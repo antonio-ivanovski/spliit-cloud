@@ -147,7 +147,12 @@
       "nSelected_other": "已选择 {count} 项",
       "removeFilter": "移除筛选",
       "settlementsHidden": "结算隐藏",
-      "title": "筛选"
+      "title": "筛选",
+      "viewMode": {
+        "label": "支出视图模式",
+        "forYou": "与我相关",
+        "all": "全部"
+      }
     },
     "showSettlements": "显示结算",
     "globalTitle": "所有支出",
@@ -183,7 +188,9 @@
     "globalArchived": "已归档",
     "globalHidden": "已隐藏",
     "globalIncludeArchived": "包含已归档的群组",
-    "globalIncludeArchivedScopeNote": "仅在未选择任何群组时适用。"
+    "globalIncludeArchivedScopeNote": "仅在未选择任何群组时适用。",
+    "hiddenExpensesShowLess": "收起",
+    "hiddenExpenses_other": "与您无关的 {count} 笔隐藏支出"
   },
   "ExpenseCard": {
     "receivedBy": "收款人：<strong>{paidBy}</strong> · 分配给 <paidFor></paidFor>",

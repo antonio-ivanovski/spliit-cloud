@@ -149,7 +149,12 @@
       "nSelected_other": "{count} selecionados",
       "removeFilter": "Remover filtro",
       "settlementsHidden": "Liquidações ocultas",
-      "title": "Filtros"
+      "title": "Filtros",
+      "viewMode": {
+        "label": "Modo de vista de despesas",
+        "forYou": "Para ti",
+        "all": "Todas"
+      }
     },
     "showSettlements": "Mostrar liquidações",
     "globalTitle": "Todas as despesas",
@@ -185,7 +190,11 @@
     "globalArchived": "arquivado",
     "globalHidden": "oculto",
     "globalIncludeArchived": "Incluir grupos arquivados",
-    "globalIncludeArchivedScopeNote": "Aplica-se apenas quando não há grupos selecionados."
+    "globalIncludeArchivedScopeNote": "Aplica-se apenas quando não há grupos selecionados.",
+    "hiddenExpensesShowLess": "Mostrar menos",
+    "hiddenExpenses_one": "{count} despesa oculta em que não participas",
+    "hiddenExpenses_many": "{count} despesas ocultas em que não participas",
+    "hiddenExpenses_other": "{count} despesas ocultas em que não participas"
   },
   "ExpenseCard": {
     "paidBy": "Pago por <strong>{paidBy}</strong> · dividido entre <paidFor></paidFor>",

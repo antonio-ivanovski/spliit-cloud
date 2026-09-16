@@ -149,7 +149,12 @@
       "nSelected_other": "{count} selectate",
       "removeFilter": "Elimină filtrul",
       "settlementsHidden": "Decontări ascunse",
-      "title": "Filtre"
+      "title": "Filtre",
+      "viewMode": {
+        "label": "Mod de vizualizare a cheltuielilor",
+        "forYou": "Pentru tine",
+        "all": "Toate"
+      }
     },
     "showSettlements": "Arată decontările",
     "globalTitle": "Toate cheltuielile",
@@ -185,7 +190,11 @@
     "globalArchived": "arhivat",
     "globalHidden": "ascuns",
     "globalIncludeArchived": "Include grupurile arhivate",
-    "globalIncludeArchivedScopeNote": "Se aplică numai când nu este selectat niciun grup."
+    "globalIncludeArchivedScopeNote": "Se aplică numai când nu este selectat niciun grup.",
+    "hiddenExpensesShowLess": "Arată mai puțin",
+    "hiddenExpenses_one": "{count} cheltuială ascunsă care nu te implică",
+    "hiddenExpenses_few": "{count} cheltuieli ascunse care nu te implică",
+    "hiddenExpenses_other": "{count} cheltuieli ascunse care nu te implică"
   },
   "ExpenseCard": {
     "receivedBy": "Primit de <strong>{paidBy}</strong> pentru <paidFor></paidFor>",

@@ -150,7 +150,12 @@
       "nSelected_other": "Wybrano: {count}",
       "removeFilter": "Usuń filtr",
       "settlementsHidden": "Rozliczenia ukryte",
-      "title": "Filtry"
+      "title": "Filtry",
+      "viewMode": {
+        "label": "Tryb widoku wydatków",
+        "forYou": "Dla Ciebie",
+        "all": "Wszystkie"
+      }
     },
     "showSettlements": "Pokaż rozliczenia",
     "globalTitle": "Wszystkie wydatki",
@@ -186,7 +191,12 @@
     "globalArchived": "zarchiwizowana",
     "globalHidden": "ukryta",
     "globalIncludeArchived": "Uwzględnij zarchiwizowane grupy",
-    "globalIncludeArchivedScopeNote": "Dotyczy tylko sytuacji, gdy nie wybrano żadnych grup."
+    "globalIncludeArchivedScopeNote": "Dotyczy tylko sytuacji, gdy nie wybrano żadnych grup.",
+    "hiddenExpensesShowLess": "Pokaż mniej",
+    "hiddenExpenses_one": "{count} ukryty wydatek, w którym nie uczestniczysz",
+    "hiddenExpenses_few": "{count} ukryte wydatki, w których nie uczestniczysz",
+    "hiddenExpenses_many": "{count} ukrytych wydatków, w których nie uczestniczysz",
+    "hiddenExpenses_other": "{count} ukrytych wydatków, w których nie uczestniczysz"
   },
   "ExpenseCard": {
     "paidBy": "Opłacone przez <strong>{paidBy}</strong> dla <paidFor></paidFor>",

@@ -30,8 +30,11 @@ export {
   getGroupCommonCurrencies,
   getGroupExpenseCount,
   getGroupExpenses,
+  getGroupExpensesInvolvingPage,
   getGroupExpensesParticipants,
   getRecurringExpenseSeries,
+  INVOLVING_PAGE_HIDDEN_CHUNK,
+  parseExpenseListCursor,
   stopRecurrence,
   updateExpense,
 } from './expenses'

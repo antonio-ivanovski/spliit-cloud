@@ -120,7 +120,12 @@
       "noMatchBody": "حاول إزالة أو تغيير بعض الفلاتر لرؤية المزيد من النتائج.",
       "dateFrom": "من",
       "nSelected_many": "تم اختيار {count}",
-      "dateRange": "نطاق التاريخ"
+      "dateRange": "نطاق التاريخ",
+      "viewMode": {
+        "label": "وضع عرض المصروفات",
+        "forYou": "الخاصة بك",
+        "all": "الكل"
+      }
     },
     "export": "تصدير",
     "noExpenses": "مجموعتك لا تحتوي على أي مصروف بعد.",
@@ -170,7 +175,14 @@
     "globalArchived": "مؤرشفة",
     "globalHidden": "مخفية",
     "globalIncludeArchived": "تضمين المجموعات المؤرشفة",
-    "globalIncludeArchivedScopeNote": "ينطبق فقط عند عدم تحديد أي مجموعة."
+    "globalIncludeArchivedScopeNote": "ينطبق فقط عند عدم تحديد أي مجموعة.",
+    "hiddenExpensesShowLess": "عرض أقل",
+    "hiddenExpenses_zero": "{count} مصروفات مخفية لا تشملك",
+    "hiddenExpenses_one": "{count} مصروف مخفي لا يشملك",
+    "hiddenExpenses_two": "{count} مصروفان مخفيان لا يشملانك",
+    "hiddenExpenses_few": "{count} مصروفات مخفية لا تشملك",
+    "hiddenExpenses_many": "{count} مصروفا مخفيا لا يشملك",
+    "hiddenExpenses_other": "{count} مصروف مخفي لا يشملك"
   },
   "GroupForm": {
     "CurrencyField": {

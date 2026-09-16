@@ -152,7 +152,12 @@
       "nSelected_other": "{count} geselecteerd",
       "removeFilter": "Filter verwijderen",
       "settlementsHidden": "Verrekeningen verborgen",
-      "title": "Filters"
+      "title": "Filters",
+      "viewMode": {
+        "label": "Weergave van uitgaven",
+        "forYou": "Voor jou",
+        "all": "Alle"
+      }
     },
     "showSettlements": "Verrekeningen tonen",
     "globalTitle": "Alle uitgaven",
@@ -188,7 +193,10 @@
     "globalArchived": "gearchiveerd",
     "globalHidden": "verborgen",
     "globalIncludeArchived": "Gearchiveerde groepen opnemen",
-    "globalIncludeArchivedScopeNote": "Alleen van toepassing als er geen groepen zijn geselecteerd."
+    "globalIncludeArchivedScopeNote": "Alleen van toepassing als er geen groepen zijn geselecteerd.",
+    "hiddenExpensesShowLess": "Minder tonen",
+    "hiddenExpenses_one": "{count} verborgen uitgave waar je niet bij betrokken bent",
+    "hiddenExpenses_other": "{count} verborgen uitgaven waar je niet bij betrokken bent"
   },
   "ExpenseCard": {
     "paidBy": "Betaald door <strong>{paidBy}</strong> · verdeeld over <paidFor></paidFor>",

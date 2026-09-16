@@ -176,7 +176,12 @@
       "nSelected_other": "Đã chọn {count}",
       "removeFilter": "Xóa bộ lọc",
       "settlementsHidden": "Đã ẩn tất toán",
-      "title": "Bộ lọc"
+      "title": "Bộ lọc",
+      "viewMode": {
+        "label": "Chế độ xem chi phí",
+        "forYou": "Dành cho bạn",
+        "all": "Tất cả"
+      }
     },
     "showSettlements": "Hiện tất toán",
     "globalTitle": "Tất cả chi phí",
@@ -212,7 +217,9 @@
     "globalArchived": "đã lưu trữ",
     "globalHidden": "đã ẩn",
     "globalIncludeArchived": "Bao gồm các nhóm đã lưu trữ",
-    "globalIncludeArchivedScopeNote": "Chỉ áp dụng khi chưa chọn nhóm nào."
+    "globalIncludeArchivedScopeNote": "Chỉ áp dụng khi chưa chọn nhóm nào.",
+    "hiddenExpensesShowLess": "Thu gọn",
+    "hiddenExpenses_other": "{count} chi phí ẩn không liên quan đến bạn"
   },
   "ExpenseCard": {
     "paidBy": "Được trả bởi <strong>{paidBy}</strong> · chia cho <paidFor></paidFor>",

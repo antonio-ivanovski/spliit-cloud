@@ -149,7 +149,12 @@
       "nSelected_other": "{count} seleccionades",
       "removeFilter": "Elimina el filtre",
       "settlementsHidden": "Liquidacions ocultes",
-      "title": "Filtres"
+      "title": "Filtres",
+      "viewMode": {
+        "label": "Mode de vista de despeses",
+        "forYou": "Per a tu",
+        "all": "Totes"
+      }
     },
     "showSettlements": "Mostra les liquidacions",
     "globalTitle": "Totes les despeses",
@@ -185,7 +190,11 @@
     "globalArchived": "arxivat",
     "globalHidden": "amagat",
     "globalIncludeArchived": "Inclou els grups arxivats",
-    "globalIncludeArchivedScopeNote": "Només s'aplica quan no hi ha cap grup seleccionat."
+    "globalIncludeArchivedScopeNote": "Només s'aplica quan no hi ha cap grup seleccionat.",
+    "hiddenExpensesShowLess": "Mostra menys",
+    "hiddenExpenses_one": "{count} despesa oculta que no t'implica",
+    "hiddenExpenses_many": "{count} despeses ocultes que no t'impliquen",
+    "hiddenExpenses_other": "{count} despeses ocultes que no t'impliquen"
   },
   "ExpenseCard": {
     "receivedBy": "Rebut per <strong>{paidBy}</strong> · assignat a <paidFor></paidFor>",

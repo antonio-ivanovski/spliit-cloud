@@ -149,7 +149,12 @@
       "nSelected_other": "{count} selezionati",
       "removeFilter": "Rimuovi filtro",
       "settlementsHidden": "Liquidazioni nascoste",
-      "title": "Filtri"
+      "title": "Filtri",
+      "viewMode": {
+        "label": "Modalità vista spese",
+        "forYou": "Per te",
+        "all": "Tutte"
+      }
     },
     "showSettlements": "Mostra liquidazioni",
     "globalTitle": "Tutte le spese",
@@ -185,7 +190,11 @@
     "globalArchived": "archiviato",
     "globalHidden": "nascosto",
     "globalIncludeArchived": "Includi i gruppi archiviati",
-    "globalIncludeArchivedScopeNote": "Si applica solo quando non è selezionato alcun gruppo."
+    "globalIncludeArchivedScopeNote": "Si applica solo quando non è selezionato alcun gruppo.",
+    "hiddenExpensesShowLess": "Mostra meno",
+    "hiddenExpenses_one": "{count} spesa nascosta che non ti riguarda",
+    "hiddenExpenses_many": "{count} spese nascoste che non ti riguardano",
+    "hiddenExpenses_other": "{count} spese nascoste che non ti riguardano"
   },
   "ExpenseCard": {
     "receivedBy": "Ricevuto da <strong>{paidBy}</strong> per <paidFor></paidFor>",

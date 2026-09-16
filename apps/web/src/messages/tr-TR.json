@@ -148,7 +148,12 @@
       "nSelected_other": "{count} seçili",
       "removeFilter": "Filtreyi kaldır",
       "settlementsHidden": "Ödemeler gizli",
-      "title": "Filtreler"
+      "title": "Filtreler",
+      "viewMode": {
+        "label": "Masraf görünüm modu",
+        "forYou": "Sizin için",
+        "all": "Tümü"
+      }
     },
     "showSettlements": "Ödemeleri göster",
     "globalTitle": "Tüm harcamalar",
@@ -184,7 +189,10 @@
     "globalArchived": "arşivlendi",
     "globalHidden": "gizli",
     "globalIncludeArchived": "Arşivlenmiş grupları dahil et",
-    "globalIncludeArchivedScopeNote": "Yalnızca grup seçilmediğinde geçerlidir."
+    "globalIncludeArchivedScopeNote": "Yalnızca grup seçilmediğinde geçerlidir.",
+    "hiddenExpensesShowLess": "Daha az göster",
+    "hiddenExpenses_one": "{count} dahil olmadığınız gizli masraf",
+    "hiddenExpenses_other": "{count} dahil olmadığınız gizli masraf"
   },
   "ExpenseCard": {
     "receivedBy": "<strong>{paidBy}</strong> aldı · <paidFor></paidFor> için paylaştırıldı",

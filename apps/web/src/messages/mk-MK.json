@@ -148,7 +148,12 @@
       "nSelected_other": "Избрани: {count}",
       "removeFilter": "Отстрани филтер",
       "settlementsHidden": "Порамнувања скриени",
-      "title": "Филтри"
+      "title": "Филтри",
+      "viewMode": {
+        "label": "Режим на приказ на трошоци",
+        "forYou": "За вас",
+        "all": "Сите"
+      }
     },
     "showSettlements": "Прикажи порамнувања",
     "globalTitle": "Сите трошоци",
@@ -184,7 +189,10 @@
     "globalArchived": "архивирана",
     "globalHidden": "скриена",
     "globalIncludeArchived": "Вклучи архивирани групи",
-    "globalIncludeArchivedScopeNote": "Важи само кога не е избрана ниту една група."
+    "globalIncludeArchivedScopeNote": "Важи само кога не е избрана ниту една група.",
+    "hiddenExpensesShowLess": "Прикажи помалку",
+    "hiddenExpenses_one": "{count} скриен трошок во кој не сте вклучени",
+    "hiddenExpenses_other": "{count} скриени трошоци во кои не сте вклучени"
   },
   "ExpenseCard": {
     "paidBy": "Платено од <strong>{paidBy}</strong> · поделено меѓу <paidFor></paidFor>",

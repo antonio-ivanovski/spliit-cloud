@@ -149,7 +149,12 @@
       "nSelected_other": "נבחרו {count} פריטים",
       "removeFilter": "הסר סינון",
       "settlementsHidden": "הסדרים מוסתרים",
-      "title": "סינונים"
+      "title": "סינונים",
+      "viewMode": {
+        "label": "מצב תצוגת ההוצאות",
+        "forYou": "עבורך",
+        "all": "הכול"
+      }
     },
     "showSettlements": "הצג הסדרים",
     "globalTitle": "כל ההוצאות",
@@ -185,7 +190,11 @@
     "globalArchived": "בארכיון",
     "globalHidden": "מוסתרת",
     "globalIncludeArchived": "כלול קבוצות בארכיון",
-    "globalIncludeArchivedScopeNote": "חל רק כאשר לא נבחרו קבוצות."
+    "globalIncludeArchivedScopeNote": "חל רק כאשר לא נבחרו קבוצות.",
+    "hiddenExpensesShowLess": "הצג פחות",
+    "hiddenExpenses_one": "{count} הוצאה נסתרת שלא כוללת אותך",
+    "hiddenExpenses_two": "{count} הוצאות נסתרות שלא כוללות אותך",
+    "hiddenExpenses_other": "{count} הוצאות נסתרות שלא כוללות אותך"
   },
   "ExpenseCard": {
     "paidBy": "שולם על ידי <strong>{paidBy}</strong> · פוצל בין <paidFor></paidFor>",

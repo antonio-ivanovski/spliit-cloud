@@ -9,6 +9,12 @@ export type ExpenseMatchMode = 'any' | 'all' | 'exact'
 
 export type ExpenseFilters = {
   showSettlements: boolean
+  /**
+   * When false (default), the timeline hides expenses that don't involve the
+   * viewer and collapses them behind per-date-group "hidden" rows. When true,
+   * every expense renders. Client-side view mode only — never sent to the API.
+   */
+  showAll: boolean
   categories: string[]
   paidBy: string[]
   paidByMatch: ExpenseMatchMode
@@ -28,6 +34,12 @@ export type ExpenseSort = {
 
 export type ExpenseQueryInput = {
   hideSettlements: boolean
+  /**
+   * Ask the API for involvement-aware pages (limit involving expenses plus
+   * their hidden context) instead of raw slices. Set by the timeline when it
+   * collapses non-involving expenses — never a shareable URL filter.
+   */
+  hideNotInvolving?: boolean
   categories?: string[]
   paidBy?: string[]
   paidByMatch?: ExpenseMatchMode
@@ -44,6 +56,7 @@ export type ExpenseQueryInput = {
 
 export const DEFAULT_FILTERS: ExpenseFilters = {
   showSettlements: true,
+  showAll: false,
   categories: [],
   paidBy: [],
   paidByMatch: 'any',
@@ -59,6 +72,18 @@ export const DEFAULT_FILTERS: ExpenseFilters = {
 export const DEFAULT_SORT: ExpenseSort = {
   sortBy: 'expenseDate',
   sortDir: 'desc',
+}
+
+/**
+ * Whether the list query should ask for involvement-aware pages. Mirrors the
+ * collapse UI exactly: the server flag is on precisely when the timeline hides
+ * non-involving expenses behind per-run rows.
+ */
+export function shouldPageByInvolvement(
+  canCollapse: boolean,
+  showAll: boolean,
+): boolean {
+  return canCollapse && !showAll
 }
 
 function splitCsv(value: string | undefined): string[] {
@@ -80,6 +105,7 @@ function readFiltersFromSearch(search: Record<string, unknown>): {
 } {
   const filters: ExpenseFilters = {
     showSettlements: search.expShowSettlements !== 'false',
+    showAll: search.expShowAll === 'true',
     categories: splitCsv(search.expCategories as string | undefined).map(
       (id) => normalizeCategoryId(id) ?? id,
     ),
@@ -136,6 +162,7 @@ function buildSearchFromFiltersAndSort(
     'expShowSettlements',
     filters.showSettlements === false ? 'false' : undefined,
   )
+  setOrDelete('expShowAll', filters.showAll === true ? 'true' : undefined)
   setOrDelete('expDateFrom', filters.dateFrom)
   setOrDelete('expDateTo', filters.dateTo)
   setOrDelete('expMinAmount', filters.minAmount)
@@ -185,6 +212,8 @@ function dateOrUndefined(value: string | undefined): Date | undefined {
  *   reflects the URL state.
  * - `filtersOpen` is ephemeral UI state shared between the toolbar trigger and
  *   the panel so they re-render together. Not persisted, not in the URL.
+ * - `showAll` is a client-side view mode (default hiding) persisted in the URL as
+ *   `expShowAll=true`; it never reaches the tRPC input.
  *
  * Returned `queryInput` merges everything into the tRPC `groups.expenses.list`
  * input shape so the parent component can spread it into the query.
@@ -233,6 +262,7 @@ export function useExpenseFilters(groupId: string) {
         nextFilters.paidForMatch = DEFAULT_FILTERS.paidForMatch
       if (key === 'showSettlements')
         nextFilters.showSettlements = DEFAULT_FILTERS.showSettlements
+      if (key === 'showAll') nextFilters.showAll = DEFAULT_FILTERS.showAll
       setApplied(nextFilters, sort)
     },
     [filters, setApplied, sort],

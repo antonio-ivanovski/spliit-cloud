@@ -1880,7 +1880,12 @@
         },
         "title": "sort the expenses"
       },
-      "title": "filter mode"
+      "title": "filter mode",
+      "viewMode": {
+        "label": "expense view mode",
+        "forYou": "for you",
+        "all": "all"
+      }
     },
     "loading": "loading expenses…",
     "exportPdfTitle": "print the pdf",
@@ -1906,7 +1911,10 @@
     "globalArchived": "in the vault",
     "globalHidden": "hidden away",
     "globalIncludeArchived": "include archived groups",
-    "globalIncludeArchivedScopeNote": "only applies when no groups are selected."
+    "globalIncludeArchivedScopeNote": "only applies when no groups are selected.",
+    "hiddenExpensesShowLess": "fold these up",
+    "hiddenExpenses_one": "{count} hidden expense that doesn't involve you",
+    "hiddenExpenses_other": "{count} hidden expenses that don't involve you"
   },
   "Feedback": {
     "navigationLabel": "feedback zone",

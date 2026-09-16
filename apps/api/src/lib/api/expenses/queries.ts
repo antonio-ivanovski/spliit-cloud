@@ -140,7 +140,6 @@ export async function getGroupBalanceExpenses(
 type GetGroupExpensesSortBy = 'expenseDate' | 'createdAt' | 'amount'
 type GetGroupExpensesSortDir = 'asc' | 'desc'
 type GetGroupExpensesMatch = 'any' | 'all' | 'exact'
-
 type GetGroupExpensesOptions = {
   ledgerId?: string
   offset?: number
@@ -205,6 +204,30 @@ export async function getGroupExpenses(
     )?.ledgerId
   if (!ledgerId) return []
 
+  const where = await buildExpenseListWhere(ledgerId, options)
+  const orderBy = buildExpenseListOrderBy(options?.sortBy, options?.sortDir)
+
+  const rows = await prisma.expense.findMany({
+    select: groupExpenseListCardSelect,
+    where,
+    orderBy,
+    skip: options && options.offset,
+    take: options && options.length,
+  })
+
+  return rows.map(mapExpenseListRow)
+}
+
+/**
+ * Shared `where` builder for the expense list: base filters (category,
+ * currency, date/amount ranges, participant matches) plus the optional text
+ * search. Extracted so the involvement-aware pager reuses the exact same
+ * filtering as the plain list.
+ */
+async function buildExpenseListWhere(
+  ledgerId: string,
+  options?: GetGroupExpensesOptions,
+): Promise<Prisma.ExpenseWhereInput> {
   const expenseDateRange: Prisma.DateTimeFilter | undefined =
     options?.dateFrom || options?.dateTo
       ? {
@@ -274,26 +297,281 @@ export async function getGroupExpenses(
     )
   }
 
-  const effectiveField = options?.sortBy ?? 'expenseDate'
-  const sortDir = options?.sortDir ?? 'desc'
-  const primaryOrder: Prisma.ExpenseOrderByWithRelationInput = {
-    [effectiveField]: sortDir,
-  }
-  const orderBy: Prisma.ExpenseOrderByWithRelationInput[] =
-    effectiveField === 'expenseDate'
-      ? [primaryOrder, { createdAt: 'desc' }, { id: 'desc' }]
-      : [primaryOrder, { id: 'desc' }]
-
-  const rows = await prisma.expense.findMany({
-    select: groupExpenseListCardSelect,
-    where,
-    orderBy,
-    skip: options && options.offset,
-    take: options && options.length,
-  })
-
-  return rows.map(mapExpenseListRow)
+  return where
 }
+
+function buildExpenseListOrderBy(
+  sortBy?: GetGroupExpensesSortBy,
+  sortDir?: GetGroupExpensesSortDir,
+): Prisma.ExpenseOrderByWithRelationInput[] {
+  const effectiveField = sortBy ?? 'expenseDate'
+  const dir = sortDir ?? 'desc'
+  const primaryOrder: Prisma.ExpenseOrderByWithRelationInput = {
+    [effectiveField]: dir,
+  }
+  return effectiveField === 'expenseDate'
+    ? [primaryOrder, { createdAt: 'desc' }, { id: 'desc' }]
+    : [primaryOrder, { id: 'desc' }]
+}
+/**
+ * Hidden (non-involving) rows delivered per involving page before the server
+ * issues a continuation token. Keeps a single response bounded while the
+ * carry-over keeps long hidden gaps gap-free across requests.
+ */
+export const INVOLVING_PAGE_HIDDEN_CHUNK = 100
+
+/**
+ * Parse the expense-list cursor. Plain numbers are involving offsets (legacy
+ * behavior); `"offset+skipped"` strings continue a truncated hidden gap at the
+ * same involving offset with `skipped` hidden rows already delivered.
+ */
+export function parseExpenseListCursor(cursor?: number | string | null): {
+  involvingOffset: number
+  hiddenSkipped: number
+} {
+  if (typeof cursor === 'string') {
+    const [offset, skipped] = cursor.split('+')
+    return {
+      involvingOffset: Number(offset),
+      hiddenSkipped: Number(skipped),
+    }
+  }
+  return { involvingOffset: cursor ?? 0, hiddenSkipped: 0 }
+}
+
+export type InvolvingPageSortBy = 'expenseDate' | 'createdAt'
+
+export type InvolvingPageOptions = GetGroupExpensesOptions & {
+  sortBy: InvolvingPageSortBy
+  sortDir?: GetGroupExpensesSortDir
+  involvingParticipantId?: string | null
+  involvingAccountId?: string | null
+  /** Offset into the involving-only sequence (never counts hidden rows). */
+  involvingOffset?: number
+  /** Involving expenses guaranteed per page; hidden context rides along. */
+  involvingLength?: number
+  /** Already-delivered hidden rows within the current gap (continuation). */
+  hiddenSkipped?: number
+  hiddenChunk?: number
+}
+
+export type InvolvingPageResult = {
+  rows: ReturnType<typeof mapExpenseListRow>[]
+  involvingReturned: number
+  hasMoreInvolving: boolean
+  hiddenPending: boolean
+}
+
+type ExpenseSortKey = {
+  id: string
+  expenseDate: Date
+  createdAt: Date
+}
+
+type SortLevel = {
+  field: 'expenseDate' | 'createdAt' | 'id'
+  dir: 'asc' | 'desc'
+}
+
+function involvingSortLevels(
+  sortBy: InvolvingPageSortBy,
+  sortDir: GetGroupExpensesSortDir,
+): SortLevel[] {
+  return sortBy === 'expenseDate'
+    ? [
+        { field: 'expenseDate', dir: sortDir },
+        { field: 'createdAt', dir: 'desc' },
+        { field: 'id', dir: 'desc' },
+      ]
+    : [
+        { field: 'createdAt', dir: sortDir },
+        { field: 'id', dir: 'desc' },
+      ]
+}
+
+/**
+ * Mirrors the client's `isExpenseInvolvingUser`: payer-or-beneficiary at the
+ * list level, by ledger participant id with the backing account id fallback.
+ * Callers guarantee at least one identity is known.
+ */
+function involvementClause(
+  participantId: string | null | undefined,
+  accountId: string | null | undefined,
+): Prisma.ExpenseWhereInput {
+  const clauses: Prisma.ExpenseWhereInput[] = []
+  if (participantId) {
+    clauses.push(
+      { paidByList: { some: { ledgerParticipantId: participantId } } },
+      { paidFor: { some: { ledgerParticipantId: participantId } } },
+    )
+  }
+  if (accountId) {
+    clauses.push(
+      {
+        paidByList: {
+          some: { ledgerParticipant: { groupMember: { accountId } } },
+        },
+      },
+      {
+        paidFor: {
+          some: { ledgerParticipant: { groupMember: { accountId } } },
+        },
+      },
+    )
+  }
+  return { OR: clauses }
+}
+
+function flipDir(dir: 'asc' | 'desc'): 'asc' | 'desc' {
+  return dir === 'desc' ? 'asc' : 'desc'
+}
+
+/**
+ * Keyset bound: rows strictly after (or before) an anchor row in the page's
+ * exact sort order, including the fixed `desc` tiebreaks. Expresses "the hidden
+ * gap between two involving expenses" without position offsets.
+ */
+function anchorBoundFilter(
+  anchor: ExpenseSortKey,
+  levels: SortLevel[],
+  side: 'after' | 'before',
+): Prisma.ExpenseWhereInput {
+  const ors = levels.map((level, index) => {
+    const priorEquals = levels.slice(0, index).map(
+      (prev) =>
+        ({
+          [prev.field]: { equals: anchor[prev.field] },
+        }) as Prisma.ExpenseWhereInput,
+    )
+    const dir = side === 'after' ? level.dir : flipDir(level.dir)
+    const test = {
+      [level.field]:
+        dir === 'desc'
+          ? { lt: anchor[level.field] }
+          : { gt: anchor[level.field] },
+    } as Prisma.ExpenseWhereInput
+    return priorEquals.length > 0
+      ? ({ AND: [...priorEquals, test] } as Prisma.ExpenseWhereInput)
+      : test
+  })
+  return { OR: ors }
+}
+
+function compareSortKeys(
+  a: ExpenseSortKey,
+  b: ExpenseSortKey,
+  levels: SortLevel[],
+): number {
+  for (const { field, dir } of levels) {
+    const av = a[field]
+    const bv = b[field]
+    if (av < bv) return dir === 'desc' ? 1 : -1
+    if (av > bv) return dir === 'desc' ? -1 : 1
+  }
+  return 0
+}
+
+function sortKeyOf(row: ExpenseListDbRow): ExpenseSortKey {
+  return { id: row.id, expenseDate: row.expenseDate, createdAt: row.createdAt }
+}
+
+/**
+ * Involvement-aware page for the collapsed timeline: up to `involvingLength`
+ * involving expenses in sort order, plus the hidden expenses positioned between
+ * the page's first involving expense and the next page's first involving
+ * expense (peeked via `+1`), so the client renders inline hidden runs with no
+ * gaps across page boundaries.
+ *
+ * Large hidden gaps are delivered in `hiddenChunk` slices: when a gap
+ * overflows, the response carries the involving page plus the first slice and
+ * reports `hiddenPending`, and the caller re-requests the same involving offset
+ * with `hiddenSkipped` advanced (carry-over). Continuation responses contain
+ * only the next hidden slice.
+ */
+export async function getGroupExpensesInvolvingPage(
+  groupId: string,
+  options: InvolvingPageOptions,
+): Promise<InvolvingPageResult> {
+  const empty: InvolvingPageResult = {
+    rows: [],
+    involvingReturned: 0,
+    hasMoreInvolving: false,
+    hiddenPending: false,
+  }
+  const ledgerId =
+    options.ledgerId ??
+    (
+      await prisma.group.findUnique({
+        where: { id: groupId },
+        select: { ledgerId: true },
+      })
+    )?.ledgerId
+  if (!ledgerId) return empty
+
+  const length = options.involvingLength ?? 20
+  const offset = options.involvingOffset ?? 0
+  const chunk = options.hiddenChunk ?? INVOLVING_PAGE_HIDDEN_CHUNK
+  const skipped = options.hiddenSkipped ?? 0
+  const sortDir = options.sortDir ?? 'desc'
+  const levels = involvingSortLevels(options.sortBy, sortDir)
+  const orderBy = buildExpenseListOrderBy(options.sortBy, sortDir)
+
+  const baseWhere = await buildExpenseListWhere(ledgerId, options)
+  const involvement = involvementClause(
+    options.involvingParticipantId,
+    options.involvingAccountId,
+  )
+
+  const involvingRows = await prisma.expense.findMany({
+    select: groupExpenseListCardSelect,
+    where: mergeWhereAnd(baseWhere, involvement),
+    orderBy,
+    skip: offset,
+    take: length + 1,
+  })
+  const pageInvolving = involvingRows.slice(0, length)
+  const peek = involvingRows[length] ?? null
+  if (pageInvolving.length === 0) return empty
+  const first = pageInvolving[0]
+  if (!first) return empty
+
+  let hiddenWhere = mergeWhereAnd(
+    mergeWhereAnd(baseWhere, { NOT: involvement }),
+    anchorBoundFilter(sortKeyOf(first), levels, 'after'),
+  )
+  if (peek) {
+    hiddenWhere = mergeWhereAnd(
+      hiddenWhere,
+      anchorBoundFilter(sortKeyOf(peek), levels, 'before'),
+    )
+  }
+  const hiddenRows = await prisma.expense.findMany({
+    select: groupExpenseListCardSelect,
+    where: hiddenWhere,
+    orderBy,
+    skip: skipped,
+    take: chunk + 1,
+  })
+  const hiddenPage = hiddenRows.slice(0, chunk)
+  const hiddenPending = hiddenRows.length > chunk
+
+  // Continuation responses carry only the next hidden slice — the involving
+  // page was already delivered with the first slice.
+  const fresh = skipped === 0
+  const merged = fresh
+    ? [...pageInvolving, ...hiddenPage].sort((a, b) =>
+        compareSortKeys(sortKeyOf(a), sortKeyOf(b), levels),
+      )
+    : hiddenPage
+
+  return {
+    rows: merged.map(mapExpenseListRow),
+    involvingReturned: fresh ? pageInvolving.length : 0,
+    hasMoreInvolving: peek != null,
+    hiddenPending,
+  }
+}
+
 export async function getGroupExpenseCount(groupId: string) {
   const group = await prisma.group.findUnique({
     where: { id: groupId },

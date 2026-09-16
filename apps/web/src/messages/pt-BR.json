@@ -74,7 +74,10 @@
         }
       },
       "amountRange": "Valor",
-      "settlementsHidden": "Acertos ocultos"
+      "settlementsHidden": "Acertos ocultos",
+      "viewMode": {
+        "forYou": "Para você"
+      }
     },
     "showSettlements": "Mostrar acertos",
     "clearSearch": "Limpar busca",
@@ -93,7 +96,10 @@
     "globalArchived": "arquivado",
     "globalHidden": "oculto",
     "globalIncludeArchived": "Incluir grupos arquivados",
-    "globalIncludeArchivedScopeNote": "Aplica-se apenas quando nenhum grupo estiver selecionado."
+    "globalIncludeArchivedScopeNote": "Aplica-se apenas quando nenhum grupo estiver selecionado.",
+    "hiddenExpenses_one": "{count} despesa oculta que não envolve você",
+    "hiddenExpenses_many": "{count} despesas ocultas que não envolvem você",
+    "hiddenExpenses_other": "{count} despesas ocultas que não envolvem você"
   },
   "ExpenseCard": {
     "yourBalance": "Seu saldo:",

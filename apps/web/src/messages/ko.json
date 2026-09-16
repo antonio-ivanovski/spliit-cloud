@@ -77,7 +77,12 @@
       "nSelected_other": "{count}개 선택됨",
       "removeFilter": "필터 제거",
       "settlementsHidden": "정산 숨김",
-      "title": "필터"
+      "title": "필터",
+      "viewMode": {
+        "label": "지출 보기 모드",
+        "forYou": "나와 관련",
+        "all": "전체"
+      }
     },
     "showSettlements": "정산 표시",
     "globalTitle": "모든 지출",
@@ -113,7 +118,9 @@
     "globalArchived": "보관됨",
     "globalHidden": "숨김",
     "globalIncludeArchived": "보관된 그룹 포함",
-    "globalIncludeArchivedScopeNote": "선택된 그룹이 없을 때만 적용됩니다."
+    "globalIncludeArchivedScopeNote": "선택된 그룹이 없을 때만 적용됩니다.",
+    "hiddenExpensesShowLess": "간략히 보기",
+    "hiddenExpenses_other": "나와 관련 없는 숨겨진 지출 {count}개"
   },
   "Groups": {
     "myGroups": "내 그룹",

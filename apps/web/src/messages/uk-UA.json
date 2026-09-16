@@ -150,7 +150,12 @@
       "nSelected_other": "Вибрано: {count}",
       "removeFilter": "Видалити фільтр",
       "settlementsHidden": "Розрахунки приховано",
-      "title": "Фільтри"
+      "title": "Фільтри",
+      "viewMode": {
+        "label": "Режим перегляду витрат",
+        "forYou": "Для вас",
+        "all": "Усі"
+      }
     },
     "showSettlements": "Показати розрахунки",
     "globalTitle": "Усі витрати",
@@ -186,7 +191,12 @@
     "globalArchived": "архівовано",
     "globalHidden": "приховано",
     "globalIncludeArchived": "Включати архівовані групи",
-    "globalIncludeArchivedScopeNote": "Застосовується, лише коли групи не вибрано."
+    "globalIncludeArchivedScopeNote": "Застосовується, лише коли групи не вибрано.",
+    "hiddenExpensesShowLess": "Показати менше",
+    "hiddenExpenses_one": "{count} прихована витрата, в якій ви не берете участі",
+    "hiddenExpenses_few": "{count} приховані витрати, в яких ви не берете участі",
+    "hiddenExpenses_many": "{count} прихованих витрат, в яких ви не берете участі",
+    "hiddenExpenses_other": "{count} прихованих витрат, в яких ви не берете участі"
   },
   "ExpenseCard": {
     "paidBy": "Сплачено <strong>{paidBy}</strong> за <paidFor></paidFor>",

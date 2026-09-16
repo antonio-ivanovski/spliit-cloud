@@ -1739,7 +1739,12 @@
         },
         "title": "খরচ সাজান"
       },
-      "title": "ফিল্টার"
+      "title": "ফিল্টার",
+      "viewMode": {
+        "label": "খরচ দেখার পদ্ধতি",
+        "forYou": "আপনার জন্য",
+        "all": "সব"
+      }
     },
     "showSettlements": "নিষ্পত্তি দেখান",
     "globalTitle": "সব খরচ",
@@ -1775,7 +1780,10 @@
     "globalArchived": "আর্কাইভ করা",
     "globalHidden": "লুকানো",
     "globalIncludeArchived": "আর্কাইভ করা গ্রুপ অন্তর্ভুক্ত করুন",
-    "globalIncludeArchivedScopeNote": "শুধুমাত্র যখন কোনো গ্রুপ নির্বাচন করা হয়নি তখন প্রযোজ্য।"
+    "globalIncludeArchivedScopeNote": "শুধুমাত্র যখন কোনো গ্রুপ নির্বাচন করা হয়নি তখন প্রযোজ্য।",
+    "hiddenExpensesShowLess": "কম দেখান",
+    "hiddenExpenses_one": "{count}টি লুকানো খরচ যাতে আপনি জড়িত নন",
+    "hiddenExpenses_other": "{count}টি লুকানো খরচ যেগুলোতে আপনি জড়িত নন"
   },
   "Footer": {
     "madeIn": "ওপেন-সোর্স সম্প্রদায় দ্বারা ভালোবাসা দিয়ে তৈরি ❤️",

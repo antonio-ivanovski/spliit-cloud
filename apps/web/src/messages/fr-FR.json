@@ -149,7 +149,12 @@
       "nSelected_other": "{count} sélectionné(s)",
       "removeFilter": "Retirer le filtre",
       "settlementsHidden": "Règlements masqués",
-      "title": "Filtres"
+      "title": "Filtres",
+      "viewMode": {
+        "label": "Mode d'affichage des dépenses",
+        "forYou": "Pour vous",
+        "all": "Toutes"
+      }
     },
     "showSettlements": "Afficher les règlements",
     "globalTitle": "Toutes les dépenses",
@@ -185,7 +190,11 @@
     "globalArchived": "archivé",
     "globalHidden": "masqué",
     "globalIncludeArchived": "Inclure les groupes archivés",
-    "globalIncludeArchivedScopeNote": "S'applique uniquement lorsqu'aucun groupe n'est sélectionné."
+    "globalIncludeArchivedScopeNote": "S'applique uniquement lorsqu'aucun groupe n'est sélectionné.",
+    "hiddenExpensesShowLess": "Afficher moins",
+    "hiddenExpenses_one": "{count} dépense masquée ne vous concernant pas",
+    "hiddenExpenses_many": "{count} dépenses masquées ne vous concernant pas",
+    "hiddenExpenses_other": "{count} dépenses masquées ne vous concernant pas"
   },
   "ExpenseCard": {
     "receivedBy": "Reçu par <strong>{paidBy}</strong> pour <paidFor></paidFor>",

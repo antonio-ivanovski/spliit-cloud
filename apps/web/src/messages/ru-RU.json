@@ -150,7 +150,12 @@
       "nSelected_other": "Выбрано: {count}",
       "removeFilter": "Удалить фильтр",
       "settlementsHidden": "Расчёты скрыты",
-      "title": "Фильтры"
+      "title": "Фильтры",
+      "viewMode": {
+        "label": "Режим просмотра расходов",
+        "forYou": "Для вас",
+        "all": "Все"
+      }
     },
     "showSettlements": "Показать расчёты",
     "globalTitle": "Все расходы",
@@ -186,7 +191,12 @@
     "globalArchived": "архивирована",
     "globalHidden": "скрыта",
     "globalIncludeArchived": "Включать архивированные группы",
-    "globalIncludeArchivedScopeNote": "Применяется, только когда группы не выбраны."
+    "globalIncludeArchivedScopeNote": "Применяется, только когда группы не выбраны.",
+    "hiddenExpensesShowLess": "Показать меньше",
+    "hiddenExpenses_one": "{count} скрытый расход, в котором вы не участвуете",
+    "hiddenExpenses_few": "{count} скрытых расхода, в которых вы не участвуете",
+    "hiddenExpenses_many": "{count} скрытых расходов, в которых вы не участвуете",
+    "hiddenExpenses_other": "{count} скрытых расходов, в которых вы не участвуете"
   },
   "ExpenseCard": {
     "paidBy": "Потратил <strong>{paidBy}</strong> за <paidFor></paidFor>",

@@ -147,7 +147,12 @@
       "nSelected_other": "{count} dipilih",
       "removeFilter": "Hapus filter",
       "settlementsHidden": "Pelunasan tersembunyi",
-      "title": "Filter"
+      "title": "Filter",
+      "viewMode": {
+        "label": "Mode tampilan pengeluaran",
+        "forYou": "Untuk Anda",
+        "all": "Semua"
+      }
     },
     "showSettlements": "Tampilkan pelunasan",
     "globalTitle": "Semua pengeluaran",
@@ -183,7 +188,9 @@
     "globalArchived": "diarsipkan",
     "globalHidden": "tersembunyi",
     "globalIncludeArchived": "Sertakan grup yang diarsipkan",
-    "globalIncludeArchivedScopeNote": "Hanya berlaku jika tidak ada grup yang dipilih."
+    "globalIncludeArchivedScopeNote": "Hanya berlaku jika tidak ada grup yang dipilih.",
+    "hiddenExpensesShowLess": "Tampilkan lebih sedikit",
+    "hiddenExpenses_other": "{count} pengeluaran tersembunyi yang tidak melibatkan Anda"
   },
   "ExpenseCard": {
     "paidBy": "Dibayar oleh <strong>{paidBy}</strong> · dibagi antara <paidFor></paidFor>",

@@ -176,7 +176,12 @@
       "nSelected_other": "{count} selected",
       "removeFilter": "Remove filter",
       "settlementsHidden": "Settlements hidden",
-      "title": "Filters"
+      "title": "Filters",
+      "viewMode": {
+        "label": "Expense view mode",
+        "forYou": "For you",
+        "all": "All"
+      }
     },
     "showSettlements": "Show settlements",
     "globalTitle": "All expenses",
@@ -212,7 +217,14 @@
     "globalArchived": "archived",
     "globalHidden": "hidden",
     "globalIncludeArchived": "Include archived groups",
-    "globalIncludeArchivedScopeNote": "Only applies when no groups are selected."
+    "globalIncludeArchivedScopeNote": "Only applies when no groups are selected.",
+    "hiddenExpensesShowLess": "Show less",
+    "hiddenExpenses_zero": "{count} hidden expenses not involving you",
+    "hiddenExpenses_one": "{count} hidden expense not involving you",
+    "hiddenExpenses_two": "{count} hidden expenses not involving you",
+    "hiddenExpenses_few": "{count} hidden expenses not involving you",
+    "hiddenExpenses_many": "{count} hidden expenses not involving you",
+    "hiddenExpenses_other": "{count} hidden expenses not involving you"
   },
   "ExpenseCard": {
     "paidBy": "Paid by <strong>{paidBy}</strong> · split between <paidFor></paidFor>",

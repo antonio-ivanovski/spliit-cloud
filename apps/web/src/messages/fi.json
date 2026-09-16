@@ -148,7 +148,12 @@
       "nSelected_other": "{count} valittu",
       "removeFilter": "Poista suodatin",
       "settlementsHidden": "Tasaukset piilotettu",
-      "title": "Suodattimet"
+      "title": "Suodattimet",
+      "viewMode": {
+        "label": "Kulujen näkymä",
+        "forYou": "Sinulle",
+        "all": "Kaikki"
+      }
     },
     "showSettlements": "Näytä tasaukset",
     "globalTitle": "Kaikki kulut",
@@ -184,7 +189,10 @@
     "globalArchived": "arkistoitu",
     "globalHidden": "piilotettu",
     "globalIncludeArchived": "Sisällytä arkistoidut ryhmät",
-    "globalIncludeArchivedScopeNote": "Koskee vain tilannetta, jossa ryhmiä ei ole valittu."
+    "globalIncludeArchivedScopeNote": "Koskee vain tilannetta, jossa ryhmiä ei ole valittu.",
+    "hiddenExpensesShowLess": "Näytä vähemmän",
+    "hiddenExpenses_one": "{count} piilotettu sinuun liittymätön kulu",
+    "hiddenExpenses_other": "{count} piilotettua sinuun liittymätöntä kulua"
   },
   "ExpenseCard": {
     "receivedBy": "Vastaanottaja <strong>{paidBy}</strong> · kohdistettu osallistujille <paidFor></paidFor>",

@@ -147,7 +147,12 @@
       "nSelected_other": "{count}件選択中",
       "removeFilter": "フィルターを削除",
       "settlementsHidden": "精算非表示",
-      "title": "フィルター"
+      "title": "フィルター",
+      "viewMode": {
+        "label": "支出の表示モード",
+        "forYou": "あなたのみ",
+        "all": "すべて"
+      }
     },
     "showSettlements": "精算を表示",
     "globalTitle": "すべての支出",
@@ -183,7 +188,9 @@
     "globalArchived": "アーカイブ済み",
     "globalHidden": "非表示",
     "globalIncludeArchived": "アーカイブ済みのグループを含める",
-    "globalIncludeArchivedScopeNote": "グループが選択されていない場合にのみ適用されます。"
+    "globalIncludeArchivedScopeNote": "グループが選択されていない場合にのみ適用されます。",
+    "hiddenExpensesShowLess": "表示を減らす",
+    "hiddenExpenses_other": "あなたに関係しない非表示の支出 {count} 件"
   },
   "ExpenseCard": {
     "receivedBy": "<strong>{paidBy}</strong>が受取 · <paidFor></paidFor>に配分",

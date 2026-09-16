@@ -1687,7 +1687,12 @@
         },
         "title": "खर्च क्रमबद्ध करें"
       },
-      "title": "फ़िल्टर"
+      "title": "फ़िल्टर",
+      "viewMode": {
+        "label": "खर्च देखने का तरीका",
+        "forYou": "आपके लिए",
+        "all": "सभी"
+      }
     },
     "showSettlements": "निपटान दिखाएं",
     "globalTitle": "सभी खर्च",
@@ -1723,7 +1728,10 @@
     "globalArchived": "संग्रहीत",
     "globalHidden": "छिपा हुआ",
     "globalIncludeArchived": "संग्रहीत समूह शामिल करें",
-    "globalIncludeArchivedScopeNote": "केवल तब लागू होता है जब कोई समूह चयनित न हो।"
+    "globalIncludeArchivedScopeNote": "केवल तब लागू होता है जब कोई समूह चयनित न हो।",
+    "hiddenExpensesShowLess": "कम दिखाएँ",
+    "hiddenExpenses_one": "{count} छिपा हुआ खर्च जिसमें आप शामिल नहीं हैं",
+    "hiddenExpenses_other": "{count} छिपे हुए खर्च जिनमें आप शामिल नहीं हैं"
   },
   "Footer": {
     "madeIn": "ओपन-सोर्स समुदाय द्वारा प्यार से बनाया गया ❤️",

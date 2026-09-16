@@ -1,3 +1,4 @@
+import { keepPreviousData } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -17,14 +18,18 @@ import {
 import {
   DEFAULT_FILTERS,
   DEFAULT_SORT,
+  shouldPageByInvolvement,
   useExpenseFilters,
 } from '@/app/groups/[groupId]/expenses/use-expense-filters'
+import { useRenderedViewMode } from '@/app/groups/[groupId]/expenses/use-rendered-view-mode'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { Button } from '@/components/ui/button'
 import { SearchBar } from '@/components/ui/search-bar'
 import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
+import { useActiveUser } from '@/lib/hooks'
+import { useCurrentAccount } from '@/lib/use-current-account'
 import { useOfflineWithoutData } from '@/lib/use-online-status'
 import { getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
@@ -34,6 +39,10 @@ import {
   useIsReadOnlyGroupViewer,
 } from '../current-group-context'
 import { useGroupAccessSearch } from '../use-group-access-search'
+import {
+  isExpenseInvolvingUser,
+  type InvolvementExpense,
+} from './expense-involvement'
 import { EXPENSE_LIST_PAGE_SIZE } from './expense-list-query'
 import { ExpenseTimeline, ExpensesLoading } from './expense-timeline'
 
@@ -76,7 +85,7 @@ const ExpenseListForSearch = ({
     accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
   const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
 
-  const { queryInput, sort, activeCount, setFilters } =
+  const { queryInput, filters, sort, activeCount, setFilters } =
     useExpenseFiltersContext()
   const { t } = useTranslation(undefined, { keyPrefix: 'Expenses' })
   const { t: tFilters } = useTranslation(undefined, {
@@ -84,6 +93,15 @@ const ExpenseListForSearch = ({
   })
   const locale = useLocale()
   const { ref: loadingRef, inView } = useInView()
+  // Involvement can only be determined for members with a ledger participant
+  // id. Everyone else (logged-out viewers, pending invitees) sees everything
+  // and gets no toggle.
+  const participantId = useActiveUser(groupId)
+  const { data: account } = useCurrentAccount()
+  const canCollapse = participantId != null
+  const showAll = filters.showAll || !canCollapse
+  const isInvolving = (expense: InvolvementExpense) =>
+    isExpenseInvolvingUser(expense, participantId, account?.id ?? null)
 
   const hasActiveFiltersOrSort =
     activeCount > 0 ||
@@ -93,6 +111,7 @@ const ExpenseListForSearch = ({
   const {
     data,
     isLoading: expensesAreLoading,
+    isPlaceholderData,
     fetchNextPage,
     refetch,
   } = trpc.groups.expenses.list.useInfiniteQuery(
@@ -104,12 +123,26 @@ const ExpenseListForSearch = ({
       linkInviteToken,
       viewKey,
       ...queryInput,
+      // Mirror the collapse UI: when hidden runs render, page around
+      // involving expenses so each page holds a meaningful row count.
+      hideNotInvolving: shouldPageByInvolvement(canCollapse, filters.showAll)
+        ? true
+        : undefined,
     },
-    { getNextPageParam: ({ nextCursor }) => nextCursor },
+    {
+      getNextPageParam: ({ nextCursor }) => nextCursor,
+      // Keep the current rows on screen while a mode switch refetches.
+      // `useRenderedViewMode` below freezes the timeline's mode to match
+      // those stale rows, so the swap happens in one clean step.
+      placeholderData: keepPreviousData,
+    },
   )
   const expenses = data?.pages.flatMap((page) => page.expenses)
   const hasMore = data?.pages.at(-1)?.hasMore ?? false
   const showOfflineEmpty = useOfflineWithoutData(!!data)
+  // While a mode switch refetches, render the stale rows under their own
+  // (previous) mode so the list never flashes a half-state.
+  const renderedShowAll = useRenderedViewMode(showAll, isPlaceholderData)
 
   const isLoading = expensesAreLoading || !expenses || !group
 
@@ -174,6 +207,8 @@ const ExpenseListForSearch = ({
       timeZone={accountTimeZone}
       hasMore={hasMore}
       loadingRef={loadingRef}
+      isInvolving={isInvolving}
+      showAll={renderedShowAll}
       renderExpense={(expense) => (
         <ExpenseCard
           key={expense.id}

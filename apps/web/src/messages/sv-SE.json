@@ -1687,7 +1687,12 @@
         },
         "title": "Sortera utgifter"
       },
-      "title": "Filter"
+      "title": "Filter",
+      "viewMode": {
+        "label": "Utgiftsvy",
+        "forYou": "För dig",
+        "all": "Alla"
+      }
     },
     "showSettlements": "Visa regleringar",
     "globalTitle": "Alla utgifter",
@@ -1723,7 +1728,10 @@
     "globalArchived": "arkiverad",
     "globalHidden": "dold",
     "globalIncludeArchived": "Inkludera arkiverade grupper",
-    "globalIncludeArchivedScopeNote": "Gäller endast när inga grupper är valda."
+    "globalIncludeArchivedScopeNote": "Gäller endast när inga grupper är valda.",
+    "hiddenExpensesShowLess": "Visa mindre",
+    "hiddenExpenses_one": "{count} dold utgift där du inte är inblandad",
+    "hiddenExpenses_other": "{count} dolda utgifter där du inte är inblandad"
   },
   "Footer": {
     "madeIn": "Gjord med kärlek av open source-communityn ❤️",

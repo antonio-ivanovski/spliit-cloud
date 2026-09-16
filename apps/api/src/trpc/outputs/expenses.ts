@@ -158,7 +158,12 @@ export const expenseGetResponseSchema = z.object({
 export const listExpensesOutputSchema = z.object({
   expenses: z.array(expenseListItemResponseSchema),
   hasMore: z.boolean(),
-  nextCursor: z.number().int(),
+  /**
+   * Plain involving offsets stay numbers; a `"offset+skipped"` string continues
+   * a truncated hidden gap at the same involving offset. Clients pass it back
+   * opaquely as the next `cursor`.
+   */
+  nextCursor: z.union([z.number().int(), z.string()]),
 })
 
 export const getExpenseOutputSchema = z.object({

@@ -88,7 +88,8 @@ export const groupAccessSearchSchema = z.object({
  * so a single search param holds the whole set; they are parsed to arrays by
  * the expense-filters hook. `expShowSettlements` flips the settlement
  * visibility alongside the other filters (it is omitted when at the default
- * `true`).
+ * `true`). `expShowAll` opts out of the default involving-only timeline (it is
+ * omitted when at the default `false`).
  */
 export const groupSearchSchema = groupAccessSearchSchema.extend({
   seriesId: optionalString,
@@ -105,6 +106,7 @@ export const groupSearchSchema = groupAccessSearchSchema.extend({
   expMaxAmount: numericString,
   expCurrencies: z.string().optional().catch(undefined),
   expShowSettlements: z.enum(['true', 'false']).optional().catch(undefined),
+  expShowAll: z.enum(['true', 'false']).optional().catch(undefined),
   expSortBy: z
     .enum(['expenseDate', 'createdAt', 'amount'])
     .optional()

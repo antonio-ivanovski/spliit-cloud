@@ -9,7 +9,7 @@ import {
   Filter,
   X,
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
@@ -32,7 +32,8 @@ import {
   SelectItem,
   SelectTrigger,
 } from '@/components/ui/select'
-import { useMediaQuery } from '@/lib/hooks'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useActiveUser, useMediaQuery } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type { CategoryId } from '@spliit/domain'
@@ -174,11 +175,15 @@ function SortControl() {
 }
 
 export function ExpenseListToolbar() {
-  const { activeCount, filtersOpen, setFiltersOpen } =
+  const { groupId } = useCurrentGroup()
+  const { filters, setFilters, activeCount, filtersOpen, setFiltersOpen } =
     useExpenseFiltersContext()
   const { t: tFilters } = useTranslation(undefined, {
     keyPrefix: 'Expenses.filters',
   })
+  // Same rule as the timeline: only members with a ledger participant id can
+  // collapse non-involving expenses, so only they get the toggle.
+  const canCollapse = useActiveUser(groupId) != null
 
   return (
     <div className="flex items-center gap-2">
@@ -205,6 +210,31 @@ export function ExpenseListToolbar() {
           </Badge>
         ) : null}
       </Button>
+
+      {canCollapse && (
+        <Tabs
+          value={filters.showAll ? 'all' : 'for-you'}
+          onValueChange={(value) =>
+            setFilters({ ...filters, showAll: value === 'all' })
+          }
+          aria-label={tFilters('viewMode.label')}
+        >
+          <TabsList className="h-9">
+            <TabsTrigger
+              value="for-you"
+              className="h-full min-h-0 py-0 text-xs sm:min-h-0"
+            >
+              {tFilters('viewMode.forYou')}
+            </TabsTrigger>
+            <TabsTrigger
+              value="all"
+              className="h-full min-h-0 py-0 text-xs sm:min-h-0"
+            >
+              {tFilters('viewMode.all')}
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      )}
 
       <div className="flex-1" />
 
@@ -371,11 +401,16 @@ export function ExpenseListFiltersPanel() {
   )
 
   const [draft, setDraft] = useState<ExpenseFilters>(filters)
+  // Re-seed the draft only on the closed→open transition. Reseeding on every
+  // applied-filter change would discard unsaved panel edits when an outside
+  // control (the toolbar "Show all" toggle, the sort control) commits to the
+  // URL while the panel is open.
+  const wasOpen = useRef(filtersOpen)
   useEffect(() => {
-    if (filtersOpen) {
-      // oxlint-disable-next-line react/react-compiler -- draft filters mirror the context when the panel opens.
+    if (filtersOpen && !wasOpen.current) {
       setDraft(filters)
     }
+    wasOpen.current = filtersOpen
   }, [filtersOpen, filters])
 
   if (!group) return null

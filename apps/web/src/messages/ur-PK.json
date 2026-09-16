@@ -1687,7 +1687,12 @@
         },
         "title": "اخراجات ترتیب دیں"
       },
-      "title": "فلٹرز"
+      "title": "فلٹرز",
+      "viewMode": {
+        "label": "اخراجات دیکھنے کا طریقہ",
+        "forYou": "آپ کے لیے",
+        "all": "سبھی"
+      }
     },
     "showSettlements": "تصفیے دکھائیں",
     "globalTitle": "تمام اخراجات",
@@ -1723,7 +1728,10 @@
     "globalArchived": "آرکائیو شدہ",
     "globalHidden": "چھپا ہوا",
     "globalIncludeArchived": "آرکائیو شدہ گروپ شامل کریں",
-    "globalIncludeArchivedScopeNote": "صرف اس وقت لاگو ہوتا ہے جب کوئی گروپ منتخب نہ ہو۔"
+    "globalIncludeArchivedScopeNote": "صرف اس وقت لاگو ہوتا ہے جب کوئی گروپ منتخب نہ ہو۔",
+    "hiddenExpensesShowLess": "کم دکھائیں",
+    "hiddenExpenses_one": "{count} چھپا ہوا خرچ جس میں آپ شامل نہیں ہیں",
+    "hiddenExpenses_other": "{count} چھپے ہوئے اخراجات جن میں آپ شامل نہیں ہیں"
   },
   "Footer": {
     "madeIn": "اوپن سورس کمیونٹی نے محبت سے بنایا ❤️",

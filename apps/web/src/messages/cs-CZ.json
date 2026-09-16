@@ -150,7 +150,12 @@
       "nSelected_other": "Vybráno: {count}",
       "removeFilter": "Odstranit filtr",
       "settlementsHidden": "Vyrovnání skryta",
-      "title": "Filtry"
+      "title": "Filtry",
+      "viewMode": {
+        "label": "Režim zobrazení výdajů",
+        "forYou": "Pro vás",
+        "all": "Vše"
+      }
     },
     "showSettlements": "Zobrazit vyrovnání",
     "globalTitle": "Všechny výdaje",
@@ -186,7 +191,12 @@
     "globalArchived": "archivováno",
     "globalHidden": "skryté",
     "globalIncludeArchived": "Zahrnout archivované skupiny",
-    "globalIncludeArchivedScopeNote": "Platí pouze v případě, že nejsou vybrány žádné skupiny."
+    "globalIncludeArchivedScopeNote": "Platí pouze v případě, že nejsou vybrány žádné skupiny.",
+    "hiddenExpensesShowLess": "Zobrazit méně",
+    "hiddenExpenses_one": "{count} skrytý výdaj, který se vás netýká",
+    "hiddenExpenses_few": "{count} skryté výdaje, které se vás netýkají",
+    "hiddenExpenses_many": "{count} skrytého výdaje, který se vás netýká",
+    "hiddenExpenses_other": "{count} skrytých výdajů, které se vás netýkají"
   },
   "ExpenseCard": {
     "receivedBy": "Přijal(a) <strong>{paidBy}</strong> · přiděleno účastníkům <paidFor></paidFor>",

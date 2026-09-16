@@ -149,7 +149,12 @@
       "nSelected_other": "{count} hautatuta",
       "removeFilter": "Kendu filtroa",
       "settlementsHidden": "Zor-kitapenak ezkutatuta",
-      "title": "Iragazkiak"
+      "title": "Iragazkiak",
+      "viewMode": {
+        "label": "Gastuak bistaratzeko modua",
+        "forYou": "Zuretzat",
+        "all": "Guztiak"
+      }
     },
     "showSettlements": "Erakutsi zor-kitapenak",
     "globalTitle": "Gastu guztiak",
@@ -185,7 +190,10 @@
     "globalArchived": "artxibatua",
     "globalHidden": "ezkutukoa",
     "globalIncludeArchived": "Sartu artxibatutako taldeak",
-    "globalIncludeArchivedScopeNote": "Talde bakar bat ere hautatuta ez dagoenean bakarrik aplikatzen da."
+    "globalIncludeArchivedScopeNote": "Talde bakar bat ere hautatuta ez dagoenean bakarrik aplikatzen da.",
+    "hiddenExpensesShowLess": "Erakutsi gutxiago",
+    "hiddenExpenses_one": "Parte hartzen ez duzun {count} gastu ezkutu",
+    "hiddenExpenses_other": "Parte hartzen ez dituzun {count} gastu ezkutu"
   },
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong>(e)k ordaindua · <paidFor></paidFor> hauen artean banatuta",

@@ -152,7 +152,12 @@
       "nSelected_other": "{count} ausgewählt",
       "removeFilter": "Filter entfernen",
       "settlementsHidden": "Ausgleichszahlungen ausgeblendet",
-      "title": "Filter"
+      "title": "Filter",
+      "viewMode": {
+        "label": "Ausgabenansicht",
+        "forYou": "Für dich",
+        "all": "Alle"
+      }
     },
     "showSettlements": "Ausgleichszahlungen anzeigen",
     "globalTitle": "Alle Ausgaben",
@@ -188,7 +193,10 @@
     "globalArchived": "archiviert",
     "globalHidden": "ausgeblendet",
     "globalIncludeArchived": "Archivierte Gruppen einbeziehen",
-    "globalIncludeArchivedScopeNote": "Gilt nur, wenn keine Gruppen ausgewählt sind."
+    "globalIncludeArchivedScopeNote": "Gilt nur, wenn keine Gruppen ausgewählt sind.",
+    "hiddenExpensesShowLess": "Weniger anzeigen",
+    "hiddenExpenses_one": "{count} ausgeblendete Ausgabe, an der du nicht beteiligt bist",
+    "hiddenExpenses_other": "{count} ausgeblendete Ausgaben, an denen du nicht beteiligt bist"
   },
   "ExpenseCard": {
     "receivedBy": "Erhalten von <strong>{paidBy}</strong> · zugeordnet zu <paidFor></paidFor>",
