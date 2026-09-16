@@ -10,9 +10,10 @@ import {
   ArrowRight,
   Loader2,
   Plus,
+  ScanLine,
   Users,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, Suspense, lazy } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { PageInset } from '@/components/layout/page-shell'
@@ -20,6 +21,7 @@ import { useMascotController } from '@/components/mascot/mascot-context'
 import { Money } from '@/components/money'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { ParticipantAvatar } from '@/components/participant-avatar'
+import { Button } from '@/components/ui/button'
 import {
   Drawer,
   DrawerContent,
@@ -49,6 +51,15 @@ import type { AccountGroup } from './group-buckets'
 import { isViewOnlyGroup, partitionGroups } from './group-buckets'
 import { GroupCard } from './group-card'
 import { PendingInvitations } from './pending-invitations'
+
+// The scan dialog (and through it, the camera stack) stays out of the
+// homepage bundle until the first Scan tap. `@zxing/browser` itself is
+// additionally imported dynamically inside the dialog.
+const ScanToJoinDialog = lazy(() =>
+  import('./scan-to-join-dialog').then((module) => ({
+    default: module.ScanToJoinDialog,
+  })),
+)
 
 const STORAGE_KEYS = {
   starred: 'spliit:home:section:starred',
@@ -88,6 +99,7 @@ type OverviewStats = {
 
 export function RecentGroupList() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
+  const { t: tHomepage } = useTranslation(undefined, { keyPrefix: 'Homepage' })
   const { t: tStats } = useTranslation(undefined, { keyPrefix: 'Stats' })
   const { data: account } = useCurrentAccount()
   const utils = trpc.useUtils()
@@ -96,6 +108,7 @@ export function RecentGroupList() {
   const showOfflineEmpty = useOfflineWithoutData(!!data)
   const [forceArchiveTarget, setForceArchiveTarget] =
     useState<AccountGroup | null>(null)
+  const [scanOpen, setScanOpen] = useState(false)
   const { mutateAsync: setPreference } =
     trpc.account.setPreference.useMutation()
   const { mutateAsync: archiveGroup } = trpc.groups.archive.useMutation()
@@ -254,6 +267,20 @@ export function RecentGroupList() {
           defaultOpen
           title={t('groups')}
           insetHeader
+          headerAction={
+            /* Phones have the camera: desktops get no scanner button. */
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-7 gap-1.5 px-2 text-xs text-muted-foreground sm:hidden"
+              onClick={() => setScanOpen(true)}
+              data-testid="scan-to-join-button"
+            >
+              <ScanLine className="h-3.5 w-3.5" />
+              {tHomepage('scanToJoin')}
+            </Button>
+          }
         >
           <ul className="motion-stagger grid items-stretch gap-3 sm:grid-cols-2">
             <CreateCard
@@ -339,6 +366,18 @@ export function RecentGroupList() {
       <WelcomeBar name={account?.name} />
       <PendingInvitations />
       {body}
+      {scanOpen ? (
+        <Suspense
+          fallback={
+            <output className="flex items-center justify-center gap-2 py-8 text-sm text-muted-foreground">
+              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+              {tHomepage('scanDialog.scanning')}
+            </output>
+          }
+        >
+          <ScanToJoinDialog open={scanOpen} onOpenChange={setScanOpen} />
+        </Suspense>
+      ) : null}
       <ForceArchiveDialogSection
         target={forceArchiveTarget}
         onClose={() => setForceArchiveTarget(null)}

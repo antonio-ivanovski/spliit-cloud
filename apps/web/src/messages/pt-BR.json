@@ -35,7 +35,18 @@
     },
     "savedGroupsAction": "Ver grupos salvos",
     "savedGroupsTitle": "Grupos salvos",
-    "savedGroupsDescription": "Grupos que você salvou neste dispositivo."
+    "savedGroupsDescription": "Grupos que você salvou neste dispositivo.",
+    "scanToJoin": "Escaneie para entrar",
+    "scanDialog": {
+      "title": "Escanear código QR do grupo",
+      "description": "Aponte sua câmera para o código QR no celular do anfitrião para entrar no grupo.",
+      "scanning": "Procurando um código QR…",
+      "noCamera": "Nenhuma câmera encontrada neste dispositivo. Escaneie o código com o aplicativo de câmera do seu celular.",
+      "permissionDenied": "O acesso à câmera foi negado. Permita o acesso à câmera nas configurações do navegador ou escaneie o código com o aplicativo de câmera do seu celular.",
+      "invalidCode": "Esse código não é um convite de grupo do Spliit. Tente escanear o código QR do anfitrião novamente.",
+      "foreignDescription": "Vai abrir {origin} neste navegador. Continue apenas se você confiar no anfitrião que mostrou o código.",
+      "foreignConfirm": "Abrir link"
+    }
   },
   "Header": {
     "signIn": "Entrar",
@@ -936,7 +947,17 @@
       "selectFriendPlaceholder": "Selecione um amigo…",
       "noFriends": "Você ainda não tem amigos. Convide pela aba E-mail.",
       "noAccountDescription": "Adicione alguém às despesas sem convidar essa pessoa para o Spliit. Depois, você pode vincular essa pessoa a uma conta.",
-      "noAccountNameDescription": "Será exibido nas despesas e nos saldos até que essa pessoa seja vinculada a uma conta."
+      "noAccountNameDescription": "Será exibido nas despesas e nos saldos até que essa pessoa seja vinculada a uma conta.",
+      "qr": {
+        "description": "As pessoas ao seu lado podem entrar todas com um único código. Funciona para todo mundo até expirar, 15 minutos após a criação.",
+        "generating": "Gerando…",
+        "multiUse": "Qualquer pessoa que o escanear pode entrar até expirar.",
+        "stop": "Parar de compartilhar",
+        "stopped": "Compartilhamento do QR interrompido. O código não funciona mais.",
+        "joined_one": "{count} pessoa entrou",
+        "joined_other": "{count} pessoas entraram",
+        "joined_zero": "{count} pessoas entraram até agora"
+      }
     },
     "invitations": {
       "description": "Convites aguardando aceitação.",
@@ -1028,6 +1049,7 @@
       "saved": "Alterações salvas",
       "regenerateWarning": "O link atual deixará de funcionar imediatamente.",
       "regenerateDescription": "Será gerado um novo link válido por 30 dias. O convite e as despesas associadas a ele serão mantidos.",
+      "regenerateQrDescription": "Será gerado um novo link de código QR com uma nova validade de 15 minutos. O convite é mantido.",
       "linkReadyTitle": "Novo link pronto",
       "linkReadyDescription": "Compartilhe-o com a pessoa que você quer convidar.",
       "linkReadyWarning": "Copie agora — você não poderá visualizá-lo novamente.",

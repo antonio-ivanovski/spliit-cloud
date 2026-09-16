@@ -33,6 +33,9 @@ function makeInvitation(
     updatedAt: new Date('2026-01-02T00:00:00Z'),
     expiresAt: new Date('2026-02-01T00:00:00Z'),
     ledgerParticipantId: 'lp-1',
+    isMultiUse: false,
+    useCount: 0,
+    recentJoiners: [],
     canRevoke: true,
     canManage: true,
     recipientProfile: null,
@@ -119,5 +122,11 @@ describe('RegenerateLinkDialog', () => {
     await user.click(screen.getByRole('button', { name: 'Cancel' }))
     expect(mocks.regenerateMutate).not.toHaveBeenCalled()
     expect(onOpenChange).toHaveBeenCalledWith(false)
+  })
+
+  it('keeps the short expiry copy for a QR session row', () => {
+    renderDialog(makeInvitation({ isMultiUse: true }))
+    expect(screen.getByText(/fresh 15-minute expiry/i)).toBeInTheDocument()
+    expect(screen.queryByText(/fresh 30-day expiry/i)).not.toBeInTheDocument()
   })
 })

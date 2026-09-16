@@ -51,7 +51,20 @@
     },
     "savedGroupsAction": "保存したグループを見る",
     "savedGroupsTitle": "保存したグループ",
-    "savedGroupsDescription": "このデバイスに保存したグループです。"
+    "savedGroupsDescription": "このデバイスに保存したグループです。",
+    "scanToJoin": "スキャンして参加",
+    "scanDialog": {
+      "title": "グループのQRコードをスキャン",
+      "description": "ホストのスマートフォンに表示されたQRコードをカメラで読み取ると、そのグループに参加できます。",
+      "scanning": "QRコードを探しています…",
+      "noCamera": "このデバイスにはカメラがありません。代わりにスマートフォンのカメラアプリでコードをスキャンしてください。",
+      "permissionDenied": "カメラへのアクセスが拒否されました。ブラウザの設定でカメラへのアクセスを許可するか、スマートフォンのカメラアプリでコードをスキャンしてください。",
+      "invalidCode": "そのコードはSpliitのグループ招待ではありません。ホストのQRコードをもう一度スキャンしてください。",
+      "foreignTitle": "このコードは別のSpliitを指しています",
+      "foreignDescription": "このブラウザで {origin} が開きます。このコードを表示したホストを信頼できる場合のみ続行してください。",
+      "foreignConfirm": "リンクを開く",
+      "foreignCancel": "戻る"
+    }
   },
   "Header": {
     "signIn": "サインイン",
@@ -635,7 +648,8 @@
     "viewOnlyBadge": "閲覧のみ",
     "removeSavedView": "削除",
     "removeSavedViewAccount": "ホームから削除しました。",
-    "removeSavedViewDevice": "このデバイスから削除しました。"
+    "removeSavedViewDevice": "このデバイスから削除しました。",
+    "linkInvitationMultiUse": "このQRコードは有効期限まで複数人で使用できます。"
   },
   "GroupForm": {
     "title": "グループ情報",
@@ -1859,6 +1873,7 @@
         "email": "メールアドレス",
         "link": "招待リンク",
         "friends": "友達",
+        "qr": "QRコード",
         "unlinked": "アカウントなし"
       },
       "emailDescription": "メールで招待を送信します。招待を受けた人が対応するアカウントから承認すると参加できます。",
@@ -1888,7 +1903,25 @@
       "noAccountDescription": "Spliitに招待せずに、支出に誰かを追加できます。後からアカウントにリンクできます。",
       "temporaryNameRequired": "仮の名前",
       "noAccountNameDescription": "この参加者をアカウントにリンクするまで、支出と残高に表示されます。",
-      "addParticipant": "参加者を追加"
+      "addParticipant": "参加者を追加",
+      "qr": {
+        "title": "近くのQRコード",
+        "description": "近くにいる人は全員、この1つのコードから参加できます。作成から15分で有効期限が切れるまで、どなたでもご利用いただけます。",
+        "show": "QRコードを表示",
+        "generating": "生成中…",
+        "multiUse": "スキャンした人はどなたでも、期限切れまで参加できます。",
+        "expiresIn": "あと{count}分で期限切れ",
+        "expiringSoon": "1分以内に期限切れ",
+        "stop": "共有を停止",
+        "stopped": "QRコードの共有を停止しました。このコードはもう使えません。",
+        "takeOver": "引き継いで新しいコードを表示",
+        "alreadyActive": "このグループでは既にQRコードが共有されています。",
+        "activeElsewhere": "コードは共有を開始したデバイスにあります。共有している方に表示してもらってください。",
+        "joined_one": "{count}人が参加しました",
+        "joined_other": "{count}人が参加しました",
+        "joined_zero": "これまで{count}人が参加しました",
+        "retry": "再試行"
+      }
     },
     "invitations": {
       "title": "保留中の招待",
@@ -1909,7 +1942,13 @@
       "email": {
         "type": "メール招待"
       },
-      "updatedOn": "更新日：{date}"
+      "updatedOn": "更新日：{date}",
+      "qr": {
+        "type": "QRセッション",
+        "fallbackLabel": "近くのQRコード",
+        "viewQr": "QRコードを表示",
+        "expireNow": "今すぐ期限切れにする"
+      }
     },
     "changeRoleAria": "役割を変更",
     "remove": "削除",
@@ -2051,6 +2090,7 @@
       "done": "完了",
       "regenerateWarning": "現在のリンクはすぐに無効になります。",
       "regenerateDescription": "新しいリンクが生成され、有効期限が30日間に更新されます。招待とその支出は保持されます。",
+      "regenerateQrDescription": "有効期限15分の新しいQRコードリンクが生成されます。招待自体は保持されます。",
       "linkReadyTitle": "新しいリンクの準備ができました",
       "linkReadyDescription": "招待したい相手と共有してください。",
       "linkReadyWarning": "今すぐコピーしてください。後で再表示することはできません。",

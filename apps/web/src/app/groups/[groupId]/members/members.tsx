@@ -28,6 +28,7 @@ import {
   formatDate,
   roleLabel,
   useMembersDialogs,
+  useQrSession,
   type PendingInvitation,
 } from './members-hooks'
 import { PendingInvitationsCard } from './pending-invitations-card'
@@ -189,6 +190,10 @@ function GroupMembersBody() {
 
   const [regenerateInvitation, setRegenerateInvitation] =
     useState<PendingInvitation | null>(null)
+  const [showQrTabRequest, setShowQrTabRequest] = useState(0)
+  // The live QR session is shared between the QR tab (displays the code)
+  // and the pending list (Expire must clear the code too — no zombies).
+  const [qrSession, setQrSession] = useQrSession(groupId)
   const regenerateButtonRefs = useRef(
     new Map<string, HTMLButtonElement | null>(),
   )
@@ -245,6 +250,7 @@ function GroupMembersBody() {
       {canInvite && (
         <>
           <InviteCard
+            key={groupId}
             groupId={groupId}
             groupName={group?.name ?? ''}
             canInviteAdmin={isAdmin}
@@ -284,6 +290,9 @@ function GroupMembersBody() {
               )
               return result !== null
             }}
+            showQrTabRequest={showQrTabRequest}
+            qrSession={qrSession}
+            onQrSessionChange={setQrSession}
           />
 
           <PendingInvitationsCard
@@ -311,6 +320,9 @@ function GroupMembersBody() {
                 name: inv.label,
               })
             }}
+            onViewQr={() => setShowQrTabRequest((count) => count + 1)}
+            activeQrSessionId={qrSession?.invitationId ?? null}
+            onQrSessionInvalidated={() => setQrSession(null)}
             locale={locale}
             timeZone={accountTimeZone}
           />

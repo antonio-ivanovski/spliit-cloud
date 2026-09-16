@@ -144,7 +144,9 @@ export function RegenerateLinkDialog({
                   {t('regenerate.title')}
                 </ResponsiveDialogTitle>
                 <ResponsiveDialogDescription>
-                  {t('manage.regenerateDescription')}
+                  {invitation.isMultiUse
+                    ? t('manage.regenerateQrDescription')
+                    : t('manage.regenerateDescription')}
                 </ResponsiveDialogDescription>
               </ResponsiveDialogHeader>
               <ResponsiveDialogBody className="flex flex-col gap-3">

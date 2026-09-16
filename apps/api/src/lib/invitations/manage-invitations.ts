@@ -23,6 +23,7 @@ import {
 } from './email-invitations'
 import {
   LINK_INVITATION_DEFAULT_TTL_MS,
+  QR_INVITATION_DEFAULT_TTL_MS,
   generateLinkToken,
   hashLinkToken,
 } from './link-invitations'
@@ -50,6 +51,8 @@ export type UpdatePendingInvitationResult = {
     status: GroupInvitationStatus
     expiresAt: Date | null
     ledgerParticipantId: string | null
+    isMultiUse: boolean
+    useCount: number
     updatedAt: Date
   }
   /** One-time shareable URL, returned only for `EMAIL -> LINK` conversions. */
@@ -196,6 +199,8 @@ export async function updatePendingInvitation(
         data.type = GroupInvitationType.EMAIL
         data.tokenHash = null
         data.expiresAt = null
+        // A converted row is a personal email invite; drop QR session flags.
+        data.isMultiUse = false
       }
     } else {
       if (switchingToLink) {
@@ -295,6 +300,8 @@ export async function updatePendingInvitation(
       status: updated.status,
       expiresAt: updated.expiresAt,
       ledgerParticipantId: updated.ledgerParticipantId,
+      isMultiUse: updated.isMultiUse,
+      useCount: updated.useCount,
       updatedAt: updated.updatedAt,
     },
     inviteUrl,
@@ -318,6 +325,8 @@ export type RegenerateLinkInvitationResult = {
     status: GroupInvitationStatus
     expiresAt: Date | null
     ledgerParticipantId: string | null
+    isMultiUse: boolean
+    useCount: number
     updatedAt: Date
   }
   inviteUrl: string
@@ -343,17 +352,34 @@ export async function regenerateLinkInvitation(
 
   const token = generateLinkToken()
   const tokenHash = await hashLinkToken(token)
-  const expiresAt = new Date(Date.now() + LINK_INVITATION_DEFAULT_TTL_MS)
+  // Rotating a QR session must not silently promote it to a 30-day
+  // multi-use link — keep the short nearby-session TTL.
+  const expiresAt = new Date(
+    Date.now() +
+      (invitation.isMultiUse
+        ? QR_INVITATION_DEFAULT_TTL_MS
+        : LINK_INVITATION_DEFAULT_TTL_MS),
+  )
 
   const boss = await getApiBoss()
   const updated = await prisma.$transaction(async (tx) => {
+    // Rotating a QR session starts a fresh room: reset the join counter so
+    // the new code does not inherit the old code's joins (joiner history
+    // stays keyed by invitation id in the activity log). Single-use links
+    // keep the email==token invariant by refreshing the placeholder.
     const flipped = await tx.groupInvitation.updateMany({
       where: {
         id: opts.invitationId,
         groupId: opts.groupId,
         status: GroupInvitationStatus.PENDING,
       },
-      data: { tokenHash, expiresAt },
+      data: {
+        tokenHash,
+        expiresAt,
+        ...(invitation.isMultiUse
+          ? { useCount: 0 }
+          : { email: buildLinkPlaceholderEmail(token) }),
+      },
     })
     if (flipped.count === 0) {
       throw new InvitationError('This invitation is no longer pending.')
@@ -393,6 +419,8 @@ export async function regenerateLinkInvitation(
       status: updated.status,
       expiresAt: updated.expiresAt,
       ledgerParticipantId: updated.ledgerParticipantId,
+      isMultiUse: updated.isMultiUse,
+      useCount: updated.useCount,
       updatedAt: updated.updatedAt,
     },
     inviteUrl: `${getWebBaseUrl()}/groups/${opts.groupId}?invite=${token}`,

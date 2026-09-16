@@ -38,7 +38,7 @@ Each roadmap item also references the upstream [`spliit-app/spliit`](https://git
 - [ ] **One-line quick entry** (SplittyPie style) — upstream [#384](https://github.com/spliit-app/spliit/issues/384)
 - [ ] **Payment method field on an expense** — upstream [#451](https://github.com/spliit-app/spliit/pull/451)
 - [ ] **Locations on expenses** — upstream [#172](https://github.com/spliit-app/spliit/pull/172)
-- [ ] **QR code to share / join a group** — upstream [#500](https://github.com/spliit-app/spliit/pull/500)
+- [x] **QR code to share / join a group** — multi-use 15-minute Nearby QR sessions + mobile Scan to join — upstream [#500](https://github.com/spliit-app/spliit/pull/500)
 - [ ] **Recurring expense stats** — cumulative per recurrence period. — upstream [#508](https://github.com/spliit-app/spliit/issues/508)
 - [x] Member management
 - [x] **Expense discovery and presentation** — dedicated expense previews, filtering, sorting, and mobile-friendly controls

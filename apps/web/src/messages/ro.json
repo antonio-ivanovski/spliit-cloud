@@ -51,7 +51,20 @@
     },
     "savedGroupsAction": "Vezi grupurile salvate",
     "savedGroupsTitle": "Grupuri salvate",
-    "savedGroupsDescription": "Grupuri pe care le-ai salvat pe acest dispozitiv."
+    "savedGroupsDescription": "Grupuri pe care le-ai salvat pe acest dispozitiv.",
+    "scanToJoin": "Scanează pentru a te alătura",
+    "scanDialog": {
+      "title": "Scanează codul QR al grupului",
+      "description": "Îndreaptă camera spre codul QR de pe telefonul gazdei pentru a te alătura grupului.",
+      "scanning": "Se caută un cod QR…",
+      "noCamera": "Nu a fost găsită nicio cameră pe acest dispozitiv. Scanează codul cu aplicația de cameră a telefonului tău.",
+      "permissionDenied": "Accesul la cameră a fost refuzat. Permite accesul la cameră din setările browserului sau scanează codul cu aplicația de cameră a telefonului tău.",
+      "invalidCode": "Codul acela nu este o invitație de grup Spliit. Încearcă să scanezi din nou codul QR al gazdei.",
+      "foreignTitle": "Acest cod duce la un alt Spliit",
+      "foreignDescription": "Va deschide {origin} în acest browser. Continuă doar dacă ai încredere în gazda care ți l-a arătat.",
+      "foreignConfirm": "Deschide linkul",
+      "foreignCancel": "Înapoi"
+    }
   },
   "Header": {
     "signIn": "Autentifică-te",
@@ -649,7 +662,8 @@
     "viewOnlyBadge": "Doar vizualizare",
     "removeSavedView": "Șterge",
     "removeSavedViewAccount": "Șters de pe pagina principală.",
-    "removeSavedViewDevice": "Șters de pe acest dispozitiv."
+    "removeSavedViewDevice": "Șters de pe acest dispozitiv.",
+    "linkInvitationMultiUse": "Acest cod QR poate fi folosit de mai multe persoane până expiră."
   },
   "GroupForm": {
     "title": "Informații despre grup",
@@ -1891,6 +1905,7 @@
         "email": "E-mail",
         "link": "Link de invitație",
         "friends": "Prieteni",
+        "qr": "Cod QR",
         "unlinked": "Fără cont"
       },
       "emailDescription": "Trimite o invitație prin e-mail. Persoana invitată se alătură după ce acceptă de pe un cont corespunzător.",
@@ -1905,7 +1920,26 @@
       "noAccountDescription": "Adaugă o persoană la cheltuieli fără să o inviți în Spliit. O poți asocia ulterior unui cont.",
       "temporaryNameRequired": "Nume temporar",
       "noAccountNameDescription": "Va apărea în cheltuieli și solduri până când acest participant este asociat unui cont.",
-      "addParticipant": "Adaugă participant"
+      "addParticipant": "Adaugă participant",
+      "qr": {
+        "title": "Cod QR din apropiere",
+        "description": "Persoanele de lângă tine se pot alătura toate cu un singur cod. Funcționează pentru toată lumea până expiră, la 15 minute după creare.",
+        "show": "Arată codul QR",
+        "generating": "Se generează…",
+        "multiUse": "Oricine îl scanează se poate alătura până expiră.",
+        "expiresIn": "Expiră în {count} min",
+        "expiringSoon": "Expiră în mai puțin de un minut",
+        "stop": "Oprește partajarea",
+        "stopped": "Partajarea QR a fost oprită. Codul nu mai funcționează.",
+        "takeOver": "Preia controlul și arată un cod nou",
+        "alreadyActive": "Un cod QR este deja partajat pentru acest grup.",
+        "activeElsewhere": "Codul se află pe dispozitivul care a început partajarea — roagă-i să-l arate.",
+        "joined_one": "{count} persoană s-a alăturat",
+        "joined_other": "{count} persoane s-au alăturat",
+        "joined_zero": "{count} persoane s-au alăturat până acum",
+        "joined_few": "{count} persoane s-au alăturat",
+        "retry": "Reîncearcă"
+      }
     },
     "invitations": {
       "title": "Invitații în așteptare",
@@ -1926,7 +1960,13 @@
       "email": {
         "type": "Invitație prin e-mail"
       },
-      "updatedOn": "Actualizat la {date}"
+      "updatedOn": "Actualizat la {date}",
+      "qr": {
+        "type": "Sesiune QR",
+        "fallbackLabel": "Cod QR din apropiere",
+        "viewQr": "Vezi codul QR",
+        "expireNow": "Expiră acum"
+      }
     },
     "changeRoleAria": "Schimbă rolul",
     "remove": "Elimină",
@@ -2069,6 +2109,7 @@
       "done": "Gata",
       "regenerateWarning": "Linkul actual va înceta să funcționeze imediat.",
       "regenerateDescription": "Va fi generat un link nou, valabil 30 de zile. Invitația și cheltuielile aferente vor fi păstrate.",
+      "regenerateQrDescription": "Se va genera un nou link de cod QR cu o nouă valabilitate de 15 minute. Invitația este păstrată.",
       "linkReadyTitle": "Link nou pregătit",
       "linkReadyDescription": "Trimite-l persoanei pe care dorești să o inviți.",
       "linkReadyWarning": "Copiază-l acum — nu îl vei mai putea vedea.",

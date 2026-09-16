@@ -51,7 +51,20 @@
     },
     "savedGroupsAction": "Gespeicherte Gruppen anzeigen",
     "savedGroupsTitle": "Gespeicherte Gruppen",
-    "savedGroupsDescription": "Gruppen, die du auf diesem Gerät gespeichert hast."
+    "savedGroupsDescription": "Gruppen, die du auf diesem Gerät gespeichert hast.",
+    "scanToJoin": "Scannen zum Beitreten",
+    "scanDialog": {
+      "title": "Gruppen-QR-Code scannen",
+      "description": "Richte deine Kamera auf den QR-Code auf dem Handy der einladenden Person, um ihrer Gruppe beizutreten.",
+      "scanning": "Suche nach einem QR-Code…",
+      "noCamera": "Auf diesem Gerät wurde keine Kamera gefunden. Scanne den Code stattdessen mit der Kamera-App deines Handys.",
+      "permissionDenied": "Der Kamerazugriff wurde verweigert. Erlaube den Kamerazugriff in deinen Browsereinstellungen oder scanne den Code mit der Kamera-App deines Handys.",
+      "invalidCode": "Dieser Code ist keine Spliit-Gruppeneinladung. Scanne den QR-Code der einladenden Person erneut.",
+      "foreignTitle": "Dieser Code verweist auf ein anderes Spliit",
+      "foreignDescription": "Es öffnet {origin} in diesem Browser. Fahre nur fort, wenn du der Person vertraust, die ihn gezeigt hat.",
+      "foreignConfirm": "Link öffnen",
+      "foreignCancel": "Zurück"
+    }
   },
   "Header": {
     "signIn": "Anmelden",
@@ -666,7 +679,8 @@
     "viewOnlyBadge": "Nur lesen",
     "removeSavedView": "Entfernen",
     "removeSavedViewAccount": "Von deiner Übersicht entfernt.",
-    "removeSavedViewDevice": "Von diesem Gerät entfernt."
+    "removeSavedViewDevice": "Von diesem Gerät entfernt.",
+    "linkInvitationMultiUse": "Dieser QR-Code kann von mehreren Personen verwendet werden, bis er abläuft."
   },
   "GroupForm": {
     "title": "Gruppeninformationen",
@@ -1899,6 +1913,7 @@
         "email": "E-Mail",
         "link": "Einladungslink",
         "friends": "Freunde",
+        "qr": "QR-Code",
         "unlinked": "Kein Konto"
       },
       "emailDescription": "Sende eine Einladung per E-Mail. Die eingeladene Person tritt bei, sobald sie von einem passenden Konto aus annimmt.",
@@ -1928,7 +1943,25 @@
       "noAccountDescription": "Füge eine Person zu den Ausgaben hinzu, ohne sie zu Spliit einzuladen. Du kannst sie später mit einem Konto verknüpfen.",
       "temporaryNameRequired": "Temporärer Name",
       "noAccountNameDescription": "Wird in Ausgaben und Salden angezeigt, bis diese Person mit einem Konto verknüpft ist.",
-      "addParticipant": "Teilnehmer hinzufügen"
+      "addParticipant": "Teilnehmer hinzufügen",
+      "qr": {
+        "title": "QR-Code in der Nähe",
+        "description": "Personen in deiner Nähe können alle über einen Code beitreten. Er gilt für alle, bis er abläuft – 15 Minuten nach der Erstellung.",
+        "show": "QR-Code anzeigen",
+        "generating": "Wird erstellt…",
+        "multiUse": "Alle, die ihn scannen, können beitreten, bis er abläuft.",
+        "expiresIn": "Läuft in {count} Min. ab",
+        "expiringSoon": "Läuft in weniger als einer Minute ab",
+        "stop": "Teilen beenden",
+        "stopped": "QR-Freigabe beendet. Der Code funktioniert nicht mehr.",
+        "takeOver": "Übernehmen & neuen Code anzeigen",
+        "alreadyActive": "Für diese Gruppe wird bereits ein QR-Code geteilt.",
+        "activeElsewhere": "Der Code ist auf dem Gerät, das die Freigabe gestartet hat – bitte diese Person, ihn zu zeigen.",
+        "joined_one": "{count} Person ist beigetreten",
+        "joined_other": "{count} Personen sind beigetreten",
+        "joined_zero": "{count} Personen sind bisher beigetreten",
+        "retry": "Erneut versuchen"
+      }
     },
     "invitations": {
       "title": "Ausstehende Einladungen",
@@ -1949,7 +1982,13 @@
       "email": {
         "type": "E-Mail-Einladung"
       },
-      "updatedOn": "Aktualisiert {date}"
+      "updatedOn": "Aktualisiert {date}",
+      "qr": {
+        "type": "QR-Sitzung",
+        "fallbackLabel": "QR-Code in der Nähe",
+        "viewQr": "QR-Code ansehen",
+        "expireNow": "Sofort ablaufen lassen"
+      }
     },
     "removeDialog": {
       "unsettled": {
@@ -2095,6 +2134,7 @@
       "done": "Fertig",
       "regenerateWarning": "Der aktuelle Link funktioniert sofort nicht mehr.",
       "regenerateDescription": "Ein neuer Link wird mit einer frischen 30-Tage-Frist erstellt. Die Einladung und ihre Ausgaben bleiben erhalten.",
+      "regenerateQrDescription": "Es wird ein neuer QR-Code-Link mit einer frischen 15-Minuten-Frist erstellt. Die Einladung bleibt erhalten.",
       "linkReadyTitle": "Neuer Link bereit",
       "linkReadyDescription": "Teile ihn mit der Person, die du einladen möchtest.",
       "linkReadyWarning": "Kopiere ihn jetzt — du kannst ihn später nicht mehr sehen.",

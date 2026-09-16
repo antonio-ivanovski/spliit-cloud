@@ -97,6 +97,19 @@ vi.mock('@/trpc/client', () => {
             isPending: false,
           }),
         },
+        createQrLink: {
+          useMutation: () => ({
+            mutateAsync: vi.fn(),
+            isPending: false,
+          }),
+        },
+        revoke: {
+          useMutation: () => ({
+            mutate: vi.fn(),
+            mutateAsync: vi.fn().mockResolvedValue({}),
+            isPending: false,
+          }),
+        },
         list: {
           useQuery: () => ({ data: mockInvitationsData, isLoading: false }),
         },
@@ -265,11 +278,12 @@ describe('GroupMembers', () => {
 
     // Should render all invite methods.
     const tabs = screen.getAllByRole('tab')
-    expect(tabs.length).toBe(4)
+    expect(tabs.length).toBe(5)
     expect(tabs[0]).toHaveTextContent('Friends')
     expect(tabs[1]).toHaveTextContent('Email')
     expect(tabs[2]).toHaveTextContent('Invite link')
-    expect(tabs[3]).toHaveTextContent('No account')
+    expect(tabs[3]).toHaveTextContent('QR code')
+    expect(tabs[4]).toHaveTextContent('No account')
 
     // Email field should be visible (default tab when no friends exist)
     const emailInput = screen.getByRole('textbox', { name: 'Email' })

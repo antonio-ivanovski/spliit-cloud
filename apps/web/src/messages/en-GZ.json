@@ -2486,7 +2486,8 @@
     "viewOnlyBadge": "just looking",
     "removeSavedView": "remove it",
     "removeSavedViewAccount": "gone from your dashboard.",
-    "removeSavedViewDevice": "gone from this device."
+    "removeSavedViewDevice": "gone from this device.",
+    "linkInvitationMultiUse": "this qr code works for a bunch of people until it expires."
   },
   "Header": {
     "signIn": "sign in",
@@ -2553,7 +2554,20 @@
     },
     "savedGroupsAction": "view saved groups",
     "savedGroupsTitle": "saved groups",
-    "savedGroupsDescription": "groups you saved on this device."
+    "savedGroupsDescription": "groups you saved on this device.",
+    "scanToJoin": "scan to join",
+    "scanDialog": {
+      "title": "scan group qr code",
+      "description": "point your camera at the qr code on the host's phone to join their group.",
+      "scanning": "looking for a qr code…",
+      "noCamera": "no camera found on this device. scan the code with your phone's camera app instead.",
+      "permissionDenied": "camera access got denied. allow it in your browser settings, or scan the code with your phone's camera app instead.",
+      "invalidCode": "that code isn't a Spliit group invite. try scanning the host's qr code again.",
+      "foreignTitle": "this code points to another Spliit",
+      "foreignDescription": "it will open {origin} in this browser. only continue if you trust the host who showed it.",
+      "foreignConfirm": "open link",
+      "foreignCancel": "go back"
+    }
   },
   "Information": {
     "title": "group info",
@@ -2628,7 +2642,13 @@
         "expiresOn": "link expires {date}, bestie",
         "expired": "expired, fr"
       },
-      "updatedOn": "updated {date}"
+      "updatedOn": "updated {date}",
+      "qr": {
+        "type": "qr session",
+        "fallbackLabel": "nearby qr code",
+        "viewQr": "view qr code",
+        "expireNow": "expire now"
+      }
     },
     "invite": {
       "title": "add people",
@@ -2665,12 +2685,31 @@
         "email": "email mode",
         "link": "invite link mode",
         "friends": "besties",
+        "qr": "qr code mode",
         "unlinked": "no account"
       },
       "noAccountDescription": "add someone to expenses without inviting them to Spliit. you can link them to an account later.",
       "temporaryNameRequired": "temporary name",
       "noAccountNameDescription": "shown in expenses and balances until this participant is linked to an account.",
-      "addParticipant": "add participant"
+      "addParticipant": "add participant",
+      "qr": {
+        "title": "nearby qr code",
+        "description": "everyone next to you can join from one code. it works for the whole crew until it expires, 15 minutes after creation.",
+        "show": "show qr code",
+        "generating": "generating…",
+        "multiUse": "anyone who scans it can join until it expires.",
+        "expiresIn": "expires in {count} min",
+        "expiringSoon": "expires in less than a minute",
+        "stop": "stop sharing",
+        "stopped": "qr sharing stopped. the code doesn't work anymore.",
+        "takeOver": "take over & show a new code",
+        "alreadyActive": "a qr code is already being shared for this group.",
+        "activeElsewhere": "the code lives on the device that started sharing — ask them to show it.",
+        "joined_one": "{count} bestie joined",
+        "joined_other": "{count} besties joined",
+        "joined_zero": "{count} besties joined so far",
+        "retry": "try it again"
+      }
     },
     "leave": {
       "button": "leave the group",
@@ -2811,6 +2850,7 @@
       "done": "all done, huge W",
       "regenerateWarning": "the current link dies rn, no cap",
       "regenerateDescription": "a fresh link drops with a new 30-day expiry. the invite and its expenses stay put, fr",
+      "regenerateQrDescription": "a fresh qr code link drops with a new 15-minute expiry. the invite stays put.",
       "linkReadyTitle": "new link ready, huge W",
       "linkReadyDescription": "share it with the bestie you wanna invite, no cap",
       "linkReadyWarning": "copy it rn — you won't see it again, fr",

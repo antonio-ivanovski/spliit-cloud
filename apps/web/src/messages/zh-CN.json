@@ -51,7 +51,20 @@
     },
     "savedGroupsAction": "查看已保存的群组",
     "savedGroupsTitle": "已保存的群组",
-    "savedGroupsDescription": "你在此设备上保存的群组。"
+    "savedGroupsDescription": "你在此设备上保存的群组。",
+    "scanToJoin": "扫码加入",
+    "scanDialog": {
+      "title": "扫描群组二维码",
+      "description": "将摄像头对准组织者手机上的二维码，即可加入他们的群组。",
+      "scanning": "正在寻找二维码…",
+      "noCamera": "在此设备上未找到摄像头。请改用手机自带的相机应用扫描该二维码。",
+      "permissionDenied": "摄像头访问被拒绝。请在浏览器设置中允许摄像头访问，或改用手机自带的相机应用扫描该二维码。",
+      "invalidCode": "该二维码不是 Spliit 群组邀请。请重新扫描组织者的二维码。",
+      "foreignTitle": "此二维码指向另一个 Spliit",
+      "foreignDescription": "将在此浏览器中打开 {origin}。只有在信任出示该二维码的组织者时才能继续。",
+      "foreignConfirm": "打开链接",
+      "foreignCancel": "返回"
+    }
   },
   "Header": {
     "signIn": "登录",
@@ -635,7 +648,8 @@
     "viewOnlyBadge": "仅查看",
     "removeSavedView": "移除",
     "removeSavedViewAccount": "已从首页移除。",
-    "removeSavedViewDevice": "已从此设备移除。"
+    "removeSavedViewDevice": "已从此设备移除。",
+    "linkInvitationMultiUse": "此二维码在过期前可供多人使用。"
   },
   "GroupForm": {
     "title": "群组信息",
@@ -1859,6 +1873,7 @@
         "email": "电子邮件",
         "link": "邀请链接",
         "friends": "朋友",
+        "qr": "二维码",
         "unlinked": "无账号"
       },
       "emailDescription": "通过电子邮件发送邀请。受邀者在匹配的账号上接受后即可加入。",
@@ -1888,7 +1903,25 @@
       "noAccountDescription": "无需邀请对方加入 Spliit，即可将其添加到支出中。之后可以将其关联到账号。",
       "temporaryNameRequired": "临时姓名",
       "noAccountNameDescription": "在将该参与者关联到账号之前，其姓名会显示在支出和余额中。",
-      "addParticipant": "添加参与者"
+      "addParticipant": "添加参与者",
+      "qr": {
+        "title": "附近的二维码",
+        "description": "在你身边的人都可以通过同一个二维码加入。自创建起 15 分钟内有效，过期前人人都可使用。",
+        "show": "显示二维码",
+        "generating": "生成中…",
+        "multiUse": "在过期之前，任何扫描它的人都可以加入。",
+        "expiresIn": "{count} 分钟后过期",
+        "expiringSoon": "不到 1 分钟后过期",
+        "stop": "停止分享",
+        "stopped": "二维码分享已停止，该二维码已失效。",
+        "takeOver": "接管并显示新二维码",
+        "alreadyActive": "该群组已在分享二维码。",
+        "activeElsewhere": "该二维码位于开始分享的设备上，请让对方出示。",
+        "joined_one": "{count} 人已加入",
+        "joined_other": "{count} 人已加入",
+        "joined_zero": "目前 {count} 人已加入",
+        "retry": "重试"
+      }
     },
     "invitations": {
       "title": "待处理的邀请",
@@ -1909,7 +1942,13 @@
       "email": {
         "type": "邮件邀请"
       },
-      "updatedOn": "更新于{date}"
+      "updatedOn": "更新于{date}",
+      "qr": {
+        "type": "二维码会话",
+        "fallbackLabel": "附近的二维码",
+        "viewQr": "查看二维码",
+        "expireNow": "立即过期"
+      }
     },
     "changeRoleAria": "更改角色",
     "remove": "移除",
@@ -2051,6 +2090,7 @@
       "done": "完成",
       "regenerateWarning": "当前链接将立即失效。",
       "regenerateDescription": "将生成一个新链接，有效期重新计算为30天。邀请及其相关支出会保留。",
+      "regenerateQrDescription": "将生成一个新的二维码链接，有效期重新设为 15 分钟，原邀请保留。",
       "linkReadyTitle": "新链接已准备就绪",
       "linkReadyDescription": "将其分享给你想邀请的人。",
       "linkReadyWarning": "请立即复制，之后将无法再次查看。",

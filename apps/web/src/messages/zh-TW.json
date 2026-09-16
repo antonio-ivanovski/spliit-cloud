@@ -51,7 +51,20 @@
     },
     "savedGroupsAction": "查看已儲存的群組",
     "savedGroupsTitle": "已儲存的群組",
-    "savedGroupsDescription": "你在此裝置上儲存的群組。"
+    "savedGroupsDescription": "你在此裝置上儲存的群組。",
+    "scanToJoin": "掃碼加入",
+    "scanDialog": {
+      "title": "掃描群組二維碼",
+      "description": "將相機對準主辦者手機上的二維碼，即可加入他們的群組。",
+      "scanning": "正在尋找二維碼…",
+      "noCamera": "在此裝置上找不到相機。請改用手機的相機應用程式掃描此二維碼。",
+      "permissionDenied": "相機存取遭到拒絕。請在瀏覽器設定中允許相機存取，或改用手機的相機應用程式掃描此二維碼。",
+      "invalidCode": "該代碼不是 Spliit 群組邀請。請重新掃描主辦者的二維碼。",
+      "foreignTitle": "此代碼指向另一個 Spliit",
+      "foreignDescription": "將在此瀏覽器中開啟 {origin}。只有在信任出示該代碼的主辦者時才能繼續。",
+      "foreignConfirm": "開啟連結",
+      "foreignCancel": "返回"
+    }
   },
   "Header": {
     "signIn": "登入",
@@ -635,7 +648,8 @@
     "viewOnlyBadge": "僅檢視",
     "removeSavedView": "移除",
     "removeSavedViewAccount": "已從首頁移除。",
-    "removeSavedViewDevice": "已從此裝置移除。"
+    "removeSavedViewDevice": "已從此裝置移除。",
+    "linkInvitationMultiUse": "此二維碼在過期前可供多人使用。"
   },
   "GroupForm": {
     "title": "群組資訊",
@@ -1859,6 +1873,7 @@
         "email": "電子郵件",
         "link": "邀請連結",
         "friends": "朋友",
+        "qr": "二維碼",
         "unlinked": "無帳戶"
       },
       "emailDescription": "透過電子郵件發送邀請。受邀者在相符的帳號上接受後即可加入。",
@@ -1888,7 +1903,25 @@
       "noAccountDescription": "無需邀請對方加入 Spliit，即可將其新增到支出中。之後可以將其連結到帳戶。",
       "temporaryNameRequired": "暫用姓名",
       "noAccountNameDescription": "在將此參與者連結到帳戶之前，其姓名會顯示在支出和餘額中。",
-      "addParticipant": "新增參與者"
+      "addParticipant": "新增參與者",
+      "qr": {
+        "title": "附近的二維碼",
+        "description": "在你身邊的人都可以透過同一個代碼加入。自建立起 15 分鐘內有效，在過期前人人都可以使用。",
+        "show": "顯示二維碼",
+        "generating": "產生中…",
+        "multiUse": "在過期之前，任何掃描它的人都可以加入。",
+        "expiresIn": "{count} 分鐘後過期",
+        "expiringSoon": "不到 1 分鐘後過期",
+        "stop": "停止分享",
+        "stopped": "二維碼分享已停止，該二維碼已失效。",
+        "takeOver": "接管並顯示新二維碼",
+        "alreadyActive": "該群組已在分享二維碼。",
+        "activeElsewhere": "該二維碼位於開始分享的裝置上，請對方出示。",
+        "joined_one": "{count} 人已加入",
+        "joined_other": "{count} 人已加入",
+        "joined_zero": "目前 {count} 人已加入",
+        "retry": "重試"
+      }
     },
     "invitations": {
       "title": "待處理的邀請",
@@ -1909,7 +1942,13 @@
       "email": {
         "type": "電子郵件邀請"
       },
-      "updatedOn": "更新於{date}"
+      "updatedOn": "更新於{date}",
+      "qr": {
+        "type": "二維碼工作階段",
+        "fallbackLabel": "附近的二維碼",
+        "viewQr": "檢視二維碼",
+        "expireNow": "立即過期"
+      }
     },
     "remove": "移除",
     "removeDialog": {
@@ -2051,6 +2090,7 @@
       "done": "完成",
       "regenerateWarning": "目前的連結將立即失效。",
       "regenerateDescription": "將產生新的連結，有效期限重新設定為30天。邀請及其相關支出會保留。",
+      "regenerateQrDescription": "將產生新的二維碼連結，有效期限重新設為 15 分鐘，原邀請會保留。",
       "linkReadyTitle": "新連結已準備就緒",
       "linkReadyDescription": "將它分享給你想邀請的人。",
       "linkReadyWarning": "請立即複製，之後將無法再次查看。",

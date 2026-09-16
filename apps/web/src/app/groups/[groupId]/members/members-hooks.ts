@@ -21,6 +21,13 @@ export type RecipientProfile = {
   image: string | null
 }
 
+export type QrSessionJoiner = {
+  accountId: string
+  name: string | null
+  image: string | null
+  joinedAt: Date | string
+}
+
 export type PendingInvitation = {
   id: string
   groupId: string
@@ -33,9 +40,120 @@ export type PendingInvitation = {
   updatedAt: Date | string
   expiresAt: Date | string | null
   ledgerParticipantId: string | null
+  isMultiUse: boolean
+  useCount: number
+  /** Accounts that joined via this QR session, oldest first. */
+  recentJoiners: QrSessionJoiner[]
   canRevoke: boolean
   canManage: boolean
   recipientProfile: RecipientProfile | null
+}
+
+/** Top-level tabs of the invite card. */
+export type InviteTab = 'friends' | 'email' | 'link' | 'qr' | 'unlinked'
+
+/**
+ * A live QR session created from this browser: the only place the one-time
+ * invite URL exists. Lifted to the invite card so tab switches keep the code.
+ * `createdAt` (epoch ms) lets the tab tell "just created, list lags" apart from
+ * "loaded from storage, list is authoritative" so revoked sessions cannot
+ * survive a reload as zombie codes.
+ */
+export type QrSession = {
+  invitationId: string
+  inviteUrl: string
+  expiresAt: Date | string
+  createdAt: number
+}
+
+export function isQrSessionExpired(session: {
+  expiresAt: Date | string
+}): boolean {
+  const ms =
+    typeof session.expiresAt === 'string'
+      ? new Date(session.expiresAt).getTime()
+      : session.expiresAt.getTime()
+  return Date.now() >= ms
+}
+
+/**
+ * Stamp a freshly created QR session. Module-level (not a component or handler)
+ * so the clock read stays outside compiled render scope.
+ */
+export function createQrSession(input: {
+  invitationId: string
+  inviteUrl: string
+  expiresAt: Date | string
+}): QrSession {
+  return { ...input, createdAt: Date.now() }
+}
+
+function qrSessionStorageKey(groupId: string) {
+  return `spliit:qr-session:${groupId}`
+}
+
+function loadStoredQrSession(groupId: string): QrSession | null {
+  if (typeof window === 'undefined') return null
+  try {
+    const raw = window.localStorage.getItem(qrSessionStorageKey(groupId))
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as Partial<QrSession>
+    if (!parsed.invitationId || !parsed.inviteUrl || !parsed.expiresAt) {
+      return null
+    }
+    const session: QrSession = {
+      invitationId: parsed.invitationId,
+      inviteUrl: parsed.inviteUrl,
+      expiresAt: parsed.expiresAt,
+      // Legacy stored sessions predate createdAt: treat them as stale so the
+      // tab drops them on the first fresh list instead of showing a zombie.
+      createdAt:
+        typeof parsed.createdAt === 'number' && parsed.createdAt > 0
+          ? parsed.createdAt
+          : 0,
+    }
+    return isQrSessionExpired(session) ? null : session
+  } catch {
+    return null
+  }
+}
+
+/**
+ * The one-time QR invite URL lives here so tab switches (which unmount inactive
+ * panels) and reloads never lose the displayed code. Revoking or expiring
+ * through any path must funnel through the setter so the stored copy cannot
+ * outlive the session (zombie codes).
+ */
+export function useQrSession(groupId: string) {
+  const [qrSession, setQrSessionState] = useState<QrSession | null>(() =>
+    loadStoredQrSession(groupId),
+  )
+  // Client-side group navigation reuses the page without remounting: rebind
+  // the session when the group changes so group A's code never shows on B.
+  const [boundGroupId, setBoundGroupId] = useState(groupId)
+  if (boundGroupId !== groupId) {
+    setBoundGroupId(groupId)
+    setQrSessionState(loadStoredQrSession(groupId))
+  }
+  const setQrSession = useMemo(
+    () => (next: QrSession | null) => {
+      setQrSessionState(next)
+      try {
+        if (next) {
+          window.localStorage.setItem(
+            qrSessionStorageKey(groupId),
+            JSON.stringify(next),
+          )
+        } else {
+          window.localStorage.removeItem(qrSessionStorageKey(groupId))
+        }
+      } catch {
+        // Storage is a convenience cache; the tab works without it.
+      }
+    },
+    [groupId],
+  )
+  return [qrSession, setQrSession] as const
 }
 
 export type UpdatePendingInput = {

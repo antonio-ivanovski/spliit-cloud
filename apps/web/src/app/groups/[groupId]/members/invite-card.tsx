@@ -19,12 +19,15 @@ import { AddUnlinkedParticipantTab } from './add-unlinked-participant-tab'
 import { InviteEmailTab } from './invite-email-tab'
 import { InviteFriendsTab } from './invite-friends-tab'
 import { InviteLinkTab } from './invite-link-tab'
+import { InviteQrTab } from './invite-qr-tab'
 import {
   emailFormSchema,
   type EmailFormValues,
   type GeneratedLink,
   type InvitableRole,
+  type InviteTab,
   type LinkFormValues,
+  type QrSession,
   type UnlinkedParticipantFormValues,
 } from './members-hooks'
 
@@ -38,6 +41,9 @@ export function InviteCard({
   onInvite,
   onGenerateLink,
   onAddParticipant,
+  qrSession,
+  onQrSessionChange,
+  showQrTabRequest,
 }: {
   groupId: string
   groupName: string
@@ -60,6 +66,19 @@ export function InviteCard({
     expiresAt: Date | string
   } | void>
   onAddParticipant: (values: UnlinkedParticipantFormValues) => Promise<boolean>
+  /**
+   * The live QR session, owned by the members page (shared with the pending
+   * list so an Expire there also clears the displayed code). Lifted out of the
+   * tab because tab switches unmount inactive panels.
+   */
+  qrSession: QrSession | null
+  onQrSessionChange: (session: QrSession | null) => void
+  /**
+   * External request to switch to the QR tab (e.g. "View QR" from a pending
+   * invitation row). Consumed via an incrementing counter so repeated requests
+   * always take effect.
+   */
+  showQrTabRequest?: number
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
   const [roleValue, setRoleValue] = useState<InvitableRole>('MEMBER')
@@ -67,9 +86,18 @@ export function InviteCard({
   const [friendRoleValue, setFriendRoleValue] =
     useState<InvitableRole>('MEMBER')
   const [generatedLink, setGeneratedLink] = useState<GeneratedLink | null>(null)
-  const [inviteTab, setInviteTab] = useState<
-    'friends' | 'email' | 'link' | 'unlinked'
-  >('email')
+  const [inviteTab, setInviteTab] = useState<InviteTab>('email')
+  // External "View QR" requests land on the QR tab.
+  const lastShowQrRequest = useRef(showQrTabRequest)
+  useEffect(() => {
+    if (
+      showQrTabRequest !== undefined &&
+      showQrTabRequest !== lastShowQrRequest.current
+    ) {
+      lastShowQrRequest.current = showQrTabRequest
+      setInviteTab('qr')
+    }
+  }, [showQrTabRequest])
   const canShare = useSyncExternalStore(
     () => () => {},
     () =>
@@ -122,6 +150,7 @@ export function InviteCard({
     { value: 'friends', label: t('invite.tab.friends') },
     { value: 'email', label: t('invite.tab.email') },
     { value: 'link', label: t('invite.tab.link') },
+    { value: 'qr', label: t('invite.tab.qr') },
     { value: 'unlinked', label: t('invite.tab.unlinked') },
   ] as const
 
@@ -199,9 +228,7 @@ export function InviteCard({
       <CardContent>
         <Tabs
           value={inviteTab}
-          onValueChange={(value) =>
-            setInviteTab(value as 'friends' | 'email' | 'link' | 'unlinked')
-          }
+          onValueChange={(value) => setInviteTab(value as InviteTab)}
           className="flex flex-col gap-4"
         >
           <Select
@@ -209,7 +236,7 @@ export function InviteCard({
             items={inviteTabItems}
             onValueChange={(value) => {
               if (value) {
-                setInviteTab(value as 'friends' | 'email' | 'link' | 'unlinked')
+                setInviteTab(value as InviteTab)
               }
             }}
           >
@@ -225,10 +252,11 @@ export function InviteCard({
             </SelectContent>
           </Select>
 
-          <TabsList className="hidden w-full grid-cols-2 sm:grid sm:grid-cols-4">
+          <TabsList className="hidden w-full grid-cols-2 sm:grid sm:grid-cols-5">
             <TabsTrigger value="friends">{t('invite.tab.friends')}</TabsTrigger>
             <TabsTrigger value="email">{t('invite.tab.email')}</TabsTrigger>
             <TabsTrigger value="link">{t('invite.tab.link')}</TabsTrigger>
+            <TabsTrigger value="qr">{t('invite.tab.qr')}</TabsTrigger>
             <TabsTrigger value="unlinked">
               {t('invite.tab.unlinked')}
             </TabsTrigger>
@@ -272,6 +300,14 @@ export function InviteCard({
               canShare={canShare}
               groupName={groupName}
               onShare={handleShareLink}
+            />
+          </TabsContent>
+
+          <TabsContent value="qr" className="mt-0 flex flex-col gap-4">
+            <InviteQrTab
+              groupId={groupId}
+              session={qrSession}
+              onSessionChange={onQrSessionChange}
             />
           </TabsContent>
 

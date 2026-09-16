@@ -172,7 +172,9 @@ export function ManagePendingInvitationDialog({
       invitation.recipientProfile?.name ??
       invitation.temporaryName ??
       (invitation.type === 'LINK'
-        ? t('invitations.link.fallbackLabel')
+        ? invitation.isMultiUse
+          ? t('invitations.qr.fallbackLabel')
+          : t('invitations.link.fallbackLabel')
         : invitation.email)
     )
   }, [invitation, t])

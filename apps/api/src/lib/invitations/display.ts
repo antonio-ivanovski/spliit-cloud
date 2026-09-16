@@ -47,6 +47,18 @@ export function buildLinkPlaceholderEmail(token: string): string {
 }
 
 /**
+ * Build a synthetic email for a multi-use QR session. `uniqueId` must be unique
+ * (it is never the join credential). QR sessions are broadcast to every group
+ * member via `invitations.list`, so unlike single-use links the placeholder
+ * must never encode the raw token — otherwise any member could reconstruct the
+ * join URL from the list response.
+ */
+export function buildQrSessionPlaceholderEmail(uniqueId: string): string {
+  const safe = uniqueId.toLowerCase().replace(/[^a-z0-9-]/g, '-')
+  return `${safe}@qr-session.${PLACEHOLDER_EMAIL_DOMAIN}`
+}
+
+/**
  * Display name for an invitation row. Priority: `temporaryName` → short
  * placeholder username or full real email →
  * {@link PENDING_INVITEE_FALLBACK_LABEL}.

@@ -51,7 +51,20 @@
     },
     "savedGroupsAction": "Opgeslagen groepen bekijken",
     "savedGroupsTitle": "Opgeslagen groepen",
-    "savedGroupsDescription": "Groepen die je op dit apparaat hebt opgeslagen."
+    "savedGroupsDescription": "Groepen die je op dit apparaat hebt opgeslagen.",
+    "scanToJoin": "Scan om lid te worden",
+    "scanDialog": {
+      "title": "Groeps-QR-code scannen",
+      "description": "Richt je camera op de QR-code op de telefoon van de uitnodiger om lid te worden van de groep.",
+      "scanning": "Zoeken naar een QR-code…",
+      "noCamera": "Er is geen camera gevonden op dit apparaat. Scan de code in plaats daarvan met de camera-app van je telefoon.",
+      "permissionDenied": "Cameratoegang is geweigerd. Sta cameratoegang toe in je browserinstellingen of scan de code met de camera-app van je telefoon.",
+      "invalidCode": "Deze code is geen Spliit-groepsuitnodiging. Scan de QR-code van de uitnodiger opnieuw.",
+      "foreignTitle": "Deze code verwijst naar een andere Spliit",
+      "foreignDescription": "Hiermee wordt {origin} in deze browser geopend. Ga alleen verder als je de uitnodiger vertrouwt die hem heeft laten zien.",
+      "foreignConfirm": "Link openen",
+      "foreignCancel": "Ga terug"
+    }
   },
   "Header": {
     "signIn": "Inloggen",
@@ -666,7 +679,8 @@
     "viewOnlyBadge": "Alleen-lezen",
     "removeSavedView": "Verwijderen",
     "removeSavedViewAccount": "Verwijderd van je overzicht.",
-    "removeSavedViewDevice": "Verwijderd van dit apparaat."
+    "removeSavedViewDevice": "Verwijderd van dit apparaat.",
+    "linkInvitationMultiUse": "Deze QR-code kan door meerdere mensen gebruikt worden tot hij verloopt."
   },
   "GroupForm": {
     "title": "Groepsinformatie",
@@ -1899,6 +1913,7 @@
         "email": "E-mail",
         "link": "Uitnodigingslink",
         "friends": "Vrienden",
+        "qr": "QR-code",
         "unlinked": "Geen account"
       },
       "emailDescription": "Stuur een uitnodiging via e-mail. De genodigde wordt lid zodra hij vanuit een overeenkomend account accepteert.",
@@ -1928,7 +1943,25 @@
       "noAccountDescription": "Voeg iemand aan de uitgaven toe zonder die persoon voor Spliit uit te nodigen. Je kunt die persoon later aan een account koppelen.",
       "temporaryNameRequired": "Tijdelijke naam",
       "noAccountNameDescription": "Wordt in uitgaven en saldi weergegeven totdat deze deelnemer aan een account is gekoppeld.",
-      "addParticipant": "Deelnemer toevoegen"
+      "addParticipant": "Deelnemer toevoegen",
+      "qr": {
+        "title": "QR-code in de buurt",
+        "description": "Iedereen naast je kan lid worden met één code. Hij werkt voor iedereen tot hij verloopt, 15 minuten na het aanmaken.",
+        "show": "QR-code tonen",
+        "generating": "Genereren…",
+        "multiUse": "Iedereen die hem scant kan lid worden tot hij verloopt.",
+        "expiresIn": "Verloopt over {count} min",
+        "expiringSoon": "Verloopt over minder dan een minuut",
+        "stop": "Stoppen met delen",
+        "stopped": "Delen van QR-code gestopt. De code werkt niet meer.",
+        "takeOver": "Overnemen en nieuwe code tonen",
+        "alreadyActive": "Er wordt al een QR-code gedeeld voor deze groep.",
+        "activeElsewhere": "De code staat op het apparaat waarmee het delen is gestart – vraag diegene om hem te tonen.",
+        "joined_one": "{count} persoon is lid geworden",
+        "joined_other": "{count} personen zijn lid geworden",
+        "joined_zero": "{count} personen zijn tot nu toe lid geworden",
+        "retry": "Opnieuw proberen"
+      }
     },
     "invitations": {
       "title": "Openstaande uitnodigingen",
@@ -1949,7 +1982,13 @@
       "email": {
         "type": "E-mailuitnodiging"
       },
-      "updatedOn": "Bijgewerkt {date}"
+      "updatedOn": "Bijgewerkt {date}",
+      "qr": {
+        "type": "QR-sessie",
+        "fallbackLabel": "QR-code in de buurt",
+        "viewQr": "QR-code bekijken",
+        "expireNow": "Nu laten verlopen"
+      }
     },
     "changeRoleAria": "Rol wijzigen",
     "remove": "Verwijderen",
@@ -2095,6 +2134,7 @@
       "done": "Klaar",
       "regenerateWarning": "De huidige link werkt onmiddellijk niet meer.",
       "regenerateDescription": "Er wordt een nieuwe link gegenereerd met een nieuwe vervaltermijn van 30 dagen. De uitnodiging en de bijbehorende uitgaven blijven behouden.",
+      "regenerateQrDescription": "Er wordt een nieuwe QR-codelink gegenereerd met een nieuwe vervaltermijn van 15 minuten. De uitnodiging blijft behouden.",
       "linkReadyTitle": "Nieuwe link klaar",
       "linkReadyDescription": "Deel hem met de persoon die je wilt uitnodigen.",
       "linkReadyWarning": "Kopieer hem nu — je kunt hem later niet meer bekijken.",

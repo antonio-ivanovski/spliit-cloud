@@ -679,6 +679,12 @@ model GroupInvitation {
   tokenHash String?   @unique
   expiresAt DateTime?
 
+  // QR / nearby sessions: a multi-use link invitation that stays PENDING
+  // across accepts (short TTL, e.g. 15 min). Each accepter gets a fresh
+  // ledger participant; `useCount` tracks joins for display.
+  isMultiUse Boolean @default(false)
+  useCount   Int     @default(0)
+
   // Optional virtual LedgerParticipant materialized for this pending invitation
   // so expenses can be recorded against the invitee before they accept. The
   // link is created at invitation write time (email/link send) and populated

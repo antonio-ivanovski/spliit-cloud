@@ -51,7 +51,20 @@
     },
     "savedGroupsAction": "Kayıtlı grupları görüntüle",
     "savedGroupsTitle": "Kayıtlı gruplar",
-    "savedGroupsDescription": "Bu cihazda kaydettiğiniz gruplar."
+    "savedGroupsDescription": "Bu cihazda kaydettiğiniz gruplar.",
+    "scanToJoin": "Katılmak için tara",
+    "scanDialog": {
+      "title": "Grup QR kodunu tara",
+      "description": "Gruba katılmak için kameranızı ev sahibinin telefonundaki QR koda doğrultun.",
+      "scanning": "QR kod aranıyor…",
+      "noCamera": "Bu cihazda kamera bulunamadı. Bunun yerine kodu telefonunuzun kamera uygulamasıyla tarayın.",
+      "permissionDenied": "Kamera erişimi reddedildi. Tarayıcı ayarlarından kamera erişimine izin verin veya kodu telefonunuzun kamera uygulamasıyla tarayın.",
+      "invalidCode": "Bu kod bir Spliit grup daveti değil. Ev sahibinin QR kodunu yeniden taramayı deneyin.",
+      "foreignTitle": "Bu kod başka bir Spliit'e işaret ediyor",
+      "foreignDescription": "{origin} bu tarayıcıda açılacak. Yalnızca bunu gösteren ev sahibine güveniyorsanız devam edin.",
+      "foreignConfirm": "Bağlantıyı aç",
+      "foreignCancel": "Geri dön"
+    }
   },
   "Header": {
     "signIn": "Oturum aç",
@@ -642,7 +655,8 @@
     "viewOnlyBadge": "Yalnızca görüntüleme",
     "removeSavedView": "Kaldır",
     "removeSavedViewAccount": "Ana sayfanızdan kaldırıldı.",
-    "removeSavedViewDevice": "Bu cihazdan kaldırıldı."
+    "removeSavedViewDevice": "Bu cihazdan kaldırıldı.",
+    "linkInvitationMultiUse": "Bu QR kod, süresi dolana kadar birden fazla kişi tarafından kullanılabilir."
   },
   "GroupForm": {
     "title": "Grup bilgileri",
@@ -1867,6 +1881,7 @@
         "email": "E-posta",
         "link": "Davet bağlantısı",
         "friends": "Arkadaşlar",
+        "qr": "QR kod",
         "unlinked": "Hesap yok"
       },
       "emailDescription": "E-postayla davet gönderin. Davetli, eşleşen bir hesaptan kabul ettiğinde katılır.",
@@ -1896,7 +1911,25 @@
       "noAccountDescription": "Birini Spliit uygulamasına davet etmeden masraflara ekle. Daha sonra bir hesaba bağlayabilirsin.",
       "temporaryNameRequired": "Geçici ad",
       "noAccountNameDescription": "Bu katılımcı bir hesaba bağlanana kadar masraflarda ve bakiyelerde gösterilir.",
-      "addParticipant": "Katılımcı ekle"
+      "addParticipant": "Katılımcı ekle",
+      "qr": {
+        "title": "Yakındaki QR kod",
+        "description": "Yakınınızdaki herkes tek bir kodla katılabilir. Kod, oluşturulduktan 15 dakika sonra sona erene kadar herkes için geçerlidir.",
+        "show": "QR kodunu göster",
+        "generating": "Oluşturuluyor…",
+        "multiUse": "Süresi dolana kadar tarayan herkes katılabilir.",
+        "expiresIn": "{count} dk içinde sona erer",
+        "expiringSoon": "Bir dakikadan kısa sürede sona erer",
+        "stop": "Paylaşımı durdur",
+        "stopped": "QR paylaşımı durduruldu. Kod artık çalışmıyor.",
+        "takeOver": "Devral ve yeni kodu göster",
+        "alreadyActive": "Bu grup için zaten bir QR kod paylaşılıyor.",
+        "activeElsewhere": "Kod, paylaşımı başlatan cihazda — göstermesini isteyin.",
+        "joined_one": "{count} kişi katıldı",
+        "joined_other": "{count} kişi katıldı",
+        "joined_zero": "Şimdiye kadar {count} kişi katıldı",
+        "retry": "Tekrar dene"
+      }
     },
     "invitations": {
       "title": "Bekleyen davetler",
@@ -1917,7 +1950,13 @@
       "email": {
         "type": "E-posta daveti"
       },
-      "updatedOn": "{date} tarihinde güncellendi"
+      "updatedOn": "{date} tarihinde güncellendi",
+      "qr": {
+        "type": "QR oturumu",
+        "fallbackLabel": "Yakındaki QR kod",
+        "viewQr": "QR kodunu görüntüle",
+        "expireNow": "Şimdi sona erdir"
+      }
     },
     "changeRoleAria": "Rolü değiştir",
     "remove": "Çıkar",
@@ -2059,6 +2098,7 @@
       "done": "Tamam",
       "regenerateWarning": "Mevcut bağlantı hemen çalışmayı durduracak.",
       "regenerateDescription": "Yeni 30 günlük süreyle yeni bir bağlantı oluşturulacak. Davet ve harcamaları korunur.",
+      "regenerateQrDescription": "Yeni bir QR kod bağlantısı oluşturulur ve 15 dakikalık yeni bir geçerlilik süresi başlar. Davet korunur.",
       "linkReadyTitle": "Yeni bağlantı hazır",
       "linkReadyDescription": "Davet etmek istediğiniz kişiyle paylaşın.",
       "linkReadyWarning": "Şimdi kopyalayın—tekrar görüntüleyemeyeceksiniz.",

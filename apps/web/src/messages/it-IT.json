@@ -51,7 +51,20 @@
     },
     "savedGroupsAction": "Vedi i gruppi salvati",
     "savedGroupsTitle": "Gruppi salvati",
-    "savedGroupsDescription": "Gruppi che hai salvato su questo dispositivo."
+    "savedGroupsDescription": "Gruppi che hai salvato su questo dispositivo.",
+    "scanToJoin": "Scansiona per unirti",
+    "scanDialog": {
+      "title": "Scansiona il codice QR del gruppo",
+      "description": "Punta la fotocamera verso il codice QR sul telefono dell'host per unirti al suo gruppo.",
+      "scanning": "Ricerca di un codice QR in corso…",
+      "noCamera": "Nessuna fotocamera trovata su questo dispositivo. Scansiona il codice con l'app fotocamera del tuo telefono.",
+      "permissionDenied": "L'accesso alla fotocamera è stato negato. Consenti l'accesso alla fotocamera nelle impostazioni del browser, oppure scansiona il codice con l'app fotocamera del tuo telefono.",
+      "invalidCode": "Questo codice non è un invito a un gruppo Spliit. Prova a scansionare di nuovo il codice QR dell'host.",
+      "foreignTitle": "Questo codice rimanda a un altro Spliit",
+      "foreignDescription": "Verrà aperto {origin} in questo browser. Continua solo se ti fidi dell'host che te l'ha mostrato.",
+      "foreignConfirm": "Apri link",
+      "foreignCancel": "Indietro"
+    }
   },
   "Header": {
     "signIn": "Accedi",
@@ -649,7 +662,8 @@
     "viewOnlyBadge": "Sola lettura",
     "removeSavedView": "Rimuovi",
     "removeSavedViewAccount": "Rimosso dalla home.",
-    "removeSavedViewDevice": "Rimosso da questo dispositivo."
+    "removeSavedViewDevice": "Rimosso da questo dispositivo.",
+    "linkInvitationMultiUse": "Questo codice QR può essere usato da più persone fino alla scadenza."
   },
   "GroupForm": {
     "title": "Informazioni del gruppo",
@@ -1876,6 +1890,7 @@
         "email": "Email",
         "link": "Link di invito",
         "friends": "Amici",
+        "qr": "Codice QR",
         "unlinked": "Senza account"
       },
       "emailDescription": "Invia un invito tramite email. L'invitato si unisce dopo averlo accettato da un account corrispondente.",
@@ -1905,7 +1920,26 @@
       "noAccountDescription": "Aggiungi qualcuno alle spese senza invitarlo su Spliit. Potrai collegarlo a un account in seguito.",
       "temporaryNameRequired": "Nome temporaneo",
       "noAccountNameDescription": "Verrà mostrato nelle spese e nei saldi finché questo partecipante non sarà collegato a un account.",
-      "addParticipant": "Aggiungi partecipante"
+      "addParticipant": "Aggiungi partecipante",
+      "qr": {
+        "title": "Codice QR nelle vicinanze",
+        "description": "Le persone accanto a te possono unirsi tutte con un unico codice. Funziona per tutti fino alla scadenza, 15 minuti dopo la creazione.",
+        "show": "Mostra codice QR",
+        "generating": "Generazione…",
+        "multiUse": "Chiunque lo scansiona può unirsi fino alla scadenza.",
+        "expiresIn": "Scade tra {count} min",
+        "expiringSoon": "Scade tra meno di un minuto",
+        "stop": "Interrompi condivisione",
+        "stopped": "Condivisione QR interrotta. Il codice non funziona più.",
+        "takeOver": "Prendi il controllo e mostra un nuovo codice",
+        "alreadyActive": "Un codice QR è già condiviso per questo gruppo.",
+        "activeElsewhere": "Il codice si trova sul dispositivo che ha avviato la condivisione — chiedi di mostrarlo.",
+        "joined_one": "{count} persona si è unita",
+        "joined_other": "{count} persone si sono unite",
+        "joined_zero": "{count} persone si sono unite finora",
+        "joined_many": "{count} persone si sono unite",
+        "retry": "Riprova"
+      }
     },
     "invitations": {
       "title": "Inviti in sospeso",
@@ -1926,7 +1960,13 @@
       "email": {
         "type": "Invito via email"
       },
-      "updatedOn": "Aggiornato il {date}"
+      "updatedOn": "Aggiornato il {date}",
+      "qr": {
+        "type": "Sessione QR",
+        "fallbackLabel": "Codice QR nelle vicinanze",
+        "viewQr": "Visualizza codice QR",
+        "expireNow": "Fai scadere ora"
+      }
     },
     "changeRoleAria": "Cambia ruolo",
     "remove": "Rimuovi",
@@ -2069,6 +2109,7 @@
       "done": "Fatto",
       "regenerateWarning": "Il link attuale smetterà di funzionare immediatamente.",
       "regenerateDescription": "Verrà generato un nuovo link valido per 30 giorni. L'invito e le relative spese verranno conservati.",
+      "regenerateQrDescription": "Verrà generato un nuovo link di codice QR con una nuova scadenza di 15 minuti. L'invito viene conservato.",
       "linkReadyTitle": "Nuovo link pronto",
       "linkReadyDescription": "Condividilo con la persona che vuoi invitare.",
       "linkReadyWarning": "Copialo ora: non potrai più visualizzarlo.",

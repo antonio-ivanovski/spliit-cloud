@@ -9,11 +9,41 @@ const mocks = vi.hoisted(() => ({
   onManage: vi.fn(),
   onGenerateLink: vi.fn(),
   onRevoke: vi.fn(),
+  onViewQr: vi.fn(),
+  revokeMutateAsync: vi.fn(),
+  revokeMutate: vi.fn(),
+  onQrSessionInvalidated: vi.fn(),
+}))
+
+vi.mock('@/trpc/client', () => ({
+  trpc: {
+    invitations: {
+      revoke: {
+        useMutation: (options?: {
+          onSuccess?: (data: unknown, vars: unknown) => void | Promise<void>
+        }) => ({
+          mutate: mocks.revokeMutate,
+          mutateAsync: async (args: unknown) => {
+            const result = await mocks.revokeMutateAsync(args)
+            await options?.onSuccess?.(result, args)
+            return result
+          },
+          isPending: false,
+        }),
+      },
+    },
+    useUtils: () => ({
+      invitations: {
+        list: { invalidate: vi.fn(async () => undefined) },
+      },
+    }),
+  },
 }))
 
 beforeEach(() => {
   vi.restoreAllMocks()
   vi.clearAllMocks()
+  mocks.revokeMutateAsync.mockResolvedValue({})
 })
 
 function mockViewport(desktop: boolean) {
@@ -44,6 +74,9 @@ function makeInvitation(
     updatedAt: new Date('2026-01-02T00:00:00Z'),
     expiresAt: new Date('2026-02-01T00:00:00Z'),
     ledgerParticipantId: 'lp-1',
+    isMultiUse: false,
+    useCount: 0,
+    recentJoiners: [],
     canRevoke: true,
     canManage: true,
     recipientProfile: null,
@@ -63,6 +96,9 @@ describe('PendingInvitationsCard row actions', () => {
         onGenerateLink={mocks.onGenerateLink}
         onGenerateButtonRef={vi.fn()}
         onRevoke={mocks.onRevoke}
+        onViewQr={mocks.onViewQr}
+        activeQrSessionId={null}
+        onQrSessionInvalidated={mocks.onQrSessionInvalidated}
         locale="en-US"
         timeZone="UTC"
       />,
@@ -116,6 +152,9 @@ describe('PendingInvitationsCard row actions', () => {
           regenerateFocusTarget = element
         }}
         onRevoke={mocks.onRevoke}
+        onViewQr={mocks.onViewQr}
+        activeQrSessionId={null}
+        onQrSessionInvalidated={mocks.onQrSessionInvalidated}
         locale="en-US"
         timeZone="UTC"
       />,
@@ -179,6 +218,9 @@ describe('PendingInvitationsCard row actions', () => {
         onGenerateLink={mocks.onGenerateLink}
         onGenerateButtonRef={vi.fn()}
         onRevoke={mocks.onRevoke}
+        onViewQr={mocks.onViewQr}
+        activeQrSessionId={null}
+        onQrSessionInvalidated={mocks.onQrSessionInvalidated}
         locale="en-US"
         timeZone="UTC"
       />,
@@ -187,5 +229,194 @@ describe('PendingInvitationsCard row actions', () => {
     expect(
       screen.queryByRole('button', { name: 'Actions for Roommate' }),
     ).not.toBeInTheDocument()
+  })
+
+  it('labels a QR session row with its join count and joiner names', () => {
+    mockViewport(true)
+    render(
+      <PendingInvitationsCard
+        invitations={[
+          makeInvitation({
+            temporaryName: null,
+            ledgerParticipantId: null,
+            isMultiUse: true,
+            useCount: 2,
+            recentJoiners: [
+              {
+                accountId: 'acct-alice',
+                name: 'Alice',
+                image: null,
+                joinedAt: new Date('2026-09-16T10:00:00Z'),
+              },
+              {
+                accountId: 'acct-bob',
+                name: 'Bob',
+                image: null,
+                joinedAt: new Date('2026-09-16T10:01:00Z'),
+              },
+            ],
+            expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+          }),
+        ]}
+        isLoading={false}
+        onManage={mocks.onManage}
+        onManageButtonRef={vi.fn()}
+        onGenerateLink={mocks.onGenerateLink}
+        onGenerateButtonRef={vi.fn()}
+        onRevoke={mocks.onRevoke}
+        onViewQr={mocks.onViewQr}
+        activeQrSessionId={null}
+        onQrSessionInvalidated={mocks.onQrSessionInvalidated}
+        locale="en-US"
+        timeZone="UTC"
+      />,
+    )
+
+    expect(screen.getByText('QR session')).toBeInTheDocument()
+    expect(screen.getByText('Nearby QR code')).toBeInTheDocument()
+    expect(screen.getByText(/2 people joined/)).toBeInTheDocument()
+    expect(screen.getByText(/Alice, Bob/)).toBeInTheDocument()
+    // QR rows never offer the single-use link actions.
+    expect(
+      screen.queryByRole('button', { name: 'Generate new link' }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Manage' }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('hides expired QR sessions from the pending list', () => {
+    mockViewport(true)
+    render(
+      <PendingInvitationsCard
+        invitations={[
+          makeInvitation({
+            id: 'inv-qr-expired',
+            temporaryName: null,
+            ledgerParticipantId: null,
+            isMultiUse: true,
+            useCount: 3,
+            recentJoiners: [],
+            expiresAt: new Date(Date.now() - 60 * 1000),
+          }),
+        ]}
+        isLoading={false}
+        onManage={mocks.onManage}
+        onManageButtonRef={vi.fn()}
+        onGenerateLink={mocks.onGenerateLink}
+        onGenerateButtonRef={vi.fn()}
+        onRevoke={mocks.onRevoke}
+        onViewQr={mocks.onViewQr}
+        activeQrSessionId={null}
+        onQrSessionInvalidated={mocks.onQrSessionInvalidated}
+        locale="en-US"
+        timeZone="UTC"
+      />,
+    )
+
+    expect(screen.queryByText('QR session')).not.toBeInTheDocument()
+    expect(screen.getByText('No pending invitations.')).toBeInTheDocument()
+  })
+
+  it('opens the QR tab from a QR row via View QR code', async () => {
+    mockViewport(true)
+    const { user } = render(
+      <PendingInvitationsCard
+        invitations={[
+          makeInvitation({
+            temporaryName: null,
+            ledgerParticipantId: null,
+            isMultiUse: true,
+            useCount: 1,
+            recentJoiners: [],
+            expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+          }),
+        ]}
+        isLoading={false}
+        onManage={mocks.onManage}
+        onManageButtonRef={vi.fn()}
+        onGenerateLink={mocks.onGenerateLink}
+        onGenerateButtonRef={vi.fn()}
+        onRevoke={mocks.onRevoke}
+        onViewQr={mocks.onViewQr}
+        activeQrSessionId={null}
+        onQrSessionInvalidated={mocks.onQrSessionInvalidated}
+        locale="en-US"
+        timeZone="UTC"
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: 'View QR code' }))
+    expect(mocks.onViewQr).toHaveBeenCalledOnce()
+    expect(mocks.onRevoke).not.toHaveBeenCalled()
+  })
+
+  it('expires a QR session directly without a ledger participant', async () => {
+    mockViewport(true)
+    const { user } = render(
+      <PendingInvitationsCard
+        invitations={[
+          makeInvitation({
+            temporaryName: null,
+            ledgerParticipantId: null,
+            isMultiUse: true,
+            useCount: 1,
+            recentJoiners: [],
+            expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+          }),
+        ]}
+        isLoading={false}
+        onManage={mocks.onManage}
+        onManageButtonRef={vi.fn()}
+        onGenerateLink={mocks.onGenerateLink}
+        onGenerateButtonRef={vi.fn()}
+        onRevoke={mocks.onRevoke}
+        onViewQr={mocks.onViewQr}
+        activeQrSessionId={null}
+        onQrSessionInvalidated={mocks.onQrSessionInvalidated}
+        locale="en-US"
+        timeZone="UTC"
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Expire now' }))
+    await waitFor(() =>
+      expect(mocks.revokeMutateAsync).toHaveBeenCalledWith({
+        invitationId: 'inv-1',
+      }),
+    )
+  })
+
+  it('clears the displayed QR code when its own session is expired', async () => {
+    mockViewport(true)
+    const onQrSessionInvalidated = vi.fn()
+    const { user } = render(
+      <PendingInvitationsCard
+        invitations={[
+          makeInvitation({
+            temporaryName: null,
+            ledgerParticipantId: null,
+            isMultiUse: true,
+            useCount: 1,
+            recentJoiners: [],
+            expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+          }),
+        ]}
+        isLoading={false}
+        onManage={mocks.onManage}
+        onManageButtonRef={vi.fn()}
+        onGenerateLink={mocks.onGenerateLink}
+        onGenerateButtonRef={vi.fn()}
+        onRevoke={mocks.onRevoke}
+        onViewQr={mocks.onViewQr}
+        activeQrSessionId="inv-1"
+        onQrSessionInvalidated={onQrSessionInvalidated}
+        locale="en-US"
+        timeZone="UTC"
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Expire now' }))
+    await waitFor(() => expect(onQrSessionInvalidated).toHaveBeenCalledOnce())
   })
 })

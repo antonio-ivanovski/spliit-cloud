@@ -2265,7 +2265,8 @@
     "viewOnlyBadge": "Endast visning",
     "removeSavedView": "Ta bort",
     "removeSavedViewAccount": "Borttagen från din översikt.",
-    "removeSavedViewDevice": "Borttagen från den här enheten."
+    "removeSavedViewDevice": "Borttagen från den här enheten.",
+    "linkInvitationMultiUse": "Denna QR-kod kan användas av flera personer tills den går ut."
   },
   "Header": {
     "signIn": "Logga in",
@@ -2332,7 +2333,20 @@
     },
     "savedGroupsAction": "Visa sparade grupper",
     "savedGroupsTitle": "Sparade grupper",
-    "savedGroupsDescription": "Grupper du har sparat på den här enheten."
+    "savedGroupsDescription": "Grupper du har sparat på den här enheten.",
+    "scanToJoin": "Skanna för att gå med",
+    "scanDialog": {
+      "title": "Skanna gruppens QR-kod",
+      "description": "Rikta kameran mot QR-koden på värdens telefon för att gå med i gruppen.",
+      "scanning": "Letar efter en QR-kod…",
+      "noCamera": "Ingen kamera hittades på den här enheten. Skanna koden med telefonens kameraapp i stället.",
+      "permissionDenied": "Kameraåtkomst nekades. Tillåt kameraåtkomst i webbläsarens inställningar eller skanna koden med telefonens kameraapp i stället.",
+      "invalidCode": "Den koden är ingen Spliit-gruppinbjudan. Skanna värdens QR-kod igen.",
+      "foreignTitle": "Den här koden pekar på en annan Spliit",
+      "foreignDescription": "Den öppnar {origin} i den här webbläsaren. Fortsätt bara om du litar på värden som visade den.",
+      "foreignConfirm": "Öppna länk",
+      "foreignCancel": "Gå tillbaka"
+    }
   },
   "Information": {
     "title": "Information",
@@ -2396,7 +2410,13 @@
         "expiresOn": "Länken förfaller {date}",
         "expired": "Utgången"
       },
-      "updatedOn": "Uppdaterad {date}"
+      "updatedOn": "Uppdaterad {date}",
+      "qr": {
+        "type": "QR-session",
+        "fallbackLabel": "QR-kod i närheten",
+        "viewQr": "Visa QR-kod",
+        "expireNow": "Låt gå ut nu"
+      }
     },
     "invite": {
       "title": "Lägg till personer",
@@ -2433,12 +2453,31 @@
         "email": "E-post",
         "link": "Inbjudningslänk",
         "friends": "Vänner",
+        "qr": "QR-kod",
         "unlinked": "Inget konto"
       },
       "noAccountDescription": "Lägg till någon i utgifterna utan att bjuda in personen till Spliit. Du kan länka personen till ett konto senare.",
       "temporaryNameRequired": "Tillfälligt namn",
       "noAccountNameDescription": "Visas i utgifter och saldon tills deltagaren länkas till ett konto.",
-      "addParticipant": "Lägg till deltagare"
+      "addParticipant": "Lägg till deltagare",
+      "qr": {
+        "title": "QR-kod i närheten",
+        "description": "Alla bredvid dig kan gå med med samma kod. Den gäller för alla tills den går ut, 15 minuter efter att den skapades.",
+        "show": "Visa QR-kod",
+        "generating": "Genererar…",
+        "multiUse": "Alla som skannar den kan gå med tills den går ut.",
+        "expiresIn": "Går ut om {count} min",
+        "expiringSoon": "Går ut om mindre än en minut",
+        "stop": "Sluta dela",
+        "stopped": "QR-delning stoppad. Koden fungerar inte längre.",
+        "takeOver": "Ta över och visa ny kod",
+        "alreadyActive": "En QR-kod delas redan för den här gruppen.",
+        "activeElsewhere": "Koden finns på enheten som började dela – be dem visa den.",
+        "joined_one": "{count} person har gått med",
+        "joined_other": "{count} personer har gått med",
+        "joined_zero": "{count} personer har gått med hittills",
+        "retry": "Försök igen"
+      }
     },
     "leave": {
       "button": "Lämna grupp",
@@ -2579,6 +2618,7 @@
       "done": "Klar",
       "regenerateWarning": "Den nuvarande länken slutar fungera omedelbart.",
       "regenerateDescription": "En ny länk genereras med en ny 30-dagars giltighetstid. Inbjudan och dess utgifter behålls.",
+      "regenerateQrDescription": "En ny QR-kodslänk genereras med en ny 15-minuters giltighetstid. Inbjudan behålls.",
       "linkReadyTitle": "Ny länk klar",
       "linkReadyDescription": "Dela den med personen du vill bjuda in.",
       "linkReadyWarning": "Kopiera den nu — du kommer inte att kunna se den igen.",

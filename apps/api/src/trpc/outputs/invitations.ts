@@ -12,6 +12,13 @@ export const recipientProfileSchema = z.object({
   image: z.string().nullable(),
 })
 
+export const qrSessionJoinerSchema = z.object({
+  accountId: z.string(),
+  name: z.string().nullable(),
+  image: z.string().nullable(),
+  joinedAt: z.date(),
+})
+
 export const invitationSchema = z.object({
   id: z.string(),
   groupId: z.string(),
@@ -24,6 +31,12 @@ export const invitationSchema = z.object({
   updatedAt: z.date(),
   expiresAt: z.date().nullable().default(null),
   ledgerParticipantId: z.string().nullable().default(null),
+  // QR / nearby sessions: multi-use short-lived link invitations.
+  isMultiUse: z.boolean().default(false),
+  useCount: z.number().default(0),
+  // Accounts that joined via this QR session, oldest first (empty unless
+  // multi-use). Resolved from INVITATION_ACCEPTED activities.
+  recentJoiners: z.array(qrSessionJoinerSchema).default([]),
   canRevoke: z.boolean().default(false),
   canManage: z.boolean().default(false),
   // Profile of the account matching the invitation email, when one exists.
@@ -65,6 +78,8 @@ export const linkInvitationPreviewSchema = z.object({
     .enum(['revoked', 'declined', 'accepted', 'expired', 'unknown'])
     .nullable(),
   expiresAt: z.date().nullable(),
+  isMultiUse: z.boolean().default(false),
+  useCount: z.number().default(0),
 })
 
 export const revokeInvitationPreviewSchema = z.object({
@@ -79,6 +94,8 @@ export const createLinkInvitationOutputSchema = z.object({
   expiresAt: z.date(),
   temporaryName: z.string().nullable(),
   role: groupRoleSchema,
+  isMultiUse: z.boolean().default(false),
+  useCount: z.number().default(0),
 })
 
 export const updatePendingInvitationOutputSchema = z.object({

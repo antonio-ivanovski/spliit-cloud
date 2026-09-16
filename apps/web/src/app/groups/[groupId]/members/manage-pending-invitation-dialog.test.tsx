@@ -33,6 +33,20 @@ vi.mock('@/trpc/client', () => ({
         }),
       },
     },
+    invitations: {
+      revoke: {
+        useMutation: () => ({
+          mutate: vi.fn(),
+          mutateAsync: vi.fn(async () => ({})),
+          isPending: false,
+        }),
+      },
+    },
+    useUtils: () => ({
+      invitations: {
+        list: { invalidate: vi.fn(async () => undefined) },
+      },
+    }),
   },
 }))
 
@@ -59,6 +73,9 @@ function makeInvitation(
     updatedAt: new Date('2026-01-02T00:00:00Z'),
     expiresAt: null,
     ledgerParticipantId: 'lp-1',
+    isMultiUse: false,
+    useCount: 0,
+    recentJoiners: [],
     canRevoke: true,
     canManage: true,
     recipientProfile: null,
@@ -376,6 +393,9 @@ describe('PendingInvitationsCard', () => {
     onGenerateLink: vi.fn(),
     onGenerateButtonRef: vi.fn(),
     onRevoke: vi.fn(),
+    onViewQr: vi.fn(),
+    activeQrSessionId: null,
+    onQrSessionInvalidated: vi.fn(),
     locale: 'en-US',
     timeZone: 'UTC',
   }

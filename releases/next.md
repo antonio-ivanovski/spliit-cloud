@@ -7,6 +7,7 @@ Welcome to `vNEXT`! A growing collection of improvements: exact group-currency a
 - See only the expenses that involve you
 - Type the expense date and time directly
 - Search archived groups from All expenses
+- Onboard a whole room with one QR code
 
 ### Enter the exact amount charged in the group currency
 
@@ -38,6 +39,14 @@ Archived groups were invisible to global search unless you picked each one by ha
 
 ![Include archived groups checkbox in the All expenses filter panel](./assets/next/search-archive.webp)
 
+### Onboard a whole room with one QR code
+
+Getting everyone into a group used to mean one single-use link per person. Now the invite card has its own **QR code** tab: one scan-only code the whole room can use, valid for 15 minutes with a live list of who joined and one tap to stop sharing. Only one session runs per group — switching tabs never loses the code, and if another admin started sharing you see their session with the option to take over. Guests on phones get a **Scan to join** action right in the home screen's Groups section with a built-in camera scanner (any phone camera works too), and each joiner lands in the group as their own member.
+
+![QR code tab in Add people showing the live code, join count, and Stop sharing](./assets/next/nearby-qr-code.webp)
+
+![Scan to join camera dialog opened from the home screen's Groups section](./assets/next/scan-to-join.webp)
+
 ## What's Changed
 
 ### 🚀 Features
@@ -48,5 +57,6 @@ Archived groups were invisible to global search unless you picked each one by ha
 - Hide expenses that don't involve you from the group timeline by default, with inline expandable rows that preserve chronological order and a "For you / All" switch (`TBD` by @TBD)
 - Type the expense or income date and time directly in the form, with the calendar and time picker still one click away (`TBD` by @TBD)
 - Search expenses in archived groups from All expenses with the new "Include archived groups" filter (`TBD` by @TBD)
+- Onboard a room of people at once with a scan-only 15-minute Nearby QR code on its own invite tab (one live session per group, joiner names included), plus a Scan to join camera action in the mobile home screen's Groups section (`TBD` by @TBD)
 
 **Full Changelog**: TBD

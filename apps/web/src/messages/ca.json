@@ -51,7 +51,20 @@
     },
     "savedGroupsAction": "Veure els grups desats",
     "savedGroupsTitle": "Grups desats",
-    "savedGroupsDescription": "Grups que has desat en aquest dispositiu."
+    "savedGroupsDescription": "Grups que has desat en aquest dispositiu.",
+    "scanToJoin": "Escaneja per unir-t'hi",
+    "scanDialog": {
+      "title": "Escaneja el codi QR del grup",
+      "description": "Apunta la càmera al codi QR del telèfon de l'amfitrió per unir-te al seu grup.",
+      "scanning": "Cercant un codi QR…",
+      "noCamera": "No s'ha trobat cap càmera en aquest dispositiu. Escaneja el codi amb l'app de càmera del teu telèfon.",
+      "permissionDenied": "S'ha denegat l'accés a la càmera. Permet l'accés a la càmera a la configuració del navegador o escaneja el codi amb l'app de càmera del teu telèfon.",
+      "invalidCode": "Aquest codi no és una invitació de grup de Spliit. Torna a escanejar el codi QR de l'amfitrió.",
+      "foreignTitle": "Aquest codi apunta a un altre Spliit",
+      "foreignDescription": "S'obrirà {origin} en aquest navegador. Continua només si confies en l'amfitrió que te l'ha mostrat.",
+      "foreignConfirm": "Obre l'enllaç",
+      "foreignCancel": "Enrere"
+    }
   },
   "Header": {
     "signIn": "Inicia sessió",
@@ -649,7 +662,8 @@
     "viewOnlyBadge": "Només de lectura",
     "removeSavedView": "Suprimeix",
     "removeSavedViewAccount": "S'ha suprimit de l'inici.",
-    "removeSavedViewDevice": "S'ha suprimit d'aquest dispositiu."
+    "removeSavedViewDevice": "S'ha suprimit d'aquest dispositiu.",
+    "linkInvitationMultiUse": "Aquest codi QR el poden fer servir diverses persones fins que caduqui."
   },
   "GroupForm": {
     "title": "Informació del grup",
@@ -1876,6 +1890,7 @@
         "email": "Correu electrònic",
         "link": "Enllaç d'invitació",
         "friends": "Amics",
+        "qr": "Codi QR",
         "unlinked": "Sense compte"
       },
       "emailDescription": "Envia una invitació per correu electrònic. La persona convidada s'hi unirà quan l'accepti des d'un compte que coincideixi.",
@@ -1905,7 +1920,26 @@
       "noAccountDescription": "Afegeix algú a les despeses sense convidar-lo a Spliit. Més endavant, pots enllaçar aquesta persona amb un compte.",
       "temporaryNameRequired": "Nom temporal",
       "noAccountNameDescription": "Es mostrarà a les despeses i als saldos fins que aquest participant s’enllaci amb un compte.",
-      "addParticipant": "Afegir participant"
+      "addParticipant": "Afegir participant",
+      "qr": {
+        "title": "Codi QR proper",
+        "description": "Les persones que tens al costat s'hi poden unir totes amb un sol codi. Funciona per a tothom fins que caduqui, 15 minuts després de crear-lo.",
+        "show": "Mostra el codi QR",
+        "generating": "Generant…",
+        "multiUse": "Tothom qui l'escanege s'hi pot unir fins que caduqui.",
+        "expiresIn": "Caduca en {count} min",
+        "expiringSoon": "Caduca en menys d'un minut",
+        "stop": "Deixa de compartir",
+        "stopped": "S'ha deixat de compartir el QR. El codi ja no funciona.",
+        "takeOver": "Pren el control i mostra un codi nou",
+        "alreadyActive": "Ja s'està compartint un codi QR per a aquest grup.",
+        "activeElsewhere": "El codi és al dispositiu que va començar a compartir — demana-li que el mostri.",
+        "joined_one": "S'hi ha unit {count} persona",
+        "joined_other": "S'hi han unit {count} persones",
+        "joined_zero": "S'hi han unit {count} persones fins ara",
+        "joined_many": "S'hi han unit {count} persones",
+        "retry": "Torna-ho a provar"
+      }
     },
     "invitations": {
       "title": "Invitacions pendents",
@@ -1926,7 +1960,13 @@
       "email": {
         "type": "Invitació per correu"
       },
-      "updatedOn": "Actualitzada el {date}"
+      "updatedOn": "Actualitzada el {date}",
+      "qr": {
+        "type": "Sessió QR",
+        "fallbackLabel": "Codi QR proper",
+        "viewQr": "Mostra el codi QR",
+        "expireNow": "Fes caducar ara"
+      }
     },
     "changeRoleAria": "Canvia el rol",
     "remove": "Elimina",
@@ -2069,6 +2109,7 @@
       "done": "Fet",
       "regenerateWarning": "L'enllaç actual deixarà de funcionar immediatament.",
       "regenerateDescription": "Es generarà un enllaç nou que caducarà al cap de 30 dies. Es conservaran la invitació i les seves despeses.",
+      "regenerateQrDescription": "Es generarà un nou enllaç de codi QR amb una nova caducitat de 15 minuts. La invitació es conserva.",
       "linkReadyTitle": "Enllaç nou a punt",
       "linkReadyDescription": "Comparteix-lo amb la persona que vols convidar.",
       "linkReadyWarning": "Copia'l ara: no el podràs tornar a veure.",

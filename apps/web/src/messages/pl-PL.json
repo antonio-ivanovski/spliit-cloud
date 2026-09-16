@@ -51,7 +51,20 @@
     },
     "savedGroupsAction": "Zobacz zapisane grupy",
     "savedGroupsTitle": "Zapisane grupy",
-    "savedGroupsDescription": "Grupy zapisane na tym urządzeniu."
+    "savedGroupsDescription": "Grupy zapisane na tym urządzeniu.",
+    "scanToJoin": "Zeskanuj, aby dołączyć",
+    "scanDialog": {
+      "title": "Zeskanuj kod QR grupy",
+      "description": "Skieruj aparat na kod QR na telefonie gospodarza, aby dołączyć do jego grupy.",
+      "scanning": "Szukam kodu QR…",
+      "noCamera": "Nie znaleziono aparatu na tym urządzeniu. Zamiast tego zeskanuj kod aplikacją aparatu w telefonie.",
+      "permissionDenied": "Odmówiono dostępu do aparatu. Zezwól na dostęp do aparatu w ustawieniach przeglądarki lub zeskanuj kod aplikacją aparatu w telefonie.",
+      "invalidCode": "Ten kod nie jest zaproszeniem do grupy w Spliit. Spróbuj ponownie zeskanować kod QR gospodarza.",
+      "foreignTitle": "Ten kod prowadzi do innego Spliita",
+      "foreignDescription": "W tej przeglądarce zostanie otwarty adres {origin}. Kontynuuj tylko wtedy, gdy ufasz osobie, która pokazała ten kod.",
+      "foreignConfirm": "Otwórz link",
+      "foreignCancel": "Wróć"
+    }
   },
   "Header": {
     "signIn": "Zaloguj się",
@@ -656,7 +669,8 @@
     "viewOnlyBadge": "Tylko odczyt",
     "removeSavedView": "Usuń",
     "removeSavedViewAccount": "Usunięto z pulpitu.",
-    "removeSavedViewDevice": "Usunięto z tego urządzenia."
+    "removeSavedViewDevice": "Usunięto z tego urządzenia.",
+    "linkInvitationMultiUse": "Ten kod QR może zostać użyty przez kilka osób, zanim wygaśnie."
   },
   "GroupForm": {
     "title": "Informacje o grupie",
@@ -1885,6 +1899,7 @@
         "email": "E-mail",
         "link": "Link zaproszenia",
         "friends": "Znajomi",
+        "qr": "Kod QR",
         "unlinked": "Bez konta"
       },
       "link": {
@@ -1914,7 +1929,27 @@
       "noAccountDescription": "Dodaj osobę do wydatków bez zapraszania jej do Spliit. Później możesz powiązać ją z kontem.",
       "temporaryNameRequired": "Tymczasowa nazwa",
       "noAccountNameDescription": "Nazwa jest wyświetlana w wydatkach i saldach do czasu powiązania uczestnika z kontem.",
-      "addParticipant": "Dodaj uczestnika"
+      "addParticipant": "Dodaj uczestnika",
+      "qr": {
+        "title": "Kod QR w pobliżu",
+        "description": "Wszystkie osoby w pobliżu mogą dołączyć za pomocą jednego kodu. Działa dla wszystkich, dopóki nie wygaśnie, 15 minut po utworzeniu.",
+        "show": "Pokaż kod QR",
+        "generating": "Generowanie…",
+        "multiUse": "Każdy, kto go zeskanuje, może dołączyć, dopóki kod nie wygaśnie.",
+        "expiresIn": "Wygasa za {count} min",
+        "expiringSoon": "Wygasa za mniej niż minutę",
+        "stop": "Przestań udostępniać",
+        "stopped": "Udostępnianie kodu QR zostało zatrzymane. Kod już nie działa.",
+        "takeOver": "Przejmij i pokaż nowy kod",
+        "alreadyActive": "Dla tej grupy kod QR jest już udostępniany.",
+        "activeElsewhere": "Kod jest na urządzeniu, które rozpoczęło udostępnianie – poproś o jego pokazanie.",
+        "joined_one": "{count} osoba dołączyła",
+        "joined_other": "{count} osób dołączyło",
+        "joined_zero": "{count} dołączyło do tej pory",
+        "joined_few": "{count} osoby dołączyły",
+        "joined_many": "{count} osób dołączyło",
+        "retry": "Spróbuj ponownie"
+      }
     },
     "invitations": {
       "title": "Oczekujące zaproszenia",
@@ -1935,7 +1970,13 @@
       "email": {
         "type": "Zaproszenie e-mail"
       },
-      "updatedOn": "Zaktualizowano {date}"
+      "updatedOn": "Zaktualizowano {date}",
+      "qr": {
+        "type": "Sesja QR",
+        "fallbackLabel": "Kod QR w pobliżu",
+        "viewQr": "Zobacz kod QR",
+        "expireNow": "Unieważnij teraz"
+      }
     },
     "changeRoleAria": "Zmień rolę",
     "remove": "Usuń",
@@ -2079,6 +2120,7 @@
       "done": "Gotowe",
       "regenerateWarning": "Bieżący link natychmiast przestanie działać.",
       "regenerateDescription": "Zostanie wygenerowany nowy link z nowym 30-dniowym terminem ważności. Zaproszenie i jego wydatki zostaną zachowane.",
+      "regenerateQrDescription": "Zostanie wygenerowany nowy link kodu QR ze świeżym 15-minutowym terminem ważności. Zaproszenie zostanie zachowane.",
       "linkReadyTitle": "Nowy link gotowy",
       "linkReadyDescription": "Udostępnij go osobie, którą chcesz zaprosić.",
       "linkReadyWarning": "Skopiuj go teraz — nie będziesz mógł go ponownie zobaczyć.",

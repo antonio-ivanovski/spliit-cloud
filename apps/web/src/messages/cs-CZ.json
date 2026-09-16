@@ -51,7 +51,20 @@
     },
     "savedGroupsAction": "Zobrazit uložené skupiny",
     "savedGroupsTitle": "Uložené skupiny",
-    "savedGroupsDescription": "Skupiny uložené na tomto zařízení."
+    "savedGroupsDescription": "Skupiny uložené na tomto zařízení.",
+    "scanToJoin": "Naskenovat pro připojení",
+    "scanDialog": {
+      "title": "Naskenovat QR kód skupiny",
+      "description": "Namiřte fotoaparát na QR kód na telefonu hostitele a připojte se k jeho skupině.",
+      "scanning": "Hledám QR kód…",
+      "noCamera": "Na tomto zařízení nebyl nalezen fotoaparát. Místo toho naskenujte kód aplikací fotoaparátu ve svém telefonu.",
+      "permissionDenied": "Přístup k fotoaparátu byl odepřen. Povolte přístup k fotoaparátu v nastavení prohlížeče, nebo naskenujte kód aplikací fotoaparátu ve svém telefonu.",
+      "invalidCode": "Tento kód není pozvánkou do skupiny ve Spliitu. Zkuste znovu naskenovat QR kód hostitele.",
+      "foreignTitle": "Tento kód odkazuje na jiný Spliit",
+      "foreignDescription": "V tomto prohlížeči se otevře {origin}. Pokračujte, pouze pokud důvěřujete hostiteli, který vám kód ukázal.",
+      "foreignConfirm": "Otevřít odkaz",
+      "foreignCancel": "Zpět"
+    }
   },
   "Header": {
     "signIn": "Přihlásit se",
@@ -656,7 +669,8 @@
     "viewOnlyBadge": "Pouze čtení",
     "removeSavedView": "Odebrat",
     "removeSavedViewAccount": "Odebráno z vaší nástěnky.",
-    "removeSavedViewDevice": "Odebráno z tohoto zařízení."
+    "removeSavedViewDevice": "Odebráno z tohoto zařízení.",
+    "linkInvitationMultiUse": "Tento QR kód může použít několik lidí, dokud nevyprší."
   },
   "GroupForm": {
     "title": "Informace o skupině",
@@ -1885,6 +1899,7 @@
         "email": "E-mail",
         "link": "Odkaz pozvánky",
         "friends": "Přátelé",
+        "qr": "QR kód",
         "unlinked": "Bez účtu"
       },
       "emailDescription": "Pošlete pozvánku e-mailem. Pozvaný se připojí, jakmile ji přijme z odpovídajícího účtu.",
@@ -1914,7 +1929,27 @@
       "noAccountDescription": "Přidejte někoho k výdajům, aniž byste ho pozvali do Spliitu. Později ho můžete propojit s účtem.",
       "temporaryNameRequired": "Dočasné jméno",
       "noAccountNameDescription": "Zobrazuje se ve výdajích a zůstatcích, dokud tohoto účastníka nepropojíte s účtem.",
-      "addParticipant": "Přidat účastníka"
+      "addParticipant": "Přidat účastníka",
+      "qr": {
+        "title": "QR kód pro okolí",
+        "description": "Všichni kolem vás se mohou připojit pomocí jednoho kódu. Funguje pro všechny, dokud nevyprší, 15 minut po vytvoření.",
+        "show": "Zobrazit QR kód",
+        "generating": "Generuji…",
+        "multiUse": "Kdokoliv ho naskenuje, se může připojit, dokud kód nevyprší.",
+        "expiresIn": "Vyprší za {count} min",
+        "expiringSoon": "Vyprší za méně než minutu",
+        "stop": "Ukončit sdílení",
+        "stopped": "Sdílení QR kódu bylo ukončeno. Kód již nefunguje.",
+        "takeOver": "Převzít a zobrazit nový kód",
+        "alreadyActive": "Pro tuto skupinu se již sdílí QR kód.",
+        "activeElsewhere": "Kód je na zařízení, které začalo sdílet – požádejte o jeho zobrazení.",
+        "joined_one": "{count} člověk se připojil",
+        "joined_other": "{count} lidí se připojilo",
+        "joined_zero": "{count} se zatím připojilo",
+        "joined_few": "{count} lidé se připojili",
+        "joined_many": "{count} lidí se připojilo",
+        "retry": "Zkusit znovu"
+      }
     },
     "invitations": {
       "title": "Čekající pozvánky",
@@ -1935,7 +1970,13 @@
       "email": {
         "type": "E-mailová pozvánka"
       },
-      "updatedOn": "Aktualizováno {date}"
+      "updatedOn": "Aktualizováno {date}",
+      "qr": {
+        "type": "QR relace",
+        "fallbackLabel": "QR kód pro okolí",
+        "viewQr": "Zobrazit QR kód",
+        "expireNow": "Ukončit platnost"
+      }
     },
     "changeRoleAria": "Změnit roli",
     "remove": "Odebrat",
@@ -2079,6 +2120,7 @@
       "done": "Hotovo",
       "regenerateWarning": "Aktuální odkaz přestane okamžitě fungovat.",
       "regenerateDescription": "Bude vygenerován nový odkaz s novou 30denní platností. Pozvánka a její výdaje zůstanou zachovány.",
+      "regenerateQrDescription": "Vygeneruje se nový odkaz QR kódu s novou 15minutovou platností. Pozvánka zůstane zachována.",
       "linkReadyTitle": "Nový odkaz je připraven",
       "linkReadyDescription": "Sdílejte jej s osobou, kterou chcete pozvat.",
       "linkReadyWarning": "Zkopírujte jej nyní — již jej nebudete moci zobrazit.",

@@ -51,7 +51,20 @@
     },
     "savedGroupsAction": "Näytä tallennetut ryhmät",
     "savedGroupsTitle": "Tallennetut ryhmät",
-    "savedGroupsDescription": "Tälle laitteelle tallentamasi ryhmät."
+    "savedGroupsDescription": "Tälle laitteelle tallentamasi ryhmät.",
+    "scanToJoin": "Skannaa liittyäksesi",
+    "scanDialog": {
+      "title": "Skannaa ryhmän QR-koodi",
+      "description": "Osoita kamerasi kutsujan puhelimessa näkyvään QR-koodiin liittyäksesi ryhmään.",
+      "scanning": "Etsitään QR-koodia…",
+      "noCamera": "Tästä laitteesta ei löytynyt kameraa. Skannaa koodi sen sijaan puhelimesi kamerasovelluksella.",
+      "permissionDenied": "Kameran käyttö estettiin. Salli kameran käyttö selaimen asetuksissa tai skannaa koodi puhelimesi kamerasovelluksella.",
+      "invalidCode": "Tämä koodi ei ole Spliit-ryhmäkutsu. Skannaa kutsujan QR-koodi uudelleen.",
+      "foreignTitle": "Tämä koodi osoittaa toiseen Spliitiin",
+      "foreignDescription": "Se avaa {origin} tässä selaimessa. Jatka vain, jos luotat kutsujaan, joka sen näytti.",
+      "foreignConfirm": "Avaa linkki",
+      "foreignCancel": "Takaisin"
+    }
   },
   "Header": {
     "signIn": "Kirjaudu sisään",
@@ -642,7 +655,8 @@
     "viewOnlyBadge": "Vain katselu",
     "removeSavedView": "Poista",
     "removeSavedViewAccount": "Poistettu etusivultasi.",
-    "removeSavedViewDevice": "Poistettu tältä laitteelta."
+    "removeSavedViewDevice": "Poistettu tältä laitteelta.",
+    "linkInvitationMultiUse": "Tätä QR-koodia voivat käyttää useat henkilöt, kunnes se vanhenee."
   },
   "GroupForm": {
     "title": "Ryhmän tiedot",
@@ -1867,6 +1881,7 @@
         "email": "Sähköposti",
         "link": "Kutsulinkki",
         "friends": "Kaverit",
+        "qr": "QR-koodi",
         "unlinked": "Ei tiliä"
       },
       "emailDescription": "Lähetä kutsu sähköpostilla. Kutsuttu liittyy, kun hän hyväksyy sen vastaavalta tililtä.",
@@ -1896,7 +1911,25 @@
       "noAccountDescription": "Lisää henkilö kuluihin kutsumatta häntä Spliitiin. Voit yhdistää hänet tiliin myöhemmin.",
       "temporaryNameRequired": "Väliaikainen nimi",
       "noAccountNameDescription": "Näkyy kuluissa ja saldoissa, kunnes tämä osallistuja yhdistetään tiliin.",
-      "addParticipant": "Lisää osallistuja"
+      "addParticipant": "Lisää osallistuja",
+      "qr": {
+        "title": "Lähi-QR-koodi",
+        "description": "Vieressäsi olevat voivat kaikki liittyä samalla koodilla. Se toimii kaikille, kunnes se vanhenee 15 minuuttia luomisen jälkeen.",
+        "show": "Näytä QR-koodi",
+        "generating": "Luodaan…",
+        "multiUse": "Kuka tahansa sen skannaava voi liittyä, kunnes se vanhenee.",
+        "expiresIn": "Vanhenee {count} minuutin kuluttua",
+        "expiringSoon": "Vanhenee alle minuutin kuluttua",
+        "stop": "Lopeta jakaminen",
+        "stopped": "QR-koodin jakaminen lopetettu. Koodi ei enää toimi.",
+        "takeOver": "Ota haltuun ja näytä uusi koodi",
+        "alreadyActive": "Tälle ryhmälle jaetaan jo QR-koodia.",
+        "activeElsewhere": "Koodi on laitteella, jolla jakaminen aloitettiin – pyydä heitä näyttämään se.",
+        "joined_one": "{count} henkilö liittyi",
+        "joined_other": "{count} henkilöä liittyi",
+        "joined_zero": "{count} henkilöä on liittynyt toistaiseksi",
+        "retry": "Yritä uudelleen"
+      }
     },
     "invitations": {
       "title": "Odottavat kutsut",
@@ -1917,7 +1950,13 @@
       "email": {
         "type": "Sähköpostikutsu"
       },
-      "updatedOn": "Päivitetty {date}"
+      "updatedOn": "Päivitetty {date}",
+      "qr": {
+        "type": "QR-sessio",
+        "fallbackLabel": "Lähi-QR-koodi",
+        "viewQr": "Näytä QR-koodi",
+        "expireNow": "Vanhenna nyt"
+      }
     },
     "changeRoleAria": "Vaihda roolia",
     "removed": "Jäsen poistettu.",
@@ -2059,6 +2098,7 @@
       "done": "Valmis",
       "regenerateWarning": "Nykyinen linkki lakkaa toimimasta välittömästi.",
       "regenerateDescription": "Uusi linkki luodaan tuoreella 30 päivän voimassaololla. Kutsu ja sen kulut säilytetään.",
+      "regenerateQrDescription": "Uusi QR-koodilinkki luodaan tuoreella 15 minuutin voimassaololla. Kutsu säilytetään.",
       "linkReadyTitle": "Uusi linkki valmis",
       "linkReadyDescription": "Jaa se henkilölle, jonka haluat kutsua.",
       "linkReadyWarning": "Kopioi se nyt — et voi nähdä sitä enää uudelleen.",

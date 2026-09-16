@@ -51,7 +51,20 @@
     },
     "savedGroupsAction": "Lihat grup tersimpan",
     "savedGroupsTitle": "Grup tersimpan",
-    "savedGroupsDescription": "Grup yang Anda simpan di perangkat ini."
+    "savedGroupsDescription": "Grup yang Anda simpan di perangkat ini.",
+    "scanToJoin": "Pindai untuk bergabung",
+    "scanDialog": {
+      "title": "Pindai kode QR grup",
+      "description": "Arahkan kamera ke kode QR di ponsel penyelenggara untuk bergabung ke grup mereka.",
+      "scanning": "Mencari kode QR…",
+      "noCamera": "Tidak ada kamera yang ditemukan di perangkat ini. Pindai kode QR dengan aplikasi kamera di ponsel Anda sebagai gantinya.",
+      "permissionDenied": "Akses kamera ditolak. Izinkan akses kamera di pengaturan browser, atau pindai dengan aplikasi kamera di ponsel Anda.",
+      "invalidCode": "Kode itu bukan undangan grup Spliit. Coba pindai lagi kode QR penyelenggara.",
+      "foreignTitle": "Kode ini mengarah ke Spliit lain",
+      "foreignDescription": "Ini akan membuka {origin} di browser ini. Lanjutkan hanya jika Anda memercayai penyelenggara yang menunjukkannya.",
+      "foreignConfirm": "Buka tautan",
+      "foreignCancel": "Kembali"
+    }
   },
   "Header": {
     "signIn": "Masuk",
@@ -635,7 +648,8 @@
     "viewOnlyBadge": "Hanya lihat",
     "removeSavedView": "Hapus",
     "removeSavedViewAccount": "Dihapus dari beranda.",
-    "removeSavedViewDevice": "Dihapus dari perangkat ini."
+    "removeSavedViewDevice": "Dihapus dari perangkat ini.",
+    "linkInvitationMultiUse": "Kode QR ini dapat digunakan oleh beberapa orang hingga kedaluwarsa."
   },
   "GroupForm": {
     "title": "Informasi grup",
@@ -1859,6 +1873,7 @@
         "email": "Email",
         "link": "Tautan undangan",
         "friends": "Teman",
+        "qr": "Kode QR",
         "unlinked": "Tanpa akun"
       },
       "emailDescription": "Kirim undangan melalui email. Yang diundang akan bergabung setelah menerimanya dari akun yang cocok.",
@@ -1888,7 +1903,23 @@
       "noAccountDescription": "Tambahkan seseorang ke pengeluaran tanpa mengundangnya ke Spliit. Anda dapat menautkannya ke akun nanti.",
       "temporaryNameRequired": "Nama sementara",
       "noAccountNameDescription": "Akan ditampilkan dalam pengeluaran dan saldo sampai peserta ini ditautkan ke akun.",
-      "addParticipant": "Tambah peserta"
+      "addParticipant": "Tambah peserta",
+      "qr": {
+        "title": "Kode QR terdekat",
+        "description": "Orang di sekitar Anda dapat bergabung semuanya dari satu kode. Kode ini berlaku untuk semua orang hingga kedaluwarsa, 15 menit setelah dibuat.",
+        "show": "Tampilkan kode QR",
+        "generating": "Membuat…",
+        "multiUse": "Siapa pun yang memindainya dapat bergabung hingga kedaluwarsa.",
+        "expiresIn": "Kedaluwarsa dalam {count} mnt",
+        "expiringSoon": "Kedaluwarsa dalam waktu kurang dari satu menit",
+        "stop": "Berhenti berbagi",
+        "stopped": "Berbagi kode QR dihentikan. Kode tidak lagi berfungsi.",
+        "takeOver": "Ambil alih & tampilkan kode baru",
+        "alreadyActive": "Kode QR sudah dibagikan untuk grup ini.",
+        "activeElsewhere": "Kode ada di perangkat yang mulai berbagi — minta mereka menunjukkannya.",
+        "joined_other": "{count} orang bergabung",
+        "retry": "Coba lagi"
+      }
     },
     "invitations": {
       "title": "Undangan tertunda",
@@ -1909,7 +1940,13 @@
       "email": {
         "type": "Undangan email"
       },
-      "updatedOn": "Diperbarui {date}"
+      "updatedOn": "Diperbarui {date}",
+      "qr": {
+        "type": "Sesi QR",
+        "fallbackLabel": "Kode QR terdekat",
+        "viewQr": "Lihat kode QR",
+        "expireNow": "Kedaluwarsakan sekarang"
+      }
     },
     "changeRoleAria": "Ubah peran",
     "remove": "Hapus",
@@ -2051,6 +2088,7 @@
       "done": "Selesai",
       "regenerateWarning": "Tautan saat ini akan berhenti berfungsi segera.",
       "regenerateDescription": "Tautan baru akan dibuat dengan masa berlaku 30 hari yang baru. Undangan dan pengeluarannya dipertahankan.",
+      "regenerateQrDescription": "Tautan kode QR baru akan dibuat dengan masa berlaku 15 menit yang baru. Undangan dipertahankan.",
       "linkReadyTitle": "Tautan baru siap",
       "linkReadyDescription": "Bagikan kepada orang yang ingin Anda undang.",
       "linkReadyWarning": "Salin sekarang—Anda tidak akan dapat melihatnya lagi.",

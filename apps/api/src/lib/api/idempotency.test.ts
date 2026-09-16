@@ -344,6 +344,7 @@ describe('create idempotency primitives', () => {
         'import',
         'linkInvitation',
         'participant',
+        'qrInvitation',
         'splitPreset',
         'subgroup',
       ].sort(),

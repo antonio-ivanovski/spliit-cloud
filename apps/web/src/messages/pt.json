@@ -51,7 +51,20 @@
     },
     "savedGroupsAction": "Ver grupos guardados",
     "savedGroupsTitle": "Grupos guardados",
-    "savedGroupsDescription": "Grupos que guardaste neste dispositivo."
+    "savedGroupsDescription": "Grupos que guardaste neste dispositivo.",
+    "scanToJoin": "Digitaliza para te juntares",
+    "scanDialog": {
+      "title": "Digitalizar código QR do grupo",
+      "description": "Aponta a câmara ao código QR no telemóvel do anfitrião para te juntares ao grupo.",
+      "scanning": "À procura de um código QR…",
+      "noCamera": "Não foi encontrada nenhuma câmara neste dispositivo. Digitaliza o código com a app de câmara do teu telemóvel.",
+      "permissionDenied": "O acesso à câmara foi negado. Permite o acesso à câmara nas definições do navegador ou digitaliza o código com a app de câmara do teu telemóvel.",
+      "invalidCode": "Esse código não é um convite de grupo Spliit. Tenta digitalizar novamente o código QR do anfitrião.",
+      "foreignTitle": "Este código aponta para outro Spliit",
+      "foreignDescription": "Vai abrir {origin} neste navegador. Continua apenas se confiares no anfitrião que to mostrou.",
+      "foreignConfirm": "Abrir ligação",
+      "foreignCancel": "Voltar"
+    }
   },
   "Header": {
     "signIn": "Iniciar sessão",
@@ -649,7 +662,8 @@
     "viewOnlyBadge": "Só de leitura",
     "removeSavedView": "Remover",
     "removeSavedViewAccount": "Removido do início.",
-    "removeSavedViewDevice": "Removido deste dispositivo."
+    "removeSavedViewDevice": "Removido deste dispositivo.",
+    "linkInvitationMultiUse": "Este código QR pode ser usado por várias pessoas até expirar."
   },
   "GroupForm": {
     "title": "Informações do grupo",
@@ -1894,6 +1908,7 @@
         "email": "E-mail",
         "link": "Ligação de convite",
         "friends": "Amigos",
+        "qr": "Código QR",
         "unlinked": "Sem conta"
       },
       "temporaryNamePlaceholder": "ex.: colega de quarto do Alex",
@@ -1905,7 +1920,26 @@
       "noAccountDescription": "Adicione alguém às despesas sem o convidar para o Spliit. Mais tarde, pode associá-lo a uma conta.",
       "temporaryNameRequired": "Nome temporário",
       "noAccountNameDescription": "Será apresentado nas despesas e nos saldos até este participante ser associado a uma conta.",
-      "addParticipant": "Adicionar participante"
+      "addParticipant": "Adicionar participante",
+      "qr": {
+        "title": "Código QR próximo",
+        "description": "As pessoas ao teu lado podem juntar-se todas com um único código. Funciona para todos até expirar, 15 minutos após a criação.",
+        "show": "Mostrar código QR",
+        "generating": "A gerar…",
+        "multiUse": "Qualquer pessoa que o digitalize pode juntar-se até expirar.",
+        "expiresIn": "Expira em {count} min",
+        "expiringSoon": "Expira em menos de um minuto",
+        "stop": "Parar de partilhar",
+        "stopped": "Partilha de QR interrompida. O código já não funciona.",
+        "takeOver": "Assumir o controlo e mostrar um novo código",
+        "alreadyActive": "Já está a ser partilhado um código QR para este grupo.",
+        "activeElsewhere": "O código está no dispositivo que começou a partilhar — pede-lhe que o mostre.",
+        "joined_one": "{count} pessoa juntou-se",
+        "joined_other": "{count} pessoas juntaram-se",
+        "joined_zero": "{count} pessoas juntaram-se até agora",
+        "joined_many": "{count} pessoas juntaram-se",
+        "retry": "Tentar novamente"
+      }
     },
     "invitations": {
       "title": "Convites pendentes",
@@ -1926,7 +1960,13 @@
       "email": {
         "type": "Convite por email"
       },
-      "updatedOn": "Atualizado em {date}"
+      "updatedOn": "Atualizado em {date}",
+      "qr": {
+        "type": "Sessão QR",
+        "fallbackLabel": "Código QR próximo",
+        "viewQr": "Ver código QR",
+        "expireNow": "Expirar agora"
+      }
     },
     "changeRoleAria": "Alterar função",
     "remove": "Remover",
@@ -2069,6 +2109,7 @@
       "done": "Concluído",
       "regenerateWarning": "A ligação atual deixará de funcionar imediatamente.",
       "regenerateDescription": "Será gerada uma nova ligação válida por 30 dias. O convite e as respetivas despesas serão mantidos.",
+      "regenerateQrDescription": "Será gerada uma nova ligação de código QR com uma nova validade de 15 minutos. O convite é mantido.",
       "linkReadyTitle": "Nova ligação pronta",
       "linkReadyDescription": "Partilhe-a com a pessoa que pretende convidar.",
       "linkReadyWarning": "Copie-a agora — não poderá voltar a vê-la.",

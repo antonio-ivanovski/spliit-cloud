@@ -51,7 +51,20 @@
     },
     "savedGroupsAction": "Xem nhóm đã lưu",
     "savedGroupsTitle": "Nhóm đã lưu",
-    "savedGroupsDescription": "Các nhóm bạn đã lưu trên thiết bị này."
+    "savedGroupsDescription": "Các nhóm bạn đã lưu trên thiết bị này.",
+    "scanToJoin": "Quét để tham gia",
+    "scanDialog": {
+      "title": "Quét mã QR nhóm",
+      "description": "Hướng máy ảnh vào mã QR trên điện thoại của chủ nhóm để tham gia nhóm của họ.",
+      "scanning": "Đang tìm mã QR…",
+      "noCamera": "Không tìm thấy máy ảnh trên thiết bị này. Hãy quét mã bằng ứng dụng máy ảnh trên điện thoại.",
+      "permissionDenied": "Quyền truy cập máy ảnh bị từ chối. Hãy cho phép truy cập máy ảnh trong cài đặt trình duyệt, hoặc quét mã bằng ứng dụng máy ảnh trên điện thoại.",
+      "invalidCode": "Mã đó không phải lời mời nhóm Spliit. Hãy thử quét lại mã QR của chủ nhóm.",
+      "foreignTitle": "Mã này trỏ tới một Spliit khác",
+      "foreignDescription": "Liên kết sẽ mở {origin} trong trình duyệt này. Chỉ tiếp tục nếu bạn tin tưởng chủ nhóm đã hiển thị mã này.",
+      "foreignConfirm": "Mở liên kết",
+      "foreignCancel": "Quay lại"
+    }
   },
   "Header": {
     "signIn": "Đăng nhập",
@@ -742,7 +755,8 @@
     "viewOnlyBadge": "Chỉ xem",
     "removeSavedView": "Xóa",
     "removeSavedViewAccount": "Đã xóa khỏi trang chủ.",
-    "removeSavedViewDevice": "Đã xóa khỏi thiết bị này."
+    "removeSavedViewDevice": "Đã xóa khỏi thiết bị này.",
+    "linkInvitationMultiUse": "Mã QR này có thể dùng cho nhiều người cho đến khi hết hạn."
   },
   "Auth": {
     "title": "Đăng nhập",
@@ -2334,6 +2348,7 @@
         "email": "Email",
         "link": "Liên kết",
         "friends": "Bạn bè",
+        "qr": "Mã QR",
         "unlinked": "Không có tài khoản"
       },
       "link": {
@@ -2363,7 +2378,23 @@
       "noAccountDescription": "Thêm một người vào các khoản chi mà không cần mời họ dùng Spliit. Có thể liên kết họ với một tài khoản sau.",
       "temporaryNameRequired": "Tên tạm thời",
       "noAccountNameDescription": "Hiển thị trong các khoản chi và số dư cho đến khi người tham gia này được liên kết với một tài khoản.",
-      "addParticipant": "Thêm người tham gia"
+      "addParticipant": "Thêm người tham gia",
+      "qr": {
+        "title": "Mã QR ở gần",
+        "description": "Những người ở gần đều có thể tham gia từ một mã. Mã này dùng được cho mọi người cho đến khi hết hạn, 15 phút sau khi tạo.",
+        "show": "Hiện mã QR",
+        "generating": "Đang tạo…",
+        "multiUse": "Bất kỳ ai quét mã đều có thể tham gia cho đến khi mã hết hạn.",
+        "expiresIn": "Hết hạn sau {count} phút",
+        "expiringSoon": "Hết hạn trong chưa đầy một phút",
+        "stop": "Dừng chia sẻ",
+        "stopped": "Đã dừng chia sẻ QR. Mã không còn hiệu lực.",
+        "takeOver": "Tiếp quản & hiện mã mới",
+        "alreadyActive": "Đã có mã QR đang được chia sẻ cho nhóm này.",
+        "activeElsewhere": "Mã nằm trên thiết bị đã bắt đầu chia sẻ — hãy nhờ họ hiển thị mã.",
+        "joined_other": "{count} người đã tham gia",
+        "retry": "Thử lại"
+      }
     },
     "invitations": {
       "title": "Lời mời",
@@ -2384,7 +2415,13 @@
       "email": {
         "type": "Email"
       },
-      "updatedOn": "Đã cập nhật {date}"
+      "updatedOn": "Đã cập nhật {date}",
+      "qr": {
+        "type": "Phiên QR",
+        "fallbackLabel": "Mã QR ở gần",
+        "viewQr": "Xem mã QR",
+        "expireNow": "Cho hết hạn ngay"
+      }
     },
     "leave": {
       "button": "Rời nhóm",
@@ -2500,6 +2537,7 @@
       "done": "Xong",
       "regenerateWarning": "Liên kết hiện tại sẽ ngừng hoạt động ngay lập tức.",
       "regenerateDescription": "Một liên kết mới sẽ được tạo với thời hạn 30 ngày mới. Lời mời và các chi phí của nó được giữ nguyên.",
+      "regenerateQrDescription": "Một liên kết mã QR mới sẽ được tạo với thời hạn 15 phút mới. Lời mời được giữ nguyên.",
       "linkReadyTitle": "Liên kết mới đã sẵn sàng",
       "linkReadyDescription": "Chia sẻ nó với người bạn muốn mời.",
       "linkReadyWarning": "Sao chép ngay—bạn sẽ không thể xem lại nó nữa.",

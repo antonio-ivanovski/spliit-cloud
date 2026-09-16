@@ -1,4 +1,3 @@
-/* oxlint-disable jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events -- wrapper stops propagation for the optional action inside a trigger. */
 import { ChevronDown } from 'lucide-react'
 import type { ReactNode } from 'react'
 
@@ -49,9 +48,10 @@ type Props = {
    */
   storageKey: string
   /**
-   * Optional content rendered to the right of the title in the trigger header
-   * (e.g., a small action button). It stays clickable and is not affected by
-   * the collapse/expand toggle.
+   * Optional content rendered to the right of the title in the section header
+   * (e.g., a small action button). It sits beside the collapse toggle — not
+   * inside it — so it stays clickable without toggling and never pollutes the
+   * toggle's accessible name.
    */
   headerAction?: ReactNode
   /** The section content that gets collapsed. */
@@ -95,33 +95,24 @@ export function CollapsibleSection({
         rootClassName,
       )}
     >
-      <CollapsibleTrigger
+      <div
         className={cn(
-          'group flex cursor-pointer items-center justify-between gap-2 rounded-md py-1 text-start transition-colors hover:bg-muted/40 hover:text-foreground/80',
+          'flex items-center justify-between gap-2 rounded-md py-1',
           insetHeader
-            ? 'mx-3 w-[calc(100%-1.5rem)] px-0 sm:-mx-2 sm:w-full sm:px-2'
-            : '-mx-2 w-full px-2',
+            ? 'mx-3 w-[calc(100%-1.5rem)] sm:-mx-2 sm:w-full'
+            : '-mx-2 w-full',
           triggerClassName,
         )}
       >
-        <span className="flex min-w-0 flex-1 items-center gap-2">
+        <CollapsibleTrigger className="group flex min-w-0 flex-1 cursor-pointer items-center gap-2 rounded-md px-1 py-1 text-start transition-colors hover:bg-muted/40 hover:text-foreground/80">
           <ChevronDown
             aria-hidden
             className="h-4 w-4 shrink-0 -rotate-90 text-muted-foreground transition-transform duration-200 group-data-[panel-open]:rotate-0"
           />
           <span className="truncate font-semibold">{title}</span>
-        </span>
-        {headerAction ? (
-          <span
-            // Stop propagation so clicking the action doesn't toggle the
-            // collapsible. The action's own click handler still runs.
-            onClick={(event) => event.stopPropagation()}
-            className="relative z-10 shrink-0"
-          >
-            {headerAction}
-          </span>
-        ) : null}
-      </CollapsibleTrigger>
+        </CollapsibleTrigger>
+        {headerAction ? <span className="shrink-0">{headerAction}</span> : null}
+      </div>
       <CollapsibleContent className={cn('pt-3', contentClassName)}>
         {children}
       </CollapsibleContent>

@@ -51,7 +51,20 @@
     },
     "savedGroupsAction": "Ikusi gordetako taldeak",
     "savedGroupsTitle": "Gordetako taldeak",
-    "savedGroupsDescription": "Gailu honetan gorde dituzun taldeak."
+    "savedGroupsDescription": "Gailu honetan gorde dituzun taldeak.",
+    "scanToJoin": "Eskaneatu batzeko",
+    "scanDialog": {
+      "title": "Eskaneatu taldearen QR kodea",
+      "description": "Zuzendu kamera antolatzailearen telefonoan dagoen QR kodera taldean sartzeko.",
+      "scanning": "QR kode baten bila…",
+      "noCamera": "Ez da kamerarik aurkitu gailu honetan. Eskaneatu kodea zure telefonoaren kamera-aplikazioarekin.",
+      "permissionDenied": "Kamerarako sarbidea ukatu da. Baimendu kamerarako sarbidea nabigatzailearen ezarpenetan, edo eskaneatu kodea zure telefonoaren kamera-aplikazioarekin.",
+      "invalidCode": "Kode hori ez da Spliit talde-gonbidapen bat. Saiatu berriro antolatzailearen QR kodea eskaneatzen.",
+      "foreignTitle": "Kode honek beste Spliit batera darama",
+      "foreignDescription": "{origin} irekiko da arakatzaile honetan. Jarraitu soilik erakutsi dizun antolatzaileaz fidatzen bazara.",
+      "foreignConfirm": "Ireki esteka",
+      "foreignCancel": "Atzera"
+    }
   },
   "Header": {
     "signIn": "Hasi saioa",
@@ -648,7 +661,8 @@
     "viewOnlyBadge": "Ikusteko soilik",
     "removeSavedView": "Kendu",
     "removeSavedViewAccount": "Hasieratik kendu da.",
-    "removeSavedViewDevice": "Gailu honetatik kendu da."
+    "removeSavedViewDevice": "Gailu honetatik kendu da.",
+    "linkInvitationMultiUse": "QR kode hau hainbat lagunek erabili dezakete iraungi arte."
   },
   "GroupForm": {
     "title": "Taldeko informazioa",
@@ -1875,6 +1889,7 @@
         "email": "E-maila",
         "link": "Gonbidapen-esteka",
         "friends": "Lagunak",
+        "qr": "QR kodea",
         "unlinked": "Konturik ez"
       },
       "emailDescription": "Bidali gonbidapen bat e-mail bidez. Gonbidatua batuko da bat datorren kontu batetik onartzen duenean.",
@@ -1904,7 +1919,25 @@
       "noAccountDescription": "Gehitu norbait gastuetara Spliit-era gonbidatu gabe. Geroago kontu batera lotu ahal izango duzu.",
       "temporaryNameRequired": "Aldi baterako izena",
       "noAccountNameDescription": "Parte-hartzaile hau kontu batera lotu arte, gastuetan eta saldoetan agertuko da.",
-      "addParticipant": "Gehitu parte-hartzailea"
+      "addParticipant": "Gehitu parte-hartzailea",
+      "qr": {
+        "title": "Inguruko QR kodea",
+        "description": "Ondoan dituzun guztiak kode bakarrarekin batu daitezke. Guztientzat balio du iraungi arte, sortu eta 15 minutura.",
+        "show": "Erakutsi QR kodea",
+        "generating": "Sortzen…",
+        "multiUse": "Eskaneatzen duen edonor batu daiteke iraungi arte.",
+        "expiresIn": "Iraungitzeko {count} min",
+        "expiringSoon": "Minutu bat baino gutxiagoan iraungiko da",
+        "stop": "Utzi partekatzeari",
+        "stopped": "QR partekatzea gelditu da. Kodeak ez du jada balio.",
+        "takeOver": "Hartu kontrola eta erakutsi kode berria",
+        "alreadyActive": "QR kode bat partekatzen ari da talde honetarako.",
+        "activeElsewhere": "Kodea partekatzen hasi zen gailuan dago — eskatu hura erakusteko.",
+        "joined_one": "{count} pertsona batu da",
+        "joined_other": "{count} pertsona batu dira",
+        "joined_zero": "{count} pertsona batu dira orain arte",
+        "retry": "Saiatu berriro"
+      }
     },
     "invitations": {
       "title": "Gonbidapen zain",
@@ -1925,7 +1958,13 @@
       "email": {
         "type": "Posta bidezko gonbidapena"
       },
-      "updatedOn": "{date}(e)an eguneratua"
+      "updatedOn": "{date}(e)an eguneratua",
+      "qr": {
+        "type": "QR saioa",
+        "fallbackLabel": "Inguruko QR kodea",
+        "viewQr": "Ikusi QR kodea",
+        "expireNow": "Iraungi orain"
+      }
     },
     "changeRoleAria": "Aldatu rola",
     "remove": "Kendu",
@@ -2068,6 +2107,7 @@
       "done": "Eginda",
       "regenerateWarning": "Uneko estekak berehala funtzionatzeari utziko dio.",
       "regenerateDescription": "30 egun barru iraungiko den esteka berri bat sortuko da. Gonbidapena eta haren gastuak mantenduko dira.",
+      "regenerateQrDescription": "QR kodearen esteka berri bat sortuko da 15 minutuko iraungitze berriarekin. Gonbidapena mantentzen da.",
       "linkReadyTitle": "Esteka berria prest",
       "linkReadyDescription": "Partekatu gonbidatu nahi duzun pertsonarekin.",
       "linkReadyWarning": "Kopiatu orain; gero ezin izango duzu berriro ikusi.",

@@ -580,7 +580,20 @@
     },
     "savedGroupsAction": "عرض المجموعات المحفوظة",
     "savedGroupsTitle": "المجموعات المحفوظة",
-    "savedGroupsDescription": "المجموعات التي حفظتها على هذا الجهاز."
+    "savedGroupsDescription": "المجموعات التي حفظتها على هذا الجهاز.",
+    "scanToJoin": "امسح للانضمام",
+    "scanDialog": {
+      "title": "مسح رمز QR للمجموعة",
+      "description": "وجّه الكاميرا إلى رمز QR على هاتف المضيف للانضمام إلى مجموعته.",
+      "scanning": "جارٍ البحث عن رمز QR…",
+      "noCamera": "لم يتم العثور على كاميرا في هذا الجهاز. امسح الرمز باستخدام تطبيق الكاميرا في هاتفك بدلاً من ذلك.",
+      "permissionDenied": "تم رفض الوصول إلى الكاميرا. اسمح بالوصول إلى الكاميرا في إعدادات المتصفح، أو امسح الرمز باستخدام تطبيق الكاميرا في هاتفك بدلاً من ذلك.",
+      "invalidCode": "هذا الرمز ليس دعوة إلى مجموعة في Spliit. حاول مسح رمز QR الخاص بالمضيف مرة أخرى.",
+      "foreignTitle": "هذا الرمز يشير إلى نسخة أخرى من Spliit",
+      "foreignDescription": "سيتم فتح {origin} في هذا المتصفح. لا تتابع إلا إذا كنت تثق بالمضيف الذي عرض هذا الرمز.",
+      "foreignConfirm": "افتح الرابط",
+      "foreignCancel": "رجوع"
+    }
   },
   "ExpensePreview": {
     "paidFor": "مقسم بين",
@@ -1158,7 +1171,8 @@
     "viewOnlyBadge": "للعرض فقط",
     "removeSavedView": "إزالة",
     "removeSavedViewAccount": "أُزيلت من صفحتك الرئيسية.",
-    "removeSavedViewDevice": "أُزيلت من هذا الجهاز."
+    "removeSavedViewDevice": "أُزيلت من هذا الجهاز.",
+    "linkInvitationMultiUse": "يمكن استخدام رمز QR هذا من قِبل عدة أشخاص حتى انتهاء صلاحيته."
   },
   "Unsubscribe": {
     "submitting": "جارٍ إلغاء الاشتراك…",
@@ -2431,6 +2445,7 @@
         "link": "رابط دعوة",
         "friends": "السمةn",
         "email": "البريد الإلكتروني",
+        "qr": "رمز QR",
         "unlinked": "بدون حساب"
       },
       "friendAlreadyInvited": "تمت دعوته بالفعل",
@@ -2442,7 +2457,28 @@
       "noAccountDescription": "أضف شخصًا إلى المصروفات دون دعوته إلى Spliit. يمكنك ربطه بحساب لاحقًا.",
       "temporaryNameRequired": "اسم مؤقت",
       "noAccountNameDescription": "سيظهر في المصروفات والأرصدة حتى يتم ربط هذا المشارك بحساب.",
-      "addParticipant": "إضافة مشارك"
+      "addParticipant": "إضافة مشارك",
+      "qr": {
+        "title": "رمز QR قريب",
+        "description": "يمكن لجميع الأشخاص بجانبك الانضمام من رمز واحد. يعمل للجميع حتى انتهاء صلاحيته، بعد 15 دقيقة من إنشائه.",
+        "show": "عرض رمز QR",
+        "generating": "جارٍ الإنشاء…",
+        "multiUse": "يمكن لأي شخص يمسحه الانضمام حتى انتهاء صلاحيته.",
+        "expiresIn": "ينتهي خلال {count} دقائق",
+        "expiringSoon": "ينتهي خلال أقل من دقيقة",
+        "stop": "إيقاف المشاركة",
+        "stopped": "توقفت مشاركة QR. لم يعد الرمز يعمل.",
+        "takeOver": "تولّي المشاركة وعرض رمز جديد",
+        "alreadyActive": "تتم مشاركة رمز QR لهذه المجموعة بالفعل.",
+        "activeElsewhere": "الرمز موجود على الجهاز الذي بدأ المشاركة — يُرجى طلب عرضه من ذلك الجهاز.",
+        "joined_one": "انضم {count} شخص",
+        "joined_other": "انضم {count} أشخاص",
+        "joined_zero": "انضم {count} حتى الآن",
+        "joined_two": "انضم {count} شخصين",
+        "joined_few": "انضم {count} أشخاص",
+        "joined_many": "انضم {count} شخصًا",
+        "retry": "حاول مجدداً"
+      }
     },
     "title": "الأعضاء",
     "removeDialog": {
@@ -2491,7 +2527,13 @@
         "type": "دعوة بريد إلكتروني"
       },
       "revokeButton": "إلغاء الدعوة",
-      "updatedOn": "تم التحديث في {date}"
+      "updatedOn": "تم التحديث في {date}",
+      "qr": {
+        "type": "جلسة QR",
+        "fallbackLabel": "رمز QR قريب",
+        "viewQr": "عرض رمز QR",
+        "expireNow": "إنهاء الصلاحية الآن"
+      }
     },
     "subgroups": {
       "title": "المجموعات الفرعية",
@@ -2549,6 +2591,7 @@
       "done": "تم",
       "regenerateWarning": "سيتوقف الرابط الحالي عن العمل فوراً.",
       "regenerateDescription": "سيُنشأ رابط جديد بصلاحية 30 يوماً. الدعوة ومصروفاتها محفوظة.",
+      "regenerateQrDescription": "سيتم إنشاء رابط رمز QR جديد بصلاحية جديدة لمدة 15 دقيقة. تبقى الدعوة كما هي.",
       "linkReadyTitle": "الرابط الجديد جاهز",
       "linkReadyDescription": "شاركه مع الشخص الذي تريد دعوته.",
       "linkReadyWarning": "انسخه الآن — لن تتمكن من عرضه مجدداً.",

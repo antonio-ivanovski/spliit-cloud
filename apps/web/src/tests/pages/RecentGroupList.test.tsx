@@ -241,11 +241,13 @@ describe('RecentGroupList', () => {
     expect(screen.getByTestId('dashboard-welcome')).toHaveClass(
       'px-[var(--page-inset,1rem)]',
     )
-    expect(
-      screen
-        .getAllByRole('button', { name: 'Groups' })
-        .find((button) => button.classList.contains('mx-3')),
-    ).toHaveClass('w-[calc(100%-1.5rem)]')
+    // The Groups toggle keeps an exact accessible name (the scan action is a
+    // sibling, not nested inside it); alignment classes live on the header row.
+    const groupsButton = screen.getByRole('button', { name: 'Groups' })
+    expect(groupsButton.parentElement).toHaveClass(
+      'mx-3',
+      'w-[calc(100%-1.5rem)]',
+    )
   })
 
   it('groups cross-group balances by direction and currency', async () => {
@@ -674,6 +676,30 @@ describe('RecentGroupList', () => {
     // "Groups" heading appears when there are non-starred groups
     expect(screen.getByRole('button', { name: 'Groups' })).toBeInTheDocument()
     expect(screen.getByText('Active Trip')).toBeInTheDocument()
+  })
+
+  it('offers Scan to join from the Groups section header', async () => {
+    mocks.mockUseOverviewQuery.mockReturnValue({
+      data: {
+        groups: [],
+        stats: {
+          balanceSummaries: [],
+        },
+      },
+      isLoading: false,
+    })
+
+    const { user } = render(<RecentGroupList />)
+
+    const scanButton = screen.getByTestId('scan-to-join-button')
+    expect(scanButton).toHaveTextContent('Scan to join')
+    // The action sits beside the toggle, not nested inside it.
+    expect(screen.getByRole('button', { name: 'Groups' })).toBeInTheDocument()
+
+    await user.click(scanButton)
+    expect(
+      await screen.findByRole('heading', { name: 'Scan group QR code' }),
+    ).toBeInTheDocument()
   })
 
   // ── Archived section ────────────────────────────────────────────────

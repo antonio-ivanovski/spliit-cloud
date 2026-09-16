@@ -51,7 +51,20 @@
     },
     "savedGroupsAction": "הצגת קבוצות שמורות",
     "savedGroupsTitle": "קבוצות שמורות",
-    "savedGroupsDescription": "קבוצות ששמרת במכשיר הזה."
+    "savedGroupsDescription": "קבוצות ששמרת במכשיר הזה.",
+    "scanToJoin": "סרוק כדי להצטרף",
+    "scanDialog": {
+      "title": "סריקת קוד QR של הקבוצה",
+      "description": "כוון את המצלמה אל קוד ה-QR בטלפון של המארח כדי להצטרף לקבוצה שלו.",
+      "scanning": "מחפש קוד QR…",
+      "noCamera": "לא נמצאה מצלמה במכשיר הזה. סרוק את הקוד עם אפליקציית המצלמה בטלפון שלך במקום זאת.",
+      "permissionDenied": "הגישה למצלמה נדחתה. אפשר גישה למצלמה בהגדרות הדפדפן, או סרוק עם אפליקציית המצלמה בטלפון שלך במקום זאת.",
+      "invalidCode": "הקוד הזה אינו הזמנה לקבוצה ב-Spliit. נסה לסרוק שוב את קוד ה-QR של המארח.",
+      "foreignTitle": "הקוד הזה מפנה ל-Spliit אחר",
+      "foreignDescription": "זה יפתח את {origin} בדפדפן הזה. המשך רק אם אתה סומך על המארח שהציג אותו.",
+      "foreignConfirm": "פתח קישור",
+      "foreignCancel": "חזרה"
+    }
   },
   "Header": {
     "signIn": "התחבר",
@@ -649,7 +662,8 @@
     "viewOnlyBadge": "לצפייה בלבד",
     "removeSavedView": "הסר",
     "removeSavedViewAccount": "הוסרה מהדף הראשי.",
-    "removeSavedViewDevice": "הוסרה מהמכשיר הזה."
+    "removeSavedViewDevice": "הוסרה מהמכשיר הזה.",
+    "linkInvitationMultiUse": "ניתן להשתמש בקוד QR הזה על ידי מספר אנשים עד שיפוג תוקפו."
   },
   "GroupForm": {
     "title": "מידע על הקבוצה",
@@ -1876,6 +1890,7 @@
         "email": "דוא״ל",
         "link": "קישור הזמנה",
         "friends": "חברים",
+        "qr": "קוד QR",
         "unlinked": "ללא חשבון"
       },
       "emailDescription": "שלחו הזמנה בדוא״ל. המוזמן יצטרף לאחר שיאשר אותה מחשבון תואם.",
@@ -1905,7 +1920,26 @@
       "noAccountDescription": "הוסף אדם להוצאות בלי להזמין אותו ל-Spliit. ניתן לקשר אותו לחשבון בהמשך.",
       "temporaryNameRequired": "שם זמני",
       "noAccountNameDescription": "יוצג בהוצאות וביתרות עד לקישור המשתתף לחשבון.",
-      "addParticipant": "הוסף משתתף"
+      "addParticipant": "הוסף משתתף",
+      "qr": {
+        "title": "קוד QR קרוב",
+        "description": "כל האנשים שלידכם יכולים להצטרף מקוד אחד. הוא עובד לכולם עד שיפוג, 15 דקות לאחר היצירה.",
+        "show": "הצגת קוד QR",
+        "generating": "יוצר…",
+        "multiUse": "כל מי שסורק אותו יכול להצטרף עד שיפוג.",
+        "expiresIn": "יפוג בעוד {count} דקות",
+        "expiringSoon": "יפוג בעוד פחות מדקה",
+        "stop": "עצירת השיתוף",
+        "stopped": "שיתוף ה-QR הופסק. הקוד כבר לא עובד.",
+        "takeOver": "השתלט והצג קוד חדש",
+        "alreadyActive": "קוד QR כבר משותף עבור הקבוצה הזו.",
+        "activeElsewhere": "הקוד נמצא במכשיר שהתחיל את השיתוף — בקשו להציג אותו.",
+        "joined_one": "הצטרף {count} אדם",
+        "joined_other": "הצטרפו {count} אנשים",
+        "joined_zero": "הצטרפו {count} עד כה",
+        "joined_two": "הצטרפו {count} אנשים",
+        "retry": "נסה שוב"
+      }
     },
     "invitations": {
       "title": "הזמנות ממתינות",
@@ -1926,7 +1960,13 @@
       "email": {
         "type": "הזמנה בדוא״ל"
       },
-      "updatedOn": "עודכן {date}"
+      "updatedOn": "עודכן {date}",
+      "qr": {
+        "type": "הפעלת QR",
+        "fallbackLabel": "קוד QR קרוב",
+        "viewQr": "הצגת קוד QR",
+        "expireNow": "בטל תוקף עכשיו"
+      }
     },
     "changeRoleAria": "שנה תפקיד",
     "remove": "הסר",
@@ -2069,6 +2109,7 @@
       "done": "סיום",
       "regenerateWarning": "הקישור הנוכחי יפסיק לפעול מיד.",
       "regenerateDescription": "ייווצר קישור חדש עם תוקף של 30 ימים. ההזמנה וההוצאות שלה נשמרות.",
+      "regenerateQrDescription": "ייווצר קישור קוד QR חדש עם תוקף חדש של 15 דקות. ההזמנה נשמרת.",
       "linkReadyTitle": "הקישור החדש מוכן",
       "linkReadyDescription": "שתפו אותו עם האדם שאתם רוצים להזמין.",
       "linkReadyWarning": "העתיקו אותו עכשיו — לא תוכלו לראות אותו שוב.",

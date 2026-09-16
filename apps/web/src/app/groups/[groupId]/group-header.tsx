@@ -220,7 +220,11 @@ export const GroupHeader = ({
               {isLinkBanner && (
                 <p className="flex items-start gap-1.5 text-xs text-muted-foreground">
                   <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-                  <span>{tGroups('linkInvitationSingleUse')}</span>
+                  <span>
+                    {previewQuery.data?.preview?.isMultiUse
+                      ? tGroups('linkInvitationMultiUse')
+                      : tGroups('linkInvitationSingleUse')}
+                  </span>
                 </p>
               )}
               {isLinkBanner && previewQuery.data?.preview?.temporaryName && (

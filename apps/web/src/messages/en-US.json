@@ -51,7 +51,20 @@
     },
     "savedGroupsAction": "View saved groups",
     "savedGroupsTitle": "Saved groups",
-    "savedGroupsDescription": "Groups you saved on this device."
+    "savedGroupsDescription": "Groups you saved on this device.",
+    "scanToJoin": "Scan to join",
+    "scanDialog": {
+      "title": "Scan group QR code",
+      "description": "Point your camera at the QR code on the host's phone to join their group.",
+      "scanning": "Looking for a QR code…",
+      "noCamera": "No camera found on this device. Scan the code with your phone's camera app instead.",
+      "permissionDenied": "Camera access was denied. Allow camera access in your browser settings, or scan with your phone's camera app instead.",
+      "invalidCode": "That code is not a Spliit group invite. Try scanning the host's QR code again.",
+      "foreignTitle": "This code points to another Spliit",
+      "foreignDescription": "It will open {origin} in this browser. Only continue if you trust the host who showed it.",
+      "foreignConfirm": "Open link",
+      "foreignCancel": "Go back"
+    }
   },
   "Header": {
     "signIn": "Sign in",
@@ -747,7 +760,8 @@
     "viewOnlyBadge": "View-only",
     "removeSavedView": "Remove",
     "removeSavedViewAccount": "Removed from your dashboard.",
-    "removeSavedViewDevice": "Removed from this device."
+    "removeSavedViewDevice": "Removed from this device.",
+    "linkInvitationMultiUse": "This QR code can be used by several people until it expires."
   },
   "Auth": {
     "title": "Sign in to Spliit Cloud",
@@ -2362,6 +2376,7 @@
         "email": "Email",
         "link": "Invite link",
         "friends": "Friends",
+        "qr": "QR code",
         "unlinked": "No account"
       },
       "link": {
@@ -2378,6 +2393,27 @@
         "shareText": "I just created {groupName} for our shared expenses on Spliit Cloud. Here's a one-time invite link — open it to join:\n{inviteUrl}",
         "generateNew": "Generate new link",
         "copyLink": "Copy link"
+      },
+      "qr": {
+        "title": "Nearby QR code",
+        "description": "People next to you can all join from one code. It works for everyone until it expires, 15 minutes after creation.",
+        "show": "Show QR code",
+        "generating": "Generating…",
+        "multiUse": "Anyone who scans it can join until it expires.",
+        "expiresIn": "Expires in {count} min",
+        "expiringSoon": "Expires in less than a minute",
+        "stop": "Stop sharing",
+        "stopped": "QR sharing stopped. The code no longer works.",
+        "takeOver": "Take over & show new code",
+        "alreadyActive": "A QR code is already being shared for this group.",
+        "activeElsewhere": "The code is on the device that started sharing — ask them to show it.",
+        "joined_one": "{count} person joined",
+        "joined_other": "{count} people joined",
+        "joined_zero": "{count} joined so far",
+        "joined_two": "{count} people joined",
+        "joined_few": "{count} people joined",
+        "joined_many": "{count} people joined",
+        "retry": "Try again"
       },
       "emailDescription": "Send an invitation by email. The invitee joins once they accept from a matching account.",
       "linkDescription": "Generate a single-use link anyone can use to join. The link stops working after the first accept.",
@@ -2408,6 +2444,12 @@
         "anyoneWithLink": "Anyone with the link",
         "expiresOn": "Link expires {date}",
         "expired": "Expired"
+      },
+      "qr": {
+        "type": "QR session",
+        "fallbackLabel": "Nearby QR code",
+        "viewQr": "View QR code",
+        "expireNow": "Expire now"
       },
       "email": {
         "type": "Email invite"
@@ -2528,6 +2570,7 @@
       "done": "Done",
       "regenerateWarning": "The current link will stop working immediately.",
       "regenerateDescription": "A new link will be generated with a fresh 30-day expiry. The invitation and its expenses are kept.",
+      "regenerateQrDescription": "A new QR code link will be generated with a fresh 15-minute expiry. The invitation is kept.",
       "linkReadyTitle": "New link ready",
       "linkReadyDescription": "Share it with the person you want to invite.",
       "linkReadyWarning": "Copy it now—you won't be able to view it again.",

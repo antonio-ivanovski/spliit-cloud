@@ -43,6 +43,9 @@ import {
   acceptLinkInvitation,
   createLinkInvitation,
   getLinkInvitationPreview,
+  listQrSessionJoiners,
+  QR_INVITATION_DEFAULT_TTL_MS,
+  QR_SESSION_MAX_USES,
 } from '../../../lib/invitations/link-invitations'
 import {
   regenerateLinkInvitation,
@@ -97,11 +100,29 @@ export const invitationsRouter = createTRPCRouter({
         }),
         listGroupInvitations(groupId),
       ])
+      const now = new Date()
+      // A live QR session is a group-wide broadcast: every member sees it
+      // (joiner names stay in-group) while revoke/manage stay gated by
+      // canRevoke/canManage below. Expired or full sessions are dead codes,
+      // not actionable invitations, so they are excluded for every viewer —
+      // not just filtered in the UI — and carry no credential in any case
+      // (random placeholder email).
+      const isLiveQrSession = (invitation: (typeof allInvitations)[number]) =>
+        invitation.type === GroupInvitationType.LINK &&
+        invitation.isMultiUse &&
+        (!invitation.expiresAt || invitation.expiresAt >= now) &&
+        invitation.useCount < QR_SESSION_MAX_USES
+      const isDeadQrSession = (invitation: (typeof allInvitations)[number]) =>
+        invitation.type === GroupInvitationType.LINK &&
+        invitation.isMultiUse &&
+        !isLiveQrSession(invitation)
       const invitations = allInvitations.filter(
         (invitation) =>
           invitation.status === GroupInvitationStatus.PENDING &&
+          !isDeadQrSession(invitation) &&
           (member.role === 'ADMIN' ||
-            invitation.invitedById === ctx.auth.user.id),
+            invitation.invitedById === ctx.auth.user.id ||
+            isLiveQrSession(invitation)),
       )
       const [unusedParticipantIds, recipientProfiles] = await Promise.all([
         member.role === 'ADMIN'
@@ -114,11 +135,18 @@ export const invitationsRouter = createTRPCRouter({
             }),
         resolveRecipientProfiles(invitations),
       ])
+      // Joiner names for QR sessions come from the accept activity log.
+      const joinersByInvitation = await listQrSessionJoiners(
+        invitations
+          .filter((invitation) => invitation.isMultiUse)
+          .map((i) => i.id),
+      )
       const canManageGroup =
         !group.archived && group.groupType !== GroupType.FRIEND
       return {
         invitations: invitations.map((invitation) => ({
           ...invitation,
+          recentJoiners: joinersByInvitation.get(invitation.id) ?? [],
           canRevoke:
             !group.archived &&
             canRevokeInvitation({
@@ -215,6 +243,8 @@ export const invitationsRouter = createTRPCRouter({
             expiresAt: result.invitation.expiresAt,
             temporaryName: result.invitation.temporaryName,
             role: result.invitation.role,
+            isMultiUse: result.invitation.isMultiUse,
+            useCount: result.invitation.useCount,
           }
         },
         encode: (result) => ({
@@ -222,6 +252,8 @@ export const invitationsRouter = createTRPCRouter({
           expiresAt: result.expiresAt.toISOString(),
           temporaryName: result.temporaryName,
           role: result.role,
+          isMultiUse: result.isMultiUse,
+          useCount: result.useCount,
         }),
         decode: (stored) => {
           const result = stored as {
@@ -229,6 +261,131 @@ export const invitationsRouter = createTRPCRouter({
             expiresAt: string
             temporaryName: string | null
             role: GroupRole
+            isMultiUse: boolean
+            useCount: number
+          }
+          return {
+            ...result,
+            inviteUrl: `${getWebBaseUrl()}/groups/${input.groupId}?invite=${token}`,
+            expiresAt: new Date(result.expiresAt),
+          }
+        },
+      })
+      return value
+    }),
+
+  /**
+   * Create a multi-use QR / nearby session invitation. The link stays usable
+   * for any number of joins until its short expiry (15 min) or revoke, so a
+   * room of people can join from one displayed QR code. Sessions are always
+   * MEMBER-level: a forwarded screenshot must never mint outside admins.
+   */
+  createQrLink: protectedProcedure
+    .input(
+      z.object({
+        groupId: z.string().min(1),
+        requestId: createRequestIdSchema,
+        role: z.literal('MEMBER').default('MEMBER'),
+      }),
+    )
+    .output(createLinkInvitationOutputSchema)
+    .mutation(async ({ input, ctx }) => {
+      const { group, member } = await loadGroupMutationContext({
+        groupId: input.groupId,
+        accountId: ctx.auth.user.id,
+      })
+      if (!canCreateInvitationWithRole(member.role, input.role)) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Members can only invite other members',
+        })
+      }
+      if (group.archived) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Archived groups cannot create invitations',
+        })
+      }
+      if (group.groupType === GroupType.FRIEND) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'friendLedgerFull',
+        })
+      }
+      const token = deriveCreateToken({
+        accountId: ctx.auth.user.id,
+        operation: CREATE_OPERATIONS.qrInvitation,
+        requestId: input.requestId,
+        discriminator: 'qr-session',
+      })
+      const expiresAt = new Date(Date.now() + QR_INVITATION_DEFAULT_TTL_MS)
+      const { value } = await runIdempotentCreate({
+        accountId: ctx.auth.user.id,
+        operation: CREATE_OPERATIONS.qrInvitation,
+        requestId: input.requestId,
+        input: { ...input, requestId: undefined },
+        prepare: getApiBoss,
+        execute: async (tx, notificationBoss) => {
+          // One live QR session per group: the tab resumes the active
+          // session instead of minting parallel codes. The row lock is held
+          // until this interactive transaction commits, so concurrent
+          // creators serialize here instead of both observing "no active".
+          await tx.$queryRaw`SELECT "id" FROM "Group" WHERE "id" = ${input.groupId} FOR UPDATE`
+          // A full session counts as dead: the host's tab falls back to the
+          // empty state and may start a fresh room.
+          const activeSession = await tx.groupInvitation.findFirst({
+            where: {
+              groupId: input.groupId,
+              status: GroupInvitationStatus.PENDING,
+              isMultiUse: true,
+              OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+              useCount: { lt: QR_SESSION_MAX_USES },
+            },
+            select: { id: true },
+          })
+          if (activeSession) {
+            throw new TRPCError({
+              code: 'CONFLICT',
+              message:
+                'A QR session is already active for this group. Stop it before starting a new one.',
+            })
+          }
+          const result = await createLinkInvitation({
+            groupId: input.groupId,
+            role: input.role as GroupRole,
+            inviterAccountId: ctx.auth.user.id,
+            notificationBoss,
+            token,
+            expiresAt,
+            isMultiUse: true,
+            tx,
+          })
+          return {
+            invitationId: result.invitation.id,
+            inviteUrl: result.inviteUrl,
+            expiresAt: result.invitation.expiresAt,
+            temporaryName: result.invitation.temporaryName,
+            role: result.invitation.role,
+            isMultiUse: result.invitation.isMultiUse,
+            useCount: result.invitation.useCount,
+          }
+        },
+        encode: (result) => ({
+          invitationId: result.invitationId,
+          expiresAt: result.expiresAt.toISOString(),
+          temporaryName: result.temporaryName,
+          role: result.role,
+          isMultiUse: result.isMultiUse,
+          useCount: result.useCount,
+        }),
+        decode: (stored) => {
+          const result = stored as {
+            invitationId: string
+            expiresAt: string
+            temporaryName: string | null
+            role: GroupRole
+            isMultiUse: boolean
+            useCount: number
           }
           return {
             ...result,
