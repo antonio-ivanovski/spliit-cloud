@@ -85,7 +85,8 @@
     "legalNavigation": "Yasal bağlantılar",
     "privacy": "Gizlilik",
     "terms": "Şartlar",
-    "imprint": "Proje bildirimi"
+    "imprint": "Proje bildirimi",
+    "sponsor": "Sponsor Ol"
   },
   "Expenses": {
     "title": "Masraflar",
@@ -3207,7 +3208,8 @@
       "copy": "Tanılama bilgilerini kopyala",
       "copied": "Kopyalandı",
       "copyFailed": "Panoya erişilemedi. Tanılama bilgilerini seçip elle kopyalayın."
-    }
+    },
+    "sponsorLink": "Spliit Cloud'u maddi olarak desteklemek ister misiniz? <cta>Sponsor olun</cta>."
   },
   "ExpenseReport": {
     "title": "Masraf raporu",
@@ -3985,5 +3987,55 @@
       "waitDuplicate": "İçe aktarmadan önce yinelenen denetiminin bitmesini bekle.",
       "invalidRowTitle": "Geçersiz içe aktarma satırı"
     }
+  },
+  "Sponsor": {
+    "title": "Spliit Cloud'u destekleyin",
+    "description": "Spliit Cloud, ticari amacı olmayan, topluluk tarafından sürdürülen bir projedir. Arkadaşlarınız ve ailenizle masrafları bölüşmenize yardımcı oluyorsa, barındırma ve geliştirme için destek olmayı düşünün.",
+    "bitcoin": {
+      "title": "Bitcoin",
+      "network": "Bitcoin zincir üstü",
+      "description": "Herhangi bir Bitcoin cüzdanından veya borsasından bu adrese BTC gönderin.",
+      "addressLabel": "Cüzdan adresi",
+      "copy": "Adresi kopyala",
+      "copied": "Kopyalandı",
+      "copyFailed": "Pano erişimi başarısız oldu. Adresi manuel olarak seçip kopyalayın.",
+      "qrLabel": "Bitcoin bağış adresi için QR kodu"
+    },
+    "evm": {
+      "title": "Ethereum / Base Ağı",
+      "network": "Ethereum · aynı adres Base'de de geçerli",
+      "description": "EVM uyumlu herhangi bir cüzdandan ETH, USDC veya USDT gönderin. Göndermeden önce Ethereum veya Base ağında olduğunuzdan emin olun.",
+      "addressLabel": "Cüzdan adresi",
+      "copy": "Adresi kopyala",
+      "copied": "Kopyalandı",
+      "copyFailed": "Pano erişimi başarısız oldu. Adresi manuel olarak seçip kopyalayın.",
+      "qrLabel": "Ethereum / Base bağış adresi için QR kodu",
+      "contact": "Farklı bir token göndermek veya başka bir EVM ağı kullanmak mı istiyorsunuz? <email>Önce bize sorun</email> — her varlık kurtarılamayabilir."
+    },
+    "methodsLabel": "Destek yolları",
+    "github": {
+      "title": "GitHub Sponsorları",
+      "description": "Kartla ödeme ve aylık destek için en iyi seçenek. Sponsorluk katmanları GitHub üzerinden USD olarak faturalandırılır.",
+      "action": "Sponsor ol"
+    },
+    "lightning": {
+      "title": "Lightning Ağı",
+      "network": "Bitcoin Lightning Ağı",
+      "description": "Bu Lightning adresi aracılığıyla anında, düşük ücretli sats gönderin.",
+      "addressLabel": "Lightning adresi",
+      "copy": "Adresi kopyala",
+      "copied": "Kopyalandı",
+      "copyFailed": "Pano erişimi başarısız oldu. Adresi manuel olarak seçip kopyalayın.",
+      "qrLabel": "Lightning bağış adresi için QR kodu"
+    },
+    "notice": {
+      "title": "Kripto bağışları geri alınamaz",
+      "description": "Göndermeden önce adresi ve ağı mutlaka kontrol edin ve spliit.cloud/sponsor adresinde olduğunuzu doğrulayın. Yanlış adrese gönderilen tutarlar geri alınamaz."
+    },
+    "contact": {
+      "title": "Bağış yaptınız mı, yoksa başka bir şekilde mi destek olmak istersiniz?",
+      "description": "Bağış yaptıysanız bize yazın — sizden haber almayı çok isteriz. Diğer bağış yöntemleriyle ilgili sorularınız için <email>contact@spliit.cloud</email> adresine yazın."
+    },
+    "feedbackLink": "Maddi destek yerine fikirle katkıda bulunmayı mı tercih edersiniz? <cta>Geri bildirim paylaşın</cta>."
   }
 }

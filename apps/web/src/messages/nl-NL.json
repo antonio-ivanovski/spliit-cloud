@@ -85,7 +85,8 @@
     "legalNavigation": "Juridische links",
     "privacy": "Privacy",
     "terms": "Voorwaarden",
-    "imprint": "Colofon"
+    "imprint": "Colofon",
+    "sponsor": "Sponsoring"
   },
   "Expenses": {
     "title": "Uitgaven",
@@ -3279,7 +3280,8 @@
       "copy": "Diagnostiek kopiëren",
       "copied": "Gekopieerd",
       "copyFailed": "Toegang tot het klembord is mislukt. Selecteer en kopieer de diagnostiek handmatig."
-    }
+    },
+    "sponsorLink": "Wil je Spliit Cloud financieel steunen? <cta>Word sponsor</cta>."
   },
   "ExpenseReport": {
     "title": "Uitgavenrapport",
@@ -4057,5 +4059,55 @@
       "waitDuplicate": "Wacht tot de duplicaatcontrole klaar is voordat je importeert.",
       "invalidRowTitle": "Ongeldige importrij"
     }
+  },
+  "Sponsor": {
+    "title": "Steun Spliit Cloud",
+    "description": "Spliit Cloud is een niet-commercieel project dat door de community wordt onderhouden. Als het je helpt om uitgaven met vrienden en familie te verdelen, overweeg dan bij te dragen aan hosting en ontwikkeling.",
+    "bitcoin": {
+      "title": "Bitcoin",
+      "network": "Bitcoin-netwerk (on-chain)",
+      "description": "Stuur BTC naar dit adres vanaf elke Bitcoin-wallet of exchange.",
+      "addressLabel": "Walletadres",
+      "copy": "Adres kopiëren",
+      "copied": "Gekopieerd",
+      "copyFailed": "Toegang tot klembord mislukt. Selecteer en kopieer het adres handmatig.",
+      "qrLabel": "QR-code voor het Bitcoin-donatieadres"
+    },
+    "evm": {
+      "title": "Ethereum en Base",
+      "network": "Ethereum · zelfde adres werkt op Base",
+      "description": "Stuur ETH, USDC of USDT vanaf elke EVM-compatibele wallet. Zorg dat je op Ethereum of Base zit voordat je verstuurt.",
+      "addressLabel": "Walletadres",
+      "copy": "Adres kopiëren",
+      "copied": "Gekopieerd",
+      "copyFailed": "Toegang tot klembord mislukt. Selecteer en kopieer het adres handmatig.",
+      "qrLabel": "QR-code voor het Ethereum-/Base-donatieadres",
+      "contact": "Een andere token sturen of een andere EVM-chain gebruiken? <email>Vraag het ons eerst</email> — niet alle assets kunnen worden teruggehaald."
+    },
+    "methodsLabel": "Manieren om te steunen",
+    "github": {
+      "title": "GitHub-sponsors",
+      "description": "De beste optie voor kaartbetalingen en maandelijkse steun. Sponsorlevels worden via GitHub in USD gefactureerd.",
+      "action": "Word sponsor"
+    },
+    "lightning": {
+      "title": "Lightning-netwerk",
+      "network": "Bitcoin Lightning-netwerk",
+      "description": "Directe sats met lage kosten via dit Lightning-adres.",
+      "addressLabel": "Lightning-adres",
+      "copy": "Adres kopiëren",
+      "copied": "Gekopieerd",
+      "copyFailed": "Toegang tot klembord mislukt. Selecteer en kopieer het adres handmatig.",
+      "qrLabel": "QR-code voor het Lightning-donatieadres"
+    },
+    "notice": {
+      "title": "Cryptodonaties zijn onomkeerbaar",
+      "description": "Controleer het adres en netwerk goed voor je verstuurt en check dat je op spliit.cloud/sponsor zit. Geld dat naar het verkeerde adres is gestuurd, kan niet worden teruggehaald."
+    },
+    "contact": {
+      "title": "Gedoneerd of wil je op een andere manier geven?",
+      "description": "Als je hebt gedoneerd, stuur ons een berichtje — we horen graag van je. Voor vragen over andere donatiemethoden, schrijf naar <email>contact@spliit.cloud</email>."
+    },
+    "feedbackLink": "Draag je liever ideeën bij dan geld? <cta>Terugkoppeling delen</cta>."
   }
 }

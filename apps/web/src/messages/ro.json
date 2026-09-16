@@ -85,7 +85,8 @@
     "legalNavigation": "Linkuri legale",
     "privacy": "Confidențialitate",
     "terms": "Termeni",
-    "imprint": "Mențiuni legale"
+    "imprint": "Mențiuni legale",
+    "sponsor": "Susține"
   },
   "Expenses": {
     "title": "Cheltuieli",
@@ -3227,7 +3228,8 @@
       "copy": "Copiază diagnosticul",
       "copied": "Copiat",
       "copyFailed": "Accesul la clipboard a eșuat. Selectează și copiază manual diagnosticul."
-    }
+    },
+    "sponsorLink": "Vrei să susții financiar Spliit Cloud? <cta>Devino sponsor</cta>."
   },
   "ExpenseReport": {
     "title": "Raport de cheltuieli",
@@ -4015,5 +4017,55 @@
       "importedCount_few": "{count} cheltuieli importate",
       "matchingExpensesNotice_few": "{count} cheltuieli au titluri potrivite sau similare."
     }
+  },
+  "Sponsor": {
+    "bitcoin": {
+      "title": "Bitcoin",
+      "network": "Rețeaua principală Bitcoin",
+      "description": "Trimite BTC la această adresă din orice portofel sau platformă Bitcoin.",
+      "addressLabel": "Adresa portofelului",
+      "copy": "Copiază adresa",
+      "copied": "Copiat",
+      "copyFailed": "Accesul la clipboard a eșuat. Selectează și copiază manual adresa.",
+      "qrLabel": "Cod QR pentru adresa de donație Bitcoin"
+    },
+    "evm": {
+      "title": "Ethereum și Base",
+      "network": "Ethereum · aceeași adresă funcționează pe Base",
+      "description": "Trimite ETH, USDC sau USDT din orice portofel compatibil cu EVM. Asigură-te că ești pe Ethereum sau Base înainte de a trimite.",
+      "addressLabel": "Adresa portofelului",
+      "copy": "Copiază adresa",
+      "copied": "Copiat",
+      "copyFailed": "Accesul la clipboard a eșuat. Selectează și copiază manual adresa.",
+      "qrLabel": "Cod QR pentru adresa de donație Ethereum / Base",
+      "contact": "Trimiți un alt token sau folosești un alt lanț EVM? <email>Întreabă-ne mai întâi</email> — nu toate activele pot fi recuperate."
+    },
+    "title": "Susține Spliit Cloud",
+    "description": "Spliit Cloud este un proiect necomercial, întreținut de comunitate. Dacă te ajută să împarți cheltuielile cu prietenii și familia, ia în considerare o contribuție pentru găzduire și dezvoltare.",
+    "methodsLabel": "Modalități de susținere",
+    "github": {
+      "title": "Sponsori GitHub",
+      "description": "Cea mai bună opțiune pentru plăți cu cardul și susținere lunară. Nivelurile de sponsorizare sunt facturate în USD prin GitHub.",
+      "action": "Devino sponsor"
+    },
+    "lightning": {
+      "title": "Rețeaua Lightning",
+      "network": "Rețeaua Bitcoin Lightning",
+      "description": "Sats instant, cu comisioane mici, prin această adresă Lightning.",
+      "addressLabel": "Adresă Lightning",
+      "copy": "Copiază adresa",
+      "copied": "Copiat",
+      "copyFailed": "Accesul la clipboard a eșuat. Selectează și copiază manual adresa.",
+      "qrLabel": "Cod QR pentru adresa de donație Lightning"
+    },
+    "notice": {
+      "title": "Donațiile cripto sunt ireversibile",
+      "description": "Verifică adresa și rețeaua înainte de a trimite și asigură-te că ești pe spliit.cloud/sponsor. Fondurile trimise la o adresă greșită nu pot fi recuperate."
+    },
+    "contact": {
+      "title": "Ai donat deja sau vrei un alt mod de a contribui?",
+      "description": "Dacă ai donat deja, scrie-ne — ne-ar plăcea să auzim de la tine. Pentru întrebări despre alte metode de donație, scrie la <email>contact@spliit.cloud</email>."
+    },
+    "feedbackLink": "Preferi să contribui cu idei în loc de fonduri? <cta>Trimite o opinie</cta>."
   }
 }

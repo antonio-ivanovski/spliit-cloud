@@ -85,7 +85,8 @@
     "legalNavigation": "法的リンク",
     "privacy": "プライバシー",
     "terms": "利用規約",
-    "imprint": "運営者情報"
+    "imprint": "運営者情報",
+    "sponsor": "スポンサー"
   },
   "Expenses": {
     "title": "支出",
@@ -3189,7 +3190,8 @@
       "copy": "診断情報をコピー",
       "copied": "コピーしました",
       "copyFailed": "クリップボードにアクセスできませんでした。診断情報を選択して手動でコピーしてください。"
-    }
+    },
+    "sponsorLink": "Spliit Cloud を資金面で支援したいですか？<cta>スポンサーになる</cta>。"
   },
   "ExpenseReport": {
     "title": "支出レポート",
@@ -3962,5 +3964,55 @@
       "waitDuplicate": "インポート前に重複チェックの完了をお待ちください。",
       "invalidRowTitle": "無効なインポート行"
     }
+  },
+  "Sponsor": {
+    "title": "Spliit Cloud を支援する",
+    "description": "Spliit Cloud は非営利のコミュニティ運営プロジェクトです。友人や家族との割り勘に役立っている場合は、ホスティングや開発のためのご支援をご検討ください。",
+    "bitcoin": {
+      "title": "ビットコイン",
+      "network": "ビットコイン オンチェーン",
+      "description": "お使いのビットコインウォレットや取引所から、このアドレスに BTC を送金してください。",
+      "addressLabel": "ウォレットアドレス",
+      "copy": "アドレスをコピー",
+      "copied": "コピーしました",
+      "copyFailed": "クリップボードにアクセスできませんでした。アドレスを手動で選択してコピーしてください。",
+      "qrLabel": "ビットコイン寄付アドレスの QR コード"
+    },
+    "evm": {
+      "title": "イーサリアム / Base",
+      "network": "Ethereum ・ Base でも同じアドレスが使えます",
+      "description": "EVM 対応ウォレットから ETH、USDC、USDT を送金できます。送金前に Ethereum または Base ネットワーク上であることをご確認ください。",
+      "addressLabel": "ウォレットアドレス",
+      "copy": "アドレスをコピー",
+      "copied": "コピーしました",
+      "copyFailed": "クリップボードにアクセスできませんでした。アドレスを手動で選択してコピーしてください。",
+      "qrLabel": "Ethereum / Base 寄付アドレスの QR コード",
+      "contact": "別のトークンや他の EVM チェーンでの送金をお考えですか？<email>事前にお問い合わせください</email>。すべての資産を取り戻せるわけではありません。"
+    },
+    "methodsLabel": "支援方法",
+    "github": {
+      "title": "GitHub スポンサー",
+      "description": "カード払いや毎月のご支援に最適な方法です。スポンサープランは GitHub を通じて米ドルで請求されます。",
+      "action": "スポンサーになる"
+    },
+    "lightning": {
+      "title": "ライトニング",
+      "network": "ビットコイン ライトニングネットワーク",
+      "description": "このライトニングアドレス宛に、低手数料で即時に sats を送金できます。",
+      "addressLabel": "ライトニングアドレス",
+      "copy": "アドレスをコピー",
+      "copied": "コピーしました",
+      "copyFailed": "クリップボードにアクセスできませんでした。アドレスを手動で選択してコピーしてください。",
+      "qrLabel": "ライトニング寄付アドレスの QR コード"
+    },
+    "notice": {
+      "title": "暗号資産の寄付は取り消せません",
+      "description": "送金前にアドレスとネットワークを必ずご確認のうえ、spliit.cloud/sponsor にアクセスしていることをご確認ください。誤ったアドレスに送金した資金は取り戻せません。"
+    },
+    "contact": {
+      "title": "寄付済みの方、または他の方法で支援したい方へ？",
+      "description": "ご寄付いただいた方は、ぜひご一報ください。お便りをお待ちしております。その他の寄付方法に関するご質問は、<email>contact@spliit.cloud</email> までご連絡ください。"
+    },
+    "feedbackLink": "資金ではなくアイデアで貢献したいですか？<cta>フィードバックを共有する</cta>。"
   }
 }

@@ -85,7 +85,8 @@
     "legalNavigation": "法律連結",
     "privacy": "隱私",
     "terms": "條款",
-    "imprint": "專案聲明"
+    "imprint": "專案聲明",
+    "sponsor": "贊助"
   },
   "Expenses": {
     "title": "消費",
@@ -3189,7 +3190,8 @@
       "copy": "複製診斷資訊",
       "copied": "已複製",
       "copyFailed": "無法存取剪貼簿。請選取並手動複製診斷資訊。"
-    }
+    },
+    "sponsorLink": "想以資金支持 Spliit Cloud？<cta>成為贊助者</cta>。"
   },
   "ExpenseReport": {
     "title": "消費報告",
@@ -3962,5 +3964,55 @@
       "waitDuplicate": "請等待重複檢查完成後再匯入。",
       "invalidRowTitle": "無效的匯入列"
     }
+  },
+  "Sponsor": {
+    "title": "贊助 Spliit Cloud",
+    "description": "Spliit Cloud 是非商業、由社群維護的專案。如果它幫您與親友分攤了費用，歡迎為主機託管與開發盡一份心力。",
+    "bitcoin": {
+      "title": "比特幣",
+      "network": "比特幣主網",
+      "description": "從任何比特幣錢包或交易所向此地址傳送 BTC。",
+      "addressLabel": "錢包地址",
+      "copy": "複製地址",
+      "copied": "已複製",
+      "copyFailed": "無法存取剪貼簿，請手動選取並複製地址。",
+      "qrLabel": "比特幣捐款地址 QR Code"
+    },
+    "evm": {
+      "title": "以太幣 / Base",
+      "network": "Ethereum · 在 Base 上使用相同地址",
+      "description": "從任何相容 EVM 的錢包傳送 ETH、USDC 或 USDT。傳送前請確認您位於 Ethereum 或 Base 網路。",
+      "addressLabel": "錢包地址",
+      "copy": "複製地址",
+      "copied": "已複製",
+      "copyFailed": "無法存取剪貼簿，請手動選取並複製地址。",
+      "qrLabel": "Ethereum / Base 捐款地址 QR Code",
+      "contact": "想傳送其他代幣或使用其他 EVM 網路？<email>請先聯絡我們</email>——並非所有資產都能找回。"
+    },
+    "methodsLabel": "支援方式",
+    "github": {
+      "title": "GitHub 贊助",
+      "description": "最適合信用卡付款與每月支持的方式。贊助等級透過 GitHub 以美元計費。",
+      "action": "成為贊助者"
+    },
+    "lightning": {
+      "title": "閃電網路",
+      "network": "比特幣閃電網路",
+      "description": "透過此閃電網路地址即時、低手續費地傳送 sats。",
+      "addressLabel": "閃電網路地址",
+      "copy": "複製地址",
+      "copied": "已複製",
+      "copyFailed": "無法存取剪貼簿，請手動選取並複製地址。",
+      "qrLabel": "閃電網路捐款地址 QR Code"
+    },
+    "notice": {
+      "title": "加密貨幣捐款無法撤回",
+      "description": "傳送前請仔細核對地址與網路，並確認您正在造訪 spliit.cloud/sponsor。傳送到錯誤地址的資金將無法找回。"
+    },
+    "contact": {
+      "title": "已捐款，或想透過其他方式支持？",
+      "description": "如果您已捐款，歡迎留言告訴我們——很期待收到您的消息。如需詢問其他捐款方式，請寫信至 <email>contact@spliit.cloud</email>。"
+    },
+    "feedbackLink": "比較想貢獻想法而非資金？<cta>分享意見回饋</cta>。"
   }
 }

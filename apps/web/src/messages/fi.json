@@ -85,7 +85,8 @@
     "legalNavigation": "Oikeudelliset linkit",
     "privacy": "Tietosuoja",
     "terms": "Käyttöehdot",
-    "imprint": "Julkaisutiedot"
+    "imprint": "Julkaisutiedot",
+    "sponsor": "Sponsori"
   },
   "Expenses": {
     "title": "Kulut",
@@ -3207,7 +3208,8 @@
       "copy": "Kopioi diagnostiikka",
       "copied": "Kopioitu",
       "copyFailed": "Leikepöydän käyttö epäonnistui. Valitse ja kopioi diagnostiikkatiedot käsin."
-    }
+    },
+    "sponsorLink": "Haluatko tukea Spliit Cloudia taloudellisesti? <cta>Ryhdy sponsoriksi</cta>."
   },
   "ExpenseReport": {
     "title": "Kuluraportti",
@@ -3985,5 +3987,55 @@
       "waitDuplicate": "Odota kaksoiskappaletarkistuksen valmistumista ennen tuontia.",
       "invalidRowTitle": "Virheellinen tuontirivi"
     }
+  },
+  "Sponsor": {
+    "title": "Tue Spliit Cloudia",
+    "description": "Spliit Cloud on ei-kaupallinen, yhteisön ylläpitämä projekti. Jos se auttaa sinua jakamaan kuluja ystävien ja perheen kanssa, harkitse osallistumista hosting- ja kehityskuluihin.",
+    "bitcoin": {
+      "title": "Bitcoin",
+      "network": "Bitcoinin lohkoketju",
+      "description": "Lähetä BTC tähän osoitteeseen mistä tahansa Bitcoin-lompakosta tai pörssistä.",
+      "addressLabel": "Lompakko-osoite",
+      "copy": "Kopioi osoite",
+      "copied": "Kopioitu",
+      "copyFailed": "Leikepöydän käyttö epäonnistui. Valitse osoite ja kopioi se manuaalisesti.",
+      "qrLabel": "Bitcoin-lahjoitusosoitteen QR-koodi"
+    },
+    "evm": {
+      "title": "Ethereum ja Base",
+      "network": "Ethereum · sama osoite toimii Basessa",
+      "description": "Lähetä ETH, USDC tai USDT mistä tahansa EVM-yhteensopivasta lompakosta. Varmista ennen lähettämistä, että olet Ethereum- tai Base-verkossa.",
+      "addressLabel": "Lompakko-osoite",
+      "copy": "Kopioi osoite",
+      "copied": "Kopioitu",
+      "copyFailed": "Leikepöydän käyttö epäonnistui. Valitse osoite ja kopioi se manuaalisesti.",
+      "qrLabel": "Ethereum / Base -lahjoitusosoitteen QR-koodi",
+      "contact": "Lähetätkö eri tokenia tai käytätkö toista EVM-ketjua? <email>Kysy meiltä ensin</email> — kaikkia varoja ei voida palauttaa."
+    },
+    "methodsLabel": "Tavat tukea",
+    "github": {
+      "title": "GitHub-sponsorit",
+      "description": "Paras vaihtoehto korttimaksuille ja kuukausittaiselle tuelle. Sponsorointitasot laskutetaan USD:ssä GitHubin kautta.",
+      "action": "Ryhdy sponsoriksi"
+    },
+    "lightning": {
+      "title": "Lightning-verkko",
+      "network": "Bitcoinin Lightning-verkko",
+      "description": "Välittömät, edulliset satsit tämän Lightning-osoitteen kautta.",
+      "addressLabel": "Lightning-osoite",
+      "copy": "Kopioi osoite",
+      "copied": "Kopioitu",
+      "copyFailed": "Leikepöydän käyttö epäonnistui. Valitse osoite ja kopioi se manuaalisesti.",
+      "qrLabel": "Lightning-lahjoitusosoitteen QR-koodi"
+    },
+    "notice": {
+      "title": "Kryptolahjoitukset ovat peruuttamattomia",
+      "description": "Tarkista osoite ja verkko ennen lähettämistä ja varmista, että olet sivulla spliit.cloud/sponsor. Väärään osoitteeseen lähetettyjä varoja ei voida palauttaa."
+    },
+    "contact": {
+      "title": "Lahjoititko jo tai haluatko tukea muulla tavalla?",
+      "description": "Jos olet lahjoittanut, laita meille viestiä — kuulemme sinusta mielellämme. Jos sinulla on kysyttävää muista lahjoitustavoista, kirjoita osoitteeseen <email>contact@spliit.cloud</email>."
+    },
+    "feedbackLink": "Haluatko osallistua mieluummin ideoilla kuin varoilla? <cta>Anna palautetta</cta>."
   }
 }

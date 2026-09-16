@@ -1739,7 +1739,8 @@
     "legalNavigation": "Juridiska länkar",
     "privacy": "Integritet",
     "terms": "Villkor",
-    "imprint": "Projektinformation"
+    "imprint": "Projektinformation",
+    "sponsor": "Sponsra"
   },
   "ForgotPassword": {
     "title": "Återställ ditt lösenord",
@@ -3203,7 +3204,8 @@
       "copy": "Kopiera diagnostik",
       "copied": "Kopierat",
       "copyFailed": "Åtkomst till urklipp misslyckades. Markera och kopiera diagnostiken manuellt."
-    }
+    },
+    "sponsorLink": "Vill du stödja Spliit Cloud ekonomiskt? <cta>Bli sponsor</cta>."
   },
   "ExpenseReport": {
     "title": "Utgiftsrapport",
@@ -3981,5 +3983,55 @@
       "waitDuplicate": "Vänta tills dubblettkontrollen är klar innan du importerar.",
       "invalidRowTitle": "Ogiltig importrad"
     }
+  },
+  "Sponsor": {
+    "title": "Stöd Spliit Cloud",
+    "description": "Spliit Cloud är ett icke-kommersiellt projekt som underhålls av communityn. Om det hjälper dig att dela utgifter med vänner och familj, överväg att bidra till drift och utveckling.",
+    "bitcoin": {
+      "title": "Bitcoin",
+      "network": "Bitcoin-nätverket (on-chain)",
+      "description": "Skicka BTC till den här adressen från valfri Bitcoin-plånbok eller börs.",
+      "addressLabel": "Plånboksadress",
+      "copy": "Kopiera adress",
+      "copied": "Kopierat",
+      "copyFailed": "Åtkomst till urklipp misslyckades. Markera och kopiera adressen manuellt.",
+      "qrLabel": "QR-kod för Bitcoins donationsadress"
+    },
+    "evm": {
+      "title": "Ethereum och Base",
+      "network": "Ethereum · samma adress fungerar på Base",
+      "description": "Skicka ETH, USDC eller USDT från valfri EVM-kompatibel plånbok. Se till att du är på Ethereum eller Base innan du skickar.",
+      "addressLabel": "Plånboksadress",
+      "copy": "Kopiera adress",
+      "copied": "Kopierat",
+      "copyFailed": "Åtkomst till urklipp misslyckades. Markera och kopiera adressen manuellt.",
+      "qrLabel": "QR-kod för Ethereum-/Base-donationsadressen",
+      "contact": "Skickar du en annan token eller använder en annan EVM-kedja? <email>Fråga oss först</email> — inte alla tillgångar kan återfås."
+    },
+    "methodsLabel": "Sätt att stödja",
+    "github": {
+      "title": "GitHub-sponsorer",
+      "description": "Det bästa alternativet för kortbetalningar och månatligt stöd. Sponsornivåer faktureras i USD via GitHub.",
+      "action": "Bli sponsor"
+    },
+    "lightning": {
+      "title": "Lightning-nätverket",
+      "network": "Bitcoin Lightning-nätverket",
+      "description": "Omedelbara sats med låga avgifter via den här Lightning-adressen.",
+      "addressLabel": "Lightning-adress",
+      "copy": "Kopiera adress",
+      "copied": "Kopierat",
+      "copyFailed": "Åtkomst till urklipp misslyckades. Markera och kopiera adressen manuellt.",
+      "qrLabel": "QR-kod för Lightnings donationsadress"
+    },
+    "notice": {
+      "title": "Kryptodonationer är oåterkalleliga",
+      "description": "Dubbelkolla adressen och nätverket innan du skickar och kontrollera att du är på spliit.cloud/sponsor. Medel som skickats till fel adress kan inte återfås."
+    },
+    "contact": {
+      "title": "Donerat, eller vill du ge på ett annat sätt?",
+      "description": "Om du har donerat, hör gärna av dig — vi vill gärna höra från dig. För frågor om andra donationssätt, skriv till <email>contact@spliit.cloud</email>."
+    },
+    "feedbackLink": "Föredrar du att bidra med idéer istället för pengar? <cta>Dela återkoppling</cta>."
   }
 }

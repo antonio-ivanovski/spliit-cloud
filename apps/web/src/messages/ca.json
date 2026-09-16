@@ -85,7 +85,8 @@
     "legalNavigation": "Enllaços legals",
     "privacy": "Privadesa",
     "terms": "Termes",
-    "imprint": "Avís legal"
+    "imprint": "Avís legal",
+    "sponsor": "Patrocini"
   },
   "Expenses": {
     "title": "Despeses",
@@ -3227,7 +3228,8 @@
       "copy": "Copia els diagnòstics",
       "copied": "Copiat",
       "copyFailed": "No s’ha pogut accedir al porta-retalls. Selecciona i copia els diagnòstics manualment."
-    }
+    },
+    "sponsorLink": "Vols donar suport econòmic a Spliit Cloud? <cta>Fes-te patrocinador</cta>."
   },
   "ExpenseReport": {
     "title": "Informe de despeses",
@@ -4010,5 +4012,55 @@
       "waitDuplicate": "Espera que acabi la comprovació de duplicats abans d'importar.",
       "invalidRowTitle": "Fila d'importació no vàlida"
     }
+  },
+  "Sponsor": {
+    "bitcoin": {
+      "title": "Bitcoin",
+      "network": "Bitcoin a la cadena",
+      "description": "Envia BTC a aquesta adreça des de qualsevol moneder o plataforma de Bitcoin.",
+      "addressLabel": "Adreça del moneder",
+      "copy": "Copia l'adreça",
+      "copied": "Copiat",
+      "copyFailed": "No s'ha pogut accedir al porta-retalls. Selecciona i copia l'adreça manualment.",
+      "qrLabel": "Codi QR de l'adreça de donació de Bitcoin"
+    },
+    "evm": {
+      "title": "Ethereum i Base",
+      "network": "Ethereum · la mateixa adreça funciona a Base",
+      "description": "Envia ETH, USDC o USDT des de qualsevol moneder compatible amb EVM. Assegura't que ets a Ethereum o Base abans d'enviar.",
+      "addressLabel": "Adreça del moneder",
+      "copy": "Copia l'adreça",
+      "copied": "Copiat",
+      "copyFailed": "No s'ha pogut accedir al porta-retalls. Selecciona i copia l'adreça manualment.",
+      "qrLabel": "Codi QR de l'adreça de donació d'Ethereum / Base",
+      "contact": "Envies un altre token o utilitzes una altra cadena EVM? <email>Pregunta'ns primer</email> — no tots els actius es poden recuperar."
+    },
+    "title": "Dona suport a Spliit Cloud",
+    "description": "Spliit Cloud és un projecte no comercial mantingut per la comunitat. Si t'ajuda a dividir despeses amb amics i familiars, considera contribuir a l'allotjament i el desenvolupament.",
+    "methodsLabel": "Formes de donar suport",
+    "github": {
+      "title": "Patrocinadors de GitHub",
+      "description": "La millor opció per a pagaments amb targeta i suport mensual. Els nivells de patrocini es facturen en USD a través de GitHub.",
+      "action": "Fes-te patrocinador"
+    },
+    "lightning": {
+      "title": "Xarxa Lightning",
+      "network": "Xarxa Lightning de Bitcoin",
+      "description": "Sats instantanis amb comissions baixes mitjançant aquesta adreça Lightning.",
+      "addressLabel": "Adreça Lightning",
+      "copy": "Copia l'adreça",
+      "copied": "Copiat",
+      "copyFailed": "No s'ha pogut accedir al porta-retalls. Selecciona i copia l'adreça manualment.",
+      "qrLabel": "Codi QR de l'adreça de donació Lightning"
+    },
+    "notice": {
+      "title": "Les donacions en cripto són irreversibles",
+      "description": "Comprova l'adreça i la xarxa abans d'enviar i verifica que ets a spliit.cloud/sponsor. Els fons enviats a una adreça incorrecta no es poden recuperar."
+    },
+    "contact": {
+      "title": "Has donat o vols una altra manera de donar?",
+      "description": "Si has donat, escriu-nos — ens encantaria saber de tu. Per a preguntes sobre altres mètodes de donació, escriu a <email>contact@spliit.cloud</email>."
+    },
+    "feedbackLink": "Prefereixes aportar idees en lloc de fons? <cta>Comparteix comentaris</cta>."
   }
 }

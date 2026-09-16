@@ -57,6 +57,7 @@ Getting everyone into a group used to mean one single-use link per person. Now t
 - Hide expenses that don't involve you from the group timeline by default, with inline expandable rows that preserve chronological order and a "For you / All" switch (`TBD` by @TBD)
 - Type the expense or income date and time directly in the form, with the calendar and time picker still one click away (`TBD` by @TBD)
 - Search expenses in archived groups from All expenses with the new "Include archived groups" filter (`TBD` by @TBD)
+- Support the project from the new [sponsor page](https://spliit.cloud/sponsor) with GitHub Sponsors, Ethereum/Base, Bitcoin, or Lightning (`TBD` by @TBD)
 - Onboard a room of people at once with a scan-only 15-minute Nearby QR code on its own invite tab (one live session per group, joiner names included), plus a Scan to join camera action in the mobile home screen's Groups section (`TBD` by @TBD)
 
 **Full Changelog**: TBD

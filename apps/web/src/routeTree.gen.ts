@@ -17,6 +17,7 @@ import { Route as FeedbackRouteImport } from './routes/feedback'
 import { Route as GroupsRouteRouteImport } from './routes/groups/route'
 import { Route as ImprintRouteImport } from './routes/imprint'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as SponsorRouteImport } from './routes/sponsor'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as AccountSettingsRouteImport } from './routes/account/settings'
@@ -92,6 +93,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/privacy.lazy').then((d) => d.Route))
+const SponsorRoute = SponsorRouteImport.update({
+  id: '/sponsor',
+  path: '/sponsor',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/sponsor.lazy').then((d) => d.Route))
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
@@ -368,6 +374,7 @@ export interface FileRoutesByFullPath {
   '/feedback': typeof FeedbackRoute
   '/imprint': typeof ImprintRoute
   '/privacy': typeof PrivacyRoute
+  '/sponsor': typeof SponsorRoute
   '/terms': typeof TermsRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/groups/$groupId': typeof GroupsGroupIdRouteRouteWithChildren
@@ -413,6 +420,7 @@ export interface FileRoutesByTo {
   '/feedback': typeof FeedbackRoute
   '/imprint': typeof ImprintRoute
   '/privacy': typeof PrivacyRoute
+  '/sponsor': typeof SponsorRoute
   '/terms': typeof TermsRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/account/settings': typeof AccountSettingsRoute
@@ -455,6 +463,7 @@ export interface FileRoutesById {
   '/feedback': typeof FeedbackRoute
   '/imprint': typeof ImprintRoute
   '/privacy': typeof PrivacyRoute
+  '/sponsor': typeof SponsorRoute
   '/terms': typeof TermsRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/groups/$groupId': typeof GroupsGroupIdRouteRouteWithChildren
@@ -502,6 +511,7 @@ export interface FileRouteTypes {
     | '/feedback'
     | '/imprint'
     | '/privacy'
+    | '/sponsor'
     | '/terms'
     | '/unsubscribe'
     | '/groups/$groupId'
@@ -547,6 +557,7 @@ export interface FileRouteTypes {
     | '/feedback'
     | '/imprint'
     | '/privacy'
+    | '/sponsor'
     | '/terms'
     | '/unsubscribe'
     | '/account/settings'
@@ -588,6 +599,7 @@ export interface FileRouteTypes {
     | '/feedback'
     | '/imprint'
     | '/privacy'
+    | '/sponsor'
     | '/terms'
     | '/unsubscribe'
     | '/groups/$groupId'
@@ -634,6 +646,7 @@ export interface RootRouteChildren {
   FeedbackRoute: typeof FeedbackRoute
   ImprintRoute: typeof ImprintRoute
   PrivacyRoute: typeof PrivacyRoute
+  SponsorRoute: typeof SponsorRoute
   TermsRoute: typeof TermsRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   AccountSettingsRoute: typeof AccountSettingsRoute
@@ -689,6 +702,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sponsor': {
+      id: '/sponsor'
+      path: '/sponsor'
+      fullPath: '/sponsor'
+      preLoaderRoute: typeof SponsorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terms': {
@@ -1064,6 +1084,7 @@ const rootRouteChildren: RootRouteChildren = {
   FeedbackRoute: FeedbackRoute,
   ImprintRoute: ImprintRoute,
   PrivacyRoute: PrivacyRoute,
+  SponsorRoute: SponsorRoute,
   TermsRoute: TermsRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   AccountSettingsRoute: AccountSettingsRoute,

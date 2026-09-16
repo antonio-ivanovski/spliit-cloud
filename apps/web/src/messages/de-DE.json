@@ -85,7 +85,8 @@
     "legalNavigation": "Rechtliche Links",
     "privacy": "Datenschutz",
     "terms": "Nutzungsbedingungen",
-    "imprint": "Impressum"
+    "imprint": "Impressum",
+    "sponsor": "Sponsoring"
   },
   "Expenses": {
     "title": "Ausgaben",
@@ -3279,7 +3280,8 @@
       "copy": "Diagnosedaten kopieren",
       "copied": "Kopiert",
       "copyFailed": "Kein Zugriff auf die Zwischenablage. Wähle die Diagnosedaten aus und kopiere sie manuell."
-    }
+    },
+    "sponsorLink": "Möchtest du Spliit Cloud finanziell unterstützen? <cta>Werde Sponsor</cta>."
   },
   "ExpenseReport": {
     "title": "Ausgabenbericht",
@@ -4057,5 +4059,55 @@
       "waitDuplicate": "Warte, bis die Duplikatprüfung abgeschlossen ist, bevor du importierst.",
       "invalidRowTitle": "Ungültige Importzeile"
     }
+  },
+  "Sponsor": {
+    "title": "Spliit Cloud unterstützen",
+    "description": "Spliit Cloud ist ein nicht-kommerzielles Projekt, das von der Community gepflegt wird. Wenn es dir hilft, Ausgaben mit Freunden und Familie zu teilen, unterstütze uns gerne bei Hosting und Entwicklung.",
+    "bitcoin": {
+      "title": "Bitcoin",
+      "network": "Bitcoin-On-Chain",
+      "description": "Sende BTC von einer beliebigen Bitcoin-Wallet oder Börse an diese Adresse.",
+      "addressLabel": "Wallet-Adresse",
+      "copy": "Adresse kopieren",
+      "copied": "Kopiert",
+      "copyFailed": "Zugriff auf die Zwischenablage fehlgeschlagen. Wähle die Adresse aus und kopiere sie manuell.",
+      "qrLabel": "QR-Code für die Bitcoin-Spendenadresse"
+    },
+    "evm": {
+      "title": "Ethereum und Base",
+      "network": "Ethereum · gleiche Adresse funktioniert auf Base",
+      "description": "Sende ETH, USDC oder USDT von einer beliebigen EVM-kompatiblen Wallet. Stelle sicher, dass du dich vor dem Senden auf Ethereum oder Base befindest.",
+      "addressLabel": "Wallet-Adresse",
+      "copy": "Adresse kopieren",
+      "copied": "Kopiert",
+      "copyFailed": "Zugriff auf die Zwischenablage fehlgeschlagen. Wähle die Adresse aus und kopiere sie manuell.",
+      "qrLabel": "QR-Code für die Ethereum-/Base-Spendenadresse",
+      "contact": "Einen anderen Token senden oder eine andere EVM-Chain nutzen? <email>Frag uns vorher</email> — nicht alle Assets können wiederhergestellt werden."
+    },
+    "methodsLabel": "Möglichkeiten zu unterstützen",
+    "github": {
+      "title": "GitHub-Sponsoren",
+      "description": "Die beste Option für Kartenzahlungen und monatliche Unterstützung. Sponsoring-Stufen werden über GitHub in USD abgerechnet.",
+      "action": "Werde Sponsor"
+    },
+    "lightning": {
+      "title": "Lightning-Netzwerk",
+      "network": "Bitcoin-Lightning-Netzwerk",
+      "description": "Sofortige Sats mit niedrigen Gebühren über diese Lightning-Adresse.",
+      "addressLabel": "Lightning-Adresse",
+      "copy": "Adresse kopieren",
+      "copied": "Kopiert",
+      "copyFailed": "Zugriff auf die Zwischenablage fehlgeschlagen. Wähle die Adresse aus und kopiere sie manuell.",
+      "qrLabel": "QR-Code für die Lightning-Spendenadresse"
+    },
+    "notice": {
+      "title": "Krypto-Spenden sind unwiderruflich",
+      "description": "Überprüfe Adresse und Netzwerk vor dem Senden und stelle sicher, dass du auf spliit.cloud/sponsor bist. Gelder, die an die falsche Adresse gesendet werden, können nicht wiederhergestellt werden."
+    },
+    "contact": {
+      "title": "Schon gespendet oder möchtest du anders spenden?",
+      "description": "Wenn du gespendet hast, schreib uns gerne — wir freuen uns, von dir zu hören. Bei Fragen zu anderen Spendenmethoden schreib an <email>contact@spliit.cloud</email>."
+    },
+    "feedbackLink": "Möchtest du lieber Ideen statt Geld beitragen? <cta>Rückmeldung geben</cta>."
   }
 }

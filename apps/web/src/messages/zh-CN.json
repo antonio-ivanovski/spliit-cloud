@@ -85,7 +85,8 @@
     "legalNavigation": "法律链接",
     "privacy": "隐私",
     "terms": "条款",
-    "imprint": "项目声明"
+    "imprint": "项目声明",
+    "sponsor": "赞助"
   },
   "Expenses": {
     "title": "消费",
@@ -3189,7 +3190,8 @@
       "copy": "复制诊断信息",
       "copied": "已复制",
       "copyFailed": "无法访问剪贴板。请选择并手动复制诊断信息。"
-    }
+    },
+    "sponsorLink": "想在资金上支持 Spliit Cloud？<cta>成为赞助者</cta>。"
   },
   "ExpenseReport": {
     "title": "消费报告",
@@ -3962,5 +3964,55 @@
       "waitDuplicate": "请等待重复检查完成后再导入。",
       "invalidRowTitle": "无效的导入行"
     }
+  },
+  "Sponsor": {
+    "title": "支持 Spliit Cloud",
+    "description": "Spliit Cloud 是一个非商业、由社区维护的项目。如果它帮您与亲友分摊了费用，欢迎为托管和开发出一份力。",
+    "bitcoin": {
+      "title": "比特币",
+      "network": "比特币主网",
+      "description": "从任意比特币钱包或交易所向此地址发送 BTC。",
+      "addressLabel": "钱包地址",
+      "copy": "复制地址",
+      "copied": "已复制",
+      "copyFailed": "剪贴板访问失败，请手动选择并复制地址。",
+      "qrLabel": "比特币捐赠地址二维码"
+    },
+    "evm": {
+      "title": "以太坊 / Base",
+      "network": "Ethereum · 在 Base 上使用相同地址",
+      "description": "从任意兼容 EVM 的钱包发送 ETH、USDC 或 USDT。发送前请确认您位于 Ethereum 或 Base 网络。",
+      "addressLabel": "钱包地址",
+      "copy": "复制地址",
+      "copied": "已复制",
+      "copyFailed": "剪贴板访问失败，请手动选择并复制地址。",
+      "qrLabel": "Ethereum / Base 捐赠地址二维码",
+      "contact": "想发送其他代币或使用其他 EVM 网络？<email>请先联系我们</email>——并非所有资产都能找回。"
+    },
+    "methodsLabel": "支持方式",
+    "github": {
+      "title": "GitHub 赞助",
+      "description": "最适合银行卡支付和按月支持的方式。赞助等级通过 GitHub 以美元计费。",
+      "action": "成为赞助者"
+    },
+    "lightning": {
+      "title": "闪电网络",
+      "network": "比特币闪电网络",
+      "description": "通过此闪电网络地址即时、低手续费地发送 sats。",
+      "addressLabel": "闪电网络地址",
+      "copy": "复制地址",
+      "copied": "已复制",
+      "copyFailed": "剪贴板访问失败，请手动选择并复制地址。",
+      "qrLabel": "闪电网络捐赠地址二维码"
+    },
+    "notice": {
+      "title": "加密货币捐赠不可撤销",
+      "description": "发送前请仔细核对地址和网络，并确认您正在访问 spliit.cloud/sponsor。发送到错误地址的资金无法找回。"
+    },
+    "contact": {
+      "title": "已捐赠，或想通过其他方式支持？",
+      "description": "如果您已捐赠，欢迎给我们留言——很期待收到您的消息。如需咨询其他捐赠方式，请写信至 <email>contact@spliit.cloud</email>。"
+    },
+    "feedbackLink": "更愿意贡献想法而非资金？<cta>分享反馈</cta>。"
   }
 }

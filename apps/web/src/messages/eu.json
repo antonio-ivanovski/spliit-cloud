@@ -85,7 +85,8 @@
     "legalNavigation": "Esteka legalak",
     "privacy": "Pribatutasuna",
     "terms": "Baldintzak",
-    "imprint": "Lege-oharra"
+    "imprint": "Lege-oharra",
+    "sponsor": "Babesle"
   },
   "Expenses": {
     "title": "Gastuak",
@@ -3225,7 +3226,8 @@
       "copy": "Kopiatu diagnostikoak",
       "copied": "Kopiatuta",
       "copyFailed": "Ezin izan da arbelera sartu. Hautatu eta kopiatu diagnostikoak eskuz."
-    }
+    },
+    "sponsorLink": "Spliit Cloud ekonomikoki babestu nahi duzu? <cta>Egin zaitez babesle</cta>."
   },
   "ExpenseReport": {
     "title": "Gastuen txostena",
@@ -4008,5 +4010,55 @@
       "waitDuplicate": "Itxaron bikoiztuen egiaztapena amaitu arte inportatu aurretik.",
       "invalidRowTitle": "Baliogabeko inportazio errenkada"
     }
+  },
+  "Sponsor": {
+    "bitcoin": {
+      "title": "Bitcoin",
+      "network": "Bitcoin katean",
+      "description": "Bidali BTC helbide honetara edozein Bitcoin diru-zorro edo truke-plataformatatik.",
+      "addressLabel": "Diru-zorroaren helbidea",
+      "copy": "Kopiatu helbidea",
+      "copied": "Kopiatuta",
+      "copyFailed": "Ezin izan da arbelera sartu. Hautatu eta kopiatu helbidea eskuz.",
+      "qrLabel": "Bitcoin dohaintza-helbidearen QR kodea"
+    },
+    "evm": {
+      "title": "Ethereum eta Base",
+      "network": "Ethereum · helbide berak Base-n ere balio du",
+      "description": "Bidali ETH, USDC edo USDT EVMrekin bateragarria den edozein diru-zorrotatik. Ziurtatu Ethereum edo Base-n zaudela bidali aurretik.",
+      "addressLabel": "Diru-zorroaren helbidea",
+      "copy": "Kopiatu helbidea",
+      "copied": "Kopiatuta",
+      "copyFailed": "Ezin izan da arbelera sartu. Hautatu eta kopiatu helbidea eskuz.",
+      "qrLabel": "Ethereum / Base dohaintza-helbidearen QR kodea",
+      "contact": "Beste token bat bidali edo beste EVM kate bat erabili nahi duzu? <email>Galdetu iezaguzu lehenik</email> — ezin dira aktibo guztiak berreskuratu."
+    },
+    "title": "Babestu Spliit Cloud",
+    "description": "Spliit Cloud irabazi-asmorik gabeko proiektu bat da, komunitateak mantentzen duena. Lagunekin eta familiarekin gastuak banatzen laguntzen badizu, kontuan hartu ostatatzea eta garapena ordaintzen laguntzea.",
+    "methodsLabel": "Laguntzeko moduak",
+    "github": {
+      "title": "GitHub Babesleak",
+      "description": "Txartel bidezko ordainketetarako eta hileroko laguntzarako aukerarik onena. Babes-mailak USDtan fakturatzen dira GitHub bidez.",
+      "action": "Egin zaitez babesle"
+    },
+    "lightning": {
+      "title": "Lightning sarea",
+      "network": "Bitcoin Lightning sarea",
+      "description": "Berehalako satsak komisio txikiekin Lightning helbide honen bidez.",
+      "addressLabel": "Lightning helbidea",
+      "copy": "Kopiatu helbidea",
+      "copied": "Kopiatuta",
+      "copyFailed": "Ezin izan da arbelera sartu. Hautatu eta kopiatu helbidea eskuz.",
+      "qrLabel": "Lightning dohaintza-helbidearen QR kodea"
+    },
+    "notice": {
+      "title": "Kripto-dohaintzak itzulezinak dira",
+      "description": "Egiaztatu helbidea eta sarea bidali aurretik, eta ziurtatu spliit.cloud/sponsor gunean zaudela. Helbide oker batera bidalitako funtsak ezin dira berreskuratu."
+    },
+    "contact": {
+      "title": "Dohaintza egin duzu, edo beste modu batean eman nahi duzu?",
+      "description": "Dohaintza egin baduzu, idatzi iezaguzu — zure berri izatea gustatuko litzaiguke. Beste dohaintza-metodoei buruzko galderetarako, idatzi <email>contact@spliit.cloud</email> helbidera."
+    },
+    "feedbackLink": "Funtsak eman beharrean ideiak eman nahiago dituzu? <cta>Partekatu iritzia</cta>."
   }
 }

@@ -85,7 +85,8 @@
     "legalNavigation": "Enlaces legales",
     "privacy": "Privacidad",
     "terms": "Términos",
-    "imprint": "Aviso legal"
+    "imprint": "Aviso legal",
+    "sponsor": "Patrocinar"
   },
   "Expenses": {
     "title": "Gastos",
@@ -3281,7 +3282,8 @@
       "copy": "Copiar diagnósticos",
       "copied": "Copiado",
       "copyFailed": "No se pudo acceder al portapapeles. Selecciona y copia los diagnósticos manualmente."
-    }
+    },
+    "sponsorLink": "¿Quieres apoyar económicamente a Spliit Cloud? <cta>Hazte patrocinador</cta>."
   },
   "ExpenseReport": {
     "title": "Informe de gastos",
@@ -4064,5 +4066,55 @@
       "waitDuplicate": "Espera a que termine la comprobación de duplicados antes de importar.",
       "invalidRowTitle": "Fila de importación no válida"
     }
+  },
+  "Sponsor": {
+    "bitcoin": {
+      "title": "Bitcoin",
+      "network": "Bitcoin en cadena",
+      "description": "Envía BTC a esta dirección desde cualquier billetera o plataforma de Bitcoin.",
+      "addressLabel": "Dirección de la billetera",
+      "copy": "Copiar dirección",
+      "copied": "Copiado",
+      "copyFailed": "No se pudo acceder al portapapeles. Selecciona y copia la dirección manualmente.",
+      "qrLabel": "Código QR de la dirección de donación de Bitcoin"
+    },
+    "evm": {
+      "title": "Ethereum y Base",
+      "network": "Ethereum · la misma dirección funciona en Base",
+      "description": "Envía ETH, USDC o USDT desde cualquier billetera compatible con EVM. Asegúrate de estar en Ethereum o Base antes de enviar.",
+      "addressLabel": "Dirección de la billetera",
+      "copy": "Copiar dirección",
+      "copied": "Copiado",
+      "copyFailed": "No se pudo acceder al portapapeles. Selecciona y copia la dirección manualmente.",
+      "qrLabel": "Código QR de la dirección de donación de Ethereum / Base",
+      "contact": "¿Envías otro token o usas otra cadena EVM? <email>Pregúntanos primero</email> — no todos los activos se pueden recuperar."
+    },
+    "title": "Apoya Spliit Cloud",
+    "description": "Spliit Cloud es un proyecto no comercial mantenido por la comunidad. Si te ayuda a dividir gastos con amigos y familiares, considera contribuir a los gastos de alojamiento y desarrollo.",
+    "methodsLabel": "Formas de apoyar",
+    "github": {
+      "title": "Patrocinadores de GitHub",
+      "description": "La mejor opción para pagos con tarjeta y apoyo mensual. Los niveles de patrocinio se facturan en USD a través de GitHub.",
+      "action": "Hazte patrocinador"
+    },
+    "lightning": {
+      "title": "Red Lightning",
+      "network": "Red Lightning de Bitcoin",
+      "description": "Sats instantáneos con comisiones bajas a través de esta dirección Lightning.",
+      "addressLabel": "Dirección Lightning",
+      "copy": "Copiar dirección",
+      "copied": "Copiado",
+      "copyFailed": "No se pudo acceder al portapapeles. Selecciona y copia la dirección manualmente.",
+      "qrLabel": "Código QR de la dirección de donación Lightning"
+    },
+    "notice": {
+      "title": "Las donaciones en cripto son irreversibles",
+      "description": "Comprueba la dirección y la red antes de enviar y verifica que estás en spliit.cloud/sponsor. Los fondos enviados a una dirección incorrecta no se pueden recuperar."
+    },
+    "contact": {
+      "title": "¿Has donado o quieres otra forma de contribuir?",
+      "description": "Si has donado, escríbenos — nos encantaría saber de ti. Para preguntas sobre otros métodos de donación, escribe a <email>contact@spliit.cloud</email>."
+    },
+    "feedbackLink": "¿Prefieres aportar ideas en lugar de fondos? <cta>Compartir comentarios</cta>."
   }
 }

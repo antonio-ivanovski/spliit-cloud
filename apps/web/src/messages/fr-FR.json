@@ -85,7 +85,8 @@
     "legalNavigation": "Liens juridiques",
     "privacy": "Confidentialité",
     "terms": "Conditions",
-    "imprint": "Mentions légales"
+    "imprint": "Mentions légales",
+    "sponsor": "Soutenir"
   },
   "Expenses": {
     "title": "Dépenses",
@@ -3227,7 +3228,8 @@
       "copy": "Copier les diagnostics",
       "copied": "Copié",
       "copyFailed": "Impossible d’accéder au presse-papiers. Sélectionnez et copiez les diagnostics manuellement."
-    }
+    },
+    "sponsorLink": "Vous souhaitez soutenir financièrement Spliit Cloud ? <cta>Devenir sponsor</cta>."
   },
   "ExpenseReport": {
     "title": "Rapport de dépenses",
@@ -4010,5 +4012,55 @@
       "waitDuplicate": "Attendez la fin de la vérification des doublons avant d’importer.",
       "invalidRowTitle": "Ligne d’import invalide"
     }
+  },
+  "Sponsor": {
+    "bitcoin": {
+      "title": "Bitcoin",
+      "network": "Réseau principal Bitcoin",
+      "description": "Envoyez des BTC à cette adresse depuis n’importe quel portefeuille ou plateforme Bitcoin.",
+      "addressLabel": "Adresse du portefeuille",
+      "copy": "Copier l’adresse",
+      "copied": "Copié",
+      "copyFailed": "Impossible d’accéder au presse-papiers. Sélectionnez et copiez l’adresse manuellement.",
+      "qrLabel": "Code QR de l’adresse de don Bitcoin"
+    },
+    "evm": {
+      "title": "Ethereum et Base",
+      "network": "Ethereum · même adresse valable sur Base",
+      "description": "Envoyez des ETH, USDC ou USDT depuis n’importe quel portefeuille compatible EVM. Assurez-vous d’être sur Ethereum ou Base avant d’envoyer.",
+      "addressLabel": "Adresse du portefeuille",
+      "copy": "Copier l’adresse",
+      "copied": "Copié",
+      "copyFailed": "Impossible d’accéder au presse-papiers. Sélectionnez et copiez l’adresse manuellement.",
+      "qrLabel": "Code QR de l’adresse de don Ethereum / Base",
+      "contact": "Vous envoyez un autre token ou utilisez une autre chaîne EVM ? <email>Demandez-nous d’abord</email> — tous les actifs ne peuvent pas être récupérés."
+    },
+    "title": "Soutenez Spliit Cloud",
+    "description": "Spliit Cloud est un projet non commercial, maintenu par la communauté. S’il vous aide à partager vos dépenses entre amis et en famille, pensez à contribuer aux frais d’hébergement et de développement.",
+    "methodsLabel": "Moyens de soutenir",
+    "github": {
+      "title": "Parrainage GitHub",
+      "description": "La meilleure option pour les paiements par carte et le soutien mensuel. Les niveaux de parrainage sont facturés en USD via GitHub.",
+      "action": "Devenir sponsor"
+    },
+    "lightning": {
+      "title": "Réseau Lightning",
+      "network": "Réseau Lightning Bitcoin",
+      "description": "Des sats instantanés à frais réduits via cette adresse Lightning.",
+      "addressLabel": "Adresse Lightning",
+      "copy": "Copier l’adresse",
+      "copied": "Copié",
+      "copyFailed": "Impossible d’accéder au presse-papiers. Sélectionnez et copiez l’adresse manuellement.",
+      "qrLabel": "Code QR de l’adresse de don Lightning"
+    },
+    "notice": {
+      "title": "Les dons en crypto sont irréversibles",
+      "description": "Vérifiez l’adresse et le réseau avant d’envoyer, et assurez-vous d’être sur spliit.cloud/sponsor. Les fonds envoyés à une mauvaise adresse ne peuvent pas être récupérés."
+    },
+    "contact": {
+      "title": "Vous avez donné, ou vous voulez donner autrement ?",
+      "description": "Si vous avez fait un don, écrivez-nous — nous serions ravis d’avoir de vos nouvelles. Pour toute question sur les autres moyens de don, écrivez à <email>contact@spliit.cloud</email>."
+    },
+    "feedbackLink": "Vous préférez contribuer par des idées plutôt que par des fonds ? <cta>Partager des commentaires</cta>."
   }
 }

@@ -1952,7 +1952,8 @@
     "privacy": {
       "title": "protect your privacy",
       "description": "remove names, emails, amounts, receipts, group links, invite tokens, and other private lore before submitting."
-    }
+    },
+    "sponsorLink": "wanna support Spliit Cloud financially? <cta>become a sponsor</cta>."
   },
   "Footer": {
     "madeIn": "made by the open-source community with love and vibes",
@@ -1960,7 +1961,8 @@
     "legalNavigation": "legal links",
     "privacy": "privacy stuff",
     "terms": "terms stuff",
-    "imprint": "project notice"
+    "imprint": "project notice",
+    "sponsor": "sponsor"
   },
   "ForgotPassword": {
     "title": "reset your password era",
@@ -3977,5 +3979,55 @@
       "waitDuplicate": "hold up for the duplicate check before importing.",
       "invalidRowTitle": "that import row is off"
     }
+  },
+  "Sponsor": {
+    "title": "support Spliit Cloud",
+    "description": "Spliit Cloud is a non-commercial, community-run project. if it helps you split expenses with friends and family, chip in for hosting and development.",
+    "bitcoin": {
+      "title": "bitcoin",
+      "network": "bitcoin on-chain",
+      "description": "send BTC to this address from any bitcoin wallet or exchange.",
+      "addressLabel": "wallet address",
+      "copy": "copy address",
+      "copied": "copied",
+      "copyFailed": "couldn't access the clipboard. select and copy the address manually.",
+      "qrLabel": "QR code for the bitcoin donation address"
+    },
+    "evm": {
+      "title": "ethereum / base",
+      "network": "ethereum · same address works on base",
+      "description": "send ETH, USDC, or USDT from any EVM-compatible wallet. make sure you're on ethereum or base before sending.",
+      "addressLabel": "wallet address",
+      "copy": "copy address",
+      "copied": "copied",
+      "copyFailed": "couldn't access the clipboard. select and copy the address manually.",
+      "qrLabel": "QR code for the ethereum / base donation address",
+      "contact": "sending a different token or using another EVM chain? <email>ask us first</email> — not every asset can be recovered."
+    },
+    "methodsLabel": "ways to support",
+    "github": {
+      "title": "github sponsors",
+      "description": "the best pick for card payments and monthly support. sponsorship tiers are billed in USD through github.",
+      "action": "become a sponsor"
+    },
+    "lightning": {
+      "title": "lightning",
+      "network": "bitcoin lightning network",
+      "description": "instant, low-fee sats via this lightning address.",
+      "addressLabel": "lightning address",
+      "copy": "copy address",
+      "copied": "copied",
+      "copyFailed": "couldn't access the clipboard. select and copy the address manually.",
+      "qrLabel": "QR code for the lightning donation address"
+    },
+    "notice": {
+      "title": "crypto donations are irreversible",
+      "description": "double-check the address and network before sending, and make sure you're on spliit.cloud/sponsor. funds sent to the wrong address can't be recovered."
+    },
+    "contact": {
+      "title": "donated, or wanna give another way?",
+      "description": "if you've donated, drop us a note — we'd love to hear from you. for questions about other donation methods, hit us up at <email>contact@spliit.cloud</email>."
+    },
+    "feedbackLink": "prefer ideas over funds? <cta>share feedback</cta>."
   }
 }

@@ -85,7 +85,8 @@
     "legalNavigation": "Právní odkazy",
     "privacy": "Ochrana soukromí",
     "terms": "Podmínky",
-    "imprint": "Podrobnosti o projektu"
+    "imprint": "Podrobnosti o projektu",
+    "sponsor": "Sponzor"
   },
   "Expenses": {
     "title": "Výdaje",
@@ -3245,7 +3246,8 @@
       "copy": "Kopírovat diagnostiku",
       "copied": "Zkopírováno",
       "copyFailed": "Přístup ke schránce se nezdařil. Vyberte a zkopírujte diagnostiku ručně."
-    }
+    },
+    "sponsorLink": "Chcete Spliit Cloud podpořit finančně? <cta>Stát se sponzorem</cta>."
   },
   "ExpenseReport": {
     "title": "Přehled výdajů",
@@ -4033,5 +4035,55 @@
       "importedCount_few": "Importovány {count} výdaje",
       "matchingExpensesNotice_few": "{count} výdaje mají odpovídající nebo podobné názvy."
     }
+  },
+  "Sponsor": {
+    "title": "Podpořte Spliit Cloud",
+    "description": "Spliit Cloud je nekomerční projekt spravovaný komunitou. Pokud vám pomáhá dělit výdaje s přáteli a rodinou, přispějte na hosting a vývoj.",
+    "bitcoin": {
+      "title": "Bitcoin",
+      "network": "Bitcoinová síť (on-chain)",
+      "description": "Pošlete BTC na tuto adresu z jakékoli bitcoinové peněženky nebo burzy.",
+      "addressLabel": "Adresa peněženky",
+      "copy": "Kopírovat adresu",
+      "copied": "Zkopírováno",
+      "copyFailed": "Přístup ke schránce se nezdařil. Adresu vyberte a zkopírujte ručně.",
+      "qrLabel": "QR kód s adresou pro dary v bitcoinech"
+    },
+    "evm": {
+      "title": "Ethereum a Base",
+      "network": "Ethereum · stejná adresa funguje v síti Base",
+      "description": "Pošlete ETH, USDC nebo USDT z jakékoli peněženky kompatibilní s EVM. Před odesláním se ujistěte, že jste v síti Ethereum nebo Base.",
+      "addressLabel": "Adresa peněženky",
+      "copy": "Kopírovat adresu",
+      "copied": "Zkopírováno",
+      "copyFailed": "Přístup ke schránce se nezdařil. Adresu vyberte a zkopírujte ručně.",
+      "qrLabel": "QR kód s adresou pro dary v sítích Ethereum / Base",
+      "contact": "Posíláte jiný token nebo používáte jinou EVM síť? <email>Nejprve se nás zeptejte</email> – ne každé aktivum lze získat zpět."
+    },
+    "methodsLabel": "Způsoby podpory",
+    "github": {
+      "title": "GitHub Sponzoři",
+      "description": "Nejlepší volba pro platby kartou a měsíční podporu. Úrovně sponzorství se účtují v USD přes GitHub.",
+      "action": "Stát se sponzorem"
+    },
+    "lightning": {
+      "title": "Lightning síť",
+      "network": "Síť Bitcoin Lightning",
+      "description": "Okamžité sats s nízkým poplatkem na tuto Lightning adresu.",
+      "addressLabel": "Lightning adresa",
+      "copy": "Kopírovat adresu",
+      "copied": "Zkopírováno",
+      "copyFailed": "Přístup ke schránce se nezdařil. Adresu vyberte a zkopírujte ručně.",
+      "qrLabel": "QR kód s Lightning adresou pro dary"
+    },
+    "notice": {
+      "title": "Kryptoměnové dary jsou nevratné",
+      "description": "Před odesláním si zkontrolujte adresu a síť a ověřte, že jste na stránce spliit.cloud/sponsor. Prostředky odeslané na špatnou adresu nelze získat zpět."
+    },
+    "contact": {
+      "title": "Přispěli jste, nebo chcete přispět jinak?",
+      "description": "Pokud jste přispěli, dejte nám vědět – rádi o vás uslyšíme. S dotazy na jiné způsoby přispění napište na <email>contact@spliit.cloud</email>."
+    },
+    "feedbackLink": "Raději přispějete nápady než penězi? <cta>Sdílet zpětnou vazbu</cta>."
   }
 }

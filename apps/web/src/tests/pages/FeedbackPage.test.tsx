@@ -4,6 +4,22 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import FeedbackPage from '@/app/feedback'
 import { render, screen } from '@/test/test-utils'
 
+vi.mock('@tanstack/react-router', () => ({
+  Link: ({
+    to,
+    children,
+    ...props
+  }: {
+    to: string
+    children?: React.ReactNode
+    [key: string]: unknown
+  }) => (
+    <a href={to} {...props}>
+      {children}
+    </a>
+  ),
+}))
+
 const diagnostics = [
   'Spliit Cloud diagnostics',
   'Instance: https://example.test',
@@ -43,6 +59,10 @@ describe('FeedbackPage', () => {
       expect(link).toHaveAttribute('target', '_blank')
       expect(link).toHaveAttribute('rel', 'noopener noreferrer')
     }
+
+    expect(
+      screen.getByRole('link', { name: 'Become a sponsor' }),
+    ).toHaveAttribute('href', '/sponsor')
   })
 
   it('copies the visible safe diagnostics', async () => {

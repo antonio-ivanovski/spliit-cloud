@@ -109,7 +109,8 @@
     "legalNavigation": "Legal links",
     "privacy": "Privacy",
     "terms": "Terms",
-    "imprint": "Project notice"
+    "imprint": "Project notice",
+    "sponsor": "Sponsor"
   },
   "Expenses": {
     "title": "Expenses",
@@ -3309,7 +3310,8 @@
       "copy": "Copy diagnostics",
       "copied": "Copied",
       "copyFailed": "Clipboard access failed. Select and copy the diagnostics manually."
-    }
+    },
+    "sponsorLink": "Want to support Spliit Cloud financially? <cta>Become a sponsor</cta>."
   },
   "ExpenseReport": {
     "title": "Expense report",
@@ -4084,5 +4086,55 @@
       "SPLIIT_UNKNOWN_PARTICIPANT": "Expense \"{title}\" references an unknown participant.",
       "SPLIIT_UNSUPPORTED_SHAPE": "This file is not a supported spliit.app JSON export."
     }
+  },
+  "Sponsor": {
+    "title": "Support Spliit Cloud",
+    "description": "Spliit Cloud is a non-commercial, community-maintained project. If it helps you split expenses with friends and family, consider chipping in for hosting and development.",
+    "methodsLabel": "Ways to support",
+    "github": {
+      "title": "GitHub Sponsors",
+      "description": "The best option for card payments and monthly support. Sponsorship tiers are billed in USD through GitHub.",
+      "action": "Become a sponsor"
+    },
+    "evm": {
+      "title": "Ethereum / Base",
+      "network": "Ethereum · same address works on Base",
+      "description": "Send ETH, USDC, or USDT from any EVM-compatible wallet. Make sure you are on Ethereum or Base before sending.",
+      "addressLabel": "Wallet address",
+      "copy": "Copy address",
+      "copied": "Copied",
+      "copyFailed": "Clipboard access failed. Select and copy the address manually.",
+      "qrLabel": "QR code for the Ethereum / Base donation address",
+      "contact": "Sending a different token or using another EVM chain? <email>Ask us first</email> — not every asset can be recovered."
+    },
+    "bitcoin": {
+      "title": "Bitcoin",
+      "network": "Bitcoin on-chain",
+      "description": "Send BTC to this address from any Bitcoin wallet or exchange.",
+      "addressLabel": "Wallet address",
+      "copy": "Copy address",
+      "copied": "Copied",
+      "copyFailed": "Clipboard access failed. Select and copy the address manually.",
+      "qrLabel": "QR code for the Bitcoin donation address"
+    },
+    "lightning": {
+      "title": "Lightning",
+      "network": "Bitcoin Lightning Network",
+      "description": "Instant, low-fee sats via this Lightning address.",
+      "addressLabel": "Lightning address",
+      "copy": "Copy address",
+      "copied": "Copied",
+      "copyFailed": "Clipboard access failed. Select and copy the address manually.",
+      "qrLabel": "QR code for the Lightning donation address"
+    },
+    "notice": {
+      "title": "Crypto donations are irreversible",
+      "description": "Double-check the address and network before sending, and verify you are on spliit.cloud/sponsor. Funds sent to the wrong address cannot be recovered."
+    },
+    "contact": {
+      "title": "Donated, or want another way to give?",
+      "description": "If you've donated, drop us a note — we'd love to hear from you. For questions about other donation methods, write to <email>contact@spliit.cloud</email>."
+    },
+    "feedbackLink": "Prefer to contribute ideas instead of funds? <cta>Share feedback</cta>."
   }
 }

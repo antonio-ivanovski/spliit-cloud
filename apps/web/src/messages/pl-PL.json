@@ -85,7 +85,8 @@
     "legalNavigation": "Linki prawne",
     "privacy": "Prywatność",
     "terms": "Warunki",
-    "imprint": "Informacja o projekcie"
+    "imprint": "Informacja o projekcie",
+    "sponsor": "Sponsoring"
   },
   "Expenses": {
     "title": "Wydatki",
@@ -3245,7 +3246,8 @@
       "copy": "Kopiuj diagnostykę",
       "copied": "Skopiowano",
       "copyFailed": "Nie udało się uzyskać dostępu do schowka. Zaznacz i skopiuj diagnostykę ręcznie."
-    }
+    },
+    "sponsorLink": "Chcesz wesprzeć finansowo Spliit Cloud? <cta>Zostań sponsorem</cta>."
   },
   "ExpenseReport": {
     "title": "Raport wydatków",
@@ -4033,5 +4035,55 @@
       "importedCount_few": "Zaimportowano {count} wydatki",
       "matchingExpensesNotice_few": "{count} wydatki mają pasujące lub podobne tytuły."
     }
+  },
+  "Sponsor": {
+    "title": "Wesprzyj Spliit Cloud",
+    "description": "Spliit Cloud to niekomercyjny projekt utrzymywany przez społeczność. Jeśli pomaga Ci dzielić wydatki z przyjaciółmi i rodziną, rozważ wsparcie kosztów hostingu i rozwoju.",
+    "bitcoin": {
+      "title": "Bitcoin",
+      "network": "Sieć główna Bitcoin",
+      "description": "Wyślij BTC na ten adres z dowolnego portfela Bitcoin lub giełdy.",
+      "addressLabel": "Adres portfela",
+      "copy": "Kopiuj adres",
+      "copied": "Skopiowano",
+      "copyFailed": "Nie udało się uzyskać dostępu do schowka. Zaznacz i skopiuj adres ręcznie.",
+      "qrLabel": "Kod QR z adresem do darowizn Bitcoin"
+    },
+    "evm": {
+      "title": "Ethereum i Base",
+      "network": "Ethereum · ten sam adres działa w Base",
+      "description": "Wyślij ETH, USDC lub USDT z dowolnego portfela zgodnego z EVM. Przed wysłaniem upewnij się, że jesteś w sieci Ethereum lub Base.",
+      "addressLabel": "Adres portfela",
+      "copy": "Kopiuj adres",
+      "copied": "Skopiowano",
+      "copyFailed": "Nie udało się uzyskać dostępu do schowka. Zaznacz i skopiuj adres ręcznie.",
+      "qrLabel": "Kod QR z adresem do darowizn Ethereum / Base",
+      "contact": "Wysyłasz inny token albo korzystasz z innego łańcucha EVM? <email>Zapytaj nas najpierw</email> — nie każdego aktywa da się odzyskać."
+    },
+    "methodsLabel": "Sposoby wsparcia",
+    "github": {
+      "title": "Sponsorzy GitHub",
+      "description": "Najlepsza opcja płatności kartą i wsparcia miesięcznego. Progi sponsorskie są rozliczane w USD za pośrednictwem GitHub.",
+      "action": "Zostań sponsorem"
+    },
+    "lightning": {
+      "title": "Sieć Lightning",
+      "network": "Sieć Bitcoin Lightning",
+      "description": "Błyskawiczne sats o niskich opłatach na ten adres Lightning.",
+      "addressLabel": "Adres Lightning",
+      "copy": "Kopiuj adres",
+      "copied": "Skopiowano",
+      "copyFailed": "Nie udało się uzyskać dostępu do schowka. Zaznacz i skopiuj adres ręcznie.",
+      "qrLabel": "Kod QR z adresem Lightning do darowizn"
+    },
+    "notice": {
+      "title": "Darowizny w kryptowalutach są nieodwracalne",
+      "description": "Przed wysłaniem sprawdź dokładnie adres i sieć oraz upewnij się, że jesteś na stronie spliit.cloud/sponsor. Środków wysłanych na zły adres nie można odzyskać."
+    },
+    "contact": {
+      "title": "Darowizna wysłana albo chcesz pomóc inaczej?",
+      "description": "Po przekazaniu darowizny daj nam znać — chętnie się o tym dowiemy. W sprawie innych metod wsparcia napisz na adres <email>contact@spliit.cloud</email>."
+    },
+    "feedbackLink": "Wolisz podzielić się pomysłami zamiast środkami? <cta>Przekaż opinię</cta>."
   }
 }

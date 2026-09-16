@@ -1666,7 +1666,8 @@
     "diagnostics": {
       "description": "Copie este contexto técnico para um relatório de erro se for relevante. Ele não inclui dados da conta, conteúdo de formulários, identificadores de URL, strings de consulta nem tokens de convite.",
       "copyFailed": "Falha ao acessar a área de transferência. Selecione e copie os diagnósticos manualmente."
-    }
+    },
+    "sponsorLink": "Quer apoiar financeiramente o Spliit Cloud? <cta>Torne-se patrocinador</cta>."
   },
   "ExpenseReport": {
     "settlementsSectionLabel": "Acertos sugeridos",
@@ -2059,5 +2060,33 @@
       "mobileStatus": "Situação",
       "tableLabel": "Despesas para revisar"
     }
+  },
+  "Sponsor": {
+    "title": "Apoie o Spliit Cloud",
+    "description": "O Spliit Cloud é um projeto sem fins lucrativos mantido pela comunidade. Se ajuda você a dividir despesas com amigos e familiares, considere contribuir para os custos de hospedagem e desenvolvimento.",
+    "bitcoin": {
+      "description": "Envie BTC para este endereço de qualquer carteira ou plataforma Bitcoin.",
+      "copyFailed": "Falha ao acessar a área de transferência. Selecione e copie o endereço manualmente.",
+      "qrLabel": "Código QR do endereço de doação Bitcoin"
+    },
+    "evm": {
+      "description": "Envie ETH, USDC ou USDT de qualquer carteira compatível com EVM. Confira se você está na Ethereum ou na Base antes de enviar.",
+      "copyFailed": "Falha ao acessar a área de transferência. Selecione e copie o endereço manualmente.",
+      "qrLabel": "Código QR do endereço de doação Ethereum / Base"
+    },
+    "github": {
+      "description": "A melhor opção para pagamentos com cartão e apoio mensal. Os níveis de patrocínio são cobrados em USD pelo GitHub.",
+      "action": "Torne-se patrocinador"
+    },
+    "lightning": {
+      "description": "Sats instantâneos com taxas baixas usando este endereço Lightning.",
+      "copyFailed": "Falha ao acessar a área de transferência. Selecione e copie o endereço manualmente.",
+      "qrLabel": "Código QR do endereço de doação Lightning"
+    },
+    "notice": {
+      "title": "As doações em cripto são irreversíveis",
+      "description": "Confira o endereço e a rede antes de enviar e confirme que você está em spliit.cloud/sponsor. Os fundos enviados para o endereço errado não podem ser recuperados."
+    },
+    "feedbackLink": "Prefere contribuir com ideias em vez de fundos? <cta>Compartilhar comentários</cta>."
   }
 }

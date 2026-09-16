@@ -1359,7 +1359,8 @@
     "legalNavigation": "법적 링크",
     "privacy": "개인정보 보호",
     "terms": "이용 약관",
-    "imprint": "사업자 정보"
+    "imprint": "사업자 정보",
+    "sponsor": "후원"
   },
   "Settings": {
     "title": "설정"
@@ -3278,7 +3279,8 @@
       "copy": "진단 정보 복사",
       "copied": "복사됨",
       "copyFailed": "클립보드에 접근하지 못했습니다. 진단 정보를 선택하여 직접 복사하세요."
-    }
+    },
+    "sponsorLink": "Spliit Cloud를 금전적으로 후원하고 싶으신가요? <cta>스폰서 되기</cta>."
   },
   "ExpenseReport": {
     "title": "지출 보고서",
@@ -4051,5 +4053,55 @@
       "waitDuplicate": "가져오기 전에 중복 검사가 끝날 때까지 기다리세요.",
       "invalidRowTitle": "잘못된 가져오기 행"
     }
+  },
+  "Sponsor": {
+    "title": "Spliit Cloud 후원하기",
+    "description": "Spliit Cloud는 비상업적 커뮤니티 운영 프로젝트입니다. 친구 및 가족과의 비용 나누기에 도움이 되었다면 호스팅과 개발을 위한 후원을 고려해 주세요.",
+    "bitcoin": {
+      "title": "비트코인",
+      "network": "비트코인 온체인",
+      "description": "사용 중인 비트코인 지갑이나 거래소에서 이 주소로 BTC를 보내세요.",
+      "addressLabel": "지갑 주소",
+      "copy": "주소 복사",
+      "copied": "복사됨",
+      "copyFailed": "클립보드 접근에 실패했습니다. 주소를 직접 선택해서 복사해 주세요.",
+      "qrLabel": "비트코인 후원 주소 QR 코드"
+    },
+    "evm": {
+      "title": "이더리움 / Base",
+      "network": "Ethereum · Base에서도 같은 주소 사용",
+      "description": "EVM 호환 지갑에서 ETH, USDC 또는 USDT를 보내세요. 보내기 전에 Ethereum 또는 Base 네트워크에 있는지 확인해 주세요.",
+      "addressLabel": "지갑 주소",
+      "copy": "주소 복사",
+      "copied": "복사됨",
+      "copyFailed": "클립보드 접근에 실패했습니다. 주소를 직접 선택해서 복사해 주세요.",
+      "qrLabel": "Ethereum / Base 후원 주소 QR 코드",
+      "contact": "다른 토큰을 보내거나 다른 EVM 체인을 사용하시나요? <email>먼저 문의해 주세요</email> — 모든 자산을 복구할 수 있는 것은 아닙니다."
+    },
+    "methodsLabel": "후원 방법",
+    "github": {
+      "title": "GitHub 스폰서",
+      "description": "카드 결제와 매월 후원에 가장 좋은 방법입니다. 후원 등급은 GitHub를 통해 USD로 청구됩니다.",
+      "action": "스폰서 되기"
+    },
+    "lightning": {
+      "title": "라이트닝",
+      "network": "비트코인 라이트닝 네트워크",
+      "description": "이 라이트닝 주소로 수수료가 낮고 즉시 sats를 보낼 수 있습니다.",
+      "addressLabel": "라이트닝 주소",
+      "copy": "주소 복사",
+      "copied": "복사됨",
+      "copyFailed": "클립보드 접근에 실패했습니다. 주소를 직접 선택해서 복사해 주세요.",
+      "qrLabel": "라이트닝 후원 주소 QR 코드"
+    },
+    "notice": {
+      "title": "암호화폐 후원은 되돌릴 수 없습니다",
+      "description": "보내기 전에 주소와 네트워크를 다시 확인하고, spliit.cloud/sponsor에 접속 중인지 확인해 주세요. 잘못된 주소로 보낸 자금은 복구할 수 없습니다."
+    },
+    "contact": {
+      "title": "이미 후원하셨거나 다른 방법으로 후원하고 싶으신가요?",
+      "description": "이미 후원해 주셨다면 메시지를 남겨 주세요 — 소식을 듣고 싶습니다. 다른 후원 방법에 대한 문의는 <email>contact@spliit.cloud</email>로 연락해 주세요."
+    },
+    "feedbackLink": "자금 대신 아이디어로 기여하고 싶으신가요? <cta>피드백 공유하기</cta>."
   }
 }

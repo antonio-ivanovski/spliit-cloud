@@ -85,7 +85,8 @@
     "legalNavigation": "Tautan hukum",
     "privacy": "Privasi",
     "terms": "Ketentuan",
-    "imprint": "Pemberitahuan proyek"
+    "imprint": "Pemberitahuan proyek",
+    "sponsor": "Dukung"
   },
   "Expenses": {
     "title": "Pengeluaran",
@@ -3188,7 +3189,8 @@
       "copy": "Salin diagnostik",
       "copied": "Disalin",
       "copyFailed": "Akses papan klip gagal. Pilih dan salin diagnostik secara manual."
-    }
+    },
+    "sponsorLink": "Ingin mendukung Spliit Cloud secara finansial? <cta>Jadi sponsor</cta>."
   },
   "ExpenseReport": {
     "title": "Laporan pengeluaran",
@@ -3961,5 +3963,55 @@
       "waitDuplicate": "Tunggu pemeriksaan duplikat selesai sebelum mengimpor.",
       "invalidRowTitle": "Baris impor tidak valid"
     }
+  },
+  "Sponsor": {
+    "bitcoin": {
+      "title": "Bitcoin",
+      "network": "Jaringan on-chain Bitcoin",
+      "description": "Kirim BTC ke alamat ini dari dompet atau bursa Bitcoin mana pun.",
+      "addressLabel": "Alamat dompet",
+      "copy": "Salin alamat",
+      "copied": "Disalin",
+      "copyFailed": "Akses papan klip gagal. Pilih dan salin alamat secara manual.",
+      "qrLabel": "Kode QR untuk alamat donasi Bitcoin"
+    },
+    "evm": {
+      "title": "Ethereum dan Base",
+      "network": "Ethereum · alamat yang sama berlaku di Base",
+      "description": "Kirim ETH, USDC, atau USDT dari dompet apa pun yang kompatibel dengan EVM. Pastikan Anda berada di jaringan Ethereum atau Base sebelum mengirim.",
+      "addressLabel": "Alamat dompet",
+      "copy": "Salin alamat",
+      "copied": "Disalin",
+      "copyFailed": "Akses papan klip gagal. Pilih dan salin alamat secara manual.",
+      "qrLabel": "Kode QR untuk alamat donasi Ethereum / Base",
+      "contact": "Ingin mengirim token lain atau menggunakan jaringan EVM lain? <email>Tanya kami dulu</email> — tidak semua aset dapat dikembalikan."
+    },
+    "title": "Dukung Spliit Cloud",
+    "description": "Spliit Cloud adalah proyek nonkomersial yang dikelola komunitas. Jika aplikasi ini membantu Anda berbagi pengeluaran dengan teman dan keluarga, pertimbangkan untuk berkontribusi pada biaya hosting dan pengembangan.",
+    "methodsLabel": "Cara mendukung",
+    "github": {
+      "title": "Sponsor GitHub",
+      "description": "Opsi terbaik untuk pembayaran kartu dan dukungan bulanan. Tingkatan sponsor ditagih dalam USD melalui GitHub.",
+      "action": "Jadi sponsor"
+    },
+    "lightning": {
+      "title": "Lightning Network",
+      "network": "Jaringan Lightning Bitcoin",
+      "description": "Sats instan dengan biaya rendah melalui alamat Lightning ini.",
+      "addressLabel": "Alamat Lightning",
+      "copy": "Salin alamat",
+      "copied": "Disalin",
+      "copyFailed": "Akses papan klip gagal. Pilih dan salin alamat secara manual.",
+      "qrLabel": "Kode QR untuk alamat donasi Lightning"
+    },
+    "notice": {
+      "title": "Donasi kripto tidak dapat dibatalkan",
+      "description": "Periksa kembali alamat dan jaringan sebelum mengirim, dan pastikan Anda berada di spliit.cloud/sponsor. Dana yang dikirim ke alamat yang salah tidak dapat dikembalikan."
+    },
+    "contact": {
+      "title": "Sudah berdonasi, atau ingin cara lain untuk berdonasi?",
+      "description": "Jika sudah berdonasi, beri tahu kami — kami senang mendengarnya. Untuk pertanyaan tentang metode donasi lain, tulis ke <email>contact@spliit.cloud</email>."
+    },
+    "feedbackLink": "Lebih suka berkontribusi dengan ide daripada dana? <cta>Bagikan masukan</cta>."
   }
 }

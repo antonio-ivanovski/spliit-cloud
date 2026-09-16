@@ -109,7 +109,8 @@
     "legalNavigation": "Pháp lý",
     "privacy": "Quyền riêng tư",
     "terms": "Điều khoản",
-    "imprint": "Thông tin pháp lý"
+    "imprint": "Thông tin pháp lý",
+    "sponsor": "Tài trợ"
   },
   "Expenses": {
     "title": "Chi phí",
@@ -3276,7 +3277,8 @@
       "copy": "Sao chép thông tin chẩn đoán",
       "copied": "Đã sao chép",
       "copyFailed": "Không thể truy cập bảng nhớ tạm. Hãy chọn và sao chép thông tin chẩn đoán theo cách thủ công."
-    }
+    },
+    "sponsorLink": "Muốn hỗ trợ Spliit Cloud về mặt tài chính? <cta>Trở thành nhà tài trợ</cta>."
   },
   "ExpenseReport": {
     "title": "Báo cáo chi phí",
@@ -4049,5 +4051,55 @@
       "waitDuplicate": "Chờ kiểm tra trùng lặp xong trước khi nhập.",
       "invalidRowTitle": "Hàng nhập không hợp lệ"
     }
+  },
+  "Sponsor": {
+    "bitcoin": {
+      "title": "Bitcoin",
+      "network": "Mạng on-chain Bitcoin",
+      "description": "Gửi BTC đến địa chỉ này từ bất kỳ ví hoặc sàn giao dịch Bitcoin nào.",
+      "addressLabel": "Địa chỉ ví",
+      "copy": "Sao chép địa chỉ",
+      "copied": "Đã sao chép",
+      "copyFailed": "Không thể truy cập khay nhớ tạm. Hãy chọn và sao chép địa chỉ theo cách thủ công.",
+      "qrLabel": "Mã QR cho địa chỉ quyên góp Bitcoin"
+    },
+    "evm": {
+      "title": "Ethereum và Base",
+      "network": "Ethereum · cùng một địa chỉ dùng được trên Base",
+      "description": "Gửi ETH, USDC hoặc USDT từ bất kỳ ví tương thích EVM nào. Hãy đảm bảo bạn đang ở mạng Ethereum hoặc Base trước khi gửi.",
+      "addressLabel": "Địa chỉ ví",
+      "copy": "Sao chép địa chỉ",
+      "copied": "Đã sao chép",
+      "copyFailed": "Không thể truy cập khay nhớ tạm. Hãy chọn và sao chép địa chỉ theo cách thủ công.",
+      "qrLabel": "Mã QR cho địa chỉ quyên góp Ethereum / Base",
+      "contact": "Muốn gửi token khác hoặc dùng chuỗi EVM khác? <email>Hỏi chúng tôi trước</email> — không phải tài sản nào cũng có thể lấy lại."
+    },
+    "title": "Hỗ trợ Spliit Cloud",
+    "description": "Spliit Cloud là một dự án phi thương mại do cộng đồng duy trì. Nếu ứng dụng giúp bạn chia chi phí với bạn bè và gia đình, hãy cân nhắc đóng góp cho chi phí lưu trữ và phát triển.",
+    "methodsLabel": "Các cách hỗ trợ",
+    "github": {
+      "title": "Nhà tài trợ GitHub",
+      "description": "Lựa chọn tốt nhất cho thanh toán bằng thẻ và hỗ trợ hằng tháng. Các gói tài trợ được thanh toán bằng USD thông qua GitHub.",
+      "action": "Trở thành nhà tài trợ"
+    },
+    "lightning": {
+      "title": "Lightning Network",
+      "network": "Mạng Lightning Bitcoin",
+      "description": "Sats tức thì, phí thấp qua địa chỉ Lightning này.",
+      "addressLabel": "Địa chỉ Lightning",
+      "copy": "Sao chép địa chỉ",
+      "copied": "Đã sao chép",
+      "copyFailed": "Không thể truy cập khay nhớ tạm. Hãy chọn và sao chép địa chỉ theo cách thủ công.",
+      "qrLabel": "Mã QR cho địa chỉ quyên góp Lightning"
+    },
+    "notice": {
+      "title": "Khoản quyên góp tiền mã hóa không thể hoàn tác",
+      "description": "Hãy kiểm tra kỹ địa chỉ và mạng trước khi gửi, và xác nhận bạn đang ở spliit.cloud/sponsor. Số tiền gửi nhầm địa chỉ sẽ không thể lấy lại."
+    },
+    "contact": {
+      "title": "Đã quyên góp, hay muốn ủng hộ theo cách khác?",
+      "description": "Nếu đã quyên góp, hãy cho chúng tôi biết — chúng tôi rất muốn nghe từ bạn. Nếu có câu hỏi về các phương thức quyên góp khác, hãy viết thư đến <email>contact@spliit.cloud</email>."
+    },
+    "feedbackLink": "Muốn đóng góp ý tưởng thay vì tiền bạc? <cta>Chia sẻ phản hồi</cta>."
   }
 }
