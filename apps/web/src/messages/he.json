@@ -944,7 +944,7 @@
     "paidForOptionByPercentageHelper": "הקצה אחוז לכל אדם",
     "paidForOptionByAmountHelper": "הקצה סכום מדויק לכל אדם",
     "convertedAmountField": {
-      "label": "סכום מומר"
+      "label": "סכום ב-{currency}"
     },
     "paidForOptionItemized": "לפי פריטים",
     "paidForOptionItemizedHelper": "חישוב החלק של כל משתתף ומשתתפת לפי הפריטים בהוצאה.",
@@ -1062,6 +1062,11 @@
       "untracked": "לא נטענה הגדרת חלוקה",
       "loadAnother": "טעינת הגדרה אחרת",
       "receivesShare": "מקבל/ת חלק"
+    },
+    "exactAmountField": {
+      "action": "עריכת הסכום ב-{currency}",
+      "description": "יש להזין את הסכום הכולל שחויב, כולל עמלות.",
+      "impliedRate": "שער מחושב: 1 {source} = {rate} {target}"
     }
   },
   "ExpenseDocumentsInput": {
@@ -2713,7 +2718,9 @@
     "commentSubmitting": "מפרסם…",
     "commentDelete": "מחיקת תגובה",
     "commentSend": "שליחת תגובה",
-    "openDocument": "פתיחת מסמך"
+    "openDocument": "פתיחת מסמך",
+    "conversionDetails": "סכום מקורי: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "סכום מקורי: {amount}"
   },
   "Participants": {
     "search": "חפש משתתפים...",

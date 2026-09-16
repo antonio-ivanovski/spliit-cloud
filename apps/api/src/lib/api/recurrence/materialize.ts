@@ -181,12 +181,18 @@ export async function materializeRecurringExpense(
               currency: snapshotTemplate.originalCurrency ?? '',
               rate: snapshotTemplate.conversionRate ?? 1,
             }
-          : snapshotTemplate.conversionSource === 'EXCHANGE'
+          : snapshotTemplate.conversionSource === 'EXACT'
             ? {
-                type: 'exchange',
+                type: 'exact',
                 currency: snapshotTemplate.originalCurrency ?? '',
+                amount: snapshotTemplate.exactAmount ?? snapshotTemplate.amount,
               }
-            : undefined,
+            : snapshotTemplate.conversionSource === 'EXCHANGE'
+              ? {
+                  type: 'exchange',
+                  currency: snapshotTemplate.originalCurrency ?? '',
+                }
+              : undefined,
     },
     {
       ledgerCurrency: snapshot.ledger.currencyCode ?? null,

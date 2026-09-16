@@ -944,7 +944,7 @@
     "paidForOptionByPercentageHelper": "Attribuez un pourcentage à chaque personne",
     "paidForOptionByAmountHelper": "Attribuez un montant exact à chaque personne",
     "convertedAmountField": {
-      "label": "Montant converti"
+      "label": "Montant en {currency}"
     },
     "paidForOptionItemized": "Par articles",
     "paidForOptionItemizedHelper": "Calculez la part de chaque participant à partir des articles de la dépense.",
@@ -1062,6 +1062,11 @@
       "untracked": "Aucun préréglage chargé",
       "loadAnother": "Charger un autre",
       "receivesShare": "reçoit une part"
+    },
+    "exactAmountField": {
+      "action": "Modifier le montant en {currency}",
+      "description": "Saisissez le montant final, frais compris.",
+      "impliedRate": "Taux implicite : 1 {source} = {rate} {target}"
     }
   },
   "ExpenseDocumentsInput": {
@@ -2713,7 +2718,9 @@
     "commentSubmitting": "Publication…",
     "commentDelete": "Supprimer le commentaire",
     "commentSend": "Envoyer le commentaire",
-    "openDocument": "Ouvrir le document"
+    "openDocument": "Ouvrir le document",
+    "conversionDetails": "Montant d’origine : {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "Montant d’origine : {amount}"
   },
   "Participants": {
     "search": "Rechercher des participants…",

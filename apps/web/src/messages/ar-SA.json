@@ -595,7 +595,9 @@
     "title": "معاينة المصروف",
     "commentPlaceholder": "مشاركة ملاحظة مع مجموعة…",
     "commentsTitle": "تعليقات",
-    "openDocument": "فتح المستند"
+    "openDocument": "فتح المستند",
+    "conversionDetails": "المبلغ الأصلي: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "المبلغ الأصلي: {amount}"
   },
   "Information": {
     "title": "المعلومات",
@@ -1172,7 +1174,7 @@
       "label": "ملاحظات"
     },
     "convertedAmountField": {
-      "label": "المبلغ المحول"
+      "label": "المبلغ بـ {currency}"
     },
     "paidByOptionByAmount": "حسب المبلغ",
     "paidByOptionSinglePayerHelper": "شخص واحد يتحمل كامل المصروفات",
@@ -1529,6 +1531,11 @@
       "untracked": "لا يوجد إعداد تقسيم محفوظ",
       "loadAnother": "تحميل إعداد آخر",
       "receivesShare": "يتلقى حصة"
+    },
+    "exactAmountField": {
+      "action": "تعديل المبلغ بـ {currency}",
+      "description": "أدخل إجمالي المبلغ المُحصّل، بما في ذلك أي رسوم.",
+      "impliedRate": "سعر الصرف الضمني: 1 {source} = {rate} {target}"
     }
   },
   "Categories": {

@@ -962,7 +962,7 @@
     "paidForOptionByPercentageHelper": "Jeder Person einen Prozentsatz zuweisen",
     "paidForOptionByAmountHelper": "Jeder Person einen genauen Betrag zuweisen",
     "convertedAmountField": {
-      "label": "Umgerechneter Betrag"
+      "label": "Betrag in {currency}"
     },
     "paidForOptionItemized": "Nach Artikeln",
     "paidForOptionItemizedHelper": "Der Anteil jeder Person wird aus den einzelnen Artikeln der Ausgabe berechnet.",
@@ -1083,6 +1083,11 @@
       "untracked": "Keine Vorlage geladen",
       "loadAnother": "Andere laden",
       "receivesShare": "erhält einen Anteil"
+    },
+    "exactAmountField": {
+      "action": "Betrag in {currency} bearbeiten",
+      "description": "Gib den endgültigen Betrag einschließlich aller Gebühren ein.",
+      "impliedRate": "Impliziter Wechselkurs: 1 {source} = {rate} {target}"
     }
   },
   "ExpenseDocumentsInput": {
@@ -2767,7 +2772,9 @@
     "commentSubmitting": "Wird veröffentlicht …",
     "commentDelete": "Kommentar löschen",
     "commentSend": "Kommentar senden",
-    "openDocument": "Dokument öffnen"
+    "openDocument": "Dokument öffnen",
+    "conversionDetails": "Originalbetrag: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "Originalbetrag: {amount}"
   },
   "Participants": {
     "search": "Teilnehmer suchen...",

@@ -55,6 +55,31 @@ describe('recurrence-series API helpers', () => {
     expect(template.conversionSource).toBe('EXCHANGE')
   })
 
+  it('keeps the authoritative charged total for exact recurring expenses', () => {
+    const template = buildRecurringTemplate({
+      expense: {
+        title: 'Subscription',
+        category: 'general',
+        amount: 10000,
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [{ participant: 'p1', shares: 10000 }],
+        splitMode: 'EVENLY',
+        paidFor: [{ participant: 'p1', shares: 1 }],
+      },
+      conversion: {
+        ledgerAmountMinor: 9347,
+        originalAmount: 10000,
+        originalCurrency: 'USD',
+        conversionRate: 0.9347,
+        conversionSource: 'EXACT',
+      },
+    })
+
+    expect(template.amount).toBe(10000)
+    expect(template.exactAmount).toBe(9347)
+    expect(template.conversionSource).toBe('EXACT')
+  })
+
   it('holds today jobs until 15:00 UTC but runs past dates immediately', () => {
     vi.setSystemTime(new Date('2026-07-22T00:02:00.000Z'))
     expect(

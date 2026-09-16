@@ -49,10 +49,11 @@ function isConverted(expense: {
   originalCurrency?: string | null
   conversionRate?: number | string | null
 }): boolean {
-  // EXCHANGE | CUSTOM means converted; null/undefined means same currency.
+  // Any conversion source means converted; null/undefined means same currency.
   if (
     expense.conversionSource === 'EXCHANGE' ||
-    expense.conversionSource === 'CUSTOM'
+    expense.conversionSource === 'CUSTOM' ||
+    expense.conversionSource === 'EXACT'
   ) {
     return true
   }

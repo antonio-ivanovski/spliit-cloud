@@ -864,7 +864,7 @@
     "paidForOptionByPercentageHelper": "각 사람에게 비율을 지정합니다",
     "paidForOptionByAmountHelper": "각 사람에게 정확한 금액을 지정합니다",
     "convertedAmountField": {
-      "label": "환산 금액"
+      "label": "{currency} 금액"
     },
     "paidForOptionItemized": "항목별",
     "paidForOptionItemizedHelper": "지출의 개별 항목을 기준으로 참여자별 부담액을 계산해요.",
@@ -985,6 +985,11 @@
       "untracked": "불러온 분할 프리셋 없음",
       "loadAnother": "다른 프리셋 불러오기",
       "receivesShare": "몫을 받아요"
+    },
+    "exactAmountField": {
+      "action": "{currency} 금액 수정",
+      "description": "수수료를 포함한 총 청구 금액을 입력하세요.",
+      "impliedRate": "계산된 환율: 1 {source} = {rate} {target}"
     }
   },
   "Balances": {
@@ -2767,7 +2772,9 @@
     "commentSubmitting": "게시 중…",
     "commentDelete": "댓글 삭제",
     "commentSend": "댓글 보내기",
-    "openDocument": "문서 열기"
+    "openDocument": "문서 열기",
+    "conversionDetails": "원래 금액: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "원래 금액: {amount}"
   },
   "Participants": {
     "search": "참여자 검색...",

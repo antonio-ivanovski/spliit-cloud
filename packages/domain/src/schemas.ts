@@ -720,7 +720,16 @@ export const expenseFormInputSchema = z
       .refine((r) => !Number.isNaN(r), 'invalidNumber')
       .refine((r) => r > 0, 'ratePositive')
       .optional(),
-    // Form-local toggle: EXCHANGE | CUSTOM | undefined (undefined = group currency).
+    exactAmount: z.preprocess(
+      (value) => (value === '' ? undefined : value),
+      z.coerce
+        .number()
+        .refine((amount) => !Number.isNaN(amount), 'invalidNumber')
+        .refine((amount) => amount !== 0, 'amountNotZero')
+        .refine((amount) => Math.abs(amount) <= 10_000_000, 'amountTenMillion')
+        .optional(),
+    ),
+    // Form-local toggle: EXCHANGE | CUSTOM | EXACT | undefined.
     // Mapped to the API `conversion` discriminant in submit-values.
     conversionType: conversionSourceSchema.optional(),
     paidBySplitMode: paidBySplitModeSchema,
@@ -743,6 +752,21 @@ export const expenseFormInputSchema = z
     itemizedRemainder: itemizedRemainderFormSchema.optional(),
   })
   .superRefine((expense, ctx) => {
+    if (expense.conversionType === 'EXACT') {
+      if (expense.exactAmount == null) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'amountNotZero',
+          path: ['exactAmount'],
+        })
+      } else if (Math.sign(expense.exactAmount) !== Math.sign(expense.amount)) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'amountSignMismatch',
+          path: ['exactAmount'],
+        })
+      }
+    }
     // A zero amount is already invalid at the amount field. Avoid reporting
     // the same state as a share-input problem while the user fixes it.
     if (expense.amount !== 0) {

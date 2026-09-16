@@ -58,7 +58,7 @@ export function toExpenseDomainShape(
   originalAmount?: number
   originalCurrency?: string
   conversionRate?: number
-  conversionSource?: 'EXCHANGE' | 'CUSTOM' | null
+  conversionSource?: 'EXCHANGE' | 'CUSTOM' | 'EXACT' | null
 } {
   return {
     title: existing.title,
@@ -114,6 +114,7 @@ export function toExpenseDomainShape(
       conversionSource: existing.conversionSource,
       originalCurrency: existing.originalCurrency,
       conversionRate: existing.conversionRate,
+      amount: existing.amount,
     }),
     originalAmount: existing.originalAmount ?? undefined,
     originalCurrency: existing.originalCurrency ?? undefined,
@@ -123,7 +124,7 @@ export function toExpenseDomainShape(
     originalAmount?: number
     originalCurrency?: string
     conversionRate?: number
-    conversionSource?: 'EXCHANGE' | 'CUSTOM' | null
+    conversionSource?: 'EXCHANGE' | 'CUSTOM' | 'EXACT' | null
   }
 }
 export async function promoteExpenseDocuments(

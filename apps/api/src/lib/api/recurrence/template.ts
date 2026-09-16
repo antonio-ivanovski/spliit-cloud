@@ -77,7 +77,7 @@ export function buildRecurringTemplate(args: {
     originalAmount: number | null
     originalCurrency: string | null
     conversionRate: number | null
-    conversionSource: 'EXCHANGE' | 'CUSTOM' | null
+    conversionSource: 'EXCHANGE' | 'CUSTOM' | 'EXACT' | null
   }
 }): RecurringExpenseTemplate {
   const { expense, conversion } = args
@@ -90,6 +90,10 @@ export function buildRecurringTemplate(args: {
     originalCurrency: conversion.originalCurrency,
     conversionRate: conversion.conversionRate,
     conversionSource: conversion.conversionSource,
+    exactAmount:
+      conversion.conversionSource === 'EXACT'
+        ? conversion.ledgerAmountMinor
+        : null,
     paidBySplitMode: expense.paidBySplitMode,
     paidByList: expense.paidByList.map((p) => ({
       ledgerParticipantId: p.participant,
@@ -184,7 +188,7 @@ export function occurrenceExpenseData(
         conversionRate: number | null
         originalAmount: number | null
         originalCurrency: string | null
-        conversionSource: 'EXCHANGE' | 'CUSTOM' | null
+        conversionSource: 'EXCHANGE' | 'CUSTOM' | 'EXACT' | null
       }
     | undefined,
   opts: { expenseDate: Date; expenseTimeZone: string },

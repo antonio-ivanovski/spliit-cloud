@@ -228,7 +228,7 @@ export async function openConfirmation(
       requestId: z.string().uuid(),
       expense: expenseApiSchema,
       conversion: z.object({
-        conversionSource: z.enum(['EXCHANGE', 'CUSTOM']).nullable(),
+        conversionSource: z.enum(['EXCHANGE', 'CUSTOM', 'EXACT']).nullable(),
         conversionRate: z.number().positive().nullable(),
         originalAmount: z.number().int().nullable(),
         originalCurrency: z.string().nullable(),

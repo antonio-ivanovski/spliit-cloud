@@ -944,7 +944,7 @@
     "paidForOptionByPercentageHelper": "Assegna una percentuale a ogni persona",
     "paidForOptionByAmountHelper": "Assegna un importo esatto a ogni persona",
     "convertedAmountField": {
-      "label": "Importo convertito"
+      "label": "Importo in {currency}"
     },
     "paidForOptionItemized": "Per voci",
     "paidForOptionItemizedHelper": "Calcola la quota di ogni partecipante dalle singole voci della spesa.",
@@ -1062,6 +1062,11 @@
       "untracked": "Nessuna preimpostazione caricata",
       "loadAnother": "Carica un altro preset",
       "receivesShare": "riceve una quota"
+    },
+    "exactAmountField": {
+      "action": "Modifica l’importo in {currency}",
+      "description": "Inserisci l’importo finale, incluse le commissioni.",
+      "impliedRate": "Tasso implicito: 1 {source} = {rate} {target}"
     }
   },
   "ExpenseDocumentsInput": {
@@ -2713,7 +2718,9 @@
     "commentSubmitting": "Pubblicazione…",
     "commentDelete": "Elimina commento",
     "commentSend": "Invia il commento",
-    "openDocument": "Apri documento"
+    "openDocument": "Apri documento",
+    "conversionDetails": "Importo originale: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "Importo originale: {amount}"
   },
   "Participants": {
     "search": "Cerca partecipanti...",

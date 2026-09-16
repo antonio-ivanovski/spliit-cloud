@@ -950,7 +950,7 @@
     "paidForOptionByPercentageHelper": "Призначте відсоток кожній особі",
     "paidForOptionByAmountHelper": "Призначте точну суму кожній особі",
     "convertedAmountField": {
-      "label": "Конвертована сума"
+      "label": "Сума в {currency}"
     },
     "paidForOptionItemized": "Позиціями",
     "paidForOptionItemizedHelper": "Частка кожного учасника розраховується з окремих позицій витрати.",
@@ -1069,6 +1069,11 @@
       "untracked": "Шаблон розподілу не завантажено",
       "loadAnother": "Завантажити інший",
       "receivesShare": "отримує частку"
+    },
+    "exactAmountField": {
+      "action": "Редагувати суму в {currency}",
+      "description": "Введіть загальну списану суму, включно з усіма комісіями.",
+      "impliedRate": "Розрахунковий курс: 1 {source} = {rate} {target}"
     }
   },
   "ExpenseDocumentsInput": {
@@ -2731,7 +2736,9 @@
     "commentSubmitting": "Публікація…",
     "commentDelete": "Видалити коментар",
     "commentSend": "Надіслати коментар",
-    "openDocument": "Відкрити документ"
+    "openDocument": "Відкрити документ",
+    "conversionDetails": "Оригінальна сума: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "Оригінальна сума: {amount}"
   },
   "Participants": {
     "search": "Пошук учасників...",

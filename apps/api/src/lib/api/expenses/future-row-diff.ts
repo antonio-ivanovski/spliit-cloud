@@ -84,7 +84,7 @@ export function futureRowBeforeShape(
   originalAmount?: number
   originalCurrency?: string
   conversionRate?: number
-  conversionSource?: 'EXCHANGE' | 'CUSTOM' | null
+  conversionSource?: 'EXCHANGE' | 'CUSTOM' | 'EXACT' | null
 } {
   return {
     title: row.title,
@@ -137,6 +137,7 @@ export function futureRowBeforeShape(
       conversionSource: row.conversionSource,
       originalCurrency: row.originalCurrency,
       conversionRate: row.conversionRate,
+      amount: row.amount,
     }),
     originalAmount: row.originalAmount ?? undefined,
     originalCurrency: row.originalCurrency ?? undefined,
@@ -146,7 +147,7 @@ export function futureRowBeforeShape(
     originalAmount?: number
     originalCurrency?: string
     conversionRate?: number
-    conversionSource?: 'EXCHANGE' | 'CUSTOM' | null
+    conversionSource?: 'EXCHANGE' | 'CUSTOM' | 'EXACT' | null
   }
 }
 
@@ -165,7 +166,7 @@ export function futureRowAfterShape(args: {
     originalAmount: number | null
     originalCurrency: string | null
     conversionRate: number | null
-    conversionSource: 'EXCHANGE' | 'CUSTOM' | null
+    conversionSource: 'EXCHANGE' | 'CUSTOM' | 'EXACT' | null
   }
   shared: RecurrenceShape
   expenseDate?: Date
@@ -174,7 +175,7 @@ export function futureRowAfterShape(args: {
   originalAmount?: number
   originalCurrency?: string
   conversionRate?: number
-  conversionSource?: 'EXCHANGE' | 'CUSTOM' | null
+  conversionSource?: 'EXCHANGE' | 'CUSTOM' | 'EXACT' | null
 } {
   const { row, template, rowConv, shared } = args
   return {
@@ -229,6 +230,7 @@ export function futureRowAfterShape(args: {
       conversionSource: rowConv.conversionSource,
       originalCurrency: rowConv.originalCurrency,
       conversionRate: rowConv.conversionRate,
+      amount: rowConv.ledgerAmountMinor,
     }),
     originalAmount: rowConv.originalAmount ?? undefined,
     originalCurrency: rowConv.originalCurrency ?? undefined,
@@ -238,6 +240,6 @@ export function futureRowAfterShape(args: {
     originalAmount?: number
     originalCurrency?: string
     conversionRate?: number
-    conversionSource?: 'EXCHANGE' | 'CUSTOM' | null
+    conversionSource?: 'EXCHANGE' | 'CUSTOM' | 'EXACT' | null
   }
 }

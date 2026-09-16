@@ -6,6 +6,7 @@ const sourceLabels = {
   same: 'None (same currency)',
   EXCHANGE: 'Exchange rate',
   CUSTOM: 'Custom rate',
+  EXACT: 'Exact amount',
 } as const
 
 type ExpenseWithConversionMeta = {
@@ -19,12 +20,14 @@ function sourceOf(
 ): ConversionSource | 'same' {
   if (
     expense.conversionSource === 'EXCHANGE' ||
-    expense.conversionSource === 'CUSTOM'
+    expense.conversionSource === 'CUSTOM' ||
+    expense.conversionSource === 'EXACT'
   ) {
     return expense.conversionSource
   }
   if (expense.conversion?.type === 'exchange') return 'EXCHANGE'
   if (expense.conversion?.type === 'custom') return 'CUSTOM'
+  if (expense.conversion?.type === 'exact') return 'EXACT'
   return 'same'
 }
 

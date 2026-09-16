@@ -950,7 +950,7 @@
     "paidForOptionByPercentageHelper": "Přiřaďte procento každé osobě",
     "paidForOptionByAmountHelper": "Přiřaďte přesnou částku každé osobě",
     "convertedAmountField": {
-      "label": "Přepočtená částka"
+      "label": "Částka v {currency}"
     },
     "paidForOptionItemized": "Podle položek",
     "paidForOptionItemizedHelper": "Podíl každého účastníka se vypočítá z jednotlivých položek výdaje.",
@@ -1069,6 +1069,11 @@
       "untracked": "Není načtená žádná předvolba",
       "loadAnother": "Načíst jinou",
       "receivesShare": "obdrží podíl"
+    },
+    "exactAmountField": {
+      "action": "Upravit částku v {currency}",
+      "description": "Zadejte celkovou účtovanou částku včetně poplatků.",
+      "impliedRate": "Odvozený kurz: 1 {source} = {rate} {target}"
     }
   },
   "ExpenseDocumentsInput": {
@@ -2731,7 +2736,9 @@
     "commentSubmitting": "Odesílání…",
     "commentDelete": "Smazat komentář",
     "commentSend": "Odeslat komentář",
-    "openDocument": "Otevřít dokument"
+    "openDocument": "Otevřít dokument",
+    "conversionDetails": "Původní částka: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "Původní částka: {amount}"
   },
   "Participants": {
     "search": "Hledat účastníky...",

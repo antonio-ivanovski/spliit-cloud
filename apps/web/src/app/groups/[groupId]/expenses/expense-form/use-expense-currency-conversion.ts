@@ -23,6 +23,9 @@ export function useExpenseCurrencyConversion(args: {
   conversionRequired: boolean
   usingCustomConversionRate: boolean
   setUsingCustomConversionRate: Dispatch<SetStateAction<boolean>>
+  usingExactAmount: boolean
+  setUsingExactAmount: Dispatch<SetStateAction<boolean>>
+  impliedConversionRate: number | undefined
   conversionRateMessage: string
   exchangeRate: ReturnType<typeof useCurrencyRate>
   /**
@@ -64,6 +67,10 @@ export function useExpenseCurrencyConversion(args: {
     control: args.form.control,
     name: 'conversionRate',
   })
+  const watchedExactAmount = useWatch({
+    control: args.form.control,
+    name: 'exactAmount',
+  })
 
   const originalCurrencyCode = args.form.getValues('originalCurrency')
   const originalCurrency = originalCurrencyCode
@@ -98,21 +105,29 @@ export function useExpenseCurrencyConversion(args: {
     originalCurrency.code !== args.group.currencyCode
   )
 
-  // Prefer conversionType over a bare rate: both EXCHANGE and CUSTOM
-  // store a rate, so `!!conversionRate` alone always opens the custom UI.
+  // Prefer conversionType over a bare rate: every persisted conversion source
+  // stores a rate, so `!!conversionRate` alone always opens the custom UI.
   const initialType = args.form.formState.defaultValues?.conversionType ?? null
   const [usingCustomConversionRate, setUsingCustomConversionRate] = useState(
     () => {
       if (initialType === 'EXCHANGE') return false
       if (initialType === 'CUSTOM') return true
+      if (initialType === 'EXACT') return false
       // Missing / legacy: a stored rate means the custom path.
       return !!args.form.formState.defaultValues?.conversionRate
     },
+  )
+  const [usingExactAmount, setUsingExactAmount] = useState(
+    () => initialType === 'EXACT',
   )
 
   useEffect(() => {
     if (!conversionRequired) {
       args.form.setValue('conversionType', undefined)
+      return
+    }
+    if (usingExactAmount) {
+      args.form.setValue('conversionType', 'EXACT')
       return
     }
     if (usingCustomConversionRate) {
@@ -129,6 +144,7 @@ export function useExpenseCurrencyConversion(args: {
     conversionRequired,
     exchangeRate.data,
     usingCustomConversionRate,
+    usingExactAmount,
     args.form,
   ])
 
@@ -142,6 +158,10 @@ export function useExpenseCurrencyConversion(args: {
   // the user input) remains the single source of truth.
   const convertedAmountPreview = (() => {
     if (!conversionRequired) return undefined
+    if (usingExactAmount) {
+      const exact = Number(watchedExactAmount)
+      return exact && Number.isFinite(exact) ? exact : undefined
+    }
     const amount = Number(watchedAmount) || 0
     const rateSource =
       usingCustomConversionRate && watchedConversionRate
@@ -152,6 +172,16 @@ export function useExpenseCurrencyConversion(args: {
     }
     const converted = amount * rateSource
     return Number.isNaN(converted) ? undefined : converted
+  })()
+
+  const impliedConversionRate = (() => {
+    if (!usingExactAmount) return undefined
+    const original = Number(watchedAmount)
+    const exact = Number(watchedExactAmount)
+    if (!original || !exact || Math.sign(original) !== Math.sign(exact)) {
+      return undefined
+    }
+    return exact / original
   })()
 
   const isFutureExpenseDate =
@@ -201,6 +231,9 @@ export function useExpenseCurrencyConversion(args: {
     conversionRequired,
     usingCustomConversionRate,
     setUsingCustomConversionRate,
+    usingExactAmount,
+    setUsingExactAmount,
+    impliedConversionRate,
     conversionRateMessage,
     exchangeRate,
     isIncome,

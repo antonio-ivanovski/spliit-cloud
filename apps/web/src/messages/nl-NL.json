@@ -962,7 +962,7 @@
     "paidForOptionByPercentageHelper": "Wijs een percentage toe aan elke persoon",
     "paidForOptionByAmountHelper": "Wijs een exact bedrag toe aan elke persoon",
     "convertedAmountField": {
-      "label": "Omgerekend bedrag"
+      "label": "Bedrag in {currency}"
     },
     "paidForOptionItemized": "Per artikel",
     "paidForOptionItemizedHelper": "Bereken het aandeel van elke deelnemer op basis van de afzonderlijke artikelen in de uitgave.",
@@ -1083,6 +1083,11 @@
       "untracked": "Geen splitsjabloon geladen",
       "loadAnother": "Andere laden",
       "receivesShare": "ontvangt een aandeel"
+    },
+    "exactAmountField": {
+      "action": "Bedrag in {currency} bewerken",
+      "description": "Voer het uiteindelijke bedrag inclusief kosten in.",
+      "impliedRate": "Afgeleide koers: 1 {source} = {rate} {target}"
     }
   },
   "ExpenseDocumentsInput": {
@@ -2767,7 +2772,9 @@
     "commentSubmitting": "Plaatsen…",
     "commentDelete": "Opmerking verwijderen",
     "commentSend": "Opmerking verzenden",
-    "openDocument": "Document openen"
+    "openDocument": "Document openen",
+    "conversionDetails": "Oorspronkelijk bedrag: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "Oorspronkelijk bedrag: {amount}"
   },
   "Participants": {
     "search": "Deelnemers zoeken...",

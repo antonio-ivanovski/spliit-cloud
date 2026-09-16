@@ -480,7 +480,7 @@
     "paidForOptionByPercentageHelper": "Atribui uma porcentagem a cada pessoa",
     "paidForOptionByAmountHelper": "Atribui um valor exato a cada pessoa",
     "convertedAmountField": {
-      "label": "Valor convertido"
+      "label": "Valor em {currency}"
     },
     "paidForOptionItemizedHelper": "Calcule a parte de cada participante a partir dos itens individuais da despesa.",
     "items": {
@@ -534,6 +534,11 @@
       "payerDistribution": "Divisão dos pagadores",
       "paidForDistribution": "Divisão dos participantes",
       "saveAsPreset": "Salvar como predefinição"
+    },
+    "exactAmountField": {
+      "action": "Edite o valor em {currency}",
+      "description": "Insira o valor final, incluindo eventuais taxas.",
+      "impliedRate": "Taxa implícita: 1 {source} = {rate} {target}"
     }
   },
   "ExpenseDocumentsInput": {
@@ -1377,7 +1382,9 @@
     "commentRequired": "Escreva um comentário primeiro.",
     "commentTooLong": "Os comentários devem ter no máximo 500 caracteres.",
     "commentSubmitting": "Publicando…",
-    "commentDelete": "Excluir comentário"
+    "commentDelete": "Excluir comentário",
+    "conversionDetails": "Valor original: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "Valor original: {amount}"
   },
   "Common": {
     "previousSlide": "Slide anterior",

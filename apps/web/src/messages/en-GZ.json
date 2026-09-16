@@ -1586,7 +1586,7 @@
     "paidForOptionByPercentageHelper": "assign a percentage to each person",
     "paidForOptionByAmountHelper": "assign an exact amount to each person",
     "convertedAmountField": {
-      "label": "converted damage amount"
+      "label": "amount in {currency}"
     },
     "scanReceipt": "scan receipt with AI magic",
     "participantAmountLabel": "amount for {name}",
@@ -1704,6 +1704,11 @@
       "untracked": "no split shortcut loaded",
       "loadAnother": "load another",
       "receivesShare": "gets a share"
+    },
+    "exactAmountField": {
+      "action": "edit amount in {currency}",
+      "description": "enter the final amount, fees included.",
+      "impliedRate": "implied rate: 1 {source} = {rate} {target}"
     }
   },
   "ExpensePreview": {
@@ -1730,7 +1735,9 @@
     "commentSubmitting": "posting…",
     "commentDelete": "delete the comment",
     "commentSend": "send the comment",
-    "openDocument": "open this document"
+    "openDocument": "open this document",
+    "conversionDetails": "original amount: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "original amount: {amount}"
   },
   "ExpenseSeries": {
     "badge": "recurring vibes",

@@ -44,7 +44,8 @@ export type RecurringExpenseTemplate = {
   originalAmount: number | null
   originalCurrency: string | null
   conversionRate: number | null
-  conversionSource: 'EXCHANGE' | 'CUSTOM' | null
+  conversionSource: 'EXCHANGE' | 'CUSTOM' | 'EXACT' | null
+  exactAmount?: number | null
   paidBySplitMode: string
   paidByList: Array<{ ledgerParticipantId: string; shares: number }>
   paidFor: Array<{ ledgerParticipantId: string; shares: number }>

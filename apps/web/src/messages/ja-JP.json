@@ -932,7 +932,7 @@
     "paidForOptionByPercentageHelper": "各メンバーにパーセンテージを割り当て",
     "paidForOptionByAmountHelper": "各メンバーに正確な金額を割り当て",
     "convertedAmountField": {
-      "label": "換算後の金額"
+      "label": "{currency} での金額"
     },
     "paidForOptionItemized": "品目別",
     "paidForOptionItemizedHelper": "支出の各品目から参加者ごとの負担額を計算します。",
@@ -1048,6 +1048,11 @@
       "untracked": "分割プリセット未読込",
       "loadAnother": "別のプリセットを読み込む",
       "receivesShare": "取り分を受け取ります"
+    },
+    "exactAmountField": {
+      "action": "{currency} での金額を編集",
+      "description": "手数料を含む請求総額を入力してください。",
+      "impliedRate": "算出レート: 1 {source} = {rate} {target}"
     }
   },
   "ExpenseDocumentsInput": {
@@ -2679,7 +2684,9 @@
     "commentSubmitting": "投稿中…",
     "commentDelete": "コメントを削除",
     "commentSend": "コメントを送信",
-    "openDocument": "書類を開く"
+    "openDocument": "書類を開く",
+    "conversionDetails": "元の金額: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "元の金額: {amount}"
   },
   "Participants": {
     "search": "参加者を検索...",

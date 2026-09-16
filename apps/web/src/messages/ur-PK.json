@@ -1403,7 +1403,7 @@
     "paidForOptionByPercentageHelper": "ہر شخص کو فیصد تفویض کریں",
     "paidForOptionByAmountHelper": "ہر شخص کو صحیح رقم تفویض کریں",
     "convertedAmountField": {
-      "label": "تبدیل شدہ رقم"
+      "label": "{currency} میں رقم"
     },
     "scanReceipt": "AI کے ساتھ رسید اسکین کریں",
     "participantAmountLabel": "{name} کے لیے رقم",
@@ -1521,6 +1521,11 @@
       "untracked": "تقسیم کا کوئی پری سیٹ لوڈ نہیں ہوا",
       "loadAnother": "دوسرا لوڈ کریں",
       "receivesShare": "حصہ ملتا ہے"
+    },
+    "exactAmountField": {
+      "action": "{currency} میں رقم میں ترمیم کریں",
+      "description": "تمام فیس سمیت وصول کی گئی کل رقم درج کریں۔",
+      "impliedRate": "حساب شدہ شرح: 1 {source} = {rate} {target}"
     }
   },
   "ExpensePreview": {
@@ -1547,7 +1552,9 @@
     "commentSubmitting": "پوسٹ ہو رہا ہے…",
     "commentDelete": "تبصرہ حذف کریں",
     "commentSend": "تبصرہ بھیجیں",
-    "openDocument": "دستاویز کھولیں"
+    "openDocument": "دستاویز کھولیں",
+    "conversionDetails": "اصل رقم: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "اصل رقم: {amount}"
   },
   "ExpenseSeries": {
     "badge": "متواتر",

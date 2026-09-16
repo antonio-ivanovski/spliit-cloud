@@ -116,7 +116,7 @@ const expenseCommonFieldsSchema = {
   originalAmount: z.number().int().nullable(),
   originalCurrency: z.string().nullable(),
   conversionRate: z.number().nullable(),
-  conversionSource: z.enum(['EXCHANGE', 'CUSTOM']).nullable(),
+  conversionSource: z.enum(['EXCHANGE', 'CUSTOM', 'EXACT']).nullable(),
   originType: z.string().nullable(),
   recurrenceSequence: z.number().int().nullable(),
   items: z.array(listItemResponseSchema),

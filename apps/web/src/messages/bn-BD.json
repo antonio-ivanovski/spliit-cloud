@@ -1443,7 +1443,7 @@
     "paidForOptionByPercentageHelper": "প্রত্যেক ব্যক্তির জন্য শতাংশ নির্ধারণ করুন",
     "paidForOptionByAmountHelper": "প্রত্যেক ব্যক্তির জন্য সঠিক পরিমাণ নির্ধারণ করুন",
     "convertedAmountField": {
-      "label": "রূপান্তরিত পরিমাণ"
+      "label": "{currency} এ পরিমাণ"
     },
     "scanReceipt": "AI দিয়ে রসিদ স্ক্যান করুন",
     "participantAmountLabel": "{name} এর জন্য পরিমাণ",
@@ -1565,6 +1565,11 @@
       "untracked": "কোনো বিভাজন প্রিসেট লোড করা নেই",
       "loadAnother": "আরেকটি লোড করুন",
       "receivesShare": "একটি ভাগ পাবে"
+    },
+    "exactAmountField": {
+      "action": "{currency} এ পরিমাণ সম্পাদনা করুন",
+      "description": "ফিসসহ মোট চার্জের পরিমাণ লিখুন।",
+      "impliedRate": "অনুমিত বিনিময় হার: 1 {source} = {rate} {target}"
     }
   },
   "ExpensePreview": {
@@ -1595,7 +1600,9 @@
     "commentSubmitting": "পোস্ট করা হচ্ছে…",
     "commentDelete": "মন্তব্য মুছুন",
     "commentSend": "মন্তব্য পাঠান",
-    "openDocument": "ডকুমেন্ট খুলুন"
+    "openDocument": "ডকুমেন্ট খুলুন",
+    "conversionDetails": "আসল: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "আসল: {amount}"
   },
   "ExpenseSeries": {
     "badge": "পুনরাবৃত্তিমূলক",

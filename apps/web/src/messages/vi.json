@@ -1478,7 +1478,7 @@
     "paidForOptionByPercentageHelper": "Theo phần trăm.",
     "paidForOptionByAmountHelper": "Theo số tiền cụ thể.",
     "convertedAmountField": {
-      "label": "Đã quy đổi"
+      "label": "Số tiền bằng {currency}"
     },
     "paidForOptionItemized": "Theo mục",
     "paidForOptionItemizedHelper": "Tính phần chia của mỗi người dựa trên từng mục trong chi phí.",
@@ -1599,6 +1599,11 @@
       "untracked": "Chưa tải mẫu chia nào",
       "loadAnother": "Tải mẫu khác",
       "receivesShare": "nhận một phần"
+    },
+    "exactAmountField": {
+      "action": "Chỉnh sửa số tiền bằng {currency}",
+      "description": "Nhập tổng số tiền bị tính, bao gồm mọi khoản phí.",
+      "impliedRate": "Tỷ giá suy ra: 1 {source} = {rate} {target}"
     }
   },
   "ExpenseDocumentsInput": {
@@ -2860,7 +2865,9 @@
     "commentSubmitting": "Đang gửi…",
     "commentDelete": "Xóa",
     "commentSend": "Gửi",
-    "openDocument": "Mở tài liệu"
+    "openDocument": "Mở tài liệu",
+    "conversionDetails": "Số tiền gốc: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "Số tiền gốc: {amount}"
   },
   "Participants": {
     "search": "Tìm…",

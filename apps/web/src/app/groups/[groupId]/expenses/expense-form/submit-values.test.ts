@@ -118,6 +118,45 @@ describe('buildSubmitValues', () => {
     expect(result.conversion).toBeUndefined()
   })
 
+  it('submits the exact charged amount in group-currency minor units', () => {
+    const result = buildSubmitValues(
+      {
+        ...baseValues,
+        amount: 100,
+        originalCurrency: 'USD',
+        conversionType: 'EXACT',
+        exactAmount: 93.47,
+      },
+      {
+        groupCurrency: getCurrency('EUR')!,
+        conversionRequired: true,
+      },
+    )
+
+    expect(result.amount).toBe(10000)
+    expect(result.conversion).toEqual({
+      type: 'exact',
+      currency: 'USD',
+      amount: 9347,
+    })
+  })
+
+  it('rejects exact amounts whose sign differs from the receipt amount', () => {
+    expect(() =>
+      buildSubmitValues(
+        {
+          ...baseValues,
+          conversionType: 'EXACT',
+          exactAmount: -93.47,
+        },
+        {
+          groupCurrency: getCurrency('USD')!,
+          conversionRequired: true,
+        },
+      ),
+    ).toThrow('matching signs')
+  })
+
   it('compatibly normalizes a wall time inside a DST gap', () => {
     const result = buildSubmitValues(
       {

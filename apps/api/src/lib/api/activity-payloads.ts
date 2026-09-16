@@ -27,7 +27,7 @@ type BuildExpenseInput = {
   affectedParticipants?: string[]
   originalAmount?: number
   conversionRate?: number
-  conversionSource?: 'EXCHANGE' | 'CUSTOM' | null
+  conversionSource?: 'EXCHANGE' | 'CUSTOM' | 'EXACT' | null
   ledgerCurrencyCode?: string | null
   recurrence?: RecurrenceActivityMetadata
   stopped?: boolean

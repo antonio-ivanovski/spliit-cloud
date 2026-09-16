@@ -198,10 +198,16 @@ export async function updateExpense(
             currency: conversion.originalCurrency ?? '',
             rate: conversion.conversionRate ?? 1,
           } as const)
-        : ({
-            type: 'exchange' as const,
-            currency: conversion.originalCurrency ?? '',
-          } as const)
+        : conversion.conversionSource === 'EXACT'
+          ? ({
+              type: 'exact' as const,
+              currency: conversion.originalCurrency ?? '',
+              amount: conversion.ledgerAmountMinor,
+            } as const)
+          : ({
+              type: 'exchange' as const,
+              currency: conversion.originalCurrency ?? '',
+            } as const)
       : undefined,
     originalAmount: conversion.originalAmount ?? undefined,
     originalCurrency: conversion.originalCurrency ?? undefined,
@@ -350,12 +356,19 @@ export async function updateExpense(
             currency: recurrenceTemplate.originalCurrency ?? '',
             rate: recurrenceTemplate.conversionRate ?? 1,
           }
-        : recurrenceTemplate.conversionSource === 'EXCHANGE'
+        : recurrenceTemplate.conversionSource === 'EXACT'
           ? {
-              type: 'exchange' as const,
+              type: 'exact' as const,
               currency: recurrenceTemplate.originalCurrency ?? '',
+              amount:
+                recurrenceTemplate.exactAmount ?? recurrenceTemplate.amount,
             }
-          : undefined
+          : recurrenceTemplate.conversionSource === 'EXCHANGE'
+            ? {
+                type: 'exchange' as const,
+                currency: recurrenceTemplate.originalCurrency ?? '',
+              }
+            : undefined
     // UTC convention (matching create/CSV/group-import): resolve FX from the
     // instant that will be persisted so `toIsoDate` derives the UTC date, not
     // the wall-midnight calendar date. Redated rows use the reanchored
@@ -1083,7 +1096,7 @@ async function updateMaterializedOccurrence(
     originalAmount: number | null
     originalCurrency: string | null
     conversionRate: number | null
-    conversionSource: 'EXCHANGE' | 'CUSTOM' | null
+    conversionSource: 'EXCHANGE' | 'CUSTOM' | 'EXACT' | null
   },
   expenseDate?: Date,
   expenseTimeZone?: string,

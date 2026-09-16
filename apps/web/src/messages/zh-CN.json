@@ -932,7 +932,7 @@
     "paidForOptionByPercentageHelper": "为每个人指定百分比",
     "paidForOptionByAmountHelper": "为每个人指定具体金额",
     "convertedAmountField": {
-      "label": "换算金额"
+      "label": "以 {currency} 计的金额"
     },
     "paidForOptionItemized": "按项目分摊",
     "paidForOptionItemizedHelper": "根据支出中的各个项目计算每位参与者的分摊额。",
@@ -1048,6 +1048,11 @@
       "untracked": "未加载分摊预设",
       "loadAnother": "加载其他预设",
       "receivesShare": "获得一份"
+    },
+    "exactAmountField": {
+      "action": "编辑以 {currency} 计的金额",
+      "description": "输入包含所有费用的总扣款金额。",
+      "impliedRate": "推算汇率：1 {source} = {rate} {target}"
     }
   },
   "ExpenseDocumentsInput": {
@@ -2679,7 +2684,9 @@
     "commentSubmitting": "发布中…",
     "commentDelete": "删除评论",
     "commentSend": "发送评论",
-    "openDocument": "打开文档"
+    "openDocument": "打开文档",
+    "conversionDetails": "原始金额：{original} · 1 {source} = {rate} {target}",
+    "originalAmount": "原始金额：{amount}"
   },
   "Participants": {
     "search": "搜索参与者……",

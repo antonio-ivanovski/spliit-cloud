@@ -11,11 +11,6 @@ import { CurrencySelector } from '@/components/currency-selector'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible'
-import {
   FormControl,
   FormDescription,
   FormField,
@@ -114,6 +109,9 @@ export function BasicDetailsCard(props: {
   }
   usingCustomConversionRate: boolean
   setUsingCustomConversionRate: Dispatch<SetStateAction<boolean>>
+  usingExactAmount: boolean
+  setUsingExactAmount: Dispatch<SetStateAction<boolean>>
+  impliedConversionRate: number | undefined
   conversionRateMessage: string
   originalCurrencies: {
     code: string
@@ -339,13 +337,19 @@ export function BasicDetailsCard(props: {
                     isLoading={false}
                     disabled={readOnly}
                     compact
-                    onValueChange={(value) =>
+                    onValueChange={(value) => {
+                      if (value !== form.getValues('originalCurrency')) {
+                        form.setValue('exactAmount', undefined, {
+                          shouldDirty: true,
+                        })
+                        props.setUsingExactAmount(false)
+                      }
                       form.setValue('originalCurrency', value, {
                         shouldDirty: true,
                         shouldTouch: true,
                         shouldValidate: true,
                       })
-                    }
+                    }}
                     pinnedCurrencyCode={props.pinnedCurrencyCode}
                     recommendedCurrencyCodes={props.recommendedCurrencyCodes}
                   />
@@ -457,114 +461,224 @@ export function BasicDetailsCard(props: {
 
               {props.conversionRequired && (
                 <div className="space-y-1 rounded-md border bg-muted/40 px-3 py-2">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-xs text-muted-foreground">
-                      {t('convertedAmountField.label')} ({group.currency})
-                    </span>
-                    <span
-                      className="text-sm font-medium tabular-nums"
-                      aria-readonly="true"
-                      data-testid="converted-amount-preview"
-                    >
-                      {previewFormatted || '—'}
-                    </span>
-                  </div>
-                  <FormDescription className="text-xs">
-                    {!form.getValues('expenseDay') ? (
-                      t('conversionRateState.noDate')
-                    ) : !props.usingCustomConversionRate ? (
-                      <>
-                        {props.conversionRateMessage}
-                        {!props.exchangeRate.isLoading &&
-                          props.exchangeRate.error && (
-                            <Button
-                              type="button"
-                              className="h-auto py-0"
-                              variant="link"
-                              onClick={() => props.exchangeRate.refresh()}
-                              disabled={readOnly}
-                            >
-                              {t('conversionRateState.refresh')}
-                            </Button>
+                  {props.usingExactAmount ? (
+                    <FormField
+                      control={form.control}
+                      name="exactAmount"
+                      render={({ field: { onChange, ...field } }) => (
+                        <FormItem className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <FormLabel className="shrink-0 text-xs font-normal text-muted-foreground">
+                              {t('convertedAmountField.label', {
+                                currency: groupCurrency.code || group.currency,
+                              })}
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                data-testid="converted-amount-input"
+                                className="h-8 max-w-[180px] text-base tabular-nums"
+                                type="text"
+                                inputMode="decimal"
+                                disabled={readOnly}
+                                value={localizeCurrencyInput(
+                                  String(field.value ?? ''),
+                                  locale,
+                                )}
+                                onChange={(event) =>
+                                  onChange(
+                                    enforceCurrencyPattern(
+                                      event.target.value,
+                                      groupCurrency.decimal_digits,
+                                      locale,
+                                    ),
+                                  )
+                                }
+                                onFocus={(event) => {
+                                  const target = event.currentTarget
+                                  setTimeout(() => target.select(), 1)
+                                }}
+                              />
+                            </FormControl>
+                          </div>
+                          <FormDescription className="text-xs">
+                            {t('exactAmountField.description')}
+                          </FormDescription>
+                          {props.impliedConversionRate && (
+                            <FormDescription className="text-xs">
+                              {t('exactAmountField.impliedRate', {
+                                source: inputCurrency.code,
+                                target: groupCurrency.code || group.currency,
+                                rate: formatNumber(
+                                  props.impliedConversionRate,
+                                  locale,
+                                  { maximumFractionDigits: 8 },
+                                ),
+                              })}
+                            </FormDescription>
                           )}
-                      </>
-                    ) : (
-                      t('conversionRateState.customRate')
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  ) : (
+                    <>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-xs text-muted-foreground">
+                          {t('convertedAmountField.label', {
+                            currency: groupCurrency.code || group.currency,
+                          })}
+                        </span>
+                        <span
+                          className="text-sm font-medium tabular-nums"
+                          aria-readonly="true"
+                          data-testid="converted-amount-preview"
+                        >
+                          {previewFormatted || '—'}
+                        </span>
+                      </div>
+                      <FormDescription className="text-xs">
+                        {!form.getValues('expenseDay') ? (
+                          t('conversionRateState.noDate')
+                        ) : !props.usingCustomConversionRate ? (
+                          <>
+                            {props.conversionRateMessage}
+                            {!props.exchangeRate.isLoading &&
+                              props.exchangeRate.error && (
+                                <Button
+                                  type="button"
+                                  className="h-auto py-0"
+                                  variant="link"
+                                  onClick={() => props.exchangeRate.refresh()}
+                                  disabled={readOnly}
+                                >
+                                  {t('conversionRateState.refresh')}
+                                </Button>
+                              )}
+                          </>
+                        ) : (
+                          t('conversionRateState.customRate')
+                        )}
+                      </FormDescription>
+                    </>
+                  )}
+                  {!props.usingCustomConversionRate &&
+                    !props.usingExactAmount && (
+                      <CurrencyRateProviderAttribution
+                        sources={props.exchangeRate.sources}
+                        via={props.exchangeRate.via}
+                      />
                     )}
-                  </FormDescription>
-                  {!props.usingCustomConversionRate && (
-                    <CurrencyRateProviderAttribution
-                      sources={props.exchangeRate.sources}
-                      via={props.exchangeRate.via}
+                  <div className="flex flex-wrap gap-x-3">
+                    {(props.usingCustomConversionRate ||
+                      props.usingExactAmount) && (
+                      <Button
+                        type="button"
+                        variant="link"
+                        className="-mx-4 h-auto py-0"
+                        disabled={readOnly}
+                        onClick={() => {
+                          props.setUsingCustomConversionRate(false)
+                          props.setUsingExactAmount(false)
+                        }}
+                      >
+                        {t('conversionRateField.useApi')}
+                      </Button>
+                    )}
+                    {!props.usingCustomConversionRate && (
+                      <Button
+                        type="button"
+                        variant="link"
+                        className="-mx-4 h-auto py-0"
+                        disabled={readOnly}
+                        onClick={() => {
+                          props.setUsingExactAmount(false)
+                          props.setUsingCustomConversionRate(true)
+                        }}
+                      >
+                        {t('conversionRateField.useCustom')}
+                      </Button>
+                    )}
+                    {!props.usingExactAmount && (
+                      <Button
+                        type="button"
+                        variant="link"
+                        className="-mx-4 h-auto py-0"
+                        disabled={readOnly}
+                        onClick={() => {
+                          form.setValue(
+                            'exactAmount',
+                            props.convertedAmountPreview == null
+                              ? undefined
+                              : Number(
+                                  props.convertedAmountPreview.toFixed(
+                                    groupCurrency.decimal_digits,
+                                  ),
+                                ),
+                            {
+                              shouldDirty: true,
+                              shouldTouch: true,
+                              shouldValidate: true,
+                            },
+                          )
+                          props.setUsingCustomConversionRate(false)
+                          props.setUsingExactAmount(true)
+                        }}
+                      >
+                        {t('exactAmountField.action', {
+                          currency: groupCurrency.code || group.currency,
+                        })}
+                      </Button>
+                    )}
+                  </div>
+                  {props.usingCustomConversionRate && (
+                    <FormField
+                      control={form.control}
+                      name="conversionRate"
+                      render={({ field: { onChange, ...field } }) => (
+                        <FormItem className="pt-1">
+                          <FormLabel>
+                            {t('conversionRateField.label')}
+                          </FormLabel>
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-xs text-muted-foreground">
+                              {inputCurrency.symbol} 1 = {group.currency}
+                            </span>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                className="max-w-[120px] text-base"
+                                type="text"
+                                inputMode="decimal"
+                                placeholder={formatNumber(0, locale, {
+                                  minimumFractionDigits: 2,
+                                  maximumFractionDigits: 2,
+                                })}
+                                disabled={readOnly}
+                                value={localizeCurrencyInput(
+                                  String(field.value ?? ''),
+                                  locale,
+                                )}
+                                onChange={(event) => {
+                                  const v = enforceCurrencyPattern(
+                                    event.target.value,
+                                    undefined,
+                                    locale,
+                                  )
+                                  onChange(v)
+                                }}
+                                onFocus={(e) => {
+                                  const target = e.currentTarget
+                                  setTimeout(() => target.select(), 1)
+                                }}
+                              />
+                            </FormControl>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                   )}
-                  <Collapsible
-                    open={props.usingCustomConversionRate}
-                    onOpenChange={props.setUsingCustomConversionRate}
-                  >
-                    <CollapsibleTrigger
-                      render={
-                        <Button
-                          type="button"
-                          variant="link"
-                          className="-mx-4 h-auto py-0"
-                          disabled={readOnly}
-                        />
-                      }
-                    >
-                      {props.usingCustomConversionRate
-                        ? t('conversionRateField.useApi')
-                        : t('conversionRateField.useCustom')}
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                      <FormField
-                        control={form.control}
-                        name="conversionRate"
-                        render={({ field: { onChange, ...field } }) => (
-                          <FormItem className="pt-1">
-                            <FormLabel>
-                              {t('conversionRateField.label')}
-                            </FormLabel>
-                            <div className="flex items-baseline gap-2">
-                              <span className="text-xs text-muted-foreground">
-                                {inputCurrency.symbol} 1 = {group.currency}
-                              </span>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  className="max-w-[120px] text-base"
-                                  type="text"
-                                  inputMode="decimal"
-                                  placeholder={formatNumber(0, locale, {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2,
-                                  })}
-                                  disabled={readOnly}
-                                  value={localizeCurrencyInput(
-                                    String(field.value ?? ''),
-                                    locale,
-                                  )}
-                                  onChange={(event) => {
-                                    const v = enforceCurrencyPattern(
-                                      event.target.value,
-                                      undefined,
-                                      locale,
-                                    )
-                                    onChange(v)
-                                  }}
-                                  onFocus={(e) => {
-                                    const target = e.currentTarget
-                                    setTimeout(() => target.select(), 1)
-                                  }}
-                                />
-                              </FormControl>
-                            </div>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </CollapsibleContent>
-                  </Collapsible>
                 </div>
               )}
             </FormItem>

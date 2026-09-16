@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server'
 
 import {
   convertMinorUnitsByRate,
+  conversionMinorScale,
   exchangeRateLookupDate,
   type ConversionSource,
   type Expense,
@@ -21,7 +22,8 @@ export class ConversionError extends Error {
       | 'INVALID_DATE'
       | 'CURRENCY_LOOKUP_FAILED'
       | 'PROVIDER_UNAVAILABLE'
-      | 'RATE_NOT_POSITIVE',
+      | 'RATE_NOT_POSITIVE'
+      | 'AMOUNT_SIGN_MISMATCH',
   ) {
     super(message)
     this.name = 'ConversionError'
@@ -120,6 +122,32 @@ export async function resolveConversion(
       amountMinor,
       fetchImpl: opts.fetchImpl,
     })
+  }
+
+  if (conversion.type === 'exact') {
+    const ledgerAmountMinor = Number(conversion.amount)
+    if (
+      !Number.isInteger(ledgerAmountMinor) ||
+      ledgerAmountMinor === 0 ||
+      Math.sign(ledgerAmountMinor) !== Math.sign(amountMinor)
+    ) {
+      throw new ConversionError(
+        'EXACT conversion amounts must be nonzero and have matching signs.',
+        'AMOUNT_SIGN_MISMATCH',
+      )
+    }
+    const rate =
+      ledgerAmountMinor /
+      (amountMinor *
+        conversionMinorScale(1, expenseCurrency, ctx.ledgerCurrency))
+    return {
+      conversionSource: 'EXACT',
+      conversionRate: rate,
+      originalAmount: amountMinor,
+      originalCurrency: expenseCurrency,
+      ledgerAmountMinor,
+      inputAmountMinor: amountMinor,
+    }
   }
 
   // custom

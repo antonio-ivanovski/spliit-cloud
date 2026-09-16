@@ -1,12 +1,13 @@
 import * as z from 'zod'
 
 /**
- * How a converted expense got its rate. Same-currency expenses store `null` in
- * the DB — there is no `NONE` value.
+ * How a converted expense got its ledger amount. Same-currency expenses store
+ * `null` in the DB — there is no `NONE` value.
  */
 export const ConversionSource = {
   EXCHANGE: 'EXCHANGE',
   CUSTOM: 'CUSTOM',
+  EXACT: 'EXACT',
 } as const
 
 export type ConversionSource =
@@ -15,9 +16,10 @@ export type ConversionSource =
 const conversionSourceValues = [
   ConversionSource.EXCHANGE,
   ConversionSource.CUSTOM,
+  ConversionSource.EXACT,
 ] as const satisfies readonly [ConversionSource, ...ConversionSource[]]
 
-/** Shared Zod schema for EXCHANGE | CUSTOM (no NONE). */
+/** Shared Zod schema for converted expenses (no NONE). */
 export const conversionSourceSchema = z.enum(conversionSourceValues)
 
 export type ConversionSourceSchema = z.infer<typeof conversionSourceSchema>
@@ -47,6 +49,18 @@ export const expenseConversionInputSchema = z.discriminatedUnion('type', [
     type: z.literal('exchange'),
     currency: conversionCurrencySchema,
   }),
+  z.object({
+    type: z.literal('exact'),
+    currency: conversionCurrencySchema,
+    amount: z
+      .number()
+      .int('invalidNumber')
+      .refine((amount) => amount !== 0, 'amountNotZero')
+      .refine(
+        (amount) => Math.abs(amount) <= 2_147_483_647,
+        'amountTenMillion',
+      ),
+  }),
 ])
 
 export type ExpenseConversionInput = z.infer<
@@ -74,7 +88,15 @@ export function conversionFromStored(row: {
   conversionSource: ConversionSource | null | undefined
   originalCurrency: string | null | undefined
   conversionRate: number | null | undefined
+  amount?: number | null | undefined
 }): ExpenseConversionInput | undefined {
+  if (row.conversionSource === 'EXACT') {
+    return {
+      type: 'exact',
+      currency: row.originalCurrency ?? '',
+      amount: Number(row.amount) || 0,
+    }
+  }
   if (row.conversionSource === 'CUSTOM') {
     return {
       type: 'custom',

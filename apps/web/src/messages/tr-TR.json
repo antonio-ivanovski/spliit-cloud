@@ -938,7 +938,7 @@
     "paidForOptionByPercentageHelper": "Her kişiye bir yüzde atayın",
     "paidForOptionByAmountHelper": "Her kişiye kesin bir tutar atayın",
     "convertedAmountField": {
-      "label": "Dönüştürülen tutar"
+      "label": "{currency} cinsinden tutar"
     },
     "paidForOptionItemized": "Kalem bazında",
     "paidForOptionItemizedHelper": "Her katılımcının payını masraftaki ayrı kalemlerden hesaplayın.",
@@ -1055,6 +1055,11 @@
       "untracked": "Yüklü bir bölme ön ayarı yok",
       "loadAnother": "Başka bir tane yükle",
       "receivesShare": "pay alır"
+    },
+    "exactAmountField": {
+      "action": "{currency} cinsinden tutarı düzenle",
+      "description": "Ücretler dâhil olmak üzere tahsil edilen toplam tutarı girin.",
+      "impliedRate": "Hesaplanan kur: 1 {source} = {rate} {target}"
     }
   },
   "ExpenseDocumentsInput": {
@@ -2695,7 +2700,9 @@
     "commentSubmitting": "Gönderiliyor…",
     "commentDelete": "Yorumu sil",
     "commentSend": "Yorum gönder",
-    "openDocument": "Belgeyi aç"
+    "openDocument": "Belgeyi aç",
+    "conversionDetails": "Orijinal tutar: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "Orijinal tutar: {amount}"
   },
   "Participants": {
     "search": "Katılımcı ara...",

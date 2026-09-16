@@ -65,7 +65,7 @@ export const expenseActivityDataSchema = z.object({
   // entered in a different currency than the ledger's base currency.
   originalAmount: z.number().int().optional(),
   conversionRate: z.number().optional(),
-  // EXCHANGE | CUSTOM — how the ledger amount was derived (absent = same currency).
+  // How the ledger amount was derived (absent = same currency).
   conversionSource: conversionSourceSchema.optional(),
   // The ledger's base currency code.
   ledgerCurrencyCode: z.string().nullable().optional(),

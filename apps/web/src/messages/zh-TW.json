@@ -932,7 +932,7 @@
     "paidForOptionByPercentageHelper": "為每個人指定百分比",
     "paidForOptionByAmountHelper": "為每個人指定具體金額",
     "convertedAmountField": {
-      "label": "換算金額"
+      "label": "以 {currency} 計的金額"
     },
     "paidForOptionItemized": "按項目分攤",
     "paidForOptionItemizedHelper": "根據支出中的各個項目計算每位參與者的分攤額。",
@@ -1048,6 +1048,11 @@
       "untracked": "尚未載入分攤預設",
       "loadAnother": "載入其他預設",
       "receivesShare": "獲得一份"
+    },
+    "exactAmountField": {
+      "action": "編輯以 {currency} 計的金額",
+      "description": "輸入包含所有費用的扣款總額。",
+      "impliedRate": "推算匯率：1 {source} = {rate} {target}"
     }
   },
   "ExpenseDocumentsInput": {
@@ -2679,7 +2684,9 @@
     "commentSubmitting": "發佈中…",
     "commentDelete": "刪除留言",
     "commentSend": "傳送留言",
-    "openDocument": "開啟文件"
+    "openDocument": "開啟文件",
+    "conversionDetails": "原始金額：{original} · 1 {source} = {rate} {target}",
+    "originalAmount": "原始金額：{amount}"
   },
   "Participants": {
     "search": "搜尋參與者……",

@@ -1377,7 +1377,7 @@
     "paidForOptionByPercentageHelper": "Доделете процент на секое лице",
     "paidForOptionByAmountHelper": "Доделете точен износ на секое лице",
     "convertedAmountField": {
-      "label": "Конвертиран износ"
+      "label": "Износ во {currency}"
     },
     "paidForOptionItemized": "По ставки",
     "paidForOptionItemizedHelper": "Уделот на секој учесник се пресметува од поединечните ставки на трошокот.",
@@ -1494,6 +1494,11 @@
       "untracked": "Нема вчитана поставеност за поделба",
       "loadAnother": "Вчитај друга",
       "receivesShare": "добива удел"
+    },
+    "exactAmountField": {
+      "action": "Уреди го износот во {currency}",
+      "description": "Внеси го вкупниот наплатен износ, вклучувајќи ги сите провизии.",
+      "impliedRate": "Пресметан курс: 1 {source} = {rate} {target}"
     }
   },
   "ExpenseDocumentsInput": {
@@ -2695,7 +2700,9 @@
     "commentSubmitting": "Објавување…",
     "commentDelete": "Избриши коментар",
     "commentSend": "Испрати коментар",
-    "openDocument": "Отвори документ"
+    "openDocument": "Отвори документ",
+    "conversionDetails": "Оригинален износ: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "Оригинален износ: {amount}"
   },
   "Participants": {
     "search": "Пребарувај учесници...",

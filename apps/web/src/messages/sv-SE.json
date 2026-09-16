@@ -1403,7 +1403,7 @@
     "paidForOptionByPercentageHelper": "Tilldela en procentsats till varje person",
     "paidForOptionByAmountHelper": "Tilldela ett exakt belopp till varje person",
     "convertedAmountField": {
-      "label": "Konverterat belopp"
+      "label": "Belopp i {currency}"
     },
     "scanReceipt": "Skanna kvitto med AI",
     "participantAmountLabel": "Belopp för {name}",
@@ -1521,6 +1521,11 @@
       "untracked": "Ingen fördelningsmall har lästs in",
       "loadAnother": "Läs in en annan",
       "receivesShare": "får en andel"
+    },
+    "exactAmountField": {
+      "action": "Redigera belopp i {currency}",
+      "description": "Ange det slutliga beloppet, inklusive eventuella avgifter.",
+      "impliedRate": "Härledd kurs: 1 {source} = {rate} {target}"
     }
   },
   "ExpensePreview": {
@@ -1547,7 +1552,9 @@
     "commentSubmitting": "Publicerar…",
     "commentDelete": "Ta bort kommentar",
     "commentSend": "Skicka kommentar",
-    "openDocument": "Öppna dokument"
+    "openDocument": "Öppna dokument",
+    "conversionDetails": "Ursprungligt belopp: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "Ursprungligt belopp: {amount}"
   },
   "ExpenseSeries": {
     "badge": "Återkommande",

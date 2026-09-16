@@ -830,6 +830,7 @@ model SplitPresetParticipant {
 enum ConversionSource {
   EXCHANGE
   CUSTOM
+  EXACT
 }
 
 model Expense {
@@ -854,7 +855,7 @@ model Expense {
   originalAmount     Int?
   originalCurrency   String?
   conversionRate     Float?
-  // EXCHANGE (provider) or CUSTOM (user rate). Null = same currency.
+  // EXCHANGE (provider), CUSTOM (user rate), or EXACT (charged total). Null = same currency.
   conversionSource   ConversionSource?
   paidBySplitMode    SplitMode         @default(BY_AMOUNT)
   paidByList         ExpensePaidBy[]

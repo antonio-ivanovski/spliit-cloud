@@ -944,7 +944,7 @@
     "paidForOptionByPercentageHelper": "Atribuie un procentaj fiecărei persoane",
     "paidForOptionByAmountHelper": "Atribuie o sumă exactă fiecărei persoane",
     "convertedAmountField": {
-      "label": "Sumă convertită"
+      "label": "Sumă în {currency}"
     },
     "paidForOptionItemized": "Pe articole",
     "paidForOptionItemizedHelper": "Calculează partea fiecărui participant din articolele individuale ale cheltuielii.",
@@ -1062,6 +1062,11 @@
       "untracked": "Nu este încărcat niciun preset",
       "loadAnother": "Încarcă altul",
       "receivesShare": "primește o cotă"
+    },
+    "exactAmountField": {
+      "action": "Editează suma în {currency}",
+      "description": "Introdu suma finală, inclusiv comisioanele.",
+      "impliedRate": "Curs implicit: 1 {source} = {rate} {target}"
     }
   },
   "ExpenseDocumentsInput": {
@@ -2713,7 +2718,9 @@
     "commentSubmitting": "Se postează…",
     "commentDelete": "Șterge comentariul",
     "commentSend": "Trimite comentariul",
-    "openDocument": "Deschide documentul"
+    "openDocument": "Deschide documentul",
+    "conversionDetails": "Sumă inițială: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "Sumă inițială: {amount}"
   },
   "Participants": {
     "search": "Caută participanți...",

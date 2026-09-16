@@ -932,7 +932,7 @@
     "paidForOptionByPercentageHelper": "Tetapkan persenan untuk setiap orang",
     "paidForOptionByAmountHelper": "Tetapkan jumlah yang tepat untuk setiap orang",
     "convertedAmountField": {
-      "label": "Jumlah yang dikonversi"
+      "label": "Jumlah dalam {currency}"
     },
     "paidForOptionItemized": "Per item",
     "paidForOptionItemizedHelper": "Hitung bagian setiap peserta dari masing-masing item dalam pengeluaran.",
@@ -1048,6 +1048,11 @@
       "untracked": "Belum ada preset pembagian yang dimuat",
       "loadAnother": "Muat yang lain",
       "receivesShare": "menerima bagian"
+    },
+    "exactAmountField": {
+      "action": "Edit jumlah dalam {currency}",
+      "description": "Masukkan total yang dibebankan, termasuk semua biaya.",
+      "impliedRate": "Kurs tersirat: 1 {source} = {rate} {target}"
     }
   },
   "Currencies": {
@@ -2679,7 +2684,9 @@
     "commentSubmitting": "Memposting…",
     "commentDelete": "Hapus komentar",
     "commentSend": "Kirim komentar",
-    "openDocument": "Buka dokumen"
+    "openDocument": "Buka dokumen",
+    "conversionDetails": "Jumlah asli: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "Jumlah asli: {amount}"
   },
   "Participants": {
     "search": "Cari peserta...",

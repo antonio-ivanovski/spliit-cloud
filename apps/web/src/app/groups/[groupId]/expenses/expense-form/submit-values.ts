@@ -36,6 +36,10 @@ export function buildSubmitValues(
     values.conversionType === 'CUSTOM' && values.conversionRate
       ? Number(values.conversionRate)
       : undefined
+  const exactAmount =
+    values.conversionType === 'EXACT' && values.exactAmount != null
+      ? Number(values.exactAmount)
+      : undefined
   if (
     conversionRequired &&
     values.conversionType === 'CUSTOM' &&
@@ -43,22 +47,37 @@ export function buildSubmitValues(
   ) {
     throw new Error('A positive conversion rate is required.')
   }
+  if (
+    conversionRequired &&
+    values.conversionType === 'EXACT' &&
+    (!exactAmount ||
+      Number.isNaN(exactAmount) ||
+      Math.sign(exactAmount) !== Math.sign(typedAmount))
+  ) {
+    throw new Error('Exact amounts must be nonzero and have matching signs.')
+  }
 
   const amountInExpenseCurrency = amountAsMinorUnits(typedAmount, inputCurrency)
 
   // Absent conversion = same currency as the group (matches nullable DB).
   const conversion: Expense['conversion'] = !conversionRequired
     ? undefined
-    : values.conversionType === 'CUSTOM' && rate
+    : values.conversionType === 'EXACT' && exactAmount
       ? {
-          type: 'custom',
+          type: 'exact',
           currency: values.originalCurrency || inputCurrency.code,
-          rate,
+          amount: amountAsMinorUnits(exactAmount, groupCurrency),
         }
-      : {
-          type: 'exchange',
-          currency: values.originalCurrency || inputCurrency.code,
-        }
+      : values.conversionType === 'CUSTOM' && rate
+        ? {
+            type: 'custom',
+            currency: values.originalCurrency || inputCurrency.code,
+            rate,
+          }
+        : {
+            type: 'exchange',
+            currency: values.originalCurrency || inputCurrency.code,
+          }
 
   const paidFor = serializePaidFor({
     splitMode: values.splitMode,

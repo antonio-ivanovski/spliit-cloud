@@ -85,6 +85,10 @@ export function importDraftAsLoadedExpense(expense: Expense): LoadedExpense {
   const converted = expense.conversion != null
   return {
     ...expense,
+    amount:
+      expense.conversion?.type === 'exact'
+        ? expense.conversion.amount
+        : expense.amount,
     id: `import-draft-${randomId()}`,
     ledgerId: '',
     createdAt: new Date(),
@@ -98,7 +102,9 @@ export function importDraftAsLoadedExpense(expense: Expense): LoadedExpense {
     conversionSource: expense.conversion
       ? expense.conversion.type === 'custom'
         ? 'CUSTOM'
-        : 'EXCHANGE'
+        : expense.conversion.type === 'exact'
+          ? 'EXACT'
+          : 'EXCHANGE'
       : null,
     paidByList: expense.paidByList.map((row) => ({
       ...row,
@@ -507,9 +513,14 @@ export function buildExpenseFormDefaults(args: {
         : amountAsDecimal(expense.amount, groupCurrency),
       originalCurrency: expense.originalCurrency ?? group.currencyCode,
       conversionRate: expense.conversionRate ?? undefined,
+      exactAmount:
+        expense.conversionSource === 'EXACT'
+          ? amountAsDecimal(expense.amount, groupCurrency)
+          : undefined,
       conversionType:
         expense.conversionSource === 'CUSTOM' ||
-        expense.conversionSource === 'EXCHANGE'
+        expense.conversionSource === 'EXCHANGE' ||
+        expense.conversionSource === 'EXACT'
           ? expense.conversionSource
           : expense.originalCurrency && expense.conversionRate
             ? ('CUSTOM' as const)

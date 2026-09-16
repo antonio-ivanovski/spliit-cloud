@@ -500,11 +500,25 @@ export function ExpenseForm(props: {
     const rate = Number(values.conversionRate)
     if (
       conversion.conversionRequired &&
+      values.conversionType === 'CUSTOM' &&
       (!rate || Number.isNaN(rate) || rate <= 0)
     ) {
       form.setError('conversionRate', {
         type: 'manual',
         message: 'ratePositive',
+      })
+      return
+    }
+    if (
+      conversion.conversionRequired &&
+      values.conversionType === 'EXACT' &&
+      (!values.exactAmount ||
+        Math.sign(Number(values.exactAmount)) !==
+          Math.sign(Number(values.amount)))
+    ) {
+      form.setError('exactAmount', {
+        type: 'manual',
+        message: values.exactAmount ? 'amountSignMismatch' : 'amountNotZero',
       })
       return
     }

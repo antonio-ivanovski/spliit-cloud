@@ -1021,6 +1021,31 @@ describe('ExpenseForm', () => {
     expect(amountInput).toHaveValue('50')
   })
 
+  it('edit mode of an EXACT expense restores both entered amounts', () => {
+    const expenseWithExactAmount = {
+      ...mockExpense,
+      amount: 4600,
+      originalCurrency: 'EUR',
+      originalAmount: 5000,
+      conversionRate: 0.92,
+      conversionSource: 'EXACT' as const,
+    }
+    render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={expenseWithExactAmount as unknown as LoadedExpense}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    expect(screen.getByRole('textbox', { name: /^amount$/i })).toHaveValue('50')
+    expect(screen.getByRole('textbox', { name: /amount in usd/i })).toHaveValue(
+      '46',
+    )
+    expect(screen.queryByDisplayValue('0.92')).not.toBeInTheDocument()
+  })
+
   it('submit converts originalAmount to minor units when currency conversion is active', async () => {
     let resolveSubmit!: (outcome: 'saved') => void
     const submission = new Promise<'saved'>((resolve) => {
@@ -1212,6 +1237,173 @@ describe('ExpenseForm', () => {
 
     expect(screen.getByTestId('converted-amount-preview')).toHaveTextContent(
       /55\.00/,
+    )
+  })
+
+  it('prefills an exact group-currency amount and preserves edits when the receipt amount changes', async () => {
+    vi.mocked(useCurrencyRate).mockReturnValue({
+      data: 1.1,
+      error: null,
+      isLoading: false,
+      via: undefined,
+      sources: [],
+      refresh: vi.fn(),
+    })
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    const currencySelector = screen.getAllByRole('combobox')[1]
+    await user.click(currencySelector)
+    await user.click(screen.getByText('Euro (EUR)'))
+
+    const amountInput = screen.getByRole('textbox', { name: /^amount$/i })
+    await user.clear(amountInput)
+    await user.type(amountInput, '100')
+    await user.click(screen.getByRole('button', { name: 'Edit amount in USD' }))
+
+    const exactInput = screen.getByRole('textbox', { name: /amount in usd/i })
+    expect(exactInput).toHaveValue('110')
+    await user.clear(exactInput)
+    await user.type(exactInput, '93.47')
+
+    expect(screen.queryByTestId('converted-amount-preview')).toBeNull()
+    expect(screen.getByTestId('converted-amount-input')).toHaveValue('93.47')
+    expect(screen.getByText(/Implied rate:/)).toHaveTextContent(/0\.9347/)
+
+    await user.clear(amountInput)
+    await user.type(amountInput, '200')
+    expect(exactInput).toHaveValue('93.47')
+    expect(screen.getByText(/Implied rate:/)).toHaveTextContent(/0\.46735/)
+
+    await user.click(currencySelector)
+    await user.click(screen.getByText('British Pound (GBP)'))
+    expect(
+      screen.queryByRole('textbox', { name: /amount in usd/i }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('prefills exact mode from the active custom rate and rounds to the group currency precision', async () => {
+    vi.mocked(useCurrencyRate).mockReturnValue({
+      data: 1.1,
+      error: null,
+      isLoading: false,
+      via: undefined,
+      sources: [],
+      refresh: vi.fn(),
+    })
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    const currencySelector = screen.getAllByRole('combobox')[1]
+    await user.click(currencySelector)
+    await user.click(screen.getByText('Euro (EUR)'))
+
+    const amountInput = screen.getByRole('textbox', { name: /^amount$/i })
+    await user.clear(amountInput)
+    await user.type(amountInput, '100')
+    await user.click(screen.getByRole('button', { name: 'Use custom rate' }))
+
+    const rateInput = screen.getByRole('textbox', { name: /exchange rate/i })
+    await user.clear(rateInput)
+    await user.type(rateInput, '0.93474')
+    expect(screen.getByTestId('converted-amount-preview')).toHaveTextContent(
+      /93\.47/,
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Edit amount in USD' }))
+    expect(screen.getByRole('textbox', { name: /amount in usd/i })).toHaveValue(
+      '93.47',
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Use exchange rate' }))
+    expect(screen.queryByRole('textbox', { name: /amount in usd/i })).toBeNull()
+    expect(screen.getByTestId('converted-amount-preview')).toHaveTextContent(
+      /110\.00/,
+    )
+  })
+
+  it('starts exact mode empty when no converted estimate is available', async () => {
+    vi.mocked(useCurrencyRate).mockReturnValue({
+      data: undefined,
+      error: new Error('Rate unavailable'),
+      isLoading: false,
+      via: undefined,
+      sources: [],
+      refresh: vi.fn(),
+    })
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    const currencySelector = screen.getAllByRole('combobox')[1]
+    await user.click(currencySelector)
+    await user.click(screen.getByText('Euro (EUR)'))
+    await user.click(screen.getByRole('button', { name: 'Edit amount in USD' }))
+
+    expect(screen.getByRole('textbox', { name: /amount in usd/i })).toHaveValue(
+      '',
+    )
+  })
+
+  it('does not overwrite an exact amount when a later exchange rate arrives', async () => {
+    vi.mocked(useCurrencyRate).mockReturnValue({
+      data: 1.1,
+      error: null,
+      isLoading: false,
+      via: undefined,
+      sources: [],
+      refresh: vi.fn(),
+    })
+    const form = (
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />
+    )
+    const { user, rerender } = render(form)
+
+    const currencySelector = screen.getAllByRole('combobox')[1]
+    await user.click(currencySelector)
+    await user.click(screen.getByText('Euro (EUR)'))
+    const amountInput = screen.getByRole('textbox', { name: /^amount$/i })
+    await user.clear(amountInput)
+    await user.type(amountInput, '100')
+    await user.click(screen.getByRole('button', { name: 'Edit amount in USD' }))
+    const exactInput = screen.getByRole('textbox', { name: /amount in usd/i })
+    await user.clear(exactInput)
+    await user.type(exactInput, '93.47')
+
+    vi.mocked(useCurrencyRate).mockReturnValue({
+      data: 1.25,
+      error: null,
+      isLoading: false,
+      via: undefined,
+      sources: [],
+      refresh: vi.fn(),
+    })
+    rerender(form)
+
+    expect(screen.getByRole('textbox', { name: /amount in usd/i })).toHaveValue(
+      '93.47',
     )
   })
 

@@ -199,4 +199,27 @@ describe('buildExpenseFormDefaults edit-mode item hydration', () => {
       { participant: 'carol', shares: 2 },
     ])
   })
+
+  it('restores both amounts for an exact conversion', () => {
+    const values = buildExpenseFormDefaults({
+      isCreate: false,
+      expense: {
+        ...itemizedExpense,
+        amount: 9347,
+        originalAmount: 10000,
+        originalCurrency: 'USD',
+        conversionRate: 0.9347,
+        conversionSource: 'EXACT',
+      } as never,
+      searchParams: {} as CreateExpenseSearch,
+      group,
+      groupCurrency: EUR,
+      currentLedgerParticipantId: 'alice',
+      settlementTitle: 'Settlement payment',
+    })
+
+    expect(values.amount).toBe(100)
+    expect(values.exactAmount).toBe(93.47)
+    expect(values.conversionType).toBe('EXACT')
+  })
 })

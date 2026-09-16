@@ -944,7 +944,7 @@
     "paidForOptionByPercentageHelper": "Assigna un percentatge a cada persona",
     "paidForOptionByAmountHelper": "Assigna una quantitat exacta a cada persona",
     "convertedAmountField": {
-      "label": "Quantitat convertida"
+      "label": "Import en {currency}"
     },
     "paidForOptionItemized": "Per articles",
     "paidForOptionItemizedHelper": "Calcula la part de cada participant a partir dels articles individuals de la despesa.",
@@ -1062,6 +1062,11 @@
       "untracked": "No hi ha cap predefinició carregada",
       "loadAnother": "Carrega’n una altra",
       "receivesShare": "rep una part"
+    },
+    "exactAmountField": {
+      "action": "Edita l’import en {currency}",
+      "description": "Introdueix l’import final, incloses les comissions.",
+      "impliedRate": "Tipus implícit: 1 {source} = {rate} {target}"
     }
   },
   "ExpenseDocumentsInput": {
@@ -2713,7 +2718,9 @@
     "commentSubmitting": "Publicant…",
     "commentDelete": "Suprimeix el comentari",
     "commentSend": "Envia el comentari",
-    "openDocument": "Obre el document"
+    "openDocument": "Obre el document",
+    "conversionDetails": "Import original: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "Import original: {amount}"
   },
   "Participants": {
     "search": "Cerca participants...",

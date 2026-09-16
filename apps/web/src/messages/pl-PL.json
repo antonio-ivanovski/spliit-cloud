@@ -950,7 +950,7 @@
     "paidForOptionByPercentageHelper": "Przypisz procent każdej osobie",
     "paidForOptionByAmountHelper": "Przypisz dokładną kwotę każdej osobie",
     "convertedAmountField": {
-      "label": "Przeliczona kwota"
+      "label": "Kwota w {currency}"
     },
     "paidForOptionItemized": "Pozycjami",
     "paidForOptionItemizedHelper": "Oblicz udział każdego uczestnika na podstawie poszczególnych pozycji wydatku.",
@@ -1069,6 +1069,11 @@
       "untracked": "Nie wczytano żadnego szablonu podziału",
       "loadAnother": "Wczytaj inny",
       "receivesShare": "otrzymuje udział"
+    },
+    "exactAmountField": {
+      "action": "Edytuj kwotę w {currency}",
+      "description": "Wprowadź łączną pobraną kwotę wraz ze wszystkimi opłatami.",
+      "impliedRate": "Wyliczony kurs: 1 {source} = {rate} {target}"
     }
   },
   "ExpenseDocumentsInput": {
@@ -2731,7 +2736,9 @@
     "commentSubmitting": "Publikowanie…",
     "commentDelete": "Usuń komentarz",
     "commentSend": "Wyślij komentarz",
-    "openDocument": "Otwórz dokument"
+    "openDocument": "Otwórz dokument",
+    "conversionDetails": "Oryginalna kwota: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "Oryginalna kwota: {amount}"
   },
   "Participants": {
     "search": "Szukaj uczestników...",

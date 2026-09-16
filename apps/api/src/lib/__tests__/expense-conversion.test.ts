@@ -71,6 +71,64 @@ describe('resolveConversion', () => {
     expect(result.conversionRate).toBe(1.1)
   })
 
+  it('exact: preserves the authoritative ledger amount and derives the rate', async () => {
+    const fetchImpl = vi.fn()
+    const result = await resolveConversion(
+      {
+        amount: 10000,
+        conversion: { type: 'exact', currency: 'USD', amount: 9347 },
+      },
+      {
+        ledgerCurrency: 'EUR',
+        expenseDate: isoDate(pastDateIso(1)),
+      },
+      { fetchImpl },
+    )
+
+    expect(fetchImpl).not.toHaveBeenCalled()
+    expect(result).toMatchObject({
+      conversionSource: 'EXACT',
+      ledgerAmountMinor: 9347,
+      originalAmount: 10000,
+      originalCurrency: 'USD',
+      conversionRate: 0.9347,
+    })
+  })
+
+  it('exact: derives a major-unit rate across different currency precisions', async () => {
+    const result = await resolveConversion(
+      {
+        amount: 10000,
+        conversion: { type: 'exact', currency: 'USD', amount: 15000 },
+      },
+      { ledgerCurrency: 'JPY', expenseDate: isoDate(pastDateIso(1)) },
+    )
+
+    expect(result.ledgerAmountMinor).toBe(15000)
+    expect(result.conversionRate).toBe(150)
+  })
+
+  it('exact: accepts matching negative amounts and rejects mismatched signs', async () => {
+    const income = await resolveConversion(
+      {
+        amount: -10000,
+        conversion: { type: 'exact', currency: 'USD', amount: -9347 },
+      },
+      { ledgerCurrency: 'EUR', expenseDate: isoDate(pastDateIso(1)) },
+    )
+    expect(income.ledgerAmountMinor).toBe(-9347)
+
+    await expect(
+      resolveConversion(
+        {
+          amount: 10000,
+          conversion: { type: 'exact', currency: 'USD', amount: -9347 },
+        },
+        { ledgerCurrency: 'EUR', expenseDate: isoDate(pastDateIso(1)) },
+      ),
+    ).rejects.toMatchObject({ code: 'AMOUNT_SIGN_MISMATCH' })
+  })
+
   it('custom: scales minor units when decimal_digits differ (USD→JPY)', async () => {
     // $100.00 = 10000¢; 1 USD = 150 JPY → 15_000 yen (not 1_500_000)
     const result = await resolveConversion(

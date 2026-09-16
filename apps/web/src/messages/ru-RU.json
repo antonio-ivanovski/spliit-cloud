@@ -950,7 +950,7 @@
     "paidForOptionByPercentageHelper": "Назначьте процент каждому",
     "paidForOptionByAmountHelper": "Назначьте точную сумму каждому",
     "convertedAmountField": {
-      "label": "Конвертированная сумма"
+      "label": "Сумма в {currency}"
     },
     "paidForOptionItemized": "По позициям",
     "paidForOptionItemizedHelper": "Доля каждого участника рассчитывается из отдельных позиций расхода.",
@@ -1069,6 +1069,11 @@
       "untracked": "Шаблон распределения не загружен",
       "loadAnother": "Загрузить другой",
       "receivesShare": "получает долю"
+    },
+    "exactAmountField": {
+      "action": "Изменить сумму в {currency}",
+      "description": "Введите итоговую сумму с учётом всех комиссий.",
+      "impliedRate": "Подразумеваемый курс: 1 {source} = {rate} {target}"
     }
   },
   "ExpenseDocumentsInput": {
@@ -2731,7 +2736,9 @@
     "commentSubmitting": "Публикация…",
     "commentDelete": "Удалить комментарий",
     "commentSend": "Отправить комментарий",
-    "openDocument": "Открыть документ"
+    "openDocument": "Открыть документ",
+    "conversionDetails": "Исходная сумма: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "Исходная сумма: {amount}"
   },
   "Participants": {
     "search": "Поиск участников...",

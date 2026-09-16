@@ -1501,7 +1501,7 @@
     "paidForOptionByPercentageHelper": "Assign a percentage to each person",
     "paidForOptionByAmountHelper": "Assign an exact amount to each person",
     "convertedAmountField": {
-      "label": "Converted amount"
+      "label": "Amount in {currency}"
     },
     "paidForOptionItemized": "Itemized",
     "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
@@ -1622,6 +1622,11 @@
       "untracked": "No preset loaded",
       "loadAnother": "Load another",
       "receivesShare": "receives a share"
+    },
+    "exactAmountField": {
+      "action": "Edit amount in {currency}",
+      "description": "Enter the final amount, including any fees.",
+      "impliedRate": "Implied rate: 1 {source} = {rate} {target}"
     }
   },
   "ExpenseDocumentsInput": {
@@ -2883,7 +2888,9 @@
     "commentSubmitting": "Posting…",
     "commentDelete": "Delete comment",
     "commentSend": "Send comment",
-    "openDocument": "Open document"
+    "openDocument": "Open document",
+    "conversionDetails": "Original: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "Original: {amount}"
   },
   "Participants": {
     "search": "Search participants...",

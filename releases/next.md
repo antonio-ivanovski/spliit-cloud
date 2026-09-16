@@ -1,29 +1,20 @@
-Welcome to `vNEXT`! One or two sentences on what this release is about.
+Welcome to `vNEXT`! A growing collection of improvements — so far: exact group-currency amounts for foreign-currency expenses, plus explicit crawler permissions and a sitemap for the public site. More to come.
 
 ## Highlights
 
-- Headline one
+- Enter the exact amount charged in the group currency
 
-### Headline one
+### Enter the exact amount charged in the group currency
 
-A short paragraph per headline, with a screenshot where it helps.
+Paying abroad rarely matches the daily exchange rate once card fees land. When an expense uses a foreign currency, choose **Edit amount in {group currency}** to type the final charged total directly — prefilled from the current estimate and rounded to the group currency, with the implied rate shown underneath. The expense preview keeps the group-currency total front and center with a compact `Original: USD 100.00 · 1 USD = 0.9347 EUR` line beneath it.
 
-![caption](./assets/next/shot.webp)
+![Enter the exact group-currency amount, including any fees](./assets/next/exact-amount.png)
 
 ## What's Changed
-
-### 🚨 Breaking Changes
-
-Omit this section when there are none. Each entry names what breaks,
-who is affected, and the exact migration steps.
 
 ### 🚀 Features
 
 - Publish explicit crawler permissions and a sitemap for the public site (`TBD` by @TBD)
-- Short entry per user-facing change (`TBD` by @TBD)
-
-### 🐛 Bug fixes
-
-- Short entry per fix (`TBD` by @TBD)
+- Enter the exact amount charged in the group currency for foreign-currency expenses, including fees, with the implied rate shown inline — closes [#111](https://github.com/antonio-ivanovski/spliit-cloud/issues/111) (`TBD` by @TBD)
 
 **Full Changelog**: TBD

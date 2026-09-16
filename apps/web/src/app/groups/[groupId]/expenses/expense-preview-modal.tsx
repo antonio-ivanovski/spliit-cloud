@@ -36,10 +36,15 @@ import type { BalanceExpense } from '@/lib/balances'
 import { getBalances } from '@/lib/balances'
 import { getCurrency } from '@/lib/currency'
 import { formatExpenseClosed } from '@/lib/expense-display'
-import { formatCurrency, getCurrencyFromGroup } from '@/lib/utils'
+import {
+  amountAsDecimal,
+  formatCurrency,
+  formatNumber,
+  getCurrencyFromGroup,
+} from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
-import type { SplitMode } from '@spliit/domain'
+import type { Currency, SplitMode } from '@spliit/domain'
 import { calculatePaidByShares, calculateShares } from '@spliit/domain'
 
 import {
@@ -59,6 +64,53 @@ import type { SeriesMutationScope } from './series-scope-dialog'
 export type Expense = NonNullable<
   AppRouterOutput['groups']['expenses']['get']['expense']
 >
+
+export function formatExpenseConversionDetails(
+  expense: Pick<
+    Expense,
+    | 'originalAmount'
+    | 'originalCurrency'
+    | 'conversionRate'
+    | 'conversionSource'
+  >,
+  groupCurrency: Currency,
+  locale: string,
+) {
+  if (
+    expense.originalAmount == null ||
+    !expense.originalCurrency ||
+    expense.originalCurrency === groupCurrency.code
+  ) {
+    return null
+  }
+
+  const originalCurrency = getCurrency(expense.originalCurrency)
+  if (!originalCurrency) return null
+
+  const originalValue = formatNumber(
+    amountAsDecimal(expense.originalAmount, originalCurrency),
+    locale,
+    {
+      minimumFractionDigits: originalCurrency.decimal_digits,
+      maximumFractionDigits: originalCurrency.decimal_digits,
+    },
+  )
+  const hasRate =
+    expense.conversionRate != null &&
+    Number.isFinite(expense.conversionRate) &&
+    expense.conversionRate > 0
+
+  return {
+    original: `${originalCurrency.code} ${originalValue}`,
+    source: originalCurrency.code,
+    target: groupCurrency.code,
+    rate: hasRate
+      ? formatNumber(expense.conversionRate!, locale, {
+          maximumFractionDigits: 8,
+        })
+      : null,
+  }
+}
 
 export type ExpensePreviewModalProps = {
   groupId: string
@@ -316,17 +368,10 @@ export function ExpensePreviewModal({
     await stopRecurrenceMutateAsync({ groupId, expenseId })
   }
 
-  const originalCurrency =
-    expense?.originalCurrency &&
-    currency &&
-    expense.originalCurrency !== currency.code
-      ? getCurrency(expense.originalCurrency)
-      : undefined
-  const showOriginalAmount =
-    expense &&
-    expense.originalAmount != null &&
-    originalCurrency != null &&
-    currency != null
+  const conversionDetails =
+    expense && currency
+      ? formatExpenseConversionDetails(expense, currency, locale)
+      : null
 
   const activeBalance =
     expense && currentLedgerParticipantId && currency
@@ -379,13 +424,13 @@ export function ExpensePreviewModal({
                 <div className="text-3xl font-bold tracking-tight tabular-nums">
                   {formatCurrency(currency, expense.amount, locale)}
                 </div>
-                {showOriginalAmount && (
+                {conversionDetails && (
                   <div className="mt-1 text-sm text-muted-foreground tabular-nums">
-                    {formatCurrency(
-                      originalCurrency,
-                      expense.originalAmount!,
-                      locale,
-                    )}
+                    {conversionDetails.rate
+                      ? t('conversionDetails', conversionDetails)
+                      : t('originalAmount', {
+                          amount: conversionDetails.original,
+                        })}
                   </div>
                 )}
               </div>

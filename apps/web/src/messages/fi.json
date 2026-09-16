@@ -938,7 +938,7 @@
     "paidForOptionByPercentageHelper": "Anna kullekin henkilölle prosenttiosuus",
     "paidForOptionByAmountHelper": "Anna kullekin henkilölle tarkka summa",
     "convertedAmountField": {
-      "label": "Muunnettu summa"
+      "label": "Summa valuutassa {currency}"
     },
     "paidForOptionItemized": "Nimikkeittäin",
     "paidForOptionItemizedHelper": "Laske kunkin osallistujan osuus kulun yksittäisistä nimikkeistä.",
@@ -1055,6 +1055,11 @@
       "untracked": "Jaon esiasetusta ei ole ladattu",
       "loadAnother": "Lataa toinen",
       "receivesShare": "saa osuuden"
+    },
+    "exactAmountField": {
+      "action": "Muokkaa valuutan {currency} summaa",
+      "description": "Syötä lopullinen summa kaikkine kuluineen.",
+      "impliedRate": "Laskennallinen kurssi: 1 {source} = {rate} {target}"
     }
   },
   "ExpenseDocumentsInput": {
@@ -2695,7 +2700,9 @@
     "commentSubmitting": "Julkaistaan…",
     "commentDelete": "Poista kommentti",
     "commentSend": "Lähetä kommentti",
-    "openDocument": "Avaa asiakirja"
+    "openDocument": "Avaa asiakirja",
+    "conversionDetails": "Alkuperäinen summa: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "Alkuperäinen summa: {amount}"
   },
   "Participants": {
     "search": "Hae osallistujia...",

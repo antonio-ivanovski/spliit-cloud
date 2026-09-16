@@ -944,7 +944,7 @@
     "paidForOptionByPercentageHelper": "Esleitu ehuneko bat pertsona bakoitzari",
     "paidForOptionByAmountHelper": "Esleitu zenbateko zehatz bat pertsona bakoitzari",
     "convertedAmountField": {
-      "label": "Zenbateko bihurtua"
+      "label": "Zenbatekoa {currency}-tan"
     },
     "paidForOptionItemized": "Artikuluka",
     "paidForOptionItemizedHelper": "Kalkulatu parte-hartzaile bakoitzaren zatia gastuaren artikulu bakoitzetik.",
@@ -1062,6 +1062,11 @@
       "untracked": "Ez dago banaketa-aurrezarpenik kargatuta",
       "loadAnother": "Kargatu beste bat",
       "receivesShare": "zati bat jasotzen du"
+    },
+    "exactAmountField": {
+      "action": "Editatu zenbatekoa {currency}-tan",
+      "description": "Sartu azken zenbatekoa, komisioak barne.",
+      "impliedRate": "Inplizituko tasa: 1 {source} = {rate} {target}"
     }
   },
   "ExpenseDocumentsInput": {
@@ -2713,7 +2718,9 @@
     "commentSubmitting": "Argitaratzen…",
     "commentDelete": "Ezabatu iruzkina",
     "commentSend": "Iruzkina bidali",
-    "openDocument": "Ireki dokumentua"
+    "openDocument": "Ireki dokumentua",
+    "conversionDetails": "Jatorrizko zenbatekoa: {original} · 1 {source} = {rate} {target}",
+    "originalAmount": "Jatorrizko zenbatekoa: {amount}"
   },
   "Participants": {
     "search": "Bilatu kideak...",

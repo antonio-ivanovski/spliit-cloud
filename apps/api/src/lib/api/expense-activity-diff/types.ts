@@ -17,7 +17,7 @@ export type DifferenceableExpense = Expense & {
   originalAmount?: number | null
   originalCurrency?: string | null
   conversionRate?: number | null
-  conversionSource?: 'EXCHANGE' | 'CUSTOM' | null
+  conversionSource?: 'EXCHANGE' | 'CUSTOM' | 'EXACT' | null
 }
 
 /** Context for formatting human-readable before/after strings. */
