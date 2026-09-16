@@ -9,6 +9,7 @@ import {
 
 import { getModel } from './ai'
 import { buildLocaleHint } from './ai/prompt'
+import { timeoutSecondsToMs } from './ai/timeout'
 import { env } from './env'
 
 const audioModelOutputSchema = z
@@ -187,6 +188,10 @@ export async function extractExpenseInformationFromAudio(
     .slice(0, 10)
   const { output } = await generateText({
     model: await getModel(env.AI_VOICE_MODEL),
+    // Bound slow self-hosted models so the tRPC handler cannot hang, and
+    // fail fast instead of retrying an already-timed-out request.
+    maxRetries: 0,
+    timeout: timeoutSecondsToMs(env.AI_VOICE_TIMEOUT_SECONDS),
     instructions: buildPrompt(context, today),
     messages: [
       {

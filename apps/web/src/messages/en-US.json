@@ -665,7 +665,7 @@
         "title": "Bring your receipts with you",
         "description": "Spliit Cloud can securely copy receipt images from the original spliit.app group and store normalized JPEG versions in your Cloud storage.",
         "fetchFailed": "Could not download the source image.",
-        "tooLarge": "The normalized image is still larger than 2 MiB.",
+        "tooLarge": "The normalized image is still larger than {maxSize}.",
         "uploadFailed": "Could not upload the normalized image.",
         "unknownFailure": "Unknown document error.",
         "discoveryFailed": "Could not discover documents on spliit.app.",
@@ -1677,7 +1677,7 @@
       "retry": "Retry"
     },
     "dropTitle": "Drop files to attach",
-    "dropDescription": "Images, PDFs, and common receipt documents up to 2 MB",
+    "dropDescription": "Images, PDFs, and common receipt documents up to {maxSize}",
     "chooseFiles": "Choose files",
     "takePhoto": "Take photo",
     "openDocument": "Open document",
@@ -1732,6 +1732,10 @@
     "UnsupportedToast": {
       "title": "Image required",
       "aiDescription": "AI receipt scan supports image files only."
+    },
+    "TimeoutToast": {
+      "title": "Receipt scanning timed out",
+      "description": "Receipt scanning failed due to timeout. Try again, use a faster model, or raise AI_RECEIPT_TIMEOUT_SECONDS."
     }
   },
   "Balances": {

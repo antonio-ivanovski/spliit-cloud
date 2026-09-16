@@ -25,13 +25,22 @@ export const EXPENSE_DOCUMENT_MIME_TYPES = [
 
 export const MAX_EXPENSE_DOCUMENT_SIZE = 2 * 1024 ** 2
 
+/**
+ * Default limit in megabytes, mirroring the API `MAX_EXPENSE_DOCUMENT_SIZE_MB`
+ * default.
+ */
+export const DEFAULT_MAX_EXPENSE_DOCUMENT_SIZE_MB = 2
+
 export const EXPENSE_DOCUMENT_IMAGE_ACCEPT =
   EXPENSE_DOCUMENT_IMAGE_MIME_TYPES.join(',')
 
 export const EXPENSE_DOCUMENT_ACCEPT = EXPENSE_DOCUMENT_MIME_TYPES.join(',')
 
-export function isExpenseDocumentSizeWithinLimit(fileSize: number): boolean {
-  return fileSize >= 0 && fileSize <= MAX_EXPENSE_DOCUMENT_SIZE
+export function isExpenseDocumentSizeWithinLimit(
+  fileSize: number,
+  maxSize: number = MAX_EXPENSE_DOCUMENT_SIZE,
+): boolean {
+  return fileSize >= 0 && fileSize <= maxSize
 }
 
 const MIME_BY_EXTENSION: Record<

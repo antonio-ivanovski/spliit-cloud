@@ -781,6 +781,10 @@
     "UnsupportedToast": {
       "title": "تصویر درکار ہے",
       "aiDescription": "AI سے رسید اسکین کرنے کے لیے صرف تصویری فائلیں معاون ہیں۔"
+    },
+    "TimeoutToast": {
+      "title": "رسید اسکین کا وقت ختم ہو گیا۔",
+      "description": "ٹائم آؤٹ کی وجہ سے رسید اسکین ناکام ہو گئی۔ دوبارہ کوشش کریں، تیز تر ماڈل استعمال کریں، یا AI_RECEIPT_TIMEOUT_SECONDS بڑھائیں۔"
     }
   },
   "Currencies": {
@@ -1145,7 +1149,7 @@
       "description": "زیادہ سے زیادہ فائل سائز {maxSize} ہے۔ آپ کی فائل {size} ہے۔"
     },
     "dropTitle": "منسلک کرنے کے لیے فائلیں یہاں چھوڑیں",
-    "dropDescription": "2 MB تک کی تصاویر، PDF اور عام رسیدی دستاویزات",
+    "dropDescription": "{maxSize} تک کی تصاویر، PDF اور عام رسیدی دستاویزات",
     "chooseFiles": "فائلیں منتخب کریں",
     "takePhoto": "تصویر لیں",
     "openDocument": "دستاویز کھولیں",
@@ -2057,7 +2061,7 @@
         "title": "اپنی رسیدیں ساتھ لے آئیں",
         "description": "Spliit Cloud اصل spliit.app گروپ سے رسیدوں کی تصاویر محفوظ طریقے سے نقل کر کے آپ کے Cloud اسٹوریج میں معیاری JPEG ورژن محفوظ کر سکتا ہے۔",
         "fetchFailed": "ماخذ کی تصویر ڈاؤن لوڈ نہیں کی جا سکی۔",
-        "tooLarge": "معیاری تصویر اب بھی 2 MiB سے بڑی ہے۔",
+        "tooLarge": "معیاری تصویر اب بھی {maxSize} سے بڑی ہے۔",
         "uploadFailed": "معیاری تصویر اپ لوڈ نہیں کی جا سکی۔",
         "unknownFailure": "دستاویز کی نامعلوم خرابی۔",
         "discoveryFailed": "spliit.app پر دستاویزات تلاش نہیں کی جا سکیں۔",

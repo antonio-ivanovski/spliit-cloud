@@ -538,7 +538,7 @@
         "title": "Importez vos reçus",
         "description": "Spliit Cloud peut copier en toute sécurité les images des reçus du groupe spliit.app d’origine et enregistrer des versions JPEG normalisées dans votre stockage Cloud.",
         "fetchFailed": "Impossible de télécharger l’image source.",
-        "tooLarge": "L’image normalisée dépasse toujours 2 Mio.",
+        "tooLarge": "L’image normalisée dépasse toujours {maxSize}.",
         "uploadFailed": "Impossible d’envoyer l’image normalisée.",
         "unknownFailure": "Erreur de document inconnue.",
         "discoveryFailed": "Impossible de trouver les documents sur spliit.app.",
@@ -1114,7 +1114,7 @@
       "retry": "Réessayer"
     },
     "dropTitle": "Déposez les fichiers à joindre",
-    "dropDescription": "Images, PDF et documents de reçu courants jusqu’à 2 Mo",
+    "dropDescription": "Images, PDF et documents de reçu courants jusqu’à {maxSize}",
     "chooseFiles": "Choisir des fichiers",
     "takePhoto": "Prendre une photo",
     "openDocument": "Ouvrir le document",
@@ -1169,6 +1169,10 @@
     "UnsupportedToast": {
       "title": "Image requise",
       "aiDescription": "L’analyse des reçus par IA accepte uniquement les fichiers image."
+    },
+    "TimeoutToast": {
+      "title": "Délai d’analyse du reçu dépassé",
+      "description": "L’analyse du reçu a échoué suite à un dépassement du délai. Réessayez, utilisez un modèle plus rapide ou augmentez AI_RECEIPT_TIMEOUT_SECONDS."
     }
   },
   "Balances": {

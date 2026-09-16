@@ -1,6 +1,9 @@
 import { z } from 'zod'
 
-import { supportedCurrencyCodeSchema } from '@spliit/domain'
+import {
+  DEFAULT_MAX_EXPENSE_DOCUMENT_SIZE_MB,
+  supportedCurrencyCodeSchema,
+} from '@spliit/domain'
 
 const interpretEnvVarAsBool = (val: unknown): boolean => {
   if (typeof val !== 'string') return false
@@ -36,6 +39,22 @@ const envSchema = z
     S3_UPLOAD_REGION: optionalString,
     S3_UPLOAD_ENDPOINT: optionalString,
     S3_UPLOAD_PUBLIC_URL: optionalUrl,
+    // Maximum expense/receipt attachment size in megabytes. Defaults to 2 to
+    // preserve historical behavior; uploads go directly to S3 via presigned
+    // URLs so this does not affect the API request body limit, but larger
+    // values increase memory use during export/sha256 verification. Capped at
+    // 50 to match the staged import-token ceiling in `lib/import-documents.ts`
+    // (static zod schemas cannot read per-request env, so the ceiling is the
+    // highest value the import flows can seal).
+    MAX_EXPENSE_DOCUMENT_SIZE_MB: z.preprocess(
+      emptyStringAsUndefined,
+      z.coerce
+        .number()
+        .finite()
+        .min(0.01)
+        .max(50)
+        .default(DEFAULT_MAX_EXPENSE_DOCUMENT_SIZE_MB),
+    ),
     PUBLIC_ENABLE_RECEIPT_EXTRACT: z.preprocess(
       interpretEnvVarAsBool,
       z.boolean().default(false),
@@ -66,6 +85,9 @@ const envSchema = z
       z.string().default('gpt-5-nano'),
     ),
     AI_VOICE_MODEL: z.preprocess(emptyStringAsUndefined, z.string().optional()),
+    AI_RECEIPT_TIMEOUT_SECONDS: z.coerce.number().int().positive().default(120),
+    AI_VOICE_TIMEOUT_SECONDS: z.coerce.number().int().positive().default(120),
+    AI_CATEGORY_TIMEOUT_SECONDS: z.coerce.number().int().positive().default(30),
     AI_CATEGORY_RECENT_EXPENSES_LIMIT: z.coerce
       .number()
       .int()
@@ -305,6 +327,20 @@ export const webOrigins = env.WEB_ORIGINS.split(',')
   .map((origin) => origin.trim())
   .filter(Boolean)
 export const hasDatabaseEnv = !!env.DATABASE_URL
+
+/**
+ * Expense attachment limit in bytes, derived from
+ * `MAX_EXPENSE_DOCUMENT_SIZE_MB`. Rounded so fractional megabytes (e.g. 0.5)
+ * behave predictably. Accepts an explicit source so tests can pass isolated env
+ * objects without mutating the global `env`.
+ */
+export function getMaxExpenseDocumentSizeBytes(
+  source: { MAX_EXPENSE_DOCUMENT_SIZE_MB?: number } = env,
+): number {
+  const megabytes =
+    source.MAX_EXPENSE_DOCUMENT_SIZE_MB ?? DEFAULT_MAX_EXPENSE_DOCUMENT_SIZE_MB
+  return Math.round(megabytes * 1024 * 1024)
+}
 
 export const DEFAULT_OIDC_PROVIDER_ID = 'oidc'
 export const DEFAULT_OIDC_DISPLAY_NAME = 'SSO'

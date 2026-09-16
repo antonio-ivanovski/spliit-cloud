@@ -76,6 +76,13 @@ describe('expense document types', () => {
     ).toBe(false)
   })
 
+  it('honors a custom limit override', () => {
+    const tenMb = 10 * 1024 ** 2
+    expect(isExpenseDocumentSizeWithinLimit(5 * 1024 ** 2, tenMb)).toBe(true)
+    expect(isExpenseDocumentSizeWithinLimit(tenMb, tenMb)).toBe(true)
+    expect(isExpenseDocumentSizeWithinLimit(tenMb + 1, tenMb)).toBe(false)
+  })
+
   it('identifies image attachments and maps extensions', () => {
     expect(isExpenseDocumentImage('image/jpeg')).toBe(true)
     expect(isExpenseDocumentImage('application/pdf')).toBe(false)

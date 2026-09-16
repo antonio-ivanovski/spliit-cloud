@@ -526,7 +526,7 @@
         "title": "レシートを持っていきましょう",
         "description": "Spliit Cloud は元の spliit.app グループからレシート画像を安全にコピーし、Cloud ストレージに正規化した JPEG 形式で保存できます。",
         "fetchFailed": "元の画像をダウンロードできませんでした。",
-        "tooLarge": "正規化した画像がまだ 2 MiB を超えています。",
+        "tooLarge": "正規化した画像がまだ {maxSize} を超えています。",
         "uploadFailed": "正規化した画像をアップロードできませんでした。",
         "unknownFailure": "不明な書類エラーです。",
         "discoveryFailed": "spliit.app で書類を見つけられませんでした。",
@@ -1098,7 +1098,7 @@
       "retry": "再試行"
     },
     "dropTitle": "添付するファイルをドロップ",
-    "dropDescription": "画像、PDF、一般的な領収書書類（2 MBまで）",
+    "dropDescription": "画像、PDF、一般的な領収書書類（{maxSize}まで）",
     "chooseFiles": "ファイルを選択",
     "FileErrorToast": {
       "description": "{fileName}: アップロード中に問題が発生しました。後でもう一度お試しいただくか、別のファイルを選択してください。"
@@ -1153,6 +1153,10 @@
     "UnsupportedToast": {
       "title": "画像が必要です",
       "aiDescription": "AIレシートスキャンは画像ファイルのみ対応しています。"
+    },
+    "TimeoutToast": {
+      "title": "領収書のスキャンがタイムアウトしました",
+      "description": "タイムアウトのため、領収書のスキャンに失敗しました。もう一度お試しください。より高速なモデルを使用するか、AI_RECEIPT_TIMEOUT_SECONDS を引き上げてください。"
     }
   },
   "Balances": {

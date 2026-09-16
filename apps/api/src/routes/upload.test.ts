@@ -197,6 +197,50 @@ describe('createUploadUrl', () => {
     expect(response.status).toBe(200)
   })
 
+  it('honors MAX_EXPENSE_DOCUMENT_SIZE_MB when raised', async () => {
+    const original = env.MAX_EXPENSE_DOCUMENT_SIZE_MB
+    env.MAX_EXPENSE_DOCUMENT_SIZE_MB = 10
+    try {
+      authState.session = {
+        user: { id: 'acct-1' },
+        session: { id: 'sess-1' },
+      }
+      prismaMock.account.findUnique.mockResolvedValue({
+        id: 'acct-1',
+        email: 'alice@example.com',
+      })
+      prismaMock.ledger.findUnique.mockResolvedValue({
+        id: 'ledger-1',
+        group: {
+          members: [{ accountId: 'acct-1', status: 'ACTIVE' }],
+        },
+      } as never)
+
+      const allowed = await createUploadUrl(
+        makeRequest(),
+        'ledger-1',
+        'receipt.pdf',
+        'application/pdf',
+        5 * 1024 ** 2,
+      )
+      expect(allowed.status).toBe(200)
+
+      const rejected = await createUploadUrl(
+        makeRequest(),
+        'ledger-1',
+        'receipt.pdf',
+        'application/pdf',
+        10 * 1024 ** 2 + 1,
+      )
+      expect(rejected.status).toBe(400)
+      await expect(rejected.json()).resolves.toMatchObject({
+        error: 'File exceeds the maximum upload size',
+      })
+    } finally {
+      env.MAX_EXPENSE_DOCUMENT_SIZE_MB = original
+    }
+  })
+
   it('returns 404 when the ledger does not exist', async () => {
     authState.session = {
       user: { id: 'acct-1' },

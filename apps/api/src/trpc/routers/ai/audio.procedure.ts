@@ -3,6 +3,7 @@ import { z } from 'zod'
 
 import { prisma } from '@spliit/db'
 
+import { isTimeoutError } from '../../../lib/ai/timeout'
 import { extractExpenseInformationFromAudio } from '../../../lib/audio-expense'
 import { env } from '../../../lib/env'
 import { resolveParticipantDisplayName } from '../../../lib/invitations/display'
@@ -85,6 +86,12 @@ export const extractExpenseInformationFromAudioProcedure = protectedProcedure
         })),
       })
     } catch (error) {
+      if (isTimeoutError(error)) {
+        throw new TRPCError({
+          code: 'TIMEOUT',
+          message: `Voice expense extraction failed due to timeout after ${env.AI_VOICE_TIMEOUT_SECONDS}s`,
+        })
+      }
       console.error(error)
       throw new TRPCError({
         code: 'BAD_GATEWAY',

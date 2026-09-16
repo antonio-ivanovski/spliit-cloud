@@ -50,6 +50,7 @@ import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
 import { randomId } from '@/lib/api'
+import { useDeploymentConfig } from '@/lib/deployment-config'
 import { useMediaQuery } from '@/lib/hooks'
 import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import type { ExpenseFormInputValues } from '@/lib/schemas'
@@ -77,7 +78,7 @@ type Props = {
   }) => void
 }
 
-const MAX_FILE_SIZE = MAX_EXPENSE_DOCUMENT_SIZE
+const FALLBACK_MAX_FILE_SIZE = MAX_EXPENSE_DOCUMENT_SIZE
 
 function isImageAttachment(
   document: ExpenseFormInputValues['documents'][number],
@@ -100,6 +101,15 @@ export function ExpenseDocumentsInput({
   const locale = useLocale()
   const { t } = useTranslation(undefined, {
     keyPrefix: 'ExpenseDocumentsInput',
+  })
+  const maxFileSize =
+    useDeploymentConfig().maxExpenseDocumentSize ?? FALLBACK_MAX_FILE_SIZE
+  const maxFileSizeRef = useRef(maxFileSize)
+  useEffect(() => {
+    maxFileSizeRef.current = maxFileSize
+  }, [maxFileSize])
+  const dropDescription = t('dropDescription', {
+    maxSize: formatFileSize(maxFileSize, locale),
   })
   const [pending, setPending] = useState(false)
   const [dragActive, setDragActive] = useState(false)
@@ -157,11 +167,16 @@ export function ExpenseDocumentsInput({
       const prepared = image
         ? await resizeImage(file)
         : { file, width: null, height: null }
-      if (!isExpenseDocumentSizeWithinLimit(prepared.file.size)) {
+      if (
+        !isExpenseDocumentSizeWithinLimit(
+          prepared.file.size,
+          maxFileSizeRef.current,
+        )
+      ) {
         toast({
           title: t('TooBigToast.title'),
           description: t('TooBigToast.description', {
-            maxSize: formatFileSize(MAX_FILE_SIZE, locale),
+            maxSize: formatFileSize(maxFileSizeRef.current, locale),
             size: formatFileSize(prepared.file.size, locale),
           }),
           variant: 'destructive',
@@ -327,9 +342,7 @@ export function ExpenseDocumentsInput({
           <div>
             <Upload className="mx-auto mb-2 h-8 w-8 text-primary" />
             <p className="font-medium">{t('dropTitle')}</p>
-            <p className="text-sm text-muted-foreground">
-              {t('dropDescription')}
-            </p>
+            <p className="text-sm text-muted-foreground">{dropDescription}</p>
           </div>
         </div>
       )}
@@ -394,7 +407,7 @@ export function ExpenseDocumentsInput({
             {pending ? t('uploading') : t('addAttachments')}
           </span>
           <span className="max-w-full text-xs leading-relaxed font-normal text-pretty break-words text-muted-foreground">
-            {t('dropDescription')}
+            {dropDescription}
           </span>
         </Button>
       )}
@@ -404,7 +417,7 @@ export function ExpenseDocumentsInput({
           <DrawerContent>
             <DrawerHeader className="text-start">
               <DrawerTitle>{t('addAttachments')}</DrawerTitle>
-              <DrawerDescription>{t('dropDescription')}</DrawerDescription>
+              <DrawerDescription>{dropDescription}</DrawerDescription>
             </DrawerHeader>
             <div className="grid gap-1 px-4 pb-4">
               <button

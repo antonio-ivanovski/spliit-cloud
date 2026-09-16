@@ -36,6 +36,7 @@ const {
     signupMode: 'open' as 'open' | 'invite_only',
     allowUninvitedSignup: true,
     enableAnonymousAuth: false,
+    maxExpenseDocumentSize: 2 * 1024 * 1024,
   },
   mockMascotReact: vi.fn(),
   mockSearch: {

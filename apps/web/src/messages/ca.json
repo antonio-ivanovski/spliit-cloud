@@ -538,7 +538,7 @@
         "title": "Porta els teus rebuts amb tu",
         "description": "Spliit Cloud pot copiar de manera segura les imatges dels rebuts del grup original de spliit.app i desar versions JPEG normalitzades al teu emmagatzematge del núvol.",
         "fetchFailed": "No s'ha pogut baixar la imatge d'origen.",
-        "tooLarge": "La imatge normalitzada encara supera els 2 MiB.",
+        "tooLarge": "La imatge normalitzada encara supera els {maxSize}.",
         "uploadFailed": "No s'ha pogut pujar la imatge normalitzada.",
         "unknownFailure": "Error de document desconegut.",
         "discoveryFailed": "No s'han pogut descobrir els documents a spliit.app.",
@@ -1114,7 +1114,7 @@
       "retry": "Tornar-ho a intentar"
     },
     "dropTitle": "Deixa els fitxers per adjuntar-los",
-    "dropDescription": "Imatges, PDF i documents de tiquet habituals de fins a 2 MB",
+    "dropDescription": "Imatges, PDF i documents de tiquet habituals de fins a {maxSize}",
     "chooseFiles": "Tria fitxers",
     "takePhoto": "Fes una foto",
     "openDocument": "Obre el document",
@@ -1169,6 +1169,10 @@
     "UnsupportedToast": {
       "title": "Cal una imatge",
       "aiDescription": "L’escaneig de tiquets amb IA només admet fitxers d’imatge."
+    },
+    "TimeoutToast": {
+      "title": "S'ha esgotat el temps d'escaneig del tiquet",
+      "description": "L'escaneig del tiquet ha fallat per temps esgotat. Torna-ho a intentar, fes servir un model més ràpid o augmenta AI_RECEIPT_TIMEOUT_SECONDS."
     }
   },
   "Balances": {

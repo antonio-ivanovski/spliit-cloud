@@ -14,6 +14,7 @@ export const MAX_CLOUD_BUNDLE_BYTES = 256 * 1024 * 1024
 export const MAX_CLOUD_BUNDLE_EXPANDED_BYTES = 512 * 1024 * 1024
 export const MAX_CLOUD_BUNDLE_ENTRIES = 10_000
 export const MAX_CLOUD_BUNDLE_MANIFEST_BYTES = 16 * 1024 * 1024
+/** Default per-document gate; callers pass the configured attachment limit. */
 export const MAX_CLOUD_DOCUMENT_BYTES = 2 * 1024 * 1024
 
 export type CloudBundleDocumentIssue = {
@@ -346,6 +347,7 @@ async function inspectGroupManifest(
  */
 export async function inspectSpliitCloudBundle(
   input: Blob,
+  maxDocumentBytes: number = MAX_CLOUD_DOCUMENT_BYTES,
 ): Promise<CloudBundleInspection> {
   if (input.size > MAX_CLOUD_BUNDLE_BYTES) {
     throw new Error('This Spliit Cloud backup is too large to import.')
@@ -394,7 +396,7 @@ export async function inspectSpliitCloudBundle(
       const max =
         isManifest || isNestedManifest
           ? MAX_CLOUD_BUNDLE_MANIFEST_BYTES
-          : MAX_CLOUD_DOCUMENT_BYTES
+          : maxDocumentBytes
       if (entry.originalSize > max) {
         failure ??= new Error(
           `Archive entry exceeds its size limit: ${entry.name}`,
@@ -426,7 +428,7 @@ export async function inspectSpliitCloudBundle(
               size >
               (isManifest || isNestedManifest
                 ? MAX_CLOUD_BUNDLE_MANIFEST_BYTES
-                : MAX_CLOUD_DOCUMENT_BYTES)
+                : maxDocumentBytes)
             ) {
               reject(
                 new Error(

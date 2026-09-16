@@ -20,7 +20,7 @@
       },
       "Documents": {
         "description": "Spliit Cloud can securely copy receipt images from the original spliit.app group and store normalised JPEG versions in your Cloud storage.",
-        "tooLarge": "The normalised image is still larger than 2 MiB.",
+        "tooLarge": "The normalised image is still larger than {maxSize}.",
         "uploadFailed": "Could not upload the normalised image."
       }
     }

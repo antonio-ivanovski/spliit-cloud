@@ -6,6 +6,7 @@ import {
 } from '@spliit/domain'
 
 import { getRecentExpenseContext } from '../../ai/context'
+import { isTimeoutError } from '../../ai/timeout'
 import { env } from '../../env'
 import { suggestCategoryWithAI } from '../../expense-form-actions'
 import { logServerInfo } from '../../logging'
@@ -85,20 +86,30 @@ export async function suggestExpenseCategory(
 
   args.beforeAi?.()
 
-  const ai = await suggestCategoryWithAI(args.title, {
-    recentExpenses: context.expenses.slice(
-      0,
-      env.AI_CATEGORY_RECENT_EXPENSES_LIMIT,
-    ),
-    locale: args.locale,
-    groupContext: context.group.name
-      ? {
-          name: context.group.name,
-          currency: context.group.currency,
-          currencyCode: context.group.currencyCode,
-        }
-      : undefined,
-  })
+  let ai: { categoryId: CategoryId | null }
+  try {
+    ai = await suggestCategoryWithAI(args.title, {
+      recentExpenses: context.expenses.slice(
+        0,
+        env.AI_CATEGORY_RECENT_EXPENSES_LIMIT,
+      ),
+      locale: args.locale,
+      groupContext: context.group.name
+        ? {
+            name: context.group.name,
+            currency: context.group.currency,
+            currencyCode: context.group.currencyCode,
+          }
+        : undefined,
+    })
+  } catch (error) {
+    // Best-effort suggestion: a slow provider must not fail the form.
+    if (isTimeoutError(error)) {
+      logSuggest({ hit: 'none', categoryId: null })
+      return { categoryId: null }
+    }
+    throw error
+  }
   logSuggest({
     hit: ai.categoryId ? 'llm' : 'none',
     categoryId: ai.categoryId,

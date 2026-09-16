@@ -544,7 +544,7 @@
         "title": "Vezměte účtenky s sebou",
         "description": "Spliit Cloud může bezpečně zkopírovat obrázky účtenek z původní skupiny na spliit.app a uložit normalizované verze JPEG do vašeho cloudového úložiště.",
         "fetchFailed": "Zdrojový obrázek se nepodařilo stáhnout.",
-        "tooLarge": "Normalizovaný obrázek je stále větší než 2 MiB.",
+        "tooLarge": "Normalizovaný obrázek je stále větší než {maxSize}.",
         "uploadFailed": "Normalizovaný obrázek se nepodařilo nahrát.",
         "unknownFailure": "Neznámá chyba dokumentu.",
         "discoveryFailed": "Dokumenty na spliit.app se nepodařilo vyhledat.",
@@ -1122,7 +1122,7 @@
       "retry": "Zkusit znovu"
     },
     "dropTitle": "Přetáhněte soubory k připojení",
-    "dropDescription": "Obrázky, PDF a běžné dokumenty účtenek do 2 MB",
+    "dropDescription": "Obrázky, PDF a běžné dokumenty účtenek do {maxSize}",
     "chooseFiles": "Vybrat soubory",
     "takePhoto": "Pořídit fotografii",
     "openDocument": "Otevřít dokument",
@@ -1177,6 +1177,10 @@
     "UnsupportedToast": {
       "title": "Je vyžadován obrázek",
       "aiDescription": "Sken účtenky pomocí AI podporuje pouze obrázkové soubory."
+    },
+    "TimeoutToast": {
+      "title": "Časový limit skenování účtenky vypršel",
+      "description": "Skenování účtenky selhalo kvůli vypršení časového limitu. Zkuste to znovu, použijte rychlejší model nebo zvyšte AI_RECEIPT_TIMEOUT_SECONDS."
     }
   },
   "Balances": {

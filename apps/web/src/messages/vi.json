@@ -660,7 +660,7 @@
         "title": "Mang theo biên lai của bạn",
         "description": "Spliit Cloud có thể sao chép an toàn ảnh biên lai từ nhóm spliit.app ban đầu và lưu các phiên bản JPEG đã chuẩn hóa vào bộ nhớ Cloud của bạn.",
         "fetchFailed": "Không thể tải ảnh nguồn xuống.",
-        "tooLarge": "Ảnh đã chuẩn hóa vẫn lớn hơn 2 MiB.",
+        "tooLarge": "Ảnh đã chuẩn hóa vẫn lớn hơn {maxSize}.",
         "uploadFailed": "Không thể tải ảnh đã chuẩn hóa lên.",
         "unknownFailure": "Lỗi tài liệu không xác định.",
         "discoveryFailed": "Không thể tìm thấy tài liệu trên spliit.app.",
@@ -1649,7 +1649,7 @@
       "retry": "Thử lại"
     },
     "dropTitle": "Thả tệp để đính kèm",
-    "dropDescription": "Hình ảnh, PDF và các tài liệu biên lai thông dụng tối đa 2 MB",
+    "dropDescription": "Hình ảnh, PDF và các tài liệu biên lai thông dụng tối đa {maxSize}",
     "chooseFiles": "Chọn tệp",
     "takePhoto": "Chụp ảnh",
     "openDocument": "Mở tài liệu",
@@ -1704,6 +1704,10 @@
     "UnsupportedToast": {
       "title": "Cần có hình ảnh",
       "aiDescription": "Tính năng quét biên lai bằng AI chỉ hỗ trợ tệp hình ảnh."
+    },
+    "TimeoutToast": {
+      "title": "Quét biên lai đã hết thời gian",
+      "description": "Quét biên lai thất bại do hết thời gian. Hãy thử lại, dùng mô hình nhanh hơn, hoặc tăng AI_RECEIPT_TIMEOUT_SECONDS."
     }
   },
   "Balances": {

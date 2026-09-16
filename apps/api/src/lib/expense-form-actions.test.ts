@@ -17,7 +17,10 @@ vi.mock('ai', () => ({
 }))
 
 vi.mock('./env', () => ({
-  env: { AI_CATEGORY_MODEL: 'test-category-model' },
+  env: {
+    AI_CATEGORY_MODEL: 'test-category-model',
+    AI_CATEGORY_TIMEOUT_SECONDS: 30,
+  },
 }))
 
 const { generateText } = await import('ai')
@@ -134,5 +137,16 @@ describe('suggestCategoryWithAI', () => {
     await expect(
       suggestCategoryWithAI('Luigi mysterious trattoria xyzzy'),
     ).resolves.toEqual({ categoryId: null })
+  })
+
+  it('bounds the provider call with the configured timeout and no retries', async () => {
+    await suggestCategoryWithAI('Luigi mysterious trattoria xyzzy')
+
+    const request = vi.mocked(generateText).mock.calls.at(-1)?.[0] as {
+      maxRetries?: number
+      timeout?: number
+    }
+    expect(request.maxRetries).toBe(0)
+    expect(request.timeout).toBe(30_000)
   })
 })

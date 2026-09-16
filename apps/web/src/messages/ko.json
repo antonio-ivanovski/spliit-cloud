@@ -439,7 +439,7 @@
         "title": "영수증도 가져오기",
         "description": "Spliit Cloud는 기존 spliit.app 그룹의 영수증 이미지를 안전하게 복사하고, 정규화된 JPEG 버전을 Cloud 저장소에 저장할 수 있습니다.",
         "fetchFailed": "원본 이미지를 다운로드할 수 없습니다.",
-        "tooLarge": "정규화된 이미지가 여전히 2 MiB보다 큽니다.",
+        "tooLarge": "정규화된 이미지가 여전히 {maxSize}보다 큽니다.",
         "uploadFailed": "정규화된 이미지를 업로드할 수 없습니다.",
         "unknownFailure": "알 수 없는 문서 오류입니다.",
         "discoveryFailed": "spliit.app에서 문서를 찾을 수 없습니다.",
@@ -1408,7 +1408,7 @@
       "retry": "다시 시도"
     },
     "dropTitle": "첨부할 파일을 여기에 놓으세요",
-    "dropDescription": "이미지, PDF 및 일반적인 영수증 문서(최대 2MB)",
+    "dropDescription": "이미지, PDF 및 일반적인 영수증 문서(최대 {maxSize})",
     "chooseFiles": "파일 선택",
     "FileErrorToast": {
       "description": "{fileName}: 업로드 중 문제가 발생했어요. 나중에 다시 시도하거나 다른 파일을 선택해 주세요."
@@ -1463,6 +1463,10 @@
     "UnsupportedToast": {
       "title": "이미지가 필요해요",
       "aiDescription": "AI 영수증 스캔은 이미지 파일만 지원해요."
+    },
+    "TimeoutToast": {
+      "title": "영수증 스캔 시간이 초과됐어요",
+      "description": "시간 초과로 영수증 스캔에 실패했어요. 다시 시도하거나, 더 빠른 모델을 사용하거나, AI_RECEIPT_TIMEOUT_SECONDS 값을 높여 보세요."
     }
   },
   "Information": {

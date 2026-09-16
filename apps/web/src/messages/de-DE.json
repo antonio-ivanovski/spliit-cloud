@@ -551,7 +551,7 @@
         "title": "Belege mitnehmen",
         "description": "Spliit Cloud kann Belegbilder sicher aus der ursprünglichen spliit.app-Gruppe kopieren und normalisierte JPEG-Versionen in deinem Cloud-Speicher ablegen.",
         "fetchFailed": "Das Quelldokument konnte nicht heruntergeladen werden.",
-        "tooLarge": "Das normalisierte Bild ist weiterhin größer als 2 MiB.",
+        "tooLarge": "Das normalisierte Bild ist weiterhin größer als {maxSize}.",
         "uploadFailed": "Das normalisierte Bild konnte nicht hochgeladen werden.",
         "unknownFailure": "Unbekannter Dokumentfehler.",
         "discoveryFailed": "Dokumente auf spliit.app konnten nicht gefunden werden.",
@@ -1134,7 +1134,7 @@
       "retry": "Wiederholen"
     },
     "dropTitle": "Dateien zum Anhängen ablegen",
-    "dropDescription": "Bilder, PDFs und gängige Belegdokumente bis zu 2 MB",
+    "dropDescription": "Bilder, PDFs und gängige Belegdokumente bis zu {maxSize}",
     "chooseFiles": "Dateien auswählen",
     "takePhoto": "Foto aufnehmen",
     "openDocument": "Dokument öffnen",
@@ -1189,6 +1189,10 @@
     "UnsupportedToast": {
       "title": "Bild erforderlich",
       "aiDescription": "Der KI-Belegscan unterstützt nur Bilddateien."
+    },
+    "TimeoutToast": {
+      "title": "Zeitüberschreitung beim KI-Belegscan",
+      "description": "Das Scannen des Belegs ist wegen einer Zeitüberschreitung fehlgeschlagen. Versuche es erneut, verwende ein schnelleres Modell oder erhöhe AI_RECEIPT_TIMEOUT_SECONDS."
     }
   },
   "Balances": {

@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { categoryIdSchema } from '@spliit/domain'
 
 import { getRecentExpenseContext } from '../../../lib/ai/context'
+import { isTimeoutError } from '../../../lib/ai/timeout'
 import { env } from '../../../lib/env'
 import { extractExpenseInformationFromImage } from '../../../lib/receipt-actions'
 import {
@@ -64,20 +65,31 @@ export const extractExpenseInformationFromImageProcedure = protectedProcedure
       ctx.resHeaders,
     )
 
-    const result = await extractExpenseInformationFromImage(
-      input.imageUrl,
-      {
-        currency: input.currency,
-        currencyCode: input.currencyCode,
-      },
-      {
-        recentExpenses: context.expenses,
-        groupContext: context.group,
-        locale: input.locale,
-        translateToLocale: input.translateToLocale,
-        currentExpense: input.currentExpense,
-      },
-    )
+    let result: Awaited<ReturnType<typeof extractExpenseInformationFromImage>>
+    try {
+      result = await extractExpenseInformationFromImage(
+        input.imageUrl,
+        {
+          currency: input.currency,
+          currencyCode: input.currencyCode,
+        },
+        {
+          recentExpenses: context.expenses,
+          groupContext: context.group,
+          locale: input.locale,
+          translateToLocale: input.translateToLocale,
+          currentExpense: input.currentExpense,
+        },
+      )
+    } catch (error) {
+      if (isTimeoutError(error)) {
+        throw new TRPCError({
+          code: 'TIMEOUT',
+          message: `Receipt scanning failed due to timeout after ${env.AI_RECEIPT_TIMEOUT_SECONDS}s`,
+        })
+      }
+      throw error
+    }
     const categoryId = categoryIdSchema.safeParse(result.categoryId)
     return {
       ...result,

@@ -3,7 +3,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 vi.mock('ai', () => ({ generateText: vi.fn() }))
 vi.mock('./ai', () => ({ getModel: vi.fn() }))
 vi.mock('./env', () => ({
-  env: { AI_RECEIPT_MODEL: 'test-receipt-model' },
+  env: {
+    AI_RECEIPT_MODEL: 'test-receipt-model',
+    AI_RECEIPT_TIMEOUT_SECONDS: 120,
+  },
 }))
 
 const { generateText } = await import('ai')
@@ -183,6 +186,24 @@ describe('extractExpenseInformationFromImage', () => {
       mediaType: 'image',
       data: imageUrl,
     })
+  })
+
+  it('bounds the provider call with the configured timeout and no retries', async () => {
+    generateTextMock.mockResolvedValue({
+      text: JSON.stringify({ amount: 1, items: [] }),
+    })
+
+    await extractExpenseInformationFromImage(
+      'https://example.com/receipt.jpg',
+      groupCurrency,
+    )
+
+    const request = generateTextMock.mock.calls[0]?.[0] as {
+      maxRetries?: number
+      timeout?: number
+    }
+    expect(request.maxRetries).toBe(0)
+    expect(request.timeout).toBe(120_000)
   })
 
   it('includes group, locale, and past-expense context as soft hints', async () => {

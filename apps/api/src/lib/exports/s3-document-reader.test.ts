@@ -2,6 +2,8 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { MAX_EXPENSE_DOCUMENT_SIZE } from '@spliit/domain'
 
+import { env } from '../env'
+
 const getS3ObjectMock = vi.hoisted(() => vi.fn())
 vi.mock('../storage', () => ({ getS3Object: getS3ObjectMock }))
 
@@ -43,5 +45,23 @@ describe('s3ExportDocumentReader', () => {
     await expect(
       s3ExportDocumentReader.read(document, new AbortController().signal),
     ).rejects.toThrow('maximum upload size')
+  })
+
+  it('honors a raised MAX_EXPENSE_DOCUMENT_SIZE_MB', async () => {
+    const original = env.MAX_EXPENSE_DOCUMENT_SIZE_MB
+    env.MAX_EXPENSE_DOCUMENT_SIZE_MB = 10
+    try {
+      getS3ObjectMock.mockResolvedValue({
+        Body: new Uint8Array(3 * 1024 ** 2),
+      })
+
+      const bytes = await s3ExportDocumentReader.read(
+        document,
+        new AbortController().signal,
+      )
+      expect(bytes.byteLength).toBe(3 * 1024 ** 2)
+    } finally {
+      env.MAX_EXPENSE_DOCUMENT_SIZE_MB = original
+    }
   })
 })

@@ -526,7 +526,7 @@
         "title": "带上你的收据",
         "description": "Spliit Cloud 可以安全地从原始 spliit.app 群组复制收据图片，并将规范化的 JPEG 版本存储到你的 Cloud 存储中。",
         "fetchFailed": "无法下载源图片。",
-        "tooLarge": "规范化后的图片仍大于 2 MiB。",
+        "tooLarge": "规范化后的图片仍大于 {maxSize}。",
         "uploadFailed": "无法上传规范化后的图片。",
         "unknownFailure": "未知的文档错误。",
         "discoveryFailed": "无法在 spliit.app 上发现文档。",
@@ -1098,7 +1098,7 @@
       "retry": "重试"
     },
     "dropTitle": "将文件拖放到此处以添加附件",
-    "dropDescription": "图片、PDF 以及常见收据文档（最大 2 MB）",
+    "dropDescription": "图片、PDF 以及常见收据文档（最大 {maxSize}）",
     "chooseFiles": "选择文件",
     "FileErrorToast": {
       "description": "{fileName}：上传时出现问题。请稍后重试，或选择其他文件。"
@@ -1153,6 +1153,10 @@
     "UnsupportedToast": {
       "title": "需要图片",
       "aiDescription": "AI 收据扫描仅支持图片文件。"
+    },
+    "TimeoutToast": {
+      "title": "收据扫描超时",
+      "description": "由于超时，收据扫描失败。请重试、使用更快的模型，或调高 AI_RECEIPT_TIMEOUT_SECONDS。"
     }
   },
   "Balances": {

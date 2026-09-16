@@ -526,7 +526,7 @@
         "title": "帶著收據一起來",
         "description": "Spliit Cloud 可以安全地從原始 spliit.app 群組複製收據圖片，並將標準化的 JPEG 版本儲存到你的 Cloud 儲存空間。",
         "fetchFailed": "無法下載來源圖片。",
-        "tooLarge": "標準化後的圖片仍大於 2 MiB。",
+        "tooLarge": "標準化後的圖片仍大於 {maxSize}。",
         "uploadFailed": "無法上傳標準化後的圖片。",
         "unknownFailure": "未知的文件錯誤。",
         "discoveryFailed": "無法在 spliit.app 找到文件。",
@@ -1098,7 +1098,7 @@
       "retry": "重試"
     },
     "dropTitle": "將檔案拖曳到這裡以附加",
-    "dropDescription": "圖片、PDF 及常見收據文件（最大 2 MB）",
+    "dropDescription": "圖片、PDF 及常見收據文件（最大 {maxSize}）",
     "chooseFiles": "選擇檔案",
     "FileErrorToast": {
       "description": "{fileName}：上傳時發生問題。請稍後再試，或選擇其他檔案。"
@@ -1153,6 +1153,10 @@
     "UnsupportedToast": {
       "title": "需要圖片",
       "aiDescription": "AI 收據掃描僅支援圖片檔案。"
+    },
+    "TimeoutToast": {
+      "title": "收據掃描逾時",
+      "description": "由於逾時，收據掃描失敗。請再試一次、使用更快的模型，或調高 AI_RECEIPT_TIMEOUT_SECONDS。"
     }
   },
   "Balances": {

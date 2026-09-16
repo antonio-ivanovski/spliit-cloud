@@ -532,7 +532,7 @@
         "title": "Ota kuitit mukaasi",
         "description": "Spliit Cloud voi kopioida kuittikuvat turvallisesti alkuperäisestä spliit.app-ryhmästä ja tallentaa muunnetut JPEG-versiot Cloud-tallennustilaasi.",
         "fetchFailed": "Lähdekuvaa ei voitu ladata.",
-        "tooLarge": "Muunnettu kuva on edelleen suurempi kuin 2 MiB.",
+        "tooLarge": "Muunnettu kuva on edelleen suurempi kuin {maxSize}.",
         "uploadFailed": "Muunnettua kuvaa ei voitu ladata palveluun.",
         "unknownFailure": "Tuntematon asiakirjavirhe.",
         "discoveryFailed": "Asiakirjoja ei voitu löytää spliit.app-palvelusta.",
@@ -1106,7 +1106,7 @@
       "retry": "Yritä uudelleen"
     },
     "dropTitle": "Pudota liitettävät tiedostot tähän",
-    "dropDescription": "Kuvat, PDF-tiedostot ja yleiset kuittiasiakirjat, enintään 2 Mt",
+    "dropDescription": "Kuvat, PDF-tiedostot ja yleiset kuittiasiakirjat, enintään {maxSize}",
     "chooseFiles": "Valitse tiedostot",
     "takePhoto": "Ota kuva",
     "openDocument": "Avaa asiakirja",
@@ -1161,6 +1161,10 @@
     "UnsupportedToast": {
       "title": "Kuva vaaditaan",
       "aiDescription": "Tekoälykuittiskannaus tukee vain kuvatiedostoja."
+    },
+    "TimeoutToast": {
+      "title": "Kuittiskannauksen aikaraja ylittyi",
+      "description": "Kuittiskannaus epäonnistui aikarajan ylittymisen vuoksi. Yritä uudelleen, käytä nopeampaa mallia tai nosta AI_RECEIPT_TIMEOUT_SECONDS."
     }
   },
   "Balances": {

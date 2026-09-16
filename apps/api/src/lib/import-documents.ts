@@ -49,6 +49,12 @@ const sourceDocumentClaimsSchema = z.object({
 
 export type SourceDocumentClaims = z.infer<typeof sourceDocumentClaimsSchema>
 
+// Safety ceiling for sealed token claims. The effective limit is
+// `MAX_EXPENSE_DOCUMENT_SIZE_MB` (capped at 50 at startup) enforced in the
+// mint/verify handlers; the static schema cannot read per-request env, so it
+// only guards against absurd JWT payloads. Keep in sync with the env max.
+const STAGED_DOCUMENT_SIZE_CEILING = 50 * 1024 * 1024
+
 const stagedDocumentClaimsSchema = z.object({
   aud: z.literal(STAGED_DOCUMENT_AUDIENCE),
   accountId: z.string().min(1),
@@ -57,11 +63,7 @@ const stagedDocumentClaimsSchema = z.object({
   sourceDocumentId: z.string().min(1),
   key: z.string().min(1),
   fileUrl: z.url(),
-  fileSize: z
-    .number()
-    .int()
-    .positive()
-    .max(2 * 1024 * 1024),
+  fileSize: z.number().int().positive().max(STAGED_DOCUMENT_SIZE_CEILING),
   width: z.number().int().positive(),
   height: z.number().int().positive(),
 })
@@ -77,11 +79,7 @@ const cloudStagedDocumentClaimsSchema = z.object({
   fileUrl: z.url(),
   fileName: z.string().nullable(),
   contentType: z.string().nullable(),
-  fileSize: z
-    .number()
-    .int()
-    .nonnegative()
-    .max(2 * 1024 * 1024),
+  fileSize: z.number().int().nonnegative().max(STAGED_DOCUMENT_SIZE_CEILING),
   width: z.number().int().positive().nullable(),
   height: z.number().int().positive().nullable(),
   sha256: z.string().regex(/^[a-f0-9]{64}$/),

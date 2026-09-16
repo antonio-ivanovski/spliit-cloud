@@ -47,6 +47,7 @@ describe('useDeploymentConfig', () => {
     vi.stubEnv('MODE', 'development')
     mockGetFeatures.mockResolvedValue({
       enableExpenseDocuments: false,
+      maxExpenseDocumentSize: 10 * 1024 * 1024,
       enableReceiptExtract: false,
       enableCategoryExtract: false,
       enableBulkCategorize: false,
@@ -72,6 +73,7 @@ describe('useDeploymentConfig', () => {
         oidcProviders: [{ id: 'oidc', name: 'Company SSO' }],
         signupMode: 'invite_only',
         allowUninvitedSignup: false,
+        maxExpenseDocumentSize: 10 * 1024 * 1024,
       })
     })
     expect(mockGetFeatures).toHaveBeenCalledOnce()

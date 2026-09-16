@@ -17,7 +17,7 @@ import {
 
 import { randomId } from '../lib/api/shared'
 import { getApplicationAuthFromRequest } from '../lib/auth/session'
-import { env } from '../lib/env'
+import { env, getMaxExpenseDocumentSizeBytes } from '../lib/env'
 import {
   openSourceDocumentClaims,
   openCloudStagedDocumentClaims,
@@ -287,7 +287,12 @@ export async function mintImportDocumentPresign(input: {
   width: number
   height: number
 }) {
-  if (!isExpenseDocumentSizeWithinLimit(input.fileSize)) {
+  if (
+    !isExpenseDocumentSizeWithinLimit(
+      input.fileSize,
+      getMaxExpenseDocumentSizeBytes(),
+    )
+  ) {
     return Response.json(
       { error: 'File exceeds the maximum upload size' },
       { status: 400 },
@@ -378,7 +383,10 @@ export async function verifyAndPromoteImportDocument(input: {
     metadata.ContentType !== 'image/jpeg' ||
     metadata.ContentLength !== claims.fileSize ||
     !metadata.ContentLength ||
-    !isExpenseDocumentSizeWithinLimit(metadata.ContentLength ?? -1)
+    !isExpenseDocumentSizeWithinLimit(
+      metadata.ContentLength ?? -1,
+      getMaxExpenseDocumentSizeBytes(),
+    )
   ) {
     throw new Error('Staged import document failed validation')
   }
@@ -412,7 +420,12 @@ export async function mintCloudImportDocumentPresign(input: {
   height: number | null
   sha256: string
 }) {
-  if (!isExpenseDocumentSizeWithinLimit(input.fileSize)) {
+  if (
+    !isExpenseDocumentSizeWithinLimit(
+      input.fileSize,
+      getMaxExpenseDocumentSizeBytes(),
+    )
+  ) {
     return Response.json(
       { error: 'File exceeds the maximum upload size' },
       { status: 400 },
@@ -512,7 +525,10 @@ export async function verifyAndPromoteCloudImportDocument(input: {
   if (
     body.byteLength !== claims.fileSize ||
     checksum !== claims.sha256 ||
-    !isExpenseDocumentSizeWithinLimit(body.byteLength)
+    !isExpenseDocumentSizeWithinLimit(
+      body.byteLength,
+      getMaxExpenseDocumentSizeBytes(),
+    )
   ) {
     throw new Error('Staged Cloud import document failed validation')
   }
@@ -566,7 +582,13 @@ async function mintUploadPresign({
       { status: 400 },
     )
   }
-  if (fileSize !== undefined && !isExpenseDocumentSizeWithinLimit(fileSize)) {
+  if (
+    fileSize !== undefined &&
+    !isExpenseDocumentSizeWithinLimit(
+      fileSize,
+      getMaxExpenseDocumentSizeBytes(),
+    )
+  ) {
     return Response.json(
       { error: 'File exceeds the maximum upload size' },
       { status: 400 },

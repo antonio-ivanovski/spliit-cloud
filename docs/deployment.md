@@ -113,9 +113,16 @@ may remain empty.
   Configure the bucket with a lifecycle rule that expires objects under
   `tmp/imports/` after 24 hours. Import retries intentionally retain these
   temporary objects until the database transaction commits; the lifecycle rule
-  removes abandoned browser sessions and interrupted uploads.
+  removes abandoned browser sessions and interrupted uploads. The per-file
+  attachment limit defaults to 2 MB and can be raised with
+  `MAX_EXPENSE_DOCUMENT_SIZE_MB` (up to 50; uploads go directly to S3, so no
+  proxy body-size change is needed, but larger values increase API memory use
+  when exporting groups with documents).
 - AI features require their corresponding `PUBLIC_ENABLE_*` flag and
   `AI_API_KEY`. `AI_PROVIDER`, model names, and `AI_BASE_URL` are optional.
+  Provider calls are bounded by `AI_RECEIPT_TIMEOUT_SECONDS` (default 120),
+  `AI_VOICE_TIMEOUT_SECONDS` (default 120), and `AI_CATEGORY_TIMEOUT_SECONDS`
+  (default 30); raise them when self-hosting a slow model.
 - Web Push requires the public key, private key, and subject together.
 - MCP requires `ENABLE_MCP=true`, `MCP_PUBLIC_URL`, and a dedicated
   `ASSISTANT_CONFIRMATION_SECRET` of at least 32 bytes. Deploy the MCP service

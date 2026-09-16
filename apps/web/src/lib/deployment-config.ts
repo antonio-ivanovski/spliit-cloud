@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useOnlineStatus } from '@/lib/use-online-status'
 import { getTrpcClient } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
+import { MAX_EXPENSE_DOCUMENT_SIZE } from '@spliit/domain'
 
 export type DeploymentConfig = Pick<
   AppRouterOutput['features']['get'],
@@ -14,6 +15,7 @@ export type DeploymentConfig = Pick<
   | 'signupMode'
   | 'allowUninvitedSignup'
   | 'enableAnonymousAuth'
+  | 'maxExpenseDocumentSize'
 >
 
 function getBuildTimeFallback(): DeploymentConfig {
@@ -32,6 +34,7 @@ function getBuildTimeFallback(): DeploymentConfig {
     signupMode: 'open',
     allowUninvitedSignup: true,
     enableAnonymousAuth: false,
+    maxExpenseDocumentSize: MAX_EXPENSE_DOCUMENT_SIZE,
   }
 }
 
@@ -49,6 +52,7 @@ export function useDeploymentConfig(): DeploymentConfig {
       signupMode,
       allowUninvitedSignup,
       enableAnonymousAuth,
+      maxExpenseDocumentSize,
     }): DeploymentConfig => ({
       defaultCurrencyCode,
       enableGoogleOAuth,
@@ -58,6 +62,7 @@ export function useDeploymentConfig(): DeploymentConfig {
       signupMode,
       allowUninvitedSignup,
       enableAnonymousAuth,
+      maxExpenseDocumentSize,
     }),
     staleTime: Infinity,
     enabled: import.meta.env.MODE !== 'test' && isOnline,

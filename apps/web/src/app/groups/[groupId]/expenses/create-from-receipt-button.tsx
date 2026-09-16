@@ -30,6 +30,7 @@ import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
 import { getCurrency } from '@/lib/currency'
+import { useDeploymentConfig } from '@/lib/deployment-config'
 import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { resizeImage, useExpenseDocumentUpload } from '@/lib/upload'
 import {
@@ -60,7 +61,7 @@ import {
 import { AiCaptureDialog } from './ai-capture-dialog'
 import type { GroupShape } from './expense-form/default-values'
 
-const MAX_FILE_SIZE = MAX_EXPENSE_DOCUMENT_SIZE
+const FALLBACK_MAX_FILE_SIZE = MAX_EXPENSE_DOCUMENT_SIZE
 const TRANSLATE_STORAGE_KEY = 'spliit-receipt-translate-to-locale'
 
 function isReceiptImageFile(file: File): boolean {
@@ -68,6 +69,28 @@ function isReceiptImageFile(file: File): boolean {
     file.type.startsWith('image/') ||
     /\.(jpe?g|png|webp|heic|heif)$/i.test(file.name)
   )
+}
+
+/**
+ * True when a receipt-scan mutation failed because the AI provider timed out.
+ * The API maps SDK timeouts to tRPC `TIMEOUT` (`data.code`); the message match
+ * covers proxied/gateway timeouts that arrive without a structured code.
+ */
+function isScanTimeoutError(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false
+  if ('data' in error && error.data && typeof error.data === 'object') {
+    if (
+      'code' in error.data &&
+      (error.data as { code?: unknown }).code === 'TIMEOUT'
+    ) {
+      return true
+    }
+  }
+  if ('code' in error && (error as { code?: unknown }).code === 'TIMEOUT') {
+    return true
+  }
+  const message = 'message' in error ? String(error.message) : ''
+  return /timed? ?out/i.test(message)
 }
 
 function readTranslatePreference(): boolean {
@@ -324,6 +347,8 @@ function ReceiptDialogContent({
   const currentGroup = useCurrentGroupOrNull()
   const group = groupOverride ?? currentGroup?.group
   const locale = useLocale()
+  const maxFileSize =
+    useDeploymentConfig().maxExpenseDocumentSize ?? FALLBACK_MAX_FILE_SIZE
   const { t } = useTranslation(undefined, { keyPrefix: 'CreateFromReceipt' })
   const { t: tExpenseForm } = useTranslation()
   const [pending, setPending] = useState(false)
@@ -404,9 +429,12 @@ function ReceiptDialogContent({
       if (requestId !== requestIdRef.current) return
       console.error(err)
       mascot.react('failure')
+      const timedOut = isScanTimeoutError(err)
       toast({
-        title: t('ErrorToast.title'),
-        description: t('ErrorToast.description'),
+        title: t(timedOut ? 'TimeoutToast.title' : 'ErrorToast.title'),
+        description: t(
+          timedOut ? 'TimeoutToast.description' : 'ErrorToast.description',
+        ),
         variant: 'destructive',
         action: (
           <ToastAction
@@ -418,7 +446,10 @@ function ReceiptDialogContent({
         ),
       })
     } finally {
-      setPending(false)
+      // A stale scan must not clear the spinner of the request that
+      // superseded it — otherwise the dialog goes idle with no result and no
+      // error, which is exactly the reported silent-timeout symptom.
+      if (requestId === requestIdRef.current) setPending(false)
     }
   }
 
@@ -460,12 +491,12 @@ function ReceiptDialogContent({
       mascot.react('thinking')
       const { file: resizedFile, width, height } = await resizeImage(file)
       if (requestId !== requestIdRef.current) return
-      if (!isExpenseDocumentSizeWithinLimit(resizedFile.size)) {
+      if (!isExpenseDocumentSizeWithinLimit(resizedFile.size, maxFileSize)) {
         mascot.react('failure')
         toast({
           title: t('TooBigToast.title'),
           description: t('TooBigToast.description', {
-            maxSize: formatFileSize(MAX_FILE_SIZE, locale),
+            maxSize: formatFileSize(maxFileSize, locale),
             size: formatFileSize(resizedFile.size, locale),
           }),
           variant: 'destructive',
@@ -489,13 +520,16 @@ function ReceiptDialogContent({
       if (requestId !== requestIdRef.current) return
       console.error(err)
       mascot.react('failure')
+      const timedOut = isScanTimeoutError(err)
       toast({
-        title: t('ErrorToast.title'),
-        description: t('ErrorToast.description'),
+        title: t(timedOut ? 'TimeoutToast.title' : 'ErrorToast.title'),
+        description: t(
+          timedOut ? 'TimeoutToast.description' : 'ErrorToast.description',
+        ),
         variant: 'destructive',
       })
     } finally {
-      setPending(false)
+      if (requestId === requestIdRef.current) setPending(false)
     }
   }
 

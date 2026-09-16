@@ -184,6 +184,27 @@ describe('inspectSpliitCloudBundle', () => {
     )
   })
 
+  it('honors a custom per-document limit', async () => {
+    const bytes = new Uint8Array(3 * 1024 * 1024).fill(7)
+    const document = {
+      sourceId: 'document-1',
+      fileName: 'receipt.txt',
+      contentType: 'text/plain',
+      width: null,
+      height: null,
+      path: 'documents/_orphans/document-1__receipt.txt',
+      status: 'INCLUDED',
+      sizeBytes: bytes.byteLength,
+      sha256: await checksum(bytes),
+    }
+    const archive = await bundleWithDocument(document, bytes)
+    await expect(inspectSpliitCloudBundle(archive)).rejects.toThrow(
+      /size limit/i,
+    )
+    const result = await inspectSpliitCloudBundle(archive, 10 * 1024 * 1024)
+    expect(result.kind).toBe('GROUP')
+  })
+
   it('rejects an archive without manifest.json', async () => {
     await expect(
       inspectSpliitCloudBundle(

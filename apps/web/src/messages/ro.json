@@ -538,7 +538,7 @@
         "title": "Adu-ți chitanțele cu tine",
         "description": "Spliit Cloud poate copia în siguranță imaginile chitanțelor din grupul original de pe spliit.app și poate salva versiuni JPEG normalizate în spațiul tău de stocare în cloud.",
         "fetchFailed": "Imaginea sursă nu a putut fi descărcată.",
-        "tooLarge": "Imaginea normalizată depășește în continuare 2 MiB.",
+        "tooLarge": "Imaginea normalizată depășește în continuare {maxSize}.",
         "uploadFailed": "Imaginea normalizată nu a putut fi încărcată.",
         "unknownFailure": "Eroare necunoscută a documentului.",
         "discoveryFailed": "Documentele nu au putut fi descoperite pe spliit.app.",
@@ -1114,7 +1114,7 @@
       "retry": "Reîncearcă"
     },
     "dropTitle": "Trage fișierele pentru a le atașa",
-    "dropDescription": "Imagini, PDF-uri și documente obișnuite pentru bonuri de până la 2 MB",
+    "dropDescription": "Imagini, PDF-uri și documente obișnuite pentru bonuri de până la {maxSize}",
     "chooseFiles": "Alege fișiere",
     "takePhoto": "Fă o fotografie",
     "openDocument": "Deschide documentul",
@@ -1169,6 +1169,10 @@
     "UnsupportedToast": {
       "title": "Imagine necesară",
       "aiDescription": "Scanarea bonurilor cu IA acceptă doar fișiere imagine."
+    },
+    "TimeoutToast": {
+      "title": "Timpul de scanare a bonului a expirat",
+      "description": "Scanarea bonului a eșuat din cauza expirării timpului. Reîncearcă, folosește un model mai rapid sau mărește AI_RECEIPT_TIMEOUT_SECONDS."
     }
   },
   "Balances": {

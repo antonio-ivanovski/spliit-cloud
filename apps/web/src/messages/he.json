@@ -538,7 +538,7 @@
         "title": "הביאו את הקבלות שלכם",
         "description": "Spliit Cloud יכול להעתיק באופן מאובטח תמונות קבלה מהקבוצה המקורית ב‑spliit.app ולשמור גרסאות JPEG אחידות באחסון ה‑Cloud שלכם.",
         "fetchFailed": "לא ניתן להוריד את תמונת המקור.",
-        "tooLarge": "התמונה המנורמלת עדיין גדולה מ‑2 MiB.",
+        "tooLarge": "התמונה המנורמלת עדיין גדולה מ‑{maxSize}.",
         "uploadFailed": "לא ניתן להעלות את התמונה המנורמלת.",
         "unknownFailure": "שגיאה לא ידועה במסמך.",
         "discoveryFailed": "לא ניתן לאתר מסמכים ב‑spliit.app.",
@@ -1114,7 +1114,7 @@
       "retry": "נסה שוב"
     },
     "dropTitle": "גררו קבצים לצירוף",
-    "dropDescription": "תמונות, קובצי PDF ומסמכי קבלה נפוצים עד 2 MB",
+    "dropDescription": "תמונות, קובצי PDF ומסמכי קבלה נפוצים עד {maxSize}",
     "chooseFiles": "בחירת קבצים",
     "takePhoto": "צילום תמונה",
     "openDocument": "פתיחת מסמך",
@@ -1169,6 +1169,10 @@
     "UnsupportedToast": {
       "title": "נדרשת תמונה",
       "aiDescription": "סריקת קבלות ב‑AI תומכת בקובצי תמונה בלבד."
+    },
+    "TimeoutToast": {
+      "title": "תם הזמן לסריקת הקבלה",
+      "description": "סריקת הקבלה נכשלה בגלל תום הזמן. נסה שוב, השתמש במודל מהיר יותר או הגדל את AI_RECEIPT_TIMEOUT_SECONDS."
     }
   },
   "Balances": {

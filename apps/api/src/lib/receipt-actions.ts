@@ -20,6 +20,7 @@ import {
   buildRecentExpensesSection,
   buildTranslationDirective,
 } from './ai/prompt'
+import { timeoutSecondsToMs } from './ai/timeout'
 import { env } from './env'
 
 type ParsedReceiptAIResponse = {
@@ -179,6 +180,10 @@ export async function extractExpenseInformationFromImage(
 
   const { text: rawContent } = await generateText({
     model: await getModel(env.AI_RECEIPT_MODEL),
+    // Bound slow self-hosted models so the tRPC handler cannot hang, and
+    // fail fast instead of retrying an already-timed-out request.
+    maxRetries: 0,
+    timeout: timeoutSecondsToMs(env.AI_RECEIPT_TIMEOUT_SECONDS),
     messages: [
       {
         role: 'user',

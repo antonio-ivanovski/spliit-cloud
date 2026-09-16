@@ -781,6 +781,10 @@
     "UnsupportedToast": {
       "title": "Bild krävs",
       "aiDescription": "AI-kvittoskanning stöder endast bildfiler."
+    },
+    "TimeoutToast": {
+      "title": "Tidsgränsen för kvittoskanningen överskreds",
+      "description": "Kvittoskanningen misslyckades på grund av en timeout. Försök igen, använd en snabbare modell eller höj AI_RECEIPT_TIMEOUT_SECONDS."
     }
   },
   "Currencies": {
@@ -1145,7 +1149,7 @@
       "description": "Den maximala filstorleken är {maxSize}. Din fil är {size}."
     },
     "dropTitle": "Släpp filer här för att bifoga",
-    "dropDescription": "Bilder, PDF-filer och vanliga kvittodokument upp till 2 MB",
+    "dropDescription": "Bilder, PDF-filer och vanliga kvittodokument upp till {maxSize}",
     "chooseFiles": "Välj filer",
     "takePhoto": "Ta foto",
     "openDocument": "Öppna dokument",
@@ -2057,7 +2061,7 @@
         "title": "Ta med dina kvitton",
         "description": "Spliit Cloud kan säkert kopiera kvittobilder från den ursprungliga spliit.app-gruppen och spara normaliserade JPEG-versioner i din Cloud-lagring.",
         "fetchFailed": "Det gick inte att hämta källbilden.",
-        "tooLarge": "Den normaliserade bilden är fortfarande större än 2 MiB.",
+        "tooLarge": "Den normaliserade bilden är fortfarande större än {maxSize}.",
         "uploadFailed": "Det gick inte att ladda upp den normaliserade bilden.",
         "unknownFailure": "Okänt dokumentfel.",
         "discoveryFailed": "Det gick inte att hitta dokument på spliit.app.",

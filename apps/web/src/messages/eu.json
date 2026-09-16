@@ -537,7 +537,7 @@
         "title": "Ekarri zure ordainagiriak",
         "description": "Spliit Cloud-ek spliit.app-eko jatorrizko taldeko ordainagirien irudiak modu seguruan kopiatu eta JPEG bertsio normalizatuak zure hodeiko biltegian gorde ditzake.",
         "fetchFailed": "Ezin izan da iturburuko irudia deskargatu.",
-        "tooLarge": "Irudi normalizatuak 2 MiB baino gehiago ditu oraindik.",
+        "tooLarge": "Irudi normalizatuak {maxSize} baino gehiago ditu oraindik.",
         "uploadFailed": "Ezin izan da irudi normalizatua igo.",
         "unknownFailure": "Dokumentuaren errore ezezaguna.",
         "discoveryFailed": "Ezin izan dira dokumentuak aurkitu spliit.app-en.",
@@ -1113,7 +1113,7 @@
       "retry": "Saiatu berriro"
     },
     "dropTitle": "Utzi fitxategiak eransteko",
-    "dropDescription": "Irudiak, PDFak eta gehienez 2 MB-ko ohiko ordainagiri-dokumentuak",
+    "dropDescription": "Irudiak, PDFak eta gehienez {maxSize}-ko ohiko ordainagiri-dokumentuak",
     "chooseFiles": "Aukeratu fitxategiak",
     "takePhoto": "Atera argazkia",
     "openDocument": "Ireki dokumentua",
@@ -1168,6 +1168,10 @@
     "UnsupportedToast": {
       "title": "Irudia behar da",
       "aiDescription": "IA bidezko ordainagiri-eskaneatzeak irudi-fitxategiak soilik onartzen ditu."
+    },
+    "TimeoutToast": {
+      "title": "Ordainagiria eskaneatzean denbora agortu da",
+      "description": "Ordainagiria eskaneatzeak huts egin du denbora-muga dela eta. Saiatu berriro, erabili eredu azkarrago bat edo handitu AI_RECEIPT_TIMEOUT_SECONDS."
     }
   },
   "Balances": {

@@ -1,5 +1,4 @@
-import { MAX_EXPENSE_DOCUMENT_SIZE } from '@spliit/domain'
-
+import { getMaxExpenseDocumentSizeBytes } from '../env'
 import { getS3Object } from '../storage'
 import type { ExportDocumentReader } from './types'
 
@@ -17,7 +16,7 @@ function assertNotAborted(signal: AbortSignal): void {
 }
 
 function ensureDocumentSize(bytes: Uint8Array): Uint8Array {
-  if (bytes.byteLength > MAX_EXPENSE_DOCUMENT_SIZE) {
+  if (bytes.byteLength > getMaxExpenseDocumentSizeBytes()) {
     throw new Error('Document exceeds the maximum upload size')
   }
   return bytes
@@ -67,7 +66,7 @@ async function readBody(
         if (next.done) break
         const bytes = toBytes(next.value)
         total += bytes.byteLength
-        if (total > MAX_EXPENSE_DOCUMENT_SIZE) {
+        if (total > getMaxExpenseDocumentSizeBytes()) {
           throw new Error('Document exceeds the maximum upload size')
         }
         chunks.push(bytes)
@@ -104,7 +103,7 @@ async function readBody(
         if (next.done) break
         const bytes = toBytes(next.value)
         total += bytes.byteLength
-        if (total > MAX_EXPENSE_DOCUMENT_SIZE) {
+        if (total > getMaxExpenseDocumentSizeBytes()) {
           throw new Error('Document exceeds the maximum upload size')
         }
         chunks.push(bytes)

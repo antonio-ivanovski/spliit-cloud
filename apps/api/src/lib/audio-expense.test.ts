@@ -111,4 +111,21 @@ describe('audio expense extraction', () => {
     expect(result.currencyCode).toBe('XYZ')
     expect(result.issues).toEqual(['unsupportedCurrency'])
   })
+
+  it('bounds the provider call with the configured timeout and no retries', async () => {
+    generateTextMock.mockResolvedValue({ output: {} } as never)
+
+    await extractExpenseInformationFromAudio({
+      audioDataUrl: 'data:audio/wav;base64,AAAA',
+      group,
+      participants: [],
+    })
+
+    const request = generateTextMock.mock.calls[0]?.[0] as {
+      maxRetries?: number
+      timeout?: number
+    }
+    expect(request.maxRetries).toBe(0)
+    expect(request.timeout).toBe(120_000)
+  })
 })

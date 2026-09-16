@@ -7,6 +7,7 @@ import { prismaMock } from '../../../test/state'
 
 const originalDeploymentValues = {
   PUBLIC_DEFAULT_CURRENCY_CODE: env.PUBLIC_DEFAULT_CURRENCY_CODE,
+  MAX_EXPENSE_DOCUMENT_SIZE_MB: env.MAX_EXPENSE_DOCUMENT_SIZE_MB,
   GOOGLE_CLIENT_ID: env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: env.GOOGLE_CLIENT_SECRET,
   GITHUB_CLIENT_ID: env.GITHUB_CLIENT_ID,
@@ -30,6 +31,7 @@ describe('features.get', () => {
   it('returns runtime deployment configuration with the feature flags', async () => {
     Object.assign(env, {
       PUBLIC_DEFAULT_CURRENCY_CODE: 'EUR',
+      MAX_EXPENSE_DOCUMENT_SIZE_MB: 10,
       GOOGLE_CLIENT_ID: 'google-client',
       GOOGLE_CLIENT_SECRET: 'google-secret',
       GITHUB_CLIENT_ID: 'github-client',
@@ -50,6 +52,7 @@ describe('features.get', () => {
 
     expect(result).toMatchObject({
       defaultCurrencyCode: 'EUR',
+      maxExpenseDocumentSize: 10 * 1024 * 1024,
       enableGoogleOAuth: true,
       enableGitHubOAuth: false,
       enableTwitterOAuth: true,

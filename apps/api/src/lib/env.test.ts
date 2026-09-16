@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
-import { getConfiguredOidcProvider, parseEnv } from './env'
+import {
+  getConfiguredOidcProvider,
+  getMaxExpenseDocumentSizeBytes,
+  parseEnv,
+} from './env'
 
 // Pure env-schema tests. Each case passes an isolated literal object to
 // `parseEnv`, so assertions never depend on ambient environment files or
@@ -378,5 +382,49 @@ describe('envSchema — AI', () => {
         AI_API_KEY: 'sk-test-key',
       }),
     ).toThrow(/AI_VOICE_MODEL must be specified/)
+  })
+})
+
+describe('envSchema — expense documents', () => {
+  it('defaults MAX_EXPENSE_DOCUMENT_SIZE_MB to 2', () => {
+    expect(parseTestEnv().MAX_EXPENSE_DOCUMENT_SIZE_MB).toBe(2)
+    expect(getMaxExpenseDocumentSizeBytes({})).toBe(2 * 1024 * 1024)
+  })
+
+  it('treats an empty value as the default', () => {
+    expect(
+      parseTestEnv({ MAX_EXPENSE_DOCUMENT_SIZE_MB: '' })
+        .MAX_EXPENSE_DOCUMENT_SIZE_MB,
+    ).toBe(2)
+  })
+
+  it('parses custom and fractional megabyte values', () => {
+    expect(
+      parseTestEnv({ MAX_EXPENSE_DOCUMENT_SIZE_MB: '10' })
+        .MAX_EXPENSE_DOCUMENT_SIZE_MB,
+    ).toBe(10)
+    expect(
+      getMaxExpenseDocumentSizeBytes({ MAX_EXPENSE_DOCUMENT_SIZE_MB: 0.5 }),
+    ).toBe(512 * 1024)
+  })
+
+  it('rejects non-positive values', () => {
+    expect(() => parseTestEnv({ MAX_EXPENSE_DOCUMENT_SIZE_MB: '0' })).toThrow()
+  })
+
+  it('caps MAX_EXPENSE_DOCUMENT_SIZE_MB at 50 to match the import-token ceiling', () => {
+    expect(
+      parseTestEnv({ MAX_EXPENSE_DOCUMENT_SIZE_MB: '50' })
+        .MAX_EXPENSE_DOCUMENT_SIZE_MB,
+    ).toBe(50)
+    expect(() => parseTestEnv({ MAX_EXPENSE_DOCUMENT_SIZE_MB: '51' })).toThrow()
+  })
+
+  it('rejects non-finite and sub-byte values', () => {
+    for (const value of ['Infinity', '1e9', '0.0000001', 'abc']) {
+      expect(() =>
+        parseTestEnv({ MAX_EXPENSE_DOCUMENT_SIZE_MB: value }),
+      ).toThrow()
+    }
   })
 })

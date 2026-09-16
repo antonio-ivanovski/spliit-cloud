@@ -8,6 +8,7 @@ const envState = vi.hoisted(() => ({
   PUBLIC_ENABLE_CATEGORY_EXTRACT: false,
   AI_CATEGORY_RECENT_EXPENSES_LIMIT: 50,
   AI_CATEGORY_MODEL: 'test-category-model',
+  AI_CATEGORY_TIMEOUT_SECONDS: 30,
   CATEGORY_MEMORY_LIMIT: 200,
 }))
 
@@ -139,5 +140,42 @@ describe('suggestExpenseCategory', () => {
       }),
     ).resolves.toEqual({ categoryId: null })
     expect(generateText).not.toHaveBeenCalled()
+  })
+
+  it('returns null instead of failing when the model times out', async () => {
+    envState.PUBLIC_ENABLE_CATEGORY_EXTRACT = true
+    prismaMock.expense.findMany.mockResolvedValue([
+      { title: 'Luigi mysterious trattoria', categoryId: 'dining-out' },
+    ] as never)
+    generateText.mockRejectedValueOnce(
+      new DOMException('timeout of 30000ms exceeded', 'TimeoutError'),
+    )
+
+    await expect(
+      suggestExpenseCategory({
+        groupId: 'group-1',
+        title: 'Luigi mysterious trattoria xyzzy',
+        allowAi: true,
+      }),
+    ).resolves.toEqual({ categoryId: null })
+    expect(console.info).toHaveBeenCalledWith(
+      expect.stringContaining('"hit":"none"'),
+    )
+  })
+
+  it('rethrows non-timeout model errors', async () => {
+    envState.PUBLIC_ENABLE_CATEGORY_EXTRACT = true
+    prismaMock.expense.findMany.mockResolvedValue([
+      { title: 'Luigi mysterious trattoria', categoryId: 'dining-out' },
+    ] as never)
+    generateText.mockRejectedValueOnce(new Error('provider exploded'))
+
+    await expect(
+      suggestExpenseCategory({
+        groupId: 'group-1',
+        title: 'Luigi mysterious trattoria xyzzy',
+        allowAi: true,
+      }),
+    ).rejects.toThrow('provider exploded')
   })
 })

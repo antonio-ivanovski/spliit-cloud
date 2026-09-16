@@ -538,7 +538,7 @@
         "title": "Traga os seus recibos consigo",
         "description": "O Spliit Cloud pode copiar de forma segura as imagens dos recibos do grupo original do spliit.app e guardar versões JPEG normalizadas no seu armazenamento na nuvem.",
         "fetchFailed": "Não foi possível transferir a imagem de origem.",
-        "tooLarge": "A imagem normalizada continua a exceder 2 MiB.",
+        "tooLarge": "A imagem normalizada continua a exceder {maxSize}.",
         "uploadFailed": "Não foi possível carregar a imagem normalizada.",
         "unknownFailure": "Erro de documento desconhecido.",
         "discoveryFailed": "Não foi possível descobrir documentos em spliit.app.",
@@ -1224,7 +1224,7 @@
       "retry": "Tentar novamente"
     },
     "dropTitle": "Solte os ficheiros para anexar",
-    "dropDescription": "Imagens, PDF e documentos de recibos comuns até 2 MB",
+    "dropDescription": "Imagens, PDF e documentos de recibos comuns até {maxSize}",
     "chooseFiles": "Escolher ficheiros",
     "takePhoto": "Tirar fotografia",
     "openDocument": "Abrir documento",
@@ -1279,6 +1279,10 @@
     "UnsupportedToast": {
       "title": "É necessária uma imagem",
       "aiDescription": "A digitalização de recibos com IA suporta apenas ficheiros de imagem."
+    },
+    "TimeoutToast": {
+      "title": "Tempo esgotado para a digitalização do recibo",
+      "description": "A digitalização do recibo falhou devido ao tempo esgotado. Tenta novamente, usa um modelo mais rápido ou aumenta AI_RECEIPT_TIMEOUT_SECONDS."
     }
   },
   "Balances": {

@@ -349,6 +349,72 @@ describe('ReceiptScanTrigger translate checkbox', () => {
     expect(mockMutateAsync.mock.calls[1][0].translateToLocale).toBe(true)
     expect(mockMutateAsync.mock.calls[1][0].imageUrl).toBe(documents[0].url)
   })
+
+  it('shows the timeout toast when the scan fails with a TIMEOUT error', async () => {
+    let rejectScan: (err: unknown) => void
+    mockMutateAsync.mockImplementationOnce(
+      () =>
+        new Promise((_resolve, reject) => {
+          rejectScan = reject
+        }),
+    )
+
+    await openDialog()
+
+    await waitFor(() => {
+      expect(mockMutateAsync).toHaveBeenCalledTimes(1)
+    })
+
+    await act(async () => {
+      rejectScan!({
+        data: { code: 'TIMEOUT' },
+        message: 'Receipt scanning failed due to timeout after 120s',
+      })
+    })
+
+    await waitFor(() => {
+      expect(mockToast).toHaveBeenCalled()
+    })
+
+    const toastCall = mockToast.mock.calls.at(-1)!
+    expect(toastCall[0].title).toBe('Receipt scanning timed out')
+    expect(toastCall[0].description).toContain(
+      'Receipt scanning failed due to timeout',
+    )
+    expect(toastCall[0].variant).toBe('destructive')
+    // The timeout toast keeps the same Retry action as generic failures.
+    expect(toastCall[0].action).toBeTruthy()
+
+    // The dialog settles instead of hanging on the spinner.
+    await waitForSettledCheckbox()
+  })
+
+  it('shows the generic error toast for non-timeout scan failures', async () => {
+    let rejectScan: (err: unknown) => void
+    mockMutateAsync.mockImplementationOnce(
+      () =>
+        new Promise((_resolve, reject) => {
+          rejectScan = reject
+        }),
+    )
+
+    await openDialog()
+
+    await waitFor(() => {
+      expect(mockMutateAsync).toHaveBeenCalledTimes(1)
+    })
+
+    await act(async () => {
+      rejectScan!(new Error('AI service unavailable'))
+    })
+
+    await waitFor(() => {
+      expect(mockToast).toHaveBeenCalled()
+    })
+
+    const toastCall = mockToast.mock.calls.at(-1)!
+    expect(toastCall[0].title).not.toBe('Receipt scanning timed out')
+  })
 })
 
 describe('ReceiptScanTrigger update protection', () => {

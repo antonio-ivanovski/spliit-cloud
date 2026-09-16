@@ -526,7 +526,7 @@
         "title": "Bawa serta struk Anda",
         "description": "Spliit Cloud dapat menyalin gambar struk dengan aman dari grup spliit.app asli dan menyimpan versi JPEG yang dinormalisasi di penyimpanan Cloud Anda.",
         "fetchFailed": "Gambar sumber tidak dapat diunduh.",
-        "tooLarge": "Gambar yang dinormalisasi masih lebih besar dari 2 MiB.",
+        "tooLarge": "Gambar yang dinormalisasi masih lebih besar dari {maxSize}.",
         "uploadFailed": "Gambar yang dinormalisasi tidak dapat diunggah.",
         "unknownFailure": "Kesalahan dokumen tidak diketahui.",
         "discoveryFailed": "Dokumen di spliit.app tidak dapat ditemukan.",
@@ -1407,7 +1407,7 @@
       "retry": "Ulangi"
     },
     "dropTitle": "Jatuhkan file untuk dilampirkan",
-    "dropDescription": "Gambar, PDF, dan dokumen tanda terima umum hingga 2 MB",
+    "dropDescription": "Gambar, PDF, dan dokumen tanda terima umum hingga {maxSize}",
     "chooseFiles": "Pilih file",
     "takePhoto": "Ambil foto",
     "openDocument": "Buka dokumen",
@@ -1462,6 +1462,10 @@
     "UnsupportedToast": {
       "title": "Gambar diperlukan",
       "aiDescription": "Pemindaian tanda terima dengan AI hanya mendukung file gambar."
+    },
+    "TimeoutToast": {
+      "title": "Waktu pemindaian struk habis",
+      "description": "Pemindaian struk gagal karena waktu habis. Coba lagi, gunakan model yang lebih cepat, atau naikkan AI_RECEIPT_TIMEOUT_SECONDS."
     }
   },
   "Balances": {

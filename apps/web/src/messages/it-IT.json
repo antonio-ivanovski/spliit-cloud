@@ -538,7 +538,7 @@
         "title": "Porta con te le tue ricevute",
         "description": "Spliit Cloud può copiare in modo sicuro le immagini delle ricevute dal gruppo originale di spliit.app e salvare versioni JPEG normalizzate nel tuo spazio di archiviazione cloud.",
         "fetchFailed": "Non è stato possibile scaricare l’immagine originale.",
-        "tooLarge": "L’immagine normalizzata supera ancora i 2 MiB.",
+        "tooLarge": "L’immagine normalizzata supera ancora i {maxSize}.",
         "uploadFailed": "Non è stato possibile caricare l’immagine normalizzata.",
         "unknownFailure": "Errore del documento sconosciuto.",
         "discoveryFailed": "Non è stato possibile trovare i documenti su spliit.app.",
@@ -1114,7 +1114,7 @@
       "retry": "Riprova"
     },
     "dropTitle": "Trascina i file da allegare",
-    "dropDescription": "Immagini, PDF e documenti di ricevute comuni fino a 2 MB",
+    "dropDescription": "Immagini, PDF e documenti di ricevute comuni fino a {maxSize}",
     "chooseFiles": "Scegli file",
     "takePhoto": "Scatta una foto",
     "openDocument": "Apri documento",
@@ -1169,6 +1169,10 @@
     "UnsupportedToast": {
       "title": "Immagine necessaria",
       "aiDescription": "La scansione delle ricevute con l’IA supporta solo i file immagine."
+    },
+    "TimeoutToast": {
+      "title": "Scansione della ricevuta: tempo scaduto",
+      "description": "La scansione della ricevuta non è riuscita a causa del timeout. Riprova, usa un modello più veloce o aumenta AI_RECEIPT_TIMEOUT_SECONDS."
     }
   },
   "Balances": {

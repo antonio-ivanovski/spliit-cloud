@@ -16,6 +16,7 @@ import {
   buildLocaleHint,
   buildRecentExpensesSection,
 } from './ai/prompt'
+import { timeoutSecondsToMs } from './ai/timeout'
 import { env } from './env'
 
 /** Limit of characters to be evaluated. May help avoiding abuse when using AI. */
@@ -64,6 +65,10 @@ export async function suggestCategoryWithAI(
         `
   const { text: rawContent } = await generateText({
     model: await getModel(env.AI_CATEGORY_MODEL),
+    // Bound slow providers so category suggestion cannot hang the caller,
+    // and fail fast instead of retrying an already-timed-out request.
+    maxRetries: 0,
+    timeout: timeoutSecondsToMs(env.AI_CATEGORY_TIMEOUT_SECONDS),
     instructions,
     prompt: description.substring(0, limit),
     reasoning: 'none',

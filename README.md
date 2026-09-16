@@ -277,6 +277,8 @@ AI_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 The model used for receipt extraction defaults to `gpt-5-nano`. Override it with `AI_RECEIPT_MODEL`.
 
+Receipt scans time out after `AI_RECEIPT_TIMEOUT_SECONDS` (default `120`). A timeout surfaces as an explicit error in the app instead of hanging silently — if you self-host a slow model, raise the value so scans can finish.
+
 ### Deduce category from title
 
 You can offer users to automatically deduce the expense category from the title. This feature relies on an AI provider; follow the signup instructions above and configure the following environment variables:
@@ -287,6 +289,8 @@ AI_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
 The model used for category extraction defaults to `gpt-5-nano`. Override it with `AI_CATEGORY_MODEL`.
+
+Voice extraction uses `AI_VOICE_MODEL` with a timeout of `AI_VOICE_TIMEOUT_SECONDS` (default `120`); inline category suggestions time out after `AI_CATEGORY_TIMEOUT_SECONDS` (default `30`) and quietly fall back to no suggestion.
 
 ### Choosing an AI provider
 

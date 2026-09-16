@@ -60,5 +60,10 @@ Getting everyone into a group used to mean one single-use link per person. Now t
 - Support the project from the new [sponsor page](https://spliit.cloud/sponsor) with GitHub Sponsors, Ethereum/Base, Bitcoin, or Lightning (`TBD` by @TBD)
 - Onboard a room of people at once with a scan-only 15-minute Nearby QR code on its own invite tab (one live session per group, joiner names included), plus a Scan to join camera action in the mobile home screen's Groups section (`TBD` by @TBD)
 - Close every page with a simple paper footer: a quiet theme-aware paper band with a subtle grain and the legal/GitHub pill buttons — light paper by day, deep green-black paper by night, no logo, no credit line, no clutter (`TBD` by @TBD)
+- Self-hosters can now raise the expense attachment size limit with `MAX_EXPENSE_DOCUMENT_SIZE_MB` (default `2`); the web UI and API enforce and display the configured limit — closes [#119](https://github.com/antonio-ivanovski/spliit-cloud/issues/119) (`TBD` by @TBD)
+
+### 🐛 Bug fixes
+
+- AI receipt scanning no longer times out silently: slow providers now fail with an explicit timeout error and a retry action, and self-hosters can raise the wait with `AI_RECEIPT_TIMEOUT_SECONDS` (plus `AI_VOICE_TIMEOUT_SECONDS` / `AI_CATEGORY_TIMEOUT_SECONDS` for voice and category suggestions) — closes [#118](https://github.com/antonio-ivanovski/spliit-cloud/issues/118) (`TBD` by @TBD)
 
 **Full Changelog**: TBD

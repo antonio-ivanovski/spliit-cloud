@@ -8,6 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useDeploymentConfig } from '@/lib/deployment-config'
 import {
   classifyImportPayload,
   classifyImportBytes,
@@ -20,6 +21,7 @@ import {
 
 import {
   inspectSpliitCloudBundle,
+  MAX_CLOUD_DOCUMENT_BYTES,
   type CloudBundleInspection,
 } from './cloud-bundle'
 import { DomainSwapCard } from './domain-swap-card'
@@ -86,6 +88,8 @@ export function SourceStep({
   const [isDragging, setIsDragging] = useState(false)
   const [wrongImporter, setWrongImporter] = useState<WrongImporter | null>(null)
   const [pendingHandoff, setPendingHandoff] = useState<File | null>(null)
+  const maxCloudDocumentBytes =
+    useDeploymentConfig().maxExpenseDocumentSize ?? MAX_CLOUD_DOCUMENT_BYTES
 
   const cfg = PROVIDERS[provider]
 
@@ -169,7 +173,9 @@ export function SourceStep({
             }
             throw new Error(t('Groups.Import.Source.cloudZipRequired'))
           }
-          onCloudLoaded?.(await inspectSpliitCloudBundle(file))
+          onCloudLoaded?.(
+            await inspectSpliitCloudBundle(file, maxCloudDocumentBytes),
+          )
           return
         }
 
@@ -192,7 +198,9 @@ export function SourceStep({
           return
         }
         if (picked.format === 'cloud') {
-          onCloudLoaded?.(await inspectSpliitCloudBundle(file))
+          onCloudLoaded?.(
+            await inspectSpliitCloudBundle(file, maxCloudDocumentBytes),
+          )
           return
         }
         const fileText = await readText()
@@ -233,7 +241,7 @@ export function SourceStep({
         onError(message)
       }
     },
-    [provider, onError, onCloudLoaded, onLoaded, t],
+    [provider, onError, onCloudLoaded, onLoaded, t, maxCloudDocumentBytes],
   )
 
   useEffect(() => {

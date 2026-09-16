@@ -532,7 +532,7 @@
         "title": "Makbuzlarınızı yanınızda getirin",
         "description": "Spliit Cloud, orijinal spliit.app grubundaki makbuz görsellerini güvenli bir şekilde kopyalayıp normalize edilmiş JPEG sürümlerini Cloud depolama alanında saklayabilir.",
         "fetchFailed": "Kaynak görsel indirilemedi.",
-        "tooLarge": "Normalize edilmiş görsel hâlâ 2 MiB boyutundan büyük.",
+        "tooLarge": "Normalize edilmiş görsel hâlâ {maxSize} boyutundan büyük.",
         "uploadFailed": "Normalize edilmiş görsel yüklenemedi.",
         "unknownFailure": "Bilinmeyen belge hatası.",
         "discoveryFailed": "spliit.app üzerinde belgeler bulunamadı.",
@@ -1106,7 +1106,7 @@
       "retry": "Tekrar dene"
     },
     "dropTitle": "Eklemek için dosyaları bırakın",
-    "dropDescription": "2 MB’a kadar resimler, PDF’ler ve yaygın makbuz belgeleri",
+    "dropDescription": "{maxSize}’a kadar resimler, PDF’ler ve yaygın makbuz belgeleri",
     "chooseFiles": "Dosyaları seç",
     "FileErrorToast": {
       "description": "{fileName}: yükleme sırasında bir sorun oluştu. Lütfen daha sonra tekrar deneyin veya farklı bir dosya seçin."
@@ -1161,6 +1161,10 @@
     "UnsupportedToast": {
       "title": "Resim gerekli",
       "aiDescription": "Yapay zekâ ile makbuz taraması yalnızca resim dosyalarını destekler."
+    },
+    "TimeoutToast": {
+      "title": "Makbuz taraması zaman aşımına uğradı",
+      "description": "Makbuz taraması zaman aşımı nedeniyle başarısız oldu. Tekrar deneyin, daha hızlı bir model kullanın veya AI_RECEIPT_TIMEOUT_SECONDS değerini artırın."
     }
   },
   "Balances": {

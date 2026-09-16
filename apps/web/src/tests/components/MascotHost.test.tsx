@@ -149,9 +149,7 @@ describe('MascotHost', () => {
       renderHost()
 
       // Home has a primary action, so the host is expanded, not docked.
-      expect(screen.getByTestId('bill-mascot').style.marginBottom).toBe(
-        '100px',
-      )
+      expect(screen.getByTestId('bill-mascot').style.marginBottom).toBe('100px')
     } finally {
       heightSpy.mockRestore()
       footer.remove()

@@ -553,7 +553,7 @@
         "title": "Trae tus recibos contigo",
         "description": "Spliit Cloud puede copiar de forma segura las imágenes de recibos del grupo original de spliit.app y guardar versiones JPEG normalizadas en tu almacenamiento en la nube.",
         "fetchFailed": "No se pudo descargar la imagen de origen.",
-        "tooLarge": "La imagen normalizada sigue superando los 2 MiB.",
+        "tooLarge": "La imagen normalizada sigue superando los {maxSize}.",
         "uploadFailed": "No se pudo subir la imagen normalizada.",
         "unknownFailure": "Error de documento desconocido.",
         "discoveryFailed": "No se pudieron descubrir documentos en spliit.app.",
@@ -1135,7 +1135,7 @@
       "retry": "Reintentar"
     },
     "dropTitle": "Suelta archivos para adjuntarlos",
-    "dropDescription": "Imágenes, PDF y documentos de recibos habituales de hasta 2 MB",
+    "dropDescription": "Imágenes, PDF y documentos de recibos habituales de hasta {maxSize}",
     "chooseFiles": "Elegir archivos",
     "takePhoto": "Hacer una foto",
     "openDocument": "Abrir documento",
@@ -1190,6 +1190,10 @@
     "UnsupportedToast": {
       "title": "Se necesita una imagen",
       "aiDescription": "El escaneo de recibos con IA solo admite archivos de imagen."
+    },
+    "TimeoutToast": {
+      "title": "Se agotó el tiempo de escaneo del recibo",
+      "description": "El escaneo del recibo falló por tiempo de espera agotado. Inténtalo de nuevo, usa un modelo más rápido o aumenta AI_RECEIPT_TIMEOUT_SECONDS."
     }
   },
   "Balances": {

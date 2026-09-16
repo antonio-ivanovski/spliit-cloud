@@ -15,16 +15,20 @@ import {
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
+import { useLocale } from '@/i18n/react'
 import { getApiBaseUrl } from '@/lib/api-url'
+import { useDeploymentConfig } from '@/lib/deployment-config'
 import { resizeImage, uploadToPresignedUrl } from '@/lib/upload'
+import { formatFileSize } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
+import { MAX_EXPENSE_DOCUMENT_SIZE } from '@spliit/domain'
 import type { NormalizedSource } from '@spliit/domain/import'
 
 import type { CloudGroupBundleInspection } from './cloud-bundle'
 import type { CloudStagedDocument } from './cloud-import-flow'
 import { WizardNav } from './wizard-nav'
 
-const MAX_FILE_SIZE = 2 * 1024 ** 2
+const FALLBACK_MAX_FILE_SIZE = MAX_EXPENSE_DOCUMENT_SIZE
 
 type Failure = {
   expenseTitle: string
@@ -141,6 +145,9 @@ export function DocumentsStep({
   onContinue,
 }: Props) {
   const { t } = useTranslation()
+  const locale = useLocale()
+  const maxFileSize =
+    useDeploymentConfig().maxExpenseDocumentSize ?? FALLBACK_MAX_FILE_SIZE
   const discover = trpc.groups.discoverImportDocuments.useMutation()
   const presign = trpc.uploads.importDocumentPresign.useMutation()
   const cloudPresign = trpc.uploads.cloudImportDocumentPresign.useMutation()
@@ -386,8 +393,12 @@ export function DocumentsStep({
             type: blob.type,
           })
           const resized = await resizeImage(file)
-          if (resized.file.size > MAX_FILE_SIZE) {
-            throw new Error(t('Groups.Import.Documents.tooLarge'))
+          if (resized.file.size > maxFileSize) {
+            throw new Error(
+              t('Groups.Import.Documents.tooLarge', {
+                maxSize: formatFileSize(maxFileSize, locale),
+              }),
+            )
           }
 
           const staged = await presign.mutateAsync({
@@ -537,7 +548,8 @@ export function DocumentsStep({
                   ? t('Groups.Import.Cloud.documentsSummary', {
                       included: cloudAvailableDocumentCount,
                       total: cloudTotalDocumentCount,
-                      maxSize: MAX_FILE_SIZE / 1024 / 1024,
+                      maxSize:
+                        Math.round((maxFileSize / 1024 / 1024) * 100) / 100,
                     })
                   : t('Groups.Import.Documents.cloudNoDocumentsAvailable')}
               </p>

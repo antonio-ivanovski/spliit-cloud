@@ -544,7 +544,7 @@
         "title": "Zabierz paragony ze sobą",
         "description": "Spliit Cloud może bezpiecznie skopiować obrazy paragonów z oryginalnej grupy na spliit.app i zapisać znormalizowane wersje JPEG w Twojej chmurze.",
         "fetchFailed": "Nie udało się pobrać obrazu źródłowego.",
-        "tooLarge": "Znormalizowany obraz nadal jest większy niż 2 MiB.",
+        "tooLarge": "Znormalizowany obraz nadal jest większy niż {maxSize}.",
         "uploadFailed": "Nie udało się przesłać znormalizowanego obrazu.",
         "unknownFailure": "Nieznany błąd dokumentu.",
         "discoveryFailed": "Nie udało się znaleźć dokumentów na spliit.app.",
@@ -1122,7 +1122,7 @@
       "retry": "Ponów"
     },
     "dropTitle": "Upuść pliki, aby je dołączyć",
-    "dropDescription": "Obrazy, pliki PDF i typowe dokumenty paragonów do 2 MB",
+    "dropDescription": "Obrazy, pliki PDF i typowe dokumenty paragonów do {maxSize}",
     "chooseFiles": "Wybierz pliki",
     "takePhoto": "Zrób zdjęcie",
     "openDocument": "Otwórz dokument",
@@ -1177,6 +1177,10 @@
     "UnsupportedToast": {
       "title": "Wymagany obraz",
       "aiDescription": "Skanowanie paragonów za pomocą AI obsługuje tylko pliki graficzne."
+    },
+    "TimeoutToast": {
+      "title": "Limit czasu skanowania paragonu upłynął",
+      "description": "Skanowanie paragonu nie powiodło się z powodu przekroczenia limitu czasu. Spróbuj ponownie, użyj szybszego modelu lub zwiększ AI_RECEIPT_TIMEOUT_SECONDS."
     }
   },
   "Balances": {
