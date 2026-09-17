@@ -69,7 +69,15 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
   const completeProfileCallbackURL = `${webOrigin}${completeProfilePath}`
 
   const [requestedMode, setRequestedMode] = useState<Mode>(initialMode)
-  const [emailVariant, setEmailVariant] = useState<EmailVariant>('magic-link')
+  // Last sign-in method recorded by the better-auth `lastLoginMethod`
+  // plugin (cookie, client-readable). Read once: it only changes on sign-in,
+  // which navigates away from this panel.
+  const [lastLoginMethod] = useState<string | null>(() =>
+    authClient.getLastUsedLoginMethod(),
+  )
+  const [emailVariant, setEmailVariant] = useState<EmailVariant>(() =>
+    lastLoginMethod === 'email' ? 'password' : 'magic-link',
+  )
   const [email, setEmail] = useState<string>(initialEmail ?? '')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -275,6 +283,7 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     password,
     confirmPassword,
     successState,
+    lastLoginMethod,
     redirectTo,
     completeProfilePath,
     canSubmitPassword,

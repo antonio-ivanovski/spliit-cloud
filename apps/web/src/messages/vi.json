@@ -819,7 +819,8 @@
     },
     "signInWithX": "Đăng nhập bằng X",
     "signInWithOidc": "Đăng nhập bằng {name}",
-    "signInAnonymously": "Ẩn danh"
+    "signInAnonymously": "Ẩn danh",
+    "lastUsed": "Dùng gần đây"
   },
   "AccountSettings": {
     "title": "Cài đặt tài khoản",

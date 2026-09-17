@@ -61,6 +61,7 @@ Getting everyone into a group used to mean one single-use link per person. Now t
 - Onboard a room of people at once with a scan-only 15-minute Nearby QR code on its own invite tab (one live session per group, joiner names included), plus a Scan to join camera action in the mobile home screen's Groups section (`TBD` by @TBD)
 - Close every page with a simple paper footer: a quiet theme-aware paper band with a subtle grain and the legal/GitHub pill buttons — light paper by day, deep green-black paper by night, no logo, no credit line, no clutter (`TBD` by @TBD)
 - Self-hosters can now raise the expense attachment size limit with `MAX_EXPENSE_DOCUMENT_SIZE_MB` (default `2`); the web UI and API enforce and display the configured limit — closes [#119](https://github.com/antonio-ivanovski/spliit-cloud/issues/119) (`TBD` by @TBD)
+- Show a "Last used" badge on the sign-in method you used most recently (social, magic link, password, or guest), and preselect the matching email tab (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
 

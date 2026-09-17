@@ -479,7 +479,8 @@
     },
     "signInWithX": "X से जारी रखें",
     "signInWithOidc": "{name} से जारी रखें",
-    "signInAnonymously": "अनाम"
+    "signInAnonymously": "अनाम",
+    "lastUsed": "पिछला इस्तेमाल"
   },
   "Balances": {
     "title": "शेष राशि",

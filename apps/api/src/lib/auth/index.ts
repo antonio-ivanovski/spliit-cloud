@@ -11,6 +11,7 @@ import {
 } from 'better-auth/api'
 import {
   jwt,
+  lastLoginMethod,
   magicLink,
   openAPI,
   type Jwk,
@@ -888,6 +889,16 @@ export const auth = betterAuth({
       // ordinary `/get-session` reads depend on the OAuth signing key.
       disableSettingJwtHeader: true,
       adapter: testJwtAdapter,
+    }),
+    // Tracks the most recent sign-in method in a JS-readable cookie
+    // (`better-auth.last_used_login_method`) so the web login panel can show
+    // a "Last used" hint. Cookie-only: no database field. The default
+    // resolver covers email, OAuth callbacks (`/callback/:id`), and magic
+    // link; `customResolveMethod` adds anonymous guest sign-in, which the
+    // plugin does not detect on its own.
+    lastLoginMethod({
+      customResolveMethod: (ctx) =>
+        ctx.path === '/sign-in/anonymous' ? 'anonymous' : null,
     }),
     magicLink({
       disableSignUp: false,

@@ -1521,7 +1521,8 @@
     },
     "signInWithX": "Продовжити через X",
     "signInWithOidc": "Продовжити через {name}",
-    "signInAnonymously": "Анонім"
+    "signInAnonymously": "Анонім",
+    "lastUsed": "Востаннє використано"
   },
   "CompleteProfile": {
     "title": "Заповніть свій профіль",

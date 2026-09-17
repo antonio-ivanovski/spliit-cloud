@@ -1804,7 +1804,8 @@
     },
     "signInWithX": "Xで続ける",
     "signInWithOidc": "{name}で続ける",
-    "signInAnonymously": "匿名"
+    "signInAnonymously": "匿名",
+    "lastUsed": "前回使用"
   },
   "CompleteProfile": {
     "title": "プロフィールを完成",

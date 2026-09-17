@@ -483,7 +483,8 @@
     },
     "signInWithX": "X দিয়ে চালিয়ে যান",
     "signInWithOidc": "{name} দিয়ে চালিয়ে যান",
-    "signInAnonymously": "বেনামী"
+    "signInAnonymously": "বেনামী",
+    "lastUsed": "সর্বশেষ ব্যবহৃত"
   },
   "Balances": {
     "title": "ব্যালেন্স",

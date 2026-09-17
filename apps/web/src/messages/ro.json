@@ -1821,7 +1821,8 @@
     },
     "signInWithX": "Continuă cu X",
     "signInWithOidc": "Continuă cu {name}",
-    "signInAnonymously": "Anonim"
+    "signInAnonymously": "Anonim",
+    "lastUsed": "Ultima utilizare"
   },
   "CompleteProfile": {
     "title": "Completează-ți profilul",

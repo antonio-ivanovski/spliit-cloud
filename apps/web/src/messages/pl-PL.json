@@ -1521,7 +1521,8 @@
     },
     "signInWithX": "Kontynuuj przez X",
     "signInWithOidc": "Kontynuuj przez {name}",
-    "signInAnonymously": "Anonimowy"
+    "signInAnonymously": "Anonimowy",
+    "lastUsed": "Ostatnio używane"
   },
   "CompleteProfile": {
     "title": "Uzupełnij swój profil",

@@ -1843,7 +1843,8 @@
     },
     "signInWithX": "X로 계속하기",
     "signInWithOidc": "{name}(으)로 계속하기",
-    "signInAnonymously": "익명"
+    "signInAnonymously": "익명",
+    "lastUsed": "최근 사용"
   },
   "CompleteProfile": {
     "title": "프로필 완성하기",

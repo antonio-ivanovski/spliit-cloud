@@ -1844,7 +1844,8 @@
     },
     "signInWithX": "Weiter mit X",
     "signInWithOidc": "Weiter mit {name}",
-    "signInAnonymously": "Anonym"
+    "signInAnonymously": "Anonym",
+    "lastUsed": "Zuletzt verwendet"
   },
   "CompleteProfile": {
     "title": "Profil vervollständigen",

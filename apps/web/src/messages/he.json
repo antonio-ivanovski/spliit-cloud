@@ -1821,7 +1821,8 @@
     },
     "signInWithX": "המשך עם X",
     "signInWithOidc": "המשך עם {name}",
-    "signInAnonymously": "אנונימי"
+    "signInAnonymously": "אנונימי",
+    "lastUsed": "שימוש אחרון"
   },
   "CompleteProfile": {
     "title": "השלם את הפרופיל שלך",

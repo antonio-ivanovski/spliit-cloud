@@ -1812,7 +1812,8 @@
     },
     "signInWithX": "Jatka X:llä",
     "signInWithOidc": "Jatka: {name}",
-    "signInAnonymously": "Nimetön"
+    "signInAnonymously": "Nimetön",
+    "lastUsed": "Viimeksi käytetty"
   },
   "CompleteProfile": {
     "title": "Täydennä profiilisi",

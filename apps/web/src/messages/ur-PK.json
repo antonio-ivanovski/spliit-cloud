@@ -479,7 +479,8 @@
     },
     "signInWithX": "X کے ساتھ جاری رکھیں",
     "signInWithOidc": "{name} کے ساتھ جاری رکھیں",
-    "signInAnonymously": "گمنام"
+    "signInAnonymously": "گمنام",
+    "lastUsed": "آخری استعمال"
   },
   "Balances": {
     "title": "بیلنس",

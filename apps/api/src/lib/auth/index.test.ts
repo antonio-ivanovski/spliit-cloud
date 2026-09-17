@@ -44,6 +44,8 @@ const realAuthModule = (await vi.importActual('./index')) as {
           disableDeleteAnonymousUser?: boolean
           generateName?: (ctx: { headers?: Headers }) => string
           generateRandomEmail?: () => string
+          storeInDatabase?: boolean
+          customResolveMethod?: (ctx: { path?: string }) => string | null
         }
       }>
       emailVerification?: {
@@ -315,6 +317,32 @@ describe('better-auth emailVerification config', () => {
     expect(warn).toHaveBeenCalledWith(
       expect.stringContaining('auth-email-recipient'),
     )
+  })
+})
+
+describe('better-auth last login method tracking', () => {
+  it('registers the last-login-method plugin in cookie-only mode', () => {
+    // Cookie-only keeps the hint per browser without a database field on
+    // the Account model; the web login panel reads it to show "Last used".
+    const plugin = realAuthModule.auth.options.plugins?.find(
+      (candidate) => candidate.id === 'last-login-method',
+    )
+    expect(plugin).toBeDefined()
+    expect(plugin?.options?.storeInDatabase).not.toBe(true)
+  })
+
+  it('resolves anonymous guest sign-in as a trackable method', () => {
+    // The plugin's default resolver does not know the anonymous endpoint,
+    // so customResolveMethod maps it to "anonymous" and defers to the
+    // default resolution (null) for everything else.
+    const plugin = realAuthModule.auth.options.plugins?.find(
+      (candidate) => candidate.id === 'last-login-method',
+    )
+    const resolveMethod = plugin?.options?.customResolveMethod
+    expect(resolveMethod).toBeDefined()
+    expect(resolveMethod?.({ path: '/sign-in/anonymous' })).toBe('anonymous')
+    expect(resolveMethod?.({ path: '/sign-in/email' })).toBeNull()
+    expect(resolveMethod?.({ path: '/callback/google' })).toBeNull()
   })
 })
 

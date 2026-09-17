@@ -824,7 +824,8 @@
     },
     "signInWithX": "Continue with X",
     "signInWithOidc": "Continue with {name}",
-    "signInAnonymously": "Anonymous"
+    "signInAnonymously": "Anonymous",
+    "lastUsed": "Last used"
   },
   "AccountSettings": {
     "title": "Account settings",

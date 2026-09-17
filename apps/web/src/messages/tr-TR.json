@@ -1503,7 +1503,8 @@
     },
     "signInWithX": "X ile devam et",
     "signInWithOidc": "{name} ile devam et",
-    "signInAnonymously": "Anonim"
+    "signInAnonymously": "Anonim",
+    "lastUsed": "Son kullanılan"
   },
   "CompleteProfile": {
     "title": "Profilinizi tamamlayın",

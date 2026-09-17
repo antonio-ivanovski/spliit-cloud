@@ -1521,7 +1521,8 @@
     },
     "signInWithX": "Pokračovat přes X",
     "signInWithOidc": "Pokračovat přes {name}",
-    "signInAnonymously": "Anonymní"
+    "signInAnonymously": "Anonymní",
+    "lastUsed": "Naposledy použito"
   },
   "CompleteProfile": {
     "title": "Dokončete svůj profil",

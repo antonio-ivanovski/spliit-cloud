@@ -479,7 +479,8 @@
     },
     "signInWithX": "Fortsätt med X",
     "signInWithOidc": "Fortsätt med {name}",
-    "signInAnonymously": "Anonym"
+    "signInAnonymously": "Anonym",
+    "lastUsed": "Senast använt"
   },
   "Balances": {
     "title": "Balanser",

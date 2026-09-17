@@ -18,6 +18,7 @@ const {
   mockDeploymentConfig,
   mockMascotReact,
   mockSearch,
+  mockGetLastUsedLoginMethod,
 } = vi.hoisted(() => ({
   mockSignInEmail: vi.fn(),
   mockSignUpEmail: vi.fn(),
@@ -39,6 +40,7 @@ const {
     maxExpenseDocumentSize: 2 * 1024 * 1024,
   },
   mockMascotReact: vi.fn(),
+  mockGetLastUsedLoginMethod: vi.fn(),
   mockSearch: {
     redirect: undefined as string | undefined,
     mode: undefined as 'sign-in' | 'sign-up' | undefined,
@@ -59,6 +61,7 @@ vi.mock('@/lib/auth', () => ({
       email: mockSignUpEmail,
     },
     getSession: mockGetSession,
+    getLastUsedLoginMethod: mockGetLastUsedLoginMethod,
   },
 }))
 
@@ -126,6 +129,7 @@ describe('AuthPanel', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     sessionStorage.clear()
+    mockGetLastUsedLoginMethod.mockReturnValue(null)
     mockDeploymentConfig.enableGoogleOAuth = false
     mockDeploymentConfig.enableGitHubOAuth = false
     mockDeploymentConfig.enableTwitterOAuth = false
@@ -363,6 +367,62 @@ describe('AuthPanel', () => {
       },
       { headers: { 'X-Spliit-Invite-Token': 'link-invite-token' } },
     )
+  })
+
+  // ── Last used login method ──────────────────────────────────────
+
+  it('shows a Last used badge on the matching social button', () => {
+    mockDeploymentConfig.enableGoogleOAuth = true
+    mockDeploymentConfig.enableGitHubOAuth = true
+    mockGetLastUsedLoginMethod.mockReturnValue('google')
+
+    render(<AuthPanel />)
+
+    expect(
+      screen.getByRole('button', { name: /Continue with Google/ }),
+    ).toHaveTextContent('Last used')
+    expect(
+      screen.getByRole('button', { name: 'Continue with GitHub' }),
+    ).not.toHaveTextContent('Last used')
+  })
+
+  it('defaults to the password tab when the last method was email', () => {
+    mockGetLastUsedLoginMethod.mockReturnValue('email')
+
+    render(<AuthPanel />)
+
+    expect(screen.getByLabelText('Password')).toBeInTheDocument()
+    expect(screen.getByRole('tab', { name: /password/i })).toHaveTextContent(
+      'Last used',
+    )
+  })
+
+  it('shows a Last used badge on the magic-link tab', () => {
+    mockGetLastUsedLoginMethod.mockReturnValue('magic-link')
+
+    render(<AuthPanel />)
+
+    expect(screen.getByRole('tab', { name: /magic link/i })).toHaveTextContent(
+      'Last used',
+    )
+  })
+
+  it('shows a Last used badge on the anonymous button', () => {
+    mockGetLastUsedLoginMethod.mockReturnValue('anonymous')
+
+    render(<AuthPanel />)
+
+    expect(screen.getByRole('button', { name: /Anonymous/ })).toHaveTextContent(
+      'Last used',
+    )
+  })
+
+  it('shows no Last used badges without a stored method', () => {
+    mockDeploymentConfig.enableGoogleOAuth = true
+
+    render(<AuthPanel />)
+
+    expect(screen.queryByText('Last used')).not.toBeInTheDocument()
   })
 
   // ── Forgot password link ────────────────────────────────────────────

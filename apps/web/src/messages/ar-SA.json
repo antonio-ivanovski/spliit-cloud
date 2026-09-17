@@ -2801,7 +2801,8 @@
     },
     "signInWithX": "تسجيل الدخول عبر X",
     "signInWithOidc": "تسجيل الدخول عبر {name}",
-    "signInAnonymously": "مجهول"
+    "signInAnonymously": "مجهول",
+    "lastUsed": "آخر استخدام"
   },
   "Footer": {
     "privacy": "الخصوصية",

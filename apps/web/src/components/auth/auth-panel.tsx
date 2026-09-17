@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useOnlineStatus } from '@/lib/use-online-status'
@@ -31,6 +32,7 @@ export function AuthPanel({
     password,
     confirmPassword,
     successState,
+    lastLoginMethod,
     canSubmitPassword,
     canSignUp,
     hasEmailInvitation,
@@ -82,6 +84,7 @@ export function AuthPanel({
         twitterEnabled={twitterEnabled}
         oidcProviders={oidcProviders}
         disabled={!isOnline || emailAuth.isPending || magicLink.isPending}
+        lastUsedMethod={lastLoginMethod}
         onGoogle={handleGoogle}
         onGithub={handleGithub}
         onTwitter={handleTwitter}
@@ -106,8 +109,22 @@ export function AuthPanel({
           className="flex flex-col gap-4"
         >
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="magic-link">{t('magicLinkTab')}</TabsTrigger>
-            <TabsTrigger value="password">{t('passwordTab')}</TabsTrigger>
+            <TabsTrigger value="magic-link">
+              {t('magicLinkTab')}
+              {lastLoginMethod === 'magic-link' && (
+                <Badge variant="secondary" className="ms-1.5">
+                  {t('lastUsed')}
+                </Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="password">
+              {t('passwordTab')}
+              {lastLoginMethod === 'email' && (
+                <Badge variant="secondary" className="ms-1.5">
+                  {t('lastUsed')}
+                </Badge>
+              )}
+            </TabsTrigger>
           </TabsList>
         </Tabs>
 

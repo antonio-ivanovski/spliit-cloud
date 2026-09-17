@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import githubSvg from '@/components/auth/github.svg'
 import googleSvg from '@/components/auth/google.svg'
 import xSvg from '@/components/auth/x.svg'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 
 export function SocialButtons({
@@ -12,6 +13,7 @@ export function SocialButtons({
   twitterEnabled,
   oidcProviders,
   disabled,
+  lastUsedMethod,
   onGoogle,
   onGithub,
   onTwitter,
@@ -23,6 +25,7 @@ export function SocialButtons({
   twitterEnabled: boolean
   oidcProviders: Array<{ id: string; name: string }>
   disabled: boolean
+  lastUsedMethod: string | null
   onGoogle: () => void
   onGithub: () => void
   onTwitter: () => void
@@ -30,6 +33,13 @@ export function SocialButtons({
   onAnonymous: () => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
+
+  const lastUsedBadge = (method: string) =>
+    lastUsedMethod === method ? (
+      <Badge variant="secondary" className="ms-2">
+        {t('lastUsed')}
+      </Badge>
+    ) : null
 
   return (
     <section className="flex flex-col gap-3">
@@ -43,6 +53,7 @@ export function SocialButtons({
         >
           <img src={googleSvg} alt="" className="me-2 h-4 w-4 dark:invert" />
           {t('signInWithGoogle')}
+          {lastUsedBadge('google')}
         </Button>
       )}
       {githubEnabled && (
@@ -55,6 +66,7 @@ export function SocialButtons({
         >
           <img src={githubSvg} alt="" className="me-2 h-4 w-4 dark:invert" />
           {t('signInWithGithub')}
+          {lastUsedBadge('github')}
         </Button>
       )}
       {twitterEnabled && (
@@ -67,6 +79,7 @@ export function SocialButtons({
         >
           <img src={xSvg} alt="" className="me-2 h-4 w-4 dark:invert" />
           {t('signInWithX')}
+          {lastUsedBadge('twitter')}
         </Button>
       )}
       {oidcProviders.map((provider) => (
@@ -80,6 +93,7 @@ export function SocialButtons({
         >
           <KeyRound className="me-2 h-4 w-4" />
           {t('signInWithOidc', { name: provider.name })}
+          {lastUsedBadge(provider.id)}
         </Button>
       ))}
       <Button
@@ -91,6 +105,7 @@ export function SocialButtons({
       >
         <HatGlasses className="me-2 h-4 w-4" />
         {t('signInAnonymously')}
+        {lastUsedBadge('anonymous')}
       </Button>
     </section>
   )

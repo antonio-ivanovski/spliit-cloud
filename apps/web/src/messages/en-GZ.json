@@ -524,7 +524,8 @@
     },
     "signInWithX": "continue with X",
     "signInWithOidc": "continue with {name}",
-    "signInAnonymously": "Anon"
+    "signInAnonymously": "Anon",
+    "lastUsed": "last used"
   },
   "Balances": {
     "title": "balance check",

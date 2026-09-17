@@ -1804,7 +1804,8 @@
     },
     "signInWithX": "Lanjutkan dengan X",
     "signInWithOidc": "Lanjutkan dengan {name}",
-    "signInAnonymously": "Anonim"
+    "signInAnonymously": "Anonim",
+    "lastUsed": "Terakhir digunakan"
   },
   "CompleteProfile": {
     "title": "Lengkapi profil Anda",

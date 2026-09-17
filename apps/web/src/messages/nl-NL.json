@@ -1844,7 +1844,8 @@
     },
     "signInWithX": "Doorgaan met X",
     "signInWithOidc": "Doorgaan met {name}",
-    "signInAnonymously": "Anoniem"
+    "signInAnonymously": "Anoniem",
+    "lastUsed": "Laatst gebruikt"
   },
   "CompleteProfile": {
     "title": "Voltooi je profiel",

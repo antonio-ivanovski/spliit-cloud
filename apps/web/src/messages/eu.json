@@ -1820,7 +1820,8 @@
     },
     "signInWithX": "Jarraitu X-ekin",
     "signInWithOidc": "Jarraitu {name}-rekin",
-    "signInAnonymously": "Anonimoa"
+    "signInAnonymously": "Anonimoa",
+    "lastUsed": "Azken erabilera"
   },
   "CompleteProfile": {
     "title": "Osatu zure profila",

@@ -1495,7 +1495,8 @@
     },
     "signInWithX": "使用 X 繼續",
     "signInWithOidc": "使用 {name} 繼續",
-    "signInAnonymously": "匿名"
+    "signInAnonymously": "匿名",
+    "lastUsed": "上次使用"
   },
   "CompleteProfile": {
     "title": "完善您的個人資料",

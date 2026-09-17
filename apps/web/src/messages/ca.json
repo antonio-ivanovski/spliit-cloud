@@ -1821,7 +1821,8 @@
     },
     "signInWithX": "Continua amb X",
     "signInWithOidc": "Continua amb {name}",
-    "signInAnonymously": "Anònim"
+    "signInAnonymously": "Anònim",
+    "lastUsed": "Darrer ús"
   },
   "CompleteProfile": {
     "title": "Completa el teu perfil",

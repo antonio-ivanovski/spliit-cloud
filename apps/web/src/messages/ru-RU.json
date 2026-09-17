@@ -1521,7 +1521,8 @@
     },
     "signInWithX": "Продолжить через X",
     "signInWithOidc": "Продолжить через {name}",
-    "signInAnonymously": "Аноним"
+    "signInAnonymously": "Аноним",
+    "lastUsed": "Последний раз"
   },
   "CompleteProfile": {
     "title": "Заполните профиль",
