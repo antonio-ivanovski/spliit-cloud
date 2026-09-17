@@ -78,7 +78,14 @@ function ResponsiveDialog(props: ResponsiveDialogProps) {
 
 // ── Trigger ─────────────────────────────────────────────────────────────
 
-type ResponsiveDialogTriggerProps = React.ComponentProps<typeof DialogTrigger> & {
+type ResponsiveDialogTriggerProps = Omit<
+  React.ComponentProps<typeof DialogTrigger>,
+  // Base UI brands Dialog and Drawer handles separately (`DialogHandle` vs
+  // `DrawerHandle`), so an explicit handle cannot be shared across the
+  // breakpoint. The trigger always renders inside `ResponsiveDialog`, which
+  // provides the handle through context.
+  'handle'
+> & {
   render?: React.ReactElement
 }
 

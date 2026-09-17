@@ -9,8 +9,8 @@
 // matching Zod schema in `@spliit/domain/activities`, which is the same
 // schema used to validate runtime writes and reads.
 //
-// This file must be a module (`export {}`) so the global declaration
-// merges with the one Prisma Client expects internally.
+// This file must be a module (the type imports above make it one) so the
+// global declaration merges with the one Prisma Client expects internally.
 //
 // Notification channel annotations emit a bare global alias below, preserving
 // the shared domain literal type in generated Prisma models.
@@ -29,8 +29,6 @@ import type {
 } from '@spliit/domain/activities'
 import type { NotificationChannel as DomainNotificationChannel } from '@spliit/domain/notifications'
 import type { RecurringExpenseTemplate as DomainRecurringExpenseTemplate } from '@spliit/domain/recurring-expenses'
-
-export {}
 
 declare global {
   // oxlint-disable-next-line typescript/no-namespace

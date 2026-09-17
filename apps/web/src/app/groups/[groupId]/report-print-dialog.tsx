@@ -49,7 +49,7 @@ export function ReportPrintDialog({
   const [to, setTo] = useState('')
   const [opening, setOpening] = useState(false)
 
-  // oxlint-disable react/react-compiler -- initialize the date fields after the asynchronous bounds query resolves.
+  // oxlint-disable react/set-state-in-effect -- initialize the date fields after the asynchronous bounds query resolves.
   useEffect(() => {
     if (!open || !bounds.data) return
     // react-doctor-disable-next-line react-doctor/no-adjust-state-on-prop-change -- bounds arrive asynchronously and initialize otherwise uncontrolled date fields without overwriting user edits.
@@ -57,7 +57,7 @@ export function ReportPrintDialog({
     // react-doctor-disable-next-line react-doctor/no-adjust-state-on-prop-change -- bounds arrive asynchronously and initialize otherwise uncontrolled date fields without overwriting user edits.
     setTo((current) => current || bounds.data!.to)
   }, [open, bounds.data])
-  // oxlint-enable react/react-compiler
+  // oxlint-enable react/set-state-in-effect
 
   const rangeInvalid = from !== '' && to !== '' && from > to
   const submitDisabled = opening || !isValidRange(from, to) || !bounds.data

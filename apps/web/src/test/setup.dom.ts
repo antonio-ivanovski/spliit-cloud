@@ -115,6 +115,27 @@ vi.stubGlobal('cancelAnimationFrame', (id: number) => {
   clearTimeout(id)
 })
 
+// ── Remove partial Web Animations API ───────────────────────────────────
+// happy-dom ≥20.12 implements Element.animate/getAnimations, so motion takes
+// its native-animation path — but happy-dom's Animation.cancel() rejects
+// `finished` in ways that escape as unhandled rejections under Vitest.
+// Animations are not under test; drop WAAPI so motion uses the JS fallback
+// it used before, like the other env stubs above.
+if (
+  typeof Element !== 'undefined' &&
+  'animate' in Element.prototype &&
+  typeof Element.prototype.animate === 'function'
+) {
+  // oxlint-disable-next-line typescript/no-explicit-any
+  delete (Element.prototype as any).animate
+}
+
+// ── Disable Base UI exit-animation waits ────────────────────────────────
+// happy-dom ≥20.12 implements Element.getAnimations, so Base UI defers popup
+// unmounts to rAF + animation promises that never settle in tests. Opt out
+// via Base UI's documented test flag to keep open/close synchronous.
+vi.stubGlobal('BASE_UI_ANIMATIONS_DISABLED', true)
+
 // Flush Base UI's deferred open after user-event pointer/keyboard actions.
 const flushBaseUiFrames = async () => {
   await act(async () => {

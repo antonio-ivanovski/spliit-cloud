@@ -334,7 +334,7 @@ export function RawPreview({
   )
 }
 
-// oxlint-disable react/react-compiler -- TanStack Virtual exposes measurement refs through its virtualizer result.
+// oxlint-disable react/refs -- TanStack Virtual exposes measurement refs through its virtualizer result.
 export function SourceFileDialog({
   table,
   open,
@@ -452,7 +452,7 @@ export function SourceFileDialog({
   )
 }
 
-// oxlint-enable react/react-compiler
+// oxlint-enable react/refs
 
 export function previewFieldValue(
   row: DelimitedPreviewRow,
@@ -993,7 +993,7 @@ function previewRowRemeasureLens(row: DelimitedPreviewRow): string {
   return `${row.rowId}:${row.issues.length}:${issueLens}:${row.warning?.length ?? 0}:${row.error?.length ?? 0}`
 }
 
-// oxlint-disable react/react-compiler -- TanStack Virtual exposes measurement refs through its virtualizer result.
+// oxlint-disable react/refs -- TanStack Virtual exposes measurement refs through its virtualizer result.
 export function MappedExpensesDialog({
   rows,
   open,
@@ -1266,4 +1266,4 @@ export function SourceCategoryPreviewDialog({
   )
 }
 
-// oxlint-enable react/react-compiler
+// oxlint-enable react/refs

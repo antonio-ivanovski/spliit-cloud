@@ -1,4 +1,4 @@
-import { Settings2, ShieldCheck, Trash2, UserRound } from 'lucide-react'
+import { Settings2, ShieldCheck, Trash, UserRound } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { AccountAvatar } from '@/components/account-avatar'
@@ -193,7 +193,7 @@ export function MemberListCard({
                               })
                             }
                           >
-                            <Trash2 size={16} aria-hidden="true" />
+                            <Trash size={16} aria-hidden="true" />
                           </Button>
                         </SegmentedActions>
                       }
@@ -225,7 +225,7 @@ export function MemberListCard({
                         {
                           key: 'remove',
                           label: t('remove'),
-                          icon: Trash2,
+                          icon: Trash,
                           destructive: true,
                           onSelect: () =>
                             onRemove({

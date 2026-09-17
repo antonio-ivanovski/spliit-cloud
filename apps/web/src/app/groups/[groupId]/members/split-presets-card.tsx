@@ -3,7 +3,7 @@ import {
   MoreHorizontal,
   Pencil,
   Plus,
-  Trash2,
+  Trash,
   UserRound,
   UserRoundCheck,
   UsersRound,
@@ -536,7 +536,7 @@ export function SplitPresetsCard(props: {
                       className="text-destructive data-highlighted:text-destructive"
                       onClick={() => setDeleteTarget(preset)}
                     >
-                      <Trash2 className="me-2 size-4" aria-hidden="true" />
+                      <Trash className="me-2 size-4" aria-hidden="true" />
                       {t('splitPresets.delete')}
                     </DropdownMenuItem>
                   </>

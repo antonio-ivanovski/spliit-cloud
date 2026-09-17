@@ -19,7 +19,7 @@
     "test": "vitest run src"
   },
   "dependencies": {
-    "pg-boss": "12.26.2",
+    "pg-boss": "12.32.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {

@@ -67,7 +67,7 @@ export function ResponsiveChoicePicker<T extends string>({
   const displayValue = selected?.label ?? placeholder
 
   useEffect(() => {
-    // oxlint-disable-next-line react/react-compiler -- active option must follow the controlled value for keyboard navigation.
+    // oxlint-disable-next-line react/set-state-in-effect -- active option must follow the controlled value for keyboard navigation.
     setActiveIndex(selectedIndex)
   }, [selectedIndex])
 

@@ -95,39 +95,33 @@ const {
     .mockResolvedValue({ categoryId: null })
   const mockCategoryReset = vi.fn()
 
-  const mockCurrencyGetRate = vi.fn(
-    (_opts?: unknown): MockQueryResult => ({
-      data: undefined,
-      error: null,
-      isLoading: false,
-      isSuccess: false,
-      refetch: vi.fn(),
-    }),
-  )
+  const mockCurrencyGetRate = vi.fn((_opts?: unknown): MockQueryResult => ({
+    data: undefined,
+    error: null,
+    isLoading: false,
+    isSuccess: false,
+    refetch: vi.fn(),
+  }))
 
   // Defaults to `data: undefined` (no saved default) — individual
   // tests override per-call to exercise the Load/Save buttons.
-  const mockAccountDefaultSplit = vi.fn(
-    (_opts?: unknown): MockQueryResult => ({
-      data: undefined,
-      error: null,
-      isLoading: false,
-      isSuccess: false,
-      refetch: vi.fn(),
-    }),
-  )
+  const mockAccountDefaultSplit = vi.fn((_opts?: unknown): MockQueryResult => ({
+    data: undefined,
+    error: null,
+    isLoading: false,
+    isSuccess: false,
+    refetch: vi.fn(),
+  }))
 
   // No group history by default; selector keeps static common fallback
   // while `isSuccess` is false.
-  const mockCommonCurrencies = vi.fn(
-    (_opts?: unknown): MockQueryResult => ({
-      data: undefined,
-      error: null,
-      isLoading: false,
-      isSuccess: false,
-      refetch: vi.fn(),
-    }),
-  )
+  const mockCommonCurrencies = vi.fn((_opts?: unknown): MockQueryResult => ({
+    data: undefined,
+    error: null,
+    isLoading: false,
+    isSuccess: false,
+    refetch: vi.fn(),
+  }))
 
   const mockCategoryMemoryResult: MockQueryResult = {
     data: { expenses: [] },
@@ -143,15 +137,13 @@ const {
   )
 
   const mockInvalidateDefaultSplit = vi.fn()
-  const mockSplitPresets = vi.fn(
-    (_opts?: unknown): MockQueryResult => ({
-      data: { presets: [], canManage: false },
-      error: null,
-      isLoading: false,
-      isSuccess: true,
-      refetch: vi.fn(),
-    }),
-  )
+  const mockSplitPresets = vi.fn((_opts?: unknown): MockQueryResult => ({
+    data: { presets: [], canManage: false },
+    error: null,
+    isLoading: false,
+    isSuccess: true,
+    refetch: vi.fn(),
+  }))
   const mockSplitPresetCreate = vi.fn().mockResolvedValue({ preset: null })
   const mockSplitPresetUpdate = vi.fn().mockResolvedValue({ preset: null })
   const mockInvalidateSplitPresets = vi.fn()
@@ -432,15 +424,13 @@ beforeEach(() => {
   )
   mockInvalidateDefaultSplit.mockReset()
   mockSplitPresets.mockReset()
-  mockSplitPresets.mockImplementation(
-    (_opts?: unknown): MockQueryResult => ({
-      data: { presets: [], canManage: false },
-      error: null,
-      isLoading: false,
-      isSuccess: true,
-      refetch: vi.fn(),
-    }),
-  )
+  mockSplitPresets.mockImplementation((_opts?: unknown): MockQueryResult => ({
+    data: { presets: [], canManage: false },
+    error: null,
+    isLoading: false,
+    isSuccess: true,
+    refetch: vi.fn(),
+  }))
 
   vi.mocked(useCurrencies).mockReturnValue(defaultCurrencies)
   vi.mocked(getCurrency).mockImplementation(

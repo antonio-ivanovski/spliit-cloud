@@ -151,7 +151,7 @@ export function useInstallPrompt(): UseInstallPromptResult {
   // Re-runs whenever any gate flips on.
   const inRemindLater =
     remindAt !== null &&
-    // oxlint-disable-next-line react/react-compiler -- current time is intentionally sampled during render for the reminder gate.
+    // oxlint-disable-next-line react/purity -- current time is intentionally sampled during render for the reminder gate.
     Date.now() < remindAt
       ? remindAt
       : null
@@ -169,7 +169,7 @@ export function useInstallPrompt(): UseInstallPromptResult {
   // remind-later kicks in, …) the open dialog must follow.
   useEffect(() => {
     if (!readyToShow && isOpen) {
-      // oxlint-disable-next-line react/react-compiler -- close when install eligibility disappears.
+      // oxlint-disable-next-line react/set-state-in-effect -- close when install eligibility disappears.
       setIsOpen(false)
     }
   }, [readyToShow, isOpen])

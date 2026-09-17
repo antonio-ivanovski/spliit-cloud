@@ -1,4 +1,4 @@
-import { Hash, Trash2, UserPen } from 'lucide-react'
+import { Hash, Trash, UserPen } from 'lucide-react'
 import type { FieldPath, UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -300,7 +300,7 @@ export function ExpenseItemRow({
               title={displayActionDelete}
               className="h-9 w-9 shrink-0 text-muted-foreground hover:text-destructive md:h-8 md:w-8"
             >
-              <Trash2 className="h-4 w-4" />
+              <Trash className="h-4 w-4" />
             </Button>
           )}
         </div>

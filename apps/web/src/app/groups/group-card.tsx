@@ -9,7 +9,7 @@ import {
   EyeOff,
   MoreHorizontal,
   Star,
-  Trash2,
+  Trash,
   Users,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -247,7 +247,7 @@ export function GroupCard({
                           onRemoveSavedView()
                         }}
                       >
-                        <Trash2 className="me-2 h-4 w-4" />
+                        <Trash className="me-2 h-4 w-4" />
                         {t('removeSavedView')}
                       </DropdownMenuItem>
                     ) : null}

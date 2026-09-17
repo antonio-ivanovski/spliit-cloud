@@ -1,4 +1,4 @@
-import { Ellipsis, KeyRound, RotateCw, Trash2 } from 'lucide-react'
+import { Ellipsis, KeyRound, RotateCw, Trash } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -123,7 +123,7 @@ export function PublicViewOnlyLinkSection({ groupId }: { groupId: string }) {
                       aria-label={t('remove')}
                       onClick={() => setConfirmation('remove')}
                     >
-                      <Trash2 className="size-4" aria-hidden="true" />
+                      <Trash className="size-4" aria-hidden="true" />
                     </Button>
                     <div className="sm:hidden">
                       <DropdownMenu>
@@ -155,10 +155,7 @@ export function PublicViewOnlyLinkSection({ groupId }: { groupId: string }) {
                             className="text-destructive focus:text-destructive"
                             onClick={() => setConfirmation('remove')}
                           >
-                            <Trash2
-                              className="me-2 size-4"
-                              aria-hidden="true"
-                            />
+                            <Trash className="me-2 size-4" aria-hidden="true" />
                             {t('remove')}
                           </DropdownMenuItem>
                         </DropdownMenuContent>

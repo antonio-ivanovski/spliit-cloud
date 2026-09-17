@@ -172,7 +172,7 @@ export function PendingInvitationsCard({
               const isExpired =
                 isLink &&
                 !!invitation.expiresAt &&
-                // oxlint-disable-next-line react/react-compiler -- per-row clock read
+                // oxlint-disable-next-line react/purity -- per-row clock read
                 new Date(invitation.expiresAt).getTime() < Date.now()
               const profile = invitation.recipientProfile
               const effectiveName =

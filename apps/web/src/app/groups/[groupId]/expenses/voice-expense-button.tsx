@@ -283,7 +283,7 @@ export function VoiceExpenseButton({
   useEffect(() => {
     if (processing || !result || !effectiveGroup) return
     flowActiveRef.current = true
-    // oxlint-disable-next-line react/react-compiler -- open the review dialog after extraction resolves.
+    // oxlint-disable-next-line react/set-state-in-effect -- open the review dialog after extraction resolves.
     setPreview({
       source: 'voice',
       transcript: result.transcript,

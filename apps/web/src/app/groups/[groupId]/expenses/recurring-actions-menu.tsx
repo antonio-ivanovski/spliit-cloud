@@ -1,4 +1,4 @@
-import { MoreHorizontal, Pencil, Repeat2, Trash2 } from 'lucide-react'
+import { MoreHorizontal, Pencil, Repeat2, Trash } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -177,7 +177,7 @@ export function RecurringActionsMenu({
               <div className="grid gap-2">
                 <ActionButton
                   destructive
-                  icon={<Trash2 aria-hidden="true" />}
+                  icon={<Trash aria-hidden="true" />}
                   label={t('deleteOccurrence')}
                   description={t('deleteOccurrenceDescription')}
                   onClick={() =>
@@ -186,7 +186,7 @@ export function RecurringActionsMenu({
                 />
                 <ActionButton
                   destructive
-                  icon={<Trash2 aria-hidden="true" />}
+                  icon={<Trash aria-hidden="true" />}
                   label={t('deleteThisAndFuture')}
                   description={t('deleteThisAndFutureDescription')}
                   onClick={() =>
@@ -196,7 +196,7 @@ export function RecurringActionsMenu({
                 {!isTerminal && (
                   <ActionButton
                     destructive
-                    icon={<Trash2 aria-hidden="true" />}
+                    icon={<Trash aria-hidden="true" />}
                     label={t('deleteThisAndFutureStop')}
                     description={t('deleteThisAndFutureStopDescription')}
                     onClick={() =>

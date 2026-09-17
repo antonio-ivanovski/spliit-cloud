@@ -159,6 +159,7 @@ export function TimeZonePickerContent({
   const activeRowIndex = rows.findIndex(
     (row) => row.type === 'option' && row.option.id === activeOptionId,
   )
+  // oxlint-disable-next-line react/incompatible-library -- TanStack Virtual exposes measurement refs through its virtualizer result.
   const virtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => listRef.current,

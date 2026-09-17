@@ -67,7 +67,7 @@ export function GroupLayoutClient({
   // from the URL immediately so a page refresh won't reopen the dialog.
   useEffect(() => {
     if (friendLinkInviteUrl) {
-      // oxlint-disable-next-line react/react-compiler -- open the one-time dialog from a URL event.
+      // oxlint-disable-next-line react/set-state-in-effect -- open the one-time dialog from a URL event.
       setFriendLinkDialogUrl(friendLinkInviteUrl)
       void navigate({
         to: '/groups/$groupId',

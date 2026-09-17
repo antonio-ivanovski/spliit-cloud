@@ -19,17 +19,17 @@
     "test": "vitest run src"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "7.9.1",
-    "@prisma/client": "^7.9.1",
+    "@prisma/adapter-pg": "7.10.0",
+    "@prisma/client": "^7.10.0",
     "@spliit/domain": "workspace:*",
     "dotenv": "^17.4.2",
-    "pg": "8.22.0"
+    "pg": "8.23.0"
   },
   "devDependencies": {
     "@spliit/config": "workspace:*",
     "@types/node": "24.13.2",
-    "@types/pg": "^8.20.0",
-    "prisma": "^7.9.1",
+    "@types/pg": "^8.23.1",
+    "prisma": "^7.10.0",
     "prisma-json-types-generator": "^5.1.1",
     "prisma-mock": "^1.1.0",
     "typescript": "7.0.2",

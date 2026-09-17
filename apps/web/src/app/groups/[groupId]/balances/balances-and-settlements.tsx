@@ -125,7 +125,7 @@ export default function BalancesAndSettlements() {
     try {
       const saved = window.localStorage.getItem('spliit-balances-view')
       if (saved === 'simple' || saved === 'visual') {
-        // oxlint-disable-next-line react/react-compiler -- restore the persisted view after reading browser storage.
+        // oxlint-disable-next-line react/set-state-in-effect -- restore the persisted view after reading browser storage.
         setStoredView(saved)
       }
     } catch {

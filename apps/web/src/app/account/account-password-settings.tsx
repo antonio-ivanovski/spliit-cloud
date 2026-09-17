@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
-import { Loader2, Pencil, Trash2 } from 'lucide-react'
+import { Loader2, Pencil, Trash } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -276,7 +276,7 @@ export function AccountPasswordSettings({
                   disabled={passwordStatusQuery.isPending}
                   onClick={openRemoveDialog}
                 >
-                  <Trash2 className="me-2 h-4 w-4" aria-hidden="true" />
+                  <Trash className="me-2 h-4 w-4" aria-hidden="true" />
                   {t('password.remove')}
                 </Button>
               </>

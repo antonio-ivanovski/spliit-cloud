@@ -1,4 +1,4 @@
-import { Database, PencilLine, PlusCircle, Receipt, Trash2 } from 'lucide-react'
+import { Database, PencilLine, PlusCircle, Receipt, Trash } from 'lucide-react'
 
 /**
  * How each scope is presented on the consent screen.
@@ -22,7 +22,7 @@ const SCOPE_GRANTS = [
   },
   {
     scope: 'spliit:groups:delete',
-    icon: Trash2,
+    icon: Trash,
     titleKey: 'groupsDeleteTitle',
     descriptionKey: 'groupsDeleteDescription',
   },
@@ -40,7 +40,7 @@ const SCOPE_GRANTS = [
   },
   {
     scope: 'spliit:expenses:delete',
-    icon: Trash2,
+    icon: Trash,
     titleKey: 'expensesDeleteTitle',
     descriptionKey: 'expensesDeleteDescription',
   },

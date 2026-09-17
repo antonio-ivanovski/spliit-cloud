@@ -129,6 +129,7 @@ export function ManagePendingInvitationDialog({
     },
   })
 
+  // oxlint-disable-next-line react/incompatible-library -- react-hook-form watch reads during render by design.
   const delivery = form.watch('delivery')
   const emailValue = form.watch('email')
   const formState = form.formState

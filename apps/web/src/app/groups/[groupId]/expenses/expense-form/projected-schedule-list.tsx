@@ -68,6 +68,7 @@ export function ProjectedScheduleList({
       ? loadedCount + 1 // sentinel row loads another page for indefinite rules
       : Math.min(loadedCount, schedule.totalCount)
 
+  // oxlint-disable-next-line react/incompatible-library -- TanStack Virtual exposes measurement refs through its virtualizer result.
   const virtualizer = useVirtualizer({
     count: rowCount,
     getScrollElement: () => scrollRef.current,

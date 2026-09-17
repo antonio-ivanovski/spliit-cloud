@@ -958,8 +958,9 @@ describe('invitationsRouter.decline', () => {
  * Build the prisma stubs the revoke procedure needs: - resolve the group
  * context for the caller (`loadGroupMutationContext`), - resolve the invitation
  * by id (the pre-check + transaction both query it), - empty recurring-expense
- * + expense stubs so `getGroupBalances` doesn't hit the `null is not iterable`
- * path used by other helper flows.
+ *
+ * - Expense stubs so `getGroupBalances` doesn't hit the `null is not iterable`
+ *   path used by other helper flows.
  *
  * `invitationStatus` defaults to PENDING so the normal happy path doesn't have
  * to opt in. `participantId` controls whether the invitation has a materialized

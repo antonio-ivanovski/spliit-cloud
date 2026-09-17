@@ -1,4 +1,4 @@
-import { Trash2 } from 'lucide-react'
+import { Trash } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -89,7 +89,7 @@ export function DeletePopup({
               className,
             )}
           >
-            <Trash2 className="h-4 w-4 min-[420px]:me-2" />
+            <Trash className="h-4 w-4 min-[420px]:me-2" />
             <span className="hidden min-[420px]:inline">
               {labels?.label ?? t('label')}
             </span>

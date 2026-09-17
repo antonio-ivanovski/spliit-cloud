@@ -1,4 +1,4 @@
-import { Link2, Trash2 } from 'lucide-react'
+import { Link2, Trash } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -119,7 +119,7 @@ export function UnlinkedParticipantsSection({
                         })
                       }
                     >
-                      <Trash2 size={16} aria-hidden="true" />
+                      <Trash size={16} aria-hidden="true" />
                     </Button>
                   </SegmentedActions>
                 }
@@ -133,7 +133,7 @@ export function UnlinkedParticipantsSection({
                   {
                     key: 'remove',
                     label: t('remove'),
-                    icon: Trash2,
+                    icon: Trash,
                     destructive: true,
                     onSelect: () =>
                       onRemove({

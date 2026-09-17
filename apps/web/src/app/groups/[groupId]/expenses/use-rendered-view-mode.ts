@@ -16,9 +16,9 @@ export function useRenderedViewMode(
 ): boolean {
   const renderedRef = useRef(showAll)
   if (!isPlaceholderData) {
-    // oxlint-disable-next-line react/react-compiler -- freeze the previous mode while placeholder rows render; a state+effect version would flip one frame late and cascade.
+    // oxlint-disable-next-line react/refs -- freeze the previous mode while placeholder rows render; a state+effect version would flip one frame late and cascade.
     renderedRef.current = showAll
   }
-  // oxlint-disable-next-line react/react-compiler -- read the frozen mode during the placeholder render (see above).
+  // oxlint-disable-next-line react/refs -- read the frozen mode during the placeholder render (see above).
   return isPlaceholderData ? renderedRef.current : showAll
 }

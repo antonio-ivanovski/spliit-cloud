@@ -94,7 +94,7 @@ export function duplicateReason(match: DuplicateMatch) {
   return <Trans i18nKey="ExpenseImport.reviewList.duplicateRepeated" />
 }
 
-// oxlint-disable react/react-compiler -- TanStack Virtual exposes measurement refs through its virtualizer result.
+// oxlint-disable react/refs, react/immutability -- TanStack Virtual exposes measurement refs through its virtualizer result.
 export function ReviewExpensesList({
   rows,
   duplicateByRow,
@@ -303,4 +303,4 @@ export function ReviewExpensesList({
   )
 }
 
-// oxlint-enable react/react-compiler
+// oxlint-enable react/refs, react/immutability

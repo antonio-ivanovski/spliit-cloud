@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { Archive, ArchiveRestore, Sparkles, Trash2 } from 'lucide-react'
+import { Archive, ArchiveRestore, Sparkles, Trash } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -177,7 +177,7 @@ export const EditGroup = () => {
               variant="destructive"
               onClick={() => setDeleteDialogOpen(true)}
             >
-              <Trash2 className="me-2 h-4 w-4" />
+              <Trash className="me-2 h-4 w-4" />
               {tGroups('delete.button')}
             </Button>
           </CardContent>

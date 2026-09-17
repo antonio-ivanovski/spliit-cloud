@@ -277,7 +277,7 @@ export function ShareRowInput(props: {
   // Holds the input element for the focus-restore effect below. The
   // section-qualified registry (`inputRefs`) is keyed by array + participant
   // so invalid-submit focus and this local restore share one attach point.
-  // oxlint-disable react/react-compiler -- the compiler cannot preserve a
+  // oxlint-disable react/preserve-manual-memoization -- the compiler cannot preserve a
   // memo over the mutable registry Map (`inputRefs.current`); the deps are
   // exhaustive and the captured objects are stable across renders.
   const attachRef = useCallback(
@@ -292,7 +292,7 @@ export function ShareRowInput(props: {
     },
     [arrayName, participantId, inputRefs],
   )
-  // oxlint-enable react/react-compiler
+  // oxlint-enable react/preserve-manual-memoization
 
   if (splitMode === 'EVENLY') return null
 

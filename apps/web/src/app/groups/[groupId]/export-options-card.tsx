@@ -39,7 +39,7 @@ function ExportOption({
       variant={accent ? 'default' : 'secondary'}
       className="h-10 w-full shrink-0 px-3 sm:w-auto"
       nativeButton={false}
-      // oxlint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- Button render merges {actionLabel} into the download link.
+      // oxlint-disable-next-line jsx-a11y/control-has-associated-label -- Button render merges {actionLabel} into the download link.
       render={<a href={href} target="_blank" rel="noopener noreferrer" />}
     >
       {actionLabel}

@@ -69,7 +69,7 @@ export function CategoryIcon({
   ...props
 }: { category: Category | null } & LucideProps) {
   const Icon = getCategoryIcon(`${category?.grouping}/${category?.name}`)
-  // oxlint-disable-next-line react/react-compiler -- Lucide icons are stateless components selected from a static mapping.
+  // oxlint-disable-next-line react/static-components -- Lucide icons are stateless components selected from a static mapping.
   return <Icon {...props} />
 }
 

@@ -1,4 +1,4 @@
-import { LoaderCircle, Send, Trash2 } from 'lucide-react'
+import { LoaderCircle, Send, Trash } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -188,7 +188,7 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
                       disabled={deletingCommentId === comment.id}
                       onClick={() => void handleDelete(comment.id)}
                     >
-                      <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+                      <Trash className="h-3.5 w-3.5" aria-hidden="true" />
                     </Button>
                   )}
                 </div>

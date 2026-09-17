@@ -1,11 +1,4 @@
-import {
-  AlertTriangle,
-  Check,
-  Edit3,
-  Layers3,
-  Plus,
-  Trash2,
-} from 'lucide-react'
+import { AlertTriangle, Check, Edit3, Layers3, Plus, Trash } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -330,7 +323,7 @@ export function SubgroupsCard({
                             name: subgroup.name,
                           })}
                         >
-                          <Trash2 className="size-4" aria-hidden="true" />
+                          <Trash className="size-4" aria-hidden="true" />
                         </Button>
                       </div>
                     )}

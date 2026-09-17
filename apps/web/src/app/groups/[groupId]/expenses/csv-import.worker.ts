@@ -109,5 +109,3 @@ worker.onmessage = ({ data }: MessageEvent<Request>) => {
     }
   })()
 }
-
-export {}

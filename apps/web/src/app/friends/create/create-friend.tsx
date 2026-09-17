@@ -467,6 +467,7 @@ export function CreateFriend() {
                     <CurrencySelector
                       aria-label={tGroupForm('CurrencyCodeField.label')}
                       currencies={currencies}
+                      // oxlint-disable-next-line react/incompatible-library -- react-hook-form watch reads during render by design.
                       defaultValue={form.watch(field.name) ?? ''}
                       pinnedCurrencyCode={form.watch(field.name) ?? undefined}
                       onValueChange={(newCurrency) => {

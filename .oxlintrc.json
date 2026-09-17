@@ -63,7 +63,6 @@
       "rules": {
         "react/rules-of-hooks": "error",
         "react/exhaustive-deps": "warn",
-        "react/react-compiler": "warn",
         "no-restricted-imports": [
           "error",
           {

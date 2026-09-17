@@ -100,7 +100,7 @@ export function useSuggestCategoryFromTitle(args: {
     if (!isSubmitting) return
     clearLoadingDelay()
     categoryAbortRef.current?.abort()
-    // oxlint-disable-next-line react/react-compiler -- abort in-flight suggest on submit and clear delayed loading indicator.
+    // oxlint-disable-next-line react/set-state-in-effect -- abort in-flight suggest on submit and clear delayed loading indicator.
     setCategoryLoading(false)
   }, [clearLoadingDelay, isSubmitting])
 
@@ -203,7 +203,7 @@ export function useSuggestCategoryFromTitle(args: {
   )
 
   useEffect(() => {
-    // oxlint-disable-next-line react/react-compiler -- live debounced suggest may synchronously clear loading on a local dictionary/history hit.
+    // oxlint-disable-next-line react/set-state-in-effect -- live debounced suggest may synchronously clear loading on a local dictionary/history hit.
     triggerSuggest(debouncedTitle, true)
   }, [debouncedTitle, triggerSuggest])
 

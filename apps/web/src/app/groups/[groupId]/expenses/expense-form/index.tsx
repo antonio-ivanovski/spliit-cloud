@@ -256,7 +256,7 @@ export function ExpenseForm(props: {
     paidBy: { preset: SplitPreset; source: LoadedPresetSource } | null
     paidFor: { preset: SplitPreset; source: LoadedPresetSource } | null
   }>({ paidBy: null, paidFor: null })
-  // oxlint-disable react/react-compiler -- record which async defaults were applied; this state must remain stable after the user edits the draft.
+  // oxlint-disable react/set-state-in-effect -- record which async defaults were applied; this state must remain stable after the user edits the draft.
   useEffect(() => {
     if (!isCreate || props.expense || props.isCopy || !splitPresetsQuery.data) {
       return
@@ -356,7 +356,7 @@ export function ExpenseForm(props: {
     splitPresets,
     splitPresetsQuery.data,
   ])
-  // oxlint-enable react/react-compiler
+  // oxlint-enable react/set-state-in-effect
 
   const automaticDefaultPaidForPreset =
     appliedAutomaticDefaults.paidFor?.preset ?? null
@@ -604,7 +604,7 @@ export function ExpenseForm(props: {
       <form
         ref={formElementRef}
         data-expense-form
-        // oxlint-disable-next-line react/react-compiler -- handleInvalidSubmit reads shareInputRefs at submit time (event handler, never during render); the section-qualified registry replaces array-index focus for position-shifting rows.
+        // oxlint-disable-next-line react/refs -- handleInvalidSubmit reads shareInputRefs at submit time (event handler, never during render); the section-qualified registry replaces array-index focus for position-shifting rows.
         onSubmit={form.handleSubmit(submit, handleInvalidSubmit)}
         onFocusCapture={tabNavigation.onFocusCapture}
         onKeyDownCapture={tabNavigation.onKeyDownCapture}

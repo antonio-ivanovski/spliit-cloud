@@ -78,38 +78,43 @@ function accessSearch(search: Record<string, unknown>) {
 }
 
 describe('group access search retention', () => {
+  // Assert on `buildLocation` (the search pipeline behind `navigate`:
+  // middlewares + validation + serialization). `router.navigate()` itself
+  // is intentionally a no-op in this document-less environment since
+  // TanStack Router 1.170.36 treats it as a server; committing to history
+  // is router internals, not ours to verify here.
   it('keeps viewKey and invite across tab, expense, balances, and create navigations', async () => {
     const router = await createGroupRouter(
       '/groups/grp-1/expenses?viewKey=public-secret&invite=invite-token',
     )
     expect(accessSearch(router.state.location.search)).toEqual(retained)
 
-    await router.navigate({
+    const balances = router.buildLocation({
       to: '/groups/$groupId/balances',
       params: { groupId: 'grp-1' },
     })
-    expect(accessSearch(router.state.location.search)).toEqual(retained)
+    expect(accessSearch(balances.search)).toEqual(retained)
 
-    await router.navigate({
+    const balancesVisual = router.buildLocation({
       to: '/groups/$groupId/balances',
       params: { groupId: 'grp-1' },
       search: { view: 'visual' },
     })
-    expect(router.state.location.search).toMatchObject({
+    expect(balancesVisual.search).toMatchObject({
       ...retained,
       view: 'visual',
     })
 
-    await router.navigate({
+    const expensePreview = router.buildLocation({
       to: '/groups/$groupId/expenses/$expenseId',
       params: { groupId: 'grp-1', expenseId: 'exp-1' },
     })
-    expect(accessSearch(router.state.location.search)).toEqual(retained)
+    expect(accessSearch(expensePreview.search)).toEqual(retained)
 
-    await router.navigate({
+    const createExpense = router.buildLocation({
       to: '/groups/$groupId/expenses/create',
       params: { groupId: 'grp-1' },
     })
-    expect(accessSearch(router.state.location.search)).toEqual(retained)
+    expect(accessSearch(createExpense.search)).toEqual(retained)
   })
 })

@@ -612,7 +612,7 @@ export function GlobalExpensesContent() {
 
   useEffect(() => {
     if (filtersOpen) {
-      // oxlint-disable-next-line react/react-compiler -- seed the draft when the panel opens.
+      // oxlint-disable-next-line react/set-state-in-effect -- seed the draft when the panel opens.
       setDraftFilters(filters)
     }
   }, [filters, filtersOpen])

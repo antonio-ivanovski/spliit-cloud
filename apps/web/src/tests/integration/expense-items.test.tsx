@@ -17,8 +17,9 @@ import { randomId } from '@spliit/domain'
  *
  * These tests use the same pattern as `group-creation.test.tsx`: - Connect to a
  * real API server on port 3101 (via `probeExistingApi`). - Create a real group
- * + expense via tRPC. - Render React components (here `ExpenseCard`) with
- * mocked context hooks, so we don't need a full router setup.
+ *
+ * - Expense via tRPC. - Render React components (here `ExpenseCard`) with mocked
+ *   context hooks, so we don't need a full router setup.
  *
  * The suite is skipped if the API is not running. Items are exercised
  * end-to-end through the API and the `ItemsPreview` part of the card.

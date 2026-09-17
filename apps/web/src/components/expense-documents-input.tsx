@@ -206,7 +206,7 @@ export function ExpenseDocumentsInput({
 
   // Keep one stable callback for the native form drag listeners; the latest
   // mutable values are read through refs updated by effects above.
-  // oxlint-disable-next-line react/react-compiler
+  // oxlint-disable-next-line react/preserve-manual-memoization
   const handleFiles = useCallback(async (files: File[]) => {
     if (!files.length || pendingRef.current) return
     pendingRef.current = true

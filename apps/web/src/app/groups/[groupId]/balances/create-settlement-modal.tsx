@@ -145,7 +145,7 @@ export function CreateSettlementModal({
   usePwaUpdateBlocker(open && legs.length > 0 && canCreate, 'settlement-modal')
   useEffect(() => {
     if (open) {
-      // oxlint-disable-next-line react/react-compiler -- initialize selection from the controlled default when opened.
+      // oxlint-disable-next-line react/set-state-in-effect -- initialize selection from the controlled default when opened.
       setSelectedKeys(
         (defaultSelectedValue ? defaultSelectedValue.split('|') : []).filter(
           Boolean,

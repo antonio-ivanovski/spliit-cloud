@@ -147,7 +147,7 @@ export function BudgetForm({
   useEffect(() => {
     if (!budget) return
     const groupCurrency = getCurrencyFromGroup(group)
-    // oxlint-disable-next-line react/react-compiler
+    // oxlint-disable-next-line react/set-state-in-effect
     setName(budget.name)
     setAmount(
       amountAsDecimal(budget.amount, groupCurrency).toFixed(

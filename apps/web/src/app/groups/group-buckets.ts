@@ -72,8 +72,10 @@ const bucketBySection = {
  * Buckets are mutually exclusive in priority order: - hidden (per-account
  * preference, beats everything else) - archived (group-level flag, GROUP-only —
  * FRIEND ledgers are server-rejected from archiving so they never land here) -
- * starred (mixed; appears regardless of groupType) - groups (non-starred GROUP)
- * - friends (non-starred FRIEND)
+ * starred (mixed; appears regardless of groupType) - groups (non-starred
+ * GROUP)
+ *
+ * - Friends (non-starred FRIEND)
  *
  * FRIEND groups skip the `archived` bucket as a defense-in-depth — the server
  * prevents archive for FRIEND, but if a stale row ever slipped through we'd

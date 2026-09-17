@@ -39,6 +39,7 @@ export function useVirtualizedRows(options: {
     (element: HTMLDivElement | null) => setScrollElement(element),
     [],
   )
+  // oxlint-disable-next-line react/incompatible-library -- TanStack Virtual exposes measurement refs through its virtualizer result.
   const virtualizer = useVirtualizer({
     count: options.count,
     getScrollElement: () => scrollElement,

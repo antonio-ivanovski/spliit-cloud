@@ -224,7 +224,7 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
       ...recurrence,
       end: { type: 'DATE', endDate: expenseDate },
     })
-    // oxlint-disable-next-line react/react-compiler -- clear the draft after normalizing the controlled date.
+    // oxlint-disable-next-line react/set-state-in-effect -- clear the draft after normalizing the controlled date.
     setEndDateDraft(null)
   }, [expenseDate, recurrence, updateRecurrence])
 

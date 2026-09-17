@@ -238,7 +238,7 @@ export function ExpenseItemsCard({
 
   useEffect(() => {
     if (splitMode === 'ITEMIZED' || items.length > 0) {
-      // oxlint-disable-next-line react/react-compiler -- open the item editor when controlled items become available.
+      // oxlint-disable-next-line react/set-state-in-effect -- open the item editor when controlled items become available.
       setItemsOpen(true)
     }
   }, [items.length, splitMode])

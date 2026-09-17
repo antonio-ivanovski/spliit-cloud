@@ -132,6 +132,7 @@ export function InviteCard({
     defaultValues: { temporaryName: '' },
   })
 
+  // oxlint-disable-next-line react/incompatible-library -- react-hook-form watch reads during render by design.
   const email = form.watch('email')
   const temporaryName = form.watch('temporaryName')
   const linkTemporaryName = linkForm.watch('temporaryName')
