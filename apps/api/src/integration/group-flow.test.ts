@@ -35,7 +35,7 @@ describe('Group flow — real DB', () => {
   }
 
   beforeAll(async () => {
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: adminEmail },
       update: {},
       create: {
@@ -52,9 +52,9 @@ describe('Group flow — real DB', () => {
     for (const lid of ledgerIds) {
       await prisma.ledger.delete({ where: { id: lid } }).catch(() => {})
     }
-    await prisma.account.delete({ where: { id: adminId } }).catch(() => {})
+    await prisma.user.delete({ where: { id: adminId } }).catch(() => {})
     for (const aid of extraAccountIds) {
-      await prisma.account.delete({ where: { id: aid } }).catch(() => {})
+      await prisma.user.delete({ where: { id: aid } }).catch(() => {})
     }
   })
 
@@ -134,7 +134,7 @@ describe('Group flow — real DB', () => {
     const member1Id = `m1-${runId}`
     const member2Id = `m2-${runId}`
     extraAccountIds.push(member1Id, member2Id)
-    await prisma.account.createMany({
+    await prisma.user.createMany({
       data: [
         {
           id: member1Id,

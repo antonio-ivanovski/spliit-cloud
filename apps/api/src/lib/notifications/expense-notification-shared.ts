@@ -279,7 +279,7 @@ export async function loadActivityChannelContext(args: {
       select: EXPENSE_GROUP_SELECT,
     }),
     args.actor?.type === 'ACCOUNT'
-      ? prisma.account.findUnique({
+      ? prisma.user.findUnique({
           where: { id: args.actor.id },
           select: { name: true },
         })
@@ -311,7 +311,7 @@ export async function loadActivityGroupAndActor(args: {
       select: EXPENSE_GROUP_SELECT,
     }),
     args.actor?.type === 'ACCOUNT'
-      ? prisma.account.findUnique({
+      ? prisma.user.findUnique({
           where: { id: args.actor.id },
           select: { name: true },
         })

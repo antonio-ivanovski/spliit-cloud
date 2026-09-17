@@ -156,7 +156,7 @@ describe('Friend ledger — real DB', () => {
       [peerId, peerEmail, 'Test Peer'],
       [thirdId, thirdEmail, 'Test Third'],
     ] as const) {
-      await prisma.account.upsert({
+      await prisma.user.upsert({
         where: { email },
         update: {},
         create: {
@@ -190,7 +190,7 @@ describe('Friend ledger — real DB', () => {
       await prisma.group.delete({ where: { id: gid } }).catch(() => {})
     }
     for (const aid of [callerId, peerId, thirdId]) {
-      await prisma.account.delete({ where: { id: aid } }).catch(() => {})
+      await prisma.user.delete({ where: { id: aid } }).catch(() => {})
     }
 
     await cleanupMaildevInbox(mailRecipients)
@@ -386,7 +386,7 @@ describe('Friend ledger — real DB', () => {
     const aEmail = `a-${runId}@test.example`
     const bId = `acct-b-${runId}`
     const bEmail = `b-${runId}@test.example`
-    await prisma.account.createMany({
+    await prisma.user.createMany({
       data: [
         { id: aId, email: aEmail, emailVerified: true, name: 'A' },
         { id: bId, email: bEmail, emailVerified: true, name: 'B' },
@@ -424,8 +424,8 @@ describe('Friend ledger — real DB', () => {
       expect(second.existed).toBe(true)
       expect(second.groupId).toBe(first.groupId)
     } finally {
-      await prisma.account.delete({ where: { id: aId } }).catch(() => {})
-      await prisma.account.delete({ where: { id: bId } }).catch(() => {})
+      await prisma.user.delete({ where: { id: aId } }).catch(() => {})
+      await prisma.user.delete({ where: { id: bId } }).catch(() => {})
     }
   })
 
@@ -453,7 +453,7 @@ describe('Friend ledger — real DB', () => {
     // and the account row is created. Here we create the account then
     // run the same auto-accept helper.
     const newAccountId = `acct-new-${runId}`
-    await prisma.account.create({
+    await prisma.user.create({
       data: {
         id: newAccountId,
         email: newEmail,
@@ -497,9 +497,7 @@ describe('Friend ledger — real DB', () => {
       const [smaller, larger] = [callerId, newAccountId].sort()
       expect(group!.friendPairKey).toBe(`${smaller}:${larger}`)
     } finally {
-      await prisma.account
-        .delete({ where: { id: newAccountId } })
-        .catch(() => {})
+      await prisma.user.delete({ where: { id: newAccountId } }).catch(() => {})
     }
   })
 
@@ -512,7 +510,7 @@ describe('Friend ledger — real DB', () => {
     // already created earlier in this test file.
     const linkRecipientId = `acct-linkrecv-${runId}`
     const linkRecipientEmail = `linkrecv-${runId}@test.example`
-    await prisma.account.create({
+    await prisma.user.create({
       data: {
         id: linkRecipientId,
         email: linkRecipientEmail,
@@ -597,7 +595,7 @@ describe('Friend ledger — real DB', () => {
       const group = await prisma.group.findUnique({ where: { id: groupId } })
       expect(group!.friendPairKey).not.toBeNull()
     } finally {
-      await prisma.account
+      await prisma.user
         .delete({ where: { id: linkRecipientId } })
         .catch(() => {})
     }
@@ -612,7 +610,7 @@ describe('Friend ledger — real DB', () => {
     // something to filter.
     const targetEmail = `pending-${runId}@unknown.example`
     const targetAccountId = `acct-listfilter-${runId}`
-    await prisma.account.create({
+    await prisma.user.create({
       data: {
         id: targetAccountId,
         email: targetEmail,
@@ -633,7 +631,7 @@ describe('Friend ledger — real DB', () => {
       )
       expect(friendInvites).toHaveLength(0)
     } finally {
-      await prisma.account
+      await prisma.user
         .delete({ where: { id: targetAccountId } })
         .catch(() => {})
     }
@@ -949,7 +947,7 @@ describe('Friend ledger — real DB', () => {
     const aEmail = `crud-a-${runId}@test.example`
     const bId = `acct-crud-b-${runId}`
     const bEmail = `crud-b-${runId}@test.example`
-    await prisma.account.createMany({
+    await prisma.user.createMany({
       data: [
         { id: aId, email: aEmail, emailVerified: true, name: 'CRUD A' },
         { id: bId, email: bEmail, emailVerified: true, name: 'CRUD B' },
@@ -1046,8 +1044,8 @@ describe('Friend ledger — real DB', () => {
       const afterDelete = await gc.expenses.list({ groupId: result.groupId })
       expect(afterDelete.expenses).toHaveLength(0)
     } finally {
-      await prisma.account.delete({ where: { id: aId } }).catch(() => {})
-      await prisma.account.delete({ where: { id: bId } }).catch(() => {})
+      await prisma.user.delete({ where: { id: aId } }).catch(() => {})
+      await prisma.user.delete({ where: { id: bId } }).catch(() => {})
     }
   })
 
@@ -1059,7 +1057,7 @@ describe('Friend ledger — real DB', () => {
     const aEmail = `bal-a-${runId}@test.example`
     const bId = `acct-bal-b-${runId}`
     const bEmail = `bal-b-${runId}@test.example`
-    await prisma.account.createMany({
+    await prisma.user.createMany({
       data: [
         { id: aId, email: aEmail, emailVerified: true, name: 'Bal A' },
         { id: bId, email: bEmail, emailVerified: true, name: 'Bal B' },
@@ -1129,8 +1127,8 @@ describe('Friend ledger — real DB', () => {
       expect(balancesResult.balances[bP.id].paidFor).toBe(2500)
       expect(balancesResult.balances[bP.id].total).toBe(-2500)
     } finally {
-      await prisma.account.delete({ where: { id: aId } }).catch(() => {})
-      await prisma.account.delete({ where: { id: bId } }).catch(() => {})
+      await prisma.user.delete({ where: { id: aId } }).catch(() => {})
+      await prisma.user.delete({ where: { id: bId } }).catch(() => {})
     }
   })
 
@@ -1142,7 +1140,7 @@ describe('Friend ledger — real DB', () => {
     const aEmail = `cd-a-${runId}@test.example`
     const newEmail = `cd-new-${runId}@test.example`
 
-    await prisma.account.create({
+    await prisma.user.create({
       data: { id: aId, email: aEmail, emailVerified: true, name: 'Cross A' },
     })
 
@@ -1163,7 +1161,7 @@ describe('Friend ledger — real DB', () => {
       trackGroup(aResult.groupId)
 
       const bId = `acct-cd-b-${runId}`
-      await prisma.account.create({
+      await prisma.user.create({
         data: {
           id: bId,
           email: newEmail,
@@ -1188,10 +1186,10 @@ describe('Friend ledger — real DB', () => {
         expect(bResult.existed).toBe(true)
         expect(bResult.groupId).toBe(aResult.groupId)
       } finally {
-        await prisma.account.delete({ where: { id: bId } }).catch(() => {})
+        await prisma.user.delete({ where: { id: bId } }).catch(() => {})
       }
     } finally {
-      await prisma.account.delete({ where: { id: aId } }).catch(() => {})
+      await prisma.user.delete({ where: { id: aId } }).catch(() => {})
     }
   })
 
@@ -1212,7 +1210,7 @@ describe('Friend ledger — real DB', () => {
     trackGroup(created.groupId)
 
     const newAccountId = `acct-race-${runId}`
-    await prisma.account.create({
+    await prisma.user.create({
       data: {
         id: newAccountId,
         email: newEmail,
@@ -1239,9 +1237,7 @@ describe('Friend ledger — real DB', () => {
         }),
       ).resolves.toBeUndefined()
     } finally {
-      await prisma.account
-        .delete({ where: { id: newAccountId } })
-        .catch(() => {})
+      await prisma.user.delete({ where: { id: newAccountId } }).catch(() => {})
     }
   })
 
@@ -1250,7 +1246,7 @@ describe('Friend ledger — real DB', () => {
     const aEmail = `dup-a-${runId}@test.example`
     const bId = `acct-dup-b-${runId}`
     const bEmail = `dup-b-${runId}@test.example`
-    await prisma.account.createMany({
+    await prisma.user.createMany({
       data: [
         { id: aId, email: aEmail, emailVerified: true, name: 'Dup A' },
         { id: bId, email: bEmail, emailVerified: true, name: 'Dup B' },
@@ -1352,8 +1348,8 @@ describe('Friend ledger — real DB', () => {
       await prisma.ledger
         .delete({ where: { id: `ldg-dup-stale-${runId}` } })
         .catch(() => {})
-      await prisma.account.delete({ where: { id: aId } }).catch(() => {})
-      await prisma.account.delete({ where: { id: bId } }).catch(() => {})
+      await prisma.user.delete({ where: { id: aId } }).catch(() => {})
+      await prisma.user.delete({ where: { id: bId } }).catch(() => {})
     }
   })
 

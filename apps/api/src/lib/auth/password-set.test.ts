@@ -179,7 +179,7 @@ describe('password-set plugin', () => {
     removeLimiter.clear()
     // restoreAllMocks would nuke the prismaMock reset from test/mocks.ts
     vi.clearAllMocks()
-    prismaMock.account.findUnique.mockResolvedValue(accountRow() as never)
+    prismaMock.user.findUnique.mockResolvedValue(accountRow() as never)
   })
 
   describe('getPasswordStatus', () => {
@@ -232,7 +232,7 @@ describe('password-set plugin', () => {
 
   describe('setPassword', () => {
     it('rejects anonymous accounts', async () => {
-      prismaMock.account.findUnique.mockResolvedValue(
+      prismaMock.user.findUnique.mockResolvedValue(
         accountRow({ isAnonymous: true }) as never,
       )
       await expect(
@@ -243,7 +243,7 @@ describe('password-set plugin', () => {
     })
 
     it('rejects placeholder email accounts', async () => {
-      prismaMock.account.findUnique.mockResolvedValue(
+      prismaMock.user.findUnique.mockResolvedValue(
         accountRow({ email: '123@github.placeholder.local' }) as never,
       )
       await expect(
@@ -254,7 +254,7 @@ describe('password-set plugin', () => {
     })
 
     it('rejects unverified email', async () => {
-      prismaMock.account.findUnique.mockResolvedValue(
+      prismaMock.user.findUnique.mockResolvedValue(
         accountRow({ emailVerified: false }) as never,
       )
       await expect(
@@ -394,7 +394,7 @@ describe('password-set plugin', () => {
         const { ctx, internalAdapter } = makeCtx(accountId)
         allowedAdapters.push(internalAdapter)
         ;(ctx.context.session.user as { id: string }).id = accountId
-        prismaMock.account.findUnique.mockResolvedValue(
+        prismaMock.user.findUnique.mockResolvedValue(
           accountRow({ id: accountId }) as never,
         )
         // The first ten attempts must genuinely succeed — do not swallow
@@ -413,7 +413,7 @@ describe('password-set plugin', () => {
       }
       const { ctx: blocked } = makeCtx(accountId)
       ;(blocked.context.session.user as { id: string }).id = accountId
-      prismaMock.account.findUnique.mockResolvedValue(
+      prismaMock.user.findUnique.mockResolvedValue(
         accountRow({ id: accountId }) as never,
       )
       await expect(
@@ -424,7 +424,7 @@ describe('password-set plugin', () => {
 
     it('returns 401 when account row missing', async () => {
       const isolatedId = `missing-${Date.now()}`
-      prismaMock.account.findUnique.mockResolvedValue(null as never)
+      prismaMock.user.findUnique.mockResolvedValue(null as never)
       await expect(
         plugin.endpoints.setPassword(
           sessionContext({
@@ -450,7 +450,7 @@ describe('password-set plugin', () => {
     }
 
     it('rejects anonymous accounts', async () => {
-      prismaMock.account.findUnique.mockResolvedValue(
+      prismaMock.user.findUnique.mockResolvedValue(
         accountRow({ isAnonymous: true }) as never,
       )
       await expect(
@@ -496,7 +496,7 @@ describe('password-set plugin', () => {
     it('rejects removal without alternative sign-in (no other provider, unverified email)', async () => {
       const internalAdapter = mockInternalAdapter()
       await seedCredential(internalAdapter, STRONG)
-      prismaMock.account.findUnique.mockResolvedValue(
+      prismaMock.user.findUnique.mockResolvedValue(
         accountRow({ emailVerified: false }) as never,
       )
       internalAdapter.findAccounts.mockResolvedValue([] as never)
@@ -513,7 +513,7 @@ describe('password-set plugin', () => {
     it('rejects removal when email is placeholder even if verified', async () => {
       const internalAdapter = mockInternalAdapter()
       await seedCredential(internalAdapter, STRONG)
-      prismaMock.account.findUnique.mockResolvedValue(
+      prismaMock.user.findUnique.mockResolvedValue(
         accountRow({
           email: '123@github.placeholder.local',
           emailVerified: true,
@@ -556,7 +556,7 @@ describe('password-set plugin', () => {
     it('allows removal with another provider (oauth) even without verified email and still emails if the email is real', async () => {
       const internalAdapter = mockInternalAdapter()
       await seedCredential(internalAdapter, STRONG)
-      prismaMock.account.findUnique.mockResolvedValue(
+      prismaMock.user.findUnique.mockResolvedValue(
         accountRow({
           email: 'user@example.com',
           emailVerified: false,
@@ -615,9 +615,7 @@ describe('password-set plugin', () => {
           id: 'cred-1',
           password: 'test-hash',
         } as never)
-        prismaMock.account.findUnique.mockResolvedValue(
-          rateLimitAccount as never,
-        )
+        prismaMock.user.findUnique.mockResolvedValue(rateLimitAccount as never)
         internalAdapter.findAccounts.mockResolvedValue([
           { providerId: 'google' },
         ] as never)

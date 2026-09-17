@@ -22,11 +22,11 @@ describe('assistant expense confirmation concurrency', () => {
       await prisma.expense.deleteMany({ where: { ledgerId } }).catch(() => {})
       await prisma.ledger.delete({ where: { id: ledgerId } }).catch(() => {})
     }
-    await prisma.account.delete({ where: { id: accountId } }).catch(() => {})
+    await prisma.user.delete({ where: { id: accountId } }).catch(() => {})
   })
 
   it('commits exactly one expense, activity, and notification sequence for parallel confirmations', async () => {
-    await prisma.account.create({
+    await prisma.user.create({
       data: {
         id: accountId,
         email,
@@ -73,7 +73,7 @@ describe('assistant expense confirmation concurrency', () => {
         accessToken: 'test-token',
         scopes: ['spliit:groups:read', 'spliit:expenses:write'],
         audiences: [`${env.MCP_PUBLIC_URL}/mcp`],
-        user: await prisma.account.findUniqueOrThrow({
+        user: await prisma.user.findUniqueOrThrow({
           where: { id: accountId },
         }),
         session: { id: `oauth:${accountId}` },

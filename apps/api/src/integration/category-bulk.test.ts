@@ -64,7 +64,7 @@ describe('bulkUpdateExpenseCategories — real DB', () => {
   }
 
   beforeAll(async () => {
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: adminEmail },
       update: {},
       create: {
@@ -107,7 +107,7 @@ describe('bulkUpdateExpenseCategories — real DB', () => {
       }
       await prisma.group.delete({ where: { id } }).catch(() => null)
     }
-    await prisma.account.delete({ where: { id: adminId } }).catch(() => null)
+    await prisma.user.delete({ where: { id: adminId } }).catch(() => null)
   })
 
   it('lists general, non-settlement expenses as categorization candidates', async () => {

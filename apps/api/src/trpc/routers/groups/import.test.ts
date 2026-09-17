@@ -29,7 +29,7 @@ function _makeCaller(authUserId: string) {
 }
 
 async function authAs(userId: string) {
-  prismaMock.account.findUnique.mockImplementation(async (args: unknown) => {
+  prismaMock.user.findUnique.mockImplementation(async (args: unknown) => {
     const id = (args as { where: { id: string } }).where.id
     return {
       id,
@@ -38,7 +38,7 @@ async function authAs(userId: string) {
       name: 'Alice',
     }
   })
-  prismaMock.account.findUnique.mockResolvedValue({
+  prismaMock.user.findUnique.mockResolvedValue({
     id: userId,
     email: 'alice@example.com',
     emailVerified: true,
@@ -1016,7 +1016,7 @@ describe('importGroup', () => {
     // validate LINK_EXISTING_PARTICIPANT refs. Stub as empty.
     prismaMock.ledgerParticipant.findMany.mockResolvedValue([] as never)
     // Override the account mock so the linked account lookup returns null
-    prismaMock.account.findUnique.mockResolvedValue(null as never)
+    prismaMock.user.findUnique.mockResolvedValue(null as never)
     await expect(
       importGroup(
         {
@@ -1277,7 +1277,7 @@ describe('linkUnlinkedParticipantToAccount', () => {
       displayName: 'Jane',
       ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
     } as never)
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'acct-other',
       email: 'b@example.com',
       emailVerified: true,
@@ -1314,7 +1314,7 @@ describe('linkUnlinkedParticipantToAccount', () => {
       displayName: 'Jane',
       ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
     } as never)
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'acct-other',
       email: 'b@example.com',
       emailVerified: true,

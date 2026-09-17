@@ -122,10 +122,10 @@ describe('importLinksRouter.link — email-based lookup', () => {
       displayName: 'Jane',
       ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
     } as never)
-    prismaMock.account.findFirst.mockResolvedValue({
+    prismaMock.user.findFirst.mockResolvedValue({
       id: 'acct-target',
     } as never)
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'acct-target',
     } as never)
     prismaMock.groupMember.create.mockResolvedValue({
@@ -151,7 +151,7 @@ describe('importLinksRouter.link — email-based lookup', () => {
     })
     expect(groupMemberCalls).toBeGreaterThanOrEqual(2)
     // The lookup used the lowercased email.
-    expect(prismaMock.account.findFirst).toHaveBeenCalledWith({
+    expect(prismaMock.user.findFirst).toHaveBeenCalledWith({
       where: { email: 'jane@example.com' },
       select: { id: true },
     })
@@ -159,7 +159,7 @@ describe('importLinksRouter.link — email-based lookup', () => {
 
   it('throws NOT_FOUND when no account exists for the email', async () => {
     stubGroupContext()
-    prismaMock.account.findFirst.mockResolvedValue(null as never)
+    prismaMock.user.findFirst.mockResolvedValue(null as never)
     const caller = importLinksRouter.createCaller(makeCaller('acct-admin'))
     await expect(
       caller.link({
@@ -242,10 +242,10 @@ describe('importLinksRouter.link — email-based lookup', () => {
       displayName: 'Jane',
       ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
     } as never)
-    prismaMock.account.findFirst.mockResolvedValue({
+    prismaMock.user.findFirst.mockResolvedValue({
       id: 'acct-alice',
     } as never)
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'acct-alice',
     } as never)
     prismaMock.groupMember.update.mockResolvedValue({
@@ -270,7 +270,7 @@ describe('importLinksRouter.link — email-based lookup', () => {
       ledgerParticipantId: 'lp-jane',
     })
     expect(groupMemberCalls).toBeGreaterThanOrEqual(2)
-    expect(prismaMock.account.findFirst).toHaveBeenCalledWith({
+    expect(prismaMock.user.findFirst).toHaveBeenCalledWith({
       where: { email: 'alice@example.com' },
       select: { id: true },
     })
@@ -337,7 +337,7 @@ describe('importLinksRouter.link — email-based lookup', () => {
     })
     // Email-based account resolution is skipped when pendingInvitationId
     // is supplied.
-    expect(prismaMock.account.findFirst).not.toHaveBeenCalled()
+    expect(prismaMock.user.findFirst).not.toHaveBeenCalled()
   })
 
   it('rejects the link to a non-pending invitation', async () => {
@@ -434,7 +434,7 @@ describe('importLinksRouter.link — email-based lookup', () => {
       where: { id: 'lp-jane' },
     })
     // Account lookup is bypassed when pendingInvitationId is supplied.
-    expect(prismaMock.account.findFirst).not.toHaveBeenCalled()
+    expect(prismaMock.user.findFirst).not.toHaveBeenCalled()
   })
 })
 

@@ -201,7 +201,7 @@ describe('expense file import', () => {
   }
 
   beforeAll(async () => {
-    await prisma.account.create({
+    await prisma.user.create({
       data: {
         id: accountId,
         email,
@@ -238,7 +238,7 @@ describe('expense file import', () => {
     for (const id of ledgerIds) {
       await prisma.ledger.delete({ where: { id } }).catch(() => {})
     }
-    await prisma.account.delete({ where: { id: accountId } }).catch(() => {})
+    await prisma.user.delete({ where: { id: accountId } }).catch(() => {})
   })
 
   it('previews duplicates, imports complete drafts atomically, and replays safely', async () => {
@@ -2787,7 +2787,7 @@ describe('expense file import document ownership', () => {
 
   beforeAll(async () => {
     storageOverrides.uploadsConfigured = true
-    await prisma.account.create({
+    await prisma.user.create({
       data: {
         id: accountId,
         email,
@@ -2831,7 +2831,7 @@ describe('expense file import document ownership', () => {
     for (const id of ledgerIds) {
       await prisma.ledger.delete({ where: { id } }).catch(() => {})
     }
-    await prisma.account.delete({ where: { id: accountId } }).catch(() => {})
+    await prisma.user.delete({ where: { id: accountId } }).catch(() => {})
   })
 
   it('promotes staged documents during preparation, before any transaction', async () => {

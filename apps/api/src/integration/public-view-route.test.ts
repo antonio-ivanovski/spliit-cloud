@@ -32,7 +32,7 @@ describe('Public view-only query param — real DB', () => {
   const publicCaller = () => groupsRouter.createCaller({ auth: null } as never)
 
   beforeAll(async () => {
-    await prisma.account.create({
+    await prisma.user.create({
       data: {
         id: adminId,
         email: adminEmail,
@@ -62,7 +62,7 @@ describe('Public view-only query param — real DB', () => {
 
   afterAll(async () => {
     await prisma.ledger.delete({ where: { id: ledgerId } }).catch(() => {})
-    await prisma.account.delete({ where: { id: adminId } }).catch(() => {})
+    await prisma.user.delete({ where: { id: adminId } }).catch(() => {})
   })
 
   it('uses the canonical group id plus viewKey across group read procedures', async () => {

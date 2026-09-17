@@ -90,7 +90,7 @@ export const friendsRouter = createTRPCRouter({
       if (friendFormValues.peerAccountId) {
         peer = { accountId: friendFormValues.peerAccountId }
       } else if (friendFormValues.peerEmail) {
-        const account = await prisma.account.findUnique({
+        const account = await prisma.user.findUnique({
           where: { email: friendFormValues.peerEmail.toLowerCase() },
           select: { id: true },
         })

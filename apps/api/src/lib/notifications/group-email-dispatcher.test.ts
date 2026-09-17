@@ -33,7 +33,7 @@ function buildEvent(
 const dispatcher = new GroupEmailActivityNotificationDispatcher()
 
 beforeEach(() => {
-  prismaMock.account.findUnique.mockResolvedValue({
+  prismaMock.user.findUnique.mockResolvedValue({
     email: 'bob@example.com',
     name: 'Alice',
   } as never)

@@ -235,7 +235,7 @@ async function preloadSnapshotContext(args: {
   const accountIdList = [...accountIds]
   const accounts =
     accountIdList.length > 0
-      ? await tx.account.findMany({
+      ? await tx.user.findMany({
           where: { id: { in: accountIdList } },
           select: {
             id: true,

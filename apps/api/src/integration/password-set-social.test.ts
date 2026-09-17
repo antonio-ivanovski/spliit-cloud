@@ -24,10 +24,10 @@ afterAll(async () => {
     await prisma.session.deleteMany({
       where: { userId: { in: trackedAccountIds } },
     })
-    await prisma.authIdentity.deleteMany({
+    await prisma.account.deleteMany({
       where: { userId: { in: trackedAccountIds } },
     })
-    await prisma.account.deleteMany({
+    await prisma.user.deleteMany({
       where: { id: { in: trackedAccountIds } },
     })
   }
@@ -52,7 +52,7 @@ async function signUpAndGetCookie(
     user?: { id: string }
   }
   // Ensure account exists
-  const account = await prisma.account.findUnique({
+  const account = await prisma.user.findUnique({
     where: { email: email.toLowerCase() },
   })
   if (!account)
@@ -60,7 +60,7 @@ async function signUpAndGetCookie(
       `account not created for ${email}: ${JSON.stringify(signUpBody)}`,
     )
   // Make email verified so sign-in is allowed
-  await prisma.account.update({
+  await prisma.user.update({
     where: { id: account.id },
     data: { emailVerified: true },
   })
@@ -93,10 +93,10 @@ describe('password-set for Google OAuth users → credential sign-in', () => {
     trackedAccountIds.push(account.id)
 
     // Delete the credential identity created by sign-up, then add Google identity
-    await prisma.authIdentity.deleteMany({
+    await prisma.account.deleteMany({
       where: { userId: account.id, providerId: 'credential' },
     })
-    await prisma.authIdentity.create({
+    await prisma.account.create({
       data: {
         id: `google-${runId}`,
         userId: account.id,
@@ -141,7 +141,7 @@ describe('password-set for Google OAuth users → credential sign-in', () => {
     expect(await setRes.json()).toEqual({ success: true })
 
     // 4. DB row is canonical (providerId, accountId)
-    const cred = await prisma.authIdentity.findFirst({
+    const cred = await prisma.account.findFirst({
       where: { userId: account.id, providerId: 'credential' },
     })
     expect(cred).toBeTruthy()
@@ -207,8 +207,8 @@ describe('password-set for Google OAuth users → credential sign-in', () => {
     trackedAccountIds.push(account.id)
 
     // Simulate stray credential-shaped row with wrong accountId
-    await prisma.authIdentity.deleteMany({ where: { userId: account.id } })
-    await prisma.authIdentity.create({
+    await prisma.account.deleteMany({ where: { userId: account.id } })
+    await prisma.account.create({
       data: {
         id: `stray-${runId}`,
         userId: account.id,
@@ -218,7 +218,7 @@ describe('password-set for Google OAuth users → credential sign-in', () => {
         password: null,
       },
     })
-    await prisma.authIdentity.create({
+    await prisma.account.create({
       data: {
         id: `google-stray-${runId}`,
         userId: account.id,
@@ -240,7 +240,7 @@ describe('password-set for Google OAuth users → credential sign-in', () => {
     expect(setRes.status).toBe(200)
 
     // Canonical row must exist (providerId credential, accountId userId)
-    const canonical = await prisma.authIdentity.findFirst({
+    const canonical = await prisma.account.findFirst({
       where: {
         userId: account.id,
         providerId: 'credential',

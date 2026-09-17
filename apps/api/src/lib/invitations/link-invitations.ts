@@ -346,7 +346,7 @@ export async function acceptLinkInvitation(
   // the wrong invitation (and its ledger participant), orphaning the
   // email invite. The email invitation is the recipient-specific
   // intent, so surface it instead of accepting via the link.
-  const account = await prisma.account.findUnique({
+  const account = await prisma.user.findUnique({
     where: { id: opts.accountId },
     select: { email: true },
   })
@@ -709,7 +709,7 @@ export async function listQrSessionJoiners(
   })
   if (activities.length === 0) return result
   const accountIds = [...new Set(activities.map((a) => a.actorId!))]
-  const accounts = await prisma.account.findMany({
+  const accounts = await prisma.user.findMany({
     where: { id: { in: accountIds } },
     select: { id: true, name: true, image: true },
   })

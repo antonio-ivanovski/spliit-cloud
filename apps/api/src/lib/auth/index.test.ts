@@ -145,7 +145,7 @@ describe('better-auth session config', () => {
   })
 
   it('marks a new anonymous account for the standard profile-name flow', async () => {
-    prismaMock.account.count.mockResolvedValue(0)
+    prismaMock.user.count.mockResolvedValue(0)
     const beforeCreate =
       realAuthModule.auth.options.databaseHooks?.user?.create?.before
     expect(beforeCreate).toBeDefined()
@@ -263,7 +263,7 @@ describe('better-auth session config', () => {
       name: 'Alice',
       image: null,
     }
-    prismaMock.account.findUnique.mockResolvedValue(account as never)
+    prismaMock.user.findUnique.mockResolvedValue(account as never)
     await getCachedAccount(account.id)
 
     await realAuthModule.auth.options.databaseHooks?.user?.update?.after?.({
@@ -275,7 +275,7 @@ describe('better-auth session config', () => {
     })
     await getCachedAccount(account.id)
 
-    expect(prismaMock.account.findUnique).toHaveBeenCalledTimes(3)
+    expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(3)
   })
 })
 
@@ -342,7 +342,7 @@ describe('better-auth emailAndPassword config', () => {
   })
 
   it('mentions other linked sign-in methods in password reset emails', async () => {
-    prismaMock.authIdentity.findMany.mockResolvedValueOnce([
+    prismaMock.account.findMany.mockResolvedValueOnce([
       { providerId: 'credential' },
       { providerId: 'google' },
       { providerId: 'magic-link' },
@@ -365,7 +365,7 @@ describe('better-auth emailAndPassword config', () => {
   })
 
   it('sends sign-in method guidance instead of reset copy for social-only accounts', async () => {
-    prismaMock.authIdentity.findMany.mockResolvedValueOnce([
+    prismaMock.account.findMany.mockResolvedValueOnce([
       { providerId: 'google' },
       { providerId: 'magic-link' },
     ])
@@ -387,9 +387,7 @@ describe('better-auth emailAndPassword config', () => {
   })
 
   it('uses the OIDC display name for password recovery method labels', async () => {
-    prismaMock.authIdentity.findMany.mockResolvedValueOnce([
-      { providerId: 'oidc' },
-    ])
+    prismaMock.account.findMany.mockResolvedValueOnce([{ providerId: 'oidc' }])
 
     await realAuthModule.auth.options.emailAndPassword?.sendResetPassword?.({
       user: { id: 'acct-1', email: 'alice@example.com' },

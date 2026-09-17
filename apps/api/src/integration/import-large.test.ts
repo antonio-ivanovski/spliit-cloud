@@ -120,7 +120,7 @@ describe('large group imports', () => {
   }
 
   beforeAll(async () => {
-    await prisma.account.create({
+    await prisma.user.create({
       data: {
         id: accountId,
         email,
@@ -134,7 +134,7 @@ describe('large group imports', () => {
     for (const ledgerId of ledgerIds) {
       await prisma.ledger.delete({ where: { id: ledgerId } }).catch(() => {})
     }
-    await prisma.account.delete({ where: { id: accountId } }).catch(() => {})
+    await prisma.user.delete({ where: { id: accountId } }).catch(() => {})
   })
 
   it('imports 1,113 expenses and all dependent rows within the default transaction timeout', async () => {

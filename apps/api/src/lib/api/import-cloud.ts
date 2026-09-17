@@ -630,7 +630,7 @@ async function createFriendImportLedger(
     peerMapping.mode === 'INVITE_CONTACT'
   ) {
     const email = peerMapping.email!.trim().toLowerCase()
-    const account = await tx.account.findUnique({
+    const account = await tx.user.findUnique({
       where: { email },
       select: { id: true },
     })
@@ -646,7 +646,7 @@ async function createFriendImportLedger(
     throw new Error('You cannot restore a friend ledger with yourself')
   }
   if ('accountId' in peerTarget) {
-    const peerAccount = await tx.account.findUnique({
+    const peerAccount = await tx.user.findUnique({
       where: { id: peerTarget.accountId },
       select: { id: true },
     })

@@ -4,8 +4,8 @@ export const accountSummarySelect = {
   id: true,
   name: true,
   image: true,
-} satisfies Prisma.AccountSelect
+} satisfies Prisma.UserSelect
 
-export type AccountSummary = Prisma.AccountGetPayload<{
+export type AccountSummary = Prisma.UserGetPayload<{
   select: typeof accountSummarySelect
 }>

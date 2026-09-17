@@ -68,7 +68,7 @@ describe.skipIf(!maildevReachable)('Email invitation flow — real DB', () => {
 
   beforeAll(async () => {
     // Create admin account
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: adminEmail },
       update: {},
       create: {
@@ -128,7 +128,7 @@ describe.skipIf(!maildevReachable)('Email invitation flow — real DB', () => {
 
     // Delete accounts
     for (const aid of accountIds) {
-      await prisma.account.delete({ where: { id: aid } }).catch(() => {})
+      await prisma.user.delete({ where: { id: aid } }).catch(() => {})
     }
 
     // Sweep mail owned by this suite (also on assertion failure).
@@ -190,7 +190,7 @@ describe.skipIf(!maildevReachable)('Email invitation flow — real DB', () => {
   it('accepts the invitation and adds the user as a group member', async () => {
     // Create the invitee account now — it was intentionally deferred so
     // the invitation email test above exercises the new-user variant.
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: inviteeEmail },
       update: {},
       create: {
@@ -271,13 +271,11 @@ describe.skipIf(!apiReachable || !maildevReachable)(
         .catch(() => {})
 
       // Clean up the account if it was created
-      const account = await prisma.account
+      const account = await prisma.user
         .findUnique({ where: { email: testEmail } })
         .catch(() => null)
       if (account) {
-        await prisma.account
-          .delete({ where: { id: account.id } })
-          .catch(() => {})
+        await prisma.user.delete({ where: { id: account.id } }).catch(() => {})
       }
 
       // Sweep mail owned by this suite (also on assertion failure).
@@ -348,7 +346,7 @@ describe.skipIf(!apiReachable || !maildevReachable)(
       }
 
       // Verify the session was actually created in the DB
-      const account = await prisma.account.findUnique({
+      const account = await prisma.user.findUnique({
         where: { email: testEmail },
       })
       if (account) {

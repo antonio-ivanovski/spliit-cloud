@@ -26,12 +26,12 @@ describe('canCreateAccount', () => {
     await expect(
       canCreateAccount({ email: 'stranger@example.com' }),
     ).resolves.toBe(true)
-    expect(prismaMock.account.count).not.toHaveBeenCalled()
+    expect(prismaMock.user.count).not.toHaveBeenCalled()
   })
 
   it('allows the first account on an invite-only instance', async () => {
     env.SIGNUP_MODE = 'invite_only'
-    prismaMock.account.count.mockResolvedValue(0)
+    prismaMock.user.count.mockResolvedValue(0)
     await expect(
       canCreateAccount({ email: 'owner@example.com' }),
     ).resolves.toBe(true)
@@ -39,7 +39,7 @@ describe('canCreateAccount', () => {
 
   it('allows an email with a pending EMAIL invitation', async () => {
     env.SIGNUP_MODE = 'invite_only'
-    prismaMock.account.count.mockResolvedValue(3)
+    prismaMock.user.count.mockResolvedValue(3)
     prismaMock.groupInvitation.findFirst.mockResolvedValue({
       id: 'inv-1',
     } as never)
@@ -50,7 +50,7 @@ describe('canCreateAccount', () => {
 
   it('rejects an unknown email without a live link token', async () => {
     env.SIGNUP_MODE = 'invite_only'
-    prismaMock.account.count.mockResolvedValue(3)
+    prismaMock.user.count.mockResolvedValue(3)
     prismaMock.groupInvitation.findFirst.mockResolvedValue(null)
     await expect(
       canCreateAccount({ email: 'stranger@example.com' }),
@@ -59,7 +59,7 @@ describe('canCreateAccount', () => {
 
   it('allows any email when a usable link invite token is present', async () => {
     env.SIGNUP_MODE = 'invite_only'
-    prismaMock.account.count.mockResolvedValue(3)
+    prismaMock.user.count.mockResolvedValue(3)
     const token = 'a'.repeat(32)
     prismaMock.groupInvitation.findFirst
       .mockResolvedValueOnce(null)
@@ -82,7 +82,7 @@ describe('canCreateAccount', () => {
 
   it('rejects an expired link invite token', async () => {
     env.SIGNUP_MODE = 'invite_only'
-    prismaMock.account.count.mockResolvedValue(3)
+    prismaMock.user.count.mockResolvedValue(3)
     prismaMock.groupInvitation.findFirst
       .mockResolvedValueOnce(null)
       .mockResolvedValueOnce({
@@ -116,7 +116,7 @@ describe('enforceSignupGate', () => {
 
   it('rejects password sign-up without invite proof', async () => {
     env.SIGNUP_MODE = 'invite_only'
-    prismaMock.account.count.mockResolvedValue(2)
+    prismaMock.user.count.mockResolvedValue(2)
     prismaMock.groupInvitation.findFirst.mockResolvedValue(null)
     await expect(
       enforceSignupGate({
@@ -131,7 +131,7 @@ describe('enforceSignupGate', () => {
 
   it('allows magic-link for an existing account', async () => {
     env.SIGNUP_MODE = 'invite_only'
-    prismaMock.account.findFirst.mockResolvedValue({ id: 'acct-1' } as never)
+    prismaMock.user.findFirst.mockResolvedValue({ id: 'acct-1' } as never)
     await expect(
       enforceSignupGate({
         path: '/sign-in/magic-link',
@@ -142,8 +142,8 @@ describe('enforceSignupGate', () => {
 
   it('rejects magic-link for an unknown email without invite proof', async () => {
     env.SIGNUP_MODE = 'invite_only'
-    prismaMock.account.count.mockResolvedValue(2)
-    prismaMock.account.findFirst.mockResolvedValue(null)
+    prismaMock.user.count.mockResolvedValue(2)
+    prismaMock.user.findFirst.mockResolvedValue(null)
     prismaMock.groupInvitation.findFirst.mockResolvedValue(null)
     await expect(
       enforceSignupGate({
@@ -233,7 +233,7 @@ describe('readLinkInviteToken', () => {
 describe('assertCanCreateAccount', () => {
   it('throws when invite-only and no proof is present', async () => {
     env.SIGNUP_MODE = 'invite_only'
-    prismaMock.account.count.mockResolvedValue(1)
+    prismaMock.user.count.mockResolvedValue(1)
     prismaMock.groupInvitation.findFirst.mockResolvedValue(null)
     await expect(
       assertCanCreateAccount({ email: 'nobody@example.com', context: null }),

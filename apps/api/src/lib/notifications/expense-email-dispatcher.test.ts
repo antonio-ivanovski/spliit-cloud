@@ -99,7 +99,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         },
       },
     ] as never)
-    prismaMock.account.findUnique.mockResolvedValue({ name: 'Alice' } as never)
+    prismaMock.user.findUnique.mockResolvedValue({ name: 'Alice' } as never)
 
     await dispatcher.dispatch({
       activity: buildEvent({
@@ -136,7 +136,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-alice', { email: 'alice@test.com' }),
         makeParticipant('lp-bob', { email: 'bob@test.com' }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         id: 'acct-alice',
         name: 'Alice',
       } as never)
@@ -166,7 +166,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-alice', { email: 'alice@test.com' }),
         makeParticipant('lp-bob', { email: 'bob@test.com' }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         id: 'acct-alice',
         name: 'Alice',
       } as never)
@@ -199,7 +199,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
           name: 'Bob',
         },
       } as never)
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         name: 'Alice',
       } as never)
 
@@ -238,7 +238,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-alice'),
         makeParticipant('lp-bob', { email: 'bob@test.com' }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         id: 'acct-alice',
         name: 'Alice',
       } as never)
@@ -273,7 +273,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-bob', { email: 'bob@test.com' }),
         makeParticipant('lp-carol', { email: 'carol@test.com' }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         id: 'acct-alice',
         name: 'Alice',
       } as never)
@@ -390,7 +390,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-alice'),
         makeParticipant('lp-bob', { email: 'bob@test.com' }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         id: 'acct-alice',
         name: 'Alice',
       } as never)
@@ -425,7 +425,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-alice'),
         makeParticipant('lp-bob', { email: 'bob@test.com' }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         id: 'acct-alice',
         name: 'Alice',
       } as never)
@@ -465,7 +465,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-bob', { email: 'bob@test.com' }),
         makeParticipant('lp-carol', { email: 'carol@test.com' }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         id: 'acct-alice',
         name: 'Alice',
       } as never)
@@ -508,7 +508,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
           hasGroupMember: false,
         }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         id: 'acct-alice',
         name: 'Alice',
       } as never)
@@ -554,7 +554,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-alice'),
         makeParticipant('lp-bob', { email: 'bob@test.com' }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         id: 'acct-alice',
         name: 'Alice',
       } as never)
@@ -586,7 +586,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-alice'),
         makeParticipant('lp-pending', { hasGroupMember: false }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         id: 'acct-alice',
         name: 'Alice',
       } as never)
@@ -612,7 +612,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-alice'),
         makeParticipant('lp-bob', { email: 'bob@test.com' }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         id: 'acct-alice',
         name: 'Alice',
       } as never)
@@ -652,7 +652,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-alice'),
         makeParticipant('lp-bob', { email: 'bob@test.com' }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         id: 'acct-alice',
         name: 'Alice',
       } as never)
@@ -695,7 +695,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-alice'),
         makeParticipant('lp-bob', { email: 'bob@test.com' }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         id: 'acct-alice',
         name: 'Alice',
       } as never)
@@ -725,7 +725,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-alice'),
         makeParticipant('lp-bob', { email: 'bob@test.com' }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         id: 'acct-alice',
         name: 'Alice',
       } as never)
@@ -755,7 +755,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-alice'),
         makeParticipant('lp-bob', { email: 'bob@test.com' }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         id: 'acct-alice',
         name: 'Alice',
       } as never)
@@ -787,7 +787,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-alice'),
         makeParticipant('lp-bob', { email: 'bob@test.com' }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         id: 'acct-alice',
         name: 'Alice',
       } as never)
@@ -817,7 +817,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-alice'),
         makeParticipant('lp-bob', { email: 'bob@test.com' }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         id: 'acct-alice',
         name: 'Alice',
       } as never)
@@ -849,7 +849,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
 
   describe('recurring_expense_stopped (standalone)', () => {
     it('includes full cadence+termination in the body and HTML recurrence line', async () => {
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         id: 'acct-alice',
         name: 'Alice',
       } as never)
@@ -892,7 +892,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
     })
 
     it('renders DATE termination in the recurrence line', async () => {
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         id: 'acct-alice',
         name: 'Alice',
       } as never)
@@ -933,7 +933,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
 
   describe('recurring_expense_summary', () => {
     it('sends an email containing natural English cadence for the recurring summary', async () => {
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         id: 'acct-alice',
         name: 'Alice',
       } as never)
@@ -983,7 +983,7 @@ describe('ExpenseEmailActivityNotificationDispatcher', () => {
         makeParticipant('lp-alice'),
         makeParticipant('lp-bob', { email: 'bob@test.com' }),
       ] as never)
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         id: 'acct-alice',
         name: 'Alice',
       } as never)

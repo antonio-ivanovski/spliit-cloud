@@ -339,7 +339,7 @@ export const accountRouter = createTRPCRouter({
     )
     .output(z.object({ account: accountProfileSchema }))
     .mutation(async ({ input, ctx }) => {
-      const account = await prisma.account.update({
+      const account = await prisma.user.update({
         where: { id: ctx.auth.user.id },
         data: { name: input.name },
         select: {
@@ -359,11 +359,11 @@ export const accountRouter = createTRPCRouter({
   removeProfileImage: protectedProcedure
     .output(z.object({ account: accountProfileSchema }))
     .mutation(async ({ ctx }) => {
-      const existing = await prisma.account.findUnique({
+      const existing = await prisma.user.findUnique({
         where: { id: ctx.auth.user.id },
         select: { image: true },
       })
-      const account = await prisma.account.update({
+      const account = await prisma.user.update({
         where: { id: ctx.auth.user.id },
         data: { image: null },
         select: {
@@ -408,11 +408,11 @@ export const accountRouter = createTRPCRouter({
           message: 'Profile image upload is invalid',
         })
       }
-      const existing = await prisma.account.findUnique({
+      const existing = await prisma.user.findUnique({
         where: { id: ctx.auth.user.id },
         select: { image: true },
       })
-      const account = await prisma.account.update({
+      const account = await prisma.user.update({
         where: { id: ctx.auth.user.id },
         data: { image: input.fileUrl },
         select: {
@@ -760,7 +760,7 @@ export const accountRouter = createTRPCRouter({
       })
 
       const accountIds = coMembers.map((c) => c.accountId)
-      const accounts = await prisma.account.findMany({
+      const accounts = await prisma.user.findMany({
         where: { id: { in: accountIds } },
         select: { id: true, name: true, email: true, image: true },
       })

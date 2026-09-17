@@ -33,7 +33,7 @@ describe('account cache generation guard', () => {
     // First call returns the stale row; we then invalidate before it would
     // have been cached, and resolve the next fetch with the fresh row.
     let resolveFirst: (account: typeof staleAccount) => void = () => {}
-    prismaMock.account.findUnique
+    prismaMock.user.findUnique
       .mockImplementationOnce(
         () => new Promise((resolve) => (resolveFirst = resolve)) as never,
       )
@@ -56,7 +56,7 @@ describe('account cache generation guard', () => {
       ...freshAccount,
       anonymousOnboardingCompleted: true,
     })
-    expect(prismaMock.account.findUnique).toHaveBeenCalledTimes(2)
+    expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(2)
   })
 
   it('keeps a fetch that lands before invalidateAccountCache', async () => {
@@ -68,7 +68,7 @@ describe('account cache generation guard', () => {
       name: 'Alice',
       image: null,
     }
-    prismaMock.account.findUnique.mockResolvedValue(account as never)
+    prismaMock.user.findUnique.mockResolvedValue(account as never)
 
     const firstResult = await getCachedAccount(id)
     invalidateAccountCache(id)
@@ -79,7 +79,7 @@ describe('account cache generation guard', () => {
       ...account,
       anonymousOnboardingCompleted: true,
     })
-    expect(prismaMock.account.findUnique).toHaveBeenCalledTimes(1)
+    expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(1)
   })
 
   it('rejects concurrent fetches when clearAccountCache runs in between', async () => {
@@ -100,7 +100,7 @@ describe('account cache generation guard', () => {
     }
 
     let resolveFirst: (account: typeof firstAccount) => void = () => {}
-    prismaMock.account.findUnique
+    prismaMock.user.findUnique
       .mockImplementationOnce(
         () => new Promise((resolve) => (resolveFirst = resolve)) as never,
       )
@@ -118,11 +118,11 @@ describe('account cache generation guard', () => {
       ...secondAccount,
       anonymousOnboardingCompleted: true,
     })
-    expect(prismaMock.account.findUnique).toHaveBeenCalledTimes(2)
+    expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(2)
   })
 
   it('marks an anonymous account complete only after recovery is acknowledged', async () => {
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'anonymous-1',
       isAnonymous: true,
       name: 'Guest',
@@ -152,7 +152,7 @@ describe('account cache generation guard', () => {
   })
 
   it('does not look up recovery credentials for ordinary accounts', async () => {
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'acct-1',
       isAnonymous: false,
       name: 'Alice',

@@ -58,7 +58,7 @@ export async function assertNotInvitingSelf(
   normalizedEmail: string,
   client: InvitationClient = prisma,
 ) {
-  const inviter = await client.account.findUnique({
+  const inviter = await client.user.findUnique({
     where: { id: inviterAccountId },
   })
   if (inviter && inviter.email.toLowerCase() === normalizedEmail) {
@@ -152,7 +152,7 @@ export async function createEmailInvitation({
   // name is authoritative and overwrites any submitted temporary name —
   // mirroring the pending-invitation manage path so pending rows and emails
   // are consistent.
-  const matchedAccount = await client.account.findFirst({
+  const matchedAccount = await client.user.findFirst({
     where: { email: { equals: normalizedEmail, mode: 'insensitive' } },
     select: { name: true },
   })

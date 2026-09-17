@@ -430,7 +430,7 @@ export class EmailDeliverySenderImpl implements EmailDeliverySender {
     snapshot: DeliverySnapshotV1
     recipientAccountId: string
   }): Promise<void> {
-    const account = await prisma.account.findUnique({
+    const account = await prisma.user.findUnique({
       where: { id: args.recipientAccountId },
       select: { email: true, emailVerified: true },
     })

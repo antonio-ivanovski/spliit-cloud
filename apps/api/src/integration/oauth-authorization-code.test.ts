@@ -44,7 +44,7 @@ afterAll(async () => {
     await prisma.session.deleteMany({
       where: { userId: { in: trackedAccountIds } },
     })
-    await prisma.account.deleteMany({
+    await prisma.user.deleteMany({
       where: { id: { in: trackedAccountIds } },
     })
   }
@@ -261,7 +261,7 @@ describe('OAuth authorization code + PKCE + refresh', () => {
     const expiresAt = new Date(Date.now() + 1000 * 60 * 60)
     // Transaction so a failed session insert cannot leak the account row.
     const accountId = await prisma.$transaction(async (tx) => {
-      const account = await tx.account.create({
+      const account = await tx.user.create({
         data: {
           id: `oauth-fixture-${runId}`,
           email: `oauth-user-${runId}@test.example`,
@@ -493,7 +493,7 @@ describe('OAuth authorization code + PKCE + refresh', () => {
     // Exercise the MCP-specific assistant surface with the verified token's
     // identity fields. The API-default case above covers the real HTTP bearer
     // and JWKS boundary; this assertion stays focused on legacy MCP behavior.
-    const account = await prisma.account.findUnique({
+    const account = await prisma.user.findUnique({
       where: { id: accountId },
     })
     const groupCaller = groupsRouter.createCaller({
@@ -778,7 +778,7 @@ describe('OAuth authorization code + PKCE + refresh', () => {
     }
     expect(tokens.scope.split(' ')).not.toContain('spliit:expenses:write')
 
-    const account = await prisma.account.findUnique({
+    const account = await prisma.user.findUnique({
       where: { id: accountId },
     })
     const assistantCaller = assistantRouter.createCaller({

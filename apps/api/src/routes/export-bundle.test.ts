@@ -42,7 +42,7 @@ function enableMember() {
     user: { id: 'acct-1' },
     session: { id: 'sess-1' },
   }
-  prismaMock.account.findUnique.mockResolvedValue({
+  prismaMock.user.findUnique.mockResolvedValue({
     id: 'acct-1',
     email: 'alice@example.com',
   })

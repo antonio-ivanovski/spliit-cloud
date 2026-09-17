@@ -121,7 +121,7 @@ export const importLinksRouter = createTRPCRouter({
           if (!resolvedAccountId) {
             const account = await (
               await import('@spliit/db')
-            ).prisma.account.findFirst({
+            ).prisma.user.findFirst({
               where: { email: email!.toLowerCase() },
               select: { id: true },
             })

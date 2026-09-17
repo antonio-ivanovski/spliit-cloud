@@ -51,7 +51,7 @@ describe.skipIf(!maildevReachable)(
     }
 
     beforeAll(async () => {
-      await prisma.account.upsert({
+      await prisma.user.upsert({
         where: { email: adminEmail },
         update: {},
         create: {
@@ -102,7 +102,7 @@ describe.skipIf(!maildevReachable)(
         await prisma.ledger.delete({ where: { id: lid } }).catch(() => {})
       }
       for (const aid of accountIds) {
-        await prisma.account.delete({ where: { id: aid } }).catch(() => {})
+        await prisma.user.delete({ where: { id: aid } }).catch(() => {})
       }
 
       // Sweep mail owned by this suite (also on assertion failure).
@@ -219,7 +219,7 @@ describe('import summary notification', () => {
   }
 
   beforeAll(async () => {
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: adminEmail2 },
       update: {},
       create: {
@@ -229,7 +229,7 @@ describe('import summary notification', () => {
         name: 'Test Admin',
       },
     })
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: aliceEmail2 },
       update: {},
       create: {
@@ -254,8 +254,8 @@ describe('import summary notification', () => {
     for (const lid of ledgerIds2) {
       await prisma.ledger.delete({ where: { id: lid } }).catch(() => {})
     }
-    await prisma.account.delete({ where: { id: adminId2 } }).catch(() => {})
-    await prisma.account.delete({ where: { id: aliceId2 } }).catch(() => {})
+    await prisma.user.delete({ where: { id: adminId2 } }).catch(() => {})
+    await prisma.user.delete({ where: { id: aliceId2 } }).catch(() => {})
   })
 
   async function createGroup(name: string, addAlice = false) {
@@ -457,7 +457,7 @@ describe('Import participant deduplication', () => {
   }
 
   beforeAll(async () => {
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: adminEmail3 },
       update: {},
       create: {
@@ -497,7 +497,7 @@ describe('Import participant deduplication', () => {
   })
 
   afterAll(async () => {
-    await prisma.account.delete({ where: { id: adminId3 } }).catch(() => {})
+    await prisma.user.delete({ where: { id: adminId3 } }).catch(() => {})
 
     // The dedup import dispatches a real invitation email that no assertion
     // consumes; sweep it so the persistent MailDev store stays bounded.
@@ -651,7 +651,7 @@ describe('Import summary — totalAmount excludes settlements', () => {
   }
 
   beforeAll(async () => {
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: adminEmail4 },
       update: {},
       create: {
@@ -694,7 +694,7 @@ describe('Import summary — totalAmount excludes settlements', () => {
   })
 
   afterAll(async () => {
-    await prisma.account.delete({ where: { id: adminId4 } }).catch(() => {})
+    await prisma.user.delete({ where: { id: adminId4 } }).catch(() => {})
   })
 
   async function createGroupWithAdmin(currencyCode = 'EUR') {

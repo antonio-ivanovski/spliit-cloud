@@ -47,11 +47,11 @@ export async function updateMemberRole(opts: {
     return target
   }
 
-  const targetAccount = await prisma.account.findUnique({
+  const targetAccount = await prisma.user.findUnique({
     where: { id: target.accountId },
     select: { name: true },
   })
-  const actorAccount = await prisma.account.findUnique({
+  const actorAccount = await prisma.user.findUnique({
     where: { id: actor.accountId },
     select: { name: true },
   })
@@ -143,7 +143,7 @@ export async function removeMember(opts: {
     )
   }
 
-  const actorAccount = await prisma.account.findUnique({
+  const actorAccount = await prisma.user.findUnique({
     where: { id: actor.accountId },
     select: { name: true },
   })

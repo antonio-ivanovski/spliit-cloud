@@ -35,7 +35,7 @@ function enableAccount() {
     user: { id: 'acct-1' },
     session: { id: 'sess-1' },
   }
-  prismaMock.account.findUnique.mockResolvedValue({
+  prismaMock.user.findUnique.mockResolvedValue({
     id: 'acct-1',
     name: 'Alice',
     email: 'alice@example.com',
@@ -51,7 +51,7 @@ describe('exportAccountBundle route', () => {
     const response = await exportAccountBundle(makeRequest())
 
     expect(response.status).toBe(401)
-    expect(prismaMock.account.findUnique).not.toHaveBeenCalled()
+    expect(prismaMock.user.findUnique).not.toHaveBeenCalled()
   })
 
   it('rejects malformed selections without opening a transaction', async () => {

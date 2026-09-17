@@ -122,11 +122,11 @@ beforeEach(() => {
     [] as never,
   )
   prismaMock.pushSubscription.findMany.mockResolvedValue([] as never)
-  prismaMock.account.findUnique.mockResolvedValue({
+  prismaMock.user.findUnique.mockResolvedValue({
     id: 'account-bob',
     name: 'Bob',
   } as never)
-  prismaMock.account.findMany.mockImplementation((async (args: {
+  prismaMock.user.findMany.mockImplementation((async (args: {
     where?: { id?: { in?: string[] } | string }
   }) => {
     const ids = (() => {

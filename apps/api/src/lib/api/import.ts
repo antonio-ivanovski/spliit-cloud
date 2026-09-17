@@ -633,7 +633,7 @@ export async function importGroup(
         continue
       }
 
-      const account = await tx.account.findUnique({
+      const account = await tx.user.findUnique({
         where: { id: mapping.linkedAccountId },
         select: { id: true },
       })
@@ -1004,7 +1004,7 @@ export async function importGroup(
   if (!group) {
     throw new Error('Group not found after import commit')
   }
-  const inviter = await client.account.findUnique({
+  const inviter = await client.user.findUnique({
     where: { id: actor.accountId },
     select: { name: true, email: true },
   })
@@ -1029,7 +1029,7 @@ export async function importGroup(
         notificationBoss: boss,
         tx: options?.tx,
       })
-      const existingAccount = await client.account.findFirst({
+      const existingAccount = await client.user.findFirst({
         where: { email: { equals: email.toLowerCase(), mode: 'insensitive' } },
         select: { id: true },
       })

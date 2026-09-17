@@ -62,7 +62,7 @@ describe('createTRPCContext', () => {
       emailVerified: true,
       name: 'Alice',
     }
-    prismaMock.account.findUnique.mockResolvedValue(refreshedAccount)
+    prismaMock.user.findUnique.mockResolvedValue(refreshedAccount)
 
     const ctx = await createTRPCContext({ req: makeRequest() })
 
@@ -110,14 +110,14 @@ describe('protectedProcedure', () => {
       emailVerified: true,
       name: 'Alice',
     }
-    prismaMock.account.findUnique.mockResolvedValue(refreshedAccount)
+    prismaMock.user.findUnique.mockResolvedValue(refreshedAccount)
     const ctx = await createTRPCContext({ req: makeRequest() })
 
     const result = await callProbe(ctx)
 
     expect(result).toEqual({ authUserId: 'acct-1' })
     expect(ctx.auth).not.toBeNull()
-    expect(prismaMock.account.findUnique).toHaveBeenCalledWith({
+    expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
       where: { id: 'acct-1' },
     })
   })
@@ -127,7 +127,7 @@ describe('protectedProcedure', () => {
       user: { id: 'anonymous-1' },
       session: { id: 'sess-anonymous' },
     }
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'anonymous-1',
       email: 'guest@test.anonymous.placeholder.local',
       emailVerified: false,
@@ -148,7 +148,7 @@ describe('protectedProcedure', () => {
       user: { id: 'anonymous-2' },
       session: { id: 'sess-anonymous-2' },
     }
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'anonymous-2',
       email: 'guest2@test.anonymous.placeholder.local',
       emailVerified: false,

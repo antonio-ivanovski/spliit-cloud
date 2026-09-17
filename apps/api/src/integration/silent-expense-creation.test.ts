@@ -46,7 +46,7 @@ describe('Silent expense creation — activity + notification', () => {
   }
 
   beforeAll(async () => {
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: adminEmail },
       update: {},
       create: {
@@ -56,7 +56,7 @@ describe('Silent expense creation — activity + notification', () => {
         name: 'Test Admin',
       },
     })
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: aliceEmail },
       update: {},
       create: {
@@ -82,8 +82,8 @@ describe('Silent expense creation — activity + notification', () => {
     for (const lid of ledgerIds) {
       await prisma.ledger.delete({ where: { id: lid } }).catch(() => {})
     }
-    await prisma.account.delete({ where: { id: adminId } }).catch(() => {})
-    await prisma.account.delete({ where: { id: aliceId } }).catch(() => {})
+    await prisma.user.delete({ where: { id: adminId } }).catch(() => {})
+    await prisma.user.delete({ where: { id: aliceId } }).catch(() => {})
   })
 
   // -------------------------------------------------------------------

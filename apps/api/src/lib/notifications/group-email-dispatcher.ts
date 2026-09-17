@@ -51,7 +51,7 @@ export class GroupEmailActivityNotificationDispatcher implements ActivityNotific
       return
     const [account, group, actor, invitation, inviterMembership] =
       await Promise.all([
-        prisma.account.findUnique({
+        prisma.user.findUnique({
           where: { id: intent.recipientAccountId },
           select: { email: true },
         }),
@@ -60,7 +60,7 @@ export class GroupEmailActivityNotificationDispatcher implements ActivityNotific
           select: { name: true },
         }),
         intent.activity.actor?.type === 'ACCOUNT'
-          ? prisma.account.findUnique({
+          ? prisma.user.findUnique({
               where: { id: intent.activity.actor.id },
               select: { name: true },
             })

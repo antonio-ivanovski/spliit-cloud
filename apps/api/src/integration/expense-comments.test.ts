@@ -26,7 +26,7 @@ describe('Expense comments — real DB', () => {
   } as never)
 
   beforeAll(async () => {
-    await prisma.account.create({
+    await prisma.user.create({
       data: {
         id: accountId,
         email,
@@ -40,7 +40,7 @@ describe('Expense comments — real DB', () => {
     if (ledgerId) {
       await prisma.ledger.delete({ where: { id: ledgerId } }).catch(() => {})
     }
-    await prisma.account.delete({ where: { id: accountId } }).catch(() => {})
+    await prisma.user.delete({ where: { id: accountId } }).catch(() => {})
   })
 
   it('preserves author snapshots and cascades comment activities with the expense', async () => {
@@ -102,7 +102,7 @@ describe('Expense comments — real DB', () => {
       subjectId: expenseId,
     })
 
-    await prisma.account.delete({ where: { id: accountId } })
+    await prisma.user.delete({ where: { id: accountId } })
     const preserved = await prisma.expenseComment.findUniqueOrThrow({
       where: { id: comment.id },
     })

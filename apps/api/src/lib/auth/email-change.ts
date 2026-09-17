@@ -154,7 +154,7 @@ function enforceAccountRateLimit(
 }
 
 async function loadAccount(accountId: string) {
-  const account = await prisma.account.findUnique({
+  const account = await prisma.user.findUnique({
     where: { id: accountId },
     select: {
       id: true,
@@ -225,7 +225,7 @@ export function emailChange() {
             })
           }
 
-          const taken = await prisma.account.findFirst({
+          const taken = await prisma.user.findFirst({
             where: {
               email: { equals: email, mode: 'insensitive' },
               NOT: { id: account.id },
@@ -375,7 +375,7 @@ export function emailChange() {
           let updated: typeof account
           try {
             updated = await prisma.$transaction(async (tx) => {
-              const next = await tx.account.update({
+              const next = await tx.user.update({
                 where: { id: account.id },
                 data: {
                   email,
@@ -399,7 +399,7 @@ export function emailChange() {
                 })
               }
               if (!previousWasPlaceholder) {
-                await tx.authIdentity.updateMany({
+                await tx.account.updateMany({
                   where: {
                     userId: account.id,
                     providerId: { in: ['credential', 'magic-link'] },

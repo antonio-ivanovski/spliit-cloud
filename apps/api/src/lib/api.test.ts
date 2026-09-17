@@ -699,7 +699,7 @@ describe('getActivities', () => {
         paidBySplitMode: 'EVENLY',
       },
     ] as never)
-    prismaMock.account.findMany.mockResolvedValue([
+    prismaMock.user.findMany.mockResolvedValue([
       { id: 'acct-alice', name: 'Alice' },
       { id: 'acct-bob', name: 'Bob' },
     ] as never)
@@ -891,7 +891,7 @@ describe('linkUnlinkedParticipantToAccount', () => {
       displayName: 'Jane',
       ledger: { id: 'ledger-1', group: { id: 'grp-1' } },
     } as never)
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'acct-alice',
       name: 'Alice',
     } as never)
@@ -988,7 +988,7 @@ describe('linkUnlinkedParticipantToAccount', () => {
         return null as never
       },
     )
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'acct-alice',
     } as never)
     prismaMock.groupMember.findUnique.mockResolvedValue({
@@ -1099,7 +1099,7 @@ describe('linkUnlinkedParticipantToAccount', () => {
         return null as never
       },
     )
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'acct-alice',
     } as never)
     prismaMock.groupMember.findUnique.mockResolvedValue({

@@ -60,7 +60,7 @@ describe('Invitation flow — real DB', () => {
 
   beforeAll(async () => {
     // Create the admin account and the invitee account
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: adminEmail },
       update: {},
       create: {
@@ -70,7 +70,7 @@ describe('Invitation flow — real DB', () => {
         name: 'Test Admin',
       },
     })
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: inviteeEmail },
       update: {},
       create: {
@@ -80,7 +80,7 @@ describe('Invitation flow — real DB', () => {
         name: 'Test User',
       },
     })
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: retargetedEmail },
       update: {},
       create: {
@@ -96,9 +96,9 @@ describe('Invitation flow — real DB', () => {
     for (const lid of ledgerIds) {
       await prisma.ledger.delete({ where: { id: lid } }).catch(() => {})
     }
-    await prisma.account.delete({ where: { id: adminId } }).catch(() => {})
-    await prisma.account.delete({ where: { id: inviteeId } }).catch(() => {})
-    await prisma.account.delete({ where: { id: retargetedId } }).catch(() => {})
+    await prisma.user.delete({ where: { id: adminId } }).catch(() => {})
+    await prisma.user.delete({ where: { id: inviteeId } }).catch(() => {})
+    await prisma.user.delete({ where: { id: retargetedId } }).catch(() => {})
 
     // Invitation deliveries this suite triggers; swept so the persistent
     // MailDev store stays bounded (also on assertion failure).

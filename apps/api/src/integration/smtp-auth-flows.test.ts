@@ -50,7 +50,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
     }
 
     for (const aid of accountIds) {
-      await prisma.account.delete({ where: { id: aid } }).catch(() => {})
+      await prisma.user.delete({ where: { id: aid } }).catch(() => {})
     }
 
     await cleanupMaildevInbox(mailRecipients)
@@ -70,7 +70,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
       // delivery and sign-in are covered elsewhere in this file; this test is
       // only about the password-reset flow. One precomputed hash for the
       // whole group — no per-test crypto.
-      await prisma.account.create({
+      await prisma.user.create({
         data: {
           id: accountId,
           email,
@@ -79,7 +79,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
         },
       })
       accountIds.push(accountId)
-      await prisma.authIdentity.create({
+      await prisma.account.create({
         data: {
           id: `auth-id-${runId}`,
           providerId: 'credential',
@@ -135,7 +135,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
     const mlAccountId = `ml-acct-${runId}`
 
     beforeAll(async () => {
-      await prisma.account.create({
+      await prisma.user.create({
         data: {
           id: mlAccountId,
           email: mlEmail,
@@ -144,7 +144,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
         },
       })
       accountIds.push(mlAccountId)
-      await prisma.authIdentity.create({
+      await prisma.account.create({
         data: {
           id: `ml-id-${runId}`,
           providerId: 'magic-link',
@@ -201,7 +201,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
       })
       expect([200, 302, 307]).toContain(signUpRes.status)
 
-      const acct = await prisma.account.findUnique({
+      const acct = await prisma.user.findUnique({
         where: { email: verifyEmail },
       })
       expect(acct).not.toBeNull()
@@ -228,7 +228,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
       })
       expect([200, 302, 307, 308]).toContain(verifyRes.status)
 
-      const updated = await prisma.account.findUnique({
+      const updated = await prisma.user.findUnique({
         where: { email: verifyEmail },
       })
       expect(updated!.emailVerified).toBe(true)
@@ -263,7 +263,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
     }
 
     beforeAll(async () => {
-      await prisma.account.upsert({
+      await prisma.user.upsert({
         where: { email: adminEmail },
         update: {},
         create: {
@@ -409,7 +409,7 @@ describe.skipIf(!maildevReachable)('SMTP graceful degradation', () => {
   }
 
   beforeAll(async () => {
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: adminEmail },
       update: {},
       create: {
@@ -462,7 +462,7 @@ describe.skipIf(!maildevReachable)('SMTP graceful degradation', () => {
     for (const lid of ledgerIds) {
       await prisma.ledger.delete({ where: { id: lid } }).catch(() => {})
     }
-    await prisma.account.delete({ where: { id: adminId } }).catch(() => {})
+    await prisma.user.delete({ where: { id: adminId } }).catch(() => {})
 
     await cleanupMaildevInbox([inviteeEmail])
   })

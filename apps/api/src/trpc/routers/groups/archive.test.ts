@@ -52,7 +52,7 @@ async function authAs(userId: string) {
     user: { id: userId },
     session: { id: 'sess-1' },
   }
-  prismaMock.account.findUnique.mockImplementation(async (args: unknown) => {
+  prismaMock.user.findUnique.mockImplementation(async (args: unknown) => {
     const id = (args as { where: { id: string } }).where.id
     return {
       id,

@@ -94,7 +94,7 @@ async function invitationRecipient(
     select: { email: true },
   })
   if (!invitation?.email) return []
-  const account = await client.account.findFirst({
+  const account = await client.user.findFirst({
     where: { email: { equals: invitation.email, mode: 'insensitive' } },
     select: { id: true },
   })

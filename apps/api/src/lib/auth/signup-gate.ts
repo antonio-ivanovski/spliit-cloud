@@ -43,7 +43,7 @@ export function isInviteOnlySignup(): boolean {
 
 export async function allowUninvitedSignup(): Promise<boolean> {
   if (!isInviteOnlySignup()) return true
-  return (await prisma.account.count()) === 0
+  return (await prisma.user.count()) === 0
 }
 
 export async function hasPendingEmailInvitationForEmail(
@@ -136,7 +136,7 @@ export async function enforceSignupGate(ctx: SignupGateRequest): Promise<void> {
   if (ctx.path === '/sign-in/magic-link') {
     const email = readBodyEmail(ctx)
     if (email) {
-      const existing = await prisma.account.findFirst({
+      const existing = await prisma.user.findFirst({
         where: { email: { equals: email.trim(), mode: 'insensitive' } },
         select: { id: true },
       })

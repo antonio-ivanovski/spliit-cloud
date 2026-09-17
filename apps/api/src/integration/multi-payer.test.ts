@@ -52,7 +52,7 @@ describe('Multi-payer expenses — real DB', () => {
   }
 
   beforeAll(async () => {
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: adminEmail },
       update: {},
       create: {
@@ -71,7 +71,7 @@ describe('Multi-payer expenses — real DB', () => {
       await prisma.ledger.delete({ where: { id: lid } }).catch(() => {})
     }
     for (const aid of accountIds) {
-      await prisma.account.delete({ where: { id: aid } }).catch(() => {})
+      await prisma.user.delete({ where: { id: aid } }).catch(() => {})
     }
   })
 

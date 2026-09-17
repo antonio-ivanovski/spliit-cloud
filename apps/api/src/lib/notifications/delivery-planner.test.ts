@@ -118,10 +118,10 @@ beforeEach(() => {
     lastCreatedIds.map((id) => ({ id }))) as never)
   mockExpenseParticipantAccount('account-bob')
   mockGroup()
-  prismaMock.account.findUnique.mockImplementation((async (args: {
+  prismaMock.user.findUnique.mockImplementation((async (args: {
     where: { id: string }
   }) => mockAccount(args.where.id)) as never)
-  prismaMock.account.findMany.mockImplementation((async (args: {
+  prismaMock.user.findMany.mockImplementation((async (args: {
     where?: { id?: { in?: string[] } | string }
   }) => {
     const ids = (() => {
@@ -223,7 +223,7 @@ describe('planActivityNotificationDeliveries', () => {
       },
     ] as never)
 
-    const accountCallsBefore = prismaMock.account.findMany.mock.calls.length
+    const accountCallsBefore = prismaMock.user.findMany.mock.calls.length
 
     const ids = await planActivityNotificationDeliveries({
       event: event(),
@@ -235,9 +235,7 @@ describe('planActivityNotificationDeliveries', () => {
     expect(prismaMock.notificationDelivery.createMany).not.toHaveBeenCalled()
     // The snapshot preload (account.findMany) must not run when no
     // delivery can be created.
-    expect(prismaMock.account.findMany.mock.calls.length).toBe(
-      accountCallsBefore,
-    )
+    expect(prismaMock.user.findMany.mock.calls.length).toBe(accountCallsBefore)
   })
 
   it('creates one row per push subscription for the same recipient', async () => {
@@ -280,7 +278,7 @@ describe('planActivityNotificationDeliveries', () => {
     ] as never)
     prismaMock.pushSubscription.findMany.mockResolvedValue([] as never)
 
-    const accountCallsBefore = prismaMock.account.findMany.mock.calls.length
+    const accountCallsBefore = prismaMock.user.findMany.mock.calls.length
 
     const ids = await planActivityNotificationDeliveries({
       event: event(),
@@ -292,9 +290,7 @@ describe('planActivityNotificationDeliveries', () => {
     expect(prismaMock.notificationDelivery.createMany).not.toHaveBeenCalled()
     // The snapshot preload (account.findMany) must not run when no
     // delivery can be created.
-    expect(prismaMock.account.findMany.mock.calls.length).toBe(
-      accountCallsBefore,
-    )
+    expect(prismaMock.user.findMany.mock.calls.length).toBe(accountCallsBefore)
   })
 
   it('relies on skipDuplicates so a replayed event yields no extra rows', async () => {
@@ -415,7 +411,7 @@ describe('planActivityNotificationDeliveries', () => {
       subscriptions as never,
     )
     const accountFindManyCalls: unknown[] = []
-    prismaMock.account.findMany.mockImplementation((async (args: unknown) => {
+    prismaMock.user.findMany.mockImplementation((async (args: unknown) => {
       accountFindManyCalls.push(args)
       const ids =
         (args as { where?: { id?: { in?: string[] } } })?.where?.id?.in ?? []

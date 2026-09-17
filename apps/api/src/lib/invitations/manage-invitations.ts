@@ -118,7 +118,7 @@ export async function updatePendingInvitation(
   // is authoritative and overwrites any submitted temporary name.
   let matchedAccount: { id: string; name: string | null } | null = null
   if (isEmailDelivery) {
-    matchedAccount = await prisma.account.findFirst({
+    matchedAccount = await prisma.user.findFirst({
       where: { email: { equals: normalizedEmail, mode: 'insensitive' } },
       select: { id: true, name: true },
     })

@@ -67,7 +67,7 @@ describe('getOAuthAuthFromRequest', () => {
   })
 
   it('verifies the bearer token against the local issuer and MCP audience', async () => {
-    prismaMock.account.findUnique.mockResolvedValue(accountRow() as never)
+    prismaMock.user.findUnique.mockResolvedValue(accountRow() as never)
     verifyBearerTokenMock.mockResolvedValue({
       sub: 'account-1',
       client_id: 'client-1',
@@ -87,14 +87,14 @@ describe('getOAuthAuthFromRequest', () => {
       },
       jwksUrl: `${API_BASE}/auth/jwks`,
     })
-    expect(prismaMock.account.findUnique).toHaveBeenCalledWith({
+    expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
       where: { id: 'account-1' },
     })
   })
 
   it('maps verified claims to account, scopes and session', async () => {
     const row = accountRow()
-    prismaMock.account.findUnique.mockResolvedValue(row as never)
+    prismaMock.user.findUnique.mockResolvedValue(row as never)
     verifyBearerTokenMock.mockResolvedValue({
       sub: 'account-1',
       client_id: 'client-1',
@@ -129,7 +129,7 @@ describe('getOAuthAuthFromRequest', () => {
   })
 
   it('exposes the verified aud claim for per-surface audience checks', async () => {
-    prismaMock.account.findUnique.mockResolvedValue(accountRow() as never)
+    prismaMock.user.findUnique.mockResolvedValue(accountRow() as never)
 
     // String, array (with non-string entries dropped), and absent forms all
     // normalise to a plain list; surfaces fail closed on an empty one.
@@ -157,7 +157,7 @@ describe('getOAuthAuthFromRequest', () => {
   })
 
   it('falls back to a space-separated scope claim and derived session id', async () => {
-    prismaMock.account.findUnique.mockResolvedValue(accountRow() as never)
+    prismaMock.user.findUnique.mockResolvedValue(accountRow() as never)
     verifyBearerTokenMock.mockResolvedValue({
       sub: 'account-1',
       client_id: 'client-1',
@@ -180,7 +180,7 @@ describe('getOAuthAuthFromRequest', () => {
   })
 
   it('preserves incomplete anonymous onboarding on OAuth auth', async () => {
-    prismaMock.account.findUnique.mockResolvedValue(
+    prismaMock.user.findUnique.mockResolvedValue(
       accountRow({ isAnonymous: true }) as never,
     )
     prismaMock.anonymousRecoveryCredential.findUnique.mockResolvedValue(null)
@@ -221,7 +221,7 @@ describe('getOAuthAuthFromRequest', () => {
       expect(await getOAuthAuthFromRequest(bearerRequest('tok-123'))).toBeNull()
     }
     // Rejected before the subject lookup, so no DB I/O for expiry-less tokens.
-    expect(prismaMock.account.findUnique).not.toHaveBeenCalled()
+    expect(prismaMock.user.findUnique).not.toHaveBeenCalled()
   })
 
   it('returns null for requests without a usable bearer token', async () => {
@@ -247,25 +247,25 @@ describe('getOAuthAuthFromRequest', () => {
       verifyBearerTokenMock.mockResolvedValue(claims)
       expect(await getOAuthAuthFromRequest(bearerRequest('tok-123'))).toBeNull()
     }
-    expect(prismaMock.account.findUnique).not.toHaveBeenCalled()
+    expect(prismaMock.user.findUnique).not.toHaveBeenCalled()
   })
 
   it('returns null when the subject has no account', async () => {
-    prismaMock.account.findUnique.mockResolvedValue(null as never)
+    prismaMock.user.findUnique.mockResolvedValue(null as never)
     verifyBearerTokenMock.mockResolvedValue({
       sub: 'ghost',
       exp: 1000,
       iat: 900,
     })
     expect(await getOAuthAuthFromRequest(bearerRequest('tok-123'))).toBeNull()
-    expect(prismaMock.account.findUnique).toHaveBeenCalledWith({
+    expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
       where: { id: 'ghost' },
     })
   })
 
   it('keeps accepting API tokens when MCP is disabled and unconfigured', async () => {
     envState.overrides = { ENABLE_MCP: false, MCP_PUBLIC_URL: '' }
-    prismaMock.account.findUnique.mockResolvedValue(accountRow() as never)
+    prismaMock.user.findUnique.mockResolvedValue(accountRow() as never)
     verifyBearerTokenMock.mockResolvedValue({
       sub: 'account-1',
       client_id: 'client-1',
@@ -287,7 +287,7 @@ describe('getOAuthAuthFromRequest', () => {
   })
 
   it('rejects claims without an OAuth client', async () => {
-    prismaMock.account.findUnique.mockResolvedValue(accountRow() as never)
+    prismaMock.user.findUnique.mockResolvedValue(accountRow() as never)
     verifyBearerTokenMock.mockResolvedValue({
       sub: 'account-1',
       scopes: ['spliit:groups:read'],
@@ -302,7 +302,7 @@ describe('getOAuthAuthFromRequest', () => {
   })
 
   it('rejects access tokens bound to a superseded generation', async () => {
-    prismaMock.account.findUnique.mockResolvedValue(accountRow() as never)
+    prismaMock.user.findUnique.mockResolvedValue(accountRow() as never)
     verifyBearerTokenMock.mockResolvedValue({
       sub: 'account-1',
       client_id: 'client-1',
@@ -334,7 +334,7 @@ describe('getOAuthAuthFromRequest', () => {
   })
 
   it('rejects unbound tokens on a pair with revocation history', async () => {
-    prismaMock.account.findUnique.mockResolvedValue(accountRow() as never)
+    prismaMock.user.findUnique.mockResolvedValue(accountRow() as never)
     verifyBearerTokenMock.mockResolvedValue({
       sub: 'account-1',
       client_id: 'client-1',
@@ -357,7 +357,7 @@ describe('getOAuthAuthFromRequest', () => {
   })
 
   it('accepts unbound tokens on a pair that was never revoked', async () => {
-    prismaMock.account.findUnique.mockResolvedValue(accountRow() as never)
+    prismaMock.user.findUnique.mockResolvedValue(accountRow() as never)
     verifyBearerTokenMock.mockResolvedValue({
       sub: 'account-1',
       client_id: 'client-1',
@@ -375,7 +375,7 @@ describe('getOAuthAuthFromRequest', () => {
   })
 
   it('resolves the client from azp for pre-1.7-shaped tokens', async () => {
-    prismaMock.account.findUnique.mockResolvedValue(accountRow() as never)
+    prismaMock.user.findUnique.mockResolvedValue(accountRow() as never)
     // Better Auth 1.6 access tokens carry the client in `azp` with no
     // `client_id` and no `jti`. The verifier normalizes `azp` into
     // `client_id`; the azp fallback here keeps the pair resolvable even if
@@ -403,7 +403,7 @@ describe('getOAuthAuthFromRequest', () => {
   })
 
   it('rejects a current-generation token while a revocation barrier stands', async () => {
-    prismaMock.account.findUnique.mockResolvedValue(accountRow() as never)
+    prismaMock.user.findUnique.mockResolvedValue(accountRow() as never)
     verifyBearerTokenMock.mockResolvedValue({
       sub: 'account-1',
       client_id: 'client-1',

@@ -64,7 +64,7 @@ describe('split presets — real DB', () => {
   }
 
   beforeAll(async () => {
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: adminEmail },
       update: {},
       create: {
@@ -80,7 +80,7 @@ describe('split presets — real DB', () => {
     for (const ledgerId of ledgerIds) {
       await prisma.ledger.delete({ where: { id: ledgerId } }).catch(() => {})
     }
-    await prisma.account.delete({ where: { id: adminId } }).catch(() => {})
+    await prisma.user.delete({ where: { id: adminId } }).catch(() => {})
   })
 
   it('supports one-sided CRUD, idempotent creation, and case-insensitive names', async () => {
@@ -161,7 +161,7 @@ describe('split presets — real DB', () => {
     const group = await createGroup(`Preset ACL ${runId}`)
     const memberId = `acct-member-${runId}`
     const memberEmail = `member-${runId}@test.example`
-    await prisma.account.create({
+    await prisma.user.create({
       data: {
         id: memberId,
         email: memberEmail,
@@ -259,7 +259,7 @@ describe('split presets — real DB', () => {
         }),
       ).rejects.toMatchObject({ code: 'FORBIDDEN' })
     } finally {
-      await prisma.account.delete({ where: { id: memberId } }).catch(() => {})
+      await prisma.user.delete({ where: { id: memberId } }).catch(() => {})
       await prisma.ledgerParticipant
         .delete({ where: { id: memberParticipant.id } })
         .catch(() => {})
@@ -270,7 +270,7 @@ describe('split presets — real DB', () => {
     const group = await createGroup(`Preset defaults ${runId}`)
     const memberId = `acct-default-member-${runId}`
     const memberEmail = `default-member-${runId}@test.example`
-    await prisma.account.create({
+    await prisma.user.create({
       data: {
         id: memberId,
         email: memberEmail,
@@ -376,7 +376,7 @@ describe('split presets — real DB', () => {
         ).personalDefaults.paidFor,
       ).toEqual({ mode: 'INHERIT', presetId: null })
     } finally {
-      await prisma.account.delete({ where: { id: memberId } }).catch(() => {})
+      await prisma.user.delete({ where: { id: memberId } }).catch(() => {})
     }
   })
 

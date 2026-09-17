@@ -57,7 +57,7 @@ describe('Activity list authorization — real DB', () => {
       { id: nonMemberId, email: nonMemberEmail, name: 'Test Non-Member' },
     ]
     for (const acct of accounts) {
-      await prisma.account.upsert({
+      await prisma.user.upsert({
         where: { email: acct.email },
         update: {},
         create: acct,
@@ -189,7 +189,7 @@ describe('Activity list authorization — real DB', () => {
       nonMemberId,
     ]
     for (const id of allIds) {
-      await prisma.account.delete({ where: { id } }).catch(() => {})
+      await prisma.user.delete({ where: { id } }).catch(() => {})
     }
   })
 

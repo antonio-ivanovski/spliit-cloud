@@ -133,7 +133,7 @@ async function findExistingFriendGroupByPendingEmailViaAccount(
   callerAccountId: string,
   peerAccountId: string,
 ): Promise<string | null> {
-  const account = await client.account.findUnique({
+  const account = await client.user.findUnique({
     where: { id: peerAccountId },
     select: { email: true },
   })
@@ -204,7 +204,7 @@ export async function createFriendLedger(
       if (existing) return { groupId: existing, existed: true }
     }
     if (!existing) {
-      const callerAccount = await client.account.findUnique({
+      const callerAccount = await client.user.findUnique({
         where: { id: callerAccountId },
         select: { email: true },
       })

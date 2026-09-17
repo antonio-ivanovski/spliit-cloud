@@ -19,7 +19,7 @@ import {
 import { anonymous } from 'better-auth/plugins/anonymous'
 import { genericOAuth } from 'better-auth/plugins/generic-oauth'
 
-import { prisma, type Account } from '@spliit/db'
+import { prisma, type User } from '@spliit/db'
 import { isStrongPassword } from '@spliit/domain/password'
 
 import { autoAcceptPendingFriendInvitationsForAccount } from '../api/friends'
@@ -90,7 +90,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 async function getAuthMethodLabels(userId: string) {
-  const identities = await prisma.authIdentity.findMany({
+  const identities = await prisma.account.findMany({
     where: { userId },
     select: { providerId: true },
     orderBy: { createdAt: 'asc' },
@@ -396,14 +396,13 @@ async function fetchGitHubJson<T>(url: string, accessToken: string) {
 }
 
 /**
- * Resolve the Spliit `Account` for a GitHub OAuth sign-in. Prefers a verified
- * email from GitHub's `/user/emails` endpoint; falls back to a synthetic
- * placeholder email (`<id>@github.placeholder.local`) when the user has no
- * verified email on file (private email, missing `user:email` scope). The
- * synthetic path is what enables "email-less accounts" — the user gets a
- * complete account and can use the app, but email-only features (magic-link
- * sign-in, password reset, notifications) skip them because the email is a
- * placeholder.
+ * Resolve the Spliit user for a GitHub OAuth sign-in. Prefers a verified email
+ * from GitHub's `/user/emails` endpoint; falls back to a synthetic placeholder
+ * email (`<id>@github.placeholder.local`) when the user has no verified email
+ * on file (private email, missing `user:email` scope). The synthetic path is
+ * what enables "email-less accounts" — the user gets a complete account and can
+ * use the app, but email-only features (magic-link sign-in, password reset,
+ * notifications) skip them because the email is a placeholder.
  */
 export async function getVerifiedGitHubUserInfo(token: OAuthToken) {
   if (!token.accessToken) return null
@@ -490,7 +489,7 @@ async function fetchTwitterJson<T>(url: string, accessToken: string) {
 }
 
 /**
- * Resolve the Spliit `Account` for an X (Twitter) OAuth sign-in. Prefers the
+ * Resolve the Spliit user for an X (Twitter) OAuth sign-in. Prefers the
  * confirmed email from X API v2 (`user.fields=confirmed_email`); falls back to
  * a synthetic placeholder (`<id>@twitter.placeholder.local`) when the user has
  * no confirmed email. Better Auth's default uses the X username as the email in
@@ -547,21 +546,15 @@ export async function getVerifiedTwitterUserInfo(token: OAuthToken) {
 }
 
 /**
- * Spliit authentication is built on better-auth. better-auth owns its own
- * schema (user, session, account, verification). We map those tables to our
- * Spliit concepts:
- *
- * Better-auth "user" -> Account (stable global user profile) better-auth
- * "account" -> AuthIdentity (provider identity records) better-auth "session"
- * -> Session (server-recognized sessions) better-auth "verification" ->
- * Verification (magic-link/email tokens)
- *
- * The mapping is achieved by passing `modelName` overrides to better-auth and
- * by naming the Prisma models to match (see packages/db/prisma/schema.prisma).
+ * Spliit authentication is built on better-auth using its official schema
+ * (User, Session, Account for provider identity records, Verification for
+ * magic-link/email tokens). Physical table names are pinned with @@map
+ * ("Account" for users, "AuthIdentity" for identities), so no data migration
+ * was needed; see packages/db/prisma/schema.prisma.
  *
  * Email identity merging: better-auth links a new OAuth/magic-link sign-in to
- * the existing `Account` when the verified email matches. We rely on the
- * library's `accountLinking` behaviour for that.
+ * the existing user when the verified email matches. We rely on the library's
+ * `accountLinking` behaviour for that.
  */
 export const auth = betterAuth({
   appName: 'Spliit Cloud',
@@ -596,12 +589,9 @@ export const auth = betterAuth({
     provider: 'postgresql',
   }),
 
-  // Use Spliit-specific model names that match our Prisma schema.
-  user: {
-    modelName: 'Account',
-  },
+  // Prisma models use better-auth's official names (User, Session, Account,
+  // Verification), so no modelName overrides are needed.
   session: {
-    modelName: 'Session',
     // 180-day (6 months) rolling sessions; better-auth handles refresh/sliding expiry.
     expiresIn: 60 * 60 * 24 * 180,
     updateAge: 60 * 60 * 24,
@@ -611,7 +601,6 @@ export const auth = betterAuth({
     },
   },
   account: {
-    modelName: 'AuthIdentity',
     accountLinking: {
       enabled: true,
       // Generic OIDC is operator-configured and may report unverified
@@ -628,10 +617,6 @@ export const auth = betterAuth({
       ],
     },
   },
-  verification: {
-    modelName: 'Verification',
-  },
-
   hooks: {
     before: beforeAuthMiddleware,
     after: createAuthMiddleware(async (ctx) => {
@@ -968,5 +953,5 @@ export const auth = betterAuth({
   },
 })
 
-export type AuthAccount = Account
+export type AuthAccount = User
 export type AuthInstance = typeof auth

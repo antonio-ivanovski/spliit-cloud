@@ -1,9 +1,9 @@
-import { prisma, type Account } from '@spliit/db'
+import { prisma, type User } from '@spliit/db'
 
 const ACCOUNT_CACHE_TTL_MS = 30_000
 const ACCOUNT_CACHE_MAX_SIZE = 1024
 
-export type CachedAccount = Account & {
+export type CachedAccount = User & {
   anonymousOnboardingCompleted: boolean
 }
 
@@ -15,7 +15,7 @@ export function isAnonymousSetupIncomplete(user: {
 }
 
 function withAnonymousOnboarding(
-  account: Account,
+  account: User,
   recovery?: {
     acknowledgedAt: Date | null
     onboardingCompletedAt: Date | null
@@ -58,7 +58,7 @@ export async function getCachedAccount(accountId: string) {
   if (cached) accountCache.delete(accountId)
 
   const generationAtFetchStart = accountCacheGeneration
-  const account = await prisma.account.findUnique({ where: { id: accountId } })
+  const account = await prisma.user.findUnique({ where: { id: accountId } })
   if (!account) return null
 
   const recovery = account.isAnonymous

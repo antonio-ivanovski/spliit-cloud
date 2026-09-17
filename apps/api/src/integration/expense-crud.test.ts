@@ -40,7 +40,7 @@ describe('Expense CRUD — real DB', () => {
   }
 
   beforeAll(async () => {
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: adminEmail },
       update: {},
       create: {
@@ -50,7 +50,7 @@ describe('Expense CRUD — real DB', () => {
         name: 'Test Admin',
       },
     })
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: memberEmail },
       update: {},
       create: {
@@ -66,8 +66,8 @@ describe('Expense CRUD — real DB', () => {
     for (const lid of ledgerIds) {
       await prisma.ledger.delete({ where: { id: lid } }).catch(() => {})
     }
-    await prisma.account.delete({ where: { id: adminId } }).catch(() => {})
-    await prisma.account.delete({ where: { id: memberId } }).catch(() => {})
+    await prisma.user.delete({ where: { id: adminId } }).catch(() => {})
+    await prisma.user.delete({ where: { id: memberId } }).catch(() => {})
   })
 
   /**

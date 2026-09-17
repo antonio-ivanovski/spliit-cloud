@@ -189,7 +189,7 @@ describe('loadActivityChannelContext', () => {
       members: [],
       invitations: [],
     } as never)
-    prismaMock.account.findUnique.mockResolvedValue({ name: 'Alice' } as never)
+    prismaMock.user.findUnique.mockResolvedValue({ name: 'Alice' } as never)
   })
 
   it('returns participants, group, and a resolved actor name', async () => {
@@ -221,7 +221,7 @@ describe('loadActivityGroupAndActor', () => {
       members: [],
       invitations: [],
     } as never)
-    prismaMock.account.findUnique.mockResolvedValue({ name: 'Alice' } as never)
+    prismaMock.user.findUnique.mockResolvedValue({ name: 'Alice' } as never)
   })
 
   it('returns group and actor name', async () => {

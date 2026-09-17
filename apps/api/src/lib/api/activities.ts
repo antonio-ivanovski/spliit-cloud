@@ -233,7 +233,7 @@ export async function getActivities(
   const accountActors =
     accountActorIds.length === 0
       ? []
-      : await prisma.account.findMany({
+      : await prisma.user.findMany({
           where: { id: { in: accountActorIds } },
           select: { id: true, name: true },
         })

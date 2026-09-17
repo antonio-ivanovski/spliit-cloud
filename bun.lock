@@ -258,7 +258,6 @@
     "@prisma/client",
   ],
   "patchedDependencies": {
-    "@better-auth/prisma-adapter@1.7.5": "patches/@better-auth%2Fprisma-adapter@1.7.5.patch",
     "@trpc/openapi@11.18.0-alpha": "patches/@trpc%2Fopenapi@11.18.0-alpha.patch",
   },
   "packages": {

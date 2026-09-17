@@ -486,7 +486,7 @@ export const invitationsRouter = createTRPCRouter({
       // account on this Spliit Cloud instance. The DB row is the source of
       // truth: the in-app UI will surface the invitation to existing users
       // regardless of email delivery, so we never fail the mutation on send.
-      const existingAccount = await prisma.account.findFirst({
+      const existingAccount = await prisma.user.findFirst({
         where: {
           email: { equals: input.email.toLowerCase(), mode: 'insensitive' },
         },
@@ -905,7 +905,7 @@ async function resolveRecipientProfiles(
     if (!isPlaceholderEmail(email)) realEmails.add(email)
   }
   if (realEmails.size === 0) return new Map()
-  const accounts = await prisma.account.findMany({
+  const accounts = await prisma.user.findMany({
     where: { email: { in: [...realEmails], mode: 'insensitive' } },
     select: { id: true, name: true, image: true, email: true },
   })
@@ -923,7 +923,7 @@ async function resolveSingleRecipientProfile(args: {
 }): Promise<{ id: string; name: string | null; image: string | null } | null> {
   if (args.type === GroupInvitationType.LINK) return null
   if (isPlaceholderEmail(args.email)) return null
-  const account = await prisma.account.findFirst({
+  const account = await prisma.user.findFirst({
     where: { email: { equals: args.email, mode: 'insensitive' } },
     select: { id: true, name: true, image: true },
   })

@@ -62,7 +62,7 @@ export async function linkUnlinkedParticipantToAccount(opts: {
       throw new Error('Ledger participant is already linked to a member')
     }
 
-    const account = await tx.account.findUnique({
+    const account = await tx.user.findUnique({
       where: { id: accountId },
       select: { id: true, name: true },
     })

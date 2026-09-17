@@ -60,7 +60,7 @@ describe('Recurring bulk updates — real DB', () => {
   }
 
   beforeAll(async () => {
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: adminEmail },
       update: {},
       create: {
@@ -70,7 +70,7 @@ describe('Recurring bulk updates — real DB', () => {
         name: 'Test Admin',
       },
     })
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: witnessEmail },
       update: {},
       create: {
@@ -95,8 +95,8 @@ describe('Recurring bulk updates — real DB', () => {
     for (const lid of ledgerIds) {
       await prisma.ledger.delete({ where: { id: lid } }).catch(() => {})
     }
-    await prisma.account.delete({ where: { id: adminId } }).catch(() => {})
-    await prisma.account.delete({ where: { id: witnessId } }).catch(() => {})
+    await prisma.user.delete({ where: { id: adminId } }).catch(() => {})
+    await prisma.user.delete({ where: { id: witnessId } }).catch(() => {})
   })
 
   /**

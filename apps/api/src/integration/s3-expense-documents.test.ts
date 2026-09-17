@@ -58,7 +58,7 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
 
     if (res.ok) {
       // Account already exists and is verified
-      const account = await prisma.account.findUnique({ where: { email } })
+      const account = await prisma.user.findUnique({ where: { email } })
       const setCookie = res.headers.get('set-cookie') ?? ''
       const sessionMatch = setCookie.match(
         /better-auth\.session_token=([^;,]+)/,
@@ -70,7 +70,7 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
       return { cookie, accountId: account?.id ?? '' }
     }
 
-    // Sign up (creates Account + AuthIdentity with password hash)
+    // Sign up (creates User + Account identity with password hash)
     res = await app.request('/auth/sign-up/email', {
       method: 'POST',
       headers: authHeaders,
@@ -81,7 +81,7 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
     trackAccount(accountId)
 
     // Mark verified
-    await prisma.account.update({
+    await prisma.user.update({
       where: { email },
       data: { emailVerified: true },
     })
@@ -171,7 +171,7 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
       await prisma.session
         .deleteMany({ where: { userId: aid } })
         .catch(() => {})
-      await prisma.authIdentity
+      await prisma.account
         .deleteMany({ where: { userId: aid } })
         .catch(() => {})
     }
@@ -187,7 +187,7 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
     }
 
     for (const aid of trackedAccountIds) {
-      await prisma.account.delete({ where: { id: aid } }).catch(() => {})
+      await prisma.user.delete({ where: { id: aid } }).catch(() => {})
     }
   })
 

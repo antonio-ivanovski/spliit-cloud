@@ -7,7 +7,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('@spliit/db', () => ({
   prisma: {
-    account: {
+    user: {
       deleteMany: mocks.deleteMany,
       findMany: mocks.findMany,
     },

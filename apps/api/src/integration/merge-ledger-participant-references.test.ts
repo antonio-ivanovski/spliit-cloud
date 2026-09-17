@@ -331,7 +331,7 @@ describe('mergeLedgerParticipantReferences — same-expense coalesce', () => {
     const adminEmail = `mpr-admin-${runId}@test.example`
 
     beforeAll(async () => {
-      await prisma.account.upsert({
+      await prisma.user.upsert({
         where: { email: adminEmail },
         update: {},
         create: {
@@ -344,7 +344,7 @@ describe('mergeLedgerParticipantReferences — same-expense coalesce', () => {
     })
 
     afterAll(async () => {
-      await prisma.account.delete({ where: { id: adminId } }).catch(() => {})
+      await prisma.user.delete({ where: { id: adminId } }).catch(() => {})
     })
 
     it('sums shares onto the invitation LP when source and target already share an expense', async () => {

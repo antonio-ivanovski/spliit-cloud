@@ -108,7 +108,7 @@ function isUniqueConstraintError(error: unknown) {
 }
 
 async function loadAccount(accountId: string) {
-  const account = await prisma.account.findUnique({
+  const account = await prisma.user.findUnique({
     where: { id: accountId },
     select: {
       id: true,

@@ -69,7 +69,7 @@ describe('features.get', () => {
       ENABLE_ANONYMOUS_AUTH: true,
       SIGNUP_MODE: 'invite_only',
     })
-    prismaMock.account.count.mockResolvedValue(1)
+    prismaMock.user.count.mockResolvedValue(1)
 
     const result = await featuresRouter.createCaller({ auth: null }).get()
 

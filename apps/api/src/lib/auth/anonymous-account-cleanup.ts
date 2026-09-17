@@ -4,7 +4,7 @@ export const UNACKNOWLEDGED_ANONYMOUS_ACCOUNT_RETENTION_MS =
   7 * 24 * 60 * 60 * 1000
 const CLEANUP_BATCH_SIZE = 100
 
-function eligibleAnonymousAccounts(cutoff: Date): Prisma.AccountWhereInput {
+function eligibleAnonymousAccounts(cutoff: Date): Prisma.UserWhereInput {
   return {
     isAnonymous: true,
     OR: [
@@ -43,7 +43,7 @@ export async function runAnonymousAccountCleanup(
   let deleted = 0
 
   for (;;) {
-    const candidates = await prisma.account.findMany({
+    const candidates = await prisma.user.findMany({
       where,
       select: { id: true },
       orderBy: { id: 'asc' },
@@ -51,7 +51,7 @@ export async function runAnonymousAccountCleanup(
     })
     if (candidates.length === 0) break
 
-    const result = await prisma.account.deleteMany({
+    const result = await prisma.user.deleteMany({
       where: {
         ...where,
         id: { in: candidates.map(({ id }) => id) },

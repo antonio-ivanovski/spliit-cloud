@@ -22,18 +22,17 @@ datasource db {
 // ---------------------------------------------------------------------------
 // Auth & accounts
 //
-// better-auth owns four core tables: user, session, account, verification.
-// We rename them to Spliit concepts via the better-auth `modelName` option:
-//   - better-auth "user"        -> Account  (stable global user profile)
-//   - better-auth "session"     -> Session  (server-recognized sessions)
-//   - better-auth "account"     -> AuthIdentity (provider identity records)
-//   - better-auth "verification"-> Verification (magic-link/email tokens)
+// better-auth owns four core tables, using its official model names: User,
+// Session, Account (provider identity records), Verification
+// (magic-link/email tokens). Physical table names are pinned with @@map so
+// historical tables ("Account" for users, "AuthIdentity" for identities)
+// are preserved and no data migration is needed.
 //
 // Field names match what better-auth expects by default so the Prisma adapter
 // can read/write without a field mapping.
 // ---------------------------------------------------------------------------
 
-model Account {
+model User {
   id            String   @id
   email         String   @unique
   emailVerified Boolean  @default(false)
@@ -43,7 +42,7 @@ model Account {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  authIdentities     AuthIdentity[]
+  accounts           Account[]
   sessions           Session[]
   oauthClients       OauthClient[]
   oauthRefreshTokens OauthRefreshToken[]
@@ -67,10 +66,12 @@ model Account {
   expensesCreated               Expense[]                       @relation("ExpenseCreator")
   expenseComments               ExpenseComment[]
   idempotencyRequests           IdempotencyRequest[]
+
+  @@map("Account")
 }
 
 model AnonymousRecoveryCredential {
-  account               Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  account               User      @relation(fields: [accountId], references: [id], onDelete: Cascade)
   accountId             String    @id
   keyHash               String    @unique
   pendingKeyCiphertext  String?
@@ -81,7 +82,7 @@ model AnonymousRecoveryCredential {
 }
 
 model IdempotencyRequest {
-  account     Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  account     User      @relation(fields: [accountId], references: [id], onDelete: Cascade)
   accountId   String
   operation   String
   requestId   String    @db.Uuid
@@ -96,7 +97,7 @@ model IdempotencyRequest {
 
 model PushSubscription {
   id        String   @id
-  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  account   User     @relation(fields: [accountId], references: [id], onDelete: Cascade)
   accountId String
   endpoint  String   @unique @db.Text
   p256dh    String   @db.Text
@@ -117,7 +118,7 @@ model AccountNotificationPreference {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  account   User     @relation(fields: [accountId], references: [id], onDelete: Cascade)
   accountId String
   // Notification category validated by @spliit/domain at API boundaries.
   category  String
@@ -128,7 +129,7 @@ model AccountNotificationPreference {
   @@index([accountId])
 }
 
-model AuthIdentity {
+model Account {
   id                    String    @id
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
@@ -139,11 +140,11 @@ model AuthIdentity {
   // Provider identity: "credential" (email/password), "magic-link", or a social
   // provider id such as "google".
   providerId            String
-  // The provider-specific account id (e.g. Google sub, or the Account id for
+  // The provider-specific account id (e.g. Google sub, or the User id for
   // credential identities).
   accountId             String
-  // Refers to the owning Spliit account (better-auth "user").
-  account               Account   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Refers to the owning user (better-auth "user").
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                String
   accessToken           String?
   refreshToken          String?
@@ -156,14 +157,16 @@ model AuthIdentity {
 
   @@unique([providerId, accountId])
   @@index([userId])
+
+  @@map("AuthIdentity")
 }
 
 model Session {
   id                 String              @id
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
-  // The signed-in account this session belongs to.
-  account            Account             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // The signed-in user this session belongs to.
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId             String
   expiresAt          DateTime
   token              String              @unique
@@ -187,7 +190,7 @@ model OauthClient {
   scopes                          String[]              @default([])
   clientCredentialsScopes         String[]              @default([])
   userId                          String?
-  account                         Account?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                            User?                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt                       DateTime?
   updatedAt                       DateTime?
   name                            String?
@@ -267,7 +270,7 @@ model OauthRefreshToken {
   sessionId                String?
   session                  Session?           @relation(fields: [sessionId], references: [id], onDelete: SetNull)
   userId                   String
-  account                  Account            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                     User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   referenceId              String?
   authorizationCodeId      String?
   resources                String[]           @default([])
@@ -298,7 +301,7 @@ model OauthAccessToken {
   sessionId                String?
   session                  Session?           @relation(fields: [sessionId], references: [id], onDelete: SetNull)
   userId                   String?
-  account                  Account?           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                     User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
   referenceId              String?
   authorizationCodeId      String?
   resources                String[]           @default([])
@@ -324,7 +327,7 @@ model OauthConsent {
   clientId                 String
   oauthClient              OauthClient @relation(fields: [clientId], references: [clientId], onDelete: Cascade)
   userId                   String?
-  account                  Account?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                     User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
   referenceId              String?
   resources                String[]           @default([])
   requestedUserInfoClaims  String[]           @default([])
@@ -596,7 +599,7 @@ model GroupMember {
 
   group     Group             @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId   String
-  account   Account           @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  account   User              @relation(fields: [accountId], references: [id], onDelete: Cascade)
   accountId String
   role      GroupRole         @default(MEMBER)
   status    GroupMemberStatus @default(ACTIVE)
@@ -661,11 +664,11 @@ model GroupInvitation {
   status GroupInvitationStatus @default(PENDING)
 
   // The inviter (owner/admin who created the invitation).
-  invitedBy   Account @relation("InvitationInviter", fields: [invitedById], references: [id])
+  invitedBy   User    @relation("InvitationInviter", fields: [invitedById], references: [id])
   invitedById String
 
   // The account that accepted the invitation, once accepted.
-  acceptedBy   Account?  @relation("InvitationInviteeAccount", fields: [acceptedById], references: [id])
+  acceptedBy   User?     @relation("InvitationInviteeAccount", fields: [acceptedById], references: [id])
   acceptedById String?
   acceptedAt   DateTime?
   revokedAt    DateTime?
@@ -708,7 +711,7 @@ model AccountPreference {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  account   User    @relation(fields: [accountId], references: [id], onDelete: Cascade)
   accountId String  @unique
 
   // Values are validated against shared @spliit/domain schemas at API boundaries.
@@ -730,7 +733,7 @@ model AccountGroupPreference {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  account   User    @relation(fields: [accountId], references: [id], onDelete: Cascade)
   accountId String
   group     Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId   String
@@ -759,7 +762,7 @@ model AccountSavedView {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  account   User    @relation(fields: [accountId], references: [id], onDelete: Cascade)
   accountId String
   group     Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId   String
@@ -790,7 +793,7 @@ model SplitPreset {
 
   group     Group      @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId   String
-  ownerAccount   Account? @relation("PersonalSplitPresetOwner", fields: [ownerAccountId], references: [id], onDelete: Cascade)
+  ownerAccount   User?    @relation("PersonalSplitPresetOwner", fields: [ownerAccountId], references: [id], onDelete: Cascade)
   ownerAccountId String?
   // GROUP for shared presets, ACCOUNT:<accountId> for personal presets.
   scopeKey  String
@@ -845,7 +848,7 @@ model Expense {
   ledgerId           String
   // Nullable so pre-ownership expenses and expenses whose creator account was
   // deleted remain preserved. Null-owned expenses are admin-managed.
-  createdByAccount   Account?          @relation("ExpenseCreator", fields: [createdByAccountId], references: [id], onDelete: SetNull)
+  createdByAccount   User?             @relation("ExpenseCreator", fields: [createdByAccountId], references: [id], onDelete: SetNull)
   createdByAccountId String?
   // Canonical expense instant. Its wall-clock representation is interpreted
   // using expenseTimeZone; the name is retained for API compatibility.
@@ -988,7 +991,7 @@ model RecurringExpenseSeries {
   id                    String                       @id
   ledger                Ledger                       @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
   ledgerId              String
-  creatorAccount        Account?                     @relation("RecurringExpenseSeriesCreator", fields: [creatorAccountId], references: [id], onDelete: SetNull)
+  creatorAccount        User?                        @relation("RecurringExpenseSeriesCreator", fields: [creatorAccountId], references: [id], onDelete: SetNull)
   creatorAccountId      String?
   // Immutable scheduling timezone captured from the expense's timezone at creation.
   timeZone              String
@@ -1136,7 +1139,7 @@ model NotificationDelivery {
   activityId         String?
   activity           Activity? @relation(fields: [activityId], references: [id], onDelete: SetNull)
   recipientAccountId String
-  recipientAccount   Account   @relation(fields: [recipientAccountId], references: [id], onDelete: Cascade)
+  recipientAccount   User      @relation(fields: [recipientAccountId], references: [id], onDelete: Cascade)
   category           String
   channel            String
   targetKey          String
@@ -1174,7 +1177,7 @@ model ExpenseComment {
 
   // Nullable by design: account deletion preserves the comment and its
   // authorName snapshot while clearing this relation.
-  authorAccount   Account? @relation(fields: [authorAccountId], references: [id], onDelete: SetNull)
+  authorAccount   User?    @relation(fields: [authorAccountId], references: [id], onDelete: SetNull)
   authorAccountId String?
   authorName      String
   text            String   @db.Text

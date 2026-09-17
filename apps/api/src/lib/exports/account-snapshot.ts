@@ -93,7 +93,7 @@ export async function loadAccountExportSource(
   client: Prisma.TransactionClient | typeof prisma = prisma,
 ): Promise<AccountExportSource> {
   const selection = accountExportSelectionSchema.parse(input)
-  const account = await client.account.findUnique({
+  const account = await client.user.findUnique({
     where: { id: accountId },
     select: {
       id: true,

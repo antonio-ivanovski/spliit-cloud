@@ -110,7 +110,7 @@ export async function createTestSession(
   try {
     process.env.DATABASE_URL ??= 'postgresql://postgres:1234@localhost'
     const { prisma } = await import('@spliit/db')
-    await prisma.account.update({
+    await prisma.user.update({
       where: { email },
       data: { emailVerified: true },
     })
@@ -142,9 +142,9 @@ export async function cleanupTestAccount(email: string): Promise<void> {
   try {
     process.env.DATABASE_URL ??= 'postgresql://postgres:1234@localhost'
     const { prisma } = await import('@spliit/db')
-    const account = await prisma.account.findUnique({ where: { email } })
+    const account = await prisma.user.findUnique({ where: { email } })
     if (account) {
-      await prisma.account.delete({ where: { id: account.id } })
+      await prisma.user.delete({ where: { id: account.id } })
     }
   } catch {
     // Table may not exist or DB not running — skip

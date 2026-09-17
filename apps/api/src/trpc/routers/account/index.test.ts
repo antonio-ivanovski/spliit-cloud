@@ -32,7 +32,7 @@ async function authAs(userId: string) {
     user: { id: userId },
     session: { id: 'sess-1' },
   }
-  prismaMock.account.findUnique.mockImplementation(async (args: unknown) => {
+  prismaMock.user.findUnique.mockImplementation(async (args: unknown) => {
     const id = (args as { where: { id: string } }).where.id
     return {
       id,
@@ -597,18 +597,18 @@ describe('accountRouter profile cache invalidation', () => {
       image: null,
     }
     const updatedAccount = { ...initialAccount, name: 'Alice Updated' }
-    prismaMock.account.findUnique.mockResolvedValueOnce(initialAccount as never)
-    prismaMock.account.update.mockResolvedValue(updatedAccount as never)
+    prismaMock.user.findUnique.mockResolvedValueOnce(initialAccount as never)
+    prismaMock.user.update.mockResolvedValue(updatedAccount as never)
 
     await getCachedAccount('acct-profile')
     await makeCaller('acct-profile').updateProfile({ name: 'Alice Updated' })
-    prismaMock.account.findUnique.mockResolvedValueOnce(updatedAccount as never)
+    prismaMock.user.findUnique.mockResolvedValueOnce(updatedAccount as never)
 
     await expect(getCachedAccount('acct-profile')).resolves.toEqual({
       ...updatedAccount,
       anonymousOnboardingCompleted: true,
     })
-    expect(prismaMock.account.findUnique).toHaveBeenCalledTimes(2)
+    expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(2)
   })
 })
 

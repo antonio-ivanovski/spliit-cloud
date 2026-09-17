@@ -57,7 +57,7 @@ async function createGroupActivityFixture(
 
   const accountIdsToClean = [adminId]
 
-  await prisma.account.upsert({
+  await prisma.user.upsert({
     where: { email: adminEmail },
     update: {},
     create: {
@@ -111,7 +111,7 @@ async function createGroupActivityFixture(
     trackedMailRecipients.push(memberEmail)
     accountIdsToClean.push(memberId)
 
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: memberEmail },
       update: {},
       create: {
@@ -152,7 +152,7 @@ async function createGroupActivityFixture(
     trackedMailRecipients.push(inviteeEmail)
     accountIdsToClean.push(inviteeId)
 
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: inviteeEmail },
       update: {},
       create: {
@@ -179,7 +179,7 @@ async function createGroupActivityFixture(
       // Ledger cascade deletes associated expenses, activities, participants
       await prisma.ledger.delete({ where: { id: ledgerId } }).catch(() => {})
       for (const id of accountIdsToClean) {
-        await prisma.account.delete({ where: { id } }).catch(() => {})
+        await prisma.user.delete({ where: { id } }).catch(() => {})
       }
     },
   }

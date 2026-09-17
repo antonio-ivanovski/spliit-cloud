@@ -51,7 +51,7 @@ describe('ExpensePushActivityNotificationDispatcher summaries', () => {
       members: [],
       invitations: [],
     } as never)
-    prismaMock.account.findUnique.mockResolvedValue({ name: 'Alice' } as never)
+    prismaMock.user.findUnique.mockResolvedValue({ name: 'Alice' } as never)
     prismaMock.pushSubscription.findMany.mockResolvedValue([
       {
         id: 'push-1',
@@ -162,7 +162,7 @@ describe('ExpensePushActivityNotificationDispatcher recurring paths', () => {
       members: [],
       invitations: [],
     } as never)
-    prismaMock.account.findUnique.mockResolvedValue({ name: 'Alice' } as never)
+    prismaMock.user.findUnique.mockResolvedValue({ name: 'Alice' } as never)
     prismaMock.pushSubscription.findMany.mockResolvedValue([
       {
         id: 'push-1',

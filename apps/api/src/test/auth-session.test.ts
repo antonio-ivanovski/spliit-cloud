@@ -35,7 +35,7 @@ describe('getAuthFromRequest', () => {
     const result = await getAuthFromRequest(makeRequest())
 
     expect(result).toBeNull()
-    expect(prismaMock.account.findUnique).not.toHaveBeenCalled()
+    expect(prismaMock.user.findUnique).not.toHaveBeenCalled()
   })
 
   it('returns null when the session references an account that no longer exists', async () => {
@@ -43,12 +43,12 @@ describe('getAuthFromRequest', () => {
       user: { id: 'acct-deleted' },
       session: { id: 'sess-1' },
     }
-    prismaMock.account.findUnique.mockResolvedValue(null)
+    prismaMock.user.findUnique.mockResolvedValue(null)
 
     const result = await getAuthFromRequest(makeRequest())
 
     expect(result).toBeNull()
-    expect(prismaMock.account.findUnique).toHaveBeenCalledWith({
+    expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
       where: { id: 'acct-deleted' },
     })
   })
@@ -67,7 +67,7 @@ describe('getAuthFromRequest', () => {
       user: { id: 'acct-1' },
       session: { id: 'sess-1' },
     }
-    prismaMock.account.findUnique.mockResolvedValue(refreshedAccount)
+    prismaMock.user.findUnique.mockResolvedValue(refreshedAccount)
 
     const result = await getAuthFromRequest(makeRequest())
     const cachedResult = await getAuthFromRequest(makeRequest())
@@ -81,8 +81,8 @@ describe('getAuthFromRequest', () => {
       ...refreshedAccount,
       anonymousOnboardingCompleted: true,
     })
-    expect(prismaMock.account.findUnique).toHaveBeenCalledTimes(1)
-    expect(prismaMock.account.findUnique).toHaveBeenCalledWith({
+    expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(1)
+    expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
       where: { id: 'acct-1' },
     })
   })
@@ -101,7 +101,7 @@ describe('getAuthFromRequest', () => {
       name: 'Alice',
     }
     const refreshedAccount = { ...initialAccount, name: 'Alice Updated' }
-    prismaMock.account.findUnique
+    prismaMock.user.findUnique
       .mockResolvedValueOnce(initialAccount as never)
       .mockResolvedValueOnce(refreshedAccount as never)
 
@@ -112,7 +112,7 @@ describe('getAuthFromRequest', () => {
     await expect(getAuthFromRequest(makeRequest())).resolves.toMatchObject({
       user: { ...refreshedAccount, anonymousOnboardingCompleted: true },
     })
-    expect(prismaMock.account.findUnique).toHaveBeenCalledTimes(2)
+    expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(2)
   })
 
   it('refetches the account after explicit invalidation', async () => {
@@ -127,7 +127,7 @@ describe('getAuthFromRequest', () => {
       name: 'Alice',
     }
     const updatedAccount = { ...initialAccount, name: 'Alice Updated' }
-    prismaMock.account.findUnique
+    prismaMock.user.findUnique
       .mockResolvedValueOnce(initialAccount as never)
       .mockResolvedValueOnce(updatedAccount as never)
 
@@ -139,7 +139,7 @@ describe('getAuthFromRequest', () => {
       ...updatedAccount,
       anonymousOnboardingCompleted: true,
     })
-    expect(prismaMock.account.findUnique).toHaveBeenCalledTimes(2)
+    expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(2)
   })
 
   it('treats an unauthenticated request as no-op', async () => {
@@ -159,7 +159,7 @@ describe('getApplicationAuthFromRequest', () => {
       user: { id: 'anonymous-pending' },
       session: { id: 'sess-pending' },
     }
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'anonymous-pending',
       name: 'Guest',
       isAnonymous: true,
@@ -183,7 +183,7 @@ describe('getApplicationAuthFromRequest', () => {
       user: { id: 'anonymous-ready' },
       session: { id: 'sess-ready' },
     }
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'anonymous-ready',
       name: 'Guest',
       isAnonymous: true,

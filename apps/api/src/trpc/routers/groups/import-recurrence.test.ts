@@ -48,7 +48,7 @@ function monthlyExpense(date: string) {
 
 describe('importGroup recurring collapse', () => {
   beforeEach(async () => {
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'acct-importer',
       email: 'alice@example.com',
       emailVerified: true,

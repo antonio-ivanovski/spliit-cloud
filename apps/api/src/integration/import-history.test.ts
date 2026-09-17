@@ -29,7 +29,7 @@ describe('Spliit import history', () => {
   }
 
   beforeAll(async () => {
-    await prisma.account.create({
+    await prisma.user.create({
       data: {
         id: accountId,
         email: accountEmail,
@@ -43,7 +43,7 @@ describe('Spliit import history', () => {
     for (const ledgerId of ledgerIds) {
       await prisma.ledger.delete({ where: { id: ledgerId } }).catch(() => {})
     }
-    await prisma.account.delete({ where: { id: accountId } }).catch(() => {})
+    await prisma.user.delete({ where: { id: accountId } }).catch(() => {})
   })
 
   it('restores history for new and existing-group imports without notifications', async () => {

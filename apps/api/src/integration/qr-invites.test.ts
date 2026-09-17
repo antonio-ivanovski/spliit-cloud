@@ -63,7 +63,7 @@ describe('QR / nearby session invitations — real DB', () => {
   }
 
   beforeAll(async () => {
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: adminEmail },
       update: {},
       create: {
@@ -73,7 +73,7 @@ describe('QR / nearby session invitations — real DB', () => {
         name: 'Test Admin',
       },
     })
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: inviteeEmail },
       update: {},
       create: {
@@ -83,7 +83,7 @@ describe('QR / nearby session invitations — real DB', () => {
         name: 'Test Invitee',
       },
     })
-    await prisma.account.upsert({
+    await prisma.user.upsert({
       where: { email: secondInviteeEmail },
       update: {},
       create: {
@@ -99,11 +99,9 @@ describe('QR / nearby session invitations — real DB', () => {
     for (const lid of ledgerIds) {
       await prisma.ledger.delete({ where: { id: lid } }).catch(() => {})
     }
-    await prisma.account.delete({ where: { id: adminId } }).catch(() => {})
-    await prisma.account.delete({ where: { id: inviteeId } }).catch(() => {})
-    await prisma.account
-      .delete({ where: { id: secondInviteeId } })
-      .catch(() => {})
+    await prisma.user.delete({ where: { id: adminId } }).catch(() => {})
+    await prisma.user.delete({ where: { id: inviteeId } }).catch(() => {})
+    await prisma.user.delete({ where: { id: secondInviteeId } }).catch(() => {})
   })
 
   async function createTestGroup(

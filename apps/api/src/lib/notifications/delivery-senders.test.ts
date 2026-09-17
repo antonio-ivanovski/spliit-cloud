@@ -114,7 +114,7 @@ beforeEach(() => {
 
 describe('EmailDeliverySenderImpl', () => {
   it('renders the template and forwards a single email to sendEmail', async () => {
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       email: 'bob@example.com',
       emailVerified: true,
     } as never)
@@ -142,7 +142,7 @@ describe('EmailDeliverySenderImpl', () => {
   })
 
   it('formats amounts and date-only fields using the recipient locale', async () => {
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       email: 'bob@example.com',
       emailVerified: true,
     } as never)
@@ -159,7 +159,7 @@ describe('EmailDeliverySenderImpl', () => {
   })
 
   it('formats notification counts in the HTML template too', async () => {
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       email: 'bob@example.com',
       emailVerified: true,
     } as never)
@@ -176,7 +176,7 @@ describe('EmailDeliverySenderImpl', () => {
   })
 
   it('throws PermanentDeliveryError when the account is missing', async () => {
-    prismaMock.account.findUnique.mockResolvedValue(null as never)
+    prismaMock.user.findUnique.mockResolvedValue(null as never)
     const snapshot = buildExpenseCreatedSnapshot()
 
     await expect(
@@ -190,7 +190,7 @@ describe('EmailDeliverySenderImpl', () => {
   })
 
   it('throws PermanentDeliveryError when the email is not verified', async () => {
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       email: 'bob@example.com',
       emailVerified: false,
     } as never)
@@ -215,7 +215,7 @@ describe('EmailDeliverySenderImpl', () => {
   ] as const)(
     'enforces user-generated quotas for %s planner emails',
     async (kind, category) => {
-      prismaMock.account.findUnique.mockResolvedValue({
+      prismaMock.user.findUnique.mockResolvedValue({
         email: 'bob@example.com',
         emailVerified: true,
       } as never)
@@ -251,7 +251,7 @@ describe('EmailDeliverySenderImpl', () => {
   )
 
   it('adds RFC 8058 headers and footer when the snapshot opts in to unsubscribe', async () => {
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       email: 'bob@example.com',
       emailVerified: true,
     } as never)
@@ -291,7 +291,7 @@ describe('EmailDeliverySenderImpl', () => {
   })
 
   it('classifies SMTP 5xx as PermanentDeliveryError', async () => {
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       email: 'bob@example.com',
       emailVerified: true,
     } as never)
@@ -312,7 +312,7 @@ describe('EmailDeliverySenderImpl', () => {
   })
 
   it('classifies SMTP 4xx as TransientDeliveryError', async () => {
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       email: 'bob@example.com',
       emailVerified: true,
     } as never)
@@ -333,7 +333,7 @@ describe('EmailDeliverySenderImpl', () => {
   })
 
   it('redacts long SMTP error messages before throwing', async () => {
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       email: 'bob@example.com',
       emailVerified: true,
     } as never)

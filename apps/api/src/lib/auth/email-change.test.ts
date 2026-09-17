@@ -60,8 +60,8 @@ function accountRow(overrides: Record<string, unknown> = {}) {
 describe('email change plugin', () => {
   beforeEach(() => {
     autoAcceptMock.mockResolvedValue(undefined)
-    prismaMock.account.findUnique.mockResolvedValue(accountRow() as never)
-    prismaMock.account.findFirst.mockResolvedValue(null)
+    prismaMock.user.findUnique.mockResolvedValue(accountRow() as never)
+    prismaMock.user.findFirst.mockResolvedValue(null)
   })
 
   it('generates a 6-digit OTP', () => {
@@ -88,7 +88,7 @@ describe('email change plugin', () => {
   })
 
   it('requires graduation acknowledgment for anonymous accounts', async () => {
-    prismaMock.account.findUnique.mockResolvedValue(
+    prismaMock.user.findUnique.mockResolvedValue(
       accountRow({
         email: 'guest-1@anonymous.placeholder.local',
         emailVerified: false,
@@ -107,7 +107,7 @@ describe('email change plugin', () => {
   })
 
   it('sends an OTP after an anonymous account acknowledges graduation', async () => {
-    prismaMock.account.findUnique.mockResolvedValue(
+    prismaMock.user.findUnique.mockResolvedValue(
       accountRow({
         email: 'guest-1@anonymous.placeholder.local',
         emailVerified: false,
@@ -129,7 +129,7 @@ describe('email change plugin', () => {
   })
 
   it('lets GitHub placeholder accounts add an email without graduation', async () => {
-    prismaMock.account.findUnique.mockResolvedValue(
+    prismaMock.user.findUnique.mockResolvedValue(
       accountRow({
         email: '789@github.placeholder.local',
         emailVerified: false,
@@ -168,7 +168,7 @@ describe('email change plugin', () => {
   })
 
   it('rejects an email already used by another account before sending', async () => {
-    prismaMock.account.findFirst.mockResolvedValue({ id: 'other' } as never)
+    prismaMock.user.findFirst.mockResolvedValue({ id: 'other' } as never)
 
     await expect(
       plugin.endpoints.requestEmailChange(
@@ -181,7 +181,7 @@ describe('email change plugin', () => {
   it('graduates an anonymous account and deletes URL recovery on confirm', async () => {
     const email = 'new@example.com'
     const otp = '123456'
-    prismaMock.account.findUnique.mockResolvedValue(
+    prismaMock.user.findUnique.mockResolvedValue(
       accountRow({
         email: 'guest-1@anonymous.placeholder.local',
         emailVerified: false,
@@ -202,7 +202,7 @@ describe('email change plugin', () => {
         attempts: 0,
       }),
     } as never)
-    prismaMock.account.update.mockResolvedValue(
+    prismaMock.user.update.mockResolvedValue(
       accountRow({ email, emailVerified: true, isAnonymous: false }) as never,
     )
 
@@ -219,7 +219,7 @@ describe('email change plugin', () => {
       isAnonymous: false,
     })
 
-    expect(prismaMock.account.update).toHaveBeenCalledWith(
+    expect(prismaMock.user.update).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({
           email,
@@ -231,7 +231,7 @@ describe('email change plugin', () => {
     expect(
       prismaMock.anonymousRecoveryCredential.deleteMany,
     ).toHaveBeenCalledWith({ where: { accountId: 'account-1' } })
-    expect(prismaMock.authIdentity.updateMany).not.toHaveBeenCalled()
+    expect(prismaMock.account.updateMany).not.toHaveBeenCalled()
     expect(sendEmailMock).not.toHaveBeenCalled()
     expect(autoAcceptMock).toHaveBeenCalledWith({
       accountId: 'account-1',
@@ -242,7 +242,7 @@ describe('email change plugin', () => {
   it('adds email to a GitHub placeholder account without touching anonymous recovery', async () => {
     const email = 'new@example.com'
     const otp = '654321'
-    prismaMock.account.findUnique.mockResolvedValue(
+    prismaMock.user.findUnique.mockResolvedValue(
       accountRow({
         email: '789@github.placeholder.local',
         emailVerified: false,
@@ -263,7 +263,7 @@ describe('email change plugin', () => {
         attempts: 0,
       }),
     } as never)
-    prismaMock.account.update.mockResolvedValue(
+    prismaMock.user.update.mockResolvedValue(
       accountRow({ email, emailVerified: true, isAnonymous: false }) as never,
     )
 
@@ -271,7 +271,7 @@ describe('email change plugin', () => {
       sessionRequest({ body: { email, otp } }),
     )
 
-    expect(prismaMock.account.update).toHaveBeenCalledWith(
+    expect(prismaMock.user.update).toHaveBeenCalledWith(
       expect.objectContaining({
         data: { email, emailVerified: true },
       }),
@@ -299,7 +299,7 @@ describe('email change plugin', () => {
         attempts: 0,
       }),
     } as never)
-    prismaMock.account.update.mockResolvedValue(
+    prismaMock.user.update.mockResolvedValue(
       accountRow({ email, emailVerified: true }) as never,
     )
 
@@ -307,7 +307,7 @@ describe('email change plugin', () => {
       sessionRequest({ body: { email, otp } }),
     )
 
-    expect(prismaMock.authIdentity.updateMany).toHaveBeenCalledWith({
+    expect(prismaMock.account.updateMany).toHaveBeenCalledWith({
       where: {
         userId: 'account-1',
         providerId: { in: ['credential', 'magic-link'] },

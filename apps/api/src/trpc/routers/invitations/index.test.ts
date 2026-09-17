@@ -32,7 +32,7 @@ async function authAs(userId: string) {
     user: { id: userId },
     session: { id: 'sess-1' },
   }
-  prismaMock.account.findUnique.mockImplementation(async (args: unknown) => {
+  prismaMock.user.findUnique.mockImplementation(async (args: unknown) => {
     const id = (args as { where: { id: string } }).where.id
     return {
       id,
@@ -49,7 +49,7 @@ async function authAs(userId: string) {
 describe('invitationsRouter.list', () => {
   // `list` resolves recipient profiles with one bulk account lookup.
   beforeEach(() => {
-    prismaMock.account.findMany.mockResolvedValue([] as never)
+    prismaMock.user.findMany.mockResolvedValue([] as never)
   })
 
   it('returns the invitations list for an ADMIN', async () => {
@@ -406,7 +406,7 @@ describe('invitationsRouter.accept', () => {
       user: { id: 'acct-bob' },
       session: { id: 'sess-bob' },
     }
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'acct-bob',
       email: 'BOB@example.com',
       emailVerified: true,
@@ -463,7 +463,7 @@ describe('invitationsRouter.accept', () => {
       user: { id: 'acct-eve' },
       session: { id: 'sess-eve' },
     }
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'acct-eve',
       email: 'eve@example.com',
       emailVerified: true,
@@ -490,7 +490,7 @@ describe('invitationsRouter.accept', () => {
       user: { id: 'acct-bob' },
       session: { id: 'sess-bob' },
     }
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'acct-bob',
       email: 'bob@example.com',
       emailVerified: true,
@@ -520,7 +520,7 @@ describe('invitationsRouter.accept', () => {
       user: { id: 'acct-bob' },
       session: { id: 'sess-bob' },
     }
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'acct-bob',
       email: 'bob@example.com',
       emailVerified: true,
@@ -765,7 +765,7 @@ describe('invitationsRouter.create — guards and email', () => {
       email: 'bob@example.com',
       groupId: 'grp-1',
     } as never)
-    prismaMock.account.findFirst.mockResolvedValue({
+    prismaMock.user.findFirst.mockResolvedValue({
       id: 'acct-bob',
       name: 'Bob Profile',
     } as never)
@@ -815,7 +815,7 @@ describe('invitationsRouter.create — guards and email', () => {
       email: 'newuser@example.com',
       groupId: 'grp-1',
     } as never)
-    // prismaMock.account.findFirst returns null by default → no account.
+    // prismaMock.user.findFirst returns null by default → no account.
 
     const caller = makeCaller('acct-admin')
     await caller.create({
@@ -1547,7 +1547,7 @@ describe('invitationsRouter.acceptLink', () => {
       user: { id: 'acct-bob' },
       session: { id: 'sess-bob' },
     }
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'acct-bob',
       email: 'bob@example.com',
       emailVerified: true,
@@ -1636,7 +1636,7 @@ describe('invitationsRouter.acceptLink', () => {
       user: { id: 'acct-bob' },
       session: { id: 'sess-bob' },
     }
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'acct-bob',
       email: 'bob@example.com',
       emailVerified: true,
@@ -1664,7 +1664,7 @@ describe('invitationsRouter.acceptLink', () => {
       user: { id: 'acct-bob' },
       session: { id: 'sess-bob' },
     }
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'acct-bob',
       email: 'bob@example.com',
       emailVerified: true,
@@ -1691,7 +1691,7 @@ describe('invitationsRouter.acceptLink', () => {
       user: { id: 'acct-bob' },
       session: { id: 'sess-bob' },
     }
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'acct-bob',
       email: 'bob@example.com',
       emailVerified: true,
@@ -1718,7 +1718,7 @@ describe('invitationsRouter.acceptLink', () => {
       user: { id: 'acct-bob' },
       session: { id: 'sess-bob' },
     }
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'acct-bob',
       email: 'bob@example.com',
       emailVerified: true,
@@ -1748,7 +1748,7 @@ describe('invitationsRouter.acceptLink', () => {
       user: { id: 'acct-bob' },
       session: { id: 'sess-bob' },
     }
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'acct-bob',
       email: 'bob@example.com',
       emailVerified: true,
@@ -1807,7 +1807,7 @@ describe('invitationsRouter.acceptLink', () => {
       user: { id: 'acct-bob' },
       session: { id: 'sess-bob' },
     }
-    prismaMock.account.findUnique.mockResolvedValue({
+    prismaMock.user.findUnique.mockResolvedValue({
       id: 'acct-bob',
       email: 'bob@example.com',
       emailVerified: true,
@@ -2028,7 +2028,7 @@ describe('invitationsRouter.updatePending', () => {
       updatedAt: new Date(NOW.getTime() + 1000),
     } as never)
     // No account exists for the new destination.
-    prismaMock.account.findFirst.mockResolvedValue(null as never)
+    prismaMock.user.findFirst.mockResolvedValue(null as never)
     prismaMock.groupInvitation.findFirst.mockResolvedValue(null as never)
     prismaMock.groupMember.findFirst.mockResolvedValue(null as never)
 
@@ -2074,7 +2074,7 @@ describe('invitationsRouter.updatePending', () => {
       email: 'carol@example.com',
       updatedAt: new Date(NOW.getTime() + 1000),
     } as never)
-    prismaMock.account.findFirst.mockResolvedValue({
+    prismaMock.user.findFirst.mockResolvedValue({
       id: 'acct-carol',
       name: 'Carol Profile',
       image: null,
@@ -2158,7 +2158,7 @@ describe('invitationsRouter.updatePending', () => {
         expiresAt: NOW,
       },
     })
-    prismaMock.account.findFirst.mockResolvedValue(null as never)
+    prismaMock.user.findFirst.mockResolvedValue(null as never)
     prismaMock.groupInvitation.findFirst.mockResolvedValue(null as never)
     prismaMock.groupMember.findFirst.mockResolvedValue(null as never)
 
