@@ -1351,7 +1351,8 @@
     "anonymousSignOutWarning": "이 익명 계정은 저장된 로그인 링크를 통해서만 복구할 수 있습니다. 지금 로그아웃하시겠습니까?",
     "signOutTitle": "로그아웃하시겠습니까?",
     "signOutError": "로그아웃할 수 없습니다. 다시 시도해 주세요.",
-    "cancel": "취소"
+    "cancel": "취소",
+    "signOutOffline": "로그아웃하려면 연결하세요"
   },
   "Footer": {
     "madeIn": "오픈소스 커뮤니티가 사랑을 담아 만들었어요 ❤️",
@@ -2640,7 +2641,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "현재 오프라인 상태입니다. 변경 내용은 다시 연결될 때까지 저장되지 않습니다."
+    "message": "오프라인입니다. 다운로드한 데이터는 읽기 전용입니다.",
+    "serverUnavailable": "지금 Spliit에 닿지 않아요. 다운로드한 데이터를 보여줍니다.",
+    "reconnecting": "다시 연결 중… 다운로드한 데이터를 계속 읽을 수 있어요."
   },
   "InstallPromotion": {
     "title": "Spliit Cloud 설치",
@@ -4108,5 +4111,51 @@
       "description": "이미 후원해 주셨다면 메시지를 남겨 주세요 — 소식을 듣고 싶습니다. 다른 후원 방법에 대한 문의는 <email>contact@spliit.cloud</email>로 연락해 주세요."
     },
     "feedbackLink": "자금 대신 아이디어로 기여하고 싶으신가요? <cta>피드백 공유하기</cta>."
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "그룹 다운로드 중 ({ready}/{total})",
+    "statusAvailable": "오프라인 사용 가능",
+    "statusPartial": "일부 그룹이 내려받아지지 않았어요",
+    "statusPaused": "다운로드 일시중지됨",
+    "statusUnavailable": "오프라인 저장소를 쓸 수 없어요",
+    "statusNeedsUpdate": "다운로드를 업데이트해야 해요",
+    "statusEmpty": "내려받을 그룹이 없어요.",
+    "recent500Note": "최근 500개를 보여줍니다. 이전분은 다시 연결하세요.",
+    "title": "오프라인 다운로드",
+    "description": "연결 없이 다운로드한 그룹과 지출을 읽어요. 파일은 연결이 필요해요.",
+    "automatic": "자동 다운로드",
+    "automaticDescription": "온라인일 때 그룹을 내려받아 오프라인에서 읽어요.",
+    "lastUpdated": "최근 업데이트 {date}",
+    "storageEstimate": "오프라인 데이터에 약 {size} 사용",
+    "refreshNow": "지금 새로고침",
+    "clear": "다운로드 지우기",
+    "clearConfirm": "이 기기에서 다운로드한 그룹과 지출을 지울까요? 서버 데이터는 안전해요. 자동 다운로드는 꺼져요.",
+    "keepOnDevice": "이 기기에 다운로드 유지",
+    "keepOnDeviceDescription": "브라우저에 오프라인 데이터 유지를 요청해요. 공간이 부족하면 지워질 수 있어요.",
+    "keepOnDeviceKept": "브라우저가 오프라인 데이터를 유지하려 해요.",
+    "keepOnDeviceNotKept": "브라우저가 오프라인 데이터를 유지하지 않았어요. 다운로드는 돼요.",
+    "groupNotDownloaded": "내려받지 않음",
+    "downloadFailed": "다운로드 실패",
+    "totalsIncomplete": "합계를 업데이트하려면 다시 연결하세요.",
+    "totalsIncompleteWithCount": "합계를 업데이트하려면 다시 연결하세요. (대기 중 {count}개)",
+    "recent500WithCount": "{count}개 중 최근 500개를 보여줍니다. 이전분은 다시 연결하세요.",
+    "offlineSearchHint": "오프라인 검색은 정확히 일치하는 텍스트만 찾아요. 오타 보정에는 연결이 필요해요.",
+    "groupsNotDownloaded": "{count}개 그룹이 내려받아지지 않았어요",
+    "groupsNeedUpdating": "{count}개를 업데이트해야 해요",
+    "storageBlocked": "오프라인 저장소 업데이트를 마치려면 다른 Spliit 탭을 닫아주세요.",
+    "storageQuota": "오프라인 저장소가 가득 찼어요. 다시 시도하거나 다운로드를 지워 공간을 비워주세요.",
+    "statusBlocked": "오프라인 저장소가 차단됐어요",
+    "statusQuotaError": "오프라인 저장소가 가득 찼어요",
+    "storageRetry": "저장소 다시 시도",
+    "schemaUnsupported": "다운로드를 읽으려면 앱을 업데이트하세요",
+    "cleanupFailed": "오프라인 다운로드를 지우지 못했습니다. 다시 시도하세요."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "바꾸려면 다시 연결하세요",
+    "attachmentsNeedConnection": "첨부를 보려면 연결하세요",
+    "needsConnection": "이 기능은 연결이 필요해요",
+    "expenseMissing": "이 지출은 이 기기의 다운로드에 없어요. 새/오래된 지출을 확인하려면 다시 연결하세요.",
+    "groupMissing": "이 그룹은 아직 다운로드가 끝나지 않았어요.",
+    "balancesStale": "잔액이 최신이 아닐 수 있어요."
   }
 }

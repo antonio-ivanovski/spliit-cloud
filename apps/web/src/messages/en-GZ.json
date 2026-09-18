@@ -2507,7 +2507,8 @@
     "anonymousSignOutWarning": "Your saved sign in link is the only way back into this anon account. Sign out now?",
     "signOutTitle": "Sign out, yeah?",
     "signOutError": "Couldn't sign out. Give it another go.",
-    "cancel": "Nah, go back"
+    "cancel": "Nah, go back",
+    "signOutOffline": "connect to sign out fr"
   },
   "Homepage": {
     "title": "Split <strong>Expenses</strong> with <strong>Besties & Family</strong>",
@@ -3036,7 +3037,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "you are offline. changes now will not save until reconnecting."
+    "message": "You're offline rn. Downloaded stuff is read-only.",
+    "serverUnavailable": "Can't reach Spliit rn. Showing your downloads.",
+    "reconnecting": "Reconnecting… hang tight, you can keep reading your downloads."
   },
   "Participants": {
     "search": "search participants…",
@@ -4034,5 +4037,51 @@
       "description": "if you've donated, drop us a note — we'd love to hear from you. for questions about other donation methods, hit us up at <email>contact@spliit.cloud</email>."
     },
     "feedbackLink": "prefer ideas over funds? <cta>share feedback</cta>."
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "Grabbing groups ({ready}/{total})",
+    "statusAvailable": "Good to go offline",
+    "statusPartial": "Some groups aren't downloaded yet",
+    "statusPaused": "Downloads are paused rn",
+    "statusUnavailable": "Offline storage isn't available",
+    "statusNeedsUpdate": "Downloads need a refresh",
+    "statusEmpty": "No groups to grab.",
+    "recent500Note": "Showing the newest 500. Reconnect for older ones.",
+    "title": "Saved for offline",
+    "description": "Read your downloaded groups and expenses with no connection. Files still need a connection.",
+    "automatic": "Auto downloads",
+    "automaticDescription": "Grab groups for offline reading while you're online.",
+    "lastUpdated": "Updated {date}",
+    "storageEstimate": "Using around {size} for offline stuff",
+    "refreshNow": "Refresh",
+    "clear": "Wipe downloads",
+    "clearConfirm": "Remove downloaded groups and expenses from this device? Your server data stays safe. Auto downloads will be turned off.",
+    "keepOnDevice": "Keep my downloads here",
+    "keepOnDeviceDescription": "Ask your browser to hold onto offline data. It can still clear it if space gets tight.",
+    "keepOnDeviceKept": "Your browser will try to hold onto offline data.",
+    "keepOnDeviceNotKept": "Your browser didn't keep offline data. Downloads still work tho.",
+    "groupNotDownloaded": "Not downloaded yet",
+    "downloadFailed": "Download didn't work",
+    "totalsIncomplete": "Hop back online to refresh totals.",
+    "totalsIncompleteWithCount": "Hop back online to refresh totals. ({count} pending)",
+    "recent500WithCount": "Showing newest 500 of {count}. Hop back online for older ones.",
+    "offlineSearchHint": "Offline search is exact-match only; typo-proof search needs a connection.",
+    "groupsNotDownloaded": "{count} group(s) still not saved",
+    "groupsNeedUpdating": "{count} need a refresh",
+    "storageBlocked": "Close your other Spliit tabs so offline storage can finish updating.",
+    "storageQuota": "Offline storage is full. Try again or clear downloads to free up space.",
+    "statusBlocked": "Offline storage is blocked",
+    "statusQuotaError": "Offline storage is full",
+    "storageRetry": "Give storage another shot",
+    "schemaUnsupported": "Update the app to read downloads",
+    "cleanupFailed": "couldn't clear offline downloads, try again"
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "Hop back online to edit",
+    "attachmentsNeedConnection": "Connect to check attachments",
+    "needsConnection": "This one needs a connection",
+    "expenseMissing": "This expense isn't in this device's download. Hop back online to check newer or older ones.",
+    "groupMissing": "This group hasn't finished downloading yet.",
+    "balancesStale": "Balances might be a lil stale."
   }
 }

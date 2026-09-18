@@ -52,7 +52,8 @@
     "signIn": "Entrar",
     "signOut": "Sair",
     "accountSettings": "Configurações da conta",
-    "anonymousSignOutWarning": "Esta conta anônima só pode ser recuperada com o link de login salvo. Sair agora?"
+    "anonymousSignOutWarning": "Esta conta anônima só pode ser recuperada com o link de login salvo. Sair agora?",
+    "signOutOffline": "Conecte-se para sair"
   },
   "Footer": {
     "legalNavigation": "Links jurídicos"
@@ -1320,7 +1321,9 @@
     "fallback": "Uma atividade foi registrada"
   },
   "OfflineBanner": {
-    "message": "Você está offline. As alterações que fizer agora não serão salvas até que você se reconecte."
+    "message": "Você está offline. Os dados baixados são só para leitura.",
+    "serverUnavailable": "Não dá para falar com o Spliit agora. Mostrando dados baixados.",
+    "reconnecting": "Reconectando… Você pode continuar lendo os dados baixados."
   },
   "InstallPromotion": {
     "description": "Adicione o Spliit Cloud à sua tela inicial — abre como um app nativo para adicionar despesas mais rapidamente e acessar de forma mais simples.",
@@ -1794,7 +1797,8 @@
   },
   "OfflineEmptyState": {
     "title": "Você está offline",
-    "description": "Esta tela precisa de uma conexão. Reconecte-se para carregar seus grupos e despesas."
+    "description": "Esta tela precisa de uma conexão. Reconecte-se para carregar seus grupos e despesas.",
+    "retry": "Tentar novamente"
   },
   "AccountAuthorizedClients": {
     "title": "Apps conectados",
@@ -2092,5 +2096,51 @@
       "description": "Confira o endereço e a rede antes de enviar e confirme que você está em spliit.cloud/sponsor. Os fundos enviados para o endereço errado não podem ser recuperados."
     },
     "feedbackLink": "Prefere contribuir com ideias em vez de fundos? <cta>Compartilhar comentários</cta>."
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "Baixando grupos ({ready}/{total})",
+    "statusAvailable": "Disponível offline",
+    "statusPartial": "Alguns grupos não foram baixados",
+    "statusPaused": "Downloads pausados",
+    "statusUnavailable": "Armazenamento offline indisponível",
+    "statusNeedsUpdate": "Os downloads precisam ser atualizados",
+    "statusEmpty": "Nenhum grupo para baixar.",
+    "recent500Note": "Mostrando os 500 recentes. Reconecte para ver os antigos.",
+    "title": "Downloads offline",
+    "description": "Leia grupos e despesas baixados sem conexão. Arquivos ainda precisam de conexão.",
+    "automatic": "Downloads automáticos",
+    "automaticDescription": "Baixe grupos para ler offline quando estiver online.",
+    "lastUpdated": "Atualizado em {date}",
+    "storageEstimate": "Cerca de {size} para dados offline",
+    "refreshNow": "Atualizar agora",
+    "clear": "Apagar downloads",
+    "clearConfirm": "Remover grupos e despesas baixados deste dispositivo? Seus dados no servidor continuam seguros. Os downloads automáticos serão desligados.",
+    "keepOnDevice": "Manter downloads neste dispositivo",
+    "keepOnDeviceDescription": "Peça ao navegador para guardar os dados offline. Ele ainda pode apagar se faltar espaço.",
+    "keepOnDeviceKept": "O navegador vai tentar guardar os dados offline.",
+    "keepOnDeviceNotKept": "O navegador não guardou os dados offline. Os downloads continuam funcionando.",
+    "groupNotDownloaded": "Não baixado",
+    "downloadFailed": "O download falhou",
+    "totalsIncomplete": "Reconecte para atualizar os totais.",
+    "totalsIncompleteWithCount": "Reconecte para atualizar os totais. ({count} pendentes)",
+    "recent500WithCount": "Mostrando 500 recentes de {count}. Reconecte para ver os antigos.",
+    "offlineSearchHint": "A pesquisa offline usa texto exato; tolerância a erros precisa de conexão.",
+    "groupsNotDownloaded": "{count} grupo(s) não baixados",
+    "groupsNeedUpdating": "{count} precisam ser atualizados",
+    "storageBlocked": "Feche as outras abas do Spliit para concluir a atualização do armazenamento offline.",
+    "storageQuota": "O armazenamento offline está cheio. Tente de novo ou apague downloads para liberar espaço.",
+    "statusBlocked": "Armazenamento offline bloqueado",
+    "statusQuotaError": "Armazenamento offline cheio",
+    "storageRetry": "Tentar armazenamento de novo",
+    "schemaUnsupported": "Atualize o app para ler os downloads",
+    "cleanupFailed": "Não foi possível apagar os downloads. Tente de novo."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "Reconecte para fazer alterações",
+    "attachmentsNeedConnection": "Conecte-se para ver anexos",
+    "needsConnection": "Esse recurso precisa de conexão",
+    "expenseMissing": "Essa despesa não está no download deste dispositivo. Reconecte para ver despesas mais recentes ou antigas.",
+    "groupMissing": "Esse grupo ainda não terminou de baixar.",
+    "balancesStale": "Os saldos podem estar desatualizados."
   }
 }

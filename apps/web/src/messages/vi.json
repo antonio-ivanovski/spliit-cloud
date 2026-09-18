@@ -77,7 +77,8 @@
     "anonymousSignOutWarning": "Tài khoản ẩn danh này chỉ có thể được khôi phục bằng liên kết đăng nhập đã lưu của bạn. Đăng xuất bây giờ?",
     "signOutTitle": "Đăng xuất?",
     "signOutError": "Không thể đăng xuất. Vui lòng thử lại.",
-    "cancel": "Hủy"
+    "cancel": "Hủy",
+    "signOutOffline": "Kết nối để đăng xuất"
   },
   "Common": {
     "close": "Đóng",
@@ -2715,7 +2716,9 @@
     "openExpense": "Mở chi phí"
   },
   "OfflineBanner": {
-    "message": "Bạn đang ngoại tuyến. Các thay đổi hiện tại sẽ không được lưu cho đến khi bạn kết nối lại."
+    "message": "Bạn đang ngoại tuyến. Dữ liệu đã tải chỉ để đọc.",
+    "serverUnavailable": "Hiện không tới được Spliit. Đang hiện dữ liệu đã tải.",
+    "reconnecting": "Đang kết nối lại… Bạn vẫn có thể đọc dữ liệu đã tải."
   },
   "InstallPromotion": {
     "title": "Cài đặt ứng dụng",
@@ -4106,5 +4109,51 @@
       "description": "Nếu đã quyên góp, hãy cho chúng tôi biết — chúng tôi rất muốn nghe từ bạn. Nếu có câu hỏi về các phương thức quyên góp khác, hãy viết thư đến <email>contact@spliit.cloud</email>."
     },
     "feedbackLink": "Muốn đóng góp ý tưởng thay vì tiền bạc? <cta>Chia sẻ phản hồi</cta>."
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "Đang tải nhóm ({ready}/{total})",
+    "statusAvailable": "Dùng được ngoại tuyến",
+    "statusPartial": "Một số nhóm chưa được tải",
+    "statusPaused": "Lượt tải đang dừng",
+    "statusUnavailable": "Bộ nhớ ngoại tuyến không dùng được",
+    "statusNeedsUpdate": "Lượt tải cần cập nhật",
+    "statusEmpty": "Không có nhóm để tải.",
+    "recent500Note": "Đang hiện 500 mục mới nhất. Kết nối lại để xem cũ hơn.",
+    "title": "Lượt tải ngoại tuyến",
+    "description": "Đọc nhóm và chi tiêu đã tải mà không cần mạng. Tệp vẫn cần mạng.",
+    "automatic": "Tải tự động",
+    "automaticDescription": "Tải nhóm để đọc ngoại tuyến khi bạn trực tuyến.",
+    "lastUpdated": "Cập nhật lúc {date}",
+    "storageEstimate": "Dùng khoảng {size} cho dữ liệu ngoại tuyến",
+    "refreshNow": "Làm mới ngay",
+    "clear": "Xóa lượt tải",
+    "clearConfirm": "Gỡ nhóm và chi tiêu đã tải khỏi thiết bị này? Dữ liệu máy chủ vẫn an toàn. Lượt tải tự động sẽ tắt.",
+    "keepOnDevice": "Giữ lượt tải trên thiết bị này",
+    "keepOnDeviceDescription": "Nhờ trình duyệt giữ dữ liệu ngoại tuyến. Trình duyệt vẫn có thể xóa khi thiếu chỗ.",
+    "keepOnDeviceKept": "Trình duyệt sẽ cố giữ dữ liệu ngoại tuyến.",
+    "keepOnDeviceNotKept": "Trình duyệt đã không giữ dữ liệu ngoại tuyến. Lượt tải vẫn chạy.",
+    "groupNotDownloaded": "Chưa tải",
+    "downloadFailed": "Tải thất bại",
+    "totalsIncomplete": "Kết nối lại để cập nhật tổng.",
+    "totalsIncompleteWithCount": "Kết nối lại để cập nhật tổng. ({count} đang chờ)",
+    "recent500WithCount": "Đang hiện 500 mới nhất trong {count}. Kết nối lại để xem cũ hơn.",
+    "offlineSearchHint": "Tìm kiếm ngoại tuyến dùng văn bản chính xác; chịu lỗi gõ cần có mạng.",
+    "groupsNotDownloaded": "{count} nhóm chưa được tải",
+    "groupsNeedUpdating": "{count} cần cập nhật",
+    "storageBlocked": "Đóng các tab Spliit khác để hoàn tất cập nhật bộ nhớ ngoại tuyến.",
+    "storageQuota": "Bộ nhớ ngoại tuyến đã đầy. Thử lại hoặc xóa lượt tải để giải phóng dung lượng.",
+    "statusBlocked": "Bộ nhớ ngoại tuyến bị chặn",
+    "statusQuotaError": "Bộ nhớ ngoại tuyến đã đầy",
+    "storageRetry": "Thử lại bộ nhớ",
+    "schemaUnsupported": "Cập nhật ứng dụng để đọc nội dung đã tải",
+    "cleanupFailed": "Không thể xóa nội dung đã tải. Thử lại."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "Kết nối lại để thay đổi",
+    "attachmentsNeedConnection": "Kết nối để xem đính kèm",
+    "needsConnection": "Tính năng này cần mạng",
+    "expenseMissing": "Chi phí này không có trong bản tải của thiết bị này. Kết nối lại để xem chi phí mới hơn/cũ hơn.",
+    "groupMissing": "Nhóm này chưa tải xong.",
+    "balancesStale": "Số dư có thể đã cũ."
   }
 }

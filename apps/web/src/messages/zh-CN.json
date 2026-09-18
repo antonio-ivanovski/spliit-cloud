@@ -77,7 +77,8 @@
     "anonymousSignOutWarning": "此匿名帐户只能使用您保存的登录链接来恢复。现在退出吗？",
     "signOutTitle": "退出？",
     "signOutError": "无法注销。请再试一次。",
-    "cancel": "取消"
+    "cancel": "取消",
+    "signOutOffline": "连接以退出登录"
   },
   "Footer": {
     "madeIn": "由开源社区用爱打造 ❤️",
@@ -2592,7 +2593,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "当前处于离线状态。当前所做的更改在重新连接之前不会被保存。"
+    "message": "你已离线。已下载的数据为只读。",
+    "serverUnavailable": "现在无法连接到 Spliit。正在显示已下载的数据。",
+    "reconnecting": "正在重连…你可以继续阅读已下载的数据。"
   },
   "InstallPromotion": {
     "title": "安装 Spliit Cloud",
@@ -4019,5 +4022,51 @@
       "description": "如果您已捐赠，欢迎给我们留言——很期待收到您的消息。如需咨询其他捐赠方式，请写信至 <email>contact@spliit.cloud</email>。"
     },
     "feedbackLink": "更愿意贡献想法而非资金？<cta>分享反馈</cta>。"
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "正在下载群组（{ready}/{total}）",
+    "statusAvailable": "可离线使用",
+    "statusPartial": "部分群组尚未下载",
+    "statusPaused": "下载已暂停",
+    "statusUnavailable": "离线存储不可用",
+    "statusNeedsUpdate": "下载需要更新",
+    "statusEmpty": "没有可下载的群组。",
+    "recent500Note": "仅显示最近 500 条。请重连查看更早内容。",
+    "title": "离线下载",
+    "description": "无需连接即可阅读已下载的群组和支出。文件仍需连接。",
+    "automatic": "自动下载",
+    "automaticDescription": "在线时下载群组以便离线阅读。",
+    "lastUpdated": "上次更新 {date}",
+    "storageEstimate": "离线数据约用 {size}",
+    "refreshNow": "立即刷新",
+    "clear": "清除下载",
+    "clearConfirm": "要从此设备移除已下载的群组和支出吗？你的服务器数据仍然安全。自动下载将被关闭。",
+    "keepOnDevice": "在此设备上保留下载",
+    "keepOnDeviceDescription": "请求浏览器保留离线数据。空间不足时仍可能被清除。",
+    "keepOnDeviceKept": "浏览器将尽量保留离线数据。",
+    "keepOnDeviceNotKept": "浏览器未保留离线数据。下载仍可使用。",
+    "groupNotDownloaded": "未下载",
+    "downloadFailed": "下载失败",
+    "totalsIncomplete": "重连后更新合计。",
+    "totalsIncompleteWithCount": "重连后更新合计。（{count} 条待处理）",
+    "recent500WithCount": "共 {count} 条，仅显示最近 500 条。请重连查看更早内容。",
+    "offlineSearchHint": "离线搜索仅精确匹配，容错搜索需要连接。",
+    "groupsNotDownloaded": "{count} 个群组尚未下载",
+    "groupsNeedUpdating": "{count} 个需要更新",
+    "storageBlocked": "请关闭其他 Spliit 标签页，以完成离线存储更新。",
+    "storageQuota": "离线存储已满。请重试，或清除下载以释放空间。",
+    "statusBlocked": "离线存储被阻止",
+    "statusQuotaError": "离线存储已满",
+    "storageRetry": "重试存储",
+    "schemaUnsupported": "更新应用以读取下载内容",
+    "cleanupFailed": "无法清除离线下载。请重试。"
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "重连后进行更改",
+    "attachmentsNeedConnection": "连接后查看附件",
+    "needsConnection": "此功能需要连接",
+    "expenseMissing": "此笔支出不在本设备的下载中。重连后查看更新或更早的支出。",
+    "groupMissing": "此群组尚未下载完成。",
+    "balancesStale": "余额可能已过期。"
   }
 }

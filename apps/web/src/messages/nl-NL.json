@@ -77,7 +77,8 @@
     "anonymousSignOutWarning": "Dit anonieme account kan alleen worden hersteld met uw opgeslagen inloglink. Nu uitloggen?",
     "signOutTitle": "Uitloggen?",
     "signOutError": "Kan niet afmelden. Probeer het opnieuw.",
-    "cancel": "Annuleren"
+    "cancel": "Annuleren",
+    "signOutOffline": "Maak verbinding om uit te loggen"
   },
   "Footer": {
     "madeIn": "Gemaakt met liefde door de open-source community ❤️",
@@ -2641,7 +2642,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "Je bent offline. Wijzigingen die je nu maakt, worden pas opgeslagen als je weer verbinding hebt."
+    "message": "Je bent offline. Gedownloade gegevens zijn alleen-lezen.",
+    "serverUnavailable": "Spliit is nu niet bereikbaar. Gedownloade gegevens worden getoond.",
+    "reconnecting": "Opnieuw verbinden… Je kunt gedownloade gegevens blijven lezen."
   },
   "InstallPromotion": {
     "title": "Spliit Cloud installeren",
@@ -4114,5 +4117,51 @@
       "description": "Als je hebt gedoneerd, stuur ons een berichtje — we horen graag van je. Voor vragen over andere donatiemethoden, schrijf naar <email>contact@spliit.cloud</email>."
     },
     "feedbackLink": "Draag je liever ideeën bij dan geld? <cta>Terugkoppeling delen</cta>."
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "Groepen downloaden ({ready}/{total})",
+    "statusAvailable": "Offline beschikbaar",
+    "statusPartial": "Sommige groepen zijn niet gedownload",
+    "statusPaused": "Downloads gepauzeerd",
+    "statusUnavailable": "Offline opslag niet beschikbaar",
+    "statusNeedsUpdate": "Downloads moeten worden bijgewerkt",
+    "statusEmpty": "Geen groepen om te downloaden.",
+    "recent500Note": "Toont recente 500. Maak verbinding voor oudere.",
+    "title": "Offlinedownloads",
+    "description": "Lees gedownloade groepen en uitgaven zonder verbinding. Bestanden hebben nog steeds een verbinding nodig.",
+    "automatic": "Automatische downloads",
+    "automaticDescription": "Download groepen om offline te lezen als je online bent.",
+    "lastUpdated": "Laatst bijgewerkt {date}",
+    "storageEstimate": "Ongeveer {size} voor offline gegevens",
+    "refreshNow": "Nu vernieuwen",
+    "clear": "Downloads wissen",
+    "clearConfirm": "Gedownloade groepen en uitgaven van dit apparaat verwijderen? Je servergegevens blijven veilig. Automatische downloads worden uitgeschakeld.",
+    "keepOnDevice": "Downloads op dit apparaat bewaren",
+    "keepOnDeviceDescription": "Vraag de browser om offline gegevens te bewaren. De browser kan ze bij ruimtegebrek alsnog wissen.",
+    "keepOnDeviceKept": "De browser probeert offline gegevens te bewaren.",
+    "keepOnDeviceNotKept": "De browser heeft offline gegevens niet bewaard. Downloads werken nog steeds.",
+    "groupNotDownloaded": "Niet gedownload",
+    "downloadFailed": "Download mislukt",
+    "totalsIncomplete": "Maak verbinding om totalen bij te werken.",
+    "totalsIncompleteWithCount": "Maak verbinding om totalen bij te werken. ({count} in behandeling)",
+    "recent500WithCount": "Toont recente 500 van {count}. Maak verbinding voor oudere.",
+    "offlineSearchHint": "Offline zoeken gebruikt exacte tekst; tolerantie voor typefouten heeft een verbinding nodig.",
+    "groupsNotDownloaded": "{count} groep(en) niet gedownload",
+    "groupsNeedUpdating": "{count} moeten worden bijgewerkt",
+    "storageBlocked": "Sluit andere Spliit-tabbladen om het bijwerken van de offline-opslag te voltooien.",
+    "storageQuota": "Offline-opslag is vol. Probeer opnieuw of verwijder downloads om ruimte vrij te maken.",
+    "statusBlocked": "Offline-opslag geblokkeerd",
+    "statusQuotaError": "Offline-opslag vol",
+    "storageRetry": "Opslag opnieuw proberen",
+    "schemaUnsupported": "Werk de app bij om downloads te lezen",
+    "cleanupFailed": "Offline downloads konden niet worden gewist. Probeer opnieuw."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "Maak verbinding om wijzigingen te maken",
+    "attachmentsNeedConnection": "Maak verbinding om bijlagen te bekijken",
+    "needsConnection": "Deze functie heeft een verbinding nodig",
+    "expenseMissing": "Deze uitgave staat niet in de download van dit apparaat. Maak verbinding om nieuwere/oudere uitgaven te controleren.",
+    "groupMissing": "Deze groep is nog niet volledig gedownload.",
+    "balancesStale": "Saldo's zijn mogelijk verouderd."
   }
 }

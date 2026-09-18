@@ -77,7 +77,8 @@
     "anonymousSignOutWarning": "Acest cont anonim poate fi recuperat numai cu linkul de recuperare salvat. Deconectați-vă acum?",
     "signOutTitle": "Deconectați-vă?",
     "signOutError": "Nu s-a putut deconecta. Vă rugăm să încercați din nou.",
-    "cancel": "Anulează"
+    "cancel": "Anulează",
+    "signOutOffline": "Conectează-te pentru a te deconecta"
   },
   "Footer": {
     "madeIn": "Realizat de comunitatea open-source cu dragoste ❤️",
@@ -2613,7 +2614,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "Ești offline. Modificările pe care le faci acum nu vor fi salvate până nu te reconectezi."
+    "message": "Ești offline. Datele descărcate sunt doar pentru citire.",
+    "serverUnavailable": "Spliit nu poate fi contactat acum. Se afișează datele descărcate.",
+    "reconnecting": "Reconectare… Poți continua să citești datele descărcate."
   },
   "InstallPromotion": {
     "title": "Instalează Spliit Cloud",
@@ -4072,5 +4075,51 @@
       "description": "Dacă ai donat deja, scrie-ne — ne-ar plăcea să auzim de la tine. Pentru întrebări despre alte metode de donație, scrie la <email>contact@spliit.cloud</email>."
     },
     "feedbackLink": "Preferi să contribui cu idei în loc de fonduri? <cta>Trimite o opinie</cta>."
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "Se descarcă grupuri ({ready}/{total})",
+    "statusAvailable": "Disponibil offline",
+    "statusPartial": "Unele grupuri nu sunt descărcate",
+    "statusPaused": "Descărcări întrerupte",
+    "statusUnavailable": "Stocarea offline indisponibilă",
+    "statusNeedsUpdate": "Descărcările trebuie actualizate",
+    "statusEmpty": "Niciun grup de descărcat.",
+    "recent500Note": "Se afișează cele mai recente 500. Reconectează-te pentru cele vechi.",
+    "title": "Descărcări offline",
+    "description": "Citește grupuri și cheltuieli descărcate fără conexiune. Fișierele au nevoie în continuare de conexiune.",
+    "automatic": "Descărcări automate",
+    "automaticDescription": "Descarcă grupuri pentru citire offline când ești online.",
+    "lastUpdated": "Actualizat {date}",
+    "storageEstimate": "Circa {size} pentru date offline",
+    "refreshNow": "Reîmprospătează acum",
+    "clear": "Șterge descărcările",
+    "clearConfirm": "Elimini grupurile și cheltuielile descărcate de pe acest dispozitiv? Datele de pe server rămân în siguranță. Descărcările automate vor fi oprite.",
+    "keepOnDevice": "Păstrează descărcările pe acest dispozitiv",
+    "keepOnDeviceDescription": "Cere browserului să păstreze datele offline. Le poate șterge totuși dacă nu e spațiu.",
+    "keepOnDeviceKept": "Browserul va încerca să păstreze datele offline.",
+    "keepOnDeviceNotKept": "Browserul nu a păstrat datele offline. Descărcările funcționează în continuare.",
+    "groupNotDownloaded": "Nedescărcat",
+    "downloadFailed": "Descărcarea a eșuat",
+    "totalsIncomplete": "Reconectează-te pentru a actualiza totalurile.",
+    "totalsIncompleteWithCount": "Reconectează-te pentru a actualiza totalurile. ({count} în așteptare)",
+    "recent500WithCount": "Se afișează 500 recente din {count}. Reconectează-te pentru cele vechi.",
+    "offlineSearchHint": "Căutarea offline folosește text exact; toleranța la greșeli are nevoie de conexiune.",
+    "groupsNotDownloaded": "{count} grup(uri) nedescărcat(e)",
+    "groupsNeedUpdating": "{count} trebuie actualizate",
+    "storageBlocked": "Închide celelalte file Spliit pentru a termina actualizarea stocării offline.",
+    "storageQuota": "Stocarea offline este plină. Reîncearcă sau șterge descărcări pentru a elibera spațiu.",
+    "statusBlocked": "Stocare offline blocată",
+    "statusQuotaError": "Stocare offline plină",
+    "storageRetry": "Reîncearcă stocarea",
+    "schemaUnsupported": "Actualizează aplicația pentru a citi descărcările",
+    "cleanupFailed": "Nu s-au putut șterge descărcările. Încearcă din nou."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "Reconectează-te pentru a modifica",
+    "attachmentsNeedConnection": "Conectează-te pentru a vedea atașamentele",
+    "needsConnection": "Această funcție are nevoie de conexiune",
+    "expenseMissing": "Această cheltuială nu este în descărcarea acestui dispozitiv. Reconectează-te pentru cheltuieli mai noi sau mai vechi.",
+    "groupMissing": "Acest grup nu a terminat de descărcat.",
+    "balancesStale": "Soldurile pot fi învechite."
   }
 }

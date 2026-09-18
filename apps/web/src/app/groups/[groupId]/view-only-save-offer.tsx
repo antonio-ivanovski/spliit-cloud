@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
+import { useOnlineStatus } from '@/lib/use-online-status'
 
 export function ViewOnlyBanner({
   isPublicLink,
@@ -62,6 +63,10 @@ export function ViewOnlySaveOffer({
   onSave: () => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
+  const isOnline = useOnlineStatus()
+  // Account saves are writes and need a connection. Device saves stay
+  // local and remain usable offline.
+  const saveDisabled = pending || (persistToAccount && !isOnline)
 
   return (
     <p className="pt-1 text-muted-foreground">
@@ -71,7 +76,7 @@ export function ViewOnlySaveOffer({
       <Button
         type="button"
         variant="link"
-        disabled={pending}
+        disabled={saveDisabled}
         className="h-auto px-0 text-sm font-medium text-sky-800 dark:text-sky-200"
         onClick={onSave}
       >

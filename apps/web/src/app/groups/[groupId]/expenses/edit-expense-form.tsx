@@ -17,6 +17,8 @@ import {
   isGlobalExpensesReturnTo,
 } from '@/lib/expense-navigation'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
+import { OfflineWriteError } from '@/lib/offline/write-guard'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 import { useIsReadOnlyGroupViewer } from '../current-group-context'
@@ -90,6 +92,15 @@ export function EditExpenseForm({
   } | null>(null)
 
   const navigate = useNavigate()
+  // Cold offline navigation
+  // (no group/expense data) shows an explicit connection-required state and
+  // never initializes an editable form from a stale snapshot. When the form
+  // was already loaded (dirty or not) and connectivity drops, keep it mounted
+  // in-memory with the existing navigation/PWA-update blocker, disable
+  // submission, and show "not saved" — no durable draft storage. Reconnect
+  // refetches permission/version without replacing dirty inputs; the existing
+  // version-conflict dialog stays authoritative.
+  const isOnline = useOnlineStatus()
 
   const { mutateAsync: updateExpenseMutateAsync } = useUpdateExpenseMutation({
     onConflict: () => setConflictOpen(true),
@@ -123,8 +134,36 @@ export function EditExpenseForm({
     })
   }
 
+  if (!isOnline && (!group || !expense)) {
+    return (
+      <Card>
+        <CardHeader className="hidden sm:flex">
+          <CardTitle>
+            {tExpenseForm('Expense.editTitle', { title: '' })}
+          </CardTitle>
+          <CardDescription>{t('backToExpenses')}</CardDescription>
+        </CardHeader>
+        <CardContent spacing="standalone" className="flex flex-col gap-3">
+          <output className="block text-sm text-muted-foreground">
+            This feature needs a connection
+          </output>
+          <div>
+            <Button
+              variant="secondary"
+              nativeButton={false}
+              render={<Link {...expenseListLink(groupId, returnTo)} />}
+            >
+              {t('backToExpenses')}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
   if (!group || !expense) return null
   const expectedVersion = expense.version
+  const offlineWithData = !isOnline
 
   // The expense form is read-only when the group is archived or when the
   // viewer is a PENDING invitee. The server enforces the same rule on
@@ -159,6 +198,11 @@ export function EditExpenseForm({
 
   return (
     <>
+      {offlineWithData && (
+        <output className="mb-4 block rounded-md border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-100">
+          Reconnect to make changes — your edits are kept here but not saved.
+        </output>
+      )}
       {seriesId && selectedScope && (
         <div
           className="mb-4 rounded-md border bg-muted/50 px-4 py-2.5 text-sm text-muted-foreground"
@@ -171,60 +215,69 @@ export function EditExpenseForm({
           )}
         </div>
       )}
-      <ExpenseForm
-        key={formRevision}
-        group={group}
-        expense={expense}
-        cancelLink={expenseFormCancelLink(group.id, returnTo)}
-        currentLedgerParticipantId={currentLedgerParticipantId}
-        readOnly={readOnly}
-        editScope={selectedScope}
-        heading={tExpenseForm('Expense.editTitle', { title: expense.title })}
-        onSubmit={async (expense) => {
-          if (seriesId) {
-            if (selectedScope) {
-              await updateExpenseMutateAsync({
-                expenseId,
-                groupId,
-                expense,
-                scope: selectedScope,
-                expectedVersion,
-              } as Parameters<typeof updateExpenseMutateAsync>[0])
-              return 'saved'
-            }
-            // The scope dialog performs the actual update later
-            // (deferred save — the pending submit stays open until the
-            // dialog either cancels or finishes persistence).
-            return new Promise<ExpenseSubmitOutcome>((resolve, reject) => {
-              setScopeDialog({
-                mode: 'update',
-                expense,
-                resolve,
-                reject,
+      {/* Offline with data: fieldset disables submission while keeping the
+          form mounted (dirty preserved, PWA/nav blocker active). Cancel/back
+          links stay usable; the guard rejects any missed submit. */}
+      <fieldset disabled={offlineWithData} className="min-w-0">
+        <ExpenseForm
+          key={formRevision}
+          group={group}
+          expense={expense}
+          cancelLink={expenseFormCancelLink(group.id, returnTo)}
+          currentLedgerParticipantId={currentLedgerParticipantId}
+          readOnly={readOnly}
+          editScope={selectedScope}
+          heading={tExpenseForm('Expense.editTitle', { title: expense.title })}
+          onSubmit={async (expense) => {
+            // Explicit offline entry check (fieldset is also disabled): never
+            // send the update offline. The guard would also reject; throwing
+            // here avoids optimism and keeps the draft mounted.
+            if (!isOnline) throw new OfflineWriteError()
+            if (seriesId) {
+              if (selectedScope) {
+                await updateExpenseMutateAsync({
+                  expenseId,
+                  groupId,
+                  expense,
+                  scope: selectedScope,
+                  expectedVersion,
+                } as Parameters<typeof updateExpenseMutateAsync>[0])
+                return 'saved'
+              }
+              // The scope dialog performs the actual update later
+              // (deferred save — the pending submit stays open until the
+              // dialog either cancels or finishes persistence).
+              return new Promise<ExpenseSubmitOutcome>((resolve, reject) => {
+                setScopeDialog({
+                  mode: 'update',
+                  expense,
+                  resolve,
+                  reject,
+                })
               })
+            }
+            await updateExpenseMutateAsync({
+              expenseId,
+              groupId,
+              expense,
+              expectedVersion,
             })
-          }
-          await updateExpenseMutateAsync({
-            expenseId,
-            groupId,
-            expense,
-            expectedVersion,
-          })
-          return 'saved'
-        }}
-        // Post-save navigation is separate from persistence so a
-        // navigation failure can never be reported as a save failure.
-        onSaved={navigateAfterUpdate}
-        onDelete={async () => {
-          if (readOnly) return
-          if (seriesId) {
-            setScopeDialog({ mode: 'delete' })
-            return
-          }
-          await deleteExpenseMutateAsync({ expenseId, groupId })
-        }}
-        runtimeFeatureFlags={runtimeFeatureFlags}
-      />
+            return 'saved'
+          }}
+          // Post-save navigation is separate from persistence so a
+          // navigation failure can never be reported as a save failure.
+          onSaved={navigateAfterUpdate}
+          onDelete={async () => {
+            if (readOnly || offlineWithData) return
+            if (seriesId) {
+              setScopeDialog({ mode: 'delete' })
+              return
+            }
+            await deleteExpenseMutateAsync({ expenseId, groupId })
+          }}
+          runtimeFeatureFlags={runtimeFeatureFlags}
+        />
+      </fieldset>
       <SeriesScopeDialog
         key={scopeDialog?.mode ?? 'closed'}
         open={scopeDialog != null}

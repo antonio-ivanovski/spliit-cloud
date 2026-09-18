@@ -9,7 +9,7 @@ import {
 import { ActivityItem } from '@/app/groups/[groupId]/activity/activity-item'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { ScanStickyHeading } from '@/components/layout/scan-surface'
-import { OfflineEmptyState } from '@/components/offline-empty-state'
+import { OfflineNeedsConnection } from '@/components/offline-download-status'
 import { Skeleton } from '@/components/ui/skeleton'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import { useOfflineWithoutData } from '@/lib/use-online-status'
@@ -58,6 +58,7 @@ ActivitiesLoading.displayName = 'ActivitiesLoading'
 
 export function ActivityList() {
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'Activity' })
+  const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const locale = i18n.language || 'en-US'
   const { group, groupId } = useCurrentGroup()
   const { linkInviteToken, viewKey } = useGroupAccessSearch()
@@ -69,7 +70,6 @@ export function ActivityList() {
     data: activitiesData,
     isLoading,
     fetchNextPage,
-    refetch,
   } = trpc.groups.activities.list.useInfiniteQuery(
     { groupId, limit: PAGE_SIZE, linkInviteToken, viewKey },
     { getNextPageParam: ({ nextCursor }) => nextCursor },
@@ -85,9 +85,15 @@ export function ActivityList() {
   }, [fetchNextPage, hasMore, inView, isLoading])
 
   if (showOfflineEmpty) {
+    // Extras (activity) are connection-required: never launch the network
+    // query offline and never promise persisted data. In-flow only, with back
+    // navigation; never a generic full-page error.
     return (
       <div className="px-4 sm:px-6">
-        <OfflineEmptyState variant="plain" onRetry={() => void refetch()} />
+        <OfflineNeedsConnection
+          backLabel={tGroups('backToGroups')}
+          backHref={`/groups/${groupId}`}
+        />
       </div>
     )
   }

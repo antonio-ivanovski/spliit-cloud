@@ -77,7 +77,8 @@
     "anonymousSignOutWarning": "Kontu anonimo hau gordetako saioa hasteko estekarekin soilik berreskura daiteke. Saioa amaitu nahi duzu?",
     "signOutTitle": "Saioa amaitu?",
     "signOutError": "Ezin izan da saioa amaitu. Mesedez, saiatu berriro.",
-    "cancel": "Utzi"
+    "cancel": "Utzi",
+    "signOutOffline": "Konektatu saioa amaitzeko"
   },
   "Footer": {
     "madeIn": "Kode irekiko komunitateak maitasunez egina ❤️",
@@ -2611,7 +2612,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "Lineaz kanpo zaude. Oraingoz egiten dituzun aldaketak ez dira gordeko berriro konektatu arte."
+    "message": "Lineaz kanpo zaude. Deskargatutako datuak irakurtzeko soilik dira.",
+    "serverUnavailable": "Ezin da Spliit-ekin konektatu une honetan. Deskargatutako datuak erakusten.",
+    "reconnecting": "Berriro konektatzen… Deskargatutako datuak irakurtzen jarrai dezakezu."
   },
   "InstallPromotion": {
     "title": "Instalatu Spliit Cloud",
@@ -4065,5 +4068,51 @@
       "description": "Dohaintza egin baduzu, idatzi iezaguzu — zure berri izatea gustatuko litzaiguke. Beste dohaintza-metodoei buruzko galderetarako, idatzi <email>contact@spliit.cloud</email> helbidera."
     },
     "feedbackLink": "Funtsak eman beharrean ideiak eman nahiago dituzu? <cta>Partekatu iritzia</cta>."
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "Taldeak deskargatzen ({ready}/{total})",
+    "statusAvailable": "Offline eskuragarri",
+    "statusPartial": "Talde batzuk ez daude deskargatuta",
+    "statusPaused": "Deskargak pausatuta",
+    "statusUnavailable": "Offline biltegia ez dago eskuragarri",
+    "statusNeedsUpdate": "Deskargek eguneratu behar dute",
+    "statusEmpty": "Ez dago deskargatzeko talderik.",
+    "recent500Note": "Azken 500ak erakusten. Konektatu zaharragoetarako.",
+    "title": "Offline deskargak",
+    "description": "Irakurri deskargatutako taldeak eta gastuak konexiorik gabe. Fitxategiek konexioa behar dute.",
+    "automatic": "Deskarga automatikoak",
+    "automaticDescription": "Deskargatu taldeak offline irakurtzeko linean zaudenean.",
+    "lastUpdated": "Eguneratuta {date}",
+    "storageEstimate": "{size} inguru offline datuetarako",
+    "refreshNow": "Freskatu orain",
+    "clear": "Garbitu deskargak",
+    "clearConfirm": "Kendu gailu honetatik deskargatutako taldeak eta gastuak? Zure zerbitzariko datuak seguru daude. Deskarga automatikoak desaktibatuko dira.",
+    "keepOnDevice": "Gorde deskargak gailu honetan",
+    "keepOnDeviceDescription": "Eskatu nabigatzaileari offline datuak gordetzeko. Leku faltan garbitu ditzake.",
+    "keepOnDeviceKept": "Nabigatzailea offline datuak gordetzen saiatuko da.",
+    "keepOnDeviceNotKept": "Nabigatzaileak ez ditu offline datuak gorde. Deskargek funtzionatzen dute.",
+    "groupNotDownloaded": "Deskargatu gabe",
+    "downloadFailed": "Deskargak huts egin du",
+    "totalsIncomplete": "Konektatu guztizkoak eguneratzeko.",
+    "totalsIncompleteWithCount": "Konektatu guztizkoak eguneratzeko. ({count} zain)",
+    "recent500WithCount": "Azken 500ak erakusten {count}-tik. Konektatu zaharragoetarako.",
+    "offlineSearchHint": "Offline bilaketak testu zehatza erabiltzen du; akatsen tolerantziak konexioa behar du.",
+    "groupsNotDownloaded": "{count} talde deskargatu gabe",
+    "groupsNeedUpdating": "{count} eguneratu behar",
+    "storageBlocked": "Itxi Spliit-en beste fitxak offline biltegia eguneratzen amaitzeko.",
+    "storageQuota": "Offline biltegia beteta dago. Saiatu berriro edo ezabatu deskargak lekua askatzeko.",
+    "statusBlocked": "Offline biltegia blokeatuta",
+    "statusQuotaError": "Offline biltegia beteta",
+    "storageRetry": "Saiatu biltegia berriro",
+    "schemaUnsupported": "Eguneratu aplikazioa deskargak irakurtzeko",
+    "cleanupFailed": "Ezin izan dira deskargak garbitu. Saiatu berriro."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "Konektatu aldaketak egiteko",
+    "attachmentsNeedConnection": "Konektatu eranskinak ikusteko",
+    "needsConnection": "Eginbide honek konexioa behar du",
+    "expenseMissing": "Gastu hau ez dago gailu honen deskargan. Konektatu gastu berriagoak edo zaharragoak ikusteko.",
+    "groupMissing": "Talde honek ez du deskarga amaitu.",
+    "balancesStale": "Saldoak zaharkituta egon daitezke."
   }
 }

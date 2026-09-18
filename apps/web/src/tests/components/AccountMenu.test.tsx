@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { AccountMenu } from '@/components/account-menu'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { render, screen, waitFor } from '@/test/test-utils'
 
 // ── Module mocks ────────────────────────────────────────────────────────
@@ -50,6 +51,15 @@ vi.mock('@/lib/auth', () => ({
 
 vi.mock('@/lib/use-current-account', () => ({
   useCurrentAccount: vi.fn(),
+}))
+
+vi.mock('@/lib/use-online-status', () => ({
+  useOnlineStatus: vi.fn(() => true),
+}))
+
+vi.mock('@/lib/offline/provider', () => ({
+  useOfflineSession: () => ({ cleanupError: null }),
+  useOptionalOfflineLifecycle: () => null,
 }))
 
 vi.mock('@/lib/push-notifications', () => ({
@@ -354,5 +364,41 @@ describe('AccountMenu', () => {
       }),
     )
     expect(mockReplaceLocation).not.toHaveBeenCalled()
+  })
+
+  it('shows a distinct offline hint instead of the generic failure (P1-6)', async () => {
+    vi.mocked(useOnlineStatus).mockReturnValue(false)
+    try {
+      const user = userEvent.setup()
+      vi.mocked(useCurrentAccount).mockReturnValue({
+        data: {
+          id: 'user-1',
+          name: 'Alice',
+          email: 'alice@example.com',
+          image: null,
+          emailVerified: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        isPending: false,
+        isRefetching: false,
+        error: null,
+        refetch: vi.fn(),
+      })
+
+      render(<AccountMenu />)
+      await user.click(screen.getByRole('button', { name: /account/i }))
+      await user.click(screen.getByText('Sign out'))
+
+      await waitFor(() =>
+        expect(mockToast).toHaveBeenCalledWith({
+          description: 'Connect to sign out',
+          variant: 'destructive',
+        }),
+      )
+      expect(mockSignOut).not.toHaveBeenCalled()
+    } finally {
+      vi.mocked(useOnlineStatus).mockReturnValue(true)
+    }
   })
 })

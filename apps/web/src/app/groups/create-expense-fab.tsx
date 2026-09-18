@@ -28,6 +28,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { cn } from '@/lib/utils'
 
 type Props = {
@@ -54,6 +55,7 @@ export function CreateExpenseFab({
   const [voiceFlowActive, setVoiceFlowActive] = useState(false)
   const [receiptFlowActive, setReceiptFlowActive] = useState(false)
   const currentGroupId = currentGroup?.group?.id
+  const isOnline = useOnlineStatus()
   const isExpenseFormRoute =
     pathname.endsWith('/expenses/create') ||
     pathname.endsWith('/tools/import') ||
@@ -63,7 +65,8 @@ export function CreateExpenseFab({
   const canEditCurrentGroup = Boolean(
     currentGroup?.group &&
     (currentGroup.viewer?.canMutate ?? !currentGroup.currentInvitation) &&
-    !currentGroup.group.archived,
+    !currentGroup.group.archived &&
+    isOnline,
   )
   const actionFlowActive =
     voiceOpen || receiptOpen || voiceFlowActive || receiptFlowActive

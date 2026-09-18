@@ -77,7 +77,8 @@
     "anonymousSignOutWarning": "Tämä anonyymi tili voidaan palauttaa vain tallennetulla palautuslinkilläsi. Kirjaudu ulos nyt?",
     "signOutTitle": "Kirjaudu ulos?",
     "signOutError": "Uloskirjautuminen ei onnistunut. Yritä uudelleen.",
-    "cancel": "Peruuta"
+    "cancel": "Peruuta",
+    "signOutOffline": "Yhdistä kirjautuaksesi ulos"
   },
   "Footer": {
     "madeIn": "Avoimen lähdekoodin yhteisön rakkaudella tekemä ❤️",
@@ -2601,7 +2602,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "Et ole yhteydessä internetiin. Nyt tekemiäsi muutoksia ei tallenneta, ennen kuin muodostat yhteyden uudelleen."
+    "message": "Olet offline. Ladatut tiedot ovat vain luku -tilassa.",
+    "serverUnavailable": "Spliit ei ole juuri nyt tavoitettavissa. Näytetään ladatut tiedot.",
+    "reconnecting": "Yhdistetään uudelleen… Voit jatkaa ladattujen tietojen lukemista."
   },
   "InstallPromotion": {
     "title": "Asenna Spliit Cloud",
@@ -4042,5 +4045,51 @@
       "description": "Jos olet lahjoittanut, laita meille viestiä — kuulemme sinusta mielellämme. Jos sinulla on kysyttävää muista lahjoitustavoista, kirjoita osoitteeseen <email>contact@spliit.cloud</email>."
     },
     "feedbackLink": "Haluatko osallistua mieluummin ideoilla kuin varoilla? <cta>Anna palautetta</cta>."
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "Ladataan ryhmiä ({ready}/{total})",
+    "statusAvailable": "Saatavilla offline",
+    "statusPartial": "Joitakin ryhmiä ei ole ladattu",
+    "statusPaused": "Lataukset tauotettu",
+    "statusUnavailable": "Offline tallennus ei käytössä",
+    "statusNeedsUpdate": "Lataukset pitää päivittää",
+    "statusEmpty": "Ei ladattavia ryhmiä.",
+    "recent500Note": "Näytetään uusimmat 500. Yhdistä vanhempia varten.",
+    "title": "Offline lataukset",
+    "description": "Lue ladattuja ryhmiä ja kuluja ilman yhteyttä. Tiedostot tarvitsevat yhä yhteyden.",
+    "automatic": "Automaattiset lataukset",
+    "automaticDescription": "Lataa ryhmät offline lukemista varten kun olet online.",
+    "lastUpdated": "Päivitetty viimeksi {date}",
+    "storageEstimate": "Käyttää noin {size} offline tietoihin",
+    "refreshNow": "Päivitä nyt",
+    "clear": "Tyhjennä lataukset",
+    "clearConfirm": "Poistetaanko ladatut ryhmät ja kulut tältä laitteelta? Palvelimen tiedot pysyvät turvassa. Automaattiset lataukset kytketään pois.",
+    "keepOnDevice": "Säilytä lataukset tällä laitteella",
+    "keepOnDeviceDescription": "Pyydä selainta säilyttämään offline tiedot. Selain voi silti tyhjentää ne tilan loppuessa.",
+    "keepOnDeviceKept": "Selain yrittää säilyttää offline tiedot.",
+    "keepOnDeviceNotKept": "Selain ei säilyttänyt offline tietoja. Lataukset toimivat silti.",
+    "groupNotDownloaded": "Ei ladattu",
+    "downloadFailed": "Lataus epäonnistui",
+    "totalsIncomplete": "Yhdistä summien päivittämiseksi.",
+    "totalsIncompleteWithCount": "Yhdistä summien päivittämiseksi. ({count} odottaa)",
+    "recent500WithCount": "Näytetään uusimmat 500 / {count}. Yhdistä vanhempia varten.",
+    "offlineSearchHint": "Offline-haku käyttää tarkkaa tekstiä; kirjoitusvirheiden sieto tarvitsee yhteyden.",
+    "groupsNotDownloaded": "{count} ryhmää ei ladattu",
+    "groupsNeedUpdating": "{count} pitää päivittää",
+    "storageBlocked": "Sulje muut Spliit-välilehdet offline-tallennuksen päivityksen viimeistelemiseksi.",
+    "storageQuota": "Offline-tallennus on täynnä. Yritä uudelleen tai tyhjennä latauksia tilan vapauttamiseksi.",
+    "statusBlocked": "Offline-tallennus estetty",
+    "statusQuotaError": "Offline-tallennus täynnä",
+    "storageRetry": "Yritä tallennusta uudelleen",
+    "schemaUnsupported": "Päivitä sovellus ladattujen tietojen lukemiseksi",
+    "cleanupFailed": "Offline-latauksia ei voitu tyhjentää. Yritä uudelleen."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "Yhdistä tehdäksesi muutoksia",
+    "attachmentsNeedConnection": "Yhdistä nähdäksesi liitteet",
+    "needsConnection": "Tämä toiminto tarvitsee yhteyden",
+    "expenseMissing": "Tämä kulu ei ole tämän laitteen latauksessa. Yhdistä uudempien/vanhempien kulujen tarkistamiseksi.",
+    "groupMissing": "Tämä ryhmä ei ole vielä latautunut.",
+    "balancesStale": "Saldot voivat olla vanhentuneita."
   }
 }

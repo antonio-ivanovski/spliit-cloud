@@ -26,6 +26,7 @@ import type { SuggestedSettlement } from '@/lib/balances'
 import type { Currency } from '@/lib/currency'
 import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import {
   dateOnlyInAccountTimeZone,
   formatCurrency,
@@ -90,6 +91,7 @@ export function CreateSettlementModal({
   const today = dateOnlyInAccountTimeZone(new Date(), accountTimeZone)
   const utils = trpc.useUtils()
   const { toast } = useToast()
+  const isOnline = useOnlineStatus()
   const { t } = useTranslation(undefined, { keyPrefix: 'CreateSettlement' })
   const { t: tForm } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const { t: tCategories } = useTranslation(undefined, {
@@ -126,7 +128,11 @@ export function CreateSettlementModal({
   const selectedTotal = sumSettlementLegs(selectedLegs)
   const isLegacySingle = !settlementGroup && selectedLegs.length === 1
   const canCreate = Boolean(
-    legs.length > 0 && group && !group.archived && !isReadOnlyGroupViewer,
+    legs.length > 0 &&
+    group &&
+    !group.archived &&
+    !isReadOnlyGroupViewer &&
+    isOnline,
   )
   const needsConversion =
     legs.length > 0 &&
@@ -141,8 +147,10 @@ export function CreateSettlementModal({
   console.log('test 4')
 
   // An open modal holds an in-progress selection; a reload would discard it.
-  // The global mutation guard lets an initiated settlement finish.
-  usePwaUpdateBlocker(open && legs.length > 0 && canCreate, 'settlement-modal')
+  // The global mutation guard lets an initiated settlement finish. Keep the
+  // blocker independent of connectivity so dirty selection survives offline
+  // like ExpenseForm (canCreate gates the footer actions separately).
+  usePwaUpdateBlocker(open && legs.length > 0, 'settlement-modal')
   useEffect(() => {
     if (open) {
       // oxlint-disable-next-line react/set-state-in-effect -- initialize selection from the controlled default when opened.
@@ -186,7 +194,10 @@ export function CreateSettlementModal({
           }
 
   const handleCreate = async () => {
-    if (selectedLegs.length === 0 || !centralParticipantId) return
+    // UI entry check before optimism/success toast/navigation: offline never
+    // claims success. The guard would also reject; this avoids the duplicate
+    // generic toast path entirely.
+    if (!isOnline || selectedLegs.length === 0 || !centralParticipantId) return
     const expenseDate = new Date()
 
     const paidByList =
@@ -377,6 +388,11 @@ export function CreateSettlementModal({
         </ResponsiveDialogBody>
 
         <ResponsiveDialogFooter className="flex-row gap-2 sm:justify-end">
+          {!isOnline && (
+            <output className="block w-full text-sm text-muted-foreground">
+              Reconnect to make changes
+            </output>
+          )}
           {canCreate && (
             <>
               <Button

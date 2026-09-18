@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { PageInset } from '@/components/layout/page-shell'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import type { Balances, SuggestedSettlement } from '@/lib/balances'
+import { useOfflineBalances } from '@/lib/offline/read-hooks'
 import { useOfflineWithoutData } from '@/lib/use-online-status'
 import { getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
@@ -95,6 +96,7 @@ function hasUnsettledBalance(
 
 export default function BalancesAndSettlements() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
+  const { t: tOffline } = useTranslation()
   const utils = trpc.useUtils()
   const { groupId, group } = useCurrentGroup()
   const { linkInviteToken, viewKey } = useGroupAccessSearch()
@@ -113,7 +115,24 @@ export default function BalancesAndSettlements() {
   } = trpc.groups.balances.list.useQuery({ groupId, linkInviteToken, viewKey })
   const { data: subgroupsData, isLoading: subgroupsAreLoading } =
     trpc.groups.subgroups.list.useQuery({ groupId, linkInviteToken, viewKey })
-  const showOfflineEmpty = useOfflineWithoutData(!!balancesData)
+  // Offline adapter: stored server balances render when the network has no
+  // complete result. Subgroup definitions stay online-only; the stored
+  // subgroup settlement plan still renders from the snapshot.
+  const offlineEnabled = !linkInviteToken && !viewKey
+  const offline = useOfflineBalances(groupId)
+  const useOfflineSource =
+    offlineEnabled && !balancesData && offline.meta.availability === 'ready'
+  const effectiveBalances = (
+    useOfflineSource
+      ? (offline.data?.balances as typeof balancesData)
+      : balancesData
+  ) as typeof balancesData
+  const offlineDirtySince = useOfflineSource
+    ? ((offline.data?.dirtySince as Date | null) ?? null)
+    : null
+  const showOfflineEmpty =
+    useOfflineWithoutData(!!balancesData) &&
+    !(offlineEnabled && offline.meta.availability === 'ready')
 
   useEffect(() => {
     // Until we use tRPC more widely and can invalidate the cache on expense
@@ -136,27 +155,28 @@ export default function BalancesAndSettlements() {
   const participants = useMemo(() => {
     const merged = mergeBalanceParticipants(
       group?.participants ?? [],
-      balancesData?.participants,
+      effectiveBalances?.participants,
     )
-    if (!balancesData) return merged
+    if (!effectiveBalances) return merged
     return merged.filter(
       (participant) =>
         !participant.removed ||
         hasUnsettledBalance(
           participant.id,
-          balancesData.balances,
-          balancesData.suggestedSettlements,
-          balancesData.currencyBalances,
+          effectiveBalances.balances,
+          effectiveBalances.suggestedSettlements,
+          effectiveBalances.currencyBalances,
         ),
     )
-  }, [group?.participants, balancesData])
+  }, [group?.participants, effectiveBalances])
 
-  const isLoading =
-    balancesAreLoading || subgroupsAreLoading || !balancesData || !group
+  const isLoading = useOfflineSource
+    ? !effectiveBalances || !group
+    : balancesAreLoading || subgroupsAreLoading || !balancesData || !group
   const groupCurrency = group ? getCurrencyFromGroup(group) : undefined
   const currencyBalances =
-    !isLoading && groupCurrency
-      ? withDisplayCurrencies(balancesData.currencyBalances, groupCurrency)
+    !isLoading && groupCurrency && effectiveBalances
+      ? withDisplayCurrencies(effectiveBalances.currencyBalances, groupCurrency)
       : []
   const view = viewParam ?? storedView
   const settlementSubgroups = useMemo<SubgroupDefinition[]>(
@@ -178,12 +198,12 @@ export default function BalancesAndSettlements() {
     subgroupsData?.enabled === true &&
     settlementSubgroups.length > 0 &&
     Boolean(groupCurrency)
-  const settlementBalances = balancesData?.balances
-  const subgroupSettlementPlan = balancesData?.settlement.subgroup as
+  const settlementBalances = effectiveBalances?.balances
+  const subgroupSettlementPlan = effectiveBalances?.settlement.subgroup as
     | SubgroupSettlementPlan
     | undefined
-  const individualSettlementPlan = balancesData?.settlement.individual ?? {
-    suggestedSettlements: balancesData?.suggestedSettlements ?? [],
+  const individualSettlementPlan = effectiveBalances?.settlement.individual ?? {
+    suggestedSettlements: effectiveBalances?.suggestedSettlements ?? [],
     policy: 'standard' as const,
   }
 
@@ -234,6 +254,13 @@ export default function BalancesAndSettlements() {
 
   return (
     <>
+      {offlineDirtySince && (
+        <PageInset className="mb-3 sm:mb-4">
+          <output className="block border-s-2 border-primary/40 ps-3 text-sm text-muted-foreground">
+            {tOffline('OfflineReadOnly.balancesStale')}
+          </output>
+        </PageInset>
+      )}
       <PageInset className="mb-3 grid w-full min-w-0 gap-3 sm:mb-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <BalanceViewSelector value={view} onChange={changeView} />
         <CurrencyDisplaySelector

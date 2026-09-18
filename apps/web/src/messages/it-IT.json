@@ -77,7 +77,8 @@
     "anonymousSignOutWarning": "Questo account anonimo può essere recuperato solo con il link di accesso salvato. Uscire adesso?",
     "signOutTitle": "Uscire?",
     "signOutError": "Impossibile uscire. Riprova.",
-    "cancel": "Annulla"
+    "cancel": "Annulla",
+    "signOutOffline": "Connettiti per uscire"
   },
   "Footer": {
     "madeIn": "Realizzato dalla comunità open-source con amore ❤️",
@@ -2613,7 +2614,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "Sei offline. Le modifiche che farai adesso non verranno salvate finché non tornerai online."
+    "message": "Sei offline. I dati scaricati sono in sola lettura.",
+    "serverUnavailable": "Spliit non è raggiungibile al momento. Mostro i dati scaricati.",
+    "reconnecting": "Riconnessione… Puoi continuare a leggere i dati scaricati."
   },
   "InstallPromotion": {
     "title": "Installa Spliit Cloud",
@@ -4067,5 +4070,51 @@
       "description": "Se hai donato, scrivici — ci farebbe piacere sentirti. Per domande su altri metodi di donazione, scrivi a <email>contact@spliit.cloud</email>."
     },
     "feedbackLink": "Preferisci contribuire con idee invece che con fondi? <cta>Condividi un’opinione</cta>."
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "Scaricamento gruppi ({ready}/{total})",
+    "statusAvailable": "Disponibile offline",
+    "statusPartial": "Alcuni gruppi non sono scaricati",
+    "statusPaused": "Download in pausa",
+    "statusUnavailable": "Archiviazione offline non disponibile",
+    "statusNeedsUpdate": "I download devono essere aggiornati",
+    "statusEmpty": "Nessun gruppo da scaricare.",
+    "recent500Note": "Mostro i 500 recenti. Riconnettiti per i precedenti.",
+    "title": "Download offline",
+    "description": "Leggi gruppi e spese scaricati senza connessione. I file richiedono comunque una connessione.",
+    "automatic": "Download automatici",
+    "automaticDescription": "Scarica i gruppi per leggerli offline quando sei online.",
+    "lastUpdated": "Ultimo aggiornamento {date}",
+    "storageEstimate": "Circa {size} per i dati offline",
+    "refreshNow": "Aggiorna ora",
+    "clear": "Elimina i download",
+    "clearConfirm": "Rimuovere gruppi e spese scaricati da questo dispositivo? I tuoi dati sul server restano al sicuro. I download automatici verranno disattivati.",
+    "keepOnDevice": "Conserva i download su questo dispositivo",
+    "keepOnDeviceDescription": "Chiedi al browser di conservare i dati offline. Potrebbe comunque eliminarli se manca spazio.",
+    "keepOnDeviceKept": "Il browser proverà a conservare i dati offline.",
+    "keepOnDeviceNotKept": "Il browser non ha conservato i dati offline. I download funzionano comunque.",
+    "groupNotDownloaded": "Non scaricato",
+    "downloadFailed": "Download non riuscito",
+    "totalsIncomplete": "Riconnettiti per aggiornare i totali.",
+    "totalsIncompleteWithCount": "Riconnettiti per aggiornare i totali. ({count} in sospeso)",
+    "recent500WithCount": "Mostro i 500 recenti di {count}. Riconnettiti per i precedenti.",
+    "offlineSearchHint": "La ricerca offline usa il testo esatto; per la tolleranza agli errori serve una connessione.",
+    "groupsNotDownloaded": "{count} gruppo(i) non scaricato(i)",
+    "groupsNeedUpdating": "{count} da aggiornare",
+    "storageBlocked": "Chiudi le altre schede di Spliit per completare l'aggiornamento dell'archiviazione offline.",
+    "storageQuota": "L'archiviazione offline è piena. Riprova o elimina dei download per liberare spazio.",
+    "statusBlocked": "Archiviazione offline bloccata",
+    "statusQuotaError": "Archiviazione offline piena",
+    "storageRetry": "Riprova archiviazione",
+    "schemaUnsupported": "Aggiorna l'app per leggere i download",
+    "cleanupFailed": "Impossibile cancellare i download. Riprova."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "Riconnettiti per modificare",
+    "attachmentsNeedConnection": "Connettiti per vedere gli allegati",
+    "needsConnection": "Questa funzione richiede una connessione",
+    "expenseMissing": "Questa spesa non è nel download di questo dispositivo. Riconnettiti per vedere spese più recenti o precedenti.",
+    "groupMissing": "Questo gruppo non ha finito di scaricarsi.",
+    "balancesStale": "I saldi potrebbero non essere aggiornati."
   }
 }

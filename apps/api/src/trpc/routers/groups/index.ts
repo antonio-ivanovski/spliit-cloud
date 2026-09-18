@@ -21,6 +21,8 @@ import {
 import { listGroupsProcedure } from './list.procedure'
 import { lookupGroupProcedure } from './lookup.procedure'
 import { groupMembersRouter } from './members'
+import { offlineCatalogProcedure } from './offline-catalog.procedure'
+import { offlineSnapshotProcedure } from './offline-snapshot.procedure'
 import { groupParticipantsRouter } from './participants'
 import { groupReportsRouter } from './reports'
 import { groupSavedViewsRouter } from './saved-views'
@@ -59,6 +61,20 @@ export const groupsRouter = createTRPCRouter({
   getDetails: getGroupDetailsProcedure,
 
   list: listGroupsProcedure,
+
+  /**
+   * Offline catalog download: all ACTIVE memberships with live-computed
+   * summaries. Cookie session only; no OAuth scope, no OpenAPI bearer
+   * publication. Private/no-store.
+   */
+  offlineCatalog: offlineCatalogProcedure,
+
+  /**
+   * Offline group snapshot: coherent group + overview + balances + up to 500
+   * newest expenses. Membership-only, never accepts link invites.
+   * Private/no-store.
+   */
+  offlineSnapshot: offlineSnapshotProcedure,
 
   /**
    * Create a new group with ledger and participants. The caller becomes the

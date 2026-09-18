@@ -26,6 +26,7 @@ import {
   type AccountTheme,
 } from '@/lib/account-preferences'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 /**
@@ -101,6 +102,14 @@ function AccountPreferenceSession({
     promptActive: false,
   })
   const utils = trpc.useUtils()
+  // Transport gate for remote pushes. The shared transport store is
+  // the source of truth (`unknown` fails open so normal online startup and
+  // existing tests without an OfflineProvider stay eligible); session +
+  // permission revalidation gates UI affordances via
+  // `useOfflineWriteEligibility`/`useGroupWriteEligibility`. The global
+  // MutationCache/tRPC guards reject any missed push without sending it.
+  const isOnline = useOnlineStatus()
+  const canPushPreferences = isOnline
   const preferencesQuery = trpc.account.getPreferences.useQuery(undefined, {
     staleTime: 0,
   })
@@ -154,6 +163,13 @@ function AccountPreferenceSession({
   )
 
   useEffect(() => {
+    // Never push the bootstrap fill while offline. Local
+    // theme/locale/download settings stay usable; the effect reruns after
+    // reconnect when server data refetches.
+    if (!canPushPreferences) {
+      bootstrapInFlight.current = false
+      return
+    }
     if (!serverPreferences || !needsInitialization || bootstrapInFlight.current)
       return
     bootstrapInFlight.current = true
@@ -200,6 +216,7 @@ function AccountPreferenceSession({
   }, [
     accountId,
     bootstrapRetry,
+    canPushPreferences,
     deviceDefaults,
     initialize,
     needsInitialization,
@@ -218,22 +235,27 @@ function AccountPreferenceSession({
   }, [accountId, authoritativePreferences, resolved])
 
   useEffect(() => {
+    // While disconnected, never overwrite the local theme/locale
+    // choice with stale server data. Local presentation stays as the user left
+    // it; on reconnect the existing precedence resumes.
+    if (!canPushPreferences) return
     if (resolved?.theme && resolved.theme !== theme) {
       setTheme(resolved.theme, {
         notify: false,
         persist: pendingPatches.current.length === 0,
       })
     }
-  }, [resolved?.theme, setTheme, theme])
+  }, [canPushPreferences, resolved?.theme, setTheme, theme])
 
   useEffect(() => {
+    if (!canPushPreferences) return
     if (resolved?.locale && resolved.locale !== locale) {
       void setUserLocale(resolved.locale, {
         notify: false,
         persist: pendingPatches.current.length === 0,
       })
     }
-  }, [locale, resolved?.locale])
+  }, [canPushPreferences, locale, resolved?.locale])
 
   const patchPreferences = useCallback(
     (
@@ -242,6 +264,29 @@ function AccountPreferenceSession({
     ) => {
       const current = latestPreferences.current
       if (!current) return Promise.resolve(false)
+
+      // Local theme/locale/download settings may change offline, but
+      // remote preference writes are never queued. Apply the local
+      // presentation + in-memory/cache value immediately, report "not saved
+      // remotely" (false), and leave confirmedPreferences/pendingPatches
+      // untouched so reconnect uses existing precedence without pretending a
+      // remote save happened.
+      if (!canPushPreferences) {
+        if (options.optimistic !== false) {
+          const optimistic = { ...current, ...patch }
+          latestPreferences.current = optimistic
+          utils.account.getPreferences.setData(undefined, {
+            preferences: optimistic,
+          })
+        }
+        if (patch.theme) {
+          setTheme(patch.theme, { notify: false, persist: true })
+        }
+        if (patch.locale) {
+          void setUserLocale(patch.locale, { notify: false, persist: true })
+        }
+        return Promise.resolve(false)
+      }
 
       const patchId = ++nextPatchId.current
       pendingPatches.current.push({ id: patchId, patch })
@@ -294,8 +339,10 @@ function AccountPreferenceSession({
     },
     [
       accountId,
+      canPushPreferences,
       persistPresentationCache,
       publishOptimisticPreferences,
+      setTheme,
       t,
       toast,
       update,

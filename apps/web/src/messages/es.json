@@ -77,7 +77,8 @@
     "anonymousSignOutWarning": "Esta cuenta anónima solo se puede recuperar con su enlace de inicio de sesión guardado. ¿Cerrar sesión ahora?",
     "signOutTitle": "¿Cerrar sesión?",
     "signOutError": "No se pudo cerrar sesión. Por favor inténtalo de nuevo.",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "signOutOffline": "Conéctate para cerrar sesión"
   },
   "Footer": {
     "madeIn": "Hecho por la comunidad de código abierto con amor ❤️",
@@ -2643,7 +2644,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "Estás sin conexión. Los cambios que hagas ahora no se guardarán hasta que vuelvas a conectarte."
+    "message": "Estás sin conexión. Los datos descargados son de solo lectura.",
+    "serverUnavailable": "No se puede contactar con Spliit ahora mismo. Mostrando datos descargados.",
+    "reconnecting": "Reconectando… Puedes seguir leyendo los datos descargados."
   },
   "InstallPromotion": {
     "title": "Instalar Spliit Cloud",
@@ -4121,5 +4124,51 @@
       "description": "Si has donado, escríbenos — nos encantaría saber de ti. Para preguntas sobre otros métodos de donación, escribe a <email>contact@spliit.cloud</email>."
     },
     "feedbackLink": "¿Prefieres aportar ideas en lugar de fondos? <cta>Compartir comentarios</cta>."
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "Descargando grupos ({ready}/{total})",
+    "statusAvailable": "Disponible sin conexión",
+    "statusPartial": "Algunos grupos no están descargados",
+    "statusPaused": "Descargas en pausa",
+    "statusUnavailable": "Almacenamiento sin conexión no disponible",
+    "statusNeedsUpdate": "Las descargas necesitan actualizarse",
+    "statusEmpty": "No hay grupos para descargar.",
+    "recent500Note": "Mostrando los 500 recientes. Reconecta para ver anteriores.",
+    "title": "Descargas sin conexión",
+    "description": "Lee grupos y gastos descargados sin conexión. Los archivos siguen necesitando conexión.",
+    "automatic": "Descargas automáticas",
+    "automaticDescription": "Descarga grupos para leer sin conexión cuando estés en línea.",
+    "lastUpdated": "Actualizado {date}",
+    "storageEstimate": "Usando unos {size} para datos sin conexión",
+    "refreshNow": "Actualizar ahora",
+    "clear": "Borrar descargas",
+    "clearConfirm": "¿Quitar los grupos y gastos descargados de este dispositivo? Tus datos del servidor están a salvo. Las descargas automáticas se desactivarán.",
+    "keepOnDevice": "Conservar descargas en este dispositivo",
+    "keepOnDeviceDescription": "Pide al navegador que conserve los datos sin conexión. Aun así puede borrarlos si falta espacio.",
+    "keepOnDeviceKept": "El navegador intentará conservar los datos sin conexión.",
+    "keepOnDeviceNotKept": "El navegador no conservó los datos sin conexión. Las descargas siguen funcionando.",
+    "groupNotDownloaded": "No descargado",
+    "downloadFailed": "La descarga falló",
+    "totalsIncomplete": "Reconecta para actualizar los totales.",
+    "totalsIncompleteWithCount": "Reconecta para actualizar los totales. ({count} pendientes)",
+    "recent500WithCount": "Mostrando 500 recientes de {count}. Reconecta para ver anteriores.",
+    "offlineSearchHint": "La búsqueda sin conexión usa texto exacto; la tolerancia a errores necesita conexión.",
+    "groupsNotDownloaded": "{count} grupo(s) sin descargar",
+    "groupsNeedUpdating": "{count} necesitan actualizarse",
+    "storageBlocked": "Cierra otras pestañas de Spliit para terminar de actualizar el almacenamiento sin conexión.",
+    "storageQuota": "El almacenamiento sin conexión está lleno. Reintenta o borra descargas para liberar espacio.",
+    "statusBlocked": "Almacenamiento sin conexión bloqueado",
+    "statusQuotaError": "Almacenamiento sin conexión lleno",
+    "storageRetry": "Reintentar almacenamiento",
+    "schemaUnsupported": "Actualiza la app para leer las descargas",
+    "cleanupFailed": "No se pudieron borrar las descargas. Inténtalo de nuevo."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "Reconecta para hacer cambios",
+    "attachmentsNeedConnection": "Conéctate para ver adjuntos",
+    "needsConnection": "Esta función necesita conexión",
+    "expenseMissing": "Este gasto no está en la descarga de este dispositivo. Reconecta para ver gastos más nuevos o antiguos.",
+    "groupMissing": "Este grupo aún no terminó de descargarse.",
+    "balancesStale": "Los saldos pueden estar desactualizados."
   }
 }

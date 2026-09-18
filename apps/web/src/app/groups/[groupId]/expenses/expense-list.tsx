@@ -29,6 +29,7 @@ import { SearchBar } from '@/components/ui/search-bar'
 import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import { useActiveUser } from '@/lib/hooks'
+import { useOfflineExpenses } from '@/lib/offline/read-hooks'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { useOfflineWithoutData } from '@/lib/use-online-status'
 import { getCurrencyFromGroup } from '@/lib/utils'
@@ -91,6 +92,7 @@ const ExpenseListForSearch = ({
   const { t: tFilters } = useTranslation(undefined, {
     keyPrefix: 'Expenses.filters',
   })
+  const { t: tOffline } = useTranslation()
   const locale = useLocale()
   const { ref: loadingRef, inView } = useInView()
   // Involvement can only be determined for members with a ledger participant
@@ -137,20 +139,66 @@ const ExpenseListForSearch = ({
       placeholderData: keepPreviousData,
     },
   )
-  const expenses = data?.pages.flatMap((page) => page.expenses)
-  const hasMore = data?.pages.at(-1)?.hasMore ?? false
-  const showOfflineEmpty = useOfflineWithoutData(!!data)
+  // Offline adapter (membership-only; link/view visitors stay online-only).
+  // Local keys stay disjoint (`['offline', ...]` with storedAt+nonce) and
+  // server pages are never appended onto local pages.
+  const offlineEnabled = !linkInviteToken && !viewKey
+  const offline = useOfflineExpenses({
+    groupId,
+    filter: {
+      hideSettlements: queryInput.hideSettlements,
+      categories: queryInput.categories,
+      paidBy: queryInput.paidBy,
+      paidByMatch: queryInput.paidByMatch,
+      paidFor: queryInput.paidFor,
+      paidForMatch: queryInput.paidForMatch,
+      dateFrom: queryInput.dateFrom,
+      dateTo: queryInput.dateTo,
+      minAmount: queryInput.minAmount,
+      maxAmount: queryInput.maxAmount,
+      currencies: queryInput.currencies,
+      search: searchText,
+      locale,
+    },
+    sortBy: sort.sortBy,
+    sortDir: sort.sortDir,
+    collapseInvolving: shouldPageByInvolvement(canCollapse, filters.showAll),
+  })
+  const networkHasPages = !!data?.pages?.length
+  const useOfflineSource =
+    offlineEnabled && !networkHasPages && offline.meta.availability === 'ready'
+  type NetworkExpenses = NonNullable<typeof data>['pages'][number]['expenses']
+  const expenses = (
+    useOfflineSource
+      ? offline.data?.pages.flatMap((page) => page.expenses)
+      : data?.pages.flatMap((page) => page.expenses)
+  ) as NetworkExpenses | undefined
+  const hasMore = useOfflineSource
+    ? offline.hasMore
+    : (data?.pages.at(-1)?.hasMore ?? false)
+  const offlineMeta = offline.meta
+  const showOfflineEmpty =
+    useOfflineWithoutData(!!data) &&
+    !(offlineEnabled && offlineMeta.availability === 'ready')
+  const fetchNextPageUnified = useOfflineSource
+    ? offline.fetchNextPage
+    : fetchNextPage
   // While a mode switch refetches, render the stale rows under their own
   // (previous) mode so the list never flashes a half-state.
   const renderedShowAll = useRenderedViewMode(showAll, isPlaceholderData)
 
-  const isLoading = expensesAreLoading || !expenses || !group
+  const isLoading = useOfflineSource
+    ? offline.isLoading || !expenses || !group
+    : expensesAreLoading || !expenses || !group
 
   useEffect(() => {
-    if (inView && hasMore && !isLoading) void fetchNextPage()
-  }, [fetchNextPage, hasMore, inView, isLoading])
+    if (inView && hasMore && !isLoading) void fetchNextPageUnified()
+  }, [fetchNextPageUnified, hasMore, inView, isLoading])
 
   if (showOfflineEmpty) {
+    // No network pages and no complete local snapshot: honest missing state.
+    // A missing group snapshot shows the download hint via the layout shell;
+    // this list stays generic to avoid duplicate banners.
     return (
       <div className="px-4 sm:px-6">
         <OfflineEmptyState variant="plain" onRetry={() => void refetch()} />
@@ -158,7 +206,7 @@ const ExpenseListForSearch = ({
     )
   }
 
-  if (isLoading) return <ExpensesLoading />
+  if (isLoading || !expenses || !group) return <ExpensesLoading />
 
   if (expenses.length === 0)
     return (
@@ -201,23 +249,42 @@ const ExpenseListForSearch = ({
     )
 
   return (
-    <ExpenseTimeline
-      expenses={expenses}
-      sortBy={sort.sortBy}
-      timeZone={accountTimeZone}
-      hasMore={hasMore}
-      loadingRef={loadingRef}
-      isInvolving={isInvolving}
-      showAll={renderedShowAll}
-      renderExpense={(expense) => (
-        <ExpenseCard
-          key={expense.id}
-          expense={expense}
-          currency={getCurrencyFromGroup(group)}
-          groupId={groupId}
-          participantCount={group.participants.length}
-        />
+    <>
+      {useOfflineSource && searchText.trim() && (
+        <p
+          className="mx-4 mb-2 text-xs text-muted-foreground sm:mx-6"
+          role="note"
+        >
+          {tOffline('OfflineDownloads.offlineSearchHint')}
+        </p>
       )}
-    />
+      {useOfflineSource &&
+        offlineMeta.hasMore &&
+        offlineMeta.totalCount != null && (
+          <output className="mx-4 mb-2 block text-xs text-muted-foreground sm:mx-6">
+            {tOffline('OfflineDownloads.recent500WithCount', {
+              count: offlineMeta.totalCount,
+            })}
+          </output>
+        )}
+      <ExpenseTimeline
+        expenses={expenses}
+        sortBy={sort.sortBy}
+        timeZone={accountTimeZone}
+        hasMore={hasMore}
+        loadingRef={loadingRef}
+        isInvolving={isInvolving}
+        showAll={renderedShowAll}
+        renderExpense={(expense) => (
+          <ExpenseCard
+            key={expense.id}
+            expense={expense}
+            currency={getCurrencyFromGroup(group)}
+            groupId={groupId}
+            participantCount={group.participants.length}
+          />
+        )}
+      />
+    </>
   )
 }

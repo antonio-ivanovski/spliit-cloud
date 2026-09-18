@@ -77,7 +77,8 @@
     "anonymousSignOutWarning": "Ce compte anonyme ne peut être récupéré qu'avec votre lien de connexion enregistré. Se déconnecter maintenant ?",
     "signOutTitle": "Se déconnecter ?",
     "signOutError": "Impossible de se déconnecter. Veuillez réessayer.",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "signOutOffline": "Connectez-vous pour vous déconnecter"
   },
   "Footer": {
     "madeIn": "Créé par la communauté open-source avec amour ❤️",
@@ -2613,7 +2614,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "Vous êtes hors ligne. Les modifications que vous effectuerez ne seront pas enregistrées tant que vous ne serez pas reconnecté."
+    "message": "Vous êtes hors ligne. Les données téléchargées sont en lecture seule.",
+    "serverUnavailable": "Spliit est injoignable pour le moment. Affichage des données téléchargées.",
+    "reconnecting": "Reconnexion… Vous pouvez continuer à lire vos données téléchargées."
   },
   "InstallPromotion": {
     "title": "Installer Spliit Cloud",
@@ -4067,5 +4070,51 @@
       "description": "Si vous avez fait un don, écrivez-nous — nous serions ravis d’avoir de vos nouvelles. Pour toute question sur les autres moyens de don, écrivez à <email>contact@spliit.cloud</email>."
     },
     "feedbackLink": "Vous préférez contribuer par des idées plutôt que par des fonds ? <cta>Partager des commentaires</cta>."
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "Téléchargement des groupes ({ready}/{total})",
+    "statusAvailable": "Disponible hors ligne",
+    "statusPartial": "Certains groupes ne sont pas téléchargés",
+    "statusPaused": "Téléchargements en pause",
+    "statusUnavailable": "Stockage hors ligne indisponible",
+    "statusNeedsUpdate": "Les téléchargements doivent être mis à jour",
+    "statusEmpty": "Aucun groupe à télécharger.",
+    "recent500Note": "Affichage des 500 récents. Reconnectez-vous pour les plus anciens.",
+    "title": "Téléchargements hors ligne",
+    "description": "Lisez les groupes et dépenses téléchargés sans connexion. Les fichiers nécessitent toujours une connexion.",
+    "automatic": "Téléchargements automatiques",
+    "automaticDescription": "Téléchargez les groupes pour les lire hors ligne quand vous êtes en ligne.",
+    "lastUpdated": "Dernière mise à jour {date}",
+    "storageEstimate": "Environ {size} pour les données hors ligne",
+    "refreshNow": "Actualiser",
+    "clear": "Effacer les téléchargements",
+    "clearConfirm": "Supprimer les groupes et dépenses téléchargés de cet appareil ? Vos données serveur restent en sécurité. Les téléchargements automatiques seront désactivés.",
+    "keepOnDevice": "Conserver les téléchargements sur cet appareil",
+    "keepOnDeviceDescription": "Demandez au navigateur de conserver les données hors ligne. Il peut quand même les effacer en cas de manque d’espace.",
+    "keepOnDeviceKept": "Le navigateur essaiera de conserver les données hors ligne.",
+    "keepOnDeviceNotKept": "Le navigateur n’a pas conservé les données hors ligne. Les téléchargements fonctionnent quand même.",
+    "groupNotDownloaded": "Non téléchargé",
+    "downloadFailed": "Échec du téléchargement",
+    "totalsIncomplete": "Reconnectez-vous pour mettre à jour les totaux.",
+    "totalsIncompleteWithCount": "Reconnectez-vous pour mettre à jour les totaux. ({count} en attente)",
+    "recent500WithCount": "Affichage des 500 récents sur {count}. Reconnectez-vous pour les plus anciens.",
+    "offlineSearchHint": "La recherche hors ligne utilise le texte exact ; la tolérance aux fautes nécessite une connexion.",
+    "groupsNotDownloaded": "{count} groupe(s) non téléchargé(s)",
+    "groupsNeedUpdating": "{count} à mettre à jour",
+    "storageBlocked": "Fermez les autres onglets Spliit pour terminer la mise à jour du stockage hors ligne.",
+    "storageQuota": "Le stockage hors ligne est plein. Réessayez ou supprimez des téléchargements pour libérer de l'espace.",
+    "statusBlocked": "Stockage hors ligne bloqué",
+    "statusQuotaError": "Stockage hors ligne plein",
+    "storageRetry": "Réessayer le stockage",
+    "schemaUnsupported": "Mettez à jour l’app pour lire les téléchargements",
+    "cleanupFailed": "Impossible d’effacer les téléchargements. Réessayez."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "Reconnectez-vous pour modifier",
+    "attachmentsNeedConnection": "Connectez-vous pour voir les pièces jointes",
+    "needsConnection": "Cette fonction nécessite une connexion",
+    "expenseMissing": "Cette dépense n'est pas dans le téléchargement de cet appareil. Reconnectez-vous pour voir les dépenses plus récentes ou plus anciennes.",
+    "groupMissing": "Ce groupe n'a pas fini de se télécharger.",
+    "balancesStale": "Les soldes sont peut-être obsolètes."
   }
 }

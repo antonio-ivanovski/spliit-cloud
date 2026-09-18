@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next'
 import { PageInset } from '@/components/layout/page-shell'
 import { useMascotController } from '@/components/mascot/mascot-context'
 import { Money } from '@/components/money'
+import { OfflineDownloadStatus } from '@/components/offline-download-status'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { ParticipantAvatar } from '@/components/participant-avatar'
 import { Button } from '@/components/ui/button'
@@ -40,6 +41,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { getCurrencyFromGroup } from '@/lib/currency'
 import { useMediaQuery } from '@/lib/hooks'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
+import { useOfflineOverview } from '@/lib/offline/read-hooks'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { useOfflineWithoutData } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
@@ -101,11 +103,16 @@ export function RecentGroupList() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const { t: tHomepage } = useTranslation(undefined, { keyPrefix: 'Homepage' })
   const { t: tStats } = useTranslation(undefined, { keyPrefix: 'Stats' })
+  const { t: tOffline } = useTranslation()
   const { data: account } = useCurrentAccount()
   const utils = trpc.useUtils()
   const { data, error, isLoading, refetch } =
     trpc.overview.get.useQuery(undefined)
   const showOfflineEmpty = useOfflineWithoutData(!!data)
+  // Offline adapter: catalog cards + stored overviews when the network has no
+  // complete result. Totals render only when every catalog group is ready and
+  // none is dirty; otherwise show the reconnect hint (never invented zeros).
+  const offlineOverview = useOfflineOverview()
   const [forceArchiveTarget, setForceArchiveTarget] =
     useState<AccountGroup | null>(null)
   const [scanOpen, setScanOpen] = useState(false)
@@ -173,48 +180,157 @@ export function RecentGroupList() {
   ) {
     return (
       <>
-        {list.map((group) => (
-          <GroupCard
-            key={group.id}
-            group={group}
-            variant={variant}
-            onToggleStar={() =>
-              updatePreference(group.id, {
-                starred: !group.preference.starred,
-              })
-            }
-            onToggleHidden={() =>
-              updatePreference(group.id, {
-                hidden: !group.preference.hidden,
-              })
-            }
-            onToggleArchived={
-              variant !== 'friends' &&
-              variant !== 'hidden' &&
-              group.currentMemberRole === 'ADMIN' &&
-              group.groupType !== 'FRIEND' &&
-              !isViewOnlyGroup(group)
-                ? () => toggleArchived(group)
-                : undefined
-            }
-            onRemoveSavedView={
-              isViewOnlyGroup(group)
-                ? async () => {
-                    await removeSavedView({ groupId: group.id })
-                    await invalidateAccountGroupLists(utils)
-                    toast({ description: t('removeSavedViewAccount') })
-                  }
-                : undefined
-            }
-          />
-        ))}
+        {list.map((group) => {
+          // Offline dirty flag: last-known balances may be out of date.
+          // Online groups never carry dirtySince, so this stays false there.
+          const dirtySince = (group as unknown as { dirtySince?: Date | null })
+            .dirtySince
+          return (
+            <GroupCard
+              key={group.id}
+              group={group}
+              variant={variant}
+              stale={dirtySince != null}
+              onToggleStar={() =>
+                updatePreference(group.id, {
+                  starred: !group.preference.starred,
+                })
+              }
+              onToggleHidden={() =>
+                updatePreference(group.id, {
+                  hidden: !group.preference.hidden,
+                })
+              }
+              onToggleArchived={
+                variant !== 'friends' &&
+                variant !== 'hidden' &&
+                group.currentMemberRole === 'ADMIN' &&
+                group.groupType !== 'FRIEND' &&
+                !isViewOnlyGroup(group)
+                  ? () => toggleArchived(group)
+                  : undefined
+              }
+              onRemoveSavedView={
+                isViewOnlyGroup(group)
+                  ? async () => {
+                      await removeSavedView({ groupId: group.id })
+                      await invalidateAccountGroupLists(utils)
+                      toast({ description: t('removeSavedViewAccount') })
+                    }
+                  : undefined
+              }
+            />
+          )
+        })}
       </>
     )
   }
 
   let body: React.ReactNode
-  if (showOfflineEmpty) {
-    body = <OfflineEmptyState onRetry={() => void refetch()} />
+  const offlineReady =
+    offlineOverview.meta.availability === 'ready' && offlineOverview.data
+  // Offline wins when the network has no complete result, even online on
+  // failure (mirrors expense-list/balances/page gating on !data, not !online).
+  const useOfflineSource = !data && offlineReady && offlineOverview.data
+  if (useOfflineSource && offlineOverview.data) {
+    // Offline download wins when the network has no complete result.
+    // Undownloaded groups keep names/metadata with UNAVAILABLE summaries;
+    // totals show only when every catalog group is ready and none is dirty.
+    const offlineGroups = offlineOverview.data
+      .groups as unknown as AccountGroup[]
+    const {
+      groups: sectionGroups,
+      friends,
+      starred,
+      archived,
+      hidden,
+    } = partitionGroups(offlineGroups)
+    const offlineStats = offlineOverview.data.stats as unknown as OverviewStats
+    body = (
+      <div className="flex flex-col gap-5">
+        {!offlineOverview.data.totalsAvailable && (
+          <output className="rounded-lg border bg-muted/40 px-4 py-2 text-sm text-muted-foreground">
+            {offlineOverview.meta.incompleteGroupCount > 0
+              ? tOffline('OfflineDownloads.totalsIncompleteWithCount', {
+                  count: offlineOverview.meta.incompleteGroupCount,
+                })
+              : tOffline('OfflineDownloads.totalsIncomplete')}
+          </output>
+        )}
+        <CollapsibleSection
+          storageKey={STORAGE_KEYS.groups}
+          defaultOpen
+          title={t('groups')}
+          insetHeader
+        >
+          <ul className="motion-stagger grid items-stretch gap-3 sm:grid-cols-2">
+            {renderGroupItems(sectionGroups, 'groups')}
+          </ul>
+        </CollapsibleSection>
+        {offlineOverview.data.totalsAvailable && (
+          <AcrossGroupsBalanceCard
+            stats={offlineStats}
+            groups={offlineGroups}
+          />
+        )}
+        {starred.length > 0 && (
+          <CollapsibleSection
+            storageKey={STORAGE_KEYS.starred}
+            defaultOpen
+            title={t('starred')}
+            insetHeader
+          >
+            <ul className="motion-stagger grid items-stretch gap-3 sm:grid-cols-2">
+              {renderGroupItems(starred, 'starred')}
+            </ul>
+          </CollapsibleSection>
+        )}
+        {friends.length > 0 && (
+          <CollapsibleSection
+            storageKey={STORAGE_KEYS.friends}
+            defaultOpen
+            title={t('friends')}
+            insetHeader
+          >
+            <ul className="motion-stagger grid items-stretch gap-3 sm:grid-cols-2">
+              {renderGroupItems(friends, 'friends')}
+            </ul>
+          </CollapsibleSection>
+        )}
+        {archived.length > 0 && (
+          <CollapsibleSection
+            storageKey={STORAGE_KEYS.archived}
+            defaultOpen={false}
+            title={t('archived')}
+            insetHeader
+          >
+            <ul className="motion-stagger grid items-stretch gap-3 opacity-60 sm:grid-cols-2">
+              {renderGroupItems(archived, 'archived')}
+            </ul>
+          </CollapsibleSection>
+        )}
+        {hidden.length > 0 && (
+          <CollapsibleSection
+            storageKey={STORAGE_KEYS.hidden}
+            defaultOpen={false}
+            title={t('hidden')}
+            insetHeader
+          >
+            <ul className="motion-stagger grid items-stretch gap-3 opacity-60 sm:grid-cols-2">
+              {renderGroupItems(hidden, 'hidden')}
+            </ul>
+          </CollapsibleSection>
+        )}
+      </div>
+    )
+  } else if (showOfflineEmpty) {
+    const canRetry =
+      typeof navigator === 'undefined' ? true : navigator.onLine !== false
+    body = (
+      <OfflineEmptyState
+        onRetry={canRetry ? () => void refetch() : undefined}
+      />
+    )
   } else if (isGroupsLoading) {
     body = (
       <div className="flex items-center justify-center rounded-lg border bg-card py-10 text-sm text-muted-foreground">
@@ -365,6 +481,9 @@ export function RecentGroupList() {
     <>
       <WelcomeBar name={account?.name} />
       <PendingInvitations />
+      <div className="mb-3">
+        <OfflineDownloadStatus />
+      </div>
       {body}
       {scanOpen ? (
         <Suspense

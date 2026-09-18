@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next'
 import { CopyButton } from '@/components/copy-button'
 import { PageInset } from '@/components/layout/page-shell'
 import { GroupMobileAppBar, MobileGroupNav } from '@/components/mobile-shell'
+import { OfflineMissingData } from '@/components/offline-download-status'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -28,6 +29,7 @@ import {
 import { useToast } from '@/components/ui/use-toast'
 import { useEffectiveRuntimeFeatureFlags } from '@/lib/effective-runtime-feature-flags'
 import { isFocusedMobilePath, isMobileGroupNavPath } from '@/lib/mobile-nav'
+import { useOfflineGroup } from '@/lib/offline/read-hooks'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
@@ -83,7 +85,27 @@ export function GroupLayoutClient({
     { retry: false },
   )
   const isOnline = useOnlineStatus()
-  const showOfflineEmpty = !isOnline && !data?.group
+  // Offline adapter: a complete local snapshot renders immediately when the
+  // network has no matching complete result (cold direct routes included).
+  // Link-invite / view-key paths stay online-only and never read snapshots.
+  const offlineGroup = useOfflineGroup(groupId)
+  const offlineView =
+    !linkInviteToken && !viewKey && offlineGroup.meta.availability === 'ready'
+      ? (offlineGroup.data?.view ?? null)
+      : null
+  const offlineGroupOutput = offlineView?.group as
+    | {
+        group?: Record<string, unknown>
+        displayName?: string
+        currentLedgerParticipantId?: string | null
+        currentMember?: Record<string, unknown> | null
+        currentInvitation?: Record<string, unknown> | null
+        linkInviteState?: Record<string, unknown> | null
+        viewer?: Record<string, unknown>
+        hasSavedView?: boolean
+      }
+    | undefined
+  const showOfflineEmpty = !isOnline && !data?.group && !offlineView
   const { t: tNotFound } = useTranslation(undefined, {
     keyPrefix: 'Groups.NotFound',
   })
@@ -100,6 +122,7 @@ export function GroupLayoutClient({
     keyPrefix: 'Friends',
   })
   const { t: tTitles } = useTranslation()
+  const { t: tOffline } = useTranslation()
   const { toast } = useToast()
   const { isPending: accountPending } = useCurrentAccount()
   const { flags: effectiveRuntimeFlags } = useEffectiveRuntimeFeatureFlags()
@@ -131,9 +154,39 @@ export function GroupLayoutClient({
   }, [data, tNotFound, toast])
 
   if (showOfflineEmpty) {
+    const canRetry =
+      typeof navigator === 'undefined' ? true : navigator.onLine !== false
+    const isMissingDownload =
+      offlineGroup.meta.availability === 'missing' &&
+      !linkInviteToken &&
+      !viewKey
+    if (isMissingDownload) {
+      return (
+        <main className="flex flex-1 flex-col gap-4 px-4 pt-4">
+          <OfflineMissingData
+            description={tOffline('OfflineReadOnly.groupMissing')}
+            onRetry={canRetry ? () => void refetch() : undefined}
+            backLabel={tForbidden('backToGroups')}
+            backHref="/"
+          />
+        </main>
+      )
+    }
     return (
       <main className="flex flex-1 flex-col">
-        <OfflineEmptyState variant="page" onRetry={() => void refetch()} />
+        <OfflineEmptyState
+          variant="page"
+          onRetry={canRetry ? () => void refetch() : undefined}
+        />
+        <div className="flex justify-center pb-6">
+          <Button
+            variant="outline"
+            nativeButton={false}
+            render={<Link to="/" />}
+          >
+            {tForbidden('backToGroups')}
+          </Button>
+        </div>
       </main>
     )
   }
@@ -233,17 +286,35 @@ export function GroupLayoutClient({
 
   const props =
     isLoading || !data?.group
-      ? {
-          isLoading: true as const,
-          groupId,
-          group: undefined,
-          displayName: undefined,
-          currentLedgerParticipantId: undefined,
-          currentMember: undefined,
-          currentInvitation: undefined,
-          linkInviteState: undefined,
-          viewer: undefined,
-        }
+      ? offlineGroupOutput?.group
+        ? {
+            isLoading: false as const,
+            groupId,
+            group: offlineGroupOutput.group as never,
+            displayName: (offlineGroupOutput.displayName as string) ?? '',
+            currentLedgerParticipantId:
+              (offlineGroupOutput.currentLedgerParticipantId as
+                | string
+                | null) ?? null,
+            currentMember: (offlineGroupOutput.currentMember as never) ?? null,
+            currentInvitation:
+              (offlineGroupOutput.currentInvitation as never) ?? null,
+            linkInviteState:
+              (offlineGroupOutput.linkInviteState as never) ?? null,
+            viewer: offlineGroupOutput.viewer as never,
+            hasSavedView: (offlineGroupOutput.hasSavedView as boolean) ?? false,
+          }
+        : {
+            isLoading: true as const,
+            groupId,
+            group: undefined,
+            displayName: undefined,
+            currentLedgerParticipantId: undefined,
+            currentMember: undefined,
+            currentInvitation: undefined,
+            linkInviteState: undefined,
+            viewer: undefined,
+          }
       : {
           isLoading: false as const,
           groupId,

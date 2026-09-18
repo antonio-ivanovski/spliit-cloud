@@ -36,6 +36,8 @@ import type { BalanceExpense } from '@/lib/balances'
 import { getBalances } from '@/lib/balances'
 import { getCurrency } from '@/lib/currency'
 import { formatExpenseClosed } from '@/lib/expense-display'
+import { useOfflineExpense } from '@/lib/offline/read-hooks'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import {
   amountAsDecimal,
   formatCurrency,
@@ -199,13 +201,31 @@ export function ExpensePreviewModal({
   const { t: tCategories } = useTranslation(undefined, {
     keyPrefix: 'Categories',
   })
+  const { t: tOffline } = useTranslation()
 
   const { data, isLoading, error } = trpc.groups.expenses.get.useQuery(
     { groupId, expenseId, linkInviteToken, viewKey },
     { enabled: open, retry: false },
   )
+  // Offline adapter (membership-only): complete stored detail renders when the
+  // network has no matching result. Missing ids show the download hint (covers
+  // never-opened details within the 500 cap and rows beyond it).
+  const offlineEnabled = !linkInviteToken && !viewKey
+  const offline = useOfflineExpense(groupId, expenseId)
+  const useOfflineSource =
+    offlineEnabled && !data?.expense && offline.meta.availability === 'ready'
+  const offlineMissing =
+    offlineEnabled &&
+    !data?.expense &&
+    !isLoading &&
+    offline.meta.availability === 'missing'
 
-  const expense = data?.expense
+  const expense = (
+    useOfflineSource
+      ? (offline.data?.expense as Expense | undefined)
+      : data?.expense
+  ) as Expense | undefined
+  const offlineDetailMeta = useOfflineSource ? offline.data : null
   const [seriesListOpen, setSeriesListOpen] = useState(false)
   const series = useMemo<ExpenseSeriesMetadata | null>(() => {
     if (!expense) return null
@@ -233,15 +253,21 @@ export function ExpensePreviewModal({
     }
   }, [expense])
   const currency = group ? getCurrencyFromGroup(group) : undefined
-  const canEdit = Boolean(expense?.permissions.canEdit)
-  const canDelete = Boolean(expense?.permissions.canDelete)
-  const canManageRecurrence = Boolean(expense?.permissions.canManageRecurrence)
+  // Effective actions = server permission ∩ connection. Browse,
+  // expand, close, and back stay usable offline; edit/delete/copy/settle and
+  // authenticated-link generation require connection.
+  const isOnline = useOnlineStatus()
+  const canEdit = Boolean(expense?.permissions.canEdit) && isOnline
+  const canDelete = Boolean(expense?.permissions.canDelete) && isOnline
+  const canManageRecurrence =
+    Boolean(expense?.permissions.canManageRecurrence) && isOnline
   const canCopy = Boolean(
     expense &&
     group &&
     currentMember &&
     !group.archived &&
-    !isReadOnlyGroupViewer,
+    !isReadOnlyGroupViewer &&
+    isOnline,
   )
   const participants = group?.participants ?? []
   const balanceExpense = expense
@@ -322,6 +348,9 @@ export function ExpensePreviewModal({
   }
 
   const handleEdit = async (scope?: SeriesMutationScope) => {
+    // Edit affordances are already disabled offline; this entry check
+    // is defence in depth. The footer output explains the blocked state.
+    if (!isOnline) return
     if (onEdit) {
       onEdit(scope)
       return
@@ -337,6 +366,7 @@ export function ExpensePreviewModal({
   }
 
   const handleMakeCopy = () => {
+    if (!isOnline) return
     if (onMakeCopy) {
       onMakeCopy()
       return
@@ -349,6 +379,7 @@ export function ExpensePreviewModal({
   })
   const { mutateAsync: stopRecurrenceMutateAsync } = useStopRecurrenceMutation()
   const handleDelete = async (option?: RecurringDeleteOption) => {
+    if (!isOnline) return
     if (!option) {
       await deleteExpenseMutateAsync({ expenseId, groupId })
       return
@@ -365,6 +396,7 @@ export function ExpensePreviewModal({
     } as Parameters<typeof deleteExpenseMutateAsync>[0])
   }
   const handleStopRecurrence = async () => {
+    if (!isOnline) return
     await stopRecurrenceMutateAsync({ groupId, expenseId })
   }
 
@@ -407,7 +439,12 @@ export function ExpensePreviewModal({
         </ResponsiveDialogHeader>
 
         <ResponsiveDialogBody className="max-h-[70vh] space-y-5 overflow-y-auto">
-          {isLoading && (
+          {offlineMissing ? (
+            <output className="block text-sm text-muted-foreground">
+              {tOffline('OfflineReadOnly.expenseMissing')}
+            </output>
+          ) : null}
+          {isLoading && !useOfflineSource && (
             <div className="space-y-4" aria-label={t('title')}>
               <Skeleton className="h-10 w-36" />
               <Skeleton className="h-4 w-full" />
@@ -415,118 +452,155 @@ export function ExpensePreviewModal({
               <Skeleton className="h-20 w-full" />
             </div>
           )}
-          {!isLoading && error && (
+          {!isLoading && error && !useOfflineSource && (
             <p className="text-sm text-muted-foreground">{error.message}</p>
           )}
-          {!isLoading && !error && expense && currency && (
-            <div className="space-y-5">
-              <div>
-                <div className="text-3xl font-bold tracking-tight tabular-nums">
-                  {formatCurrency(currency, expense.amount, locale)}
+          {(!isLoading || useOfflineSource) &&
+            (!error || useOfflineSource) &&
+            expense &&
+            currency && (
+              <div className="space-y-5">
+                <div>
+                  <div className="text-3xl font-bold tracking-tight tabular-nums">
+                    {formatCurrency(currency, expense.amount, locale)}
+                  </div>
+                  {conversionDetails && (
+                    <div className="mt-1 text-sm text-muted-foreground tabular-nums">
+                      {conversionDetails.rate
+                        ? t('conversionDetails', conversionDetails)
+                        : t('originalAmount', {
+                            amount: conversionDetails.original,
+                          })}
+                    </div>
+                  )}
                 </div>
-                {conversionDetails && (
-                  <div className="mt-1 text-sm text-muted-foreground tabular-nums">
-                    {conversionDetails.rate
-                      ? t('conversionDetails', conversionDetails)
-                      : t('originalAmount', {
-                          amount: conversionDetails.original,
-                        })}
+
+                {(() => {
+                  const d = formatExpenseClosed(
+                    expense as never,
+                    locale,
+                    undefined,
+                    tForm('dateTimePicker.yourTime' as never),
+                  )
+                  return (
+                    <div
+                      className="text-sm text-muted-foreground"
+                      title={d.tooltip}
+                    >
+                      {t('date')}:{' '}
+                      <span className="text-foreground">{d.text}</span>
+                    </div>
+                  )
+                })()}
+
+                <div className="space-y-4 border-t pt-4">
+                  <ExpenseSplitBars
+                    label={t('paidBy')}
+                    modeLabel={splitModeLabel(
+                      'paidBy',
+                      expense.paidBySplitMode,
+                    )}
+                    rows={paidByRows}
+                    currency={currency}
+                    locale={locale}
+                  />
+                  <ExpenseSplitBars
+                    label={t('paidFor')}
+                    modeLabel={splitModeLabel('paidFor', expense.splitMode)}
+                    rows={paidForRows}
+                    currency={currency}
+                    locale={locale}
+                  />
+                </div>
+
+                {currentLedgerParticipantId && (
+                  <div className="rounded-lg border bg-muted/30 px-4 py-3">
+                    <div className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
+                      {t('yourBalance')}
+                    </div>
+                    <div className="mt-1 text-lg font-semibold tabular-nums">
+                      {activeBalance == null ? (
+                        tCard('notInvolved')
+                      ) : (
+                        <span
+                          className={
+                            activeBalance < 0
+                              ? 'text-red-600'
+                              : 'text-green-600'
+                          }
+                        >
+                          {formatCurrency(currency, activeBalance, locale)}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 )}
-              </div>
 
-              {(() => {
-                const d = formatExpenseClosed(
-                  expense as never,
-                  locale,
-                  undefined,
-                  tForm('dateTimePicker.yourTime' as never),
-                )
-                return (
-                  <div
-                    className="text-sm text-muted-foreground"
-                    title={d.tooltip}
-                  >
-                    {t('date')}:{' '}
-                    <span className="text-foreground">{d.text}</span>
+                {expense.notes?.trim() && (
+                  <div className="space-y-1">
+                    <div className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
+                      {t('notes')}
+                    </div>
+                    <p className="text-sm break-words whitespace-pre-wrap text-muted-foreground">
+                      {expense.notes.trim().length > 160
+                        ? `${expense.notes.trim().slice(0, 160)}…`
+                        : expense.notes.trim()}
+                    </p>
                   </div>
-                )
-              })()}
+                )}
 
-              <div className="space-y-4 border-t pt-4">
-                <ExpenseSplitBars
-                  label={t('paidBy')}
-                  modeLabel={splitModeLabel('paidBy', expense.paidBySplitMode)}
-                  rows={paidByRows}
+                <ExpenseItemsSummary
+                  items={expense.items}
                   currency={currency}
                   locale={locale}
                 />
-                <ExpenseSplitBars
-                  label={t('paidFor')}
-                  modeLabel={splitModeLabel('paidFor', expense.splitMode)}
-                  rows={paidForRows}
-                  currency={currency}
-                  locale={locale}
-                />
+
+                {useOfflineSource ? (
+                  <OfflineAttachmentMetadata
+                    documents={
+                      (expense.documents as Array<{
+                        id: string
+                        fileName: string | null
+                        contentType: string | null
+                      }>) ?? []
+                    }
+                  />
+                ) : (
+                  <ExpenseAttachmentsPreview documents={expense.documents} />
+                )}
+
+                {series && (
+                  <>
+                    <SeriesControls
+                      groupId={groupId}
+                      series={series}
+                      onViewSeries={() => setSeriesListOpen(true)}
+                    />
+                    {useOfflineSource &&
+                      (offlineDetailMeta?.previousAvailable === false ||
+                        offlineDetailMeta?.nextAvailable === false) && (
+                        <p
+                          className="text-xs text-muted-foreground"
+                          role="note"
+                        >
+                          {tOffline('OfflineReadOnly.expenseMissing')}
+                        </p>
+                      )}
+                  </>
+                )}
               </div>
-
-              {currentLedgerParticipantId && (
-                <div className="rounded-lg border bg-muted/30 px-4 py-3">
-                  <div className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                    {t('yourBalance')}
-                  </div>
-                  <div className="mt-1 text-lg font-semibold tabular-nums">
-                    {activeBalance == null ? (
-                      tCard('notInvolved')
-                    ) : (
-                      <span
-                        className={
-                          activeBalance < 0 ? 'text-red-600' : 'text-green-600'
-                        }
-                      >
-                        {formatCurrency(currency, activeBalance, locale)}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {expense.notes?.trim() && (
-                <div className="space-y-1">
-                  <div className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                    {t('notes')}
-                  </div>
-                  <p className="text-sm break-words whitespace-pre-wrap text-muted-foreground">
-                    {expense.notes.trim().length > 160
-                      ? `${expense.notes.trim().slice(0, 160)}…`
-                      : expense.notes.trim()}
-                  </p>
-                </div>
-              )}
-
-              <ExpenseItemsSummary
-                items={expense.items}
-                currency={currency}
-                locale={locale}
-              />
-
-              <ExpenseAttachmentsPreview documents={expense.documents} />
-
-              {series && (
-                <SeriesControls
-                  groupId={groupId}
-                  series={series}
-                  onViewSeries={() => setSeriesListOpen(true)}
-                />
-              )}
-            </div>
-          )}
+            )}
           {expense && (
             <ExpenseComments groupId={groupId} expenseId={expenseId} />
           )}
         </ResponsiveDialogBody>
 
         <ResponsiveDialogFooter className="flex-row flex-wrap gap-2 sm:flex-nowrap sm:justify-end">
+          {!isOnline && expense && (
+            <output className="block w-full text-sm text-muted-foreground">
+              {tOffline('OfflineReadOnly.reconnectToEdit')}
+            </output>
+          )}
           {series ? (
             canManageRecurrence ? (
               <RecurringActionsMenu
@@ -603,5 +677,48 @@ export function ExpensePreviewModal({
         />
       )}
     </ResponsiveDialog>
+  )
+}
+
+/**
+ * Offline attachment rows: filename/type/count with no URL fetch. Receipt
+ * binaries are never implied as downloaded.
+ */
+function OfflineAttachmentMetadata({
+  documents,
+}: {
+  documents: Array<{
+    id: string
+    fileName: string | null
+    contentType: string | null
+  }>
+}) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpensePreview' })
+  const { t: tOffline } = useTranslation()
+  if (documents.length === 0) return null
+  return (
+    <section className="space-y-2">
+      <h3 className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
+        {t('attachments', { count: documents.length })}
+      </h3>
+      <ul className="grid gap-1.5">
+        {documents.map((document) => (
+          <li
+            key={document.id}
+            className="rounded-md bg-muted/35 px-3 py-2 text-sm text-muted-foreground"
+          >
+            <span className="font-medium text-foreground">
+              {document.fileName ?? t('attachments', { count: 1 })}
+            </span>
+            {document.contentType && (
+              <span className="ms-2 text-xs">· {document.contentType}</span>
+            )}
+          </li>
+        ))}
+      </ul>
+      <p className="text-xs text-muted-foreground" role="note">
+        {tOffline('OfflineReadOnly.attachmentsNeedConnection')}
+      </p>
+    </section>
   )
 }

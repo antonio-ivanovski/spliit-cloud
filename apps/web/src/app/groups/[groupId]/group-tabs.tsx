@@ -9,6 +9,11 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useToast } from '@/components/ui/use-toast'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { shouldHideMobileGroupTabs } from '@/lib/mobile-nav'
+import {
+  isOfflineWriteError,
+  notifyOfflineWriteBlocked,
+} from '@/lib/offline/write-guard'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 import { useCurrentGroup } from './current-group-context'
@@ -45,6 +50,7 @@ export function GroupTabs({ groupId }: Props) {
   const utils = trpc.useUtils()
   const { toast } = useToast()
   const { mutateAsync: archiveGroup } = trpc.groups.archive.useMutation()
+  const isOnline = useOnlineStatus()
   const { group, currentMember, viewer } = useCurrentGroup()
   const { data } = trpc.account.members.useQuery(
     { groupId },
@@ -62,6 +68,14 @@ export function GroupTabs({ groupId }: Props) {
   const isFriendLedger = group?.groupType === 'FRIEND'
 
   async function handleUnarchive() {
+    // UI entry check before success toast/invalidation: offline never claims
+    // success. The transport guard would also reject.
+    if (!isOnline) {
+      notifyOfflineWriteBlocked((message) =>
+        toast({ description: message, variant: 'destructive' }),
+      )
+      return
+    }
     try {
       await archiveGroup({ groupId, archived: false })
       await Promise.all([
@@ -70,6 +84,12 @@ export function GroupTabs({ groupId }: Props) {
       ])
       toast({ description: tGroups('bannerUnarchiveSuccess') })
     } catch (error) {
+      if (isOfflineWriteError(error)) {
+        notifyOfflineWriteBlocked((message) =>
+          toast({ description: message, variant: 'destructive' }),
+        )
+        return
+      }
       toast({
         description:
           error instanceof Error ? error.message : tGroups('unarchiveSuccess'),
@@ -90,6 +110,7 @@ export function GroupTabs({ groupId }: Props) {
               <Button
                 size="sm"
                 variant="secondary"
+                disabled={!isOnline}
                 onClick={() => void handleUnarchive()}
               >
                 <ArchiveRestore className="me-2 h-4 w-4" />

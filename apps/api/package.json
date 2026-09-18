@@ -23,7 +23,8 @@
     "./lib/notifications/dispatcher": "./src/lib/notifications/dispatcher.ts",
     "./lib/budgets/evaluate": "./src/lib/budgets/evaluate.ts",
     "./lib/exports": "./src/lib/exports/index.ts",
-    "./lib/notifications/budget-planner": "./src/lib/notifications/budget-planner.ts"
+    "./lib/notifications/budget-planner": "./src/lib/notifications/budget-planner.ts",
+    "./offline-contract": "./src/trpc/outputs/offline.ts"
   },
   "scripts": {
     "bundle:runtime": "bun build src/server.ts --target=bun --production --keep-names --outfile=dist/server.js",
