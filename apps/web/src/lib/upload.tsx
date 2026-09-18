@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 
+import { assertTransportOnline } from '@/lib/offline/write-guard'
 import { trpc } from '@/trpc/client'
 
 const MAX_DIMENSION = 2560
@@ -160,6 +161,10 @@ export function useExpenseDocumentUpload(ledgerId?: string | null) {
   // react-doctor-disable-next-line react-doctor/query-mutation-missing-invalidation -- S3 upload, caller invalidates with returned URL
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
+      // UI entry check before the presign fetch + S3 PUT: uploads
+      // require connection. The presign tRPC mutation is also covered by the
+      // global guard; this check prevents the S3 PUT fetch from firing.
+      assertTransportOnline()
       const contentType = file.type || 'application/octet-stream'
       const { uploadUrl, fileUrl } = await presignMutation.mutateAsync({
         ledgerId: ledgerId ?? '',

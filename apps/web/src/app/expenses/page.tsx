@@ -20,7 +20,7 @@ import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { PageShell } from '@/components/layout/page-shell'
 import { ScanSurface } from '@/components/layout/scan-surface'
-import { OfflineEmptyState } from '@/components/offline-empty-state'
+import { OfflineMissingData } from '@/components/offline-download-status'
 import { RequireAuth } from '@/components/require-auth'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -42,6 +42,11 @@ import {
   enforceCurrencyPattern,
   localizeCurrencyInput,
 } from '@/lib/currency-input'
+import {
+  useOfflineFilterOptions,
+  useOfflineGlobalExpenses,
+  useOfflineGroup,
+} from '@/lib/offline/read-hooks'
 import { useOfflineWithoutData } from '@/lib/use-online-status'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
@@ -554,6 +559,20 @@ function GlobalExpensePreview({
 }) {
   const groupQuery = trpc.groups.get.useQuery({ groupId }, { retry: false })
   const data = groupQuery.data
+  // Offline adapter for direct global deep links: stored group output backs
+  // the preview when the network group is unavailable.
+  const offlineGroup = useOfflineGroup(groupId)
+  const offlineOutput = offlineGroup.data?.view?.group as
+    | {
+        group?: never
+        displayName?: string
+        currentLedgerParticipantId?: string | null
+        currentMember?: never
+        currentInvitation?: never
+        linkInviteState?: never
+        hasSavedView?: boolean
+      }
+    | undefined
   const context = data?.group
     ? {
         isLoading: false as const,
@@ -566,16 +585,29 @@ function GlobalExpensePreview({
         linkInviteState: data.linkInviteState ?? null,
         hasSavedView: data.hasSavedView,
       }
-    : {
-        isLoading: true as const,
-        groupId,
-        group: undefined,
-        displayName: undefined,
-        currentLedgerParticipantId: undefined,
-        currentMember: undefined,
-        currentInvitation: undefined,
-        linkInviteState: undefined,
-      }
+    : offlineOutput?.group
+      ? {
+          isLoading: false as const,
+          groupId,
+          group: offlineOutput.group,
+          displayName: offlineOutput.displayName ?? '',
+          currentLedgerParticipantId:
+            offlineOutput.currentLedgerParticipantId ?? null,
+          currentMember: offlineOutput.currentMember ?? null,
+          currentInvitation: offlineOutput.currentInvitation ?? null,
+          linkInviteState: offlineOutput.linkInviteState ?? null,
+          hasSavedView: offlineOutput.hasSavedView ?? false,
+        }
+      : {
+          isLoading: true as const,
+          groupId,
+          group: undefined,
+          displayName: undefined,
+          currentLedgerParticipantId: undefined,
+          currentMember: undefined,
+          currentInvitation: undefined,
+          linkInviteState: undefined,
+        }
 
   return (
     <CurrentGroupProvider {...context}>
@@ -597,6 +629,12 @@ export function GlobalExpensesContent() {
   const selectedExpenseId = search.expenseId
   const selectedExpenseGroupId = search.expenseGroupId
   const optionsQuery = trpc.expenses.filterOptions.useQuery()
+  // Offline adapters: union of ready snapshots with stored group metadata.
+  // Explicit groupIds take precedence; hidden+archived defaults match the
+  // server. Filter options derive from downloaded records with no remote
+  // prerequisite. Missing/dirty counts render above results, never as
+  // authoritative totals.
+  const offlineFilterOptions = useOfflineFilterOptions()
   const filters = useMemo(
     () => readFilters(search as Record<string, unknown>),
     [search],
@@ -608,7 +646,9 @@ export function GlobalExpensesContent() {
   const accountPreferences = useSyncedAccountPreferences()
   const accountTimeZone =
     accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
-  const options = optionsQuery.data
+  const options =
+    optionsQuery.data ??
+    (offlineFilterOptions.data as unknown as FilterOptions | undefined)
 
   useEffect(() => {
     if (filtersOpen) {
@@ -664,15 +704,33 @@ export function GlobalExpensesContent() {
     enabled: options !== undefined,
     getNextPageParam: (page) => page.nextCursor ?? undefined,
   })
-  const expenses =
-    expensesQuery.data?.pages.flatMap((page) => page.expenses) ?? []
-  const hasMore = expensesQuery.data?.pages.at(-1)?.hasMore ?? false
-  const showOfflineEmpty = useOfflineWithoutData(!!expensesQuery.data)
+  const offlineGlobal = useOfflineGlobalExpenses({
+    ...(input as unknown as Record<string, never>),
+    search: debouncedSearch || undefined,
+  } as unknown as Parameters<typeof useOfflineGlobalExpenses>[0])
+  const networkHasPages = !!expensesQuery.data?.pages?.length
+  const useOfflineSource =
+    !networkHasPages &&
+    offlineGlobal.meta.availability === 'ready' &&
+    !!offlineGlobal.data
+  const expenses = useOfflineSource
+    ? ((offlineGlobal.data?.pages.flatMap((page) => page.expenses) ??
+        []) as GlobalExpense[])
+    : ((expensesQuery.data?.pages.flatMap((page) => page.expenses) ??
+        []) as GlobalExpense[])
+  const hasMore = useOfflineSource
+    ? offlineGlobal.hasMore
+    : (expensesQuery.data?.pages.at(-1)?.hasMore ?? false)
+  const showOfflineEmpty =
+    useOfflineWithoutData(!!expensesQuery.data) &&
+    !(offlineGlobal.meta.availability === 'ready')
 
   useEffect(() => {
-    if (inView && hasMore && !expensesQuery.isFetching)
-      void expensesQuery.fetchNextPage()
-  }, [expensesQuery, hasMore, inView])
+    if (inView && hasMore && !expensesQuery.isFetching) {
+      if (useOfflineSource) void offlineGlobal.fetchNextPage()
+      else void expensesQuery.fetchNextPage()
+    }
+  }, [expensesQuery, hasMore, inView, useOfflineSource, offlineGlobal])
 
   const returnTo = buildGlobalExpensesReturnTo(filters)
   const activeFilterCount = [
@@ -790,23 +848,68 @@ export function GlobalExpensesContent() {
               </div>
             )}
             <section aria-label={t('Expenses.globalTitle')}>
+              {useOfflineSource && debouncedSearch.trim() && (
+                <p
+                  className="mx-4 mb-2 text-xs text-muted-foreground sm:mx-6"
+                  role="note"
+                >
+                  {t('OfflineDownloads.offlineSearchHint')}
+                </p>
+              )}
+              {useOfflineSource &&
+                offlineGlobal.meta.incompleteGroupCount > 0 && (
+                  <output className="mx-4 mb-2 block text-xs text-muted-foreground sm:mx-6">
+                    {t('OfflineDownloads.groupsNotDownloaded', {
+                      count: offlineGlobal.meta.incompleteGroupCount,
+                    })}
+                    {(offlineGlobal.data?.dirtyGroupCount ?? 0) > 0 &&
+                      ` · ${t('OfflineDownloads.groupsNeedUpdating', {
+                        count: offlineGlobal.data?.dirtyGroupCount ?? 0,
+                      })}`}
+                  </output>
+                )}
+              {useOfflineSource &&
+                offlineGlobal.meta.hasMore &&
+                offlineGlobal.meta.totalCount != null && (
+                  <output className="mx-4 mb-2 block text-xs text-muted-foreground sm:mx-6">
+                    {t('OfflineDownloads.recent500WithCount', {
+                      count: offlineGlobal.meta.totalCount,
+                    })}
+                  </output>
+                )}
+              {useOfflineSource &&
+                offlineGlobal.meta.hasMore &&
+                offlineGlobal.meta.totalCount == null && (
+                  <output className="mx-4 mb-2 block text-xs text-muted-foreground sm:mx-6">
+                    {t('OfflineDownloads.recent500Note')}
+                  </output>
+                )}
               {showOfflineEmpty ? (
                 <div className="mx-4 sm:mx-6">
-                  <OfflineEmptyState
-                    variant="plain"
-                    onRetry={() => {
-                      void optionsQuery.refetch()
-                      void expensesQuery.refetch()
-                    }}
+                  <OfflineMissingData
+                    description={t('OfflineDownloads.totalsIncomplete')}
+                    onRetry={
+                      typeof navigator !== 'undefined' &&
+                      navigator.onLine === false
+                        ? undefined
+                        : () => {
+                            void optionsQuery.refetch()
+                            void expensesQuery.refetch()
+                          }
+                    }
+                    backLabel={t('Groups.backToGroups')}
+                    backHref="/"
                   />
                 </div>
-              ) : optionsQuery.error || expensesQuery.error ? (
+              ) : !useOfflineSource &&
+                (optionsQuery.error || expensesQuery.error) ? (
                 <div className="px-4 py-10 text-center text-sm text-destructive sm:px-6">
                   {(optionsQuery.error ?? expensesQuery.error)?.message}
                 </div>
-              ) : expensesQuery.isLoading ||
-                optionsQuery.isLoading ||
-                !options ? (
+              ) : !useOfflineSource &&
+                (expensesQuery.isLoading ||
+                  optionsQuery.isLoading ||
+                  !options) ? (
                 <ExpensesLoading />
               ) : expenses.length === 0 ? (
                 <div className="px-6 py-6 text-sm text-muted-foreground">

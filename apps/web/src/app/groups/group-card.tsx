@@ -55,6 +55,7 @@ export function GroupCard({
   onRemoveSavedView,
   onSelect,
   hideFinancialSummary = false,
+  stale = false,
 }: {
   group: AccountGroup | AccountGroupsItem
   variant?: 'groups' | 'friends' | 'starred' | 'archived' | 'hidden'
@@ -70,6 +71,8 @@ export function GroupCard({
    */
   onSelect?: (groupId: string) => void
   hideFinancialSummary?: boolean
+  /** Offline dirty flag: last-known balances may be out of date. */
+  stale?: boolean
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const { t: tOverview } = useTranslation(undefined, {
@@ -77,6 +80,7 @@ export function GroupCard({
   })
   const { t: tBalances } = useTranslation(undefined, { keyPrefix: 'Balances' })
   const { t: tStats } = useTranslation(undefined, { keyPrefix: 'Stats' })
+  const { t: tOffline } = useTranslation()
   const isSelectable = onSelect !== undefined
   const isStarred = group.preference.starred
   const isHidden = group.preference.hidden
@@ -345,6 +349,15 @@ export function GroupCard({
               <div className="truncate">{renderFinancialSummary()}</div>
             )}
           </div>
+          {stale ? (
+            <p
+              className="mt-1 text-xs text-muted-foreground"
+              role="note"
+              data-testid={`group-card-stale-${group.id}`}
+            >
+              {tOffline('OfflineReadOnly.balancesStale')}
+            </p>
+          ) : null}
         </div>
       </div>
     </>

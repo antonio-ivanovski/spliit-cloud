@@ -77,7 +77,8 @@
     "anonymousSignOutWarning": "Dieses anonyme Konto kann nur mit deinem gespeicherten Anmeldelink wiederhergestellt werden. Jetzt abmelden?",
     "signOutTitle": "Abmelden?",
     "signOutError": "Konntest dich nicht abmelden. Bitte versuche es erneut.",
-    "cancel": "Abbrechen"
+    "cancel": "Abbrechen",
+    "signOutOffline": "Zum Abmelden verbinden"
   },
   "Footer": {
     "madeIn": "Von der Open-Source-Community mit Liebe gemacht ❤️",
@@ -2725,7 +2726,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "Du bist offline. Änderungen, die du jetzt machst, werden erst gespeichert, wenn du wieder online bist."
+    "message": "Du bist offline. Heruntergeladene Daten sind schreibgeschützt.",
+    "serverUnavailable": "Spliit ist gerade nicht erreichbar. Heruntergeladene Daten werden gezeigt.",
+    "reconnecting": "Verbinde erneut… Du kannst heruntergeladene Daten weiter lesen."
   },
   "InstallPromotion": {
     "install": "Installieren",
@@ -4278,5 +4281,51 @@
     "involvedOnlyBadge": "Nur beteiligt",
     "deleteConfirmDescription": "Dieser Webhook und sein Zustellverlauf werden endgültig entfernt. Ausstehende Zustellungen werden abgebrochen.",
     "deleteConfirm": "Löschen"
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "Lade Gruppen ({ready}/{total})",
+    "statusAvailable": "Offline verfügbar",
+    "statusPartial": "Manche Gruppen sind nicht heruntergeladen",
+    "statusPaused": "Downloads pausiert",
+    "statusUnavailable": "Offline-Speicher nicht verfügbar",
+    "statusNeedsUpdate": "Downloads müssen aktualisiert werden",
+    "statusEmpty": "Keine Gruppen zum Herunterladen.",
+    "recent500Note": "Zeige die neuesten 500. Verbinde dich für ältere.",
+    "title": "Offline-Downloads",
+    "description": "Lies heruntergeladene Gruppen und Ausgaben ohne Verbindung. Dateien brauchen weiterhin eine Verbindung.",
+    "automatic": "Automatische Downloads",
+    "automaticDescription": "Lade Gruppen für offline Lesen herunter, wenn du online bist.",
+    "lastUpdated": "Zuletzt aktualisiert {date}",
+    "storageEstimate": "Etwa {size} für offline Daten",
+    "refreshNow": "Jetzt aktualisieren",
+    "clear": "Downloads löschen",
+    "clearConfirm": "Heruntergeladene Gruppen und Ausgaben von diesem Gerät entfernen? Deine Serverdaten bleiben sicher. Automatische Downloads werden ausgeschaltet.",
+    "keepOnDevice": "Downloads auf diesem Gerät behalten",
+    "keepOnDeviceDescription": "Bitte den Browser, offline Daten zu behalten. Der Browser kann sie bei Platzmangel trotzdem löschen.",
+    "keepOnDeviceKept": "Der Browser versucht, offline Daten zu behalten.",
+    "keepOnDeviceNotKept": "Der Browser hat offline Daten nicht behalten. Downloads funktionieren trotzdem.",
+    "groupNotDownloaded": "Nicht heruntergeladen",
+    "downloadFailed": "Download fehlgeschlagen",
+    "totalsIncomplete": "Verbinde dich, um Summen zu aktualisieren.",
+    "totalsIncompleteWithCount": "Verbinde dich, um Summen zu aktualisieren. ({count} ausstehend)",
+    "recent500WithCount": "Zeige neueste 500 von {count}. Verbinde dich für ältere.",
+    "offlineSearchHint": "Offline-Suche nutzt exakten Text; für Tippfehler-Toleranz wird eine Verbindung benötigt.",
+    "groupsNotDownloaded": "{count} Gruppe(n) nicht heruntergeladen",
+    "groupsNeedUpdating": "{count} müssen aktualisiert werden",
+    "storageBlocked": "Schließe andere Spliit-Tabs, um die Aktualisierung des Offline-Speichers abzuschließen.",
+    "storageQuota": "Offline-Speicher ist voll. Erneut versuchen oder Downloads löschen, um Platz zu schaffen.",
+    "statusBlocked": "Offline-Speicher blockiert",
+    "statusQuotaError": "Offline-Speicher voll",
+    "storageRetry": "Speicher erneut versuchen",
+    "schemaUnsupported": "App aktualisieren, um Downloads zu lesen",
+    "cleanupFailed": "Offline-Downloads konnten nicht gelöscht werden. Erneut versuchen."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "Verbinde dich, um Änderungen zu machen",
+    "attachmentsNeedConnection": "Verbinde dich, um Anhänge zu sehen",
+    "needsConnection": "Diese Funktion braucht eine Verbindung",
+    "expenseMissing": "Diese Ausgabe ist nicht im Download dieses Geräts. Verbinde dich, um neuere/ältere Ausgaben zu prüfen.",
+    "groupMissing": "Diese Gruppe wurde noch nicht vollständig heruntergeladen.",
+    "balancesStale": "Salden sind möglicherweise veraltet."
   }
 }

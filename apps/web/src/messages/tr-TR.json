@@ -77,7 +77,8 @@
     "anonymousSignOutWarning": "Bu anonim hesap yalnızca kayıtlı oturum açma bağlantınızla kurtarılabilir. Şimdi oturum kapatılsın mı?",
     "signOutTitle": "Çıkış yapılsın mı?",
     "signOutError": "Oturum kapatılamadı. Lütfen tekrar deneyin.",
-    "cancel": "İptal"
+    "cancel": "İptal",
+    "signOutOffline": "Çıkış yapmak için bağlan"
   },
   "Footer": {
     "madeIn": "Açık kaynak topluluğu tarafından sevgiyle yapıldı ❤️",
@@ -2689,7 +2690,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "Çevrimdışısınız. Şu an yapacağınız değişiklikler yeniden bağlanana kadar kaydedilmeyecek."
+    "message": "Çevrimdışısın. İndirilen veriler salt okunur.",
+    "serverUnavailable": "Şu an Spliit'e ulaşılamıyor. İndirilen veriler gösteriliyor.",
+    "reconnecting": "Yeniden bağlanıyor… İndirilen verileri okumaya devam edebilirsin."
   },
   "InstallPromotion": {
     "install": "Yükle",
@@ -4210,5 +4213,51 @@
     "involvedOnlyBadge": "Yalnızca ilgili",
     "deleteConfirmDescription": "Bu webhook ve teslimat geçmişi kalıcı olarak kaldırılacak. Bekleyen teslimatlar iptal edilecek.",
     "deleteConfirm": "Sil"
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "Gruplar indiriliyor ({ready}/{total})",
+    "statusAvailable": "Çevrimdışı kullanılabilir",
+    "statusPartial": "Bazı gruplar indirilmedi",
+    "statusPaused": "İndirmeler duraklatıldı",
+    "statusUnavailable": "Çevrimdışı depolama kullanılamıyor",
+    "statusNeedsUpdate": "İndirmelerin güncellenmesi gerek",
+    "statusEmpty": "İndirilecek grup yok.",
+    "recent500Note": "Son 500 gösteriliyor. Eskiler için yeniden bağlan.",
+    "title": "Çevrimdışı indirmeler",
+    "description": "İndirilen grup ve harcamaları bağlantısız oku. Dosyalar yine de bağlantı ister.",
+    "automatic": "Otomatik indirmeler",
+    "automaticDescription": "Çevrimiçiyken grupları çevrimdışı okumak için indir.",
+    "lastUpdated": "Son güncelleme {date}",
+    "storageEstimate": "Çevrimdışı veriler için yaklaşık {size}",
+    "refreshNow": "Şimdi yenile",
+    "clear": "İndirmeleri temizle",
+    "clearConfirm": "İndirilen gruplar ve harcamalar bu cihazdan kaldırılsın mı? Sunucudaki verilerin güvende. Otomatik indirmeler kapatılacak.",
+    "keepOnDevice": "İndirmeleri bu cihazda tut",
+    "keepOnDeviceDescription": "Tarayıcıdan çevrimdışı verileri tutmasını iste. Yer daralırsa yine de silebilir.",
+    "keepOnDeviceKept": "Tarayıcı çevrimdışı verileri tutmaya çalışacak.",
+    "keepOnDeviceNotKept": "Tarayıcı çevrimdışı verileri tutmadı. İndirmeler yine de çalışır.",
+    "groupNotDownloaded": "İndirilmedi",
+    "downloadFailed": "İndirme başarısız",
+    "totalsIncomplete": "Toplamları güncellemek için yeniden bağlan.",
+    "totalsIncompleteWithCount": "Toplamları güncellemek için yeniden bağlan. (bekleyen: {count})",
+    "recent500WithCount": "{count} içinden son 500 gösteriliyor. Eskiler için yeniden bağlan.",
+    "offlineSearchHint": "Çevrimdışı arama tam metin kullanır; yazım hatası toleransı için bağlantı gerekir.",
+    "groupsNotDownloaded": "İndirilmeyen {count} grup",
+    "groupsNeedUpdating": "Güncellenmesi gereken {count} grup",
+    "storageBlocked": "Çevrimdışı depolamanın güncellenmesini bitirmek için diğer Spliit sekmelerini kapat.",
+    "storageQuota": "Çevrimdışı depolama dolu. Tekrar dene ya da yer açmak için indirmeleri temizle.",
+    "statusBlocked": "Çevrimdışı depolama engellendi",
+    "statusQuotaError": "Çevrimdışı depolama dolu",
+    "storageRetry": "Depolamayı tekrar dene",
+    "schemaUnsupported": "İndirilenleri okumak için uygulamayı güncelle",
+    "cleanupFailed": "Çevrimdışı indirilenler temizlenemedi. Tekrar dene."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "Değişiklik için yeniden bağlan",
+    "attachmentsNeedConnection": "Ekleri görmek için bağlan",
+    "needsConnection": "Bu özellik bağlantı gerektirir",
+    "expenseMissing": "Bu gider bu cihazdaki indirmede yok. Daha yeni/eski giderler için yeniden bağlan.",
+    "groupMissing": "Bu grup henüz indirilmedi.",
+    "balancesStale": "Bakiyeler güncel olmayabilir."
   }
 }

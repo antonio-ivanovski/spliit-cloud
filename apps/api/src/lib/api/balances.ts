@@ -18,8 +18,9 @@ import { randomId } from './shared'
 export async function getGroupBalances(
   groupId: string,
   ledgerId?: string,
+  client: Prisma.TransactionClient | typeof prisma = prisma,
 ): Promise<Balances> {
-  const rows = await getGroupBalanceExpenses(groupId, ledgerId)
+  const rows = await getGroupBalanceExpenses(groupId, ledgerId, client)
   const expenses = rows.map(toBalanceExpense)
   const balances = getBalances(expenses)
   const suggestedSettlements = getSuggestedSettlements(balances)

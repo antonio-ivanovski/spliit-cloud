@@ -77,7 +77,8 @@
     "anonymousSignOutWarning": "この匿名アカウントは、保存したサインインリンクを使用してのみ回復できます。今すぐサインアウトしますか?",
     "signOutTitle": "サインアウトしますか?",
     "signOutError": "サインアウトできませんでした。もう一度試してください。",
-    "cancel": "キャンセル"
+    "cancel": "キャンセル",
+    "signOutOffline": "サインアウトするには接続してください"
   },
   "Footer": {
     "madeIn": "オープンソースコミュニティによって愛を込めて作られました ❤️",
@@ -2681,7 +2682,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "現在オフラインです。行った変更は再接続するまで保存されません。"
+    "message": "オフラインです。ダウンロード済みデータは読み取り専用です。",
+    "serverUnavailable": "今Spliitに接続できません。ダウンロード済みデータを表示しています。",
+    "reconnecting": "再接続中…ダウンロード済みデータを引き続き読めます。"
   },
   "InstallPromotion": {
     "install": "インストール",
@@ -4188,5 +4191,51 @@
     "involvedOnlyBadge": "自分のみ",
     "deleteConfirmDescription": "このWebhookとその配信履歴は完全に削除されます。保留中の配信はキャンセルされます。",
     "deleteConfirm": "削除"
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "グループをダウンロード中（{ready}/{total}）",
+    "statusAvailable": "オフラインで利用可能",
+    "statusPartial": "一部のグループはダウンロードされていません",
+    "statusPaused": "ダウンロードは一時停止中",
+    "statusUnavailable": "オフライン保存を利用できません",
+    "statusNeedsUpdate": "ダウンロードの更新が必要です",
+    "statusEmpty": "ダウンロードするグループがありません。",
+    "recent500Note": "最新の500件を表示しています。古い分は再接続してください。",
+    "title": "オフラインのダウンロード",
+    "description": "接続なしでダウンロード済みのグループと支出を読みます。ファイルには接続が必要です。",
+    "automatic": "自動ダウンロード",
+    "automaticDescription": "オンラインのときにグループをダウンロードしてオフラインで読みます。",
+    "lastUpdated": "最終更新 {date}",
+    "storageEstimate": "オフラインデータに約{size}を使用",
+    "refreshNow": "今すぐ更新",
+    "clear": "ダウンロードを削除",
+    "clearConfirm": "この端末からダウンロード済みのグループと支出を削除しますか？サーバーのデータは安全です。自動ダウンロードはオフになります。",
+    "keepOnDevice": "この端末にダウンロードを保持",
+    "keepOnDeviceDescription": "ブラウザにオフラインデータの保持を求めます。容量不足では削除されることがあります。",
+    "keepOnDeviceKept": "ブラウザはオフラインデータの保持に努めます。",
+    "keepOnDeviceNotKept": "ブラウザはオフラインデータを保持しませんでした。ダウンロードは動作します。",
+    "groupNotDownloaded": "未ダウンロード",
+    "downloadFailed": "ダウンロードに失敗しました",
+    "totalsIncomplete": "合計を更新するには再接続してください。",
+    "totalsIncompleteWithCount": "合計を更新するには再接続してください。（{count}件保留中）",
+    "recent500WithCount": "{count}件中最新の500件を表示しています。古い分は再接続してください。",
+    "offlineSearchHint": "オフライン検索は完全一致のみです。あいまい検索には接続が必要です。",
+    "groupsNotDownloaded": "{count}件のグループがダウンロードされていません",
+    "groupsNeedUpdating": "{count}件の更新が必要です",
+    "storageBlocked": "他のSpliitタブを閉じてオフラインストレージの更新を完了してください。",
+    "storageQuota": "オフラインストレージがいっぱいです。再試行するか、ダウンロードを削除して空きを作ってください。",
+    "statusBlocked": "オフラインストレージがブロックされています",
+    "statusQuotaError": "オフラインストレージがいっぱいです",
+    "storageRetry": "ストレージを再試行",
+    "schemaUnsupported": "ダウンロードを読むにはアプリを更新してください",
+    "cleanupFailed": "オフラインのダウンロードを消去できませんでした。もう一度お試しください。"
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "変更するには再接続してください",
+    "attachmentsNeedConnection": "添付を見るには接続してください",
+    "needsConnection": "この機能には接続が必要です",
+    "expenseMissing": "この支出はこのデバイスのダウンロードにありません。新旧の支出を確認するには再接続してください。",
+    "groupMissing": "このグループはまだダウンロードが終わっていません。",
+    "balancesStale": "残高が古い可能性があります。"
   }
 }

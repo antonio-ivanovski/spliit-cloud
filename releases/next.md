@@ -19,7 +19,7 @@ who is affected, and the exact migration steps.
 
 ### 🚀 Features
 
-- Short entry per user-facing change (`TBD` by @TBD)
+- Read your groups offline: all member groups, recent expenses (newest 500 per group), and balances are automatically downloaded for read-only offline use; files and edits still require a connection (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
 

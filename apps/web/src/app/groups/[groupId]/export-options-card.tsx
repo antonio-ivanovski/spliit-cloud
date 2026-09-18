@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
 import { getApiBaseUrl } from '@/lib/api-url'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { cn } from '@/lib/utils'
 
 import { ReportPrintDialog } from './report-print-dialog'
@@ -22,6 +23,7 @@ type ExportOptionProps = {
   accent?: boolean
   href?: string
   onAction?: () => void
+  disabled?: boolean
 }
 
 function ExportOption({
@@ -33,27 +35,30 @@ function ExportOption({
   accent = false,
   href,
   onAction,
+  disabled = false,
 }: ExportOptionProps) {
-  const action = href ? (
-    <Button
-      variant={accent ? 'default' : 'secondary'}
-      className="h-10 w-full shrink-0 px-3 sm:w-auto"
-      nativeButton={false}
-      // oxlint-disable-next-line jsx-a11y/control-has-associated-label -- Button render merges {actionLabel} into the download link.
-      render={<a href={href} target="_blank" rel="noopener noreferrer" />}
-    >
-      {actionLabel}
-    </Button>
-  ) : (
-    <Button
-      type="button"
-      variant={accent ? 'default' : 'secondary'}
-      className="h-10 w-full shrink-0 px-3 sm:w-auto"
-      onClick={onAction}
-    >
-      {actionLabel}
-    </Button>
-  )
+  const action =
+    href && !disabled ? (
+      <Button
+        variant={accent ? 'default' : 'secondary'}
+        className="h-10 w-full shrink-0 px-3 sm:w-auto"
+        nativeButton={false}
+        // oxlint-disable-next-line jsx-a11y/control-has-associated-label -- Button render merges {actionLabel} into the download link.
+        render={<a href={href} target="_blank" rel="noopener noreferrer" />}
+      >
+        {actionLabel}
+      </Button>
+    ) : (
+      <Button
+        type="button"
+        variant={accent ? 'default' : 'secondary'}
+        className="h-10 w-full shrink-0 px-3 sm:w-auto"
+        onClick={disabled ? undefined : onAction}
+        disabled={disabled}
+      >
+        {actionLabel}
+      </Button>
+    )
 
   return (
     <div
@@ -101,9 +106,18 @@ export function ExportOptionsCard({ groupId }: { groupId: string }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Expenses' })
   const apiUrl = getApiBaseUrl()
   const [pdfDialogOpen, setPdfDialogOpen] = useState(false)
+  // Exports require connection (authenticated REST + report queries).
+  // Browse stays usable; export actions are disabled offline with one
+  // reconnect explanation. No background fetch merely to preview.
+  const isOnline = useOnlineStatus()
 
   return (
     <>
+      {!isOnline && (
+        <output className="block text-sm text-muted-foreground">
+          Reconnect to make changes
+        </output>
+      )}
       <div data-testid="export-options-grid" className="grid grid-cols-1 gap-2">
         <ExportOption
           icon={FileText}
@@ -112,7 +126,8 @@ export function ExportOptionsCard({ groupId }: { groupId: string }) {
           badge="PDF"
           actionLabel={t('exportPdfAction')}
           accent
-          onAction={() => setPdfDialogOpen(true)}
+          onAction={isOnline ? () => setPdfDialogOpen(true) : undefined}
+          disabled={!isOnline}
         />
         <ExportOption
           icon={Archive}
@@ -120,7 +135,10 @@ export function ExportOptionsCard({ groupId }: { groupId: string }) {
           purpose={t('exportBundlePurpose')}
           badge="ZIP"
           actionLabel={t('exportBundleAction')}
-          href={`${apiUrl}/groups/${groupId}/export/bundle`}
+          href={
+            isOnline ? `${apiUrl}/groups/${groupId}/export/bundle` : undefined
+          }
+          disabled={!isOnline}
         />
         <ExportOption
           icon={FileSpreadsheet}
@@ -128,7 +146,12 @@ export function ExportOptionsCard({ groupId }: { groupId: string }) {
           purpose={t('exportCsvPurpose')}
           badge="CSV"
           actionLabel={t('exportCsvAction')}
-          href={`${apiUrl}/groups/${groupId}/expenses/export/csv`}
+          href={
+            isOnline
+              ? `${apiUrl}/groups/${groupId}/expenses/export/csv`
+              : undefined
+          }
+          disabled={!isOnline}
         />
       </div>
       <ReportPrintDialog

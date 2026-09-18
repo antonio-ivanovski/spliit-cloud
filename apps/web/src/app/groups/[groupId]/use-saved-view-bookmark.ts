@@ -2,11 +2,16 @@ import { useEffect, useRef, useState } from 'react'
 
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import {
+  isOfflineWriteError,
+  notifyOfflineWriteBlocked,
+} from '@/lib/offline/write-guard'
+import {
   saveDeviceView,
   touchDeviceView,
   useDeviceSavedViews,
 } from '@/lib/saved-view-groups'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 import { useCurrentGroup } from './current-group-context'
@@ -27,6 +32,8 @@ export function useSavedViewBookmark(options?: {
   const lastVisit = useRef<string | null>(null)
 
   const persistToAccount = Boolean(account && !account.isAnonymous)
+  const isOnline = useOnlineStatus()
+  const canWrite = isOnline
   const groupId = group?.id
   const groupName = group?.name
   const groupEmoji = group?.emoji
@@ -56,12 +63,21 @@ export function useSavedViewBookmark(options?: {
       void invalidateAccountGroupLists(utils)
       onSaved?.()
     },
-    onError: (error) => onError?.(error.message),
+    onError: (error) => {
+      if (isOfflineWriteError(error)) {
+        notifyOfflineWriteBlocked((message) => onError?.(message))
+        return
+      }
+      onError?.(error.message)
+    },
   })
 
   const touchMutate = touch.mutate
 
   useEffect(() => {
+    // The touch is an automatic write effect — never send it offline.
+    // Device views stay local; the guard would also reject a missed call.
+    if (!canWrite) return
     if (!isPublicLink || !groupId || !viewKey) return
     if (lastVisit.current === visitKey) return
     lastVisit.current = visitKey
@@ -80,6 +96,7 @@ export function useSavedViewBookmark(options?: {
       })
     }
   }, [
+    canWrite,
     deviceSaved,
     groupColor,
     groupEmoji,
@@ -96,6 +113,12 @@ export function useSavedViewBookmark(options?: {
   const save = () => {
     if (!groupId || !viewKey || !groupName) return
     if (persistToAccount) {
+      // Manual account write: gate before optimism. Device views stay local
+      // and always succeed offline.
+      if (!canWrite) {
+        notifyOfflineWriteBlocked((message) => onError?.(message))
+        return
+      }
       saveMutation.mutate({ groupId, viewKey })
       return
     }

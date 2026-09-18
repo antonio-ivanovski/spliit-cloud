@@ -60,13 +60,30 @@ describe('OfflineBanner', () => {
     render(<OfflineBanner />)
     expect(screen.getByTestId('offline-banner')).toBeInTheDocument()
 
-    act(() => {
-      window.dispatchEvent(new Event('online'))
-    })
+    // Realistic online recovery: the browser flips `navigator.onLine` first,
+    // then fires the event. The shared store validates via a liveness probe;
+    // stub it so the test does not depend on a live API.
+    const originalFetch = globalThis.fetch
+    globalThis.fetch = (async () =>
+      new Response(JSON.stringify({ status: 'ok' }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      })) as unknown as typeof fetch
+    try {
+      Object.defineProperty(navigator, 'onLine', {
+        configurable: true,
+        value: true,
+      })
+      act(() => {
+        window.dispatchEvent(new Event('online'))
+      })
 
-    await waitFor(() => {
-      expect(screen.queryByTestId('offline-banner')).not.toBeInTheDocument()
-    })
+      await waitFor(() => {
+        expect(screen.queryByTestId('offline-banner')).not.toBeInTheDocument()
+      })
+    } finally {
+      globalThis.fetch = originalFetch
+    }
   })
 
   it('shows the banner when a fetch fails even if navigator.onLine is true', async () => {

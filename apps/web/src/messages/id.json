@@ -77,7 +77,8 @@
     "anonymousSignOutWarning": "Akun anonim ini hanya dapat dipulihkan dengan tautan masuk yang Anda simpan. Keluar sekarang?",
     "signOutTitle": "Keluar?",
     "signOutError": "Tidak dapat keluar. Silakan coba lagi.",
-    "cancel": "Batal"
+    "cancel": "Batal",
+    "signOutOffline": "Hubungkan untuk keluar"
   },
   "Footer": {
     "madeIn": "Dibuat oleh komunitas open-source dengan cinta ❤️",
@@ -2679,7 +2680,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "Anda sedang offline. Perubahan yang Anda buat sekarang tidak akan disimpan sampai Anda tersambung kembali."
+    "message": "Kamu offline. Data yang diunduh hanya-baca.",
+    "serverUnavailable": "Tak bisa menjangkau Spliit sekarang. Menampilkan data yang diunduh.",
+    "reconnecting": "Menyambung lagi… Kamu bisa terus membaca data yang diunduh."
   },
   "InstallPromotion": {
     "install": "Pasang",
@@ -4187,5 +4190,51 @@
     "involvedOnlyBadge": "Hanya yang terlibat",
     "deleteConfirmDescription": "Webhook ini dan riwayat pengirimannya akan dihapus permanen. Pengiriman yang tertunda akan dibatalkan.",
     "deleteConfirm": "Hapus"
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "Mengunduh grup ({ready}/{total})",
+    "statusAvailable": "Tersedia offline",
+    "statusPartial": "Sebagian grup belum diunduh",
+    "statusPaused": "Unduhan dijeda",
+    "statusUnavailable": "Penyimpanan offline tak tersedia",
+    "statusNeedsUpdate": "Unduhan perlu diperbarui",
+    "statusEmpty": "Tak ada grup untuk diunduh.",
+    "recent500Note": "Menampilkan 500 terbaru. Sambung lagi untuk yang lama.",
+    "title": "Unduhan offline",
+    "description": "Baca grup dan pengeluaran yang diunduh tanpa koneksi. Berkas tetap butuh koneksi.",
+    "automatic": "Unduhan otomatis",
+    "automaticDescription": "Unduh grup untuk dibaca offline saat kamu online.",
+    "lastUpdated": "Terakhir diperbarui {date}",
+    "storageEstimate": "Pakai sekitar {size} untuk data offline",
+    "refreshNow": "Segarkan sekarang",
+    "clear": "Hapus unduhan",
+    "clearConfirm": "Hapus grup dan pengeluaran yang diunduh dari perangkat ini? Data server-mu tetap aman. Unduhan otomatis akan dimatikan.",
+    "keepOnDevice": "Simpan unduhan di perangkat ini",
+    "keepOnDeviceDescription": "Minta browser menyimpan data offline. Browser tetap bisa menghapusnya bila ruang kurang.",
+    "keepOnDeviceKept": "Browser akan mencoba menyimpan data offline.",
+    "keepOnDeviceNotKept": "Browser tidak menyimpan data offline. Unduhan tetap jalan.",
+    "groupNotDownloaded": "Belum diunduh",
+    "downloadFailed": "Unduhan gagal",
+    "totalsIncomplete": "Sambung lagi untuk memperbarui total.",
+    "totalsIncompleteWithCount": "Sambung lagi untuk memperbarui total. ({count} tertunda)",
+    "recent500WithCount": "Menampilkan 500 terbaru dari {count}. Sambung lagi untuk yang lama.",
+    "offlineSearchHint": "Pencarian offline memakai teks persis; toleransi salah ketik butuh koneksi.",
+    "groupsNotDownloaded": "{count} grup belum diunduh",
+    "groupsNeedUpdating": "{count} perlu diperbarui",
+    "storageBlocked": "Tutup tab Spliit lain untuk menyelesaikan pembaruan penyimpanan offline.",
+    "storageQuota": "Penyimpanan offline penuh. Coba lagi atau hapus unduhan untuk mengosongkan ruang.",
+    "statusBlocked": "Penyimpanan offline diblokir",
+    "statusQuotaError": "Penyimpanan offline penuh",
+    "storageRetry": "Coba penyimpanan lagi",
+    "schemaUnsupported": "Perbarui aplikasi untuk membaca unduhan",
+    "cleanupFailed": "Tidak dapat menghapus unduhan. Coba lagi."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "Sambung lagi untuk mengubah",
+    "attachmentsNeedConnection": "Sambung untuk lihat lampiran",
+    "needsConnection": "Fitur ini butuh koneksi",
+    "expenseMissing": "Pengeluaran ini tidak ada di unduhan perangkat ini. Sambung lagi untuk cek pengeluaran baru/lama.",
+    "groupMissing": "Grup ini belum selesai diunduh.",
+    "balancesStale": "Saldo mungkin kedaluwarsa."
   }
 }

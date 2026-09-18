@@ -77,7 +77,8 @@
     "anonymousSignOutWarning": "To anonimowe konto można odzyskać tylko za pomocą zapisanego linku odzyskiwania. Wylogować się teraz?",
     "signOutTitle": "Wylogować się?",
     "signOutError": "Nie można się wylogować. Spróbuj ponownie.",
-    "cancel": "Anuluj"
+    "cancel": "Anuluj",
+    "signOutOffline": "Połącz się, aby się wylogować"
   },
   "Footer": {
     "madeIn": "Stworzone przez społeczność open-source z miłością ❤️",
@@ -2711,7 +2712,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "Jesteś offline. Zmiany, które teraz wprowadzisz, nie zostaną zapisane, dopóki nie połączysz się ponownie."
+    "message": "Jesteś offline. Pobrane dane są tylko do odczytu.",
+    "serverUnavailable": "Brak połączenia ze Spliit. Wyświetlam pobrane dane.",
+    "reconnecting": "Łączenie ponownie… Możesz dalej czytać pobrane dane."
   },
   "InstallPromotion": {
     "install": "Zainstaluj",
@@ -4256,5 +4259,51 @@
     "involvedOnlyBadge": "Tylko moje",
     "deleteConfirmDescription": "Ten webhook i jego historia dostarczeń zostaną trwale usunięte. Oczekujące dostarczenia zostaną anulowane.",
     "deleteConfirm": "Usuń"
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "Pobieranie grup ({ready}/{total})",
+    "statusAvailable": "Dostępne offline",
+    "statusPartial": "Niektóre grupy nie są pobrane",
+    "statusPaused": "Pobieranie wstrzymane",
+    "statusUnavailable": "Magazyn offline niedostępny",
+    "statusNeedsUpdate": "Pobrane wymagają aktualizacji",
+    "statusEmpty": "Brak grup do pobrania.",
+    "recent500Note": "Wyświetlam najnowsze 500. Połącz się, aby zobaczyć starsze.",
+    "title": "Pobrane offline",
+    "description": "Czytaj pobrane grupy i wydatki bez połączenia. Pliki nadal wymagają połączenia.",
+    "automatic": "Automatyczne pobieranie",
+    "automaticDescription": "Pobieraj grupy do czytania offline, gdy jesteś online.",
+    "lastUpdated": "Zaktualizowano {date}",
+    "storageEstimate": "Około {size} na dane offline",
+    "refreshNow": "Odśwież teraz",
+    "clear": "Wyczyść pobrane",
+    "clearConfirm": "Usunąć pobrane grupy i wydatki z tego urządzenia? Twoje dane na serwerze są bezpieczne. Automatyczne pobieranie zostanie wyłączone.",
+    "keepOnDevice": "Zachowaj pobrane na tym urządzeniu",
+    "keepOnDeviceDescription": "Poproś przeglądarkę o zachowanie danych offline. Przy braku miejsca może je usunąć.",
+    "keepOnDeviceKept": "Przeglądarka spróbuje zachować dane offline.",
+    "keepOnDeviceNotKept": "Przeglądarka nie zachowała danych offline. Pobieranie nadal działa.",
+    "groupNotDownloaded": "Nie pobrano",
+    "downloadFailed": "Pobieranie nie powiodło się",
+    "totalsIncomplete": "Połącz się, aby zaktualizować sumy.",
+    "totalsIncompleteWithCount": "Połącz się, aby zaktualizować sumy. (oczekujące: {count})",
+    "recent500WithCount": "Wyświetlam 500 najnowszych z {count}. Połącz się, aby zobaczyć starsze.",
+    "offlineSearchHint": "Wyszukiwanie offline używa dokładnego tekstu; tolerancja literówek wymaga połączenia.",
+    "groupsNotDownloaded": "{count} grup(y) niepobranych",
+    "groupsNeedUpdating": "{count} wymaga aktualizacji",
+    "storageBlocked": "Zamknij inne karty Spliit, aby dokończyć aktualizację pamięci offline.",
+    "storageQuota": "Pamięć offline jest pełna. Spróbuj ponownie albo usuń pobrane, aby zwolnić miejsce.",
+    "statusBlocked": "Pamięć offline zablokowana",
+    "statusQuotaError": "Pamięć offline pełna",
+    "storageRetry": "Spróbuj pamięć ponownie",
+    "schemaUnsupported": "Zaktualizuj aplikację, aby odczytać pobrane dane",
+    "cleanupFailed": "Nie udało się wyczyścić pobranych danych. Spróbuj ponownie."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "Połącz się, aby wprowadzać zmiany",
+    "attachmentsNeedConnection": "Połącz się, aby zobaczyć załączniki",
+    "needsConnection": "Ta funkcja wymaga połączenia",
+    "expenseMissing": "Tego wydatku nie ma w pobranym pliku tego urządzenia. Połącz się, aby sprawdzić nowsze/starsze wydatki.",
+    "groupMissing": "Ta grupa jeszcze się nie pobrała.",
+    "balancesStale": "Salda mogą być nieaktualne."
   }
 }

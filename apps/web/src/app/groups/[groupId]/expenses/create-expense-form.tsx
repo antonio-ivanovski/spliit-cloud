@@ -16,7 +16,9 @@ import {
   isGlobalExpensesReturnTo,
 } from '@/lib/expense-navigation'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
+import { OfflineWriteError } from '@/lib/offline/write-guard'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 import { useIsReadOnlyGroupViewer } from '../current-group-context'
@@ -67,6 +69,38 @@ export function CreateExpenseForm({
       { enabled: !!sourceExpenseId },
     )
   const sourceExpense = sourceExpenseData?.expense
+  const isOnline = useOnlineStatus()
+  const offlineWithData = !isOnline && !!group
+
+  // Cold offline create never initializes an editable form from a
+  // stale snapshot. A form already open keeps in-memory values (fieldset
+  // disabled, blocker active) with "not saved" status.
+  if (!isOnline && !group) {
+    return (
+      <Card>
+        <CardHeader className="hidden sm:flex">
+          <CardTitle>{t('create')}</CardTitle>
+          <CardDescription>{tGroups('backToExpenses')}</CardDescription>
+        </CardHeader>
+        <CardContent spacing="standalone" className="flex flex-col gap-3">
+          <output className="block text-sm text-muted-foreground">
+            This feature needs a connection
+          </output>
+          <div>
+            <Button
+              variant="secondary"
+              nativeButton={false}
+              render={
+                <Link to="/groups/$groupId/expenses" params={{ groupId }} />
+              }
+            >
+              {tGroups('backToExpenses')}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
 
   if (!group) return null
 
@@ -141,42 +175,56 @@ export function CreateExpenseForm({
   }
 
   return (
-    <ExpenseForm
-      group={group}
-      {...(sourceExpense ? { expense: sourceExpense, isCopy: true } : {})}
-      searchParams={searchParams}
-      cancelLink={expenseFormCancelLink(group.id, searchParams.returnTo)}
-      currentLedgerParticipantId={currentLedgerParticipantId}
-      heading={
-        sourceExpense
-          ? tExpenseForm('Expense.createCopy', { title: sourceExpense.title })
-          : undefined
-      }
-      onSubmit={async (expense) => {
-        // Persistence only — navigation happens in `onSaved` so a
-        // navigation failure is never conflated with a save failure.
-        const result = await createAttempt.run((requestId) =>
-          createExpenseMutateAsync({ groupId, requestId, expense }),
-        )
-        if (!result) return 'deferred'
-        return 'saved'
-      }}
-      onSaved={async () => {
-        if (isGlobalExpensesReturnTo(searchParams.returnTo)) {
-          await navigate({
-            to: '/expenses',
-            search: getGlobalExpensesSearch(searchParams.returnTo) as never,
-            replace: true,
-          })
-        } else {
-          await navigate({
-            to: '/groups/$groupId/expenses',
-            params: { groupId: group.id },
-            replace: true,
-          })
-        }
-      }}
-      runtimeFeatureFlags={runtimeFeatureFlags}
-    />
+    <>
+      {offlineWithData && (
+        <output className="mb-4 block rounded-md border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-100">
+          Reconnect to make changes — your edits are kept here but not saved.
+        </output>
+      )}
+      <fieldset disabled={offlineWithData} className="min-w-0">
+        <ExpenseForm
+          group={group}
+          {...(sourceExpense ? { expense: sourceExpense, isCopy: true } : {})}
+          searchParams={searchParams}
+          cancelLink={expenseFormCancelLink(group.id, searchParams.returnTo)}
+          currentLedgerParticipantId={currentLedgerParticipantId}
+          heading={
+            sourceExpense
+              ? tExpenseForm('Expense.createCopy', {
+                  title: sourceExpense.title,
+                })
+              : undefined
+          }
+          onSubmit={async (expense) => {
+            // Explicit offline entry check (fieldset is also disabled): never
+            // send the create offline. The guard would also reject.
+            if (!isOnline) throw new OfflineWriteError()
+            // Persistence only — navigation happens in `onSaved` so a
+            // navigation failure is never conflated with a save failure.
+            const result = await createAttempt.run((requestId) =>
+              createExpenseMutateAsync({ groupId, requestId, expense }),
+            )
+            if (!result) return 'deferred'
+            return 'saved'
+          }}
+          onSaved={async () => {
+            if (isGlobalExpensesReturnTo(searchParams.returnTo)) {
+              await navigate({
+                to: '/expenses',
+                search: getGlobalExpensesSearch(searchParams.returnTo) as never,
+                replace: true,
+              })
+            } else {
+              await navigate({
+                to: '/groups/$groupId/expenses',
+                params: { groupId: group.id },
+                replace: true,
+              })
+            }
+          }}
+          runtimeFeatureFlags={runtimeFeatureFlags}
+        />
+      </fieldset>
+    </>
   )
 }

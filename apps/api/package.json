@@ -25,7 +25,8 @@
     "./lib/exports": "./src/lib/exports/index.ts",
     "./lib/notifications/budget-planner": "./src/lib/notifications/budget-planner.ts",
     "./lib/webhooks/delivery": "./src/lib/webhooks/delivery.ts",
-    "./lib/webhooks/maintenance": "./src/lib/webhooks/maintenance.ts"
+    "./lib/webhooks/maintenance": "./src/lib/webhooks/maintenance.ts",
+    "./offline-contract": "./src/trpc/outputs/offline.ts"
   },
   "scripts": {
     "bundle:runtime": "bun build src/server.ts --target=bun --production --keep-names --outfile=dist/server.js",

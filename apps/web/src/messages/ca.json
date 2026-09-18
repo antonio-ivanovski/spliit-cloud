@@ -77,7 +77,8 @@
     "anonymousSignOutWarning": "Aquest compte anònim només es pot recuperar amb el vostre enllaç d'inici de sessió desat. Tancar la sessió ara?",
     "signOutTitle": "Tancar la sessió?",
     "signOutError": "No s'ha pogut tancar la sessió. Si us plau, torna-ho a provar.",
-    "cancel": "Cancel·la"
+    "cancel": "Cancel·la",
+    "signOutOffline": "Connecta't per tancar la sessió"
   },
   "Footer": {
     "madeIn": "Fet per la comunitat de codi obert amb amor ❤️",
@@ -2700,7 +2701,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "No tens connexió. Els canvis que facis ara no es desaran fins que et tornis a connectar."
+    "message": "Estàs sense connexió. Les dades descarregades són de només lectura.",
+    "serverUnavailable": "No es pot contactar amb Spliit ara mateix. Mostrant les dades descarregades.",
+    "reconnecting": "Reconnectant… Pots continuar llegint les dades descarregades."
   },
   "InstallPromotion": {
     "install": "Instal·la",
@@ -4234,5 +4237,51 @@
     "involvedOnlyBadge": "Només implicats",
     "deleteConfirmDescription": "Aquest webhook i el seu historial de lliuraments s'eliminaran permanentment. Els lliuraments pendents es cancel·laran.",
     "deleteConfirm": "Elimina"
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "Descarregant grups ({ready}/{total})",
+    "statusAvailable": "Disponible sense connexió",
+    "statusPartial": "Alguns grups no estan descarregats",
+    "statusPaused": "Descàrregues en pausa",
+    "statusUnavailable": "Emmagatzematge sense connexió no disponible",
+    "statusNeedsUpdate": "Les descàrregues s'han d'actualitzar",
+    "statusEmpty": "No hi ha grups per descarregar.",
+    "recent500Note": "Mostrant els 500 recents. Reconnecta per veure'n d'anteriors.",
+    "title": "Descàrregues sense connexió",
+    "description": "Llegeix grups i despeses descarregats sense connexió. Els fitxers continuen necessitant connexió.",
+    "automatic": "Descàrregues automàtiques",
+    "automaticDescription": "Descarrega grups per llegir sense connexió quan estiguis en línia.",
+    "lastUpdated": "Actualitzat {date}",
+    "storageEstimate": "Utilitzant uns {size} per a dades sense connexió",
+    "refreshNow": "Actualitza ara",
+    "clear": "Esborra les descàrregues",
+    "clearConfirm": "Vols treure els grups i despeses descarregats d'aquest dispositiu? Les teves dades del servidor estan segures. Les descàrregues automàtiques es desactivaran.",
+    "keepOnDevice": "Conserva les descàrregues en aquest dispositiu",
+    "keepOnDeviceDescription": "Demanant al navegador que conservi les dades sense connexió. Tot i així les pot esborrar si falta espai.",
+    "keepOnDeviceKept": "El navegador intentarà conservar les dades sense connexió.",
+    "keepOnDeviceNotKept": "El navegador no ha conservat les dades sense connexió. Les descàrregues continuen funcionant.",
+    "groupNotDownloaded": "No descarregat",
+    "downloadFailed": "La descàrrega ha fallat",
+    "totalsIncomplete": "Reconnecta per actualitzar els totals.",
+    "totalsIncompleteWithCount": "Reconnecta per actualitzar els totals. ({count} pendents)",
+    "recent500WithCount": "Mostrant 500 recents de {count}. Reconnecta per veure'n d'anteriors.",
+    "offlineSearchHint": "La cerca sense connexió usa text exacte; la tolerància a errors necessita connexió.",
+    "groupsNotDownloaded": "{count} grup(s) sense descarregar",
+    "groupsNeedUpdating": "{count} cal actualitzar",
+    "storageBlocked": "Tanca les altres pestanyes del Spliit per acabar d'actualitzar l'emmagatzematge sense connexió.",
+    "storageQuota": "L'emmagatzematge sense connexió és ple. Torna-ho a intentar o esborra descàrregues per alliberar espai.",
+    "statusBlocked": "Emmagatzematge sense connexió bloquejat",
+    "statusQuotaError": "Emmagatzematge sense connexió ple",
+    "storageRetry": "Reintenta l'emmagatzematge",
+    "schemaUnsupported": "Actualitza l'app per llegir les baixades",
+    "cleanupFailed": "No s'han pogut esborrar les baixades. Torna-ho a provar."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "Reconnecta per fer canvis",
+    "attachmentsNeedConnection": "Connecta't per veure els adjunts",
+    "needsConnection": "Aquesta funció necessita connexió",
+    "expenseMissing": "Aquesta despesa no és a la descàrrega d'aquest dispositiu. Reconnecta per veure despeses més noves o anteriors.",
+    "groupMissing": "Aquest grup encara no s'ha acabat de descarregar.",
+    "balancesStale": "Els saldos poden estar desactualitzats."
   }
 }

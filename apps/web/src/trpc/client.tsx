@@ -7,6 +7,7 @@ import superjson from 'superjson'
 
 import { getApiBaseUrl } from '@/lib/api-url'
 import { trackedFetch } from '@/lib/connectivity'
+import { createOfflineWriteGuardLink } from '@/lib/offline/write-guard'
 import type { AppRouter } from '@spliit/api/router'
 
 import { makeQueryClient } from './query-client'
@@ -33,6 +34,11 @@ function getUrl() {
 export function getTrpcClient() {
   return (trpcClientSingleton ??= trpc.createClient({
     links: [
+      // Write guard: rechecks transport immediately before any
+      // imperative tRPC mutation and throws OfflineWriteError without sending
+      // a request. Queries pass through (offline adapters use disjoint keys).
+      // Probes/session verification bypass by construction (plain fetch).
+      createOfflineWriteGuardLink(),
       httpBatchLink({
         transformer: superjson,
         url: getUrl(),

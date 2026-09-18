@@ -8,7 +8,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
+import { isOfflineWriteError } from '@/lib/offline/write-guard'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { formatZonedDate } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
@@ -38,12 +40,17 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
   const accountTimeZone =
     accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpensePreview' })
+  const { t: tOffline } = useTranslation()
   const utils = trpc.useUtils()
   const createAttempt = useIdempotentCreate()
+  const isOnline = useOnlineStatus()
 
+  // Comments need a connection. Do not launch the list query offline;
+  // reads stay available via the downloaded expense detail. Writes are gated
+  // below and at the transport guard; the draft is preserved on failure.
   const commentsQuery = trpc.groups.expenses.comments.list.useQuery(
     { groupId, expenseId, linkInviteToken, viewKey },
-    { retry: false },
+    { retry: false, enabled: isOnline },
   )
   const [draft, setDraft] = useState('')
   const [validationError, setValidationError] = useState<string | null>(null)
@@ -55,7 +62,11 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
   const deleteMutation = trpc.groups.expenses.comments.delete.useMutation()
 
   const canComment = Boolean(
-    group && !group.archived && !isReadOnlyGroupViewer && currentMember,
+    group &&
+    !group.archived &&
+    !isReadOnlyGroupViewer &&
+    currentMember &&
+    isOnline,
   )
 
   const invalidateComments = async () => {
@@ -77,6 +88,12 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
 
   const handleCreate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    // UI entry check before optimism/dirty clearing: keep the draft and rely
+    // on the persistent output below. No toast here so the global 3s dedupe
+    // stays free for mutations that do toast.
+    if (!isOnline) {
+      return
+    }
     const body = draft.trim()
     if (!body) {
       setValidationError(t('commentRequired'))
@@ -95,12 +112,18 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
       if (result === null) return
       setDraft('')
       await invalidateComments()
-    } catch {
+    } catch (error) {
       // Keep the draft in place so a transient failure never loses a comment.
+      // Offline rejections are already explained once; suppress the duplicate
+      // generic error for guard errors.
+      if (isOfflineWriteError(error)) return
     }
   }
 
   const handleDelete = async (commentId: string) => {
+    if (!isOnline) {
+      return
+    }
     setDeletingCommentId(commentId)
     try {
       await deleteMutation.mutateAsync({ groupId, expenseId, commentId })
@@ -178,7 +201,7 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
                       accountTimeZone,
                     )}
                   </time>
-                  {!isReadOnlyGroupViewer && comment.canDelete && (
+                  {!isReadOnlyGroupViewer && comment.canDelete && isOnline && (
                     <Button
                       type="button"
                       variant="ghost"
@@ -259,7 +282,13 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
         </form>
       )}
 
-      {deleteMutation.error && (
+      {!isOnline && (
+        <output className="block text-xs text-muted-foreground">
+          {tOffline('OfflineReadOnly.reconnectToEdit')}
+        </output>
+      )}
+
+      {deleteMutation.error && !isOfflineWriteError(deleteMutation.error) && (
         <p className="text-xs text-destructive" role="alert">
           {deleteMutation.error.message}
         </p>

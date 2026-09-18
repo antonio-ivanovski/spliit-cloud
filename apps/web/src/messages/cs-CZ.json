@@ -77,7 +77,8 @@
     "anonymousSignOutWarning": "Tento anonymní účet lze obnovit pouze pomocí vašeho uloženého přihlašovacího odkazu. Odhlásit se nyní?",
     "signOutTitle": "Odhlásit se?",
     "signOutError": "Nelze se odhlásit. Zkuste to prosím znovu.",
-    "cancel": "Zrušit"
+    "cancel": "Zrušit",
+    "signOutOffline": "Připojte se pro odhlášení"
   },
   "Footer": {
     "madeIn": "Vytvořeno open-source komunitou s láskou ❤️",
@@ -2711,7 +2712,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "Jste offline. Změny, které nyní provedete, nebudou uloženy, dokud se znovu nepřipojíte."
+    "message": "Jsi offline. Stažená data jsou jen ke čtení.",
+    "serverUnavailable": "Spliit je momentálně nedostupný. Zobrazuji stažená data.",
+    "reconnecting": "Připojuji znovu… Stažená data můžeš dál číst."
   },
   "InstallPromotion": {
     "install": "Nainstalovat",
@@ -4256,5 +4259,51 @@
     "involvedOnlyBadge": "Pouze mé",
     "deleteConfirmDescription": "Tento webhook a jeho historie doručení budou trvale odstraněny. Čekající doručení budou zrušena.",
     "deleteConfirm": "Smazat"
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "Stahuji skupiny ({ready}/{total})",
+    "statusAvailable": "Dostupné offline",
+    "statusPartial": "Některé skupiny nejsou stažené",
+    "statusPaused": "Stahování pozastaveno",
+    "statusUnavailable": "Offline úložiště není k dispozici",
+    "statusNeedsUpdate": "Stažené je třeba aktualizovat",
+    "statusEmpty": "Žádné skupiny ke stažení.",
+    "recent500Note": "Zobrazuji nejnovějších 500. Pro starší se připoj.",
+    "title": "Offline stažené",
+    "description": "Čti stažené skupiny a výdaje bez připojení. Soubory připojení stále potřebují.",
+    "automatic": "Automatické stahování",
+    "automaticDescription": "Stahuj skupiny pro offline čtení, když jsi online.",
+    "lastUpdated": "Aktualizováno {date}",
+    "storageEstimate": "Asi {size} pro offline data",
+    "refreshNow": "Aktualizovat",
+    "clear": "Smazat stažené",
+    "clearConfirm": "Odebrat stažené skupiny a výdaje z tohoto zařízení? Tvá data na serveru zůstanou v bezpečí. Automatické stahování se vypne.",
+    "keepOnDevice": "Ponechat stažené v tomto zařízení",
+    "keepOnDeviceDescription": "Požádej prohlížeč o uchování offline dat. Při nedostatku místa je může smazat.",
+    "keepOnDeviceKept": "Prohlížeč se pokusí offline data uchovat.",
+    "keepOnDeviceNotKept": "Prohlížeč offline data neuchoval. Stahování funguje dál.",
+    "groupNotDownloaded": "Nestaženo",
+    "downloadFailed": "Stahování selhalo",
+    "totalsIncomplete": "Připoj se pro aktualizaci součtů.",
+    "totalsIncompleteWithCount": "Připoj se pro aktualizaci součtů. ({count} čeká)",
+    "recent500WithCount": "Zobrazuji 500 nejnovějších z {count}. Pro starší se připoj.",
+    "offlineSearchHint": "Offline vyhledávání používá přesný text; tolerance překlepů potřebuje připojení.",
+    "groupsNotDownloaded": "{count} skupina(y) nestaženo",
+    "groupsNeedUpdating": "{count} je třeba aktualizovat",
+    "storageBlocked": "Zavři ostatní karty Spliit a dokonči aktualizaci offline úložiště.",
+    "storageQuota": "Offline úložiště je plné. Zkus to znovu, nebo smaž stažené a uvolni místo.",
+    "statusBlocked": "Offline úložiště zablokováno",
+    "statusQuotaError": "Offline úložiště je plné",
+    "storageRetry": "Zkusit úložiště znovu",
+    "schemaUnsupported": "Aktualizujte aplikaci pro čtení stažených dat",
+    "cleanupFailed": "Offline stažené soubory se nepodařilo vymazat. Zkuste to znovu."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "Připoj se pro úpravy",
+    "attachmentsNeedConnection": "Připoj se pro zobrazení příloh",
+    "needsConnection": "Tato funkce potřebuje připojení",
+    "expenseMissing": "Tento výdaj není ve staženém obsahu tohoto zařízení. Připoj se a zkontroluj novější/starší výdaje.",
+    "groupMissing": "Tato skupina se ještě nestáhla celá.",
+    "balancesStale": "Zůstatky nemusí být aktuální."
   }
 }

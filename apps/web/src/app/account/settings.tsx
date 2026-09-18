@@ -27,6 +27,7 @@ import { AccountAiPreferences } from './ai-preferences'
 import { AnonymousAccountSettings } from './anonymous-account-settings'
 import { AuthorizedClients } from './authorized-clients'
 import { NotificationsPreferences } from './notifications-preferences'
+import { OfflineDownloadSettings } from './offline-download-settings'
 import {
   SettingsFieldRow,
   SettingsList,
@@ -339,6 +340,7 @@ function AccountSettingsContent() {
         </SettingsSection>
       </div>
       <AccountPreferences />
+      <OfflineDownloadSettings />
       <AuthorizedClients />
       <AccountExportModal />
       <NotificationsPreferences />

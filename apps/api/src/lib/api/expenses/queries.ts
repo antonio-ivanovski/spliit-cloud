@@ -89,20 +89,23 @@ export function mapExpenseListRow(row: ExpenseListDbRow) {
   }
 }
 
-export async function getGroupExpensesParticipants(groupId: string) {
-  const group = await prisma.group.findUnique({
+export async function getGroupExpensesParticipants(
+  groupId: string,
+  client: Prisma.TransactionClient | typeof prisma = prisma,
+) {
+  const group = await client.group.findUnique({
     where: { id: groupId },
     select: { ledgerId: true },
   })
   if (!group?.ledgerId) return []
 
   const [paidBy, paidFor] = await Promise.all([
-    prisma.expensePaidBy.findMany({
+    client.expensePaidBy.findMany({
       where: { expense: { ledgerId: group.ledgerId } },
       select: { ledgerParticipantId: true },
       distinct: ['ledgerParticipantId'],
     }),
-    prisma.expensePaidFor.findMany({
+    client.expensePaidFor.findMany({
       where: { expense: { ledgerId: group.ledgerId } },
       select: { ledgerParticipantId: true },
       distinct: ['ledgerParticipantId'],
@@ -120,18 +123,19 @@ export async function getGroupExpensesParticipants(groupId: string) {
 export async function getGroupBalanceExpenses(
   groupId: string,
   ledgerId?: string,
+  client: Prisma.TransactionClient | typeof prisma = prisma,
 ) {
   const resolvedLedgerId =
     ledgerId ??
     (
-      await prisma.group.findUnique({
+      await client.group.findUnique({
         where: { id: groupId },
         select: { ledgerId: true },
       })
     )?.ledgerId
   if (!resolvedLedgerId) return []
 
-  return prisma.expense.findMany({
+  return client.expense.findMany({
     where: { ledgerId: resolvedLedgerId },
     select: balanceExpenseSelect,
   })
@@ -193,11 +197,12 @@ function buildParticipantMatch(
 export async function getGroupExpenses(
   groupId: string,
   options?: GetGroupExpensesOptions,
+  client: Prisma.TransactionClient | typeof prisma = prisma,
 ) {
   const ledgerId =
     options?.ledgerId ??
     (
-      await prisma.group.findUnique({
+      await client.group.findUnique({
         where: { id: groupId },
         select: { ledgerId: true },
       })
@@ -207,7 +212,7 @@ export async function getGroupExpenses(
   const where = await buildExpenseListWhere(ledgerId, options)
   const orderBy = buildExpenseListOrderBy(options?.sortBy, options?.sortDir)
 
-  const rows = await prisma.expense.findMany({
+  const rows = await client.expense.findMany({
     select: groupExpenseListCardSelect,
     where,
     orderBy,
@@ -493,6 +498,7 @@ function sortKeyOf(row: ExpenseListDbRow): ExpenseSortKey {
 export async function getGroupExpensesInvolvingPage(
   groupId: string,
   options: InvolvingPageOptions,
+  client: Prisma.TransactionClient | typeof prisma = prisma,
 ): Promise<InvolvingPageResult> {
   const empty: InvolvingPageResult = {
     rows: [],
@@ -503,7 +509,7 @@ export async function getGroupExpensesInvolvingPage(
   const ledgerId =
     options.ledgerId ??
     (
-      await prisma.group.findUnique({
+      await client.group.findUnique({
         where: { id: groupId },
         select: { ledgerId: true },
       })
@@ -524,7 +530,7 @@ export async function getGroupExpensesInvolvingPage(
     options.involvingAccountId,
   )
 
-  const involvingRows = await prisma.expense.findMany({
+  const involvingRows = await client.expense.findMany({
     select: groupExpenseListCardSelect,
     where: mergeWhereAnd(baseWhere, involvement),
     orderBy,
@@ -571,7 +577,7 @@ export async function getGroupExpensesInvolvingPage(
       anchorBoundFilter(sortKeyOf(peek), levels, 'before'),
     )
   }
-  const hiddenRows = await prisma.expense.findMany({
+  const hiddenRows = await client.expense.findMany({
     select: groupExpenseListCardSelect,
     where: hiddenWhere,
     orderBy,
@@ -598,13 +604,16 @@ export async function getGroupExpensesInvolvingPage(
   }
 }
 
-export async function getGroupExpenseCount(groupId: string) {
-  const group = await prisma.group.findUnique({
+export async function getGroupExpenseCount(
+  groupId: string,
+  client: Prisma.TransactionClient | typeof prisma = prisma,
+) {
+  const group = await client.group.findUnique({
     where: { id: groupId },
     select: { ledgerId: true },
   })
   if (!group?.ledgerId) return 0
-  return prisma.expense.count({ where: { ledgerId: group.ledgerId } })
+  return client.expense.count({ where: { ledgerId: group.ledgerId } })
 }
 
 /**
@@ -631,8 +640,11 @@ export function mergeCurrencyRecommendations(
   return recommendations
 }
 
-export async function getGroupCommonCurrencies(groupId: string) {
-  const group = await prisma.group.findUnique({
+export async function getGroupCommonCurrencies(
+  groupId: string,
+  client: Prisma.TransactionClient | typeof prisma = prisma,
+) {
+  const group = await client.group.findUnique({
     where: { id: groupId },
     select: {
       ledgerId: true,
@@ -642,7 +654,7 @@ export async function getGroupCommonCurrencies(groupId: string) {
   if (!group?.ledgerId) return [] as string[]
 
   const since = commonCurrencyLookbackDate()
-  const rows = await prisma.expense.findMany({
+  const rows = await client.expense.findMany({
     where: {
       ledgerId: group.ledgerId,
       expenseDate: { gte: since },
@@ -662,13 +674,17 @@ export async function getGroupCommonCurrencies(groupId: string) {
   )
 }
 
-export async function getExpense(groupId: string, expenseId: string) {
-  const group = await prisma.group.findUnique({
+export async function getExpense(
+  groupId: string,
+  expenseId: string,
+  client: Prisma.TransactionClient | typeof prisma = prisma,
+) {
+  const group = await client.group.findUnique({
     where: { id: groupId },
     select: { ledgerId: true },
   })
   if (!group?.ledgerId) return null
-  const expense = await prisma.expense.findFirst({
+  const expense = await client.expense.findFirst({
     where: { id: expenseId, ledgerId: group.ledgerId },
     include: {
       paidByList: { include: { ledgerParticipant: true } },
@@ -687,7 +703,7 @@ export async function getExpense(groupId: string, expenseId: string) {
   if (!expense) return null
   const previousExpense =
     expense.recurringSeries && expense.recurrenceSequence
-      ? await prisma.expense.findFirst({
+      ? await client.expense.findFirst({
           where: {
             recurringSeriesId: expense.recurringSeriesId,
             recurrenceSequence: { lt: expense.recurrenceSequence },
@@ -698,7 +714,7 @@ export async function getExpense(groupId: string, expenseId: string) {
       : null
   const nextExpense =
     expense.recurringSeries && expense.recurrenceSequence
-      ? await prisma.expense.findFirst({
+      ? await client.expense.findFirst({
           where: {
             recurringSeriesId: expense.recurringSeriesId,
             recurrenceSequence: { gt: expense.recurrenceSequence },
@@ -730,14 +746,15 @@ export async function getRecurringExpenseSeries(
     occurrenceCursor?: number
     occurrenceLimit?: number
   },
+  client: Prisma.TransactionClient | typeof prisma = prisma,
 ) {
-  const group = await prisma.group.findUnique({
+  const group = await client.group.findUnique({
     where: { id: groupId },
     select: { ledgerId: true },
   })
   if (!group?.ledgerId) return { series: [], nextCursor: null }
   const limit = Math.min(Math.max(options?.limit ?? 20, 1), 100)
-  const rows = await prisma.recurringExpenseSeries.findMany({
+  const rows = await client.recurringExpenseSeries.findMany({
     where: {
       ledgerId: group.ledgerId,
       ...(options?.seriesId ? { id: options.seriesId } : {}),

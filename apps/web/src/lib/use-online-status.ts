@@ -1,45 +1,16 @@
-import { useEffect, useState } from 'react'
-
-import {
-  hasFetchNetworkFailure,
-  reportNetworkSuccess,
-  subscribeConnectivity,
-} from '@/lib/connectivity'
+import { useConnectivityOnlineStatus } from '@/lib/offline/connectivity'
 
 /**
- * Tracks whether the app can reach the network.
+ * Compatibility projection of the shared offline transport store.
  *
- * Combines `navigator.onLine` with a latch set when fetch throws a connectivity
- * error. DevTools "service worker offline" often leaves `navigator.onLine` true
- * while API calls fail, so the latch is what surfaces the offline banner.
+ * Previously this hook owned its own `navigator.onLine` + fetch-failure latch.
+ * It now projects `transport !== 'unreachable'` plus a synchronous
+ * `navigator.onLine` hint (so a freshly-set `navigator.onLine === false`
+ * reports offline even before the store's `offline` event fires). The shared
+ * store owns all event listeners and recovery probes; this hook adds none.
  */
 export function useOnlineStatus(): boolean {
-  const [browserOnline, setBrowserOnline] = useState<boolean>(() =>
-    typeof navigator === 'undefined' ? true : navigator.onLine,
-  )
-  const [fetchFailed, setFetchFailed] = useState(hasFetchNetworkFailure)
-
-  useEffect(() => {
-    const handleOnline = () => {
-      reportNetworkSuccess()
-      setBrowserOnline(true)
-    }
-    const handleOffline = () => setBrowserOnline(false)
-
-    window.addEventListener('online', handleOnline)
-    window.addEventListener('offline', handleOffline)
-    const unsubscribe = subscribeConnectivity(() => {
-      setFetchFailed(hasFetchNetworkFailure())
-    })
-
-    return () => {
-      window.removeEventListener('online', handleOnline)
-      window.removeEventListener('offline', handleOffline)
-      unsubscribe()
-    }
-  }, [])
-
-  return browserOnline && !fetchFailed
+  return useConnectivityOnlineStatus()
 }
 
 /**

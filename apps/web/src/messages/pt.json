@@ -77,7 +77,8 @@
     "anonymousSignOutWarning": "Esta conta anónima só pode ser recuperada com a ligação de início de sessão guardada. Sair agora?",
     "signOutTitle": "Sair?",
     "signOutError": "Não foi possível sair. Por favor, tente novamente.",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "signOutOffline": "Liga-te para saíres"
   },
   "Footer": {
     "madeIn": "Feito pela comunidade de código aberto com amor ❤️",
@@ -2700,7 +2701,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "Estás offline. As alterações que fizeres agora não serão guardadas até voltares a ter ligação."
+    "message": "Estás offline. Os dados descarregados são só de leitura.",
+    "serverUnavailable": "Não é possível contactar o Spliit agora. A mostrar dados descarregados.",
+    "reconnecting": "A religar… Podes continuar a ler os dados descarregados."
   },
   "InstallPromotion": {
     "install": "Instalar",
@@ -4234,5 +4237,51 @@
     "involvedOnlyBadge": "Só envolvidos",
     "deleteConfirmDescription": "Este webhook e o seu histórico de entregas serão removidos permanentemente. As entregas pendentes serão canceladas.",
     "deleteConfirm": "Eliminar"
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "A descarregar grupos ({ready}/{total})",
+    "statusAvailable": "Disponível offline",
+    "statusPartial": "Alguns grupos não estão descarregados",
+    "statusPaused": "Descargas em pausa",
+    "statusUnavailable": "Armazenamento offline indisponível",
+    "statusNeedsUpdate": "As descargas precisam de atualização",
+    "statusEmpty": "Sem grupos para descarregar.",
+    "recent500Note": "A mostrar os 500 recentes. Liga-te para veres os antigos.",
+    "title": "Descargas offline",
+    "description": "Lê grupos e despesas descarregados sem ligação. Os ficheiros continuam a precisar de ligação.",
+    "automatic": "Descargas automáticas",
+    "automaticDescription": "Descarrega grupos para leitura offline quando estiveres online.",
+    "lastUpdated": "Atualizado {date}",
+    "storageEstimate": "Cerca de {size} para dados offline",
+    "refreshNow": "Atualizar agora",
+    "clear": "Limpar descargas",
+    "clearConfirm": "Remover grupos e despesas descarregados deste dispositivo? Os teus dados no servidor ficam seguros. As descargas automáticas serão desligadas.",
+    "keepOnDevice": "Manter descargas neste dispositivo",
+    "keepOnDeviceDescription": "Pede ao navegador para manter os dados offline. Pode apagá-los na mesma se faltar espaço.",
+    "keepOnDeviceKept": "O navegador vai tentar manter os dados offline.",
+    "keepOnDeviceNotKept": "O navegador não manteve os dados offline. As descargas continuam a funcionar.",
+    "groupNotDownloaded": "Não descarregado",
+    "downloadFailed": "A descarga falhou",
+    "totalsIncomplete": "Liga-te para atualizares os totais.",
+    "totalsIncompleteWithCount": "Liga-te para atualizares os totais. ({count} pendentes)",
+    "recent500WithCount": "A mostrar 500 recentes de {count}. Liga-te para veres os antigos.",
+    "offlineSearchHint": "A pesquisa offline usa texto exato; a tolerância a erros precisa de ligação.",
+    "groupsNotDownloaded": "{count} grupo(s) sem descarregar",
+    "groupsNeedUpdating": "{count} precisam de atualização",
+    "storageBlocked": "Fecha os outros separadores do Spliit para concluíres a atualização do armazenamento offline.",
+    "storageQuota": "O armazenamento offline está cheio. Tenta de novo ou apaga descargas para libertar espaço.",
+    "statusBlocked": "Armazenamento offline bloqueado",
+    "statusQuotaError": "Armazenamento offline cheio",
+    "storageRetry": "Tentar armazenamento de novo",
+    "schemaUnsupported": "Atualiza a app para leres as descargas",
+    "cleanupFailed": "Não foi possível apagar as descargas. Tenta novamente."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "Religa-te para fazeres alterações",
+    "attachmentsNeedConnection": "Liga-te para veres os anexos",
+    "needsConnection": "Esta função precisa de ligação",
+    "expenseMissing": "Esta despesa não está na descarga deste dispositivo. Liga-te para veres despesas mais recentes ou antigas.",
+    "groupMissing": "Este grupo ainda não acabou de descarregar.",
+    "balancesStale": "Os saldos podem estar desatualizados."
   }
 }

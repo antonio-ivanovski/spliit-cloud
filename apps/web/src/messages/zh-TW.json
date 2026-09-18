@@ -77,7 +77,8 @@
     "anonymousSignOutWarning": "此匿名帳戶只能使用您儲存的登入連結來復原。現在退出嗎？",
     "signOutTitle": "退出？",
     "signOutError": "無法登出。請再試一次。",
-    "cancel": "取消"
+    "cancel": "取消",
+    "signOutOffline": "連線以登出"
   },
   "Footer": {
     "madeIn": "由開源社群用愛打造 ❤️",
@@ -2681,7 +2682,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "目前處於離線狀態。在重新連線之前，您所做的變更不會被儲存。"
+    "message": "你已離線。已下載的資料為唯讀。",
+    "serverUnavailable": "現在無法連到 Spliit。正在顯示已下載的資料。",
+    "reconnecting": "正在重新連線…你可以繼續閱讀已下載的資料。"
   },
   "InstallPromotion": {
     "install": "安裝",
@@ -4188,5 +4191,51 @@
     "involvedOnlyBadge": "僅與我相關",
     "deleteConfirmDescription": "此 Webhook 及其傳送記錄將被永久刪除。待處理的傳送將被取消。",
     "deleteConfirm": "刪除"
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "正在下載群組（{ready}/{total}）",
+    "statusAvailable": "可離線使用",
+    "statusPartial": "部分群組尚未下載",
+    "statusPaused": "下載已暫停",
+    "statusUnavailable": "離線儲存空間無法使用",
+    "statusNeedsUpdate": "下載需要更新",
+    "statusEmpty": "沒有可下載的群組。",
+    "recent500Note": "僅顯示最近 500 筆。請重新連線查看較早內容。",
+    "title": "離線下載",
+    "description": "免連線即可閱讀已下載的群組和支出。檔案仍需連線。",
+    "automatic": "自動下載",
+    "automaticDescription": "在線上時下載群組以便離線閱讀。",
+    "lastUpdated": "上次更新 {date}",
+    "storageEstimate": "離線資料約用 {size}",
+    "refreshNow": "立即重新整理",
+    "clear": "清除下載",
+    "clearConfirm": "要從此裝置移除已下載的群組和支出嗎？你的伺服器資料仍然安全。自動下載將會關閉。",
+    "keepOnDevice": "在此裝置上保留下載",
+    "keepOnDeviceDescription": "請求瀏覽器保留離線資料。空間不足時仍可能被清除。",
+    "keepOnDeviceKept": "瀏覽器會盡量保留離線資料。",
+    "keepOnDeviceNotKept": "瀏覽器未保留離線資料。下載仍可使用。",
+    "groupNotDownloaded": "未下載",
+    "downloadFailed": "下載失敗",
+    "totalsIncomplete": "重新連線後更新合計。",
+    "totalsIncompleteWithCount": "重新連線後更新合計。（{count} 筆待處理）",
+    "recent500WithCount": "共 {count} 筆，僅顯示最近 500 筆。請重新連線查看較早內容。",
+    "offlineSearchHint": "離線搜尋僅完全比對，錯字容錯需要連線。",
+    "groupsNotDownloaded": "{count} 個群組尚未下載",
+    "groupsNeedUpdating": "{count} 個需要更新",
+    "storageBlocked": "請關閉其他 Spliit 分頁，以完成離線儲存空間更新。",
+    "storageQuota": "離線儲存空間已滿。請重試，或清除下載以釋放空間。",
+    "statusBlocked": "離線儲存空間遭到封鎖",
+    "statusQuotaError": "離線儲存空間已滿",
+    "storageRetry": "重試儲存空間",
+    "schemaUnsupported": "更新應用程式以讀取下載內容",
+    "cleanupFailed": "無法清除離線下載。請再試一次。"
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "重新連線後進行變更",
+    "attachmentsNeedConnection": "連線後查看附件",
+    "needsConnection": "此功能需要連線",
+    "expenseMissing": "這筆支出不在此裝置的下載中。重新連線後查看較新或較早的支出。",
+    "groupMissing": "此群組尚未下載完成。",
+    "balancesStale": "餘額可能已過期。"
   }
 }

@@ -3,6 +3,12 @@ import { useNavigate } from '@tanstack/react-router'
 import { useMascotController } from '@/components/mascot/mascot-context'
 import { useToast } from '@/components/ui/use-toast'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
+import { useOptionalOfflineSync } from '@/lib/offline/provider'
+import {
+  isOfflineWriteError,
+  notifyOfflineWriteBlocked,
+  OFFLINE_WRITE_BLOCKED_MESSAGE,
+} from '@/lib/offline/write-guard'
 import { trpc } from '@/trpc/client'
 import { isSettlementCategory } from '@spliit/domain'
 
@@ -161,6 +167,15 @@ function startCatchUpPoll(args: {
   void tick()
 }
 
+/**
+ * Single accessible offline explanation. The global write guard throws before
+ * any optimistic context exists, so rollback handlers must tolerate a missing
+ * context (these hooks carry no optimistic context by design).
+ */
+function toastOfflineBlocked(notify: (message: string) => void) {
+  notifyOfflineWriteBlocked(notify)
+}
+
 export function useUpdateExpenseMutation({
   onConflict,
 }: {
@@ -169,16 +184,34 @@ export function useUpdateExpenseMutation({
   const { toast } = useToast()
   const mascot = useMascotController()
   const invalidateExpenseDependencies = useInvalidateExpenseDependencies()
+  const sync = useOptionalOfflineSync()
 
   return trpc.groups.expenses.update.useMutation({
     onSuccess: (_data, variables) => {
       mascot.react('success')
+      // Successful online mutation schedules an offline refresh
+      // asynchronously without delaying success.
+      try {
+        void sync
+          ?.handleMutationSuccess({ groupIds: [variables.groupId] })
+          .catch(() => undefined)
+      } catch {
+        // Notification must never break mutation handling.
+      }
       return invalidateExpenseDependencies({
         groupId: variables.groupId,
         expenseId: variables.expenseId,
       })
     },
     onError: (error) => {
+      // UI entry checks run before analytics/optimism; the guard rejects
+      // offline before onSuccess, so success reactions/transitions never run.
+      if (isOfflineWriteError(error)) {
+        toastOfflineBlocked((message) =>
+          toast({ description: message ?? OFFLINE_WRITE_BLOCKED_MESSAGE }),
+        )
+        return
+      }
       if (error.data?.code === 'CONFLICT') {
         onConflict?.()
         return
@@ -194,6 +227,7 @@ export function useCreateExpenseMutation() {
   const mascot = useMascotController()
   const utils = trpc.useUtils()
   const invalidateExpenseDependencies = useInvalidateExpenseDependencies()
+  const sync = useOptionalOfflineSync()
 
   return trpc.groups.expenses.create.useMutation({
     onSuccess: (data, variables) => {
@@ -202,6 +236,13 @@ export function useCreateExpenseMutation() {
           ? 'celebrate'
           : 'success',
       )
+      try {
+        void sync
+          ?.handleMutationSuccess({ groupIds: [variables.groupId] })
+          .catch(() => undefined)
+      } catch {
+        // Notification must never break mutation handling.
+      }
       // Fire-and-forget catch-up poll for past-dated series. The worker
       // materializes the remaining occurrences asynchronously; without
       // polling, expenses/activities/balances stay stale until an
@@ -227,6 +268,12 @@ export function useCreateExpenseMutation() {
       })
     },
     onError: (error) => {
+      if (isOfflineWriteError(error)) {
+        toastOfflineBlocked((message) =>
+          toast({ description: message ?? OFFLINE_WRITE_BLOCKED_MESSAGE }),
+        )
+        return
+      }
       mascot.react('failure')
       toast({ description: error.message, variant: 'destructive' })
     },
@@ -242,6 +289,7 @@ export function useDeleteExpenseMutation({
   const { toast } = useToast()
   const mascot = useMascotController()
   const invalidateExpenseDependencies = useInvalidateExpenseDependencies()
+  const sync = useOptionalOfflineSync()
 
   return trpc.groups.expenses.delete.useMutation({
     onSuccess: async (_data, variables) => {
@@ -251,6 +299,19 @@ export function useDeleteExpenseMutation({
       await invalidateExpenseDependencies({
         groupId: variables.groupId,
       })
+      // Successful delete removes the expense locally and marks
+      // balances/overview stale; a targeted refresh follows. Fire-and-forget
+      // so mutation success stays immediate.
+      try {
+        await sync
+          ?.handleExpenseDeleted({
+            groupId: variables.groupId,
+            expenseId: variables.expenseId,
+          })
+          .catch(() => undefined)
+      } catch {
+        // Ignore sync failures; invalidation already ran.
+      }
       if (onDeleted) {
         await onDeleted()
       } else {
@@ -262,6 +323,12 @@ export function useDeleteExpenseMutation({
       }
     },
     onError: (error) => {
+      if (isOfflineWriteError(error)) {
+        toastOfflineBlocked((message) =>
+          toast({ description: message ?? OFFLINE_WRITE_BLOCKED_MESSAGE }),
+        )
+        return
+      }
       mascot.react('failure')
       toast({ description: error.message, variant: 'destructive' })
     },
@@ -270,13 +337,22 @@ export function useDeleteExpenseMutation({
 
 export function useStopRecurrenceMutation() {
   const invalidateExpenseDependencies = useInvalidateExpenseDependencies()
+  const sync = useOptionalOfflineSync()
 
   return trpc.groups.expenses.stopRecurrence.useMutation({
-    onSuccess: (_data, variables) =>
-      invalidateExpenseDependencies({
+    onSuccess: (_data, variables) => {
+      try {
+        void sync
+          ?.handleMutationSuccess({ groupIds: [variables.groupId] })
+          .catch(() => undefined)
+      } catch {
+        // Ignore.
+      }
+      return invalidateExpenseDependencies({
         groupId: variables.groupId,
         expenseId: variables.expenseId,
         financial: false,
-      }),
+      })
+    },
   })
 }

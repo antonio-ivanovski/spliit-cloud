@@ -2367,7 +2367,8 @@
     "anonymousSignOutWarning": "Det här anonyma kontot kan endast återställas med din sparade inloggningslänk. Logga ut nu?",
     "signOutTitle": "Logga ut?",
     "signOutError": "Kunde inte logga ut. Försök igen.",
-    "cancel": "Avbryt"
+    "cancel": "Avbryt",
+    "signOutOffline": "Anslut för att logga ut"
   },
   "Homepage": {
     "title": "Dela <strong>utgifter</strong> med <strong>vänner & familj</strong>",
@@ -2805,7 +2806,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "Du är offline. Ändringar du gör nu sparas inte förrän du återansluter."
+    "message": "Du är offline. Nedladdad data är skrivskyddad.",
+    "serverUnavailable": "Spliit är inte nåbart just nu. Visar nedladdad data.",
+    "reconnecting": "Återansluter… Du kan fortsätta läsa nedladdad data."
   },
   "Participants": {
     "search": "Sök deltagare...",
@@ -4206,5 +4209,51 @@
     "involvedOnlyBadge": "Endast egna",
     "deleteConfirmDescription": "Den här webhooken och dess leveranshistorik tas bort permanent. Väntande leveranser avbryts.",
     "deleteConfirm": "Ta bort"
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "Laddar ner grupper ({ready}/{total})",
+    "statusAvailable": "Tillgänglig offline",
+    "statusPartial": "Vissa grupper är inte nedladdade",
+    "statusPaused": "Nedladdningar pausade",
+    "statusUnavailable": "Offline lagring inte tillgänglig",
+    "statusNeedsUpdate": "Nedladdningar behöver uppdateras",
+    "statusEmpty": "Inga grupper att ladda ner.",
+    "recent500Note": "Visar senaste 500. Anslut för äldre.",
+    "title": "Offline nedladdningar",
+    "description": "Läs nedladdade grupper och utgifter utan anslutning. Filer behöver fortfarande anslutning.",
+    "automatic": "Automatiska nedladdningar",
+    "automaticDescription": "Ladda ner grupper för offline läsning när du är online.",
+    "lastUpdated": "Senast uppdaterad {date}",
+    "storageEstimate": "Använder cirka {size} för offline data",
+    "refreshNow": "Uppdatera nu",
+    "clear": "Rensa nedladdningar",
+    "clearConfirm": "Ta bort nedladdade grupper och utgifter från den här enheten? Din serverdata är säker. Automatiska nedladdningar stängs av.",
+    "keepOnDevice": "Behåll nedladdningar på den här enheten",
+    "keepOnDeviceDescription": "Be webbläsaren behålla offline data. Webbläsaren kan ändå rensa den vid platsbrist.",
+    "keepOnDeviceKept": "Webbläsaren försöker behålla offline data.",
+    "keepOnDeviceNotKept": "Webbläsaren behöll inte offline data. Nedladdningar fungerar ändå.",
+    "groupNotDownloaded": "Inte nedladdad",
+    "downloadFailed": "Nedladdning misslyckades",
+    "totalsIncomplete": "Anslut för att uppdatera summor.",
+    "totalsIncompleteWithCount": "Anslut för att uppdatera summor. ({count} väntande)",
+    "recent500WithCount": "Visar senaste 500 av {count}. Anslut för äldre.",
+    "offlineSearchHint": "Offline-sökning använder exakt text; stavfelstolerans kräver anslutning.",
+    "groupsNotDownloaded": "{count} grupp(er) inte nedladdade",
+    "groupsNeedUpdating": "{count} behöver uppdateras",
+    "storageBlocked": "Stäng andra Spliit-flikar för att slutföra uppdateringen av offline-lagringen.",
+    "storageQuota": "Offline-lagringen är full. Försök igen eller rensa nedladdningar för att frigöra utrymme.",
+    "statusBlocked": "Offline-lagring blockerad",
+    "statusQuotaError": "Offline-lagring full",
+    "storageRetry": "Försök lagring igen",
+    "schemaUnsupported": "Uppdatera appen för att läsa nedladdningar",
+    "cleanupFailed": "Kunde inte rensa nedladdningar. Försök igen."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "Anslut för att göra ändringar",
+    "attachmentsNeedConnection": "Anslut för att visa bilagor",
+    "needsConnection": "Den här funktionen behöver anslutning",
+    "expenseMissing": "Den här utgiften finns inte i enhetens nedladdning. Anslut för att se nyare/äldre utgifter.",
+    "groupMissing": "Den här gruppen har inte laddats ned klart.",
+    "balancesStale": "Saldon kan vara inaktuella."
   }
 }
