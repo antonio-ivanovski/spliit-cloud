@@ -19,20 +19,22 @@ function isSpaNavigation(request) {
   return mode === 'navigate' || accept.includes('text/html')
 }
 
-// OAuth/OIDC discovery documents live on the API, but agents and crawlers
-// only know the web origin. Proxy them so standard discovery works from
+// OAuth/OIDC discovery documents and Digital Asset Links live on the API,
+// but agents, crawlers and (for assetlinks) Android / Play verifiers only
+// know the web origin. Proxy them so standard discovery works from
 // https://spliit.cloud without duplicating issuer metadata that would go
 // stale. Static files (api-catalog, agent-card.json) never match these
 // prefixes and keep serving from ASSETS below.
-function isOAuthDiscoveryPath(pathname) {
+function isApiHostedWellKnownPath(pathname) {
   return (
     pathname === '/.well-known/oauth-protected-resource' ||
     pathname.startsWith('/.well-known/oauth-authorization-server') ||
-    pathname.startsWith('/.well-known/openid-configuration')
+    pathname.startsWith('/.well-known/openid-configuration') ||
+    pathname === '/.well-known/assetlinks.json'
   )
 }
 
-async function proxyOAuthDiscovery(request, pathname) {
+async function proxyWellKnownToApi(request, pathname) {
   const requestUrl = new globalThis.URL(request.url)
   const upstream = new globalThis.URL(
     `${pathname}${requestUrl.search}`,
@@ -61,10 +63,10 @@ export default {
     // Path-first on purpose: this must answer for plain machine GETs (curl,
     // scanners, crawlers) regardless of Accept or Sec-Fetch-Mode headers.
     if (
-      isOAuthDiscoveryPath(pathname) &&
+      isApiHostedWellKnownPath(pathname) &&
       (request.method === 'GET' || request.method === 'HEAD')
     ) {
-      return proxyOAuthDiscovery(request, pathname)
+      return proxyWellKnownToApi(request, pathname)
     }
 
     // Machine-readable files must 404 honestly when missing. Never fall them

@@ -34,6 +34,12 @@ yarn-error.log*
 .env*.local
 *.env
 
+# Android TWA signing keys (never commit; back up offline)
+*.keystore
+*.jks
+signing-key-info.txt
+twa-key-info.txt
+
 # vercel
 .vercel
 

@@ -14,6 +14,7 @@ import { bodyLimit } from 'hono/body-limit'
 import { cors } from 'hono/cors'
 
 import { auth } from './lib/auth'
+import { getAssetLinksStatements } from './lib/assetlinks'
 import {
   getOAuthProtectedResourceChallenge,
   getOAuthProtectedResourceMetadata,
@@ -302,6 +303,28 @@ app.get(OAUTH_PROTECTED_RESOURCE_PATH, (c) =>
     'Access-Control-Allow-Origin': '*',
   }),
 )
+
+// Digital Asset Links for the Android TWA. Driven by TWA_PACKAGE_NAME and
+// TWA_SHA256_FINGERPRINTS; 404s honestly when no TWA is configured so
+// verifiers (and PWABuilder) report "not configured" instead of matching a
+// stale or empty claim. Served through the web origin's `/.well-known/`
+// proxy on both Cloudflare Pages (_worker.js) and Docker (nginx.web.conf).
+app.get('/.well-known/assetlinks.json', (c) => {
+  const statements = getAssetLinksStatements()
+  if (!statements) {
+    return c.json(
+      {
+        error:
+          'No TWA configured. Set TWA_PACKAGE_NAME and TWA_SHA256_FINGERPRINTS to publish Digital Asset Links.',
+      },
+      404,
+    )
+  }
+  return c.json(statements, 200, {
+    'Access-Control-Allow-Origin': '*',
+    'Cache-Control': 'public, max-age=3600',
+  })
+})
 
 app.get('/groups/:groupId/export/bundle', exportRateLimit, (c) =>
   exportGroupBundle(c.req.raw, c.req.param('groupId')),

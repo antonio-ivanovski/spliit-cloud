@@ -164,6 +164,14 @@ const envSchema = z
     // account on a fresh instance, emails with a pending group/friend
     // invitation, or visitors carrying a live share-link invite token.
     SIGNUP_MODE: z.enum(['open', 'invite_only']).default('open'),
+
+    // Android TWA (Trusted Web Activity) identity for
+    // `/.well-known/assetlinks.json`. Both empty means no TWA is configured
+    // and the route 404s. Fingerprints are comma-separated SHA-256 cert
+    // fingerprints (colon-separated keytool output is accepted); keep the
+    // upload-key and Play App-signing fingerprints listed together.
+    TWA_PACKAGE_NAME: optionalString,
+    TWA_SHA256_FINGERPRINTS: optionalString,
   })
   .superRefine((env, ctx) => {
     if (env.NODE_ENV === 'production' && !env.BETTER_AUTH_SECRET) {

@@ -63,6 +63,81 @@ export default defineConfig({
         background_color: '#ffffff',
         theme_color: '#047857',
         lang: 'en',
+        dir: 'ltr',
+        orientation: 'any',
+        display_override: ['standalone'],
+        categories: ['finance', 'productivity'],
+        prefer_related_applications: false,
+        related_applications: [
+          {
+            platform: 'webapp',
+            url: 'https://spliit.cloud/manifest.webmanifest',
+          },
+        ],
+        shortcuts: [
+          {
+            name: 'Create group',
+            short_name: 'New group',
+            description: 'Start a new expense sharing group',
+            url: '/groups/create',
+            icons: [
+              {
+                src: '/logo-192x192.png',
+                sizes: '192x192',
+                type: 'image/png',
+              },
+            ],
+          },
+          {
+            name: 'All expenses',
+            short_name: 'Expenses',
+            description: 'Browse expenses across all your groups',
+            url: '/expenses',
+            icons: [
+              {
+                src: '/logo-192x192.png',
+                sizes: '192x192',
+                type: 'image/png',
+              },
+            ],
+          },
+          {
+            name: 'Account settings',
+            short_name: 'Settings',
+            description: 'Manage your Spliit account and preferences',
+            url: '/account/settings',
+            icons: [
+              {
+                src: '/logo-192x192.png',
+                sizes: '192x192',
+                type: 'image/png',
+              },
+            ],
+          },
+        ],
+        screenshots: [
+          {
+            src: '/screenshots/phone-groups-390x844.png',
+            sizes: '390x844',
+            type: 'image/png',
+            form_factor: 'narrow',
+            label: 'Spliit group balances on a phone',
+          },
+          {
+            src: '/screenshots/phone-expenses-390x844.png',
+            sizes: '390x844',
+            type: 'image/png',
+            form_factor: 'narrow',
+            label: 'Spliit expense list on a phone',
+          },
+          {
+            src: '/screenshots/desktop-overview-1280x720.png',
+            sizes: '1280x720',
+            type: 'image/png',
+            form_factor: 'wide',
+            label: 'Spliit group overview on a desktop',
+          },
+        ],
         icons: [
           {
             src: '/logo-192x192.png',
@@ -92,6 +167,8 @@ export default defineConfig({
         globIgnores: [
           '_worker.js',
           '404.html',
+          // Store/install artwork only; not needed to launch the app offline.
+          'screenshots/*',
           // ~3 MiB receipt-upload codec; not needed to launch the app offline.
           'assets/heic-to-*.js',
         ],
