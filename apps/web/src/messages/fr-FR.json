@@ -2616,14 +2616,12 @@
     "message": "Vous êtes hors ligne. Les modifications que vous effectuerez ne seront pas enregistrées tant que vous ne serez pas reconnecté."
   },
   "InstallPromotion": {
-    "title": "Installer Spliit Cloud",
-    "description": "Ajoutez Spliit Cloud à votre écran d'accueil — se lance comme une application native pour ajouter des dépenses plus rapidement et y accéder plus simplement.",
     "install": "Installer",
-    "remindLater": "Me le rappeler plus tard",
-    "dismiss": "Ne plus afficher",
+    "remindLater": "Pas maintenant",
+    "dismiss": "Ne plus demander",
     "chrome": {
       "title": "Installer Spliit Cloud",
-      "description": "Ajoutez Spliit Cloud à votre écran d'accueil — se lance comme une application native pour ajouter des dépenses plus rapidement et y accéder plus simplement."
+      "description": "Ajoutez Spliit Cloud à votre écran d'accueil pour un suivi des dépenses plus rapide — fonctionne comme une application native."
     },
     "ios": {
       "title": "Installer Spliit Cloud",

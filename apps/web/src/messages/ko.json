@@ -2643,14 +2643,12 @@
     "message": "현재 오프라인 상태입니다. 변경 내용은 다시 연결될 때까지 저장되지 않습니다."
   },
   "InstallPromotion": {
-    "title": "Spliit Cloud 설치",
-    "description": "Spliit Cloud를 홈 화면에 추가하면 네이티브 앱처럼 실행되어 지출 추가가 더 빠르고 접근이 더 간편해집니다.",
     "install": "설치",
-    "remindLater": "나중에 알림",
-    "dismiss": "다시 표시하지 않기",
+    "remindLater": "나중에",
+    "dismiss": "다시 묻지 않기",
     "chrome": {
       "title": "Spliit Cloud 설치",
-      "description": "Spliit Cloud를 홈 화면에 추가하면 네이티브 앱처럼 실행되어 지출 추가가 더 빠르고 접근이 더 간편해집니다."
+      "description": "Spliit Cloud를 홈 화면에 추가하여 지출을 더 빠르게 관리하세요 — 네이티브 앱처럼 동작합니다."
     },
     "ios": {
       "title": "Spliit Cloud 설치",

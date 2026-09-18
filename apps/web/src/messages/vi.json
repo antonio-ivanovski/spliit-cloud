@@ -2718,14 +2718,12 @@
     "message": "Bạn đang ngoại tuyến. Các thay đổi hiện tại sẽ không được lưu cho đến khi bạn kết nối lại."
   },
   "InstallPromotion": {
-    "title": "Cài đặt ứng dụng",
-    "description": "Cài Spliit để truy cập nhanh.",
     "install": "Cài đặt",
-    "remindLater": "Nhắc sau",
-    "dismiss": "Bỏ qua",
+    "remindLater": "Để sau",
+    "dismiss": "Đừng hỏi lại",
     "chrome": {
       "title": "Cài trên Chrome",
-      "description": "Cài như ứng dụng."
+      "description": "Thêm Spliit Cloud vào màn hình chính để theo dõi chi tiêu nhanh hơn — hoạt động như ứng dụng gốc."
     },
     "ios": {
       "title": "Cài trên iOS",

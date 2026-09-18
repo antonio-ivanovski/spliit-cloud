@@ -482,8 +482,6 @@
     "copiedInviteLink": "تم نسخ رابط الدعوة"
   },
   "InstallPromotion": {
-    "dismiss": "تجاهل",
-    "title": "تثبيت التطبيق",
     "ios": {
       "step3": "انقر على \"إضافة\" في الزاوية العلوية اليمنى",
       "title": "تثبيت Spliit Cloud",
@@ -491,12 +489,12 @@
       "step1": "انقر على زر المشاركة",
       "step2": "مرر للأسفل وانقر على إضافة إلى الشاشة الرئيسية"
     },
-    "remindLater": "ذكرني لاحقاً",
+    "remindLater": "ليس الآن",
+    "dismiss": "لا تسأل مجددًا",
     "chrome": {
-      "description": "أضف Spliit Cloud إلى الشاشة الرئيسية — يفتح كتطبيق أصلي لإضافة مصروفات أسرع.",
-      "title": "تثبيت Spliit Cloud"
+      "title": "تثبيت Spliit Cloud",
+      "description": "أضف Spliit Cloud إلى الشاشة الرئيسية لتتبّع المصروفات بشكل أسرع — يعمل كتطبيق أصلي."
     },
-    "description": "أضف Spliit Cloud إلى شاشتك الرئيسية — يُفتح كتطبيق أصلي لتسجيل المصروفات بشكل أسرع ووصول أبسط.",
     "install": "تثبيت",
     "firefox": {
       "description": "أضف Spliit Cloud إلى الشاشة الرئيسية من قائمة المتصفح.",

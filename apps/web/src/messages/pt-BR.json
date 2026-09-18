@@ -1323,9 +1323,8 @@
     "message": "Você está offline. As alterações que fizer agora não serão salvas até que você se reconecte."
   },
   "InstallPromotion": {
-    "description": "Adicione o Spliit Cloud à sua tela inicial — abre como um app nativo para adicionar despesas mais rapidamente e acessar de forma mais simples.",
     "chrome": {
-      "description": "Adicione o Spliit Cloud à sua tela inicial — abre como um app nativo para adicionar despesas mais rapidamente e acessar de forma mais simples."
+      "description": "Adicione o Spliit Cloud à sua tela inicial para acompanhar os gastos mais rápido — funciona como um app nativo."
     },
     "ios": {
       "description": "Adicione o Spliit Cloud à sua tela inicial para acesso com um toque.",

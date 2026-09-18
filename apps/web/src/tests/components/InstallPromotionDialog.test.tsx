@@ -37,15 +37,12 @@ function setMaxTouchPoints(value: number) {
   })
 }
 
-function mockMatchMedia(standalone: boolean) {
-  // Single mock: standalone query only matches when explicitly true;
+function mockMatchMedia(installed: boolean) {
+  // Any display-mode query matches only when explicitly installed;
   // everything else is desktop (Radix Dialog) mode so unmounts are
   // deterministic across all tests.
   vi.spyOn(window, 'matchMedia').mockImplementation((query: string) => ({
-    matches:
-      standalone && query.includes('display-mode: standalone')
-        ? true
-        : !query.includes('display-mode: standalone'),
+    matches: query.includes('display-mode:') ? installed : true,
     media: query,
     onchange: null,
     addListener: vi.fn(),
@@ -112,12 +109,40 @@ describe('InstallPromotionDialog', () => {
       ),
     ).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /install/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /not now/i })).toBeInTheDocument()
     expect(
-      screen.getByRole('button', { name: /remind me later/i }),
+      screen.getByRole('button', { name: /don't ask again/i }),
     ).toBeInTheDocument()
-    expect(
-      screen.getByRole('button', { name: /don't show again/i }),
-    ).toBeInTheDocument()
+  })
+
+  it('renders all actions in a single footer with Install last', async () => {
+    render(<InstallPromotionDialog />)
+    fireBeforeInstallPrompt()
+    const installBtn = await screen.findByTestId(
+      'install-promotion-install',
+      {},
+      { timeout: AUTO_OPEN_TIMEOUT_MS },
+    )
+    const remindBtn = await screen.findByTestId(
+      'install-promotion-remind-later',
+      {},
+      { timeout: AUTO_OPEN_TIMEOUT_MS },
+    )
+    const dismissBtn = await screen.findByTestId(
+      'install-promotion-dismiss',
+      {},
+      { timeout: AUTO_OPEN_TIMEOUT_MS },
+    )
+    // Single-footer regression guard: the split-footer layout rendered
+    // Install in its own row above the dismiss actions.
+    expect(installBtn.parentElement).toBe(remindBtn.parentElement)
+    expect(dismissBtn.parentElement).toBe(remindBtn.parentElement)
+    const buttons: Element[] = Array.from(
+      (installBtn.parentElement as HTMLElement).querySelectorAll('button'),
+    )
+    expect(buttons.indexOf(installBtn)).toBeGreaterThan(
+      buttons.indexOf(remindBtn),
+    )
   })
 
   it('shows the iOS instructions on iOS Safari without beforeinstallprompt', async () => {
@@ -192,7 +217,7 @@ describe('InstallPromotionDialog', () => {
 
   // ── Persistence: dismiss / remind-later ───────────────────────────────
 
-  it('clicking "Don\'t show again" sets a permanent localStorage flag', async () => {
+  it('clicking "Don\'t ask again" sets a permanent localStorage flag', async () => {
     const user = userEvent.setup()
     render(<InstallPromotionDialog />)
     fireBeforeInstallPrompt()
@@ -206,7 +231,7 @@ describe('InstallPromotionDialog', () => {
     expect(localStorage.getItem('spliit-pwa-install-dismissed')).toBe('true')
   })
 
-  it('clicking "Remind me later" sets a 24h timestamp in localStorage', async () => {
+  it('clicking "Not now" sets a 24h timestamp in localStorage', async () => {
     const user = userEvent.setup()
     const before = Date.now()
     render(<InstallPromotionDialog />)
@@ -267,6 +292,33 @@ describe('InstallPromotionDialog', () => {
     expect(screen.queryByTestId('install-promotion-dialog')).toBeNull()
   })
 
+  it('does not auto-open in minimal-ui display mode (already installed)', async () => {
+    vi.spyOn(window, 'matchMedia').mockImplementation((query: string) => ({
+      matches: query === '(display-mode: minimal-ui)',
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(() => false),
+    }))
+    render(<InstallPromotionDialog />)
+    fireBeforeInstallPrompt()
+    await new Promise((r) => setTimeout(r, 100))
+    expect(screen.queryByTestId('install-promotion-dialog')).toBeNull()
+  })
+
+  it('does not auto-open when launched from an Android TWA (already installed)', async () => {
+    vi.spyOn(document, 'referrer', 'get').mockReturnValue(
+      'android-app://cloud.spliit.app',
+    )
+    render(<InstallPromotionDialog />)
+    fireBeforeInstallPrompt()
+    await new Promise((r) => setTimeout(r, 100))
+    expect(screen.queryByTestId('install-promotion-dialog')).toBeNull()
+  })
+
   it('hides itself after appinstalled fires', async () => {
     render(<InstallPromotionDialog />)
     fireBeforeInstallPrompt()
@@ -294,7 +346,7 @@ describe('InstallPromotionDialog', () => {
 
   // ── Esc / backdrop dismiss ────────────────────────────────────────────
 
-  it('treats Esc / backdrop dismiss as "remind me later" (not permanent)', async () => {
+  it('treats Esc / backdrop dismiss as "not now" (not permanent)', async () => {
     const user = userEvent.setup()
     render(<InstallPromotionDialog />)
     fireBeforeInstallPrompt()

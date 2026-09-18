@@ -2616,14 +2616,12 @@
     "message": "אתה לא מחובר לרשת. השינויים שתבצע כעת לא יישמרו עד שתתחבר מחדש."
   },
   "InstallPromotion": {
-    "title": "התקן את Spliit Cloud",
-    "description": "הוסף את Spliit Cloud למסך הבית — נפתח כמו אפליקציה מקורית, להוספת הוצאות מהירה יותר וגישה נוחה יותר.",
     "install": "התקן",
-    "remindLater": "הזכר לי מאוחר יותר",
-    "dismiss": "אל תציג שוב",
+    "remindLater": "לא עכשיו",
+    "dismiss": "אל תשאל שוב",
     "chrome": {
       "title": "התקן את Spliit Cloud",
-      "description": "הוסף את Spliit Cloud למסך הבית — נפתח כמו אפליקציה מקורית, להוספת הוצאות מהירה יותר וגישה נוחה יותר."
+      "description": "הוסף את Spliit Cloud למסך הבית למעקב מהיר יותר אחר הוצאות — עובד כמו אפליקציה מקורית."
     },
     "ios": {
       "title": "התקן את Spliit Cloud",

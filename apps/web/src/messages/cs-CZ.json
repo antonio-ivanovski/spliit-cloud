@@ -2628,14 +2628,12 @@
     "message": "Jste offline. Změny, které nyní provedete, nebudou uloženy, dokud se znovu nepřipojíte."
   },
   "InstallPromotion": {
-    "title": "Nainstalovat Spliit Cloud",
-    "description": "Přidejte si Spliit Cloud na domovskou obrazovku — spouští se jako nativní aplikace pro rychlejší přidávání výdajů a jednodušší přístup.",
     "install": "Nainstalovat",
-    "remindLater": "Připomenout později",
-    "dismiss": "Znovu nezobrazovat",
+    "remindLater": "Teď ne",
+    "dismiss": "Už se neptat",
     "chrome": {
       "title": "Nainstalovat Spliit Cloud",
-      "description": "Přidejte si Spliit Cloud na domovskou obrazovku — spouští se jako nativní aplikace pro rychlejší přidávání výdajů a jednodušší přístup."
+      "description": "Přidejte si Spliit Cloud na domovskou obrazovku pro rychlejší sledování výdajů — funguje jako nativní aplikace."
     },
     "ios": {
       "title": "Nainstalovat Spliit Cloud",

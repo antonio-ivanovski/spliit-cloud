@@ -2644,14 +2644,12 @@
     "message": "Je bent offline. Wijzigingen die je nu maakt, worden pas opgeslagen als je weer verbinding hebt."
   },
   "InstallPromotion": {
-    "title": "Spliit Cloud installeren",
-    "description": "Voeg Spliit Cloud toe aan je startscherm — opent als een native app voor sneller uitgaven toevoegen en eenvoudigere toegang.",
     "install": "Installeren",
-    "remindLater": "Herinner me later",
-    "dismiss": "Niet opnieuw tonen",
+    "remindLater": "Nu niet",
+    "dismiss": "Niet opnieuw vragen",
     "chrome": {
       "title": "Spliit Cloud installeren",
-      "description": "Voeg Spliit Cloud toe aan je startscherm — opent als een native app voor sneller uitgaven toevoegen en eenvoudigere toegang."
+      "description": "Voeg Spliit Cloud toe aan je startscherm om sneller je uitgaven bij te houden — werkt als een native app."
     },
     "ios": {
       "title": "Spliit Cloud installeren",

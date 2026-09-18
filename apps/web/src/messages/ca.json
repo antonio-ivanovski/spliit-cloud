@@ -2616,14 +2616,12 @@
     "message": "No tens connexió. Els canvis que facis ara no es desaran fins que et tornis a connectar."
   },
   "InstallPromotion": {
-    "title": "Instal·la Spliit Cloud",
-    "description": "Afegeix Spliit Cloud a la pantalla d'inici: s'obre com una aplicació nativa per afegir despeses més ràpidament i accedir-hi de manera més senzilla.",
     "install": "Instal·la",
-    "remindLater": "Recorda-m'ho més tard",
-    "dismiss": "No ho tornis a mostrar",
+    "remindLater": "Ara no",
+    "dismiss": "No m'ho tornis a demanar",
     "chrome": {
       "title": "Instal·la Spliit Cloud",
-      "description": "Afegeix Spliit Cloud a la pantalla d'inici: s'obre com una aplicació nativa per afegir despeses més ràpidament i accedir-hi de manera més senzilla."
+      "description": "Afegeix Spliit Cloud a la pantalla d'inici per fer un seguiment de les despeses més ràpidament — funciona com una aplicació nativa."
     },
     "ios": {
       "title": "Instal·la Spliit Cloud",

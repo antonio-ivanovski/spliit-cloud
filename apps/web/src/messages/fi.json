@@ -2604,14 +2604,12 @@
     "message": "Et ole yhteydessä internetiin. Nyt tekemiäsi muutoksia ei tallenneta, ennen kuin muodostat yhteyden uudelleen."
   },
   "InstallPromotion": {
-    "title": "Asenna Spliit Cloud",
-    "description": "Lisää Spliit Cloud aloitusnäytölle — avautuu kuin natiivisovellus nopeampaa kulujen lisäämistä ja yksinkertaisempaa käyttöä varten.",
     "install": "Asenna",
-    "remindLater": "Muistuta myöhemmin",
-    "dismiss": "Älä näytä uudelleen",
+    "remindLater": "Ei nyt",
+    "dismiss": "Älä kysy uudelleen",
     "chrome": {
       "title": "Asenna Spliit Cloud",
-      "description": "Lisää Spliit Cloud aloitusnäytölle — avautuu kuin natiivisovellus nopeampaa kulujen lisäämistä ja yksinkertaisempaa käyttöä varten."
+      "description": "Lisää Spliit Cloud aloitusnäytölle kulujen nopeampaa seurantaa varten — toimii kuin natiivisovellus."
     },
     "ios": {
       "title": "Asenna Spliit Cloud",

@@ -34,12 +34,12 @@ import {
  * expose `beforeinstallprompt`). - Other browsers (Firefox desktop, Safari
  * desktop, etc.): renders nothing.
  *
- * Persistence via localStorage: - "Remind me later" sets a 24h cooldown. -
- * "Don't show again" sets a permanent dismissal flag. - Successful install
- * (`appinstalled`) clears both flags.
+ * Persistence via localStorage: - "Not now" sets a 24h cooldown. - "Don't ask
+ * again" sets a permanent dismissal flag. - Successful install (`appinstalled`)
+ * clears both flags.
  *
- * Esc / backdrop close count as "Remind me later" so an accidental dismissal
- * does not silently suppress the prompt forever.
+ * Esc / backdrop close count as "Not now" so an accidental dismissal does not
+ * silently suppress the prompt forever.
  */
 export function InstallPromotionDialog() {
   const { t } = useTranslation()
@@ -94,7 +94,7 @@ export function InstallPromotionDialog() {
       open={isOpen}
       onOpenChange={(next) => {
         if (!next) {
-          // Treat Esc / backdrop dismissals as "remind me later" so an
+          // Treat Esc / backdrop dismissals as "not now" so an
           // accidental close does not silence the prompt forever.
           remindLater()
         }
@@ -103,21 +103,23 @@ export function InstallPromotionDialog() {
       <ResponsiveDialogContent
         className="max-w-md"
         data-testid="install-promotion-dialog"
+        // Don't autofocus the Install button on open — the focus ring looks
+        // broken on a promo dialog and Enter would fire the native prompt.
+        initialFocus={() => null}
       >
-        {browserSupport === 'native-install' && (
-          <ChromeContent onInstall={install} />
-        )}
+        {browserSupport === 'native-install' && <ChromeHeader />}
         {browserSupport === 'ios-instructions' && <IosContent />}
         {browserSupport === 'firefox-android-instructions' && (
           <FirefoxContent />
         )}
 
-        <ResponsiveDialogFooter className="flex flex-col gap-2 sm:flex-row sm:justify-end">
+        <ResponsiveDialogFooter className="flex-col-reverse gap-2 sm:flex-row sm:items-center">
           <Button
             type="button"
             variant="ghost"
             onClick={dismiss}
             data-testid="install-promotion-dismiss"
+            className="w-full sm:mr-auto sm:w-auto sm:justify-start"
           >
             {t('InstallPromotion.dismiss')}
           </Button>
@@ -126,40 +128,39 @@ export function InstallPromotionDialog() {
             variant="outline"
             onClick={remindLater}
             data-testid="install-promotion-remind-later"
+            className="w-full sm:w-auto"
           >
             {t('InstallPromotion.remindLater')}
           </Button>
+          {browserSupport === 'native-install' && (
+            <Button
+              type="button"
+              onClick={() => {
+                void install()
+              }}
+              data-testid="install-promotion-install"
+              className="w-full sm:w-auto"
+            >
+              {t('InstallPromotion.install')}
+            </Button>
+          )}
         </ResponsiveDialogFooter>
       </ResponsiveDialogContent>
     </ResponsiveDialog>
   )
 }
 
-function ChromeContent({ onInstall }: { onInstall: () => Promise<unknown> }) {
+function ChromeHeader() {
   const { t } = useTranslation()
   return (
-    <>
-      <ResponsiveDialogHeader>
-        <ResponsiveDialogTitle>
-          {t('InstallPromotion.chrome.title')}
-        </ResponsiveDialogTitle>
-        <ResponsiveDialogDescription>
-          {t('InstallPromotion.chrome.description')}
-        </ResponsiveDialogDescription>
-      </ResponsiveDialogHeader>
-      <ResponsiveDialogFooter className="-mt-2 flex flex-col gap-2 sm:flex-row sm:justify-end">
-        <Button
-          type="button"
-          onClick={() => {
-            void onInstall()
-          }}
-          data-testid="install-promotion-install"
-          className="w-full sm:w-auto"
-        >
-          {t('InstallPromotion.install')}
-        </Button>
-      </ResponsiveDialogFooter>
-    </>
+    <ResponsiveDialogHeader>
+      <ResponsiveDialogTitle>
+        {t('InstallPromotion.chrome.title')}
+      </ResponsiveDialogTitle>
+      <ResponsiveDialogDescription>
+        {t('InstallPromotion.chrome.description')}
+      </ResponsiveDialogDescription>
+    </ResponsiveDialogHeader>
   )
 }
 

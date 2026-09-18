@@ -2616,14 +2616,12 @@
     "message": "Ești offline. Modificările pe care le faci acum nu vor fi salvate până nu te reconectezi."
   },
   "InstallPromotion": {
-    "title": "Instalează Spliit Cloud",
-    "description": "Adaugă Spliit Cloud pe ecranul principal — se lansează ca o aplicație nativă pentru a adăuga cheltuieli mai rapid și un acces mai simplu.",
     "install": "Instalează",
-    "remindLater": "Amintește-mi mai târziu",
-    "dismiss": "Nu mai afișa",
+    "remindLater": "Nu acum",
+    "dismiss": "Nu mă mai întreba",
     "chrome": {
       "title": "Instalează Spliit Cloud",
-      "description": "Adaugă Spliit Cloud pe ecranul principal — se lansează ca o aplicație nativă pentru a adăuga cheltuieli mai rapid și un acces mai simplu."
+      "description": "Adaugă Spliit Cloud pe ecranul principal pentru o urmărire mai rapidă a cheltuielilor — funcționează ca o aplicație nativă."
     },
     "ios": {
       "title": "Instalează Spliit Cloud",

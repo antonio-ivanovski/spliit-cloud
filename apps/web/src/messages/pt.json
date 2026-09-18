@@ -2616,14 +2616,12 @@
     "message": "Estás offline. As alterações que fizeres agora não serão guardadas até voltares a ter ligação."
   },
   "InstallPromotion": {
-    "title": "Instalar Spliit Cloud",
-    "description": "Adicione o Spliit Cloud ao seu ecrã inicial — abre como uma aplicação nativa para adicionar despesas mais rapidamente e aceder de forma mais simples.",
     "install": "Instalar",
-    "remindLater": "Lembrar mais tarde",
-    "dismiss": "Não mostrar novamente",
+    "remindLater": "Agora não",
+    "dismiss": "Não perguntar novamente",
     "chrome": {
       "title": "Instalar Spliit Cloud",
-      "description": "Adicione o Spliit Cloud ao seu ecrã inicial — abre como uma aplicação nativa para adicionar despesas mais rapidamente e aceder de forma mais simples."
+      "description": "Adicione o Spliit Cloud ao seu ecrã inicial para um acompanhamento de despesas mais rápido — funciona como uma aplicação nativa."
     },
     "ios": {
       "title": "Instalar Spliit Cloud",

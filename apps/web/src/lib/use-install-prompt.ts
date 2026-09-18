@@ -20,13 +20,26 @@ export type InstallStatus =
   | 'install' // ready to be promoted
   | 'remind-later' // localStorage remind-later timer active
   | 'dismissed' // user picked "don't show again"
-  | 'installed' // display-mode is standalone (already installed)
+  | 'installed' // launched inside the installed app window
   | 'unsupported' // no install path for this browser
 
 const DISMISS_KEY = 'spliit-pwa-install-dismissed'
 const REMIND_KEY = 'spliit-pwa-install-remind-at'
 const REMIND_DELAY_MS = 24 * 60 * 60 * 1000 // 24h
 const AUTO_OPEN_DELAY_MS = 2000
+
+/**
+ * Display modes that prove the page runs inside its installed app window rather
+ * than a regular browser tab. Which one matches depends on the platform and the
+ * manifest `display` value.
+ */
+const INSTALLED_DISPLAY_MODES = [
+  'fullscreen',
+  'standalone',
+  'minimal-ui',
+  'window-controls-overlay',
+  'picture-in-picture',
+] as const
 
 function detectBrowserSupport(): BrowserSupport {
   if (typeof navigator === 'undefined') return 'unsupported'
@@ -68,11 +81,23 @@ function readRemindAt(): number | null {
 
 function readInstalled(): boolean {
   if (typeof window === 'undefined') return false
-  const standalone = window.matchMedia('(display-mode: standalone)').matches
+  // An installed PWA can launch in any of these display modes depending on
+  // the platform and the manifest `display` value — checking only
+  // `standalone` misses e.g. minimal-ui and window-controls-overlay launches.
+  const launchedAsApp =
+    typeof window.matchMedia === 'function' &&
+    INSTALLED_DISPLAY_MODES.some(
+      (mode) => window.matchMedia(`(display-mode: ${mode})`).matches,
+    )
   // iOS Safari exposes its own private flag for "added to home screen".
-  // oxlint-disable-next-line typescript/no-explicit-any
-  const iosStandalone = (navigator as any).standalone === true
-  return standalone || iosStandalone
+  const iosStandalone =
+    (navigator as Navigator & { standalone?: boolean }).standalone === true
+  // Android TWA / Play-wrapper launches carry an android-app:// referrer.
+  const twaReferrer =
+    typeof document !== 'undefined' &&
+    typeof document.referrer === 'string' &&
+    document.referrer.startsWith('android-app://')
+  return launchedAsApp || iosStandalone || twaReferrer
 }
 
 export interface UseInstallPromptResult {
@@ -85,9 +110,9 @@ export interface UseInstallPromptResult {
   open: () => void
   /** Close the dialog without recording any dismissal state. */
   close: () => void
-  /** "Remind me later" — 24h cooldown via localStorage. */
+  /** "Not now" — 24h cooldown via localStorage. */
   remindLater: () => void
-  /** "Don't show again" — permanent suppression via localStorage. */
+  /** "Don't ask again" — permanent suppression via localStorage. */
   dismiss: () => void
   /**
    * Trigger the deferred prompt (native-install only). Resolves to the user
@@ -137,12 +162,34 @@ export function useInstallPrompt(): UseInstallPromptResult {
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
     window.addEventListener('appinstalled', handleAppInstalled)
+    // If the page moves into an installed display mode while open (install
+    // completed in another tab, browser UI install), suppress from now on.
+    // One-way: leaving the app window mid-session must not re-arm the promo.
+    const handleDisplayModeChange = () => {
+      if (readInstalled()) setInstalled(true)
+    }
+    const modeQueries =
+      typeof window.matchMedia === 'function'
+        ? INSTALLED_DISPLAY_MODES.map((mode) =>
+            window.matchMedia(`(display-mode: ${mode})`),
+          )
+        : []
+    for (const query of modeQueries) {
+      if (typeof query.addEventListener === 'function') {
+        query.addEventListener('change', handleDisplayModeChange)
+      }
+    }
     return () => {
       window.removeEventListener(
         'beforeinstallprompt',
         handleBeforeInstallPrompt,
       )
       window.removeEventListener('appinstalled', handleAppInstalled)
+      for (const query of modeQueries) {
+        if (typeof query.removeEventListener === 'function') {
+          query.removeEventListener('change', handleDisplayModeChange)
+        }
+      }
     }
   }, [])
 

@@ -2593,14 +2593,12 @@
     "message": "Anda sedang offline. Perubahan yang Anda buat sekarang tidak akan disimpan sampai Anda tersambung kembali."
   },
   "InstallPromotion": {
-    "title": "Pasang Spliit Cloud",
-    "description": "Tambahkan Spliit Cloud ke layar utama — terbuka seperti aplikasi asli untuk penambahan pengeluaran yang lebih cepat dan akses yang lebih sederhana.",
     "install": "Pasang",
-    "remindLater": "Ingatkan saya nanti",
-    "dismiss": "Jangan tampilkan lagi",
+    "remindLater": "Nanti saja",
+    "dismiss": "Jangan tanya lagi",
     "chrome": {
       "title": "Pasang Spliit Cloud",
-      "description": "Tambahkan Spliit Cloud ke layar utama — terbuka seperti aplikasi asli untuk penambahan pengeluaran yang lebih cepat dan akses yang lebih sederhana."
+      "description": "Tambahkan Spliit Cloud ke layar utama untuk pelacakan pengeluaran yang lebih cepat — berfungsi seperti aplikasi asli."
     },
     "ios": {
       "title": "Pasang Spliit Cloud",

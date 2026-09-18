@@ -2595,14 +2595,12 @@
     "message": "現在オフラインです。行った変更は再接続するまで保存されません。"
   },
   "InstallPromotion": {
-    "title": "Spliit Cloudをインストール",
-    "description": "Spliit Cloudをホーム画面に追加 — ネイティブアプリのように起動し、経費の追加がより素早く、アクセスもより簡単になります。",
     "install": "インストール",
-    "remindLater": "後で通知する",
-    "dismiss": "次回から表示しない",
+    "remindLater": "今はしない",
+    "dismiss": "今後表示しない",
     "chrome": {
       "title": "Spliit Cloudをインストール",
-      "description": "Spliit Cloudをホーム画面に追加 — ネイティブアプリのように起動し、経費の追加がより素早く、アクセスもより簡単になります。"
+      "description": "Spliit Cloudをホーム画面に追加して、支出の管理をもっと素早く — ネイティブアプリのように動作します。"
     },
     "ios": {
       "title": "Spliit Cloudをインストール",

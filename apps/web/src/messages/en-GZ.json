@@ -2582,14 +2582,12 @@
     "empty": "no group info yet."
   },
   "InstallPromotion": {
-    "title": "install Spliit Cloud era",
-    "description": "add Spliit Cloud to your home screen — it launches like a native app for faster expense adding and easier access.",
     "install": "install it",
-    "remindLater": "remind me later",
-    "dismiss": "do not show again",
+    "remindLater": "not now",
+    "dismiss": "don't ask again",
     "chrome": {
       "title": "install Spliit Cloud",
-      "description": "add Spliit Cloud to your home screen — it launches like a native app for faster expense adding and easier access."
+      "description": "add Spliit Cloud to your home screen for faster expense tracking — works like a native app."
     },
     "firefox": {
       "title": "install Spliit Cloud",

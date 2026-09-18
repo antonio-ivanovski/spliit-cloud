@@ -2428,14 +2428,12 @@
     "empty": "এখনও কোনো গ্রুপ তথ্য নেই।"
   },
   "InstallPromotion": {
-    "title": "Spliit Cloud ইনস্টল করুন",
-    "description": "Spliit Cloud আপনার হোম স্ক্রিনে যোগ করুন — নেটিভ অ্যাপের মতো খোলে দ্রুত খরচ যোগ এবং সহজ অ্যাক্সেসের জন্য।",
     "install": "ইনস্টল",
-    "remindLater": "পরে মনে করিয়ে দিন",
-    "dismiss": "আর দেখাবেন না",
+    "remindLater": "এখন না",
+    "dismiss": "আর জিজ্ঞেস করবেন না",
     "chrome": {
       "title": "Spliit Cloud ইনস্টল করুন",
-      "description": "Spliit Cloud আপনার হোম স্ক্রিনে যোগ করুন — নেটিভ অ্যাপের মতো খোলে দ্রুত খরচ যোগ এবং সহজ অ্যাক্সেসের জন্য।"
+      "description": "দ্রুত খরচ ট্র্যাক করতে Spliit Cloud আপনার হোম স্ক্রিনে যোগ করুন — নেটিভ অ্যাপের মতো কাজ করে।"
     },
     "firefox": {
       "title": "Spliit Cloud ইনস্টল করুন",

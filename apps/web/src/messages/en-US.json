@@ -2751,14 +2751,12 @@
     "message": "You're offline. Changes you make now won't be saved until you reconnect."
   },
   "InstallPromotion": {
-    "title": "Install Spliit Cloud",
-    "description": "Add Spliit Cloud to your home screen — launches like a native app for quicker expense adding and simpler access.",
     "install": "Install",
-    "remindLater": "Remind me later",
-    "dismiss": "Don't show again",
+    "remindLater": "Not now",
+    "dismiss": "Don't ask again",
     "chrome": {
       "title": "Install Spliit Cloud",
-      "description": "Add Spliit Cloud to your home screen — launches like a native app for quicker expense adding and simpler access."
+      "description": "Add Spliit Cloud to your home screen for faster expense tracking — works like a native app."
     },
     "ios": {
       "title": "Install Spliit Cloud",

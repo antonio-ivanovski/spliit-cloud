@@ -23,6 +23,7 @@ who is affected, and the exact migration steps.
 
 ### 🐛 Bug fixes
 
-- Short entry per fix (`TBD` by @TBD)
+- Fixed the install dialog's split-button layout and shortened its copy (`TBD` by @TBD)
+- Never show the install promotion inside the already-installed app, whatever display mode it launched in (`TBD` by @TBD)
 
 **Full Changelog**: TBD

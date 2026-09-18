@@ -2646,14 +2646,12 @@
     "message": "Estás sin conexión. Los cambios que hagas ahora no se guardarán hasta que vuelvas a conectarte."
   },
   "InstallPromotion": {
-    "title": "Instalar Spliit Cloud",
-    "description": "Añade Spliit Cloud a tu pantalla de inicio: se abre como una aplicación nativa para añadir gastos más rápido y acceder de forma más sencilla.",
     "install": "Instalar",
-    "remindLater": "Recordármelo más tarde",
-    "dismiss": "No volver a mostrar",
+    "remindLater": "Ahora no",
+    "dismiss": "No volver a preguntar",
     "chrome": {
       "title": "Instalar Spliit Cloud",
-      "description": "Añade Spliit Cloud a tu pantalla de inicio: se abre como una aplicación nativa para añadir gastos más rápido y acceder de forma más sencilla."
+      "description": "Añade Spliit Cloud a tu pantalla de inicio para un seguimiento de gastos más rápido — funciona como una aplicación nativa."
     },
     "ios": {
       "title": "Instalar Spliit Cloud",

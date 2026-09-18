@@ -2614,14 +2614,12 @@
     "message": "Lineaz kanpo zaude. Oraingoz egiten dituzun aldaketak ez dira gordeko berriro konektatu arte."
   },
   "InstallPromotion": {
-    "title": "Instalatu Spliit Cloud",
-    "description": "Gehitu Spliit Cloud zure hasierako pantailan: aplikazio natibo bat bezala irekitzen da, gastuak azkarrago gehitzeko eta sarbide errazagoa izateko.",
     "install": "Instalatu",
-    "remindLater": "Gogorarazi beranduago",
-    "dismiss": "Ez erakutsi berriro",
+    "remindLater": "Orain ez",
+    "dismiss": "Ez galdetu berriro",
     "chrome": {
       "title": "Instalatu Spliit Cloud",
-      "description": "Gehitu Spliit Cloud zure hasierako pantailan: aplikazio natibo bat bezala irekitzen da, gastuak azkarrago gehitzeko eta sarbide errazagoa izateko."
+      "description": "Gehitu Spliit Cloud zure hasierako pantailan gastuen jarraipena azkarrago egiteko — aplikazio natibo batek bezala funtzionatzen du."
     },
     "ios": {
       "title": "Instalatu Spliit Cloud",

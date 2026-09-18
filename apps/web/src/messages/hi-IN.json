@@ -2360,14 +2360,12 @@
     "empty": "अभी तक कोई समूह जानकारी नहीं।"
   },
   "InstallPromotion": {
-    "title": "Spliit Cloud इंस्टॉल करें",
-    "description": "Spliit Cloud को अपनी होम स्क्रीन पर जोड़ें — तेज़ खर्च जोड़ने और सरल पहुंच के लिए नेटिव ऐप की तरह खुलता है।",
     "install": "इंस्टॉल करें",
-    "remindLater": "बाद में याद दिलाएं",
-    "dismiss": "फिर से न दिखाएं",
+    "remindLater": "अभी नहीं",
+    "dismiss": "फिर से न पूछें",
     "chrome": {
       "title": "Spliit Cloud इंस्टॉल करें",
-      "description": "Spliit Cloud को अपनी होम स्क्रीन पर जोड़ें — तेज़ खर्च जोड़ने और सरल पहुंच के लिए नेटिव ऐप की तरह खुलता है।"
+      "description": "तेज़ खर्च ट्रैकिंग के लिए Spliit Cloud को अपनी होम स्क्रीन पर जोड़ें — नेटिव ऐप की तरह काम करता है।"
     },
     "firefox": {
       "title": "Spliit Cloud इंस्टॉल करें",

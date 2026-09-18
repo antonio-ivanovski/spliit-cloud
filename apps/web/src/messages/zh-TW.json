@@ -2595,14 +2595,12 @@
     "message": "目前處於離線狀態。在重新連線之前，您所做的變更不會被儲存。"
   },
   "InstallPromotion": {
-    "title": "安裝 Spliit Cloud",
-    "description": "將 Spliit Cloud 加入主畫面 — 像原生應用程式一樣啟動，讓新增支出更快速、存取更簡便。",
     "install": "安裝",
-    "remindLater": "稍後再提醒我",
-    "dismiss": "不再顯示",
+    "remindLater": "暫不",
+    "dismiss": "不再詢問",
     "chrome": {
       "title": "安裝 Spliit Cloud",
-      "description": "將 Spliit Cloud 加入主畫面 — 像原生應用程式一樣啟動，讓新增支出更快速、存取更簡便。"
+      "description": "將 Spliit Cloud 加入主畫面，更快速地追蹤支出 — 像原生應用程式一樣運作。"
     },
     "ios": {
       "title": "安裝 Spliit Cloud",

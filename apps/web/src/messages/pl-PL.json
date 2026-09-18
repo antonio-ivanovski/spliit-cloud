@@ -2628,14 +2628,12 @@
     "message": "Jesteś offline. Zmiany, które teraz wprowadzisz, nie zostaną zapisane, dopóki nie połączysz się ponownie."
   },
   "InstallPromotion": {
-    "title": "Zainstaluj Spliit Cloud",
-    "description": "Dodaj Spliit Cloud do ekranu początkowego — uruchamia się jak natywna aplikacja do szybszego dodawania wydatków i prostszego dostępu.",
     "install": "Zainstaluj",
-    "remindLater": "Przypomnij później",
-    "dismiss": "Nie pokazuj ponownie",
+    "remindLater": "Nie teraz",
+    "dismiss": "Nie pytaj ponownie",
     "chrome": {
       "title": "Zainstaluj Spliit Cloud",
-      "description": "Dodaj Spliit Cloud do ekranu początkowego — uruchamia się jak natywna aplikacja do szybszego dodawania wydatków i prostszego dostępu."
+      "description": "Dodaj Spliit Cloud do ekranu początkowego, aby szybciej śledzić wydatki — działa jak natywna aplikacja."
     },
     "ios": {
       "title": "Zainstaluj Spliit Cloud",
