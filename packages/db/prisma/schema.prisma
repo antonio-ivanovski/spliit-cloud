@@ -61,6 +61,7 @@ model User {
   pushSubscriptions             PushSubscription[]
   notificationPreferences       AccountNotificationPreference[]
   notificationDeliveries        NotificationDelivery[]
+  webhookEndpoints              WebhookEndpoint[]
   anonymousRecoveryCredential   AnonymousRecoveryCredential?
   recurringExpenseSeriesCreated RecurringExpenseSeries[]        @relation("RecurringExpenseSeriesCreator")
   expensesCreated               Expense[]                       @relation("ExpenseCreator")
@@ -554,6 +555,7 @@ model Group {
   // pending-invitation window (peer hasn't joined yet), populated on accept.
   // A partial unique index guarantees at most one FRIEND group per pair.
   friendPairKey      String?
+  webhookEvents      WebhookEvent[]
 }
 
 model Subgroup {
@@ -1126,11 +1128,102 @@ model Activity {
   expenseCommentId       String?                @unique
   expenseComment         ExpenseComment?        @relation("ExpenseCommentActivity", fields: [expenseCommentId], references: [id], onDelete: Cascade)
   notificationDeliveries NotificationDelivery[]
+  webhookEvents          WebhookEvent[]
 
   @@index([ledgerId, time])
   @@index([ledgerId, visibleInGroupFeed, time])
   @@index([ledgerId, type, time])
   @@index([subjectType, subjectId])
+}
+
+// Account-owned outbound webhook destination. Endpoints dynamically follow
+// every group where the owner has an ACTIVE membership.
+model WebhookEndpoint {
+  id            String   @id
+  account       User     @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId     String
+  name          String
+  url           String   @db.Text
+  enabled       Boolean  @default(false)
+  notifyCreated Boolean  @default(true)
+  notifyUpdated Boolean  @default(true)
+  notifyDeleted Boolean  @default(true)
+  involvedOnly  Boolean  @default(false)
+  secretVersion Int      @default(1)
+  lastSuccessAt DateTime?
+  lastFailureAt DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  deliveries WebhookDelivery[]
+
+  @@index([accountId, createdAt])
+  @@index([accountId, enabled])
+}
+
+// Immutable, versioned payload shared by every destination that was eligible
+// when the originating expense transaction committed.
+model WebhookEvent {
+  id              String    @id
+  sourceKey       String    @unique
+  type            String
+  apiVersion      String    @default("v1")
+  occurredAt      DateTime
+  payload         Json
+  group           Group?    @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  groupId         String?
+  activity        Activity? @relation(fields: [activityId], references: [id], onDelete: SetNull)
+  activityId      String?
+  allowAfterDelete Boolean  @default(false)
+  createdAt       DateTime  @default(now())
+
+  deliveries WebhookDelivery[]
+
+  @@index([groupId, occurredAt])
+  @@index([activityId])
+  @@index([createdAt])
+}
+
+model WebhookDelivery {
+  id           String          @id
+  endpoint     WebhookEndpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
+  endpointId   String
+  event        WebhookEvent    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId      String
+  status       String          @default("PENDING")
+  attemptCount Int             @default(0)
+  lastAttemptAt DateTime?
+  lastHttpStatus Int?
+  lastErrorCode String?
+  lastErrorMessage String?     @db.Text
+  sentAt       DateTime?
+  terminalAt   DateTime?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  attempts WebhookDeliveryAttempt[]
+
+  @@unique([endpointId, eventId])
+  @@index([status, createdAt])
+  @@index([endpointId, createdAt])
+  @@index([eventId])
+}
+
+model WebhookDeliveryAttempt {
+  id           String          @id
+  delivery     WebhookDelivery @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
+  deliveryId   String
+  attempt      Int
+  startedAt    DateTime
+  finishedAt   DateTime?
+  outcome      String?
+  httpStatus   Int?
+  durationMs   Int?
+  errorCode    String?
+  errorMessage String?         @db.Text
+
+  @@unique([deliveryId, attempt])
+  @@index([deliveryId, startedAt])
 }
 
 model NotificationDelivery {

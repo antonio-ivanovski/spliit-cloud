@@ -32,6 +32,7 @@ import {
   SettingsSection,
   settingsControlId,
 } from './settings-ui'
+import { WebhookSettings } from './webhook-settings'
 
 /**
  * Account settings page. Allows a signed-in user to update their display name
@@ -188,6 +189,8 @@ function AccountSettingsContent() {
 
   const isDirty = name.trim() !== (account.name ?? '')
 
+  console.log('AccountSettingsContent render')
+
   return (
     <PageShell className="flex-col gap-6 py-4 sm:py-6">
       <h1 className="hidden items-center gap-2 text-2xl font-semibold sm:flex">
@@ -314,6 +317,9 @@ function AccountSettingsContent() {
       <AuthorizedClients />
       <AccountExportModal />
       <NotificationsPreferences />
+      {!account.isAnonymous && account.emailVerified ? (
+        <WebhookSettings />
+      ) : null}
       <AccountAiPreferences />
     </PageShell>
   )

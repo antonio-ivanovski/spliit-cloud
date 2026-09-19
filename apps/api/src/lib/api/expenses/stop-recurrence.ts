@@ -1,5 +1,6 @@
 import { prisma } from '@spliit/db'
 
+import { planExpenseWebhook } from '../../webhooks/planner'
 import { logActivity, planNotificationForActivity } from '../activities'
 import { getApiBoss } from '../boss'
 import { getExpense } from './queries'
@@ -100,6 +101,14 @@ export async function stopRecurrence(
     )
 
     await planNotificationForActivity(tx, activity, {}, { boss })
+    await planExpenseWebhook({
+      tx,
+      boss,
+      activity,
+      groupId,
+      operation: 'updated',
+      changedFields: ['recurrence'],
+    })
     return { activity }
   })
 }

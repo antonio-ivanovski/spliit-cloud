@@ -9,11 +9,11 @@ export type AssetLinksSource = {
 }
 
 /**
- * Normalize one SHA-256 certificate fingerprint to the Digital Asset Links
- * wire format: uppercase hex without colons (64 chars). Accepts the
- * colon-separated `keytool`/`apksigner` output form as well. Returns
- * undefined for anything that is not a plausible SHA-256 fingerprint so a
- * typo can never silently ship in `assetlinks.json`.
+ * Normalize one SHA-256 certificate fingerprint to the Digital Asset Links wire
+ * format: uppercase hex without colons (64 chars). Accepts the colon-separated
+ * `keytool`/`apksigner` output form as well. Returns undefined for anything
+ * that is not a plausible SHA-256 fingerprint so a typo can never silently ship
+ * in `assetlinks.json`.
  */
 export function normalizeFingerprint(value: string): string | undefined {
   const compact = value.replace(/:/g, '').toUpperCase()
@@ -40,10 +40,10 @@ export type AssetLinksStatement = {
 }
 
 /**
- * Build the `/.well-known/assetlinks.json` statements for the configured
- * TWA. Returns undefined when the instance has no TWA configured so the
- * route can 404 honestly instead of serving an empty claim list.
- * Accepts an explicit source so tests can pass isolated env objects.
+ * Build the `/.well-known/assetlinks.json` statements for the configured TWA.
+ * Returns undefined when the instance has no TWA configured so the route can
+ * 404 honestly instead of serving an empty claim list. Accepts an explicit
+ * source so tests can pass isolated env objects.
  */
 export function getAssetLinksStatements(
   source: AssetLinksSource = env,

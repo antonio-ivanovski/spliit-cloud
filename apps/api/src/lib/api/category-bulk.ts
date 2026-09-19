@@ -10,6 +10,11 @@ import {
 } from '@spliit/domain'
 import type { BulkUpdateExpenseCategoriesInput } from '@spliit/domain/schemas'
 
+import {
+  hasEligibleWebhookEndpoints,
+  planExpenseBatchWebhook,
+} from '../webhooks/planner'
+import { loadExpenseSnapshotsChunked } from '../webhooks/snapshot'
 import { logActivity, planNotificationForActivity } from './activities'
 import { getApiBoss } from './boss'
 import { groupLedgerIdArchivedSelect } from './selects/group-ledger-id-archived'
@@ -206,6 +211,27 @@ export async function bulkUpdateExpenseCategories(args: {
       tx,
     )
     await planNotificationForActivity(tx, activity, {}, { boss })
+    if (await hasEligibleWebhookEndpoints(tx, groupId, 'updated')) {
+      const snapshots = await loadExpenseSnapshotsChunked(
+        tx,
+        rows.map((row) => row.expenseId),
+      )
+      await planExpenseBatchWebhook({
+        tx,
+        boss,
+        sourceKey: `activity:${activity.id}:webhook-batch-v1`,
+        activityId: activity.id,
+        groupId,
+        actorAccountId: accountId,
+        operation: 'updated',
+        source: 'bulk-category-update',
+        occurredAt: activity.time,
+        expenses: snapshots.map((expense) => ({
+          expense,
+          changedFields: ['category'],
+        })),
+      })
+    }
 
     return {
       applied: rows.length,

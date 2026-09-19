@@ -40,6 +40,13 @@ type Props = {
   }
   /** When provided, the destructive action requires typing this exact name. */
   confirmationTarget?: string
+  /**
+   * Controlled open state for callers whose trigger lives outside the popup
+   * (e.g. a dropdown menu item). When omitted, the popup manages its own
+   * trigger and open state.
+   */
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
 }
 
 export function DeletePopup({
@@ -47,14 +54,22 @@ export function DeletePopup({
   className,
   labels,
   confirmationTarget,
+  open,
+  onOpenChange,
 }: Props) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'ExpenseForm.DeletePopup',
   })
-  const [open, setOpen] = useState(false)
+  const [internalOpen, setInternalOpen] = useState(false)
+  const controlled = open !== undefined
+  const dialogOpen = controlled ? open : internalOpen
+  const setDialogOpen = (next: boolean) => {
+    if (!controlled) setInternalOpen(next)
+    onOpenChange?.(next)
+  }
   const [submitting, setSubmitting] = useState(false)
   const [confirmationValue, setConfirmationValue] = useTypedConfirmationValue(
-    `${open}:${confirmationTarget ?? ''}`,
+    `${dialogOpen}:${confirmationTarget ?? ''}`,
   )
   const requiresConfirmation = confirmationTarget != null
   const canDelete =
@@ -66,7 +81,7 @@ export function DeletePopup({
     setSubmitting(true)
     try {
       await onDelete()
-      setOpen(false)
+      setDialogOpen(false)
     } finally {
       setSubmitting(false)
     }
@@ -74,28 +89,30 @@ export function DeletePopup({
 
   return (
     <ResponsiveDialog
-      open={open}
+      open={dialogOpen}
       onOpenChange={(nextOpen) => {
         if (!nextOpen && submitting) return
-        setOpen(nextOpen)
+        setDialogOpen(nextOpen)
       }}
     >
-      <ResponsiveDialogTrigger
-        render={
-          <Button
-            variant="outline"
-            className={cn(
-              'border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive',
-              className,
-            )}
-          >
-            <Trash className="h-4 w-4 min-[420px]:me-2" />
-            <span className="hidden min-[420px]:inline">
-              {labels?.label ?? t('label')}
-            </span>
-          </Button>
-        }
-      />
+      {controlled ? null : (
+        <ResponsiveDialogTrigger
+          render={
+            <Button
+              variant="outline"
+              className={cn(
+                'border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive',
+                className,
+              )}
+            >
+              <Trash className="h-4 w-4 min-[420px]:me-2" />
+              <span className="hidden min-[420px]:inline">
+                {labels?.label ?? t('label')}
+              </span>
+            </Button>
+          }
+        />
+      )}
       <ResponsiveDialogContent>
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>

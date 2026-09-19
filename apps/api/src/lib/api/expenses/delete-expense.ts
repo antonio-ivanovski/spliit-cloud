@@ -3,6 +3,11 @@ import { utcToWallTime } from '@spliit/domain'
 
 import { deleteS3Object } from '../../../routes/upload'
 import {
+  hasEligibleWebhookEndpoints,
+  planExpenseBatchWebhook,
+} from '../../webhooks/planner'
+import { loadExpenseSnapshotsChunked } from '../../webhooks/snapshot'
+import {
   buildExpenseActivityData,
   logActivity,
   planNotificationForActivity,
@@ -173,6 +178,18 @@ export async function deleteExpense(
       )
     }
 
+    const hasWebhookEndpoints = await hasEligibleWebhookEndpoints(
+      tx,
+      groupId,
+      'deleted',
+    )
+    const webhookSnapshots = hasWebhookEndpoints
+      ? await loadExpenseSnapshotsChunked(
+          tx,
+          snapshotRows.map((row) => row.id),
+        )
+      : []
+
     // Log one EXPENSE_DELETED activity per affected row.
     const loggedActivities: Awaited<ReturnType<typeof logActivity>>[] = []
     const unionParticipantIds: string[] = affectedParticipantIds.slice()
@@ -326,7 +343,7 @@ export async function deleteExpense(
             ...(stopAct ? { stopped: true } : {}),
           }),
         },
-        { boss },
+        { boss, webhookExpenseSnapshot: webhookSnapshots[0] },
       )
     } else if (loggedActivities.length >= 2) {
       const primaryActivity = loggedActivities[0]!
@@ -354,8 +371,20 @@ export async function deleteExpense(
             stopped: stopAct != null,
           },
         },
-        { boss },
+        { boss, skipWebhook: true },
       )
+      await planExpenseBatchWebhook({
+        tx,
+        boss,
+        sourceKey: `activity:${primaryActivity.id}:webhook-batch-v1`,
+        activityId: primaryActivity.id,
+        groupId,
+        actorAccountId: actor.accountId,
+        operation: 'deleted',
+        source: 'recurring-series-delete',
+        occurredAt: primaryActivity.time,
+        expenses: webhookSnapshots.map((expense) => ({ expense })),
+      })
     }
 
     return {

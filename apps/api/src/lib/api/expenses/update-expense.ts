@@ -15,6 +15,11 @@ import { deleteS3Object } from '../../../routes/upload'
 import { resolveConversion } from '../../expense-conversion'
 import { resolveParticipantDisplayName } from '../../invitations'
 import {
+  hasEligibleWebhookEndpoints,
+  planExpenseBatchWebhook,
+} from '../../webhooks/planner'
+import { loadExpenseSnapshotsChunked } from '../../webhooks/snapshot'
+import {
   buildExpenseActivityData,
   logActivity,
   planNotificationForActivity,
@@ -1057,8 +1062,37 @@ export async function updateExpense(
             stopped: false,
           },
         },
-        { boss },
+        { boss, skipWebhook: true },
       )
+      if (await hasEligibleWebhookEndpoints(tx, groupId, 'updated')) {
+        const changedById = new Map(
+          changedRows.map((row) => [
+            row.expenseId,
+            [...(row.data.changedFields ?? [])],
+          ]),
+        )
+        const webhookSnapshots = (
+          await loadExpenseSnapshotsChunked(
+            tx,
+            changedRows.map((row) => row.expenseId),
+          )
+        ).map((expense) => ({
+          expense,
+          changedFields: changedById.get(expense.id) ?? [],
+        }))
+        await planExpenseBatchWebhook({
+          tx,
+          boss,
+          sourceKey: `activity:${changedRows[0]!.activity.id}:webhook-batch-v1`,
+          activityId: changedRows[0]!.activity.id,
+          groupId,
+          actorAccountId: actor.accountId,
+          operation: 'updated',
+          source: 'recurring-series-update',
+          occurredAt: changedRows[0]!.activity.time,
+          expenses: webhookSnapshots,
+        })
+      }
     }
     return { updatedExpense: updated, changedRows }
   })

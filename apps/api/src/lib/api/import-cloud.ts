@@ -26,7 +26,13 @@ import {
   hashLinkToken,
 } from '../invitations'
 import { isPlaceholderEmail } from '../invitations/display'
+import {
+  hasEligibleWebhookEndpoints,
+  planExpenseBatchWebhook,
+} from '../webhooks/planner'
+import { loadExpenseSnapshotsChunked } from '../webhooks/snapshot'
 import { buildImportSummaryActivityData, logActivity } from './activities'
+import { getApiBoss } from './boss'
 import { createFriendLedger, type CreateFriendLedgerPeer } from './friends'
 import { enqueueMaterialization } from './recurrence/series-ops'
 import { randomId } from './shared'
@@ -855,6 +861,7 @@ export async function importCloudGroup(
   options: { tx?: Prisma.TransactionClient; prepared: PreparedCloudImport },
 ): Promise<CloudImportResult> {
   const manifest = spliitGroupExportManifestSchema.parse(input.manifest)
+  const boss = await getApiBoss()
   validateReferences(manifest, input.participants, input.groupPreference)
   const run = async (tx: Prisma.TransactionClient) => {
     for (const mapping of input.participants) {
@@ -1542,7 +1549,34 @@ export async function importCloudGroup(
       tx,
       ledger.id,
     )
-    void summaryActivity
+    if (
+      manifest.expenses.length > 0 &&
+      (await hasEligibleWebhookEndpoints(tx, group.id, 'created'))
+    ) {
+      const importedExpenseRows = await tx.expense.findMany({
+        where: { ledgerId: ledger.id },
+        select: { id: true },
+        orderBy: { createdAt: 'asc' },
+      })
+      const webhookExpenses = (
+        await loadExpenseSnapshotsChunked(
+          tx,
+          importedExpenseRows.map(({ id }) => id),
+        )
+      ).map((expense) => ({ expense }))
+      await planExpenseBatchWebhook({
+        tx,
+        boss,
+        sourceKey: `activity:${summaryActivity.id}:webhook-batch-v1`,
+        activityId: summaryActivity.id,
+        groupId: group.id,
+        actorAccountId: actor.accountId,
+        operation: 'created',
+        source: 'spliit-cloud-import',
+        occurredAt: summaryActivity.time,
+        expenses: webhookExpenses,
+      })
+    }
     return {
       groupId: group.id,
       ledgerId: ledger.id,

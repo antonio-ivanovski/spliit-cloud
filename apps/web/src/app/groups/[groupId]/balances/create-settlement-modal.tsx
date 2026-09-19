@@ -105,7 +105,6 @@ export function CreateSettlementModal({
       removed: 'removed' in participant ? Boolean(participant.removed) : false,
     }),
   )
-  console.log('test 2')
   const legs = settlementGroup?.legs ?? (settlement ? [settlement] : [])
   const direction: SettlementDirection = settlementGroup?.direction ?? 'pay'
   const centralParticipantId =
@@ -137,8 +136,6 @@ export function CreateSettlementModal({
   const { mutateAsync: createExpenseMutateAsync, isPending } =
     useCreateExpenseMutation()
   const createAttempt = useIdempotentCreate()
-
-  console.log('test 4')
 
   // An open modal holds an in-progress selection; a reload would discard it.
   // The global mutation guard lets an initiated settlement finish.

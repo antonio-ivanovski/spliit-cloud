@@ -6,6 +6,11 @@ import { runAnonymousAccountCleanup } from '@spliit/api/lib/auth/anonymous-accou
 import { evaluateBudgets } from '@spliit/api/lib/budgets/evaluate'
 import { runNotificationCleanup } from '@spliit/api/lib/notifications/delivery-cleanup'
 import { reconcileMissingDeliveryJobs } from '@spliit/api/lib/notifications/delivery-reconciliation'
+import { handleWebhookDelivery } from '@spliit/api/lib/webhooks/delivery'
+import {
+  cleanupWebhookDeliveries,
+  reconcileWebhookDeliveries,
+} from '@spliit/api/lib/webhooks/maintenance'
 import { JOB_NAMES, sendJob, type JobHandlers } from '@spliit/jobs'
 
 import { handleNotificationDelivery } from './notification-delivery'
@@ -46,6 +51,23 @@ export const handlers: JobHandlers = {
         failedDeleted: result.failedDeleted,
       }),
     )
+  },
+  [JOB_NAMES.WEBHOOK_DELIVER]: async (payload, context) => {
+    await handleWebhookDelivery(payload.deliveryId, context)
+  },
+  [JOB_NAMES.WEBHOOK_RECONCILE]: async (payload, context) => {
+    const result = await reconcileWebhookDeliveries(
+      context.boss,
+      payload.cursor ?? null,
+    )
+    if (result.nextCursor) {
+      await sendJob(context.boss, JOB_NAMES.WEBHOOK_RECONCILE, {
+        cursor: result.nextCursor,
+      })
+    }
+  },
+  [JOB_NAMES.WEBHOOK_CLEANUP]: async () => {
+    await cleanupWebhookDeliveries()
   },
   [JOB_NAMES.ANONYMOUS_ACCOUNT_CLEANUP]: async (_payload, _context) => {
     const result = await runAnonymousAccountCleanup()

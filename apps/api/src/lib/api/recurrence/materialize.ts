@@ -9,6 +9,12 @@ import type { SpliitBoss } from '@spliit/jobs'
 
 import { resolveConversion } from '../../expense-conversion'
 import { planActivityNotificationDeliveries } from '../../notifications/delivery-planner'
+import {
+  hasEligibleWebhookEndpoints,
+  planExpenseBatchWebhook,
+  planExpenseWebhook,
+} from '../../webhooks/planner'
+import { loadExpenseSnapshotsChunked } from '../../webhooks/snapshot'
 import { buildExpenseActivityData, logActivity } from '../activities'
 import { randomId } from '../shared'
 import { enqueueMaterialization, rescheduleMaterialization } from './series-ops'
@@ -409,6 +415,13 @@ export async function materializeRecurringExpense(
         tx,
         boss: existingBoss,
       })
+      await planExpenseWebhook({
+        tx,
+        boss: existingBoss,
+        activity,
+        groupId: series.ledger.group.id,
+        operation: 'created',
+      })
     }
 
     const nextSequence = payload.sequence + 1
@@ -481,6 +494,37 @@ export async function materializeRecurringExpense(
         tx,
         boss: existingBoss,
       })
+      if (
+        await hasEligibleWebhookEndpoints(tx, series.ledger.group.id, 'created')
+      ) {
+        const batchExpenseIds = await tx.expense.findMany({
+          where: {
+            recurringSeriesId: series.id,
+            recurrenceSequence: {
+              gte: payload.sequence - batchCount + 1,
+              lte: payload.sequence,
+            },
+          },
+          orderBy: { recurrenceSequence: 'asc' },
+          select: { id: true },
+        })
+        const snapshots = await loadExpenseSnapshotsChunked(
+          tx,
+          batchExpenseIds.map(({ id }) => id),
+        )
+        await planExpenseBatchWebhook({
+          tx,
+          boss: existingBoss,
+          sourceKey: `${summaryId}:webhook-v1`,
+          activityId: activity.id,
+          groupId: series.ledger.group.id,
+          actorAccountId: series.creatorAccountId,
+          operation: 'created',
+          source: 'recurring-catch-up',
+          occurredAt: activity.time,
+          expenses: snapshots.map((expense) => ({ expense })),
+        })
+      }
     }
 
     return {

@@ -195,7 +195,7 @@ export function SettingsRow({
       )}
     >
       <div className="min-w-0">
-        <div className="flex min-w-0 items-start gap-2">
+        <div className="flex min-w-0 items-center gap-2">
           <p id={titleId} className="min-w-0 font-medium break-words">
             {label}
           </p>

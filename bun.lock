@@ -165,6 +165,16 @@
         "workbox-routing": "7.4.1",
       },
     },
+    "apps/webhook-relay": {
+      "name": "@spliit/webhook-relay",
+      "version": "0.1.0",
+      "devDependencies": {
+        "@spliit/config": "workspace:*",
+        "@types/node": "24.13.2",
+        "typescript": "7.0.2",
+        "vitest": "^5.0.1",
+      },
+    },
     "apps/worker": {
       "name": "@spliit/worker",
       "version": "0.1.0",
@@ -1264,6 +1274,8 @@
     "@spliit/mcp": ["@spliit/mcp@workspace:apps/mcp"],
 
     "@spliit/web": ["@spliit/web@workspace:apps/web"],
+
+    "@spliit/webhook-relay": ["@spliit/webhook-relay@workspace:apps/webhook-relay"],
 
     "@spliit/worker": ["@spliit/worker@workspace:apps/worker"],
 

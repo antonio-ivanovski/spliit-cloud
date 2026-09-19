@@ -2,6 +2,12 @@ import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
 
 import { deleteS3Object } from '../../routes/upload'
 import {
+  hasEligibleWebhookEndpoints,
+  planExpenseBatchWebhook,
+  planSettlementWebhookBatch,
+} from '../webhooks/planner'
+import { loadExpenseSnapshotsChunked } from '../webhooks/snapshot'
+import {
   buildGroupActivityData,
   buildMemberActivityData,
   logActivity,
@@ -212,14 +218,27 @@ export async function removeMember(opts: {
     }
     await deletePersonalPresetsForAccount(groupId, target.accountId, tx)
     await planNotificationForActivity(tx, activity, {}, { boss })
-    for (const settlementActivity of settlementActivities ?? []) {
-      await planNotificationForActivity(
-        tx,
-        settlementActivity.activity,
-        {},
-        { boss },
-      )
-    }
+    await Promise.all(
+      (settlementActivities ?? []).map((settlementActivity) =>
+        planNotificationForActivity(
+          tx,
+          settlementActivity.activity,
+          {},
+          {
+            boss,
+            skipWebhook: true,
+          },
+        ),
+      ),
+    )
+    await planSettlementWebhookBatch({
+      tx,
+      boss,
+      groupId,
+      actorAccountId: actor.accountId,
+      source: 'member-removal-settlement',
+      settlements: settlementActivities ?? [],
+    })
     return { updated, settlementActivities, activity }
   })
   return result.updated
@@ -267,7 +286,38 @@ export async function deleteGroup(opts: {
   })
   await Promise.all(documents.map((doc) => deleteS3Object(doc.url)))
 
-  await prisma.group.delete({ where: { id: groupId } })
+  await prisma.$transaction(async (tx) => {
+    if (await hasEligibleWebhookEndpoints(tx, groupId, 'deleted')) {
+      const expenseRows =
+        (await tx.expense.findMany({
+          where: { ledgerId: group.ledgerId },
+          select: { id: true },
+          orderBy: { createdAt: 'asc' },
+        })) ?? []
+      // Lazy boss: group deletion must not fail when pg-boss is down and
+      // nobody listens for webhooks. Planner persists without jobs otherwise.
+      const boss = await getApiBoss()
+      const snapshots = (
+        await loadExpenseSnapshotsChunked(
+          tx,
+          expenseRows.map(({ id }) => id),
+        )
+      ).map((expense) => ({ expense }))
+      await planExpenseBatchWebhook({
+        tx,
+        boss,
+        sourceKey: `group:${groupId}:deleted:webhook-v1`,
+        groupId,
+        actorAccountId: opts.actor.accountId,
+        operation: 'deleted',
+        source: 'group-deletion',
+        occurredAt: new Date(),
+        expenses: snapshots,
+        allowAfterDelete: true,
+      })
+    }
+    await tx.group.delete({ where: { id: groupId } })
+  })
   return { deleted: true }
 }
 
@@ -417,14 +467,27 @@ export async function leaveGroup(opts: {
     )
 
     await planNotificationForActivity(tx, activity, {}, { boss })
-    for (const settlementActivity of settlementActivities) {
-      await planNotificationForActivity(
-        tx,
-        settlementActivity.activity,
-        {},
-        { boss },
-      )
-    }
+    await Promise.all(
+      settlementActivities.map((settlementActivity) =>
+        planNotificationForActivity(
+          tx,
+          settlementActivity.activity,
+          {},
+          {
+            boss,
+            skipWebhook: true,
+          },
+        ),
+      ),
+    )
+    await planSettlementWebhookBatch({
+      tx,
+      boss,
+      groupId,
+      actorAccountId: actor.accountId,
+      source: 'member-leave-settlement',
+      settlements: settlementActivities,
+    })
     return {
       promotedMemberId: isLastAdmin ? (promoteMemberId ?? null) : null,
       settlementActivities,

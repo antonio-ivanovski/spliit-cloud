@@ -11,6 +11,7 @@ import {
   RevokeInvitationPreconditionError,
   revokeInvitation,
 } from '../invitations/email-invitations'
+import { planSettlementWebhookBatch } from '../webhooks/planner'
 import {
   buildGroupActivityData,
   logActivity,
@@ -300,14 +301,27 @@ export async function softRemoveParticipant(opts: {
 
     const activity = await logActivity(groupId, activityArgs, tx)
     await planNotificationForActivity(tx, activity, {}, { boss })
-    for (const settlementActivity of settlementActivities) {
-      await planNotificationForActivity(
-        tx,
-        settlementActivity.activity,
-        {},
-        { boss },
-      )
-    }
+    await Promise.all(
+      settlementActivities.map((settlementActivity) =>
+        planNotificationForActivity(
+          tx,
+          settlementActivity.activity,
+          {},
+          {
+            boss,
+            skipWebhook: true,
+          },
+        ),
+      ),
+    )
+    await planSettlementWebhookBatch({
+      tx,
+      boss,
+      groupId,
+      actorAccountId: actor.accountId,
+      source: 'participant-removal-settlement',
+      settlements: settlementActivities,
+    })
   })
 
   return { ledgerParticipantId, kind }

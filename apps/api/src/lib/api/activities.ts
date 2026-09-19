@@ -8,6 +8,7 @@ import {
   type ActivityType,
 } from '@spliit/domain/activities'
 import { getNotificationCategoryForActivity } from '@spliit/domain/notifications'
+import type { WebhookExpenseSnapshot } from '@spliit/domain/webhooks'
 import type { SpliitBoss } from '@spliit/jobs'
 
 import { resolveParticipantDisplayName } from '../invitations/display'
@@ -17,6 +18,7 @@ import {
   scheduleDefaultNotificationDispatch,
 } from '../notifications/dispatcher'
 import type { ActivityNotificationEvent } from '../notifications/types'
+import { planExpenseWebhook } from '../webhooks/planner'
 import { participantDisplayNameSelect } from './selects/participant-display-name'
 import { randomId } from './shared'
 export {
@@ -71,7 +73,11 @@ export async function planNotificationForActivity(
   tx: Prisma.TransactionClient,
   activity: Activity,
   eventOverrides: Partial<Omit<ActivityNotificationEvent, 'activityId'>> = {},
-  options: { boss: SpliitBoss | null },
+  options: {
+    boss: SpliitBoss | null
+    webhookExpenseSnapshot?: WebhookExpenseSnapshot
+    skipWebhook?: boolean
+  },
 ): Promise<string[]> {
   const type = eventOverrides.type ?? activity.type
   if (
@@ -108,6 +114,25 @@ export async function planNotificationForActivity(
     data,
     occurredAt: activity.time,
     ...eventOverrides,
+  }
+  const webhookOperation =
+    type === 'EXPENSE_CREATED' || type === 'RECURRING_EXPENSE_CREATED'
+      ? 'created'
+      : type === 'EXPENSE_UPDATED'
+        ? 'updated'
+        : type === 'EXPENSE_DELETED'
+          ? 'deleted'
+          : null
+  if (webhookOperation && !options.skipWebhook) {
+    await planExpenseWebhook({
+      tx,
+      boss: options.boss,
+      activity,
+      groupId,
+      operation: webhookOperation,
+      expenseSnapshot: options.webhookExpenseSnapshot,
+      changedFields: data.kind === 'expense' ? (data.changedFields ?? []) : [],
+    })
   }
   const deliveryIds = await planActivityNotificationDeliveries({
     event,

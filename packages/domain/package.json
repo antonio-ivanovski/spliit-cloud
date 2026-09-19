@@ -21,7 +21,8 @@
     "./calculator": "./src/calculator.ts",
     "./export-manifest": "./src/export-manifest.ts",
     "./import": "./src/import/index.ts",
-    "./notification-delivery": "./src/notification-delivery.ts"
+    "./notification-delivery": "./src/notification-delivery.ts",
+    "./webhooks": "./src/webhooks.ts"
   },
   "scripts": {
     "check-formatting": "oxfmt --check .",

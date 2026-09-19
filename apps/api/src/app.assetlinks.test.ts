@@ -23,7 +23,9 @@ describe('assetlinks fingerprints', () => {
   })
 
   it('rejects malformed fingerprints instead of shipping them', () => {
-    expect(normalizeFingerprint('REPLACE_ME_WITH_UPLOAD_KEY_SHA256')).toBeUndefined()
+    expect(
+      normalizeFingerprint('REPLACE_ME_WITH_UPLOAD_KEY_SHA256'),
+    ).toBeUndefined()
     expect(normalizeFingerprint('A1B2')).toBeUndefined()
     expect(parseFingerprints('not-a-fingerprint')).toEqual([])
   })

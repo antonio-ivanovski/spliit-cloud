@@ -23,6 +23,12 @@ import {
   RECURRING_MATERIALIZATION_QUEUE,
   RECURRING_RECONCILIATION_DLQ,
   RECURRING_RECONCILIATION_QUEUE,
+  WEBHOOK_CLEANUP_DLQ,
+  WEBHOOK_CLEANUP_QUEUE,
+  WEBHOOK_DELIVER_DLQ,
+  WEBHOOK_DELIVER_QUEUE,
+  WEBHOOK_RECONCILE_DLQ,
+  WEBHOOK_RECONCILE_QUEUE,
   type JobName,
   type JobPayload,
 } from './registry'
@@ -30,6 +36,7 @@ import {
 export const MATERIALIZATION_EXPIRE_SECONDS = 300
 export const NOTIFICATION_DELIVER_EXPIRE_SECONDS = 300
 export const NOTIFICATION_MAINTENANCE_EXPIRE_SECONDS = 300
+export const WEBHOOK_DELIVER_EXPIRE_SECONDS = 60
 
 export const JOB_SEND_OPTIONS = {
   [RECURRING_MATERIALIZATION_QUEUE]: {
@@ -65,6 +72,26 @@ export const JOB_SEND_OPTIONS = {
     expireInSeconds: NOTIFICATION_MAINTENANCE_EXPIRE_SECONDS,
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
     deadLetter: NOTIFICATION_CLEANUP_DLQ,
+  },
+  [WEBHOOK_DELIVER_QUEUE]: {
+    retryLimit: 8,
+    retryDelay: 300,
+    retryBackoff: true,
+    expireInSeconds: WEBHOOK_DELIVER_EXPIRE_SECONDS,
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+    deadLetter: WEBHOOK_DELIVER_DLQ,
+  },
+  [WEBHOOK_RECONCILE_QUEUE]: {
+    retryLimit: 0,
+    expireInSeconds: NOTIFICATION_MAINTENANCE_EXPIRE_SECONDS,
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+    deadLetter: WEBHOOK_RECONCILE_DLQ,
+  },
+  [WEBHOOK_CLEANUP_QUEUE]: {
+    retryLimit: 0,
+    expireInSeconds: NOTIFICATION_MAINTENANCE_EXPIRE_SECONDS,
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+    deadLetter: WEBHOOK_CLEANUP_DLQ,
   },
   [ANONYMOUS_ACCOUNT_CLEANUP_QUEUE]: {
     retryLimit: 0,
@@ -102,6 +129,19 @@ export const JOB_QUEUE_OPTIONS = {
   },
   [NOTIFICATION_CLEANUP_QUEUE]: {
     ...JOB_SEND_OPTIONS[NOTIFICATION_CLEANUP_QUEUE],
+    notify: true,
+  },
+  [WEBHOOK_DELIVER_QUEUE]: {
+    ...JOB_SEND_OPTIONS[WEBHOOK_DELIVER_QUEUE],
+    policy: 'exclusive',
+    notify: true,
+  },
+  [WEBHOOK_RECONCILE_QUEUE]: {
+    ...JOB_SEND_OPTIONS[WEBHOOK_RECONCILE_QUEUE],
+    notify: true,
+  },
+  [WEBHOOK_CLEANUP_QUEUE]: {
+    ...JOB_SEND_OPTIONS[WEBHOOK_CLEANUP_QUEUE],
     notify: true,
   },
   [ANONYMOUS_ACCOUNT_CLEANUP_QUEUE]: {
@@ -142,6 +182,18 @@ export const JOB_WORK_OPTIONS = {
     pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
   },
   [NOTIFICATION_CLEANUP_QUEUE]: {
+    localConcurrency: 1,
+    pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
+  },
+  [WEBHOOK_DELIVER_QUEUE]: {
+    localConcurrency: env.JOBS_MAX_CONCURRENCY,
+    pollingIntervalSeconds: env.JOBS_POLLING_INTERVAL_SECONDS,
+  },
+  [WEBHOOK_RECONCILE_QUEUE]: {
+    localConcurrency: 1,
+    pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
+  },
+  [WEBHOOK_CLEANUP_QUEUE]: {
     localConcurrency: 1,
     pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
   },
@@ -273,6 +325,15 @@ export async function ensureQueues(boss: SpliitBoss): Promise<void> {
   await createOrConvergeQueue(boss, BUDGET_EVALUATE_DLQ, {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
   })
+  await createOrConvergeQueue(boss, WEBHOOK_DELIVER_DLQ, {
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+  })
+  await createOrConvergeQueue(boss, WEBHOOK_RECONCILE_DLQ, {
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+  })
+  await createOrConvergeQueue(boss, WEBHOOK_CLEANUP_DLQ, {
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+  })
   await createOrConvergeQueue(
     boss,
     RECURRING_MATERIALIZATION_QUEUE,
@@ -307,6 +368,21 @@ export async function ensureQueues(boss: SpliitBoss): Promise<void> {
     boss,
     ANONYMOUS_ACCOUNT_CLEANUP_QUEUE,
     JOB_QUEUE_OPTIONS[ANONYMOUS_ACCOUNT_CLEANUP_QUEUE],
+  )
+  await createOrConvergeQueue(
+    boss,
+    WEBHOOK_DELIVER_QUEUE,
+    JOB_QUEUE_OPTIONS[WEBHOOK_DELIVER_QUEUE],
+  )
+  await createOrConvergeQueue(
+    boss,
+    WEBHOOK_RECONCILE_QUEUE,
+    JOB_QUEUE_OPTIONS[WEBHOOK_RECONCILE_QUEUE],
+  )
+  await createOrConvergeQueue(
+    boss,
+    WEBHOOK_CLEANUP_QUEUE,
+    JOB_QUEUE_OPTIONS[WEBHOOK_CLEANUP_QUEUE],
   )
 }
 
@@ -407,6 +483,12 @@ export function notificationDeliverSingletonKey(payload: {
   return payload.deliveryId
 }
 
+export function webhookDeliverSingletonKey(payload: {
+  deliveryId: string
+}): string {
+  return payload.deliveryId
+}
+
 export async function hasDeadLetteredMaterialization(
   boss: SpliitBoss,
   payload: {
@@ -456,7 +538,13 @@ export async function sendJob<Name extends JobName>(
               parsed as JobPayload<'notification.deliver'>,
             ),
           }
-        : {}
+        : name === WEBHOOK_DELIVER_QUEUE
+          ? {
+              singletonKey: webhookDeliverSingletonKey(
+                parsed as JobPayload<'webhook.deliver'>,
+              ),
+            }
+          : {}
   return boss.send(name, parsed, {
     ...JOB_SEND_OPTIONS[name],
     ...options,
@@ -489,7 +577,11 @@ export async function insertJobs<Name extends JobName>(
           ? notificationDeliverSingletonKey(
               parsed as JobPayload<'notification.deliver'>,
             )
-          : undefined
+          : name === WEBHOOK_DELIVER_QUEUE
+            ? webhookDeliverSingletonKey(
+                parsed as JobPayload<'webhook.deliver'>,
+              )
+            : undefined
     return {
       data: parsed,
       ...sendOptions,

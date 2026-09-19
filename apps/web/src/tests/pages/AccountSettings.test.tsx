@@ -52,6 +52,14 @@ vi.mock('@/app/account/notifications-preferences', () => ({
   ),
 }))
 
+vi.mock('@/app/account/webhook-settings', () => ({
+  WebhookSettings: () => (
+    <section data-testid="webhooks-mock">
+      <h2>Webhooks</h2>
+    </section>
+  ),
+}))
+
 vi.mock('@/trpc/client', () => ({
   trpc: {
     useUtils: () => ({
@@ -156,7 +164,7 @@ beforeEach(() => {
 })
 
 describe('AccountSettingsPage', () => {
-  it('renders a single h1 and six h2 sections in the documented order', () => {
+  it('renders a single h1 and seven h2 sections in the documented order', () => {
     render(<AccountSettingsPage />)
 
     const headings = screen.getAllByRole('heading')
@@ -174,6 +182,7 @@ describe('AccountSettingsPage', () => {
       'Connected apps',
       'Backups & export',
       'Notifications',
+      'Webhooks',
       'AI features',
     ])
   })

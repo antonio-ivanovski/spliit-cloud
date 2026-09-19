@@ -13,8 +13,8 @@ import { Hono, type MiddlewareHandler } from 'hono'
 import { bodyLimit } from 'hono/body-limit'
 import { cors } from 'hono/cors'
 
-import { auth } from './lib/auth'
 import { getAssetLinksStatements } from './lib/assetlinks'
+import { auth } from './lib/auth'
 import {
   getOAuthProtectedResourceChallenge,
   getOAuthProtectedResourceMetadata,

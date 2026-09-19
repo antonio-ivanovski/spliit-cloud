@@ -43,6 +43,11 @@ import {
 import { openStagedDocumentClaims } from '../import-documents'
 import { getPlaceholderEmailDisplayName } from '../invitations/display'
 import {
+  hasEligibleWebhookEndpoints,
+  planExpenseBatchWebhook,
+} from '../webhooks/planner'
+import { loadExpenseSnapshotsChunked } from '../webhooks/snapshot'
+import {
   buildExpenseActivityData,
   buildGroupActivityData,
   buildImportSummaryActivityData,
@@ -970,6 +975,24 @@ export async function importGroup(
         { groupId },
         { boss },
       )
+    }
+    if (await hasEligibleWebhookEndpoints(tx, groupId, 'created')) {
+      const webhookSnapshots = await loadExpenseSnapshotsChunked(
+        tx,
+        expenseRows.map((row) => row.id),
+      )
+      await planExpenseBatchWebhook({
+        tx,
+        boss,
+        sourceKey: `activity:${summaryActivity.id}:webhook-batch-v1`,
+        activityId: summaryActivity.id,
+        groupId,
+        actorAccountId: actor.accountId,
+        operation: 'created',
+        source: input.sourceMeta?.provider ?? 'import',
+        occurredAt: summaryActivity.time,
+        expenses: webhookSnapshots.map((expense) => ({ expense })),
+      })
     }
 
     return {

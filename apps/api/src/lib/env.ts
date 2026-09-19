@@ -159,6 +159,19 @@ const envSchema = z
     // Dedicated secret for stateless optional-email unsubscribe links.
     EMAIL_UNSUBSCRIBE_SECRET: optionalString,
 
+    // Outbound webhook destinations are public HTTPS by default. Self-hosted
+    // instances may opt into LAN/HTTP targets explicitly.
+    WEBHOOK_ALLOW_PRIVATE_ENDPOINTS: z.preprocess(
+      interpretEnvVarAsBool,
+      z.boolean().default(false),
+    ),
+
+    // Optional Cloudflare Worker relay that forwards webhook deliveries so
+    // destinations never see the server IP. Both values are required together.
+    // A configured relay cannot reach private networks (see superRefine).
+    WEBHOOK_RELAY_URL: optionalString,
+    WEBHOOK_RELAY_SECRET: optionalString,
+
     // Account registration. `open` is the historical default (anyone can
     // create an account). `invite_only` restricts sign-up to the first
     // account on a fresh instance, emails with a pending group/friend
@@ -250,6 +263,59 @@ const envSchema = z
         path: ['SMTP_USER'],
         message: 'SMTP_USER and SMTP_PASS must be configured together',
       })
+    }
+    // The webhook relay is deployment configuration: both values together or
+    // neither. A relayed delivery cannot reach private networks, so combining
+    // a production (HTTPS) relay with private endpoints is a boot error. An
+    // HTTP relay URL is only accepted for local `wrangler dev` testing, which
+    // already requires the private-endpoints escape hatch.
+    if (!!env.WEBHOOK_RELAY_URL !== !!env.WEBHOOK_RELAY_SECRET) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['WEBHOOK_RELAY_URL'],
+        message:
+          'WEBHOOK_RELAY_URL and WEBHOOK_RELAY_SECRET must be configured together',
+      })
+    }
+    if (
+      env.WEBHOOK_RELAY_URL &&
+      env.WEBHOOK_RELAY_SECRET &&
+      Buffer.byteLength(env.WEBHOOK_RELAY_SECRET, 'utf8') < 32
+    ) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['WEBHOOK_RELAY_SECRET'],
+        message: 'WEBHOOK_RELAY_SECRET must be at least 32 bytes',
+      })
+    }
+    if (env.WEBHOOK_RELAY_URL) {
+      let relayProtocol: string | undefined
+      try {
+        relayProtocol = new URL(env.WEBHOOK_RELAY_URL).protocol
+      } catch {
+        relayProtocol = undefined
+      }
+      if (
+        relayProtocol !== 'https:' &&
+        !(relayProtocol === 'http:' && env.WEBHOOK_ALLOW_PRIVATE_ENDPOINTS)
+      ) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['WEBHOOK_RELAY_URL'],
+          message:
+            'WEBHOOK_RELAY_URL must be an HTTPS URL (HTTP is only allowed for local development when WEBHOOK_ALLOW_PRIVATE_ENDPOINTS is true)',
+        })
+      } else if (
+        relayProtocol === 'https:' &&
+        env.WEBHOOK_ALLOW_PRIVATE_ENDPOINTS
+      ) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['WEBHOOK_ALLOW_PRIVATE_ENDPOINTS'],
+          message:
+            'WEBHOOK_ALLOW_PRIVATE_ENDPOINTS must be false when WEBHOOK_RELAY_URL is configured; the relay cannot reach private-network destinations',
+        })
+      }
     }
     if (env.NODE_ENV === 'production' && env.SMTP_HOST) {
       if (
@@ -353,6 +419,27 @@ export function getMaxExpenseDocumentSizeBytes(
 export const DEFAULT_OIDC_PROVIDER_ID = 'oidc'
 export const DEFAULT_OIDC_DISPLAY_NAME = 'SSO'
 
+export type WebhookRelayConfig = {
+  url: string
+  secret: string
+}
+
+/**
+ * Relay configuration for outbound webhook deliveries. Returns `undefined` when
+ * the relay is not configured (direct delivery). Accepts an explicit source so
+ * tests can pass isolated env objects without mutating global env.
+ */
+export function getWebhookRelayConfig(
+  source: {
+    WEBHOOK_RELAY_URL?: string
+    WEBHOOK_RELAY_SECRET?: string
+  } = env,
+): WebhookRelayConfig | undefined {
+  if (!source.WEBHOOK_RELAY_URL || !source.WEBHOOK_RELAY_SECRET) {
+    return undefined
+  }
+  return { url: source.WEBHOOK_RELAY_URL, secret: source.WEBHOOK_RELAY_SECRET }
+}
 export type ConfiguredOidcProvider = {
   id: string
   name: string

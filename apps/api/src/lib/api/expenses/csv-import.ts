@@ -28,6 +28,11 @@ import {
 } from '../../expense-conversion'
 import { logServerInfo, logServerWarn } from '../../logging'
 import {
+  hasEligibleWebhookEndpoints,
+  planExpenseBatchWebhook,
+} from '../../webhooks/planner'
+import { loadExpenseSnapshotsChunked } from '../../webhooks/snapshot'
+import {
   buildExpenseActivityData,
   buildImportSummaryActivityData,
   logActivity,
@@ -1873,6 +1878,23 @@ export async function importExpenseFile(
             { groupId: args.groupId },
             { boss: prepared.notificationBoss },
           )
+        }
+        if (await hasEligibleWebhookEndpoints(tx, args.groupId, 'created')) {
+          const webhookExpenses = (
+            await loadExpenseSnapshotsChunked(tx, expenseIds)
+          ).map((expense) => ({ expense }))
+          await planExpenseBatchWebhook({
+            tx,
+            boss: prepared.notificationBoss,
+            sourceKey: `activity:${summaryActivity.id}:webhook-batch-v1`,
+            activityId: summaryActivity.id,
+            groupId: args.groupId,
+            actorAccountId: args.accountId,
+            operation: 'created',
+            source: 'expense-file-import',
+            occurredAt: summaryActivity.time,
+            expenses: webhookExpenses,
+          })
         }
         summaryMs = Math.round(performance.now() - summaryStartedAt)
         finishPhase('summary', { summaryMs })

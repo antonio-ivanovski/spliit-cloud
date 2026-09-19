@@ -59,6 +59,18 @@ async function main() {
     { retryLimit: 0, key: 'notification-cleanup' },
   )
   await boss.schedule(
+    JOB_NAMES.WEBHOOK_RECONCILE,
+    env.JOBS_NOTIFICATION_RECONCILE_CRON,
+    {},
+    { retryLimit: 0, key: 'webhook-reconcile' },
+  )
+  await boss.schedule(
+    JOB_NAMES.WEBHOOK_CLEANUP,
+    '15 * * * *',
+    {},
+    { retryLimit: 0, key: 'webhook-cleanup' },
+  )
+  await boss.schedule(
     JOB_NAMES.ANONYMOUS_ACCOUNT_CLEANUP,
     '30 3 * * *',
     {},

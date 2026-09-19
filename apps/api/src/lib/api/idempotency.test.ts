@@ -347,6 +347,7 @@ describe('create idempotency primitives', () => {
         'qrInvitation',
         'splitPreset',
         'subgroup',
+        'webhook',
       ].sort(),
     )
     expect(new Set(Object.values(CREATE_OPERATIONS)).size).toBe(

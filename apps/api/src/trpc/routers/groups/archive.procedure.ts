@@ -16,6 +16,7 @@ import {
 import { getApiBoss } from '../../../lib/api/boss'
 import { resumeRecurringExpenseSeries } from '../../../lib/api/recurrence-series'
 import { SPLIIT_SCOPES } from '../../../lib/auth/scopes'
+import { planSettlementWebhookBatch } from '../../../lib/webhooks/planner'
 import {
   apiProcedure,
   assertOAuthScope,
@@ -147,14 +148,27 @@ export const archiveGroupProcedure = apiProcedure('spliit:groups:delete', {
       if (activity) {
         await planNotificationForActivity(tx, activity, {}, { boss })
       }
-      for (const settlementActivity of settlementActivities) {
-        await planNotificationForActivity(
-          tx,
-          settlementActivity.activity,
-          {},
-          { boss },
-        )
-      }
+      await Promise.all(
+        settlementActivities.map((settlementActivity) =>
+          planNotificationForActivity(
+            tx,
+            settlementActivity.activity,
+            {},
+            {
+              boss,
+              skipWebhook: true,
+            },
+          ),
+        ),
+      )
+      await planSettlementWebhookBatch({
+        tx,
+        boss,
+        groupId,
+        actorAccountId: ctx.auth.user.id,
+        source: 'force-archive-settlement',
+        settlements: settlementActivities,
+      })
       return {
         group: updated,
         activity,

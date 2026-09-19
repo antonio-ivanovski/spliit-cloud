@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import {
   getConfiguredOidcProvider,
   getMaxExpenseDocumentSizeBytes,
+  getWebhookRelayConfig,
   parseEnv,
 } from './env'
 
@@ -382,6 +383,73 @@ describe('envSchema — AI', () => {
         AI_API_KEY: 'sk-test-key',
       }),
     ).toThrow(/AI_VOICE_MODEL must be specified/)
+  })
+})
+
+describe('envSchema — webhook relay', () => {
+  const relayBase: NodeJS.ProcessEnv = {
+    WEBHOOK_RELAY_URL: 'https://relay.example.com/forward',
+    WEBHOOK_RELAY_SECRET: 'r'.repeat(32),
+  }
+
+  it('leaves the relay unconfigured when both vars are absent', () => {
+    const env = parseTestEnv()
+    expect(env.WEBHOOK_RELAY_URL).toBeUndefined()
+    expect(env.WEBHOOK_RELAY_SECRET).toBeUndefined()
+    expect(getWebhookRelayConfig(env)).toBeUndefined()
+  })
+
+  it('accepts a complete relay configuration', () => {
+    const env = parseTestEnv(relayBase)
+    expect(getWebhookRelayConfig(env)).toEqual({
+      url: 'https://relay.example.com/forward',
+      secret: 'r'.repeat(32),
+    })
+  })
+
+  it('rejects a relay URL without a secret', () => {
+    expect(() =>
+      parseTestEnv({ ...relayBase, WEBHOOK_RELAY_SECRET: undefined }),
+    ).toThrow(
+      /WEBHOOK_RELAY_URL and WEBHOOK_RELAY_SECRET must be configured together/,
+    )
+  })
+
+  it('rejects a relay secret without a URL', () => {
+    expect(() =>
+      parseTestEnv({ ...relayBase, WEBHOOK_RELAY_URL: undefined }),
+    ).toThrow(
+      /WEBHOOK_RELAY_URL and WEBHOOK_RELAY_SECRET must be configured together/,
+    )
+  })
+
+  it('rejects a short relay secret', () => {
+    expect(() =>
+      parseTestEnv({ ...relayBase, WEBHOOK_RELAY_SECRET: 'too-short' }),
+    ).toThrow(/WEBHOOK_RELAY_SECRET must be at least 32 bytes/)
+  })
+
+  it('rejects a non-HTTPS relay URL', () => {
+    expect(() =>
+      parseTestEnv({ ...relayBase, WEBHOOK_RELAY_URL: 'http://relay.test' }),
+    ).toThrow(/WEBHOOK_RELAY_URL must be an HTTPS URL/)
+  })
+
+  it('allows an HTTP relay URL for local development with private endpoints', () => {
+    const env = parseTestEnv({
+      ...relayBase,
+      WEBHOOK_RELAY_URL: 'http://127.0.0.1:8787/forward',
+      WEBHOOK_ALLOW_PRIVATE_ENDPOINTS: 'true',
+    })
+    expect(env.WEBHOOK_RELAY_URL).toBe('http://127.0.0.1:8787/forward')
+  })
+
+  it('rejects private endpoints combined with an HTTPS relay', () => {
+    expect(() =>
+      parseTestEnv({ ...relayBase, WEBHOOK_ALLOW_PRIVATE_ENDPOINTS: 'true' }),
+    ).toThrow(
+      /WEBHOOK_ALLOW_PRIVATE_ENDPOINTS must be false when WEBHOOK_RELAY_URL is configured/,
+    )
   })
 })
 

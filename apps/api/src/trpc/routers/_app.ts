@@ -13,6 +13,7 @@ import { invitationsRouter } from './invitations'
 import { notificationsRouter } from './notifications'
 import { overviewRouter } from './overview'
 import { uploadsRouter } from './uploads'
+import { webhooksRouter } from './webhooks'
 
 export const appRouter = createTRPCRouter({
   account: accountRouter,
@@ -27,6 +28,7 @@ export const appRouter = createTRPCRouter({
   notifications: notificationsRouter,
   overview: overviewRouter,
   uploads: uploadsRouter,
+  webhooks: webhooksRouter,
 })
 
 export type AppRouter = typeof appRouter

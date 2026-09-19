@@ -27,6 +27,7 @@ import { removeParticipantFromSubgroup } from '../api/subgroups'
 import { sendEmail } from '../mail/send'
 import { renderInvitationEmail } from '../mail/templates/invitation'
 import { allowUserGeneratedEmail } from '../outbound-email-rate-limit'
+import { planSettlementWebhookBatch } from '../webhooks/planner'
 import { getInvitationDisplayName } from './display'
 import {
   materializePendingInvitationParticipant,
@@ -368,9 +369,25 @@ export async function revokeInvitation(opts: {
     if (settlementActivities) {
       await Promise.all(
         settlementActivities.map((meta) =>
-          planNotificationForActivity(tx, meta.activity, {}, { boss }),
+          planNotificationForActivity(
+            tx,
+            meta.activity,
+            {},
+            {
+              boss,
+              skipWebhook: true,
+            },
+          ),
         ),
       )
+      await planSettlementWebhookBatch({
+        tx,
+        boss,
+        groupId: opts.groupId,
+        actorAccountId: opts.actor.accountId,
+        source: 'invitation-revocation-settlement',
+        settlements: settlementActivities,
+      })
     }
 
     return { updated, settlementActivities, activity }

@@ -25,6 +25,7 @@ export const CREATE_OPERATIONS = {
   linkInvitation: 'invitations.createLink',
   qrInvitation: 'invitations.createQrLink',
   friendLedger: 'friends.create',
+  webhook: 'webhooks.create',
 } as const
 
 export type CreateOperation =
@@ -133,6 +134,12 @@ export const CREATE_MUTATION_CATALOG = [
     mechanism: 'shared',
     operation: CREATE_OPERATIONS.friendLedger,
     source: 'friends/index.ts',
+    symbol: 'create',
+  },
+  {
+    mechanism: 'shared',
+    operation: CREATE_OPERATIONS.webhook,
+    source: 'webhooks/index.ts',
     symbol: 'create',
   },
   {
