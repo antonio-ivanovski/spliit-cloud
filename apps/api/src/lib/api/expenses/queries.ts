@@ -480,7 +480,9 @@ function sortKeyOf(row: ExpenseListDbRow): ExpenseSortKey {
  * involving expenses in sort order, plus the hidden expenses positioned between
  * the page's first involving expense and the next page's first involving
  * expense (peeked via `+1`), so the client renders inline hidden runs with no
- * gaps across page boundaries.
+ * gaps across page boundaries. The first page additionally includes hidden
+ * expenses positioned before its first involving expense, so a leading hidden
+ * run still renders its toggle.
  *
  * Large hidden gaps are delivered in `hiddenChunk` slices: when a gap
  * overflows, the response carries the involving page plus the first slice and
@@ -531,14 +533,38 @@ export async function getGroupExpensesInvolvingPage(
   })
   const pageInvolving = involvingRows.slice(0, length)
   const peek = involvingRows[length] ?? null
-  if (pageInvolving.length === 0) return empty
+  if (pageInvolving.length === 0) {
+    // Nothing involves the viewer: page through the hidden rows alone so the
+    // timeline can still render collapsed hidden runs instead of an empty list.
+    // Only the head of the list pages this way (`offset === 0` with a
+    // `hiddenSkipped` carry-over); stray later offsets stay empty to avoid
+    // re-delivering the same rows.
+    if (offset !== 0) return empty
+    const hiddenOnlyRows = await prisma.expense.findMany({
+      select: groupExpenseListCardSelect,
+      where: mergeWhereAnd(baseWhere, { NOT: involvement }),
+      orderBy,
+      skip: skipped,
+      take: chunk + 1,
+    })
+    const hiddenOnlyPage = hiddenOnlyRows.slice(0, chunk)
+    return {
+      rows: hiddenOnlyPage.map(mapExpenseListRow),
+      involvingReturned: 0,
+      hasMoreInvolving: false,
+      hiddenPending: hiddenOnlyRows.length > chunk,
+    }
+  }
   const first = pageInvolving[0]
   if (!first) return empty
 
-  let hiddenWhere = mergeWhereAnd(
-    mergeWhereAnd(baseWhere, { NOT: involvement }),
-    anchorBoundFilter(sortKeyOf(first), levels, 'after'),
-  )
+  let hiddenWhere = mergeWhereAnd(baseWhere, { NOT: involvement })
+  if (offset !== 0) {
+    hiddenWhere = mergeWhereAnd(
+      hiddenWhere,
+      anchorBoundFilter(sortKeyOf(first), levels, 'after'),
+    )
+  }
   if (peek) {
     hiddenWhere = mergeWhereAnd(
       hiddenWhere,

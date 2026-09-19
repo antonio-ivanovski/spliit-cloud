@@ -345,7 +345,11 @@ describe('groupsRouter.expenses.list with hideNotInvolving', () => {
       limit: 1,
       hideNotInvolving: true,
     })
-    expect(page1.expenses.map((e) => e.id)).toEqual(['first', 'middle-hidden'])
+    expect(page1.expenses.map((e) => e.id)).toEqual([
+      'early-hidden',
+      'first',
+      'middle-hidden',
+    ])
     expect(page1.nextCursor).toBe(1)
 
     const page2 = await caller.expenses.list({
@@ -399,7 +403,87 @@ describe('groupsRouter.expenses.list with hideNotInvolving', () => {
     ])
   })
 
-  it('returns an empty page when nothing involves the viewer', async () => {
+  it('includes leading hidden expenses before the first involving row', async () => {
+    await setup(ME, [
+      h('hidden-newest', '2026-09-12T12:00:00.000Z'),
+      h('hidden-second', '2026-09-11T12:00:00.000Z'),
+      v('mine', '2026-09-10T12:00:00.000Z'),
+      h('hidden-trailing', '2026-09-09T12:00:00.000Z'),
+    ])
+    const caller = makeCaller()
+
+    const page = await caller.expenses.list({
+      groupId: 'grp-1',
+      limit: 5,
+      hideNotInvolving: true,
+    })
+    expect(page.expenses.map((e) => e.id)).toEqual([
+      'hidden-newest',
+      'hidden-second',
+      'mine',
+      'hidden-trailing',
+    ])
+    expect(page.hasMore).toBe(false)
+  })
+
+  it('includes leading hidden expenses when paging', async () => {
+    await setup(ME, [
+      h('hidden-top', '2026-09-11T12:00:00.000Z'),
+      v('first', '2026-09-10T12:00:00.000Z'),
+      h('hidden-middle', '2026-09-09T12:00:00.000Z'),
+      v('second', '2026-09-08T12:00:00.000Z'),
+      h('hidden-bottom', '2026-09-07T12:00:00.000Z'),
+    ])
+    const caller = makeCaller()
+
+    const page1 = await caller.expenses.list({
+      groupId: 'grp-1',
+      limit: 1,
+      hideNotInvolving: true,
+    })
+    expect(page1.expenses.map((e) => e.id)).toEqual([
+      'hidden-top',
+      'first',
+      'hidden-middle',
+    ])
+    expect(page1.hasMore).toBe(true)
+
+    const page2 = await caller.expenses.list({
+      groupId: 'grp-1',
+      limit: 1,
+      cursor: page1.nextCursor,
+      hideNotInvolving: true,
+    })
+    expect(page2.expenses.map((e) => e.id)).toEqual([
+      'second',
+      'hidden-bottom',
+    ])
+    expect(page2.hasMore).toBe(false)
+  })
+
+  it('includes leading hidden expenses in ascending order', async () => {
+    await setup(ME, [
+      h('hidden-oldest', '2026-09-06T12:00:00.000Z'),
+      v('first', '2026-09-07T12:00:00.000Z'),
+      v('second', '2026-09-08T12:00:00.000Z'),
+    ])
+    const caller = makeCaller()
+
+    const page = await caller.expenses.list({
+      groupId: 'grp-1',
+      limit: 5,
+      sortDir: 'asc',
+      hideNotInvolving: true,
+    })
+    expect(page.expenses.map((e) => e.id)).toEqual([
+      'hidden-oldest',
+      'first',
+      'second',
+    ])
+    expect(page.hasMore).toBe(false)
+  })
+
+  it('returns hidden rows when nothing involves the viewer', async () => {
     await setup('lp-stranger', [
       h('a', '2026-09-10T12:00:00.000Z'),
       h('b', '2026-09-09T12:00:00.000Z'),
@@ -412,7 +496,7 @@ describe('groupsRouter.expenses.list with hideNotInvolving', () => {
       limit: 5,
       hideNotInvolving: true,
     })
-    expect(page.expenses).toEqual([])
+    expect(page.expenses.map((e) => e.id)).toEqual(['a', 'b'])
     expect(page.hasMore).toBe(false)
   })
 

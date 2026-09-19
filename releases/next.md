@@ -36,5 +36,6 @@ This one was requested by the community — thanks to @obsilover for proposing i
 - Fixed the install dialog's split-button layout and shortened its copy (`TBD` by @TBD)
 - Never show the install promotion inside the already-installed app, whatever display mode it launched in (`TBD` by @TBD)
 - Fixed toasts rendering inline below the footer; they now float at the top (centered on mobile, top-right on desktop) (`TBD` by @TBD)
+- Fixed the expenses timeline hiding the "not involving you" toggle when hidden expenses sit at the top of the list; leading hidden expenses are now included on the first page, and groups with no involving expenses show collapsed hidden runs instead of an empty list (`TBD` by @TBD)
 
 **Full Changelog**: TBD

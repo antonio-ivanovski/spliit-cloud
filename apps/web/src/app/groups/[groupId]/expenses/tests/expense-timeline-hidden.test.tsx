@@ -166,6 +166,38 @@ describe('ExpenseTimeline hidden-expenses collapse', () => {
     ).toBeInTheDocument()
   })
 
+  it('collapses leading hidden expenses at the top of the group', () => {
+    const { container } = renderTimeline(
+      [
+        makeExpense('t1', TODAY),
+        makeExpense('t2', TODAY),
+        makeExpense('m1', TODAY),
+      ],
+      new Set(['m1']),
+    )
+
+    expect(orderedRowLabels(container)).toEqual([
+      '2 hidden expenses not involving you',
+      'Expense m1',
+    ])
+  })
+
+  it('collapses trailing hidden expenses at the end of the group', () => {
+    const { container } = renderTimeline(
+      [
+        makeExpense('m1', TODAY),
+        makeExpense('t1', TODAY),
+        makeExpense('t2', TODAY),
+      ],
+      new Set(['m1']),
+    )
+
+    expect(orderedRowLabels(container)).toEqual([
+      'Expense m1',
+      '2 hidden expenses not involving you',
+    ])
+  })
+
   it('collapses a lone hidden expense between involving ones', () => {
     const { container } = renderTimeline(
       [
