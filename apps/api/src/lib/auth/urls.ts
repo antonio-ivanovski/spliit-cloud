@@ -1,7 +1,19 @@
 import { env } from '../env'
 
+/**
+ * Strip terminal trailing slashes from a base URL. The schema already
+ * normalizes `env` values, but tests mock `env` directly and operators can
+ * mutate it, so getters strip defensively: every concatenation site appends its
+ * own leading slash (`${base}/groups/…`), and a stored slash would otherwise
+ * rebuild the `//groups/…` invite-link bug (issue #120). Silent here —
+ * `parseEnv` already warns about the non-canonical value.
+ */
+function normalizeBaseUrl(url: string): string {
+  return url.trim().replace(/\/+$/, '')
+}
+
 export function getApiBaseUrl(): string {
-  if (env.BETTER_AUTH_URL) return env.BETTER_AUTH_URL
+  if (env.BETTER_AUTH_URL) return normalizeBaseUrl(env.BETTER_AUTH_URL)
   // In local dev the API runs on 3001 and the web on 3000. Use the configured
   // port to derive a sensible base URL when no explicit override is set.
   return `http://localhost:${env.PORT}`
@@ -9,7 +21,7 @@ export function getApiBaseUrl(): string {
 
 export function getWebBaseUrl(): string {
   const firstWebOrigin = env.WEB_ORIGINS.split(',')
-    .map((o) => o.trim())
+    .map((o) => normalizeBaseUrl(o))
     .find(Boolean)
   return firstWebOrigin ?? 'http://localhost:3000'
 }
@@ -30,7 +42,8 @@ export function getWebBaseUrl(): string {
  */
 export function oauthAudiences(): string[] {
   const audiences = [getApiBaseUrl()]
-  if (env.MCP_PUBLIC_URL) audiences.push(`${env.MCP_PUBLIC_URL}/mcp`)
+  if (env.MCP_PUBLIC_URL)
+    audiences.push(`${normalizeBaseUrl(env.MCP_PUBLIC_URL)}/mcp`)
   return audiences
 }
 
@@ -44,5 +57,7 @@ export function oauthAudiences(): string[] {
  * rely on this being defined.
  */
 export function getMcpAudience(): string | null {
-  return env.MCP_PUBLIC_URL ? `${env.MCP_PUBLIC_URL}/mcp` : null
+  return env.MCP_PUBLIC_URL
+    ? `${normalizeBaseUrl(env.MCP_PUBLIC_URL)}/mcp`
+    : null
 }

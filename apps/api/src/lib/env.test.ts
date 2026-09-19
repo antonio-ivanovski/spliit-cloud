@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import {
   getConfiguredOidcProvider,
@@ -493,6 +493,111 @@ describe('envSchema — expense documents', () => {
       expect(() =>
         parseTestEnv({ MAX_EXPENSE_DOCUMENT_SIZE_MB: value }),
       ).toThrow()
+    }
+  })
+})
+
+describe('envSchema — trailing slashes (issue #120)', () => {
+  it('strips a trailing slash from WEB_ORIGINS and warns', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    try {
+      const env = parseTestEnv({ WEB_ORIGINS: 'https://spliit.example.com/' })
+      expect(env.WEB_ORIGINS).toBe('https://spliit.example.com')
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining('WEB_ORIGINS'))
+    } finally {
+      warn.mockRestore()
+    }
+  })
+
+  it('normalizes each entry of a comma-separated WEB_ORIGINS list', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    try {
+      const env = parseTestEnv({
+        WEB_ORIGINS: 'https://a.example.com/, https://b.example.com///',
+      })
+      expect(env.WEB_ORIGINS).toBe(
+        'https://a.example.com,https://b.example.com',
+      )
+    } finally {
+      warn.mockRestore()
+    }
+  })
+
+  it('falls back to the default when WEB_ORIGINS is only slashes', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    try {
+      const env = parseTestEnv({ WEB_ORIGINS: ' / ' })
+      expect(env.WEB_ORIGINS).toBe('http://localhost:3000')
+    } finally {
+      warn.mockRestore()
+    }
+  })
+
+  it('strips trailing slashes from every URL env and warns', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    try {
+      const env = parseTestEnv({
+        BETTER_AUTH_URL: 'https://api.example.com/',
+        MCP_PUBLIC_URL: 'https://mcp.example.com///',
+        AI_BASE_URL: 'https://openrouter.ai/api/v1/',
+        S3_UPLOAD_PUBLIC_URL: 'https://uploads.example.com/',
+        S3_UPLOAD_ENDPOINT: 'https://s3.example.com/',
+        OIDC_CLIENT_ID: 'oidc-client',
+        OIDC_CLIENT_SECRET: 'oidc-secret',
+        OIDC_DISCOVERY_URL:
+          'https://auth.example.com/.well-known/openid-configuration/',
+        PUSH_VAPID_PUBLIC_KEY: 'public-key',
+        PUSH_VAPID_PRIVATE_KEY: 'private-key',
+        PUSH_VAPID_SUBJECT: 'https://example.com/',
+        DATABASE_URL: 'postgresql://spliit:spliit@db:5432/spliit/',
+        WEBHOOK_RELAY_URL: 'https://relay.example.com/forward/',
+        WEBHOOK_RELAY_SECRET: 'r'.repeat(32),
+      })
+      expect(env.BETTER_AUTH_URL).toBe('https://api.example.com')
+      expect(env.MCP_PUBLIC_URL).toBe('https://mcp.example.com')
+      expect(env.AI_BASE_URL).toBe('https://openrouter.ai/api/v1')
+      expect(env.S3_UPLOAD_PUBLIC_URL).toBe('https://uploads.example.com')
+      expect(env.S3_UPLOAD_ENDPOINT).toBe('https://s3.example.com')
+      expect(env.OIDC_DISCOVERY_URL).toBe(
+        'https://auth.example.com/.well-known/openid-configuration',
+      )
+      expect(env.PUSH_VAPID_SUBJECT).toBe('https://example.com')
+      expect(env.DATABASE_URL).toBe('postgresql://spliit:spliit@db:5432/spliit')
+      expect(env.WEBHOOK_RELAY_URL).toBe('https://relay.example.com/forward')
+      for (const field of [
+        'BETTER_AUTH_URL',
+        'MCP_PUBLIC_URL',
+        'WEBHOOK_RELAY_URL',
+      ]) {
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining(field))
+      }
+    } finally {
+      warn.mockRestore()
+    }
+  })
+
+  it('treats a lone slash URL as absent', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    try {
+      const env = parseTestEnv({ AI_BASE_URL: '/' })
+      expect(env.AI_BASE_URL).toBeUndefined()
+    } finally {
+      warn.mockRestore()
+    }
+  })
+
+  it('leaves canonical URLs untouched and silent', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    try {
+      const env = parseTestEnv({
+        WEB_ORIGINS: 'https://spliit.example.com',
+        BETTER_AUTH_URL: 'https://api.example.com',
+      })
+      expect(env.WEB_ORIGINS).toBe('https://spliit.example.com')
+      expect(env.BETTER_AUTH_URL).toBe('https://api.example.com')
+      expect(warn).not.toHaveBeenCalled()
+    } finally {
+      warn.mockRestore()
     }
   })
 })

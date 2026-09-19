@@ -33,6 +33,7 @@ This one was requested by the community — thanks to @obsilover for proposing i
 
 ### 🐛 Bug fixes
 
+- Fixed trailing slashes in URL envs (`APP_URL=https://host/` flowed into `WEB_ORIGINS`/`BETTER_AUTH_URL`) producing `//groups/…` invite links and breaking CORS/trusted-origins sign-in: all URL envs are now stripped to their canonical slash-less form with a startup warning — fixes #120 (`TBD` by @TBD)
 - Fixed the install dialog's split-button layout and shortened its copy (`TBD` by @TBD)
 - Never show the install promotion inside the already-installed app, whatever display mode it launched in (`TBD` by @TBD)
 - Fixed toasts rendering inline below the footer; they now float at the top (centered on mobile, top-right on desktop) (`TBD` by @TBD)

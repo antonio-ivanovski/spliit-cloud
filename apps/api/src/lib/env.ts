@@ -13,21 +13,83 @@ const interpretEnvVarAsBool = (val: unknown): boolean => {
 const emptyStringAsUndefined = (val: unknown) =>
   typeof val === 'string' && val.trim() === '' ? undefined : val
 
+/**
+ * Strip terminal trailing slashes from a URL env value (`https://host/` →
+ * `https://host`). Terminal-only stripping mirrors the web client's
+ * `VITE_API_URL` handling (`api-url.ts`) and is safe for path-bearing URLs
+ * (`https://api.example.com/v1/` → `.../v1`): every concatenation site in the
+ * API adds its own leading slash, so a stored trailing slash always produces
+ * `//` (invite links, unsubscribe, OAuth pages, `/mcp` audiences, …).
+ *
+ * Warns so operators notice the non-canonical value; parsing continues with the
+ * stripped form instead of failing boot for existing deployments (see issue
+ * #120: `APP_URL=https://host/` flowed into `WEB_ORIGINS` / `BETTER_AUTH_URL`
+ * and broke invite links + CORS/trusted-origins).
+ */
+function stripTrailingSlashesWithWarn(raw: unknown, field: string): unknown {
+  if (typeof raw !== 'string') return raw
+  const trimmed = raw.trim()
+  if (trimmed === '') return raw
+  const stripped = trimmed.replace(/\/+$/, '')
+  if (stripped !== trimmed) {
+    console.warn(
+      `[env] ${field} had trailing slash(es) which were stripped (got "${trimmed}", using "${stripped}"). Use the canonical form with no trailing slash.`,
+    )
+  }
+  return stripped === '' ? undefined : stripped
+}
+
+const normalizeUrlValue =
+  (field: string) =>
+  (val: unknown): unknown =>
+    emptyStringAsUndefined(stripTrailingSlashesWithWarn(val, field))
+
+const optionalUrlNormalized = (field: string) =>
+  z.preprocess(normalizeUrlValue(field), z.url().optional())
+
+const optionalStringNormalized = (field: string) =>
+  z.preprocess(normalizeUrlValue(field), z.string().optional())
+
+/**
+ * Normalize `WEB_ORIGINS` (comma-separated origins): trim each entry, strip
+ * terminal slashes, drop empties, rejoin. Warns per stripped entry. Returns
+ * `undefined` for empty input so the `localhost:3000` default applies.
+ */
+function normalizeWebOrigins(val: unknown): unknown {
+  const emptied = emptyStringAsUndefined(val)
+  if (typeof emptied !== 'string') return emptied
+  const normalized = emptied
+    .split(',')
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .map((part) => {
+      const stripped = part.replace(/\/+$/, '')
+      if (stripped !== part) {
+        console.warn(
+          `[env] WEB_ORIGINS entry had trailing slash(es) which were stripped (got "${part}", using "${stripped}"). Use the canonical form with no trailing slash.`,
+        )
+      }
+      return stripped
+    })
+    .filter(Boolean)
+  if (normalized.length === 0) return undefined
+  return normalized.join(',')
+}
+
 const optionalString = z.preprocess(
   emptyStringAsUndefined,
   z.string().optional(),
 )
-const optionalUrl = z.preprocess(emptyStringAsUndefined, z.url().optional())
 
 const envSchema = z
   .object({
     NODE_ENV: optionalString,
     PORT: z.coerce.number().int().positive().default(3001),
     WEB_ORIGINS: z.preprocess(
-      emptyStringAsUndefined,
+      normalizeWebOrigins,
       z.string().default('http://localhost:3000'),
     ),
-    DATABASE_URL: optionalUrl,
+    DATABASE_URL: optionalUrlNormalized('DATABASE_URL'),
     PUBLIC_ENABLE_EXPENSE_DOCUMENTS: z.preprocess(
       interpretEnvVarAsBool,
       z.boolean().default(false),
@@ -37,8 +99,8 @@ const envSchema = z
     S3_UPLOAD_SECRET: optionalString,
     S3_UPLOAD_BUCKET: optionalString,
     S3_UPLOAD_REGION: optionalString,
-    S3_UPLOAD_ENDPOINT: optionalString,
-    S3_UPLOAD_PUBLIC_URL: optionalUrl,
+    S3_UPLOAD_ENDPOINT: optionalStringNormalized('S3_UPLOAD_ENDPOINT'),
+    S3_UPLOAD_PUBLIC_URL: optionalUrlNormalized('S3_UPLOAD_PUBLIC_URL'),
     // Maximum expense/receipt attachment size in megabytes. Defaults to 2 to
     // preserve historical behavior; uploads go directly to S3 via presigned
     // URLs so this does not affect the API request body limit, but larger
@@ -75,7 +137,7 @@ const envSchema = z
       .enum(['openai', 'anthropic', 'openai-compatible', 'google'])
       .default('openai'),
     AI_API_KEY: optionalString,
-    AI_BASE_URL: optionalUrl,
+    AI_BASE_URL: optionalUrlNormalized('AI_BASE_URL'),
     AI_RECEIPT_MODEL: z.preprocess(
       emptyStringAsUndefined,
       z.string().default('gpt-5-nano'),
@@ -103,7 +165,7 @@ const envSchema = z
 
     // better-auth
     BETTER_AUTH_SECRET: optionalString,
-    BETTER_AUTH_URL: optionalUrl,
+    BETTER_AUTH_URL: optionalUrlNormalized('BETTER_AUTH_URL'),
     GOOGLE_CLIENT_ID: optionalString,
     GOOGLE_CLIENT_SECRET: optionalString,
     GITHUB_CLIENT_ID: optionalString,
@@ -112,7 +174,7 @@ const envSchema = z
     TWITTER_CLIENT_SECRET: optionalString,
     OIDC_CLIENT_ID: optionalString,
     OIDC_CLIENT_SECRET: optionalString,
-    OIDC_DISCOVERY_URL: optionalUrl,
+    OIDC_DISCOVERY_URL: optionalUrlNormalized('OIDC_DISCOVERY_URL'),
     OIDC_DISPLAY_NAME: optionalString,
     OIDC_PROVIDER_ID: z.preprocess(
       emptyStringAsUndefined,
@@ -129,7 +191,7 @@ const envSchema = z
       z.boolean().default(false),
     ),
     ENABLE_MCP: z.preprocess(interpretEnvVarAsBool, z.boolean().default(false)),
-    MCP_PUBLIC_URL: optionalUrl,
+    MCP_PUBLIC_URL: optionalUrlNormalized('MCP_PUBLIC_URL'),
     ASSISTANT_CONFIRMATION_SECRET: optionalString,
     // Set when the API sits behind a trusted reverse proxy (Dokploy, Caddy,
     // a CDN). Only then are X-Forwarded-For / X-Real-IP honored for rate-limit
@@ -154,7 +216,7 @@ const envSchema = z
     // so local development can run without a VAPID key pair.
     PUSH_VAPID_PUBLIC_KEY: optionalString,
     PUSH_VAPID_PRIVATE_KEY: optionalString,
-    PUSH_VAPID_SUBJECT: optionalUrl,
+    PUSH_VAPID_SUBJECT: optionalUrlNormalized('PUSH_VAPID_SUBJECT'),
 
     // Dedicated secret for stateless optional-email unsubscribe links.
     EMAIL_UNSUBSCRIBE_SECRET: optionalString,
@@ -169,7 +231,7 @@ const envSchema = z
     // Optional Cloudflare Worker relay that forwards webhook deliveries so
     // destinations never see the server IP. Both values are required together.
     // A configured relay cannot reach private networks (see superRefine).
-    WEBHOOK_RELAY_URL: optionalString,
+    WEBHOOK_RELAY_URL: optionalStringNormalized('WEBHOOK_RELAY_URL'),
     WEBHOOK_RELAY_SECRET: optionalString,
 
     // Account registration. `open` is the historical default (anyone can
@@ -397,8 +459,11 @@ export function parseEnv(rawEnv: NodeJS.ProcessEnv = process.env): Env {
 }
 
 export const env = parseEnv()
+// Defense in depth: `env.WEB_ORIGINS` is already normalized by the schema,
+// but tests and direct `env` mutation bypass `parseEnv`, so strip again here
+// so CORS / `trustedOrigins` / `${webOrigins[0]}/…` builders never see `//`.
 export const webOrigins = env.WEB_ORIGINS.split(',')
-  .map((origin) => origin.trim())
+  .map((origin) => origin.trim().replace(/\/+$/, ''))
   .filter(Boolean)
 export const hasDatabaseEnv = !!env.DATABASE_URL
 

@@ -18,6 +18,9 @@ network. The default stack does not publish ports `3001`, `3003`, or `5432`.
 Copy `container.env.example` to `container.env` and set:
 
 - `APP_URL` to the final HTTPS origin, such as `https://spliit.example.com`
+  (canonical form has no trailing slash; a trailing slash is tolerated and
+  stripped with a startup warning — it used to break invite links with
+  `//groups/…`, see issue #120)
 - a long random `POSTGRES_PASSWORD`
 - `BETTER_AUTH_SECRET` from `openssl rand -base64 32`
 - `SMTP_HOST`, `SMTP_PORT`, and `EMAIL_FROM`

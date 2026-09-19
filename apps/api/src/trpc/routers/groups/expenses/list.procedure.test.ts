@@ -454,10 +454,7 @@ describe('groupsRouter.expenses.list with hideNotInvolving', () => {
       cursor: page1.nextCursor,
       hideNotInvolving: true,
     })
-    expect(page2.expenses.map((e) => e.id)).toEqual([
-      'second',
-      'hidden-bottom',
-    ])
+    expect(page2.expenses.map((e) => e.id)).toEqual(['second', 'hidden-bottom'])
     expect(page2.hasMore).toBe(false)
   })
 
