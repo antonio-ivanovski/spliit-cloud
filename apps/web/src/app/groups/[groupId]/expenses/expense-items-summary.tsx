@@ -1,10 +1,24 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { Currency } from '@/lib/currency'
+import { getCurrency, type Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
 
 import { ExpenseItemsOverflowToggle } from './expense-items-overflow-toggle'
+
+/**
+ * Resolve the currency used for stored item amounts. Items are always persisted
+ * in the expense's entered currency (which matches `originalCurrency` when a
+ * conversion is stored). Unknown or missing expense currencies fall back to the
+ * group currency to preserve the previous display behavior.
+ */
+export function resolveExpenseItemsCurrency(
+  originalCurrencyCode: string | null | undefined,
+  groupCurrency: Currency,
+): Currency {
+  if (!originalCurrencyCode) return groupCurrency
+  return getCurrency(originalCurrencyCode) ?? groupCurrency
+}
 
 type Item = {
   id: string

@@ -258,7 +258,7 @@ export function ExpenseCard({
         </div>
         <ItemsPreview
           items={expense.items}
-          currency={currency}
+          currency={originalCurrency ?? currency}
           locale={locale}
         />
         <div className="text-xs text-muted-foreground">

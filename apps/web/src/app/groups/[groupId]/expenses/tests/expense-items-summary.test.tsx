@@ -1,4 +1,7 @@
-import { ExpenseItemsSummary } from '@/app/groups/[groupId]/expenses/expense-items-summary'
+import {
+  ExpenseItemsSummary,
+  resolveExpenseItemsCurrency,
+} from '@/app/groups/[groupId]/expenses/expense-items-summary'
 import { render, screen } from '@/test/test-utils'
 
 const EUR = { code: 'EUR', symbol: '€', decimal_digits: 2, rounding: 0 }
@@ -58,5 +61,23 @@ describe('ExpenseItemsSummary', () => {
     expect(
       screen.queryByRole('button', { name: /more/i }),
     ).not.toBeInTheDocument()
+  })
+})
+
+describe('resolveExpenseItemsCurrency', () => {
+  it('uses the stored expense currency when an expense was converted', () => {
+    const resolved = resolveExpenseItemsCurrency('USD', EUR)
+
+    expect(resolved.code).toBe('USD')
+    expect(resolved.symbol).toBe('$')
+  })
+
+  it('falls back to the group currency without a stored expense currency', () => {
+    expect(resolveExpenseItemsCurrency(null, EUR)).toBe(EUR)
+    expect(resolveExpenseItemsCurrency(undefined, EUR)).toBe(EUR)
+  })
+
+  it('falls back to the group currency for an unknown expense currency', () => {
+    expect(resolveExpenseItemsCurrency('NOT_A_CURRENCY', EUR)).toBe(EUR)
   })
 })

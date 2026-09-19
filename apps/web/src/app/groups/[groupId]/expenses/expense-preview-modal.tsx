@@ -10,7 +10,10 @@ import {
 } from '@/app/groups/[groupId]/expenses/category-side-effect-badge'
 import { ExpenseAttachmentsPreview } from '@/app/groups/[groupId]/expenses/expense-attachments-preview'
 import { ExpenseComments } from '@/app/groups/[groupId]/expenses/expense-comments'
-import { ExpenseItemsSummary } from '@/app/groups/[groupId]/expenses/expense-items-summary'
+import {
+  ExpenseItemsSummary,
+  resolveExpenseItemsCurrency,
+} from '@/app/groups/[groupId]/expenses/expense-items-summary'
 import {
   useDeleteExpenseMutation,
   useStopRecurrenceMutation,
@@ -506,7 +509,10 @@ export function ExpensePreviewModal({
 
               <ExpenseItemsSummary
                 items={expense.items}
-                currency={currency}
+                currency={resolveExpenseItemsCurrency(
+                  expense.originalCurrency,
+                  currency,
+                )}
                 locale={locale}
               />
 

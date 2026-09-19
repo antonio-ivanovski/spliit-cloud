@@ -193,6 +193,41 @@ describe('ExpenseCard', () => {
     )
   })
 
+  it('formats item preview amounts in the stored expense currency', () => {
+    vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
+    vi.mocked(useActiveUser).mockReturnValue(null)
+
+    render(
+      <ExpenseCard
+        expense={makeExpense({
+          amount: 1080,
+          originalAmount: 1000,
+          originalCurrency: 'USD',
+          conversionRate: 1.08,
+          items: [
+            { id: 'item-1', title: 'Converters', amount: 500 },
+            { id: 'item-2', title: 'Cables', amount: 500 },
+          ],
+        })}
+        currency={EUR}
+        groupId="group-1"
+        participantCount={2}
+      />,
+    )
+
+    const card = screen.getByTestId('expense-item-exp-1')
+    const cardText = card.textContent ?? ''
+
+    expect(screen.getByTestId('expense-amount')).toHaveTextContent('€10.80')
+    expect(screen.getByTestId('expense-original-amount')).toHaveTextContent(
+      '$10.00',
+    )
+    expect(cardText).toContain('Converters')
+    expect(cardText).toContain('Cables')
+    expect(cardText.match(/\$5\.00/g) ?? []).toHaveLength(2)
+    expect(cardText).not.toContain('€5.00')
+  })
+
   it('does not show a secondary amount for same-currency expenses', () => {
     vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue(null)
