@@ -60,8 +60,8 @@ import { passwordSet } from './password-set'
 import { ALL_SCOPES, DEFAULT_CLIENT_SCOPES } from './scopes'
 import {
   assertCanCreateAccount,
+  captureOAuthSignupInvite,
   enforceSignupGate,
-  persistSignupInviteCookie,
 } from './signup-gate'
 import { getApiBaseUrl, oauthAudiences } from './urls'
 
@@ -141,12 +141,13 @@ const beforeAuthMiddleware = createAuthMiddleware(async (ctx) => {
   }
 
   if (ctx.path === '/sign-in/anonymous') {
-    if (!env.ENABLE_ANONYMOUS_AUTH || env.SIGNUP_MODE !== 'open') {
+    if (!env.ENABLE_ANONYMOUS_AUTH) {
       throw new APIError('FORBIDDEN', {
         message: 'Anonymous account creation is disabled.',
         code: 'ANONYMOUS_SIGNUP_DISABLED',
       })
     }
+    await assertCanCreateAccount({ context: ctx, anonymous: true })
     const current = await getSessionFromCtx(ctx, { disableRefresh: true })
     if (current) {
       throw new APIError('CONFLICT', {
@@ -228,7 +229,7 @@ const beforeAuthMiddleware = createAuthMiddleware(async (ctx) => {
     })
   }
 
-  await persistSignupInviteCookie(ctx)
+  await captureOAuthSignupInvite(ctx)
   await enforceSignupGate(ctx)
 })
 
@@ -687,6 +688,7 @@ export const auth = betterAuth({
           await assertCanCreateAccount({
             email: user.email,
             context,
+            anonymous: user.isAnonymous === true,
           })
           if (user.isAnonymous) {
             return { data: { ...user, name: user.email } }

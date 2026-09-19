@@ -41,6 +41,9 @@ export function AuthPanel({
     twitterEnabled,
     oidcProviders,
     anonymousEnabled,
+    linkInviteToken,
+    redirectTo: resolvedRedirectTo,
+    completeProfilePath,
     setEmail,
     setPassword,
     setConfirmPassword,
@@ -206,6 +209,9 @@ export function AuthPanel({
         open={anonymousDialogOpen}
         onOpenChange={setAnonymousDialogOpen}
         creationEnabled={anonymousEnabled}
+        linkInviteToken={linkInviteToken}
+        redirectTo={resolvedRedirectTo}
+        completeProfilePath={completeProfilePath}
       />
     </>
   )

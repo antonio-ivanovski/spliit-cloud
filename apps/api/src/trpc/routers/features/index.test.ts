@@ -64,7 +64,7 @@ describe('features.get', () => {
     })
   })
 
-  it('hides anonymous signup in invite-only mode', async () => {
+  it('exposes anonymous auth capability in invite-only mode', async () => {
     Object.assign(env, {
       ENABLE_ANONYMOUS_AUTH: true,
       SIGNUP_MODE: 'invite_only',
@@ -73,7 +73,7 @@ describe('features.get', () => {
 
     const result = await featuresRouter.createCaller({ auth: null }).get()
 
-    expect(result.enableAnonymousAuth).toBe(false)
+    expect(result.enableAnonymousAuth).toBe(true)
   })
 
   it('omits OIDC providers when credentials are unset', async () => {

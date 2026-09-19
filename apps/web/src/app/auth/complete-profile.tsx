@@ -20,6 +20,7 @@ import {
   needsAnonymousOnboarding,
   needsDisplayName,
 } from '@/lib/account'
+import { safeLocalReturnPath } from '@/lib/signup-invite'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 
@@ -37,7 +38,7 @@ export function CompleteProfilePage() {
   const { t } = useTranslation(undefined, { keyPrefix: 'CompleteProfile' })
   const navigate = useNavigate()
   const { redirect } = completeProfileRouteApi.useSearch()
-  const redirectTo = redirect ?? '/'
+  const redirectTo = safeLocalReturnPath(redirect)
   const { data: account, isPending, refetch } = useCurrentAccount()
   const [recoveryAcknowledged, setRecoveryAcknowledged] = useState(false)
 

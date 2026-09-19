@@ -33,6 +33,8 @@ This one was requested by the community — thanks to @obsilover for proposing i
 
 ### 🐛 Bug fixes
 
+- Rejected authentication return paths that become external redirects after URL normalization (`TBD` by @TBD)
+- Preserved group share-link invites through password, magic-link, SSO, and anonymous authentication; invited guests can now create accounts on invite-only instances and return to the group to accept — fixes #123 (`TBD` by @TBD)
 - Fixed trailing slashes in URL envs (`APP_URL=https://host/` flowed into `WEB_ORIGINS`/`BETTER_AUTH_URL`) producing `//groups/…` invite links and breaking CORS/trusted-origins sign-in: all URL envs are now stripped to their canonical slash-less form with a startup warning — fixes #120 (`TBD` by @TBD)
 - Fixed the install dialog's split-button layout and shortened its copy (`TBD` by @TBD)
 - Never show the install promotion inside the already-installed app, whatever display mode it launched in (`TBD` by @TBD)

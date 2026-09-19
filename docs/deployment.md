@@ -100,13 +100,15 @@ may remain empty.
   group or friend email invitation, or by opening a live share-link invite.
   Existing users can always sign in. Inviting someone to a group or friend
   ledger is how they get an account.
-- Anonymous account creation requires `ENABLE_ANONYMOUS_AUTH=true`,
-  `SIGNUP_MODE=open`, a stable `BETTER_AUTH_SECRET`, and `TRUST_PROXY=true`
-  behind a correctly configured trusted proxy. The proxy must sanitize client
-  IP headers so per-client signup and recovery limits are meaningful. Turning
-  anonymous creation off later prevents new anonymous accounts but keeps
-  recovery available for existing ones. Recovery links are permanent bearer
-  credentials, so back up the secret; changing it makes interrupted,
+- Anonymous account creation requires `ENABLE_ANONYMOUS_AUTH=true`, a stable
+  `BETTER_AUTH_SECRET`, and `TRUST_PROXY=true` behind a correctly configured
+  trusted proxy. With `SIGNUP_MODE=invite_only`, new anonymous accounts also
+  require a live group share-link invite; the empty-instance first-account
+  exception does not apply to anonymous accounts. The proxy must sanitize
+  client IP headers so per-client signup and recovery limits are meaningful.
+  Turning anonymous creation off later prevents new anonymous accounts but
+  keeps recovery available for existing ones. Recovery links are permanent
+  bearer credentials, so back up the secret; changing it makes interrupted,
   not-yet-confirmed setup links unreadable. The background worker permanently
   deletes anonymous accounts that do not start recovery-link setup within seven
   days, or leave setup unacknowledged for seven days. Acknowledged anonymous

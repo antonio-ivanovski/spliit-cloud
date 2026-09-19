@@ -13,6 +13,10 @@ import { act, render, screen } from '@/test/test-utils'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
+const { mockHomeSearch } = vi.hoisted(() => ({
+  mockHomeSearch: { redirect: undefined as string | undefined },
+}))
+
 vi.mock('@/lib/use-current-account', () => ({
   useCurrentAccount: vi.fn(),
 }))
@@ -33,12 +37,11 @@ vi.mock('@tanstack/react-router', () => ({
     </a>
   ),
   useNavigate: () => vi.fn(),
+  Navigate: ({ to }: { to: string }) => (
+    <div data-testid="home-redirect" data-to={to} />
+  ),
   getRouteApi: () => ({
-    useSearch: () => ({
-      redirect: undefined,
-      mode: undefined,
-      email: undefined,
-    }),
+    useSearch: () => mockHomeSearch,
   }),
 }))
 
@@ -362,5 +365,31 @@ describe('HomePage (signed-in)', () => {
     render(<HomePage />)
 
     expect(screen.getByTestId('recent-group-list')).toBeInTheDocument()
+  })
+
+  it('continues an authenticated visitor to the preserved destination', () => {
+    mockHomeSearch.redirect = '/groups/grp-1?invite=invite-token'
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: {
+        id: 'user-1',
+        name: 'Alice',
+        email: 'alice@example.com',
+        image: null,
+        emailVerified: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(<HomePage />)
+
+    expect(screen.getByTestId('home-redirect')).toHaveAttribute(
+      'data-to',
+      '/groups/grp-1?invite=invite-token',
+    )
   })
 })

@@ -304,7 +304,6 @@ export const GroupHeader = ({
                       redirect: inviteToken
                         ? `/groups/${groupId}?invite=${encodeURIComponent(inviteToken)}`
                         : `/groups/${groupId}`,
-                      invitation: isLinkBanner ? inviteToken : undefined,
                     }}
                   />
                 }

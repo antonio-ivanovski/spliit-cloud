@@ -1,3 +1,4 @@
+import { getRouteApi, Navigate } from '@tanstack/react-router'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { AuthPanel } from '@/components/auth/auth-panel'
@@ -8,13 +9,17 @@ import {
 } from '@/components/mascot/mascot-registry'
 import { MascotSpeechBubble } from '@/components/mascot/mascot-speech-bubble'
 import { useLandingMascot } from '@/components/mascot/use-landing-mascot'
+import { safeLocalReturnPath } from '@/lib/signup-invite'
 import { useCurrentAccount } from '@/lib/use-current-account'
 
 import { RecentGroupList } from './groups/recent-group-list'
 import { SignedOutSavedGroupsEntry } from './groups/signed-out-saved-view-list'
 
+const homeRouteApi = getRouteApi('/')
+
 export default function HomePage() {
   const { data: account } = useCurrentAccount()
+  const { redirect } = homeRouteApi.useSearch()
 
   if (!account) {
     return (
@@ -29,6 +34,10 @@ export default function HomePage() {
         </div>
       </PageShell>
     )
+  }
+
+  if (redirect) {
+    return <Navigate to={safeLocalReturnPath(redirect)} replace />
   }
 
   return (

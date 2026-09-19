@@ -51,8 +51,7 @@ export const featuresRouter = createTRPCRouter({
         oidcProviders: oidc ? [{ id: oidc.id, name: oidc.name }] : [],
         signupMode: env.SIGNUP_MODE,
         allowUninvitedSignup: await allowUninvitedSignup(),
-        enableAnonymousAuth:
-          env.ENABLE_ANONYMOUS_AUTH && env.SIGNUP_MODE === 'open',
+        enableAnonymousAuth: env.ENABLE_ANONYMOUS_AUTH,
       }
     }),
 })

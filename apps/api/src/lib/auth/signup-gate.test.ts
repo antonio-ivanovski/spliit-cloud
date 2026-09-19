@@ -1,16 +1,27 @@
+import type * as BetterAuthApi from 'better-auth/api'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+
+const { addOAuthServerContextMock, getOAuthStateMock } = vi.hoisted(() => ({
+  addOAuthServerContextMock: vi.fn(),
+  getOAuthStateMock: vi.fn(),
+}))
+
+vi.mock('better-auth/api', async (importOriginal) => ({
+  ...(await importOriginal<typeof BetterAuthApi>()),
+  addOAuthServerContext: addOAuthServerContextMock,
+  getOAuthState: getOAuthStateMock,
+}))
 
 import '../../test/mocks'
 import { prismaMock } from '../../test/state'
 import { env } from '../env'
 import {
-  SIGNUP_INVITE_COOKIE,
   SIGNUP_INVITE_HEADER,
   SIGNUP_INVITE_REQUIRED,
   assertCanCreateAccount,
   canCreateAccount,
+  captureOAuthSignupInvite,
   enforceSignupGate,
-  persistSignupInviteCookie,
   readLinkInviteToken,
 } from './signup-gate'
 
@@ -18,6 +29,8 @@ const originalSignupMode = env.SIGNUP_MODE
 
 afterEach(() => {
   env.SIGNUP_MODE = originalSignupMode
+  addOAuthServerContextMock.mockReset()
+  getOAuthStateMock.mockReset()
 })
 
 describe('canCreateAccount', () => {
@@ -154,79 +167,83 @@ describe('enforceSignupGate', () => {
   })
 })
 
-describe('persistSignupInviteCookie', () => {
-  it('stores a usable link token from the header on social sign-in', async () => {
-    const token = 'b'.repeat(32)
-    prismaMock.groupInvitation.findFirst.mockResolvedValue({
-      status: 'PENDING',
-      expiresAt: new Date(Date.now() + 60_000),
-      temporaryName: null,
-      role: 'MEMBER',
-      group: { id: 'grp-1', name: 'Trip', groupType: 'GROUP' },
-      invitedBy: { name: 'Alice' },
-    } as never)
-    const setCookie = vi.fn()
-    await persistSignupInviteCookie({
-      path: '/sign-in/social',
-      headers: {
-        get: (name) => (name === SIGNUP_INVITE_HEADER ? token : null),
-      },
-      setCookie,
-    })
-    expect(setCookie).toHaveBeenCalledWith(
-      SIGNUP_INVITE_COOKIE,
-      token,
-      expect.objectContaining({ httpOnly: true, sameSite: 'lax', path: '/' }),
-    )
+describe('readLinkInviteToken', () => {
+  it('reads a direct request header', async () => {
+    await expect(
+      readLinkInviteToken({
+        headers: { get: () => 'header-token-value' },
+      }),
+    ).resolves.toBe('header-token-value')
   })
 
-  it('stores a usable link token from the header on OIDC sign-in', async () => {
-    const token = 'b'.repeat(32)
-    prismaMock.groupInvitation.findFirst.mockResolvedValue({
-      status: 'PENDING',
-      expiresAt: new Date(Date.now() + 60_000),
-      temporaryName: null,
-      role: 'MEMBER',
-      group: { id: 'grp-1', name: 'Trip', groupType: 'GROUP' },
-      invitedBy: { name: 'Alice' },
-    } as never)
-    const setCookie = vi.fn()
-    await persistSignupInviteCookie({
-      path: '/sign-in/oauth2',
-      headers: {
-        get: (name) => (name === SIGNUP_INVITE_HEADER ? token : null),
-      },
-      setCookie,
-    })
-    expect(setCookie).toHaveBeenCalledWith(
-      SIGNUP_INVITE_COOKIE,
-      token,
-      expect.objectContaining({ httpOnly: true, sameSite: 'lax', path: '/' }),
-    )
+  it('recovers a link token from a nested magic-link callback', async () => {
+    const destination = '/groups/grp-1?invite=magic-link-token-123456'
+    const completeProfile = `http://localhost:3000/auth/complete-profile?redirect=${encodeURIComponent(destination)}`
+
+    await expect(
+      readLinkInviteToken({
+        path: '/magic-link/verify',
+        query: { newUserCallbackURL: completeProfile },
+      }),
+    ).resolves.toBe('magic-link-token-123456')
   })
 
-  it('does not store an unusable token', async () => {
-    prismaMock.groupInvitation.findFirst.mockResolvedValue(null)
-    const setCookie = vi.fn()
-    await persistSignupInviteCookie({
-      path: '/sign-in/social',
-      headers: {
-        get: (name) => (name === SIGNUP_INVITE_HEADER ? 'c'.repeat(32) : null),
-      },
-      setCookie,
+  it('rejects invite tokens from external callback destinations', async () => {
+    await expect(
+      readLinkInviteToken({
+        path: '/magic-link/verify',
+        query: {
+          newUserCallbackURL:
+            'https://attacker.example/groups/grp-1?invite=stolen-token',
+        },
+      }),
+    ).resolves.toBeUndefined()
+  })
+
+  it('reads server-controlled invite proof on an OAuth callback', async () => {
+    getOAuthStateMock.mockResolvedValue({
+      serverContext: { signupInviteToken: 'oauth-token-123456' },
     })
-    expect(setCookie).not.toHaveBeenCalled()
+
+    await expect(
+      readLinkInviteToken({ path: '/callback/google' }),
+    ).resolves.toBe('oauth-token-123456')
   })
 })
 
-describe('readLinkInviteToken', () => {
-  it('prefers the request header over the cookie', () => {
-    expect(
-      readLinkInviteToken({
-        headers: { get: () => 'header-token-value' },
-        getCookie: () => 'cookie-token-value',
-      }),
-    ).toBe('header-token-value')
+describe('captureOAuthSignupInvite', () => {
+  it('adds a currently usable link token to server-controlled OAuth state', async () => {
+    const token = 'o'.repeat(32)
+    prismaMock.groupInvitation.findFirst.mockResolvedValue({
+      status: 'PENDING',
+      expiresAt: new Date(Date.now() + 60_000),
+      temporaryName: null,
+      role: 'MEMBER',
+      group: { id: 'grp-1', name: 'Trip', groupType: 'GROUP' },
+      invitedBy: { name: 'Alice' },
+    } as never)
+
+    await captureOAuthSignupInvite({
+      path: '/sign-in/social',
+      headers: {
+        get: (name) => (name === SIGNUP_INVITE_HEADER ? token : null),
+      },
+    })
+
+    expect(addOAuthServerContextMock).toHaveBeenCalledWith({
+      signupInviteToken: token,
+    })
+  })
+
+  it('does not carry invalid invite proof into OAuth state', async () => {
+    prismaMock.groupInvitation.findFirst.mockResolvedValue(null)
+
+    await captureOAuthSignupInvite({
+      path: '/sign-in/social',
+      headers: { get: () => 'x'.repeat(32) },
+    })
+
+    expect(addOAuthServerContextMock).not.toHaveBeenCalled()
   })
 })
 
@@ -238,5 +255,16 @@ describe('assertCanCreateAccount', () => {
     await expect(
       assertCanCreateAccount({ email: 'nobody@example.com', context: null }),
     ).rejects.toMatchObject({ body: { code: SIGNUP_INVITE_REQUIRED } })
+  })
+
+  it('requires a usable link for anonymous signup even on an empty instance', async () => {
+    env.SIGNUP_MODE = 'invite_only'
+    prismaMock.user.count.mockResolvedValue(0)
+    prismaMock.groupInvitation.findFirst.mockResolvedValue(null)
+
+    await expect(
+      assertCanCreateAccount({ context: null, anonymous: true }),
+    ).rejects.toMatchObject({ body: { code: SIGNUP_INVITE_REQUIRED } })
+    expect(prismaMock.user.count).not.toHaveBeenCalled()
   })
 })

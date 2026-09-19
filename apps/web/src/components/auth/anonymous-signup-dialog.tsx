@@ -20,16 +20,23 @@ import {
 } from '@/lib/anonymous-recovery'
 import { authClient } from '@/lib/auth'
 import { replaceBrowserLocation } from '@/lib/browser-navigation'
+import { signupInviteFetchOptions } from '@/lib/signup-invite'
 import { useOnlineStatus } from '@/lib/use-online-status'
 
 export function AnonymousSignupDialog({
   open,
   onOpenChange,
   creationEnabled,
+  linkInviteToken,
+  redirectTo,
+  completeProfilePath,
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
   creationEnabled: boolean
+  linkInviteToken?: string
+  redirectTo: string
+  completeProfilePath: string
 }) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'AnonymousAccount.signup',
@@ -53,13 +60,14 @@ export function AnonymousSignupDialog({
     setPending(true)
     setError(null)
     try {
-      const result = await authClient.signIn.anonymous()
+      const result = await authClient.signIn.anonymous({
+        fetchOptions: signupInviteFetchOptions(linkInviteToken),
+      })
       if (result.error) throw new Error(result.error.message)
-      onOpenChange(false)
-      setRecoveryLink('')
+      replaceBrowserLocation(completeProfilePath)
     } catch {
       setError('create')
-    } finally {
+      // react-doctor-disable-next-line react-doctor/no-unowned-async-error-clear -- Pending disables every dialog action, so a newer request cannot exist.
       setPending(false)
     }
   }
@@ -75,10 +83,10 @@ export function AnonymousSignupDialog({
     setError(null)
     try {
       await recoverAnonymousAccount({ code })
-      replaceBrowserLocation('/')
+      replaceBrowserLocation(redirectTo)
     } catch {
       setError('recover')
-    } finally {
+      // react-doctor-disable-next-line react-doctor/no-unowned-async-error-clear -- Pending disables every dialog action, so a newer request cannot exist.
       setPending(false)
     }
   }

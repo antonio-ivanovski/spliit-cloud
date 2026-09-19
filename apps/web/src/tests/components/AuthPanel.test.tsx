@@ -19,6 +19,7 @@ const {
   mockMascotReact,
   mockSearch,
   mockGetLastUsedLoginMethod,
+  mockReplaceBrowserLocation,
 } = vi.hoisted(() => ({
   mockSignInEmail: vi.fn(),
   mockSignUpEmail: vi.fn(),
@@ -41,6 +42,7 @@ const {
   },
   mockMascotReact: vi.fn(),
   mockGetLastUsedLoginMethod: vi.fn(),
+  mockReplaceBrowserLocation: vi.fn(),
   mockSearch: {
     redirect: undefined as string | undefined,
     mode: undefined as 'sign-in' | 'sign-up' | undefined,
@@ -67,6 +69,10 @@ vi.mock('@/lib/auth', () => ({
 
 vi.mock('@/lib/deployment-config', () => ({
   useDeploymentConfig: () => mockDeploymentConfig,
+}))
+
+vi.mock('@/lib/browser-navigation', () => ({
+  replaceBrowserLocation: mockReplaceBrowserLocation,
 }))
 
 vi.mock('@/lib/anonymous-recovery', () => ({
@@ -303,6 +309,48 @@ describe('AuthPanel', () => {
 
   // ── Social buttons ──────────────────────────────────────────────────
 
+  it('carries a group invite through magic-link signup', async () => {
+    mockDeploymentConfig.signupMode = 'invite_only'
+    mockDeploymentConfig.allowUninvitedSignup = false
+    mockSearch.redirect = '/groups/grp-1?invite=magic-invite-token'
+    mockSignInMagicLink.mockResolvedValue({ error: null })
+    const { user } = render(<AuthPanel />)
+
+    await fillEmail(user, 'invited@example.com')
+    await user.click(screen.getByText('Send sign-in link'))
+
+    expect(mockSignInMagicLink).toHaveBeenCalledWith(
+      {
+        email: 'invited@example.com',
+        callbackURL: `${window.location.origin}${mockSearch.redirect}`,
+        newUserCallbackURL: `${window.location.origin}/auth/complete-profile?redirect=${encodeURIComponent(mockSearch.redirect)}`,
+      },
+      { headers: { 'X-Spliit-Invite-Token': 'magic-invite-token' } },
+    )
+  })
+
+  it('carries a group invite through password signup', async () => {
+    mockDeploymentConfig.signupMode = 'invite_only'
+    mockDeploymentConfig.allowUninvitedSignup = false
+    mockSearch.redirect = '/groups/grp-1?invite=password-invite-token'
+    mockSignUpEmail.mockResolvedValue({ error: null })
+    const { user } = render(<AuthPanel />)
+
+    await switchToPasswordTab(user)
+    await fillEmail(user, 'invited@example.com')
+    await user.type(screen.getByLabelText('Password'), 'StrongPass1!')
+    await user.type(screen.getByLabelText('Confirm password'), 'StrongPass1!')
+    await user.click(screen.getByText('Sign up with password'))
+
+    expect(mockSignUpEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        email: 'invited@example.com',
+        callbackURL: `${window.location.origin}/auth/complete-profile?redirect=${encodeURIComponent(mockSearch.redirect)}`,
+      }),
+      { headers: { 'X-Spliit-Invite-Token': 'password-invite-token' } },
+    )
+  })
+
   it('social buttons appear when feature flags are enabled', () => {
     mockDeploymentConfig.enableGoogleOAuth = true
     mockDeploymentConfig.enableGitHubOAuth = true
@@ -499,8 +547,46 @@ describe('AuthPanel', () => {
     expect(screen.queryByLabelText('Display name')).not.toBeInTheDocument()
     await user.click(createButton)
 
-    expect(mockSignInAnonymous).toHaveBeenCalledWith()
-    expect(sessionStorage.getItem('spliit.anonymous.redirect')).toBeNull()
+    expect(mockSignInAnonymous).toHaveBeenCalledWith({ fetchOptions: {} })
+    expect(mockReplaceBrowserLocation).toHaveBeenCalledWith(
+      '/auth/complete-profile?redirect=%2Fgroups',
+    )
+  })
+
+  it('permits an invited anonymous account on an invite-only instance', async () => {
+    mockDeploymentConfig.enableAnonymousAuth = true
+    mockDeploymentConfig.signupMode = 'invite_only'
+    mockDeploymentConfig.allowUninvitedSignup = false
+    mockSearch.redirect = '/groups/grp-1?invite=invite-token-123456'
+    mockSignInAnonymous.mockResolvedValue({ data: {}, error: null })
+    const { user } = render(<AuthPanel />)
+
+    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
+    await user.click(
+      screen.getByRole('button', { name: 'Create anonymous account' }),
+    )
+
+    expect(mockSignInAnonymous).toHaveBeenCalledWith({
+      fetchOptions: {
+        headers: { 'X-Spliit-Invite-Token': 'invite-token-123456' },
+      },
+    })
+    expect(mockReplaceBrowserLocation).toHaveBeenCalledWith(
+      `/auth/complete-profile?redirect=${encodeURIComponent(mockSearch.redirect)}`,
+    )
+  })
+
+  it('keeps anonymous creation hidden on invite-only instances without a link', async () => {
+    mockDeploymentConfig.enableAnonymousAuth = true
+    mockDeploymentConfig.signupMode = 'invite_only'
+    mockDeploymentConfig.allowUninvitedSignup = true
+    const { user } = render(<AuthPanel />)
+
+    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
+
+    expect(
+      screen.queryByRole('button', { name: 'Create anonymous account' }),
+    ).not.toBeInTheDocument()
   })
 
   it('shows recovery-only anonymous access when signup is disabled', async () => {
@@ -567,6 +653,27 @@ describe('AuthPanel', () => {
       'This sign in link is invalid.',
     )
     expect(mockSignInAnonymous).not.toHaveBeenCalled()
+  })
+
+  it('returns anonymous recovery to the pending invite destination', async () => {
+    mockDeploymentConfig.enableAnonymousAuth = true
+    mockSearch.redirect = '/groups/grp-1?invite=recovery-invite'
+    mockRecoverAnonymous.mockResolvedValue({ success: true })
+    const savedKey = `spliit_anonymous_v1_${'a'.repeat(43)}`
+    const { user } = render(<AuthPanel />)
+
+    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
+    await user.type(
+      screen.getByLabelText('Sign in link'),
+      `https://app.example/auth/recover#code=${savedKey}`,
+    )
+    await user.click(
+      screen.getByRole('button', { name: 'Sign in to anonymous account' }),
+    )
+
+    expect(mockReplaceBrowserLocation).toHaveBeenCalledWith(
+      '/groups/grp-1?invite=recovery-invite',
+    )
   })
 
   it('rejects a malformed sign in link without submitting it', async () => {

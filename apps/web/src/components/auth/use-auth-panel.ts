@@ -8,8 +8,8 @@ import { needsDisplayName } from '@/lib/account'
 import { authClient } from '@/lib/auth'
 import { useDeploymentConfig } from '@/lib/deployment-config'
 import {
-  extractLinkInviteTokenFromRedirect,
   hasSignupInviteProof,
+  resolveAuthReturnContext,
   signupInviteFetchOptions,
 } from '@/lib/signup-invite'
 import { useOnlineStatus } from '@/lib/use-online-status'
@@ -45,12 +45,20 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     email: initialEmail,
     invitation,
   } = useSearch({ strict: false }) as HomeSearch
-  const redirectTo = options?.redirectTo ?? redirect ?? '/'
+  const returnContext = resolveAuthReturnContext({
+    redirect,
+    redirectTo: options?.redirectTo,
+    invitation,
+  })
+  const redirectTo = returnContext.redirectTo
   const deployment = useDeploymentConfig()
-  const linkInviteToken =
-    invitation?.trim() || extractLinkInviteTokenFromRedirect(redirect)
-  const hasInviteProof = hasSignupInviteProof({ redirect, invitation })
-  const hasEmailInvitation = Boolean(invitation?.trim())
+  const linkInviteToken = returnContext.linkInviteToken
+  const hasInviteProof = hasSignupInviteProof({
+    redirect,
+    redirectTo: options?.redirectTo,
+    invitation,
+  })
+  const hasEmailInvitation = Boolean(returnContext.emailInvitationId)
   const canSignUp =
     deployment.signupMode === 'open' ||
     deployment.allowUninvitedSignup ||
@@ -193,7 +201,9 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
   const socialEnabled =
     googleEnabled || githubEnabled || twitterEnabled || oidcProviders.length > 0
   const mode = canSignUp ? requestedMode : 'sign-in'
-  const anonymousEnabled = deployment.enableAnonymousAuth
+  const anonymousEnabled =
+    deployment.enableAnonymousAuth &&
+    (deployment.signupMode === 'open' || Boolean(linkInviteToken))
 
   const canSubmitPassword = (() => {
     if (!email.trim()) return false
@@ -295,6 +305,7 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     oidcProviders,
     socialEnabled,
     anonymousEnabled,
+    linkInviteToken,
     callbackURL,
     setEmail,
     setPassword,
