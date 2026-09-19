@@ -1522,7 +1522,8 @@
     "signInWithX": "Pokračovat přes X",
     "signInWithOidc": "Pokračovat přes {name}",
     "signInAnonymously": "Anonymní",
-    "lastUsed": "Naposledy použito"
+    "lastUsed": "Naposledy použito",
+    "emailAuthDisabled": "Přihlášení e-mailem je na této instanci zakázáno. Použijte jednotné přihlášení (SSO)."
   },
   "CompleteProfile": {
     "title": "Dokončete svůj profil",
@@ -1955,7 +1956,8 @@
         "joined_few": "{count} lidé se připojili",
         "joined_many": "{count} lidí se připojilo",
         "retry": "Zkusit znovu"
-      }
+      },
+      "emailDeliveryDisabled": "Doručování e-mailů je na této instanci vypnuté. Pozvánka se přesto vytvoří a zobrazí se, až se pozvaný přihlásí; použijte odkaz pozvánky, abyste mu dali něco k otevření."
     },
     "invitations": {
       "title": "Čekající pozvánky",
@@ -1982,7 +1984,8 @@
         "fallbackLabel": "QR kód pro okolí",
         "viewQr": "Zobrazit QR kód",
         "expireNow": "Ukončit platnost"
-      }
+      },
+      "createdWithoutEmail": "Pozvánka pro {email} byla vytvořena, ale e-mail nebyl odeslán. Sdílejte místo toho odkaz pozvánky."
     },
     "changeRoleAria": "Změnit roli",
     "remove": "Odebrat",
@@ -2132,7 +2135,8 @@
       "linkReadyWarning": "Zkopírujte jej nyní — již jej nebudete moci zobrazit.",
       "emailInvalid": "Zadejte platnou e-mailovou adresu.",
       "linkNotShown": "Odkaz pozvánky zde není zobrazen. Pokud jej potřebujete znovu sdílet, použijte v seznamu možnost „Vygenerovat nový odkaz“.",
-      "switchToLinkNote": "Uložte pro převod této pozvánky na odkaz. E-mailová pozvánka přestane fungovat."
+      "switchToLinkNote": "Uložte pro převod této pozvánky na odkaz. E-mailová pozvánka přestane fungovat.",
+      "savedWithoutEmail": "Změny uloženy, ale e-mail nebyl odeslán. Sdílejte místo toho odkaz pozvánky."
     },
     "regenerate": {
       "title": "Vygenerovat nový odkaz"
@@ -2375,7 +2379,8 @@
       "masterLabel": "Povolit oznámení",
       "masterDescription": "Vypnutím ztlumíte e-mailová i push oznámení. Vaše volby podle kategorií zůstanou zachovány.",
       "emailAddToEnable": "Přidejte ověřený e-mail, abyste dostávali oznámení do schránky.",
-      "emailAddLink": "Přidat e-mail"
+      "emailAddLink": "Přidat e-mail",
+      "emailDeliveryDisabled": "Doručování e-mailů je na této instanci vypnuté. Vaše volby e-mailů se ukládají, ale nebudou se odesílat, dokud administrátor nenastaví e-mail."
     },
     "preferences": {
       "title": "Předvolby aplikace",
@@ -2848,7 +2853,8 @@
     "failedTitle": "Push se nepodařilo povolit",
     "failedDescription": "Toto zařízení se nepodařilo zaregistrovat. Oznámení nastavená pro e-mail budou i nadále chodit tam; volby pouze pro Push se nepřesměrují.",
     "emailUsage": "Dokud nepovolíte zařízení, budou přicházet pouze oznámení nastavená pro e-mail. Povolte oznámení v nastavení prohlížeče a zkuste to znovu v Nastavení.",
-    "done": "Hotovo"
+    "done": "Hotovo",
+    "emailDeliveryDisabled": "Doručování e-mailů je na této instanci vypnuté, takže vás e-mailová oznámení nemohou zastihnout. Zapněte si push na tomto zařízení, abyste i nadále dostávali aktualizace."
   },
   "Unsubscribe": {
     "title": "Vypnout tyto e-maily?",

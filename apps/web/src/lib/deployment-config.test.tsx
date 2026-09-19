@@ -58,6 +58,9 @@ describe('useDeploymentConfig', () => {
       oidcProviders: [{ id: 'oidc', name: 'Company SSO' }],
       signupMode: 'invite_only',
       allowUninvitedSignup: false,
+      enableAnonymousAuth: false,
+      enableEmailAuth: false,
+      emailDeliveryEnabled: false,
     })
 
     const { result } = renderHook(() => useDeploymentConfig(), {
@@ -73,6 +76,9 @@ describe('useDeploymentConfig', () => {
         oidcProviders: [{ id: 'oidc', name: 'Company SSO' }],
         signupMode: 'invite_only',
         allowUninvitedSignup: false,
+        enableAnonymousAuth: false,
+        enableEmailAuth: false,
+        emailDeliveryEnabled: false,
         maxExpenseDocumentSize: 10 * 1024 * 1024,
       })
     })
@@ -93,5 +99,17 @@ describe('useDeploymentConfig', () => {
 
     expect(result.current.enableGoogleOAuth).toBe(true)
     expect(mockGetFeatures).not.toHaveBeenCalled()
+  })
+
+  it('reports delivery as unknown before the features query resolves', () => {
+    vi.stubEnv('MODE', 'development')
+    mockGetFeatures.mockReturnValue(new Promise(() => {}))
+
+    const { result } = renderHook(() => useDeploymentConfig(), {
+      wrapper: createWrapper(),
+    })
+
+    expect(result.current.emailDeliveryEnabled).toBeNull()
+    expect(mockGetFeatures).toHaveBeenCalledOnce()
   })
 })

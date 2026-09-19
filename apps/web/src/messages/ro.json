@@ -1822,7 +1822,8 @@
     "signInWithX": "Continuă cu X",
     "signInWithOidc": "Continuă cu {name}",
     "signInAnonymously": "Anonim",
-    "lastUsed": "Ultima utilizare"
+    "lastUsed": "Ultima utilizare",
+    "emailAuthDisabled": "Autentificarea prin e-mail este dezactivată pe această instanță. Folosește autentificarea unică (SSO)."
   },
   "CompleteProfile": {
     "title": "Completează-ți profilul",
@@ -1945,7 +1946,8 @@
         "joined_zero": "{count} persoane s-au alăturat până acum",
         "joined_few": "{count} persoane s-au alăturat",
         "retry": "Reîncearcă"
-      }
+      },
+      "emailDeliveryDisabled": "Trimiterea e-mailurilor este dezactivată pe această instanță. Invitația este totuși creată și va apărea când persoana invitată se autentifică; folosește un link de invitație ca să aibă ceva de deschis."
     },
     "invitations": {
       "title": "Invitații în așteptare",
@@ -1972,7 +1974,8 @@
         "fallbackLabel": "Cod QR din apropiere",
         "viewQr": "Vezi codul QR",
         "expireNow": "Expiră acum"
-      }
+      },
+      "createdWithoutEmail": "Invitație creată pentru {email}, dar nu a fost trimis niciun e-mail. Distribuie în schimb un link de invitație."
     },
     "changeRoleAria": "Schimbă rolul",
     "remove": "Elimină",
@@ -2121,7 +2124,8 @@
       "linkReadyWarning": "Copiază-l acum — nu îl vei mai putea vedea.",
       "emailInvalid": "Introduceți o adresă de e-mail validă.",
       "linkNotShown": "Linkul de invitație nu este afișat aici. Dacă trebuie să-l partajați din nou, utilizați „Generează link nou” din listă.",
-      "switchToLinkNote": "Salvează pentru a transforma această invitație într-un link. Invitația prin e-mail nu va mai funcționa."
+      "switchToLinkNote": "Salvează pentru a transforma această invitație într-un link. Invitația prin e-mail nu va mai funcționa.",
+      "savedWithoutEmail": "Modificări salvate, dar nu a fost trimis niciun e-mail. Distribuie în schimb un link de invitație."
     },
     "regenerate": {
       "title": "Generează link nou"
@@ -2364,7 +2368,8 @@
       "masterLabel": "Activează notificările",
       "masterDescription": "Dezactivează-le pentru a reduce la tăcere toate e-mailurile și notificările push. Alegerile tale pe categorii sunt păstrate.",
       "emailAddToEnable": "Adaugă un e-mail verificat pentru a primi notificări în căsuța de e-mail.",
-      "emailAddLink": "Adaugă e-mail"
+      "emailAddLink": "Adaugă e-mail",
+      "emailDeliveryDisabled": "Trimiterea e-mailurilor este dezactivată pe această instanță. Opțiunile tale de e-mail sunt salvate, dar nu vor fi trimise până când administratorul configurează e-mailul."
     },
     "preferences": {
       "title": "Preferințele aplicației",
@@ -2828,7 +2833,8 @@
     "failedTitle": "Notificările push nu au putut fi activate",
     "failedDescription": "Nu am putut înregistra acest dispozitiv. Notificările configurate pentru e-mail vor continua să fie trimise acolo; opțiunile doar push nu sunt redirecționate.",
     "emailUsage": "Până când activezi un dispozitiv, vor ajunge doar notificările configurate pentru e-mail. Poți permite notificările din setările browserului și încerca din nou din Setări.",
-    "done": "Gata"
+    "done": "Gata",
+    "emailDeliveryDisabled": "Trimiterea e-mailurilor este dezactivată pe această instanță, așa că notificările prin e-mail nu pot ajunge la tine. Activează notificările push pe acest dispozitiv pentru a primi în continuare actualizări."
   },
   "Unsubscribe": {
     "title": "Dezactivezi aceste e-mailuri?",

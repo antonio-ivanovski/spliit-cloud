@@ -784,7 +784,8 @@
     "signInWithX": "Continuar com X",
     "signInWithOidc": "Continuar com {name}",
     "signInAnonymously": "Anónimo",
-    "lastUsed": "Última utilização"
+    "lastUsed": "Última utilização",
+    "emailAuthDisabled": "O início de sessão com e-mail está desativado nesta instância. Usa a autenticação única (SSO)."
   },
   "CompleteProfile": {
     "title": "Completa o teu perfil",
@@ -1945,7 +1946,8 @@
         "joined_zero": "{count} pessoas juntaram-se até agora",
         "joined_many": "{count} pessoas juntaram-se",
         "retry": "Tentar novamente"
-      }
+      },
+      "emailDeliveryDisabled": "O envio de e-mails está desativado nesta instância. O convite é criado na mesma e aparecerá quando a pessoa convidada iniciar sessão; usa uma ligação de convite para lhe dares algo que possa abrir."
     },
     "invitations": {
       "title": "Convites pendentes",
@@ -1972,7 +1974,8 @@
         "fallbackLabel": "Código QR próximo",
         "viewQr": "Ver código QR",
         "expireNow": "Expirar agora"
-      }
+      },
+      "createdWithoutEmail": "Convite criado para {email}, mas não foi enviado nenhum e-mail. Partilha antes uma ligação de convite."
     },
     "changeRoleAria": "Alterar função",
     "remove": "Remover",
@@ -2121,7 +2124,8 @@
       "linkReadyWarning": "Copie-a agora — não poderá voltar a vê-la.",
       "emailInvalid": "Insere um endereço de e-mail válido.",
       "linkNotShown": "A ligação de convite não é apresentada aqui. Se precisar de partilhá-la novamente, utilize \"Gerar nova ligação\" na lista.",
-      "switchToLinkNote": "Guarda para converter este convite numa ligação. O convite por email deixará de funcionar."
+      "switchToLinkNote": "Guarda para converter este convite numa ligação. O convite por email deixará de funcionar.",
+      "savedWithoutEmail": "Alterações guardadas, mas não foi enviado nenhum e-mail. Partilha antes uma ligação de convite."
     },
     "regenerate": {
       "title": "Gerar nova ligação"
@@ -2364,7 +2368,8 @@
       "masterLabel": "Ativar notificações",
       "masterDescription": "Desative-as para silenciar todos os e-mails e notificações push. As suas escolhas por categoria são preservadas.",
       "emailAddToEnable": "Adiciona um e-mail verificado para receber notificações na caixa de entrada.",
-      "emailAddLink": "Adicionar e-mail"
+      "emailAddLink": "Adicionar e-mail",
+      "emailDeliveryDisabled": "O envio de e-mails está desativado nesta instância. As tuas escolhas de e-mail são guardadas, mas não serão enviadas até que o administrador configure o e-mail."
     },
     "preferences": {
       "title": "Preferências da aplicação",
@@ -2828,7 +2833,8 @@
     "failedTitle": "Não foi possível ativar as notificações push",
     "failedDescription": "Não foi possível registar este dispositivo. As notificações configuradas para e-mail continuarão a ser enviadas por e-mail; as opções apenas push não serão redirecionadas.",
     "emailUsage": "Apenas as notificações configuradas para e-mail serão recebidas até ativar um dispositivo. Pode permitir notificações nas definições do navegador e tentar novamente nas Definições.",
-    "done": "Concluído"
+    "done": "Concluído",
+    "emailDeliveryDisabled": "O envio de e-mails está desativado nesta instância, por isso as notificações por e-mail não te podem alcançar. Ativa as notificações push neste dispositivo para continuares a receber atualizações."
   },
   "Unsubscribe": {
     "title": "Desativar estes e-mails?",

@@ -41,6 +41,7 @@ export function AuthPanel({
     twitterEnabled,
     oidcProviders,
     anonymousEnabled,
+    emailAuthEnabled,
     linkInviteToken,
     redirectTo: resolvedRedirectTo,
     completeProfilePath,
@@ -95,93 +96,112 @@ export function AuthPanel({
         onAnonymous={() => setAnonymousDialogOpen(true)}
       />
 
-      <div className="flex items-center gap-3 text-xs text-muted-foreground uppercase">
-        <div className="h-px flex-1 bg-border" />
-        <span>{t('orContinueWithEmail')}</span>
-        <div className="h-px flex-1 bg-border" />
-      </div>
-
-      <section className="rounded-lg bg-muted/20 p-3">
-        <Tabs
-          value={emailVariant}
-          onValueChange={(value) => {
-            setEmailVariant(value as 'magic-link' | 'password')
-            emailAuth.reset()
-            magicLink.reset()
-          }}
-          className="flex flex-col gap-4"
-        >
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="magic-link">
-              {t('magicLinkTab')}
-              {lastLoginMethod === 'magic-link' && (
-                <Badge variant="secondary" className="ms-1.5">
-                  {t('lastUsed')}
-                </Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="password">
-              {t('passwordTab')}
-              {lastLoginMethod === 'email' && (
-                <Badge variant="secondary" className="ms-1.5">
-                  {t('lastUsed')}
-                </Badge>
-              )}
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-
-        {emailVariant === 'magic-link' ? (
-          <MagicLinkForm
-            email={email}
-            error={magicLink.isError ? getErrorMessage(magicLink.error) : null}
-            isPending={magicLink.isPending}
-            disabled={!isOnline}
-            onEmailChange={setEmail}
-            onSubmit={handleMagicLink}
-          />
-        ) : (
-          <PasswordForm
-            mode={mode}
-            email={email}
-            password={password}
-            confirmPassword={confirmPassword}
-            canSubmit={canSubmitPassword}
-            error={emailAuth.isError ? getErrorMessage(emailAuth.error) : null}
-            isPending={emailAuth.isPending}
-            disabled={!isOnline}
-            onEmailChange={setEmail}
-            onPasswordChange={setPassword}
-            onConfirmPasswordChange={setConfirmPassword}
-            onSubmit={handlePasswordSubmit}
-          />
-        )}
-      </section>
-
-      {canSignUp ? (
-        <div className="w-full text-center text-sm text-muted-foreground">
-          {mode === 'sign-in' ? t('noAccount') : t('haveAccount')}{' '}
-          <Button
-            type="button"
-            variant="link"
-            className="h-auto px-0 py-0"
-            onClick={() =>
-              switchMode(mode === 'sign-in' ? 'sign-up' : 'sign-in')
-            }
-          >
-            {mode === 'sign-in' ? t('createAccount') : t('signIn')}
-          </Button>
-        </div>
+      {!emailAuthEnabled ? (
+        <>
+          <p className="text-center text-sm text-muted-foreground">
+            {t('emailAuthDisabled')}
+          </p>
+          {!canSignUp && (
+            <p className="text-center text-sm text-muted-foreground">
+              {t('inviteOnly.message')}
+            </p>
+          )}
+        </>
       ) : (
-        <p className="text-center text-sm text-muted-foreground">
-          {t('inviteOnly.message')}
-        </p>
-      )}
+        <>
+          <div className="flex items-center gap-3 text-xs text-muted-foreground uppercase">
+            <div className="h-px flex-1 bg-border" />
+            <span>{t('orContinueWithEmail')}</span>
+            <div className="h-px flex-1 bg-border" />
+          </div>
 
-      {hasEmailInvitation && mode === 'sign-up' && (
-        <p className="text-center text-sm text-muted-foreground">
-          {t('inviteOnly.useInvitedEmail')}
-        </p>
+          <section className="rounded-lg bg-muted/20 p-3">
+            <Tabs
+              value={emailVariant}
+              onValueChange={(value) => {
+                setEmailVariant(value as 'magic-link' | 'password')
+                emailAuth.reset()
+                magicLink.reset()
+              }}
+              className="flex flex-col gap-4"
+            >
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="magic-link">
+                  {t('magicLinkTab')}
+                  {lastLoginMethod === 'magic-link' && (
+                    <Badge variant="secondary" className="ms-1.5">
+                      {t('lastUsed')}
+                    </Badge>
+                  )}
+                </TabsTrigger>
+                <TabsTrigger value="password">
+                  {t('passwordTab')}
+                  {lastLoginMethod === 'email' && (
+                    <Badge variant="secondary" className="ms-1.5">
+                      {t('lastUsed')}
+                    </Badge>
+                  )}
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            {emailVariant === 'magic-link' ? (
+              <MagicLinkForm
+                email={email}
+                error={
+                  magicLink.isError ? getErrorMessage(magicLink.error) : null
+                }
+                isPending={magicLink.isPending}
+                disabled={!isOnline}
+                onEmailChange={setEmail}
+                onSubmit={handleMagicLink}
+              />
+            ) : (
+              <PasswordForm
+                mode={mode}
+                email={email}
+                password={password}
+                confirmPassword={confirmPassword}
+                canSubmit={canSubmitPassword}
+                error={
+                  emailAuth.isError ? getErrorMessage(emailAuth.error) : null
+                }
+                isPending={emailAuth.isPending}
+                disabled={!isOnline}
+                onEmailChange={setEmail}
+                onPasswordChange={setPassword}
+                onConfirmPasswordChange={setConfirmPassword}
+                onSubmit={handlePasswordSubmit}
+              />
+            )}
+          </section>
+
+          {canSignUp ? (
+            <div className="w-full text-center text-sm text-muted-foreground">
+              {mode === 'sign-in' ? t('noAccount') : t('haveAccount')}{' '}
+              <Button
+                type="button"
+                variant="link"
+                className="h-auto px-0 py-0"
+                onClick={() =>
+                  switchMode(mode === 'sign-in' ? 'sign-up' : 'sign-in')
+                }
+              >
+                {mode === 'sign-in' ? t('createAccount') : t('signIn')}
+              </Button>
+            </div>
+          ) : (
+            <p className="text-center text-sm text-muted-foreground">
+              {t('inviteOnly.message')}
+            </p>
+          )}
+
+          {hasEmailInvitation && mode === 'sign-up' && (
+            <p className="text-center text-sm text-muted-foreground">
+              {t('inviteOnly.useInvitedEmail')}
+            </p>
+          )}
+        </>
       )}
 
       <p className="text-center text-xs leading-5 text-muted-foreground">

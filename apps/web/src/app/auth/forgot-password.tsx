@@ -16,6 +16,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { authClient } from '@/lib/auth'
+import { useDeploymentConfig } from '@/lib/deployment-config'
 
 const forgotPasswordRouteApi = getRouteApi('/auth/forgot-password')
 
@@ -34,7 +35,9 @@ function getErrorMessage(error: unknown): string {
  */
 export function ForgotPasswordPage() {
   const { t } = useTranslation(undefined, { keyPrefix: 'ForgotPassword' })
+  const { t: tAuth } = useTranslation(undefined, { keyPrefix: 'Auth' })
   const { email: initialEmail } = forgotPasswordRouteApi.useSearch()
+  const deployment = useDeploymentConfig()
 
   const [email, setEmail] = useState(initialEmail ?? '')
   const [emailSent, setEmailSent] = useState(false)
@@ -75,7 +78,14 @@ export function ForgotPasswordPage() {
           <CardDescription>{t('subtitle')}</CardDescription>
         </CardHeader>
         <CardContent>
-          {emailSent ? (
+          {deployment.enableEmailAuth === false ? (
+            <p
+              className="text-center text-sm text-muted-foreground"
+              role="alert"
+            >
+              {tAuth('emailAuthDisabled')}
+            </p>
+          ) : emailSent ? (
             <div className="flex flex-col gap-3 rounded-lg border bg-muted/40 px-4 py-5 text-center">
               <Mail className="mx-auto h-5 w-5 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">{t('emailSent')}</p>

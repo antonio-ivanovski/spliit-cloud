@@ -1822,7 +1822,8 @@
     "signInWithX": "Continua amb X",
     "signInWithOidc": "Continua amb {name}",
     "signInAnonymously": "Anònim",
-    "lastUsed": "Darrer ús"
+    "lastUsed": "Darrer ús",
+    "emailAuthDisabled": "L'inici de sessió amb correu electrònic està desactivat en aquesta instància. Utilitza l'inici de sessió únic (SSO)."
   },
   "CompleteProfile": {
     "title": "Completa el teu perfil",
@@ -1945,7 +1946,8 @@
         "joined_zero": "S'hi han unit {count} persones fins ara",
         "joined_many": "S'hi han unit {count} persones",
         "retry": "Torna-ho a provar"
-      }
+      },
+      "emailDeliveryDisabled": "El lliurament de correu electrònic està desactivat en aquesta instància. La invitació es crea igualment i apareixerà quan la persona convidada iniciï sessió; fes servir un enllaç d'invitació per donar-li alguna cosa per obrir."
     },
     "invitations": {
       "title": "Invitacions pendents",
@@ -1972,7 +1974,8 @@
         "fallbackLabel": "Codi QR proper",
         "viewQr": "Mostra el codi QR",
         "expireNow": "Fes caducar ara"
-      }
+      },
+      "createdWithoutEmail": "Invitació creada per a {email}, però no s'ha enviat cap correu electrònic. Comparteix un enllaç d'invitació en el seu lloc."
     },
     "changeRoleAria": "Canvia el rol",
     "remove": "Elimina",
@@ -2121,7 +2124,8 @@
       "linkReadyWarning": "Copia'l ara: no el podràs tornar a veure.",
       "emailInvalid": "Introdueix una adreça de correu vàlida.",
       "linkNotShown": "L'enllaç d'invitació no es mostra aquí. Si necessites compartir-lo de nou, utilitza \"Genera un enllaç nou\" a la llista.",
-      "switchToLinkNote": "Desa per convertir aquesta invitació en un enllaç. La invitació per correu electrònic deixarà de funcionar."
+      "switchToLinkNote": "Desa per convertir aquesta invitació en un enllaç. La invitació per correu electrònic deixarà de funcionar.",
+      "savedWithoutEmail": "S'han desat els canvis, però no s'ha enviat cap correu electrònic. Comparteix un enllaç d'invitació en el seu lloc."
     },
     "regenerate": {
       "title": "Genera un enllaç nou"
@@ -2364,7 +2368,8 @@
       "masterLabel": "Activa les notificacions",
       "masterDescription": "Desactiva-les per silenciar tots els correus electrònics i les notificacions push. Les teves preferències per categoria es conserven.",
       "emailAddToEnable": "Afegeix un correu verificat per rebre notificacions a la safata d'entrada.",
-      "emailAddLink": "Afegeix un correu"
+      "emailAddLink": "Afegeix un correu",
+      "emailDeliveryDisabled": "El lliurament de correu electrònic està desactivat en aquesta instància. Les teves eleccions de correu es desen, però no s'enviaran fins que l'administrador configuri el correu electrònic."
     },
     "preferences": {
       "title": "Preferències de l'aplicació",
@@ -2828,7 +2833,8 @@
     "failedTitle": "No s'han pogut activar les notificacions push",
     "failedDescription": "No s'ha pogut registrar aquest dispositiu. Les notificacions configurades per correu electrònic continuaran arribant-hi; les opcions només push no es redirigeixen.",
     "emailUsage": "Només arribaran les notificacions configurades per correu electrònic fins que activis un dispositiu. Pots permetre les notificacions a la configuració del navegador i tornar-ho a provar des de Configuració.",
-    "done": "Fet"
+    "done": "Fet",
+    "emailDeliveryDisabled": "El lliurament de correu electrònic està desactivat en aquesta instància, de manera que les notificacions per correu no et poden arribar. Activa les notificacions push en aquest dispositiu per continuar rebent actualitzacions."
   },
   "Unsubscribe": {
     "title": "Desactiva aquests correus?",

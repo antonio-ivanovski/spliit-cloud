@@ -314,8 +314,12 @@ export function useMembersDialogs() {
   })
 
   const createMutation = trpc.invitations.create.useMutation({
-    onSuccess: async (_data, vars) => {
-      toast({ description: t('invitations.created', { email: vars.email }) })
+    onSuccess: async (data, vars) => {
+      toast({
+        description: data.emailDelivered
+          ? t('invitations.created', { email: vars.email })
+          : t('invitations.createdWithoutEmail', { email: vars.email }),
+      })
       await Promise.all([
         utils.invitations.list.invalidate({ groupId }),
         utils.groups.get.invalidate({ groupId }),

@@ -1,7 +1,8 @@
-import { UserPlus } from 'lucide-react'
+import { AlertTriangle, UserPlus } from 'lucide-react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -19,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useDeploymentConfig } from '@/lib/deployment-config'
 
 import {
   useRoleSelectItems,
@@ -45,12 +47,21 @@ export function InviteEmailTab({
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
   const roleSelectItems = useRoleSelectItems()
+  const emailDeliveryEnabled = useDeploymentConfig().emailDeliveryEnabled
 
   return (
     <>
       <p className="border-s-2 border-primary/40 ps-3 text-sm text-muted-foreground">
         {t('invite.emailDescription')}
       </p>
+      {emailDeliveryEnabled === false && (
+        <Alert className="border-amber-500/35 bg-amber-500/8">
+          <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+          <AlertDescription>
+            {t('invite.emailDeliveryDisabled')}
+          </AlertDescription>
+        </Alert>
+      )}
       <Form {...form}>
         <form onSubmit={onSubmit} className="flex flex-col gap-3">
           <FormField

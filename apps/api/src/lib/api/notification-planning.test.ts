@@ -23,6 +23,13 @@ vi.mock('./boss', () => ({
 
 vi.mock('../notifications/push', () => ({ isPushConfigured: true }))
 
+// These tests cover planning/enqueue mechanics, not the delivery gate
+// (tested in coordinator-policy/delivery-planner): pretend SMTP is set.
+vi.mock('../env', async (importOriginal) => {
+  const actual = await importOriginal()
+  return { ...actual, isEmailDeliveryEnabled: () => true }
+})
+
 import { createExpenseComment } from './expense-comments'
 
 const boss = {} as SpliitBoss

@@ -1822,7 +1822,8 @@
     "signInWithX": "Continuer avec X",
     "signInWithOidc": "Continuer avec {name}",
     "signInAnonymously": "Anonyme",
-    "lastUsed": "Dernière utilisation"
+    "lastUsed": "Dernière utilisation",
+    "emailAuthDisabled": "La connexion par e-mail est désactivée sur cette instance. Veuillez utiliser l'authentification unique (SSO)."
   },
   "CompleteProfile": {
     "title": "Complétez votre profil",
@@ -1945,7 +1946,8 @@
         "joined_zero": "{count} personne a rejoint le groupe pour le moment",
         "joined_many": "{count} personnes ont rejoint le groupe",
         "retry": "Réessayer"
-      }
+      },
+      "emailDeliveryDisabled": "L'envoi d'e-mails est désactivé sur cette instance. L'invitation est tout de même créée et apparaîtra lorsque la personne invitée se connectera ; utilisez un lien d'invitation pour lui donner quelque chose à ouvrir."
     },
     "invitations": {
       "title": "Invitations en attente",
@@ -1972,7 +1974,8 @@
         "fallbackLabel": "Code QR à proximité",
         "viewQr": "Voir le code QR",
         "expireNow": "Expirer maintenant"
-      }
+      },
+      "createdWithoutEmail": "Invitation créée pour {email}, mais aucun e-mail n'a été envoyé. Partagez plutôt un lien d'invitation."
     },
     "changeRoleAria": "Changer le rôle",
     "remove": "Supprimer",
@@ -2121,7 +2124,8 @@
       "linkReadyWarning": "Copiez-le maintenant : vous ne pourrez plus le consulter ensuite.",
       "emailInvalid": "Saisissez une adresse e-mail valide.",
       "linkNotShown": "Le lien d’invitation n’est pas affiché ici. Utilisez « Générer un nouveau lien » dans la liste si vous avez besoin de le partager à nouveau.",
-      "switchToLinkNote": "Enregistrez pour convertir cette invitation en lien. L'invitation par e-mail cessera de fonctionner."
+      "switchToLinkNote": "Enregistrez pour convertir cette invitation en lien. L'invitation par e-mail cessera de fonctionner.",
+      "savedWithoutEmail": "Modifications enregistrées, mais aucun e-mail n'a été envoyé. Partagez plutôt un lien d'invitation."
     },
     "regenerate": {
       "title": "Générer un nouveau lien"
@@ -2364,7 +2368,8 @@
       "masterLabel": "Activer les notifications",
       "masterDescription": "Désactivez-les pour mettre en silence tous les e-mails et toutes les notifications push. Vos choix par catégorie sont conservés.",
       "emailAddToEnable": "Ajoutez un e-mail vérifié pour recevoir des notifications dans votre boîte de réception.",
-      "emailAddLink": "Ajouter un e-mail"
+      "emailAddLink": "Ajouter un e-mail",
+      "emailDeliveryDisabled": "L'envoi d'e-mails est désactivé sur cette instance. Vos choix d'e-mails sont enregistrés, mais ils ne seront envoyés que lorsque l'administrateur configurera l'e-mail."
     },
     "preferences": {
       "title": "Préférences de l’application",
@@ -2828,7 +2833,8 @@
     "failedTitle": "Les notifications push n’ont pas pu être activées",
     "failedDescription": "Nous n’avons pas pu enregistrer cet appareil. Les notifications configurées par e-mail continueront d’y être envoyées ; les choix uniquement push ne seront pas redirigés.",
     "emailUsage": "Seules les notifications configurées par e-mail seront reçues tant que vous n’aurez pas activé un appareil. Vous pouvez autoriser les notifications dans les paramètres du navigateur et réessayer depuis les paramètres.",
-    "done": "Terminé"
+    "done": "Terminé",
+    "emailDeliveryDisabled": "L'envoi d'e-mails est désactivé sur cette instance, donc les notifications par e-mail ne peuvent pas vous parvenir. Activez les notifications push sur cet appareil pour continuer à recevoir les mises à jour."
   },
   "Unsubscribe": {
     "title": "Désactiver ces e-mails ?",

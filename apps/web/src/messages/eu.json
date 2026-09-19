@@ -1821,7 +1821,8 @@
     "signInWithX": "Jarraitu X-ekin",
     "signInWithOidc": "Jarraitu {name}-rekin",
     "signInAnonymously": "Anonimoa",
-    "lastUsed": "Azken erabilera"
+    "lastUsed": "Azken erabilera",
+    "emailAuthDisabled": "Posta elektronikoaren bidezko saioa hasteko aukera desgaituta dago instantzia honetan. Erabili saio-hasiera bakarra (SSO)."
   },
   "CompleteProfile": {
     "title": "Osatu zure profila",
@@ -1943,7 +1944,8 @@
         "joined_other": "{count} pertsona batu dira",
         "joined_zero": "{count} pertsona batu dira orain arte",
         "retry": "Saiatu berriro"
-      }
+      },
+      "emailDeliveryDisabled": "Instantzia honetan mezu elektronikoak bidaltzea desgaituta dago. Gonbidapena hala ere sortuko da eta gonbidatuak saioa hasten duenean agertuko da; erabili gonbidapen-esteka bat irekitzeko zerbait emateko."
     },
     "invitations": {
       "title": "Gonbidapen zain",
@@ -1970,7 +1972,8 @@
         "fallbackLabel": "Inguruko QR kodea",
         "viewQr": "Ikusi QR kodea",
         "expireNow": "Iraungi orain"
-      }
+      },
+      "createdWithoutEmail": "{email} helbiderako gonbidapena sortu da, baina ez da mezurik bidali. Horren ordez, partekatu gonbidapen-esteka bat."
     },
     "changeRoleAria": "Aldatu rola",
     "remove": "Kendu",
@@ -2119,7 +2122,8 @@
       "linkReadyWarning": "Kopiatu orain; gero ezin izango duzu berriro ikusi.",
       "emailInvalid": "Sartu baliozko helbide elektroniko bat.",
       "linkNotShown": "Gonbidapen-esteka ez da hemen erakusten. Berriro partekatu behar baduzu, erabili \"Sortu esteka berria\" zerrendan.",
-      "switchToLinkNote": "Gorde gonbidapen hau esteka bihurtzeko. Posta elektronikoko gonbidapenak ez du funtzionatuko."
+      "switchToLinkNote": "Gorde gonbidapen hau esteka bihurtzeko. Posta elektronikoko gonbidapenak ez du funtzionatuko.",
+      "savedWithoutEmail": "Aldaketak gorde dira, baina ez da mezurik bidali. Horren ordez, partekatu gonbidapen-esteka bat."
     },
     "regenerate": {
       "title": "Sortu esteka berria"
@@ -2362,7 +2366,8 @@
       "masterLabel": "Gaitu jakinarazpenak",
       "masterDescription": "Desaktibatu posta- eta push-jakinarazpen guztiak isiltzeko. Kategorien araberako aukerak gordeta mantentzen dira.",
       "emailAddToEnable": "Gehitu egiaztatutako helbide elektroniko bat sarrerako ontziko jakinarazpenak jasotzeko.",
-      "emailAddLink": "Gehitu helbidea"
+      "emailAddLink": "Gehitu helbidea",
+      "emailDeliveryDisabled": "Instantzia honetan mezu elektronikoak bidaltzea desgaituta dago. Zure posta-elektronikoko aukerak gordetzen dira, baina ez dira bidaliko administratzaileak posta konfiguratzen duen arte."
     },
     "preferences": {
       "title": "Aplikazioaren hobespenak",
@@ -2826,7 +2831,8 @@
     "failedTitle": "Ezin izan dira push jakinarazpenak aktibatu",
     "failedDescription": "Ezin izan dugu gailu hau erregistratu. Posta elektronikorako konfiguratuta dauden jakinarazpenak posta elektronikoz jasotzen jarraituko duzu; push hutseko aukerak ez dira birbideratuko.",
     "emailUsage": "Gailu bat aktibatu arte, posta elektronikorako konfiguratuta dauden jakinarazpenak baino ez dira iritsiko. Jakinarazpenak arakatzailearen ezarpenetan baimendu eta berriro saiatu zaitezke Ezarpenetatik.",
-    "done": "Eginda"
+    "done": "Eginda",
+    "emailDeliveryDisabled": "Instantzia honetan mezu elektronikoak bidaltzea desgaituta dago, eta, beraz, posta-jakinarazpenak ezin dira zugana iritsi. Gaitu push jakinarazpenak gailu honetan eguneratzeak jasotzen jarraitzeko."
   },
   "Unsubscribe": {
     "title": "Desaktibatu mezu elektroniko hauek?",

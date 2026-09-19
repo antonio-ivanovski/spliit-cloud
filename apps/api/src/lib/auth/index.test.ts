@@ -12,6 +12,8 @@ import { clearAccountCache, getCachedAccount } from './account-cache'
 // `vi.mock('../lib/auth/index', ...)` in `./mocks` would otherwise hide the
 // `options` property.
 const realAuthModule = (await vi.importActual('./index')) as {
+  EMAIL_AUTH_DISABLED: string
+  throwEmailAuthDisabled: () => never
   getVerifiedGitHubUserInfo: (token: { accessToken?: string }) => Promise<{
     user: {
       name: string
@@ -431,6 +433,21 @@ describe('better-auth emailAndPassword config', () => {
         ),
       }),
     )
+  })
+})
+
+describe('email auth disable', () => {
+  it('throws EMAIL_AUTH_DISABLED with FORBIDDEN status', () => {
+    expect(realAuthModule.EMAIL_AUTH_DISABLED).toBe('EMAIL_AUTH_DISABLED')
+    try {
+      realAuthModule.throwEmailAuthDisabled()
+      expect.unreachable()
+    } catch (err) {
+      expect(err).toMatchObject({
+        status: 'FORBIDDEN',
+        body: { code: 'EMAIL_AUTH_DISABLED' },
+      })
+    }
   })
 })
 

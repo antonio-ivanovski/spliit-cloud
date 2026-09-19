@@ -1805,7 +1805,8 @@
     "signInWithX": "使用 X 继续",
     "signInWithOidc": "使用 {name} 继续",
     "signInAnonymously": "匿名",
-    "lastUsed": "上次使用"
+    "lastUsed": "上次使用",
+    "emailAuthDisabled": "此实例已停用邮箱登录。请使用单点登录（SSO）。"
   },
   "CompleteProfile": {
     "title": "完善您的个人资料",
@@ -1927,7 +1928,8 @@
         "joined_other": "{count} 人已加入",
         "joined_zero": "目前 {count} 人已加入",
         "retry": "重试"
-      }
+      },
+      "emailDeliveryDisabled": "此实例已停用邮件发送。邀请仍会创建，并在被邀请人登录后显示；请使用邀请链接，让对方有可打开的内容。"
     },
     "invitations": {
       "title": "待处理的邀请",
@@ -1954,7 +1956,8 @@
         "fallbackLabel": "附近的二维码",
         "viewQr": "查看二维码",
         "expireNow": "立即过期"
-      }
+      },
+      "createdWithoutEmail": "已为 {email} 创建邀请，但未发送邮件。请改为分享邀请链接。"
     },
     "changeRoleAria": "更改角色",
     "remove": "移除",
@@ -2102,7 +2105,8 @@
       "linkReadyWarning": "请立即复制，之后将无法再次查看。",
       "emailInvalid": "请输入有效的电子邮件地址。",
       "linkNotShown": "邀请链接不会显示在这里。如需再次分享，请在列表中使用“生成新链接”。",
-      "switchToLinkNote": "保存后，此邀请将转换为链接。邮件邀请将停止使用。"
+      "switchToLinkNote": "保存后，此邀请将转换为链接。邮件邀请将停止使用。",
+      "savedWithoutEmail": "更改已保存，但未发送邮件。请改为分享邀请链接。"
     },
     "regenerate": {
       "title": "生成新链接"
@@ -2345,7 +2349,8 @@
       "masterLabel": "启用通知",
       "masterDescription": "关闭后，所有电子邮件和推送通知都将静默。您的分类选择会保留。",
       "emailAddToEnable": "添加已验证的邮箱以接收收件箱通知。",
-      "emailAddLink": "添加邮箱"
+      "emailAddLink": "添加邮箱",
+      "emailDeliveryDisabled": "此实例已停用邮件发送。你的邮件选择会被保存，但在管理员配置邮件之前不会发送。"
     },
     "preferences": {
       "title": "应用偏好设置",
@@ -2791,7 +2796,8 @@
     "failedTitle": "无法启用推送",
     "failedDescription": "无法注册此设备。设置为电子邮件的通知仍会发送到邮箱；仅选择推送的通知不会改用电子邮件发送。",
     "emailUsage": "启用设备前，只会收到设置为电子邮件的通知。你可以在浏览器设置中允许通知，然后从设置中重试。",
-    "done": "完成"
+    "done": "完成",
+    "emailDeliveryDisabled": "此实例已停用邮件发送，因此邮件通知无法送达。请在此设备上开启推送，以便继续接收更新。"
   },
   "Unsubscribe": {
     "title": "要关闭这些邮件吗？",

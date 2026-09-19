@@ -5,7 +5,7 @@ import { getTrpcClient } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
 import { MAX_EXPENSE_DOCUMENT_SIZE } from '@spliit/domain'
 
-export type DeploymentConfig = Pick<
+type BaseDeploymentConfig = Pick<
   AppRouterOutput['features']['get'],
   | 'defaultCurrencyCode'
   | 'enableGoogleOAuth'
@@ -15,8 +15,18 @@ export type DeploymentConfig = Pick<
   | 'signupMode'
   | 'allowUninvitedSignup'
   | 'enableAnonymousAuth'
+  | 'enableEmailAuth'
   | 'maxExpenseDocumentSize'
 >
+
+export type DeploymentConfig = BaseDeploymentConfig & {
+  /**
+   * Whether the instance can deliver email. `null` while the features query has
+   * not resolved (or offline) — consumers must treat unknown as neutral: no
+   * delivery warnings, no disabled controls.
+   */
+  emailDeliveryEnabled: boolean | null
+}
 
 function getBuildTimeFallback(): DeploymentConfig {
   return {
@@ -34,6 +44,8 @@ function getBuildTimeFallback(): DeploymentConfig {
     signupMode: 'open',
     allowUninvitedSignup: true,
     enableAnonymousAuth: false,
+    enableEmailAuth: true,
+    emailDeliveryEnabled: null,
     maxExpenseDocumentSize: MAX_EXPENSE_DOCUMENT_SIZE,
   }
 }
@@ -52,6 +64,8 @@ export function useDeploymentConfig(): DeploymentConfig {
       signupMode,
       allowUninvitedSignup,
       enableAnonymousAuth,
+      enableEmailAuth,
+      emailDeliveryEnabled,
       maxExpenseDocumentSize,
     }): DeploymentConfig => ({
       defaultCurrencyCode,
@@ -62,6 +76,8 @@ export function useDeploymentConfig(): DeploymentConfig {
       signupMode,
       allowUninvitedSignup,
       enableAnonymousAuth,
+      enableEmailAuth,
+      emailDeliveryEnabled,
       maxExpenseDocumentSize,
     }),
     staleTime: Infinity,

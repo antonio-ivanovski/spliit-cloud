@@ -16,6 +16,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { authClient } from '@/lib/auth'
+import { useDeploymentConfig } from '@/lib/deployment-config'
 import { cn } from '@/lib/utils'
 import {
   getPasswordRequirements,
@@ -39,7 +40,9 @@ const resetPasswordRouteApi = getRouteApi('/auth/reset-password')
  */
 export function ResetPasswordPage() {
   const { t } = useTranslation(undefined, { keyPrefix: 'ResetPassword' })
+  const { t: tAuth } = useTranslation(undefined, { keyPrefix: 'Auth' })
   const { token, error } = resetPasswordRouteApi.useSearch()
+  const deployment = useDeploymentConfig()
   const hasInvalidToken = !token || error === 'INVALID_TOKEN'
 
   const [password, setPassword] = useState('')
@@ -88,6 +91,30 @@ export function ResetPasswordPage() {
       return
     }
     await resetPassword.mutateAsync({ newPassword: password, token })
+  }
+
+  // Email auth is off: no reset link can be issued or used, so show one
+  // disabled notice regardless of token validity.
+  if (deployment.enableEmailAuth === false) {
+    return (
+      <PageShell width="full" className="items-center justify-center py-10">
+        <Card className="w-full max-w-sm">
+          <CardHeader className="space-y-2 text-center">
+            <CardTitle className="text-2xl">{t('title')}</CardTitle>
+            <CardDescription>{tAuth('emailAuthDisabled')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button
+              className="w-full"
+              nativeButton={false}
+              render={<Link to="/" />}
+            >
+              {t('backToSignIn')}
+            </Button>
+          </CardContent>
+        </Card>
+      </PageShell>
+    )
   }
 
   if (hasInvalidToken) {

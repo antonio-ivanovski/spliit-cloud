@@ -873,7 +873,8 @@
       "useInvitedEmail": "Use o endereço de e-mail com o qual você recebeu o convite."
     },
     "signInAnonymously": "Anônimo",
-    "lastUsed": "Último uso"
+    "lastUsed": "Último uso",
+    "emailAuthDisabled": "O login com email está desativado nesta instância. Use o login único (SSO)."
   },
   "CompleteProfile": {
     "title": "Complete seu perfil",
@@ -961,7 +962,8 @@
         "joined_one": "{count} pessoa entrou",
         "joined_other": "{count} pessoas entraram",
         "joined_zero": "{count} pessoas entraram até agora"
-      }
+      },
+      "emailDeliveryDisabled": "O envio de e-mails está desativado nesta instância. O convite é criado mesmo assim e aparecerá quando a pessoa convidada entrar; use um link de convite para dar a ela algo que possa abrir."
     },
     "invitations": {
       "description": "Convites aguardando aceitação.",
@@ -973,7 +975,8 @@
       },
       "email": {
         "type": "Convite por e-mail"
-      }
+      },
+      "createdWithoutEmail": "Convite criado para {email}, mas nenhum e-mail foi enviado. Compartilhe um link de convite em vez disso."
     },
     "removeDialog": {
       "description": "As despesas anteriores permanecerão no livro-razão, mas essa pessoa não aparecerá mais na lista de membros nem em novas despesas.",
@@ -1059,7 +1062,8 @@
       "linkReadyWarning": "Copie agora — você não poderá visualizá-lo novamente.",
       "emailInvalid": "Insira um endereço de e-mail válido.",
       "linkNotShown": "O link de convite não é exibido aqui. Se precisar compartilhá-lo novamente, use \"Gerar novo link\" na lista.",
-      "switchToLinkNote": "Salve para converter este convite em um link. O convite por e-mail deixará de funcionar."
+      "switchToLinkNote": "Salve para converter este convite em um link. O convite por e-mail deixará de funcionar.",
+      "savedWithoutEmail": "Alterações salvas, mas nenhum e-mail foi enviado. Compartilhe um link de convite em vez disso."
     },
     "regenerate": {
       "title": "Gerar novo link"
@@ -1172,7 +1176,8 @@
         }
       },
       "masterDescription": "Desative para silenciar todos os e-mails e notificações push. Suas escolhas por categoria são preservadas.",
-      "emailAddToEnable": "Adicione um e-mail verificado para receber notificações na caixa de entrada."
+      "emailAddToEnable": "Adicione um e-mail verificado para receber notificações na caixa de entrada.",
+      "emailDeliveryDisabled": "O envio de e-mails está desativado nesta instância. Suas escolhas de e-mail são salvas, mas não serão enviadas até que o administrador configure o e-mail."
     },
     "preferences": {
       "title": "Preferências do aplicativo",
@@ -1454,7 +1459,8 @@
     "enabling": "Ativando…",
     "deniedDescription": "Seu navegador bloqueou a permissão para notificações. As notificações configuradas para e-mail continuarão sendo enviadas por e-mail; as opções somente push não serão redirecionadas.",
     "failedDescription": "Não foi possível registrar este dispositivo. As notificações configuradas para e-mail continuarão sendo enviadas por e-mail; as opções somente push não serão redirecionadas.",
-    "emailUsage": "Somente as notificações configuradas para e-mail serão recebidas até que você ative um dispositivo. Permita notificações nas configurações do navegador e tente novamente em Configurações."
+    "emailUsage": "Somente as notificações configuradas para e-mail serão recebidas até que você ative um dispositivo. Permita notificações nas configurações do navegador e tente novamente em Configurações.",
+    "emailDeliveryDisabled": "O envio de e-mails está desativado nesta instância, por isso as notificações por e-mail não chegam até você. Ative as notificações push neste dispositivo para continuar recebendo atualizações."
   },
   "Unsubscribe": {
     "submitting": "Cancelando inscrição…",

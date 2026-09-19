@@ -1845,7 +1845,8 @@
     "signInWithX": "Weiter mit X",
     "signInWithOidc": "Weiter mit {name}",
     "signInAnonymously": "Anonym",
-    "lastUsed": "Zuletzt verwendet"
+    "lastUsed": "Zuletzt verwendet",
+    "emailAuthDisabled": "Die Anmeldung per E-Mail ist in dieser Instanz deaktiviert. Bitte nutze Single Sign-on (SSO)."
   },
   "CompleteProfile": {
     "title": "Profil vervollständigen",
@@ -1967,7 +1968,8 @@
         "joined_other": "{count} Personen sind beigetreten",
         "joined_zero": "{count} Personen sind bisher beigetreten",
         "retry": "Erneut versuchen"
-      }
+      },
+      "emailDeliveryDisabled": "Der E-Mail-Versand ist in dieser Instanz deaktiviert. Die Einladung wird trotzdem erstellt und erscheint, sobald die eingeladene Person sich anmeldet; nutze einen Einladungslink, damit sie etwas zum Öffnen hat."
     },
     "invitations": {
       "title": "Ausstehende Einladungen",
@@ -1994,7 +1996,8 @@
         "fallbackLabel": "QR-Code in der Nähe",
         "viewQr": "QR-Code ansehen",
         "expireNow": "Sofort ablaufen lassen"
-      }
+      },
+      "createdWithoutEmail": "Einladung für {email} erstellt, aber es wurde keine E-Mail gesendet. Teile stattdessen einen Einladungslink."
     },
     "removeDialog": {
       "unsettled": {
@@ -2146,7 +2149,8 @@
       "linkReadyWarning": "Kopiere ihn jetzt — du kannst ihn später nicht mehr sehen.",
       "emailInvalid": "Gib eine gültige E-Mail-Adresse ein.",
       "linkNotShown": "Der Einladungslink wird hier nicht angezeigt. Verwende „Neuen Link erstellen“ in der Liste, wenn du ihn erneut teilen möchtest.",
-      "switchToLinkNote": "Speichern, um diese Einladung in einen Link umzuwandeln. Die E-Mail-Einladung funktioniert dann nicht mehr."
+      "switchToLinkNote": "Speichern, um diese Einladung in einen Link umzuwandeln. Die E-Mail-Einladung funktioniert dann nicht mehr.",
+      "savedWithoutEmail": "Änderungen gespeichert, aber es wurde keine E-Mail gesendet. Teile stattdessen einen Einladungslink."
     },
     "regenerate": {
       "title": "Neuen Link erstellen"
@@ -2389,7 +2393,8 @@
       "masterLabel": "Benachrichtigungen aktivieren",
       "masterDescription": "Deaktivieren, um alle E-Mail- und Push-Benachrichtigungen stummzuschalten. Deine Auswahl pro Kategorie bleibt erhalten.",
       "emailAddToEnable": "Füge eine bestätigte E-Mail hinzu, um Benachrichtigungen im Posteingang zu erhalten.",
-      "emailAddLink": "E-Mail hinzufügen"
+      "emailAddLink": "E-Mail hinzufügen",
+      "emailDeliveryDisabled": "Der E-Mail-Versand ist in dieser Instanz deaktiviert. Deine E-Mail-Auswahl wird gespeichert, aber erst versendet, wenn der Administrator E-Mail konfiguriert."
     },
     "preferences": {
       "title": "App-Einstellungen",
@@ -2880,7 +2885,8 @@
     "failedTitle": "Push konnte nicht aktiviert werden",
     "failedDescription": "Dieses Gerät konnte nicht registriert werden. Für E-Mail konfigurierte Benachrichtigungen werden weiterhin per E-Mail zugestellt; Nur-Push-Auswahlen werden nicht umgeleitet.",
     "emailUsage": "Es werden nur Benachrichtigungen zugestellt, die für E-Mail konfiguriert sind, bis du ein Gerät aktivierst. Du kannst Benachrichtigungen in deinen Browsereinstellungen erlauben und es anschließend in den Einstellungen erneut versuchen.",
-    "done": "Fertig"
+    "done": "Fertig",
+    "emailDeliveryDisabled": "Der E-Mail-Versand ist in dieser Instanz deaktiviert, deshalb können dich E-Mail-Benachrichtigungen nicht erreichen. Aktiviere Push-Benachrichtigungen auf diesem Gerät, um weiterhin Updates zu erhalten."
   },
   "Unsubscribe": {
     "title": "Diese E-Mails deaktivieren?",

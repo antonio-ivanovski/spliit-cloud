@@ -820,7 +820,8 @@
     "signInWithX": "Đăng nhập bằng X",
     "signInWithOidc": "Đăng nhập bằng {name}",
     "signInAnonymously": "Ẩn danh",
-    "lastUsed": "Dùng gần đây"
+    "lastUsed": "Dùng gần đây",
+    "emailAuthDisabled": "Đăng nhập bằng email đã bị tắt trên phiên bản này. Vui lòng dùng đăng nhập một lần (SSO)."
   },
   "AccountSettings": {
     "title": "Cài đặt tài khoản",
@@ -974,7 +975,8 @@
       "masterLabel": "Bật thông báo",
       "masterDescription": "Tắt để im lặng mọi thông báo qua email và push. Các lựa chọn theo danh mục của bạn vẫn được giữ nguyên.",
       "emailAddToEnable": "Thêm email đã xác minh để nhận thông báo qua hộp thư đến.",
-      "emailAddLink": "Thêm email"
+      "emailAddLink": "Thêm email",
+      "emailDeliveryDisabled": "Tính năng gửi email đã bị tắt trên phiên bản này. Lựa chọn email của bạn được lưu, nhưng sẽ không gửi cho đến khi quản trị viên cấu hình email."
     },
     "preferences": {
       "title": "Tùy chọn ứng dụng",
@@ -2400,7 +2402,8 @@
         "activeElsewhere": "Mã nằm trên thiết bị đã bắt đầu chia sẻ — hãy nhờ họ hiển thị mã.",
         "joined_other": "{count} người đã tham gia",
         "retry": "Thử lại"
-      }
+      },
+      "emailDeliveryDisabled": "Tính năng gửi email đã bị tắt trên phiên bản này. Lời mời vẫn được tạo và sẽ hiển thị khi người được mời đăng nhập; hãy dùng liên kết mời để họ có thứ gì đó để mở."
     },
     "invitations": {
       "title": "Lời mời",
@@ -2427,7 +2430,8 @@
         "fallbackLabel": "Mã QR ở gần",
         "viewQr": "Xem mã QR",
         "expireNow": "Cho hết hạn ngay"
-      }
+      },
+      "createdWithoutEmail": "Đã tạo lời mời cho {email}, nhưng không có email nào được gửi. Hãy chia sẻ liên kết mời thay thế."
     },
     "leave": {
       "button": "Rời nhóm",
@@ -2549,7 +2553,8 @@
       "linkReadyWarning": "Sao chép ngay—bạn sẽ không thể xem lại nó nữa.",
       "emailInvalid": "Nhập địa chỉ email hợp lệ.",
       "linkNotShown": "Liên kết mời không được hiển thị ở đây. Hãy dùng \"Tạo liên kết mới\" trong danh sách nếu bạn cần chia sẻ lại.",
-      "switchToLinkNote": "Lưu để chuyển lời mời này thành liên kết. Lời mời qua email sẽ ngừng hoạt động."
+      "switchToLinkNote": "Lưu để chuyển lời mời này thành liên kết. Lời mời qua email sẽ ngừng hoạt động.",
+      "savedWithoutEmail": "Đã lưu thay đổi, nhưng không có email nào được gửi. Hãy chia sẻ liên kết mời thay thế."
     },
     "regenerate": {
       "title": "Tạo liên kết mới"
@@ -2753,7 +2758,8 @@
     "failedTitle": "Thất bại",
     "failedDescription": "Không thể bật thông báo.",
     "emailUsage": "Chỉ gửi thông báo liên quan.",
-    "done": "Xong"
+    "done": "Xong",
+    "emailDeliveryDisabled": "Tính năng gửi email đã bị tắt trên phiên bản này, nên thông báo qua email không thể đến được. Hãy bật push trên thiết bị này để tiếp tục nhận cập nhật."
   },
   "Friends": {
     "title": "Theo dõi chi phí với bạn bè",

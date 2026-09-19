@@ -10,6 +10,7 @@ const mocks = vi.hoisted(() => ({
   enable: vi.fn(),
   savePreferences: vi.fn(),
   invalidatePreferences: vi.fn(),
+  emailDeliveryEnabled: true as boolean | null,
   navigate: vi.fn(async ({ to, hash }: { to: string; hash?: string }) => {
     window.history.pushState({}, '', `${to}${hash ? `#${hash}` : ''}`)
   }),
@@ -21,6 +22,12 @@ vi.mock('@/lib/use-current-account', () => ({
 
 vi.mock('@/lib/use-push-notifications', () => ({
   usePushNotifications: mocks.usePushNotifications,
+}))
+
+vi.mock('@/lib/deployment-config', () => ({
+  useDeploymentConfig: () => ({
+    emailDeliveryEnabled: mocks.emailDeliveryEnabled,
+  }),
 }))
 
 vi.mock('@tanstack/react-router', async () => {
@@ -63,6 +70,7 @@ describe('PushNotificationOnboarding', () => {
     localStorage.clear()
     window.history.replaceState({}, '', '/')
     vi.clearAllMocks()
+    mocks.emailDeliveryEnabled = true
     mocks.useCurrentAccount.mockReturnValue({
       data: { id: 'account-1', name: 'Ada', email: 'ada@example.com' },
       isPending: false,
@@ -375,6 +383,79 @@ describe('PushNotificationOnboarding', () => {
 
     await user.click(screen.getByRole('button', { name: /done/i }))
     expect(localStorage.getItem(PUSH_ONBOARDING_ACTIVE_KEY)).toBeNull()
+  })
+
+  it('offers dismiss instead of email fallback when delivery is off', async () => {
+    mocks.emailDeliveryEnabled = false
+    const user = userEvent.setup()
+    render(<PushNotificationOnboarding />)
+    await screen.findByTestId('push-notification-onboarding')
+
+    expect(
+      screen.getByText(/email delivery is turned off on this instance/i),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: /use email/i }),
+    ).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /don't ask again/i }))
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('push-notification-onboarding')).toBeNull()
+    })
+    expect(mocks.savePreferences).not.toHaveBeenCalled()
+    expect(
+      localStorage.getItem(`${PUSH_ONBOARDING_COMPLETE_PREFIX}account-1`),
+    ).toBe('true')
+  })
+
+  it('warns email-only accounts about delivery instead of email coverage', async () => {
+    mocks.emailDeliveryEnabled = false
+    mocks.usePreferencesQuery.mockReturnValue({
+      isPending: false,
+      isError: false,
+      data: {
+        hasExplicitPreferences: true,
+        categories: [
+          { category: 'EXPENSE_CREATED', effectiveChannels: ['EMAIL'] },
+        ],
+      },
+    })
+    render(<PushNotificationOnboarding />)
+    await screen.findByTestId('push-notification-onboarding')
+
+    expect(
+      screen.getByText(/email delivery is turned off on this instance/i),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByText(/only notifications configured for email/i),
+    ).not.toBeInTheDocument()
+  })
+
+  it('explains delivery is off after push registration fails without SMTP', async () => {
+    mocks.emailDeliveryEnabled = false
+    mocks.usePushNotifications.mockReturnValue({
+      supported: true,
+      configured: true,
+      iosHomeScreenRequired: false,
+      permission: 'default',
+      enabled: false,
+      enable: mocks.enable.mockRejectedValue(new Error('denied')),
+    })
+    const user = userEvent.setup()
+    render(<PushNotificationOnboarding />)
+    await screen.findByTestId('push-notification-onboarding')
+    await user.click(
+      screen.getByRole('button', { name: /enable push notifications/i }),
+    )
+
+    expect(
+      await screen.findByText(/email delivery is turned off on this instance/i),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByText(/only notifications configured for email/i),
+    ).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /done/i })).toBeInTheDocument()
   })
 
   it('does not prompt when browser permission is already denied', async () => {

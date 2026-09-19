@@ -134,9 +134,11 @@ and PostgreSQL as one Compose project. The web container is the only public
 entry point: it serves the SPA and proxies API/auth requests over the private
 Docker network. Point any HTTPS reverse proxy at the web port.
 
-SMTP is required for sign-in links, email verification, recovery, and
-invitations. S3-compatible document storage, AI features, OAuth providers, Web
-Push, and the MCP assistant are optional.
+By default, SMTP is required for sign-in links, email verification, recovery,
+and invitations. Set `ENABLE_EMAIL_AUTH=false` for an SSO-only instance: the email
+form is hidden, email endpoints are rejected, and SMTP becomes optional — see
+[docs/deployment.md](./docs/deployment.md). S3-compatible document storage, AI
+features, OAuth providers, Web Push, and the MCP assistant are optional.
 
 ## Run locally
 
@@ -171,7 +173,8 @@ ignored by Git.
    repository.
 2. Copy `container.env.example` to `container.env`.
 3. Set `APP_URL`, `POSTGRES_PASSWORD`, `BETTER_AUTH_SECRET`, the SMTP settings,
-   `EMAIL_FROM`, and `EMAIL_UNSUBSCRIBE_SECRET`.
+   `EMAIL_FROM`, and `EMAIL_UNSUBSCRIBE_SECRET` (SMTP settings are optional when
+   `ENABLE_EMAIL_AUTH=false`).
 4. Start the stack:
 
    ```bash
@@ -214,7 +217,9 @@ Key requirements for a public instance:
 - `EMAIL_UNSUBSCRIBE_SECRET` generated with `openssl rand -hex 32`
 - HTTPS on the configured `APP_URL`
 - persistent PostgreSQL storage with off-server backups
-- working SMTP and correctly configured SPF/DKIM/DMARC
+- working SMTP and correctly configured SPF/DKIM/DMARC (required unless the
+  instance is SSO-only with `ENABLE_EMAIL_AUTH=false` and no SMTP configured —
+  see [docs/deployment.md](./docs/deployment.md))
 - only the web gateway reachable publicly
 - tested database restore procedure
 - for a private instance, `SIGNUP_MODE=invite_only` so only invited people can create accounts (the first user on a fresh instance can always register)

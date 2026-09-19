@@ -29,6 +29,7 @@ This one was requested by the community — thanks to @obsilover for proposing i
 ### 🚀 Features
 
 - Added outbound webhooks: subscribe any HTTPS endpoint to expense created/updated/deleted events, with signed payloads, a personal `viewer` block, involved-only filtering, automatic retries, delivery history with manual redelivery, test sends, secret rotation, and a Create/Edit/View setup dialog with delete confirmation (`TBD` by @TBD)
+- Added SSO-only mode: set `ENABLE_EMAIL_AUTH=false` to hide sign-in with email (password + magic link) and make SMTP optional; email sign-in endpoints are rejected with `EMAIL_AUTH_DISABLED`, invite-only signup still passes by pending email match, and email invitations stay in-app with a delivery warning when no email can be sent — fixes #121 (`TBD` by @TBD)
 - Prepared the web app manifest for future store packaging: app shortcuts (create group, all expenses, account settings), install screenshots, and Digital Asset Links groundwork (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
@@ -40,5 +41,6 @@ This one was requested by the community — thanks to @obsilover for proposing i
 - Never show the install promotion inside the already-installed app, whatever display mode it launched in (`TBD` by @TBD)
 - Fixed toasts rendering inline below the footer; they now float at the top (centered on mobile, top-right on desktop) (`TBD` by @TBD)
 - Fixed the expenses timeline hiding the "not involving you" toggle when hidden expenses sit at the top of the list; leading hidden expenses are now included on the first page, and groups with no involving expenses show collapsed hidden runs instead of an empty list (`TBD` by @TBD)
+- Made "no SMTP" a first-class state: without `SMTP_HOST` no EMAIL-channel notification is planned, sent, or retried (stored email preferences are kept but stay inert), notification settings show a delivery warning with the Email option disabled, and the push onboarding dialog stops offering email as a fallback and instead prompts affected users to enable push (`TBD` by @TBD)
 
 **Full Changelog**: TBD

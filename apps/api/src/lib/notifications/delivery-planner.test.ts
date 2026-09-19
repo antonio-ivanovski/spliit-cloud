@@ -30,6 +30,16 @@ vi.mock(import('@spliit/jobs'), async (importOriginal) => {
 
 vi.mock('./push', () => ({ isPushConfigured: true }))
 
+const envMocks = vi.hoisted(() => ({ emailDeliveryEnabled: true }))
+
+vi.mock('../env', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    isEmailDeliveryEnabled: () => envMocks.emailDeliveryEnabled,
+  }
+})
+
 import type { SpliitBoss } from '@spliit/jobs'
 
 import { planActivityNotificationDeliveries } from './delivery-planner'
@@ -101,6 +111,7 @@ function mockAccount(
 
 beforeEach(() => {
   jobMocks.sendJob.mockReset()
+  envMocks.emailDeliveryEnabled = true
   lastCreatedIds = []
   prismaMock.accountNotificationPreference.findMany.mockResolvedValue(
     [] as never,
@@ -138,6 +149,26 @@ afterEach(() => {
 })
 
 describe('planActivityNotificationDeliveries', () => {
+  it('plans nothing when only EMAIL applies and delivery is disabled (no SMTP)', async () => {
+    envMocks.emailDeliveryEnabled = false
+    prismaMock.accountNotificationPreference.findMany.mockResolvedValue([
+      {
+        accountId: 'account-bob',
+        category: NotificationCategory.EXPENSE_CREATED,
+        channels: [NotificationChannel.EMAIL],
+      },
+    ] as never)
+
+    const ids = await planActivityNotificationDeliveries({
+      event: event(),
+      tx,
+      boss: null,
+    })
+
+    expect(ids).toHaveLength(0)
+    expect(prismaMock.notificationDelivery.createMany).not.toHaveBeenCalled()
+  })
+
   it('excludes the actor from recipients when includeActorAsRecipient is not set', async () => {
     prismaMock.accountNotificationPreference.findMany.mockResolvedValue([
       {

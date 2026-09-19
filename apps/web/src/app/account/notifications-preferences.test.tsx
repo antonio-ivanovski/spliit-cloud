@@ -11,6 +11,7 @@ const mocks = vi.hoisted(() => ({
   usePushNotifications: vi.fn(),
   enablePush: vi.fn(),
   toast: vi.fn(),
+  emailDeliveryEnabled: true as boolean | null,
 }))
 
 vi.mock('@/trpc/client', () => ({
@@ -44,6 +45,12 @@ vi.mock('@/lib/use-push-notifications', () => ({
 
 vi.mock('@/components/ui/use-toast', () => ({
   useToast: () => ({ toast: mocks.toast }),
+}))
+
+vi.mock('@/lib/deployment-config', () => ({
+  useDeploymentConfig: () => ({
+    emailDeliveryEnabled: mocks.emailDeliveryEnabled,
+  }),
 }))
 
 vi.mock('@tanstack/react-router', () => ({
@@ -142,6 +149,7 @@ function makeData(
 describe('NotificationsPreferences', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mocks.emailDeliveryEnabled = true
     mocks.useCurrentAccount.mockReturnValue({
       data: { id: 'account-1', email: 'user@example.com' },
     })
@@ -247,6 +255,37 @@ describe('NotificationsPreferences', () => {
     expect(mocks.toast).toHaveBeenCalledWith(
       expect.objectContaining({ variant: 'destructive' }),
     )
+  })
+
+  it('shows a delivery warning and locks the Email option when delivery is off', async () => {
+    mocks.emailDeliveryEnabled = false
+    const user = userEvent.setup()
+    render(<NotificationsPreferences />)
+
+    expect(
+      screen.getByText(/your email choices are saved/i),
+    ).toBeInTheDocument()
+    // Stored EMAIL prefs stay visible (never stripped from the draft).
+    expect(screen.getAllByRole('combobox')[0]).toHaveTextContent('Email')
+
+    await user.click(screen.getAllByRole('combobox')[0])
+    const emailOption = screen.getByRole('option', { name: 'Email' })
+    expect(emailOption).toHaveAttribute('aria-disabled', 'true')
+    expect(screen.getByRole('option', { name: 'Push' })).not.toHaveAttribute(
+      'aria-disabled',
+      'true',
+    )
+    await user.click(emailOption)
+    expect(mocks.savePreferences).not.toHaveBeenCalled()
+  })
+
+  it('stays neutral while delivery state is unknown', () => {
+    mocks.emailDeliveryEnabled = null
+    render(<NotificationsPreferences />)
+
+    expect(
+      screen.queryByText(/your email choices are saved/i),
+    ).not.toBeInTheDocument()
   })
 
   it('warns when Push is selected but no device target exists', () => {

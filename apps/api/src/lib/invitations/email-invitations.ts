@@ -24,6 +24,7 @@ import { getApiBoss } from '../api/boss'
 import { randomId } from '../api/shared'
 import { adjustSplitPresetsForRemovedParticipant } from '../api/split-presets'
 import { removeParticipantFromSubgroup } from '../api/subgroups'
+import { isEmailDeliveryEnabled } from '../env'
 import { sendEmail } from '../mail/send'
 import { renderInvitationEmail } from '../mail/templates/invitation'
 import { allowUserGeneratedEmail } from '../outbound-email-rate-limit'
@@ -510,7 +511,11 @@ export async function declineInvitation(opts: {
 /**
  * Send the invitation email to the recipient.
  *
- * Both HTML and text bodies are rendered by `renderInvitationEmail`.
+ * Both HTML and text bodies are rendered by `renderInvitationEmail`. Returns
+ * true when the email was delivered, false when delivery was skipped
+ * (rate-limited, SMTP unconfigured for SSO-only instances) or failed
+ * (best-effort warn). The DB row is always the source of truth: invitees can
+ * claim via the in-app pending list or link invites.
  */
 export async function sendInvitationEmail(opts: {
   invitationId: string
@@ -527,7 +532,10 @@ export async function sendInvitationEmail(opts: {
   expenseCount?: number
   totalAmount?: number
   currencyCode?: string | null
-}) {
+}): Promise<boolean> {
+  // SSO-only instances run without SMTP. The DB row is the source of truth
+  // (signup gate + in-app pending list), so delivery is best-effort: a
+  // missing SMTP config skips quietly, other failures warn.
   if (
     !allowUserGeneratedEmail({
       senderAccountId: opts.senderAccountId,
@@ -535,16 +543,24 @@ export async function sendInvitationEmail(opts: {
       policy: 'invitation-email',
     })
   )
-    return
+    return false
 
   try {
     const rendered = await renderInvitationEmail(opts)
     await sendEmail({ to: opts.recipientEmail, ...rendered })
+    return true
   } catch (err) {
+    if (!isEmailDeliveryEnabled()) {
+      console.log(
+        `[invitations] skipping invitation email for ${opts.invitationId} (SMTP not configured)`,
+      )
+      return false
+    }
     console.warn(
       `[invitations] failed to send invitation email for ${opts.invitationId}:`,
       err,
     )
+    return false
   }
 }
 

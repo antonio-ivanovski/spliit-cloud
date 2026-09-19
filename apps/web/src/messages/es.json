@@ -1846,7 +1846,8 @@
     "signInWithX": "Continuar con X",
     "signInWithOidc": "Continuar con {name}",
     "signInAnonymously": "Anónimo",
-    "lastUsed": "Último uso"
+    "lastUsed": "Último uso",
+    "emailAuthDisabled": "El inicio de sesión con correo electrónico está desactivado en esta instancia. Usa el inicio de sesión único (SSO)."
   },
   "CompleteProfile": {
     "title": "Completa tu perfil",
@@ -1969,7 +1970,8 @@
         "joined_zero": "Se han unido {count} personas hasta ahora",
         "joined_many": "Se han unido {count} personas",
         "retry": "Reintentar"
-      }
+      },
+      "emailDeliveryDisabled": "El envío de correos está desactivado en esta instancia. La invitación se crea igualmente y aparecerá cuando la persona invitada inicie sesión; usa un enlace de invitación para darle algo que abrir."
     },
     "invitations": {
       "title": "Invitaciones pendientes",
@@ -1996,7 +1998,8 @@
         "fallbackLabel": "Código QR cercano",
         "viewQr": "Ver código QR",
         "expireNow": "Caducar ahora"
-      }
+      },
+      "createdWithoutEmail": "Invitación creada para {email}, pero no se envió ningún correo. Comparte un enlace de invitación en su lugar."
     },
     "changeRoleAria": "Cambiar rol",
     "remove": "Eliminar",
@@ -2148,7 +2151,8 @@
       "linkReadyWarning": "Cópialo ahora: no podrás volver a verlo.",
       "emailInvalid": "Introduce una dirección de correo electrónico válida.",
       "linkNotShown": "El enlace de invitación no se muestra aquí. Si necesitas volver a compartirlo, utiliza \"Generar nuevo enlace\" en la lista.",
-      "switchToLinkNote": "Guarda para convertir esta invitación en un enlace. La invitación por correo electrónico dejará de funcionar."
+      "switchToLinkNote": "Guarda para convertir esta invitación en un enlace. La invitación por correo electrónico dejará de funcionar.",
+      "savedWithoutEmail": "Cambios guardados, pero no se envió ningún correo. Comparte un enlace de invitación en su lugar."
     },
     "regenerate": {
       "title": "Generar nuevo enlace"
@@ -2391,7 +2395,8 @@
       "masterLabel": "Activar las notificaciones",
       "masterDescription": "Desactívalas para silenciar todos los correos y las notificaciones push. Tus preferencias por categoría se conservan.",
       "emailAddToEnable": "Añade un correo verificado para recibir notificaciones en la bandeja de entrada.",
-      "emailAddLink": "Añadir correo"
+      "emailAddLink": "Añadir correo",
+      "emailDeliveryDisabled": "El envío de correos está desactivado en esta instancia. Tus elecciones de correo se guardan, pero no se enviarán hasta que el administrador configure el correo."
     },
     "preferences": {
       "title": "Preferencias de la aplicación",
@@ -2882,7 +2887,8 @@
     "failedTitle": "No se han podido activar las notificaciones push",
     "failedDescription": "No hemos podido registrar este dispositivo. Las notificaciones configuradas para correo electrónico seguirán llegando allí; las opciones solo push no se redirigen.",
     "emailUsage": "Solo llegarán las notificaciones configuradas para correo electrónico hasta que actives un dispositivo. Puedes permitir las notificaciones en la configuración del navegador y volver a intentarlo desde Ajustes.",
-    "done": "Listo"
+    "done": "Listo",
+    "emailDeliveryDisabled": "El envío de correos está desactivado en esta instancia, por lo que las notificaciones por correo no pueden llegarte. Activa las notificaciones push en este dispositivo para seguir recibiendo actualizaciones."
   },
   "Unsubscribe": {
     "title": "¿Desactivar estos correos?",

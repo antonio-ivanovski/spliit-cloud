@@ -1845,7 +1845,8 @@
     "signInWithX": "Doorgaan met X",
     "signInWithOidc": "Doorgaan met {name}",
     "signInAnonymously": "Anoniem",
-    "lastUsed": "Laatst gebruikt"
+    "lastUsed": "Laatst gebruikt",
+    "emailAuthDisabled": "Inloggen met e-mail is uitgeschakeld op deze instantie. Gebruik single sign-on (SSO)."
   },
   "CompleteProfile": {
     "title": "Voltooi je profiel",
@@ -1967,7 +1968,8 @@
         "joined_other": "{count} personen zijn lid geworden",
         "joined_zero": "{count} personen zijn tot nu toe lid geworden",
         "retry": "Opnieuw proberen"
-      }
+      },
+      "emailDeliveryDisabled": "E-mailbezorging is uitgeschakeld op deze instantie. De uitnodiging wordt alsnog aangemaakt en verschijnt wanneer de genodigde inlogt; gebruik een uitnodigingslink zodat diegene iets kan openen."
     },
     "invitations": {
       "title": "Openstaande uitnodigingen",
@@ -1994,7 +1996,8 @@
         "fallbackLabel": "QR-code in de buurt",
         "viewQr": "QR-code bekijken",
         "expireNow": "Nu laten verlopen"
-      }
+      },
+      "createdWithoutEmail": "Uitnodiging voor {email} aangemaakt, maar er is geen e-mail verzonden. Deel in plaats daarvan een uitnodigingslink."
     },
     "changeRoleAria": "Rol wijzigen",
     "remove": "Verwijderen",
@@ -2146,7 +2149,8 @@
       "linkReadyWarning": "Kopieer hem nu — je kunt hem later niet meer bekijken.",
       "emailInvalid": "Voer een geldig e-mailadres in.",
       "linkNotShown": "De uitnodigingslink wordt hier niet weergegeven. Gebruik „Nieuwe link genereren“ in de lijst als je hem opnieuw wilt delen.",
-      "switchToLinkNote": "Sla op om deze uitnodiging om te zetten in een link. De e-mailuitnodiging werkt dan niet meer."
+      "switchToLinkNote": "Sla op om deze uitnodiging om te zetten in een link. De e-mailuitnodiging werkt dan niet meer.",
+      "savedWithoutEmail": "Wijzigingen opgeslagen, maar er is geen e-mail verzonden. Deel in plaats daarvan een uitnodigingslink."
     },
     "regenerate": {
       "title": "Nieuwe link genereren"
@@ -2389,7 +2393,8 @@
       "masterLabel": "Meldingen inschakelen",
       "masterDescription": "Zet dit uit om alle e-mail- en pushmeldingen te dempen. Je keuzes per categorie blijven bewaard.",
       "emailAddToEnable": "Voeg een geverifieerd e-mailadres toe om meldingen in je inbox te ontvangen.",
-      "emailAddLink": "E-mail toevoegen"
+      "emailAddLink": "E-mail toevoegen",
+      "emailDeliveryDisabled": "E-mailbezorging is uitgeschakeld op deze instantie. Je e-mailkeuzes worden wel opgeslagen, maar pas verzonden als de beheerder e-mail instelt."
     },
     "preferences": {
       "title": "Appvoorkeuren",
@@ -2880,7 +2885,8 @@
     "failedTitle": "Push kon niet worden ingeschakeld",
     "failedDescription": "We konden dit apparaat niet registreren. Meldingen die voor e-mail zijn ingesteld, blijven daar aankomen; keuzes met alleen push worden niet omgeleid.",
     "emailUsage": "Er komen alleen meldingen aan die voor e-mail zijn ingesteld totdat je een apparaat inschakelt. Je kunt meldingen toestaan in je browserinstellingen en het daarna opnieuw proberen via Instellingen.",
-    "done": "Klaar"
+    "done": "Klaar",
+    "emailDeliveryDisabled": "E-mailbezorging is uitgeschakeld op deze instantie, dus e-mailmeldingen kunnen je niet bereiken. Schakel pushmeldingen in op dit apparaat om updates te blijven ontvangen."
   },
   "Unsubscribe": {
     "title": "Deze e-mails uitschakelen?",

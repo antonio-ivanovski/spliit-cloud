@@ -1813,7 +1813,8 @@
     "signInWithX": "Jatka X:llä",
     "signInWithOidc": "Jatka: {name}",
     "signInAnonymously": "Nimetön",
-    "lastUsed": "Viimeksi käytetty"
+    "lastUsed": "Viimeksi käytetty",
+    "emailAuthDisabled": "Sähköpostilla kirjautuminen on poistettu käytöstä tässä instanssissa. Käytä kertakirjautumista (SSO)."
   },
   "CompleteProfile": {
     "title": "Täydennä profiilisi",
@@ -1935,7 +1936,8 @@
         "joined_other": "{count} henkilöä liittyi",
         "joined_zero": "{count} henkilöä on liittynyt toistaiseksi",
         "retry": "Yritä uudelleen"
-      }
+      },
+      "emailDeliveryDisabled": "Sähköpostin lähetys on poistettu käytöstä tässä instanssissa. Kutsu luodaan silti ja se näkyy, kun kutsuttu kirjautuu sisään; käytä kutsulinkkiä, jotta hänellä on jotain avattavaa."
     },
     "invitations": {
       "title": "Odottavat kutsut",
@@ -1962,7 +1964,8 @@
         "fallbackLabel": "Lähi-QR-koodi",
         "viewQr": "Näytä QR-koodi",
         "expireNow": "Vanhenna nyt"
-      }
+      },
+      "createdWithoutEmail": "Kutsu vastaanottajalle {email} luotiin, mutta sähköpostia ei lähetetty. Jaa sen sijaan kutsulinkki."
     },
     "changeRoleAria": "Vaihda roolia",
     "removed": "Jäsen poistettu.",
@@ -2110,7 +2113,8 @@
       "linkReadyWarning": "Kopioi se nyt — et voi nähdä sitä enää uudelleen.",
       "emailInvalid": "Syötä kelvollinen sähköpostiosoite.",
       "linkNotShown": "Kutsulinkkiä ei näytetä täällä. Käytä „Luo uusi linkki“ -painiketta listassa, jos haluat jakaa sen uudelleen.",
-      "switchToLinkNote": "Tallenna muuttaaksesi tämän kutsun linkiksi. Sähköpostikutsu lakkaa toimimasta."
+      "switchToLinkNote": "Tallenna muuttaaksesi tämän kutsun linkiksi. Sähköpostikutsu lakkaa toimimasta.",
+      "savedWithoutEmail": "Muutokset tallennettu, mutta sähköpostia ei lähetetty. Jaa sen sijaan kutsulinkki."
     },
     "regenerate": {
       "title": "Luo uusi linkki"
@@ -2353,7 +2357,8 @@
       "masterLabel": "Ota ilmoitukset käyttöön",
       "masterDescription": "Poista käytöstä mykistääksesi kaikki sähköposti- ja push-ilmoitukset. Luokkakohtaiset valintasi säilyvät ennallaan.",
       "emailAddToEnable": "Lisää vahvistettu sähköposti vastaanottaaksesi ilmoituksia postilaatikkoosi.",
-      "emailAddLink": "Lisää sähköposti"
+      "emailAddLink": "Lisää sähköposti",
+      "emailDeliveryDisabled": "Sähköpostin lähetys on poistettu käytöstä tässä instanssissa. Sähköpostivalintasi tallennetaan, mutta niitä ei lähetetä ennen kuin ylläpitäjä määrittää sähköpostin."
     },
     "preferences": {
       "title": "Sovellusasetukset",
@@ -2808,7 +2813,8 @@
     "failedTitle": "Push-ilmoituksia ei voitu ottaa käyttöön",
     "failedDescription": "Laitteen rekisteröinti epäonnistui. Sähköpostiin määritetyt ilmoitukset toimitetaan edelleen sähköpostitse; vain pushille valittuja ei ohjata sähköpostiin.",
     "emailUsage": "Saat sähköpostitse vain ilmoitukset, jotka on määritetty sähköpostiin, kunnes otat laitteen käyttöön. Voit sallia ilmoitukset selaimesi asetuksissa ja yrittää uudelleen asetuksissa.",
-    "done": "Valmis"
+    "done": "Valmis",
+    "emailDeliveryDisabled": "Sähköpostin lähetys on poistettu käytöstä tässä instanssissa, joten sähköposti-ilmoitukset eivät tavoita sinua. Ota push-ilmoitukset käyttöön tällä laitteella, jotta saat päivityksiä jatkossakin."
   },
   "Unsubscribe": {
     "title": "Poistetaanko nämä sähköpostit käytöstä?",

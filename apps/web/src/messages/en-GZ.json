@@ -210,7 +210,8 @@
       "masterLabel": "turn on notifications",
       "masterDescription": "Switch off to mute all email and push notifications. Your per-category picks are kept.",
       "emailAddToEnable": "add a verified email to get inbox notifications.",
-      "emailAddLink": "add an email"
+      "emailAddLink": "add an email",
+      "emailDeliveryDisabled": "email delivery is off on this instance. your email picks are saved but nothing goes out until the admin sets email up."
     },
     "preferences": {
       "title": "app vibes",
@@ -525,7 +526,8 @@
     "signInWithX": "continue with X",
     "signInWithOidc": "continue with {name}",
     "signInAnonymously": "Anon",
-    "lastUsed": "last used"
+    "lastUsed": "last used",
+    "emailAuthDisabled": "email sign-in is off on this instance. use single sign-on instead."
   },
   "Balances": {
     "title": "balance check",
@@ -2653,7 +2655,8 @@
         "fallbackLabel": "nearby qr code",
         "viewQr": "view qr code",
         "expireNow": "expire now"
-      }
+      },
+      "createdWithoutEmail": "invite for {email} is made, but no email went out. drop a link invite instead."
     },
     "invite": {
       "title": "add people",
@@ -2714,7 +2717,8 @@
         "joined_other": "{count} besties joined",
         "joined_zero": "{count} besties joined so far",
         "retry": "try it again"
-      }
+      },
+      "emailDeliveryDisabled": "email delivery is off on this instance. the invite still gets made and shows up when they sign in; use a link invite so they've got something to open."
     },
     "leave": {
       "button": "leave the group",
@@ -2861,7 +2865,8 @@
       "linkReadyWarning": "copy it rn — you won't see it again, fr",
       "emailInvalid": "gimme a valid email, fr",
       "linkNotShown": "no invite link shown here. tap \"generate a fresh link\" on the list if u need to share again, fr",
-      "switchToLinkNote": "save to convert this invite into a link. the email invite stops working, no cap"
+      "switchToLinkNote": "save to convert this invite into a link. the email invite stops working, no cap",
+      "savedWithoutEmail": "changes saved, huge W, but no email went out. drop a link invite instead."
     },
     "regenerate": {
       "title": "generate a fresh link"
@@ -3054,7 +3059,8 @@
     "failedTitle": "push could not turn on",
     "failedDescription": "we could not register this device. Email-configured alerts continue there; Push-only choices do not reroute.",
     "emailUsage": "only Email-configured alerts arrive until enabling a device. allow notifications in browser settings and retry from Settings.",
-    "done": "done, slay"
+    "done": "done, slay",
+    "emailDeliveryDisabled": "email delivery is off on this instance, so email pings can't reach you. turn on push on this device to keep getting updates."
   },
   "ResetPassword": {
     "title": "choose a new password",

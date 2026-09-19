@@ -59,6 +59,12 @@ export type UpdatePendingInvitationResult = {
   inviteUrl: string | null
   /** Whether the invitation email must be (re)sent to the new recipient. */
   shouldSendEmail: boolean
+  /**
+   * True when the (re)send was delivered, or when no send was attempted
+   * (metadata-only save). False when a send was attempted but skipped (SMTP
+   * unconfigured) or failed — the DB row is still the source of truth.
+   */
+  emailDelivered: boolean
 }
 
 type LoadedInvitation = NonNullable<
@@ -275,19 +281,19 @@ export async function updatePendingInvitation(
   const shouldSendEmail =
     isEmailDelivery && (destinationChanged || switchingToEmail)
 
-  if (shouldSendEmail) {
-    await sendInvitationEmail({
-      invitationId: updated.id,
-      groupId: updated.groupId,
-      groupName: (await loadGroupName(updated.groupId)) ?? '',
-      inviterDisplayName: opts.inviterDisplayName,
-      inviterRole: opts.inviterRole,
-      recipientEmail: updated.email,
-      senderAccountId: opts.actorAccountId,
-      recipientIsExistingUser: matchedAccount !== null,
-      temporaryName: matchedAccount ? undefined : updated.temporaryName,
-    })
-  }
+  const emailDelivered = shouldSendEmail
+    ? await sendInvitationEmail({
+        invitationId: updated.id,
+        groupId: updated.groupId,
+        groupName: (await loadGroupName(updated.groupId)) ?? '',
+        inviterDisplayName: opts.inviterDisplayName,
+        inviterRole: opts.inviterRole,
+        recipientEmail: updated.email,
+        senderAccountId: opts.actorAccountId,
+        recipientIsExistingUser: matchedAccount !== null,
+        temporaryName: matchedAccount ? undefined : updated.temporaryName,
+      })
+    : true
 
   return {
     invitation: {
@@ -306,6 +312,7 @@ export async function updatePendingInvitation(
     },
     inviteUrl,
     shouldSendEmail,
+    emailDelivered,
   }
 }
 

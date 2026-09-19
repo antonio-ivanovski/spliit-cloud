@@ -56,6 +56,7 @@ type MutationState = {
   mutateAsync: (input: UpdatePendingInput) => Promise<{
     invitation: PendingInvitation
     inviteUrl: string | null
+    emailDelivered: boolean
   }>
   isPending: boolean
 }
@@ -249,7 +250,12 @@ export function ManagePendingInvitationDialog({
           expiresAt: result.invitation.expiresAt,
         })
       } else {
-        toast({ description: t('manage.saved') })
+        toast({
+          description:
+            !result.emailDelivered && destinationWillChange
+              ? t('manage.savedWithoutEmail')
+              : t('manage.saved'),
+        })
         handleClose()
       }
     } catch (err) {

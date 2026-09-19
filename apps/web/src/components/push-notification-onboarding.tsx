@@ -15,6 +15,7 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
 import { needsDisplayName } from '@/lib/account'
+import { useDeploymentConfig } from '@/lib/deployment-config'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { usePushNotifications } from '@/lib/use-push-notifications'
 import { trpc } from '@/trpc/client'
@@ -165,6 +166,11 @@ export function PushNotificationOnboarding() {
   const activeToken = useRef<string | null>(null)
 
   const accountId = account?.id
+  // Instance-level delivery state. When email cannot be delivered, the modal
+  // must not offer email as a fallback — stored EMAIL prefs stay untouched
+  // but push becomes the only working channel.
+  const emailDeliveryDisabled =
+    useDeploymentConfig().emailDeliveryEnabled === false
   const mode = useMemo<OnboardingMode | null>(() => {
     const data = preferences.data as PreferenceData | undefined
     if (!data) return null
@@ -296,7 +302,7 @@ export function PushNotificationOnboarding() {
   }, [accountId, saveChannels])
 
   const chooseEmail = useCallback(async () => {
-    if (mode !== 'initial') return
+    if (mode !== 'initial' || emailDeliveryDisabled) return
     setPreferenceError(false)
     try {
       await saveEmailPreference()
@@ -304,7 +310,7 @@ export function PushNotificationOnboarding() {
     } catch {
       setPreferenceError(true)
     }
-  }, [finishAndClose, mode, saveEmailPreference])
+  }, [emailDeliveryDisabled, finishAndClose, mode, saveEmailPreference])
 
   const dismiss = useCallback(() => {
     finishAndClose()
@@ -377,7 +383,12 @@ export function PushNotificationOnboarding() {
           closeWithoutCompletion()
           return
         }
-        if (mode === 'initial' && !result && !preferenceError) {
+        if (
+          mode === 'initial' &&
+          !emailDeliveryDisabled &&
+          !result &&
+          !preferenceError
+        ) {
           void chooseEmail()
           return
         }
@@ -416,7 +427,9 @@ export function PushNotificationOnboarding() {
                   aria-hidden="true"
                 />
                 <p className="min-w-0 break-words">
-                  {t('PushOnboarding.emailUsage')}
+                  {emailDeliveryDisabled
+                    ? t('PushOnboarding.emailDeliveryDisabled')
+                    : t('PushOnboarding.emailUsage')}
                 </p>
               </div>
               <p className="text-xs break-words text-muted-foreground">
@@ -454,15 +467,27 @@ export function PushNotificationOnboarding() {
                   </p>
                 </div>
                 {mode === 'initial' ? (
-                  <div className="flex min-w-0 items-start gap-3 rounded-lg border bg-muted/30 p-3">
-                    <Mail
-                      className="mt-0.5 h-4 w-4 shrink-0 text-primary"
-                      aria-hidden="true"
-                    />
-                    <p className="min-w-0 break-words">
-                      {t('PushOnboarding.emailFallback')}
-                    </p>
-                  </div>
+                  emailDeliveryDisabled ? (
+                    <div className="flex min-w-0 items-start gap-3 rounded-lg border bg-muted/30 p-3">
+                      <Mail
+                        className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                        aria-hidden="true"
+                      />
+                      <p className="min-w-0 break-words">
+                        {t('PushOnboarding.emailDeliveryDisabled')}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="flex min-w-0 items-start gap-3 rounded-lg border bg-muted/30 p-3">
+                      <Mail
+                        className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                        aria-hidden="true"
+                      />
+                      <p className="min-w-0 break-words">
+                        {t('PushOnboarding.emailFallback')}
+                      </p>
+                    </div>
+                  )
                 ) : mode === 'email-only-device' ? (
                   <div className="flex min-w-0 items-start gap-3 rounded-lg border bg-muted/30 p-3">
                     <Mail
@@ -470,7 +495,9 @@ export function PushNotificationOnboarding() {
                       aria-hidden="true"
                     />
                     <p className="min-w-0 break-words">
-                      {t('PushOnboarding.emailUsage')}
+                      {emailDeliveryDisabled
+                        ? t('PushOnboarding.emailDeliveryDisabled')
+                        : t('PushOnboarding.emailUsage')}
                     </p>
                   </div>
                 ) : null}
@@ -484,13 +511,15 @@ export function PushNotificationOnboarding() {
                   variant="outline"
                   className="max-w-full whitespace-normal"
                   onClick={() =>
-                    mode === 'initial' ? void chooseEmail() : dismiss()
+                    mode === 'initial' && !emailDeliveryDisabled
+                      ? void chooseEmail()
+                      : dismiss()
                   }
                   disabled={isEnabling || savePreferences.isPending}
                 >
                   {preferenceError
                     ? t('AccountSettings.notifications.retry')
-                    : mode === 'initial'
+                    : mode === 'initial' && !emailDeliveryDisabled
                       ? t('PushOnboarding.useEmail')
                       : t('InstallPromotion.dismiss')}
                 </Button>

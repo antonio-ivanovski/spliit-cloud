@@ -198,6 +198,7 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
   const githubEnabled = deployment.enableGitHubOAuth
   const twitterEnabled = deployment.enableTwitterOAuth
   const oidcProviders = deployment.oidcProviders
+  const emailAuthEnabled = deployment.enableEmailAuth
   const socialEnabled =
     googleEnabled || githubEnabled || twitterEnabled || oidcProviders.length > 0
   const mode = canSignUp ? requestedMode : 'sign-in'
@@ -305,6 +306,7 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     oidcProviders,
     socialEnabled,
     anonymousEnabled,
+    emailAuthEnabled,
     linkInviteToken,
     callbackURL,
     setEmail,

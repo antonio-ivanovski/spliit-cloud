@@ -1805,7 +1805,8 @@
     "signInWithX": "Lanjutkan dengan X",
     "signInWithOidc": "Lanjutkan dengan {name}",
     "signInAnonymously": "Anonim",
-    "lastUsed": "Terakhir digunakan"
+    "lastUsed": "Terakhir digunakan",
+    "emailAuthDisabled": "Masuk dengan email dinonaktifkan di instans ini. Gunakan single sign-on (SSO)."
   },
   "CompleteProfile": {
     "title": "Lengkapi profil Anda",
@@ -1925,7 +1926,8 @@
         "activeElsewhere": "Kode ada di perangkat yang mulai berbagi — minta mereka menunjukkannya.",
         "joined_other": "{count} orang bergabung",
         "retry": "Coba lagi"
-      }
+      },
+      "emailDeliveryDisabled": "Pengiriman email dinonaktifkan di instans ini. Undangan tetap dibuat dan akan muncul saat orang yang diundang masuk; gunakan tautan undangan agar mereka punya sesuatu untuk dibuka."
     },
     "invitations": {
       "title": "Undangan tertunda",
@@ -1952,7 +1954,8 @@
         "fallbackLabel": "Kode QR terdekat",
         "viewQr": "Lihat kode QR",
         "expireNow": "Kedaluwarsakan sekarang"
-      }
+      },
+      "createdWithoutEmail": "Undangan untuk {email} dibuat, tetapi tidak ada email yang dikirim. Bagikan tautan undangan sebagai gantinya."
     },
     "changeRoleAria": "Ubah peran",
     "remove": "Hapus",
@@ -2100,7 +2103,8 @@
       "linkReadyWarning": "Salin sekarang—Anda tidak akan dapat melihatnya lagi.",
       "emailInvalid": "Masukkan alamat email yang valid.",
       "linkNotShown": "Tautan undangan tidak ditampilkan di sini. Gunakan \"Buat tautan baru\" di daftar jika Anda perlu membagikannya lagi.",
-      "switchToLinkNote": "Simpan untuk mengubah undangan ini menjadi tautan. Undangan email akan berhenti berfungsi."
+      "switchToLinkNote": "Simpan untuk mengubah undangan ini menjadi tautan. Undangan email akan berhenti berfungsi.",
+      "savedWithoutEmail": "Perubahan disimpan, tetapi tidak ada email yang dikirim. Bagikan tautan undangan sebagai gantinya."
     },
     "regenerate": {
       "title": "Buat tautan baru"
@@ -2343,7 +2347,8 @@
       "masterLabel": "Aktifkan notifikasi",
       "masterDescription": "Matikan untuk membungkam semua notifikasi email dan push. Pilihan per kategori Anda tetap dipertahankan.",
       "emailAddToEnable": "Tambahkan email terverifikasi untuk menerima notifikasi di kotak masuk.",
-      "emailAddLink": "Tambah email"
+      "emailAddLink": "Tambah email",
+      "emailDeliveryDisabled": "Pengiriman email dinonaktifkan di instans ini. Pilihan email Anda disimpan, tetapi tidak akan dikirim sampai administrator mengonfigurasi email."
     },
     "preferences": {
       "title": "Preferensi aplikasi",
@@ -2789,7 +2794,8 @@
     "failedTitle": "Push tidak dapat diaktifkan",
     "failedDescription": "Kami tidak dapat mendaftarkan perangkat ini. Notifikasi yang dikonfigurasi untuk Email akan tetap dikirim melalui Email; pilihan Push saja tidak dialihkan.",
     "emailUsage": "Hanya notifikasi yang dikonfigurasi untuk Email yang akan diterima sampai Anda mengaktifkan perangkat. Izinkan notifikasi di setelan browser, lalu coba lagi dari Pengaturan.",
-    "done": "Selesai"
+    "done": "Selesai",
+    "emailDeliveryDisabled": "Pengiriman email dinonaktifkan di instans ini, sehingga notifikasi email tidak dapat menjangkau Anda. Aktifkan push di perangkat ini agar tetap menerima pembaruan."
   },
   "Unsubscribe": {
     "title": "Nonaktifkan email-email ini?",

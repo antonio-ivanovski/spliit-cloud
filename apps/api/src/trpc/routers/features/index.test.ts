@@ -20,6 +20,9 @@ const originalDeploymentValues = {
   OIDC_DISPLAY_NAME: env.OIDC_DISPLAY_NAME,
   OIDC_PROVIDER_ID: env.OIDC_PROVIDER_ID,
   ENABLE_ANONYMOUS_AUTH: env.ENABLE_ANONYMOUS_AUTH,
+  ENABLE_EMAIL_AUTH: env.ENABLE_EMAIL_AUTH,
+  SMTP_HOST: env.SMTP_HOST,
+  EMAIL_FROM: env.EMAIL_FROM,
   SIGNUP_MODE: env.SIGNUP_MODE,
 }
 
@@ -45,6 +48,9 @@ describe('features.get', () => {
       OIDC_DISPLAY_NAME: 'Company SSO',
       OIDC_PROVIDER_ID: 'keycloak',
       ENABLE_ANONYMOUS_AUTH: true,
+      ENABLE_EMAIL_AUTH: true,
+      SMTP_HOST: 'smtp.test',
+      EMAIL_FROM: 'Spliit <noreply@test>',
       SIGNUP_MODE: 'open',
     })
 
@@ -61,7 +67,33 @@ describe('features.get', () => {
       signupMode: 'open',
       allowUninvitedSignup: true,
       enableAnonymousAuth: true,
+      enableEmailAuth: true,
+      emailDeliveryEnabled: true,
     })
+  })
+
+  it('exposes SSO-only mode with delivery disabled', async () => {
+    Object.assign(env, {
+      ENABLE_EMAIL_AUTH: false,
+      SMTP_HOST: undefined,
+    })
+
+    const result = await featuresRouter.createCaller({ auth: null }).get()
+
+    expect(result.enableEmailAuth).toBe(false)
+    expect(result.emailDeliveryEnabled).toBe(false)
+  })
+
+  it('reports delivery disabled when the sender identity is missing', async () => {
+    Object.assign(env, {
+      ENABLE_EMAIL_AUTH: false,
+      SMTP_HOST: 'smtp.test',
+      EMAIL_FROM: undefined,
+    })
+
+    const result = await featuresRouter.createCaller({ auth: null }).get()
+
+    expect(result.emailDeliveryEnabled).toBe(false)
   })
 
   it('exposes anonymous auth capability in invite-only mode', async () => {

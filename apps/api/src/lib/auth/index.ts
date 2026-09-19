@@ -24,7 +24,12 @@ import { prisma, type User } from '@spliit/db'
 import { isStrongPassword } from '@spliit/domain/password'
 
 import { autoAcceptPendingFriendInvitationsForAccount } from '../api/friends'
-import { env, getConfiguredOidcProvider, webOrigins } from '../env'
+import {
+  env,
+  getConfiguredOidcProvider,
+  isEmailAuthEnabled,
+  webOrigins,
+} from '../env'
 import {
   buildProviderPlaceholderEmail,
   isPlaceholderEmail,
@@ -66,6 +71,33 @@ import {
 import { getApiBaseUrl, oauthAudiences } from './urls'
 
 const oidcProvider = getConfiguredOidcProvider()
+const emailAuthEnabled = isEmailAuthEnabled()
+
+export const EMAIL_AUTH_DISABLED = 'EMAIL_AUTH_DISABLED'
+
+// Entry points that create or complete an email-based session. Blocked when
+// ENABLE_EMAIL_AUTH=false so existing email accounts cannot sign in either
+// (SSO-only mode). `/verify-email` is included because
+// `autoSignInAfterVerification` turns verification into a session. Magic-link
+// routes are not listed: omitting the plugin below unmounts them (404).
+// OAuth/social, anonymous, and session-based flows are unaffected.
+// Password set/change and email change for signed-in SSO users stay enabled.
+const EMAIL_AUTH_DISABLED_PATHS = new Set([
+  '/sign-in/email',
+  '/sign-up/email',
+  '/request-password-reset',
+  '/reset-password',
+  '/send-verification-email',
+  '/verify-email',
+])
+
+export function throwEmailAuthDisabled(): never {
+  throw new APIError('FORBIDDEN', {
+    message:
+      'Sign-in with email is disabled on this instance. Use single sign-on instead.',
+    code: EMAIL_AUTH_DISABLED,
+  })
+}
 
 const anonymousSignupLimiter = new FixedWindowLimiter({
   limit: 10,
@@ -115,6 +147,9 @@ function buildPasswordRecoveryEmail(opts: {
 }
 
 const beforeAuthMiddleware = createAuthMiddleware(async (ctx) => {
+  if (!emailAuthEnabled && EMAIL_AUTH_DISABLED_PATHS.has(ctx.path)) {
+    throwEmailAuthDisabled()
+  }
   if (ctx.path === '/oauth2/token') {
     await prepareOAuthTokenExchange(ctx.request, ctx.body)
     await bindLegacyRefreshTokenResource(ctx.body)
@@ -730,7 +765,7 @@ export const auth = betterAuth({
   },
 
   emailAndPassword: {
-    enabled: true,
+    enabled: emailAuthEnabled,
     requireEmailVerification: true,
     minPasswordLength: 8,
     maxPasswordLength: 128,
@@ -902,31 +937,39 @@ export const auth = betterAuth({
       customResolveMethod: (ctx) =>
         ctx.path === '/sign-in/anonymous' ? 'anonymous' : null,
     }),
-    magicLink({
-      disableSignUp: false,
-      sendMagicLink: async ({ email, url }) => {
-        enforceAuthEmailRecipientLimit(email, '/sign-in/magic-link')
-        // Best-effort: a failed send must not break the magic-link sign-in
-        // flow. better-auth already created the verification token in the DB,
-        // so the user can retry from the sign-in page and a fresh token will
-        // be issued on the next request. Mirrors the swallow-and-warn pattern
-        // used in lib/invitations.ts.
-        try {
-          const rendered = await renderMagicLinkEmail({
-            signInUrl: url,
-          })
-          await sendEmail({
-            to: email,
-            ...rendered,
-          })
-        } catch (err) {
-          console.warn(
-            `[magic-link] failed to send magic link email to ${email}:`,
-            err,
-          )
-        }
-      },
-    }),
+    // Magic-link sign-in is part of email auth. Omit the plugin entirely
+    // when ENABLE_EMAIL_AUTH=false so `/sign-in/magic-link` and
+    // `/magic-link/verify` are unmounted (404) instead of relying on the
+    // middleware path list above.
+    ...(emailAuthEnabled
+      ? [
+          magicLink({
+            disableSignUp: false,
+            sendMagicLink: async ({ email, url }) => {
+              enforceAuthEmailRecipientLimit(email, '/sign-in/magic-link')
+              // Best-effort: a failed send must not break the magic-link sign-in
+              // flow. better-auth already created the verification token in the DB,
+              // so the user can retry from the sign-in page and a fresh token will
+              // be issued on the next request. Mirrors the swallow-and-warn pattern
+              // used in lib/invitations.ts.
+              try {
+                const rendered = await renderMagicLinkEmail({
+                  signInUrl: url,
+                })
+                await sendEmail({
+                  to: email,
+                  ...rendered,
+                })
+              } catch (err) {
+                console.warn(
+                  `[magic-link] failed to send magic link email to ${email}:`,
+                  err,
+                )
+              }
+            },
+          }),
+        ]
+      : []),
     // Exposes `auth.api.generateOpenAPISchema()` so the build-time spec
     // generator in `apps/api/scripts/generate-openapi.ts` can introspect
     // every endpoint (core + magic-link) and emit accurate paths, request

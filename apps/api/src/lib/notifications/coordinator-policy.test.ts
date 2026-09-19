@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
   NotificationCategory,
@@ -10,6 +10,16 @@ import { prismaMock } from '../../test/state'
 import { resolveNotificationChannelsForIntents } from './coordinator-policy'
 import type { ActivityNotificationIntent } from './types'
 vi.mock('./push', () => ({ isPushConfigured: true }))
+
+const envMocks = vi.hoisted(() => ({ emailDeliveryEnabled: true }))
+
+vi.mock('../env', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    isEmailDeliveryEnabled: () => envMocks.emailDeliveryEnabled,
+  }
+})
 
 function intent(
   overrides: Partial<Omit<ActivityNotificationIntent, 'channels'>> = {},
@@ -29,6 +39,10 @@ function intent(
     ...overrides,
   }
 }
+
+beforeEach(() => {
+  envMocks.emailDeliveryEnabled = true
+})
 
 afterEach(() => {
   vi.restoreAllMocks()
@@ -105,6 +119,34 @@ describe('resolveNotificationChannelsForIntents', () => {
     expect(plans.map((plan) => plan.channels)).toEqual([
       [NotificationChannel.EMAIL],
     ])
+  })
+
+  it('drops EMAIL but keeps PUSH when delivery is disabled (no SMTP)', async () => {
+    envMocks.emailDeliveryEnabled = false
+    prismaMock.accountNotificationPreference.findMany.mockResolvedValue([
+      {
+        accountId: 'account-1',
+        category: NotificationCategory.EXPENSE_CHANGED,
+        channels: [NotificationChannel.EMAIL, NotificationChannel.PUSH],
+      },
+    ] as never)
+    prismaMock.pushSubscription.findMany.mockResolvedValue([
+      { id: 'sub-1', accountId: 'account-1' },
+    ] as never)
+
+    const plans = await resolveNotificationChannelsForIntents([intent()])
+    expect(plans.map((plan) => plan.channels)).toEqual([
+      [NotificationChannel.PUSH],
+    ])
+  })
+
+  it('resolves to no channels when only EMAIL is selected and delivery is disabled', async () => {
+    envMocks.emailDeliveryEnabled = false
+    prismaMock.accountNotificationPreference.findMany.mockResolvedValue([])
+    prismaMock.pushSubscription.findMany.mockResolvedValue([])
+
+    const plans = await resolveNotificationChannelsForIntents([intent()])
+    expect(plans.map((plan) => plan.channels)).toEqual([[]])
   })
 
   it('returns the same push subscription map for every plan entry', async () => {

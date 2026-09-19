@@ -27,6 +27,7 @@ import {
 import { Switch } from '@/components/ui/switch'
 import { useToast } from '@/components/ui/use-toast'
 import { isPlaceholderEmail } from '@/lib/account'
+import { useDeploymentConfig } from '@/lib/deployment-config'
 import { useMediaQuery } from '@/lib/hooks'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { usePushNotifications } from '@/lib/use-push-notifications'
@@ -114,6 +115,11 @@ type ChannelSelectorProps = {
   onToggle: (channel: Channel) => void
   title: string
   emailDisabled?: boolean
+  /**
+   * Instance-level email delivery off: EMAIL stays checked (stored prefs are
+   * preserved) but cannot be toggled.
+   */
+  emailDeliveryDisabled?: boolean
   pushDisabled?: boolean
   offLabel: string
   savingLabel: string
@@ -131,6 +137,7 @@ function ChannelSelector({
   onToggle,
   title,
   emailDisabled = false,
+  emailDeliveryDisabled = false,
   pushDisabled = false,
   offLabel,
   savingLabel,
@@ -145,7 +152,9 @@ function ChannelSelector({
       <CommandGroup>
         {CHANNELS.map((channel) => {
           const channelDisabled =
-            channel === NotificationChannel.EMAIL ? emailDisabled : pushDisabled
+            channel === NotificationChannel.EMAIL
+              ? emailDisabled || emailDeliveryDisabled
+              : pushDisabled
           const checked = channels.includes(channel)
           return (
             <CommandItem
@@ -238,6 +247,11 @@ export function NotificationsPreferences() {
   const [pendingCategory, setPendingCategory] = useState<Category | null>(null)
   const initializedData = useRef<PreferenceData | undefined>(undefined)
   const emailDisabled = !account?.email || isPlaceholderEmail(account.email)
+  // Instance-level delivery state. Unlike `emailDisabled` (this account has
+  // no usable address), delivery-off preserves stored EMAIL prefs untouched —
+  // they resume if SMTP returns — so the draft is never stripped here.
+  const emailDeliveryDisabled =
+    useDeploymentConfig().emailDeliveryEnabled === false
 
   useEffect(() => {
     if (!preferences.data || initializedData.current === preferences.data)
@@ -444,6 +458,7 @@ export function NotificationsPreferences() {
                           labels={channelLabels}
                           title={t(row.titleKey)}
                           emailDisabled={emailDisabled}
+                          emailDeliveryDisabled={emailDeliveryDisabled}
                           pushDisabled={pushDisabled}
                           offLabel={t('off')}
                           savingLabel={t('saving')}
@@ -486,6 +501,16 @@ export function NotificationsPreferences() {
               </SettingsGroup>
             ))}
 
+            {emailDeliveryDisabled ? (
+              <Alert
+                className="border-amber-500/50 bg-amber-50 py-3 text-amber-950 dark:bg-amber-950/20 dark:text-amber-100"
+                aria-live="polite"
+              >
+                <AlertDescription className="text-sm">
+                  {t('emailDeliveryDisabled')}
+                </AlertDescription>
+              </Alert>
+            ) : null}
             {emailDisabled ? (
               <Alert variant="default" className="py-3">
                 <AlertDescription className="text-sm">

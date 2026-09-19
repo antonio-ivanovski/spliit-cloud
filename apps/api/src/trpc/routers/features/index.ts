@@ -4,6 +4,8 @@ import { allowUninvitedSignup } from '../../../lib/auth/signup-gate'
 import {
   env,
   getConfiguredOidcProvider,
+  isEmailAuthEnabled,
+  isEmailDeliveryEnabled,
   getMaxExpenseDocumentSizeBytes,
 } from '../../../lib/env'
 import { baseProcedure, createTRPCRouter } from '../../init'
@@ -31,6 +33,8 @@ export const featuresRouter = createTRPCRouter({
         signupMode: z.enum(['open', 'invite_only']),
         allowUninvitedSignup: z.boolean(),
         enableAnonymousAuth: z.boolean(),
+        enableEmailAuth: z.boolean(),
+        emailDeliveryEnabled: z.boolean(),
       }),
     )
     .query(async () => {
@@ -52,6 +56,8 @@ export const featuresRouter = createTRPCRouter({
         signupMode: env.SIGNUP_MODE,
         allowUninvitedSignup: await allowUninvitedSignup(),
         enableAnonymousAuth: env.ENABLE_ANONYMOUS_AUTH,
+        enableEmailAuth: isEmailAuthEnabled(),
+        emailDeliveryEnabled: isEmailDeliveryEnabled(),
       }
     }),
 })

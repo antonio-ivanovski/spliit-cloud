@@ -1496,7 +1496,8 @@
     "signInWithX": "使用 X 繼續",
     "signInWithOidc": "使用 {name} 繼續",
     "signInAnonymously": "匿名",
-    "lastUsed": "上次使用"
+    "lastUsed": "上次使用",
+    "emailAuthDisabled": "此執行個體已停用電子郵件登入。請使用單一登入（SSO）。"
   },
   "CompleteProfile": {
     "title": "完善您的個人資料",
@@ -1927,7 +1928,8 @@
         "joined_other": "{count} 人已加入",
         "joined_zero": "目前 {count} 人已加入",
         "retry": "重試"
-      }
+      },
+      "emailDeliveryDisabled": "此執行個體已停用電子郵件傳送。邀請仍會建立，並在受邀者登入後顯示；請使用邀請連結，讓對方有東西可以開啟。"
     },
     "invitations": {
       "title": "待處理的邀請",
@@ -1954,7 +1956,8 @@
         "fallbackLabel": "附近的二維碼",
         "viewQr": "檢視二維碼",
         "expireNow": "立即過期"
-      }
+      },
+      "createdWithoutEmail": "已為 {email} 建立邀請，但未傳送電子郵件。請改為分享邀請連結。"
     },
     "remove": "移除",
     "removeDialog": {
@@ -2102,7 +2105,8 @@
       "linkReadyWarning": "請立即複製，之後將無法再次查看。",
       "emailInvalid": "請輸入有效的電子郵件地址。",
       "linkNotShown": "邀請連結不會顯示在這裡。如需再次分享，請在清單中使用「產生新連結」。",
-      "switchToLinkNote": "儲存後，此邀請將轉換為連結。電子郵件邀請將停止使用。"
+      "switchToLinkNote": "儲存後，此邀請將轉換為連結。電子郵件邀請將停止使用。",
+      "savedWithoutEmail": "變更已儲存，但未傳送電子郵件。請改為分享邀請連結。"
     },
     "regenerate": {
       "title": "產生新連結"
@@ -2345,7 +2349,8 @@
       "masterLabel": "啟用通知",
       "masterDescription": "關閉後，所有電子郵件和推播通知都會靜默。您的分類選擇會保留。",
       "emailAddToEnable": "新增已驗證的電子郵件以接收收件匣通知。",
-      "emailAddLink": "新增電子郵件"
+      "emailAddLink": "新增電子郵件",
+      "emailDeliveryDisabled": "此執行個體已停用電子郵件傳送。你的電子郵件選擇會儲存，但在管理員設定電子郵件之前不會傳送。"
     },
     "preferences": {
       "title": "應用程式偏好設定",
@@ -2791,7 +2796,8 @@
     "failedTitle": "無法啟用推播",
     "failedDescription": "無法註冊此裝置。設為電子郵件的通知仍會傳送到信箱；僅選擇推播的通知不會改由電子郵件傳送。",
     "emailUsage": "啟用裝置前，只會收到設為電子郵件的通知。你可以在瀏覽器設定中允許通知，然後從設定重試。",
-    "done": "完成"
+    "done": "完成",
+    "emailDeliveryDisabled": "此執行個體已停用電子郵件傳送，因此電子郵件通知無法送達。請在此裝置上開啟推播，以便繼續接收更新。"
   },
   "Unsubscribe": {
     "title": "要關閉這些電子郵件嗎？",

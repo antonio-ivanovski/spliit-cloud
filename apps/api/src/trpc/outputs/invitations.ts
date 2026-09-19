@@ -103,6 +103,9 @@ export const updatePendingInvitationOutputSchema = z.object({
   // One-time shareable URL for `EMAIL -> LINK` conversions. Null for
   // email/metadata-only saves.
   inviteUrl: z.url().nullable(),
+  // True when the (re)send was delivered or no send was attempted; false
+  // when a send was attempted but skipped (SMTP unconfigured) or failed.
+  emailDelivered: z.boolean(),
 })
 
 export const regenerateLinkInvitationOutputSchema = z.object({

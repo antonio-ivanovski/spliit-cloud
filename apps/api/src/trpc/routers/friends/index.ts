@@ -16,6 +16,7 @@ import {
   runIdempotentCreate,
 } from '../../../lib/api/idempotency'
 import { getWebBaseUrl } from '../../../lib/auth/urls'
+import { isEmailDeliveryEnabled } from '../../../lib/env'
 import { getPlaceholderEmailDisplayName } from '../../../lib/invitations/display'
 import { sendEmail } from '../../../lib/mail/send'
 import { renderFriendLedgerEmail } from '../../../lib/mail/templates/friend-ledger'
@@ -34,6 +35,8 @@ async function sendFriendLedgerNotification(opts: {
   inviterName: string
   isNewUser: boolean
 }): Promise<void> {
+  // SSO-only instances run without SMTP; the ledger auto-appears in-app, so
+  // a missing SMTP config skips quietly instead of warning.
   if (
     !allowUserGeneratedEmail({
       senderAccountId: opts.senderAccountId,
@@ -50,6 +53,12 @@ async function sendFriendLedgerNotification(opts: {
     })
     await sendEmail({ to: opts.recipientEmail, ...rendered })
   } catch (err) {
+    if (!isEmailDeliveryEnabled()) {
+      console.log(
+        `[friends] skipping friend ledger notification to ${opts.recipientEmail} (SMTP not configured)`,
+      )
+      return
+    }
     console.warn(
       `[friends] failed to send friend ledger notification to ${opts.recipientEmail}:`,
       err,

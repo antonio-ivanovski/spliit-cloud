@@ -38,6 +38,8 @@ const {
     signupMode: 'open' as 'open' | 'invite_only',
     allowUninvitedSignup: true,
     enableAnonymousAuth: false,
+    enableEmailAuth: true,
+    emailDeliveryEnabled: true,
     maxExpenseDocumentSize: 2 * 1024 * 1024,
   },
   mockMascotReact: vi.fn(),
@@ -143,6 +145,8 @@ describe('AuthPanel', () => {
     mockDeploymentConfig.signupMode = 'open'
     mockDeploymentConfig.allowUninvitedSignup = true
     mockDeploymentConfig.enableAnonymousAuth = false
+    mockDeploymentConfig.enableEmailAuth = true
+    mockDeploymentConfig.emailDeliveryEnabled = true
     mockSearch.redirect = undefined
     mockSearch.mode = undefined
     mockSearch.email = undefined
@@ -724,5 +728,43 @@ describe('AuthPanel', () => {
     expect(
       screen.getByRole('link', { name: 'Privacy notice' }),
     ).toHaveAttribute('href', '/privacy')
+  })
+
+  it('hides the email form and shows SSO notice when email auth is disabled', () => {
+    mockDeploymentConfig.enableEmailAuth = false
+    mockDeploymentConfig.oidcProviders = [{ id: 'oidc', name: 'SSO' }]
+
+    render(<AuthPanel />)
+
+    expect(
+      screen.getByText(
+        'Sign-in with email is disabled on this instance. Please use single sign-on.',
+      ),
+    ).toBeInTheDocument()
+    expect(screen.queryByLabelText('Email')).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Send sign-in link' }),
+    ).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /SSO/i })).toBeInTheDocument()
+  })
+
+  it('keeps the invite-only notice when email auth is disabled', () => {
+    mockDeploymentConfig.enableEmailAuth = false
+    mockDeploymentConfig.oidcProviders = [{ id: 'oidc', name: 'SSO' }]
+    mockDeploymentConfig.signupMode = 'invite_only'
+    mockDeploymentConfig.allowUninvitedSignup = false
+
+    render(<AuthPanel />)
+
+    expect(
+      screen.getByText(
+        'Sign-in with email is disabled on this instance. Please use single sign-on.',
+      ),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(
+        'This instance is invite-only. Use an invitation link or ask someone to invite you to a group.',
+      ),
+    ).toBeInTheDocument()
   })
 })

@@ -825,7 +825,8 @@
     "signInWithX": "Continue with X",
     "signInWithOidc": "Continue with {name}",
     "signInAnonymously": "Anonymous",
-    "lastUsed": "Last used"
+    "lastUsed": "Last used",
+    "emailAuthDisabled": "Sign-in with email is disabled on this instance. Please use single sign-on."
   },
   "AccountSettings": {
     "title": "Account settings",
@@ -979,7 +980,8 @@
       "masterLabel": "Enable notifications",
       "masterDescription": "Turn off to silence all email and push notifications. Your per-category choices are preserved.",
       "emailAddToEnable": "Add a verified email to receive inbox notifications.",
-      "emailAddLink": "Add email"
+      "emailAddLink": "Add email",
+      "emailDeliveryDisabled": "Email delivery is turned off on this instance. Your email choices are saved but won't send until the administrator configures email."
     },
     "preferences": {
       "title": "App preferences",
@@ -2433,7 +2435,8 @@
       "noAccountDescription": "Add someone to expenses without inviting them to Spliit. You can link them to an account later.",
       "temporaryNameRequired": "Temporary name",
       "noAccountNameDescription": "Shown in expenses and balances until this participant is linked to an account.",
-      "addParticipant": "Add participant"
+      "addParticipant": "Add participant",
+      "emailDeliveryDisabled": "Email delivery is turned off on this instance. The invitation is still created and will appear when the invitee signs in; use a link invite to give them something to open."
     },
     "invitations": {
       "title": "Pending invitations",
@@ -2460,7 +2463,8 @@
       "email": {
         "type": "Email invite"
       },
-      "updatedOn": "Updated {date}"
+      "updatedOn": "Updated {date}",
+      "createdWithoutEmail": "Invitation created for {email}, but no email was sent. Share a link invite instead."
     },
     "leave": {
       "button": "Leave group",
@@ -2582,7 +2586,8 @@
       "linkReadyWarning": "Copy it now—you won't be able to view it again.",
       "emailInvalid": "Enter a valid email address.",
       "linkNotShown": "The invite link is not shown here. Use \"Generate new link\" on the list if you need to share it again.",
-      "switchToLinkNote": "Save to convert this invitation into a link. The email invitation will stop working."
+      "switchToLinkNote": "Save to convert this invitation into a link. The email invitation will stop working.",
+      "savedWithoutEmail": "Changes saved, but no email was sent. Share a link invite instead."
     },
     "regenerate": {
       "title": "Generate new link"
@@ -2786,7 +2791,8 @@
     "failedTitle": "Push could not be enabled",
     "failedDescription": "We could not register this device. Notifications configured for Email will continue there; Push-only choices are not rerouted.",
     "emailUsage": "Only notifications configured for Email will arrive until you enable a device. You can allow notifications in your browser settings and try again from Settings.",
-    "done": "Done"
+    "done": "Done",
+    "emailDeliveryDisabled": "Email delivery is turned off on this instance, so email notifications can't reach you. Enable push on this device to keep receiving updates."
   },
   "Friends": {
     "title": "Track expenses with a friend",

@@ -27,6 +27,8 @@ Copy `container.env.example` to `container.env` and set:
 - both `SMTP_USER` and `SMTP_PASS` for authenticated SMTP, or neither for a
   trusted anonymous relay
 - `EMAIL_UNSUBSCRIBE_SECRET` from `openssl rand -hex 32`
+- SSO-only instances only: set `ENABLE_EMAIL_AUTH=false` plus OIDC or social
+  credentials instead — SMTP then becomes optional (see below).
 
 Then start the project:
 
@@ -93,6 +95,24 @@ may remain empty.
 
 - OAuth buttons are enabled automatically when both credentials for Google or
   GitHub are configured.
+- Email sign-in (password + magic link) is enabled by default. Set
+  `ENABLE_EMAIL_AUTH=false` for SSO-only instances: the email form is hidden,
+  password/recovery/verification endpoints return `EMAIL_AUTH_DISABLED`,
+  magic-link routes are unmounted, and SMTP becomes optional. At least one SSO
+  provider (OIDC or Google/GitHub/X) is required or the API refuses to start.
+  Existing email accounts cannot sign in while disabled.
+  Email invitations still work without SMTP: the row is created, invite-only
+  signup passes by email match, friends auto-join on SSO sign-in, and groups
+  accept from the in-app pending list — tell the invitee to sign in via SSO,
+  or share a link invite instead.
+  Auth (`ENABLE_EMAIL_AUTH`) and delivery (`SMTP_HOST` plus `EMAIL_FROM` set)
+  are independent:
+  SMTP can be omitted on any instance, and then no EMAIL-channel notification
+  is planned, sent, or retried — stored email preferences are kept but stay
+  inert until SMTP returns. The UI reports this state: notification settings
+  show a delivery warning with the Email option disabled, the push onboarding
+  dialog stops offering email as a fallback, and the invite form keeps working
+  with a warning banner.
 - Account registration defaults to `SIGNUP_MODE=open` (anyone who can reach the
   instance can create an account). Set `SIGNUP_MODE=invite_only` for a private
   instance. In that mode the first account on a fresh database can still

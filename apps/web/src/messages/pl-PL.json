@@ -1522,7 +1522,8 @@
     "signInWithX": "Kontynuuj przez X",
     "signInWithOidc": "Kontynuuj przez {name}",
     "signInAnonymously": "Anonimowy",
-    "lastUsed": "Ostatnio używane"
+    "lastUsed": "Ostatnio używane",
+    "emailAuthDisabled": "Logowanie przez e-mail jest wyłączone w tej instancji. Użyj logowania jednokrotnego (SSO)."
   },
   "CompleteProfile": {
     "title": "Uzupełnij swój profil",
@@ -1955,7 +1956,8 @@
         "joined_few": "{count} osoby dołączyły",
         "joined_many": "{count} osób dołączyło",
         "retry": "Spróbuj ponownie"
-      }
+      },
+      "emailDeliveryDisabled": "Wysyłanie e-maili jest wyłączone w tej instancji. Zaproszenie i tak zostanie utworzone i pojawi się, gdy zaproszona osoba się zaloguje; użyj linku zaproszenia, aby dać jej coś do otwarcia."
     },
     "invitations": {
       "title": "Oczekujące zaproszenia",
@@ -1982,7 +1984,8 @@
         "fallbackLabel": "Kod QR w pobliżu",
         "viewQr": "Zobacz kod QR",
         "expireNow": "Unieważnij teraz"
-      }
+      },
+      "createdWithoutEmail": "Zaproszenie dla {email} zostało utworzone, ale nie wysłano żadnego e-maila. Zamiast tego udostępnij link zaproszenia."
     },
     "changeRoleAria": "Zmień rolę",
     "remove": "Usuń",
@@ -2132,7 +2135,8 @@
       "linkReadyWarning": "Skopiuj go teraz — nie będziesz mógł go ponownie zobaczyć.",
       "emailInvalid": "Wprowadź prawidłowy adres e-mail.",
       "linkNotShown": "Link zaproszenia nie jest tutaj wyświetlany. Jeśli chcesz udostępnić go ponownie, użyj na liście opcji „Wygeneruj nowy link”.",
-      "switchToLinkNote": "Zapisz, aby zamienić to zaproszenie na link. Zaproszenie e-mail przestanie działać."
+      "switchToLinkNote": "Zapisz, aby zamienić to zaproszenie na link. Zaproszenie e-mail przestanie działać.",
+      "savedWithoutEmail": "Zmiany zapisane, ale nie wysłano żadnego e-maila. Zamiast tego udostępnij link zaproszenia."
     },
     "regenerate": {
       "title": "Wygeneruj nowy link"
@@ -2375,7 +2379,8 @@
       "masterLabel": "Włącz powiadomienia",
       "masterDescription": "Wyłącz, aby wyciszyć wszystkie powiadomienia e-mail i push. Twoje wybory według kategorii zostaną zachowane.",
       "emailAddToEnable": "Dodaj zweryfikowany e-mail, aby otrzymywać powiadomienia na skrzynkę.",
-      "emailAddLink": "Dodaj e-mail"
+      "emailAddLink": "Dodaj e-mail",
+      "emailDeliveryDisabled": "Wysyłanie e-maili jest wyłączone w tej instancji. Twoje wybory e-maili są zapisywane, ale nie będą wysyłane, dopóki administrator nie skonfiguruje poczty."
     },
     "preferences": {
       "title": "Preferencje aplikacji",
@@ -2848,7 +2853,8 @@
     "failedTitle": "Nie udało się włączyć powiadomień push",
     "failedDescription": "Nie udało się zarejestrować tego urządzenia. Powiadomienia skonfigurowane dla e-maila nadal będą tam dostarczane; wybory wyłącznie push nie są przekierowywane.",
     "emailUsage": "Dopóki nie włączysz urządzenia, będą docierać tylko powiadomienia skonfigurowane dla e-maila. Zezwól na powiadomienia w ustawieniach przeglądarki i spróbuj ponownie w Ustawieniach.",
-    "done": "Gotowe"
+    "done": "Gotowe",
+    "emailDeliveryDisabled": "Wysyłanie e-maili jest wyłączone w tej instancji, więc powiadomienia e-mail nie dotrą do Ciebie. Włącz powiadomienia push na tym urządzeniu, aby nadal otrzymywać aktualizacje."
   },
   "Unsubscribe": {
     "title": "Wyłączyć te e-maile?",

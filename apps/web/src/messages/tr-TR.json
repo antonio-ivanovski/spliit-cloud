@@ -1504,7 +1504,8 @@
     "signInWithX": "X ile devam et",
     "signInWithOidc": "{name} ile devam et",
     "signInAnonymously": "Anonim",
-    "lastUsed": "Son kullanılan"
+    "lastUsed": "Son kullanılan",
+    "emailAuthDisabled": "Bu örnekte e-posta ile oturum açma devre dışı bırakıldı. Lütfen tek oturum açma (SSO) kullanın."
   },
   "CompleteProfile": {
     "title": "Profilinizi tamamlayın",
@@ -1935,7 +1936,8 @@
         "joined_other": "{count} kişi katıldı",
         "joined_zero": "Şimdiye kadar {count} kişi katıldı",
         "retry": "Tekrar dene"
-      }
+      },
+      "emailDeliveryDisabled": "Bu örnekte e-posta gönderimi kapalı. Davet yine de oluşturulur ve davetli oturum açtığında görünür; açabileceği bir şey olması için bir davet bağlantısı kullanın."
     },
     "invitations": {
       "title": "Bekleyen davetler",
@@ -1962,7 +1964,8 @@
         "fallbackLabel": "Yakındaki QR kod",
         "viewQr": "QR kodunu görüntüle",
         "expireNow": "Şimdi sona erdir"
-      }
+      },
+      "createdWithoutEmail": "{email} için davet oluşturuldu, ancak e-posta gönderilemedi. Bunun yerine bir davet bağlantısı paylaşın."
     },
     "changeRoleAria": "Rolü değiştir",
     "remove": "Çıkar",
@@ -2110,7 +2113,8 @@
       "linkReadyWarning": "Şimdi kopyalayın—tekrar görüntüleyemeyeceksiniz.",
       "emailInvalid": "Geçerli bir e-posta adresi girin.",
       "linkNotShown": "Davet bağlantısı burada gösterilmiyor. Yeniden paylaşmanız gerekirse listedeki \"Yeni bağlantı oluştur\" seçeneğini kullanın.",
-      "switchToLinkNote": "Bu daveti bağlantıya dönüştürmek için kaydet. E-posta daveti çalışmayı durduracak."
+      "switchToLinkNote": "Bu daveti bağlantıya dönüştürmek için kaydet. E-posta daveti çalışmayı durduracak.",
+      "savedWithoutEmail": "Değişiklikler kaydedildi, ancak e-posta gönderilemedi. Bunun yerine bir davet bağlantısı paylaşın."
     },
     "regenerate": {
       "title": "Yeni bağlantı oluştur"
@@ -2353,7 +2357,8 @@
       "masterLabel": "Bildirimleri etkinleştir",
       "masterDescription": "Kapatarak tüm e-posta ve anlık bildirimleri susturun. Kategori bazlı seçimleriniz korunur.",
       "emailAddToEnable": "Gelen kutusu bildirimleri almak için doğrulanmış bir e-posta ekleyin.",
-      "emailAddLink": "E-posta ekle"
+      "emailAddLink": "E-posta ekle",
+      "emailDeliveryDisabled": "Bu örnekte e-posta gönderimi kapalı. E-posta tercihleriniz kaydedilir, ancak yönetici e-postayı yapılandırana kadar gönderilmez."
     },
     "preferences": {
       "title": "Uygulama tercihleri",
@@ -2808,7 +2813,8 @@
     "failedTitle": "Anlık bildirim etkinleştirilemedi",
     "failedDescription": "Bu cihaz kaydedilemedi. E-posta için yapılandırılan bildirimler e-posta üzerinden devam eder; yalnızca anlık bildirim seçenekleri başka kanala yönlendirilmez.",
     "emailUsage": "Bir cihaz etkinleştirene kadar yalnızca e-posta için yapılandırılan bildirimler gelir. Tarayıcı ayarlarınızdan bildirimlere izin verin ve Ayarlar'dan tekrar deneyin.",
-    "done": "Tamam"
+    "done": "Tamam",
+    "emailDeliveryDisabled": "Bu örnekte e-posta gönderimi kapalı, bu yüzden e-posta bildirimleri size ulaşamaz. Güncellemeleri almaya devam etmek için bu cihazda push bildirimlerini açın."
   },
   "Unsubscribe": {
     "title": "Bu e-postaları kapat?",

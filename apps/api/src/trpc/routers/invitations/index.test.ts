@@ -742,7 +742,10 @@ describe('invitationsRouter.create — guards and email', () => {
       email: 'bob@example.com',
       role: 'MEMBER',
     })
-    expect(result).toMatchObject({ invitationId: 'inv-new-1' })
+    expect(result).toMatchObject({
+      invitationId: 'inv-new-1',
+      emailDelivered: true,
+    })
     expect(prismaMock.groupInvitation.create).toHaveBeenCalled()
   })
 
@@ -771,7 +774,7 @@ describe('invitationsRouter.create — guards and email', () => {
     } as never)
 
     const caller = makeCaller('acct-admin')
-    await caller.create({
+    const result = await caller.create({
       requestId: crypto.randomUUID(),
       groupId: 'grp-1',
       email: 'bob@example.com',
@@ -779,6 +782,7 @@ describe('invitationsRouter.create — guards and email', () => {
       temporaryName: 'Submitted Name',
     })
 
+    expect(result).toMatchObject({ emailDelivered: true })
     expect(sendEmailMock).not.toHaveBeenCalled()
     // Profile name is authoritative on create too, matching the manage path.
     expect(prismaMock.groupInvitation.create).toHaveBeenCalledWith(
@@ -818,19 +822,58 @@ describe('invitationsRouter.create — guards and email', () => {
     // prismaMock.user.findFirst returns null by default → no account.
 
     const caller = makeCaller('acct-admin')
-    await caller.create({
+    const result = await caller.create({
       requestId: crypto.randomUUID(),
       groupId: 'grp-1',
       email: 'newuser@example.com',
       role: 'MEMBER',
     })
 
+    expect(result).toMatchObject({ emailDelivered: true })
     expect(sendEmailMock).toHaveBeenCalledTimes(1)
     const call = sendEmailMock.mock.calls[0][0]
     expect(call.to).toBe('newuser@example.com')
     expect(call.subject).toContain('Roadtrip 2026')
     expect(call.text).toMatch(/create an account/i)
     expect(call.text).toContain('/?invitation=inv-new')
+  })
+
+  it('still creates the invitation when delivery fails without SMTP (SSO-only)', async () => {
+    await authAs('acct-admin')
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: 'grp-1',
+      name: 'Roadtrip 2026',
+      ledgerId: 'ledger-1',
+      ledger: { id: 'ledger-1' },
+    } as never)
+    prismaMock.groupMember.findUnique.mockResolvedValue({
+      groupId: 'grp-1',
+      accountId: 'acct-admin',
+      role: 'ADMIN',
+      status: 'ACTIVE',
+    } as never)
+    prismaMock.groupInvitation.create.mockResolvedValue({
+      id: 'inv-new',
+      email: 'newuser@example.com',
+      groupId: 'grp-1',
+    } as never)
+    // prismaMock.user.findFirst returns null by default → no account.
+    // The unit-test env omits SMTP_HOST, so the failure skips quietly.
+    sendEmailMock.mockRejectedValueOnce(new Error('smtp down'))
+
+    const caller = makeCaller('acct-admin')
+    const result = await caller.create({
+      requestId: crypto.randomUUID(),
+      groupId: 'grp-1',
+      email: 'newuser@example.com',
+      role: 'MEMBER',
+    })
+
+    expect(result).toMatchObject({
+      invitationId: 'inv-new',
+      emailDelivered: false,
+    })
+    expect(prismaMock.groupInvitation.create).toHaveBeenCalled()
   })
 })
 
@@ -1984,6 +2027,7 @@ describe('invitationsRouter.updatePending', () => {
     })
 
     expect(result.inviteUrl).toBeNull()
+    expect(result).toMatchObject({ emailDelivered: true })
     expect(sendEmailMock).not.toHaveBeenCalled()
     expect(prismaMock.groupInvitation.updateMany).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -2040,6 +2084,7 @@ describe('invitationsRouter.updatePending', () => {
     })
 
     expect(result.inviteUrl).toBeNull()
+    expect(result).toMatchObject({ emailDelivered: true })
     expect(sendEmailMock).toHaveBeenCalledTimes(1)
     expect(sendEmailMock.mock.calls[0]?.[0]?.to).toBe('carol@example.com')
     expect(prismaMock.groupInvitation.updateMany).toHaveBeenCalledWith(
@@ -2062,6 +2107,36 @@ describe('invitationsRouter.updatePending', () => {
           after: 'carol@example.com',
         }),
       ]),
+    )
+  })
+
+  it('still retargets when delivery fails without SMTP (SSO-only)', async () => {
+    await authAs('acct-admin')
+    const { invitation } = seedUpdateContext({})
+    prismaMock.groupInvitation.findUniqueOrThrow.mockResolvedValue({
+      ...invitation,
+      email: 'carol@example.com',
+      updatedAt: new Date(NOW.getTime() + 1000),
+    } as never)
+    prismaMock.user.findFirst.mockResolvedValue(null as never)
+    prismaMock.groupInvitation.findFirst.mockResolvedValue(null as never)
+    prismaMock.groupMember.findFirst.mockResolvedValue(null as never)
+    // The unit-test env omits SMTP_HOST, so the failure skips quietly.
+    sendEmailMock.mockRejectedValueOnce(new Error('smtp down'))
+
+    const caller = makeCaller('acct-admin')
+    const result = await caller.updatePending({
+      invitationId: 'inv-1',
+      role: 'MEMBER',
+      delivery: { type: 'EMAIL', email: 'carol@example.com' },
+    })
+
+    expect(result.inviteUrl).toBeNull()
+    expect(result).toMatchObject({ emailDelivered: false })
+    expect(prismaMock.groupInvitation.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ email: 'carol@example.com' }),
+      }),
     )
   })
 

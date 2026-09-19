@@ -4,6 +4,8 @@ import {
   getConfiguredOidcProvider,
   getMaxExpenseDocumentSizeBytes,
   getWebhookRelayConfig,
+  isEmailAuthEnabled,
+  isEmailDeliveryEnabled,
   parseEnv,
 } from './env'
 
@@ -42,6 +44,39 @@ describe('envSchema — production', () => {
     expect(() =>
       parseTestEnv({ ...productionBase, EMAIL_FROM: undefined }),
     ).toThrow(/EMAIL_FROM is required in production/)
+  })
+
+  it('allows missing SMTP in production when email auth is disabled', () => {
+    const env = parseTestEnv({
+      ...productionBase,
+      ENABLE_EMAIL_AUTH: 'false',
+      SMTP_HOST: undefined,
+      EMAIL_FROM: undefined,
+      EMAIL_UNSUBSCRIBE_SECRET: undefined,
+      OIDC_CLIENT_ID: 'oidc-client',
+      OIDC_CLIENT_SECRET: 'oidc-secret',
+      OIDC_DISCOVERY_URL:
+        'https://auth.example.com/.well-known/openid-configuration',
+    })
+    expect(env.ENABLE_EMAIL_AUTH).toBe(false)
+    expect(env.SMTP_HOST).toBeUndefined()
+  })
+
+  it('rejects disabling email auth without any SSO provider', () => {
+    expect(() =>
+      parseTestEnv({
+        ...productionBase,
+        ENABLE_EMAIL_AUTH: 'false',
+        SMTP_HOST: undefined,
+        EMAIL_FROM: undefined,
+        EMAIL_UNSUBSCRIBE_SECRET: undefined,
+      }),
+    ).toThrow(/ENABLE_EMAIL_AUTH=false requires at least one SSO provider/)
+  })
+
+  it('defaults ENABLE_EMAIL_AUTH to true', () => {
+    const env = parseTestEnv({ ...productionBase })
+    expect(env.ENABLE_EMAIL_AUTH).toBe(true)
   })
 
   it('allows an anonymous SMTP relay when both credentials are absent', () => {
@@ -599,5 +634,30 @@ describe('envSchema — trailing slashes (issue #120)', () => {
     } finally {
       warn.mockRestore()
     }
+  })
+})
+
+describe('email auth helpers', () => {
+  it('defaults email auth to enabled', () => {
+    expect(isEmailAuthEnabled({})).toBe(true)
+    expect(isEmailAuthEnabled({ ENABLE_EMAIL_AUTH: false })).toBe(false)
+    expect(isEmailAuthEnabled({ ENABLE_EMAIL_AUTH: true })).toBe(true)
+  })
+
+  it('treats an empty ENABLE_EMAIL_AUTH as unset (default true)', () => {
+    const env = parseTestEnv({ ...productionBase, ENABLE_EMAIL_AUTH: '' })
+    expect(env.ENABLE_EMAIL_AUTH).toBe(true)
+  })
+
+  it('reports delivery only when host and sender are both set', () => {
+    expect(isEmailDeliveryEnabled({})).toBe(false)
+    expect(isEmailDeliveryEnabled({ SMTP_HOST: 'smtp.test' })).toBe(false)
+    expect(isEmailDeliveryEnabled({ EMAIL_FROM: 'noreply@test' })).toBe(false)
+    expect(
+      isEmailDeliveryEnabled({
+        SMTP_HOST: 'smtp.test',
+        EMAIL_FROM: 'noreply@test',
+      }),
+    ).toBe(true)
   })
 })

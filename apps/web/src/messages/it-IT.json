@@ -1822,7 +1822,8 @@
     "signInWithX": "Continua con X",
     "signInWithOidc": "Continua con {name}",
     "signInAnonymously": "Anonimo",
-    "lastUsed": "Ultimo utilizzo"
+    "lastUsed": "Ultimo utilizzo",
+    "emailAuthDisabled": "L'accesso con email è disattivato su questa istanza. Usa il single sign-on (SSO)."
   },
   "CompleteProfile": {
     "title": "Completa il tuo profilo",
@@ -1945,7 +1946,8 @@
         "joined_zero": "{count} persone si sono unite finora",
         "joined_many": "{count} persone si sono unite",
         "retry": "Riprova"
-      }
+      },
+      "emailDeliveryDisabled": "L'invio delle email è disattivato su questa istanza. L'invito viene comunque creato e apparirà quando la persona invitata accede; usa un link di invito per darle qualcosa da aprire."
     },
     "invitations": {
       "title": "Inviti in sospeso",
@@ -1972,7 +1974,8 @@
         "fallbackLabel": "Codice QR nelle vicinanze",
         "viewQr": "Visualizza codice QR",
         "expireNow": "Fai scadere ora"
-      }
+      },
+      "createdWithoutEmail": "Invito creato per {email}, ma nessuna email è stata inviata. Condividi invece un link di invito."
     },
     "changeRoleAria": "Cambia ruolo",
     "remove": "Rimuovi",
@@ -2121,7 +2124,8 @@
       "linkReadyWarning": "Copialo ora: non potrai più visualizzarlo.",
       "emailInvalid": "Inserisci un indirizzo email valido.",
       "linkNotShown": "Il link di invito non viene mostrato qui. Se devi condividerlo di nuovo, usa \"Genera nuovo link\" nell’elenco.",
-      "switchToLinkNote": "Salva per convertire questo invito in un link. L'invito via email smetterà di funzionare."
+      "switchToLinkNote": "Salva per convertire questo invito in un link. L'invito via email smetterà di funzionare.",
+      "savedWithoutEmail": "Modifiche salvate, ma nessuna email è stata inviata. Condividi invece un link di invito."
     },
     "regenerate": {
       "title": "Genera nuovo link"
@@ -2364,7 +2368,8 @@
       "masterLabel": "Abilita le notifiche",
       "masterDescription": "Disattivale per silenziare tutte le notifiche via e-mail e push. Le tue scelte per categoria vengono conservate.",
       "emailAddToEnable": "Aggiungi un'e-mail verificata per ricevere le notifiche nella posta in arrivo.",
-      "emailAddLink": "Aggiungi e-mail"
+      "emailAddLink": "Aggiungi e-mail",
+      "emailDeliveryDisabled": "L'invio delle email è disattivato su questa istanza. Le tue scelte email vengono salvate, ma non saranno inviate finché l'amministratore non configura l'email."
     },
     "preferences": {
       "title": "Preferenze dell'app",
@@ -2828,7 +2833,8 @@
     "failedTitle": "Impossibile abilitare le notifiche push",
     "failedDescription": "Non è stato possibile registrare questo dispositivo. Le notifiche configurate per l’e-mail continueranno a essere inviate lì; le opzioni solo push non verranno reindirizzate.",
     "emailUsage": "Finché non abiliti un dispositivo, arriveranno solo le notifiche configurate per l’e-mail. Puoi consentire le notifiche nelle impostazioni del browser e riprovare dalle Impostazioni.",
-    "done": "Fatto"
+    "done": "Fatto",
+    "emailDeliveryDisabled": "L'invio delle email è disattivato su questa istanza, quindi le notifiche email non possono raggiungerti. Attiva le notifiche push su questo dispositivo per continuare a ricevere gli aggiornamenti."
   },
   "Unsubscribe": {
     "title": "Disattivare queste e-mail?",

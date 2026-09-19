@@ -4,6 +4,7 @@ import {
   getDefaultNotificationChannels,
 } from '@spliit/domain/notifications'
 
+import { isEmailDeliveryEnabled } from '../env'
 import { isPushConfigured } from './push'
 import type { ActivityNotificationIntent } from './types'
 
@@ -73,6 +74,13 @@ export async function resolveNotificationChannelsForIntents(
       .filter((row) => row.notificationsEnabled === false)
       .map((row) => row.accountId),
   )
+  // Single choke point for email delivery: every planner (activity,
+  // budget) and the immediate coordinator resolve through here. Without
+  // SMTP there is no transport, so EMAIL is dropped silently — stored
+  // preferences are preserved (and resume if SMTP returns) but nothing is
+  // planned, sent, or retried. Direct invitation sends keep their own
+  // best-effort quiet skip with the DB row as source of truth.
+  const emailDeliveryEnabled = isEmailDeliveryEnabled()
   return intents.map((intent) => {
     if (disabledAccountIds.has(intent.recipientAccountId)) {
       return {
@@ -98,6 +106,11 @@ export async function resolveNotificationChannelsForIntents(
       resolved = channels
     } else {
       resolved = getDefaultNotificationChannels(intent.category, hasPush)
+    }
+    if (!emailDeliveryEnabled) {
+      resolved = resolved.filter(
+        (channel) => channel !== NotificationChannel.EMAIL,
+      )
     }
     return {
       channels: resolved,

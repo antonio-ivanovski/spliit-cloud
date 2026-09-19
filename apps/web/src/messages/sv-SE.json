@@ -146,7 +146,8 @@
       "masterLabel": "Aktivera aviseringar",
       "masterDescription": "Stäng av för att tysta alla e-post- och push-aviseringar. Dina val per kategori behålls.",
       "emailAddToEnable": "Lägg till en verifierad e-postadress för att ta emot aviseringar i inkorgen.",
-      "emailAddLink": "Lägg till e-post"
+      "emailAddLink": "Lägg till e-post",
+      "emailDeliveryDisabled": "E-postutskick är avstängt i den här instansen. Dina e-postval sparas men skickas inte förrän administratören konfigurerar e-post."
     },
     "title": "Kontoinställningar",
     "profile": {
@@ -480,7 +481,8 @@
     "signInWithX": "Fortsätt med X",
     "signInWithOidc": "Fortsätt med {name}",
     "signInAnonymously": "Anonym",
-    "lastUsed": "Senast använt"
+    "lastUsed": "Senast använt",
+    "emailAuthDisabled": "Inloggning med e-post är inaktiverad i den här instansen. Använd enkel inloggning (SSO)."
   },
   "Balances": {
     "title": "Balanser",
@@ -2420,7 +2422,8 @@
         "fallbackLabel": "QR-kod i närheten",
         "viewQr": "Visa QR-kod",
         "expireNow": "Låt gå ut nu"
-      }
+      },
+      "createdWithoutEmail": "Inbjudan för {email} skapad, men inget e-postmeddelande skickades. Dela en inbjudningslänk i stället."
     },
     "invite": {
       "title": "Lägg till personer",
@@ -2481,7 +2484,8 @@
         "joined_other": "{count} personer har gått med",
         "joined_zero": "{count} personer har gått med hittills",
         "retry": "Försök igen"
-      }
+      },
+      "emailDeliveryDisabled": "E-postutskick är avstängt i den här instansen. Inbjudan skapas ändå och visas när den inbjudna loggar in; använd en inbjudningslänk så att personen har något att öppna."
     },
     "leave": {
       "button": "Lämna grupp",
@@ -2628,7 +2632,8 @@
       "linkReadyWarning": "Kopiera den nu — du kommer inte att kunna se den igen.",
       "emailInvalid": "Ange en giltig e-postadress.",
       "linkNotShown": "Inbjudningslänken visas inte här. Använd „Generera ny länk“ i listan om du behöver dela den igen.",
-      "switchToLinkNote": "Spara för att omvandla den här inbjudan till en länk. E-postinbjudan slutar att fungera."
+      "switchToLinkNote": "Spara för att omvandla den här inbjudan till en länk. E-postinbjudan slutar att fungera.",
+      "savedWithoutEmail": "Ändringar sparade, men inget e-postmeddelande skickades. Dela en inbjudningslänk i stället."
     },
     "regenerate": {
       "title": "Generera ny länk"
@@ -2740,7 +2745,8 @@
     "failedTitle": "Push kunde inte aktiveras",
     "failedDescription": "Vi kunde inte registrera denna enhet. Notiser konfigurerade för e-post fortsätter dit; val med endast push omdirigeras inte.",
     "emailUsage": "Endast notiser konfigurerade för e-post kommer fram tills du aktiverar en enhet. Du kan tillåta notiser i webbläsarens inställningar och försöka igen från Inställningar.",
-    "done": "Klar"
+    "done": "Klar",
+    "emailDeliveryDisabled": "E-postutskick är avstängt i den här instansen, så e-postaviseringar kan inte nå dig. Aktivera push på den här enheten för att fortsätta få uppdateringar."
   },
   "ResetPassword": {
     "title": "Välj ett nytt lösenord",

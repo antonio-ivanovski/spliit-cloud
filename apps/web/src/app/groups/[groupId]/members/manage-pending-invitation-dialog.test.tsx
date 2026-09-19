@@ -52,6 +52,11 @@ vi.mock('@/trpc/client', () => ({
 
 const mocks = vi.hoisted(() => ({
   updateMutate: vi.fn(),
+  toast: vi.fn(),
+}))
+
+vi.mock('@/components/ui/use-toast', () => ({
+  useToast: () => ({ toast: mocks.toast }),
 }))
 
 beforeEach(() => {
@@ -178,6 +183,52 @@ describe('ManagePendingInvitationDialog', () => {
     })
     await waitFor(() => {
       expect(onOpenChange).toHaveBeenCalledWith(false)
+    })
+  })
+
+  it('reports an unsent email after retargeting without delivery', async () => {
+    mocks.updateMutate.mockResolvedValue({
+      invitation: makeInvitation({ email: 'carol@example.com' }),
+      inviteUrl: null,
+      emailDelivered: false,
+    })
+    const { user, onOpenChange } = renderDialog(makeInvitation())
+    const emailInput = screen.getByRole('textbox', {
+      name: 'Email address',
+    })
+    await user.clear(emailInput)
+    await user.type(emailInput, 'carol@example.com')
+    await user.click(screen.getByRole('button', { name: 'Update & send' }))
+
+    await waitFor(() => {
+      expect(mocks.toast).toHaveBeenCalledWith({
+        description:
+          'Changes saved, but no email was sent. Share a link invite instead.',
+      })
+    })
+    await waitFor(() => {
+      expect(onOpenChange).toHaveBeenCalledWith(false)
+    })
+  })
+
+  it('confirms a delivered resend after retargeting', async () => {
+    mocks.updateMutate.mockResolvedValue({
+      invitation: makeInvitation({ email: 'carol@example.com' }),
+      inviteUrl: null,
+      emailDelivered: true,
+    })
+    const { user } = renderDialog(makeInvitation())
+    const emailInput = screen.getByRole('textbox', {
+      name: 'Email address',
+    })
+    await user.clear(emailInput)
+    await user.type(emailInput, 'carol@example.com')
+    await user.click(screen.getByRole('button', { name: 'Update & send' }))
+
+    await waitFor(() => {
+      expect(mocks.toast).toHaveBeenCalledWith({
+        description: 'Changes saved',
+      })
     })
   })
 

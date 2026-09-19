@@ -10,6 +10,17 @@ const interpretEnvVarAsBool = (val: unknown): boolean => {
   return ['true', 'yes', '1', 'on'].includes(val.toLowerCase())
 }
 
+// Variant that preserves `undefined` so a `z.boolean().default(true)` schema
+// keeps its default when the variable is unset, while still parsing
+// explicit "false"/"0"/"off" as false. Empty strings count as unset:
+// compose interpolation (`${VAR:-}`) and env files often produce those, and
+// flipping a default-true flag off on empty would be surprising.
+const interpretOptionalEnvVarAsBool = (val: unknown): boolean | undefined => {
+  if (val === undefined) return undefined
+  if (typeof val === 'string' && val.trim() === '') return undefined
+  return interpretEnvVarAsBool(val)
+}
+
 const emptyStringAsUndefined = (val: unknown) =>
   typeof val === 'string' && val.trim() === '' ? undefined : val
 
@@ -190,6 +201,13 @@ const envSchema = z
       interpretEnvVarAsBool,
       z.boolean().default(false),
     ),
+    // Email sign-in (password + magic link). Defaults to true to preserve
+    // historical behavior. Set to false for SSO-only instances (OIDC/social);
+    // SMTP then becomes optional (see superRefine below).
+    ENABLE_EMAIL_AUTH: z.preprocess(
+      interpretOptionalEnvVarAsBool,
+      z.boolean().default(true),
+    ),
     ENABLE_MCP: z.preprocess(interpretEnvVarAsBool, z.boolean().default(false)),
     MCP_PUBLIC_URL: optionalUrlNormalized('MCP_PUBLIC_URL'),
     ASSISTANT_CONFIRMATION_SECRET: optionalString,
@@ -290,19 +308,56 @@ const envSchema = z
           'ASSISTANT_CONFIRMATION_SECRET must be at least 32 bytes when ENABLE_MCP is true',
       })
     }
-    if (env.NODE_ENV === 'production' && !env.SMTP_HOST) {
+    // SMTP is required in production only while email auth is enabled.
+    // SSO-only instances (ENABLE_EMAIL_AUTH=false) may run without SMTP;
+    // email invitations then skip delivery and rely on the in-app pending
+    // list (see email-invitations.ts), and link invites work fully offline.
+    if (
+      env.NODE_ENV === 'production' &&
+      env.ENABLE_EMAIL_AUTH &&
+      !env.SMTP_HOST
+    ) {
       ctx.addIssue({
         code: 'custom',
         path: ['SMTP_HOST'],
-        message: 'SMTP_HOST is required in production',
+        message:
+          'SMTP_HOST is required in production when ENABLE_EMAIL_AUTH is true (set ENABLE_EMAIL_AUTH=false for SSO-only instances without SMTP)',
       })
     }
-    if (env.NODE_ENV === 'production' && !env.EMAIL_FROM) {
+    if (
+      env.NODE_ENV === 'production' &&
+      env.ENABLE_EMAIL_AUTH &&
+      !env.EMAIL_FROM
+    ) {
       ctx.addIssue({
         code: 'custom',
         path: ['EMAIL_FROM'],
-        message: 'EMAIL_FROM is required in production',
+        message:
+          'EMAIL_FROM is required in production when ENABLE_EMAIL_AUTH is true',
       })
+    }
+    // Disabling email auth without any SSO/social provider locks every user
+    // out (existing email accounts are rejected too). Fail boot early with a
+    // clear message instead of serving an empty login panel.
+    if (!env.ENABLE_EMAIL_AUTH) {
+      const hasOidc = !!(
+        env.OIDC_CLIENT_ID &&
+        env.OIDC_CLIENT_SECRET &&
+        env.OIDC_DISCOVERY_URL
+      )
+      const hasSocial = !!(
+        (env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET) ||
+        (env.GITHUB_CLIENT_ID && env.GITHUB_CLIENT_SECRET) ||
+        (env.TWITTER_CLIENT_ID && env.TWITTER_CLIENT_SECRET)
+      )
+      if (!hasOidc && !hasSocial) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['ENABLE_EMAIL_AUTH'],
+          message:
+            'ENABLE_EMAIL_AUTH=false requires at least one SSO provider (OIDC_CLIENT_ID/SECRET/DISCOVERY_URL or Google/GitHub/Twitter credentials)',
+        })
+      }
     }
     const pushVapidValues = [
       env.PUSH_VAPID_PUBLIC_KEY,
@@ -536,4 +591,29 @@ export function getConfiguredOidcProvider(
     clientSecret: source.OIDC_CLIENT_SECRET,
     discoveryUrl: source.OIDC_DISCOVERY_URL,
   }
+}
+
+/**
+ * Whether email sign-in (password + magic link) is enabled. Defaults to true
+ * when unset to preserve historical behavior. Accepts an explicit source so
+ * tests can pass isolated env objects without mutating global env.
+ */
+export function isEmailAuthEnabled(
+  source: { ENABLE_EMAIL_AUTH?: boolean } = env,
+): boolean {
+  return source.ENABLE_EMAIL_AUTH ?? true
+}
+
+/**
+ * Whether outbound email can be delivered. Requires both the transport
+ * (`SMTP_HOST`) and a sender identity (`EMAIL_FROM`): a host without a from
+ * address cannot produce sendable mail, so it counts as undeliverable rather
+ * than silently misconfigured. Drives the web delivery hint and the quiet skip
+ * for best-effort sends on instances that run without SMTP. Accepts an explicit
+ * source so tests can pass isolated env objects without mutating global env.
+ */
+export function isEmailDeliveryEnabled(
+  source: { SMTP_HOST?: string; EMAIL_FROM?: string } = env,
+): boolean {
+  return !!source.SMTP_HOST && !!source.EMAIL_FROM
 }

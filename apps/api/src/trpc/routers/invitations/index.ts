@@ -458,7 +458,16 @@ export const invitationsRouter = createTRPCRouter({
           .optional(),
       }),
     )
-    .output(z.object({ invitationId: z.string() }))
+    .output(
+      z.object({
+        invitationId: z.string(),
+        // False only when delivery was attempted but could not happen
+        // (SMTP unconfigured, rate-limited, or a send failure). Existing
+        // account and idempotent replay paths return true: no email is
+        // expected for those, so the UI keeps its normal success copy.
+        emailDelivered: z.boolean(),
+      }),
+    )
     .mutation(async ({ input, ctx }) => {
       const { group, member } = await loadGroupMutationContext({
         groupId: input.groupId,
@@ -516,7 +525,7 @@ export const invitationsRouter = createTRPCRouter({
         },
       })
       if (!replayed && !existingAccount) {
-        await sendInvitationEmail({
+        const emailDelivered = await sendInvitationEmail({
           invitationId: value.invitationId,
           groupId: group.id,
           groupName: group.name,
@@ -530,8 +539,9 @@ export const invitationsRouter = createTRPCRouter({
           recipientIsExistingUser: false,
           temporaryName: value.temporaryName,
         })
+        return { invitationId: value.invitationId, emailDelivered }
       }
-      return { invitationId: value.invitationId }
+      return { invitationId: value.invitationId, emailDelivered: true }
     }),
 
   /** Preview the balance impact of revoking a pending invitation. */
@@ -777,6 +787,7 @@ export const invitationsRouter = createTRPCRouter({
             ),
           },
           inviteUrl: result.inviteUrl,
+          emailDelivered: result.emailDelivered,
         }
       } catch (err) {
         throw mapUpdateError(err)
