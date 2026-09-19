@@ -43,5 +43,6 @@ This one was requested by the community — thanks to @obsilover for proposing i
 - Fixed the expenses timeline hiding the "not involving you" toggle when hidden expenses sit at the top of the list; leading hidden expenses are now included on the first page, and groups with no involving expenses show collapsed hidden runs instead of an empty list (`TBD` by @TBD)
 - Fixed item prices in expense details and expense cards showing the group currency for converted expenses; stored item amounts are now shown in the expense's own currency — fixes #125 (`TBD` by @TBD)
 - Made "no SMTP" a first-class state: without `SMTP_HOST` no EMAIL-channel notification is planned, sent, or retried (stored email preferences are kept but stay inert), notification settings show a delivery warning with the Email option disabled, and the push onboarding dialog stops offering email as a fallback and instead prompts affected users to enable push (`TBD` by @TBD)
+- Fixed mobile pickers staying behind the iOS software keyboard: currency, timezone, locale, and category drawers now lift above the keyboard and stay within the visible viewport, with native Android keyboard resizing as a progressive enhancement — fixes #124 (`TBD` by @TBD)
 
 **Full Changelog**: TBD

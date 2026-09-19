@@ -10,7 +10,7 @@ import {
   ResponsiveDialogTitle,
   ResponsiveDialogTrigger,
 } from '@/components/ui/responsive-dialog'
-import { render, screen } from '@/test/test-utils'
+import { fireEvent, render, screen, waitFor } from '@/test/test-utils'
 
 // ── Helpers ─────────────────────────────────────────────────────────────
 
@@ -281,5 +281,90 @@ describe('ResponsiveDialog', () => {
     expect(
       screen.getByRole('heading', { name: /controlled/i }),
     ).toBeInTheDocument()
+  })
+
+  it('publishes the visual-viewport keyboard inset to a mobile drawer', async () => {
+    mockMobileMediaQuery()
+
+    let viewportHeight = window.innerHeight
+    const resizeListeners = new Set<(event: Event) => void>()
+    const visualViewport = {
+      width: window.innerWidth,
+      get height() {
+        return viewportHeight
+      },
+      offsetLeft: 0,
+      offsetTop: 0,
+      pageLeft: 0,
+      pageTop: 0,
+      scale: 1,
+      onresize: null,
+      onscroll: null,
+      addEventListener: (type: string, listener: EventListener) => {
+        if (type === 'resize' && typeof listener === 'function') {
+          resizeListeners.add(listener as (event: Event) => void)
+        }
+      },
+      removeEventListener: (type: string, listener: EventListener) => {
+        if (type === 'resize' && typeof listener === 'function') {
+          resizeListeners.delete(listener as (event: Event) => void)
+        }
+      },
+      dispatchEvent: () => false,
+    } as unknown as VisualViewport
+    const originalVisualViewport = Object.getOwnPropertyDescriptor(
+      window,
+      'visualViewport',
+    )
+    Object.defineProperty(window, 'visualViewport', {
+      configurable: true,
+      value: visualViewport,
+    })
+
+    try {
+      render(
+        <ResponsiveDialog defaultOpen>
+          <ResponsiveDialogContent>
+            <ResponsiveDialogTitle>Keyboard aware</ResponsiveDialogTitle>
+            <input type="text" placeholder="Search" />
+          </ResponsiveDialogContent>
+        </ResponsiveDialog>,
+      )
+
+      const popup = screen.getByRole('dialog')
+      const viewport = popup.parentElement
+      expect(viewport?.className).toContain(
+        'pb-[var(--drawer-keyboard-inset,0px)]',
+      )
+      expect(popup.className).toContain(
+        'max-h-[calc(100dvh-3rem-var(--drawer-keyboard-inset,0px))]',
+      )
+
+      const input = screen.getByPlaceholderText('Search')
+      input.focus()
+      viewportHeight = window.innerHeight - 336
+      const resize = new Event('resize')
+      resizeListeners.forEach((listener) => listener(resize))
+
+      await waitFor(() => {
+        expect(
+          viewport?.style.getPropertyValue('--drawer-keyboard-inset'),
+        ).toBe('336px')
+      })
+
+      fireEvent.blur(input)
+      await waitFor(() => {
+        expect(
+          viewport?.style.getPropertyValue('--drawer-keyboard-inset'),
+        ).toBe('0px')
+      })
+    } finally {
+      if (originalVisualViewport) {
+        Object.defineProperty(window, 'visualViewport', originalVisualViewport)
+      } else {
+        // oxlint-disable-next-line typescript/no-explicit-any
+        delete (window as any).visualViewport
+      }
+    }
   })
 })

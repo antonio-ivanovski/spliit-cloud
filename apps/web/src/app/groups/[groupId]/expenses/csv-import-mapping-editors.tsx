@@ -2135,7 +2135,7 @@ export function MappingEditor({
 
   return (
     <ResponsiveDialog open onOpenChange={(open) => !open && onClose()}>
-      <ResponsiveDialogContent className="max-h-[calc(100dvh-2rem)] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden sm:max-w-3xl">
+      <ResponsiveDialogContent className="max-h-[calc(100dvh-2rem-var(--drawer-keyboard-inset,0px))] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden sm:max-w-3xl">
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>
             {t('ExpenseImport.mapping.editorTitle', { title: t(meta.title) })}
@@ -3016,7 +3016,7 @@ export function MoneyMappingEditor({
   const resetVisual = () => resetToVisual('simple')
   return (
     <ResponsiveDialog open onOpenChange={(open) => !open && onClose()}>
-      <ResponsiveDialogContent className="max-h-[calc(100dvh-2rem)] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden sm:max-w-3xl">
+      <ResponsiveDialogContent className="max-h-[calc(100dvh-2rem-var(--drawer-keyboard-inset,0px))] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden sm:max-w-3xl">
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>
             {t('ExpenseImport.mapping.moneyMappingTitle')}

@@ -33,14 +33,15 @@ const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Popup>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Popup>
 >(({ className, children, ...props }, ref) => (
-  <DrawerPortal>
-    <DrawerOverlay />
-    <DrawerPrimitive.Viewport className="fixed inset-0 z-50 flex items-end justify-center touch-none">
-      <DrawerPrimitive.Popup
-        ref={ref}
-        className={(state) =>
-          cn(
-            'motion-drawer relative flex w-full max-h-[calc(100dvh-3rem)] min-h-0 flex-col overflow-hidden rounded-t-[14px] border bg-background pb-[env(safe-area-inset-bottom)] outline-none touch-auto overscroll-contain [transform:translateY(var(--drawer-swipe-movement-y))] transition-[transform,translate,scale,filter,box-shadow] duration-[var(--motion-duration-slow)] ease-[var(--motion-ease-out)] data-[nested-drawer-open]:-translate-y-2 data-[nested-drawer-open]:scale-[0.96] data-[nested-drawer-open]:brightness-75 data-[swiping]:select-none data-[starting-style]:[transform:translateY(calc(100%+2px))] data-[ending-style]:[transform:translateY(calc(100%+2px))] data-[ending-style]:duration-[calc(var(--drawer-swipe-strength)*400ms)]',
+  <DrawerPrimitive.VirtualKeyboardProvider>
+    <DrawerPortal>
+      <DrawerOverlay />
+      <DrawerPrimitive.Viewport className="fixed inset-0 z-50 flex items-end justify-center touch-none pb-[var(--drawer-keyboard-inset,0px)]">
+        <DrawerPrimitive.Popup
+          ref={ref}
+          className={(state) =>
+            cn(
+              'motion-drawer relative flex w-full max-h-[calc(100dvh-3rem-var(--drawer-keyboard-inset,0px))] min-h-0 flex-col overflow-hidden rounded-t-[14px] border bg-background pb-[env(safe-area-inset-bottom)] outline-none touch-auto overscroll-contain [transform:translateY(var(--drawer-swipe-movement-y))] transition-[transform,translate,scale,filter,box-shadow] duration-[var(--motion-duration-slow)] ease-[var(--motion-ease-out)] data-[nested-drawer-open]:-translate-y-2 data-[nested-drawer-open]:scale-[0.96] data-[nested-drawer-open]:brightness-75 data-[swiping]:select-none data-[starting-style]:[transform:translateY(calc(100%+2px))] data-[ending-style]:[transform:translateY(calc(100%+2px))] data-[ending-style]:duration-[calc(var(--drawer-swipe-strength)*400ms)]',
             state.nested
               ? 'shadow-[0_24px_80px_-20px_rgb(0_0_0/0.65)] ring-1 ring-foreground/20'
               : 'shadow-xl',
@@ -53,9 +54,10 @@ const DrawerContent = React.forwardRef<
         <DrawerPrimitive.Content className="flex min-h-0 flex-1 flex-col outline-none">
           {children}
         </DrawerPrimitive.Content>
-      </DrawerPrimitive.Popup>
-    </DrawerPrimitive.Viewport>
-  </DrawerPortal>
+        </DrawerPrimitive.Popup>
+      </DrawerPrimitive.Viewport>
+    </DrawerPortal>
+  </DrawerPrimitive.VirtualKeyboardProvider>
 ))
 DrawerContent.displayName = 'DrawerContent'
 
