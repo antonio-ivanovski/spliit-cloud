@@ -5,6 +5,26 @@
 /.well-known/api-catalog
   Content-Type: application/linkset+json
 
+/index.md
+  Cache-Control: public, max-age=0, must-revalidate
+  Content-Type: text/markdown; charset=utf-8
+
+/terms.md
+  Cache-Control: public, max-age=0, must-revalidate
+  Content-Type: text/markdown; charset=utf-8
+
+/privacy.md
+  Cache-Control: public, max-age=0, must-revalidate
+  Content-Type: text/markdown; charset=utf-8
+
+/imprint.md
+  Cache-Control: public, max-age=0, must-revalidate
+  Content-Type: text/markdown; charset=utf-8
+
+/sponsor.md
+  Cache-Control: public, max-age=0, must-revalidate
+  Content-Type: text/markdown; charset=utf-8
+
 /index.html
   Cache-Control: no-cache, max-age=0, must-revalidate
 

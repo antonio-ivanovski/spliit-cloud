@@ -16,7 +16,7 @@ import {
   createOAuthRevocationBarrier,
   oauthRevocationBarrierIdentifier,
 } from '../lib/auth/oauth-revocation-barrier'
-import { getApiBaseUrl } from '../lib/auth/urls'
+import { getApiBaseUrl, getWebBaseUrl } from '../lib/auth/urls'
 import { env } from '../lib/env'
 import { assistantRouter } from '../trpc/routers/assistant'
 import { groupsRouter } from '../trpc/routers/groups'
@@ -321,11 +321,23 @@ describe('OAuth authorization code + PKCE + refresh', () => {
       authorization_endpoint: string
       token_endpoint: string
       code_challenge_methods_supported: string[]
+      agent_auth: {
+        skill: string
+        register_uri: string
+        revocation_uri: string
+        identity_types_supported: string[]
+      }
     }
     expect(discovery).toMatchObject({
       authorization_endpoint: `${ISSUER}/oauth2/authorize`,
       token_endpoint: `${ISSUER}/oauth2/token`,
       code_challenge_methods_supported: ['S256'],
+      agent_auth: {
+        skill: `${getWebBaseUrl()}/auth.md`,
+        register_uri: `${ISSUER}/oauth2/register`,
+        revocation_uri: `${ISSUER}/oauth2/revoke`,
+        identity_types_supported: ['service_auth'],
+      },
     })
 
     const registrationResponse = await app.request(

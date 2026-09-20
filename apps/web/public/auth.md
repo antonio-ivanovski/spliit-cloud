@@ -10,7 +10,7 @@ Base URLs:
 
 - Web app: `https://spliit.cloud`
 - API and authorization server: `https://api.spliit.cloud`
-- Machine-readable API catalog: `https://spliit.cloud/.well-known/api-catalog`
+- Machine-readable API catalog: https://spliit.cloud/.well-known/api-catalog
   (RFC 9727; points at the OpenAPI spec, docs, and health endpoint)
 
 ## Discover OAuth metadata
@@ -18,24 +18,52 @@ Base URLs:
 Start from the protected-resource document (RFC 9728), also mirrored on the
 web origin for discovery:
 
-- `https://api.spliit.cloud/.well-known/oauth-protected-resource`
-- `https://spliit.cloud/.well-known/oauth-protected-resource` (proxied)
+- https://api.spliit.cloud/.well-known/oauth-protected-resource
+- https://spliit.cloud/.well-known/oauth-protected-resource (proxied)
 
 It carries `resource`, `authorization_servers`, `scopes_supported`, and
 `bearer_methods_supported: ["header"]`. Follow the advertised authorization
 server through RFC 8414 discovery:
 
-- `https://api.spliit.cloud/.well-known/oauth-authorization-server`
-- `https://api.spliit.cloud/.well-known/openid-configuration`
+- https://api.spliit.cloud/.well-known/oauth-authorization-server
+- https://api.spliit.cloud/.well-known/openid-configuration
 
 The server document lists `issuer`, `authorization_endpoint`, `token_endpoint`,
 `jwks_uri`, `grant_types_supported: ["authorization_code", "refresh_token"]`,
 and `response_types_supported: ["code"]`.
 
+## Machine-readable agent metadata
+
+The authorization server advertises the registration surface in an `agent_auth`
+block; the live document is authoritative:
+
+- https://api.spliit.cloud/.well-known/oauth-authorization-server/auth
+
+```json
+{
+  "agent_auth": {
+    "skill": "https://spliit.cloud/auth.md",
+    "register_uri": "https://api.spliit.cloud/auth/oauth2/register",
+    "revocation_uri": "https://api.spliit.cloud/auth/oauth2/revoke",
+    "identity_types_supported": ["service_auth"],
+    "service_auth": {
+      "credential_types_supported": ["access_token"]
+    }
+  }
+}
+```
+
+`service_auth` is the only supported registration method: the agent registers
+an OAuth client, then the account holder completes the ceremony in the browser
+(sign-in and scope consent). There is no ID-JAG (`identity_assertion`) path and
+no anonymous credential issuance — the API never issues credentials without the
+account holder approving them.
+
 ## Registration method
 
-Supported method: OAuth 2.1 dynamic client registration (open, no
-pre-provisioning). One complete method:
+Supported method: `service_auth` — standard OAuth 2.1 with dynamic client
+registration (open, no pre-provisioning) and the account holder's browser
+consent. One complete method:
 
 1. Register (public clients use `token_endpoint_auth_method: "none"` with
    PKCE `S256`):

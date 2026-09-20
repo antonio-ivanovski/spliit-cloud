@@ -48,6 +48,8 @@ Typing or pasting a single emoji into the group name moves it into the emoji fie
 - Prepared the web app manifest for future store packaging: app shortcuts (create group, all expenses, account settings), install screenshots, and Digital Asset Links groundwork (`TBD` by @TBD)
 - Added group emoji and color: pick both inline in the group form and the import wizard's new-group step (custom emoji and hex included; Spliit Cloud exports prefill the picker and your edits override), shown as emoji rails, color-tinted cards, and a tinted ambient background, with live title-emoji extraction including Undo and a one-time prompt to move an emoji out of an existing group's name (`TBD` by @TBD)
 - Tinted the page ambient background with the group color: inside a group that has a color set, the emerald/coral backdrop orbs take on the group hue at their usual subtle strength, in both light and dark mode; groups without a color keep the default backdrop (`TBD` by @TBD)
+- Published machine-readable `agent_auth` metadata in OAuth authorization-server discovery pointing at dynamic client registration and the user-consent flow, with `/auth.md` as the step-by-step guide, so agent-readiness scanners and auth.md clients can find the registration surface (`TBD` by @TBD)
+- Added Markdown content negotiation for the public static pages (`/`, `/terms`, `/privacy`, `/imprint`, `/sponsor`): requests that explicitly accept `text/markdown` receive a clean Markdown representation with a token-count header on both the Cloudflare Pages and Docker deployments, while browsers keep receiving HTML (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
 

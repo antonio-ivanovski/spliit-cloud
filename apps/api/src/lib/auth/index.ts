@@ -50,6 +50,7 @@ import { invalidateAccountCache } from './account-cache'
 import { anonymousRecovery } from './anonymous-recovery'
 import { emailChange } from './email-change'
 import { enforceAuthEmailRecipientLimit } from './email-rate-limit'
+import { agentAuthMetadataExtension } from './oauth-agent-auth'
 import { bindLegacyRefreshTokenResource } from './oauth-refresh-compat'
 import { applyNativeApplicationTypeForLoopbackRegistration } from './oauth-registration'
 import {
@@ -910,6 +911,7 @@ export const auth = betterAuth({
       allowUnauthenticatedClientRegistration: true,
       allowPublicClientPrelogin: true,
       silenceWarnings: { oauthAuthServerConfig: true },
+      extensions: [agentAuthMetadataExtension],
       grantTypes: ['authorization_code', 'refresh_token'],
       // Registering without asking for anything specific grants read-only
       // access. Manage and delete must be requested explicitly, so an

@@ -91,6 +91,14 @@ and the OpenAPI document name the scope an operation actually needs, so an
 agent that falls back to requesting everything in `scopes_supported` ends up
 with a safe read-only grant.
 
+The authorization-server metadata also carries an `agent_auth` block naming the
+agent registration surface: `skill` (the step-by-step guide at
+[`/auth.md`](https://spliit.cloud/auth.md)), `register_uri` (the
+dynamic-registration endpoint used below), and `revocation_uri`.
+`identity_types_supported: ["service_auth"]` means the account holder approves
+the grant in the browser. There is no ID-JAG or anonymous credential issuance,
+so those flows are deliberately not advertised.
+
 ## Registering a client
 
 Dynamic client registration is open, so a client can enrol itself:

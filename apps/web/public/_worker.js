@@ -1,5 +1,52 @@
 const API_ORIGIN = 'https://api.spliit.cloud'
 
+// Public static pages that have a hand-maintained Markdown companion. Agents
+// asking for text/markdown get the companion instead of the client-rendered
+// SPA shell, which contains no page content. Dynamic routes are never listed
+// here and keep behaving exactly as before.
+const MARKDOWN_PAGES = new Map([
+  ['/', '/index.md'],
+  ['/terms', '/terms.md'],
+  ['/privacy', '/privacy.md'],
+  ['/imprint', '/imprint.md'],
+  ['/sponsor', '/sponsor.md'],
+])
+
+function acceptsMarkdown(acceptHeader) {
+  if (!acceptHeader) return false
+
+  return acceptHeader.split(',').some((entry) => {
+    const [mediaType, ...parameters] = entry.trim().toLowerCase().split(';')
+    if (mediaType.trim() !== 'text/markdown') return false
+
+    const quality = parameters
+      .map((parameter) => parameter.trim())
+      .find((parameter) => parameter.startsWith('q='))
+    return quality === undefined || Number.parseFloat(quality.slice(2)) > 0
+  })
+}
+
+// Approximation for the x-markdown-tokens header; the real tokenizer is not
+// available at the edge and the header is advisory only.
+function estimateTokens(text) {
+  return Math.ceil(text.length / 4)
+}
+
+function markdownAlternateLink(markdownPath) {
+  return `<${markdownPath}>; rel="alternate"; type="text/markdown"`
+}
+
+function withMarkdownAlternate(response, markdownPath) {
+  const headers = new globalThis.Headers(response.headers)
+  headers.set('Vary', 'Accept')
+  headers.append('Link', markdownAlternateLink(markdownPath))
+  return new globalThis.Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  })
+}
+
 function isSpaNavigation(request) {
   if (request.method !== 'GET') return false
 
@@ -73,7 +120,7 @@ export default {
     // through to the SPA shell: some crawlers send Accept: text/html and
     // would otherwise receive index.html with a 200.
     if (
-      pathname === '/auth.md' ||
+      pathname.endsWith('.md') ||
       pathname === '/robots.txt' ||
       pathname === '/sitemap.xml' ||
       pathname.startsWith('/.well-known/')
@@ -81,11 +128,49 @@ export default {
       return env.ASSETS.fetch(request)
     }
 
-    const response = await env.ASSETS.fetch(request)
-    if (response.status !== 404 || !isSpaNavigation(request)) {
-      return response
+    const markdownPath = MARKDOWN_PAGES.get(pathname)
+    if (
+      markdownPath !== undefined &&
+      (request.method === 'GET' || request.method === 'HEAD') &&
+      acceptsMarkdown(request.headers.get('Accept'))
+    ) {
+      const isHead = request.method === 'HEAD'
+      const markdownResponse = await env.ASSETS.fetch(
+        new globalThis.Request(new globalThis.URL(markdownPath, request.url), {
+          method: request.method,
+        }),
+      )
+
+      if (markdownResponse.ok) {
+        const markdown = isHead ? '' : await markdownResponse.text()
+        const headers = new globalThis.Headers(markdownResponse.headers)
+        headers.set('Content-Type', 'text/markdown; charset=utf-8')
+        headers.set('Vary', 'Accept')
+        headers.set('Cache-Control', 'no-cache, max-age=0, must-revalidate')
+        if (!isHead) {
+          headers.set('x-markdown-tokens', String(estimateTokens(markdown)))
+        }
+        return new globalThis.Response(isHead ? null : markdown, {
+          status: markdownResponse.status,
+          headers,
+        })
+      }
+      // A missing companion must not break the request: fall through to the
+      // normal asset / SPA handling below, which 404s honestly for agents.
     }
 
-    return env.ASSETS.fetch(new globalThis.URL('/', request.url))
+    const response = await env.ASSETS.fetch(request)
+    if (response.status !== 404 || !isSpaNavigation(request)) {
+      return markdownPath === undefined
+        ? response
+        : withMarkdownAlternate(response, markdownPath)
+    }
+
+    const spaResponse = await env.ASSETS.fetch(
+      new globalThis.URL('/', request.url),
+    )
+    return markdownPath === undefined
+      ? spaResponse
+      : withMarkdownAlternate(spaResponse, markdownPath)
   },
 }
