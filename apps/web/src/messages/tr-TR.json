@@ -374,9 +374,7 @@
         "newGroup": "Yeni grup",
         "existingGroup": "Mevcut grup",
         "loading": "Yükleniyor…",
-        "noAdminGroups": "Henüz hiçbir grubu yönetmiyorsunuz.",
-        "memberCount_one": "{count} üye",
-        "memberCount_other": "{count} üye"
+        "noAdminGroups": "Henüz hiçbir grubu yönetmiyorsunuz."
       },
       "Done": {
         "importComplete": "İçe aktarma tamamlandı",
@@ -657,7 +655,13 @@
     "removeSavedView": "Kaldır",
     "removeSavedViewAccount": "Ana sayfanızdan kaldırıldı.",
     "removeSavedViewDevice": "Bu cihazdan kaldırıldı.",
-    "linkInvitationMultiUse": "Bu QR kod, süresi dolana kadar birden fazla kişi tarafından kullanılabilir."
+    "linkInvitationMultiUse": "Bu QR kod, süresi dolana kadar birden fazla kişi tarafından kullanılabilir.",
+    "emojiIntro": {
+      "title": "Bu gruba bir emoji verelim mi?",
+      "description": "Gruplar artık adlarının yanında bir emoji gösterebiliyor. “{name}” içinde {emoji} fark edildi.",
+      "openSettings": "Grup ayarlarını aç",
+      "notNow": "Şimdi değil"
+    }
   },
   "GroupForm": {
     "title": "Grup bilgileri",
@@ -714,7 +718,43 @@
     },
     "bulkCategorizeSectionTitle": "Toplu yapay zeka araçları",
     "bulkCategorizeSectionDescription": "Yapay zeka kategorileyicisini çok sayıda harcamaya aynı anda uygulayın. Harcamaları içe aktardıktan sonra veya birçok başlık hâlâ kategorilenmemişken kullanışlıdır.",
-    "bulkCategorizeButton": "Toplu kategorilendiriciyi aç"
+    "bulkCategorizeButton": "Toplu kategorilendiriciyi aç",
+    "Appearance": {
+      "emojiLabel": "Grup emojisi",
+      "customEmojiLabel": "Özel emoji",
+      "customEmojiPlaceholder": "Bir emoji yapıştırın",
+      "none": "Yok",
+      "colorLabel": "Grup rengi",
+      "detectedEmojiHint": "Grup adında {emoji} algılandı. Kaydedildiğinde grup emojisi olarak kullanılacak ve addan kaldırılacak.",
+      "colors": {
+        "slate": "Arduvaz",
+        "red": "Kırmızı",
+        "orange": "Turuncu",
+        "amber": "Kehribar",
+        "emerald": "Zümrüt",
+        "teal": "Cam göbeği",
+        "sky": "Gök mavisi",
+        "blue": "Mavi",
+        "violet": "Menekşe",
+        "pink": "Pembe",
+        "yellow": "Sarı",
+        "lime": "Limon yeşili",
+        "green": "Yeşil",
+        "cyan": "Turkuaz",
+        "indigo": "İndigo",
+        "fuchsia": "Fuşya",
+        "rose": "Gül",
+        "stone": "Taş"
+      },
+      "noColor": "Renk yok",
+      "customColorLabel": "Özel renk",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "Grup kartına ve emoji arka planına uygulanır.",
+      "customEmojiTile": "Özel emoji…",
+      "customColorTile": "Özel renk…",
+      "autoMovedHint": "{emoji}, addan çıkarılarak grup emojisine taşındı.",
+      "undoMove": "Geri al"
+    }
   },
   "ExpenseForm": {
     "Income": {
@@ -1356,7 +1396,10 @@
     "invalidWallTime": "Bu saat, seçilen tarihte bu saat diliminde mevcut değil.",
     "proportionalUnassignedItems": "Kalan tutarı orantılı bölmek için her kalemi en az bir katılımcıya atayın veya özel bölme kullanın.",
     "proportionalZeroBasis": "Kalem ara toplamları birbirini götürdüğünden kalan tutar orantılı bölünemez. Kalemleri düzeltin veya özel bölme kullanın.",
-    "proportionalInvalidRatios": "Bazı katılımcıların kalem ara toplamları zıt işaretli olduğundan kalan tutar orantılı bölünemez. Kalemleri düzeltin veya özel bölme kullanın."
+    "proportionalInvalidRatios": "Bazı katılımcıların kalem ara toplamları zıt işaretli olduğundan kalan tutar orantılı bölünemez. Kalemleri düzeltin veya özel bölme kullanın.",
+    "max32": "En fazla 32 karakter girin.",
+    "invalidEmoji": "Tek bir emoji girin.",
+    "invalidColor": "Geçerli bir hex renk girin, örneğin #1A2B3C."
   },
   "Categories": {
     "search": "Kategori ara...",

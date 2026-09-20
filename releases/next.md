@@ -1,8 +1,9 @@
-Welcome to `vNEXT`! The flagship of this release is outbound webhooks — Spliit can now push expense changes to your own integrations in real time — plus a round of smaller polish fixes.
+Welcome to `vNEXT`! The flagship of this release is outbound webhooks — Spliit can now push expense changes to your own integrations in real time — alongside group emoji and colors and a round of smaller polish fixes.
 
 ## Highlights
 
 - Outbound webhooks: real-time expense events for your own integrations
+- Group emoji and colors: give every group its own look
 
 ### Outbound webhooks: real-time expense events for your own integrations
 
@@ -24,6 +25,20 @@ This one was requested by the community — thanks to @obsilover for proposing i
 
 <img src="./assets/next/webhook-site-test.webp" alt="Signed Spliit event arriving at webhook.site, showing the signature headers and JSON payload" width="700">
 
+### Group emoji and colors: give every group its own look
+
+Every group can now carry an emoji and a color. Pick both inline when creating or editing a group — a scrollable emoji row, an 18-color palette, and custom emoji or hex color when the presets don't fit. The emoji shows up on a full-height colored rail on the home screen and in the import destination picker, the color tints the card, and on the group page the same color warms the ambient background in both light and dark mode.
+
+Typing or pasting a single emoji into the group name moves it into the emoji field on the spot, with an Undo right there — existing groups get a one-time offer to lift an emoji out of their name, and Spliit Cloud imports prefill the picker from the export while your edits still win.
+
+**Pick an emoji and a color right in the group form**
+
+<img src="./assets/next/create-group.webp" alt="Create a group form with the Group emoji row and the Group color palette, airplane emoji and red color selected" width="700">
+
+**Emoji rails and color-tinted cards on the home screen**
+
+<img src="./assets/next/group-card.webp" alt="Group card on the home screen showing the airplane emoji on a red-tinted rail" width="480">
+
 ## What's Changed
 
 ### 🚀 Features
@@ -31,6 +46,8 @@ This one was requested by the community — thanks to @obsilover for proposing i
 - Added outbound webhooks: subscribe any HTTPS endpoint to expense created/updated/deleted events, with signed payloads, a personal `viewer` block, involved-only filtering, automatic retries, delivery history with manual redelivery, test sends, secret rotation, and a Create/Edit/View setup dialog with delete confirmation (`TBD` by @TBD)
 - Added SSO-only mode: set `ENABLE_EMAIL_AUTH=false` to hide sign-in with email (password + magic link) and make SMTP optional; email sign-in endpoints are rejected with `EMAIL_AUTH_DISABLED`, invite-only signup still passes by pending email match, and email invitations stay in-app with a delivery warning when no email can be sent — fixes #121 (`TBD` by @TBD)
 - Prepared the web app manifest for future store packaging: app shortcuts (create group, all expenses, account settings), install screenshots, and Digital Asset Links groundwork (`TBD` by @TBD)
+- Added group emoji and color: pick both inline in the group form and the import wizard's new-group step (custom emoji and hex included; Spliit Cloud exports prefill the picker and your edits override), shown as emoji rails, color-tinted cards, and a tinted ambient background, with live title-emoji extraction including Undo and a one-time prompt to move an emoji out of an existing group's name (`TBD` by @TBD)
+- Tinted the page ambient background with the group color: inside a group that has a color set, the emerald/coral backdrop orbs take on the group hue at their usual subtle strength, in both light and dark mode; groups without a color keep the default backdrop (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
 

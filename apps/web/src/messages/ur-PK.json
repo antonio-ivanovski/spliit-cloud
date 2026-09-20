@@ -1842,7 +1842,43 @@
     },
     "bulkCategorizeSectionTitle": "بلک AI ٹولز",
     "bulkCategorizeSectionDescription": "ایک ساتھ کئی اخراجات پر AI کیٹیگریزر چلائیں۔ اخراجات درآمد کرنے کے بعد یا جب بہت سے عنوانات غیر درجہ بند ہوں تو مفید ہے۔",
-    "bulkCategorizeButton": "بلک کیٹیگریزر کھولیں"
+    "bulkCategorizeButton": "بلک کیٹیگریزر کھولیں",
+    "Appearance": {
+      "emojiLabel": "گروپ ایموجی",
+      "customEmojiLabel": "اپنی مرضی کا ایموجی",
+      "customEmojiPlaceholder": "کوئی بھی ایموجی پیسٹ کریں",
+      "none": "کوئی نہیں",
+      "colorLabel": "گروپ کا رنگ",
+      "detectedEmojiHint": "گروپ کے نام میں {emoji} پایا گیا۔ محفوظ کرنے پر اسے گروپ ایموجی کے طور پر استعمال کیا جائے گا اور نام سے ہٹا دیا جائے گا۔",
+      "colors": {
+        "slate": "سلیٹ",
+        "red": "لال",
+        "orange": "نارنجی",
+        "amber": "امبر",
+        "emerald": "ایمرالڈ",
+        "teal": "ٹیل",
+        "sky": "آسمانی",
+        "blue": "نیلا",
+        "violet": "بنفشی",
+        "pink": "گلابی",
+        "yellow": "پیلا",
+        "lime": "لائم",
+        "green": "سبز",
+        "cyan": "سیان",
+        "indigo": "انڈیگو",
+        "fuchsia": "فوشیا",
+        "rose": "روز",
+        "stone": "اسٹون"
+      },
+      "noColor": "کوئی رنگ نہیں",
+      "customColorLabel": "کسٹم رنگ",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "گروپ کارڈ اور ایموجی پس منظر پر لاگو ہوتا ہے۔",
+      "customEmojiTile": "اپنی مرضی کا ایموجی…",
+      "customColorTile": "کسٹم رنگ…",
+      "autoMovedHint": "{emoji} کو نام سے ہٹا کر گروپ ایموجی میں رکھ دیا گیا۔",
+      "undoMove": "واپس لائیں"
+    }
   },
   "Groups": {
     "linkInvitationBannerDescription": "{inviter} نے آپ کو Spliit Cloud پر {groupName} میں شامل ہونے کی دعوت دی۔",
@@ -1921,9 +1957,7 @@
         "newGroup": "نیا گروپ",
         "existingGroup": "موجودہ گروپ",
         "loading": "لوڈ ہو رہا ہے…",
-        "noAdminGroups": "آپ ابھی تک کسی گروپ کا انتظام نہیں کرتے۔",
-        "memberCount_one": "{count} رکن",
-        "memberCount_other": "{count} اراکین"
+        "noAdminGroups": "آپ ابھی تک کسی گروپ کا انتظام نہیں کرتے۔"
       },
       "Done": {
         "importComplete": "درآمد مکمل",
@@ -2274,7 +2308,13 @@
     "removeSavedView": "ہٹائیں",
     "removeSavedViewAccount": "آپ کے ڈیش بورڈ سے ہٹا دیا گیا۔",
     "removeSavedViewDevice": "اس ڈیوائس سے ہٹا دیا گیا۔",
-    "linkInvitationMultiUse": "یہ QR کوڈ ختم ہونے تک کئی لوگ استعمال کر سکتے ہیں۔"
+    "linkInvitationMultiUse": "یہ QR کوڈ ختم ہونے تک کئی لوگ استعمال کر سکتے ہیں۔",
+    "emojiIntro": {
+      "title": "اس گروپ کو ایک ایموجی دیں؟",
+      "description": "گروپس اب اپنے نام کے ساتھ ایک ایموجی دکھا سکتے ہیں۔ ہم نے “{name}” میں {emoji} دیکھا۔",
+      "openSettings": "گروپ کی ترتیبات کھولیں",
+      "notNow": "ابھی نہیں"
+    }
   },
   "Header": {
     "signIn": "سائن ان",
@@ -2848,7 +2888,10 @@
     "invalidWallTime": "منتخب تاریخ پر اس ٹائم زون میں یہ وقت موجود نہیں ہے۔",
     "proportionalUnassignedItems": "باقی رقم متناسب طور پر تقسیم کرنے کے لیے ہر آئٹم کو کم از کم ایک شریک کو تفویض کریں، یا اپنی مرضی کی تقسیم استعمال کریں۔",
     "proportionalZeroBasis": "آئٹمز کے ذیلی مجموعے ایک دوسرے کو منسوخ کر دیتے ہیں، اس لیے باقی رقم متناسب طور پر تقسیم نہیں ہو سکتی۔ آئٹمز درست کریں یا اپنی مرضی کی تقسیم استعمال کریں۔",
-    "proportionalInvalidRatios": "کچھ شرکاء کے آئٹمز کے ذیلی مجموعوں کی علامتیں مخالف ہیں، اس لیے باقی رقم متناسب طور پر تقسیم نہیں ہو سکتی۔ آئٹمز درست کریں یا اپنی مرضی کی تقسیم استعمال کریں۔"
+    "proportionalInvalidRatios": "کچھ شرکاء کے آئٹمز کے ذیلی مجموعوں کی علامتیں مخالف ہیں، اس لیے باقی رقم متناسب طور پر تقسیم نہیں ہو سکتی۔ آئٹمز درست کریں یا اپنی مرضی کی تقسیم استعمال کریں۔",
+    "max32": "زیادہ سے زیادہ 32 حروف درج کریں۔",
+    "invalidEmoji": "ایک ایموجی درج کریں۔",
+    "invalidColor": "ایک درست ہیکس رنگ درج کریں، جیسے #1A2B3C۔"
   },
   "Settings": {
     "title": "ترتیبات"

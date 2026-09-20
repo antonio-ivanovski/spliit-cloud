@@ -1842,7 +1842,43 @@
     },
     "bulkCategorizeSectionTitle": "बल्क AI उपकरण",
     "bulkCategorizeSectionDescription": "एक साथ कई खर्चों पर AI श्रेणीकारक चलाएं। खर्च आयात करने के बाद या जब कई शीर्षक अभी भी अश्रेणीबद्ध हैं तब उपयोगी।",
-    "bulkCategorizeButton": "बल्क श्रेणीकारक खोलें"
+    "bulkCategorizeButton": "बल्क श्रेणीकारक खोलें",
+    "Appearance": {
+      "emojiLabel": "समूह इमोजी",
+      "customEmojiLabel": "कस्टम इमोजी",
+      "customEmojiPlaceholder": "कोई भी इमोजी पेस्ट करें",
+      "none": "कोई नहीं",
+      "colorLabel": "समूह का रंग",
+      "detectedEmojiHint": "समूह के नाम में {emoji} पाया गया। सहेजने पर इसे समूह इमोजी के रूप में उपयोग किया जाएगा और नाम से हटा दिया जाएगा।",
+      "colors": {
+        "slate": "स्लेट",
+        "red": "लाल",
+        "orange": "नारंगी",
+        "amber": "अंबर",
+        "emerald": "एमराल्ड",
+        "teal": "टील",
+        "sky": "आसमानी",
+        "blue": "नीला",
+        "violet": "बैंगनी",
+        "pink": "गुलाबी",
+        "yellow": "पीला",
+        "lime": "लाइम",
+        "green": "हरा",
+        "cyan": "सियान",
+        "indigo": "इंडिगो",
+        "fuchsia": "फ़्यूशिया",
+        "rose": "रोज़",
+        "stone": "स्टोन"
+      },
+      "noColor": "कोई रंग नहीं",
+      "customColorLabel": "कस्टम रंग",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "समूह कार्ड और इमोजी पृष्ठभूमि पर लागू होता है।",
+      "customEmojiTile": "कस्टम इमोजी…",
+      "customColorTile": "कस्टम रंग…",
+      "autoMovedHint": "{emoji} को नाम से हटाकर समूह इमोजी में रखा गया।",
+      "undoMove": "पूर्ववत करें"
+    }
   },
   "Groups": {
     "linkInvitationBannerDescription": "{inviter} ने आपको Spliit Cloud पर {groupName} में शामिल होने के लिए आमंत्रित किया है।",
@@ -1921,9 +1957,7 @@
         "newGroup": "नया समूह",
         "existingGroup": "मौजूदा समूह",
         "loading": "लोड हो रहा है…",
-        "noAdminGroups": "आप अभी तक किसी समूह का प्रशासन नहीं करते।",
-        "memberCount_one": "{count} सदस्य",
-        "memberCount_other": "{count} सदस्य"
+        "noAdminGroups": "आप अभी तक किसी समूह का प्रशासन नहीं करते।"
       },
       "Done": {
         "importComplete": "आयात पूर्ण",
@@ -2274,7 +2308,13 @@
     "removeSavedView": "हटाएं",
     "removeSavedViewAccount": "आपके डैशबोर्ड से हटा दिया गया।",
     "removeSavedViewDevice": "इस डिवाइस से हटा दिया गया।",
-    "linkInvitationMultiUse": "इस QR कोड का उपयोग समाप्त होने तक कई लोग कर सकते हैं।"
+    "linkInvitationMultiUse": "इस QR कोड का उपयोग समाप्त होने तक कई लोग कर सकते हैं।",
+    "emojiIntro": {
+      "title": "इस समूह को एक इमोजी दें?",
+      "description": "समूह अब अपने नाम के बगल में एक इमोजी दिखा सकते हैं। हमने “{name}” में {emoji} देखा।",
+      "openSettings": "समूह सेटिंग खोलें",
+      "notNow": "अभी नहीं"
+    }
   },
   "Header": {
     "signIn": "साइन इन करें",
@@ -2848,7 +2888,10 @@
     "invalidWallTime": "चुनी गई तारीख पर इस समय क्षेत्र में यह समय मौजूद नहीं है।",
     "proportionalUnassignedItems": "शेष राशि आनुपातिक रूप से विभाजित करने के लिए प्रत्येक आइटम को कम से कम एक सदस्य को असाइन करें, या कस्टम विभाजन का उपयोग करें।",
     "proportionalZeroBasis": "आइटम उप-योग एक-दूसरे को रद्द कर देते हैं, इसलिए शेष राशि आनुपातिक रूप से विभाजित नहीं की जा सकती। आइटम ठीक करें या कस्टम विभाजन का उपयोग करें।",
-    "proportionalInvalidRatios": "कुछ सदस्यों के आइटम उप-योग के चिह्न विपरीत हैं, इसलिए शेष राशि आनुपातिक रूप से विभाजित नहीं की जा सकती। आइटम ठीक करें या कस्टम विभाजन का उपयोग करें।"
+    "proportionalInvalidRatios": "कुछ सदस्यों के आइटम उप-योग के चिह्न विपरीत हैं, इसलिए शेष राशि आनुपातिक रूप से विभाजित नहीं की जा सकती। आइटम ठीक करें या कस्टम विभाजन का उपयोग करें।",
+    "max32": "अधिकतम 32 वर्ण दर्ज करें।",
+    "invalidEmoji": "एक इमोजी दर्ज करें।",
+    "invalidColor": "एक मान्य हेक्स रंग दर्ज करें, जैसे #1A2B3C।"
   },
   "Settings": {
     "title": "सेटिंग"

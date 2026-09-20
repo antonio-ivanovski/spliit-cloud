@@ -252,6 +252,11 @@ export const spliitGroupExportSnapshotSchema = z.object({
     archived: z.boolean(),
     groupType: z.enum(['GROUP', 'FRIEND']),
     subgroupsEnabled: z.boolean(),
+    // Appearance added after the original export format. Optional so exports
+    // taken before the feature (and hand-edited bundles) still validate; absent
+    // values fall back to the deterministic auto appearance on restore.
+    emoji: z.string().max(32).nullable().optional(),
+    color: z.string().max(32).nullable().optional(),
     createdAt: isoDateTime,
     ledger: z.object({
       sourceId,

@@ -361,6 +361,8 @@ export const overviewRouter = createTRPCRouter({
               archived: true,
               createdAt: true,
               groupType: true,
+              emoji: true,
+              color: true,
               friendPairKey: true,
               ledger: {
                 select: { id: true, currency: true, currencyCode: true },
@@ -494,6 +496,8 @@ export const overviewRouter = createTRPCRouter({
           archived: group.archived,
           createdAt: group.createdAt.toISOString(),
           groupType: group.groupType,
+          emoji: group.emoji,
+          color: group.color,
           ledger: {
             currency: group.ledger.currency,
             currencyCode: group.ledger.currencyCode,
@@ -520,6 +524,8 @@ export const overviewRouter = createTRPCRouter({
           group: {
             select: {
               name: true,
+              emoji: true,
+              color: true,
               ledger: {
                 select: { currency: true, currencyCode: true },
               },
@@ -545,6 +551,8 @@ export const overviewRouter = createTRPCRouter({
         archived: false,
         createdAt: row.createdAt.toISOString(),
         groupType: GroupType.GROUP,
+        emoji: row.group.emoji,
+        color: row.group.color,
         ledger: {
           currency: row.group.ledger.currency,
           currencyCode: row.group.ledger.currencyCode,

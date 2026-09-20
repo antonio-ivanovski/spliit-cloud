@@ -68,6 +68,7 @@ export const EditGroup = () => {
         readOnly={isReadOnlyViewer || currentMember?.role === 'MEMBER'}
         archived={!!group?.archived}
         hideNameField={isFriendLedger}
+        hideAppearance={isFriendLedger}
         currencyLocked={!!data?.hasExpenses}
         onSubmit={(groupFormValues) =>
           updateMutation.mutateAsync({ groupId, groupFormValues })

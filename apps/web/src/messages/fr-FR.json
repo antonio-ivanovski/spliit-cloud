@@ -379,10 +379,7 @@
         "newGroup": "Nouveau groupe",
         "existingGroup": "Groupe existant",
         "loading": "Chargement…",
-        "noAdminGroups": "Vous n'administrez encore aucun groupe.",
-        "memberCount_one": "{count} membre",
-        "memberCount_many": "{count} membres",
-        "memberCount_other": "{count} membres"
+        "noAdminGroups": "Vous n'administrez encore aucun groupe."
       },
       "Done": {
         "importComplete": "Importation terminée",
@@ -664,7 +661,13 @@
     "removeSavedView": "Supprimer",
     "removeSavedViewAccount": "Supprimé de votre accueil.",
     "removeSavedViewDevice": "Supprimé de cet appareil.",
-    "linkInvitationMultiUse": "Ce code QR peut être utilisé par plusieurs personnes jusqu'à son expiration."
+    "linkInvitationMultiUse": "Ce code QR peut être utilisé par plusieurs personnes jusqu'à son expiration.",
+    "emojiIntro": {
+      "title": "Donner un emoji à ce groupe ?",
+      "description": "Les groupes peuvent désormais afficher un emoji à côté de leur nom. Nous avons remarqué {emoji} dans « {name} ».",
+      "openSettings": "Ouvrir les paramètres du groupe",
+      "notNow": "Pas maintenant"
+    }
   },
   "GroupForm": {
     "title": "Informations sur le groupe",
@@ -721,7 +724,43 @@
     "archivedNotice": "Ce groupe est archivé. Ses paramètres sont gelés et ne peuvent plus être modifiés.",
     "bulkCategorizeSectionTitle": "Outils d'IA en lot",
     "bulkCategorizeSectionDescription": "Exécutez le catégoriseur IA sur plusieurs dépenses à la fois. Utile après avoir importé des dépenses ou lorsque de nombreux titres ne sont pas encore catégorisés.",
-    "bulkCategorizeButton": "Ouvrir le catégoriseur en lot"
+    "bulkCategorizeButton": "Ouvrir le catégoriseur en lot",
+    "Appearance": {
+      "emojiLabel": "Emoji du groupe",
+      "customEmojiLabel": "Emoji personnalisé",
+      "customEmojiPlaceholder": "Collez n'importe quel emoji",
+      "none": "Aucun",
+      "colorLabel": "Couleur du groupe",
+      "detectedEmojiHint": "{emoji} a été détecté dans le nom du groupe. L'enregistrement l'utilisera comme emoji du groupe et le retirera du nom.",
+      "colors": {
+        "slate": "Ardoise",
+        "red": "Rouge",
+        "orange": "Orange",
+        "amber": "Ambre",
+        "emerald": "Émeraude",
+        "teal": "Turquoise",
+        "sky": "Ciel",
+        "blue": "Bleu",
+        "violet": "Violet",
+        "pink": "Rose",
+        "yellow": "Jaune",
+        "lime": "Lime",
+        "green": "Vert",
+        "cyan": "Cyan",
+        "indigo": "Indigo",
+        "fuchsia": "Fuchsia",
+        "rose": "Rose foncé",
+        "stone": "Pierre"
+      },
+      "noColor": "Aucune couleur",
+      "customColorLabel": "Couleur personnalisée",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "S'applique à la carte du groupe et au fond de l'emoji.",
+      "customEmojiTile": "Emoji personnalisé…",
+      "customColorTile": "Couleur personnalisée…",
+      "autoMovedHint": "{emoji} a été déplacé du nom vers l'emoji du groupe.",
+      "undoMove": "Annuler"
+    }
   },
   "ExpenseForm": {
     "Income": {
@@ -1365,7 +1404,10 @@
     "invalidWallTime": "Cette heure n’existe pas à la date sélectionnée dans ce fuseau horaire.",
     "proportionalUnassignedItems": "Attribuez chaque article à au moins un participant pour répartir le reste proportionnellement, ou utilisez une répartition personnalisée.",
     "proportionalZeroBasis": "Les sous-totaux des articles s’annulent, le reste ne peut donc pas être réparti proportionnellement. Corrigez les articles ou utilisez une répartition personnalisée.",
-    "proportionalInvalidRatios": "Les sous-totaux des articles de certains participants sont de signes opposés, le reste ne peut donc pas être réparti proportionnellement. Corrigez les articles ou utilisez une répartition personnalisée."
+    "proportionalInvalidRatios": "Les sous-totaux des articles de certains participants sont de signes opposés, le reste ne peut donc pas être réparti proportionnellement. Corrigez les articles ou utilisez une répartition personnalisée.",
+    "max32": "Entrez au maximum 32 caractères.",
+    "invalidEmoji": "Entrez un seul emoji.",
+    "invalidColor": "Entrez une couleur hexadécimale valide, par exemple #1A2B3C."
   },
   "Categories": {
     "search": "Rechercher une catégorie…",

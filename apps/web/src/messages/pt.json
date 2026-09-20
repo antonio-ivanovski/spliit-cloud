@@ -379,10 +379,7 @@
         "newGroup": "Novo grupo",
         "existingGroup": "Grupo existente",
         "loading": "A carregar…",
-        "noAdminGroups": "Ainda não administra nenhum grupo.",
-        "memberCount_one": "{count} membro",
-        "memberCount_many": "{count} membros",
-        "memberCount_other": "{count} membros"
+        "noAdminGroups": "Ainda não administra nenhum grupo."
       },
       "Done": {
         "importComplete": "Importação concluída",
@@ -664,7 +661,13 @@
     "removeSavedView": "Remover",
     "removeSavedViewAccount": "Removido do início.",
     "removeSavedViewDevice": "Removido deste dispositivo.",
-    "linkInvitationMultiUse": "Este código QR pode ser usado por várias pessoas até expirar."
+    "linkInvitationMultiUse": "Este código QR pode ser usado por várias pessoas até expirar.",
+    "emojiIntro": {
+      "title": "Dar um emoji a este grupo?",
+      "description": "Os grupos agora podem mostrar um emoji junto ao nome. Reparámos em {emoji} em “{name}”.",
+      "openSettings": "Abrir as definições do grupo",
+      "notNow": "Agora não"
+    }
   },
   "GroupForm": {
     "title": "Informações do grupo",
@@ -721,7 +724,43 @@
     "archivedNotice": "Este grupo está arquivado. As suas definições estão congeladas e já não podem ser alteradas.",
     "bulkCategorizeSectionTitle": "Ferramentas de IA em lote",
     "bulkCategorizeSectionDescription": "Executa o categorizador de IA em várias despesas de uma vez. Útil depois de importar despesas ou quando muitos títulos ainda não estão categorizados.",
-    "bulkCategorizeButton": "Abrir o categorizador em lote"
+    "bulkCategorizeButton": "Abrir o categorizador em lote",
+    "Appearance": {
+      "emojiLabel": "Emoji do grupo",
+      "customEmojiLabel": "Emoji personalizado",
+      "customEmojiPlaceholder": "Cola qualquer emoji",
+      "none": "Nenhum",
+      "colorLabel": "Cor do grupo",
+      "detectedEmojiHint": "{emoji} foi detetado no nome do grupo. Ao guardar, será usado como emoji do grupo e removido do nome.",
+      "colors": {
+        "slate": "Ardósia",
+        "red": "Vermelho",
+        "orange": "Laranja",
+        "amber": "Âmbar",
+        "emerald": "Esmeralda",
+        "teal": "Turquesa",
+        "sky": "Celeste",
+        "blue": "Azul",
+        "violet": "Violeta",
+        "pink": "Rosa",
+        "yellow": "Amarelo",
+        "lime": "Lima",
+        "green": "Verde",
+        "cyan": "Ciano",
+        "indigo": "Índigo",
+        "fuchsia": "Fúcsia",
+        "rose": "Rosado",
+        "stone": "Pedra"
+      },
+      "noColor": "Sem cor",
+      "customColorLabel": "Cor personalizada",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "Aplica-se ao cartão do grupo e ao fundo do emoji.",
+      "customEmojiTile": "Emoji personalizado…",
+      "customColorTile": "Cor personalizada…",
+      "autoMovedHint": "{emoji} foi movido do nome para o emoji do grupo.",
+      "undoMove": "Desfazer"
+    }
   },
   "Auth": {
     "title": "Iniciar sessão no Spliit Cloud",
@@ -1477,7 +1516,10 @@
     "invalidWallTime": "Esta hora não existe na data selecionada neste fuso horário.",
     "proportionalUnassignedItems": "Atribui cada item a pelo menos um participante para dividir o restante proporcionalmente, ou usa uma divisão personalizada.",
     "proportionalZeroBasis": "Os subtotais dos itens anulam-se, por isso o restante não pode ser dividido proporcionalmente. Corrige os itens ou usa uma divisão personalizada.",
-    "proportionalInvalidRatios": "Os subtotais de itens de alguns participantes têm sinais opostos, por isso o restante não pode ser dividido proporcionalmente. Corrige os itens ou usa uma divisão personalizada."
+    "proportionalInvalidRatios": "Os subtotais de itens de alguns participantes têm sinais opostos, por isso o restante não pode ser dividido proporcionalmente. Corrige os itens ou usa uma divisão personalizada.",
+    "max32": "Introduz no máximo 32 caracteres.",
+    "invalidEmoji": "Introduz um único emoji.",
+    "invalidColor": "Introduz uma cor hexadecimal válida, como #1A2B3C."
   },
   "Categories": {
     "search": "Pesquisar categoria...",

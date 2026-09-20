@@ -369,8 +369,7 @@
         "newGroup": "Grup baru",
         "existingGroup": "Grup yang ada",
         "loading": "Memuat…",
-        "noAdminGroups": "Anda belum mengelola grup apa pun.",
-        "memberCount_other": "{count} anggota"
+        "noAdminGroups": "Anda belum mengelola grup apa pun."
       },
       "Done": {
         "importComplete": "Impor selesai",
@@ -650,7 +649,13 @@
     "removeSavedView": "Hapus",
     "removeSavedViewAccount": "Dihapus dari beranda.",
     "removeSavedViewDevice": "Dihapus dari perangkat ini.",
-    "linkInvitationMultiUse": "Kode QR ini dapat digunakan oleh beberapa orang hingga kedaluwarsa."
+    "linkInvitationMultiUse": "Kode QR ini dapat digunakan oleh beberapa orang hingga kedaluwarsa.",
+    "emojiIntro": {
+      "title": "Beri emoji untuk grup ini?",
+      "description": "Grup kini dapat menampilkan emoji di samping namanya. Kami melihat {emoji} dalam “{name}”.",
+      "openSettings": "Buka pengaturan grup",
+      "notNow": "Nanti saja"
+    }
   },
   "GroupForm": {
     "title": "Informasi grup",
@@ -707,7 +712,43 @@
     "archivedNotice": "Grup ini diarsipkan. Pengaturannya dibekukan dan tidak dapat diubah lagi.",
     "bulkCategorizeSectionTitle": "Alat AI massal",
     "bulkCategorizeSectionDescription": "Jalankan pengkategorian AI ke banyak pengeluaran sekaligus. Berguna setelah mengimpor pengeluaran atau saat banyak judul belum dikategorikan.",
-    "bulkCategorizeButton": "Buka kategorisasi massal"
+    "bulkCategorizeButton": "Buka kategorisasi massal",
+    "Appearance": {
+      "emojiLabel": "Emoji grup",
+      "customEmojiLabel": "Emoji kustom",
+      "customEmojiPlaceholder": "Tempel emoji apa pun",
+      "none": "Tidak ada",
+      "colorLabel": "Warna grup",
+      "detectedEmojiHint": "{emoji} terdeteksi dalam nama grup. Menyimpan akan menggunakannya sebagai emoji grup dan menghapusnya dari nama.",
+      "colors": {
+        "slate": "Abu-abu",
+        "red": "Merah",
+        "orange": "Oranye",
+        "amber": "Kuning ambar",
+        "emerald": "Zamrud",
+        "teal": "Toska",
+        "sky": "Biru langit",
+        "blue": "Biru",
+        "violet": "Ungu",
+        "pink": "Merah muda",
+        "yellow": "Kuning",
+        "lime": "Hijau limau",
+        "green": "Hijau",
+        "cyan": "Sian",
+        "indigo": "Nila",
+        "fuchsia": "Fuksia",
+        "rose": "Merah mawar",
+        "stone": "Abu batu"
+      },
+      "noColor": "Tanpa warna",
+      "customColorLabel": "Warna kustom",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "Berlaku untuk kartu grup dan latar emoji.",
+      "customEmojiTile": "Emoji kustom…",
+      "customColorTile": "Warna kustom…",
+      "autoMovedHint": "{emoji} dipindahkan dari nama menjadi emoji grup.",
+      "undoMove": "Urungkan"
+    }
   },
   "ExpenseForm": {
     "Income": {
@@ -1657,7 +1698,10 @@
     "invalidWallTime": "Waktu ini tidak tersedia pada tanggal yang dipilih di zona waktu ini.",
     "proportionalUnassignedItems": "Tetapkan setiap item ke setidaknya satu peserta untuk membagi sisa jumlah secara proporsional, atau gunakan pembagian kustom.",
     "proportionalZeroBasis": "Subtotal item saling meniadakan, sehingga sisa jumlah tidak dapat dibagi secara proporsional. Perbaiki item atau gunakan pembagian kustom.",
-    "proportionalInvalidRatios": "Subtotal item sebagian peserta bertanda berlawanan, sehingga sisa jumlah tidak dapat dibagi secara proporsional. Perbaiki item atau gunakan pembagian kustom."
+    "proportionalInvalidRatios": "Subtotal item sebagian peserta bertanda berlawanan, sehingga sisa jumlah tidak dapat dibagi secara proporsional. Perbaiki item atau gunakan pembagian kustom.",
+    "max32": "Masukkan maksimal 32 karakter.",
+    "invalidEmoji": "Masukkan satu emoji.",
+    "invalidColor": "Masukkan warna hex yang valid, seperti #1A2B3C."
   },
   "Categories": {
     "search": "Cari kategori...",

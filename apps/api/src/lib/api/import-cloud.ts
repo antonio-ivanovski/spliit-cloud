@@ -8,10 +8,14 @@ import {
 import {
   wallTimeToUtc,
   SETTLEMENT_CATEGORY_ID,
+  isGroupColorId,
+  isSingleEmoji,
   isSettlementCategory,
+  normalizeHexColor,
   splitPresetSchema,
   spliitGroupExportManifestSchema,
   toSecondPrecision,
+  type GroupColor,
   type SpliitGroupExportManifest,
 } from '@spliit/domain'
 
@@ -61,6 +65,10 @@ export type CloudImportInput = {
     information?: string | null
     currency: string
     currencyCode?: string | null
+    // Wizard appearance picks; omitted = untouched (restore the export),
+    // ''/null = explicitly none, else the pick.
+    emoji?: string
+    color?: string | null
   }
   archived: boolean
   participants: CloudImportParticipantMapping[]
@@ -910,10 +918,48 @@ export async function importCloudGroup(
           createdAt: asDate(manifest.group.ledger.createdAt),
         },
       })
+      // Restore the exported appearance when the bundle carries it (newer
+      // exports); absent or invalid values stay blank, matching
+      // pre-appearance bundles. Explicit wizard picks override the export;
+      // omitted (untouched) keeps the restore.
+      const exportedEmoji =
+        typeof manifest.group.emoji === 'string' &&
+        (manifest.group.emoji === '' || isSingleEmoji(manifest.group.emoji))
+          ? manifest.group.emoji
+          : undefined
+      const exportedColor: GroupColor | null | undefined = (() => {
+        const value = manifest.group.color
+        if (value === null) return null
+        if (typeof value !== 'string') return undefined
+        if (isGroupColorId(value)) return value
+        return normalizeHexColor(value) ?? undefined
+      })()
+      const overrideEmoji =
+        input.groupFormValues.emoji !== undefined &&
+        (input.groupFormValues.emoji === '' ||
+          isSingleEmoji(input.groupFormValues.emoji))
+          ? input.groupFormValues.emoji
+          : undefined
+      const overrideColor: GroupColor | null | undefined = (() => {
+        const value = input.groupFormValues.color
+        if (value === undefined) return undefined
+        if (value === null) return null
+        if (isGroupColorId(value)) return value
+        return normalizeHexColor(value) ?? undefined
+      })()
       const createdGroup = await tx.group.create({
         data: {
           id: randomId(),
+          // Stored verbatim: title-emoji extraction is a client concern
+          // (the import wizard's group form moves it live); the API never
+          // rewrites the name.
           name: input.groupFormValues.name,
+          emoji:
+            (overrideEmoji !== undefined ? overrideEmoji : exportedEmoji) ??
+            null,
+          color:
+            (overrideColor !== undefined ? overrideColor : exportedColor) ??
+            null,
           information: input.groupFormValues.information ?? null,
           archived: false,
           groupType: 'GROUP',

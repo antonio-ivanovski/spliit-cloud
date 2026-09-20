@@ -379,10 +379,7 @@
         "newGroup": "Grup nou",
         "existingGroup": "Grup existent",
         "loading": "Se încarcă…",
-        "noAdminGroups": "Nu administrați încă niciun grup.",
-        "memberCount_one": "{count} membru",
-        "memberCount_few": "{count} membri",
-        "memberCount_other": "{count} membri"
+        "noAdminGroups": "Nu administrați încă niciun grup."
       },
       "Done": {
         "importComplete": "Import finalizat",
@@ -664,7 +661,13 @@
     "removeSavedView": "Șterge",
     "removeSavedViewAccount": "Șters de pe pagina principală.",
     "removeSavedViewDevice": "Șters de pe acest dispozitiv.",
-    "linkInvitationMultiUse": "Acest cod QR poate fi folosit de mai multe persoane până expiră."
+    "linkInvitationMultiUse": "Acest cod QR poate fi folosit de mai multe persoane până expiră.",
+    "emojiIntro": {
+      "title": "Dai un emoji acestui grup?",
+      "description": "Grupurile pot afișa acum un emoji lângă nume. Am observat {emoji} în “{name}”.",
+      "openSettings": "Deschide setările grupului",
+      "notNow": "Nu acum"
+    }
   },
   "GroupForm": {
     "title": "Informații despre grup",
@@ -721,7 +724,43 @@
     },
     "bulkCategorizeSectionTitle": "Instrumente AI în lot",
     "bulkCategorizeSectionDescription": "Rulează categorizatorul AI pe mai multe cheltuieli deodată. Util după importarea cheltuielilor sau când multe titluri nu sunt încă categorizate.",
-    "bulkCategorizeButton": "Deschide categorizatorul în lot"
+    "bulkCategorizeButton": "Deschide categorizatorul în lot",
+    "Appearance": {
+      "emojiLabel": "Emoji-ul grupului",
+      "customEmojiLabel": "Emoji personalizat",
+      "customEmojiPlaceholder": "Lipește orice emoji",
+      "none": "Niciunul",
+      "colorLabel": "Culoarea grupului",
+      "detectedEmojiHint": "{emoji} a fost detectat în numele grupului. La salvare, va fi folosit ca emoji al grupului și eliminat din nume.",
+      "colors": {
+        "slate": "Ardezie",
+        "red": "Roșu",
+        "orange": "Portocaliu",
+        "amber": "Chihlimbar",
+        "emerald": "Smarald",
+        "teal": "Turcoaz",
+        "sky": "Azuriu",
+        "blue": "Albastru",
+        "violet": "Violet",
+        "pink": "Roz",
+        "yellow": "Galben",
+        "lime": "Lime",
+        "green": "Verde",
+        "cyan": "Cian",
+        "indigo": "Indigo",
+        "fuchsia": "Fucsia",
+        "rose": "Trandafiriu",
+        "stone": "Piatră"
+      },
+      "noColor": "Fără culoare",
+      "customColorLabel": "Culoare personalizată",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "Se aplică cardului grupului și fundalului emoji-ului.",
+      "customEmojiTile": "Emoji personalizat…",
+      "customColorTile": "Culoare personalizată…",
+      "autoMovedHint": "{emoji} a fost mutat din nume în emoji-ul grupului.",
+      "undoMove": "Anulează"
+    }
   },
   "ExpenseForm": {
     "Income": {
@@ -1365,7 +1404,10 @@
     "invalidWallTime": "Această oră nu există la data selectată în acest fus orar.",
     "proportionalUnassignedItems": "Atribuie fiecare articol cel puțin unui participant pentru a împărți restul proporțional, sau folosește o împărțire personalizată.",
     "proportionalZeroBasis": "Subtotalurile articolelor se anulează reciproc, deci restul nu poate fi împărțit proporțional. Corectează articolele sau folosește o împărțire personalizată.",
-    "proportionalInvalidRatios": "Subtotalurile articolelor unor participanți au semne opuse, deci restul nu poate fi împărțit proporțional. Corectează articolele sau folosește o împărțire personalizată."
+    "proportionalInvalidRatios": "Subtotalurile articolelor unor participanți au semne opuse, deci restul nu poate fi împărțit proporțional. Corectează articolele sau folosește o împărțire personalizată.",
+    "max32": "Introdu cel mult 32 de caractere.",
+    "invalidEmoji": "Introdu un singur emoji.",
+    "invalidColor": "Introduceți o culoare hexazecimală validă, de exemplu #1A2B3C."
   },
   "Categories": {
     "search": "Căutați categorie…",

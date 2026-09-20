@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import {
   classifyEnglishIdentity,
+  isAllowedLocaleCognate,
   isAutoAllowedEnglishIdentity,
 } from './english-identity'
 import {
@@ -94,15 +95,24 @@ describe('translation guides', () => {
 })
 
 describe('english-identity', () => {
-  it('auto-allows brands, urls, and placeholder-only templates', () => {
+  it('auto-allows brands, urls, format masks, and placeholder-only templates', () => {
     expect(isAutoAllowedEnglishIdentity('GitHub')).toBe(true)
     expect(isAutoAllowedEnglishIdentity('Spliit')).toBe(true)
     expect(isAutoAllowedEnglishIdentity('https://spliit.app/groups/…')).toBe(
       true,
     )
+    expect(isAutoAllowedEnglishIdentity('#RRGGBB')).toBe(true)
     expect(isAutoAllowedEnglishIdentity('1 {source} = {rate} {target}')).toBe(
       true,
     )
+  })
+
+  it('allows documented locale cognates in the audit only', () => {
+    expect(isAllowedLocaleCognate('fr-FR', 'Orange')).toBe(true)
+    expect(isAllowedLocaleCognate('fr-FR', 'Violet')).toBe(true)
+    expect(isAllowedLocaleCognate('ro', 'Violet')).toBe(true)
+    expect(isAllowedLocaleCognate('de-DE', 'Orange')).toBe(false)
+    expect(isAllowedLocaleCognate('fr-FR', 'Remove participant?')).toBe(false)
   })
 
   it('rejects sentence-like English copies without the flag', () => {
@@ -112,7 +122,6 @@ describe('english-identity', () => {
     )
     expect(result).toEqual({ identical: true, allowed: false })
   })
-
   it('allows identical English when --allow-english is set', () => {
     const result = classifyEnglishIdentity('Remove', 'Remove', {
       allowEnglish: true,
@@ -148,6 +157,7 @@ describe('setStrings / english guard', () => {
           title: 'Remove participant?',
           brand: 'GitHub',
           fmt: '1 {source} = {rate} {target}',
+          color: 'Orange',
         },
         null,
         2,
@@ -210,6 +220,16 @@ describe('setStrings / english guard', () => {
         brand: 'GitHub',
       }),
     ).rejects.toThrow(/refusing to set title/)
+  })
+
+  it('still rejects a documented cognate on set without the flag', async () => {
+    await expect(setString('fr-FR', 'color', 'Orange')).rejects.toThrow(
+      /refusing to set color/,
+    )
+    const result = await setString('fr-FR', 'color', 'Orange', {
+      allowEnglish: true,
+    })
+    expect(result.allowEnglishKeys).toEqual(['color'])
   })
 })
 

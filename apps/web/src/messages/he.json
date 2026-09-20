@@ -379,10 +379,7 @@
         "newGroup": "קבוצה חדשה",
         "existingGroup": "קבוצה קיימת",
         "loading": "טוען…",
-        "noAdminGroups": "עדיין אינך מנהל אף קבוצה.",
-        "memberCount_one": "{count} חבר/ת קבוצה",
-        "memberCount_two": "{count} חברי/ות קבוצה",
-        "memberCount_other": "{count} חברי וחברות קבוצה"
+        "noAdminGroups": "עדיין אינך מנהל אף קבוצה."
       },
       "Done": {
         "importComplete": "הייבוא הושלם",
@@ -664,7 +661,13 @@
     "removeSavedView": "הסר",
     "removeSavedViewAccount": "הוסרה מהדף הראשי.",
     "removeSavedViewDevice": "הוסרה מהמכשיר הזה.",
-    "linkInvitationMultiUse": "ניתן להשתמש בקוד QR הזה על ידי מספר אנשים עד שיפוג תוקפו."
+    "linkInvitationMultiUse": "ניתן להשתמש בקוד QR הזה על ידי מספר אנשים עד שיפוג תוקפו.",
+    "emojiIntro": {
+      "title": "לתת לקבוצה הזו אימוג'י?",
+      "description": "קבוצות יכולות כעת להציג אימוג'י לצד שמן. שמנו לב ל-{emoji} ב“{name}”.",
+      "openSettings": "פתח הגדרות קבוצה",
+      "notNow": "לא עכשיו"
+    }
   },
   "GroupForm": {
     "title": "מידע על הקבוצה",
@@ -721,7 +724,43 @@
     "archivedNotice": "קבוצה זו בארכיון. ההגדרות שלה קפואות ולא ניתן יותר לשנות אותן.",
     "bulkCategorizeSectionTitle": "כלי בינה מלאכותית המוניים",
     "bulkCategorizeSectionDescription": "הרץ את מקטלג הבינה המלאכותית על הוצאות רבות בבת אחת. שימושי לאחר ייבוא הוצאות או כשכותרות רבות עדיין ללא קטגוריה.",
-    "bulkCategorizeButton": "פתח את הכלי ההמוני לקטלוג"
+    "bulkCategorizeButton": "פתח את הכלי ההמוני לקטלוג",
+    "Appearance": {
+      "emojiLabel": "אימוג'י הקבוצה",
+      "customEmojiLabel": "אימוג'י מותאם אישית",
+      "customEmojiPlaceholder": "הדבק כל אימוג'י",
+      "none": "ללא",
+      "colorLabel": "צבע הקבוצה",
+      "detectedEmojiHint": "{emoji} זוהה בשם הקבוצה. שמירה תשתמש בו כאימוג'י הקבוצה ותסיר אותו מהשם.",
+      "colors": {
+        "slate": "סלייט",
+        "red": "אדום",
+        "orange": "כתום",
+        "amber": "ענבר",
+        "emerald": "אמרלד",
+        "teal": "טיל",
+        "sky": "תכלת",
+        "blue": "כחול",
+        "violet": "סגול",
+        "pink": "ורוד",
+        "yellow": "צהוב",
+        "lime": "ליים",
+        "green": "ירוק",
+        "cyan": "ציאן",
+        "indigo": "אינדיגו",
+        "fuchsia": "פוקסיה",
+        "rose": "רוז",
+        "stone": "סטון"
+      },
+      "noColor": "ללא צבע",
+      "customColorLabel": "צבע מותאם אישית",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "חל על כרטיס הקבוצה ורקע האימוג'י.",
+      "customEmojiTile": "אימוג'י מותאם אישית…",
+      "customColorTile": "צבע מותאם אישית…",
+      "autoMovedHint": "הועבר {emoji} מהשם לאימוג'י הקבוצה.",
+      "undoMove": "בטל"
+    }
   },
   "ExpenseForm": {
     "Income": {
@@ -1365,7 +1404,10 @@
     "invalidWallTime": "שעה זו אינה קיימת בתאריך שנבחר באזור הזמן הזה.",
     "proportionalUnassignedItems": "שייכו כל פריט למשתתף אחד לפחות כדי לחלק את היתרה באופן יחסי, או השתמשו בחלוקה מותאמת אישית.",
     "proportionalZeroBasis": "סכומי הביניים של הפריטים מקזזים זה את זה, ולכן לא ניתן לחלק את היתרה באופן יחסי. תקנו את הפריטים או השתמשו בחלוקה מותאמת אישית.",
-    "proportionalInvalidRatios": "לסכומי הביניים של הפריטים של חלק מהמשתתפים יש סימנים מנוגדים, ולכן לא ניתן לחלק את היתרה באופן יחסי. תקנו את הפריטים או השתמשו בחלוקה מותאמת אישית."
+    "proportionalInvalidRatios": "לסכומי הביניים של הפריטים של חלק מהמשתתפים יש סימנים מנוגדים, ולכן לא ניתן לחלק את היתרה באופן יחסי. תקנו את הפריטים או השתמשו בחלוקה מותאמת אישית.",
+    "max32": "הזן 32 תווים לכל היותר.",
+    "invalidEmoji": "הזן אימוג'י אחד בלבד.",
+    "invalidColor": "הזן צבע הקס תקין, למשל #1A2B3C."
   },
   "Categories": {
     "search": "חפש קטגוריה...",

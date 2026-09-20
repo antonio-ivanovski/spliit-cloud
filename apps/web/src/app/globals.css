@@ -5,6 +5,18 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * Hides system scrollbars on horizontal option rows. The edge fade is painted
+ * as a mask-image on the scroll container by the row component, so no
+ * background-colored overlay is needed.
+ */
+@utility scroll-x-fade {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @utility container {
   margin-inline: auto;
   padding-inline: 2rem;
@@ -13,6 +25,115 @@
   }
   @media (width >= 1400px) {
     max-width: 1400px;
+  }
+}
+
+/*
+ * Group accent utilities. `--group-accent` is set inline by
+ * `groupAccentStyle()` from the group's palette id or custom hex color; only
+ * apply these classes when that style is present. `color-mix()` needs Chrome
+ * 111+ / Safari 16.2+ / Firefox 113+, the same floor as Tailwind v4.
+ */
+@utility group-accent-chip {
+  background-color: color-mix(in oklab, var(--group-accent) 14%, transparent);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in oklab, var(--group-accent) 26%, transparent);
+  @variant dark {
+    background-color: color-mix(in oklab, var(--group-accent) 22%, transparent);
+    box-shadow: inset 0 0 0 1px
+      color-mix(in oklab, var(--group-accent) 32%, transparent);
+  }
+}
+
+@utility group-accent-card {
+  border-color: color-mix(
+    in oklab,
+    var(--group-accent) 24%,
+    var(--color-border)
+  );
+  background-image: linear-gradient(
+    105deg,
+    color-mix(in oklab, var(--group-accent) 7%, transparent),
+    transparent 55%
+  );
+  &:hover {
+    border-color: color-mix(
+      in oklab,
+      var(--group-accent) 40%,
+      var(--color-border)
+    );
+    background-image: linear-gradient(
+      105deg,
+      color-mix(in oklab, var(--group-accent) 12%, transparent),
+      transparent 60%
+    );
+  }
+  @variant dark {
+    border-color: color-mix(
+      in oklab,
+      var(--group-accent) 34%,
+      var(--color-border)
+    );
+    background-image: linear-gradient(
+      105deg,
+      color-mix(in oklab, var(--group-accent) 10%, transparent),
+      transparent 55%
+    );
+    &:hover {
+      border-color: color-mix(
+        in oklab,
+        var(--group-accent) 48%,
+        var(--color-border)
+      );
+      background-image: linear-gradient(
+        105deg,
+        color-mix(in oklab, var(--group-accent) 16%, transparent),
+        transparent 60%
+      );
+    }
+  }
+}
+
+@utility group-accent-rail {
+  background-color: color-mix(in oklab, var(--group-accent) 8%, transparent);
+  border-inline-end: 1px solid
+    color-mix(in oklab, var(--group-accent) 14%, transparent);
+  @variant dark {
+    background-color: color-mix(in oklab, var(--group-accent) 14%, transparent);
+    border-inline-end-color: color-mix(
+      in oklab,
+      var(--group-accent) 20%,
+      transparent
+    );
+  }
+}
+
+@utility group-accent-tint {
+  background-image: linear-gradient(
+    to right,
+    color-mix(in oklab, var(--group-accent) 15%, transparent),
+    transparent
+  );
+  &:dir(rtl) {
+    background-image: linear-gradient(
+      to left,
+      color-mix(in oklab, var(--group-accent) 15%, transparent),
+      transparent
+    );
+  }
+  @variant dark {
+    background-image: linear-gradient(
+      to right,
+      color-mix(in oklab, var(--group-accent) 24%, transparent),
+      transparent
+    );
+    &:dir(rtl) {
+      background-image: linear-gradient(
+        to left,
+        color-mix(in oklab, var(--group-accent) 24%, transparent),
+        transparent
+      );
+    }
   }
 }
 
@@ -362,6 +483,53 @@
     circle,
     hsl(24 84% 56% / 0.11) 0%,
     hsl(38 90% 56% / 0.04) 48%,
+    transparent 72%
+  );
+}
+
+/*
+ * Group-tinted ambient backdrop. When `AmbientBackdrop` carries a resolved
+ * group accent (`data-group-tinted`), both orbs take the group hue at the
+ * same alphas as the default emerald/coral wash above — subtle by design.
+ * `color-mix()` needs Chrome 111+ / Safari 16.2+ / Firefox 113+, the same
+ * floor as Tailwind v4.
+ */
+.ambient-backdrop[data-group-tinted='true'] .ambient-backdrop__orb--emerald {
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--group-accent) 16%, transparent) 0%,
+    color-mix(in oklab, var(--group-accent) 7%, transparent) 46%,
+    transparent 72%
+  );
+}
+
+.ambient-backdrop[data-group-tinted='true'] .ambient-backdrop__orb--coral {
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--group-accent) 13%, transparent) 0%,
+    color-mix(in oklab, var(--group-accent) 6%, transparent) 48%,
+    transparent 72%
+  );
+}
+
+.dark
+  .ambient-backdrop[data-group-tinted='true']
+  .ambient-backdrop__orb--emerald {
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--group-accent) 16%, transparent) 0%,
+    color-mix(in oklab, var(--group-accent) 5%, transparent) 48%,
+    transparent 72%
+  );
+}
+
+.dark
+  .ambient-backdrop[data-group-tinted='true']
+  .ambient-backdrop__orb--coral {
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--group-accent) 11%, transparent) 0%,
+    color-mix(in oklab, var(--group-accent) 4%, transparent) 48%,
     transparent 72%
   );
 }

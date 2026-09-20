@@ -27,6 +27,8 @@ export function savedViewToAccountGroup(view: DeviceSavedView): AccountGroup {
     archived: false,
     createdAt: view.lastOpenedAt,
     groupType: 'GROUP',
+    emoji: view.emoji ?? null,
+    color: view.color ?? null,
     ledger: { currency: '', currencyCode: null },
     memberCount: view.memberCount,
     currentMemberRole: 'MEMBER',

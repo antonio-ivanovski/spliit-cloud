@@ -47,7 +47,12 @@
       "description": "These settings are set per-device, and are used to customise your experience."
     },
     "bulkCategorizeSectionDescription": "Run the AI categoriser across many expenses at once. Useful after importing expenses or when many titles are still uncategorised.",
-    "bulkCategorizeButton": "Open bulk categoriser"
+    "bulkCategorizeButton": "Open bulk categoriser",
+    "Appearance": {
+      "colorLabel": "Group colour",
+      "noColor": "No colour",
+      "customColorTile": "Custom colour…"
+    }
   },
   "ExpenseForm": {
     "paidForOptionItemized": "Itemised",

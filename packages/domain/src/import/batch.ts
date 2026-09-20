@@ -23,6 +23,11 @@ export type ImportBatchState = {
     information: string
     currency: string
     currencyCode: string
+    // Three-state appearance, mirroring `groupFormSchema`: omitted/undefined =
+    // leave undecided (the group form extracts a title emoji live, else
+    // blank), ''/null = explicitly none, any other value = the pick.
+    emoji?: string | null
+    color?: string | null
   }
   participants: ParticipantMappingState[]
   sourceIdToDestId: Record<string, string>
@@ -313,6 +318,9 @@ export function buildImportBatch(
           information: string | undefined
           currency: string
           currencyCode: string
+          // No null emoji lane: the import procedure takes `groupFormSchema`.
+          emoji?: string
+          color?: string | null
           participants: Array<{ name: string }>
         }
         participants: ImportBatchParticipant[]
@@ -496,6 +504,13 @@ export function buildImportBatch(
             information: state.groupFormValues.information || undefined,
             currency: state.groupFormValues.currency,
             currencyCode: state.groupFormValues.currencyCode || '',
+            // Passed through untouched (never `??`-coerced), except the null
+            // emoji lane: the import procedure takes `groupFormSchema`, whose
+            // emoji has no null lane, and null is undecided there anyway
+            // (the group form extracts a title emoji live, else blank) —
+            // identical to undefined.
+            emoji: state.groupFormValues.emoji ?? undefined,
+            color: state.groupFormValues.color,
             participants: [{ name: 'Owner' }],
           },
           participants,

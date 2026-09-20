@@ -369,8 +369,7 @@
         "newGroup": "新建群组",
         "existingGroup": "现有群组",
         "loading": "加载中…",
-        "noAdminGroups": "您尚未管理任何群组。",
-        "memberCount_other": "{count} 位成员"
+        "noAdminGroups": "您尚未管理任何群组。"
       },
       "Done": {
         "importComplete": "导入完成",
@@ -650,7 +649,13 @@
     "removeSavedView": "移除",
     "removeSavedViewAccount": "已从首页移除。",
     "removeSavedViewDevice": "已从此设备移除。",
-    "linkInvitationMultiUse": "此二维码在过期前可供多人使用。"
+    "linkInvitationMultiUse": "此二维码在过期前可供多人使用。",
+    "emojiIntro": {
+      "title": "要为这个群组设置表情符号吗？",
+      "description": "群组现在可以在名称旁边显示表情符号。我们注意到“{name}”中有 {emoji}。",
+      "openSettings": "打开群组设置",
+      "notNow": "暂不"
+    }
   },
   "GroupForm": {
     "title": "群组信息",
@@ -707,7 +712,43 @@
     "archivedNotice": "此群组已归档。设置已冻结，无法再更改。",
     "bulkCategorizeSectionTitle": "批量AI工具",
     "bulkCategorizeSectionDescription": "对多项支出一次性运行AI分类。在导入支出后或许多标题仍未分类时非常有用。",
-    "bulkCategorizeButton": "打开批量分类器"
+    "bulkCategorizeButton": "打开批量分类器",
+    "Appearance": {
+      "emojiLabel": "群组表情符号",
+      "customEmojiLabel": "自定义表情符号",
+      "customEmojiPlaceholder": "粘贴任意表情符号",
+      "none": "无",
+      "colorLabel": "群组颜色",
+      "detectedEmojiHint": "在群组名称中检测到 {emoji}。保存时将把它用作群组表情符号，并从名称中移除。",
+      "colors": {
+        "slate": "石板色",
+        "red": "红色",
+        "orange": "橙色",
+        "amber": "琥珀色",
+        "emerald": "翡翠绿",
+        "teal": "青色",
+        "sky": "天蓝色",
+        "blue": "蓝色",
+        "violet": "紫色",
+        "pink": "粉色",
+        "yellow": "黄色",
+        "lime": "柠檬绿",
+        "green": "绿色",
+        "cyan": "青蓝色",
+        "indigo": "靛蓝色",
+        "fuchsia": "品红色",
+        "rose": "玫瑰色",
+        "stone": "石色"
+      },
+      "noColor": "无颜色",
+      "customColorLabel": "自定义颜色",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "适用于群组卡片和表情符号背景。",
+      "customEmojiTile": "自定义表情符号…",
+      "customColorTile": "自定义颜色…",
+      "autoMovedHint": "已将 {emoji} 从名称中移到群组表情符号。",
+      "undoMove": "撤销"
+    }
   },
   "ExpenseForm": {
     "Income": {
@@ -1348,7 +1389,10 @@
     "invalidWallTime": "所选日期在此时区中不存在这个时间。",
     "proportionalUnassignedItems": "请将每个项目分配给至少一位参与者，以便按比例分摊余款，或改用自定义分摊。",
     "proportionalZeroBasis": "项目小计相互抵消，因此无法按比例分摊余款。请修正项目或改用自定义分摊。",
-    "proportionalInvalidRatios": "部分参与者的项目小计符号相反，因此无法按比例分摊余款。请修正项目或改用自定义分摊。"
+    "proportionalInvalidRatios": "部分参与者的项目小计符号相反，因此无法按比例分摊余款。请修正项目或改用自定义分摊。",
+    "max32": "输入至多 32 个字符。",
+    "invalidEmoji": "请输入单个表情符号。",
+    "invalidColor": "请输入有效的十六进制颜色，例如 #1A2B3C。"
   },
   "Categories": {
     "search": "搜寻类别……",

@@ -71,6 +71,18 @@ describe('device saved views', () => {
     expect(readDeviceSavedViews()).toEqual([])
   })
 
+  it('drops rows whose appearance fields have the wrong type', () => {
+    window.localStorage.setItem(
+      DEVICE_SAVED_VIEWS_KEY,
+      JSON.stringify([
+        { ...sample, groupId: 'bad-color', color: 123 },
+        { ...sample, groupId: 'bad-emoji', emoji: { nope: true } },
+        { ...sample, groupId: 'ok', emoji: '🏝️', color: '#a1b2c3' },
+      ]),
+    )
+    expect(readDeviceSavedViews().map((item) => item.groupId)).toEqual(['ok'])
+  })
+
   it('orders bookmarks by lastOpenedAt after a touch', () => {
     saveDeviceView({
       ...sample,

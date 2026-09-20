@@ -24,6 +24,9 @@ export const accountGroupSchema = z.object({
   archived: z.boolean(),
   createdAt: z.string(),
   groupType: groupTypeSchema.default('GROUP'),
+  // null = undecided, '' = explicitly none picked, else the emoji.
+  emoji: z.string().nullable().default(null),
+  color: z.string().nullable().default(null),
   ledger: z.object({
     currency: z.string(),
     currencyCode: z.string().nullable(),

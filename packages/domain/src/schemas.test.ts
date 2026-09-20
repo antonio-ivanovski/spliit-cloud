@@ -1329,6 +1329,64 @@ describe('groupFormSchema', () => {
     expect(result.success).toBe(true)
   })
 
+  it('accepts an emoji, the declined sentinel, and palette colors', () => {
+    const base = {
+      name: 'Weekend Trip',
+      currency: '$',
+      currencyCode: 'USD',
+      participants: [{ name: 'Alice' }],
+    }
+    expect(
+      groupFormSchema.safeParse({ ...base, emoji: '🏝️', color: 'teal' })
+        .success,
+    ).toBe(true)
+    expect(groupFormSchema.safeParse({ ...base, emoji: '' }).success).toBe(true)
+    expect(
+      groupFormSchema.safeParse({ ...base, emoji: undefined, color: null })
+        .success,
+    ).toBe(true)
+  })
+
+  it('normalizes a custom hex color to lowercase on parse', () => {
+    const result = groupFormSchema.safeParse({
+      name: 'Weekend Trip',
+      currency: '$',
+      currencyCode: 'USD',
+      color: '#A1B2C3',
+      participants: [{ name: 'Alice' }],
+    })
+    expect(result.success).toBe(true)
+    if (result.success) expect(result.data.color).toBe('#a1b2c3')
+
+    expect(
+      groupFormSchema.safeParse({
+        name: 'Weekend Trip',
+        currency: '$',
+        currencyCode: 'USD',
+        color: '#abc',
+        participants: [{ name: 'Alice' }],
+      }).success,
+    ).toBe(false)
+  })
+
+  it('rejects non-emoji values and unknown colors', () => {
+    const base = {
+      name: 'Weekend Trip',
+      currency: '$',
+      currencyCode: 'USD',
+      participants: [{ name: 'Alice' }],
+    }
+    expect(groupFormSchema.safeParse({ ...base, emoji: 'trip' }).success).toBe(
+      false,
+    )
+    expect(groupFormSchema.safeParse({ ...base, emoji: '🏝️🎉' }).success).toBe(
+      false,
+    )
+    expect(
+      groupFormSchema.safeParse({ ...base, color: 'chartreuse' }).success,
+    ).toBe(false)
+  })
+
   it('requires at least 1 participant (business logic requires 2)', () => {
     // Single participant passes schema validation
     const resultOne = groupFormSchema.safeParse({

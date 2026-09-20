@@ -328,6 +328,8 @@ export function createGroupExportSnapshot(
       archived: group.archived,
       groupType: group.groupType,
       subgroupsEnabled: group.subgroupsEnabled,
+      emoji: group.emoji,
+      color: group.color,
       createdAt: group.createdAt.toISOString(),
       ledger: {
         sourceId: group.ledger.id,

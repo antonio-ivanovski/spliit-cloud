@@ -1894,7 +1894,43 @@
     },
     "bulkCategorizeSectionTitle": "বাল্ক AI টুলস",
     "bulkCategorizeSectionDescription": "একসাথে অনেক খরচে AI ক্যাটেগোরাইজার চালান। খরচ আমদানি করার পর বা অনেক শিরোনাম অক্যাটেগোরাইজড থাকলে দরকারী।",
-    "bulkCategorizeButton": "বাল্ক ক্যাটেগোরাইজার খুলুন"
+    "bulkCategorizeButton": "বাল্ক ক্যাটেগোরাইজার খুলুন",
+    "Appearance": {
+      "emojiLabel": "গ্রুপ ইমোজি",
+      "customEmojiLabel": "কাস্টম ইমোজি",
+      "customEmojiPlaceholder": "যেকোনো ইমোজি পেস্ট করুন",
+      "none": "কিছু না",
+      "colorLabel": "গ্রুপের রঙ",
+      "detectedEmojiHint": "গ্রুপের নামে {emoji} পাওয়া গেছে। সংরক্ষণ করলে এটি গ্রুপ ইমোজি হিসেবে ব্যবহৃত হবে এবং নাম থেকে সরিয়ে দেওয়া হবে।",
+      "colors": {
+        "slate": "স্লেট",
+        "red": "লাল",
+        "orange": "কমলা",
+        "amber": "অ্যাম্বার",
+        "emerald": "এমারাল্ড",
+        "teal": "টিল",
+        "sky": "আকাশি",
+        "blue": "নীল",
+        "violet": "বেগুনি",
+        "pink": "গোলাপি",
+        "yellow": "হলুদ",
+        "lime": "লাইম",
+        "green": "সবুজ",
+        "cyan": "সায়ান",
+        "indigo": "ইন্ডিগো",
+        "fuchsia": "ফুশিয়া",
+        "rose": "রোজ",
+        "stone": "স্টোন"
+      },
+      "noColor": "কোনো রঙ নেই",
+      "customColorLabel": "কাস্টম রঙ",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "গ্রুপ কার্ড এবং ইমোজি ব্যাকগ্রাউন্ডে প্রযোজ্য।",
+      "customEmojiTile": "কাস্টম ইমোজি…",
+      "customColorTile": "কাস্টম রঙ…",
+      "autoMovedHint": "{emoji} নাম থেকে সরিয়ে গ্রুপ ইমোজিতে রাখা হয়েছে।",
+      "undoMove": "পূর্বাবস্থায় ফেরান"
+    }
   },
   "Groups": {
     "linkInvitationBannerDescription": "{inviter} আপনাকে Spliit Cloud-এ {groupName}-এ যোগ দেওয়ার জন্য আমন্ত্রণ জানিয়েছেন।",
@@ -1981,13 +2017,7 @@
         "newGroup": "নতুন গ্রুপ",
         "existingGroup": "বিদ্যমান গ্রুপ",
         "loading": "লোড হচ্ছে…",
-        "noAdminGroups": "আপনি এখনও কোনো গ্রুপ পরিচালনা করছেন না।",
-        "memberCount_zero": "{count} জন সদস্য",
-        "memberCount_one": "{count} জন সদস্য",
-        "memberCount_two": "{count} জন সদস্য",
-        "memberCount_few": "{count} জন সদস্য",
-        "memberCount_many": "{count} জন সদস্য",
-        "memberCount_other": "{count} জন সদস্য"
+        "noAdminGroups": "আপনি এখনও কোনো গ্রুপ পরিচালনা করছেন না।"
       },
       "Done": {
         "importComplete": "আমদানি সম্পন্ন",
@@ -2342,7 +2372,13 @@
     "removeSavedView": "সরান",
     "removeSavedViewAccount": "আপনার ড্যাশবোর্ড থেকে সরানো হয়েছে।",
     "removeSavedViewDevice": "এই ডিভাইস থেকে সরানো হয়েছে।",
-    "linkInvitationMultiUse": "এই QR কোডটি মেয়াদ শেষ না হওয়া পর্যন্ত একাধিক ব্যক্তি ব্যবহার করতে পারবেন।"
+    "linkInvitationMultiUse": "এই QR কোডটি মেয়াদ শেষ না হওয়া পর্যন্ত একাধিক ব্যক্তি ব্যবহার করতে পারবেন।",
+    "emojiIntro": {
+      "title": "এই গ্রুপে একটি ইমোজি দেবেন?",
+      "description": "গ্রুপগুলো এখন তাদের নামের পাশে একটি ইমোজি দেখাতে পারে। আমরা “{name}”-এ {emoji} লক্ষ্য করেছি।",
+      "openSettings": "গ্রুপ সেটিংস খুলুন",
+      "notNow": "এখন না"
+    }
   },
   "Header": {
     "signIn": "সাইন ইন",
@@ -2870,7 +2906,10 @@
     "invalidWallTime": "নির্বাচিত তারিখে এই সময় অঞ্চলে এই সময়টি বিদ্যমান নেই।",
     "proportionalUnassignedItems": "বাকি পরিমাণ আনুপাতিকভাবে ভাগ করতে প্রতিটি আইটেম কমপক্ষে একজন অংশগ্রহণকারীকে নির্ধারণ করুন, অথবা কাস্টম ভাগ ব্যবহার করুন।",
     "proportionalZeroBasis": "আইটেম উপ-মোটগুলি একে অপরকে বাতিল করে, তাই বাকি পরিমাণ আনুপাতিকভাবে ভাগ করা যাবে না। আইটেমগুলি সংশোধন করুন বা কাস্টম ভাগ ব্যবহার করুন।",
-    "proportionalInvalidRatios": "কিছু অংশগ্রহণকারীর আইটেম উপ-মোটের চিহ্ন বিপরীত, তাই বাকি পরিমাণ আনুপাতিকভাবে ভাগ করা যাবে না। আইটেমগুলি সংশোধন করুন বা কাস্টম ভাগ ব্যবহার করুন।"
+    "proportionalInvalidRatios": "কিছু অংশগ্রহণকারীর আইটেম উপ-মোটের চিহ্ন বিপরীত, তাই বাকি পরিমাণ আনুপাতিকভাবে ভাগ করা যাবে না। আইটেমগুলি সংশোধন করুন বা কাস্টম ভাগ ব্যবহার করুন।",
+    "max32": "সর্বাধিক ৩২টি অক্ষর লিখুন।",
+    "invalidEmoji": "একটি ইমোজি লিখুন।",
+    "invalidColor": "একটি বৈধ হেক্স রঙ লিখুন, যেমন #1A2B3C।"
   },
   "Settings": {
     "title": "সেটিংস"

@@ -379,10 +379,7 @@
         "newGroup": "Nuovo gruppo",
         "existingGroup": "Gruppo esistente",
         "loading": "Caricamento…",
-        "noAdminGroups": "Non amministri ancora nessun gruppo.",
-        "memberCount_one": "{count} membro",
-        "memberCount_many": "{count} membri",
-        "memberCount_other": "{count} membri"
+        "noAdminGroups": "Non amministri ancora nessun gruppo."
       },
       "Done": {
         "importComplete": "Importazione completata",
@@ -664,7 +661,13 @@
     "removeSavedView": "Rimuovi",
     "removeSavedViewAccount": "Rimosso dalla home.",
     "removeSavedViewDevice": "Rimosso da questo dispositivo.",
-    "linkInvitationMultiUse": "Questo codice QR può essere usato da più persone fino alla scadenza."
+    "linkInvitationMultiUse": "Questo codice QR può essere usato da più persone fino alla scadenza.",
+    "emojiIntro": {
+      "title": "Dai un emoji a questo gruppo?",
+      "description": "I gruppi ora possono mostrare un emoji accanto al nome. Abbiamo notato {emoji} in “{name}”.",
+      "openSettings": "Apri le impostazioni del gruppo",
+      "notNow": "Non ora"
+    }
   },
   "GroupForm": {
     "title": "Informazioni del gruppo",
@@ -721,7 +724,43 @@
     },
     "bulkCategorizeSectionTitle": "Strumenti IA in blocco",
     "bulkCategorizeSectionDescription": "Esegui il categorizzatore IA su più spese contemporaneamente. Utile dopo aver importato spese o quando molti titoli non sono ancora categorizzati.",
-    "bulkCategorizeButton": "Apri il categorizzatore in blocco"
+    "bulkCategorizeButton": "Apri il categorizzatore in blocco",
+    "Appearance": {
+      "emojiLabel": "Emoji del gruppo",
+      "customEmojiLabel": "Emoji personalizzato",
+      "customEmojiPlaceholder": "Incolla qualsiasi emoji",
+      "none": "Nessuno",
+      "colorLabel": "Colore del gruppo",
+      "detectedEmojiHint": "{emoji} è stato rilevato nel nome del gruppo. Salvando verrà usato come emoji del gruppo e rimosso dal nome.",
+      "colors": {
+        "slate": "Ardesia",
+        "red": "Rosso",
+        "orange": "Arancione",
+        "amber": "Ambra",
+        "emerald": "Smeraldo",
+        "teal": "Turchese",
+        "sky": "Azzurro",
+        "blue": "Blu",
+        "violet": "Viola",
+        "pink": "Rosa",
+        "yellow": "Giallo",
+        "lime": "Lime",
+        "green": "Verde",
+        "cyan": "Ciano",
+        "indigo": "Indaco",
+        "fuchsia": "Fucsia",
+        "rose": "Rosato",
+        "stone": "Pietra"
+      },
+      "noColor": "Nessun colore",
+      "customColorLabel": "Colore personalizzato",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "Si applica alla scheda del gruppo e allo sfondo dell'emoji.",
+      "customEmojiTile": "Emoji personalizzato…",
+      "customColorTile": "Colore personalizzato…",
+      "autoMovedHint": "{emoji} è stato spostato dal nome all'emoji del gruppo.",
+      "undoMove": "Annulla"
+    }
   },
   "ExpenseForm": {
     "Income": {
@@ -1365,7 +1404,10 @@
     "invalidWallTime": "Questo orario non esiste nella data selezionata per questo fuso orario.",
     "proportionalUnassignedItems": "Assegna ogni voce ad almeno un partecipante per dividere l’importo restante proporzionalmente, oppure usa una divisione personalizzata.",
     "proportionalZeroBasis": "I subtotali delle voci si annullano a vicenda, quindi l’importo restante non può essere diviso proporzionalmente. Correggi le voci o usa una divisione personalizzata.",
-    "proportionalInvalidRatios": "I subtotali delle voci di alcuni partecipanti hanno segni opposti, quindi l’importo restante non può essere diviso proporzionalmente. Correggi le voci o usa una divisione personalizzata."
+    "proportionalInvalidRatios": "I subtotali delle voci di alcuni partecipanti hanno segni opposti, quindi l’importo restante non può essere diviso proporzionalmente. Correggi le voci o usa una divisione personalizzata.",
+    "max32": "Inserisci al massimo trentadue caratteri.",
+    "invalidEmoji": "Inserisci un solo emoji.",
+    "invalidColor": "Inserisci un colore esadecimale valido, ad esempio #1A2B3C."
   },
   "Categories": {
     "search": "Cerca categoria...",

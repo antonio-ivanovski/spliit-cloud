@@ -525,13 +525,7 @@
         "newGroup": "New group",
         "existingGroup": "Existing group",
         "loading": "Loading…",
-        "noAdminGroups": "You don't administer any group yet.",
-        "memberCount_zero": "{count} members",
-        "memberCount_one": "{count} member",
-        "memberCount_two": "{count} members",
-        "memberCount_few": "{count} members",
-        "memberCount_many": "{count} members",
-        "memberCount_other": "{count} members"
+        "noAdminGroups": "You don't administer any group yet."
       },
       "Mapping": {
         "headsUp": "Heads up",
@@ -762,7 +756,13 @@
     "removeSavedView": "Remove",
     "removeSavedViewAccount": "Removed from your dashboard.",
     "removeSavedViewDevice": "Removed from this device.",
-    "linkInvitationMultiUse": "This QR code can be used by several people until it expires."
+    "linkInvitationMultiUse": "This QR code can be used by several people until it expires.",
+    "emojiIntro": {
+      "title": "Give this group an emoji?",
+      "description": "Groups can now show an emoji next to their name. We noticed {emoji} in “{name}”.",
+      "openSettings": "Open group settings",
+      "notNow": "Not now"
+    }
   },
   "Auth": {
     "title": "Sign in to Spliit Cloud",
@@ -1284,7 +1284,43 @@
     },
     "bulkCategorizeSectionTitle": "Bulk AI tools",
     "bulkCategorizeSectionDescription": "Run the AI categorizer across many expenses at once. Useful after importing expenses or when many titles are still uncategorized.",
-    "bulkCategorizeButton": "Open bulk categorizer"
+    "bulkCategorizeButton": "Open bulk categorizer",
+    "Appearance": {
+      "emojiLabel": "Group emoji",
+      "customEmojiLabel": "Custom emoji",
+      "customEmojiPlaceholder": "Paste any emoji",
+      "none": "None",
+      "colorLabel": "Group color",
+      "detectedEmojiHint": "{emoji} was detected in the group name. Saving will use it as the group emoji and remove it from the name.",
+      "colors": {
+        "slate": "Slate",
+        "red": "Red",
+        "orange": "Orange",
+        "amber": "Amber",
+        "emerald": "Emerald",
+        "teal": "Teal",
+        "sky": "Sky",
+        "blue": "Blue",
+        "violet": "Violet",
+        "pink": "Pink",
+        "yellow": "Yellow",
+        "lime": "Lime",
+        "green": "Green",
+        "cyan": "Cyan",
+        "indigo": "Indigo",
+        "fuchsia": "Fuchsia",
+        "rose": "Rose",
+        "stone": "Stone"
+      },
+      "noColor": "No color",
+      "customColorLabel": "Custom color",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "Applies to the group card and emoji background.",
+      "customEmojiTile": "Custom emoji…",
+      "customColorTile": "Custom color…",
+      "autoMovedHint": "Moved {emoji} out of the name into the group emoji.",
+      "undoMove": "Undo"
+    }
   },
   "ExpenseForm": {
     "Income": {
@@ -1934,7 +1970,10 @@
     "invalidWallTime": "This time does not exist on the selected date in this timezone.",
     "proportionalUnassignedItems": "Assign every item to at least one participant to split the remainder proportionally, or use a custom split.",
     "proportionalZeroBasis": "Item subtotals cancel out, so the remainder cannot be split proportionally. Fix the items or use a custom split.",
-    "proportionalInvalidRatios": "Some participants' item subtotals have opposite signs, so the remainder cannot be split proportionally. Fix the items or use a custom split."
+    "proportionalInvalidRatios": "Some participants' item subtotals have opposite signs, so the remainder cannot be split proportionally. Fix the items or use a custom split.",
+    "max32": "Enter at most 32 characters.",
+    "invalidEmoji": "Enter a single emoji.",
+    "invalidColor": "Enter a valid hex color, like #1A2B3C."
   },
   "Categories": {
     "search": "Search category...",

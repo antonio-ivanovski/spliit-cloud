@@ -521,7 +521,7 @@ export function DocumentsStep({
   return (
     <div className="flex flex-col gap-4">
       <Card>
-        <CardContent className="flex flex-col gap-4 p-4">
+        <CardContent spacing="standalone" className="flex flex-col gap-4">
           <div>
             <h3 className="font-medium">
               {t('Groups.Import.Documents.title')}

@@ -12,34 +12,31 @@ import {
   type NormalizedSource,
 } from '@spliit/domain/import'
 
+import { GroupCard } from '../group-card'
+import type { ImportGroupFormValues } from './import-wizard-state'
 import { WizardNav } from './wizard-nav'
 
 const DESTINATION_FORM_ID = 'import-wizard-destination-form'
 
 type Props = {
   source: NormalizedSource
-  initialGroupFormValues: {
-    name: string
-    information: string
-    currency: string
-    currencyCode: string
-  }
+  initialGroupFormValues: ImportGroupFormValues
   mode: 'NEW_GROUP' | 'EXISTING_GROUP' | null
   allowExisting?: boolean
   currencyLocked?: boolean
   hideNameField?: boolean
+  /**
+   * When `true`, the appearance picker is hidden (friend-ledger restores carry
+   * no appearance). Mirrors `GroupForm`'s `hideAppearance`.
+   */
+  hideAppearance?: boolean
   initialArchived?: boolean
   onArchivedChange?: (archived: boolean) => void
   onBack: () => void
   onContinue: (choice: {
     mode: 'NEW_GROUP' | 'EXISTING_GROUP'
     targetGroupId: string | null
-    groupFormValues: {
-      name: string
-      information: string
-      currency: string
-      currencyCode: string
-    }
+    groupFormValues: ImportGroupFormValues
   }) => void
 }
 
@@ -50,6 +47,7 @@ export function DestinationStep({
   allowExisting = true,
   currencyLocked = false,
   hideNameField = false,
+  hideAppearance = false,
   initialArchived = false,
   onArchivedChange,
   onBack,
@@ -107,10 +105,13 @@ export function DestinationStep({
 
         <TabsContent value="NEW_GROUP">
           <Card>
-            <CardContent className="p-4">
+            <CardContent spacing="standalone">
               <GroupForm
                 formId={DESTINATION_FORM_ID}
                 hideActions
+                // Friend-ledger restores carry no appearance; every other
+                // import offers the same inline picker as group creation.
+                hideAppearance={hideAppearance}
                 initialValues={{
                   name: initialGroupFormValues.name || source.name,
                   information:
@@ -121,6 +122,10 @@ export function DestinationStep({
                   // An explicit empty string means "custom currency" and
                   // prevents GroupForm from applying the account default.
                   currencyCode: initialGroupFormValues.currencyCode,
+                  // Appearance prefill (e.g. restored from a cloud export);
+                  // otherwise blank unless the user picks.
+                  emoji: initialGroupFormValues.emoji,
+                  color: initialGroupFormValues.color,
                 }}
                 currencyLocked={currencyLocked}
                 hideNameField={hideNameField}
@@ -133,6 +138,10 @@ export function DestinationStep({
                       information: values.information ?? '',
                       currency: values.currency,
                       currencyCode: values.currencyCode ?? '',
+                      // Threaded untouched so the import APIs resolve the
+                      // same blank/pick/none tri-state as group creation.
+                      emoji: values.emoji,
+                      color: values.color,
                     },
                   })
                 }}
@@ -165,30 +174,22 @@ export function DestinationStep({
                 {t('Groups.Import.Destination.noAdminGroups')}
               </p>
             ) : (
-              <div className="grid gap-2">
+              <ul className="grid list-none gap-2 p-0">
                 {groups.map((g) => (
-                  <Card
+                  <GroupCard
                     key={g.id}
-                    className="cursor-pointer transition hover:border-primary"
-                    onClick={() =>
+                    group={g}
+                    hideFinancialSummary
+                    onSelect={(groupId) =>
                       onContinue({
                         mode: 'EXISTING_GROUP',
-                        targetGroupId: g.id,
+                        targetGroupId: groupId,
                         groupFormValues: initialGroupFormValues,
                       })
                     }
-                  >
-                    <CardContent className="px-4 py-3">
-                      <p className="font-medium">{g.name}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {t('Groups.Import.Destination.memberCount', {
-                          count: g.memberCount,
-                        })}
-                      </p>
-                    </CardContent>
-                  </Card>
+                  />
                 ))}
-              </div>
+              </ul>
             )}
           </TabsContent>
         )}

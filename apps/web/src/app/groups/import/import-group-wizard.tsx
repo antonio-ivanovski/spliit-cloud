@@ -53,11 +53,13 @@ import {
   importWizardReducer,
   initialWizardState,
 } from './import-wizard-reducer'
-import type { ImportStep } from './import-wizard-state'
 import {
   buildImportExpenses,
   isDocumentImportFailure,
+  prefillAppearanceFromManifest,
   shouldDiscardStagedDocumentTokens,
+  type ImportGroupFormValues,
+  type ImportStep,
 } from './import-wizard-state'
 import { LegacyExportWarning } from './legacy-export-warning'
 import { MappingStep } from './mapping-step'
@@ -371,6 +373,11 @@ export function ImportGroupWizard() {
         currency: pendingCloudInspection.manifest.group.ledger.currency,
         currencyCode:
           pendingCloudInspection.manifest.group.ledger.currencyCode ?? '',
+        // Prefill the appearance picker from the export so the user sees
+        // (and can override) what the server would otherwise restore
+        // silently. Validation mirrors the server restore: undecided export
+        // values stay undecided, invalid ones stay blank.
+        ...prefillAppearanceFromManifest(pendingCloudInspection.manifest.group),
       },
       archived: pendingCloudInspection.manifest.group.archived,
     })
@@ -406,12 +413,7 @@ export function ImportGroupWizard() {
     (choice: {
       mode: 'NEW_GROUP' | 'EXISTING_GROUP'
       targetGroupId: string | null
-      groupFormValues: {
-        name: string
-        information: string
-        currency: string
-        currencyCode: string
-      }
+      groupFormValues: ImportGroupFormValues
     }) => {
       dispatch({
         type: 'DESTINATION_CHOSEN',
@@ -944,7 +946,10 @@ export function ImportGroupWizard() {
         state.step === 'source' &&
         (pendingCloudInspection && (isAccountPending || accountQueue) ? (
           <Card>
-            <CardContent className="flex flex-col items-center gap-3 p-8 text-center text-sm text-muted-foreground">
+            <CardContent
+              spacing="standalone"
+              className="flex flex-col items-center gap-3 p-6 text-center text-sm text-muted-foreground sm:p-8"
+            >
               <Loader2 className="h-5 w-5 animate-spin" />
               <p>{t('Groups.Import.fetchingGroup')}</p>
             </CardContent>
@@ -974,7 +979,10 @@ export function ImportGroupWizard() {
 
       {state.step === 'destination' && !state.source && prefillSourceUrl && (
         <Card>
-          <CardContent className="flex flex-col items-center gap-3 p-8 text-center text-sm text-muted-foreground">
+          <CardContent
+            spacing="standalone"
+            className="flex flex-col items-center gap-3 p-6 text-center text-sm text-muted-foreground sm:p-8"
+          >
             <Loader2 className="h-5 w-5 animate-spin" />
             <p>{t('Groups.Import.fetchingGroup')}</p>
           </CardContent>
@@ -1015,6 +1023,12 @@ export function ImportGroupWizard() {
             currencyLocked={state.sourceKind === 'CLOUD'}
             initialArchived={state.archived}
             hideNameField={
+              state.sourceKind === 'CLOUD' &&
+              state.cloudInspection?.manifest.group.groupType === 'FRIEND'
+            }
+            // Friend-ledger restores carry no appearance; the picker stays
+            // hidden exactly like the friend settings form.
+            hideAppearance={
               state.sourceKind === 'CLOUD' &&
               state.cloudInspection?.manifest.group.groupType === 'FRIEND'
             }

@@ -240,7 +240,43 @@
       "label": "العملة الرئيسية",
       "customOption": "مخصص"
     },
-    "bulkCategorizeSectionDescription": "شغّل مصنف الذكاء الاصطناعي على العديد من المصروفات دفعة واحدة. مفيد بعد استيراد المصروفات أو عندما تظل عناوين كثيرة غير مصنفة."
+    "bulkCategorizeSectionDescription": "شغّل مصنف الذكاء الاصطناعي على العديد من المصروفات دفعة واحدة. مفيد بعد استيراد المصروفات أو عندما تظل عناوين كثيرة غير مصنفة.",
+    "Appearance": {
+      "emojiLabel": "إيموجي المجموعة",
+      "customEmojiLabel": "إيموجي مخصص",
+      "customEmojiPlaceholder": "الصق أي إيموجي",
+      "none": "بدون",
+      "colorLabel": "لون المجموعة",
+      "detectedEmojiHint": "تم رصد {emoji} في اسم المجموعة. عند الحفظ سنستخدمه كإيموجي للمجموعة وسنزيله من الاسم.",
+      "colors": {
+        "slate": "رمادي",
+        "red": "أحمر",
+        "orange": "برتقالي",
+        "amber": "كهرماني",
+        "emerald": "زمردي",
+        "teal": "فيروزي",
+        "sky": "سماوي",
+        "blue": "أزرق",
+        "violet": "بنفسجي",
+        "pink": "وردي",
+        "yellow": "أصفر",
+        "lime": "ليموني",
+        "green": "أخضر",
+        "cyan": "سيان",
+        "indigo": "نيلي",
+        "fuchsia": "فوشي",
+        "rose": "زهري",
+        "stone": "حجري"
+      },
+      "noColor": "بدون لون",
+      "customColorLabel": "لون مخصص",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "ينطبق على بطاقة المجموعة وخلفية الإيموجي.",
+      "customEmojiTile": "إيموجي مخصص…",
+      "customColorTile": "لون مخصص…",
+      "autoMovedHint": "تم نقل {emoji} من الاسم إلى إيموجي المجموعة.",
+      "undoMove": "تراجع"
+    }
   },
   "Balances": {
     "removedBadge": "مُزال",
@@ -659,7 +695,10 @@
     "invalidWallTime": "هذا الوقت غير موجود في التاريخ المحدد ضمن هذه المنطقة الزمنية.",
     "proportionalUnassignedItems": "عيّن كل بند لمشارك واحد على الأقل لتقسيم المبلغ المتبقي بشكل متناسب، أو استخدم تقسيمًا مخصصًا.",
     "proportionalZeroBasis": "المجاميع الفرعية للبنود تلغي بعضها، لذا لا يمكن تقسيم المبلغ المتبقي بشكل متناسب. صحّح البنود أو استخدم تقسيمًا مخصصًا.",
-    "proportionalInvalidRatios": "المجاميع الفرعية لبنود بعض المشاركين لها إشارات متعاكسة، لذا لا يمكن تقسيم المبلغ المتبقي بشكل متناسب. صحّح البنود أو استخدم تقسيمًا مخصصًا."
+    "proportionalInvalidRatios": "المجاميع الفرعية لبنود بعض المشاركين لها إشارات متعاكسة، لذا لا يمكن تقسيم المبلغ المتبقي بشكل متناسب. صحّح البنود أو استخدم تقسيمًا مخصصًا.",
+    "max32": "أدخل 32 حرفاً كحد أقصى.",
+    "invalidEmoji": "أدخل إيموجي واحداً فقط.",
+    "invalidColor": "أدخل لونًا سداسيًا عشريًا صالحًا، مثل #1A2B3C."
   },
   "Stats": {
     "title": "الإحصائيات",
@@ -925,16 +964,10 @@
       },
       "Destination": {
         "noAdminGroups": "أنت لا تدير أي مجموعة.",
-        "memberCount_other": "{count} عضو",
         "loading": "جارٍ التحميل…",
         "existingGroup": "مجموعة موجودة",
-        "memberCount_two": "{count} عضوين",
         "newGroup": "مجموعة جديدة",
-        "memberCount_many": "{count} عضواً",
-        "memberCount_few": "{count} أعضاء",
-        "heading": "أين تريد استيراد <strong>{name}</strong>؟ ({participantCount} مشارك · {expenseCount} مصروفات)",
-        "memberCount_zero": "{count} أعضاء",
-        "memberCount_one": "{count} عضو"
+        "heading": "أين تريد استيراد <strong>{name}</strong>؟ ({participantCount} مشارك · {expenseCount} مصروفات)"
       },
       "StepHeader": {
         "backTo": "رجوع إلى {step}",
@@ -1171,7 +1204,13 @@
     "removeSavedView": "إزالة",
     "removeSavedViewAccount": "أُزيلت من صفحتك الرئيسية.",
     "removeSavedViewDevice": "أُزيلت من هذا الجهاز.",
-    "linkInvitationMultiUse": "يمكن استخدام رمز QR هذا من قِبل عدة أشخاص حتى انتهاء صلاحيته."
+    "linkInvitationMultiUse": "يمكن استخدام رمز QR هذا من قِبل عدة أشخاص حتى انتهاء صلاحيته.",
+    "emojiIntro": {
+      "title": "هل نضيف إيموجي لهذه المجموعة؟",
+      "description": "يمكن للمجموعات الآن عرض إيموجي بجانب اسمها. لاحظنا {emoji} في “{name}”.",
+      "openSettings": "افتح إعدادات المجموعة",
+      "notNow": "ليس الآن"
+    }
   },
   "Unsubscribe": {
     "submitting": "جارٍ إلغاء الاشتراك…",

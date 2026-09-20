@@ -9,6 +9,10 @@ export type DeviceSavedView = {
   name: string
   memberCount: number
   lastOpenedAt: string
+  // Optional so snapshots written before the group appearance feature keep
+  // validating. `''` keeps its "explicitly none" meaning.
+  emoji?: string | null
+  color?: string | null
 }
 
 const listeners = new Set<() => void>()
@@ -18,6 +22,10 @@ let cachedViews: DeviceSavedView[] = EMPTY
 
 function emit() {
   for (const listener of listeners) listener()
+}
+
+function isOptionalAppearanceValue(value: unknown): boolean {
+  return value === undefined || value === null || typeof value === 'string'
 }
 
 function isDeviceSavedView(value: unknown): value is DeviceSavedView {
@@ -31,7 +39,9 @@ function isDeviceSavedView(value: unknown): value is DeviceSavedView {
     typeof row.name === 'string' &&
     typeof row.memberCount === 'number' &&
     Number.isFinite(row.memberCount) &&
-    typeof row.lastOpenedAt === 'string'
+    typeof row.lastOpenedAt === 'string' &&
+    isOptionalAppearanceValue(row.emoji) &&
+    isOptionalAppearanceValue(row.color)
   )
 }
 

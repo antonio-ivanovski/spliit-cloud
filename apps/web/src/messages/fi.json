@@ -374,9 +374,7 @@
         "newGroup": "Uusi ryhmä",
         "existingGroup": "Olemassa oleva ryhmä",
         "loading": "Ladataan…",
-        "noAdminGroups": "Et hallinnoi vielä yhtään ryhmää.",
-        "memberCount_one": "{count} jäsen",
-        "memberCount_other": "{count} jäsentä"
+        "noAdminGroups": "Et hallinnoi vielä yhtään ryhmää."
       },
       "Done": {
         "importComplete": "Tuonti valmis",
@@ -657,7 +655,13 @@
     "removeSavedView": "Poista",
     "removeSavedViewAccount": "Poistettu etusivultasi.",
     "removeSavedViewDevice": "Poistettu tältä laitteelta.",
-    "linkInvitationMultiUse": "Tätä QR-koodia voivat käyttää useat henkilöt, kunnes se vanhenee."
+    "linkInvitationMultiUse": "Tätä QR-koodia voivat käyttää useat henkilöt, kunnes se vanhenee.",
+    "emojiIntro": {
+      "title": "Annetaanko tälle ryhmälle emoji?",
+      "description": "Ryhmät voivat nyt näyttää emojin nimensä vieressä. Huomasimme {emoji} nimessä ”{name}”.",
+      "openSettings": "Avaa ryhmän asetukset",
+      "notNow": "Ei nyt"
+    }
   },
   "GroupForm": {
     "title": "Ryhmän tiedot",
@@ -714,7 +718,43 @@
     },
     "bulkCategorizeSectionTitle": "AI-työkalut joukkokäsittelyyn",
     "bulkCategorizeSectionDescription": "Suorita tekoälykategorisoija useille kuluille kerralla. Hyödyllinen kulujen tuonnin jälkeen tai kun monia otsikoita ei ole vielä kategorisoitu.",
-    "bulkCategorizeButton": "Avaa joukkokategorisoija"
+    "bulkCategorizeButton": "Avaa joukkokategorisoija",
+    "Appearance": {
+      "emojiLabel": "Ryhmän emoji",
+      "customEmojiLabel": "Oma emoji",
+      "customEmojiPlaceholder": "Liitä mikä tahansa emoji",
+      "none": "Ei mitään",
+      "colorLabel": "Ryhmän väri",
+      "detectedEmojiHint": "{emoji} havaittiin ryhmän nimessä. Tallentaminen käyttää sitä ryhmän emojina ja poistaa sen nimestä.",
+      "colors": {
+        "slate": "Liuske",
+        "red": "Punainen",
+        "orange": "Oranssi",
+        "amber": "Meripihka",
+        "emerald": "Smaragdi",
+        "teal": "Petrooli",
+        "sky": "Taivaansininen",
+        "blue": "Sininen",
+        "violet": "Violetti",
+        "pink": "Vaaleanpunainen",
+        "yellow": "Keltainen",
+        "lime": "Limetti",
+        "green": "Vihreä",
+        "cyan": "Syaani",
+        "indigo": "Indigo",
+        "fuchsia": "Fuksia",
+        "rose": "Ruusu",
+        "stone": "Kivi"
+      },
+      "noColor": "Ei väriä",
+      "customColorLabel": "Oma väri",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "Koskee ryhmäkorttia ja emojin taustaa.",
+      "customEmojiTile": "Oma emoji…",
+      "customColorTile": "Oma väri…",
+      "autoMovedHint": "{emoji} siirrettiin nimestä ryhmän emojiksi.",
+      "undoMove": "Peruuta"
+    }
   },
   "ExpenseForm": {
     "Income": {
@@ -1356,7 +1396,10 @@
     "invalidWallTime": "Tätä kellonaikaa ei ole valittuna päivänä tällä aikavyöhykkeellä.",
     "proportionalUnassignedItems": "Määritä jokainen kohde vähintään yhdelle osallistujalle, jotta loppusumma voidaan jakaa suhteessa, tai käytä mukautettua jakoa.",
     "proportionalZeroBasis": "Kohdekohtaiset välisummat kumoavat toisensa, joten loppusummaa ei voi jakaa suhteessa. Korjaa kohteet tai käytä mukautettua jakoa.",
-    "proportionalInvalidRatios": "Joidenkin osallistujien kohdekohtaisilla välisummilla on eri etumerkit, joten loppusummaa ei voi jakaa suhteessa. Korjaa kohteet tai käytä mukautettua jakoa."
+    "proportionalInvalidRatios": "Joidenkin osallistujien kohdekohtaisilla välisummilla on eri etumerkit, joten loppusummaa ei voi jakaa suhteessa. Korjaa kohteet tai käytä mukautettua jakoa.",
+    "max32": "Syötä enintään 32 merkkiä.",
+    "invalidEmoji": "Syötä yksi emoji.",
+    "invalidColor": "Syötä kelvollinen heksaväri, esimerkiksi #1A2B3C."
   },
   "Categories": {
     "search": "Etsi kategoriaa...",

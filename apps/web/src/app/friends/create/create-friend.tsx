@@ -436,6 +436,9 @@ export function CreateFriend() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>{t('temporaryNameLabel')}</FormLabel>
+                        <FormDescription>
+                          {t('temporaryNameHelp')}
+                        </FormDescription>
                         <FormControl>
                           <Input
                             type="text"
@@ -446,9 +449,6 @@ export function CreateFriend() {
                             value={field.value ?? ''}
                           />
                         </FormControl>
-                        <FormDescription>
-                          {t('temporaryNameHelp')}
-                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}

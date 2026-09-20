@@ -1,7 +1,11 @@
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
-import { spliitGroupExportManifestSchema } from '@spliit/domain'
+import {
+  GROUP_COLOR_IDS,
+  isSingleEmoji,
+  spliitGroupExportManifestSchema,
+} from '@spliit/domain'
 
 import {
   CREATE_OPERATIONS,
@@ -57,6 +61,17 @@ const cloudGroupFormValuesSchema = z.object({
   currencyCode: z
     .union([z.string().min(3).max(4).nullish(), z.literal('')])
     .optional(),
+  // Wizard appearance picks override the exported appearance on submit;
+  // omitted means untouched (the export is restored). Lanes mirror
+  // `groupFormSchema`: '' = explicitly none, else the pick.
+  emoji: z
+    .string()
+    .max(32)
+    .refine((value) => value === '' || isSingleEmoji(value))
+    .optional(),
+  color: z
+    .union([z.enum(GROUP_COLOR_IDS), z.string().regex(/^#[0-9a-fA-F]{6}$/)])
+    .nullish(),
 })
 
 const importedPresetSchema = z.object({

@@ -147,7 +147,7 @@ export function MappingRow({
 
   return (
     <Card>
-      <CardContent className="flex flex-col gap-3 p-4">
+      <CardContent spacing="standalone" className="flex flex-col gap-3">
         <div>
           <p className="font-medium">{name}</p>
         </div>

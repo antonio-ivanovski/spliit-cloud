@@ -45,7 +45,13 @@ export {
   type CreateFriendLedgerPeer,
   type CreateFriendLedgerResult,
 } from './friends'
-export { createGroup, getGroup, getGroups, updateGroup } from './groups'
+export {
+  createGroup,
+  dismissGroupEmojiIntro,
+  getGroup,
+  getGroups,
+  updateGroup,
+} from './groups'
 export {
   importGroup,
   type ImportInput,

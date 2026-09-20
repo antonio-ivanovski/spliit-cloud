@@ -384,11 +384,7 @@
         "newGroup": "Nová skupina",
         "existingGroup": "Existující skupina",
         "loading": "Načítám…",
-        "noAdminGroups": "Zatím nespravujete žádnou skupinu.",
-        "memberCount_one": "{count} člen",
-        "memberCount_few": "{count} členové",
-        "memberCount_many": "{count} členů",
-        "memberCount_other": "{count} členů"
+        "noAdminGroups": "Zatím nespravujete žádnou skupinu."
       },
       "Done": {
         "importComplete": "Import dokončen",
@@ -671,7 +667,13 @@
     "removeSavedView": "Odebrat",
     "removeSavedViewAccount": "Odebráno z vaší nástěnky.",
     "removeSavedViewDevice": "Odebráno z tohoto zařízení.",
-    "linkInvitationMultiUse": "Tento QR kód může použít několik lidí, dokud nevyprší."
+    "linkInvitationMultiUse": "Tento QR kód může použít několik lidí, dokud nevyprší.",
+    "emojiIntro": {
+      "title": "Dát této skupině emoji?",
+      "description": "Skupiny nyní mohou mít emoji vedle názvu. V názvu „{name}“ jsme si všimli {emoji}.",
+      "openSettings": "Otevřít nastavení skupiny",
+      "notNow": "Teď ne"
+    }
   },
   "GroupForm": {
     "title": "Informace o skupině",
@@ -728,7 +730,43 @@
     },
     "bulkCategorizeSectionTitle": "Hromadné AI nástroje",
     "bulkCategorizeSectionDescription": "Spustit AI kategorizaci na mnoha výdajích najednou. Užitečné po importu výdajů nebo když mnoho názvů stále není kategorizováno.",
-    "bulkCategorizeButton": "Otevřít hromadnou kategorizaci"
+    "bulkCategorizeButton": "Otevřít hromadnou kategorizaci",
+    "Appearance": {
+      "emojiLabel": "Emoji skupiny",
+      "customEmojiLabel": "Vlastní emoji",
+      "customEmojiPlaceholder": "Vložte libovolné emoji",
+      "none": "Žádné",
+      "colorLabel": "Barva skupiny",
+      "detectedEmojiHint": "V názvu skupiny bylo zjištěno {emoji}. Uložením ho použijete jako emoji skupiny a z názvu ho odstraníte.",
+      "colors": {
+        "slate": "Břidlicová",
+        "red": "Červená",
+        "orange": "Oranžová",
+        "amber": "Jantarová",
+        "emerald": "Smaragdová",
+        "teal": "Tyrkysová",
+        "sky": "Nebeská",
+        "blue": "Modrá",
+        "violet": "Fialová",
+        "pink": "Růžová",
+        "yellow": "Žlutá",
+        "lime": "Limetková",
+        "green": "Zelená",
+        "cyan": "Azurová",
+        "indigo": "Indigová",
+        "fuchsia": "Fuchsiová",
+        "rose": "Starorůžová",
+        "stone": "Kamenná"
+      },
+      "noColor": "Bez barvy",
+      "customColorLabel": "Vlastní barva",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "Platí pro kartu skupiny a pozadí emoji.",
+      "customEmojiTile": "Vlastní emoji…",
+      "customColorTile": "Vlastní barva…",
+      "autoMovedHint": "{emoji} bylo přesunuto z názvu do emoji skupiny.",
+      "undoMove": "Vrátit zpět"
+    }
   },
   "ExpenseForm": {
     "Income": {
@@ -1374,7 +1412,10 @@
     "invalidWallTime": "Tento čas ve vybraném datu v tomto časovém pásmu neexistuje.",
     "proportionalUnassignedItems": "Přiřaďte každou položku alespoň jednomu účastníkovi, aby bylo možné zbytek rozdělit poměrně, nebo použijte vlastní rozdělení.",
     "proportionalZeroBasis": "Mezisoučty položek se navzájem ruší, takže zbytek nelze rozdělit poměrně. Opravte položky nebo použijte vlastní rozdělení.",
-    "proportionalInvalidRatios": "Mezisoučty položek některých účastníků mají opačná znaménka, takže zbytek nelze rozdělit poměrně. Opravte položky nebo použijte vlastní rozdělení."
+    "proportionalInvalidRatios": "Mezisoučty položek některých účastníků mají opačná znaménka, takže zbytek nelze rozdělit poměrně. Opravte položky nebo použijte vlastní rozdělení.",
+    "max32": "Zadejte nejvýše 32 znaků.",
+    "invalidEmoji": "Zadejte jedno emoji.",
+    "invalidColor": "Zadejte platnou hex barvu, např. #1A2B3C."
   },
   "Categories": {
     "search": "Hledat kategorii...",

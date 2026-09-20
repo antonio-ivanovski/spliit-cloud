@@ -520,13 +520,7 @@
         "newGroup": "Nhóm mới",
         "existingGroup": "Nhóm hiện tại",
         "loading": "Đang tải…",
-        "noAdminGroups": "Bạn không phải admin nhóm nào.",
-        "memberCount_zero": "{count} thành viên",
-        "memberCount_one": "{count} thành viên",
-        "memberCount_two": "{count} thành viên",
-        "memberCount_few": "{count} thành viên",
-        "memberCount_many": "{count} thành viên",
-        "memberCount_other": "{count} thành viên"
+        "noAdminGroups": "Bạn không phải admin nhóm nào."
       },
       "Mapping": {
         "headsUp": "Lưu ý",
@@ -757,7 +751,13 @@
     "removeSavedView": "Xóa",
     "removeSavedViewAccount": "Đã xóa khỏi trang chủ.",
     "removeSavedViewDevice": "Đã xóa khỏi thiết bị này.",
-    "linkInvitationMultiUse": "Mã QR này có thể dùng cho nhiều người cho đến khi hết hạn."
+    "linkInvitationMultiUse": "Mã QR này có thể dùng cho nhiều người cho đến khi hết hạn.",
+    "emojiIntro": {
+      "title": "Đặt emoji cho nhóm này?",
+      "description": "Nhóm giờ đây có thể hiển thị emoji bên cạnh tên. Đã phát hiện {emoji} trong “{name}”.",
+      "openSettings": "Mở cài đặt nhóm",
+      "notNow": "Để sau"
+    }
   },
   "Auth": {
     "title": "Đăng nhập",
@@ -1256,7 +1256,43 @@
     },
     "bulkCategorizeSectionTitle": "Phân loại hàng loạt",
     "bulkCategorizeSectionDescription": "Phân loại nhiều chi phí cùng lúc.",
-    "bulkCategorizeButton": "Phân loại hàng loạt"
+    "bulkCategorizeButton": "Phân loại hàng loạt",
+    "Appearance": {
+      "emojiLabel": "Emoji nhóm",
+      "customEmojiLabel": "Emoji tùy chỉnh",
+      "customEmojiPlaceholder": "Dán emoji bất kỳ",
+      "none": "Không có",
+      "colorLabel": "Màu nhóm",
+      "detectedEmojiHint": "Đã phát hiện {emoji} trong tên nhóm. Khi lưu, emoji này sẽ được dùng làm emoji nhóm và xóa khỏi tên.",
+      "colors": {
+        "slate": "Xám đá",
+        "red": "Đỏ",
+        "orange": "Cam",
+        "amber": "Hổ phách",
+        "emerald": "Xanh lục bảo",
+        "teal": "Xanh cổ vịt",
+        "sky": "Xanh da trời",
+        "blue": "Xanh dương",
+        "violet": "Tím",
+        "pink": "Hồng",
+        "yellow": "Vàng",
+        "lime": "Xanh chanh",
+        "green": "Xanh lá",
+        "cyan": "Xanh lơ",
+        "indigo": "Chàm",
+        "fuchsia": "Hồng cánh sen",
+        "rose": "Hoa hồng",
+        "stone": "Xám nâu"
+      },
+      "noColor": "Không màu",
+      "customColorLabel": "Màu tùy chỉnh",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "Áp dụng cho thẻ nhóm và nền emoji.",
+      "customEmojiTile": "Emoji tùy chỉnh…",
+      "customColorTile": "Màu tùy chỉnh…",
+      "autoMovedHint": "Đã chuyển {emoji} ra khỏi tên thành emoji nhóm.",
+      "undoMove": "Hoàn tác"
+    }
   },
   "ExpenseForm": {
     "Income": {
@@ -1906,7 +1942,10 @@
     "invalidWallTime": "Thời gian này không tồn tại vào ngày đã chọn trong múi giờ này.",
     "proportionalUnassignedItems": "Hãy gán mỗi mục cho ít nhất một người để chia phần còn lại theo tỷ lệ, hoặc dùng cách chia tùy chỉnh.",
     "proportionalZeroBasis": "Các tổng phụ triệt tiêu lẫn nhau nên không thể chia phần còn lại theo tỷ lệ. Hãy sửa các mục hoặc dùng cách chia tùy chỉnh.",
-    "proportionalInvalidRatios": "Tổng phụ các mục của một số người có dấu trái nhau nên không thể chia phần còn lại theo tỷ lệ. Hãy sửa các mục hoặc dùng cách chia tùy chỉnh."
+    "proportionalInvalidRatios": "Tổng phụ các mục của một số người có dấu trái nhau nên không thể chia phần còn lại theo tỷ lệ. Hãy sửa các mục hoặc dùng cách chia tùy chỉnh.",
+    "max32": "Tối đa 32 ký tự.",
+    "invalidEmoji": "Nhập một emoji duy nhất.",
+    "invalidColor": "Nhập mã màu hex hợp lệ, ví dụ #1A2B3C."
   },
   "Categories": {
     "search": "Tìm danh mục…",

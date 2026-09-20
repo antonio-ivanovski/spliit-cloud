@@ -4,6 +4,10 @@ import { useTranslation } from 'react-i18next'
 
 import { AccountMenu } from '@/components/account-menu'
 import { AccountPreferencesSync } from '@/components/account-preferences-sync'
+import {
+  AmbientAccentProvider,
+  AmbientBackdrop,
+} from '@/components/ambient-backdrop'
 import Image from '@/components/app-image'
 import { CurrencyConverterButton } from '@/components/currency-converter/currency-converter'
 import { InstallPromotionDialog } from '@/components/install-promotion-dialog'
@@ -74,12 +78,7 @@ function Content() {
       <AccountPreferencesBoundary isAuthRoute={isAuthRoute}>
         <MascotProvider>
           <div className="app-shell relative isolate flex flex-col overflow-x-clip">
-            {showAmbientBackdrop && (
-              <div className="ambient-backdrop" aria-hidden="true">
-                <span className="ambient-backdrop__orb ambient-backdrop__orb--emerald" />
-                <span className="ambient-backdrop__orb ambient-backdrop__orb--coral" />
-              </div>
-            )}
+            {showAmbientBackdrop && <AmbientBackdrop />}
             <header
               data-app-header
               className="fixed inset-x-0 top-0 z-50 hidden h-16 justify-between border-b bg-white/50 p-2 backdrop-blur-xs sm:flex dark:bg-gray-950/50"
@@ -173,7 +172,9 @@ export function AppShell() {
         <Suspense>
           <ProgressBar />
         </Suspense>
-        <Content />
+        <AmbientAccentProvider>
+          <Content />
+        </AmbientAccentProvider>
       </ThemeProvider>
     </I18nProvider>
   )

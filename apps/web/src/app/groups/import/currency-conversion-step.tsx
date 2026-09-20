@@ -652,7 +652,7 @@ export function CurrencyConversionStep({
     <div className="flex flex-col gap-6">
       {noConversionNeeded ? (
         <Card>
-          <CardContent className="flex items-center gap-3 p-4">
+          <CardContent spacing="standalone" className="flex items-center gap-3">
             <Check className="h-5 w-5 shrink-0 text-green-600" />
             <p className="text-sm">
               {t('Groups.Import.CurrencyConversion.noConversionNeeded')}
@@ -667,7 +667,7 @@ export function CurrencyConversionStep({
           )
           return (
             <Card key={pairKey} className="overflow-hidden">
-              <CardContent className="p-4">
+              <CardContent spacing="standalone">
                 <PairConversionCard
                   pair={pair}
                   pairKey={pairKey}

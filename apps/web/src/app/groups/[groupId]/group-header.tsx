@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { GroupTabs } from '@/app/groups/[groupId]/group-tabs'
 import { CreateExpenseFab } from '@/app/groups/create-expense-fab'
 import { ViewOnlyBadge } from '@/app/groups/view-only-badge'
+import { GroupEmojiBadge } from '@/components/group-emoji-badge'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -174,7 +175,9 @@ export const GroupHeader = ({
     >
       <div className="mobile-contents items-center justify-between gap-3 sm:flex">
         <h1
-          className={`flex min-w-0 items-center gap-2 text-2xl font-bold ${focusedMobileRoute || mobileGroupTabRoute ? 'hidden sm:flex' : ''}`}
+          className={`-mx-2 flex min-w-0 items-center gap-2 rounded-lg px-2 py-0.5 text-2xl font-bold ${
+            focusedMobileRoute || mobileGroupTabRoute ? 'hidden sm:flex' : ''
+          }`}
         >
           {!isEditingImportedRow ? (
             <Button
@@ -187,6 +190,11 @@ export const GroupHeader = ({
               <ArrowLeft className="h-5 w-5 rtl:rotate-180" />
             </Button>
           ) : null}
+          <GroupEmojiBadge
+            emoji={group?.emoji}
+            color={group?.color}
+            size="md"
+          />
           <Link to="/groups/$groupId" params={{ groupId }} className="truncate">
             {isLoading ? (
               <Skeleton className="mt-1.5 mb-1.5 h-5 w-32" />

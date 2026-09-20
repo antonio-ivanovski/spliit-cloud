@@ -378,10 +378,7 @@
         "newGroup": "Talde berria",
         "existingGroup": "Lehendik dagoen taldea",
         "loading": "Kargatzen…",
-        "noAdminGroups": "Oraindik ez duzu talderik administratzen.",
-        "memberCount_one": "{count} kide",
-        "memberCount_many": "{count} kide",
-        "memberCount_other": "{count} kide"
+        "noAdminGroups": "Oraindik ez duzu talderik administratzen."
       },
       "Done": {
         "importComplete": "Inportazioa osatuta",
@@ -663,7 +660,13 @@
     "removeSavedView": "Kendu",
     "removeSavedViewAccount": "Hasieratik kendu da.",
     "removeSavedViewDevice": "Gailu honetatik kendu da.",
-    "linkInvitationMultiUse": "QR kode hau hainbat lagunek erabili dezakete iraungi arte."
+    "linkInvitationMultiUse": "QR kode hau hainbat lagunek erabili dezakete iraungi arte.",
+    "emojiIntro": {
+      "title": "Jarri emoji bat talde honi?",
+      "description": "Taldeek emoji bat erakutsi dezakete orain izenaren ondoan. {emoji} ikusi dugu “{name}” izenean.",
+      "openSettings": "Ireki taldearen ezarpenak",
+      "notNow": "Orain ez"
+    }
   },
   "GroupForm": {
     "title": "Taldeko informazioa",
@@ -720,7 +723,43 @@
     "archivedNotice": "Talde hau artxibatuta dago. Bere ezarpenak izoztuta daude eta ezin dira gehiago aldatu.",
     "bulkCategorizeSectionTitle": "IA treskak multzoka",
     "bulkCategorizeSectionDescription": "Exekutatu IA kategorizatzailea hainbat gastutan aldi berean. Erabilgarria gastuak inportatu ondoren edo izenburu asko kategorizatu gabe daudenean.",
-    "bulkCategorizeButton": "Ireki kategorizatzaile multzokatua"
+    "bulkCategorizeButton": "Ireki kategorizatzaile multzokatua",
+    "Appearance": {
+      "emojiLabel": "Taldearen emojia",
+      "customEmojiLabel": "Emoji pertsonalizatua",
+      "customEmojiPlaceholder": "Itsatsi edozein emoji",
+      "none": "Bat ere ez",
+      "colorLabel": "Taldearen kolorea",
+      "detectedEmojiHint": "{emoji} hauteman dugu taldearen izenean. Gordetzean taldearen emoji gisa erabiliko da eta izenetik kenduko da.",
+      "colors": {
+        "slate": "Arbela",
+        "red": "Gorria",
+        "orange": "Laranja",
+        "amber": "Anbar",
+        "emerald": "Esmeralda",
+        "teal": "Turkesa",
+        "sky": "Zeru-urdina",
+        "blue": "Urdina",
+        "violet": "Bioleta",
+        "pink": "Arrosa",
+        "yellow": "Horia",
+        "lime": "Lima",
+        "green": "Berdea",
+        "cyan": "Zian",
+        "indigo": "Indigoa",
+        "fuchsia": "Fuxia",
+        "rose": "Larrosa",
+        "stone": "Harria"
+      },
+      "noColor": "Kolorerik ez",
+      "customColorLabel": "Kolore pertsonalizatua",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "Taldearen txartelari eta emojaren atzealdeari aplikatzen zaio.",
+      "customEmojiTile": "Emoji pertsonalizatua…",
+      "customColorTile": "Kolore pertsonalizatua…",
+      "autoMovedHint": "{emoji} izenetik taldearen emojira mugitu dugu.",
+      "undoMove": "Desegin"
+    }
   },
   "ExpenseForm": {
     "Income": {
@@ -1364,7 +1403,10 @@
     "invalidWallTime": "Ordu hau ez dago hautatutako datan ordu-eremu honetan.",
     "proportionalUnassignedItems": "Esleitu artikulu bakoitza gutxienez parte-hartzaile bati gainerakoa proportzionalki banatzeko, edo erabili banaketa pertsonalizatua.",
     "proportionalZeroBasis": "Artikuluen azpitotalek elkar ezeztatzen dute; beraz, gainerakoa ezin da proportzionalki banatu. Zuzendu artikuluak edo erabili banaketa pertsonalizatua.",
-    "proportionalInvalidRatios": "Parte-hartzaile batzuen artikulu-azpitotalek kontrako zeinuak dituzte; beraz, gainerakoa ezin da proportzionalki banatu. Zuzendu artikuluak edo erabili banaketa pertsonalizatua."
+    "proportionalInvalidRatios": "Parte-hartzaile batzuen artikulu-azpitotalek kontrako zeinuak dituzte; beraz, gainerakoa ezin da proportzionalki banatu. Zuzendu artikuluak edo erabili banaketa pertsonalizatua.",
+    "max32": "Sartu gehienez 32 karaktere.",
+    "invalidEmoji": "Sartu emoji bakarra.",
+    "invalidColor": "Sartu baliozko kolore hamaseitarra, adibidez #1A2B3C."
   },
   "Categories": {
     "search": "Bilatu kategoria...",

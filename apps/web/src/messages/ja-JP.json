@@ -369,8 +369,7 @@
         "newGroup": "新しいグループ",
         "existingGroup": "既存のグループ",
         "loading": "読み込み中…",
-        "noAdminGroups": "まだグループを管理していません。",
-        "memberCount_other": "メンバー{count}人"
+        "noAdminGroups": "まだグループを管理していません。"
       },
       "Done": {
         "importComplete": "インポート完了",
@@ -650,7 +649,13 @@
     "removeSavedView": "削除",
     "removeSavedViewAccount": "ホームから削除しました。",
     "removeSavedViewDevice": "このデバイスから削除しました。",
-    "linkInvitationMultiUse": "このQRコードは有効期限まで複数人で使用できます。"
+    "linkInvitationMultiUse": "このQRコードは有効期限まで複数人で使用できます。",
+    "emojiIntro": {
+      "title": "このグループに絵文字を設定しますか？",
+      "description": "グループ名の横に絵文字を表示できるようになりました。「{name}」に {emoji} が含まれているのを見つけました。",
+      "openSettings": "グループ設定を開く",
+      "notNow": "今はしない"
+    }
   },
   "GroupForm": {
     "title": "グループ情報",
@@ -707,7 +712,43 @@
     "archivedNotice": "このグループはアーカイブされています。設定は凍結されており、変更できません。",
     "bulkCategorizeSectionTitle": "一括AIツール",
     "bulkCategorizeSectionDescription": "多数の支出に対して一度にAIカテゴリ分類を実行します。支出をインポートした後や、多くのタイトルが未分類の場合に便利です。",
-    "bulkCategorizeButton": "一括カテゴリ分類を開く"
+    "bulkCategorizeButton": "一括カテゴリ分類を開く",
+    "Appearance": {
+      "emojiLabel": "グループ絵文字",
+      "customEmojiLabel": "カスタム絵文字",
+      "customEmojiPlaceholder": "絵文字を貼り付けてください",
+      "none": "なし",
+      "colorLabel": "グループの色",
+      "detectedEmojiHint": "グループ名に {emoji} が含まれています。保存するとグループの絵文字として使用され、名前から削除されます。",
+      "colors": {
+        "slate": "スレート",
+        "red": "レッド",
+        "orange": "オレンジ",
+        "amber": "アンバー",
+        "emerald": "エメラルド",
+        "teal": "ティール",
+        "sky": "スカイ",
+        "blue": "ブルー",
+        "violet": "バイオレット",
+        "pink": "ピンク",
+        "yellow": "イエロー",
+        "lime": "ライム",
+        "green": "グリーン",
+        "cyan": "シアン",
+        "indigo": "インディゴ",
+        "fuchsia": "フクシア",
+        "rose": "ローズ",
+        "stone": "ストーン"
+      },
+      "noColor": "色なし",
+      "customColorLabel": "カスタムカラー",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "グループカード、絵文字の背景に適用されます。",
+      "customEmojiTile": "カスタム絵文字…",
+      "customColorTile": "カスタムカラー…",
+      "autoMovedHint": "{emoji} を名前からグループ絵文字に移動しました。",
+      "undoMove": "元に戻す"
+    }
   },
   "ExpenseForm": {
     "Income": {
@@ -1348,7 +1389,10 @@
     "invalidWallTime": "選択した日付のこのタイムゾーンには、この時刻は存在しません。",
     "proportionalUnassignedItems": "残額を按分するには、すべての品目を1人以上のメンバーに割り当ててください。またはカスタム分割を使用してください。",
     "proportionalZeroBasis": "品目小計が相殺されるため、残額を按分できません。品目を修正するか、カスタム分割を使用してください。",
-    "proportionalInvalidRatios": "一部のメンバーの品目小計の符号が異なるため、残額を按分できません。品目を修正するか、カスタム分割を使用してください。"
+    "proportionalInvalidRatios": "一部のメンバーの品目小計の符号が異なるため、残額を按分できません。品目を修正するか、カスタム分割を使用してください。",
+    "max32": "最大32文字まで入力してください。",
+    "invalidEmoji": "絵文字を1つ入力してください。",
+    "invalidColor": "有効な16進カラーを入力してください（例: #1A2B3C）。"
   },
   "Categories": {
     "search": "カテゴリーを検索...",

@@ -389,13 +389,7 @@
         "newGroup": "Neue Gruppe",
         "existingGroup": "Bestehende Gruppe",
         "loading": "Laden…",
-        "noAdminGroups": "Du verwaltest noch keine Gruppe.",
-        "memberCount_zero": "{count} Mitglieder",
-        "memberCount_one": "{count} Mitglied",
-        "memberCount_two": "{count} Mitglieder",
-        "memberCount_few": "{count} Mitglieder",
-        "memberCount_many": "{count} Mitglieder",
-        "memberCount_other": "{count} Mitglieder"
+        "noAdminGroups": "Du verwaltest noch keine Gruppe."
       },
       "Done": {
         "importComplete": "Import abgeschlossen",
@@ -681,7 +675,13 @@
     "removeSavedView": "Entfernen",
     "removeSavedViewAccount": "Von deiner Übersicht entfernt.",
     "removeSavedViewDevice": "Von diesem Gerät entfernt.",
-    "linkInvitationMultiUse": "Dieser QR-Code kann von mehreren Personen verwendet werden, bis er abläuft."
+    "linkInvitationMultiUse": "Dieser QR-Code kann von mehreren Personen verwendet werden, bis er abläuft.",
+    "emojiIntro": {
+      "title": "Dieser Gruppe ein Emoji geben?",
+      "description": "Gruppen können jetzt ein Emoji neben ihrem Namen anzeigen. Wir haben {emoji} in „{name}“ bemerkt.",
+      "openSettings": "Gruppeneinstellungen öffnen",
+      "notNow": "Nicht jetzt"
+    }
   },
   "GroupForm": {
     "title": "Gruppeninformationen",
@@ -738,7 +738,43 @@
     },
     "bulkCategorizeSectionTitle": "KI-Tools für Massenbearbeitung",
     "bulkCategorizeSectionDescription": "Führe den KI-Kategorisierer für viele Ausgaben auf einmal aus. Nützlich nach dem Import von Ausgaben oder wenn viele Titel noch nicht kategorisiert sind.",
-    "bulkCategorizeButton": "Massenkategorisierer öffnen"
+    "bulkCategorizeButton": "Massenkategorisierer öffnen",
+    "Appearance": {
+      "emojiLabel": "Gruppen-Emoji",
+      "customEmojiLabel": "Eigenes Emoji",
+      "customEmojiPlaceholder": "Beliebiges Emoji einfügen",
+      "none": "Keine",
+      "colorLabel": "Gruppenfarbe",
+      "detectedEmojiHint": "{emoji} wurde im Gruppennamen erkannt. Beim Speichern wird es als Gruppen-Emoji verwendet und aus dem Namen entfernt.",
+      "colors": {
+        "slate": "Schiefer",
+        "red": "Rot",
+        "orange": "Orangeton",
+        "amber": "Bernstein",
+        "emerald": "Smaragd",
+        "teal": "Petrol",
+        "sky": "Himmelblau",
+        "blue": "Blau",
+        "violet": "Violett",
+        "pink": "Rosa",
+        "yellow": "Gelb",
+        "lime": "Limette",
+        "green": "Grün",
+        "cyan": "Cyan",
+        "indigo": "Indigo",
+        "fuchsia": "Fuchsia",
+        "rose": "Rose",
+        "stone": "Stein"
+      },
+      "noColor": "Keine Farbe",
+      "customColorLabel": "Eigene Farbe",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "Gilt für die Gruppenkarte und den Emoji-Hintergrund.",
+      "customEmojiTile": "Eigenes Emoji…",
+      "customColorTile": "Eigene Farbe…",
+      "autoMovedHint": "{emoji} wurde aus dem Namen in das Gruppen-Emoji verschoben.",
+      "undoMove": "Rückgängig machen"
+    }
   },
   "ExpenseForm": {
     "Income": {
@@ -1388,7 +1424,10 @@
     "invalidWallTime": "Diese Uhrzeit existiert am ausgewählten Datum in dieser Zeitzone nicht.",
     "proportionalUnassignedItems": "Weise jeden Artikel mindestens einer teilnehmenden Person zu, um den Restbetrag proportional aufzuteilen, oder verwende eine eigene Aufteilung.",
     "proportionalZeroBasis": "Die Artikelzwischensummen heben sich gegenseitig auf, daher kann der Restbetrag nicht proportional aufgeteilt werden. Korrigiere die Artikel oder verwende eine eigene Aufteilung.",
-    "proportionalInvalidRatios": "Die Artikelzwischensummen einiger Teilnehmenden haben unterschiedliche Vorzeichen, daher kann der Restbetrag nicht proportional aufgeteilt werden. Korrigiere die Artikel oder verwende eine eigene Aufteilung."
+    "proportionalInvalidRatios": "Die Artikelzwischensummen einiger Teilnehmenden haben unterschiedliche Vorzeichen, daher kann der Restbetrag nicht proportional aufgeteilt werden. Korrigiere die Artikel oder verwende eine eigene Aufteilung.",
+    "max32": "Gib maximal 32 Zeichen ein.",
+    "invalidEmoji": "Gib ein einzelnes Emoji ein.",
+    "invalidColor": "Gib eine gültige Hex-Farbe ein, z. B. #1A2B3C."
   },
   "Categories": {
     "search": "Nach Kategorie suchen...",

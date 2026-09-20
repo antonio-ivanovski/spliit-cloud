@@ -1,6 +1,7 @@
 import { Calendar, Globe } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { GroupEmojiBadge } from '@/components/group-emoji-badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -13,6 +14,7 @@ import {
 
 import type {
   ConversionMode,
+  ImportGroupFormValues,
   ParticipantMappingState,
 } from './import-wizard-state'
 import { WizardNav } from './wizard-nav'
@@ -25,12 +27,7 @@ type Props = {
   source: NormalizedSource
   mode: 'NEW_GROUP' | 'EXISTING_GROUP'
   targetGroupId: string | null
-  groupFormValues: {
-    name: string
-    information: string
-    currency: string
-    currencyCode: string
-  }
+  groupFormValues: ImportGroupFormValues
   participants: ParticipantMappingState[]
   resolvedExpenses: NormalizedSource['expenses']
   invites?: ImportInvite[]
@@ -167,10 +164,23 @@ export function ConfirmStep({
     <div className="flex flex-col gap-6">
       {/* Destination */}
       <Card>
-        <CardContent className="flex flex-col gap-2 p-4">
-          <p className="text-sm font-medium">
-            {t('Groups.Import.Confirm.destinationLabel')}
-          </p>
+        <CardContent spacing="standalone" className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <p className="text-sm font-medium">
+              {t('Groups.Import.Confirm.destinationLabel')}
+            </p>
+            {/* New groups show the picked appearance chip (renders nothing
+                when the import stays blank, and a color swatch when only a
+                color was picked), mirroring the group header. */}
+            {mode === 'NEW_GROUP' && (
+              <GroupEmojiBadge
+                size="sm"
+                emoji={groupFormValues.emoji}
+                color={groupFormValues.color}
+                showColorOnly
+              />
+            )}
+          </div>
           <p className="text-sm text-muted-foreground">
             {mode === 'EXISTING_GROUP'
               ? t('Groups.Import.Confirm.existingGroupFormat')
@@ -184,7 +194,7 @@ export function ConfirmStep({
 
       {/* Summary */}
       <Card>
-        <CardContent className="flex flex-col gap-2 p-4">
+        <CardContent spacing="standalone" className="flex flex-col gap-2">
           <p className="text-sm font-medium">
             {t('Groups.Import.Confirm.summaryLabel')}
           </p>
@@ -257,7 +267,7 @@ export function ConfirmStep({
       {/* Conversion summary */}
       {conversionPairs.length > 0 && (
         <Card>
-          <CardContent className="flex flex-col gap-3 p-4">
+          <CardContent spacing="standalone" className="flex flex-col gap-3">
             <p className="text-sm font-medium">
               {t('Groups.Import.Confirm.appliedExchangeRatesLabel')}
             </p>

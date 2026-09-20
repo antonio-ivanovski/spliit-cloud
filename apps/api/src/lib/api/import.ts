@@ -541,7 +541,12 @@ export async function importGroup(
       const group = await tx.group.create({
         data: {
           id: randomId(),
+          // Stored verbatim: title-emoji extraction is a client concern
+          // (the import wizard's group form moves it live); the API never
+          // rewrites the name.
           name: input.groupFormValues.name,
+          emoji: input.groupFormValues.emoji ?? null,
+          color: input.groupFormValues.color ?? null,
           information: input.groupFormValues.information,
           ledgerId: ledger.id,
         },

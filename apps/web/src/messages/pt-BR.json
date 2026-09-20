@@ -342,7 +342,11 @@
     "viewOnlyBannerSave": "Salvar grupo",
     "viewOnlyBannerSavedAccount": "Salvo. Você o encontrará no início.",
     "viewOnlyBannerSavedDevice": "Salvo. Você o encontrará neste dispositivo.",
-    "viewOnlyBadge": "Somente visualização"
+    "viewOnlyBadge": "Somente visualização",
+    "emojiIntro": {
+      "description": "Os grupos agora podem mostrar um emoji ao lado do nome. Vimos {emoji} em “{name}”.",
+      "openSettings": "Abrir as configurações do grupo"
+    }
   },
   "GroupForm": {
     "NameField": {
@@ -381,7 +385,11 @@
     "readOnlyNote": "Apenas proprietários e administradores podem alterar as configurações do grupo.",
     "readOnlyTitle": "Configurações do grupo",
     "archivedNotice": "Este grupo está arquivado. Suas configurações estão congeladas e não podem mais ser alteradas.",
-    "bulkCategorizeSectionDescription": "Execute o categorizador de IA em várias despesas de uma vez. Útil depois de importar despesas ou quando muitos títulos ainda não estão categorizados."
+    "bulkCategorizeSectionDescription": "Execute o categorizador de IA em várias despesas de uma vez. Útil depois de importar despesas ou quando muitos títulos ainda não estão categorizados.",
+    "Appearance": {
+      "customEmojiPlaceholder": "Cole qualquer emoji",
+      "detectedEmojiHint": "Detectamos {emoji} no nome do grupo. Ao salvar, ele será usado como emoji do grupo e removido do nome."
+    }
   },
   "ExpenseForm": {
     "Income": {
@@ -731,7 +739,10 @@
     "invalidWallTime": "Este horário não existe na data selecionada neste fuso horário.",
     "proportionalUnassignedItems": "Atribua cada item a pelo menos um participante para dividir o restante proporcionalmente, ou use uma divisão personalizada.",
     "proportionalZeroBasis": "Os subtotais dos itens se anulam, por isso o restante não pode ser dividido proporcionalmente. Corrija os itens ou use uma divisão personalizada.",
-    "proportionalInvalidRatios": "Os subtotais de itens de alguns participantes têm sinais opostos, por isso o restante não pode ser dividido proporcionalmente. Corrija os itens ou use uma divisão personalizada."
+    "proportionalInvalidRatios": "Os subtotais de itens de alguns participantes têm sinais opostos, por isso o restante não pode ser dividido proporcionalmente. Corrija os itens ou use uma divisão personalizada.",
+    "max32": "Digite no máximo 32 caracteres.",
+    "invalidEmoji": "Digite um único emoji.",
+    "invalidColor": "Digite uma cor hexadecimal válida, como #1A2B3C."
   },
   "Categories": {
     "Entertainment": {

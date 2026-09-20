@@ -1,3 +1,8 @@
+import {
+  isGroupColorId,
+  isSingleEmoji,
+  normalizeHexColor,
+} from '@spliit/domain'
 import { resolveCurrencyCode } from '@spliit/domain/currency'
 import type {
   NormalizedSource,
@@ -78,6 +83,23 @@ export type ConversionMode = 'perDate' | 'fixed'
 
 export type ImportMode = 'NEW_GROUP' | 'EXISTING_GROUP'
 
+/**
+ * Appearance-aware group values carried through the wizard. Lanes mirror
+ * `groupFormSchema` (which has no null emoji lane): emoji omitted/undefined =
+ * undecided (the destination form extracts a title emoji live, else blank), ''
+ * = explicitly none; color additionally allows null for explicitly none.
+ * Threaded untouched (never `??`-coerced) from destination to the import APIs,
+ * which store the name verbatim.
+ */
+export type ImportGroupFormValues = {
+  name: string
+  information: string
+  currency: string
+  currencyCode: string
+  emoji?: string
+  color?: string | null
+}
+
 export function supportsDocumentRecovery(source: NormalizedSource | null) {
   return source?.provider === 'SPLIIT' && source.sourceGroupId !== 'csv-import'
 }
@@ -114,7 +136,9 @@ export type ParticipantMappingState = {
   contactAccountId?: string
 }
 
-export const initialGroupFormValues = (source: NormalizedSource | null) => {
+export const initialGroupFormValues = (
+  source: NormalizedSource | null,
+): ImportGroupFormValues => {
   const sourceCurrency = source?.currency ?? '€'
   const currencyCode =
     source?.currencyCode || resolveCurrencyCode(sourceCurrency) || ''
@@ -124,7 +148,35 @@ export const initialGroupFormValues = (source: NormalizedSource | null) => {
     information: source?.information ?? '',
     currency: sourceCurrency,
     currencyCode,
+    emoji: undefined,
+    color: undefined,
   }
+}
+
+/**
+ * Prefill for the import appearance picker from a cloud export bundle. Mirrors
+ * the server-side restore (`import-cloud.ts`): undecided export values stay
+ * undecided, invalid ones stay blank, explicit-none stays none — so the picker
+ * shows exactly what the server would otherwise restore silently, and any user
+ * edit overrides it on submit.
+ */
+export function prefillAppearanceFromManifest(manifestGroup: {
+  emoji?: string | null
+  color?: string | null
+}): Pick<ImportGroupFormValues, 'emoji' | 'color'> {
+  const emoji =
+    typeof manifestGroup.emoji === 'string' &&
+    (manifestGroup.emoji === '' || isSingleEmoji(manifestGroup.emoji))
+      ? manifestGroup.emoji
+      : undefined
+  const color = ((): ImportGroupFormValues['color'] => {
+    const value = manifestGroup.color
+    if (value === null) return null
+    if (typeof value !== 'string') return undefined
+    if (isGroupColorId(value)) return value
+    return normalizeHexColor(value) ?? undefined
+  })()
+  return { emoji, color }
 }
 
 /** Map the batched expenses into the shape the import mutation expects. */

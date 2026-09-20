@@ -5,6 +5,7 @@ import { groupBalancesRouter } from './balances'
 import { groupBudgetsRouter } from './budgets'
 import { createGroupProcedure } from './create.procedure'
 import { deleteGroupProcedure } from './delete.procedure'
+import { dismissGroupEmojiIntroProcedure } from './dismissEmojiIntro.procedure'
 import { groupExpensesRouter } from './expenses'
 import { getGroupProcedure } from './get.procedure'
 import { getGroupDetailsProcedure } from './getDetails.procedure'
@@ -68,6 +69,12 @@ export const groupsRouter = createTRPCRouter({
 
   /** Update a group's name, currency, information, or participants. */
   update: updateGroupProcedure,
+
+  /**
+   * Dismiss the group emoji intro for this group (ADMIN-only, group-wide).
+   * Writes the declined sentinel so the prompt never reappears for any admin.
+   */
+  dismissEmojiIntro: dismissGroupEmojiIntroProcedure,
 
   /**
    * Archive or unarchive a group. Archived groups reject new expenses. Use

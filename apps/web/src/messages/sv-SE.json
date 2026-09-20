@@ -1842,7 +1842,43 @@
     },
     "bulkCategorizeSectionTitle": "AI-verktyg för bulk",
     "bulkCategorizeSectionDescription": "Kör AI-kategoriseraren för många utgifter på en gång. Användbart efter import av utgifter eller när många titlar fortfarande är okategoriserade.",
-    "bulkCategorizeButton": "Öppna bulkkategoriserare"
+    "bulkCategorizeButton": "Öppna bulkkategoriserare",
+    "Appearance": {
+      "emojiLabel": "Gruppemoji",
+      "customEmojiLabel": "Anpassad emoji",
+      "customEmojiPlaceholder": "Klistra in en emoji",
+      "none": "Ingen",
+      "colorLabel": "Gruppfärg",
+      "detectedEmojiHint": "{emoji} hittades i gruppnamnet. När du sparar används den som gruppens emoji och tas bort från namnet.",
+      "colors": {
+        "slate": "Skiffer",
+        "red": "Röd",
+        "orange": "Brandgul",
+        "amber": "Bärnsten",
+        "emerald": "Smaragd",
+        "teal": "Petrol",
+        "sky": "Himmelsblå",
+        "blue": "Blå",
+        "violet": "Violett",
+        "pink": "Rosa",
+        "yellow": "Gul",
+        "lime": "Limegrön",
+        "green": "Grön",
+        "cyan": "Cyan",
+        "indigo": "Indigo",
+        "fuchsia": "Fuchsia",
+        "rose": "Ros",
+        "stone": "Sten"
+      },
+      "noColor": "Ingen färg",
+      "customColorLabel": "Anpassad färg",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "Gäller gruppkortet och emojibakgrunden.",
+      "customEmojiTile": "Anpassad emoji…",
+      "customColorTile": "Anpassad färg…",
+      "autoMovedHint": "{emoji} flyttades från namnet till gruppemoji.",
+      "undoMove": "Ångra"
+    }
   },
   "Groups": {
     "linkInvitationBannerDescription": "{inviter} bjöd in dig att gå med i {groupName} på Spliit Cloud.",
@@ -1921,9 +1957,7 @@
         "newGroup": "Ny grupp",
         "existingGroup": "Befintlig grupp",
         "loading": "Laddar…",
-        "noAdminGroups": "Du Administrerar ännu ingen grupp.",
-        "memberCount_one": "{count} medlem",
-        "memberCount_other": "{count} medlemmar"
+        "noAdminGroups": "Du Administrerar ännu ingen grupp."
       },
       "Done": {
         "importComplete": "Import klar",
@@ -2274,7 +2308,13 @@
     "removeSavedView": "Ta bort",
     "removeSavedViewAccount": "Borttagen från din översikt.",
     "removeSavedViewDevice": "Borttagen från den här enheten.",
-    "linkInvitationMultiUse": "Denna QR-kod kan användas av flera personer tills den går ut."
+    "linkInvitationMultiUse": "Denna QR-kod kan användas av flera personer tills den går ut.",
+    "emojiIntro": {
+      "title": "Ge den här gruppen en emoji?",
+      "description": "Grupper kan nu visa en emoji bredvid sitt namn. Vi såg {emoji} i ”{name}”.",
+      "openSettings": "Öppna gruppens inställningar",
+      "notNow": "Inte nu"
+    }
   },
   "Header": {
     "signIn": "Logga in",
@@ -2798,7 +2838,10 @@
     "invalidWallTime": "Den här tiden finns inte på det valda datumet i den här tidszonen.",
     "proportionalUnassignedItems": "Tilldela varje rad till minst en deltagare för att fördela restbeloppet proportionellt, eller använd en anpassad fördelning.",
     "proportionalZeroBasis": "Radernas subtotaler tar ut varandra, så restbeloppet kan inte fördelas proportionellt. Korrigera raderna eller använd en anpassad fördelning.",
-    "proportionalInvalidRatios": "Vissa deltagares radsubtotaler har motsatta tecken, så restbeloppet kan inte fördelas proportionellt. Korrigera raderna eller använd en anpassad fördelning."
+    "proportionalInvalidRatios": "Vissa deltagares radsubtotaler har motsatta tecken, så restbeloppet kan inte fördelas proportionellt. Korrigera raderna eller använd en anpassad fördelning.",
+    "max32": "Ange högst 32 tecken.",
+    "invalidEmoji": "Ange en enda emoji.",
+    "invalidColor": "Ange en giltig hexfärg, till exempel #1A2B3C."
   },
   "Settings": {
     "title": "Inställningar"

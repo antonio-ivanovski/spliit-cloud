@@ -7,6 +7,11 @@ import {
 } from './conversion'
 import type { RecurrenceRule, SplitMode } from './enums'
 import {
+  GROUP_COLOR_IDS,
+  isSingleEmoji,
+  type GroupColor,
+} from './group-appearance'
+import {
   getProportionalRemainderError,
   itemsExceedExpenseAmount,
 } from './itemized-expenses'
@@ -27,6 +32,29 @@ const groupFormFields = {
     .describe(
       'ISO-4217 3-letter code or 3–4 char crypto ticker, or empty for custom',
     ),
+  // Three states: omitted = leave undecided (title emoji is moved into the
+  // field on create, otherwise the group stays blank; the intro may be
+  // offered for existing groups), '' = explicitly none picked, any other
+  // value = the chosen emoji. See @spliit/domain group-appearance.
+  emoji: z
+    .string()
+    .max(32, { error: 'max32' })
+    .refine((value) => value === '' || isSingleEmoji(value), {
+      error: 'invalidEmoji',
+    })
+    .optional(),
+  // One of the standard palette ids or a custom `#rrggbb` hex color.
+  // Null/omitted clears or leaves untouched depending on the mutation; new
+  // groups stay blank (null) when omitted.
+  color: z
+    .union([
+      z.enum(GROUP_COLOR_IDS),
+      z
+        .string()
+        .regex(/^#[0-9a-fA-F]{6}$/, { error: 'invalidColor' })
+        .transform((value) => value.toLowerCase() as GroupColor),
+    ])
+    .nullish(),
   participants: z
     .array(
       z.object({

@@ -41,6 +41,48 @@ const BRAND_TOKENS = new Set([
 
 const URL_OR_EMAIL = /^(https?:\/\/\S+|[\w.+-]+@[\w.-]+\.\w+|mailto:\S+)$/i
 
+/**
+ * Input-format masks rendered verbatim in every locale (the user sees the
+ * literal mask, not prose), e.g. the hex color placeholder.
+ */
+const FORMAT_TOKENS = new Set(['#RRGGBB'])
+
+/**
+ * English-identical values that are nevertheless the correct spelling in a
+ * specific locale (shared cognates), keyed `${locale}:${enValue}`. Unlike
+ * auto-allowed brands these still need `--allow-english` on `set`; the audit
+ * only stops reporting them as untranslated.
+ */
+const LOCALE_COGNATES = new Set([
+  'fr-FR:Orange',
+  'fr-FR:Violet',
+  'ro:Violet',
+  'fr-FR:Cyan',
+  'fr-FR:Fuchsia',
+  'fr-FR:Indigo',
+  'fr-FR:Lime',
+  'it-IT:Lime',
+  'ro:Indigo',
+  'ro:Lime',
+  'de-DE:Cyan',
+  'de-DE:Fuchsia',
+  'de-DE:Indigo',
+  'de-DE:Rose',
+  'fi:Indigo',
+  'nl-NL:Fuchsia',
+  'nl-NL:Indigo',
+  'sv-SE:Cyan',
+  'sv-SE:Fuchsia',
+  'sv-SE:Indigo',
+])
+
+export function isAllowedLocaleCognate(
+  locale: string,
+  enValue: string,
+): boolean {
+  return LOCALE_COGNATES.has(`${locale}:${enValue}`)
+}
+
 /** Strip i18next placeholders and rich-text tags; leftover letters matter. */
 function letterContentOutsideMarkup(value: string): string {
   return value
@@ -54,6 +96,7 @@ export function isAutoAllowedEnglishIdentity(enValue: string): boolean {
   if (trimmed.length === 0) return false
   if (BRAND_TOKENS.has(trimmed)) return true
   if (URL_OR_EMAIL.test(trimmed)) return true
+  if (FORMAT_TOKENS.has(trimmed)) return true
   // Format templates whose only letters live inside {placeholders} / tags
   if (letterContentOutsideMarkup(trimmed).length === 0) return true
   return false

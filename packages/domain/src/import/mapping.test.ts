@@ -391,6 +391,88 @@ describe('buildImportBatch', () => {
     })
   })
 
+  it('carries picked emoji/color through a NEW_GROUP batch untouched', () => {
+    const participants: ParticipantMappingState[] = [
+      mappingRow('p-0', 'John', 'LINK_ACCOUNT', { linkedAccountId }),
+    ]
+    const state: ImportBatchState = {
+      source: baseSource,
+      mode: 'NEW_GROUP',
+      targetGroupId: null,
+      groupFormValues: {
+        name: 'Trip',
+        information: '',
+        currency: '€',
+        currencyCode: 'EUR',
+        emoji: '🍻',
+        color: 'teal',
+      },
+      participants,
+      sourceIdToDestId: { 'p-0': 'dest-a' },
+      destIds: { 'p-0': 'dest-a' },
+      resolvedExpenses: [],
+    }
+    const { batch } = buildImportBatch(state, 'EUR')
+    if ('targetGroupId' in batch) throw new Error('expected new-group shape')
+    expect(batch.groupFormValues.emoji).toBe('🍻')
+    expect(batch.groupFormValues.color).toBe('teal')
+  })
+
+  it('preserves explicit-none appearance (empty emoji, null color) in a NEW_GROUP batch', () => {
+    const participants: ParticipantMappingState[] = [
+      mappingRow('p-0', 'John', 'LINK_ACCOUNT', { linkedAccountId }),
+    ]
+    const state: ImportBatchState = {
+      source: baseSource,
+      mode: 'NEW_GROUP',
+      targetGroupId: null,
+      groupFormValues: {
+        name: 'Trip',
+        information: '',
+        currency: '€',
+        currencyCode: 'EUR',
+        emoji: '',
+        color: null,
+      },
+      participants,
+      sourceIdToDestId: { 'p-0': 'dest-a' },
+      destIds: { 'p-0': 'dest-a' },
+      resolvedExpenses: [],
+    }
+    const { batch } = buildImportBatch(state, 'EUR')
+    if ('targetGroupId' in batch) throw new Error('expected new-group shape')
+    expect(batch.groupFormValues.emoji).toBe('')
+    expect(batch.groupFormValues.color).toBeNull()
+  })
+
+  it('maps a null emoji prefill to the undecided lane in a NEW_GROUP batch', () => {
+    const participants: ParticipantMappingState[] = [
+      mappingRow('p-0', 'John', 'LINK_ACCOUNT', { linkedAccountId }),
+    ]
+    const state: ImportBatchState = {
+      source: baseSource,
+      mode: 'NEW_GROUP',
+      targetGroupId: null,
+      groupFormValues: {
+        name: 'Trip',
+        information: '',
+        currency: '€',
+        currencyCode: 'EUR',
+        emoji: null,
+        color: null,
+      },
+      participants,
+      sourceIdToDestId: { 'p-0': 'dest-a' },
+      destIds: { 'p-0': 'dest-a' },
+      resolvedExpenses: [],
+    }
+    const { batch } = buildImportBatch(state, 'EUR')
+    if ('targetGroupId' in batch) throw new Error('expected new-group shape')
+    // `groupFormSchema` has no null emoji lane; null is undecided anyway.
+    expect(batch.groupFormValues.emoji).toBeUndefined()
+    expect(batch.groupFormValues.color).toBeNull()
+  })
+
   it('produces an EXISTING_GROUP-shaped batch when targetGroupId is set', () => {
     const participants: ParticipantMappingState[] = [
       mappingRow('p-0', 'John', 'LINK_EXISTING_PARTICIPANT', {

@@ -1,4 +1,10 @@
-import { GroupMemberStatus, GroupRole, prisma, type Prisma } from '@spliit/db'
+import {
+  GroupMemberStatus,
+  GroupRole,
+  GroupType,
+  prisma,
+  type Prisma,
+} from '@spliit/db'
 import {
   type GroupFormValues,
   type GroupUpdateFormValues,
@@ -40,7 +46,11 @@ export async function createGroup(
     const group = await tx.group.create({
       data: {
         id: randomId(),
+        // Stored verbatim: title-emoji extraction is a client concern (the
+        // group form moves it live); the API never rewrites the name.
         name: groupFormValues.name,
+        emoji: groupFormValues.emoji ?? null,
+        color: groupFormValues.color ?? null,
         information: groupFormValues.information,
         ledgerId: ledger.id,
       },
@@ -116,11 +126,28 @@ export async function updateGroup(
     }
     const summary = getGroupChangeSummary(oldGroup, newGroup, {})
 
+    // Appearance changes: `undefined` leaves the stored value untouched
+    // (partial API callers must not accidentally dismiss the intro); `''` is
+    // the explicit "none picked" sentinel. Friend ledgers keep the peer
+    // avatar as their identity and never carry an emoji/color.
+    const appearance =
+      existingGroup.groupType === GroupType.FRIEND
+        ? {}
+        : {
+            ...(groupFormValues.emoji === undefined
+              ? {}
+              : { emoji: groupFormValues.emoji }),
+            ...(groupFormValues.color === undefined
+              ? {}
+              : { color: groupFormValues.color }),
+          }
+
     const group = await tx.group.update({
       where: { id: groupId },
       data: {
         name: groupFormValues.name,
         information: groupFormValues.information,
+        ...appearance,
       },
     })
     await tx.ledger.update({
@@ -153,6 +180,20 @@ export async function updateGroup(
     return { group, activity }
   })
   return result.group
+}
+
+/**
+ * Record that the group's admins declined the "groups can have an emoji" intro.
+ * Writes the `''` declined sentinel only while the emoji is still undecided, so
+ * a concurrent emoji pick is never clobbered. The decision is group-wide: the
+ * first admin to dismiss ends the prompt for everyone, but the settings picker
+ * can still set an emoji later.
+ */
+export async function dismissGroupEmojiIntro(groupId: string) {
+  await prisma.group.updateMany({
+    where: { id: groupId, emoji: null },
+    data: { emoji: '' },
+  })
 }
 
 export async function getGroup(groupId: string) {

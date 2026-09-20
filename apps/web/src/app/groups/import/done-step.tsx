@@ -75,7 +75,10 @@ export function DoneStep({
   return (
     <div className="flex flex-col gap-4">
       <Card>
-        <CardContent className="flex flex-col items-center gap-4 p-6 text-center">
+        <CardContent
+          spacing="standalone"
+          className="flex flex-col items-center gap-4 text-center"
+        >
           <CheckCircle2 className="h-12 w-12 text-green-500" />
           <div className="flex flex-col gap-1">
             <p className="text-xs tracking-wide text-muted-foreground uppercase">
@@ -130,7 +133,7 @@ export function DoneStep({
 
       {linkInvites.length > 0 && (
         <Card>
-          <CardContent className="flex flex-col gap-4 p-4">
+          <CardContent spacing="standalone" className="flex flex-col gap-4">
             <div>
               <h2 className="text-base font-medium">
                 {t('Groups.Import.Done.shareableLinksTitle')}
@@ -183,7 +186,7 @@ export function DoneStep({
 
       {emailInvites.length > 0 && (
         <Card>
-          <CardContent className="flex flex-col gap-2 p-4">
+          <CardContent spacing="standalone" className="flex flex-col gap-2">
             <h2 className="text-base font-medium">
               {t('Groups.Import.Done.emailInvitesTitle')}
             </h2>

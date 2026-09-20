@@ -277,13 +277,7 @@
         "newGroup": "새 그룹",
         "existingGroup": "기존 그룹",
         "loading": "로딩 중…",
-        "noAdminGroups": "아직 관리하는 그룹이 없습니다.",
-        "memberCount_zero": "멤버 {count}명",
-        "memberCount_one": "멤버 {count}명",
-        "memberCount_two": "멤버 {count}명",
-        "memberCount_few": "멤버 {count}명",
-        "memberCount_many": "멤버 {count}명",
-        "memberCount_other": "멤버 {count}명"
+        "noAdminGroups": "아직 관리하는 그룹이 없습니다."
       },
       "Done": {
         "importComplete": "가져오기 완료",
@@ -568,7 +562,13 @@
     "removeSavedView": "삭제",
     "removeSavedViewAccount": "홈에서 삭제했습니다.",
     "removeSavedViewDevice": "이 기기에서 삭제했습니다.",
-    "linkInvitationMultiUse": "이 QR 코드는 만료될 때까지 여러 사람이 사용할 수 있습니다."
+    "linkInvitationMultiUse": "이 QR 코드는 만료될 때까지 여러 사람이 사용할 수 있습니다.",
+    "emojiIntro": {
+      "title": "이 그룹에 이모지를 지정할까요?",
+      "description": "이제 그룹 이름 옆에 이모지를 표시할 수 있습니다. “{name}”에서 {emoji}를 찾았습니다.",
+      "openSettings": "그룹 설정 열기",
+      "notNow": "나중에"
+    }
   },
   "GroupForm": {
     "title": "그룹 정보",
@@ -625,7 +625,43 @@
     "archivedNotice": "이 그룹은 보관되었습니다. 설정이 고정되어 더 이상 변경할 수 없습니다.",
     "bulkCategorizeSectionTitle": "일괄 AI 도구",
     "bulkCategorizeSectionDescription": "여러 지출에 대해 한 번에 AI 카테고리 분류를 실행합니다. 지출을 가져온 후 또는 많은 제목이 아직 분류되지 않은 경우 유용합니다.",
-    "bulkCategorizeButton": "일괄 분류기 열기"
+    "bulkCategorizeButton": "일괄 분류기 열기",
+    "Appearance": {
+      "emojiLabel": "그룹 이모지",
+      "customEmojiLabel": "사용자 지정 이모지",
+      "customEmojiPlaceholder": "원하는 이모지를 붙여넣으세요",
+      "none": "없음",
+      "colorLabel": "그룹 색상",
+      "detectedEmojiHint": "그룹 이름에서 {emoji}를 찾았습니다. 저장하면 그룹 이모지로 사용하고 이름에서 제거합니다.",
+      "colors": {
+        "slate": "슬레이트",
+        "red": "레드",
+        "orange": "오렌지",
+        "amber": "앰버",
+        "emerald": "에메랄드",
+        "teal": "틸",
+        "sky": "스카이",
+        "blue": "블루",
+        "violet": "바이올렛",
+        "pink": "핑크",
+        "yellow": "옐로우",
+        "lime": "라임",
+        "green": "그린",
+        "cyan": "시안",
+        "indigo": "인디고",
+        "fuchsia": "푸시아",
+        "rose": "로즈",
+        "stone": "스톤"
+      },
+      "noColor": "색상 없음",
+      "customColorLabel": "사용자 지정 색상",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "그룹 카드 및 이모지 배경에 적용됩니다.",
+      "customEmojiTile": "사용자 지정 이모지…",
+      "customColorTile": "사용자 지정 색상…",
+      "autoMovedHint": "{emoji}를 이름에서 그룹 이모지로 이동했습니다.",
+      "undoMove": "실행 취소"
+    }
   },
   "ExpenseForm": {
     "Expense": {
@@ -1186,7 +1222,10 @@
     "invalidWallTime": "선택한 날짜에는 이 시간대에 해당 시간이 존재하지 않습니다.",
     "proportionalUnassignedItems": "남은 금액을 비례대로 나누려면 모든 항목을 한 명 이상의 참가자에게 지정하세요. 또는 커스텀 분할을 사용하세요.",
     "proportionalZeroBasis": "항목 소계가 서로 상쇄되어 남은 금액을 비례대로 나눌 수 없습니다. 항목을 수정하거나 커스텀 분할을 사용하세요.",
-    "proportionalInvalidRatios": "일부 참가자의 항목 소계 부호가 달라서 남은 금액을 비례대로 나눌 수 없습니다. 항목을 수정하거나 커스텀 분할을 사용하세요."
+    "proportionalInvalidRatios": "일부 참가자의 항목 소계 부호가 달라서 남은 금액을 비례대로 나눌 수 없습니다. 항목을 수정하거나 커스텀 분할을 사용하세요.",
+    "max32": "최대 32자까지 입력해 주세요.",
+    "invalidEmoji": "이모지 하나를 입력해 주세요.",
+    "invalidColor": "유효한 16진수 색상을 입력해 주세요(예: #1A2B3C)."
   },
   "Categories": {
     "search": "카테고리 선택...",

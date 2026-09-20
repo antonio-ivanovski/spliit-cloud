@@ -157,7 +157,10 @@ export {
 // Audit / diff logic
 // ---------------------------------------------------------------------------
 
-import { classifyEnglishIdentity } from './english-identity'
+import {
+  classifyEnglishIdentity,
+  isAllowedLocaleCognate,
+} from './english-identity'
 import {
   coveredKeys,
   isSparseLocale,
@@ -326,6 +329,7 @@ export async function validateAllMessages(
 }
 
 function untranslatedEnglishKeysForLocale(
+  locale: string,
   enData: Record<string, unknown>,
   localeData: Record<string, unknown>,
   candidateKeys: readonly string[],
@@ -336,7 +340,10 @@ function untranslatedEnglishKeysForLocale(
     const locValue = getAt(localeData, key)
     if (typeof enValue !== 'string' || typeof locValue !== 'string') continue
     const identity = classifyEnglishIdentity(enValue, locValue)
-    if (identity.identical && !identity.allowed) bad.push(key)
+    if (identity.identical && !identity.allowed) {
+      if (isAllowedLocaleCognate(locale, enValue)) continue
+      bad.push(key)
+    }
   }
   return bad.sort()
 }
@@ -383,6 +390,7 @@ export async function auditMessages(
         (k) => introducedSet.has(k) && presentSet.has(k),
       )
       const untranslated = untranslatedEnglishKeysForLocale(
+        locale,
         enData,
         data,
         introducedPresent,
@@ -449,7 +457,12 @@ export async function identicalKeysByLocale(
     targetLocales.map(async (locale) => {
       const data = await readMessagesFile(locale)
       const expected = expectedKeysForLocale(enKeys, locale)
-      result[locale] = untranslatedEnglishKeysForLocale(enData, data, expected)
+      result[locale] = untranslatedEnglishKeysForLocale(
+        locale,
+        enData,
+        data,
+        expected,
+      )
     }),
   )
   return result

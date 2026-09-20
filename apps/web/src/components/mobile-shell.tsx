@@ -20,6 +20,7 @@ import { useGroupAccessSearch } from '@/app/groups/[groupId]/use-group-access-se
 import { ViewOnlyBadge } from '@/app/groups/view-only-badge'
 import { AccountMenu } from '@/components/account-menu'
 import { CurrencyConverterButton } from '@/components/currency-converter/currency-converter'
+import { GroupEmojiBadge } from '@/components/group-emoji-badge'
 import { LocaleSwitcher } from '@/components/locale-switcher'
 import { ThemeToggle } from '@/components/theme-toggle'
 import {
@@ -108,7 +109,7 @@ export function GroupMobileAppBar() {
     <header
       data-app-header
       data-group-mobile-app-bar
-      className="fixed inset-x-0 top-0 z-50 flex h-(--app-header-height) items-center gap-1 border-b bg-background/95 px-2 app-header-inset backdrop-blur supports-backdrop-filter:bg-background/80 sm:hidden"
+      className="fixed inset-x-0 top-0 z-50 flex h-(--app-header-height) items-center gap-1.5 border-b bg-background/95 px-2 app-header-inset backdrop-blur supports-backdrop-filter:bg-background/80 sm:hidden"
     >
       <Link
         to="/"
@@ -117,12 +118,13 @@ export function GroupMobileAppBar() {
       >
         <ArrowLeft className="size-5 rtl:rotate-180" aria-hidden="true" />
       </Link>
-      <h1 className="min-w-0 flex-1 truncate text-base font-semibold">
+      <h1 className="flex min-w-0 flex-1 items-center gap-1.5 rounded-md px-1 py-0.5 text-base font-semibold">
+        <GroupEmojiBadge emoji={group?.emoji} color={group?.color} size="sm" />
         <Link
           to="/groups/$groupId/expenses"
           params={{ groupId }}
           search={{ invite: linkInviteToken, viewKey }}
-          className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden"
+          className="min-w-0 flex-1 truncate focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden"
         >
           {title}
         </Link>

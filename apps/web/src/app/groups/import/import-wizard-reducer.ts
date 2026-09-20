@@ -15,6 +15,7 @@ import {
   initialGroupFormValues,
   type ImportSourceKind,
   type ConversionMode,
+  type ImportGroupFormValues,
   type ImportMode,
   type ImportStep,
   type ParticipantMappingState,
@@ -32,12 +33,7 @@ export type WizardState = {
   prefillSourceUrl: string | null
   mode: ImportMode | null
   targetGroupId: string | null
-  groupFormValues: {
-    name: string
-    information: string
-    currency: string
-    currencyCode: string
-  }
+  groupFormValues: ImportGroupFormValues
   participants: ParticipantMappingState[]
   sourceIdToDestId: Record<string, string>
   destIds: Record<string, string>

@@ -384,11 +384,7 @@
         "newGroup": "Nowa grupa",
         "existingGroup": "Istniejąca grupa",
         "loading": "Ładowanie…",
-        "noAdminGroups": "Nie administrujesz jeszcze żadną grupą.",
-        "memberCount_one": "{count} członek",
-        "memberCount_few": "{count} członków",
-        "memberCount_many": "{count} członków",
-        "memberCount_other": "{count} członków"
+        "noAdminGroups": "Nie administrujesz jeszcze żadną grupą."
       },
       "Done": {
         "importComplete": "Import zakończony",
@@ -671,7 +667,13 @@
     "removeSavedView": "Usuń",
     "removeSavedViewAccount": "Usunięto z pulpitu.",
     "removeSavedViewDevice": "Usunięto z tego urządzenia.",
-    "linkInvitationMultiUse": "Ten kod QR może zostać użyty przez kilka osób, zanim wygaśnie."
+    "linkInvitationMultiUse": "Ten kod QR może zostać użyty przez kilka osób, zanim wygaśnie.",
+    "emojiIntro": {
+      "title": "Nadać tej grupie emoji?",
+      "description": "Grupy mogą teraz wyświetlać emoji obok nazwy. Zauważyliśmy {emoji} w „{name}”.",
+      "openSettings": "Otwórz ustawienia grupy",
+      "notNow": "Nie teraz"
+    }
   },
   "GroupForm": {
     "title": "Informacje o grupie",
@@ -728,7 +730,43 @@
     },
     "bulkCategorizeSectionTitle": "Zbiorcze narzędzia AI",
     "bulkCategorizeSectionDescription": "Uruchom kategoryzator AI dla wielu wydatków naraz. Przydatne po zaimportowaniu wydatków lub gdy wiele tytułów wciąż nie ma kategorii.",
-    "bulkCategorizeButton": "Otwórz kategoryzator zbiorczy"
+    "bulkCategorizeButton": "Otwórz kategoryzator zbiorczy",
+    "Appearance": {
+      "emojiLabel": "Emoji grupy",
+      "customEmojiLabel": "Własne emoji",
+      "customEmojiPlaceholder": "Wklej dowolne emoji",
+      "none": "Brak",
+      "colorLabel": "Kolor grupy",
+      "detectedEmojiHint": "Wykryto {emoji} w nazwie grupy. Zapisanie ustawi je jako emoji grupy i usunie z nazwy.",
+      "colors": {
+        "slate": "Łupkowy",
+        "red": "Czerwony",
+        "orange": "Pomarańczowy",
+        "amber": "Bursztynowy",
+        "emerald": "Szmaragdowy",
+        "teal": "Morski",
+        "sky": "Błękitny",
+        "blue": "Niebieski",
+        "violet": "Fioletowy",
+        "pink": "Różowy",
+        "yellow": "Żółty",
+        "lime": "Limonkowy",
+        "green": "Zielony",
+        "cyan": "Cyjanowy",
+        "indigo": "Indygo",
+        "fuchsia": "Fuksjowy",
+        "rose": "Różany",
+        "stone": "Kamienny"
+      },
+      "noColor": "Bez koloru",
+      "customColorLabel": "Własny kolor",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "Dotyczy karty grupy i tła emoji.",
+      "customEmojiTile": "Własne emoji…",
+      "customColorTile": "Własny kolor…",
+      "autoMovedHint": "Przeniesiono {emoji} z nazwy do emoji grupy.",
+      "undoMove": "Cofnij"
+    }
   },
   "ExpenseForm": {
     "Income": {
@@ -1374,7 +1412,10 @@
     "invalidWallTime": "Ta godzina nie istnieje w wybranym dniu w tej strefie czasowej.",
     "proportionalUnassignedItems": "Przypisz każdą pozycję do co najmniej jednego uczestnika, aby podzielić resztę proporcjonalnie, lub użyj własnego podziału.",
     "proportionalZeroBasis": "Sumy częściowe pozycji znoszą się wzajemnie, więc reszty nie można podzielić proporcjonalnie. Popraw pozycje lub użyj własnego podziału.",
-    "proportionalInvalidRatios": "Sumy częściowe pozycji niektórych uczestników mają przeciwne znaki, więc reszty nie można podzielić proporcjonalnie. Popraw pozycje lub użyj własnego podziału."
+    "proportionalInvalidRatios": "Sumy częściowe pozycji niektórych uczestników mają przeciwne znaki, więc reszty nie można podzielić proporcjonalnie. Popraw pozycje lub użyj własnego podziału.",
+    "max32": "Wprowadź maksymalnie 32 znaki.",
+    "invalidEmoji": "Wprowadź jedno emoji.",
+    "invalidColor": "Wprowadź prawidłowy kolor hex, np. #1A2B3C."
   },
   "Categories": {
     "search": "Szukaj kategorii…",

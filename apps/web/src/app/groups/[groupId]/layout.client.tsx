@@ -31,8 +31,11 @@ import { isFocusedMobilePath, isMobileGroupNavPath } from '@/lib/mobile-nav'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
+import { displayEmoji } from '@spliit/domain'
 
 import { CurrentGroupProvider } from './current-group-context'
+import { GroupAmbientAccent } from './group-ambient-accent'
+import { GroupEmojiIntroDialog } from './group-emoji-intro-dialog'
 import { GroupHeader } from './group-header'
 import { SaveGroupLocally } from './save-recent-group'
 
@@ -118,7 +121,8 @@ export function GroupLayoutClient({
               ? 'Members.title'
               : 'Expenses.title'
     const groupName = data.displayName ?? data.group.name
-    document.title = `${groupName} · ${tTitles(titleKey)}`
+    const emoji = displayEmoji(data.group.emoji)
+    document.title = `${emoji ? `${emoji} ` : ''}${groupName} · ${tTitles(titleKey)}`
   }, [data, focusedMobileRoute, pathname, tTitles])
 
   useEffect(() => {
@@ -259,6 +263,10 @@ export function GroupLayoutClient({
 
   return (
     <CurrentGroupProvider {...props}>
+      <GroupAmbientAccent
+        color={props.group?.color}
+        groupType={props.group?.groupType}
+      />
       <GroupMobileAppBar />
       {/* Keep this wrapper transform-free: expense forms contain a
           viewport-fixed action bar. */}
@@ -279,6 +287,7 @@ export function GroupLayoutClient({
         <MobileGroupNav groupId={props.groupId} />
       )}
       {!isPrintReportRoute && <SaveGroupLocally />}
+      {!isPrintReportRoute && <GroupEmojiIntroDialog />}
       <ResponsiveDialog
         open={!!friendLinkDialogUrl}
         onOpenChange={(open) => {

@@ -20,6 +20,8 @@ const manifest = {
     archived: false,
     groupType: 'GROUP' as const,
     subgroupsEnabled: false,
+    emoji: '🎉',
+    color: '#a1b2c3',
     createdAt: '2026-08-01T12:00:00.000Z',
     ledger: {
       sourceId: 'ledger-1',
@@ -298,6 +300,7 @@ describe('prepareCloudImport', () => {
   it('restores through a transaction client with fresh ids and archives after contents', async () => {
     const calls: string[] = []
     const participantIds: string[] = []
+    const groupCreateData: Array<Record<string, unknown>> = []
     const tx = {
       ledger: {
         create: vi.fn(async ({ data }: { data: { id: string } }) => {
@@ -309,6 +312,7 @@ describe('prepareCloudImport', () => {
         findFirst: vi.fn(async () => null),
         create: vi.fn(async ({ data }: { data: { id: string } }) => {
           calls.push('group.create')
+          groupCreateData.push(data)
           return { id: data.id }
         }),
         update: vi.fn(async () => {
@@ -368,6 +372,206 @@ describe('prepareCloudImport', () => {
       calls.indexOf('ledgerParticipant.create'),
     )
     expect(calls.at(-1)).toBe('activity.create')
+    // Appearance travels with the bundle; the old-bundle fallback is covered
+    // by the blank-appearance test below.
+    expect(groupCreateData[0]).toMatchObject({
+      emoji: '🎉',
+      color: '#a1b2c3',
+    })
+  })
+
+  it('leaves appearance blank for bundles exported before the feature', async () => {
+    const groupCreateData: Array<Record<string, unknown>> = []
+    const tx = {
+      ledger: {
+        create: vi.fn(async ({ data }: { data: { id: string } }) => ({
+          id: data.id,
+          currencyCode: 'USD',
+        })),
+      },
+      group: {
+        findFirst: vi.fn(async () => null),
+        create: vi.fn(async ({ data }: { data: { id: string } }) => {
+          groupCreateData.push(data)
+          return { id: data.id }
+        }),
+        update: vi.fn(async () => ({})),
+      },
+      groupInvitation: { findFirst: vi.fn(async () => null) },
+      groupMember: { create: vi.fn(async () => ({ id: 'member-1' })) },
+      ledgerParticipant: {
+        create: vi.fn(async ({ data }: { data: { id?: string } }) => ({
+          id: data.id ?? 'actor-participant',
+        })),
+        findMany: vi.fn(async () => []),
+      },
+      accountGroupPreference: {
+        upsert: vi.fn(async () => ({ id: 'group-pref-1' })),
+      },
+      splitPreset: {
+        create: vi.fn(async () => ({ id: 'preset-1' })),
+        createMany: vi.fn(async () => ({ count: 0 })),
+        findMany: vi.fn(async () => []),
+      },
+      splitPresetParticipant: {
+        createMany: vi.fn(async () => ({ count: 0 })),
+      },
+      activity: {
+        create: vi.fn(async () => ({ id: 'activity-1' })),
+      },
+    }
+
+    const legacyManifest = {
+      ...manifest,
+      group: { ...manifest.group, emoji: undefined, color: undefined },
+    }
+
+    await importCloudGroup(
+      input({ manifest: legacyManifest }),
+      { accountId: 'account-1' },
+      {
+        tx: tx as never,
+        prepared: { documents: new Map(), promotedDocumentUrls: [] },
+      },
+    )
+
+    const created = groupCreateData[0] as { emoji: null; color: null }
+    expect(created.emoji).toBeNull()
+    expect(created.color).toBeNull()
+  })
+
+  it('prefers explicit wizard appearance picks over the export', async () => {
+    const groupCreateData: Array<Record<string, unknown>> = []
+    const tx = {
+      ledger: {
+        create: vi.fn(async ({ data }: { data: { id: string } }) => ({
+          id: data.id,
+          currencyCode: 'USD',
+        })),
+      },
+      group: {
+        findFirst: vi.fn(async () => null),
+        create: vi.fn(async ({ data }: { data: { id: string } }) => {
+          groupCreateData.push(data)
+          return { id: data.id }
+        }),
+        update: vi.fn(async () => ({})),
+      },
+      groupInvitation: { findFirst: vi.fn(async () => null) },
+      groupMember: { create: vi.fn(async () => ({ id: 'member-1' })) },
+      ledgerParticipant: {
+        create: vi.fn(async ({ data }: { data: { id?: string } }) => ({
+          id: data.id ?? 'actor-participant',
+        })),
+        findMany: vi.fn(async () => []),
+      },
+      accountGroupPreference: {
+        upsert: vi.fn(async () => ({ id: 'group-pref-1' })),
+      },
+      splitPreset: {
+        create: vi.fn(async () => ({ id: 'preset-1' })),
+        createMany: vi.fn(async () => ({ count: 0 })),
+        findMany: vi.fn(async () => []),
+      },
+      splitPresetParticipant: {
+        createMany: vi.fn(async () => ({ count: 0 })),
+      },
+      activity: {
+        create: vi.fn(async () => ({ id: 'activity-1' })),
+      },
+    }
+
+    await importCloudGroup(
+      input({
+        groupFormValues: {
+          name: 'Trip copy',
+          information: null,
+          currency: '$',
+          currencyCode: 'USD',
+          emoji: '🍻',
+          color: '#FF0000',
+        },
+      }),
+      { accountId: 'account-1' },
+      {
+        tx: tx as never,
+        prepared: { documents: new Map(), promotedDocumentUrls: [] },
+      },
+    )
+
+    // The export carries 🎉/#a1b2c3; the wizard picks win (hex normalized).
+    expect(groupCreateData[0]).toMatchObject({
+      emoji: '🍻',
+      color: '#ff0000',
+    })
+  })
+
+  it('lets explicit-none wizard picks clear an exported appearance', async () => {
+    const groupCreateData: Array<Record<string, unknown>> = []
+    const tx = {
+      ledger: {
+        create: vi.fn(async ({ data }: { data: { id: string } }) => ({
+          id: data.id,
+          currencyCode: 'USD',
+        })),
+      },
+      group: {
+        findFirst: vi.fn(async () => null),
+        create: vi.fn(async ({ data }: { data: { id: string } }) => {
+          groupCreateData.push(data)
+          return { id: data.id }
+        }),
+        update: vi.fn(async () => ({})),
+      },
+      groupInvitation: { findFirst: vi.fn(async () => null) },
+      groupMember: { create: vi.fn(async () => ({ id: 'member-1' })) },
+      ledgerParticipant: {
+        create: vi.fn(async ({ data }: { data: { id?: string } }) => ({
+          id: data.id ?? 'actor-participant',
+        })),
+        findMany: vi.fn(async () => []),
+      },
+      accountGroupPreference: {
+        upsert: vi.fn(async () => ({ id: 'group-pref-1' })),
+      },
+      splitPreset: {
+        create: vi.fn(async () => ({ id: 'preset-1' })),
+        createMany: vi.fn(async () => ({ count: 0 })),
+        findMany: vi.fn(async () => []),
+      },
+      splitPresetParticipant: {
+        createMany: vi.fn(async () => ({ count: 0 })),
+      },
+      activity: {
+        create: vi.fn(async () => ({ id: 'activity-1' })),
+      },
+    }
+
+    await importCloudGroup(
+      input({
+        groupFormValues: {
+          name: '🏝️ Trip copy',
+          information: null,
+          currency: '$',
+          currencyCode: 'USD',
+          emoji: '',
+          color: null,
+        },
+      }),
+      { accountId: 'account-1' },
+      {
+        tx: tx as never,
+        prepared: { documents: new Map(), promotedDocumentUrls: [] },
+      },
+    )
+
+    // '' / null mean "none" and beat the exported 🎉/#a1b2c3. The server
+    // stores the name verbatim — title-emoji extraction is client-side.
+    expect(groupCreateData[0]).toMatchObject({
+      name: '🏝️ Trip copy',
+      emoji: '',
+      color: null,
+    })
   })
 
   it('restores account group preferences with remapped participant ids', async () => {

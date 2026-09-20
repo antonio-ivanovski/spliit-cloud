@@ -531,6 +531,17 @@ model Group {
   // separate Friends homepage section.
   groupType   GroupType @default(GROUP)
 
+  // Group appearance. `emoji` is a three-state sentinel:
+  //   NULL = undecided (the group page may offer the intro when the name
+  //          contains an emoji),
+  //   ''   = explicitly none picked / intro dismissed (never prompt again),
+  //   else = the chosen emoji.
+  // Do not coerce '' to NULL or use truthiness checks that conflate them;
+  // see @spliit/domain group-appearance helpers.
+  emoji       String?
+  // Palette id from GROUP_COLOR_IDS. NULL means no color accent.
+  color       String?
+
   // One group has exactly one ledger that holds its accounting core.
   ledger   Ledger @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
   ledgerId String @unique

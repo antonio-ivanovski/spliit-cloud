@@ -70,6 +70,9 @@ export const groupSchema = z.object({
   archived: z.boolean(),
   createdAt: z.date(),
   groupType: groupTypeSchema,
+  // null = undecided, '' = explicitly none picked, else the emoji.
+  emoji: z.string().nullable().default(null),
+  color: z.string().nullable().default(null),
   ledgerId: z.string(),
   friendPairKey: z.string().nullable(),
   ledger: groupLedgerSchema,
@@ -88,6 +91,8 @@ export const groupListItemSchema = z.object({
   archived: z.boolean(),
   createdAt: z.date(),
   groupType: groupTypeSchema,
+  emoji: z.string().nullable().default(null),
+  color: z.string().nullable().default(null),
   ledgerId: z.string(),
   friendPairKey: z.string().nullable(),
   ledger: z.object({

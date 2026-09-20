@@ -308,6 +308,58 @@ describe('importGroup', () => {
     expect(result.groupId).not.toBe(input.sourceMeta?.sourceGroupId)
   })
 
+  it('persists wizard appearance picks on the imported group', async () => {
+    await authAs('acct-importer')
+    stubGroupWithLedger('dest-grp', 'dest-ledger')
+    prismaMock.ledger.create.mockResolvedValue({
+      id: 'dest-ledger',
+      currency: '€',
+      currencyCode: 'EUR',
+      createdAt: new Date(),
+    } as never)
+    prismaMock.group.create.mockResolvedValue({
+      id: 'dest-grp',
+      name: 'Imported',
+      information: null,
+      archived: false,
+      createdAt: new Date(),
+      ledgerId: 'dest-ledger',
+    } as never)
+    prismaMock.groupMember.create.mockResolvedValue({
+      id: 'dest-gm',
+      groupId: 'dest-grp',
+      accountId: 'acct-importer',
+      role: 'ADMIN',
+      status: 'ACTIVE',
+    } as never)
+    prismaMock.ledgerParticipant.create.mockResolvedValue({} as never)
+
+    await importGroup(
+      {
+        groupFormValues: {
+          name: 'Imported',
+          information: '',
+          currency: '€',
+          currencyCode: 'EUR',
+          emoji: '🍻',
+          color: 'teal',
+          participants: [{ name: 'Owner' }],
+        },
+        participants: [...baseParticipants],
+        expenses: [],
+      },
+      { accountId: 'acct-importer' },
+    )
+
+    expect(prismaMock.group.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        name: 'Imported',
+        emoji: '🍻',
+        color: 'teal',
+      }),
+    })
+  })
+
   it('writes expenses pointing at the supplied destLedgerParticipantId (no foreign-key violation)', async () => {
     await authAs('acct-importer')
     stubGroupWithLedger('dest-grp', 'dest-ledger')

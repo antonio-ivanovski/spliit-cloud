@@ -678,6 +678,20 @@ describe('auditMessages', () => {
     expect(result.summary.totalUntranslatedEnglish).toBe(0)
   })
 
+  it('suppresses documented locale cognates on introduced keys', async () => {
+    await seedFile('en-US', { color: 'Orange' })
+    await seedNonEnLocales({ color: 'Orange' })
+    const result = await auditMessages({
+      readOldEn: async () => ({}),
+    })
+    expect(result.locales['fr-FR'].untranslatedEnglishKeys).toEqual([])
+    expect(result.locales['de-DE'].untranslatedEnglishKeys).toEqual(['color'])
+    expect(result.summary.totalUntranslatedEnglish).toBe(
+      locales.filter((locale) => locale !== 'en-US' && locale !== 'fr-FR')
+        .length,
+    )
+  })
+
   it('changesOnly mode: only flags keys the diff introduced', async () => {
     await seedFile('en-US', { kept: 'k', pre: 'p', brandNew: 'b' })
     await seedNonEnLocales({ kept: 'K', pre: 'P' })

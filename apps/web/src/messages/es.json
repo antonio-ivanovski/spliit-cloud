@@ -391,13 +391,7 @@
         "newGroup": "Nuevo grupo",
         "existingGroup": "Grupo existente",
         "loading": "Cargando…",
-        "noAdminGroups": "Aún no administras ningún grupo.",
-        "memberCount_zero": "{count} miembros",
-        "memberCount_one": "{count} miembro",
-        "memberCount_two": "{count} miembros",
-        "memberCount_few": "{count} miembros",
-        "memberCount_many": "{count} miembros",
-        "memberCount_other": "{count} miembros"
+        "noAdminGroups": "Aún no administras ningún grupo."
       },
       "Done": {
         "importComplete": "Importación completa",
@@ -682,7 +676,13 @@
     "removeSavedView": "Eliminar",
     "removeSavedViewAccount": "Se ha eliminado de tu inicio.",
     "removeSavedViewDevice": "Se ha eliminado de este dispositivo.",
-    "linkInvitationMultiUse": "Este código QR lo pueden usar varias personas hasta que caduque."
+    "linkInvitationMultiUse": "Este código QR lo pueden usar varias personas hasta que caduque.",
+    "emojiIntro": {
+      "title": "¿Darle un emoji a este grupo?",
+      "description": "Los grupos ahora pueden mostrar un emoji junto a su nombre. Hemos visto {emoji} en “{name}”.",
+      "openSettings": "Abrir los ajustes del grupo",
+      "notNow": "Ahora no"
+    }
   },
   "GroupForm": {
     "title": "Información del grupo",
@@ -739,7 +739,43 @@
     "archivedNotice": "Este grupo está archivado. Su configuración está congelada y ya no se puede modificar.",
     "bulkCategorizeSectionTitle": "Herramientas de IA en lote",
     "bulkCategorizeSectionDescription": "Ejecuta el categorizador de IA en muchos gastos a la vez. Útil después de importar gastos o cuando muchos títulos aún no están categorizados.",
-    "bulkCategorizeButton": "Abrir el categorizador en lote"
+    "bulkCategorizeButton": "Abrir el categorizador en lote",
+    "Appearance": {
+      "emojiLabel": "Emoji del grupo",
+      "customEmojiLabel": "Emoji personalizado",
+      "customEmojiPlaceholder": "Pega cualquier emoji",
+      "none": "Ninguno",
+      "colorLabel": "Color del grupo",
+      "detectedEmojiHint": "Hemos detectado {emoji} en el nombre del grupo. Al guardar, se usará como emoji del grupo y se quitará del nombre.",
+      "colors": {
+        "slate": "Pizarra",
+        "red": "Rojo",
+        "orange": "Naranja",
+        "amber": "Ámbar",
+        "emerald": "Esmeralda",
+        "teal": "Turquesa",
+        "sky": "Celeste",
+        "blue": "Azul",
+        "violet": "Violeta",
+        "pink": "Rosa",
+        "yellow": "Amarillo",
+        "lime": "Lima",
+        "green": "Verde",
+        "cyan": "Cian",
+        "indigo": "Índigo",
+        "fuchsia": "Fucsia",
+        "rose": "Rosado",
+        "stone": "Piedra"
+      },
+      "noColor": "Sin color",
+      "customColorLabel": "Color personalizado",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "Se aplica a la tarjeta del grupo y al fondo del emoji.",
+      "customEmojiTile": "Emoji personalizado…",
+      "customColorTile": "Color personalizado…",
+      "autoMovedHint": "Hemos movido {emoji} del nombre al emoji del grupo.",
+      "undoMove": "Deshacer"
+    }
   },
   "ExpenseForm": {
     "Income": {
@@ -1389,7 +1425,10 @@
     "invalidWallTime": "Esta hora no existe en la fecha seleccionada en esta zona horaria.",
     "proportionalUnassignedItems": "Asigna cada artículo al menos a un participante para dividir el resto proporcionalmente, o usa una división personalizada.",
     "proportionalZeroBasis": "Los subtotales de los artículos se anulan entre sí, por lo que el resto no se puede dividir proporcionalmente. Corrige los artículos o usa una división personalizada.",
-    "proportionalInvalidRatios": "Los subtotales de artículos de algunos participantes tienen signos opuestos, por lo que el resto no se puede dividir proporcionalmente. Corrige los artículos o usa una división personalizada."
+    "proportionalInvalidRatios": "Los subtotales de artículos de algunos participantes tienen signos opuestos, por lo que el resto no se puede dividir proporcionalmente. Corrige los artículos o usa una división personalizada.",
+    "max32": "Introduce como máximo 32 caracteres.",
+    "invalidEmoji": "Introduce un solo emoji.",
+    "invalidColor": "Introduce un color hexadecimal válido, como #1A2B3C."
   },
   "Categories": {
     "search": "Buscar categoría...",

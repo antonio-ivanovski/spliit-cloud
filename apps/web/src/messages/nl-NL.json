@@ -390,13 +390,7 @@
         "newGroup": "Nieuwe groep",
         "existingGroup": "Bestaande groep",
         "loading": "Laden…",
-        "noAdminGroups": "Je beheert nog geen groep.",
-        "memberCount_zero": "{count} leden",
-        "memberCount_one": "{count} lid",
-        "memberCount_two": "{count} leden",
-        "memberCount_few": "{count} leden",
-        "memberCount_many": "{count} leden",
-        "memberCount_other": "{count} leden"
+        "noAdminGroups": "Je beheert nog geen groep."
       },
       "Done": {
         "importComplete": "Import voltooid",
@@ -681,7 +675,13 @@
     "removeSavedView": "Verwijderen",
     "removeSavedViewAccount": "Verwijderd van je overzicht.",
     "removeSavedViewDevice": "Verwijderd van dit apparaat.",
-    "linkInvitationMultiUse": "Deze QR-code kan door meerdere mensen gebruikt worden tot hij verloopt."
+    "linkInvitationMultiUse": "Deze QR-code kan door meerdere mensen gebruikt worden tot hij verloopt.",
+    "emojiIntro": {
+      "title": "Deze groep een emoji geven?",
+      "description": "Groepen kunnen nu een emoji naast hun naam tonen. We hebben {emoji} gezien in “{name}”.",
+      "openSettings": "Groepsinstellingen openen",
+      "notNow": "Niet nu"
+    }
   },
   "GroupForm": {
     "title": "Groepsinformatie",
@@ -738,7 +738,43 @@
     },
     "bulkCategorizeSectionTitle": "AI-tools voor bulkverwerking",
     "bulkCategorizeSectionDescription": "Voer de AI-categoriseerder in één keer uit op veel uitgaven. Handig na het importeren van uitgaven of wanneer veel titels nog niet zijn gecategoriseerd.",
-    "bulkCategorizeButton": "Bulk-categoriseerder openen"
+    "bulkCategorizeButton": "Bulk-categoriseerder openen",
+    "Appearance": {
+      "emojiLabel": "Groepsemoji",
+      "customEmojiLabel": "Aangepaste emoji",
+      "customEmojiPlaceholder": "Plak een emoji",
+      "none": "Geen",
+      "colorLabel": "Groepskleur",
+      "detectedEmojiHint": "{emoji} is in de groepsnaam gevonden. Bij het opslaan gebruiken we deze als groepsemoji en verwijderen we deze uit de naam.",
+      "colors": {
+        "slate": "Leisteen",
+        "red": "Rood",
+        "orange": "Oranje",
+        "amber": "Barnsteen",
+        "emerald": "Smaragd",
+        "teal": "Petrol",
+        "sky": "Hemelsblauw",
+        "blue": "Blauw",
+        "violet": "Paars",
+        "pink": "Roze",
+        "yellow": "Geel",
+        "lime": "Limoen",
+        "green": "Groen",
+        "cyan": "Cyaan",
+        "indigo": "Indigo",
+        "fuchsia": "Fuchsia",
+        "rose": "Roos",
+        "stone": "Steen"
+      },
+      "noColor": "Geen kleur",
+      "customColorLabel": "Aangepaste kleur",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "Geldt voor de groepskaart en emoji-achtergrond.",
+      "customEmojiTile": "Aangepaste emoji…",
+      "customColorTile": "Aangepaste kleur…",
+      "autoMovedHint": "{emoji} is uit de naam naar de groepsemoji verplaatst.",
+      "undoMove": "Ongedaan maken"
+    }
   },
   "ExpenseForm": {
     "Income": {
@@ -1388,7 +1424,10 @@
     "invalidWallTime": "Dit tijdstip bestaat niet op de geselecteerde datum in deze tijdzone.",
     "proportionalUnassignedItems": "Wijs elk item toe aan ten minste één deelnemer om het restbedrag proportioneel te verdelen, of gebruik een eigen verdeling.",
     "proportionalZeroBasis": "De itemsubtotalen heffen elkaar op, dus het restbedrag kan niet proportioneel worden verdeeld. Corrigeer de items of gebruik een eigen verdeling.",
-    "proportionalInvalidRatios": "De itemsubtotalen van sommige deelnemers hebben tegengestelde tekens, dus het restbedrag kan niet proportioneel worden verdeeld. Corrigeer de items of gebruik een eigen verdeling."
+    "proportionalInvalidRatios": "De itemsubtotalen van sommige deelnemers hebben tegengestelde tekens, dus het restbedrag kan niet proportioneel worden verdeeld. Corrigeer de items of gebruik een eigen verdeling.",
+    "max32": "Vul maximaal 32 karakters in.",
+    "invalidEmoji": "Vul één emoji in.",
+    "invalidColor": "Vul een geldige hex-kleur in, zoals #1A2B3C."
   },
   "Categories": {
     "search": "Categorie zoeken…",

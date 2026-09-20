@@ -379,10 +379,7 @@
         "newGroup": "Grup nou",
         "existingGroup": "Grup existent",
         "loading": "Carregant…",
-        "noAdminGroups": "Encara no administreu cap grup.",
-        "memberCount_one": "{count} membre",
-        "memberCount_many": "{count} membres",
-        "memberCount_other": "{count} membres"
+        "noAdminGroups": "Encara no administreu cap grup."
       },
       "Done": {
         "importComplete": "Importació completa",
@@ -664,7 +661,13 @@
     "removeSavedView": "Suprimeix",
     "removeSavedViewAccount": "S'ha suprimit de l'inici.",
     "removeSavedViewDevice": "S'ha suprimit d'aquest dispositiu.",
-    "linkInvitationMultiUse": "Aquest codi QR el poden fer servir diverses persones fins que caduqui."
+    "linkInvitationMultiUse": "Aquest codi QR el poden fer servir diverses persones fins que caduqui.",
+    "emojiIntro": {
+      "title": "Vols posar un emoji a aquest grup?",
+      "description": "Els grups ara poden mostrar un emoji al costat del nom. Hem vist {emoji} a «{name}».",
+      "openSettings": "Obre la configuració del grup",
+      "notNow": "Ara no"
+    }
   },
   "GroupForm": {
     "title": "Informació del grup",
@@ -721,7 +724,43 @@
     "archivedNotice": "Aquest grup està arxivat. La seva configuració està congelada i ja no es pot canviar.",
     "bulkCategorizeSectionTitle": "Eines d'IA en lots",
     "bulkCategorizeSectionDescription": "Executa el categoritzador d'IA en moltes despeses alhora. Útil després d'importar despeses o quan molts títols encara no estan categoritzats.",
-    "bulkCategorizeButton": "Obrir el categoritzador en lots"
+    "bulkCategorizeButton": "Obrir el categoritzador en lots",
+    "Appearance": {
+      "emojiLabel": "Emoji del grup",
+      "customEmojiLabel": "Emoji personalitzat",
+      "customEmojiPlaceholder": "Enganxa qualsevol emoji",
+      "none": "Cap",
+      "colorLabel": "Color del grup",
+      "detectedEmojiHint": "S'ha detectat {emoji} al nom del grup. En desar, s'utilitzarà com a emoji del grup i s'eliminarà del nom.",
+      "colors": {
+        "slate": "Pissarra",
+        "red": "Vermell",
+        "orange": "Taronja",
+        "amber": "Ambre",
+        "emerald": "Maragda",
+        "teal": "Turquesa",
+        "sky": "Cel",
+        "blue": "Blau",
+        "violet": "Violeta",
+        "pink": "Rosa",
+        "yellow": "Groc",
+        "lime": "Llima",
+        "green": "Verd",
+        "cyan": "Cian",
+        "indigo": "Indi",
+        "fuchsia": "Fúcsia",
+        "rose": "Rosat",
+        "stone": "Pedra"
+      },
+      "noColor": "Sense color",
+      "customColorLabel": "Color personalitzat",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "S'aplica a la targeta del grup i al fons de l'emoji.",
+      "customEmojiTile": "Emoji personalitzat…",
+      "customColorTile": "Color personalitzat…",
+      "autoMovedHint": "S'ha mogut {emoji} del nom a l'emoji del grup.",
+      "undoMove": "Desfer"
+    }
   },
   "ExpenseForm": {
     "Income": {
@@ -1365,7 +1404,10 @@
     "invalidWallTime": "Aquesta hora no existeix a la data seleccionada en aquesta zona horària.",
     "proportionalUnassignedItems": "Assigna cada article com a mínim a un participant per repartir la resta proporcionalment, o fes servir un repartiment personalitzat.",
     "proportionalZeroBasis": "Els subtotals dels articles s’anul·len entre si, de manera que la resta no es pot repartir proporcionalment. Corregeix els articles o fes servir un repartiment personalitzat.",
-    "proportionalInvalidRatios": "Els subtotals d’articles d’alguns participants tenen signes oposats, de manera que la resta no es pot repartir proporcionalment. Corregeix els articles o fes servir un repartiment personalitzat."
+    "proportionalInvalidRatios": "Els subtotals d’articles d’alguns participants tenen signes oposats, de manera que la resta no es pot repartir proporcionalment. Corregeix els articles o fes servir un repartiment personalitzat.",
+    "max32": "Introdueix com a màxim trenta-dos caràcters.",
+    "invalidEmoji": "Introdueix un sol emoji.",
+    "invalidColor": "Introdueix un color hexadecimal vàlid, com ara #1A2B3C."
   },
   "Categories": {
     "search": "Cercar categoria...",

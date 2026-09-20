@@ -2064,7 +2064,43 @@
     },
     "bulkCategorizeSectionTitle": "bulk AI tools",
     "bulkCategorizeSectionDescription": "run the AI categorizer across many expenses at once. useful after imports or when titles are still uncategorized.",
-    "bulkCategorizeButton": "open bulk categorizer"
+    "bulkCategorizeButton": "open bulk categorizer",
+    "Appearance": {
+      "emojiLabel": "group emoji",
+      "customEmojiLabel": "custom emoji",
+      "customEmojiPlaceholder": "paste any emoji",
+      "none": "none",
+      "colorLabel": "group color",
+      "detectedEmojiHint": "{emoji} showed up in the group name. saving will use it as the group emoji and drop it from the name.",
+      "colors": {
+        "slate": "slate",
+        "red": "red",
+        "orange": "orange",
+        "amber": "amber",
+        "emerald": "emerald",
+        "teal": "teal",
+        "sky": "sky",
+        "blue": "blue",
+        "violet": "violet",
+        "pink": "pink",
+        "yellow": "yellow",
+        "lime": "lime",
+        "green": "green",
+        "cyan": "cyan",
+        "indigo": "indigo",
+        "fuchsia": "fuchsia",
+        "rose": "rose",
+        "stone": "stone"
+      },
+      "noColor": "no color",
+      "customColorLabel": "custom color",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "applies to the group card and emoji background.",
+      "customEmojiTile": "custom emoji…",
+      "customColorTile": "custom color…",
+      "autoMovedHint": "moved {emoji} out of the name into the group emoji.",
+      "undoMove": "undo it"
+    }
   },
   "Groups": {
     "linkInvitationBannerDescription": "{inviter} just invited you to join {groupName} on Spliit Cloud.",
@@ -2143,9 +2179,7 @@
         "newGroup": "new group",
         "existingGroup": "existing group, bestie",
         "loading": "loading…",
-        "noAdminGroups": "you do not administer any group yet.",
-        "memberCount_one": "{count} member, bestie",
-        "memberCount_other": "{count} members, besties"
+        "noAdminGroups": "you do not administer any group yet."
       },
       "Done": {
         "importComplete": "import complete. huge W.",
@@ -2496,7 +2530,13 @@
     "removeSavedView": "remove it",
     "removeSavedViewAccount": "gone from your dashboard.",
     "removeSavedViewDevice": "gone from this device.",
-    "linkInvitationMultiUse": "this qr code works for a bunch of people until it expires."
+    "linkInvitationMultiUse": "this qr code works for a bunch of people until it expires.",
+    "emojiIntro": {
+      "title": "give this group an emoji?",
+      "description": "groups can now show an emoji next to their name. we spotted {emoji} in “{name}”.",
+      "openSettings": "open group settings",
+      "notNow": "not now"
+    }
   },
   "Header": {
     "signIn": "sign in",
@@ -3112,7 +3152,10 @@
     "invalidWallTime": "That time doesn't exist on the selected date in this timezone.",
     "proportionalUnassignedItems": "assign every item to at least one person to split the leftover proportionally, or use a custom split.",
     "proportionalZeroBasis": "item subtotals cancel out, so the leftover can’t be split proportionally. fix the items or use a custom split.",
-    "proportionalInvalidRatios": "some people’s item subtotals have opposite signs, so the leftover can’t be split proportionally. fix the items or use a custom split."
+    "proportionalInvalidRatios": "some people’s item subtotals have opposite signs, so the leftover can’t be split proportionally. fix the items or use a custom split.",
+    "max32": "enter 32 characters max.",
+    "invalidEmoji": "enter a single emoji.",
+    "invalidColor": "enter a valid hex color, like #1A2B3C."
   },
   "Settings": {
     "title": "settings hub"

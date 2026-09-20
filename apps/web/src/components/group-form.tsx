@@ -1,12 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from '@tanstack/react-router'
 import { Save, UserPlus } from 'lucide-react'
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useForm, useFormState } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { z } from 'zod'
 
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
+import { GroupAppearanceField } from '@/components/group-appearance-field'
 import { SubmitButton } from '@/components/submit-button'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -24,9 +25,11 @@ import type { AccountPreferences } from '@/lib/account-preferences'
 import type { getGroup } from '@/lib/api'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { useDeploymentConfig } from '@/lib/deployment-config'
+import { resolveGroupColor } from '@/lib/group-appearance'
 import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import type { GroupFormValues } from '@/lib/schemas'
 import { groupFormSchema } from '@/lib/schemas'
+import { extractSingleTitleEmoji, isEmojiUndecided } from '@spliit/domain'
 
 import { CurrencySelector } from './currency-selector'
 import { Textarea } from './ui/textarea'
@@ -99,7 +102,17 @@ export type Props = {
     information?: string
     currency?: string
     currencyCode?: string
+    // Appearance prefill (e.g. restored from a cloud export bundle).
+    // Omitted/undefined stays undecided (blank unless a title emoji is
+    // extracted live/at mount); null/'' means explicitly none.
+    emoji?: string | null
+    color?: string | null
   }
+  /**
+   * When `true`, the emoji/color picker is hidden entirely. Used for
+   * FRIEND-typed ledgers, whose identity is the peer's avatar.
+   */
+  hideAppearance?: boolean
   onSubmit: (groupFormValues: GroupFormValues) => Promise<void>
 }
 
@@ -126,6 +139,7 @@ export function GroupForm({
   formId,
   hideActions = false,
   hideNameField = false,
+  hideAppearance = false,
   nameReadOnly = false,
   currencyLocked = false,
   onSubmit,
@@ -142,14 +156,33 @@ export function GroupForm({
     accountPreferences?.defaultCurrencyCode ??
     deploymentCurrencyCode
 
+  // Existing groups created before the appearance feature keep their emoji
+  // inside the name. When the emoji is still undecided, prefill the detected
+  // title emoji into the group emoji (the form fields show exactly what will
+  // be stored). Single-emoji only — deliberate multi-emoji decoration stays
+  // in the name, exactly like live typing. Mount must not open the form
+  // invalid, so a one-character remainder stays untouched here (live typing
+  // still strips it and fails validation instead).
+  const initialEmojiSuggestion = (() => {
+    if (!group || !isEmojiUndecided(group.emoji)) return null
+    // Hidden name or picker means the user cannot see or fix the stripped
+    // value; never rewrite fields the form does not show.
+    if (hideNameField || hideAppearance) return null
+    const extracted = extractSingleTitleEmoji(group.name)
+    if (!extracted || extracted.strippedName.length < 2) return null
+    return extracted
+  })()
+
   const form = useForm<GroupFormInput, unknown, GroupFormValues>({
     resolver: zodResolver(groupFormSchema),
     defaultValues: group
       ? {
-          name: group.name,
+          name: initialEmojiSuggestion?.strippedName ?? group.name,
           information: group.information ?? '',
           currency: group.currency ?? '',
           currencyCode: group.currencyCode ?? '',
+          emoji: group.emoji ?? initialEmojiSuggestion?.emoji,
+          color: resolveGroupColor(group.color),
           // The backend ignores `participants` on update; the form's
           // hidden `groupFormSchema.participants` validation only needs a
           // stable placeholder. The group.participants array mixes in
@@ -159,16 +192,38 @@ export function GroupForm({
           // fix.
           participants: PARTICIPANTS_PLACEHOLDER,
         }
-      : {
-          name: initialValues?.name ?? '',
-          information: initialValues?.information ?? '',
-          currency:
-            initialValues?.currency ??
-            getCurrency(initialCurrencyCode || 'USD')?.symbol ??
-            '',
-          currencyCode: initialCurrencyCode,
-          participants: PARTICIPANTS_PLACEHOLDER,
-        },
+      : (() => {
+          // Import prefills (e.g. a legacy export whose name still carries an
+          // emoji) extract once at mount when the emoji is undecided, so the
+          // fields visibly show the outcome instead of the server rewriting
+          // it at submit. Silent: no undo notice for values the user didn't
+          // type — the tiles stay editable.
+          const prefillName = initialValues?.name ?? ''
+          const prefillEmoji = initialValues?.emoji ?? undefined
+          const extracted =
+            isEmojiUndecided(prefillEmoji) && !hideAppearance
+              ? extractSingleTitleEmoji(prefillName)
+              : null
+          // Same min-2 guard as the edit-form suggestion: a one-character
+          // remainder must not prefill the form invalid.
+          const mounted =
+            extracted && extracted.strippedName.length >= 2 ? extracted : null
+          return {
+            name: mounted?.strippedName ?? prefillName,
+            information: initialValues?.information ?? '',
+            currency:
+              initialValues?.currency ??
+              getCurrency(initialCurrencyCode || 'USD')?.symbol ??
+              '',
+            currencyCode: initialCurrencyCode,
+            // Blank unless prefilled (e.g. cloud-export restore) or picked.
+            // The form schema has no null emoji lane, so a null prefill
+            // (undecided export) maps to undefined; explicit '' is kept.
+            emoji: mounted?.emoji ?? prefillEmoji,
+            color: initialValues?.color,
+            participants: PARTICIPANTS_PLACEHOLDER,
+          }
+        })(),
   })
 
   useEffect(() => {
@@ -197,6 +252,151 @@ export function GroupForm({
     isGroupFormDirty && !readOnly && !isArchived,
     'group-form-edits',
   )
+
+  const watchedEmoji = form.watch('emoji')
+  const watchedColor = form.watch('color')
+  // A title emoji typed or pasted into the name field moves into the emoji
+  // field immediately — the emoji never commits to the name input. The move
+  // only fires while the emoji is undecided, so an explicit pick (or an
+  // explicit None) always wins.
+  const [movedNotice, setMovedNotice] = useState<{
+    emoji: string
+    nameBefore: string
+    nameAfter: string
+  } | null>(null)
+  // Set when a move empties the name field: the separator typed right after
+  // (e.g. the space in "🏝️ Weekend Trip" typed char by char) is consumed so
+  // it doesn't accumulate as a leading space. Cleared at the first
+  // non-whitespace input, on Undo, or whenever the field is non-empty for
+  // another reason.
+  const consumeSeparatorAfterEmptyMove = useRef(false)
+  // The emoji moved out of the name while the field was empty. Lets a
+  // variation selector or skin-tone modifier delivered as its own keystroke
+  // (some IMEs and test drivers split "🏝️" into "🏝" + U+FE0F) attach to that
+  // emoji instead of landing invisibly in the name.
+  const lastMovedEmoji = useRef<string | null>(null)
+  // Set by Undo: the restored name still contains exactly one emoji, so the
+  // live rule would immediately move it again on the next keystroke. Suppress
+  // that emoji until the name changes to no emoji or a different one.
+  const suppressedEmoji = useRef<string | null>(null)
+  // The notice survives continued name typing (the emoji-first flow: type
+  // 🏝️, keep typing the name) so the transfer stays visible with its Undo;
+  // it clears once the emoji itself changes again. Undo restores the
+  // pre-move name only while the name is still untouched since the move —
+  // otherwise it keeps the typed text and just unpicks the emoji, never
+  // clobbering user input.
+  useEffect(() => {
+    if (movedNotice && watchedEmoji !== movedNotice.emoji) {
+      setMovedNotice(null)
+    }
+  }, [movedNotice, watchedEmoji])
+
+  function undoTitleEmojiMove() {
+    if (!movedNotice) return
+    if (form.getValues('emoji') !== movedNotice.emoji) {
+      setMovedNotice(null)
+      return
+    }
+    if ((form.getValues('name') ?? '') === movedNotice.nameAfter) {
+      form.setValue('name', movedNotice.nameBefore, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      })
+    }
+    // Back to undecided. The form schema has no null emoji lane (undecided is
+    // undefined at this layer; null only exists at the API/DB layer), and the
+    // update mutation leaves the stored value untouched on undefined — which
+    // is correct here because the move only ever fires while undecided.
+    form.setValue('emoji', undefined, {
+      shouldDirty: true,
+      shouldTouch: true,
+    })
+    consumeSeparatorAfterEmptyMove.current = false
+    lastMovedEmoji.current = null
+    suppressedEmoji.current = movedNotice.emoji
+    setMovedNotice(null)
+  }
+
+  function maybeMoveTitleEmoji(next: string, input: HTMLInputElement | null) {
+    if (readOnly || isArchived || nameReadOnly || hideAppearance) return next
+    const extracted = extractSingleTitleEmoji(next)
+    if (!extracted) {
+      suppressedEmoji.current = null
+      return next
+    }
+    if (extracted.emoji === suppressedEmoji.current) return next
+    if (!isEmojiUndecided(form.getValues('emoji'))) return next
+    // The pre-move name is the incoming value, not the stored one: RHF still
+    // holds the previous keystroke here because we intercept before onChange.
+    const nameBefore = next
+    form.setValue('emoji', extracted.emoji, {
+      shouldDirty: true,
+      shouldTouch: true,
+    })
+    setMovedNotice({
+      emoji: extracted.emoji,
+      nameBefore,
+      nameAfter: extracted.strippedName,
+    })
+    if (extracted.strippedName === '') {
+      consumeSeparatorAfterEmptyMove.current = true
+      lastMovedEmoji.current = extracted.emoji
+    }
+    // Keep the caret stable when the emoji was stripped before it; trailing
+    // input (the common case) is already at the end. Skipped when the move
+    // emptied the field — position 0 is the only valid caret there.
+    if (
+      input &&
+      extracted.strippedName.length > 0 &&
+      document.activeElement === input
+    ) {
+      const cursor = input.selectionStart ?? next.length
+      const emojiIndex = next.indexOf(extracted.emoji)
+      const newCursor =
+        emojiIndex !== -1 && cursor > emojiIndex
+          ? Math.max(
+              emojiIndex,
+              cursor - (next.length - extracted.strippedName.length),
+            )
+          : cursor
+      requestAnimationFrame(() => {
+        if (document.activeElement === input) {
+          input.setSelectionRange(newCursor, newCursor)
+        }
+      })
+    }
+    return extracted.strippedName
+  }
+
+  // Live-move feedback renders under the name field, where the change
+  // happened — not at the bottom of the appearance block. The appearance
+  // block keeps only the mount-time suggestion hint, plus the move notice
+  // as a fallback when the name field is hidden (the move itself is
+  // blocked while the name is hidden, so that path is defensive only).
+  const movedNameNotice = movedNotice ? (
+    <span>
+      {t('Appearance.autoMovedHint', { emoji: movedNotice.emoji })}{' '}
+      <button
+        type="button"
+        onClick={undoTitleEmojiMove}
+        className="underline underline-offset-2"
+      >
+        {t('Appearance.undoMove')}
+      </button>
+    </span>
+  ) : null
+  const suggestionHint =
+    initialEmojiSuggestion &&
+    watchedEmoji === initialEmojiSuggestion.emoji &&
+    !movedNotice
+      ? t('Appearance.detectedEmojiHint', {
+          emoji: initialEmojiSuggestion.emoji,
+        })
+      : null
+  const appearanceHint = hideNameField
+    ? (movedNameNotice ?? suggestionHint)
+    : suggestionHint
 
   const currencies = useCurrencies(
     t('CurrencyCodeField.customOption'),
@@ -235,18 +435,76 @@ export function GroupForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t('NameField.label')}</FormLabel>
+                    <FormDescription>
+                      {t('NameField.description')}
+                    </FormDescription>
                     <FormControl>
                       <Input
                         className="text-base"
                         placeholder={t('NameField.placeholder')}
                         disabled={readOnly || isArchived || nameReadOnly}
                         {...field}
+                        onChange={(event) => {
+                          // Leave IME composition alone; intercept after it
+                          // commits so CJK input is never disturbed.
+                          if (
+                            event.nativeEvent instanceof InputEvent &&
+                            event.nativeEvent.isComposing
+                          ) {
+                            field.onChange(event)
+                            return
+                          }
+                          let next = event.target.value
+                          // After a move emptied the field, swallow the
+                          // separator and any variation selector/modifier
+                          // delivered as its own keystroke (the "🏝️ Weekend
+                          // Trip" char-by-char case) until real text arrives.
+                          if (consumeSeparatorAfterEmptyMove.current) {
+                            const modifier = next.match(
+                              /^(?:[\uFE0E\uFE0F]|\p{Emoji_Modifier})+/u,
+                            )?.[0]
+                            if (modifier && lastMovedEmoji.current) {
+                              const merged = lastMovedEmoji.current + modifier
+                              lastMovedEmoji.current = merged
+                              form.setValue('emoji', merged, {
+                                shouldDirty: true,
+                                shouldTouch: true,
+                              })
+                              setMovedNotice((notice) =>
+                                notice ? { ...notice, emoji: merged } : notice,
+                              )
+                              next = next.slice(modifier.length)
+                            }
+                            next = next.replace(/^\s+/, '')
+                            if (/\S/.test(next)) {
+                              consumeSeparatorAfterEmptyMove.current = false
+                              lastMovedEmoji.current = null
+                            }
+                          }
+                          const committed = maybeMoveTitleEmoji(
+                            next,
+                            event.target,
+                          )
+                          if (committed === event.target.value) {
+                            field.onChange(event)
+                          } else {
+                            // No shouldValidate: a move that empties (or
+                            // shortens) the name must not flash an error
+                            // before submit; submit validation still blocks.
+                            form.setValue('name', committed, {
+                              shouldDirty: true,
+                              shouldTouch: true,
+                            })
+                          }
+                        }}
                       />
                     </FormControl>
-                    <FormDescription>
-                      {t('NameField.description')}
-                    </FormDescription>
                     <FormMessage />
+                    {movedNameNotice ? (
+                      <p className="text-xs text-muted-foreground">
+                        {movedNameNotice}
+                      </p>
+                    ) : null}
                   </FormItem>
                 )}
               />
@@ -258,6 +516,15 @@ export function GroupForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t('CurrencyCodeField.label')}</FormLabel>
+                  <FormDescription>
+                    {currencyLocked
+                      ? t('CurrencyCodeField.lockedAfterExpenses')
+                      : t(
+                          group
+                            ? 'CurrencyCodeField.editDescription'
+                            : 'CurrencyCodeField.createDescription',
+                        )}
+                  </FormDescription>
                   <CurrencySelector
                     aria-label={t('CurrencyCodeField.label')}
                     currencies={currencies}
@@ -287,15 +554,6 @@ export function GroupForm({
                     }}
                     isLoading={false}
                   />
-                  <FormDescription>
-                    {currencyLocked
-                      ? t('CurrencyCodeField.lockedAfterExpenses')
-                      : t(
-                          group
-                            ? 'CurrencyCodeField.editDescription'
-                            : 'CurrencyCodeField.createDescription',
-                        )}
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -307,6 +565,9 @@ export function GroupForm({
               render={({ field }) => (
                 <FormItem hidden={!!form.watch('currencyCode')?.length}>
                   <FormLabel>{t('CurrencyField.label')}</FormLabel>
+                  <FormDescription>
+                    {t('CurrencyField.description')}
+                  </FormDescription>
                   <FormControl>
                     <Input
                       className="text-base"
@@ -316,13 +577,37 @@ export function GroupForm({
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    {t('CurrencyField.description')}
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            {!hideAppearance && (
+              <div className="sm:col-span-2">
+                <FormField
+                  control={form.control}
+                  name="emoji"
+                  render={({ field }) => (
+                    <FormItem>
+                      <GroupAppearanceField
+                        emoji={field.value}
+                        color={watchedColor}
+                        disabled={readOnly || isArchived}
+                        hint={appearanceHint}
+                        onEmojiChange={(nextEmoji) => {
+                          suppressedEmoji.current = null
+                          field.onChange(nextEmoji)
+                        }}
+                        onColorChange={(next) =>
+                          form.setValue('color', next, { shouldDirty: true })
+                        }
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            )}
 
             <div className="sm:col-span-2">
               <FormField

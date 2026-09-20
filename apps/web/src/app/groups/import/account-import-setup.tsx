@@ -112,7 +112,10 @@ export function AccountImportSetup({
     <div className="flex flex-col gap-4">
       {finished ? (
         <Card>
-          <CardContent className="flex flex-col gap-3 p-6 text-center">
+          <CardContent
+            spacing="standalone"
+            className="flex flex-col gap-3 text-center"
+          >
             <h2 className="text-lg font-semibold">
               {t('Groups.Import.Done.importComplete')}
             </h2>
@@ -149,7 +152,7 @@ export function AccountImportSetup({
       {finished ? null : (
         <>
           <Card>
-            <CardContent className="flex flex-col gap-3 p-4">
+            <CardContent spacing="standalone" className="flex flex-col gap-3">
               <div>
                 <h2 className="text-lg font-semibold">
                   {t('Groups.Import.Cloud.accountTitle')}

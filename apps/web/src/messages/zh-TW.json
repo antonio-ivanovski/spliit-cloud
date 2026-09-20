@@ -369,8 +369,7 @@
         "newGroup": "新群組",
         "existingGroup": "現有群組",
         "loading": "載入中…",
-        "noAdminGroups": "您尚未管理任何群組。",
-        "memberCount_other": "{count} 位成員"
+        "noAdminGroups": "您尚未管理任何群組。"
       },
       "Done": {
         "importComplete": "匯入完成",
@@ -650,7 +649,13 @@
     "removeSavedView": "移除",
     "removeSavedViewAccount": "已從首頁移除。",
     "removeSavedViewDevice": "已從此裝置移除。",
-    "linkInvitationMultiUse": "此二維碼在過期前可供多人使用。"
+    "linkInvitationMultiUse": "此二維碼在過期前可供多人使用。",
+    "emojiIntro": {
+      "title": "要為這個群組設定表情符號嗎？",
+      "description": "群組現在可以在名稱旁顯示表情符號。我們注意到「{name}」中有 {emoji}。",
+      "openSettings": "開啟群組設定",
+      "notNow": "暫不"
+    }
   },
   "GroupForm": {
     "title": "群組資訊",
@@ -707,7 +712,43 @@
     },
     "bulkCategorizeSectionTitle": "批次AI工具",
     "bulkCategorizeSectionDescription": "對多項支出一次性執行AI分類。在匯入支出後或許多標題仍未分類時非常有用。",
-    "bulkCategorizeButton": "開啟批次分類器"
+    "bulkCategorizeButton": "開啟批次分類器",
+    "Appearance": {
+      "emojiLabel": "群組表情符號",
+      "customEmojiLabel": "自訂表情符號",
+      "customEmojiPlaceholder": "貼上任意表情符號",
+      "none": "無",
+      "colorLabel": "群組顏色",
+      "detectedEmojiHint": "在群組名稱中偵測到 {emoji}。儲存時將把它用作群組表情符號，並從名稱中移除。",
+      "colors": {
+        "slate": "石板色",
+        "red": "紅色",
+        "orange": "橙色",
+        "amber": "琥珀色",
+        "emerald": "翡翠綠",
+        "teal": "青色",
+        "sky": "天藍色",
+        "blue": "藍色",
+        "violet": "紫色",
+        "pink": "粉紅色",
+        "yellow": "黃色",
+        "lime": "檸檬綠",
+        "green": "綠色",
+        "cyan": "青藍色",
+        "indigo": "靛藍色",
+        "fuchsia": "品紅色",
+        "rose": "玫瑰色",
+        "stone": "石色"
+      },
+      "noColor": "無顏色",
+      "customColorLabel": "自訂顏色",
+      "customColorPlaceholder": "#RRGGBB",
+      "customColorHint": "適用於群組卡片和表情符號背景。",
+      "customEmojiTile": "自訂表情符號…",
+      "customColorTile": "自訂顏色…",
+      "autoMovedHint": "已將 {emoji} 從名稱移到群組表情符號。",
+      "undoMove": "取消操作"
+    }
   },
   "ExpenseForm": {
     "Income": {
@@ -1348,7 +1389,10 @@
     "invalidWallTime": "所選日期在此時區中不存在這個時間。",
     "proportionalUnassignedItems": "請將每個項目分配給至少一位參與者，以便按比例分攤餘款，或改用自訂分攤。",
     "proportionalZeroBasis": "項目小計相互抵銷，因此無法按比例分攤餘款。請修正項目或改用自訂分攤。",
-    "proportionalInvalidRatios": "部分參與者的項目小計符號相反，因此無法按比例分攤餘款。請修正項目或改用自訂分攤。"
+    "proportionalInvalidRatios": "部分參與者的項目小計符號相反，因此無法按比例分攤餘款。請修正項目或改用自訂分攤。",
+    "max32": "請輸入至多 32 個字。",
+    "invalidEmoji": "請輸入單個表情符號。",
+    "invalidColor": "請輸入有效的十六進位顏色，例如 #1A2B3C。"
   },
   "Categories": {
     "search": "搜尋類別……",

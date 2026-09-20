@@ -29,6 +29,8 @@ export function useSavedViewBookmark(options?: {
   const persistToAccount = Boolean(account && !account.isAnonymous)
   const groupId = group?.id
   const groupName = group?.name
+  const groupEmoji = group?.emoji
+  const groupColor = group?.color
   const memberCount = group?.members.length ?? 0
   const visitKey = `${account?.id ?? 'device'}:${groupId ?? ''}:${viewKey ?? ''}`
   const isPublicLink =
@@ -73,10 +75,14 @@ export function useSavedViewBookmark(options?: {
         viewKey,
         name: groupName,
         memberCount,
+        emoji: groupEmoji ?? null,
+        color: groupColor ?? null,
       })
     }
   }, [
     deviceSaved,
+    groupColor,
+    groupEmoji,
     groupId,
     groupName,
     isPublicLink,
@@ -98,6 +104,8 @@ export function useSavedViewBookmark(options?: {
       viewKey,
       name: groupName,
       memberCount,
+      emoji: groupEmoji ?? null,
+      color: groupColor ?? null,
       lastOpenedAt: new Date().toISOString(),
     })
     onSaved?.()
