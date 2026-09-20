@@ -8,7 +8,7 @@ Versioned releases. The public instance and `:latest` images follow these versio
 
 - End every `What's Changed` entry with ``(`TBD` by @handle)``. The hash is unknowable until the commits are final, so agents and contributors always leave `TBD` and never invent a SHA. Use the contributor's handle, or `@TBD` when unknown.
 - Write `` `vNEXT` `` wherever the version number would appear (welcome line, `SPLIIT_TAG=vNEXT`).
-- Screenshots go in `releases/assets/next/`, referenced as `./assets/next/<file>`.
+- Screenshots go in `releases/assets/next/`, referenced as `./assets/next/<file>` — Markdown (`![]()`) or HTML `<img>` both work; the release workflow rewrites both to pinned absolute URLs.
 - Keep `**Full Changelog**: TBD` at the end — it is filled at cut time.
 
 ## How to cut a release

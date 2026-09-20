@@ -265,9 +265,13 @@ jobs:
 
           # Rewrite relative screenshot links `./assets/...` (relative to
           # `releases/`) to absolute tagged blob URLs so they render on the
-          # Releases page and stay pinned to this tag.
+          # Releases page and stay pinned to this tag. Handles both Markdown
+          # image syntax `](...)` and HTML `<img src="...">` (used for
+          # sized screenshots in Highlights).
           # (`-i.bak` keeps this working on both GNU and BSD sed.)
           sed -i.bak "s#](\./assets/#](https://github.com/${{ github.repository }}/blob/${TAG}/releases/assets/#g" /tmp/notes.md
+          sed -i.bak "s#src=\"\./assets/#src=\"https://github.com/${{ github.repository }}/blob/${TAG}/releases/assets/#g" /tmp/notes.md
+          sed -i.bak "s#src='\./assets/#src='https://github.com/${{ github.repository }}/blob/${TAG}/releases/assets/#g" /tmp/notes.md
           rm -f /tmp/notes.md.bak
 
           # Append Docker image pointers. `:latest` always equals this
