@@ -427,13 +427,13 @@ export function GroupForm({
           <CardHeader className="hidden sm:flex">
             <CardTitle>{t('title')}</CardTitle>
           </CardHeader>
-          <CardContent className="grid grid-cols-1 gap-4 pt-4 sm:grid-cols-2 sm:p-6 sm:pt-0">
+          <CardContent className="grid min-w-0 grid-cols-1 gap-4 pt-4 sm:grid-cols-2 sm:p-6 sm:pt-0">
             {!hideNameField && (
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="col-span-1 min-w-0">
                     <FormLabel>{t('NameField.label')}</FormLabel>
                     <FormDescription>
                       {t('NameField.description')}
@@ -514,7 +514,7 @@ export function GroupForm({
               control={form.control}
               name="currencyCode"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="col-span-1 min-w-0">
                   <FormLabel>{t('CurrencyCodeField.label')}</FormLabel>
                   <FormDescription>
                     {currencyLocked
@@ -563,7 +563,10 @@ export function GroupForm({
               control={form.control}
               name="currency"
               render={({ field }) => (
-                <FormItem hidden={!!form.watch('currencyCode')?.length}>
+                <FormItem
+                  hidden={!!form.watch('currencyCode')?.length}
+                  className="col-span-1 min-w-0"
+                >
                   <FormLabel>{t('CurrencyField.label')}</FormLabel>
                   <FormDescription>
                     {t('CurrencyField.description')}
@@ -583,7 +586,7 @@ export function GroupForm({
             />
 
             {!hideAppearance && (
-              <div className="sm:col-span-2">
+              <div className="col-span-1 min-w-0 sm:col-span-2">
                 <FormField
                   control={form.control}
                   name="emoji"
@@ -609,7 +612,7 @@ export function GroupForm({
               </div>
             )}
 
-            <div className="sm:col-span-2">
+            <div className="col-span-1 min-w-0 sm:col-span-2">
               <FormField
                 control={form.control}
                 name="information"
