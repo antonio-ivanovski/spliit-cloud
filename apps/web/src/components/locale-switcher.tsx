@@ -89,7 +89,13 @@ export function LocaleSelector({
     setOpen(false)
     onValueChange(nextLocale)
   }
-  const picker = <LocaleCommand locale={value} onValueChange={selectLocale} />
+  const picker = (
+    <LocaleCommand
+      locale={value}
+      onValueChange={selectLocale}
+      searchLayout={!isDesktop}
+    />
+  )
   if (isDesktop) {
     return (
       <Popover open={open} onOpenChange={setOpen}>
@@ -136,7 +142,7 @@ export function LocaleSelector({
           />
         }
       />
-      <DrawerContent className="p-0">
+      <DrawerContent layout="search" className="p-0">
         <DrawerHeader className="pb-2 text-start">
           <DrawerTitle>{t('title')}</DrawerTitle>
         </DrawerHeader>
@@ -149,9 +155,11 @@ export function LocaleSelector({
 function LocaleCommand({
   locale,
   onValueChange,
+  searchLayout = false,
 }: {
   locale: Locale
   onValueChange: (locale: Locale) => void
+  searchLayout?: boolean
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'LanguageSwitcher' })
   const localizedLabels = useMemo(
@@ -228,10 +236,17 @@ function LocaleCommand({
     })
 
   return (
-    <Command>
+    <Command className={cn(searchLayout && 'h-auto min-h-0 flex-auto')}>
       <CommandInput placeholder={t('search')} className="text-base" />
-      <CommandEmpty>{t('noLanguage')}</CommandEmpty>
-      <CommandList className="max-h-[min(60vh,420px)] overscroll-contain">
+      <CommandList
+        className={cn(
+          'overscroll-contain',
+          searchLayout
+            ? 'max-h-none min-h-0 flex-auto'
+            : 'max-h-[min(60vh,420px)]',
+        )}
+      >
+        <CommandEmpty>{t('noLanguage')}</CommandEmpty>
         <CommandGroup heading={t('suggested')}>
           {renderItems(groups.suggested)}
         </CommandGroup>

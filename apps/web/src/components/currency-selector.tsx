@@ -12,6 +12,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
   CommandSeparator,
 } from '@/components/ui/command'
 import {
@@ -130,6 +131,7 @@ export function CurrencySelector({
         onValueToggle={(code) => {
           onValueToggle?.(code)
         }}
+        searchLayout={!isDesktop}
       />
     )
 
@@ -160,13 +162,13 @@ export function CurrencySelector({
               </Button>
             }
           />
-          <DrawerContent className="p-0">
+          <DrawerContent layout="search" className="p-0">
             <DrawerHeader className="pb-2 text-start">
               <DrawerTitle>
                 {mobileTitle ?? t('Expenses.filters.currency')}
               </DrawerTitle>
             </DrawerHeader>
-            <div className="min-h-0 overflow-y-auto px-1">{command}</div>
+            {command}
             <DrawerFooter className="border-t bg-background pt-3">
               <Button type="button" onClick={() => setOpen(false)}>
                 {mobileDoneLabel ?? t('Groups.Import.StepHeader.done')}
@@ -246,7 +248,18 @@ export function CurrencySelector({
           />
         }
       />
-      <DrawerContent className="p-0">{command}</DrawerContent>
+      <DrawerContent layout="search" className="p-0">
+        <CurrencyCommand
+          currencies={currencies}
+          pinnedCurrencyCode={pinnedCurrencyCode}
+          recommendedCurrencyCodes={recommendedCurrencyCodes}
+          onValueChange={(code) => {
+            onValueChange(code)
+            setOpen(false)
+          }}
+          searchLayout
+        />
+      </DrawerContent>
     </Drawer>
   )
 }
@@ -259,6 +272,7 @@ function CurrencyCommand({
   mode = 'single',
   selectedValues = [],
   onValueToggle,
+  searchLayout = false,
 }: {
   currencies: DisplayCurrency[]
   onValueChange: (currencyId: DisplayCurrency['code']) => void
@@ -267,6 +281,7 @@ function CurrencyCommand({
   mode?: 'single' | 'multi'
   selectedValues?: string[]
   onValueToggle?: (currencyCode: string) => void
+  searchLayout?: boolean
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Currencies' })
 
@@ -344,10 +359,15 @@ function CurrencyCommand({
     ))
 
   return (
-    <Command>
+    <Command className={cn(searchLayout && 'h-auto min-h-0 flex-auto')}>
       <CommandInput placeholder={t('search')} className="text-base" />
-      <CommandEmpty>{t('noCurrency')}</CommandEmpty>
-      <div className="max-h-[300px] w-full overflow-y-auto">
+      <CommandList
+        className={cn(
+          'w-full',
+          searchLayout ? 'max-h-none min-h-0 flex-auto' : 'max-h-[300px]',
+        )}
+      >
+        <CommandEmpty>{t('noCurrency')}</CommandEmpty>
         {priority.length > 0 && (
           <CommandGroup>{renderItems(priority)}</CommandGroup>
         )}
@@ -357,7 +377,7 @@ function CurrencyCommand({
         {crypto.length > 0 && (
           <CommandGroup>{renderItems(crypto)}</CommandGroup>
         )}
-      </div>
+      </CommandList>
     </Command>
   )
 }

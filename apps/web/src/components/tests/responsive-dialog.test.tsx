@@ -287,14 +287,18 @@ describe('ResponsiveDialog', () => {
     mockMobileMediaQuery()
 
     let viewportHeight = window.innerHeight
+    let viewportOffsetTop = 0
     const resizeListeners = new Set<(event: Event) => void>()
+    const scrollListeners = new Set<(event: Event) => void>()
     const visualViewport = {
       width: window.innerWidth,
       get height() {
         return viewportHeight
       },
       offsetLeft: 0,
-      offsetTop: 0,
+      get offsetTop() {
+        return viewportOffsetTop
+      },
       pageLeft: 0,
       pageTop: 0,
       scale: 1,
@@ -304,10 +308,16 @@ describe('ResponsiveDialog', () => {
         if (type === 'resize' && typeof listener === 'function') {
           resizeListeners.add(listener as (event: Event) => void)
         }
+        if (type === 'scroll' && typeof listener === 'function') {
+          scrollListeners.add(listener as (event: Event) => void)
+        }
       },
       removeEventListener: (type: string, listener: EventListener) => {
         if (type === 'resize' && typeof listener === 'function') {
           resizeListeners.delete(listener as (event: Event) => void)
+        }
+        if (type === 'scroll' && typeof listener === 'function') {
+          scrollListeners.delete(listener as (event: Event) => void)
         }
       },
       dispatchEvent: () => false,
@@ -322,14 +332,15 @@ describe('ResponsiveDialog', () => {
     })
 
     try {
-      render(
-        <ResponsiveDialog defaultOpen>
+      const renderDialog = (open: boolean) => (
+        <ResponsiveDialog open={open}>
           <ResponsiveDialogContent>
             <ResponsiveDialogTitle>Keyboard aware</ResponsiveDialogTitle>
             <input type="text" placeholder="Search" />
           </ResponsiveDialogContent>
-        </ResponsiveDialog>,
+        </ResponsiveDialog>
       )
+      const { rerender } = render(renderDialog(true))
 
       const popup = screen.getByRole('dialog')
       const viewport = popup.parentElement
@@ -358,6 +369,44 @@ describe('ResponsiveDialog', () => {
           viewport?.style.getPropertyValue('--drawer-keyboard-inset'),
         ).toBe('0px')
       })
+
+      viewportOffsetTop = 24
+      fireEvent.focus(input)
+      resizeListeners.forEach((listener) => listener(new Event('resize')))
+      await waitFor(() => {
+        expect(
+          viewport?.style.getPropertyValue('--drawer-keyboard-inset'),
+        ).toBe('312px')
+      })
+
+      fireEvent.blur(input)
+      await waitFor(() => {
+        expect(
+          viewport?.style.getPropertyValue('--drawer-keyboard-inset'),
+        ).toBe('0px')
+      })
+
+      input.focus()
+      viewportOffsetTop = 0
+      resizeListeners.forEach((listener) => listener(new Event('resize')))
+      await waitFor(() => {
+        expect(
+          viewport?.style.getPropertyValue('--drawer-keyboard-inset'),
+        ).toBe('336px')
+      })
+
+      rerender(renderDialog(false))
+      await waitFor(() => {
+        expect(
+          viewport?.style.getPropertyValue('--drawer-keyboard-inset'),
+        ).toBe('')
+      })
+
+      rerender(renderDialog(true))
+      const reopenedViewport = screen.getByRole('dialog').parentElement
+      expect(
+        reopenedViewport?.style.getPropertyValue('--drawer-keyboard-inset'),
+      ).not.toBe('336px')
     } finally {
       if (originalVisualViewport) {
         Object.defineProperty(window, 'visualViewport', originalVisualViewport)

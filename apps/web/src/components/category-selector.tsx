@@ -115,6 +115,7 @@ export function CategorySelector({
         selectedValues={selectedValues}
         onValueToggle={onValueToggle}
         inputRef={commandInputRef}
+        searchLayout={!isDesktop}
       />
     )
 
@@ -143,13 +144,17 @@ export function CategorySelector({
               </Button>
             }
           />
-          <DrawerContent className="p-0" initialFocus={commandInputRef}>
+          <DrawerContent
+            layout="search"
+            className="p-0"
+            initialFocus={commandInputRef}
+          >
             <DrawerHeader className="pb-2 text-start">
               <DrawerTitle>
                 {mobileTitle ?? t('Expenses.filters.category')}
               </DrawerTitle>
             </DrawerHeader>
-            <div className="min-h-0 overflow-y-auto px-1">{command}</div>
+            {command}
             <DrawerFooter className="border-t bg-background pt-3">
               <Button type="button" onClick={() => setOpen(false)}>
                 {mobileDoneLabel ?? t('Groups.Import.StepHeader.done')}
@@ -244,7 +249,11 @@ export function CategorySelector({
           />
         }
       />
-      <DrawerContent className="p-0" initialFocus={commandInputRef}>
+      <DrawerContent
+        layout="search"
+        className="p-0"
+        initialFocus={commandInputRef}
+      >
         <CategoryOptions
           hierarchy={hierarchy}
           mode="single"
@@ -254,6 +263,7 @@ export function CategorySelector({
             setOpen(false)
           }}
           inputRef={commandInputRef}
+          searchLayout
         />
       </DrawerContent>
     </Drawer>
@@ -267,6 +277,7 @@ function CategoryOptions({
   selectedValues = [],
   onValueToggle,
   inputRef,
+  searchLayout = false,
 }: {
   hierarchy: Hierarchy
   onValueChange?: (categoryId: CategoryId) => void
@@ -274,6 +285,7 @@ function CategoryOptions({
   selectedValues?: CategoryId[]
   onValueToggle?: (categoryId: CategoryId) => void
   inputRef?: React.Ref<HTMLInputElement>
+  searchLayout?: boolean
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Categories' })
   const locale = useLocale()
@@ -355,7 +367,12 @@ function CategoryOptions({
           setSearch(value)
       }}
     >
-      <div className="flex min-h-0 flex-col">
+      <div
+        className={cn(
+          'flex min-h-0 flex-col',
+          searchLayout && 'h-auto flex-auto',
+        )}
+      >
         <div className="flex shrink-0 items-center gap-2 border-b px-3">
           <Search className="size-4 shrink-0 text-muted-foreground" />
           <Combobox.Input
@@ -367,7 +384,14 @@ function CategoryOptions({
             }
           />
         </div>
-        <Combobox.List className="max-h-[min(300px,calc(var(--available-height,80dvh)-3rem))] min-h-0 overflow-x-hidden overflow-y-auto overscroll-contain p-1">
+        <Combobox.List
+          className={cn(
+            'min-h-0 overflow-x-hidden overflow-y-auto overscroll-contain p-1',
+            searchLayout
+              ? 'max-h-none flex-auto'
+              : 'max-h-[min(300px,calc(var(--available-height,80dvh)-3rem))]',
+          )}
+        >
           {ranked && ranked.length === 0 ? (
             <div className="py-6 text-center text-sm">{t('noCategory')}</div>
           ) : ranked ? (

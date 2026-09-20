@@ -136,6 +136,56 @@ describe('CurrencySelector', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
+  it('content-sizes mobile search results while preserving the scroll cap', async () => {
+    mediaQueryMock.mockReturnValue(false)
+    const onValueChange = vi.fn()
+    const { user } = render(
+      <CurrencySelector
+        currencies={currencies}
+        defaultValue="USD"
+        isLoading={false}
+        onValueChange={onValueChange}
+      />,
+    )
+
+    await user.click(screen.getByRole('combobox'))
+
+    const drawer = screen.getByRole('dialog')
+    expect(drawer).toHaveClass(
+      'h-auto',
+      'max-h-[calc(min(70dvh,32rem,calc(100dvh-3rem-var(--drawer-keyboard-inset,0px)))+var(--drawer-keyboard-inset,0px))]',
+      'border-b-0',
+    )
+    expect(drawer.parentElement).not.toHaveClass(
+      'pb-[var(--drawer-keyboard-inset,0px)]',
+    )
+    expect(drawer.querySelector('[data-drawer-content]')).toHaveClass(
+      'pb-[calc(env(safe-area-inset-bottom)+var(--drawer-keyboard-inset,0px))]',
+    )
+
+    const search = screen.getByPlaceholderText(/search/i)
+    const results = screen.getByRole('listbox')
+    expect(search).toHaveClass('text-base')
+    expect(results).toHaveClass('min-h-0', 'flex-auto', 'max-h-none')
+
+    await user.type(search, 'Australian')
+    expect(screen.getAllByRole('option')).toHaveLength(1)
+    expect(screen.getByRole('option')).toHaveTextContent('Australian Dollar')
+    expect(drawer).toHaveClass('h-auto')
+
+    await user.clear(search)
+    await user.type(search, 'not-a-currency')
+    expect(screen.getByText(/no currencies/i)).toBeInTheDocument()
+    expect(screen.queryByRole('option')).toBeNull()
+
+    await user.clear(search)
+    await user.type(search, 'Euro')
+    await user.click(screen.getByRole('option', { name: /Euro \(EUR\)/ }))
+
+    expect(onValueChange).toHaveBeenCalledWith('EUR')
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
   it('pins the group currency first in the priority block', () => {
     openSelectorWith({
       pinnedCurrencyCode: 'EUR',

@@ -11,6 +11,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from '@/components/ui/command'
 import {
   Drawer,
@@ -114,22 +115,21 @@ export function ParticipantSelector({
     return (
       <Drawer open={open} onOpenChange={setOpen}>
         <DrawerTrigger render={trigger} />
-        <DrawerContent className="p-0">
+        <DrawerContent layout="search" className="p-0">
           <DrawerHeader className="pb-2 text-start">
             <DrawerTitle>
               {mobileTitle ?? t('Expenses.filters.paidBy')}
             </DrawerTitle>
           </DrawerHeader>
-          <div className="min-h-0 overflow-y-auto px-1">
-            <ParticipantCommand
-              participants={participants}
-              mode={mode}
-              selectedValues={selectedValues}
-              onValueChange={onValueChange}
-              onValueToggle={onValueToggle}
-              onClose={() => setOpen(false)}
-            />
-          </div>
+          <ParticipantCommand
+            participants={participants}
+            mode={mode}
+            selectedValues={selectedValues}
+            onValueChange={onValueChange}
+            onValueToggle={onValueToggle}
+            onClose={() => setOpen(false)}
+            searchLayout
+          />
           <DrawerFooter className="border-t bg-background pt-3">
             <Button type="button" onClick={() => setOpen(false)}>
               {mobileDoneLabel ?? t('Groups.Import.StepHeader.done')}
@@ -164,6 +164,7 @@ function ParticipantCommand({
   onValueChange,
   onValueToggle,
   onClose,
+  searchLayout = false,
 }: {
   participants: Participant[]
   mode: 'single' | 'multi'
@@ -171,15 +172,23 @@ function ParticipantCommand({
   onValueChange?: (participantId: string) => void
   onValueToggle?: (participantId: string) => void
   onClose: () => void
+  searchLayout?: boolean
 }) {
   const { t } = useTranslation()
   const selectedSet = new Set(selectedValues)
 
   return (
-    <Command>
-      <CommandInput placeholder={t('Participants.search')} />
-      <CommandEmpty>{t('Participants.noParticipant')}</CommandEmpty>
-      <div className="max-h-[300px] overflow-y-auto">
+    <Command className={cn(searchLayout && 'h-auto min-h-0 flex-auto')}>
+      <CommandInput
+        placeholder={t('Participants.search')}
+        className="text-base"
+      />
+      <CommandList
+        className={cn(
+          searchLayout ? 'max-h-none min-h-0 flex-auto' : 'max-h-[300px]',
+        )}
+      >
+        <CommandEmpty>{t('Participants.noParticipant')}</CommandEmpty>
         <CommandGroup>
           {participants.map((participant) => {
             const isSelected = selectedSet.has(participant.id)
@@ -219,7 +228,7 @@ function ParticipantCommand({
             )
           })}
         </CommandGroup>
-      </div>
+      </CommandList>
     </Command>
   )
 }

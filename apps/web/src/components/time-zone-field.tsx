@@ -107,6 +107,7 @@ type TimeZonePickerContentProps = {
   referenceDate?: Date
   className?: string
   listClassName?: string
+  searchLayout?: boolean
 }
 
 export function TimeZonePickerContent({
@@ -115,6 +116,7 @@ export function TimeZonePickerContent({
   referenceDate,
   className,
   listClassName,
+  searchLayout = false,
 }: TimeZonePickerContentProps) {
   const listRef = React.useRef<HTMLDivElement>(null)
   const { t, i18n } = useTranslation()
@@ -250,7 +252,10 @@ export function TimeZonePickerContent({
   }
 
   return (
-    <Command className={className} shouldFilter={false}>
+    <Command
+      className={cn(className, searchLayout && 'h-auto min-h-0 flex-auto')}
+      shouldFilter={false}
+    >
       <CommandInput
         placeholder={t('TimeZoneSelector.search' as never, {
           defaultValue: 'Search timezones or cities',
@@ -269,7 +274,10 @@ export function TimeZonePickerContent({
       <CommandList
         ref={listRef}
         className={cn(
-          'relative max-h-[min(60vh,420px)] overscroll-contain',
+          'relative overscroll-contain',
+          searchLayout
+            ? 'max-h-none min-h-0 flex-auto'
+            : 'max-h-[min(60vh,420px)]',
           listClassName,
         )}
       >
@@ -386,6 +394,7 @@ export const TimeZoneField = forwardRef<HTMLButtonElement, Props>(
         value={value}
         referenceDate={referenceDate}
         onChange={select}
+        searchLayout={!isDesktop}
       />
     )
 
@@ -433,7 +442,7 @@ export const TimeZoneField = forwardRef<HTMLButtonElement, Props>(
     return (
       <Drawer open={open} onOpenChange={setOpen}>
         <DrawerTrigger render={trigger} />
-        <DrawerContent className="p-0">
+        <DrawerContent layout="search" className="p-0">
           <DrawerHeader className="pb-2 text-start">
             <DrawerTitle>
               {t('TimeZoneSelector.title' as never, {
