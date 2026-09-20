@@ -498,13 +498,15 @@ allowed); IP literals and credential-bearing URLs are rejected.
 
 The envelope is documented in `apps/webhook-relay/src/index.ts`: Spliit signs
 `version`, canonical destination, 60-second expiry, attempt ID, and the
-sha256 of the raw body. The worker returns the destination status verbatim and
+sha256 of the raw body. The worker accepts envelopes up to 30 seconds past
+expiry for clock skew. The worker returns the destination status verbatim and
 answers any relay-side failure with `502`, which Spliit retries.
 
 Limitations: Spliit still resolves destination hostnames during validation, so
 the DNS resolver sees them — the relay hides the server IP from the
 _destination_, nothing more. Relay logs contain only the attempt ID and
-outcome. Roll back by unsetting both variables and restarting.
+outcome, and only for failures and upstream error statuses. Roll back by
+unsetting both variables and restarting.
 
 ## Secrets
 

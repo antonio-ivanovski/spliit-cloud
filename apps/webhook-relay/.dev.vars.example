@@ -1,0 +1,3 @@
+# Local `wrangler dev` secret. Never commit a real value here; production uses
+# `wrangler secret put RELAY_SECRET`.
+RELAY_SECRET=
