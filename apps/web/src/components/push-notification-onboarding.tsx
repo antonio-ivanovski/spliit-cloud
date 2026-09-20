@@ -164,8 +164,21 @@ export function PushNotificationOnboarding() {
   const [preferenceError, setPreferenceError] = useState(false)
   const [coordinationVersion, setCoordinationVersion] = useState(0)
   const activeToken = useRef<string | null>(null)
+  const enableAttempt = useRef<object | null>(null)
 
   const accountId = account?.id
+  useEffect(() => {
+    // Reset account-owned UI and invalidate asynchronous results on account changes.
+    // oxlint-disable react/set-state-in-effect
+    setIsEnabling(false)
+    setIsOpen(false)
+    setResult(null)
+    setPreferenceError(false)
+    // oxlint-enable react/set-state-in-effect
+    return () => {
+      enableAttempt.current = null
+    }
+  }, [accountId])
   // Instance-level delivery state. When email cannot be delivered, the modal
   // must not offer email as a fallback — stored EMAIL prefs stay untouched
   // but push becomes the only working channel.
@@ -203,7 +216,7 @@ export function PushNotificationOnboarding() {
       push.supported &&
       push.configured &&
       !push.iosHomeScreenRequired &&
-      push.permission !== 'denied' &&
+      (push.permission !== 'denied' || isEnabling || !!result) &&
       (!push.enabled || isOpen || isEnabling || !!result || preferenceError),
     [
       account,
@@ -243,7 +256,7 @@ export function PushNotificationOnboarding() {
         setCoordinationVersion((value) => value + 1)
         return
       }
-      setIsOpen(true)
+      if (!enableAttempt.current) setIsOpen(true)
     }, 700)
     const refresh = window.setInterval(
       () => refreshActive(token),
@@ -325,6 +338,8 @@ export function PushNotificationOnboarding() {
     if (!accountId) return
     const handleStorage = (event: StorageEvent) => {
       if (event.key === completionKey(accountId) && event.newValue === 'true') {
+        enableAttempt.current = null
+        setIsEnabling(false)
         releaseActive()
         setIsOpen(false)
         return
@@ -342,32 +357,46 @@ export function PushNotificationOnboarding() {
   }, [accountId, releaseActive])
 
   async function enable() {
-    if (!mode) return
+    if (!mode || enableAttempt.current) return
+    const attempt = {}
+    enableAttempt.current = attempt
+    const isCurrentAttempt = () => enableAttempt.current === attempt
+    setIsOpen(false)
+    setResult(null)
     setIsEnabling(true)
     setPreferenceError(false)
     try {
       try {
         await push.enable()
       } catch {
+        if (!isCurrentAttempt()) return
         const permissionDenied =
           push.permission === 'denied' ||
           (typeof Notification !== 'undefined' &&
             Notification.permission === 'denied')
         setResult(permissionDenied ? 'denied' : 'failed')
+        setIsOpen(true)
         return
       }
+      if (!isCurrentAttempt()) return
       try {
         if (mode === 'initial') await saveRecommendedPreferences()
       } catch {
+        if (!isCurrentAttempt()) return
         setPreferenceError(true)
+        setIsOpen(true)
         return
       }
+      if (!isCurrentAttempt()) return
       finishAndClose()
       if (mode === 'email-only-device') {
         void navigate({ to: '/account/settings', hash: 'notifications' })
       }
     } finally {
-      setIsEnabling(false)
+      if (isCurrentAttempt()) {
+        enableAttempt.current = null
+        setIsEnabling(false)
+      }
     }
   }
 

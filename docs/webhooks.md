@@ -478,7 +478,9 @@ public spliit.cloud instance; self-hosters follow the same steps with their
 own Cloudflare account, worker name, and URLs:
 
 1. Deploy the worker in `apps/webhook-relay`:
-   `bunx wrangler login && bunx wrangler deploy`.
+   `bunx wrangler login && bunx wrangler deploy`. (For the spliit.cloud
+   instance the release workflow deploys the worker automatically on every
+   version tag — it only needs a `CLOUDFLARE_API_TOKEN` repo secret.)
 2. Set the shared HMAC secret (min 32 chars, unrelated to
    `BETTER_AUTH_SECRET`) via secret storage, never in `wrangler.jsonc`:
    `bunx wrangler secret put RELAY_SECRET`.

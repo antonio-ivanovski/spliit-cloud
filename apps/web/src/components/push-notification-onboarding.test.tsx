@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { act, render, screen, waitFor } from '@/test/test-utils'
 
@@ -66,6 +66,7 @@ import {
 } from './push-notification-onboarding'
 
 describe('PushNotificationOnboarding', () => {
+  afterEach(() => vi.unstubAllGlobals())
   beforeEach(() => {
     localStorage.clear()
     window.history.replaceState({}, '', '/')
@@ -261,6 +262,127 @@ describe('PushNotificationOnboarding', () => {
       screen.getByRole('button', { name: /enable push notifications/i }),
     )
     expect(mocks.enable).toHaveBeenCalledTimes(1)
+  })
+
+  it('hides throughout setup, retains ownership, and completes only after saving', async () => {
+    const push = Promise.withResolvers<void>()
+    const save = Promise.withResolvers<void>()
+    mocks.enable.mockReturnValue(push.promise)
+    mocks.savePreferences.mockReturnValue(save.promise)
+    const user = userEvent.setup()
+    const { rerender } = render(<PushNotificationOnboarding />)
+    await screen.findByTestId('push-notification-onboarding')
+    const owner = JSON.parse(
+      localStorage.getItem(PUSH_ONBOARDING_ACTIVE_KEY)!,
+    ).token
+    await user.click(
+      screen.getByRole('button', { name: /enable push notifications/i }),
+    )
+    expect(screen.queryByTestId('push-notification-onboarding')).toBeNull()
+    await act(async () => {
+      await new Promise((resolve) => window.setTimeout(resolve, 800))
+    })
+    expect(screen.queryByTestId('push-notification-onboarding')).toBeNull()
+    expect(
+      JSON.parse(localStorage.getItem(PUSH_ONBOARDING_ACTIVE_KEY)!).token,
+    ).toBe(owner)
+    expect(
+      localStorage.getItem(`${PUSH_ONBOARDING_COMPLETE_PREFIX}account-1`),
+    ).toBeNull()
+    await act(async () => push.resolve())
+    expect(mocks.savePreferences).toHaveBeenCalledTimes(1)
+    expect(screen.queryByTestId('push-notification-onboarding')).toBeNull()
+    expect(
+      localStorage.getItem(`${PUSH_ONBOARDING_COMPLETE_PREFIX}account-1`),
+    ).toBeNull()
+    await act(async () => save.resolve())
+    rerender(<PushNotificationOnboarding />)
+    expect(screen.queryByTestId('push-notification-onboarding')).toBeNull()
+    expect(
+      localStorage.getItem(`${PUSH_ONBOARDING_COMPLETE_PREFIX}account-1`),
+    ).toBe('true')
+    expect(localStorage.getItem(PUSH_ONBOARDING_ACTIVE_KEY)).toBeNull()
+  })
+
+  it.each(['push', 'denied', 'preferences'])(
+    'reopens after a deferred %s failure',
+    async (failure) => {
+      const pending = Promise.withResolvers<void>()
+      if (failure === 'preferences')
+        mocks.savePreferences.mockReturnValue(pending.promise)
+      else mocks.enable.mockReturnValue(pending.promise)
+      const user = userEvent.setup()
+      const { rerender } = render(<PushNotificationOnboarding />)
+      await screen.findByTestId('push-notification-onboarding')
+      await user.click(
+        screen.getByRole('button', { name: /enable push notifications/i }),
+      )
+      expect(screen.queryByTestId('push-notification-onboarding')).toBeNull()
+      if (failure === 'denied') {
+        vi.stubGlobal('Notification', { permission: 'denied' })
+        mocks.usePushNotifications.mockReturnValue({
+          ...mocks.usePushNotifications(),
+          permission: 'denied',
+        })
+        rerender(<PushNotificationOnboarding />)
+        expect(localStorage.getItem(PUSH_ONBOARDING_ACTIVE_KEY)).not.toBeNull()
+      }
+      await act(async () => pending.reject(new Error('setup failed')))
+      expect(
+        await screen.findByTestId('push-notification-onboarding'),
+      ).toBeInTheDocument()
+      if (failure === 'preferences')
+        expect(screen.getByRole('alert')).toHaveTextContent(
+          /could not save notification preferences/i,
+        )
+      else {
+        expect(screen.getByRole('button', { name: /done/i })).toBeEnabled()
+        expect(
+          screen.getByText(
+            failure === 'denied'
+              ? 'Push notifications are blocked'
+              : 'Push could not be enabled',
+          ),
+        ).toBeInTheDocument()
+      }
+      expect(
+        localStorage.getItem(`${PUSH_ONBOARDING_COMPLETE_PREFIX}account-1`),
+      ).toBeNull()
+    },
+  )
+
+  it.each([
+    ['account', 'success'],
+    ['account', 'failure'],
+    ['unmount', 'success'],
+    ['unmount', 'failure'],
+  ])('ignores pending %s results on %s', async (change, outcome) => {
+    const pending = Promise.withResolvers<void>()
+    mocks.enable.mockReturnValue(pending.promise)
+    const user = userEvent.setup()
+    const { rerender, unmount } = render(<PushNotificationOnboarding />)
+    await screen.findByTestId('push-notification-onboarding')
+    await user.click(
+      screen.getByRole('button', { name: /enable push notifications/i }),
+    )
+    if (change === 'unmount') unmount()
+    else {
+      mocks.useCurrentAccount.mockReturnValue({
+        data: undefined,
+        isPending: false,
+      })
+      rerender(<PushNotificationOnboarding />)
+    }
+    await act(async () => {
+      if (outcome === 'success') pending.resolve()
+      else pending.reject(new Error('late failure'))
+    })
+    expect(mocks.savePreferences).not.toHaveBeenCalled()
+    expect(mocks.navigate).not.toHaveBeenCalled()
+    expect(
+      localStorage.getItem(`${PUSH_ONBOARDING_COMPLETE_PREFIX}account-1`),
+    ).toBeNull()
+    expect(screen.queryByTestId('push-notification-onboarding')).toBeNull()
   })
 
   it('applies the optimized channels after the first push opt-in', async () => {

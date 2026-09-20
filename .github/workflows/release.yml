@@ -203,6 +203,39 @@ jobs:
           docker buildx imagetools inspect "${IMAGE}:${TAG}"
           docker buildx imagetools inspect "${IMAGE}:latest"
 
+  deploy-relay-worker:
+    name: Deploy webhook relay worker
+    needs: validate-notes
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.validate-notes.outputs.tag }}
+          fetch-depth: 1
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      # Ships worker code only; RELAY_SECRET persists across deploys and is
+      # managed separately via `wrangler secret put` (see docs/webhooks.md).
+      - name: Deploy relay worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        working-directory: apps/webhook-relay
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "::error::CLOUDFLARE_API_TOKEN is not configured. Add a repo secret with a Cloudflare API token able to deploy Workers scripts (Workers Scripts:Edit)."
+            exit 1
+          fi
+          bun run deploy
+
   create-release:
     name: Create GitHub Release
     needs: [validate-notes, merge-images]
@@ -267,7 +300,7 @@ jobs:
 
   deploy-dokploy:
     name: Trigger Dokploy deploy
-    needs: [merge-images, create-release]
+    needs: [merge-images, create-release, deploy-relay-worker]
     runs-on: ubuntu-24.04-arm
     steps:
       - name: Trigger Dokploy compose deploy
