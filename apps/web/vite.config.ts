@@ -180,7 +180,10 @@ export default defineConfig({
     allowedHosts: publicWebHosts,
   },
   preview: {
-    port: 3000,
+    // Keep preview off the dev port: a production service worker persists at
+    // the origin scope, so sharing :3000 lets a previewed build keep serving
+    // its precache to dev pages (most visibly in Firefox on localhost:3000).
+    port: 4173,
   },
   resolve: {
     alias: {

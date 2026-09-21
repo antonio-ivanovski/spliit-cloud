@@ -36,7 +36,11 @@ function decodeBase64Url(value: string): ArrayBuffer {
 
 export async function getPushSubscription(): Promise<PushSubscription | null> {
   if (!isPushSupported()) return null
-  const registration = await navigator.serviceWorker.ready
+  // `serviceWorker.ready` only resolves while a worker is active; with none
+  // registered (for example a worker-less dev server) it pends forever and
+  // would hang callers such as logout. `getRegistration()` resolves either way.
+  const registration = await navigator.serviceWorker.getRegistration()
+  if (!registration) return null
   return registration.pushManager.getSubscription()
 }
 
@@ -47,7 +51,8 @@ export async function subscribeToPush(
   const permission = await Notification.requestPermission()
   if (permission !== 'granted') throw new Error('Push permission was denied')
 
-  const registration = await navigator.serviceWorker.ready
+  const registration = await navigator.serviceWorker.getRegistration()
+  if (!registration) throw new Error('Push notifications are unsupported')
   return registration.pushManager.subscribe({
     userVisibleOnly: true,
     applicationServerKey: decodeBase64Url(applicationServerKey),
