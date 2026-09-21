@@ -28,5 +28,6 @@ When no stage is confident enough, the expense form now shows the runners-up as 
 ### 🐛 Bug fixes
 
 - Smarter local category suggestions: short words like "in"/"to" no longer trigger false brand matches ("Beers in Prague" suggested insurance), the generic "premium" alias no longer maps alcohol to insurance, and a near-exact dictionary hit now overrules a twice-repeated past mislabel (`TBD` by @TBD)
+- AI extraction works again on the OpenCode Go endpoint: receipt, voice, and category requests now send a stable `x-opencode-session` header when `AI_BASE_URL` points at `opencode.ai/zen/go`, instead of failing with a missing-session routing error (`TBD` by @TBD)
 
 **Full Changelog**: TBD
