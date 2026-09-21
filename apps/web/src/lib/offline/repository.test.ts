@@ -33,6 +33,8 @@ function overviewEntry(groupId: string) {
       archived: false,
       createdAt: new Date().toISOString(),
       groupType: 'GROUP' as const,
+      emoji: null,
+      color: null,
       ledger: { currency: 'USD', currencyCode: 'USD' },
       memberCount: 2,
       currentMemberRole: 'MEMBER' as const,
@@ -177,6 +179,8 @@ function makeSnapshot(
         archived: false,
         createdAt: stamp,
         groupType: 'GROUP' as const,
+        emoji: null,
+        color: null,
         ledgerId: 'ledger-1',
         friendPairKey: null,
         ledger: {
