@@ -7,6 +7,7 @@ import type {
 import { ExpenseForm } from '@/app/groups/[groupId]/expenses/expense-form/index'
 import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
 import { getCurrency, useCurrencies } from '@/lib/currency'
+import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { useCurrencyRate, useMediaQuery } from '@/lib/hooks'
 import type { Expense } from '@/lib/schemas'
 import { act, fireEvent, render, screen, within } from '@/test/test-utils'
@@ -86,13 +87,15 @@ const {
     }
     return {
       mutate,
-      mutateAsync: vi.fn().mockResolvedValue({ categoryId: null }),
+      mutateAsync: vi
+        .fn()
+        .mockResolvedValue({ categoryId: null, candidates: [] }),
       isPending: false,
     }
   })
   const mockCategoryMutateAsync = vi
     .fn()
-    .mockResolvedValue({ categoryId: null })
+    .mockResolvedValue({ categoryId: null, candidates: [] })
   const mockCategoryReset = vi.fn()
 
   const mockCurrencyGetRate = vi.fn((_opts?: unknown): MockQueryResult => ({
@@ -357,12 +360,20 @@ const mockExpense = {
   expense: null,
 }
 
-const runtimeFeatureFlags = {
+const runtimeFeatureFlags: RuntimeFeatureFlags = {
   enableExpenseDocuments: false,
   enableReceiptExtract: false,
   enableVoiceExpense: false,
   enableCategoryExtract: false,
   enableBulkCategorize: false,
+  enableDictionarySuggest: true,
+  enableHistorySuggest: true,
+  categoryEngine: 'llm',
+  categoryLocalThresholds: {
+    minScore: 0.7,
+    settlementMinScore: 0.95,
+  },
+  aiMinConfidence: 0.5,
 }
 
 // ── Setup ───────────────────────────────────────────────────────────────
@@ -390,7 +401,10 @@ beforeEach(() => {
     promptActive: false,
   }
   mockCategoryMutateAsync.mockReset()
-  mockCategoryMutateAsync.mockResolvedValue({ categoryId: null })
+  mockCategoryMutateAsync.mockResolvedValue({
+    categoryId: null,
+    candidates: [],
+  })
   mockCategoryReset.mockReset()
   mockAccountDefaultSplit.mockReset()
   mockAccountDefaultSplit.mockImplementation(
@@ -747,7 +761,10 @@ describe('ExpenseForm', () => {
       />,
     )
 
-    mockCategoryMutateAsync.mockResolvedValueOnce({ categoryId: 'groceries' })
+    mockCategoryMutateAsync.mockResolvedValueOnce({
+      categoryId: 'groceries',
+      candidates: [],
+    })
     const title = screen.getByRole('textbox', { name: /expense title/i })
     await user.type(title, 'Luigi mysterious trattoria xyzzy')
 
@@ -811,7 +828,10 @@ describe('ExpenseForm', () => {
       />,
     )
 
-    mockCategoryMutateAsync.mockResolvedValueOnce({ categoryId: null })
+    mockCategoryMutateAsync.mockResolvedValueOnce({
+      categoryId: null,
+      candidates: [],
+    })
     const title = screen.getByRole('textbox', { name: /expense title/i })
     await user.type(title, 'Luigi mysterious trattoria xyzzy')
 
@@ -821,6 +841,292 @@ describe('ExpenseForm', () => {
     expect(
       screen.getByRole('combobox', { name: 'General' }),
     ).toBeInTheDocument()
+  })
+
+  it('shows other-suggestion chips when nothing categorizes the title', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={{
+          ...runtimeFeatureFlags,
+          // Raised gate turns the 0.92 nike hits into near-miss guesses.
+          categoryLocalThresholds: {
+            minScore: 0.95,
+            settlementMinScore: 0.99,
+          },
+        }}
+      />,
+    )
+
+    mockCategoryMutateAsync.mockResolvedValueOnce({
+      categoryId: null,
+      candidates: [],
+    })
+    const title = screen.getByRole('textbox', { name: /expense title/i })
+    await user.type(title, 'nike')
+    await user.tab()
+
+    await vi.waitFor(() => {
+      expect(mockCategoryMutateAsync).toHaveBeenCalledTimes(1)
+    })
+    expect(
+      screen.getByRole('group', { name: 'Category suggestions' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Sports' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Clothing' })).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Sports' }))
+    await vi.waitFor(() => {
+      expect(
+        screen.getByRole('combobox', { name: 'Sports' }),
+      ).toBeInTheDocument()
+    })
+    expect(
+      screen.queryByRole('group', { name: 'Category suggestions' }),
+    ).not.toBeInTheDocument()
+
+    // A tapped guess locks like a manual pick: further typing re-suggests
+    // nothing and keeps the picked category.
+    mockCategoryMutateAsync.mockClear()
+    await user.type(title, ' shoes')
+    await new Promise((resolve) => setTimeout(resolve, 800))
+    expect(mockCategoryMutateAsync).not.toHaveBeenCalled()
+    expect(screen.getByRole('combobox', { name: 'Sports' })).toBeInTheDocument()
+  })
+
+  it('shows a single other-suggestion chip on a near-tie dictionary hit', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const title = screen.getByRole('textbox', { name: /expense title/i })
+    await user.type(title, 'nike')
+    await user.tab()
+
+    // Sports auto-applies locally (0.92) with Clothing tied at 0.92.
+    await vi.waitFor(() => {
+      expect(
+        screen.getByRole('combobox', { name: 'Sports' }),
+      ).toBeInTheDocument()
+    })
+    expect(mockCategoryMutateAsync).not.toHaveBeenCalled()
+    expect(
+      screen.getByRole('group', { name: 'Category suggestions' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Clothing' })).toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Sports' }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('shows no other-suggestion chips when the dictionary stage is disabled', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={{
+          ...runtimeFeatureFlags,
+          enableDictionarySuggest: false,
+        }}
+      />,
+    )
+
+    mockCategoryMutateAsync.mockResolvedValueOnce({
+      categoryId: null,
+      candidates: [],
+    })
+    const title = screen.getByRole('textbox', { name: /expense title/i })
+    await user.type(title, 'nike')
+    await user.tab()
+
+    await vi.waitFor(() => {
+      expect(mockCategoryMutateAsync).toHaveBeenCalledTimes(1)
+    })
+    expect(
+      screen.queryByRole('group', { name: 'Category suggestions' }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('clears other-suggestion chips when the title is shortened below the gate', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={{
+          ...runtimeFeatureFlags,
+          categoryLocalThresholds: {
+            minScore: 0.95,
+            settlementMinScore: 0.99,
+          },
+        }}
+      />,
+    )
+
+    mockCategoryMutateAsync.mockResolvedValueOnce({
+      categoryId: null,
+      candidates: [],
+    })
+    const title = screen.getByRole('textbox', { name: /expense title/i })
+    await user.type(title, 'nike')
+    await user.tab()
+
+    await vi.waitFor(() => {
+      expect(
+        screen.getByRole('group', { name: 'Category suggestions' }),
+      ).toBeInTheDocument()
+    })
+
+    await user.clear(title)
+    expect(title).toHaveValue('')
+    await vi.waitFor(() => {
+      expect(
+        screen.queryByRole('group', { name: 'Category suggestions' }),
+      ).not.toBeInTheDocument()
+    })
+  })
+
+  it('shows AI runner chips alongside an applied server category', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={{
+          ...runtimeFeatureFlags,
+          enableCategoryExtract: true,
+        }}
+      />,
+    )
+
+    // In-between AI verdict: liquor applies, dining-out arrives as a chip.
+    mockCategoryMutateAsync.mockResolvedValueOnce({
+      categoryId: 'liquor',
+      candidates: [{ id: 'dining-out', score: 0.29, source: 'ai' }],
+    })
+    const title = screen.getByRole('textbox', { name: /expense title/i })
+    await user.type(title, 'Luigi mysterious trattoria xyzzy')
+
+    await vi.waitFor(() => {
+      expect(
+        screen.getByRole('combobox', { name: 'Liquor' }),
+      ).toBeInTheDocument()
+    })
+    expect(
+      screen.getByRole('group', { name: 'Category suggestions' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Dining Out' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Liquor' }),
+    ).not.toBeInTheDocument()
+
+    // Tapping the AI chip applies it and locks like a manual pick.
+    await user.click(screen.getByRole('button', { name: 'Dining Out' }))
+    await vi.waitFor(() => {
+      expect(
+        screen.getByRole('combobox', { name: 'Dining Out' }),
+      ).toBeInTheDocument()
+    })
+    expect(
+      screen.queryByRole('group', { name: 'Category suggestions' }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('prefers AI runners over dictionary guesses when the server returns nothing', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={{
+          ...runtimeFeatureFlags,
+          enableCategoryExtract: true,
+        }}
+      />,
+    )
+
+    // Below-floor AI verdict: nothing applies, but the top pick itself plus
+    // runners become chips instead of dictionary guesses.
+    mockCategoryMutateAsync.mockResolvedValueOnce({
+      categoryId: null,
+      candidates: [
+        { id: 'liquor', score: 0.43, source: 'ai' },
+        { id: 'dining-out', score: 0.36, source: 'ai' },
+      ],
+    })
+    const title = screen.getByRole('textbox', { name: /expense title/i })
+    await user.type(title, 'Luigi mysterious trattoria xyzzy')
+
+    await vi.waitFor(() => {
+      expect(mockCategoryMutateAsync).toHaveBeenCalledTimes(1)
+    })
+    expect(
+      screen.getByRole('combobox', { name: 'General' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('group', { name: 'Category suggestions' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Liquor' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Dining Out' }),
+    ).toBeInTheDocument()
+  })
+
+  it('shows no chips for a decisive server verdict without runners', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={{
+          ...runtimeFeatureFlags,
+          enableCategoryExtract: true,
+        }}
+      />,
+    )
+
+    mockCategoryMutateAsync.mockResolvedValueOnce({
+      categoryId: 'groceries',
+      candidates: [],
+    })
+    const title = screen.getByRole('textbox', { name: /expense title/i })
+    await user.type(title, 'Luigi mysterious trattoria xyzzy')
+
+    await vi.waitFor(() => {
+      expect(
+        screen.getByRole('combobox', { name: 'Groceries' }),
+      ).toBeInTheDocument()
+    })
+    expect(
+      screen.queryByRole('group', { name: 'Category suggestions' }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('shows no other-suggestion chips on a confident dictionary hit', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const title = screen.getByRole('textbox', { name: /expense title/i })
+    await user.type(title, 'uber')
+    await user.tab()
+
+    // Taxi auto-applies (0.92); the runner-up trails by more than the
+    // near-tie window, so there is nothing to offer.
+    await vi.waitFor(() => {
+      expect(screen.getByRole('combobox', { name: 'Taxi' })).toBeInTheDocument()
+    })
+    expect(mockCategoryMutateAsync).not.toHaveBeenCalled()
+    expect(
+      screen.queryByRole('group', { name: 'Category suggestions' }),
+    ).not.toBeInTheDocument()
   })
 
   it('does not auto-categorize an expense with an existing category', async () => {
@@ -844,10 +1150,12 @@ describe('ExpenseForm', () => {
   })
 
   it('ignores an in-flight AI suggestion after a manual category selection', async () => {
-    let resolveSuggestion: ((value: { categoryId: string }) => void) | undefined
+    let resolveSuggestion:
+      | ((value: { categoryId: string; candidates: never[] }) => void)
+      | undefined
     mockCategoryMutateAsync.mockImplementation(
       () =>
-        new Promise<{ categoryId: string }>((resolve) => {
+        new Promise<{ categoryId: string; candidates: never[] }>((resolve) => {
           resolveSuggestion = resolve
         }),
     )
@@ -878,7 +1186,7 @@ describe('ExpenseForm', () => {
 
     await user.click(categoryButton)
     await user.click(screen.getByText('Groceries'))
-    resolveSuggestion?.({ categoryId: 'dining-out' })
+    resolveSuggestion?.({ categoryId: 'dining-out', candidates: [] })
 
     await vi.waitFor(() => {
       expect(
@@ -891,10 +1199,12 @@ describe('ExpenseForm', () => {
     expect(mockCategoryReset).toHaveBeenCalled()
   })
   it('cancels the AI categorizer on submit so a late response cannot clobber the saved value', async () => {
-    let resolveSuggestion: ((value: { categoryId: string }) => void) | undefined
+    let resolveSuggestion:
+      | ((value: { categoryId: string; candidates: never[] }) => void)
+      | undefined
     mockCategoryMutateAsync.mockImplementation(
       () =>
-        new Promise<{ categoryId: string }>((resolve) => {
+        new Promise<{ categoryId: string; candidates: never[] }>((resolve) => {
           resolveSuggestion = resolve
         }),
     )
@@ -939,7 +1249,7 @@ describe('ExpenseForm', () => {
 
     // Now resolve the AI suggestion. Without cancel-on-submit this
     // would race to overwrite the category before the form unmounts.
-    resolveSuggestion?.({ categoryId: 'groceries' })
+    resolveSuggestion?.({ categoryId: 'groceries', candidates: [] })
     await Promise.resolve()
 
     expect(submittedValues.category).not.toBe('groceries')

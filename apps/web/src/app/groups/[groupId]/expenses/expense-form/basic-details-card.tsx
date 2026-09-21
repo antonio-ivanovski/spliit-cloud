@@ -4,7 +4,11 @@ import { useState, type Dispatch, type SetStateAction } from 'react'
 import { useWatch, type UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
+import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
+import {
+  categoryFromId,
+  categoryLabel,
+} from '@/app/groups/[groupId]/stats/category-utils'
 import { CategorySelector } from '@/components/category-selector'
 import { CurrencyRateProviderAttribution } from '@/components/currency-rate-provider-attribution'
 import { CurrencySelector } from '@/components/currency-selector'
@@ -137,15 +141,23 @@ export function BasicDetailsCard(props: {
     keyPrefix: 'Categories',
   })
   const locale = useLocale() as Locale
-  const { isCategoryLoading, onManualCategory, onTitleBlur } =
-    useSuggestCategoryFromTitle({
-      form,
-      groupId: group.id,
-      locale,
-      readOnly,
-      enableCategoryExtract: props.runtimeFeatureFlags.enableCategoryExtract,
-      suggestCategoryMutation: props.suggestCategoryMutation,
-    })
+  const {
+    isCategoryLoading,
+    onManualCategory,
+    onTitleBlur,
+    categoryCandidates,
+    onPickCandidate,
+  } = useSuggestCategoryFromTitle({
+    form,
+    groupId: group.id,
+    locale,
+    readOnly,
+    enableCategoryExtract: props.runtimeFeatureFlags.enableCategoryExtract,
+    enableDictionarySuggest: props.runtimeFeatureFlags.enableDictionarySuggest,
+    enableHistorySuggest: props.runtimeFeatureFlags.enableHistorySuggest,
+    localThresholds: props.runtimeFeatureFlags.categoryLocalThresholds,
+    suggestCategoryMutation: props.suggestCategoryMutation,
+  })
   const [calculatorOpen, setCalculatorOpen] = useState(false)
   const [calculatorExpression, setCalculatorExpression] = useState<
     string | null
@@ -317,6 +329,33 @@ export function BasicDetailsCard(props: {
                 <FormDescription className="text-xs">
                   {categoryHint}
                 </FormDescription>
+              ) : null}
+              {!readOnly && categoryCandidates.length > 0 ? (
+                <div
+                  // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- fieldset min-inline-size blocks this chip row from scrolling
+                  role="group"
+                  aria-label={t('otherSuggestions')}
+                  className="scroll-x-fade flex max-w-full flex-nowrap gap-1.5 overflow-x-auto overscroll-x-contain"
+                >
+                  {categoryCandidates.map((candidate) => (
+                    <Button
+                      key={candidate.id}
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="h-7 shrink-0 gap-1 rounded-full px-2.5 text-xs"
+                      disabled={readOnly}
+                      onClick={() => onPickCandidate(candidate.id)}
+                    >
+                      <CategoryIcon
+                        category={categoryFromId(candidate.id)}
+                        aria-hidden
+                        className="size-3.5 shrink-0"
+                      />
+                      {categoryLabel(tCategories, candidate.id)}
+                    </Button>
+                  ))}
+                </div>
               ) : null}
               <FormMessage />
             </FormItem>

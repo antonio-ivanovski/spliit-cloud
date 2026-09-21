@@ -1137,7 +1137,8 @@
       "action": "Modifica l’importo in {currency}",
       "description": "Inserisci l’importo finale, incluse le commissioni.",
       "impliedRate": "Tasso implicito: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "Suggerimenti di categoria"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Elimina documento",

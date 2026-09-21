@@ -1700,7 +1700,8 @@
       "action": "Edit amount in {currency}",
       "description": "Enter the final amount, including any fees.",
       "impliedRate": "Implied rate: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "Category suggestions"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Delete document",

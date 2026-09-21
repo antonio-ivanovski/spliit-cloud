@@ -1155,7 +1155,8 @@
       "action": "Edita la cantidad en {currency}",
       "description": "Introduce la cantidad final, incluidas las comisiones.",
       "impliedRate": "Tipo de cambio implícito: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "Sugerencias de categoría"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Eliminar documento",

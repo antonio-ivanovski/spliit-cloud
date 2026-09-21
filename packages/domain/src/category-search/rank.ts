@@ -17,6 +17,10 @@ const GROUPING_WEIGHT = 0.55
 const SLUG_WEIGHT = 0.5
 const FALLBACK_ALIAS_WEIGHT = 0.42
 
+/** Han/Kana/Hangul characters can be a complete word in one character (`滴滴`). */
+export const CJK_SCRIPT =
+  /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\u3400-\u9fff\uf900-\ufaff\uff66-\uff9f\uac00-\ud7af]/u
+
 /** Drop hits weaker than this so subsequence noise stays out of the picker. */
 const MIN_SCORE = 0.32
 
@@ -230,11 +234,19 @@ function haystackWords(haystack: string): string[] {
 function scoreText(needle: string, haystack: string): number {
   if (!needle || !haystack) return 0
   if (haystack === needle) return 1
-  if (haystack.startsWith(needle)) return 0.92
-
+  // Prefix/substring matches on 1–2 character needles are noise: the tokens
+  // "in" and "to" prefix-match the labels "insurance"/"income" and the alias
+  // "toll" at 0.92, so any "... in ..." title misfires at high confidence.
+  // Exact matches (TV, EVN) still score above. Han/Kana/Hangul needles are
+  // exempt: one CJK character can be a complete word, matching the
+  // min-query-length exemption in suggest.ts.
   const words = haystackWords(haystack)
-  if (words.some((word) => word.startsWith(needle))) return 0.88
-  if (haystack.includes(needle)) return 0.8
+  const cjk = CJK_SCRIPT.test(needle)
+  if (cjk || needle.length >= 3) {
+    if (haystack.startsWith(needle)) return 0.92
+    if (words.some((word) => word.startsWith(needle))) return 0.88
+    if (needle.length >= 4 && haystack.includes(needle)) return 0.8
+  }
 
   const fullDistance = damerauLevenshtein(needle, haystack, 2)
   if (fullDistance === 1) return 0.72

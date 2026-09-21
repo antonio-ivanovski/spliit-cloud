@@ -1537,7 +1537,8 @@
       "action": "{currency} میں رقم میں ترمیم کریں",
       "description": "تمام فیس سمیت وصول کی گئی کل رقم درج کریں۔",
       "impliedRate": "حساب شدہ شرح: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "زمرے کی تجاویز"
   },
   "ExpensePreview": {
     "title": "خرچے کا پیش نظارہ",

@@ -1610,7 +1610,8 @@
       "action": "تعديل المبلغ بـ {currency}",
       "description": "أدخل إجمالي المبلغ المُحصّل، بما في ذلك أي رسوم.",
       "impliedRate": "سعر الصرف الضمني: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "اقتراحات الفئات"
   },
   "Categories": {
     "noCategory": "لا توجد فئة مطابقة.",

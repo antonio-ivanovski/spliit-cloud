@@ -63,3 +63,11 @@ storage/maxio/buckets/*
 !storage/maxio/buckets/spliit-local/
 storage/maxio/buckets/spliit-local/*
 !storage/maxio/buckets/spliit-local/.bucket.json
+
+# One-time category calibration (prod expense dumps + script outputs, never commit)
+Main-dump.csv
+Exact-repeat ceiling.csv
+Label-distribution.csv
+Ledger-sizes.csv
+Stats queries.csv
+calibration-out/

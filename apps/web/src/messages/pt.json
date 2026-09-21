@@ -1249,7 +1249,8 @@
       "action": "Edite o montante em {currency}",
       "description": "Introduza o montante final, incluindo quaisquer taxas.",
       "impliedRate": "Taxa implícita: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "Sugestões de categoria"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Eliminar documento",

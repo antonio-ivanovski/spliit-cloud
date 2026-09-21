@@ -1137,7 +1137,8 @@
       "action": "עריכת הסכום ב-{currency}",
       "description": "יש להזין את הסכום הכולל שחויב, כולל עמלות.",
       "impliedRate": "שער מחושב: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "הצעות לקטגוריות"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "מחיקת מסמך",

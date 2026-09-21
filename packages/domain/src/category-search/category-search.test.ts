@@ -186,6 +186,49 @@ describe('rankCategories', () => {
     const cab = rankCategories('cab', french)[0]
     expect((vtc?.score ?? 0) > (cab?.score ?? 0)).toBe(true)
   })
+
+  it('scores no confident hit for a bare two-letter token', () => {
+    // "in" prefix-matches the labels "insurance"/"income" at 0.92 without
+    // this; only subsequence noise (below every suggest gate) may remain.
+    for (const query of ['in', 'to']) {
+      const ranked = rankCategories(query, english)
+      expect(ranked.every((hit) => hit.score < 0.7)).toBe(true)
+    }
+    expect(suggestCategoryFromTitle('Beers in Malt Worm', english)).toBeNull()
+    expect(suggestCategoryFromTitle('Lent to Maleka', english)).toBeNull()
+  })
+
+  it('still promotes a three-letter token prefix', () => {
+    const docs: CategorySearchDocument[] = [
+      {
+        id: 'dining-out',
+        label: 'Dining out',
+        grouping: 'Food',
+        isParent: false,
+        aliases: ['restaurant'],
+        samples: [],
+        fallbackAliases: [],
+      },
+    ]
+    const hit = rankCategories('res', docs)[0]
+    expect(hit?.id).toBe('dining-out')
+    expect(hit!.score).toBeGreaterThanOrEqual(0.8)
+  })
+
+  it('still matches a two-letter exact alias', () => {
+    const docs: CategorySearchDocument[] = [
+      {
+        id: 'tv-phone-internet',
+        label: 'TV',
+        grouping: 'Bills',
+        isParent: false,
+        aliases: ['tv'],
+        samples: [],
+        fallbackAliases: [],
+      },
+    ]
+    expect(rankCategories('TV', docs)[0]?.id).toBe('tv-phone-internet')
+  })
 })
 
 describe('suggestCategoryFromTitleForLocale', () => {
@@ -222,9 +265,15 @@ describe('suggestCategoryFromTitle', () => {
     expect(suggestCategoryFromTitle('ub', english)).toBeNull()
   })
 
-  it('does not auto-apply an ambiguous brand alias', () => {
-    expect(suggestCategoryFromTitle('nike', english)).toBeNull()
-    expect(suggestCategoryFromTitle('adidas', english)).toBeNull()
+  it('takes the top hit for an ambiguous brand alias', () => {
+    expect(suggestCategoryFromTitle('nike', english)).toMatchObject({
+      id: 'sports',
+      source: 'dictionary',
+    })
+    expect(suggestCategoryFromTitle('adidas', english)).toMatchObject({
+      id: 'sports',
+      source: 'dictionary',
+    })
   })
 
   it('lets repeated exact history beat a missing dictionary', () => {
@@ -243,6 +292,143 @@ describe('suggestCategoryFromTitle', () => {
     ]
     expect(suggestCategoryFromTitle('uber', english, memory)).toMatchObject({
       id: 'taxi',
+      source: 'dictionary',
+    })
+  })
+
+  it('lets history decide alone when the dictionary stage is disabled', () => {
+    const memory: CategoryTitleMemory[] = [
+      { title: 'uber', categoryId: 'bus-train' },
+    ]
+    expect(
+      suggestCategoryFromTitle('uber', english, memory, {
+        dictionaryEnabled: false,
+      }),
+    ).toMatchObject({ id: 'bus-train', source: 'history' })
+  })
+
+  it('lets the dictionary decide alone when the history stage is disabled', () => {
+    const memory: CategoryTitleMemory[] = [
+      { title: 'uber', categoryId: 'bus-train' },
+      { title: 'uber', categoryId: 'bus-train' },
+    ]
+    expect(
+      suggestCategoryFromTitle('uber', english, memory, {
+        historyEnabled: false,
+      }),
+    ).toMatchObject({ id: 'taxi', source: 'dictionary' })
+  })
+
+  it('lets a near-exact dictionary hit veto poisoned exact history', () => {
+    // Prod dump: "ICA" filed as income twice, overruling the correct
+    // groceries alias on every repeat. A >=0.9 dictionary hit wins back.
+    const memory: CategoryTitleMemory[] = [
+      { title: 'ICA', categoryId: 'income' },
+      { title: 'ICA', categoryId: 'income' },
+    ]
+    expect(suggestCategoryFromTitle('ICA', english, memory)).toMatchObject({
+      id: 'groceries',
+      source: 'dictionary',
+    })
+  })
+
+  it('does not veto history below the 0.9 dictionary bar', () => {
+    const docs: CategorySearchDocument[] = [
+      {
+        id: 'groceries',
+        label: 'Veto Marker Word',
+        grouping: 'Food',
+        isParent: false,
+        aliases: [],
+        samples: [],
+        fallbackAliases: [],
+      },
+    ]
+    const memory: CategoryTitleMemory[] = [
+      { title: 'mark', categoryId: 'income' },
+      { title: 'mark', categoryId: 'income' },
+    ]
+    // "mark" prefix-matches at 0.88: history keeps its exact-repeat win.
+    expect(suggestCategoryFromTitle('mark', docs, memory)).toMatchObject({
+      id: 'income',
+      source: 'history',
+    })
+  })
+
+  it('never lets a settlement dictionary hit veto history', () => {
+    const docs: CategorySearchDocument[] = [
+      {
+        id: 'settlement',
+        label: 'Settle Exact Words',
+        grouping: 'Settle',
+        isParent: false,
+        aliases: [],
+        samples: [],
+        fallbackAliases: [],
+      },
+    ]
+    const memory: CategoryTitleMemory[] = [
+      { title: 'Settle Exact Words', categoryId: 'groceries' },
+      { title: 'Settle Exact Words', categoryId: 'groceries' },
+    ]
+    expect(
+      suggestCategoryFromTitle('Settle Exact Words', docs, memory),
+    ).toMatchObject({ id: 'groceries', source: 'history' })
+  })
+
+  it('no longer maps premium alcohol to insurance', () => {
+    expect(suggestCategoryFromTitle('Premium lager', english)).toBeNull()
+    expect(
+      resolveCategorySearchFields('insurance', 'en-US').aliases,
+    ).not.toContain('premium')
+  })
+
+  it('suggests nothing when both stages are disabled', () => {
+    const memory: CategoryTitleMemory[] = [
+      { title: 'uber', categoryId: 'bus-train' },
+      { title: 'uber', categoryId: 'bus-train' },
+    ]
+    expect(
+      suggestCategoryFromTitle('uber', english, memory, {
+        dictionaryEnabled: false,
+        historyEnabled: false,
+      }),
+    ).toBeNull()
+  })
+
+  it('honours a raised minimum score', () => {
+    const hit = suggestCategoryFromTitle('uber', english)
+    expect(hit).not.toBeNull()
+    expect(
+      suggestCategoryFromTitle('uber', english, [], {
+        thresholds: { minScore: 1.1, settlementMinScore: 1.1 },
+      }),
+    ).toBeNull()
+  })
+
+  it('takes the top hit when scores are close instead of rejecting the tie', () => {
+    const close: CategorySearchDocument[] = [
+      {
+        id: 'groceries',
+        label: 'Weekly shop',
+        grouping: 'Weekly shop',
+        isParent: false,
+        aliases: [],
+        samples: [],
+        fallbackAliases: [],
+      },
+      {
+        id: 'dining-out',
+        label: 'Weekly shop',
+        grouping: 'Weekly shop',
+        isParent: false,
+        aliases: [],
+        samples: [],
+        fallbackAliases: [],
+      },
+    ]
+    expect(suggestCategoryFromTitle('weekly shop', close)).toMatchObject({
+      id: 'groceries',
       source: 'dictionary',
     })
   })
@@ -303,21 +489,29 @@ describe('suggestCategoryFromTitle', () => {
     expect(suggestCategoryFromTitle('flight', chinese)?.id).toBe('plane')
   })
 
-  it('does not treat airport as a plane title', () => {
-    expect(suggestCategoryFromTitle('airport', english)).toBeNull()
+  it('takes the top hit for airport without treating it as a plane title', () => {
+    expect(suggestCategoryFromTitle('airport', english)).toMatchObject({
+      id: 'parking',
+      source: 'dictionary',
+    })
     expect(suggestCategoryFromTitle('airport parking', english)?.id).toBe(
       'parking',
     )
   })
 
-  it('does not auto-apply non-specific aliases', async () => {
+  it('takes the top hit for non-specific aliases above the minimum', async () => {
     await loadLocaleDictionary('it-IT')
     await loadLocaleDictionary('zh-CN')
     expect(suggestCategoryFromTitle('target', english)).toBeNull()
     expect(
       suggestCategoryFromTitle('compagnia', documentsFor('it-IT')),
     ).toBeNull()
-    expect(suggestCategoryFromTitle('电', documentsFor('zh-CN'))).toBeNull()
+    expect(suggestCategoryFromTitle('电', documentsFor('zh-CN'))).toMatchObject(
+      {
+        id: 'movies',
+        source: 'dictionary',
+      },
+    )
     expect(suggestCategoryFromTitle('电费', documentsFor('zh-CN'))?.id).toBe(
       'electricity',
     )

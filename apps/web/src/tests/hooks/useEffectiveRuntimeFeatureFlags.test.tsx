@@ -101,6 +101,14 @@ describe('useEffectiveRuntimeFeatureFlags', () => {
       enableVoiceExpense: true,
       enableCategoryExtract: true,
       enableBulkCategorize: false,
+      enableDictionarySuggest: true,
+      enableHistorySuggest: true,
+      categoryEngine: 'llm',
+      categoryLocalThresholds: {
+        minScore: 0.7,
+        settlementMinScore: 0.95,
+      },
+      aiMinConfidence: 0.5,
     }
     mocks.updater = {
       ready: true,
@@ -133,6 +141,14 @@ describe('useEffectiveRuntimeFeatureFlags', () => {
       enableVoiceExpense: true,
       enableCategoryExtract: true,
       enableBulkCategorize: false,
+      enableDictionarySuggest: true,
+      enableHistorySuggest: true,
+      categoryEngine: 'llm',
+      categoryLocalThresholds: {
+        minScore: 0.7,
+        settlementMinScore: 0.95,
+      },
+      aiMinConfidence: 0.5,
     }
     mocks.updater = {
       ready: true,
@@ -163,6 +179,14 @@ describe('useEffectiveRuntimeFeatureFlags', () => {
       enableVoiceExpense: true,
       enableCategoryExtract: true,
       enableBulkCategorize: false,
+      enableDictionarySuggest: true,
+      enableHistorySuggest: true,
+      categoryEngine: 'llm',
+      categoryLocalThresholds: {
+        minScore: 0.7,
+        settlementMinScore: 0.95,
+      },
+      aiMinConfidence: 0.5,
     }
     mocks.updater = {
       ready: true,
@@ -197,6 +221,14 @@ describe('useEffectiveRuntimeFeatureFlags', () => {
       enableVoiceExpense: true,
       enableCategoryExtract: true,
       enableBulkCategorize: false,
+      enableDictionarySuggest: true,
+      enableHistorySuggest: true,
+      categoryEngine: 'llm',
+      categoryLocalThresholds: {
+        minScore: 0.7,
+        settlementMinScore: 0.95,
+      },
+      aiMinConfidence: 0.5,
     }
     mocks.updater = {
       ready: false, // sync layer still hydrating
@@ -227,6 +259,14 @@ describe('useEffectiveRuntimeFeatureFlags', () => {
       enableVoiceExpense: true,
       enableCategoryExtract: true,
       enableBulkCategorize: false,
+      enableDictionarySuggest: true,
+      enableHistorySuggest: true,
+      categoryEngine: 'llm',
+      categoryLocalThresholds: {
+        minScore: 0.7,
+        settlementMinScore: 0.95,
+      },
+      aiMinConfidence: 0.5,
     }
     mocks.updater = null
 
@@ -239,5 +279,58 @@ describe('useEffectiveRuntimeFeatureFlags', () => {
       enableCategoryExtract: true,
       enableBulkCategorize: false,
     })
+  })
+
+  it('passes suggest stages through without per-user AI gating', () => {
+    // Local stages are deterministic, not AI: deployment switches apply even
+    // when the user opted out of AI features.
+    mocks.serverFeatures = {
+      enableExpenseDocuments: true,
+      enableReceiptExtract: true,
+      enableVoiceExpense: true,
+      enableCategoryExtract: true,
+      enableBulkCategorize: false,
+      enableDictionarySuggest: false,
+      enableHistorySuggest: true,
+      categoryEngine: 'system-one',
+      categoryLocalThresholds: {
+        minScore: 0.8,
+        settlementMinScore: 0.97,
+      },
+      aiMinConfidence: 0.6,
+    }
+    mocks.updater = {
+      ready: true,
+      isUpdating: false,
+      patchPreferences: () => undefined,
+    }
+    mocks.preferences = {
+      aiFeaturesEnabled: false,
+      aiCategoryExtractEnabled: false,
+      aiReceiptScanEnabled: false,
+      aiVoiceExpenseEnabled: false,
+    }
+
+    function StageProbe() {
+      const { flags } = useEffectiveRuntimeFeatureFlags()
+      return (
+        <div
+          data-testid="stages"
+          data-dictionary={flags.enableDictionarySuggest ? 'true' : 'false'}
+          data-history={flags.enableHistorySuggest ? 'true' : 'false'}
+          data-engine={flags.categoryEngine}
+          data-min-score={flags.categoryLocalThresholds.minScore}
+          data-ai-floor={flags.aiMinConfidence}
+        />
+      )
+    }
+
+    render(<StageProbe />)
+    const el = screen.getByTestId('stages')
+    expect(el.getAttribute('data-dictionary')).toBe('false')
+    expect(el.getAttribute('data-history')).toBe('true')
+    expect(el.getAttribute('data-engine')).toBe('system-one')
+    expect(el.getAttribute('data-min-score')).toBe('0.8')
+    expect(el.getAttribute('data-ai-floor')).toBe('0.6')
   })
 })

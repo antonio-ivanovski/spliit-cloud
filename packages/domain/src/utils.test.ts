@@ -1,3 +1,4 @@
+import { DEFAULT_CATEGORIES } from './categories'
 import type { Currency } from './currency'
 import {
   cn,
@@ -246,18 +247,22 @@ describe('formatFileSize', () => {
 })
 
 describe('formatCategoryForAIPrompt', () => {
-  it('formats correctly', () => {
-    const category = {
-      id: 5,
-      grouping: 'Food',
-      name: 'Groceries',
-    }
+  it('formats taxonomy path with generic guidance and parent hint', () => {
+    const category = DEFAULT_CATEGORIES.find(({ id }) => id === 'liquor')!
 
-    expect(
-      formatCategoryForAIPrompt(
-        category as unknown as Parameters<typeof formatCategoryForAIPrompt>[0],
-      ),
-    ).toBe('"Food/Groceries" (ID: 5)')
+    expect(formatCategoryForAIPrompt(category)).toBe(
+      '"Food and Drink/Liquor" (ID: liquor). Covers: alcoholic drinks: beer, wine, spirits, in shops or bars. Not: restaurant meals (dining-out); non-alcoholic groceries (groceries). Part of "Food and Drink". If the expense is Food and Drink spending in general rather than specifically the above, choose "food-and-drink".',
+    )
+  })
+
+  it('gives parents a prefer-child hint and general no parent hint', () => {
+    const parent = DEFAULT_CATEGORIES.find(({ id }) => id === 'food-and-drink')!
+    expect(formatCategoryForAIPrompt(parent)).toContain(
+      'prefer a more specific child',
+    )
+
+    const fallback = DEFAULT_CATEGORIES.find(({ id }) => id === 'general')!
+    expect(formatCategoryForAIPrompt(fallback)).not.toContain('Part of')
   })
 })
 

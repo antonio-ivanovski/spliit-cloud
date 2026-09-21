@@ -148,6 +148,19 @@ may remain empty.
   Provider calls are bounded by `AI_RECEIPT_TIMEOUT_SECONDS` (default 120),
   `AI_VOICE_TIMEOUT_SECONDS` (default 120), and `AI_CATEGORY_TIMEOUT_SECONDS`
   (default 30); raise them when self-hosting a slow model.
+  Category suggestions run dictionary, then group history, then one AI engine
+  (`AI_CATEGORY_ENGINE=llm|system-one`, default `llm`). The system-one engine
+  needs `AI_SYSTEM_ONE_API_KEY` instead of `AI_API_KEY`, plus optional
+  `AI_SYSTEM_ONE_MODEL` (default `jev-latest`),
+  `AI_SYSTEM_ONE_TIMEOUT_SECONDS` (default 10), and `AI_SYSTEM_ONE_BASE_URL`
+  (default TypeSafe's endpoint; override for a self-hosted compatible server).
+  Both engines share one
+  confidence floor, `AI_CATEGORY_MIN_CONFIDENCE` (default 0.5). The local stages can be switched
+  off with `CATEGORY_DICTIONARY_ENABLED` / `CATEGORY_HISTORY_ENABLED`
+  (default true) and tuned with `CATEGORY_LOCAL_MIN_SCORE` (default 0.8) and
+  `CATEGORY_LOCAL_SETTLEMENT_MIN_SCORE` (default 0.95). Boot validation rejects a system-one engine
+  without its key, so misconfiguration fails fast instead of silently
+  suggesting nothing.
 - Web Push requires the public key, private key, and subject together.
 - MCP requires `ENABLE_MCP=true`, `MCP_PUBLIC_URL`, and a dedicated
   `ASSISTANT_CONFIRMATION_SECRET` of at least 32 bytes. Deploy the MCP service

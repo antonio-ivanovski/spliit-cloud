@@ -1130,7 +1130,8 @@
       "action": "Muokkaa valuutan {currency} summaa",
       "description": "Syötä lopullinen summa kaikkine kuluineen.",
       "impliedRate": "Laskennallinen kurssi: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "Kategoriaehdotukset"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Poista asiakirja",

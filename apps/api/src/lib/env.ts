@@ -166,6 +166,73 @@ const envSchema = z
       .int()
       .positive()
       .default(50),
+    /**
+     * Which AI backend classifies a single expense title when the local stages
+     * miss: the configured LLM provider, or a System One decision model
+     * (TypeSafe's Jev by default; any `/v1/systemone`-compatible model such as
+     * a self-hosted Kev via AI_SYSTEM_ONE_BASE_URL). Exactly one engine runs
+     * per suggestion.
+     */
+    AI_CATEGORY_ENGINE: z.enum(['llm', 'system-one']).default('llm'),
+    /**
+     * API key for the System One decision-model endpoint. Only used when
+     * AI_CATEGORY_ENGINE is 'system-one'. Keep this server-side; never expose
+     * to the web client.
+     */
+    AI_SYSTEM_ONE_API_KEY: optionalString,
+    AI_SYSTEM_ONE_MODEL: z.preprocess(
+      emptyStringAsUndefined,
+      z.string().default('jev-latest'),
+    ),
+    AI_SYSTEM_ONE_TIMEOUT_SECONDS: z.coerce
+      .number()
+      .int()
+      .positive()
+      .default(10),
+    AI_SYSTEM_ONE_BASE_URL: z.preprocess(
+      emptyStringAsUndefined,
+      z.url().default('https://api.typesafe.ai/v1/systemone'),
+    ),
+    /**
+     * Minimum AI confidence (0–1) for a suggestion to be applied, whichever
+     * engine runs: the decision model reports model confidence, the LLM
+     * self-reports confidence in its structured verdict. Below the floor the
+     * verdict degrades to no suggestion. Defaults to 0.5 as a conservative
+     * starting point — calibrate on a labeled sample of real expenses before
+     * changing. Note the two confidences are not on the same scale (LLM
+     * self-reports skew high), so recalibrate when switching engines.
+     */
+    AI_CATEGORY_MIN_CONFIDENCE: z.preprocess(
+      emptyStringAsUndefined,
+      z.coerce.number().min(0).max(1).default(0.5),
+    ),
+    /**
+     * Master switches for the local single-expense suggest stages. Both default
+     * to on; the web client mirrors them (via `features.get`) because it runs
+     * the same local matching before calling the server.
+     */
+    CATEGORY_DICTIONARY_ENABLED: z.preprocess(
+      interpretOptionalEnvVarAsBool,
+      z.boolean().default(true),
+    ),
+    CATEGORY_HISTORY_ENABLED: z.preprocess(
+      interpretOptionalEnvVarAsBool,
+      z.boolean().default(true),
+    ),
+    /**
+     * Local-matcher gates for the suggest flow (dictionary + history, client
+     * and server run the same matcher). Defaults preserve the long-standing
+     * behavior; tuned values apply to suggestions only — expense-list query
+     * expansion stays on the domain constants.
+     */
+    CATEGORY_LOCAL_MIN_SCORE: z.preprocess(
+      emptyStringAsUndefined,
+      z.coerce.number().min(0).max(1).default(0.8),
+    ),
+    CATEGORY_LOCAL_SETTLEMENT_MIN_SCORE: z.preprocess(
+      emptyStringAsUndefined,
+      z.coerce.number().min(0).max(1).default(0.95),
+    ),
     /** Recent title→category pairs for local matching (not sent to the LLM). */
     CATEGORY_MEMORY_LIMIT: z.coerce
       .number()
@@ -462,14 +529,27 @@ const envSchema = z
     }
     if (
       (env.PUBLIC_ENABLE_RECEIPT_EXTRACT ||
-        env.PUBLIC_ENABLE_CATEGORY_EXTRACT ||
-        env.PUBLIC_ENABLE_VOICE_EXPENSE) &&
+        env.PUBLIC_ENABLE_VOICE_EXPENSE ||
+        (env.PUBLIC_ENABLE_CATEGORY_EXTRACT &&
+          env.AI_CATEGORY_ENGINE === 'llm')) &&
       !env.AI_API_KEY
     ) {
       ctx.addIssue({
         code: 'custom',
         message:
-          'If PUBLIC_ENABLE_RECEIPT_EXTRACT, PUBLIC_ENABLE_CATEGORY_EXTRACT, or PUBLIC_ENABLE_VOICE_EXPENSE is specified, then AI_API_KEY must be specified too',
+          'If PUBLIC_ENABLE_RECEIPT_EXTRACT, PUBLIC_ENABLE_VOICE_EXPENSE, or PUBLIC_ENABLE_CATEGORY_EXTRACT with AI_CATEGORY_ENGINE=llm is specified, then AI_API_KEY must be specified too',
+      })
+    }
+    if (
+      env.PUBLIC_ENABLE_CATEGORY_EXTRACT &&
+      env.AI_CATEGORY_ENGINE === 'system-one' &&
+      !env.AI_SYSTEM_ONE_API_KEY
+    ) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['AI_SYSTEM_ONE_API_KEY'],
+        message:
+          'AI_SYSTEM_ONE_API_KEY must be specified when PUBLIC_ENABLE_CATEGORY_EXTRACT is enabled with AI_CATEGORY_ENGINE=system-one',
       })
     }
     if (env.PUBLIC_ENABLE_VOICE_EXPENSE && !env.AI_VOICE_MODEL) {

@@ -1123,7 +1123,8 @@
       "action": "{currency} での金額を編集",
       "description": "手数料を含む請求総額を入力してください。",
       "impliedRate": "算出レート: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "カテゴリー候補"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "書類を削除",

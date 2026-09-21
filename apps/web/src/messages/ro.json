@@ -1137,7 +1137,8 @@
       "action": "Editează suma în {currency}",
       "description": "Introdu suma finală, inclusiv comisioanele.",
       "impliedRate": "Curs implicit: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "Sugestii de categorii"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Șterge documentul",

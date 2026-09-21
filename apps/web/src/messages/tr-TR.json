@@ -1130,7 +1130,8 @@
       "action": "{currency} cinsinden tutarı düzenle",
       "description": "Ücretler dâhil olmak üzere tahsil edilen toplam tutarı girin.",
       "impliedRate": "Hesaplanan kur: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "Kategori önerileri"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Belgeyi sil",

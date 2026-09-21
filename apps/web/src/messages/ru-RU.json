@@ -1144,7 +1144,8 @@
       "action": "Изменить сумму в {currency}",
       "description": "Введите итоговую сумму с учётом всех комиссий.",
       "impliedRate": "Подразумеваемый курс: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "Предложения категорий"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Удалить документ",

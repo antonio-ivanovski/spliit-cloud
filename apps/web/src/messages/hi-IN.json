@@ -1537,7 +1537,8 @@
       "action": "{currency} में राशि संपादित करें",
       "description": "सभी शुल्कों सहित कुल ली गई राशि दर्ज करें।",
       "impliedRate": "अनुमानित दर: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "श्रेणी सुझाव"
   },
   "ExpensePreview": {
     "title": "खर्च पूर्वावलोकन",

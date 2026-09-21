@@ -1123,7 +1123,8 @@
       "action": "編輯以 {currency} 計的金額",
       "description": "輸入包含所有費用的扣款總額。",
       "impliedRate": "推算匯率：1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "類別建議"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "刪除文檔",

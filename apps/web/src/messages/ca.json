@@ -1137,7 +1137,8 @@
       "action": "Edita l’import en {currency}",
       "description": "Introdueix l’import final, incloses les comissions.",
       "impliedRate": "Tipus implícit: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "Suggeriments de categoria"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Suprimeix el document",

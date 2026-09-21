@@ -1154,7 +1154,8 @@
       "action": "Bedrag in {currency} bewerken",
       "description": "Voer het uiteindelijke bedrag inclusief kosten in.",
       "impliedRate": "Afgeleide koers: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "Categoriesuggesties"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Document verwijderen",

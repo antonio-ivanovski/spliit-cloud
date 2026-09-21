@@ -1144,7 +1144,8 @@
       "action": "Edytuj kwotę w {currency}",
       "description": "Wprowadź łączną pobraną kwotę wraz ze wszystkimi opłatami.",
       "impliedRate": "Wyliczony kurs: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "Propozycje kategorii"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Usuń dokument",

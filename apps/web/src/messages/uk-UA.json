@@ -1144,7 +1144,8 @@
       "action": "Редагувати суму в {currency}",
       "description": "Введіть загальну списану суму, включно з усіма комісіями.",
       "impliedRate": "Розрахунковий курс: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "Пропозиції категорій"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Видалити документ",

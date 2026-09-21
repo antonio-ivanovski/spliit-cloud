@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
 import type { Category } from './categories'
+import { describeCategoryForAI } from './category-descriptions'
 import { getCurrency, getCurrencyFromGroup, type Currency } from './currency'
 import { resolveFormattingLocale } from './i18n'
 
@@ -84,10 +85,8 @@ export function formatDateOnly(
   })
 }
 
-export function formatCategoryForAIPrompt(
-  category: Pick<Category, 'id' | 'grouping' | 'name'>,
-) {
-  return `"${category.grouping}/${category.name}" (ID: ${category.id})`
+export function formatCategoryForAIPrompt(category: Category) {
+  return describeCategoryForAI(category)
 }
 
 /**

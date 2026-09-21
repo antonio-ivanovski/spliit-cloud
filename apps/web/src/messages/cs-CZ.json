@@ -1144,7 +1144,8 @@
       "action": "Upravit částku v {currency}",
       "description": "Zadejte celkovou účtovanou částku včetně poplatků.",
       "impliedRate": "Odvozený kurz: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "Návrhy kategorií"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Smazat dokument",

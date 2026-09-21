@@ -1154,7 +1154,8 @@
       "action": "Betrag in {currency} bearbeiten",
       "description": "Gib den endgültigen Betrag einschließlich aller Gebühren ein.",
       "impliedRate": "Impliziter Wechselkurs: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "Kategorievorschläge"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Dokument löschen",

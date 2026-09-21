@@ -1136,7 +1136,8 @@
       "action": "Editatu zenbatekoa {currency}-tan",
       "description": "Sartu azken zenbatekoa, komisioak barne.",
       "impliedRate": "Inplizituko tasa: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "Kategoria-iradokizunak"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Ezabatu dokumentua",

@@ -1123,7 +1123,8 @@
       "action": "编辑以 {currency} 计的金额",
       "description": "输入包含所有费用的总扣款金额。",
       "impliedRate": "推算汇率：1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "类别建议"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "删除文档",

@@ -1123,7 +1123,8 @@
       "action": "Edit jumlah dalam {currency}",
       "description": "Masukkan total yang dibebankan, termasuk semua biaya.",
       "impliedRate": "Kurs tersirat: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "Saran kategori"
   },
   "Currencies": {
     "search": "Cari mata uang...",

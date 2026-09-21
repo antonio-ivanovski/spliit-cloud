@@ -11,6 +11,13 @@ import {
 
 export const suggestCategoryOutputSchema = z.object({
   categoryId: categoryIdSchema.nullable(),
+  candidates: z.array(
+    z.object({
+      id: categoryIdSchema,
+      score: z.number().min(0).max(1),
+      source: z.literal('ai'),
+    }),
+  ),
 })
 
 export const suggestCategoryProcedure = protectedProcedure

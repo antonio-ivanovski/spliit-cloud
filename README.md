@@ -304,6 +304,24 @@ The model used for category extraction defaults to `gpt-5-nano`. Override it wit
 
 Voice extraction uses `AI_VOICE_MODEL` with a timeout of `AI_VOICE_TIMEOUT_SECONDS` (default `120`); inline category suggestions time out after `AI_CATEGORY_TIMEOUT_SECONDS` (default `30`) and quietly fall back to no suggestion.
 
+Suggestions run in stages: the local dictionary (brands/aliases), then group title history, then one AI engine. Each local stage has a deployment switch (`CATEGORY_DICTIONARY_ENABLED` and `CATEGORY_HISTORY_ENABLED`, both default `true`); the local-matcher gates are tunable via `CATEGORY_LOCAL_MIN_SCORE` (default `0.8`) and `CATEGORY_LOCAL_SETTLEMENT_MIN_SCORE` (default `0.95`). The web client mirrors the switches automatically, so both layers agree on which stages run.
+
+#### Choosing the category AI engine (LLM or System One)
+
+`AI_CATEGORY_ENGINE` selects which AI backend classifies a title when the local stages miss: `llm` (default, the configured `AI_PROVIDER`) or `system-one` (a System One decision-model `Choice` judgment — TypeSafe's Jev by default). The choice is exclusive — exactly one engine runs per suggestion. The LLM engine needs a model with JSON-mode support (it returns a structured verdict with self-reported confidence); unparsable verdicts fall back to plain-text ID extraction with confidence `0`.
+
+To use System One, set the engine and the server-side key (never exposed to the web client):
+
+```.env
+PUBLIC_ENABLE_CATEGORY_EXTRACT=true
+AI_CATEGORY_ENGINE=system-one
+AI_SYSTEM_ONE_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+```
+
+Optional overrides: `AI_SYSTEM_ONE_MODEL` (default `jev-latest`; pin a versioned ID such as `jev-1.13.0` once you tune thresholds, since the `jev-latest` alias moves), `AI_SYSTEM_ONE_TIMEOUT_SECONDS` (default `10`), and `AI_SYSTEM_ONE_BASE_URL` (default TypeSafe's endpoint; point at a self-hosted `/v1/systemone`-compatible server such as Kev to run another decision model — experimental, recalibrate the floor for it).
+
+Both engines report a confidence with each verdict (System One: model confidence; LLM: self-reported confidence in its structured verdict) and share one floor: `AI_CATEGORY_MIN_CONFIDENCE` (default `0.5`). Below-floor verdicts degrade to no suggestion. The two confidences are not on the same scale — recalibrate the floor on a labeled sample of real expenses when switching engines.
+
 ### Choosing an AI provider
 
 Set `AI_PROVIDER` to select the request protocol. Provider selection is explicit and is never inferred from a model ID:

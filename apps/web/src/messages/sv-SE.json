@@ -1537,7 +1537,8 @@
       "action": "Redigera belopp i {currency}",
       "description": "Ange det slutliga beloppet, inklusive eventuella avgifter.",
       "impliedRate": "Härledd kurs: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "Kategoriförslag"
   },
   "ExpensePreview": {
     "title": "Utgiftsförhandsvisning",

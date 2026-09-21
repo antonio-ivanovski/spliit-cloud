@@ -209,7 +209,6 @@
     "samples": ["doctor visit", "pharmacy run", "travel vaccinations"]
   },
   "insurance": {
-    "aliases": ["premium"],
     "samples": ["car insurance"]
   },
   "taxes": {

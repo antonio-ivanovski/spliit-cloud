@@ -1581,7 +1581,8 @@
       "action": "{currency} এ পরিমাণ সম্পাদনা করুন",
       "description": "ফিসসহ মোট চার্জের পরিমাণ লিখুন।",
       "impliedRate": "অনুমিত বিনিময় হার: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "বিভাগের পরামর্শ"
   },
   "ExpensePreview": {
     "title": "খরচ প্রিভিউ",

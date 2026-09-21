@@ -1672,7 +1672,8 @@
       "action": "Chỉnh sửa số tiền bằng {currency}",
       "description": "Nhập tổng số tiền bị tính, bao gồm mọi khoản phí.",
       "impliedRate": "Tỷ giá suy ra: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "Gợi ý danh mục"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Xóa tài liệu",

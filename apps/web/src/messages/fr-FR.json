@@ -1137,7 +1137,8 @@
       "action": "Modifier le montant en {currency}",
       "description": "Saisissez le montant final, frais compris.",
       "impliedRate": "Taux implicite : 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "Suggestions de catégorie"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Supprimer le document",

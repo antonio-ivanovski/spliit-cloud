@@ -9,10 +9,14 @@ import { trpc } from '@/trpc/client'
 import {
   DEFAULT_CATEGORIES,
   DEFAULT_CATEGORY_ID,
+  CATEGORY_CANDIDATE_NEAR_TIE_WINDOW,
   createCategorySearchDocument,
   meetsCategorySuggestLiveMinQueryLength,
   meetsCategorySuggestMinQueryLength,
   suggestCategoryFromTitle,
+  suggestCategoryRunnersUp,
+  type CategoryLocalThresholds,
+  type CategorySuggestion,
   type ExpenseFormInputValues,
 } from '@spliit/domain'
 
@@ -27,6 +31,9 @@ export function useSuggestCategoryFromTitle(args: {
   locale: string
   readOnly: boolean
   enableCategoryExtract: boolean
+  enableDictionarySuggest: boolean
+  enableHistorySuggest: boolean
+  localThresholds: CategoryLocalThresholds
   suggestCategoryMutation: ReturnType<
     typeof trpc.groups.expenses.suggestCategory.useMutation
   >
@@ -37,10 +44,16 @@ export function useSuggestCategoryFromTitle(args: {
     locale,
     readOnly,
     enableCategoryExtract,
+    enableDictionarySuggest,
+    enableHistorySuggest,
+    localThresholds,
     suggestCategoryMutation,
   } = args
   const { t } = useTranslation(undefined, { keyPrefix: 'Categories' })
   const [isCategoryLoading, setCategoryLoading] = useState(false)
+  const [categoryCandidates, setCategoryCandidates] = useState<
+    CategorySuggestion[]
+  >([])
   const categoryRequestRef = useRef(0)
   const categoryAbortRef = useRef<AbortController | null>(null)
   const loadingDelayRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -82,10 +95,14 @@ export function useSuggestCategoryFromTitle(args: {
 
   const memoryQuery = trpc.groups.expenses.categoryMemory.useQuery(
     { groupId, ...useGroupAccessSearch() },
-    { enabled: !readOnly },
+    { enabled: !readOnly && enableHistorySuggest },
   )
   const memory = memoryQuery.data?.expenses
-  const memoryReady = readOnly || memoryQuery.isSuccess || memoryQuery.isError
+  const memoryReady =
+    readOnly ||
+    !enableHistorySuggest ||
+    memoryQuery.isSuccess ||
+    memoryQuery.isError
 
   const { isSubmitting } = useFormState({ control: form.control })
 
@@ -102,6 +119,7 @@ export function useSuggestCategoryFromTitle(args: {
     categoryAbortRef.current?.abort()
     // oxlint-disable-next-line react/set-state-in-effect -- abort in-flight suggest on submit and clear delayed loading indicator.
     setCategoryLoading(false)
+    setCategoryCandidates([])
   }, [clearLoadingDelay, isSubmitting])
 
   const triggerSuggest = useCallback(
@@ -118,9 +136,19 @@ export function useSuggestCategoryFromTitle(args: {
           categorySourceRef.current === 'suggested') &&
         lastCategorizedTitleRef.current !== title
 
-      if (!canSuggest) return
+      if (!canSuggest) {
+        // Stale guesses must not linger once the title no longer qualifies
+        // (cleared or shortened below the length gate). A repeated trigger
+        // for the same title keeps its chips.
+        if (!meetsGate) setCategoryCandidates([])
+        return
+      }
 
-      const local = suggestCategoryFromTitle(title, documents, memory ?? [])
+      const local = suggestCategoryFromTitle(title, documents, memory ?? [], {
+        dictionaryEnabled: enableDictionarySuggest,
+        historyEnabled: enableHistorySuggest,
+        thresholds: localThresholds,
+      })
       if (local) {
         clearLoadingDelay()
         categoryRequestRef.current += 1
@@ -133,8 +161,30 @@ export function useSuggestCategoryFromTitle(args: {
           shouldTouch: true,
           shouldValidate: true,
         })
+        // Single "other suggestions" chip on a near-tie dictionary hit —
+        // same score scale, so the comparison is meaningful. History and AI
+        // hits use different scales and never get a runner-up chip.
+        if (local.source === 'dictionary') {
+          const [runnerUp] = suggestCategoryRunnersUp(title, documents, {
+            thresholds: localThresholds,
+            excludeIds: [local.id],
+          })
+          const nearTie =
+            !!runnerUp &&
+            local.score - runnerUp.score <= CATEGORY_CANDIDATE_NEAR_TIE_WINDOW
+          console.debug('[suggestCategory:client]', {
+            title,
+            local,
+            runnerUp: runnerUp ?? null,
+            chipShown: nearTie,
+          })
+          setCategoryCandidates(nearTie ? [runnerUp] : [])
+        } else {
+          setCategoryCandidates([])
+        }
         return
       }
+      setCategoryCandidates([])
 
       const requestId = ++categoryRequestRef.current
       categoryAbortRef.current?.abort()
@@ -157,7 +207,7 @@ export function useSuggestCategoryFromTitle(args: {
         locale,
         allowAi: enableCategoryExtract,
       })
-        .then(({ categoryId }) => {
+        .then(({ categoryId, candidates }) => {
           if (
             requestId !== categoryRequestRef.current ||
             abortController.signal.aborted ||
@@ -168,6 +218,24 @@ export function useSuggestCategoryFromTitle(args: {
             return
           }
 
+          // The AI engine's own runners-up double as guess chips (the applied
+          // winner is already excluded server-side; on a miss the top pick is
+          // included). When the AI did not run or had no usable runners, fall
+          // back to dictionary guesses, which obey the dictionary flag.
+          const chips =
+            candidates.length > 0
+              ? candidates
+              : !categoryId && enableDictionarySuggest
+                ? suggestCategoryRunnersUp(title, documents, {
+                    thresholds: localThresholds,
+                  })
+                : []
+          console.debug('[suggestCategory:client]', {
+            title,
+            serverCategoryId: categoryId,
+            chips,
+          })
+          setCategoryCandidates(chips)
           if (!categoryId) return
 
           categorySourceRef.current = 'suggested'
@@ -192,6 +260,9 @@ export function useSuggestCategoryFromTitle(args: {
       clearLoadingDelay,
       documents,
       enableCategoryExtract,
+      enableDictionarySuggest,
+      enableHistorySuggest,
+      localThresholds,
       form,
       groupId,
       locale,
@@ -207,18 +278,51 @@ export function useSuggestCategoryFromTitle(args: {
     triggerSuggest(debouncedTitle, true)
   }, [debouncedTitle, triggerSuggest])
 
+  const rawTitleMeetsGate = meetsCategorySuggestMinQueryLength(
+    titleValue.trim(),
+  )
+  useEffect(() => {
+    // Guess chips must follow the raw title, not the debounced one: the
+    // debounced trigger never reruns when the debounced value is unchanged
+    // (e.g. typed then cleared within one debounce window), which would
+    // leave chips for a title that no longer qualifies.
+    // oxlint-disable-next-line react/set-state-in-effect -- drop stale guess chips the moment the raw title stops qualifying.
+    if (!rawTitleMeetsGate) setCategoryCandidates([])
+  }, [rawTitleMeetsGate])
+
   const onManualCategory = useCallback(() => {
     clearLoadingDelay()
     categoryRequestRef.current += 1
     categoryAbortRef.current?.abort()
     categorySourceRef.current = 'manual'
     setCategoryLoading(false)
+    setCategoryCandidates([])
     suggestCategoryMutation.reset?.()
   }, [clearLoadingDelay, suggestCategoryMutation])
+
+  const onPickCandidate = useCallback(
+    (categoryId: CategorySuggestion['id']) => {
+      form.setValue('category', categoryId, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      })
+      // A tapped guess is an explicit pick: lock the category like a manual
+      // selection so further typing does not overwrite it.
+      onManualCategory()
+    },
+    [form, onManualCategory],
+  )
 
   const onTitleBlur = useCallback(() => {
     triggerSuggest(form.getValues('title') ?? '', false)
   }, [form, triggerSuggest])
 
-  return { isCategoryLoading, onManualCategory, onTitleBlur }
+  return {
+    isCategoryLoading,
+    onManualCategory,
+    onTitleBlur,
+    categoryCandidates,
+    onPickCandidate,
+  }
 }

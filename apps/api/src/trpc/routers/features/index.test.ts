@@ -24,6 +24,12 @@ const originalDeploymentValues = {
   SMTP_HOST: env.SMTP_HOST,
   EMAIL_FROM: env.EMAIL_FROM,
   SIGNUP_MODE: env.SIGNUP_MODE,
+  CATEGORY_DICTIONARY_ENABLED: env.CATEGORY_DICTIONARY_ENABLED,
+  CATEGORY_HISTORY_ENABLED: env.CATEGORY_HISTORY_ENABLED,
+  AI_CATEGORY_ENGINE: env.AI_CATEGORY_ENGINE,
+  CATEGORY_LOCAL_MIN_SCORE: env.CATEGORY_LOCAL_MIN_SCORE,
+  CATEGORY_LOCAL_SETTLEMENT_MIN_SCORE: env.CATEGORY_LOCAL_SETTLEMENT_MIN_SCORE,
+  AI_CATEGORY_MIN_CONFIDENCE: env.AI_CATEGORY_MIN_CONFIDENCE,
 }
 
 afterEach(() => {
@@ -69,6 +75,30 @@ describe('features.get', () => {
       enableAnonymousAuth: true,
       enableEmailAuth: true,
       emailDeliveryEnabled: true,
+    })
+  })
+
+  it('exposes the category suggest stages, engine, and thresholds', async () => {
+    Object.assign(env, {
+      CATEGORY_DICTIONARY_ENABLED: false,
+      CATEGORY_HISTORY_ENABLED: true,
+      AI_CATEGORY_ENGINE: 'system-one',
+      CATEGORY_LOCAL_MIN_SCORE: 0.8,
+      CATEGORY_LOCAL_SETTLEMENT_MIN_SCORE: 0.97,
+      AI_CATEGORY_MIN_CONFIDENCE: 0.6,
+    })
+
+    const result = await featuresRouter.createCaller({ auth: null }).get()
+
+    expect(result).toMatchObject({
+      enableDictionarySuggest: false,
+      enableHistorySuggest: true,
+      categoryEngine: 'system-one',
+      categoryLocalThresholds: {
+        minScore: 0.8,
+        settlementMinScore: 0.97,
+      },
+      aiMinConfidence: 0.6,
     })
   })
 

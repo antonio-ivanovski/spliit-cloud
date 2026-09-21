@@ -1572,7 +1572,8 @@
       "action": "Уреди го износот во {currency}",
       "description": "Внеси го вкупниот наплатен износ, вклучувајќи ги сите провизии.",
       "impliedRate": "Пресметан курс: 1 {source} = {rate} {target}"
-    }
+    },
+    "otherSuggestions": "Предлози за категории"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Избриши документ",

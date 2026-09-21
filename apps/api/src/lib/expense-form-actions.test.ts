@@ -1,3 +1,4 @@
+import { NoObjectGeneratedError } from 'ai'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 // Capture generation arguments so we can assert on the actual instructions.
@@ -7,11 +8,15 @@ vi.mock('./ai', () => ({
   getModel: vi.fn(async () => ({})),
 }))
 
-vi.mock('ai', () => ({
+vi.mock('ai', async (importOriginal) => ({
+  ...((await importOriginal()) as object),
   generateText: vi.fn(
     async (args: { instructions: string; prompt: string }) => {
       captured.push(args)
-      return { text: '"groceries"' }
+      return {
+        text: '{"categoryId":"groceries","confidence":0.85}',
+        output: { categoryId: 'groceries', confidence: 0.85 },
+      }
     },
   ),
 }))
@@ -124,19 +129,113 @@ describe('suggestCategoryWithAI', () => {
     expect(captured[0]!.prompt).toBe('a'.repeat(40))
   })
 
-  it('returns the parsed category id', async () => {
-    await expect(
-      suggestCategoryWithAI('Luigi mysterious trattoria xyzzy'),
-    ).resolves.toEqual({ categoryId: 'groceries' })
+  it('asks for a JSON verdict with confidence', async () => {
+    await suggestCategoryWithAI('Luigi mysterious trattoria xyzzy')
+    const prompt = instructions()
+    expect(prompt).toContain('JSON object')
+    expect(prompt).toContain('confidence')
   })
 
-  it('returns null when the model falls back to general', async () => {
+  it('returns the parsed category id with its confidence', async () => {
+    await expect(
+      suggestCategoryWithAI('Luigi mysterious trattoria xyzzy'),
+    ).resolves.toEqual({
+      categoryId: 'groceries',
+      confidence: 0.85,
+      distribution: [{ id: 'groceries', probability: 1 }],
+    })
+  })
+
+  it('returns null but preserves confidence when the model falls back to general', async () => {
     vi.mocked(generateText).mockResolvedValueOnce({
-      text: 'general',
+      text: '{"categoryId":"general","confidence":0.9}',
+      output: { categoryId: 'general', confidence: 0.9 },
     } as never)
     await expect(
       suggestCategoryWithAI('Luigi mysterious trattoria xyzzy'),
-    ).resolves.toEqual({ categoryId: null })
+    ).resolves.toEqual({ categoryId: null, confidence: 0.9, distribution: [] })
+  })
+
+  it('falls back to plain-text ID extraction with confidence 0 when JSON output throws', async () => {
+    // A model without JSON-mode makes Output.json() raise
+    // NoObjectGeneratedError carrying the raw text.
+    vi.mocked(generateText).mockRejectedValueOnce(
+      new NoObjectGeneratedError({
+        message: 'No object generated',
+        text: 'groceries',
+      }),
+    )
+    await expect(
+      suggestCategoryWithAI('Luigi mysterious trattoria xyzzy'),
+    ).resolves.toEqual({
+      categoryId: 'groceries',
+      confidence: 0,
+      distribution: [],
+    })
+  })
+
+  it('falls back to plain-text ID extraction with confidence 0 when the verdict output is missing', async () => {
+    vi.mocked(generateText).mockResolvedValueOnce({
+      text: 'groceries',
+      output: undefined,
+    } as never)
+    await expect(
+      suggestCategoryWithAI('Luigi mysterious trattoria xyzzy'),
+    ).resolves.toEqual({
+      categoryId: 'groceries',
+      confidence: 0,
+      distribution: [],
+    })
+  })
+
+  it('asks for runner-up categories with independent confidences', async () => {
+    await suggestCategoryWithAI('Luigi mysterious trattoria xyzzy')
+    expect(instructions()).toContain('runnersUp')
+    expect(instructions()).toContain('need not sum to 1')
+  })
+
+  it('normalizes winner + validated runners into a distribution', async () => {
+    vi.mocked(generateText).mockResolvedValueOnce({
+      text: '{"categoryId":"liquor","confidence":0.6}',
+      output: {
+        categoryId: 'liquor',
+        confidence: 0.6,
+        runnersUp: [
+          { categoryId: 'dining-out', confidence: 0.3 },
+          { categoryId: 'general', confidence: 0.9 },
+          { categoryId: 'nope', confidence: 0.5 },
+          { categoryId: 'liquor', confidence: 0.4 },
+          { categoryId: 'movies', confidence: 1.5 },
+        ],
+      },
+    } as never)
+    // general / unknown / winner-dupe dropped, 1.5 clamped to 1.
+    const total = 0.6 + 0.3 + 1
+    await expect(
+      suggestCategoryWithAI('Luigi mysterious trattoria xyzzy'),
+    ).resolves.toEqual({
+      categoryId: 'liquor',
+      confidence: 0.6,
+      distribution: [
+        { id: 'liquor', probability: 0.6 / total },
+        { id: 'dining-out', probability: 0.3 / total },
+        { id: 'movies', probability: 1 / total },
+      ],
+    })
+  })
+
+  it('returns no distribution when the winner is a no-match', async () => {
+    vi.mocked(generateText).mockResolvedValueOnce({
+      text: '{"categoryId":"general","confidence":0.4}',
+      output: {
+        categoryId: 'general',
+        confidence: 0.4,
+        runnersUp: [{ categoryId: 'liquor', confidence: 0.8 }],
+      },
+    } as never)
+    await expect(
+      suggestCategoryWithAI('Luigi mysterious trattoria xyzzy'),
+    ).resolves.toEqual({ categoryId: null, confidence: 0.4, distribution: [] })
   })
 
   it('bounds the provider call with the configured timeout and no retries', async () => {

@@ -4,6 +4,7 @@ import {
 } from '@/components/account-preferences-sync'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { trpc } from '@/trpc/client'
+import { DEFAULT_LOCAL_THRESHOLDS } from '@spliit/domain'
 
 export interface EffectiveRuntimeFeatureFlags {
   /**
@@ -70,6 +71,14 @@ export function useEffectiveRuntimeFeatureFlags(): EffectiveRuntimeFeatureFlags 
         aiEnabled &&
         prefs?.aiCategoryExtractEnabled !== false,
       enableBulkCategorize: !!serverFlags?.enableBulkCategorize,
+      enableDictionarySuggest: serverFlags?.enableDictionarySuggest ?? true,
+      enableHistorySuggest: serverFlags?.enableHistorySuggest ?? true,
+      categoryEngine: serverFlags?.categoryEngine ?? 'llm',
+      categoryLocalThresholds: serverFlags?.categoryLocalThresholds ?? {
+        ...DEFAULT_LOCAL_THRESHOLDS,
+      },
+      // Fallback mirrors the server default; informational only, never enforced here.
+      aiMinConfidence: serverFlags?.aiMinConfidence ?? 0.5,
     },
     isLoading,
   }

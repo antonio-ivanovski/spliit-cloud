@@ -419,6 +419,63 @@ describe('envSchema — AI', () => {
       }),
     ).toThrow(/AI_VOICE_MODEL must be specified/)
   })
+
+  it('defaults AI_CATEGORY_ENGINE to llm', () => {
+    expect(parseTestEnv().AI_CATEGORY_ENGINE).toBe('llm')
+  })
+
+  it('throws when category extract uses the system-one engine but AI_SYSTEM_ONE_API_KEY is missing', () => {
+    expect(() =>
+      parseTestEnv({
+        PUBLIC_ENABLE_CATEGORY_EXTRACT: 'true',
+        AI_CATEGORY_ENGINE: 'system-one',
+      }),
+    ).toThrow(/AI_SYSTEM_ONE_API_KEY must be specified/)
+  })
+
+  it('does not require AI_API_KEY when category extract uses the system-one engine', () => {
+    const env = parseTestEnv({
+      PUBLIC_ENABLE_CATEGORY_EXTRACT: 'true',
+      AI_CATEGORY_ENGINE: 'system-one',
+      AI_SYSTEM_ONE_API_KEY: 'so-test-key',
+    })
+    expect(env.AI_CATEGORY_ENGINE).toBe('system-one')
+    expect(env.AI_SYSTEM_ONE_API_KEY).toBe('so-test-key')
+  })
+
+  it('defaults the System One model, endpoint, and timeout', () => {
+    const env = parseTestEnv()
+    expect(env.AI_SYSTEM_ONE_MODEL).toBe('jev-latest')
+    expect(env.AI_SYSTEM_ONE_BASE_URL).toBe(
+      'https://api.typesafe.ai/v1/systemone',
+    )
+    expect(env.AI_SYSTEM_ONE_TIMEOUT_SECONDS).toBe(10)
+  })
+
+  it('defaults the local suggest stages to enabled with calibrated thresholds', () => {
+    const env = parseTestEnv()
+    expect(env.CATEGORY_DICTIONARY_ENABLED).toBe(true)
+    expect(env.CATEGORY_HISTORY_ENABLED).toBe(true)
+    expect(env.CATEGORY_LOCAL_MIN_SCORE).toBe(0.8)
+    expect(env.CATEGORY_LOCAL_SETTLEMENT_MIN_SCORE).toBe(0.95)
+    expect(env.AI_CATEGORY_MIN_CONFIDENCE).toBe(0.5)
+  })
+
+  it('rejects out-of-range suggest thresholds', () => {
+    expect(() => parseTestEnv({ CATEGORY_LOCAL_MIN_SCORE: '1.5' })).toThrow()
+    expect(() => parseTestEnv({ AI_CATEGORY_MIN_CONFIDENCE: '-0.1' })).toThrow()
+  })
+
+  it('falls back to defaults when threshold env vars are empty strings', () => {
+    const env = parseTestEnv({
+      CATEGORY_LOCAL_MIN_SCORE: '',
+      CATEGORY_LOCAL_SETTLEMENT_MIN_SCORE: '',
+      AI_CATEGORY_MIN_CONFIDENCE: '',
+    })
+    expect(env.CATEGORY_LOCAL_MIN_SCORE).toBe(0.8)
+    expect(env.CATEGORY_LOCAL_SETTLEMENT_MIN_SCORE).toBe(0.95)
+    expect(env.AI_CATEGORY_MIN_CONFIDENCE).toBe(0.5)
+  })
 })
 
 describe('envSchema — webhook relay', () => {
