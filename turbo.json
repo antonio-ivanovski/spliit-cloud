@@ -23,6 +23,15 @@
       "cache": false,
       "persistent": true
     },
+    "dev:mcp": {
+      "dependsOn": ["@spliit/db#prisma-generate"],
+      "cache": false,
+      "persistent": true
+    },
+    "dev:relay": {
+      "cache": false,
+      "persistent": true
+    },
     "prisma-generate": {
       "inputs": [
         "prisma/schema.prisma",

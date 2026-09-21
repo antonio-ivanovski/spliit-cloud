@@ -21,6 +21,10 @@ cloudflared tunnel --url http://localhost:3001  # API
 cloudflared tunnel --url http://localhost:3000  # Web
 ```
 
+For local development, run the MCP server manually (it is not part of
+`bun dev`): `bun --filter @spliit/mcp dev:mcp` (defaults to
+`http://localhost:3002`).
+
 ## 1. Configure production
 
 Set these values in the Dokploy Compose environment:

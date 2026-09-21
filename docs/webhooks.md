@@ -491,8 +491,12 @@ own Cloudflare account, worker name, and URLs:
 4. Send a test event to a request-inspection endpoint and confirm the
    Cloudflare source IP and a valid `webhook-signature` before relying on it.
 
+For local testing, run the relay manually (it is not part of `bun dev`):
+`bun --filter @spliit/webhook-relay dev:relay` (defaults to
+`http://localhost:8787/forward`), then set `WEBHOOK_RELAY_URL` accordingly.
+
 Rules enforced at boot: both variables together or neither; the relay URL must
-be HTTPS (HTTP is only accepted for local `wrangler dev` testing together with
+be HTTPS (HTTP is only accepted for local `dev:relay` testing together with
 `WEBHOOK_ALLOW_PRIVATE_ENDPOINTS=true`); and an HTTPS relay cannot be combined
 with `WEBHOOK_ALLOW_PRIVATE_ENDPOINTS=true`, because the relay cannot reach
 private networks. Relayed destinations must be public HTTPS (explicit ports

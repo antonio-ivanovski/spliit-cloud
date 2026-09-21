@@ -7,7 +7,7 @@
     "check-formatting": "oxfmt --check .",
     "check-types": "tsc --noEmit",
     "deploy": "wrangler deploy",
-    "dev": "wrangler dev",
+    "dev:relay": "wrangler dev",
     "format": "oxfmt .",
     "lint": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives .",
     "lint:fix": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives --fix .",

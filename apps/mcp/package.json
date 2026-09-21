@@ -27,7 +27,7 @@
     "check-formatting": "oxfmt --check .",
     "check-types": "tsc --noEmit",
     "deploy": "mcp-use deploy",
-    "dev": "bun --env-file=../../.env run dev:server",
+    "dev:mcp": "bun --env-file=../../.env run dev:server",
     "dev:server": "mcp-use dev --port 3002 --no-open",
     "format": "oxfmt .",
     "lint": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives .",

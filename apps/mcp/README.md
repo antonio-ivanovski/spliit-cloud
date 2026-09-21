@@ -66,7 +66,7 @@ between ChatGPT and Claude.
 - `MCP_WEB_URL`: public Spliit web origin used by expense links
 
 These three variables are required by the MCP process. It validates them before
-constructing the server or binding its port, so `dev` and production `start`
+constructing the server or binding its port, so `dev:mcp` and production `start`
 exit immediately when one is absent or malformed. The Docker Compose service
 also uses required-variable checks and will not create the MCP container when
 one is missing.
@@ -105,7 +105,7 @@ bun --cwd apps/mcp run build
 ```
 
 For local interactive validation, start the existing API and web app separately,
-then run `bun --cwd apps/mcp dev`. The development server listens on port 3002,
+then run `bun --filter @spliit/mcp dev:mcp`. The development server listens on port 3002,
 and MCP clients connect to `/mcp`. Do not point a public assistant host at
 localhost; use HTTPS deployments or secure development tunnels for the MCP,
 API, and web origins used during OAuth.

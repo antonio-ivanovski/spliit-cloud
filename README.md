@@ -150,7 +150,14 @@ features, OAuth providers, Web Push, and the MCP assistant are optional.
    ```bash
    bun dev:up                       # postgres, maxio, maildev via compose.dev.yaml
    bun prisma-migrate
-   bun dev                          # web on :3000, api on :3001
+    bun dev                          # web on :3000, api on :3001, worker admin on :3003
+   ```
+
+   Opt-in only (not started by `bun dev` — run manually when needed):
+
+   ```bash
+   bun --filter @spliit/mcp dev:mcp                # MCP on :3002
+   bun --filter @spliit/webhook-relay dev:relay    # Cloudflare relay on :8787
    ```
 
    `bun dev:down` stops the local service containers. Remove `storage/` for a

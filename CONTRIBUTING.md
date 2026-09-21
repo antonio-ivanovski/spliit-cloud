@@ -21,7 +21,14 @@ bun install
 cp .env.example .env
 bun dev:up                       # starts postgres, maxio, maildev (compose.dev.yaml)
 bun prisma-migrate
-bun dev                          # web :3000, api :3001
+bun dev                          # web :3000, api :3001, worker admin :3003
+```
+
+Opt-in only (not started by `bun dev` — run manually when needed):
+
+```bash
+bun --filter @spliit/mcp dev:mcp                # MCP on :3002
+bun --filter @spliit/webhook-relay dev:relay    # Cloudflare relay on :8787
 ```
 
 Service state lives under `storage/` at the repository root. Stop local
