@@ -6,6 +6,7 @@ import {
   getConfiguredOidcProvider,
   isEmailAuthEnabled,
   isEmailDeliveryEnabled,
+  isPasskeyAuthEnabled,
   getMaxExpenseDocumentSizeBytes,
 } from '../../../lib/env'
 import { baseProcedure, createTRPCRouter } from '../../init'
@@ -43,6 +44,7 @@ export const featuresRouter = createTRPCRouter({
         allowUninvitedSignup: z.boolean(),
         enableAnonymousAuth: z.boolean(),
         enableEmailAuth: z.boolean(),
+        enablePasskeyAuth: z.boolean(),
         emailDeliveryEnabled: z.boolean(),
       }),
     )
@@ -74,6 +76,7 @@ export const featuresRouter = createTRPCRouter({
         allowUninvitedSignup: await allowUninvitedSignup(),
         enableAnonymousAuth: env.ENABLE_ANONYMOUS_AUTH,
         enableEmailAuth: isEmailAuthEnabled(),
+        enablePasskeyAuth: isPasskeyAuthEnabled(),
         emailDeliveryEnabled: isEmailDeliveryEnabled(),
       }
     }),

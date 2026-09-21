@@ -17,8 +17,13 @@ vi.mock('../env', () => ({
   },
 }))
 
-const { getApiBaseUrl, getMcpAudience, getWebBaseUrl, oauthAudiences } =
-  await import('./urls')
+const {
+  getApiBaseUrl,
+  getMcpAudience,
+  getPasskeyRpID,
+  getWebBaseUrl,
+  oauthAudiences,
+} = await import('./urls')
 
 afterEach(() => {
   delete process.env.TEST_BETTER_AUTH_URL
@@ -85,5 +90,29 @@ describe('trailing-slash tolerance (issue #120)', () => {
       'https://mcp.example.test/mcp',
     ])
     expect(getMcpAudience()).toBe('https://mcp.example.test/mcp')
+  })
+})
+
+describe('getPasskeyRpID', () => {
+  it('uses localhost for local development', () => {
+    process.env.TEST_WEB_ORIGINS = 'http://localhost:3000'
+
+    expect(getPasskeyRpID()).toBe('localhost')
+  })
+
+  it('uses the web hostname, not the API hostname', () => {
+    // Split-origin deployments call navigator.credentials from the web
+    // origin; an API-derived rpID would fail WebAuthn verification.
+    process.env.TEST_WEB_ORIGINS = 'https://app.example.test'
+    process.env.TEST_BETTER_AUTH_URL = 'https://api.example.test'
+
+    expect(getPasskeyRpID()).toBe('app.example.test')
+  })
+
+  it('strips ports and uses the first web origin', () => {
+    process.env.TEST_WEB_ORIGINS =
+      'https://app.example.test:8443, https://b.example.test'
+
+    expect(getPasskeyRpID()).toBe('app.example.test')
   })
 })

@@ -1549,7 +1549,8 @@
       "generic": "Coś poszło nie tak. Spróbuj ponownie.",
       "passwordPolicy": "Użyj co najmniej 8 znaków zawierających wielką literę, małą literę, cyfrę i symbol.",
       "magicLinkFailed": "Nie udało się wysłać linku logowania.",
-      "signupInviteRequired": "Ta instancja jest dostępna tylko na zaproszenie. Użyj linku zaproszenia lub poproś kogoś o zaproszenie do grupy."
+      "signupInviteRequired": "Ta instancja jest dostępna tylko na zaproszenie. Użyj linku zaproszenia lub poproś kogoś o zaproszenie do grupy.",
+      "passkeyFailed": "Logowanie kluczem dostępu nie powiodło się. Spróbuj ponownie lub użyj innej metody logowania."
     },
     "loading": "Ładowanie…",
     "signedInAs": "Zalogowany jako {name}",
@@ -1565,7 +1566,8 @@
     "signInWithOidc": "Kontynuuj przez {name}",
     "signInAnonymously": "Anonimowy",
     "lastUsed": "Ostatnio używane",
-    "emailAuthDisabled": "Logowanie przez e-mail jest wyłączone w tej instancji. Użyj logowania jednokrotnego (SSO)."
+    "emailAuthDisabled": "Logowanie przez e-mail jest wyłączone w tej instancji. Użyj logowania jednokrotnego (SSO).",
+    "signInWithPasskey": "Zaloguj się kluczem dostępu"
   },
   "CompleteProfile": {
     "title": "Uzupełnij swój profil",
@@ -2597,6 +2599,43 @@
         "notFound": "Dla tego konta nie ustawiono hasła."
       },
       "setShort": "Ustaw"
+    },
+    "passkey": {
+      "label": "Klucze dostępu",
+      "help": "Loguj się bez hasła przy użyciu odcisku palca, twarzy lub klucza bezpieczeństwa. Klucze dostępu działają z każdym typem konta i nie wymagają adresu e-mail.",
+      "anonymousHelp": "Klucze dostępu umożliwiają temu anonimowemu kontu logowanie bez linku logowania na zarejestrowanych urządzeniach. Zachowaj link logowania jako kopię zapasową.",
+      "unsupported": "Ta przeglądarka lub urządzenie nie obsługuje kluczy dostępu.",
+      "empty": "Brak kluczy dostępu.",
+      "unnamed": "Klucz dostępu",
+      "add": "Dodaj klucz dostępu",
+      "addTitle": "Dodaj klucz dostępu",
+      "addDescription": "Postępuj zgodnie z instrukcjami przeglądarki, aby zarejestrować to urządzenie. Nadaj mu nazwę, aby je później rozpoznać.",
+      "waitHint": "Przeglądarka poprosi Cię o weryfikację — może to chwilę potrwać.",
+      "nameLabel": "Nazwa (opcjonalnie)",
+      "namePlaceholder": "np. MacBook Touch ID",
+      "addSubmit": "Dodaj klucz dostępu",
+      "saving": "Oczekiwanie na urządzenie…",
+      "cancel": "Anuluj",
+      "remove": "Usuń",
+      "removeTitle": "Usunąć klucz dostępu?",
+      "removeDescription": "To urządzenie nie będzie już logować Cię kluczem dostępu. Możesz je zarejestrować ponownie w dowolnym momencie.",
+      "removeConfirm": "Usuń",
+      "removing": "Usuwanie…",
+      "added": "Dodano klucz dostępu.",
+      "removed": "Usunięto klucz dostępu.",
+      "errors": {
+        "generic": "Coś poszło nie tak. Spróbuj ponownie.",
+        "loadFailed": "Nie udało się wczytać kluczy dostępu.",
+        "addFailed": "Nie udało się dodać klucza dostępu. Spróbuj ponownie.",
+        "removeFailed": "Nie udało się usunąć klucza dostępu. Spróbuj ponownie.",
+        "lastMethod": "To jest Twoja jedyna metoda logowania. Najpierw zapisz link logowania lub dodaj inną metodę logowania."
+      },
+      "synced": "Zsynchronizowany",
+      "deviceBound": "Tylko to urządzenie",
+      "backedUp": "Z kopią zapasową",
+      "removeWarning": "Tej operacji nie można cofnąć. To urządzenie nie będzie już logować Cię kluczem dostępu — możesz je zarejestrować ponownie w dowolnym momencie.",
+      "removeLastWarning": "To jest Twój ostatni klucz dostępu. Jeśli to Twoja jedyna metoda logowania, usunięcie jest zablokowane, dopóki nie zapiszesz linku logowania lub innej metody logowania.",
+      "anonymousHelpNoLink": "Do tego anonimowego konta nie zapisano żadnego linku logowania. Utwórz go w wierszu linku logowania poniżej — działa na każdym urządzeniu."
     }
   },
   "Activities": {
@@ -3403,8 +3442,20 @@
       "recoverError": "Ten link logowania jest nieprawidłowy. Sprawdź cały link i spróbuj ponownie.",
       "recoveryLinkRequiredLabel": "Link odzyskiwania",
       "createTitle": "Utwórz nowe konto",
-      "or": "LUB",
-      "recoverTitle": "Masz już anonimowe konto?"
+      "recoverTitle": "Masz już anonimowe konto?",
+      "passkeyHint": "Zaraz po utworzeniu możesz dodać klucz dostępu, aby logować się bez hasła na tym urządzeniu.",
+      "addPasskey": "Dodaj klucz dostępu",
+      "passkeyError": "Nie udało się dodać klucza dostępu. Możesz go dodać później w ustawieniach konta.",
+      "choiceTitle": "Wybierz zapasowe logowanie",
+      "choiceDescription": "Wybierz, jak będziesz wracać na to anonimowe konto. Każdą z opcji możesz później dodać, zmienić lub usunąć w Ustawieniach konta.",
+      "linkTitle": "Zapisz link logowania",
+      "linkDescription": "Zalecane: prywatny link, który zaloguje Cię na dowolnym urządzeniu. Przechowuj go w bezpiecznym miejscu.",
+      "passkeyTitle": "Użyj klucza dostępu zamiast tego",
+      "passkeyDescription": "Loguj się przy użyciu odcisku palca, twarzy lub klucza bezpieczeństwa na tym urządzeniu. Żadnego linku do zapisywania — i żaden link nie będzie później potrzebny.",
+      "existingPasskeyTitle": "Masz już zarejestrowany klucz dostępu?",
+      "existingPasskeyDescription": "Zaloguj się ponownie kluczem dostępu na jednym ze swoich zarejestrowanych urządzeń.",
+      "passkeySignIn": "Zaloguj się kluczem dostępu",
+      "passkeySignInError": "Nie udało się zalogować tym kluczem dostępu. Spróbuj ponownie lub użyj linku logowania."
     },
     "onboarding": {
       "title": "Zapisz link logowania",
@@ -3452,7 +3503,19 @@
       "activateDescription": "Zapisz link zastępczy przed jego aktywacją.",
       "stagedDescription": "Twoje obecne łącze odzyskiwania będzie działać, dopóki nie aktywujesz tego zamiennika. Zamknięcie lub odświeżenie powoduje odrzucenie zamiennika.",
       "activateConfirm": "Aktywuj wymianę",
-      "replacementActivated": "Zastępczy link logowania jest teraz aktywny."
+      "replacementActivated": "Zastępczy link logowania jest teraz aktywny.",
+      "create": "Utwórz link logowania",
+      "createTitle": "Utworzyć link logowania?",
+      "createDescription": "Wygeneruj prywatny link, aby go przejrzeć i zapisać. Każdy, kto ma link, może uzyskać dostęp do tego anonimowego konta.",
+      "created": "Utworzono link logowania.",
+      "remove": "Usuń link logowania",
+      "removeTitle": "Usunąć link logowania?",
+      "removeDescription": "Bieżący link przestaje działać natychmiast. Zarejestrowany klucz dostępu nadal działa.",
+      "removeWarning": "Każdy, kto ma bieżący link, traci dostęp. Tego nie można cofnąć.",
+      "removeConfirm": "Usuń link",
+      "removeRequiresPasskey": "Najpierw dodaj klucz dostępu — link logowania jest obecnie jedynym sposobem powrotu na to konto.",
+      "removed": "Usunięto link logowania.",
+      "createConfirm": "Zapisz link logowania"
     }
   },
   "GroupViewLink": {

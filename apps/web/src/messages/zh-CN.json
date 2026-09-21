@@ -1835,7 +1835,8 @@
       "generic": "出了点问题。请重试。",
       "passwordPolicy": "请使用至少8个字符，包含大写字母、小写字母、数字和符号。",
       "magicLinkFailed": "无法发送登录链接。",
-      "signupInviteRequired": "此实例仅限邀请加入。请使用邀请链接，或请他人邀请您加入群组。"
+      "signupInviteRequired": "此实例仅限邀请加入。请使用邀请链接，或请他人邀请您加入群组。",
+      "passkeyFailed": "通行密钥登录失败，请重试或使用其他登录方式。"
     },
     "loading": "加载中……",
     "signedInAs": "以 {name} 身份登录",
@@ -1851,7 +1852,8 @@
     "signInWithOidc": "使用 {name} 继续",
     "signInAnonymously": "匿名",
     "lastUsed": "上次使用",
-    "emailAuthDisabled": "此实例已停用邮箱登录。请使用单点登录（SSO）。"
+    "emailAuthDisabled": "此实例已停用邮箱登录。请使用单点登录（SSO）。",
+    "signInWithPasskey": "使用通行密钥登录"
   },
   "CompleteProfile": {
     "title": "完善您的个人资料",
@@ -2570,6 +2572,43 @@
         "notFound": "此账户未设置密码。"
       },
       "setShort": "设置"
+    },
+    "passkey": {
+      "label": "通行密钥",
+      "help": "使用设备的指纹、面容或安全密钥即可免密码登录。通行密钥适用于所有帐户类型，无需电子邮件地址。",
+      "anonymousHelp": "使用通行密钥后，此匿名帐户在已注册的设备上无需登录链接即可登录。请保留登录链接作为备用。",
+      "unsupported": "此浏览器或设备不支持通行密钥。",
+      "empty": "尚未添加通行密钥。",
+      "unnamed": "通行密钥",
+      "add": "添加通行密钥",
+      "addTitle": "添加通行密钥",
+      "addDescription": "按照浏览器的提示注册此设备。为其取个名称，方便日后辨认。",
+      "waitHint": "浏览器将要求您进行验证，这可能需要一点时间。",
+      "nameLabel": "名称（选填）",
+      "namePlaceholder": "例如：MacBook 触控 ID",
+      "addSubmit": "添加通行密钥",
+      "saving": "正在等待您的设备…",
+      "cancel": "取消",
+      "remove": "移除",
+      "removeTitle": "移除通行密钥？",
+      "removeDescription": "此设备将无法再使用通行密钥登录。您可以随时重新注册。",
+      "removeConfirm": "移除",
+      "removing": "移除中…",
+      "added": "已添加通行密钥。",
+      "removed": "已移除通行密钥。",
+      "errors": {
+        "generic": "出了点问题，请重试。",
+        "loadFailed": "无法加载通行密钥。",
+        "addFailed": "无法添加通行密钥，请重试。",
+        "removeFailed": "无法移除通行密钥，请重试。",
+        "lastMethod": "这是您唯一的登录方式。请先保存登录链接或添加其他登录方式。"
+      },
+      "synced": "已同步",
+      "deviceBound": "仅限此设备",
+      "backedUp": "已备份",
+      "removeWarning": "此操作无法撤销。此设备将无法再使用通行密钥登录，您可以随时重新注册。",
+      "removeLastWarning": "这是最后一个通行密钥。如果它是唯一的登录方式，在保存登录链接或添加其他登录方式之前无法移除。",
+      "anonymousHelpNoLink": "此匿名帐户未保存登录链接。请在下方的登录链接行中创建一个，在任何设备上都能使用。"
     }
   },
   "Activities": {
@@ -3350,8 +3389,20 @@
       "recoverError": "此登录链接无效。检查完整的链接并重试。",
       "recoveryLinkRequiredLabel": "登录链接",
       "createTitle": "创建新帐户",
-      "or": "或",
-      "recoverTitle": "已有匿名帐户？"
+      "recoverTitle": "已有匿名帐户？",
+      "passkeyHint": "创建完成后可立即添加通行密钥，以便在此设备上免密码登录。",
+      "addPasskey": "添加通行密钥",
+      "passkeyError": "无法添加通行密钥，您可以稍后在帐户设置中添加。",
+      "choiceTitle": "选择备用登录方式",
+      "choiceDescription": "选择重新登录此匿名帐户的方式。您稍后可在帐户设置中添加、更改或移除任一方式。",
+      "linkTitle": "保存登录链接",
+      "linkDescription": "推荐：可在任何设备上重新登录的私人链接。请将其保存在安全的地方。",
+      "passkeyTitle": "改用通行密钥",
+      "passkeyDescription": "在此设备上使用指纹、面容或安全密钥登录。无需保存链接，之后也不需要链接。",
+      "existingPasskeyTitle": "已注册过通行密钥？",
+      "existingPasskeyDescription": "在您已注册的设备之一上使用通行密钥重新登录。",
+      "passkeySignIn": "使用通行密钥登录",
+      "passkeySignInError": "无法使用此通行密钥登录。请重试或使用您的登录链接。"
     },
     "onboarding": {
       "title": "保存您的登录链接",
@@ -3399,7 +3450,19 @@
       "activateDescription": "在激活替换链接之前保存它。",
       "stagedDescription": "您当前的登录链接将一直有效，直到您激活此替代链接。关闭或刷新会放弃替换。",
       "activateConfirm": "激活替换",
-      "replacementActivated": "您的替代登录链接现已生效。"
+      "replacementActivated": "您的替代登录链接现已生效。",
+      "create": "创建登录链接",
+      "createTitle": "创建登录链接？",
+      "createDescription": "生成私人链接以供查看和保存。持有该链接的任何人都可以访问此匿名帐户。",
+      "created": "登录链接已创建。",
+      "remove": "移除登录链接",
+      "removeTitle": "移除登录链接？",
+      "removeDescription": "当前链接会立即失效。已注册的通行密钥可继续使用。",
+      "removeWarning": "持有当前链接的任何人将失去访问权限。此操作无法撤销。",
+      "removeConfirm": "移除链接",
+      "removeRequiresPasskey": "请先添加通行密钥，登录链接是目前返回此帐户的唯一方式。",
+      "removed": "登录链接已移除。",
+      "createConfirm": "保存登录链接"
     }
   },
   "GroupViewLink": {

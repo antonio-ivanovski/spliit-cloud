@@ -151,6 +151,24 @@ describe('account cache generation guard', () => {
     ).toHaveBeenCalledTimes(2)
   })
 
+  it('treats a verified passkey as completed anonymous onboarding', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({
+      id: 'anonymous-passkey',
+      isAnonymous: true,
+      name: 'Guest',
+    } as never)
+    prismaMock.anonymousRecoveryCredential.findUnique.mockResolvedValue({
+      acknowledgedAt: null,
+      onboardingCompletedAt: null,
+    } as never)
+    prismaMock.passkey.count.mockResolvedValue(1 as never)
+
+    await expect(getCachedAccount('anonymous-passkey')).resolves.toMatchObject({
+      id: 'anonymous-passkey',
+      anonymousOnboardingCompleted: true,
+    })
+  })
+
   it('does not look up recovery credentials for ordinary accounts', async () => {
     prismaMock.user.findUnique.mockResolvedValue({
       id: 'acct-1',

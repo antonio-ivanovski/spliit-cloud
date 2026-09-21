@@ -1850,7 +1850,8 @@
       "generic": "Ceva a mers greșit. Te rugăm să încerci din nou.",
       "passwordPolicy": "Folosește cel puțin 8 caractere cu majuscule, minuscule, un număr și un simbol.",
       "magicLinkFailed": "Nu s-a putut trimite linkul de autentificare.",
-      "signupInviteRequired": "Această instanță este doar pe bază de invitație. Folosește un link de invitație sau cere cuiva să te invite într-un grup."
+      "signupInviteRequired": "Această instanță este doar pe bază de invitație. Folosește un link de invitație sau cere cuiva să te invite într-un grup.",
+      "passkeyFailed": "Conectarea cu cheia de acces a eșuat. Încearcă din nou sau folosește altă metodă de conectare."
     },
     "loading": "Se încarcă…",
     "signedInAs": "Autentificat ca {name}",
@@ -1866,7 +1867,8 @@
     "signInWithOidc": "Continuă cu {name}",
     "signInAnonymously": "Anonim",
     "lastUsed": "Ultima utilizare",
-    "emailAuthDisabled": "Autentificarea prin e-mail este dezactivată pe această instanță. Folosește autentificarea unică (SSO)."
+    "emailAuthDisabled": "Autentificarea prin e-mail este dezactivată pe această instanță. Folosește autentificarea unică (SSO).",
+    "signInWithPasskey": "Autentifică-te cu cheia de acces"
   },
   "CompleteProfile": {
     "title": "Completează-ți profilul",
@@ -2587,6 +2589,43 @@
         "notFound": "Nicio parolă setată pentru acest cont."
       },
       "setShort": "Setează"
+    },
+    "passkey": {
+      "label": "Chei de acces",
+      "help": "Conectează-te fără parolă folosind amprenta, fața sau o cheie de securitate a dispozitivului tău. Cheile de acces funcționează pentru orice tip de cont și nu au nevoie de adresă de e-mail.",
+      "anonymousHelp": "Cheile de acces permit acestui cont de invitat să se conecteze fără linkul de recuperare pe dispozitivele înregistrate. Păstrează linkul de recuperare ca backup.",
+      "unsupported": "Acest browser sau dispozitiv nu acceptă cheile de acces.",
+      "empty": "Încă nu există chei de acces.",
+      "unnamed": "Cheie de acces",
+      "add": "Adaugă o cheie de acces",
+      "addTitle": "Adaugă o cheie de acces",
+      "addDescription": "Urmează instrucțiunile browserului pentru a înregistra acest dispozitiv. Dă-i un nume ca să-l recunoști mai târziu.",
+      "waitHint": "Browserul îți va cere să verifici — poate dura un moment.",
+      "nameLabel": "Nume (opțional)",
+      "namePlaceholder": "de ex. Touch ID de pe MacBook",
+      "addSubmit": "Adaugă cheia de acces",
+      "saving": "Se așteaptă dispozitivul tău…",
+      "cancel": "Anulează",
+      "remove": "Elimină",
+      "removeTitle": "Elimini cheia de acces?",
+      "removeDescription": "Acest dispozitiv nu te va mai conecta cu o cheie de acces. Îl poți înregistra din nou oricând.",
+      "removeConfirm": "Elimină",
+      "removing": "Se elimină…",
+      "added": "Cheie de acces adăugată.",
+      "removed": "Cheie de acces eliminată.",
+      "errors": {
+        "generic": "Ceva a mers greșit. Încearcă din nou.",
+        "loadFailed": "Cheile de acces nu au putut fi încărcate.",
+        "addFailed": "Cheia de acces nu a putut fi adăugată. Încearcă din nou.",
+        "removeFailed": "Cheia de acces nu a putut fi eliminată. Încearcă din nou.",
+        "lastMethod": "Aceasta este singura ta metodă de conectare. Salvează un link de recuperare sau adaugă mai întâi o altă metodă de conectare."
+      },
+      "synced": "Sincronizată",
+      "deviceBound": "Doar pe acest dispozitiv",
+      "backedUp": "Cu backup",
+      "removeWarning": "Această acțiune nu poate fi anulată. Dispozitivul nu te va mai conecta cu o cheie de acces — îl poți înregistra din nou oricând.",
+      "removeLastWarning": "Aceasta este ultima ta cheie de acces. Dacă este singura ta metodă de conectare, eliminarea este blocată până salvezi un link de recuperare sau o altă metodă de conectare.",
+      "anonymousHelpNoLink": "Niciun link de conectare nu este salvat pentru acest cont de invitat. Creează unul în rândul linkului de conectare de mai jos — funcționează pe orice dispozitiv."
     }
   },
   "Activities": {
@@ -3386,8 +3425,20 @@
       "recoverError": "Acest link de conectare este nevalid. Verificați linkul complet și încercați din nou.",
       "recoveryLinkRequiredLabel": "Link de conectare",
       "createTitle": "Creați un cont nou",
-      "or": "SAU",
-      "recoverTitle": "Aveți deja un cont anonim?"
+      "recoverTitle": "Aveți deja un cont anonim?",
+      "passkeyHint": "Poți adăuga o cheie de acces imediat după creare pentru conectare fără parolă pe acest dispozitiv.",
+      "addPasskey": "Adaugă o cheie de acces",
+      "passkeyError": "Cheia de acces nu a putut fi adăugată. Poți adăuga una mai târziu din setările contului.",
+      "choiceTitle": "Alege conectarea de rezervă",
+      "choiceDescription": "Alege cum vei reveni în acest cont de invitat. Poți adăuga, schimba sau elimina oricare dintre opțiuni mai târziu în Setările contului.",
+      "linkTitle": "Salvează un link de recuperare",
+      "linkDescription": "Recomandat: un link privat care te reconectează pe orice dispozitiv. Păstrează-l într-un loc sigur.",
+      "passkeyTitle": "Folosește o cheie de acces",
+      "passkeyDescription": "Conectează-te cu amprenta, fața sau o cheie de securitate pe acest dispozitiv. Niciun link de păstrat — și după aceea nu va mai fi necesar niciunul.",
+      "existingPasskeyTitle": "Ai înregistrat deja o cheie de acces?",
+      "existingPasskeyDescription": "Conectează-te din nou cu cheia de acces pe unul dintre dispozitivele tale înregistrate.",
+      "passkeySignIn": "Autentifică-te cu cheia de acces",
+      "passkeySignInError": "Nu te-ai putut conecta cu această cheie de acces. Încearcă din nou sau folosește linkul de conectare."
     },
     "onboarding": {
       "title": "Salvați linkul de recuperare",
@@ -3435,7 +3486,19 @@
       "activateDescription": "Salvați linkul de înlocuire înainte de a-l activa.",
       "stagedDescription": "Linkul dvs. actual de recuperare continuă să funcționeze până când activați această înlocuire. Închiderea sau reîmprospătarea elimină înlocuitorul.",
       "activateConfirm": "Activați înlocuirea",
-      "replacementActivated": "Linkul de conectare înlocuitor este acum activ."
+      "replacementActivated": "Linkul de conectare înlocuitor este acum activ.",
+      "create": "Creați linkul de conectare",
+      "createTitle": "Creați un link de conectare?",
+      "createDescription": "Generați un link privat pentru a examina și salva. Oricine îl are poate accesa acest cont de invitat.",
+      "created": "Link de conectare creat.",
+      "remove": "Eliminați linkul de conectare",
+      "removeTitle": "Eliminați linkul de conectare?",
+      "removeDescription": "Linkul actual nu mai funcționează imediat. O cheie de acces înregistrată continuă să funcționeze.",
+      "removeWarning": "Oricine are linkul actual pierde accesul. Această acțiune nu poate fi anulată.",
+      "removeConfirm": "Eliminați linkul",
+      "removeRequiresPasskey": "Adăugați mai întâi o cheie de acces — linkul de conectare este în prezent singura modalitate de a reveni în acest cont.",
+      "removed": "Link de conectare eliminat.",
+      "createConfirm": "Salvați linkul de conectare"
     }
   },
   "GroupViewLink": {

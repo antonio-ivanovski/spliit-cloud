@@ -810,7 +810,8 @@
       "generic": "Something went wrong. Please try again.",
       "magicLinkFailed": "Could not send the sign-in link.",
       "passwordPolicy": "Use at least 8 characters with uppercase, lowercase, a number, and a symbol.",
-      "signupInviteRequired": "This instance is invite-only. Use an invitation link or ask someone to invite you to a group."
+      "signupInviteRequired": "This instance is invite-only. Use an invitation link or ask someone to invite you to a group.",
+      "passkeyFailed": "Passkey sign-in failed. Try again or use another sign-in method."
     },
     "loading": "Loading…",
     "signedInAs": "Signed in as {name}",
@@ -826,7 +827,8 @@
     "signInWithOidc": "Continue with {name}",
     "signInAnonymously": "Anonymous",
     "lastUsed": "Last used",
-    "emailAuthDisabled": "Sign-in with email is disabled on this instance. Please use single sign-on."
+    "emailAuthDisabled": "Sign-in with email is disabled on this instance. Please use single sign-on.",
+    "signInWithPasskey": "Sign in with passkey"
   },
   "AccountSettings": {
     "title": "Account settings",
@@ -1156,6 +1158,43 @@
       "removeCurrentRequired": "Enter your current password.",
       "changeShort": "Change",
       "setShort": "Set"
+    },
+    "passkey": {
+      "label": "Passkeys",
+      "help": "Sign in without a password using your device's fingerprint, face, or security key. Passkeys work for every account type and need no email address.",
+      "anonymousHelp": "Passkeys let this guest account sign in without the recovery link on registered devices. Keep your recovery link as a backup.",
+      "unsupported": "This browser or device does not support passkeys.",
+      "empty": "No passkeys yet.",
+      "unnamed": "Passkey",
+      "add": "Add a passkey",
+      "addTitle": "Add a passkey",
+      "addDescription": "Follow your browser's prompt to register this device. Give it a name so you recognize it later.",
+      "waitHint": "Your browser will ask you to verify — this may take a moment.",
+      "nameLabel": "Name (optional)",
+      "namePlaceholder": "e.g. MacBook Touch ID",
+      "addSubmit": "Add passkey",
+      "saving": "Waiting for your device…",
+      "cancel": "Cancel",
+      "remove": "Remove",
+      "removeTitle": "Remove passkey?",
+      "removeDescription": "This device will no longer sign you in with a passkey. You can register it again at any time.",
+      "removeConfirm": "Remove",
+      "removing": "Removing…",
+      "added": "Passkey added.",
+      "removed": "Passkey removed.",
+      "errors": {
+        "generic": "Something went wrong. Try again.",
+        "loadFailed": "Could not load passkeys.",
+        "addFailed": "Could not add the passkey. Try again.",
+        "removeFailed": "Could not remove the passkey. Try again.",
+        "lastMethod": "This is your only sign-in method. Save a recovery link or add another sign-in method first."
+      },
+      "synced": "Synced",
+      "deviceBound": "This device only",
+      "backedUp": "Backed up",
+      "removeWarning": "This cannot be undone. The device will no longer sign you in with a passkey — register it again at any time.",
+      "removeLastWarning": "This is your last passkey. If it is your only sign-in method, removal is blocked until you save a recovery link or another sign-in method.",
+      "anonymousHelpNoLink": "No sign in link is saved for this guest account. Create one in the sign in link row below — it works on any device."
     }
   },
   "AccountAuthorizedClients": {
@@ -3465,8 +3504,20 @@
       "recoverError": "This sign in link is invalid. Check the complete link and try again.",
       "recoveryLinkRequiredLabel": "Sign in link",
       "createTitle": "Create a new account",
-      "or": "OR",
-      "recoverTitle": "Already have an anonymous account?"
+      "recoverTitle": "Already have an anonymous account?",
+      "passkeyHint": "You can add a passkey right after creation for passwordless sign-in on this device.",
+      "addPasskey": "Add a passkey",
+      "passkeyError": "Could not add the passkey. You can add one later in account settings.",
+      "choiceTitle": "Choose your backup sign-in",
+      "choiceDescription": "Pick how you'll get back into this guest account. You can add, change, or remove either option later in Account settings.",
+      "linkTitle": "Save a recovery link",
+      "linkDescription": "Recommended: a private link that signs you back in on any device. Store it somewhere safe.",
+      "passkeyTitle": "Use a passkey instead",
+      "passkeyDescription": "Sign in with your fingerprint, face, or a security key on this device. No link to store — and no link is required afterwards.",
+      "existingPasskeyTitle": "Already registered a passkey?",
+      "existingPasskeyDescription": "Sign back in with the passkey on one of your registered devices.",
+      "passkeySignIn": "Sign in with passkey",
+      "passkeySignInError": "Could not sign in with this passkey. Try again or use your sign in link."
     },
     "onboarding": {
       "title": "Save your sign in link",
@@ -3504,7 +3555,7 @@
     },
     "settings": {
       "recoveryTitle": "Sign in link",
-      "recoveryDescription": "This anonymous account can only be accessed with your saved link. Open it in a browser, or choose Anonymous and paste the complete link in the installed PWA. The current link cannot be shown again.",
+      "recoveryDescription": "Sign back in on any device with this private link — no password needed. Passkeys on your registered devices work as well. The current link cannot be shown again.",
       "replace": "Replace sign in link",
       "replaceTitle": "Replace your sign in link?",
       "replaceDescription": "Generate a replacement link to review and save. Your current sign in link keeps working until you activate the replacement.",
@@ -3514,7 +3565,19 @@
       "activateDescription": "Save the replacement link before activating it.",
       "stagedDescription": "Your current sign in link keeps working until you activate this replacement. Closing or refreshing discards the replacement.",
       "activateConfirm": "Activate replacement",
-      "replacementActivated": "Your replacement sign in link is now active."
+      "replacementActivated": "Your replacement sign in link is now active.",
+      "create": "Create sign in link",
+      "createTitle": "Create a sign in link?",
+      "createDescription": "Generate a private link to review and save. Anyone holding the link can access this guest account.",
+      "created": "Sign in link created.",
+      "remove": "Remove sign in link",
+      "removeTitle": "Remove the sign in link?",
+      "removeDescription": "The current link stops working immediately. A registered passkey keeps working.",
+      "removeWarning": "Anyone holding the current link loses access. This cannot be undone.",
+      "removeConfirm": "Remove link",
+      "removeRequiresPasskey": "Add a passkey first — the sign in link is currently the only way back into this account.",
+      "removed": "Sign in link removed.",
+      "createConfirm": "Save sign in link"
     }
   },
   "GroupViewLink": {

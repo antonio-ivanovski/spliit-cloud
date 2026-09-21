@@ -1835,7 +1835,8 @@
       "generic": "Terjadi kesalahan. Silakan coba lagi.",
       "passwordPolicy": "Gunakan setidaknya 8 karakter dengan huruf besar, huruf kecil, angka, dan simbol.",
       "magicLinkFailed": "Tidak dapat mengirim tautan masuk.",
-      "signupInviteRequired": "Instans ini hanya bisa diakses dengan undangan. Gunakan tautan undangan atau minta seseorang mengundang Anda ke sebuah grup."
+      "signupInviteRequired": "Instans ini hanya bisa diakses dengan undangan. Gunakan tautan undangan atau minta seseorang mengundang Anda ke sebuah grup.",
+      "passkeyFailed": "Masuk dengan passkey gagal. Coba lagi atau gunakan metode masuk lain."
     },
     "loading": "Memuat…",
     "signedInAs": "Masuk sebagai {name}",
@@ -1851,7 +1852,8 @@
     "signInWithOidc": "Lanjutkan dengan {name}",
     "signInAnonymously": "Anonim",
     "lastUsed": "Terakhir digunakan",
-    "emailAuthDisabled": "Masuk dengan email dinonaktifkan di instans ini. Gunakan single sign-on (SSO)."
+    "emailAuthDisabled": "Masuk dengan email dinonaktifkan di instans ini. Gunakan single sign-on (SSO).",
+    "signInWithPasskey": "Masuk dengan passkey"
   },
   "CompleteProfile": {
     "title": "Lengkapi profil Anda",
@@ -2568,6 +2570,43 @@
         "notFound": "Tidak ada kata sandi yang diatur untuk akun ini."
       },
       "setShort": "Atur"
+    },
+    "passkey": {
+      "label": "Passkey",
+      "help": "Masuk tanpa kata sandi menggunakan sidik jari, wajah, atau kunci keamanan perangkat. Passkey berfungsi untuk semua jenis akun dan tidak memerlukan alamat email.",
+      "anonymousHelp": "Passkey memungkinkan akun anonim ini masuk tanpa tautan pemulihan di perangkat yang terdaftar. Simpan tautan pemulihan sebagai cadangan.",
+      "unsupported": "Browser atau perangkat ini tidak mendukung passkey.",
+      "empty": "Belum ada passkey.",
+      "unnamed": "Passkey tanpa nama",
+      "add": "Tambah passkey",
+      "addTitle": "Tambah passkey",
+      "addDescription": "Ikuti petunjuk browser untuk mendaftarkan perangkat ini. Beri nama agar mudah dikenali nanti.",
+      "waitHint": "Browser akan meminta verifikasi — ini mungkin memerlukan waktu sejenak.",
+      "nameLabel": "Nama (opsional)",
+      "namePlaceholder": "cth. MacBook Touch ID",
+      "addSubmit": "Tambah passkey",
+      "saving": "Menunggu perangkat Anda…",
+      "cancel": "Batal",
+      "remove": "Hapus",
+      "removeTitle": "Hapus passkey?",
+      "removeDescription": "Perangkat ini tidak akan lagi memasukkan Anda dengan passkey. Anda dapat mendaftarkannya lagi kapan saja.",
+      "removeConfirm": "Hapus",
+      "removing": "Menghapus…",
+      "added": "Passkey ditambahkan.",
+      "removed": "Passkey dihapus.",
+      "errors": {
+        "generic": "Terjadi kesalahan. Coba lagi.",
+        "loadFailed": "Passkey tidak dapat dimuat.",
+        "addFailed": "Passkey tidak dapat ditambahkan. Coba lagi.",
+        "removeFailed": "Passkey tidak dapat dihapus. Coba lagi.",
+        "lastMethod": "Ini satu-satunya metode masuk Anda. Simpan tautan pemulihan atau tambahkan metode masuk lain terlebih dahulu."
+      },
+      "synced": "Disinkronkan",
+      "deviceBound": "Hanya perangkat ini",
+      "backedUp": "Dicadangkan",
+      "removeWarning": "Tindakan ini tidak dapat dibatalkan. Perangkat tidak akan lagi memasukkan Anda dengan passkey — daftarkan lagi kapan saja.",
+      "removeLastWarning": "Ini passkey terakhir Anda. Jika ini satu-satunya metode masuk Anda, penghapusan diblokir hingga Anda menyimpan tautan pemulihan atau metode masuk lain.",
+      "anonymousHelpNoLink": "Tidak ada tautan masuk yang tersimpan untuk akun anonim ini. Buatlah di baris tautan masuk di bawah — tautan ini berfungsi di perangkat apa pun."
     }
   },
   "Activities": {
@@ -3349,8 +3388,20 @@
       "recoverError": "Tautan masuk ini tidak valid. Periksa tautan lengkapnya dan coba lagi.",
       "recoveryLinkRequiredLabel": "Tautan masuk",
       "createTitle": "Buat akun baru",
-      "or": "ATAU",
-      "recoverTitle": "Sudah punya akun anonim?"
+      "recoverTitle": "Sudah punya akun anonim?",
+      "passkeyHint": "Anda dapat menambahkan passkey segera setelah pembuatan akun untuk masuk tanpa kata sandi di perangkat ini.",
+      "addPasskey": "Tambah passkey",
+      "passkeyError": "Passkey tidak dapat ditambahkan. Anda dapat menambahkannya nanti di pengaturan akun.",
+      "choiceTitle": "Pilih metode masuk cadangan",
+      "choiceDescription": "Pilih cara masuk kembali ke akun anonim ini. Anda dapat menambah, mengubah, atau menghapus salah satu opsi nanti di pengaturan akun.",
+      "linkTitle": "Simpan tautan pemulihan",
+      "linkDescription": "Disarankan: tautan pribadi yang memasukkan Anda kembali di perangkat mana pun. Simpan di tempat yang aman.",
+      "passkeyTitle": "Gunakan passkey sebagai gantinya",
+      "passkeyDescription": "Masuk dengan sidik jari, wajah, atau kunci keamanan di perangkat ini. Tidak ada tautan untuk disimpan — dan tidak diperlukan tautan setelahnya.",
+      "existingPasskeyTitle": "Sudah mendaftarkan passkey?",
+      "existingPasskeyDescription": "Masuk kembali dengan passkey di salah satu perangkat terdaftar Anda.",
+      "passkeySignIn": "Masuk dengan passkey",
+      "passkeySignInError": "Tidak dapat masuk dengan passkey ini. Coba lagi atau gunakan tautan masuk Anda."
     },
     "onboarding": {
       "title": "Simpan tautan masuk Anda",
@@ -3398,7 +3449,19 @@
       "activateDescription": "Simpan link pengganti sebelum mengaktifkannya.",
       "stagedDescription": "Tautan masuk Anda saat ini tetap berfungsi hingga Anda mengaktifkan penggantinya. Menutup atau menyegarkan akan membuang penggantinya.",
       "activateConfirm": "Aktifkan penggantian",
-      "replacementActivated": "Tautan masuk pengganti Anda kini aktif."
+      "replacementActivated": "Tautan masuk pengganti Anda kini aktif.",
+      "create": "Buat tautan masuk",
+      "createTitle": "Buat tautan masuk?",
+      "createDescription": "Buat tautan privat untuk ditinjau dan disimpan. Siapa pun yang memiliki tautan tersebut dapat mengakses akun anonim ini.",
+      "created": "Tautan masuk dibuat.",
+      "remove": "Hapus tautan masuk",
+      "removeTitle": "Hapus tautan masuk?",
+      "removeDescription": "Tautan saat ini langsung berhenti berfungsi. Passkey yang terdaftar tetap berfungsi.",
+      "removeWarning": "Siapa pun yang memiliki tautan saat ini akan kehilangan akses. Tindakan ini tidak dapat dibatalkan.",
+      "removeConfirm": "Hapus tautan",
+      "removeRequiresPasskey": "Tambahkan passkey terlebih dahulu — tautan masuk saat ini adalah satu-satunya cara untuk kembali ke akun ini.",
+      "removed": "Tautan masuk dihapus.",
+      "createConfirm": "Simpan tautan masuk"
     }
   },
   "GroupViewLink": {

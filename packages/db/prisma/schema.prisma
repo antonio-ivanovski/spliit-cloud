@@ -63,6 +63,7 @@ model User {
   notificationDeliveries        NotificationDelivery[]
   webhookEndpoints              WebhookEndpoint[]
   anonymousRecoveryCredential   AnonymousRecoveryCredential?
+  passkeys                      Passkey[]
   recurringExpenseSeriesCreated RecurringExpenseSeries[]        @relation("RecurringExpenseSeriesCreator")
   expensesCreated               Expense[]                       @relation("ExpenseCreator")
   expenseComments               ExpenseComment[]
@@ -80,6 +81,34 @@ model AnonymousRecoveryCredential {
   onboardingCompletedAt DateTime?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// Passkeys (WebAuthn). Owned by better-auth's `passkey` plugin (`model:
+// "passkey"` in the adapter). One row per registered credential, keyed by
+// user id so every account type — email, social/OIDC (including placeholder
+// emails), anonymous, graduated anonymous — can register and sign in without
+// an email address. Deleting the user cascades.
+// ---------------------------------------------------------------------------
+
+model Passkey {
+  id           String   @id
+  name         String?
+  publicKey    String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+  credentialID String
+  counter      Int
+  deviceType   String
+  backedUp     Boolean
+  transports   String?
+  createdAt    DateTime @default(now())
+  aaguid       String?
+
+  @@index([userId])
+  @@index([credentialID])
+
+  @@map("Passkey")
 }
 
 model IdempotencyRequest {

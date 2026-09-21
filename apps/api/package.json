@@ -51,6 +51,7 @@
     "@aws-sdk/client-s3": "^3.1134.0",
     "@aws-sdk/s3-request-presigner": "^3.1134.0",
     "@better-auth/oauth-provider": "~1.7.5",
+    "@better-auth/passkey": "~1.7.5",
     "@json2csv/plainjs": "^7.0.8",
     "@react-email/components": "^1.0.12",
     "@scalar/hono-api-reference": "^0.12.2",

@@ -16,6 +16,7 @@ type BaseDeploymentConfig = Pick<
   | 'allowUninvitedSignup'
   | 'enableAnonymousAuth'
   | 'enableEmailAuth'
+  | 'enablePasskeyAuth'
   | 'maxExpenseDocumentSize'
 >
 
@@ -45,6 +46,7 @@ function getBuildTimeFallback(): DeploymentConfig {
     allowUninvitedSignup: true,
     enableAnonymousAuth: false,
     enableEmailAuth: true,
+    enablePasskeyAuth: true,
     emailDeliveryEnabled: null,
     maxExpenseDocumentSize: MAX_EXPENSE_DOCUMENT_SIZE,
   }
@@ -65,6 +67,7 @@ export function useDeploymentConfig(): DeploymentConfig {
       allowUninvitedSignup,
       enableAnonymousAuth,
       enableEmailAuth,
+      enablePasskeyAuth,
       emailDeliveryEnabled,
       maxExpenseDocumentSize,
     }): DeploymentConfig => ({
@@ -77,6 +80,7 @@ export function useDeploymentConfig(): DeploymentConfig {
       allowUninvitedSignup,
       enableAnonymousAuth,
       enableEmailAuth,
+      enablePasskeyAuth,
       emailDeliveryEnabled,
       maxExpenseDocumentSize,
     }),

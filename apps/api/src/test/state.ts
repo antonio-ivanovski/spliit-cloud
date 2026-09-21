@@ -44,6 +44,8 @@ export function resetPrisma() {
     id: 'act-default',
     time: new Date(),
   } as never)
+  // No passkeys by default; tests covering passkey flows stub their own count.
+  prismaMock.passkey.count.mockResolvedValue(0 as never)
   prisma$Transaction.mockImplementation(async (input: unknown) => {
     if (typeof input === 'function') {
       return (input as (tx: unknown) => unknown)(prismaMock)

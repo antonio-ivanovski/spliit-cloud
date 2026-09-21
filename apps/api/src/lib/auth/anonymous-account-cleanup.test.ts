@@ -45,6 +45,9 @@ describe('anonymous-account-cleanup', () => {
     )
     const eligibility = {
       isAnonymous: true,
+      // Passkey holders have a durable sign-in method and are never
+      // cleanup candidates, even without a recovery ack.
+      passkeys: { none: {} },
       OR: [
         {
           createdAt: { lte: cutoff },

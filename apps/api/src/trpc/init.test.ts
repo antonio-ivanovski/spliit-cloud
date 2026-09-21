@@ -216,6 +216,41 @@ describe('protectedProcedure', () => {
       expect.stringContaining('authenticated-mutation'),
     )
   })
+
+  it('does not spend the mutation budget on gated rejections', async () => {
+    const mutation = protectedProcedure.mutation(() => 'ok')
+    const ctx = {
+      auth: {
+        session: { id: 'gated-budget-session' },
+        user: {
+          id: 'gated-budget-account',
+          email: 'gated-budget@test.anonymous.placeholder.local',
+          emailVerified: false,
+          isAnonymous: true,
+          name: 'Gated Budget',
+        },
+      },
+      resHeaders: new Headers(),
+    }
+    const callMutation = () =>
+      mutation({
+        ctx,
+        type: 'mutation',
+        path: 'gatedProbe',
+        getRawInput: async () => undefined,
+        meta: undefined,
+        signal: undefined,
+      } as never)
+
+    // Past the 120/min budget: every call must still fail at the gate, never
+    // with TOO_MANY_REQUESTS — gated rejections never touch the budget, so a
+    // burst of them cannot starve the gate-exempt onboarding mutations.
+    for (let count = 0; count < 130; count += 1) {
+      await expect(callMutation()).rejects.toMatchObject({
+        code: 'PRECONDITION_FAILED',
+      })
+    }
+  })
 })
 
 describe('assistantProcedure', () => {

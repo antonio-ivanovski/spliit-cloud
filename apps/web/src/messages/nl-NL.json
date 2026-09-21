@@ -1870,7 +1870,8 @@
       "generic": "Er is iets misgegaan. Probeer het opnieuw.",
       "passwordPolicy": "Gebruik minstens 8 tekens met een hoofdletter, een kleine letter, een cijfer en een symbool.",
       "magicLinkFailed": "Kon de inloglink niet verzenden.",
-      "signupInviteRequired": "Deze instantie is alleen op uitnodiging. Gebruik een uitnodigingslink of vraag iemand om je uit te nodigen voor een groep."
+      "signupInviteRequired": "Deze instantie is alleen op uitnodiging. Gebruik een uitnodigingslink of vraag iemand om je uit te nodigen voor een groep.",
+      "passkeyFailed": "Inloggen met passkey is mislukt. Probeer het opnieuw of gebruik een andere inlogmethode."
     },
     "loading": "Laden…",
     "signedInAs": "Ingelogd als {name}",
@@ -1886,7 +1887,8 @@
     "signInWithOidc": "Doorgaan met {name}",
     "signInAnonymously": "Anoniem",
     "lastUsed": "Laatst gebruikt",
-    "emailAuthDisabled": "Inloggen met e-mail is uitgeschakeld op deze instantie. Gebruik single sign-on (SSO)."
+    "emailAuthDisabled": "Inloggen met e-mail is uitgeschakeld op deze instantie. Gebruik single sign-on (SSO).",
+    "signInWithPasskey": "Inloggen met passkey"
   },
   "CompleteProfile": {
     "title": "Voltooi je profiel",
@@ -2609,6 +2611,43 @@
         "notFound": "Voor dit account is geen wachtwoord ingesteld."
       },
       "setShort": "Instellen"
+    },
+    "passkey": {
+      "label": "Passkey",
+      "help": "Log in zonder wachtwoord met de vingerafdruk, het gezicht of de beveiligingssleutel van je apparaat. Passkeys werken voor elk accounttype en hebben geen e-mailadres nodig.",
+      "anonymousHelp": "Met passkeys kan dit anonieme account inloggen zonder de inloglink op geregistreerde apparaten. Bewaar je inloglink als reserve.",
+      "unsupported": "Deze browser of dit apparaat ondersteunt geen passkeys.",
+      "empty": "Nog geen passkeys.",
+      "unnamed": "Naamloze passkey",
+      "add": "Een passkey toevoegen",
+      "addTitle": "Een passkey toevoegen",
+      "addDescription": "Volg de instructies van je browser om dit apparaat te registreren. Geef het een naam zodat je het later herkent.",
+      "waitHint": "Je browser vraagt je om te verifiëren — dit kan even duren.",
+      "nameLabel": "Naam (optioneel)",
+      "namePlaceholder": "bijv. MacBook Touch ID",
+      "addSubmit": "Passkey toevoegen",
+      "saving": "Wachten op je apparaat…",
+      "cancel": "Annuleren",
+      "remove": "Verwijderen",
+      "removeTitle": "Passkey verwijderen?",
+      "removeDescription": "Dit apparaat logt je dan niet meer in met een passkey. Je kunt het op elk moment opnieuw registreren.",
+      "removeConfirm": "Verwijderen",
+      "removing": "Verwijderen…",
+      "added": "Passkey toegevoegd.",
+      "removed": "Passkey verwijderd.",
+      "errors": {
+        "generic": "Er is iets misgegaan. Probeer het opnieuw.",
+        "loadFailed": "Passkeys konden niet worden geladen.",
+        "addFailed": "De passkey kon niet worden toegevoegd. Probeer het opnieuw.",
+        "removeFailed": "De passkey kon niet worden verwijderd. Probeer het opnieuw.",
+        "lastMethod": "Dit is je enige inlogmethode. Sla eerst een inloglink op of voeg een andere inlogmethode toe."
+      },
+      "synced": "Gesynchroniseerd",
+      "deviceBound": "Alleen dit apparaat",
+      "backedUp": "Back-up",
+      "removeWarning": "Dit kan niet ongedaan worden gemaakt. Het apparaat logt je dan niet meer in met een passkey — je kunt het op elk moment opnieuw registreren.",
+      "removeLastWarning": "Dit is je laatste passkey. Als dit je enige inlogmethode is, is verwijderen geblokkeerd totdat je een inloglink opslaat of een andere inlogmethode toevoegt.",
+      "anonymousHelpNoLink": "Er is geen inloglink opgeslagen voor dit gastaccount. Maak er een aan in de inloglinkrij hieronder — hij werkt op elk apparaat."
     }
   },
   "Activities": {
@@ -3435,8 +3474,20 @@
       "recoverError": "Deze inloglink is ongeldig. Controleer de volledige link en probeer het opnieuw.",
       "recoveryLinkRequiredLabel": "Inloglink",
       "createTitle": "Nieuw account maken",
-      "or": "OF",
-      "recoverTitle": "Heb je al een anoniem account?"
+      "recoverTitle": "Heb je al een anoniem account?",
+      "passkeyHint": "U kunt direct na het aanmaken een passkey toevoegen voor wachtwoordloos inloggen op dit apparaat.",
+      "addPasskey": "Een passkey toevoegen",
+      "passkeyError": "De passkey kon niet worden toegevoegd. U kunt er later een toevoegen in de accountinstellingen.",
+      "choiceTitle": "Kies uw reserve-inlog",
+      "choiceDescription": "Kies hoe u terugkeert naar dit anonieme account. U kunt beide opties later toevoegen, wijzigen of verwijderen in Accountinstellingen.",
+      "linkTitle": "Een inloglink opslaan",
+      "linkDescription": "Aanbevolen: een privélink waarmee u op elk apparaat weer inlogt. Bewaar deze op een veilige plek.",
+      "passkeyTitle": "Gebruik een passkey in plaats daarvan",
+      "passkeyDescription": "Log in met uw vingerafdruk, gezicht of een beveiligingssleutel op dit apparaat. Geen link om te bewaren — en daarna is er ook geen link meer nodig.",
+      "existingPasskeyTitle": "Al een passkey geregistreerd?",
+      "existingPasskeyDescription": "Log weer in met de passkey op een van uw geregistreerde apparaten.",
+      "passkeySignIn": "Inloggen met passkey",
+      "passkeySignInError": "Kon niet inloggen met deze passkey. Probeer het opnieuw of gebruik uw inloglink."
     },
     "onboarding": {
       "title": "Sla uw inloglink op",
@@ -3484,7 +3535,19 @@
       "activateDescription": "Bewaar de vervangende link voordat u deze activeert.",
       "stagedDescription": "Uw huidige inloglink blijft werken totdat u deze vervanging activeert. Als u sluit of vernieuwt, wordt de vervanging verwijderd.",
       "activateConfirm": "Activeer vervanging",
-      "replacementActivated": "Je vervangende inloglink is nu actief."
+      "replacementActivated": "Je vervangende inloglink is nu actief.",
+      "create": "Inloglink aanmaken",
+      "createTitle": "Een inloglink aanmaken?",
+      "createDescription": "Genereer een privélink om te bekijken en op te slaan. Iedereen met de link heeft toegang tot dit gastaccount.",
+      "created": "Inloglink aangemaakt.",
+      "remove": "Inloglink verwijderen",
+      "removeTitle": "De inloglink verwijderen?",
+      "removeDescription": "De huidige link stopt onmiddellijk met werken. Een geregistreerde passkey blijft werken.",
+      "removeWarning": "Iedereen met de huidige link verliest de toegang. Dit kan niet ongedaan worden gemaakt.",
+      "removeConfirm": "Link verwijderen",
+      "removeRequiresPasskey": "Voeg eerst een passkey toe — de inloglink is momenteel de enige manier om weer in dit account te komen.",
+      "removed": "Inloglink verwijderd.",
+      "createConfirm": "Inloglink opslaan"
     }
   },
   "GroupViewLink": {

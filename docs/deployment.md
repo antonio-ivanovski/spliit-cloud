@@ -133,6 +133,14 @@ may remain empty.
   deletes anonymous accounts that do not start recovery-link setup within seven
   days, or leave setup unacknowledged for seven days. Acknowledged anonymous
   accounts are never removed by this sweep.
+- Passkey sign-in defaults to `ENABLE_PASSKEY_AUTH=true` and works for every
+  account type — email, social/OIDC (including placeholder emails), and
+  anonymous (no email needed). The WebAuthn relying-party ID is the hostname
+  of `WEB_ORIGINS[0]`, so every configured web origin must share the same
+  effective domain. Registering a passkey satisfies anonymous onboarding and
+  spares the account from the cleanup sweep above. Set
+  `ENABLE_PASSKEY_AUTH=false` to hide passkey UI and unmount the passkey
+  endpoints.
 - Expense documents require
   `PUBLIC_ENABLE_EXPENSE_DOCUMENTS=true` and the required `S3_UPLOAD_*` values.
   Configure the bucket with a lifecycle rule that expires objects under

@@ -372,6 +372,43 @@
         "notFound": "no password is set for this account."
       },
       "setShort": "set it"
+    },
+    "passkey": {
+      "label": "passkeys",
+      "help": "sign in with zero passwords using your fingerprint, face, or security key. passkeys work for every account type, no email needed.",
+      "anonymousHelp": "passkeys let this guest account sign in without the recovery link on registered devices. keep your recovery link saved as backup tho.",
+      "unsupported": "this browser or device can't do passkeys.",
+      "empty": "no passkeys yet.",
+      "unnamed": "passkey",
+      "add": "add a passkey",
+      "addTitle": "add a passkey",
+      "addDescription": "follow your browser's prompts to register this device. give it a name you'll actually recognize later.",
+      "waitHint": "your browser will ask you to verify — hang tight, it takes a sec.",
+      "nameLabel": "name (optional)",
+      "namePlaceholder": "e.g. Touch ID on my MacBook",
+      "addSubmit": "add passkey",
+      "saving": "waiting on your device…",
+      "cancel": "cancel",
+      "remove": "remove",
+      "removeTitle": "remove this passkey?",
+      "removeDescription": "this device won't sign you in with a passkey anymore. you can register it again whenever.",
+      "removeConfirm": "remove",
+      "removing": "removing…",
+      "added": "passkey added, you're good.",
+      "removed": "passkey removed.",
+      "errors": {
+        "generic": "something glitched. try again.",
+        "loadFailed": "couldn't load your passkeys.",
+        "addFailed": "couldn't add that passkey. try again.",
+        "removeFailed": "couldn't remove that passkey. try again.",
+        "lastMethod": "this is your only sign-in method. save a recovery link or add another sign-in method first."
+      },
+      "synced": "synced",
+      "deviceBound": "this device only",
+      "backedUp": "backed up",
+      "removeWarning": "no undo here. this device won't sign you in with a passkey anymore — you can register it again anytime.",
+      "removeLastWarning": "this is your last passkey. if it's your only sign-in method, you can't remove it until you save a recovery link or another sign-in method.",
+      "anonymousHelpNoLink": "no sign in link saved for this guest account yet. make one in the sign in link row below — it works on any device."
     }
   },
   "Activities": {
@@ -507,7 +544,8 @@
       "generic": "something went sideways  try again.",
       "magicLinkFailed": "couldn't send the sign-in link. the magic flopped.",
       "passwordPolicy": "use at least 8 characters with uppercase, lowercase, a number, and a symbol. security era.",
-      "signupInviteRequired": "this instance is invite-only. grab an invite link or ask someone to pull you into a group."
+      "signupInviteRequired": "this instance is invite-only. grab an invite link or ask someone to pull you into a group.",
+      "passkeyFailed": "passkey sign-in didn't work. try again or use another sign-in method."
     },
     "signInWithGithub": "continue with GitHub",
     "legalNotice": "by continuing, you agree to the <terms>terms of use</terms> and acknowledge the <privacy>privacy notice</privacy>.",
@@ -527,7 +565,8 @@
     "signInWithOidc": "continue with {name}",
     "signInAnonymously": "Anon",
     "lastUsed": "last used",
-    "emailAuthDisabled": "email sign-in is off on this instance. use single sign-on instead."
+    "emailAuthDisabled": "email sign-in is off on this instance. use single sign-on instead.",
+    "signInWithPasskey": "sign in with passkey"
   },
   "Balances": {
     "title": "balance check",
@@ -3359,8 +3398,20 @@
       "recoverError": "That sign in link is no good. Check the whole link and try again.",
       "recoveryLinkRequiredLabel": "Your sign in link",
       "createTitle": "Make a fresh account",
-      "or": "or",
-      "recoverTitle": "Already got an anon account?"
+      "recoverTitle": "Already got an anon account?",
+      "passkeyHint": "you can add a passkey right after creation for passwordless sign-in on this device.",
+      "addPasskey": "add a passkey",
+      "passkeyError": "couldn't add the passkey. you can add one later in account settings.",
+      "choiceTitle": "choose your backup sign-in",
+      "choiceDescription": "pick how you'll get back into this guest account. you can add, change, or remove either option later in account settings.",
+      "linkTitle": "save a recovery link",
+      "linkDescription": "recommended: a private link that signs you back in on any device. keep it somewhere safe.",
+      "passkeyTitle": "use a passkey instead",
+      "passkeyDescription": "sign in with your fingerprint, face, or a security key on this device. nothing to save — and no link needed after.",
+      "existingPasskeyTitle": "already registered a passkey?",
+      "existingPasskeyDescription": "sign back in with the passkey on one of your registered devices.",
+      "passkeySignIn": "sign in with passkey",
+      "passkeySignInError": "could not sign in with this passkey. try again or use your sign in link."
     },
     "onboarding": {
       "title": "Keep your sign in link safe",
@@ -3408,7 +3459,19 @@
       "activateDescription": "Save the new link before you activate it.",
       "stagedDescription": "Your current sign in link still works until you activate this one. Close or refresh and this replacement is gone.",
       "activateConfirm": "Activate new link",
-      "replacementActivated": "your replacement sign-in link is active now."
+      "replacementActivated": "your replacement sign-in link is active now.",
+      "create": "create sign in link",
+      "createTitle": "create a sign in link?",
+      "createDescription": "generate a private link to review and save. anyone with the link can get into this guest account.",
+      "created": "sign in link created.",
+      "remove": "remove sign in link",
+      "removeTitle": "remove the sign in link?",
+      "removeDescription": "the current link stops working right away. a registered passkey keeps working.",
+      "removeWarning": "anyone with the current link loses access. no undo on this one.",
+      "removeConfirm": "remove link",
+      "removeRequiresPasskey": "add a passkey first — the sign in link is the only way back into this account right now.",
+      "removed": "sign in link removed.",
+      "createConfirm": "save sign in link"
     }
   },
   "GroupViewLink": {

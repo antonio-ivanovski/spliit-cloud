@@ -2,7 +2,7 @@
 
 This document is for AI agents and programmatic clients (scripts, CLIs,
 external apps) that need to act on a Spliit account. Humans sign in with
-email/password, magic link, or Google/GitHub/X in the browser; agents use
+email/password, magic link, passkey, or Google/GitHub/X in the browser; agents use
 OAuth 2.1 against the API's own authorization server instead of a browser
 session.
 

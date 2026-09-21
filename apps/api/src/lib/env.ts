@@ -268,6 +268,15 @@ const envSchema = z
       interpretEnvVarAsBool,
       z.boolean().default(false),
     ),
+    // Passkey/WebAuthn sign-in (passwordless, works for every account type
+    // including anonymous and placeholder social accounts). Defaults to true;
+    // set to false to hide passkey UI and unmount `/passkey/*` +
+    // `/sign-in/passkey` (passkey-first registration is not offered, so
+    // disabling only removes an additional sign-in method).
+    ENABLE_PASSKEY_AUTH: z.preprocess(
+      interpretOptionalEnvVarAsBool,
+      z.boolean().default(true),
+    ),
     // Email sign-in (password + magic link). Defaults to true to preserve
     // historical behavior. Set to false for SSO-only instances (OIDC/social);
     // SMTP then becomes optional (see superRefine below).
@@ -682,6 +691,17 @@ export function isEmailAuthEnabled(
   source: { ENABLE_EMAIL_AUTH?: boolean } = env,
 ): boolean {
   return source.ENABLE_EMAIL_AUTH ?? true
+}
+
+/**
+ * Whether passkey/WebAuthn sign-in is enabled. Defaults to true when unset.
+ * Accepts an explicit source so tests can pass isolated env objects without
+ * mutating global env.
+ */
+export function isPasskeyAuthEnabled(
+  source: { ENABLE_PASSKEY_AUTH?: boolean } = env,
+): boolean {
+  return source.ENABLE_PASSKEY_AUTH ?? true
 }
 
 /**

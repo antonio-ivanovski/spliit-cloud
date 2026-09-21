@@ -7,6 +7,7 @@ import {
   GroupMemberStatus,
   GroupRole,
   GroupType,
+  Prisma,
   prisma,
 } from '@spliit/db'
 import {
@@ -25,7 +26,7 @@ import {
   listAuthorizedClients,
   revokeAuthorizedClient,
 } from '../../../lib/auth/authorized-clients'
-import { env } from '../../../lib/env'
+import { env, isEmailAuthEnabled } from '../../../lib/env'
 import {
   getInvitationDisplayName,
   isPlaceholderEmail,
@@ -35,7 +36,11 @@ import {
   isProfileImageUrlForAccount,
   validateProfileImageUpload,
 } from '../../../routes/upload'
-import { createTRPCRouter, protectedProcedure } from '../../init'
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  rateLimitedSessionProcedure,
+} from '../../init'
 import {
   accountFriendsOutputSchema,
   accountGroupPreferencesOutputSchema,
@@ -43,7 +48,9 @@ import {
   accountMembersOutputSchema,
   accountPreferenceOutputSchema,
   accountProfileSchema,
+  afterPasskeyChangeOutputSchema,
   authorizedClientsOutputSchema,
+  deletePasskeyOutputSchema,
   revokeAuthorizedClientOutputSchema,
 } from '../../outputs/account'
 
@@ -156,6 +163,60 @@ function inferDefaultCurrency(memberships: CurrencyMembership[]) {
 }
 
 /**
+ * Whether the account keeps a way back in after losing one passkey. Mirrors the
+ * password-removal `NO_ALTERNATIVE_SIGN_IN` guard, plus passkey- and
+ * anonymous-specific methods: a second passkey, an acknowledged anonymous
+ * recovery link, or a verified real email that can receive a magic link (only
+ * when email auth is enabled). Placeholder emails don't count.
+ */
+async function hasOtherSignInMethod(
+  db: Prisma.TransactionClient,
+  accountId: string,
+): Promise<boolean> {
+  const [account, identities, recovery, passkeyCount] = await Promise.all([
+    db.user.findUnique({
+      where: { id: accountId },
+      select: { email: true, emailVerified: true },
+    }),
+    db.account.findMany({
+      where: { userId: accountId },
+      select: { providerId: true, password: true },
+    }),
+    db.anonymousRecoveryCredential.findUnique({
+      where: { accountId },
+      select: { acknowledgedAt: true, onboardingCompletedAt: true },
+    }),
+    db.passkey.count({ where: { userId: accountId } }),
+  ])
+  if (passkeyCount > 1) return true
+  // Any non-credential provider (OAuth/social/magic-link identity) or a set
+  // password counts as an alternative.
+  if (
+    identities.some(
+      (identity) =>
+        identity.providerId !== 'credential' || identity.password != null,
+    )
+  )
+    return true
+  // An acknowledged recovery link survives passkey changes: it is only ever
+  // cleared by explicit rotation/removal, never by registering or removing
+  // a passkey.
+  if (
+    recovery?.acknowledgedAt != null &&
+    recovery.onboardingCompletedAt != null
+  )
+    return true
+  if (
+    isEmailAuthEnabled() &&
+    account?.email &&
+    !isPlaceholderEmail(account.email) &&
+    account.emailVerified === true
+  )
+    return true
+  return false
+}
+
+/**
  * Account-scoped router. Used by the web client to bootstrap an authenticated
  * session (profile, group memberships, pending invitations) without exposing
  * legacy anonymous behaviour.
@@ -206,6 +267,90 @@ export const accountRouter = createTRPCRouter({
         })
       }
       return result
+    }),
+
+  /**
+   * Delete one of the caller's passkeys. Refuses to remove the last remaining
+   * sign-in method: deleting the final passkey of an account with no other way
+   * back in fails with CONFLICT instead of silently locking the account out.
+   * The better-auth plugin endpoint cannot enforce this (it deletes through the
+   * raw adapter, bypassing database hooks), so the web client must use this
+   * mutation instead of `authClient.passkey.deletePasskey`.
+   *
+   * Gate-exempt on purpose: fresh anonymous accounts register their first
+   * passkey before onboarding completes, and the CONFLICT check below is the
+   * real lockout guard — the onboarding gate must not decide this. Still spends
+   * the shared authenticated-mutation budget.
+   *
+   * The account row is locked first (`SELECT … FOR UPDATE`; the User model is
+   * mapped to the "Account" table): under READ COMMITTED two concurrent
+   * deletions could otherwise each observe one remaining passkey and both
+   * commit, dropping the credentials to zero. A lost in-transaction race
+   * (P2025) maps to NOT_FOUND instead of leaking a 500.
+   */
+  deletePasskey: rateLimitedSessionProcedure
+    .input(z.object({ id: z.string().min(1) }))
+    .output(deletePasskeyOutputSchema)
+    .mutation(async ({ ctx, input }) => {
+      const accountId = ctx.auth.user.id
+      await prisma.$transaction(async (tx) => {
+        await tx.$queryRaw`SELECT "id" FROM "Account" WHERE "id" = ${accountId} FOR UPDATE`
+        const passkey = await tx.passkey.findUnique({
+          where: { id: input.id },
+          select: { id: true, userId: true },
+        })
+        if (!passkey || passkey.userId !== accountId) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Passkey not found',
+          })
+        }
+        try {
+          await tx.passkey.delete({ where: { id: input.id } })
+        } catch (error) {
+          if (
+            error instanceof Prisma.PrismaClientKnownRequestError &&
+            error.code === 'P2025'
+          ) {
+            throw new TRPCError({
+              code: 'NOT_FOUND',
+              message: 'Passkey not found',
+            })
+          }
+          throw error
+        }
+        const remaining = await tx.passkey.count({
+          where: { userId: accountId },
+        })
+        if (remaining === 0 && !(await hasOtherSignInMethod(tx, accountId))) {
+          throw new TRPCError({
+            code: 'CONFLICT',
+            message: 'Cannot remove the last sign-in method',
+          })
+        }
+      })
+      invalidateAccountCache(accountId)
+      return { success: true }
+    }),
+
+  /**
+   * Ping after a passkey was added (or removed) outside tRPC. The passkey
+   * plugin writes through the raw adapter, bypassing database hooks, so the 30s
+   * account cache would otherwise keep serving the pre-passkey onboarding
+   * state. The web client calls this after every successful `addPasskey` so the
+   * anonymous gate flips immediately.
+   *
+   * Gate-exempt on purpose: this ping is what flips the gate for fresh
+   * anonymous accounts, so gating it on the still-stale cached row would
+   * deadlock it for the 30s cache TTL and break completing onboarding right
+   * after registering a passkey. Invalidating one's own cache row is harmless
+   * without the gate. Still spends the shared authenticated-mutation budget.
+   */
+  afterPasskeyChange: rateLimitedSessionProcedure
+    .output(afterPasskeyChangeOutputSchema)
+    .mutation(async ({ ctx }) => {
+      invalidateAccountCache(ctx.auth.user.id)
+      return { success: true }
     }),
 
   /** Read the caller's server-synced account preferences. */

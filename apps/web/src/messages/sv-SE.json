@@ -327,6 +327,43 @@
         "notFound": "Inget lösenord är angivet för detta konto."
       },
       "setShort": "Ställ in"
+    },
+    "passkey": {
+      "label": "Passnycklar",
+      "help": "Logga in utan lösenord med enhetens fingeravtryck, ansikte eller säkerhetsnyckel. Passnycklar fungerar för alla kontotyper och behöver ingen e-postadress.",
+      "anonymousHelp": "Med passnycklar kan det här anonyma kontot logga in utan inloggningslänken på registrerade enheter. Behåll din inloggningslänk som säkerhetskopia.",
+      "unsupported": "Den här webbläsaren eller enheten stöder inte passnycklar.",
+      "empty": "Inga passnycklar ännu.",
+      "unnamed": "Passnyckel",
+      "add": "Lägg till en passnyckel",
+      "addTitle": "Lägg till en passnyckel",
+      "addDescription": "Följ webbläsarens instruktioner för att registrera den här enheten. Ge den ett namn så att du känner igen den senare.",
+      "waitHint": "Webbläsaren ber dig verifiera — det kan ta en liten stund.",
+      "nameLabel": "Namn (valfritt)",
+      "namePlaceholder": "t.ex. MacBook Touch ID",
+      "addSubmit": "Lägg till passnyckel",
+      "saving": "Väntar på din enhet…",
+      "cancel": "Avbryt",
+      "remove": "Ta bort",
+      "removeTitle": "Ta bort passnyckel?",
+      "removeDescription": "Den här enheten loggar inte längre in dig med en passnyckel. Du kan registrera den igen när som helst.",
+      "removeConfirm": "Ta bort",
+      "removing": "Tar bort…",
+      "added": "Passnyckeln har lagts till.",
+      "removed": "Passnyckeln har tagits bort.",
+      "errors": {
+        "generic": "Något gick fel. Försök igen.",
+        "loadFailed": "Passnycklarna kunde inte läsas in.",
+        "addFailed": "Passnyckeln kunde inte läggas till. Försök igen.",
+        "removeFailed": "Passnyckeln kunde inte tas bort. Försök igen.",
+        "lastMethod": "Det här är din enda inloggningsmetod. Spara en inloggningslänk eller lägg till en annan inloggningsmetod först."
+      },
+      "synced": "Synkroniserad",
+      "deviceBound": "Endast den här enheten",
+      "backedUp": "Säkerhetskopierad",
+      "removeWarning": "Det här kan inte ångras. Enheten loggar inte längre in dig med en passnyckel — registrera den igen när som helst.",
+      "removeLastWarning": "Det här är din sista passnyckel. Om det är din enda inloggningsmetod är borttagning blockerad tills du har sparat en inloggningslänk eller lagt till en annan inloggningsmetod.",
+      "anonymousHelpNoLink": "Ingen inloggningslänk är sparad för det här gästkontot. Skapa en på inloggningslänksraden nedan — den fungerar på alla enheter."
     }
   },
   "Activities": {
@@ -462,7 +499,8 @@
       "generic": "Något gick fel. Försök igen.",
       "magicLinkFailed": "Kunde inte skicka inloggningslänken.",
       "passwordPolicy": "Använd minst 8 tecken med versal, gemen, en siffra och en symbol.",
-      "signupInviteRequired": "Den här instansen är endast för inbjudna. Använd en inbjudningslänk eller be någon att bjuda in dig till en grupp."
+      "signupInviteRequired": "Den här instansen är endast för inbjudna. Använd en inbjudningslänk eller be någon att bjuda in dig till en grupp.",
+      "passkeyFailed": "Inloggningen med passnyckel misslyckades. Försök igen eller använd en annan inloggningsmetod."
     },
     "signInWithGithub": "Fortsätt med GitHub",
     "legalNotice": "Genom att fortsätta godkänner du <terms>användarvillkoren</terms> och bekräftar <privacy>integritetspolicyn</privacy>.",
@@ -482,7 +520,8 @@
     "signInWithOidc": "Fortsätt med {name}",
     "signInAnonymously": "Anonym",
     "lastUsed": "Senast använt",
-    "emailAuthDisabled": "Inloggning med e-post är inaktiverad i den här instansen. Använd enkel inloggning (SSO)."
+    "emailAuthDisabled": "Inloggning med e-post är inaktiverad i den här instansen. Använd enkel inloggning (SSO).",
+    "signInWithPasskey": "Logga in med passnyckel"
   },
   "Balances": {
     "title": "Balanser",
@@ -3363,8 +3402,20 @@
       "recoverError": "Denna inloggningslänk är ogiltig. Kontrollera hela länken och försök igen.",
       "recoveryLinkRequiredLabel": "Inloggningslänk",
       "createTitle": "Skapa ett nytt konto",
-      "or": "ELLER",
-      "recoverTitle": "Har du redan ett anonymt konto?"
+      "recoverTitle": "Har du redan ett anonymt konto?",
+      "passkeyHint": "Du kan lägga till en passnyckel direkt efter att kontot skapats för lösenordsfri inloggning på den här enheten.",
+      "addPasskey": "Lägg till en passnyckel",
+      "passkeyError": "Passnyckeln kunde inte läggas till. Du kan lägga till en senare i kontoinställningarna.",
+      "choiceTitle": "Välj din reservinloggning",
+      "choiceDescription": "Välj hur du tar dig tillbaka till det här anonyma kontot. Du kan lägga till, ändra eller ta bort båda alternativen senare i Kontoinställningar.",
+      "linkTitle": "Spara en inloggningslänk",
+      "linkDescription": "Rekommenderas: en privat länk som loggar in dig igen på vilken enhet som helst. Förvara den på ett säkert ställe.",
+      "passkeyTitle": "Använd en passnyckel istället",
+      "passkeyDescription": "Logga in med ditt fingeravtryck, ansikte eller en säkerhetsnyckel på den här enheten. Ingen länk att spara — och ingen länk behövs efteråt.",
+      "existingPasskeyTitle": "Har du redan registrerat en passnyckel?",
+      "existingPasskeyDescription": "Logga in igen med passnyckeln på en av dina registrerade enheter.",
+      "passkeySignIn": "Logga in med passnyckel",
+      "passkeySignInError": "Det gick inte att logga in med den här passnyckeln. Försök igen eller använd din inloggningslänk."
     },
     "onboarding": {
       "title": "Spara din inloggningslänk",
@@ -3412,7 +3463,19 @@
       "activateDescription": "Spara ersättningslänken innan du aktiverar den.",
       "stagedDescription": "Din nuvarande inloggningslänk fortsätter att fungera tills du aktiverar den här ersättningen. Stängning eller uppdatering kasserar ersättningen.",
       "activateConfirm": "Aktivera ersättning",
-      "replacementActivated": "Din ersättande inloggningslänk är nu aktiv."
+      "replacementActivated": "Din ersättande inloggningslänk är nu aktiv.",
+      "create": "Skapa inloggningslänk",
+      "createTitle": "Skapa en inloggningslänk?",
+      "createDescription": "Skapa en privat länk att granska och spara. Den som har länken kan komma åt det här gästkontot.",
+      "created": "Inloggningslänk skapad.",
+      "remove": "Ta bort inloggningslänk",
+      "removeTitle": "Ta bort inloggningslänken?",
+      "removeDescription": "Den aktuella länken slutar fungera omedelbart. En registrerad passnyckel fortsätter att fungera.",
+      "removeWarning": "Den som har den aktuella länken förlorar åtkomsten. Detta kan inte ångras.",
+      "removeConfirm": "Ta bort länk",
+      "removeRequiresPasskey": "Lägg till en passnyckel först — inloggningslänken är för närvarande det enda sättet att komma tillbaka till det här kontot.",
+      "removed": "Inloggningslänk borttagen.",
+      "createConfirm": "Spara inloggningslänk"
     }
   },
   "GroupViewLink": {

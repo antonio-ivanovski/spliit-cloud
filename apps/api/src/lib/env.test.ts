@@ -6,6 +6,7 @@ import {
   getWebhookRelayConfig,
   isEmailAuthEnabled,
   isEmailDeliveryEnabled,
+  isPasskeyAuthEnabled,
   parseEnv,
 } from './env'
 
@@ -699,6 +700,17 @@ describe('email auth helpers', () => {
     expect(isEmailAuthEnabled({})).toBe(true)
     expect(isEmailAuthEnabled({ ENABLE_EMAIL_AUTH: false })).toBe(false)
     expect(isEmailAuthEnabled({ ENABLE_EMAIL_AUTH: true })).toBe(true)
+  })
+
+  it('defaults passkey auth to enabled', () => {
+    expect(isPasskeyAuthEnabled({})).toBe(true)
+    expect(isPasskeyAuthEnabled({ ENABLE_PASSKEY_AUTH: false })).toBe(false)
+    expect(isPasskeyAuthEnabled({ ENABLE_PASSKEY_AUTH: true })).toBe(true)
+  })
+
+  it('treats an empty ENABLE_PASSKEY_AUTH as unset (default true)', () => {
+    const env = parseTestEnv({ ...productionBase, ENABLE_PASSKEY_AUTH: '' })
+    expect(env.ENABLE_PASSKEY_AUTH).toBe(true)
   })
 
   it('treats an empty ENABLE_EMAIL_AUTH as unset (default true)', () => {

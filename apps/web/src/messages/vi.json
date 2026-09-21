@@ -805,7 +805,8 @@
       "generic": "Đã xảy ra lỗi. Vui lòng thử lại.",
       "magicLinkFailed": "Không thể gửi liên kết.",
       "passwordPolicy": "Sử dụng ít nhất 8 ký tự bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.",
-      "signupInviteRequired": "Phiên bản này chỉ dành cho người được mời. Hãy dùng liên kết mời hoặc nhờ ai đó mời bạn vào một nhóm."
+      "signupInviteRequired": "Phiên bản này chỉ dành cho người được mời. Hãy dùng liên kết mời hoặc nhờ ai đó mời bạn vào một nhóm.",
+      "passkeyFailed": "Đăng nhập bằng passkey thất bại. Hãy thử lại hoặc dùng phương thức đăng nhập khác."
     },
     "loading": "Đang tải…",
     "signedInAs": "Đã đăng nhập với tư cách {name}",
@@ -821,7 +822,8 @@
     "signInWithOidc": "Đăng nhập bằng {name}",
     "signInAnonymously": "Ẩn danh",
     "lastUsed": "Dùng gần đây",
-    "emailAuthDisabled": "Đăng nhập bằng email đã bị tắt trên phiên bản này. Vui lòng dùng đăng nhập một lần (SSO)."
+    "emailAuthDisabled": "Đăng nhập bằng email đã bị tắt trên phiên bản này. Vui lòng dùng đăng nhập một lần (SSO).",
+    "signInWithPasskey": "Đăng nhập bằng passkey"
   },
   "AccountSettings": {
     "title": "Cài đặt tài khoản",
@@ -1151,6 +1153,43 @@
         "notFound": "Tài khoản này chưa đặt mật khẩu."
       },
       "setShort": "Đặt"
+    },
+    "passkey": {
+      "label": "Passkey",
+      "help": "Đăng nhập mà không cần mật khẩu bằng vân tay, khuôn mặt hoặc khóa bảo mật của thiết bị. Passkey dùng được cho mọi loại tài khoản và không cần địa chỉ email.",
+      "anonymousHelp": "Passkey giúp tài khoản ẩn danh này đăng nhập mà không cần liên kết khôi phục trên các thiết bị đã đăng ký. Hãy giữ liên kết khôi phục làm bản dự phòng.",
+      "unsupported": "Trình duyệt hoặc thiết bị này không hỗ trợ passkey.",
+      "empty": "Chưa có passkey nào.",
+      "unnamed": "Passkey chưa có tên",
+      "add": "Thêm passkey",
+      "addTitle": "Thêm passkey",
+      "addDescription": "Làm theo hướng dẫn của trình duyệt để đăng ký thiết bị này. Đặt tên để dễ nhận biết sau này.",
+      "waitHint": "Trình duyệt sẽ yêu cầu bạn xác minh — việc này có thể mất một chút thời gian.",
+      "nameLabel": "Tên (tùy chọn)",
+      "namePlaceholder": "vd. MacBook Touch ID",
+      "addSubmit": "Thêm passkey",
+      "saving": "Đang chờ thiết bị của bạn…",
+      "cancel": "Hủy",
+      "remove": "Xóa",
+      "removeTitle": "Xóa passkey?",
+      "removeDescription": "Thiết bị này sẽ không còn đăng nhập cho bạn bằng passkey nữa. Bạn có thể đăng ký lại bất cứ lúc nào.",
+      "removeConfirm": "Xóa",
+      "removing": "Đang xóa…",
+      "added": "Đã thêm passkey.",
+      "removed": "Đã xóa passkey.",
+      "errors": {
+        "generic": "Đã xảy ra lỗi. Hãy thử lại.",
+        "loadFailed": "Không thể tải passkey.",
+        "addFailed": "Không thể thêm passkey. Hãy thử lại.",
+        "removeFailed": "Không thể xóa passkey. Hãy thử lại.",
+        "lastMethod": "Đây là phương thức đăng nhập duy nhất của bạn. Hãy lưu liên kết khôi phục hoặc thêm một phương thức đăng nhập khác trước."
+      },
+      "synced": "Đã đồng bộ",
+      "deviceBound": "Chỉ thiết bị này",
+      "backedUp": "Đã sao lưu",
+      "removeWarning": "Không thể hoàn tác hành động này. Thiết bị sẽ không còn đăng nhập cho bạn bằng passkey nữa — bạn có thể đăng ký lại bất cứ lúc nào.",
+      "removeLastWarning": "Đây là passkey cuối cùng của bạn. Nếu đây là phương thức đăng nhập duy nhất, việc xóa sẽ bị chặn cho đến khi bạn lưu liên kết khôi phục hoặc một phương thức đăng nhập khác.",
+      "anonymousHelpNoLink": "Không có liên kết đăng nhập nào được lưu cho tài khoản ẩn danh này. Hãy tạo một liên kết ở hàng liên kết đăng nhập bên dưới — liên kết này hoạt động trên mọi thiết bị."
     }
   },
   "CompleteProfile": {
@@ -3432,8 +3471,20 @@
       "recoverError": "Liên kết đăng nhập này không hợp lệ. Kiểm tra liên kết đầy đủ và thử lại.",
       "recoveryLinkRequiredLabel": "Liên kết đăng nhập",
       "createTitle": "Tạo tài khoản mới",
-      "or": "HOẶC",
-      "recoverTitle": "Đã có tài khoản ẩn danh?"
+      "recoverTitle": "Đã có tài khoản ẩn danh?",
+      "passkeyHint": "Bạn có thể thêm passkey ngay sau khi tạo tài khoản để đăng nhập không cần mật khẩu trên thiết bị này.",
+      "addPasskey": "Thêm passkey",
+      "passkeyError": "Không thể thêm passkey. Bạn có thể thêm sau trong cài đặt tài khoản.",
+      "choiceTitle": "Chọn phương thức đăng nhập dự phòng",
+      "choiceDescription": "Chọn cách đăng nhập lại vào tài khoản ẩn danh này. Bạn có thể thêm, thay đổi hoặc xóa tùy chọn sau trong cài đặt tài khoản.",
+      "linkTitle": "Lưu liên kết khôi phục",
+      "linkDescription": "Khuyến nghị: liên kết riêng tư giúp bạn đăng nhập lại trên mọi thiết bị. Hãy lưu ở nơi an toàn.",
+      "passkeyTitle": "Dùng passkey thay thế",
+      "passkeyDescription": "Đăng nhập bằng vân tay, khuôn mặt hoặc khóa bảo mật trên thiết bị này. Không cần lưu liên kết nào — và sau đó cũng không yêu cầu liên kết.",
+      "existingPasskeyTitle": "Đã đăng ký passkey?",
+      "existingPasskeyDescription": "Đăng nhập lại bằng passkey trên một trong các thiết bị đã đăng ký của bạn.",
+      "passkeySignIn": "Đăng nhập bằng passkey",
+      "passkeySignInError": "Không thể đăng nhập bằng passkey này. Hãy thử lại hoặc dùng liên kết đăng nhập của bạn."
     },
     "onboarding": {
       "title": "Lưu liên kết đăng nhập của bạn",
@@ -3481,7 +3532,19 @@
       "activateDescription": "Lưu liên kết thay thế trước khi kích hoạt.",
       "stagedDescription": "Liên kết đăng nhập hiện tại của bạn tiếp tục hoạt động cho đến khi bạn kích hoạt thay thế này. Đóng hoặc làm mới sẽ loại bỏ sự thay thế.",
       "activateConfirm": "Kích hoạt thay thế",
-      "replacementActivated": "Liên kết đăng nhập thay thế của bạn hiện đã hoạt động."
+      "replacementActivated": "Liên kết đăng nhập thay thế của bạn hiện đã hoạt động.",
+      "create": "Tạo liên kết đăng nhập",
+      "createTitle": "Tạo liên kết đăng nhập?",
+      "createDescription": "Tạo một liên kết riêng tư để xem lại và lưu. Bất cứ ai có liên kết đều có thể truy cập vào tài khoản ẩn danh này.",
+      "created": "Đã tạo liên kết đăng nhập.",
+      "remove": "Xóa liên kết đăng nhập",
+      "removeTitle": "Xóa liên kết đăng nhập?",
+      "removeDescription": "Liên kết hiện tại sẽ ngừng hoạt động ngay lập tức. Passkey đã đăng ký vẫn hoạt động.",
+      "removeWarning": "Bất cứ ai giữ liên kết hiện tại sẽ mất quyền truy cập. Không thể hoàn tác hành động này.",
+      "removeConfirm": "Xóa liên kết",
+      "removeRequiresPasskey": "Hãy thêm passkey trước — liên kết đăng nhập hiện là cách duy nhất để quay lại tài khoản này.",
+      "removed": "Đã xóa liên kết đăng nhập.",
+      "createConfirm": "Lưu liên kết đăng nhập"
     }
   },
   "GroupViewLink": {

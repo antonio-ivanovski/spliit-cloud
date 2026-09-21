@@ -873,7 +873,8 @@
       "nameRequired": "Insira um nome de exibição.",
       "generic": "Algo deu errado. Por favor, tente novamente.",
       "passwordPolicy": "Use pelo menos 8 caracteres com maiúsculas, minúsculas, um número e um símbolo.",
-      "signupInviteRequired": "Esta instância é apenas por convite. Use um link de convite ou peça a alguém que te convide para um grupo."
+      "signupInviteRequired": "Esta instância é apenas por convite. Use um link de convite ou peça a alguém que te convide para um grupo.",
+      "passkeyFailed": "O login com chave de acesso falhou. Tente novamente ou use outro método de login."
     },
     "loading": "Carregando…",
     "signedInAs": "Conectado como {name}",
@@ -885,7 +886,8 @@
     },
     "signInAnonymously": "Anônimo",
     "lastUsed": "Último uso",
-    "emailAuthDisabled": "O login com email está desativado nesta instância. Use o login único (SSO)."
+    "emailAuthDisabled": "O login com email está desativado nesta instância. Use o login único (SSO).",
+    "signInWithPasskey": "Entrar com chave de acesso"
   },
   "CompleteProfile": {
     "title": "Complete seu perfil",
@@ -1310,6 +1312,21 @@
         "generic": "Não foi possível atualizar a senha. Tente novamente.",
         "noAlternativeSignIn": "Adicione um e-mail verificado ou conecte outro método de login antes de remover sua senha.",
         "notFound": "Nenhuma senha definida para esta conta."
+      }
+    },
+    "passkey": {
+      "help": "Entre sem senha usando a impressão digital, o rosto ou uma chave de segurança do seu dispositivo. As chaves de acesso funcionam para todos os tipos de conta e não precisam de e-mail.",
+      "anonymousHelp": "As chaves de acesso permitem que esta conta de convidado entre sem o link de recuperação nos dispositivos registrados. Guarde seu link de recuperação como backup.",
+      "unsupported": "Este navegador ou dispositivo não é compatível com chaves de acesso.",
+      "empty": "Ainda não há chaves de acesso.",
+      "addDescription": "Siga as instruções do navegador para registrar este dispositivo. Dê um nome para reconhecê-lo mais tarde.",
+      "waitHint": "Seu navegador vai pedir que você verifique — isso pode levar um momento.",
+      "namePlaceholder": "Ex.: Touch ID do MacBook",
+      "saving": "Aguardando seu dispositivo…",
+      "removeDescription": "Este dispositivo deixará de entrar com uma chave de acesso. Você pode registrá-lo novamente a qualquer momento.",
+      "removing": "Removendo…",
+      "errors": {
+        "generic": "Algo deu errado. Tente novamente."
       }
     }
   },
@@ -1743,7 +1760,9 @@
       "recoverError": "Este link de login é inválido. Verifique o link completo e tente novamente.",
       "recoveryLinkRequiredLabel": "Link de login",
       "createTitle": "Criar uma nova conta",
-      "recoverTitle": "Já tem uma conta anônima?"
+      "recoverTitle": "Já tem uma conta anônima?",
+      "passkeyHint": "Você pode adicionar uma chave de acesso logo após a criação para entrar sem senha neste dispositivo.",
+      "passkeyError": "Não foi possível adicionar a chave de acesso. Você pode adicionar uma mais tarde nas configurações da conta."
     },
     "onboarding": {
       "title": "Salve seu link de login",

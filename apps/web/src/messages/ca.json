@@ -1850,7 +1850,8 @@
       "generic": "Alguna cosa ha anat malament. Si us plau, torna-ho a intentar.",
       "passwordPolicy": "Utilitza almenys 8 caràcters amb majúscules, minúscules, un número i un símbol.",
       "magicLinkFailed": "No s'ha pogut enviar l'enllaç d'inici de sessió.",
-      "signupInviteRequired": "Aquesta instància és només per invitació. Utilitza un enllaç d'invitació o demana a algú que t'inviti a un grup."
+      "signupInviteRequired": "Aquesta instància és només per invitació. Utilitza un enllaç d'invitació o demana a algú que t'inviti a un grup.",
+      "passkeyFailed": "L'inici de sessió amb clau d'accés ha fallat. Torna-ho a provar o utilitza un altre mètode d'inici de sessió."
     },
     "loading": "Carregant…",
     "signedInAs": "Sessió iniciada com a {name}",
@@ -1866,7 +1867,8 @@
     "signInWithOidc": "Continua amb {name}",
     "signInAnonymously": "Anònim",
     "lastUsed": "Darrer ús",
-    "emailAuthDisabled": "L'inici de sessió amb correu electrònic està desactivat en aquesta instància. Utilitza l'inici de sessió únic (SSO)."
+    "emailAuthDisabled": "L'inici de sessió amb correu electrònic està desactivat en aquesta instància. Utilitza l'inici de sessió únic (SSO).",
+    "signInWithPasskey": "Inicia sessió amb clau d'accés"
   },
   "CompleteProfile": {
     "title": "Completa el teu perfil",
@@ -2587,6 +2589,43 @@
         "notFound": "Aquest compte no té cap contrasenya establerta."
       },
       "setShort": "Estableix"
+    },
+    "passkey": {
+      "label": "Claus d'accés",
+      "help": "Inicia sessió sense contrasenya amb l'empremta digital, la cara o una clau de seguretat del teu dispositiu. Les claus d'accés funcionen amb tots els tipus de compte i no necessiten cap adreça de correu electrònic.",
+      "anonymousHelp": "Les claus d'accés permeten a aquest compte de convidat iniciar sessió sense l'enllaç de recuperació als dispositius registrats. Conserva l'enllaç de recuperació com a còpia de seguretat.",
+      "unsupported": "Aquest navegador o dispositiu no admet les claus d'accés.",
+      "empty": "Encara no hi ha cap clau d'accés.",
+      "unnamed": "Clau d'accés",
+      "add": "Afegeix una clau d'accés",
+      "addTitle": "Afegeix una clau d'accés",
+      "addDescription": "Segueix les instruccions del navegador per registrar aquest dispositiu. Posa-li un nom per reconèixer-lo més tard.",
+      "waitHint": "El navegador et demanarà que ho verifiquis; pot trigar una mica.",
+      "nameLabel": "Nom (opcional)",
+      "namePlaceholder": "p. ex., Touch ID del MacBook",
+      "addSubmit": "Afegeix la clau d'accés",
+      "saving": "Esperant el teu dispositiu…",
+      "cancel": "Cancel·la",
+      "remove": "Elimina",
+      "removeTitle": "Eliminar la clau d'accés?",
+      "removeDescription": "Aquest dispositiu deixarà d'iniciar sessió amb una clau d'accés. Pots tornar-lo a registrar en qualsevol moment.",
+      "removeConfirm": "Elimina",
+      "removing": "S'està eliminant…",
+      "added": "Clau d'accés afegida.",
+      "removed": "Clau d'accés eliminada.",
+      "errors": {
+        "generic": "Alguna cosa ha anat malament. Torna-ho a provar.",
+        "loadFailed": "No s'han pogut carregar les claus d'accés.",
+        "addFailed": "No s'ha pogut afegir la clau d'accés. Torna-ho a provar.",
+        "removeFailed": "No s'ha pogut eliminar la clau d'accés. Torna-ho a provar.",
+        "lastMethod": "Aquest és el teu únic mètode d'inici de sessió. Desa un enllaç de recuperació o afegeix un altre mètode d'inici de sessió primer."
+      },
+      "synced": "Sincronitzada",
+      "deviceBound": "Només en aquest dispositiu",
+      "backedUp": "Amb còpia de seguretat",
+      "removeWarning": "Això no es pot desfer. El dispositiu deixarà d'iniciar sessió amb una clau d'accés — torna'l a registrar en qualsevol moment.",
+      "removeLastWarning": "Aquesta és la teva última clau d'accés. Si és el teu únic mètode d'inici de sessió, l'eliminació quedarà bloquejada fins que desis un enllaç de recuperació o un altre mètode d'inici de sessió.",
+      "anonymousHelpNoLink": "No hi ha cap enllaç d'inici de sessió desat per a aquest compte de convidat. Crea'n un a la fila de l'enllaç d'inici de sessió de sota — funciona en qualsevol dispositiu."
     }
   },
   "Activities": {
@@ -3386,8 +3425,20 @@
       "recoverError": "Aquest enllaç d'inici de sessió no és vàlid. Comprova l'enllaç complet i torna-ho a provar.",
       "recoveryLinkRequiredLabel": "Enllaç d'inici de sessió",
       "createTitle": "Crea un compte nou",
-      "or": "O",
-      "recoverTitle": "Ja teniu un compte anònim?"
+      "recoverTitle": "Ja teniu un compte anònim?",
+      "passkeyHint": "Pots afegir una clau d'accés tot just després de crear el compte per iniciar sessió sense contrasenya en aquest dispositiu.",
+      "addPasskey": "Afegeix una clau d'accés",
+      "passkeyError": "No s'ha pogut afegir la clau d'accés. Pots afegir-ne una més tard a la configuració del compte.",
+      "choiceTitle": "Tria el teu accés de reserva",
+      "choiceDescription": "Tria com tornaràs a entrar en aquest compte de convidat. Pots afegir, canviar o eliminar qualsevol de les dues opcions més tard a la configuració del compte.",
+      "linkTitle": "Desa un enllaç de recuperació",
+      "linkDescription": "Recomanat: un enllaç privat que et permet tornar a iniciar sessió en qualsevol dispositiu. Desa'l en un lloc segur.",
+      "passkeyTitle": "Utilitza una clau d'accés",
+      "passkeyDescription": "Inicia sessió amb l'empremta digital, la cara o una clau de seguretat en aquest dispositiu. No hi ha cap enllaç per desar — i després no en caldrà cap.",
+      "existingPasskeyTitle": "Ja has registrat una clau d'accés?",
+      "existingPasskeyDescription": "Torna a iniciar sessió amb la clau d'accés en un dels teus dispositius registrats.",
+      "passkeySignIn": "Inicia sessió amb clau d'accés",
+      "passkeySignInError": "No s'ha pogut iniciar sessió amb aquesta clau d'accés. Torna-ho a provar o utilitza l'enllaç d'inici de sessió."
     },
     "onboarding": {
       "title": "Desa l'enllaç d'inici de sessió",
@@ -3435,7 +3486,19 @@
       "activateDescription": "Deseu l'enllaç de substitució abans d'activar-lo.",
       "stagedDescription": "El vostre enllaç d'inici de sessió actual continua funcionant fins que activeu aquesta substitució. Tancar o actualitzar descarta el reemplaçament.",
       "activateConfirm": "Activa la substitució",
-      "replacementActivated": "L'enllaç d'inici de sessió de substitució ja està actiu."
+      "replacementActivated": "L'enllaç d'inici de sessió de substitució ja està actiu.",
+      "create": "Crea l'enllaç d'inici de sessió",
+      "createTitle": "Voleu crear un enllaç d'inici de sessió?",
+      "createDescription": "Genera un enllaç privat per revisar-lo i desar-lo. Qualsevol persona que el tingui pot accedir a aquest compte de convidat.",
+      "created": "Enllaç d'inici de sessió creat.",
+      "remove": "Elimina l'enllaç d'inici de sessió",
+      "removeTitle": "Eliminar l'enllaç d'inici de sessió?",
+      "removeDescription": "L'enllaç actual deixa de funcionar immediatament. Una clau d'accés registrada continua funcionant.",
+      "removeWarning": "Qualsevol persona que tingui l'enllaç actual perd l'accés. Això no es pot desfer.",
+      "removeConfirm": "Elimina l'enllaç",
+      "removeRequiresPasskey": "Afegeix primer una clau d'accés — l'enllaç d'inici de sessió és actualment l'única manera de tornar a aquest compte.",
+      "removed": "Enllaç d'inici de sessió eliminat.",
+      "createConfirm": "Desa l'enllaç d'inici de sessió"
     }
   },
   "GroupViewLink": {

@@ -9,6 +9,8 @@ export type AnonymousRecoveryStatus = {
   acknowledged: boolean
   onboardingCompleted: boolean
   canResumeSetup: boolean
+  /** At least one verified passkey is registered — an alternative safeguard. */
+  hasPasskey: boolean
 }
 
 export type AnonymousRecoveryKey = {
@@ -96,6 +98,13 @@ export function replacePendingAnonymousRecovery() {
   return request<AnonymousRecoveryKey>('/anonymous-recovery/setup/replace', {
     method: 'POST',
     body: JSON.stringify({ confirmed: true }),
+  })
+}
+
+export function revokeAnonymousRecovery(input?: { onlyPending?: boolean }) {
+  return request<{ success: true }>('/anonymous-recovery/revoke', {
+    method: 'POST',
+    body: JSON.stringify(input ?? {}),
   })
 }
 

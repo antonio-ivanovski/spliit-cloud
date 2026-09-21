@@ -1,4 +1,5 @@
 import { oauthProviderClient } from '@better-auth/oauth-provider/client'
+import { passkeyClient } from '@better-auth/passkey/client'
 import {
   anonymousClient,
   lastLoginMethodClient,
@@ -31,6 +32,7 @@ export const authClient = createAuthClient({
     magicLinkClient(),
     anonymousClient(),
     lastLoginMethodClient(),
+    passkeyClient(),
   ],
 })
 

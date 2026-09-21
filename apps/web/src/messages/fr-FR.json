@@ -1850,7 +1850,8 @@
       "generic": "Une erreur s'est produite. Veuillez réessayer.",
       "passwordPolicy": "Utilisez au moins 8 caractères avec une majuscule, une minuscule, un chiffre et un symbole.",
       "magicLinkFailed": "Impossible d'envoyer le lien de connexion.",
-      "signupInviteRequired": "Cette instance est réservée aux invitations. Utilisez un lien d'invitation ou demandez à quelqu'un de vous inviter dans un groupe."
+      "signupInviteRequired": "Cette instance est réservée aux invitations. Utilisez un lien d'invitation ou demandez à quelqu'un de vous inviter dans un groupe.",
+      "passkeyFailed": "La connexion par clé d'accès a échoué. Réessayez ou utilisez une autre méthode de connexion."
     },
     "loading": "Chargement…",
     "signedInAs": "Connecté en tant que {name}",
@@ -1866,7 +1867,8 @@
     "signInWithOidc": "Continuer avec {name}",
     "signInAnonymously": "Anonyme",
     "lastUsed": "Dernière utilisation",
-    "emailAuthDisabled": "La connexion par e-mail est désactivée sur cette instance. Veuillez utiliser l'authentification unique (SSO)."
+    "emailAuthDisabled": "La connexion par e-mail est désactivée sur cette instance. Veuillez utiliser l'authentification unique (SSO).",
+    "signInWithPasskey": "Se connecter avec une clé d'accès"
   },
   "CompleteProfile": {
     "title": "Complétez votre profil",
@@ -2587,6 +2589,43 @@
         "notFound": "Aucun mot de passe n’est défini pour ce compte."
       },
       "setShort": "Définir"
+    },
+    "passkey": {
+      "label": "Clés d'accès",
+      "help": "Connectez-vous sans mot de passe grâce à l'empreinte digitale, à la reconnaissance faciale ou à une clé de sécurité de votre appareil. Les clés d'accès fonctionnent pour tous les types de compte et ne nécessitent aucune adresse e-mail.",
+      "anonymousHelp": "Les clés d'accès permettent à ce compte invité de se connecter sans le lien de récupération sur les appareils enregistrés. Conservez votre lien de récupération en sauvegarde.",
+      "unsupported": "Ce navigateur ou cet appareil ne prend pas en charge les clés d'accès.",
+      "empty": "Aucune clé d'accès pour le moment.",
+      "unnamed": "Clé d'accès",
+      "add": "Ajouter une clé d'accès",
+      "addTitle": "Ajouter une clé d'accès",
+      "addDescription": "Suivez les instructions de votre navigateur pour enregistrer cet appareil. Donnez-lui un nom pour le reconnaître plus tard.",
+      "waitHint": "Votre navigateur vous demandera de vérifier — cela peut prendre un moment.",
+      "nameLabel": "Nom (facultatif)",
+      "namePlaceholder": "p. ex. Touch ID du MacBook",
+      "addSubmit": "Ajouter la clé d'accès",
+      "saving": "En attente de votre appareil…",
+      "cancel": "Annuler",
+      "remove": "Supprimer",
+      "removeTitle": "Supprimer la clé d'accès ?",
+      "removeDescription": "Cet appareil ne vous connectera plus avec une clé d'accès. Vous pourrez l'enregistrer à nouveau à tout moment.",
+      "removeConfirm": "Supprimer",
+      "removing": "Suppression…",
+      "added": "Clé d'accès ajoutée.",
+      "removed": "Clé d'accès supprimée.",
+      "errors": {
+        "generic": "Une erreur est survenue. Veuillez réessayer.",
+        "loadFailed": "Impossible de charger les clés d'accès.",
+        "addFailed": "Impossible d'ajouter la clé d'accès. Réessayez.",
+        "removeFailed": "Impossible de supprimer la clé d'accès. Réessayez.",
+        "lastMethod": "Il s'agit de votre seule méthode de connexion. Enregistrez un lien de récupération ou ajoutez d'abord une autre méthode de connexion."
+      },
+      "synced": "Synchronisée",
+      "deviceBound": "Cet appareil uniquement",
+      "backedUp": "Sauvegardée",
+      "removeWarning": "Cette action est irréversible. L'appareil ne vous connectera plus avec une clé d'accès — vous pourrez l'enregistrer à nouveau à tout moment.",
+      "removeLastWarning": "Il s'agit de votre dernière clé d'accès. S'il s'agit de votre seule méthode de connexion, la suppression est bloquée jusqu'à ce que vous enregistriez un lien de récupération ou une autre méthode de connexion.",
+      "anonymousHelpNoLink": "Aucun lien de connexion n'est enregistré pour ce compte invité. Créez-en un dans la ligne du lien de connexion ci-dessous — il fonctionne sur n'importe quel appareil."
     }
   },
   "Activities": {
@@ -3386,8 +3425,20 @@
       "recoverError": "Ce lien de connexion n'est pas valide. Vérifiez le lien complet et réessayez.",
       "recoveryLinkRequiredLabel": "Lien de connexion",
       "createTitle": "Créer un nouveau compte",
-      "or": "OU",
-      "recoverTitle": "Vous avez déjà un compte anonyme ?"
+      "recoverTitle": "Vous avez déjà un compte anonyme ?",
+      "passkeyHint": "Vous pouvez ajouter une clé d'accès juste après la création pour vous connecter sans mot de passe sur cet appareil.",
+      "addPasskey": "Ajouter une clé d'accès",
+      "passkeyError": "Impossible d'ajouter la clé d'accès. Vous pourrez en ajouter une plus tard dans les paramètres du compte.",
+      "choiceTitle": "Choisissez votre connexion de secours",
+      "choiceDescription": "Choisissez comment vous reconnecter à ce compte invité. Vous pourrez ajouter, modifier ou supprimer l'une ou l'autre option plus tard dans les paramètres du compte.",
+      "linkTitle": "Enregistrer un lien de récupération",
+      "linkDescription": "Recommandé : un lien privé qui vous reconnecte sur n'importe quel appareil. Conservez-le en lieu sûr.",
+      "passkeyTitle": "Utiliser une clé d'accès",
+      "passkeyDescription": "Connectez-vous avec votre empreinte digitale, votre visage ou une clé de sécurité sur cet appareil. Aucun lien à conserver — et aucun lien ne sera nécessaire ensuite.",
+      "existingPasskeyTitle": "Vous avez déjà enregistré une clé d'accès ?",
+      "existingPasskeyDescription": "Reconnectez-vous avec la clé d'accès sur l'un de vos appareils enregistrés.",
+      "passkeySignIn": "Se connecter avec une clé d'accès",
+      "passkeySignInError": "Impossible de vous connecter avec cette clé d'accès. Réessayez ou utilisez votre lien de connexion."
     },
     "onboarding": {
       "title": "Enregistrez votre lien de connexion",
@@ -3435,7 +3486,19 @@
       "activateDescription": "Enregistrez le lien de remplacement avant de l'activer.",
       "stagedDescription": "Votre lien de connexion actuel continue de fonctionner jusqu'à ce que vous activiez ce remplacement. La fermeture ou l'actualisation supprime le remplacement.",
       "activateConfirm": "Activer le remplacement",
-      "replacementActivated": "Votre lien de connexion de remplacement est maintenant actif."
+      "replacementActivated": "Votre lien de connexion de remplacement est maintenant actif.",
+      "create": "Créer un lien de connexion",
+      "createTitle": "Créer un lien de connexion ?",
+      "createDescription": "Générez un lien privé pour le consulter et l'enregistrer. Toute personne qui le possède peut accéder à ce compte invité.",
+      "created": "Lien de connexion créé.",
+      "remove": "Supprimer le lien de connexion",
+      "removeTitle": "Supprimer le lien de connexion ?",
+      "removeDescription": "Le lien actuel cesse immédiatement de fonctionner. Une clé d'accès enregistrée continue de fonctionner.",
+      "removeWarning": "Toute personne possédant le lien actuel perd l'accès. Cette action est irréversible.",
+      "removeConfirm": "Supprimer le lien",
+      "removeRequiresPasskey": "Ajoutez d'abord une clé d'accès — le lien de connexion est actuellement le seul moyen de revenir à ce compte.",
+      "removed": "Lien de connexion supprimé.",
+      "createConfirm": "Enregistrer le lien de connexion"
     }
   },
   "GroupViewLink": {

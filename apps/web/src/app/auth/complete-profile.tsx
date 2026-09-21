@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AnonymousRecoveryOnboarding } from '@/components/auth/anonymous-recovery-onboarding'
+import { AnonymousSafeguardChoice } from '@/components/auth/anonymous-safeguard-choice'
 import { PageInset, PageShell } from '@/components/layout/page-shell'
 import { Button } from '@/components/ui/button'
 import {
@@ -20,6 +21,8 @@ import {
   needsAnonymousOnboarding,
   needsDisplayName,
 } from '@/lib/account'
+import { useDeploymentConfig } from '@/lib/deployment-config'
+import { isPasskeySupported } from '@/lib/passkey'
 import { safeLocalReturnPath } from '@/lib/signup-invite'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
@@ -36,10 +39,14 @@ const completeProfileRouteApi = getRouteApi('/auth/complete-profile')
  */
 export function CompleteProfilePage() {
   const { t } = useTranslation(undefined, { keyPrefix: 'CompleteProfile' })
+  const { t: tSignup } = useTranslation(undefined, {
+    keyPrefix: 'AnonymousAccount.signup',
+  })
   const navigate = useNavigate()
   const { redirect } = completeProfileRouteApi.useSearch()
   const redirectTo = safeLocalReturnPath(redirect)
   const { data: account, isPending, refetch } = useCurrentAccount()
+  const deployment = useDeploymentConfig()
   const [recoveryAcknowledged, setRecoveryAcknowledged] = useState(false)
 
   const [name, setName] = useState('')
@@ -110,12 +117,36 @@ export function CompleteProfilePage() {
   }
 
   if (needsRecovery) {
+    // Same safeguard choice as the signup dialog: closing the dialog (or a
+    // passkey-less creation path) must not silently drop the passkey
+    // alternative. The Card owns the heading here, so the embedded
+    // onboarding hides its own title (see AnonymousSafeguardChoice).
+    const passkeyAvailable =
+      deployment.enablePasskeyAuth && isPasskeySupported()
     return (
       <PageShell width="full" className="items-center justify-center py-10">
         <Card className="w-full max-w-xl">
-          <CardContent className="pt-6">
-            <AnonymousRecoveryOnboarding onComplete={handleRecoveryComplete} />
-          </CardContent>
+          {passkeyAvailable ? (
+            <>
+              <CardHeader className="space-y-2 text-center">
+                <CardTitle className="text-2xl">
+                  {tSignup('choiceTitle')}
+                </CardTitle>
+                <CardDescription>
+                  {tSignup('choiceDescription')}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AnonymousSafeguardChoice onComplete={handleRecoveryComplete} />
+              </CardContent>
+            </>
+          ) : (
+            <CardContent spacing="standalone">
+              <AnonymousRecoveryOnboarding
+                onComplete={handleRecoveryComplete}
+              />
+            </CardContent>
+          )}
         </Card>
       </PageShell>
     )

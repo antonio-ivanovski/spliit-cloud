@@ -1549,7 +1549,8 @@
       "generic": "Něco se pokazilo. Zkuste to prosím znovu.",
       "passwordPolicy": "Použijte alespoň 8 znaků s velkým písmenem, malým písmenem, číslicí a symbolem.",
       "magicLinkFailed": "Odeslání přihlašovacího odkazu se nezdařilo.",
-      "signupInviteRequired": "Tato instance je pouze na pozvánku. Použijte odkaz pozvánky nebo požádejte někoho, aby vás pozval do skupiny."
+      "signupInviteRequired": "Tato instance je pouze na pozvánku. Použijte odkaz pozvánky nebo požádejte někoho, aby vás pozval do skupiny.",
+      "passkeyFailed": "Přihlášení přístupovým klíčem se nezdařilo. Zkuste to znovu nebo použijte jiný způsob přihlášení."
     },
     "loading": "Načítání…",
     "signedInAs": "Přihlášen jako {name}",
@@ -1565,7 +1566,8 @@
     "signInWithOidc": "Pokračovat přes {name}",
     "signInAnonymously": "Anonymní",
     "lastUsed": "Naposledy použito",
-    "emailAuthDisabled": "Přihlášení e-mailem je na této instanci zakázáno. Použijte jednotné přihlášení (SSO)."
+    "emailAuthDisabled": "Přihlášení e-mailem je na této instanci zakázáno. Použijte jednotné přihlášení (SSO).",
+    "signInWithPasskey": "Přihlásit se pomocí přístupového klíče"
   },
   "CompleteProfile": {
     "title": "Dokončete svůj profil",
@@ -2597,6 +2599,43 @@
         "notFound": "Pro tento účet není nastaveno žádné heslo."
       },
       "setShort": "Nastavit"
+    },
+    "passkey": {
+      "label": "Přístupové klíče",
+      "help": "Přihlašujte se bez hesla pomocí otisku prstu, obličeje nebo bezpečnostního klíče. Přístupové klíče fungují pro každý typ účtu a nepotřebují e-mailovou adresu.",
+      "anonymousHelp": "Přístupové klíče umožňují tomuto anonymnímu účtu přihlašovat se bez přihlašovacího odkazu na registrovaných zařízeních. Přihlašovací odkaz si uschovejte jako zálohu.",
+      "unsupported": "Tento prohlížeč nebo zařízení přístupové klíče nepodporuje.",
+      "empty": "Zatím žádné přístupové klíče.",
+      "unnamed": "Přístupový klíč",
+      "add": "Přidat přístupový klíč",
+      "addTitle": "Přidat přístupový klíč",
+      "addDescription": "Postupujte podle pokynů prohlížeče a zaregistrujte toto zařízení. Pojmenujte ho, abyste ho později poznali.",
+      "waitHint": "Prohlížeč vás požádá o ověření — může to chvíli trvat.",
+      "nameLabel": "Název (volitelné)",
+      "namePlaceholder": "např. MacBook Touch ID",
+      "addSubmit": "Přidat přístupový klíč",
+      "saving": "Čekání na vaše zařízení…",
+      "cancel": "Zrušit",
+      "remove": "Odstranit",
+      "removeTitle": "Odstranit přístupový klíč?",
+      "removeDescription": "Toto zařízení vás už pomocí přístupového klíče nepřihlásí. Kdykoli ho můžete zaregistrovat znovu.",
+      "removeConfirm": "Odstranit",
+      "removing": "Odstraňování…",
+      "added": "Přístupový klíč přidán.",
+      "removed": "Přístupový klíč odstraněn.",
+      "errors": {
+        "generic": "Něco se pokazilo. Zkuste to znovu.",
+        "loadFailed": "Přístupové klíče se nepodařilo načíst.",
+        "addFailed": "Přístupový klíč se nepodařilo přidat. Zkuste to znovu.",
+        "removeFailed": "Přístupový klíč se nepodařilo odstranit. Zkuste to znovu.",
+        "lastMethod": "Toto je vaše jediná metoda přihlášení. Nejprve si uložte přihlašovací odkaz nebo přidejte jinou metodu přihlášení."
+      },
+      "synced": "Synchronizovaný",
+      "deviceBound": "Pouze toto zařízení",
+      "backedUp": "Zálohovaný",
+      "removeWarning": "Toto nelze vzít zpět. Zařízení vás už pomocí přístupového klíče nepřihlásí — kdykoli ho můžete zaregistrovat znovu.",
+      "removeLastWarning": "Toto je váš poslední přístupový klíč. Pokud je to vaše jediná metoda přihlášení, odebrání je zablokováno, dokud si neuložíte přihlašovací odkaz nebo jinou metodu přihlášení.",
+      "anonymousHelpNoLink": "Pro tento anonymní účet není uložen žádný přihlašovací odkaz. Vytvořte si ho v řádku s přihlašovacím odkazem níže — funguje na jakémkoli zařízení."
     }
   },
   "Activities": {
@@ -3403,8 +3442,20 @@
       "recoverError": "Tento přihlašovací odkaz je neplatný. Zkontrolujte celý odkaz a zkuste to znovu.",
       "recoveryLinkRequiredLabel": "Odkaz pro obnovení",
       "createTitle": "Vytvořit nový účet",
-      "or": "NEBO",
-      "recoverTitle": "Už máte anonymní účet?"
+      "recoverTitle": "Už máte anonymní účet?",
+      "passkeyHint": "Hned po vytvoření si můžete přidat přístupový klíč pro přihlašování bez hesla na tomto zařízení.",
+      "addPasskey": "Přidat přístupový klíč",
+      "passkeyError": "Přístupový klíč se nepodařilo přidat. Můžete ho přidat později v nastavení účtu.",
+      "choiceTitle": "Vyberte si záložní přihlášení",
+      "choiceDescription": "Vyberte, jak se budete do tohoto anonymního účtu vracet. Obě možnosti můžete později v Nastavení účtu přidat, změnit nebo odebrat.",
+      "linkTitle": "Uložit přihlašovací odkaz",
+      "linkDescription": "Doporučujeme: soukromý odkaz, který vás přihlásí na jakémkoli zařízení. Uložte si ho na bezpečné místo.",
+      "passkeyTitle": "Místo toho použít přístupový klíč",
+      "passkeyDescription": "Přihlašujte se pomocí otisku prstu, obličeje nebo bezpečnostního klíče na tomto zařízení. Žádný odkaz k ukládání — a žádný odkaz pak nebude potřeba.",
+      "existingPasskeyTitle": "Už máte registrovaný přístupový klíč?",
+      "existingPasskeyDescription": "Přihlaste se zpět pomocí přístupového klíče na jednom ze svých registrovaných zařízení.",
+      "passkeySignIn": "Přihlásit se pomocí přístupového klíče",
+      "passkeySignInError": "Pomocí tohoto přístupového klíče se nepodařilo přihlásit. Zkuste to znovu nebo použijte svůj přihlašovací odkaz."
     },
     "onboarding": {
       "title": "Uložte přihlašovací odkaz",
@@ -3452,7 +3503,19 @@
       "activateDescription": "Uložte náhradní odkaz před jeho aktivací.",
       "stagedDescription": "Váš aktuální přihlašovací odkaz funguje, dokud tuto náhradu neaktivujete. Zavřením nebo obnovením se náhrada zahodí.",
       "activateConfirm": "Aktivujte náhradu",
-      "replacementActivated": "Náhradní přihlašovací odkaz je nyní aktivní."
+      "replacementActivated": "Náhradní přihlašovací odkaz je nyní aktivní.",
+      "create": "Vytvořit přihlašovací odkaz",
+      "createTitle": "Vytvořit přihlašovací odkaz?",
+      "createDescription": "Vygenerujte si soukromý odkaz ke kontrole a uložení. Kdokoli, kdo odkaz má, získá přístup k tomuto anonymnímu účtu.",
+      "created": "Přihlašovací odkaz vytvořen.",
+      "remove": "Odstranit přihlašovací odkaz",
+      "removeTitle": "Odstranit přihlašovací odkaz?",
+      "removeDescription": "Aktuální odkaz přestane okamžitě fungovat. Registrovaný přístupový klíč bude fungovat dál.",
+      "removeWarning": "Kdokoli, kdo má aktuální odkaz, ztratí přístup. Tuto akci nelze vrátit zpět.",
+      "removeConfirm": "Odstranit odkaz",
+      "removeRequiresPasskey": "Nejprve si přidejte přístupový klíč — přihlašovací odkaz je momentálně jediný způsob, jak se do tohoto účtu vrátit.",
+      "removed": "Přihlašovací odkaz odstraněn.",
+      "createConfirm": "Uložit přihlašovací odkaz"
     }
   },
   "GroupViewLink": {

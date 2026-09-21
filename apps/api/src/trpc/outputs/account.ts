@@ -105,3 +105,11 @@ export const revokeAuthorizedClientOutputSchema = z.object({
   accessTokensDeleted: z.number().int(),
   authorizationCodesDeleted: z.number().int(),
 })
+
+export const deletePasskeyOutputSchema = z.object({
+  success: z.boolean(),
+})
+
+export const afterPasskeyChangeOutputSchema = z.object({
+  success: z.boolean(),
+})

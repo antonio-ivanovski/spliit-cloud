@@ -1533,7 +1533,8 @@
       "generic": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin.",
       "passwordPolicy": "En az 8 karakter kullanın ve büyük harf, küçük harf, rakam ve sembol içersin.",
       "magicLinkFailed": "Oturum açma bağlantısı gönderilemedi.",
-      "signupInviteRequired": "Bu kurulum yalnızca davetle erişilebilir. Bir davet bağlantısı kullanın veya birinden sizi bir gruba davet etmesini isteyin."
+      "signupInviteRequired": "Bu kurulum yalnızca davetle erişilebilir. Bir davet bağlantısı kullanın veya birinden sizi bir gruba davet etmesini isteyin.",
+      "passkeyFailed": "Geçiş anahtarıyla oturum açılamadı. Lütfen tekrar deneyin veya başka bir oturum açma yöntemi kullanın."
     },
     "loading": "Yükleniyor…",
     "signedInAs": "{name} olarak oturum açıldı",
@@ -1549,7 +1550,8 @@
     "signInWithOidc": "{name} ile devam et",
     "signInAnonymously": "Anonim",
     "lastUsed": "Son kullanılan",
-    "emailAuthDisabled": "Bu örnekte e-posta ile oturum açma devre dışı bırakıldı. Lütfen tek oturum açma (SSO) kullanın."
+    "emailAuthDisabled": "Bu örnekte e-posta ile oturum açma devre dışı bırakıldı. Lütfen tek oturum açma (SSO) kullanın.",
+    "signInWithPasskey": "Geçiş anahtarıyla oturum aç"
   },
   "CompleteProfile": {
     "title": "Profilinizi tamamlayın",
@@ -2577,6 +2579,43 @@
         "notFound": "Bu hesap için şifre belirlenmedi."
       },
       "setShort": "Belirle"
+    },
+    "passkey": {
+      "label": "Geçiş anahtarları",
+      "help": "Cihazınızın parmak izi, yüz tanıma veya güvenlik anahtarıyla şifresiz oturum açın. Geçiş anahtarları her hesap türünde çalışır ve e-posta adresi gerekmez.",
+      "anonymousHelp": "Geçiş anahtarları, bu anonim hesabın kayıtlı cihazlarda kurtarma bağlantısı olmadan oturum açmasını sağlar. Kurtarma bağlantınızı yedek olarak saklayın.",
+      "unsupported": "Bu tarayıcı veya cihaz geçiş anahtarlarını desteklemiyor.",
+      "empty": "Henüz geçiş anahtarı yok.",
+      "unnamed": "Geçiş anahtarı",
+      "add": "Geçiş anahtarı ekle",
+      "addTitle": "Geçiş anahtarı ekle",
+      "addDescription": "Bu cihazı kaydetmek için tarayıcınızın yönergelerini izleyin. Daha sonra tanımak için bir ad verin.",
+      "waitHint": "Tarayıcınız doğrulamanızı isteyecek — bu biraz sürebilir.",
+      "nameLabel": "Ad (isteğe bağlı)",
+      "namePlaceholder": "örn. MacBook Touch ID",
+      "addSubmit": "Geçiş anahtarı ekle",
+      "saving": "Cihazınız bekleniyor…",
+      "cancel": "İptal",
+      "remove": "Kaldır",
+      "removeTitle": "Geçiş anahtarı kaldırılsın mı?",
+      "removeDescription": "Bu cihaz artık geçiş anahtarıyla oturum açamayacak. İstediğiniz zaman yeniden kaydedebilirsiniz.",
+      "removeConfirm": "Kaldır",
+      "removing": "Kaldırılıyor…",
+      "added": "Geçiş anahtarı eklendi.",
+      "removed": "Geçiş anahtarı kaldırıldı.",
+      "errors": {
+        "generic": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin.",
+        "loadFailed": "Geçiş anahtarları yüklenemedi.",
+        "addFailed": "Geçiş anahtarı eklenemedi. Lütfen tekrar deneyin.",
+        "removeFailed": "Geçiş anahtarı kaldırılamadı. Lütfen tekrar deneyin.",
+        "lastMethod": "Bu, tek oturum açma yönteminiz. Önce bir kurtarma bağlantısı kaydedin veya başka bir oturum açma yöntemi ekleyin."
+      },
+      "synced": "Eşitlendi",
+      "deviceBound": "Yalnızca bu cihaz",
+      "backedUp": "Yedeklendi",
+      "removeWarning": "Bu işlem geri alınamaz. Bu cihaz artık geçiş anahtarıyla oturum açamayacak — istediğiniz zaman yeniden kaydedebilirsiniz.",
+      "removeLastWarning": "Bu, son geçiş anahtarınız. Tek oturum açma yönteminiz buysa, bir kurtarma bağlantısı kaydedene veya başka bir oturum açma yöntemi ekleyene kadar kaldırma engellenir.",
+      "anonymousHelpNoLink": "Bu anonim hesap için kayıtlı oturum açma bağlantısı yok. Aşağıdaki oturum açma bağlantısı satırında bir tane oluşturun — her cihazda çalışır."
     }
   },
   "Activities": {
@@ -3367,8 +3406,20 @@
       "recoverError": "Bu oturum açma bağlantısı geçersiz. Bağlantının tamamını kontrol edip tekrar deneyin.",
       "recoveryLinkRequiredLabel": "Oturum açma bağlantısı",
       "createTitle": "Yeni hesap oluştur",
-      "or": "VEYA",
-      "recoverTitle": "Zaten anonim hesabınız var mı?"
+      "recoverTitle": "Zaten anonim hesabınız var mı?",
+      "passkeyHint": "Bu cihazda şifresiz oturum açmak için oluşturma işleminden hemen sonra bir geçiş anahtarı ekleyebilirsiniz.",
+      "addPasskey": "Geçiş anahtarı ekle",
+      "passkeyError": "Geçiş anahtarı eklenemedi. Daha sonra hesap ayarlarından ekleyebilirsiniz.",
+      "choiceTitle": "Yedek oturum açma yönteminizi seçin",
+      "choiceDescription": "Bu anonim hesaba nasıl geri döneceğinizi seçin. Her iki seçeneği de daha sonra hesap ayarlarından ekleyebilir, değiştirebilir veya kaldırabilirsiniz.",
+      "linkTitle": "Kurtarma bağlantısı kaydet",
+      "linkDescription": "Önerilir: Herhangi bir cihazda oturum açmanızı sağlayan özel bir bağlantı. Güvenli bir yerde saklayın.",
+      "passkeyTitle": "Bunun yerine geçiş anahtarı kullan",
+      "passkeyDescription": "Bu cihazda parmak izi, yüz tanıma veya güvenlik anahtarıyla oturum açın. Saklanacak bağlantı yok — sonrasında bağlantı gerekmez.",
+      "existingPasskeyTitle": "Zaten kayıtlı bir geçiş anahtarınız var mı?",
+      "existingPasskeyDescription": "Kayıtlı cihazlarınızdan birindeki geçiş anahtarıyla yeniden oturum açın.",
+      "passkeySignIn": "Geçiş anahtarıyla oturum aç",
+      "passkeySignInError": "Bu geçiş anahtarıyla oturum açılamadı. Tekrar deneyin veya oturum açma bağlantınızı kullanın."
     },
     "onboarding": {
       "title": "Kurtarma bağlantınızı kaydedin",
@@ -3416,7 +3467,19 @@
       "activateDescription": "Etkinleştirmeden önce yeni bağlantıyı kaydedin.",
       "stagedDescription": "Mevcut kurtarma bağlantınız siz bu değişikliği etkinleştirene kadar çalışmaya devam eder. Kapatma veya yenileme, değiştirme işlemini iptal eder.",
       "activateConfirm": "Değiştirmeyi etkinleştir",
-      "replacementActivated": "Yeni oturum açma bağlantınız artık etkin."
+      "replacementActivated": "Yeni oturum açma bağlantınız artık etkin.",
+      "create": "Oturum açma bağlantısı oluştur",
+      "createTitle": "Oturum açma bağlantısı oluşturulsun mu?",
+      "createDescription": "İnceleyip kaydetmek için özel bir bağlantı oluşturun. Bağlantıya sahip olan herkes bu anonim hesaba erişebilir.",
+      "created": "Oturum açma bağlantısı oluşturuldu.",
+      "remove": "Oturum açma bağlantısını kaldır",
+      "removeTitle": "Oturum açma bağlantısı kaldırılsın mı?",
+      "removeDescription": "Mevcut bağlantı hemen çalışmayı durdurur. Kayıtlı geçiş anahtarı çalışmaya devam eder.",
+      "removeWarning": "Mevcut bağlantıya sahip olan herkes erişimini kaybeder. Bu işlem geri alınamaz.",
+      "removeConfirm": "Bağlantıyı kaldır",
+      "removeRequiresPasskey": "Önce bir geçiş anahtarı ekleyin — oturum açma bağlantısı şu anda bu hesaba geri dönmenin tek yolu.",
+      "removed": "Oturum açma bağlantısı kaldırıldı.",
+      "createConfirm": "Oturum açma bağlantısını kaydet"
     }
   },
   "GroupViewLink": {

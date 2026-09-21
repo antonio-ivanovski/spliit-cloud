@@ -1,4 +1,4 @@
-import { HatGlasses, KeyRound } from 'lucide-react'
+import { Fingerprint, HatGlasses, KeyRound } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import githubSvg from '@/components/auth/github.svg'
@@ -12,24 +12,30 @@ export function SocialButtons({
   githubEnabled,
   twitterEnabled,
   oidcProviders,
+  passkeyEnabled,
+  passkeyPending,
   disabled,
   lastUsedMethod,
   onGoogle,
   onGithub,
   onTwitter,
   onOidc,
+  onPasskey,
   onAnonymous,
 }: {
   googleEnabled: boolean
   githubEnabled: boolean
   twitterEnabled: boolean
   oidcProviders: Array<{ id: string; name: string }>
+  passkeyEnabled: boolean
+  passkeyPending: boolean
   disabled: boolean
   lastUsedMethod: string | null
   onGoogle: () => void
   onGithub: () => void
   onTwitter: () => void
   onOidc: (providerId: string) => void
+  onPasskey: () => void
   onAnonymous: () => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
@@ -43,6 +49,19 @@ export function SocialButtons({
 
   return (
     <section className="flex flex-col gap-3">
+      {passkeyEnabled && (
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full justify-center border-border/80 bg-background"
+          onClick={onPasskey}
+          disabled={disabled || passkeyPending}
+        >
+          <Fingerprint className="me-2 h-4 w-4" />
+          {t('signInWithPasskey')}
+          {lastUsedBadge('passkey')}
+        </Button>
+      )}
       {googleEnabled && (
         <Button
           type="button"

@@ -1842,7 +1842,8 @@
       "generic": "Jokin meni vikaan. Yritä uudelleen.",
       "passwordPolicy": "Käytä vähintään 8 merkkiä, joissa on iso kirjain, pieni kirjain, numero ja erikoismerkki.",
       "magicLinkFailed": "Kirjautumislinkkiä ei voitu lähettää.",
-      "signupInviteRequired": "Tämä instanssi on vain kutsutuille. Käytä kutsulinkkiä tai pyydä jotakuta kutsumaan sinut ryhmään."
+      "signupInviteRequired": "Tämä instanssi on vain kutsutuille. Käytä kutsulinkkiä tai pyydä jotakuta kutsumaan sinut ryhmään.",
+      "passkeyFailed": "Pääsyavaimella kirjautuminen epäonnistui. Yritä uudelleen tai käytä toista kirjautumistapaa."
     },
     "loading": "Ladataan…",
     "signedInAs": "Kirjautuneena käyttäjänä {name}",
@@ -1858,7 +1859,8 @@
     "signInWithOidc": "Jatka: {name}",
     "signInAnonymously": "Nimetön",
     "lastUsed": "Viimeksi käytetty",
-    "emailAuthDisabled": "Sähköpostilla kirjautuminen on poistettu käytöstä tässä instanssissa. Käytä kertakirjautumista (SSO)."
+    "emailAuthDisabled": "Sähköpostilla kirjautuminen on poistettu käytöstä tässä instanssissa. Käytä kertakirjautumista (SSO).",
+    "signInWithPasskey": "Kirjaudu pääsyavaimella"
   },
   "CompleteProfile": {
     "title": "Täydennä profiilisi",
@@ -2577,6 +2579,43 @@
         "notFound": "Tälle tilille ei ole asetettu salasanaa."
       },
       "setShort": "Aseta"
+    },
+    "passkey": {
+      "label": "Pääsyavaimet",
+      "help": "Kirjaudu ilman salasanaa laitteesi sormenjäljellä, kasvoilla tai turva-avaimella. Pääsyavaimet toimivat kaikentyyppisillä tileillä eivätkä vaadi sähköpostiosoitetta.",
+      "anonymousHelp": "Pääsyavaimilla tämä nimetön tili voi kirjautua ilman kirjautumislinkkiä rekisteröidyillä laitteilla. Säilytä kirjautumislinkkisi varmuuden vuoksi.",
+      "unsupported": "Tämä selain tai laite ei tue pääsyavaimia.",
+      "empty": "Ei pääsyavaimia vielä.",
+      "unnamed": "Pääsyavain",
+      "add": "Lisää pääsyavain",
+      "addTitle": "Lisää pääsyavain",
+      "addDescription": "Rekisteröi tämä laite selaimesi ohjeiden mukaan. Anna sille nimi, jotta tunnistat sen myöhemmin.",
+      "waitHint": "Selaimesi pyytää sinua vahvistamaan — tässä voi kestää hetki.",
+      "nameLabel": "Nimi (valinnainen)",
+      "namePlaceholder": "esim. MacBook Touch ID",
+      "addSubmit": "Lisää pääsyavain",
+      "saving": "Odotetaan laitettasi…",
+      "cancel": "Peruuta",
+      "remove": "Poista",
+      "removeTitle": "Poistetaanko pääsyavain?",
+      "removeDescription": "Tämä laite ei enää kirjaa sinua sisään pääsyavaimella. Voit rekisteröidä sen uudelleen milloin tahansa.",
+      "removeConfirm": "Poista pääsyavain",
+      "removing": "Poistetaan…",
+      "added": "Pääsyavain lisätty.",
+      "removed": "Pääsyavain poistettu.",
+      "errors": {
+        "generic": "Jokin meni pieleen. Yritä uudelleen.",
+        "loadFailed": "Pääsyavaimia ei voitu ladata.",
+        "addFailed": "Pääsyavainta ei voitu lisätä. Yritä uudelleen.",
+        "removeFailed": "Pääsyavainta ei voitu poistaa. Yritä uudelleen.",
+        "lastMethod": "Tämä on ainoa kirjautumistapasi. Tallenna kirjautumislinkki tai lisää toinen kirjautumistapa ensin."
+      },
+      "synced": "Synkronoitu",
+      "deviceBound": "Vain tällä laitteella",
+      "backedUp": "Varmuuskopioitu",
+      "removeWarning": "Tätä ei voi kumota. Laite ei enää kirjaa sinua sisään pääsyavaimella — voit rekisteröidä sen uudelleen milloin tahansa.",
+      "removeLastWarning": "Tämä on viimeinen pääsyavaimesi. Jos se on ainoa kirjautumistapasi, poistaminen on estetty, kunnes olet tallentanut kirjautumislinkin tai lisännyt toisen kirjautumistavan.",
+      "anonymousHelpNoLink": "Tälle vierastilille ei ole tallennettu kirjautumislinkkiä. Luo sellainen alla olevalla kirjautumislinkkirivillä — se toimii millä tahansa laitteella."
     }
   },
   "Activities": {
@@ -3367,8 +3406,20 @@
       "recoverError": "Tämä kirjautumislinkki on virheellinen. Tarkista täydellinen linkki ja yritä uudelleen.",
       "recoveryLinkRequiredLabel": "Kirjautumislinkki",
       "createTitle": "Luo uusi tili",
-      "or": "TAI",
-      "recoverTitle": "Onko sinulla jo anonyymi tili?"
+      "recoverTitle": "Onko sinulla jo anonyymi tili?",
+      "passkeyHint": "Voit lisätä pääsyavaimen heti luonnin jälkeen salasanatonta kirjautumista varten tällä laitteella.",
+      "addPasskey": "Lisää pääsyavain",
+      "passkeyError": "Pääsyavainta ei voitu lisätä. Voit lisätä sen myöhemmin tilin asetuksissa.",
+      "choiceTitle": "Valitse varakirjautuminen",
+      "choiceDescription": "Valitse, miten palaat tähän nimettömään tiliin. Voit lisätä, vaihtaa tai poistaa kumpaakin vaihtoehtoa myöhemmin tilin asetuksissa.",
+      "linkTitle": "Tallenna kirjautumislinkki",
+      "linkDescription": "Suositus: yksityinen linkki, jolla kirjaudut takaisin millä tahansa laitteella. Säilytä se turvallisessa paikassa.",
+      "passkeyTitle": "Käytä sen sijaan pääsyavainta",
+      "passkeyDescription": "Kirjaudu sormenjäljelläsi, kasvoillasi tai turva-avaimella tällä laitteella. Linkkiä ei tarvitse tallentaa — eikä linkkiä tarvita jälkikäteen.",
+      "existingPasskeyTitle": "Oletko jo rekisteröinyt pääsyavaimen?",
+      "existingPasskeyDescription": "Kirjaudu takaisin sisään jonkin rekisteröidyn laitteesi pääsyavaimella.",
+      "passkeySignIn": "Kirjaudu pääsyavaimella",
+      "passkeySignInError": "Tällä pääsyavaimella ei voitu kirjautua. Yritä uudelleen tai käytä kirjautumislinkkiäsi."
     },
     "onboarding": {
       "title": "Tallenna kirjautumislinkki",
@@ -3416,7 +3467,19 @@
       "activateDescription": "Tallenna korvaava linkki ennen sen aktivointia.",
       "stagedDescription": "Nykyinen kirjautumislinkkisi toimii, kunnes aktivoit tämän korvaavan linkin. Sulkeminen tai päivittäminen hylkää korvaavan tuotteen.",
       "activateConfirm": "Aktivoi vaihto",
-      "replacementActivated": "Korvaava kirjautumislinkkisi on nyt käytössä."
+      "replacementActivated": "Korvaava kirjautumislinkkisi on nyt käytössä.",
+      "create": "Luo kirjautumislinkki",
+      "createTitle": "Luodaanko kirjautumislinkki?",
+      "createDescription": "Luo yksityinen linkki tarkistettavaksi ja tallennettavaksi. Kuka tahansa, jolla on linkki, voi käyttää tätä vierastiliä.",
+      "created": "Kirjautumislinkki luotu.",
+      "remove": "Poista kirjautumislinkki",
+      "removeTitle": "Poistetaanko kirjautumislinkki?",
+      "removeDescription": "Nykyinen linkki lakkaa toimimasta välittömästi. Rekisteröity pääsyavain toimii edelleen.",
+      "removeWarning": "Kuka tahansa, jolla on nykyinen linkki, menettää pääsyn. Tätä ei voi perua.",
+      "removeConfirm": "Poista linkki",
+      "removeRequiresPasskey": "Lisää ensin pääsyavain — kirjautumislinkki on tällä hetkellä ainoa tapa palata tälle tilille.",
+      "removed": "Kirjautumislinkki poistettu.",
+      "createConfirm": "Tallenna kirjautumislinkki"
     }
   },
   "GroupViewLink": {

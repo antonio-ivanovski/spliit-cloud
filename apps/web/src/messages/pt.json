@@ -808,7 +808,8 @@
       "generic": "Algo correu mal. Por favor, tenta novamente.",
       "passwordPolicy": "Utiliza pelo menos 8 caracteres com maiúsculas, minúsculas, um número e um símbolo.",
       "magicLinkFailed": "Não foi possível enviar o link de acesso.",
-      "signupInviteRequired": "Esta instância é apenas por convite. Usa uma ligação de convite ou pede a alguém que te convide para um grupo."
+      "signupInviteRequired": "Esta instância é apenas por convite. Usa uma ligação de convite ou pede a alguém que te convide para um grupo.",
+      "passkeyFailed": "O início de sessão com chave de acesso falhou. Tente novamente ou use outro método de início de sessão."
     },
     "loading": "A carregar…",
     "signedInAs": "Sessão iniciada como {name}",
@@ -824,7 +825,8 @@
     "signInWithOidc": "Continuar com {name}",
     "signInAnonymously": "Anónimo",
     "lastUsed": "Última utilização",
-    "emailAuthDisabled": "O início de sessão com e-mail está desativado nesta instância. Usa a autenticação única (SSO)."
+    "emailAuthDisabled": "O início de sessão com e-mail está desativado nesta instância. Usa a autenticação única (SSO).",
+    "signInWithPasskey": "Iniciar sessão com chave de acesso"
   },
   "CompleteProfile": {
     "title": "Completa o teu perfil",
@@ -2587,6 +2589,43 @@
         "notFound": "Nenhuma palavra-passe definida para esta conta."
       },
       "setShort": "Definir"
+    },
+    "passkey": {
+      "label": "Chaves de acesso",
+      "help": "Inicie sessão sem palavra-passe com a impressão digital, o rosto ou uma chave de segurança do seu dispositivo. As chaves de acesso funcionam para todos os tipos de conta e não precisam de endereço de e-mail.",
+      "anonymousHelp": "As chaves de acesso permitem que esta conta de convidado inicie sessão sem a ligação de recuperação nos dispositivos registados. Guarde a sua ligação de recuperação como cópia de segurança.",
+      "unsupported": "Este navegador ou dispositivo não suporta chaves de acesso.",
+      "empty": "Ainda não existem chaves de acesso.",
+      "unnamed": "Chave de acesso",
+      "add": "Adicionar uma chave de acesso",
+      "addTitle": "Adicionar uma chave de acesso",
+      "addDescription": "Siga as instruções do navegador para registar este dispositivo. Dê-lhe um nome para o reconhecer mais tarde.",
+      "waitHint": "O seu navegador vai pedir-lhe para verificar — isto pode demorar um momento.",
+      "nameLabel": "Nome (opcional)",
+      "namePlaceholder": "p. ex., Touch ID do MacBook",
+      "addSubmit": "Adicionar chave de acesso",
+      "saving": "A aguardar o seu dispositivo…",
+      "cancel": "Cancelar",
+      "remove": "Remover",
+      "removeTitle": "Remover a chave de acesso?",
+      "removeDescription": "Este dispositivo deixará de iniciar sessão com uma chave de acesso. Pode registá-lo novamente em qualquer altura.",
+      "removeConfirm": "Remover",
+      "removing": "A remover…",
+      "added": "Chave de acesso adicionada.",
+      "removed": "Chave de acesso removida.",
+      "errors": {
+        "generic": "Algo correu mal. Tente novamente.",
+        "loadFailed": "Não foi possível carregar as chaves de acesso.",
+        "addFailed": "Não foi possível adicionar a chave de acesso. Tente novamente.",
+        "removeFailed": "Não foi possível remover a chave de acesso. Tente novamente.",
+        "lastMethod": "Este é o seu único método de início de sessão. Guarde uma ligação de recuperação ou adicione primeiro outro método de início de sessão."
+      },
+      "synced": "Sincronizada",
+      "deviceBound": "Apenas neste dispositivo",
+      "backedUp": "Com cópia de segurança",
+      "removeWarning": "Isto não pode ser anulado. O dispositivo deixará de iniciar sessão com uma chave de acesso — pode registá-lo novamente em qualquer altura.",
+      "removeLastWarning": "Esta é a sua última chave de acesso. Se for o seu único método de início de sessão, a remoção fica bloqueada até guardar uma ligação de recuperação ou outro método de início de sessão.",
+      "anonymousHelpNoLink": "Não há nenhuma ligação de início de sessão guardada para esta conta de convidado. Crie uma na linha da ligação de início de sessão abaixo — funciona em qualquer dispositivo."
     }
   },
   "Activities": {
@@ -3386,8 +3425,20 @@
       "recoverError": "Esta ligação de início de sessão é inválida. Verifica a ligação completa e tenta novamente.",
       "recoveryLinkRequiredLabel": "Ligação de início de sessão",
       "createTitle": "Criar uma conta nova",
-      "or": "OU",
-      "recoverTitle": "Já tem uma conta anónima?"
+      "recoverTitle": "Já tem uma conta anónima?",
+      "passkeyHint": "Pode adicionar uma chave de acesso logo após a criação para iniciar sessão sem palavra-passe neste dispositivo.",
+      "addPasskey": "Adicionar uma chave de acesso",
+      "passkeyError": "Não foi possível adicionar a chave de acesso. Pode adicionar uma mais tarde nas definições da conta.",
+      "choiceTitle": "Escolha o seu acesso de reserva",
+      "choiceDescription": "Escolha como voltar a entrar nesta conta de convidado. Pode adicionar, alterar ou remover qualquer uma das opções mais tarde nas Definições da conta.",
+      "linkTitle": "Guardar uma ligação de recuperação",
+      "linkDescription": "Recomendado: uma ligação privada que volta a iniciar sessão em qualquer dispositivo. Guarde-a num local seguro.",
+      "passkeyTitle": "Usar uma chave de acesso",
+      "passkeyDescription": "Inicie sessão com a impressão digital, o rosto ou uma chave de segurança neste dispositivo. Não há ligação para guardar — e depois não será precisa nenhuma.",
+      "existingPasskeyTitle": "Já registou uma chave de acesso?",
+      "existingPasskeyDescription": "Volte a iniciar sessão com a chave de acesso num dos seus dispositivos registados.",
+      "passkeySignIn": "Iniciar sessão com chave de acesso",
+      "passkeySignInError": "Não foi possível iniciar sessão com esta chave de acesso. Tente novamente ou use a sua ligação de início de sessão."
     },
     "onboarding": {
       "title": "Guarde a sua ligação de início de sessão",
@@ -3435,7 +3486,19 @@
       "activateDescription": "Guarda a ligação de substituição antes de a ativar.",
       "stagedDescription": "A sua ligação de início de sessão atual continua a funcionar até ativar esta substituição. Fechar ou atualizar descarta a substituição.",
       "activateConfirm": "Ativar substituição",
-      "replacementActivated": "A ligação de início de sessão de substituição está agora ativa."
+      "replacementActivated": "A ligação de início de sessão de substituição está agora ativa.",
+      "create": "Criar ligação de início de sessão",
+      "createTitle": "Criar uma ligação de início de sessão?",
+      "createDescription": "Gere uma ligação privada para rever e guardar. Qualquer pessoa que a possua pode aceder a esta conta de convidado.",
+      "created": "Ligação de início de sessão criada.",
+      "remove": "Remover ligação de início de sessão",
+      "removeTitle": "Remover a ligação de início de sessão?",
+      "removeDescription": "A ligação atual deixa de funcionar imediatamente. Uma chave de acesso registada continua a funcionar.",
+      "removeWarning": "Qualquer pessoa que tenha a ligação atual perde o acesso. Isto não pode ser anulado.",
+      "removeConfirm": "Remover ligação",
+      "removeRequiresPasskey": "Adicione primeiro uma chave de acesso — a ligação de início de sessão é atualmente a única forma de voltar a esta conta.",
+      "removed": "Ligação de início de sessão removida.",
+      "createConfirm": "Guardar ligação de início de sessão"
     }
   },
   "GroupViewLink": {

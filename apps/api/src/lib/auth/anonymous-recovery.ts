@@ -38,6 +38,10 @@ const rotationLimiter = new FixedWindowLimiter({
   limit: 5,
   windowMs: 60 * 1000,
 })
+const revokeLimiter = new FixedWindowLimiter({
+  limit: 5,
+  windowMs: 60 * 1000,
+})
 
 const recoveryBody = z.object({
   code: z.string().max(128),
@@ -48,6 +52,7 @@ const acknowledgeBody = z.object({
   code: z.string().max(128),
 })
 const rotateBody = z.object({ confirmed: z.literal(true) })
+const revokeBody = z.object({ onlyPending: z.boolean().optional() })
 const activateRotationBody = z.object({
   activationTicket: z.string().max(2048),
   confirmedCopied: z.literal(true),
@@ -230,21 +235,27 @@ export function anonymousRecovery() {
         async (ctx) => {
           noStore(ctx)
           const user = requireAnonymousSession(ctx)
-          const credential =
-            await prisma.anonymousRecoveryCredential.findUnique({
+          const [credential, passkeyCount] = await Promise.all([
+            prisma.anonymousRecoveryCredential.findUnique({
               where: { accountId: user.id },
               select: {
                 acknowledgedAt: true,
                 onboardingCompletedAt: true,
                 pendingKeyCiphertext: true,
               },
-            })
+            }),
+            prisma.passkey.count({ where: { userId: user.id } }),
+          ])
           return ctx.json({
             isAnonymous: true,
             hasRecoveryKey: credential != null,
             acknowledged: credential?.acknowledgedAt != null,
             onboardingCompleted: credential?.onboardingCompletedAt != null,
             canResumeSetup: credential?.pendingKeyCiphertext != null,
+            // A verified passkey is an alternative safeguard: recovery-link
+            // setup can be skipped when at least one is registered. The
+            // credential itself is never created, modified, or removed here.
+            hasPasskey: passkeyCount > 0,
           })
         },
       ),
@@ -456,6 +467,47 @@ export function anonymousRecovery() {
             })
           }
           return ctx.json({ code, recoveryUrl: recoveryUrl(code) })
+        },
+      ),
+      revokeAnonymousRecovery: createAuthEndpoint(
+        '/anonymous-recovery/revoke',
+        { method: 'POST', use: [sessionMiddleware], body: revokeBody },
+        async (ctx) => {
+          noStore(ctx)
+          enforceRateLimit(ctx, revokeLimiter, 'anonymous-recovery-revoke')
+          const user = requireAnonymousSession(ctx)
+          const credential =
+            await prisma.anonymousRecoveryCredential.findUnique({
+              where: { accountId: user.id },
+              select: { acknowledgedAt: true },
+            })
+          if (!credential) {
+            throw new APIError('NOT_FOUND', {
+              message: 'No sign in link exists for this account.',
+              code: 'RECOVERY_KEY_NOT_FOUND',
+            })
+          }
+          // Post-passkey signup cleanup must never remove a saved backup:
+          // with onlyPending an acknowledged link is left untouched and
+          // reported as success.
+          if (!ctx.body.onlyPending || !credential.acknowledgedAt) {
+            if (credential.acknowledgedAt) {
+              const passkeyCount = await prisma.passkey.count({
+                where: { userId: user.id },
+              })
+              if (passkeyCount === 0) {
+                throw new APIError('CONFLICT', {
+                  message: 'Add a passkey before removing the sign in link.',
+                  code: 'RECOVERY_KEY_REQUIRED',
+                })
+              }
+            }
+            await prisma.anonymousRecoveryCredential.delete({
+              where: { accountId: user.id },
+            })
+            invalidateAccountCache(user.id)
+          }
+          return ctx.json({ success: true })
         },
       ),
       signInAnonymousRecovery: createAuthEndpoint(

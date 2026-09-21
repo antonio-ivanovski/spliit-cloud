@@ -199,6 +199,7 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
   const twitterEnabled = deployment.enableTwitterOAuth
   const oidcProviders = deployment.oidcProviders
   const emailAuthEnabled = deployment.enableEmailAuth
+  const passkeyEnabled = deployment.enablePasskeyAuth ?? true
   const socialEnabled =
     googleEnabled || githubEnabled || twitterEnabled || oidcProviders.length > 0
   const mode = canSignUp ? requestedMode : 'sign-in'
@@ -217,6 +218,7 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     setRequestedMode(next)
     emailAuth.reset()
     magicLink.reset()
+    passkeyAuth.reset()
     setPassword('')
     setConfirmPassword('')
     setSuccessState(null)
@@ -229,12 +231,58 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     setSuccessState(null)
     emailAuth.reset()
     magicLink.reset()
+    passkeyAuth.reset()
   }
 
   function handleMagicLink(event: React.FormEvent) {
     event.preventDefault()
     if (!isOnline) return
     magicLink.mutate({ email, callbackURL })
+  }
+
+  // react-doctor-disable-next-line react-doctor/query-mutation-missing-invalidation -- better-auth session via cookies, not tRPC query cache
+  const passkeyAuth = useMutation({
+    retry: false,
+    mutationFn: async () => {
+      const result = await authClient.signIn.passkey()
+      if (result.error) {
+        // Closing the browser prompt surfaces as an error too; report it as
+        // a cancellation so callers can stay silent instead of alarming.
+        const code: unknown =
+          result.error != null && typeof result.error === 'object'
+            ? (result.error as { code?: unknown }).code
+            : undefined
+        if (typeof code === 'string' && /cancel/i.test(code)) {
+          throw new Error('PASSKEY_CANCELLED')
+        }
+        throw new Error(t('errors.passkeyFailed'))
+      }
+    },
+    onError(error) {
+      if (error instanceof Error && error.message === 'PASSKEY_CANCELLED') {
+        return
+      }
+      mascot.react('failure')
+    },
+    async onSuccess() {
+      mascot.react('success')
+      const session = await authClient.getSession({
+        query: { disableCookieCache: true },
+      })
+      const account = session.data?.user
+      await navigate({
+        href:
+          account && needsDisplayName(account)
+            ? completeProfilePath
+            : redirectTo,
+        replace: true,
+      })
+    },
+  })
+
+  function handlePasskeySignIn() {
+    if (!isOnline || !passkeyEnabled) return
+    passkeyAuth.mutate()
   }
 
   function handlePasswordSubmit(event: React.FormEvent) {
@@ -307,6 +355,7 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     socialEnabled,
     anonymousEnabled,
     emailAuthEnabled,
+    passkeyEnabled,
     linkInviteToken,
     callbackURL,
     setEmail,
@@ -318,11 +367,13 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     resetEmailFlow,
     handleMagicLink,
     handlePasswordSubmit,
+    handlePasskeySignIn,
     handleGoogle,
     handleGithub,
     handleTwitter,
     handleOidc,
     emailAuth,
     magicLink,
+    passkeyAuth,
   }
 }

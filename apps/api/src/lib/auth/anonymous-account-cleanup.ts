@@ -7,6 +7,12 @@ const CLEANUP_BATCH_SIZE = 100
 function eligibleAnonymousAccounts(cutoff: Date): Prisma.UserWhereInput {
   return {
     isAnonymous: true,
+    // A verified passkey satisfies anonymous onboarding (see
+    // `account-cache.ts`), so passkey holders are never cleanup candidates —
+    // they have a durable, email-free sign-in method even without a recovery
+    // ack. Account cascades remove passkeys together with Better Auth
+    // sessions when an eligible account is deleted.
+    passkeys: { none: {} },
     OR: [
       {
         createdAt: { lte: cutoff },

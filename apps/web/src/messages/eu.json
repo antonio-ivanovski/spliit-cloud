@@ -1849,7 +1849,8 @@
       "generic": "Zerbaitek huts egin du. Saiatu berriro mesedez.",
       "passwordPolicy": "Erabili gutxienez 8 karaktere, letra larri eta xehez, zenbaki batez eta ikur batez.",
       "magicLinkFailed": "Ezin izan da saioa hasteko esteka bidali.",
-      "signupInviteRequired": "Instantzia hau gonbidapen bidezkoa da soilik. Erabili gonbidapen-esteka bat edo eskatu norbaiti talde batera gonbidatzeko."
+      "signupInviteRequired": "Instantzia hau gonbidapen bidezkoa da soilik. Erabili gonbidapen-esteka bat edo eskatu norbaiti talde batera gonbidatzeko.",
+      "passkeyFailed": "Huts egin du passkeyarekin saioa hasteak. Saiatu berriro edo erabili beste saio-hasiera metodo bat."
     },
     "loading": "Kargatzen…",
     "signedInAs": "{name} gisa saioa hasita",
@@ -1865,7 +1866,8 @@
     "signInWithOidc": "Jarraitu {name}-rekin",
     "signInAnonymously": "Anonimoa",
     "lastUsed": "Azken erabilera",
-    "emailAuthDisabled": "Posta elektronikoaren bidezko saioa hasteko aukera desgaituta dago instantzia honetan. Erabili saio-hasiera bakarra (SSO)."
+    "emailAuthDisabled": "Posta elektronikoaren bidezko saioa hasteko aukera desgaituta dago instantzia honetan. Erabili saio-hasiera bakarra (SSO).",
+    "signInWithPasskey": "Hasi saioa passkeyarekin"
   },
   "CompleteProfile": {
     "title": "Osatu zure profila",
@@ -2585,6 +2587,43 @@
       "removeCurrentRequired": "Sartu oraingo pasahitza.",
       "changeShort": "Aldatu",
       "setShort": "Ezarri"
+    },
+    "passkey": {
+      "label": "Passkeyak",
+      "help": "Hasi saioa pasahitzik gabe zure gailuaren hatz-markarekin, aurpegiarekin edo segurtasun-gakoarekin. Passkeyak kontu mota guztietarako balio dute eta ez dute helbide elektronikorik behar.",
+      "anonymousHelp": "Passkeyei esker kontu gonbidatu honek berreskuratzeko estekarik gabe has dezake saioa erregistratutako gailuetan. Gorde berreskuratzeko esteka babeskopia gisa.",
+      "unsupported": "Nabigatzaile edo gailu honek ez ditu passkeyak onartzen.",
+      "empty": "Oraindik ez dago passkeyik.",
+      "unnamed": "Izenik gabeko passkey",
+      "add": "Gehitu passkey bat",
+      "addTitle": "Gehitu passkey bat",
+      "addDescription": "Jarraitu nabigatzailearen argibideei gailu hau erregistratzeko. Eman izen bat gero ezagutzeko.",
+      "waitHint": "Nabigatzaileak egiaztatzeko eskatuko dizu; une bat behar izan dezake.",
+      "nameLabel": "Izena (aukerakoa)",
+      "namePlaceholder": "adib. MacBook Touch ID",
+      "addSubmit": "Gehitu passkeya",
+      "saving": "Zure gailuaren zain…",
+      "cancel": "Utzi",
+      "remove": "Kendu",
+      "removeTitle": "Kendu passkeya?",
+      "removeDescription": "Gailu honek ez du jada passkeyarekin saioa hasiko. Edozein unetan erregistra dezakezu berriro.",
+      "removeConfirm": "Kendu",
+      "removing": "Kentzen…",
+      "added": "Passkeya gehitu da.",
+      "removed": "Passkeya kendu da.",
+      "errors": {
+        "generic": "Zerbait gaizki joan da. Saiatu berriro.",
+        "loadFailed": "Ezin izan dira passkeyak kargatu.",
+        "addFailed": "Ezin izan da passkeya gehitu. Saiatu berriro.",
+        "removeFailed": "Ezin izan da passkeya kendu. Saiatu berriro.",
+        "lastMethod": "Hau da zure saioa hasteko metodo bakarra. Gorde berreskuratzeko esteka bat edo gehitu beste saio-hasiera metodo bat lehenik."
+      },
+      "synced": "Sinkronizatuta",
+      "deviceBound": "Gailu honetan bakarrik",
+      "backedUp": "Babeskopia eginda",
+      "removeWarning": "Hau ezin da desegin. Gailu honek ez du jada passkeyarekin saioa hasiko — nahi duzunean erregistra dezakezu berriro.",
+      "removeLastWarning": "Hau da zure azken passkeya. Zure saioa hasteko metodo bakarra bada, kentzea blokeatuta egongo da berreskuratzeko esteka bat edo beste saio-hasiera metodo bat gordetzen duzun arte.",
+      "anonymousHelpNoLink": "Ez dago saioa hasteko estekarik gordeta kontu gonbidatu honetarako. Sortu bat beheko saioa hasteko estekaren errenkadan — edozein gailutan funtzionatzen du."
     }
   },
   "Activities": {
@@ -3384,8 +3423,20 @@
       "recoverError": "Saioa hasteko esteka hau baliogabea da. Egiaztatu esteka osoa eta saiatu berriro.",
       "recoveryLinkRequiredLabel": "Saioa hasteko esteka",
       "createTitle": "Sortu kontu berria",
-      "or": "EDO",
-      "recoverTitle": "Baduzu kontu anonimo bat?"
+      "recoverTitle": "Baduzu kontu anonimo bat?",
+      "passkeyHint": "Kontua sortu eta berehala gehitu dezakezu passkey bat gailu honetan pasahitzik gabe saioa hasteko.",
+      "addPasskey": "Gehitu passkey bat",
+      "passkeyError": "Ezin izan da passkeya gehitu. Geroago gehitu dezakezu kontuaren ezarpenetan.",
+      "choiceTitle": "Aukeratu ordezko saio-hasiera",
+      "choiceDescription": "Aukeratu nola itzuliko zaren kontu gonbidatu honetara. Bi aukeretako edozein gehitu, aldatu edo kendu dezakezu gero Kontuaren ezarpenetan.",
+      "linkTitle": "Gorde berreskuratzeko esteka",
+      "linkDescription": "Gomendatua: edozein gailutan saioa berriro hasteko esteka pribatua. Gorde leku seguru batean.",
+      "passkeyTitle": "Erabili passkey bat",
+      "passkeyDescription": "Hasi saioa hatz-markarekin, aurpegiarekin edo segurtasun-gakoarekin gailu honetan. Ez dago estekarik gordetzeko — eta ondoren ez da estekarik beharko.",
+      "existingPasskeyTitle": "Erregistratu al duzu passkey bat?",
+      "existingPasskeyDescription": "Hasi saioa berriro erregistratutako gailuetako bateko passkeyarekin.",
+      "passkeySignIn": "Hasi saioa passkeyarekin",
+      "passkeySignInError": "Ezin izan da passkey honekin saioa hasi. Saiatu berriro edo erabili saioa hasteko esteka."
     },
     "onboarding": {
       "title": "Gorde saioa hasteko esteka",
@@ -3433,7 +3484,19 @@
       "activateDescription": "Gorde ordezko esteka aktibatu aurretik.",
       "stagedDescription": "Zure oraingo saioa hasteko estekak funtzionatzen jarraituko du ordezko hau aktibatzen duzun arte. Itxi edo freskatzeak ordezkoa baztertzen du.",
       "activateConfirm": "Aktibatu ordezkoa",
-      "replacementActivated": "Ordezko saioa hasteko esteka aktibo dago orain."
+      "replacementActivated": "Ordezko saioa hasteko esteka aktibo dago orain.",
+      "create": "Sortu saioa hasteko esteka",
+      "createTitle": "Saioa hasteko esteka sortu?",
+      "createDescription": "Sortu esteka pribatu bat berrikusteko eta gordetzeko. Esteka duen edonork sar dezake kontu gonbidatu hau.",
+      "created": "Saioa hasteko esteka sortu da.",
+      "remove": "Kendu saioa hasteko esteka",
+      "removeTitle": "Kendu saioa hasteko esteka?",
+      "removeDescription": "Oraingo estekak berehala uzten du funtzionatzeari. Erregistratutako passkeyak funtzionatzen jarraituko du.",
+      "removeWarning": "Oraingo esteka duen edonork galtzen du sarbidea. Hau ezin da desegin.",
+      "removeConfirm": "Kendu esteka",
+      "removeRequiresPasskey": "Gehitu passkey bat lehenik — saioa hasteko esteka da une honetan kontu honetara itzultzeko modu bakarra.",
+      "removed": "Saioa hasteko esteka kendu da.",
+      "createConfirm": "Gorde saioa hasteko esteka"
     }
   },
   "GroupViewLink": {

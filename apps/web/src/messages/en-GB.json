@@ -34,6 +34,9 @@
       "categoryExtractLabel": "Expense categoriser",
       "receiptPromptsDescription": "Tailor the AI behaviour when scanning receipts (currency hints, line-item grouping, etc.).",
       "voicePromptsDescription": "Tailor the AI behaviour when creating expenses from your voice (splitting, payer defaults, etc.)."
+    },
+    "passkey": {
+      "addDescription": "Follow your browser's prompt to register this device. Give it a name so you recognise it later."
     }
   },
   "GroupForm": {

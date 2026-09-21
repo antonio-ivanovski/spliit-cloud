@@ -1,15 +1,18 @@
 import { describe, expect, it } from 'vitest'
 
+import { Prisma } from '@spliit/db'
+
 import '../../../test/mocks'
 import {
   clearAccountCache,
   getCachedAccount,
 } from '../../../lib/auth/account-cache'
-import { authState, prismaMock } from '../../../test/state'
+import { env } from '../../../lib/env'
+import { authState, prisma$QueryRaw, prismaMock } from '../../../test/state'
 import { createTRPCContext } from '../../init'
 import { accountRouter } from './index'
 
-function makeCaller(authUserId: string) {
+function makeCaller(authUserId: string, user?: Record<string, unknown>) {
   return accountRouter.createCaller({
     auth: {
       session: { id: 'sess-1' },
@@ -18,6 +21,7 @@ function makeCaller(authUserId: string) {
         email: 'alice@example.com',
         emailVerified: true,
         name: 'Alice',
+        ...user,
       },
     },
   } as never)
@@ -705,5 +709,281 @@ describe('accountRouter.groups — archive + hide filters', () => {
     expect(result.groups.find((group) => group.id === 'g-2')).toMatchObject({
       latestExpenseCreatedAt: null,
     })
+  })
+})
+
+describe('accountRouter.deletePasskey', () => {
+  const accountId = 'acct-passkey'
+  const passkeyRow = { id: 'pk-1', userId: accountId }
+
+  function mockPasskeyState({
+    passkey = passkeyRow,
+    // Post-delete remaining count: the mutation deletes first, then
+    // verifies inside one transaction. 0 = this was the last passkey.
+    passkeyCount = 0,
+    user = {
+      id: accountId,
+      email: `${accountId}@placeholder.local`,
+      emailVerified: false,
+    },
+    identities = [],
+    recovery = null,
+  }: {
+    passkey?: { id: string; userId: string } | null
+    passkeyCount?: number
+    user?: { id: string; email: string; emailVerified: boolean } | null
+    identities?: Array<{ providerId: string; password: string | null }>
+    recovery?: {
+      acknowledgedAt: Date | null
+      onboardingCompletedAt: Date | null
+    } | null
+  } = {}) {
+    prismaMock.passkey.findUnique.mockResolvedValue(passkey as never)
+    prismaMock.passkey.count.mockResolvedValue(passkeyCount as never)
+    prismaMock.user.findUnique.mockResolvedValue(user as never)
+    prismaMock.account.findMany.mockResolvedValue(identities as never)
+    prismaMock.anonymousRecoveryCredential.findUnique.mockResolvedValue(
+      recovery as never,
+    )
+    prismaMock.passkey.delete.mockResolvedValue(passkeyRow as never)
+  }
+
+  it('requires authentication', async () => {
+    await expect(
+      makeAnonymousCaller().deletePasskey({ id: 'pk-1' }),
+    ).rejects.toMatchObject({ code: 'UNAUTHORIZED' })
+  })
+
+  it('returns NOT_FOUND for an unknown passkey', async () => {
+    mockPasskeyState({ passkey: null })
+    await expect(
+      makeCaller(accountId).deletePasskey({ id: 'pk-missing' }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
+    expect(prismaMock.passkey.delete).not.toHaveBeenCalled()
+  })
+
+  it('returns NOT_FOUND for another account’s passkey', async () => {
+    mockPasskeyState({ passkey: { id: 'pk-other', userId: 'acct-other' } })
+    await expect(
+      makeCaller(accountId).deletePasskey({ id: 'pk-other' }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
+    expect(prismaMock.passkey.delete).not.toHaveBeenCalled()
+  })
+
+  it('blocks removing the only sign-in method of a bare anonymous account', async () => {
+    mockPasskeyState()
+    // Delete-then-verify: the delete is attempted inside the transaction
+    // and rolled back by the guard, so only the CONFLICT is observable.
+    await expect(
+      makeCaller(accountId).deletePasskey({ id: 'pk-1' }),
+    ).rejects.toMatchObject({ code: 'CONFLICT' })
+  })
+
+  it('blocks a placeholder-email account with no password or provider', async () => {
+    mockPasskeyState({
+      user: {
+        id: accountId,
+        email: 'x123@link.placeholder.local',
+        emailVerified: false,
+      },
+    })
+    await expect(
+      makeCaller(accountId).deletePasskey({ id: 'pk-1' }),
+    ).rejects.toMatchObject({ code: 'CONFLICT' })
+  })
+
+  it('blocks when the verified email cannot receive a magic link', async () => {
+    mockPasskeyState({
+      user: {
+        id: accountId,
+        email: 'alice@example.com',
+        emailVerified: true,
+      },
+    })
+    const previous = env.ENABLE_EMAIL_AUTH
+    env.ENABLE_EMAIL_AUTH = false
+    try {
+      await expect(
+        makeCaller(accountId).deletePasskey({ id: 'pk-1' }),
+      ).rejects.toMatchObject({ code: 'CONFLICT' })
+    } finally {
+      env.ENABLE_EMAIL_AUTH = previous
+    }
+  })
+
+  it('allows removal when an acknowledged recovery link exists', async () => {
+    const acknowledgedAt = new Date('2026-01-01T00:00:00Z')
+    mockPasskeyState({
+      recovery: {
+        acknowledgedAt,
+        onboardingCompletedAt: acknowledgedAt,
+      },
+    })
+    await expect(
+      makeCaller(accountId).deletePasskey({ id: 'pk-1' }),
+    ).resolves.toEqual({ success: true })
+    expect(prismaMock.passkey.delete).toHaveBeenCalledWith({
+      where: { id: 'pk-1' },
+    })
+    // The recovery link is never touched by passkey removal: it stays until
+    // an explicit rotation/removal.
+    expect(prismaMock.anonymousRecoveryCredential.delete).not.toHaveBeenCalled()
+  })
+
+  it('allows removal with a verified real email while email auth is on', async () => {
+    mockPasskeyState({
+      user: {
+        id: accountId,
+        email: 'alice@example.com',
+        emailVerified: true,
+      },
+    })
+    await expect(
+      makeCaller(accountId).deletePasskey({ id: 'pk-1' }),
+    ).resolves.toEqual({ success: true })
+    expect(prismaMock.passkey.delete).toHaveBeenCalled()
+  })
+
+  it('allows removal when a password is set', async () => {
+    mockPasskeyState({
+      identities: [{ providerId: 'credential', password: 'hashed' }],
+    })
+    await expect(
+      makeCaller(accountId).deletePasskey({ id: 'pk-1' }),
+    ).resolves.toEqual({ success: true })
+    expect(prismaMock.passkey.delete).toHaveBeenCalled()
+  })
+
+  it('allows removal when an OAuth provider is linked', async () => {
+    mockPasskeyState({
+      identities: [{ providerId: 'google', password: null }],
+    })
+    await expect(
+      makeCaller(accountId).deletePasskey({ id: 'pk-1' }),
+    ).resolves.toEqual({ success: true })
+    expect(prismaMock.passkey.delete).toHaveBeenCalled()
+  })
+
+  it('allows removal while a second passkey remains', async () => {
+    mockPasskeyState({ passkeyCount: 1 })
+    await expect(
+      makeCaller(accountId).deletePasskey({ id: 'pk-1' }),
+    ).resolves.toEqual({ success: true })
+    expect(prismaMock.passkey.delete).toHaveBeenCalled()
+  })
+
+  it('allows removal during incomplete onboarding when another method exists', async () => {
+    // Gate-exempt: a fresh anonymous account registers its first passkey
+    // before onboarding completes, and the CONFLICT check above is the real
+    // lockout guard — the onboarding gate must not decide this.
+    const acknowledgedAt = new Date('2026-01-01T00:00:00Z')
+    mockPasskeyState({
+      recovery: {
+        acknowledgedAt,
+        onboardingCompletedAt: acknowledgedAt,
+      },
+    })
+    await expect(
+      makeCaller(accountId, { isAnonymous: true }).deletePasskey({
+        id: 'pk-1',
+      }),
+    ).resolves.toEqual({ success: true })
+  })
+
+  it('locks the account row so concurrent deletions serialize', async () => {
+    const acknowledgedAt = new Date('2026-01-01T00:00:00Z')
+    mockPasskeyState({
+      recovery: {
+        acknowledgedAt,
+        onboardingCompletedAt: acknowledgedAt,
+      },
+    })
+    await makeCaller(accountId).deletePasskey({ id: 'pk-1' })
+    expect(prisma$QueryRaw).toHaveBeenCalledTimes(1)
+    const [strings] = prisma$QueryRaw.mock.calls[0] as unknown as [
+      TemplateStringsArray,
+    ]
+    expect(strings.join('')).toContain('FOR UPDATE')
+  })
+
+  it('returns NOT_FOUND when the passkey vanishes mid-transaction', async () => {
+    mockPasskeyState()
+    prismaMock.passkey.delete.mockRejectedValueOnce(
+      new Prisma.PrismaClientKnownRequestError(
+        'Record to delete does not exist.',
+        { code: 'P2025', clientVersion: 'test' },
+      ),
+    )
+    await expect(
+      makeCaller(accountId).deletePasskey({ id: 'pk-1' }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
+  })
+
+  it('invalidates the cached account after removal', async () => {
+    clearAccountCache()
+    const account = {
+      id: accountId,
+      email: 'alice@example.com',
+      emailVerified: true,
+      name: 'Alice',
+      image: null,
+    }
+    mockPasskeyState({
+      passkeyCount: 1,
+      user: {
+        id: accountId,
+        email: 'alice@example.com',
+        emailVerified: true,
+      },
+    })
+    prismaMock.user.findUnique.mockResolvedValueOnce(account as never)
+
+    await getCachedAccount(accountId)
+    await makeCaller(accountId).deletePasskey({ id: 'pk-1' })
+    prismaMock.user.findUnique.mockResolvedValueOnce(account as never)
+    await getCachedAccount(accountId)
+
+    // One read per cache miss: the guard is skipped (a passkey remains),
+    // so only the two getCachedAccount misses hit the database.
+    // Two reads — not one — proves the mutation invalidated the cache.
+    expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(2)
+  })
+})
+
+describe('accountRouter.afterPasskeyChange', () => {
+  it('requires authentication', async () => {
+    await expect(
+      makeAnonymousCaller().afterPasskeyChange(),
+    ).rejects.toMatchObject({ code: 'UNAUTHORIZED' })
+  })
+
+  it('succeeds while anonymous onboarding is still incomplete', async () => {
+    // Gate-exempt: this ping is what flips the gate for fresh anonymous
+    // accounts, so gating it on the still-stale cached row would deadlock
+    // completing onboarding right after registering a passkey.
+    await expect(
+      makeCaller('acct-fresh', { isAnonymous: true }).afterPasskeyChange(),
+    ).resolves.toEqual({ success: true })
+  })
+
+  it('invalidates the cached account', async () => {
+    clearAccountCache()
+    const account = {
+      id: 'acct-ping',
+      email: 'ping@example.com',
+      emailVerified: true,
+      name: 'Ping',
+      image: null,
+    }
+    prismaMock.user.findUnique.mockResolvedValueOnce(account as never)
+
+    await getCachedAccount('acct-ping')
+    await expect(makeCaller('acct-ping').afterPasskeyChange()).resolves.toEqual(
+      { success: true },
+    )
+    prismaMock.user.findUnique.mockResolvedValueOnce(account as never)
+    await getCachedAccount('acct-ping')
+
+    expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(2)
   })
 })

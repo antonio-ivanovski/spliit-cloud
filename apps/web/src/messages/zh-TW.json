@@ -1526,7 +1526,8 @@
       "generic": "出了點問題。請再試一次。",
       "passwordPolicy": "請使用至少8個字元，包含大寫字母、小寫字母、數字和符號。",
       "magicLinkFailed": "無法傳送登入連結。",
-      "signupInviteRequired": "此執行個體僅限邀請加入。請使用邀請連結，或請他人邀請您加入群組。"
+      "signupInviteRequired": "此執行個體僅限邀請加入。請使用邀請連結，或請他人邀請您加入群組。",
+      "passkeyFailed": "通行密鑰登入失敗，請再試一次或使用其他登入方式。"
     },
     "loading": "載入中……",
     "signedInAs": "以 {name} 身分登入",
@@ -1542,7 +1543,8 @@
     "signInWithOidc": "使用 {name} 繼續",
     "signInAnonymously": "匿名",
     "lastUsed": "上次使用",
-    "emailAuthDisabled": "此執行個體已停用電子郵件登入。請使用單一登入（SSO）。"
+    "emailAuthDisabled": "此執行個體已停用電子郵件登入。請使用單一登入（SSO）。",
+    "signInWithPasskey": "使用通行密鑰登入"
   },
   "CompleteProfile": {
     "title": "完善您的個人資料",
@@ -2570,6 +2572,43 @@
         "notFound": "此帳號未設定密碼。"
       },
       "setShort": "設定"
+    },
+    "passkey": {
+      "label": "通行密鑰",
+      "help": "使用裝置的指紋、臉部辨識或安全性金鑰即可免密碼登入。通行密鑰適用於所有帳戶類型，無需電子郵件地址。",
+      "anonymousHelp": "使用通行密鑰後，此匿名帳戶在已註冊的裝置上無需登入連結即可登入。請保留登入連結作為備用。",
+      "unsupported": "此瀏覽器或裝置不支援通行密鑰。",
+      "empty": "尚未新增通行密鑰。",
+      "unnamed": "通行密鑰",
+      "add": "新增通行密鑰",
+      "addTitle": "新增通行密鑰",
+      "addDescription": "請依照瀏覽器的提示註冊此裝置。為它取個名稱，方便日後辨認。",
+      "waitHint": "瀏覽器將要求您進行驗證，這可能需要一點時間。",
+      "nameLabel": "名稱（選填）",
+      "namePlaceholder": "例如：MacBook 觸控 ID",
+      "addSubmit": "新增通行密鑰",
+      "saving": "正在等待您的裝置…",
+      "cancel": "取消",
+      "remove": "移除",
+      "removeTitle": "移除通行密鑰？",
+      "removeDescription": "此裝置將無法再使用通行密鑰登入。您可以隨時重新註冊。",
+      "removeConfirm": "移除",
+      "removing": "移除中…",
+      "added": "已新增通行密鑰。",
+      "removed": "已移除通行密鑰。",
+      "errors": {
+        "generic": "發生問題，請再試一次。",
+        "loadFailed": "無法載入通行密鑰。",
+        "addFailed": "無法新增通行密鑰，請再試一次。",
+        "removeFailed": "無法移除通行密鑰，請再試一次。",
+        "lastMethod": "這是您唯一的登入方式。請先儲存登入連結或新增其他登入方式。"
+      },
+      "synced": "已同步",
+      "deviceBound": "僅限此裝置",
+      "backedUp": "已備份",
+      "removeWarning": "此操作無法復原。此裝置將無法再使用通行密鑰登入，您可以隨時重新註冊。",
+      "removeLastWarning": "這是最後一個通行密鑰。如果它是唯一的登入方式，在儲存登入連結或新增其他登入方式之前無法移除。",
+      "anonymousHelpNoLink": "此匿名帳戶未儲存登入連結。請在下方登入連結列建立一個，在任何裝置上都能使用。"
     }
   },
   "Activities": {
@@ -3350,8 +3389,20 @@
       "recoverError": "此登入連結無效。檢查完整的連結並重試。",
       "recoveryLinkRequiredLabel": "恢復鏈接",
       "createTitle": "建立新帳戶",
-      "or": "或",
-      "recoverTitle": "已有匿名帳戶？"
+      "recoverTitle": "已有匿名帳戶？",
+      "passkeyHint": "建立完成後可立即新增通行密鑰，以便在此裝置上免密碼登入。",
+      "addPasskey": "新增通行密鑰",
+      "passkeyError": "無法新增通行密鑰，您可以稍後在帳戶設定中新增。",
+      "choiceTitle": "選擇備用登入方式",
+      "choiceDescription": "選擇重新登入此匿名帳戶的方式。您稍後可在帳戶設定中新增、變更或移除任一方式。",
+      "linkTitle": "儲存登入連結",
+      "linkDescription": "建議：可在任何裝置上重新登入的私人連結。請將其儲存在安全的地方。",
+      "passkeyTitle": "改用通行密鑰",
+      "passkeyDescription": "在此裝置上使用指紋、臉部辨識或安全性金鑰登入。無需儲存連結，之後也不需要連結。",
+      "existingPasskeyTitle": "已註冊過通行密鑰？",
+      "existingPasskeyDescription": "在您已註冊的裝置之一上使用通行密鑰重新登入。",
+      "passkeySignIn": "使用通行密鑰登入",
+      "passkeySignInError": "無法使用此通行密鑰登入。請再試一次或使用您的登入連結。"
     },
     "onboarding": {
       "title": "保存您的恢復鏈接",
@@ -3399,7 +3450,19 @@
       "activateDescription": "在啟動替換連結之前保存它。",
       "stagedDescription": "您目前的登入連結將一直有效，直到您啟動此替代連結。關閉或刷新會放棄替換。",
       "activateConfirm": "啟動替換",
-      "replacementActivated": "您的替代登入連結現已生效。"
+      "replacementActivated": "您的替代登入連結現已生效。",
+      "create": "建立登入連結",
+      "createTitle": "建立登入連結？",
+      "createDescription": "產生私人連結以供查看並儲存。持有該連結的任何人都可以存取此匿名帳戶。",
+      "created": "登入連結已建立。",
+      "remove": "移除登入連結",
+      "removeTitle": "移除登入連結？",
+      "removeDescription": "目前連結會立即失效。已註冊的通行密鑰可繼續使用。",
+      "removeWarning": "持有目前連結的任何人將失去存取權限。此操作無法復原。",
+      "removeConfirm": "移除連結",
+      "removeRequiresPasskey": "請先新增通行密鑰，登入連結是目前返回此帳戶的唯一方式。",
+      "removed": "登入連結已移除。",
+      "createConfirm": "儲存登入連結"
     }
   },
   "GroupViewLink": {

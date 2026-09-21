@@ -1850,7 +1850,8 @@
       "passwordPolicy": "Usa almeno 8 caratteri con una maiuscola, una minuscola, un numero e un simbolo.",
       "generic": "Qualcosa è andato storto. Riprova.",
       "magicLinkFailed": "Impossibile inviare il link di accesso.",
-      "signupInviteRequired": "Questa istanza è accessibile solo su invito. Usa un link di invito o chiedi a qualcuno di invitarti in un gruppo."
+      "signupInviteRequired": "Questa istanza è accessibile solo su invito. Usa un link di invito o chiedi a qualcuno di invitarti in un gruppo.",
+      "passkeyFailed": "Accesso con chiave di accesso non riuscito. Riprova o usa un altro metodo di accesso."
     },
     "loading": "Caricamento…",
     "signedInAs": "Connesso come {name}",
@@ -1866,7 +1867,8 @@
     "signInWithOidc": "Continua con {name}",
     "signInAnonymously": "Anonimo",
     "lastUsed": "Ultimo utilizzo",
-    "emailAuthDisabled": "L'accesso con email è disattivato su questa istanza. Usa il single sign-on (SSO)."
+    "emailAuthDisabled": "L'accesso con email è disattivato su questa istanza. Usa il single sign-on (SSO).",
+    "signInWithPasskey": "Accedi con chiave di accesso"
   },
   "CompleteProfile": {
     "title": "Completa il tuo profilo",
@@ -2587,6 +2589,43 @@
         "notFound": "Nessuna password impostata per questo account."
       },
       "setShort": "Imposta"
+    },
+    "passkey": {
+      "label": "Chiavi di accesso",
+      "help": "Accedi senza password con l'impronta digitale, il volto o una chiave di sicurezza del tuo dispositivo. Le chiavi di accesso funzionano per ogni tipo di account e non richiedono alcun indirizzo email.",
+      "anonymousHelp": "Le chiavi di accesso consentono a questo account ospite di accedere senza il link di recupero sui dispositivi registrati. Conserva il link di recupero come backup.",
+      "unsupported": "Questo browser o dispositivo non supporta le chiavi di accesso.",
+      "empty": "Non ci sono ancora chiavi di accesso.",
+      "unnamed": "Chiave di accesso",
+      "add": "Aggiungi una chiave di accesso",
+      "addTitle": "Aggiungi una chiave di accesso",
+      "addDescription": "Segui le istruzioni del browser per registrare questo dispositivo. Dagli un nome per riconoscerlo in seguito.",
+      "waitHint": "Il browser ti chiederà di verificare: potrebbe volerci un momento.",
+      "nameLabel": "Nome (facoltativo)",
+      "namePlaceholder": "es. Touch ID del MacBook",
+      "addSubmit": "Aggiungi chiave di accesso",
+      "saving": "In attesa del tuo dispositivo…",
+      "cancel": "Annulla",
+      "remove": "Rimuovi",
+      "removeTitle": "Rimuovere la chiave di accesso?",
+      "removeDescription": "Questo dispositivo non ti farà più accedere con una chiave di accesso. Potrai registrarlo di nuovo in qualsiasi momento.",
+      "removeConfirm": "Rimuovi",
+      "removing": "Rimozione…",
+      "added": "Chiave di accesso aggiunta.",
+      "removed": "Chiave di accesso rimossa.",
+      "errors": {
+        "generic": "Qualcosa è andato storto. Riprova.",
+        "loadFailed": "Impossibile caricare le chiavi di accesso.",
+        "addFailed": "Impossibile aggiungere la chiave di accesso. Riprova.",
+        "removeFailed": "Impossibile rimuovere la chiave di accesso. Riprova.",
+        "lastMethod": "Questo è il tuo unico metodo di accesso. Salva un link di recupero o aggiungi prima un altro metodo di accesso."
+      },
+      "synced": "Sincronizzata",
+      "deviceBound": "Solo su questo dispositivo",
+      "backedUp": "Con backup",
+      "removeWarning": "Questa azione non può essere annullata. Il dispositivo non ti farà più accedere con una chiave di accesso — potrai registrarlo di nuovo in qualsiasi momento.",
+      "removeLastWarning": "Questa è la tua ultima chiave di accesso. Se è il tuo unico metodo di accesso, la rimozione è bloccata finché non salvi un link di recupero o un altro metodo di accesso.",
+      "anonymousHelpNoLink": "Nessun link di accesso salvato per questo account ospite. Creane uno nella riga del link di accesso qui sotto — funziona su qualsiasi dispositivo."
     }
   },
   "Activities": {
@@ -3386,8 +3425,20 @@
       "recoverError": "Questo link di accesso non è valido. Controlla il collegamento completo e riprova.",
       "recoveryLinkRequiredLabel": "Collegamento per il ripristino",
       "createTitle": "Crea un nuovo account",
-      "or": "OPPURE",
-      "recoverTitle": "Hai già un account anonimo?"
+      "recoverTitle": "Hai già un account anonimo?",
+      "passkeyHint": "Puoi aggiungere una chiave di accesso subito dopo la creazione per accedere senza password su questo dispositivo.",
+      "addPasskey": "Aggiungi una chiave di accesso",
+      "passkeyError": "Impossibile aggiungere la chiave di accesso. Potrai aggiungerne una in seguito nelle impostazioni dell'account.",
+      "choiceTitle": "Scegli l'accesso di riserva",
+      "choiceDescription": "Scegli come rientrare in questo account ospite. Potrai aggiungere, modificare o rimuovere entrambe le opzioni in seguito nelle impostazioni dell'account.",
+      "linkTitle": "Salva un link di recupero",
+      "linkDescription": "Consigliato: un link privato che ti fa accedere di nuovo su qualsiasi dispositivo. Conservalo in un luogo sicuro.",
+      "passkeyTitle": "Usa una chiave di accesso",
+      "passkeyDescription": "Accedi con l'impronta digitale, il volto o una chiave di sicurezza su questo dispositivo. Nessun link da conservare — e dopo non ne servirà alcuno.",
+      "existingPasskeyTitle": "Hai già registrato una chiave di accesso?",
+      "existingPasskeyDescription": "Accedi di nuovo con la chiave di accesso su uno dei tuoi dispositivi registrati.",
+      "passkeySignIn": "Accedi con chiave di accesso",
+      "passkeySignInError": "Impossibile accedere con questa chiave di accesso. Riprova o usa il tuo link di accesso."
     },
     "onboarding": {
       "title": "Salva il link di accesso",
@@ -3435,7 +3486,19 @@
       "activateDescription": "Salva il collegamento sostitutivo prima di attivarlo.",
       "stagedDescription": "Il tuo attuale link di accesso continua a funzionare finché non attivi questa sostituzione. La chiusura o l'aggiornamento elimina la sostituzione.",
       "activateConfirm": "Attiva la sostituzione",
-      "replacementActivated": "Il link di accesso sostitutivo è ora attivo."
+      "replacementActivated": "Il link di accesso sostitutivo è ora attivo.",
+      "create": "Crea il link di accesso",
+      "createTitle": "Creare un link di accesso?",
+      "createDescription": "Genera un link privato da rivedere e salvare. Chiunque lo abbia può accedere a questo account ospite.",
+      "created": "Link di accesso creato.",
+      "remove": "Rimuovi il link di accesso",
+      "removeTitle": "Rimuovere il link di accesso?",
+      "removeDescription": "Il link attuale smette subito di funzionare. Una chiave di accesso registrata continua a funzionare.",
+      "removeWarning": "Chiunque abbia il link attuale perde l'accesso. Questa azione non può essere annullata.",
+      "removeConfirm": "Rimuovi il link",
+      "removeRequiresPasskey": "Aggiungi prima una chiave di accesso — il link di accesso è al momento l'unico modo per tornare a questo account.",
+      "removed": "Link di accesso rimosso.",
+      "createConfirm": "Salva il link di accesso"
     }
   },
   "GroupViewLink": {

@@ -1870,7 +1870,8 @@
       "nameRequired": "Gib einen Anzeigenamen ein.",
       "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
       "magicLinkFailed": "Der Anmeldelink konnte nicht gesendet werden.",
-      "signupInviteRequired": "Diese Instanz ist nur auf Einladung zugänglich. Nutze einen Einladungslink oder bitte jemanden, dich in eine Gruppe einzuladen."
+      "signupInviteRequired": "Diese Instanz ist nur auf Einladung zugänglich. Nutze einen Einladungslink oder bitte jemanden, dich in eine Gruppe einzuladen.",
+      "passkeyFailed": "Anmeldung mit Passkey fehlgeschlagen. Versuche es erneut oder nutze eine andere Anmeldemethode."
     },
     "loading": "Lädt…",
     "signedInAs": "Angemeldet als {name}",
@@ -1886,7 +1887,8 @@
     "signInWithOidc": "Weiter mit {name}",
     "signInAnonymously": "Anonym",
     "lastUsed": "Zuletzt verwendet",
-    "emailAuthDisabled": "Die Anmeldung per E-Mail ist in dieser Instanz deaktiviert. Bitte nutze Single Sign-on (SSO)."
+    "emailAuthDisabled": "Die Anmeldung per E-Mail ist in dieser Instanz deaktiviert. Bitte nutze Single Sign-on (SSO).",
+    "signInWithPasskey": "Mit Passkey anmelden"
   },
   "CompleteProfile": {
     "title": "Profil vervollständigen",
@@ -2609,6 +2611,43 @@
         "notFound": "Für dieses Konto ist kein Passwort festgelegt."
       },
       "setShort": "Festlegen"
+    },
+    "passkey": {
+      "label": "Passkey",
+      "help": "Melde dich ohne Passwort mit Fingerabdruck, Gesicht oder Sicherheitsschlüssel deines Geräts an. Passkeys funktionieren für jeden Kontotyp und benötigen keine E-Mail-Adresse.",
+      "anonymousHelp": "Mit Passkeys kann sich dieses anonyme Konto auf registrierten Geräten ohne Anmeldelink anmelden. Behalte deinen Anmeldelink als Sicherung.",
+      "unsupported": "Passkeys werden von diesem Browser oder Gerät nicht unterstützt.",
+      "empty": "Noch keine Passkeys.",
+      "unnamed": "Unbenannter Passkey",
+      "add": "Passkey hinzufügen",
+      "addTitle": "Passkey hinzufügen",
+      "addDescription": "Folge den Anweisungen deines Browsers, um dieses Gerät zu registrieren. Gib ihm einen Namen, damit du es später wiedererkennst.",
+      "waitHint": "Dein Browser bittet dich gleich um Bestätigung — das kann einen Moment dauern.",
+      "nameLabel": "Bezeichnung (optional)",
+      "namePlaceholder": "z. B. MacBook Touch ID",
+      "addSubmit": "Passkey hinzufügen",
+      "saving": "Warte auf dein Gerät…",
+      "cancel": "Abbrechen",
+      "remove": "Entfernen",
+      "removeTitle": "Passkey entfernen?",
+      "removeDescription": "Dieses Gerät meldet dich dann nicht mehr per Passkey an. Du kannst es jederzeit erneut registrieren.",
+      "removeConfirm": "Entfernen",
+      "removing": "Wird entfernt…",
+      "added": "Passkey hinzugefügt.",
+      "removed": "Passkey entfernt.",
+      "errors": {
+        "generic": "Etwas ist schiefgelaufen. Versuche es erneut.",
+        "loadFailed": "Passkeys konnten nicht geladen werden.",
+        "addFailed": "Der Passkey konnte nicht hinzugefügt werden. Versuche es erneut.",
+        "removeFailed": "Der Passkey konnte nicht entfernt werden. Versuche es erneut.",
+        "lastMethod": "Das ist deine einzige Anmeldemethode. Speichere zuerst einen Anmeldelink oder füge eine weitere Anmeldemethode hinzu."
+      },
+      "synced": "Synchronisiert",
+      "deviceBound": "Nur dieses Gerät",
+      "backedUp": "Gesichert",
+      "removeWarning": "Das kann nicht rückgängig gemacht werden. Das Gerät meldet dich dann nicht mehr per Passkey an — du kannst es jederzeit erneut registrieren.",
+      "removeLastWarning": "Das ist dein letzter Passkey. Wenn es deine einzige Anmeldemethode ist, ist das Entfernen blockiert, bis du einen Anmeldelink gespeichert oder eine weitere Anmeldemethode hinzugefügt hast.",
+      "anonymousHelpNoLink": "Für dieses Gastkonto ist kein Anmeldelink gespeichert. Erstelle einen in der Anmeldelink-Zeile unten — er funktioniert auf jedem Gerät."
     }
   },
   "Activities": {
@@ -3435,8 +3474,20 @@
       "recoverError": "Dieser Anmeldelink ist ungültig. Überprüfe den vollständigen Link und versuche es erneut.",
       "recoveryLinkRequiredLabel": "Anmeldelink",
       "createTitle": "Neues Konto erstellen",
-      "or": "ODER",
-      "recoverTitle": "Hast du bereits ein anonymes Konto?"
+      "recoverTitle": "Hast du bereits ein anonymes Konto?",
+      "passkeyHint": "Du kannst direkt nach der Erstellung einen Passkey für die passwortlose Anmeldung auf diesem Gerät hinzufügen.",
+      "addPasskey": "Passkey hinzufügen",
+      "passkeyError": "Der Passkey konnte nicht hinzugefügt werden. Du kannst später in den Kontoeinstellungen einen hinzufügen.",
+      "choiceTitle": "Wähle deine Backup-Anmeldung",
+      "choiceDescription": "Wähle, wie du wieder in dieses anonyme Konto kommst. Du kannst beide Optionen später in den Kontoeinstellungen hinzufügen, ändern oder entfernen.",
+      "linkTitle": "Anmeldelink speichern",
+      "linkDescription": "Empfohlen: ein privater Link, mit dem du dich auf jedem Gerät wieder anmelden kannst. Bewahre ihn an einem sicheren Ort auf.",
+      "passkeyTitle": "Stattdessen einen Passkey verwenden",
+      "passkeyDescription": "Melde dich mit Fingerabdruck, Gesicht oder Sicherheitsschlüssel auf diesem Gerät an. Kein Link zum Aufbewahren — und danach ist auch kein Link mehr nötig.",
+      "existingPasskeyTitle": "Bereits einen Passkey registriert?",
+      "existingPasskeyDescription": "Melde dich mit dem Passkey auf einem deiner registrierten Geräte wieder an.",
+      "passkeySignIn": "Mit Passkey anmelden",
+      "passkeySignInError": "Mit diesem Passkey konnte nicht angemeldet werden. Versuche es erneut oder nutze deinen Anmeldelink."
     },
     "onboarding": {
       "title": "Speichere deinen Anmeldelink",
@@ -3484,7 +3535,19 @@
       "activateDescription": "Speichere den Ersatzlink, bevor du ihn aktivierst.",
       "stagedDescription": "Dein aktueller Anmeldelink funktioniert weiterhin, bis du diesen Ersatz aktivierst. Beim Schließen oder Aktualisieren wird der Ersatz verworfen.",
       "activateConfirm": "Ersetzung aktivieren",
-      "replacementActivated": "Dein neuer Anmeldelink ist jetzt aktiv."
+      "replacementActivated": "Dein neuer Anmeldelink ist jetzt aktiv.",
+      "create": "Anmeldelink erstellen",
+      "createTitle": "Anmeldelink erstellen?",
+      "createDescription": "Generiere einen privaten Link zum Überprüfen und Speichern. Wer den Link hat, kann auf dieses Gastkonto zugreifen.",
+      "created": "Anmeldelink erstellt.",
+      "remove": "Anmeldelink entfernen",
+      "removeTitle": "Anmeldelink entfernen?",
+      "removeDescription": "Der aktuelle Link funktioniert sofort nicht mehr. Ein registrierter Passkey funktioniert weiterhin.",
+      "removeWarning": "Wer den aktuellen Link hat, verliert den Zugriff. Dies kann nicht rückgängig gemacht werden.",
+      "removeConfirm": "Link entfernen",
+      "removeRequiresPasskey": "Füge zuerst einen Passkey hinzu — der Anmeldelink ist derzeit die einzige Möglichkeit, wieder in dieses Konto zu gelangen.",
+      "removed": "Anmeldelink entfernt.",
+      "createConfirm": "Anmeldelink speichern"
     }
   },
   "GroupViewLink": {

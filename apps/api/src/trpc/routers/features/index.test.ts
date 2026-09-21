@@ -21,6 +21,7 @@ const originalDeploymentValues = {
   OIDC_PROVIDER_ID: env.OIDC_PROVIDER_ID,
   ENABLE_ANONYMOUS_AUTH: env.ENABLE_ANONYMOUS_AUTH,
   ENABLE_EMAIL_AUTH: env.ENABLE_EMAIL_AUTH,
+  ENABLE_PASSKEY_AUTH: env.ENABLE_PASSKEY_AUTH,
   SMTP_HOST: env.SMTP_HOST,
   EMAIL_FROM: env.EMAIL_FROM,
   SIGNUP_MODE: env.SIGNUP_MODE,
@@ -55,6 +56,7 @@ describe('features.get', () => {
       OIDC_PROVIDER_ID: 'keycloak',
       ENABLE_ANONYMOUS_AUTH: true,
       ENABLE_EMAIL_AUTH: true,
+      ENABLE_PASSKEY_AUTH: true,
       SMTP_HOST: 'smtp.test',
       EMAIL_FROM: 'Spliit <noreply@test>',
       SIGNUP_MODE: 'open',
@@ -74,8 +76,23 @@ describe('features.get', () => {
       allowUninvitedSignup: true,
       enableAnonymousAuth: true,
       enableEmailAuth: true,
+      enablePasskeyAuth: true,
       emailDeliveryEnabled: true,
     })
+  })
+
+  it('exposes passkey auth capability', async () => {
+    Object.assign(env, { ENABLE_PASSKEY_AUTH: false })
+
+    await expect(
+      featuresRouter.createCaller({ auth: null }).get(),
+    ).resolves.toMatchObject({ enablePasskeyAuth: false })
+
+    Object.assign(env, { ENABLE_PASSKEY_AUTH: true })
+
+    await expect(
+      featuresRouter.createCaller({ auth: null }).get(),
+    ).resolves.toMatchObject({ enablePasskeyAuth: true })
   })
 
   it('exposes the category suggest stages, engine, and thresholds', async () => {

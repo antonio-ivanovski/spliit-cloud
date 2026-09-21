@@ -60,6 +60,7 @@ describe('useDeploymentConfig', () => {
       allowUninvitedSignup: false,
       enableAnonymousAuth: false,
       enableEmailAuth: false,
+      enablePasskeyAuth: true,
       emailDeliveryEnabled: false,
     })
 
@@ -78,6 +79,7 @@ describe('useDeploymentConfig', () => {
         allowUninvitedSignup: false,
         enableAnonymousAuth: false,
         enableEmailAuth: false,
+        enablePasskeyAuth: true,
         emailDeliveryEnabled: false,
         maxExpenseDocumentSize: 10 * 1024 * 1024,
       })

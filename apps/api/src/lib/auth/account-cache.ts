@@ -20,11 +20,13 @@ function withAnonymousOnboarding(
     acknowledgedAt: Date | null
     onboardingCompletedAt: Date | null
   } | null,
+  hasPasskey = false,
 ): CachedAccount {
   return {
     ...account,
     anonymousOnboardingCompleted:
       account.isAnonymous !== true ||
+      hasPasskey ||
       (recovery?.acknowledgedAt != null &&
         recovery.onboardingCompletedAt != null),
   }
@@ -61,13 +63,21 @@ export async function getCachedAccount(accountId: string) {
   const account = await prisma.user.findUnique({ where: { id: accountId } })
   if (!account) return null
 
-  const recovery = account.isAnonymous
-    ? await prisma.anonymousRecoveryCredential.findUnique({
-        where: { accountId: account.id },
-        select: { acknowledgedAt: true, onboardingCompletedAt: true },
-      })
-    : null
-  const result = withAnonymousOnboarding(account, recovery)
+  // A verified passkey satisfies anonymous onboarding (passwordless,
+  // email-free sign-in bound to the same user id). Recovery-link state is
+  // only consulted for anonymous accounts; passkeys are checked for them
+  // too so a freshly registered passkey flips the protected-procedure gate
+  // without waiting for a recovery ack.
+  const [recovery, passkeyCount] = account.isAnonymous
+    ? await Promise.all([
+        prisma.anonymousRecoveryCredential.findUnique({
+          where: { accountId: account.id },
+          select: { acknowledgedAt: true, onboardingCompletedAt: true },
+        }),
+        prisma.passkey.count({ where: { userId: account.id } }),
+      ])
+    : [null, 0]
+  const result = withAnonymousOnboarding(account, recovery, passkeyCount > 0)
 
   // A concurrent invalidateAccountCache (or clearAccountCache) bumped the
   // generation while we were awaiting the DB. Skip the write so we don't

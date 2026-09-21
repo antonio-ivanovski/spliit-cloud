@@ -27,6 +27,27 @@ export function getWebBaseUrl(): string {
 }
 
 /**
+ * WebAuthn Relying Party ID for the passkey plugin.
+ *
+ * Must be the effective domain of the page that calls
+ * `navigator.credentials.create/get` — i.e. the web origin, not the API base
+ * URL (better-auth's default derives rpID from its own `baseURL`, which is the
+ * API and would break WebAuthn on split-origin deployments). `localhost` stays
+ * `localhost` for local dev; otherwise the hostname of `WEB_ORIGINS[0]` (port
+ * stripped, no scheme).
+ */
+export function getPasskeyRpID(): string {
+  const webBase = getWebBaseUrl()
+  try {
+    const hostname = new URL(webBase).hostname.trim()
+    if (hostname) return hostname
+  } catch {
+    // Fall through to localhost below.
+  }
+  return 'localhost'
+}
+
+/**
  * Audiences an access token may legitimately carry.
  *
  * The API is its own resource server, so tokens minted for it use the API base

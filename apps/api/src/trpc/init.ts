@@ -161,50 +161,108 @@ const authenticatedMutationLimiter = new FixedWindowLimiter({
 })
 
 /**
+ * Procedure that requires an authenticated session. Unlike `protectedProcedure`
+ * it does not enforce the anonymous onboarding gate — for mutations that must
+ * run while onboarding is still incomplete (e.g. the passkey cache-bust ping,
+ * whose whole purpose is to flip the gate), the gate would deadlock on its own
+ * stale cache row. Resolvers on this procedure enforce their own business
+ * guards instead.
+ *
+ * No rate limit here: gated rejections must not spend the shared
+ * authenticated-mutation budget (they never reach a mutation), so the limiter
+ * runs after the gate on `protectedProcedure` and standalone on
+ * `rateLimitedSessionProcedure` below.
+ */
+export const sessionProcedure = baseProcedure.use(async ({ ctx, next }) => {
+  if (
+    !ctx.auth ||
+    ('credentialKind' in ctx.auth && ctx.auth.credentialKind === 'oauth')
+  ) {
+    throw new TRPCError({
+      code: 'UNAUTHORIZED',
+      message: 'Authentication required',
+    })
+  }
+  return next({
+    ctx: {
+      ...ctx,
+      // Narrow the type so procedures can rely on a non-null auth.
+      auth: ctx.auth,
+    },
+  })
+})
+
+/**
+ * Shared authenticated-mutation budget (120/min per account). Runs after the
+ * gate on `protectedProcedure` — preserving the historical order where gated
+ * rejections never touch the budget — and standalone on
+ * `rateLimitedSessionProcedure` for gate-exempt mutations.
+ */
+async function enforceAuthenticatedMutationLimit({
+  userId,
+  resHeaders,
+  path,
+  type,
+}: {
+  userId: string
+  resHeaders?: Headers
+  path: string
+  type: string
+}): Promise<void> {
+  if (type !== 'mutation') return
+  const decision = authenticatedMutationLimiter.hit(userId)
+  if (!decision.allowed) {
+    logRateLimitExceeded({
+      policy: 'authenticated-mutation',
+      identity: userId,
+      retryAfterSeconds: decision.retryAfterSeconds,
+      path,
+    })
+    resHeaders?.set('Retry-After', String(decision.retryAfterSeconds))
+    throw new TRPCError({
+      code: 'TOO_MANY_REQUESTS',
+      message: 'Request limit exceeded; try again shortly',
+    })
+  }
+}
+
+/**
+ * Session-authenticated mutations without the onboarding gate, still spending
+ * the shared authenticated-mutation budget. For the passkey
+ * `deletePasskey`/`afterPasskeyChange` mutations, whose lockout guard and
+ * cache-bust purpose respectively replace the gate.
+ */
+export const rateLimitedSessionProcedure = sessionProcedure.use(
+  async ({ ctx, next, path, type }) => {
+    await enforceAuthenticatedMutationLimit({
+      userId: ctx.auth.user.id,
+      resHeaders: ctx.resHeaders,
+      path,
+      type,
+    })
+    return next()
+  },
+)
+
+/**
  * Procedure that requires an authenticated account. The account is exposed to
  * the procedure via `ctx.auth.user`.
  */
-export const protectedProcedure = baseProcedure.use(
+export const protectedProcedure = sessionProcedure.use(
   async ({ ctx, next, path, type }) => {
-    if (
-      !ctx.auth ||
-      ('credentialKind' in ctx.auth && ctx.auth.credentialKind === 'oauth')
-    ) {
-      throw new TRPCError({
-        code: 'UNAUTHORIZED',
-        message: 'Authentication required',
-      })
-    }
     if (isAnonymousSetupIncomplete(ctx.auth.user)) {
       throw new TRPCError({
         code: 'PRECONDITION_FAILED',
         message: 'ANONYMOUS_SETUP_REQUIRED',
       })
     }
-    if (type === 'mutation') {
-      const decision = authenticatedMutationLimiter.hit(ctx.auth.user.id)
-      if (!decision.allowed) {
-        logRateLimitExceeded({
-          policy: 'authenticated-mutation',
-          identity: ctx.auth.user.id,
-          retryAfterSeconds: decision.retryAfterSeconds,
-          path,
-        })
-        ctx.resHeaders?.set('Retry-After', String(decision.retryAfterSeconds))
-        throw new TRPCError({
-          code: 'TOO_MANY_REQUESTS',
-          message: 'Request limit exceeded; try again shortly',
-        })
-      }
-    }
-
-    return next({
-      ctx: {
-        ...ctx,
-        // Narrow the type so procedures can rely on a non-null auth.
-        auth: ctx.auth,
-      },
+    await enforceAuthenticatedMutationLimit({
+      userId: ctx.auth.user.id,
+      resHeaders: ctx.resHeaders,
+      path,
+      type,
     })
+    return next()
   },
 )
 

@@ -10,6 +10,7 @@ import { RequireAuth } from '@/components/require-auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
+import { useDeploymentConfig } from '@/lib/deployment-config'
 import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { prepareProfileImage, uploadToPresignedUrl } from '@/lib/upload'
 import { useCurrentAccount } from '@/lib/use-current-account'
@@ -19,6 +20,7 @@ import { trpc } from '@/trpc/client'
 
 import { AccountEmailSettings } from './account-email-settings'
 import { AccountExportModal } from './account-export-modal'
+import { AccountPasskeySettings } from './account-passkey-settings'
 import { AccountPasswordSettings } from './account-password-settings'
 import { AccountPreferences } from './account-preferences'
 import { AccountAiPreferences } from './ai-preferences'
@@ -52,6 +54,7 @@ function AccountSettingsContent() {
   const { t } = useTranslation(undefined, { keyPrefix: 'AccountSettings' })
   const { t: tCommon } = useTranslation(undefined, { keyPrefix: 'Header' })
   const { data: account, isPending, refetch } = useCurrentAccount()
+  const deployment = useDeploymentConfig()
   const navigate = useNavigate()
   const { hash } = useLocation()
   useHashTargetFocus(hash)
@@ -189,8 +192,6 @@ function AccountSettingsContent() {
 
   const isDirty = name.trim() !== (account.name ?? '')
 
-  console.log('AccountSettingsContent render')
-
   return (
     <PageShell className="flex-col gap-6 py-4 sm:py-6">
       <h1 className="hidden items-center gap-2 text-2xl font-semibold sm:flex">
@@ -206,7 +207,7 @@ function AccountSettingsContent() {
         </Button>
         {t('title')}
       </h1>
-      <form className="flex flex-col gap-3" onSubmit={handleSubmit} noValidate>
+      <div className="flex flex-col gap-3">
         <SettingsSection
           id="profile"
           title={t('profile.title')}
@@ -221,6 +222,7 @@ function AccountSettingsContent() {
               ) : null}
               <Button
                 type="submit"
+                form="account-profile-form"
                 disabled={submitting || updateProfile.isPending || !isDirty}
               >
                 {(submitting || updateProfile.isPending) && (
@@ -234,70 +236,87 @@ function AccountSettingsContent() {
           }
         >
           <SettingsList className="border-t border-border/70">
-            <SettingsRow
-              id="profile-photo"
-              label={t('image.label')}
-              description={t('image.help')}
-              control={
-                <div className="flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-                  <AccountAvatar
-                    account={account}
-                    size="xl"
-                    className="shrink-0"
-                  />
-                  <div className="flex flex-wrap gap-2 sm:flex-1">
-                    <FilePickerInput
-                      ref={imageInputRef}
-                      accept="image/*,.heic,.heif"
-                      className="hidden"
-                      onFilesSelected={([file]) => void handleImageChange(file)}
+            {/*
+             * Only the profile fields live inside the form. The credential
+             * rows below (email, password, passkey, recovery) run their own
+             * mutations in portaled dialogs: keeping them outside this form
+             * guarantees their buttons can never submit a profile update
+             * (previously a stray submit fired duplicate "Profile updated"
+             * toasts next to passkey actions).
+             */}
+            <form
+              id="account-profile-form"
+              className="contents"
+              onSubmit={handleSubmit}
+              noValidate
+            >
+              <SettingsRow
+                id="profile-photo"
+                label={t('image.label')}
+                description={t('image.help')}
+                control={
+                  <div className="flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+                    <AccountAvatar
+                      account={account}
+                      size="xl"
+                      className="shrink-0"
                     />
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      onClick={() => imageInputRef.current?.click()}
-                      disabled={
-                        isUploadingImage || removeProfileImage.isPending
-                      }
-                    >
-                      {isUploadingImage
-                        ? t('image.uploading')
-                        : t('image.choose')}
-                    </Button>
-                    {account.image ? (
+                    <div className="flex flex-wrap gap-2 sm:flex-1">
+                      <FilePickerInput
+                        ref={imageInputRef}
+                        accept="image/*,.heic,.heif"
+                        className="hidden"
+                        onFilesSelected={([file]) =>
+                          void handleImageChange(file)
+                        }
+                      />
                       <Button
                         type="button"
                         size="sm"
                         variant="outline"
-                        onClick={() => void handleRemoveImage()}
+                        onClick={() => imageInputRef.current?.click()}
                         disabled={
                           isUploadingImage || removeProfileImage.isPending
                         }
                       >
-                        {t('image.remove')}
+                        {isUploadingImage
+                          ? t('image.uploading')
+                          : t('image.choose')}
                       </Button>
-                    ) : null}
+                      {account.image ? (
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          onClick={() => void handleRemoveImage()}
+                          disabled={
+                            isUploadingImage || removeProfileImage.isPending
+                          }
+                        >
+                          {t('image.remove')}
+                        </Button>
+                      ) : null}
+                    </div>
                   </div>
-                </div>
-              }
-            />
-            <SettingsFieldRow
-              id="account-settings-name"
-              label={t('nameLabel')}
-              control={
-                <Input
-                  id={settingsControlId('account-settings-name')}
-                  type="text"
-                  autoComplete="name"
-                  value={name}
-                  onChange={(e) => setDirtyName(e.target.value)}
-                  required
-                  maxLength={50}
-                  className={cn('w-full sm:max-w-xs')}
-                />
-              }
-            />
+                }
+              />
+              <SettingsFieldRow
+                id="account-settings-name"
+                label={t('nameLabel')}
+                control={
+                  <Input
+                    id={settingsControlId('account-settings-name')}
+                    type="text"
+                    autoComplete="name"
+                    value={name}
+                    onChange={(e) => setDirtyName(e.target.value)}
+                    required
+                    maxLength={50}
+                    className={cn('w-full sm:max-w-xs')}
+                  />
+                }
+              />
+            </form>
             <AccountEmailSettings
               email={account.email}
               isAnonymous={account.isAnonymous}
@@ -309,10 +328,16 @@ function AccountSettingsContent() {
               isAnonymous={account.isAnonymous}
               onUpdated={refreshAccount}
             />
+            {deployment.enablePasskeyAuth ? (
+              <AccountPasskeySettings
+                isAnonymous={account.isAnonymous}
+                onUpdated={refreshAccount}
+              />
+            ) : null}
             {account.isAnonymous ? <AnonymousAccountSettings /> : null}
           </SettingsList>
         </SettingsSection>
-      </form>
+      </div>
       <AccountPreferences />
       <AuthorizedClients />
       <AccountExportModal />

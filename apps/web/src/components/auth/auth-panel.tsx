@@ -1,10 +1,11 @@
 import { Link } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { authClient } from '@/lib/auth'
 import { useOnlineStatus } from '@/lib/use-online-status'
 
 import { AnonymousSignupDialog } from './anonymous-signup-dialog'
@@ -42,6 +43,7 @@ export function AuthPanel({
     oidcProviders,
     anonymousEnabled,
     emailAuthEnabled,
+    passkeyEnabled,
     linkInviteToken,
     redirectTo: resolvedRedirectTo,
     completeProfilePath,
@@ -53,13 +55,40 @@ export function AuthPanel({
     resetEmailFlow,
     handleMagicLink,
     handlePasswordSubmit,
+    handlePasskeySignIn,
     handleGoogle,
     handleGithub,
     handleTwitter,
     handleOidc,
     emailAuth,
     magicLink,
+    passkeyAuth,
   } = useAuthPanel({ redirectTo })
+
+  // Conditional UI: offer a registered passkey through browser autofill when
+  // the platform supports it. Fire once on mount; failures (including the
+  // user dismissing the prompt) are swallowed — explicit sign-in goes
+  // through the passkey button below.
+  useEffect(() => {
+    if (!passkeyEnabled || !isOnline) return
+    const mediation = window.PublicKeyCredential as unknown as
+      | {
+          isConditionalMediationAvailable?: () => Promise<boolean>
+        }
+      | undefined
+    if (typeof mediation?.isConditionalMediationAvailable !== 'function') {
+      return
+    }
+    let cancelled = false
+    void mediation.isConditionalMediationAvailable().then((available) => {
+      if (available && !cancelled) {
+        void authClient.signIn.passkey({ autoFill: true }).catch(() => {})
+      }
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [passkeyEnabled, isOnline])
 
   if (successState) {
     const success = (
@@ -87,14 +116,22 @@ export function AuthPanel({
         githubEnabled={githubEnabled}
         twitterEnabled={twitterEnabled}
         oidcProviders={oidcProviders}
+        passkeyEnabled={passkeyEnabled}
+        passkeyPending={passkeyAuth.isPending}
         disabled={!isOnline || emailAuth.isPending || magicLink.isPending}
         lastUsedMethod={lastLoginMethod}
         onGoogle={handleGoogle}
         onGithub={handleGithub}
         onTwitter={handleTwitter}
         onOidc={handleOidc}
+        onPasskey={handlePasskeySignIn}
         onAnonymous={() => setAnonymousDialogOpen(true)}
       />
+      {passkeyAuth.isError ? (
+        <p className="text-center text-sm text-destructive" role="alert">
+          {getErrorMessage(passkeyAuth.error)}
+        </p>
+      ) : null}
 
       {!emailAuthEnabled ? (
         <>
@@ -229,6 +266,7 @@ export function AuthPanel({
         open={anonymousDialogOpen}
         onOpenChange={setAnonymousDialogOpen}
         creationEnabled={anonymousEnabled}
+        passkeyEnabled={passkeyEnabled}
         linkInviteToken={linkInviteToken}
         redirectTo={resolvedRedirectTo}
         completeProfilePath={completeProfilePath}

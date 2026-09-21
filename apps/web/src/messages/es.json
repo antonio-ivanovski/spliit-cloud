@@ -1871,7 +1871,8 @@
       "generic": "Algo salió mal. Inténtalo de nuevo.",
       "passwordPolicy": "Usa al menos 8 caracteres con mayúsculas, minúsculas, un número y un símbolo.",
       "magicLinkFailed": "No se pudo enviar el enlace de inicio de sesión.",
-      "signupInviteRequired": "Esta instancia es solo por invitación. Usa un enlace de invitación o pide a alguien que te invite a un grupo."
+      "signupInviteRequired": "Esta instancia es solo por invitación. Usa un enlace de invitación o pide a alguien que te invite a un grupo.",
+      "passkeyFailed": "El inicio de sesión con clave de acceso ha fallado. Inténtalo de nuevo o usa otro método de inicio de sesión."
     },
     "loading": "Cargando…",
     "signedInAs": "Conectado como {name}",
@@ -1887,7 +1888,8 @@
     "signInWithOidc": "Continuar con {name}",
     "signInAnonymously": "Anónimo",
     "lastUsed": "Último uso",
-    "emailAuthDisabled": "El inicio de sesión con correo electrónico está desactivado en esta instancia. Usa el inicio de sesión único (SSO)."
+    "emailAuthDisabled": "El inicio de sesión con correo electrónico está desactivado en esta instancia. Usa el inicio de sesión único (SSO).",
+    "signInWithPasskey": "Iniciar sesión con clave de acceso"
   },
   "CompleteProfile": {
     "title": "Completa tu perfil",
@@ -2611,6 +2613,43 @@
         "notFound": "No hay ninguna contraseña establecida para esta cuenta."
       },
       "setShort": "Establecer"
+    },
+    "passkey": {
+      "label": "Claves de acceso",
+      "help": "Inicia sesión sin contraseña con la huella dactilar, la cara o una llave de seguridad de tu dispositivo. Las claves de acceso funcionan con todos los tipos de cuenta y no necesitan correo electrónico.",
+      "anonymousHelp": "Las claves de acceso permiten a esta cuenta de invitado iniciar sesión sin el enlace de recuperación en los dispositivos registrados. Guarda tu enlace de recuperación como copia de seguridad.",
+      "unsupported": "Este navegador o dispositivo no admite claves de acceso.",
+      "empty": "Aún no hay claves de acceso.",
+      "unnamed": "Clave de acceso",
+      "add": "Añadir una clave de acceso",
+      "addTitle": "Añadir una clave de acceso",
+      "addDescription": "Sigue las instrucciones de tu navegador para registrar este dispositivo. Ponle un nombre para reconocerlo más tarde.",
+      "waitHint": "Tu navegador te pedirá que lo verifiques; puede tardar un momento.",
+      "nameLabel": "Nombre (opcional)",
+      "namePlaceholder": "p. ej., Touch ID del MacBook",
+      "addSubmit": "Añadir clave de acceso",
+      "saving": "Esperando a tu dispositivo…",
+      "cancel": "Cancelar",
+      "remove": "Eliminar",
+      "removeTitle": "¿Eliminar la clave de acceso?",
+      "removeDescription": "Este dispositivo dejará de iniciar sesión con una clave de acceso. Puedes registrarlo de nuevo en cualquier momento.",
+      "removeConfirm": "Eliminar",
+      "removing": "Eliminando…",
+      "added": "Clave de acceso añadida.",
+      "removed": "Clave de acceso eliminada.",
+      "errors": {
+        "generic": "Algo salió mal. Inténtalo de nuevo.",
+        "loadFailed": "No se pudieron cargar las claves de acceso.",
+        "addFailed": "No se pudo añadir la clave de acceso. Inténtalo de nuevo.",
+        "removeFailed": "No se pudo eliminar la clave de acceso. Inténtalo de nuevo.",
+        "lastMethod": "Este es tu único método de inicio de sesión. Guarda un enlace de recuperación o añade otro método de inicio de sesión primero."
+      },
+      "synced": "Sincronizada",
+      "deviceBound": "Solo en este dispositivo",
+      "backedUp": "Con copia de seguridad",
+      "removeWarning": "Esto no se puede deshacer. El dispositivo dejará de iniciar sesión con una clave de acceso — podrás registrarlo de nuevo en cualquier momento.",
+      "removeLastWarning": "Esta es tu última clave de acceso. Si es tu único método de inicio de sesión, la eliminación quedará bloqueada hasta que guardes un enlace de recuperación u otro método de inicio de sesión.",
+      "anonymousHelpNoLink": "No hay ningún enlace de inicio de sesión guardado para esta cuenta de invitado. Crea uno en la fila del enlace de inicio de sesión de abajo — funciona en cualquier dispositivo."
     }
   },
   "Activities": {
@@ -3437,8 +3476,20 @@
       "recoverError": "Este enlace de inicio de sesión no es válido. Consulta el enlace completo y vuelve a intentarlo.",
       "recoveryLinkRequiredLabel": "Enlace de inicio de sesión",
       "createTitle": "Crear una cuenta nueva",
-      "or": "O",
-      "recoverTitle": "¿Ya tienes una cuenta anónima?"
+      "recoverTitle": "¿Ya tienes una cuenta anónima?",
+      "passkeyHint": "Puedes añadir una clave de acceso justo después de crear la cuenta para iniciar sesión sin contraseña en este dispositivo.",
+      "addPasskey": "Añadir una clave de acceso",
+      "passkeyError": "No se pudo añadir la clave de acceso. Puedes añadir una más tarde en la configuración de la cuenta.",
+      "choiceTitle": "Elige tu acceso de reserva",
+      "choiceDescription": "Elige cómo volverás a entrar en esta cuenta de invitado. Puedes añadir, cambiar o eliminar cualquiera de las dos opciones más tarde en la configuración de la cuenta.",
+      "linkTitle": "Guardar un enlace de recuperación",
+      "linkDescription": "Recomendado: un enlace privado que te permite volver a iniciar sesión en cualquier dispositivo. Guárdalo en un lugar seguro.",
+      "passkeyTitle": "Usar una clave de acceso",
+      "passkeyDescription": "Inicia sesión con tu huella dactilar, tu cara o una llave de seguridad en este dispositivo. No hay ningún enlace que guardar — y después no necesitarás ninguno.",
+      "existingPasskeyTitle": "¿Ya has registrado una clave de acceso?",
+      "existingPasskeyDescription": "Vuelve a iniciar sesión con la clave de acceso en uno de tus dispositivos registrados.",
+      "passkeySignIn": "Iniciar sesión con clave de acceso",
+      "passkeySignInError": "No se pudo iniciar sesión con esta clave de acceso. Inténtalo de nuevo o usa tu enlace de inicio de sesión."
     },
     "onboarding": {
       "title": "Guarde su enlace de inicio de sesión",
@@ -3486,7 +3537,19 @@
       "activateDescription": "Guarde el enlace de reemplazo antes de activarlo.",
       "stagedDescription": "Su enlace de inicio de sesión actual sigue funcionando hasta que active este reemplazo. Cerrar o actualizar descarta el reemplazo.",
       "activateConfirm": "Activar reemplazo",
-      "replacementActivated": "El enlace de inicio de sesión de reemplazo ya está activo."
+      "replacementActivated": "El enlace de inicio de sesión de reemplazo ya está activo.",
+      "create": "Crear enlace de inicio de sesión",
+      "createTitle": "¿Crear un enlace de inicio de sesión?",
+      "createDescription": "Genera un enlace privado para revisar y guardar. Cualquiera que lo tenga puede acceder a esta cuenta de invitado.",
+      "created": "Enlace de inicio de sesión creado.",
+      "remove": "Eliminar enlace de inicio de sesión",
+      "removeTitle": "¿Eliminar el enlace de inicio de sesión?",
+      "removeDescription": "El enlace actual deja de funcionar inmediatamente. Una clave de acceso registrada sigue funcionando.",
+      "removeWarning": "Cualquiera que tenga el enlace actual pierde el acceso. Esto no se puede deshacer.",
+      "removeConfirm": "Eliminar enlace",
+      "removeRequiresPasskey": "Añade primero una clave de acceso — el enlace de inicio de sesión es actualmente la única forma de volver a esta cuenta.",
+      "removed": "Enlace de inicio de sesión eliminado.",
+      "createConfirm": "Guardar enlace de inicio de sesión"
     }
   },
   "GroupViewLink": {

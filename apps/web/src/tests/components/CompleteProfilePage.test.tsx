@@ -8,14 +8,26 @@ import { fireEvent, render, screen, waitFor } from '@/test/test-utils'
 
 const {
   acknowledgeMock,
+  mockAddPasskey,
+  mockMarkPasskeyLastUsed,
+  mockDeploymentConfig,
   mockNavigate,
+  mockNotifyPasskeyChanged,
+  mockPasskeySupported,
+  mockRevokeRecovery,
   mockUpdateProfile,
   replacePendingMock,
   setupMock,
   statusMock,
 } = vi.hoisted(() => ({
   acknowledgeMock: vi.fn(),
+  mockAddPasskey: vi.fn(),
+  mockMarkPasskeyLastUsed: vi.fn(),
+  mockDeploymentConfig: { enablePasskeyAuth: false },
   mockNavigate: vi.fn(),
+  mockNotifyPasskeyChanged: vi.fn(),
+  mockPasskeySupported: { value: false },
+  mockRevokeRecovery: vi.fn(),
   mockUpdateProfile: vi.fn(),
   replacePendingMock: vi.fn(),
   setupMock: vi.fn(),
@@ -43,11 +55,23 @@ vi.mock('@/lib/anonymous-recovery', () => ({
   acknowledgeAnonymousRecovery: acknowledgeMock,
   getAnonymousRecoveryStatus: statusMock,
   replacePendingAnonymousRecovery: replacePendingMock,
+  revokeAnonymousRecovery: mockRevokeRecovery,
   setupAnonymousRecovery: setupMock,
 }))
 
 vi.mock('@/lib/use-current-account', () => ({
   useCurrentAccount: vi.fn(),
+}))
+
+vi.mock('@/lib/deployment-config', () => ({
+  useDeploymentConfig: () => mockDeploymentConfig,
+}))
+
+vi.mock('@/lib/passkey', () => ({
+  isPasskeySupported: () => mockPasskeySupported.value,
+  addPasskey: mockAddPasskey,
+  markPasskeyAsLastUsedLoginMethod: mockMarkPasskeyLastUsed,
+  notifyPasskeyChanged: mockNotifyPasskeyChanged,
 }))
 
 vi.mock('@/trpc/client', () => ({
@@ -94,6 +118,11 @@ function mockAccount(
 describe('CompleteProfilePage', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockDeploymentConfig.enablePasskeyAuth = false
+    mockPasskeySupported.value = false
+    mockAddPasskey.mockResolvedValue({ id: 'pk-1' })
+    mockNotifyPasskeyChanged.mockResolvedValue(undefined)
+    mockRevokeRecovery.mockResolvedValue({ success: true })
     Object.defineProperty(navigator, 'onLine', {
       configurable: true,
       value: true,
@@ -104,6 +133,7 @@ describe('CompleteProfilePage', () => {
       acknowledged: false,
       onboardingCompleted: false,
       canResumeSetup: false,
+      hasPasskey: false,
     })
     setupMock.mockResolvedValue({
       code: 'spliit_anonymous_v1_test-key',
@@ -332,6 +362,7 @@ describe('CompleteProfilePage', () => {
       acknowledged: true,
       onboardingCompleted: true,
       canResumeSetup: false,
+      hasPasskey: false,
     })
     const email = 'guest-1@anonymous.placeholder.local'
     vi.mocked(useCurrentAccount).mockReturnValue({
@@ -351,6 +382,189 @@ describe('CompleteProfilePage', () => {
     expect(await screen.findByLabelText('Display name')).toBeInTheDocument()
     expect(screen.queryByText('Save your sign in link')).not.toBeInTheDocument()
     expect(setupMock).not.toHaveBeenCalled()
+  })
+
+  it('skips recovery setup when a passkey is registered instead', async () => {
+    // Passkey is the alternative safeguard chosen at signup: no link setup,
+    // straight to naming. The recovery link is not created as a side effect.
+    statusMock.mockResolvedValue({
+      isAnonymous: true,
+      hasRecoveryKey: false,
+      acknowledged: false,
+      onboardingCompleted: false,
+      canResumeSetup: false,
+      hasPasskey: true,
+    })
+    const email = 'guest-1@anonymous.placeholder.local'
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: mockAccount({
+        name: email,
+        email,
+        isAnonymous: true,
+      }),
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(<CompleteProfilePage />)
+
+    expect(await screen.findByLabelText('Display name')).toBeInTheDocument()
+    expect(screen.queryByText('Save your sign in link')).not.toBeInTheDocument()
+    expect(setupMock).not.toHaveBeenCalled()
+  })
+
+  it('offers link or passkey when both safeguards are available', async () => {
+    mockDeploymentConfig.enablePasskeyAuth = true
+    mockPasskeySupported.value = true
+    const email = 'guest-1@anonymous.placeholder.local'
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: mockAccount({
+        name: email,
+        email,
+        isAnonymous: true,
+      }),
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(<CompleteProfilePage />)
+
+    // Same choice as the signup dialog: radio cards, link pre-selected with
+    // its setup shown below the group.
+    expect(
+      await screen.findByText('Choose your backup sign-in'),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('radio', { name: /Save a recovery link/ }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('radio', { name: /Use a passkey instead/ }),
+    ).toBeInTheDocument()
+    // The card header owns the title; the pre-selected link setup shows the
+    // key panel instead.
+    expect(screen.queryByText('Save your sign in link')).not.toBeInTheDocument()
+    expect(
+      await screen.findByRole('button', { name: 'Start using Spliit' }),
+    ).toBeInTheDocument()
+    expect(setupMock).toHaveBeenCalled()
+  })
+
+  it('saves a recovery link from the complete-profile choice', async () => {
+    mockDeploymentConfig.enablePasskeyAuth = true
+    mockPasskeySupported.value = true
+    const mockRefetch = vi.fn().mockResolvedValue(undefined)
+    const email = 'guest-1@anonymous.placeholder.local'
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: mockAccount({
+        name: email,
+        email,
+        isAnonymous: true,
+      }),
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: mockRefetch,
+    })
+
+    const { user } = render(<CompleteProfilePage />)
+
+    // Link pre-selected: its setup shows below the group, no extra click.
+    // Embedded link setup hides the duplicate heading; the key panel shows.
+    expect(
+      await screen.findByRole('button', { name: 'Start using Spliit' }),
+    ).toBeInTheDocument()
+    expect(screen.queryByText('Save your sign in link')).not.toBeInTheDocument()
+    expect(setupMock).toHaveBeenCalled()
+
+    await user.click(
+      screen.getByRole('checkbox', {
+        name: 'I copied and safely stored my sign in link.',
+      }),
+    )
+    await user.click(screen.getByRole('button', { name: 'Start using Spliit' }))
+
+    await waitFor(() => expect(acknowledgeMock).toHaveBeenCalled())
+    expect(await screen.findByLabelText('Display name')).toBeInTheDocument()
+  })
+
+  it('switches between link and passkey choice cards', async () => {
+    mockDeploymentConfig.enablePasskeyAuth = true
+    mockPasskeySupported.value = true
+    const email = 'guest-1@anonymous.placeholder.local'
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: mockAccount({
+        name: email,
+        email,
+        isAnonymous: true,
+      }),
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    const { user } = render(<CompleteProfilePage />)
+
+    expect(
+      await screen.findByRole('button', { name: 'Start using Spliit' }),
+    ).toBeInTheDocument()
+
+    await user.click(
+      screen.getByRole('radio', { name: /Use a passkey instead/ }),
+    )
+
+    expect(
+      await screen.findByRole('button', { name: 'Add a passkey' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Start using Spliit' }),
+    ).not.toBeInTheDocument()
+
+    await user.click(
+      screen.getByRole('radio', { name: /Save a recovery link/ }),
+    )
+
+    expect(
+      await screen.findByRole('button', { name: 'Start using Spliit' }),
+    ).toBeInTheDocument()
+  })
+
+  it('adds a passkey from the complete-profile choice', async () => {
+    mockDeploymentConfig.enablePasskeyAuth = true
+    mockPasskeySupported.value = true
+    const mockRefetch = vi.fn().mockResolvedValue(undefined)
+    const email = 'guest-1@anonymous.placeholder.local'
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: mockAccount({
+        name: email,
+        email,
+        isAnonymous: true,
+      }),
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: mockRefetch,
+    })
+
+    const { user } = render(<CompleteProfilePage />)
+
+    await user.click(
+      await screen.findByRole('radio', { name: /Use a passkey instead/ }),
+    )
+    await user.click(screen.getByRole('button', { name: 'Add a passkey' }))
+
+    expect(mockAddPasskey).toHaveBeenCalled()
+    expect(mockNotifyPasskeyChanged).toHaveBeenCalled()
+    // Passkey-onboarded: the login screen hints at the passkey next time.
+    expect(mockMarkPasskeyLastUsed).toHaveBeenCalled()
+    // The never-acknowledged setup link is cleaned up.
+    expect(mockRevokeRecovery).toHaveBeenCalledWith({ onlyPending: true })
+    // Passkey registered: straight to naming.
+    expect(await screen.findByLabelText('Display name')).toBeInTheDocument()
   })
 
   it('does not enter the app when recovery setup cannot run offline', () => {

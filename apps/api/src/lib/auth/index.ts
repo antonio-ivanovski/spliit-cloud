@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto'
 
 import { oauthProvider } from '@better-auth/oauth-provider'
+import { getAuthenticatorName, passkey } from '@better-auth/passkey'
 import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
 import {
@@ -28,6 +29,7 @@ import {
   env,
   getConfiguredOidcProvider,
   isEmailAuthEnabled,
+  isPasskeyAuthEnabled,
   webOrigins,
 } from '../env'
 import {
@@ -69,10 +71,11 @@ import {
   captureOAuthSignupInvite,
   enforceSignupGate,
 } from './signup-gate'
-import { getApiBaseUrl, oauthAudiences } from './urls'
+import { getApiBaseUrl, getPasskeyRpID, oauthAudiences } from './urls'
 
 const oidcProvider = getConfiguredOidcProvider()
 const emailAuthEnabled = isEmailAuthEnabled()
+const passkeyAuthEnabled = isPasskeyAuthEnabled()
 
 export const EMAIL_AUTH_DISABLED = 'EMAIL_AUTH_DISABLED'
 
@@ -763,6 +766,12 @@ export const auth = betterAuth({
           ),
       },
     },
+    // Note: no `databaseHooks.passkey` here. The passkey plugin issues
+    // passkey writes through the raw adapter (`ctx.context.adapter`), which
+    // bypasses database hooks, so create/delete hooks on this model would be
+    // dead code. Cache invalidation for passkey changes instead happens
+    // explicitly in the `account.deletePasskey` / `account.afterPasskeyChange`
+    // tRPC mutations, which the web client calls after add/remove.
   },
 
   emailAndPassword: {
@@ -933,12 +942,42 @@ export const auth = betterAuth({
     // (`better-auth.last_used_login_method`) so the web login panel can show
     // a "Last used" hint. Cookie-only: no database field. The default
     // resolver covers email, OAuth callbacks (`/callback/:id`), and magic
-    // link; `customResolveMethod` adds anonymous guest sign-in, which the
-    // plugin does not detect on its own.
+    // link; `customResolveMethod` adds anonymous guest sign-in and passkey
+    // sign-in, which the plugins do not detect on their own.
     lastLoginMethod({
-      customResolveMethod: (ctx) =>
-        ctx.path === '/sign-in/anonymous' ? 'anonymous' : null,
+      customResolveMethod: (ctx) => {
+        if (ctx.path === '/sign-in/anonymous') return 'anonymous'
+        if (
+          ctx.path === '/sign-in/passkey' ||
+          ctx.path === '/passkey/verify-authentication'
+        )
+          return 'passkey'
+        return null
+      },
     }),
+    // Passkey/WebAuthn passwordless sign-in. Session-only registration
+    // (`requireSession:true`, the default): signed-in users add a passkey in
+    // account settings, then sign in later with it. Works for every account
+    // type — email, social/OIDC (including placeholder emails), and anonymous
+    // (no email needed, WebAuthn is keyed by user id). Omit entirely when
+    // ENABLE_PASSKEY_AUTH=false so `/passkey/*` + `/sign-in/passkey`
+    // unmount (404), mirroring the magic-link gating above.
+    ...(passkeyAuthEnabled
+      ? [
+          passkey({
+            rpID: getPasskeyRpID(),
+            rpName: 'Spliit Cloud',
+            origin: [...webOrigins],
+            registration: {
+              afterVerification: async ({ verification }) => ({
+                name: getAuthenticatorName(
+                  verification.registrationInfo?.aaguid,
+                ),
+              }),
+            },
+          }),
+        ]
+      : []),
     // Magic-link sign-in is part of email auth. Omit the plugin entirely
     // when ENABLE_EMAIL_AUTH=false so `/sign-in/magic-link` and
     // `/magic-link/verify` are unmounted (404) instead of relying on the

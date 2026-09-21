@@ -290,4 +290,131 @@ describe('anonymous recovery keys', () => {
       } as never),
     ).resolves.toEqual({ success: true })
   })
+
+  it('revokes an acknowledged link when a passkey remains', async () => {
+    const endpoint = anonymousRecovery().endpoints.revokeAnonymousRecovery
+    prismaMock.anonymousRecoveryCredential.findUnique.mockResolvedValueOnce({
+      acknowledgedAt: new Date(),
+    } as never)
+    prismaMock.passkey.count.mockResolvedValueOnce(1 as never)
+    prismaMock.anonymousRecoveryCredential.delete.mockResolvedValueOnce(
+      {} as never,
+    )
+
+    await expect(
+      endpoint({
+        body: {},
+        context: {
+          session: {
+            session: { id: 'session-1' },
+            user: { id: 'account-1', isAnonymous: true },
+          },
+        },
+        request: new Request(
+          'https://api.example/auth/anonymous-recovery/revoke',
+        ),
+      } as never),
+    ).resolves.toEqual({ success: true })
+    expect(prismaMock.anonymousRecoveryCredential.delete).toHaveBeenCalledWith({
+      where: { accountId: 'account-1' },
+    })
+  })
+
+  it('refuses to revoke the last safeguard without a passkey', async () => {
+    const endpoint = anonymousRecovery().endpoints.revokeAnonymousRecovery
+    prismaMock.anonymousRecoveryCredential.findUnique.mockResolvedValueOnce({
+      acknowledgedAt: new Date(),
+    } as never)
+    prismaMock.anonymousRecoveryCredential.delete.mockClear()
+
+    await expect(
+      endpoint({
+        body: {},
+        context: {
+          session: {
+            session: { id: 'session-1' },
+            user: { id: 'account-1', isAnonymous: true },
+          },
+        },
+        request: new Request(
+          'https://api.example/auth/anonymous-recovery/revoke',
+        ),
+      } as never),
+    ).rejects.toMatchObject({ body: { code: 'RECOVERY_KEY_REQUIRED' } })
+    expect(prismaMock.anonymousRecoveryCredential.delete).not.toHaveBeenCalled()
+  })
+
+  it('revokes a pending key without requiring a passkey', async () => {
+    const endpoint = anonymousRecovery().endpoints.revokeAnonymousRecovery
+    prismaMock.anonymousRecoveryCredential.findUnique.mockResolvedValueOnce({
+      acknowledgedAt: null,
+    } as never)
+    prismaMock.anonymousRecoveryCredential.delete.mockResolvedValueOnce(
+      {} as never,
+    )
+
+    await expect(
+      endpoint({
+        body: {},
+        context: {
+          session: {
+            session: { id: 'session-1' },
+            user: { id: 'account-1', isAnonymous: true },
+          },
+        },
+        request: new Request(
+          'https://api.example/auth/anonymous-recovery/revoke',
+        ),
+      } as never),
+    ).resolves.toEqual({ success: true })
+    expect(prismaMock.anonymousRecoveryCredential.delete).toHaveBeenCalledWith({
+      where: { accountId: 'account-1' },
+    })
+  })
+
+  it('leaves a saved backup untouched for pending-only cleanup', async () => {
+    const endpoint = anonymousRecovery().endpoints.revokeAnonymousRecovery
+    prismaMock.anonymousRecoveryCredential.findUnique.mockResolvedValueOnce({
+      acknowledgedAt: new Date(),
+    } as never)
+    prismaMock.anonymousRecoveryCredential.delete.mockClear()
+
+    await expect(
+      endpoint({
+        body: { onlyPending: true },
+        context: {
+          session: {
+            session: { id: 'session-1' },
+            user: { id: 'account-1', isAnonymous: true },
+          },
+        },
+        request: new Request(
+          'https://api.example/auth/anonymous-recovery/revoke',
+        ),
+      } as never),
+    ).resolves.toEqual({ success: true })
+    expect(prismaMock.anonymousRecoveryCredential.delete).not.toHaveBeenCalled()
+  })
+
+  it('returns not found when no sign in link exists', async () => {
+    const endpoint = anonymousRecovery().endpoints.revokeAnonymousRecovery
+    prismaMock.anonymousRecoveryCredential.findUnique.mockResolvedValueOnce(
+      null as never,
+    )
+
+    await expect(
+      endpoint({
+        body: {},
+        context: {
+          session: {
+            session: { id: 'session-1' },
+            user: { id: 'account-1', isAnonymous: true },
+          },
+        },
+        request: new Request(
+          'https://api.example/auth/anonymous-recovery/revoke',
+        ),
+      } as never),
+    ).rejects.toMatchObject({ body: { code: 'RECOVERY_KEY_NOT_FOUND' } })
+  })
 })

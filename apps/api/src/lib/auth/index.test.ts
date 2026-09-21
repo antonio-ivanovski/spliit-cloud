@@ -48,6 +48,9 @@ const realAuthModule = (await vi.importActual('./index')) as {
           generateRandomEmail?: () => string
           storeInDatabase?: boolean
           customResolveMethod?: (ctx: { path?: string }) => string | null
+          rpID?: string
+          rpName?: string
+          origin?: string | string[] | null
         }
       }>
       emailVerification?: {
@@ -345,6 +348,55 @@ describe('better-auth last login method tracking', () => {
     expect(resolveMethod?.({ path: '/sign-in/anonymous' })).toBe('anonymous')
     expect(resolveMethod?.({ path: '/sign-in/email' })).toBeNull()
     expect(resolveMethod?.({ path: '/callback/google' })).toBeNull()
+  })
+
+  it('resolves passkey verification as a trackable method', () => {
+    const plugin = realAuthModule.auth.options.plugins?.find(
+      (candidate) => candidate.id === 'last-login-method',
+    )
+    const resolveMethod = plugin?.options?.customResolveMethod
+    expect(resolveMethod).toBeDefined()
+    expect(resolveMethod?.({ path: '/sign-in/passkey' })).toBe('passkey')
+    expect(resolveMethod?.({ path: '/passkey/verify-authentication' })).toBe(
+      'passkey',
+    )
+    expect(resolveMethod?.({ path: '/passkey/verify-registration' })).toBeNull()
+  })
+})
+
+describe('better-auth passkey config', () => {
+  it('registers the passkey plugin bound to the web origin', () => {
+    // rpID must be the web hostname (the page calling navigator.credentials),
+    // not the API baseURL hostname that better-auth would default to.
+    // origin accepts every configured web origin for multi-origin instances.
+    const plugin = realAuthModule.auth.options.plugins?.find(
+      (candidate) => candidate.id === 'passkey',
+    )
+    expect(plugin).toBeDefined()
+    expect(plugin?.options).toMatchObject({
+      rpID: 'localhost',
+      rpName: 'Spliit Cloud',
+    })
+    expect(plugin?.options?.origin).toContain('http://localhost:3000')
+  })
+
+  it('keeps passkey registration session-only', () => {
+    const plugin = realAuthModule.auth.options.plugins?.find(
+      (candidate) => candidate.id === 'passkey',
+    )
+    expect(
+      (plugin?.options as { registration?: { requireSession?: boolean } })
+        ?.registration?.requireSession ?? true,
+    ).toBe(true)
+  })
+
+  it('does not register dead passkey database hooks', () => {
+    // The passkey plugin writes through the raw adapter
+    // (`ctx.context.adapter`), which bypasses database hooks — hooks on this
+    // model would never fire. Cache invalidation for passkey changes lives
+    // in the `account.deletePasskey` / `account.afterPasskeyChange` tRPC
+    // mutations instead.
+    expect(realAuthModule.auth.options.databaseHooks?.passkey).toBeUndefined()
   })
 })
 

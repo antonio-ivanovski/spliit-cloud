@@ -19,8 +19,15 @@ import { AnonymousRecoveryKeyPanel } from './anonymous-recovery-key-panel'
 
 export function AnonymousRecoveryOnboarding({
   onComplete,
+  hideHeader = false,
 }: {
   onComplete: () => void | Promise<void>
+  /**
+   * Skip the centered title block when a host (signup dialog, safeguard choice)
+   * already renders its own heading — avoids stacked duplicates crammed against
+   * the dialog/card header.
+   */
+  hideHeader?: boolean
 }) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'AnonymousAccount.onboarding',
@@ -46,6 +53,13 @@ export function AnonymousRecoveryOnboarding({
           const status = await getAnonymousRecoveryStatus()
           if (!active) return
           if (status.acknowledged && status.onboardingCompleted) {
+            await onComplete()
+            return
+          }
+          // A registered passkey is an alternative safeguard: skip link
+          // setup entirely. The choice between the two happens at signup;
+          // afterwards both coexist and neither removes the other.
+          if (status.hasPasskey) {
             await onComplete()
             return
           }
@@ -121,10 +135,14 @@ export function AnonymousRecoveryOnboarding({
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="space-y-2 text-center">
-        <h2 className="text-2xl font-semibold tracking-tight">{t('title')}</h2>
-        <p className="text-sm text-muted-foreground">{t('description')}</p>
-      </div>
+      {hideHeader ? null : (
+        <div className="space-y-2 text-center">
+          <h2 className="text-2xl font-semibold tracking-tight">
+            {t('title')}
+          </h2>
+          <p className="text-sm text-muted-foreground">{t('description')}</p>
+        </div>
+      )}
 
       {recovery ? (
         <AnonymousRecoveryKeyPanel
