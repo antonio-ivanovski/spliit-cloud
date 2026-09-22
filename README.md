@@ -2,7 +2,9 @@
 
 **Spliit Cloud is a community-maintained fork of Spliit: a free, open-source expense splitting app for groups, trips, roommates, friends, and shared costs.**
 
-It keeps the simplicity of the original Spliit while moving toward cloud accounts, reliable group syncing, stronger tests, and a more maintainable stack.
+**No email or social login required:** start with an anonymous account in a few clicks — no email address, no Google/GitHub/OIDC — and keep it recoverable with a recovery link or a passkey.
+
+It keeps the simplicity of the original Spliit while fixing its biggest weakness: groups that lived only in the browser and never synced properly across devices. Cloud accounts give you reliable group syncing, stronger tests, and a more maintainable stack — without forcing everyone onto email.
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 [![Status Spliit Cloud](https://status.spliit.cloud/api/badge/38/uptime/720)](https://status.spliit.cloud/)
@@ -14,7 +16,7 @@ It keeps the simplicity of the original Spliit while moving toward cloud account
 
 ## Try it
 
-Public instance: **[https://spliit.cloud](https://spliit.cloud)**
+Public instance: **[https://spliit.cloud](https://spliit.cloud)** — no email or social account needed. Choose the anonymous option at sign-up (a display name plus a recovery link or passkey) and you get synced groups on all your devices.
 
 Live uptime & incident status at **[https://status.spliit.cloud](https://status.spliit.cloud/)**
 
@@ -27,7 +29,9 @@ You can also self-host your own instance. See [Self-hosting overview](#self-host
 
 ## What is Spliit Cloud?
 
-Spliit Cloud is a community-maintained fork of [Spliit](https://github.com/spliit-app/spliit), the open-source expense splitter originally created by [Sebastien Castiel](https://github.com/scastiel). It aims to keep the lightweight, no-frills experience that made Spliit popular while evolving the product toward real cloud accounts, reliable multi-device sync, and a stack that is easier to operate and self-host.
+Spliit Cloud is a community-maintained fork of [Spliit](https://github.com/spliit-app/spliit), the open-source expense splitter originally created by [Sebastien Castiel](https://github.com/scastiel). It aims to keep the lightweight, no-frills experience that made Spliit popular while evolving the product toward reliable multi-device sync and a stack that is easier to operate and self-host.
+
+People loved that original Spliit needed no account — and hated that their groups lived only in one browser, vanished when site data was cleared, and never synced to their phone. Spliit Cloud is the middle ground: an **anonymous account takes a few clicks and asks for no email or social identity**, yet your groups follow you across devices and every edit is attributable to a real member. Add email, social login, or a passkey later if you want — or never.
 
 The public instance lives at [spliit.cloud](https://spliit.cloud): the web app runs on Cloudflare Pages, the API runs on a Hetzner VPS via Dokploy with PostgreSQL on the same VPS, database backups are written to a dedicated Cloudflare R2 bucket, and asset uploads are stored in a separate Cloudflare R2 bucket.
 
@@ -35,7 +39,9 @@ The public instance lives at [spliit.cloud](https://spliit.cloud): the web app r
 
 Spliit Cloud exists because I liked Spliit and wanted to keep using it with my friends.
 
-The original Spliit project, created by [Sebastien Castiel](https://github.com/scastiel), is a clean and useful open-source alternative to Splitwise. I first looked at contributing improvements upstream, but after submitting fixes and reviewing existing issues and pull requests, the project appeared to have slowed down.
+The original Spliit project, created by [Sebastien Castiel](https://github.com/scastiel), is a clean and useful open-source alternative to Splitwise. I first looked at contributing improvements upstream, but after submitting fixes and reviewing existing issues and pull requests at the time, the project appeared to have slowed down.
+
+Since then upstream has become active again (see [Relationship to Spliit](#relationship-to-spliit)): `1.20–1.26` shipped global balances, expanded stats, PWA offline assets, monthly category visuals, and security hardening. The stacks and data models have diverged too far to merge back, and hundreds of people now depend on `spliit.cloud` — so this fork continues as its own line while porting upstream prior art where it fits.
 
 This fork is meant to continue that work openly, with proper credit to the original author and project.
 
@@ -49,7 +55,7 @@ The main things I wanted to improve are:
 - clearer self-hosting and deployment paths
 - migration/import support for existing Spliit groups
 
-Spliit Cloud ships only account-bound groups. I explored supporting both local and synced groups in [spliit-app/spliit#495](https://github.com/spliit-app/spliit/pull/495), but the dual model became hard to implement and hard to explain. Binding groups to accounts keeps the mental model simple, the data secure, and every action attributable to a member. You do not have to use email or social login: an anonymous account type exists for people who want that privacy, while still giving the group clear authorization and responsibility for what each member does. See the [FAQ](#do-i-need-email-or-social-login) for the full reasoning.
+Spliit Cloud ships only account-bound groups. I explored supporting both local and synced groups in [spliit-app/spliit#495](https://github.com/spliit-app/spliit/pull/495), but the dual model became hard to implement and hard to explain. Binding groups to accounts keeps the mental model simple, the data secure, and every action attributable to a member. You do not have to use email or social login: create an **anonymous account in a few clicks** — just a display name, no email address, no Google/GitHub/OIDC — and keep it with a recovery link or a passkey. You get all the benefits of synced groups with the same simplicity people loved about account-free Spliit, while the group still sees a real member with authorization instead of a shared URL anyone can edit. See the [FAQ](#do-i-need-email-or-social-login) for the full reasoning.
 
 Spliit Cloud is not affiliated with the original Spliit project unless stated otherwise.
 
@@ -61,7 +67,7 @@ Credit for the original idea, design, and foundation belongs to the original Spl
 
 This fork keeps the project open-source and aims to continue development in a direction focused on accounts, syncing, maintainability, and self-hosting.
 
-The original `spliit-app/spliit` project appears to have slowed down, with many issues and pull requests not receiving maintainer responses recently. This fork exists to keep the project moving in a more focused direction while preserving credit to the original work.
+Upstream is actively maintained again: since August 2026 it has shipped `1.20–1.26` with real improvements (global balances, expanded group stats with date ranges and drill-downs, monthly category visuals, PWA service worker with offline assets, settle-up in a non-group currency, configurable OpenAI endpoint/models, security headers/CSP, and even-split previews). Switching back is no longer practical — hundreds of people depend on `spliit.cloud`, groups here are account-bound rather than URL-identified (with anonymous accounts preserving the no-email simplicity), and the stacks have diverged (Vite + React SPA with Hono + tRPC here, Next.js upstream). Where upstream ships useful prior art, this fork ports and credits it instead of pretending the gap is still one-sided; the feature table below reflects that parity honestly.
 
 ## Who is this for?
 
@@ -69,36 +75,40 @@ Spliit Cloud may be useful if you want:
 
 - a free and open-source alternative to Splitwise
 - shared expense tracking for trips, friends, roommates, couples, or small groups
-- a hosted app with synced groups and accounts, including anonymous accounts that do not require email or social login
+- a hosted app with synced groups and accounts — with an anonymous option that needs no email or social login and recovers via link or passkey
 - a self-hostable expense splitting app
 - a project that is actively maintained and open to contributions
 - a codebase with stronger tests and a simpler operating model
 
 ## Features
 
-| Feature                               | Why it matters                                                                                                                                                                                                                  | Spliit Cloud | Original Spliit                                                 |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------------------------------------------------------- |
-| Core Spliit features                  | Groups, categories, receipts and drag-and-drop attachments, balances, settlements, advanced splits, PWA support, and no ads.                                                                                                    | ✅           | ✅                                                              |
-| Accounts, friends, and synced groups  | Sign in with email, optional OIDC/OAuth, or an anonymous account with no email or social login. Profile avatars, 1-on-1 friend ledgers, and groups that follow you across devices—with every action attributable to an account. | ✅           | ❌                                                              |
-| Import and export                     | Import Splitwise, original Spliit, and Spliit Cloud bundles; export CSV, printable PDF reports, and full group or account ZIP archives including documents.                                                                     | ✅           | ❓ (group JSON export only)                                     |
-| Reliable currency handling            | Multi-currency expenses with server-side conversion, a conversion widget, and cryptocurrency support.                                                                                                                           | ✅           | ❓ (bad implementation with broken API)                         |
-| Multiple payers and itemized expenses | Track several payers, line items, tax, tip, and precise per-person shares in one expense.                                                                                                                                       | ✅           | ❌                                                              |
-| Durable recurring expenses            | Create real recurrence series with intervals, date/count/indefinite endings, catch-up, retries, history, previews, navigation, and explicit stop/edit/delete controls—not read-time side effects.                               | ✅           | ❓ (bare minimum support with recurrence being an afterthought) |
-| Activity, comments, and discovery     | Per-expense change history and comments, plus preview, filtering, sorting, and search across groups—without opening the edit form.                                                                                              | ✅           | ❓                                                              |
-| Email and push notifications          | Deliver group and expense updates through email or push, with per-user preferences for which categories and channels are enabled.                                                                                               | ✅           | ❌                                                              |
-| Stats, charts, and budgets            | Per-group spending charts plus weekly, monthly, yearly, or custom budgets by category and participant, with over-budget notifications.                                                                                          | ✅           | ❌                                                              |
-| Balances, settlements, and subgroups  | Switch between balance views, settle faster, combine compatible payments, or settle as subgroup units such as couples.                                                                                                          | ✅           | ❌                                                              |
-| Full localization                     | Supported languages have complete and a maintained i18n validation workflow.                                                                                                                                                    | ✅           | ❌                                                              |
-| OpenAPI, Scalar, and MCP              | Explore the published API interactively, consume the OpenAPI spec, or create expenses from ChatGPT and Claude through the optional MCP assistant.                                                                               | ✅           | ❌                                                              |
-| Group archive & delete                | Archive groups to make them view-only, or permanently delete them when no longer needed.                                                                                                                                        | ✅           | ❌                                                              |
-| AI-assisted expense workflows         | Categorize from the title (including without an AI provider), scan receipts, and describe expenses by voice; extracted details stay up for review before saving.                                                                | ✅           | ❓ (limited AI support)                                         |
-| Expense amount calculator             | A calculator widget in the expense amount field for quick arithmetic while entering expenses.                                                                                                                                   | ✅           | ❌                                                              |
-| Responsive mobile experience          | Mobile-specific layouts and interaction patterns improve the experience beyond simply narrowing the desktop UI.                                                                                                                 | ✅           | ❓ (just a narrow desktop app)                                  |
-| Active maintenance                    | New features, fixes, and self-hosting improvements continue to move forward.                                                                                                                                                    | ✅           | ❓                                                              |
+| Feature                               | Why it matters                                                                                                                                                                                                                                                                                        | Spliit Cloud | Original Spliit                                                        |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | ---------------------------------------------------------------------- |
+| Core Spliit features                  | Groups, categories, receipts and drag-and-drop attachments, balances, settlements, advanced splits, PWA support, and no ads. Upstream added an offline-asset service worker with update prompt in `1.23.0`.                                                                                           | ✅           | ✅                                                                     |
+| Accounts, friends, and synced groups  | Sign in with email, passkeys, optional OIDC/OAuth, or an anonymous account with no email or social login. Profile avatars, 1-on-1 friend ledgers, password set/change, email change, last-used sign-in badge, and groups that follow you across devices—with every action attributable to an account. | ✅           | ❌                                                                     |
+| Passkeys and account security         | Passwordless sign-in for every account type (including guests), backup sign-in choice at signup, per-instance `ENABLE_PASSKEY_AUTH` kill switch, invite-only `SIGNUP_MODE` for private instances.                                                                                                     | ✅           | ❌                                                                     |
+| Import and export                     | Import Splitwise CSV, bank-statement CSVs (mapping wizard, duplicate detection), Cospend projects, original Spliit, and Spliit Cloud bundles; export CSV, printable PDF reports, and full group or account ZIP archives including documents. Upstream added notes/history to JSON export in `1.21.0`. | ✅           | ❓ (group JSON export only; Splitwise #483 / Tricount #526 still open) |
+| Reliable currency handling            | Multi-currency expenses with server-side conversion, a conversion widget, exact group-currency amount override (fees included, implied rate shown), and cryptocurrency support. Upstream fixed the Frankfurter endpoint and minor-units bugs and added settle-in-other-currency in `1.20–1.23`.       | ✅           | ❓ (fixed basics, no server conversion widget or crypto)               |
+| Multiple payers and itemized expenses | Track several payers, line items, tax, tip, proportional-to-items remainder splits, and precise per-person shares in one expense.                                                                                                                                                                     | ✅           | ❌                                                                     |
+| Durable recurring expenses            | Create real recurrence series with intervals, date/count/indefinite endings, catch-up, retries, history, previews, navigation, and explicit stop/edit/delete controls—not read-time side effects. Upstream recurrence got E2E and date fixes but no durable series.                                   | ✅           | ❓ (basic recurrence only)                                             |
+| Activity, comments, and discovery     | Per-expense change history and comments, For-you/All involving timeline, manual date entry, archived-group search, plus preview, filtering, sorting, and search across groups—without opening the edit form.                                                                                          | ✅           | ❓                                                                     |
+| Sharing and group identity            | Multi-use 15-minute Nearby QR invites with Scan-to-join, group emoji and colors, public view-only links, and member management. Upstream rebased QR sharing in `1.22.0`.                                                                                                                              | ✅           | ❓ (QR sharing only)                                                   |
+| Outbound webhooks                     | Subscribe any HTTPS endpoint to signed `expense.created/updated/deleted` events with retries, delivery history, redelivery, involved-only filtering, and per-endpoint secrets.                                                                                                                        | ✅           | ❌                                                                     |
+| Email and push notifications          | Deliver group and expense updates through email or push, with per-user preferences for which categories and channels are enabled. SSO-only instances (`ENABLE_EMAIL_AUTH=false`) run without SMTP.                                                                                                    | ✅           | ❌                                                                     |
+| Stats, charts, and budgets            | Per-group spending charts, monthly category visuals, cross-group roll-up, plus weekly, monthly, yearly, or custom budgets by category and participant, with over-budget notifications. Upstream added global balance, expanded stats, drill-downs, and monthly visuals v1 in `1.23–1.25`.             | ✅           | ❓ (stats without budgets)                                             |
+| Balances, settlements, and subgroups  | Switch between balance views, settle faster, combine compatible payments, or settle as subgroup units such as couples. Upstream added by-amount remainder display and even-split previews in `1.25–1.26`.                                                                                             | ✅           | ❓ (basic balances only)                                               |
+| Full localization                     | Supported languages have complete and a maintained i18n validation workflow, with sparse overlays and fallback chains (e.g. en-GB, pt-BR). Upstream uses Weblate with steady translation activity.                                                                                                    | ✅           | ❓ (Weblate, no audited-complete workflow)                             |
+| OpenAPI, Scalar, MCP, and OAuth       | Explore the published API interactively, consume the OpenAPI spec, create expenses from ChatGPT and Claude through the optional MCP assistant, or connect scripts and agents via delegated OAuth 2.1 with per-resource scopes and connected-app controls.                                             | ✅           | ❌                                                                     |
+| Versioned releases and images         | Every release publishes immutable `:vX.Y.Z` GHCR images for all services with `:latest` tracking the newest stable release; `SPLIIT_TAG` pins upgrades and the public instance deploys per release. Upstream ships standalone/runtime images with feature flags.                                      | ✅           | ❓ (images, no versioned release train)                                |
+| Group archive & delete                | Archive groups to make them view-only, or permanently delete them when no longer needed.                                                                                                                                                                                                              | ✅           | ❌                                                                     |
+| AI-assisted expense workflows         | Categorize from the title via local dictionary, group history, then one AI engine (LLM or System One Jev with `AI_CATEGORY_ENGINE`), uncertain guesses as one-tap chips, per-user opt-out; scan receipts and describe expenses by voice; extracted details stay up for review before saving.          | ✅           | ❓ (configurable OpenAI endpoint/models since `1.23.0`)                |
+| Expense amount calculator             | A calculator widget in the expense amount field for quick arithmetic while entering expenses.                                                                                                                                                                                                         | ✅           | ❌                                                                     |
+| Responsive mobile experience          | Mobile-specific layouts and interaction patterns improve the experience beyond simply narrowing the desktop UI. Upstream added mobile tab icons in `1.23.0`.                                                                                                                                          | ✅           | ❓ (mostly a narrow desktop app)                                       |
+| Active maintenance                    | New features, fixes, and self-hosting improvements continue to move forward — see [releases](./releases/README.md). Upstream is active again too (`1.20–1.26` in Aug–Sep 2026 with stats, PWA, security, and perf work).                                                                              | ✅           | ✅                                                                     |
 
 ## Roadmap
 
-The [detailed roadmap](./ROADMAP.md) is the source of truth. Current work focuses on privacy/trust features (end-to-end encryption and offline support), expanded integrations, and self-hosting polish.
+The [detailed roadmap](./ROADMAP.md) is the source of truth. Recent work shipped imports (bank CSV, Cospend), delegated OAuth for agents, Nearby QR invites, outbound webhooks, group emoji/colors, passkeys, and System One categorization. Next up are privacy/trust features (end-to-end encryption and offline support), expanded integrations, and self-hosting polish.
 
 ## Known limitations
 
@@ -210,6 +220,11 @@ docker compose \
 
 Developers can build the same stack from source with
 `-f compose.yaml -f compose.build.yaml`.
+
+Images are published to GHCR as immutable `:vX.Y.Z` tags for every release,
+with `:latest` tracking the newest stable release (never a `main` snapshot).
+Pin `SPLIIT_TAG=vX.Y.Z` in `container.env` for controlled upgrades, or follow
+stable with `SPLIIT_TAG=latest`.
 
 See [docs/deployment.md](./docs/deployment.md) for configuration, reverse-proxy,
 upgrade, backup, and optional-feature guidance. For a private instance, set
@@ -347,11 +362,13 @@ Supported providers are `openai` (Responses API), `anthropic` (Messages API), `o
 ## API access
 
 Scripts and agents authenticate with OAuth 2.1 rather than a browser session.
-Scopes are granted per resource and verb, and the two delete scopes are never
+Scopes are granted per resource and verb (`spliit:groups:read`, `spliit:expenses:read`, and friends), and the two delete scopes are never
 part of the default grant, so an agent cannot remove a group or an expense
 unless you asked for it. Edits that destroy data, such as shortening a recurring
 series, need the delete scope too. Connected apps can be reviewed and
-disconnected from account settings.
+disconnected from account settings. Discovery works from just the API or web
+origin (`/.well-known/api-catalog`, `/agent-card.json`, `/auth.md`), with a manual
+copy-back page (`/oauth/manual-callback`) for CLIs that cannot receive a redirect.
 
 See [docs/api-access.md](./docs/api-access.md) for registering a client,
 obtaining a token, and the full scope list. The interactive reference lives at
@@ -365,6 +382,8 @@ Import:
 
 - original Spliit (`spliit.app` and self-hosted) group exports, including documents
 - Splitwise CSV
+- bank-statement CSVs via a mapping wizard with duplicate detection
+- Cospend project exports
 - Spliit Cloud group, account, and friend-ledger bundles
 
 Export:
@@ -406,7 +425,9 @@ No. Spliit Cloud is an independent community fork of Spliit. The original Spliit
 
 ### Why not just contribute to the original project?
 
-That was the original intention. After submitting fixes and reviewing existing issues and pull requests, the original project appeared to have slowed down. This fork allows development to continue while keeping the work open-source and properly attributed.
+That was the original intention. After submitting fixes and reviewing existing issues and pull requests at the time, the original project appeared to have slowed down, so this fork kept the work moving with account-bound groups and a different stack.
+
+Upstream has since become active again (`1.20–1.26`). Merging back is no longer practical: hundreds of people depend on `spliit.cloud`, the data model (account-bound groups vs URL-identified local groups) and the stack (Vite + Hono + tRPC vs Next.js) have diverged, and a migration would break existing groups. Instead this fork ports useful upstream work with credit and keeps the comparison table honest about where upstream has caught up.
 
 ### Is Spliit Cloud free?
 
@@ -418,7 +439,7 @@ Yes. Self-hosting is supported. See the local and container setup instructions b
 
 ### Can I migrate from original Spliit?
 
-Yes. Import of `spliit.app` group exports is supported today; see [docs/migration.md](./docs/migration.md) for the step-by-step. Self-hosted Spliit instances can be migrated by exporting each group and importing it into Spliit Cloud. Splitwise CSV and Spliit Cloud bundles (groups, accounts, and friend ledgers) can be imported the same way.
+Yes. Import of `spliit.app` group exports is supported today; see [docs/migration.md](./docs/migration.md) for the step-by-step. Self-hosted Spliit instances can be migrated by exporting each group and importing it into Spliit Cloud. Splitwise CSV, bank-statement CSVs, Cospend projects, and Spliit Cloud bundles (groups, accounts, and friend ledgers) can be imported the same way.
 
 You can also export Spliit Cloud data as CSV, printable PDF reports, and ZIP bundles that include documents.
 
@@ -426,7 +447,7 @@ You can also export Spliit Cloud data as CSV, printable PDF reports, and ZIP bun
 
 No. Groups in Spliit Cloud are always bound to an account so membership, edits, and responsibility stay clear, but that account does not have to be tied to email or a social provider.
 
-You can create an **anonymous account**: no email address, no Google/GitHub/OIDC. You keep a recovery link instead. The group still sees a real member with authorization, so actions are attributable instead of living behind a shared URL that anyone can edit.
+You can create an **anonymous account in a few clicks**: no email address, no Google/GitHub/OIDC — just a display name. You keep a recovery link and can add a passkey instead or alongside it, so the account works across devices and survives a lost browser. The group still sees a real member with authorization, so actions are attributable instead of living behind a shared URL that anyone can edit.
 
 That is different from original Spliit's local-only groups, which lived entirely in the browser and were identified by a URL or group ID. In practice that led to:
 
