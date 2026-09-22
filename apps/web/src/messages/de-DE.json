@@ -2647,7 +2647,12 @@
       "backedUp": "Gesichert",
       "removeWarning": "Das kann nicht rückgängig gemacht werden. Das Gerät meldet dich dann nicht mehr per Passkey an — du kannst es jederzeit erneut registrieren.",
       "removeLastWarning": "Das ist dein letzter Passkey. Wenn es deine einzige Anmeldemethode ist, ist das Entfernen blockiert, bis du einen Anmeldelink gespeichert oder eine weitere Anmeldemethode hinzugefügt hast.",
-      "anonymousHelpNoLink": "Für dieses Gastkonto ist kein Anmeldelink gespeichert. Erstelle einen in der Anmeldelink-Zeile unten — er funktioniert auf jedem Gerät."
+      "anonymousHelpNoLink": "Für dieses Gastkonto ist kein Anmeldelink gespeichert. Erstelle einen in der Anmeldelink-Zeile unten — er funktioniert auf jedem Gerät.",
+      "reauthTitle": "Melde dich erneut an, um einen Passkey hinzuzufügen",
+      "reauthDescription": "Zu deiner Sicherheit erfordert das Hinzufügen eines Passkeys eine aktuelle Anmeldung. Du wirst abgemeldet, meldest dich erneut an und landest direkt wieder hier, um den Vorgang abzuschließen.",
+      "reauthConfirm": "Melde dich erneut an",
+      "reauthAnonymousTitle": "Speichere zuerst einen Anmeldelink",
+      "reauthAnonymousDescription": "Dieses Gastkonto hat noch keinen Anmeldelink und noch keinen Passkey. Wenn du dich jetzt abmeldest, verlierst du den Zugang für immer — speichere zuerst einen Anmeldelink im Bereich Anmeldelink und komm dann zurück, um einen Passkey hinzuzufügen."
     }
   },
   "Activities": {

@@ -2608,7 +2608,12 @@
       "backedUp": "已備份",
       "removeWarning": "此操作無法復原。此裝置將無法再使用通行密鑰登入，您可以隨時重新註冊。",
       "removeLastWarning": "這是最後一個通行密鑰。如果它是唯一的登入方式，在儲存登入連結或新增其他登入方式之前無法移除。",
-      "anonymousHelpNoLink": "此匿名帳戶未儲存登入連結。請在下方登入連結列建立一個，在任何裝置上都能使用。"
+      "anonymousHelpNoLink": "此匿名帳戶未儲存登入連結。請在下方登入連結列建立一個，在任何裝置上都能使用。",
+      "reauthTitle": "重新登入以新增通行密鑰",
+      "reauthDescription": "為了您的安全，新增通行密鑰需要重新登入。系統會先將您登出，您重新登入後將直接返回此處完成操作。",
+      "reauthConfirm": "重新登入",
+      "reauthAnonymousTitle": "先儲存恢復鏈接",
+      "reauthAnonymousDescription": "此匿名帳戶尚無恢復鏈接，也沒有通行密鑰。若現在登出，將永遠無法再存取 — 請先在恢復鏈接區段儲存恢復鏈接，然後再回來新增通行密鑰。"
     }
   },
   "Activities": {

@@ -2625,7 +2625,12 @@
       "backedUp": "Com cópia de segurança",
       "removeWarning": "Isto não pode ser anulado. O dispositivo deixará de iniciar sessão com uma chave de acesso — pode registá-lo novamente em qualquer altura.",
       "removeLastWarning": "Esta é a sua última chave de acesso. Se for o seu único método de início de sessão, a remoção fica bloqueada até guardar uma ligação de recuperação ou outro método de início de sessão.",
-      "anonymousHelpNoLink": "Não há nenhuma ligação de início de sessão guardada para esta conta de convidado. Crie uma na linha da ligação de início de sessão abaixo — funciona em qualquer dispositivo."
+      "anonymousHelpNoLink": "Não há nenhuma ligação de início de sessão guardada para esta conta de convidado. Crie uma na linha da ligação de início de sessão abaixo — funciona em qualquer dispositivo.",
+      "reauthTitle": "Iniciar sessão novamente para adicionar uma chave de acesso",
+      "reauthDescription": "Para a tua segurança, adicionar uma chave de acesso requer um início de sessão recente. A sessão será terminada, voltarás a iniciar sessão e regressarás aqui para concluir.",
+      "reauthConfirm": "Iniciar sessão novamente",
+      "reauthAnonymousTitle": "Guarda primeiro uma ligação de início de sessão",
+      "reauthAnonymousDescription": "Esta conta de convidado ainda não tem ligação de início de sessão nem chave de acesso. Se terminares a sessão agora, perderás o acesso para sempre — guarda primeiro uma ligação de início de sessão na secção Ligação de início de sessão e depois volta para adicionar uma chave de acesso."
     }
   },
   "Activities": {

@@ -2608,7 +2608,12 @@
       "backedUp": "已备份",
       "removeWarning": "此操作无法撤销。此设备将无法再使用通行密钥登录，您可以随时重新注册。",
       "removeLastWarning": "这是最后一个通行密钥。如果它是唯一的登录方式，在保存登录链接或添加其他登录方式之前无法移除。",
-      "anonymousHelpNoLink": "此匿名帐户未保存登录链接。请在下方的登录链接行中创建一个，在任何设备上都能使用。"
+      "anonymousHelpNoLink": "此匿名帐户未保存登录链接。请在下方的登录链接行中创建一个，在任何设备上都能使用。",
+      "reauthTitle": "重新登录以添加通行密钥",
+      "reauthDescription": "出于安全考虑，添加通行密钥需要重新登录。系统会先将您退出登录，您重新登录后将直接返回此处完成操作。",
+      "reauthConfirm": "重新登录",
+      "reauthAnonymousTitle": "先保存登录链接",
+      "reauthAnonymousDescription": "此匿名帐户还没有登录链接，也没有通行密钥。现在退出登录将永远无法找回 — 请先在登录链接部分保存登录链接，然后再回来添加通行密钥。"
     }
   },
   "Activities": {

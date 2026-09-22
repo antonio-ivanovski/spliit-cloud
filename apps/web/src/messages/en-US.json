@@ -1194,7 +1194,12 @@
       "backedUp": "Backed up",
       "removeWarning": "This cannot be undone. The device will no longer sign you in with a passkey — register it again at any time.",
       "removeLastWarning": "This is your last passkey. If it is your only sign-in method, removal is blocked until you save a recovery link or another sign-in method.",
-      "anonymousHelpNoLink": "No sign in link is saved for this guest account. Create one in the sign in link row below — it works on any device."
+      "anonymousHelpNoLink": "No sign in link is saved for this guest account. Create one in the sign in link row below — it works on any device.",
+      "reauthTitle": "Sign in again to add a passkey",
+      "reauthDescription": "For your security, adding a passkey needs a fresh sign-in. You will sign out, sign back in, and land right back here to finish.",
+      "reauthConfirm": "Sign in again",
+      "reauthAnonymousTitle": "Save a sign-in link first",
+      "reauthAnonymousDescription": "This guest account has no sign-in link and no passkey yet. Signing out now would lock you out for good — save a sign-in link in the Sign in link section first, then come back to add a passkey."
     }
   },
   "AccountAuthorizedClients": {

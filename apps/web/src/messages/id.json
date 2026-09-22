@@ -2606,7 +2606,12 @@
       "backedUp": "Dicadangkan",
       "removeWarning": "Tindakan ini tidak dapat dibatalkan. Perangkat tidak akan lagi memasukkan Anda dengan passkey — daftarkan lagi kapan saja.",
       "removeLastWarning": "Ini passkey terakhir Anda. Jika ini satu-satunya metode masuk Anda, penghapusan diblokir hingga Anda menyimpan tautan pemulihan atau metode masuk lain.",
-      "anonymousHelpNoLink": "Tidak ada tautan masuk yang tersimpan untuk akun anonim ini. Buatlah di baris tautan masuk di bawah — tautan ini berfungsi di perangkat apa pun."
+      "anonymousHelpNoLink": "Tidak ada tautan masuk yang tersimpan untuk akun anonim ini. Buatlah di baris tautan masuk di bawah — tautan ini berfungsi di perangkat apa pun.",
+      "reauthTitle": "Masuk kembali untuk menambahkan passkey",
+      "reauthDescription": "Demi keamanan Anda, penambahan passkey memerlukan sesi masuk yang baru. Anda akan keluar, masuk kembali, dan langsung kembali ke sini untuk menyelesaikan.",
+      "reauthConfirm": "Masuk kembali",
+      "reauthAnonymousTitle": "Simpan tautan masuk terlebih dahulu",
+      "reauthAnonymousDescription": "Akun anonim ini belum memiliki tautan masuk maupun passkey. Keluar sekarang akan mengunci Anda selamanya — simpan tautan masuk di bagian Tautan masuk terlebih dahulu, lalu kembali untuk menambahkan passkey."
     }
   },
   "Activities": {

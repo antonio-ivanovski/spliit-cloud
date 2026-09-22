@@ -6,6 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import '../../test/mocks'
 import { prismaMock, sendEmailMock } from '../../test/state'
 import { clearAccountCache, getCachedAccount } from './account-cache'
+import { SESSION_FRESH_AGE_SECONDS } from './session-policy'
 
 // `vi.importActual` returns the real (un-mocked) module so we can inspect the
 // better-auth options we configured in `lib/auth/index.ts`. The existing
@@ -182,6 +183,13 @@ describe('better-auth session config', () => {
       60 * 60 * 24 * 180,
     )
     expect(realAuthModule.auth.options.session?.updateAge).toBe(60 * 60 * 24)
+  })
+
+  it('keeps a 30-day freshness window for passkey enrollment', () => {
+    expect(realAuthModule.auth.options.session?.freshAge).toBe(
+      SESSION_FRESH_AGE_SECONDS,
+    )
+    expect(SESSION_FRESH_AGE_SECONDS).toBe(30 * 24 * 60 * 60)
   })
 
   it('keeps the standalone JWT token endpoint disabled in OAuth Provider mode', () => {

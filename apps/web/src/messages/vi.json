@@ -1189,7 +1189,12 @@
       "backedUp": "Đã sao lưu",
       "removeWarning": "Không thể hoàn tác hành động này. Thiết bị sẽ không còn đăng nhập cho bạn bằng passkey nữa — bạn có thể đăng ký lại bất cứ lúc nào.",
       "removeLastWarning": "Đây là passkey cuối cùng của bạn. Nếu đây là phương thức đăng nhập duy nhất, việc xóa sẽ bị chặn cho đến khi bạn lưu liên kết khôi phục hoặc một phương thức đăng nhập khác.",
-      "anonymousHelpNoLink": "Không có liên kết đăng nhập nào được lưu cho tài khoản ẩn danh này. Hãy tạo một liên kết ở hàng liên kết đăng nhập bên dưới — liên kết này hoạt động trên mọi thiết bị."
+      "anonymousHelpNoLink": "Không có liên kết đăng nhập nào được lưu cho tài khoản ẩn danh này. Hãy tạo một liên kết ở hàng liên kết đăng nhập bên dưới — liên kết này hoạt động trên mọi thiết bị.",
+      "reauthTitle": "Đăng nhập lại để thêm passkey",
+      "reauthDescription": "Vì sự an toàn của bạn, việc thêm passkey cần một lần đăng nhập mới. Bạn sẽ đăng xuất, đăng nhập lại rồi quay lại ngay đây để hoàn tất.",
+      "reauthConfirm": "Đăng nhập lại",
+      "reauthAnonymousTitle": "Lưu liên kết đăng nhập trước",
+      "reauthAnonymousDescription": "Tài khoản khách này chưa có liên kết đăng nhập và chưa có passkey. Đăng xuất ngay bây giờ sẽ khóa bạn vĩnh viễn — hãy lưu liên kết đăng nhập trong mục Liên kết đăng nhập trước, rồi quay lại để thêm passkey."
     }
   },
   "CompleteProfile": {

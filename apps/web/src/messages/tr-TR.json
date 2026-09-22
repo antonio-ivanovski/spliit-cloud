@@ -2615,7 +2615,12 @@
       "backedUp": "Yedeklendi",
       "removeWarning": "Bu işlem geri alınamaz. Bu cihaz artık geçiş anahtarıyla oturum açamayacak — istediğiniz zaman yeniden kaydedebilirsiniz.",
       "removeLastWarning": "Bu, son geçiş anahtarınız. Tek oturum açma yönteminiz buysa, bir kurtarma bağlantısı kaydedene veya başka bir oturum açma yöntemi ekleyene kadar kaldırma engellenir.",
-      "anonymousHelpNoLink": "Bu anonim hesap için kayıtlı oturum açma bağlantısı yok. Aşağıdaki oturum açma bağlantısı satırında bir tane oluşturun — her cihazda çalışır."
+      "anonymousHelpNoLink": "Bu anonim hesap için kayıtlı oturum açma bağlantısı yok. Aşağıdaki oturum açma bağlantısı satırında bir tane oluşturun — her cihazda çalışır.",
+      "reauthTitle": "Geçiş anahtarı eklemek için yeniden oturum aç",
+      "reauthDescription": "Güvenliğiniz için geçiş anahtarı eklemek yeni bir oturum gerektirir. Oturumunuz kapatılacak, yeniden oturum açacak ve işlemi tamamlamak için doğrudan buraya döneceksiniz.",
+      "reauthConfirm": "Yeniden oturum aç",
+      "reauthAnonymousTitle": "Önce oturum açma bağlantısı kaydedin",
+      "reauthAnonymousDescription": "Bu misafir hesapta henüz oturum açma bağlantısı ve geçiş anahtarı yok. Şimdi oturum kapatırsanız kalıcı olarak kilitlenirsiniz — önce Oturum açma bağlantısı bölümüne bir oturum açma bağlantısı kaydedin, ardından geçiş anahtarı eklemek için geri dönün."
     }
   },
   "Activities": {

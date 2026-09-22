@@ -2615,7 +2615,12 @@
       "backedUp": "Varmuuskopioitu",
       "removeWarning": "Tätä ei voi kumota. Laite ei enää kirjaa sinua sisään pääsyavaimella — voit rekisteröidä sen uudelleen milloin tahansa.",
       "removeLastWarning": "Tämä on viimeinen pääsyavaimesi. Jos se on ainoa kirjautumistapasi, poistaminen on estetty, kunnes olet tallentanut kirjautumislinkin tai lisännyt toisen kirjautumistavan.",
-      "anonymousHelpNoLink": "Tälle vierastilille ei ole tallennettu kirjautumislinkkiä. Luo sellainen alla olevalla kirjautumislinkkirivillä — se toimii millä tahansa laitteella."
+      "anonymousHelpNoLink": "Tälle vierastilille ei ole tallennettu kirjautumislinkkiä. Luo sellainen alla olevalla kirjautumislinkkirivillä — se toimii millä tahansa laitteella.",
+      "reauthTitle": "Kirjaudu uudelleen sisään lisätäksesi pääsyavaimen",
+      "reauthDescription": "Turvallisuutesi vuoksi pääsyavaimen lisääminen vaatii tuoreen kirjautumisen. Sinut kirjataan ulos, kirjaudut uudelleen sisään ja palaat takaisin tänne viimeistelläksesi.",
+      "reauthConfirm": "Kirjaudu uudelleen sisään",
+      "reauthAnonymousTitle": "Tallenna kirjautumislinkki ensin",
+      "reauthAnonymousDescription": "Tällä vierastilillä ei ole vielä kirjautumislinkkiä eikä pääsyavainta. Jos kirjaudut ulos nyt, menetät käyttöoikeuden lopullisesti — tallenna ensin kirjautumislinkki Kirjautumislinkki-osiossa ja palaa sitten lisäämään pääsyavain."
     }
   },
   "Activities": {

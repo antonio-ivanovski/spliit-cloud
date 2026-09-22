@@ -2635,7 +2635,12 @@
       "backedUp": "Zálohovaný",
       "removeWarning": "Toto nelze vzít zpět. Zařízení vás už pomocí přístupového klíče nepřihlásí — kdykoli ho můžete zaregistrovat znovu.",
       "removeLastWarning": "Toto je váš poslední přístupový klíč. Pokud je to vaše jediná metoda přihlášení, odebrání je zablokováno, dokud si neuložíte přihlašovací odkaz nebo jinou metodu přihlášení.",
-      "anonymousHelpNoLink": "Pro tento anonymní účet není uložen žádný přihlašovací odkaz. Vytvořte si ho v řádku s přihlašovacím odkazem níže — funguje na jakémkoli zařízení."
+      "anonymousHelpNoLink": "Pro tento anonymní účet není uložen žádný přihlašovací odkaz. Vytvořte si ho v řádku s přihlašovacím odkazem níže — funguje na jakémkoli zařízení.",
+      "reauthTitle": "Přihlaste se znovu pro přidání přístupového klíče",
+      "reauthDescription": "Z bezpečnostních důvodů vyžaduje přidání přístupového klíče čerstvé přihlášení. Budete odhlášeni, znovu se přihlásíte a vrátíte se přímo sem k dokončení.",
+      "reauthConfirm": "Přihlásit se znovu",
+      "reauthAnonymousTitle": "Nejprve si uložte odkaz pro obnovení",
+      "reauthAnonymousDescription": "Tento anonymní účet zatím nemá odkaz pro obnovení ani přístupový klíč. Pokud se nyní odhlásíte, natrvalo ztratíte přístup — nejprve si uložte odkaz pro obnovení v části Odkaz pro obnovení a pak se vraťte pro přidání přístupového klíče."
     }
   },
   "Activities": {

@@ -2625,7 +2625,12 @@
       "backedUp": "Amb còpia de seguretat",
       "removeWarning": "Això no es pot desfer. El dispositiu deixarà d'iniciar sessió amb una clau d'accés — torna'l a registrar en qualsevol moment.",
       "removeLastWarning": "Aquesta és la teva última clau d'accés. Si és el teu únic mètode d'inici de sessió, l'eliminació quedarà bloquejada fins que desis un enllaç de recuperació o un altre mètode d'inici de sessió.",
-      "anonymousHelpNoLink": "No hi ha cap enllaç d'inici de sessió desat per a aquest compte de convidat. Crea'n un a la fila de l'enllaç d'inici de sessió de sota — funciona en qualsevol dispositiu."
+      "anonymousHelpNoLink": "No hi ha cap enllaç d'inici de sessió desat per a aquest compte de convidat. Crea'n un a la fila de l'enllaç d'inici de sessió de sota — funciona en qualsevol dispositiu.",
+      "reauthTitle": "Torna a iniciar sessió per afegir una clau d'accés",
+      "reauthDescription": "Per la teva seguretat, afegir una clau d'accés necessita una sessió recent. La sessió es tancarà, tornaràs a iniciar sessió i tornaràs aquí mateix per acabar.",
+      "reauthConfirm": "Torna a iniciar sessió",
+      "reauthAnonymousTitle": "Desa primer un enllaç d'inici de sessió",
+      "reauthAnonymousDescription": "Aquest compte de convidat encara no té cap enllaç d'inici de sessió ni cap clau d'accés. Si tanques la sessió ara, perdràs l'accés per sempre — desa un enllaç d'inici de sessió a la secció Enllaç d'inici de sessió primer i després torna per afegir una clau d'accés."
     }
   },
   "Activities": {

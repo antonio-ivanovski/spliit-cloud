@@ -18,13 +18,16 @@ import {
 } from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
 import { getAnonymousRecoveryStatus } from '@/lib/anonymous-recovery'
+import { useDeploymentConfig } from '@/lib/deployment-config'
 import {
   addPasskey,
+  getPasskeySessionFreshness,
   isPasskeySupported,
   listPasskeys,
   notifyPasskeyChanged,
   PasskeyError,
   removePasskey,
+  signOutAndReturnToSignIn,
   type PasskeyInfo,
 } from '@/lib/passkey'
 
@@ -49,6 +52,7 @@ export function AccountPasskeySettings({
   })
   const { toast } = useToast()
   const queryClient = useQueryClient()
+  const deploymentConfig = useDeploymentConfig()
 
   const supported = isPasskeySupported()
   const passkeysQuery = useQuery({
@@ -71,6 +75,9 @@ export function AccountPasskeySettings({
   const [dialogError, setDialogError] = useState<string | null>(null)
   const [removeTarget, setRemoveTarget] = useState<PasskeyInfo | null>(null)
   const [removeError, setRemoveError] = useState<string | null>(null)
+  const [checkingFreshness, setCheckingFreshness] = useState(false)
+  const [reauthOpen, setReauthOpen] = useState(false)
+  const [reauthPending, setReauthPending] = useState(false)
 
   function errorMessage(code: string) {
     const key =
@@ -89,6 +96,62 @@ export function AccountPasskeySettings({
     setDialogError(null)
     setAddOpen(true)
   }
+
+  /**
+   * Proactive freshness gate: sessions older than the server's freshness window
+   * fail passkey enrollment with SESSION_NOT_FRESH, so offer the re-auth
+   * roundtrip before the WebAuthn ceremony instead of failing it midway. The
+   * probe never throws — on any failure the attempt proceeds and the server
+   * verdict (mapped in `saveMutation`) decides.
+   */
+  async function handleAddClick() {
+    if (checkingFreshness) return
+    setCheckingFreshness(true)
+    try {
+      const fresh = await getPasskeySessionFreshness(
+        deploymentConfig.passkeyFreshAgeSeconds,
+      )
+      if (fresh) {
+        openAddDialog()
+      } else {
+        setReauthOpen(true)
+      }
+    } finally {
+      setCheckingFreshness(false)
+    }
+  }
+
+  async function handleReauthConfirm() {
+    if (reauthPending) return
+    setReauthPending(true)
+    try {
+      await signOutAndReturnToSignIn()
+    } catch (err) {
+      setReauthPending(false)
+      if (
+        err instanceof PasskeyError &&
+        err.code === 'PASSKEY_REAUTH_NAVIGATE_FAILED'
+      ) {
+        // The session is already dead at this point: retrying sign-out is
+        // meaningless, so close and let the next account refetch bounce
+        // through RequireAuth to sign-in.
+        setReauthOpen(false)
+      }
+      toast({
+        description: t('passkey.errors.generic'),
+        variant: 'destructive',
+      })
+    }
+  }
+
+  // Signing out an anonymous account with no other way back in (no sign-in
+  // link, no passkey yet) would lock it out for good — those guests must
+  // save a sign-in link first instead of re-authenticating. Unknown recovery
+  // status fails safe toward the warning.
+  const reauthUnsafe =
+    isAnonymous === true &&
+    passkeys.length === 0 &&
+    recoveryStatusQuery.data?.hasRecoveryKey !== true
 
   async function afterChange() {
     await queryClient.invalidateQueries({
@@ -109,6 +172,13 @@ export function AccountPasskeySettings({
     },
     onError: (err: unknown) => {
       const code = err instanceof PasskeyError ? err.code : 'PASSKEY_ADD_FAILED'
+      // Backstop for the proactive check (clock skew, or the session aging
+      // past the window mid-ceremony): route to the same re-auth modal.
+      if (code === 'PASSKEY_SESSION_STALE') {
+        setAddOpen(false)
+        setReauthOpen(true)
+        return
+      }
       setDialogError(code)
     },
   })
@@ -163,8 +233,10 @@ export function AccountPasskeySettings({
               variant="ghost"
               size="sm"
               className="shrink-0"
-              disabled={!supported || passkeysQuery.isPending}
-              onClick={openAddDialog}
+              disabled={
+                !supported || passkeysQuery.isPending || checkingFreshness
+              }
+              onClick={() => void handleAddClick()}
             >
               <Plus className="me-2 h-4 w-4" aria-hidden="true" />
               {t('passkey.add')}
@@ -289,6 +361,50 @@ export function AccountPasskeySettings({
               </Button>
             </ResponsiveDialogFooter>
           </form>
+        </ResponsiveDialogContent>
+      </ResponsiveDialog>
+
+      <ResponsiveDialog
+        open={reauthOpen}
+        onOpenChange={(next) => {
+          if (!next && !reauthPending) setReauthOpen(false)
+        }}
+      >
+        <ResponsiveDialogContent className="max-w-lg">
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle>
+              {reauthUnsafe
+                ? t('passkey.reauthAnonymousTitle')
+                : t('passkey.reauthTitle')}
+            </ResponsiveDialogTitle>
+            <ResponsiveDialogDescription>
+              {reauthUnsafe
+                ? t('passkey.reauthAnonymousDescription')
+                : t('passkey.reauthDescription')}
+            </ResponsiveDialogDescription>
+          </ResponsiveDialogHeader>
+          <ResponsiveDialogFooter className="gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setReauthOpen(false)}
+              disabled={reauthPending}
+            >
+              {t('passkey.cancel')}
+            </Button>
+            {reauthUnsafe ? null : (
+              <Button
+                type="button"
+                disabled={reauthPending}
+                onClick={() => void handleReauthConfirm()}
+              >
+                {reauthPending ? (
+                  <Loader2 className="me-2 h-4 w-4 animate-spin" />
+                ) : null}
+                {t('passkey.reauthConfirm')}
+              </Button>
+            )}
+          </ResponsiveDialogFooter>
         </ResponsiveDialogContent>
       </ResponsiveDialog>
 

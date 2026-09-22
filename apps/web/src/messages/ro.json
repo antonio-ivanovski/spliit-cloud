@@ -2625,7 +2625,12 @@
       "backedUp": "Cu backup",
       "removeWarning": "Această acțiune nu poate fi anulată. Dispozitivul nu te va mai conecta cu o cheie de acces — îl poți înregistra din nou oricând.",
       "removeLastWarning": "Aceasta este ultima ta cheie de acces. Dacă este singura ta metodă de conectare, eliminarea este blocată până salvezi un link de recuperare sau o altă metodă de conectare.",
-      "anonymousHelpNoLink": "Niciun link de conectare nu este salvat pentru acest cont de invitat. Creează unul în rândul linkului de conectare de mai jos — funcționează pe orice dispozitiv."
+      "anonymousHelpNoLink": "Niciun link de conectare nu este salvat pentru acest cont de invitat. Creează unul în rândul linkului de conectare de mai jos — funcționează pe orice dispozitiv.",
+      "reauthTitle": "Autentifică-te din nou pentru a adăuga o cheie de acces",
+      "reauthDescription": "Pentru siguranța ta, adăugarea unei chei de acces necesită o autentificare recentă. Vei fi deconectat, te vei autentifica din nou și vei reveni chiar aici pentru a finaliza.",
+      "reauthConfirm": "Autentifică-te din nou",
+      "reauthAnonymousTitle": "Salvează mai întâi un link de conectare",
+      "reauthAnonymousDescription": "Acest cont de invitat nu are încă un link de conectare și nicio cheie de acces. Dacă te deconectezi acum, vei pierde accesul definitiv — salvează mai întâi un link de conectare în secțiunea Link de conectare, apoi revino pentru a adăuga o cheie de acces."
     }
   },
   "Activities": {

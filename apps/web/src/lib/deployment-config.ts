@@ -17,6 +17,7 @@ type BaseDeploymentConfig = Pick<
   | 'enableAnonymousAuth'
   | 'enableEmailAuth'
   | 'enablePasskeyAuth'
+  | 'passkeyFreshAgeSeconds'
   | 'maxExpenseDocumentSize'
 >
 
@@ -47,6 +48,10 @@ function getBuildTimeFallback(): DeploymentConfig {
     enableAnonymousAuth: false,
     enableEmailAuth: true,
     enablePasskeyAuth: true,
+    // Must match SESSION_FRESH_AGE_SECONDS on the API. Only used when the
+    // features query has not resolved (offline / test); otherwise the server
+    // value wins.
+    passkeyFreshAgeSeconds: 30 * 24 * 60 * 60,
     emailDeliveryEnabled: null,
     maxExpenseDocumentSize: MAX_EXPENSE_DOCUMENT_SIZE,
   }
@@ -68,6 +73,7 @@ export function useDeploymentConfig(): DeploymentConfig {
       enableAnonymousAuth,
       enableEmailAuth,
       enablePasskeyAuth,
+      passkeyFreshAgeSeconds,
       emailDeliveryEnabled,
       maxExpenseDocumentSize,
     }): DeploymentConfig => ({
@@ -81,6 +87,7 @@ export function useDeploymentConfig(): DeploymentConfig {
       enableAnonymousAuth,
       enableEmailAuth,
       enablePasskeyAuth,
+      passkeyFreshAgeSeconds,
       emailDeliveryEnabled,
       maxExpenseDocumentSize,
     }),

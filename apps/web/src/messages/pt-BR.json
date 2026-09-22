@@ -1327,7 +1327,12 @@
       "removing": "Removendo…",
       "errors": {
         "generic": "Algo deu errado. Tente novamente."
-      }
+      },
+      "reauthTitle": "Entre novamente para adicionar uma chave de acesso",
+      "reauthDescription": "Para sua segurança, adicionar uma chave de acesso exige um login recente. Você sairá da conta, entrará de novo e voltará aqui mesmo para concluir.",
+      "reauthConfirm": "Entrar novamente",
+      "reauthAnonymousTitle": "Salve primeiro um link de login",
+      "reauthAnonymousDescription": "Esta conta de convidado ainda não tem link de login nem chave de acesso. Se você sair agora, perderá o acesso para sempre — salve primeiro um link de login na seção Link de login e depois volte para adicionar uma chave de acesso."
     }
   },
   "Activities": {

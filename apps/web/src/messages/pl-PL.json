@@ -2635,7 +2635,12 @@
       "backedUp": "Z kopią zapasową",
       "removeWarning": "Tej operacji nie można cofnąć. To urządzenie nie będzie już logować Cię kluczem dostępu — możesz je zarejestrować ponownie w dowolnym momencie.",
       "removeLastWarning": "To jest Twój ostatni klucz dostępu. Jeśli to Twoja jedyna metoda logowania, usunięcie jest zablokowane, dopóki nie zapiszesz linku logowania lub innej metody logowania.",
-      "anonymousHelpNoLink": "Do tego anonimowego konta nie zapisano żadnego linku logowania. Utwórz go w wierszu linku logowania poniżej — działa na każdym urządzeniu."
+      "anonymousHelpNoLink": "Do tego anonimowego konta nie zapisano żadnego linku logowania. Utwórz go w wierszu linku logowania poniżej — działa na każdym urządzeniu.",
+      "reauthTitle": "Zaloguj się ponownie, aby dodać klucz dostępu",
+      "reauthDescription": "Ze względów bezpieczeństwa dodanie klucza dostępu wymaga świeżego logowania. Zostaniesz wylogowany, zalogujesz się ponownie i wrócisz tutaj, aby dokończyć.",
+      "reauthConfirm": "Zaloguj się ponownie",
+      "reauthAnonymousTitle": "Najpierw zapisz link odzyskiwania",
+      "reauthAnonymousDescription": "To anonimowe konto nie ma jeszcze linku odzyskiwania ani klucza dostępu. Wylogowanie teraz trwale zablokuje ci dostęp — najpierw zapisz link odzyskiwania w sekcji Link odzyskiwania, a potem wróć, aby dodać klucz dostępu."
     }
   },
   "Activities": {

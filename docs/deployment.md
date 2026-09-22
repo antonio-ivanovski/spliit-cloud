@@ -147,7 +147,8 @@ may remain empty.
   effective domain. Registering a passkey satisfies anonymous onboarding and
   spares the account from the cleanup sweep above. Set
   `ENABLE_PASSKEY_AUTH=false` to hide passkey UI and unmount the passkey
-  endpoints.
+  endpoints. Enrolling a passkey requires a session younger than 30 days;
+  older sessions are asked to sign in again first.
 - Expense documents require
   `PUBLIC_ENABLE_EXPENSE_DOCUMENTS=true` and the required `S3_UPLOAD_*` values.
   Configure the bucket with a lifecycle rule that expires objects under

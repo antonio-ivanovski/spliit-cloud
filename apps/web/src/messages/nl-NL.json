@@ -2647,7 +2647,12 @@
       "backedUp": "Back-up",
       "removeWarning": "Dit kan niet ongedaan worden gemaakt. Het apparaat logt je dan niet meer in met een passkey — je kunt het op elk moment opnieuw registreren.",
       "removeLastWarning": "Dit is je laatste passkey. Als dit je enige inlogmethode is, is verwijderen geblokkeerd totdat je een inloglink opslaat of een andere inlogmethode toevoegt.",
-      "anonymousHelpNoLink": "Er is geen inloglink opgeslagen voor dit gastaccount. Maak er een aan in de inloglinkrij hieronder — hij werkt op elk apparaat."
+      "anonymousHelpNoLink": "Er is geen inloglink opgeslagen voor dit gastaccount. Maak er een aan in de inloglinkrij hieronder — hij werkt op elk apparaat.",
+      "reauthTitle": "Log opnieuw in om een passkey toe te voegen",
+      "reauthDescription": "Voor je veiligheid vereist het toevoegen van een passkey een recente login. Je wordt uitgelogd, logt opnieuw in en komt direct hier terug om af te ronden.",
+      "reauthConfirm": "Opnieuw inloggen",
+      "reauthAnonymousTitle": "Bewaar eerst een inloglink",
+      "reauthAnonymousDescription": "Dit gastaccount heeft nog geen inloglink en nog geen passkey. Als je nu uitlogt, raak je voorgoed buitengesloten — bewaar eerst een inloglink in de sectie Inloglink en kom dan terug om een passkey toe te voegen."
     }
   },
   "Activities": {

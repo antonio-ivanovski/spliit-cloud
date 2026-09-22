@@ -363,7 +363,12 @@
       "backedUp": "Säkerhetskopierad",
       "removeWarning": "Det här kan inte ångras. Enheten loggar inte längre in dig med en passnyckel — registrera den igen när som helst.",
       "removeLastWarning": "Det här är din sista passnyckel. Om det är din enda inloggningsmetod är borttagning blockerad tills du har sparat en inloggningslänk eller lagt till en annan inloggningsmetod.",
-      "anonymousHelpNoLink": "Ingen inloggningslänk är sparad för det här gästkontot. Skapa en på inloggningslänksraden nedan — den fungerar på alla enheter."
+      "anonymousHelpNoLink": "Ingen inloggningslänk är sparad för det här gästkontot. Skapa en på inloggningslänksraden nedan — den fungerar på alla enheter.",
+      "reauthTitle": "Logga in igen för att lägga till en passnyckel",
+      "reauthDescription": "För din säkerhet kräver tillägg av en passnyckel en ny inloggning. Du loggas ut, loggar in igen och hamnar här igen för att slutföra.",
+      "reauthConfirm": "Logga in igen",
+      "reauthAnonymousTitle": "Spara en inloggningslänk först",
+      "reauthAnonymousDescription": "Det här gästkontot har ännu ingen inloggningslänk och ingen passnyckel. Om du loggar ut nu blir du utelåst för alltid — spara först en inloggningslänk i avsnittet Inloggningslänk och kom sedan tillbaka för att lägga till en passnyckel."
     }
   },
   "Activities": {

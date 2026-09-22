@@ -2625,7 +2625,12 @@
       "backedUp": "Sauvegardée",
       "removeWarning": "Cette action est irréversible. L'appareil ne vous connectera plus avec une clé d'accès — vous pourrez l'enregistrer à nouveau à tout moment.",
       "removeLastWarning": "Il s'agit de votre dernière clé d'accès. S'il s'agit de votre seule méthode de connexion, la suppression est bloquée jusqu'à ce que vous enregistriez un lien de récupération ou une autre méthode de connexion.",
-      "anonymousHelpNoLink": "Aucun lien de connexion n'est enregistré pour ce compte invité. Créez-en un dans la ligne du lien de connexion ci-dessous — il fonctionne sur n'importe quel appareil."
+      "anonymousHelpNoLink": "Aucun lien de connexion n'est enregistré pour ce compte invité. Créez-en un dans la ligne du lien de connexion ci-dessous — il fonctionne sur n'importe quel appareil.",
+      "reauthTitle": "Connectez-vous à nouveau pour ajouter une clé d'accès",
+      "reauthDescription": "Pour votre sécurité, l'ajout d'une clé d'accès nécessite une connexion récente. Vous serez déconnecté, puis reconnecté, et reviendrez ici pour terminer.",
+      "reauthConfirm": "Se connecter à nouveau",
+      "reauthAnonymousTitle": "Enregistrez d'abord un lien de connexion",
+      "reauthAnonymousDescription": "Ce compte invité n'a encore ni lien de connexion ni clé d'accès. Vous déconnecter maintenant vous bloquerait définitivement — enregistrez d'abord un lien de connexion dans la section Lien de connexion, puis revenez pour ajouter une clé d'accès."
     }
   },
   "Activities": {

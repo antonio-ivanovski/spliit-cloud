@@ -1,6 +1,9 @@
 import { getTrpcClient } from '@/trpc/client'
 
 import { authClient } from './auth'
+import { replaceBrowserLocation } from './browser-navigation'
+import { clearLastAccount } from './last-account'
+import { safeLocalReturnPath } from './signup-invite'
 
 export type PasskeyInfo = {
   id: string
@@ -70,9 +73,100 @@ export async function addPasskey(name?: string): Promise<PasskeyInfo> {
     trimmed ? { name: trimmed } : undefined,
   )
   if (result.error || !result.data) {
+    // Backstop for the proactive freshness check below (clock skew, or the
+    // session aging past the window between the check and verification):
+    // a stale session fails mid-ceremony with SESSION_NOT_FRESH.
+    if (
+      typeof result.error === 'object' &&
+      result.error !== null &&
+      'code' in result.error &&
+      result.error.code === 'SESSION_NOT_FRESH'
+    ) {
+      const status =
+        'status' in result.error && typeof result.error.status === 'number'
+          ? result.error.status
+          : 403
+      throw new PasskeyError('PASSKEY_SESSION_STALE', status)
+    }
     throw toPasskeyError(result.error, 'PASSKEY_ADD_FAILED')
   }
   return result.data as PasskeyInfo
+}
+
+/**
+ * Mirrors the server's `freshSessionMiddleware` rule (`now - createdAt <
+ * freshAge`) so the settings page can offer a re-auth roundtrip before the
+ * WebAuthn ceremony instead of failing it midway. Unknown, missing, or
+ * unparseable session timestamps count as fresh — the server is the source of
+ * truth and `addPasskey` maps its verdict.
+ */
+export function isSessionFreshForPasskeyRegistration(
+  sessionCreatedAt: string | Date | null | undefined,
+  freshAgeSeconds: number,
+  nowMs: number = Date.now(),
+): boolean {
+  // Fail open: without a usable window (e.g. web newer than the API during
+  // a rolling deploy, so `passkeyFreshAgeSeconds` is undefined) the probe
+  // must not block — the server verdict decides. `0` disables the server
+  // check, so it counts as always fresh here too.
+  if (!Number.isFinite(freshAgeSeconds) || freshAgeSeconds <= 0) return true
+  if (sessionCreatedAt == null) return true
+  const createdAt = new Date(sessionCreatedAt).getTime()
+  if (Number.isNaN(createdAt)) return true
+  return nowMs - createdAt < freshAgeSeconds * 1000
+}
+
+/**
+ * One-shot freshness probe for the "Add a passkey" entry point. Never throws:
+ * any failure (offline, no session payload) resolves fresh so the attempt
+ * proceeds and the server verdict decides.
+ */
+export async function getPasskeySessionFreshness(
+  freshAgeSeconds: number,
+): Promise<boolean> {
+  try {
+    const { data } = await authClient.getSession()
+    return isSessionFreshForPasskeyRegistration(
+      data?.session?.createdAt,
+      freshAgeSeconds,
+    )
+  } catch {
+    return true
+  }
+}
+
+/**
+ * Re-authentication roundtrip for stale sessions: sign the old session out (it
+ * must die, or the sign-in page sees a live session and never shows the form)
+ * and hard-navigate to `/` with the current page preserved as `redirect` — the
+ * same pattern as `RequireAuth`. After sign-in the user lands back and retries
+ * with a fresh session.
+ */
+export async function signOutAndReturnToSignIn(): Promise<void> {
+  const result = await authClient.signOut()
+  if (result?.error) {
+    throw new PasskeyError('PASSKEY_SIGN_OUT_FAILED', 0)
+  }
+  // The last-account snapshot survives reloads: clear it before navigating
+  // or the landing page renders signed-in from cache and ping-pongs through
+  // RequireAuth. In-memory query caches die with the hard navigation below,
+  // so they need no explicit clearing. Push is intentionally kept: this is a
+  // re-auth roundtrip on the same device, not a logout — disconnecting would
+  // orphan the endpoint while the per-account onboarding flag stays set.
+  clearLastAccount()
+  try {
+    const current =
+      typeof window === 'undefined'
+        ? '/'
+        : `${window.location.pathname}${window.location.search}${window.location.hash}`
+    replaceBrowserLocation(
+      `/?redirect=${encodeURIComponent(safeLocalReturnPath(current))}`,
+    )
+  } catch {
+    // The session is already dead at this point: report the navigation, not
+    // the sign-out, so the caller does not claim the sign-out failed.
+    throw new PasskeyError('PASSKEY_REAUTH_NAVIGATE_FAILED', 0)
+  }
 }
 
 /**

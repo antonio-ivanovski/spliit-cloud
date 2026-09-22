@@ -2623,7 +2623,12 @@
       "backedUp": "Babeskopia eginda",
       "removeWarning": "Hau ezin da desegin. Gailu honek ez du jada passkeyarekin saioa hasiko — nahi duzunean erregistra dezakezu berriro.",
       "removeLastWarning": "Hau da zure azken passkeya. Zure saioa hasteko metodo bakarra bada, kentzea blokeatuta egongo da berreskuratzeko esteka bat edo beste saio-hasiera metodo bat gordetzen duzun arte.",
-      "anonymousHelpNoLink": "Ez dago saioa hasteko estekarik gordeta kontu gonbidatu honetarako. Sortu bat beheko saioa hasteko estekaren errenkadan — edozein gailutan funtzionatzen du."
+      "anonymousHelpNoLink": "Ez dago saioa hasteko estekarik gordeta kontu gonbidatu honetarako. Sortu bat beheko saioa hasteko estekaren errenkadan — edozein gailutan funtzionatzen du.",
+      "reauthTitle": "Hasi saioa berriro passkey bat gehitzeko",
+      "reauthDescription": "Zure segurtasunagatik, passkey bat gehitzeak saio-hasiera berria behar du. Saioa amaituko da, berriro hasiko duzu eta hemen bertan amaituko duzu.",
+      "reauthConfirm": "Hasi saioa berriro",
+      "reauthAnonymousTitle": "Gorde saioa hasteko esteka bat lehenik",
+      "reauthAnonymousDescription": "Kontu gonbidatu honek ez du oraindik saioa hasteko estekarik ez passkeyrik. Orain saioa amaituz gero, sarbidea betiko galduko duzu — gorde saioa hasteko esteka bat Saioa hasteko esteka atalean lehenik, eta gero itzuli passkey bat gehitzera."
     }
   },
   "Activities": {

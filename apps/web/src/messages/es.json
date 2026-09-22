@@ -2649,7 +2649,12 @@
       "backedUp": "Con copia de seguridad",
       "removeWarning": "Esto no se puede deshacer. El dispositivo dejará de iniciar sesión con una clave de acceso — podrás registrarlo de nuevo en cualquier momento.",
       "removeLastWarning": "Esta es tu última clave de acceso. Si es tu único método de inicio de sesión, la eliminación quedará bloqueada hasta que guardes un enlace de recuperación u otro método de inicio de sesión.",
-      "anonymousHelpNoLink": "No hay ningún enlace de inicio de sesión guardado para esta cuenta de invitado. Crea uno en la fila del enlace de inicio de sesión de abajo — funciona en cualquier dispositivo."
+      "anonymousHelpNoLink": "No hay ningún enlace de inicio de sesión guardado para esta cuenta de invitado. Crea uno en la fila del enlace de inicio de sesión de abajo — funciona en cualquier dispositivo.",
+      "reauthTitle": "Inicia sesión de nuevo para añadir una clave de acceso",
+      "reauthDescription": "Por tu seguridad, añadir una clave de acceso requiere un inicio de sesión reciente. Se cerrará tu sesión, volverás a iniciarla y volverás aquí mismo para terminar.",
+      "reauthConfirm": "Inicia sesión de nuevo",
+      "reauthAnonymousTitle": "Guarda primero un enlace de inicio de sesión",
+      "reauthAnonymousDescription": "Esta cuenta de invitado aún no tiene enlace de inicio de sesión ni clave de acceso. Si cierras sesión ahora, perderás el acceso para siempre — guarda primero un enlace de inicio de sesión en la sección Enlace de inicio de sesión y vuelve después a añadir una clave de acceso."
     }
   },
   "Activities": {

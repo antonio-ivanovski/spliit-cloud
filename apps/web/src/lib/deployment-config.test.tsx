@@ -61,6 +61,7 @@ describe('useDeploymentConfig', () => {
       enableAnonymousAuth: false,
       enableEmailAuth: false,
       enablePasskeyAuth: true,
+      passkeyFreshAgeSeconds: 30 * 24 * 60 * 60,
       emailDeliveryEnabled: false,
     })
 
@@ -80,6 +81,7 @@ describe('useDeploymentConfig', () => {
         enableAnonymousAuth: false,
         enableEmailAuth: false,
         enablePasskeyAuth: true,
+        passkeyFreshAgeSeconds: 30 * 24 * 60 * 60,
         emailDeliveryEnabled: false,
         maxExpenseDocumentSize: 10 * 1024 * 1024,
       })

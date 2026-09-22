@@ -2625,7 +2625,12 @@
       "backedUp": "Con backup",
       "removeWarning": "Questa azione non può essere annullata. Il dispositivo non ti farà più accedere con una chiave di accesso — potrai registrarlo di nuovo in qualsiasi momento.",
       "removeLastWarning": "Questa è la tua ultima chiave di accesso. Se è il tuo unico metodo di accesso, la rimozione è bloccata finché non salvi un link di recupero o un altro metodo di accesso.",
-      "anonymousHelpNoLink": "Nessun link di accesso salvato per questo account ospite. Creane uno nella riga del link di accesso qui sotto — funziona su qualsiasi dispositivo."
+      "anonymousHelpNoLink": "Nessun link di accesso salvato per questo account ospite. Creane uno nella riga del link di accesso qui sotto — funziona su qualsiasi dispositivo.",
+      "reauthTitle": "Accedi di nuovo per aggiungere una chiave di accesso",
+      "reauthDescription": "Per la tua sicurezza, aggiungere una chiave di accesso richiede un accesso recente. Verrai disconnesso, dovrai accedere di nuovo e tornerai qui per finire.",
+      "reauthConfirm": "Accedi di nuovo",
+      "reauthAnonymousTitle": "Salva prima un collegamento per il ripristino",
+      "reauthAnonymousDescription": "Questo account ospite non ha ancora un collegamento per il ripristino né una chiave di accesso. Se esci adesso, perderai l'accesso per sempre — salva prima un collegamento per il ripristino nella sezione Collegamento per il ripristino, poi torna per aggiungere una chiave di accesso."
     }
   },
   "Activities": {
