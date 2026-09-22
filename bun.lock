@@ -44,6 +44,7 @@
         "openapi-types": "^12.1.3",
         "react": "^19.2.7",
         "react-dom": "^19.2.7",
+        "reflect-metadata": "^0.2.2",
         "superjson": "^2.2.6",
         "web-push": "^3.6.7",
         "zod": "^4.4.3",
@@ -186,6 +187,7 @@
         "@spliit/db": "workspace:*",
         "@spliit/domain": "workspace:*",
         "@spliit/jobs": "workspace:*",
+        "reflect-metadata": "^0.2.2",
       },
       "devDependencies": {
         "@spliit/config": "workspace:*",

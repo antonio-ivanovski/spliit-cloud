@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import { app } from './app'
 import { stopApiBoss } from './lib/api/boss'
 import { env } from './lib/env'
