@@ -614,6 +614,93 @@ describe('accountRouter profile cache invalidation', () => {
     })
     expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(2)
   })
+
+  it('allows updateProfile while anonymous onboarding is incomplete', async () => {
+    const incompleteGuest = {
+      id: 'guest-1',
+      email: 'guest-1@anonymous.placeholder.local',
+      emailVerified: false,
+      name: 'guest-1@anonymous.placeholder.local',
+      isAnonymous: true,
+      image: null,
+      anonymousOnboardingCompleted: false,
+    }
+    const updatedAccount = { ...incompleteGuest, name: 'New Guest' }
+    prismaMock.user.update.mockResolvedValue(updatedAccount as never)
+
+    const { anonymousOnboardingCompleted: _, ...selectedAccount } =
+      updatedAccount
+    const caller = makeCaller('guest-1', incompleteGuest)
+    await expect(caller.updateProfile({ name: 'New Guest' })).resolves.toEqual({
+      account: selectedAccount,
+    })
+    expect(prismaMock.user.update).toHaveBeenCalledWith({
+      where: { id: 'guest-1' },
+      data: { name: 'New Guest' },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        emailVerified: true,
+        isAnonymous: true,
+        image: true,
+      },
+    })
+
+    // The gate still guards everything else for the same account shape.
+    await expect(caller.getPreferences()).rejects.toMatchObject({
+      code: 'PRECONDITION_FAILED',
+      message: 'ANONYMOUS_SETUP_REQUIRED',
+    })
+  })
+})
+
+describe('accountRouter.onboardingStatus', () => {
+  it('reports incomplete for a guest that only set its display name', async () => {
+    // The name-first regression: this account looks finished to the
+    // session-based predicate but the server still awaits its safeguard.
+    const caller = makeCaller('guest-1', {
+      email: 'guest-1@anonymous.placeholder.local',
+      emailVerified: false,
+      name: 'New Guest',
+      isAnonymous: true,
+      anonymousOnboardingCompleted: false,
+    })
+
+    await expect(caller.onboardingStatus()).resolves.toEqual({
+      anonymousOnboardingCompleted: false,
+    })
+  })
+
+  it('reports complete for a finished anonymous account', async () => {
+    const caller = makeCaller('guest-2', {
+      email: 'guest-2@anonymous.placeholder.local',
+      emailVerified: false,
+      name: 'Old Guest',
+      isAnonymous: true,
+      anonymousOnboardingCompleted: true,
+    })
+
+    await expect(caller.onboardingStatus()).resolves.toEqual({
+      anonymousOnboardingCompleted: true,
+    })
+  })
+
+  it('reports complete for ordinary accounts', async () => {
+    const caller = makeCaller('acct-1', { anonymousOnboardingCompleted: true })
+
+    await expect(caller.onboardingStatus()).resolves.toEqual({
+      anonymousOnboardingCompleted: true,
+    })
+  })
+
+  it('requires authentication', async () => {
+    await expect(
+      makeAnonymousCaller().onboardingStatus(),
+    ).rejects.toMatchObject({
+      code: 'UNAUTHORIZED',
+    })
+  })
 })
 
 describe('accountRouter.groups — archive + hide filters', () => {
@@ -947,6 +1034,93 @@ describe('accountRouter.deletePasskey', () => {
     // so only the two getCachedAccount misses hit the database.
     // Two reads — not one — proves the mutation invalidated the cache.
     expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(2)
+  })
+})
+
+describe('accountRouter.renamePasskey', () => {
+  const accountId = 'acct-passkey'
+  const passkeyRow = { id: 'pk-1', userId: accountId }
+
+  beforeEach(() => {
+    prismaMock.passkey.findUnique.mockResolvedValue(passkeyRow as never)
+    prismaMock.passkey.update.mockResolvedValue(passkeyRow as never)
+  })
+
+  it('requires authentication', async () => {
+    await expect(
+      makeAnonymousCaller().renamePasskey({ id: 'pk-1', name: 'MacBook' }),
+    ).rejects.toMatchObject({ code: 'UNAUTHORIZED' })
+  })
+
+  it('returns NOT_FOUND for an unknown passkey', async () => {
+    prismaMock.passkey.findUnique.mockResolvedValue(null)
+    await expect(
+      makeCaller(accountId).renamePasskey({
+        id: 'pk-missing',
+        name: 'MacBook',
+      }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
+    expect(prismaMock.passkey.update).not.toHaveBeenCalled()
+  })
+
+  it('returns NOT_FOUND for another account’s passkey', async () => {
+    prismaMock.passkey.findUnique.mockResolvedValue({
+      id: 'pk-other',
+      userId: 'acct-other',
+    } as never)
+    await expect(
+      makeCaller(accountId).renamePasskey({ id: 'pk-other', name: 'MacBook' }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
+    expect(prismaMock.passkey.update).not.toHaveBeenCalled()
+  })
+
+  it('returns NOT_FOUND when the passkey vanishes mid-rename', async () => {
+    prismaMock.passkey.update.mockRejectedValueOnce(
+      new Prisma.PrismaClientKnownRequestError(
+        'Record to update does not exist.',
+        { code: 'P2025', clientVersion: 'test' },
+      ),
+    )
+    await expect(
+      makeCaller(accountId).renamePasskey({ id: 'pk-1', name: 'MacBook' }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
+  })
+
+  it('rejects a blank or overlong nickname', async () => {
+    await expect(
+      makeCaller(accountId).renamePasskey({ id: 'pk-1', name: '   ' }),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
+    await expect(
+      makeCaller(accountId).renamePasskey({
+        id: 'pk-1',
+        name: 'x'.repeat(101),
+      }),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
+    expect(prismaMock.passkey.update).not.toHaveBeenCalled()
+  })
+
+  it('renames the caller’s own passkey', async () => {
+    await expect(
+      makeCaller(accountId).renamePasskey({ id: 'pk-1', name: '  MacBook  ' }),
+    ).resolves.toEqual({ success: true })
+    // Trimmed by the input schema before the write.
+    expect(prismaMock.passkey.update).toHaveBeenCalledWith({
+      where: { id: 'pk-1' },
+      data: { name: 'MacBook' },
+    })
+  })
+
+  it('allows renaming during incomplete anonymous onboarding', async () => {
+    // Gate-exempt: the safeguard step registers the first passkey before
+    // onboarding completes and renames it right after — the onboarding gate
+    // must not decide this.
+    await expect(
+      makeCaller(accountId, { isAnonymous: true }).renamePasskey({
+        id: 'pk-1',
+        name: 'MacBook',
+      }),
+    ).resolves.toEqual({ success: true })
+    expect(prismaMock.passkey.update).toHaveBeenCalled()
   })
 })
 

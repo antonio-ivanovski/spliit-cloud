@@ -3490,7 +3490,18 @@
       "existingPasskeyTitle": "Đã đăng ký passkey?",
       "existingPasskeyDescription": "Đăng nhập lại bằng passkey trên một trong các thiết bị đã đăng ký của bạn.",
       "passkeySignIn": "Đăng nhập bằng passkey",
-      "passkeySignInError": "Không thể đăng nhập bằng passkey này. Hãy thử lại hoặc dùng liên kết đăng nhập của bạn."
+      "passkeySignInError": "Không thể đăng nhập bằng passkey này. Hãy thử lại hoặc dùng liên kết đăng nhập của bạn.",
+      "passkeyNameLabel": "Đặt tên cho passkey này (tùy chọn)",
+      "passkeyNamePlaceholder": "vd. MacBook Touch ID",
+      "nameTitle": "Chọn tên hiển thị",
+      "nameDescription": "Hiển thị trên passkey và trong các nhóm của bạn. Bạn có thể thay đổi sau.",
+      "nameLabel": "Tên hiển thị",
+      "namePlaceholder": "Tên của bạn",
+      "nameSave": "Hoàn tất",
+      "nameSaving": "Đang lưu…",
+      "nameRequired": "Vui lòng nhập tên.",
+      "nameTooShort": "Tên phải có ít nhất 2 ký tự.",
+      "nameError": "Không thể lưu tên hiển thị. Vui lòng thử lại."
     },
     "onboarding": {
       "title": "Lưu liên kết đăng nhập của bạn",

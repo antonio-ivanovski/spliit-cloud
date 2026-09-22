@@ -330,6 +330,7 @@ function AccountSettingsContent() {
             />
             {deployment.enablePasskeyAuth ? (
               <AccountPasskeySettings
+                displayName={account.name ?? ''}
                 isAnonymous={account.isAnonymous}
                 onUpdated={refreshAccount}
               />

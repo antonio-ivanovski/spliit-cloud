@@ -3407,7 +3407,18 @@
       "existingPasskeyTitle": "Sudah mendaftarkan passkey?",
       "existingPasskeyDescription": "Masuk kembali dengan passkey di salah satu perangkat terdaftar Anda.",
       "passkeySignIn": "Masuk dengan passkey",
-      "passkeySignInError": "Tidak dapat masuk dengan passkey ini. Coba lagi atau gunakan tautan masuk Anda."
+      "passkeySignInError": "Tidak dapat masuk dengan passkey ini. Coba lagi atau gunakan tautan masuk Anda.",
+      "passkeyNameLabel": "Beri nama passkey ini (opsional)",
+      "passkeyNamePlaceholder": "cth. MacBook Touch ID",
+      "nameTitle": "Pilih nama tampilan",
+      "nameDescription": "Ditampilkan pada passkey dan di grup Anda. Anda dapat mengubahnya nanti.",
+      "nameLabel": "Nama tampilan",
+      "namePlaceholder": "Nama Anda",
+      "nameSave": "Simpan dan lanjutkan",
+      "nameSaving": "Menyimpan…",
+      "nameRequired": "Masukkan nama tampilan.",
+      "nameTooShort": "Nama harus minimal 2 karakter.",
+      "nameError": "Nama tampilan tidak dapat disimpan. Silakan coba lagi."
     },
     "onboarding": {
       "title": "Simpan tautan masuk Anda",

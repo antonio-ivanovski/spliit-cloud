@@ -3495,7 +3495,18 @@
       "existingPasskeyTitle": "¿Ya has registrado una clave de acceso?",
       "existingPasskeyDescription": "Vuelve a iniciar sesión con la clave de acceso en uno de tus dispositivos registrados.",
       "passkeySignIn": "Iniciar sesión con clave de acceso",
-      "passkeySignInError": "No se pudo iniciar sesión con esta clave de acceso. Inténtalo de nuevo o usa tu enlace de inicio de sesión."
+      "passkeySignInError": "No se pudo iniciar sesión con esta clave de acceso. Inténtalo de nuevo o usa tu enlace de inicio de sesión.",
+      "passkeyNameLabel": "Ponle un nombre a esta clave de acceso (opcional)",
+      "passkeyNamePlaceholder": "p. ej., Touch ID del MacBook",
+      "nameTitle": "Elige un nombre para mostrar",
+      "nameDescription": "Se muestra en tu clave de acceso y en tus grupos. Puedes cambiarlo más tarde.",
+      "nameLabel": "Nombre para mostrar",
+      "namePlaceholder": "Tu nombre",
+      "nameSave": "Guardar y continuar",
+      "nameSaving": "Guardando…",
+      "nameRequired": "Introduce un nombre para mostrar.",
+      "nameTooShort": "El nombre debe tener al menos 2 caracteres.",
+      "nameError": "No se pudo guardar el nombre para mostrar. Inténtalo de nuevo."
     },
     "onboarding": {
       "title": "Guarde su enlace de inicio de sesión",

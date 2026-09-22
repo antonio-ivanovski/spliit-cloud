@@ -3425,7 +3425,18 @@
       "existingPasskeyTitle": "Oletko jo rekisteröinyt pääsyavaimen?",
       "existingPasskeyDescription": "Kirjaudu takaisin sisään jonkin rekisteröidyn laitteesi pääsyavaimella.",
       "passkeySignIn": "Kirjaudu pääsyavaimella",
-      "passkeySignInError": "Tällä pääsyavaimella ei voitu kirjautua. Yritä uudelleen tai käytä kirjautumislinkkiäsi."
+      "passkeySignInError": "Tällä pääsyavaimella ei voitu kirjautua. Yritä uudelleen tai käytä kirjautumislinkkiäsi.",
+      "passkeyNameLabel": "Nimeä tämä pääsyavain (valinnainen)",
+      "passkeyNamePlaceholder": "esim. MacBook Touch ID",
+      "nameTitle": "Valitse näyttönimi",
+      "nameDescription": "Näkyy pääsyavaimessasi ja ryhmissäsi. Voit muuttaa sitä myöhemmin.",
+      "nameLabel": "Näyttönimi",
+      "namePlaceholder": "Nimesi",
+      "nameSave": "Tallenna ja jatka",
+      "nameSaving": "Tallennetaan…",
+      "nameRequired": "Syötä näyttönimi.",
+      "nameTooShort": "Nimen on oltava vähintään 2 merkkiä pitkä.",
+      "nameError": "Näyttönimeä ei voitu tallentaa. Yritä uudelleen."
     },
     "onboarding": {
       "title": "Tallenna kirjautumislinkki",

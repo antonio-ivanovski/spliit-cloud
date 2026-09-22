@@ -3444,7 +3444,18 @@
       "existingPasskeyTitle": "Vous avez déjà enregistré une clé d'accès ?",
       "existingPasskeyDescription": "Reconnectez-vous avec la clé d'accès sur l'un de vos appareils enregistrés.",
       "passkeySignIn": "Se connecter avec une clé d'accès",
-      "passkeySignInError": "Impossible de vous connecter avec cette clé d'accès. Réessayez ou utilisez votre lien de connexion."
+      "passkeySignInError": "Impossible de vous connecter avec cette clé d'accès. Réessayez ou utilisez votre lien de connexion.",
+      "passkeyNameLabel": "Nommez cette clé d'accès (facultatif)",
+      "passkeyNamePlaceholder": "p. ex. Touch ID du MacBook",
+      "nameTitle": "Choisissez un nom d'affichage",
+      "nameDescription": "Affiché sur votre clé d'accès et dans vos groupes. Vous pourrez le modifier plus tard.",
+      "nameLabel": "Nom d'affichage",
+      "namePlaceholder": "Votre nom",
+      "nameSave": "Enregistrer et continuer",
+      "nameSaving": "Enregistrement…",
+      "nameRequired": "Saisissez un nom d'affichage.",
+      "nameTooShort": "Le nom doit contenir au moins 2 caractères.",
+      "nameError": "Impossible d'enregistrer le nom d'affichage. Veuillez réessayer."
     },
     "onboarding": {
       "title": "Enregistrez votre lien de connexion",

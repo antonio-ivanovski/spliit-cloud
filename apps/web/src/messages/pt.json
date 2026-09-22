@@ -3444,7 +3444,18 @@
       "existingPasskeyTitle": "Já registou uma chave de acesso?",
       "existingPasskeyDescription": "Volte a iniciar sessão com a chave de acesso num dos seus dispositivos registados.",
       "passkeySignIn": "Iniciar sessão com chave de acesso",
-      "passkeySignInError": "Não foi possível iniciar sessão com esta chave de acesso. Tente novamente ou use a sua ligação de início de sessão."
+      "passkeySignInError": "Não foi possível iniciar sessão com esta chave de acesso. Tente novamente ou use a sua ligação de início de sessão.",
+      "passkeyNameLabel": "Dê um nome a esta chave de acesso (opcional)",
+      "passkeyNamePlaceholder": "p. ex., Touch ID do MacBook",
+      "nameTitle": "Escolhe um nome de exibição",
+      "nameDescription": "Aparece na tua chave de acesso e nos teus grupos. Podes alterá-lo mais tarde.",
+      "nameLabel": "Nome de exibição",
+      "namePlaceholder": "O teu nome",
+      "nameSave": "Guardar e continuar",
+      "nameSaving": "A guardar…",
+      "nameRequired": "Introduz um nome de exibição.",
+      "nameTooShort": "O nome deve ter pelo menos 2 caracteres.",
+      "nameError": "Não foi possível guardar o nome de exibição. Tenta novamente."
     },
     "onboarding": {
       "title": "Guarde a sua ligação de início de sessão",

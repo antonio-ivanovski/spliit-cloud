@@ -9,10 +9,12 @@ import { fireEvent, render, screen, waitFor } from '@/test/test-utils'
 const {
   acknowledgeMock,
   mockAddPasskey,
+  mockRenamePasskey,
   mockMarkPasskeyLastUsed,
   mockDeploymentConfig,
   mockNavigate,
   mockNotifyPasskeyChanged,
+  mockOnboardingStatus,
   mockPasskeySupported,
   mockRevokeRecovery,
   mockUpdateProfile,
@@ -22,10 +24,17 @@ const {
 } = vi.hoisted(() => ({
   acknowledgeMock: vi.fn(),
   mockAddPasskey: vi.fn(),
+  mockRenamePasskey: vi.fn(),
   mockMarkPasskeyLastUsed: vi.fn(),
   mockDeploymentConfig: { enablePasskeyAuth: false },
   mockNavigate: vi.fn(),
   mockNotifyPasskeyChanged: vi.fn(),
+  mockOnboardingStatus: {
+    data: undefined as { anonymousOnboardingCompleted: boolean } | undefined,
+    isPending: false,
+    isFetching: false,
+    refetch: vi.fn(),
+  },
   mockPasskeySupported: { value: false },
   mockRevokeRecovery: vi.fn(),
   mockUpdateProfile: vi.fn(),
@@ -72,6 +81,7 @@ vi.mock('@/lib/passkey', () => ({
   addPasskey: mockAddPasskey,
   markPasskeyAsLastUsedLoginMethod: mockMarkPasskeyLastUsed,
   notifyPasskeyChanged: mockNotifyPasskeyChanged,
+  renamePasskey: mockRenamePasskey,
 }))
 
 vi.mock('@/trpc/client', () => ({
@@ -81,6 +91,19 @@ vi.mock('@/trpc/client', () => ({
         useMutation: () => ({
           mutateAsync: mockUpdateProfile,
         }),
+      },
+      onboardingStatus: {
+        // Mirror real TanStack semantics: a disabled query is pending with
+        // no fetch in flight.
+        useQuery: (_input: unknown, opts?: { enabled?: boolean }) =>
+          opts?.enabled === false
+            ? {
+                data: undefined,
+                isPending: true,
+                isFetching: false,
+                refetch: mockOnboardingStatus.refetch,
+              }
+            : mockOnboardingStatus,
       },
     },
   },
@@ -120,7 +143,11 @@ describe('CompleteProfilePage', () => {
     vi.clearAllMocks()
     mockDeploymentConfig.enablePasskeyAuth = false
     mockPasskeySupported.value = false
+    mockOnboardingStatus.data = undefined
+    mockOnboardingStatus.isPending = false
+    mockOnboardingStatus.isFetching = false
     mockAddPasskey.mockResolvedValue({ id: 'pk-1' })
+    mockRenamePasskey.mockResolvedValue(undefined)
     mockNotifyPasskeyChanged.mockResolvedValue(undefined)
     mockRevokeRecovery.mockResolvedValue({ success: true })
     Object.defineProperty(navigator, 'onLine', {
@@ -184,10 +211,14 @@ describe('CompleteProfilePage', () => {
       refetch: vi.fn(),
     })
 
-    render(<CompleteProfilePage />)
+    const { container } = render(<CompleteProfilePage />)
 
-    // The form should not be rendered — Navigate was returned instead
+    // The form should not be rendered — Navigate was returned instead.
+    // A disabled status query must not hold the spinner either.
     expect(screen.queryByText('Complete your profile')).not.toBeInTheDocument()
+    expect(
+      container.querySelector('.lucide-loader-circle'),
+    ).not.toBeInTheDocument()
   })
 
   it('shows form when account has no name', () => {
@@ -276,10 +307,9 @@ describe('CompleteProfilePage', () => {
     )
   })
 
-  it('calls updateProfile and navigates on submit', async () => {
+  it('calls updateProfile and waits for fresh state on submit', async () => {
     const mockRefetch = vi.fn().mockResolvedValue(undefined)
     mockUpdateProfile.mockResolvedValue(undefined)
-    mockNavigate.mockResolvedValue(undefined)
 
     vi.mocked(useCurrentAccount).mockReturnValue({
       data: mockAccount({ name: '' }),
@@ -297,18 +327,121 @@ describe('CompleteProfilePage', () => {
     await user.click(screen.getByText('Save and continue'))
 
     expect(mockUpdateProfile).toHaveBeenCalledWith({ name: 'Alice' })
-    // After mutation success, the session is refetched and navigate is called
+    // After mutation success, the session is refetched so the re-rendered
+    // account routes itself — no blind navigation: the mocked account still
+    // needs a name, so the form stays put waiting for fresh state.
     expect(mockRefetch).toHaveBeenCalledWith({
       query: { disableCookieCache: true },
     })
-    expect(mockNavigate).toHaveBeenCalledWith({
-      href: '/',
-      replace: true,
-    })
+    expect(screen.getByLabelText('Display name')).toBeInTheDocument()
+    expect(mockNavigate).not.toHaveBeenCalled()
   })
 
-  it('asks an anonymous account to save its sign in link before naming', async () => {
-    const mockRefetch = vi.fn().mockResolvedValue(undefined)
+  it('shows the safeguard step once the anonymous account has a name', async () => {
+    mockDeploymentConfig.enablePasskeyAuth = true
+    mockPasskeySupported.value = true
+    const email = 'guest-1@anonymous.placeholder.local'
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: mockAccount({
+        name: 'New Guest',
+        email,
+        anonymousOnboardingCompleted: false,
+        isAnonymous: true,
+      }),
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(<CompleteProfilePage />)
+
+    // Name-first: with the display name set, onboarding continues at the
+    // safeguard choice instead of asking for the name again.
+    expect(
+      await screen.findByText('Choose your backup sign-in'),
+    ).toBeInTheDocument()
+    expect(screen.queryByLabelText('Display name')).not.toBeInTheDocument()
+  })
+
+  it('keeps a named guest on the safeguard step while the server awaits it', async () => {
+    // The reported escape: session predicate alone calls this account done
+    // (real name, no embedded flag) and would redirect to the dashboard
+    // into 412s. The authoritative status query keeps the safeguard up.
+    mockOnboardingStatus.data = { anonymousOnboardingCompleted: false }
+    const email = 'guest-1@anonymous.placeholder.local'
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: mockAccount({
+        name: 'New Guest',
+        email,
+        isAnonymous: true,
+      }),
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(<CompleteProfilePage />)
+
+    expect(
+      await screen.findByRole('button', { name: 'Start using Spliit' }),
+    ).toBeInTheDocument()
+    expect(screen.queryByLabelText('Display name')).not.toBeInTheDocument()
+    expect(setupMock).toHaveBeenCalled()
+  })
+
+  it('redirects a named guest the server reports complete', async () => {
+    mockOnboardingStatus.data = { anonymousOnboardingCompleted: true }
+    const email = 'guest-1@anonymous.placeholder.local'
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: mockAccount({
+        name: 'New Guest',
+        email,
+        isAnonymous: true,
+      }),
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(<CompleteProfilePage />)
+
+    // Navigate renders null in tests: neither step may appear.
+    await waitFor(() =>
+      expect(screen.queryByLabelText('Display name')).not.toBeInTheDocument(),
+    )
+    expect(
+      screen.queryByText('Choose your backup sign-in'),
+    ).not.toBeInTheDocument()
+  })
+
+  it('waits for the authoritative status before redirecting out', async () => {
+    mockOnboardingStatus.isPending = true
+    mockOnboardingStatus.isFetching = true
+    const email = 'guest-1@anonymous.placeholder.local'
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: mockAccount({
+        name: 'New Guest',
+        email,
+        isAnonymous: true,
+      }),
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    const { container } = render(<CompleteProfilePage />)
+
+    // A named session alone cannot prove completion: hold the spinner
+    // instead of redirecting on the fallback.
+    expect(container.querySelector('.lucide-loader-circle')).toBeInTheDocument()
+    expect(screen.queryByLabelText('Display name')).not.toBeInTheDocument()
+  })
+
+  it('asks an anonymous account for its display name before the safeguard', async () => {
     const email = 'guest-1@anonymous.placeholder.local'
     vi.mocked(useCurrentAccount).mockReturnValue({
       data: mockAccount({
@@ -319,40 +452,16 @@ describe('CompleteProfilePage', () => {
       isPending: false,
       isRefetching: false,
       error: null,
-      refetch: mockRefetch,
+      refetch: vi.fn(),
     })
 
-    const { user } = render(<CompleteProfilePage />)
+    render(<CompleteProfilePage />)
 
-    expect(
-      await screen.findByText('Save your sign in link'),
-    ).toBeInTheDocument()
-    expect(screen.queryByLabelText('Display name')).not.toBeInTheDocument()
-    expect(
-      screen.getByDisplayValue(
-        'https://app.example/auth/recover#code=spliit_anonymous_v1_test-key',
-      ),
-    ).toBeInTheDocument()
-
-    const start = screen.getByRole('button', { name: 'Start using Spliit' })
-    expect(start).toBeDisabled()
-    await user.click(
-      screen.getByRole('checkbox', {
-        name: 'I copied and safely stored my sign in link.',
-      }),
-    )
-    await user.click(start)
-
-    await waitFor(() =>
-      expect(acknowledgeMock).toHaveBeenCalledWith({
-        confirmedCopied: true,
-        code: 'spliit_anonymous_v1_test-key',
-      }),
-    )
-    expect(mockRefetch).toHaveBeenCalledWith({
-      query: { disableCookieCache: true },
-    })
+    // Name-first: the display name form renders before the sign-in link
+    // setup, so a passkey registered next already carries the real name.
     expect(await screen.findByLabelText('Display name')).toBeInTheDocument()
+    expect(screen.queryByText('Save your sign in link')).not.toBeInTheDocument()
+    expect(setupMock).not.toHaveBeenCalled()
   })
 
   it('skips recovery setup when the anonymous account already finished it', async () => {
@@ -421,8 +530,9 @@ describe('CompleteProfilePage', () => {
     const email = 'guest-1@anonymous.placeholder.local'
     vi.mocked(useCurrentAccount).mockReturnValue({
       data: mockAccount({
-        name: email,
+        name: 'New Guest',
         email,
+        anonymousOnboardingCompleted: false,
         isAnonymous: true,
       }),
       isPending: false,
@@ -460,8 +570,9 @@ describe('CompleteProfilePage', () => {
     const email = 'guest-1@anonymous.placeholder.local'
     vi.mocked(useCurrentAccount).mockReturnValue({
       data: mockAccount({
-        name: email,
+        name: 'New Guest',
         email,
+        anonymousOnboardingCompleted: false,
         isAnonymous: true,
       }),
       isPending: false,
@@ -488,7 +599,12 @@ describe('CompleteProfilePage', () => {
     await user.click(screen.getByRole('button', { name: 'Start using Spliit' }))
 
     await waitFor(() => expect(acknowledgeMock).toHaveBeenCalled())
-    expect(await screen.findByLabelText('Display name')).toBeInTheDocument()
+    // Named and safeguard-acknowledged: onboarding is done, the page leaves.
+    await waitFor(() =>
+      expect(
+        screen.queryByRole('button', { name: 'Start using Spliit' }),
+      ).not.toBeInTheDocument(),
+    )
   })
 
   it('switches between link and passkey choice cards', async () => {
@@ -497,8 +613,9 @@ describe('CompleteProfilePage', () => {
     const email = 'guest-1@anonymous.placeholder.local'
     vi.mocked(useCurrentAccount).mockReturnValue({
       data: mockAccount({
-        name: email,
+        name: 'New Guest',
         email,
+        anonymousOnboardingCompleted: false,
         isAnonymous: true,
       }),
       isPending: false,
@@ -540,8 +657,9 @@ describe('CompleteProfilePage', () => {
     const email = 'guest-1@anonymous.placeholder.local'
     vi.mocked(useCurrentAccount).mockReturnValue({
       data: mockAccount({
-        name: email,
+        name: 'New Guest',
         email,
+        anonymousOnboardingCompleted: false,
         isAnonymous: true,
       }),
       isPending: false,
@@ -557,17 +675,24 @@ describe('CompleteProfilePage', () => {
     )
     await user.click(screen.getByRole('button', { name: 'Add a passkey' }))
 
-    expect(mockAddPasskey).toHaveBeenCalled()
+    // The ceremony always carries the display name; no label was typed, so
+    // no rename follows.
+    expect(mockAddPasskey).toHaveBeenCalledWith('New Guest')
+    expect(mockRenamePasskey).not.toHaveBeenCalled()
     expect(mockNotifyPasskeyChanged).toHaveBeenCalled()
     // Passkey-onboarded: the login screen hints at the passkey next time.
     expect(mockMarkPasskeyLastUsed).toHaveBeenCalled()
     // The never-acknowledged setup link is cleaned up.
     expect(mockRevokeRecovery).toHaveBeenCalledWith({ onlyPending: true })
-    // Passkey registered: straight to naming.
-    expect(await screen.findByLabelText('Display name')).toBeInTheDocument()
+    // Named and safeguard-complete: onboarding is done, the page leaves.
+    await waitFor(() =>
+      expect(
+        screen.queryByRole('button', { name: 'Add a passkey' }),
+      ).not.toBeInTheDocument(),
+    )
   })
 
-  it('does not enter the app when recovery setup cannot run offline', () => {
+  it('shows the offline state when the name step cannot run offline', () => {
     Object.defineProperty(navigator, 'onLine', {
       configurable: true,
       value: false,

@@ -3444,7 +3444,18 @@
       "existingPasskeyTitle": "כבר רשמת מפתח גישה?",
       "existingPasskeyDescription": "התחבר בחזרה עם מפתח הגישה באחד המכשירים הרשומים שלך.",
       "passkeySignIn": "התחבר עם מפתח גישה",
-      "passkeySignInError": "לא ניתן להתחבר עם מפתח הגישה הזה. נסה שוב או השתמש בקישור הכניסה שלך."
+      "passkeySignInError": "לא ניתן להתחבר עם מפתח הגישה הזה. נסה שוב או השתמש בקישור הכניסה שלך.",
+      "passkeyNameLabel": "תן שם למפתח הגישה הזה (אופציונלי)",
+      "passkeyNamePlaceholder": "לדוגמה: MacBook Touch ID",
+      "nameTitle": "בחר שם תצוגה",
+      "nameDescription": "יופיע על מפתח הגישה שלך ובקבוצות שלך. תוכל לשנות אותו בהמשך.",
+      "nameLabel": "שם תצוגה",
+      "namePlaceholder": "השם שלך",
+      "nameSave": "שמור והמשך",
+      "nameSaving": "שומר…",
+      "nameRequired": "הזן שם תצוגה.",
+      "nameTooShort": "השם חייב להכיל לפחות 2 תווים.",
+      "nameError": "לא ניתן לשמור את שם התצוגה. אנא נסה שוב."
     },
     "onboarding": {
       "title": "שמור את קישור הכניסה שלך",

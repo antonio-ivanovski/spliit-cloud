@@ -67,8 +67,17 @@ export async function listPasskeys(): Promise<PasskeyInfo[]> {
   }))
 }
 
-export async function addPasskey(name?: string): Promise<PasskeyInfo> {
-  const trimmed = name?.trim()
+/**
+ * Register a passkey. The `ceremonyName` becomes the WebAuthn `user.name` — the
+ * identity the authenticator and password manager show for the credential — so
+ * callers always pass the account display name, never a device label and never
+ * nothing (an empty name falls back to `undefined` and the plugin then uses the
+ * account email, i.e. the guest placeholder for anonymous accounts). The
+ * Spliit-side nickname shown in Account settings is a separate concern, set
+ * afterwards with `renamePasskey`.
+ */
+export async function addPasskey(ceremonyName?: string): Promise<PasskeyInfo> {
+  const trimmed = ceremonyName?.trim()
   const result = await authClient.passkey.addPasskey(
     trimmed ? { name: trimmed } : undefined,
   )
@@ -91,6 +100,26 @@ export async function addPasskey(name?: string): Promise<PasskeyInfo> {
     throw toPasskeyError(result.error, 'PASSKEY_ADD_FAILED')
   }
   return result.data as PasskeyInfo
+}
+
+/**
+ * Rename a passkey through the `account.renamePasskey` tRPC mutation — the
+ * nickname shown in Account settings only. The plugin endpoint is never used:
+ * it can only rewrite our own row, which this mutation already does with an
+ * ownership check, and neither can touch the authenticator-side entry (baked
+ * from the ceremony identity at creation). Callers treat this as best-effort
+ * after a successful registration: the credential exists regardless, and a
+ * failed rename just leaves the display-name nickname the ceremony set.
+ */
+export async function renamePasskey(
+  id: string,
+  nickname: string,
+): Promise<void> {
+  try {
+    await getTrpcClient().account.renamePasskey.mutate({ id, name: nickname })
+  } catch {
+    throw new PasskeyError('PASSKEY_RENAME_FAILED', 0)
+  }
 }
 
 /**

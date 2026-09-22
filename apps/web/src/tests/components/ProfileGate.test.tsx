@@ -29,6 +29,35 @@ vi.mock('@/lib/use-current-account', () => ({
   useCurrentAccount: vi.fn(),
 }))
 
+const { mockOnboardingStatus } = vi.hoisted(() => ({
+  mockOnboardingStatus: {
+    data: undefined as { anonymousOnboardingCompleted: boolean } | undefined,
+    isPending: false,
+    isFetching: false,
+    refetch: vi.fn(),
+  },
+}))
+
+vi.mock('@/trpc/client', () => ({
+  trpc: {
+    account: {
+      onboardingStatus: {
+        // Mirror real TanStack semantics: a disabled query is pending with
+        // no fetch in flight.
+        useQuery: (_input: unknown, opts?: { enabled?: boolean }) =>
+          opts?.enabled === false
+            ? {
+                data: undefined,
+                isPending: true,
+                isFetching: false,
+                refetch: mockOnboardingStatus.refetch,
+              }
+            : mockOnboardingStatus,
+      },
+    },
+  },
+}))
+
 // ── SUT ─────────────────────────────────────────────────────────────────
 
 import { type Mock } from 'vitest'
@@ -42,6 +71,9 @@ describe('ProfileGate', () => {
   afterEach(() => {
     vi.clearAllMocks()
     mockCurrentPath = '/'
+    mockOnboardingStatus.data = undefined
+    mockOnboardingStatus.isPending = false
+    mockOnboardingStatus.isFetching = false
   })
 
   it('lets signed-out visitors through while the session is still resolving', () => {
@@ -175,6 +207,64 @@ describe('ProfileGate', () => {
     const navigate = screen.getByTestId('navigate')
     expect(navigate).toHaveAttribute('data-to', '/auth/complete-profile')
     expect(navigate.getAttribute('data-search')).toContain('redirect')
+  })
+
+  it('redirects a named guest the server still awaits its safeguard from', () => {
+    // Name-first regression: the session predicate alone calls this account
+    // done (real name, no embedded flag) and would let it onto the dashboard
+    // into 412s. The authoritative status query closes the hole.
+    mockOnboardingStatus.data = { anonymousOnboardingCompleted: false }
+    ;(useCurrentAccount as Mock).mockReturnValue({
+      data: {
+        id: 'guest-1',
+        name: 'New Guest',
+        email: 'guest-1@anonymous.placeholder.local',
+        isAnonymous: true,
+        image: null,
+        emailVerified: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      isPending: false,
+    })
+
+    render(
+      <ProfileGate>
+        <div data-testid="child">content</div>
+      </ProfileGate>,
+    )
+
+    expect(screen.getByTestId('navigate')).toHaveAttribute(
+      'data-to',
+      '/auth/complete-profile',
+    )
+    expect(screen.queryByTestId('child')).not.toBeInTheDocument()
+  })
+
+  it('lets a named guest through once the server reports completion', () => {
+    mockOnboardingStatus.data = { anonymousOnboardingCompleted: true }
+    ;(useCurrentAccount as Mock).mockReturnValue({
+      data: {
+        id: 'guest-1',
+        name: 'New Guest',
+        email: 'guest-1@anonymous.placeholder.local',
+        isAnonymous: true,
+        image: null,
+        emailVerified: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      isPending: false,
+    })
+
+    render(
+      <ProfileGate>
+        <div data-testid="child">content</div>
+      </ProfileGate>,
+    )
+
+    expect(screen.getByTestId('child')).toHaveTextContent('content')
+    expect(screen.queryByTestId('navigate')).not.toBeInTheDocument()
   })
 
   it('redirects to complete-profile when name equals email', () => {

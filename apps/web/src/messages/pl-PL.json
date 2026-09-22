@@ -3461,7 +3461,18 @@
       "existingPasskeyTitle": "Masz już zarejestrowany klucz dostępu?",
       "existingPasskeyDescription": "Zaloguj się ponownie kluczem dostępu na jednym ze swoich zarejestrowanych urządzeń.",
       "passkeySignIn": "Zaloguj się kluczem dostępu",
-      "passkeySignInError": "Nie udało się zalogować tym kluczem dostępu. Spróbuj ponownie lub użyj linku logowania."
+      "passkeySignInError": "Nie udało się zalogować tym kluczem dostępu. Spróbuj ponownie lub użyj linku logowania.",
+      "passkeyNameLabel": "Nazwij ten klucz dostępu (opcjonalnie)",
+      "passkeyNamePlaceholder": "np. MacBook Touch ID",
+      "nameTitle": "Wybierz nazwę wyświetlaną",
+      "nameDescription": "Wyświetlana na Twoim kluczu dostępu i w Twoich grupach. Możesz ją później zmienić.",
+      "nameLabel": "Nazwa wyświetlana",
+      "namePlaceholder": "Twoje imię",
+      "nameSave": "Zapisz i kontynuuj",
+      "nameSaving": "Zapisywanie…",
+      "nameRequired": "Wprowadź nazwę wyświetlaną.",
+      "nameTooShort": "Nazwa musi mieć co najmniej 2 znaki.",
+      "nameError": "Nie udało się zapisać nazwy wyświetlanej. Spróbuj ponownie."
     },
     "onboarding": {
       "title": "Zapisz link logowania",

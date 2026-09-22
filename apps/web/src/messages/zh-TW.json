@@ -3408,7 +3408,18 @@
       "existingPasskeyTitle": "已註冊過通行密鑰？",
       "existingPasskeyDescription": "在您已註冊的裝置之一上使用通行密鑰重新登入。",
       "passkeySignIn": "使用通行密鑰登入",
-      "passkeySignInError": "無法使用此通行密鑰登入。請再試一次或使用您的登入連結。"
+      "passkeySignInError": "無法使用此通行密鑰登入。請再試一次或使用您的登入連結。",
+      "passkeyNameLabel": "為此通行密鑰命名（選填）",
+      "passkeyNamePlaceholder": "例如：MacBook 觸控 ID",
+      "nameTitle": "選擇顯示名稱",
+      "nameDescription": "將顯示在您的通行密鑰和群組中。您可以稍後變更。",
+      "nameLabel": "顯示名稱",
+      "namePlaceholder": "您的姓名",
+      "nameSave": "儲存並繼續",
+      "nameSaving": "儲存中……",
+      "nameRequired": "請輸入顯示名稱。",
+      "nameTooShort": "姓名必須至少 2 個字元。",
+      "nameError": "無法儲存顯示名稱。請再試一次。"
     },
     "onboarding": {
       "title": "保存您的恢復鏈接",

@@ -3461,7 +3461,18 @@
       "existingPasskeyTitle": "Už máte registrovaný přístupový klíč?",
       "existingPasskeyDescription": "Přihlaste se zpět pomocí přístupového klíče na jednom ze svých registrovaných zařízení.",
       "passkeySignIn": "Přihlásit se pomocí přístupového klíče",
-      "passkeySignInError": "Pomocí tohoto přístupového klíče se nepodařilo přihlásit. Zkuste to znovu nebo použijte svůj přihlašovací odkaz."
+      "passkeySignInError": "Pomocí tohoto přístupového klíče se nepodařilo přihlásit. Zkuste to znovu nebo použijte svůj přihlašovací odkaz.",
+      "passkeyNameLabel": "Pojmenujte tento přístupový klíč (volitelné)",
+      "passkeyNamePlaceholder": "např. MacBook Touch ID",
+      "nameTitle": "Zvolte zobrazované jméno",
+      "nameDescription": "Zobrazuje se na vašem přístupovém klíči a ve vašich skupinách. Později ho můžete změnit.",
+      "nameLabel": "Zobrazované jméno",
+      "namePlaceholder": "Vaše jméno",
+      "nameSave": "Uložit a pokračovat",
+      "nameSaving": "Ukládání…",
+      "nameRequired": "Zadejte zobrazované jméno.",
+      "nameTooShort": "Jméno musí mít alespoň 2 znaky.",
+      "nameError": "Zobrazované jméno se nepodařilo uložit. Zkuste to prosím znovu."
     },
     "onboarding": {
       "title": "Uložte přihlašovací odkaz",

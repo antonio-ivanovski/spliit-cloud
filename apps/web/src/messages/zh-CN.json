@@ -3408,7 +3408,18 @@
       "existingPasskeyTitle": "已注册过通行密钥？",
       "existingPasskeyDescription": "在您已注册的设备之一上使用通行密钥重新登录。",
       "passkeySignIn": "使用通行密钥登录",
-      "passkeySignInError": "无法使用此通行密钥登录。请重试或使用您的登录链接。"
+      "passkeySignInError": "无法使用此通行密钥登录。请重试或使用您的登录链接。",
+      "passkeyNameLabel": "为此通行密钥命名（选填）",
+      "passkeyNamePlaceholder": "例如：MacBook 触控 ID",
+      "nameTitle": "选择显示名称",
+      "nameDescription": "将显示在您的通行密钥和群组中。您可以稍后更改。",
+      "nameLabel": "显示名称",
+      "namePlaceholder": "您的姓名",
+      "nameSave": "保存并继续",
+      "nameSaving": "保存中……",
+      "nameRequired": "请输入显示名称。",
+      "nameTooShort": "姓名必须至少2个字符。",
+      "nameError": "无法保存显示名称。请重试。"
     },
     "onboarding": {
       "title": "保存您的登录链接",

@@ -3408,7 +3408,18 @@
       "existingPasskeyTitle": "すでにパスキーを登録していますか？",
       "existingPasskeyDescription": "登録済みのデバイスのいずれかでパスキーを使って再サインインしてください。",
       "passkeySignIn": "パスキーでサインイン",
-      "passkeySignInError": "このパスキーではサインインできませんでした。もう一度試すか、サインインリンクを使ってください。"
+      "passkeySignInError": "このパスキーではサインインできませんでした。もう一度試すか、サインインリンクを使ってください。",
+      "passkeyNameLabel": "このパスキーに名前を付けます（任意）",
+      "passkeyNamePlaceholder": "例：MacBook の Touch ID",
+      "nameTitle": "表示名を選んでください",
+      "nameDescription": "パスキーとグループに表示されます。後で変更できます。",
+      "nameLabel": "表示名",
+      "namePlaceholder": "あなたの名前",
+      "nameSave": "保存して続ける",
+      "nameSaving": "保存中…",
+      "nameRequired": "表示名を入力してください。",
+      "nameTooShort": "名前は2文字以上である必要があります。",
+      "nameError": "表示名を保存できませんでした。もう一度お試しください。"
     },
     "onboarding": {
       "title": "サインインリンクを保存します",

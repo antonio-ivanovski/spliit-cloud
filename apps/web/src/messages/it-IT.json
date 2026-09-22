@@ -3444,7 +3444,18 @@
       "existingPasskeyTitle": "Hai già registrato una chiave di accesso?",
       "existingPasskeyDescription": "Accedi di nuovo con la chiave di accesso su uno dei tuoi dispositivi registrati.",
       "passkeySignIn": "Accedi con chiave di accesso",
-      "passkeySignInError": "Impossibile accedere con questa chiave di accesso. Riprova o usa il tuo link di accesso."
+      "passkeySignInError": "Impossibile accedere con questa chiave di accesso. Riprova o usa il tuo link di accesso.",
+      "passkeyNameLabel": "Dai un nome a questa chiave di accesso (facoltativo)",
+      "passkeyNamePlaceholder": "es. Touch ID del MacBook",
+      "nameTitle": "Scegli un nome visualizzato",
+      "nameDescription": "Verrà mostrato sulla tua chiave di accesso e nei tuoi gruppi. Puoi cambiarlo in seguito.",
+      "nameLabel": "Nome visualizzato",
+      "namePlaceholder": "Il tuo nome",
+      "nameSave": "Salva e continua",
+      "nameSaving": "Salvataggio…",
+      "nameRequired": "Inserisci un nome visualizzato.",
+      "nameTooShort": "Il nome deve contenere almeno 2 caratteri.",
+      "nameError": "Impossibile salvare il nome visualizzato. Riprova."
     },
     "onboarding": {
       "title": "Salva il link di accesso",

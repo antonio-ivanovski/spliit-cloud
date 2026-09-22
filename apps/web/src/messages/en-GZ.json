@@ -3417,7 +3417,18 @@
       "existingPasskeyTitle": "already registered a passkey?",
       "existingPasskeyDescription": "sign back in with the passkey on one of your registered devices.",
       "passkeySignIn": "sign in with passkey",
-      "passkeySignInError": "could not sign in with this passkey. try again or use your sign in link."
+      "passkeySignInError": "could not sign in with this passkey. try again or use your sign in link.",
+      "passkeyNameLabel": "name this passkey (optional)",
+      "passkeyNamePlaceholder": "e.g. Touch ID on my MacBook",
+      "nameTitle": "pick a display name",
+      "nameDescription": "shows on your passkey and in your groups. you can switch it later.",
+      "nameLabel": "display name",
+      "namePlaceholder": "your name, obviously",
+      "nameSave": "save and continue",
+      "nameSaving": "saving…",
+      "nameRequired": "enter a display name, bestie.",
+      "nameTooShort": "name needs at least 2 characters.",
+      "nameError": "couldn't save the display name. try again."
     },
     "onboarding": {
       "title": "Keep your sign in link safe",

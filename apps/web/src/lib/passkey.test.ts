@@ -9,6 +9,7 @@ import {
   markPasskeyAsLastUsedLoginMethod,
   notifyPasskeyChanged,
   removePasskey,
+  renamePasskey,
   signOutAndReturnToSignIn,
   type PasskeyError,
 } from './passkey'
@@ -17,6 +18,7 @@ const {
   mockAdd,
   mockList,
   mockDeletePasskey,
+  mockRenamePasskey,
   mockAfterPasskeyChange,
   mockGetSession,
   mockSignOut,
@@ -26,6 +28,7 @@ const {
   mockAdd: vi.fn(),
   mockList: vi.fn(),
   mockDeletePasskey: vi.fn(),
+  mockRenamePasskey: vi.fn(),
   mockAfterPasskeyChange: vi.fn(),
   mockGetSession: vi.fn(),
   mockSignOut: vi.fn(),
@@ -56,6 +59,7 @@ vi.mock('@/trpc/client', () => ({
   getTrpcClient: () => ({
     account: {
       deletePasskey: { mutate: mockDeletePasskey },
+      renamePasskey: { mutate: mockRenamePasskey },
       afterPasskeyChange: { mutate: mockAfterPasskeyChange },
     },
   }),
@@ -116,6 +120,20 @@ describe('passkey lib', () => {
     mockAdd.mockResolvedValueOnce({ data: { id: 'pk-2' }, error: null })
     await addPasskey('   ')
     expect(mockAdd).toHaveBeenCalledWith(undefined)
+  })
+
+  it('renames the Spliit-side nickname and maps failures', async () => {
+    mockRenamePasskey.mockResolvedValueOnce({ success: true })
+    await expect(renamePasskey('pk-1', 'MacBook')).resolves.toBeUndefined()
+    expect(mockRenamePasskey).toHaveBeenCalledWith({
+      id: 'pk-1',
+      name: 'MacBook',
+    })
+
+    mockRenamePasskey.mockRejectedValueOnce(new Error('NOT_FOUND'))
+    await expect(renamePasskey('pk-1', 'MacBook')).rejects.toMatchObject({
+      code: 'PASSKEY_RENAME_FAILED',
+    } as Partial<PasskeyError>)
   })
 
   it('maps a stale-session registration failure to PASSKEY_SESSION_STALE', async () => {

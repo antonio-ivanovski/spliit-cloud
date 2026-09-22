@@ -3425,7 +3425,18 @@
       "existingPasskeyTitle": "Zaten kayıtlı bir geçiş anahtarınız var mı?",
       "existingPasskeyDescription": "Kayıtlı cihazlarınızdan birindeki geçiş anahtarıyla yeniden oturum açın.",
       "passkeySignIn": "Geçiş anahtarıyla oturum aç",
-      "passkeySignInError": "Bu geçiş anahtarıyla oturum açılamadı. Tekrar deneyin veya oturum açma bağlantınızı kullanın."
+      "passkeySignInError": "Bu geçiş anahtarıyla oturum açılamadı. Tekrar deneyin veya oturum açma bağlantınızı kullanın.",
+      "passkeyNameLabel": "Bu geçiş anahtarına bir ad verin (isteğe bağlı)",
+      "passkeyNamePlaceholder": "örn. MacBook Touch ID",
+      "nameTitle": "Bir görünen ad seçin",
+      "nameDescription": "Geçiş anahtarınızda ve gruplarınızda görünür. Daha sonra değiştirebilirsiniz.",
+      "nameLabel": "Görünen ad",
+      "namePlaceholder": "Adınız",
+      "nameSave": "Kaydet ve devam et",
+      "nameSaving": "Kaydediliyor…",
+      "nameRequired": "Bir görünen ad girin.",
+      "nameTooShort": "Ad en az 2 karakter olmalıdır.",
+      "nameError": "Görünen ad kaydedilemedi. Lütfen tekrar deneyin."
     },
     "onboarding": {
       "title": "Kurtarma bağlantınızı kaydedin",

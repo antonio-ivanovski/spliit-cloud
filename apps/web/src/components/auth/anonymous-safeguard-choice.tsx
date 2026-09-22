@@ -4,12 +4,15 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { revokeAnonymousRecovery } from '@/lib/anonymous-recovery'
 import {
   addPasskey,
   markPasskeyAsLastUsedLoginMethod,
   notifyPasskeyChanged,
+  renamePasskey,
 } from '@/lib/passkey'
 import { useOnlineStatus } from '@/lib/use-online-status'
 import { cn } from '@/lib/utils'
@@ -91,8 +94,13 @@ function ChoiceHeader({
  * title to avoid stacked duplicate headings.
  */
 export function AnonymousSafeguardChoice({
+  displayName,
   onComplete,
 }: {
+  // The already-saved display name: the ceremony identity for the passkey
+  // below. The typed label is only the Spliit-side nickname, renamed after a
+  // successful registration.
+  displayName: string
   onComplete: () => void | Promise<void>
 }) {
   const { t } = useTranslation(undefined, {
@@ -100,6 +108,7 @@ export function AnonymousSafeguardChoice({
   })
   const isOnline = useOnlineStatus()
   const [method, setMethod] = useState<SafeguardMethod>('link')
+  const [passkeyName, setPasskeyName] = useState('')
   const [passkeyPending, setPasskeyPending] = useState(false)
   const [passkeyError, setPasskeyError] = useState(false)
 
@@ -108,7 +117,15 @@ export function AnonymousSafeguardChoice({
     setPasskeyPending(true)
     setPasskeyError(false)
     try {
-      await addPasskey()
+      // The ceremony always carries the display name as its identity, so the
+      // authenticator entry shows it even when the label field is skipped.
+      // The label only renames our own row afterwards — best-effort, and
+      // skipped when it matches the ceremony name (no-op write).
+      const created = await addPasskey(displayName)
+      const nickname = passkeyName.trim()
+      if (nickname && nickname !== displayName.trim()) {
+        await renamePasskey(created.id, nickname).catch(() => {})
+      }
       // The account now signs in with a passkey: point the login screen's
       // "Last used" hint at it (the plugin only writes its cookie on
       // sign-in responses, and registration is not one).
@@ -162,6 +179,21 @@ export function AnonymousSafeguardChoice({
         <AnonymousRecoveryOnboarding hideHeader onComplete={onComplete} />
       ) : (
         <div className="grid gap-2">
+          <div className="grid gap-1.5">
+            <Label htmlFor="anonymous-passkey-name">
+              {t('passkeyNameLabel')}
+            </Label>
+            <Input
+              id="anonymous-passkey-name"
+              type="text"
+              autoComplete="off"
+              maxLength={100}
+              placeholder={t('passkeyNamePlaceholder')}
+              value={passkeyName}
+              onChange={(e) => setPasskeyName(e.target.value)}
+              disabled={disabled}
+            />
+          </div>
           <Button
             type="button"
             className="w-full"

@@ -27,6 +27,7 @@ import {
   notifyPasskeyChanged,
   PasskeyError,
   removePasskey,
+  renamePasskey,
   signOutAndReturnToSignIn,
   type PasskeyInfo,
 } from '@/lib/passkey'
@@ -41,9 +42,14 @@ const ERROR_MESSAGE_KEYS = {
 } as const
 
 export function AccountPasskeySettings({
+  displayName,
   isAnonymous,
   onUpdated,
 }: {
+  // The account display name: always the ceremony identity for a new
+  // passkey, so the authenticator entry shows it. The dialog field only
+  // renames the Spliit-side nickname afterwards.
+  displayName: string
   isAnonymous?: boolean | null
   onUpdated: () => Promise<void>
 }) {
@@ -164,7 +170,19 @@ export function AccountPasskeySettings({
   }
 
   const saveMutation = useMutation({
-    mutationFn: (vars: { name: string }) => addPasskey(vars.name),
+    mutationFn: async (vars: { name: string }) => {
+      // Ceremony identity is always the display name; the typed label only
+      // renames our own row afterwards — best-effort, and skipped when it
+      // matches the ceremony name (no-op write). A failed rename still
+      // resolves: the credential is registered with the display-name
+      // nickname, which is a sensible fallback.
+      const created = await addPasskey(displayName)
+      const nickname = vars.name
+      if (nickname && nickname !== displayName.trim()) {
+        await renamePasskey(created.id, nickname).catch(() => {})
+      }
+      return created
+    },
     onSuccess: async () => {
       await afterChange()
       toast({ description: t('passkey.added') })

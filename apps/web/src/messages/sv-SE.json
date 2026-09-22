@@ -3421,7 +3421,18 @@
       "existingPasskeyTitle": "Har du redan registrerat en passnyckel?",
       "existingPasskeyDescription": "Logga in igen med passnyckeln på en av dina registrerade enheter.",
       "passkeySignIn": "Logga in med passnyckel",
-      "passkeySignInError": "Det gick inte att logga in med den här passnyckeln. Försök igen eller använd din inloggningslänk."
+      "passkeySignInError": "Det gick inte att logga in med den här passnyckeln. Försök igen eller använd din inloggningslänk.",
+      "passkeyNameLabel": "Ge den här passnyckeln ett namn (valfritt)",
+      "passkeyNamePlaceholder": "t.ex. MacBook Touch ID",
+      "nameTitle": "Välj ett visningsnamn",
+      "nameDescription": "Visas på din passnyckel och i dina grupper. Du kan ändra det senare.",
+      "nameLabel": "Visningsnamn",
+      "namePlaceholder": "Ditt namn",
+      "nameSave": "Spara och fortsätt",
+      "nameSaving": "Sparar…",
+      "nameRequired": "Ange ett visningsnamn.",
+      "nameTooShort": "Namnet måste vara minst 2 tecken.",
+      "nameError": "Visningsnamnet kunde inte sparas. Försök igen."
     },
     "onboarding": {
       "title": "Spara din inloggningslänk",

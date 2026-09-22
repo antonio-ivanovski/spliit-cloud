@@ -3444,7 +3444,18 @@
       "existingPasskeyTitle": "Ai înregistrat deja o cheie de acces?",
       "existingPasskeyDescription": "Conectează-te din nou cu cheia de acces pe unul dintre dispozitivele tale înregistrate.",
       "passkeySignIn": "Autentifică-te cu cheia de acces",
-      "passkeySignInError": "Nu te-ai putut conecta cu această cheie de acces. Încearcă din nou sau folosește linkul de conectare."
+      "passkeySignInError": "Nu te-ai putut conecta cu această cheie de acces. Încearcă din nou sau folosește linkul de conectare.",
+      "passkeyNameLabel": "Dă un nume acestei chei de acces (opțional)",
+      "passkeyNamePlaceholder": "de ex. Touch ID de pe MacBook",
+      "nameTitle": "Alege un nume de afișare",
+      "nameDescription": "Se afișează pe cheia ta de acces și în grupurile tale. Poți să-l schimbi mai târziu.",
+      "nameLabel": "Nume de afișare",
+      "namePlaceholder": "Numele tău",
+      "nameSave": "Salvează și continuă",
+      "nameSaving": "Se salvează…",
+      "nameRequired": "Introdu un nume de afișare.",
+      "nameTooShort": "Numele trebuie să aibă cel puțin 2 caractere.",
+      "nameError": "Numele de afișare nu a putut fi salvat. Te rugăm să încerci din nou."
     },
     "onboarding": {
       "title": "Salvați linkul de recuperare",

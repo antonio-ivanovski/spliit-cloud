@@ -3493,7 +3493,18 @@
       "existingPasskeyTitle": "Bereits einen Passkey registriert?",
       "existingPasskeyDescription": "Melde dich mit dem Passkey auf einem deiner registrierten Geräte wieder an.",
       "passkeySignIn": "Mit Passkey anmelden",
-      "passkeySignInError": "Mit diesem Passkey konnte nicht angemeldet werden. Versuche es erneut oder nutze deinen Anmeldelink."
+      "passkeySignInError": "Mit diesem Passkey konnte nicht angemeldet werden. Versuche es erneut oder nutze deinen Anmeldelink.",
+      "passkeyNameLabel": "Gib diesem Passkey einen Namen (optional)",
+      "passkeyNamePlaceholder": "z. B. MacBook Touch ID",
+      "nameTitle": "Wähle einen Anzeigenamen",
+      "nameDescription": "Wird auf deinem Passkey und in deinen Gruppen angezeigt. Du kannst ihn später ändern.",
+      "nameLabel": "Anzeigename",
+      "namePlaceholder": "Dein Name",
+      "nameSave": "Speichern und fortfahren",
+      "nameSaving": "Speichert…",
+      "nameRequired": "Gib einen Anzeigenamen ein.",
+      "nameTooShort": "Der Name muss mindestens 2 Zeichen lang sein.",
+      "nameError": "Der Anzeigename konnte nicht gespeichert werden. Bitte versuche es erneut."
     },
     "onboarding": {
       "title": "Speichere deinen Anmeldelink",

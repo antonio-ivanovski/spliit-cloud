@@ -3442,7 +3442,18 @@
       "existingPasskeyTitle": "Erregistratu al duzu passkey bat?",
       "existingPasskeyDescription": "Hasi saioa berriro erregistratutako gailuetako bateko passkeyarekin.",
       "passkeySignIn": "Hasi saioa passkeyarekin",
-      "passkeySignInError": "Ezin izan da passkey honekin saioa hasi. Saiatu berriro edo erabili saioa hasteko esteka."
+      "passkeySignInError": "Ezin izan da passkey honekin saioa hasi. Saiatu berriro edo erabili saioa hasteko esteka.",
+      "passkeyNameLabel": "Eman izena passkey honi (aukerakoa)",
+      "passkeyNamePlaceholder": "adib. MacBook Touch ID",
+      "nameTitle": "Aukeratu erakusteko izen bat",
+      "nameDescription": "Zure passkey-ean eta taldeetan agertuko da. Geroago alda dezakezu.",
+      "nameLabel": "Erakusteko izena",
+      "namePlaceholder": "Zure izena",
+      "nameSave": "Gorde eta jarraitu",
+      "nameSaving": "Gordetzen…",
+      "nameRequired": "Sartu erakusteko izen bat.",
+      "nameTooShort": "Izenak gutxienez 2 karaktere izan behar ditu.",
+      "nameError": "Ezin izan da erakusteko izena gorde. Saiatu berriro mesedez."
     },
     "onboarding": {
       "title": "Gorde saioa hasteko esteka",

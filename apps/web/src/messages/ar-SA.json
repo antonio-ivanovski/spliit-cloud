@@ -3500,7 +3500,18 @@
       "existingPasskeyTitle": "هل سجّلت مفتاح مرور بالفعل؟",
       "existingPasskeyDescription": "سجّل الدخول مجددًا باستخدام مفتاح المرور على أحد أجهزتك المسجّلة.",
       "passkeySignIn": "تسجيل الدخول بمفتاح المرور",
-      "passkeySignInError": "تعذّر تسجيل الدخول بمفتاح المرور هذا. حاول مرة أخرى أو استخدم رابط تسجيل الدخول."
+      "passkeySignInError": "تعذّر تسجيل الدخول بمفتاح المرور هذا. حاول مرة أخرى أو استخدم رابط تسجيل الدخول.",
+      "passkeyNameLabel": "سمِّ مفتاح المرور هذا (اختياري)",
+      "passkeyNamePlaceholder": "مثال: MacBook Touch ID",
+      "nameTitle": "اختر اسماً ظاهراً",
+      "nameDescription": "يظهر على مفتاح المرور وفي مجموعاتك. يمكنك تغييره لاحقاً.",
+      "nameLabel": "الاسم الظاهر",
+      "namePlaceholder": "اسمك",
+      "nameSave": "حفظ",
+      "nameSaving": "جارٍ الحفظ…",
+      "nameRequired": "أدخل اسماً ظاهراً.",
+      "nameTooShort": "يجب ألا يقل الاسم عن حرفين.",
+      "nameError": "تعذّر حفظ الاسم الظاهر. حاول مرة أخرى."
     },
     "onboarding": {
       "title": "احفظ رابط تسجيل الدخول",

@@ -3493,7 +3493,18 @@
       "existingPasskeyTitle": "Al een passkey geregistreerd?",
       "existingPasskeyDescription": "Log weer in met de passkey op een van uw geregistreerde apparaten.",
       "passkeySignIn": "Inloggen met passkey",
-      "passkeySignInError": "Kon niet inloggen met deze passkey. Probeer het opnieuw of gebruik uw inloglink."
+      "passkeySignInError": "Kon niet inloggen met deze passkey. Probeer het opnieuw of gebruik uw inloglink.",
+      "passkeyNameLabel": "Geef deze passkey een naam (optioneel)",
+      "passkeyNamePlaceholder": "bijv. MacBook Touch ID",
+      "nameTitle": "Kies een weergavenaam",
+      "nameDescription": "Wordt getoond op je passkey en in je groepen. Je kunt deze later wijzigen.",
+      "nameLabel": "Weergavenaam",
+      "namePlaceholder": "Jouw naam",
+      "nameSave": "Opslaan en doorgaan",
+      "nameSaving": "Aan het opslaan…",
+      "nameRequired": "Voer een weergavenaam in.",
+      "nameTooShort": "Naam moet minimaal 2 tekens bevatten.",
+      "nameError": "De weergavenaam kon niet worden opgeslagen. Probeer het opnieuw."
     },
     "onboarding": {
       "title": "Sla uw inloglink op",

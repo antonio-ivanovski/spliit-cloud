@@ -3444,7 +3444,18 @@
       "existingPasskeyTitle": "Ja has registrat una clau d'accés?",
       "existingPasskeyDescription": "Torna a iniciar sessió amb la clau d'accés en un dels teus dispositius registrats.",
       "passkeySignIn": "Inicia sessió amb clau d'accés",
-      "passkeySignInError": "No s'ha pogut iniciar sessió amb aquesta clau d'accés. Torna-ho a provar o utilitza l'enllaç d'inici de sessió."
+      "passkeySignInError": "No s'ha pogut iniciar sessió amb aquesta clau d'accés. Torna-ho a provar o utilitza l'enllaç d'inici de sessió.",
+      "passkeyNameLabel": "Anomena aquesta clau d'accés (opcional)",
+      "passkeyNamePlaceholder": "p. ex., Touch ID del MacBook",
+      "nameTitle": "Tria un nom de visualització",
+      "nameDescription": "Es mostra a la teva clau d'accés i als teus grups. Pots canviar-lo més tard.",
+      "nameLabel": "Nom de visualització",
+      "namePlaceholder": "El teu nom",
+      "nameSave": "Desa i continua",
+      "nameSaving": "Desant…",
+      "nameRequired": "Introdueix un nom de visualització.",
+      "nameTooShort": "El nom ha de tenir almenys 2 caràcters.",
+      "nameError": "No s'ha pogut desar el nom de visualització. Torna-ho a intentar."
     },
     "onboarding": {
       "title": "Desa l'enllaç d'inici de sessió",

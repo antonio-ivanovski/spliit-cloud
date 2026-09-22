@@ -110,6 +110,10 @@ export const deletePasskeyOutputSchema = z.object({
   success: z.boolean(),
 })
 
+export const renamePasskeyOutputSchema = z.object({
+  success: z.boolean(),
+})
+
 export const afterPasskeyChangeOutputSchema = z.object({
   success: z.boolean(),
 })
