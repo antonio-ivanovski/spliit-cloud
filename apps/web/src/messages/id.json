@@ -3350,7 +3350,8 @@
     "hintTapToAddExpense": "Saya {name} — ketuk saya untuk menambah pengeluaran.",
     "hintTapToCreateGroup": "Saya {name} — ketuk saya untuk membuat grup.",
     "billName": "Bill",
-    "offlineMessage": "Saya tidak bisa membuat apa pun selama Anda offline."
+    "offlineMessage": "Saya tidak bisa membuat apa pun selama Anda offline.",
+    "serverUnreachableMessage": "Saya tidak dapat menjangkau server Spliit saat ini — koneksi Anda tampaknya baik-baik saja, jadi ini kesalahan kami."
   },
   "CreateSettlement": {
     "description": "Tinjau pembayaran sebelum mencatatnya.",
@@ -4187,5 +4188,14 @@
     "involvedOnlyBadge": "Hanya yang terlibat",
     "deleteConfirmDescription": "Webhook ini dan riwayat pengirimannya akan dihapus permanen. Pengiriman yang tertunda akan dibatalkan.",
     "deleteConfirm": "Hapus"
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit tidak tersedia",
+    "description": "Kami tidak dapat menjangkau server Spliit saat ini. Koneksi Anda tampaknya baik-baik saja — silakan coba lagi sebentar lagi.",
+    "retry": "Coba lagi"
+  },
+  "ApiStatusBanner": {
+    "message": "Spliit tidak dapat dijangkau saat ini. Koneksi Anda tampaknya baik-baik saja — masalahnya ada di pihak kami.",
+    "statusLink": "Periksa status"
   }
 }

@@ -23,6 +23,6 @@ who is affected, and the exact migration steps.
 
 ### 🐛 Bug fixes
 
-- Short entry per fix (`TBD` by @TBD)
+- Show an accurate "Spliit can't be reached" warning with a status-page link when the API is down instead of incorrectly telling online users they are offline. Self-hosted instances can point it at their own status page via `VITE_STATUS_PAGE_URL`, or leave it unset to hide the link (`TBD` by @TBD)
 
 **Full Changelog**: TBD

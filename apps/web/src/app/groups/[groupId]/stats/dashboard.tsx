@@ -12,12 +12,16 @@ import { CategoryBreakdown } from '@/app/groups/[groupId]/stats/category-breakdo
 import { ParticipantBreakdown } from '@/app/groups/[groupId]/stats/participant-breakdown'
 import { StatsPeriodPicker } from '@/app/groups/[groupId]/stats/period-picker'
 import { SpendingChart } from '@/app/groups/[groupId]/stats/spending-chart'
+import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useLocale } from '@/i18n/react'
 import { getCurrencyFromGroup, type Currency } from '@/lib/currency'
-import { useOfflineWithoutData } from '@/lib/use-online-status'
+import {
+  useOfflineWithoutData,
+  useServerUnreachableWithoutData,
+} from '@/lib/use-online-status'
 import { formatCurrency } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import { resolveFormattingLocale } from '@spliit/domain'
@@ -135,6 +139,11 @@ export function StatsDashboard() {
     { placeholderData: keepPreviousData },
   )
   const showOfflineEmpty = useOfflineWithoutData(!!data)
+  const showServerEmpty = useServerUnreachableWithoutData(!!data)
+
+  if (showServerEmpty) {
+    return <ApiErrorEmptyState onRetry={() => void refetch()} />
+  }
 
   if (showOfflineEmpty) {
     return <OfflineEmptyState onRetry={() => void refetch()} />

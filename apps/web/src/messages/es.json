@@ -3438,7 +3438,8 @@
     "hintTapToAddExpense": "Soy {name} — tócame para añadir un gasto.",
     "hintTapToCreateGroup": "Soy {name} — tócame para crear un grupo.",
     "billName": "Bill",
-    "offlineMessage": "No puedo crear nada mientras estás sin conexión."
+    "offlineMessage": "No puedo crear nada mientras estás sin conexión.",
+    "serverUnreachableMessage": "No puedo conectar con el servidor de Spliit en este momento — tu conexión parece estar bien, así que la culpa es nuestra."
   },
   "CreateSettlement": {
     "description": "Revisa el pago antes de registrarlo.",
@@ -4285,5 +4286,14 @@
     "involvedOnlyBadge": "Solo implicados",
     "deleteConfirmDescription": "Este webhook y su historial de entregas se eliminarán permanentemente. Las entregas pendientes se cancelarán.",
     "deleteConfirm": "Eliminar"
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit no está disponible",
+    "description": "No podemos conectar con el servidor de Spliit en este momento. Tu conexión parece estar bien — inténtalo de nuevo en unos instantes.",
+    "retry": "Intentar de nuevo"
+  },
+  "ApiStatusBanner": {
+    "message": "No se puede contactar con Spliit en este momento. Tu conexión parece estar bien — el problema está de nuestro lado.",
+    "statusLink": "Ver estado"
   }
 }

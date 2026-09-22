@@ -3404,7 +3404,8 @@
     "hintTapToAddExpense": "Jsem {name} — klepni na mě a přidej výdaj.",
     "hintTapToCreateGroup": "Jsem {name} — klepni na mě a vytvoř skupinu.",
     "billName": "Bill",
-    "offlineMessage": "Nemůžu nic vytvořit, když jsi offline."
+    "offlineMessage": "Nemůžu nic vytvořit, když jsi offline.",
+    "serverUnreachableMessage": "Se serverem Spliit se právě teď nemohu spojit — vaše připojení vypadá v pořádku, takže chyba je na naší straně."
   },
   "CreateSettlement": {
     "description": "Zkontrolujte platbu před jejím zaznamenáním.",
@@ -4256,5 +4257,14 @@
     "involvedOnlyBadge": "Pouze mé",
     "deleteConfirmDescription": "Tento webhook a jeho historie doručení budou trvale odstraněny. Čekající doručení budou zrušena.",
     "deleteConfirm": "Smazat"
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit je nedostupný",
+    "description": "Se serverem Spliit se právě teď nelze spojit. Vaše připojení vypadá v pořádku — zkuste to prosím za chvíli znovu.",
+    "retry": "Zkusit znovu"
+  },
+  "ApiStatusBanner": {
+    "message": "Spliit je právě teď nedostupný. Vaše připojení vypadá v pořádku — problém je na naší straně.",
+    "statusLink": "Zkontrolovat stav"
   }
 }

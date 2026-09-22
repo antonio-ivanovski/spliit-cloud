@@ -39,6 +39,15 @@ export async function trackedFetch(
 ): Promise<Response> {
   try {
     const response = await fetch(input, init)
+    // A 5xx response means the request reached *something* but the API itself
+    // is failing (crashed container, broken deploy, overloaded DB). The user
+    // is online — the server is not. Latch this the same way as a thrown
+    // connectivity error so the UI can blame the server instead of the user.
+    // 4xx responses are honest answers from a working API: clear the latch.
+    if (response.status >= 500) {
+      reportNetworkFailure()
+      return response
+    }
     reportNetworkSuccess()
     return response
   } catch (error) {

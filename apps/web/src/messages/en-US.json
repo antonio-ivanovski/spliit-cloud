@@ -3466,7 +3466,8 @@
     "hintTapToAddExpense": "I'm {name} — tap me to add an expense.",
     "hintTapToCreateGroup": "I'm {name} — tap me to create a group.",
     "billName": "Bill",
-    "offlineMessage": "I can't create anything while you're offline."
+    "offlineMessage": "I can't create anything while you're offline.",
+    "serverUnreachableMessage": "I can't reach the Spliit server right now — your connection looks fine, so this one's on us."
   },
   "CreateSettlement": {
     "description": "Review the payment before recording it.",
@@ -4305,5 +4306,14 @@
     "involvedOnlyBadge": "Involved only",
     "deleteConfirmDescription": "This webhook and its delivery history will be permanently removed. Pending deliveries will be canceled.",
     "deleteConfirm": "Delete"
+  },
+  "ApiStatusBanner": {
+    "message": "Spliit can't be reached right now. Your connection looks fine — the problem is on our end.",
+    "statusLink": "Check status"
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit is unavailable",
+    "description": "We can't reach the Spliit server right now. Your connection looks fine — please try again in a moment.",
+    "retry": "Try again"
   }
 }

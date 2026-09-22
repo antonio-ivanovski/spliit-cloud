@@ -2,21 +2,22 @@
 import { WifiOff } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useOnlineStatus } from '@/lib/use-online-status'
+import { useConnectivityStatus } from '@/lib/use-online-status'
 
 /**
  * In-flow banner below the app header. Sticky so it stays visible, but it
  * occupies layout space so it cannot cover the page heading.
  *
- * Uses `navigator.onLine` plus the `online` / `offline` window events, and a
- * latch set when auth/tRPC `fetch` throws a connectivity error. DevTools
- * "service worker offline" often leaves `navigator.onLine` true.
+ * Shown only when the browser itself is offline (`navigator.onLine` false).
+ * When the browser is online but the API cannot be reached,
+ * {@link ApiStatusBanner} takes over instead — the user is not offline, so we
+ * must not say they are.
  */
 export function OfflineBanner() {
-  const isOnline = useOnlineStatus()
+  const status = useConnectivityStatus()
   const { t } = useTranslation()
 
-  if (isOnline) return null
+  if (status !== 'offline') return null
 
   return (
     <div

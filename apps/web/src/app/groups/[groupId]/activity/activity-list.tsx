@@ -8,11 +8,15 @@ import {
 } from '@/app/groups/[groupId]/activity/activity-grouping'
 import { ActivityItem } from '@/app/groups/[groupId]/activity/activity-item'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
+import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { ScanStickyHeading } from '@/components/layout/scan-surface'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
-import { useOfflineWithoutData } from '@/lib/use-online-status'
+import {
+  useOfflineWithoutData,
+  useServerUnreachableWithoutData,
+} from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 import { useCurrentGroup } from '../current-group-context'
@@ -79,10 +83,19 @@ export function ActivityList() {
   const activities = activitiesData?.pages.flatMap((page) => page.activities)
   const hasMore = activitiesData?.pages.at(-1)?.hasMore ?? false
   const showOfflineEmpty = useOfflineWithoutData(!!activitiesData)
+  const showServerEmpty = useServerUnreachableWithoutData(!!activitiesData)
 
   useEffect(() => {
     if (inView && hasMore && !isLoading) void fetchNextPage()
   }, [fetchNextPage, hasMore, inView, isLoading])
+
+  if (showServerEmpty) {
+    return (
+      <div className="px-4 sm:px-6">
+        <ApiErrorEmptyState variant="plain" onRetry={() => void refetch()} />
+      </div>
+    )
+  }
 
   if (showOfflineEmpty) {
     return (

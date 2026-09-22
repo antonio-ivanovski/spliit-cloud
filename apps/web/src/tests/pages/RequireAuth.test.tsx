@@ -177,7 +177,7 @@ describe('RequireAuth', () => {
     expect(screen.queryByTestId('child')).not.toBeInTheDocument()
   })
 
-  it('shows the offline empty state when get-session fails and navigator.onLine is still true', () => {
+  it('shows the server-down empty state when get-session fails and navigator.onLine is still true', () => {
     reportNetworkFailure(new TypeError('Failed to fetch'))
     vi.mocked(useCurrentAccount).mockReturnValue({
       data: null,
@@ -195,7 +195,8 @@ describe('RequireAuth', () => {
       </RequireAuth>,
     )
 
-    expect(screen.getByTestId('offline-empty-state')).toBeInTheDocument()
+    expect(screen.getByTestId('api-error-empty-state')).toBeInTheDocument()
+    expect(screen.queryByTestId('offline-empty-state')).not.toBeInTheDocument()
     expect(screen.queryByTestId('navigate')).not.toBeInTheDocument()
   })
 

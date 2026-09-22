@@ -16,6 +16,7 @@ import {
 import { useState, Suspense, lazy } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { PageInset } from '@/components/layout/page-shell'
 import { useMascotController } from '@/components/mascot/mascot-context'
 import { Money } from '@/components/money'
@@ -41,7 +42,10 @@ import { getCurrencyFromGroup } from '@/lib/currency'
 import { useMediaQuery } from '@/lib/hooks'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { useOfflineWithoutData } from '@/lib/use-online-status'
+import {
+  useOfflineWithoutData,
+  useServerUnreachableWithoutData,
+} from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 import { CollapsibleSection } from './collapsible-section'
@@ -106,6 +110,7 @@ export function RecentGroupList() {
   const { data, error, isLoading, refetch } =
     trpc.overview.get.useQuery(undefined)
   const showOfflineEmpty = useOfflineWithoutData(!!data)
+  const showServerEmpty = useServerUnreachableWithoutData(!!data)
   const [forceArchiveTarget, setForceArchiveTarget] =
     useState<AccountGroup | null>(null)
   const [scanOpen, setScanOpen] = useState(false)
@@ -213,7 +218,9 @@ export function RecentGroupList() {
   }
 
   let body: React.ReactNode
-  if (showOfflineEmpty) {
+  if (showServerEmpty) {
+    body = <ApiErrorEmptyState onRetry={() => void refetch()} />
+  } else if (showOfflineEmpty) {
     body = <OfflineEmptyState onRetry={() => void refetch()} />
   } else if (isGroupsLoading) {
     body = (

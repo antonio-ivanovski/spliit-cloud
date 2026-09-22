@@ -47,6 +47,7 @@ vi.mock('@/trpc/client', () => ({
 
 vi.mock('@/lib/use-online-status', () => ({
   useOfflineWithoutData: () => false,
+  useServerUnreachableWithoutData: () => false,
 }))
 
 vi.mock('@/app/groups/[groupId]/stats/period-picker', () => ({

@@ -3351,7 +3351,8 @@
     "hintTapToAddExpense": "私は{name}です。タップして支出を追加できます。",
     "hintTapToCreateGroup": "私は{name}です。タップしてグループを作成できます。",
     "billName": "ビル",
-    "offlineMessage": "オフライン中は何も作成できません。"
+    "offlineMessage": "オフライン中は何も作成できません。",
+    "serverUnreachableMessage": "今Spliitサーバーに接続できません — 接続に問題はないようなので、こちら側の問題です。"
   },
   "CreateSettlement": {
     "description": "支払いを記録する前に確認してください。",
@@ -4188,5 +4189,14 @@
     "involvedOnlyBadge": "自分のみ",
     "deleteConfirmDescription": "このWebhookとその配信履歴は完全に削除されます。保留中の配信はキャンセルされます。",
     "deleteConfirm": "削除"
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliitはご利用いただけません",
+    "description": "現在Spliitサーバーに接続できません。接続に問題はないようですので、しばらくしてからもう一度お試しください。",
+    "retry": "再試行"
+  },
+  "ApiStatusBanner": {
+    "message": "現在Spliitに接続できません。接続に問題はないようです — こちら側の問題です。",
+    "statusLink": "ステータスを確認"
   }
 }

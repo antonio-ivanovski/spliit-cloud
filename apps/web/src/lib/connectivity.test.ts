@@ -37,4 +37,17 @@ describe('connectivity latch', () => {
     expect(hasFetchNetworkFailure()).toBe(true)
     globalThis.fetch = original
   })
+
+  it('trackedFetch latches on 5xx responses but clears on 4xx/2xx', async () => {
+    const original = globalThis.fetch
+    globalThis.fetch = (async () =>
+      new Response('{}', { status: 503 })) as typeof fetch
+    await trackedFetch('/trpc')
+    expect(hasFetchNetworkFailure()).toBe(true)
+    globalThis.fetch = (async () =>
+      new Response('{}', { status: 401 })) as typeof fetch
+    await trackedFetch('/trpc')
+    expect(hasFetchNetworkFailure()).toBe(false)
+    globalThis.fetch = original
+  })
 })

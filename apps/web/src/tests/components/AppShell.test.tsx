@@ -81,6 +81,9 @@ vi.mock('@/components/mobile-shell', () => ({
   ),
 }))
 vi.mock('@/components/offline-banner', () => ({ OfflineBanner: () => null }))
+vi.mock('@/components/api-status-banner', () => ({
+  ApiStatusBanner: () => null,
+}))
 vi.mock('@/components/pwa-register', () => ({ PwaRegister: () => null }))
 vi.mock('@/components/profile-gate', () => ({
   ProfileGate: ({ children }: React.PropsWithChildren) => children,

@@ -3385,7 +3385,8 @@
     "hintTapToAddExpense": "{name} naiz — sakatu niri gastu bat gehitzeko.",
     "hintTapToCreateGroup": "{name} naiz — sakatu niri talde bat sortzeko.",
     "billName": "Bill",
-    "offlineMessage": "Ezin dut ezer sortu lineaz kanpo zauden bitartean."
+    "offlineMessage": "Ezin dut ezer sortu lineaz kanpo zauden bitartean.",
+    "serverUnreachableMessage": "Ezin dut Spliit zerbitzariarekin konektatu une honetan — zure konexioa ondo dagoela dirudi, beraz arazoa gurea da."
   },
   "CreateSettlement": {
     "description": "Berrikusi ordainketa erregistratu aurretik.",
@@ -4232,5 +4233,14 @@
     "involvedOnlyBadge": "Parte-hartutakoak soilik",
     "deleteConfirmDescription": "Webhook hau eta bere bidalketa-historia betiko ezabatuko dira. Zain dauden bidalketak ezeztatuko dira.",
     "deleteConfirm": "Ezabatu"
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit ez dago erabilgarri",
+    "description": "Ezin dugu Spliit zerbitzariarekin konektatu une honetan. Zure konexioa ondo dagoela dirudi — saiatu berriro pixka bat barru.",
+    "retry": "Saiatu berriro"
+  },
+  "ApiStatusBanner": {
+    "message": "Ezin da Spliitekin konektatu une honetan. Zure konexioa ondo dagoela dirudi — arazoa gurea da.",
+    "statusLink": "Egiaztatu egoera"
   }
 }

@@ -23,6 +23,7 @@ import {
 } from '@/app/groups/[groupId]/expenses/use-expense-filters'
 import { useRenderedViewMode } from '@/app/groups/[groupId]/expenses/use-rendered-view-mode'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
+import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { Button } from '@/components/ui/button'
 import { SearchBar } from '@/components/ui/search-bar'
@@ -30,7 +31,10 @@ import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import { useActiveUser } from '@/lib/hooks'
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { useOfflineWithoutData } from '@/lib/use-online-status'
+import {
+  useOfflineWithoutData,
+  useServerUnreachableWithoutData,
+} from '@/lib/use-online-status'
 import { getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
@@ -140,6 +144,7 @@ const ExpenseListForSearch = ({
   const expenses = data?.pages.flatMap((page) => page.expenses)
   const hasMore = data?.pages.at(-1)?.hasMore ?? false
   const showOfflineEmpty = useOfflineWithoutData(!!data)
+  const showServerEmpty = useServerUnreachableWithoutData(!!data)
   // While a mode switch refetches, render the stale rows under their own
   // (previous) mode so the list never flashes a half-state.
   const renderedShowAll = useRenderedViewMode(showAll, isPlaceholderData)
@@ -149,6 +154,14 @@ const ExpenseListForSearch = ({
   useEffect(() => {
     if (inView && hasMore && !isLoading) void fetchNextPage()
   }, [fetchNextPage, hasMore, inView, isLoading])
+
+  if (showServerEmpty) {
+    return (
+      <div className="px-4 sm:px-6">
+        <ApiErrorEmptyState variant="plain" onRetry={() => void refetch()} />
+      </div>
+    )
+  }
 
   if (showOfflineEmpty) {
     return (

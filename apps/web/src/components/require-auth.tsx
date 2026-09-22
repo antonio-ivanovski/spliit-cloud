@@ -2,10 +2,14 @@ import { Navigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import type { PropsWithChildren } from 'react'
 
+import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { needsAccountOnboarding } from '@/lib/account'
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { useOnlineStatus } from '@/lib/use-online-status'
+import {
+  useOfflineWithoutData,
+  useServerUnreachableWithoutData,
+} from '@/lib/use-online-status'
 
 function currentPathWithSearch(): string {
   if (typeof window === 'undefined') return '/'
@@ -31,7 +35,8 @@ function hasGroupViewerCredential(): boolean {
  */
 export function RequireAuth({ children }: PropsWithChildren) {
   const { data: account, isPending, refetch } = useCurrentAccount()
-  const isOnline = useOnlineStatus()
+  const showOfflineEmpty = useOfflineWithoutData(!!account)
+  const showServerEmpty = useServerUnreachableWithoutData(!!account)
   const permitsGroupViewer =
     typeof window !== 'undefined' &&
     /^\/groups\/(?!create(?:\/|$)|import(?:\/|$)|bulk-categorize(?:\/|$))[^/]+(?:\/|$)/.test(
@@ -49,8 +54,13 @@ export function RequireAuth({ children }: PropsWithChildren) {
 
   if (!account) {
     if (permitsGroupViewer) return <>{children}</>
-    if (!isOnline) {
+    if (showOfflineEmpty) {
       return <OfflineEmptyState variant="page" onRetry={() => void refetch()} />
+    }
+    if (showServerEmpty) {
+      return (
+        <ApiErrorEmptyState variant="page" onRetry={() => void refetch()} />
+      )
     }
     return (
       <Navigate to="/" search={{ redirect: currentPathWithSearch() }} replace />

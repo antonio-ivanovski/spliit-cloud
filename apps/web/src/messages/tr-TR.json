@@ -3368,7 +3368,8 @@
     "hintTapToAddExpense": "Ben {name} — gider eklemek için bana dokun.",
     "hintTapToCreateGroup": "Ben {name} — grup oluşturmak için bana dokun.",
     "billName": "Bill",
-    "offlineMessage": "Çevrimdışıyken hiçbir şey oluşturamam."
+    "offlineMessage": "Çevrimdışıyken hiçbir şey oluşturamam.",
+    "serverUnreachableMessage": "Şu anda Spliit sunucusuna ulaşamıyorum — bağlantın normal görünüyor, yani sorun bizde."
   },
   "CreateSettlement": {
     "description": "Ödemeyi kaydetmeden önce gözden geçirin.",
@@ -4210,5 +4211,14 @@
     "involvedOnlyBadge": "Yalnızca ilgili",
     "deleteConfirmDescription": "Bu webhook ve teslimat geçmişi kalıcı olarak kaldırılacak. Bekleyen teslimatlar iptal edilecek.",
     "deleteConfirm": "Sil"
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit kullanılamıyor",
+    "description": "Şu anda Spliit sunucusuna ulaşamıyoruz. Bağlantın normal görünüyor — lütfen birazdan tekrar dene.",
+    "retry": "Tekrar dene"
+  },
+  "ApiStatusBanner": {
+    "message": "Şu anda Spliit'e ulaşılamıyor. Bağlantın normal görünüyor — sorun bizden kaynaklanıyor.",
+    "statusLink": "Durumu kontrol et"
   }
 }

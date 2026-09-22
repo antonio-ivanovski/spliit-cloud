@@ -8,6 +8,7 @@ import {
   AmbientAccentProvider,
   AmbientBackdrop,
 } from '@/components/ambient-backdrop'
+import { ApiStatusBanner } from '@/components/api-status-banner'
 import Image from '@/components/app-image'
 import { CurrencyConverterButton } from '@/components/currency-converter/currency-converter'
 import { InstallPromotionDialog } from '@/components/install-promotion-dialog'
@@ -143,6 +144,7 @@ function Content() {
 
             <div className="relative z-20 flex flex-1 flex-col pt-(--app-header-height)">
               <OfflineBanner />
+              <ApiStatusBanner />
               <ProfileGate>
                 <Outlet />
               </ProfileGate>

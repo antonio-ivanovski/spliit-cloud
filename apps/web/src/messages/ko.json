@@ -3435,7 +3435,8 @@
     "hintTapToAddExpense": "저는 {name}입니다. 나를 눌러 지출을 추가하세요.",
     "hintTapToCreateGroup": "저는 {name}입니다. 나를 눌러 그룹을 만드세요.",
     "billName": "빌",
-    "offlineMessage": "오프라인 상태에서는 아무것도 만들 수 없어요."
+    "offlineMessage": "오프라인 상태에서는 아무것도 만들 수 없어요.",
+    "serverUnreachableMessage": "지금 Spliit 서버에 연결할 수 없어요 — 연결 상태는 정상으로 보이니 저희 쪽 문제예요."
   },
   "CreateSettlement": {
     "description": "지불을 기록하기 전에 확인하세요.",
@@ -4272,5 +4273,14 @@
     "involvedOnlyBadge": "관련 항목만",
     "deleteConfirmDescription": "이 웹훅과 전송 기록이 영구적으로 삭제됩니다. 대기 중인 전송은 취소됩니다.",
     "deleteConfirm": "삭제"
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit을 현재 사용할 수 없습니다",
+    "description": "지금 Spliit 서버에 연결할 수 없습니다. 연결 상태는 정상으로 보이니 잠시 후 다시 시도해 주세요.",
+    "retry": "다시 시도"
+  },
+  "ApiStatusBanner": {
+    "message": "지금 Spliit에 연결할 수 없습니다. 연결 상태는 정상으로 보이니 저희 쪽 문제입니다.",
+    "statusLink": "상태 확인"
   }
 }

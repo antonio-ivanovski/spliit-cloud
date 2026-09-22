@@ -3364,7 +3364,8 @@
     "hintTapToAddExpense": "Jag är {name} — tryck på mig för att lägga till en utgift.",
     "hintTapToCreateGroup": "Jag är {name} — tryck på mig för att skapa en grupp.",
     "billName": "Bill",
-    "offlineMessage": "Jag kan inte skapa något medan du är offline."
+    "offlineMessage": "Jag kan inte skapa något medan du är offline.",
+    "serverUnreachableMessage": "Jag kan inte nå Spliit-servern just nu — din anslutning ser bra ut, så det här felet ligger hos oss."
   },
   "CreateSettlement": {
     "description": "Granska betalningen innan du registrerar den.",
@@ -4206,5 +4207,14 @@
     "involvedOnlyBadge": "Endast egna",
     "deleteConfirmDescription": "Den här webhooken och dess leveranshistorik tas bort permanent. Väntande leveranser avbryts.",
     "deleteConfirm": "Ta bort"
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit är inte tillgängligt",
+    "description": "Vi kan inte nå Spliit-servern just nu. Din anslutning ser bra ut — försök igen om en stund.",
+    "retry": "Försök igen"
+  },
+  "ApiStatusBanner": {
+    "message": "Det går inte att nå Spliit just nu. Din anslutning ser bra ut — problemet ligger hos oss.",
+    "statusLink": "Kontrollera status"
   }
 }

@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/speed-dial'
 import { isMobileGroupNavPath } from '@/lib/mobile-nav'
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { useOnlineStatus } from '@/lib/use-online-status'
+import { useConnectivityStatus, useOnlineStatus } from '@/lib/use-online-status'
 import { cn } from '@/lib/utils'
 
 import {
@@ -61,6 +61,7 @@ import {
   coachSpeechForActions,
   isCoachSpeechLine,
   OFFLINE_SPEECH_LINE,
+  SERVER_UNREACHABLE_SPEECH_LINE,
   type MascotSpeechLine,
 } from './mascot-speech'
 import { MascotSpeechBubble } from './mascot-speech-bubble'
@@ -125,6 +126,7 @@ export function MascotHost() {
   const { react } = useMascotController()
   const { data: account, isPending } = useCurrentAccount()
   const isOnline = useOnlineStatus()
+  const connectivityStatus = useConnectivityStatus()
   const offline = !isOnline
   const welcomedAccountRef = useRef<string | null>(null)
   const pathname = useLocation({ select: (location) => location.pathname })
@@ -270,8 +272,12 @@ export function MascotHost() {
   }, [account?.id, navigate])
 
   const handlePersonalityTap = useCallback(() => {
-    if (offline) {
+    if (connectivityStatus === 'offline') {
       setSpeech({ path: pathname, line: OFFLINE_SPEECH_LINE })
+      return
+    }
+    if (connectivityStatus === 'server-unreachable') {
+      setSpeech({ path: pathname, line: SERVER_UNREACHABLE_SPEECH_LINE })
       return
     }
     if (cycleRef.current.path !== pathname) {
@@ -281,7 +287,7 @@ export function MascotHost() {
     cycleRef.current.index += 1
     setSpeech({ path: pathname, line })
     mascot?.react('welcome', 900)
-  }, [mascot, offline, pathname, speechLines])
+  }, [mascot, connectivityStatus, pathname, speechLines])
 
   useEffect(() => {
     if (!speechLine) return

@@ -3351,7 +3351,8 @@
     "hintTapToAddExpense": "我是 {name}，点我即可添加一笔支出。",
     "hintTapToCreateGroup": "我是 {name}，点我即可创建群组。",
     "billName": "Bill",
-    "offlineMessage": "处于离线状态时，我无法创建任何内容。"
+    "offlineMessage": "处于离线状态时，我无法创建任何内容。",
+    "serverUnreachableMessage": "我目前无法连接到 Spliit 服务器 — 您的网络连接正常，问题出在我们这边。"
   },
   "CreateSettlement": {
     "description": "请核对付款信息后再记录。",
@@ -4188,5 +4189,14 @@
     "involvedOnlyBadge": "仅与我相关",
     "deleteConfirmDescription": "此 Webhook 及其传送历史将被永久删除。待处理的传送将被取消。",
     "deleteConfirm": "删除"
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit 暂时不可用",
+    "description": "目前无法连接到 Spliit 服务器。您的网络连接正常 — 请稍后再试。",
+    "retry": "重试"
+  },
+  "ApiStatusBanner": {
+    "message": "目前无法连接到 Spliit。您的网络连接正常 — 问题出在我们这边。",
+    "statusLink": "查看状态"
   }
 }

@@ -2,10 +2,14 @@ import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { PageInset } from '@/components/layout/page-shell'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import type { Balances, SuggestedSettlement } from '@/lib/balances'
-import { useOfflineWithoutData } from '@/lib/use-online-status'
+import {
+  useOfflineWithoutData,
+  useServerUnreachableWithoutData,
+} from '@/lib/use-online-status'
 import { getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type {
@@ -114,6 +118,7 @@ export default function BalancesAndSettlements() {
   const { data: subgroupsData, isLoading: subgroupsAreLoading } =
     trpc.groups.subgroups.list.useQuery({ groupId, linkInviteToken, viewKey })
   const showOfflineEmpty = useOfflineWithoutData(!!balancesData)
+  const showServerEmpty = useServerUnreachableWithoutData(!!balancesData)
 
   useEffect(() => {
     // Until we use tRPC more widely and can invalidate the cache on expense
@@ -170,6 +175,9 @@ export default function BalancesAndSettlements() {
         : [],
     [subgroupsData],
   )
+  if (showServerEmpty) {
+    return <ApiErrorEmptyState onRetry={() => void refetchBalances()} />
+  }
   if (showOfflineEmpty) {
     return <OfflineEmptyState onRetry={() => void refetchBalances()} />
   }

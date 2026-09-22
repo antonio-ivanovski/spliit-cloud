@@ -3443,7 +3443,8 @@
     "hintTapToAddExpense": "أنا {name} — انقر عليّ لإضافة نفقة.",
     "hintTapToCreateGroup": "أنا {name} — انقر عليّ لإنشاء مجموعة.",
     "billName": "بيل",
-    "offlineMessage": "لا أستطيع إنشاء أي شيء وأنت غير متصل."
+    "offlineMessage": "لا أستطيع إنشاء أي شيء وأنت غير متصل.",
+    "serverUnreachableMessage": "تعذّر عليّ الوصول إلى خادم Spliit في الوقت الحالي — يبدو اتصالك جيدًا، إذن المشكلة من جانبنا."
   },
   "CreateSettlement": {
     "description": "سوِّ الحسابات مع عضو في المجموعة.",
@@ -4305,5 +4306,14 @@
     "involvedOnlyBadge": "مشارَكتي فقط",
     "deleteConfirmDescription": "ستتم إزالة خطاف الويب هذا وسجلّ تسليماته نهائيًا، وسيتم إلغاء عمليات التسليم المعلّقة.",
     "deleteConfirm": "حذف"
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit غير متاح حاليًا",
+    "description": "تعذّر الوصول إلى خادم Spliit في الوقت الحالي. يبدو اتصالك جيدًا — يُرجى المحاولة مجددًا بعد قليل.",
+    "retry": "إعادة المحاولة"
+  },
+  "ApiStatusBanner": {
+    "message": "تعذّر الوصول إلى Spliit في الوقت الحالي. يبدو اتصالك جيدًا — المشكلة من جانبنا.",
+    "statusLink": "التحقق من الحالة"
   }
 }

@@ -3387,7 +3387,8 @@
     "hintTapToAddExpense": "אני {name} — גע בי כדי להוסיף הוצאה.",
     "hintTapToCreateGroup": "אני {name} — גע בי כדי ליצור קבוצה.",
     "billName": "ביל",
-    "offlineMessage": "אני לא יכול ליצור כלום כשאין חיבור לרשת."
+    "offlineMessage": "אני לא יכול ליצור כלום כשאין חיבור לרשת.",
+    "serverUnreachableMessage": "אני לא מצליח להתחבר לשרת Spliit כרגע — החיבור שלך נראה תקין, אז הבעיה אצלנו."
   },
   "CreateSettlement": {
     "description": "סקור את התשלום לפני רישומו.",
@@ -4239,5 +4240,14 @@
     "involvedOnlyBadge": "מעורבות בלבד",
     "deleteConfirmDescription": "הוובהוק הזה והיסטוריית המסירות שלו יוסרו לצמיתות. מסירות ממתינות יבוטלו.",
     "deleteConfirm": "מחיקה"
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit אינו זמין כרגע",
+    "description": "לא ניתן להתחבר לשרת Spliit כרגע. החיבור שלך נראה תקין — יש לנסות שוב בעוד רגע.",
+    "retry": "נסו שוב"
+  },
+  "ApiStatusBanner": {
+    "message": "לא ניתן להתחבר ל־Spliit כרגע. החיבור שלך נראה תקין — הבעיה בצד שלנו.",
+    "statusLink": "בדיקת סטטוס"
   }
 }

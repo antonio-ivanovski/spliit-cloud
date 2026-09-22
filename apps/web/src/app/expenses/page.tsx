@@ -18,6 +18,7 @@ import {
 } from '@/app/groups/[groupId]/expenses/expense-timeline'
 import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
+import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { PageShell } from '@/components/layout/page-shell'
 import { ScanSurface } from '@/components/layout/scan-surface'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
@@ -42,7 +43,10 @@ import {
   enforceCurrencyPattern,
   localizeCurrencyInput,
 } from '@/lib/currency-input'
-import { useOfflineWithoutData } from '@/lib/use-online-status'
+import {
+  useOfflineWithoutData,
+  useServerUnreachableWithoutData,
+} from '@/lib/use-online-status'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
@@ -668,6 +672,7 @@ export function GlobalExpensesContent() {
     expensesQuery.data?.pages.flatMap((page) => page.expenses) ?? []
   const hasMore = expensesQuery.data?.pages.at(-1)?.hasMore ?? false
   const showOfflineEmpty = useOfflineWithoutData(!!expensesQuery.data)
+  const showServerEmpty = useServerUnreachableWithoutData(!!expensesQuery.data)
 
   useEffect(() => {
     if (inView && hasMore && !expensesQuery.isFetching)
@@ -790,7 +795,17 @@ export function GlobalExpensesContent() {
               </div>
             )}
             <section aria-label={t('Expenses.globalTitle')}>
-              {showOfflineEmpty ? (
+              {showServerEmpty ? (
+                <div className="mx-4 sm:mx-6">
+                  <ApiErrorEmptyState
+                    variant="plain"
+                    onRetry={() => {
+                      void optionsQuery.refetch()
+                      void expensesQuery.refetch()
+                    }}
+                  />
+                </div>
+              ) : showOfflineEmpty ? (
                 <div className="mx-4 sm:mx-6">
                   <OfflineEmptyState
                     variant="plain"

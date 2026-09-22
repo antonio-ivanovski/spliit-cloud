@@ -3387,7 +3387,8 @@
     "hintTapToAddExpense": "Sóc {name} — toca'm per afegir una despesa.",
     "hintTapToCreateGroup": "Sóc {name} — toca'm per crear un grup.",
     "billName": "Bill",
-    "offlineMessage": "No puc crear res mentre no tens connexió."
+    "offlineMessage": "No puc crear res mentre no tens connexió.",
+    "serverUnreachableMessage": "No puc connectar amb el servidor de Spliit ara mateix — la teva connexió sembla correcta, així que la culpa és nostra."
   },
   "CreateSettlement": {
     "description": "Revisa el pagament abans de registrar-lo.",
@@ -4234,5 +4235,14 @@
     "involvedOnlyBadge": "Només implicats",
     "deleteConfirmDescription": "Aquest webhook i el seu historial de lliuraments s'eliminaran permanentment. Els lliuraments pendents es cancel·laran.",
     "deleteConfirm": "Elimina"
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit no està disponible",
+    "description": "No podem connectar amb el servidor de Spliit ara mateix. La teva connexió sembla correcta — torna-ho a provar d'aquí a una estona.",
+    "retry": "Torna-ho a provar"
+  },
+  "ApiStatusBanner": {
+    "message": "No es pot contactar amb Spliit ara mateix. La teva connexió sembla correcta — el problema és nostre.",
+    "statusLink": "Consulta l'estat"
   }
 }

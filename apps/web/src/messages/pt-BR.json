@@ -1731,7 +1731,8 @@
     "landingHintTap": "Toque em mim quando quiser. Eu não mordo — sou um recibo.",
     "hintTapToAddExpense": "Eu sou o {name} — toque em mim para adicionar uma despesa.",
     "hintTapToCreateGroup": "Eu sou o {name} — toque em mim para criar um grupo.",
-    "offlineMessage": "Não consigo criar nada enquanto você está offline."
+    "offlineMessage": "Não consigo criar nada enquanto você está offline.",
+    "serverUnreachableMessage": "Não consigo conectar ao servidor Spliit agora — sua conexão parece estar bem, então a culpa é nossa."
   },
   "CreateSettlement": {
     "description": "Revise o pagamento antes de registrá-lo.",
@@ -2145,5 +2146,12 @@
     "urlHint": "Endpoint HTTPS público. Alterar o URL desativa o endpoint até você reativá-lo.",
     "eventsRequired": "Selecione pelo menos um tipo de evento.",
     "involvedOnlyHint": "Receba apenas eventos de despesas que você pagou ou das quais deve uma parte."
+  },
+  "ApiErrorEmptyState": {
+    "description": "Não foi possível conectar ao servidor Spliit agora. Sua conexão parece estar bem — tente novamente em instantes."
+  },
+  "ApiStatusBanner": {
+    "message": "Não foi possível acessar o Spliit agora. Sua conexão parece estar bem — o problema é do nosso lado.",
+    "statusLink": "Ver status"
   }
 }

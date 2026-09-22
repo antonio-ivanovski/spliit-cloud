@@ -88,6 +88,13 @@ project can continue serving the web app from Cloudflare Pages while exposing
 the API from Dokploy or the API-port Compose override. No runtime `config.js` is
 used.
 
+When the browser is online but the API cannot be reached, the web app shows a
+server-down warning instead of claiming the user is offline. Build the SPA with
+`VITE_STATUS_PAGE_URL` set to link that warning (and the matching empty
+states) to a status page — Spliit Cloud uses `https://status.spliit.cloud/`.
+Leave it unset on self-hosted instances without a status page: the warning
+still appears, just without an external link.
+
 ## Optional features
 
 The example environment file contains every supported toggle. Optional values

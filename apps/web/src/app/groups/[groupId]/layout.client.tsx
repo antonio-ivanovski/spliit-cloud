@@ -11,6 +11,7 @@ import type { PropsWithChildren } from 'react'
 import { useEffect, useState, useSyncExternalStore } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { CopyButton } from '@/components/copy-button'
 import { PageInset } from '@/components/layout/page-shell'
 import { GroupMobileAppBar, MobileGroupNav } from '@/components/mobile-shell'
@@ -29,7 +30,11 @@ import { useToast } from '@/components/ui/use-toast'
 import { useEffectiveRuntimeFeatureFlags } from '@/lib/effective-runtime-feature-flags'
 import { isFocusedMobilePath, isMobileGroupNavPath } from '@/lib/mobile-nav'
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { useOnlineStatus } from '@/lib/use-online-status'
+import {
+  useOfflineWithoutData,
+  useOnlineStatus,
+  useServerUnreachableWithoutData,
+} from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 import { displayEmoji } from '@spliit/domain'
 
@@ -86,7 +91,8 @@ export function GroupLayoutClient({
     { retry: false },
   )
   const isOnline = useOnlineStatus()
-  const showOfflineEmpty = !isOnline && !data?.group
+  const showOfflineEmpty = useOfflineWithoutData(!!data?.group)
+  const showServerEmpty = useServerUnreachableWithoutData(!!data?.group)
   const { t: tNotFound } = useTranslation(undefined, {
     keyPrefix: 'Groups.NotFound',
   })
@@ -133,6 +139,14 @@ export function GroupLayoutClient({
       })
     }
   }, [data, tNotFound, toast])
+
+  if (showServerEmpty) {
+    return (
+      <main className="flex flex-1 flex-col">
+        <ApiErrorEmptyState variant="page" onRetry={() => void refetch()} />
+      </main>
+    )
+  }
 
   if (showOfflineEmpty) {
     return (

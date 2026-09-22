@@ -3433,7 +3433,8 @@
     "hintTapToAddExpense": "Tôi là {name} — chạm vào tôi để thêm khoản chi.",
     "hintTapToCreateGroup": "Tôi là {name} — chạm vào tôi để tạo nhóm.",
     "billName": "Bill",
-    "offlineMessage": "Tôi không thể tạo gì khi bạn đang ngoại tuyến."
+    "offlineMessage": "Tôi không thể tạo gì khi bạn đang ngoại tuyến.",
+    "serverUnreachableMessage": "Hiện không thể kết nối đến máy chủ Spliit — kết nối mạng vẫn ổn, nên đây là lỗi từ phía chúng tôi."
   },
   "CreateSettlement": {
     "description": "Xem lại khoản thanh toán tất toán trước khi ghi nhận.",
@@ -4270,5 +4271,14 @@
     "involvedOnlyBadge": "Chỉ liên quan",
     "deleteConfirmDescription": "Webhook này và lịch sử gửi sẽ bị xóa vĩnh viễn. Các lần gửi đang chờ sẽ bị hủy.",
     "deleteConfirm": "Xóa"
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit hiện không khả dụng",
+    "description": "Hiện không thể kết nối đến máy chủ Spliit. Kết nối mạng vẫn ổn — vui lòng thử lại sau giây lát.",
+    "retry": "Thử lại"
+  },
+  "ApiStatusBanner": {
+    "message": "Hiện không thể kết nối đến Spliit. Kết nối mạng vẫn ổn — sự cố nằm ở phía chúng tôi.",
+    "statusLink": "Xem trạng thái"
   }
 }

@@ -3368,7 +3368,8 @@
     "hintTapToAddExpense": "Olen {name} — napauta minua lisätäksesi kulun.",
     "hintTapToCreateGroup": "Olen {name} — napauta minua luodaksesi ryhmän.",
     "billName": "Bill",
-    "offlineMessage": "En voi luoda mitään, kun et ole yhteydessä."
+    "offlineMessage": "En voi luoda mitään, kun et ole yhteydessä.",
+    "serverUnreachableMessage": "En saa yhteyttä Spliit-palvelimeen juuri nyt — yhteytesi näyttää toimivan, joten vika on meidän."
   },
   "CreateSettlement": {
     "description": "Tarkista maksu ennen sen tallentamista.",
@@ -4210,5 +4211,14 @@
     "involvedOnlyBadge": "Vain omat",
     "deleteConfirmDescription": "Tämä webhook ja sen toimitushistoria poistetaan pysyvästi. Odottavat toimitukset peruutetaan.",
     "deleteConfirm": "Poista"
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit ei ole käytettävissä",
+    "description": "Spliit-palvelimeen ei saada yhteyttä juuri nyt. Yhteytesi näyttää toimivan — yritä hetken kuluttua uudelleen.",
+    "retry": "Yritä uudelleen"
+  },
+  "ApiStatusBanner": {
+    "message": "Spliitiin ei saada yhteyttä juuri nyt. Yhteytesi näyttää toimivan — vika on meidän päässämme.",
+    "statusLink": "Tarkista tila"
   }
 }

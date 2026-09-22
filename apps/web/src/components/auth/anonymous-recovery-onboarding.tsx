@@ -2,6 +2,7 @@ import { AlertTriangle, Loader2, RefreshCw } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,7 +14,7 @@ import {
 } from '@/lib/anonymous-recovery'
 import { reportNetworkFailure } from '@/lib/connectivity'
 import { isNetworkError } from '@/lib/network-error'
-import { useOnlineStatus } from '@/lib/use-online-status'
+import { useConnectivityStatus, useOnlineStatus } from '@/lib/use-online-status'
 
 import { AnonymousRecoveryKeyPanel } from './anonymous-recovery-key-panel'
 
@@ -33,6 +34,7 @@ export function AnonymousRecoveryOnboarding({
     keyPrefix: 'AnonymousAccount.onboarding',
   })
   const isOnline = useOnlineStatus()
+  const connectivityStatus = useConnectivityStatus()
   const [recovery, setRecovery] = useState<AnonymousRecoveryKey | null>(null)
   const [confirmed, setConfirmed] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -119,6 +121,10 @@ export function AnonymousRecoveryOnboarding({
     } finally {
       setLoading(false)
     }
+  }
+
+  if (connectivityStatus === 'server-unreachable') {
+    return <ApiErrorEmptyState variant="plain" />
   }
 
   if (!isOnline || networkFailed) {

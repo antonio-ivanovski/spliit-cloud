@@ -3436,7 +3436,8 @@
     "hintTapToAddExpense": "Ich bin {name} — tippe mich an, um eine Ausgabe hinzuzufügen.",
     "hintTapToCreateGroup": "Ich bin {name} — tippe mich an, um eine Gruppe zu erstellen.",
     "billName": "Bill",
-    "offlineMessage": "Ich kann nichts erstellen, während du offline bist."
+    "offlineMessage": "Ich kann nichts erstellen, während du offline bist.",
+    "serverUnreachableMessage": "Ich kann den Spliit-Server gerade nicht erreichen — deine Verbindung scheint in Ordnung zu sein, also liegt es an uns."
   },
   "CreateSettlement": {
     "description": "Überprüfe die Zahlung, bevor du sie aufzeichnest.",
@@ -4278,5 +4279,14 @@
     "involvedOnlyBadge": "Nur beteiligt",
     "deleteConfirmDescription": "Dieser Webhook und sein Zustellverlauf werden endgültig entfernt. Ausstehende Zustellungen werden abgebrochen.",
     "deleteConfirm": "Löschen"
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit ist nicht verfügbar",
+    "description": "Der Spliit-Server ist gerade nicht erreichbar. Deine Verbindung scheint in Ordnung zu sein — versuche es bitte gleich noch einmal.",
+    "retry": "Erneut versuchen"
+  },
+  "ApiStatusBanner": {
+    "message": "Spliit ist gerade nicht erreichbar. Deine Verbindung scheint in Ordnung zu sein — das Problem liegt bei uns.",
+    "statusLink": "Status prüfen"
   }
 }
