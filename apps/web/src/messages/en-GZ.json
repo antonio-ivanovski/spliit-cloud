@@ -2008,13 +2008,14 @@
     "sponsorLink": "wanna support Spliit Cloud financially? <cta>become a sponsor</cta>."
   },
   "Footer": {
-    "madeIn": "made by the open-source community with love and vibes",
+    "madeIn": "made by the <github>open-source community</github> with love and vibes",
     "legalNavigation": "legal links",
     "privacy": "privacy stuff",
     "terms": "terms stuff",
     "imprint": "project notice",
     "sponsor": "sponsor",
-    "timeLabel": "time of day"
+    "timeLabel": "time of day",
+    "status": "status"
   },
   "ForgotPassword": {
     "title": "reset your password era",

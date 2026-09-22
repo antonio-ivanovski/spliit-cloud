@@ -80,13 +80,14 @@
     "cancel": "Откажи"
   },
   "Footer": {
-    "madeIn": "Направено од open-source заедницата со љубов ❤️",
+    "madeIn": "Направено од <github>open-source заедницата</github> со љубов ❤️",
     "legalNavigation": "Правни линкови",
     "privacy": "Приватност",
     "terms": "Услови",
     "imprint": "Забелешка за проектот",
     "sponsor": "Спонзор",
-    "timeLabel": "Време од денот"
+    "timeLabel": "Време од денот",
+    "status": "Статус"
   },
   "Expenses": {
     "title": "Трошоци",

@@ -80,13 +80,14 @@
     "cancel": "Utzi"
   },
   "Footer": {
-    "madeIn": "Kode irekiko komunitateak maitasunez egina ❤️",
+    "madeIn": "<github>Kode irekiko komunitateak</github> maitasunez egina ❤️",
     "legalNavigation": "Esteka legalak",
     "privacy": "Pribatutasuna",
     "terms": "Baldintzak",
     "imprint": "Lege-oharra",
     "sponsor": "Babesle",
-    "timeLabel": "Eguneko ordua"
+    "timeLabel": "Eguneko ordua",
+    "status": "Egoera"
   },
   "Expenses": {
     "title": "Gastuak",

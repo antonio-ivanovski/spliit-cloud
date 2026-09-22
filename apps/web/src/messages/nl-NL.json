@@ -80,13 +80,14 @@
     "cancel": "Annuleren"
   },
   "Footer": {
-    "madeIn": "Gemaakt met liefde door de open-source community ❤️",
+    "madeIn": "Gemaakt met liefde door de <github>open-source community</github> ❤️",
     "legalNavigation": "Juridische links",
     "privacy": "Privacy",
     "terms": "Voorwaarden",
     "imprint": "Colofon",
     "sponsor": "Sponsoring",
-    "timeLabel": "Tijd van de dag"
+    "timeLabel": "Tijd van de dag",
+    "status": "Status"
   },
   "Expenses": {
     "title": "Uitgaven",

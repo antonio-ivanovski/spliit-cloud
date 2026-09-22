@@ -80,13 +80,14 @@
     "cancel": "İptal"
   },
   "Footer": {
-    "madeIn": "Açık kaynak topluluğu tarafından sevgiyle yapıldı ❤️",
+    "madeIn": "<github>Açık kaynak topluluğu</github> tarafından sevgiyle yapıldı ❤️",
     "legalNavigation": "Yasal bağlantılar",
     "privacy": "Gizlilik",
     "terms": "Şartlar",
     "imprint": "Proje bildirimi",
     "sponsor": "Sponsor Ol",
-    "timeLabel": "Günün saati"
+    "timeLabel": "Günün saati",
+    "status": "Durum"
   },
   "Expenses": {
     "title": "Masraflar",

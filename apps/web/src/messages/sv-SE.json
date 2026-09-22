@@ -1786,13 +1786,14 @@
     "hiddenExpenses_other": "{count} dolda utgifter där du inte är inblandad"
   },
   "Footer": {
-    "madeIn": "Gjord med kärlek av open source-communityn ❤️",
+    "madeIn": "Gjord med kärlek av <github>open source-communityn</github> ❤️",
     "legalNavigation": "Juridiska länkar",
     "privacy": "Integritet",
     "terms": "Villkor",
     "imprint": "Projektinformation",
     "sponsor": "Sponsra",
-    "timeLabel": "Tid på dygnet"
+    "timeLabel": "Tid på dygnet",
+    "status": "Status"
   },
   "ForgotPassword": {
     "title": "Återställ ditt lösenord",

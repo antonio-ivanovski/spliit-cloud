@@ -80,13 +80,14 @@
     "cancel": "Annuler"
   },
   "Footer": {
-    "madeIn": "Créé par la communauté open-source avec amour ❤️",
+    "madeIn": "Créé par la <github>communauté open-source</github> avec amour ❤️",
     "legalNavigation": "Liens juridiques",
     "privacy": "Confidentialité",
     "terms": "Conditions",
     "imprint": "Mentions légales",
     "sponsor": "Soutenir",
-    "timeLabel": "Moment de la journée"
+    "timeLabel": "Moment de la journée",
+    "status": "Statut"
   },
   "Expenses": {
     "title": "Dépenses",

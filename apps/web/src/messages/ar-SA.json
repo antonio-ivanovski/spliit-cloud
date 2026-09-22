@@ -2894,12 +2894,13 @@
   },
   "Footer": {
     "privacy": "الخصوصية",
+    "madeIn": "صنع من قبل <github>مجتمع المصادر المفتوحة</github> بحب ❤️",
     "legalNavigation": "روابط قانونية",
-    "madeIn": "صنع من قبل مجتمع المصادر المفتوحة بحب ❤️",
     "terms": "الشروط",
     "imprint": "إشعار المشروع",
     "sponsor": "رعاية",
-    "timeLabel": "الوقت من اليوم"
+    "timeLabel": "الوقت من اليوم",
+    "status": "الحالة"
   },
   "CreateFromReceipt": {
     "Dialog": {

@@ -1786,13 +1786,14 @@
     "hiddenExpenses_other": "{count} छिपे हुए खर्च जिनमें आप शामिल नहीं हैं"
   },
   "Footer": {
-    "madeIn": "ओपन-सोर्स समुदाय द्वारा प्यार से बनाया गया ❤️",
+    "madeIn": "<github>ओपन-सोर्स समुदाय</github> द्वारा प्यार से बनाया गया ❤️",
     "legalNavigation": "कानूनी लिंक",
     "privacy": "गोपनीयता",
     "terms": "शर्तें",
     "imprint": "परियोजना सूचना",
     "sponsor": "प्रायोजक",
-    "timeLabel": "दिन का समय"
+    "timeLabel": "दिन का समय",
+    "status": "स्थिति"
   },
   "ForgotPassword": {
     "title": "अपना पासवर्ड रीसेट करें",

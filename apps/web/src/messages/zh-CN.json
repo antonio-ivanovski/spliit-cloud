@@ -80,13 +80,14 @@
     "cancel": "取消"
   },
   "Footer": {
-    "madeIn": "由开源社区用爱打造 ❤️",
+    "madeIn": "由<github>开源社区</github>用爱打造 ❤️",
     "legalNavigation": "法律链接",
     "privacy": "隐私",
     "terms": "条款",
     "imprint": "项目声明",
     "sponsor": "赞助",
-    "timeLabel": "一天中的时间"
+    "timeLabel": "一天中的时间",
+    "status": "状态"
   },
   "Expenses": {
     "title": "消费",

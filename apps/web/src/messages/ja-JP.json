@@ -80,13 +80,14 @@
     "cancel": "キャンセル"
   },
   "Footer": {
-    "madeIn": "オープンソースコミュニティによって愛を込めて作られました ❤️",
+    "madeIn": "<github>オープンソースコミュニティ</github>によって愛を込めて作られました ❤️",
     "legalNavigation": "法的リンク",
     "privacy": "プライバシー",
     "terms": "利用規約",
     "imprint": "運営者情報",
     "sponsor": "スポンサー",
-    "timeLabel": "時刻"
+    "timeLabel": "時刻",
+    "status": "ステータス"
   },
   "Expenses": {
     "title": "支出",

@@ -104,13 +104,14 @@
     "system": "System default"
   },
   "Footer": {
-    "madeIn": "Made by the open-source community with love ❤️",
+    "madeIn": "Made by the <github>open-source community</github> with love ❤️",
     "legalNavigation": "Legal links",
     "privacy": "Privacy",
     "terms": "Terms",
     "imprint": "Project notice",
     "sponsor": "Sponsor",
-    "timeLabel": "Time of day"
+    "timeLabel": "Time of day",
+    "status": "Status"
   },
   "Expenses": {
     "title": "Expenses",

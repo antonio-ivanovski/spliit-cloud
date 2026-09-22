@@ -80,13 +80,14 @@
     "cancel": "Отмена"
   },
   "Footer": {
-    "madeIn": "Создано сообществом open-source с любовью ❤️",
+    "madeIn": "Создано <github>сообществом open-source</github> с любовью ❤️",
     "legalNavigation": "Правовая информация",
     "privacy": "Конфиденциальность",
     "terms": "Условия",
     "imprint": "Сведения о проекте",
     "sponsor": "Спонсор",
-    "timeLabel": "Время суток"
+    "timeLabel": "Время суток",
+    "status": "Статус"
   },
   "Expenses": {
     "title": "Расходы",

@@ -80,13 +80,14 @@
     "cancel": "Annulla"
   },
   "Footer": {
-    "madeIn": "Realizzato dalla comunità open-source con amore ❤️",
+    "madeIn": "Realizzato dalla <github>comunità open-source</github> con amore ❤️",
     "legalNavigation": "Collegamenti legali",
     "privacy": "Privacy",
     "terms": "Termini",
     "imprint": "Note legali",
     "sponsor": "Sponsorizza",
-    "timeLabel": "Momento della giornata"
+    "timeLabel": "Momento della giornata",
+    "status": "Stato"
   },
   "Expenses": {
     "title": "Spese",

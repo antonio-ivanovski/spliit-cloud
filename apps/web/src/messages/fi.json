@@ -80,13 +80,14 @@
     "cancel": "Peruuta"
   },
   "Footer": {
-    "madeIn": "Avoimen lähdekoodin yhteisön rakkaudella tekemä ❤️",
+    "madeIn": "<github>Avoimen lähdekoodin yhteisön</github> rakkaudella tekemä ❤️",
     "legalNavigation": "Oikeudelliset linkit",
     "privacy": "Tietosuoja",
     "terms": "Käyttöehdot",
     "imprint": "Julkaisutiedot",
     "sponsor": "Sponsori",
-    "timeLabel": "Vuorokaudenaika"
+    "timeLabel": "Vuorokaudenaika",
+    "status": "Tila"
   },
   "Expenses": {
     "title": "Kulut",

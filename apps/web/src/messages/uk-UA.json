@@ -80,13 +80,14 @@
     "cancel": "Скасувати"
   },
   "Footer": {
-    "madeIn": "Створено спільнотою open-source з любов'ю ❤️",
+    "madeIn": "Створено <github>спільнотою open-source</github> з любов'ю ❤️",
     "legalNavigation": "Правові посилання",
     "privacy": "Конфіденційність",
     "terms": "Умови",
     "imprint": "Примітка про проєкт",
     "sponsor": "Спонсор",
-    "timeLabel": "Час доби"
+    "timeLabel": "Час доби",
+    "status": "Статус"
   },
   "Expenses": {
     "title": "Витрати",

@@ -118,6 +118,38 @@
   opacity: 0.85;
 }
 
+/* The sentence itself never wraps — it moves as one line. */
+.art-footer__credit > span {
+  white-space: nowrap;
+}
+
+/* ── Inline GitHub link inside the credit sentence ───────────────
+   Stays a plain inline box (not inline-flex: a flex container would take
+   its baseline from the icon's bottom edge and perch above the text).
+   The icon is sized in em and nudged onto the text baseline instead. */
+.art-footer__credit-link {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  white-space: nowrap;
+}
+
+.art-footer__credit-link:hover {
+  text-decoration-thickness: 2px;
+}
+
+.art-footer__github-icon.art-footer__github-icon--inline {
+  /* Preflight blockifies img/svg — without this the icon splits the
+     sentence onto its own line. */
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  margin-right: 0.25em;
+}
+
 .art-footer__link--warm {
   border-color: rgb(237 81 103 / 0.4);
 }

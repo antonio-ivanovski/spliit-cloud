@@ -74,6 +74,13 @@ const LOCALE_COGNATES = new Set([
   'sv-SE:Cyan',
   'sv-SE:Fuchsia',
   'sv-SE:Indigo',
+  // "Status" is the correct native spelling (service-status loanword) —
+  // matches the established ApiStatusBanner.statusLink wording in each locale.
+  'de-DE:Status',
+  'id:Status',
+  'nl-NL:Status',
+  'pl-PL:Status',
+  'sv-SE:Status',
 ])
 
 export function isAllowedLocaleCognate(

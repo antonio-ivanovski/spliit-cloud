@@ -80,13 +80,14 @@
     "cancel": "Anuluj"
   },
   "Footer": {
-    "madeIn": "Stworzone przez społeczność open-source z miłością ❤️",
+    "madeIn": "Stworzone przez <github>społeczność open-source</github> z miłością ❤️",
     "legalNavigation": "Linki prawne",
     "privacy": "Prywatność",
     "terms": "Warunki",
     "imprint": "Informacja o projekcie",
     "sponsor": "Sponsoring",
-    "timeLabel": "Pora dnia"
+    "timeLabel": "Pora dnia",
+    "status": "Status"
   },
   "Expenses": {
     "title": "Wydatki",

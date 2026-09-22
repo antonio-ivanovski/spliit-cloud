@@ -21,6 +21,7 @@ who is affected, and the exact migration steps.
 
 - Short entry per user-facing change (`TBD` by @TBD)
 - Guest signup now asks for your display name before the backup sign-in choice, so a passkey created during onboarding already shows your real name — and you can give the passkey its own label while adding it (`TBD` by @TBD)
+- The footer keeps the GitHub link inline in the "open-source community" credit note and shows a Status pill linking to the deployment's status page when one is configured (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
 

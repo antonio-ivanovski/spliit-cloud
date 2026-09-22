@@ -80,13 +80,14 @@
     "cancel": "בטל"
   },
   "Footer": {
-    "madeIn": "נוצר על ידי קהילת הקוד הפתוח באהבה ❤️",
+    "madeIn": "נוצר על ידי <github>קהילת הקוד הפתוח</github> באהבה ❤️",
     "legalNavigation": "קישורים משפטיים",
     "privacy": "פרטיות",
     "terms": "תנאים",
     "imprint": "הודעת פרויקט",
     "sponsor": "תמיכה",
-    "timeLabel": "שעת היום"
+    "timeLabel": "שעת היום",
+    "status": "סטטוס"
   },
   "Expenses": {
     "title": "הוצאות",

@@ -80,13 +80,14 @@
     "cancel": "Batal"
   },
   "Footer": {
-    "madeIn": "Dibuat oleh komunitas open-source dengan cinta ❤️",
+    "madeIn": "Dibuat oleh <github>komunitas open-source</github> dengan cinta ❤️",
     "legalNavigation": "Tautan hukum",
     "privacy": "Privasi",
     "terms": "Ketentuan",
     "imprint": "Pemberitahuan proyek",
     "sponsor": "Dukung",
-    "timeLabel": "Waktu dalam sehari"
+    "timeLabel": "Waktu dalam sehari",
+    "status": "Status"
   },
   "Expenses": {
     "title": "Pengeluaran",

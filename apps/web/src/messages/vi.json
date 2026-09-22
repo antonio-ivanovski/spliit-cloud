@@ -104,13 +104,14 @@
     "system": "Hệ thống"
   },
   "Footer": {
-    "madeIn": "Được tạo bởi cộng đồng mã nguồn mở với tình yêu ❤️",
+    "madeIn": "Được tạo bởi <github>cộng đồng mã nguồn mở</github> với tình yêu ❤️",
     "legalNavigation": "Pháp lý",
     "privacy": "Quyền riêng tư",
     "terms": "Điều khoản",
     "imprint": "Thông tin pháp lý",
     "sponsor": "Tài trợ",
-    "timeLabel": "Thời điểm trong ngày"
+    "timeLabel": "Thời điểm trong ngày",
+    "status": "Trạng thái"
   },
   "Expenses": {
     "title": "Chi phí",

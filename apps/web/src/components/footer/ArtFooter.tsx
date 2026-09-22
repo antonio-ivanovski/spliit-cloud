@@ -1,16 +1,46 @@
 import { Link } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
+import type { ReactNode } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
+
+import { getStatusPageUrl } from '@/lib/status-page'
 
 import githubSvg from '../auth/github.svg'
 
 import './footer-art.css'
 
+const GITHUB_URL = 'https://github.com/antonio-ivanovski/spliit-cloud'
+
+/**
+ * Inline GitHub link inside the open-source credit sentence. The icon is part
+ * of the component so translators only own the link text inside `<github>`.
+ */
+function GithubCreditLink({ children }: { children?: ReactNode }) {
+  return (
+    <a
+      href={GITHUB_URL}
+      target="_blank"
+      rel="noreferrer"
+      className="art-footer__credit-link"
+    >
+      <img
+        src={githubSvg}
+        alt=""
+        aria-hidden="true"
+        className="art-footer__github-icon art-footer__github-icon--inline"
+      />
+      {children}
+    </a>
+  )
+}
+
 /**
  * Simple paper footer: a quiet theme-aware paper band with a subtle grain and
- * the legal/GitHub pill buttons. No artwork, no brand mark, no credit.
+ * the legal pill buttons. The GitHub link lives with the open-source credit,
+ * plus a status pill when the deployment configured one.
  */
 export function ArtFooter({ hiddenOnMobile }: { hiddenOnMobile: boolean }) {
   const { t } = useTranslation()
+  const statusPageUrl = getStatusPageUrl()
 
   return (
     <footer
@@ -36,16 +66,24 @@ export function ArtFooter({ hiddenOnMobile }: { hiddenOnMobile: boolean }) {
             <Link to="/feedback" className="art-footer__link">
               {t('Feedback.navigationLabel')}
             </Link>
-            <a
-              className="art-footer__link"
-              href="https://github.com/antonio-ivanovski/spliit-cloud"
-            >
-              <img src={githubSvg} alt="" className="art-footer__github-icon" />
-              GitHub
-            </a>
+            {statusPageUrl ? (
+              <a
+                className="art-footer__link"
+                href={statusPageUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {t('Footer.status')}
+              </a>
+            ) : null}
           </nav>
           <p className="art-footer__credit">
-            <span>{t('Footer.madeIn')}</span>
+            <span className="whitespace-nowrap">
+              <Trans
+                i18nKey="Footer.madeIn"
+                components={{ github: <GithubCreditLink /> }}
+              />
+            </span>
             <Link
               to="/sponsor"
               className="art-footer__link art-footer__link--warm"

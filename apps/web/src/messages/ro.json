@@ -80,13 +80,14 @@
     "cancel": "Anulează"
   },
   "Footer": {
-    "madeIn": "Realizat de comunitatea open-source cu dragoste ❤️",
+    "madeIn": "Realizat de <github>comunitatea open-source</github> cu dragoste ❤️",
     "legalNavigation": "Linkuri legale",
     "privacy": "Confidențialitate",
     "terms": "Termeni",
     "imprint": "Mențiuni legale",
     "sponsor": "Susține",
-    "timeLabel": "Momentul zilei"
+    "timeLabel": "Momentul zilei",
+    "status": "Stare"
   },
   "Expenses": {
     "title": "Cheltuieli",

@@ -80,13 +80,14 @@
     "cancel": "Zrušit"
   },
   "Footer": {
-    "madeIn": "Vytvořeno open-source komunitou s láskou ❤️",
+    "madeIn": "Vytvořeno <github>open-source komunitou</github> s láskou ❤️",
     "legalNavigation": "Právní odkazy",
     "privacy": "Ochrana soukromí",
     "terms": "Podmínky",
     "imprint": "Podrobnosti o projektu",
     "sponsor": "Sponzor",
-    "timeLabel": "Denní doba"
+    "timeLabel": "Denní doba",
+    "status": "Stav"
   },
   "Expenses": {
     "title": "Výdaje",

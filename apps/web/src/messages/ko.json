@@ -1394,13 +1394,14 @@
     "cancel": "취소"
   },
   "Footer": {
-    "madeIn": "오픈소스 커뮤니티가 사랑을 담아 만들었어요 ❤️",
+    "madeIn": "<github>오픈소스 커뮤니티</github>가 사랑을 담아 만들었어요 ❤️",
     "legalNavigation": "법적 링크",
     "privacy": "개인정보 보호",
     "terms": "이용 약관",
     "imprint": "사업자 정보",
     "sponsor": "후원",
-    "timeLabel": "시간대"
+    "timeLabel": "시간대",
+    "status": "상태"
   },
   "Settings": {
     "title": "설정"

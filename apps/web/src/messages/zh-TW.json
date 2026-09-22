@@ -80,13 +80,14 @@
     "cancel": "取消"
   },
   "Footer": {
-    "madeIn": "由開源社群用愛打造 ❤️",
+    "madeIn": "由<github>開源社群</github>用愛打造 ❤️",
     "legalNavigation": "法律連結",
     "privacy": "隱私",
     "terms": "條款",
     "imprint": "專案聲明",
     "sponsor": "贊助",
-    "timeLabel": "一天中的時間"
+    "timeLabel": "一天中的時間",
+    "status": "狀態"
   },
   "Expenses": {
     "title": "消費",

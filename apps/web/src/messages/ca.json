@@ -80,13 +80,14 @@
     "cancel": "Cancel·la"
   },
   "Footer": {
-    "madeIn": "Fet per la comunitat de codi obert amb amor ❤️",
+    "madeIn": "Fet per la <github>comunitat de codi obert</github> amb amor ❤️",
     "legalNavigation": "Enllaços legals",
     "privacy": "Privadesa",
     "terms": "Termes",
     "imprint": "Avís legal",
     "sponsor": "Patrocini",
-    "timeLabel": "Moment del dia"
+    "timeLabel": "Moment del dia",
+    "status": "Estat"
   },
   "Expenses": {
     "title": "Despeses",

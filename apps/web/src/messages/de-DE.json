@@ -80,13 +80,14 @@
     "cancel": "Abbrechen"
   },
   "Footer": {
-    "madeIn": "Von der Open-Source-Community mit Liebe gemacht ❤️",
+    "madeIn": "Von der <github>Open-Source-Community</github> mit Liebe gemacht ❤️",
     "legalNavigation": "Rechtliche Links",
     "privacy": "Datenschutz",
     "terms": "Nutzungsbedingungen",
     "imprint": "Impressum",
     "sponsor": "Sponsoring",
-    "timeLabel": "Tageszeit"
+    "timeLabel": "Tageszeit",
+    "status": "Status"
   },
   "Expenses": {
     "title": "Ausgaben",
