@@ -155,7 +155,8 @@ describe('BulkCategorizePage completion state', () => {
       screen.queryByText('Categorization complete'),
     ).not.toBeInTheDocument()
     expect(screen.getByText('Calibration round 1')).toBeInTheDocument()
-    expect(screen.getByRole('progressbar')).toBeInTheDocument()
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
+    expect(screen.getByRole('status')).toHaveTextContent('Preparing')
   })
 
   it('uses the progress panel between calibration rounds', () => {
@@ -171,7 +172,7 @@ describe('BulkCategorizePage completion state', () => {
     }
     render(<BulkCategorizePage groupId="group-1" groupName="Trip" />)
     expect(screen.getByText('Calibration round 2')).toBeInTheDocument()
-    expect(screen.getByRole('progressbar')).not.toHaveAttribute('value')
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
   })
 
   it('keeps a failed run available for retry on a fresh visit', () => {
@@ -197,7 +198,7 @@ describe('BulkCategorizePage completion state', () => {
 
     await user.click(screen.getByRole('button', { name: 'Start categorizing' }))
     expect(screen.getByText('Calibration round 1')).toBeInTheDocument()
-    expect(screen.getByRole('progressbar')).not.toHaveAttribute('value')
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
   })
 
   it('shows pending progress immediately when confirming a calibration round', async () => {
@@ -215,8 +216,61 @@ describe('BulkCategorizePage completion state', () => {
 
     await user.click(screen.getByRole('button', { name: 'Confirm round' }))
     expect(screen.getByText('Preparing the next step')).toBeInTheDocument()
-    expect(screen.getByRole('progressbar')).not.toHaveAttribute('value')
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
   })
+
+  it.each([
+    { status: 'QUEUED', processed: 0, total: 20 },
+    { status: 'QUEUED_RERUN', processed: 0, total: 8 },
+  ])(
+    'uses a spinner while $status is queued',
+    ({ status, processed, total }) => {
+      mocks.run = {
+        id: 'run-progress',
+        status,
+        mode: 'jev',
+        processed,
+        total,
+        candidateTotal: 20,
+      }
+
+      render(<BulkCategorizePage groupId="group-1" groupName="Trip" />)
+
+      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
+      expect(screen.getByRole('status')).toHaveTextContent('Preparing')
+    },
+  )
+
+  it.each([
+    { status: 'PROCESSING', processed: 0, total: 20, width: '0%' },
+    { status: 'PROCESSING', processed: 5, total: 20, width: '25%' },
+    { status: 'RERUNNING', processed: 6, total: 8, width: '75%' },
+  ])(
+    'shows accurate $status progress at $processed of $total',
+    ({ status, processed, total, width }) => {
+      mocks.run = {
+        id: 'run-progress',
+        status,
+        mode: 'jev',
+        processed,
+        total,
+        candidateTotal: 20,
+      }
+
+      render(<BulkCategorizePage groupId="group-1" groupName="Trip" />)
+
+      const progressbar = screen.getByRole('progressbar')
+      expect(progressbar).toHaveAttribute(
+        'aria-valuenow',
+        String((100 * processed) / total),
+      )
+      expect(
+        progressbar.querySelector('[data-slot="progress-indicator"]'),
+      ).toHaveStyle({
+        width,
+      })
+    },
+  )
 
   it('offers General filtering and keeps rerun details in a footer popover', async () => {
     mocks.run = {

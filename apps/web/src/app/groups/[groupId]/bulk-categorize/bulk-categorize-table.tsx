@@ -1,6 +1,6 @@
 import { useWindowVirtualizer } from '@tanstack/react-virtual'
 import { ChevronRight } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useLayoutEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
@@ -70,7 +70,7 @@ export function estimateCategorizeRowHeight(
       choice.categoryId !== row.categoryId,
   ).length
   const titleWidth = wide
-    ? (containerWidth * 1.4) / 3.65 - 32
+    ? (containerWidth * 1.45) / 3.45 - 64
     : containerWidth - 32
   const estimatedChars =
     containerWidth > 0
@@ -80,7 +80,7 @@ export function estimateCategorizeRowHeight(
         : 34
   const titleLines = Math.max(1, Math.ceil(row.title.length / estimatedChars))
   return wide
-    ? Math.max(104 + (titleLines - 1) * 20, alternatives ? 120 : 104)
+    ? Math.max(72 + (titleLines - 1) * 20, alternatives ? 76 : 72)
     : 180 + (titleLines - 1) * 20 + (alternatives ? 48 : 0)
 }
 
@@ -290,23 +290,26 @@ export function BulkCategorizeTable({
     scrollMargin,
     initialRect: { width: 1024, height: 768 },
   })
-  useEffect(() => {
+  useLayoutEffect(() => {
     virtualizer.measure()
-  }, [containerWidth, virtualizer])
-  useEffect(() => {
+    containerNode
+      ?.querySelectorAll<HTMLElement>('[data-index]')
+      .forEach((row) => {
+        virtualizer.measureElement(row)
+      })
+  }, [containerWidth, containerNode, virtualizer])
+  useLayoutEffect(() => {
     if (!containerNode) return
     const update = () => {
-      setContainerWidth(Math.round(containerNode.getBoundingClientRect().width))
-      setScrollMargin(
-        containerNode.getBoundingClientRect().top + window.scrollY,
-      )
+      const rect = containerNode.getBoundingClientRect()
+      setContainerWidth(Math.round(rect.width))
+      setScrollMargin(rect.top + window.scrollY)
     }
-    const frame = window.requestAnimationFrame(update)
+    update()
     const observer = new ResizeObserver(update)
     observer.observe(containerNode)
     window.addEventListener('resize', update)
     return () => {
-      window.cancelAnimationFrame(frame)
       observer.disconnect()
       window.removeEventListener('resize', update)
     }
@@ -325,77 +328,83 @@ export function BulkCategorizeTable({
       : '—'
   return (
     <div ref={setContainerNode} className="min-w-0">
-      <ul
-        aria-label={t('tableLabel')}
-        className="relative w-full"
-        style={{ height: virtualizer.getTotalSize() }}
-      >
-        {virtualizer.getVirtualItems().map((item) => {
-          const row = ordered[item.index]!
-          return (
-            <li
-              key={row.id}
-              ref={virtualizer.measureElement}
-              data-index={item.index}
-              className="absolute inset-x-0 min-w-0 border-b bg-background px-4 py-4 text-sm transition-colors hover:bg-accent/40 sm:px-6"
-              style={{
-                transform: `translateY(${item.start - scrollMargin}px)`,
-              }}
-            >
-              <div
-                className={
-                  wide
-                    ? 'grid grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)_minmax(0,1fr)] items-start gap-5'
-                    : 'space-y-3'
-                }
+      {containerWidth > 0 && (
+        <ul
+          aria-label={t('tableLabel')}
+          className="relative w-full"
+          style={{ height: virtualizer.getTotalSize() }}
+        >
+          {virtualizer.getVirtualItems().map((item) => {
+            const row = ordered[item.index]!
+            return (
+              <li
+                key={row.id}
+                ref={virtualizer.measureElement}
+                data-index={item.index}
+                className="absolute inset-x-0 min-w-0 border-b bg-background px-4 py-4 text-sm transition-colors hover:bg-accent/40 sm:px-6"
+                style={{
+                  transform: `translateY(${item.start - scrollMargin}px)`,
+                }}
               >
-                <div className="flex min-w-0 items-start gap-3">
-                  <CategoryIcon
-                    category={categoryFromId(row.categoryId)}
-                    className="mt-0.5 size-4 shrink-0 text-muted-foreground"
-                    aria-hidden
-                  />
-                  <div className="min-w-0 flex-1">
-                    {onViewExpense ? (
-                      <button
-                        type="button"
-                        className="group inline-flex max-w-full items-start gap-1 text-start font-medium hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-primary"
-                        onClick={() => onViewExpense(row.id)}
-                        aria-label={`${t('viewExpenseDetails')}: ${row.title}`}
-                      >
-                        <span className="min-w-0 break-words">{row.title}</span>
-                        <ChevronRight
-                          className="mt-0.5 size-4 shrink-0 text-muted-foreground group-hover:text-foreground rtl:rotate-180"
-                          aria-hidden
-                        />
-                      </button>
-                    ) : (
-                      <h3 className="font-medium break-words">{row.title}</h3>
-                    )}
-                    <div className="mt-1 flex flex-wrap gap-x-2 text-xs text-muted-foreground">
-                      <span>{displayDate(row.expenseDate)}</span>
-                      <span aria-hidden>·</span>
-                      <span className="tabular-nums">{displayAmount(row)}</span>
+                <div
+                  className={
+                    wide
+                      ? 'grid grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)_minmax(0,1fr)] items-start gap-5'
+                      : 'space-y-3'
+                  }
+                >
+                  <div className="flex min-w-0 items-start gap-3">
+                    <CategoryIcon
+                      category={categoryFromId(row.categoryId)}
+                      className="mt-0.5 size-4 shrink-0 text-muted-foreground"
+                      aria-hidden
+                    />
+                    <div className="min-w-0 flex-1">
+                      {onViewExpense ? (
+                        <button
+                          type="button"
+                          className="group inline-flex max-w-full items-start gap-1 text-start font-medium hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-primary"
+                          onClick={() => onViewExpense(row.id)}
+                          aria-label={`${t('viewExpenseDetails')}: ${row.title}`}
+                        >
+                          <span className="min-w-0 break-words">
+                            {row.title}
+                          </span>
+                          <ChevronRight
+                            className="mt-0.5 size-4 shrink-0 text-muted-foreground group-hover:text-foreground rtl:rotate-180"
+                            aria-hidden
+                          />
+                        </button>
+                      ) : (
+                        <h3 className="font-medium break-words">{row.title}</h3>
+                      )}
+                      <div className="mt-1 flex flex-wrap gap-x-2 text-xs text-muted-foreground">
+                        <span>{displayDate(row.expenseDate)}</span>
+                        <span aria-hidden>·</span>
+                        <span className="tabular-nums">
+                          {displayAmount(row)}
+                        </span>
+                      </div>
                     </div>
                   </div>
+                  <CategoryPicker
+                    row={row}
+                    disabled={disabled}
+                    aiMinConfidence={aiMinConfidence}
+                    onChange={onChange}
+                  />
+                  <QuickChoices
+                    row={row}
+                    disabled={disabled}
+                    aiMinConfidence={aiMinConfidence}
+                    onChange={onChange}
+                  />
                 </div>
-                <CategoryPicker
-                  row={row}
-                  disabled={disabled}
-                  aiMinConfidence={aiMinConfidence}
-                  onChange={onChange}
-                />
-                <QuickChoices
-                  row={row}
-                  disabled={disabled}
-                  aiMinConfidence={aiMinConfidence}
-                  onChange={onChange}
-                />
-              </div>
-            </li>
-          )
-        })}
-      </ul>
+              </li>
+            )
+          })}
+        </ul>
+      )}
     </div>
   )
 }

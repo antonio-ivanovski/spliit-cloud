@@ -17,6 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { Progress } from '@/components/ui/progress'
 import { WizardStepHeader } from '@/components/wizard'
 import { useLocale } from '@/i18n/react'
 import { cn } from '@/lib/utils'
@@ -171,7 +172,17 @@ export function BulkCategorizePage({
     ].includes(run.status)
   const showProgress = pendingStage !== null || isRunning
   const progress =
-    run && run.total > 0 ? Math.round((100 * run.processed) / run.total) : 0
+    run && run.total > 0
+      ? Math.max(
+          0,
+          Math.min(100, Math.round((100 * run.processed) / run.total)),
+        )
+      : 0
+  const hasNumericProgress =
+    !pendingStage &&
+    run &&
+    run.total > 0 &&
+    ['PROCESSING', 'RERUNNING'].includes(run.status)
   const remaining = count.data ?? 0
   const calibration = run?.calibration
   const lastRound = calibration?.metrics.at(-1)
@@ -302,41 +313,24 @@ export function BulkCategorizePage({
                 </p>
               </div>
             )}
-            <div className="flex justify-between text-sm">
-              <span>
-                {run?.total && !pendingStage
-                  ? t('progressCount', {
+            {hasNumericProgress ? (
+              <>
+                <div className="flex justify-between text-sm">
+                  <span>
+                    {t('progressCount', {
                       processed: run.processed,
                       total: run.total,
-                    })
-                  : t('progressPreparing')}
-              </span>
-              {!pendingStage &&
-                run?.total &&
-                ![
-                  'QUEUED',
-                  'QUEUED_CALIBRATION',
-                  'QUEUED_RERUN',
-                  'CALIBRATING',
-                ].includes(run.status) && <span>{progress}%</span>}
-            </div>
-            <progress
-              value={
-                pendingStage ||
-                !run ||
-                [
-                  'QUEUED',
-                  'QUEUED_CALIBRATION',
-                  'QUEUED_RERUN',
-                  'CALIBRATING',
-                ].includes(run.status)
-                  ? undefined
-                  : progress
-              }
-              max={100}
-              aria-label={t('progressTitle')}
-              className="h-2 w-full accent-primary"
-            />
+                    })}
+                  </span>
+                  <span>{progress}%</span>
+                </div>
+                <Progress value={progress} aria-label={t('progressTitle')} />
+              </>
+            ) : (
+              <output className="text-sm text-muted-foreground">
+                {t('progressPreparing')}
+              </output>
+            )}
           </CardContent>
           {run && !pendingStage && run.status !== 'APPLYING' && (
             <CardFooter className="justify-end">

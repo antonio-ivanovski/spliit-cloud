@@ -38,5 +38,6 @@ who is affected, and the exact migration steps.
 - Keep the categorization success screen available after a refresh, with an option to start another run when General expenses remain (`TBD` by @handle)
 - Prevented a Jev runner-up from being automatically selected when its primary category was General or below the confidence floor (`TBD` by @handle)
 - Labeled Jev runner-up probabilities separately from primary confidence in bulk review (`TBD` by @handle)
+- Corrected the bulk review's initial desktop row heights and replaced misleading full-looking loading bars with calibration spinners and accurate progress bars (`TBD` by @handle)
 
 **Full Changelog**: TBD

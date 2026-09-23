@@ -49,6 +49,8 @@ describe('bulk categorization row estimates', () => {
     expect(estimateCategorizeRowHeight(long, 390)).toBeGreaterThan(
       estimateCategorizeRowHeight(long, 720),
     )
+    expect(estimateCategorizeRowHeight(short, 900)).toBe(72)
+    expect(estimateCategorizeRowHeight(withChoices, 900)).toBe(76)
   })
 })
 
