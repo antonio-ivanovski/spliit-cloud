@@ -671,7 +671,7 @@
     "generateSuggestions": "श्रेणियां सुझाएं",
     "backToStart": "वापस",
     "chooseMode": "खर्चों को श्रेणीबद्ध करने का तरीका चुनें",
-    "localMode": "स्थानीय मिलान",
+    "localMode": "शब्दकोश और इतिहास",
     "localModeDescription": "इस ग्रुप के श्रेणी इतिहास और अंतर्निहित शब्दकोश का उपयोग करें।",
     "startRun": "श्रेणीबद्ध करना शुरू करें",
     "noCategory": "बिना श्रेणी रखें",
@@ -758,7 +758,7 @@
     "progressCountDescription": "केवल पुष्टि की गई श्रेणियां और मध्यम या उच्च मिलान गिने जाते हैं; सामान्य और कमजोर मिलान नहीं गिने जाते।",
     "systemOneMode": "System One मॉडल",
     "systemOneModeDescription": "हर खर्च के लिए System One निर्णय मॉडल का उपयोग करें। संकेत के रूप में इस ग्रुप के श्रेणीबद्ध खर्चों और आपके द्वारा समीक्षा किए गए विकल्पों का उपयोग किया जाएगा। TypeSafe Jev ऐसा ही एक मॉडल है।",
-    "systemOneUnavailable": "System One उपलब्ध नहीं है। स्थानीय मिलान अभी भी उपलब्ध है।",
+    "systemOneUnavailable": "System One उपलब्ध नहीं है। शब्दकोश और इतिहास अभी भी उपलब्ध है।",
     "systemOneConfidence": "System One का विश्वास स्तर: {confidence}%",
     "systemOneOptionProbability": "System One विकल्प की संभावना: {probability}%",
     "overallProgress": "कुल प्रगति",
@@ -3683,7 +3683,7 @@
       "steps": {
         "choose": {
           "title": "तरीका चुनें",
-          "detail": "स्थानीय मिलान या System One निर्णय मॉडल का उपयोग करें।"
+          "detail": "शब्दकोश और इतिहास या System One निर्णय मॉडल का उपयोग करें।"
         },
         "calibrate": {
           "title": "छोटे नमूनों की समीक्षा करें",

@@ -2896,7 +2896,7 @@
     "generateSuggestions": "카테고리 제안하기",
     "backToStart": "뒤로",
     "chooseMode": "지출 분류 방법을 선택하세요",
-    "localMode": "로컬 매칭",
+    "localMode": "사전 및 기록",
     "localModeDescription": "이 그룹의 카테고리 기록과 내장 사전을 사용합니다.",
     "startRun": "분류 시작하기",
     "noCategory": "미분류로 두기",
@@ -2983,7 +2983,7 @@
     "progressCountDescription": "확정한 카테고리와 중간 또는 높은 매칭만 집계됩니다. 일반과 낮은 매칭은 포함되지 않습니다.",
     "systemOneMode": "System One 모델",
     "systemOneModeDescription": "모든 지출에 System One 결정 모델을 사용하고, 이 그룹에서 분류된 지출과 검토한 선택 항목을 힌트로 활용합니다. TypeSafe Jev는 이러한 모델 중 하나입니다.",
-    "systemOneUnavailable": "System One을 사용할 수 없습니다. 로컬 매칭은 계속 사용할 수 있습니다.",
+    "systemOneUnavailable": "System One을 사용할 수 없습니다. 사전 및 기록은 계속 사용할 수 있습니다.",
     "systemOneConfidence": "System One 신뢰도: {confidence}%",
     "systemOneOptionProbability": "System One 옵션 확률: {probability}%",
     "overallProgress": "전체 진행 상황",
@@ -3754,7 +3754,7 @@
       "steps": {
         "choose": {
           "title": "방법 선택하기",
-          "detail": "로컬 매칭 또는 System One 결정 모델을 사용합니다."
+          "detail": "사전 및 기록 또는 System One 결정 모델을 사용합니다."
         },
         "calibrate": {
           "title": "작은 샘플 검토하기",

@@ -2851,7 +2851,7 @@
     "generateSuggestions": "Suggérer des catégories",
     "backToStart": "Retour",
     "chooseMode": "Choisissez comment catégoriser les dépenses",
-    "localMode": "Correspondance locale",
+    "localMode": "Dictionnaire et historique",
     "localModeDescription": "Utilisez l’historique des catégories de ce groupe et le dictionnaire intégré.",
     "startRun": "Commencer la catégorisation",
     "noCategory": "Laisser non catégorisé",
@@ -2938,7 +2938,7 @@
     "progressCountDescription": "Seules les catégories confirmées et les correspondances moyennes ou élevées comptent ; Général et les correspondances faibles, non.",
     "systemOneMode": "Modèle System One",
     "systemOneModeDescription": "Utilisez le modèle de décision System One pour chaque dépense, en vous appuyant sur les dépenses catégorisées de ce groupe et vos choix vérifiés. TypeSafe Jev est l’un de ces modèles.",
-    "systemOneUnavailable": "System One n’est pas disponible. La correspondance locale reste disponible.",
+    "systemOneUnavailable": "System One n’est pas disponible. Le dictionnaire et l’historique restent disponibles.",
     "systemOneConfidence": "Confiance de System One : {confidence} %",
     "systemOneOptionProbability": "Probabilité de l’option System One : {probability} %",
     "overallProgress": "Progression globale",
@@ -3706,7 +3706,7 @@
       "steps": {
         "choose": {
           "title": "Choisir une méthode",
-          "detail": "Utilisez la correspondance locale ou le modèle de décision System One."
+          "detail": "Utilisez le dictionnaire et l’historique ou le modèle de décision System One."
         },
         "calibrate": {
           "title": "Vérifier de petits échantillons",

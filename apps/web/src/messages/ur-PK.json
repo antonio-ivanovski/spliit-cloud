@@ -671,7 +671,7 @@
     "generateSuggestions": "کیٹیگریز تجویز کریں",
     "backToStart": "پیچھے",
     "chooseMode": "اخراجات کو کیٹیگرائز کرنے کا طریقہ منتخب کریں",
-    "localMode": "مقامی ملاپ",
+    "localMode": "لغت اور تاریخ",
     "localModeDescription": "اس گروپ کی کیٹیگری تاریخ اور بنیادی لغت استعمال کریں۔",
     "startRun": "کیٹیگرائز کرنا شروع کریں",
     "noCategory": "بغیر کیٹیگری رکھیں",
@@ -758,7 +758,7 @@
     "progressCountDescription": "صرف تصدیق شدہ کیٹیگریز اور درمیانہ یا زیادہ ملاپ گنے جاتے ہیں؛ جنرل اور کمزور ملاپ نہیں گنے جاتے۔",
     "systemOneMode": "System One ماڈل",
     "systemOneModeDescription": "ہر خرچ کے لیے System One فیصلہ ماڈل استعمال کریں، جس میں اس گروپ کے زمرہ بند اخراجات اور آپ کے نظرثانی شدہ انتخاب بطور اشارے استعمال ہوں گے۔ TypeSafe Jev ایسا ہی ایک ماڈل ہے۔",
-    "systemOneUnavailable": "System One دستیاب نہیں ہے۔ مقامی ملاپ اب بھی دستیاب ہے۔",
+    "systemOneUnavailable": "System One دستیاب نہیں ہے۔ لغت اور تاریخ اب بھی دستیاب ہے۔",
     "systemOneConfidence": "System One کے اعتماد کی سطح: {confidence}%",
     "systemOneOptionProbability": "System One کے اختیار کا امکان: {probability}%",
     "overallProgress": "مجموعی پیش رفت",
@@ -3684,7 +3684,7 @@
       "steps": {
         "choose": {
           "title": "طریقہ منتخب کریں",
-          "detail": "مقامی ملاپ یا System One فیصلہ ماڈل استعمال کریں۔"
+          "detail": "لغت اور تاریخ یا System One فیصلہ ماڈل استعمال کریں۔"
         },
         "calibrate": {
           "title": "چھوٹے نمونوں کا جائزہ لیں",

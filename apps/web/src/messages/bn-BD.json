@@ -703,7 +703,7 @@
     "generateSuggestions": "ক্যাটেগোরি প্রস্তাব করুন",
     "backToStart": "পেছনে",
     "chooseMode": "খরচ ক্যাটেগোরাইজ করার পদ্ধতি বেছে নিন",
-    "localMode": "স্থানীয় মিল খোঁজা",
+    "localMode": "অভিধান ও ইতিহাস",
     "localModeDescription": "এই গ্রুপের ক্যাটেগোরি ইতিহাস এবং অন্তর্নির্মিত অভিধান ব্যবহার করুন।",
     "startRun": "ক্যাটেগোরাইজ শুরু করুন",
     "noCategory": "ক্যাটেগোরি ছাড়া রাখুন",
@@ -790,7 +790,7 @@
     "progressCountDescription": "শুধু নিশ্চিত ক্যাটেগোরি এবং মাঝারি বা বেশি মিল গণনা করা হয়; সাধারণ এবং কম মিল গণনা করা হয় না।",
     "systemOneMode": "System One মডেল",
     "systemOneModeDescription": "প্রতিটি খরচের জন্য System One সিদ্ধান্ত মডেল ব্যবহার করুন; এই গ্রুপের শ্রেণিবদ্ধ করা খরচ এবং আপনার পর্যালোচনা করা পছন্দগুলোকে ইঙ্গিত হিসেবে ব্যবহার করা হবে। TypeSafe Jev এমনই একটি মডেল।",
-    "systemOneUnavailable": "System One উপলভ্য নয়। স্থানীয় মিল খোঁজার সুবিধা এখনও উপলভ্য।",
+    "systemOneUnavailable": "System One উপলভ্য নয়। অভিধান ও ইতিহাস এখনও উপলভ্য।",
     "systemOneConfidence": "System One-এর নির্ভরযোগ্যতা: {confidence}%",
     "systemOneOptionProbability": "System One বিকল্পের সম্ভাবনা: {probability}%",
     "overallProgress": "সামগ্রিক অগ্রগতি",
@@ -3755,7 +3755,7 @@
       "steps": {
         "choose": {
           "title": "পদ্ধতি বেছে নিন",
-          "detail": "স্থানীয় মিল খোঁজা অথবা System One সিদ্ধান্ত মডেল ব্যবহার করুন।"
+          "detail": "অভিধান ও ইতিহাস অথবা System One সিদ্ধান্ত মডেল ব্যবহার করুন।"
         },
         "calibrate": {
           "title": "ছোট নমুনা পর্যালোচনা করুন",

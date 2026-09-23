@@ -2897,7 +2897,7 @@
     "generateSuggestions": "Kategorien vorschlagen",
     "backToStart": "Zurück",
     "chooseMode": "Wähle, wie Ausgaben kategorisiert werden",
-    "localMode": "Lokales Abgleichen",
+    "localMode": "Wörterbuch & Verlauf",
     "localModeDescription": "Nutzt den Kategorienverlauf dieser Gruppe und das integrierte Wörterbuch.",
     "startRun": "Kategorisierung starten",
     "noCategory": "Nicht kategorisiert lassen",
@@ -2984,7 +2984,7 @@
     "progressCountDescription": "Nur bestätigte Kategorien sowie mittlere und hohe Übereinstimmungen zählen; Allgemein und schwache Übereinstimmungen zählen nicht.",
     "systemOneMode": "System-One-Modell",
     "systemOneModeDescription": "Verwende für jede Ausgabe das System-One-Entscheidungsmodell und nutze die kategorisierten Ausgaben dieser Gruppe sowie deine überprüften Auswahlmöglichkeiten als Hinweise. TypeSafe Jev ist ein solches Modell.",
-    "systemOneUnavailable": "System One ist nicht verfügbar. Lokales Abgleichen ist weiterhin möglich.",
+    "systemOneUnavailable": "System One ist nicht verfügbar. Wörterbuch & Verlauf ist weiterhin verfügbar.",
     "systemOneConfidence": "System-One-Konfidenz: {confidence}%",
     "systemOneOptionProbability": "Wahrscheinlichkeit der System-One-Option: {probability}%",
     "overallProgress": "Gesamtfortschritt",
@@ -3755,7 +3755,7 @@
       "steps": {
         "choose": {
           "title": "Methode wählen",
-          "detail": "Verwende lokales Abgleichen oder das System-One-Entscheidungsmodell."
+          "detail": "Verwende Wörterbuch & Verlauf oder das System-One-Entscheidungsmodell."
         },
         "calibrate": {
           "title": "Kleine Stichproben überprüfen",

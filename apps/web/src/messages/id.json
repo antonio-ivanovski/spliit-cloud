@@ -2816,7 +2816,7 @@
     "generateSuggestions": "Sarankan kategori",
     "backToStart": "Kembali",
     "chooseMode": "Pilih cara mengategorikan pengeluaran",
-    "localMode": "Pencocokan lokal",
+    "localMode": "Kamus & riwayat",
     "localModeDescription": "Gunakan riwayat kategori grup ini dan kamus bawaan.",
     "startRun": "Mulai mengategorikan",
     "noCategory": "Biarkan tanpa kategori",
@@ -2903,7 +2903,7 @@
     "progressCountDescription": "Hanya kategori yang dikonfirmasi dan kecocokan sedang atau tinggi yang dihitung; Umum dan kecocokan rendah tidak.",
     "systemOneMode": "Model System One",
     "systemOneModeDescription": "Gunakan model keputusan System One yang dikonfigurasi untuk setiap pengeluaran, dengan pengeluaran yang telah dikategorikan di grup ini dan pilihan yang telah Anda tinjau sebagai petunjuk. TypeSafe Jev adalah salah satu model tersebut.",
-    "systemOneUnavailable": "System One tidak tersedia di server ini. Pencocokan lokal tetap tersedia.",
+    "systemOneUnavailable": "System One tidak tersedia. Kamus & riwayat tetap tersedia.",
     "systemOneConfidence": "Tingkat keyakinan System One: {confidence}%",
     "systemOneOptionProbability": "Probabilitas pilihan System One: {probability}%",
     "overallProgress": "Kemajuan keseluruhan",
@@ -3669,7 +3669,7 @@
       "steps": {
         "choose": {
           "title": "Pilih metode",
-          "detail": "Gunakan pencocokan lokal atau model keputusan System One yang dikonfigurasi."
+          "detail": "Gunakan kamus & riwayat atau model keputusan System One."
         },
         "calibrate": {
           "title": "Tinjau sampel kecil",

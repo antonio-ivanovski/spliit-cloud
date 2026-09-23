@@ -2851,7 +2851,7 @@
     "generateSuggestions": "הצע קטגוריות",
     "backToStart": "חזרה",
     "chooseMode": "בחר כיצד לסווג הוצאות",
-    "localMode": "התאמה מקומית",
+    "localMode": "מילון והיסטוריה",
     "localModeDescription": "השתמש בהיסטוריית הקטגוריות של קבוצה זו ובמילון המובנה.",
     "startRun": "התחל לסווג",
     "noCategory": "השאר ללא סיווג",
@@ -2938,7 +2938,7 @@
     "progressCountDescription": "רק קטגוריות מאושרות והתאמות בינוניות או גבוהות נספרות; כללי והתאמות חלשות לא נספרות.",
     "systemOneMode": "מודל System One",
     "systemOneModeDescription": "יש להשתמש במודל ההחלטה של System One עבור כל הוצאה, תוך שימוש בהוצאות שסווגו בקבוצה הזו ובבחירות שבדקתם כרמזים. TypeSafe Jev הוא מודל כזה.",
-    "systemOneUnavailable": "System One אינו זמין. התאמה מקומית עדיין זמינה.",
+    "systemOneUnavailable": "System One אינו זמין. מילון והיסטוריה עדיין זמינים.",
     "systemOneConfidence": "רמת הביטחון של System One: {confidence}%",
     "systemOneOptionProbability": "ההסתברות של אפשרות System One: {probability}%",
     "overallProgress": "התקדמות כללית",
@@ -3706,7 +3706,7 @@
       "steps": {
         "choose": {
           "title": "בחר שיטה",
-          "detail": "יש להשתמש בהתאמה מקומית או במודל ההחלטה של System One."
+          "detail": "יש להשתמש במילון ובהיסטוריה או במודל ההחלטה של System One."
         },
         "calibrate": {
           "title": "סקור מדגמים קטנים",

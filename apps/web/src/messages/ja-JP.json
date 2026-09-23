@@ -2818,7 +2818,7 @@
     "generateSuggestions": "カテゴリを提案",
     "backToStart": "戻る",
     "chooseMode": "支出の分類方法を選んでください",
-    "localMode": "ローカルマッチング",
+    "localMode": "辞書と履歴",
     "localModeDescription": "このグループのカテゴリ履歴と内蔵辞書を使用します。",
     "startRun": "分類を開始",
     "noCategory": "未分類のままにする",
@@ -2905,7 +2905,7 @@
     "progressCountDescription": "確定したカテゴリと中・高マッチのみが集計対象です。一般および低マッチは含まれません。",
     "systemOneMode": "System One モデル",
     "systemOneModeDescription": "すべての支出に System One の判定モデルを使用し、このグループで分類済みの支出と確認済みの選択をヒントとして利用します。TypeSafe Jev はそのようなモデルの一つです。",
-    "systemOneUnavailable": "System One は利用できません。ローカルマッチングは引き続き利用できます。",
+    "systemOneUnavailable": "System One は利用できません。辞書と履歴は引き続き利用できます。",
     "systemOneConfidence": "System One の信頼度：{confidence}%",
     "systemOneOptionProbability": "System One の候補確率：{probability}%",
     "overallProgress": "全体の進捗",
@@ -3670,7 +3670,7 @@
       "steps": {
         "choose": {
           "title": "方法を選択",
-          "detail": "ローカルマッチングまたは System One の判定モデルを使用します。"
+          "detail": "辞書と履歴または System One の判定モデルを使用します。"
         },
         "calibrate": {
           "title": "小さなサンプルを確認",

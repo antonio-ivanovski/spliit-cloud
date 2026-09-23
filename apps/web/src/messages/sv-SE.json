@@ -671,7 +671,7 @@
     "generateSuggestions": "Föreslå kategorier",
     "backToStart": "Tillbaka",
     "chooseMode": "Välj hur utgifter ska kategoriseras",
-    "localMode": "Lokal matchning",
+    "localMode": "Ordbok och historik",
     "localModeDescription": "Använder den här gruppens kategorihistorik och den inbyggda ordlistan.",
     "startRun": "Börja kategorisera",
     "noCategory": "Lämna okategoriserad",
@@ -758,7 +758,7 @@
     "progressCountDescription": "Endast bekräftade kategorier samt mellan- och högmatchningar räknas; Allmänt och svaga matchningar räknas inte.",
     "systemOneMode": "System One-modell",
     "systemOneModeDescription": "Använd beslutsmodellen System One för varje utgift och använd den här gruppens kategoriserade utgifter och dina granskade val som ledtrådar. TypeSafe Jev är en sådan modell.",
-    "systemOneUnavailable": "System One är inte tillgängligt. Lokal matchning är fortfarande tillgänglig.",
+    "systemOneUnavailable": "System One är inte tillgängligt. Ordbok och historik är fortfarande tillgängliga.",
     "systemOneConfidence": "System Ones säkerhet: {confidence}%",
     "systemOneOptionProbability": "Sannolikhet för System One-alternativet: {probability}%",
     "overallProgress": "Totala framsteg",
@@ -3683,7 +3683,7 @@
       "steps": {
         "choose": {
           "title": "Välj en metod",
-          "detail": "Använd lokal matchning eller beslutsmodellen System One."
+          "detail": "Använd ordbok och historik eller beslutsmodellen System One."
         },
         "calibrate": {
           "title": "Granska små urval",

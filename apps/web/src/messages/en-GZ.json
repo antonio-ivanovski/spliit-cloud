@@ -838,7 +838,7 @@
     "generateSuggestions": "suggest categories",
     "backToStart": "back",
     "chooseMode": "pick how to categorize expenses",
-    "localMode": "local matching",
+    "localMode": "dictionary & history",
     "localModeDescription": "uses this group’s category history plus the built-in dictionary.",
     "startRun": "start categorizing",
     "noCategory": "leave it uncategorized",
@@ -925,7 +925,7 @@
     "progressCountDescription": "only confirmed categories plus medium and high matches count. general and low matches don't.",
     "systemOneMode": "System One decision model",
     "systemOneModeDescription": "use the System One decision model for every expense, using this group’s categorized expenses and your reviewed choices as hints. TypeSafe Jev is one such model.",
-    "systemOneUnavailable": "System One isn’t available. local matching still works.",
+    "systemOneUnavailable": "System One isn’t available. dictionary & history still works.",
     "systemOneConfidence": "System One confidence score: {confidence}%",
     "systemOneOptionProbability": "System One option chance: {probability}%",
     "overallProgress": "overall progress",
@@ -3679,7 +3679,7 @@
       "steps": {
         "choose": {
           "title": "pick a method",
-          "detail": "use local matching or the System One decision model."
+          "detail": "use dictionary & history or the System One decision model."
         },
         "calibrate": {
           "title": "review small samples",

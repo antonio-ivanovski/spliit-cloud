@@ -2899,7 +2899,7 @@
     "generateSuggestions": "Sugerir categorías",
     "backToStart": "Atrás",
     "chooseMode": "Elige cómo categorizar los gastos",
-    "localMode": "Coincidencia local",
+    "localMode": "Diccionario e historial",
     "localModeDescription": "Usa el historial de categorías de este grupo y el diccionario integrado.",
     "startRun": "Empezar a categorizar",
     "noCategory": "Dejar sin categoría",
@@ -2986,7 +2986,7 @@
     "progressCountDescription": "Solo cuentan las categorías confirmadas y las coincidencias medias o altas; General y las coincidencias débiles, no.",
     "systemOneMode": "Modelo de System One",
     "systemOneModeDescription": "Usa el modelo de decisión de System One para cada gasto, utilizando como pistas los gastos categorizados de este grupo y tus opciones revisadas. TypeSafe Jev es uno de esos modelos.",
-    "systemOneUnavailable": "System One no está disponible. La coincidencia local sigue disponible.",
+    "systemOneUnavailable": "System One no está disponible. El diccionario y el historial siguen disponibles.",
     "systemOneConfidence": "Confianza de System One: {confidence}%",
     "systemOneOptionProbability": "Probabilidad de la opción de System One: {probability}%",
     "overallProgress": "Progreso general",
@@ -3757,7 +3757,7 @@
       "steps": {
         "choose": {
           "title": "Elige un método",
-          "detail": "Usa la coincidencia local o el modelo de decisión de System One."
+          "detail": "Usa el diccionario y el historial o el modelo de decisión de System One."
         },
         "calibrate": {
           "title": "Revisa muestras pequeñas",

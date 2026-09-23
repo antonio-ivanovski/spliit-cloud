@@ -2869,7 +2869,7 @@
     "generateSuggestions": "Navrhnout kategorie",
     "backToStart": "Zpět",
     "chooseMode": "Zvolte, jak kategorizovat výdaje",
-    "localMode": "Místní párování",
+    "localMode": "Slovník a historie",
     "localModeDescription": "Použije historii kategorií této skupiny a vestavěný slovník.",
     "startRun": "Začít kategorizovat",
     "noCategory": "Ponechat bez kategorie",
@@ -2956,7 +2956,7 @@
     "progressCountDescription": "Počítají se jen potvrzené kategorie a střední nebo vysoké shody; Obecné a slabé shody ne.",
     "systemOneMode": "Model System One",
     "systemOneModeDescription": "Použijte rozhodovací model System One pro každý výdaj a jako vodítko využijte kategorizované výdaje této skupiny a své zkontrolované volby. TypeSafe Jev je jedním z takových modelů.",
-    "systemOneUnavailable": "System One není dostupný. Místní párování je stále k dispozici.",
+    "systemOneUnavailable": "System One není dostupný. Slovník a historie jsou stále k dispozici.",
     "systemOneConfidence": "Spolehlivost System One: {confidence} %",
     "systemOneOptionProbability": "Pravděpodobnost možnosti System One: {probability} %",
     "overallProgress": "Celkový průběh",
@@ -3723,7 +3723,7 @@
       "steps": {
         "choose": {
           "title": "Zvolte metodu",
-          "detail": "Použijte místní párování nebo rozhodovací model System One."
+          "detail": "Použijte slovník a historii nebo rozhodovací model System One."
         },
         "calibrate": {
           "title": "Zkontrolujte malé vzorky",

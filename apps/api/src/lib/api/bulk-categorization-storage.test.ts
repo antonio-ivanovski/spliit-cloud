@@ -15,8 +15,10 @@ beforeEach(() => {
 })
 
 describe('paged categorization review', () => {
-  it('normalizes saved Jev run modes and suggestion sources', async () => {
-    expect(normalizeBulkCategorizationMode('jev')).toBe('system-one')
+  it('rejects unknown saved run modes and passes sources through', async () => {
+    expect(() => normalizeBulkCategorizationMode('jev')).toThrow(
+      'Unsupported bulk categorization mode: jev',
+    )
     expect(normalizeBulkCategorizationMode('system-one')).toBe('system-one')
 
     prismaMock.bulkCategorizationRun.findUniqueOrThrow.mockResolvedValue({
@@ -35,12 +37,12 @@ describe('paged categorization review', () => {
         categoryId: 'groceries',
         initialCategoryId: 'groceries',
         rerunFeedback: false,
-        source: 'jev',
+        source: 'system-one',
         choices: [
           {
             categoryId: 'groceries',
             confidence: 0.9,
-            source: 'jev',
+            source: 'system-one',
           },
         ],
         firstPass: null,

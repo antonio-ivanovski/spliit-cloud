@@ -449,7 +449,7 @@
     "generateSuggestions": "اقتراح الفئات",
     "backToStart": "رجوع",
     "chooseMode": "اختر طريقة تصنيف المصروفات",
-    "localMode": "المطابقة المحلية",
+    "localMode": "القاموس والسجل",
     "localModeDescription": "استخدم سجل فئات هذه المجموعة والقاموس المدمج.",
     "startRun": "بدء التصنيف",
     "noCategory": "اتركه غير مصنّف",
@@ -536,7 +536,7 @@
     "progressCountDescription": "تُحتسب الفئات المؤكدة فقط والتطابقات المتوسطة والمرتفعة؛ أما عام والتطابقات الضعيفة فلا تُحتسب.",
     "systemOneMode": "نموذج System One",
     "systemOneModeDescription": "استخدم نموذج القرار System One لكل مصروف، مستعينًا بالمصروفات المصنّفة في هذه المجموعة وباختياراتك التي راجعتها كإشارات. يُعد TypeSafe Jev أحد هذه النماذج.",
-    "systemOneUnavailable": "نظام System One غير متاح. لا تزال المطابقة المحلية متاحة.",
+    "systemOneUnavailable": "نظام System One غير متاح. لا يزال القاموس والسجل متاحين.",
     "systemOneConfidence": "درجة الثقة في System One: {confidence}%",
     "systemOneOptionProbability": "احتمالية خيار System One: {probability}%",
     "overallProgress": "التقدم العام",
@@ -3762,7 +3762,7 @@
       "steps": {
         "choose": {
           "title": "اختر طريقة",
-          "detail": "استخدم المطابقة المحلية أو نموذج القرار System One."
+          "detail": "استخدم القاموس والسجل أو نموذج القرار System One."
         },
         "calibrate": {
           "title": "مراجعة عينات صغيرة",

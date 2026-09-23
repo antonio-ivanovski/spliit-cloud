@@ -2851,7 +2851,7 @@
     "generateSuggestions": "Sugerează categorii",
     "backToStart": "Înapoi",
     "chooseMode": "Alege cum să categorizezi cheltuielile",
-    "localMode": "Potrivirea locală",
+    "localMode": "Dicționar și istoric",
     "localModeDescription": "Folosește istoricul categoriilor acestui grup și dicționarul integrat.",
     "startRun": "Începe categorizarea",
     "noCategory": "Lasă necategorizat",
@@ -2938,7 +2938,7 @@
     "progressCountDescription": "Se iau în calcul doar categoriile confirmate și potrivirile medii sau ridicate; General și potrivirile slabe, nu.",
     "systemOneMode": "Modelul System One",
     "systemOneModeDescription": "Folosește modelul de decizie System One pentru fiecare cheltuială, folosind ca indicii cheltuielile categorizate din acest grup și opțiunile tale verificate. TypeSafe Jev este un astfel de model.",
-    "systemOneUnavailable": "System One nu este disponibil. Potrivirea locală este în continuare disponibilă.",
+    "systemOneUnavailable": "System One nu este disponibil. Dicționarul și istoricul sunt în continuare disponibile.",
     "systemOneConfidence": "Nivelul de încredere System One: {confidence}%",
     "systemOneOptionProbability": "Probabilitatea opțiunii System One: {probability}%",
     "overallProgress": "Progres general",
@@ -3706,7 +3706,7 @@
       "steps": {
         "choose": {
           "title": "Alege o metodă",
-          "detail": "Folosește potrivirea locală sau modelul de decizie System One."
+          "detail": "Folosește dicționarul și istoricul sau modelul de decizie System One."
         },
         "calibrate": {
           "title": "Verifică eșantioane mici",

@@ -2818,7 +2818,7 @@
     "generateSuggestions": "建议分类",
     "backToStart": "返回",
     "chooseMode": "选择支出分类方式",
-    "localMode": "本地匹配",
+    "localMode": "词典与历史",
     "localModeDescription": "使用此群组的分类历史和内置词典。",
     "startRun": "开始分类",
     "noCategory": "保持未分类",
@@ -2905,7 +2905,7 @@
     "progressCountDescription": "仅统计已确认的分类以及中、高匹配；通用和低匹配不计入。",
     "systemOneMode": "System One 模型",
     "systemOneModeDescription": "对每笔支出使用 System One 决策模型，并参考此群组中已分类的支出和你审核过的选择。TypeSafe Jev 是此类模型之一。",
-    "systemOneUnavailable": "无法使用 System One。仍可使用本地匹配。",
+    "systemOneUnavailable": "无法使用 System One。仍可使用词典与历史。",
     "systemOneConfidence": "System One 置信度：{confidence}%",
     "systemOneOptionProbability": "System One 选项概率：{probability}%",
     "overallProgress": "总体进度",
@@ -3670,7 +3670,7 @@
       "steps": {
         "choose": {
           "title": "选择方式",
-          "detail": "使用本地匹配或 System One 决策模型。"
+          "detail": "使用词典与历史或 System One 决策模型。"
         },
         "calibrate": {
           "title": "检查小样本",

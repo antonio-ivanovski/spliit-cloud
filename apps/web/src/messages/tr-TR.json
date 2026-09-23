@@ -2833,7 +2833,7 @@
     "generateSuggestions": "Kategori öner",
     "backToStart": "Geri",
     "chooseMode": "Masrafları kategorilendirme yöntemini seçin",
-    "localMode": "Yerel eşleştirme",
+    "localMode": "Sözlük ve geçmiş",
     "localModeDescription": "Bu grubun kategori geçmişini ve yerleşik sözlüğü kullanır.",
     "startRun": "Kategorilendirmeyi başlat",
     "noCategory": "Kategorisiz bırak",
@@ -2920,7 +2920,7 @@
     "progressCountDescription": "Yalnızca onaylanan kategoriler ile orta ve yüksek eşleşmeler sayılır; Genel ve düşük güçlü eşleşmeler sayılmaz.",
     "systemOneMode": "System One modeli",
     "systemOneModeDescription": "Her masraf için System One karar modelini kullanır; bu grubun kategorilendirilmiş masraflarını ve gözden geçirdiğiniz seçimleri ipucu olarak alır. TypeSafe Jev bu tür modellerden biridir.",
-    "systemOneUnavailable": "System One kullanılamıyor. Yerel eşleştirme yine de kullanılabilir.",
+    "systemOneUnavailable": "System One kullanılamıyor. Sözlük ve geçmiş yine de kullanılabilir.",
     "systemOneConfidence": "System One güven düzeyi: {confidence}%",
     "systemOneOptionProbability": "System One seçeneği olasılığı: {probability}%",
     "overallProgress": "Genel ilerleme",
@@ -3687,7 +3687,7 @@
       "steps": {
         "choose": {
           "title": "Yöntem seçin",
-          "detail": "Yerel eşleştirmeyi veya System One karar modelini kullanın."
+          "detail": "Sözlük ve geçmişi veya System One karar modelini kullanın."
         },
         "calibrate": {
           "title": "Küçük örnekleri inceleyin",

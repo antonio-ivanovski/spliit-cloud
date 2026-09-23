@@ -2897,7 +2897,7 @@
     "generateSuggestions": "Categorieën voorstellen",
     "backToStart": "Terug",
     "chooseMode": "Kies hoe uitgaven worden gecategoriseerd",
-    "localMode": "Lokaal zoeken naar overeenkomsten",
+    "localMode": "Woordenboek & geschiedenis",
     "localModeDescription": "Gebruikt de categoriegeschiedenis van deze groep en het ingebouwde woordenboek.",
     "startRun": "Start met categoriseren",
     "noCategory": "Niet categoriseren",
@@ -2984,7 +2984,7 @@
     "progressCountDescription": "Alleen bevestigde categorieën en gemiddelde of hoge overeenkomsten tellen mee; Algemeen en zwakke overeenkomsten niet.",
     "systemOneMode": "System One-model",
     "systemOneModeDescription": "Gebruik voor elke uitgave het System One-beslismodel en gebruik de gecategoriseerde uitgaven van deze groep en je gecontroleerde keuzes als aanwijzingen. TypeSafe Jev is zo’n model.",
-    "systemOneUnavailable": "System One is niet beschikbaar. Lokaal zoeken naar overeenkomsten blijft beschikbaar.",
+    "systemOneUnavailable": "System One is niet beschikbaar. Woordenboek & geschiedenis blijft beschikbaar.",
     "systemOneConfidence": "Zekerheid van System One: {confidence}%",
     "systemOneOptionProbability": "Waarschijnlijkheid van de System One-optie: {probability}%",
     "overallProgress": "Algehele voortgang",
@@ -3755,7 +3755,7 @@
       "steps": {
         "choose": {
           "title": "Kies een methode",
-          "detail": "Gebruik lokaal zoeken naar overeenkomsten of het System One-beslismodel."
+          "detail": "Gebruik woordenboek & geschiedenis of het System One-beslismodel."
         },
         "calibrate": {
           "title": "Kleine steekproeven controleren",

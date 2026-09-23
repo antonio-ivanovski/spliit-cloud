@@ -2818,7 +2818,7 @@
     "generateSuggestions": "建議分類",
     "backToStart": "返回",
     "chooseMode": "選擇支出分類方式",
-    "localMode": "本機比對",
+    "localMode": "字典與歷史",
     "localModeDescription": "使用此群組的分類歷史和內建字典。",
     "startRun": "開始分類",
     "noCategory": "保持未分類",
@@ -2905,7 +2905,7 @@
     "progressCountDescription": "僅統計已確認的分類以及中、高比對；通用和低比對不計入。",
     "systemOneMode": "System One 模型",
     "systemOneModeDescription": "對每筆支出使用 System One 決策模型，並參考此群組中已分類的支出和你審核過的選項。TypeSafe Jev 是其中一種模型。",
-    "systemOneUnavailable": "無法使用 System One。仍可使用本機比對。",
+    "systemOneUnavailable": "無法使用 System One。仍可使用字典與歷史。",
     "systemOneConfidence": "System One 信賴度：{confidence}%",
     "systemOneOptionProbability": "System One 選項機率：{probability}%",
     "overallProgress": "整體進度",
@@ -3670,7 +3670,7 @@
       "steps": {
         "choose": {
           "title": "選擇方式",
-          "detail": "使用本機比對或 System One 決策模型。"
+          "detail": "使用字典與歷史或 System One 決策模型。"
         },
         "calibrate": {
           "title": "檢查小樣本",

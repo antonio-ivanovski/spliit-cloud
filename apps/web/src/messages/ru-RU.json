@@ -2869,7 +2869,7 @@
     "generateSuggestions": "Предложить категории",
     "backToStart": "Назад",
     "chooseMode": "Выберите, как категоризировать расходы",
-    "localMode": "Локальное сопоставление",
+    "localMode": "Словарь и история",
     "localModeDescription": "Используйте историю категорий этой группы и встроенный словарь.",
     "startRun": "Начать категоризацию",
     "noCategory": "Оставить без категории",
@@ -2956,7 +2956,7 @@
     "progressCountDescription": "Засчитываются только подтверждённые категории и средние или высокие совпадения; Общее и слабые совпадения не засчитываются.",
     "systemOneMode": "Модель System One",
     "systemOneModeDescription": "Используйте модель принятия решений System One для каждого расхода, учитывая категоризированные расходы этой группы и проверенные вами варианты. TypeSafe Jev — одна из таких моделей.",
-    "systemOneUnavailable": "System One недоступен. Локальное сопоставление по-прежнему доступно.",
+    "systemOneUnavailable": "System One недоступен. Словарь и история по-прежнему доступны.",
     "systemOneConfidence": "Уверенность System One: {confidence}%",
     "systemOneOptionProbability": "Вероятность варианта System One: {probability}%",
     "overallProgress": "Общий прогресс",
@@ -3723,7 +3723,7 @@
       "steps": {
         "choose": {
           "title": "Выберите способ",
-          "detail": "Использовать локальное сопоставление или модель принятия решений System One."
+          "detail": "Использовать словарь и историю или модель принятия решений System One."
         },
         "calibrate": {
           "title": "Проверяйте небольшие выборки",

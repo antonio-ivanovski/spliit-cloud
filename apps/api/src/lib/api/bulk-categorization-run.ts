@@ -54,30 +54,13 @@ export type Suggestion = Candidate & {
 }
 export type BulkCategorizationMode = 'local' | 'system-one'
 
-/** Legacy Jev values may remain in local run rows created before the rename. */
+/** Bulk-run modes stored in local run rows. */
 export function normalizeBulkCategorizationMode(
   mode: string,
 ): BulkCategorizationMode {
   if (mode === 'local') return 'local'
-  if (mode === 'system-one' || mode === 'jev') return 'system-one'
+  if (mode === 'system-one') return 'system-one'
   throw new Error(`Unsupported bulk categorization mode: ${mode}`)
-}
-
-function normalizeChoice(choice: Choice): Choice {
-  const source = (choice as unknown as { source: string }).source
-  return {
-    ...choice,
-    source: source === 'jev' ? 'system-one' : (source as Choice['source']),
-  }
-}
-
-function normalizeSuggestion(suggestion: Suggestion): Suggestion {
-  const source = (suggestion as unknown as { source: string }).source
-  return {
-    ...suggestion,
-    source: source === 'jev' ? 'system-one' : (source as Suggestion['source']),
-    choices: suggestion.choices.map(normalizeChoice),
-  }
 }
 
 type RoundMetric = {
@@ -107,10 +90,8 @@ const calibrationOf = (value: unknown): Calibration => {
     const calibration = value as Calibration
     return {
       ...calibration,
-      sample: list<Suggestion>(calibration.sample).map(normalizeSuggestion),
-      confirmed: list<Suggestion>(calibration.confirmed).map(
-        normalizeSuggestion,
-      ),
+      sample: list<Suggestion>(calibration.sample),
+      confirmed: list<Suggestion>(calibration.confirmed),
       metrics: recalculateRoundMetrics(calibration),
     }
   }
@@ -521,7 +502,7 @@ const logRun = (
   )
 
 function rowToSuggestion(row: BulkCategorizationRow): Suggestion {
-  return normalizeSuggestion({
+  return {
     id: row.expenseId,
     title: row.title,
     version: row.expenseVersion,
@@ -541,7 +522,7 @@ function rowToSuggestion(row: BulkCategorizationRow): Suggestion {
     ...(row.secondPass
       ? { secondPass: row.secondPass as Suggestion['secondPass'] }
       : {}),
-  })
+  }
 }
 const asCandidate = (row: BulkCategorizationRow): Candidate => ({
   id: row.expenseId,

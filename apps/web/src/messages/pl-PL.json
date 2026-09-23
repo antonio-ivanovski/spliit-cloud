@@ -2869,7 +2869,7 @@
     "generateSuggestions": "Zaproponuj kategorie",
     "backToStart": "Wróć",
     "chooseMode": "Wybierz sposób kategoryzacji wydatków",
-    "localMode": "Dopasowanie lokalne",
+    "localMode": "Słownik i historia",
     "localModeDescription": "Użyj historii kategorii tej grupy i wbudowanego słownika.",
     "startRun": "Rozpocznij kategoryzację",
     "noCategory": "Pozostaw bez kategorii",
@@ -2956,7 +2956,7 @@
     "progressCountDescription": "Liczą się tylko potwierdzone kategorie oraz średnie lub wysokie dopasowania; Ogólne i słabe dopasowania się nie liczą.",
     "systemOneMode": "Model System One",
     "systemOneModeDescription": "Użyj modelu decyzyjnego System One dla każdego wydatku, korzystając jako podpowiedzi ze skategoryzowanych wydatków tej grupy i swoich sprawdzonych wyborów. TypeSafe Jev to jeden z takich modeli.",
-    "systemOneUnavailable": "System One jest niedostępny. Dopasowanie lokalne jest nadal dostępne.",
+    "systemOneUnavailable": "System One jest niedostępny. Słownik i historia są nadal dostępne.",
     "systemOneConfidence": "Pewność System One: {confidence}%",
     "systemOneOptionProbability": "Prawdopodobieństwo opcji System One: {probability}%",
     "overallProgress": "Ogólny postęp",
@@ -3723,7 +3723,7 @@
       "steps": {
         "choose": {
           "title": "Wybierz metodę",
-          "detail": "Użyj dopasowania lokalnego lub modelu decyzyjnego System One."
+          "detail": "Użyj słownika i historii lub modelu decyzyjnego System One."
         },
         "calibrate": {
           "title": "Przejrzyj małe próbki",

@@ -1505,7 +1505,7 @@
     "discardConfirmationDescription": "Isso remove a execução, as sugestões e as escolhas feitas por você ou outros administradores. Nenhuma categoria de despesa será alterada.",
     "progressCountDescription": "Somente as categorias confirmadas e as correspondências médias ou altas contam; Geral e as correspondências fracas não.",
     "systemOneModeDescription": "Use o modelo de decisão do System One para cada despesa, usando como dicas as despesas categorizadas deste grupo e suas escolhas revisadas. O TypeSafe Jev é um desses modelos.",
-    "systemOneUnavailable": "O System One não está disponível. A correspondência local ainda está disponível.",
+    "systemOneUnavailable": "O System One não está disponível. O dicionário e o histórico ainda estão disponíveis.",
     "systemOneConfidence": "Confiança no System One: {confidence}%",
     "systemOneOptionProbability": "Probabilidade da opção no System One: {probability}%",
     "stageProcessed": "Processadas {processed} de {total} despesas nesta etapa",
@@ -1951,7 +1951,7 @@
       "steps": {
         "choose": {
           "title": "Escolha um método",
-          "detail": "Use a correspondência local ou o modelo de decisão do System One."
+          "detail": "Use o dicionário e o histórico ou o modelo de decisão do System One."
         },
         "calibrate": {
           "title": "Revise amostras pequenas",

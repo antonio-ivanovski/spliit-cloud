@@ -2833,7 +2833,7 @@
     "generateSuggestions": "Предложи категории",
     "backToStart": "Назад",
     "chooseMode": "Изберете како да ги категоризирате трошоците",
-    "localMode": "Локално совпаѓање",
+    "localMode": "Речник и историја",
     "localModeDescription": "Користи ја историјата на категории на оваа група и вградениот речник.",
     "startRun": "Започни категоризација",
     "noCategory": "Остави некатегоризирано",
@@ -2920,7 +2920,7 @@
     "progressCountDescription": "Се бројат само потврдените категории и средните или високите совпаѓања; Општо и слабите совпаѓања не се бројат.",
     "systemOneMode": "Модел System One",
     "systemOneModeDescription": "Користете го моделот за одлучување System One за секој трошок, користејќи ги категоризираните трошоци во оваа група и вашите прегледани избори како насоки. TypeSafe Jev е еден таков модел.",
-    "systemOneUnavailable": "System One не е достапен. Локалното совпаѓање сè уште е достапно.",
+    "systemOneUnavailable": "System One не е достапен. Речникот и историјата сè уште се достапни.",
     "systemOneConfidence": "Сигурност на System One: {confidence}%",
     "systemOneOptionProbability": "Веројатност на опцијата System One: {probability}%",
     "overallProgress": "Вкупен напредок",
@@ -3685,7 +3685,7 @@
       "steps": {
         "choose": {
           "title": "Изберете метод",
-          "detail": "Користете локално совпаѓање или модел за одлучување System One."
+          "detail": "Користете речник и историја или модел за одлучување System One."
         },
         "calibrate": {
           "title": "Прегледајте мали примероци",

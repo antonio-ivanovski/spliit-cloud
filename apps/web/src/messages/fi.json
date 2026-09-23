@@ -2833,7 +2833,7 @@
     "generateSuggestions": "Ehdota kategorioita",
     "backToStart": "Takaisin",
     "chooseMode": "Valitse, miten kulut luokitellaan",
-    "localMode": "Paikallinen vastaavuuksien haku",
+    "localMode": "Sanakirja ja historia",
     "localModeDescription": "Käyttää tämän ryhmän kategoriahistoriaa ja sisäänrakennettua sanakirjaa.",
     "startRun": "Aloita luokittelu",
     "noCategory": "Jätä luokittelematta",
@@ -2920,7 +2920,7 @@
     "progressCountDescription": "Vain vahvistetut kategoriat sekä kohtalaiset ja korkeat vastaavuudet lasketaan; Yleinen-kategoriaa ja heikkoja vastaavuuksia ei lasketa.",
     "systemOneMode": "System One -malli",
     "systemOneModeDescription": "Käytä System One -päätösmallia jokaiselle kululle ja hyödynnä vihjeinä tämän ryhmän luokiteltuja kuluja sekä tarkistamiasi valintoja. TypeSafe Jev on yksi tällainen malli.",
-    "systemOneUnavailable": "System One ei ole käytettävissä. Paikallinen vastaavuuksien haku on edelleen käytettävissä.",
+    "systemOneUnavailable": "System One ei ole käytettävissä. Sanakirja ja historia on edelleen käytettävissä.",
     "systemOneConfidence": "System Onen luottamus: {confidence}%",
     "systemOneOptionProbability": "System One -vaihtoehdon todennäköisyys: {probability}%",
     "overallProgress": "Kokonaisedistyminen",
@@ -3687,7 +3687,7 @@
       "steps": {
         "choose": {
           "title": "Valitse menetelmä",
-          "detail": "Käytä paikallista vastaavuuksien hakua tai System One -päätösmallia."
+          "detail": "Käytä sanakirjaa ja historiaa tai System One -päätösmallia."
         },
         "calibrate": {
           "title": "Tarkista pieniä otoksia",

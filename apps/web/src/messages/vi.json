@@ -2988,7 +2988,7 @@
     "generateSuggestions": "Gợi ý phân loại",
     "backToStart": "Quay lại",
     "chooseMode": "Chọn cách phân loại chi phí",
-    "localMode": "So khớp cục bộ",
+    "localMode": "Từ điển & lịch sử",
     "localModeDescription": "Dùng lịch sử phân loại của nhóm này và từ điển tích hợp.",
     "startRun": "Bắt đầu phân loại",
     "noCategory": "Giữ chưa phân loại",
@@ -3075,7 +3075,7 @@
     "progressCountDescription": "Chỉ tính các phân loại đã xác nhận và mức khớp trung bình hoặc cao; Chung và mức khớp thấp thì không.",
     "systemOneMode": "Mô hình System One",
     "systemOneModeDescription": "Sử dụng mô hình quyết định System One đã được cấu hình cho mọi khoản chi, dựa trên các khoản chi đã phân loại trong nhóm này và các lựa chọn bạn đã xem xét làm gợi ý. TypeSafe Jev là một mô hình như vậy.",
-    "systemOneUnavailable": "System One không khả dụng trên máy chủ này. Vẫn có thể dùng tính năng so khớp cục bộ.",
+    "systemOneUnavailable": "System One không khả dụng. Vẫn có thể dùng từ điển & lịch sử.",
     "systemOneConfidence": "Độ tin cậy của System One: {confidence}%",
     "systemOneOptionProbability": "Xác suất lựa chọn của System One: {probability}%",
     "overallProgress": "Tiến trình tổng thể",
@@ -3752,7 +3752,7 @@
       "steps": {
         "choose": {
           "title": "Chọn phương thức",
-          "detail": "Sử dụng tính năng so khớp cục bộ hoặc mô hình quyết định System One đã được cấu hình."
+          "detail": "Sử dụng từ điển & lịch sử hoặc mô hình quyết định System One."
         },
         "calibrate": {
           "title": "Xem lại các mẫu nhỏ",

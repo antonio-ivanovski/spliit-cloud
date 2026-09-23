@@ -2849,7 +2849,7 @@
     "generateSuggestions": "Iradoki kategoriak",
     "backToStart": "Atzera",
     "chooseMode": "Aukeratu gastuak nola kategorizatu",
-    "localMode": "Tokiko bat-etortzea",
+    "localMode": "Hiztegia eta historia",
     "localModeDescription": "Erabili talde honen kategorien historia eta integratutako hiztegia.",
     "startRun": "Hasi kategorizatzen",
     "noCategory": "Utzi kategorizatu gabe",
@@ -2936,7 +2936,7 @@
     "progressCountDescription": "Berretsitako kategoriek eta bat-etortze ertain edo altuek bakarrik zenbatzen dute; Orokorra eta bat-etortze ahulek ez.",
     "systemOneMode": "System One eredua",
     "systemOneModeDescription": "Erabili System One erabaki-eredua gastu bakoitzerako, talde honetako kategorizatutako gastuak eta berrikusitako aukerak argibide gisa erabiliz. TypeSafe Jev eredu horietako bat da.",
-    "systemOneUnavailable": "System One ez dago erabilgarri. Tokiko bat-etortzea erabilgarri dago oraindik.",
+    "systemOneUnavailable": "System One ez dago erabilgarri. Hiztegia eta historia erabilgarri daude oraindik.",
     "systemOneConfidence": "System One-ren konfiantza: {confidence}%",
     "systemOneOptionProbability": "System One aukeraren probabilitatea: {probability}%",
     "overallProgress": "Aurrerapen orokorra",
@@ -3704,7 +3704,7 @@
       "steps": {
         "choose": {
           "title": "Aukeratu metodo bat",
-          "detail": "Erabili tokiko bat-etortzea edo System One erabaki-eredua."
+          "detail": "Erabili hiztegia eta historia edo System One erabaki-eredua."
         },
         "calibrate": {
           "title": "Berrikusi lagin txikiak",
