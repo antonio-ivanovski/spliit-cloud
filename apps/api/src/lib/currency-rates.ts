@@ -1,4 +1,4 @@
-import { utcTodayIso } from '@spliit/domain'
+import { exchangeRateLookupDate, utcTodayIso } from '@spliit/domain'
 import {
   getCurrency,
   intermediaryCurrenciesFor,
@@ -38,6 +38,13 @@ export type CurrencyRateSource = {
   provider: CurrencyRateProviderId
   base: string
   target: string
+  /**
+   * True when the quote was fetched in the opposite orientation (`target→base`
+   * on the provider) and inverted. The `base`/`target` fields always describe
+   * the requested orientation so callers can match sources against their
+   * request pair; `inverted` reveals the actual upstream quote direction.
+   */
+  inverted?: boolean
 }
 
 export type CurrencyRate = {
@@ -253,8 +260,10 @@ async function fetchCryptoPair(
     )
     if (inverted !== null) {
       return makeRate(ctx.date, base, target, 1 / inverted, ctx.date, {
-        // Inversion still uses the Coinbase quote for target→base.
-        sources: [{ provider: 'coinbase', base, target }],
+        // Requested orientation is preserved so callers can match sources
+        // against their request pair; `inverted` marks the actual upstream
+        // quote direction (target→base on Coinbase).
+        sources: [{ provider: 'coinbase', base, target, inverted: true }],
       })
     }
     return null
@@ -296,7 +305,13 @@ async function bridgeViaIntermediaries(
     if (!leg1) continue
     const leg2 = await fetchClassifiedPair(ctx, intermediary, target)
     if (!leg2) continue
-    return makeRate(ctx.date, base, target, leg1.rate * leg2.rate, ctx.date, {
+    // The composite rate is only as fresh as its oldest leg: propagate the
+    // earliest asOfDate (e.g. a fiat leg that fell back to Friday for a
+    // weekend request) so clients can still surface the stale-rate warning.
+    // ISO YYYY-MM-DD dates compare lexicographically.
+    const asOfDate =
+      leg1.asOfDate < leg2.asOfDate ? leg1.asOfDate : leg2.asOfDate
+    return makeRate(ctx.date, base, target, leg1.rate * leg2.rate, asOfDate, {
       via: [intermediary],
       sources: [...leg1.sources, ...leg2.sources],
     })
@@ -385,9 +400,10 @@ async function resolveRate(
 
 /**
  * Resolve the rate of 1 unit of `base` in `target` on `date`. Cached in-process
- * keyed by `(date, base, target)`. Future dates use the provider's latest
- * available rate (same contract as fiat); crypto pairs involving "today" use a
- * shorter TTL.
+ * keyed by `(date, base, target)`. Future dates are clamped to today (shared
+ * `exchangeRateLookupDate` rule with the web preview and expense persistence),
+ * so providers never see a future date; `requestedDate` echoes the clamped
+ * date. Crypto pairs involving "today" use a shorter TTL.
  */
 export async function getCurrencyRate({
   date,
@@ -407,17 +423,21 @@ export async function getCurrencyRate({
   if (!ISO_DATE_RE.test(date)) {
     throw new CurrencyRateProviderError(`Invalid date: ${date}`)
   }
+  // Shared domain rule: future expense dates resolve at today's rate.
+  // Clamped here (in addition to callers) so raw API use stays consistent;
+  // idempotent for callers that already clamped.
+  const lookupDate = exchangeRateLookupDate(date)
   assertSupported(base)
   assertSupported(target)
 
-  const key = rateCacheKey(base, target, date)
+  const key = rateCacheKey(base, target, lookupDate)
   const cached = readRateCache<CurrencyRate>(key)
   if (cached) return cached
 
   if (isCryptoCurrency(base) || isCryptoCurrency(target)) {
     return resolveRate(
       {
-        date,
+        date: lookupDate,
         fiatFetch: fetchImpl,
         cryptoFetch: cryptoFetchImpl,
         memo: new Map(),
@@ -428,12 +448,14 @@ export async function getCurrencyRate({
   }
 
   // Pure fiat: single Frankfurter call (preserves prior asOfDate / ttlMs behaviour).
-  const payload = await withFxRetry(() => fetchImpl(date, base, [target]))
+  const payload = await withFxRetry(() =>
+    fetchImpl(lookupDate, base, [target]),
+  )
   const rate = payload.rates[target]
   if (typeof rate !== 'number') {
     throw new CurrencyRateNotFoundError(target)
   }
-  const result = makeRate(date, base, target, rate, payload.date, {
+  const result = makeRate(lookupDate, base, target, rate, payload.date, {
     sources: [{ provider: 'frankfurter', base, target }],
   })
   writeRateCache(key, result, ttlMs)
@@ -477,6 +499,7 @@ export type BatchRateResult =
  * base) for one Frankfurter multi-quote call. Crypto-involving requests resolve
  * individually with shared in-flight sub-legs so repeated intermediaries
  * (BTC→EUR for BTC→MKD and BTC→BGN) cost a single provider call.
+ * Future dates are clamped to today per item (same rule as `getCurrencyRate`).
  */
 export async function getCurrencyRates(
   requests: BatchRateRequest[],
@@ -509,8 +532,16 @@ export async function getCurrencyRates(
   requests.forEach((req, idx) => {
     const base = req.base.toUpperCase()
     const target = req.target.toUpperCase()
+    // Shared domain rule: future dates resolve at today's rate. Clamp here so
+    // raw batch callers stay consistent with the preview hooks and expense
+    // persistence (both also clamp; double-clamping is idempotent). Invalid
+    // dates are left untouched so downstream validation still reports
+    // INVALID_DATE instead of silently resolving at today.
+    const lookupDate = ISO_DATE_RE.test(req.date)
+      ? exchangeRateLookupDate(req.date)
+      : req.date
     const cached = readRateCache<CurrencyRate>(
-      rateCacheKey(base, target, req.date),
+      rateCacheKey(base, target, lookupDate),
     )
     if (cached) {
       output[idx] = { ok: true, rate: cached }
@@ -518,16 +549,21 @@ export async function getCurrencyRates(
     }
     allCached = false
     if (isCryptoCurrency(base) || isCryptoCurrency(target)) {
-      const key = rateCacheKey(base, target, req.date)
+      const key = rateCacheKey(base, target, lookupDate)
       const existing = cryptoGroups.get(key)
       if (existing) {
         existing.indices.push(idx)
       } else {
-        cryptoGroups.set(key, { date: req.date, base, target, indices: [idx] })
+        cryptoGroups.set(key, {
+          date: lookupDate,
+          base,
+          target,
+          indices: [idx],
+        })
       }
       return
     }
-    const key = groupKey(req.date, base)
+    const key = groupKey(lookupDate, base)
     const existing = groups.get(key)
     if (existing) {
       if (!existing.indicesByTarget.has(target)) {
@@ -539,7 +575,7 @@ export async function getCurrencyRates(
       const indicesByTarget = new Map<string, number[]>()
       indicesByTarget.set(target, [idx])
       groups.set(key, {
-        date: req.date,
+        date: lookupDate,
         base,
         targets: [target],
         indicesByTarget,
@@ -685,11 +721,14 @@ function classifyBatchError(
   if (err instanceof CurrencyRateNotFoundError) {
     return { code: 'RATE_NOT_FOUND', target: err.target }
   }
-  if (err instanceof CurrencyRateProviderError) {
-    return { code: 'PROVIDER_ERROR', message: err.message }
-  }
+  // Validation failures must stay BAD_REQUEST downstream: an "Invalid date"
+  // provider error is a caller bug, not an upstream outage, so it classifies
+  // as INVALID_DATE even though it arrives as CurrencyRateProviderError.
   if (err instanceof Error && /Invalid date/.test(err.message)) {
     return { code: 'INVALID_DATE', date }
+  }
+  if (err instanceof CurrencyRateProviderError) {
+    return { code: 'PROVIDER_ERROR', message: err.message }
   }
   return {
     code: 'PROVIDER_ERROR',

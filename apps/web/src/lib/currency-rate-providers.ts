@@ -21,6 +21,7 @@ export type CurrencyRateSource = {
   provider: CurrencyRateProviderId
   base: string
   target: string
+  inverted?: boolean
 }
 
 export function isCurrencyRateProviderId(

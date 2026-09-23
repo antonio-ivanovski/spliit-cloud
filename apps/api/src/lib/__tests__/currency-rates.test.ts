@@ -114,20 +114,20 @@ describe('getCurrencyRate', () => {
     expect(currencyRateCacheSize()).toBe(1)
   })
 
-  it('falls back to the provider latest-available rate for future dates and records the as-of date', async () => {
+  it('records the provider as-of date when it falls back to an earlier market day', async () => {
     const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue(
       makePayload({ date: '2026-06-26' }),
     )
 
     const result = await getCurrencyRate({
-      date: '2026-12-31',
+      date: '2026-06-28',
       base: 'EUR',
       target: 'USD',
       fetchImpl,
     })
 
     expect(result.rate).toBe(1.1401)
-    expect(result.requestedDate).toBe('2026-12-31')
+    expect(result.requestedDate).toBe('2026-06-28')
     expect(result.asOfDate).toBe('2026-06-26')
   })
 
@@ -498,8 +498,145 @@ describe('crypto rate resolution', () => {
     expect(result.rate).toBeCloseTo(55_000 / 2_500, 10)
     expect(result.sources).toEqual([
       { provider: 'coinbase', base: 'BTC', target: 'EUR' },
-      { provider: 'coinbase', base: 'EUR', target: 'ETH' },
+      // EUR→ETH was quoted as ETH→EUR on Coinbase and inverted.
+      { provider: 'coinbase', base: 'EUR', target: 'ETH', inverted: true },
     ])
+  })
+
+  it('propagates the earliest leg asOfDate on bridged rates', async () => {
+    const cryptoFetchImpl = vi
+      .fn<CryptoFetchFn>()
+      .mockImplementation(async (_date, base, target) => {
+        if (base === 'DOGE' && target === 'EUR') return 0.11
+        return null
+      })
+    // Fiat leg falls back to Friday for a Sunday request.
+    const fetchImpl = mockFn<FetchRatesFn>().mockImplementation(
+      async (_date, base, quotes) => ({
+        base,
+        date: '2026-06-26',
+        rates: Object.fromEntries(quotes!.map((q) => [q, 61.5])),
+      }),
+    )
+
+    const result = await getCurrencyRate({
+      date: '2026-06-28',
+      base: 'DOGE',
+      target: 'MKD',
+      cryptoFetchImpl,
+      fetchImpl,
+    })
+
+    expect(result.requestedDate).toBe('2026-06-28')
+    expect(result.asOfDate).toBe('2026-06-26')
+    expect(result.via).toEqual(['EUR'])
+  })
+
+  it('marks inverted crypto quotes without changing orientation', async () => {
+    const cryptoFetchImpl = vi
+      .fn<CryptoFetchFn>()
+      .mockImplementation(async (_date, base, target) =>
+        base === 'BTC' && target === 'USD' ? 64_000 : null,
+      )
+
+    const result = await getCurrencyRate({
+      date: '2026-06-28',
+      base: 'USD',
+      target: 'BTC',
+      cryptoFetchImpl,
+    })
+
+    expect(result.rate).toBeCloseTo(1 / 64_000, 12)
+    expect(result.sources).toEqual([
+      { provider: 'coinbase', base: 'USD', target: 'BTC', inverted: true },
+    ])
+  })
+
+  it('clamps future dates to today for fiat pairs', async () => {
+    const today = new Date().toISOString().slice(0, 10)
+    const future = new Date(Date.now() + 10 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .slice(0, 10)
+    const fetchImpl = mockFn<FetchRatesFn>().mockImplementation(
+      async (date: string, base: string) => {
+        expect(date).toBe(today)
+        return makePayload({ base, date, rates: { USD: 1.1 } })
+      },
+    )
+
+    const result = await getCurrencyRate({
+      date: future,
+      base: 'EUR',
+      target: 'USD',
+      fetchImpl,
+    })
+
+    expect(result.requestedDate).toBe(today)
+    expect(result.asOfDate).toBe(today)
+    expect(fetchImpl).toHaveBeenCalledWith(today, 'EUR', ['USD'])
+  })
+
+  it('clamps future dates to today for crypto pairs', async () => {
+    const today = new Date().toISOString().slice(0, 10)
+    const future = new Date(Date.now() + 10 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .slice(0, 10)
+    const cryptoFetchImpl = vi
+      .fn<CryptoFetchFn>()
+      .mockImplementation(async (date) => {
+        expect(date).toBe(today)
+        return 64_000
+      })
+
+    const result = await getCurrencyRate({
+      date: future,
+      base: 'BTC',
+      target: 'USD',
+      cryptoFetchImpl,
+    })
+
+    expect(result.requestedDate).toBe(today)
+    expect(cryptoFetchImpl).toHaveBeenCalledWith(today, 'BTC', 'USD')
+  })
+
+  it('clamps future dates per item in batch requests', async () => {
+    const today = new Date().toISOString().slice(0, 10)
+    const future = new Date(Date.now() + 10 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .slice(0, 10)
+    const fetchImpl = mockFn<FetchRatesFn>().mockImplementation(
+      async (date: string, base: string, quotes?: string[]) => ({
+        base,
+        date,
+        rates: Object.fromEntries((quotes ?? []).map((q) => [q, 1.1])),
+      }),
+    )
+
+    const results = await getCurrencyRates(
+      [{ date: future, base: 'EUR', target: 'USD' }],
+      { fetchImpl },
+    )
+
+    expect(fetchImpl).toHaveBeenCalledWith(today, 'EUR', ['USD'])
+    expect(results[0]).toMatchObject({
+      ok: true,
+      rate: { requestedDate: today },
+    })
+  })
+
+  it('still reports INVALID_DATE instead of clamping garbage dates', async () => {
+    const fetchImpl = mockFn<FetchRatesFn>()
+
+    const results = await getCurrencyRates(
+      [{ date: 'not-a-date', base: 'EUR', target: 'USD' }],
+      { fetchImpl },
+    )
+
+    expect(results[0]).toMatchObject({
+      ok: false,
+      error: { code: 'INVALID_DATE', date: 'not-a-date' },
+    })
+    expect(fetchImpl).not.toHaveBeenCalled()
   })
 
   it('scales alias currencies through their parent code', async () => {

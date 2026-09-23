@@ -6,6 +6,7 @@ export const currencyRateSourceSchema = z.object({
   provider: currencyRateProviderSchema,
   base: z.string(),
   target: z.string(),
+  inverted: z.boolean().optional(),
 })
 
 export const currencyRateSchema = z.object({
