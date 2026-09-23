@@ -1852,7 +1852,7 @@
       "generic": "Alguna cosa ha anat malament. Si us plau, torna-ho a intentar.",
       "passwordPolicy": "Utilitza almenys 8 caràcters amb majúscules, minúscules, un número i un símbol.",
       "magicLinkFailed": "No s'ha pogut enviar l'enllaç d'inici de sessió.",
-      "signupInviteRequired": "Aquesta instància és només per invitació. Utilitza un enllaç d'invitació o demana a algú que t'inviti a un grup.",
+      "signupInviteRequired": "Els registres són només per invitació. Utilitza un enllaç d'invitació o demana a algú que t'inviti a un grup.",
       "passkeyFailed": "L'inici de sessió amb clau d'accés ha fallat. Torna-ho a provar o utilitza un altre mètode d'inici de sessió."
     },
     "loading": "Carregant…",
@@ -1862,14 +1862,14 @@
     "signInWithGithub": "Continua amb GitHub",
     "legalNotice": "En continuar, acceptes els <terms>Termes d'ús</terms> i reconeixes l'<privacy>avís de privadesa</privacy>.",
     "inviteOnly": {
-      "message": "Aquesta instància és només per invitació. Utilitza un enllaç d'invitació o demana a algú que t'inviti a un grup.",
+      "message": "Els registres són només per invitació. Utilitza un enllaç d'invitació o demana a algú que t'inviti a un grup.",
       "useInvitedEmail": "Utilitza l'adreça de correu electrònic amb què t'han convidat."
     },
     "signInWithX": "Continua amb X",
     "signInWithOidc": "Continua amb {name}",
     "signInAnonymously": "Anònim",
     "lastUsed": "Darrer ús",
-    "emailAuthDisabled": "L'inici de sessió amb correu electrònic està desactivat en aquesta instància. Utilitza l'inici de sessió únic (SSO).",
+    "emailAuthDisabled": "L'inici de sessió amb correu electrònic està desactivat. Utilitza l'inici de sessió únic (SSO).",
     "signInWithPasskey": "Inicia sessió amb clau d'accés"
   },
   "CompleteProfile": {
@@ -1994,7 +1994,7 @@
         "joined_many": "S'hi han unit {count} persones",
         "retry": "Torna-ho a provar"
       },
-      "emailDeliveryDisabled": "El lliurament de correu electrònic està desactivat en aquesta instància. La invitació es crea igualment i apareixerà quan la persona convidada iniciï sessió; fes servir un enllaç d'invitació per donar-li alguna cosa per obrir."
+      "emailDeliveryDisabled": "El lliurament de correu electrònic està desactivat. La invitació es crea igualment i apareixerà quan la persona convidada iniciï sessió; fes servir un enllaç d'invitació per donar-li alguna cosa per obrir."
     },
     "invitations": {
       "title": "Invitacions pendents",
@@ -2416,7 +2416,7 @@
       "masterDescription": "Desactiva-les per silenciar tots els correus electrònics i les notificacions push. Les teves preferències per categoria es conserven.",
       "emailAddToEnable": "Afegeix un correu verificat per rebre notificacions a la safata d'entrada.",
       "emailAddLink": "Afegeix un correu",
-      "emailDeliveryDisabled": "El lliurament de correu electrònic està desactivat en aquesta instància. Les teves eleccions de correu es desen, però no s'enviaran fins que l'administrador configuri el correu electrònic."
+      "emailDeliveryDisabled": "El lliurament de correu electrònic està desactivat. Les teves eleccions de correu es desen, però no s'enviaran fins que el correu estigui configurat."
     },
     "preferences": {
       "title": "Preferències de l'aplicació",
@@ -2847,9 +2847,98 @@
     "expenseColumn": "Despesa",
     "categoryColumn": "Categoria",
     "confidenceColumn": "Confiança",
+    "simpleDescription": "Revisa les concordances de categoria per a les despeses de General i desa les teves opcions.",
+    "generateSuggestions": "Suggerir categories",
+    "backToStart": "Tornar",
+    "chooseMode": "Tria com categoritzar les despeses",
+    "localMode": "Concordança local",
+    "localModeDescription": "Utilitza l'historial de categories d'aquest grup i el diccionari integrat.",
+    "startRun": "Comença a categoritzar",
+    "noCategory": "Deixa sense categoria",
+    "progressTitle": "Categoritzant les despeses",
+    "progressDescription": "Pots sortir d'aquesta pàgina i tornar-hi més tard. El teu progrés es desa.",
+    "progressCount": "{categorized} de {total} despeses categoritzades",
+    "applyProgressTitle": "Desant les categories",
+    "reviewTitle": "Revisa els suggeriments",
+    "reviewSummary": "{suggested} suggeriments de {total} despeses sense categoria",
+    "sourceLocal": "Local",
+    "saveSelected": "Desa les categories seleccionades",
+    "retry": "Torna-ho a provar",
+    "restart": "Inicia una nova execució",
+    "failed": "L'execució s'ha aturat: {message}",
+    "savedSummary": "{applied} modificades, {skipped} omeses",
+    "selectedCount": "{count} seleccionades",
+    "selectAll": "Selecciona-ho tot",
+    "clearAll": "Esborra-ho tot",
+    "discardRun": "Descarta l'execució",
+    "partialSaveNotice": "És possible que algunes categories ja s'hagin desat. Descartar aquesta execució no desfarà aquests canvis.",
+    "restartOlderRunTitle": "Inicia una nova execució de categorització",
+    "restartOlderRunDescription": "Aquesta execució anterior utilitzava el flux de revisió previ. Torna a començar per revisar totes les despeses juntes.",
+    "runningMatches": "{count} de {total} despeses tenen un suggeriment de categoria fins ara",
+    "failedTitle": "Categorització aturada",
+    "reviewWorkload": "{total} despeses a General · {selected} seleccionades per categoritzar · {general} que queden a General",
+    "categoryChoices": "Opcions de categoria",
+    "moreCategories": "Tria una altra categoria",
+    "saveCount": "Desa {count} categories",
+    "finishWithoutChanges": "Acaba sense canvis",
+    "completionSummary": "Execució completa: {changed} de {total} despeses modificades. {remaining} despeses queden a General.",
+    "viewExpenses": "Mostra les despeses",
+    "countLoading": "Comptant les despeses sense categoria…",
+    "nothingToCategorize": "No hi ha despeses sense categoria per categoritzar.",
+    "startingCount": "{count} despeses són actualment a General i estan llestes per revisar.",
+    "countError": "No s'han pogut comptar les despeses sense categoria. Torna a carregar la pàgina per tornar-ho a provar.",
+    "keepGeneral": "General · deixa sense categoria",
+    "calibrationRoundTitle": "Ronda de calibratge {round}",
+    "calibrationLoading": "Preparant una mostra variada de despeses…",
+    "calibrationReviewDescription": "Revisa i corregeix aquestes {count} despeses. Les opcions es mantenen en aquesta execució fins que desis al final.",
+    "confirmRound": "Confirma la ronda",
+    "roundSummaryTitle": "Ronda {round} revisada",
+    "roundSummaryDescription": "{reviewed} revisades · {categorized} categoritzades provisionalment · {general} que queden com a General",
+    "roundQuality": "Els suggeriments inicials han coincidit amb el {accuracy}% de les teves opcions; n'has corregit {corrections}.",
+    "categorizeRemaining": "Categoritza les despeses restants",
+    "nextRound": "Revisa una altra mostra",
+    "tableLabel": "Despeses per categoritzar",
+    "dateColumn": "Data",
+    "amountColumn": "Quantitat",
+    "rerunSuggestions": "Torna a generar els suggeriments",
+    "roundQualityWithSuggestions": "{accepted} de {proposed} categories suggerides acceptades · {changed} modificades · {missed} concordances trobades des de General",
+    "roundQualityNoSuggestions": "Cap categoria suggerida · {missed} concordances trobades des de General · {abstained} que queden a General",
+    "rerunChanged": "Has canviat {changed} de {proposed} categories suggerides.",
+    "rerunAssignedSingle": "Has assignat una categoria a 1 despesa que quedava a General.",
+    "rerunAssignedMultiple": "Has assignat una categoria a {count} despeses que quedaven a General.",
+    "rerunPotentialSingle": "Els teus canvis poden millorar la concordança d'1 despesa restant de General. Torna a generar els suggeriments si vols una altra passada.",
+    "rerunPotentialMultiple": "Els teus canvis poden millorar les concordances de {count} despeses restants de General. Torna a generar els suggeriments si vols una altra passada.",
+    "rerunEligible": "Apte per a una altra passada: General {general} · concordances automàtiques incertes {uncertain}.",
+    "rerunNoEligible": "No queden General intactes ni concordances automàtiques incertes per tornar a generar. Les teves correccions continuen incloses en les categories que desis.",
+    "rerunAlreadyUsed": "Les teves últimes correccions ja s'han utilitzat per a aquests suggeriments. Fes una altra correcció per tornar-los a generar.",
+    "highMatch": "Concordança alta",
+    "mediumMatch": "Concordança mitjana",
+    "lowMatch": "Concordança baixa",
+    "belowMatchThreshold": "Per sota del llindar de concordança",
+    "refiningTitle": "Afinant les concordances incertes",
+    "runLimitSummary": "Aquesta execució inclou 10,000 despeses. {count} despeses més de General es poden categoritzar en una altra execució després de desar.",
+    "pageLoading": "Carregant les despeses…",
+    "pageLoadError": "No s'han pogut carregar les despeses.",
+    "pageRetry": "Torna-ho a provar",
+    "pageCount": "S'estan mostrant {loaded} de {total} despeses",
+    "ledgerAmountNotice": "Els imports es mostren en la moneda del grup.",
+    "viewExpenseDetails": "Mostra els detalls de la despesa",
+    "reviewFilterLabel": "Mostra les despeses",
+    "filterAll": "Totes {count}",
+    "filterGeneral": "General {count}",
+    "improveSuggestions": "Millora els suggeriments restants",
+    "rerunInfoLabel": "Sobre la millora dels suggeriments",
+    "preparingNextStage": "Preparant el següent pas",
+    "rerunProgressTitle": "Actualitzant els suggeriments",
+    "progressPreparing": "Preparant les despeses…",
+    "noGeneralRows": "No queden despeses a General en aquesta revisió.",
+    "discardConfirmationTitle": "Vols descartar aquesta execució de categorització?",
+    "discardConfirmationDescription": "Això elimina l'execució, els seus suggeriments i totes les opcions que hagis triat. No es canviarà cap categoria de despesa.",
+    "discardConfirmationCancel": "Conserva l'execució",
+    "progressCountDescription": "Només compten les categories confirmades i les concordances mitjanes o altes; General i les concordances febles, no.",
     "systemOneMode": "Model de System One",
-    "systemOneModeDescription": "Utilitza el model de decisions de System One configurat per a cada despesa, fent servir com a pistes les despeses categoritzades d’aquest grup i les teves opcions revisades. TypeSafe Jev és un d’aquests models.",
-    "systemOneUnavailable": "System One no està disponible en aquest servidor. La concordança local continua disponible.",
+    "systemOneModeDescription": "Utilitza el model de decisions de System One per a cada despesa, fent servir com a pistes les despeses categoritzades d’aquest grup i les teves opcions revisades. TypeSafe Jev és un d’aquests models.",
+    "systemOneUnavailable": "System One no està disponible. La concordança local continua disponible.",
     "systemOneConfidence": "Confiança de System One: {confidence}%",
     "systemOneOptionProbability": "Probabilitat de l’opció de System One: {probability}%"
   },
@@ -2925,7 +3014,7 @@
     "failedDescription": "No s'ha pogut registrar aquest dispositiu. Les notificacions configurades per correu electrònic continuaran arribant-hi; les opcions només push no es redirigeixen.",
     "emailUsage": "Només arribaran les notificacions configurades per correu electrònic fins que activis un dispositiu. Pots permetre les notificacions a la configuració del navegador i tornar-ho a provar des de Configuració.",
     "done": "Fet",
-    "emailDeliveryDisabled": "El lliurament de correu electrònic està desactivat en aquesta instància, de manera que les notificacions per correu no et poden arribar. Activa les notificacions push en aquest dispositiu per continuar rebent actualitzacions."
+    "emailDeliveryDisabled": "El lliurament de correu electrònic està desactivat, de manera que les notificacions per correu no et poden arribar. Activa les notificacions push en aquest dispositiu per continuar rebent actualitzacions."
   },
   "Unsubscribe": {
     "title": "Desactiva aquests correus?",
@@ -3602,10 +3691,25 @@
       }
     },
     "categorize": {
+      "title": "Categoritza les despeses",
       "description": "Suggerir categories per a les despeses existents sense categoritzar amb System One. Revisa tots els canvis abans de desar-los.",
+      "start": "Categoritza les despeses",
       "steps": {
         "choose": {
-          "detail": "Utilitza la concordança local o el model de decisions de System One configurat."
+          "title": "Tria un mètode",
+          "detail": "Utilitza la concordança local o el model de decisions de System One."
+        },
+        "calibrate": {
+          "title": "Revisa mostres petites",
+          "detail": "Corregeix els suggeriments perquè la següent ronda aprengui les categories del teu grup."
+        },
+        "review": {
+          "title": "Revisa totes les despeses",
+          "detail": "Les despeses de General apareixen primer a la taula completa."
+        },
+        "save": {
+          "title": "Desa les categories",
+          "detail": "Les despeses només canvien quan confirmes la revisió final."
         }
       }
     }

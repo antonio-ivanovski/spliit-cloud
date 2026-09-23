@@ -810,7 +810,7 @@
       "generic": "Algo correu mal. Por favor, tenta novamente.",
       "passwordPolicy": "Utiliza pelo menos 8 caracteres com maiúsculas, minúsculas, um número e um símbolo.",
       "magicLinkFailed": "Não foi possível enviar o link de acesso.",
-      "signupInviteRequired": "Esta instância é apenas por convite. Usa uma ligação de convite ou pede a alguém que te convide para um grupo.",
+      "signupInviteRequired": "Os registos são apenas por convite. Usa uma ligação de convite ou pede a alguém que te convide para um grupo.",
       "passkeyFailed": "O início de sessão com chave de acesso falhou. Tente novamente ou use outro método de início de sessão."
     },
     "loading": "A carregar…",
@@ -820,14 +820,14 @@
     "signInWithGithub": "Continuar com GitHub",
     "legalNotice": "Ao continuar, aceita os <terms>Termos de utilização</terms> e reconhece o <privacy>aviso de privacidade</privacy>.",
     "inviteOnly": {
-      "message": "Esta instância é apenas por convite. Usa uma ligação de convite ou pede a alguém que te convide para um grupo.",
+      "message": "Os registos são apenas por convite. Usa uma ligação de convite ou pede a alguém que te convide para um grupo.",
       "useInvitedEmail": "Usa o endereço de email com que recebeste o convite."
     },
     "signInWithX": "Continuar com X",
     "signInWithOidc": "Continuar com {name}",
     "signInAnonymously": "Anónimo",
     "lastUsed": "Última utilização",
-    "emailAuthDisabled": "O início de sessão com e-mail está desativado nesta instância. Usa a autenticação única (SSO).",
+    "emailAuthDisabled": "O início de sessão com e-mail está desativado. Usa a autenticação única (SSO).",
     "signInWithPasskey": "Iniciar sessão com chave de acesso"
   },
   "CompleteProfile": {
@@ -1994,7 +1994,7 @@
         "joined_many": "{count} pessoas juntaram-se",
         "retry": "Tentar novamente"
       },
-      "emailDeliveryDisabled": "O envio de e-mails está desativado nesta instância. O convite é criado na mesma e aparecerá quando a pessoa convidada iniciar sessão; usa uma ligação de convite para lhe dares algo que possa abrir."
+      "emailDeliveryDisabled": "O envio de e-mails está desativado. O convite é criado na mesma e aparecerá quando a pessoa convidada iniciar sessão; usa uma ligação de convite para lhe dares algo que possa abrir."
     },
     "invitations": {
       "title": "Convites pendentes",
@@ -2416,7 +2416,7 @@
       "masterDescription": "Desative-as para silenciar todos os e-mails e notificações push. As suas escolhas por categoria são preservadas.",
       "emailAddToEnable": "Adiciona um e-mail verificado para receber notificações na caixa de entrada.",
       "emailAddLink": "Adicionar e-mail",
-      "emailDeliveryDisabled": "O envio de e-mails está desativado nesta instância. As tuas escolhas de e-mail são guardadas, mas não serão enviadas até que o administrador configure o e-mail."
+      "emailDeliveryDisabled": "O envio de e-mails está desativado. As tuas escolhas de e-mail são guardadas, mas não serão enviadas até que o e-mail esteja configurado."
     },
     "preferences": {
       "title": "Preferências da aplicação",
@@ -2847,9 +2847,98 @@
     "expenseColumn": "Despesa",
     "categoryColumn": "Categoria",
     "confidenceColumn": "Confiança",
+    "simpleDescription": "Revê as correspondências de categoria para as despesas em Geral e guarda as tuas escolhas.",
+    "generateSuggestions": "Sugerir categorias",
+    "backToStart": "Voltar",
+    "chooseMode": "Escolhe como categorizar as despesas",
+    "localMode": "Correspondência local",
+    "localModeDescription": "Utiliza o histórico de categorias deste grupo e o dicionário integrado.",
+    "startRun": "Começar a categorizar",
+    "noCategory": "Deixar por categorizar",
+    "progressTitle": "A categorizar as despesas",
+    "progressDescription": "Podes sair desta página e voltar mais tarde. O teu progresso é guardado.",
+    "progressCount": "{categorized} de {total} despesas categorizadas",
+    "applyProgressTitle": "A guardar categorias",
+    "reviewTitle": "Revê as sugestões",
+    "reviewSummary": "{suggested} sugestões de {total} despesas não categorizadas",
+    "sourceLocal": "Local",
+    "saveSelected": "Guardar as categorias selecionadas",
+    "retry": "Tentar novamente",
+    "restart": "Iniciar uma nova execução",
+    "failed": "A execução foi interrompida: {message}",
+    "savedSummary": "{applied} alteradas, {skipped} ignoradas",
+    "selectedCount": "{count} selecionadas",
+    "selectAll": "Selecionar tudo",
+    "clearAll": "Limpar tudo",
+    "discardRun": "Descartar a execução",
+    "partialSaveNotice": "Algumas categorias podem já ter sido guardadas. Descartar esta execução não irá anular essas alterações.",
+    "restartOlderRunTitle": "Iniciar uma nova execução de categorização",
+    "restartOlderRunDescription": "Esta execução anterior usava o fluxo de revisão anterior. Começa de novo para reveres todas as despesas em conjunto.",
+    "runningMatches": "{count} de {total} despesas têm uma sugestão de categoria até agora",
+    "failedTitle": "Categorização interrompida",
+    "reviewWorkload": "{total} despesas em Geral · {selected} selecionadas para categorização · {general} que permanecem em Geral",
+    "categoryChoices": "Opções de categoria",
+    "moreCategories": "Escolhe outra categoria",
+    "saveCount": "Guardar {count} categorias",
+    "finishWithoutChanges": "Terminar sem alterações",
+    "completionSummary": "Execução concluída: {changed} de {total} despesas alteradas. {remaining} despesas permanecem em Geral.",
+    "viewExpenses": "Ver as despesas",
+    "countLoading": "A contar as despesas não categorizadas…",
+    "nothingToCategorize": "Não há despesas não categorizadas para categorizar.",
+    "startingCount": "{count} despesas estão atualmente em Geral e prontas para revisão.",
+    "countError": "Não foi possível contar as despesas não categorizadas. Recarrega a página para tentar novamente.",
+    "keepGeneral": "Geral · deixar por categorizar",
+    "calibrationRoundTitle": "Ronda de calibração {round}",
+    "calibrationLoading": "A preparar uma amostra variada de despesas…",
+    "calibrationReviewDescription": "Revê e corrige estas {count} despesas. As escolhas permanecem nesta execução até guardares no final.",
+    "confirmRound": "Confirmar a ronda",
+    "roundSummaryTitle": "Ronda {round} revista",
+    "roundSummaryDescription": "{reviewed} revistas · {categorized} categorizadas provisoriamente · {general} deixadas como Geral",
+    "roundQuality": "As sugestões iniciais corresponderam a {accuracy}% das tuas escolhas; corrigiste {corrections}.",
+    "categorizeRemaining": "Categoriza as despesas restantes",
+    "nextRound": "Revê outra amostra",
+    "tableLabel": "Despesas por categorizar",
+    "dateColumn": "Data",
+    "amountColumn": "Montante",
+    "rerunSuggestions": "Gerar novamente as sugestões",
+    "roundQualityWithSuggestions": "{accepted} de {proposed} categorias sugeridas aceites · {changed} alteradas · {missed} correspondências encontradas a partir de Geral",
+    "roundQualityNoSuggestions": "Nenhuma categoria sugerida · {missed} correspondências encontradas a partir de Geral · {abstained} que permanecem em Geral",
+    "rerunChanged": "Alteraste {changed} de {proposed} categorias sugeridas.",
+    "rerunAssignedSingle": "Atribuíste uma categoria a 1 despesa que estava em Geral.",
+    "rerunAssignedMultiple": "Atribuíste uma categoria a {count} despesas que estavam em Geral.",
+    "rerunPotentialSingle": "As tuas alterações podem melhorar a correspondência de 1 despesa restante em Geral. Gera novamente as sugestões se quiseres outra passagem.",
+    "rerunPotentialMultiple": "As tuas alterações podem melhorar as correspondências de {count} despesas restantes em Geral. Gera novamente as sugestões se quiseres outra passagem.",
+    "rerunEligible": "Elegível para outra passagem: Geral {general} · correspondências automáticas incertas {uncertain}.",
+    "rerunNoEligible": "Não restam Geral intactos nem correspondências automáticas incertas para gerar novamente. As tuas correções continuam incluídas nas categorias que guardares.",
+    "rerunAlreadyUsed": "As tuas últimas correções já foram usadas para estas sugestões. Faz outra correção para as gerar novamente.",
+    "highMatch": "Correspondência alta",
+    "mediumMatch": "Correspondência média",
+    "lowMatch": "Correspondência baixa",
+    "belowMatchThreshold": "Abaixo do limiar de correspondência",
+    "refiningTitle": "A refinar as correspondências incertas",
+    "runLimitSummary": "Esta execução inclui 10,000 despesas. Mais {count} despesas de Geral podem ser categorizadas noutra execução depois de guardares.",
+    "pageLoading": "A carregar as despesas…",
+    "pageLoadError": "Não foi possível carregar as despesas.",
+    "pageRetry": "Tentar novamente",
+    "pageCount": "A mostrar {loaded} de {total} despesas",
+    "ledgerAmountNotice": "Os montantes são apresentados na moeda do grupo.",
+    "viewExpenseDetails": "Ver os detalhes da despesa",
+    "reviewFilterLabel": "Mostrar as despesas",
+    "filterAll": "Todas {count}",
+    "filterGeneral": "Geral {count}",
+    "improveSuggestions": "Melhora as sugestões restantes",
+    "rerunInfoLabel": "Sobre a melhoria das sugestões",
+    "preparingNextStage": "A preparar o próximo passo",
+    "rerunProgressTitle": "A atualizar as sugestões",
+    "progressPreparing": "A preparar as despesas…",
+    "noGeneralRows": "Não restam despesas em Geral nesta revisão.",
+    "discardConfirmationTitle": "Descartar esta execução de categorização?",
+    "discardConfirmationDescription": "Isto remove a execução, as suas sugestões e todas as escolhas que fizeste. Nenhuma categoria de despesa será alterada.",
+    "discardConfirmationCancel": "Manter a execução",
+    "progressCountDescription": "Apenas as categorias confirmadas e as correspondências médias ou altas contam; Geral e as correspondências fracas, não.",
     "systemOneMode": "Modelo do System One",
-    "systemOneModeDescription": "Utiliza o modelo de decisão System One configurado para cada despesa, usando como pistas as despesas categorizadas deste grupo e as tuas escolhas revistas. O TypeSafe Jev é um desses modelos.",
-    "systemOneUnavailable": "O System One não está disponível neste servidor. A correspondência local continua disponível.",
+    "systemOneModeDescription": "Utiliza o modelo de decisão System One para cada despesa, usando como pistas as despesas categorizadas deste grupo e as tuas escolhas revistas. O TypeSafe Jev é um desses modelos.",
+    "systemOneUnavailable": "O System One não está disponível. A correspondência local continua disponível.",
     "systemOneConfidence": "Confiança do System One: {confidence}%",
     "systemOneOptionProbability": "Probabilidade da opção do System One: {probability}%"
   },
@@ -2925,7 +3014,7 @@
     "failedDescription": "Não foi possível registar este dispositivo. As notificações configuradas para e-mail continuarão a ser enviadas por e-mail; as opções apenas push não serão redirecionadas.",
     "emailUsage": "Apenas as notificações configuradas para e-mail serão recebidas até ativar um dispositivo. Pode permitir notificações nas definições do navegador e tentar novamente nas Definições.",
     "done": "Concluído",
-    "emailDeliveryDisabled": "O envio de e-mails está desativado nesta instância, por isso as notificações por e-mail não te podem alcançar. Ativa as notificações push neste dispositivo para continuares a receber atualizações."
+    "emailDeliveryDisabled": "O envio de e-mails está desativado, por isso as notificações por e-mail não te podem alcançar. Ativa as notificações push neste dispositivo para continuares a receber atualizações."
   },
   "Unsubscribe": {
     "title": "Desativar estes e-mails?",
@@ -3602,10 +3691,25 @@
       }
     },
     "categorize": {
+      "title": "Categorizar as despesas",
       "description": "Sugerir categorias para despesas existentes sem categoria com o System One. Revê todas as alterações antes de guardar.",
+      "start": "Categorizar as despesas",
       "steps": {
         "choose": {
-          "detail": "Utiliza a correspondência local ou o modelo de decisão System One configurado."
+          "title": "Escolhe um método",
+          "detail": "Utiliza a correspondência local ou o modelo de decisão System One."
+        },
+        "calibrate": {
+          "title": "Revê pequenas amostras",
+          "detail": "Corrige as sugestões para que a próxima ronda aprenda as categorias do teu grupo."
+        },
+        "review": {
+          "title": "Revê todas as despesas",
+          "detail": "As despesas em Geral aparecem primeiro na tabela completa."
+        },
+        "save": {
+          "title": "Guardar as categorias",
+          "detail": "As despesas só mudam quando confirmares a revisão final."
         }
       }
     }

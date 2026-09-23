@@ -1872,7 +1872,7 @@
       "generic": "Er is iets misgegaan. Probeer het opnieuw.",
       "passwordPolicy": "Gebruik minstens 8 tekens met een hoofdletter, een kleine letter, een cijfer en een symbool.",
       "magicLinkFailed": "Kon de inloglink niet verzenden.",
-      "signupInviteRequired": "Deze instantie is alleen op uitnodiging. Gebruik een uitnodigingslink of vraag iemand om je uit te nodigen voor een groep.",
+      "signupInviteRequired": "Aanmelden is alleen mogelijk op uitnodiging. Gebruik een uitnodigingslink of vraag iemand om je uit te nodigen voor een groep.",
       "passkeyFailed": "Inloggen met passkey is mislukt. Probeer het opnieuw of gebruik een andere inlogmethode."
     },
     "loading": "Laden…",
@@ -1882,14 +1882,14 @@
     "signInWithGithub": "Doorgaan met GitHub",
     "legalNotice": "Door verder te gaan ga je akkoord met de <terms>algemene voorwaarden</terms> en erken je de <privacy>privacyverklaring</privacy>.",
     "inviteOnly": {
-      "message": "Deze instantie is alleen op uitnodiging. Gebruik een uitnodigingslink of vraag iemand om je uit te nodigen voor een groep.",
+      "message": "Aanmelden is alleen mogelijk op uitnodiging. Gebruik een uitnodigingslink of vraag iemand om je uit te nodigen voor een groep.",
       "useInvitedEmail": "Gebruik het e-mailadres waarmee je bent uitgenodigd."
     },
     "signInWithX": "Doorgaan met X",
     "signInWithOidc": "Doorgaan met {name}",
     "signInAnonymously": "Anoniem",
     "lastUsed": "Laatst gebruikt",
-    "emailAuthDisabled": "Inloggen met e-mail is uitgeschakeld op deze instantie. Gebruik single sign-on (SSO).",
+    "emailAuthDisabled": "Inloggen met e-mail is uitgeschakeld. Gebruik single sign-on (SSO).",
     "signInWithPasskey": "Inloggen met passkey"
   },
   "CompleteProfile": {
@@ -2013,7 +2013,7 @@
         "joined_zero": "{count} personen zijn tot nu toe lid geworden",
         "retry": "Opnieuw proberen"
       },
-      "emailDeliveryDisabled": "E-mailbezorging is uitgeschakeld op deze instantie. De uitnodiging wordt alsnog aangemaakt en verschijnt wanneer de genodigde inlogt; gebruik een uitnodigingslink zodat diegene iets kan openen."
+      "emailDeliveryDisabled": "E-mailbezorging is uitgeschakeld. De uitnodiging wordt alsnog aangemaakt en verschijnt wanneer de genodigde inlogt; gebruik een uitnodigingslink zodat diegene iets kan openen."
     },
     "invitations": {
       "title": "Openstaande uitnodigingen",
@@ -2438,7 +2438,7 @@
       "masterDescription": "Zet dit uit om alle e-mail- en pushmeldingen te dempen. Je keuzes per categorie blijven bewaard.",
       "emailAddToEnable": "Voeg een geverifieerd e-mailadres toe om meldingen in je inbox te ontvangen.",
       "emailAddLink": "E-mail toevoegen",
-      "emailDeliveryDisabled": "E-mailbezorging is uitgeschakeld op deze instantie. Je e-mailkeuzes worden wel opgeslagen, maar pas verzonden als de beheerder e-mail instelt."
+      "emailDeliveryDisabled": "E-mailbezorging is uitgeschakeld. Je e-mailkeuzes worden wel opgeslagen, maar pas verzonden als e-mail is ingesteld."
     },
     "preferences": {
       "title": "Appvoorkeuren",
@@ -2893,9 +2893,98 @@
     "expenseColumn": "Uitgave",
     "categoryColumn": "Categorie",
     "confidenceColumn": "Betrouwbaarheid",
+    "simpleDescription": "Controleer de categorieovereenkomsten voor uitgaven in Algemeen en sla daarna je keuzes op.",
+    "generateSuggestions": "Categorieën voorstellen",
+    "backToStart": "Terug",
+    "chooseMode": "Kies hoe uitgaven worden gecategoriseerd",
+    "localMode": "Lokaal zoeken naar overeenkomsten",
+    "localModeDescription": "Gebruikt de categoriegeschiedenis van deze groep en het ingebouwde woordenboek.",
+    "startRun": "Start met categoriseren",
+    "noCategory": "Niet categoriseren",
+    "progressTitle": "Uitgaven worden gecategoriseerd",
+    "progressDescription": "Je kunt deze pagina verlaten en later terugkomen. Je voortgang wordt opgeslagen.",
+    "progressCount": "{categorized} van {total} uitgaven gecategoriseerd",
+    "applyProgressTitle": "Categorieën worden opgeslagen",
+    "reviewTitle": "Suggesties controleren",
+    "reviewSummary": "{suggested} suggesties uit {total} uitgaven zonder categorie",
+    "sourceLocal": "Lokaal",
+    "saveSelected": "Geselecteerde categorieën opslaan",
+    "retry": "Opnieuw proberen",
+    "restart": "Start een nieuwe run",
+    "failed": "De run is gestopt: {message}",
+    "savedSummary": "{applied} gewijzigd, {skipped} overgeslagen",
+    "selectedCount": "{count} geselecteerd",
+    "selectAll": "Alles selecteren",
+    "clearAll": "Selectie wissen",
+    "discardRun": "Run weggooien",
+    "partialSaveNotice": "Sommige categorieën zijn mogelijk al opgeslagen. Het weggooien van deze run maakt die wijzigingen niet ongedaan.",
+    "restartOlderRunTitle": "Start een nieuwe categorisatierun",
+    "restartOlderRunDescription": "Deze eerdere run gebruikte de vorige controleflow. Begin opnieuw om alle uitgaven samen te controleren.",
+    "runningMatches": "{count} van {total} uitgaven hebben tot nu toe een categoriesuggestie",
+    "failedTitle": "Categoriseren gestopt",
+    "reviewWorkload": "{total} uitgaven in Algemeen · {selected} geselecteerd voor categoriseren · {general} blijven in Algemeen",
+    "categoryChoices": "Categoriekeuzes",
+    "moreCategories": "Kies een andere categorie",
+    "saveCount": "{count} categorieën opslaan",
+    "finishWithoutChanges": "Afronden zonder wijzigingen",
+    "completionSummary": "Run voltooid: {changed} van {total} uitgaven gewijzigd. {remaining} uitgaven blijven in Algemeen staan.",
+    "viewExpenses": "Uitgaven bekijken",
+    "countLoading": "Uitgaven zonder categorie worden geteld…",
+    "nothingToCategorize": "Er zijn geen uitgaven zonder categorie om te categoriseren.",
+    "startingCount": "Er staan nu {count} uitgaven in Algemeen klaar voor controle.",
+    "countError": "De uitgaven zonder categorie konden niet worden geteld. Herlaad de pagina om het opnieuw te proberen.",
+    "keepGeneral": "Algemeen · niet categoriseren",
+    "calibrationRoundTitle": "Kalibratieronde {round}",
+    "calibrationLoading": "Een gevarieerde steekproef van uitgaven wordt voorbereid…",
+    "calibrationReviewDescription": "Controleer en corrigeer deze {count} uitgaven. Keuzes blijven in deze run staan tot je aan het einde opslaat.",
+    "confirmRound": "Ronde bevestigen",
+    "roundSummaryTitle": "Ronde {round} gecontroleerd",
+    "roundSummaryDescription": "{reviewed} gecontroleerd · {categorized} voorlopig gecategoriseerd · {general} blijven Algemeen",
+    "roundQuality": "De eerste suggesties kwamen in {accuracy}% overeen met je keuzes; je hebt er {corrections} gecorrigeerd.",
+    "categorizeRemaining": "Resterende uitgaven categoriseren",
+    "nextRound": "Controleer een andere steekproef",
+    "tableLabel": "Te categoriseren uitgaven",
+    "dateColumn": "Datum",
+    "amountColumn": "Bedrag",
+    "rerunSuggestions": "Suggesties opnieuw uitvoeren",
+    "roundQualityWithSuggestions": "{accepted} van {proposed} voorgestelde categorieën overgenomen · {changed} gewijzigd · {missed} overeenkomsten gevonden vanuit Algemeen",
+    "roundQualityNoSuggestions": "Geen categorieën voorgesteld · {missed} overeenkomsten gevonden vanuit Algemeen · {abstained} blijven in Algemeen",
+    "rerunChanged": "Je hebt {changed} van {proposed} voorgestelde categorieën gewijzigd.",
+    "rerunAssignedSingle": "Je hebt 1 uitgave die in Algemeen was achtergebleven een categorie gegeven.",
+    "rerunAssignedMultiple": "Je hebt {count} uitgaven die in Algemeen waren achtergebleven een categorie gegeven.",
+    "rerunPotentialSingle": "Je wijzigingen kunnen de overeenkomst voor 1 resterende Algemeen-uitgave verbeteren. Voer de suggesties opnieuw uit als je nog een ronde wilt.",
+    "rerunPotentialMultiple": "Je wijzigingen kunnen de overeenkomsten voor {count} resterende Algemeen-uitgaven verbeteren. Voer de suggesties opnieuw uit als je nog een ronde wilt.",
+    "rerunEligible": "Geschikt voor nog een ronde: Algemeen {general} · onzekere automatische overeenkomsten {uncertain}. Je correcties kunnen deze suggesties verbeteren.",
+    "rerunNoEligible": "Er zijn geen onaangeraakte Algemeen-uitgaven of onzekere automatische overeenkomsten meer om opnieuw uit te voeren. Je correcties zitten nog wel in de categorieën die je opslaat.",
+    "rerunAlreadyUsed": "Je laatste correcties zijn al gebruikt voor deze suggesties. Maak nog een correctie om ze opnieuw uit te voeren.",
+    "highMatch": "Hoge overeenkomst",
+    "mediumMatch": "Gemiddelde overeenkomst",
+    "lowMatch": "Lage overeenkomst",
+    "belowMatchThreshold": "Onder de overeenkomstdrempel",
+    "refiningTitle": "Onzekere overeenkomsten worden verfijnd",
+    "runLimitSummary": "Deze run omvat 10.000 uitgaven. {count} extra Algemeen-uitgaven kunnen na het opslaan in een nieuwe run worden gecategoriseerd.",
+    "pageLoading": "Uitgaven worden geladen…",
+    "pageLoadError": "Kon de uitgaven niet laden.",
+    "pageRetry": "Opnieuw proberen",
+    "pageCount": "{loaded} van {total} uitgaven weergegeven",
+    "ledgerAmountNotice": "Bedragen worden weergegeven in de groepsvaluta.",
+    "viewExpenseDetails": "Uitgavedetails bekijken",
+    "reviewFilterLabel": "Uitgaven tonen",
+    "filterAll": "Alle {count}",
+    "filterGeneral": "Algemeen {count}",
+    "improveSuggestions": "Resterende suggesties verbeteren",
+    "rerunInfoLabel": "Over het verbeteren van suggesties",
+    "preparingNextStage": "Volgende stap wordt voorbereid",
+    "rerunProgressTitle": "Suggesties worden bijgewerkt",
+    "progressPreparing": "Uitgaven worden voorbereid…",
+    "noGeneralRows": "Er zijn in deze controle geen uitgaven meer in Algemeen.",
+    "discardConfirmationTitle": "Deze categorisatierun weggooien?",
+    "discardConfirmationDescription": "Hiermee worden de run, de suggesties en alle gemaakte keuzes verwijderd. Er worden geen uitgavecategorieën gewijzigd.",
+    "discardConfirmationCancel": "Run behouden",
+    "progressCountDescription": "Alleen bevestigde categorieën en gemiddelde of hoge overeenkomsten tellen mee; Algemeen en zwakke overeenkomsten niet.",
     "systemOneMode": "System One-model",
-    "systemOneModeDescription": "Gebruik voor elke uitgave het geconfigureerde System One-beslismodel en gebruik de gecategoriseerde uitgaven van deze groep en je gecontroleerde keuzes als aanwijzingen. TypeSafe Jev is zo’n model.",
-    "systemOneUnavailable": "System One is niet beschikbaar op deze server. Lokaal zoeken naar overeenkomsten blijft beschikbaar.",
+    "systemOneModeDescription": "Gebruik voor elke uitgave het System One-beslismodel en gebruik de gecategoriseerde uitgaven van deze groep en je gecontroleerde keuzes als aanwijzingen. TypeSafe Jev is zo’n model.",
+    "systemOneUnavailable": "System One is niet beschikbaar. Lokaal zoeken naar overeenkomsten blijft beschikbaar.",
     "systemOneConfidence": "Zekerheid van System One: {confidence}%",
     "systemOneOptionProbability": "Waarschijnlijkheid van de System One-optie: {probability}%"
   },
@@ -2974,7 +3063,7 @@
     "failedDescription": "We konden dit apparaat niet registreren. Meldingen die voor e-mail zijn ingesteld, blijven daar aankomen; keuzes met alleen push worden niet omgeleid.",
     "emailUsage": "Er komen alleen meldingen aan die voor e-mail zijn ingesteld totdat je een apparaat inschakelt. Je kunt meldingen toestaan in je browserinstellingen en het daarna opnieuw proberen via Instellingen.",
     "done": "Klaar",
-    "emailDeliveryDisabled": "E-mailbezorging is uitgeschakeld op deze instantie, dus e-mailmeldingen kunnen je niet bereiken. Schakel pushmeldingen in op dit apparaat om updates te blijven ontvangen."
+    "emailDeliveryDisabled": "E-mailbezorging is uitgeschakeld, dus e-mailmeldingen kunnen je niet bereiken. Schakel pushmeldingen in op dit apparaat om updates te blijven ontvangen."
   },
   "Unsubscribe": {
     "title": "Deze e-mails uitschakelen?",
@@ -3651,10 +3740,25 @@
       }
     },
     "categorize": {
+      "title": "Uitgaven categoriseren",
       "description": "Stel met System One categorieën voor bestaande uitgaven zonder categorie voor. Controleer elke wijziging voordat je opslaat.",
+      "start": "Uitgaven categoriseren",
       "steps": {
         "choose": {
-          "detail": "Gebruik lokaal zoeken naar overeenkomsten of het geconfigureerde System One-beslismodel."
+          "title": "Kies een methode",
+          "detail": "Gebruik lokaal zoeken naar overeenkomsten of het System One-beslismodel."
+        },
+        "calibrate": {
+          "title": "Kleine steekproeven controleren",
+          "detail": "Corrigeer suggesties, zodat de volgende ronde de categorieën van je groep leert."
+        },
+        "review": {
+          "title": "Controleer elke uitgave",
+          "detail": "Algemeen-uitgaven staan eerst in de volledige tabel."
+        },
+        "save": {
+          "title": "Categorieën opslaan",
+          "detail": "Uitgaven wijzigen pas zodra je de laatste controle bevestigt."
         }
       }
     }

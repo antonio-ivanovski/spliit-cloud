@@ -147,7 +147,7 @@
       "masterDescription": "Stäng av för att tysta alla e-post- och push-aviseringar. Dina val per kategori behålls.",
       "emailAddToEnable": "Lägg till en verifierad e-postadress för att ta emot aviseringar i inkorgen.",
       "emailAddLink": "Lägg till e-post",
-      "emailDeliveryDisabled": "E-postutskick är avstängt i den här instansen. Dina e-postval sparas men skickas inte förrän administratören konfigurerar e-post."
+      "emailDeliveryDisabled": "E-postutskick är avstängt. Dina e-postval sparas men skickas inte förrän e-post har konfigurerats."
     },
     "title": "Kontoinställningar",
     "profile": {
@@ -504,7 +504,7 @@
       "generic": "Något gick fel. Försök igen.",
       "magicLinkFailed": "Kunde inte skicka inloggningslänken.",
       "passwordPolicy": "Använd minst 8 tecken med versal, gemen, en siffra och en symbol.",
-      "signupInviteRequired": "Den här instansen är endast för inbjudna. Använd en inbjudningslänk eller be någon att bjuda in dig till en grupp.",
+      "signupInviteRequired": "Registrering är endast möjlig med inbjudan. Använd en inbjudningslänk eller be någon att bjuda in dig till en grupp.",
       "passkeyFailed": "Inloggningen med passnyckel misslyckades. Försök igen eller använd en annan inloggningsmetod."
     },
     "signInWithGithub": "Fortsätt med GitHub",
@@ -518,14 +518,14 @@
       "symbol": "Symbol"
     },
     "inviteOnly": {
-      "message": "Den här instansen är endast för inbjudna. Använd en inbjudningslänk eller be någon att bjuda in dig till en grupp.",
+      "message": "Registrering är endast möjlig med inbjudan. Använd en inbjudningslänk eller be någon att bjuda in dig till en grupp.",
       "useInvitedEmail": "Använd den e-postadress du blev inbjuden med."
     },
     "signInWithX": "Fortsätt med X",
     "signInWithOidc": "Fortsätt med {name}",
     "signInAnonymously": "Anonym",
     "lastUsed": "Senast använt",
-    "emailAuthDisabled": "Inloggning med e-post är inaktiverad i den här instansen. Använd enkel inloggning (SSO).",
+    "emailAuthDisabled": "Inloggning med e-post är inaktiverad. Använd enkel inloggning (SSO).",
     "signInWithPasskey": "Logga in med passnyckel"
   },
   "Balances": {
@@ -667,9 +667,98 @@
       "low": "Låg"
     },
     "confidenceColumn": "Säkerhet",
+    "simpleDescription": "Granska kategorimatchningar för utgifter i Allmänt och spara sedan dina val.",
+    "generateSuggestions": "Föreslå kategorier",
+    "backToStart": "Tillbaka",
+    "chooseMode": "Välj hur utgifter ska kategoriseras",
+    "localMode": "Lokal matchning",
+    "localModeDescription": "Använder den här gruppens kategorihistorik och den inbyggda ordlistan.",
+    "startRun": "Börja kategorisera",
+    "noCategory": "Lämna okategoriserad",
+    "progressTitle": "Kategoriserar utgifter",
+    "progressDescription": "Du kan lämna sidan och komma tillbaka senare. Dina framsteg sparas.",
+    "progressCount": "{categorized} av {total} utgifter kategoriserade",
+    "applyProgressTitle": "Sparar kategorier",
+    "reviewTitle": "Granska förslag",
+    "reviewSummary": "{suggested} förslag från {total} okategoriserade utgifter",
+    "sourceLocal": "Lokal",
+    "saveSelected": "Spara valda kategorier",
+    "retry": "Försök igen",
+    "restart": "Starta en ny körning",
+    "failed": "Körningen stoppades: {message}",
+    "savedSummary": "{applied} ändrade, {skipped} överhoppade",
+    "selectedCount": "{count} valda",
+    "selectAll": "Välj alla",
+    "clearAll": "Rensa val",
+    "discardRun": "Kassera körning",
+    "partialSaveNotice": "Vissa kategorier kan redan ha sparats. Att kassera den här körningen ångrar inte de ändringarna.",
+    "restartOlderRunTitle": "Starta en ny kategoriseringskörning",
+    "restartOlderRunDescription": "Den här tidigare körningen använde det tidigare granskningsflödet. Börja om för att granska alla utgifter tillsammans.",
+    "runningMatches": "{count} av {total} utgifter har hittills ett kategoriförslag",
+    "failedTitle": "Kategoriseringen stoppades",
+    "reviewWorkload": "{total} utgifter i Allmänt · {selected} valda för kategorisering · {general} stannar i Allmänt",
+    "categoryChoices": "Kategorival",
+    "moreCategories": "Välj en annan kategori",
+    "saveCount": "Spara {count} kategorier",
+    "finishWithoutChanges": "Avsluta utan ändringar",
+    "completionSummary": "Körning klar: {changed} av {total} utgifter ändrade. {remaining} utgifter finns kvar i Allmänt.",
+    "viewExpenses": "Visa utgifter",
+    "countLoading": "Räknar okategoriserade utgifter…",
+    "nothingToCategorize": "Det finns inga okategoriserade utgifter att kategorisera.",
+    "startingCount": "{count} utgifter ligger just nu i Allmänt och är redo att granskas.",
+    "countError": "Kunde inte räkna okategoriserade utgifter. Ladda om sidan för att försöka igen.",
+    "keepGeneral": "Allmänt · lämna okategoriserad",
+    "calibrationRoundTitle": "Kalibreringsomgång {round}",
+    "calibrationLoading": "Förbereder ett varierat urval av utgifter…",
+    "calibrationReviewDescription": "Granska och korrigera dessa {count} utgifter. Valen stannar i den här körningen tills du sparar i slutet.",
+    "confirmRound": "Bekräfta omgång",
+    "roundSummaryTitle": "Omgång {round} granskad",
+    "roundSummaryDescription": "{reviewed} granskade · {categorized} preliminärt kategoriserade · {general} kvar som Allmänt",
+    "roundQuality": "De första förslagen stämde i {accuracy} % med dina val; du korrigerade {corrections}.",
+    "categorizeRemaining": "Kategorisera återstående utgifter",
+    "nextRound": "Granska ytterligare ett urval",
+    "tableLabel": "Utgifter att kategorisera",
+    "dateColumn": "Datum",
+    "amountColumn": "Belopp",
+    "rerunSuggestions": "Kör förslagen igen",
+    "roundQualityWithSuggestions": "{accepted} av {proposed} föreslagna kategorier accepterade · {changed} ändrade · {missed} matchningar hittade från Allmänt",
+    "roundQualityNoSuggestions": "Inga kategorier föreslagna · {missed} matchningar hittade från Allmänt · {abstained} kvar i Allmänt",
+    "rerunChanged": "Du ändrade {changed} av {proposed} föreslagna kategorier.",
+    "rerunAssignedSingle": "Du tilldelade en kategori till 1 utgift som blivit kvar i Allmänt.",
+    "rerunAssignedMultiple": "Du tilldelade en kategori till {count} utgifter som blivit kvar i Allmänt.",
+    "rerunPotentialSingle": "Dina ändringar kan förbättra matchningen för 1 återstående Allmänt-utgift. Kör förslagen igen om du vill ha en ny omgång.",
+    "rerunPotentialMultiple": "Dina ändringar kan förbättra matchningar för {count} återstående Allmänt-utgifter. Kör förslagen igen om du vill ha en ny omgång.",
+    "rerunEligible": "Aktuella för en ny omgång: Allmänt {general} · osäkra automatiska matchningar {uncertain}. Dina korrigeringar kan förbättra de här förslagen.",
+    "rerunNoEligible": "Det finns inga orörda Allmänt-utgifter eller osäkra automatiska matchningar kvar att köra om. Dina korrigeringar ingår ändå i kategorierna du sparar.",
+    "rerunAlreadyUsed": "Dina senaste korrigeringar har redan använts för de här förslagen. Gör en ny korrigering för att köra dem igen.",
+    "highMatch": "Hög matchning",
+    "mediumMatch": "Mellanmatchning",
+    "lowMatch": "Låg matchning",
+    "belowMatchThreshold": "Under matchningströskeln",
+    "refiningTitle": "Förfinar osäkra matchningar",
+    "runLimitSummary": "Den här körningen omfattar 10 000 utgifter. {count} fler Allmänt-utgifter kan kategoriseras i en ny körning efter att du har sparat.",
+    "pageLoading": "Laddar utgifter…",
+    "pageLoadError": "Kunde inte ladda utgifter.",
+    "pageRetry": "Försök igen",
+    "pageCount": "Visar {loaded} av {total} utgifter",
+    "ledgerAmountNotice": "Belopp visas i gruppens valuta.",
+    "viewExpenseDetails": "Visa utgiftsdetaljer",
+    "reviewFilterLabel": "Visa utgifter",
+    "filterAll": "Alla {count}",
+    "filterGeneral": "Allmänt {count}",
+    "improveSuggestions": "Förbättra återstående förslag",
+    "rerunInfoLabel": "Om att förbättra förslag",
+    "preparingNextStage": "Förbereder nästa steg",
+    "rerunProgressTitle": "Uppdaterar förslag",
+    "progressPreparing": "Förbereder utgifter…",
+    "noGeneralRows": "Det finns inga utgifter kvar i Allmänt i den här granskningen.",
+    "discardConfirmationTitle": "Kassera den här kategoriseringskörningen?",
+    "discardConfirmationDescription": "Detta tar bort körningen, dess förslag och alla val du har gjort. Inga utgiftskategorier ändras.",
+    "discardConfirmationCancel": "Behåll körning",
+    "progressCountDescription": "Endast bekräftade kategorier samt mellan- och högmatchningar räknas; Allmänt och svaga matchningar räknas inte.",
     "systemOneMode": "System One-modell",
-    "systemOneModeDescription": "Använd den konfigurerade beslutsmodellen System One för varje utgift och använd den här gruppens kategoriserade utgifter och dina granskade val som ledtrådar. TypeSafe Jev är en sådan modell.",
-    "systemOneUnavailable": "System One är inte tillgängligt på den här servern. Lokal matchning är fortfarande tillgänglig.",
+    "systemOneModeDescription": "Använd beslutsmodellen System One för varje utgift och använd den här gruppens kategoriserade utgifter och dina granskade val som ledtrådar. TypeSafe Jev är en sådan modell.",
+    "systemOneUnavailable": "System One är inte tillgängligt. Lokal matchning är fortfarande tillgänglig.",
     "systemOneConfidence": "System Ones säkerhet: {confidence}%",
     "systemOneOptionProbability": "Sannolikhet för System One-alternativet: {probability}%"
   },
@@ -2574,7 +2663,7 @@
         "joined_zero": "{count} personer har gått med hittills",
         "retry": "Försök igen"
       },
-      "emailDeliveryDisabled": "E-postutskick är avstängt i den här instansen. Inbjudan skapas ändå och visas när den inbjudna loggar in; använd en inbjudningslänk så att personen har något att öppna."
+      "emailDeliveryDisabled": "E-postutskick är avstängt. Inbjudan skapas ändå och visas när den inbjudna loggar in; använd en inbjudningslänk så att personen har något att öppna."
     },
     "leave": {
       "button": "Lämna grupp",
@@ -2835,7 +2924,7 @@
     "failedDescription": "Vi kunde inte registrera denna enhet. Notiser konfigurerade för e-post fortsätter dit; val med endast push omdirigeras inte.",
     "emailUsage": "Endast notiser konfigurerade för e-post kommer fram tills du aktiverar en enhet. Du kan tillåta notiser i webbläsarens inställningar och försöka igen från Inställningar.",
     "done": "Klar",
-    "emailDeliveryDisabled": "E-postutskick är avstängt i den här instansen, så e-postaviseringar kan inte nå dig. Aktivera push på den här enheten för att fortsätta få uppdateringar."
+    "emailDeliveryDisabled": "E-postutskick är avstängt, så e-postaviseringar kan inte nå dig. Aktivera push på den här enheten för att fortsätta få uppdateringar."
   },
   "ResetPassword": {
     "title": "Välj ett nytt lösenord",
@@ -3579,10 +3668,25 @@
       }
     },
     "categorize": {
+      "title": "Kategorisera utgifter",
       "description": "Föreslå kategorier för befintliga okategoriserade utgifter med System One. Granska varje ändring innan du sparar.",
+      "start": "Kategorisera utgifter",
       "steps": {
         "choose": {
-          "detail": "Använd lokal matchning eller den konfigurerade beslutsmodellen System One."
+          "title": "Välj en metod",
+          "detail": "Använd lokal matchning eller beslutsmodellen System One."
+        },
+        "calibrate": {
+          "title": "Granska små urval",
+          "detail": "Korrigera förslag så att nästa omgång lär sig din grupps kategorier."
+        },
+        "review": {
+          "title": "Granska varje utgift",
+          "detail": "Allmänt-utgifter visas först i den fullständiga tabellen."
+        },
+        "save": {
+          "title": "Spara kategorier",
+          "detail": "Utgifter ändras först när du bekräftar den slutliga granskningen."
         }
       }
     }

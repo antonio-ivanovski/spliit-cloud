@@ -1844,7 +1844,7 @@
       "generic": "Jokin meni vikaan. Yritä uudelleen.",
       "passwordPolicy": "Käytä vähintään 8 merkkiä, joissa on iso kirjain, pieni kirjain, numero ja erikoismerkki.",
       "magicLinkFailed": "Kirjautumislinkkiä ei voitu lähettää.",
-      "signupInviteRequired": "Tämä instanssi on vain kutsutuille. Käytä kutsulinkkiä tai pyydä jotakuta kutsumaan sinut ryhmään.",
+      "signupInviteRequired": "Rekisteröityminen on vain kutsutuille. Käytä kutsulinkkiä tai pyydä jotakuta kutsumaan sinut ryhmään.",
       "passkeyFailed": "Pääsyavaimella kirjautuminen epäonnistui. Yritä uudelleen tai käytä toista kirjautumistapaa."
     },
     "loading": "Ladataan…",
@@ -1854,14 +1854,14 @@
     "signInWithGithub": "Jatka GitHubilla",
     "legalNotice": "Jatkamalla hyväksyt <terms>käyttöehdot</terms> ja vahvistat, että olet lukenut <privacy>tietosuojailmoituksen</privacy>.",
     "inviteOnly": {
-      "message": "Tämä instanssi on vain kutsutuille. Käytä kutsulinkkiä tai pyydä jotakuta kutsumaan sinut ryhmään.",
+      "message": "Rekisteröityminen on vain kutsutuille. Käytä kutsulinkkiä tai pyydä jotakuta kutsumaan sinut ryhmään.",
       "useInvitedEmail": "Käytä sähköpostiosoitetta, jolla sinut kutsuttiin."
     },
     "signInWithX": "Jatka X:llä",
     "signInWithOidc": "Jatka: {name}",
     "signInAnonymously": "Nimetön",
     "lastUsed": "Viimeksi käytetty",
-    "emailAuthDisabled": "Sähköpostilla kirjautuminen on poistettu käytöstä tässä instanssissa. Käytä kertakirjautumista (SSO).",
+    "emailAuthDisabled": "Sähköpostilla kirjautuminen on poistettu käytöstä. Käytä kertakirjautumista (SSO).",
     "signInWithPasskey": "Kirjaudu pääsyavaimella"
   },
   "CompleteProfile": {
@@ -1985,7 +1985,7 @@
         "joined_zero": "{count} henkilöä on liittynyt toistaiseksi",
         "retry": "Yritä uudelleen"
       },
-      "emailDeliveryDisabled": "Sähköpostin lähetys on poistettu käytöstä tässä instanssissa. Kutsu luodaan silti ja se näkyy, kun kutsuttu kirjautuu sisään; käytä kutsulinkkiä, jotta hänellä on jotain avattavaa."
+      "emailDeliveryDisabled": "Sähköpostin lähetys on poistettu käytöstä. Kutsu luodaan silti ja se näkyy, kun kutsuttu kirjautuu sisään; käytä kutsulinkkiä, jotta hänellä on jotain avattavaa."
     },
     "invitations": {
       "title": "Odottavat kutsut",
@@ -2406,7 +2406,7 @@
       "masterDescription": "Poista käytöstä mykistääksesi kaikki sähköposti- ja push-ilmoitukset. Luokkakohtaiset valintasi säilyvät ennallaan.",
       "emailAddToEnable": "Lisää vahvistettu sähköposti vastaanottaaksesi ilmoituksia postilaatikkoosi.",
       "emailAddLink": "Lisää sähköposti",
-      "emailDeliveryDisabled": "Sähköpostin lähetys on poistettu käytöstä tässä instanssissa. Sähköpostivalintasi tallennetaan, mutta niitä ei lähetetä ennen kuin ylläpitäjä määrittää sähköpostin."
+      "emailDeliveryDisabled": "Sähköpostin lähetys on poistettu käytöstä. Sähköpostivalintasi tallennetaan, mutta niitä ei lähetetä ennen kuin sähköposti on määritetty."
     },
     "preferences": {
       "title": "Sovellusasetukset",
@@ -2829,9 +2829,98 @@
     "expenseColumn": "Kulu",
     "categoryColumn": "Kategoria",
     "confidenceColumn": "Varmuus",
+    "simpleDescription": "Tarkista Yleinen-kategorian kulujen kategoriavastaavuudet ja tallenna valintasi.",
+    "generateSuggestions": "Ehdota kategorioita",
+    "backToStart": "Takaisin",
+    "chooseMode": "Valitse, miten kulut luokitellaan",
+    "localMode": "Paikallinen vastaavuuksien haku",
+    "localModeDescription": "Käyttää tämän ryhmän kategoriahistoriaa ja sisäänrakennettua sanakirjaa.",
+    "startRun": "Aloita luokittelu",
+    "noCategory": "Jätä luokittelematta",
+    "progressTitle": "Luokitellaan kuluja",
+    "progressDescription": "Voit poistua sivulta ja palata myöhemmin. Edistymisesi tallennetaan.",
+    "progressCount": "{categorized} / {total} kulua luokiteltu",
+    "applyProgressTitle": "Tallennetaan kategorioita",
+    "reviewTitle": "Tarkista ehdotukset",
+    "reviewSummary": "{suggested} ehdotusta {total} luokittelemattomasta kulusta",
+    "sourceLocal": "Paikallinen",
+    "saveSelected": "Tallenna valitut kategoriat",
+    "retry": "Yritä uudelleen",
+    "restart": "Aloita uusi ajo",
+    "failed": "Ajo pysähtyi: {message}",
+    "savedSummary": "{applied} muutettu, {skipped} ohitettu",
+    "selectedCount": "{count} valittu",
+    "selectAll": "Valitse kaikki",
+    "clearAll": "Poista valinnat",
+    "discardRun": "Hylkää ajo",
+    "partialSaveNotice": "Jotkin kategoriat on ehkä jo tallennettu. Ajon hylkääminen ei kumoa näitä muutoksia.",
+    "restartOlderRunTitle": "Aloita uusi luokitteluajo",
+    "restartOlderRunDescription": "Tämä aiempi ajo käytti edellistä tarkistusnäkymää. Aloita alusta tarkistaaksesi kaikki kulut yhdessä.",
+    "runningMatches": "{count} / {total} kululla on toistaiseksi kategoriaehdotus",
+    "failedTitle": "Luokittelu pysähtyi",
+    "reviewWorkload": "{total} kulua Yleinen-kategoriassa · {selected} valittu luokiteltavaksi · {general} jää Yleinen-kategoriaan",
+    "categoryChoices": "Kategoriavalinnat",
+    "moreCategories": "Valitse toinen kategoria",
+    "saveCount": "Tallenna {count} kategoriaa",
+    "finishWithoutChanges": "Valmis ilman muutoksia",
+    "completionSummary": "Ajo valmis: {changed} / {total} kulua muutettu. {remaining} kulua jää Yleinen-kategoriaan.",
+    "viewExpenses": "Näytä kulut",
+    "countLoading": "Lasketaan luokittelemattomia kuluja…",
+    "nothingToCategorize": "Luokittelemattomia kuluja ei ole.",
+    "startingCount": "{count} kulua on parhaillaan Yleinen-kategoriassa valmiina tarkistettavaksi.",
+    "countError": "Luokittelemattomien kulujen laskeminen epäonnistui. Lataa sivu uudelleen ja yritä uudelleen.",
+    "keepGeneral": "Yleinen · jätä luokittelematta",
+    "calibrationRoundTitle": "Kalibrointikierros {round}",
+    "calibrationLoading": "Valmistellaan monipuolista otosta kuluista…",
+    "calibrationReviewDescription": "Tarkista ja korjaa nämä {count} kulua. Valinnat säilyvät tässä ajossa, kunnes tallennat lopuksi.",
+    "confirmRound": "Vahvista kierros",
+    "roundSummaryTitle": "Kierros {round} tarkistettu",
+    "roundSummaryDescription": "{reviewed} tarkistettu · {categorized} alustavasti luokiteltu · {general} jätetty Yleinen-kategoriaan",
+    "roundQuality": "Alkuperäiset ehdotukset vastasivat {accuracy} % valinnoistasi; korjasit {corrections}.",
+    "categorizeRemaining": "Luokittele jäljellä olevat kulut",
+    "nextRound": "Tarkista toinen otos",
+    "tableLabel": "Luokiteltavat kulut",
+    "dateColumn": "Päivämäärä",
+    "amountColumn": "Summa",
+    "rerunSuggestions": "Suorita ehdotukset uudelleen",
+    "roundQualityWithSuggestions": "{accepted} / {proposed} ehdotetusta kategoriasta hyväksytty · {changed} muutettu · {missed} vastaavuutta löytyi Yleinen-kategoriasta",
+    "roundQualityNoSuggestions": "Ei ehdotettuja kategorioita · {missed} vastaavuutta löytyi Yleinen-kategoriasta · {abstained} jätetty Yleinen-kategoriaan",
+    "rerunChanged": "Muutit {changed} / {proposed} ehdotetusta kategoriasta.",
+    "rerunAssignedSingle": "Annoit kategorian 1 kuluun, joka oli jäänyt Yleinen-kategoriaan.",
+    "rerunAssignedMultiple": "Annoit kategorian {count} kululle, jotka olivat jääneet Yleinen-kategoriaan.",
+    "rerunPotentialSingle": "Muutoksesi voivat parantaa 1 jäljellä olevan Yleinen-kulun vastaavuutta. Suorita ehdotukset uudelleen, jos haluat uuden kierroksen.",
+    "rerunPotentialMultiple": "Muutoksesi voivat parantaa {count} jäljellä olevan Yleinen-kulun vastaavuuksia. Suorita ehdotukset uudelleen, jos haluat uuden kierroksen.",
+    "rerunEligible": "Soveltuu uudelle kierrokselle: Yleinen {general} · epävarmat automaattiset vastaavuudet {uncertain}. Korjauksesi voivat parantaa näitä ehdotuksia.",
+    "rerunNoEligible": "Uudelleen suoritettavia koskemattomia Yleinen-kuluja tai epävarmoja automaattisia vastaavuuksia ei ole jäljellä. Korjauksesi sisältyvät silti tallentamiisi kategorioihin.",
+    "rerunAlreadyUsed": "Viimeisimmät korjauksesi on jo käytetty näissä ehdotuksissa. Tee uusi korjaus suorittaaksesi ne uudelleen.",
+    "highMatch": "Korkea vastaavuus",
+    "mediumMatch": "Kohtalainen vastaavuus",
+    "lowMatch": "Matala vastaavuus",
+    "belowMatchThreshold": "Vastaavuuskynnyksen alapuolella",
+    "refiningTitle": "Tarkennetaan epävarmoja vastaavuuksia",
+    "runLimitSummary": "Tämä ajo sisältää 10 000 kulua. {count} Yleinen-kategorian kulua lisää voidaan luokitella toisessa ajossa tallentamisen jälkeen.",
+    "pageLoading": "Ladataan kuluja…",
+    "pageLoadError": "Kulujen lataaminen epäonnistui.",
+    "pageRetry": "Yritä uudelleen",
+    "pageCount": "Näytetään {loaded} / {total} kulua",
+    "ledgerAmountNotice": "Summat näytetään ryhmän valuutassa.",
+    "viewExpenseDetails": "Näytä kulun tiedot",
+    "reviewFilterLabel": "Näytä kulut",
+    "filterAll": "Kaikki {count}",
+    "filterGeneral": "Yleinen {count}",
+    "improveSuggestions": "Paranna jäljellä olevia ehdotuksia",
+    "rerunInfoLabel": "Tietoa ehdotusten parantamisesta",
+    "preparingNextStage": "Valmistellaan seuraavaa vaihetta",
+    "rerunProgressTitle": "Päivitetään ehdotuksia",
+    "progressPreparing": "Valmistellaan kuluja…",
+    "noGeneralRows": "Tässä tarkistuksessa ei ole enää Yleinen-kategorian kuluja.",
+    "discardConfirmationTitle": "Hylätäänkö tämä luokitteluajo?",
+    "discardConfirmationDescription": "Tämä poistaa ajon, sen ehdotukset ja tekemäsi valinnat. Kulujen kategorioita ei muuteta.",
+    "discardConfirmationCancel": "Säilytä ajo",
+    "progressCountDescription": "Vain vahvistetut kategoriat sekä kohtalaiset ja korkeat vastaavuudet lasketaan; Yleinen-kategoriaa ja heikkoja vastaavuuksia ei lasketa.",
     "systemOneMode": "System One -malli",
-    "systemOneModeDescription": "Käytä määritettyä System One -päätösmallia jokaiselle kululle ja hyödynnä vihjeinä tämän ryhmän luokiteltuja kuluja sekä tarkistamiasi valintoja. TypeSafe Jev on yksi tällainen malli.",
-    "systemOneUnavailable": "System One ei ole käytettävissä tällä palvelimella. Paikallinen vastaavuuksien haku on edelleen käytettävissä.",
+    "systemOneModeDescription": "Käytä System One -päätösmallia jokaiselle kululle ja hyödynnä vihjeinä tämän ryhmän luokiteltuja kuluja sekä tarkistamiasi valintoja. TypeSafe Jev on yksi tällainen malli.",
+    "systemOneUnavailable": "System One ei ole käytettävissä. Paikallinen vastaavuuksien haku on edelleen käytettävissä.",
     "systemOneConfidence": "System Onen luottamus: {confidence}%",
     "systemOneOptionProbability": "System One -vaihtoehdon todennäköisyys: {probability}%"
   },
@@ -2906,7 +2995,7 @@
     "failedDescription": "Laitteen rekisteröinti epäonnistui. Sähköpostiin määritetyt ilmoitukset toimitetaan edelleen sähköpostitse; vain pushille valittuja ei ohjata sähköpostiin.",
     "emailUsage": "Saat sähköpostitse vain ilmoitukset, jotka on määritetty sähköpostiin, kunnes otat laitteen käyttöön. Voit sallia ilmoitukset selaimesi asetuksissa ja yrittää uudelleen asetuksissa.",
     "done": "Valmis",
-    "emailDeliveryDisabled": "Sähköpostin lähetys on poistettu käytöstä tässä instanssissa, joten sähköposti-ilmoitukset eivät tavoita sinua. Ota push-ilmoitukset käyttöön tällä laitteella, jotta saat päivityksiä jatkossakin."
+    "emailDeliveryDisabled": "Sähköpostin lähetys on poistettu käytöstä, joten sähköposti-ilmoitukset eivät tavoita sinua. Ota push-ilmoitukset käyttöön tällä laitteella, jotta saat päivityksiä jatkossakin."
   },
   "Unsubscribe": {
     "title": "Poistetaanko nämä sähköpostit käytöstä?",
@@ -3583,10 +3672,25 @@
       }
     },
     "categorize": {
+      "title": "Luokittele kulut",
       "description": "Ehdota System Onen avulla luokkia olemassa oleville luokittelemattomille kuluille. Tarkista jokainen muutos ennen tallentamista.",
+      "start": "Luokittele kulut",
       "steps": {
         "choose": {
-          "detail": "Käytä paikallista vastaavuuksien hakua tai määritettyä System One -päätösmallia."
+          "title": "Valitse menetelmä",
+          "detail": "Käytä paikallista vastaavuuksien hakua tai System One -päätösmallia."
+        },
+        "calibrate": {
+          "title": "Tarkista pieniä otoksia",
+          "detail": "Korjaa ehdotuksia, jotta seuraava kierros oppii ryhmäsi kategoriat."
+        },
+        "review": {
+          "title": "Tarkista jokainen kulu",
+          "detail": "Yleinen-kategorian kulut näkyvät ensin koko taulukossa."
+        },
+        "save": {
+          "title": "Tallenna kategoriat",
+          "detail": "Kulut muuttuvat vasta, kun vahvistat lopullisen tarkistuksen."
         }
       }
     }

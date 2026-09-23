@@ -107,7 +107,7 @@
     "leftUncategorized_few": "{count} expenses were left uncategorised because the AI was not confident enough.",
     "leftUncategorized_many": "{count} expenses were left uncategorised because the AI was not confident enough.",
     "leftUncategorized_other": "{count} expenses were left uncategorised because the AI was not confident enough.",
-    "systemOneModeDescription": "Use the configured System One decision model for every expense, using this group’s categorised expenses and your reviewed choices as hints. TypeSafe Jev is one such model."
+    "systemOneModeDescription": "Use the System One decision model for every expense, using this group’s categorised expenses and your reviewed choices as hints. TypeSafe Jev is one such model."
   },
   "Mascot": {
     "landingHintSplit": "Split a dinner, a trip, or the rent — I’ll do the maths."

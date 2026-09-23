@@ -1528,7 +1528,7 @@
       "generic": "出了點問題。請再試一次。",
       "passwordPolicy": "請使用至少8個字元，包含大寫字母、小寫字母、數字和符號。",
       "magicLinkFailed": "無法傳送登入連結。",
-      "signupInviteRequired": "此執行個體僅限邀請加入。請使用邀請連結，或請他人邀請您加入群組。",
+      "signupInviteRequired": "註冊僅限邀請加入。請使用邀請連結，或請他人邀請您加入群組。",
       "passkeyFailed": "通行密鑰登入失敗，請再試一次或使用其他登入方式。"
     },
     "loading": "載入中……",
@@ -1538,14 +1538,14 @@
     "signInWithGithub": "使用 GitHub 繼續",
     "legalNotice": "繼續即表示您同意<terms>使用條款</terms>並確認已閱讀<privacy>隱私聲明</privacy>。",
     "inviteOnly": {
-      "message": "此執行個體僅限邀請加入。請使用邀請連結，或請他人邀請您加入群組。",
+      "message": "註冊僅限邀請加入。請使用邀請連結，或請他人邀請您加入群組。",
       "useInvitedEmail": "請使用收到邀請的電子郵件地址。"
     },
     "signInWithX": "使用 X 繼續",
     "signInWithOidc": "使用 {name} 繼續",
     "signInAnonymously": "匿名",
     "lastUsed": "上次使用",
-    "emailAuthDisabled": "此執行個體已停用電子郵件登入。請使用單一登入（SSO）。",
+    "emailAuthDisabled": "已停用電子郵件登入。請使用單一登入（SSO）。",
     "signInWithPasskey": "使用通行密鑰登入"
   },
   "CompleteProfile": {
@@ -1978,7 +1978,7 @@
         "joined_zero": "目前 {count} 人已加入",
         "retry": "重試"
       },
-      "emailDeliveryDisabled": "此執行個體已停用電子郵件傳送。邀請仍會建立，並在受邀者登入後顯示；請使用邀請連結，讓對方有東西可以開啟。"
+      "emailDeliveryDisabled": "已關閉電子郵件傳送。邀請仍會建立，並在受邀者登入後顯示；請使用邀請連結，讓對方有東西可以開啟。"
     },
     "invitations": {
       "title": "待處理的邀請",
@@ -2399,7 +2399,7 @@
       "masterDescription": "關閉後，所有電子郵件和推播通知都會靜默。您的分類選擇會保留。",
       "emailAddToEnable": "新增已驗證的電子郵件以接收收件匣通知。",
       "emailAddLink": "新增電子郵件",
-      "emailDeliveryDisabled": "此執行個體已停用電子郵件傳送。你的電子郵件選擇會儲存，但在管理員設定電子郵件之前不會傳送。"
+      "emailDeliveryDisabled": "已關閉電子郵件傳送。你的電子郵件選項會儲存，但在電子郵件設定完成之前不會傳送。"
     },
     "preferences": {
       "title": "應用程式偏好設定",
@@ -2814,9 +2814,98 @@
     "expenseColumn": "支出",
     "categoryColumn": "類別",
     "confidenceColumn": "置信度",
+    "simpleDescription": "檢查通用中支出的分類比對，然後儲存你的選擇。",
+    "generateSuggestions": "建議分類",
+    "backToStart": "返回",
+    "chooseMode": "選擇支出分類方式",
+    "localMode": "本機比對",
+    "localModeDescription": "使用此群組的分類歷史和內建字典。",
+    "startRun": "開始分類",
+    "noCategory": "保持未分類",
+    "progressTitle": "正在分類支出",
+    "progressDescription": "你可以離開此頁面，稍後再回來。進度已儲存。",
+    "progressCount": "已分類 {total} 筆中的 {categorized} 筆支出",
+    "applyProgressTitle": "正在儲存分類",
+    "reviewTitle": "檢查建議",
+    "reviewSummary": "{total} 筆未分類支出中有 {suggested} 條建議",
+    "sourceLocal": "本機",
+    "saveSelected": "儲存所選分類",
+    "retry": "重試",
+    "restart": "開始新的執行",
+    "failed": "執行已停止：{message}",
+    "savedSummary": "已變更 {applied} 筆，已略過 {skipped} 筆",
+    "selectedCount": "已選 {count} 筆",
+    "selectAll": "全選",
+    "clearAll": "清除全部",
+    "discardRun": "捨棄執行",
+    "partialSaveNotice": "部分分類可能已經儲存。捨棄此次執行不會復原這些變更。",
+    "restartOlderRunTitle": "開始新的分類執行",
+    "restartOlderRunDescription": "這次較早的執行使用了舊的檢查流程。請重新開始，以便一起檢查所有支出。",
+    "runningMatches": "到目前為止，{total} 筆支出中有 {count} 筆已有分類建議",
+    "failedTitle": "分類已停止",
+    "reviewWorkload": "通用 {total} 筆 · 已選 {selected} 筆待分類 · {general} 筆保留在通用",
+    "categoryChoices": "分類選項",
+    "moreCategories": "選擇其他分類",
+    "saveCount": "儲存 {count} 個分類",
+    "finishWithoutChanges": "不做變更直接完成",
+    "completionSummary": "執行完成：{total} 筆支出中有 {changed} 筆已變更。還有 {remaining} 筆支出保留在通用中。",
+    "viewExpenses": "查看支出",
+    "countLoading": "正在統計未分類支出…",
+    "nothingToCategorize": "沒有需要分類的未分類支出。",
+    "startingCount": "目前有 {count} 筆支出在通用中，可供檢查。",
+    "countError": "無法統計未分類支出。請重新載入頁面再試一次。",
+    "keepGeneral": "通用 · 保持未分類",
+    "calibrationRoundTitle": "校準回合 {round}",
+    "calibrationLoading": "正在準備多樣化的支出樣本…",
+    "calibrationReviewDescription": "請檢查並修正這 {count} 筆支出。你的選項會保留在此次執行中，直到最後儲存。",
+    "confirmRound": "確認本回合",
+    "roundSummaryTitle": "第 {round} 回合已檢查",
+    "roundSummaryDescription": "已檢查 {reviewed} 筆 · 暫定分類 {categorized} 筆 · {general} 筆保留為通用",
+    "roundQuality": "初始建議與你的選擇有 {accuracy}% 一致；你修正了 {corrections} 處。",
+    "categorizeRemaining": "分類剩餘支出",
+    "nextRound": "查看另一組樣本",
+    "tableLabel": "待分類支出",
+    "dateColumn": "日期",
+    "amountColumn": "金額",
+    "rerunSuggestions": "重新執行建議",
+    "roundQualityWithSuggestions": "建議的 {proposed} 個分類中接受了 {accepted} 個 · 修改了 {changed} 個 · 從通用中找到 {missed} 個比對",
+    "roundQualityNoSuggestions": "無分類建議 · 從通用中找到 {missed} 個比對 · {abstained} 筆保留在通用",
+    "rerunChanged": "你修改了建議的 {proposed} 個分類中的 {changed} 個。",
+    "rerunAssignedSingle": "你已為通用中剩餘的 1 筆支出指定了分類。",
+    "rerunAssignedMultiple": "你已為通用中剩餘的 {count} 筆支出指定了分類。",
+    "rerunPotentialSingle": "你的變更可能會改善剩餘 1 筆通用支出的比對。如需再執行一次，請重新執行建議。",
+    "rerunPotentialMultiple": "你的變更可能會改善剩餘 {count} 筆通用支出的比對。如需再執行一次，請重新執行建議。",
+    "rerunEligible": "可再次執行：通用 {general} 筆 · 不確定的自動比對 {uncertain} 筆。你的修正可能會改進這些建議。",
+    "rerunNoEligible": "沒有可重新執行的未處理通用或不確定自動比對。你的修正仍會包含在儲存的分類中。",
+    "rerunAlreadyUsed": "你的最新修正已用於這些建議。再做一次修正即可再次執行。",
+    "highMatch": "高比對",
+    "mediumMatch": "中比對",
+    "lowMatch": "低比對",
+    "belowMatchThreshold": "低於比對門檻",
+    "refiningTitle": "正在優化不確定的比對",
+    "runLimitSummary": "此次執行包含 10,000 筆支出。儲存後，可在另一次執行中分類另外 {count} 筆通用支出。",
+    "pageLoading": "正在載入支出…",
+    "pageLoadError": "無法載入支出。",
+    "pageRetry": "重試",
+    "pageCount": "正在顯示 {total} 筆中的 {loaded} 筆支出",
+    "ledgerAmountNotice": "金額以群組貨幣顯示。",
+    "viewExpenseDetails": "查看支出詳細資訊",
+    "reviewFilterLabel": "顯示支出",
+    "filterAll": "全部 {count} 筆",
+    "filterGeneral": "通用 {count} 筆",
+    "improveSuggestions": "改進剩餘建議",
+    "rerunInfoLabel": "關於改進建議",
+    "preparingNextStage": "正在準備下一步",
+    "rerunProgressTitle": "正在更新建議",
+    "progressPreparing": "正在準備支出…",
+    "noGeneralRows": "本次檢查中通用裡已沒有剩餘支出。",
+    "discardConfirmationTitle": "要捨棄這次分類執行嗎？",
+    "discardConfirmationDescription": "這會刪除此次執行、相關建議和你已做的選擇。不會變更任何支出分類。",
+    "discardConfirmationCancel": "保留此次執行",
+    "progressCountDescription": "僅統計已確認的分類以及中、高比對；通用和低比對不計入。",
     "systemOneMode": "System One 模型",
-    "systemOneModeDescription": "對每筆支出使用已設定的 System One 決策模型，並參考此群組中已分類的支出和你審核過的選項。TypeSafe Jev 是其中一種模型。",
-    "systemOneUnavailable": "此伺服器無法使用 System One。仍可使用本機比對。",
+    "systemOneModeDescription": "對每筆支出使用 System One 決策模型，並參考此群組中已分類的支出和你審核過的選項。TypeSafe Jev 是其中一種模型。",
+    "systemOneUnavailable": "無法使用 System One。仍可使用本機比對。",
     "systemOneConfidence": "System One 信賴度：{confidence}%",
     "systemOneOptionProbability": "System One 選項機率：{probability}%"
   },
@@ -2890,7 +2979,7 @@
     "failedDescription": "無法註冊此裝置。設為電子郵件的通知仍會傳送到信箱；僅選擇推播的通知不會改由電子郵件傳送。",
     "emailUsage": "啟用裝置前，只會收到設為電子郵件的通知。你可以在瀏覽器設定中允許通知，然後從設定重試。",
     "done": "完成",
-    "emailDeliveryDisabled": "此執行個體已停用電子郵件傳送，因此電子郵件通知無法送達。請在此裝置上開啟推播，以便繼續接收更新。"
+    "emailDeliveryDisabled": "已關閉電子郵件傳送，因此電子郵件通知無法送達。請在此裝置上開啟推播，以便繼續接收更新。"
   },
   "Unsubscribe": {
     "title": "要關閉這些電子郵件嗎？",
@@ -3566,10 +3655,25 @@
       }
     },
     "categorize": {
+      "title": "分類支出",
       "description": "使用 System One 為現有未分類支出建議類別。儲存前請檢查每項變更。",
+      "start": "分類支出",
       "steps": {
         "choose": {
-          "detail": "使用本機比對或已設定的 System One 決策模型。"
+          "title": "選擇方式",
+          "detail": "使用本機比對或 System One 決策模型。"
+        },
+        "calibrate": {
+          "title": "檢查小樣本",
+          "detail": "修正建議，讓下一回合學習此群組的分類。"
+        },
+        "review": {
+          "title": "檢查所有支出",
+          "detail": "通用支出會顯示在完整表格的最前面。"
+        },
+        "save": {
+          "title": "儲存分類",
+          "detail": "只有確認最終檢查後，支出才會變更。"
         }
       }
     }

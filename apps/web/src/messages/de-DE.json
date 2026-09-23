@@ -1872,7 +1872,7 @@
       "nameRequired": "Gib einen Anzeigenamen ein.",
       "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
       "magicLinkFailed": "Der Anmeldelink konnte nicht gesendet werden.",
-      "signupInviteRequired": "Diese Instanz ist nur auf Einladung zugänglich. Nutze einen Einladungslink oder bitte jemanden, dich in eine Gruppe einzuladen.",
+      "signupInviteRequired": "Anmeldungen sind nur auf Einladung möglich. Nutze einen Einladungslink oder bitte jemanden, dich in eine Gruppe einzuladen.",
       "passkeyFailed": "Anmeldung mit Passkey fehlgeschlagen. Versuche es erneut oder nutze eine andere Anmeldemethode."
     },
     "loading": "Lädt…",
@@ -1882,14 +1882,14 @@
     "signInWithGithub": "Weiter mit GitHub",
     "legalNotice": "Mit der Fortsetzung stimmst du den <terms>Nutzungsbedingungen</terms> zu und nimmst den <privacy>Datenschutzhinweis</privacy> zur Kenntnis.",
     "inviteOnly": {
-      "message": "Diese Instanz ist nur auf Einladung zugänglich. Nutze einen Einladungslink oder bitte jemanden, dich in eine Gruppe einzuladen.",
+      "message": "Anmeldungen sind nur auf Einladung möglich. Nutze einen Einladungslink oder bitte jemanden, dich in eine Gruppe einzuladen.",
       "useInvitedEmail": "Verwende die E-Mail-Adresse, mit der du eingeladen wurdest."
     },
     "signInWithX": "Weiter mit X",
     "signInWithOidc": "Weiter mit {name}",
     "signInAnonymously": "Anonym",
     "lastUsed": "Zuletzt verwendet",
-    "emailAuthDisabled": "Die Anmeldung per E-Mail ist in dieser Instanz deaktiviert. Bitte nutze Single Sign-on (SSO).",
+    "emailAuthDisabled": "Die Anmeldung per E-Mail ist deaktiviert. Bitte nutze Single Sign-on (SSO).",
     "signInWithPasskey": "Mit Passkey anmelden"
   },
   "CompleteProfile": {
@@ -2013,7 +2013,7 @@
         "joined_zero": "{count} Personen sind bisher beigetreten",
         "retry": "Erneut versuchen"
       },
-      "emailDeliveryDisabled": "Der E-Mail-Versand ist in dieser Instanz deaktiviert. Die Einladung wird trotzdem erstellt und erscheint, sobald die eingeladene Person sich anmeldet; nutze einen Einladungslink, damit sie etwas zum Öffnen hat."
+      "emailDeliveryDisabled": "Der E-Mail-Versand ist deaktiviert. Die Einladung wird trotzdem erstellt und erscheint, sobald die eingeladene Person sich anmeldet; nutze einen Einladungslink, damit sie etwas zum Öffnen hat."
     },
     "invitations": {
       "title": "Ausstehende Einladungen",
@@ -2438,7 +2438,7 @@
       "masterDescription": "Deaktivieren, um alle E-Mail- und Push-Benachrichtigungen stummzuschalten. Deine Auswahl pro Kategorie bleibt erhalten.",
       "emailAddToEnable": "Füge eine bestätigte E-Mail hinzu, um Benachrichtigungen im Posteingang zu erhalten.",
       "emailAddLink": "E-Mail hinzufügen",
-      "emailDeliveryDisabled": "Der E-Mail-Versand ist in dieser Instanz deaktiviert. Deine E-Mail-Auswahl wird gespeichert, aber erst versendet, wenn der Administrator E-Mail konfiguriert."
+      "emailDeliveryDisabled": "Der E-Mail-Versand ist deaktiviert. Deine E-Mail-Auswahl wird gespeichert, aber erst versendet, wenn E-Mail eingerichtet ist."
     },
     "preferences": {
       "title": "App-Einstellungen",
@@ -2893,9 +2893,98 @@
     "expenseColumn": "Ausgabe",
     "categoryColumn": "Kategorie",
     "confidenceColumn": "Konfidenz",
+    "simpleDescription": "Überprüfe die Kategorieübereinstimmungen für Ausgaben in Allgemein und speichere dann deine Auswahl.",
+    "generateSuggestions": "Kategorien vorschlagen",
+    "backToStart": "Zurück",
+    "chooseMode": "Wähle, wie Ausgaben kategorisiert werden",
+    "localMode": "Lokales Abgleichen",
+    "localModeDescription": "Nutzt den Kategorienverlauf dieser Gruppe und das integrierte Wörterbuch.",
+    "startRun": "Kategorisierung starten",
+    "noCategory": "Nicht kategorisiert lassen",
+    "progressTitle": "Ausgaben werden kategorisiert",
+    "progressDescription": "Du kannst diese Seite verlassen und später zurückkehren. Dein Fortschritt wird gespeichert.",
+    "progressCount": "{categorized} von {total} Ausgaben kategorisiert",
+    "applyProgressTitle": "Kategorien werden gespeichert",
+    "reviewTitle": "Vorschläge überprüfen",
+    "reviewSummary": "{suggested} Vorschläge aus {total} nicht kategorisierten Ausgaben",
+    "sourceLocal": "Lokal",
+    "saveSelected": "Ausgewählte Kategorien speichern",
+    "retry": "Wiederholen",
+    "restart": "Neuen Durchlauf starten",
+    "failed": "Der Durchlauf wurde gestoppt: {message}",
+    "savedSummary": "{applied} geändert, {skipped} übersprungen",
+    "selectedCount": "{count} ausgewählt",
+    "selectAll": "Alle auswählen",
+    "clearAll": "Alle abwählen",
+    "discardRun": "Durchlauf verwerfen",
+    "partialSaveNotice": "Einige Kategorien wurden möglicherweise bereits gespeichert. Das Verwerfen dieses Durchlaufs macht diese Änderungen nicht rückgängig.",
+    "restartOlderRunTitle": "Neuen Kategorisierungsdurchlauf starten",
+    "restartOlderRunDescription": "Dieser frühere Durchlauf nutzte den vorherigen Überprüfungsablauf. Beginne von vorn, um alle Ausgaben gemeinsam zu überprüfen.",
+    "runningMatches": "{count} von {total} Ausgaben haben bisher einen Kategorievorschlag",
+    "failedTitle": "Kategorisierung gestoppt",
+    "reviewWorkload": "{total} Ausgaben in Allgemein · {selected} zur Kategorisierung ausgewählt · {general} bleiben in Allgemein",
+    "categoryChoices": "Kategorieauswahl",
+    "moreCategories": "Andere Kategorie wählen",
+    "saveCount": "{count} Kategorien speichern",
+    "finishWithoutChanges": "Ohne Änderungen abschließen",
+    "completionSummary": "Durchlauf abgeschlossen: {changed} von {total} Ausgaben geändert. {remaining} Ausgaben bleiben in Allgemein.",
+    "viewExpenses": "Ausgaben anzeigen",
+    "countLoading": "Nicht kategorisierte Ausgaben werden gezählt…",
+    "nothingToCategorize": "Es gibt keine nicht kategorisierten Ausgaben.",
+    "startingCount": "{count} Ausgaben sind derzeit in Allgemein und bereit zur Überprüfung.",
+    "countError": "Nicht kategorisierte Ausgaben konnten nicht gezählt werden. Lade die Seite neu, um es erneut zu versuchen.",
+    "keepGeneral": "Allgemein · nicht kategorisiert lassen",
+    "calibrationRoundTitle": "Kalibrierungsrunde {round}",
+    "calibrationLoading": "Vielfältige Ausgabenstichprobe wird vorbereitet…",
+    "calibrationReviewDescription": "Überprüfe und korrigiere diese {count} Ausgaben. Die Auswahl bleibt in diesem Durchlauf erhalten, bis du am Ende speicherst.",
+    "confirmRound": "Runde bestätigen",
+    "roundSummaryTitle": "Runde {round} überprüft",
+    "roundSummaryDescription": "{reviewed} überprüft · {categorized} vorläufig kategorisiert · {general} bleiben Allgemein",
+    "roundQuality": "Die ersten Vorschläge stimmten bei {accuracy} % mit deiner Auswahl überein; du hast {corrections} korrigiert.",
+    "categorizeRemaining": "Verbleibende Ausgaben kategorisieren",
+    "nextRound": "Weitere Stichprobe überprüfen",
+    "tableLabel": "Zu kategorisierende Ausgaben",
+    "dateColumn": "Datum",
+    "amountColumn": "Betrag",
+    "rerunSuggestions": "Vorschläge erneut ausführen",
+    "roundQualityWithSuggestions": "{accepted} von {proposed} vorgeschlagenen Kategorien übernommen · {changed} geändert · {missed} Übereinstimmungen aus Allgemein gefunden",
+    "roundQualityNoSuggestions": "Keine Kategorien vorgeschlagen · {missed} Übereinstimmungen aus Allgemein gefunden · {abstained} bleiben in Allgemein",
+    "rerunChanged": "Du hast {changed} von {proposed} vorgeschlagenen Kategorien geändert.",
+    "rerunAssignedSingle": "Du hast einer in Allgemein verbliebenen Ausgabe eine Kategorie zugewiesen.",
+    "rerunAssignedMultiple": "Du hast {count} in Allgemein verbliebenen Ausgaben eine Kategorie zugewiesen.",
+    "rerunPotentialSingle": "Deine Änderungen können die Übereinstimmung für 1 verbleibende Allgemein-Ausgabe verbessern. Führe die Vorschläge erneut aus, wenn du einen weiteren Durchlauf möchtest.",
+    "rerunPotentialMultiple": "Deine Änderungen können die Übereinstimmungen für {count} verbleibende Allgemein-Ausgaben verbessern. Führe die Vorschläge erneut aus, wenn du einen weiteren Durchlauf möchtest.",
+    "rerunEligible": "Für einen weiteren Durchlauf geeignet: Allgemein {general} · unsichere automatische Übereinstimmungen {uncertain}. Deine Korrekturen können diese Vorschläge verbessern.",
+    "rerunNoEligible": "Es gibt keine unberührten Allgemein-Ausgaben oder unsicheren automatischen Übereinstimmungen mehr für einen erneuten Durchlauf. Deine Korrekturen sind weiterhin in den Kategorien enthalten, die du speicherst.",
+    "rerunAlreadyUsed": "Deine neuesten Korrekturen wurden für diese Vorschläge bereits verwendet. Nimm eine weitere Korrektur vor, um sie erneut auszuführen.",
+    "highMatch": "Hohe Übereinstimmung",
+    "mediumMatch": "Mittlere Übereinstimmung",
+    "lowMatch": "Niedrige Übereinstimmung",
+    "belowMatchThreshold": "Unterhalb der Übereinstimmungsschwelle",
+    "refiningTitle": "Unsichere Übereinstimmungen werden verfeinert",
+    "runLimitSummary": "Dieser Durchlauf umfasst 10.000 Ausgaben. {count} weitere Ausgaben in Allgemein können nach dem Speichern in einem weiteren Durchlauf kategorisiert werden.",
+    "pageLoading": "Ausgaben werden geladen…",
+    "pageLoadError": "Ausgaben konnten nicht geladen werden.",
+    "pageRetry": "Wiederholen",
+    "pageCount": "{loaded} von {total} Ausgaben werden angezeigt",
+    "ledgerAmountNotice": "Beträge werden in der Gruppenwährung angezeigt.",
+    "viewExpenseDetails": "Ausgabendetails anzeigen",
+    "reviewFilterLabel": "Ausgaben anzeigen",
+    "filterAll": "Alle {count}",
+    "filterGeneral": "Allgemein {count}",
+    "improveSuggestions": "Verbleibende Vorschläge verbessern",
+    "rerunInfoLabel": "Über das Verbessern von Vorschlägen",
+    "preparingNextStage": "Nächster Schritt wird vorbereitet",
+    "rerunProgressTitle": "Vorschläge werden aktualisiert",
+    "progressPreparing": "Ausgaben werden vorbereitet…",
+    "noGeneralRows": "In dieser Überprüfung sind keine Ausgaben mehr in Allgemein.",
+    "discardConfirmationTitle": "Diesen Kategorisierungsdurchlauf verwerfen?",
+    "discardConfirmationDescription": "Dadurch werden der Durchlauf, seine Vorschläge und alle getroffenen Auswahlmöglichkeiten entfernt. Es werden keine Ausgabenkategorien geändert.",
+    "discardConfirmationCancel": "Durchlauf behalten",
+    "progressCountDescription": "Nur bestätigte Kategorien sowie mittlere und hohe Übereinstimmungen zählen; Allgemein und schwache Übereinstimmungen zählen nicht.",
     "systemOneMode": "System-One-Modell",
-    "systemOneModeDescription": "Verwende für jede Ausgabe das konfigurierte System-One-Entscheidungsmodell und nutze die kategorisierten Ausgaben dieser Gruppe sowie deine überprüften Auswahlmöglichkeiten als Hinweise. TypeSafe Jev ist ein solches Modell.",
-    "systemOneUnavailable": "System One ist auf diesem Server nicht verfügbar. Lokales Abgleichen ist weiterhin möglich.",
+    "systemOneModeDescription": "Verwende für jede Ausgabe das System-One-Entscheidungsmodell und nutze die kategorisierten Ausgaben dieser Gruppe sowie deine überprüften Auswahlmöglichkeiten als Hinweise. TypeSafe Jev ist ein solches Modell.",
+    "systemOneUnavailable": "System One ist nicht verfügbar. Lokales Abgleichen ist weiterhin möglich.",
     "systemOneConfidence": "System-One-Konfidenz: {confidence}%",
     "systemOneOptionProbability": "Wahrscheinlichkeit der System-One-Option: {probability}%"
   },
@@ -2974,7 +3063,7 @@
     "failedDescription": "Dieses Gerät konnte nicht registriert werden. Für E-Mail konfigurierte Benachrichtigungen werden weiterhin per E-Mail zugestellt; Nur-Push-Auswahlen werden nicht umgeleitet.",
     "emailUsage": "Es werden nur Benachrichtigungen zugestellt, die für E-Mail konfiguriert sind, bis du ein Gerät aktivierst. Du kannst Benachrichtigungen in deinen Browsereinstellungen erlauben und es anschließend in den Einstellungen erneut versuchen.",
     "done": "Fertig",
-    "emailDeliveryDisabled": "Der E-Mail-Versand ist in dieser Instanz deaktiviert, deshalb können dich E-Mail-Benachrichtigungen nicht erreichen. Aktiviere Push-Benachrichtigungen auf diesem Gerät, um weiterhin Updates zu erhalten."
+    "emailDeliveryDisabled": "Der E-Mail-Versand ist deaktiviert, deshalb können dich E-Mail-Benachrichtigungen nicht erreichen. Aktiviere Push-Benachrichtigungen auf diesem Gerät, um weiterhin Updates zu erhalten."
   },
   "Unsubscribe": {
     "title": "Diese E-Mails deaktivieren?",
@@ -3651,10 +3740,25 @@
       }
     },
     "categorize": {
+      "title": "Ausgaben kategorisieren",
       "description": "Schlage mit System One Kategorien für vorhandene, nicht kategorisierte Ausgaben vor. Überprüfe jede Änderung vor dem Speichern.",
+      "start": "Ausgaben kategorisieren",
       "steps": {
         "choose": {
-          "detail": "Verwende lokales Abgleichen oder das konfigurierte System-One-Entscheidungsmodell."
+          "title": "Methode wählen",
+          "detail": "Verwende lokales Abgleichen oder das System-One-Entscheidungsmodell."
+        },
+        "calibrate": {
+          "title": "Kleine Stichproben überprüfen",
+          "detail": "Korrigiere Vorschläge, damit die nächste Runde die Kategorien deiner Gruppe lernt."
+        },
+        "review": {
+          "title": "Jede Ausgabe überprüfen",
+          "detail": "Ausgaben in Allgemein erscheinen zuerst in der vollständigen Tabelle."
+        },
+        "save": {
+          "title": "Kategorien speichern",
+          "detail": "Ausgaben ändern sich erst, wenn du die abschließende Überprüfung bestätigst."
         }
       }
     }

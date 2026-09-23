@@ -1851,7 +1851,7 @@
       "generic": "Zerbaitek huts egin du. Saiatu berriro mesedez.",
       "passwordPolicy": "Erabili gutxienez 8 karaktere, letra larri eta xehez, zenbaki batez eta ikur batez.",
       "magicLinkFailed": "Ezin izan da saioa hasteko esteka bidali.",
-      "signupInviteRequired": "Instantzia hau gonbidapen bidezkoa da soilik. Erabili gonbidapen-esteka bat edo eskatu norbaiti talde batera gonbidatzeko.",
+      "signupInviteRequired": "Erregistroak gonbidapen bidezkoak dira soilik. Erabili gonbidapen-esteka bat edo eskatu norbaiti talde batera gonbidatzeko.",
       "passkeyFailed": "Huts egin du passkeyarekin saioa hasteak. Saiatu berriro edo erabili beste saio-hasiera metodo bat."
     },
     "loading": "Kargatzen…",
@@ -1861,14 +1861,14 @@
     "signInWithGithub": "Jarraitu GitHub-ekin",
     "legalNotice": "Jarraituz gero, <terms>erabilera-baldintzak</terms> onartzen dituzu eta <privacy>pribatutasun-oharra</privacy> aitortzen duzu.",
     "inviteOnly": {
-      "message": "Instantzia hau gonbidapen bidezkoa da soilik. Erabili gonbidapen-esteka bat edo eskatu norbaiti talde batera gonbidatzeko.",
+      "message": "Erregistroak gonbidapen bidezkoak dira soilik. Erabili gonbidapen-esteka bat edo eskatu norbaiti talde batera gonbidatzeko.",
       "useInvitedEmail": "Erabili gonbidapena jaso zenuen helbide elektronikoa."
     },
     "signInWithX": "Jarraitu X-ekin",
     "signInWithOidc": "Jarraitu {name}-rekin",
     "signInAnonymously": "Anonimoa",
     "lastUsed": "Azken erabilera",
-    "emailAuthDisabled": "Posta elektronikoaren bidezko saioa hasteko aukera desgaituta dago instantzia honetan. Erabili saio-hasiera bakarra (SSO).",
+    "emailAuthDisabled": "Posta elektronikoaren bidezko saioa hasteko aukera desgaituta dago. Erabili saio-hasiera bakarra (SSO).",
     "signInWithPasskey": "Hasi saioa passkeyarekin"
   },
   "CompleteProfile": {
@@ -1992,7 +1992,7 @@
         "joined_zero": "{count} pertsona batu dira orain arte",
         "retry": "Saiatu berriro"
       },
-      "emailDeliveryDisabled": "Instantzia honetan mezu elektronikoak bidaltzea desgaituta dago. Gonbidapena hala ere sortuko da eta gonbidatuak saioa hasten duenean agertuko da; erabili gonbidapen-esteka bat irekitzeko zerbait emateko."
+      "emailDeliveryDisabled": "Mezu elektronikoak bidaltzea desgaituta dago. Gonbidapena hala ere sortuko da eta gonbidatuak saioa hasten duenean agertuko da; erabili gonbidapen-esteka bat irekitzeko zerbait emateko."
     },
     "invitations": {
       "title": "Gonbidapen zain",
@@ -2414,7 +2414,7 @@
       "masterDescription": "Desaktibatu posta- eta push-jakinarazpen guztiak isiltzeko. Kategorien araberako aukerak gordeta mantentzen dira.",
       "emailAddToEnable": "Gehitu egiaztatutako helbide elektroniko bat sarrerako ontziko jakinarazpenak jasotzeko.",
       "emailAddLink": "Gehitu helbidea",
-      "emailDeliveryDisabled": "Instantzia honetan mezu elektronikoak bidaltzea desgaituta dago. Zure posta-elektronikoko aukerak gordetzen dira, baina ez dira bidaliko administratzaileak posta konfiguratzen duen arte."
+      "emailDeliveryDisabled": "Mezu elektronikoak bidaltzea desgaituta dago. Zure posta-elektronikoko aukerak gordetzen dira, baina ez dira bidaliko posta konfiguratzen den arte."
     },
     "preferences": {
       "title": "Aplikazioaren hobespenak",
@@ -2845,9 +2845,98 @@
     "expenseColumn": "Gastua",
     "categoryColumn": "Kategoria",
     "confidenceColumn": "Konfiantza",
+    "simpleDescription": "Berrikusi Orokorra ataleko gastuen kategoria-bat-etortzeak eta gorde zure aukerak.",
+    "generateSuggestions": "Iradoki kategoriak",
+    "backToStart": "Atzera",
+    "chooseMode": "Aukeratu gastuak nola kategorizatu",
+    "localMode": "Tokiko bat-etortzea",
+    "localModeDescription": "Erabili talde honen kategorien historia eta integratutako hiztegia.",
+    "startRun": "Hasi kategorizatzen",
+    "noCategory": "Utzi kategorizatu gabe",
+    "progressTitle": "Gastuak kategorizatzen",
+    "progressDescription": "Orri honetatik irten eta geroago itzuli zaitezke. Zure aurrerapena gordetzen da.",
+    "progressCount": "{total} gastutik {categorized} kategorizatuta",
+    "applyProgressTitle": "Kategoriak gordetzen",
+    "reviewTitle": "Berrikusi iradokizunak",
+    "reviewSummary": "{total} kategorizatu gabeko gastutik {suggested} iradokizun",
+    "sourceLocal": "Lokala",
+    "saveSelected": "Gorde hautatutako kategoriak",
+    "retry": "Saiatu berriro",
+    "restart": "Hasi exekuzio berri bat",
+    "failed": "Exekuzioa gelditu da: {message}",
+    "savedSummary": "{applied} aldatu, {skipped} saltatu",
+    "selectedCount": "{count} hautatuta",
+    "selectAll": "Hautatu dena",
+    "clearAll": "Garbitu dena",
+    "discardRun": "Baztertu exekuzioa",
+    "partialSaveNotice": "Baliteke kategoria batzuk jada gorde izana. Exekuzio hau baztertzeak ez ditu aldaketa horiek desegingo.",
+    "restartOlderRunTitle": "Hasi kategorizazio-exekuzio berri bat",
+    "restartOlderRunDescription": "Exekuzio zahar honek aurreko berrikuspen-fluxua erabili zuen. Hasi berriro gastu guztiak batera berrikusteko.",
+    "runningMatches": "{total} gastutik {count}k kategoria-iradokizuna dute orain arte",
+    "failedTitle": "Kategorizazioa gelditu da",
+    "reviewWorkload": "{total} gastu Orokorra atalean · {selected} kategorizatzeko hautatuta · {general} Orokorra atalean geratzen",
+    "categoryChoices": "Kategoria-aukerak",
+    "moreCategories": "Aukeratu beste kategoria bat",
+    "saveCount": "Gorde {count} kategoria",
+    "finishWithoutChanges": "Amaitu aldaketarik gabe",
+    "completionSummary": "Exekuzioa osatu da: {total} gastutik {changed} aldatu dira. {remaining} gastu geratzen dira Orokorra atalean.",
+    "viewExpenses": "Ikusi gastuak",
+    "countLoading": "Kategorizatu gabeko gastuak zenbatzen…",
+    "nothingToCategorize": "Ez dago kategorizatzeko kategorizatu gabeko gasturik.",
+    "startingCount": "{count} gastu daude une honetan Orokorra atalean eta prest berrikusteko.",
+    "countError": "Ezin izan dira kategorizatu gabeko gastuak zenbatu. Birkargatu orria berriro saiatzeko.",
+    "keepGeneral": "Orokorra · utzi kategorizatu gabe",
+    "calibrationRoundTitle": "Kalibrazio-txanda {round}",
+    "calibrationLoading": "Gastuen lagin askotarikoa prestatzen…",
+    "calibrationReviewDescription": "Berrikusi eta zuzendu {count} gastu hauek. Aukerak exekuzio honetan geratzen dira amaieran gorde arte.",
+    "confirmRound": "Berretsi txanda",
+    "roundSummaryTitle": "{round}. txanda berrikusita",
+    "roundSummaryDescription": "{reviewed} berrikusita · {categorized} behin-behinean kategorizatuta · {general} Orokorra gisa utzita",
+    "roundQuality": "Hasierako iradokizunek zure aukeren {accuracy}%ekin bat egin dute; {corrections} zuzendu dituzu.",
+    "categorizeRemaining": "Kategorizatu gainerako gastuak",
+    "nextRound": "Berrikusi beste lagin bat",
+    "tableLabel": "Kategorizatzeko gastuak",
+    "dateColumn": "Data",
+    "amountColumn": "Zenbatekoa",
+    "rerunSuggestions": "Exekutatu iradokizunak berriro",
+    "roundQualityWithSuggestions": "Iradokitako {proposed} kategorietatik {accepted} onartuta · {changed} aldatuta · {missed} bat-etortze aurkitu dira Orokorra ataletik",
+    "roundQualityNoSuggestions": "Ez da kategoriarik iradoki · {missed} bat-etortze aurkitu dira Orokorra ataletik · {abstained} geratzen dira Orokorra atalean",
+    "rerunChanged": "Iradokitako {proposed} kategorietatik {changed} aldatu dituzu.",
+    "rerunAssignedSingle": "Kategoria bat esleitu diozu Orokorra atalean geratzen zen gastu 1i.",
+    "rerunAssignedMultiple": "Kategoria bat esleitu diozu Orokorra atalean geratzen ziren {count} gasturi.",
+    "rerunPotentialSingle": "Zure aldaketek Orokorra ataleko gastu 1en bat-etortzea hobe dezakete. Exekutatu iradokizunak berriro beste pasada bat nahi baduzu.",
+    "rerunPotentialMultiple": "Zure aldaketek Orokorra ataleko {count} gasturen bat-etortzeak hobe ditzakete. Exekutatu iradokizunak berriro beste pasada bat nahi baduzu.",
+    "rerunEligible": "Beste pasada baterako hautagai: Orokorra {general} · bat-etortze automatiko zalantzazkoak {uncertain}.",
+    "rerunNoEligible": "Ez da geratzen berriro exekutatzeko ukitu gabeko Orokorra edo bat-etortze automatiko zalantzazkorik. Zure zuzenketak gordetzen dituzun kategorietan sartuta jarraitzen dute.",
+    "rerunAlreadyUsed": "Zure azken zuzenketak iradokizun hauetarako erabili dira jada. Egin beste zuzenketa bat berriro exekutatzeko.",
+    "highMatch": "Bat-etortze altua",
+    "mediumMatch": "Bat-etortze ertaina",
+    "lowMatch": "Bat-etortze baxua",
+    "belowMatchThreshold": "Bat-etortze atalasearen azpitik",
+    "refiningTitle": "Bat-etortze zalantzazkoak fintzen",
+    "runLimitSummary": "Exekuzio honek 10,000 gastu barne hartzen ditu. Orokorra ataleko {count} gastu gehiago kategoriza daitezke beste exekuzio batean gorde ondoren.",
+    "pageLoading": "Gastuak kargatzen…",
+    "pageLoadError": "Ezin izan dira gastuak kargatu.",
+    "pageRetry": "Saiatu berriro",
+    "pageCount": "{total} gastutik {loaded} erakusten",
+    "ledgerAmountNotice": "Zenbatekoak taldearen monetan agertzen dira.",
+    "viewExpenseDetails": "Ikusi gastuaren xehetasunak",
+    "reviewFilterLabel": "Erakutsi gastuak",
+    "filterAll": "Guztiak {count}",
+    "filterGeneral": "Orokorra {count}",
+    "improveSuggestions": "Hobetu gainerako iradokizunak",
+    "rerunInfoLabel": "Iradokizunak hobetzeari buruz",
+    "preparingNextStage": "Hurrengo urratsa prestatzen",
+    "rerunProgressTitle": "Iradokizunak eguneratzen",
+    "progressPreparing": "Gastuak prestatzen…",
+    "noGeneralRows": "Ez da gasturik geratzen Orokorra atalean berrikuspen honetan.",
+    "discardConfirmationTitle": "Baztertu kategorizazio-exekuzio hau?",
+    "discardConfirmationDescription": "Honek exekuzioa, bere iradokizunak eta egin dituzun aukera guztiak ezabatzen ditu. Ez da gastuen kategoriarik aldatuko.",
+    "discardConfirmationCancel": "Mantendu exekuzioa",
+    "progressCountDescription": "Berretsitako kategoriek eta bat-etortze ertain edo altuek bakarrik zenbatzen dute; Orokorra eta bat-etortze ahulek ez.",
     "systemOneMode": "System One eredua",
-    "systemOneModeDescription": "Erabili konfiguratutako System One erabaki-eredua gastu bakoitzerako, talde honetako kategorizatutako gastuak eta berrikusitako aukerak argibide gisa erabiliz. TypeSafe Jev eredu horietako bat da.",
-    "systemOneUnavailable": "System One ez dago erabilgarri zerbitzari honetan. Tokiko bat-etortzea erabilgarri dago oraindik.",
+    "systemOneModeDescription": "Erabili System One erabaki-eredua gastu bakoitzerako, talde honetako kategorizatutako gastuak eta berrikusitako aukerak argibide gisa erabiliz. TypeSafe Jev eredu horietako bat da.",
+    "systemOneUnavailable": "System One ez dago erabilgarri. Tokiko bat-etortzea erabilgarri dago oraindik.",
     "systemOneConfidence": "System One-ren konfiantza: {confidence}%",
     "systemOneOptionProbability": "System One aukeraren probabilitatea: {probability}%"
   },
@@ -2923,7 +3012,7 @@
     "failedDescription": "Ezin izan dugu gailu hau erregistratu. Posta elektronikorako konfiguratuta dauden jakinarazpenak posta elektronikoz jasotzen jarraituko duzu; push hutseko aukerak ez dira birbideratuko.",
     "emailUsage": "Gailu bat aktibatu arte, posta elektronikorako konfiguratuta dauden jakinarazpenak baino ez dira iritsiko. Jakinarazpenak arakatzailearen ezarpenetan baimendu eta berriro saiatu zaitezke Ezarpenetatik.",
     "done": "Eginda",
-    "emailDeliveryDisabled": "Instantzia honetan mezu elektronikoak bidaltzea desgaituta dago, eta, beraz, posta-jakinarazpenak ezin dira zugana iritsi. Gaitu push jakinarazpenak gailu honetan eguneratzeak jasotzen jarraitzeko."
+    "emailDeliveryDisabled": "Mezu elektronikoak bidaltzea desgaituta dago, eta, beraz, posta-jakinarazpenak ezin dira zugana iritsi. Gaitu push jakinarazpenak gailu honetan eguneratzeak jasotzen jarraitzeko."
   },
   "Unsubscribe": {
     "title": "Desaktibatu mezu elektroniko hauek?",
@@ -3600,10 +3689,25 @@
       }
     },
     "categorize": {
+      "title": "Kategorizatu gastuak",
       "description": "Iradoki kategoriak System One erabiliz lehendik kategoriatu gabeko gastuetarako. Berrikusi aldaketa guztiak gorde aurretik.",
+      "start": "Kategorizatu gastuak",
       "steps": {
         "choose": {
-          "detail": "Erabili tokiko bat-etortzea edo konfiguratutako System One erabaki-eredua."
+          "title": "Aukeratu metodo bat",
+          "detail": "Erabili tokiko bat-etortzea edo System One erabaki-eredua."
+        },
+        "calibrate": {
+          "title": "Berrikusi lagin txikiak",
+          "detail": "Zuzendu iradokizunak hurrengo txandak zure taldearen kategoriak ikas ditzan."
+        },
+        "review": {
+          "title": "Berrikusi gastu guztiak",
+          "detail": "Orokorra ataleko gastuak agertzen dira lehenik taula osoan."
+        },
+        "save": {
+          "title": "Gorde kategoriak",
+          "detail": "Gastuak azken berrikuspena berresten duzunean bakarrik aldatzen dira."
         }
       }
     }

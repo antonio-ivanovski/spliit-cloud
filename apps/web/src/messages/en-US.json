@@ -812,7 +812,7 @@
       "generic": "Something went wrong. Please try again.",
       "magicLinkFailed": "Could not send the sign-in link.",
       "passwordPolicy": "Use at least 8 characters with uppercase, lowercase, a number, and a symbol.",
-      "signupInviteRequired": "This instance is invite-only. Use an invitation link or ask someone to invite you to a group.",
+      "signupInviteRequired": "Sign-ups are invite-only. Use an invitation link or ask someone to invite you to a group.",
       "passkeyFailed": "Passkey sign-in failed. Try again or use another sign-in method."
     },
     "loading": "Loading…",
@@ -822,14 +822,14 @@
     "signInWithGithub": "Continue with GitHub",
     "legalNotice": "By continuing, you agree to the <terms>Terms of use</terms> and acknowledge the <privacy>Privacy notice</privacy>.",
     "inviteOnly": {
-      "message": "This instance is invite-only. Use an invitation link or ask someone to invite you to a group.",
+      "message": "Sign-ups are invite-only. Use an invitation link or ask someone to invite you to a group.",
       "useInvitedEmail": "Use the email address you were invited with."
     },
     "signInWithX": "Continue with X",
     "signInWithOidc": "Continue with {name}",
     "signInAnonymously": "Anonymous",
     "lastUsed": "Last used",
-    "emailAuthDisabled": "Sign-in with email is disabled on this instance. Please use single sign-on.",
+    "emailAuthDisabled": "Sign-in with email is disabled. Please use single sign-on.",
     "signInWithPasskey": "Sign in with passkey"
   },
   "AccountSettings": {
@@ -985,7 +985,7 @@
       "masterDescription": "Turn off to silence all email and push notifications. Your per-category choices are preserved.",
       "emailAddToEnable": "Add a verified email to receive inbox notifications.",
       "emailAddLink": "Add email",
-      "emailDeliveryDisabled": "Email delivery is turned off on this instance. Your email choices are saved but won't send until the administrator configures email."
+      "emailDeliveryDisabled": "Email delivery is turned off. Your email choices are saved but won’t send until email is set up."
     },
     "preferences": {
       "title": "App preferences",
@@ -2522,7 +2522,7 @@
       "temporaryNameRequired": "Temporary name",
       "noAccountNameDescription": "Shown in expenses and balances until this participant is linked to an account.",
       "addParticipant": "Add participant",
-      "emailDeliveryDisabled": "Email delivery is turned off on this instance. The invitation is still created and will appear when the invitee signs in; use a link invite to give them something to open."
+      "emailDeliveryDisabled": "Email delivery is turned off. The invitation is still created and will appear when the invitee signs in; use a link invite to give them something to open."
     },
     "invitations": {
       "title": "Pending invitations",
@@ -2878,7 +2878,7 @@
     "failedDescription": "We could not register this device. Notifications configured for Email will continue there; Push-only choices are not rerouted.",
     "emailUsage": "Only notifications configured for Email will arrive until you enable a device. You can allow notifications in your browser settings and try again from Settings.",
     "done": "Done",
-    "emailDeliveryDisabled": "Email delivery is turned off on this instance, so email notifications can't reach you. Enable push on this device to keep receiving updates."
+    "emailDeliveryDisabled": "Email delivery is turned off, so email notifications can’t reach you. Enable push on this device to keep receiving updates."
   },
   "Friends": {
     "title": "Track expenses with a friend",
@@ -3107,8 +3107,8 @@
     "discardConfirmationCancel": "Keep run",
     "progressCountDescription": "Only confirmed categories and medium or high matches count; General and low-strength matches do not.",
     "systemOneMode": "System One model",
-    "systemOneModeDescription": "Use the configured System One decision model for every expense, using this group’s categorized expenses and your reviewed choices as hints. TypeSafe Jev is one such model.",
-    "systemOneUnavailable": "System One is unavailable on this server. Local matching is still available.",
+    "systemOneModeDescription": "Use the System One decision model for every expense, using this group’s categorized expenses and your reviewed choices as hints. TypeSafe Jev is one such model.",
+    "systemOneUnavailable": "System One is unavailable. Local matching is still available.",
     "systemOneConfidence": "System One confidence: {confidence}%",
     "systemOneOptionProbability": "System One option probability: {probability}%"
   },
@@ -3753,7 +3753,7 @@
       "steps": {
         "choose": {
           "title": "Choose a method",
-          "detail": "Use local matching or the configured System One decision model."
+          "detail": "Use local matching or the System One decision model."
         },
         "calibrate": {
           "title": "Review small samples",

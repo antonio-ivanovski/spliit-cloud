@@ -1852,7 +1852,7 @@
       "generic": "Une erreur s'est produite. Veuillez réessayer.",
       "passwordPolicy": "Utilisez au moins 8 caractères avec une majuscule, une minuscule, un chiffre et un symbole.",
       "magicLinkFailed": "Impossible d'envoyer le lien de connexion.",
-      "signupInviteRequired": "Cette instance est réservée aux invitations. Utilisez un lien d'invitation ou demandez à quelqu'un de vous inviter dans un groupe.",
+      "signupInviteRequired": "Les inscriptions se font uniquement sur invitation. Utilisez un lien d'invitation ou demandez à quelqu'un de vous inviter dans un groupe.",
       "passkeyFailed": "La connexion par clé d'accès a échoué. Réessayez ou utilisez une autre méthode de connexion."
     },
     "loading": "Chargement…",
@@ -1862,14 +1862,14 @@
     "signInWithGithub": "Continuer avec GitHub",
     "legalNotice": "En continuant, vous acceptez les <terms>Conditions d'utilisation</terms> et reconnaissez l'<privacy>avis de confidentialité</privacy>.",
     "inviteOnly": {
-      "message": "Cette instance est réservée aux invitations. Utilisez un lien d'invitation ou demandez à quelqu'un de vous inviter dans un groupe.",
+      "message": "Les inscriptions se font uniquement sur invitation. Utilisez un lien d'invitation ou demandez à quelqu'un de vous inviter dans un groupe.",
       "useInvitedEmail": "Utilisez l'adresse e-mail avec laquelle vous avez reçu l'invitation."
     },
     "signInWithX": "Continuer avec X",
     "signInWithOidc": "Continuer avec {name}",
     "signInAnonymously": "Anonyme",
     "lastUsed": "Dernière utilisation",
-    "emailAuthDisabled": "La connexion par e-mail est désactivée sur cette instance. Veuillez utiliser l'authentification unique (SSO).",
+    "emailAuthDisabled": "La connexion par e-mail est désactivée. Veuillez utiliser l'authentification unique (SSO).",
     "signInWithPasskey": "Se connecter avec une clé d'accès"
   },
   "CompleteProfile": {
@@ -1994,7 +1994,7 @@
         "joined_many": "{count} personnes ont rejoint le groupe",
         "retry": "Réessayer"
       },
-      "emailDeliveryDisabled": "L'envoi d'e-mails est désactivé sur cette instance. L'invitation est tout de même créée et apparaîtra lorsque la personne invitée se connectera ; utilisez un lien d'invitation pour lui donner quelque chose à ouvrir."
+      "emailDeliveryDisabled": "L'envoi d'e-mails est désactivé. L'invitation est tout de même créée et apparaîtra lorsque la personne invitée se connectera ; utilisez un lien d'invitation pour lui donner quelque chose à ouvrir."
     },
     "invitations": {
       "title": "Invitations en attente",
@@ -2416,7 +2416,7 @@
       "masterDescription": "Désactivez-les pour mettre en silence tous les e-mails et toutes les notifications push. Vos choix par catégorie sont conservés.",
       "emailAddToEnable": "Ajoutez un e-mail vérifié pour recevoir des notifications dans votre boîte de réception.",
       "emailAddLink": "Ajouter un e-mail",
-      "emailDeliveryDisabled": "L'envoi d'e-mails est désactivé sur cette instance. Vos choix d'e-mails sont enregistrés, mais ils ne seront envoyés que lorsque l'administrateur configurera l'e-mail."
+      "emailDeliveryDisabled": "L'envoi d'e-mails est désactivé. Vos choix d'e-mails sont enregistrés, mais ils ne seront envoyés que lorsque l'e-mail sera configuré."
     },
     "preferences": {
       "title": "Préférences de l’application",
@@ -2847,9 +2847,98 @@
     "expenseColumn": "Dépense",
     "categoryColumn": "Catégorie",
     "confidenceColumn": "Confiance",
+    "simpleDescription": "Vérifiez les correspondances de catégorie pour les dépenses dans Général, puis enregistrez vos choix.",
+    "generateSuggestions": "Suggérer des catégories",
+    "backToStart": "Retour",
+    "chooseMode": "Choisissez comment catégoriser les dépenses",
+    "localMode": "Correspondance locale",
+    "localModeDescription": "Utilisez l’historique des catégories de ce groupe et le dictionnaire intégré.",
+    "startRun": "Commencer la catégorisation",
+    "noCategory": "Laisser non catégorisé",
+    "progressTitle": "Catégorisation des dépenses",
+    "progressDescription": "Vous pouvez quitter cette page et revenir plus tard. Votre progression est enregistrée.",
+    "progressCount": "{categorized} dépenses sur {total} catégorisées",
+    "applyProgressTitle": "Enregistrement des catégories",
+    "reviewTitle": "Vérifier les suggestions",
+    "reviewSummary": "{suggested} suggestions sur {total} dépenses non catégorisées",
+    "sourceLocal": "Locale",
+    "saveSelected": "Enregistrer les catégories sélectionnées",
+    "retry": "Réessayer",
+    "restart": "Démarrer une nouvelle exécution",
+    "failed": "L’exécution s’est arrêtée : {message}",
+    "savedSummary": "{applied} modifiées, {skipped} ignorées",
+    "selectedCount": "{count} sélectionnées",
+    "selectAll": "Tout sélectionner",
+    "clearAll": "Tout effacer",
+    "discardRun": "Abandonner l’exécution",
+    "partialSaveNotice": "Certaines catégories ont peut-être déjà été enregistrées. Abandonner cette exécution n’annulera pas ces modifications.",
+    "restartOlderRunTitle": "Démarrer une nouvelle exécution de catégorisation",
+    "restartOlderRunDescription": "Cette exécution antérieure utilisait l’ancien flux de révision. Recommencez pour réviser toutes les dépenses ensemble.",
+    "runningMatches": "{count} dépenses sur {total} ont une suggestion de catégorie pour l’instant",
+    "failedTitle": "Catégorisation interrompue",
+    "reviewWorkload": "{total} dépenses dans Général · {selected} sélectionnées pour catégorisation · {general} restant dans Général",
+    "categoryChoices": "Choix de catégorie",
+    "moreCategories": "Choisir une autre catégorie",
+    "saveCount": "Enregistrer {count} catégories",
+    "finishWithoutChanges": "Terminer sans modifications",
+    "completionSummary": "Exécution terminée : {changed} dépenses sur {total} modifiées. {remaining} dépenses restent dans Général.",
+    "viewExpenses": "Voir les dépenses",
+    "countLoading": "Comptage des dépenses non catégorisées…",
+    "nothingToCategorize": "Aucune dépense non catégorisée à catégoriser.",
+    "startingCount": "{count} dépenses sont actuellement dans Général et prêtes à être révisées.",
+    "countError": "Impossible de compter les dépenses non catégorisées. Rechargez la page pour réessayer.",
+    "keepGeneral": "Général · laisser non catégorisé",
+    "calibrationRoundTitle": "Cycle de calibrage {round}",
+    "calibrationLoading": "Préparation d’un échantillon varié de dépenses…",
+    "calibrationReviewDescription": "Vérifiez et corrigez ces {count} dépenses. Les choix restent dans cette exécution jusqu’à l’enregistrement final.",
+    "confirmRound": "Confirmer le cycle",
+    "roundSummaryTitle": "Cycle {round} révisé",
+    "roundSummaryDescription": "{reviewed} révisées · {categorized} catégorisées provisoirement · {general} laissées dans Général",
+    "roundQuality": "Les suggestions initiales correspondaient à {accuracy}% de vos choix ; vous en avez corrigé {corrections}.",
+    "categorizeRemaining": "Catégoriser les dépenses restantes",
+    "nextRound": "Vérifier un autre échantillon",
+    "tableLabel": "Dépenses à catégoriser",
+    "dateColumn": "Date",
+    "amountColumn": "Montant",
+    "rerunSuggestions": "Générer à nouveau les suggestions",
+    "roundQualityWithSuggestions": "{accepted} catégories suggérées sur {proposed} acceptées · {changed} modifiées · {missed} correspondances trouvées depuis Général",
+    "roundQualityNoSuggestions": "Aucune catégorie suggérée · {missed} correspondances trouvées depuis Général · {abstained} restant dans Général",
+    "rerunChanged": "Vous avez modifié {changed} catégories suggérées sur {proposed}.",
+    "rerunAssignedSingle": "Vous avez attribué une catégorie à 1 dépense restée dans Général.",
+    "rerunAssignedMultiple": "Vous avez attribué une catégorie à {count} dépenses restées dans Général.",
+    "rerunPotentialSingle": "Vos modifications peuvent améliorer la correspondance d’1 dépense restante dans Général. Générez à nouveau les suggestions pour un autre passage.",
+    "rerunPotentialMultiple": "Vos modifications peuvent améliorer les correspondances de {count} dépenses restantes dans Général. Générez à nouveau les suggestions pour un autre passage.",
+    "rerunEligible": "Éligible pour un autre passage : Général {general} · correspondances automatiques incertaines {uncertain}.",
+    "rerunNoEligible": "Il ne reste ni Général intact ni correspondances automatiques incertaines à générer à nouveau. Vos corrections restent incluses dans les catégories enregistrées.",
+    "rerunAlreadyUsed": "Vos dernières corrections ont déjà été utilisées pour ces suggestions. Apportez une autre correction pour les générer à nouveau.",
+    "highMatch": "Correspondance élevée",
+    "mediumMatch": "Correspondance moyenne",
+    "lowMatch": "Correspondance faible",
+    "belowMatchThreshold": "Sous le seuil de correspondance",
+    "refiningTitle": "Affinage des correspondances incertaines",
+    "runLimitSummary": "Cette exécution comprend 10,000 dépenses. {count} dépenses Général supplémentaires peuvent être catégorisées dans une autre exécution après enregistrement.",
+    "pageLoading": "Chargement des dépenses…",
+    "pageLoadError": "Impossible de charger les dépenses.",
+    "pageRetry": "Réessayer",
+    "pageCount": "Affichage de {loaded} dépenses sur {total}",
+    "ledgerAmountNotice": "Les montants sont affichés dans la devise du groupe.",
+    "viewExpenseDetails": "Voir les détails de la dépense",
+    "reviewFilterLabel": "Afficher les dépenses",
+    "filterAll": "Toutes {count}",
+    "filterGeneral": "Général {count}",
+    "improveSuggestions": "Améliorer les suggestions restantes",
+    "rerunInfoLabel": "À propos de l’amélioration des suggestions",
+    "preparingNextStage": "Préparation de l’étape suivante",
+    "rerunProgressTitle": "Mise à jour des suggestions",
+    "progressPreparing": "Préparation des dépenses…",
+    "noGeneralRows": "Aucune dépense ne reste dans Général dans cette révision.",
+    "discardConfirmationTitle": "Abandonner cette exécution de catégorisation ?",
+    "discardConfirmationDescription": "Cela supprime l’exécution, ses suggestions et tous les choix effectués. Aucune catégorie de dépense ne sera modifiée.",
+    "discardConfirmationCancel": "Conserver l’exécution",
+    "progressCountDescription": "Seules les catégories confirmées et les correspondances moyennes ou élevées comptent ; Général et les correspondances faibles, non.",
     "systemOneMode": "Modèle System One",
-    "systemOneModeDescription": "Utilisez le modèle de décision System One configuré pour chaque dépense, en vous appuyant sur les dépenses catégorisées de ce groupe et vos choix vérifiés. TypeSafe Jev est l’un de ces modèles.",
-    "systemOneUnavailable": "System One n’est pas disponible sur ce serveur. La correspondance locale reste disponible.",
+    "systemOneModeDescription": "Utilisez le modèle de décision System One pour chaque dépense, en vous appuyant sur les dépenses catégorisées de ce groupe et vos choix vérifiés. TypeSafe Jev est l’un de ces modèles.",
+    "systemOneUnavailable": "System One n’est pas disponible. La correspondance locale reste disponible.",
     "systemOneConfidence": "Confiance de System One : {confidence} %",
     "systemOneOptionProbability": "Probabilité de l’option System One : {probability} %"
   },
@@ -2925,7 +3014,7 @@
     "failedDescription": "Nous n’avons pas pu enregistrer cet appareil. Les notifications configurées par e-mail continueront d’y être envoyées ; les choix uniquement push ne seront pas redirigés.",
     "emailUsage": "Seules les notifications configurées par e-mail seront reçues tant que vous n’aurez pas activé un appareil. Vous pouvez autoriser les notifications dans les paramètres du navigateur et réessayer depuis les paramètres.",
     "done": "Terminé",
-    "emailDeliveryDisabled": "L'envoi d'e-mails est désactivé sur cette instance, donc les notifications par e-mail ne peuvent pas vous parvenir. Activez les notifications push sur cet appareil pour continuer à recevoir les mises à jour."
+    "emailDeliveryDisabled": "L'envoi d'e-mails est désactivé, donc les notifications par e-mail ne peuvent pas vous parvenir. Activez les notifications push sur cet appareil pour continuer à recevoir les mises à jour."
   },
   "Unsubscribe": {
     "title": "Désactiver ces e-mails ?",
@@ -3602,10 +3691,25 @@
       }
     },
     "categorize": {
+      "title": "Catégoriser les dépenses",
       "description": "Suggérer des catégories pour les dépenses existantes non catégorisées avec System One. Vérifiez chaque modification avant de l’enregistrer.",
+      "start": "Catégoriser les dépenses",
       "steps": {
         "choose": {
-          "detail": "Utilisez la correspondance locale ou le modèle de décision System One configuré."
+          "title": "Choisir une méthode",
+          "detail": "Utilisez la correspondance locale ou le modèle de décision System One."
+        },
+        "calibrate": {
+          "title": "Vérifier de petits échantillons",
+          "detail": "Corrigez les suggestions pour que le prochain cycle apprenne les catégories de votre groupe."
+        },
+        "review": {
+          "title": "Vérifier chaque dépense",
+          "detail": "Les dépenses Général apparaissent en premier dans le tableau complet."
+        },
+        "save": {
+          "title": "Enregistrer les catégories",
+          "detail": "Les dépenses ne changent que lorsque vous confirmez la révision finale."
         }
       }
     }

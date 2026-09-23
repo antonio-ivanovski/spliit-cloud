@@ -1852,7 +1852,7 @@
       "generic": "Ceva a mers greșit. Te rugăm să încerci din nou.",
       "passwordPolicy": "Folosește cel puțin 8 caractere cu majuscule, minuscule, un număr și un simbol.",
       "magicLinkFailed": "Nu s-a putut trimite linkul de autentificare.",
-      "signupInviteRequired": "Această instanță este doar pe bază de invitație. Folosește un link de invitație sau cere cuiva să te invite într-un grup.",
+      "signupInviteRequired": "Înregistrările sunt doar pe bază de invitație. Folosește un link de invitație sau cere cuiva să te invite într-un grup.",
       "passkeyFailed": "Conectarea cu cheia de acces a eșuat. Încearcă din nou sau folosește altă metodă de conectare."
     },
     "loading": "Se încarcă…",
@@ -1862,14 +1862,14 @@
     "signInWithGithub": "Continuă cu GitHub",
     "legalNotice": "Prin continuare, acceptați <terms>Termenii de utilizare</terms> și recunoașteți <privacy>nota de confidențialitate</privacy>.",
     "inviteOnly": {
-      "message": "Această instanță este doar pe bază de invitație. Folosește un link de invitație sau cere cuiva să te invite într-un grup.",
+      "message": "Înregistrările sunt doar pe bază de invitație. Folosește un link de invitație sau cere cuiva să te invite într-un grup.",
       "useInvitedEmail": "Folosește adresa de email cu care ai primit invitația."
     },
     "signInWithX": "Continuă cu X",
     "signInWithOidc": "Continuă cu {name}",
     "signInAnonymously": "Anonim",
     "lastUsed": "Ultima utilizare",
-    "emailAuthDisabled": "Autentificarea prin e-mail este dezactivată pe această instanță. Folosește autentificarea unică (SSO).",
+    "emailAuthDisabled": "Autentificarea prin e-mail este dezactivată. Folosește autentificarea unică (SSO).",
     "signInWithPasskey": "Autentifică-te cu cheia de acces"
   },
   "CompleteProfile": {
@@ -1994,7 +1994,7 @@
         "joined_few": "{count} persoane s-au alăturat",
         "retry": "Reîncearcă"
       },
-      "emailDeliveryDisabled": "Trimiterea e-mailurilor este dezactivată pe această instanță. Invitația este totuși creată și va apărea când persoana invitată se autentifică; folosește un link de invitație ca să aibă ceva de deschis."
+      "emailDeliveryDisabled": "Trimiterea e-mailurilor este dezactivată. Invitația este totuși creată și va apărea când persoana invitată se autentifică; folosește un link de invitație ca să aibă ceva de deschis."
     },
     "invitations": {
       "title": "Invitații în așteptare",
@@ -2416,7 +2416,7 @@
       "masterDescription": "Dezactivează-le pentru a reduce la tăcere toate e-mailurile și notificările push. Alegerile tale pe categorii sunt păstrate.",
       "emailAddToEnable": "Adaugă un e-mail verificat pentru a primi notificări în căsuța de e-mail.",
       "emailAddLink": "Adaugă e-mail",
-      "emailDeliveryDisabled": "Trimiterea e-mailurilor este dezactivată pe această instanță. Opțiunile tale de e-mail sunt salvate, dar nu vor fi trimise până când administratorul configurează e-mailul."
+      "emailDeliveryDisabled": "Trimiterea e-mailurilor este dezactivată. Opțiunile tale de e-mail sunt salvate, dar nu vor fi trimise până când e-mailul va fi configurat."
     },
     "preferences": {
       "title": "Preferințele aplicației",
@@ -2847,9 +2847,98 @@
     "expenseColumn": "Cheltuială",
     "categoryColumn": "Categorie",
     "confidenceColumn": "Încredere",
+    "simpleDescription": "Verifică potrivirile de categorii pentru cheltuielile din General, apoi salvează-ți opțiunile.",
+    "generateSuggestions": "Sugerează categorii",
+    "backToStart": "Înapoi",
+    "chooseMode": "Alege cum să categorizezi cheltuielile",
+    "localMode": "Potrivirea locală",
+    "localModeDescription": "Folosește istoricul categoriilor acestui grup și dicționarul integrat.",
+    "startRun": "Începe categorizarea",
+    "noCategory": "Lasă necategorizat",
+    "progressTitle": "Se categorisesc cheltuielile",
+    "progressDescription": "Poți părăsi această pagină și reveni mai târziu. Progresul tău este salvat.",
+    "progressCount": "{categorized} din {total} cheltuieli categorizate",
+    "applyProgressTitle": "Se salvează categoriile",
+    "reviewTitle": "Verifică sugestiile",
+    "reviewSummary": "{suggested} sugestii din {total} cheltuieli necategorizate",
+    "sourceLocal": "Locală",
+    "saveSelected": "Salvează categoriile selectate",
+    "retry": "Încearcă din nou",
+    "restart": "Începe o nouă execuție",
+    "failed": "Execuția s-a oprit: {message}",
+    "savedSummary": "{applied} modificate, {skipped} omise",
+    "selectedCount": "{count} selectate",
+    "selectAll": "Selectează tot",
+    "clearAll": "Șterge tot",
+    "discardRun": "Renunță la execuție",
+    "partialSaveNotice": "Este posibil ca unele categorii să fi fost deja salvate. Renunțarea la această execuție nu va anula acele modificări.",
+    "restartOlderRunTitle": "Începe o nouă execuție de categorizare",
+    "restartOlderRunDescription": "Această execuție anterioară folosea fluxul de verificare anterior. Începe din nou pentru a verifica toate cheltuielile împreună.",
+    "runningMatches": "{count} din {total} cheltuieli au o sugestie de categorie până acum",
+    "failedTitle": "Categorizarea s-a oprit",
+    "reviewWorkload": "{total} cheltuieli în General · {selected} selectate pentru categorizare · {general} rămân în General",
+    "categoryChoices": "Opțiuni de categorie",
+    "moreCategories": "Alege altă categorie",
+    "saveCount": "Salvează {count} categorii",
+    "finishWithoutChanges": "Finalizează fără modificări",
+    "completionSummary": "Execuție finalizată: {changed} din {total} cheltuieli modificate. {remaining} cheltuieli rămân în General.",
+    "viewExpenses": "Vezi cheltuielile",
+    "countLoading": "Se numără cheltuielile necategorizate…",
+    "nothingToCategorize": "Nu există cheltuieli necategorizate de categorizat.",
+    "startingCount": "{count} cheltuieli sunt în prezent în General și gata de verificat.",
+    "countError": "Nu s-au putut număra cheltuielile necategorizate. Reîncarcă pagina pentru a încerca din nou.",
+    "keepGeneral": "General · lasă necategorizat",
+    "calibrationRoundTitle": "Runda de calibrare {round}",
+    "calibrationLoading": "Se pregătește un eșantion variat de cheltuieli…",
+    "calibrationReviewDescription": "Verifică și corectează aceste {count} cheltuieli. Opțiunile rămân în această execuție până salvezi la final.",
+    "confirmRound": "Confirmă runda",
+    "roundSummaryTitle": "Runda {round} verificată",
+    "roundSummaryDescription": "{reviewed} verificate · {categorized} categorizate provizoriu · {general} lăsate ca General",
+    "roundQuality": "Sugestiile inițiale au corespuns cu {accuracy}% din opțiunile tale; ai corectat {corrections}.",
+    "categorizeRemaining": "Categorizează cheltuielile rămase",
+    "nextRound": "Verifică alt eșantion",
+    "tableLabel": "Cheltuieli de categorizat",
+    "dateColumn": "Data",
+    "amountColumn": "Sumă",
+    "rerunSuggestions": "Rulează din nou sugestiile",
+    "roundQualityWithSuggestions": "{accepted} din {proposed} categorii sugerate acceptate · {changed} modificate · {missed} potriviri găsite din General",
+    "roundQualityNoSuggestions": "Nicio categorie sugerată · {missed} potriviri găsite din General · {abstained} rămase în General",
+    "rerunChanged": "Ai modificat {changed} din {proposed} categorii sugerate.",
+    "rerunAssignedSingle": "Ai atribuit o categorie pentru 1 cheltuială rămasă în General.",
+    "rerunAssignedMultiple": "Ai atribuit o categorie pentru {count} cheltuieli rămase în General.",
+    "rerunPotentialSingle": "Modificările tale pot îmbunătăți potrivirea pentru 1 cheltuială rămasă în General. Rulează din nou sugestiile dacă vrei încă o trecere.",
+    "rerunPotentialMultiple": "Modificările tale pot îmbunătăți potrivirile pentru {count} cheltuieli rămase în General. Rulează din nou sugestiile dacă vrei încă o trecere.",
+    "rerunEligible": "Eligibil pentru încă o trecere: General {general} · potriviri automate incerte {uncertain}.",
+    "rerunNoEligible": "Nu au rămas General neatinse sau potriviri automate incerte de rulat din nou. Corecțiile tale rămân incluse în categoriile salvate.",
+    "rerunAlreadyUsed": "Ultimele tale corecții au fost deja folosite pentru aceste sugestii. Fă o altă corecție pentru a le rula din nou.",
+    "highMatch": "Potrivire ridicată",
+    "mediumMatch": "Potrivire medie",
+    "lowMatch": "Potrivire scăzută",
+    "belowMatchThreshold": "Sub pragul de potrivire",
+    "refiningTitle": "Se rafinează potrivirile incerte",
+    "runLimitSummary": "Această execuție include 10,000 cheltuieli. Alte {count} cheltuieli din General pot fi categorizate într-o altă execuție după salvare.",
+    "pageLoading": "Se încarcă cheltuielile…",
+    "pageLoadError": "Nu s-au putut încărca cheltuielile.",
+    "pageRetry": "Încearcă din nou",
+    "pageCount": "Se afișează {loaded} din {total} cheltuieli",
+    "ledgerAmountNotice": "Sumele sunt afișate în moneda grupului.",
+    "viewExpenseDetails": "Vezi detaliile cheltuielii",
+    "reviewFilterLabel": "Afișează cheltuielile",
+    "filterAll": "Toate {count}",
+    "filterGeneral": "General {count}",
+    "improveSuggestions": "Îmbunătățește sugestiile rămase",
+    "rerunInfoLabel": "Despre îmbunătățirea sugestiilor",
+    "preparingNextStage": "Se pregătește pasul următor",
+    "rerunProgressTitle": "Se actualizează sugestiile",
+    "progressPreparing": "Se pregătesc cheltuielile…",
+    "noGeneralRows": "Nu au rămas cheltuieli în General în această verificare.",
+    "discardConfirmationTitle": "Renunți la această execuție de categorizare?",
+    "discardConfirmationDescription": "Aceasta elimină execuția, sugestiile sale și toate opțiunile alese. Nicio categorie de cheltuieli nu va fi modificată.",
+    "discardConfirmationCancel": "Păstrează execuția",
+    "progressCountDescription": "Se iau în calcul doar categoriile confirmate și potrivirile medii sau ridicate; General și potrivirile slabe, nu.",
     "systemOneMode": "Modelul System One",
-    "systemOneModeDescription": "Folosește modelul de decizie System One configurat pentru fiecare cheltuială, folosind ca indicii cheltuielile categorizate din acest grup și opțiunile tale verificate. TypeSafe Jev este un astfel de model.",
-    "systemOneUnavailable": "System One nu este disponibil pe acest server. Potrivirea locală este în continuare disponibilă.",
+    "systemOneModeDescription": "Folosește modelul de decizie System One pentru fiecare cheltuială, folosind ca indicii cheltuielile categorizate din acest grup și opțiunile tale verificate. TypeSafe Jev este un astfel de model.",
+    "systemOneUnavailable": "System One nu este disponibil. Potrivirea locală este în continuare disponibilă.",
     "systemOneConfidence": "Nivelul de încredere System One: {confidence}%",
     "systemOneOptionProbability": "Probabilitatea opțiunii System One: {probability}%"
   },
@@ -2925,7 +3014,7 @@
     "failedDescription": "Nu am putut înregistra acest dispozitiv. Notificările configurate pentru e-mail vor continua să fie trimise acolo; opțiunile doar push nu sunt redirecționate.",
     "emailUsage": "Până când activezi un dispozitiv, vor ajunge doar notificările configurate pentru e-mail. Poți permite notificările din setările browserului și încerca din nou din Setări.",
     "done": "Gata",
-    "emailDeliveryDisabled": "Trimiterea e-mailurilor este dezactivată pe această instanță, așa că notificările prin e-mail nu pot ajunge la tine. Activează notificările push pe acest dispozitiv pentru a primi în continuare actualizări."
+    "emailDeliveryDisabled": "Trimiterea e-mailurilor este dezactivată, așa că notificările prin e-mail nu pot ajunge la tine. Activează notificările push pe acest dispozitiv pentru a primi în continuare actualizări."
   },
   "Unsubscribe": {
     "title": "Dezactivezi aceste e-mailuri?",
@@ -3602,10 +3691,25 @@
       }
     },
     "categorize": {
+      "title": "Categorizează cheltuielile",
       "description": "Sugerează categorii pentru cheltuielile existente necategorizate folosind System One. Verifică fiecare modificare înainte de salvare.",
+      "start": "Categorizează cheltuielile",
       "steps": {
         "choose": {
-          "detail": "Folosește potrivirea locală sau modelul de decizie System One configurat."
+          "title": "Alege o metodă",
+          "detail": "Folosește potrivirea locală sau modelul de decizie System One."
+        },
+        "calibrate": {
+          "title": "Verifică eșantioane mici",
+          "detail": "Corectează sugestiile astfel încât runda următoare să învețe categoriile grupului tău."
+        },
+        "review": {
+          "title": "Verifică fiecare cheltuială",
+          "detail": "Cheltuielile din General apar primele în tabelul complet."
+        },
+        "save": {
+          "title": "Salvează categoriile",
+          "detail": "Cheltuielile se modifică doar când confirmi verificarea finală."
         }
       }
     }

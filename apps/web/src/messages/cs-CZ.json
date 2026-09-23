@@ -1551,7 +1551,7 @@
       "generic": "Něco se pokazilo. Zkuste to prosím znovu.",
       "passwordPolicy": "Použijte alespoň 8 znaků s velkým písmenem, malým písmenem, číslicí a symbolem.",
       "magicLinkFailed": "Odeslání přihlašovacího odkazu se nezdařilo.",
-      "signupInviteRequired": "Tato instance je pouze na pozvánku. Použijte odkaz pozvánky nebo požádejte někoho, aby vás pozval do skupiny.",
+      "signupInviteRequired": "Registrace jsou pouze na pozvánku. Použijte odkaz pozvánky nebo požádejte někoho, aby vás pozval do skupiny.",
       "passkeyFailed": "Přihlášení přístupovým klíčem se nezdařilo. Zkuste to znovu nebo použijte jiný způsob přihlášení."
     },
     "loading": "Načítání…",
@@ -1561,14 +1561,14 @@
     "signInWithGithub": "Pokračovat přes GitHub",
     "legalNotice": "Pokračováním souhlasíte s <terms>Obchodními podmínkami</terms> a berete na vědomí <privacy>Zásady ochrany soukromí</privacy>.",
     "inviteOnly": {
-      "message": "Tato instance je pouze na pozvánku. Použijte odkaz pozvánky nebo požádejte někoho, aby vás pozval do skupiny.",
+      "message": "Registrace jsou pouze na pozvánku. Použijte odkaz pozvánky nebo požádejte někoho, aby vás pozval do skupiny.",
       "useInvitedEmail": "Použijte e-mailovou adresu, na kterou vám přišla pozvánka."
     },
     "signInWithX": "Pokračovat přes X",
     "signInWithOidc": "Pokračovat přes {name}",
     "signInAnonymously": "Anonymní",
     "lastUsed": "Naposledy použito",
-    "emailAuthDisabled": "Přihlášení e-mailem je na této instanci zakázáno. Použijte jednotné přihlášení (SSO).",
+    "emailAuthDisabled": "Přihlášení e-mailem je zakázáno. Použijte jednotné přihlášení (SSO).",
     "signInWithPasskey": "Přihlásit se pomocí přístupového klíče"
   },
   "CompleteProfile": {
@@ -2003,7 +2003,7 @@
         "joined_many": "{count} lidí se připojilo",
         "retry": "Zkusit znovu"
       },
-      "emailDeliveryDisabled": "Doručování e-mailů je na této instanci vypnuté. Pozvánka se přesto vytvoří a zobrazí se, až se pozvaný přihlásí; použijte odkaz pozvánky, abyste mu dali něco k otevření."
+      "emailDeliveryDisabled": "Doručování e-mailů je vypnuté. Pozvánka se přesto vytvoří a zobrazí se, až se pozvaný přihlásí; použijte odkaz pozvánky, abyste mu dali něco k otevření."
     },
     "invitations": {
       "title": "Čekající pozvánky",
@@ -2426,7 +2426,7 @@
       "masterDescription": "Vypnutím ztlumíte e-mailová i push oznámení. Vaše volby podle kategorií zůstanou zachovány.",
       "emailAddToEnable": "Přidejte ověřený e-mail, abyste dostávali oznámení do schránky.",
       "emailAddLink": "Přidat e-mail",
-      "emailDeliveryDisabled": "Doručování e-mailů je na této instanci vypnuté. Vaše volby e-mailů se ukládají, ale nebudou se odesílat, dokud administrátor nenastaví e-mail."
+      "emailDeliveryDisabled": "Doručování e-mailů je vypnuté. Vaše volby e-mailů se ukládají, ale nebudou se odesílat, dokud nebude e-mail nastaven."
     },
     "preferences": {
       "title": "Předvolby aplikace",
@@ -2865,9 +2865,98 @@
     "expenseColumn": "Výdaj",
     "categoryColumn": "Kategorie",
     "confidenceColumn": "Spolehlivost",
+    "simpleDescription": "Zkontrolujte shody kategorií u výdajů v Obecných a pak své volby uložte.",
+    "generateSuggestions": "Navrhnout kategorie",
+    "backToStart": "Zpět",
+    "chooseMode": "Zvolte, jak kategorizovat výdaje",
+    "localMode": "Místní párování",
+    "localModeDescription": "Použije historii kategorií této skupiny a vestavěný slovník.",
+    "startRun": "Začít kategorizovat",
+    "noCategory": "Ponechat bez kategorie",
+    "progressTitle": "Kategorizuji výdaje",
+    "progressDescription": "Tuto stránku můžete opustit a vrátit se později. Váš postup je uložen.",
+    "progressCount": "Kategorizováno {categorized} z {total} výdajů",
+    "applyProgressTitle": "Ukládání kategorií",
+    "reviewTitle": "Zkontrolovat návrhy",
+    "reviewSummary": "{suggested} návrhů z {total} nekategorizovaných výdajů",
+    "sourceLocal": "Místní",
+    "saveSelected": "Uložit vybrané kategorie",
+    "retry": "Zkusit znovu",
+    "restart": "Zahájit nový běh",
+    "failed": "Běh se zastavil: {message}",
+    "savedSummary": "{applied} změněno, {skipped} přeskočeno",
+    "selectedCount": "{count} vybráno",
+    "selectAll": "Vybrat vše",
+    "clearAll": "Vymazat vše",
+    "discardRun": "Zahodit běh",
+    "partialSaveNotice": "Některé kategorie už mohly být uloženy. Zahození běhu tyto změny nevrátí.",
+    "restartOlderRunTitle": "Zahájit nový kategorizační běh",
+    "restartOlderRunDescription": "Tento starší běh používal předchozí kontrolní postup. Začněte znovu, abyste zkontrolovali všechny výdaje společně.",
+    "runningMatches": "{count} z {total} výdajů má zatím návrh kategorie",
+    "failedTitle": "Kategorizace se zastavila",
+    "reviewWorkload": "{total} výdajů jako Obecné · {selected} vybráno ke kategorizaci · {general} zůstává jako Obecné",
+    "categoryChoices": "Volby kategorií",
+    "moreCategories": "Zvolit jinou kategorii",
+    "saveCount": "Uložit {count} kategorií",
+    "finishWithoutChanges": "Dokončit beze změn",
+    "completionSummary": "Běh dokončen: {changed} z {total} výdajů změněno. {remaining} výdajů zůstává jako Obecné.",
+    "viewExpenses": "Zobrazit výdaje",
+    "countLoading": "Počítám nekategorizované výdaje…",
+    "nothingToCategorize": "Nejsou tu žádné nekategorizované výdaje ke kategorizaci.",
+    "startingCount": "{count} výdajů je právě v Obecných a připraveno ke kontrole.",
+    "countError": "Nepodařilo se spočítat nekategorizované výdaje. Obnovte stránku a zkuste to znovu.",
+    "keepGeneral": "Obecné · ponechat bez kategorie",
+    "calibrationRoundTitle": "Kalibrační kolo {round}",
+    "calibrationLoading": "Připravuji různorodý vzorek výdajů…",
+    "calibrationReviewDescription": "Zkontrolujte a opravte těchto {count} výdajů. Volby zůstávají v tomto běhu, dokud je na konci neuložíte.",
+    "confirmRound": "Potvrdit kolo",
+    "roundSummaryTitle": "Kolo {round} zkontrolováno",
+    "roundSummaryDescription": "{reviewed} zkontrolováno · {categorized} předběžně kategorizováno · {general} ponecháno jako Obecné",
+    "roundQuality": "Počáteční návrhy odpovídaly {accuracy}% vašich voleb; opravili jste {corrections}.",
+    "categorizeRemaining": "Kategorizovat zbývající výdaje",
+    "nextRound": "Zkontrolovat další vzorek",
+    "tableLabel": "Výdaje ke kategorizaci",
+    "dateColumn": "Datum",
+    "amountColumn": "Částka",
+    "rerunSuggestions": "Spustit návrhy znovu",
+    "roundQualityWithSuggestions": "{accepted} z {proposed} navržených kategorií přijato · {changed} změněno · {missed} shod nalezeno z Obecných",
+    "roundQualityNoSuggestions": "Žádné kategorie nenavrženy · {missed} shod nalezeno z Obecných · {abstained} ponecháno jako Obecné",
+    "rerunChanged": "Změnili jste {changed} z {proposed} navržených kategorií.",
+    "rerunAssignedSingle": "Přiřadili jste kategorii 1 výdaji ponechanému jako Obecné.",
+    "rerunAssignedMultiple": "Přiřadili jste kategorii {count} výdajům ponechaným jako Obecné.",
+    "rerunPotentialSingle": "Vaše změny mohou vylepšit shodu u 1 zbývajícího Obecného výdaje. Pokud chcete další průchod, spusťte návrhy znovu.",
+    "rerunPotentialMultiple": "Vaše změny mohou vylepšit shody u {count} zbývajících Obecných výdajů. Pokud chcete další průchod, spusťte návrhy znovu.",
+    "rerunEligible": "Vhodné pro další průchod: Obecné {general} · nejisté automatické shody {uncertain}. Vaše opravy mohou tyto návrhy vylepšit.",
+    "rerunNoEligible": "Nezbývají žádné nedotčené Obecné ani nejisté automatické shody k novému spuštění. Vaše opravy jsou stále součástí kategorií, které uložíte.",
+    "rerunAlreadyUsed": "Vaše poslední opravy už byly pro tyto návrhy použity. Proveďte další opravu, abyste je mohli spustit znovu.",
+    "highMatch": "Vysoká shoda",
+    "mediumMatch": "Střední shoda",
+    "lowMatch": "Nízká shoda",
+    "belowMatchThreshold": "Pod prahem shody",
+    "refiningTitle": "Zpřesňování nejistých shod",
+    "runLimitSummary": "Tento běh zahrnuje 10,000 výdajů. Po uložení můžete v dalším běhu kategorizovat dalších {count} Obecných výdajů.",
+    "pageLoading": "Načítám výdaje…",
+    "pageLoadError": "Výdaje se nepodařilo načíst.",
+    "pageRetry": "Zkusit znovu",
+    "pageCount": "Zobrazeno {loaded} z {total} výdajů",
+    "ledgerAmountNotice": "Částky jsou uvedeny v měně skupiny.",
+    "viewExpenseDetails": "Zobrazit podrobnosti výdaje",
+    "reviewFilterLabel": "Zobrazit výdaje",
+    "filterAll": "Vše {count}",
+    "filterGeneral": "Obecné {count}",
+    "improveSuggestions": "Vylepšit zbývající návrhy",
+    "rerunInfoLabel": "O vylepšování návrhů",
+    "preparingNextStage": "Připravuji další krok",
+    "rerunProgressTitle": "Aktualizuji návrhy",
+    "progressPreparing": "Připravuji výdaje…",
+    "noGeneralRows": "V této kontrole nezůstaly žádné výdaje v kategorii Obecné.",
+    "discardConfirmationTitle": "Zahodit tento kategorizační běh?",
+    "discardConfirmationDescription": "Tím se odstraní běh, jeho návrhy i vaše provedené volby. Kategorie žádného výdaje se nezmění.",
+    "discardConfirmationCancel": "Ponechat běh",
+    "progressCountDescription": "Počítají se jen potvrzené kategorie a střední nebo vysoké shody; Obecné a slabé shody ne.",
     "systemOneMode": "Model System One",
-    "systemOneModeDescription": "Použijte nakonfigurovaný rozhodovací model System One pro každý výdaj a jako vodítko využijte kategorizované výdaje této skupiny a své zkontrolované volby. TypeSafe Jev je jedním z takových modelů.",
-    "systemOneUnavailable": "System One není na tomto serveru dostupný. Místní párování je stále k dispozici.",
+    "systemOneModeDescription": "Použijte rozhodovací model System One pro každý výdaj a jako vodítko využijte kategorizované výdaje této skupiny a své zkontrolované volby. TypeSafe Jev je jedním z takových modelů.",
+    "systemOneUnavailable": "System One není dostupný. Místní párování je stále k dispozici.",
     "systemOneConfidence": "Spolehlivost System One: {confidence} %",
     "systemOneOptionProbability": "Pravděpodobnost možnosti System One: {probability} %"
   },
@@ -2944,7 +3033,7 @@
     "failedDescription": "Toto zařízení se nepodařilo zaregistrovat. Oznámení nastavená pro e-mail budou i nadále chodit tam; volby pouze pro Push se nepřesměrují.",
     "emailUsage": "Dokud nepovolíte zařízení, budou přicházet pouze oznámení nastavená pro e-mail. Povolte oznámení v nastavení prohlížeče a zkuste to znovu v Nastavení.",
     "done": "Hotovo",
-    "emailDeliveryDisabled": "Doručování e-mailů je na této instanci vypnuté, takže vás e-mailová oznámení nemohou zastihnout. Zapněte si push na tomto zařízení, abyste i nadále dostávali aktualizace."
+    "emailDeliveryDisabled": "Doručování e-mailů je vypnuté, takže vás e-mailová oznámení nemohou zastihnout. Zapněte si push na tomto zařízení, abyste i nadále dostávali aktualizace."
   },
   "Unsubscribe": {
     "title": "Vypnout tyto e-maily?",
@@ -3619,10 +3708,25 @@
       }
     },
     "categorize": {
+      "title": "Kategorizovat výdaje",
       "description": "Navrhnout kategorie existujících nekategorizovaných výdajů pomocí System One. Před uložením zkontrolujte každou změnu.",
+      "start": "Kategorizovat výdaje",
       "steps": {
         "choose": {
-          "detail": "Použijte místní párování nebo nakonfigurovaný rozhodovací model System One."
+          "title": "Zvolte metodu",
+          "detail": "Použijte místní párování nebo rozhodovací model System One."
+        },
+        "calibrate": {
+          "title": "Zkontrolujte malé vzorky",
+          "detail": "Opravte návrhy, aby se další kolo naučilo kategorie vaší skupiny."
+        },
+        "review": {
+          "title": "Zkontrolujte každý výdaj",
+          "detail": "Obecné výdaje se v celé tabulce zobrazí jako první."
+        },
+        "save": {
+          "title": "Uložte kategorie",
+          "detail": "Výdaje se změní, až potvrdíte závěrečnou kontrolu."
         }
       }
     }
