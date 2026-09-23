@@ -84,14 +84,12 @@ export function estimateCategorizeRowHeight(
     : 180 + (titleLines - 1) * 20 + (alternatives ? 48 : 0)
 }
 
-function confidenceBadgeClass(band: 'high' | 'medium' | 'low' | 'system-one') {
-  if (band === 'system-one')
-    return 'border-sky-300 bg-sky-50 text-sky-900 dark:border-sky-700 dark:bg-sky-950 dark:text-sky-100'
+function confidenceBadgeClass(band: 'high' | 'medium' | 'low') {
   if (band === 'high')
     return 'border-emerald-300 bg-emerald-50 text-emerald-900 dark:border-emerald-700 dark:bg-emerald-950 dark:text-emerald-100'
   if (band === 'medium')
-    return 'border-amber-300 bg-amber-50 text-amber-900 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-100'
-  return 'border-orange-300 bg-orange-50 text-orange-900 dark:border-orange-700 dark:bg-orange-950 dark:text-orange-100'
+    return 'border-yellow-300 bg-yellow-50 text-yellow-900 dark:border-yellow-700 dark:bg-yellow-950 dark:text-yellow-100'
+  return 'border-rose-300 bg-rose-50 text-rose-900 dark:border-rose-700 dark:bg-rose-950 dark:text-rose-100'
 }
 
 function chipClass(
@@ -100,11 +98,6 @@ function chipClass(
 ) {
   if (choice.source === 'manual')
     return 'border-violet-300 bg-violet-50 text-violet-900 hover:border-violet-400 hover:bg-violet-100 hover:text-violet-950 focus-visible:ring-violet-500 dark:border-violet-700 dark:bg-violet-950 dark:text-violet-100 dark:hover:bg-violet-900 dark:hover:text-violet-50'
-  if (
-    choice.source === 'system-one' &&
-    choice.evidenceKind === 'option-probability'
-  )
-    return 'border-sky-300 bg-sky-50 text-sky-900 hover:border-sky-400 hover:bg-sky-100 hover:text-sky-950 focus-visible:ring-sky-500 dark:border-sky-700 dark:bg-sky-950 dark:text-sky-100 dark:hover:bg-sky-900 dark:hover:text-sky-50'
   const band = categoryConfidenceBand(
     choice.source === 'local' ? choice.matchScore : choice.confidence,
     choice.floor ?? aiMinConfidence,
@@ -112,9 +105,9 @@ function chipClass(
   if (band === 'high')
     return 'border-emerald-300 bg-emerald-50 text-emerald-900 hover:border-emerald-400 hover:bg-emerald-100 hover:text-emerald-950 focus-visible:ring-emerald-500 dark:border-emerald-700 dark:bg-emerald-950 dark:text-emerald-100 dark:hover:bg-emerald-900 dark:hover:text-emerald-50'
   if (band === 'medium')
-    return 'border-amber-300 bg-amber-50 text-amber-900 hover:border-amber-400 hover:bg-amber-100 hover:text-amber-950 focus-visible:ring-amber-500 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-100 dark:hover:bg-amber-900 dark:hover:text-amber-50'
+    return 'border-yellow-300 bg-yellow-50 text-yellow-900 hover:border-yellow-400 hover:bg-yellow-100 hover:text-yellow-950 focus-visible:ring-yellow-500 dark:border-yellow-700 dark:bg-yellow-950 dark:text-yellow-100 dark:hover:bg-yellow-900 dark:hover:text-yellow-50'
   if (band === 'low')
-    return 'border-orange-300 bg-orange-50 text-orange-900 hover:border-orange-400 hover:bg-orange-100 hover:text-orange-950 focus-visible:ring-orange-500 dark:border-orange-700 dark:bg-orange-950 dark:text-orange-100 dark:hover:bg-orange-900 dark:hover:text-orange-50'
+    return 'border-rose-300 bg-rose-50 text-rose-900 hover:border-rose-400 hover:bg-rose-100 hover:text-rose-950 focus-visible:ring-rose-500 dark:border-rose-700 dark:bg-rose-950 dark:text-rose-100 dark:hover:bg-rose-900 dark:hover:text-rose-50'
   return 'border-slate-300 bg-slate-100 text-slate-800 hover:border-slate-400 hover:bg-slate-200 hover:text-slate-900 focus-visible:ring-slate-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 dark:hover:text-slate-50'
 }
 
@@ -137,6 +130,11 @@ function CategoryPicker({
   for (const choice of row.choices) {
     if (choice.categoryId === DEFAULT_CATEGORY_ID || choice.source === 'manual')
       continue
+    const band = categoryConfidenceBand(
+      choice.source === 'local' ? choice.matchScore : choice.confidence,
+      choice.floor ?? aiMinConfidence,
+    )
+    if (band === 'none') continue
     if (choice.source === 'system-one' && choice.confidence !== null) {
       const confidence = Math.round(choice.confidence * 100)
       categoryBadges.set(choice.categoryId, {
@@ -145,16 +143,11 @@ function CategoryPicker({
           choice.evidenceKind === 'option-probability'
             ? t('systemOneOptionProbability', { probability: confidence })
             : t('systemOneConfidence', { confidence }),
-        className: confidenceBadgeClass('system-one'),
+        className: confidenceBadgeClass(band),
       })
       continue
     }
     if (choice.source !== 'local' || choice.matchScore == null) continue
-    const band = categoryConfidenceBand(
-      choice.matchScore,
-      choice.floor ?? aiMinConfidence,
-    )
-    if (band === 'none') continue
     const label =
       band === 'high'
         ? t('highMatch')

@@ -117,3 +117,106 @@ describe('bulk categorization table measurements', () => {
     expect(virtualizerMock.measure).toHaveBeenCalled()
   })
 })
+
+describe('bulk categorization chip confidence colors', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+    vi.unstubAllGlobals()
+  })
+
+  function renderChip(choices: CategorizeRow['choices']) {
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(
+      () => ({ width: 900, top: 100 }) as DOMRect,
+    )
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        observe() {}
+        disconnect() {}
+      },
+    )
+    const view = render(
+      <BulkCategorizeTable
+        rows={[{ ...row, choices }]}
+        disabled={false}
+        aiMinConfidence={0.5}
+        onChange={vi.fn()}
+      />,
+    )
+    return view.container.querySelector('button.rounded-full')?.className ?? ''
+  }
+
+  it.each([
+    {
+      name: 'local high match',
+      choice: {
+        categoryId: 'groceries',
+        source: 'local',
+        confidence: null,
+        matchScore: 0.95,
+      } as const,
+      token: 'bg-emerald-50',
+    },
+    {
+      name: 'local medium match',
+      choice: {
+        categoryId: 'groceries',
+        source: 'local',
+        confidence: null,
+        matchScore: 0.75,
+      } as const,
+      token: 'bg-yellow-50',
+    },
+    {
+      name: 'local low match',
+      choice: {
+        categoryId: 'groceries',
+        source: 'local',
+        confidence: null,
+        matchScore: 0.6,
+      } as const,
+      token: 'bg-rose-50',
+    },
+    {
+      name: 'confident system-one verdict',
+      choice: {
+        categoryId: 'groceries',
+        source: 'system-one',
+        confidence: 0.95,
+      } as const,
+      token: 'bg-emerald-50',
+    },
+    {
+      name: 'uncertain system-one verdict',
+      choice: {
+        categoryId: 'groceries',
+        source: 'system-one',
+        confidence: 0.55,
+      } as const,
+      token: 'bg-rose-50',
+    },
+    {
+      name: 'manual choice',
+      choice: {
+        categoryId: 'groceries',
+        source: 'manual',
+        confidence: null,
+      } as const,
+      token: 'bg-violet-50',
+    },
+    {
+      name: 'below-floor match',
+      choice: {
+        categoryId: 'groceries',
+        source: 'local',
+        confidence: null,
+        matchScore: 0.4,
+      } as const,
+      token: 'bg-slate-100',
+    },
+  ])('colors $name with $token', ({ choice, token }) => {
+    const className = renderChip([choice])
+    expect(className).toContain(token)
+    expect(className).not.toContain('bg-sky-50')
+  })
+})
