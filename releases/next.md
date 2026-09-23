@@ -23,6 +23,6 @@ who is affected, and the exact migration steps.
 
 ### 🐛 Bug fixes
 
-- Short entry per fix (`TBD` by @TBD)
+- Fixed PWA auto-zoom on iOS by keeping form fields at 16px so focusing an input no longer zooms the page. Thanks @KihtrakRaknas for reporting (#129) (`TBD` by @TBD)
 
 **Full Changelog**: TBD

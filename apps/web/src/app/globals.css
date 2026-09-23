@@ -687,6 +687,17 @@ html[data-pwa-update-restart='true'] .motion-stagger > * {
   @apply font-bold text-transparent;
 }
 
+/* Prevent iOS Safari auto-zoom on focus (triggers below 16px). Component
+   bases above already use text-base; this catches native controls and any
+   missed text-sm override on touch devices without disabling pinch-zoom. */
+@media (pointer: coarse) {
+  input,
+  textarea,
+  select {
+    font-size: max(16px, 1rem);
+  }
+}
+
 /* Native type="date" — explicit calendar SVG (browser icon invisible on dark bg). */
 input[type='date'] {
   color-scheme: light;
