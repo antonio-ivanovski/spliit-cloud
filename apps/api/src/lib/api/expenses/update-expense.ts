@@ -5,6 +5,7 @@ import {
   computePaidForFromItems,
   dateOnlyInTimeZone,
   getCurrency,
+  isSettlementCategory,
   utcToWallTime,
   wallTimeToUtc,
   type Expense,
@@ -133,24 +134,90 @@ export async function updateExpense(
     },
     select: participantDisplayNameSelect({ pendingInvitationsOnly: true }),
   })
-  const participantIds = new Set(participants.map((p) => p.id))
-  for (const participantId of [
-    ...expense.paidByList.map((p) => p.participant),
-    ...expense.paidFor.map((p) => p.participant),
-    ...(expense.items ?? []).flatMap((item) =>
-      item.paidFor.map((p) => p.participant),
+  // Removed participants are kept forever on expenses they were part of
+  // (issue #128): the read path returns them and the edit form round-trips
+  // them verbatim, so a no-op resave must not throw. Grandfather only IDs
+  // already stored on THIS expense — adding an arbitrary removed participant
+  // that was never on it is still rejected (except settlements, below).
+  const existingParticipantIds = new Set<string>([
+    ...existingExpense.paidByList.map((p) => p.ledgerParticipantId),
+    ...existingExpense.paidFor.map((p) => p.ledgerParticipantId),
+    ...existingExpense.items.flatMap((item) =>
+      item.paidFor.map((p) => p.ledgerParticipantId),
     ),
-    ...(expense.itemizedRemainder?.paidFor ?? []).map((p) => p.participant),
-  ]) {
-    if (!participantIds.has(participantId)) {
-      throw new Error(`Invalid participant ID: ${participantId}`)
-    }
+    ...(existingExpense.itemizedRemainder
+      ? existingExpense.itemizedRemainder.paidFor.map(
+          (p) => p.ledgerParticipantId,
+        )
+      : []),
+  ])
+  // Settlements may involve soft-removed participants who still appear in
+  // balances. Mirror create-expense.ts: allow all removed ledger participants
+  // when the incoming expense is a settlement.
+  let settlementParticipantIds: string[] = []
+  if (isSettlementCategory(expense.category)) {
+    const removedParticipants = await prisma.ledgerParticipant.findMany({
+      where: { ledgerId: group.ledgerId, removedAt: { not: null } },
+      select: { id: true },
+    })
+    settlementParticipantIds = removedParticipants.map((p) => p.id)
   }
+  const participantIds = new Set<string>([
+    ...participants.map((p) => p.id),
+    ...existingParticipantIds,
+    ...settlementParticipantIds,
+  ])
+  const incomingParticipantIds: Array<{ id: string; leg: string }> = [
+    ...expense.paidByList.map((p) => ({ id: p.participant, leg: 'paidBy' })),
+    ...expense.paidFor.map((p) => ({ id: p.participant, leg: 'paidFor' })),
+    ...(expense.items ?? []).flatMap((item, index) =>
+      item.paidFor.map((p) => ({
+        id: p.participant,
+        leg: `items[${index}].paidFor`,
+      })),
+    ),
+    ...(expense.itemizedRemainder?.paidFor ?? []).map((p) => ({
+      id: p.participant,
+      leg: 'itemizedRemainder.paidFor',
+    })),
+  ]
+  const invalidParticipantIds = incomingParticipantIds.filter(
+    ({ id }) => !participantIds.has(id),
+  )
+  if (invalidParticipantIds.length > 0) {
+    const detail = [...new Set(invalidParticipantIds.map(({ id }) => id))].join(
+      ', ',
+    )
+    const legs = [...new Set(invalidParticipantIds.map(({ leg }) => leg))].join(
+      ', ',
+    )
+    throw new Error(
+      `Invalid participant ID: ${detail} (in ${legs}). The participant may have been removed from the group; only participants already on this expense (or removed participants on settlements) can be kept.`,
+    )
+  }
+
+  // Build participant name map for change formatting. Grandfathered (removed)
+  // participants are fetched so activity diffs show names instead of raw IDs.
+  const missingNameIds = [...existingParticipantIds].filter(
+    (id) => !participants.some((p) => p.id === id),
+  )
+  const grandfatheredParticipants =
+    missingNameIds.length > 0
+      ? await prisma.ledgerParticipant.findMany({
+          where: { id: { in: missingNameIds } },
+          select: participantDisplayNameSelect({ pendingInvitationsOnly: true }),
+        })
+      : []
 
   // Build participant name map for change formatting.
   const participantNameMap = new Map<string, string>()
   for (const p of participants) {
     participantNameMap.set(p.id, resolveParticipantDisplayName(p))
+  }
+  for (const p of grandfatheredParticipants) {
+    if (!participantNameMap.has(p.id)) {
+      participantNameMap.set(p.id, resolveParticipantDisplayName(p))
+    }
   }
 
   const changeCtx: ChangeContext = {
