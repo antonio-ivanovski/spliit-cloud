@@ -8,7 +8,7 @@ import {
   Loader2,
   Sparkles,
 } from 'lucide-react'
-import { forwardRef, useMemo, useRef, useState } from 'react'
+import { forwardRef, useId, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
@@ -48,6 +48,8 @@ import {
 
 type Props = {
   categories: ReadonlyArray<Category>
+  /** Optional confidence badges for suggested categories, keyed by category ID. */
+  categoryBadges?: ReadonlyMap<CategoryId, CategorySelectorBadge>
   onValueChange: (categoryId: CategoryId) => void
   /**
    * Category ID to be selected by default. Overwriting this value will update
@@ -81,8 +83,15 @@ type Props = {
   ariaLabel?: string
 }
 
+export type CategorySelectorBadge = {
+  text: string
+  accessibleDescription: string
+  className?: string
+}
+
 export function CategorySelector({
   categories,
+  categoryBadges,
   onValueChange,
   defaultValue,
   isLoading,
@@ -209,6 +218,7 @@ export function CategorySelector({
           render={
             <CategoryButton
               category={selectedCategory}
+              badge={categoryBadges?.get(selectedCategory.id)}
               open={open}
               isLoading={isLoading}
               loadingAppearance={loadingAppearance}
@@ -226,6 +236,7 @@ export function CategorySelector({
         >
           <CategoryOptions
             hierarchy={hierarchy}
+            categoryBadges={categoryBadges}
             mode="single"
             selectedValues={[selectedCategory.id]}
             onValueChange={(id) => {
@@ -245,6 +256,7 @@ export function CategorySelector({
         render={
           <CategoryButton
             category={selectedCategory}
+            badge={categoryBadges?.get(selectedCategory.id)}
             open={open}
             isLoading={isLoading}
             loadingAppearance={loadingAppearance}
@@ -261,6 +273,7 @@ export function CategorySelector({
       >
         <CategoryOptions
           hierarchy={hierarchy}
+          categoryBadges={categoryBadges}
           mode="single"
           selectedValues={[selectedCategory.id]}
           onValueChange={(id) => {
@@ -277,6 +290,7 @@ export function CategorySelector({
 
 function CategoryOptions({
   hierarchy,
+  categoryBadges,
   onValueChange,
   mode = 'single',
   selectedValues = [],
@@ -285,6 +299,7 @@ function CategoryOptions({
   searchLayout = false,
 }: {
   hierarchy: Hierarchy
+  categoryBadges?: ReadonlyMap<CategoryId, CategorySelectorBadge>
   onValueChange?: (categoryId: CategoryId) => void
   mode?: 'single' | 'multi'
   selectedValues?: CategoryId[]
@@ -410,6 +425,7 @@ function CategoryOptions({
                   <CategoryOptionsRow
                     key={hit.id}
                     category={category}
+                    badge={categoryBadges?.get(category.id)}
                     label={document.label}
                     grouping={document.grouping}
                     mode={mode}
@@ -442,6 +458,7 @@ function CategoryOptions({
                 <Combobox.Group key={parent.id}>
                   <CategoryOptionsRow
                     category={parent}
+                    badge={categoryBadges?.get(parent.id)}
                     label={groupLabel}
                     grouping={groupLabel}
                     mode={mode}
@@ -459,6 +476,7 @@ function CategoryOptions({
                       <CategoryOptionsRow
                         key={category.id}
                         category={category}
+                        badge={categoryBadges?.get(category.id)}
                         label={categoryLabel(t, category.id)}
                         grouping={groupLabel}
                         mode={mode}
@@ -480,6 +498,7 @@ function CategoryOptions({
 
 function CategoryOptionsRow({
   category,
+  badge,
   label,
   grouping,
   mode,
@@ -491,6 +510,7 @@ function CategoryOptionsRow({
   ranked = false,
 }: {
   category: Category
+  badge?: CategorySelectorBadge
   label: string
   grouping: string
   mode: 'single' | 'multi'
@@ -502,12 +522,14 @@ function CategoryOptionsRow({
   ranked?: boolean
 }) {
   const isGroupHeader = parentRow && hasChildren
+  const badgeDescriptionId = useId()
   return (
     <Combobox.Item
       value={category.id}
       onClick={onSelect}
       aria-selected={selected}
       aria-label={label}
+      aria-describedby={badge ? badgeDescriptionId : undefined}
       className={cn(
         'relative flex w-full cursor-pointer items-center rounded-sm px-2 py-1.5 text-sm outline-none select-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground',
         isGroupHeader && 'bg-muted/40 font-semibold',
@@ -518,13 +540,13 @@ function CategoryOptionsRow({
           className={cn('me-2 h-4 w-4 shrink-0', selected ? '' : 'invisible')}
         />
       )}
-      {indented ? (
-        <span className="ps-8">
-          <CategoryLabel category={category} />
-        </span>
-      ) : (
-        <span className="min-w-0 flex-1 truncate">
-          <CategoryLabel category={category} />
+      <span className="min-w-0 flex-1">
+        <CategoryLabel category={category} indented={indented} />
+      </span>
+      <CategoryBadgeView badge={badge} />
+      {badge && (
+        <span id={badgeDescriptionId} className="sr-only">
+          {badge.accessibleDescription}
         </span>
       )}
       {ranked && grouping !== label ? (
@@ -566,6 +588,7 @@ const CATEGORY_GROUPING_HEADINGS = {
 
 type CategoryButtonProps = {
   category: Category
+  badge?: CategorySelectorBadge
   open: boolean
   isLoading: boolean
   className?: string
@@ -577,6 +600,7 @@ const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
   (
     {
       category,
+      badge,
       open,
       isLoading,
       loadingAppearance = 'spinner',
@@ -587,6 +611,7 @@ const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
     ref,
   ) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'Categories' })
+    const badgeDescriptionId = useId()
     const iconClassName = 'h-4 w-4 shrink-0 opacity-50'
     const label = categoryLabel(t, category.id)
     return (
@@ -600,21 +625,30 @@ const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
         className={cn(
           compact
             ? 'h-10 w-16 shrink-0 gap-2 rounded-none border-0 px-3'
-            : 'flex w-full',
+            : 'flex w-full min-w-0 gap-2',
           typeof className === 'string' ? className : undefined,
         )}
         ref={ref}
         {...props}
+        aria-describedby={badge ? badgeDescriptionId : undefined}
       >
         <span
           className={
             compact
-              ? 'flex items-center justify-center'
-              : 'min-w-0 flex-1 text-start'
+              ? 'flex min-w-0 items-center justify-center gap-1'
+              : 'flex min-w-0 flex-1 items-center gap-2 text-start'
           }
         >
-          <CategoryLabel category={category} compact={compact} />
+          <span className="min-w-0 flex-1 overflow-hidden">
+            <CategoryLabel category={category} compact={compact} />
+          </span>
+          <CategoryBadgeView badge={badge} />
         </span>
+        {badge && (
+          <span id={badgeDescriptionId} className="sr-only">
+            {badge.accessibleDescription}
+          </span>
+        )}
         {isLoading ? (
           loadingAppearance === 'ai' ? (
             <Sparkles
@@ -638,16 +672,33 @@ const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
 )
 CategoryButton.displayName = 'CategoryButton'
 
+function CategoryBadgeView({ badge }: { badge?: CategorySelectorBadge }) {
+  if (!badge) return null
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        'shrink-0 rounded-full border px-1.5 py-0.5 text-[11px] leading-4 font-medium whitespace-nowrap',
+        badge.className ?? 'border-border bg-muted text-muted-foreground',
+      )}
+    >
+      {badge.text}
+    </span>
+  )
+}
+
 function CategoryLabel({
   category,
   compact = false,
+  indented = false,
 }: {
   category: Category
   compact?: boolean
+  indented?: boolean
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Categories' })
   return (
-    <div className="flex min-w-0 items-center gap-3">
+    <div className={cn('flex min-w-0 items-center gap-3', indented && 'ps-8')}>
       <CategoryIcon category={category} className="h-4 w-4 shrink-0" />
       {!compact && (
         <span className="min-w-0 truncate">

@@ -10,7 +10,10 @@ import {
   categoryFromId,
   categoryLabel,
 } from '@/app/groups/[groupId]/stats/category-utils'
-import { CategorySelector } from '@/components/category-selector'
+import {
+  CategorySelector,
+  type CategorySelectorBadge,
+} from '@/components/category-selector'
 import { Button } from '@/components/ui/button'
 import { useVirtualizedRows } from '@/components/use-virtualized-rows'
 import { useLocale } from '@/i18n/react'
@@ -78,6 +81,16 @@ export function estimateCategorizeRowHeight(
     : 142 + (titleLines - 1) * 20 + (alternatives ? 48 : 0)
 }
 
+function confidenceBadgeClass(band: 'high' | 'medium' | 'low' | 'jev') {
+  if (band === 'jev')
+    return 'border-sky-300 bg-sky-50 text-sky-900 dark:border-sky-700 dark:bg-sky-950 dark:text-sky-100'
+  if (band === 'high')
+    return 'border-emerald-300 bg-emerald-50 text-emerald-900 dark:border-emerald-700 dark:bg-emerald-950 dark:text-emerald-100'
+  if (band === 'medium')
+    return 'border-amber-300 bg-amber-50 text-amber-900 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-100'
+  return 'border-orange-300 bg-orange-50 text-orange-900 dark:border-orange-700 dark:bg-orange-950 dark:text-orange-100'
+}
+
 function chipClass(
   choice: CategorizeRow['choices'][number],
   aiMinConfidence: number,
@@ -112,66 +125,48 @@ function CategoryPicker({
   const { t: tCategories } = useTranslation(undefined, {
     keyPrefix: 'Categories',
   })
-  const selectedChoice =
-    row.categoryId === DEFAULT_CATEGORY_ID
-      ? undefined
-      : row.choices.find((choice) => choice.categoryId === row.categoryId)
-  const localBand =
-    selectedChoice?.source === 'local' && selectedChoice.matchScore != null
-      ? categoryConfidenceBand(
-          selectedChoice.matchScore,
-          selectedChoice.floor ?? aiMinConfidence,
-        )
-      : null
-  const jevConfidence =
-    selectedChoice?.source === 'jev' ? selectedChoice.confidence : null
-  const strengthLabel =
-    localBand === 'high'
-      ? t('highMatch')
-      : localBand === 'medium'
-        ? t('mediumMatch')
-        : localBand === 'low'
-          ? t('lowMatch')
-          : localBand === 'none'
-            ? t('belowMatchThreshold')
-            : null
-  const strengthClass =
-    localBand === 'high'
-      ? 'border-emerald-300 bg-emerald-50 text-emerald-900 dark:border-emerald-700 dark:bg-emerald-950 dark:text-emerald-100'
-      : localBand === 'medium'
-        ? 'border-amber-300 bg-amber-50 text-amber-900 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-100'
-        : localBand === 'low'
-          ? 'border-orange-300 bg-orange-50 text-orange-900 dark:border-orange-700 dark:bg-orange-950 dark:text-orange-100'
-          : 'border-border bg-muted text-muted-foreground'
+  const categoryBadges = new Map<CategoryId, CategorySelectorBadge>()
+  for (const choice of row.choices) {
+    if (choice.categoryId === DEFAULT_CATEGORY_ID || choice.source === 'manual')
+      continue
+    if (choice.source === 'jev' && choice.confidence !== null) {
+      const confidence = Math.round(choice.confidence * 100)
+      categoryBadges.set(choice.categoryId, {
+        text: `${confidence}%`,
+        accessibleDescription: t('jevConfidence', { confidence }),
+        className: confidenceBadgeClass('jev'),
+      })
+      continue
+    }
+    if (choice.source !== 'local' || choice.matchScore == null) continue
+    const band = categoryConfidenceBand(
+      choice.matchScore,
+      choice.floor ?? aiMinConfidence,
+    )
+    if (band === 'none') continue
+    const label =
+      band === 'high'
+        ? t('highMatch')
+        : band === 'medium'
+          ? t('mediumMatch')
+          : t('lowMatch')
+    categoryBadges.set(choice.categoryId, {
+      text: label,
+      accessibleDescription: label,
+      className: confidenceBadgeClass(band),
+    })
+  }
   return (
-    <div className="flex min-w-0 flex-wrap items-center gap-2">
-      <div className="min-w-[10rem] flex-1">
-        <CategorySelector
-          categories={CATEGORIES}
-          defaultValue={row.categoryId}
-          isLoading={false}
-          disabled={disabled}
-          ariaLabel={`${t('categoryColumn')}: ${row.title} — ${categoryLabel(tCategories, row.categoryId)}`}
-          onValueChange={(categoryId) => onChange(row.id, categoryId)}
-        />
-      </div>
-      {jevConfidence !== null && (
-        <span
-          className="shrink-0 rounded-full border border-sky-300 bg-sky-50 px-2 py-1 text-xs font-medium text-sky-900 dark:border-sky-700 dark:bg-sky-950 dark:text-sky-100"
-          aria-label={t('jevConfidence', {
-            confidence: Math.round(jevConfidence * 100),
-          })}
-        >
-          {Math.round(jevConfidence * 100)}%
-        </span>
-      )}
-      {strengthLabel && (
-        <span
-          className={`shrink-0 rounded-full border px-2 py-1 text-xs font-medium ${strengthClass}`}
-        >
-          {strengthLabel}
-        </span>
-      )}
+    <div className="min-w-0 flex-1">
+      <CategorySelector
+        categories={CATEGORIES}
+        categoryBadges={categoryBadges}
+        defaultValue={row.categoryId}
+        isLoading={false}
+        disabled={disabled}
+        ariaLabel={`${t('categoryColumn')}: ${row.title} — ${categoryLabel(tCategories, row.categoryId)}`}
+        onValueChange={(categoryId) => onChange(row.id, categoryId)}
+      />
     </div>
   )
 }

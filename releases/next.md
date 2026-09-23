@@ -26,6 +26,7 @@ who is affected, and the exact migration steps.
 - Kept rerun feedback visible after manual categorization and let reruns reconsider uncertain automatic matches; Local and Jev now run as separate categorization modes (`TBD` by @handle)
 - Clarified the separate Local and Jev modes, placed match strength beside neutral category pickers, and improved virtualized expense row sizing (`TBD` by @handle)
 - Improved Jev bulk suggestions with relevant reviewed examples, nearby categorized expenses, and an extra pass over General or uncertain matches before review (`TBD` by @handle)
+- Showed Jev confidence and local match strength inside the bulk categorizer's category picker (`TBD` by @handle)
 
 ### 🐛 Bug fixes
 
