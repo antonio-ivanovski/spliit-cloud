@@ -6,6 +6,7 @@ import {
   bulkCategorizeDiscardProcedure,
   bulkCategorizeEditProcedure,
   bulkCategorizeRetryProcedure,
+  bulkCategorizeReviewPageProcedure,
   bulkCategorizeRerunProcedure,
   bulkCategorizeStartProcedure,
   bulkCategorizeStatusProcedure,
@@ -14,6 +15,7 @@ import {
 export const aiBulkCategorizeRouter = createTRPCRouter({
   status: bulkCategorizeStatusProcedure,
   count: bulkCategorizeCountProcedure,
+  reviewPage: bulkCategorizeReviewPageProcedure,
   start: bulkCategorizeStartProcedure,
   edit: bulkCategorizeEditProcedure,
   confirm: bulkCategorizeConfirmProcedure,

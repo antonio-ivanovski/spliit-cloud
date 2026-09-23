@@ -1,20 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import '../../test/mocks'
-import { prismaMock } from '../../test/state'
+import { prisma$Transaction, prismaMock } from '../../test/state'
 
-const mocks = vi.hoisted(() => ({
-  categorize: vi.fn(),
-  neighbors: vi.fn(),
-  sendJob: vi.fn(),
-  getBoss: vi.fn(),
-}))
-vi.mock('../ai/batch-categorize', () => ({
-  categorizeExpensesWithJev: mocks.categorize,
-}))
-vi.mock('../ai/jev-neighbors', () => ({
-  loadJevDateNeighbors: mocks.neighbors,
-}))
+const mocks = vi.hoisted(() => ({ sendJob: vi.fn(), getBoss: vi.fn() }))
 vi.mock('./boss', () => ({ getApiBossForWrite: mocks.getBoss }))
 vi.mock('@spliit/jobs', async (original) => ({
   ...(await original()),
@@ -26,96 +15,64 @@ import {
   retryCategorizationRun,
 } from './bulk-categorization-run'
 
-describe('resumable automatic Jev pass', () => {
-  let run: Record<string, unknown>
-  beforeEach(() => {
-    run = {
-      id: 'run-1',
-      groupId: 'group-1',
-      accountId: 'account-1',
-      mode: 'jev',
-      status: 'QUEUED',
-      locale: 'en-US',
-      total: 1,
-      processed: 0,
-      round: 1,
-      applied: 0,
-      skipped: 0,
-      candidates: [
-        {
-          id: 'expense-1',
-          title: 'Market',
-          version: 1,
-          expenseDate: '2026-09-22T00:00:00.000Z',
-          amount: 100,
-          currency: 'USD',
-        },
-      ],
-      calibration: {
-        sample: [],
-        confirmed: [],
-        metrics: [],
-        existingCategorized: 0,
-        next: 'full',
-      },
-      examples: [],
-      suggestions: [],
-      error: null,
-    }
-    prismaMock.bulkCategorizationRun.findUniqueOrThrow.mockImplementation(
-      async () => run as never,
-    )
-    prismaMock.bulkCategorizationRun.findUnique.mockImplementation(
-      async () => run as never,
-    )
-    prismaMock.bulkCategorizationRun.update.mockImplementation(async (args) => {
-      run = { ...run, ...args.data }
-      return run as never
-    })
-    mocks.categorize.mockReset()
-    mocks.neighbors.mockReset().mockResolvedValue(new Map())
-    mocks.getBoss.mockReset().mockResolvedValue({})
-    mocks.sendJob.mockReset().mockResolvedValue('job-1')
+beforeEach(() => {
+  mocks.getBoss.mockReset().mockResolvedValue({})
+  mocks.sendJob.mockReset().mockResolvedValue('job-1')
+  prisma$Transaction.mockImplementation(async (callback) =>
+    (callback as (tx: unknown) => Promise<unknown>)(prismaMock),
+  )
+})
+
+describe('categorization job safety', () => {
+  it('ignores a duplicate or obsolete job without reading candidates', async () => {
+    prismaMock.bulkCategorizationRun.updateMany.mockResolvedValueOnce({
+      count: 0,
+    } as never)
+    await processCategorizationJob('run-1', 'full', 'obsolete-attempt')
+    expect(prismaMock.bulkCategorizationRow.findMany).not.toHaveBeenCalled()
   })
 
-  it('retries the saved second-pass target without repeating the first pass', async () => {
-    mocks.categorize
-      .mockResolvedValueOnce(
-        new Map([
-          [
-            'expense-1',
-            { categoryId: 'general', confidence: 0.9, probabilities: [] },
-          ],
-        ]),
-      )
-      .mockRejectedValueOnce(new Error('temporary Jev failure'))
-      .mockResolvedValueOnce(
-        new Map([
-          [
-            'expense-1',
-            { categoryId: 'groceries', confidence: 0.9, probabilities: [] },
-          ],
-        ]),
-      )
-    await expect(processCategorizationJob('run-1', 'full')).rejects.toThrow(
-      'temporary Jev failure',
+  it('retries a failed full pass with a new attempt and keeps saved progress', async () => {
+    prismaMock.bulkCategorizationRun.findUniqueOrThrow.mockResolvedValue({
+      id: 'run-1',
+      status: 'FAILED_FULL',
+      revision: 3,
+      processed: 25,
+      updatedAt: new Date(),
+    } as never)
+    prismaMock.bulkCategorizationRun.updateMany.mockResolvedValueOnce({
+      count: 1,
+    } as never)
+    await retryCategorizationRun('run-1', 3)
+    expect(prismaMock.bulkCategorizationRun.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: 'run-1', revision: 3 },
+        data: expect.objectContaining({
+          status: 'QUEUED',
+          revision: { increment: 1 },
+        }),
+      }),
     )
-    expect(run.status).toBe('FAILED_FULL')
-    expect(run.examples).toMatchObject({
-      phase: 'second',
-      targetIds: ['expense-1'],
-    })
-    expect(run.processed).toBe(0)
-    await retryCategorizationRun('run-1')
-    await processCategorizationJob('run-1', 'full')
-    expect(mocks.categorize).toHaveBeenCalledTimes(3)
-    expect(run.status).toBe('REVIEW')
-    expect(run.suggestions).toMatchObject([
-      {
-        categoryId: 'groceries',
-        firstPass: { categoryId: 'general' },
-        secondPass: { categoryId: 'groceries' },
-      },
-    ])
+    expect(mocks.sendJob).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.objectContaining({
+        runId: 'run-1',
+        phase: 'full',
+        attemptId: expect.any(String),
+      }),
+      expect.anything(),
+    )
+  })
+
+  it('rejects retry after another admin changed the review', async () => {
+    prismaMock.bulkCategorizationRun.findUniqueOrThrow.mockResolvedValue({
+      id: 'run-1',
+      status: 'FAILED_RERUN',
+      revision: 4,
+      updatedAt: new Date(),
+    } as never)
+    await expect(retryCategorizationRun('run-1', 3)).rejects.toThrow('Refresh')
+    expect(mocks.sendJob).not.toHaveBeenCalled()
   })
 })

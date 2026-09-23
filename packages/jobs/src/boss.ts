@@ -109,7 +109,7 @@ export const JOB_SEND_OPTIONS = {
   },
   [BULK_CATEGORIZE_QUEUE]: {
     retryLimit: 0,
-    expireInSeconds: 3600,
+    expireInSeconds: 6 * 3600,
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
     deadLetter: BULK_CATEGORIZE_DLQ,
   },

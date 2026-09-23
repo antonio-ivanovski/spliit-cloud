@@ -1,4 +1,4 @@
-import { prisma, type Prisma } from '@spliit/db'
+import { prisma, type BulkCategorizationRow, type Prisma } from '@spliit/db'
 import {
   DEFAULT_CATEGORY_ID,
   SETTLEMENT_CATEGORY_ID,
@@ -394,6 +394,19 @@ export function changeRunSuggestion(
   }
 }
 
+export function mergeRerunSuggestions(
+  current: Suggestion[],
+  additions: Suggestion[],
+) {
+  const byId = new Map(additions.map((row) => [row.id, row]))
+  return current.map((row) => {
+    const addition = byId.get(row.id)
+    return addition
+      ? { ...addition, firstPass: row.firstPass, secondPass: row.secondPass }
+      : row
+  })
+}
+
 export type RunData = {
   id: string
   groupId: string
@@ -406,39 +419,198 @@ export type RunData = {
   round: number
   applied: number
   skipped: number
-  candidates: unknown
+  candidateTotal: number
+  omitted: number
+  revision: number
+  attemptId: string | null
+  workerToken: string | null
+  leaseUntil: Date | null
   calibration: unknown
   examples: unknown
-  suggestions: unknown
   error: string | null
+  updatedAt: Date
 }
-type FullPassState = {
-  phase: 'second' | 'complete'
-  targetIds: string[]
-}
-function fullPassStateOf(value: unknown): FullPassState | null {
-  if (
-    !value ||
-    Array.isArray(value) ||
-    typeof value !== 'object' ||
-    !('phase' in value)
-  )
-    return null
-  const state = value as FullPassState
-  return (state.phase === 'second' || state.phase === 'complete') &&
-    Array.isArray(state.targetIds)
-    ? state
-    : null
-}
-const list = <T>(value: unknown): T[] =>
-  Array.isArray(value) ? (value as T[]) : []
+type FullPassState = { phase: 'first' | 'second' | 'complete' }
 const json = (value: unknown): Prisma.InputJsonValue =>
   value as Prisma.InputJsonValue
+const list = <T>(value: unknown): T[] =>
+  Array.isArray(value) ? (value as T[]) : []
+const RUN_LIMIT = 10_000
+const CHUNK_SIZE = 25
+const PAGE_SIZE = 100
+const LEASE_MS = 5 * 60_000
+const busy = new Set([
+  'QUEUED',
+  'PROCESSING',
+  'QUEUED_RERUN',
+  'RERUNNING',
+  'QUEUED_CALIBRATION',
+  'CALIBRATING',
+])
+type Phase = 'calibration' | 'full' | 'rerun'
+const queuedStatus = (phase: Phase) =>
+  phase === 'calibration'
+    ? 'QUEUED_CALIBRATION'
+    : phase === 'rerun'
+      ? 'QUEUED_RERUN'
+      : 'QUEUED'
+const runningStatus = (phase: Phase) =>
+  phase === 'calibration'
+    ? 'CALIBRATING'
+    : phase === 'rerun'
+      ? 'RERUNNING'
+      : 'PROCESSING'
+const failedStatus = (phase: Phase) =>
+  phase === 'calibration'
+    ? 'FAILED_CALIBRATION'
+    : phase === 'rerun'
+      ? 'FAILED_RERUN'
+      : 'FAILED_FULL'
+const phaseOfFailure = (status: string): Phase =>
+  status === 'FAILED_CALIBRATION'
+    ? 'calibration'
+    : status === 'FAILED_RERUN'
+      ? 'rerun'
+      : 'full'
+const logRun = (
+  runId: string,
+  event: string,
+  values: Record<string, string | number> = {},
+) =>
+  console.info(
+    JSON.stringify({
+      component: 'bulk-categorization',
+      runId,
+      event,
+      ...values,
+    }),
+  )
 
-export function presentRun(run: RunData | null) {
+function rowToSuggestion(row: BulkCategorizationRow): Suggestion {
+  return {
+    id: row.expenseId,
+    title: row.title,
+    version: row.expenseVersion,
+    expenseDate: row.expenseDate.toISOString(),
+    amount: row.amount,
+    currency: row.currency,
+    categoryId: row.categoryId as CategoryId,
+    ...(row.initialCategoryId
+      ? { initialCategoryId: row.initialCategoryId as CategoryId }
+      : {}),
+    rerunFeedback: row.rerunFeedback,
+    source: row.source as Suggestion['source'],
+    choices: list<Choice>(row.choices),
+    ...(row.firstPass
+      ? { firstPass: row.firstPass as Suggestion['firstPass'] }
+      : {}),
+    ...(row.secondPass
+      ? { secondPass: row.secondPass as Suggestion['secondPass'] }
+      : {}),
+  }
+}
+const asCandidate = (row: BulkCategorizationRow): Candidate => ({
+  id: row.expenseId,
+  title: row.title,
+  version: row.expenseVersion,
+  expenseDate: row.expenseDate.toISOString(),
+  amount: row.amount,
+  currency: row.currency,
+})
+const suggestionData = (row: Suggestion) => ({
+  categoryId: row.categoryId,
+  initialCategoryId: row.initialCategoryId ?? row.categoryId,
+  source: row.source,
+  choices: json(row.choices),
+  ...(row.firstPass ? { firstPass: json(row.firstPass) } : {}),
+  ...(row.secondPass ? { secondPass: json(row.secondPass) } : {}),
+  manualCorrection: isManualCategorizationCorrection(row),
+  rerunEligible:
+    getRerunCandidates([row], {
+      sample: [],
+      confirmed: [],
+      metrics: [],
+      existingCategorized: 0,
+      next: 'full',
+    }).length > 0,
+})
+
+export async function presentRun(run: RunData | null) {
   if (!run) return null
   const calibration = calibrationOf(run.calibration)
-  const suggestions = list<Suggestion>(run.suggestions)
+  const [
+    sample,
+    selected,
+    proposedCount,
+    changedCount,
+    assignedCount,
+    newFeedback,
+    general,
+    uncertain,
+    currentMatches,
+  ] = await Promise.all([
+    prisma.bulkCategorizationRow.findMany({
+      where: { runId: run.id, stage: 'SAMPLE' },
+      orderBy: { position: 'asc' },
+    }),
+    prisma.bulkCategorizationRow.count({
+      where: { runId: run.id, categoryId: { not: DEFAULT_CATEGORY_ID } },
+    }),
+    prisma.bulkCategorizationRow.count({
+      where: {
+        runId: run.id,
+        stage: { not: 'CONFIRMED' },
+        initialCategoryId: { not: DEFAULT_CATEGORY_ID },
+      },
+    }),
+    prisma.bulkCategorizationRow.count({
+      where: {
+        runId: run.id,
+        stage: { not: 'CONFIRMED' },
+        manualCorrection: true,
+        rerunFeedback: false,
+        initialCategoryId: { not: DEFAULT_CATEGORY_ID },
+      },
+    }),
+    prisma.bulkCategorizationRow.count({
+      where: {
+        runId: run.id,
+        stage: { not: 'CONFIRMED' },
+        manualCorrection: true,
+        rerunFeedback: false,
+        initialCategoryId: DEFAULT_CATEGORY_ID,
+      },
+    }),
+    prisma.bulkCategorizationRow.count({
+      where: {
+        runId: run.id,
+        stage: { not: 'CONFIRMED' },
+        manualCorrection: true,
+        rerunFeedback: false,
+      },
+    }),
+    prisma.bulkCategorizationRow.count({
+      where: {
+        runId: run.id,
+        rerunEligible: true,
+        categoryId: DEFAULT_CATEGORY_ID,
+      },
+    }),
+    prisma.bulkCategorizationRow.count({
+      where: {
+        runId: run.id,
+        rerunEligible: true,
+        categoryId: { not: DEFAULT_CATEGORY_ID },
+      },
+    }),
+    prisma.bulkCategorizationRow.count({
+      where: {
+        runId: run.id,
+        stage: { in: ['CONFIRMED', 'SUGGESTED'] },
+        categoryId: { not: DEFAULT_CATEGORY_ID },
+      },
+    }),
+  ])
   return {
     id: run.id,
     mode: run.mode as 'local' | 'jev',
@@ -448,67 +620,126 @@ export function presentRun(run: RunData | null) {
     round: run.round,
     applied: run.applied,
     skipped: run.skipped,
-    candidateTotal: list<Candidate>(run.candidates).length,
-    fullPassPhase: fullPassStateOf(run.examples)?.phase ?? 'first',
-    jevPassComparison:
-      run.status === 'DONE' && run.mode === 'jev'
-        ? compareJevPasses(suggestions)
-        : null,
-    calibration,
-    rerunCandidates: getRerunCandidateCounts(suggestions, calibration),
-    suggestions: suggestions.map((row) => ({
-      ...row,
-      categoryId: row.included === false ? DEFAULT_CATEGORY_ID : row.categoryId,
-      choices:
-        row.choices ??
-        (row.categoryId !== DEFAULT_CATEGORY_ID
-          ? [
-              {
-                categoryId: row.categoryId,
-                confidence: null,
-                source: 'local' as const,
-              },
-            ]
-          : []),
-    })),
+    revision: run.revision,
+    reviewCycle: run.attemptId,
+    candidateTotal: run.candidateTotal,
+    omitted: run.omitted,
+    fullPassPhase: (run.examples as FullPassState | null)?.phase ?? 'first',
+    calibration: { ...calibration, sample: sample.map(rowToSuggestion) },
+    selected,
+    currentMatches,
+    feedback: {
+      proposedCount,
+      changedCount,
+      assignedCount,
+      hasNewCorrection: newFeedback > 0,
+      hasCorrections: changedCount + assignedCount > 0,
+    },
+    rerunCandidates: { general, uncertain },
+    stalled:
+      busy.has(run.status) &&
+      Date.now() - run.updatedAt.getTime() > LEASE_MS * 2,
     error: run.error,
   }
 }
 
-async function groupCandidates(groupId: string): Promise<Candidate[]> {
-  const group = await prisma.group.findUnique({
+export async function getCategorizationReviewPage(
+  runId: string,
+  cursor: number | undefined,
+  limit = PAGE_SIZE,
+  filter: 'all' | 'general' = 'all',
+) {
+  const run = await prisma.bulkCategorizationRun.findUniqueOrThrow({
+    where: { id: runId },
+    select: { revision: true, status: true, candidateTotal: true },
+  })
+  if (
+    !['REVIEW', 'DONE', 'QUEUED_RERUN', 'RERUNNING', 'FAILED_RERUN'].includes(
+      run.status,
+    )
+  )
+    throw new Error('Review is not available')
+  const where = {
+    runId,
+    ...(cursor !== undefined && { reviewOrder: { gt: cursor } }),
+    ...(filter === 'general' && { categoryId: DEFAULT_CATEGORY_ID }),
+  }
+  const [rows, total] = await Promise.all([
+    prisma.bulkCategorizationRow.findMany({
+      where,
+      orderBy: { reviewOrder: 'asc' },
+      take: Math.min(PAGE_SIZE, limit),
+    }),
+    filter === 'general'
+      ? prisma.bulkCategorizationRow.count({
+          where: { runId, categoryId: DEFAULT_CATEGORY_ID },
+        })
+      : Promise.resolve(run.candidateTotal),
+  ])
+  return {
+    rows: rows.map(rowToSuggestion),
+    total,
+    revision: run.revision,
+    nextCursor:
+      rows.length === Math.min(PAGE_SIZE, limit)
+        ? (rows.at(-1)?.reviewOrder ?? null)
+        : null,
+  }
+}
+
+export async function captureCategorizationCandidates(groupId: string) {
+  const group = await prisma.group.findUniqueOrThrow({
     where: { id: groupId },
     select: { ledgerId: true },
   })
-  if (!group) throw new Error('Group not found')
-  const rows = await prisma.expense.findMany({
-    where: { ledgerId: group.ledgerId, categoryId: DEFAULT_CATEGORY_ID },
-    select: {
-      id: true,
-      title: true,
-      version: true,
-      expenseDate: true,
-      amount: true,
-    },
-    orderBy: { expenseDate: 'asc' },
-  })
-  const ledger = await prisma.ledger.findUniqueOrThrow({
-    where: { id: group.ledgerId },
-    select: { currencyCode: true, currency: true },
-  })
-  return rows.map((row) => ({
-    ...row,
-    expenseDate: row.expenseDate.toISOString(),
-    currency: ledger.currencyCode ?? ledger.currency,
-  }))
+  const [count, ledger] = await Promise.all([
+    prisma.expense.count({
+      where: { ledgerId: group.ledgerId, categoryId: DEFAULT_CATEGORY_ID },
+    }),
+    prisma.ledger.findUniqueOrThrow({
+      where: { id: group.ledgerId },
+      select: { currencyCode: true, currency: true },
+    }),
+  ])
+  const rows = await prisma.$queryRaw<
+    Array<{
+      id: string
+      title: string
+      version: number
+      expenseDate: Date
+      amount: number
+    }>
+  >`
+    WITH ranked AS (
+      SELECT "id", "title", "version", "expenseDate", "amount",
+        row_number() OVER (ORDER BY "expenseDate", "id") - 1 AS ordinal
+      FROM "Expense"
+      WHERE "ledgerId" = ${group.ledgerId} AND "categoryId" = ${DEFAULT_CATEGORY_ID}
+    ), bucketed AS (
+      SELECT *, floor(ordinal * ${Math.min(count, RUN_LIMIT)}::numeric / ${Math.max(count, 1)})::integer AS bucket
+      FROM ranked
+    )
+    SELECT DISTINCT ON (bucket) "id", "title", "version", "expenseDate", "amount"
+    FROM bucketed ORDER BY bucket, ordinal`
+  return {
+    ledgerId: group.ledgerId,
+    count,
+    candidates: rows.slice(0, RUN_LIMIT).map((row): Candidate => ({
+      id: row.id,
+      title: row.title,
+      version: row.version,
+      expenseDate: row.expenseDate.toISOString(),
+      amount: row.amount,
+      currency: ledger.currencyCode ?? ledger.currency,
+    })),
+  }
 }
 
 export async function countUncategorizedExpenses(groupId: string) {
-  const group = await prisma.group.findUnique({
+  const group = await prisma.group.findUniqueOrThrow({
     where: { id: groupId },
     select: { ledgerId: true },
   })
-  if (!group) throw new Error('Group not found')
   return prisma.expense.count({
     where: { ledgerId: group.ledgerId, categoryId: DEFAULT_CATEGORY_ID },
   })
@@ -522,110 +753,104 @@ export async function startCategorizationRun(args: {
 }) {
   if (args.mode === 'jev' && !env.AI_SYSTEM_ONE_API_KEY)
     throw new Error('Jev is unavailable')
-  const candidates = await groupCandidates(args.groupId)
-  const group = await prisma.group.findUniqueOrThrow({
-    where: { id: args.groupId },
-    select: { ledgerId: true },
-  })
-  const existingCategorized = await prisma.expense.count({
-    where: {
-      ledgerId: group.ledgerId,
-      categoryId: { notIn: [DEFAULT_CATEGORY_ID, SETTLEMENT_CATEGORY_ID] },
-    },
-  })
   const existing = await prisma.bulkCategorizationRun.findUnique({
     where: { groupId: args.groupId },
   })
-  if (
-    existing &&
-    [
-      'QUEUED',
-      'PROCESSING',
-      'APPLYING',
-      'QUEUED_RERUN',
-      'RERUNNING',
-      'QUEUED_CALIBRATION',
-      'CALIBRATING',
-    ].includes(existing.status)
+  if (existing && existing.status !== 'DONE') return presentRun(existing)
+  const { ledgerId, count, candidates } = await captureCategorizationCandidates(
+    args.groupId,
   )
-    return presentRun(existing)
-  const id = randomId()
-  const run = await prisma.bulkCategorizationRun.upsert({
-    where: { groupId: args.groupId },
-    create: {
-      id,
-      ...args,
-      status: 'QUEUED_CALIBRATION',
-      total: candidates.length,
-      candidates: json(candidates),
-      calibration: json({
-        sample: [],
-        confirmed: [],
-        metrics: [],
-        existingCategorized,
-        next: 'calibration',
-      }),
-    },
-    update: {
-      id,
-      accountId: args.accountId,
-      mode: args.mode,
-      locale: args.locale,
-      status: 'QUEUED_CALIBRATION',
-      total: candidates.length,
-      processed: 0,
-      round: 0,
-      applied: 0,
-      skipped: 0,
-      candidates: json(candidates),
-      calibration: json({
-        sample: [],
-        confirmed: [],
-        metrics: [],
-        existingCategorized,
-        next: 'calibration',
-      }),
-      examples: json([]),
-      suggestions: json([]),
-      error: null,
+  const existingCategorized = await prisma.expense.count({
+    where: {
+      ledgerId,
+      categoryId: { notIn: [DEFAULT_CATEGORY_ID, SETTLEMENT_CATEGORY_ID] },
     },
   })
-  if (candidates.length) await enqueueCategorization(run.id, 'calibration')
-  else
-    await prisma.bulkCategorizationRun.update({
-      where: { id: run.id },
-      data: { status: 'REVIEW' },
+  const id = randomId()
+  const attemptId = candidates.length ? randomId() : null
+  try {
+    await prisma.$transaction(
+      async (tx) => {
+        if (existing)
+          await tx.bulkCategorizationRun.deleteMany({
+            where: { id: existing.id, status: 'DONE' },
+          })
+        await tx.bulkCategorizationRun.create({
+          data: {
+            id,
+            groupId: args.groupId,
+            accountId: args.accountId,
+            mode: args.mode,
+            locale: args.locale,
+            status: candidates.length ? 'QUEUED_CALIBRATION' : 'REVIEW',
+            total: Math.min(12, candidates.length),
+            candidateTotal: candidates.length,
+            omitted: Math.max(0, count - candidates.length),
+            attemptId,
+            calibration: json({
+              sample: [],
+              confirmed: [],
+              metrics: [],
+              existingCategorized,
+              next: 'calibration',
+            }),
+            examples: json({ phase: 'first' }),
+          },
+        })
+        for (let offset = 0; offset < candidates.length; offset += 500) {
+          await tx.bulkCategorizationRow.createMany({
+            data: candidates.slice(offset, offset + 500).map((row, index) => ({
+              runId: id,
+              expenseId: row.id,
+              position: offset + index,
+              title: row.title,
+              expenseVersion: row.version,
+              expenseDate: new Date(row.expenseDate),
+              amount: row.amount,
+              currency: row.currency,
+            })),
+          })
+        }
+      },
+      { maxWait: 10000, timeout: 120000 },
+    )
+  } catch (cause) {
+    const active = await prisma.bulkCategorizationRun.findUnique({
+      where: { groupId: args.groupId },
     })
+    if (active && active.id !== existing?.id) return presentRun(active)
+    throw cause
+  }
+  logRun(id, 'started', {
+    mode: args.mode,
+    candidates: candidates.length,
+    omitted: Math.max(0, count - candidates.length),
+  })
+  if (attemptId) await enqueueCategorization(id, 'calibration', attemptId)
   return presentRun(
-    await prisma.bulkCategorizationRun.findUnique({ where: { id: run.id } }),
+    await prisma.bulkCategorizationRun.findUnique({ where: { id } }),
   )
 }
 
 async function enqueueCategorization(
   runId: string,
-  phase: 'calibration' | 'full' | 'rerun' | 'apply',
+  phase: Phase,
+  attemptId: string,
 ) {
   try {
     const boss = await getApiBossForWrite()
     const jobId = await sendJob(
       boss,
       JOB_NAMES.BULK_CATEGORIZE,
-      { runId, phase },
+      { runId, phase, attemptId },
       { retryLimit: 0 },
     )
     if (!jobId) throw new Error('Could not queue categorization')
   } catch (cause) {
-    await prisma.bulkCategorizationRun.update({
-      where: { id: runId },
+    await prisma.bulkCategorizationRun.updateMany({
+      where: { id: runId, attemptId, status: queuedStatus(phase) },
       data: {
-        status:
-          phase === 'apply'
-            ? 'FAILED_APPLY'
-            : phase === 'rerun'
-              ? 'FAILED_RERUN'
-              : phase === 'calibration'
-                ? 'FAILED_CALIBRATION'
-                : 'FAILED_FULL',
+        status: failedStatus(phase),
         error: cause instanceof Error ? cause.message : String(cause),
       },
     })
@@ -635,149 +860,250 @@ async function enqueueCategorization(
 
 export async function updateRunSuggestions(
   runId: string,
-  changes: Array<{
-    expenseId: string
-    categoryId?: CategoryId
-  }>,
+  revision: number,
+  changes: Array<{ expenseId: string; categoryId: CategoryId }>,
 ) {
-  const run = await prisma.bulkCategorizationRun.findUniqueOrThrow({
-    where: { id: runId },
-  })
-  if (!['REVIEW', 'CALIBRATION_REVIEW'].includes(run.status))
-    throw new Error('Run is not ready for review')
-  const byId = new Map(changes.map((change) => [change.expenseId, change]))
-  if (run.status === 'CALIBRATION_REVIEW') {
-    const calibration = calibrationOf(run.calibration)
-    calibration.sample = calibration.sample.map((row) => {
-      const change = byId.get(row.id)
-      return change ? changeRunSuggestion(row, change.categoryId, false) : row
+  return prisma.$transaction(async (tx) => {
+    const claimed = await tx.bulkCategorizationRun.updateMany({
+      where: {
+        id: runId,
+        revision,
+        status: { in: ['REVIEW', 'CALIBRATION_REVIEW'] },
+      },
+      data: { revision: { increment: 1 } },
     })
-    return presentRun(
-      await prisma.bulkCategorizationRun.update({
-        where: { id: runId },
-        data: { calibration: json(calibration) },
+    if (claimed.count !== 1)
+      throw new Error('This review changed. Refresh and try again.')
+    const run = await tx.bulkCategorizationRun.findUniqueOrThrow({
+      where: { id: runId },
+    })
+    const allowedStage =
+      run.status === 'CALIBRATION_REVIEW'
+        ? 'SAMPLE'
+        : { in: ['CONFIRMED', 'SUGGESTED'] }
+    for (const change of changes) {
+      const row = await tx.bulkCategorizationRow.findUnique({
+        where: { runId_expenseId: { runId, expenseId: change.expenseId } },
+      })
+      if (
+        !row ||
+        (typeof allowedStage === 'string'
+          ? row.stage !== allowedStage
+          : !allowedStage.in.includes(row.stage))
+      )
+        throw new Error('Expense is not in this review')
+      if (row.categoryId === change.categoryId) continue
+      const suggested = changeRunSuggestion(
+        rowToSuggestion(row),
+        change.categoryId,
+      )
+      await tx.bulkCategorizationRow.update({
+        where: { runId_expenseId: { runId, expenseId: change.expenseId } },
+        data: {
+          categoryId: change.categoryId,
+          rerunFeedback: false,
+          manualCorrection: isManualCategorizationCorrection(suggested),
+          rerunEligible:
+            row.stage === 'SAMPLE'
+              ? false
+              : getRerunCandidates([suggested], {
+                  sample: [],
+                  confirmed: [],
+                  metrics: [],
+                  existingCategorized: 0,
+                  next: 'full',
+                }).length > 0 && row.stage !== 'CONFIRMED',
+        },
+      })
+    }
+    const [selected, newFeedback] = await Promise.all([
+      tx.bulkCategorizationRow.count({
+        where: { runId, categoryId: { not: DEFAULT_CATEGORY_ID } },
+      }),
+      tx.bulkCategorizationRow.count({
+        where: {
+          runId,
+          stage: 'SUGGESTED',
+          manualCorrection: true,
+          rerunFeedback: false,
+        },
+      }),
+    ])
+    return {
+      revision: run.revision,
+      selected,
+      general: run.candidateTotal - selected,
+      newFeedback,
+    }
+  })
+}
+
+export async function confirmCalibrationRound(runId: string, revision: number) {
+  const next = await prisma.$transaction(async (tx) => {
+    const claimed = await tx.bulkCategorizationRun.updateMany({
+      where: { id: runId, revision, status: 'CALIBRATION_REVIEW' },
+      data: { revision: { increment: 1 } },
+    })
+    if (claimed.count !== 1)
+      throw new Error('This review changed. Refresh and try again.')
+    const run = await tx.bulkCategorizationRun.findUniqueOrThrow({
+      where: { id: runId },
+    })
+    const calibration = calibrationOf(run.calibration)
+    const sample = (
+      await tx.bulkCategorizationRow.findMany({
+        where: { runId, stage: 'SAMPLE' },
+        orderBy: { position: 'asc' },
+      })
+    ).map(rowToSuggestion)
+    if (!sample.length) throw new Error('Calibration sample is empty')
+    calibration.confirmed.push(...sample)
+    calibration.metrics.push(scoreCalibrationRound(sample, run.round))
+    const phase: Phase = nextCalibrationPhase(
+      calibrationDecision({
+        total: run.candidateTotal,
+        existingCategorized: calibration.existingCategorized,
+        confirmed: calibration.confirmed,
+        metrics: calibration.metrics,
       }),
     )
-  }
-  const suggestions = list<Suggestion>(run.suggestions).map((row) => {
-    const change = byId.get(row.id)
-    return change ? changeRunSuggestion(row, change.categoryId) : row
-  })
-  return presentRun(
-    await prisma.bulkCategorizationRun.update({
+    calibration.next = phase
+    await tx.bulkCategorizationRow.updateMany({
+      where: { runId, stage: 'SAMPLE' },
+      data: { stage: 'CONFIRMED', rerunEligible: false },
+    })
+    const attemptId = randomId()
+    await tx.bulkCategorizationRun.update({
       where: { id: runId },
-      data: { suggestions: json(suggestions) },
-    }),
-  )
+      data: {
+        calibration: json(calibration),
+        status: queuedStatus(phase),
+        attemptId,
+        workerToken: null,
+        leaseUntil: null,
+        processed: 0,
+        total:
+          phase === 'full'
+            ? run.candidateTotal - calibration.confirmed.length
+            : Math.min(12, run.candidateTotal - calibration.confirmed.length),
+      },
+    })
+    return { phase, attemptId }
+  })
+  logRun(runId, 'calibration-confirmed', { next: next.phase })
+  await enqueueCategorization(runId, next.phase, next.attemptId)
 }
 
-export async function confirmCalibrationRound(runId: string) {
-  const run = await prisma.bulkCategorizationRun.findUniqueOrThrow({
-    where: { id: runId },
-  })
-  if (run.status !== 'CALIBRATION_REVIEW')
-    throw new Error('Calibration is not ready for review')
-  const calibration = calibrationOf(run.calibration)
-  const sample = calibration.sample
-  if (!sample.length) throw new Error('Calibration sample is empty')
-  calibration.confirmed.push(...sample)
-  calibration.sample = []
-  const metric = scoreCalibrationRound(sample, run.round)
-  calibration.metrics.push(metric)
-  const decision = calibrationDecision({
-    total: list<Candidate>(run.candidates).length,
-    existingCategorized: calibration.existingCategorized,
-    confirmed: calibration.confirmed,
-    metrics: calibration.metrics,
-  })
-  const phase = nextCalibrationPhase(decision)
-  calibration.next = phase
-  await prisma.bulkCategorizationRun.update({
-    where: { id: runId },
-    data: {
-      calibration: json(calibration),
-      suggestions: json(calibration.confirmed),
-      status: phase === 'full' ? 'QUEUED' : 'QUEUED_CALIBRATION',
-      processed: 0,
-      total:
-        list<Candidate>(run.candidates).length - calibration.confirmed.length,
-    },
-  })
-  await enqueueCategorization(runId, phase)
+async function setReviewOrder(tx: Prisma.TransactionClient, runId: string) {
+  await tx.$executeRaw`
+    UPDATE "BulkCategorizationRow" AS target SET "reviewOrder" = ranked.ordinal
+    FROM (
+      SELECT "expenseId", row_number() OVER (
+        ORDER BY CASE WHEN "categoryId" = ${DEFAULT_CATEGORY_ID} THEN 0 ELSE 1 END,
+          "expenseDate" DESC, "expenseId"
+      ) - 1 AS ordinal
+      FROM "BulkCategorizationRow" WHERE "runId" = ${runId}
+    ) AS ranked
+    WHERE target."runId" = ${runId} AND target."expenseId" = ranked."expenseId"`
 }
 
-export async function rerunCategorizationRun(runId: string) {
-  const run = await prisma.bulkCategorizationRun.findUniqueOrThrow({
-    where: { id: runId },
+export async function rerunCategorizationRun(runId: string, revision: number) {
+  const result = await prisma.$transaction(async (tx) => {
+    const claimed = await tx.bulkCategorizationRun.updateMany({
+      where: { id: runId, revision, status: 'REVIEW' },
+      data: { revision: { increment: 1 } },
+    })
+    if (claimed.count !== 1)
+      throw new Error('This review changed. Refresh and try again.')
+    const feedback = await tx.bulkCategorizationRow.count({
+      where: {
+        runId,
+        stage: 'SUGGESTED',
+        manualCorrection: true,
+        rerunFeedback: false,
+      },
+    })
+    const targets = await tx.bulkCategorizationRow.count({
+      where: { runId, stage: 'SUGGESTED', rerunEligible: true },
+    })
+    if (!feedback || !targets)
+      throw new Error('There is no new feedback or eligible expense to rerun')
+    await tx.bulkCategorizationRow.updateMany({
+      where: { runId, stage: 'SUGGESTED', manualCorrection: true },
+      data: { rerunFeedback: true },
+    })
+    await tx.bulkCategorizationRow.updateMany({
+      where: { runId, stage: 'SUGGESTED', rerunEligible: true },
+      data: { rerunTarget: true },
+    })
+    const attemptId = randomId()
+    await tx.bulkCategorizationRun.update({
+      where: { id: runId },
+      data: {
+        status: 'QUEUED_RERUN',
+        attemptId,
+        workerToken: null,
+        leaseUntil: null,
+        processed: 0,
+        total: targets,
+        error: null,
+      },
+    })
+    return { attemptId, targets }
   })
-  if (run.status !== 'REVIEW') throw new Error('Run is not ready for review')
-  const calibration = calibrationOf(run.calibration)
-  const suggestions = list<Suggestion>(run.suggestions)
-  const corrections = finalReviewCorrections(suggestions, calibration)
-  if (!hasUnsharedFinalReviewCorrection(suggestions, calibration))
-    throw new Error('Make a new category correction before rerunning')
-  const candidates = getRerunCandidates(suggestions, calibration)
-  if (!candidates.length)
-    throw new Error('There are no remaining eligible expenses to rerun')
-  const correctionIds = new Set(corrections.map((row) => row.id))
-  const markedSuggestions = suggestions.map((row) =>
-    correctionIds.has(row.id) ? { ...row, rerunFeedback: true } : row,
-  )
-  calibration.rerunTargetIds = candidates.map((row) => row.id)
-  await prisma.bulkCategorizationRun.update({
-    where: { id: runId },
-    data: {
-      status: 'QUEUED_RERUN',
-      processed: 0,
-      total: candidates.length,
-      suggestions: json(markedSuggestions),
-      calibration: json(calibration),
-      error: null,
-    },
-  })
-  await enqueueCategorization(runId, 'rerun')
+  logRun(runId, 'rerun-queued', { targets: result.targets })
+  await enqueueCategorization(runId, 'rerun', result.attemptId)
 }
 
-export async function applyCategorizationRun(runId: string) {
+export async function applyCategorizationRun(
+  runId: string,
+  revision: number,
+  accountId: string,
+) {
   const result = await prisma.$transaction(
     async (tx) => {
+      const claimed = await tx.bulkCategorizationRun.updateMany({
+        where: { id: runId, revision, status: 'REVIEW' },
+        data: { revision: { increment: 1 } },
+      })
+      if (claimed.count !== 1)
+        throw new Error('This review changed. Refresh and try again.')
       const run = await tx.bulkCategorizationRun.findUniqueOrThrow({
         where: { id: runId },
       })
-      if (run.status !== 'REVIEW')
-        throw new Error('Run is not ready for review')
-      const selected = list<Suggestion>(run.suggestions).filter(
-        (row) =>
-          row.categoryId !== DEFAULT_CATEGORY_ID && row.included !== false,
-      )
+      const selected = await tx.bulkCategorizationRow.findMany({
+        where: { runId, categoryId: { not: DEFAULT_CATEGORY_ID } },
+        orderBy: { position: 'asc' },
+      })
       const expectedVersions = new Map(
-        selected.map((row) => [row.id, row.version]),
+        selected.map((row) => [row.expenseId, row.expenseVersion]),
       )
       let applied = 0
       for (let offset = 0; offset < selected.length; offset += 2000) {
         const chunk = selected.slice(offset, offset + 2000)
-        const result = await bulkUpdateExpenseCategories({
+        const update = await bulkUpdateExpenseCategories({
           groupId: run.groupId,
-          accountId: run.accountId,
+          accountId,
           transaction: tx,
           expectedVersions,
+          setBased: true,
           input: {
             groupId: run.groupId,
             fromCategoryId: DEFAULT_CATEGORY_ID,
             changes: chunk.map((row) => ({
-              expenseId: row.id,
-              categoryId: row.categoryId,
+              expenseId: row.expenseId,
+              categoryId: row.categoryId as CategoryId,
             })),
           },
         })
-        if (result.applied !== chunk.length)
+        if (update.applied !== chunk.length)
           throw new Error(
-            'An expense changed while saving. No categories were applied; review the latest expenses and try again.',
+            'An expense changed while saving. No categories were applied; refresh the review and try again.',
           )
-        applied += result.applied
+        applied += update.applied
       }
-      const updated = await tx.bulkCategorizationRun.updateMany({
-        where: { id: runId, status: 'REVIEW' },
+      await tx.bulkCategorizationRun.update({
+        where: { id: runId },
         data: {
           status: 'DONE',
           processed: selected.length,
@@ -787,107 +1113,161 @@ export async function applyCategorizationRun(runId: string) {
           error: null,
         },
       })
-      if (updated.count !== 1)
-        throw new Error('The categorization review changed before it was saved')
       return { groupId: run.groupId, applied, skipped: 0 }
     },
-    { maxWait: 10000, timeout: 60000 },
+    { maxWait: 10000, timeout: 180000 },
   )
   if (result.applied > 0) await enqueueBudgetEvaluation(result.groupId)
+  logRun(runId, 'saved', { applied: result.applied })
   return result
 }
 
-export async function retryCategorizationRun(runId: string) {
-  const run = await prisma.bulkCategorizationRun.findUniqueOrThrow({
-    where: { id: runId },
-  })
-  if (!run.status.startsWith('FAILED_')) throw new Error('Run has not failed')
-  const phase =
-    run.status === 'FAILED_APPLY'
-      ? 'apply'
-      : run.status === 'FAILED_RERUN'
+export async function retryCategorizationRun(runId: string, revision: number) {
+  const result = await prisma.$transaction(async (tx) => {
+    const run = await tx.bulkCategorizationRun.findUniqueOrThrow({
+      where: { id: runId },
+    })
+    const stalled =
+      busy.has(run.status) &&
+      Date.now() - run.updatedAt.getTime() > LEASE_MS * 2
+    if (
+      run.revision !== revision ||
+      (!run.status.startsWith('FAILED_') && !stalled)
+    )
+      throw new Error('This run changed. Refresh and try again.')
+    const phase = run.status.startsWith('FAILED_')
+      ? phaseOfFailure(run.status)
+      : run.status.includes('RERUN')
         ? 'rerun'
-        : run.status === 'FAILED_CALIBRATION'
+        : run.status.includes('CALIBRAT')
           ? 'calibration'
           : 'full'
-  const calibration = calibrationOf(run.calibration)
-  const rerunCandidates =
-    phase === 'rerun'
-      ? getRerunTargetCandidates(
-          list<Candidate>(run.candidates),
-          list<Suggestion>(run.suggestions),
-          calibration,
-        )
-      : null
-  if (rerunCandidates && rerunCandidates.length === 0) {
-    await prisma.bulkCategorizationRun.update({
-      where: { id: runId },
-      data: { status: 'REVIEW', processed: 0, error: null },
+    const attemptId = randomId()
+    const claimed = await tx.bulkCategorizationRun.updateMany({
+      where: { id: runId, revision },
+      data: {
+        status: queuedStatus(phase),
+        attemptId,
+        workerToken: null,
+        leaseUntil: null,
+        revision: { increment: 1 },
+        error: null,
+      },
     })
-    return
-  }
-  if (rerunCandidates)
-    calibration.rerunTargetIds = rerunCandidates.map((row) => row.id)
-  await prisma.bulkCategorizationRun.update({
-    where: { id: runId },
-    data: {
-      status:
-        phase === 'apply'
-          ? 'APPLYING'
-          : phase === 'rerun'
-            ? 'QUEUED_RERUN'
-            : phase === 'calibration'
-              ? 'QUEUED_CALIBRATION'
-              : 'QUEUED',
-      ...(rerunCandidates
-        ? {
-            total: rerunCandidates.length,
-            processed: 0,
-            calibration: json(calibration),
-          }
-        : {}),
-      error: null,
-    },
+    if (claimed.count !== 1)
+      throw new Error('This run changed. Refresh and try again.')
+    return { phase, attemptId }
   })
-  await enqueueCategorization(runId, phase)
+  await enqueueCategorization(runId, result.phase, result.attemptId)
 }
 
-export async function discardCategorizationRun(runId: string) {
+export async function discardCategorizationRun(
+  runId: string,
+  revision: number,
+) {
   const deleted = await prisma.bulkCategorizationRun.deleteMany({
-    where: { id: runId, status: { not: 'APPLYING' } },
+    where: { id: runId, revision, status: { not: 'DONE' } },
   })
-  if (deleted.count === 0)
-    throw new Error('This run cannot be discarded while saving categories')
+  if (deleted.count !== 1)
+    throw new Error('This run changed. Refresh and try again.')
+  logRun(runId, 'discarded')
+}
+
+async function claimJob(runId: string, phase: Phase, attemptId: string) {
+  const now = new Date()
+  const workerToken = randomId()
+  const claimed = await prisma.bulkCategorizationRun.updateMany({
+    where: {
+      id: runId,
+      attemptId,
+      OR: [
+        { status: queuedStatus(phase) },
+        { status: runningStatus(phase), leaseUntil: { lt: now } },
+      ],
+    },
+    data: {
+      status: runningStatus(phase),
+      workerToken,
+      leaseUntil: new Date(now.getTime() + LEASE_MS),
+    },
+  })
+  return claimed.count ? workerToken : null
+}
+async function checkpoint(
+  runId: string,
+  phase: Phase,
+  attemptId: string,
+  workerToken: string,
+  update: (tx: Prisma.TransactionClient) => Promise<void>,
+  processed: number,
+) {
+  await prisma.$transaction(async (tx) => {
+    const claimed = await tx.bulkCategorizationRun.updateMany({
+      where: {
+        id: runId,
+        status: runningStatus(phase),
+        attemptId,
+        workerToken,
+      },
+      data: { processed, leaseUntil: new Date(Date.now() + LEASE_MS) },
+    })
+    if (claimed.count !== 1) throw new Error('This job is no longer current')
+    await update(tx)
+  })
+}
+async function finishPhase(
+  runId: string,
+  phase: Phase,
+  attemptId: string,
+  workerToken: string,
+  update: (tx: Prisma.TransactionClient) => Promise<void>,
+) {
+  await prisma.$transaction(async (tx) => {
+    const claimed = await tx.bulkCategorizationRun.updateMany({
+      where: {
+        id: runId,
+        status: runningStatus(phase),
+        attemptId,
+        workerToken,
+      },
+      data: { workerToken: null, leaseUntil: null },
+    })
+    if (claimed.count !== 1) throw new Error('This job is no longer current')
+    await update(tx)
+  })
 }
 
 export async function processCategorizationJob(
   runId: string,
-  phase: 'calibration' | 'full' | 'rerun' | 'apply',
+  phase: Phase,
+  attemptId: string,
 ) {
+  const workerToken = await claimJob(runId, phase, attemptId)
+  if (!workerToken) return
+  const started = Date.now()
   try {
-    if (phase === 'apply') await processApply(runId)
-    else if (phase === 'calibration') await processCalibration(runId)
-    else if (phase === 'rerun') await processRerun(runId)
-    else await processFull(runId)
+    if (phase === 'calibration')
+      await processCalibration(runId, attemptId, workerToken)
+    else if (phase === 'rerun')
+      await processRerun(runId, attemptId, workerToken)
+    else await processFull(runId, attemptId, workerToken)
+    logRun(runId, 'job-complete', { phase, durationMs: Date.now() - started })
   } catch (cause) {
-    const current = await prisma.bulkCategorizationRun.findUnique({
-      where: { id: runId },
-    })
-    if (!current) return
-    await prisma.bulkCategorizationRun.update({
-      where: { id: runId },
+    await prisma.bulkCategorizationRun.updateMany({
+      where: {
+        id: runId,
+        attemptId,
+        workerToken,
+        status: runningStatus(phase),
+      },
       data: {
-        status:
-          phase === 'apply'
-            ? 'FAILED_APPLY'
-            : phase === 'rerun'
-              ? 'FAILED_RERUN'
-              : phase === 'calibration'
-                ? 'FAILED_CALIBRATION'
-                : 'FAILED_FULL',
+        status: failedStatus(phase),
+        workerToken: null,
+        leaseUntil: null,
         error: cause instanceof Error ? cause.message : String(cause),
       },
     })
+    logRun(runId, 'job-failed', { phase, durationMs: Date.now() - started })
     throw cause
   }
 }
@@ -897,10 +1277,7 @@ export function buildCategorizationFeedback(
   _locale: string,
 ) {
   const positive: Array<{ title: string; categoryId: CategoryId }> = []
-  const rejected: Array<{
-    title: string
-    rejectedCategoryId: CategoryId
-  }> = []
+  const rejected: Array<{ title: string; rejectedCategoryId: CategoryId }> = []
   const rejectedByTitle = new Map<string, Set<CategoryId>>()
   for (const row of confirmed) {
     if (row.categoryId !== DEFAULT_CATEGORY_ID)
@@ -932,17 +1309,18 @@ export async function suggestRows(
   run: RunData,
   chunk: Candidate[],
   confirmed: Suggestion[],
-  options: { dateNeighbors?: boolean } = {},
+  options: {
+    dateNeighbors?: boolean
+    localContext?: Awaited<ReturnType<typeof prepareLocalContext>>
+  } = {},
 ): Promise<Suggestion[]> {
   const feedback = buildCategorizationFeedback(confirmed, run.locale)
   const localMode = run.mode === 'local'
-  if (localMode) await loadLocaleDictionary(run.locale)
-  const context = localMode
-    ? await getRecentExpenseContext(run.groupId, env.CATEGORY_MEMORY_LIMIT)
+  const local = localMode
+    ? (options.localContext ?? (await prepareLocalContext(run)))
     : null
-  const documents = localMode
-    ? createCategorySearchDocumentsForLocale(run.locale)
-    : []
+  const context = local?.context
+  const documents = local?.documents ?? []
   const localThresholds = {
     minScore: env.CATEGORY_LOCAL_MIN_SCORE,
     settlementMinScore: env.CATEGORY_LOCAL_SETTLEMENT_MIN_SCORE,
@@ -1021,231 +1399,287 @@ export async function suggestRows(
   })
 }
 
-async function processCalibration(runId: string) {
+async function prepareLocalContext(run: RunData) {
+  await loadLocaleDictionary(run.locale)
+  return {
+    context: await getRecentExpenseContext(
+      run.groupId,
+      env.CATEGORY_MEMORY_LIMIT,
+    ),
+    documents: createCategorySearchDocumentsForLocale(run.locale),
+  }
+}
+
+async function processCalibration(
+  runId: string,
+  attemptId: string,
+  workerToken: string,
+) {
   const run = await prisma.bulkCategorizationRun.findUniqueOrThrow({
     where: { id: runId },
   })
-  if (!['QUEUED_CALIBRATION', 'CALIBRATING'].includes(run.status)) return
-  const calibration = calibrationOf(run.calibration)
-  const candidates = list<Candidate>(run.candidates)
-  const sample = calibration.sample.length
-    ? calibration.sample
-    : await suggestRows(
-        run,
-        sampleCalibrationCandidates(
-          candidates,
-          new Set(calibration.confirmed.map((row) => row.id)),
-        ),
-        calibration.confirmed,
-      )
-  calibration.sample = sample
-  await prisma.bulkCategorizationRun.update({
-    where: { id: runId },
-    data: {
-      status: 'CALIBRATION_REVIEW',
-      round: run.round + (run.status === 'QUEUED_CALIBRATION' ? 1 : 0),
-      calibration: json(calibration),
-      processed: 0,
-      total: sample.length,
-    },
+  const sample = await prisma.bulkCategorizationRow.findMany({
+    where: { runId, stage: 'SAMPLE' },
+    orderBy: { position: 'asc' },
   })
+  if (sample.length) {
+    await finishPhase(runId, 'calibration', attemptId, workerToken, (tx) =>
+      tx.bulkCategorizationRun
+        .update({
+          where: { id: runId },
+          data: { status: 'CALIBRATION_REVIEW' },
+        })
+        .then(() => undefined),
+    )
+    return
+  }
+  const pending = await prisma.bulkCategorizationRow.findMany({
+    where: { runId, stage: 'PENDING' },
+    orderBy: { position: 'asc' },
+  })
+  const calibration = calibrationOf(run.calibration)
+  const chosen = sampleCalibrationCandidates(
+    pending.map(asCandidate),
+    new Set(),
+    12,
+  )
+  const suggested = await suggestRows(run, chosen, calibration.confirmed)
+  await finishPhase(
+    runId,
+    'calibration',
+    attemptId,
+    workerToken,
+    async (tx) => {
+      for (const row of suggested)
+        await tx.bulkCategorizationRow.update({
+          where: { runId_expenseId: { runId, expenseId: row.id } },
+          data: {
+            ...suggestionData(row),
+            stage: 'SAMPLE',
+            rerunEligible: false,
+          },
+        })
+      await tx.bulkCategorizationRun.update({
+        where: { id: runId },
+        data: {
+          status: 'CALIBRATION_REVIEW',
+          round: { increment: 1 },
+          total: suggested.length,
+          processed: suggested.length,
+        },
+      })
+    },
+  )
 }
 
-async function processFull(runId: string) {
+async function processFull(
+  runId: string,
+  attemptId: string,
+  workerToken: string,
+) {
   let run = await prisma.bulkCategorizationRun.findUniqueOrThrow({
     where: { id: runId },
   })
-  if (!['QUEUED', 'PROCESSING'].includes(run.status)) return
   const calibration = calibrationOf(run.calibration)
-  const confirmedIds = new Set(calibration.confirmed.map((row) => row.id))
-  const candidates = list<Candidate>(run.candidates).filter(
-    (row) => !confirmedIds.has(row.id),
-  )
-  let state = fullPassStateOf(run.examples)
-  if (!state) {
-    while (run.processed < candidates.length) {
-      const chunk = candidates.slice(run.processed, run.processed + 25)
-      const additions = await suggestRows(run, chunk, calibration.confirmed)
-      run = await prisma.bulkCategorizationRun.update({
-        where: { id: runId },
-        data: {
-          status: 'PROCESSING',
-          processed: run.processed + chunk.length,
-          suggestions: json([
-            ...list<Suggestion>(run.suggestions),
-            ...additions,
-          ]),
-        },
+  const localContext =
+    run.mode === 'local' ? await prepareLocalContext(run) : undefined
+  let state = (run.examples as FullPassState | null)?.phase ?? 'first'
+  if (state === 'first') {
+    while (true) {
+      const pending = await prisma.bulkCategorizationRow.findMany({
+        where: { runId, stage: 'PENDING' },
+        orderBy: { position: 'asc' },
+        take: CHUNK_SIZE,
       })
+      if (!pending.length) break
+      const additions = await suggestRows(
+        run,
+        pending.map(asCandidate),
+        calibration.confirmed,
+        { localContext },
+      )
+      await checkpoint(
+        runId,
+        'full',
+        attemptId,
+        workerToken,
+        async (tx) => {
+          for (const row of additions)
+            await tx.bulkCategorizationRow.update({
+              where: { runId_expenseId: { runId, expenseId: row.id } },
+              data: { ...suggestionData(row), stage: 'SUGGESTED' },
+            })
+        },
+        run.processed + pending.length,
+      )
+      run = { ...run, processed: run.processed + pending.length }
     }
     if (run.mode !== 'jev') {
-      await prisma.bulkCategorizationRun.update({
-        where: { id: runId },
-        data: { status: 'REVIEW' },
+      await finishPhase(runId, 'full', attemptId, workerToken, async (tx) => {
+        await setReviewOrder(tx, runId)
+        await tx.bulkCategorizationRun.update({
+          where: { id: runId },
+          data: { status: 'REVIEW', examples: json({ phase: 'complete' }) },
+        })
       })
       return
     }
-    const candidateIds = new Set(candidates.map((row) => row.id))
-    const targetIds = getAutomaticJevTargets(
-      list<Suggestion>(run.suggestions).filter((row) =>
-        candidateIds.has(row.id),
-      ),
-    ).map((row) => row.id)
-    state = { phase: 'second', targetIds }
-    run = await prisma.bulkCategorizationRun.update({
-      where: { id: runId },
-      data: {
-        examples: json(state),
-        processed: 0,
-        total: targetIds.length,
-        status: 'PROCESSING',
-      },
-    })
-  }
-  if (state.phase === 'second') {
-    const byId = new Map(candidates.map((row) => [row.id, row]))
-    const targets = state.targetIds.map((id) => {
-      const candidate = byId.get(id)
-      if (!candidate) throw new Error(`Second-pass candidate ${id} is missing`)
-      return candidate
-    })
-    while (run.processed < targets.length) {
-      const chunk = targets.slice(run.processed, run.processed + 25)
-      const additions = await suggestRows(run, chunk, calibration.confirmed, {
-        dateNeighbors: true,
+    let cursor = 0
+    let targets = 0
+    while (true) {
+      const rows = await prisma.bulkCategorizationRow.findMany({
+        where: { runId, stage: 'SUGGESTED', position: { gte: cursor } },
+        orderBy: { position: 'asc' },
+        take: 500,
       })
-      run = await prisma.bulkCategorizationRun.update({
-        where: { id: runId },
-        data: {
-          status: 'PROCESSING',
-          processed: run.processed + chunk.length,
-          suggestions: json(
-            mergeAutomaticJevSuggestions(
-              list<Suggestion>(run.suggestions),
-              additions,
-            ),
-          ),
-        },
-      })
-    }
-  }
-  await prisma.bulkCategorizationRun.update({
-    where: { id: runId },
-    data: { status: 'REVIEW', examples: json({ ...state, phase: 'complete' }) },
-  })
-}
-
-async function processRerun(runId: string) {
-  let run = await prisma.bulkCategorizationRun.findUniqueOrThrow({
-    where: { id: runId },
-  })
-  if (!['QUEUED_RERUN', 'RERUNNING'].includes(run.status)) return
-  const calibration = calibrationOf(run.calibration)
-  const feedback = finalReviewCorrections(
-    list<Suggestion>(run.suggestions),
-    calibration,
-  )
-  const candidates = getRerunTargetCandidates(
-    list<Candidate>(run.candidates),
-    list<Suggestion>(run.suggestions),
-    calibration,
-  )
-  const confirmedById = new Map(
-    calibration.confirmed.map((row) => [row.id, row]),
-  )
-  const examples = [
-    ...calibration.confirmed,
-    ...feedback.filter((row) => !confirmedById.has(row.id)),
-  ]
-  if (run.processed >= candidates.length)
-    run = await prisma.bulkCategorizationRun.update({
-      where: { id: runId },
-      data: { processed: 0, total: candidates.length },
-    })
-  while (run.processed < candidates.length) {
-    const chunk = candidates.slice(run.processed, run.processed + 25)
-    const additions = await suggestRows(run, chunk, examples)
-    const suggestions = mergeRerunSuggestions(
-      list<Suggestion>(run.suggestions),
-      additions,
-    )
-    run = await prisma.bulkCategorizationRun.update({
-      where: { id: runId },
-      data: {
-        status: 'RERUNNING',
-        processed: run.processed + chunk.length,
-        suggestions: json(suggestions),
-      },
-    })
-  }
-  await prisma.bulkCategorizationRun.update({
-    where: { id: runId },
-    data: { status: 'REVIEW', processed: 0, total: candidates.length },
-  })
-}
-
-export function mergeRerunSuggestions(
-  current: Suggestion[],
-  additions: Suggestion[],
-) {
-  const additionsById = new Map(additions.map((row) => [row.id, row]))
-  return current.map((row) => {
-    const addition = additionsById.get(row.id)
-    return addition
-      ? {
-          ...addition,
-          firstPass: row.firstPass,
-          secondPass: row.secondPass,
-        }
-      : row
-  })
-}
-
-async function processApply(runId: string) {
-  let run = await prisma.bulkCategorizationRun.findUniqueOrThrow({
-    where: { id: runId },
-  })
-  if (run.status !== 'APPLYING') return
-  const selected = list<Suggestion>(run.suggestions).filter(
-    (row) => row.categoryId !== DEFAULT_CATEGORY_ID && row.included !== false,
-  )
-  while (run.processed < selected.length) {
-    const chunk = selected.slice(run.processed, run.processed + 500)
-    const current = await prisma.expense.findMany({
-      where: {
-        id: { in: chunk.map((row) => row.id) },
-        categoryId: DEFAULT_CATEGORY_ID,
-      },
-      select: { id: true, version: true },
-    })
-    const versions = new Map(current.map((row) => [row.id, row.version]))
-    const eligible = chunk.filter((row) => versions.get(row.id) === row.version)
-    const result = eligible.length
-      ? await bulkUpdateExpenseCategories({
-          groupId: run.groupId,
-          accountId: run.accountId,
-          input: {
-            groupId: run.groupId,
-            fromCategoryId: DEFAULT_CATEGORY_ID,
-            changes: eligible.map((row) => ({
-              expenseId: row.id,
-              categoryId: row.categoryId,
-            })),
+      if (!rows.length) break
+      const ids = getAutomaticJevTargets(rows.map(rowToSuggestion)).map(
+        (row) => row.id,
+      )
+      if (ids.length)
+        await checkpoint(
+          runId,
+          'full',
+          attemptId,
+          workerToken,
+          async (tx) => {
+            await tx.bulkCategorizationRow.updateMany({
+              where: { runId, expenseId: { in: ids } },
+              data: { secondPassTarget: true },
+            })
           },
-        })
-      : { applied: 0, skipped: 0 }
-    run = await prisma.bulkCategorizationRun.update({
-      where: { id: runId },
-      data: {
-        processed: run.processed + chunk.length,
-        applied: run.applied + result.applied,
-        skipped: run.skipped + result.skipped + chunk.length - eligible.length,
-      },
+          run.processed,
+        )
+      targets += ids.length
+      cursor = rows.at(-1)!.position + 1
+    }
+    await checkpoint(
+      runId,
+      'full',
+      attemptId,
+      workerToken,
+      (tx) =>
+        tx.bulkCategorizationRun
+          .update({
+            where: { id: runId },
+            data: {
+              examples: json({ phase: 'second' }),
+              processed: 0,
+              total: targets,
+            },
+          })
+          .then(() => undefined),
+      0,
+    )
+    run = { ...run, processed: 0, total: targets }
+    state = 'second'
+  }
+  if (state === 'second') {
+    while (true) {
+      const pending = await prisma.bulkCategorizationRow.findMany({
+        where: { runId, secondPassTarget: true },
+        orderBy: { position: 'asc' },
+        take: CHUNK_SIZE,
+      })
+      if (!pending.length) break
+      const additions = await suggestRows(
+        run,
+        pending.map(asCandidate),
+        calibration.confirmed,
+        { dateNeighbors: true },
+      )
+      const current = pending.map(rowToSuggestion)
+      const merged = mergeAutomaticJevSuggestions(current, additions)
+      await checkpoint(
+        runId,
+        'full',
+        attemptId,
+        workerToken,
+        async (tx) => {
+          for (const row of merged)
+            await tx.bulkCategorizationRow.update({
+              where: { runId_expenseId: { runId, expenseId: row.id } },
+              data: { ...suggestionData(row), secondPassTarget: false },
+            })
+        },
+        run.processed + pending.length,
+      )
+      run = { ...run, processed: run.processed + pending.length }
+    }
+    await finishPhase(runId, 'full', attemptId, workerToken, async (tx) => {
+      await setReviewOrder(tx, runId)
+      await tx.bulkCategorizationRun.update({
+        where: { id: runId },
+        data: { status: 'REVIEW', examples: json({ phase: 'complete' }) },
+      })
     })
   }
-  if (run.applied > 0) await enqueueBudgetEvaluation(run.groupId)
-  await prisma.bulkCategorizationRun.update({
+}
+
+async function processRerun(
+  runId: string,
+  attemptId: string,
+  workerToken: string,
+) {
+  let run = await prisma.bulkCategorizationRun.findUniqueOrThrow({
     where: { id: runId },
-    data: { status: 'DONE' },
+  })
+  const examples = (
+    await prisma.bulkCategorizationRow.findMany({
+      where: {
+        runId,
+        OR: [
+          { stage: 'CONFIRMED' },
+          { stage: 'SUGGESTED', manualCorrection: true },
+        ],
+      },
+    })
+  ).map(rowToSuggestion)
+  const localContext =
+    run.mode === 'local' ? await prepareLocalContext(run) : undefined
+  while (true) {
+    const pending = await prisma.bulkCategorizationRow.findMany({
+      where: { runId, rerunTarget: true },
+      orderBy: { position: 'asc' },
+      take: CHUNK_SIZE,
+    })
+    if (!pending.length) break
+    const additions = await suggestRows(
+      run,
+      pending.map(asCandidate),
+      examples,
+      { localContext },
+    )
+    await checkpoint(
+      runId,
+      'rerun',
+      attemptId,
+      workerToken,
+      async (tx) => {
+        for (const row of additions)
+          await tx.bulkCategorizationRow.update({
+            where: { runId_expenseId: { runId, expenseId: row.id } },
+            data: {
+              ...suggestionData(row),
+              rerunTarget: false,
+              firstPass:
+                pending.find((item) => item.expenseId === row.id)?.firstPass ??
+                undefined,
+              secondPass:
+                pending.find((item) => item.expenseId === row.id)?.secondPass ??
+                undefined,
+            },
+          })
+      },
+      run.processed + pending.length,
+    )
+    run = { ...run, processed: run.processed + pending.length }
+  }
+  await finishPhase(runId, 'rerun', attemptId, workerToken, async (tx) => {
+    await setReviewOrder(tx, runId)
+    await tx.bulkCategorizationRun.update({
+      where: { id: runId },
+      data: { status: 'REVIEW', processed: 0 },
+    })
   })
 }

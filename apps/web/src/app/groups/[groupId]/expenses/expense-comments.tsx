@@ -23,13 +23,18 @@ const MAX_COMMENT_LENGTH = 500
 type ExpenseCommentsProps = {
   groupId: string
   expenseId: string
+  readOnly?: boolean
 }
 
 /**
  * Comments attached to an expense. Read access is available to every group
  * viewer; writing is reserved for accepted members of active groups.
  */
-export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
+export function ExpenseComments({
+  groupId,
+  expenseId,
+  readOnly = false,
+}: ExpenseCommentsProps) {
   const { group, currentMember } = useCurrentGroup()
   const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
   const { linkInviteToken, viewKey } = useGroupAccessSearch()
@@ -178,7 +183,7 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
                       accountTimeZone,
                     )}
                   </time>
-                  {!isReadOnlyGroupViewer && comment.canDelete && (
+                  {!readOnly && !isReadOnlyGroupViewer && comment.canDelete && (
                     <Button
                       type="button"
                       variant="ghost"
@@ -201,7 +206,7 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
         </ul>
       )}
 
-      {canComment && (
+      {canComment && !readOnly && (
         <form className="space-y-2 pt-1" onSubmit={handleCreate}>
           <label htmlFor="expense-comment-input" className="sr-only">
             {t('commentInputLabel')}

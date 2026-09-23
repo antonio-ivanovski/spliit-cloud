@@ -31,7 +31,8 @@ export const jobPayloadSchemas = {
   'budget.evaluate': z.object({ groupId: z.string().min(1).optional() }),
   'bulk-categorize.run': z.object({
     runId: z.string().min(1),
-    phase: z.enum(['calibration', 'full', 'rerun', 'apply']),
+    phase: z.enum(['calibration', 'full', 'rerun']),
+    attemptId: z.string().min(1),
   }),
 } as const
 

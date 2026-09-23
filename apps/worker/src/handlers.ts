@@ -18,7 +18,11 @@ import { handleNotificationDelivery } from './notification-delivery'
 
 export const handlers: JobHandlers = {
   [JOB_NAMES.BULK_CATEGORIZE]: async (payload) => {
-    await processCategorizationJob(payload.runId, payload.phase)
+    await processCategorizationJob(
+      payload.runId,
+      payload.phase,
+      payload.attemptId,
+    )
   },
   [JOB_NAMES.MATERIALIZE_RECURRING_EXPENSE]: async (payload, context) => {
     await materializeRecurringExpense(payload, context.boss)

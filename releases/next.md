@@ -28,12 +28,14 @@ who is affected, and the exact migration steps.
 - Improved Jev bulk suggestions with relevant reviewed examples, nearby categorized expenses, and an extra pass over General or uncertain matches before review (`TBD` by @handle)
 - Showed Jev confidence and local match strength inside the bulk categorizer's category picker (`TBD` by @handle)
 - Shared Local matching and category interpretation across the expense form, bulk categorizer, and CSV import, with consistent Jev validation for single and batch suggestions (`TBD` by @handle)
+- Made the Tools categorizer ready for large groups with 10,000-expense runs, paged review, safe retries and concurrent edits, and a fast atomic save; remaining General expenses can be handled in another run (`TBD` by @handle)
+- Gave the Tools categorizer consistent progress across rounds, page-scrolling expense review with a read-only detail preview, General filtering, and sticky save and rerun actions (`TBD` by @handle)
 
 ### 🐛 Bug fixes
 
 - Short entry per fix (`TBD` by @TBD)
 - Reset the review correction note after its feedback has been used for a categorization rerun (`TBD` by @handle)
-- Show the categorization success screen only for the visit where the run was saved, and return to the start view on later visits (`TBD` by @handle)
+- Keep the categorization success screen available after a refresh, with an option to start another run when General expenses remain (`TBD` by @handle)
 - Prevented a Jev runner-up from being automatically selected when its primary category was General or below the confidence floor (`TBD` by @handle)
 - Labeled Jev runner-up probabilities separately from primary confidence in bulk review (`TBD` by @handle)
 

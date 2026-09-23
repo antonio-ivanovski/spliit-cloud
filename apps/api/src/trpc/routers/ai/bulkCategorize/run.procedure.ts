@@ -10,6 +10,7 @@ import {
   confirmCalibrationRound,
   countUncategorizedExpenses,
   discardCategorizationRun,
+  getCategorizationReviewPage,
   presentRun,
   retryCategorizationRun,
   rerunCategorizationRun,
@@ -20,6 +21,9 @@ import { loadGroupMutationContext, protectedProcedure } from '../../../init'
 
 const groupInput = z.object({ groupId: z.string().min(1) })
 const runInput = groupInput.extend({ runId: z.string().min(1) })
+const revisionInput = runInput.extend({
+  revision: z.number().int().nonnegative(),
+})
 const assignableCategorySchema = categoryIdSchema.refine(
   (id) => id !== SETTLEMENT_CATEGORY_ID,
 )
@@ -64,6 +68,26 @@ export const bulkCategorizeCountProcedure = protectedProcedure
     return countUncategorizedExpenses(input.groupId)
   })
 
+export const bulkCategorizeReviewPageProcedure = protectedProcedure
+  .input(
+    runInput.extend({
+      cursor: z.number().int().nonnegative().optional(),
+      limit: z.number().int().min(1).max(100).optional(),
+      reviewCycle: z.string().nullable().optional(),
+      filter: z.enum(['all', 'general']).default('all'),
+    }),
+  )
+  .query(async ({ ctx, input }) => {
+    await requireAdmin(input.groupId, ctx.auth.user.id)
+    await requireRun(input.groupId, input.runId)
+    return getCategorizationReviewPage(
+      input.runId,
+      input.cursor,
+      input.limit,
+      input.filter,
+    )
+  })
+
 export const bulkCategorizeStartProcedure = protectedProcedure
   .input(
     groupInput.extend({
@@ -88,7 +112,7 @@ export const bulkCategorizeStartProcedure = protectedProcedure
 
 export const bulkCategorizeEditProcedure = protectedProcedure
   .input(
-    runInput.extend({
+    revisionInput.extend({
       changes: z
         .array(
           z.object({
@@ -102,49 +126,49 @@ export const bulkCategorizeEditProcedure = protectedProcedure
   .mutation(async ({ ctx, input }) => {
     await requireAdmin(input.groupId, ctx.auth.user.id)
     await requireRun(input.groupId, input.runId)
-    return updateRunSuggestions(input.runId, input.changes)
+    return updateRunSuggestions(input.runId, input.revision, input.changes)
   })
 
 export const bulkCategorizeApplyProcedure = protectedProcedure
-  .input(runInput)
+  .input(revisionInput)
   .mutation(async ({ ctx, input }) => {
     await requireAdmin(input.groupId, ctx.auth.user.id)
     await requireRun(input.groupId, input.runId)
-    return applyCategorizationRun(input.runId)
+    return applyCategorizationRun(input.runId, input.revision, ctx.auth.user.id)
   })
 
 export const bulkCategorizeConfirmProcedure = protectedProcedure
-  .input(runInput)
+  .input(revisionInput)
   .mutation(async ({ ctx, input }) => {
     await requireAdmin(input.groupId, ctx.auth.user.id)
     await requireRun(input.groupId, input.runId)
-    await confirmCalibrationRound(input.runId)
+    await confirmCalibrationRound(input.runId, input.revision)
     return { confirmed: true }
   })
 
 export const bulkCategorizeRerunProcedure = protectedProcedure
-  .input(runInput)
+  .input(revisionInput)
   .mutation(async ({ ctx, input }) => {
     await requireAdmin(input.groupId, ctx.auth.user.id)
     await requireRun(input.groupId, input.runId)
-    await rerunCategorizationRun(input.runId)
+    await rerunCategorizationRun(input.runId, input.revision)
     return { queued: true }
   })
 
 export const bulkCategorizeRetryProcedure = protectedProcedure
-  .input(runInput)
+  .input(revisionInput)
   .mutation(async ({ ctx, input }) => {
     await requireAdmin(input.groupId, ctx.auth.user.id)
     await requireRun(input.groupId, input.runId)
-    await retryCategorizationRun(input.runId)
+    await retryCategorizationRun(input.runId, input.revision)
     return { queued: true }
   })
 
 export const bulkCategorizeDiscardProcedure = protectedProcedure
-  .input(runInput)
+  .input(revisionInput)
   .mutation(async ({ ctx, input }) => {
     await requireAdmin(input.groupId, ctx.auth.user.id)
     await requireRun(input.groupId, input.runId)
-    await discardCategorizationRun(input.runId)
+    await discardCategorizationRun(input.runId, input.revision)
     return { discarded: true }
   })

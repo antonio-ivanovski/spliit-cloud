@@ -60,6 +60,9 @@ vi.mock('@/trpc/client', () => ({
 vi.mock('./bulk-categorize-table', () => ({
   BulkCategorizeTable: () => <div data-testid="categorize-table" />,
 }))
+vi.mock('./bulk-categorize-paged-review', () => ({
+  BulkCategorizePagedReview: () => <div data-testid="paged-review" />,
+}))
 
 import { BulkCategorizePage } from './bulk-categorize-page'
 
@@ -76,6 +79,7 @@ describe('BulkCategorizePage completion state', () => {
       id: 'run-1',
       status: 'REVIEW',
       mode: 'local',
+      revision: 1,
       suggestions: [],
       candidateTotal: 2,
       rerunCandidates: { general: 0, uncertain: 0 },
@@ -94,10 +98,11 @@ describe('BulkCategorizePage completion state', () => {
     expect(mocks.save).toHaveBeenCalledWith({
       groupId: 'group-1',
       runId: 'run-1',
+      revision: 1,
     })
   })
 
-  it('shows the start view instead of a persisted completion on a fresh visit', () => {
+  it('shows persisted completion on a fresh visit', () => {
     mocks.run = {
       id: 'run-1',
       status: 'DONE',
@@ -109,20 +114,13 @@ describe('BulkCategorizePage completion state', () => {
 
     render(<BulkCategorizePage groupId="group-1" groupName="Trip" />)
 
+    expect(screen.getByText('Categorization complete')).toBeInTheDocument()
     expect(
-      screen.queryByText('Categorization complete'),
-    ).not.toBeInTheDocument()
-    expect(
-      screen.getByRole('button', { name: 'Start categorizing' }),
-    ).toBeInTheDocument()
-    expect(
-      screen.getByText(
-        '3 expenses are currently in General and ready to review.',
-      ),
+      screen.getByRole('button', { name: 'Start a new run' }),
     ).toBeInTheDocument()
   })
 
-  it('shows the empty start view when no uncategorized expenses remain', () => {
+  it('shows completion when no uncategorized expenses remain', () => {
     mocks.run = {
       id: 'run-1',
       status: 'DONE',
@@ -135,9 +133,7 @@ describe('BulkCategorizePage completion state', () => {
 
     render(<BulkCategorizePage groupId="group-1" groupName="Trip" />)
 
-    expect(
-      screen.getByText('There are no uncategorized expenses to categorize.'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('Categorization complete')).toBeInTheDocument()
     expect(
       screen.queryByRole('button', { name: 'Start categorizing' }),
     ).not.toBeInTheDocument()
@@ -158,7 +154,24 @@ describe('BulkCategorizePage completion state', () => {
     expect(
       screen.queryByText('Categorization complete'),
     ).not.toBeInTheDocument()
-    expect(screen.getByText(/Preparing a varied sample/)).toBeInTheDocument()
+    expect(screen.getByText('Calibration round 1')).toBeInTheDocument()
+    expect(screen.getByRole('progressbar')).toBeInTheDocument()
+  })
+
+  it('uses the progress panel between calibration rounds', () => {
+    mocks.run = {
+      id: 'run-2',
+      status: 'QUEUED_CALIBRATION',
+      mode: 'jev',
+      round: 1,
+      total: 12,
+      processed: 0,
+      candidateTotal: 50,
+      calibration: { sample: [], confirmed: [], metrics: [] },
+    }
+    render(<BulkCategorizePage groupId="group-1" groupName="Trip" />)
+    expect(screen.getByText('Calibration round 2')).toBeInTheDocument()
+    expect(screen.getByRole('progressbar')).not.toHaveAttribute('value')
   })
 
   it('keeps a failed run available for retry on a fresh visit', () => {
@@ -175,5 +188,68 @@ describe('BulkCategorizePage completion state', () => {
 
     expect(screen.getByText(/Temporary categorizer error/)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument()
+  })
+
+  it('shows the same progress panel as soon as a run starts', async () => {
+    mocks.start.mockImplementationOnce(() => new Promise(() => {}))
+    const user = userEvent.setup()
+    render(<BulkCategorizePage groupId="group-1" groupName="Trip" />)
+
+    await user.click(screen.getByRole('button', { name: 'Start categorizing' }))
+    expect(screen.getByText('Calibration round 1')).toBeInTheDocument()
+    expect(screen.getByRole('progressbar')).not.toHaveAttribute('value')
+  })
+
+  it('shows pending progress immediately when confirming a calibration round', async () => {
+    mocks.run = {
+      id: 'run-4',
+      status: 'CALIBRATION_REVIEW',
+      revision: 2,
+      round: 1,
+      candidateTotal: 20,
+      calibration: { sample: [], confirmed: [], metrics: [] },
+    }
+    mocks.confirm.mockImplementationOnce(() => new Promise(() => {}))
+    const user = userEvent.setup()
+    render(<BulkCategorizePage groupId="group-1" groupName="Trip" />)
+
+    await user.click(screen.getByRole('button', { name: 'Confirm round' }))
+    expect(screen.getByText('Preparing the next step')).toBeInTheDocument()
+    expect(screen.getByRole('progressbar')).not.toHaveAttribute('value')
+  })
+
+  it('offers General filtering and keeps rerun details in a footer popover', async () => {
+    mocks.run = {
+      id: 'run-5',
+      status: 'REVIEW',
+      revision: 3,
+      mode: 'jev',
+      candidateTotal: 10,
+      selected: 7,
+      reviewCycle: 'attempt-1',
+      rerunCandidates: { general: 2, uncertain: 1 },
+      feedback: {
+        proposedCount: 8,
+        changedCount: 2,
+        assignedCount: 1,
+        hasNewCorrection: true,
+        hasCorrections: true,
+      },
+    }
+    const user = userEvent.setup()
+    render(<BulkCategorizePage groupId="group-1" groupName="Trip" />)
+
+    const general = screen.getByRole('button', { name: 'General 3' })
+    await user.click(general)
+    expect(general).toHaveAttribute('aria-pressed', 'true')
+    expect(
+      screen.getByRole('button', { name: 'Improve remaining suggestions' }),
+    ).toBeInTheDocument()
+    await user.click(
+      screen.getByRole('button', { name: 'About improving suggestions' }),
+    )
+    expect(
+      screen.getByText('You changed 2 of 8 suggested categories.'),
+    ).toBeInTheDocument()
   })
 })

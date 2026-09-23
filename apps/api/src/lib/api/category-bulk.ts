@@ -1,4 +1,4 @@
-import { prisma, type Prisma } from '@spliit/db'
+import { prisma, Prisma } from '@spliit/db'
 import {
   BULK_APPLY_HARD_LIMIT,
   DEFAULT_CATEGORY_ID,
@@ -69,6 +69,8 @@ export async function bulkUpdateExpenseCategories(args: {
   transaction?: Prisma.TransactionClient
   /** Expected expense versions. A mismatch is reported as a skipped row. */
   expectedVersions?: Map<string, number>
+  /** Use one version-checked SQL update for a large reviewed run. */
+  setBased?: boolean
 }): Promise<BulkCategorizeApplyResult> {
   const { groupId, accountId, input, expectedVersions } = args
   const fromCategoryId = input.fromCategoryId ?? DEFAULT_CATEGORY_ID
@@ -116,9 +118,8 @@ export async function bulkUpdateExpenseCategories(args: {
 
   const boss = await getApiBoss()
   const apply = async (tx: Prisma.TransactionClient) => {
-    // Lock the candidate rows by selecting them. Update via updateMany
-    // below would not surface the prior categoryIds for the activity
-    // row in one call, so we go with N targeted updates.
+    // Read eligible rows for the activity record. The update below checks
+    // each row's category and version, so a concurrent change is skipped.
     const candidates = await tx.expense.findMany({
       where: {
         ledgerId: group.ledgerId,
@@ -144,44 +145,75 @@ export async function bulkUpdateExpenseCategories(args: {
     const rows: ExpenseCategoriesBulkUpdatedRow[] = []
     const distinctDestinations = new Set<string>()
 
-    for (const candidate of candidates) {
-      const toCategoryId = wantedById.get(candidate.id)
-      if (!toCategoryId) continue
-      const expectedVersion = expectedVersions?.get(candidate.id)
-      if (
-        expectedVersions &&
-        (expectedVersion === undefined || candidate.version !== expectedVersion)
+    if (args.setBased) {
+      if (!expectedVersions)
+        throw new Error('Set-based category updates require expense versions')
+      const values = candidates.map(
+        (candidate) =>
+          Prisma.sql`(${candidate.id}::text, ${expectedVersions.get(candidate.id) ?? -1}::integer, ${wantedById.get(candidate.id) ?? ''}::text)`,
       )
-        continue
-      // Narrow via the schema in case the stored category is a
-      // legacy/unknown id; this just protects the activity row from
-      // crashing on weird inputs.
-      const from: CategoryId = categoryIdSchema.safeParse(candidate.categoryId)
-        .success
-        ? (candidate.categoryId as CategoryId)
-        : DEFAULT_CATEGORY_ID
-      if (from === toCategoryId) continue
-      const claimed = await tx.expense.updateMany({
-        where: {
-          id: candidate.id,
-          ledgerId: group.ledgerId,
-          categoryId: candidate.categoryId,
-          version: expectedVersion ?? candidate.version,
-        },
-        data: {
-          categoryId: toCategoryId,
-          version: { increment: 1 },
-        },
-      })
-      if (claimed.count === 0) continue
-      rows.push({
-        expenseId: candidate.id,
-        title: candidate.title,
-        fromCategoryId: from,
-        toCategoryId: toCategoryId as CategoryId,
-      })
-      distinctDestinations.add(toCategoryId)
-    }
+      const updated = await tx.$queryRaw<
+        Array<{ id: string; title: string; categoryId: string }>
+      >(Prisma.sql`
+        UPDATE "Expense" AS expense
+        SET "categoryId" = desired."categoryId", "version" = expense."version" + 1
+        FROM (VALUES ${Prisma.join(values)}) AS desired("id", "version", "categoryId")
+        WHERE expense."id" = desired."id"
+          AND expense."ledgerId" = ${group.ledgerId}
+          AND expense."categoryId" = ${fromCategoryId}
+          AND expense."version" = desired."version"
+        RETURNING expense."id", expense."title", expense."categoryId"
+      `)
+      for (const changed of updated) {
+        rows.push({
+          expenseId: changed.id,
+          title: changed.title,
+          fromCategoryId: fromCategoryId as CategoryId,
+          toCategoryId: changed.categoryId as CategoryId,
+        })
+        distinctDestinations.add(changed.categoryId)
+      }
+    } else
+      for (const candidate of candidates) {
+        const toCategoryId = wantedById.get(candidate.id)
+        if (!toCategoryId) continue
+        const expectedVersion = expectedVersions?.get(candidate.id)
+        if (
+          expectedVersions &&
+          (expectedVersion === undefined ||
+            candidate.version !== expectedVersion)
+        )
+          continue
+        // Narrow via the schema in case the stored category is a
+        // legacy/unknown id; this just protects the activity row from
+        // crashing on weird inputs.
+        const from: CategoryId = categoryIdSchema.safeParse(
+          candidate.categoryId,
+        ).success
+          ? (candidate.categoryId as CategoryId)
+          : DEFAULT_CATEGORY_ID
+        if (from === toCategoryId) continue
+        const claimed = await tx.expense.updateMany({
+          where: {
+            id: candidate.id,
+            ledgerId: group.ledgerId,
+            categoryId: candidate.categoryId,
+            version: expectedVersion ?? candidate.version,
+          },
+          data: {
+            categoryId: toCategoryId,
+            version: { increment: 1 },
+          },
+        })
+        if (claimed.count === 0) continue
+        rows.push({
+          expenseId: candidate.id,
+          title: candidate.title,
+          fromCategoryId: from,
+          toCategoryId: toCategoryId as CategoryId,
+        })
+        distinctDestinations.add(toCategoryId)
+      }
 
     // No row was actually moved (every requested expense was already
     // on the destination category, or no candidates matched the

@@ -163,6 +163,10 @@ export const expensePreviewSearchSchema = groupAccessSearchSchema.extend({
   returnTo: globalExpensesReturnTo,
 })
 
+export const bulkCategorizeSearchSchema = z.object({
+  expenseId: z.string().min(1).optional().catch(undefined),
+})
+
 export const expenseImportSearchSchema = groupAccessSearchSchema.extend({
   editRow: optionalString,
 })

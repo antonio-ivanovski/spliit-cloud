@@ -1,11 +1,10 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useWindowVirtualizer } from '@tanstack/react-virtual'
+import { ChevronRight } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
-import {
-  formatMinorAmount,
-  hashPreviewLens,
-} from '@/app/groups/[groupId]/expenses/csv-import-review-model'
+import { formatMinorAmount } from '@/app/groups/[groupId]/expenses/csv-import-review-model'
 import {
   categoryFromId,
   categoryLabel,
@@ -15,7 +14,6 @@ import {
   type CategorySelectorBadge,
 } from '@/components/category-selector'
 import { Button } from '@/components/ui/button'
-import { useVirtualizedRows } from '@/components/use-virtualized-rows'
 import { useLocale } from '@/i18n/react'
 import {
   DEFAULT_CATEGORIES,
@@ -82,8 +80,8 @@ export function estimateCategorizeRowHeight(
         : 34
   const titleLines = Math.max(1, Math.ceil(row.title.length / estimatedChars))
   return wide
-    ? Math.max(76 + (titleLines - 1) * 20, alternatives ? 104 : 76)
-    : 142 + (titleLines - 1) * 20 + (alternatives ? 48 : 0)
+    ? Math.max(104 + (titleLines - 1) * 20, alternatives ? 120 : 104)
+    : 180 + (titleLines - 1) * 20 + (alternatives ? 48 : 0)
 }
 
 function confidenceBadgeClass(band: 'high' | 'medium' | 'low' | 'jev') {
@@ -257,60 +255,66 @@ export function BulkCategorizeTable({
   disabled,
   aiMinConfidence,
   onChange,
+  onViewExpense,
+  preserveOrder = false,
 }: {
   rows: CategorizeRow[]
   disabled: boolean
   aiMinConfidence: number
   onChange: (id: string, categoryId: CategoryId) => void
+  onViewExpense?: (id: string) => void
+  preserveOrder?: boolean
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'BulkCategorize' })
   const locale = useLocale()
+  const dateFormatter = useMemo(
+    () => new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }),
+    [locale],
+  )
+  const [containerNode, setContainerNode] = useState<HTMLDivElement | null>(
+    null,
+  )
   const [containerWidth, setContainerWidth] = useState(0)
+  const [scrollMargin, setScrollMargin] = useState(0)
   const wide = containerWidth >= 760
-  const ordered = useMemo(() => sortCategorizeRows(rows), [rows])
-  const estimateRowHeight = useCallback(
-    (index: number) =>
-      estimateCategorizeRowHeight(ordered[index]!, containerWidth),
-    [ordered, containerWidth],
+  const ordered = useMemo(
+    () => (preserveOrder ? rows : sortCategorizeRows(rows)),
+    [rows, preserveOrder],
   )
-  const remeasureKey = useMemo(
-    () =>
-      hashPreviewLens(
-        ordered.map(
-          (row) =>
-            `${row.id}:${row.title.length}:${row.categoryId}:${row.choices.length}`,
-        ),
-      ),
-    [ordered],
-  )
-  const virtual = useVirtualizedRows({
+  const virtualizer = useWindowVirtualizer({
     count: ordered.length,
-    estimateSize: estimateRowHeight,
+    estimateSize: (index) =>
+      estimateCategorizeRowHeight(ordered[index]!, containerWidth),
     getItemKey: (index) => ordered[index]!.id,
-    remeasureKey: `${remeasureKey}:${containerWidth}`,
-    resetScrollOnChange: false,
     overscan: 8,
+    scrollMargin,
+    initialRect: { width: 1024, height: 768 },
   })
-  const setScrollRef = virtual.setScrollRef
-  const setContainer = useCallback(
-    (node: HTMLDivElement | null) => {
-      setScrollRef(node)
-      if (!node) return
-      const observer = new ResizeObserver(([entry]) => {
-        setContainerWidth(Math.round(entry?.contentRect.width ?? 0))
-      })
-      observer.observe(node)
-      return () => {
-        observer.disconnect()
-        setScrollRef(null)
-      }
-    },
-    [setScrollRef],
-  )
+  useEffect(() => {
+    virtualizer.measure()
+  }, [containerWidth, virtualizer])
+  useEffect(() => {
+    if (!containerNode) return
+    const update = () => {
+      setContainerWidth(Math.round(containerNode.getBoundingClientRect().width))
+      setScrollMargin(
+        containerNode.getBoundingClientRect().top + window.scrollY,
+      )
+    }
+    const frame = window.requestAnimationFrame(update)
+    const observer = new ResizeObserver(update)
+    observer.observe(containerNode)
+    window.addEventListener('resize', update)
+    return () => {
+      window.cancelAnimationFrame(frame)
+      observer.disconnect()
+      window.removeEventListener('resize', update)
+    }
+  }, [containerNode])
   const displayDate = (value: string) => {
     const date = value ? new Date(value) : null
     return date && Number.isFinite(date.getTime())
-      ? new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(date)
+      ? dateFormatter.format(date)
       : '—'
   }
   const displayAmount = (row: CategorizeRow) =>
@@ -320,107 +324,78 @@ export function BulkCategorizeTable({
         : `${(row.amount / 100).toFixed(2)} ${row.currency}`
       : '—'
   return (
-    <div
-      ref={setContainer}
-      className="h-[min(70dvh,46rem)] min-h-80 min-w-0 overflow-x-hidden overflow-y-auto"
-    >
-      {wide ? (
-        <table
-          aria-label={t('tableLabel')}
-          className="block w-full text-left text-sm"
-        >
-          <caption className="sr-only">{t('tableLabel')}</caption>
-          <thead className="block border-b bg-muted/40 text-xs text-muted-foreground">
-            <tr className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1.25fr)]">
-              <th className="px-4 py-3 font-medium">{t('expenseColumn')}</th>
-              <th className="px-4 py-3 font-medium">{t('categoryColumn')}</th>
-              <th className="px-4 py-3 font-medium">{t('categoryChoices')}</th>
-            </tr>
-          </thead>
-          <tbody
-            className="relative block"
-            style={{ height: virtual.totalSize }}
-          >
-            {virtual.items.map((item) => {
-              const row = ordered[item.index]!
-              return (
-                <tr
-                  key={row.id}
-                  ref={virtual.measureElement}
-                  data-index={item.index}
-                  className="absolute inset-x-0 grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1.25fr)] border-b bg-background"
-                  style={{ transform: `translateY(${item.start}px)` }}
-                >
-                  <td className="min-w-0 px-4 py-3">
-                    <div className="font-medium break-words">{row.title}</div>
+    <div ref={setContainerNode} className="min-w-0">
+      <ul
+        aria-label={t('tableLabel')}
+        className="relative w-full"
+        style={{ height: virtualizer.getTotalSize() }}
+      >
+        {virtualizer.getVirtualItems().map((item) => {
+          const row = ordered[item.index]!
+          return (
+            <li
+              key={row.id}
+              ref={virtualizer.measureElement}
+              data-index={item.index}
+              className="absolute inset-x-0 min-w-0 border-b bg-background px-4 py-4 text-sm transition-colors hover:bg-accent/40 sm:px-6"
+              style={{
+                transform: `translateY(${item.start - scrollMargin}px)`,
+              }}
+            >
+              <div
+                className={
+                  wide
+                    ? 'grid grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)_minmax(0,1fr)] items-start gap-5'
+                    : 'space-y-3'
+                }
+              >
+                <div className="flex min-w-0 items-start gap-3">
+                  <CategoryIcon
+                    category={categoryFromId(row.categoryId)}
+                    className="mt-0.5 size-4 shrink-0 text-muted-foreground"
+                    aria-hidden
+                  />
+                  <div className="min-w-0 flex-1">
+                    {onViewExpense ? (
+                      <button
+                        type="button"
+                        className="group inline-flex max-w-full items-start gap-1 text-start font-medium hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-primary"
+                        onClick={() => onViewExpense(row.id)}
+                        aria-label={`${t('viewExpenseDetails')}: ${row.title}`}
+                      >
+                        <span className="min-w-0 break-words">{row.title}</span>
+                        <ChevronRight
+                          className="mt-0.5 size-4 shrink-0 text-muted-foreground group-hover:text-foreground rtl:rotate-180"
+                          aria-hidden
+                        />
+                      </button>
+                    ) : (
+                      <h3 className="font-medium break-words">{row.title}</h3>
+                    )}
                     <div className="mt-1 flex flex-wrap gap-x-2 text-xs text-muted-foreground">
                       <span>{displayDate(row.expenseDate)}</span>
                       <span aria-hidden>·</span>
-                      <span>{displayAmount(row)}</span>
+                      <span className="tabular-nums">{displayAmount(row)}</span>
                     </div>
-                  </td>
-                  <td className="min-w-0 px-4 py-3">
-                    <CategoryPicker
-                      row={row}
-                      disabled={disabled}
-                      aiMinConfidence={aiMinConfidence}
-                      onChange={onChange}
-                    />
-                  </td>
-                  <td className="min-w-0 px-4 py-3">
-                    <QuickChoices
-                      row={row}
-                      disabled={disabled}
-                      aiMinConfidence={aiMinConfidence}
-                      onChange={onChange}
-                    />
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-      ) : (
-        <ul
-          aria-label={t('tableLabel')}
-          className="relative"
-          style={{ height: virtual.totalSize }}
-        >
-          {virtual.items.map((item) => {
-            const row = ordered[item.index]!
-            return (
-              <li
-                key={row.id}
-                ref={virtual.measureElement}
-                data-index={item.index}
-                className="absolute inset-x-0 min-w-0 border-b bg-background p-4"
-                style={{ transform: `translateY(${item.start}px)` }}
-              >
-                <h3 className="font-medium break-words">{row.title}</h3>
-                <div className="mt-1 flex flex-wrap gap-x-2 text-xs text-muted-foreground">
-                  <span>{displayDate(row.expenseDate)}</span>
-                  <span aria-hidden>·</span>
-                  <span>{displayAmount(row)}</span>
+                  </div>
                 </div>
-                <div className="mt-3 space-y-3">
-                  <CategoryPicker
-                    row={row}
-                    disabled={disabled}
-                    aiMinConfidence={aiMinConfidence}
-                    onChange={onChange}
-                  />
-                  <QuickChoices
-                    row={row}
-                    disabled={disabled}
-                    aiMinConfidence={aiMinConfidence}
-                    onChange={onChange}
-                  />
-                </div>
-              </li>
-            )
-          })}
-        </ul>
-      )}
+                <CategoryPicker
+                  row={row}
+                  disabled={disabled}
+                  aiMinConfidence={aiMinConfidence}
+                  onChange={onChange}
+                />
+                <QuickChoices
+                  row={row}
+                  disabled={disabled}
+                  aiMinConfidence={aiMinConfidence}
+                  onChange={onChange}
+                />
+              </div>
+            </li>
+          )
+        })}
+      </ul>
     </div>
   )
 }
