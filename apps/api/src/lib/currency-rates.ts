@@ -448,9 +448,7 @@ export async function getCurrencyRate({
   }
 
   // Pure fiat: single Frankfurter call (preserves prior asOfDate / ttlMs behaviour).
-  const payload = await withFxRetry(() =>
-    fetchImpl(lookupDate, base, [target]),
-  )
+  const payload = await withFxRetry(() => fetchImpl(lookupDate, base, [target]))
   const rate = payload.rates[target]
   if (typeof rate !== 'number') {
     throw new CurrencyRateNotFoundError(target)
@@ -498,8 +496,8 @@ export type BatchRateResult =
  * Resolve multiple rates in parallel. Fiat-only requests are grouped by (date,
  * base) for one Frankfurter multi-quote call. Crypto-involving requests resolve
  * individually with shared in-flight sub-legs so repeated intermediaries
- * (BTC→EUR for BTC→MKD and BTC→BGN) cost a single provider call.
- * Future dates are clamped to today per item (same rule as `getCurrencyRate`).
+ * (BTC→EUR for BTC→MKD and BTC→BGN) cost a single provider call. Future dates
+ * are clamped to today per item (same rule as `getCurrencyRate`).
  */
 export async function getCurrencyRates(
   requests: BatchRateRequest[],

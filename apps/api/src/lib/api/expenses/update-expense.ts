@@ -205,7 +205,9 @@ export async function updateExpense(
     missingNameIds.length > 0
       ? await prisma.ledgerParticipant.findMany({
           where: { id: { in: missingNameIds } },
-          select: participantDisplayNameSelect({ pendingInvitationsOnly: true }),
+          select: participantDisplayNameSelect({
+            pendingInvitationsOnly: true,
+          }),
         })
       : []
 

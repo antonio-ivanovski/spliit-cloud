@@ -9,21 +9,21 @@ import { checkDbConnection, testRunId } from './setup'
 await checkDbConnection()
 
 /**
- * Regression tests for https://github.com/antonio-ivanovski/spliit-cloud/issues/128
- * "[Bug] Invalid Participant ID Error" when editing an existing transaction.
+ * Regression tests for
+ * https://github.com/antonio-ivanovski/spliit-cloud/issues/128 "[Bug] Invalid
+ * Participant ID Error" when editing an existing transaction.
  *
  * Reporter: self-hosted instance, itemized split, suspected participant
  * deletion between creation and edit. Even a no-op resave fails.
  *
  * Expected (desired) behavior: editing an expense that still references a
- * soft-removed participant (`removedAt != null`) must not throw
- * `Invalid participant ID`. The read path (`getExpense`) returns those IDs
- * and the edit form round-trips them verbatim, so update validation must
- * grandfather them (and/or allow settlements with removed participants,
- * mirroring create).
+ * soft-removed participant (`removedAt != null`) must not throw `Invalid
+ * participant ID`. The read path (`getExpense`) returns those IDs and the edit
+ * form round-trips them verbatim, so update validation must grandfather them
+ * (and/or allow settlements with removed participants, mirroring create).
  *
- * These tests currently FAIL with `Invalid participant ID: <id>` — that
- * failure is the reproduction. Do not fix `update-expense.ts` yet.
+ * These tests currently FAIL with `Invalid participant ID: <id>` — that failure
+ * is the reproduction. Do not fix `update-expense.ts` yet.
  */
 describe('Issue #128 — update expense with removed participant — real DB', () => {
   const runId = testRunId()
@@ -507,9 +507,9 @@ describe('Issue #128 — update expense with removed participant — real DB', (
       after.paidFor.map((p) => [p.ledgerParticipantId, p.shares]),
     )
     // Filler must not migrate away from the removed participant on rename.
-    expect(afterById[participants['Alice']]).toBe(beforeById[participants['Alice']])
-    expect(
-      after.paidFor.reduce((sum, p) => sum + p.shares, 0),
-    ).toBe(10000)
+    expect(afterById[participants['Alice']]).toBe(
+      beforeById[participants['Alice']],
+    )
+    expect(after.paidFor.reduce((sum, p) => sum + p.shares, 0)).toBe(10000)
   })
 })
