@@ -2,16 +2,19 @@ import { prisma, type Prisma } from '@spliit/db'
 import {
   DEFAULT_CATEGORY_ID,
   SETTLEMENT_CATEGORY_ID,
+  categorizeLocally,
   loadLocaleDictionary,
   categoryConfidenceBand,
   createCategorySearchDocumentsForLocale,
-  suggestCategoryRunnersUp,
-  suggestCategoryFromTitleForLocale,
+  normalizeSearchText,
+  type CategorizerChoice,
+  type CategoryEvidence,
   type CategoryId,
 } from '@spliit/domain'
 import { JOB_NAMES, sendJob } from '@spliit/jobs'
 
 import { categorizeExpensesWithJev } from '../ai/batch-categorize'
+import { adaptJevCategory } from '../ai/category-adapters'
 import { getRecentExpenseContext } from '../ai/context'
 import { loadJevDateNeighbors } from '../ai/jev-neighbors'
 import { enqueueBudgetEvaluation } from '../budgets/enqueue'
@@ -36,6 +39,8 @@ export type Choice = {
   matchScore?: number
   /** Acceptance floor used when this choice was generated. */
   floor?: number
+  /** Optional for older JSON drafts; distinguishes Jev alternatives. */
+  evidenceKind?: CategoryEvidence['kind']
 }
 export type Suggestion = Candidate & {
   categoryId: CategoryId
@@ -889,7 +894,7 @@ export async function processCategorizationJob(
 
 export function buildCategorizationFeedback(
   confirmed: Suggestion[],
-  locale: string,
+  _locale: string,
 ) {
   const positive: Array<{ title: string; categoryId: CategoryId }> = []
   const rejected: Array<{
@@ -910,7 +915,7 @@ export function buildCategorizationFeedback(
       title: row.title,
       rejectedCategoryId: row.initialCategoryId,
     })
-    const key = row.title.trim().toLocaleLowerCase(locale)
+    const key = normalizeSearchText(row.title)
     const categories = rejectedByTitle.get(key) ?? new Set<CategoryId>()
     categories.add(row.initialCategoryId)
     rejectedByTitle.set(key, categories)
@@ -919,9 +924,7 @@ export function buildCategorizationFeedback(
     positive,
     rejected,
     isRejected: (title: string, categoryId: CategoryId) =>
-      rejectedByTitle
-        .get(title.trim().toLocaleLowerCase(locale))
-        ?.has(categoryId) ?? false,
+      rejectedByTitle.get(normalizeSearchText(title))?.has(categoryId) ?? false,
   }
 }
 
@@ -932,42 +935,17 @@ export async function suggestRows(
   options: { dateNeighbors?: boolean } = {},
 ): Promise<Suggestion[]> {
   const feedback = buildCategorizationFeedback(confirmed, run.locale)
-  const isRejected = feedback.isRejected
   const localMode = run.mode === 'local'
   if (localMode) await loadLocaleDictionary(run.locale)
   const context = localMode
-    ? await getRecentExpenseContext(run.groupId, 200)
+    ? await getRecentExpenseContext(run.groupId, env.CATEGORY_MEMORY_LIMIT)
     : null
-  const hints = [...feedback.positive, ...(context?.expenses ?? [])]
   const documents = localMode
     ? createCategorySearchDocumentsForLocale(run.locale)
     : []
   const localThresholds = {
     minScore: env.CATEGORY_LOCAL_MIN_SCORE,
     settlementMinScore: env.CATEGORY_LOCAL_SETTLEMENT_MIN_SCORE,
-  }
-  const local = new Map<
-    string,
-    { id: CategoryId; score: number; source: string }
-  >()
-  for (const row of localMode ? chunk : []) {
-    const hit = suggestCategoryFromTitleForLocale(
-      row.title,
-      run.locale,
-      hints,
-      {
-        dictionaryEnabled: env.CATEGORY_DICTIONARY_ENABLED,
-        historyEnabled: env.CATEGORY_HISTORY_ENABLED,
-        thresholds: localThresholds,
-      },
-    )
-    if (
-      hit &&
-      hit.id !== DEFAULT_CATEGORY_ID &&
-      hit.id !== SETTLEMENT_CATEGORY_ID &&
-      !isRejected(row.title, hit.id)
-    )
-      local.set(row.id, hit)
   }
   const jev =
     run.mode === 'jev' && chunk.length
@@ -989,109 +967,55 @@ export async function suggestRows(
         )
       : new Map()
   return chunk.map((row): Suggestion => {
-    const hit = local.get(row.id)
-    if (hit) {
-      const runners = env.CATEGORY_DICTIONARY_ENABLED
-        ? suggestCategoryRunnersUp(row.title, documents, {
-            excludeIds: [hit.id],
-            limit: 2,
-            thresholds: localThresholds,
-          }).filter((runner) => !isRejected(row.title, runner.id))
-        : []
-      const floor =
-        hit.source === 'history' ? 0.75 : env.CATEGORY_LOCAL_MIN_SCORE
-      const choices: Choice[] = [
-        {
-          categoryId: hit.id,
-          confidence: null,
-          source: 'local',
-          matchScore: hit.score,
-          floor,
-        },
-      ]
-      for (const runner of runners)
-        choices.push({
-          categoryId: runner.id,
-          confidence: null,
-          source: 'local',
-          matchScore: runner.score,
-          floor: env.CATEGORY_LOCAL_MIN_SCORE,
-        })
-      return {
-        ...row,
-        categoryId: hit.id,
-        initialCategoryId: hit.id,
-        source: 'local',
-        choices,
-      }
-    }
     const guess = jev.get(row.id)
-    if (!guess && localMode) {
-      const alternatives = env.CATEGORY_DICTIONARY_ENABLED
-        ? suggestCategoryRunnersUp(row.title, documents, {
-            limit: 2,
-            thresholds: localThresholds,
-          }).filter((runner) => !isRejected(row.title, runner.id))
-        : []
-      return {
-        ...row,
-        categoryId: DEFAULT_CATEGORY_ID,
-        initialCategoryId: DEFAULT_CATEGORY_ID,
-        source: 'none',
-        choices: alternatives.map((runner) => ({
-          categoryId: runner.id,
-          confidence: null,
-          source: 'local',
-          matchScore: runner.score,
-          floor: env.CATEGORY_LOCAL_MIN_SCORE,
-        })),
-      }
-    }
-    if (!guess)
-      return {
-        ...row,
-        categoryId: DEFAULT_CATEGORY_ID,
-        initialCategoryId: DEFAULT_CATEGORY_ID,
-        source: 'none',
-        choices: [],
-      }
-    const choices: Choice[] = []
-    const addChoice = (categoryId: CategoryId, confidence: number) => {
-      if (
-        categoryId === DEFAULT_CATEGORY_ID ||
-        categoryId === SETTLEMENT_CATEGORY_ID ||
-        choices.some((choice) => choice.categoryId === categoryId) ||
-        isRejected(row.title, categoryId)
-      )
-        return
-      choices.push({
-        categoryId,
-        confidence,
-        source: 'jev',
-        floor: env.AI_CATEGORY_MIN_CONFIDENCE,
-      })
-    }
-    if (
-      guess.categoryId !== DEFAULT_CATEGORY_ID &&
-      !isRejected(row.title, guess.categoryId)
+    const rejected = new Set(
+      feedback.rejected
+        .filter(
+          (item) =>
+            normalizeSearchText(item.title) === normalizeSearchText(row.title),
+        )
+        .map((item) => item.rejectedCategoryId),
     )
-      addChoice(guess.categoryId, guess.confidence)
-    for (const choice of guess.probabilities) {
-      if (choices.length >= 3) break
-      if (choice.probability >= 0.15)
-        addChoice(choice.categoryId, choice.probability)
-    }
-    const categoryId =
-      choices.find(
-        (choice) =>
-          choice.confidence !== null &&
-          choice.confidence >= env.AI_CATEGORY_MIN_CONFIDENCE,
-      )?.categoryId ?? DEFAULT_CATEGORY_ID
+    const result = localMode
+      ? categorizeLocally({
+          title: row.title,
+          documents,
+          memory: context?.expenses ?? [],
+          feedback,
+          alternativeLimit: 2,
+          options: {
+            dictionaryEnabled: env.CATEGORY_DICTIONARY_ENABLED,
+            historyEnabled: env.CATEGORY_HISTORY_ENABLED,
+            thresholds: localThresholds,
+          },
+        })
+      : adaptJevCategory(guess, env.AI_CATEGORY_MIN_CONFIDENCE, rejected)
+    const choices: Choice[] = [result.primary, ...result.alternatives]
+      .filter((choice): choice is CategorizerChoice => choice !== null)
+      .slice(0, 3)
+      .map((choice) => ({
+        categoryId: choice.categoryId,
+        confidence:
+          choice.evidence.kind === 'heuristic' ? null : choice.evidence.value,
+        source: localMode ? 'local' : 'jev',
+        evidenceKind: choice.evidence.kind,
+        ...(choice.evidence.kind === 'heuristic' && {
+          matchScore: choice.evidence.value,
+        }),
+        ...('floor' in choice.evidence && { floor: choice.evidence.floor }),
+      }))
+    const categoryId = result.categoryId ?? DEFAULT_CATEGORY_ID
     return {
       ...row,
       categoryId,
       initialCategoryId: categoryId,
-      source: 'jev',
+      source: localMode
+        ? result.primary
+          ? 'local'
+          : 'none'
+        : guess
+          ? 'jev'
+          : 'none',
       choices,
     }
   })

@@ -56,17 +56,21 @@ export type SuggestCategoryWithSystemOneResult = {
   marginTopTwo: number
 }
 
-type SystemOneChoiceAnswer = {
-  type: 'choice'
-  choice: string
+export type SystemOneCategoryAnswer = {
+  choice: CategoryId
   confidence: number
   probabilities: Record<string, number>
 }
 
-type SystemOneResponse = {
-  model: string
-  answers: Record<string, SystemOneChoiceAnswer>
-  usage: { input_tokens: number; output_tokens: number }
+export class SystemOneRequestError extends Error {
+  constructor(
+    readonly status: number,
+    readonly errorType?: string,
+  ) {
+    super(
+      `SystemOne request failed with status ${status}${errorType ? ` (${errorType})` : ''}`,
+    )
+  }
 }
 
 /**
@@ -86,6 +90,96 @@ export function systemOneCategoryOptions(): {
   }))
 }
 
+/** Shared Jev request builder and allowlist validator for one or many choices. */
+export async function requestSystemOneCategories(args: {
+  state: Record<string, unknown>
+  questions: Record<string, { instructions: string | Record<string, unknown> }>
+  apiKey: string
+  model?: string
+  baseUrl?: string
+  timeoutSeconds?: number
+}): Promise<Record<string, SystemOneCategoryAnswer | undefined>> {
+  const criteria = Object.fromEntries(
+    systemOneCategoryOptions().map(({ id, description }) => [id, description]),
+  )
+  const questions = Object.fromEntries(
+    Object.entries(args.questions).map(([key, question]) => [
+      key,
+      { type: 'choice', instructions: question.instructions, criteria },
+    ]),
+  )
+  const response = await fetch(args.baseUrl ?? DEFAULT_SYSTEM_ONE_API_URL, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${args.apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    signal: AbortSignal.timeout(timeoutSecondsToMs(args.timeoutSeconds ?? 10)),
+    body: JSON.stringify({
+      state: args.state,
+      model: args.model ?? 'jev-latest',
+      questions,
+    }),
+  })
+  if (!response.ok) {
+    const body =
+      typeof response.json === 'function'
+        ? await response.json().catch(() => null)
+        : null
+    const errorType =
+      body && typeof body === 'object' && 'detail' in body
+        ? (body.detail as { error_type?: unknown })?.error_type
+        : undefined
+    throw new SystemOneRequestError(
+      response.status,
+      typeof errorType === 'string' ? errorType : undefined,
+    )
+  }
+  const payload = (await response.json()) as {
+    answers?: Record<
+      string,
+      {
+        type?: string
+        choice?: string
+        confidence?: number
+        probabilities?: Record<string, number>
+      }
+    >
+  }
+  const allowed = new Set(Object.keys(criteria))
+  return Object.fromEntries(
+    Object.keys(questions).map((key) => {
+      const answer = payload.answers?.[key]
+      if (
+        answer?.type !== 'choice' ||
+        !answer.choice ||
+        !allowed.has(answer.choice) ||
+        !Number.isFinite(answer.confidence) ||
+        answer.confidence! < 0 ||
+        answer.confidence! > 1
+      )
+        return [key, undefined]
+      const probabilities = Object.fromEntries(
+        Object.entries(answer.probabilities ?? {}).filter(
+          ([id, probability]) =>
+            allowed.has(id) &&
+            Number.isFinite(probability) &&
+            probability >= 0 &&
+            probability <= 1,
+        ),
+      )
+      return [
+        key,
+        {
+          choice: answer.choice as CategoryId,
+          confidence: answer.confidence!,
+          probabilities,
+        } satisfies SystemOneCategoryAnswer,
+      ]
+    }),
+  )
+}
+
 /**
  * Title → category judgment via a System One decision model. Asks a single flat
  * `Choice` question over every default category, with the expense title,
@@ -101,12 +195,6 @@ export async function suggestCategoryWithSystemOne(
   description: string,
   options: SuggestCategoryWithSystemOneOptions,
 ): Promise<SuggestCategoryWithSystemOneResult> {
-  const criteria: Record<string, string> = {}
-  for (const option of systemOneCategoryOptions()) {
-    criteria[option.id] = option.description
-  }
-  const allowedIds = new Set(Object.keys(criteria))
-
   const languageName = options.locale
     ? resolveLanguageName(options.locale)
     : undefined
@@ -127,35 +215,20 @@ export async function suggestCategoryWithSystemOne(
     })),
   }
 
-  const response = await fetch(options.baseUrl ?? DEFAULT_SYSTEM_ONE_API_URL, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${options.apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    signal: AbortSignal.timeout(
-      timeoutSecondsToMs(options.timeoutSeconds ?? 10),
-    ),
-    body: JSON.stringify({
-      state,
-      model: options.model ?? 'jev-latest',
-      questions: {
-        category: {
-          type: 'choice',
-          instructions:
-            'Which expense category best describes this expense title? Use the group context, app language hint, and recent expenses as supporting context. If no category fits, choose general.',
-          criteria,
-        },
+  const answers = await requestSystemOneCategories({
+    state,
+    questions: {
+      category: {
+        instructions:
+          'Which expense category best describes this expense title? Use the group context, app language hint, and recent expenses as supporting context. If no category fits, choose general.',
       },
-    }),
+    },
+    apiKey: options.apiKey,
+    model: options.model,
+    baseUrl: options.baseUrl,
+    timeoutSeconds: options.timeoutSeconds,
   })
-
-  if (!response.ok) {
-    throw new Error(`SystemOne request failed with status ${response.status}`)
-  }
-
-  const payload = (await response.json()) as SystemOneResponse
-  const answer = payload.answers?.['category']
+  const answer = answers.category
   const choice = answer?.choice
   const confidence = answer?.confidence ?? 0
   const probabilities = answer?.probabilities ?? {}
@@ -168,7 +241,6 @@ export async function suggestCategoryWithSystemOne(
   const minConfidence = options.minConfidence ?? 0
   if (
     !choice ||
-    !allowedIds.has(choice) ||
     choice === DEFAULT_CATEGORY_ID ||
     choice === SETTLEMENT_CATEGORY_ID ||
     confidence < minConfidence

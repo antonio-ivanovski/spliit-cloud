@@ -1,10 +1,11 @@
 import {
   createCategorySearchDocumentsForLocale,
+  CATEGORY_DICTIONARY_HISTORY_VETO_SCORE,
+  categorizeLocally,
   loadLocaleDictionary,
   meetsCategorySuggestMinQueryLength,
   rankCategories,
   suggestAiCandidates,
-  suggestCategoryFromTitleForLocale,
   type AiCategoryDistribution,
   type AiCategorySuggestion,
   type CategoryId,
@@ -12,6 +13,7 @@ import {
   type SuggestCategoryOptions,
 } from '@spliit/domain'
 
+import { adaptJevCategory, adaptLlmCategory } from '../../ai/category-adapters'
 import { getRecentExpenseContext } from '../../ai/context'
 import { suggestCategoryWithSystemOne } from '../../ai/system-one-categorize'
 import { isTimeoutError } from '../../ai/timeout'
@@ -49,6 +51,7 @@ type SuggestNoneReason =
   | 'title-too-short'
   | 'local-miss-ai-disabled'
   | 'ai-below-floor'
+  | 'ai-abstained'
   | 'ai-timeout'
 
 type SuggestCandidate = { id: string; score: number }
@@ -158,22 +161,27 @@ export async function suggestExpenseCategory(
 
   await loadLocaleDictionary(locale)
 
-  if (env.CATEGORY_DICTIONARY_ENABLED) {
-    const dictionaryHit = suggestCategoryFromTitleForLocale(
-      args.title,
-      locale,
-      [],
-      { ...options, historyEnabled: false },
-    )
-    if (dictionaryHit) {
-      logSuggest({
-        ...input,
-        hit: 'dictionary',
-        categoryId: dictionaryHit.id,
-        score: round3(dictionaryHit.score),
-      })
-      return { categoryId: dictionaryHit.id, candidates: [] }
-    }
+  const documents = createCategorySearchDocumentsForLocale(locale)
+  // A near-exact dictionary hit cannot be displaced by conflicting history;
+  // keep this common form path free of a group-context query.
+  const early = categorizeLocally({
+    title: args.title,
+    documents,
+    options: { ...options, historyEnabled: false },
+    alternativeLimit: 0,
+  })
+  if (
+    early.categoryId &&
+    early.primary?.source === 'dictionary' &&
+    early.primary.evidence.value >= CATEGORY_DICTIONARY_HISTORY_VETO_SCORE
+  ) {
+    logSuggest({
+      ...input,
+      hit: 'dictionary',
+      categoryId: early.categoryId,
+      score: round3(early.primary.evidence.value),
+    })
+    return { categoryId: early.categoryId, candidates: [] }
   }
 
   // Recent expenses feed both the history stage and the AI engine, so fetch
@@ -185,22 +193,20 @@ export async function suggestExpenseCategory(
     ? await getRecentExpenseContext(args.groupId, env.CATEGORY_MEMORY_LIMIT)
     : undefined
 
-  if (env.CATEGORY_HISTORY_ENABLED && context) {
-    const historyHit = suggestCategoryFromTitleForLocale(
-      args.title,
-      locale,
-      context.expenses,
-      { ...options, dictionaryEnabled: false },
-    )
-    if (historyHit) {
-      logSuggest({
-        ...input,
-        hit: 'history',
-        categoryId: historyHit.id,
-        score: round3(historyHit.score),
-      })
-      return { categoryId: historyHit.id, candidates: [] }
-    }
+  const local = categorizeLocally({
+    title: args.title,
+    documents,
+    memory: context?.expenses ?? [],
+    options,
+  })
+  if (local.categoryId && local.primary) {
+    logSuggest({
+      ...input,
+      hit: local.primary.source as 'dictionary' | 'history',
+      categoryId: local.categoryId,
+      score: round3(local.primary.evidence.value),
+    })
+    return { categoryId: local.categoryId, candidates: [] }
   }
 
   if (!args.allowAi || !env.PUBLIC_ENABLE_CATEGORY_EXTRACT) {
@@ -237,22 +243,36 @@ export async function suggestExpenseCategory(
         model: env.AI_SYSTEM_ONE_MODEL,
         baseUrl: env.AI_SYSTEM_ONE_BASE_URL,
         timeoutSeconds: env.AI_SYSTEM_ONE_TIMEOUT_SECONDS,
-        minConfidence,
+        // Let the shared interpreter apply the same floor as bulk.
+        minConfidence: 0,
         recentExpenses,
         locale: args.locale,
         groupContext,
       })
+      const verdict = adaptJevCategory(
+        {
+          categoryId: (systemOne.categoryId ?? 'general') as CategoryId,
+          confidence: systemOne.confidence,
+          probabilities: Object.entries(systemOne.probabilities).map(
+            ([categoryId, probability]) => ({
+              categoryId: categoryId as CategoryId,
+              probability,
+            }),
+          ),
+        },
+        minConfidence,
+      )
       const distribution: AiCategoryDistribution[] = Object.entries(
         systemOne.probabilities,
       ).map(([id, probability]) => ({ id, probability }))
       const candidates = suggestAiCandidates(
         distribution,
-        systemOne.categoryId ? [systemOne.categoryId] : [],
+        verdict.categoryId ? [verdict.categoryId] : [],
       )
       logSuggest({
         ...input,
-        hit: systemOne.categoryId ? 'system-one' : 'none',
-        categoryId: systemOne.categoryId,
+        hit: verdict.categoryId ? 'system-one' : 'none',
+        categoryId: verdict.categoryId,
         confidence: round3(systemOne.confidence),
         marginTopTwo: round3(systemOne.marginTopTwo),
         probabilities: Object.entries(systemOne.probabilities)
@@ -265,12 +285,14 @@ export async function suggestExpenseCategory(
         candidates,
         model: env.AI_SYSTEM_ONE_MODEL,
         latencyMs: Date.now() - started,
-        ...(!systemOne.categoryId && {
-          reason: 'ai-below-floor' as const,
+        ...(!verdict.categoryId && {
+          reason: systemOne.categoryId
+            ? ('ai-below-floor' as const)
+            : ('ai-abstained' as const),
           topCandidates: getTopCandidates(),
         }),
       })
-      return { categoryId: systemOne.categoryId, candidates }
+      return { categoryId: verdict.categoryId, candidates }
     }
 
     const ai = await suggestCategoryWithAI(args.title, {
@@ -278,15 +300,15 @@ export async function suggestExpenseCategory(
       locale: args.locale,
       groupContext,
     })
-    const floored = ai.confidence < minConfidence ? null : ai.categoryId
+    const verdict = adaptLlmCategory(ai, minConfidence)
     const candidates = suggestAiCandidates(
       ai.distribution,
-      floored ? [floored] : [],
+      verdict.categoryId ? [verdict.categoryId] : [],
     )
     logSuggest({
       ...input,
-      hit: floored ? 'llm' : 'none',
-      categoryId: floored,
+      hit: verdict.categoryId ? 'llm' : 'none',
+      categoryId: verdict.categoryId,
       confidence: round3(ai.confidence),
       distribution: ai.distribution.map(({ id, probability }) => ({
         id,
@@ -295,12 +317,14 @@ export async function suggestExpenseCategory(
       candidates,
       model: env.AI_CATEGORY_MODEL,
       latencyMs: Date.now() - started,
-      ...(!floored && {
-        reason: 'ai-below-floor' as const,
+      ...(!verdict.categoryId && {
+        reason: ai.categoryId
+          ? ('ai-below-floor' as const)
+          : ('ai-abstained' as const),
         topCandidates: getTopCandidates(),
       }),
     })
-    return { categoryId: floored, candidates }
+    return { categoryId: verdict.categoryId, candidates }
   } catch (error) {
     // Best-effort suggestion: a slow provider must not fail the form.
     if (isTimeoutError(error)) {

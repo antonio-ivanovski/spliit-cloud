@@ -3090,7 +3090,8 @@
     "lowMatch": "Low match",
     "belowMatchThreshold": "Below match threshold",
     "jevConfidence": "Jev confidence: {confidence}%",
-    "refiningTitle": "Refining uncertain matches"
+    "refiningTitle": "Refining uncertain matches",
+    "jevOptionProbability": "Jev option probability: {probability}%"
   },
   "ExpensePreview": {
     "title": "Expense preview",

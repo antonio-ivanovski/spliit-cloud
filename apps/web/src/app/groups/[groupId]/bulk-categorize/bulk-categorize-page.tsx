@@ -36,6 +36,12 @@ export function BulkCategorizePage({
   const locale = useLocale()
   const [mode, setMode] = useState<'local' | 'jev'>('local')
   const [error, setError] = useState<string | null>(null)
+  const [completion, setCompletion] = useState<{
+    runId: string
+    applied: number
+    total: number
+    mode: 'local' | 'jev'
+  } | null>(null)
   const { data: features } = trpc.features.get.useQuery()
   const count = trpc.ai.bulkCategorize.count.useQuery(
     { groupId },
@@ -68,6 +74,8 @@ export function BulkCategorizePage({
   const confirm = trpc.ai.bulkCategorize.confirm.useMutation()
   const rerun = trpc.ai.bulkCategorize.rerun.useMutation()
   const run = status.data
+  const completionForCurrentRun =
+    run && completion?.runId === run.id ? completion : null
   const pending =
     start.isPending ||
     edit.isPending ||
@@ -85,6 +93,26 @@ export function BulkCategorizePage({
     setError(null)
     try {
       await action()
+      await status.refetch()
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : String(cause))
+    }
+  }
+
+  async function saveReview(
+    runId: string,
+    total: number,
+    runMode: 'local' | 'jev',
+  ) {
+    setError(null)
+    try {
+      const result = await save.mutateAsync({ groupId, runId })
+      setCompletion({
+        runId,
+        applied: result.applied,
+        total,
+        mode: runMode,
+      })
       await status.refetch()
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : String(cause))
@@ -161,6 +189,54 @@ export function BulkCategorizePage({
               {blockedReason === 'admin' ? t('adminsOnly') : t('archived')}
             </CardTitle>
           </CardHeader>
+        </Card>
+      ) : completionForCurrentRun ? (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Check
+                className="size-5 rounded-full bg-emerald-100 p-0.5 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
+                aria-hidden
+              />
+              {t('doneTitle')}
+            </CardTitle>
+            <CardDescription>
+              {count.isFetching
+                ? t('countLoading')
+                : t('completionSummary', {
+                    changed: completionForCurrentRun.applied,
+                    total: completionForCurrentRun.total,
+                    remaining,
+                  })}
+            </CardDescription>
+          </CardHeader>
+          <CardFooter className="flex flex-wrap gap-2">
+            <Button
+              nativeButton={false}
+              render={
+                <Link to="/groups/$groupId/expenses" params={{ groupId }} />
+              }
+            >
+              {t('viewExpenses')}
+            </Button>
+            {remaining > 0 && (
+              <Button
+                variant="outline"
+                disabled={pending}
+                onClick={() =>
+                  void act(() =>
+                    start.mutateAsync({
+                      groupId,
+                      mode: completionForCurrentRun.mode,
+                      locale,
+                    }),
+                  )
+                }
+              >
+                {t('restart')}
+              </Button>
+            )}
+          </CardFooter>
         </Card>
       ) : run?.status === 'QUEUED_CALIBRATION' ||
         run?.status === 'CALIBRATING' ? (
@@ -427,7 +503,7 @@ export function BulkCategorizePage({
             <Button
               disabled={pending}
               onClick={() =>
-                void act(() => save.mutateAsync({ groupId, runId: run.id }))
+                void saveReview(run.id, run.candidateTotal, run.mode)
               }
             >
               {save.isPending ? (
@@ -439,50 +515,6 @@ export function BulkCategorizePage({
                 ? t('saveCount', { count: selected })
                 : t('finishWithoutChanges')}
             </Button>
-          </CardFooter>
-        </Card>
-      ) : run?.status === 'DONE' ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Check
-                className="size-5 rounded-full bg-emerald-100 p-0.5 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
-                aria-hidden
-              />
-              {t('doneTitle')}
-            </CardTitle>
-            <CardDescription>
-              {count.isFetching
-                ? t('countLoading')
-                : t('completionSummary', {
-                    changed: run.applied,
-                    total: run.candidateTotal,
-                    remaining,
-                  })}
-            </CardDescription>
-          </CardHeader>
-          <CardFooter className="flex flex-wrap gap-2">
-            <Button
-              nativeButton={false}
-              render={
-                <Link to="/groups/$groupId/expenses" params={{ groupId }} />
-              }
-            >
-              {t('viewExpenses')}
-            </Button>
-            {remaining > 0 && (
-              <Button
-                variant="outline"
-                disabled={pending}
-                onClick={() =>
-                  void act(() =>
-                    start.mutateAsync({ groupId, mode: run.mode, locale }),
-                  )
-                }
-              >
-                {t('restart')}
-              </Button>
-            )}
           </CardFooter>
         </Card>
       ) : (

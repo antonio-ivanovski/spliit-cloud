@@ -10,11 +10,10 @@ import {
   DEFAULT_CATEGORIES,
   DEFAULT_CATEGORY_ID,
   CATEGORY_CANDIDATE_NEAR_TIE_WINDOW,
+  categorizeLocally,
   createCategorySearchDocument,
   meetsCategorySuggestLiveMinQueryLength,
   meetsCategorySuggestMinQueryLength,
-  suggestCategoryFromTitle,
-  suggestCategoryRunnersUp,
   type CategoryLocalThresholds,
   type CategorySuggestion,
   type ExpenseFormInputValues,
@@ -144,19 +143,24 @@ export function useSuggestCategoryFromTitle(args: {
         return
       }
 
-      const local = suggestCategoryFromTitle(title, documents, memory ?? [], {
-        dictionaryEnabled: enableDictionarySuggest,
-        historyEnabled: enableHistorySuggest,
-        thresholds: localThresholds,
+      const local = categorizeLocally({
+        title,
+        documents,
+        memory: memory ?? [],
+        options: {
+          dictionaryEnabled: enableDictionarySuggest,
+          historyEnabled: enableHistorySuggest,
+          thresholds: localThresholds,
+        },
       })
-      if (local) {
+      if (local.categoryId) {
         clearLoadingDelay()
         categoryRequestRef.current += 1
         categoryAbortRef.current?.abort()
         lastCategorizedTitleRef.current = title
         categorySourceRef.current = 'suggested'
         setCategoryLoading(false)
-        form.setValue('category', local.id, {
+        form.setValue('category', local.categoryId, {
           shouldDirty: true,
           shouldTouch: true,
           shouldValidate: true,
@@ -164,21 +168,29 @@ export function useSuggestCategoryFromTitle(args: {
         // Single "other suggestions" chip on a near-tie dictionary hit —
         // same score scale, so the comparison is meaningful. History and AI
         // hits use different scales and never get a runner-up chip.
-        if (local.source === 'dictionary') {
-          const [runnerUp] = suggestCategoryRunnersUp(title, documents, {
-            thresholds: localThresholds,
-            excludeIds: [local.id],
-          })
+        if (local.primary?.source === 'dictionary') {
+          const [runnerUp] = local.alternatives
           const nearTie =
             !!runnerUp &&
-            local.score - runnerUp.score <= CATEGORY_CANDIDATE_NEAR_TIE_WINDOW
+            local.primary.evidence.value - runnerUp.evidence.value <=
+              CATEGORY_CANDIDATE_NEAR_TIE_WINDOW
           console.debug('[suggestCategory:client]', {
             title,
             local,
             runnerUp: runnerUp ?? null,
             chipShown: nearTie,
           })
-          setCategoryCandidates(nearTie ? [runnerUp] : [])
+          setCategoryCandidates(
+            nearTie && runnerUp
+              ? [
+                  {
+                    id: runnerUp.categoryId,
+                    score: runnerUp.evidence.value,
+                    source: 'dictionary',
+                  },
+                ]
+              : [],
+          )
         } else {
           setCategoryCandidates([])
         }
@@ -226,9 +238,11 @@ export function useSuggestCategoryFromTitle(args: {
             candidates.length > 0
               ? candidates
               : !categoryId && enableDictionarySuggest
-                ? suggestCategoryRunnersUp(title, documents, {
-                    thresholds: localThresholds,
-                  })
+                ? local.alternatives.map((choice) => ({
+                    id: choice.categoryId,
+                    score: choice.evidence.value,
+                    source: 'dictionary' as const,
+                  }))
                 : []
           console.debug('[suggestCategory:client]', {
             title,

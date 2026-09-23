@@ -39,6 +39,11 @@ export type CategorizeRow = {
     source: 'local' | 'jev' | 'manual'
     matchScore?: number
     floor?: number
+    evidenceKind?:
+      | 'heuristic'
+      | 'model-confidence'
+      | 'option-probability'
+      | 'self-reported-confidence'
   }>
 }
 
@@ -97,6 +102,8 @@ function chipClass(
 ) {
   if (choice.source === 'manual')
     return 'border-violet-300 bg-violet-50 text-violet-900 hover:border-violet-400 hover:bg-violet-100 hover:text-violet-950 focus-visible:ring-violet-500 dark:border-violet-700 dark:bg-violet-950 dark:text-violet-100 dark:hover:bg-violet-900 dark:hover:text-violet-50'
+  if (choice.source === 'jev' && choice.evidenceKind === 'option-probability')
+    return 'border-sky-300 bg-sky-50 text-sky-900 hover:border-sky-400 hover:bg-sky-100 hover:text-sky-950 focus-visible:ring-sky-500 dark:border-sky-700 dark:bg-sky-950 dark:text-sky-100 dark:hover:bg-sky-900 dark:hover:text-sky-50'
   const band = categoryConfidenceBand(
     choice.source === 'local' ? choice.matchScore : choice.confidence,
     choice.floor ?? aiMinConfidence,
@@ -133,7 +140,10 @@ function CategoryPicker({
       const confidence = Math.round(choice.confidence * 100)
       categoryBadges.set(choice.categoryId, {
         text: `${confidence}%`,
-        accessibleDescription: t('jevConfidence', { confidence }),
+        accessibleDescription:
+          choice.evidenceKind === 'option-probability'
+            ? t('jevOptionProbability', { probability: confidence })
+            : t('jevConfidence', { confidence }),
         className: confidenceBadgeClass('jev'),
       })
       continue
@@ -220,9 +230,20 @@ function QuickChoices({
               {categoryLabel(tCategories, categoryId)}
             </span>
             {choice.source === 'jev' && choice.confidence !== null && (
-              <span className="opacity-70">
-                {Math.round(choice.confidence * 100)}%
-              </span>
+              <>
+                <span className="opacity-70" aria-hidden>
+                  {Math.round(choice.confidence * 100)}%
+                </span>
+                <span className="sr-only">
+                  {choice.evidenceKind === 'option-probability'
+                    ? t('jevOptionProbability', {
+                        probability: Math.round(choice.confidence * 100),
+                      })
+                    : t('jevConfidence', {
+                        confidence: Math.round(choice.confidence * 100),
+                      })}
+                </span>
+              </>
             )}
           </Button>
         )

@@ -14,10 +14,55 @@ import {
   categorizeExpensesWithJev,
   relevantJevExamples,
 } from './batch-categorize'
+import { suggestCategoryWithSystemOne } from './system-one-categorize'
 
 afterEach(() => vi.unstubAllGlobals())
 
 describe('categorizeExpensesWithJev', () => {
+  it('validates single and batch Jev answers through the same request parser', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (_url, init: RequestInit) => {
+        const body = JSON.parse(init.body as string)
+        return {
+          ok: true,
+          json: async () => ({
+            answers: Object.fromEntries(
+              Object.keys(body.questions).map((key) => [
+                key,
+                {
+                  type: 'choice',
+                  choice: 'groceries',
+                  confidence: 0.82,
+                  probabilities: {
+                    groceries: 0.82,
+                    'dining-out': 0.18,
+                    unknown: 0.7,
+                  },
+                },
+              ]),
+            ),
+          }),
+        }
+      }),
+    )
+    const single = await suggestCategoryWithSystemOne('Store', {
+      apiKey: 'test-key',
+    })
+    const batch = await categorizeExpensesWithJev([
+      { id: 'expense-1', title: 'Store', expenseDate: '2026-09-20' },
+    ])
+    expect(batch.get('expense-1')).toMatchObject({
+      categoryId: single.categoryId,
+      confidence: single.confidence,
+      probabilities: [
+        { categoryId: 'groceries', probability: 0.82 },
+        { categoryId: 'dining-out', probability: 0.18 },
+      ],
+    })
+    expect(single.probabilities).not.toHaveProperty('unknown')
+  })
+
   it('batches independent choices and retains General, weak matches, and alternatives for review', async () => {
     const requests: unknown[] = []
     vi.stubGlobal(

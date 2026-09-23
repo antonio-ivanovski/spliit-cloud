@@ -1,12 +1,11 @@
-import { type CategoryId } from '@spliit/domain'
+import { normalizeSearchText, type CategoryId } from '@spliit/domain'
 
 import { env } from '../env'
 import { getRecentExpenseContext, type RecentExpenseContext } from './context'
 import {
-  DEFAULT_SYSTEM_ONE_API_URL,
-  systemOneCategoryOptions,
+  requestSystemOneCategories,
+  SystemOneRequestError,
 } from './system-one-categorize'
-import { timeoutSecondsToMs } from './timeout'
 
 const QUESTIONS_PER_REQUEST = 5
 const MAX_EXAMPLES = 8
@@ -73,11 +72,6 @@ export async function categorizeExpensesWithJev(
 ): Promise<Map<string, BatchCategorySuggestion>> {
   if (!env.AI_SYSTEM_ONE_API_KEY) return new Map()
   const eligible = expenses.filter((row) => row.title.trim().length >= 3)
-  const categoryOptions = systemOneCategoryOptions()
-  const criteria = Object.fromEntries(
-    categoryOptions.map(({ id, description }) => [id, description]),
-  )
-  const allowed = new Set(categoryOptions.map(({ id }) => id))
   const context: RecentExpenseContext | undefined = options.groupId
     ? await getRecentExpenseContext(options.groupId)
     : undefined
@@ -97,7 +91,6 @@ export async function categorizeExpensesWithJev(
       chunk.map((expense, index) => [
         `expense_${index}`,
         {
-          type: 'choice',
           instructions: {
             task: 'Choose the best category for this expense. Confirmed examples are strong guidance. Nearby categorized expenses are supporting context only. Rejections apply only to this title. Choose general if no category fits.',
             expense: {
@@ -112,82 +105,50 @@ export async function categorizeExpensesWithJev(
             rejectedCategories: (options.rejectedExamples ?? [])
               .filter(
                 (row) =>
-                  row.title.trim().toLocaleLowerCase(locale) ===
-                  expense.title.trim().toLocaleLowerCase(locale),
+                  normalizeSearchText(row.title) ===
+                  normalizeSearchText(expense.title),
               )
               .map((row) => row.rejectedCategoryId),
             nearbyExpenses: options.neighborsById?.get(expense.id) ?? [],
           },
-          criteria,
         },
       ]),
     )
-    const response = await fetch(
-      env.AI_SYSTEM_ONE_BASE_URL || DEFAULT_SYSTEM_ONE_API_URL,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${env.AI_SYSTEM_ONE_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        signal: AbortSignal.timeout(
-          timeoutSecondsToMs(env.AI_SYSTEM_ONE_TIMEOUT_SECONDS),
-        ),
-        body: JSON.stringify({
-          model: env.AI_SYSTEM_ONE_MODEL,
-          state,
-          questions,
-        }),
-      },
-    )
-    if (!response.ok) {
-      const body = await response.json().catch(() => null)
-      const errorType =
-        body && typeof body === 'object' && 'detail' in body
-          ? (body.detail as { error_type?: unknown })?.error_type
-          : undefined
-      if (errorType === 'max_tokens_exceeded' && chunk.length > 1) {
+    let answers
+    try {
+      answers = await requestSystemOneCategories({
+        state,
+        questions,
+        apiKey: env.AI_SYSTEM_ONE_API_KEY!,
+        model: env.AI_SYSTEM_ONE_MODEL,
+        baseUrl: env.AI_SYSTEM_ONE_BASE_URL || undefined,
+        timeoutSeconds: env.AI_SYSTEM_ONE_TIMEOUT_SECONDS,
+      })
+    } catch (error) {
+      if (
+        error instanceof SystemOneRequestError &&
+        error.errorType === 'max_tokens_exceeded' &&
+        chunk.length > 1
+      ) {
         const midpoint = Math.ceil(chunk.length / 2)
         await requestChunk(chunk.slice(0, midpoint))
         await requestChunk(chunk.slice(midpoint))
         return
       }
-      throw new Error(
-        `Jev categorization failed with status ${response.status}${typeof errorType === 'string' ? ` (${errorType})` : ''}`,
-      )
-    }
-    const payload = (await response.json()) as {
-      answers?: Record<
-        string,
-        {
-          type?: string
-          choice?: string
-          confidence?: number
-          probabilities?: Record<string, number>
-        }
-      >
+      if (error instanceof SystemOneRequestError)
+        throw new Error(
+          `Jev categorization failed with status ${error.status}${error.errorType ? ` (${error.errorType})` : ''}`,
+          { cause: error },
+        )
+      throw error
     }
     for (const [index, expense] of chunk.entries()) {
-      const answer = payload.answers?.[`expense_${index}`]
-      if (
-        answer?.type !== 'choice' ||
-        !answer.choice ||
-        !allowed.has(answer.choice) ||
-        !Number.isFinite(answer.confidence)
-      ) {
-        continue
-      }
+      const answer = answers[`expense_${index}`]
+      if (!answer) continue
       suggestions.set(expense.id, {
-        categoryId: answer.choice as CategoryId,
-        confidence: answer.confidence!,
-        probabilities: Object.entries(answer.probabilities ?? {})
-          .filter(
-            ([id, probability]) =>
-              allowed.has(id) &&
-              Number.isFinite(probability) &&
-              probability >= 0 &&
-              probability <= 1,
-          )
+        categoryId: answer.choice,
+        confidence: answer.confidence,
+        probabilities: Object.entries(answer.probabilities)
           .map(([categoryId, probability]) => ({
             categoryId: categoryId as CategoryId,
             probability,

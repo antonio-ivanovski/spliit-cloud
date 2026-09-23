@@ -135,6 +135,18 @@ describe('suggestExpenseCategory', () => {
     )
   })
 
+  it('uses the same joint Local policy as the form when history beats a weaker dictionary match', async () => {
+    prismaMock.expense.findMany.mockResolvedValue([
+      { title: 'weekly shop', categoryId: 'dining-out' },
+      { title: 'weekly shop', categoryId: 'dining-out' },
+    ] as never)
+
+    await expect(
+      suggestExpenseCategory({ groupId: 'group-1', title: 'weekly shop' }),
+    ).resolves.toEqual({ categoryId: 'dining-out', candidates: [] })
+    expect(generateText).not.toHaveBeenCalled()
+  })
+
   it('returns null when history misses and AI is off', async () => {
     prismaMock.expense.findMany.mockResolvedValue([
       { title: 'Luigi mysterious trattoria', categoryId: 'dining-out' },

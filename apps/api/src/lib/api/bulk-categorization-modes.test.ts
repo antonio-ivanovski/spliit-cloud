@@ -86,6 +86,26 @@ describe('bulk categorization modes', () => {
       categoryId: 'groceries',
       confidence: 0.9,
       source: 'jev',
+      evidenceKind: 'model-confidence',
     })
+  })
+
+  it('leaves General selected when Jev gives a strong runner-up', async () => {
+    jev.mockResolvedValue(
+      new Map([
+        [
+          'expense-1',
+          {
+            categoryId: 'general',
+            confidence: 0.9,
+            probabilities: [{ categoryId: 'groceries', probability: 0.9 }],
+          },
+        ],
+      ]),
+    )
+    const [suggestion] = await suggestRows(run('jev'), [candidate], [])
+    expect(suggestion?.categoryId).toBe('general')
+    expect(suggestion?.choices[0]?.categoryId).toBe('groceries')
+    expect(suggestion?.choices[0]?.evidenceKind).toBe('option-probability')
   })
 })
