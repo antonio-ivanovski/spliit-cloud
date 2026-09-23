@@ -3,11 +3,11 @@ import {
   isSettlementCategory,
   type CategoryId,
 } from '../categories'
+import { categorizeLocally } from '../category-categorization'
 import {
   createCategorySearchDocumentsForLocale,
   damerauLevenshtein,
   normalizeSearchText,
-  suggestCategoryFromTitle,
   type CategoryTitleMemory,
 } from '../category-search'
 import type {
@@ -109,8 +109,16 @@ export function resolveImportCategories<T extends DelimitedPreviewRow>(
     if (Object.hasOwn(mapping.categoryBindings, key))
       return mapping.categoryBindings[key]
     if (!sourceCache.has(key)) {
-      const hit = suggestCategoryFromTitle(row.categorySource!, documents)
-      sourceCache.set(key, hit && ordinary(hit.id) ? hit.id : null)
+      const hit = categorizeLocally({
+        title: row.categorySource!,
+        documents,
+        options: { historyEnabled: false },
+        alternativeLimit: 0,
+      })
+      sourceCache.set(
+        key,
+        hit.categoryId && ordinary(hit.categoryId) ? hit.categoryId : null,
+      )
     }
     return sourceCache.get(key) ?? undefined
   }
@@ -159,13 +167,21 @@ export function resolveImportCategories<T extends DelimitedPreviewRow>(
       } else if (!confirmed || confirmed.size === 0) {
         if (!titleCache.has(key)) {
           const candidates = historyIndex(row.title)
-          const hit = suggestCategoryFromTitle(row.title, documents, [
-            ...candidates.exact,
-            ...candidates.fuzzy,
-          ])
+          const hit = categorizeLocally({
+            title: row.title,
+            documents,
+            memory: [...candidates.exact, ...candidates.fuzzy],
+            alternativeLimit: 0,
+          })
           titleCache.set(
             key,
-            hit && ordinary(hit.id) ? { id: hit.id, source: hit.source } : null,
+            hit.categoryId &&
+              hit.primary &&
+              (hit.primary.source === 'dictionary' ||
+                hit.primary.source === 'history') &&
+              ordinary(hit.categoryId)
+              ? { id: hit.categoryId, source: hit.primary.source }
+              : null,
           )
         }
         const hit = titleCache.get(key)

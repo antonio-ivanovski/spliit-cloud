@@ -16,9 +16,11 @@ const stubState = {
   opts: null as {
     count?: number
     getScrollElement?: () => HTMLDivElement | null
+    estimateSize?: (index: number) => number
   } | null,
   scrollToOffsetCalls: [] as number[],
   measureCalls: 0,
+  measuredIndexes: [] as number[],
 }
 vi.mock('@tanstack/react-virtual', () => ({
   useVirtualizer: (opts: typeof stubState.opts) => {
@@ -29,14 +31,19 @@ vi.mock('@tanstack/react-virtual', () => ({
 const stubVirtualizer = {
   getVirtualItems: () => {
     const count = stubState.opts?.count ?? 0
-    return Array.from({ length: Math.min(count, 5) }, (_, index) => ({
-      index,
-      start: index * 56,
-      size: 56,
-      key: index,
-    }))
+    let start = 0
+    return Array.from({ length: Math.min(count, 5) }, (_, index) => {
+      const size = stubState.opts?.estimateSize?.(index) ?? 56
+      const item = { index, start, size, key: index }
+      start += size
+      return item
+    })
   },
-  getTotalSize: () => (stubState.opts?.count ?? 0) * 56,
+  getTotalSize: () =>
+    Array.from(
+      { length: stubState.opts?.count ?? 0 },
+      (_, index) => stubState.opts?.estimateSize?.(index) ?? 56,
+    ).reduce((total, size) => total + size, 0),
   measure: () => {
     stubState.measureCalls += 1
   },
@@ -45,7 +52,9 @@ const stubVirtualizer = {
     const element = stubState.opts?.getScrollElement?.()
     if (element) element.scrollTop = offset
   },
-  measureElement: () => {},
+  measureElement: (element: HTMLElement) => {
+    stubState.measuredIndexes.push(Number(element.dataset.index))
+  },
 }
 
 function Harness({
@@ -53,15 +62,17 @@ function Harness({
   resetKey = 'ALL',
   offset = 0,
   remeasure = 'a',
+  rowHeights,
 }: {
   count?: number
   resetKey?: string
   offset?: number
   remeasure?: string
+  rowHeights?: number[]
 }) {
   const virtualRows = useVirtualizedRows({
     count,
-    estimateSize: 56,
+    estimateSize: rowHeights ? (index) => rowHeights[index] ?? 56 : 56,
     remeasureKey: remeasure,
     getItemKey: (index) => `row-${index}`,
     overscan: 4,
@@ -87,6 +98,7 @@ function Harness({
           key={item.key}
           index={item.index}
           measure={measureElement}
+          start={item.start}
         />
       ))}
     </div>
@@ -96,12 +108,19 @@ function Harness({
 function MeasuredRow({
   index,
   measure,
+  start,
 }: {
   index: number
   measure: (element: HTMLElement | null) => void
+  start: number
 }) {
   return (
-    <div ref={measure} data-index={index} style={{ height: 56 }}>
+    <div
+      ref={measure}
+      data-index={index}
+      data-start={start}
+      style={{ height: 56 }}
+    >
       row {index}
     </div>
   )
@@ -113,6 +132,7 @@ describe('useVirtualizedRows scroll restoration', () => {
   beforeEach(() => {
     stubState.scrollToOffsetCalls = []
     stubState.measureCalls = 0
+    stubState.measuredIndexes = []
   })
 
   it('restores a saved offset once on mount', async () => {
@@ -165,6 +185,23 @@ describe('useVirtualizedRows scroll restoration', () => {
     await flushFrames()
     expect(scroller.scrollTop).toBe(500)
     expect(stubState.scrollToOffsetCalls).toEqual([2000])
+  })
+
+  it('uses per-row heights and remeasures after content or width changes', async () => {
+    const view = render(
+      <Harness count={3} rowHeights={[80, 150, 90]} remeasure="wide" />,
+    )
+    expect(screen.getByText('row 1').dataset.start).toBe('80')
+    expect(screen.getByText('row 2').dataset.start).toBe('230')
+    expect(stubState.measuredIndexes).toContain(1)
+    await flushFrames()
+    const priorMeasures = stubState.measureCalls
+    view.rerender(
+      <Harness count={3} rowHeights={[100, 210, 90]} remeasure="narrow" />,
+    )
+    expect(screen.getByText('row 2').dataset.start).toBe('310')
+    await flushFrames()
+    expect(stubState.measureCalls).toBeGreaterThan(priorMeasures)
   })
 
   it('restores again on remount with the same offset', async () => {

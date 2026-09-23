@@ -385,7 +385,8 @@
             "monthly": "meses",
             "yearly": "años"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Sugerir categorías para gastos sin categorizar con System One"
       },
       "Destination": {
         "heading": "¿Dónde te gustaría importar <strong>{name}</strong>? ({participantCount} participantes · {expenseCount} gastos)",
@@ -1872,7 +1873,7 @@
       "generic": "Algo salió mal. Inténtalo de nuevo.",
       "passwordPolicy": "Usa al menos 8 caracteres con mayúsculas, minúsculas, un número y un símbolo.",
       "magicLinkFailed": "No se pudo enviar el enlace de inicio de sesión.",
-      "signupInviteRequired": "Esta instancia es solo por invitación. Usa un enlace de invitación o pide a alguien que te invite a un grupo.",
+      "signupInviteRequired": "Los registros son solo por invitación. Usa un enlace de invitación o pide a alguien que te invite a un grupo.",
       "passkeyFailed": "El inicio de sesión con clave de acceso ha fallado. Inténtalo de nuevo o usa otro método de inicio de sesión."
     },
     "loading": "Cargando…",
@@ -1882,14 +1883,14 @@
     "signInWithGithub": "Continuar con GitHub",
     "legalNotice": "Al continuar, aceptas los <terms>Términos de uso</terms> y reconoces el <privacy>aviso de privacidad</privacy>.",
     "inviteOnly": {
-      "message": "Esta instancia es solo por invitación. Usa un enlace de invitación o pide a alguien que te invite a un grupo.",
+      "message": "Los registros son solo por invitación. Usa un enlace de invitación o pide a alguien que te invite a un grupo.",
       "useInvitedEmail": "Usa la dirección de correo electrónico con la que te invitaron."
     },
     "signInWithX": "Continuar con X",
     "signInWithOidc": "Continuar con {name}",
     "signInAnonymously": "Anónimo",
     "lastUsed": "Último uso",
-    "emailAuthDisabled": "El inicio de sesión con correo electrónico está desactivado en esta instancia. Usa el inicio de sesión único (SSO).",
+    "emailAuthDisabled": "El inicio de sesión con correo electrónico está desactivado. Usa el inicio de sesión único (SSO).",
     "signInWithPasskey": "Iniciar sesión con clave de acceso"
   },
   "CompleteProfile": {
@@ -2014,7 +2015,7 @@
         "joined_many": "Se han unido {count} personas",
         "retry": "Reintentar"
       },
-      "emailDeliveryDisabled": "El envío de correos está desactivado en esta instancia. La invitación se crea igualmente y aparecerá cuando la persona invitada inicie sesión; usa un enlace de invitación para darle algo que abrir."
+      "emailDeliveryDisabled": "El envío de correos está desactivado. La invitación se crea igualmente y aparecerá cuando la persona invitada inicie sesión; usa un enlace de invitación para darle algo que abrir."
     },
     "invitations": {
       "title": "Invitaciones pendientes",
@@ -2439,7 +2440,7 @@
       "masterDescription": "Desactívalas para silenciar todos los correos y las notificaciones push. Tus preferencias por categoría se conservan.",
       "emailAddToEnable": "Añade un correo verificado para recibir notificaciones en la bandeja de entrada.",
       "emailAddLink": "Añadir correo",
-      "emailDeliveryDisabled": "El envío de correos está desactivado en esta instancia. Tus elecciones de correo se guardan, pero no se enviarán hasta que el administrador configure el correo."
+      "emailDeliveryDisabled": "El envío de correos está desactivado. Tus elecciones de correo se guardan, pero no se enviarán hasta que el correo esté configurado."
     },
     "preferences": {
       "title": "Preferencias de la aplicación",
@@ -2805,9 +2806,6 @@
   },
   "BulkCategorize": {
     "title": "Categorización en lote",
-    "calibrationTitle": "Paso 1 — Calibración",
-    "calibrationDescription": "Cada ejemplo que confirmas ayuda a la IA a mejorar sus próximas sugerencias. Puede estar lista después de una ronda o pedir más ejemplos.",
-    "roundCount": "Ronda {round} de {max}",
     "confidence": {
       "high": "Alto",
       "medium": "Medio",
@@ -2896,7 +2894,110 @@
     "doneTitle": "Categorías guardadas",
     "expenseColumn": "Gasto",
     "categoryColumn": "Categoría",
-    "confidenceColumn": "Confianza"
+    "confidenceColumn": "Confianza",
+    "simpleDescription": "Revisa las coincidencias de categoría para los gastos en General y guarda tus opciones.",
+    "generateSuggestions": "Sugerir categorías",
+    "backToStart": "Atrás",
+    "chooseMode": "Elige cómo categorizar los gastos",
+    "localMode": "Diccionario e historial",
+    "localModeDescription": "Usa el historial de categorías de este grupo y el diccionario integrado.",
+    "startRun": "Empezar a categorizar",
+    "noCategory": "Dejar sin categoría",
+    "progressTitle": "Categorizando los gastos",
+    "progressDescription": "Puedes salir de esta página y volver más tarde. Tu progreso se guarda.",
+    "progressCount": "{categorized} de {total} gastos categorizados",
+    "applyProgressTitle": "Guardando categorías",
+    "reviewTitle": "Revisa las sugerencias",
+    "reviewSummary": "{suggested} sugerencias de {total} gastos sin categoría",
+    "sourceLocal": "Local",
+    "saveSelected": "Guardar las categorías seleccionadas",
+    "retry": "Reintentar",
+    "restart": "Iniciar una nueva ejecución",
+    "failed": "La ejecución se detuvo: {message}",
+    "savedSummary": "{applied} modificados, {skipped} omitidos",
+    "selectedCount": "{count} seleccionados",
+    "selectAll": "Seleccionar todo",
+    "clearAll": "Borrar todo",
+    "discardRun": "Descartar la ejecución",
+    "partialSaveNotice": "Es posible que algunas categorías ya se hayan guardado. Descartar esta ejecución no deshará esos cambios.",
+    "restartOlderRunTitle": "Iniciar una nueva ejecución de categorización",
+    "restartOlderRunDescription": "Esta ejecución anterior usaba el flujo de revisión previo. Empieza de nuevo para revisar todos los gastos juntos.",
+    "runningMatches": "{count} de {total} gastos tienen una sugerencia de categoría hasta ahora",
+    "failedTitle": "Categorización detenida",
+    "reviewWorkload": "{total} gastos en General · {selected} seleccionados para categorizar · {general} que quedan en General",
+    "categoryChoices": "Opciones de categoría",
+    "moreCategories": "Elige otra categoría",
+    "saveCount": "Guardar {count} categorías",
+    "finishWithoutChanges": "Terminar sin cambios",
+    "completionSummary": "Ejecución completa: {changed} de {total} gastos modificados. {remaining} gastos quedan en General.",
+    "viewExpenses": "Ver los gastos",
+    "countLoading": "Contando los gastos sin categoría…",
+    "nothingToCategorize": "No hay gastos sin categoría para categorizar.",
+    "startingCount": "{count} gastos están actualmente en General y listos para revisar.",
+    "countError": "No se pudieron contar los gastos sin categoría. Recarga la página para intentarlo de nuevo.",
+    "keepGeneral": "General · dejar sin categoría",
+    "calibrationRoundTitle": "Ronda de calibración {round}",
+    "calibrationLoading": "Preparando una muestra variada de gastos…",
+    "calibrationReviewDescription": "Revisa y corrige estos {count} gastos. Las opciones se mantienen en esta ejecución hasta que guardes al final.",
+    "confirmRound": "Confirma la ronda",
+    "roundSummaryTitle": "Ronda {round} revisada",
+    "roundSummaryDescription": "{reviewed} revisados · {categorized} categorizados provisionalmente · {general} que quedan como General",
+    "roundQuality": "Las sugerencias iniciales coincidieron con el {accuracy}% de tus opciones; corregiste {corrections}.",
+    "categorizeRemaining": "Categoriza los gastos restantes",
+    "nextRound": "Revisa otra muestra",
+    "tableLabel": "Gastos por categorizar",
+    "dateColumn": "Fecha",
+    "amountColumn": "Cantidad",
+    "rerunSuggestions": "Generar sugerencias de nuevo",
+    "roundQualityWithSuggestions": "{accepted} de {proposed} categorías sugeridas aceptadas · {changed} modificadas · {missed} coincidencias encontradas desde General",
+    "roundQualityNoSuggestions": "Ninguna categoría sugerida · {missed} coincidencias encontradas desde General · {abstained} que quedan en General",
+    "rerunChanged": "Cambiaste {changed} de {proposed} categorías sugeridas.",
+    "rerunAssignedSingle": "Asignaste una categoría a 1 gasto que quedaba en General.",
+    "rerunAssignedMultiple": "Asignaste una categoría a {count} gastos que quedaban en General.",
+    "rerunPotentialSingle": "Tus cambios pueden mejorar la coincidencia de 1 gasto restante de General. Genera las sugerencias de nuevo si quieres otra pasada.",
+    "rerunPotentialMultiple": "Tus cambios pueden mejorar las coincidencias de {count} gastos restantes de General. Genera las sugerencias de nuevo si quieres otra pasada.",
+    "rerunEligible": "Apto para otra pasada: General {general} · coincidencias automáticas inciertas {uncertain}.",
+    "rerunNoEligible": "No quedan General intactos ni coincidencias automáticas inciertas para generar de nuevo. Tus correcciones siguen incluidas en las categorías que guardes.",
+    "rerunAlreadyUsed": "Tus últimas correcciones ya se han usado para estas sugerencias. Haz otra corrección para generarlas de nuevo.",
+    "highMatch": "Coincidencia alta",
+    "mediumMatch": "Coincidencia media",
+    "lowMatch": "Coincidencia baja",
+    "belowMatchThreshold": "Por debajo del umbral de coincidencia",
+    "refiningTitle": "Refinando las coincidencias inciertas",
+    "runLimitSummary": "Esta ejecución incluye 10,000 gastos. {count} gastos más de General se pueden categorizar en otra ejecución después de guardar.",
+    "pageLoading": "Cargando los gastos…",
+    "pageLoadError": "No se pudieron cargar los gastos.",
+    "pageRetry": "Reintentar",
+    "pageCount": "Mostrando {loaded} de {total} gastos",
+    "ledgerAmountNotice": "Los importes se muestran en la moneda del grupo.",
+    "viewExpenseDetails": "Ver los detalles del gasto",
+    "reviewFilterLabel": "Mostrar los gastos",
+    "filterAll": "Todos {count}",
+    "filterGeneral": "General {count}",
+    "improveSuggestions": "Mejora las sugerencias restantes",
+    "rerunInfoLabel": "Acerca de mejorar las sugerencias",
+    "preparingNextStage": "Preparando el siguiente paso",
+    "rerunProgressTitle": "Actualizando las sugerencias",
+    "progressPreparing": "Preparando los gastos…",
+    "noGeneralRows": "No quedan gastos en General en esta revisión.",
+    "discardConfirmationTitle": "¿Descartar esta ejecución de categorización?",
+    "discardConfirmationDescription": "Esto elimina la ejecución, sus sugerencias y las opciones elegidas por ti u otros administradores. No se cambiará ninguna categoría de gasto.",
+    "discardConfirmationCancel": "Mantener la ejecución",
+    "progressCountDescription": "Solo cuentan las categorías confirmadas y las coincidencias medias o altas; General y las coincidencias débiles, no.",
+    "systemOneMode": "Modelo de System One",
+    "systemOneModeDescription": "Usa el modelo de decisión de System One para cada gasto, utilizando como pistas los gastos categorizados de este grupo y tus opciones revisadas. TypeSafe Jev es uno de esos modelos.",
+    "systemOneUnavailable": "System One no está disponible. El diccionario y el historial siguen disponibles.",
+    "systemOneConfidence": "Confianza de System One: {confidence}%",
+    "systemOneOptionProbability": "Probabilidad de la opción de System One: {probability}%",
+    "overallProgress": "Progreso general",
+    "fullPassProcessed": "Procesados {processed} de {total} gastos",
+    "stageProcessed": "Procesados {processed} de {total} gastos en este paso",
+    "saveSkipped": "{count} gastos se omitieron porque cambiaron.",
+    "sharedRunNotice": "Esta ejecución se comparte con otros administradores del grupo. Todos ven las mismas sugerencias.",
+    "saveConflictTitle": "{count} gastos cambiaron desde que empezó esta revisión",
+    "saveConflictDescription": "Alguien editó estos gastos o cambió su categoría fuera de esta ejecución. Guarda los otros gastos o edita de nuevo las categorías e intenta guardar una vez más.",
+    "saveConflictMore": "Y {count} más.",
+    "saveOtherExpenses": "Guardar otros gastos"
   },
   "ExpensePreview": {
     "title": "Vista previa del gasto",
@@ -2973,7 +3074,7 @@
     "failedDescription": "No hemos podido registrar este dispositivo. Las notificaciones configuradas para correo electrónico seguirán llegando allí; las opciones solo push no se redirigen.",
     "emailUsage": "Solo llegarán las notificaciones configuradas para correo electrónico hasta que actives un dispositivo. Puedes permitir las notificaciones en la configuración del navegador y volver a intentarlo desde Ajustes.",
     "done": "Listo",
-    "emailDeliveryDisabled": "El envío de correos está desactivado en esta instancia, por lo que las notificaciones por correo no pueden llegarte. Activa las notificaciones push en este dispositivo para seguir recibiendo actualizaciones."
+    "emailDeliveryDisabled": "El envío de correos está desactivado, por lo que las notificaciones por correo no pueden llegarte. Activa las notificaciones push en este dispositivo para seguir recibiendo actualizaciones."
   },
   "Unsubscribe": {
     "title": "¿Desactivar estos correos?",
@@ -3648,6 +3749,29 @@
           "detail": "Revisa duplicados y confirma la importación."
         }
       }
+    },
+    "categorize": {
+      "title": "Categorizar los gastos",
+      "description": "Sugerir categorías para los gastos existentes sin categorizar con System One. Revisa cada cambio antes de guardarlo.",
+      "start": "Categorizar los gastos",
+      "steps": {
+        "choose": {
+          "title": "Elige un método",
+          "detail": "Usa el diccionario y el historial o el modelo de decisión de System One."
+        },
+        "calibrate": {
+          "title": "Revisa muestras pequeñas",
+          "detail": "Corrige las sugerencias para que la siguiente ronda aprenda las categorías de tu grupo."
+        },
+        "review": {
+          "title": "Revisa todos los gastos",
+          "detail": "Los gastos de General aparecen primero en la tabla completa."
+        },
+        "save": {
+          "title": "Guardar las categorías",
+          "detail": "Los gastos solo cambian cuando confirmas la revisión final."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4194,7 +4318,8 @@
       "valuesRecomputedTitle": "Valores recalculados",
       "viewExpenses": "Ver gastos",
       "waitDuplicate": "Espera a que termine la comprobación de duplicados antes de importar.",
-      "invalidRowTitle": "Fila de importación no válida"
+      "invalidRowTitle": "Fila de importación no válida",
+      "categorizeWithSystemOne": "Sugerir categorías para gastos sin categorizar con System One"
     }
   },
   "Sponsor": {

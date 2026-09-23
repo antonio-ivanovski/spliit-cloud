@@ -378,7 +378,8 @@
             "monthly": "miesiące",
             "yearly": "lata"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Zasugeruj kategorie nieskategoryzowanych wydatków za pomocą System One"
       },
       "Destination": {
         "heading": "Gdzie chcesz zaimportować <strong>{name}</strong>? ({participantCount} uczestników · {expenseCount} wydatków)",
@@ -1550,7 +1551,7 @@
       "generic": "Coś poszło nie tak. Spróbuj ponownie.",
       "passwordPolicy": "Użyj co najmniej 8 znaków zawierających wielką literę, małą literę, cyfrę i symbol.",
       "magicLinkFailed": "Nie udało się wysłać linku logowania.",
-      "signupInviteRequired": "Ta instancja jest dostępna tylko na zaproszenie. Użyj linku zaproszenia lub poproś kogoś o zaproszenie do grupy.",
+      "signupInviteRequired": "Rejestracja jest możliwa tylko na zaproszenie. Użyj linku zaproszenia lub poproś kogoś o zaproszenie do grupy.",
       "passkeyFailed": "Logowanie kluczem dostępu nie powiodło się. Spróbuj ponownie lub użyj innej metody logowania."
     },
     "loading": "Ładowanie…",
@@ -1560,14 +1561,14 @@
     "signInWithGithub": "Kontynuuj przez GitHub",
     "legalNotice": "Kontynuując, zgadzasz się na <terms>Warunki korzystania</terms> i potwierdzasz <privacy>Informacje o prywatności</privacy>.",
     "inviteOnly": {
-      "message": "Ta instancja jest dostępna tylko na zaproszenie. Użyj linku zaproszenia lub poproś kogoś o zaproszenie do grupy.",
+      "message": "Rejestracja jest możliwa tylko na zaproszenie. Użyj linku zaproszenia lub poproś kogoś o zaproszenie do grupy.",
       "useInvitedEmail": "Użyj adresu e-mail, na który wysłano zaproszenie."
     },
     "signInWithX": "Kontynuuj przez X",
     "signInWithOidc": "Kontynuuj przez {name}",
     "signInAnonymously": "Anonimowy",
     "lastUsed": "Ostatnio używane",
-    "emailAuthDisabled": "Logowanie przez e-mail jest wyłączone w tej instancji. Użyj logowania jednokrotnego (SSO).",
+    "emailAuthDisabled": "Logowanie przez e-mail jest wyłączone. Użyj logowania jednokrotnego (SSO).",
     "signInWithPasskey": "Zaloguj się kluczem dostępu"
   },
   "CompleteProfile": {
@@ -2002,7 +2003,7 @@
         "joined_many": "{count} osób dołączyło",
         "retry": "Spróbuj ponownie"
       },
-      "emailDeliveryDisabled": "Wysyłanie e-maili jest wyłączone w tej instancji. Zaproszenie i tak zostanie utworzone i pojawi się, gdy zaproszona osoba się zaloguje; użyj linku zaproszenia, aby dać jej coś do otwarcia."
+      "emailDeliveryDisabled": "Wysyłanie e-maili jest wyłączone. Zaproszenie i tak zostanie utworzone i pojawi się, gdy zaproszona osoba się zaloguje; użyj linku zaproszenia, aby dać jej coś do otwarcia."
     },
     "invitations": {
       "title": "Oczekujące zaproszenia",
@@ -2425,7 +2426,7 @@
       "masterDescription": "Wyłącz, aby wyciszyć wszystkie powiadomienia e-mail i push. Twoje wybory według kategorii zostaną zachowane.",
       "emailAddToEnable": "Dodaj zweryfikowany e-mail, aby otrzymywać powiadomienia na skrzynkę.",
       "emailAddLink": "Dodaj e-mail",
-      "emailDeliveryDisabled": "Wysyłanie e-maili jest wyłączone w tej instancji. Twoje wybory e-maili są zapisywane, ale nie będą wysyłane, dopóki administrator nie skonfiguruje poczty."
+      "emailDeliveryDisabled": "Wysyłanie e-maili jest wyłączone. Twoje wybory e-maili są zapisywane, ale nie będą wysyłane, dopóki poczta nie zostanie skonfigurowana."
     },
     "preferences": {
       "title": "Preferencje aplikacji",
@@ -2789,9 +2790,6 @@
   },
   "BulkCategorize": {
     "title": "Zbiorcza kategoryzacja",
-    "calibrationTitle": "Krok 1 — Kalibracja",
-    "calibrationDescription": "Każdy potwierdzony przykład staje się wzorcem odniesienia dla kolejnego przebiegu AI. Może być gotowe już po jednej rundzie lub poprosić o więcej przykładów.",
-    "roundCount": "Runda {round} z {max}",
     "confidence": {
       "high": "Wysoka",
       "medium": "Średnia",
@@ -2866,7 +2864,110 @@
     "doneTitle": "Kategorie zapisane",
     "expenseColumn": "Wydatek",
     "categoryColumn": "Kategoria",
-    "confidenceColumn": "Pewność"
+    "confidenceColumn": "Pewność",
+    "simpleDescription": "Przejrzyj dopasowania kategorii dla wydatków w Ogólnych, a następnie zapisz swoje wybory.",
+    "generateSuggestions": "Zaproponuj kategorie",
+    "backToStart": "Wróć",
+    "chooseMode": "Wybierz sposób kategoryzacji wydatków",
+    "localMode": "Słownik i historia",
+    "localModeDescription": "Użyj historii kategorii tej grupy i wbudowanego słownika.",
+    "startRun": "Rozpocznij kategoryzację",
+    "noCategory": "Pozostaw bez kategorii",
+    "progressTitle": "Kategoryzowanie wydatków",
+    "progressDescription": "Możesz opuścić tę stronę i wrócić później. Twój postęp jest zapisany.",
+    "progressCount": "Skategoryzowano {categorized} z {total} wydatków",
+    "applyProgressTitle": "Zapisywanie kategorii",
+    "reviewTitle": "Przejrzyj sugestie",
+    "reviewSummary": "{suggested} sugestii z {total} nieskategoryzowanych wydatków",
+    "sourceLocal": "Lokalnie",
+    "saveSelected": "Zapisz wybrane kategorie",
+    "retry": "Spróbuj ponownie",
+    "restart": "Rozpocznij nowy przebieg",
+    "failed": "Przebieg zatrzymany: {message}",
+    "savedSummary": "Zmieniono {applied}, pominięto {skipped}",
+    "selectedCount": "Wybrano {count}",
+    "selectAll": "Zaznacz wszystko",
+    "clearAll": "Wyczyść wszystko",
+    "discardRun": "Odrzuć przebieg",
+    "partialSaveNotice": "Niektóre kategorie mogły już zostać zapisane. Odrzucenie tego przebiegu nie cofnie tych zmian.",
+    "restartOlderRunTitle": "Rozpocznij nowy przebieg kategoryzacji",
+    "restartOlderRunDescription": "Ten wcześniejszy przebieg używał poprzedniego przepływu przeglądania. Zacznij od nowa, aby przejrzeć wszystkie wydatki razem.",
+    "runningMatches": "{count} z {total} wydatków ma już sugestię kategorii",
+    "failedTitle": "Kategoryzacja zatrzymana",
+    "reviewWorkload": "{total} wydatków w Ogólnych · {selected} wybranych do kategoryzacji · {general} pozostających jako Ogólne",
+    "categoryChoices": "Wybory kategorii",
+    "moreCategories": "Wybierz inną kategorię",
+    "saveCount": "Zapisz {count} kategorii",
+    "finishWithoutChanges": "Zakończ bez zmian",
+    "completionSummary": "Przebieg zakończony: zmieniono {changed} z {total} wydatków. {remaining} wydatków pozostaje jako Ogólne.",
+    "viewExpenses": "Zobacz wydatki",
+    "countLoading": "Liczenie nieskategoryzowanych wydatków…",
+    "nothingToCategorize": "Nie ma nieskategoryzowanych wydatków do skategoryzowania.",
+    "startingCount": "{count} wydatków jest obecnie w Ogólnych i gotowych do przeglądu.",
+    "countError": "Nie udało się policzyć nieskategoryzowanych wydatków. Odśwież stronę, aby spróbować ponownie.",
+    "keepGeneral": "Ogólne · pozostaw bez kategorii",
+    "calibrationRoundTitle": "Runda kalibracyjna {round}",
+    "calibrationLoading": "Przygotowywanie zróżnicowanej próbki wydatków…",
+    "calibrationReviewDescription": "Sprawdź i popraw te {count} wydatków. Wybory pozostają w tym przebiegu, dopóki nie zapiszesz ich na końcu.",
+    "confirmRound": "Potwierdź rundę",
+    "roundSummaryTitle": "Runda {round} przejrzana",
+    "roundSummaryDescription": "{reviewed} przejrzanych · {categorized} wstępnie skategoryzowanych · {general} pozostawionych jako Ogólne",
+    "roundQuality": "Wstępne sugestie były zgodne z {accuracy}% Twoich wyborów; poprawiono {corrections}.",
+    "categorizeRemaining": "Kategoryzuj pozostałe wydatki",
+    "nextRound": "Sprawdź kolejną próbkę",
+    "tableLabel": "Wydatki do skategoryzowania",
+    "dateColumn": "Data",
+    "amountColumn": "Suma",
+    "rerunSuggestions": "Uruchom sugestie ponownie",
+    "roundQualityWithSuggestions": "Zaakceptowano {accepted} z {proposed} sugerowanych kategorii · zmieniono {changed} · znaleziono {missed} dopasowań z Ogólnych",
+    "roundQualityNoSuggestions": "Brak sugerowanych kategorii · znaleziono {missed} dopasowań z Ogólnych · {abstained} pozostawionych jako Ogólne",
+    "rerunChanged": "Zmieniono {changed} z {proposed} sugerowanych kategorii.",
+    "rerunAssignedSingle": "Przypisano kategorię do 1 wydatku pozostawionego jako Ogólne.",
+    "rerunAssignedMultiple": "Przypisano kategorię do {count} wydatków pozostawionych jako Ogólne.",
+    "rerunPotentialSingle": "Twoje zmiany mogą poprawić dopasowanie dla 1 pozostałego wydatku Ogólnego. Uruchom sugestie ponownie, jeśli chcesz wykonać kolejny przebieg.",
+    "rerunPotentialMultiple": "Twoje zmiany mogą poprawić dopasowania dla {count} pozostałych wydatków Ogólnych. Uruchom sugestie ponownie, jeśli chcesz wykonać kolejny przebieg.",
+    "rerunEligible": "Kwalifikuje się do kolejnego przebiegu: Ogólne {general} · niepewne automatyczne dopasowania {uncertain}. Twoje poprawki mogą poprawić te sugestie.",
+    "rerunNoEligible": "Nie ma nietkniętych Ogólnych ani niepewnych automatycznych dopasowań do ponownego uruchomienia. Twoje poprawki są nadal uwzględnione w zapisywanych kategoriach.",
+    "rerunAlreadyUsed": "Twoje ostatnie poprawki zostały już wykorzystane w tych sugestiach. Wprowadź kolejną poprawkę, aby uruchomić je ponownie.",
+    "highMatch": "Wysokie dopasowanie",
+    "mediumMatch": "Średnie dopasowanie",
+    "lowMatch": "Niskie dopasowanie",
+    "belowMatchThreshold": "Poniżej progu dopasowania",
+    "refiningTitle": "Dopracowywanie niepewnych dopasowań",
+    "runLimitSummary": "Ten przebieg obejmuje 10,000 wydatków. Po zapisaniu kolejne {count} wydatków Ogólnych można skategoryzować w innym przebiegu.",
+    "pageLoading": "Wczytywanie wydatków…",
+    "pageLoadError": "Nie udało się wczytać wydatków.",
+    "pageRetry": "Spróbuj ponownie",
+    "pageCount": "Wyświetlono {loaded} z {total} wydatków",
+    "ledgerAmountNotice": "Kwoty są pokazane w walucie grupy.",
+    "viewExpenseDetails": "Zobacz szczegóły wydatku",
+    "reviewFilterLabel": "Pokaż wydatki",
+    "filterAll": "Wszystkie {count}",
+    "filterGeneral": "Ogólne {count}",
+    "improveSuggestions": "Popraw pozostałe sugestie",
+    "rerunInfoLabel": "O poprawianiu sugestii",
+    "preparingNextStage": "Przygotowywanie następnego kroku",
+    "rerunProgressTitle": "Aktualizowanie sugestii",
+    "progressPreparing": "Przygotowywanie wydatków…",
+    "noGeneralRows": "W tym przeglądzie nie ma już wydatków w kategorii Ogólne.",
+    "discardConfirmationTitle": "Odrzucić ten przebieg kategoryzacji?",
+    "discardConfirmationDescription": "Spowoduje to usunięcie przebiegu, jego sugestii oraz wyborów dokonanych przez ciebie lub innych administratorów. Kategorie wydatków nie zostaną zmienione.",
+    "discardConfirmationCancel": "Zachowaj przebieg",
+    "progressCountDescription": "Liczą się tylko potwierdzone kategorie oraz średnie lub wysokie dopasowania; Ogólne i słabe dopasowania się nie liczą.",
+    "systemOneMode": "Model System One",
+    "systemOneModeDescription": "Użyj modelu decyzyjnego System One dla każdego wydatku, korzystając jako podpowiedzi ze skategoryzowanych wydatków tej grupy i swoich sprawdzonych wyborów. TypeSafe Jev to jeden z takich modeli.",
+    "systemOneUnavailable": "System One jest niedostępny. Słownik i historia są nadal dostępne.",
+    "systemOneConfidence": "Pewność System One: {confidence}%",
+    "systemOneOptionProbability": "Prawdopodobieństwo opcji System One: {probability}%",
+    "overallProgress": "Ogólny postęp",
+    "fullPassProcessed": "Przetworzono {processed} z {total} wydatków",
+    "stageProcessed": "W tym kroku przetworzono {processed} z {total} wydatków",
+    "saveSkipped": "Pominięto {count} wydatków, ponieważ uległy zmianie.",
+    "sharedRunNotice": "Ten przebieg jest współdzielony z innymi administratorami grupy. Wszyscy widzą te same sugestie.",
+    "saveConflictTitle": "{count} wydatków zmieniło się od rozpoczęcia tego przeglądu.",
+    "saveConflictDescription": "Ktoś edytował te wydatki lub zmienił ich kategorię poza tym przebiegiem. Zapisz pozostałe wydatki albo edytuj kategorie ponownie i spróbuj zapisać jeszcze raz.",
+    "saveConflictMore": "I {count} kolejnych wydatków.",
+    "saveOtherExpenses": "Zapisz pozostałe wydatki"
   },
   "ExpensePreview": {
     "title": "Podgląd wydatku",
@@ -2941,7 +3042,7 @@
     "failedDescription": "Nie udało się zarejestrować tego urządzenia. Powiadomienia skonfigurowane dla e-maila nadal będą tam dostarczane; wybory wyłącznie push nie są przekierowywane.",
     "emailUsage": "Dopóki nie włączysz urządzenia, będą docierać tylko powiadomienia skonfigurowane dla e-maila. Zezwól na powiadomienia w ustawieniach przeglądarki i spróbuj ponownie w Ustawieniach.",
     "done": "Gotowe",
-    "emailDeliveryDisabled": "Wysyłanie e-maili jest wyłączone w tej instancji, więc powiadomienia e-mail nie dotrą do Ciebie. Włącz powiadomienia push na tym urządzeniu, aby nadal otrzymywać aktualizacje."
+    "emailDeliveryDisabled": "Wysyłanie e-maili jest wyłączone, więc powiadomienia e-mail nie dotrą do Ciebie. Włącz powiadomienia push na tym urządzeniu, aby nadal otrzymywać aktualizacje."
   },
   "Unsubscribe": {
     "title": "Wyłączyć te e-maile?",
@@ -3614,6 +3715,29 @@
           "detail": "Sprawdź duplikaty i potwierdź import."
         }
       }
+    },
+    "categorize": {
+      "title": "Kategoryzuj wydatki",
+      "description": "Zasugeruj kategorie istniejących nieskategoryzowanych wydatków za pomocą System One. Przejrzyj każdą zmianę przed zapisaniem.",
+      "start": "Kategoryzuj wydatki",
+      "steps": {
+        "choose": {
+          "title": "Wybierz metodę",
+          "detail": "Użyj słownika i historii lub modelu decyzyjnego System One."
+        },
+        "calibrate": {
+          "title": "Przejrzyj małe próbki",
+          "detail": "Popraw sugestie, aby kolejna runda nauczyła się kategorii Twojej grupy."
+        },
+        "review": {
+          "title": "Przejrzyj każdy wydatek",
+          "detail": "Wydatki Ogólne pojawiają się jako pierwsze w pełnej tabeli."
+        },
+        "save": {
+          "title": "Zapisz kategorie",
+          "detail": "Wydatki zmienią się dopiero po potwierdzeniu końcowego przeglądu."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4165,7 +4289,8 @@
       "applyToExpenses_few": "Zastosuj do {count} wydatków",
       "importExpenses_few": "Importuj {count} wydatki",
       "importedCount_few": "Zaimportowano {count} wydatki",
-      "matchingExpensesNotice_few": "{count} wydatki mają pasujące lub podobne tytuły."
+      "matchingExpensesNotice_few": "{count} wydatki mają pasujące lub podobne tytuły.",
+      "categorizeWithSystemOne": "Zasugeruj kategorie nieskategoryzowanych wydatków za pomocą System One"
     }
   },
   "Sponsor": {

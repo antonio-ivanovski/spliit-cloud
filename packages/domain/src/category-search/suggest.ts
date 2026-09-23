@@ -51,6 +51,9 @@ export const CATEGORY_CANDIDATE_WINDOW = 0.15
  */
 export const CATEGORY_CANDIDATE_NEAR_TIE_WINDOW = 0.04
 
+/** Dictionary score that cannot be displaced by conflicting exact history. */
+export const CATEGORY_DICTIONARY_HISTORY_VETO_SCORE = 0.9
+
 /** Maximum guess chips shown under the expense title. */
 export const CATEGORY_CANDIDATE_LIMIT = 3
 
@@ -262,7 +265,11 @@ export function suggestCategoryFromTitle(
     // twice (e.g. "ICA" filed as income) would otherwise overrule a correct
     // brand/alias match forever. Settlement never vetoes — a wrong settlement
     // corrupts balances, so history keeps its say there.
-    if (dictHit && dictHit.score >= 0.9 && dictHit.id !== historyId) {
+    if (
+      dictHit &&
+      dictHit.score >= CATEGORY_DICTIONARY_HISTORY_VETO_SCORE &&
+      dictHit.id !== historyId
+    ) {
       if (!isSettlementCategory(dictHit.id)) return dictHit
     }
     if (historyHit.count >= 2) {
@@ -402,7 +409,7 @@ export function suggestAiCandidates(
 
 /**
  * Rescales independent LLM confidences (each 0–1, need not sum to anything)
- * into a Jev-style distribution summing to 1. Entries below
+ * into a System One option distribution summing to 1. Entries below
  * AI_CANDIDATE_RAW_MIN_CONFIDENCE are dropped first; an empty or all-zero input
  * yields no distribution.
  */

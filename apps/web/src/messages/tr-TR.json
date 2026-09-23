@@ -368,7 +368,8 @@
             "monthly": "ay",
             "yearly": "yıl"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Kategorilendirilmemiş masraflar için System One ile kategori öner"
       },
       "Destination": {
         "heading": "<strong>{name}</strong> grubunu nereye içe aktarmak istersiniz? ({participantCount} katılımcı · {expenseCount} harcama)",
@@ -1534,7 +1535,7 @@
       "generic": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin.",
       "passwordPolicy": "En az 8 karakter kullanın ve büyük harf, küçük harf, rakam ve sembol içersin.",
       "magicLinkFailed": "Oturum açma bağlantısı gönderilemedi.",
-      "signupInviteRequired": "Bu kurulum yalnızca davetle erişilebilir. Bir davet bağlantısı kullanın veya birinden sizi bir gruba davet etmesini isteyin.",
+      "signupInviteRequired": "Kayıtlar yalnızca davetle mümkündür. Bir davet bağlantısı kullanın veya birinden sizi bir gruba davet etmesini isteyin.",
       "passkeyFailed": "Geçiş anahtarıyla oturum açılamadı. Lütfen tekrar deneyin veya başka bir oturum açma yöntemi kullanın."
     },
     "loading": "Yükleniyor…",
@@ -1544,14 +1545,14 @@
     "signInWithGithub": "GitHub ile devam et",
     "legalNotice": "Devam ederek <terms>Kullanım Şartları</terms>'nı kabul eder ve <privacy>Gizlilik Bildirimi</privacy>'ni onaylarsınız.",
     "inviteOnly": {
-      "message": "Bu kurulum yalnızca davetle erişilebilir. Bir davet bağlantısı kullanın veya birinden sizi bir gruba davet etmesini isteyin.",
+      "message": "Kayıtlar yalnızca davetle mümkündür. Bir davet bağlantısı kullanın veya birinden sizi bir gruba davet etmesini isteyin.",
       "useInvitedEmail": "Davet edildiğiniz e-posta adresini kullanın."
     },
     "signInWithX": "X ile devam et",
     "signInWithOidc": "{name} ile devam et",
     "signInAnonymously": "Anonim",
     "lastUsed": "Son kullanılan",
-    "emailAuthDisabled": "Bu örnekte e-posta ile oturum açma devre dışı bırakıldı. Lütfen tek oturum açma (SSO) kullanın.",
+    "emailAuthDisabled": "E-posta ile oturum açma devre dışı. Lütfen tek oturum açma (SSO) kullanın.",
     "signInWithPasskey": "Geçiş anahtarıyla oturum aç"
   },
   "CompleteProfile": {
@@ -1984,7 +1985,7 @@
         "joined_zero": "Şimdiye kadar {count} kişi katıldı",
         "retry": "Tekrar dene"
       },
-      "emailDeliveryDisabled": "Bu örnekte e-posta gönderimi kapalı. Davet yine de oluşturulur ve davetli oturum açtığında görünür; açabileceği bir şey olması için bir davet bağlantısı kullanın."
+      "emailDeliveryDisabled": "E-posta gönderimi kapalı. Davet yine de oluşturulur ve davetli oturum açtığında görünür; açabileceği bir şey olması için bir davet bağlantısı kullanın."
     },
     "invitations": {
       "title": "Bekleyen davetler",
@@ -2405,7 +2406,7 @@
       "masterDescription": "Kapatarak tüm e-posta ve anlık bildirimleri susturun. Kategori bazlı seçimleriniz korunur.",
       "emailAddToEnable": "Gelen kutusu bildirimleri almak için doğrulanmış bir e-posta ekleyin.",
       "emailAddLink": "E-posta ekle",
-      "emailDeliveryDisabled": "Bu örnekte e-posta gönderimi kapalı. E-posta tercihleriniz kaydedilir, ancak yönetici e-postayı yapılandırana kadar gönderilmez."
+      "emailDeliveryDisabled": "E-posta gönderimi kapalı. E-posta tercihleriniz kaydedilir ancak e-posta ayarlanana kadar gönderilmez."
     },
     "preferences": {
       "title": "Uygulama tercihleri",
@@ -2767,9 +2768,6 @@
   },
   "BulkCategorize": {
     "title": "Toplu kategorilendirme",
-    "calibrationTitle": "Adım 1 — Kalibrasyon",
-    "calibrationDescription": "Onayladığınız her örnek, AI’ın sonraki önerilerini geliştirmesine yardımcı olur. Tek turdan sonra hazır olabilir veya daha fazla örnek isteyebilir.",
-    "roundCount": "Tur {round} / {max}",
     "confidence": {
       "high": "Yüksek",
       "medium": "Orta",
@@ -2830,7 +2828,110 @@
     "doneTitle": "Kategoriler kaydedildi",
     "expenseColumn": "Harcama",
     "categoryColumn": "Kategori",
-    "confidenceColumn": "Güven"
+    "confidenceColumn": "Güven",
+    "simpleDescription": "Genel'deki masrafların kategori eşleşmelerini inceleyin, ardından seçimlerinizi kaydedin.",
+    "generateSuggestions": "Kategori öner",
+    "backToStart": "Geri",
+    "chooseMode": "Masrafları kategorilendirme yöntemini seçin",
+    "localMode": "Sözlük ve geçmiş",
+    "localModeDescription": "Bu grubun kategori geçmişini ve yerleşik sözlüğü kullanır.",
+    "startRun": "Kategorilendirmeyi başlat",
+    "noCategory": "Kategorisiz bırak",
+    "progressTitle": "Masraflar kategorilendiriliyor",
+    "progressDescription": "Bu sayfadan ayrılıp daha sonra dönebilirsiniz. İlerlemeniz kaydedilir.",
+    "progressCount": "{total} masraftan {categorized} tanesi kategorilendirildi",
+    "applyProgressTitle": "Kategoriler kaydediliyor",
+    "reviewTitle": "Önerileri inceleyin",
+    "reviewSummary": "{total} kategorisiz masraftan {suggested} öneri",
+    "sourceLocal": "Yerel",
+    "saveSelected": "Seçili kategorileri kaydet",
+    "retry": "Yeniden dene",
+    "restart": "Yeni tur başlat",
+    "failed": "Tur durdu: {message}",
+    "savedSummary": "{applied} değişti, {skipped} atlandı",
+    "selectedCount": "{count} seçili",
+    "selectAll": "Tümünü seç",
+    "clearAll": "Tümünü temizle",
+    "discardRun": "Turu at",
+    "partialSaveNotice": "Bazı kategoriler zaten kaydedilmiş olabilir. Bu turun atılması bu değişiklikleri geri almaz.",
+    "restartOlderRunTitle": "Yeni kategorilendirme turu başlat",
+    "restartOlderRunDescription": "Bu eski tur önceki inceleme akışını kullanıyordu. Tüm masrafları birlikte incelemek için yeniden başlayın.",
+    "runningMatches": "Şu ana kadar {total} masraftan {count} tanesinde kategori önerisi var",
+    "failedTitle": "Kategorilendirme durdu",
+    "reviewWorkload": "Genel'de {total} masraf · kategorilendirme için {selected} seçili · Genel'de kalan {general}",
+    "categoryChoices": "Kategori seçenekleri",
+    "moreCategories": "Başka kategori seç",
+    "saveCount": "{count} kategoriyi kaydet",
+    "finishWithoutChanges": "Değişiklik yapmadan bitir",
+    "completionSummary": "Tur tamamlandı: {total} masraftan {changed} tanesi değişti. {remaining} masraf Genel'de kaldı.",
+    "viewExpenses": "Masrafları görüntüle",
+    "countLoading": "Kategorilendirilmemiş masraflar sayılıyor…",
+    "nothingToCategorize": "Kategorilendirilecek kategorisiz masraf yok.",
+    "startingCount": "Şu anda {count} masraf Genel'de ve incelemeye hazır.",
+    "countError": "Kategorilendirilmemiş masraflar sayılamadı. Yeniden denemek için sayfayı yeniden yükleyin.",
+    "keepGeneral": "Genel · kategorisiz bırak",
+    "calibrationRoundTitle": "Kalibrasyon turu {round}",
+    "calibrationLoading": "Çeşitli masraflardan oluşan bir örnek hazırlanıyor…",
+    "calibrationReviewDescription": "Bu {count} masrafı inceleyin ve düzeltin. Seçimler en sonda kaydedilene kadar bu turda kalır.",
+    "confirmRound": "Turu onayla",
+    "roundSummaryTitle": "Tur {round} incelendi",
+    "roundSummaryDescription": "{reviewed} incelendi · {categorized} geçici olarak kategorilendirildi · Genel olarak bırakılan {general}",
+    "roundQuality": "İlk öneriler seçimlerinizle %{accuracy} eşleşti; {corrections} tanesini düzelttiniz.",
+    "categorizeRemaining": "Kalan masrafları kategorilendirin",
+    "nextRound": "Başka bir örneği incele",
+    "tableLabel": "Kategorilendirilecek masraflar",
+    "dateColumn": "Tarih",
+    "amountColumn": "Tutar",
+    "rerunSuggestions": "Önerileri yeniden çalıştır",
+    "roundQualityWithSuggestions": "Önerilen {proposed} kategoriden {accepted} tanesi kabul edildi · {changed} tanesi değiştirildi · Genel'den bulunan {missed} eşleşme",
+    "roundQualityNoSuggestions": "Önerilen kategori yok · Genel'den bulunan {missed} eşleşme · Genel'de bırakılan {abstained}",
+    "rerunChanged": "Önerilen {proposed} kategoriden {changed} tanesini değiştirdiniz.",
+    "rerunAssignedSingle": "Genel'de kalan 1 masrafa kategori atadınız.",
+    "rerunAssignedMultiple": "Genel'de kalan {count} masrafa kategori atadınız.",
+    "rerunPotentialSingle": "Değişiklikleriniz kalan 1 Genel masrafın eşleşmesini iyileştirebilir. Başka bir tur isterseniz önerileri yeniden çalıştırın.",
+    "rerunPotentialMultiple": "Değişiklikleriniz kalan {count} Genel masrafın eşleşmelerini iyileştirebilir. Başka bir tur isterseniz önerileri yeniden çalıştırın.",
+    "rerunEligible": "Başka bir tur için uygun: Genel {general} · belirsiz otomatik eşleşme {uncertain}. Düzeltmeleriniz bu önerileri iyileştirebilir.",
+    "rerunNoEligible": "Yeniden çalıştırılacak el değmemiş Genel veya belirsiz otomatik eşleşme kalmadı. Düzeltmeleriniz kaydettiğiniz kategorilere yine de dahil edilir.",
+    "rerunAlreadyUsed": "Son düzeltmeleriniz bu öneriler için zaten kullanıldı. Yeniden çalıştırmak için başka bir düzeltme yapın.",
+    "highMatch": "Yüksek eşleşme",
+    "mediumMatch": "Orta eşleşme",
+    "lowMatch": "Düşük eşleşme",
+    "belowMatchThreshold": "Eşleşme eşiğinin altında",
+    "refiningTitle": "Belirsiz eşleşmeler iyileştiriliyor",
+    "runLimitSummary": "Bu tur 10.000 masraf içeriyor. Kaydettikten sonra başka bir turda {count} Genel masraf daha kategorilendirilebilir.",
+    "pageLoading": "Masraflar yükleniyor…",
+    "pageLoadError": "Masraflar yüklenemedi.",
+    "pageRetry": "Yeniden dene",
+    "pageCount": "{total} masraftan {loaded} tanesi gösteriliyor",
+    "ledgerAmountNotice": "Tutarlar grup para birimiyle gösterilir.",
+    "viewExpenseDetails": "Masraf ayrıntılarını görüntüle",
+    "reviewFilterLabel": "Masrafları göster",
+    "filterAll": "Tümü {count}",
+    "filterGeneral": "Genel {count}",
+    "improveSuggestions": "Kalan önerileri iyileştir",
+    "rerunInfoLabel": "Önerileri iyileştirme hakkında",
+    "preparingNextStage": "Sonraki adım hazırlanıyor",
+    "rerunProgressTitle": "Öneriler güncelleniyor",
+    "progressPreparing": "Masraflar hazırlanıyor…",
+    "noGeneralRows": "Bu incelemede Genel'de masraf kalmadı.",
+    "discardConfirmationTitle": "Bu kategorilendirme turu atılsın mı?",
+    "discardConfirmationDescription": "Bu, turu, önerilerini ve sizin ya da diğer yöneticilerin yaptığı seçimleri kaldırır. Hiçbir masrafın kategorisi değişmez.",
+    "discardConfirmationCancel": "Turu koru",
+    "progressCountDescription": "Yalnızca onaylanan kategoriler ile orta ve yüksek eşleşmeler sayılır; Genel ve düşük güçlü eşleşmeler sayılmaz.",
+    "systemOneMode": "System One modeli",
+    "systemOneModeDescription": "Her masraf için System One karar modelini kullanır; bu grubun kategorilendirilmiş masraflarını ve gözden geçirdiğiniz seçimleri ipucu olarak alır. TypeSafe Jev bu tür modellerden biridir.",
+    "systemOneUnavailable": "System One kullanılamıyor. Sözlük ve geçmiş yine de kullanılabilir.",
+    "systemOneConfidence": "System One güven düzeyi: {confidence}%",
+    "systemOneOptionProbability": "System One seçeneği olasılığı: {probability}%",
+    "overallProgress": "Genel ilerleme",
+    "fullPassProcessed": "{total} masraftan {processed} tanesi işlendi",
+    "stageProcessed": "Bu adımda {total} masraftan {processed} tanesi işlendi",
+    "saveSkipped": "{count} masraf değiştiği için atlandı.",
+    "sharedRunNotice": "Bu tur diğer grup yöneticileriyle paylaşılıyor. Herkes aynı önerileri görür.",
+    "saveConflictTitle": "Bu inceleme başladığından beri {count} masraf değişti",
+    "saveConflictDescription": "Bu masraflar bu turun dışında düzenlendi veya kategorileri değiştirildi. Diğer masrafları kaydedin ya da kategorileri yeniden düzenleyip kaydetmeyi tekrar deneyin.",
+    "saveConflictMore": "Ve {count} tane daha.",
+    "saveOtherExpenses": "Diğer masrafları kaydet"
   },
   "ExpensePreview": {
     "title": "Masraf önizlemesi",
@@ -2903,7 +3004,7 @@
     "failedDescription": "Bu cihaz kaydedilemedi. E-posta için yapılandırılan bildirimler e-posta üzerinden devam eder; yalnızca anlık bildirim seçenekleri başka kanala yönlendirilmez.",
     "emailUsage": "Bir cihaz etkinleştirene kadar yalnızca e-posta için yapılandırılan bildirimler gelir. Tarayıcı ayarlarınızdan bildirimlere izin verin ve Ayarlar'dan tekrar deneyin.",
     "done": "Tamam",
-    "emailDeliveryDisabled": "Bu örnekte e-posta gönderimi kapalı, bu yüzden e-posta bildirimleri size ulaşamaz. Güncellemeleri almaya devam etmek için bu cihazda push bildirimlerini açın."
+    "emailDeliveryDisabled": "E-posta gönderimi kapalı olduğundan e-posta bildirimleri size ulaşamaz. Güncellemeleri almaya devam etmek için bu cihazda anlık bildirimleri açın."
   },
   "Unsubscribe": {
     "title": "Bu e-postaları kapat?",
@@ -3578,6 +3679,29 @@
           "detail": "Yinelenenleri denetle ve içe aktarmayı onayla."
         }
       }
+    },
+    "categorize": {
+      "title": "Masrafları kategorilendir",
+      "description": "Mevcut kategorilendirilmemiş masraflar için System One ile kategori önerin. Kaydetmeden önce her değişikliği inceleyin.",
+      "start": "Masrafları kategorilendir",
+      "steps": {
+        "choose": {
+          "title": "Yöntem seçin",
+          "detail": "Sözlük ve geçmişi veya System One karar modelini kullanın."
+        },
+        "calibrate": {
+          "title": "Küçük örnekleri inceleyin",
+          "detail": "Önerileri düzeltin, sonraki tur grubunuzun kategorilerini öğrensin."
+        },
+        "review": {
+          "title": "Her masrafı inceleyin",
+          "detail": "Genel masraflar tam tabloda önce görünür."
+        },
+        "save": {
+          "title": "Kategorileri kaydedin",
+          "detail": "Masraflar yalnızca son incelemeyi onayladığınızda değişir."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4119,7 +4243,8 @@
       "valuesRecomputedTitle": "Değerler yeniden hesaplandı",
       "viewExpenses": "Masrafları görüntüle",
       "waitDuplicate": "İçe aktarmadan önce yinelenen denetiminin bitmesini bekle.",
-      "invalidRowTitle": "Geçersiz içe aktarma satırı"
+      "invalidRowTitle": "Geçersiz içe aktarma satırı",
+      "categorizeWithSystemOne": "Kategorilendirilmemiş masraflar için System One ile kategori öner"
     }
   },
   "Sponsor": {

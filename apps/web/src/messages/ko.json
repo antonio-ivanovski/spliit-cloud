@@ -270,7 +270,8 @@
             "monthly": "개월",
             "yearly": "년"
           }
-        }
+        },
+        "categorizeWithSystemOne": "System One으로 분류되지 않은 지출의 카테고리를 제안"
       },
       "Destination": {
         "heading": "<strong>{name}</strong>을(를) 어디로 가져오시겠습니까? ({participantCount}명의 참가자 · {expenseCount}개의 지출)",
@@ -1870,7 +1871,7 @@
       "generic": "문제가 발생했습니다. 다시 시도해 주세요.",
       "passwordPolicy": "대문자, 소문자, 숫자, 특수문자를 포함하여 최소 8자 이상 사용하세요。",
       "magicLinkFailed": "로그인 링크를 보낼 수 없습니다.",
-      "signupInviteRequired": "이 인스턴스는 초대 전용입니다. 초대 링크를 사용하거나 다른 사람에게 그룹으로 초대해 달라고 요청하세요.",
+      "signupInviteRequired": "회원가입은 초대 전용입니다. 초대 링크를 사용하거나 다른 사람에게 그룹으로 초대해 달라고 요청하세요.",
       "passkeyFailed": "패스키 로그인에 실패했어요. 다시 시도하거나 다른 로그인 방법을 사용해 보세요."
     },
     "loading": "로딩 중…",
@@ -1880,14 +1881,14 @@
     "signInWithGithub": "GitHub로 계속하기",
     "legalNotice": "계속하면 <terms>이용 약관</terms>에 동의하고 <privacy>개인정보 처리방침</privacy>을 확인한 것으로 간주합니다.",
     "inviteOnly": {
-      "message": "이 인스턴스는 초대 전용입니다. 초대 링크를 사용하거나 다른 사람에게 그룹으로 초대해 달라고 요청하세요.",
+      "message": "회원가입은 초대 전용입니다. 초대 링크를 사용하거나 다른 사람에게 그룹으로 초대해 달라고 요청하세요.",
       "useInvitedEmail": "초대받은 이메일 주소를 사용하세요."
     },
     "signInWithX": "X로 계속하기",
     "signInWithOidc": "{name}(으)로 계속하기",
     "signInAnonymously": "익명",
     "lastUsed": "최근 사용",
-    "emailAuthDisabled": "이 인스턴스에서는 이메일 로그인이 비활성화되어 있습니다. 싱글 사인온(SSO)을 사용하세요.",
+    "emailAuthDisabled": "이메일 로그인이 비활성화되어 있습니다. 싱글 사인온(SSO)을 사용하세요.",
     "signInWithPasskey": "패스키로 로그인"
   },
   "CompleteProfile": {
@@ -2011,7 +2012,7 @@
         "joined_zero": "지금까지 {count}명이 참여했습니다",
         "retry": "다시 시도"
       },
-      "emailDeliveryDisabled": "이 인스턴스에서는 이메일 발송이 꺼져 있습니다. 초대는 그대로 생성되며 초대받은 사람이 로그인하면 표시됩니다. 열어볼 수 있도록 초대 링크를 공유하세요."
+      "emailDeliveryDisabled": "이메일 발송이 꺼져 있습니다. 초대는 그대로 생성되며 초대받은 사람이 로그인하면 표시됩니다. 열어볼 수 있도록 초대 링크를 공유하세요."
     },
     "invitations": {
       "title": "대기 중인 초대",
@@ -2436,7 +2437,7 @@
       "masterDescription": "끄면 모든 이메일 및 푸시 알림이 전송되지 않습니다. 카테고리별 선택은 유지됩니다.",
       "emailAddToEnable": "받은편지함 알림을 받으려면 인증된 이메일을 추가하세요.",
       "emailAddLink": "이메일 추가",
-      "emailDeliveryDisabled": "이 인스턴스에서는 이메일 발송이 꺼져 있습니다. 이메일 설정은 저장되지만 관리자가 이메일을 구성할 때까지 전송되지 않습니다."
+      "emailDeliveryDisabled": "이메일 발송이 꺼져 있습니다. 이메일 설정은 저장되지만 이메일이 설정될 때까지 전송되지 않습니다."
     },
     "preferences": {
       "title": "앱 환경설정",
@@ -2802,9 +2803,6 @@
   },
   "BulkCategorize": {
     "title": "일괄 카테고리 분류",
-    "calibrationTitle": "1단계 — 캘리브레이션",
-    "calibrationDescription": "확인한 예시가 쌓일수록 AI의 다음 추천이 더 정확해져요. 한 번에 준비될 수도 있고 예시를 더 요청할 수도 있어요.",
-    "roundCount": "라운드 {round} / {max}",
     "confidence": {
       "high": "높음",
       "medium": "중간",
@@ -2893,7 +2891,110 @@
     "doneTitle": "카테고리 저장됨",
     "expenseColumn": "지출",
     "categoryColumn": "카테고리",
-    "confidenceColumn": "신뢰도"
+    "confidenceColumn": "신뢰도",
+    "simpleDescription": "일반에 있는 지출의 카테고리 매칭을 검토한 뒤 선택 내용을 저장하세요.",
+    "generateSuggestions": "카테고리 제안하기",
+    "backToStart": "뒤로",
+    "chooseMode": "지출 분류 방법을 선택하세요",
+    "localMode": "사전 및 기록",
+    "localModeDescription": "이 그룹의 카테고리 기록과 내장 사전을 사용합니다.",
+    "startRun": "분류 시작하기",
+    "noCategory": "미분류로 두기",
+    "progressTitle": "지출 분류 중",
+    "progressDescription": "이 페이지를 나갔다가 나중에 돌아올 수 있습니다. 진행 상황은 저장됩니다.",
+    "progressCount": "{total}개 중 {categorized}개의 지출 분류됨",
+    "applyProgressTitle": "카테고리 저장 중",
+    "reviewTitle": "제안 검토하기",
+    "reviewSummary": "미분류 {total}개 중 {suggested}개의 제안",
+    "sourceLocal": "로컬",
+    "saveSelected": "선택한 카테고리 저장하기",
+    "retry": "다시 시도",
+    "restart": "새 실행 시작하기",
+    "failed": "실행이 중단되었습니다: {message}",
+    "savedSummary": "{applied}개 변경됨, {skipped}개 건너뜀",
+    "selectedCount": "{count}개 선택됨",
+    "selectAll": "모두 선택",
+    "clearAll": "모두 지우기",
+    "discardRun": "실행 삭제",
+    "partialSaveNotice": "일부 카테고리는 이미 저장되었을 수 있습니다. 이 실행을 삭제해도 해당 변경은 되돌리지 않습니다.",
+    "restartOlderRunTitle": "새 분류 실행 시작하기",
+    "restartOlderRunDescription": "이 이전 실행은 이전 검토 흐름을 사용했습니다. 모든 지출을 함께 검토하려면 다시 시작하세요.",
+    "runningMatches": "지금까지 {total}개 중 {count}개의 지출에 카테고리 제안이 있습니다",
+    "failedTitle": "분류가 중단됨",
+    "reviewWorkload": "일반 {total}개 · 분류 대상으로 선택 {selected}개 · 일반 유지 {general}개",
+    "categoryChoices": "카테고리 선택 항목",
+    "moreCategories": "다른 카테고리 선택하기",
+    "saveCount": "{count}개의 카테고리 저장하기",
+    "finishWithoutChanges": "변경 없이 마침",
+    "completionSummary": "실행 완료: {total}개 중 {changed}개의 지출이 변경되었습니다. {remaining}개의 지출은 일반으로 남아 있습니다.",
+    "viewExpenses": "지출 보기",
+    "countLoading": "미분류 지출을 세는 중…",
+    "nothingToCategorize": "분류할 미분류 지출이 없습니다.",
+    "startingCount": "현재 {count}개의 지출이 일반에 있으며 검토할 준비가 되었습니다.",
+    "countError": "미분류 지출을 셀 수 없습니다. 페이지를 새로고침하고 다시 시도하세요.",
+    "keepGeneral": "일반 · 미분류로 유지",
+    "calibrationRoundTitle": "보정 라운드 {round}",
+    "calibrationLoading": "다양한 지출 샘플을 준비하는 중…",
+    "calibrationReviewDescription": "이 {count}개의 지출을 검토하고 수정하세요. 저장하기 전까지 선택 내용은 이번 실행에만 유지됩니다.",
+    "confirmRound": "라운드 확인",
+    "roundSummaryTitle": "라운드 {round} 검토됨",
+    "roundSummaryDescription": "{reviewed}개 검토 · {categorized}개 임시 분류 · 일반 유지 {general}개",
+    "roundQuality": "초기 제안이 선택 내용의 {accuracy}%와 일치했습니다. {corrections}개를 수정했습니다.",
+    "categorizeRemaining": "남은 지출 분류하기",
+    "nextRound": "다른 샘플 검토하기",
+    "tableLabel": "분류할 지출",
+    "dateColumn": "날짜",
+    "amountColumn": "금액",
+    "rerunSuggestions": "제안 다시 실행",
+    "roundQualityWithSuggestions": "제안 {proposed}개 중 {accepted}개 수락 · {changed}개 변경 · 일반에서 찾은 매칭 {missed}개",
+    "roundQualityNoSuggestions": "제안 없음 · 일반에서 찾은 매칭 {missed}개 · 일반 유지 {abstained}개",
+    "rerunChanged": "제안된 {proposed}개 중 {changed}개의 카테고리를 변경했습니다.",
+    "rerunAssignedSingle": "일반에 남아 있던 1개의 지출에 카테고리를 지정했습니다.",
+    "rerunAssignedMultiple": "일반에 남아 있던 {count}개의 지출에 카테고리를 지정했습니다.",
+    "rerunPotentialSingle": "변경 내용으로 남은 일반 지출 1개의 매칭이 개선될 수 있습니다. 다시 실행하려면 제안을 다시 실행하세요.",
+    "rerunPotentialMultiple": "변경 내용으로 남은 일반 지출 {count}개의 매칭이 개선될 수 있습니다. 다시 실행하려면 제안을 다시 실행하세요.",
+    "rerunEligible": "추가 실행 가능: 일반 {general}개 · 불확실한 자동 매칭 {uncertain}개. 수정 내용이 제안을 개선할 수 있습니다.",
+    "rerunNoEligible": "다시 실행할 수 있는 미처리 일반 또는 불확실한 자동 매칭이 남아 있지 않습니다. 수정 내용은 저장하는 카테고리에 계속 포함됩니다.",
+    "rerunAlreadyUsed": "최근 수정 내용은 이미 이 제안에 반영되었습니다. 다시 실행하려면 추가로 수정하세요.",
+    "highMatch": "높은 매칭",
+    "mediumMatch": "중간 매칭",
+    "lowMatch": "낮은 매칭",
+    "belowMatchThreshold": "매칭 기준 미만",
+    "refiningTitle": "불확실한 매칭 다듬는 중",
+    "runLimitSummary": "이번 실행에는 10,000개의 지출이 포함됩니다. 저장 후 다른 실행에서 일반 지출 {count}개를 추가로 분류할 수 있습니다.",
+    "pageLoading": "지출을 불러오는 중…",
+    "pageLoadError": "지출을 불러오지 못했습니다.",
+    "pageRetry": "다시 시도",
+    "pageCount": "{total}개 중 {loaded}개의 지출 표시 중",
+    "ledgerAmountNotice": "금액은 그룹 통화로 표시됩니다.",
+    "viewExpenseDetails": "지출 상세 보기",
+    "reviewFilterLabel": "표시할 지출",
+    "filterAll": "전체 {count}개",
+    "filterGeneral": "일반 {count}개",
+    "improveSuggestions": "남은 제안 개선하기",
+    "rerunInfoLabel": "제안 개선에 대해",
+    "preparingNextStage": "다음 단계 준비 중",
+    "rerunProgressTitle": "제안 업데이트 중",
+    "progressPreparing": "지출을 준비하는 중…",
+    "noGeneralRows": "이번 검토에서 일반에 남아 있는 지출이 없습니다.",
+    "discardConfirmationTitle": "이 분류 실행을 삭제하시겠습니까?",
+    "discardConfirmationDescription": "실행, 제안, 나와 다른 관리자가 선택한 내용이 삭제됩니다. 지출 카테고리는 변경되지 않습니다.",
+    "discardConfirmationCancel": "실행 유지하기",
+    "progressCountDescription": "확정한 카테고리와 중간 또는 높은 매칭만 집계됩니다. 일반과 낮은 매칭은 포함되지 않습니다.",
+    "systemOneMode": "System One 모델",
+    "systemOneModeDescription": "모든 지출에 System One 결정 모델을 사용하고, 이 그룹에서 분류된 지출과 검토한 선택 항목을 힌트로 활용합니다. TypeSafe Jev는 이러한 모델 중 하나입니다.",
+    "systemOneUnavailable": "System One을 사용할 수 없습니다. 사전 및 기록은 계속 사용할 수 있습니다.",
+    "systemOneConfidence": "System One 신뢰도: {confidence}%",
+    "systemOneOptionProbability": "System One 옵션 확률: {probability}%",
+    "overallProgress": "전체 진행 상황",
+    "fullPassProcessed": "{total}개 중 {processed}개의 지출 처리됨",
+    "stageProcessed": "이 단계에서 {total}개 중 {processed}개의 지출 처리됨",
+    "saveSkipped": "변경되어 {count}개의 지출을 건너뛰었습니다.",
+    "sharedRunNotice": "이번 실행은 다른 그룹 관리자와 공유됩니다. 모두가 같은 제안을 봅니다.",
+    "saveConflictTitle": "검토 시작 이후 {count}개의 지출이 변경됨",
+    "saveConflictDescription": "이 지출들은 이번 실행 외부에서 수정되거나 카테고리가 변경되었습니다. 다른 지출을 저장하거나, 카테고리를 다시 수정한 뒤 다시 저장해 보세요.",
+    "saveConflictMore": "그 외 {count}개 더.",
+    "saveOtherExpenses": "다른 지출 저장하기"
   },
   "ExpensePreview": {
     "title": "지출 미리보기",
@@ -2970,7 +3071,7 @@
     "failedDescription": "이 기기를 등록하지 못했습니다. 이메일로 설정한 알림은 계속 이메일로 전송됩니다. 푸시만 선택한 알림은 이메일로 전환되지 않습니다.",
     "emailUsage": "기기를 활성화할 때까지 이메일로 설정한 알림만 도착합니다. 브라우저 설정에서 알림을 허용한 후 설정에서 다시 시도할 수 있습니다.",
     "done": "완료",
-    "emailDeliveryDisabled": "이 인스턴스에서는 이메일 발송이 꺼져 있어 이메일 알림을 받으실 수 없습니다. 업데이트를 계속 받으려면 이 기기에서 푸시를 켜세요."
+    "emailDeliveryDisabled": "이메일 발송이 꺼져 있어 이메일 알림을 받으실 수 없습니다. 업데이트를 계속 받으려면 이 기기에서 푸시를 켜세요."
   },
   "Unsubscribe": {
     "title": "이 이메일을 끄시겠어요?",
@@ -3645,6 +3746,29 @@
           "detail": "중복을 확인하고 가져오기를 확정하세요."
         }
       }
+    },
+    "categorize": {
+      "title": "지출 분류하기",
+      "description": "기존의 분류되지 않은 지출에 대해 System One으로 카테고리를 제안합니다. 저장하기 전에 모든 변경 사항을 검토하세요.",
+      "start": "지출 분류하기",
+      "steps": {
+        "choose": {
+          "title": "방법 선택하기",
+          "detail": "사전 및 기록 또는 System One 결정 모델을 사용합니다."
+        },
+        "calibrate": {
+          "title": "작은 샘플 검토하기",
+          "detail": "제안을 수정하면 다음 라운드에서 그룹의 카테고리를 학습합니다."
+        },
+        "review": {
+          "title": "모든 지출 검토하기",
+          "detail": "일반 지출이 전체 표의 맨 앞에 표시됩니다."
+        },
+        "save": {
+          "title": "카테고리 저장하기",
+          "detail": "최종 검토를 확정해야만 지출이 변경됩니다."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4181,7 +4305,8 @@
       "valuesRecomputedTitle": "값 다시 계산됨",
       "viewExpenses": "지출 보기",
       "waitDuplicate": "가져오기 전에 중복 검사가 끝날 때까지 기다리세요.",
-      "invalidRowTitle": "잘못된 가져오기 행"
+      "invalidRowTitle": "잘못된 가져오기 행",
+      "categorizeWithSystemOne": "System One으로 분류되지 않은 지출의 카테고리를 제안"
     }
   },
   "Sponsor": {

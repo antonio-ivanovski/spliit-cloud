@@ -596,6 +596,66 @@ model Group {
   // A partial unique index guarantees at most one FRIEND group per pair.
   friendPairKey      String?
   webhookEvents      WebhookEvent[]
+  bulkCategorizationRun BulkCategorizationRun?
+}
+
+model BulkCategorizationRun {
+  id             String                  @id
+  group          Group                   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId        String                  @unique
+  accountId      String
+  mode           String
+  status         String
+  locale         String                  @default("en-US")
+  total          Int                     @default(0)
+  processed      Int                     @default(0)
+  round          Int                     @default(0)
+  applied        Int                     @default(0)
+  skipped        Int                     @default(0)
+  candidateTotal Int                     @default(0)
+  omitted        Int                     @default(0)
+  revision       Int                     @default(0)
+  attemptId      String?
+  workerToken    String?
+  leaseUntil     DateTime?
+  calibration    Json                    @default("[]")
+  examples       Json                    @default("[]")
+  error          String?
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+  rows           BulkCategorizationRow[]
+}
+
+model BulkCategorizationRow {
+  run               BulkCategorizationRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  runId             String
+  expenseId         String
+  position          Int
+  reviewOrder       Int?
+  title             String
+  expenseVersion    Int
+  expenseDate       DateTime              @db.Timestamptz(0)
+  amount            Int
+  currency          String
+  stage             String                @default("PENDING")
+  categoryId        String                @default("general")
+  initialCategoryId String?
+  rerunFeedback     Boolean               @default(false)
+  manualCorrection  Boolean               @default(false)
+  rerunEligible     Boolean               @default(false)
+  rerunTarget       Boolean               @default(false)
+  secondPassTarget  Boolean               @default(false)
+  source            String                @default("none")
+  choices           Json                  @default("[]")
+  firstPass         Json?
+  secondPass        Json?
+
+  @@id([runId, expenseId])
+  @@unique([runId, position])
+  @@index([runId, stage, position])
+  @@index([runId, reviewOrder])
+  @@index([runId, rerunTarget, position])
+  @@index([runId, secondPassTarget, position])
 }
 
 model Subgroup {

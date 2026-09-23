@@ -363,7 +363,8 @@
             "monthly": "bulan",
             "yearly": "tahun"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Sarankan kategori untuk pengeluaran yang belum dikategorikan dengan System One"
       },
       "Destination": {
         "heading": "Di mana Anda ingin mengimpor <strong>{name}</strong>? ({participantCount} peserta · {expenseCount} pengeluaran)",
@@ -2757,9 +2758,6 @@
   },
   "BulkCategorize": {
     "title": "Kategorisasi massal",
-    "calibrationTitle": "Langkah 1 — Kalibrasi",
-    "calibrationDescription": "Setiap contoh yang Anda konfirmasi membantu AI memperbaiki saran berikutnya. AI mungkin siap setelah satu putaran atau meminta contoh tambahan.",
-    "roundCount": "Putaran {round} dari {max}",
     "confidence": {
       "high": "Tinggi",
       "medium": "Sedang",
@@ -2813,7 +2811,110 @@
     "doneTitle": "Kategori tersimpan",
     "expenseColumn": "Pengeluaran",
     "categoryColumn": "Kategori",
-    "confidenceColumn": "Keyakinan"
+    "confidenceColumn": "Keyakinan",
+    "simpleDescription": "Tinjau kecocokan kategori untuk pengeluaran di Umum, lalu simpan pilihan Anda.",
+    "generateSuggestions": "Sarankan kategori",
+    "backToStart": "Kembali",
+    "chooseMode": "Pilih cara mengategorikan pengeluaran",
+    "localMode": "Kamus & riwayat",
+    "localModeDescription": "Gunakan riwayat kategori grup ini dan kamus bawaan.",
+    "startRun": "Mulai mengategorikan",
+    "noCategory": "Biarkan tanpa kategori",
+    "progressTitle": "Mengategorikan pengeluaran",
+    "progressDescription": "Anda dapat meninggalkan halaman ini dan kembali lagi nanti. Progres Anda tersimpan.",
+    "progressCount": "Dikategorikan {categorized} dari {total} pengeluaran",
+    "applyProgressTitle": "Menyimpan kategori",
+    "reviewTitle": "Tinjau saran",
+    "reviewSummary": "{suggested} saran dari {total} pengeluaran yang belum dikategorikan",
+    "sourceLocal": "Lokal",
+    "saveSelected": "Simpan kategori yang dipilih",
+    "retry": "Coba lagi",
+    "restart": "Mulai run baru",
+    "failed": "Run terhenti: {message}",
+    "savedSummary": "{applied} diubah, {skipped} dilewati",
+    "selectedCount": "{count} dipilih",
+    "selectAll": "Pilih semua",
+    "clearAll": "Hapus semua",
+    "discardRun": "Buang run",
+    "partialSaveNotice": "Sebagian kategori mungkin sudah disimpan. Membuang run ini tidak akan membatalkan perubahan tersebut.",
+    "restartOlderRunTitle": "Mulai run kategorisasi baru",
+    "restartOlderRunDescription": "Run sebelumnya ini menggunakan alur tinjauan lama. Mulai lagi untuk meninjau semua pengeluaran bersama-sama.",
+    "runningMatches": "{count} dari {total} pengeluaran sudah memiliki saran kategori sejauh ini",
+    "failedTitle": "Kategorisasi terhenti",
+    "reviewWorkload": "{total} pengeluaran di Umum · {selected} dipilih untuk dikategorikan · {general} tetap di Umum",
+    "categoryChoices": "Pilihan kategori",
+    "moreCategories": "Pilih kategori lain",
+    "saveCount": "Simpan {count} kategori",
+    "finishWithoutChanges": "Selesai tanpa perubahan",
+    "completionSummary": "Run selesai: {changed} dari {total} pengeluaran diubah. {remaining} pengeluaran tetap di Umum.",
+    "viewExpenses": "Lihat pengeluaran",
+    "countLoading": "Menghitung pengeluaran yang belum dikategorikan…",
+    "nothingToCategorize": "Tidak ada pengeluaran yang belum dikategorikan.",
+    "startingCount": "{count} pengeluaran saat ini berada di Umum dan siap ditinjau.",
+    "countError": "Tidak dapat menghitung pengeluaran yang belum dikategorikan. Muat ulang halaman untuk mencoba lagi.",
+    "keepGeneral": "Umum · biarkan tanpa kategori",
+    "calibrationRoundTitle": "Putaran kalibrasi {round}",
+    "calibrationLoading": "Menyiapkan contoh pengeluaran yang beragam…",
+    "calibrationReviewDescription": "Tinjau dan perbaiki {count} pengeluaran ini. Pilihan tetap dalam run ini sampai Anda menyimpan di akhir.",
+    "confirmRound": "Konfirmasi putaran",
+    "roundSummaryTitle": "Putaran {round} ditinjau",
+    "roundSummaryDescription": "{reviewed} ditinjau · {categorized} dikategorikan sementara · {general} dibiarkan sebagai Umum",
+    "roundQuality": "Saran awal cocok {accuracy}% dengan pilihan Anda; Anda mengoreksi {corrections}.",
+    "categorizeRemaining": "Kategorikan sisa pengeluaran",
+    "nextRound": "Tinjau contoh lain",
+    "tableLabel": "Pengeluaran yang akan dikategorikan",
+    "dateColumn": "Tanggal",
+    "amountColumn": "Jumlah",
+    "rerunSuggestions": "Jalankan ulang saran",
+    "roundQualityWithSuggestions": "{accepted} dari {proposed} kategori yang disarankan diterima · {changed} diubah · {missed} kecocokan ditemukan dari Umum",
+    "roundQualityNoSuggestions": "Tidak ada kategori disarankan · {missed} kecocokan ditemukan dari Umum · {abstained} tersisa di Umum",
+    "rerunChanged": "Anda mengubah {changed} dari {proposed} kategori yang disarankan.",
+    "rerunAssignedSingle": "Anda menetapkan kategori untuk 1 pengeluaran yang tersisa di Umum.",
+    "rerunAssignedMultiple": "Anda menetapkan kategori untuk {count} pengeluaran yang tersisa di Umum.",
+    "rerunPotentialSingle": "Perubahan Anda dapat meningkatkan kecocokan untuk 1 pengeluaran Umum yang tersisa. Jalankan ulang saran jika ingin putaran berikutnya.",
+    "rerunPotentialMultiple": "Perubahan Anda dapat meningkatkan kecocokan untuk {count} pengeluaran Umum yang tersisa. Jalankan ulang saran jika ingin putaran berikutnya.",
+    "rerunEligible": "Layak untuk putaran berikutnya: Umum {general} · kecocokan otomatis yang belum pasti {uncertain}. Koreksi Anda dapat meningkatkan saran ini.",
+    "rerunNoEligible": "Tidak ada Umum yang belum disentuh atau kecocokan otomatis yang belum pasti tersisa untuk dijalankan ulang. Koreksi Anda tetap disertakan dalam kategori yang disimpan.",
+    "rerunAlreadyUsed": "Koreksi terbaru Anda sudah digunakan untuk saran ini. Buat koreksi lain untuk menjalankannya lagi.",
+    "highMatch": "Kecocokan tinggi",
+    "mediumMatch": "Kecocokan sedang",
+    "lowMatch": "Kecocokan rendah",
+    "belowMatchThreshold": "Di bawah ambang kecocokan",
+    "refiningTitle": "Memperbaiki kecocokan yang belum pasti",
+    "runLimitSummary": "Run ini mencakup 10,000 pengeluaran. {count} pengeluaran Umum lainnya dapat dikategorikan dalam run berikutnya setelah Anda menyimpan.",
+    "pageLoading": "Memuat pengeluaran…",
+    "pageLoadError": "Tidak dapat memuat pengeluaran.",
+    "pageRetry": "Coba lagi",
+    "pageCount": "Menampilkan {loaded} dari {total} pengeluaran",
+    "ledgerAmountNotice": "Jumlah ditampilkan dalam mata uang grup.",
+    "viewExpenseDetails": "Lihat detail pengeluaran",
+    "reviewFilterLabel": "Tampilkan pengeluaran",
+    "filterAll": "Semua {count}",
+    "filterGeneral": "Umum {count}",
+    "improveSuggestions": "Tingkatkan saran yang tersisa",
+    "rerunInfoLabel": "Tentang meningkatkan saran",
+    "preparingNextStage": "Menyiapkan langkah berikutnya",
+    "rerunProgressTitle": "Memperbarui saran",
+    "progressPreparing": "Menyiapkan pengeluaran…",
+    "noGeneralRows": "Tidak ada pengeluaran yang tersisa di Umum dalam tinjauan ini.",
+    "discardConfirmationTitle": "Buang run kategorisasi ini?",
+    "discardConfirmationDescription": "Tindakan ini menghapus run, sarannya, dan pilihan yang dibuat oleh Anda atau admin lain. Tidak ada kategori pengeluaran yang akan diubah.",
+    "discardConfirmationCancel": "Pertahankan run",
+    "progressCountDescription": "Hanya kategori yang dikonfirmasi dan kecocokan sedang atau tinggi yang dihitung; Umum dan kecocokan rendah tidak.",
+    "systemOneMode": "Model System One",
+    "systemOneModeDescription": "Gunakan model keputusan System One yang dikonfigurasi untuk setiap pengeluaran, dengan pengeluaran yang telah dikategorikan di grup ini dan pilihan yang telah Anda tinjau sebagai petunjuk. TypeSafe Jev adalah salah satu model tersebut.",
+    "systemOneUnavailable": "System One tidak tersedia. Kamus & riwayat tetap tersedia.",
+    "systemOneConfidence": "Tingkat keyakinan System One: {confidence}%",
+    "systemOneOptionProbability": "Probabilitas pilihan System One: {probability}%",
+    "overallProgress": "Kemajuan keseluruhan",
+    "fullPassProcessed": "Diproses {processed} dari {total} pengeluaran",
+    "stageProcessed": "Diproses {processed} dari {total} pengeluaran pada langkah ini",
+    "saveSkipped": "{count} pengeluaran dilewati karena telah berubah.",
+    "sharedRunNotice": "Run ini dibagikan dengan admin grup lainnya. Semua orang melihat saran yang sama.",
+    "saveConflictTitle": "{count} pengeluaran berubah sejak peninjauan ini dimulai",
+    "saveConflictDescription": "Seseorang mengedit pengeluaran ini atau mengubah kategorinya di luar run ini. Simpan pengeluaran lainnya, atau edit lagi kategorinya lalu coba simpan sekali lagi.",
+    "saveConflictMore": "Dan {count} lainnya.",
+    "saveOtherExpenses": "Simpan pengeluaran lainnya"
   },
   "ExpensePreview": {
     "title": "Pratinjau pengeluaran",
@@ -3560,6 +3661,29 @@
           "detail": "Periksa duplikat dan konfirmasi impor."
         }
       }
+    },
+    "categorize": {
+      "title": "Kategorikan pengeluaran",
+      "description": "Sarankan kategori untuk pengeluaran yang sudah ada dan belum dikategorikan dengan System One. Tinjau setiap perubahan sebelum menyimpan.",
+      "start": "Kategorikan pengeluaran",
+      "steps": {
+        "choose": {
+          "title": "Pilih metode",
+          "detail": "Gunakan kamus & riwayat atau model keputusan System One."
+        },
+        "calibrate": {
+          "title": "Tinjau sampel kecil",
+          "detail": "Perbaiki saran agar putaran berikutnya mempelajari kategori grup Anda."
+        },
+        "review": {
+          "title": "Tinjau setiap pengeluaran",
+          "detail": "Pengeluaran Umum muncul pertama di tabel lengkap."
+        },
+        "save": {
+          "title": "Simpan kategori",
+          "detail": "Pengeluaran hanya berubah saat Anda mengonfirmasi tinjauan akhir."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4096,7 +4220,8 @@
       "valuesRecomputedTitle": "Nilai dihitung ulang",
       "viewExpenses": "Lihat pengeluaran",
       "waitDuplicate": "Tunggu pemeriksaan duplikat selesai sebelum mengimpor.",
-      "invalidRowTitle": "Baris impor tidak valid"
+      "invalidRowTitle": "Baris impor tidak valid",
+      "categorizeWithSystemOne": "Sarankan kategori untuk pengeluaran yang belum dikategorikan dengan System One"
     }
   },
   "Sponsor": {

@@ -363,7 +363,8 @@
             "monthly": "か月",
             "yearly": "年"
           }
-        }
+        },
+        "categorizeWithSystemOne": "System One でカテゴリ未設定の支出にカテゴリを提案"
       },
       "Destination": {
         "heading": "<strong>{name}</strong> をどこにインポートしますか？（{participantCount} 名の参加者 · {expenseCount} 件の支出）",
@@ -1836,7 +1837,7 @@
       "generic": "問題が発生しました。もう一度お試しください。",
       "passwordPolicy": "大文字、小文字、数字、記号を含む8文字以上を使用してください。",
       "magicLinkFailed": "サインインリンクを送信できませんでした。",
-      "signupInviteRequired": "このインスタンスは招待制です。招待リンクを使用するか、誰かにグループへ招待してもらってください。",
+      "signupInviteRequired": "新規登録は招待制です。招待リンクを使うか、誰かにグループへ招待してもらってください。",
       "passkeyFailed": "パスキーでのサインインに失敗しました。もう一度お試しいただくか、別のサインイン方法をお試しください。"
     },
     "loading": "読み込み中…",
@@ -1846,14 +1847,14 @@
     "signInWithGithub": "GitHubで続ける",
     "legalNotice": "続行すると、<terms>利用規約</terms>に同意し、<privacy>プライバシーに関する通知</privacy>を確認したことになります。",
     "inviteOnly": {
-      "message": "このインスタンスは招待制です。招待リンクを使用するか、誰かにグループへ招待してもらってください。",
+      "message": "新規登録は招待制です。招待リンクを使うか、誰かにグループへ招待してもらってください。",
       "useInvitedEmail": "招待されたメールアドレスを使用してください。"
     },
     "signInWithX": "Xで続ける",
     "signInWithOidc": "{name}で続ける",
     "signInAnonymously": "匿名",
     "lastUsed": "前回使用",
-    "emailAuthDisabled": "このインスタンスではメールでのサインインは無効です。シングルサインオン（SSO）をご利用ください。",
+    "emailAuthDisabled": "メールでのサインインは無効です。シングルサインオンをご利用ください。",
     "signInWithPasskey": "パスキーでサインイン"
   },
   "CompleteProfile": {
@@ -1977,7 +1978,7 @@
         "joined_zero": "これまで{count}人が参加しました",
         "retry": "再試行"
       },
-      "emailDeliveryDisabled": "このインスタンスではメール配信が無効です。招待は作成され、招待された人がサインインすると表示されます。相手が開けるよう招待リンクを共有してください。"
+      "emailDeliveryDisabled": "メール配信はオフになっています。招待は作成され、招待された人がサインインすると表示されます。相手が開けるよう招待リンクを共有してください。"
     },
     "invitations": {
       "title": "保留中の招待",
@@ -2398,7 +2399,7 @@
       "masterDescription": "オフにすると、すべてのメール通知とプッシュ通知が停止します。カテゴリごとの設定は保持されます。",
       "emailAddToEnable": "受信トレイ通知を受け取るには、確認済みのメールアドレスを追加してください。",
       "emailAddLink": "メールを追加",
-      "emailDeliveryDisabled": "このインスタンスではメール配信が無効です。メール設定は保存されますが、管理者がメールを設定するまで送信されません。"
+      "emailDeliveryDisabled": "メール配信はオフになっています。メール設定は保存されますが、メールが設定されるまで送信されません。"
     },
     "preferences": {
       "title": "アプリ設定",
@@ -2759,9 +2760,6 @@
   },
   "BulkCategorize": {
     "title": "一括カテゴリ分類",
-    "calibrationTitle": "ステップ1 — キャリブレーション",
-    "calibrationDescription": "確認した例が増えるほど、AIの次の提案が改善されます。1回で準備が整う場合も、追加の例が必要な場合もあります。",
-    "roundCount": "ラウンド {round} / {max}",
     "confidence": {
       "high": "高",
       "medium": "中",
@@ -2815,7 +2813,110 @@
     "doneTitle": "カテゴリを保存しました",
     "expenseColumn": "支出",
     "categoryColumn": "カテゴリ",
-    "confidenceColumn": "確信度"
+    "confidenceColumn": "確信度",
+    "simpleDescription": "一般の支出のカテゴリマッチを確認し、選択内容を保存してください。",
+    "generateSuggestions": "カテゴリを提案",
+    "backToStart": "戻る",
+    "chooseMode": "支出の分類方法を選んでください",
+    "localMode": "辞書と履歴",
+    "localModeDescription": "このグループのカテゴリ履歴と内蔵辞書を使用します。",
+    "startRun": "分類を開始",
+    "noCategory": "未分類のままにする",
+    "progressTitle": "支出を分類中",
+    "progressDescription": "このページを離れて後で戻ることができます。進行状況は保存されます。",
+    "progressCount": "{total}件中{categorized}件を分類済み",
+    "applyProgressTitle": "カテゴリを保存中",
+    "reviewTitle": "提案を確認",
+    "reviewSummary": "未分類{total}件中{suggested}件に提案があります",
+    "sourceLocal": "ローカル",
+    "saveSelected": "選択したカテゴリを保存",
+    "retry": "再試行",
+    "restart": "新しい実行を開始",
+    "failed": "実行が停止しました：{message}",
+    "savedSummary": "{applied}件を変更、{skipped}件をスキップしました",
+    "selectedCount": "{count}件を選択中",
+    "selectAll": "すべて選択",
+    "clearAll": "すべてクリア",
+    "discardRun": "実行を破棄",
+    "partialSaveNotice": "一部のカテゴリはすでに保存されている場合があります。この実行を破棄しても、その変更は取り消されません。",
+    "restartOlderRunTitle": "新しい分類実行を開始",
+    "restartOlderRunDescription": "この以前の実行では古い確認フローが使われています。すべての支出をまとめて確認するには最初からやり直してください。",
+    "runningMatches": "これまでに{total}件中{count}件の支出にカテゴリ提案があります",
+    "failedTitle": "分類が停止しました",
+    "reviewWorkload": "一般{total}件中、分類対象{selected}件、一般のまま{general}件",
+    "categoryChoices": "カテゴリの選択肢",
+    "moreCategories": "別のカテゴリを選ぶ",
+    "saveCount": "{count}件のカテゴリを保存",
+    "finishWithoutChanges": "変更せずに終了",
+    "completionSummary": "実行完了：{total}件中{changed}件の支出を変更しました。{remaining}件は一般のままです。",
+    "viewExpenses": "支出を表示",
+    "countLoading": "未分類の支出を集計中…",
+    "nothingToCategorize": "分類する未分類の支出はありません。",
+    "startingCount": "現在{count}件の支出が一般にあり、確認できます。",
+    "countError": "未分類の支出を数えられませんでした。ページを再読み込みしてもう一度お試しください。",
+    "keepGeneral": "一般・未分類のままにする",
+    "calibrationRoundTitle": "キャリブレーションラウンド {round}",
+    "calibrationLoading": "さまざまな支出のサンプルを準備中…",
+    "calibrationReviewDescription": "{count}件の支出を確認して修正してください。選択内容は最後に保存するまでこの実行内に保持されます。",
+    "confirmRound": "ラウンドを確定",
+    "roundSummaryTitle": "ラウンド {round} を確認済み",
+    "roundSummaryDescription": "{reviewed}件を確認・{categorized}件を仮分類・{general}件を一般のままに",
+    "roundQuality": "最初の提案はあなたの選択の{accuracy}%と一致しました。{corrections}件を修正しました。",
+    "categorizeRemaining": "残りの支出を分類する",
+    "nextRound": "別のサンプルを確認",
+    "tableLabel": "分類対象の支出",
+    "dateColumn": "日付",
+    "amountColumn": "金額",
+    "rerunSuggestions": "提案を再実行",
+    "roundQualityWithSuggestions": "提案{proposed}件中{accepted}件を承認・{changed}件を変更・一般から{missed}件を検出",
+    "roundQualityNoSuggestions": "提案なし・一般から{missed}件を検出・一般のまま{abstained}件",
+    "rerunChanged": "提案された{proposed}件中{changed}件のカテゴリを変更しました。",
+    "rerunAssignedSingle": "一般に残っていた1件の支出にカテゴリを割り当てました。",
+    "rerunAssignedMultiple": "一般に残っていた{count}件の支出にカテゴリを割り当てました。",
+    "rerunPotentialSingle": "変更により、残りの一般の支出1件のマッチが改善される可能性があります。もう一度実行する場合は提案を再実行してください。",
+    "rerunPotentialMultiple": "変更により、残りの一般の支出{count}件のマッチが改善される可能性があります。もう一度実行する場合は提案を再実行してください。",
+    "rerunEligible": "再実行の対象：一般 {general}件・不確かな自動マッチ {uncertain}件。修正内容により提案が改善される場合があります。",
+    "rerunNoEligible": "再実行できる未処理の一般または不確かな自動マッチは残っていません。修正内容は保存するカテゴリに引き続き反映されます。",
+    "rerunAlreadyUsed": "最新の修正はすでにこの提案に反映されています。もう一度実行するには別の修正を行ってください。",
+    "highMatch": "高マッチ",
+    "mediumMatch": "中マッチ",
+    "lowMatch": "低マッチ",
+    "belowMatchThreshold": "マッチ基準未満",
+    "refiningTitle": "不確かなマッチを絞り込み中",
+    "runLimitSummary": "この実行には10,000件の支出が含まれます。保存後に別の実行で、さらに一般の支出{count}件を分類できます。",
+    "pageLoading": "支出を読み込み中…",
+    "pageLoadError": "支出を読み込めませんでした。",
+    "pageRetry": "再試行",
+    "pageCount": "{total}件中{loaded}件の支出を表示しています",
+    "ledgerAmountNotice": "金額はグループの通貨で表示されます。",
+    "viewExpenseDetails": "支出の詳細を表示",
+    "reviewFilterLabel": "表示する支出",
+    "filterAll": "すべて {count}件",
+    "filterGeneral": "一般 {count}件",
+    "improveSuggestions": "残りの提案を改善",
+    "rerunInfoLabel": "提案の改善について",
+    "preparingNextStage": "次のステップを準備中",
+    "rerunProgressTitle": "提案を更新中",
+    "progressPreparing": "支出を準備中…",
+    "noGeneralRows": "この確認では一般に残っている支出はありません。",
+    "discardConfirmationTitle": "この分類実行を破棄しますか？",
+    "discardConfirmationDescription": "実行とその提案、あなたや他の管理者が行った選択が削除されます。支出のカテゴリは変更されません。",
+    "discardConfirmationCancel": "実行を続ける",
+    "progressCountDescription": "確定したカテゴリと中・高マッチのみが集計対象です。一般および低マッチは含まれません。",
+    "systemOneMode": "System One モデル",
+    "systemOneModeDescription": "すべての支出に System One の判定モデルを使用し、このグループで分類済みの支出と確認済みの選択をヒントとして利用します。TypeSafe Jev はそのようなモデルの一つです。",
+    "systemOneUnavailable": "System One は利用できません。辞書と履歴は引き続き利用できます。",
+    "systemOneConfidence": "System One の信頼度：{confidence}%",
+    "systemOneOptionProbability": "System One の候補確率：{probability}%",
+    "overallProgress": "全体の進捗",
+    "fullPassProcessed": "{total}件中{processed}件の支出を処理済み",
+    "stageProcessed": "このステップでは{total}件中{processed}件の支出を処理済み",
+    "saveSkipped": "{count}件の支出は変更されたためスキップされました。",
+    "sharedRunNotice": "この実行は他のグループ管理者と共有されます。全員が同じ提案を確認できます。",
+    "saveConflictTitle": "この確認の開始後に{count}件の支出が変更されました",
+    "saveConflictDescription": "これらの支出は、この実行の外で編集されるか、カテゴリが変更されました。他の支出を保存するか、カテゴリを再度編集してもう一度保存してください。",
+    "saveConflictMore": "他に{count}件。",
+    "saveOtherExpenses": "他の支出を保存"
   },
   "ExpensePreview": {
     "title": "支出のプレビュー",
@@ -2887,7 +2988,7 @@
     "failedDescription": "このデバイスを登録できませんでした。メールに設定した通知は引き続きメールで届きます。プッシュのみの選択はメールに振り替えられません。",
     "emailUsage": "デバイスを有効にするまで、メールに設定した通知のみ届きます。ブラウザの設定で通知を許可し、設定からもう一度お試しください。",
     "done": "完了",
-    "emailDeliveryDisabled": "このインスタンスではメール配信が無効のため、メール通知を受け取れません。このデバイスでプッシュを有効にして、引き続き更新を受け取ってください。"
+    "emailDeliveryDisabled": "メール配信がオフのため、メール通知を受け取れません。このデバイスでプッシュを有効にして、引き続き更新を受け取ってください。"
   },
   "Unsubscribe": {
     "title": "これらのメールを停止しますか？",
@@ -3561,6 +3662,29 @@
           "detail": "重複を確認し、インポートを確定します。"
         }
       }
+    },
+    "categorize": {
+      "title": "支出を分類",
+      "description": "既存のカテゴリ未設定の支出について System One がカテゴリを提案します。保存する前にすべての変更を確認してください。",
+      "start": "支出を分類",
+      "steps": {
+        "choose": {
+          "title": "方法を選択",
+          "detail": "辞書と履歴または System One の判定モデルを使用します。"
+        },
+        "calibrate": {
+          "title": "小さなサンプルを確認",
+          "detail": "提案を修正すると、次のラウンドでグループのカテゴリを学習します。"
+        },
+        "review": {
+          "title": "すべての支出を確認",
+          "detail": "一般の支出は全体の表の先頭に表示されます。"
+        },
+        "save": {
+          "title": "カテゴリを保存",
+          "detail": "最終確認で確定したときにのみ支出が変更されます。"
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4097,7 +4221,8 @@
       "valuesRecomputedTitle": "値を再計算しました",
       "viewExpenses": "支出を表示",
       "waitDuplicate": "インポート前に重複チェックの完了をお待ちください。",
-      "invalidRowTitle": "無効なインポート行"
+      "invalidRowTitle": "無効なインポート行",
+      "categorizeWithSystemOne": "System One でカテゴリ未設定の支出にカテゴリを提案"
     }
   },
   "Sponsor": {

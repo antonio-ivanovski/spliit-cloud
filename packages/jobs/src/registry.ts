@@ -29,6 +29,11 @@ export const jobPayloadSchemas = {
   'webhook.cleanup': z.object({}),
   'anonymous-account.cleanup': z.object({}),
   'budget.evaluate': z.object({ groupId: z.string().min(1).optional() }),
+  'bulk-categorize.run': z.object({
+    runId: z.string().min(1),
+    phase: z.enum(['calibration', 'full', 'rerun']),
+    attemptId: z.string().min(1),
+  }),
 } as const
 
 export type JobName = keyof typeof jobPayloadSchemas
@@ -48,6 +53,7 @@ export const JOB_NAMES = {
   WEBHOOK_CLEANUP: 'webhook.cleanup',
   ANONYMOUS_ACCOUNT_CLEANUP: 'anonymous-account.cleanup',
   EVALUATE_BUDGETS: 'budget.evaluate',
+  BULK_CATEGORIZE: 'bulk-categorize.run',
 } as const satisfies Record<string, JobName>
 
 export const RECURRING_MATERIALIZATION_QUEUE =
@@ -74,6 +80,8 @@ export const ANONYMOUS_ACCOUNT_CLEANUP_QUEUE =
 export const ANONYMOUS_ACCOUNT_CLEANUP_DLQ = `${ANONYMOUS_ACCOUNT_CLEANUP_QUEUE}.dead-letter`
 export const BUDGET_EVALUATE_QUEUE = JOB_NAMES.EVALUATE_BUDGETS
 export const BUDGET_EVALUATE_DLQ = `${BUDGET_EVALUATE_QUEUE}.dead-letter`
+export const BULK_CATEGORIZE_QUEUE = JOB_NAMES.BULK_CATEGORIZE
+export const BULK_CATEGORIZE_DLQ = `${BULK_CATEGORIZE_QUEUE}.dead-letter`
 
 export const DEAD_LETTER_QUEUE_BY_SOURCE = {
   [RECURRING_MATERIALIZATION_QUEUE]: RECURRING_MATERIALIZATION_DLQ,
@@ -86,6 +94,7 @@ export const DEAD_LETTER_QUEUE_BY_SOURCE = {
   [WEBHOOK_CLEANUP_QUEUE]: WEBHOOK_CLEANUP_DLQ,
   [ANONYMOUS_ACCOUNT_CLEANUP_QUEUE]: ANONYMOUS_ACCOUNT_CLEANUP_DLQ,
   [BUDGET_EVALUATE_QUEUE]: BUDGET_EVALUATE_DLQ,
+  [BULK_CATEGORIZE_QUEUE]: BULK_CATEGORIZE_DLQ,
 } as const satisfies Record<JobName, string>
 
 export function deadLetterQueueFor(sourceQueue: string): string | null {

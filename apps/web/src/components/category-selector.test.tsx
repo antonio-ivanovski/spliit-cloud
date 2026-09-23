@@ -1,14 +1,18 @@
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
-import { render, screen } from '@/test/test-utils'
+import { render, screen, within } from '@/test/test-utils'
 import {
   DEFAULT_CATEGORIES,
   DEFAULT_CATEGORY_ID,
+  type CategoryId,
   toggleCategorySelection,
 } from '@spliit/domain'
 
-import { CategorySelector } from './category-selector'
+import {
+  CategorySelector,
+  type CategorySelectorBadge,
+} from './category-selector'
 
 async function openSelector() {
   const user = userEvent.setup()
@@ -40,6 +44,79 @@ describe('CategorySelector', () => {
 
     await user.click(parent)
     expect(onValueToggle).toHaveBeenCalledWith('home')
+  })
+
+  it('shows confidence badges for suggested categories in the trigger and options', async () => {
+    const categoryBadges = new Map<CategoryId, CategorySelectorBadge>([
+      [
+        'groceries',
+        {
+          text: '87%',
+          accessibleDescription: 'System One confidence: 87%',
+        },
+      ],
+      [
+        'rent',
+        {
+          text: 'High match',
+          accessibleDescription: 'High match',
+        },
+      ],
+    ])
+
+    render(
+      <CategorySelector
+        categories={DEFAULT_CATEGORIES}
+        categoryBadges={categoryBadges}
+        defaultValue="groceries"
+        isLoading={false}
+        onValueChange={() => {}}
+      />,
+    )
+
+    const trigger = screen.getByRole('combobox')
+    expect(trigger).toHaveTextContent('87%')
+    expect(trigger).toHaveAccessibleDescription('System One confidence: 87%')
+
+    await openSelector()
+    const groceries = await screen.findByRole('option', { name: 'Groceries' })
+    const rent = screen.getByRole('option', { name: 'Rent' })
+    const taxi = screen.getByRole('option', { name: 'Taxi' })
+
+    expect(within(groceries).getByText('87%')).toBeInTheDocument()
+    expect(groceries).toHaveAccessibleDescription('System One confidence: 87%')
+    expect(within(rent).getAllByText('High match')).toHaveLength(2)
+    expect(rent).toHaveAccessibleDescription('High match')
+    expect(within(taxi).queryByText(/%|match/i)).not.toBeInTheDocument()
+  })
+
+  it('keeps keyboard selection available when category options have badges', async () => {
+    const user = userEvent.setup()
+    const onValueChange = vi.fn()
+
+    render(
+      <CategorySelector
+        categories={DEFAULT_CATEGORIES}
+        categoryBadges={
+          new Map<CategoryId, CategorySelectorBadge>([
+            [
+              'rent',
+              { text: 'High match', accessibleDescription: 'High match' },
+            ],
+          ])
+        }
+        defaultValue={DEFAULT_CATEGORY_ID}
+        isLoading={false}
+        onValueChange={onValueChange}
+      />,
+    )
+
+    await user.click(screen.getByRole('combobox'))
+    const search = screen.getByPlaceholderText(/search category/i)
+    await user.type(search, 'rent')
+    await user.keyboard('{Enter}')
+
+    expect(onValueChange).toHaveBeenCalledWith('rent')
   })
 
   it('marks all children checked when the parent is selected', async () => {

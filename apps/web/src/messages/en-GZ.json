@@ -211,7 +211,7 @@
       "masterDescription": "Switch off to mute all email and push notifications. Your per-category picks are kept.",
       "emailAddToEnable": "add a verified email to get inbox notifications.",
       "emailAddLink": "add an email",
-      "emailDeliveryDisabled": "email delivery is off on this instance. your email picks are saved but nothing goes out until the admin sets email up."
+      "emailDeliveryDisabled": "email delivery is off. your email picks are saved but nothing goes out until email is set up."
     },
     "preferences": {
       "title": "app vibes",
@@ -549,7 +549,7 @@
       "generic": "something went sideways  try again.",
       "magicLinkFailed": "couldn't send the sign-in link. the magic flopped.",
       "passwordPolicy": "use at least 8 characters with uppercase, lowercase, a number, and a symbol. security era.",
-      "signupInviteRequired": "this instance is invite-only. grab an invite link or ask someone to pull you into a group.",
+      "signupInviteRequired": "sign-ups are invite-only. grab an invite link or ask someone to pull you into a group.",
       "passkeyFailed": "passkey sign-in didn't work. try again or use another sign-in method."
     },
     "signInWithGithub": "continue with GitHub",
@@ -563,14 +563,14 @@
       "symbol": "a symbol"
     },
     "inviteOnly": {
-      "message": "this instance is invite-only. grab an invite link or ask someone to pull you into a group.",
+      "message": "sign-ups are invite-only. grab an invite link or ask someone to pull you into a group.",
       "useInvitedEmail": "use the email you got invited with."
     },
     "signInWithX": "continue with X",
     "signInWithOidc": "continue with {name}",
     "signInAnonymously": "Anon",
     "lastUsed": "last used",
-    "emailAuthDisabled": "email sign-in is off on this instance. use single sign-on instead.",
+    "emailAuthDisabled": "email sign-in is off. use single sign-on instead.",
     "signInWithPasskey": "sign in with passkey"
   },
   "Balances": {
@@ -773,8 +773,6 @@
   },
   "BulkCategorize": {
     "title": "bulk categorize mode",
-    "calibrationTitle": "step 1 — calibration era",
-    "calibrationDescription": "each confirmed example helps the AI level up its next suggestions. it may be ready after one round or ask for more examples.",
     "aiWantsMore": "the AI wants a few more examples. confirm or correct the suggestions below, then run another round.",
     "aiSaidReady": "the AI feels ready. go to preview to commit the vibes.",
     "feedbackTableTitle": "selected expenses",
@@ -830,13 +828,115 @@
     "doneTitle": "categories saved. we ate.",
     "expenseColumn": "expense",
     "categoryColumn": "category",
-    "roundCount": "round {round} of {max}",
     "confidence": {
       "high": "high confidence",
       "medium": "medium confidence",
       "low": "low confidence"
     },
-    "confidenceColumn": "confidence check"
+    "confidenceColumn": "confidence check",
+    "simpleDescription": "review the category matches for expenses in general, then save your picks.",
+    "generateSuggestions": "suggest categories",
+    "backToStart": "back",
+    "chooseMode": "pick how to categorize expenses",
+    "localMode": "dictionary & history",
+    "localModeDescription": "uses this group’s category history plus the built-in dictionary.",
+    "startRun": "start categorizing",
+    "noCategory": "leave it uncategorized",
+    "progressTitle": "categorizing expenses",
+    "progressDescription": "you can leave this page and come back later. your progress is saved.",
+    "progressCount": "{categorized} of {total} expenses categorized",
+    "applyProgressTitle": "saving categories",
+    "reviewTitle": "review the suggestions",
+    "reviewSummary": "{suggested} suggestions out of {total} uncategorized expenses",
+    "sourceLocal": "local",
+    "saveSelected": "save the selected categories",
+    "retry": "retry",
+    "restart": "start a new run",
+    "failed": "the run stopped: {message}",
+    "savedSummary": "{applied} updated, {skipped} skipped",
+    "selectedCount": "{count} ticked",
+    "selectAll": "select all",
+    "clearAll": "clear all",
+    "discardRun": "ditch this run",
+    "partialSaveNotice": "some categories might already be saved. ditching this run won't undo those.",
+    "restartOlderRunTitle": "start a new categorization run",
+    "restartOlderRunDescription": "this older run used the previous review flow. start over to review everything together.",
+    "runningMatches": "{count} of {total} expenses have a suggestion so far",
+    "failedTitle": "categorization stopped",
+    "reviewWorkload": "{total} expenses in general · {selected} picked for categorizing · {general} staying in general",
+    "categoryChoices": "category choices",
+    "moreCategories": "pick a different category",
+    "saveCount": "save {count} categories",
+    "finishWithoutChanges": "finish with no changes",
+    "completionSummary": "run complete: {changed} of {total} expenses changed. {remaining} still sitting in general.",
+    "viewExpenses": "view expenses",
+    "countLoading": "counting uncategorized expenses…",
+    "nothingToCategorize": "no uncategorized expenses to sort out.",
+    "startingCount": "{count} expenses are sitting in general, ready to review.",
+    "countError": "couldn't count the uncategorized expenses. reload the page and try again.",
+    "keepGeneral": "general · leave it uncategorized",
+    "calibrationRoundTitle": "calibration round {round}",
+    "calibrationLoading": "putting together a mixed sample of expenses…",
+    "calibrationReviewDescription": "review and fix these {count} expenses. your picks stay in this run until you save at the end.",
+    "confirmRound": "confirm round",
+    "roundSummaryTitle": "round {round} reviewed",
+    "roundSummaryDescription": "{reviewed} reviewed · {categorized} provisionally categorized · {general} left as general",
+    "roundQuality": "the first suggestions matched {accuracy}% of your picks; you fixed {corrections}.",
+    "categorizeRemaining": "categorize the rest of the expenses",
+    "nextRound": "review another sample",
+    "tableLabel": "expenses to categorize",
+    "dateColumn": "date",
+    "amountColumn": "amount",
+    "rerunSuggestions": "re-run suggestions",
+    "roundQualityWithSuggestions": "{accepted} of {proposed} suggested categories kept · {changed} changed · {missed} matches found hiding in general",
+    "roundQualityNoSuggestions": "no categories suggested · {missed} matches found hiding in general · {abstained} left in general",
+    "rerunChanged": "you changed {changed} of {proposed} suggested categories.",
+    "rerunAssignedSingle": "you gave 1 expense stuck in general a category.",
+    "rerunAssignedMultiple": "you gave {count} expenses stuck in general a category.",
+    "rerunPotentialSingle": "your changes might improve the match for 1 leftover general expense. re-run the suggestions if you want another go.",
+    "rerunPotentialMultiple": "your changes might improve matches for {count} leftover general expenses. re-run the suggestions if you want another go.",
+    "rerunEligible": "up for another pass: general {general} · shaky auto matches {uncertain}. your fixes might level up these suggestions.",
+    "rerunNoEligible": "no untouched general or shaky auto matches left to re-run. your fixes still count in the categories you save.",
+    "rerunAlreadyUsed": "your latest fixes are already baked into these suggestions. make another fix to run them again.",
+    "highMatch": "high match",
+    "mediumMatch": "medium match",
+    "lowMatch": "low match",
+    "belowMatchThreshold": "below the match threshold",
+    "refiningTitle": "cleaning up the iffy matches",
+    "runLimitSummary": "this run covers 10,000 expenses. {count} more general expenses can go in another run after you save.",
+    "pageLoading": "loading expenses…",
+    "pageLoadError": "couldn't load the expenses.",
+    "pageRetry": "retry",
+    "pageCount": "showing {loaded} of {total} expenses",
+    "ledgerAmountNotice": "amounts show in the group currency.",
+    "viewExpenseDetails": "view expense details",
+    "reviewFilterLabel": "show expenses",
+    "filterAll": "all {count}",
+    "filterGeneral": "general {count}",
+    "improveSuggestions": "improve the rest of the suggestions",
+    "rerunInfoLabel": "about improving suggestions",
+    "preparingNextStage": "getting the next step ready",
+    "rerunProgressTitle": "updating suggestions",
+    "progressPreparing": "getting expenses ready…",
+    "noGeneralRows": "nothing left in general in this review.",
+    "discardConfirmationTitle": "ditch this categorization run?",
+    "discardConfirmationDescription": "this deletes the run, its suggestions, and every pick you or other admins made. no expense categories get changed.",
+    "discardConfirmationCancel": "keep the run",
+    "progressCountDescription": "only confirmed categories plus medium and high matches count. general and low matches don't.",
+    "systemOneMode": "System One decision model",
+    "systemOneModeDescription": "use the System One decision model for every expense, using this group’s categorized expenses and your reviewed choices as hints. TypeSafe Jev is one such model.",
+    "systemOneUnavailable": "System One isn’t available. dictionary & history still works.",
+    "systemOneConfidence": "System One confidence score: {confidence}%",
+    "systemOneOptionProbability": "System One option chance: {probability}%",
+    "overallProgress": "overall progress",
+    "fullPassProcessed": "processed {processed} of {total} expenses",
+    "stageProcessed": "processed {processed} of {total} expenses in this step",
+    "saveSkipped": "{count} expenses got skipped because they changed.",
+    "sharedRunNotice": "this run is shared with other group admins. everyone sees the same suggestions.",
+    "saveConflictTitle": "{count} expenses changed since this review kicked off",
+    "saveConflictDescription": "someone edited these expenses or changed their category outside this run. save the other expenses, or fix the categories up again and try saving one more time.",
+    "saveConflictMore": "and {count} more.",
+    "saveOtherExpenses": "save the other expenses"
   },
   "Categories": {
     "Entertainment": {
@@ -2203,7 +2303,8 @@
             "monthly": "months, fr",
             "yearly": "years, fr"
           }
-        }
+        },
+        "categorizeWithSystemOne": "suggest categories for uncategorized expenses with System One"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}, obviously",
@@ -2804,7 +2905,7 @@
         "joined_zero": "{count} besties joined so far",
         "retry": "try it again"
       },
-      "emailDeliveryDisabled": "email delivery is off on this instance. the invite still gets made and shows up when they sign in; use a link invite so they've got something to open."
+      "emailDeliveryDisabled": "email delivery is off. the invite still gets made and shows up when they sign in; use a link invite so they've got something to open."
     },
     "leave": {
       "button": "leave the group",
@@ -3146,7 +3247,7 @@
     "failedDescription": "we could not register this device. Email-configured alerts continue there; Push-only choices do not reroute.",
     "emailUsage": "only Email-configured alerts arrive until enabling a device. allow notifications in browser settings and retry from Settings.",
     "done": "done, slay",
-    "emailDeliveryDisabled": "email delivery is off on this instance, so email pings can't reach you. turn on push on this device to keep getting updates."
+    "emailDeliveryDisabled": "email delivery is off, so email pings can't reach you. turn on push on this device to keep getting updates."
   },
   "ResetPassword": {
     "title": "choose a new password",
@@ -3568,6 +3669,29 @@
         "review": {
           "title": "review and import",
           "detail": "sniff out dupes and lock in the import."
+        }
+      }
+    },
+    "categorize": {
+      "title": "categorize expenses",
+      "description": "suggest categories for existing uncategorized expenses with System One. review every change before saving.",
+      "start": "categorize expenses",
+      "steps": {
+        "choose": {
+          "title": "pick a method",
+          "detail": "use dictionary & history or the System One decision model."
+        },
+        "calibrate": {
+          "title": "review small samples",
+          "detail": "fix the suggestions so the next round learns your group’s categories."
+        },
+        "review": {
+          "title": "review every expense",
+          "detail": "general expenses show up first in the full table."
+        },
+        "save": {
+          "title": "save categories",
+          "detail": "nothing changes until you confirm the final review."
         }
       }
     }
@@ -4111,7 +4235,8 @@
       "valuesRecomputedTitle": "values recomputed",
       "viewExpenses": "check the expenses",
       "waitDuplicate": "hold up for the duplicate check before importing.",
-      "invalidRowTitle": "that import row is off"
+      "invalidRowTitle": "that import row is off",
+      "categorizeWithSystemOne": "suggest categories for uncategorized expenses with System One"
     }
   },
   "Sponsor": {

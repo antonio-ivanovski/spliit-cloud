@@ -26,6 +26,7 @@ import { Button } from '@/components/ui/button'
 import {
   ResponsiveDialog,
   ResponsiveDialogBody,
+  ResponsiveDialogClose,
   ResponsiveDialogContent,
   ResponsiveDialogDescription,
   ResponsiveDialogFooter,
@@ -130,6 +131,8 @@ export type ExpensePreviewModalProps = {
    * expense.
    */
   onMakeCopy?: () => void
+  /** Hide expense and comment mutations when used for review. */
+  readOnly?: boolean
 }
 
 function toBalanceExpense(
@@ -189,6 +192,7 @@ export function ExpensePreviewModal({
   onClose,
   onEdit,
   onMakeCopy,
+  readOnly = false,
 }: ExpensePreviewModalProps) {
   const { group, currentLedgerParticipantId, currentMember } = useCurrentGroup()
   const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
@@ -197,6 +201,7 @@ export function ExpensePreviewModal({
   const navigate = useNavigate()
   const { toast } = useToast()
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpensePreview' })
+  const { t: tCommon } = useTranslation(undefined, { keyPrefix: 'Common' })
   const { t: tForm } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const { t: tCard } = useTranslation(undefined, { keyPrefix: 'ExpenseCard' })
   const { t: tCategories } = useTranslation(undefined, {
@@ -518,7 +523,7 @@ export function ExpensePreviewModal({
 
               <ExpenseAttachmentsPreview documents={expense.documents} />
 
-              {series && (
+              {series && !readOnly && (
                 <SeriesControls
                   groupId={groupId}
                   series={series}
@@ -528,79 +533,96 @@ export function ExpensePreviewModal({
             </div>
           )}
           {expense && (
-            <ExpenseComments groupId={groupId} expenseId={expenseId} />
+            <ExpenseComments
+              groupId={groupId}
+              expenseId={expenseId}
+              readOnly={readOnly}
+            />
           )}
         </ResponsiveDialogBody>
 
-        <ResponsiveDialogFooter className="flex-row flex-wrap gap-2 sm:flex-nowrap sm:justify-end">
-          {series ? (
-            canManageRecurrence ? (
-              <RecurringActionsMenu
-                className="me-auto"
-                seriesStatus={series.status}
-                confirmationTarget={expense?.title ?? ''}
-                onEdit={handleEdit}
-                onDelete={(option) => handleDelete(option)}
-                onStop={
-                  series.status === 'CANCELLED' || series.status === 'COMPLETED'
-                    ? undefined
-                    : handleStopRecurrence
-                }
-              />
-            ) : null
-          ) : canDelete ? (
-            <DeletePopup
-              onDelete={() => handleDelete()}
-              confirmationTarget={expense?.title ?? ''}
-              className="me-auto shrink-0 px-3 sm:px-4"
+        {readOnly ? (
+          <ResponsiveDialogFooter>
+            <ResponsiveDialogClose
+              render={
+                <Button type="button" variant="outline">
+                  {tCommon('close')}
+                </Button>
+              }
             />
-          ) : null}
-          {canCopy && (
-            <>
-              <Button
-                variant="outline"
-                className="min-w-0 flex-1 px-3 sm:flex-none sm:px-4"
-                nativeButton={!!onMakeCopy}
-                render={
-                  onMakeCopy ? undefined : (
-                    <Link
-                      to="/groups/$groupId/expenses/create"
-                      params={{ groupId }}
-                      search={{
-                        fromExpenseId: expenseId,
-                        ...(returnTo ? { returnTo } : {}),
-                      }}
-                    />
-                  )
-                }
-                onClick={handleMakeCopy}
-                data-testid="expense-make-copy"
-              >
-                <FileInput className="me-1.5 h-4 w-4 shrink-0 sm:me-2" />
-                <span className="truncate">{t('makeCopy')}</span>
-              </Button>
-              {canEdit && !series && (
-                <EditButton
-                  label={t('edit')}
-                  className="min-w-0 px-3 sm:px-4"
-                  nativeButton={!!onEdit}
+          </ResponsiveDialogFooter>
+        ) : (
+          <ResponsiveDialogFooter className="flex-row flex-wrap gap-2 sm:flex-nowrap sm:justify-end">
+            {series ? (
+              canManageRecurrence ? (
+                <RecurringActionsMenu
+                  className="me-auto"
+                  seriesStatus={series.status}
+                  confirmationTarget={expense?.title ?? ''}
+                  onEdit={handleEdit}
+                  onDelete={(option) => handleDelete(option)}
+                  onStop={
+                    series.status === 'CANCELLED' ||
+                    series.status === 'COMPLETED'
+                      ? undefined
+                      : handleStopRecurrence
+                  }
+                />
+              ) : null
+            ) : canDelete ? (
+              <DeletePopup
+                onDelete={() => handleDelete()}
+                confirmationTarget={expense?.title ?? ''}
+                className="me-auto shrink-0 px-3 sm:px-4"
+              />
+            ) : null}
+            {canCopy && (
+              <>
+                <Button
+                  variant="outline"
+                  className="min-w-0 flex-1 px-3 sm:flex-none sm:px-4"
+                  nativeButton={!!onMakeCopy}
                   render={
-                    onEdit ? undefined : (
+                    onMakeCopy ? undefined : (
                       <Link
-                        to="/groups/$groupId/expenses/$expenseId/edit"
-                        params={{ groupId, expenseId }}
-                        search={returnTo ? { returnTo } : undefined}
+                        to="/groups/$groupId/expenses/create"
+                        params={{ groupId }}
+                        search={{
+                          fromExpenseId: expenseId,
+                          ...(returnTo ? { returnTo } : {}),
+                        }}
                       />
                     )
                   }
-                  onClick={onEdit ? () => void handleEdit() : undefined}
-                />
-              )}
-            </>
-          )}
-        </ResponsiveDialogFooter>
+                  onClick={handleMakeCopy}
+                  data-testid="expense-make-copy"
+                >
+                  <FileInput className="me-1.5 h-4 w-4 shrink-0 sm:me-2" />
+                  <span className="truncate">{t('makeCopy')}</span>
+                </Button>
+                {canEdit && !series && (
+                  <EditButton
+                    label={t('edit')}
+                    className="min-w-0 px-3 sm:px-4"
+                    nativeButton={!!onEdit}
+                    render={
+                      onEdit ? undefined : (
+                        <Link
+                          to="/groups/$groupId/expenses/$expenseId/edit"
+                          params={{ groupId, expenseId }}
+                          search={returnTo ? { returnTo } : undefined}
+                        />
+                      )
+                    }
+                    onClick={onEdit ? () => void handleEdit() : undefined}
+                  />
+                )}
+              </>
+            )}
+          </ResponsiveDialogFooter>
+        )}
       </ResponsiveDialogContent>
-      {series && (
+      {series && !readOnly && (
         <SeriesListDialog
           groupId={groupId}
           seriesId={series.id}

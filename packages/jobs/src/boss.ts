@@ -15,6 +15,8 @@ import {
   NOTIFICATION_CLEANUP_QUEUE,
   BUDGET_EVALUATE_QUEUE,
   BUDGET_EVALUATE_DLQ,
+  BULK_CATEGORIZE_QUEUE,
+  BULK_CATEGORIZE_DLQ,
   NOTIFICATION_DELIVER_DLQ,
   NOTIFICATION_DELIVER_QUEUE,
   NOTIFICATION_RECONCILE_DLQ,
@@ -105,6 +107,12 @@ export const JOB_SEND_OPTIONS = {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
     deadLetter: BUDGET_EVALUATE_DLQ,
   },
+  [BULK_CATEGORIZE_QUEUE]: {
+    retryLimit: 0,
+    expireInSeconds: 6 * 3600,
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+    deadLetter: BULK_CATEGORIZE_DLQ,
+  },
 } as const satisfies Record<JobName, SendOptions>
 
 export const JOB_QUEUE_OPTIONS = {
@@ -120,6 +128,11 @@ export const JOB_QUEUE_OPTIONS = {
   },
   [NOTIFICATION_DELIVER_QUEUE]: {
     ...JOB_SEND_OPTIONS[NOTIFICATION_DELIVER_QUEUE],
+    policy: 'exclusive',
+    notify: true,
+  },
+  [BULK_CATEGORIZE_QUEUE]: {
+    ...JOB_SEND_OPTIONS[BULK_CATEGORIZE_QUEUE],
     policy: 'exclusive',
     notify: true,
   },
@@ -165,6 +178,10 @@ export type JobWorkOptions = {
  * empty-fetches do not dominate VPS CPU when LISTEN/NOTIFY is unavailable.
  */
 export const JOB_WORK_OPTIONS = {
+  [BULK_CATEGORIZE_QUEUE]: {
+    localConcurrency: 1,
+    pollingIntervalSeconds: env.JOBS_POLLING_INTERVAL_SECONDS,
+  },
   [NOTIFICATION_DELIVER_QUEUE]: {
     localConcurrency: env.JOBS_MAX_CONCURRENCY,
     pollingIntervalSeconds: env.JOBS_POLLING_INTERVAL_SECONDS,
@@ -325,6 +342,9 @@ export async function ensureQueues(boss: SpliitBoss): Promise<void> {
   await createOrConvergeQueue(boss, BUDGET_EVALUATE_DLQ, {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
   })
+  await createOrConvergeQueue(boss, BULK_CATEGORIZE_DLQ, {
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+  })
   await createOrConvergeQueue(boss, WEBHOOK_DELIVER_DLQ, {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
   })
@@ -343,6 +363,11 @@ export async function ensureQueues(boss: SpliitBoss): Promise<void> {
     boss,
     BUDGET_EVALUATE_QUEUE,
     JOB_QUEUE_OPTIONS[BUDGET_EVALUATE_QUEUE],
+  )
+  await createOrConvergeQueue(
+    boss,
+    BULK_CATEGORIZE_QUEUE,
+    JOB_QUEUE_OPTIONS[BULK_CATEGORIZE_QUEUE],
   )
   await createOrConvergeQueue(
     boss,

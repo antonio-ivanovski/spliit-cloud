@@ -373,7 +373,8 @@
             "monthly": "חודשים",
             "yearly": "שנים"
           }
-        }
+        },
+        "categorizeWithSystemOne": "הצעת קטגוריות להוצאות ללא קטגוריה באמצעות System One"
       },
       "Destination": {
         "heading": "לאן תרצה לייבא את <strong>{name}</strong>? ({participantCount} משתתפים · {expenseCount} הוצאות)",
@@ -1851,7 +1852,7 @@
       "generic": "משהו השתבש. אנא נסה שוב.",
       "passwordPolicy": "השתמש בלפחות 8 תווים עם אות גדולה, אות קטנה, מספר וסימן.",
       "magicLinkFailed": "לא ניתן לשלוח את קישור ההתחברות.",
-      "signupInviteRequired": "המופע הזה פתוח להזמנות בלבד. השתמש בקישור הזמנה או בקש ממישהו להזמין אותך לקבוצה.",
+      "signupInviteRequired": "ההרשמה אפשרית בהזמנה בלבד. השתמש בקישור הזמנה או בקש ממישהו להזמין אותך לקבוצה.",
       "passkeyFailed": "ההתחברות עם מפתח גישה נכשלה. נסה שוב או השתמש בשיטת התחברות אחרת."
     },
     "loading": "טוען…",
@@ -1861,14 +1862,14 @@
     "signInWithGithub": "המשך עם GitHub",
     "legalNotice": "בהמשך השימוש, אתה מסכים ל<terms>תנאי השימוש</terms> ומאשר את <privacy>הודעת הפרטיות</privacy>.",
     "inviteOnly": {
-      "message": "המופע הזה פתוח להזמנות בלבד. השתמש בקישור הזמנה או בקש ממישהו להזמין אותך לקבוצה.",
+      "message": "ההרשמה אפשרית בהזמנה בלבד. השתמש בקישור הזמנה או בקש ממישהו להזמין אותך לקבוצה.",
       "useInvitedEmail": "השתמש בכתובת האימייל שאליה נשלחה ההזמנה."
     },
     "signInWithX": "המשך עם X",
     "signInWithOidc": "המשך עם {name}",
     "signInAnonymously": "אנונימי",
     "lastUsed": "שימוש אחרון",
-    "emailAuthDisabled": "התחברות עם דוא\"ל מושבתת במופע זה. יש להשתמש בהתחברות מאוחדת (SSO).",
+    "emailAuthDisabled": "התחברות עם דוא\"ל מושבתת. יש להשתמש בהתחברות מאוחדת (SSO).",
     "signInWithPasskey": "התחבר עם מפתח גישה"
   },
   "CompleteProfile": {
@@ -1993,7 +1994,7 @@
         "joined_two": "הצטרפו {count} אנשים",
         "retry": "נסה שוב"
       },
-      "emailDeliveryDisabled": "שליחת דוא\"ל מושבתת במופע זה. ההזמנה תיווצר בכל זאת ותופיע כשהמוזמן יתחבר; השתמשו בקישור הזמנה כדי לתת לו משהו לפתוח."
+      "emailDeliveryDisabled": "שליחת דוא\"ל מושבתת. ההזמנה תיווצר בכל זאת ותופיע כשהמוזמן יתחבר; השתמשו בקישור הזמנה כדי לתת לו משהו לפתוח."
     },
     "invitations": {
       "title": "הזמנות ממתינות",
@@ -2415,7 +2416,7 @@
       "masterDescription": "כבה כדי להשתיק את כל התראות הדוא״ל וההתראות הניידות. הבחירות שלך לפי קטגוריה נשמרות.",
       "emailAddToEnable": "הוסף אימייל מאומת כדי לקבל התראות בתיבת הדואר הנכנס.",
       "emailAddLink": "הוסף אימייל",
-      "emailDeliveryDisabled": "שליחת דוא\"ל מושבתת במופע זה. בחירות הדוא\"ל שלך נשמרות, אך לא יישלחו עד שהמנהל יגדיר את הדוא\"ל."
+      "emailDeliveryDisabled": "שליחת דוא\"ל מושבתת. בחירות הדוא\"ל שלך נשמרות, אך לא יישלחו עד שהדוא\"ל יוגדר."
     },
     "preferences": {
       "title": "העדפות האפליקציה",
@@ -2778,9 +2779,6 @@
   },
   "BulkCategorize": {
     "title": "קטלוג המוני",
-    "calibrationTitle": "שלב 1 — כיול",
-    "calibrationDescription": "כל דוגמה שמאשרים עוזרת ל-AI לשפר את ההצעות הבאות. ייתכן שסבב אחד יספיק או שיידרשו דוגמאות נוספות.",
-    "roundCount": "סבב {round} מתוך {max}",
     "confidence": {
       "high": "גבוה",
       "medium": "בינוני",
@@ -2848,7 +2846,110 @@
     "doneTitle": "הקטגוריות נשמרו",
     "expenseColumn": "הוצאה",
     "categoryColumn": "קטגוריה",
-    "confidenceColumn": "ביטחון"
+    "confidenceColumn": "ביטחון",
+    "simpleDescription": "סקור התאמות קטגוריות עבור הוצאות בכללי, ולאחר מכן שמור את הבחירות שלך.",
+    "generateSuggestions": "הצע קטגוריות",
+    "backToStart": "חזרה",
+    "chooseMode": "בחר כיצד לסווג הוצאות",
+    "localMode": "מילון והיסטוריה",
+    "localModeDescription": "השתמש בהיסטוריית הקטגוריות של קבוצה זו ובמילון המובנה.",
+    "startRun": "התחל לסווג",
+    "noCategory": "השאר ללא סיווג",
+    "progressTitle": "מסווג הוצאות",
+    "progressDescription": "ניתן לעזוב דף זה ולחזור מאוחר יותר. ההתקדמות שלך נשמרת.",
+    "progressCount": "סווגו {categorized} מתוך {total} הוצאות",
+    "applyProgressTitle": "שמירת קטגוריות",
+    "reviewTitle": "סקור הצעות",
+    "reviewSummary": "{suggested} הצעות מתוך {total} הוצאות שלא סווגו",
+    "sourceLocal": "מקומי",
+    "saveSelected": "שמור קטגוריות נבחרות",
+    "retry": "נסה שוב",
+    "restart": "התחל הרצה חדשה",
+    "failed": "ההרצה נעצרה: {message}",
+    "savedSummary": "{applied} השתנו, {skipped} דולגו",
+    "selectedCount": "{count} נבחרו",
+    "selectAll": "בחר הכול",
+    "clearAll": "נקה הכול",
+    "discardRun": "בטל הרצה",
+    "partialSaveNotice": "ייתכן שחלק מהקטגוריות כבר נשמרו. ביטול ההרצה הזו לא יבטל את השינויים האלה.",
+    "restartOlderRunTitle": "התחל הרצת סיווג חדשה",
+    "restartOlderRunDescription": "הרצה מוקדמת זו השתמשה בתהליך הסקירה הקודם. התחל שוב כדי לסקור את כל ההוצאות יחד.",
+    "runningMatches": "ל-{count} מתוך {total} הוצאות יש הצעת קטגוריה עד כה",
+    "failedTitle": "הסיווג נעצר",
+    "reviewWorkload": "{total} הוצאות בכללי · {selected} נבחרו לסיווג · {general} נשארות בכללי",
+    "categoryChoices": "בחירות קטגוריה",
+    "moreCategories": "בחר קטגוריה אחרת",
+    "saveCount": "שמור {count} קטגוריות",
+    "finishWithoutChanges": "סיים ללא שינויים",
+    "completionSummary": "ההרצה הושלמה: {changed} מתוך {total} הוצאות השתנו. {remaining} הוצאות נשארו בכללי.",
+    "viewExpenses": "הצג הוצאות",
+    "countLoading": "סופר הוצאות שלא סווגו…",
+    "nothingToCategorize": "אין הוצאות שלא סווגו לסיווג.",
+    "startingCount": "{count} הוצאות נמצאות כרגע בכללי ומוכנות לסקירה.",
+    "countError": "לא ניתן היה לספור את ההוצאות שלא סווגו. טען מחדש את הדף כדי לנסות שוב.",
+    "keepGeneral": "כללי · השאר ללא סיווג",
+    "calibrationRoundTitle": "סבב כיול {round}",
+    "calibrationLoading": "מכין מדגם מגוון של הוצאות…",
+    "calibrationReviewDescription": "בדוק ותקן את {count} ההוצאות האלה. הבחירות נשארות בהרצה זו עד שתשמור בסוף.",
+    "confirmRound": "אשר סבב",
+    "roundSummaryTitle": "סבב {round} נבדק",
+    "roundSummaryDescription": "{reviewed} נבדקו · {categorized} סווגו זמנית · {general} נותרו ככללי",
+    "roundQuality": "ההצעות הראשוניות תאמו {accuracy}% מהבחירות שלך; תיקנת {corrections}.",
+    "categorizeRemaining": "סווג את ההוצאות הנותרות",
+    "nextRound": "בדוק מדגם נוסף",
+    "tableLabel": "הוצאות לסיווג",
+    "dateColumn": "תאריך",
+    "amountColumn": "סכום",
+    "rerunSuggestions": "הרץ שוב הצעות",
+    "roundQualityWithSuggestions": "{accepted} מתוך {proposed} קטגוריות מוצעות התקבלו · {changed} שונו · נמצאו {missed} התאמות מכללי",
+    "roundQualityNoSuggestions": "לא הוצעו קטגוריות · נמצאו {missed} התאמות מכללי · {abstained} נותרו בכללי",
+    "rerunChanged": "שינית {changed} מתוך {proposed} קטגוריות מוצעות.",
+    "rerunAssignedSingle": "הקצית קטגוריה להוצאה אחת שנותרה בכללי.",
+    "rerunAssignedMultiple": "הקצית קטגוריה ל-{count} הוצאות שנותרו בכללי.",
+    "rerunPotentialSingle": "השינויים שלך עשויים לשפר את ההתאמה עבור הוצאה אחת נותרת בכללי. הרץ שוב את ההצעות אם תרצה מעבר נוסף.",
+    "rerunPotentialMultiple": "השינויים שלך עשויים לשפר התאמות עבור {count} הוצאות נותרות בכללי. הרץ שוב את ההצעות אם תרצה מעבר נוסף.",
+    "rerunEligible": "זכאי למעבר נוסף: כללי {general} · התאמות אוטומטיות לא ודאיות {uncertain}. התיקונים שלך עשויים לשפר הצעות אלה.",
+    "rerunNoEligible": "לא נותרו הוצאות בכללי שלא נגעו בהן או התאמות אוטומטיות לא ודאיות להרצה חוזרת. התיקונים שלך עדיין כלולים בקטגוריות שתשמור.",
+    "rerunAlreadyUsed": "התיקונים האחרונים שלך כבר שימשו להצעות אלה. בצע תיקון נוסף כדי להריץ אותן שוב.",
+    "highMatch": "התאמה גבוהה",
+    "mediumMatch": "התאמה בינונית",
+    "lowMatch": "התאמה נמוכה",
+    "belowMatchThreshold": "מתחת לסף ההתאמה",
+    "refiningTitle": "מדייק התאמות לא ודאיות",
+    "runLimitSummary": "הרצה זו כוללת 10,000 הוצאות. ניתן לסווג {count} הוצאות נוספות בכללי בהרצה נוספת לאחר השמירה.",
+    "pageLoading": "טוען הוצאות…",
+    "pageLoadError": "לא ניתן היה לטעון הוצאות.",
+    "pageRetry": "נסה שוב",
+    "pageCount": "מציג {loaded} מתוך {total} הוצאות",
+    "ledgerAmountNotice": "הסכומים מוצגים במטבע הקבוצה.",
+    "viewExpenseDetails": "הצג פרטי הוצאה",
+    "reviewFilterLabel": "הצג הוצאות",
+    "filterAll": "הכול {count}",
+    "filterGeneral": "כללי {count}",
+    "improveSuggestions": "שפר את ההצעות הנותרות",
+    "rerunInfoLabel": "על שיפור הצעות",
+    "preparingNextStage": "מכין את השלב הבא",
+    "rerunProgressTitle": "מעדכן הצעות",
+    "progressPreparing": "מכין הוצאות…",
+    "noGeneralRows": "לא נותרו הוצאות בכללי בסקירה זו.",
+    "discardConfirmationTitle": "לבטל את הרצת הסיווג הזו?",
+    "discardConfirmationDescription": "פעולה זו מסירה את ההרצה, את ההצעות שלה ואת הבחירות שביצעת אתה או מנהלים אחרים. שום קטגוריות של הוצאות לא ישתנו.",
+    "discardConfirmationCancel": "שמור הרצה",
+    "progressCountDescription": "רק קטגוריות מאושרות והתאמות בינוניות או גבוהות נספרות; כללי והתאמות חלשות לא נספרות.",
+    "systemOneMode": "מודל System One",
+    "systemOneModeDescription": "יש להשתמש במודל ההחלטה של System One עבור כל הוצאה, תוך שימוש בהוצאות שסווגו בקבוצה הזו ובבחירות שבדקתם כרמזים. TypeSafe Jev הוא מודל כזה.",
+    "systemOneUnavailable": "System One אינו זמין. מילון והיסטוריה עדיין זמינים.",
+    "systemOneConfidence": "רמת הביטחון של System One: {confidence}%",
+    "systemOneOptionProbability": "ההסתברות של אפשרות System One: {probability}%",
+    "overallProgress": "התקדמות כללית",
+    "fullPassProcessed": "עובדו {processed} מתוך {total} הוצאות",
+    "stageProcessed": "עובדו {processed} מתוך {total} הוצאות בשלב זה",
+    "saveSkipped": "{count} הוצאות דולגו כי הן השתנו.",
+    "sharedRunNotice": "ההרצה הזו משותפת עם מנהלי הקבוצה האחרים. כולם רואים את אותן הצעות.",
+    "saveConflictTitle": "{count} הוצאות השתנו מאז תחילת הסקירה",
+    "saveConflictDescription": "מישהו ערך את ההוצאות האלה או שינה את הקטגוריה שלהן מחוץ להרצה זו. שמור את ההוצאות האחרות, או ערוך שוב את הקטגוריות ונסה לשמור שוב.",
+    "saveConflictMore": "ועוד {count}.",
+    "saveOtherExpenses": "שמור הוצאות אחרות"
   },
   "ExpensePreview": {
     "title": "תצוגה מקדימה של הוצאה",
@@ -2922,7 +3023,7 @@
     "failedDescription": "לא ניתן היה לרשום את המכשיר. התראות שהוגדרו לדוא״ל ימשיכו להגיע לשם; בחירות של דחיפה בלבד לא ינותבו מחדש.",
     "emailUsage": "רק התראות שהוגדרו לדוא״ל יגיעו עד שתפעיל מכשיר. ניתן לאפשר התראות בהגדרות הדפדפן ולנסות שוב מההגדרות.",
     "done": "סיום",
-    "emailDeliveryDisabled": "שליחת דוא\"ל מושבתת במופע זה, ולכן התראות הדוא\"ל לא יגיעו אליך. הפעל התראות דחיפה במכשיר זה כדי להמשיך לקבל עדכונים."
+    "emailDeliveryDisabled": "שליחת דוא\"ל מושבתת, ולכן התראות הדוא\"ל לא יגיעו אליך. הפעל התראות דחיפה במכשיר זה כדי להמשיך לקבל עדכונים."
   },
   "Unsubscribe": {
     "title": "להפסיק לקבל את האימיילים האלה?",
@@ -3597,6 +3698,29 @@
           "detail": "בדיקת כפילויות ואישור הייבוא."
         }
       }
+    },
+    "categorize": {
+      "title": "סיווג הוצאות",
+      "description": "הצעת קטגוריות להוצאות קיימות ללא קטגוריה באמצעות System One. יש לבדוק כל שינוי לפני השמירה.",
+      "start": "סיווג הוצאות",
+      "steps": {
+        "choose": {
+          "title": "בחר שיטה",
+          "detail": "יש להשתמש במילון ובהיסטוריה או במודל ההחלטה של System One."
+        },
+        "calibrate": {
+          "title": "סקור מדגמים קטנים",
+          "detail": "תקן הצעות כדי שהסבב הבא ילמד את הקטגוריות של הקבוצה שלך."
+        },
+        "review": {
+          "title": "סקור כל הוצאה",
+          "detail": "הוצאות כללי מופיעות תחילה בטבלה המלאה."
+        },
+        "save": {
+          "title": "שמור קטגוריות",
+          "detail": "הוצאות משתנות רק כשתאשר את הסקירה הסופית."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4148,7 +4272,8 @@
       "applyToExpenses_two": "החלה על {count} הוצאות",
       "importExpenses_two": "ייבוא {count} הוצאות",
       "importedCount_two": "{count} הוצאות יובאו",
-      "matchingExpensesNotice_two": "ל־{count} הוצאות יש כותרות תואמות או דומות."
+      "matchingExpensesNotice_two": "ל־{count} הוצאות יש כותרות תואמות או דומות.",
+      "categorizeWithSystemOne": "הצעת קטגוריות להוצאות ללא קטגוריה באמצעות System One"
     }
   },
   "Sponsor": {

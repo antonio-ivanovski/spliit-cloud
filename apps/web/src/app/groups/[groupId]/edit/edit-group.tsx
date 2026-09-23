@@ -1,5 +1,4 @@
-import { Link } from '@tanstack/react-router'
-import { Archive, ArchiveRestore, Sparkles, Trash } from 'lucide-react'
+import { Archive, ArchiveRestore, Trash } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -41,8 +40,6 @@ export const EditGroup = () => {
   })
   const updateMutation = useUpdateGroupMutation()
   const deleteMutation = useDeleteGroupMutation()
-  const { data: features } = trpc.features.get.useQuery()
-  const { t } = useTranslation(undefined, { keyPrefix: 'GroupForm' })
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const { t: tExpenses } = useTranslation(undefined, { keyPrefix: 'Expenses' })
   const [forceArchiveOpen, setForceArchiveOpen] = useState(false)
@@ -99,32 +96,6 @@ export const EditGroup = () => {
           </CardContent>
         </Card>
       ) : null}
-
-      {canArchive && !isArchived && features?.enableBulkCategorize && (
-        <Card className="mb-2">
-          <CardHeader>
-            <CardTitle>{t('bulkCategorizeSectionTitle')}</CardTitle>
-            <CardDescription>
-              {t('bulkCategorizeSectionDescription')}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button
-              variant="secondary"
-              nativeButton={false}
-              render={
-                <Link
-                  to="/groups/bulk-categorize/$groupId"
-                  params={{ groupId }}
-                />
-              }
-            >
-              <Sparkles className="me-2 h-4 w-4" />
-              {t('bulkCategorizeButton')}
-            </Button>
-          </CardContent>
-        </Card>
-      )}
 
       {canArchive && (
         <Card className="mb-2">

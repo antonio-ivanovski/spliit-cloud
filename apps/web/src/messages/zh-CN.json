@@ -363,7 +363,8 @@
             "monthly": "个月",
             "yearly": "年"
           }
-        }
+        },
+        "categorizeWithSystemOne": "使用 System One 为未分类支出建议类别"
       },
       "Destination": {
         "heading": "您想将 <strong>{name}</strong> 导入到哪里？（{participantCount} 名参与者 · {expenseCount} 笔支出）",
@@ -1836,7 +1837,7 @@
       "generic": "出了点问题。请重试。",
       "passwordPolicy": "请使用至少8个字符，包含大写字母、小写字母、数字和符号。",
       "magicLinkFailed": "无法发送登录链接。",
-      "signupInviteRequired": "此实例仅限邀请加入。请使用邀请链接，或请他人邀请您加入群组。",
+      "signupInviteRequired": "注册仅限邀请加入。请使用邀请链接，或请他人邀请您加入群组。",
       "passkeyFailed": "通行密钥登录失败，请重试或使用其他登录方式。"
     },
     "loading": "加载中……",
@@ -1846,14 +1847,14 @@
     "signInWithGithub": "使用 GitHub 继续",
     "legalNotice": "继续即表示您同意<terms>使用条款</terms>并确认已阅读<privacy>隐私声明</privacy>。",
     "inviteOnly": {
-      "message": "此实例仅限邀请加入。请使用邀请链接，或请他人邀请您加入群组。",
+      "message": "注册仅限邀请加入。请使用邀请链接，或请他人邀请您加入群组。",
       "useInvitedEmail": "请使用收到邀请的邮箱地址。"
     },
     "signInWithX": "使用 X 继续",
     "signInWithOidc": "使用 {name} 继续",
     "signInAnonymously": "匿名",
     "lastUsed": "上次使用",
-    "emailAuthDisabled": "此实例已停用邮箱登录。请使用单点登录（SSO）。",
+    "emailAuthDisabled": "已停用邮箱登录。请使用单点登录（SSO）。",
     "signInWithPasskey": "使用通行密钥登录"
   },
   "CompleteProfile": {
@@ -1977,7 +1978,7 @@
         "joined_zero": "目前 {count} 人已加入",
         "retry": "重试"
       },
-      "emailDeliveryDisabled": "此实例已停用邮件发送。邀请仍会创建，并在被邀请人登录后显示；请使用邀请链接，让对方有可打开的内容。"
+      "emailDeliveryDisabled": "邮件发送已关闭。邀请仍会创建，并在被邀请人登录后显示；请使用邀请链接，让对方有可打开的内容。"
     },
     "invitations": {
       "title": "待处理的邀请",
@@ -2398,7 +2399,7 @@
       "masterDescription": "关闭后，所有电子邮件和推送通知都将静默。您的分类选择会保留。",
       "emailAddToEnable": "添加已验证的邮箱以接收收件箱通知。",
       "emailAddLink": "添加邮箱",
-      "emailDeliveryDisabled": "此实例已停用邮件发送。你的邮件选择会被保存，但在管理员配置邮件之前不会发送。"
+      "emailDeliveryDisabled": "邮件发送已关闭。你的邮件选项会被保存，但在邮件配置完成之前不会发送。"
     },
     "preferences": {
       "title": "应用偏好设置",
@@ -2759,9 +2760,6 @@
   },
   "BulkCategorize": {
     "title": "批量分类",
-    "calibrationTitle": "步骤1 — 校准",
-    "calibrationDescription": "你确认的每个示例都会帮助 AI 改进下一次建议。AI 可能一轮后即可准备就绪，也可能需要更多示例。",
-    "roundCount": "第{round}轮 / 共{max}轮",
     "confidence": {
       "high": "高",
       "medium": "中",
@@ -2815,7 +2813,110 @@
     "doneTitle": "分类已保存",
     "expenseColumn": "支出",
     "categoryColumn": "类别",
-    "confidenceColumn": "置信度"
+    "confidenceColumn": "置信度",
+    "simpleDescription": "检查通用中支出的分类匹配，然后保存你的选择。",
+    "generateSuggestions": "建议分类",
+    "backToStart": "返回",
+    "chooseMode": "选择支出分类方式",
+    "localMode": "词典与历史",
+    "localModeDescription": "使用此群组的分类历史和内置词典。",
+    "startRun": "开始分类",
+    "noCategory": "保持未分类",
+    "progressTitle": "正在分类支出",
+    "progressDescription": "你可以离开此页面，稍后再回来。进度已保存。",
+    "progressCount": "已分类 {total} 笔中的 {categorized} 笔支出",
+    "applyProgressTitle": "正在保存分类",
+    "reviewTitle": "检查建议",
+    "reviewSummary": "{total} 笔未分类支出中有 {suggested} 条建议",
+    "sourceLocal": "本地",
+    "saveSelected": "保存所选分类",
+    "retry": "重试",
+    "restart": "开始新的运行",
+    "failed": "运行已停止：{message}",
+    "savedSummary": "已更改 {applied} 笔，已跳过 {skipped} 笔",
+    "selectedCount": "已选 {count} 笔",
+    "selectAll": "全选",
+    "clearAll": "清除全部",
+    "discardRun": "舍弃运行",
+    "partialSaveNotice": "部分分类可能已经保存。舍弃本次运行不会撤销这些更改。",
+    "restartOlderRunTitle": "开始新的分类运行",
+    "restartOlderRunDescription": "此次较早的运行使用了旧的检查流程。请重新开始，以便一起检查所有支出。",
+    "runningMatches": "到目前为止，{total} 笔支出中有 {count} 笔已有分类建议",
+    "failedTitle": "分类已停止",
+    "reviewWorkload": "通用 {total} 笔 · 已选 {selected} 笔待分类 · {general} 笔保留在通用",
+    "categoryChoices": "分类选项",
+    "moreCategories": "选择其他分类",
+    "saveCount": "保存 {count} 个分类",
+    "finishWithoutChanges": "不做更改直接完成",
+    "completionSummary": "运行完成：{total} 笔支出中有 {changed} 笔已更改。还有 {remaining} 笔支出保留在通用中。",
+    "viewExpenses": "查看支出",
+    "countLoading": "正在统计未分类支出…",
+    "nothingToCategorize": "没有需要分类的未分类支出。",
+    "startingCount": "当前有 {count} 笔支出在通用中，可供检查。",
+    "countError": "无法统计未分类支出。请重新加载页面再试一次。",
+    "keepGeneral": "通用 · 保持未分类",
+    "calibrationRoundTitle": "校准轮次 {round}",
+    "calibrationLoading": "正在准备多样化的支出样本…",
+    "calibrationReviewDescription": "请检查并修正这 {count} 笔支出。你的选择会保留在本次运行中，直到最后保存。",
+    "confirmRound": "确认本轮",
+    "roundSummaryTitle": "第 {round} 轮已检查",
+    "roundSummaryDescription": "已检查 {reviewed} 笔 · 临时分类 {categorized} 笔 · {general} 笔保留为通用",
+    "roundQuality": "初始建议与你的选择有 {accuracy}% 一致；你修正了 {corrections} 处。",
+    "categorizeRemaining": "分类剩余支出",
+    "nextRound": "查看另一组样本",
+    "tableLabel": "待分类支出",
+    "dateColumn": "日期",
+    "amountColumn": "金额",
+    "rerunSuggestions": "重新运行建议",
+    "roundQualityWithSuggestions": "建议的 {proposed} 个分类中接受了 {accepted} 个 · 修改了 {changed} 个 · 从通用中找到 {missed} 个匹配",
+    "roundQualityNoSuggestions": "无分类建议 · 从通用中找到 {missed} 个匹配 · {abstained} 笔保留在通用",
+    "rerunChanged": "你修改了建议的 {proposed} 个分类中的 {changed} 个。",
+    "rerunAssignedSingle": "你已为通用中剩余的 1 笔支出指定了分类。",
+    "rerunAssignedMultiple": "你已为通用中剩余的 {count} 笔支出指定了分类。",
+    "rerunPotentialSingle": "你的更改可能会改善剩余 1 笔通用支出的匹配。如需再运行一次，请重新运行建议。",
+    "rerunPotentialMultiple": "你的更改可能会改善剩余 {count} 笔通用支出的匹配。如需再运行一次，请重新运行建议。",
+    "rerunEligible": "可再次运行：通用 {general} 笔 · 不确定的自动匹配 {uncertain} 笔。你的修正可能会改进这些建议。",
+    "rerunNoEligible": "没有可重新运行的未处理通用或不确定自动匹配。你的修正仍会包含在保存的分类中。",
+    "rerunAlreadyUsed": "你的最新修正已用于这些建议。再做一次修正即可再次运行。",
+    "highMatch": "高匹配",
+    "mediumMatch": "中匹配",
+    "lowMatch": "低匹配",
+    "belowMatchThreshold": "低于匹配阈值",
+    "refiningTitle": "正在优化不确定的匹配",
+    "runLimitSummary": "本次运行包含 10,000 笔支出。保存后，可在另一次运行中分类另外 {count} 笔通用支出。",
+    "pageLoading": "正在加载支出…",
+    "pageLoadError": "无法加载支出。",
+    "pageRetry": "重试",
+    "pageCount": "正在显示 {total} 笔中的 {loaded} 笔支出",
+    "ledgerAmountNotice": "金额以群组货币显示。",
+    "viewExpenseDetails": "查看支出详情",
+    "reviewFilterLabel": "显示支出",
+    "filterAll": "全部 {count} 笔",
+    "filterGeneral": "通用 {count} 笔",
+    "improveSuggestions": "改进剩余建议",
+    "rerunInfoLabel": "关于改进建议",
+    "preparingNextStage": "正在准备下一步",
+    "rerunProgressTitle": "正在更新建议",
+    "progressPreparing": "正在准备支出…",
+    "noGeneralRows": "本次检查中通用里已没有剩余支出。",
+    "discardConfirmationTitle": "要舍弃本次分类运行吗？",
+    "discardConfirmationDescription": "这将删除本次运行、相关建议，以及你或其他管理员已做的选择。不会更改任何支出分类。",
+    "discardConfirmationCancel": "保留本次运行",
+    "progressCountDescription": "仅统计已确认的分类以及中、高匹配；通用和低匹配不计入。",
+    "systemOneMode": "System One 模型",
+    "systemOneModeDescription": "对每笔支出使用 System One 决策模型，并参考此群组中已分类的支出和你审核过的选择。TypeSafe Jev 是此类模型之一。",
+    "systemOneUnavailable": "无法使用 System One。仍可使用词典与历史。",
+    "systemOneConfidence": "System One 置信度：{confidence}%",
+    "systemOneOptionProbability": "System One 选项概率：{probability}%",
+    "overallProgress": "总体进度",
+    "fullPassProcessed": "已处理 {total} 笔支出中的 {processed} 笔",
+    "stageProcessed": "本步骤已处理 {total} 笔支出中的 {processed} 笔",
+    "saveSkipped": "由于发生更改，已跳过 {count} 笔支出。",
+    "sharedRunNotice": "此次运行与其他群组管理员共享。所有人看到的建议都相同。",
+    "saveConflictTitle": "自本次检查开始以来，有 {count} 笔支出发生了更改",
+    "saveConflictDescription": "这些支出已在此次运行之外被编辑或更改了分类。请保存其他支出，或重新编辑分类后再试一次。",
+    "saveConflictMore": "还有 {count} 笔。",
+    "saveOtherExpenses": "保存其他支出"
   },
   "ExpensePreview": {
     "title": "消费预览",
@@ -2887,7 +2988,7 @@
     "failedDescription": "无法注册此设备。设置为电子邮件的通知仍会发送到邮箱；仅选择推送的通知不会改用电子邮件发送。",
     "emailUsage": "启用设备前，只会收到设置为电子邮件的通知。你可以在浏览器设置中允许通知，然后从设置中重试。",
     "done": "完成",
-    "emailDeliveryDisabled": "此实例已停用邮件发送，因此邮件通知无法送达。请在此设备上开启推送，以便继续接收更新。"
+    "emailDeliveryDisabled": "邮件发送已关闭，因此邮件通知无法送达。请在此设备上开启推送，以便继续接收更新。"
   },
   "Unsubscribe": {
     "title": "要关闭这些邮件吗？",
@@ -3561,6 +3662,29 @@
           "detail": "检查重复并确认导入。"
         }
       }
+    },
+    "categorize": {
+      "title": "分类支出",
+      "description": "使用 System One 为现有未分类支出建议类别。保存前请检查每项更改。",
+      "start": "分类支出",
+      "steps": {
+        "choose": {
+          "title": "选择方式",
+          "detail": "使用词典与历史或 System One 决策模型。"
+        },
+        "calibrate": {
+          "title": "检查小样本",
+          "detail": "修正建议，让下一轮学习你们群组的分类。"
+        },
+        "review": {
+          "title": "检查所有支出",
+          "detail": "通用支出会显示在完整表格的最前面。"
+        },
+        "save": {
+          "title": "保存分类",
+          "detail": "只有确认最终检查后，支出才会更改。"
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4097,7 +4221,8 @@
       "valuesRecomputedTitle": "值已重新计算",
       "viewExpenses": "查看支出",
       "waitDuplicate": "请等待重复检查完成后再导入。",
-      "invalidRowTitle": "无效的导入行"
+      "invalidRowTitle": "无效的导入行",
+      "categorizeWithSystemOne": "使用 System One 为未分类支出建议类别"
     }
   },
   "Sponsor": {

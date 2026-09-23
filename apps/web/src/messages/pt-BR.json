@@ -179,7 +179,8 @@
         "rateFetchError": "Não foi possível buscar as taxas de câmbio. A importação está bloqueada até que o provedor de taxas esteja acessível novamente.",
         "currencyRateAsOfFormat": "Solicitado {requested} · provedor usou {asOf}",
         "currencyConversionDescription": "As despesas serão convertidas da moeda de origem para a moeda do livro de destino usando as taxas abaixo.",
-        "currencyRateForDateFormat": "Aplicado para despesas com data {date}"
+        "currencyRateForDateFormat": "Aplicado para despesas com data {date}",
+        "categorizeWithSystemOne": "Sugerir categorias para despesas não categorizadas usando o System One"
       },
       "Destination": {
         "heading": "Onde você gostaria de importar <strong>{name}</strong>? ({participantCount} participantes · {expenseCount} despesas)",
@@ -873,7 +874,7 @@
       "nameRequired": "Insira um nome de exibição.",
       "generic": "Algo deu errado. Por favor, tente novamente.",
       "passwordPolicy": "Use pelo menos 8 caracteres com maiúsculas, minúsculas, um número e um símbolo.",
-      "signupInviteRequired": "Esta instância é apenas por convite. Use um link de convite ou peça a alguém que te convide para um grupo.",
+      "signupInviteRequired": "Os cadastros são apenas por convite. Use um link de convite ou peça a alguém que te convide para um grupo.",
       "passkeyFailed": "O login com chave de acesso falhou. Tente novamente ou use outro método de login."
     },
     "loading": "Carregando…",
@@ -881,12 +882,12 @@
     "required": "Você precisa entrar para acessar seus grupos.",
     "legalNotice": "Ao continuar, você aceita os <terms>Termos de uso</terms> e reconhece o <privacy>aviso de privacidade</privacy>.",
     "inviteOnly": {
-      "message": "Esta instância é apenas por convite. Use um link de convite ou peça a alguém que te convide para um grupo.",
+      "message": "Os cadastros são apenas por convite. Use um link de convite ou peça a alguém que te convide para um grupo.",
       "useInvitedEmail": "Use o endereço de e-mail com o qual você recebeu o convite."
     },
     "signInAnonymously": "Anônimo",
     "lastUsed": "Último uso",
-    "emailAuthDisabled": "O login com email está desativado nesta instância. Use o login único (SSO).",
+    "emailAuthDisabled": "O login com email está desativado. Use o login único (SSO).",
     "signInWithPasskey": "Entrar com chave de acesso"
   },
   "CompleteProfile": {
@@ -976,7 +977,7 @@
         "joined_other": "{count} pessoas entraram",
         "joined_zero": "{count} pessoas entraram até agora"
       },
-      "emailDeliveryDisabled": "O envio de e-mails está desativado nesta instância. O convite é criado mesmo assim e aparecerá quando a pessoa convidada entrar; use um link de convite para dar a ela algo que possa abrir."
+      "emailDeliveryDisabled": "O envio de e-mails está desativado. O convite é criado mesmo assim e aparecerá quando a pessoa convidada entrar; use um link de convite para dar a ela algo que possa abrir."
     },
     "invitations": {
       "description": "Convites aguardando aceitação.",
@@ -1190,7 +1191,7 @@
       },
       "masterDescription": "Desative para silenciar todos os e-mails e notificações push. Suas escolhas por categoria são preservadas.",
       "emailAddToEnable": "Adicione um e-mail verificado para receber notificações na caixa de entrada.",
-      "emailDeliveryDisabled": "O envio de e-mails está desativado nesta instância. Suas escolhas de e-mail são salvas, mas não serão enviadas até que o administrador configure o e-mail."
+      "emailDeliveryDisabled": "O envio de e-mails está desativado. Suas escolhas de e-mail são salvas, mas não serão enviadas até que o e-mail esteja configurado."
     },
     "preferences": {
       "title": "Preferências do aplicativo",
@@ -1402,9 +1403,6 @@
     "copiedInviteLink": "Link de convite copiado"
   },
   "BulkCategorize": {
-    "calibrationTitle": "Etapa 1 — Calibração",
-    "calibrationDescription": "Cada exemplo que você confirma se torna a verdade absoluta para a próxima passada da IA. Pode estar pronta após uma rodada, ou pedir mais exemplos.",
-    "roundCount": "Rodada {round} de {max}",
     "aiWantsMore": "A IA gostaria de mais alguns exemplos. Confirme ou corrija as sugestões abaixo e execute outra rodada.",
     "aiSaidReady": "A IA se sente preparada. Vá para a prévia para aplicar as alterações.",
     "emptySelection": "Nenhuma despesa precisa de revisão agora. Gere a prévia para aplicar categorias a todos os candidatos.",
@@ -1447,7 +1445,73 @@
     "leftUncategorized_many": "{count} despesas foram deixadas sem categorizar porque a IA não estava confiante o suficiente.",
     "leftUncategorized_other": "{count} despesas foram deixadas sem categorizar porque a IA não estava confiante o suficiente.",
     "retryPreview": "Tentar prévia novamente",
-    "doneTitle": "Categorias salvas"
+    "doneTitle": "Categorias salvas",
+    "simpleDescription": "Revise as correspondências de categoria para as despesas em Geral e salve suas escolhas.",
+    "chooseMode": "Escolha como categorizar as despesas",
+    "localModeDescription": "Use o histórico de categorias deste grupo e o dicionário integrado.",
+    "noCategory": "Deixar sem categorizar",
+    "progressTitle": "Categorizando as despesas",
+    "progressDescription": "Você pode sair desta página e voltar mais tarde. Seu progresso é salvo.",
+    "applyProgressTitle": "Salvando categorias",
+    "reviewTitle": "Revise as sugestões",
+    "saveSelected": "Salvar as categorias selecionadas",
+    "partialSaveNotice": "Algumas categorias podem já ter sido salvas. Descartar esta execução não desfará essas alterações.",
+    "restartOlderRunDescription": "Esta execução anterior usava o fluxo de revisão anterior. Comece novamente para revisar todas as despesas juntas.",
+    "runningMatches": "{count} de {total} despesas têm uma sugestão de categoria até o momento",
+    "reviewWorkload": "{total} despesas em Geral · {selected} selecionadas para categorização · {general} que continuam em Geral",
+    "moreCategories": "Escolha outra categoria",
+    "saveCount": "Salvar {count} categorias",
+    "finishWithoutChanges": "Concluir sem alterações",
+    "completionSummary": "Execução concluída: {changed} de {total} despesas alteradas. {remaining} despesas continuam em Geral.",
+    "countLoading": "Contando as despesas não categorizadas…",
+    "startingCount": "{count} despesas estão em Geral e prontas para revisão.",
+    "countError": "Não foi possível contar as despesas não categorizadas. Recarregue a página para tentar novamente.",
+    "keepGeneral": "Geral · deixar sem categorizar",
+    "calibrationRoundTitle": "Rodada de calibragem {round}",
+    "calibrationLoading": "Preparando uma amostra variada de despesas…",
+    "calibrationReviewDescription": "Revise e corrija estas {count} despesas. As escolhas permanecem nesta execução até você salvar no final.",
+    "confirmRound": "Confirmar a rodada",
+    "roundSummaryTitle": "Rodada {round} revisada",
+    "roundSummaryDescription": "{reviewed} revisadas · {categorized} categorizadas provisoriamente · {general} mantidas como Geral",
+    "roundQuality": "As sugestões iniciais corresponderam a {accuracy}% das suas escolhas; você corrigiu {corrections}.",
+    "categorizeRemaining": "Categorize as despesas restantes",
+    "nextRound": "Revise outra amostra",
+    "tableLabel": "Despesas para categorizar",
+    "amountColumn": "Valor",
+    "rerunSuggestions": "Gerar sugestões novamente",
+    "roundQualityWithSuggestions": "{accepted} de {proposed} categorias sugeridas aceitas · {changed} alteradas · {missed} correspondências encontradas em Geral",
+    "roundQualityNoSuggestions": "Nenhuma categoria sugerida · {missed} correspondências encontradas em Geral · {abstained} que continuam em Geral",
+    "rerunChanged": "Você alterou {changed} de {proposed} categorias sugeridas.",
+    "rerunAssignedSingle": "Você atribuiu uma categoria a 1 despesa que estava em Geral.",
+    "rerunAssignedMultiple": "Você atribuiu uma categoria a {count} despesas que estavam em Geral.",
+    "rerunPotentialSingle": "Suas alterações podem melhorar a correspondência de 1 despesa restante em Geral. Gere as sugestões novamente se quiser outra rodada.",
+    "rerunPotentialMultiple": "Suas alterações podem melhorar as correspondências de {count} despesas restantes em Geral. Gere as sugestões novamente se quiser outra rodada.",
+    "rerunEligible": "Elegível para outra rodada: Geral {general} · correspondências automáticas incertas {uncertain}.",
+    "rerunNoEligible": "Não há Geral intactos nem correspondências automáticas incertas para gerar novamente. Suas correções continuam incluídas nas categorias salvas.",
+    "rerunAlreadyUsed": "Suas últimas correções já foram usadas para estas sugestões. Faça outra correção para gerá-las novamente.",
+    "belowMatchThreshold": "Abaixo do limite de correspondência",
+    "refiningTitle": "Refinando as correspondências incertas",
+    "runLimitSummary": "Esta execução inclui 10,000 despesas. Mais {count} despesas de Geral podem ser categorizadas em outra execução depois de salvar.",
+    "pageLoading": "Carregando as despesas…",
+    "pageCount": "Exibindo {loaded} de {total} despesas",
+    "ledgerAmountNotice": "Os valores são exibidos na moeda do grupo.",
+    "reviewFilterLabel": "Exibir as despesas",
+    "improveSuggestions": "Melhore as sugestões restantes",
+    "rerunInfoLabel": "Sobre como melhorar as sugestões",
+    "preparingNextStage": "Preparando a próxima etapa",
+    "rerunProgressTitle": "Atualizando as sugestões",
+    "progressPreparing": "Preparando as despesas…",
+    "noGeneralRows": "Não há despesas em Geral nesta revisão.",
+    "discardConfirmationDescription": "Isso remove a execução, as sugestões e as escolhas feitas por você ou outros administradores. Nenhuma categoria de despesa será alterada.",
+    "progressCountDescription": "Somente as categorias confirmadas e as correspondências médias ou altas contam; Geral e as correspondências fracas não.",
+    "systemOneModeDescription": "Use o modelo de decisão do System One para cada despesa, usando como dicas as despesas categorizadas deste grupo e suas escolhas revisadas. O TypeSafe Jev é um desses modelos.",
+    "systemOneUnavailable": "O System One não está disponível. O dicionário e o histórico ainda estão disponíveis.",
+    "systemOneConfidence": "Confiança no System One: {confidence}%",
+    "systemOneOptionProbability": "Probabilidade da opção no System One: {probability}%",
+    "stageProcessed": "Processadas {processed} de {total} despesas nesta etapa",
+    "sharedRunNotice": "Esta execução é compartilhada com outros administradores do grupo. Todos veem as mesmas sugestões.",
+    "saveConflictDescription": "Alguém editou estas despesas ou alterou a categoria delas fora desta execução. Salve as outras despesas ou edite as categorias novamente e tente salvar mais uma vez.",
+    "saveOtherExpenses": "Salvar outras despesas"
   },
   "ExpensePreview": {
     "title": "Prévia da despesa",
@@ -1493,7 +1557,7 @@
     "deniedDescription": "Seu navegador bloqueou a permissão para notificações. As notificações configuradas para e-mail continuarão sendo enviadas por e-mail; as opções somente push não serão redirecionadas.",
     "failedDescription": "Não foi possível registrar este dispositivo. As notificações configuradas para e-mail continuarão sendo enviadas por e-mail; as opções somente push não serão redirecionadas.",
     "emailUsage": "Somente as notificações configuradas para e-mail serão recebidas até que você ative um dispositivo. Permita notificações nas configurações do navegador e tente novamente em Configurações.",
-    "emailDeliveryDisabled": "O envio de e-mails está desativado nesta instância, por isso as notificações por e-mail não chegam até você. Ative as notificações push neste dispositivo para continuar recebendo atualizações."
+    "emailDeliveryDisabled": "O envio de e-mails está desativado, por isso as notificações por e-mail não chegam até você. Ative as notificações push neste dispositivo para continuar recebendo atualizações."
   },
   "Unsubscribe": {
     "submitting": "Cancelando inscrição…",
@@ -1881,6 +1945,26 @@
           "detail": "Verifique duplicadas e confirme a importação."
         }
       }
+    },
+    "categorize": {
+      "description": "Sugerir categorias para despesas existentes não categorizadas usando o System One. Revise todas as alterações antes de salvar.",
+      "steps": {
+        "choose": {
+          "title": "Escolha um método",
+          "detail": "Use o dicionário e o histórico ou o modelo de decisão do System One."
+        },
+        "calibrate": {
+          "title": "Revise amostras pequenas",
+          "detail": "Corrija as sugestões para que a próxima rodada aprenda as categorias do seu grupo."
+        },
+        "review": {
+          "title": "Revise todas as despesas"
+        },
+        "save": {
+          "title": "Salvar as categorias",
+          "detail": "As despesas só mudam quando você confirmar a revisão final."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -2075,7 +2159,8 @@
       "stepReviewDescription": "Verifique as despesas mapeadas, resolva duplicadas ou erros e importe as linhas selecionadas.",
       "stepReviewTitle": "Revisar despesas",
       "valuesRecomputedDescription": "A moeda ou o fuso horário mudou, por isso valores e datas foram recalculados. Suas seleções e linhas editadas foram mantidas.",
-      "waitDuplicate": "Aguarde a verificação de duplicadas terminar antes de importar."
+      "waitDuplicate": "Aguarde a verificação de duplicadas terminar antes de importar.",
+      "categorizeWithSystemOne": "Sugerir categorias para despesas não categorizadas usando o System One"
     },
     "parseErrors": {
       "CSV_MISSING_PARTICIPANT_COLUMNS": "Faltam colunas de participantes no CSV",

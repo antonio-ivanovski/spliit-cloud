@@ -373,7 +373,8 @@
             "monthly": "mesi",
             "yearly": "anni"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Suggerisci categorie per le spese non categorizzate con System One"
       },
       "Destination": {
         "heading": "Dove desideri importare <strong>{name}</strong>? ({participantCount} partecipanti · {expenseCount} spese)",
@@ -1851,7 +1852,7 @@
       "passwordPolicy": "Usa almeno 8 caratteri con una maiuscola, una minuscola, un numero e un simbolo.",
       "generic": "Qualcosa è andato storto. Riprova.",
       "magicLinkFailed": "Impossibile inviare il link di accesso.",
-      "signupInviteRequired": "Questa istanza è accessibile solo su invito. Usa un link di invito o chiedi a qualcuno di invitarti in un gruppo.",
+      "signupInviteRequired": "Le registrazioni sono solo su invito. Usa un link di invito o chiedi a qualcuno di invitarti in un gruppo.",
       "passkeyFailed": "Accesso con chiave di accesso non riuscito. Riprova o usa un altro metodo di accesso."
     },
     "loading": "Caricamento…",
@@ -1861,14 +1862,14 @@
     "signInWithGithub": "Continua con GitHub",
     "legalNotice": "Continuando, accetti i <terms>Termini di utilizzo</terms> e riconosci l'<privacy>informativa sulla privacy</privacy>.",
     "inviteOnly": {
-      "message": "Questa istanza è accessibile solo su invito. Usa un link di invito o chiedi a qualcuno di invitarti in un gruppo.",
+      "message": "Le registrazioni sono solo su invito. Usa un link di invito o chiedi a qualcuno di invitarti in un gruppo.",
       "useInvitedEmail": "Usa l'indirizzo email con cui hai ricevuto l'invito."
     },
     "signInWithX": "Continua con X",
     "signInWithOidc": "Continua con {name}",
     "signInAnonymously": "Anonimo",
     "lastUsed": "Ultimo utilizzo",
-    "emailAuthDisabled": "L'accesso con email è disattivato su questa istanza. Usa il single sign-on (SSO).",
+    "emailAuthDisabled": "L'accesso con email è disattivato. Usa il single sign-on (SSO).",
     "signInWithPasskey": "Accedi con chiave di accesso"
   },
   "CompleteProfile": {
@@ -1993,7 +1994,7 @@
         "joined_many": "{count} persone si sono unite",
         "retry": "Riprova"
       },
-      "emailDeliveryDisabled": "L'invio delle email è disattivato su questa istanza. L'invito viene comunque creato e apparirà quando la persona invitata accede; usa un link di invito per darle qualcosa da aprire."
+      "emailDeliveryDisabled": "L'invio delle email è disattivato. L'invito viene comunque creato e apparirà quando la persona invitata accede; usa un link di invito per darle qualcosa da aprire."
     },
     "invitations": {
       "title": "Inviti in sospeso",
@@ -2415,7 +2416,7 @@
       "masterDescription": "Disattivale per silenziare tutte le notifiche via e-mail e push. Le tue scelte per categoria vengono conservate.",
       "emailAddToEnable": "Aggiungi un'e-mail verificata per ricevere le notifiche nella posta in arrivo.",
       "emailAddLink": "Aggiungi e-mail",
-      "emailDeliveryDisabled": "L'invio delle email è disattivato su questa istanza. Le tue scelte email vengono salvate, ma non saranno inviate finché l'amministratore non configura l'email."
+      "emailDeliveryDisabled": "L'invio delle email è disattivato. Le tue scelte email vengono salvate, ma non saranno inviate finché l'email non sarà configurata."
     },
     "preferences": {
       "title": "Preferenze dell'app",
@@ -2778,9 +2779,6 @@
   },
   "BulkCategorize": {
     "title": "Categorizzazione in blocco",
-    "calibrationTitle": "Passo 1 — Calibrazione",
-    "calibrationDescription": "Ogni esempio che confermi diventa la verità assoluta per la passata successiva dell'IA. Può essere pronta dopo un solo giro, o chiedere altri esempi.",
-    "roundCount": "Round {round} di {max}",
     "confidence": {
       "high": "Alta",
       "medium": "Media",
@@ -2848,7 +2846,110 @@
     "doneTitle": "Categorie salvate",
     "expenseColumn": "Spesa",
     "categoryColumn": "Categoria",
-    "confidenceColumn": "Confidenza"
+    "confidenceColumn": "Confidenza",
+    "simpleDescription": "Revisiona le corrispondenze di categoria per le spese in Generale, quindi salva le tue scelte.",
+    "generateSuggestions": "Suggerisci categorie",
+    "backToStart": "Indietro",
+    "chooseMode": "Scegli come categorizzare le spese",
+    "localMode": "Dizionario e cronologia",
+    "localModeDescription": "Usa la cronologia delle categorie di questo gruppo e il dizionario integrato.",
+    "startRun": "Inizia a categorizzare",
+    "noCategory": "Lascia non categorizzata",
+    "progressTitle": "Categorizzazione delle spese",
+    "progressDescription": "Puoi uscire da questa pagina e tornare più tardi. I tuoi progressi vengono salvati.",
+    "progressCount": "{categorized} spese su {total} categorizzate",
+    "applyProgressTitle": "Salvataggio categorie",
+    "reviewTitle": "Revisiona i suggerimenti",
+    "reviewSummary": "{suggested} suggerimenti da {total} spese non categorizzate",
+    "sourceLocal": "Locale",
+    "saveSelected": "Salva le categorie selezionate",
+    "retry": "Riprova",
+    "restart": "Avvia una nuova esecuzione",
+    "failed": "L’esecuzione si è interrotta: {message}",
+    "savedSummary": "{applied} modificate, {skipped} ignorate",
+    "selectedCount": "{count} selezionate",
+    "selectAll": "Seleziona tutto",
+    "clearAll": "Cancella tutto",
+    "discardRun": "Abbandona l’esecuzione",
+    "partialSaveNotice": "Alcune categorie potrebbero essere già state salvate. L’abbandono di questa esecuzione non annullerà tali modifiche.",
+    "restartOlderRunTitle": "Avvia una nuova esecuzione di categorizzazione",
+    "restartOlderRunDescription": "Questa esecuzione precedente usava il flusso di revisione precedente. Ricomincia per revisionare tutte le spese insieme.",
+    "runningMatches": "{count} spese su {total} hanno un suggerimento di categoria finora",
+    "failedTitle": "Categorizzazione interrotta",
+    "reviewWorkload": "{total} spese in Generale · {selected} selezionate per la categorizzazione · {general} che restano in Generale",
+    "categoryChoices": "Scelte di categoria",
+    "moreCategories": "Scegli un’altra categoria",
+    "saveCount": "Salva {count} categorie",
+    "finishWithoutChanges": "Termina senza modifiche",
+    "completionSummary": "Esecuzione completata: {changed} spese su {total} modificate. {remaining} spese restano in Generale.",
+    "viewExpenses": "Visualizza le spese",
+    "countLoading": "Conteggio delle spese non categorizzate…",
+    "nothingToCategorize": "Non ci sono spese non categorizzate da categorizzare.",
+    "startingCount": "{count} spese sono attualmente in Generale e pronte per la revisione.",
+    "countError": "Impossibile contare le spese non categorizzate. Ricarica la pagina per riprovare.",
+    "keepGeneral": "Generale · lascia non categorizzata",
+    "calibrationRoundTitle": "Turno di calibrazione {round}",
+    "calibrationLoading": "Preparazione di un campione vario di spese…",
+    "calibrationReviewDescription": "Revisiona e correggi queste {count} spese. Le scelte restano in questa esecuzione finché non salvi alla fine.",
+    "confirmRound": "Conferma il turno",
+    "roundSummaryTitle": "Turno {round} revisionato",
+    "roundSummaryDescription": "{reviewed} revisionate · {categorized} categorizzate in via provvisoria · {general} lasciate in Generale",
+    "roundQuality": "I suggerimenti iniziali corrispondevano al {accuracy}% delle tue scelte; ne hai corretti {corrections}.",
+    "categorizeRemaining": "Categorizza le spese rimanenti",
+    "nextRound": "Revisiona un altro campione",
+    "tableLabel": "Spese da categorizzare",
+    "dateColumn": "Data",
+    "amountColumn": "Importo",
+    "rerunSuggestions": "Rigenera i suggerimenti",
+    "roundQualityWithSuggestions": "{accepted} categorie suggerite su {proposed} accettate · {changed} modificate · {missed} corrispondenze trovate da Generale",
+    "roundQualityNoSuggestions": "Nessuna categoria suggerita · {missed} corrispondenze trovate da Generale · {abstained} rimaste in Generale",
+    "rerunChanged": "Hai modificato {changed} categorie suggerite su {proposed}.",
+    "rerunAssignedSingle": "Hai assegnato una categoria a 1 spesa rimasta in Generale.",
+    "rerunAssignedMultiple": "Hai assegnato una categoria a {count} spese rimaste in Generale.",
+    "rerunPotentialSingle": "Le tue modifiche possono migliorare la corrispondenza di 1 spesa rimanente in Generale. Genera di nuovo i suggerimenti per un altro passaggio.",
+    "rerunPotentialMultiple": "Le tue modifiche possono migliorare le corrispondenze di {count} spese rimanenti in Generale. Genera di nuovo i suggerimenti per un altro passaggio.",
+    "rerunEligible": "Idoneo per un altro passaggio: Generale {general} · corrispondenze automatiche incerte {uncertain}.",
+    "rerunNoEligible": "Non restano Generale intatti né corrispondenze automatiche incerte da rigenerare. Le tue correzioni restano incluse nelle categorie salvate.",
+    "rerunAlreadyUsed": "Le tue ultime correzioni sono già state usate per questi suggerimenti. Apporta un’altra correzione per generarli di nuovo.",
+    "highMatch": "Corrispondenza alta",
+    "mediumMatch": "Corrispondenza media",
+    "lowMatch": "Corrispondenza bassa",
+    "belowMatchThreshold": "Sotto la soglia di corrispondenza",
+    "refiningTitle": "Rifinitura delle corrispondenze incerte",
+    "runLimitSummary": "Questa esecuzione include 10,000 spese. Altre {count} spese in Generale possono essere categorizzate in un’altra esecuzione dopo il salvataggio.",
+    "pageLoading": "Caricamento delle spese…",
+    "pageLoadError": "Impossibile caricare le spese.",
+    "pageRetry": "Riprova",
+    "pageCount": "Visualizzazione di {loaded} spese su {total}",
+    "ledgerAmountNotice": "Gli importi sono mostrati nella valuta del gruppo.",
+    "viewExpenseDetails": "Visualizza i dettagli della spesa",
+    "reviewFilterLabel": "Mostra le spese",
+    "filterAll": "Tutte {count}",
+    "filterGeneral": "Generale {count}",
+    "improveSuggestions": "Migliora i suggerimenti rimanenti",
+    "rerunInfoLabel": "Informazioni sul miglioramento dei suggerimenti",
+    "preparingNextStage": "Preparazione del passaggio successivo",
+    "rerunProgressTitle": "Aggiornamento dei suggerimenti",
+    "progressPreparing": "Preparazione delle spese…",
+    "noGeneralRows": "Non restano spese in Generale in questa revisione.",
+    "discardConfirmationTitle": "Abbandonare questa esecuzione di categorizzazione?",
+    "discardConfirmationDescription": "Questo rimuove l’esecuzione, i suoi suggerimenti e le scelte fatte da te o da altri amministratori. Nessuna categoria di spesa verrà modificata.",
+    "discardConfirmationCancel": "Mantieni l’esecuzione",
+    "progressCountDescription": "Contano solo le categorie confermate e le corrispondenze medie o alte; Generale e le corrispondenze deboli, no.",
+    "systemOneMode": "Modello System One",
+    "systemOneModeDescription": "Usa il modello decisionale di System One per ogni spesa, usando come suggerimenti le spese categorizzate di questo gruppo e le tue scelte verificate. TypeSafe Jev è uno di questi modelli.",
+    "systemOneUnavailable": "System One non è disponibile. Il dizionario e la cronologia sono ancora disponibili.",
+    "systemOneConfidence": "Affidabilità di System One: {confidence}%",
+    "systemOneOptionProbability": "Probabilità dell’opzione di System One: {probability}%",
+    "overallProgress": "Progresso complessivo",
+    "fullPassProcessed": "Elaborate {processed} spese su {total}",
+    "stageProcessed": "Elaborate {processed} spese su {total} in questo passaggio",
+    "saveSkipped": "{count} spese ignorate perché modificate.",
+    "sharedRunNotice": "Questa esecuzione è condivisa con gli altri amministratori del gruppo. Tutti vedono gli stessi suggerimenti.",
+    "saveConflictTitle": "{count} spese modificate dall’inizio di questa revisione",
+    "saveConflictDescription": "Qualcuno ha modificato queste spese o ne ha cambiato la categoria fuori da questa esecuzione. Salva le altre spese, oppure modifica di nuovo le categorie e prova a salvare ancora una volta.",
+    "saveConflictMore": "E altre {count}.",
+    "saveOtherExpenses": "Salva le altre spese"
   },
   "ExpensePreview": {
     "title": "Anteprima della spesa",
@@ -2922,7 +3023,7 @@
     "failedDescription": "Non è stato possibile registrare questo dispositivo. Le notifiche configurate per l’e-mail continueranno a essere inviate lì; le opzioni solo push non verranno reindirizzate.",
     "emailUsage": "Finché non abiliti un dispositivo, arriveranno solo le notifiche configurate per l’e-mail. Puoi consentire le notifiche nelle impostazioni del browser e riprovare dalle Impostazioni.",
     "done": "Fatto",
-    "emailDeliveryDisabled": "L'invio delle email è disattivato su questa istanza, quindi le notifiche email non possono raggiungerti. Attiva le notifiche push su questo dispositivo per continuare a ricevere gli aggiornamenti."
+    "emailDeliveryDisabled": "L'invio delle email è disattivato, quindi le notifiche email non possono raggiungerti. Attiva le notifiche push su questo dispositivo per continuare a ricevere gli aggiornamenti."
   },
   "Unsubscribe": {
     "title": "Disattivare queste e-mail?",
@@ -3597,6 +3698,29 @@
           "detail": "Controlla duplicati e conferma l'importazione."
         }
       }
+    },
+    "categorize": {
+      "title": "Categorizza le spese",
+      "description": "Suggerisci categorie per le spese esistenti non categorizzate con System One. Verifica ogni modifica prima di salvarla.",
+      "start": "Categorizza le spese",
+      "steps": {
+        "choose": {
+          "title": "Scegli un metodo",
+          "detail": "Usa il dizionario e la cronologia o il modello decisionale di System One."
+        },
+        "calibrate": {
+          "title": "Revisiona piccoli campioni",
+          "detail": "Correggi i suggerimenti così che il prossimo turno impari le categorie del tuo gruppo."
+        },
+        "review": {
+          "title": "Revisiona ogni spesa",
+          "detail": "Le spese in Generale appaiono per prime nella tabella completa."
+        },
+        "save": {
+          "title": "Salva le categorie",
+          "detail": "Le spese cambiano solo quando confermi la revisione finale."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4090,7 +4214,8 @@
       "valuesRecomputedTitle": "Valori ricalcolati",
       "viewExpenses": "Vedi spese",
       "waitDuplicate": "Attendi la fine del controllo duplicati prima di importare.",
-      "invalidRowTitle": "Riga di importazione non valida"
+      "invalidRowTitle": "Riga di importazione non valida",
+      "categorizeWithSystemOne": "Suggerisci categorie per le spese non categorizzate con System One"
     },
     "apiErrors": {
       "IMPORT_DUPLICATE_CONFLICT": "Alcune righe selezionate hanno nuove corrispondenze duplicate o non approvate (righe {rows}). Controllale e riprova.",
