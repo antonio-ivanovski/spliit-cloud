@@ -378,7 +378,8 @@
             "monthly": "місяців",
             "yearly": "років"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Запропонувати категорії для некатегоризованих витрат за допомогою System One"
       },
       "Destination": {
         "heading": "Куди ви хочете імпортувати <strong>{name}</strong>? ({participantCount} учасників · {expenseCount} витрат)",
@@ -2863,7 +2864,12 @@
     "doneTitle": "Категорії збережено",
     "expenseColumn": "Витрата",
     "categoryColumn": "Категорія",
-    "confidenceColumn": "Впевненість"
+    "confidenceColumn": "Впевненість",
+    "systemOneMode": "Модель System One",
+    "systemOneModeDescription": "Використовуйте налаштовану модель ухвалення рішень System One для кожної витрати, використовуючи як підказки категоризовані витрати цієї групи та перевірені вами варіанти. TypeSafe Jev — одна з таких моделей.",
+    "systemOneUnavailable": "System One недоступна на цьому сервері. Локальне зіставлення все ще доступне.",
+    "systemOneConfidence": "Упевненість System One: {confidence}%",
+    "systemOneOptionProbability": "Імовірність варіанта System One: {probability}%"
   },
   "ExpensePreview": {
     "title": "Попередній перегляд витрати",
@@ -3611,6 +3617,14 @@
           "detail": "Перевірте дублікати і підтвердіть імпорт."
         }
       }
+    },
+    "categorize": {
+      "description": "Запропонувати категорії для наявних некатегоризованих витрат за допомогою System One. Перевірте кожну зміну перед збереженням.",
+      "steps": {
+        "choose": {
+          "detail": "Використовувати локальне зіставлення або налаштовану модель ухвалення рішень System One."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4162,7 +4176,8 @@
       "applyToExpenses_few": "Застосувати до {count} витрат",
       "importExpenses_few": "Імпортувати {count} витрати",
       "importedCount_few": "Імпортовано {count} витрати",
-      "matchingExpensesNotice_few": "{count} витрати мають відповідні або схожі назви."
+      "matchingExpensesNotice_few": "{count} витрати мають відповідні або схожі назви.",
+      "categorizeWithSystemOne": "Запропонувати категорії для некатегоризованих витрат за допомогою System One"
     }
   },
   "Sponsor": {

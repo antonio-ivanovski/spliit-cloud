@@ -378,7 +378,8 @@
             "monthly": "месяцев",
             "yearly": "лет"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Предложить категории для некатегоризированных расходов с помощью System One"
       },
       "Destination": {
         "heading": "Куда вы хотите импортировать <strong>{name}</strong>? ({participantCount} участников · {expenseCount} трат)",
@@ -2863,7 +2864,12 @@
     "doneTitle": "Категории сохранены",
     "expenseColumn": "Расход",
     "categoryColumn": "Категория",
-    "confidenceColumn": "Уверенность"
+    "confidenceColumn": "Уверенность",
+    "systemOneMode": "Модель System One",
+    "systemOneModeDescription": "Используйте настроенную модель принятия решений System One для каждого расхода, учитывая категоризированные расходы этой группы и проверенные вами варианты. TypeSafe Jev — одна из таких моделей.",
+    "systemOneUnavailable": "System One недоступен на этом сервере. Локальное сопоставление по-прежнему доступно.",
+    "systemOneConfidence": "Уверенность System One: {confidence}%",
+    "systemOneOptionProbability": "Вероятность варианта System One: {probability}%"
   },
   "ExpensePreview": {
     "title": "Предпросмотр расхода",
@@ -3611,6 +3617,14 @@
           "detail": "Проверьте дубликаты и подтвердите импорт."
         }
       }
+    },
+    "categorize": {
+      "description": "Предложить категории для существующих некатегоризированных расходов с помощью System One. Проверьте каждое изменение перед сохранением.",
+      "steps": {
+        "choose": {
+          "detail": "Использовать локальное сопоставление или настроенную модель принятия решений System One."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4162,7 +4176,8 @@
       "applyToExpenses_few": "Применить к {count} расходам",
       "importExpenses_few": "Импортировать {count} расхода",
       "importedCount_few": "Импортировано {count} расхода",
-      "matchingExpensesNotice_few": "{count} расхода имеют совпадающие или похожие названия."
+      "matchingExpensesNotice_few": "{count} расхода имеют совпадающие или похожие названия.",
+      "categorizeWithSystemOne": "Предложить категории для некатегоризированных расходов с помощью System One"
     }
   },
   "Sponsor": {

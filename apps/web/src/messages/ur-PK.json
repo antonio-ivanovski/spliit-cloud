@@ -666,7 +666,12 @@
       "medium": "درمیانی",
       "low": "کم"
     },
-    "confidenceColumn": "اعتماد"
+    "confidenceColumn": "اعتماد",
+    "systemOneMode": "System One ماڈل",
+    "systemOneModeDescription": "ہر خرچ کے لیے تشکیل شدہ System One فیصلہ ماڈل استعمال کریں، جس میں اس گروپ کے زمرہ بند اخراجات اور آپ کے نظرثانی شدہ انتخاب بطور اشارے استعمال ہوں گے۔ TypeSafe Jev ایسا ہی ایک ماڈل ہے۔",
+    "systemOneUnavailable": "اس سرور پر System One دستیاب نہیں ہے۔ مقامی ملاپ اب بھی دستیاب ہے۔",
+    "systemOneConfidence": "System One کے اعتماد کی سطح: {confidence}%",
+    "systemOneOptionProbability": "System One کے اختیار کا امکان: {probability}%"
   },
   "Categories": {
     "Entertainment": {
@@ -1978,7 +1983,8 @@
             "monthly": "مہینے",
             "yearly": "سال"
           }
-        }
+        },
+        "categorizeWithSystemOne": "System One سے غیر زمرہ بند اخراجات کے لیے زمرے تجویز کریں"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -3572,6 +3578,14 @@
           "detail": "ڈپلیکیٹ جانچیں اور درآمد کی تصدیق کریں۔"
         }
       }
+    },
+    "categorize": {
+      "description": "System One سے موجودہ غیر زمرہ بند اخراجات کے لیے زمرے تجویز کریں۔ محفوظ کرنے سے پہلے ہر تبدیلی کا جائزہ لیں۔",
+      "steps": {
+        "choose": {
+          "detail": "مقامی ملاپ یا تشکیل شدہ System One فیصلہ ماڈل استعمال کریں۔"
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4118,7 +4132,8 @@
       "valuesRecomputedTitle": "اقدار دوبارہ گنی گئیں",
       "viewExpenses": "اخراجات دیکھیں",
       "waitDuplicate": "درآمد سے پہلے ڈپلیکیٹ جانچ مکمل ہونے تک انتظار کریں۔",
-      "invalidRowTitle": "غلط درآمد قطار"
+      "invalidRowTitle": "غلط درآمد قطار",
+      "categorizeWithSystemOne": "System One سے غیر زمرہ بند اخراجات کے لیے زمرے تجویز کریں"
     }
   },
   "Sponsor": {

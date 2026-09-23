@@ -444,7 +444,12 @@
     "saved_zero": "تم إعادة تصنيف {count} نفقة.",
     "saveAll_zero": "حفظ {count} تغيير",
     "description": "صنف نفقاتك تلقائياً باستخدام الذكاء الاصطناعي.",
-    "calibrationReady": "المعايرة جاهزة."
+    "calibrationReady": "المعايرة جاهزة.",
+    "systemOneMode": "نموذج System One",
+    "systemOneModeDescription": "استخدم نموذج القرار System One المُعدّ لكل مصروف، مستعينًا بالمصروفات المصنّفة في هذه المجموعة وباختياراتك التي راجعتها كإشارات. يُعد TypeSafe Jev أحد هذه النماذج.",
+    "systemOneUnavailable": "نظام System One غير متاح على هذا الخادم. لا تزال المطابقة المحلية متاحة.",
+    "systemOneConfidence": "درجة الثقة في System One: {confidence}%",
+    "systemOneOptionProbability": "احتمالية خيار System One: {probability}%"
   },
   "ExpenseDocumentsInput": {
     "ErrorToast": {
@@ -1078,7 +1083,8 @@
             "monthly": "أشهر",
             "yearly": "سنوات"
           }
-        }
+        },
+        "categorizeWithSystemOne": "اقتراح فئات للمصروفات غير المصنّفة باستخدام نظام System One"
       },
       "Documents": {
         "title": "اصطحب إيصالاتك معك",
@@ -3650,6 +3656,14 @@
           "detail": "تحقق من المكررات وأكّد الاستيراد."
         }
       }
+    },
+    "categorize": {
+      "description": "اقتراح فئات للمصروفات الحالية غير المصنّفة باستخدام نظام System One. راجع كل تغيير قبل الحفظ.",
+      "steps": {
+        "choose": {
+          "detail": "استخدم المطابقة المحلية أو نموذج القرار System One المُعدّ."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4211,7 +4225,8 @@
       "importedCount_zero": "تم استيراد {count} مصروف",
       "matchingExpensesNotice_few": "{count} مصروفات لها عناوين مطابقة أو مشابهة.",
       "matchingExpensesNotice_two": "{count} مصروفين لهما عنوانان مطابقان أو متشابهان.",
-      "matchingExpensesNotice_zero": "{count} مصروف له عنوان مطابق أو مشابه."
+      "matchingExpensesNotice_zero": "{count} مصروف له عنوان مطابق أو مشابه.",
+      "categorizeWithSystemOne": "اقتراح فئات للمصروفات غير المصنّفة باستخدام نظام System One"
     }
   },
   "Sponsor": {

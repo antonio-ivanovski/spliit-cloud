@@ -384,7 +384,8 @@
             "monthly": "maanden",
             "yearly": "jaren"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Categorieën voorstellen voor uitgaven zonder categorie met System One"
       },
       "Destination": {
         "heading": "Waar wil je <strong>{name}</strong> importeren? ({participantCount} deelnemers · {expenseCount} uitgaven)",
@@ -2891,7 +2892,12 @@
     "doneTitle": "Categorieën opgeslagen",
     "expenseColumn": "Uitgave",
     "categoryColumn": "Categorie",
-    "confidenceColumn": "Betrouwbaarheid"
+    "confidenceColumn": "Betrouwbaarheid",
+    "systemOneMode": "System One-model",
+    "systemOneModeDescription": "Gebruik voor elke uitgave het geconfigureerde System One-beslismodel en gebruik de gecategoriseerde uitgaven van deze groep en je gecontroleerde keuzes als aanwijzingen. TypeSafe Jev is zo’n model.",
+    "systemOneUnavailable": "System One is niet beschikbaar op deze server. Lokaal zoeken naar overeenkomsten blijft beschikbaar.",
+    "systemOneConfidence": "Zekerheid van System One: {confidence}%",
+    "systemOneOptionProbability": "Waarschijnlijkheid van de System One-optie: {probability}%"
   },
   "ExpensePreview": {
     "title": "Voorbeeld van uitgave",
@@ -3643,6 +3649,14 @@
           "detail": "Controleer duplicaten en bevestig de import."
         }
       }
+    },
+    "categorize": {
+      "description": "Stel met System One categorieën voor bestaande uitgaven zonder categorie voor. Controleer elke wijziging voordat je opslaat.",
+      "steps": {
+        "choose": {
+          "detail": "Gebruik lokaal zoeken naar overeenkomsten of het geconfigureerde System One-beslismodel."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4184,7 +4198,8 @@
       "valuesRecomputedTitle": "Waarden opnieuw berekend",
       "viewExpenses": "Uitgaven bekijken",
       "waitDuplicate": "Wacht tot de duplicaatcontrole klaar is voordat je importeert.",
-      "invalidRowTitle": "Ongeldige importrij"
+      "invalidRowTitle": "Ongeldige importrij",
+      "categorizeWithSystemOne": "Categorieën voorstellen voor uitgaven zonder categorie met System One"
     }
   },
   "Sponsor": {

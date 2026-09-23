@@ -270,7 +270,8 @@
             "monthly": "개월",
             "yearly": "년"
           }
-        }
+        },
+        "categorizeWithSystemOne": "System One으로 분류되지 않은 지출의 카테고리를 제안"
       },
       "Destination": {
         "heading": "<strong>{name}</strong>을(를) 어디로 가져오시겠습니까? ({participantCount}명의 참가자 · {expenseCount}개의 지출)",
@@ -2890,7 +2891,12 @@
     "doneTitle": "카테고리 저장됨",
     "expenseColumn": "지출",
     "categoryColumn": "카테고리",
-    "confidenceColumn": "신뢰도"
+    "confidenceColumn": "신뢰도",
+    "systemOneMode": "System One 모델",
+    "systemOneModeDescription": "모든 지출에 구성된 System One 결정 모델을 사용하고, 이 그룹에서 분류된 지출과 검토한 선택 항목을 힌트로 활용합니다. TypeSafe Jev는 이러한 모델 중 하나입니다.",
+    "systemOneUnavailable": "이 서버에서는 System One을 사용할 수 없습니다. 로컬 매칭은 계속 사용할 수 있습니다.",
+    "systemOneConfidence": "System One 신뢰도: {confidence}%",
+    "systemOneOptionProbability": "System One 옵션 확률: {probability}%"
   },
   "ExpensePreview": {
     "title": "지출 미리보기",
@@ -3642,6 +3648,14 @@
           "detail": "중복을 확인하고 가져오기를 확정하세요."
         }
       }
+    },
+    "categorize": {
+      "description": "기존의 분류되지 않은 지출에 대해 System One으로 카테고리를 제안합니다. 저장하기 전에 모든 변경 사항을 검토하세요.",
+      "steps": {
+        "choose": {
+          "detail": "로컬 매칭 또는 구성된 System One 결정 모델을 사용합니다."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4178,7 +4192,8 @@
       "valuesRecomputedTitle": "값 다시 계산됨",
       "viewExpenses": "지출 보기",
       "waitDuplicate": "가져오기 전에 중복 검사가 끝날 때까지 기다리세요.",
-      "invalidRowTitle": "잘못된 가져오기 행"
+      "invalidRowTitle": "잘못된 가져오기 행",
+      "categorizeWithSystemOne": "System One으로 분류되지 않은 지출의 카테고리를 제안"
     }
   },
   "Sponsor": {

@@ -666,7 +666,12 @@
       "medium": "Mellan",
       "low": "Låg"
     },
-    "confidenceColumn": "Säkerhet"
+    "confidenceColumn": "Säkerhet",
+    "systemOneMode": "System One-modell",
+    "systemOneModeDescription": "Använd den konfigurerade beslutsmodellen System One för varje utgift och använd den här gruppens kategoriserade utgifter och dina granskade val som ledtrådar. TypeSafe Jev är en sådan modell.",
+    "systemOneUnavailable": "System One är inte tillgängligt på den här servern. Lokal matchning är fortfarande tillgänglig.",
+    "systemOneConfidence": "System Ones säkerhet: {confidence}%",
+    "systemOneOptionProbability": "Sannolikhet för System One-alternativet: {probability}%"
   },
   "Categories": {
     "Entertainment": {
@@ -1978,7 +1983,8 @@
             "monthly": "månader",
             "yearly": "år"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Föreslå kategorier för okategoriserade utgifter med System One"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -3571,6 +3577,14 @@
           "detail": "Kontrollera dubletter och bekräfta importen."
         }
       }
+    },
+    "categorize": {
+      "description": "Föreslå kategorier för befintliga okategoriserade utgifter med System One. Granska varje ändring innan du sparar.",
+      "steps": {
+        "choose": {
+          "detail": "Använd lokal matchning eller den konfigurerade beslutsmodellen System One."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4112,7 +4126,8 @@
       "valuesRecomputedTitle": "Värden omräknade",
       "viewExpenses": "Visa utgifter",
       "waitDuplicate": "Vänta tills dubblettkontrollen är klar innan du importerar.",
-      "invalidRowTitle": "Ogiltig importrad"
+      "invalidRowTitle": "Ogiltig importrad",
+      "categorizeWithSystemOne": "Föreslå kategorier för okategoriserade utgifter med System One"
     }
   },
   "Sponsor": {

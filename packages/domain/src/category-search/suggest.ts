@@ -409,7 +409,7 @@ export function suggestAiCandidates(
 
 /**
  * Rescales independent LLM confidences (each 0–1, need not sum to anything)
- * into a Jev-style distribution summing to 1. Entries below
+ * into a System One option distribution summing to 1. Entries below
  * AI_CANDIDATE_RAW_MIN_CONFIDENCE are dropped first; an empty or all-zero input
  * yields no distribution.
  */

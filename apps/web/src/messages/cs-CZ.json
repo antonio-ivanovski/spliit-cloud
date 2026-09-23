@@ -378,7 +378,8 @@
             "monthly": "měsíce",
             "yearly": "roky"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Navrhnout kategorie nekategorizovaných výdajů pomocí System One"
       },
       "Destination": {
         "heading": "Kam chcete importovat <strong>{name}</strong>? ({participantCount} účastníků · {expenseCount} výdajů)",
@@ -2863,7 +2864,12 @@
     "doneTitle": "Kategorie uloženy",
     "expenseColumn": "Výdaj",
     "categoryColumn": "Kategorie",
-    "confidenceColumn": "Spolehlivost"
+    "confidenceColumn": "Spolehlivost",
+    "systemOneMode": "Model System One",
+    "systemOneModeDescription": "Použijte nakonfigurovaný rozhodovací model System One pro každý výdaj a jako vodítko využijte kategorizované výdaje této skupiny a své zkontrolované volby. TypeSafe Jev je jedním z takových modelů.",
+    "systemOneUnavailable": "System One není na tomto serveru dostupný. Místní párování je stále k dispozici.",
+    "systemOneConfidence": "Spolehlivost System One: {confidence} %",
+    "systemOneOptionProbability": "Pravděpodobnost možnosti System One: {probability} %"
   },
   "ExpensePreview": {
     "title": "Náhled výdaje",
@@ -3611,6 +3617,14 @@
           "detail": "Zkontrolujte duplikáty a potvrďte import."
         }
       }
+    },
+    "categorize": {
+      "description": "Navrhnout kategorie existujících nekategorizovaných výdajů pomocí System One. Před uložením zkontrolujte každou změnu.",
+      "steps": {
+        "choose": {
+          "detail": "Použijte místní párování nebo nakonfigurovaný rozhodovací model System One."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4162,7 +4176,8 @@
       "applyToExpenses_few": "Použít pro {count} výdaje",
       "importExpenses_few": "Importovat {count} výdaje",
       "importedCount_few": "Importovány {count} výdaje",
-      "matchingExpensesNotice_few": "{count} výdaje mají odpovídající nebo podobné názvy."
+      "matchingExpensesNotice_few": "{count} výdaje mají odpovídající nebo podobné názvy.",
+      "categorizeWithSystemOne": "Navrhnout kategorie nekategorizovaných výdajů pomocí System One"
     }
   },
   "Sponsor": {

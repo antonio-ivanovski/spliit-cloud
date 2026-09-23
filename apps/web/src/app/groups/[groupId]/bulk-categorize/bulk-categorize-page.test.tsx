@@ -25,7 +25,9 @@ vi.mock('@tanstack/react-router', () => ({
 vi.mock('@/trpc/client', () => ({
   trpc: {
     features: {
-      get: { useQuery: () => ({ data: { bulkCategorizeJevAvailable: true } }) },
+      get: {
+        useQuery: () => ({ data: { bulkCategorizeSystemOneAvailable: true } }),
+      },
     },
     ai: {
       bulkCategorize: {
@@ -163,7 +165,7 @@ describe('BulkCategorizePage completion state', () => {
     mocks.run = {
       id: 'run-2',
       status: 'QUEUED_CALIBRATION',
-      mode: 'jev',
+      mode: 'system-one',
       round: 1,
       total: 12,
       processed: 0,
@@ -238,7 +240,7 @@ describe('BulkCategorizePage completion state', () => {
       mocks.run = {
         id: 'run-progress',
         status,
-        mode: 'jev',
+        mode: 'system-one',
         currentMatches,
         rerunCandidates: { general: 0, uncertain },
         candidateTotal: 20,
@@ -265,7 +267,7 @@ describe('BulkCategorizePage completion state', () => {
       mocks.run = {
         id: 'run-progress',
         status,
-        mode: 'jev',
+        mode: 'system-one',
         currentMatches,
         rerunCandidates: { general: 0, uncertain },
         candidateTotal: 20,
@@ -360,7 +362,7 @@ describe('BulkCategorizePage completion state', () => {
       id: 'run-5',
       status: 'REVIEW',
       revision: 3,
-      mode: 'jev',
+      mode: 'system-one',
       candidateTotal: 10,
       selected: 7,
       reviewCycle: 'attempt-1',

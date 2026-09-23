@@ -373,7 +373,8 @@
             "monthly": "mois",
             "yearly": "ans"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Suggérer des catégories pour les dépenses non catégorisées avec System One"
       },
       "Destination": {
         "heading": "Où souhaitez-vous importer <strong>{name}</strong>? ({participantCount} participants · {expenseCount} dépenses)",
@@ -2845,7 +2846,12 @@
     "doneTitle": "Catégories enregistrées",
     "expenseColumn": "Dépense",
     "categoryColumn": "Catégorie",
-    "confidenceColumn": "Confiance"
+    "confidenceColumn": "Confiance",
+    "systemOneMode": "Modèle System One",
+    "systemOneModeDescription": "Utilisez le modèle de décision System One configuré pour chaque dépense, en vous appuyant sur les dépenses catégorisées de ce groupe et vos choix vérifiés. TypeSafe Jev est l’un de ces modèles.",
+    "systemOneUnavailable": "System One n’est pas disponible sur ce serveur. La correspondance locale reste disponible.",
+    "systemOneConfidence": "Confiance de System One : {confidence} %",
+    "systemOneOptionProbability": "Probabilité de l’option System One : {probability} %"
   },
   "ExpensePreview": {
     "title": "Aperçu de la dépense",
@@ -3594,6 +3600,14 @@
           "detail": "Vérifiez les doublons et confirmez l’import."
         }
       }
+    },
+    "categorize": {
+      "description": "Suggérer des catégories pour les dépenses existantes non catégorisées avec System One. Vérifiez chaque modification avant de l’enregistrer.",
+      "steps": {
+        "choose": {
+          "detail": "Utilisez la correspondance locale ou le modèle de décision System One configuré."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4140,7 +4154,8 @@
       "valuesRecomputedTitle": "Valeurs recalculées",
       "viewExpenses": "Voir les dépenses",
       "waitDuplicate": "Attendez la fin de la vérification des doublons avant d’importer.",
-      "invalidRowTitle": "Ligne d’import invalide"
+      "invalidRowTitle": "Ligne d’import invalide",
+      "categorizeWithSystemOne": "Suggérer des catégories pour les dépenses non catégorisées avec System One"
     }
   },
   "Sponsor": {

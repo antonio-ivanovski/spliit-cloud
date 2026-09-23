@@ -31,7 +31,7 @@ describe('getBulkCategorizationProgress', () => {
     ).toEqual({ categorized: 38, total: 100, percentage: 38 })
   })
 
-  it('keeps one count through the first and second Jev passes', () => {
+  it('keeps one count through the first and second System One passes', () => {
     const firstPass = progress({
       status: 'PROCESSING',
       currentMatches: 50,

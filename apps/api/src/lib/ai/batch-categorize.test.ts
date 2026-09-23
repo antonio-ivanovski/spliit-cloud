@@ -11,15 +11,15 @@ vi.mock('../env', () => ({
 }))
 
 import {
-  categorizeExpensesWithJev,
-  relevantJevExamples,
+  categorizeExpensesWithSystemOne,
+  relevantSystemOneExamples,
 } from './batch-categorize'
 import { suggestCategoryWithSystemOne } from './system-one-categorize'
 
 afterEach(() => vi.unstubAllGlobals())
 
-describe('categorizeExpensesWithJev', () => {
-  it('validates single and batch Jev answers through the same request parser', async () => {
+describe('categorizeExpensesWithSystemOne', () => {
+  it('validates single and batch System One answers through the same request parser', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(async (_url, init: RequestInit) => {
@@ -49,7 +49,7 @@ describe('categorizeExpensesWithJev', () => {
     const single = await suggestCategoryWithSystemOne('Store', {
       apiKey: 'test-key',
     })
-    const batch = await categorizeExpensesWithJev([
+    const batch = await categorizeExpensesWithSystemOne([
       { id: 'expense-1', title: 'Store', expenseDate: '2026-09-20' },
     ])
     expect(batch.get('expense-1')).toMatchObject({
@@ -96,7 +96,7 @@ describe('categorizeExpensesWithJev', () => {
       title: `Store ${index % 26}`,
       expenseDate: '2026-09-20T00:00:00.000Z',
     }))
-    const result = await categorizeExpensesWithJev(titles, {
+    const result = await categorizeExpensesWithSystemOne(titles, {
       examples: [{ title: 'Corner shop', categoryId: 'groceries' }],
     })
     expect(requests).toHaveLength(6)
@@ -111,7 +111,7 @@ describe('categorizeExpensesWithJev', () => {
     expect(result.has('e-26')).toBe(true)
   })
 
-  it('splits a batch when Jev exceeds its token limit', async () => {
+  it('splits a batch when System One exceeds its token limit', async () => {
     const sizes: number[] = []
     vi.stubGlobal(
       'fetch',
@@ -140,7 +140,7 @@ describe('categorizeExpensesWithJev', () => {
         }
       }),
     )
-    const result = await categorizeExpensesWithJev(
+    const result = await categorizeExpensesWithSystemOne(
       Array.from({ length: 5 }, (_, index) => ({
         id: `e-${index}`,
         title: `Store ${index}`,
@@ -152,10 +152,10 @@ describe('categorizeExpensesWithJev', () => {
   })
 })
 
-describe('Jev example selection', () => {
+describe('System One example selection', () => {
   it('ranks matching titles and omits unrelated examples', () => {
     expect(
-      relevantJevExamples('Corner Cafe', [
+      relevantSystemOneExamples('Corner Cafe', [
         { title: 'Taxi ride', categoryId: 'taxi' },
         { title: 'Corner Cafe', categoryId: 'dining-out' },
         { title: 'Cafe lunch', categoryId: 'food-and-drink' },
@@ -196,7 +196,7 @@ describe('Jev example selection', () => {
         }
       }),
     )
-    const result = await categorizeExpensesWithJev(
+    const result = await categorizeExpensesWithSystemOne(
       [
         { id: 'old', title: 'Market', expenseDate: '2026-09-01T00:00:00.000Z' },
         { id: 'new', title: 'Market', expenseDate: '2026-09-21T00:00:00.000Z' },

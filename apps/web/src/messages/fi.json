@@ -368,7 +368,8 @@
             "monthly": "kuukausi",
             "yearly": "vuosi"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Ehdota luokittelemattomille kuluille luokkia System Onen avulla"
       },
       "Destination": {
         "heading": "Mihin haluat tuoda <strong>{name}</strong>? ({participantCount} osallistujaa · {expenseCount} kulua)",
@@ -2827,7 +2828,12 @@
     "doneTitle": "Kategoriat tallennettu",
     "expenseColumn": "Kulu",
     "categoryColumn": "Kategoria",
-    "confidenceColumn": "Varmuus"
+    "confidenceColumn": "Varmuus",
+    "systemOneMode": "System One -malli",
+    "systemOneModeDescription": "Käytä määritettyä System One -päätösmallia jokaiselle kululle ja hyödynnä vihjeinä tämän ryhmän luokiteltuja kuluja sekä tarkistamiasi valintoja. TypeSafe Jev on yksi tällainen malli.",
+    "systemOneUnavailable": "System One ei ole käytettävissä tällä palvelimella. Paikallinen vastaavuuksien haku on edelleen käytettävissä.",
+    "systemOneConfidence": "System Onen luottamus: {confidence}%",
+    "systemOneOptionProbability": "System One -vaihtoehdon todennäköisyys: {probability}%"
   },
   "ExpensePreview": {
     "title": "Kulun esikatselu",
@@ -3575,6 +3581,14 @@
           "detail": "Tarkista kaksoiskappaleet ja vahvista tuonti."
         }
       }
+    },
+    "categorize": {
+      "description": "Ehdota System Onen avulla luokkia olemassa oleville luokittelemattomille kuluille. Tarkista jokainen muutos ennen tallentamista.",
+      "steps": {
+        "choose": {
+          "detail": "Käytä paikallista vastaavuuksien hakua tai määritettyä System One -päätösmallia."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4116,7 +4130,8 @@
       "valuesRecomputedTitle": "Arvot laskettu uudelleen",
       "viewExpenses": "Näytä kulut",
       "waitDuplicate": "Odota kaksoiskappaletarkistuksen valmistumista ennen tuontia.",
-      "invalidRowTitle": "Virheellinen tuontirivi"
+      "invalidRowTitle": "Virheellinen tuontirivi",
+      "categorizeWithSystemOne": "Ehdota luokittelemattomille kuluille luokkia System Onen avulla"
     }
   },
   "Sponsor": {

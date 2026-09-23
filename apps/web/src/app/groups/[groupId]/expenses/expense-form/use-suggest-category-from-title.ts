@@ -174,12 +174,6 @@ export function useSuggestCategoryFromTitle(args: {
             !!runnerUp &&
             local.primary.evidence.value - runnerUp.evidence.value <=
               CATEGORY_CANDIDATE_NEAR_TIE_WINDOW
-          console.debug('[suggestCategory:client]', {
-            title,
-            local,
-            runnerUp: runnerUp ?? null,
-            chipShown: nearTie,
-          })
           setCategoryCandidates(
             nearTie && runnerUp
               ? [
@@ -244,11 +238,6 @@ export function useSuggestCategoryFromTitle(args: {
                     source: 'dictionary' as const,
                   }))
                 : []
-          console.debug('[suggestCategory:client]', {
-            title,
-            serverCategoryId: categoryId,
-            chips,
-          })
           setCategoryCandidates(chips)
           if (!categoryId) return
 

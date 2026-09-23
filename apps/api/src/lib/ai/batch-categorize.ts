@@ -10,9 +10,13 @@ import {
 const QUESTIONS_PER_REQUEST = 5
 const MAX_EXAMPLES = 8
 
-export type JevExpense = { id: string; title: string; expenseDate: string }
-export type JevExample = { title: string; categoryId: CategoryId }
-export type JevNeighbor = JevExample & { expenseDate: string }
+export type SystemOneExpense = {
+  id: string
+  title: string
+  expenseDate: string
+}
+export type SystemOneExample = { title: string; categoryId: CategoryId }
+export type SystemOneNeighbor = SystemOneExample & { expenseDate: string }
 
 function words(title: string, locale: string) {
   return new Set(
@@ -26,9 +30,9 @@ function words(title: string, locale: string) {
   )
 }
 
-export function relevantJevExamples(
+export function relevantSystemOneExamples(
   title: string,
-  examples: readonly JevExample[],
+  examples: readonly SystemOneExample[],
   locale = 'en-US',
 ) {
   const query = words(title, locale)
@@ -55,19 +59,19 @@ export type BatchCategorySuggestion = {
   probabilities: Array<{ categoryId: CategoryId; probability: number }>
 }
 
-/** One independent Jev Choice per expense ID, with target-specific hints. */
-export async function categorizeExpensesWithJev(
-  expenses: readonly JevExpense[],
+/** One independent System One Choice per expense ID, with target-specific hints. */
+export async function categorizeExpensesWithSystemOne(
+  expenses: readonly SystemOneExpense[],
   options: {
     groupId?: string
     groupName?: string
     locale?: string
-    examples?: JevExample[]
+    examples?: SystemOneExample[]
     rejectedExamples?: Array<{
       title: string
       rejectedCategoryId: CategoryId
     }>
-    neighborsById?: Map<string, JevNeighbor[]>
+    neighborsById?: Map<string, SystemOneNeighbor[]>
   } = {},
 ): Promise<Map<string, BatchCategorySuggestion>> {
   if (!env.AI_SYSTEM_ONE_API_KEY) return new Map()
@@ -78,7 +82,7 @@ export async function categorizeExpensesWithJev(
   const locale = options.locale ?? 'en-US'
   const examples = [
     ...(options.examples ?? []),
-    ...((context?.expenses ?? []) as JevExample[]),
+    ...((context?.expenses ?? []) as SystemOneExample[]),
   ]
   const state = {
     groupName: (options.groupName ?? context?.group.name ?? '').slice(0, 100),
@@ -86,7 +90,7 @@ export async function categorizeExpensesWithJev(
   }
   const suggestions = new Map<string, BatchCategorySuggestion>()
 
-  async function requestChunk(chunk: JevExpense[]): Promise<void> {
+  async function requestChunk(chunk: SystemOneExpense[]): Promise<void> {
     const questions = Object.fromEntries(
       chunk.map((expense, index) => [
         `expense_${index}`,
@@ -97,7 +101,7 @@ export async function categorizeExpensesWithJev(
               title: expense.title.slice(0, 80),
               expenseDate: expense.expenseDate,
             },
-            confirmedExamples: relevantJevExamples(
+            confirmedExamples: relevantSystemOneExamples(
               expense.title,
               examples,
               locale,
@@ -137,7 +141,7 @@ export async function categorizeExpensesWithJev(
       }
       if (error instanceof SystemOneRequestError)
         throw new Error(
-          `Jev categorization failed with status ${error.status}${error.errorType ? ` (${error.errorType})` : ''}`,
+          `System One categorization failed with status ${error.status}${error.errorType ? ` (${error.errorType})` : ''}`,
           { cause: error },
         )
       throw error

@@ -373,7 +373,8 @@
             "monthly": "חודשים",
             "yearly": "שנים"
           }
-        }
+        },
+        "categorizeWithSystemOne": "הצעת קטגוריות להוצאות ללא קטגוריה באמצעות System One"
       },
       "Destination": {
         "heading": "לאן תרצה לייבא את <strong>{name}</strong>? ({participantCount} משתתפים · {expenseCount} הוצאות)",
@@ -2845,7 +2846,12 @@
     "doneTitle": "הקטגוריות נשמרו",
     "expenseColumn": "הוצאה",
     "categoryColumn": "קטגוריה",
-    "confidenceColumn": "ביטחון"
+    "confidenceColumn": "ביטחון",
+    "systemOneMode": "מודל System One",
+    "systemOneModeDescription": "יש להשתמש במודל ההחלטה המוגדר של System One עבור כל הוצאה, תוך שימוש בהוצאות שסווגו בקבוצה הזו ובבחירות שבדקתם כרמזים. TypeSafe Jev הוא מודל כזה.",
+    "systemOneUnavailable": "System One אינו זמין בשרת הזה. התאמה מקומית עדיין זמינה.",
+    "systemOneConfidence": "רמת הביטחון של System One: {confidence}%",
+    "systemOneOptionProbability": "ההסתברות של אפשרות System One: {probability}%"
   },
   "ExpensePreview": {
     "title": "תצוגה מקדימה של הוצאה",
@@ -3594,6 +3600,14 @@
           "detail": "בדיקת כפילויות ואישור הייבוא."
         }
       }
+    },
+    "categorize": {
+      "description": "הצעת קטגוריות להוצאות קיימות ללא קטגוריה באמצעות System One. יש לבדוק כל שינוי לפני השמירה.",
+      "steps": {
+        "choose": {
+          "detail": "יש להשתמש בהתאמה מקומית או במודל ההחלטה המוגדר של System One."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4145,7 +4159,8 @@
       "applyToExpenses_two": "החלה על {count} הוצאות",
       "importExpenses_two": "ייבוא {count} הוצאות",
       "importedCount_two": "{count} הוצאות יובאו",
-      "matchingExpensesNotice_two": "ל־{count} הוצאות יש כותרות תואמות או דומות."
+      "matchingExpensesNotice_two": "ל־{count} הוצאות יש כותרות תואמות או דומות.",
+      "categorizeWithSystemOne": "הצעת קטגוריות להוצאות ללא קטגוריה באמצעות System One"
     }
   },
   "Sponsor": {

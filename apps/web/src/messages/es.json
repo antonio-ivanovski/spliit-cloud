@@ -385,7 +385,8 @@
             "monthly": "meses",
             "yearly": "años"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Sugerir categorías para gastos sin categorizar con System One"
       },
       "Destination": {
         "heading": "¿Dónde te gustaría importar <strong>{name}</strong>? ({participantCount} participantes · {expenseCount} gastos)",
@@ -2893,7 +2894,12 @@
     "doneTitle": "Categorías guardadas",
     "expenseColumn": "Gasto",
     "categoryColumn": "Categoría",
-    "confidenceColumn": "Confianza"
+    "confidenceColumn": "Confianza",
+    "systemOneMode": "Modelo de System One",
+    "systemOneModeDescription": "Usa el modelo de decisión configurado de System One para cada gasto, utilizando como pistas los gastos categorizados de este grupo y tus opciones revisadas. TypeSafe Jev es uno de esos modelos.",
+    "systemOneUnavailable": "System One no está disponible en este servidor. La coincidencia local sigue disponible.",
+    "systemOneConfidence": "Confianza de System One: {confidence}%",
+    "systemOneOptionProbability": "Probabilidad de la opción de System One: {probability}%"
   },
   "ExpensePreview": {
     "title": "Vista previa del gasto",
@@ -3645,6 +3651,14 @@
           "detail": "Revisa duplicados y confirma la importación."
         }
       }
+    },
+    "categorize": {
+      "description": "Sugerir categorías para los gastos existentes sin categorizar con System One. Revisa cada cambio antes de guardarlo.",
+      "steps": {
+        "choose": {
+          "detail": "Usa la coincidencia local o el modelo de decisión configurado de System One."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4191,7 +4205,8 @@
       "valuesRecomputedTitle": "Valores recalculados",
       "viewExpenses": "Ver gastos",
       "waitDuplicate": "Espera a que termine la comprobación de duplicados antes de importar.",
-      "invalidRowTitle": "Fila de importación no válida"
+      "invalidRowTitle": "Fila de importación no válida",
+      "categorizeWithSystemOne": "Sugerir categorías para gastos sin categorizar con System One"
     }
   },
   "Sponsor": {

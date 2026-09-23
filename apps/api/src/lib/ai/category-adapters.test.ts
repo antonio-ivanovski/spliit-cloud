@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
-import { adaptJevCategory, adaptLlmCategory } from './category-adapters'
+import { adaptSystemOneCategory, adaptLlmCategory } from './category-adapters'
 
 describe('AI category adapters', () => {
-  it('does not promote a Jev runner-up after General', () => {
-    const result = adaptJevCategory(
+  it('does not promote a System One runner-up after General', () => {
+    const result = adaptSystemOneCategory(
       {
         categoryId: 'general',
         confidence: 0.95,
@@ -16,8 +16,8 @@ describe('AI category adapters', () => {
     expect(result.alternatives[0]?.categoryId).toBe('groceries')
   })
 
-  it('keeps a weak Jev primary for review and uses only its confidence to select', () => {
-    const result = adaptJevCategory(
+  it('keeps a weak System One primary for review and uses only its confidence to select', () => {
+    const result = adaptSystemOneCategory(
       {
         categoryId: 'groceries',
         confidence: 0.4,
@@ -33,16 +33,16 @@ describe('AI category adapters', () => {
     expect(result.alternatives[0]?.categoryId).toBe('dining-out')
   })
 
-  it('excludes rejected Jev categories only for the supplied title', () => {
+  it('excludes rejected System One categories only for the supplied title', () => {
     const answer = {
       categoryId: 'groceries' as const,
       confidence: 0.9,
       probabilities: [{ categoryId: 'dining-out' as const, probability: 0.7 }],
     }
     expect(
-      adaptJevCategory(answer, 0.5, new Set(['groceries'])).categoryId,
+      adaptSystemOneCategory(answer, 0.5, new Set(['groceries'])).categoryId,
     ).toBeNull()
-    expect(adaptJevCategory(answer, 0.5).categoryId).toBe('groceries')
+    expect(adaptSystemOneCategory(answer, 0.5).categoryId).toBe('groceries')
   })
 
   it('labels LLM confidence separately from normalized alternative probabilities', () => {

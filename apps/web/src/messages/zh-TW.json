@@ -363,7 +363,8 @@
             "monthly": "個月",
             "yearly": "年"
           }
-        }
+        },
+        "categorizeWithSystemOne": "使用 System One 為未分類支出建議類別"
       },
       "Destination": {
         "heading": "您想要將 <strong>{name}</strong> 匯入到哪裡？（{participantCount} 位參與者 · {expenseCount} 筆支出）",
@@ -2812,7 +2813,12 @@
     "doneTitle": "分類已儲存",
     "expenseColumn": "支出",
     "categoryColumn": "類別",
-    "confidenceColumn": "置信度"
+    "confidenceColumn": "置信度",
+    "systemOneMode": "System One 模型",
+    "systemOneModeDescription": "對每筆支出使用已設定的 System One 決策模型，並參考此群組中已分類的支出和你審核過的選項。TypeSafe Jev 是其中一種模型。",
+    "systemOneUnavailable": "此伺服器無法使用 System One。仍可使用本機比對。",
+    "systemOneConfidence": "System One 信賴度：{confidence}%",
+    "systemOneOptionProbability": "System One 選項機率：{probability}%"
   },
   "ExpensePreview": {
     "title": "消費紀錄預覽",
@@ -3558,6 +3564,14 @@
           "detail": "檢查重複並確認匯入。"
         }
       }
+    },
+    "categorize": {
+      "description": "使用 System One 為現有未分類支出建議類別。儲存前請檢查每項變更。",
+      "steps": {
+        "choose": {
+          "detail": "使用本機比對或已設定的 System One 決策模型。"
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4094,7 +4108,8 @@
       "valuesRecomputedTitle": "值已重新計算",
       "viewExpenses": "查看支出",
       "waitDuplicate": "請等待重複檢查完成後再匯入。",
-      "invalidRowTitle": "無效的匯入列"
+      "invalidRowTitle": "無效的匯入列",
+      "categorizeWithSystemOne": "使用 System One 為未分類支出建議類別"
     }
   },
   "Sponsor": {

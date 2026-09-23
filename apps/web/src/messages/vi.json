@@ -620,7 +620,8 @@
             "monthly": "tháng",
             "yearly": "năm"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Đề xuất danh mục cho các khoản chi chưa được phân loại bằng System One"
       },
       "Done": {
         "importComplete": "Nhập hoàn tất!",
@@ -2982,7 +2983,12 @@
     "doneTitle": "Hoàn tất!",
     "expenseColumn": "Chi phí",
     "categoryColumn": "Danh mục",
-    "confidenceColumn": "Độ tin cậy"
+    "confidenceColumn": "Độ tin cậy",
+    "systemOneMode": "Mô hình System One",
+    "systemOneModeDescription": "Sử dụng mô hình quyết định System One đã được cấu hình cho mọi khoản chi, dựa trên các khoản chi đã phân loại trong nhóm này và các lựa chọn bạn đã xem xét làm gợi ý. TypeSafe Jev là một mô hình như vậy.",
+    "systemOneUnavailable": "System One không khả dụng trên máy chủ này. Vẫn có thể dùng tính năng so khớp cục bộ.",
+    "systemOneConfidence": "Độ tin cậy của System One: {confidence}%",
+    "systemOneOptionProbability": "Xác suất lựa chọn của System One: {probability}%"
   },
   "ExpensePreview": {
     "title": "Chi phí",
@@ -3640,6 +3646,14 @@
           "detail": "Kiểm tra bản trùng và xác nhận nhập."
         }
       }
+    },
+    "categorize": {
+      "description": "Đề xuất danh mục cho các khoản chi hiện có chưa được phân loại bằng System One. Hãy xem lại mọi thay đổi trước khi lưu.",
+      "steps": {
+        "choose": {
+          "detail": "Sử dụng tính năng so khớp cục bộ hoặc mô hình quyết định System One đã được cấu hình."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4176,7 +4190,8 @@
       "valuesRecomputedTitle": "Giá trị đã tính lại",
       "viewExpenses": "Xem chi phí",
       "waitDuplicate": "Chờ kiểm tra trùng lặp xong trước khi nhập.",
-      "invalidRowTitle": "Hàng nhập không hợp lệ"
+      "invalidRowTitle": "Hàng nhập không hợp lệ",
+      "categorizeWithSystemOne": "Đề xuất danh mục cho các khoản chi chưa được phân loại bằng System One"
     }
   },
   "Sponsor": {

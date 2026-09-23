@@ -698,7 +698,12 @@
       "medium": "মধ্যম",
       "low": "নিম্ন"
     },
-    "confidenceColumn": "আস্থা"
+    "confidenceColumn": "আস্থা",
+    "systemOneMode": "System One মডেল",
+    "systemOneModeDescription": "প্রতিটি খরচের জন্য কনফিগার করা System One সিদ্ধান্ত মডেল ব্যবহার করুন; এই গ্রুপের শ্রেণিবদ্ধ করা খরচ এবং আপনার পর্যালোচনা করা পছন্দগুলোকে ইঙ্গিত হিসেবে ব্যবহার করা হবে। TypeSafe Jev এমনই একটি মডেল।",
+    "systemOneUnavailable": "এই সার্ভারে System One উপলভ্য নয়। স্থানীয় মিল খোঁজার সুবিধা এখনও উপলভ্য।",
+    "systemOneConfidence": "System One-এর নির্ভরযোগ্যতা: {confidence}%",
+    "systemOneOptionProbability": "System One বিকল্পের সম্ভাবনা: {probability}%"
   },
   "Categories": {
     "Entertainment": {
@@ -2038,7 +2043,8 @@
             "monthly": "মাস",
             "yearly": "বছর"
           }
-        }
+        },
+        "categorizeWithSystemOne": "System One দিয়ে শ্রেণিবিহীন খরচের জন্য শ্রেণি প্রস্তাব করুন"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -3643,6 +3649,14 @@
           "detail": "ডুপ্লিকেট পরীক্ষা করুন এবং আমদানি নিশ্চিত করুন।"
         }
       }
+    },
+    "categorize": {
+      "description": "System One দিয়ে বিদ্যমান শ্রেণিবিহীন খরচের জন্য শ্রেণি প্রস্তাব করুন। সংরক্ষণ করার আগে প্রতিটি পরিবর্তন পর্যালোচনা করুন।",
+      "steps": {
+        "choose": {
+          "detail": "স্থানীয় মিল খোঁজা অথবা কনফিগার করা System One সিদ্ধান্ত মডেল ব্যবহার করুন।"
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4189,7 +4203,8 @@
       "valuesRecomputedTitle": "মান পুনর্গণনা করা হয়েছে",
       "viewExpenses": "খরচ দেখুন",
       "waitDuplicate": "আমদানির আগে ডুপ্লিকেট পরীক্ষা শেষ হওয়া পর্যন্ত অপেক্ষা করুন।",
-      "invalidRowTitle": "অবৈধ আমদানি সারি"
+      "invalidRowTitle": "অবৈধ আমদানি সারি",
+      "categorizeWithSystemOne": "System One দিয়ে শ্রেণিবিহীন খরচের জন্য শ্রেণি প্রস্তাব করুন"
     }
   },
   "Sponsor": {

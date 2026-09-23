@@ -22,6 +22,9 @@
         "description": "Spliit Cloud can securely copy receipt images from the original spliit.app group and store normalised JPEG versions in your Cloud storage.",
         "tooLarge": "The normalised image is still larger than {maxSize}.",
         "uploadFailed": "Could not upload the normalised image."
+      },
+      "Confirm": {
+        "categorizeWithSystemOne": "Suggest categories for uncategorised expenses with System One"
       }
     }
   },
@@ -103,7 +106,8 @@
     "leftUncategorized_two": "{count} expenses were left uncategorised because the AI was not confident enough.",
     "leftUncategorized_few": "{count} expenses were left uncategorised because the AI was not confident enough.",
     "leftUncategorized_many": "{count} expenses were left uncategorised because the AI was not confident enough.",
-    "leftUncategorized_other": "{count} expenses were left uncategorised because the AI was not confident enough."
+    "leftUncategorized_other": "{count} expenses were left uncategorised because the AI was not confident enough.",
+    "systemOneModeDescription": "Use the configured System One decision model for every expense, using this group’s categorised expenses and your reviewed choices as hints. TypeSafe Jev is one such model."
   },
   "Mascot": {
     "landingHintSplit": "Split a dinner, a trip, or the rent — I’ll do the maths."
@@ -117,6 +121,9 @@
     },
     "defaults": {
       "paidForDescription": "Choose the participants and a proportional split. Fixed amounts and itemisation are available when editing an individual expense."
+    },
+    "wizard": {
+      "categorizeWithSystemOne": "Suggest categories for uncategorised expenses with System One"
     }
   },
   "Feedback": {
@@ -143,6 +150,11 @@
       "codeLabel": "Authorisation code",
       "errorDescription": "The authorisation server returned an error instead of a code.",
       "copyCode": "Copy authorisation code"
+    }
+  },
+  "Tools": {
+    "categorize": {
+      "description": "Suggest categories for existing uncategorised expenses with System One. Review every change before saving."
     }
   }
 }

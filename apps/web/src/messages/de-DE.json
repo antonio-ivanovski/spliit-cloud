@@ -383,7 +383,8 @@
             "monthly": "Monate",
             "yearly": "Jahre"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Kategorien für nicht kategorisierte Ausgaben mit System One vorschlagen"
       },
       "Destination": {
         "heading": "Wohin möchtest du <strong>{name}</strong> importieren? ({participantCount} Teilnehmer · {expenseCount} Ausgaben)",
@@ -2891,7 +2892,12 @@
     "doneTitle": "Kategorien gespeichert",
     "expenseColumn": "Ausgabe",
     "categoryColumn": "Kategorie",
-    "confidenceColumn": "Konfidenz"
+    "confidenceColumn": "Konfidenz",
+    "systemOneMode": "System-One-Modell",
+    "systemOneModeDescription": "Verwende für jede Ausgabe das konfigurierte System-One-Entscheidungsmodell und nutze die kategorisierten Ausgaben dieser Gruppe sowie deine überprüften Auswahlmöglichkeiten als Hinweise. TypeSafe Jev ist ein solches Modell.",
+    "systemOneUnavailable": "System One ist auf diesem Server nicht verfügbar. Lokales Abgleichen ist weiterhin möglich.",
+    "systemOneConfidence": "System-One-Konfidenz: {confidence}%",
+    "systemOneOptionProbability": "Wahrscheinlichkeit der System-One-Option: {probability}%"
   },
   "ExpensePreview": {
     "title": "Ausgabenvorschau",
@@ -3643,6 +3649,14 @@
           "detail": "Duplikate prüfen und Import bestätigen."
         }
       }
+    },
+    "categorize": {
+      "description": "Schlage mit System One Kategorien für vorhandene, nicht kategorisierte Ausgaben vor. Überprüfe jede Änderung vor dem Speichern.",
+      "steps": {
+        "choose": {
+          "detail": "Verwende lokales Abgleichen oder das konfigurierte System-One-Entscheidungsmodell."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4184,7 +4198,8 @@
       "valuesRecomputedTitle": "Werte neu berechnet",
       "viewExpenses": "Ausgaben ansehen",
       "waitDuplicate": "Warte, bis die Duplikatprüfung abgeschlossen ist, bevor du importierst.",
-      "invalidRowTitle": "Ungültige Importzeile"
+      "invalidRowTitle": "Ungültige Importzeile",
+      "categorizeWithSystemOne": "Kategorien für nicht kategorisierte Ausgaben mit System One vorschlagen"
     }
   },
   "Sponsor": {

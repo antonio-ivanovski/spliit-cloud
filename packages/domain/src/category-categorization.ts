@@ -21,7 +21,7 @@ import {
   type SuggestCategoryOptions,
 } from './category-search/suggest'
 
-export type CategorizerEngine = 'local' | 'jev' | 'llm'
+export type CategorizerEngine = 'local' | 'system-one' | 'llm'
 export type CategoryEvidence =
   | { kind: 'heuristic'; value: number; floor: number }
   | { kind: 'model-confidence'; value: number; floor: number }
@@ -30,7 +30,7 @@ export type CategoryEvidence =
 
 export type CategorizerChoice = {
   categoryId: CategoryId
-  source: 'dictionary' | 'history' | 'jev' | 'llm'
+  source: 'dictionary' | 'history' | 'system-one' | 'llm'
   evidence: CategoryEvidence
 }
 

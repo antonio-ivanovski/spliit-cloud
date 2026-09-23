@@ -368,7 +368,8 @@
             "monthly": "ay",
             "yearly": "yıl"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Kategorilendirilmemiş masraflar için System One ile kategori öner"
       },
       "Destination": {
         "heading": "<strong>{name}</strong> grubunu nereye içe aktarmak istersiniz? ({participantCount} katılımcı · {expenseCount} harcama)",
@@ -2827,7 +2828,12 @@
     "doneTitle": "Kategoriler kaydedildi",
     "expenseColumn": "Harcama",
     "categoryColumn": "Kategori",
-    "confidenceColumn": "Güven"
+    "confidenceColumn": "Güven",
+    "systemOneMode": "System One modeli",
+    "systemOneModeDescription": "Her masraf için yapılandırılmış System One karar modelini kullanır; bu grubun kategorilendirilmiş masraflarını ve gözden geçirdiğiniz seçimleri ipucu olarak alır. TypeSafe Jev bu tür modellerden biridir.",
+    "systemOneUnavailable": "Bu sunucuda System One kullanılamıyor. Yerel eşleştirme yine de kullanılabilir.",
+    "systemOneConfidence": "System One güven düzeyi: {confidence}%",
+    "systemOneOptionProbability": "System One seçeneği olasılığı: {probability}%"
   },
   "ExpensePreview": {
     "title": "Masraf önizlemesi",
@@ -3575,6 +3581,14 @@
           "detail": "Yinelenenleri denetle ve içe aktarmayı onayla."
         }
       }
+    },
+    "categorize": {
+      "description": "Mevcut kategorilendirilmemiş masraflar için System One ile kategori önerin. Kaydetmeden önce her değişikliği inceleyin.",
+      "steps": {
+        "choose": {
+          "detail": "Yerel eşleştirmeyi veya yapılandırılmış System One karar modelini kullanın."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4116,7 +4130,8 @@
       "valuesRecomputedTitle": "Değerler yeniden hesaplandı",
       "viewExpenses": "Masrafları görüntüle",
       "waitDuplicate": "İçe aktarmadan önce yinelenen denetiminin bitmesini bekle.",
-      "invalidRowTitle": "Geçersiz içe aktarma satırı"
+      "invalidRowTitle": "Geçersiz içe aktarma satırı",
+      "categorizeWithSystemOne": "Kategorilendirilmemiş masraflar için System One ile kategori öner"
     }
   },
   "Sponsor": {

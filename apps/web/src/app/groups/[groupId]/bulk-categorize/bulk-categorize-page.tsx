@@ -52,7 +52,7 @@ export function BulkCategorizePage({
 }: BulkCategorizePageProps) {
   const { t } = useTranslation(undefined, { keyPrefix: 'BulkCategorize' })
   const locale = useLocale()
-  const [mode, setMode] = useState<'local' | 'jev'>('local')
+  const [mode, setMode] = useState<'local' | 'system-one'>('local')
   const [error, setError] = useState<string | null>(null)
   const [editing, setEditing] = useState(false)
   const [discardDialogOpen, setDiscardDialogOpen] = useState(false)
@@ -65,7 +65,7 @@ export function BulkCategorizePage({
     runId: string
     applied: number
     total: number
-    mode: 'local' | 'jev'
+    mode: 'local' | 'system-one'
   } | null>(null)
   const { data: features } = trpc.features.get.useQuery()
   const count = trpc.ai.bulkCategorize.count.useQuery(
@@ -159,7 +159,7 @@ export function BulkCategorizePage({
   async function saveReview(
     runId: string,
     total: number,
-    runMode: 'local' | 'jev',
+    runMode: 'local' | 'system-one',
   ) {
     setError(null)
     try {
@@ -301,7 +301,8 @@ export function BulkCategorizePage({
                         run?.status === 'FAILED_RERUN' ||
                         pendingStage === 'rerun'
                       ? t('rerunProgressTitle')
-                      : run?.mode === 'jev' && run?.fullPassPhase === 'second'
+                      : run?.mode === 'system-one' &&
+                          run?.fullPassPhase === 'second'
                         ? t('refiningTitle')
                         : t('progressTitle')}
             </CardTitle>
@@ -655,12 +656,13 @@ export function BulkCategorizePage({
           {count.isSuccess && remaining > 0 && (
             <>
               <CardContent className="grid gap-3 sm:grid-cols-2">
-                {(['local', 'jev'] as const).map((value) => (
+                {(['local', 'system-one'] as const).map((value) => (
                   <button
                     type="button"
                     key={value}
                     disabled={
-                      value === 'jev' && !features?.bulkCategorizeJevAvailable
+                      value === 'system-one' &&
+                      !features?.bulkCategorizeSystemOneAvailable
                     }
                     onClick={() => setMode(value)}
                     aria-pressed={mode === value}
@@ -672,21 +674,25 @@ export function BulkCategorizePage({
                     )}
                   >
                     <span className="flex items-center gap-2 font-medium">
-                      {value === 'jev' && <Sparkles className="size-4" />}
-                      {t(value === 'jev' ? 'jevMode' : 'localMode')}
+                      {value === 'system-one' && (
+                        <Sparkles className="size-4" />
+                      )}
+                      {t(
+                        value === 'system-one' ? 'systemOneMode' : 'localMode',
+                      )}
                     </span>
                     <span className="mt-2 block text-sm text-muted-foreground">
                       {t(
-                        value === 'jev'
-                          ? 'jevModeDescription'
+                        value === 'system-one'
+                          ? 'systemOneModeDescription'
                           : 'localModeDescription',
                       )}
                     </span>
                   </button>
                 ))}
-                {!features?.bulkCategorizeJevAvailable && (
+                {!features?.bulkCategorizeSystemOneAvailable && (
                   <p className="text-sm text-muted-foreground sm:col-span-2">
-                    {t('unavailable')}
+                    {t('systemOneUnavailable')}
                   </p>
                 )}
               </CardContent>
@@ -694,7 +700,8 @@ export function BulkCategorizePage({
                 <Button
                   disabled={
                     pending ||
-                    (mode === 'jev' && !features?.bulkCategorizeJevAvailable)
+                    (mode === 'system-one' &&
+                      !features?.bulkCategorizeSystemOneAvailable)
                   }
                   onClick={() =>
                     void act(

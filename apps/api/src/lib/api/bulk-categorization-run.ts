@@ -13,10 +13,10 @@ import {
 } from '@spliit/domain'
 import { JOB_NAMES, sendJob } from '@spliit/jobs'
 
-import { categorizeExpensesWithJev } from '../ai/batch-categorize'
-import { adaptJevCategory } from '../ai/category-adapters'
+import { categorizeExpensesWithSystemOne } from '../ai/batch-categorize'
+import { adaptSystemOneCategory } from '../ai/category-adapters'
 import { getRecentExpenseContext } from '../ai/context'
-import { loadJevDateNeighbors } from '../ai/jev-neighbors'
+import { loadSystemOneDateNeighbors } from '../ai/system-one-neighbors'
 import { enqueueBudgetEvaluation } from '../budgets/enqueue'
 import { env } from '../env'
 import { getApiBossForWrite } from './boss'
@@ -34,24 +34,52 @@ export type Candidate = {
 export type Choice = {
   categoryId: CategoryId
   confidence: number | null
-  source: 'local' | 'jev'
+  source: 'local' | 'system-one'
   /** Local matcher strength. This is a heuristic score, not a probability. */
   matchScore?: number
   /** Acceptance floor used when this choice was generated. */
   floor?: number
-  /** Optional for older JSON drafts; distinguishes Jev alternatives. */
+  /** Optional for older JSON drafts; distinguishes System One alternatives. */
   evidenceKind?: CategoryEvidence['kind']
 }
 export type Suggestion = Candidate & {
   categoryId: CategoryId
   initialCategoryId?: CategoryId
   rerunFeedback?: boolean
-  source: 'local' | 'jev' | 'none'
+  source: 'local' | 'system-one' | 'none'
   choices: Choice[]
   firstPass?: { categoryId: CategoryId; confidence: number | null }
   secondPass?: { categoryId: CategoryId; confidence: number | null }
   included?: boolean // Existing local runs may still contain this field.
 }
+export type BulkCategorizationMode = 'local' | 'system-one'
+
+/** Legacy Jev values may remain in local run rows created before the rename. */
+export function normalizeBulkCategorizationMode(
+  mode: string,
+): BulkCategorizationMode {
+  if (mode === 'local') return 'local'
+  if (mode === 'system-one' || mode === 'jev') return 'system-one'
+  throw new Error(`Unsupported bulk categorization mode: ${mode}`)
+}
+
+function normalizeChoice(choice: Choice): Choice {
+  const source = (choice as unknown as { source: string }).source
+  return {
+    ...choice,
+    source: source === 'jev' ? 'system-one' : (source as Choice['source']),
+  }
+}
+
+function normalizeSuggestion(suggestion: Suggestion): Suggestion {
+  const source = (suggestion as unknown as { source: string }).source
+  return {
+    ...suggestion,
+    source: source === 'jev' ? 'system-one' : (source as Suggestion['source']),
+    choices: suggestion.choices.map(normalizeChoice),
+  }
+}
+
 type RoundMetric = {
   round: number
   reviewed: number
@@ -75,11 +103,17 @@ const calibrationOf = (value: unknown): Calibration => {
     !Array.isArray(value) &&
     typeof value === 'object' &&
     'sample' in value
-  )
+  ) {
+    const calibration = value as Calibration
     return {
-      ...(value as Calibration),
-      metrics: recalculateRoundMetrics(value as Calibration),
+      ...calibration,
+      sample: list<Suggestion>(calibration.sample).map(normalizeSuggestion),
+      confirmed: list<Suggestion>(calibration.confirmed).map(
+        normalizeSuggestion,
+      ),
+      metrics: recalculateRoundMetrics(calibration),
     }
+  }
   return {
     sample: [],
     confirmed: [],
@@ -261,12 +295,12 @@ export function getRerunCandidateCounts(
   return { general, uncertain: candidates.length - general }
 }
 
-export function getAutomaticJevTargets(suggestions: Suggestion[]) {
+export function getAutomaticSystemOneTargets(suggestions: Suggestion[]) {
   return suggestions.filter((row) => {
     if (row.categoryId === DEFAULT_CATEGORY_ID) return true
     const selected = row.choices.find(
       (choice) =>
-        choice.categoryId === row.categoryId && choice.source === 'jev',
+        choice.categoryId === row.categoryId && choice.source === 'system-one',
     )
     return (
       selected != null &&
@@ -280,7 +314,7 @@ export function getAutomaticJevTargets(suggestions: Suggestion[]) {
 
 const STRONG_SECOND_PASS_CONFIDENCE = 0.8
 
-export function mergeAutomaticJevSuggestions(
+export function mergeAutomaticSystemOneSuggestions(
   current: Suggestion[],
   additions: Suggestion[],
 ) {
@@ -314,7 +348,7 @@ export function mergeAutomaticJevSuggestions(
       ...row,
       categoryId: promote ? addition.categoryId : row.categoryId,
       initialCategoryId: promote ? addition.categoryId : row.initialCategoryId,
-      source: promote ? ('jev' as const) : row.source,
+      source: promote ? ('system-one' as const) : row.source,
       choices,
       firstPass: row.firstPass ?? {
         categoryId: row.initialCategoryId ?? row.categoryId,
@@ -331,7 +365,7 @@ export function mergeAutomaticJevSuggestions(
   })
 }
 
-export function compareJevPasses(suggestions: Suggestion[]) {
+export function compareSystemOnePasses(suggestions: Suggestion[]) {
   const reviewed = suggestions.filter((row) => row.firstPass && row.secondPass)
   return {
     reviewed: reviewed.length,
@@ -487,7 +521,7 @@ const logRun = (
   )
 
 function rowToSuggestion(row: BulkCategorizationRow): Suggestion {
-  return {
+  return normalizeSuggestion({
     id: row.expenseId,
     title: row.title,
     version: row.expenseVersion,
@@ -507,7 +541,7 @@ function rowToSuggestion(row: BulkCategorizationRow): Suggestion {
     ...(row.secondPass
       ? { secondPass: row.secondPass as Suggestion['secondPass'] }
       : {}),
-  }
+  })
 }
 const asCandidate = (row: BulkCategorizationRow): Candidate => ({
   id: row.expenseId,
@@ -613,7 +647,7 @@ export async function presentRun(run: RunData | null) {
   ])
   return {
     id: run.id,
-    mode: run.mode as 'local' | 'jev',
+    mode: normalizeBulkCategorizationMode(run.mode),
     status: run.status,
     total: run.total,
     processed: run.processed,
@@ -748,11 +782,11 @@ export async function countUncategorizedExpenses(groupId: string) {
 export async function startCategorizationRun(args: {
   groupId: string
   accountId: string
-  mode: 'local' | 'jev'
+  mode: BulkCategorizationMode
   locale: string
 }) {
-  if (args.mode === 'jev' && !env.AI_SYSTEM_ONE_API_KEY)
-    throw new Error('Jev is unavailable')
+  if (args.mode === 'system-one' && !env.AI_SYSTEM_ONE_API_KEY)
+    throw new Error('System One is unavailable')
   const existing = await prisma.bulkCategorizationRun.findUnique({
     where: { groupId: args.groupId },
   })
@@ -1315,7 +1349,7 @@ export async function suggestRows(
   } = {},
 ): Promise<Suggestion[]> {
   const feedback = buildCategorizationFeedback(confirmed, run.locale)
-  const localMode = run.mode === 'local'
+  const localMode = normalizeBulkCategorizationMode(run.mode) === 'local'
   const local = localMode
     ? (options.localContext ?? (await prepareLocalContext(run)))
     : null
@@ -1325,9 +1359,9 @@ export async function suggestRows(
     minScore: env.CATEGORY_LOCAL_MIN_SCORE,
     settlementMinScore: env.CATEGORY_LOCAL_SETTLEMENT_MIN_SCORE,
   }
-  const jev =
-    run.mode === 'jev' && chunk.length
-      ? await categorizeExpensesWithJev(
+  const systemOne =
+    normalizeBulkCategorizationMode(run.mode) === 'system-one' && chunk.length
+      ? await categorizeExpensesWithSystemOne(
           chunk.map((row) => ({
             id: row.id,
             title: row.title,
@@ -1339,13 +1373,13 @@ export async function suggestRows(
             examples: feedback.positive,
             rejectedExamples: feedback.rejected,
             neighborsById: options.dateNeighbors
-              ? await loadJevDateNeighbors(run.groupId, chunk, confirmed)
+              ? await loadSystemOneDateNeighbors(run.groupId, chunk, confirmed)
               : undefined,
           },
         )
       : new Map()
   return chunk.map((row): Suggestion => {
-    const guess = jev.get(row.id)
+    const guess = systemOne.get(row.id)
     const rejected = new Set(
       feedback.rejected
         .filter(
@@ -1367,7 +1401,7 @@ export async function suggestRows(
             thresholds: localThresholds,
           },
         })
-      : adaptJevCategory(guess, env.AI_CATEGORY_MIN_CONFIDENCE, rejected)
+      : adaptSystemOneCategory(guess, env.AI_CATEGORY_MIN_CONFIDENCE, rejected)
     const choices: Choice[] = [result.primary, ...result.alternatives]
       .filter((choice): choice is CategorizerChoice => choice !== null)
       .slice(0, 3)
@@ -1375,7 +1409,7 @@ export async function suggestRows(
         categoryId: choice.categoryId,
         confidence:
           choice.evidence.kind === 'heuristic' ? null : choice.evidence.value,
-        source: localMode ? 'local' : 'jev',
+        source: localMode ? 'local' : 'system-one',
         evidenceKind: choice.evidence.kind,
         ...(choice.evidence.kind === 'heuristic' && {
           matchScore: choice.evidence.value,
@@ -1392,7 +1426,7 @@ export async function suggestRows(
           ? 'local'
           : 'none'
         : guess
-          ? 'jev'
+          ? 'system-one'
           : 'none',
       choices,
     }
@@ -1482,7 +1516,9 @@ async function processFull(
   })
   const calibration = calibrationOf(run.calibration)
   const localContext =
-    run.mode === 'local' ? await prepareLocalContext(run) : undefined
+    normalizeBulkCategorizationMode(run.mode) === 'local'
+      ? await prepareLocalContext(run)
+      : undefined
   let state = (run.examples as FullPassState | null)?.phase ?? 'first'
   if (state === 'first') {
     while (true) {
@@ -1514,7 +1550,7 @@ async function processFull(
       )
       run = { ...run, processed: run.processed + pending.length }
     }
-    if (run.mode !== 'jev') {
+    if (normalizeBulkCategorizationMode(run.mode) !== 'system-one') {
       await finishPhase(runId, 'full', attemptId, workerToken, async (tx) => {
         await setReviewOrder(tx, runId)
         await tx.bulkCategorizationRun.update({
@@ -1533,7 +1569,7 @@ async function processFull(
         take: 500,
       })
       if (!rows.length) break
-      const ids = getAutomaticJevTargets(rows.map(rowToSuggestion)).map(
+      const ids = getAutomaticSystemOneTargets(rows.map(rowToSuggestion)).map(
         (row) => row.id,
       )
       if (ids.length)
@@ -1589,7 +1625,7 @@ async function processFull(
         { dateNeighbors: true },
       )
       const current = pending.map(rowToSuggestion)
-      const merged = mergeAutomaticJevSuggestions(current, additions)
+      const merged = mergeAutomaticSystemOneSuggestions(current, additions)
       await checkpoint(
         runId,
         'full',
@@ -1636,7 +1672,9 @@ async function processRerun(
     })
   ).map(rowToSuggestion)
   const localContext =
-    run.mode === 'local' ? await prepareLocalContext(run) : undefined
+    normalizeBulkCategorizationMode(run.mode) === 'local'
+      ? await prepareLocalContext(run)
+      : undefined
   while (true) {
     const pending = await prisma.bulkCategorizationRow.findMany({
       where: { runId, rerunTarget: true },

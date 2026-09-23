@@ -373,7 +373,8 @@
             "monthly": "mesos",
             "yearly": "anys"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Suggerir categories per a les despeses sense categoritzar amb System One"
       },
       "Destination": {
         "heading": "On voleu importar <strong>{name}</strong>? ({participantCount} participants · {expenseCount} despeses)",
@@ -2845,7 +2846,12 @@
     "doneTitle": "Categories desades",
     "expenseColumn": "Despesa",
     "categoryColumn": "Categoria",
-    "confidenceColumn": "Confiança"
+    "confidenceColumn": "Confiança",
+    "systemOneMode": "Model de System One",
+    "systemOneModeDescription": "Utilitza el model de decisions de System One configurat per a cada despesa, fent servir com a pistes les despeses categoritzades d’aquest grup i les teves opcions revisades. TypeSafe Jev és un d’aquests models.",
+    "systemOneUnavailable": "System One no està disponible en aquest servidor. La concordança local continua disponible.",
+    "systemOneConfidence": "Confiança de System One: {confidence}%",
+    "systemOneOptionProbability": "Probabilitat de l’opció de System One: {probability}%"
   },
   "ExpensePreview": {
     "title": "Vista prèvia de la despesa",
@@ -3594,6 +3600,14 @@
           "detail": "Revisa duplicats i confirma la importació."
         }
       }
+    },
+    "categorize": {
+      "description": "Suggerir categories per a les despeses existents sense categoritzar amb System One. Revisa tots els canvis abans de desar-los.",
+      "steps": {
+        "choose": {
+          "detail": "Utilitza la concordança local o el model de decisions de System One configurat."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4140,7 +4154,8 @@
       "valuesRecomputedTitle": "Valors recalculats",
       "viewExpenses": "Mostra despeses",
       "waitDuplicate": "Espera que acabi la comprovació de duplicats abans d'importar.",
-      "invalidRowTitle": "Fila d'importació no vàlida"
+      "invalidRowTitle": "Fila d'importació no vàlida",
+      "categorizeWithSystemOne": "Suggerir categories per a les despeses sense categoritzar amb System One"
     }
   },
   "Sponsor": {

@@ -373,7 +373,8 @@
             "monthly": "mesi",
             "yearly": "anni"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Suggerisci categorie per le spese non categorizzate con System One"
       },
       "Destination": {
         "heading": "Dove desideri importare <strong>{name}</strong>? ({participantCount} partecipanti · {expenseCount} spese)",
@@ -2845,7 +2846,12 @@
     "doneTitle": "Categorie salvate",
     "expenseColumn": "Spesa",
     "categoryColumn": "Categoria",
-    "confidenceColumn": "Confidenza"
+    "confidenceColumn": "Confidenza",
+    "systemOneMode": "Modello System One",
+    "systemOneModeDescription": "Usa il modello decisionale configurato di System One per ogni spesa, usando come suggerimenti le spese categorizzate di questo gruppo e le tue scelte verificate. TypeSafe Jev è uno di questi modelli.",
+    "systemOneUnavailable": "System One non è disponibile su questo server. La corrispondenza locale è ancora disponibile.",
+    "systemOneConfidence": "Affidabilità di System One: {confidence}%",
+    "systemOneOptionProbability": "Probabilità dell’opzione di System One: {probability}%"
   },
   "ExpensePreview": {
     "title": "Anteprima della spesa",
@@ -3594,6 +3600,14 @@
           "detail": "Controlla duplicati e conferma l'importazione."
         }
       }
+    },
+    "categorize": {
+      "description": "Suggerisci categorie per le spese esistenti non categorizzate con System One. Verifica ogni modifica prima di salvarla.",
+      "steps": {
+        "choose": {
+          "detail": "Usa la corrispondenza locale o il modello decisionale configurato di System One."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4087,7 +4101,8 @@
       "valuesRecomputedTitle": "Valori ricalcolati",
       "viewExpenses": "Vedi spese",
       "waitDuplicate": "Attendi la fine del controllo duplicati prima di importare.",
-      "invalidRowTitle": "Riga di importazione non valida"
+      "invalidRowTitle": "Riga di importazione non valida",
+      "categorizeWithSystemOne": "Suggerisci categorie per le spese non categorizzate con System One"
     },
     "apiErrors": {
       "IMPORT_DUPLICATE_CONFLICT": "Alcune righe selezionate hanno nuove corrispondenze duplicate o non approvate (righe {rows}). Controllale e riprova.",

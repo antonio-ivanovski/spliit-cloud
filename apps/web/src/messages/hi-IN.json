@@ -666,7 +666,12 @@
       "medium": "मध्यम",
       "low": "निम्न"
     },
-    "confidenceColumn": "विश्वास स्तर"
+    "confidenceColumn": "विश्वास स्तर",
+    "systemOneMode": "System One मॉडल",
+    "systemOneModeDescription": "हर खर्च के लिए कॉन्फ़िगर किए गए System One निर्णय मॉडल का उपयोग करें। संकेत के रूप में इस ग्रुप के श्रेणीबद्ध खर्चों और आपके द्वारा समीक्षा किए गए विकल्पों का उपयोग किया जाएगा। TypeSafe Jev ऐसा ही एक मॉडल है।",
+    "systemOneUnavailable": "इस सर्वर पर System One उपलब्ध नहीं है। स्थानीय मिलान अभी भी उपलब्ध है।",
+    "systemOneConfidence": "System One का विश्वास स्तर: {confidence}%",
+    "systemOneOptionProbability": "System One विकल्प की संभावना: {probability}%"
   },
   "Categories": {
     "Entertainment": {
@@ -1978,7 +1983,8 @@
             "monthly": "महीने",
             "yearly": "वर्ष"
           }
-        }
+        },
+        "categorizeWithSystemOne": "System One से श्रेणीहीन खर्चों के लिए श्रेणियां सुझाएं"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -3571,6 +3577,14 @@
           "detail": "डुप्लिकेट जांचें और आयात की पुष्टि करें।"
         }
       }
+    },
+    "categorize": {
+      "description": "System One से मौजूदा श्रेणीहीन खर्चों के लिए श्रेणियां सुझाएं। सहेजने से पहले हर बदलाव की समीक्षा करें।",
+      "steps": {
+        "choose": {
+          "detail": "स्थानीय मिलान या कॉन्फ़िगर किए गए System One निर्णय मॉडल का उपयोग करें।"
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4117,7 +4131,8 @@
       "valuesRecomputedTitle": "मान फिर से गिने गए",
       "viewExpenses": "खर्च देखें",
       "waitDuplicate": "आयात से पहले डुप्लिकेट जांच पूरी होने तक प्रतीक्षा करें।",
-      "invalidRowTitle": "अमान्य आयात पंक्ति"
+      "invalidRowTitle": "अमान्य आयात पंक्ति",
+      "categorizeWithSystemOne": "System One से श्रेणीहीन खर्चों के लिए श्रेणियां सुझाएं"
     }
   },
   "Sponsor": {

@@ -5,16 +5,16 @@ import {
   type CategoryId,
 } from '@spliit/domain'
 
-import type { JevExpense, JevNeighbor } from './batch-categorize'
+import type { SystemOneExpense, SystemOneNeighbor } from './batch-categorize'
 
 const WINDOW_MS = 7 * 24 * 60 * 60 * 1000
 
-type DatedExample = JevNeighbor & { id: string }
+type DatedExample = SystemOneNeighbor & { id: string }
 
 export function selectDateNeighbors(
-  target: JevExpense,
+  target: SystemOneExpense,
   examples: readonly DatedExample[],
-): JevNeighbor[] {
+): SystemOneNeighbor[] {
   const date = Date.parse(target.expenseDate)
   if (!Number.isFinite(date)) return []
   const eligible = examples.filter(
@@ -42,17 +42,17 @@ export function selectDateNeighbors(
   }))
 }
 
-export async function loadJevDateNeighbors(
+export async function loadSystemOneDateNeighbors(
   groupId: string,
-  targets: readonly JevExpense[],
+  targets: readonly SystemOneExpense[],
   confirmed: readonly DatedExample[],
-): Promise<Map<string, JevNeighbor[]>> {
+): Promise<Map<string, SystemOneNeighbor[]>> {
   const group = await prisma.group.findUnique({
     where: { id: groupId },
     select: { ledgerId: true },
   })
   if (!group) throw new Error('Group not found')
-  const result = new Map<string, JevNeighbor[]>()
+  const result = new Map<string, SystemOneNeighbor[]>()
   for (let offset = 0; offset < targets.length; offset += 5) {
     await Promise.all(
       targets.slice(offset, offset + 5).map(async (target) => {

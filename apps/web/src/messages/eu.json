@@ -372,7 +372,8 @@
             "monthly": "hilabete",
             "yearly": "urte"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Iradoki kategoriak System One erabiliz kategoriatu gabeko gastuetarako"
       },
       "Destination": {
         "heading": "Nora inportatu nahi duzu <strong>{name}</strong>? ({participantCount} parte-hartzaile · {expenseCount} gastu)",
@@ -2843,7 +2844,12 @@
     "doneTitle": "Kategoriak gordeta",
     "expenseColumn": "Gastua",
     "categoryColumn": "Kategoria",
-    "confidenceColumn": "Konfiantza"
+    "confidenceColumn": "Konfiantza",
+    "systemOneMode": "System One eredua",
+    "systemOneModeDescription": "Erabili konfiguratutako System One erabaki-eredua gastu bakoitzerako, talde honetako kategorizatutako gastuak eta berrikusitako aukerak argibide gisa erabiliz. TypeSafe Jev eredu horietako bat da.",
+    "systemOneUnavailable": "System One ez dago erabilgarri zerbitzari honetan. Tokiko bat-etortzea erabilgarri dago oraindik.",
+    "systemOneConfidence": "System One-ren konfiantza: {confidence}%",
+    "systemOneOptionProbability": "System One aukeraren probabilitatea: {probability}%"
   },
   "ExpensePreview": {
     "title": "Gastuaren aurrebista",
@@ -3592,6 +3598,14 @@
           "detail": "Egiaztatu bikoiztuak eta berretsi inportazioa."
         }
       }
+    },
+    "categorize": {
+      "description": "Iradoki kategoriak System One erabiliz lehendik kategoriatu gabeko gastuetarako. Berrikusi aldaketa guztiak gorde aurretik.",
+      "steps": {
+        "choose": {
+          "detail": "Erabili tokiko bat-etortzea edo konfiguratutako System One erabaki-eredua."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4138,7 +4152,8 @@
       "valuesRecomputedTitle": "Balioak birkalkulatuta",
       "viewExpenses": "Ikusi gastuak",
       "waitDuplicate": "Itxaron bikoiztuen egiaztapena amaitu arte inportatu aurretik.",
-      "invalidRowTitle": "Baliogabeko inportazio errenkada"
+      "invalidRowTitle": "Baliogabeko inportazio errenkada",
+      "categorizeWithSystemOne": "Iradoki kategoriak System One erabiliz kategoriatu gabeko gastuetarako"
     }
   },
   "Sponsor": {

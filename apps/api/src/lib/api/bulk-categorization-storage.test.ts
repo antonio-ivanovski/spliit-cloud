@@ -4,6 +4,7 @@ import '../../test/mocks'
 import { prisma$Transaction, prismaMock } from '../../test/state'
 import {
   getCategorizationReviewPage,
+  normalizeBulkCategorizationMode,
   updateRunSuggestions,
 } from './bulk-categorization-run'
 
@@ -14,6 +15,46 @@ beforeEach(() => {
 })
 
 describe('paged categorization review', () => {
+  it('normalizes saved Jev run modes and suggestion sources', async () => {
+    expect(normalizeBulkCategorizationMode('jev')).toBe('system-one')
+    expect(normalizeBulkCategorizationMode('system-one')).toBe('system-one')
+
+    prismaMock.bulkCategorizationRun.findUniqueOrThrow.mockResolvedValue({
+      revision: 2,
+      status: 'REVIEW',
+      candidateTotal: 1,
+    } as never)
+    prismaMock.bulkCategorizationRow.findMany.mockResolvedValue([
+      {
+        expenseId: 'expense-1',
+        title: 'Groceries',
+        expenseVersion: 1,
+        expenseDate: new Date('2025-01-01T00:00:00.000Z'),
+        amount: 100,
+        currency: 'EUR',
+        categoryId: 'groceries',
+        initialCategoryId: 'groceries',
+        rerunFeedback: false,
+        source: 'jev',
+        choices: [
+          {
+            categoryId: 'groceries',
+            confidence: 0.9,
+            source: 'jev',
+          },
+        ],
+        firstPass: null,
+        secondPass: null,
+      },
+    ] as never)
+
+    const page = await getCategorizationReviewPage('run-1', undefined)
+    expect(page.rows[0]).toMatchObject({
+      source: 'system-one',
+      choices: [{ source: 'system-one' }],
+    })
+  })
+
   it('reads only a bounded page in its saved review order', async () => {
     prismaMock.bulkCategorizationRun.findUniqueOrThrow.mockResolvedValue({
       revision: 2,

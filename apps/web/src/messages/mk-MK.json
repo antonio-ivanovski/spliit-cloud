@@ -502,7 +502,8 @@
             "monthly": "месеци",
             "yearly": "години"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Предложете категории за некатегоризираните трошоци со System One"
       },
       "Done": {
         "importComplete": "Увозот е завршен",
@@ -2827,7 +2828,12 @@
     "doneTitle": "Категориите се зачувани",
     "expenseColumn": "Трошок",
     "categoryColumn": "Категорија",
-    "confidenceColumn": "Сигурност"
+    "confidenceColumn": "Сигурност",
+    "systemOneMode": "Модел System One",
+    "systemOneModeDescription": "Користете го конфигурираниот модел за одлучување System One за секој трошок, користејќи ги категоризираните трошоци во оваа група и вашите прегледани избори како насоки. TypeSafe Jev е еден таков модел.",
+    "systemOneUnavailable": "System One не е достапен на овој сервер. Локалното совпаѓање сè уште е достапно.",
+    "systemOneConfidence": "Сигурност на System One: {confidence}%",
+    "systemOneOptionProbability": "Веројатност на опцијата System One: {probability}%"
   },
   "ExpensePreview": {
     "title": "Преглед на трошок",
@@ -3573,6 +3579,14 @@
           "detail": "Проверете дупликати и потврдете го увозот."
         }
       }
+    },
+    "categorize": {
+      "description": "Предложете категории за постоечките некатегоризирани трошоци со System One. Прегледајте ја секоја промена пред зачувување.",
+      "steps": {
+        "choose": {
+          "detail": "Користете локално совпаѓање или конфигуриран модел за одлучување System One."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4119,7 +4133,8 @@
       "valuesRecomputedTitle": "Вредностите се пресметани повторно",
       "viewExpenses": "Прикажи трошоци",
       "waitDuplicate": "Почекајте да заврши проверката за дупликати пред увоз.",
-      "invalidRowTitle": "Неважечки ред за увоз"
+      "invalidRowTitle": "Неважечки ред за увоз",
+      "categorizeWithSystemOne": "Предложете категории за некатегоризираните трошоци со System One"
     }
   },
   "Sponsor": {

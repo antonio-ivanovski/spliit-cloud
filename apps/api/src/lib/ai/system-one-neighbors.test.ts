@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import type { CategoryId } from '@spliit/domain'
 
-import { selectDateNeighbors } from './jev-neighbors'
+import { selectDateNeighbors } from './system-one-neighbors'
 
 describe('date-neighbor hints', () => {
   it('takes up to three confirmed categories on each side within seven days', () => {

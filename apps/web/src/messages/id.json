@@ -363,7 +363,8 @@
             "monthly": "bulan",
             "yearly": "tahun"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Sarankan kategori untuk pengeluaran yang belum dikategorikan dengan System One"
       },
       "Destination": {
         "heading": "Di mana Anda ingin mengimpor <strong>{name}</strong>? ({participantCount} peserta · {expenseCount} pengeluaran)",
@@ -2810,7 +2811,12 @@
     "doneTitle": "Kategori tersimpan",
     "expenseColumn": "Pengeluaran",
     "categoryColumn": "Kategori",
-    "confidenceColumn": "Keyakinan"
+    "confidenceColumn": "Keyakinan",
+    "systemOneMode": "Model System One",
+    "systemOneModeDescription": "Gunakan model keputusan System One yang dikonfigurasi untuk setiap pengeluaran, dengan pengeluaran yang telah dikategorikan di grup ini dan pilihan yang telah Anda tinjau sebagai petunjuk. TypeSafe Jev adalah salah satu model tersebut.",
+    "systemOneUnavailable": "System One tidak tersedia di server ini. Pencocokan lokal tetap tersedia.",
+    "systemOneConfidence": "Tingkat keyakinan System One: {confidence}%",
+    "systemOneOptionProbability": "Probabilitas pilihan System One: {probability}%"
   },
   "ExpensePreview": {
     "title": "Pratinjau pengeluaran",
@@ -3557,6 +3563,14 @@
           "detail": "Periksa duplikat dan konfirmasi impor."
         }
       }
+    },
+    "categorize": {
+      "description": "Sarankan kategori untuk pengeluaran yang sudah ada dan belum dikategorikan dengan System One. Tinjau setiap perubahan sebelum menyimpan.",
+      "steps": {
+        "choose": {
+          "detail": "Gunakan pencocokan lokal atau model keputusan System One yang dikonfigurasi."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4093,7 +4107,8 @@
       "valuesRecomputedTitle": "Nilai dihitung ulang",
       "viewExpenses": "Lihat pengeluaran",
       "waitDuplicate": "Tunggu pemeriksaan duplikat selesai sebelum mengimpor.",
-      "invalidRowTitle": "Baris impor tidak valid"
+      "invalidRowTitle": "Baris impor tidak valid",
+      "categorizeWithSystemOne": "Sarankan kategori untuk pengeluaran yang belum dikategorikan dengan System One"
     }
   },
   "Sponsor": {

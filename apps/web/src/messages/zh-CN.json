@@ -363,7 +363,8 @@
             "monthly": "个月",
             "yearly": "年"
           }
-        }
+        },
+        "categorizeWithSystemOne": "使用 System One 为未分类支出建议类别"
       },
       "Destination": {
         "heading": "您想将 <strong>{name}</strong> 导入到哪里？（{participantCount} 名参与者 · {expenseCount} 笔支出）",
@@ -2812,7 +2813,12 @@
     "doneTitle": "分类已保存",
     "expenseColumn": "支出",
     "categoryColumn": "类别",
-    "confidenceColumn": "置信度"
+    "confidenceColumn": "置信度",
+    "systemOneMode": "System One 模型",
+    "systemOneModeDescription": "对每笔支出使用已配置的 System One 决策模型，并参考此群组中已分类的支出和你审核过的选择。TypeSafe Jev 是此类模型之一。",
+    "systemOneUnavailable": "此服务器无法使用 System One。仍可使用本地匹配。",
+    "systemOneConfidence": "System One 置信度：{confidence}%",
+    "systemOneOptionProbability": "System One 选项概率：{probability}%"
   },
   "ExpensePreview": {
     "title": "消费预览",
@@ -3558,6 +3564,14 @@
           "detail": "检查重复并确认导入。"
         }
       }
+    },
+    "categorize": {
+      "description": "使用 System One 为现有未分类支出建议类别。保存前请检查每项更改。",
+      "steps": {
+        "choose": {
+          "detail": "使用本地匹配或已配置的 System One 决策模型。"
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4094,7 +4108,8 @@
       "valuesRecomputedTitle": "值已重新计算",
       "viewExpenses": "查看支出",
       "waitDuplicate": "请等待重复检查完成后再导入。",
-      "invalidRowTitle": "无效的导入行"
+      "invalidRowTitle": "无效的导入行",
+      "categorizeWithSystemOne": "使用 System One 为未分类支出建议类别"
     }
   },
   "Sponsor": {

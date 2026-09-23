@@ -7,14 +7,14 @@ import {
   type CategoryId,
 } from '@spliit/domain'
 
-export type JevCategoryAnswer = {
+export type SystemOneCategoryAnswer = {
   categoryId: CategoryId
   confidence: number
   probabilities: readonly { categoryId: CategoryId; probability: number }[]
 }
 
-export function adaptJevCategory(
-  answer: JevCategoryAnswer | null | undefined,
+export function adaptSystemOneCategory(
+  answer: SystemOneCategoryAnswer | null | undefined,
   floor: number,
   rejected: ReadonlySet<CategoryId> = new Set(),
 ): CategorizerResult {
@@ -23,7 +23,7 @@ export function adaptJevCategory(
     id && !rejected.has(id)
       ? {
           categoryId: id,
-          source: 'jev',
+          source: 'system-one',
           evidence: {
             kind: 'model-confidence',
             value: answer!.confidence,
@@ -39,7 +39,7 @@ export function adaptJevCategory(
         return categoryId && !rejected.has(categoryId)
           ? {
               categoryId,
-              source: 'jev',
+              source: 'system-one',
               evidence: {
                 kind: 'option-probability',
                 value: row.probability,
@@ -48,7 +48,7 @@ export function adaptJevCategory(
           : null
       })
       .filter((row): row is CategorizerChoice => row !== null) ?? []
-  return interpretCategorizerResult('jev', primary, alternatives)
+  return interpretCategorizerResult('system-one', primary, alternatives)
 }
 
 export function adaptLlmCategory(

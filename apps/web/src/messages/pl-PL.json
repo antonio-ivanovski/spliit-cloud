@@ -378,7 +378,8 @@
             "monthly": "miesiące",
             "yearly": "lata"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Zasugeruj kategorie nieskategoryzowanych wydatków za pomocą System One"
       },
       "Destination": {
         "heading": "Gdzie chcesz zaimportować <strong>{name}</strong>? ({participantCount} uczestników · {expenseCount} wydatków)",
@@ -2863,7 +2864,12 @@
     "doneTitle": "Kategorie zapisane",
     "expenseColumn": "Wydatek",
     "categoryColumn": "Kategoria",
-    "confidenceColumn": "Pewność"
+    "confidenceColumn": "Pewność",
+    "systemOneMode": "Model System One",
+    "systemOneModeDescription": "Użyj skonfigurowanego modelu decyzyjnego System One dla każdego wydatku, korzystając jako podpowiedzi ze skategoryzowanych wydatków tej grupy i swoich sprawdzonych wyborów. TypeSafe Jev to jeden z takich modeli.",
+    "systemOneUnavailable": "System One jest niedostępny na tym serwerze. Dopasowanie lokalne jest nadal dostępne.",
+    "systemOneConfidence": "Pewność System One: {confidence}%",
+    "systemOneOptionProbability": "Prawdopodobieństwo opcji System One: {probability}%"
   },
   "ExpensePreview": {
     "title": "Podgląd wydatku",
@@ -3611,6 +3617,14 @@
           "detail": "Sprawdź duplikaty i potwierdź import."
         }
       }
+    },
+    "categorize": {
+      "description": "Zasugeruj kategorie istniejących nieskategoryzowanych wydatków za pomocą System One. Przejrzyj każdą zmianę przed zapisaniem.",
+      "steps": {
+        "choose": {
+          "detail": "Użyj dopasowania lokalnego lub skonfigurowanego modelu decyzyjnego System One."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4162,7 +4176,8 @@
       "applyToExpenses_few": "Zastosuj do {count} wydatków",
       "importExpenses_few": "Importuj {count} wydatki",
       "importedCount_few": "Zaimportowano {count} wydatki",
-      "matchingExpensesNotice_few": "{count} wydatki mają pasujące lub podobne tytuły."
+      "matchingExpensesNotice_few": "{count} wydatki mają pasujące lub podobne tytuły.",
+      "categorizeWithSystemOne": "Zasugeruj kategorie nieskategoryzowanych wydatków za pomocą System One"
     }
   },
   "Sponsor": {

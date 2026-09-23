@@ -34,7 +34,7 @@ export type CategorizeRow = {
   choices: Array<{
     categoryId: CategoryId
     confidence: number | null
-    source: 'local' | 'jev' | 'manual'
+    source: 'local' | 'system-one' | 'manual'
     matchScore?: number
     floor?: number
     evidenceKind?:
@@ -84,8 +84,8 @@ export function estimateCategorizeRowHeight(
     : 180 + (titleLines - 1) * 20 + (alternatives ? 48 : 0)
 }
 
-function confidenceBadgeClass(band: 'high' | 'medium' | 'low' | 'jev') {
-  if (band === 'jev')
+function confidenceBadgeClass(band: 'high' | 'medium' | 'low' | 'system-one') {
+  if (band === 'system-one')
     return 'border-sky-300 bg-sky-50 text-sky-900 dark:border-sky-700 dark:bg-sky-950 dark:text-sky-100'
   if (band === 'high')
     return 'border-emerald-300 bg-emerald-50 text-emerald-900 dark:border-emerald-700 dark:bg-emerald-950 dark:text-emerald-100'
@@ -100,7 +100,10 @@ function chipClass(
 ) {
   if (choice.source === 'manual')
     return 'border-violet-300 bg-violet-50 text-violet-900 hover:border-violet-400 hover:bg-violet-100 hover:text-violet-950 focus-visible:ring-violet-500 dark:border-violet-700 dark:bg-violet-950 dark:text-violet-100 dark:hover:bg-violet-900 dark:hover:text-violet-50'
-  if (choice.source === 'jev' && choice.evidenceKind === 'option-probability')
+  if (
+    choice.source === 'system-one' &&
+    choice.evidenceKind === 'option-probability'
+  )
     return 'border-sky-300 bg-sky-50 text-sky-900 hover:border-sky-400 hover:bg-sky-100 hover:text-sky-950 focus-visible:ring-sky-500 dark:border-sky-700 dark:bg-sky-950 dark:text-sky-100 dark:hover:bg-sky-900 dark:hover:text-sky-50'
   const band = categoryConfidenceBand(
     choice.source === 'local' ? choice.matchScore : choice.confidence,
@@ -134,15 +137,15 @@ function CategoryPicker({
   for (const choice of row.choices) {
     if (choice.categoryId === DEFAULT_CATEGORY_ID || choice.source === 'manual')
       continue
-    if (choice.source === 'jev' && choice.confidence !== null) {
+    if (choice.source === 'system-one' && choice.confidence !== null) {
       const confidence = Math.round(choice.confidence * 100)
       categoryBadges.set(choice.categoryId, {
         text: `${confidence}%`,
         accessibleDescription:
           choice.evidenceKind === 'option-probability'
-            ? t('jevOptionProbability', { probability: confidence })
-            : t('jevConfidence', { confidence }),
-        className: confidenceBadgeClass('jev'),
+            ? t('systemOneOptionProbability', { probability: confidence })
+            : t('systemOneConfidence', { confidence }),
+        className: confidenceBadgeClass('system-one'),
       })
       continue
     }
@@ -227,17 +230,17 @@ function QuickChoices({
             <span className="max-w-40 min-w-0 truncate text-start">
               {categoryLabel(tCategories, categoryId)}
             </span>
-            {choice.source === 'jev' && choice.confidence !== null && (
+            {choice.source === 'system-one' && choice.confidence !== null && (
               <>
                 <span className="opacity-70" aria-hidden>
                   {Math.round(choice.confidence * 100)}%
                 </span>
                 <span className="sr-only">
                   {choice.evidenceKind === 'option-probability'
-                    ? t('jevOptionProbability', {
+                    ? t('systemOneOptionProbability', {
                         probability: Math.round(choice.confidence * 100),
                       })
-                    : t('jevConfidence', {
+                    : t('systemOneConfidence', {
                         confidence: Math.round(choice.confidence * 100),
                       })}
                 </span>

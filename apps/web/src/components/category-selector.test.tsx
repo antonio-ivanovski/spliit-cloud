@@ -52,7 +52,7 @@ describe('CategorySelector', () => {
         'groceries',
         {
           text: '87%',
-          accessibleDescription: 'Jev confidence: 87%',
+          accessibleDescription: 'System One confidence: 87%',
         },
       ],
       [
@@ -76,7 +76,7 @@ describe('CategorySelector', () => {
 
     const trigger = screen.getByRole('combobox')
     expect(trigger).toHaveTextContent('87%')
-    expect(trigger).toHaveAccessibleDescription('Jev confidence: 87%')
+    expect(trigger).toHaveAccessibleDescription('System One confidence: 87%')
 
     await openSelector()
     const groceries = await screen.findByRole('option', { name: 'Groceries' })
@@ -84,7 +84,7 @@ describe('CategorySelector', () => {
     const taxi = screen.getByRole('option', { name: 'Taxi' })
 
     expect(within(groceries).getByText('87%')).toBeInTheDocument()
-    expect(groceries).toHaveAccessibleDescription('Jev confidence: 87%')
+    expect(groceries).toHaveAccessibleDescription('System One confidence: 87%')
     expect(within(rent).getAllByText('High match')).toHaveLength(2)
     expect(rent).toHaveAccessibleDescription('High match')
     expect(within(taxi).queryByText(/%|match/i)).not.toBeInTheDocument()

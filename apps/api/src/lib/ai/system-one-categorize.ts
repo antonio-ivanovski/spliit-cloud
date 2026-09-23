@@ -10,7 +10,7 @@ import type { GroupContext, RecentExpense } from './context'
 import { resolveLanguageName } from './prompt'
 import { timeoutSecondsToMs } from './timeout'
 
-/** Default TypeSafe evaluation endpoint (Jev is a System One model). */
+/** TypeSafe's System One endpoint (Jev is its flagship System One model). */
 export const DEFAULT_SYSTEM_ONE_API_URL = 'https://api.typesafe.ai/v1/systemone'
 
 /** Same abuse bound as the LLM fallback (~10 tokens). */
@@ -90,7 +90,10 @@ export function systemOneCategoryOptions(): {
   }))
 }
 
-/** Shared Jev request builder and allowlist validator for one or many choices. */
+/**
+ * Shared System One request builder and allowlist validator for one or many
+ * choices.
+ */
 export async function requestSystemOneCategories(args: {
   state: Record<string, unknown>
   questions: Record<string, { instructions: string | Record<string, unknown> }>

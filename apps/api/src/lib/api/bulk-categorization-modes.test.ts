@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const jev = vi.hoisted(() => vi.fn())
-vi.mock('../ai/batch-categorize', () => ({ categorizeExpensesWithJev: jev }))
+const systemOne = vi.hoisted(() => vi.fn())
+vi.mock('../ai/batch-categorize', () => ({
+  categorizeExpensesWithSystemOne: systemOne,
+}))
 vi.mock('../ai/context', () => ({
   getRecentExpenseContext: vi.fn(async () => ({ expenses: [] })),
 }))
@@ -21,7 +23,7 @@ const candidate: Candidate = {
   currency: 'USD',
 }
 
-function run(mode: 'local' | 'jev'): RunData {
+function run(mode: 'local' | 'system-one'): RunData {
   return {
     id: 'run-1',
     groupId: 'group-1',
@@ -42,12 +44,12 @@ function run(mode: 'local' | 'jev'): RunData {
   }
 }
 
-beforeEach(() => jev.mockReset())
+beforeEach(() => systemOne.mockReset())
 
 describe('bulk categorization modes', () => {
   it('uses only local ranking and stores scored primary and alternatives', async () => {
     const [suggestion] = await suggestRows(run('local'), [candidate], [])
-    expect(jev).not.toHaveBeenCalled()
+    expect(systemOne).not.toHaveBeenCalled()
     expect(suggestion?.source).toBe('local')
     expect(suggestion?.choices[0]).toMatchObject({
       categoryId: suggestion?.categoryId,
@@ -62,8 +64,8 @@ describe('bulk categorization modes', () => {
     ).toBe(true)
   })
 
-  it('uses Jev for every candidate without a local override', async () => {
-    jev.mockResolvedValue(
+  it('uses System One for every candidate without a local override', async () => {
+    systemOne.mockResolvedValue(
       new Map([
         [
           'expense-1',
@@ -75,23 +77,23 @@ describe('bulk categorization modes', () => {
         ],
       ]),
     )
-    const [suggestion] = await suggestRows(run('jev'), [candidate], [])
-    expect(jev).toHaveBeenCalledWith(
+    const [suggestion] = await suggestRows(run('system-one'), [candidate], [])
+    expect(systemOne).toHaveBeenCalledWith(
       [{ id: 'expense-1', title: 'nike', expenseDate: candidate.expenseDate }],
       expect.any(Object),
     )
     expect(suggestion?.categoryId).toBe('groceries')
-    expect(suggestion?.source).toBe('jev')
+    expect(suggestion?.source).toBe('system-one')
     expect(suggestion?.choices[0]).toMatchObject({
       categoryId: 'groceries',
       confidence: 0.9,
-      source: 'jev',
+      source: 'system-one',
       evidenceKind: 'model-confidence',
     })
   })
 
-  it('leaves General selected when Jev gives a strong runner-up', async () => {
-    jev.mockResolvedValue(
+  it('leaves General selected when System One gives a strong runner-up', async () => {
+    systemOne.mockResolvedValue(
       new Map([
         [
           'expense-1',
@@ -103,7 +105,7 @@ describe('bulk categorization modes', () => {
         ],
       ]),
     )
-    const [suggestion] = await suggestRows(run('jev'), [candidate], [])
+    const [suggestion] = await suggestRows(run('system-one'), [candidate], [])
     expect(suggestion?.categoryId).toBe('general')
     expect(suggestion?.choices[0]?.categoryId).toBe('groceries')
     expect(suggestion?.choices[0]?.evidenceKind).toBe('option-probability')

@@ -91,7 +91,7 @@ export const bulkCategorizeReviewPageProcedure = protectedProcedure
 export const bulkCategorizeStartProcedure = protectedProcedure
   .input(
     groupInput.extend({
-      mode: z.enum(['local', 'jev']),
+      mode: z.enum(['local', 'system-one']),
       locale: z.string().optional(),
     }),
   )

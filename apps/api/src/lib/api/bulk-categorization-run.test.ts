@@ -10,9 +10,9 @@ import {
   getRerunCandidates,
   getRerunCandidateCounts,
   getRerunTargetCandidates,
-  getAutomaticJevTargets,
-  mergeAutomaticJevSuggestions,
-  compareJevPasses,
+  getAutomaticSystemOneTargets,
+  mergeAutomaticSystemOneSuggestions,
+  compareSystemOnePasses,
   hasUnsharedFinalReviewCorrection,
   mergeRerunSuggestions,
   nextCalibrationPhase,
@@ -279,7 +279,7 @@ describe('rerun corrections', () => {
         ...candidates[3]!,
         categoryId: 'food-and-drink' as const,
         initialCategoryId: DEFAULT_CATEGORY_ID,
-        source: 'jev' as const,
+        source: 'system-one' as const,
         choices: [],
       },
     ] satisfies Suggestion[]
@@ -312,20 +312,20 @@ describe('rerun corrections', () => {
         ...candidates[0]!,
         categoryId: 'groceries',
         initialCategoryId: DEFAULT_CATEGORY_ID,
-        source: 'jev',
+        source: 'system-one',
         choices: [],
       },
       {
         ...candidates[1]!,
         categoryId: 'taxi',
         initialCategoryId: 'taxi',
-        source: 'jev',
+        source: 'system-one',
         choices: [
           {
             categoryId: 'taxi',
             confidence: 0.6,
             floor: 0.5,
-            source: 'jev',
+            source: 'system-one',
           },
         ],
       },
@@ -444,12 +444,12 @@ describe('rerun corrections', () => {
   })
 })
 
-describe('automatic Jev refinement', () => {
+describe('automatic System One refinement', () => {
   const base = candidates.slice(0, 3).map((row, index): Suggestion => ({
     ...row,
     categoryId: index === 0 ? DEFAULT_CATEGORY_ID : 'taxi',
     initialCategoryId: index === 0 ? DEFAULT_CATEGORY_ID : 'taxi',
-    source: 'jev',
+    source: 'system-one',
     choices:
       index === 0
         ? []
@@ -458,13 +458,13 @@ describe('automatic Jev refinement', () => {
               categoryId: 'taxi',
               confidence: index === 1 ? 0.55 : 0.95,
               floor: 0.5,
-              source: 'jev',
+              source: 'system-one',
             },
           ],
   }))
 
-  it('selects General and low-band Jev rows only', () => {
-    expect(getAutomaticJevTargets(base).map((row) => row.id)).toEqual([
+  it('selects General and low-band System One rows only', () => {
+    expect(getAutomaticSystemOneTargets(base).map((row) => row.id)).toEqual([
       'expense-0',
       'expense-1',
     ])
@@ -476,16 +476,20 @@ describe('automatic Jev refinement', () => {
         ...base[0]!,
         categoryId: 'groceries',
         initialCategoryId: 'groceries',
-        choices: [{ categoryId: 'groceries', confidence: 0.82, source: 'jev' }],
+        choices: [
+          { categoryId: 'groceries', confidence: 0.82, source: 'system-one' },
+        ],
       },
       {
         ...base[1]!,
         categoryId: 'groceries',
         initialCategoryId: 'groceries',
-        choices: [{ categoryId: 'groceries', confidence: 0.9, source: 'jev' }],
+        choices: [
+          { categoryId: 'groceries', confidence: 0.9, source: 'system-one' },
+        ],
       },
     ]
-    const merged = mergeAutomaticJevSuggestions(base, additions)
+    const merged = mergeAutomaticSystemOneSuggestions(base, additions)
     expect(merged[0]).toMatchObject({
       categoryId: 'groceries',
       initialCategoryId: 'groceries',
@@ -497,15 +501,17 @@ describe('automatic Jev refinement', () => {
       'groceries',
     )
     expect(merged[2]).toBe(base[2])
-    expect(compareJevPasses(merged)).toMatchObject({
+    expect(compareSystemOnePasses(merged)).toMatchObject({
       reviewed: 2,
       firstAccepted: 1,
       secondAccepted: 1,
     })
-    const weak = mergeAutomaticJevSuggestions(base, [
+    const weak = mergeAutomaticSystemOneSuggestions(base, [
       {
         ...additions[0]!,
-        choices: [{ categoryId: 'groceries', confidence: 0.7, source: 'jev' }],
+        choices: [
+          { categoryId: 'groceries', confidence: 0.7, source: 'system-one' },
+        ],
       },
     ])
     expect(weak[0]?.categoryId).toBe('general')

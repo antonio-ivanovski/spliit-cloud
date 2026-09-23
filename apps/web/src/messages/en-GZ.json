@@ -833,7 +833,12 @@
       "medium": "medium confidence",
       "low": "low confidence"
     },
-    "confidenceColumn": "confidence check"
+    "confidenceColumn": "confidence check",
+    "systemOneMode": "System One decision model",
+    "systemOneModeDescription": "use the configured System One decision model for every expense. it uses this group’s categorized expenses and your reviewed choices as hints. TypeSafe Jev is one such model.",
+    "systemOneUnavailable": "System One isn’t available on this server right now. local matching still works.",
+    "systemOneConfidence": "System One confidence score: {confidence}%",
+    "systemOneOptionProbability": "System One option chance: {probability}%"
   },
   "Categories": {
     "Entertainment": {
@@ -2200,7 +2205,8 @@
             "monthly": "months, fr",
             "yearly": "years, fr"
           }
-        }
+        },
+        "categorizeWithSystemOne": "suggest categories for uncategorized expenses with System One"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}, obviously",
@@ -3567,6 +3573,14 @@
           "detail": "sniff out dupes and lock in the import."
         }
       }
+    },
+    "categorize": {
+      "description": "suggest categories for existing uncategorized expenses with System One. review every change before saving.",
+      "steps": {
+        "choose": {
+          "detail": "use local matching or the configured System One decision model."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4108,7 +4122,8 @@
       "valuesRecomputedTitle": "values recomputed",
       "viewExpenses": "check the expenses",
       "waitDuplicate": "hold up for the duplicate check before importing.",
-      "invalidRowTitle": "that import row is off"
+      "invalidRowTitle": "that import row is off",
+      "categorizeWithSystemOne": "suggest categories for uncategorized expenses with System One"
     }
   },
   "Sponsor": {

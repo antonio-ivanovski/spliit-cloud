@@ -373,7 +373,8 @@
             "monthly": "luni",
             "yearly": "ani"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Sugerează categorii pentru cheltuielile necategorizate folosind System One"
       },
       "Destination": {
         "heading": "Unde doriți să importați <strong>{name}</strong>? ({participantCount} participanți · {expenseCount} cheltuieli)",
@@ -2845,7 +2846,12 @@
     "doneTitle": "Categorii salvate",
     "expenseColumn": "Cheltuială",
     "categoryColumn": "Categorie",
-    "confidenceColumn": "Încredere"
+    "confidenceColumn": "Încredere",
+    "systemOneMode": "Modelul System One",
+    "systemOneModeDescription": "Folosește modelul de decizie System One configurat pentru fiecare cheltuială, folosind ca indicii cheltuielile categorizate din acest grup și opțiunile tale verificate. TypeSafe Jev este un astfel de model.",
+    "systemOneUnavailable": "System One nu este disponibil pe acest server. Potrivirea locală este în continuare disponibilă.",
+    "systemOneConfidence": "Nivelul de încredere System One: {confidence}%",
+    "systemOneOptionProbability": "Probabilitatea opțiunii System One: {probability}%"
   },
   "ExpensePreview": {
     "title": "Previzualizarea cheltuielii",
@@ -3594,6 +3600,14 @@
           "detail": "Verifică duplicatele și confirmă importul."
         }
       }
+    },
+    "categorize": {
+      "description": "Sugerează categorii pentru cheltuielile existente necategorizate folosind System One. Verifică fiecare modificare înainte de salvare.",
+      "steps": {
+        "choose": {
+          "detail": "Folosește potrivirea locală sau modelul de decizie System One configurat."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4145,7 +4159,8 @@
       "applyToExpenses_few": "Aplică la {count} cheltuieli",
       "importExpenses_few": "Importă {count} cheltuieli",
       "importedCount_few": "{count} cheltuieli importate",
-      "matchingExpensesNotice_few": "{count} cheltuieli au titluri potrivite sau similare."
+      "matchingExpensesNotice_few": "{count} cheltuieli au titluri potrivite sau similare.",
+      "categorizeWithSystemOne": "Sugerează categorii pentru cheltuielile necategorizate folosind System One"
     }
   },
   "Sponsor": {

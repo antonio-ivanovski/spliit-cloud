@@ -363,7 +363,8 @@
             "monthly": "か月",
             "yearly": "年"
           }
-        }
+        },
+        "categorizeWithSystemOne": "System One でカテゴリ未設定の支出にカテゴリを提案"
       },
       "Destination": {
         "heading": "<strong>{name}</strong> をどこにインポートしますか？（{participantCount} 名の参加者 · {expenseCount} 件の支出）",
@@ -2812,7 +2813,12 @@
     "doneTitle": "カテゴリを保存しました",
     "expenseColumn": "支出",
     "categoryColumn": "カテゴリ",
-    "confidenceColumn": "確信度"
+    "confidenceColumn": "確信度",
+    "systemOneMode": "System One モデル",
+    "systemOneModeDescription": "すべての支出に、設定された System One の判定モデルを使用します。このグループでカテゴリ分類済みの支出と、確認済みの選択内容をヒントとして利用します。TypeSafe Jev はそのようなモデルの一つです。",
+    "systemOneUnavailable": "このサーバーでは System One を利用できません。ローカルマッチングは引き続き利用できます。",
+    "systemOneConfidence": "System One の信頼度：{confidence}%",
+    "systemOneOptionProbability": "System One の候補確率：{probability}%"
   },
   "ExpensePreview": {
     "title": "支出のプレビュー",
@@ -3558,6 +3564,14 @@
           "detail": "重複を確認し、インポートを確定します。"
         }
       }
+    },
+    "categorize": {
+      "description": "既存のカテゴリ未設定の支出について System One がカテゴリを提案します。保存する前にすべての変更を確認してください。",
+      "steps": {
+        "choose": {
+          "detail": "ローカルマッチングまたは設定された System One の判定モデルを使用します。"
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4094,7 +4108,8 @@
       "valuesRecomputedTitle": "値を再計算しました",
       "viewExpenses": "支出を表示",
       "waitDuplicate": "インポート前に重複チェックの完了をお待ちください。",
-      "invalidRowTitle": "無効なインポート行"
+      "invalidRowTitle": "無効なインポート行",
+      "categorizeWithSystemOne": "System One でカテゴリ未設定の支出にカテゴリを提案"
     }
   },
   "Sponsor": {

@@ -11,10 +11,10 @@ const documents = createCategorySearchDocumentsForLocale('en-US')
 
 describe('shared categorization interpretation', () => {
   it('never promotes an alternative when the primary abstains', () => {
-    const result = interpretCategorizerResult('jev', null, [
+    const result = interpretCategorizerResult('system-one', null, [
       {
         categoryId: 'groceries',
-        source: 'jev',
+        source: 'system-one',
         evidence: { kind: 'option-probability', value: 0.9 },
       },
     ])
@@ -34,20 +34,20 @@ describe('shared categorization interpretation', () => {
   })
 
   it('filters General and settlement from primary and alternatives', () => {
-    const result = interpretCategorizerResult('jev', null, [
+    const result = interpretCategorizerResult('system-one', null, [
       {
         categoryId: 'general',
-        source: 'jev',
+        source: 'system-one',
         evidence: { kind: 'option-probability', value: 0.9 },
       },
       {
         categoryId: 'settlement',
-        source: 'jev',
+        source: 'system-one',
         evidence: { kind: 'option-probability', value: 0.8 },
       },
       {
         categoryId: 'taxi',
-        source: 'jev',
+        source: 'system-one',
         evidence: { kind: 'option-probability', value: 0.7 },
       },
     ])
