@@ -39,5 +39,7 @@ who is affected, and the exact migration steps.
 - Prevented a Jev runner-up from being automatically selected when its primary category was General or below the confidence floor (`TBD` by @handle)
 - Labeled Jev runner-up probabilities separately from primary confidence in bulk review (`TBD` by @handle)
 - Corrected the bulk review's initial desktop row heights and replaced misleading full-looking loading bars with calibration spinners and accurate progress bars (`TBD` by @handle)
+- Kept bulk categorization progress continuous across calibration, Jev refinement, and reruns, counting confirmed or medium/high matches while General and low-strength results remain uncounted (`TBD` by @handle)
+- Added a confirmation before discarding a categorization run (`TBD` by @handle)
 
 **Full Changelog**: TBD

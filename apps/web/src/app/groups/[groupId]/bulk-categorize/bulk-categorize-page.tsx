@@ -18,6 +18,15 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Progress } from '@/components/ui/progress'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogClose,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog'
 import { WizardStepHeader } from '@/components/wizard'
 import { useLocale } from '@/i18n/react'
 import { cn } from '@/lib/utils'
@@ -25,6 +34,7 @@ import { trpc } from '@/trpc/client'
 import { DEFAULT_CATEGORY_ID, type CategoryId } from '@spliit/domain'
 
 import { BulkCategorizePagedReview } from './bulk-categorize-paged-review'
+import { getBulkCategorizationProgress } from './bulk-categorize-progress'
 import { BulkCategorizeTable } from './bulk-categorize-table'
 
 export type BulkCategorizePageProps = {
@@ -45,6 +55,7 @@ export function BulkCategorizePage({
   const [mode, setMode] = useState<'local' | 'jev'>('local')
   const [error, setError] = useState<string | null>(null)
   const [editing, setEditing] = useState(false)
+  const [discardDialogOpen, setDiscardDialogOpen] = useState(false)
   const [reviewKey, setReviewKey] = useState(0)
   const [filter, setFilter] = useState<'all' | 'general'>('all')
   const [pendingStage, setPendingStage] = useState<
@@ -116,19 +127,33 @@ export function BulkCategorizePage({
   async function act(
     action: () => Promise<unknown>,
     stage?: 'calibration' | 'next' | 'rerun' | 'retry',
-  ) {
+  ): Promise<boolean> {
     setError(null)
     if (stage) setPendingStage(stage)
     try {
       await action()
       await status.refetch()
+      return true
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : String(cause))
       await status.refetch()
       setReviewKey((value) => value + 1)
+      return false
     } finally {
       setPendingStage(null)
     }
+  }
+
+  async function confirmDiscardRun() {
+    if (!run) return
+    const discarded = await act(() =>
+      discard.mutateAsync({
+        groupId,
+        runId: run.id,
+        revision: run.revision,
+      }),
+    )
+    if (discarded) setDiscardDialogOpen(false)
   }
 
   async function saveReview(
@@ -171,18 +196,12 @@ export function BulkCategorizePage({
       'CALIBRATING',
     ].includes(run.status)
   const showProgress = pendingStage !== null || isRunning
-  const progress =
-    run && run.total > 0
-      ? Math.max(
-          0,
-          Math.min(100, Math.round((100 * run.processed) / run.total)),
-        )
-      : 0
+  const progress = run ? getBulkCategorizationProgress(run) : null
   const hasNumericProgress =
     !pendingStage &&
     run &&
-    run.total > 0 &&
-    ['PROCESSING', 'RERUNNING'].includes(run.status)
+    progress !== null &&
+    ['QUEUED', 'PROCESSING', 'QUEUED_RERUN', 'RERUNNING'].includes(run.status)
   const remaining = count.data ?? 0
   const calibration = run?.calibration
   const lastRound = calibration?.metrics.at(-1)
@@ -318,13 +337,19 @@ export function BulkCategorizePage({
                 <div className="flex justify-between text-sm">
                   <span>
                     {t('progressCount', {
-                      processed: run.processed,
-                      total: run.total,
+                      categorized: progress.categorized,
+                      total: progress.total,
                     })}
                   </span>
-                  <span>{progress}%</span>
+                  <span>{progress.percentage}%</span>
                 </div>
-                <Progress value={progress} aria-label={t('progressTitle')} />
+                <Progress
+                  value={progress.percentage}
+                  aria-label={t('progressTitle')}
+                />
+                <p className="text-xs text-muted-foreground">
+                  {t('progressCountDescription')}
+                </p>
               </>
             ) : (
               <output className="text-sm text-muted-foreground">
@@ -337,15 +362,7 @@ export function BulkCategorizePage({
               <Button
                 variant="outline"
                 disabled={pending}
-                onClick={() =>
-                  void act(() =>
-                    discard.mutateAsync({
-                      groupId,
-                      runId: run.id,
-                      revision: run.revision,
-                    }),
-                  )
-                }
+                onClick={() => setDiscardDialogOpen(true)}
               >
                 {t('discardRun')}
               </Button>
@@ -426,15 +443,7 @@ export function BulkCategorizePage({
             <Button
               variant="outline"
               disabled={pending}
-              onClick={() =>
-                void act(() =>
-                  discard.mutateAsync({
-                    groupId,
-                    runId: run.id,
-                    revision: run.revision,
-                  }),
-                )
-              }
+              onClick={() => setDiscardDialogOpen(true)}
             >
               {t('discardRun')}
             </Button>
@@ -484,15 +493,7 @@ export function BulkCategorizePage({
             <Button
               variant="outline"
               disabled={pending}
-              onClick={() =>
-                void act(() =>
-                  discard.mutateAsync({
-                    groupId,
-                    runId: run.id,
-                    revision: run.revision,
-                  }),
-                )
-              }
+              onClick={() => setDiscardDialogOpen(true)}
             >
               {t('discardRun')}
             </Button>
@@ -556,15 +557,7 @@ export function BulkCategorizePage({
               <Button
                 variant="ghost"
                 disabled={pending}
-                onClick={() =>
-                  void act(() =>
-                    discard.mutateAsync({
-                      groupId,
-                      runId: run.id,
-                      revision: run.revision,
-                    }),
-                  )
-                }
+                onClick={() => setDiscardDialogOpen(true)}
               >
                 {t('discardRun')}
               </Button>
@@ -723,6 +716,43 @@ export function BulkCategorizePage({
           {error}
         </p>
       )}
+      <ResponsiveDialog
+        open={discardDialogOpen}
+        onOpenChange={(open) => {
+          if (!pending) setDiscardDialogOpen(open)
+        }}
+      >
+        <ResponsiveDialogContent>
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle>
+              {t('discardConfirmationTitle')}
+            </ResponsiveDialogTitle>
+            <ResponsiveDialogDescription>
+              {t('discardConfirmationDescription')}
+            </ResponsiveDialogDescription>
+          </ResponsiveDialogHeader>
+          <ResponsiveDialogFooter className="flex flex-col gap-2">
+            <Button
+              type="button"
+              variant="destructive"
+              disabled={pending}
+              onClick={() => void confirmDiscardRun()}
+            >
+              {discard.isPending && (
+                <Loader2 className="me-2 size-4 animate-spin" />
+              )}
+              {t('discardRun')}
+            </Button>
+            <ResponsiveDialogClose
+              render={
+                <Button variant="secondary" disabled={pending}>
+                  {t('discardConfirmationCancel')}
+                </Button>
+              }
+            />
+          </ResponsiveDialogFooter>
+        </ResponsiveDialogContent>
+      </ResponsiveDialog>
     </div>
   )
 }

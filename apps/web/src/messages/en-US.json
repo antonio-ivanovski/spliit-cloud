@@ -3029,7 +3029,7 @@
     "noCategory": "Leave uncategorized",
     "progressTitle": "Categorizing expenses",
     "progressDescription": "You can leave this page and return later. Your progress is saved.",
-    "progressCount": "{processed} of {total} expenses processed",
+    "progressCount": "Categorized {categorized} of {total} expenses",
     "applyProgressTitle": "Saving categories",
     "reviewTitle": "Review suggestions",
     "reviewSummary": "{suggested} suggestions from {total} uncategorized expenses",
@@ -3107,7 +3107,11 @@
     "preparingNextStage": "Preparing the next step",
     "rerunProgressTitle": "Updating suggestions",
     "progressPreparing": "Preparing expenses…",
-    "noGeneralRows": "No expenses are left in General in this review."
+    "noGeneralRows": "No expenses are left in General in this review.",
+    "discardConfirmationTitle": "Discard this categorization run?",
+    "discardConfirmationDescription": "This removes the run, its suggestions, and any choices you have made. No expense categories will be changed.",
+    "discardConfirmationCancel": "Keep run",
+    "progressCountDescription": "Only confirmed categories and medium or high matches count; General and low-strength matches do not."
   },
   "ExpensePreview": {
     "title": "Expense preview",

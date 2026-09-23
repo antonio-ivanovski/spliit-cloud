@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { render, screen, userEvent } from '@/test/test-utils'
+import { render, screen, userEvent, within } from '@/test/test-utils'
 
 const mocks = vi.hoisted(() => ({
   run: null as unknown,
@@ -220,57 +220,140 @@ describe('BulkCategorizePage completion state', () => {
   })
 
   it.each([
-    { status: 'QUEUED', processed: 0, total: 20 },
-    { status: 'QUEUED_RERUN', processed: 0, total: 8 },
+    {
+      status: 'QUEUED',
+      currentMatches: 0,
+      uncertain: 0,
+      width: '0%',
+    },
+    {
+      status: 'QUEUED_RERUN',
+      currentMatches: 12,
+      uncertain: 0,
+      width: '60%',
+    },
   ])(
-    'uses a spinner while $status is queued',
-    ({ status, processed, total }) => {
+    'shows the current progress baseline while $status is queued',
+    ({ status, currentMatches, uncertain, width }) => {
       mocks.run = {
         id: 'run-progress',
         status,
         mode: 'jev',
-        processed,
-        total,
+        currentMatches,
+        rerunCandidates: { general: 0, uncertain },
         candidateTotal: 20,
       }
 
       render(<BulkCategorizePage groupId="group-1" groupName="Trip" />)
 
-      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
-      expect(screen.getByRole('status')).toHaveTextContent('Preparing')
+      expect(screen.getByRole('progressbar')).toBeInTheDocument()
+      expect(
+        screen
+          .getByRole('progressbar')
+          .querySelector('[data-slot="progress-indicator"]'),
+      ).toHaveStyle({ width })
     },
   )
 
   it.each([
-    { status: 'PROCESSING', processed: 0, total: 20, width: '0%' },
-    { status: 'PROCESSING', processed: 5, total: 20, width: '25%' },
-    { status: 'RERUNNING', processed: 6, total: 8, width: '75%' },
+    { status: 'PROCESSING', currentMatches: 0, uncertain: 0, percent: 0 },
+    { status: 'PROCESSING', currentMatches: 5, uncertain: 0, percent: 25 },
+    { status: 'RERUNNING', currentMatches: 20, uncertain: 2, percent: 90 },
   ])(
-    'shows accurate $status progress at $processed of $total',
-    ({ status, processed, total, width }) => {
+    'shows accurate $status progress at $percent percent',
+    ({ status, currentMatches, uncertain, percent }) => {
       mocks.run = {
         id: 'run-progress',
         status,
         mode: 'jev',
-        processed,
-        total,
+        currentMatches,
+        rerunCandidates: { general: 0, uncertain },
         candidateTotal: 20,
       }
 
       render(<BulkCategorizePage groupId="group-1" groupName="Trip" />)
 
       const progressbar = screen.getByRole('progressbar')
-      expect(progressbar).toHaveAttribute(
-        'aria-valuenow',
-        String((100 * processed) / total),
-      )
+      expect(progressbar).toHaveAttribute('aria-valuenow', String(percent))
+      expect(screen.getByText(`${percent}%`)).toBeInTheDocument()
       expect(
         progressbar.querySelector('[data-slot="progress-indicator"]'),
       ).toHaveStyle({
-        width,
+        width: `${percent}%`,
       })
     },
   )
+
+  it('includes confirmed calibration expenses in the full-pass progress label', () => {
+    mocks.run = {
+      id: 'run-calibration-progress',
+      status: 'PROCESSING',
+      mode: 'local',
+      currentMatches: 7,
+      rerunCandidates: { general: 0, uncertain: 0 },
+      candidateTotal: 20,
+      calibration: {
+        confirmed: [
+          { categoryId: 'food' },
+          { categoryId: 'general' },
+          { categoryId: 'transport' },
+          { categoryId: 'general' },
+        ],
+        sample: [],
+        metrics: [],
+      },
+    }
+
+    render(<BulkCategorizePage groupId="group-1" groupName="Trip" />)
+
+    expect(screen.getByText('Categorized 7 of 20 expenses')).toBeInTheDocument()
+    expect(screen.getByText('35%')).toBeInTheDocument()
+    expect(
+      screen.getByText(
+        'Only confirmed categories and medium or high matches count; General and low-strength matches do not.',
+      ),
+    ).toBeInTheDocument()
+  })
+
+  it('requires confirmation before discarding a run', async () => {
+    mocks.run = {
+      id: 'run-discard',
+      status: 'REVIEW',
+      mode: 'local',
+      revision: 5,
+      candidateTotal: 2,
+      selected: 1,
+      reviewCycle: 'attempt-discard',
+      rerunCandidates: { general: 0, uncertain: 0 },
+    }
+    const user = userEvent.setup()
+    render(<BulkCategorizePage groupId="group-1" groupName="Trip" />)
+
+    await user.click(screen.getByRole('button', { name: 'Discard run' }))
+
+    const dialog = screen.getByRole('dialog')
+    expect(
+      within(dialog).getByText('Discard this categorization run?'),
+    ).toBeInTheDocument()
+    expect(mocks.discard).not.toHaveBeenCalled()
+
+    await user.click(within(dialog).getByRole('button', { name: 'Keep run' }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(mocks.discard).not.toHaveBeenCalled()
+
+    await user.click(screen.getByRole('button', { name: 'Discard run' }))
+    await user.click(
+      within(screen.getByRole('dialog')).getByRole('button', {
+        name: 'Discard run',
+      }),
+    )
+
+    expect(mocks.discard).toHaveBeenCalledWith({
+      groupId: 'group-1',
+      runId: 'run-discard',
+      revision: 5,
+    })
+  })
 
   it('offers General filtering and keeps rerun details in a footer popover', async () => {
     mocks.run = {
