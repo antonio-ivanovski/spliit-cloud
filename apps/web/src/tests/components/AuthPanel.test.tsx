@@ -564,7 +564,7 @@ describe('AuthPanel', () => {
     expect(screen.queryByText('Create an account')).not.toBeInTheDocument()
     expect(
       screen.getByText(
-        'This instance is invite-only. Use an invitation link or ask someone to invite you to a group.',
+        'Sign-ups are invite-only. Use an invitation link or ask someone to invite you to a group.',
       ),
     ).toBeInTheDocument()
   })
@@ -809,7 +809,7 @@ describe('AuthPanel', () => {
 
     expect(
       screen.getByText(
-        'Sign-in with email is disabled on this instance. Please use single sign-on.',
+        'Sign-in with email is disabled. Please use single sign-on.',
       ),
     ).toBeInTheDocument()
     expect(screen.queryByLabelText('Email')).not.toBeInTheDocument()
@@ -829,12 +829,12 @@ describe('AuthPanel', () => {
 
     expect(
       screen.getByText(
-        'Sign-in with email is disabled on this instance. Please use single sign-on.',
+        'Sign-in with email is disabled. Please use single sign-on.',
       ),
     ).toBeInTheDocument()
     expect(
       screen.getByText(
-        'This instance is invite-only. Use an invitation link or ask someone to invite you to a group.',
+        'Sign-ups are invite-only. Use an invitation link or ask someone to invite you to a group.',
       ),
     ).toBeInTheDocument()
   })

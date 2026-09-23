@@ -514,7 +514,7 @@ describe('PushNotificationOnboarding', () => {
     await screen.findByTestId('push-notification-onboarding')
 
     expect(
-      screen.getByText(/email delivery is turned off on this instance/i),
+      screen.getByText(/email delivery is turned off, so email notifications/i),
     ).toBeInTheDocument()
     expect(
       screen.queryByRole('button', { name: /use email/i }),
@@ -547,7 +547,7 @@ describe('PushNotificationOnboarding', () => {
     await screen.findByTestId('push-notification-onboarding')
 
     expect(
-      screen.getByText(/email delivery is turned off on this instance/i),
+      screen.getByText(/email delivery is turned off, so email notifications/i),
     ).toBeInTheDocument()
     expect(
       screen.queryByText(/only notifications configured for email/i),
@@ -572,7 +572,7 @@ describe('PushNotificationOnboarding', () => {
     )
 
     expect(
-      await screen.findByText(/email delivery is turned off on this instance/i),
+      await screen.findByText(/email delivery is turned off, so email notifications/i),
     ).toBeInTheDocument()
     expect(
       screen.queryByText(/only notifications configured for email/i),
