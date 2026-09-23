@@ -78,7 +78,7 @@ export function BulkCategorizePagedReview({
           {t('pageLoadError')}{' '}
           <button
             type="button"
-            className="underline"
+            className="cursor-pointer underline"
             onClick={() => void page.refetch()}
           >
             {t('pageRetry')}

@@ -366,7 +366,7 @@ export function BulkCategorizeTable({
                       {onViewExpense ? (
                         <button
                           type="button"
-                          className="group inline-flex max-w-full items-start gap-1 text-start font-medium hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-primary"
+                          className="group inline-flex max-w-full cursor-pointer items-start gap-1 text-start font-medium hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-primary"
                           onClick={() => onViewExpense(row.id)}
                           aria-label={`${t('viewExpenseDetails')}: ${row.title}`}
                         >

@@ -585,7 +585,7 @@ export function BulkCategorizePage({
                 <Popover modal={false}>
                   <PopoverTrigger
                     aria-label={t('rerunInfoLabel')}
-                    className="inline-flex size-9 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary"
+                    className="inline-flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary"
                   >
                     <Info className="size-4" aria-hidden />
                   </PopoverTrigger>
@@ -667,7 +667,7 @@ export function BulkCategorizePage({
                     onClick={() => setMode(value)}
                     aria-pressed={mode === value}
                     className={cn(
-                      'rounded-lg border p-4 text-start transition-colors hover:bg-muted/50 disabled:cursor-not-allowed disabled:opacity-50',
+                      'cursor-pointer rounded-lg border p-4 text-start transition-colors hover:bg-muted/50 disabled:cursor-not-allowed disabled:opacity-50',
                       mode === value
                         ? 'border-primary bg-primary/5'
                         : 'border-border',
