@@ -14,6 +14,7 @@ const mocks = vi.hoisted(() => ({
   discard: vi.fn(async () => undefined),
   confirm: vi.fn(async () => undefined),
   rerun: vi.fn(async () => undefined),
+  saveConflictsFetch: vi.fn(async () => []),
 }))
 
 vi.mock('@tanstack/react-router', () => ({
@@ -24,6 +25,13 @@ vi.mock('@tanstack/react-router', () => ({
 
 vi.mock('@/trpc/client', () => ({
   trpc: {
+    useUtils: () => ({
+      ai: {
+        bulkCategorize: {
+          saveConflicts: { fetch: mocks.saveConflictsFetch },
+        },
+      },
+    }),
     features: {
       get: {
         useQuery: () => ({ data: { bulkCategorizeSystemOneAvailable: true } }),
@@ -49,7 +57,12 @@ vi.mock('@/trpc/client', () => ({
         },
         start: { useMutation: () => ({ mutateAsync: mocks.start }) },
         edit: { useMutation: () => ({ mutateAsync: mocks.edit }) },
-        save: { useMutation: () => ({ mutateAsync: mocks.save }) },
+        save: {
+          useMutation: () => ({
+            mutateAsync: mocks.save,
+            isPending: false,
+          }),
+        },
         retry: { useMutation: () => ({ mutateAsync: mocks.retry }) },
         discard: { useMutation: () => ({ mutateAsync: mocks.discard }) },
         confirm: { useMutation: () => ({ mutateAsync: mocks.confirm }) },
@@ -101,6 +114,7 @@ describe('BulkCategorizePage completion state', () => {
       groupId: 'group-1',
       runId: 'run-1',
       revision: 1,
+      skipExpenseIds: [],
     })
   })
 
@@ -224,25 +238,27 @@ describe('BulkCategorizePage completion state', () => {
   it.each([
     {
       status: 'QUEUED',
-      currentMatches: 0,
-      uncertain: 0,
+      processed: 0,
+      total: 20,
       width: '0%',
     },
     {
       status: 'QUEUED_RERUN',
-      currentMatches: 12,
-      uncertain: 0,
+      processed: 12,
+      total: 20,
       width: '60%',
     },
   ])(
     'shows the current progress baseline while $status is queued',
-    ({ status, currentMatches, uncertain, width }) => {
+    ({ status, processed, total, width }) => {
       mocks.run = {
         id: 'run-progress',
         status,
-        mode: 'system-one',
-        currentMatches,
-        rerunCandidates: { general: 0, uncertain },
+        mode: 'local',
+        processed,
+        total,
+        fullPassPhase: 'first',
+        calibration: { confirmed: [], sample: [], metrics: [] },
         candidateTotal: 20,
       }
 
@@ -258,18 +274,20 @@ describe('BulkCategorizePage completion state', () => {
   )
 
   it.each([
-    { status: 'PROCESSING', currentMatches: 0, uncertain: 0, percent: 0 },
-    { status: 'PROCESSING', currentMatches: 5, uncertain: 0, percent: 25 },
-    { status: 'RERUNNING', currentMatches: 20, uncertain: 2, percent: 90 },
+    { status: 'PROCESSING', processed: 0, total: 20, percent: 0 },
+    { status: 'PROCESSING', processed: 5, total: 20, percent: 25 },
+    { status: 'RERUNNING', processed: 18, total: 20, percent: 90 },
   ])(
     'shows accurate $status progress at $percent percent',
-    ({ status, currentMatches, uncertain, percent }) => {
+    ({ status, processed, total, percent }) => {
       mocks.run = {
         id: 'run-progress',
         status,
-        mode: 'system-one',
-        currentMatches,
-        rerunCandidates: { general: 0, uncertain },
+        mode: 'local',
+        processed,
+        total,
+        fullPassPhase: 'first',
+        calibration: { confirmed: [], sample: [], metrics: [] },
         candidateTotal: 20,
       }
 
@@ -291,8 +309,9 @@ describe('BulkCategorizePage completion state', () => {
       id: 'run-calibration-progress',
       status: 'PROCESSING',
       mode: 'local',
-      currentMatches: 7,
-      rerunCandidates: { general: 0, uncertain: 0 },
+      processed: 3,
+      total: 20,
+      fullPassPhase: 'first',
       candidateTotal: 20,
       calibration: {
         confirmed: [
@@ -308,13 +327,9 @@ describe('BulkCategorizePage completion state', () => {
 
     render(<BulkCategorizePage groupId="group-1" groupName="Trip" />)
 
-    expect(screen.getByText('Categorized 7 of 20 expenses')).toBeInTheDocument()
+    expect(screen.getByText('Processed 7 of 20 expenses')).toBeInTheDocument()
     expect(screen.getByText('35%')).toBeInTheDocument()
-    expect(
-      screen.getByText(
-        'Only confirmed categories and medium or high matches count; General and low-strength matches do not.',
-      ),
-    ).toBeInTheDocument()
+    expect(screen.getByText('Overall progress')).toBeInTheDocument()
   })
 
   it('requires confirmation before discarding a run', async () => {

@@ -66,6 +66,7 @@ describe('General-only categorization review', () => {
         reviewCycle="cycle-1"
         total={2}
         filter="general"
+        remoteReviewVersion={0}
         disabled={false}
         aiMinConfidence={0.5}
         onChange={onChange}
@@ -108,6 +109,7 @@ describe('General-only categorization review', () => {
         reviewCycle="cycle-1"
         total={0}
         filter="general"
+        remoteReviewVersion={0}
         disabled={false}
         aiMinConfidence={0.5}
         onChange={async () => true}

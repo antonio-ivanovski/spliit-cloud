@@ -7,111 +7,114 @@ const progress = (
 ) =>
   getBulkCategorizationProgress({
     status: 'PROCESSING',
+    mode: 'local',
     candidateTotal: 100,
-    currentMatches: 0,
-    rerunCandidates: { uncertain: 0 },
+    processed: 0,
+    total: 100,
+    fullPassPhase: 'first',
+    calibration: { confirmed: [] },
     ...overrides,
   })
 
 describe('getBulkCategorizationProgress', () => {
-  it('counts confirmed calibration categories in the run total', () => {
-    expect(progress({ currentMatches: 12 })).toEqual({
-      categorized: 12,
-      total: 100,
-      percentage: 12,
+  it('tracks processed work even when nothing matches', () => {
+    expect(progress({ processed: 30, total: 100 })).toEqual({
+      percentage: 30,
+      stageProcessed: 30,
+      stageTotal: 100,
+      overallProcessed: 30,
+      overallTotal: 100,
+      phase: 'first',
     })
   })
 
-  it('excludes General and low-strength matches from the count', () => {
+  it('counts confirmed calibration choices as completed work', () => {
     expect(
       progress({
-        currentMatches: 50,
-        rerunCandidates: { uncertain: 12 },
+        processed: 10,
+        total: 100,
+        calibration: { confirmed: [{}, {}, {}] },
       }),
-    ).toEqual({ categorized: 38, total: 100, percentage: 38 })
+    ).toMatchObject({
+      overallProcessed: 13,
+      overallTotal: 100,
+      percentage: 13,
+      phase: 'first',
+    })
   })
 
-  it('keeps one count through the first and second System One passes', () => {
+  it('reserves the last 20 percent for the System One refinement pass', () => {
     const firstPass = progress({
-      status: 'PROCESSING',
-      currentMatches: 50,
-      rerunCandidates: { uncertain: 8 },
+      mode: 'system-one',
+      processed: 100,
+      total: 100,
+      fullPassPhase: 'first',
     })
+    expect(firstPass?.percentage).toBe(80)
+    expect(firstPass?.overallProcessed).toBe(100)
+
     const secondPass = progress({
-      status: 'PROCESSING',
-      currentMatches: 50,
-      rerunCandidates: { uncertain: 8 },
+      mode: 'system-one',
+      processed: 50,
+      total: 100,
+      fullPassPhase: 'second',
     })
-
-    expect(firstPass).toEqual(secondPass)
-    expect(secondPass?.categorized).toBe(42)
-    expect(secondPass?.percentage).toBe(42)
+    expect(secondPass).toEqual({
+      percentage: 90,
+      stageProcessed: 50,
+      stageTotal: 100,
+      overallProcessed: 100,
+      overallTotal: 100,
+      phase: 'second',
+    })
   })
 
-  it('advances when a low-strength match is upgraded during refinement', () => {
-    const before = progress({
-      currentMatches: 50,
-      rerunCandidates: { uncertain: 20 },
-    })
-    const after = progress({
-      currentMatches: 50,
-      rerunCandidates: { uncertain: 18 },
-    })
-
-    expect(before?.categorized).toBe(30)
-    expect(after?.categorized).toBe(32)
-  })
-
-  it('advances when a General expense gets a medium or high match', () => {
-    const before = progress({ currentMatches: 40 })
-    const after = progress({ currentMatches: 41 })
-
-    expect(before?.categorized).toBe(40)
-    expect(after?.categorized).toBe(41)
-  })
-
-  it('keeps already categorized matches as the baseline for a rerun', () => {
+  it('keeps already processed work as the baseline for a rerun', () => {
     expect(
       progress({
         status: 'QUEUED_RERUN',
-        currentMatches: 80,
-        rerunCandidates: { uncertain: 15 },
+        processed: 5,
+        total: 20,
       }),
-    ).toEqual({ categorized: 65, total: 100, percentage: 65 })
+    ).toMatchObject({
+      overallProcessed: 85,
+      percentage: 85,
+      phase: 'rerun',
+    })
 
     expect(
       progress({
         status: 'RERUNNING',
-        currentMatches: 81,
-        rerunCandidates: { uncertain: 14 },
+        processed: 6,
+        total: 20,
       }),
-    ).toEqual({ categorized: 67, total: 100, percentage: 67 })
-  })
-
-  it('can complete below 100 percent when some matches remain weak or General', () => {
-    expect(
-      progress({
-        currentMatches: 70,
-        rerunCandidates: { uncertain: 20 },
-      }),
-    ).toEqual({ categorized: 50, total: 100, percentage: 50 })
-  })
-
-  it('clamps counts to the captured run size', () => {
-    expect(progress({ candidateTotal: 10, currentMatches: 20 })).toEqual({
-      categorized: 10,
-      total: 10,
-      percentage: 100,
+    ).toMatchObject({
+      overallProcessed: 86,
+      percentage: 86,
+      phase: 'rerun',
     })
-    expect(progress({ currentMatches: -1 })).toEqual({
-      categorized: 0,
-      total: 100,
+  })
+
+  it('clamps processed counts to the stage and run size', () => {
+    expect(progress({ candidateTotal: 10, processed: 20, total: 10 })).toEqual({
+      percentage: 100,
+      stageProcessed: 10,
+      stageTotal: 10,
+      overallProcessed: 10,
+      overallTotal: 10,
+      phase: 'first',
+    })
+    expect(progress({ processed: -1 })).toMatchObject({
       percentage: 0,
+      stageProcessed: 0,
+      overallProcessed: 0,
     })
   })
 
   it('does not show numeric progress during calibration or review', () => {
     expect(progress({ status: 'CALIBRATING' })).toBeNull()
     expect(progress({ status: 'REVIEW' })).toBeNull()
+    expect(progress({ status: 'DONE', processed: 100 })).toBeNull()
+    expect(progress({ candidateTotal: 0 })).toBeNull()
   })
 })

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useInView } from 'react-intersection-observer'
 
@@ -13,6 +13,7 @@ export function BulkCategorizePagedReview({
   reviewCycle,
   total,
   filter,
+  remoteReviewVersion,
   disabled,
   aiMinConfidence,
   onChange,
@@ -23,6 +24,7 @@ export function BulkCategorizePagedReview({
   reviewCycle: string | null
   total: number
   filter: 'all' | 'general'
+  remoteReviewVersion: number
   disabled: boolean
   aiMinConfidence: number
   onChange: (id: string, categoryId: CategoryId) => Promise<boolean>
@@ -30,12 +32,19 @@ export function BulkCategorizePagedReview({
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'BulkCategorize' })
   const [edits, setEdits] = useState<Map<string, CategoryId>>(new Map())
+  const lastRemoteReviewVersion = useRef(remoteReviewVersion)
   const { ref: endRef, inView } = useInView({ rootMargin: '800px' })
   const page = trpc.ai.bulkCategorize.reviewPage.useInfiniteQuery(
     { groupId, runId, reviewCycle, filter, limit: 100 },
     { enabled: total > 0, getNextPageParam: ({ nextCursor }) => nextCursor },
   )
   const { hasNextPage, isFetchingNextPage, fetchNextPage } = page
+  useEffect(() => {
+    if (lastRemoteReviewVersion.current === remoteReviewVersion) return
+    lastRemoteReviewVersion.current = remoteReviewVersion
+    setEdits(new Map())
+    void page.refetch()
+  }, [remoteReviewVersion, page.refetch])
   const rows = useMemo(
     () =>
       (total === 0

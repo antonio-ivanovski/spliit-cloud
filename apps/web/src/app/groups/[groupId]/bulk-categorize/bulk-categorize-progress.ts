@@ -1,24 +1,26 @@
 export type BulkCategorizationProgressRun = {
   status: string
+  mode: 'local' | 'system-one'
   candidateTotal: number
-  currentMatches: number
-  rerunCandidates?: { uncertain?: number }
+  processed: number
+  total: number
+  fullPassPhase: 'first' | 'second' | 'complete'
+  calibration: { confirmed: readonly unknown[] }
 }
 
 export type BulkCategorizationProgress = {
-  categorized: number
-  total: number
   percentage: number
+  stageProcessed: number
+  stageTotal: number
+  overallProcessed: number
+  overallTotal: number
+  phase: 'first' | 'second' | 'rerun'
 }
 
 const clamp = (value: number, min: number, max: number) =>
   Math.max(min, Math.min(max, value))
 
-/**
- * Returns cumulative categorized matches for the current run journey.
- * Low-strength automatic matches are eligible for another pass and do not count
- * until they are upgraded; confirmed calibration choices do count.
- */
+/** Calibration is complete work; a System One refinement reserves the last 20%. */
 export function getBulkCategorizationProgress(
   run: BulkCategorizationProgressRun,
 ): BulkCategorizationProgress | null {
@@ -28,13 +30,52 @@ export function getBulkCategorizationProgress(
   )
     return null
 
-  const total = run.candidateTotal
-  const lowStrengthMatches = Math.max(0, run.rerunCandidates?.uncertain ?? 0)
-  const categorized = clamp(run.currentMatches - lowStrengthMatches, 0, total)
+  const stageTotal = Math.max(0, run.total)
+  const stageProcessed = clamp(run.processed, 0, stageTotal)
+  const overallTotal = run.candidateTotal
 
+  if (run.status === 'QUEUED_RERUN' || run.status === 'RERUNNING') {
+    const overallProcessed = clamp(
+      overallTotal - stageTotal + stageProcessed,
+      0,
+      overallTotal,
+    )
+    return {
+      percentage: Math.floor((100 * overallProcessed) / overallTotal),
+      stageProcessed,
+      stageTotal,
+      overallProcessed,
+      overallTotal,
+      phase: 'rerun',
+    }
+  }
+
+  if (run.mode === 'system-one' && run.fullPassPhase === 'second') {
+    return {
+      percentage:
+        stageTotal === 0
+          ? 100
+          : Math.floor(80 + (20 * stageProcessed) / stageTotal),
+      stageProcessed,
+      stageTotal,
+      overallProcessed: overallTotal,
+      overallTotal,
+      phase: 'second',
+    }
+  }
+
+  const overallProcessed = clamp(
+    run.calibration.confirmed.length + stageProcessed,
+    0,
+    overallTotal,
+  )
+  const firstPassRange = run.mode === 'system-one' ? 80 : 100
   return {
-    categorized,
-    total,
-    percentage: Math.floor((100 * categorized) / total),
+    percentage: Math.floor((firstPassRange * overallProcessed) / overallTotal),
+    stageProcessed,
+    stageTotal,
+    overallProcessed,
+    overallTotal,
+    phase: 'first',
   }
 }

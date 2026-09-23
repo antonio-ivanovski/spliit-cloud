@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { ArrowLeft, Check, Info, Loader2, Sparkles } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
@@ -57,6 +57,14 @@ export function BulkCategorizePage({
   const [editing, setEditing] = useState(false)
   const [discardDialogOpen, setDiscardDialogOpen] = useState(false)
   const [reviewKey, setReviewKey] = useState(0)
+  const [remoteReviewVersion, setRemoteReviewVersion] = useState(0)
+  const reviewRevisionRef = useRef<{ runId: string; revision: number } | null>(
+    null,
+  )
+  const localRevisionRef = useRef<number | null>(null)
+  const [saveConflicts, setSaveConflicts] = useState<
+    Array<{ expenseId: string; title: string }> | undefined
+  >()
   const [filter, setFilter] = useState<'all' | 'general'>('all')
   const [pendingStage, setPendingStage] = useState<
     'calibration' | 'next' | 'rerun' | 'retry' | null
@@ -64,6 +72,7 @@ export function BulkCategorizePage({
   const [completion, setCompletion] = useState<{
     runId: string
     applied: number
+    skipped: number
     total: number
     mode: 'local' | 'system-one'
   } | null>(null)
@@ -86,8 +95,14 @@ export function BulkCategorizePage({
           'CALIBRATING',
           'QUEUED_RERUN',
           'RERUNNING',
+          'CALIBRATION_REVIEW',
+          'REVIEW',
         ].includes(query.state.data?.status ?? '')
-          ? 1500
+          ? ['REVIEW', 'CALIBRATION_REVIEW'].includes(
+              query.state.data?.status ?? '',
+            )
+            ? 3000
+            : 1500
           : false,
     },
   )
@@ -98,6 +113,7 @@ export function BulkCategorizePage({
   const discard = trpc.ai.bulkCategorize.discard.useMutation()
   const confirm = trpc.ai.bulkCategorize.confirm.useMutation()
   const rerun = trpc.ai.bulkCategorize.rerun.useMutation()
+  const utils = trpc.useUtils()
   const run = status.data
   const completionForCurrentRun =
     run && completion?.runId === run.id
@@ -106,6 +122,7 @@ export function BulkCategorizePage({
         ? {
             runId: run.id,
             applied: run.applied,
+            skipped: run.skipped,
             total: run.candidateTotal,
             mode: run.mode,
           }
@@ -123,6 +140,26 @@ export function BulkCategorizePage({
   useEffect(() => {
     if (run?.status === 'DONE') void refetchCount()
   }, [run?.status, refetchCount])
+
+  useEffect(() => {
+    if (!run) {
+      reviewRevisionRef.current = null
+      return
+    }
+    const previous = reviewRevisionRef.current
+    if (
+      previous?.runId === run.id &&
+      previous.revision !== run.revision &&
+      ['REVIEW', 'CALIBRATION_REVIEW'].includes(run.status) &&
+      localRevisionRef.current !== run.revision
+    ) {
+      setRemoteReviewVersion((value) => value + 1)
+      setSaveConflicts(undefined)
+    }
+    reviewRevisionRef.current = { runId: run.id, revision: run.revision }
+    if (localRevisionRef.current === run.revision)
+      localRevisionRef.current = null
+  }, [run?.id, run?.revision, run?.status])
 
   async function act(
     action: () => Promise<unknown>,
@@ -160,17 +197,21 @@ export function BulkCategorizePage({
     runId: string,
     total: number,
     runMode: 'local' | 'system-one',
+    skipExpenseIds: string[] = [],
   ) {
     setError(null)
+    setSaveConflicts(undefined)
     try {
       const result = await save.mutateAsync({
         groupId,
         runId,
         revision: run!.revision,
+        skipExpenseIds,
       })
       setCompletion({
         runId,
         applied: result.applied,
+        skipped: result.skipped,
         total,
         mode: runMode,
       })
@@ -179,6 +220,15 @@ export function BulkCategorizePage({
       setError(cause instanceof Error ? cause.message : String(cause))
       await status.refetch()
       setReviewKey((value) => value + 1)
+      try {
+        const conflicts = await utils.ai.bulkCategorize.saveConflicts.fetch({
+          groupId,
+          runId,
+        })
+        if (conflicts.length) setSaveConflicts(conflicts)
+      } catch {
+        // The save error remains visible if conflict details cannot be loaded.
+      }
     }
   }
 
@@ -232,12 +282,14 @@ export function BulkCategorizePage({
     setError(null)
     setEditing(true)
     try {
-      await edit.mutateAsync({
+      const result = await edit.mutateAsync({
         groupId,
         runId: run.id,
         revision: run.revision,
         changes: [{ expenseId, categoryId }],
       })
+      localRevisionRef.current = result.revision
+      setSaveConflicts(undefined)
       await status.refetch()
       return true
     } catch (cause) {
@@ -336,12 +388,7 @@ export function BulkCategorizePage({
             {hasNumericProgress ? (
               <>
                 <div className="flex justify-between text-sm">
-                  <span>
-                    {t('progressCount', {
-                      categorized: progress.categorized,
-                      total: progress.total,
-                    })}
-                  </span>
+                  <span>{t('overallProgress')}</span>
                   <span>{progress.percentage}%</span>
                 </div>
                 <Progress
@@ -349,7 +396,15 @@ export function BulkCategorizePage({
                   aria-label={t('progressTitle')}
                 />
                 <p className="text-xs text-muted-foreground">
-                  {t('progressCountDescription')}
+                  {progress.phase === 'first'
+                    ? t('fullPassProcessed', {
+                        processed: progress.overallProcessed,
+                        total: progress.overallTotal,
+                      })
+                    : t('stageProcessed', {
+                        processed: progress.stageProcessed,
+                        total: progress.stageTotal,
+                      })}
                 </p>
               </>
             ) : (
@@ -389,6 +444,11 @@ export function BulkCategorizePage({
                     remaining,
                   })}
             </CardDescription>
+            {completionForCurrentRun.skipped > 0 && (
+              <CardDescription>
+                {t('saveSkipped', { count: completionForCurrentRun.skipped })}
+              </CardDescription>
+            )}
           </CardHeader>
           <CardFooter className="flex flex-wrap gap-2">
             <Button
@@ -424,6 +484,7 @@ export function BulkCategorizePage({
             <CardTitle>
               {t('calibrationRoundTitle', { round: run.round })}
             </CardTitle>
+            <CardDescription>{t('sharedRunNotice')}</CardDescription>
             <CardDescription>
               {t('calibrationReviewDescription', {
                 count: calibration?.sample.length ?? 0,
@@ -504,6 +565,7 @@ export function BulkCategorizePage({
         <Card>
           <CardHeader>
             <CardTitle>{t('reviewTitle')}</CardTitle>
+            <CardDescription>{t('sharedRunNotice')}</CardDescription>
             <CardDescription>
               {t('reviewWorkload', {
                 total: run.candidateTotal,
@@ -540,6 +602,44 @@ export function BulkCategorizePage({
             </fieldset>
           </CardHeader>
           <CardContent className="border-t p-0 sm:p-0">
+            {saveConflicts && saveConflicts.length > 0 && (
+              <div
+                role="alert"
+                className="space-y-2 border-b bg-amber-50 p-4 text-sm text-amber-950 dark:bg-amber-950/30 dark:text-amber-100"
+              >
+                <p className="font-medium">
+                  {t('saveConflictTitle', { count: saveConflicts.length })}
+                </p>
+                <p>{t('saveConflictDescription')}</p>
+                <ul className="list-inside list-disc">
+                  {saveConflicts.slice(0, 5).map((conflict) => (
+                    <li key={conflict.expenseId} className="truncate">
+                      {conflict.title}
+                    </li>
+                  ))}
+                </ul>
+                {saveConflicts.length > 5 && (
+                  <p>
+                    {t('saveConflictMore', { count: saveConflicts.length - 5 })}
+                  </p>
+                )}
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={pending}
+                  onClick={() =>
+                    void saveReview(
+                      run.id,
+                      run.candidateTotal,
+                      run.mode,
+                      saveConflicts.map((row) => row.expenseId),
+                    )
+                  }
+                >
+                  {t('saveOtherExpenses')}
+                </Button>
+              </div>
+            )}
             <BulkCategorizePagedReview
               key={`${run.id}:${run.reviewCycle}:${reviewKey}`}
               groupId={groupId}
@@ -547,6 +647,7 @@ export function BulkCategorizePage({
               reviewCycle={run.reviewCycle}
               total={filter === 'general' ? generalCount : run.candidateTotal}
               filter={filter}
+              remoteReviewVersion={remoteReviewVersion}
               disabled={pending}
               aiMinConfidence={features?.aiMinConfidence ?? 0.5}
               onChange={editCategory}
