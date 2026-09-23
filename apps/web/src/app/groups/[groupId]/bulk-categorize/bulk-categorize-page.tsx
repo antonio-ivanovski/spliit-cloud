@@ -159,7 +159,7 @@ export function BulkCategorizePage({
     reviewRevisionRef.current = { runId: run.id, revision: run.revision }
     if (localRevisionRef.current === run.revision)
       localRevisionRef.current = null
-  }, [run?.id, run?.revision, run?.status])
+  }, [run])
 
   async function act(
     action: () => Promise<unknown>,

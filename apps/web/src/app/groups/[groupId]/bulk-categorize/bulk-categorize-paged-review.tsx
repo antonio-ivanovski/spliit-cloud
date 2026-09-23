@@ -38,13 +38,13 @@ export function BulkCategorizePagedReview({
     { groupId, runId, reviewCycle, filter, limit: 100 },
     { enabled: total > 0, getNextPageParam: ({ nextCursor }) => nextCursor },
   )
-  const { hasNextPage, isFetchingNextPage, fetchNextPage } = page
+  const { hasNextPage, isFetchingNextPage, fetchNextPage, refetch } = page
   useEffect(() => {
     if (lastRemoteReviewVersion.current === remoteReviewVersion) return
     lastRemoteReviewVersion.current = remoteReviewVersion
     setEdits(new Map())
-    void page.refetch()
-  }, [remoteReviewVersion, page.refetch])
+    void refetch()
+  }, [remoteReviewVersion, refetch])
   const rows = useMemo(
     () =>
       (total === 0
