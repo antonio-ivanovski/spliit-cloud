@@ -1093,7 +1093,9 @@ export async function applyCategorizationRun(
   runId: string,
   revision: number,
   accountId: string,
+  skipExpenseIds: string[] = [],
 ) {
+  const approvedSkips = new Set(skipExpenseIds)
   const result = await prisma.$transaction(
     async (tx) => {
       const claimed = await tx.bulkCategorizationRun.updateMany({
@@ -1109,12 +1111,21 @@ export async function applyCategorizationRun(
         where: { runId, categoryId: { not: DEFAULT_CATEGORY_ID } },
         orderBy: { position: 'asc' },
       })
+      const conflicts = await findSaveConflicts(tx, run.groupId, selected)
+      if (conflicts.some((row) => !approvedSkips.has(row.expenseId)))
+        throw new Error(
+          'Some selected expenses changed since this run started. No categories were applied.',
+        )
+      const skippedIds = new Set(conflicts.map((row) => row.expenseId))
+      const applicable = selected.filter(
+        (row) => !skippedIds.has(row.expenseId),
+      )
       const expectedVersions = new Map(
-        selected.map((row) => [row.expenseId, row.expenseVersion]),
+        applicable.map((row) => [row.expenseId, row.expenseVersion]),
       )
       let applied = 0
-      for (let offset = 0; offset < selected.length; offset += 2000) {
-        const chunk = selected.slice(offset, offset + 2000)
+      for (let offset = 0; offset < applicable.length; offset += 2000) {
+        const chunk = applicable.slice(offset, offset + 2000)
         const update = await bulkUpdateExpenseCategories({
           groupId: run.groupId,
           accountId,
@@ -1132,7 +1143,7 @@ export async function applyCategorizationRun(
         })
         if (update.applied !== chunk.length)
           throw new Error(
-            'An expense changed while saving. No categories were applied; refresh the review and try again.',
+            'An expense changed while saving. No categories were applied; review the changed expenses and try again.',
           )
         applied += update.applied
       }
@@ -1143,17 +1154,67 @@ export async function applyCategorizationRun(
           processed: selected.length,
           total: selected.length,
           applied,
-          skipped: 0,
+          skipped: skippedIds.size,
           error: null,
         },
       })
-      return { groupId: run.groupId, applied, skipped: 0 }
+      return { groupId: run.groupId, applied, skipped: skippedIds.size }
     },
     { maxWait: 10000, timeout: 180000 },
   )
   if (result.applied > 0) await enqueueBudgetEvaluation(result.groupId)
   logRun(runId, 'saved', { applied: result.applied })
   return result
+}
+
+type SaveConflict = { expenseId: string; title: string }
+
+async function findSaveConflicts(
+  tx: Prisma.TransactionClient,
+  groupId: string,
+  selected: BulkCategorizationRow[],
+): Promise<SaveConflict[]> {
+  if (!selected.length) return []
+  const group = await tx.group.findUniqueOrThrow({
+    where: { id: groupId },
+    select: { ledgerId: true },
+  })
+  const live = new Map<string, { version: number; categoryId: string }>()
+  for (let offset = 0; offset < selected.length; offset += 1000) {
+    const expenses = await tx.expense.findMany({
+      where: {
+        ledgerId: group.ledgerId,
+        id: {
+          in: selected.slice(offset, offset + 1000).map((row) => row.expenseId),
+        },
+      },
+      select: { id: true, version: true, categoryId: true },
+    })
+    for (const expense of expenses) live.set(expense.id, expense)
+  }
+  return selected
+    .filter((row) => {
+      const expense = live.get(row.expenseId)
+      return (
+        !expense ||
+        expense.categoryId !== DEFAULT_CATEGORY_ID ||
+        expense.version !== row.expenseVersion
+      )
+    })
+    .map((row) => ({ expenseId: row.expenseId, title: row.title }))
+}
+
+export async function getCategorizationSaveConflicts(runId: string) {
+  const run = await prisma.bulkCategorizationRun.findUniqueOrThrow({
+    where: { id: runId },
+    select: { groupId: true, status: true },
+  })
+  if (run.status !== 'REVIEW') return []
+  const selected = await prisma.bulkCategorizationRow.findMany({
+    where: { runId, categoryId: { not: DEFAULT_CATEGORY_ID } },
+    orderBy: { position: 'asc' },
+  })
+  return findSaveConflicts(prisma, run.groupId, selected)
 }
 
 export async function retryCategorizationRun(runId: string, revision: number) {

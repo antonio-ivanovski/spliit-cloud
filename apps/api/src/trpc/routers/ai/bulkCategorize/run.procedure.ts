@@ -11,6 +11,7 @@ import {
   countUncategorizedExpenses,
   discardCategorizationRun,
   getCategorizationReviewPage,
+  getCategorizationSaveConflicts,
   presentRun,
   retryCategorizationRun,
   rerunCategorizationRun,
@@ -88,6 +89,14 @@ export const bulkCategorizeReviewPageProcedure = protectedProcedure
     )
   })
 
+export const bulkCategorizeSaveConflictsProcedure = protectedProcedure
+  .input(runInput)
+  .query(async ({ ctx, input }) => {
+    await requireAdmin(input.groupId, ctx.auth.user.id)
+    await requireRun(input.groupId, input.runId)
+    return getCategorizationSaveConflicts(input.runId)
+  })
+
 export const bulkCategorizeStartProcedure = protectedProcedure
   .input(
     groupInput.extend({
@@ -130,11 +139,20 @@ export const bulkCategorizeEditProcedure = protectedProcedure
   })
 
 export const bulkCategorizeApplyProcedure = protectedProcedure
-  .input(revisionInput)
+  .input(
+    revisionInput.extend({
+      skipExpenseIds: z.array(z.string().min(1)).max(10_000).optional(),
+    }),
+  )
   .mutation(async ({ ctx, input }) => {
     await requireAdmin(input.groupId, ctx.auth.user.id)
     await requireRun(input.groupId, input.runId)
-    return applyCategorizationRun(input.runId, input.revision, ctx.auth.user.id)
+    return applyCategorizationRun(
+      input.runId,
+      input.revision,
+      ctx.auth.user.id,
+      input.skipExpenseIds,
+    )
   })
 
 export const bulkCategorizeConfirmProcedure = protectedProcedure

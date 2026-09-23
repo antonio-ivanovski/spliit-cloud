@@ -20,6 +20,7 @@ const row = (index: number) => ({
   expenseId: `expense-${index}`,
   expenseVersion: 1,
   categoryId: 'groceries',
+  title: `Expense ${index}`,
 })
 let transactionCommitted: boolean
 
@@ -39,6 +40,18 @@ beforeEach(() => {
     row(2),
   ] as never)
   prismaMock.bulkCategorizationRun.update.mockResolvedValue({} as never)
+  prismaMock.group.findUniqueOrThrow.mockResolvedValue({
+    ledgerId: 'ledger-1',
+  } as never)
+  prismaMock.expense.findMany.mockImplementation(async (args: unknown) => {
+    const ids = (args as { where?: { id?: { in?: string[] } } })?.where?.id
+      ?.in as string[] | undefined
+    return (ids ?? []).map((id) => ({
+      id,
+      version: 1,
+      categoryId: 'general',
+    })) as never
+  })
   mocks.bulkUpdate.mockReset().mockResolvedValue({ applied: 2, skipped: 0 })
   mocks.enqueueBudgetEvaluation.mockReset().mockResolvedValue(undefined)
   prisma$Transaction.mockImplementation(async (callback) => {
@@ -110,5 +123,47 @@ describe('atomic bulk categorization save', () => {
       applyCategorizationRun('run-1', 0, 'saving-admin'),
     ).rejects.toThrow('Refresh')
     expect(mocks.bulkUpdate).not.toHaveBeenCalled()
+  })
+
+  it('blocks save when a selected expense changed and reports no writes', async () => {
+    prismaMock.expense.findMany.mockResolvedValueOnce([
+      { id: 'expense-1', version: 2, categoryId: 'general' },
+      { id: 'expense-2', version: 1, categoryId: 'general' },
+    ] as never)
+    await expect(
+      applyCategorizationRun('run-1', 1, 'saving-admin'),
+    ).rejects.toThrow('Some selected expenses changed')
+    expect(transactionCommitted).toBe(false)
+    expect(mocks.bulkUpdate).not.toHaveBeenCalled()
+    expect(prismaMock.bulkCategorizationRun.update).not.toHaveBeenCalled()
+  })
+
+  it('saves unaffected expenses when conflicts are explicitly skipped', async () => {
+    prismaMock.expense.findMany.mockImplementation(
+      async () =>
+        [
+          { id: 'expense-1', version: 2, categoryId: 'general' },
+          { id: 'expense-2', version: 1, categoryId: 'general' },
+        ] as never,
+    )
+    mocks.bulkUpdate.mockResolvedValueOnce({ applied: 1, skipped: 0 })
+    await expect(
+      applyCategorizationRun('run-1', 1, 'saving-admin', ['expense-1']),
+    ).resolves.toEqual({
+      groupId: 'group-1',
+      applied: 1,
+      skipped: 1,
+    })
+    expect(transactionCommitted).toBe(true)
+    expect(mocks.bulkUpdate).toHaveBeenCalledTimes(1)
+    expect(prismaMock.bulkCategorizationRun.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          status: 'DONE',
+          applied: 1,
+          skipped: 1,
+        }),
+      }),
+    )
   })
 })
