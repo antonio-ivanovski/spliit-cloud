@@ -2767,9 +2767,6 @@
   },
   "BulkCategorize": {
     "title": "Toplu kategorilendirme",
-    "calibrationTitle": "Adım 1 — Kalibrasyon",
-    "calibrationDescription": "Onayladığınız her örnek, AI’ın sonraki önerilerini geliştirmesine yardımcı olur. Tek turdan sonra hazır olabilir veya daha fazla örnek isteyebilir.",
-    "roundCount": "Tur {round} / {max}",
     "confidence": {
       "high": "Yüksek",
       "medium": "Orta",

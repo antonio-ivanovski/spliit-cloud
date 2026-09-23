@@ -2894,9 +2894,6 @@
   },
   "BulkCategorize": {
     "title": "Phân loại hàng loạt",
-    "calibrationTitle": "Hiệu chỉnh AI",
-    "calibrationDescription": "Cung cấp ví dụ để AI học.",
-    "roundCount": "Vòng {round} trên {max}",
     "confidence": {
       "high": "Cao",
       "medium": "Trung bình",

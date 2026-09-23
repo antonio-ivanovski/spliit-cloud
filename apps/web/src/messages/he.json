@@ -2778,9 +2778,6 @@
   },
   "BulkCategorize": {
     "title": "קטלוג המוני",
-    "calibrationTitle": "שלב 1 — כיול",
-    "calibrationDescription": "כל דוגמה שמאשרים עוזרת ל-AI לשפר את ההצעות הבאות. ייתכן שסבב אחד יספיק או שיידרשו דוגמאות נוספות.",
-    "roundCount": "סבב {round} מתוך {max}",
     "confidence": {
       "high": "גבוה",
       "medium": "בינוני",

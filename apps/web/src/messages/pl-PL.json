@@ -2789,9 +2789,6 @@
   },
   "BulkCategorize": {
     "title": "Zbiorcza kategoryzacja",
-    "calibrationTitle": "Krok 1 — Kalibracja",
-    "calibrationDescription": "Każdy potwierdzony przykład staje się wzorcem odniesienia dla kolejnego przebiegu AI. Może być gotowe już po jednej rundzie lub poprosić o więcej przykładów.",
-    "roundCount": "Runda {round} z {max}",
     "confidence": {
       "high": "Wysoka",
       "medium": "Średnia",

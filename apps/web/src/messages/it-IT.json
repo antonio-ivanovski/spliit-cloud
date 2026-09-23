@@ -2778,9 +2778,6 @@
   },
   "BulkCategorize": {
     "title": "Categorizzazione in blocco",
-    "calibrationTitle": "Passo 1 — Calibrazione",
-    "calibrationDescription": "Ogni esempio che confermi diventa la verità assoluta per la passata successiva dell'IA. Può essere pronta dopo un solo giro, o chiedere altri esempi.",
-    "roundCount": "Round {round} di {max}",
     "confidence": {
       "high": "Alta",
       "medium": "Media",

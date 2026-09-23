@@ -2759,9 +2759,6 @@
   },
   "BulkCategorize": {
     "title": "一括カテゴリ分類",
-    "calibrationTitle": "ステップ1 — キャリブレーション",
-    "calibrationDescription": "確認した例が増えるほど、AIの次の提案が改善されます。1回で準備が整う場合も、追加の例が必要な場合もあります。",
-    "roundCount": "ラウンド {round} / {max}",
     "confidence": {
       "high": "高",
       "medium": "中",

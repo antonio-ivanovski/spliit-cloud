@@ -1,22 +1,24 @@
 import { createTRPCRouter } from '../../../init'
-import { aiBulkCategorizeCalibrateProcedure } from './calibrate.procedure'
-import { aiBulkCategorizeListCandidatesProcedure } from './listCandidates.procedure'
-import { aiBulkCategorizePreviewProcedure } from './preview.procedure'
+import {
+  bulkCategorizeApplyProcedure,
+  bulkCategorizeConfirmProcedure,
+  bulkCategorizeCountProcedure,
+  bulkCategorizeDiscardProcedure,
+  bulkCategorizeEditProcedure,
+  bulkCategorizeRetryProcedure,
+  bulkCategorizeRerunProcedure,
+  bulkCategorizeStartProcedure,
+  bulkCategorizeStatusProcedure,
+} from './run.procedure'
 
 export const aiBulkCategorizeRouter = createTRPCRouter({
-  /**
-   * Expenses eligible for bulk recategorization (still on `fromCategoryId`,
-   * non-settlement).
-   */
-  listCandidates: aiBulkCategorizeListCandidatesProcedure,
-  /**
-   * Fetch the next batch of AI category suggestions, optionally conditioned on
-   * prior selections.
-   */
-  calibrate: aiBulkCategorizeCalibrateProcedure,
-  /**
-   * Compute AI category suggestions for all eligible expenses without applying
-   * them.
-   */
-  preview: aiBulkCategorizePreviewProcedure,
+  status: bulkCategorizeStatusProcedure,
+  count: bulkCategorizeCountProcedure,
+  start: bulkCategorizeStartProcedure,
+  edit: bulkCategorizeEditProcedure,
+  confirm: bulkCategorizeConfirmProcedure,
+  rerun: bulkCategorizeRerunProcedure,
+  save: bulkCategorizeApplyProcedure,
+  retry: bulkCategorizeRetryProcedure,
+  discard: bulkCategorizeDiscardProcedure,
 })

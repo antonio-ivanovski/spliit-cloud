@@ -2767,9 +2767,6 @@
   },
   "BulkCategorize": {
     "title": "Joukkokategorisointi",
-    "calibrationTitle": "Vaihe 1 — Kalibrointi",
-    "calibrationDescription": "Jokainen vahvistamasi esimerkki auttaa tekoälyä parantamaan seuraavia ehdotuksiaan. Se voi olla valmis yhden kierroksen jälkeen tai pyytää lisää esimerkkejä.",
-    "roundCount": "Kierros {round} / {max}",
     "confidence": {
       "high": "Korkea",
       "medium": "Kohtalainen",

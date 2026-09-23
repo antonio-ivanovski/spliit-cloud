@@ -2759,9 +2759,6 @@
   },
   "BulkCategorize": {
     "title": "批次分類",
-    "calibrationTitle": "步驟1 — 校正",
-    "calibrationDescription": "你確認的每個示例都會幫助 AI 改進下一次建議。AI 可能一輪後即可準備就緒，也可能需要更多示例。",
-    "roundCount": "第{round}輪 / 共{max}輪",
     "confidence": {
       "high": "高",
       "medium": "中",

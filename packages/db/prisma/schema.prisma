@@ -596,6 +596,29 @@ model Group {
   // A partial unique index guarantees at most one FRIEND group per pair.
   friendPairKey      String?
   webhookEvents      WebhookEvent[]
+  bulkCategorizationRun BulkCategorizationRun?
+}
+
+model BulkCategorizationRun {
+  id          String   @id
+  group       Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId     String   @unique
+  accountId   String
+  mode        String
+  status      String
+  locale      String   @default("en-US")
+  total       Int      @default(0)
+  processed   Int      @default(0)
+  round       Int      @default(0)
+  applied     Int      @default(0)
+  skipped     Int      @default(0)
+  candidates  Json     @default("[]")
+  calibration Json     @default("[]")
+  examples    Json     @default("[]")
+  suggestions Json     @default("[]")
+  error       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Subgroup {

@@ -1402,9 +1402,6 @@
     "copiedInviteLink": "Link de convite copiado"
   },
   "BulkCategorize": {
-    "calibrationTitle": "Etapa 1 — Calibração",
-    "calibrationDescription": "Cada exemplo que você confirma se torna a verdade absoluta para a próxima passada da IA. Pode estar pronta após uma rodada, ou pedir mais exemplos.",
-    "roundCount": "Rodada {round} de {max}",
     "aiWantsMore": "A IA gostaria de mais alguns exemplos. Confirme ou corrija as sugestões abaixo e execute outra rodada.",
     "aiSaidReady": "A IA se sente preparada. Vá para a prévia para aplicar as alterações.",
     "emptySelection": "Nenhuma despesa precisa de revisão agora. Gere a prévia para aplicar categorias a todos os candidatos.",

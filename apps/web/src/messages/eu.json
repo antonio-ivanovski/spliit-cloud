@@ -2776,9 +2776,6 @@
   },
   "BulkCategorize": {
     "title": "Kategorizazio multzokatua",
-    "calibrationTitle": "1. urratsa — Kalibrazioa",
-    "calibrationDescription": "Zuk berresten duzun adibide bakoitza IAren hurrengo pasarako egia absolutua da. Ronda bat ostean prest egon daiteke, edo eska itzazu adibide gehiago.",
-    "roundCount": "{round}. erronda, {max}tik",
     "confidence": {
       "high": "Handia",
       "medium": "Ertaina",

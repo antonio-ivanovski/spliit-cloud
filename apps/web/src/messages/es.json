@@ -2805,9 +2805,6 @@
   },
   "BulkCategorize": {
     "title": "Categorización en lote",
-    "calibrationTitle": "Paso 1 — Calibración",
-    "calibrationDescription": "Cada ejemplo que confirmas ayuda a la IA a mejorar sus próximas sugerencias. Puede estar lista después de una ronda o pedir más ejemplos.",
-    "roundCount": "Ronda {round} de {max}",
     "confidence": {
       "high": "Alto",
       "medium": "Medio",

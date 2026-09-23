@@ -10,8 +10,6 @@ const routeApi = getRouteApi('/groups/bulk-categorize/$groupId')
 
 function BulkCategorizeRoute() {
   const { groupId } = routeApi.useParams()
-  const { data: features, isLoading: featuresLoading } =
-    trpc.features.get.useQuery()
   const { data: groupData, isLoading: groupLoading } = trpc.groups.get.useQuery(
     {
       groupId,
@@ -19,7 +17,7 @@ function BulkCategorizeRoute() {
   )
   const { t } = useTranslation(undefined, { keyPrefix: 'BulkCategorize' })
 
-  if (featuresLoading || groupLoading) {
+  if (groupLoading) {
     return (
       <div className="flex flex-col gap-6">
         <Skeleton className="h-8 w-48" />
@@ -40,10 +38,9 @@ function BulkCategorizeRoute() {
   }
 
   const role = groupData?.currentMember?.role
-  let blockedReason: 'admin' | 'archived' | 'feature' | null = null
+  let blockedReason: 'admin' | 'archived' | null = null
   if (role !== 'ADMIN') blockedReason = 'admin'
   else if (group.archived) blockedReason = 'archived'
-  else if (!features?.enableBulkCategorize) blockedReason = 'feature'
 
   return (
     <BulkCategorizePage

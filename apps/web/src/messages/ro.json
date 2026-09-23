@@ -2778,9 +2778,6 @@
   },
   "BulkCategorize": {
     "title": "Categorizare în lot",
-    "calibrationTitle": "Pasul 1 — Calibrare",
-    "calibrationDescription": "Fiecare exemplu pe care îl confirmi devine adevărul absolut pentru următoarea trecere a IA. Poate fi gata după un singur tur, sau poate cere mai multe exemple.",
-    "roundCount": "Runda {round} din {max}",
     "confidence": {
       "high": "Ridicată",
       "medium": "Medie",

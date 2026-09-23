@@ -2803,9 +2803,6 @@
   },
   "BulkCategorize": {
     "title": "Massenkategorisierung",
-    "calibrationTitle": "Schritt 1 — Kalibrierung",
-    "calibrationDescription": "Jedes bestätigte Beispiel hilft der KI, ihre nächsten Vorschläge zu verbessern. Sie kann nach einem Durchlauf bereit sein oder weitere Beispiele anfordern.",
-    "roundCount": "Runde {round} von {max}",
     "confidence": {
       "high": "Hoch",
       "medium": "Mittel",

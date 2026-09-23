@@ -606,8 +606,6 @@
   },
   "BulkCategorize": {
     "title": "Bulkkategorisera",
-    "calibrationTitle": "Steg 1 — Kalibrering",
-    "calibrationDescription": "Varje exempel du bekräftar hjälper AI:n att förbättra sina nästa förslag. Den kan vara redo efter en omgång eller be om fler exempel.",
     "aiWantsMore": "AI:n vill gärna ha några fler exempel. Bekräfta eller korrigera förslagen nedan och kör en ny omgång.",
     "aiSaidReady": "AI:n är redo. Gå till förhandsgranskningen för att bekräfta.",
     "feedbackTableTitle": "Valda utgifter",
@@ -663,7 +661,6 @@
     "doneTitle": "Kategorier sparade",
     "expenseColumn": "Utgift",
     "categoryColumn": "Kategori",
-    "roundCount": "Omgång {round} av {max}",
     "confidence": {
       "high": "Hög",
       "medium": "Mellan",

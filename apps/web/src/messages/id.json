@@ -2757,9 +2757,6 @@
   },
   "BulkCategorize": {
     "title": "Kategorisasi massal",
-    "calibrationTitle": "Langkah 1 — Kalibrasi",
-    "calibrationDescription": "Setiap contoh yang Anda konfirmasi membantu AI memperbaiki saran berikutnya. AI mungkin siap setelah satu putaran atau meminta contoh tambahan.",
-    "roundCount": "Putaran {round} dari {max}",
     "confidence": {
       "high": "Tinggi",
       "medium": "Sedang",

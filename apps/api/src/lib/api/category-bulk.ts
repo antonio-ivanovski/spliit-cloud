@@ -1,4 +1,4 @@
-import { prisma } from '@spliit/db'
+import { prisma, type Prisma } from '@spliit/db'
 import {
   BULK_APPLY_HARD_LIMIT,
   DEFAULT_CATEGORY_ID,
@@ -65,8 +65,12 @@ export async function bulkUpdateExpenseCategories(args: {
   /** Authenticated account id, persisted as the activity actor. */
   accountId: string
   input: BulkUpdateExpenseCategoriesInput
+  /** Join a caller's all-or-nothing transaction when supplied. */
+  transaction?: Prisma.TransactionClient
+  /** Expected expense versions. A mismatch is reported as a skipped row. */
+  expectedVersions?: Map<string, number>
 }): Promise<BulkCategorizeApplyResult> {
-  const { groupId, accountId, input } = args
+  const { groupId, accountId, input, expectedVersions } = args
   const fromCategoryId = input.fromCategoryId ?? DEFAULT_CATEGORY_ID
 
   if (input.changes.length === 0) {
@@ -89,7 +93,8 @@ export async function bulkUpdateExpenseCategories(args: {
     wantedById.set(change.expenseId, change.categoryId)
   }
 
-  const group = await prisma.group.findUnique({
+  const client = args.transaction ?? prisma
+  const group = await client.group.findUnique({
     where: { id: groupId },
     select: groupLedgerIdArchivedSelect,
   })
@@ -110,7 +115,7 @@ export async function bulkUpdateExpenseCategories(args: {
   }
 
   const boss = await getApiBoss()
-  const result = await prisma.$transaction(async (tx) => {
+  const apply = async (tx: Prisma.TransactionClient) => {
     // Lock the candidate rows by selecting them. Update via updateMany
     // below would not surface the prior categoryIds for the activity
     // row in one call, so we go with N targeted updates.
@@ -142,6 +147,12 @@ export async function bulkUpdateExpenseCategories(args: {
     for (const candidate of candidates) {
       const toCategoryId = wantedById.get(candidate.id)
       if (!toCategoryId) continue
+      const expectedVersion = expectedVersions?.get(candidate.id)
+      if (
+        expectedVersions &&
+        (expectedVersion === undefined || candidate.version !== expectedVersion)
+      )
+        continue
       // Narrow via the schema in case the stored category is a
       // legacy/unknown id; this just protects the activity row from
       // crashing on weird inputs.
@@ -155,7 +166,7 @@ export async function bulkUpdateExpenseCategories(args: {
           id: candidate.id,
           ledgerId: group.ledgerId,
           categoryId: candidate.categoryId,
-          version: candidate.version,
+          version: expectedVersion ?? candidate.version,
         },
         data: {
           categoryId: toCategoryId,
@@ -239,7 +250,11 @@ export async function bulkUpdateExpenseCategories(args: {
       distinctCategories: distinctDestinations.size,
       rows,
     } satisfies BulkCategorizeApplyResult
-  })
+  }
+
+  const result = args.transaction
+    ? await apply(args.transaction)
+    : await prisma.$transaction(apply)
 
   return result
 }

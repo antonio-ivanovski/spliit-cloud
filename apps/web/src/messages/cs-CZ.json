@@ -2789,9 +2789,6 @@
   },
   "BulkCategorize": {
     "title": "Hromadná kategorizace",
-    "calibrationTitle": "Krok 1 — Kalibrace",
-    "calibrationDescription": "Každý potvrzený příklad pomáhá AI zlepšit další návrhy. Může být hotová po jednom kole nebo si vyžádat další příklady.",
-    "roundCount": "Kolo {round} z {max}",
     "confidence": {
       "high": "Vysoká",
       "medium": "Střední",

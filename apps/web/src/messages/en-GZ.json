@@ -773,8 +773,6 @@
   },
   "BulkCategorize": {
     "title": "bulk categorize mode",
-    "calibrationTitle": "step 1 — calibration era",
-    "calibrationDescription": "each confirmed example helps the AI level up its next suggestions. it may be ready after one round or ask for more examples.",
     "aiWantsMore": "the AI wants a few more examples. confirm or correct the suggestions below, then run another round.",
     "aiSaidReady": "the AI feels ready. go to preview to commit the vibes.",
     "feedbackTableTitle": "selected expenses",
@@ -830,7 +828,6 @@
     "doneTitle": "categories saved. we ate.",
     "expenseColumn": "expense",
     "categoryColumn": "category",
-    "roundCount": "round {round} of {max}",
     "confidence": {
       "high": "high confidence",
       "medium": "medium confidence",

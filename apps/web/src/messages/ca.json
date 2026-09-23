@@ -2778,9 +2778,6 @@
   },
   "BulkCategorize": {
     "title": "Categorització en lots",
-    "calibrationTitle": "Pas 1 — Calibració",
-    "calibrationDescription": "Cada exemple que confirmes ajuda la IA a millorar els suggeriments següents. Pot estar preparada després d’una ronda o demanar més exemples.",
-    "roundCount": "Ronda {round} de {max}",
     "confidence": {
       "high": "Alt",
       "medium": "Mitjà",

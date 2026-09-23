@@ -2802,9 +2802,6 @@
   },
   "BulkCategorize": {
     "title": "일괄 카테고리 분류",
-    "calibrationTitle": "1단계 — 캘리브레이션",
-    "calibrationDescription": "확인한 예시가 쌓일수록 AI의 다음 추천이 더 정확해져요. 한 번에 준비될 수도 있고 예시를 더 요청할 수도 있어요.",
-    "roundCount": "라운드 {round} / {max}",
     "confidence": {
       "high": "높음",
       "medium": "중간",

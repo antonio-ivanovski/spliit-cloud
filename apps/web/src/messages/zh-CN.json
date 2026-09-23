@@ -2759,9 +2759,6 @@
   },
   "BulkCategorize": {
     "title": "批量分类",
-    "calibrationTitle": "步骤1 — 校准",
-    "calibrationDescription": "你确认的每个示例都会帮助 AI 改进下一次建议。AI 可能一轮后即可准备就绪，也可能需要更多示例。",
-    "roundCount": "第{round}轮 / 共{max}轮",
     "confidence": {
       "high": "高",
       "medium": "中",

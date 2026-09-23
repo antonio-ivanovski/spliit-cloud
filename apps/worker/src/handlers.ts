@@ -1,3 +1,4 @@
+import { processCategorizationJob } from '@spliit/api/lib/api/bulk-categorization-run'
 import {
   materializeRecurringExpense,
   reconcileDueRecurringExpenses,
@@ -16,6 +17,9 @@ import { JOB_NAMES, sendJob, type JobHandlers } from '@spliit/jobs'
 import { handleNotificationDelivery } from './notification-delivery'
 
 export const handlers: JobHandlers = {
+  [JOB_NAMES.BULK_CATEGORIZE]: async (payload) => {
+    await processCategorizationJob(payload.runId, payload.phase)
+  },
   [JOB_NAMES.MATERIALIZE_RECURRING_EXPENSE]: async (payload, context) => {
     await materializeRecurringExpense(payload, context.boss)
   },

@@ -77,6 +77,8 @@ type Props = {
   /** Title and action label shown by the mobile multi-select drawer. */
   mobileTitle?: string
   mobileDoneLabel?: string
+  /** Accessible label for the trigger when several selectors appear together. */
+  ariaLabel?: string
 }
 
 export function CategorySelector({
@@ -93,6 +95,7 @@ export function CategorySelector({
   multiPlaceholder,
   mobileTitle,
   mobileDoneLabel,
+  ariaLabel,
 }: Props) {
   const [open, setOpen] = useState(false)
   const commandInputRef = useRef<HTMLInputElement>(null)
@@ -211,6 +214,7 @@ export function CategorySelector({
               loadingAppearance={loadingAppearance}
               disabled={disabled}
               compact={compact}
+              {...(ariaLabel ? { 'aria-label': ariaLabel } : {})}
             />
           }
         />
@@ -246,6 +250,7 @@ export function CategorySelector({
             loadingAppearance={loadingAppearance}
             disabled={disabled}
             compact={compact}
+            {...(ariaLabel ? { 'aria-label': ariaLabel } : {})}
           />
         }
       />
@@ -563,6 +568,7 @@ type CategoryButtonProps = {
   category: Category
   open: boolean
   isLoading: boolean
+  className?: string
   loadingAppearance?: 'ai' | 'spinner'
   disabled?: boolean
   compact?: boolean
@@ -602,7 +608,9 @@ const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
       >
         <span
           className={
-            compact ? 'flex items-center justify-center' : 'flex-1 text-start'
+            compact
+              ? 'flex items-center justify-center'
+              : 'min-w-0 flex-1 text-start'
           }
         >
           <CategoryLabel category={category} compact={compact} />
@@ -639,9 +647,13 @@ function CategoryLabel({
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Categories' })
   return (
-    <div className="flex items-center gap-3">
-      <CategoryIcon category={category} className="h-4 w-4" />
-      {!compact && categoryLabel(t, category.id)}
+    <div className="flex min-w-0 items-center gap-3">
+      <CategoryIcon category={category} className="h-4 w-4 shrink-0" />
+      {!compact && (
+        <span className="min-w-0 truncate">
+          {categoryLabel(t, category.id)}
+        </span>
+      )}
     </div>
   )
 }

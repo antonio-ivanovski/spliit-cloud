@@ -2803,9 +2803,6 @@
   },
   "BulkCategorize": {
     "title": "Bulkcategoriseren",
-    "calibrationTitle": "Stap 1 — Kalibratie",
-    "calibrationDescription": "Elk voorbeeld dat je bevestigt, helpt de AI om de volgende suggesties te verbeteren. De AI kan na één ronde klaar zijn of om meer voorbeelden vragen.",
-    "roundCount": "Ronde {round} van {max}",
     "confidence": {
       "high": "Hoog",
       "medium": "Gemiddeld",
