@@ -1502,12 +1502,16 @@
     "rerunProgressTitle": "Atualizando as sugestões",
     "progressPreparing": "Preparando as despesas…",
     "noGeneralRows": "Não há despesas em Geral nesta revisão.",
-    "discardConfirmationDescription": "Isso remove a execução, as sugestões e todas as escolhas feitas. Nenhuma categoria de despesa será alterada.",
+    "discardConfirmationDescription": "Isso remove a execução, as sugestões e as escolhas feitas por você ou outros administradores. Nenhuma categoria de despesa será alterada.",
     "progressCountDescription": "Somente as categorias confirmadas e as correspondências médias ou altas contam; Geral e as correspondências fracas não.",
     "systemOneModeDescription": "Use o modelo de decisão do System One para cada despesa, usando como dicas as despesas categorizadas deste grupo e suas escolhas revisadas. O TypeSafe Jev é um desses modelos.",
     "systemOneUnavailable": "O System One não está disponível. A correspondência local ainda está disponível.",
     "systemOneConfidence": "Confiança no System One: {confidence}%",
-    "systemOneOptionProbability": "Probabilidade da opção no System One: {probability}%"
+    "systemOneOptionProbability": "Probabilidade da opção no System One: {probability}%",
+    "stageProcessed": "Processadas {processed} de {total} despesas nesta etapa",
+    "sharedRunNotice": "Esta execução é compartilhada com outros administradores do grupo. Todos veem as mesmas sugestões.",
+    "saveConflictDescription": "Alguém editou estas despesas ou alterou a categoria delas fora desta execução. Salve as outras despesas ou edite as categorias novamente e tente salvar mais uma vez.",
+    "saveOtherExpenses": "Salvar outras despesas"
   },
   "ExpensePreview": {
     "title": "Prévia da despesa",

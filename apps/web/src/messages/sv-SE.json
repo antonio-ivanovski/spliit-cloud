@@ -753,14 +753,23 @@
     "progressPreparing": "Förbereder utgifter…",
     "noGeneralRows": "Det finns inga utgifter kvar i Allmänt i den här granskningen.",
     "discardConfirmationTitle": "Kassera den här kategoriseringskörningen?",
-    "discardConfirmationDescription": "Detta tar bort körningen, dess förslag och alla val du har gjort. Inga utgiftskategorier ändras.",
+    "discardConfirmationDescription": "Detta tar bort körningen, dess förslag och val som gjorts av dig eller andra administratörer. Inga utgiftskategorier ändras.",
     "discardConfirmationCancel": "Behåll körning",
     "progressCountDescription": "Endast bekräftade kategorier samt mellan- och högmatchningar räknas; Allmänt och svaga matchningar räknas inte.",
     "systemOneMode": "System One-modell",
     "systemOneModeDescription": "Använd beslutsmodellen System One för varje utgift och använd den här gruppens kategoriserade utgifter och dina granskade val som ledtrådar. TypeSafe Jev är en sådan modell.",
     "systemOneUnavailable": "System One är inte tillgängligt. Lokal matchning är fortfarande tillgänglig.",
     "systemOneConfidence": "System Ones säkerhet: {confidence}%",
-    "systemOneOptionProbability": "Sannolikhet för System One-alternativet: {probability}%"
+    "systemOneOptionProbability": "Sannolikhet för System One-alternativet: {probability}%",
+    "overallProgress": "Totala framsteg",
+    "fullPassProcessed": "{processed} av {total} utgifter bearbetade",
+    "stageProcessed": "{processed} av {total} utgifter bearbetade i detta steg",
+    "saveSkipped": "{count} utgifter hoppades över eftersom de ändrades.",
+    "sharedRunNotice": "Den här körningen delas med andra gruppadministratörer. Alla ser samma förslag.",
+    "saveConflictTitle": "{count} utgifter har ändrats sedan den här granskningen startade",
+    "saveConflictDescription": "Någon redigerade dessa utgifter eller ändrade deras kategori utanför den här körningen. Spara de övriga utgifterna, eller redigera kategorierna igen och försök spara en gång till.",
+    "saveConflictMore": "Och {count} till.",
+    "saveOtherExpenses": "Spara övriga utgifter"
   },
   "Categories": {
     "Entertainment": {

@@ -753,14 +753,23 @@
     "progressPreparing": "اخراجات تیار کیے جا رہے ہیں…",
     "noGeneralRows": "اس جائزے میں جنرل میں کوئی خرچ باقی نہیں ہے۔",
     "discardConfirmationTitle": "کیا یہ کیٹیگرائزیشن رن ختم کیا جائے؟",
-    "discardConfirmationDescription": "اس سے رن، اس کی تجاویز اور آپ کے کیے گئے تمام انتخاب ختم ہو جائیں گے۔ کسی خرچ کی کیٹیگری تبدیل نہیں ہوگی۔",
+    "discardConfirmationDescription": "اس سے رن، اس کی تجاویز اور آپ کے یا دیگر گروپ ایڈمنز کے کیے گئے تمام انتخاب ختم ہو جائیں گے۔ کسی خرچ کی کیٹیگری تبدیل نہیں ہوگی۔",
     "discardConfirmationCancel": "رن رکھیں",
     "progressCountDescription": "صرف تصدیق شدہ کیٹیگریز اور درمیانہ یا زیادہ ملاپ گنے جاتے ہیں؛ جنرل اور کمزور ملاپ نہیں گنے جاتے۔",
     "systemOneMode": "System One ماڈل",
     "systemOneModeDescription": "ہر خرچ کے لیے System One فیصلہ ماڈل استعمال کریں، جس میں اس گروپ کے زمرہ بند اخراجات اور آپ کے نظرثانی شدہ انتخاب بطور اشارے استعمال ہوں گے۔ TypeSafe Jev ایسا ہی ایک ماڈل ہے۔",
     "systemOneUnavailable": "System One دستیاب نہیں ہے۔ مقامی ملاپ اب بھی دستیاب ہے۔",
     "systemOneConfidence": "System One کے اعتماد کی سطح: {confidence}%",
-    "systemOneOptionProbability": "System One کے اختیار کا امکان: {probability}%"
+    "systemOneOptionProbability": "System One کے اختیار کا امکان: {probability}%",
+    "overallProgress": "مجموعی پیش رفت",
+    "fullPassProcessed": "{total} میں سے {processed} اخراجات پروسیس کیے گئے۔",
+    "stageProcessed": "اس مرحلے میں {total} میں سے {processed} اخراجات پروسیس کیے گئے۔",
+    "saveSkipped": "{count} اخراجات تبدیل ہونے کی وجہ سے چھوڑ دیے گئے۔",
+    "sharedRunNotice": "یہ رن دیگر گروپ ایڈمنز کے ساتھ شیئر کیا گیا ہے۔ سب ایک ہی تجاویز دیکھتے ہیں۔",
+    "saveConflictTitle": "اس جائزے کے شروع ہونے کے بعد سے {count} اخراجات تبدیل ہوئے",
+    "saveConflictDescription": "کسی نے اس رن کے باہر ان اخراجات میں ترمیم کی یا ان کی کیٹیگری تبدیل کی۔ دیگر اخراجات محفوظ کریں، یا کیٹیگریز میں دوبارہ ترمیم کر کے ایک بار پھر محفوظ کرنے کی کوشش کریں۔",
+    "saveConflictMore": "اور {count} مزید۔",
+    "saveOtherExpenses": "دیگر اخراجات محفوظ کریں"
   },
   "Categories": {
     "Entertainment": {

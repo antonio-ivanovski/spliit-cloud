@@ -753,14 +753,23 @@
     "progressPreparing": "खर्च तैयार किए जा रहे हैं…",
     "noGeneralRows": "इस समीक्षा में सामान्य में कोई खर्च शेष नहीं है।",
     "discardConfirmationTitle": "क्या यह श्रेणीकरण रन हटाया जाए?",
-    "discardConfirmationDescription": "इससे रन, इसके सुझाव और आपके द्वारा किए गए सभी विकल्प हट जाएंगे। किसी भी खर्च की श्रेणी नहीं बदलेगी।",
+    "discardConfirmationDescription": "इससे रन, इसके सुझाव और आपके या अन्य समूह प्रशासकों द्वारा किए गए सभी विकल्प हट जाएंगे। किसी भी खर्च की श्रेणी नहीं बदलेगी।",
     "discardConfirmationCancel": "रन रखें",
     "progressCountDescription": "केवल पुष्टि की गई श्रेणियां और मध्यम या उच्च मिलान गिने जाते हैं; सामान्य और कमजोर मिलान नहीं गिने जाते।",
     "systemOneMode": "System One मॉडल",
     "systemOneModeDescription": "हर खर्च के लिए System One निर्णय मॉडल का उपयोग करें। संकेत के रूप में इस ग्रुप के श्रेणीबद्ध खर्चों और आपके द्वारा समीक्षा किए गए विकल्पों का उपयोग किया जाएगा। TypeSafe Jev ऐसा ही एक मॉडल है।",
     "systemOneUnavailable": "System One उपलब्ध नहीं है। स्थानीय मिलान अभी भी उपलब्ध है।",
     "systemOneConfidence": "System One का विश्वास स्तर: {confidence}%",
-    "systemOneOptionProbability": "System One विकल्प की संभावना: {probability}%"
+    "systemOneOptionProbability": "System One विकल्प की संभावना: {probability}%",
+    "overallProgress": "कुल प्रगति",
+    "fullPassProcessed": "{total} में से {processed} खर्च संसाधित किए गए।",
+    "stageProcessed": "इस चरण में {total} में से {processed} खर्च संसाधित किए गए।",
+    "saveSkipped": "बदल जाने के कारण {count} खर्च छोड़ दिए गए।",
+    "sharedRunNotice": "यह रन अन्य समूह प्रशासकों के साथ साझा किया गया है। सभी को समान सुझाव दिखते हैं।",
+    "saveConflictTitle": "इस समीक्षा के शुरू होने के बाद से {count} खर्च बदल गए",
+    "saveConflictDescription": "किसी ने इस रन के बाहर इन खर्चों को संपादित किया या उनकी श्रेणी बदल दी। अन्य खर्चों को सहेजें, या श्रेणियों को फिर से संपादित करके एक बार और सहेजने का प्रयास करें।",
+    "saveConflictMore": "और {count} अन्य।",
+    "saveOtherExpenses": "अन्य खर्च सहेजें"
   },
   "Categories": {
     "Entertainment": {

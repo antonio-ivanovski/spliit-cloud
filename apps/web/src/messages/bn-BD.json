@@ -785,14 +785,23 @@
     "progressPreparing": "খরচ প্রস্তুত করা হচ্ছে…",
     "noGeneralRows": "এই পর্যালোচনায় সাধারণ-এ কোনো খরচ বাকি নেই।",
     "discardConfirmationTitle": "এই ক্যাটেগোরাইজেশন রানটি বাতিল করবেন?",
-    "discardConfirmationDescription": "এটি রান, এর পরামর্শ এবং আপনার করা সব পছন্দ মুছে দেবে। কোনো খরচের ক্যাটেগোরি পরিবর্তন হবে না।",
+    "discardConfirmationDescription": "এটি রান, এর পরামর্শ এবং আপনার বা অন্য অ্যাডমিনদের করা সব পছন্দ মুছে দেবে। কোনো খরচের ক্যাটেগোরি পরিবর্তন হবে না।",
     "discardConfirmationCancel": "রান রাখুন",
     "progressCountDescription": "শুধু নিশ্চিত ক্যাটেগোরি এবং মাঝারি বা বেশি মিল গণনা করা হয়; সাধারণ এবং কম মিল গণনা করা হয় না।",
     "systemOneMode": "System One মডেল",
     "systemOneModeDescription": "প্রতিটি খরচের জন্য System One সিদ্ধান্ত মডেল ব্যবহার করুন; এই গ্রুপের শ্রেণিবদ্ধ করা খরচ এবং আপনার পর্যালোচনা করা পছন্দগুলোকে ইঙ্গিত হিসেবে ব্যবহার করা হবে। TypeSafe Jev এমনই একটি মডেল।",
     "systemOneUnavailable": "System One উপলভ্য নয়। স্থানীয় মিল খোঁজার সুবিধা এখনও উপলভ্য।",
     "systemOneConfidence": "System One-এর নির্ভরযোগ্যতা: {confidence}%",
-    "systemOneOptionProbability": "System One বিকল্পের সম্ভাবনা: {probability}%"
+    "systemOneOptionProbability": "System One বিকল্পের সম্ভাবনা: {probability}%",
+    "overallProgress": "সামগ্রিক অগ্রগতি",
+    "fullPassProcessed": "{total}টি খরচের মধ্যে {processed}টি প্রক্রিয়া করা হয়েছে",
+    "stageProcessed": "এই ধাপে {total}টি খরচের মধ্যে {processed}টি প্রক্রিয়া করা হয়েছে",
+    "saveSkipped": "পরিবর্তন হওয়ায় {count}টি খরচ এড়ানো হয়েছে।",
+    "sharedRunNotice": "এই রানটি অন্যান্য গ্রুপ অ্যাডমিনদের সাথে শেয়ার করা হয়। সবাই একই পরামর্শ দেখতে পান।",
+    "saveConflictTitle": "এই পর্যালোচনা শুরু হওয়ার পর {count}টি খরচ পরিবর্তন হয়েছে",
+    "saveConflictDescription": "এই রানের বাইরে কেউ এই খরচগুলো সম্পাদনা করেছে বা এগুলোর ক্যাটেগোরি বদলেছে। অন্য খরচগুলো সংরক্ষণ করুন, অথবা ক্যাটেগোরিগুলো আবার সম্পাদনা করে আরেকবার সংরক্ষণের চেষ্টা করুন।",
+    "saveConflictMore": "আরও {count}টি।",
+    "saveOtherExpenses": "অন্য খরচগুলো সংরক্ষণ করুন"
   },
   "Categories": {
     "Entertainment": {

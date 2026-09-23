@@ -531,14 +531,23 @@
     "progressPreparing": "جارٍ تجهيز المصروفات…",
     "noGeneralRows": "لا توجد مصروفات متبقية في عام في هذه المراجعة.",
     "discardConfirmationTitle": "تجاهل تشغيل التصنيف هذا؟",
-    "discardConfirmationDescription": "سيؤدي هذا إلى إزالة التشغيل واقتراحاته وأي اختيارات قمت بها. لن يتم تغيير أي فئات للمصروفات.",
+    "discardConfirmationDescription": "سيؤدي هذا إلى إزالة التشغيل واقتراحاته والاختيارات التي أجريتها أنت أو المسؤولون الآخرون. لن يتم تغيير أي فئات للمصروفات.",
     "discardConfirmationCancel": "الاحتفاظ بالتشغيل",
     "progressCountDescription": "تُحتسب الفئات المؤكدة فقط والتطابقات المتوسطة والمرتفعة؛ أما عام والتطابقات الضعيفة فلا تُحتسب.",
     "systemOneMode": "نموذج System One",
     "systemOneModeDescription": "استخدم نموذج القرار System One لكل مصروف، مستعينًا بالمصروفات المصنّفة في هذه المجموعة وباختياراتك التي راجعتها كإشارات. يُعد TypeSafe Jev أحد هذه النماذج.",
     "systemOneUnavailable": "نظام System One غير متاح. لا تزال المطابقة المحلية متاحة.",
     "systemOneConfidence": "درجة الثقة في System One: {confidence}%",
-    "systemOneOptionProbability": "احتمالية خيار System One: {probability}%"
+    "systemOneOptionProbability": "احتمالية خيار System One: {probability}%",
+    "overallProgress": "التقدم العام",
+    "fullPassProcessed": "تمت معالجة {processed} من {total} من المصروفات",
+    "stageProcessed": "تمت معالجة {processed} من {total} من المصروفات في هذه الخطوة",
+    "saveSkipped": "تم تخطي {count} من المصروفات لأنها تغيرت.",
+    "sharedRunNotice": "هذا التشغيل مشترك مع مسؤولي المجموعة الآخرين. يرى الجميع الاقتراحات نفسها.",
+    "saveConflictTitle": "تغير {count} من المصروفات منذ بدء هذه المراجعة",
+    "saveConflictDescription": "عدل شخص ما هذه المصروفات أو غير فئتها خارج هذا التشغيل. احفظ المصروفات الأخرى، أو عدل الفئات مرة أخرى وحاول الحفظ مجددًا.",
+    "saveConflictMore": "و{count} أخرى.",
+    "saveOtherExpenses": "حفظ المصروفات الأخرى"
   },
   "ExpenseDocumentsInput": {
     "ErrorToast": {
