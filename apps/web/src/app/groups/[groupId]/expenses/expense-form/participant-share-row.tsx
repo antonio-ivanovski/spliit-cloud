@@ -45,7 +45,7 @@ export function ParticipantShareRow({
   return (
     <div
       className={cn(
-        'flex min-w-0 items-center gap-2 border-t py-2.5 last-of-type:mb-4! last-of-type:border-b',
+        'flex min-w-0 items-start gap-2 border-t py-2.5 last-of-type:mb-4! last-of-type:border-b',
         checked && 'bg-primary/[0.035]',
         disabled || !selectable ? 'cursor-default' : 'cursor-pointer',
         className,
@@ -88,7 +88,7 @@ export function ParticipantShareRow({
         </div>
       )}
       {shareInput && (
-        <div className="flex w-fit shrink-0 items-center justify-end">
+        <div className="flex w-fit shrink-0 items-start justify-end">
           {shareInput}
         </div>
       )}

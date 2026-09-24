@@ -132,7 +132,7 @@ export function ExpenseItemRow({
     <div className={cn('border-t py-3', isFiller && 'bg-muted/25')}>
       <div
         className={cn(
-          'grid grid-cols-[minmax(0,1fr)_minmax(0,5.5rem)_minmax(0,4.5rem)] items-center gap-1 md:items-start md:gap-x-3',
+          'grid grid-cols-[minmax(0,1fr)_minmax(0,5.5rem)_minmax(0,4.5rem)] items-start gap-1 md:gap-x-3',
           expenseItemGridClass,
         )}
       >

@@ -60,4 +60,8 @@ Here's the full flow, step by step:
 
 - Added a Tools flow to bulk-categorize existing group expenses with Dictionary & history or the System One decision model: calibration samples, virtualized review with match strength and confidence, reruns that learn from corrections, accurate progress across rounds, shared runs with safe retries and conflict recovery, and an atomic save (`TBD` by @handle)
 
+### 🐛 Bug fixes
+
+- Dismissed stale validation errors as soon as a field is edited across auth, account, budget, invitation, and comment forms, and kept itemized expense and share rows top-aligned so error text no longer centers sibling inputs. Thanks @KihtrakRaknas for reporting (#131, #132) (`TBD` by @handle)
+
 **Full Changelog**: TBD

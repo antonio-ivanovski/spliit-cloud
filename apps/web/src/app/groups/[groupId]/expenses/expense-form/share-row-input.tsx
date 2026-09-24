@@ -60,13 +60,13 @@ export function ShareRowInputControls({
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
 
   return (
-    <div className="flex items-center justify-end gap-0.5">
+    <div className="flex items-start justify-end gap-0.5">
       {splitMode === 'BY_SHARES' && (
         <Button
           type="button"
           variant="ghost"
           size="icon"
-          className="size-8 shrink-0"
+          className="size-8 shrink-0 self-start"
           disabled={readOnly || !isSelected}
           aria-label={t('decreaseShares', { name: participantName })}
           onClick={() => onStep(-1)}
@@ -80,7 +80,7 @@ export function ShareRowInputControls({
           type="button"
           variant="ghost"
           size="icon"
-          className="size-8 shrink-0"
+          className="size-8 shrink-0 self-start"
           disabled={readOnly || Number(value ?? 0) >= MAX_DISPLAY_SHARES}
           aria-label={t('increaseShares', { name: participantName })}
           onClick={() => onStep(1)}
@@ -463,7 +463,7 @@ export function ShareRowInput(props: {
           {input}
         </ShareRowInputControls>
       ) : (
-        <div className="flex items-center justify-end gap-0.5">{input}</div>
+        <div className="flex items-start justify-end gap-0.5">{input}</div>
       )}
     </div>
   )

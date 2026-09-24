@@ -107,6 +107,7 @@ export function ExpenseComments({
 
   const handleDelete = async (commentId: string) => {
     setDeletingCommentId(commentId)
+    if (deleteMutation.isError) deleteMutation.reset()
     try {
       await deleteMutation.mutateAsync({ groupId, expenseId, commentId })
       await invalidateComments()
@@ -219,6 +220,7 @@ export function ExpenseComments({
               onChange={(event) => {
                 setDraft(event.target.value)
                 if (validationError) setValidationError(null)
+                if (createMutation.isError) createMutation.reset()
               }}
               placeholder={t('commentPlaceholder')}
               maxLength={MAX_COMMENT_LENGTH}

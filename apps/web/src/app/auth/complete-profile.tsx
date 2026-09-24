@@ -173,7 +173,10 @@ export function CompleteProfilePage() {
                   autoComplete="name"
                   placeholder={t('namePlaceholder')}
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => {
+                    setName(e.target.value)
+                    if (error) setError(null)
+                  }}
                   required
                 />
               </div>

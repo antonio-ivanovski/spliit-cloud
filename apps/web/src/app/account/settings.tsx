@@ -309,7 +309,10 @@ function AccountSettingsContent() {
                     type="text"
                     autoComplete="name"
                     value={name}
-                    onChange={(e) => setDirtyName(e.target.value)}
+                    onChange={(e) => {
+                      setDirtyName(e.target.value)
+                      if (error) setError(null)
+                    }}
                     required
                     maxLength={50}
                     className={cn('w-full sm:max-w-xs')}

@@ -143,6 +143,10 @@ export function BudgetForm({
   const [notifyOver, setNotifyOver] = useState(budget?.notifyOver ?? true)
   const [error, setError] = useState<string | null>(null)
 
+  function clearError() {
+    if (error) setError(null)
+  }
+
   // The edit dialog is intentionally re-seeded when a different budget is selected.
   useEffect(() => {
     if (!budget) return
@@ -300,7 +304,10 @@ export function BudgetForm({
           <Input
             id="budget-name"
             value={name}
-            onChange={(event) => setName(event.target.value)}
+            onChange={(event) => {
+              setName(event.target.value)
+              clearError()
+            }}
             placeholder={t('form.namePlaceholder')}
           />
         </div>
@@ -325,7 +332,7 @@ export function BudgetForm({
               inputMode="decimal"
               placeholder={amountPlaceholder(currency.decimal_digits, locale)}
               value={localizeCurrencyInput(amount, locale)}
-              onChange={(event) =>
+              onChange={(event) => {
                 setAmount(
                   enforceCurrencyPattern(
                     event.target.value,
@@ -333,7 +340,8 @@ export function BudgetForm({
                     locale,
                   ),
                 )
-              }
+                clearError()
+              }}
               onFocus={(event) => {
                 const el = event.currentTarget
                 setTimeout(() => el.select(), 1)
@@ -347,7 +355,10 @@ export function BudgetForm({
         <legend className="text-sm font-medium">{t('form.period')}</legend>
         <Select
           value={periodType}
-          onValueChange={(value) => setPeriodType(value as BudgetPeriodType)}
+          onValueChange={(value) => {
+            setPeriodType(value as BudgetPeriodType)
+            clearError()
+          }}
         >
           <SelectTrigger aria-label={t('form.period')}>
             <SelectValue />
@@ -380,7 +391,10 @@ export function BudgetForm({
                 id="budget-start"
                 pickerTitle={t('form.startDate')}
                 value={customStart}
-                onValueChange={setCustomStart}
+                onValueChange={(value) => {
+                  setCustomStart(value)
+                  clearError()
+                }}
               />
             </div>
             <div className="space-y-2">
@@ -389,7 +403,10 @@ export function BudgetForm({
                 id="budget-end"
                 pickerTitle={t('form.endDate')}
                 value={customEnd}
-                onValueChange={setCustomEnd}
+                onValueChange={(value) => {
+                  setCustomEnd(value)
+                  clearError()
+                }}
               />
             </div>
           </div>
@@ -399,18 +416,22 @@ export function BudgetForm({
       <ScopeFieldset
         label={t('form.categories')}
         scope={categoryScope}
-        onScopeChange={setCategoryScope}
+        onScopeChange={(scope) => {
+          setCategoryScope(scope)
+          clearError()
+        }}
         allLabel={t('allCategories')}
         selectedLabel={t('selectedCategories')}
         allChips={<ScopeChipList items={allCategoryChips} />}
         selectedChips={
           <ScopeChipList
             items={selectedCategoryChips}
-            onRemove={(id) =>
+            onRemove={(id) => {
               setCategoryNodeIds((current) =>
                 current.filter((value) => value !== id),
               )
-            }
+              clearError()
+            }}
             removeLabel={t('remove')}
           />
         }
@@ -426,11 +447,12 @@ export function BudgetForm({
             mode="multi"
             onValueChange={() => undefined}
             selectedValues={selectedCategoryIds}
-            onValueToggle={(id) =>
+            onValueToggle={(id) => {
               setCategoryNodeIds((current) =>
                 toggleCategorySelection(current, id),
               )
-            }
+              clearError()
+            }}
             multiPlaceholder={t('form.chooseCategories')}
             mobileTitle={t('form.categories')}
           />
@@ -440,18 +462,22 @@ export function BudgetForm({
       <ScopeFieldset
         label={t('form.participants')}
         scope={participantScope}
-        onScopeChange={setParticipantScope}
+        onScopeChange={(scope) => {
+          setParticipantScope(scope)
+          clearError()
+        }}
         allLabel={t('allParticipants')}
         selectedLabel={t('selectedParticipants')}
         allChips={<ScopeChipList items={allParticipantChips} />}
         selectedChips={
           <ScopeChipList
             items={selectedParticipantChips}
-            onRemove={(id) =>
+            onRemove={(id) => {
               setParticipantIds((current) =>
                 current.filter((value) => value !== id),
               )
-            }
+              clearError()
+            }}
             removeLabel={t('remove')}
           />
         }
@@ -464,13 +490,14 @@ export function BudgetForm({
             participants={participantOptions}
             mode="multi"
             selectedValues={participantIds}
-            onValueToggle={(id) =>
+            onValueToggle={(id) => {
               setParticipantIds((current) =>
                 current.includes(id)
                   ? current.filter((value) => value !== id)
                   : [...current, id],
               )
-            }
+              clearError()
+            }}
             multiPlaceholder={t('form.chooseParticipants')}
             mobileTitle={t('form.participants')}
             className="w-full"
@@ -495,7 +522,10 @@ export function BudgetForm({
           <Checkbox
             id="budget-notify-trending"
             checked={notifyTrending}
-            onCheckedChange={(checked) => setNotifyTrending(checked === true)}
+            onCheckedChange={(checked) => {
+              setNotifyTrending(checked === true)
+              clearError()
+            }}
           />
           <Label htmlFor="budget-notify-trending" className="cursor-pointer">
             <span className="block text-sm font-medium">
@@ -510,7 +540,10 @@ export function BudgetForm({
           <Checkbox
             id="budget-notify-over"
             checked={notifyOver}
-            onCheckedChange={(checked) => setNotifyOver(checked === true)}
+            onCheckedChange={(checked) => {
+              setNotifyOver(checked === true)
+              clearError()
+            }}
           />
           <Label htmlFor="budget-notify-over" className="cursor-pointer">
             <span className="block text-sm font-medium">

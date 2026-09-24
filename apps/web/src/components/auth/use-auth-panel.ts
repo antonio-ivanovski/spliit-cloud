@@ -234,6 +234,27 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     passkeyAuth.reset()
   }
 
+  function clearAuthErrors() {
+    if (emailAuth.isError) emailAuth.reset()
+    if (magicLink.isError) magicLink.reset()
+    if (passkeyAuth.isError) passkeyAuth.reset()
+  }
+
+  function updateEmail(next: string) {
+    setEmail(next)
+    clearAuthErrors()
+  }
+
+  function updatePassword(next: string) {
+    setPassword(next)
+    clearAuthErrors()
+  }
+
+  function updateConfirmPassword(next: string) {
+    setConfirmPassword(next)
+    clearAuthErrors()
+  }
+
   function handleMagicLink(event: React.FormEvent) {
     event.preventDefault()
     if (!isOnline) return
@@ -358,9 +379,9 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     passkeyEnabled,
     linkInviteToken,
     callbackURL,
-    setEmail,
-    setPassword,
-    setConfirmPassword,
+    setEmail: updateEmail,
+    setPassword: updatePassword,
+    setConfirmPassword: updateConfirmPassword,
     setEmailVariant,
     setSuccessState,
     switchMode,
