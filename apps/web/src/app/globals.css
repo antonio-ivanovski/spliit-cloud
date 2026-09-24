@@ -236,6 +236,20 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentcolor);
   }
+  /* Kill double-tap-to-zoom while keeping pan + pinch-zoom intact. */
+  html,
+  body {
+    touch-action: manipulation;
+  }
+}
+
+/*
+ * Installed-PWA shell tuning (set via `data-app-mode="pwa"` in main.tsx).
+ * Visual only: no zoom lock, intentional pinch-zoom keeps working.
+ */
+html[data-app-mode='pwa'] body {
+  overscroll-behavior-y: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 :root {

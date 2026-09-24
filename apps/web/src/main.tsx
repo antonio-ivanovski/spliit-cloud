@@ -4,9 +4,11 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
 import { initI18n } from '@/i18n/setup'
+import { initPwaAppMode } from '@/lib/pwa-app-mode'
 import { startPwaUpdateManager } from '@/lib/pwa-update-manager'
 import { router } from '@/router'
 
+initPwaAppMode()
 startPwaUpdateManager()
 await initI18n()
 

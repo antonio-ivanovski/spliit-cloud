@@ -62,6 +62,7 @@ Here's the full flow, step by step:
 
 ### 🐛 Bug fixes
 
+- Made the installed PWA feel more native without disabling pinch-zoom: double-tap zoom is suppressed via `touch-action`, and PWA launches get overscroll/tap-highlight tuning. Thanks @KihtrakRaknas for reporting (#129) (`TBD` by @handle)
 - Dismissed stale validation errors as soon as a field is edited across auth, account, budget, invitation, and comment forms, and kept itemized expense and share rows top-aligned so error text no longer centers sibling inputs. Thanks @KihtrakRaknas for reporting (#131, #132) (`TBD` by @handle)
 
 **Full Changelog**: TBD
