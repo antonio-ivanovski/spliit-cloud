@@ -547,7 +547,34 @@
     "saveConflictTitle": "تغير {count} من المصروفات منذ بدء هذه المراجعة",
     "saveConflictDescription": "عدل شخص ما هذه المصروفات أو غير فئتها خارج هذا التشغيل. احفظ المصروفات الأخرى، أو عدل الفئات مرة أخرى وحاول الحفظ مجددًا.",
     "saveConflictMore": "و{count} أخرى.",
-    "saveOtherExpenses": "حفظ المصروفات الأخرى"
+    "saveOtherExpenses": "حفظ المصروفات الأخرى",
+    "receiptTitles": {
+      "freshMarket": "سوق المنتجات الطازجة",
+      "greenGrocer": "بقالة الخضار",
+      "fruitStand": "بسطة الفاكهة",
+      "cornerBistro": "مطعم الحي",
+      "noodleHouse": "مطعم النودلز",
+      "cafeLunch": "غداء المقهى",
+      "flightTicket": "تذكرة الطيران",
+      "airlineBaggage": "أمتعة الطيران",
+      "boardingPass": "بطاقة الصعود",
+      "homeSupplies": "مستلزمات المنزل",
+      "hardwareShop": "متجر الأدوات",
+      "cleaningGoods": "مستلزمات التنظيف",
+      "cinemaTickets": "تذاكر السينما",
+      "movieNight": "سهرة سينمائية",
+      "filmFestival": "مهرجان الأفلام",
+      "organicMarket": "سوق المنتجات العضوية",
+      "bakeryRun": "مشتريات المخبز",
+      "sushiBar": "مطعم السوشي",
+      "pizzaNight": "سهرة البيتزا",
+      "airportLounge": "صالة المطار",
+      "extraLegroom": "مساحة إضافية للأرجل",
+      "laundryDetergent": "مسحوق الغسيل",
+      "storageBoxes": "صناديق التخزين",
+      "popcornCombo": "وجبة الفشار",
+      "streamingRental": "استئجار عبر البث"
+    }
   },
   "ExpenseDocumentsInput": {
     "ErrorToast": {

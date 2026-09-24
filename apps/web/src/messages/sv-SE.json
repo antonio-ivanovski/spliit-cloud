@@ -769,7 +769,34 @@
     "saveConflictTitle": "{count} utgifter har ändrats sedan den här granskningen startade",
     "saveConflictDescription": "Någon redigerade dessa utgifter eller ändrade deras kategori utanför den här körningen. Spara de övriga utgifterna, eller redigera kategorierna igen och försök spara en gång till.",
     "saveConflictMore": "Och {count} till.",
-    "saveOtherExpenses": "Spara övriga utgifter"
+    "saveOtherExpenses": "Spara övriga utgifter",
+    "receiptTitles": {
+      "freshMarket": "Färskmarknad",
+      "greenGrocer": "Grönsaksbutik",
+      "fruitStand": "Fruktstånd",
+      "cornerBistro": "Hörnbistro",
+      "noodleHouse": "Nudelbar",
+      "cafeLunch": "Cafélunch",
+      "flightTicket": "Flygbiljett",
+      "airlineBaggage": "Flygbagage",
+      "boardingPass": "Boardingkort",
+      "homeSupplies": "Hemartiklar",
+      "hardwareShop": "Järnaffär",
+      "cleaningGoods": "Städvaror",
+      "cinemaTickets": "Biobiljetter",
+      "movieNight": "Filmkväll",
+      "filmFestival": "Filmfestival",
+      "organicMarket": "Ekomarknad",
+      "bakeryRun": "Bageribesök",
+      "sushiBar": "Sushibar",
+      "pizzaNight": "Pizzakväll",
+      "airportLounge": "Flygplatslounge",
+      "extraLegroom": "Extra benutrymme",
+      "laundryDetergent": "Tvättmedel",
+      "storageBoxes": "Förvaringslådor",
+      "popcornCombo": "Popcornmeny",
+      "streamingRental": "Streaminghyra"
+    }
   },
   "Categories": {
     "Entertainment": {

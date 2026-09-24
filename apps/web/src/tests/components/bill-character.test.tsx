@@ -106,6 +106,22 @@ describe('BillCharacter', () => {
     expect(container.querySelector('[data-mascot-arm]')).toBeNull()
   })
 
+  it('uses Bill’s existing receipt artwork with arms only in the sorting scene', () => {
+    const { container, rerender } = render(
+      <BillCharacter sortingPhase="reading" />,
+    )
+    expect(
+      container.querySelector('[data-mascot-sorting-arms="reading"]'),
+    ).toBeTruthy()
+    expect(
+      container.querySelector('[data-mascot-sorting-face="reading"]'),
+    ).toBeTruthy()
+    expect(container.innerHTML).toContain('M70 14H42')
+
+    rerender(<BillCharacter />)
+    expect(container.querySelector('[data-mascot-sorting-arms]')).toBeNull()
+  })
+
   it('paints the stick arm behind the receipt body', () => {
     const { container } = render(<BillCharacter reaction="welcome" />)
     const arm = container.querySelector('[data-mascot-arm="wave"]')

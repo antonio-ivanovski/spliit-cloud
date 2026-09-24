@@ -1511,7 +1511,19 @@
     "stageProcessed": "Processadas {processed} de {total} despesas nesta etapa",
     "sharedRunNotice": "Esta execução é compartilhada com outros administradores do grupo. Todos veem as mesmas sugestões.",
     "saveConflictDescription": "Alguém editou estas despesas ou alterou a categoria delas fora desta execução. Salve as outras despesas ou edite as categorias novamente e tente salvar mais uma vez.",
-    "saveOtherExpenses": "Salvar outras despesas"
+    "saveOtherExpenses": "Salvar outras despesas",
+    "receiptTitles": {
+      "greenGrocer": "Quitanda",
+      "fruitStand": "Barraca de frutas",
+      "cornerBistro": "Bistrô da esquina",
+      "flightTicket": "Passagem de avião",
+      "cinemaTickets": "Ingressos de cinema",
+      "organicMarket": "Mercado orgânico",
+      "laundryDetergent": "Detergente para roupa",
+      "storageBoxes": "Caixas de armazenamento",
+      "popcornCombo": "Combo de pipoca",
+      "streamingRental": "Aluguel em streaming"
+    }
   },
   "ExpensePreview": {
     "title": "Prévia da despesa",

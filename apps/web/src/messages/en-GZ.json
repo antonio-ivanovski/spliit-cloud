@@ -936,7 +936,34 @@
     "saveConflictTitle": "{count} expenses changed since this review kicked off",
     "saveConflictDescription": "someone edited these expenses or changed their category outside this run. save the other expenses, or fix the categories up again and try saving one more time.",
     "saveConflictMore": "and {count} more.",
-    "saveOtherExpenses": "save the other expenses"
+    "saveOtherExpenses": "save the other expenses",
+    "receiptTitles": {
+      "freshMarket": "fresh market haul",
+      "greenGrocer": "green grocer run",
+      "fruitStand": "fruit stand stop",
+      "cornerBistro": "corner bistro dinner",
+      "noodleHouse": "noodle house dinner",
+      "cafeLunch": "cafe lunch date",
+      "flightTicket": "flight ticket",
+      "airlineBaggage": "checked bag fees",
+      "boardingPass": "boarding pass",
+      "homeSupplies": "home supplies restock",
+      "hardwareShop": "hardware store run",
+      "cleaningGoods": "cleaning supplies haul",
+      "cinemaTickets": "cinema tickets",
+      "movieNight": "movie night snacks",
+      "filmFestival": "film fest tickets",
+      "organicMarket": "organic market haul",
+      "bakeryRun": "bakery run",
+      "sushiBar": "sushi bar dinner",
+      "pizzaNight": "pizza night order",
+      "airportLounge": "airport lounge hang",
+      "extraLegroom": "extra legroom upgrade",
+      "laundryDetergent": "laundry detergent run",
+      "storageBoxes": "storage boxes haul",
+      "popcornCombo": "popcorn combo",
+      "streamingRental": "streaming rental night"
+    }
   },
   "Categories": {
     "Entertainment": {

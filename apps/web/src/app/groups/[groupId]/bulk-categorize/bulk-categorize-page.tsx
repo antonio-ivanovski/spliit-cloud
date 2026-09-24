@@ -35,6 +35,7 @@ import { DEFAULT_CATEGORY_ID, type CategoryId } from '@spliit/domain'
 
 import { BulkCategorizePagedReview } from './bulk-categorize-paged-review'
 import { getBulkCategorizationProgress } from './bulk-categorize-progress'
+import { BulkCategorizeProgressScene } from './bulk-categorize-progress-scene'
 import { BulkCategorizeTable } from './bulk-categorize-table'
 
 export type BulkCategorizePageProps = {
@@ -333,11 +334,7 @@ export function BulkCategorizePage({
       ) : showProgress ? (
         <Card aria-live="polite">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Loader2
-                className="size-5 animate-spin text-primary"
-                aria-hidden
-              />
+            <CardTitle>
               {pendingStage === 'calibration'
                 ? t('calibrationRoundTitle', { round: 1 })
                 : run?.status === 'QUEUED_CALIBRATION' ||
@@ -361,6 +358,7 @@ export function BulkCategorizePage({
             <CardDescription>{t('progressDescription')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
+            <BulkCategorizeProgressScene />
             {(calibration?.metrics.length ?? 0) > 0 && (
               <div className="space-y-1 text-sm text-muted-foreground">
                 <p>
@@ -464,12 +462,14 @@ export function BulkCategorizePage({
                 variant="outline"
                 disabled={pending}
                 onClick={() =>
-                  void act(() =>
-                    start.mutateAsync({
-                      groupId,
-                      mode: completionForCurrentRun.mode,
-                      locale,
-                    }),
+                  void act(
+                    () =>
+                      start.mutateAsync({
+                        groupId,
+                        mode: completionForCurrentRun.mode,
+                        locale,
+                      }),
+                    'calibration',
                   )
                 }
               >

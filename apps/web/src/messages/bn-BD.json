@@ -801,7 +801,34 @@
     "saveConflictTitle": "এই পর্যালোচনা শুরু হওয়ার পর {count}টি খরচ পরিবর্তন হয়েছে",
     "saveConflictDescription": "এই রানের বাইরে কেউ এই খরচগুলো সম্পাদনা করেছে বা এগুলোর ক্যাটেগোরি বদলেছে। অন্য খরচগুলো সংরক্ষণ করুন, অথবা ক্যাটেগোরিগুলো আবার সম্পাদনা করে আরেকবার সংরক্ষণের চেষ্টা করুন।",
     "saveConflictMore": "আরও {count}টি।",
-    "saveOtherExpenses": "অন্য খরচগুলো সংরক্ষণ করুন"
+    "saveOtherExpenses": "অন্য খরচগুলো সংরক্ষণ করুন",
+    "receiptTitles": {
+      "freshMarket": "তাজা বাজার",
+      "greenGrocer": "সবজির দোকান",
+      "fruitStand": "ফলের দোকান",
+      "cornerBistro": "কর্নার বিস্ট্রো",
+      "noodleHouse": "নুডল হাউস",
+      "cafeLunch": "ক্যাফে লাঞ্চ",
+      "flightTicket": "ফ্লাইট টিকিট",
+      "airlineBaggage": "এয়ারলাইন ব্যাগেজ",
+      "boardingPass": "বোর্ডিং পাস",
+      "homeSupplies": "গৃহস্থালি সামগ্রী",
+      "hardwareShop": "হার্ডওয়্যারের দোকান",
+      "cleaningGoods": "পরিষ্কারের সামগ্রী",
+      "cinemaTickets": "সিনেমার টিকিট",
+      "movieNight": "মুভি নাইট",
+      "filmFestival": "চলচ্চিত্র উৎসব",
+      "organicMarket": "অর্গানিক মার্কেট",
+      "bakeryRun": "বেকারি কেনাকাটা",
+      "sushiBar": "সুশি বার",
+      "pizzaNight": "পিৎজা নাইট",
+      "airportLounge": "এয়ারপোর্ট লাউঞ্জ",
+      "extraLegroom": "এক্সট্রা লেগরুম",
+      "laundryDetergent": "লন্ড্রি ডিটারজেন্ট",
+      "storageBoxes": "স্টোরেজ বাক্স",
+      "popcornCombo": "পপকর্ন কম্বো",
+      "streamingRental": "স্ট্রিমিং ভাড়া"
+    }
   },
   "Categories": {
     "Entertainment": {

@@ -769,7 +769,34 @@
     "saveConflictTitle": "इस समीक्षा के शुरू होने के बाद से {count} खर्च बदल गए",
     "saveConflictDescription": "किसी ने इस रन के बाहर इन खर्चों को संपादित किया या उनकी श्रेणी बदल दी। अन्य खर्चों को सहेजें, या श्रेणियों को फिर से संपादित करके एक बार और सहेजने का प्रयास करें।",
     "saveConflictMore": "और {count} अन्य।",
-    "saveOtherExpenses": "अन्य खर्च सहेजें"
+    "saveOtherExpenses": "अन्य खर्च सहेजें",
+    "receiptTitles": {
+      "freshMarket": "ताज़ा बाज़ार",
+      "greenGrocer": "सब्ज़ी विक्रेता",
+      "fruitStand": "फलों की दुकान",
+      "cornerBistro": "कॉर्नर बिस्ट्रो",
+      "noodleHouse": "नूडल हाउस",
+      "cafeLunch": "कैफ़े लंच",
+      "flightTicket": "फ़्लाइट टिकट",
+      "airlineBaggage": "एयरलाइन सामान",
+      "boardingPass": "बोर्डिंग पास",
+      "homeSupplies": "घर का सामान",
+      "hardwareShop": "हार्डवेयर की दुकान",
+      "cleaningGoods": "सफ़ाई का सामान",
+      "cinemaTickets": "सिनेमा टिकट",
+      "movieNight": "मूवी नाइट",
+      "filmFestival": "फ़िल्म महोत्सव",
+      "organicMarket": "ऑर्गेनिक बाज़ार",
+      "bakeryRun": "बेकरी खरीदारी",
+      "sushiBar": "सुशी बार",
+      "pizzaNight": "पिज़्ज़ा नाइट",
+      "airportLounge": "एयरपोर्ट लाउंज",
+      "extraLegroom": "एक्स्ट्रा लेगरूम",
+      "laundryDetergent": "कपड़े धोने का डिटर्जेंट",
+      "storageBoxes": "स्टोरेज बॉक्स",
+      "popcornCombo": "पॉपकॉर्न कॉम्बो",
+      "streamingRental": "स्ट्रीमिंग किराया"
+    }
   },
   "Categories": {
     "Entertainment": {

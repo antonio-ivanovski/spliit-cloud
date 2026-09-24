@@ -769,7 +769,34 @@
     "saveConflictTitle": "اس جائزے کے شروع ہونے کے بعد سے {count} اخراجات تبدیل ہوئے",
     "saveConflictDescription": "کسی نے اس رن کے باہر ان اخراجات میں ترمیم کی یا ان کی کیٹیگری تبدیل کی۔ دیگر اخراجات محفوظ کریں، یا کیٹیگریز میں دوبارہ ترمیم کر کے ایک بار پھر محفوظ کرنے کی کوشش کریں۔",
     "saveConflictMore": "اور {count} مزید۔",
-    "saveOtherExpenses": "دیگر اخراجات محفوظ کریں"
+    "saveOtherExpenses": "دیگر اخراجات محفوظ کریں",
+    "receiptTitles": {
+      "freshMarket": "تازہ مارکیٹ",
+      "greenGrocer": "سبزی فروش",
+      "fruitStand": "پھلوں کی دکان",
+      "cornerBistro": "کارنر بسٹرو",
+      "noodleHouse": "نوڈل ہاؤس",
+      "cafeLunch": "کیفے لنچ",
+      "flightTicket": "فلائٹ ٹکٹ",
+      "airlineBaggage": "ایئر لائن سامان",
+      "boardingPass": "بورڈنگ پاس",
+      "homeSupplies": "گھر کا سامان",
+      "hardwareShop": "ہارڈویئر شاپ",
+      "cleaningGoods": "صفائی کا سامان",
+      "cinemaTickets": "سینما ٹکٹ",
+      "movieNight": "مووی نائٹ",
+      "filmFestival": "فلم فیسٹیول",
+      "organicMarket": "آرگینک مارکیٹ",
+      "bakeryRun": "بیکری خریداری",
+      "sushiBar": "سوشی بار",
+      "pizzaNight": "پیزا نائٹ",
+      "airportLounge": "ایئرپورٹ لاؤنج",
+      "extraLegroom": "اضافی لیگ روم",
+      "laundryDetergent": "کپڑے دھونے کا ڈیٹرجنٹ",
+      "storageBoxes": "اسٹوریج بکس",
+      "popcornCombo": "پاپ کارن کومبو",
+      "streamingRental": "اسٹریمنگ کرایہ"
+    }
   },
   "Categories": {
     "Entertainment": {
