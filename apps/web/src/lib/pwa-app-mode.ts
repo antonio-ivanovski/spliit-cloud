@@ -1,9 +1,9 @@
 /**
- * Tags the document with how it was launched so CSS can tune the installed
- * PWA shell (overscroll, tap highlight) without touching browser tabs.
+ * Tags the document with how it was launched so CSS can tune the installed PWA
+ * shell (overscroll, tap highlight) without touching browser tabs.
  *
- * Detection mirrors `use-install-prompt.ts`: any installed display mode,
- * iOS `navigator.standalone`, or an Android TWA referrer counts as PWA.
+ * Detection mirrors `use-install-prompt.ts`: any installed display mode, iOS
+ * `navigator.standalone`, or an Android TWA referrer counts as PWA.
  */
 
 const INSTALLED_DISPLAY_MODES = [
@@ -40,7 +40,10 @@ function applyAppMode() {
 /** Set `data-app-mode` once and keep it fresh across display-mode changes. */
 export function initPwaAppMode(): () => void {
   applyAppMode()
-  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+  if (
+    typeof window === 'undefined' ||
+    typeof window.matchMedia !== 'function'
+  ) {
     return () => {}
   }
   const queries = INSTALLED_DISPLAY_MODES.map((mode) =>

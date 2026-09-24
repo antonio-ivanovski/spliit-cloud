@@ -9,7 +9,7 @@
  * with the real version, fills the `**Full Changelog**` compare link, and
  * recreates an empty `releases/next.md` skeleton. Lists every remaining `TBD`
  * hash placeholder for the maintainer to fill before committing and tagging.
- * See `releases/README.md`.
+ * See `.agents/skills/cut-release/SKILL.md`.
  */
 import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'

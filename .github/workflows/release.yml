@@ -51,7 +51,7 @@ jobs:
         run: |
           TAG="${{ steps.resolve.outputs.tag }}"
           if [ ! -f "releases/${TAG}.md" ]; then
-            echo "::error::Missing releases/${TAG}.md. Cut the release with 'bun release:prepare ${TAG}' first — see releases/README.md."
+            echo "::error::Missing releases/${TAG}.md. Cut the release with 'bun release:prepare ${TAG}' first — see .agents/skills/cut-release/SKILL.md."
             exit 1
           fi
           echo "Found releases/${TAG}.md"
