@@ -425,6 +425,27 @@ describe('suggestExpenseCategory with AI_CATEGORY_ENGINE=system-one', () => {
     })
   })
 
+  it.each([
+    ['unknown probability key', { groceries: 0.9, unknown: 0.7 }],
+    ['empty distribution', {}],
+    ['missing winner key', { 'dining-out': 0.9 }],
+  ])(
+    'returns null when System One distribution is malformed (%s)',
+    async (_label, probabilities) => {
+      fetchMock.mockResolvedValueOnce(
+        systemOneSplitResponse(probabilities, 'groceries', 0.9),
+      )
+
+      await expect(
+        suggestExpenseCategory({
+          groupId: 'group-1',
+          title: 'xyzzy-unknown',
+          allowAi: true,
+        }),
+      ).resolves.toEqual({ categoryId: null, candidates: [] })
+    },
+  )
+
   it('returns null instead of failing when System One times out', async () => {
     fetchMock.mockRejectedValueOnce(
       new DOMException('timeout of 10000ms exceeded', 'TimeoutError'),

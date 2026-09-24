@@ -186,6 +186,93 @@ describe('suggestCategoryWithSystemOne', () => {
     ).resolves.toMatchObject({ categoryId: null })
   })
 
+  it.each([
+    ['non-numeric confidence', 'groceries', 'not-a-number'],
+    ['NaN confidence', 'groceries', Number.NaN],
+    ['infinite confidence', 'groceries', Number.POSITIVE_INFINITY],
+    ['negative confidence', 'groceries', -0.1],
+    ['over-range confidence', 'groceries', 1.5],
+  ])('rejects malformed choice with %s', async (_label, choice, confidence) => {
+    fetchMock.mockResolvedValueOnce(systemOneResponse(choice, confidence))
+
+    await expect(
+      suggestCategoryWithSystemOne('xyzzy', { apiKey: 'test-key' }),
+    ).resolves.toMatchObject({ categoryId: null, confidence: 0 })
+  })
+
+  it.each([['score'], ['noul'], [undefined]])(
+    'rejects non-choice answer type %s',
+    async (type) => {
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          model: 'jev-1.13.0',
+          answers: {
+            category: {
+              type,
+              choice: 'groceries',
+              confidence: 0.9,
+              probabilities: { groceries: 0.9 },
+            },
+          },
+        }),
+      })
+
+      await expect(
+        suggestCategoryWithSystemOne('xyzzy', { apiKey: 'test-key' }),
+      ).resolves.toMatchObject({ categoryId: null })
+    },
+  )
+
+  it.each([
+    ['unknown probability key', { groceries: 0.82, unknown: 0.7 }],
+    ['non-numeric probability', { groceries: 'high' }],
+    ['NaN probability', { groceries: Number.NaN }],
+    ['infinite probability', { groceries: Number.POSITIVE_INFINITY }],
+    ['negative probability', { groceries: -0.2 }],
+    ['over-range probability', { groceries: 1.2 }],
+    ['empty map', {}],
+    ['missing winner key', { 'dining-out': 0.9 }],
+  ])(
+    'rejects malformed distribution with %s',
+    async (_label, probabilities) => {
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          model: 'jev-1.13.0',
+          answers: {
+            category: {
+              type: 'choice',
+              choice: 'groceries',
+              confidence: 0.82,
+              probabilities,
+            },
+          },
+        }),
+      })
+
+      await expect(
+        suggestCategoryWithSystemOne('xyzzy', { apiKey: 'test-key' }),
+      ).resolves.toMatchObject({ categoryId: null, confidence: 0 })
+    },
+  )
+
+  it('rejects missing probability maps', async () => {
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        model: 'jev-1.13.0',
+        answers: {
+          category: { type: 'choice', choice: 'groceries', confidence: 0.9 },
+        },
+      }),
+    })
+
+    await expect(
+      suggestCategoryWithSystemOne('xyzzy', { apiKey: 'test-key' }),
+    ).resolves.toMatchObject({ categoryId: null })
+  })
+
   it('throws on non-ok responses so callers can decide how to degrade', async () => {
     fetchMock.mockResolvedValueOnce({ ok: false, status: 429 })
 

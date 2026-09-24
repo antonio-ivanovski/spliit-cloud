@@ -92,7 +92,13 @@ export function systemOneCategoryOptions(): {
 
 /**
  * Shared System One request builder and allowlist validator for one or many
- * choices.
+ * choices. Malformed Choice answers (wrong type, unknown choice, non-finite or
+ * out-of-range confidence, or a malformed probability distribution) map to
+ * `undefined` (no suggestion). The probability distribution is load-bearing for
+ * runner-up alternatives and margin computation, so it is strictly validated:
+ * it must be a non-empty object whose keys are all allowed categories, whose
+ * values are all finite numbers in [0,1], and which contains the selected
+ * choice. Filtering partial maps would hide provider protocol violations.
  */
 export async function requestSystemOneCategories(args: {
   state: Record<string, unknown>
@@ -162,14 +168,31 @@ export async function requestSystemOneCategories(args: {
         answer.confidence! > 1
       )
         return [key, undefined]
+      const rawProbabilities = answer.probabilities
+      if (
+        !rawProbabilities ||
+        typeof rawProbabilities !== 'object' ||
+        Array.isArray(rawProbabilities)
+      )
+        return [key, undefined]
+      const entries = Object.entries(
+        rawProbabilities as Record<string, unknown>,
+      )
+      if (entries.length === 0) return [key, undefined]
+      for (const [id, probability] of entries) {
+        if (
+          !allowed.has(id) ||
+          typeof probability !== 'number' ||
+          !Number.isFinite(probability) ||
+          probability < 0 ||
+          probability > 1
+        )
+          return [key, undefined]
+      }
+      if (!(answer.choice in (rawProbabilities as Record<string, unknown>)))
+        return [key, undefined]
       const probabilities = Object.fromEntries(
-        Object.entries(answer.probabilities ?? {}).filter(
-          ([id, probability]) =>
-            allowed.has(id) &&
-            Number.isFinite(probability) &&
-            probability >= 0 &&
-            probability <= 1,
-        ),
+        entries as Array<[string, number]>,
       )
       return [
         key,

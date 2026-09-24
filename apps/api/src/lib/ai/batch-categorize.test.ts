@@ -37,7 +37,6 @@ describe('categorizeExpensesWithSystemOne', () => {
                   probabilities: {
                     groceries: 0.82,
                     'dining-out': 0.18,
-                    unknown: 0.7,
                   },
                 },
               ]),
@@ -60,7 +59,48 @@ describe('categorizeExpensesWithSystemOne', () => {
         { categoryId: 'dining-out', probability: 0.18 },
       ],
     })
-    expect(single.probabilities).not.toHaveProperty('unknown')
+  })
+
+  it('rejects batch answers with malformed probability distributions', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (_url, init: RequestInit) => {
+        const body = JSON.parse(init.body as string)
+        const keys = Object.keys(body.questions)
+        return {
+          ok: true,
+          json: async () => ({
+            answers: Object.fromEntries(
+              keys.map((key, index) => [
+                key,
+                index === 0
+                  ? {
+                      type: 'choice',
+                      choice: 'groceries',
+                      confidence: 0.82,
+                      probabilities: {
+                        groceries: 0.82,
+                        unknown: 0.7,
+                      },
+                    }
+                  : {
+                      type: 'choice',
+                      choice: 'groceries',
+                      confidence: 0.82,
+                      probabilities: { groceries: 0.82 },
+                    },
+              ]),
+            ),
+          }),
+        }
+      }),
+    )
+    const batch = await categorizeExpensesWithSystemOne([
+      { id: 'bad-map', title: 'Store A', expenseDate: '2026-09-20' },
+      { id: 'good-map', title: 'Store B', expenseDate: '2026-09-20' },
+    ])
+    expect(batch.has('bad-map')).toBe(false)
+    expect(batch.get('good-map')?.categoryId).toBe('groceries')
   })
 
   it('batches independent choices and retains General, weak matches, and alternatives for review', async () => {
@@ -80,10 +120,13 @@ describe('categorizeExpensesWithSystemOne', () => {
                   type: 'choice',
                   choice: index === 1 ? 'general' : 'groceries',
                   confidence: index === 2 ? 0.4 : 0.9,
-                  probabilities: {
-                    groceries: index === 2 ? 0.4 : 0.9,
-                    'dining-out': 0.25,
-                  },
+                  probabilities:
+                    index === 1
+                      ? { general: 0.9, 'dining-out': 0.25 }
+                      : {
+                          groceries: index === 2 ? 0.4 : 0.9,
+                          'dining-out': 0.25,
+                        },
                 },
               ]),
             ),
@@ -133,7 +176,12 @@ describe('categorizeExpensesWithSystemOne', () => {
             answers: Object.fromEntries(
               Object.keys(body.questions).map((key) => [
                 key,
-                { type: 'choice', choice: 'groceries', confidence: 0.9 },
+                {
+                  type: 'choice',
+                  choice: 'groceries',
+                  confidence: 0.9,
+                  probabilities: { groceries: 0.9 },
+                },
               ]),
             ),
           }),
@@ -185,11 +233,17 @@ describe('System One example selection', () => {
           ok: true,
           json: async () => ({
             answers: {
-              expense_0: { type: 'choice', choice: 'taxi', confidence: 0.9 },
+              expense_0: {
+                type: 'choice',
+                choice: 'taxi',
+                confidence: 0.9,
+                probabilities: { taxi: 0.9 },
+              },
               expense_1: {
                 type: 'choice',
                 choice: 'groceries',
                 confidence: 0.9,
+                probabilities: { groceries: 0.9 },
               },
             },
           }),

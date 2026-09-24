@@ -339,6 +339,15 @@ Optional overrides: `AI_SYSTEM_ONE_MODEL` (default `jev-latest`; pin a versioned
 
 Both engines report a confidence with each verdict (System One: model confidence; LLM: self-reported confidence in its structured verdict) and share one floor: `AI_CATEGORY_MIN_CONFIDENCE` (default `0.5`). Below-floor verdicts degrade to no suggestion. The two confidences are not on the same scale — recalibrate the floor on a labeled sample of real expenses when switching engines.
 
+System One validates every Choice answer at runtime before the floor applies: the answer must be `type: choice`, the choice must be allowlisted, confidence must be finite in `[0,1]`, and the probability distribution must be a non-empty object with only allowed keys, finite `[0,1]` values, and the winner present. Anything malformed becomes no suggestion (bulk runs skip that expense).
+
+What reaches the configured System One endpoint (credentials stay server-side, never in the web client):
+
+- Single suggestion (`suggestCategoryWithSystemOne`): truncated title (40 chars), app language, group name/currency, and recent title/category pairs.
+- Bulk categorization (`categorizeExpensesWithSystemOne`, up to 5 questions per request): per expense title (80-char slice) plus expense date; shared group name (100 chars) and locale; per-expense confirmed/recent examples (top 8), title-matched rejected categories, and opt-in nearby categorized expenses (±7 days, up to 3 before + 3 after with title/category/date).
+
+Single suggestions run only when the user opts into AI extract; bulk runs are group-admin gated. Suggestion paths log no expense titles or group IDs — bulk run logs record only run lifecycle counts, phases, and durations.
+
 ### Choosing an AI provider
 
 Set `AI_PROVIDER` to select the request protocol. Provider selection is explicit and is never inferred from a model ID:
