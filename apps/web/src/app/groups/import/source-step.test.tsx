@@ -4,6 +4,7 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen } from '@/test/test-utils'
 
 import type { SourceMode } from './source-providers'
+import { pickParser } from './source-providers'
 import { SourceStep } from './source-step'
 
 // jsdom doesn't implement scrollIntoView; the SourceStep mount effect
@@ -224,5 +225,70 @@ describe('SourceStep — initialError (prefill) handling', () => {
     expect(
       screen.getByText(/CSV exports do not include recurrence/i),
     ).toBeInTheDocument()
+  })
+})
+
+describe('pickParser', () => {
+  it.each([
+    {
+      provider: 'spliit',
+      fileName: 'group.csv',
+      expected: 'csv',
+    },
+    {
+      provider: 'spliit',
+      fileName: 'group.json',
+      expected: 'json',
+    },
+    {
+      provider: 'splitwise',
+      fileName: 'export.csv',
+      expected: 'csv',
+    },
+    {
+      provider: 'splitwise',
+      fileName: 'export.json',
+      expected: null,
+    },
+    {
+      provider: 'spliit',
+      fileName: 'group.txt',
+      expected: null,
+    },
+    {
+      provider: 'splitwise',
+      fileName: 'export.xlsx',
+      expected: null,
+    },
+    {
+      provider: 'tricount',
+      fileName: 'anything.csv',
+      expected: null,
+    },
+    {
+      provider: 'settleup',
+      fileName: 'anything.json',
+      expected: null,
+    },
+    {
+      provider: 'spliit',
+      fileName: 'GROUP.CSV',
+      expected: 'csv',
+    },
+    {
+      provider: 'spliit',
+      fileName: 'group.JSON',
+      expected: 'json',
+    },
+  ] as Array<{
+    provider: SourceMode
+    fileName: string
+    expected: 'csv' | 'json' | null
+  }>)('routes $provider $fileName to $expected', ({
+    provider,
+    fileName,
+    expected,
+  }) => {
+    expect(pickParser(provider, fileName).format).toBe(expected)
   })
 })

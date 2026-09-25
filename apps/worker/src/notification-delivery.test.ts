@@ -39,7 +39,6 @@ const hoisted = vi.hoisted(() => {
     markRetryExhausted: vi.fn(),
     markSent: vi.fn(),
     markTransientFailure: vi.fn(),
-    normalizeProviderError: vi.fn(),
     emailSend: vi.fn(),
     pushSend: vi.fn(),
   }
@@ -68,14 +67,19 @@ vi.mock('@spliit/api/lib/notifications/delivery-senders', () => ({
   PermanentDeliveryError: hoisted.PermanentDeliveryError,
 }))
 
-vi.mock('@spliit/api/lib/notifications/delivery-repository', () => ({
-  claimDelivery: hoisted.claimDelivery,
-  markPermanentFailure: hoisted.markPermanentFailure,
-  markRetryExhausted: hoisted.markRetryExhausted,
-  markSent: hoisted.markSent,
-  markTransientFailure: hoisted.markTransientFailure,
-  normalizeProviderError: hoisted.normalizeProviderError,
-}))
+vi.mock('@spliit/api/lib/notifications/delivery-repository', async (importOriginal) => {
+  const actual = await importOriginal<
+    typeof import('@spliit/api/lib/notifications/delivery-repository')
+  >()
+  return {
+    ...actual,
+    claimDelivery: hoisted.claimDelivery,
+    markPermanentFailure: hoisted.markPermanentFailure,
+    markRetryExhausted: hoisted.markRetryExhausted,
+    markSent: hoisted.markSent,
+    markTransientFailure: hoisted.markTransientFailure,
+  }
+})
 
 vi.mock('@spliit/api/lib/notifications/email-delivery-sender', () => ({
   emailDeliverySender: { send: hoisted.emailSend },
@@ -162,7 +166,6 @@ beforeEach(() => {
   mocks.markRetryExhausted.mockReset()
   mocks.markSent.mockReset()
   mocks.markTransientFailure.mockReset()
-  mocks.normalizeProviderError.mockReset()
   mocks.emailSend.mockReset()
   mocks.pushSend.mockReset()
 
@@ -170,38 +173,6 @@ beforeEach(() => {
   mocks.markRetryExhausted.mockResolvedValue(true)
   mocks.markSent.mockResolvedValue(true)
   mocks.markTransientFailure.mockResolvedValue(true)
-  mocks.normalizeProviderError.mockImplementation(
-    (
-      error: unknown,
-      classification: 'transient' | 'permanent',
-      providerStatus?: number,
-    ) => {
-      const errRecord = error as {
-        kind?: string
-        code?: string
-        message?: string
-      } | null
-      const allowedKinds = new Set([
-        'TRANSIENT',
-        'PERMANENT',
-        'TARGET_GONE',
-        'ENDPOINT_GONE',
-        'DATA_CONTRACT',
-      ])
-      const fallbackKind =
-        classification === 'transient' ? 'TRANSIENT' : 'PERMANENT'
-      const kind =
-        errRecord?.kind && allowedKinds.has(errRecord.kind)
-          ? errRecord.kind
-          : fallbackKind
-      return {
-        kind,
-        code: errRecord?.code ?? 'UNKNOWN',
-        providerStatus,
-        message: errRecord?.message ?? 'unknown error',
-      }
-    },
-  )
 })
 
 afterEach(() => {

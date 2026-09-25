@@ -42,7 +42,7 @@ describe('locale fallback chains', () => {
 
   it('falls back to en-US for full locales and is empty for en-US itself', () => {
     expect(fallbackChain('fr-FR')).toEqual(['en-US'])
-    expect(fallbackChain('de-DE')).toBeInstanceOf(Array)
+    expect(fallbackChain('de-DE')).toEqual(['en-US'])
     expect(fallbackChain('en-US')).toEqual([])
   })
 

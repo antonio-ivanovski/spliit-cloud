@@ -4,6 +4,9 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
 import { tryParseSplitwiseCsv } from './splitwise-csv'
+import { anonymizeSplitwiseCsv } from './anonymize-splitwise-csv'
+import { guessGroupNameFromFilename } from './filename'
+import { splitwiseCategoryToId } from './splitwise-categories'
 import type { NormalizedSource } from './types'
 
 const HEADER = 'Date,Description,Category,Cost,Currency,John Doe,Jane Doe'
@@ -1497,5 +1500,145 @@ describe('tryParseSplitwiseCsv with fixtures', () => {
     const e = result.source.expenses[0]
     expect(e.amount).toBe(11520)
     expect(e.paidFor[0].shares).toBe(11520)
+  })
+})
+
+describe('guessGroupNameFromFilename (folded from filename.test.ts)', () => {
+  it.each([
+    [
+      'john-d-and-jane-d_2026-06-30_export.csv',
+      'John D. and Jane D.',
+    ],
+    [
+      'mary-jane-and-peter-parker_2025-01-01_export.csv',
+      'Mary Jane. and Peter Parker.',
+    ],
+    [
+      'a-b-and-c-d-and-e-f_2025-01-01_export.csv',
+      'A B. and C D. and E F.',
+    ],
+    ['test_2026-07-01_export.csv', 'Test'],
+    ['london_2022_2026-07-01_export.csv', 'London 2022'],
+    [
+      'john-d-and-jane-d_2026-06-30_export.json',
+      'John D. and Jane D.',
+    ],
+    ['family-zu-besuch_2026-09-06.csv', 'Family Zu Besuch'],
+    ['osterreich-2026_2026-09-06.csv', 'Osterreich 2026'],
+  ] as Array<[string, string]>)(
+    'derives %s → %s',
+    (filename, expected) => {
+      expect(guessGroupNameFromFilename(filename)).toBe(expected)
+    },
+  )
+
+  it.each([
+    ['2026_2026-06-30_export.csv'],
+    ['_2026-06-30_export.csv'],
+    ['export.csv'],
+    ['random.json'],
+    ['group-name.csv'],
+  ] as Array<[string]>)('returns null for %s', (filename) => {
+    expect(guessGroupNameFromFilename(filename)).toBeNull()
+  })
+
+  it('humanizes Cospend dated project slugs', () => {
+    expect(guessGroupNameFromFilename('family-zu-besuch_2026-09-06.csv')).toBe(
+      'Family Zu Besuch',
+    )
+    expect(guessGroupNameFromFilename('osterreich-2026_2026-09-06.csv')).toBe(
+      'Osterreich 2026',
+    )
+  })
+
+  it('humanizes bare slugs when provider is COSPEND', () => {
+    expect(guessGroupNameFromFilename('family.csv', 'COSPEND')).toBe('Family')
+    expect(guessGroupNameFromFilename('family-zu-besuch.csv', 'COSPEND')).toBe(
+      'Family Zu Besuch',
+    )
+    expect(guessGroupNameFromFilename('family.csv')).toBeNull()
+    expect(guessGroupNameFromFilename('family.csv', 'SPLITWISE')).toBeNull()
+    expect(guessGroupNameFromFilename('12345.csv', 'COSPEND')).toBeNull()
+  })
+})
+
+describe('splitwiseCategoryToId compact taxonomy (folded from splitwise-categories.test.ts)', () => {
+  it.each(['Activities', 'Events', 'Attractions', 'Parties'])(
+    'maps %s to Events and Activities',
+    (category) => {
+      expect(splitwiseCategoryToId(category)).toBe('events-and-activities')
+    },
+  )
+
+  it.each(['Subscriptions', 'Streaming', 'Software', 'Cloud Storage'])(
+    'maps %s to Digital Subscriptions',
+    (category) => {
+      expect(splitwiseCategoryToId(category)).toBe('digital-subscriptions')
+    },
+  )
+
+  it.each(['Membership', 'Memberships', 'Gym', 'Fitness'])(
+    'maps %s to Memberships',
+    (category) => {
+      expect(splitwiseCategoryToId(category)).toBe('memberships')
+    },
+  )
+
+  it.each(['Personal Care', 'Wellness', 'Beauty'])(
+    'maps %s to Personal Care and Wellness',
+    (category) => {
+      expect(splitwiseCategoryToId(category)).toBe('personal-care-and-wellness')
+    },
+  )
+
+  it.each(['Tolls', 'Toll'])('maps %s to Tolls', (category) => {
+    expect(splitwiseCategoryToId(category)).toBe('tolls')
+  })
+
+  it.each(['Plants', 'Gardening'])('maps %s to its Home child', (category) => {
+    expect(splitwiseCategoryToId(category)).toBe(category.toLowerCase())
+  })
+
+  it('preserves existing categories instead of broadening them', () => {
+    expect(splitwiseCategoryToId('Entertainment - Movies')).toBe('movies')
+    expect(splitwiseCategoryToId('Utilities - TV/Phone/Internet')).toBe(
+      'tv-phone-internet',
+    )
+    expect(splitwiseCategoryToId('Life - Medical Expenses')).toBe(
+      'medical-expenses',
+    )
+  })
+})
+
+describe('anonymizeSplitwiseCsv canonical-fixture parity (folded from anonymize-splitwise-csv.test.ts)', () => {
+  it('anonymizes the canonical group export fixture', () => {
+    const input = readFixture('_2026-06-30_export.csv')
+    const originalParsed = tryParseSplitwiseCsv(input)
+    expect(originalParsed.ok).toBe(true)
+    if (!originalParsed.ok) return
+
+    const result = anonymizeSplitwiseCsv(input)
+    expect(result.outputName).toBe('splitwise-anonymized.csv')
+
+    const reparsed = tryParseSplitwiseCsv(result.outputCsv)
+    expect(reparsed.ok).toBe(true)
+    if (!reparsed.ok) return
+    expect(reparsed.source.expenses).toHaveLength(
+      originalParsed.source.expenses.length,
+    )
+    const originalTotal = originalParsed.source.expenses.reduce(
+      (s, e) => s + e.amount,
+      0,
+    )
+    const reprocessedTotal = reparsed.source.expenses.reduce(
+      (s, e) => s + e.amount,
+      0,
+    )
+    expect(reprocessedTotal).toBe(originalTotal)
+    const header = result.outputCsv
+      .split('\n')
+      .find((l) => l.startsWith('Date,Description,Category,Cost,Currency'))
+    expect(header).toBeDefined()
+    expect(header).toMatch(/Person \d+/)
   })
 })

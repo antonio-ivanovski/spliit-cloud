@@ -318,13 +318,12 @@ describe('ExpenseDateTimeField', () => {
     await user.click(screen.getByRole('button', { name: 'Tomorrow' }))
 
     expect(screen.queryByText('Enter a valid date.')).not.toBeInTheDocument()
-    const tomorrow = new Date()
-    tomorrow.setDate(tomorrow.getDate() + 1)
-    const iso = [
-      tomorrow.getFullYear().toString().padStart(4, '0'),
-      (tomorrow.getMonth() + 1).toString().padStart(2, '0'),
-      tomorrow.getDate().toString().padStart(2, '0'),
-    ].join('-')
+    const iso = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'UTC',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(Date.now() + 864e5)
     expect(screen.getByTestId('selection')).toHaveTextContent(
       `${iso}|23:45|UTC`,
     )

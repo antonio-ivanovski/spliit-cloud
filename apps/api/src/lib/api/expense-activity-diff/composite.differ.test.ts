@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import type { Expense } from '@spliit/domain'
+import type { Expense, ExpenseApiItem } from '@spliit/domain'
 
 import { amountDiffer } from './amount.differ'
 import { categoryDiffer } from './category.differ'
@@ -13,6 +13,7 @@ import { payersDiffer } from './payers.differ'
 import { recurrenceDiffer } from './recurrence.differ'
 import { splitDiffer } from './split.differ'
 import { titleDiffer } from './title.differ'
+import { getAffectedParticipantIds } from './participant-collector'
 import type { ChangeContext } from './types'
 
 function makeExpense(overrides: Partial<Expense> = {}): Expense {
@@ -71,6 +72,19 @@ function fullDiffer() {
     itemsDiffer,
     documentsDiffer,
   ])
+}
+
+function item(overrides: Partial<ExpenseApiItem> = {}): ExpenseApiItem {
+  return {
+    id: undefined,
+    title: 'Pizza',
+    unitPrice: 1500,
+    quantity: 1,
+    amount: 1500,
+    splitMode: 'EVENLY',
+    paidFor: [{ participant: 'lp-alice', shares: 1 }],
+    ...overrides,
+  } as ExpenseApiItem
 }
 
 describe('compositeExpenseDiffer', () => {
@@ -181,5 +195,87 @@ describe('compositeExpenseDiffer', () => {
       expect(composite.getDiffers()).toHaveLength(1)
       expect(composite.getDiffers()[0]).toBe(titleDiffer)
     })
+  })
+})
+
+describe('getAffectedParticipantIds', () => {
+  it('returns every payer and split participant from a single expense (create case)', () => {
+    const expense = makeExpense({
+      paidByList: [
+        { participant: 'lp-alice', shares: 3000 },
+        { participant: 'lp-bob', shares: 1500 },
+      ],
+      paidFor: [
+        { participant: 'lp-alice', shares: 1 },
+        { participant: 'lp-bob', shares: 1 },
+        { participant: 'lp-carol', shares: 1 },
+      ],
+    })
+    expect(getAffectedParticipantIds({ newExpense: expense })).toEqual(
+      new Set(['lp-alice', 'lp-bob', 'lp-carol']),
+    )
+  })
+
+  it('unions old and new participant ids (update case)', () => {
+    const old = makeExpense({
+      paidByList: [{ participant: 'lp-alice', shares: 4500 }],
+      paidFor: [
+        { participant: 'lp-alice', shares: 1 },
+        { participant: 'lp-bob', shares: 1 },
+      ],
+    })
+    const upd = makeExpense({
+      paidByList: [{ participant: 'lp-alice', shares: 4500 }],
+      paidFor: [
+        { participant: 'lp-alice', shares: 1 },
+        { participant: 'lp-carol', shares: 1 },
+      ],
+    })
+    expect(
+      getAffectedParticipantIds({ oldExpense: old, newExpense: upd }),
+    ).toEqual(new Set(['lp-alice', 'lp-bob', 'lp-carol']))
+  })
+
+  it('tolerates undefined oldExpense (create)', () => {
+    const ids = getAffectedParticipantIds({ newExpense: makeExpense() })
+    expect(ids.has('lp-alice')).toBe(true)
+    expect(ids.has('lp-bob')).toBe(true)
+  })
+
+  it('tolerates undefined newExpense (delete)', () => {
+    const ids = getAffectedParticipantIds({ oldExpense: makeExpense() })
+    expect(ids.has('lp-alice')).toBe(true)
+    expect(ids.has('lp-bob')).toBe(true)
+  })
+
+  it('collects from items and itemized remainder', () => {
+    const old = makeExpense({
+      splitMode: 'ITEMIZED',
+      paidFor: [{ participant: 'lp-alice', shares: 1 }],
+      items: [
+        item({ id: 'i-1', paidFor: [{ participant: 'lp-alice', shares: 1 }] }),
+      ],
+    })
+    const upd = makeExpense({
+      splitMode: 'ITEMIZED',
+      paidFor: [{ participant: 'lp-alice', shares: 1 }],
+      items: [
+        item({ id: 'i-1', paidFor: [{ participant: 'lp-alice', shares: 1 }] }),
+        item({
+          id: 'i-2',
+          paidFor: [
+            { participant: 'lp-bob', shares: 1 },
+            { participant: 'lp-carol', shares: 1 },
+          ],
+        }),
+      ],
+      itemizedRemainder: {
+        splitMode: 'EVENLY',
+        paidFor: [{ participant: 'lp-dave', shares: 1 }],
+      },
+    })
+    expect(
+      getAffectedParticipantIds({ oldExpense: old, newExpense: upd }),
+    ).toEqual(new Set(['lp-alice', 'lp-bob', 'lp-carol', 'lp-dave']))
   })
 })

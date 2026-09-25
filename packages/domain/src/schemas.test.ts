@@ -1629,3 +1629,52 @@ describe('friendFormSchema', () => {
     expect(result.success).toBe(true)
   })
 })
+
+describe('Ledger conversion metadata (folded from ledger.test.ts)', () => {
+  it('expenseFormInputSchema preserves conversion metadata through parse', () => {
+    // The form schema no longer carries `originalAmount` — the typed
+    // input amount lives in `amount`, and the conversion metadata is
+    // the audit/display pair (`originalCurrency` + `conversionRate`).
+    const raw = {
+      title: 'Test expense',
+      expenseDay: '2026-06-24',
+      expenseTime: '12:00',
+      expenseTimeZone: 'UTC',
+      category: 'general',
+      amount: 50,
+      isMultiPayer: false,
+      paidBySplitMode: 'EVENLY' as const,
+      paidByList: [{ participant: 'lp-alice', shares: 50 }],
+      paidFor: [
+        { participant: 'lp-alice', shares: 25 },
+        { participant: 'lp-bob', shares: 25 },
+      ],
+      splitMode: 'BY_AMOUNT' as const,
+      originalCurrency: 'EUR',
+      conversionRate: 0.85,
+    }
+    const result = expenseFormInputSchema.parse(raw)
+    expect(result.originalCurrency).toBe('EUR')
+    expect(result.conversionRate).toBe(0.85)
+    expect(result.amount).toBe(50)
+  })
+
+  it('expenseFormInputSchema rejects BY_AMOUNT when shares do not sum to amount', () => {
+    const raw = {
+      title: 'Test',
+      expenseDay: '2026-06-24',
+      category: 'general',
+      amount: 100,
+      isMultiPayer: false,
+      paidBySplitMode: 'EVENLY' as const,
+      paidByList: [{ participant: 'lp-a', shares: 30 }],
+      paidFor: [
+        { participant: 'lp-a', shares: 30 },
+        { participant: 'lp-b', shares: 30 },
+        { participant: 'lp-c', shares: 30 },
+      ],
+      splitMode: 'BY_AMOUNT' as const,
+    }
+    expect(() => expenseFormInputSchema.parse(raw)).toThrow()
+  })
+})

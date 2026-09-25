@@ -107,22 +107,6 @@ describe('groupsRouter.archive', () => {
     )
   })
 
-  it('archives a group when the caller is an ADMIN (alias check)', async () => {
-    await authAs('acct-admin')
-    mockGroupWithMember('ADMIN')
-    prismaMock.group.update.mockResolvedValue({
-      id: 'grp-1',
-      archived: true,
-    } as never)
-
-    const caller = makeCaller('acct-admin')
-    await caller.archive({ groupId: 'grp-1', archived: true })
-
-    expect(prismaMock.group.update).toHaveBeenCalledWith(
-      expect.objectContaining({ data: { archived: true } }),
-    )
-  })
-
   it('unarchives a group when the caller is an ADMIN', async () => {
     await authAs('acct-admin')
     mockGroupWithMember('ADMIN')

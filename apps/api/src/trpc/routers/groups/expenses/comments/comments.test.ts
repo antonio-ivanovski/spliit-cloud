@@ -169,6 +169,48 @@ describe('groups.expenses.comments', () => {
     )
   })
 
+  it('bounds the comment activity excerpt to 160 characters', async () => {
+    activeMember()
+    prismaMock.expense.findFirst.mockResolvedValue({
+      id: expenseId,
+      title: 'Dinner',
+    } as never)
+    prismaMock.expenseComment.create.mockResolvedValue({
+      id: 'comment-1',
+      expenseId,
+      authorAccountId: accountId,
+      authorName: 'Alice',
+      authorAccount: { image: 'alice.png' },
+      text: 'x'.repeat(200),
+      createdAt: new Date('2026-01-01T00:00:00Z'),
+    } as never)
+    prismaMock.activity.create.mockResolvedValue({
+      id: 'activity-1',
+      time: new Date('2026-01-01T00:00:00Z'),
+    } as never)
+
+    await caller().expenses.comments.create({
+      requestId: crypto.randomUUID(),
+      groupId,
+      expenseId,
+      body: 'x'.repeat(200),
+    })
+
+    expect(prismaMock.activity.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          data: expect.objectContaining({
+            kind: 'expense_comment',
+            commentId: 'comment-1',
+            expenseTitle: 'Dinner',
+            authorName: 'Alice',
+            excerpt: 'x'.repeat(160),
+          }),
+        }),
+      }),
+    )
+  })
+
   it('rejects writes to archived groups', async () => {
     prismaMock.group.findUnique.mockResolvedValue({
       id: groupId,

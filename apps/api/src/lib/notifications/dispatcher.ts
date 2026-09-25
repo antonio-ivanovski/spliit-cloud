@@ -9,7 +9,6 @@ import {
 } from '@spliit/domain/notifications'
 
 import { CompositeActivityNotificationDispatcher } from './composite'
-import { ActivityNotificationCoordinator } from './coordinator'
 import {
   scheduleNotificationDispatch,
   waitForScheduledNotificationDispatchesForTest,
@@ -32,21 +31,6 @@ export type {
   NotificationChannel,
 } from './types'
 export { waitForScheduledNotificationDispatchesForTest }
-
-/**
- * Register the production coordinator in the process-wide dispatcher. Kept for
- * backward compatibility with existing integration tests that flush
- * microtask-dispatched events. Production uses the durable planner ({@link
- * planActivityNotificationDeliveries}) instead.
- *
- * @deprecated Use {@link planActivityNotificationDeliveries} for production
- *   paths.
- */
-export function initializeDefaultNotificationDispatchers(): void {
-  setDefaultActivityNotificationDispatchers([
-    new ActivityNotificationCoordinator(),
-  ])
-}
 
 /**
  * Process-wide composite dispatcher. Only used by legacy microtask-based

@@ -1,3 +1,4 @@
+import { getBalances } from './balances'
 import { getCurrency } from './currency'
 import { exactAmountToNumber } from './exact-math'
 import {
@@ -12,6 +13,7 @@ import {
   serializePaidBy,
   serializePaidFor,
 } from './totals'
+import { distributeRemainder } from './remainder-distribution'
 
 type TotalsExpense = Parameters<typeof getTotalActiveUserPaidFor>[1][number]
 
@@ -1122,5 +1124,245 @@ describe('serializePaidBy', () => {
       paidByList: [{ participant: { id: 'a' }, shares: 5.5 }],
     })
     expect(result[0].shares).toBe(550)
+  })
+})
+
+describe('Ledger split unit preservation (folded from ledger.test.ts)', () => {
+  type InferredBalanceExpense = Parameters<typeof getBalances>[0][number]
+
+  const makeLedgerExpense = (
+    overrides: Partial<InferredBalanceExpense>,
+  ): InferredBalanceExpense =>
+    ({
+      id: 'lp-ledger-1',
+      amount: 0,
+      splitMode: 'EVENLY',
+      paidBySplitMode: 'EVENLY',
+      paidByList: [
+        { participant: { id: 'lp-owner', name: 'Owner' }, shares: 1 },
+      ],
+      paidFor: [{ participant: { id: 'lp-owner', name: 'Owner' }, shares: 1 }],
+      ...overrides,
+    }) as InferredBalanceExpense
+
+  it('BY_AMOUNT shares are ledger base-currency minor units', () => {
+    const amount = 1500 // 15.00 in minor units
+    const expenses: InferredBalanceExpense[] = [
+      makeLedgerExpense({
+        amount,
+        splitMode: 'BY_AMOUNT',
+        paidByList: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+        ],
+        paidFor: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 500 },
+          { participant: { id: 'lp-bob', name: 'Bob' }, shares: 1000 },
+        ],
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+
+    expect(balances['lp-alice'].paid).toBe(amount)
+    expect(balances['lp-alice'].paidFor).toBe(500)
+    expect(balances['lp-bob'].paidFor).toBe(1000)
+    expect(balances['lp-alice'].total).toBe(1000)
+    expect(balances['lp-bob'].total).toBe(-1000)
+  })
+
+  it('BY_PERCENTAGE shares are basis points out of 10000', () => {
+    const expenses: InferredBalanceExpense[] = [
+      makeLedgerExpense({
+        amount: 20000, // 200.00
+        splitMode: 'BY_PERCENTAGE',
+        paidByList: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+        ],
+        paidFor: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 2500 },
+          { participant: { id: 'lp-bob', name: 'Bob' }, shares: 7500 },
+        ],
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+    expect(balances['lp-alice'].paidFor).toBe(5000)
+    expect(balances['lp-bob'].paidFor).toBe(15000)
+  })
+
+  it('EVENLY splits equally regardless of shares value', () => {
+    const expenses: InferredBalanceExpense[] = [
+      makeLedgerExpense({
+        amount: 3000,
+        splitMode: 'EVENLY',
+        paidByList: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+        ],
+        paidFor: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 99 },
+          { participant: { id: 'lp-bob', name: 'Bob' }, shares: 1 },
+          { participant: { id: 'lp-carol', name: 'Carol' }, shares: 50 },
+        ],
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+    expect(balances['lp-alice'].paidFor).toBe(1000)
+    expect(balances['lp-bob'].paidFor).toBe(1000)
+    expect(balances['lp-carol'].paidFor).toBe(1000)
+  })
+
+  it('BY_SHARES uses relative shares', () => {
+    const expenses: InferredBalanceExpense[] = [
+      makeLedgerExpense({
+        amount: 6000,
+        splitMode: 'BY_SHARES',
+        paidByList: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+        ],
+        paidFor: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+          { participant: { id: 'lp-bob', name: 'Bob' }, shares: 2 },
+          { participant: { id: 'lp-carol', name: 'Carol' }, shares: 3 },
+        ],
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+    expect(balances['lp-alice'].paidFor).toBe(1000)
+    expect(balances['lp-bob'].paidFor).toBe(2000)
+    expect(balances['lp-carol'].paidFor).toBe(3000)
+  })
+
+  it('calculateShare works with ledger participant IDs', () => {
+    const expense = {
+      id: 'le-1',
+      amount: 1000,
+      splitMode: 'EVENLY',
+      paidBySplitMode: 'EVENLY',
+      paidByList: [
+        { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+      ],
+      paidFor: [
+        { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+        { participant: { id: 'lp-bob', name: 'Bob' }, shares: 1 },
+      ],
+    } as Parameters<typeof getTotalGroupSpending>[0][number]
+    const share = calculateShare('lp-bob', expense)
+    expect(share).toBe(500)
+  })
+
+  it('getTotalActiveUserShare works with ledger participant IDs', () => {
+    type InferredTotalsExpense = Parameters<
+      typeof getTotalGroupSpending
+    >[0][number]
+    const makeTotalsExpense = (
+      overrides: Partial<InferredTotalsExpense>,
+    ): InferredTotalsExpense =>
+      ({
+        id: 'le-1',
+        amount: 1000,
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'EVENLY',
+        paidByList: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+        ],
+        paidFor: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+          { participant: { id: 'lp-bob', name: 'Bob' }, shares: 1 },
+        ],
+        ...overrides,
+      }) as InferredTotalsExpense
+    const expenses: InferredTotalsExpense[] = [
+      makeTotalsExpense({
+        id: 'le-1',
+        amount: 3000,
+        splitMode: 'BY_AMOUNT',
+        paidByList: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+        ],
+        paidFor: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1000 },
+          { participant: { id: 'lp-bob', name: 'Bob' }, shares: 2000 },
+        ],
+      }),
+      makeTotalsExpense({
+        id: 'le-2',
+        amount: 600,
+        splitMode: 'BY_PERCENTAGE',
+        paidByList: [{ participant: { id: 'lp-bob', name: 'Bob' }, shares: 1 }],
+        paidFor: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 2500 },
+          { participant: { id: 'lp-bob', name: 'Bob' }, shares: 7500 },
+        ],
+      }),
+    ]
+
+    expect(getTotalActiveUserShare('lp-alice', expenses)).toBe(1150)
+    expect(getTotalActiveUserShare('lp-bob', expenses)).toBe(2450)
+  })
+
+  it('BY_PERCENTAGE with small basis points (1 bp)', () => {
+    const expenses: InferredBalanceExpense[] = [
+      makeLedgerExpense({
+        amount: 1000000,
+        splitMode: 'BY_PERCENTAGE',
+        paidByList: [{ participant: { id: 'lp-a', name: 'A' }, shares: 1 }],
+        paidFor: [
+          { participant: { id: 'lp-a', name: 'A' }, shares: 1 },
+          { participant: { id: 'lp-b', name: 'B' }, shares: 9999 },
+        ],
+      }),
+    ]
+    const balances = getBalances(expenses)
+    expect(balances['lp-a'].paidFor).toBe(100)
+    expect(balances['lp-b'].paidFor).toBe(999900)
+  })
+
+  it('mixed split modes in a single getBalances call', () => {
+    const expenses: InferredBalanceExpense[] = [
+      makeLedgerExpense({
+        id: 'le-1',
+        amount: 6000,
+        splitMode: 'BY_SHARES',
+        paidByList: [{ participant: { id: 'lp-a', name: 'A' }, shares: 1 }],
+        paidFor: [
+          { participant: { id: 'lp-a', name: 'A' }, shares: 1 },
+          { participant: { id: 'lp-b', name: 'B' }, shares: 2 },
+        ],
+      }),
+      makeLedgerExpense({
+        id: 'le-2',
+        amount: 12000,
+        splitMode: 'EVENLY',
+        paidByList: [{ participant: { id: 'lp-b', name: 'B' }, shares: 1 }],
+        paidFor: [
+          { participant: { id: 'lp-a', name: 'A' }, shares: 1 },
+          { participant: { id: 'lp-b', name: 'B' }, shares: 1 },
+        ],
+      }),
+    ]
+    const balances = getBalances(expenses)
+    expect(balances['lp-a'].paidFor).toBe(8000)
+    expect(balances['lp-b'].paidFor).toBe(10000)
+    expect(balances['lp-a'].total).toBe(-2000)
+    expect(balances['lp-b'].total).toBe(2000)
+  })
+})
+
+describe('Negative refund truncation (folded from remainder-distribution.test.ts)', () => {
+  it('negative amount (refund) truncates toward zero', () => {
+    const exact = calculateExactShares({
+      amount: -101,
+      splitMode: 'EVENLY',
+      participants: [
+        { id: 'a', shares: 1 },
+        { id: 'b', shares: 1 },
+        { id: 'c', shares: 1 },
+      ],
+    })
+    const result = distributeRemainder(exact, -101, { seed: 0 })
+    expect(sumValues(result)).toBe(-101)
+    expect(Object.values(result).every((n) => n <= 0)).toBe(true)
   })
 })

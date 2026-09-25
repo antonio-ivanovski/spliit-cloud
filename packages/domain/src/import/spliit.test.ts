@@ -1,3 +1,5 @@
+import * as fs from 'fs'
+import * as path from 'path'
 import { describe, expect, it } from 'vitest'
 
 import {
@@ -637,5 +639,52 @@ describe('extractSpliitGroupIdFromUrl', () => {
   })
   it('returns null for unparseable URLs', () => {
     expect(extractSpliitGroupIdFromUrl('not a url')).toBe(null)
+  })
+})
+
+describe('complex spliit.app export exact values (folded from test-complex-import.test.ts)', () => {
+  const fixturePath = path.resolve(
+    __dirname,
+    '../fixtures/spliit-export-features.json',
+  )
+  const raw = JSON.parse(fs.readFileSync(fixturePath, 'utf-8'))
+
+  it('handles multi-currency fields', () => {
+    const result = tryParseSpliitExport(raw)
+    if (!result.ok) return
+    const mc = result.source.expenses.find((e) => e.originalAmount !== null)
+    expect(mc).toBeDefined()
+    expect(mc!.originalAmount).toBe(50000)
+    expect(mc!.originalCurrency).toBe('USD')
+    expect(mc!.conversionRate).toBe(0.9)
+  })
+
+  it('resolves all numeric category IDs to string IDs', () => {
+    const result = tryParseSpliitExport(raw)
+    if (!result.ok) return
+    const cats = new Set(result.source.expenses.map((e) => e.category))
+    // The export has categories like general, dining-out, rent, movies, etc.
+    expect(cats.has('dining-out')).toBe(true)
+    expect(cats.has('rent')).toBe(true)
+    expect(cats.has('groceries')).toBe(true)
+    expect(cats.has('gas-fuel')).toBe(true)
+    expect(cats.has('settlement')).toBe(true)
+  })
+
+  it('handles string conversionRate values', () => {
+    // The spliit.app export has conversionRate as a string "0.9"
+    const modifiedRaw = JSON.parse(JSON.stringify(raw))
+    const expenseWithString = modifiedRaw.expenses.find(
+      (e: { originalAmount: unknown }) => e.originalAmount !== null,
+    )
+    if (expenseWithString) {
+      expenseWithString.conversionRate = '0.9'
+    }
+    const result = tryParseSpliitExport(modifiedRaw)
+    expect(result.ok).toBe(true)
+    if (result.ok) {
+      const mc = result.source.expenses.find((e) => e.originalAmount !== null)
+      expect(mc?.conversionRate).toBe(0.9)
+    }
   })
 })

@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -104,8 +104,21 @@ describe('Cloudflare Pages worker markdown negotiation', () => {
       { page: '/sponsor', asset: '/sponsor.md' },
     ])
 
+    const publicMarkdownAssets = readdirSync(publicDir)
+      .filter((file) => file.endsWith('.md') && file !== 'auth.md')
+      .map((file) => `/${file}`)
+      .sort()
+    expect(markdownPages.map(({ asset }) => asset).sort()).toEqual(
+      publicMarkdownAssets,
+    )
+
     for (const { asset } of markdownPages) {
       expect(existsSync(join(publicDir, asset)), asset).toBe(true)
+    }
+
+    for (const file of publicMarkdownAssets) {
+      if (file === '/auth.md') continue
+      expect(existsSync(join(publicDir, file)), file).toBe(true)
     }
   })
 

@@ -1,6 +1,6 @@
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
-import { sendJob, type SpliitBoss } from './boss'
+import { sendJob } from './boss'
 import {
   ANONYMOUS_ACCOUNT_CLEANUP_DLQ,
   ANONYMOUS_ACCOUNT_CLEANUP_QUEUE,
@@ -20,12 +20,7 @@ import {
   RECURRING_RECONCILIATION_QUEUE,
   sourceQueueForDeadLetter,
 } from './registry'
-
-function createBossMock() {
-  return {
-    send: vi.fn(async () => 'job-id'),
-  } as unknown as SpliitBoss
-}
+import { createBossMock } from './test-helpers'
 
 describe('notification job registry', () => {
   it('accepts legacy v1 materialization payloads without a schedule version', () => {

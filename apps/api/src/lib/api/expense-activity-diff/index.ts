@@ -27,7 +27,6 @@ import type { ChangeContext, DifferenceableExpense } from './types'
 export { compositeExpenseDiffer } from './composite.differ'
 export type { CompositeExpenseDiffer } from './composite.differ'
 export { getAffectedParticipantIds } from './participant-collector'
-export { payerSemantics, splitSemantics } from './semantics'
 export type { ChangeContext, DiffEmission, ExpenseDiffer } from './types'
 
 // Individual differs

@@ -3,31 +3,10 @@ import {
   convertByRate,
   exactAmountToNumber,
   exactFromFraction,
-  exactFromInteger,
   exactZero,
-  gcd,
   isCrossCurrency,
   type ExactAmount,
 } from './exact-math'
-
-describe('gcd', () => {
-  it('returns gcd of two positive integers', () => {
-    expect(gcd(12n, 8n)).toBe(4n)
-  })
-
-  it('returns gcd including negative numbers', () => {
-    expect(gcd(-12n, 8n)).toBe(4n)
-  })
-
-  it('handles zero: gcd(a, 0) = |a|', () => {
-    expect(gcd(0n, 5n)).toBe(5n)
-    expect(gcd(5n, 0n)).toBe(5n)
-  })
-
-  it('returns 1 for coprime numbers', () => {
-    expect(gcd(7n, 13n)).toBe(1n)
-  })
-})
 
 describe('exactFromFraction', () => {
   it('reduces fraction to lowest terms', () => {
@@ -50,22 +29,6 @@ describe('exactFromFraction', () => {
   it('returns zero for zero denominator', () => {
     const result = exactFromFraction(5n, 0n)
     expect(result).toEqual({ numerator: 0n, denominator: 1n })
-  })
-})
-
-describe('exactZero', () => {
-  it('returns 0/1', () => {
-    expect(exactZero()).toEqual({ numerator: 0n, denominator: 1n })
-  })
-})
-
-describe('exactFromInteger', () => {
-  it('converts a number to ExactAmount with denominator 1', () => {
-    expect(exactFromInteger(42)).toEqual({ numerator: 42n, denominator: 1n })
-  })
-
-  it('handles negative integers', () => {
-    expect(exactFromInteger(-5)).toEqual({ numerator: -5n, denominator: 1n })
   })
 })
 

@@ -84,7 +84,7 @@ describe('invitationsRouter.list', () => {
     expect(result.invitations[0]).toMatchObject({ id: 'inv-1' })
   })
 
-  it('returns the invitations list for an ADMIN', async () => {
+  it('returns an empty invitations list for an ADMIN when none exist', async () => {
     await authAs('acct-admin')
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'grp-1',

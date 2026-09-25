@@ -179,6 +179,46 @@ describe('suggestExpenseCategory', () => {
     )
   })
 
+  it('does not offer settlement as an LLM category', async () => {
+    envState.PUBLIC_ENABLE_CATEGORY_EXTRACT = true
+    prismaMock.expense.findMany.mockResolvedValue([
+      { title: 'Luigi mysterious trattoria', categoryId: 'dining-out' },
+    ] as never)
+
+    await suggestExpenseCategory({
+      groupId: 'group-1',
+      title: 'Luigi mysterious trattoria xyzzy',
+      allowAi: true,
+    })
+
+    const instructions = (
+      generateText.mock.calls[0]?.[0] as { instructions?: string }
+    )?.instructions
+    expect(instructions).not.toContain('settlement')
+  })
+
+  it('truncates LLM input to 40 characters with no retries and configured timeout', async () => {
+    envState.PUBLIC_ENABLE_CATEGORY_EXTRACT = true
+    prismaMock.expense.findMany.mockResolvedValue([
+      { title: 'Luigi mysterious trattoria', categoryId: 'dining-out' },
+    ] as never)
+
+    await suggestExpenseCategory({
+      groupId: 'group-1',
+      title: 'a'.repeat(100),
+      allowAi: true,
+    })
+
+    const request = generateText.mock.calls[0]?.[0] as {
+      prompt?: string
+      maxRetries?: number
+      timeout?: number
+    }
+    expect(request.prompt).toBe('a'.repeat(40))
+    expect(request.maxRetries).toBe(0)
+    expect(request.timeout).toBe(30_000)
+  })
+
   it('returns null when the LLM confidence is below the minimum', async () => {
     envState.PUBLIC_ENABLE_CATEGORY_EXTRACT = true
     prismaMock.expense.findMany.mockResolvedValue([

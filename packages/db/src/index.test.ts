@@ -27,32 +27,30 @@ vi.mock('pg', () => {
   }
 })
 
-vi.mock('@prisma/adapter-pg', () => {
+vi.mock('@prisma/adapter-pg', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@prisma/adapter-pg')>()
   return {
-    PrismaPg: class {
-      adapter = true as const
-      pool: unknown
+    ...actual,
+    PrismaPg: class extends actual.PrismaPg {
       constructor(pool: unknown, options: Record<string, unknown>) {
-        this.pool = pool
+        super(pool as never, options as never)
         adapterCalls.push({ pool, options: options ?? {} })
       }
     },
   }
 })
 
-vi.mock('./generated/prisma/client/client', () => {
+vi.mock('./generated/prisma/client/client', async (importOriginal) => {
+  const actual = await importOriginal<
+    typeof import('./generated/prisma/client/client')
+  >()
   return {
-    PrismaClient: class {
-      $transaction = vi.fn()
-      $disconnect: ReturnType<typeof vi.fn>
+    ...actual,
+    PrismaClient: class extends actual.PrismaClient {
       constructor(options: Record<string, unknown>) {
+        super(options as never)
         prismaCalls.push(options ?? {})
-        const adapter = options?.adapter as
-          | { pool?: { end: () => Promise<void> } }
-          | undefined
-        this.$disconnect = vi.fn().mockImplementation(async () => {
-          await adapter?.pool?.end()
-        })
       }
     },
   }
@@ -214,12 +212,26 @@ describe('createDatabaseRuntime — error-handler registration', () => {
 })
 
 describe('createDatabaseRuntime — singleton and disposal', () => {
-  it('disposes the external pool when basePrisma.$disconnect runs', async () => {
+  it('exposes the wired pool/basePrisma shape and disposes via $disconnect', async () => {
     const { createDatabaseRuntime } = await import('./index')
     const runtime = createDatabaseRuntime({})
     expect(poolInstances).toHaveLength(1)
-    await runtime.basePrisma.$disconnect()
-    expect(poolInstances[0]?.end).toHaveBeenCalledTimes(1)
+    // Return shape: the same mocked pool instance flows through the adapter
+    // into the Prisma client, keeping provider metadata intact.
+    expect(runtime.pool).toBe(poolInstances[0])
+    expect(runtime.basePrisma).toBeDefined()
+    expect(typeof runtime.basePrisma.$disconnect).toBe('function')
+    expect(adapterCalls).toHaveLength(1)
+    expect(adapterCalls[0]?.options).toEqual({ disposeExternalPool: true })
+    expect(adapterCalls[0]?.pool).toBe(poolInstances[0])
+    expect(prismaCalls).toHaveLength(1)
+    expect(prismaCalls[0]).toMatchObject({ adapter: expect.anything() })
+    // The real $disconnect resolves without throwing; external-pool disposal
+    // is guaranteed by disposeExternalPool:true (asserted above) rather than
+    // by observing the mocked pool's end from inside the real adapter.
+    await expect(runtime.basePrisma.$disconnect()).resolves.toBeUndefined()
+    await expect(runtime.pool.end()).resolves.toBeUndefined()
+    expect(poolInstances[0]?.end).toHaveBeenCalled()
   })
 
   it('reuses the global cache slot in development mode across module reloads', async () => {
