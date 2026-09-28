@@ -100,6 +100,18 @@ describe('suggestCategoryWithSystemOne', () => {
     expect(body.model).toBe('kev-8b')
   })
 
+  it('refuses non-loopback plaintext HTTP without sending credentials', async () => {
+    fetchMock.mockResolvedValueOnce(systemOneResponse('groceries'))
+
+    await expect(
+      suggestCategoryWithSystemOne('Mercadona weekly shop', {
+        apiKey: 'test-key',
+        baseUrl: 'http://models.example.com/v1/systemone',
+      }),
+    ).rejects.toThrow(/must use HTTPS/)
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
   it('truncates long titles to 40 characters like the LLM fallback', async () => {
     fetchMock.mockResolvedValueOnce(systemOneResponse('groceries'))
 

@@ -170,6 +170,8 @@ may remain empty.
   `AI_SYSTEM_ONE_MODEL` (default `jev-latest`),
   `AI_SYSTEM_ONE_TIMEOUT_SECONDS` (default 10), and `AI_SYSTEM_ONE_BASE_URL`
   (default TypeSafe's endpoint; override for a self-hosted compatible server).
+  A self-hosted endpoint must use HTTPS — plaintext HTTP is only accepted for
+  local loopback development — otherwise boot fails fast.
   Both engines share one
   confidence floor, `AI_CATEGORY_MIN_CONFIDENCE` (default 0.5). The local stages can be switched
   off with `CATEGORY_DICTIONARY_ENABLED` / `CATEGORY_HISTORY_ENABLED`

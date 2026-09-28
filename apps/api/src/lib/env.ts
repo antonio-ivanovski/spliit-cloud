@@ -5,6 +5,8 @@ import {
   supportedCurrencyCodeSchema,
 } from '@spliit/domain'
 
+import { isLoopbackHostname } from './ai/system-one-base-url'
+
 const interpretEnvVarAsBool = (val: unknown): boolean => {
   if (typeof val !== 'string') return false
   return ['true', 'yes', '1', 'on'].includes(val.toLowerCase())
@@ -556,6 +558,24 @@ const envSchema = z
         message:
           'AI_SYSTEM_ONE_API_KEY must be specified when PUBLIC_ENABLE_CATEGORY_EXTRACT is enabled with AI_CATEGORY_ENGINE=system-one',
       })
+    }
+    // The bearer key and expense context travel to this endpoint, so a
+    // non-loopback `http:` URL would leak both in cleartext. Fail boot fast;
+    // loopback HTTP stays available for local self-hosted development.
+    if (env.AI_SYSTEM_ONE_BASE_URL) {
+      try {
+        const url = new URL(env.AI_SYSTEM_ONE_BASE_URL)
+        if (url.protocol === 'http:' && !isLoopbackHostname(url.hostname)) {
+          ctx.addIssue({
+            code: 'custom',
+            path: ['AI_SYSTEM_ONE_BASE_URL'],
+            message:
+              'AI_SYSTEM_ONE_BASE_URL must use HTTPS (HTTP is only allowed for local loopback development, e.g. http://localhost or http://127.0.0.1)',
+          })
+        }
+      } catch {
+        // Invalid URLs are already reported by the `z.url()` schema.
+      }
     }
     if (env.PUBLIC_ENABLE_VOICE_EXPENSE && !env.AI_VOICE_MODEL) {
       ctx.addIssue({

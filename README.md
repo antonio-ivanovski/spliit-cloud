@@ -335,7 +335,7 @@ AI_CATEGORY_ENGINE=system-one
 AI_SYSTEM_ONE_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-Optional overrides: `AI_SYSTEM_ONE_MODEL` (default `jev-latest`; pin a versioned ID such as `jev-1.13.0` once you tune thresholds, since the `jev-latest` alias moves), `AI_SYSTEM_ONE_TIMEOUT_SECONDS` (default `10`), and `AI_SYSTEM_ONE_BASE_URL` (default TypeSafe's endpoint; point at a self-hosted `/v1/systemone`-compatible server such as Kev to run another decision model — experimental, recalibrate the floor for it).
+Optional overrides: `AI_SYSTEM_ONE_MODEL` (default `jev-latest`; pin a versioned ID such as `jev-1.13.0` once you tune thresholds, since the `jev-latest` alias moves), `AI_SYSTEM_ONE_TIMEOUT_SECONDS` (default `10`), and `AI_SYSTEM_ONE_BASE_URL` (default TypeSafe's endpoint; point at a self-hosted `/v1/systemone`-compatible server such as Kev to run another decision model — experimental, recalibrate the floor for it). A self-hosted endpoint must use HTTPS; plaintext HTTP is only accepted for local loopback development (`http://localhost`, `http://127.0.0.1`).
 
 Both engines report a confidence with each verdict (System One: model confidence; LLM: self-reported confidence in its structured verdict) and share one floor: `AI_CATEGORY_MIN_CONFIDENCE` (default `0.5`). Below-floor verdicts degrade to no suggestion. The two confidences are not on the same scale — recalibrate the floor on a labeled sample of real expenses when switching engines.
 

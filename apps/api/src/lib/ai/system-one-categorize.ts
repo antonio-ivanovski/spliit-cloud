@@ -8,6 +8,7 @@ import {
 
 import type { GroupContext, RecentExpense } from './context'
 import { resolveLanguageName } from './prompt'
+import { assertSystemOneBaseUrl } from './system-one-base-url'
 import { timeoutSecondsToMs } from './timeout'
 
 /** TypeSafe's System One endpoint (Jev is its flagship System One model). */
@@ -23,7 +24,8 @@ export type SuggestCategoryWithSystemOneOptions = {
   model?: string
   /**
    * Endpoint base URL. Defaults to TypeSafe; point at a self-hosted
-   * `/v1/systemone`-compatible server (e.g. Kev) to run another model.
+   * `/v1/systemone`-compatible server (e.g. Kev) to run another model. Must be
+   * HTTPS, except `http://localhost` / loopback for local development.
    */
   baseUrl?: string
   /** Per-request timeout in seconds. */
@@ -111,13 +113,17 @@ export async function requestSystemOneCategories(args: {
   const criteria = Object.fromEntries(
     systemOneCategoryOptions().map(({ id, description }) => [id, description]),
   )
+  const baseUrl = args.baseUrl ?? DEFAULT_SYSTEM_ONE_API_URL
+  // Fail before any credential or expense context leaves the process rather
+  // than trusting every caller to have passed env validation.
+  assertSystemOneBaseUrl(baseUrl)
   const questions = Object.fromEntries(
     Object.entries(args.questions).map(([key, question]) => [
       key,
       { type: 'choice', instructions: question.instructions, criteria },
     ]),
   )
-  const response = await fetch(args.baseUrl ?? DEFAULT_SYSTEM_ONE_API_URL, {
+  const response = await fetch(baseUrl, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${args.apiKey}`,

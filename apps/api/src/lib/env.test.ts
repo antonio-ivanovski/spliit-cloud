@@ -453,6 +453,29 @@ describe('envSchema — AI', () => {
     expect(env.AI_SYSTEM_ONE_TIMEOUT_SECONDS).toBe(10)
   })
 
+  it.each([
+    'http://models.example.com/v1/systemone',
+    'http://192.168.1.10:8009/v1/systemone',
+  ])(
+    'rejects a non-loopback plaintext HTTP System One endpoint (%s)',
+    (url) => {
+      expect(() => parseTestEnv({ AI_SYSTEM_ONE_BASE_URL: url })).toThrow(
+        /AI_SYSTEM_ONE_BASE_URL must use HTTPS/,
+      )
+    },
+  )
+
+  it.each([
+    'https://models.example.com/v1/systemone',
+    'http://localhost:8009/v1/systemone',
+    'http://127.0.0.1:8009/v1/systemone',
+    'http://[::1]:8009/v1/systemone',
+  ])('accepts an HTTPS or loopback System One endpoint (%s)', (url) => {
+    expect(
+      parseTestEnv({ AI_SYSTEM_ONE_BASE_URL: url }).AI_SYSTEM_ONE_BASE_URL,
+    ).toBe(url)
+  })
+
   it('defaults the local suggest stages to enabled with calibrated thresholds', () => {
     const env = parseTestEnv()
     expect(env.CATEGORY_DICTIONARY_ENABLED).toBe(true)

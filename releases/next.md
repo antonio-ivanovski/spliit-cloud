@@ -24,5 +24,6 @@ who is affected, and the exact migration steps.
 ### 🐛 Bug fixes
 
 - Friend, member, and import dropdowns now keep showing names instead of raw IDs after selection (`TBD` by @TBD)
+- `AI_SYSTEM_ONE_BASE_URL` now requires HTTPS, except for local loopback development (`http://localhost`, `http://127.0.0.1`). A remote plaintext HTTP endpoint fails boot instead of sending the bearer key and expense context in cleartext — switch those endpoints to HTTPS (`TBD` by @TBD)
 
 **Full Changelog**: TBD
