@@ -232,7 +232,9 @@
       "showLess": "Zobrazit méně"
     },
     "copyToast": "Vytvoření kopie výdaje zahájeno. Stávající údaje výdaje budou použity k vytvoření nového.",
-    "incomeBadge": "Příjem"
+    "incomeBadge": "Příjem",
+    "paidBySingle": "Zaplatil(a) <strong>{paidBy}</strong> · zaplaceno za <paidFor></paidFor>",
+    "paidByMultipleSingle": "Zaplatili <paidByNames></paidByNames> · zaplaceno za <paidFor></paidFor>"
   },
   "Groups": {
     "myGroups": "Moje skupiny",

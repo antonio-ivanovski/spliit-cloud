@@ -234,7 +234,9 @@
       "showLess": "Weniger anzeigen"
     },
     "copyToast": "Ausgabe wird kopiert. Die bestehenden Ausgabedetails werden zum Erstellen einer neuen Ausgabe verwendet.",
-    "incomeBadge": "Einnahme"
+    "incomeBadge": "Einnahme",
+    "paidBySingle": "Bezahlt von <strong>{paidBy}</strong> · bezahlt für <paidFor></paidFor>",
+    "paidByMultipleSingle": "Bezahlt von <paidByNames></paidByNames> · bezahlt für <paidFor></paidFor>"
   },
   "Groups": {
     "myGroups": "Meine Gruppen",

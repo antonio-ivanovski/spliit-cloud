@@ -226,7 +226,9 @@
       "showLess": "Прикажи помалку"
     },
     "copyToast": "Копирањето на трошокот е започнато. Постоечките детали за трошокот ќе бидат искористени за создавање нов.",
-    "incomeBadge": "Приход"
+    "incomeBadge": "Приход",
+    "paidBySingle": "Платено од <strong>{paidBy}</strong> · платено за <paidFor></paidFor>",
+    "paidByMultipleSingle": "Платено од <paidByNames></paidByNames> · платено за <paidFor></paidFor>"
   },
   "Groups": {
     "myGroups": "Мои групи",

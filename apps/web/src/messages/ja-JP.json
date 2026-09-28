@@ -223,7 +223,9 @@
       "showLess": "表示を減らす"
     },
     "copyToast": "支出のコピーを開始しました。既存の支出の詳細を使用して新しい支出を作成します。",
-    "incomeBadge": "収入"
+    "incomeBadge": "収入",
+    "paidBySingle": "<strong>{paidBy}</strong>が支払い · <paidFor></paidFor>のために支払い",
+    "paidByMultipleSingle": "<paidByNames></paidByNames>が支払い · <paidFor></paidFor>のために支払い"
   },
   "Groups": {
     "myGroups": "マイグループ",

@@ -229,7 +229,9 @@
       "showLess": "Mostra menys"
     },
     "copyToast": "S'ha iniciat la còpia de la despesa. Les dades de la despesa existent s'utilitzaran per crear-ne una de nova.",
-    "incomeBadge": "Ingressos"
+    "incomeBadge": "Ingressos",
+    "paidBySingle": "Pagat per <strong>{paidBy}</strong> · pagat per a <paidFor></paidFor>",
+    "paidByMultipleSingle": "Pagat per <paidByNames></paidByNames> · pagat per a <paidFor></paidFor>"
   },
   "Groups": {
     "myGroups": "Els meus grups",

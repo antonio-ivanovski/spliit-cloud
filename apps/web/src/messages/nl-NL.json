@@ -234,7 +234,9 @@
       "showLess": "Minder tonen"
     },
     "copyToast": "Kopiëren gestart. De bestaande uitgavedetails worden gebruikt om een nieuwe aan te maken.",
-    "incomeBadge": "Inkomen"
+    "incomeBadge": "Inkomen",
+    "paidBySingle": "Betaald door <strong>{paidBy}</strong> · betaald voor <paidFor></paidFor>",
+    "paidByMultipleSingle": "Betaald door <paidByNames></paidByNames> · betaald voor <paidFor></paidFor>"
   },
   "Groups": {
     "myGroups": "Mijn groepen",

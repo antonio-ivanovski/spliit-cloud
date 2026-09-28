@@ -228,7 +228,9 @@
       "showLess": "Erakutsi gutxiago"
     },
     "copyToast": "Gastuaren kopia hasi da. Lehendik dagoen gastuaren datuak erabiliko dira berri bat sortzeko.",
-    "incomeBadge": "Diru-sarrera"
+    "incomeBadge": "Diru-sarrera",
+    "paidBySingle": "<strong>{paidBy}</strong>(e)k ordaindua · <paidFor></paidFor>(r)entzat ordaindua",
+    "paidByMultipleSingle": "<paidByNames></paidByNames> hauek ordaindua · <paidFor></paidFor>(r)entzat ordaindua"
   },
   "Groups": {
     "myGroups": "Nire taldeak",

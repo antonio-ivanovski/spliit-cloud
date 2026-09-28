@@ -1307,7 +1307,9 @@
       "participants": "{names}",
       "showLess": "कम दिखाएँ"
     },
-    "incomeBadge": "आय"
+    "incomeBadge": "आय",
+    "paidBySingle": "<strong>{paidBy}</strong> द्वारा भुगतान · <paidFor></paidFor> के लिए भुगतान",
+    "paidByMultipleSingle": "<paidByNames></paidByNames> द्वारा भुगतान · <paidFor></paidFor> के लिए भुगतान"
   },
   "ExpenseDocumentsInput": {
     "ErrorToast": {

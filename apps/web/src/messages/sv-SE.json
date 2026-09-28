@@ -1307,7 +1307,9 @@
       "participants": "{names}",
       "showLess": "Visa mindre"
     },
-    "incomeBadge": "Inkomst"
+    "incomeBadge": "Inkomst",
+    "paidBySingle": "Betald av <strong>{paidBy}</strong> · betald för <paidFor></paidFor>",
+    "paidByMultipleSingle": "Betald av <paidByNames></paidByNames> · betald för <paidFor></paidFor>"
   },
   "ExpenseDocumentsInput": {
     "ErrorToast": {

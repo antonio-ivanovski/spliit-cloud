@@ -688,7 +688,9 @@
     "yourBalance": "رصيدك:",
     "notInvolved": "أنت غير مشترك",
     "receivedBy": "استلم بواسطة <strong>{paidBy}</strong> · مخصص لـ <paidFor></paidFor>",
-    "incomeBadge": "دخل"
+    "incomeBadge": "دخل",
+    "paidBySingle": "دفع بواسطة <strong>{paidBy}</strong> · مدفوع لـ <paidFor></paidFor>",
+    "paidByMultipleSingle": "دفع بواسطة <paidByNames></paidByNames> · مدفوع لـ <paidFor></paidFor>"
   },
   "Homepage": {
     "features": {

@@ -26,7 +26,9 @@ type Expense = Awaited<ReturnType<typeof getGroupExpenses>>[number]
 
 const participantsKey = {
   paidBy: 'ExpenseCard.paidBy',
+  paidBySingle: 'ExpenseCard.paidBySingle',
   paidByMultiple: 'ExpenseCard.paidByMultiple',
+  paidByMultipleSingle: 'ExpenseCard.paidByMultipleSingle',
   receivedBy: 'ExpenseCard.receivedBy',
   receivedByMultiple: 'ExpenseCard.receivedByMultiple',
 } as const
@@ -88,9 +90,17 @@ function Participants({
 
   const isMultiPayer = expense.paidByList.length > 1
   const direction = expense.amount > 0 ? 'paidBy' : 'receivedBy'
-  const i18nKey = isMultiPayer
-    ? participantsKey[`${direction}Multiple`]
-    : participantsKey[direction]
+  const isEveryone =
+    expense.paidFor.length === participantCount && participantCount >= 4
+  const isSingleBeneficiary = !isEveryone && expense.paidFor.length === 1
+  const i18nKey =
+    direction === 'paidBy' && isSingleBeneficiary
+      ? isMultiPayer
+        ? participantsKey.paidByMultipleSingle
+        : participantsKey.paidBySingle
+      : isMultiPayer
+        ? participantsKey[`${direction}Multiple`]
+        : participantsKey[direction]
 
   if (isMultiPayer) {
     // Decision #13: sort payers alphabetically by resolved display name.

@@ -226,7 +226,9 @@
       "showLess": "Näytä vähemmän"
     },
     "copyToast": "Kulun kopiointi aloitettu. Olemassa olevia kulun tietoja käytetään uuden kulun luomiseen.",
-    "incomeBadge": "Tulo"
+    "incomeBadge": "Tulo",
+    "paidBySingle": "Maksaja <strong>{paidBy}</strong> · maksettu henkilölle <paidFor></paidFor>",
+    "paidByMultipleSingle": "Maksajat <paidByNames></paidByNames> · maksettu henkilölle <paidFor></paidFor>"
   },
   "Groups": {
     "myGroups": "Omat ryhmät",

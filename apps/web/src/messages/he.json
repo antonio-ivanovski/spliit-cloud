@@ -229,7 +229,9 @@
       "showLess": "הצג פחות"
     },
     "copyToast": "העתקת ההוצאה הותחלה. פרטי ההוצאה הקיימים ישמשו ליצירת הוצאה חדשה.",
-    "incomeBadge": "הכנסה"
+    "incomeBadge": "הכנסה",
+    "paidBySingle": "שולם על ידי <strong>{paidBy}</strong> · שולם עבור <paidFor></paidFor>",
+    "paidByMultipleSingle": "שולם על ידי <paidByNames></paidByNames> · שולם עבור <paidFor></paidFor>"
   },
   "Groups": {
     "myGroups": "הקבוצות שלי",

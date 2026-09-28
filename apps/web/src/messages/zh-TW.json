@@ -223,7 +223,9 @@
       "showLess": "收合"
     },
     "copyToast": "已啟動複製支出。將使用現有的支出詳細資料來建立新的支出。",
-    "incomeBadge": "收入"
+    "incomeBadge": "收入",
+    "paidBySingle": "付款人：<strong>{paidBy}</strong> · 為 <paidFor></paidFor> 付款",
+    "paidByMultipleSingle": "付款人：<paidByNames></paidByNames> · 為 <paidFor></paidFor> 付款"
   },
   "Groups": {
     "myGroups": "我的群組",

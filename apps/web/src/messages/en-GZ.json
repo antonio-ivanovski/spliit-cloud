@@ -1490,7 +1490,9 @@
       "participants": "{names}, obviously",
       "showLess": "fold these up"
     },
-    "incomeBadge": "income"
+    "incomeBadge": "income",
+    "paidBySingle": "fronted by <strong>{paidBy}</strong> · paid for <paidFor></paidFor>",
+    "paidByMultipleSingle": "fronted by <paidByNames></paidByNames> · paid for <paidFor></paidFor>"
   },
   "ExpenseDocumentsInput": {
     "ErrorToast": {

@@ -262,7 +262,9 @@
       "showLess": "Show less"
     },
     "copyToast": "Copy expense initiated. The existing expense details will be used to create a new one.",
-    "incomeBadge": "Income"
+    "incomeBadge": "Income",
+    "paidBySingle": "Paid by <strong>{paidBy}</strong> · paid for <paidFor></paidFor>",
+    "paidByMultipleSingle": "Paid by <paidByNames></paidByNames> · paid for <paidFor></paidFor>"
   },
   "ExpenseSeries": {
     "badge": "Recurring",

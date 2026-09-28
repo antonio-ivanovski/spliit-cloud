@@ -232,7 +232,9 @@
       "showLess": "Показать меньше"
     },
     "copyToast": "Копирование расхода запущено. Существующие данные расхода будут использованы для создания нового.",
-    "incomeBadge": "Доход"
+    "incomeBadge": "Доход",
+    "paidBySingle": "Потратил <strong>{paidBy}</strong> за <paidFor></paidFor>",
+    "paidByMultipleSingle": "Потратили <paidByNames></paidByNames> за <paidFor></paidFor>"
   },
   "Groups": {
     "myGroups": "Мои группы",

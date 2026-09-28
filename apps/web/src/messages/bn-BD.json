@@ -1343,7 +1343,9 @@
       "participants": "{names}",
       "showLess": "কম দেখান"
     },
-    "incomeBadge": "আয়"
+    "incomeBadge": "আয়",
+    "paidBySingle": "<strong>{paidBy}</strong> প্রদান করেছেন · <paidFor></paidFor> এর জন্য প্রদান",
+    "paidByMultipleSingle": "<paidByNames></paidByNames> প্রদান করেছেন · <paidFor></paidFor> এর জন্য প্রদান"
   },
   "ExpenseDocumentsInput": {
     "ErrorToast": {

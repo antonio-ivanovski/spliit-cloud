@@ -474,6 +474,101 @@ describe('ExpenseCard', () => {
     expect(container.textContent).toContain('split between Alice, Bob, Carol')
   })
 
+  it('says paid for instead of split between for a single beneficiary', () => {
+    vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
+    vi.mocked(useActiveUser).mockReturnValue(null)
+
+    const { container } = render(
+      <ExpenseCard
+        expense={makeExpense({
+          paidByList: [
+            {
+              ledgerParticipant: { id: 'user-alice', name: 'Alice' },
+              shares: 3000,
+            },
+          ],
+          paidFor: [
+            {
+              ledgerParticipant: { id: 'user-bob', name: 'Bob' },
+              shares: 1,
+            },
+          ],
+        })}
+        currency={EUR}
+        groupId="group-1"
+        participantCount={2}
+      />,
+    )
+
+    expect(container.textContent).toContain('Paid by Alice · paid for Bob')
+    expect(container.textContent).not.toContain('split between')
+  })
+
+  it('says paid for for multiple payers and a single beneficiary', () => {
+    vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
+    vi.mocked(useActiveUser).mockReturnValue(null)
+
+    const { container } = render(
+      <ExpenseCard
+        expense={makeExpense({
+          paidByList: [
+            {
+              ledgerParticipant: { id: 'user-alice', name: 'Alice' },
+              shares: 1500,
+            },
+            {
+              ledgerParticipant: { id: 'user-bob', name: 'Bob' },
+              shares: 1500,
+            },
+          ],
+          paidFor: [
+            {
+              ledgerParticipant: { id: 'user-carol', name: 'Carol' },
+              shares: 1,
+            },
+          ],
+        })}
+        currency={EUR}
+        groupId="group-1"
+        participantCount={3}
+      />,
+    )
+
+    expect(container.textContent).toContain('Paid by Alice, Bob · paid for Carol')
+    expect(container.textContent).not.toContain('split between')
+  })
+
+  it('keeps allocated to for a single-beneficiary income', () => {
+    vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
+    vi.mocked(useActiveUser).mockReturnValue(null)
+
+    const { container } = render(
+      <ExpenseCard
+        expense={makeExpense({
+          amount: -3000,
+          paidByList: [
+            {
+              ledgerParticipant: { id: 'user-alice', name: 'Alice' },
+              shares: 3000,
+            },
+          ],
+          paidFor: [
+            {
+              ledgerParticipant: { id: 'user-bob', name: 'Bob' },
+              shares: 1,
+            },
+          ],
+        })}
+        currency={EUR}
+        groupId="group-1"
+        participantCount={2}
+      />,
+    )
+
+    expect(container.textContent).toContain('allocated to Bob')
+    expect(container.textContent).not.toContain('split between')
+  })
+
   it('uses stored top-level shares for itemized balances with slim item rows', () => {
     vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue('user-bob')
@@ -612,7 +707,7 @@ describe('ExpenseCard', () => {
       expect(container.textContent).toContain('Alice, Bob, Carol')
       // Phrase template renders the payer group before the payee.
       expect(container.textContent).toContain(
-        'Paid by Alice, Bob, Carol · split between Dave',
+        'Paid by Alice, Bob, Carol · paid for Dave',
       )
       // The strong-order check pins the exact slot order.
       const strongTexts = Array.from(container.querySelectorAll('strong')).map(

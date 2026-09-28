@@ -1307,7 +1307,9 @@
       "participants": "{names}",
       "showLess": "کم دکھائیں"
     },
-    "incomeBadge": "آمدنی"
+    "incomeBadge": "آمدنی",
+    "paidBySingle": "<strong>{paidBy}</strong> نے ادا کیا · <paidFor></paidFor> کے لیے ادا کیا",
+    "paidByMultipleSingle": "<paidByNames></paidByNames> نے ادا کیا · <paidFor></paidFor> کے لیے ادا کیا"
   },
   "ExpenseDocumentsInput": {
     "ErrorToast": {

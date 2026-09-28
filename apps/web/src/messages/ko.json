@@ -1436,7 +1436,9 @@
       "showLess": "간략히 보기"
     },
     "copyToast": "지출 복사가 시작되었습니다. 기존 지출 정보를 사용해 새 지출이 생성됩니다.",
-    "incomeBadge": "수입"
+    "incomeBadge": "수입",
+    "paidBySingle": "<strong>{paidBy}</strong>님이 결제 · <paidFor></paidFor>님을 위해 결제",
+    "paidByMultipleSingle": "<paidByNames></paidByNames>님이 결제 · <paidFor></paidFor>님을 위해 결제"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "문서 삭제",

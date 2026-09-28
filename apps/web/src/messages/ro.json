@@ -229,7 +229,9 @@
       "showLess": "Arată mai puțin"
     },
     "copyToast": "Copierea cheltuielii a fost inițiată. Detaliile cheltuielii existente vor fi folosite pentru a crea una nouă.",
-    "incomeBadge": "Venit"
+    "incomeBadge": "Venit",
+    "paidBySingle": "Plătit de <strong>{paidBy}</strong> · plătit pentru <paidFor></paidFor>",
+    "paidByMultipleSingle": "Plătit de <paidByNames></paidByNames> · plătit pentru <paidFor></paidFor>"
   },
   "Groups": {
     "myGroups": "Grupurile mele",

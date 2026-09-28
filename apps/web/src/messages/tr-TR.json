@@ -226,7 +226,9 @@
       "showLess": "Daha az göster"
     },
     "copyToast": "Masraf kopyalama başlatıldı. Mevcut masraf ayrıntıları yeni bir tane oluşturmak için kullanılacak.",
-    "incomeBadge": "Gelir"
+    "incomeBadge": "Gelir",
+    "paidBySingle": "<strong>{paidBy}</strong> ödedi · <paidFor></paidFor> için ödedi",
+    "paidByMultipleSingle": "<paidByNames></paidByNames> ödedi · <paidFor></paidFor> için ödedi"
   },
   "Groups": {
     "myGroups": "Gruplarım",

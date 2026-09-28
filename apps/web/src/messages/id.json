@@ -223,7 +223,9 @@
       "showLess": "Tampilkan lebih sedikit"
     },
     "copyToast": "Penyalinan pengeluaran dimulai. Detail pengeluaran yang ada akan digunakan untuk membuat pengeluaran baru.",
-    "incomeBadge": "Pendapatan"
+    "incomeBadge": "Pendapatan",
+    "paidBySingle": "Dibayar oleh <strong>{paidBy}</strong> · dibayar untuk <paidFor></paidFor>",
+    "paidByMultipleSingle": "Dibayar oleh <paidByNames></paidByNames> · dibayar untuk <paidFor></paidFor>"
   },
   "Groups": {
     "myGroups": "Grup saya",

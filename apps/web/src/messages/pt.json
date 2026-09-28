@@ -229,7 +229,9 @@
       "showLess": "Mostrar menos"
     },
     "copyToast": "Iniciada a cópia da despesa. Os detalhes da despesa existente serão usados para criar uma nova.",
-    "incomeBadge": "Rendimento"
+    "incomeBadge": "Rendimento",
+    "paidBySingle": "Pago por <strong>{paidBy}</strong> · pago para <paidFor></paidFor>",
+    "paidByMultipleSingle": "Pago por <paidByNames></paidByNames> · pago para <paidFor></paidFor>"
   },
   "Groups": {
     "myGroups": "Os meus grupos",
