@@ -12,6 +12,7 @@ import { ExpenseAttachmentsPreview } from '@/app/groups/[groupId]/expenses/expen
 import { ExpenseComments } from '@/app/groups/[groupId]/expenses/expense-comments'
 import {
   ExpenseItemsSummary,
+  resolveExpenseItemsAmount,
   resolveExpenseItemsCurrency,
 } from '@/app/groups/[groupId]/expenses/expense-items-summary'
 import {
@@ -137,7 +138,7 @@ export type ExpensePreviewModalProps = {
   readOnly?: boolean
 }
 
-function toBalanceExpense(
+export function toBalanceExpense(
   expense: Expense,
   participants: Array<{ id: string; name: string }>,
 ): BalanceExpense {
@@ -175,6 +176,7 @@ function toBalanceExpense(
     itemizedRemainder: expense.itemizedRemainder
       ? {
           splitMode: expense.itemizedRemainder.splitMode,
+          allocationMode: expense.itemizedRemainder.allocationMode,
           paidFor: expense.itemizedRemainder.paidFor.map((entry) => ({
             participant: entry.ledgerParticipantId,
             shares: entry.shares,
@@ -522,7 +524,10 @@ export function ExpensePreviewModal({
                 locale={locale}
                 participants={participants}
                 itemizedRemainder={expense.itemizedRemainder}
-                expenseAmount={expense.amount}
+                expenseAmount={resolveExpenseItemsAmount(
+                  expense.originalAmount,
+                  expense.amount,
+                )}
                 otherLabel={tForm('items.other')}
                 proportionalText={tForm(
                   'items.remainderAllocationProportional',

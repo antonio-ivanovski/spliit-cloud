@@ -118,6 +118,11 @@ export function scaleRowsToAmount(
 /**
  * Apply a chosen split to every item (scaled per item total) and to the
  * itemized remainder filler (scaled to the unaccounted amount).
+ *
+ * `groupCurrency` is the expense input (payer) currency the item amounts are
+ * denominated in — not the ledger currency. Callers must pass the input
+ * currency so BY_AMOUNT precision matches the stored item amounts for converted
+ * expenses.
  */
 export function applySplitToAll({
   items,

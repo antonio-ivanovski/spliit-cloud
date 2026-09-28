@@ -20,16 +20,22 @@ export function isFillerItem(
   return item.isFiller === true
 }
 
+/**
+ * Append a synthetic "Other" filler item when the item subtotal does not cover
+ * the expense total. All amounts are denominated in the expense's _input_
+ * currency (the currency the amount field is entered in) — never the ledger
+ * currency, which differs for converted expenses.
+ */
 export function withAutoOtherFiller(
   items: ExpenseFormItemValues[],
   expenseAmountMajor: number,
-  groupCurrency: Currency,
+  inputCurrency: Currency,
   itemizedRemainder?: ExpenseFormInputValues['itemizedRemainder'],
 ): ExpenseFormDisplayItem[] {
   const { itemsMinor, amountMinor, gapMinor } = getItemizedFormMinorTotals(
     items,
     expenseAmountMajor,
-    groupCurrency,
+    inputCurrency,
   )
 
   if (
@@ -39,7 +45,7 @@ export function withAutoOtherFiller(
     return items
   }
 
-  const gapMajor = gapMinorAsMajor(gapMinor, groupCurrency)
+  const gapMajor = gapMinorAsMajor(gapMinor, inputCurrency)
 
   return [
     ...items,

@@ -28,6 +28,20 @@ export function resolveExpenseItemsCurrency(
   return getCurrency(originalCurrencyCode) ?? groupCurrency
 }
 
+/**
+ * Resolve the expense total denominated in the same currency as the stored item
+ * amounts. Items are persisted in the expense's entered currency, so for
+ * converted expenses the "Other (unaccounted)" filler must compare against
+ * `originalAmount` — comparing against the ledger `amount` mixes currencies and
+ * produces a spurious filler whenever the rate is not 1:1.
+ */
+export function resolveExpenseItemsAmount(
+  originalAmount: number | null | undefined,
+  amount: number,
+): number {
+  return originalAmount ?? amount
+}
+
 type Item = {
   id: string
   title: string
@@ -76,7 +90,13 @@ export function ExpenseItemsSummary({
   locale: string
   participants?: BreakdownParticipant[]
   itemizedRemainder?: ItemizedRemainder
-  /** Ledger-total minor units; enables the "Other (unaccounted)" row. */
+  /**
+   * Expense total in the same currency as `items` (i.e. the entered-currency
+   * total: `originalAmount ?? amount`). Enables the "Other (unaccounted)" row.
+   * Must NOT be the ledger total for converted expenses — items are stored in
+   * the entered currency, so a ledger total here mixes currencies. Prefer
+   * `resolveExpenseItemsAmount` at the call site.
+   */
   expenseAmount?: number
   /** Label for the filler row (defaults to the itemized remainder title). */
   otherLabel?: string

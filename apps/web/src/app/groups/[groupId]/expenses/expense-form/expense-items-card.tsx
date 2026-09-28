@@ -120,6 +120,12 @@ export function ExpenseItemsCard({
 }: {
   form: UseFormReturn<ExpenseFormInputValues>
   group: Group
+  /**
+   * Expense input (payer) currency — the currency the amount field and item
+   * prices are entered in. Callers pass `payerCurrency`, not the ledger
+   * currency: item math must run in input minor units, especially for converted
+   * expenses where the two differ.
+   */
   groupCurrency: Currency
   readOnly?: boolean
   presets: SplitPreset[]
