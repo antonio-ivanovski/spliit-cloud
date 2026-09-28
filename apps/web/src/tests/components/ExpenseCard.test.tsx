@@ -411,6 +411,69 @@ describe('ExpenseCard', () => {
     expect(container.textContent).toContain('€10.00')
   })
 
+  it.each([
+    {
+      amount: 400,
+      phrase: 'Paid by Alice, Bob, Carol, Dave · split between everyone',
+      allPayers: true,
+    },
+    {
+      amount: -400,
+      phrase: 'allocated to everyone',
+      allPayers: false,
+    },
+  ])(
+    'shows everyone for an all-member split ($phrase)',
+    ({ amount, phrase, allPayers }) => {
+      vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
+      vi.mocked(useActiveUser).mockReturnValue(null)
+
+      const paidFor = ['Alice', 'Bob', 'Carol', 'Dave'].map((name) => ({
+        ledgerParticipant: { id: name.toLowerCase(), name },
+        shares: 1,
+      }))
+      const { container } = render(
+        <ExpenseCard
+          expense={makeExpense({
+            amount,
+            paidFor,
+            ...(allPayers && {
+              paidByList: paidFor.map(({ ledgerParticipant }) => ({
+                ledgerParticipant,
+                shares: 100,
+              })),
+            }),
+          })}
+          currency={EUR}
+          groupId="group-1"
+          participantCount={4}
+        />,
+      )
+
+      expect(container.textContent).toContain(phrase)
+    },
+  )
+
+  it('shows names when every member of a three-person group shares the expense', () => {
+    vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
+    vi.mocked(useActiveUser).mockReturnValue(null)
+
+    const paidFor = ['Alice', 'Bob', 'Carol'].map((name) => ({
+      ledgerParticipant: { id: name.toLowerCase(), name },
+      shares: 1,
+    }))
+    const { container } = render(
+      <ExpenseCard
+        expense={makeExpense({ paidFor })}
+        currency={EUR}
+        groupId="group-1"
+        participantCount={3}
+      />,
+    )
+
+    expect(container.textContent).toContain('split between Alice, Bob, Carol')
+  })
+
   it('uses stored top-level shares for itemized balances with slim item rows', () => {
     vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue('user-bob')

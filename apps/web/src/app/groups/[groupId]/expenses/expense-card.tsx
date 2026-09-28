@@ -76,16 +76,14 @@ function Participants({
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseCard' })
   const locale = useLocale()
   const paidFor =
-    expense.paidFor.length == participantCount && participantCount >= 4 ? (
-      <strong>{t('everyone')}</strong>
-    ) : (
-      expense.paidFor.map((paidFor, index) => (
-        <span key={index}>
-          {index !== 0 && <>, </>}
-          <strong>{paidFor.ledgerParticipant.name}</strong>
-        </span>
-      ))
-    )
+    expense.paidFor.length === participantCount && participantCount >= 4
+      ? [<strong key="everyone">{t('everyone')}</strong>]
+      : expense.paidFor.map((paidFor, index) => (
+          <span key={index}>
+            {index !== 0 && <>, </>}
+            <strong>{paidFor.ledgerParticipant.name}</strong>
+          </span>
+        ))
 
   const isMultiPayer = expense.paidByList.length > 1
   const direction = expense.amount > 0 ? 'paidBy' : 'receivedBy'

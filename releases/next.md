@@ -25,5 +25,6 @@ who is affected, and the exact migration steps.
 
 - The group tab bar stays anchored to the bottom of the screen while scrolling in the iOS PWA. Thanks @KihtrakRaknas for opening [#137](https://github.com/antonio-ivanovski/spliit-cloud/issues/137) (`TBD` by @TBD)
 - Expense notifications now open the relevant expense directly in the app. Thanks @KihtrakRaknas for opening [#141](https://github.com/antonio-ivanovski/spliit-cloud/issues/141) (`TBD` by @TBD)
+- Expenses split among every member of a group now show “everyone” in the expense list. Thanks @KihtrakRaknas for opening [#143](https://github.com/antonio-ivanovski/spliit-cloud/issues/143) (`TBD` by @TBD)
 
 **Full Changelog**: TBD
