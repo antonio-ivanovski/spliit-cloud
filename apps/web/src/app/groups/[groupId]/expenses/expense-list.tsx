@@ -29,6 +29,7 @@ import { Button } from '@/components/ui/button'
 import { SearchBar } from '@/components/ui/search-bar'
 import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
+import { useRestoreExpenseEditScroll } from '@/lib/expense-edit-scroll'
 import { useActiveUser } from '@/lib/hooks'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import {
@@ -150,6 +151,11 @@ const ExpenseListForSearch = ({
   const renderedShowAll = useRenderedViewMode(showAll, isPlaceholderData)
 
   const isLoading = expensesAreLoading || !expenses || !group
+
+  useRestoreExpenseEditScroll(
+    !isLoading && !showServerEmpty && !showOfflineEmpty,
+    groupId,
+  )
 
   useEffect(() => {
     if (inView && hasMore && !isLoading) void fetchNextPage()

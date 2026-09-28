@@ -30,6 +30,7 @@ import { ThemeProvider } from '@/components/theme-provider'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Toaster } from '@/components/ui/toaster'
 import { I18nProvider } from '@/i18n/react'
+import { discardExpenseEditScrollOutside } from '@/lib/expense-edit-scroll'
 import { isFocusedMobilePath, isMobileGroupTabPath } from '@/lib/mobile-nav'
 import { markPwaUpdateProtectionInitialized } from '@/lib/pwa-update-blockers'
 import { TRPCProvider } from '@/trpc/client'
@@ -54,6 +55,7 @@ function AccountPreferencesBoundary({
 function Content() {
   const { t } = useTranslation()
   const pathname = useLocation({ select: (location) => location.pathname })
+  useEffect(() => discardExpenseEditScrollOutside(pathname), [pathname])
   const isAuthRoute = pathname.startsWith('/auth/')
   const focusedMobileRoute = isFocusedMobilePath(pathname)
   const groupTabMobileRoute = isMobileGroupTabPath(pathname)

@@ -43,6 +43,7 @@ import {
   enforceCurrencyPattern,
   localizeCurrencyInput,
 } from '@/lib/currency-input'
+import { useRestoreExpenseEditScroll } from '@/lib/expense-edit-scroll'
 import {
   useOfflineWithoutData,
   useServerUnreachableWithoutData,
@@ -634,6 +635,7 @@ export function GlobalExpensesContent() {
       to: '/expenses',
       search: filtersToSearch(filters) as never,
       replace: true,
+      resetScroll: false,
     })
   }
 
@@ -673,6 +675,10 @@ export function GlobalExpensesContent() {
   const hasMore = expensesQuery.data?.pages.at(-1)?.hasMore ?? false
   const showOfflineEmpty = useOfflineWithoutData(!!expensesQuery.data)
   const showServerEmpty = useServerUnreachableWithoutData(!!expensesQuery.data)
+
+  useRestoreExpenseEditScroll(
+    !!options && !!expensesQuery.data && !showOfflineEmpty && !showServerEmpty,
+  )
 
   useEffect(() => {
     if (inView && hasMore && !expensesQuery.isFetching)

@@ -22,10 +22,26 @@ export const expenseIdParamSchema = cuidLike
 
 const optionalString = z.string().optional().catch(undefined)
 
+// TanStack Router parses bare `true`/`false` URL values as booleans before
+// route validation. Keep filter flags as strings for their URL-backed readers.
+const booleanString = z
+  .preprocess(
+    (value) => (typeof value === 'boolean' ? String(value) : value),
+    z.enum(['true', 'false']).optional(),
+  )
+  .catch(undefined)
+
 const numericString = z
-  .string()
-  .regex(/^-?\d+(\.\d+)?$/, 'expected a numeric string')
-  .optional()
+  .preprocess(
+    (value) =>
+      typeof value === 'number' && Number.isFinite(value)
+        ? String(value)
+        : value,
+    z
+      .string()
+      .regex(/^-?\d+(\.\d+)?$/, 'expected a numeric string')
+      .optional(),
+  )
   .catch(undefined)
 
 const integerString = z
@@ -105,8 +121,8 @@ export const groupSearchSchema = groupAccessSearchSchema.extend({
   expMinAmount: numericString,
   expMaxAmount: numericString,
   expCurrencies: z.string().optional().catch(undefined),
-  expShowSettlements: z.enum(['true', 'false']).optional().catch(undefined),
-  expShowAll: z.enum(['true', 'false']).optional().catch(undefined),
+  expShowSettlements: booleanString,
+  expShowAll: booleanString,
   expSortBy: z
     .enum(['expenseDate', 'createdAt', 'amount'])
     .optional()
@@ -148,8 +164,8 @@ export const globalExpensesSearchSchema = z.object({
   minAmount: numericString,
   maxAmount: numericString,
   currencies: optionalString,
-  showSettlements: z.enum(['true', 'false']).optional().catch(undefined),
-  includeArchived: z.enum(['true', 'false']).optional().catch(undefined),
+  showSettlements: booleanString,
+  includeArchived: booleanString,
   sortBy: z
     .enum(['expenseDate', 'createdAt', 'amount'])
     .optional()

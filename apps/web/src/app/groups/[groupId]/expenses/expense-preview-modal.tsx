@@ -40,6 +40,8 @@ import type { BalanceExpense } from '@/lib/balances'
 import { getBalances } from '@/lib/balances'
 import { getCurrency } from '@/lib/currency'
 import { formatExpenseClosed } from '@/lib/expense-display'
+import { captureExpenseEditScroll } from '@/lib/expense-edit-scroll'
+import { expenseEditSearch } from '@/lib/expense-navigation'
 import {
   amountAsDecimal,
   formatCurrency,
@@ -324,12 +326,14 @@ export function ExpensePreviewModal({
       void navigate({
         to: '/groups/$groupId/expenses',
         params: { groupId },
+        resetScroll: false,
       })
     }
     if (!nextOpen) onClose?.()
   }
 
   const handleEdit = async (scope?: SeriesMutationScope) => {
+    captureExpenseEditScroll(groupId, expenseId, returnTo)
     if (onEdit) {
       onEdit(scope)
       return
@@ -337,10 +341,7 @@ export function ExpensePreviewModal({
     await navigate({
       to: '/groups/$groupId/expenses/$expenseId/edit',
       params: { groupId, expenseId },
-      search: {
-        ...(scope ? { scope } : {}),
-        ...(returnTo ? { returnTo } : {}),
-      },
+      search: expenseEditSearch(scope, returnTo),
     })
   }
 
@@ -610,7 +611,22 @@ export function ExpensePreviewModal({
                         <Link
                           to="/groups/$groupId/expenses/$expenseId/edit"
                           params={{ groupId, expenseId }}
-                          search={returnTo ? { returnTo } : undefined}
+                          search={expenseEditSearch(undefined, returnTo)}
+                          onClick={(event) => {
+                            if (
+                              event.button === 0 &&
+                              !event.metaKey &&
+                              !event.ctrlKey &&
+                              !event.shiftKey &&
+                              !event.altKey
+                            ) {
+                              captureExpenseEditScroll(
+                                groupId,
+                                expenseId,
+                                returnTo,
+                              )
+                            }
+                          }}
                         />
                       )
                     }

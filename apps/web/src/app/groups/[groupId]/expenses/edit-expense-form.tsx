@@ -11,10 +11,8 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import {
-  expenseFormCancelLink,
-  expenseListLink,
-  getGlobalExpensesSearch,
-  isGlobalExpensesReturnTo,
+  expenseEditListLink,
+  expenseEditPreviewLink,
 } from '@/lib/expense-navigation'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { trpc } from '@/trpc/client'
@@ -90,37 +88,19 @@ export function EditExpenseForm({
   } | null>(null)
 
   const navigate = useNavigate()
+  const previewLink = expenseEditPreviewLink(groupId, expenseId, returnTo)
 
   const { mutateAsync: updateExpenseMutateAsync } = useUpdateExpenseMutation({
     onConflict: () => setConflictOpen(true),
   })
   const { mutateAsync: deleteExpenseMutateAsync } = useDeleteExpenseMutation({
-    onDeleted: isGlobalExpensesReturnTo(returnTo)
-      ? () =>
-          navigate({
-            to: '/expenses',
-            search: getGlobalExpensesSearch(returnTo) as never,
-            replace: true,
-          })
-      : undefined,
+    onDeleted: () =>
+      navigate({ ...expenseEditListLink(groupId, returnTo), replace: true }),
   })
   const selectedScope = initialScope ?? null
 
   const navigateAfterUpdate = async () => {
-    if (isGlobalExpensesReturnTo(returnTo)) {
-      await navigate({
-        to: '/expenses',
-        search: getGlobalExpensesSearch(returnTo) as never,
-        replace: true,
-      })
-      return
-    }
-    await navigate({
-      to: '/groups/$groupId/expenses/$expenseId',
-      params: { groupId: groupId, expenseId },
-      search: returnTo ? { returnTo } : undefined,
-      replace: true,
-    })
+    await navigate({ ...previewLink, replace: true })
   }
 
   if (!group || !expense) return null
@@ -147,7 +127,7 @@ export function EditExpenseForm({
             <Button
               variant="secondary"
               nativeButton={false}
-              render={<Link {...expenseListLink(groupId, returnTo)} />}
+              render={<Link {...previewLink} />}
             >
               {t('backToExpenses')}
             </Button>
@@ -175,7 +155,7 @@ export function EditExpenseForm({
         key={formRevision}
         group={group}
         expense={expense}
-        cancelLink={expenseFormCancelLink(group.id, returnTo)}
+        cancelLink={previewLink}
         currentLedgerParticipantId={currentLedgerParticipantId}
         readOnly={readOnly}
         editScope={selectedScope}

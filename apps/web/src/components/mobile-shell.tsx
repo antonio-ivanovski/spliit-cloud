@@ -54,10 +54,20 @@ export function MobileAppHeaderActions() {
 }
 
 export function MobileAppBar() {
-  const pathname = useLocation({ select: (location) => location.pathname })
+  const location = useLocation()
+  const pathname = location.pathname
   const { t } = useTranslation()
-  const meta = useMemo(() => getFocusedRouteMeta(pathname, t), [pathname, t])
-
+  const returnTo = (location.search as Record<string, unknown> | undefined)
+    ?.returnTo
+  const meta = useMemo(
+    () =>
+      getFocusedRouteMeta(
+        pathname,
+        t,
+        typeof returnTo === 'string' ? returnTo : undefined,
+      ),
+    [pathname, returnTo, t],
+  )
   useEffect(() => {
     if (meta) {
       document.title = `Spliit · ${meta.title}`
@@ -76,6 +86,9 @@ export function MobileAppBar() {
       <Link
         to={meta.to}
         params={meta.params}
+        search={meta.search}
+        resetScroll={meta.resetScroll}
+        replace={meta.replace}
         className="inline-flex size-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden"
         aria-label={t('Header.back')}
       >

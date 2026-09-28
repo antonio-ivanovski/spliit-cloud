@@ -15,6 +15,7 @@ import { useLocale } from '@/i18n/react'
 import type { getGroupExpenses } from '@/lib/api'
 import { getCurrency, type Currency } from '@/lib/currency'
 import { formatExpenseClosed } from '@/lib/expense-display'
+import { expensePreviewSearch } from '@/lib/expense-navigation'
 import { cn, formatCurrency } from '@/lib/utils'
 import { isSettlementCategory } from '@spliit/domain'
 
@@ -202,6 +203,7 @@ export function ExpenseCard({
         <Link
           to="/expenses"
           search={expensesSearch}
+          resetScroll={false}
           className={overlayClassName}
           aria-label={expense.title}
         />
@@ -209,7 +211,8 @@ export function ExpenseCard({
         <Link
           to="/groups/$groupId/expenses/$expenseId"
           params={{ groupId, expenseId: expense.id }}
-          search={returnTo ? { returnTo } : undefined}
+          search={expensePreviewSearch(returnTo)}
+          resetScroll={false}
           className={overlayClassName}
           aria-label={expense.title}
         />

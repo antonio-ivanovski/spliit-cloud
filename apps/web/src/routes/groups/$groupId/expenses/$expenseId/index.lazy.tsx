@@ -6,6 +6,7 @@ import {
 
 import { ExpensePreviewModal } from '@/app/groups/[groupId]/expenses/expense-preview-modal'
 import {
+  expensePreviewCloseSearch,
   getGlobalExpensesSearch,
   isGlobalExpensesReturnTo,
 } from '@/lib/expense-navigation'
@@ -27,11 +28,14 @@ function ExpensePreviewRoute() {
               to: '/expenses',
               search: getGlobalExpensesSearch(returnTo) as never,
               replace: true,
+              resetScroll: false,
             })
           : navigate({
               to: '/groups/$groupId/expenses',
               params: { groupId },
+              search: expensePreviewCloseSearch,
               replace: true,
+              resetScroll: false,
             })
       }
     />
