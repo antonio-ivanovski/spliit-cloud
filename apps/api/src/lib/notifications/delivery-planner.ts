@@ -361,6 +361,18 @@ function buildSnapshot(args: {
     ? { id: group.id, name: group.name, type: group.groupType }
     : { id: event.groupId, name: '', type: 'GROUP' }
   const baseLink = `${getWebBaseUrl()}/groups/${event.groupId}`
+  const kind = pickSnapshotKind(event)
+  const hasViewableExpense =
+    kind === 'expense_created' ||
+    kind === 'expense_updated' ||
+    kind === 'expense_comment' ||
+    kind === 'recurring_created' ||
+    kind === 'recurring_occurrence' ||
+    kind === 'settlement'
+  const link =
+    hasViewableExpense && expense
+      ? `${baseLink}/expenses/${encodeURIComponent(expense.id)}`
+      : baseLink
   const unsubscribeCategory = category
   const pushFields =
     channel === NotificationChannel.PUSH && pushSubscriptionId
@@ -368,11 +380,10 @@ function buildSnapshot(args: {
           subscriptionId: pushSubscriptionId,
           title: pushTitle(event),
           body: pushBody(event),
-          url: baseLink,
+          url: link,
           tag: eventKey,
         }
       : undefined
-  const kind = pickSnapshotKind(event)
   const summary = summaryFromParsed(parsed)
   const draft: Record<string, unknown> = {
     version: NotificationSnapshotVersion.V1,
@@ -382,7 +393,7 @@ function buildSnapshot(args: {
     actor: actorSnapshot,
     recipient: recipientSnapshot,
     unsubscribeCategory,
-    link: baseLink,
+    link,
   }
   if (pushFields) draft.push = pushFields
   if (group) {

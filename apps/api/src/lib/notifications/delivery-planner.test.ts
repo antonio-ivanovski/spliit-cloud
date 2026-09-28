@@ -149,6 +149,124 @@ afterEach(() => {
 })
 
 describe('planActivityNotificationDeliveries', () => {
+  it('persists the expense preview destination for both email and push', async () => {
+    prismaMock.accountNotificationPreference.findMany.mockResolvedValue([
+      {
+        accountId: 'account-bob',
+        category: NotificationCategory.EXPENSE_CREATED,
+        channels: [NotificationChannel.EMAIL, NotificationChannel.PUSH],
+      },
+    ] as never)
+    prismaMock.pushSubscription.findMany.mockResolvedValue([
+      { id: 'push-1', accountId: 'account-bob' },
+    ] as never)
+
+    await planActivityNotificationDeliveries({ event: event(), tx, boss: null })
+
+    const rows = prismaMock.notificationDelivery.createMany.mock.calls[0]?.[0]
+      ?.data as Array<{
+      channel: NotificationChannel
+      snapshot: { link: string; push?: { url: string } }
+    }>
+    expect(rows).toHaveLength(2)
+    const destination =
+      'http://localhost:3000/groups/group-1/expenses/expense-1'
+    expect(
+      rows.find((row) => row.channel === NotificationChannel.EMAIL)?.snapshot
+        .link,
+    ).toBe(destination)
+    expect(
+      rows.find((row) => row.channel === NotificationChannel.PUSH)?.snapshot,
+    ).toMatchObject({
+      link: destination,
+      push: { url: destination },
+    })
+  })
+
+  it.each([
+    {
+      type: 'EXPENSE_UPDATED' as const,
+      category: NotificationCategory.EXPENSE_CHANGED,
+      data: { kind: 'expense' as const, affectedParticipants: ['lp-bob'] },
+    },
+    {
+      type: 'EXPENSE_COMMENTED' as const,
+      category: NotificationCategory.EXPENSE_COMMENT,
+      data: {
+        kind: 'expense_comment' as const,
+        commentId: 'comment-1',
+        expenseTitle: 'Dinner',
+        authorName: 'Alice',
+        excerpt: 'Looks good',
+      },
+    },
+    {
+      type: 'RECURRING_EXPENSE_CREATED' as const,
+      category: NotificationCategory.RECURRING_EXPENSE_CREATED,
+      data: { kind: 'expense' as const, summary: 'Recurring dinner' },
+    },
+  ])(
+    'links $type to its viewable expense',
+    async ({ type, category, data }) => {
+      if (type === 'EXPENSE_COMMENTED') {
+        prismaMock.expenseComment.findMany.mockResolvedValue([] as never)
+      }
+      prismaMock.accountNotificationPreference.findMany.mockResolvedValue([
+        {
+          accountId: 'account-bob',
+          category,
+          channels: [NotificationChannel.EMAIL],
+        },
+      ] as never)
+
+      await planActivityNotificationDeliveries({
+        event: event({ type, data }),
+        tx,
+        boss: null,
+      })
+
+      const rows = prismaMock.notificationDelivery.createMany.mock.calls[0]?.[0]
+        ?.data as Array<{ snapshot: { link: string } }>
+      expect(rows[0]?.snapshot.link).toBe(
+        'http://localhost:3000/groups/group-1/expenses/expense-1',
+      )
+    },
+  )
+
+  it('keeps the group destination when the referenced expense is unavailable', async () => {
+    prismaMock.expense.findUnique.mockImplementation(
+      (args: { select?: Record<string, unknown> }) =>
+        args?.select?.ledger
+          ? Promise.resolve(null)
+          : Promise.resolve({
+              paidByList: [{ ledgerParticipantId: 'lp-bob', shares: 100 }],
+              paidFor: [{ ledgerParticipantId: 'lp-bob', shares: 100 }],
+              items: [],
+              itemizedRemainder: null,
+            }),
+    )
+    prismaMock.accountNotificationPreference.findMany.mockResolvedValue([
+      {
+        accountId: 'account-bob',
+        category: NotificationCategory.EXPENSE_CHANGED,
+        channels: [NotificationChannel.EMAIL],
+      },
+    ] as never)
+
+    await planActivityNotificationDeliveries({
+      event: event({
+        type: 'EXPENSE_UPDATED',
+        data: { kind: 'expense', affectedParticipants: ['lp-bob'] },
+      }),
+      tx,
+      boss: null,
+    })
+
+    const rows = prismaMock.notificationDelivery.createMany.mock.calls[0]?.[0]
+      ?.data as Array<{ snapshot: { link: string } }>
+    expect(rows[0]?.snapshot.link).toBe('http://localhost:3000/groups/group-1')
+  })
+
   it('plans nothing when only EMAIL applies and delivery is disabled (no SMTP)', async () => {
     envMocks.emailDeliveryEnabled = false
     prismaMock.accountNotificationPreference.findMany.mockResolvedValue([
@@ -523,6 +641,29 @@ describe('planActivityNotificationDeliveries transaction rollback', () => {
 })
 
 describe('planActivityNotificationDeliveries — event data handling', () => {
+  it('keeps a deleted-expense notification at the group even before the row disappears', async () => {
+    prismaMock.accountNotificationPreference.findMany.mockResolvedValue([
+      {
+        accountId: 'account-bob',
+        category: NotificationCategory.EXPENSE_CHANGED,
+        channels: [NotificationChannel.EMAIL],
+      },
+    ] as never)
+
+    await planActivityNotificationDeliveries({
+      event: event({
+        type: 'EXPENSE_DELETED',
+        data: { kind: 'expense', affectedParticipants: ['lp-bob'] },
+      }),
+      tx,
+      boss: null,
+    })
+
+    const rows = prismaMock.notificationDelivery.createMany.mock.calls[0]?.[0]
+      ?.data as Array<{ snapshot: { link: string } }>
+    expect(rows[0]?.snapshot.link).toBe('http://localhost:3000/groups/group-1')
+  })
+
   it('reconstructs a deleted expense snapshot from parsed activity data', async () => {
     // The expense row is gone (delete-and-notify), so loadExpenseSummary
     // (which selects the ledger) returns null. Participant resolution
@@ -556,9 +697,10 @@ describe('planActivityNotificationDeliveries — event data handling', () => {
     })
     expect(ids).toHaveLength(1)
     const data = prismaMock.notificationDelivery.createMany.mock.calls[0]?.[0]
-      ?.data as Array<{ snapshot: { expense: unknown } }>
+      ?.data as Array<{ snapshot: { expense: unknown; link: string } }>
     expect(data[0]?.snapshot).toMatchObject({
       kind: 'expense_deleted',
+      link: 'http://localhost:3000/groups/group-1',
       expense: {
         id: 'expense-1',
         description: 'Hotel',
@@ -566,6 +708,36 @@ describe('planActivityNotificationDeliveries — event data handling', () => {
         currencyCode: 'EUR',
       },
     })
+  })
+
+  it('keeps recurring summaries at the group even if an expense subject is present', async () => {
+    prismaMock.accountNotificationPreference.findMany.mockResolvedValue([
+      {
+        accountId: 'account-bob',
+        category: NotificationCategory.RECURRING_EXPENSE_CREATED,
+        channels: [NotificationChannel.EMAIL],
+      },
+    ] as never)
+
+    await planActivityNotificationDeliveries({
+      event: event({
+        type: 'RECURRING_EXPENSE_CREATED',
+        data: {
+          kind: 'recurring_expense_summary',
+          count: 2,
+          startDate: '2026-07-20',
+          endDate: '2026-07-21',
+          operation: 'create',
+          affectedParticipants: ['lp-bob'],
+        },
+      }),
+      tx,
+      boss: null,
+    })
+
+    const rows = prismaMock.notificationDelivery.createMany.mock.calls[0]?.[0]
+      ?.data as Array<{ snapshot: { link: string } }>
+    expect(rows[0]?.snapshot.link).toBe('http://localhost:3000/groups/group-1')
   })
 
   it('renders a friend-ledger event through the friend_added branch', async () => {
