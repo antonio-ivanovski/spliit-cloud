@@ -1159,7 +1159,8 @@
       "description": "Introduce la cantidad final, incluidas las comisiones.",
       "impliedRate": "Tipo de cambio implícito: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Sugerencias de categoría"
+    "otherSuggestions": "Sugerencias de categoría",
+    "paidForItemizedEmptyHint": "Asigna personas a los artículos para ver la parte de cada uno."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Eliminar documento",

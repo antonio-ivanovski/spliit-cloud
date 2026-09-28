@@ -1620,7 +1620,8 @@
       "description": "Внеси го вкупниот наплатен износ, вклучувајќи ги сите провизии.",
       "impliedRate": "Пресметан курс: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Предлози за категории"
+    "otherSuggestions": "Предлози за категории",
+    "paidForItemizedEmptyHint": "Доделете луѓе на ставките за да го видите уделот на секого."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Избриши документ",

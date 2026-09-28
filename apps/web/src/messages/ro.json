@@ -1141,7 +1141,8 @@
       "description": "Introdu suma finală, inclusiv comisioanele.",
       "impliedRate": "Curs implicit: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Sugestii de categorii"
+    "otherSuggestions": "Sugestii de categorii",
+    "paidForItemizedEmptyHint": "Atribuie persoane articolelor pentru a vedea partea fiecăruia."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Șterge documentul",

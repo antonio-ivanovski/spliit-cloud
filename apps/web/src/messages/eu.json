@@ -1140,7 +1140,8 @@
       "description": "Sartu azken zenbatekoa, komisioak barne.",
       "impliedRate": "Inplizituko tasa: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Kategoria-iradokizunak"
+    "otherSuggestions": "Kategoria-iradokizunak",
+    "paidForItemizedEmptyHint": "Esleitu pertsonak artikuluei, bakoitzaren zatia ikusteko."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Ezabatu dokumentua",

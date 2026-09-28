@@ -1141,7 +1141,8 @@
       "description": "Saisissez le montant final, frais compris.",
       "impliedRate": "Taux implicite : 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Suggestions de catégorie"
+    "otherSuggestions": "Suggestions de catégorie",
+    "paidForItemizedEmptyHint": "Assignez des personnes aux articles pour voir la part de chacun."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Supprimer le document",

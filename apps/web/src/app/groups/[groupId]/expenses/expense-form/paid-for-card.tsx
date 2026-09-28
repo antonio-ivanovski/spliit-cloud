@@ -29,7 +29,6 @@ import { getRowShareErrors } from './get-row-share-errors'
 import { LeaveItemizedDialog } from './leave-itemized-dialog'
 import { PaidForRow } from './paid-for-row'
 import { ParticipantPendingLabel } from './participant-pending-label'
-import { ParticipantShareRow } from './participant-share-row'
 import type { ShareInputRefs } from './share-row-input'
 import { SplitDistributionEditor } from './split-distribution-editor'
 import {
@@ -59,6 +58,155 @@ const paidForOptionKeys = {
 } as const satisfies Record<SplitMode, string>
 
 type ItemSplitMode = Exclude<SplitMode, 'ITEMIZED'>
+
+type ItemizedPaidForRow = { participant: string; shares: number }
+
+/**
+ * Derived itemized totals in expense-currency minor units, converted from the
+ * form's display values the same way ExpenseItemsCard does so the PaidFor
+ * preview matches the persisted split. Calculation failures surface as
+ * `hasError` instead of throwing into the render path. The returned
+ * `inputCurrency` is the currency the minor-unit shares are denominated in.
+ */
+function getItemizedPaidForResult({
+  splitMode,
+  items,
+  participantIds,
+  amount,
+  remainder,
+  conversionRequired,
+  originalCurrency,
+  groupCurrency,
+}: {
+  splitMode: SplitMode
+  items: ExpenseFormItemValues[]
+  participantIds: string[]
+  amount: number
+  remainder: ExpenseFormInputValues['itemizedRemainder']
+  conversionRequired: boolean
+  originalCurrency: Currency
+  groupCurrency: Currency
+}): {
+  paidFor: ItemizedPaidForRow[]
+  hasError: boolean
+  inputCurrency: Currency
+} {
+  const inputCurrency = conversionRequired ? originalCurrency : groupCurrency
+  if (splitMode !== 'ITEMIZED')
+    return { paidFor: [], hasError: false, inputCurrency }
+  try {
+    const toApiRows = (
+      rows: ExpenseFormItemValues['paidFor'],
+      mode: ExpenseFormItemValues['splitMode'],
+    ) =>
+      rows.map(({ participant, shares }) => ({
+        participant,
+        shares:
+          mode === 'BY_AMOUNT'
+            ? amountAsMinorUnits(Number(shares) || 0, inputCurrency)
+            : mode === 'BY_PERCENTAGE'
+              ? Math.round((Number(shares) || 0) * 100)
+              : mode === 'BY_SHARES'
+                ? safeSharesToFixedUnits(shares)
+                : Math.round(Number(shares) || 0),
+      }))
+    return {
+      paidFor: computePaidForFromItems(
+        items.map((item) => {
+          const unitPrice = amountAsMinorUnits(
+            Number(item.unitPrice) || 0,
+            inputCurrency,
+          )
+          const quantity = Math.max(1, Math.round(Number(item.quantity) || 1))
+          return {
+            id: item.id,
+            title: item.title,
+            unitPrice,
+            quantity,
+            amount: unitPrice * quantity,
+            splitMode: item.splitMode,
+            paidFor: toApiRows(item.paidFor, item.splitMode),
+          }
+        }),
+        participantIds,
+        amountAsMinorUnits(Number(amount) || 0, inputCurrency),
+        remainder
+          ? {
+              splitMode: remainder.splitMode,
+              allocationMode: remainder.allocationMode ?? 'CUSTOM',
+              paidFor: toApiRows(remainder.paidFor, remainder.splitMode),
+            }
+          : undefined,
+      ).paidFor,
+      hasError: false,
+      inputCurrency,
+    }
+  } catch (error) {
+    console.error('Unable to calculate itemized paid-for shares', error)
+    return { paidFor: [], hasError: true, inputCurrency }
+  }
+}
+
+/**
+ * Compact derived totals for the selected Itemized split option: plain-text
+ * participant names and amounts for nonzero shares, in group order. No
+ * checkboxes — shares come from the items, edited in the Items card.
+ */
+function ItemizedPaidForTotals({
+  hasError,
+  participants,
+  paidFor,
+  currency,
+}: {
+  hasError: boolean
+  participants: Group['participants']
+  paidFor: ItemizedPaidForRow[]
+  currency: Currency
+}) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
+
+  if (hasError) {
+    return (
+      <p className="text-sm text-red-600" role="alert">
+        {t('items.calculationError')}
+      </p>
+    )
+  }
+
+  const rows = participants.flatMap((participant) => {
+    const row = paidFor.find(
+      (paidFor) => paidFor.participant === participant.id,
+    )
+    return row && row.shares !== 0 ? [{ participant, shares: row.shares }] : []
+  })
+
+  if (rows.length === 0) {
+    return (
+      <p className="text-sm text-muted-foreground">
+        {t('paidForItemizedEmptyHint')}
+      </p>
+    )
+  }
+
+  return (
+    <div className="divide-y">
+      {rows.map(({ participant, shares }) => (
+        <div
+          key={participant.id}
+          className="flex min-w-0 items-center justify-between gap-2 py-1.5"
+        >
+          <span className="min-w-0 flex-1 truncate text-sm font-medium">
+            {participant.name}
+            {participant.pending ? (
+              <ParticipantPendingLabel text={t('participant.pending')} />
+            ) : null}
+          </span>
+          <ParticipantRowAmountPreview amount={shares} currency={currency} />
+        </div>
+      ))}
+    </div>
+  )
+}
 
 // react-doctor-disable-next-line react-doctor/no-giant-component -- cohesive split-method card, shared form state
 export function PaidForCard(props: {
@@ -111,6 +259,10 @@ export function PaidForCard(props: {
   const amount = useWatch({ control: form.control, name: 'amount' })
   const paidFor = useWatch({ control: form.control, name: 'paidFor' })
   const items = useWatch({ control: form.control, name: 'items' }) ?? []
+  const itemizedRemainder = useWatch({
+    control: form.control,
+    name: 'itemizedRemainder',
+  })
 
   const originalCurrency = originalCurrencyCode
     ? (getCurrency(originalCurrencyCode) ?? {
@@ -333,67 +485,25 @@ export function PaidForCard(props: {
     resetItemParticipants(to)
   }
 
-  const itemizedPaidForResult = (() => {
-    if (splitMode !== 'ITEMIZED') return { paidFor: [], hasError: false }
-    try {
-      const inputCurrency = conversionRequired
-        ? originalCurrency
-        : groupCurrency
-      const itemizedRemainder = form.getValues('itemizedRemainder')
-      const toApiRows = (
-        rows: ExpenseFormItemValues['paidFor'],
-        mode: ExpenseFormItemValues['splitMode'],
-      ) =>
-        rows.map(({ participant, shares }) => ({
-          participant,
-          shares:
-            mode === 'BY_AMOUNT'
-              ? amountAsMinorUnits(Number(shares) || 0, inputCurrency)
-              : mode === 'BY_PERCENTAGE'
-                ? Math.round((Number(shares) || 0) * 100)
-                : mode === 'BY_SHARES'
-                  ? safeSharesToFixedUnits(shares)
-                  : Math.round(Number(shares) || 0),
-        }))
-      return {
-        paidFor: computePaidForFromItems(
-          items.map((item) => {
-            const unitPrice = amountAsMinorUnits(
-              Number(item.unitPrice) || 0,
-              inputCurrency,
-            )
-            const quantity = Math.max(1, Math.round(Number(item.quantity) || 1))
-            return {
-              id: item.id,
-              title: item.title,
-              unitPrice,
-              quantity,
-              amount: unitPrice * quantity,
-              splitMode: item.splitMode,
-              paidFor: toApiRows(item.paidFor, item.splitMode),
-            }
-          }),
-          group.participants.map((participant) => participant.id),
-          amountAsMinorUnits(Number(amount) || 0, inputCurrency),
-          itemizedRemainder
-            ? {
-                splitMode: itemizedRemainder.splitMode,
-                allocationMode: itemizedRemainder.allocationMode ?? 'CUSTOM',
-                paidFor: toApiRows(
-                  itemizedRemainder.paidFor,
-                  itemizedRemainder.splitMode,
-                ),
-              }
-            : undefined,
-        ).paidFor,
-        hasError: false,
-      }
-    } catch (error) {
-      console.error('Unable to calculate itemized paid-for shares', error)
-      return { paidFor: [], hasError: true }
-    }
-  })()
-  const itemizedPaidFor = itemizedPaidForResult.paidFor
+  const itemizedPaidForResult = getItemizedPaidForResult({
+    splitMode,
+    items,
+    participantIds: group.participants.map((participant) => participant.id),
+    amount,
+    remainder: itemizedRemainder,
+    conversionRequired,
+    originalCurrency,
+    groupCurrency,
+  })
+
+  const renderItemizedContent = (
+    <ItemizedPaidForTotals
+      hasError={itemizedPaidForResult.hasError}
+      participants={group.participants}
+      paidFor={itemizedPaidForResult.paidFor}
+      currency={itemizedPaidForResult.inputCurrency}
+    />
+  )
 
   const handlePaidForSplitModeChange = (nextMode: SplitMode) => {
     const currentMode = form.getValues('splitMode')
@@ -645,56 +755,14 @@ export function PaidForCard(props: {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="mb-4">
-          <PaidForSplitOptionCards
-            focusPriority={expenseTabPriority.paidFor}
-            value={splitMode}
-            onChange={handlePaidForSplitModeChange}
-            renderContent={renderPaidForContent}
-            readOnly={readOnly}
-          />
-        </div>
-
-        {splitMode === 'ITEMIZED' && (
-          <div className="space-y-0">
-            {itemizedPaidForResult.hasError && (
-              <p className="mb-3 text-sm text-red-600" role="alert">
-                {t('items.calculationError')}
-              </p>
-            )}
-            {group.participants.map((participant) => {
-              const row = itemizedPaidFor.find(
-                (paidFor) => paidFor.participant === participant.id,
-              )
-              return (
-                <ParticipantShareRow
-                  key={participant.id}
-                  participant={participant}
-                  checked={!!row}
-                  onCheckedChange={() => {}}
-                  disabled
-                  pendingLabel={
-                    participant.pending ? (
-                      <ParticipantPendingLabel
-                        text={t('participant.pending')}
-                      />
-                    ) : undefined
-                  }
-                  preview={
-                    row ? (
-                      <ParticipantRowAmountPreview
-                        amount={row.shares}
-                        currency={
-                          conversionRequired ? originalCurrency : groupCurrency
-                        }
-                      />
-                    ) : undefined
-                  }
-                />
-              )
-            })}
-          </div>
-        )}
+        <PaidForSplitOptionCards
+          focusPriority={expenseTabPriority.paidFor}
+          value={splitMode}
+          onChange={handlePaidForSplitModeChange}
+          renderContent={renderPaidForContent}
+          renderItemizedContent={renderItemizedContent}
+          readOnly={readOnly}
+        />
       </CardContent>
 
       <LeaveItemizedDialog

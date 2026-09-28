@@ -1127,7 +1127,8 @@
       "description": "輸入包含所有費用的扣款總額。",
       "impliedRate": "推算匯率：1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "類別建議"
+    "otherSuggestions": "類別建議",
+    "paidForItemizedEmptyHint": "為項目指派人員即可查看每個人的分攤額。"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "刪除文檔",

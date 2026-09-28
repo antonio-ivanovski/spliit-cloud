@@ -1134,7 +1134,8 @@
       "description": "Syötä lopullinen summa kaikkine kuluineen.",
       "impliedRate": "Laskennallinen kurssi: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Kategoriaehdotukset"
+    "otherSuggestions": "Kategoriaehdotukset",
+    "paidForItemizedEmptyHint": "Liitä osallistujat kohteisiin nähdäksesi kunkin osuuden."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Poista asiakirja",

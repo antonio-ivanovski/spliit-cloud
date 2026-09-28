@@ -1127,7 +1127,8 @@
       "description": "手数料を含む請求総額を入力してください。",
       "impliedRate": "算出レート: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "カテゴリー候補"
+    "otherSuggestions": "カテゴリー候補",
+    "paidForItemizedEmptyHint": "品目に参加者を割り当てると、各人の分担額を確認できます。"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "書類を削除",

@@ -1754,7 +1754,8 @@
       "description": "ফিসসহ মোট চার্জের পরিমাণ লিখুন।",
       "impliedRate": "অনুমিত বিনিময় হার: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "বিভাগের পরামর্শ"
+    "otherSuggestions": "বিভাগের পরামর্শ",
+    "paidForItemizedEmptyHint": "কার কত অংশ তা দেখতে আইটেমগুলোতে লোক নির্ধারণ করুন।"
   },
   "ExpensePreview": {
     "title": "খরচ প্রিভিউ",

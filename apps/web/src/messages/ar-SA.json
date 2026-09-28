@@ -1740,7 +1740,8 @@
       "description": "أدخل إجمالي المبلغ المُحصّل، بما في ذلك أي رسوم.",
       "impliedRate": "سعر الصرف الضمني: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "اقتراحات الفئات"
+    "otherSuggestions": "اقتراحات الفئات",
+    "paidForItemizedEmptyHint": "عيّن الأشخاص إلى البنود لرؤية حصة كل شخص."
   },
   "Categories": {
     "noCategory": "لا توجد فئة مطابقة.",

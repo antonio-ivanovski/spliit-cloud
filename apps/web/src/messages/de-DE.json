@@ -1158,7 +1158,8 @@
       "description": "Gib den endgültigen Betrag einschließlich aller Gebühren ein.",
       "impliedRate": "Impliziter Wechselkurs: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Kategorievorschläge"
+    "otherSuggestions": "Kategorievorschläge",
+    "paidForItemizedEmptyHint": "Weise Personen den Artikeln zu, um den Anteil jeder Person zu sehen."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Dokument löschen",

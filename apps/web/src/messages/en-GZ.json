@@ -1893,7 +1893,8 @@
       "description": "enter the final amount, fees included.",
       "impliedRate": "implied rate: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "category suggestions"
+    "otherSuggestions": "category suggestions",
+    "paidForItemizedEmptyHint": "assign people to items to see each share."
   },
   "ExpensePreview": {
     "title": "expense preview era",

@@ -1158,7 +1158,8 @@
       "description": "Voer het uiteindelijke bedrag inclusief kosten in.",
       "impliedRate": "Afgeleide koers: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Categoriesuggesties"
+    "otherSuggestions": "Categoriesuggesties",
+    "paidForItemizedEmptyHint": "Wijs personen toe aan artikelen om ieders aandeel te zien."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Document verwijderen",

@@ -572,7 +572,8 @@
       "action": "Edite o valor em {currency}",
       "description": "Insira o valor final, incluindo eventuais taxas.",
       "impliedRate": "Taxa implícita: 1 {source} = {rate} {target}"
-    }
+    },
+    "paidForItemizedEmptyHint": "Atribua pessoas aos itens para ver a parte de cada um."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Excluir documento",

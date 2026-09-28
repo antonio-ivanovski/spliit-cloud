@@ -1148,7 +1148,8 @@
       "description": "Введіть загальну списану суму, включно з усіма комісіями.",
       "impliedRate": "Розрахунковий курс: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Пропозиції категорій"
+    "otherSuggestions": "Пропозиції категорій",
+    "paidForItemizedEmptyHint": "Призначте учасників позиціям, щоб побачити частку кожного."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Видалити документ",

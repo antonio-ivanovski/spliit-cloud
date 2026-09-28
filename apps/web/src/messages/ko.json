@@ -1044,7 +1044,8 @@
       "description": "수수료를 포함한 총 청구 금액을 입력하세요.",
       "impliedRate": "계산된 환율: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "카테고리 제안"
+    "otherSuggestions": "카테고리 제안",
+    "paidForItemizedEmptyHint": "항목에 참여자를 지정하면 각자의 부담액을 볼 수 있어요."
   },
   "Balances": {
     "title": "잔액",

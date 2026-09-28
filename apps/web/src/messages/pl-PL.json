@@ -1148,7 +1148,8 @@
       "description": "Wprowadź łączną pobraną kwotę wraz ze wszystkimi opłatami.",
       "impliedRate": "Wyliczony kurs: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Propozycje kategorii"
+    "otherSuggestions": "Propozycje kategorii",
+    "paidForItemizedEmptyHint": "Przypisz osoby do pozycji, aby zobaczyć udział każdego."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Usuń dokument",

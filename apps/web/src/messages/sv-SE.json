@@ -1710,7 +1710,8 @@
       "description": "Ange det slutliga beloppet, inklusive eventuella avgifter.",
       "impliedRate": "Härledd kurs: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Kategoriförslag"
+    "otherSuggestions": "Kategoriförslag",
+    "paidForItemizedEmptyHint": "Koppla personer till rader för att se vars och ens andel."
   },
   "ExpensePreview": {
     "title": "Utgiftsförhandsvisning",

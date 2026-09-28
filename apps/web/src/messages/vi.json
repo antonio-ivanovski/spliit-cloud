@@ -1720,7 +1720,8 @@
       "description": "Nhập tổng số tiền bị tính, bao gồm mọi khoản phí.",
       "impliedRate": "Tỷ giá suy ra: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Gợi ý danh mục"
+    "otherSuggestions": "Gợi ý danh mục",
+    "paidForItemizedEmptyHint": "Gán người vào các mục để xem phần của mỗi người."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Xóa tài liệu",

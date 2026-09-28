@@ -1141,7 +1141,8 @@
       "description": "Inserisci l’importo finale, incluse le commissioni.",
       "impliedRate": "Tasso implicito: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Suggerimenti di categoria"
+    "otherSuggestions": "Suggerimenti di categoria",
+    "paidForItemizedEmptyHint": "Assegna le persone alle voci per vedere ogni quota."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Elimina documento",

@@ -1148,7 +1148,8 @@
       "description": "Zadejte celkovou účtovanou částku včetně poplatků.",
       "impliedRate": "Odvozený kurz: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Návrhy kategorií"
+    "otherSuggestions": "Návrhy kategorií",
+    "paidForItemizedEmptyHint": "Přiřaďte osoby k položkám, aby bylo vidět podíl každého."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Smazat dokument",

@@ -1127,7 +1127,8 @@
       "description": "Masukkan total yang dibebankan, termasuk semua biaya.",
       "impliedRate": "Kurs tersirat: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Saran kategori"
+    "otherSuggestions": "Saran kategori",
+    "paidForItemizedEmptyHint": "Tetapkan orang ke item untuk melihat bagian masing-masing."
   },
   "Currencies": {
     "search": "Cari mata uang...",

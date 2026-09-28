@@ -1134,7 +1134,8 @@
       "description": "Ücretler dâhil olmak üzere tahsil edilen toplam tutarı girin.",
       "impliedRate": "Hesaplanan kur: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Kategori önerileri"
+    "otherSuggestions": "Kategori önerileri",
+    "paidForItemizedEmptyHint": "Her kişinin payını görmek için kalemlere kişi atayın."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Belgeyi sil",

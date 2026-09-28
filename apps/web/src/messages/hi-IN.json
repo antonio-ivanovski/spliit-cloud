@@ -1710,7 +1710,8 @@
       "description": "सभी शुल्कों सहित कुल ली गई राशि दर्ज करें।",
       "impliedRate": "अनुमानित दर: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "श्रेणी सुझाव"
+    "otherSuggestions": "श्रेणी सुझाव",
+    "paidForItemizedEmptyHint": "प्रत्येक का हिस्सा देखने के लिए आइटमों में लोगों को नियुक्त करें।"
   },
   "ExpensePreview": {
     "title": "खर्च पूर्वावलोकन",

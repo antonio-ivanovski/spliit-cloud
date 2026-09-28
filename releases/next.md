@@ -19,7 +19,7 @@ who is affected, and the exact migration steps.
 
 ### 🚀 Features
 
-- Short entry per user-facing change (`TBD` by @TBD)
+- Itemized expenses now show “Itemized” as a selected “Split between” option with each person’s calculated share, so you can see at a glance who owes what from the items. Thanks @KihtrakRaknas for opening [#135](https://github.com/antonio-ivanovski/spliit-cloud/issues/135) (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
 

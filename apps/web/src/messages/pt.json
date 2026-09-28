@@ -1255,7 +1255,8 @@
       "description": "Introduza o montante final, incluindo quaisquer taxas.",
       "impliedRate": "Taxa implícita: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Sugestões de categoria"
+    "otherSuggestions": "Sugestões de categoria",
+    "paidForItemizedEmptyHint": "Atribui pessoas aos itens para ver a parte de cada um."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Eliminar documento",

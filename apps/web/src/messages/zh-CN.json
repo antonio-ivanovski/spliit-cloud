@@ -1127,7 +1127,8 @@
       "description": "输入包含所有费用的总扣款金额。",
       "impliedRate": "推算汇率：1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "类别建议"
+    "otherSuggestions": "类别建议",
+    "paidForItemizedEmptyHint": "为项目分配人员即可查看每个人的份额。"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "删除文档",
