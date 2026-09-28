@@ -13,6 +13,7 @@ import {
   Wrench,
 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 
 import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
@@ -214,48 +215,51 @@ export function MobileGroupNav({ groupId }: GroupNavProps) {
 
   return (
     <>
-      <nav
-        aria-label={t('Groups.groupActions')}
-        className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 mobile-bottom-inset shadow-[0_-4px_20px_rgb(0_0_0/0.06)] backdrop-blur supports-backdrop-filter:bg-background/80 sm:hidden"
-      >
-        <div className="mx-auto grid h-(--mobile-nav-bar-height) max-w-lg grid-cols-5 items-stretch px-1">
-          {tabs.map(({ to, label, icon: Icon }) => {
-            const active = pathname === to.replace('$groupId', groupId)
-            return (
-              <Link
-                key={to}
-                to={to}
-                params={{ groupId }}
-                search={{ invite: linkInviteToken, viewKey }}
-                aria-current={active ? 'page' : undefined}
-                className={`flex min-h-11 min-w-0 flex-col items-center justify-center gap-0.5 rounded-lg px-1 text-center text-[10px] leading-tight font-medium transition-colors ${active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
-              >
-                <Icon
-                  className="motion-nav-icon size-5"
-                  strokeWidth={active ? 2.5 : 2}
-                  aria-hidden="true"
-                />
-                <span className="line-clamp-2 max-w-full">{label}</span>
-              </Link>
-            )
-          })}
-          <button
-            type="button"
-            aria-label={t('Groups.groupActions')}
-            aria-current={activeMore ? 'page' : undefined}
-            onClick={() => setMoreOpen(true)}
-            className={`flex min-h-11 min-w-0 flex-col items-center justify-center gap-0.5 rounded-lg px-1 text-center text-[10px] leading-tight font-medium transition-colors ${activeMore ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
-          >
-            <MoreHorizontal
-              className="motion-nav-icon size-5"
-              aria-hidden="true"
-            />
-            <span className="line-clamp-2 max-w-full">
-              {t('Groups.groupActions')}
-            </span>
-          </button>
-        </div>
-      </nav>
+      {createPortal(
+        <nav
+          aria-label={t('Groups.groupActions')}
+          className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 mobile-bottom-inset shadow-[0_-4px_20px_rgb(0_0_0/0.06)] backdrop-blur supports-backdrop-filter:bg-background/80 sm:hidden"
+        >
+          <div className="mx-auto grid h-(--mobile-nav-bar-height) max-w-lg grid-cols-5 items-stretch px-1">
+            {tabs.map(({ to, label, icon: Icon }) => {
+              const active = pathname === to.replace('$groupId', groupId)
+              return (
+                <Link
+                  key={to}
+                  to={to}
+                  params={{ groupId }}
+                  search={{ invite: linkInviteToken, viewKey }}
+                  aria-current={active ? 'page' : undefined}
+                  className={`flex min-h-11 min-w-0 flex-col items-center justify-center gap-0.5 rounded-lg px-1 text-center text-[10px] leading-tight font-medium transition-colors ${active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+                >
+                  <Icon
+                    className="motion-nav-icon size-5"
+                    strokeWidth={active ? 2.5 : 2}
+                    aria-hidden="true"
+                  />
+                  <span className="line-clamp-2 max-w-full">{label}</span>
+                </Link>
+              )
+            })}
+            <button
+              type="button"
+              aria-label={t('Groups.groupActions')}
+              aria-current={activeMore ? 'page' : undefined}
+              onClick={() => setMoreOpen(true)}
+              className={`flex min-h-11 min-w-0 flex-col items-center justify-center gap-0.5 rounded-lg px-1 text-center text-[10px] leading-tight font-medium transition-colors ${activeMore ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+            >
+              <MoreHorizontal
+                className="motion-nav-icon size-5"
+                aria-hidden="true"
+              />
+              <span className="line-clamp-2 max-w-full">
+                {t('Groups.groupActions')}
+              </span>
+            </button>
+          </div>
+        </nav>,
+        document.body,
+      )}
 
       <ResponsiveDialog open={moreOpen} onOpenChange={setMoreOpen}>
         <ResponsiveDialogContent className="sm:max-w-sm">

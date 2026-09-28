@@ -23,6 +23,6 @@ who is affected, and the exact migration steps.
 
 ### 🐛 Bug fixes
 
-- Short entry per fix (`TBD` by @TBD)
+- The group tab bar stays anchored to the bottom of the screen while scrolling in the iOS PWA. Thanks @KihtrakRaknas for opening [#137](https://github.com/antonio-ivanovski/spliit-cloud/issues/137) (`TBD` by @TBD)
 
 **Full Changelog**: TBD
