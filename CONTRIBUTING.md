@@ -33,7 +33,10 @@ bun --filter @spliit/webhook-relay dev:relay    # Cloudflare relay on :8787
 
 Service state lives under `storage/` at the repository root. Stop local
 service containers with `bun dev:down` when you are done; remove `storage/`
-for a clean reset.
+for a clean reset (`bun dev:up` recreates it owned by your user). If your
+`storage/` predates this fix and is root-owned (maxio unhealthy, maildev
+crashing on received mail), one-time: `sudo chown -R $(id -u):$(id -g)
+storage`, then `bun dev:up` again.
 
 Other useful commands:
 

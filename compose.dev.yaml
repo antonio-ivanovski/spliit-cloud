@@ -5,6 +5,9 @@ services:
     image: postgres:18-alpine
     container_name: spliit-postgres
     restart: unless-stopped
+    # Run as the host user (see scripts/dev-up.ts) so the bind-mounted
+    # PGDATA stays host-owned across fresh checkouts.
+    user: '${UID:-1000}:${GID:-1000}'
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1234
@@ -26,6 +29,9 @@ services:
     image: ghcr.io/coollabsio/maxio:0.4.2
     container_name: spliit-maxio
     restart: unless-stopped
+    # Runs as uid 999 in the image; run as the host user instead so /data
+    # stays writable on fresh checkouts (see scripts/dev-up.ts).
+    user: '${UID:-1000}:${GID:-1000}'
     environment:
       MAXIO_DEFAULT_BUCKETS: spliit-local
       MAXIO_ALLOW_INSECURE_DEV: 'true'
@@ -41,6 +47,9 @@ services:
     image: maildev/maildev:2.2.1
     container_name: spliit-maildev
     restart: unless-stopped
+    # Runs as uid 1000 in the image; run as the host user instead so /data
+    # stays writable on fresh checkouts (see scripts/dev-up.ts).
+    user: '${UID:-1000}:${GID:-1000}'
     ports:
       - 1080:1080
       - 1025:1025
