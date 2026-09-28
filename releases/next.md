@@ -21,6 +21,7 @@ who is affected, and the exact migration steps.
 
 - Itemized expenses now show “Itemized” as a selected “Split between” option with each person’s calculated share, so you can see at a glance who owes what from the items. Thanks @KihtrakRaknas for opening [#135](https://github.com/antonio-ivanovski/spliit-cloud/issues/135) (`TBD` by @TBD)
 - Itemized expenses now list who each item is assigned to in the expense details, with an expandable per-person amount breakdown, so the split is visible without opening the editor. Thanks @KihtrakRaknas for opening [#146](https://github.com/antonio-ivanovski/spliit-cloud/issues/146) (`TBD` by @TBD)
+- Group tabs now lead with Expenses, Balances, Activity, and Members, and you can set your own tab order for your account — including hiding tabs you don't use — from Account settings. Thanks @KihtrakRaknas for opening [#139](https://github.com/antonio-ivanovski/spliit-cloud/issues/139) (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
 

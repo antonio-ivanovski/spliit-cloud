@@ -671,7 +671,9 @@
       "description": "Grupurile pot afișa acum un emoji lângă nume. Am observat {emoji} în “{name}”.",
       "openSettings": "Deschide setările grupului",
       "notNow": "Nu acum"
-    }
+    },
+    "groupTabsHint": "Vrei să rearanjezi filele grupului sau să le ascunzi pe cele pe care nu le folosești?",
+    "groupTabsHintLink": "Personalizează filele în setările contului tău"
   },
   "GroupForm": {
     "title": "Informații despre grup",
@@ -2439,7 +2441,17 @@
       "mascotOptions": {
         "off": "Dezactivată",
         "bill": "Bill, bonul"
-      }
+      },
+      "groupTabs": "Filele grupului",
+      "groupTabsHelp": "Alege ce file sunt afișate și în ce ordine în fiecare grup.",
+      "groupTabsCustomize": "Personalizează",
+      "groupTabsSave": "Salvează",
+      "groupTabsDiscard": "Renunță",
+      "groupTabsReset": "Resetează valorile implicite",
+      "groupTabsHide": "Ascunde {name}",
+      "groupTabsShow": "Afișează {name}",
+      "groupTabsMoveUp": "Mută {name} în sus",
+      "groupTabsMoveDown": "Mută {name} în jos"
     },
     "aiPreferences": {
       "title": "Funcții AI",

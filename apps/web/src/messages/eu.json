@@ -670,7 +670,9 @@
       "description": "Taldeek emoji bat erakutsi dezakete orain izenaren ondoan. {emoji} ikusi dugu “{name}” izenean.",
       "openSettings": "Ireki taldearen ezarpenak",
       "notNow": "Orain ez"
-    }
+    },
+    "groupTabsHint": "Taldeko fitxak berrantolatu edo erabiltzen ez dituzunak ezkutatu nahi dituzu?",
+    "groupTabsHintLink": "Pertsonalizatu fitxak kontuaren ezarpenetan"
   },
   "GroupForm": {
     "title": "Taldeko informazioa",
@@ -2437,7 +2439,17 @@
       "mascotOptions": {
         "off": "Desaktibatuta",
         "bill": "Bill ordainagiria"
-      }
+      },
+      "groupTabs": "Taldeko fitxak",
+      "groupTabsHelp": "Aukeratu zein fitxa erakusten diren eta zein ordenatan talde guztietan.",
+      "groupTabsCustomize": "Pertsonalizatu",
+      "groupTabsSave": "Gorde",
+      "groupTabsDiscard": "Baztertu",
+      "groupTabsReset": "Berrezarri lehenetsitako balioak",
+      "groupTabsHide": "Ezkutatu {name}",
+      "groupTabsShow": "Erakutsi {name}",
+      "groupTabsMoveUp": "Mugitu {name} gora",
+      "groupTabsMoveDown": "Mugitu {name} behera"
     },
     "aiPreferences": {
       "title": "IAren ezaugarriak",

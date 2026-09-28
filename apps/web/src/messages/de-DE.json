@@ -685,7 +685,9 @@
       "description": "Gruppen können jetzt ein Emoji neben ihrem Namen anzeigen. Wir haben {emoji} in „{name}“ bemerkt.",
       "openSettings": "Gruppeneinstellungen öffnen",
       "notNow": "Nicht jetzt"
-    }
+    },
+    "groupTabsHint": "Möchtest du die Gruppenreiter neu anordnen oder nicht genutzte Gruppenreiter ausblenden?",
+    "groupTabsHintLink": "Reiter in den Kontoeinstellungen anpassen"
   },
   "GroupForm": {
     "title": "Gruppeninformationen",
@@ -2461,7 +2463,17 @@
       "mascotOptions": {
         "off": "Aus",
         "bill": "Bill, der Beleg"
-      }
+      },
+      "groupTabs": "Gruppenreiter",
+      "groupTabsHelp": "Wähle aus, welche Reiter in jeder Gruppe angezeigt werden und in welcher Reihenfolge.",
+      "groupTabsCustomize": "Anpassen",
+      "groupTabsSave": "Speichern",
+      "groupTabsDiscard": "Verwerfen",
+      "groupTabsReset": "Auf Standard zurücksetzen",
+      "groupTabsHide": "{name} ausblenden",
+      "groupTabsShow": "{name} anzeigen",
+      "groupTabsMoveUp": "{name} nach oben verschieben",
+      "groupTabsMoveDown": "{name} nach unten verschieben"
     },
     "aiPreferences": {
       "title": "KI-Funktionen",

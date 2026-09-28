@@ -677,7 +677,9 @@
       "description": "У групп теперь может быть эмодзи рядом с названием. Мы заметили {emoji} в «{name}».",
       "openSettings": "Открыть настройки группы",
       "notNow": "Не сейчас"
-    }
+    },
+    "groupTabsHint": "Хотите изменить порядок вкладок группы или скрыть те, которыми не пользуетесь?",
+    "groupTabsHintLink": "Настроить вкладки в настройках аккаунта"
   },
   "GroupForm": {
     "title": "Сведения о группе",
@@ -2449,7 +2451,17 @@
       "mascotOptions": {
         "off": "Выключен",
         "bill": "Билл-чек"
-      }
+      },
+      "groupTabs": "Вкладки группы",
+      "groupTabsHelp": "Выберите, какие вкладки отображаются и в каком порядке, в каждой группе.",
+      "groupTabsCustomize": "Настроить",
+      "groupTabsSave": "Сохранить",
+      "groupTabsDiscard": "Отбросить",
+      "groupTabsReset": "Сбросить по умолчанию",
+      "groupTabsHide": "Скрыть {name}",
+      "groupTabsShow": "Показать {name}",
+      "groupTabsMoveUp": "Переместить {name} выше",
+      "groupTabsMoveDown": "Переместить {name} ниже"
     },
     "aiPreferences": {
       "title": "Функции ИИ",

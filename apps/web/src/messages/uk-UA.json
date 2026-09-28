@@ -677,7 +677,9 @@
       "description": "Групи тепер можуть показувати емодзі поруч із назвою. Ми помітили {emoji} у «{name}».",
       "openSettings": "Відкрити налаштування групи",
       "notNow": "Не зараз"
-    }
+    },
+    "groupTabsHint": "Хочете змінити порядок вкладок групи або приховати ті, якими не користуєтеся?",
+    "groupTabsHintLink": "Налаштувати вкладки в налаштуваннях облікового запису"
   },
   "GroupForm": {
     "title": "Інформація про групу",
@@ -2449,7 +2451,17 @@
       "mascotOptions": {
         "off": "Вимкнено",
         "bill": "Білл-квитанція"
-      }
+      },
+      "groupTabs": "Вкладки групи",
+      "groupTabsHelp": "Виберіть, які вкладки відображаються та в якому порядку, у кожній групі.",
+      "groupTabsCustomize": "Налаштувати",
+      "groupTabsSave": "Зберегти",
+      "groupTabsDiscard": "Відкинути",
+      "groupTabsReset": "Скинути до типових",
+      "groupTabsHide": "Приховати {name}",
+      "groupTabsShow": "Показати {name}",
+      "groupTabsMoveUp": "Перемістити {name} вище",
+      "groupTabsMoveDown": "Перемістити {name} нижче"
     },
     "aiPreferences": {
       "title": "Функції ШІ",

@@ -171,7 +171,17 @@
       "mascotOptions": {
         "off": "Av",
         "bill": "Bill, kvittot"
-      }
+      },
+      "groupTabs": "Gruppflikar",
+      "groupTabsHelp": "Välj vilka flikar som visas i varje grupp och i vilken ordning.",
+      "groupTabsCustomize": "Anpassa",
+      "groupTabsSave": "Spara",
+      "groupTabsDiscard": "Kassera",
+      "groupTabsReset": "Återställ till standard",
+      "groupTabsHide": "Dölj {name}",
+      "groupTabsShow": "Visa {name}",
+      "groupTabsMoveUp": "Flytta {name} uppåt",
+      "groupTabsMoveDown": "Flytta {name} nedåt"
     },
     "aiPreferences": {
       "title": "AI-funktioner",
@@ -2492,7 +2502,9 @@
       "description": "Grupper kan nu visa en emoji bredvid sitt namn. Vi såg {emoji} i ”{name}”.",
       "openSettings": "Öppna gruppens inställningar",
       "notNow": "Inte nu"
-    }
+    },
+    "groupTabsHint": "Vill du ändra ordningen på gruppflikarna eller dölja dem du inte använder?",
+    "groupTabsHintLink": "Anpassa flikar i dina kontoinställningar"
   },
   "Header": {
     "signIn": "Logga in",

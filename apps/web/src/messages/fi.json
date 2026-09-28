@@ -665,7 +665,9 @@
       "description": "Ryhmät voivat nyt näyttää emojin nimensä vieressä. Huomasimme {emoji} nimessä ”{name}”.",
       "openSettings": "Avaa ryhmän asetukset",
       "notNow": "Ei nyt"
-    }
+    },
+    "groupTabsHint": "Haluatko järjestää ryhmän välilehdet uudelleen tai piilottaa ne, joita et käytä?",
+    "groupTabsHintLink": "Mukauta välilehtiä tilisi asetuksissa"
   },
   "GroupForm": {
     "title": "Ryhmän tiedot",
@@ -2429,7 +2431,17 @@
       "mascotOptions": {
         "off": "Pois käytöstä",
         "bill": "Bill-kuitti"
-      }
+      },
+      "groupTabs": "Ryhmän välilehdet",
+      "groupTabsHelp": "Valitse, mitkä välilehdet näkyvät jokaisessa ryhmässä ja missä järjestyksessä.",
+      "groupTabsCustomize": "Muokkaa",
+      "groupTabsSave": "Tallenna",
+      "groupTabsDiscard": "Hylkää",
+      "groupTabsReset": "Palauta oletukset",
+      "groupTabsHide": "Piilota {name}",
+      "groupTabsShow": "Näytä {name}",
+      "groupTabsMoveUp": "Siirrä {name} ylöspäin",
+      "groupTabsMoveDown": "Siirrä {name} alaspäin"
     },
     "aiPreferences": {
       "title": "Tekoälyominaisuudet",

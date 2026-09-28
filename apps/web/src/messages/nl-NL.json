@@ -685,7 +685,9 @@
       "description": "Groepen kunnen nu een emoji naast hun naam tonen. We hebben {emoji} gezien in “{name}”.",
       "openSettings": "Groepsinstellingen openen",
       "notNow": "Niet nu"
-    }
+    },
+    "groupTabsHint": "Wil je de groepstabbladen anders ordenen of de groepstabbladen verbergen die je niet gebruikt?",
+    "groupTabsHintLink": "Tabbladen aanpassen in je accountinstellingen"
   },
   "GroupForm": {
     "title": "Groepsinformatie",
@@ -2461,7 +2463,17 @@
       "mascotOptions": {
         "off": "Uit",
         "bill": "Bill, het bonnetje"
-      }
+      },
+      "groupTabs": "Groepstabbladen",
+      "groupTabsHelp": "Kies welke tabbladen worden weergegeven in elke groep, en in welke volgorde.",
+      "groupTabsCustomize": "Aanpassen",
+      "groupTabsSave": "Opslaan",
+      "groupTabsDiscard": "Weggooien",
+      "groupTabsReset": "Terugzetten naar standaard",
+      "groupTabsHide": "{name} verbergen",
+      "groupTabsShow": "{name} tonen",
+      "groupTabsMoveUp": "{name} omhoog verplaatsen",
+      "groupTabsMoveDown": "{name} omlaag verplaatsen"
     },
     "aiPreferences": {
       "title": "AI-functies",

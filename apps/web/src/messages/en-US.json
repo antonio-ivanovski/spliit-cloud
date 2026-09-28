@@ -766,7 +766,9 @@
       "description": "Groups can now show an emoji next to their name. We noticed {emoji} in “{name}”.",
       "openSettings": "Open group settings",
       "notNow": "Not now"
-    }
+    },
+    "groupTabsHint": "Looking to reorder the group tabs or hide the ones you don't use?",
+    "groupTabsHintLink": "Customize tabs in your account settings"
   },
   "Auth": {
     "title": "Sign in to Spliit Cloud",
@@ -1006,7 +1008,17 @@
       "mascotOptions": {
         "off": "Off",
         "bill": "Bill the receipt"
-      }
+      },
+      "groupTabs": "Group tabs",
+      "groupTabsHelp": "Choose which tabs are shown, and in which order, in every group.",
+      "groupTabsCustomize": "Customize",
+      "groupTabsSave": "Save",
+      "groupTabsDiscard": "Discard",
+      "groupTabsReset": "Reset to defaults",
+      "groupTabsHide": "Hide {name}",
+      "groupTabsShow": "Show {name}",
+      "groupTabsMoveUp": "Move {name} up",
+      "groupTabsMoveDown": "Move {name} down"
     },
     "aiPreferences": {
       "title": "AI features",

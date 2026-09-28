@@ -63,10 +63,14 @@ describe('account preference bootstrap inputs', () => {
     expect(readCachedAccountPreferences('account-a')).toEqual({
       ...first,
       mascot: 'bill',
+      groupTabOrder: null,
+      hiddenGroupTabs: null,
     })
     expect(readCachedAccountPreferences('account-b')).toEqual({
       ...second,
       mascot: 'bill',
+      groupTabOrder: null,
+      hiddenGroupTabs: null,
     })
     expect(readCachedAccountPreferences('account-c')).toBeNull()
   })
@@ -89,6 +93,93 @@ describe('account preference bootstrap inputs', () => {
       true,
     )
     expect(readCachedAccountPreferences('legacy-ai')?.mascot).toBe('bill')
+  })
+
+  it('validates a cached group tab order and defaults it when missing', () => {
+    localStorage.setItem(
+      'accountPreferences:legacy-tabs',
+      JSON.stringify({
+        defaultCurrencyCode: 'USD',
+        timeZone: 'UTC',
+        locale: 'en-US',
+        theme: 'system',
+        aiCategoryExtractEnabled: null,
+        aiReceiptScanEnabled: null,
+        aiVoiceExpenseEnabled: null,
+      }),
+    )
+    localStorage.setItem(
+      'accountPreferences:custom-tabs',
+      JSON.stringify({
+        defaultCurrencyCode: 'USD',
+        timeZone: 'UTC',
+        locale: 'en-US',
+        theme: 'system',
+        aiCategoryExtractEnabled: null,
+        aiReceiptScanEnabled: null,
+        aiVoiceExpenseEnabled: null,
+        groupTabOrder: ['members', 'expenses'],
+      }),
+    )
+    localStorage.setItem(
+      'accountPreferences:bad-tabs',
+      JSON.stringify({
+        defaultCurrencyCode: 'USD',
+        timeZone: 'UTC',
+        locale: 'en-US',
+        theme: 'system',
+        aiCategoryExtractEnabled: null,
+        aiReceiptScanEnabled: null,
+        aiVoiceExpenseEnabled: null,
+        groupTabOrder: ['overview'],
+      }),
+    )
+
+    expect(
+      readCachedAccountPreferences('legacy-tabs')?.groupTabOrder,
+    ).toBeNull()
+    expect(
+      readCachedAccountPreferences('legacy-tabs')?.hiddenGroupTabs,
+    ).toBeNull()
+    expect(readCachedAccountPreferences('custom-tabs')?.groupTabOrder).toEqual([
+      'members',
+      'expenses',
+    ])
+    expect(readCachedAccountPreferences('bad-tabs')).toBeNull()
+  })
+
+  it('validates cached hidden group tabs', () => {
+    localStorage.setItem(
+      'accountPreferences:hidden-tabs',
+      JSON.stringify({
+        defaultCurrencyCode: 'USD',
+        timeZone: 'UTC',
+        locale: 'en-US',
+        theme: 'system',
+        aiCategoryExtractEnabled: null,
+        aiReceiptScanEnabled: null,
+        aiVoiceExpenseEnabled: null,
+        hiddenGroupTabs: ['stats', 'budgets'],
+      }),
+    )
+    localStorage.setItem(
+      'accountPreferences:bad-hidden-tabs',
+      JSON.stringify({
+        defaultCurrencyCode: 'USD',
+        timeZone: 'UTC',
+        locale: 'en-US',
+        theme: 'system',
+        aiCategoryExtractEnabled: null,
+        aiReceiptScanEnabled: null,
+        aiVoiceExpenseEnabled: null,
+        hiddenGroupTabs: ['expenses'],
+      }),
+    )
+
+    expect(
+      readCachedAccountPreferences('hidden-tabs')?.hiddenGroupTabs,
+    ).toEqual(['stats', 'budgets'])
+    expect(readCachedAccountPreferences('bad-hidden-tabs')).toBeNull()
   })
 
   it('rejects corrupt or unsupported cached snapshots', () => {

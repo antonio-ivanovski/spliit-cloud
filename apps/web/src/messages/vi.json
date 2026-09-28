@@ -761,7 +761,9 @@
       "description": "Nhóm giờ đây có thể hiển thị emoji bên cạnh tên. Đã phát hiện {emoji} trong “{name}”.",
       "openSettings": "Mở cài đặt nhóm",
       "notNow": "Để sau"
-    }
+    },
+    "groupTabsHint": "Muốn sắp xếp lại các tab nhóm hoặc ẩn những tab bạn không dùng?",
+    "groupTabsHintLink": "Tùy chỉnh các tab trong cài đặt tài khoản"
   },
   "Auth": {
     "title": "Đăng nhập",
@@ -1001,7 +1003,17 @@
       "mascotOptions": {
         "off": "Tắt",
         "bill": "Bill hóa đơn"
-      }
+      },
+      "groupTabs": "Tab nhóm",
+      "groupTabsHelp": "Chọn các tab được hiển thị và thứ tự của chúng trong mọi nhóm.",
+      "groupTabsCustomize": "Tùy chỉnh",
+      "groupTabsSave": "Lưu",
+      "groupTabsDiscard": "Hủy bỏ",
+      "groupTabsReset": "Đặt lại về mặc định",
+      "groupTabsHide": "Ẩn {name}",
+      "groupTabsShow": "Hiện {name}",
+      "groupTabsMoveUp": "Di chuyển {name} lên",
+      "groupTabsMoveDown": "Di chuyển {name} xuống"
     },
     "aiPreferences": {
       "title": "Tính năng AI",

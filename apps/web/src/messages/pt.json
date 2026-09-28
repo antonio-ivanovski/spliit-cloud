@@ -671,7 +671,9 @@
       "description": "Os grupos agora podem mostrar um emoji junto ao nome. Reparámos em {emoji} em “{name}”.",
       "openSettings": "Abrir as definições do grupo",
       "notNow": "Agora não"
-    }
+    },
+    "groupTabsHint": "Queres reordenar os separadores do grupo ou ocultar os que não usas?",
+    "groupTabsHintLink": "Personalizar os separadores nas definições da tua conta"
   },
   "GroupForm": {
     "title": "Informações do grupo",
@@ -2439,7 +2441,17 @@
       "mascotOptions": {
         "off": "Desativada",
         "bill": "Bill, o recibo"
-      }
+      },
+      "groupTabs": "Separadores do grupo",
+      "groupTabsHelp": "Escolhe que separadores são mostrados e em que ordem em cada grupo.",
+      "groupTabsCustomize": "Personalizar",
+      "groupTabsSave": "Guardar",
+      "groupTabsDiscard": "Descartar",
+      "groupTabsReset": "Repor os valores predefinidos",
+      "groupTabsHide": "Ocultar {name}",
+      "groupTabsShow": "Mostrar {name}",
+      "groupTabsMoveUp": "Mover {name} para cima",
+      "groupTabsMoveDown": "Mover {name} para baixo"
     },
     "aiPreferences": {
       "title": "Funcionalidades de IA",

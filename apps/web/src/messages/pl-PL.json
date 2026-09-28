@@ -677,7 +677,9 @@
       "description": "Grupy mogą teraz wyświetlać emoji obok nazwy. Zauważyliśmy {emoji} w „{name}”.",
       "openSettings": "Otwórz ustawienia grupy",
       "notNow": "Nie teraz"
-    }
+    },
+    "groupTabsHint": "Chcesz zmienić kolejność zakładek grupy lub ukryć te, których nie używasz?",
+    "groupTabsHintLink": "Dostosuj zakładki w ustawieniach konta"
   },
   "GroupForm": {
     "title": "Informacje o grupie",
@@ -2449,7 +2451,17 @@
       "mascotOptions": {
         "off": "Wyłączona",
         "bill": "Bill, paragon"
-      }
+      },
+      "groupTabs": "Zakładki grupy",
+      "groupTabsHelp": "Wybierz, które zakładki są wyświetlane i w jakiej kolejności, w każdej grupie.",
+      "groupTabsCustomize": "Dostosuj",
+      "groupTabsSave": "Zapisz",
+      "groupTabsDiscard": "Odrzuć",
+      "groupTabsReset": "Przywróć domyślne",
+      "groupTabsHide": "Ukryj {name}",
+      "groupTabsShow": "Pokaż {name}",
+      "groupTabsMoveUp": "Przenieś {name} wyżej",
+      "groupTabsMoveDown": "Przenieś {name} niżej"
     },
     "aiPreferences": {
       "title": "Funkcje AI",

@@ -6,12 +6,19 @@ const mocks = vi.hoisted(() => ({
   mockUseCurrentGroup: vi.fn(),
   mockUseIsReadOnlyGroupViewer: vi.fn(() => false),
   mockSplitPresetsList: vi.fn(),
+  mockUseCurrentAccount: vi.fn((): { data: { id: string } | null } => ({
+    data: null,
+  })),
 }))
 
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: mocks.mockUseCurrentGroup,
   useCurrentGroupOrNull: () => null,
   useIsReadOnlyGroupViewer: mocks.mockUseIsReadOnlyGroupViewer,
+}))
+
+vi.mock('@/lib/use-current-account', () => ({
+  useCurrentAccount: mocks.mockUseCurrentAccount,
 }))
 
 vi.mock('@/trpc/client', () => ({
@@ -178,6 +185,7 @@ describe('EditGroup', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mocks.mockUseIsReadOnlyGroupViewer.mockReturnValue(false)
+    mocks.mockUseCurrentAccount.mockReturnValue({ data: null })
     setFriendGroup()
     mocks.mockSplitPresetsList.mockReturnValue({
       data: {
@@ -228,6 +236,31 @@ describe('EditGroup', () => {
 
     expect(container.querySelector('.mobile-settings-sheet')).toBeNull()
     expect(screen.getByTestId('group-form')).toBeInTheDocument()
+  })
+
+  it('links signed-in accounts to tab customization in account settings', () => {
+    mocks.mockUseCurrentAccount.mockReturnValue({ data: { id: 'acct-1' } })
+    render(<EditGroup />)
+
+    expect(
+      screen.getByText(
+        "Looking to reorder the group tabs or hide the ones you don't use?",
+      ),
+    ).toBeInTheDocument()
+    const link = screen.getByRole('link', {
+      name: 'Customize tabs in your account settings',
+    })
+    expect(link).toHaveAttribute('href', '/account/settings')
+  })
+
+  it('hides the tab customization hint without a signed-in account', () => {
+    render(<EditGroup />)
+
+    expect(
+      screen.queryByRole('link', {
+        name: 'Customize tabs in your account settings',
+      }),
+    ).not.toBeInTheDocument()
   })
 
   // ── GROUP-type control tests (tasks 13.30, 13.31) ────────────────

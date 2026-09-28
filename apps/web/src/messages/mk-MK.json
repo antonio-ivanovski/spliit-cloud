@@ -665,7 +665,9 @@
       "description": "Групите сега можат да прикажуваат емоџи до името. Забележавме {emoji} во „{name}“.",
       "openSettings": "Отвори ги поставките на групата",
       "notNow": "Не сега"
-    }
+    },
+    "groupTabsHint": "Сакате да го промените редоследот на групните табови или да ги скриете оние што не ги користите?",
+    "groupTabsHintLink": "Прилагоди ги табовите во поставките на профилот"
   },
   "Auth": {
     "title": "Најавете се на Spliit Cloud",
@@ -905,7 +907,17 @@
       "mascotOptions": {
         "off": "Исклучено",
         "bill": "Бил, сметката"
-      }
+      },
+      "groupTabs": "Групни табови",
+      "groupTabsHelp": "Изберете кои табови се прикажуваат и по кој редослед, во секоја група.",
+      "groupTabsCustomize": "Прилагоди",
+      "groupTabsSave": "Зачувај",
+      "groupTabsDiscard": "Отфрли",
+      "groupTabsReset": "Ресетирај на стандардно",
+      "groupTabsHide": "Скриј {name}",
+      "groupTabsShow": "Прикажи {name}",
+      "groupTabsMoveUp": "Премести {name} нагоре",
+      "groupTabsMoveDown": "Премести {name} надолу"
     },
     "aiPreferences": {
       "title": "ВИ функции",

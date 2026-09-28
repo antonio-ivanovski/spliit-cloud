@@ -15,6 +15,8 @@ import {
   accountMascotSchema,
   accountPreferenceSchema,
   accountThemeSchema,
+  groupTabIdSchema,
+  hideableGroupTabIdSchema,
   supportedCurrencyCodeSchema,
   timeZoneSchema,
 } from '@spliit/domain'
@@ -67,6 +69,8 @@ const accountPreferenceSelect = {
   aiCategoryExtractEnabled: true,
   aiReceiptScanEnabled: true,
   aiVoiceExpenseEnabled: true,
+  groupTabOrder: true,
+  hiddenGroupTabs: true,
 } as const
 
 const emptyAccountPreference = {
@@ -80,6 +84,8 @@ const emptyAccountPreference = {
   aiCategoryExtractEnabled: null,
   aiReceiptScanEnabled: null,
   aiVoiceExpenseEnabled: null,
+  groupTabOrder: null,
+  hiddenGroupTabs: null,
 }
 
 function parseAccountPreference(preferences: unknown) {
@@ -88,6 +94,9 @@ function parseAccountPreference(preferences: unknown) {
   )
   // Normalize nullable toggles to real booleans: `null` ≡ enabled so the
   // web sees a consistent shape and the gating hooks can compare directly.
+  // `groupTabOrder` stays nullable: `null` (or an empty array from the
+  // database default) means "use the default tab order". Same for
+  // `hiddenGroupTabs`: `null`/empty means "hide nothing".
   return {
     ...parsed,
     mascot: parsed.mascot ?? 'bill',
@@ -96,6 +105,8 @@ function parseAccountPreference(preferences: unknown) {
     aiCategoryExtractEnabled: parsed.aiCategoryExtractEnabled ?? true,
     aiReceiptScanEnabled: parsed.aiReceiptScanEnabled ?? true,
     aiVoiceExpenseEnabled: parsed.aiVoiceExpenseEnabled ?? true,
+    groupTabOrder: parsed.groupTabOrder ?? null,
+    hiddenGroupTabs: parsed.hiddenGroupTabs ?? null,
   }
 }
 
@@ -116,6 +127,10 @@ const updatePreferencesInputSchema = z.object({
   aiCategoryExtractEnabled: z.boolean().nullable().optional(),
   aiReceiptScanEnabled: z.boolean().nullable().optional(),
   aiVoiceExpenseEnabled: z.boolean().nullable().optional(),
+  // `null` resets to the default tab order (stored as the empty array).
+  groupTabOrder: z.array(groupTabIdSchema).nullable().optional(),
+  // `null` shows all tabs again (stored as the empty array).
+  hiddenGroupTabs: z.array(hideableGroupTabIdSchema).nullable().optional(),
 })
 
 type CurrencyMembership = {
@@ -531,14 +546,26 @@ export const accountRouter = createTRPCRouter({
     .input(updatePreferencesInputSchema)
     .output(accountPreferenceOutputSchema)
     .mutation(async ({ input, ctx }) => {
+      // The tab columns are non-nullable: `null` (reset to the default
+      // order / show all tabs) is stored as the empty array.
+      const { groupTabOrder, hiddenGroupTabs, ...rest } = input
+      const data = {
+        ...rest,
+        ...(groupTabOrder !== undefined
+          ? { groupTabOrder: groupTabOrder ?? [] }
+          : {}),
+        ...(hiddenGroupTabs !== undefined
+          ? { hiddenGroupTabs: hiddenGroupTabs ?? [] }
+          : {}),
+      }
       const preferences = await prisma.accountPreference.upsert({
         where: { accountId: ctx.auth.user.id },
         create: {
           id: randomId(),
           accountId: ctx.auth.user.id,
-          ...input,
+          ...data,
         },
-        update: input,
+        update: data,
         select: accountPreferenceSelect,
       })
       invalidateAccountCache(ctx.auth.user.id)

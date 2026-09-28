@@ -171,7 +171,17 @@
       "mascotOptions": {
         "off": "बंद",
         "bill": "रसीद वाला बिल"
-      }
+      },
+      "groupTabs": "समूह टैब",
+      "groupTabsHelp": "प्रत्येक समूह में कौन-से टैब दिखाए जाएं और किस क्रम में, यह चुनें।",
+      "groupTabsCustomize": "कस्टमाइज़ करें",
+      "groupTabsSave": "सहेजें",
+      "groupTabsDiscard": "रद्द करें",
+      "groupTabsReset": "डिफ़ॉल्ट पर रीसेट करें",
+      "groupTabsHide": "{name} छिपाएं",
+      "groupTabsShow": "{name} दिखाएं",
+      "groupTabsMoveUp": "{name} ऊपर ले जाएं",
+      "groupTabsMoveDown": "{name} नीचे ले जाएं"
     },
     "aiPreferences": {
       "title": "AI सुविधाएँ",
@@ -2492,7 +2502,9 @@
       "description": "समूह अब अपने नाम के बगल में एक इमोजी दिखा सकते हैं। हमने “{name}” में {emoji} देखा।",
       "openSettings": "समूह सेटिंग खोलें",
       "notNow": "अभी नहीं"
-    }
+    },
+    "groupTabsHint": "समूह टैब का क्रम बदलना चाहते हैं या जिनका उपयोग नहीं करते उन्हें छिपाना चाहते हैं?",
+    "groupTabsHintLink": "अपनी खाता सेटिंग में टैब कस्टमाइज़ करें"
   },
   "Header": {
     "signIn": "साइन इन करें",

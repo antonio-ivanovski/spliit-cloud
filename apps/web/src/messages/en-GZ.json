@@ -230,7 +230,17 @@
       "mascotOptions": {
         "off": "no mascot",
         "bill": "Bill, your receipt bestie"
-      }
+      },
+      "groupTabs": "group tabs",
+      "groupTabsHelp": "pick which tabs show up in every group, and in what order.",
+      "groupTabsCustomize": "customize",
+      "groupTabsSave": "save",
+      "groupTabsDiscard": "discard",
+      "groupTabsReset": "reset to defaults",
+      "groupTabsHide": "hide {name}",
+      "groupTabsShow": "show {name}",
+      "groupTabsMoveUp": "move {name} up",
+      "groupTabsMoveDown": "move {name} down"
     },
     "title": "account settings era",
     "profile": {
@@ -2714,7 +2724,9 @@
       "description": "groups can now show an emoji next to their name. we spotted {emoji} in “{name}”.",
       "openSettings": "open group settings",
       "notNow": "not now"
-    }
+    },
+    "groupTabsHint": "wanna reorder the group tabs or hide the ones you never use?",
+    "groupTabsHintLink": "customize tabs in your account settings"
   },
   "Header": {
     "signIn": "sign in",

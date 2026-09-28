@@ -671,7 +671,9 @@
       "description": "קבוצות יכולות כעת להציג אימוג'י לצד שמן. שמנו לב ל-{emoji} ב“{name}”.",
       "openSettings": "פתח הגדרות קבוצה",
       "notNow": "לא עכשיו"
-    }
+    },
+    "groupTabsHint": "רוצה לסדר מחדש את לשוניות הקבוצה או להסתיר את אלו שאינך משתמש בהן?",
+    "groupTabsHintLink": "התאם אישית את הלשוניות בהגדרות החשבון"
   },
   "GroupForm": {
     "title": "מידע על הקבוצה",
@@ -2439,7 +2441,17 @@
       "mascotOptions": {
         "off": "כבוי",
         "bill": "ביל הקבלה"
-      }
+      },
+      "groupTabs": "לשוניות הקבוצה",
+      "groupTabsHelp": "בחר אילו לשוניות יוצגו ובאיזה סדר, בכל קבוצה.",
+      "groupTabsCustomize": "התאמה אישית",
+      "groupTabsSave": "שמור",
+      "groupTabsDiscard": "בטל",
+      "groupTabsReset": "איפוס לברירות מחדל",
+      "groupTabsHide": "הסתר {name}",
+      "groupTabsShow": "הצג {name}",
+      "groupTabsMoveUp": "העבר את {name} למעלה",
+      "groupTabsMoveDown": "העבר את {name} למטה"
     },
     "aiPreferences": {
       "title": "תכונות בינה מלאכותית",

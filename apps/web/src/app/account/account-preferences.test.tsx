@@ -227,4 +227,68 @@ describe('AccountPreferences', () => {
       ),
     ).toBeVisible()
   })
+
+  it('summarizes visible group tabs with a customize action', () => {
+    render(<AccountPreferences />)
+
+    const row = document.getElementById('account-preference-group-tabs')
+    expect(row).not.toBeNull()
+    expect(row!.textContent).toContain('Group tabs')
+    expect(
+      screen.getByText(
+        'Expenses · Balances · Activity · Members · Stats · Budgets · Tools · Settings',
+      ),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Customize' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Move Balances down' }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('persists a moved group tab when saved', async () => {
+    const { user } = render(<AccountPreferences />)
+
+    await user.click(screen.getByRole('button', { name: 'Customize' }))
+    await user.click(screen.getByRole('button', { name: 'Move Balances down' }))
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+
+    expect(mocks.patchPreferences).toHaveBeenCalledWith({
+      groupTabOrder: [
+        'expenses',
+        'activity',
+        'balances',
+        'members',
+        'stats',
+        'budgets',
+        'tools',
+        'edit',
+      ],
+      hiddenGroupTabs: null,
+    })
+  })
+
+  it('persists hidden group tabs when saved', async () => {
+    const { user } = render(<AccountPreferences />)
+
+    await user.click(screen.getByRole('button', { name: 'Customize' }))
+    await user.click(screen.getByRole('button', { name: 'Hide Stats' }))
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+
+    expect(mocks.patchPreferences).toHaveBeenCalledWith({
+      groupTabOrder: null,
+      hiddenGroupTabs: ['stats'],
+    })
+  })
+
+  it('discards draft changes without persisting', async () => {
+    const { user } = render(<AccountPreferences />)
+
+    await user.click(screen.getByRole('button', { name: 'Customize' }))
+    await user.click(screen.getByRole('button', { name: 'Move Balances down' }))
+    await user.click(screen.getByRole('button', { name: 'Discard' }))
+
+    expect(mocks.patchPreferences).not.toHaveBeenCalled()
+  })
 })

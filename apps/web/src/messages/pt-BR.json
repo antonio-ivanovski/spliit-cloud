@@ -347,7 +347,9 @@
     "emojiIntro": {
       "description": "Os grupos agora podem mostrar um emoji ao lado do nome. Vimos {emoji} em “{name}”.",
       "openSettings": "Abrir as configurações do grupo"
-    }
+    },
+    "groupTabsHint": "Quer reordenar as abas do grupo ou ocultar as que você não usa?",
+    "groupTabsHintLink": "Personalizar as abas nas configurações da sua conta"
   },
   "GroupForm": {
     "NameField": {
@@ -1205,7 +1207,11 @@
       "chooseMascot": "Escolha um mascote",
       "mascotOptions": {
         "off": "Desativado"
-      }
+      },
+      "groupTabs": "Abas do grupo",
+      "groupTabsHelp": "Escolha quais abas são mostradas e em que ordem em cada grupo.",
+      "groupTabsSave": "Salvar",
+      "groupTabsReset": "Redefinir para o padrão"
     },
     "aiPreferences": {
       "title": "Recursos de IA",

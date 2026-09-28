@@ -12,6 +12,68 @@ export const accountMascotValues = ['off', 'bill'] as const
 export const accountMascotSchema = z.enum(accountMascotValues)
 export type AccountMascot = z.infer<typeof accountMascotSchema>
 
+/**
+ * Group tab identifiers that can appear in an account's tab order. The order of
+ * `groupTabIdValues` is the default tab order: Expenses, Balances, Activity,
+ * Members, Stats, Budgets, Tools, Settings (`edit`).
+ */
+export const groupTabIdValues = [
+  'expenses',
+  'balances',
+  'activity',
+  'members',
+  'stats',
+  'budgets',
+  'tools',
+  'edit',
+] as const
+export const groupTabIdSchema = z.enum(groupTabIdValues)
+export type GroupTabId = z.infer<typeof groupTabIdSchema>
+
+/** Default group tab order used when an account has no custom order stored. */
+export const defaultGroupTabOrder: readonly GroupTabId[] = groupTabIdValues
+
+/**
+ * Tab ids the account may hide. Expenses stays as the canonical landing tab and
+ * Settings (`edit`) stays as the member-accessible home for export, so neither
+ * can be hidden.
+ */
+export const hideableGroupTabIdValues = [
+  'balances',
+  'activity',
+  'members',
+  'stats',
+  'budgets',
+  'tools',
+] as const
+export const hideableGroupTabIdSchema = z.enum(hideableGroupTabIdValues)
+export type HideableGroupTabId = z.infer<typeof hideableGroupTabIdSchema>
+
+const groupTabIdSet = new Set<string>(groupTabIdValues)
+
+/**
+ * Merge a stored tab order with the default: unknown ids are dropped,
+ * duplicates keep their first position, and tabs missing from the stored value
+ * are appended in default order. `null`/`undefined`/empty resolves to the
+ * default order.
+ */
+export function resolveGroupTabOrder(
+  input: readonly string[] | null | undefined,
+): GroupTabId[] {
+  const seen = new Set<GroupTabId>()
+  const ordered: GroupTabId[] = []
+  for (const id of input ?? []) {
+    if (groupTabIdSet.has(id) && !seen.has(id as GroupTabId)) {
+      seen.add(id as GroupTabId)
+      ordered.push(id as GroupTabId)
+    }
+  }
+  for (const id of defaultGroupTabOrder) {
+    if (!seen.has(id)) ordered.push(id)
+  }
+  return ordered
+}
+
 const supportedCurrencyCodeSet = new Set<string>(supportedCurrencyCodes)
 const localeSet = new Set<string>(locales)
 
@@ -39,6 +101,15 @@ export const accountLocaleSchema = z
  * at the API boundary (`apps/api/.../routers/account`). The `.nullish()`
  * modifier lets older stored shapes that pre-date these fields continue to
  * validate cleanly.
+ *
+ * `groupTabOrder` follows the same convention: `null`, `undefined`, or an empty
+ * array means "use `defaultGroupTabOrder`". Use `resolveGroupTabOrder` to merge
+ * a stored value with the default (unknown ids dropped, duplicates removed,
+ * missing tabs appended in default order).
+ *
+ * `hiddenGroupTabs` follows the same convention: `null`, `undefined`, or an
+ * empty array means "hide nothing". Only `hideableGroupTabIdValues` take
+ * effect; Expenses and Settings can never be hidden.
  */
 export const accountPreferenceSchema = z.object({
   defaultCurrencyCode: supportedCurrencyCodeSchema.nullable(),
@@ -53,6 +124,8 @@ export const accountPreferenceSchema = z.object({
   aiCategoryExtractEnabled: z.boolean().nullish(),
   aiReceiptScanEnabled: z.boolean().nullish(),
   aiVoiceExpenseEnabled: z.boolean().nullish(),
+  groupTabOrder: z.array(groupTabIdSchema).nullish(),
+  hiddenGroupTabs: z.array(hideableGroupTabIdSchema).nullish(),
 })
 
 export type AccountPreference = z.infer<typeof accountPreferenceSchema>

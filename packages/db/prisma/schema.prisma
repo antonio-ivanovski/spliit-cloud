@@ -828,6 +828,12 @@ model AccountPreference {
   aiCategoryExtractEnabled Boolean? @default(true)
   aiReceiptScanEnabled     Boolean? @default(true)
   aiVoiceExpenseEnabled    Boolean? @default(true)
+  // Ordered group tab ids customized by the account (`GroupTabs` order).
+  // Empty means the default order (`defaultGroupTabOrder` in @spliit/domain).
+  groupTabOrder            String[] @default([])
+  // Hideable group tab ids the account chose to hide. Empty means hide
+  // nothing; Expenses and Settings can never be hidden.
+  hiddenGroupTabs          String[] @default([])
 }
 
 model AccountGroupPreference {

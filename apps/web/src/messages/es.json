@@ -686,7 +686,9 @@
       "description": "Los grupos ahora pueden mostrar un emoji junto a su nombre. Hemos visto {emoji} en “{name}”.",
       "openSettings": "Abrir los ajustes del grupo",
       "notNow": "Ahora no"
-    }
+    },
+    "groupTabsHint": "¿Quieres reordenar las pestañas del grupo u ocultar las que no usas?",
+    "groupTabsHintLink": "Personalizar las pestañas en la configuración de tu cuenta"
   },
   "GroupForm": {
     "title": "Información del grupo",
@@ -2463,7 +2465,17 @@
       "mascotOptions": {
         "off": "Desactivada",
         "bill": "Bill, el recibo"
-      }
+      },
+      "groupTabs": "Pestañas del grupo",
+      "groupTabsHelp": "Elige qué pestañas se muestran y en qué orden en cada grupo.",
+      "groupTabsCustomize": "Personalizar",
+      "groupTabsSave": "Guardar",
+      "groupTabsDiscard": "Descartar",
+      "groupTabsReset": "Restablecer los valores predeterminados",
+      "groupTabsHide": "Ocultar {name}",
+      "groupTabsShow": "Mostrar {name}",
+      "groupTabsMoveUp": "Mover {name} hacia arriba",
+      "groupTabsMoveDown": "Mover {name} hacia abajo"
     },
     "aiPreferences": {
       "title": "Funciones de IA",

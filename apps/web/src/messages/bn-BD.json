@@ -171,7 +171,17 @@
       "mascotOptions": {
         "off": "বন্ধ",
         "bill": "রসিদ বিল"
-      }
+      },
+      "groupTabs": "গ্রুপ ট্যাব",
+      "groupTabsHelp": "প্রতিটি গ্রুপে কোন ট্যাবগুলো দেখানো হবে এবং কোন ক্রমে, তা বেছে নিন।",
+      "groupTabsCustomize": "কাস্টমাইজ করুন",
+      "groupTabsSave": "সংরক্ষণ করুন",
+      "groupTabsDiscard": "বাতিল করুন",
+      "groupTabsReset": "ডিফল্টে রিসেট করুন",
+      "groupTabsHide": "{name} লুকান",
+      "groupTabsShow": "{name} দেখান",
+      "groupTabsMoveUp": "{name} ওপরে নিন",
+      "groupTabsMoveDown": "{name} নিচে নিন"
     },
     "aiPreferences": {
       "title": "AI বৈশিষ্ট্য",
@@ -2556,7 +2566,9 @@
       "description": "গ্রুপগুলো এখন তাদের নামের পাশে একটি ইমোজি দেখাতে পারে। আমরা “{name}”-এ {emoji} লক্ষ্য করেছি।",
       "openSettings": "গ্রুপ সেটিংস খুলুন",
       "notNow": "এখন না"
-    }
+    },
+    "groupTabsHint": "গ্রুপ ট্যাবগুলোর ক্রম বদলাতে বা যেগুলো ব্যবহার করেন না সেগুলো লুকাতে চান?",
+    "groupTabsHintLink": "অ্যাকাউন্ট সেটিংসে ট্যাব কাস্টমাইজ করুন"
   },
   "Header": {
     "signIn": "সাইন ইন",

@@ -677,7 +677,9 @@
       "description": "Skupiny nyní mohou mít emoji vedle názvu. V názvu „{name}“ jsme si všimli {emoji}.",
       "openSettings": "Otevřít nastavení skupiny",
       "notNow": "Teď ne"
-    }
+    },
+    "groupTabsHint": "Chcete změnit pořadí karet skupiny nebo skrýt ty, které nepoužíváte?",
+    "groupTabsHintLink": "Přizpůsobit karty v nastavení účtu"
   },
   "GroupForm": {
     "title": "Informace o skupině",
@@ -2449,7 +2451,17 @@
       "mascotOptions": {
         "off": "Vypnuto",
         "bill": "Bill, účtenkový maskot"
-      }
+      },
+      "groupTabs": "Karty skupiny",
+      "groupTabsHelp": "Vyberte, které karty se zobrazují a v jakém pořadí, v každé skupině.",
+      "groupTabsCustomize": "Přizpůsobit",
+      "groupTabsSave": "Uložit",
+      "groupTabsDiscard": "Zahodit",
+      "groupTabsReset": "Obnovit výchozí nastavení",
+      "groupTabsHide": "Skrýt {name}",
+      "groupTabsShow": "Zobrazit {name}",
+      "groupTabsMoveUp": "Posunout {name} nahoru",
+      "groupTabsMoveDown": "Posunout {name} dolů"
     },
     "aiPreferences": {
       "title": "Funkce AI",

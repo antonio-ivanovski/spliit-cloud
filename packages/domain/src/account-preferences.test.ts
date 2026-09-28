@@ -3,6 +3,10 @@ import {
   accountMascotSchema,
   accountPreferenceSchema,
   accountThemeSchema,
+  defaultGroupTabOrder,
+  groupTabIdSchema,
+  hideableGroupTabIdSchema,
+  resolveGroupTabOrder,
   supportedCurrencyCodeSchema,
 } from './account-preferences'
 
@@ -35,5 +39,62 @@ describe('account preference schemas', () => {
       locale: null,
       theme: null,
     })
+  })
+})
+
+describe('group tab order', () => {
+  it('uses expenses, balances, activity, members as the default order', () => {
+    expect([...defaultGroupTabOrder]).toEqual([
+      'expenses',
+      'balances',
+      'activity',
+      'members',
+      'stats',
+      'budgets',
+      'tools',
+      'edit',
+    ])
+  })
+
+  it('accepts known tab ids and rejects unknown ones', () => {
+    expect(groupTabIdSchema.parse('activity')).toBe('activity')
+    expect(groupTabIdSchema.safeParse('overview').success).toBe(false)
+    expect(hideableGroupTabIdSchema.parse('stats')).toBe('stats')
+    expect(hideableGroupTabIdSchema.safeParse('expenses').success).toBe(false)
+    expect(hideableGroupTabIdSchema.safeParse('edit').success).toBe(false)
+  })
+
+  it('resolves a missing or empty order to the default', () => {
+    expect(resolveGroupTabOrder(null)).toEqual([...defaultGroupTabOrder])
+    expect(resolveGroupTabOrder(undefined)).toEqual([...defaultGroupTabOrder])
+    expect(resolveGroupTabOrder([])).toEqual([...defaultGroupTabOrder])
+  })
+
+  it('keeps a custom order and appends missing tabs in default order', () => {
+    expect(resolveGroupTabOrder(['members', 'expenses'])).toEqual([
+      'members',
+      'expenses',
+      'balances',
+      'activity',
+      'stats',
+      'budgets',
+      'tools',
+      'edit',
+    ])
+  })
+
+  it('drops unknown ids and duplicate entries', () => {
+    expect(
+      resolveGroupTabOrder(['tools', 'overview', 'tools', 'expenses']),
+    ).toEqual([
+      'tools',
+      'expenses',
+      'balances',
+      'activity',
+      'members',
+      'stats',
+      'budgets',
+      'edit',
+    ])
   })
 })

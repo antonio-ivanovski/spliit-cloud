@@ -1,9 +1,17 @@
 import type { Locale } from '@/i18n/request'
 import { locales } from '@/i18n/request'
+import {
+  groupTabIdValues,
+  hideableGroupTabIdValues,
+  type GroupTabId,
+  type HideableGroupTabId,
+} from '@spliit/domain/account-preferences'
 import { currencyList } from '@spliit/domain/currency'
 
 export type AccountTheme = 'light' | 'dark' | 'system'
 export type AccountMascot = 'off' | 'bill'
+
+export type { GroupTabId, HideableGroupTabId }
 
 export type AccountPreferences = {
   defaultCurrencyCode: string | null
@@ -28,6 +36,16 @@ export type AccountPreferences = {
   aiCategoryExtractEnabled: boolean | null
   aiReceiptScanEnabled: boolean | null
   aiVoiceExpenseEnabled: boolean | null
+  /**
+   * Custom group tab order. Missing, `null`, or an empty array means the
+   * default order; resolve with `resolveGroupTabOrder` from `@spliit/domain`.
+   */
+  groupTabOrder?: GroupTabId[] | null
+  /**
+   * Hideable group tab ids the account chose to hide. Missing, `null`, or an
+   * empty array means hide nothing; Expenses and Settings can never be hidden.
+   */
+  hiddenGroupTabs?: HideableGroupTabId[] | null
 }
 
 export const ACCOUNT_THEME_CHANGED_EVENT = 'spliit:account-theme-changed'
@@ -64,6 +82,8 @@ function parseAccountPreferences(value: unknown): AccountPreferences | null {
   const aiCategoryExtractEnabled = candidate.aiCategoryExtractEnabled
   const aiReceiptScanEnabled = candidate.aiReceiptScanEnabled
   const aiVoiceExpenseEnabled = candidate.aiVoiceExpenseEnabled
+  const groupTabOrder = candidate.groupTabOrder
+  const hiddenGroupTabs = candidate.hiddenGroupTabs
 
   if (
     defaultCurrencyCode !== null &&
@@ -121,6 +141,34 @@ function parseAccountPreferences(value: unknown): AccountPreferences | null {
     typeof aiVoiceExpenseEnabled !== 'boolean'
   )
     return null
+  // Group tab order was introduced later: tolerate cached shapes that
+  // pre-date it by treating a missing key the same as an explicit `null`
+  // (which resolves to the default tab order).
+  if (
+    groupTabOrder !== undefined &&
+    groupTabOrder !== null &&
+    (!Array.isArray(groupTabOrder) ||
+      !groupTabOrder.every(
+        (id): id is GroupTabId =>
+          typeof id === 'string' &&
+          (groupTabIdValues as readonly string[]).includes(id),
+      ))
+  )
+    return null
+  // Hidden group tabs tolerate pre-dating cache shapes the same way; only
+  // hideable tab ids are accepted (Expenses and Settings can never be
+  // hidden).
+  if (
+    hiddenGroupTabs !== undefined &&
+    hiddenGroupTabs !== null &&
+    (!Array.isArray(hiddenGroupTabs) ||
+      !hiddenGroupTabs.every(
+        (id): id is HideableGroupTabId =>
+          typeof id === 'string' &&
+          (hideableGroupTabIdValues as readonly string[]).includes(id),
+      ))
+  )
+    return null
   return {
     defaultCurrencyCode: defaultCurrencyCode as string | null,
     timeZone: timeZone as string | null,
@@ -143,6 +191,12 @@ function parseAccountPreferences(value: unknown): AccountPreferences | null {
       aiVoiceExpenseEnabled === undefined
         ? null
         : (aiVoiceExpenseEnabled as boolean | null),
+    groupTabOrder:
+      groupTabOrder === undefined ? null : (groupTabOrder as GroupTabId[]),
+    hiddenGroupTabs:
+      hiddenGroupTabs === undefined
+        ? null
+        : (hiddenGroupTabs as HideableGroupTabId[]),
   }
 }
 

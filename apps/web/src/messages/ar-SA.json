@@ -1340,7 +1340,9 @@
       "description": "يمكن للمجموعات الآن عرض إيموجي بجانب اسمها. لاحظنا {emoji} في “{name}”.",
       "openSettings": "افتح إعدادات المجموعة",
       "notNow": "ليس الآن"
-    }
+    },
+    "groupTabsHint": "تريد إعادة ترتيب تبويبات المجموعة أو إخفاء التي لا تستخدمها؟",
+    "groupTabsHintLink": "خصّص علامات التبويب في إعدادات حسابك"
   },
   "Unsubscribe": {
     "submitting": "جارٍ إلغاء الاشتراك…",
@@ -2002,7 +2004,17 @@
       "mascotOptions": {
         "off": "إيقاف",
         "bill": "بيل، الإيصال"
-      }
+      },
+      "groupTabs": "تبويبات المجموعة",
+      "groupTabsHelp": "اختر علامات التبويب التي تظهر، وبأي ترتيب، في كل مجموعة.",
+      "groupTabsCustomize": "تخصيص",
+      "groupTabsSave": "حفظ",
+      "groupTabsDiscard": "تجاهل",
+      "groupTabsReset": "إعادة التعيين إلى الإعدادات الافتراضية",
+      "groupTabsHide": "إخفاء {name}",
+      "groupTabsShow": "إظهار {name}",
+      "groupTabsMoveUp": "نقل {name} لأعلى",
+      "groupTabsMoveDown": "نقل {name} لأسفل"
     },
     "aiPreferences": {
       "title": "ميزات الذكاء الاصطناعي",

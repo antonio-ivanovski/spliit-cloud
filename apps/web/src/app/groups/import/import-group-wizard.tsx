@@ -490,6 +490,8 @@ export function ImportGroupWizard() {
               preferences.aiCategoryExtractEnabled ?? true,
             aiReceiptScanEnabled: preferences.aiReceiptScanEnabled ?? true,
             aiVoiceExpenseEnabled: preferences.aiVoiceExpenseEnabled ?? true,
+            groupTabOrder: preferences.groupTabOrder ?? null,
+            hiddenGroupTabs: preferences.hiddenGroupTabs ?? null,
           })
         }
         const exported = accountBundle.manifest.account.notificationPreferences

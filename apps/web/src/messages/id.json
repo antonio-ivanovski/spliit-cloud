@@ -659,7 +659,9 @@
       "description": "Grup kini dapat menampilkan emoji di samping namanya. Kami melihat {emoji} dalam “{name}”.",
       "openSettings": "Buka pengaturan grup",
       "notNow": "Nanti saja"
-    }
+    },
+    "groupTabsHint": "Ingin menyusun ulang tab grup atau menyembunyikan tab yang tidak digunakan?",
+    "groupTabsHintLink": "Sesuaikan tab di pengaturan akun"
   },
   "GroupForm": {
     "title": "Informasi grup",
@@ -2420,7 +2422,17 @@
       "mascotOptions": {
         "off": "Nonaktif",
         "bill": "Bill si struk"
-      }
+      },
+      "groupTabs": "Tab grup",
+      "groupTabsHelp": "Pilih tab yang ditampilkan, dan urutannya, di setiap grup.",
+      "groupTabsCustomize": "Sesuaikan",
+      "groupTabsSave": "Simpan",
+      "groupTabsDiscard": "Buang",
+      "groupTabsReset": "Atur ulang ke default",
+      "groupTabsHide": "Sembunyikan {name}",
+      "groupTabsShow": "Tampilkan {name}",
+      "groupTabsMoveUp": "Pindahkan {name} ke atas",
+      "groupTabsMoveDown": "Pindahkan {name} ke bawah"
     },
     "aiPreferences": {
       "title": "Fitur AI",

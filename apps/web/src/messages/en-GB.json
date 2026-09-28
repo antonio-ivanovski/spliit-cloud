@@ -40,6 +40,9 @@
     },
     "passkey": {
       "addDescription": "Follow your browser's prompt to register this device. Give it a name so you recognise it later."
+    },
+    "preferences": {
+      "groupTabsCustomize": "Customise"
     }
   },
   "GroupForm": {

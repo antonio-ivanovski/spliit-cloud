@@ -659,7 +659,9 @@
       "description": "グループ名の横に絵文字を表示できるようになりました。「{name}」に {emoji} が含まれているのを見つけました。",
       "openSettings": "グループ設定を開く",
       "notNow": "今はしない"
-    }
+    },
+    "groupTabsHint": "グループタブを並び替えたり、使わないタブを非表示にしたいですか？",
+    "groupTabsHintLink": "アカウント設定でタブをカスタマイズ"
   },
   "GroupForm": {
     "title": "グループ情報",
@@ -2422,7 +2424,17 @@
       "mascotOptions": {
         "off": "オフ",
         "bill": "レシートのビル"
-      }
+      },
+      "groupTabs": "グループタブ",
+      "groupTabsHelp": "すべてのグループで表示するタブとその順序を選択します。",
+      "groupTabsCustomize": "カスタマイズ",
+      "groupTabsSave": "保存",
+      "groupTabsDiscard": "破棄",
+      "groupTabsReset": "デフォルトにリセット",
+      "groupTabsHide": "{name}を非表示",
+      "groupTabsShow": "{name}を表示",
+      "groupTabsMoveUp": "{name}を上へ移動",
+      "groupTabsMoveDown": "{name}を下へ移動"
     },
     "aiPreferences": {
       "title": "AI機能",

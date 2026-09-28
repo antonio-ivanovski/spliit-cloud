@@ -671,7 +671,9 @@
       "description": "Les groupes peuvent désormais afficher un emoji à côté de leur nom. Nous avons remarqué {emoji} dans « {name} ».",
       "openSettings": "Ouvrir les paramètres du groupe",
       "notNow": "Pas maintenant"
-    }
+    },
+    "groupTabsHint": "Vous souhaitez réorganiser les onglets du groupe ou masquer ceux que vous n'utilisez pas ?",
+    "groupTabsHintLink": "Personnaliser les onglets dans les paramètres de votre compte"
   },
   "GroupForm": {
     "title": "Informations sur le groupe",
@@ -2439,7 +2441,17 @@
       "mascotOptions": {
         "off": "Désactivée",
         "bill": "Bill, le reçu"
-      }
+      },
+      "groupTabs": "Onglets du groupe",
+      "groupTabsHelp": "Choisissez les onglets affichés et leur ordre dans chaque groupe.",
+      "groupTabsCustomize": "Personnaliser",
+      "groupTabsSave": "Enregistrer",
+      "groupTabsDiscard": "Abandonner",
+      "groupTabsReset": "Réinitialiser les valeurs par défaut",
+      "groupTabsHide": "Masquer {name}",
+      "groupTabsShow": "Afficher {name}",
+      "groupTabsMoveUp": "Déplacer {name} vers le haut",
+      "groupTabsMoveDown": "Déplacer {name} vers le bas"
     },
     "aiPreferences": {
       "title": "Fonctionnalités d'IA",

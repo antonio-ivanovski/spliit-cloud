@@ -171,7 +171,17 @@
       "mascotOptions": {
         "off": "بند",
         "bill": "رسید بل"
-      }
+      },
+      "groupTabs": "گروپ ٹیب",
+      "groupTabsHelp": "منتخب کریں کہ ہر گروپ میں کون سے ٹیب دکھائے جائیں اور کس ترتیب میں۔",
+      "groupTabsCustomize": "اپنی مرضی کے مطابق بنائیں",
+      "groupTabsSave": "محفوظ کریں",
+      "groupTabsDiscard": "منسوخ کریں",
+      "groupTabsReset": "ڈیفالٹ پر ری سیٹ کریں",
+      "groupTabsHide": "{name} چھپائیں",
+      "groupTabsShow": "{name} دکھائیں",
+      "groupTabsMoveUp": "{name} اوپر لے جائیں",
+      "groupTabsMoveDown": "{name} نیچے لے جائیں"
     },
     "aiPreferences": {
       "title": "AI فیچرز",
@@ -2492,7 +2502,9 @@
       "description": "گروپس اب اپنے نام کے ساتھ ایک ایموجی دکھا سکتے ہیں۔ ہم نے “{name}” میں {emoji} دیکھا۔",
       "openSettings": "گروپ کی ترتیبات کھولیں",
       "notNow": "ابھی نہیں"
-    }
+    },
+    "groupTabsHint": "گروپ ٹیب کو دوبارہ ترتیب دینا چاہتے ہیں یا جنہیں آپ استعمال نہیں کرتے انہیں چھپانا چاہتے ہیں؟",
+    "groupTabsHintLink": "اکاؤنٹ کی ترتیبات میں ٹیب اپنی مرضی کے مطابق بنائیں"
   },
   "Header": {
     "signIn": "سائن ان",

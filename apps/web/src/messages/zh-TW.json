@@ -659,7 +659,9 @@
       "description": "群組現在可以在名稱旁顯示表情符號。我們注意到「{name}」中有 {emoji}。",
       "openSettings": "開啟群組設定",
       "notNow": "暫不"
-    }
+    },
+    "groupTabsHint": "想要重新排列群組標籤頁，或隱藏不用的標籤頁嗎？",
+    "groupTabsHintLink": "在帳戶設定中自訂標籤頁"
   },
   "GroupForm": {
     "title": "群組資訊",
@@ -2422,7 +2424,17 @@
       "mascotOptions": {
         "off": "關閉",
         "bill": "收據角色 Bill"
-      }
+      },
+      "groupTabs": "群組標籤頁",
+      "groupTabsHelp": "選擇要在每個群組中顯示哪些標籤頁及其順序。",
+      "groupTabsCustomize": "自訂",
+      "groupTabsSave": "儲存",
+      "groupTabsDiscard": "放棄",
+      "groupTabsReset": "重設為預設值",
+      "groupTabsHide": "隱藏 {name}",
+      "groupTabsShow": "顯示 {name}",
+      "groupTabsMoveUp": "將 {name} 上移",
+      "groupTabsMoveDown": "將 {name} 下移"
     },
     "aiPreferences": {
       "title": "AI 功能",

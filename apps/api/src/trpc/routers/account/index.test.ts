@@ -118,6 +118,8 @@ describe('accountRouter account preferences', () => {
         aiCategoryExtractEnabled: true,
         aiReceiptScanEnabled: true,
         aiVoiceExpenseEnabled: true,
+        groupTabOrder: null,
+        hiddenGroupTabs: null,
       },
     })
   })
@@ -172,6 +174,8 @@ describe('accountRouter account preferences', () => {
       aiCategoryExtractEnabled: true,
       aiReceiptScanEnabled: true,
       aiVoiceExpenseEnabled: true,
+      groupTabOrder: null,
+      hiddenGroupTabs: null,
     })
   })
 
@@ -462,6 +466,96 @@ describe('accountRouter account preferences', () => {
     expect(result.preferences.mascot).toBe('bill')
   })
 
+  it('persists a custom group tab order independently', async () => {
+    prismaMock.accountPreference.upsert.mockResolvedValue({
+      defaultCurrencyCode: null,
+      timeZone: null,
+      locale: null,
+      theme: null,
+      groupTabOrder: ['members', 'expenses', 'balances'],
+    } as never)
+
+    const result = await makeCaller('acct-1').updatePreferences({
+      groupTabOrder: ['members', 'expenses', 'balances'],
+    })
+
+    expect(prismaMock.accountPreference.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { accountId: 'acct-1' },
+        update: { groupTabOrder: ['members', 'expenses', 'balances'] },
+      }),
+    )
+    expect(result.preferences.groupTabOrder).toEqual([
+      'members',
+      'expenses',
+      'balances',
+    ])
+  })
+
+  it('resets the group tab order to the default when null is written', async () => {
+    prismaMock.accountPreference.upsert.mockResolvedValue({
+      defaultCurrencyCode: null,
+      timeZone: null,
+      locale: null,
+      theme: null,
+      groupTabOrder: [],
+    } as never)
+
+    const result = await makeCaller('acct-1').updatePreferences({
+      groupTabOrder: null,
+    })
+
+    expect(prismaMock.accountPreference.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        update: { groupTabOrder: [] },
+      }),
+    )
+    // An empty stored order means "use the default tab order".
+    expect(result.preferences.groupTabOrder).toEqual([])
+  })
+
+  it('persists hidden group tabs independently', async () => {
+    prismaMock.accountPreference.upsert.mockResolvedValue({
+      defaultCurrencyCode: null,
+      timeZone: null,
+      locale: null,
+      theme: null,
+      hiddenGroupTabs: ['stats', 'budgets'],
+    } as never)
+
+    const result = await makeCaller('acct-1').updatePreferences({
+      hiddenGroupTabs: ['stats', 'budgets'],
+    })
+
+    expect(prismaMock.accountPreference.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        update: { hiddenGroupTabs: ['stats', 'budgets'] },
+      }),
+    )
+    expect(result.preferences.hiddenGroupTabs).toEqual(['stats', 'budgets'])
+  })
+
+  it('shows all tabs again when null hidden tabs are written', async () => {
+    prismaMock.accountPreference.upsert.mockResolvedValue({
+      defaultCurrencyCode: null,
+      timeZone: null,
+      locale: null,
+      theme: null,
+      hiddenGroupTabs: [],
+    } as never)
+
+    const result = await makeCaller('acct-1').updatePreferences({
+      hiddenGroupTabs: null,
+    })
+
+    expect(prismaMock.accountPreference.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        update: { hiddenGroupTabs: [] },
+      }),
+    )
+    expect(result.preferences.hiddenGroupTabs).toEqual([])
+  })
+
   it('patches the master AI preference without changing child preferences', async () => {
     prismaMock.accountPreference.upsert.mockResolvedValue({
       defaultCurrencyCode: 'EUR',
@@ -500,6 +594,8 @@ describe('accountRouter account preferences', () => {
     [{ locale: 'xx-XX' }, 'unsupported locale'],
     [{ theme: 'sepia' }, 'unsupported theme'],
     [{ mascot: 'ghost' }, 'unsupported mascot'],
+    [{ groupTabOrder: ['overview'] }, 'unknown group tab id'],
+    [{ hiddenGroupTabs: ['expenses'] }, 'non-hideable group tab id'],
   ])('rejects %s (%s)', async (input) => {
     await expect(
       makeCaller('acct-1').updatePreferences(input as never),

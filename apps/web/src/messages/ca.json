@@ -671,7 +671,9 @@
       "description": "Els grups ara poden mostrar un emoji al costat del nom. Hem vist {emoji} a «{name}».",
       "openSettings": "Obre la configuració del grup",
       "notNow": "Ara no"
-    }
+    },
+    "groupTabsHint": "Vols reordenar les pestanyes del grup o amagar les que no fas servir?",
+    "groupTabsHintLink": "Personalitza les pestanyes a la configuració del compte"
   },
   "GroupForm": {
     "title": "Informació del grup",
@@ -2439,7 +2441,17 @@
       "mascotOptions": {
         "off": "Desactivada",
         "bill": "Bill, el rebut"
-      }
+      },
+      "groupTabs": "Pestanyes del grup",
+      "groupTabsHelp": "Tria quines pestanyes es mostren i en quin ordre a cada grup.",
+      "groupTabsCustomize": "Personalitza",
+      "groupTabsSave": "Desa",
+      "groupTabsDiscard": "Descarta",
+      "groupTabsReset": "Restableix els valors per defecte",
+      "groupTabsHide": "Amaga {name}",
+      "groupTabsShow": "Mostra {name}",
+      "groupTabsMoveUp": "Mou {name} amunt",
+      "groupTabsMoveDown": "Mou {name} avall"
     },
     "aiPreferences": {
       "title": "Funcions d'IA",

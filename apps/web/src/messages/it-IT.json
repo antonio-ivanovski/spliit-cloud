@@ -671,7 +671,9 @@
       "description": "I gruppi ora possono mostrare un emoji accanto al nome. Abbiamo notato {emoji} in “{name}”.",
       "openSettings": "Apri le impostazioni del gruppo",
       "notNow": "Non ora"
-    }
+    },
+    "groupTabsHint": "Vuoi riordinare le schede del gruppo o nascondere quelle che non usi?",
+    "groupTabsHintLink": "Personalizza le schede nelle impostazioni dell'account"
   },
   "GroupForm": {
     "title": "Informazioni del gruppo",
@@ -2439,7 +2441,17 @@
       "mascotOptions": {
         "off": "Disattivata",
         "bill": "Bill, lo scontrino"
-      }
+      },
+      "groupTabs": "Schede del gruppo",
+      "groupTabsHelp": "Scegli quali schede mostrare e in che ordine in ogni gruppo.",
+      "groupTabsCustomize": "Personalizza",
+      "groupTabsSave": "Salva",
+      "groupTabsDiscard": "Abbandona",
+      "groupTabsReset": "Reimposta i valori predefiniti",
+      "groupTabsHide": "Nascondi {name}",
+      "groupTabsShow": "Mostra {name}",
+      "groupTabsMoveUp": "Sposta {name} su",
+      "groupTabsMoveDown": "Sposta {name} giù"
     },
     "aiPreferences": {
       "title": "Funzioni IA",

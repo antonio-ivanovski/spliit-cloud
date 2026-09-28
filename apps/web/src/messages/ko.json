@@ -569,7 +569,9 @@
       "description": "이제 그룹 이름 옆에 이모지를 표시할 수 있습니다. “{name}”에서 {emoji}를 찾았습니다.",
       "openSettings": "그룹 설정 열기",
       "notNow": "나중에"
-    }
+    },
+    "groupTabsHint": "그룹 탭을 다시 정렬하거나 사용하지 않는 탭을 숨기고 싶으신가요?",
+    "groupTabsHintLink": "계정 설정에서 탭 맞춤 설정"
   },
   "GroupForm": {
     "title": "그룹 정보",
@@ -2460,7 +2462,17 @@
       "mascotOptions": {
         "off": "사용 안 함",
         "bill": "영수증 빌"
-      }
+      },
+      "groupTabs": "그룹 탭",
+      "groupTabsHelp": "모든 그룹에 표시할 탭과 순서를 선택하세요.",
+      "groupTabsCustomize": "맞춤 설정",
+      "groupTabsSave": "저장",
+      "groupTabsDiscard": "버리기",
+      "groupTabsReset": "기본값으로 초기화",
+      "groupTabsHide": "{name} 숨기기",
+      "groupTabsShow": "{name} 표시",
+      "groupTabsMoveUp": "{name} 위로 이동",
+      "groupTabsMoveDown": "{name} 아래로 이동"
     },
     "aiPreferences": {
       "title": "AI 기능",

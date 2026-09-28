@@ -11,6 +11,7 @@ import {
   Users,
   WalletCards,
   Wrench,
+  type LucideIcon,
 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -20,6 +21,7 @@ import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
 import { useGroupAccessSearch } from '@/app/groups/[groupId]/use-group-access-search'
 import { ViewOnlyBadge } from '@/app/groups/view-only-badge'
 import { AccountMenu } from '@/components/account-menu'
+import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { CurrencyConverterButton } from '@/components/currency-converter/currency-converter'
 import { GroupEmojiBadge } from '@/components/group-emoji-badge'
 import { LocaleSwitcher } from '@/components/locale-switcher'
@@ -32,6 +34,7 @@ import {
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
+import { getVisibleGroupTabs, type GroupTabId } from '@/lib/group-tabs'
 import { getFocusedRouteMeta, isMobileGroupTabPath } from '@/lib/mobile-nav'
 
 /**
@@ -166,62 +169,31 @@ export function MobileGroupNav({ groupId }: GroupNavProps) {
   const pathname = useLocation({ select: (location) => location.pathname })
   const { t } = useTranslation()
   const { group, viewer } = useCurrentGroup()
+  const syncedPreferences = useSyncedAccountPreferences()
   const { linkInviteToken, viewKey } = useGroupAccessSearch()
   const [moreOpen, setMoreOpen] = useState(false)
-  const tabs = [
+  const tabMeta: Record<GroupTabId, { label: string; icon: LucideIcon }> = {
+    expenses: { label: t('Expenses.title'), icon: ReceiptText },
+    balances: { label: t('Balances.title'), icon: Scale },
+    activity: { label: t('Activity.title'), icon: Activity },
+    members: { label: t('Members.title'), icon: Users },
+    stats: { label: t('Stats.title'), icon: BarChart3 },
+    budgets: { label: t('Budgets.title'), icon: WalletCards },
+    tools: { label: t('Tools.title'), icon: Wrench },
+    edit: { label: t('Settings.title'), icon: Settings2 },
+  }
+  const orderedTabs = getVisibleGroupTabs(
+    syncedPreferences?.groupTabOrder,
     {
-      to: GROUP_NAV_TO.expenses,
-      label: t('Expenses.title'),
-      icon: ReceiptText,
+      isFriendLedger: group?.groupType === 'FRIEND',
+      canViewSettings: !!viewer,
     },
-    {
-      to: GROUP_NAV_TO.balances,
-      label: t('Balances.title'),
-      icon: Scale,
-    },
-    {
-      to: GROUP_NAV_TO.stats,
-      label: t('Stats.title'),
-      icon: BarChart3,
-    },
-    {
-      to: GROUP_NAV_TO.budgets,
-      label: t('Budgets.title'),
-      icon: WalletCards,
-    },
-  ] as const
-  const moreTabs = [
-    {
-      to: GROUP_NAV_TO.activity,
-      label: t('Activity.title'),
-      icon: Activity,
-    },
-    ...(group?.groupType === 'FRIEND'
-      ? []
-      : [
-          {
-            to: GROUP_NAV_TO.members,
-            label: t('Members.title'),
-            icon: Users,
-          },
-        ]),
-    // Tools stays visible to everyone so group utilities remain
-    // discoverable; each tool gates its own action.
-    {
-      to: GROUP_NAV_TO.tools,
-      label: t('Tools.title'),
-      icon: Wrench,
-    },
-    ...(viewer
-      ? [
-          {
-            to: GROUP_NAV_TO.edit,
-            label: t('Settings.title'),
-            icon: Settings2,
-          },
-        ]
-      : []),
-  ] as const
+    syncedPreferences?.hiddenGroupTabs,
+  ).map((id) => ({ id, to: GROUP_NAV_TO[id], ...tabMeta[id] }))
+  // The bottom bar fits four tabs plus the overflow sheet trigger; the first
+  // four visible tabs in the account's order take those slots.
+  const tabs = orderedTabs.slice(0, 4)
+  const moreTabs = orderedTabs.slice(4)
   const activeMore =
     moreTabs.some((tab) => pathname === tab.to.replace('$groupId', groupId)) ||
     pathname === '/feedback'

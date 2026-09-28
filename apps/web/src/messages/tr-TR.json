@@ -665,7 +665,9 @@
       "description": "Gruplar artık adlarının yanında bir emoji gösterebiliyor. “{name}” içinde {emoji} fark edildi.",
       "openSettings": "Grup ayarlarını aç",
       "notNow": "Şimdi değil"
-    }
+    },
+    "groupTabsHint": "Grup sekmelerini yeniden sıralamak veya kullanmadıklarınızı gizlemek ister misiniz?",
+    "groupTabsHintLink": "Hesap ayarlarınızda sekmeleri özelleştirin"
   },
   "GroupForm": {
     "title": "Grup bilgileri",
@@ -2429,7 +2431,17 @@
       "mascotOptions": {
         "off": "Kapalı",
         "bill": "Fiş Bill"
-      }
+      },
+      "groupTabs": "Grup sekmeleri",
+      "groupTabsHelp": "Her grupta hangi sekmelerin gösterileceğini ve hangi sırada olacaklarını seçin.",
+      "groupTabsCustomize": "Özelleştir",
+      "groupTabsSave": "Kaydet",
+      "groupTabsDiscard": "At",
+      "groupTabsReset": "Varsayılanlara sıfırla",
+      "groupTabsHide": "{name} sekmesini gizle",
+      "groupTabsShow": "{name} sekmesini göster",
+      "groupTabsMoveUp": "{name} sekmesini yukarı taşı",
+      "groupTabsMoveDown": "{name} sekmesini aşağı taşı"
     },
     "aiPreferences": {
       "title": "Yapay zeka özellikleri",
