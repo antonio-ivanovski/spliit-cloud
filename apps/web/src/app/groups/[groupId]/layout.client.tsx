@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next'
 
 import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { CopyButton } from '@/components/copy-button'
+import { useDocumentTitle } from '@/components/document-title'
 import { PageInset } from '@/components/layout/page-shell'
 import { GroupMobileAppBar, MobileGroupNav } from '@/components/mobile-shell'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
@@ -113,23 +114,25 @@ export function GroupLayoutClient({
   const { isPending: accountPending } = useCurrentAccount()
   const { flags: effectiveRuntimeFlags } = useEffectiveRuntimeFeatureFlags()
 
-  useEffect(() => {
-    if (!data?.group || focusedMobileRoute) return
-    const titleKey = pathname.endsWith('/balances')
-      ? 'Balances.title'
-      : pathname.endsWith('/stats')
-        ? 'Stats.title'
-        : pathname.endsWith('/activity')
-          ? 'Activity.title'
-          : pathname.includes('/budgets')
-            ? 'Budgets.title'
-            : pathname.endsWith('/members')
-              ? 'Members.title'
-              : 'Expenses.title'
-    const groupName = data.displayName ?? data.group.name
-    const emoji = displayEmoji(data.group.emoji)
-    document.title = `${emoji ? `${emoji} ` : ''}${groupName} · ${tTitles(titleKey)}`
-  }, [data, focusedMobileRoute, pathname, tTitles])
+  const titleKey = pathname.endsWith('/balances')
+    ? 'Balances.title'
+    : pathname.endsWith('/stats')
+      ? 'Stats.title'
+      : pathname.endsWith('/activity')
+        ? 'Activity.title'
+        : pathname.includes('/budgets')
+          ? 'Budgets.title'
+          : pathname.endsWith('/members')
+            ? 'Members.title'
+            : 'Expenses.title'
+  const group = data?.group
+  const groupName = data?.displayName ?? group?.name
+  const emoji = group ? displayEmoji(group.emoji) : undefined
+  useDocumentTitle(
+    group && groupName && !focusedMobileRoute
+      ? `${emoji ? `${emoji} ` : ''}${groupName} · ${tTitles(titleKey)}`
+      : null,
+  )
 
   useEffect(() => {
     if (data && !data.group) {

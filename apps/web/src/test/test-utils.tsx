@@ -8,6 +8,7 @@ import userEvent from '@testing-library/user-event'
 import { type ReactElement } from 'react'
 import { afterEach } from 'vitest'
 
+import { DocumentTitleProvider } from '@/components/document-title'
 import { ThemeProvider } from '@/components/theme-provider'
 import { I18nProvider } from '@/i18n/react'
 
@@ -40,7 +41,7 @@ function TestProviders({ children }: { children: React.ReactNode }) {
     <I18nProvider>
       <ThemeProvider>
         <QueryClientProvider client={queryClient}>
-          {children}
+          <DocumentTitleProvider>{children}</DocumentTitleProvider>
         </QueryClientProvider>
       </ThemeProvider>
     </I18nProvider>

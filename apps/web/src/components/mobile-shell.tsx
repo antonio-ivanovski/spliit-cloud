@@ -13,7 +13,7 @@ import {
   Wrench,
   type LucideIcon,
 } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 
@@ -23,6 +23,7 @@ import { ViewOnlyBadge } from '@/app/groups/view-only-badge'
 import { AccountMenu } from '@/components/account-menu'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { CurrencyConverterButton } from '@/components/currency-converter/currency-converter'
+import { useDocumentTitle } from '@/components/document-title'
 import { GroupEmojiBadge } from '@/components/group-emoji-badge'
 import { LocaleSwitcher } from '@/components/locale-switcher'
 import { ThemeToggle } from '@/components/theme-toggle'
@@ -71,13 +72,7 @@ export function MobileAppBar() {
       ),
     [pathname, returnTo, t],
   )
-  useEffect(() => {
-    if (meta) {
-      document.title = `Spliit · ${meta.title}`
-    } else if (!pathname.startsWith('/groups/')) {
-      document.title = 'Spliit Cloud'
-    }
-  }, [meta, pathname])
+  useDocumentTitle(meta ? `Spliit · ${meta.title}` : null)
 
   if (!meta) return null
 

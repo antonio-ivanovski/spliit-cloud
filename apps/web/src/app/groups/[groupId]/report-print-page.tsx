@@ -3,6 +3,7 @@ import { Loader2, Printer } from 'lucide-react'
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useDocumentTitle } from '@/components/document-title'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/i18n/react'
 import { getApiBaseUrl } from '@/lib/api-url'
@@ -299,15 +300,11 @@ export function ReportPrintPage({ groupId, from, to }: ReportPrintPageProps) {
     }
   }, [])
 
-  useEffect(() => {
-    if (!report) return
-    document.title = buildPrintDocumentTitle(
-      report.groupName,
-      report.title,
-      from,
-      to,
-    )
-  }, [from, report, to])
+  useDocumentTitle(
+    report
+      ? buildPrintDocumentTitle(report.groupName, report.title, from, to)
+      : null,
+  )
 
   useEffect(() => {
     if (!report || typeof window.print !== 'function') return

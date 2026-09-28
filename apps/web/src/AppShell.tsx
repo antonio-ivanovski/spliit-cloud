@@ -11,6 +11,7 @@ import {
 import { ApiStatusBanner } from '@/components/api-status-banner'
 import Image from '@/components/app-image'
 import { CurrencyConverterButton } from '@/components/currency-converter/currency-converter'
+import { DocumentTitleProvider } from '@/components/document-title'
 import { InstallPromotionDialog } from '@/components/install-promotion-dialog'
 import { LocaleSwitcher } from '@/components/locale-switcher'
 import { MascotProvider } from '@/components/mascot/mascot-context'
@@ -177,7 +178,9 @@ export function AppShell() {
           <ProgressBar />
         </Suspense>
         <AmbientAccentProvider>
-          <Content />
+          <DocumentTitleProvider>
+            <Content />
+          </DocumentTitleProvider>
         </AmbientAccentProvider>
       </ThemeProvider>
     </I18nProvider>
