@@ -1118,7 +1118,15 @@
       "done": "Fertig",
       "yourTime": "deine Zeit",
       "invalidDate": "Gib ein gültiges Datum ein.",
-      "invalidTime": "Gib eine gültige Uhrzeit ein (HH:mm)."
+      "invalidTime": "Gib eine gültige Uhrzeit ein (HH:mm).",
+      "hourLabel": "Stunden",
+      "minuteLabel": "Minuten",
+      "periodLabel": "vorm./nachm.",
+      "timeWheelHint": "Scrolle oder tippe, um die Uhrzeit einzustellen. Das Datum bleibt gleich.",
+      "now": "Jetzt",
+      "morning": "Morgen",
+      "midday": "Mittag",
+      "evening": "Abend"
     },
     "settlementTitle": "Ausgleichszahlung",
     "settlementHint": "{category}: Zählt in Totals, Statistiken und Budgets nicht als Ausgabe. Aktualisiert trotzdem, wer wem etwas schuldet.",

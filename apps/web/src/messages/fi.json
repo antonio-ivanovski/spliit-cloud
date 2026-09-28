@@ -1094,7 +1094,15 @@
       "done": "Valmis",
       "yourTime": "paikallinen aikasi",
       "invalidDate": "Anna kelvollinen päivämäärä.",
-      "invalidTime": "Anna kelvollinen kellonaika (HH:mm)."
+      "invalidTime": "Anna kelvollinen kellonaika (HH:mm).",
+      "hourLabel": "Tunti",
+      "minuteLabel": "Minuutti",
+      "periodLabel": "ap./ip.",
+      "timeWheelHint": "Aseta aika vierittämällä tai napauttamalla. Päivämäärä pysyy samana.",
+      "now": "Nyt",
+      "morning": "Aamu",
+      "midday": "Keskipäivä",
+      "evening": "Ilta"
     },
     "settlementTitle": "Tasausmaksu",
     "settlementHint": "{category}: Ei lasketa kuluksi kokonaissummiin, tilastoihin tai budjetteihin. Päivittää silti, kuka on velkaa kenelle.",

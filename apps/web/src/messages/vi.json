@@ -1690,7 +1690,15 @@
       "done": "Xong",
       "yourTime": "giờ của bạn",
       "invalidDate": "Nhập ngày hợp lệ.",
-      "invalidTime": "Nhập giờ hợp lệ (HH:mm)."
+      "invalidTime": "Nhập giờ hợp lệ (HH:mm).",
+      "hourLabel": "Giờ",
+      "minuteLabel": "Phút",
+      "periodLabel": "SA/CH",
+      "timeWheelHint": "Cuộn hoặc chạm để đặt giờ. Ngày vẫn giữ nguyên.",
+      "now": "Bây giờ",
+      "morning": "Sáng",
+      "midday": "Trưa",
+      "evening": "Tối"
     },
     "settlementTitle": "Thanh toán tất toán",
     "settlementHint": "{category}: Không tính là chi tiêu trong tổng, thống kê hoặc ngân sách. Vẫn cập nhật ai nợ ai.",

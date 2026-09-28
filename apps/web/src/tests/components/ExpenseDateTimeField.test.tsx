@@ -329,7 +329,7 @@ describe('ExpenseDateTimeField', () => {
     )
   })
 
-  it('updates both date and time when a mobile selection crosses midnight', async () => {
+  it('picks a mobile wheel time without changing the date', async () => {
     isDesktop = false
     const { user } = render(<Harness />)
 
@@ -337,21 +337,72 @@ describe('ExpenseDateTimeField', () => {
     await user.click(screen.getByRole('button', { name: /expense date/i }))
     await user.click(screen.getByRole('button', { name: 'Time' }))
 
-    expect(screen.getAllByText('Changes date').length).toBeGreaterThan(0)
-    const nextMidnight = document.querySelector<HTMLButtonElement>(
-      '[data-date="2026-08-13"][data-time-option="00:00"]',
+    // Wheels replace the grid on mobile: no date-coupled options.
+    expect(screen.getByRole('listbox', { name: 'Hour' })).toBeInTheDocument()
+    expect(screen.getByRole('listbox', { name: 'Minute' })).toBeInTheDocument()
+    expect(screen.queryByText('Changes date')).not.toBeInTheDocument()
+
+    const minuteMidnight = document.querySelector<HTMLButtonElement>(
+      '[data-wheel="minute"] [data-wheel-value="0"]',
     )
-    expect(nextMidnight).not.toBeNull()
-    expect(nextMidnight?.parentElement).toHaveClass('grid-cols-4')
-    await user.click(nextMidnight!)
+    expect(minuteMidnight).not.toBeNull()
+    await user.click(minuteMidnight!)
+
+    // 23:45 -> 23:00 on the same day (no midnight crossing).
+    expect(screen.getByTestId('selection')).toHaveTextContent(
+      '2026-08-12|23:00|UTC',
+    )
+  })
+
+  it('applies a mobile quick chip without changing the date', async () => {
+    isDesktop = false
+    const { user } = render(<Harness />)
+
+    await user.click(screen.getByRole('button', { name: /expense date/i }))
+    await user.click(screen.getByRole('button', { name: 'Time' }))
+
+    await user.click(screen.getByRole('button', { name: /Morning/ }))
 
     expect(screen.getByTestId('selection')).toHaveTextContent(
-      '2026-08-13|00:00|UTC',
+      '2026-08-12|09:00|UTC',
     )
-    const selectedDayHeader = screen.getByText(/Thu, Aug 13/).closest('.sticky')
-    expect(selectedDayHeader).not.toHaveTextContent('Changes date')
-    const previousDayHeader = screen.getByText(/Wed, Aug 12/).closest('.sticky')
-    expect(previousDayHeader).toHaveTextContent('Changes date')
+  })
+
+  it('toggles AM/PM on the mobile wheels', async () => {
+    isDesktop = false
+    const { user } = render(<Harness />)
+
+    await user.click(screen.getByRole('button', { name: /expense date/i }))
+    await user.click(screen.getByRole('button', { name: 'Time' }))
+
+    // en-US renders 12-hour drums: 23:45 shows as 11:45 PM.
+    expect(screen.getByRole('listbox', { name: 'AM/PM' })).toBeInTheDocument()
+
+    const am = document.querySelector<HTMLButtonElement>(
+      '[data-wheel="period"] [data-wheel-value="am"]',
+    )
+    expect(am).not.toBeNull()
+    await user.click(am!)
+
+    expect(screen.getByTestId('selection')).toHaveTextContent(
+      '2026-08-12|11:45|UTC',
+    )
+  })
+
+  it('moves mobile wheel focus with arrow keys', async () => {
+    isDesktop = false
+    const { user } = render(<Harness time="12:00" />)
+
+    await user.click(screen.getByRole('button', { name: /expense date/i }))
+    await user.click(screen.getByRole('button', { name: 'Time' }))
+
+    // 12:00 PM: ArrowDown on the minute drum picks minute 01.
+    const minuteList = screen.getByRole('listbox', { name: 'Minute' })
+    minuteList.focus()
+    await user.keyboard('{ArrowDown}')
+    expect(screen.getByTestId('selection')).toHaveTextContent(
+      '2026-08-12|12:01|UTC',
+    )
   })
 
   it('selects an embedded timezone without changing wall date or time', async () => {

@@ -1100,7 +1100,15 @@
       "done": "Eginda",
       "yourTime": "zure ordua",
       "invalidDate": "Sartu data baliozko bat.",
-      "invalidTime": "Sartu ordu baliozko bat (HH:mm)."
+      "invalidTime": "Sartu ordu baliozko bat (HH:mm).",
+      "hourLabel": "Ordua",
+      "minuteLabel": "Minutua",
+      "periodLabel": "Aldi",
+      "timeWheelHint": "Irristatu edo ukitu ordua ezartzeko. Data ez da aldatzen.",
+      "now": "Orain",
+      "morning": "Goiza",
+      "midday": "Eguerdia",
+      "evening": "Arratsaldea"
     },
     "settlementTitle": "Zor-kitapenaren ordainketa",
     "settlementHint": "{category}: Ez da gastutzat hartzen guztizkoetan, estatistiketan edo aurrekontuetan. Hala ere, nork nori zor dion eguneratzen du.",

@@ -1087,7 +1087,15 @@
       "done": "完成",
       "yourTime": "您的當地時間",
       "invalidDate": "請輸入有效日期。",
-      "invalidTime": "請輸入有效時間（HH:mm）。"
+      "invalidTime": "請輸入有效時間（HH:mm）。",
+      "hourLabel": "小時",
+      "minuteLabel": "分鐘",
+      "periodLabel": "上午/下午",
+      "timeWheelHint": "滑動或點按以設定時間，日期保持不變。",
+      "now": "現在",
+      "morning": "早上",
+      "midday": "中午",
+      "evening": "晚上"
     },
     "settlementTitle": "結算付款",
     "settlementHint": "{category}：不計入總額、統計與預算中的支出。仍會更新誰欠誰。",

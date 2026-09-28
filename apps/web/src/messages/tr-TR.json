@@ -1094,7 +1094,15 @@
       "done": "Bitti",
       "yourTime": "yerel saatiniz",
       "invalidDate": "Geçerli bir tarih girin.",
-      "invalidTime": "Geçerli bir saat girin (HH:mm)."
+      "invalidTime": "Geçerli bir saat girin (HH:mm).",
+      "hourLabel": "Saat",
+      "minuteLabel": "Dakika",
+      "periodLabel": "ÖÖ/ÖS",
+      "timeWheelHint": "Saati ayarlamak için kaydırın veya dokunun. Tarih aynı kalır.",
+      "now": "Şimdi",
+      "morning": "Sabah",
+      "midday": "Öğle",
+      "evening": "Akşam"
     },
     "settlementTitle": "Borç kapatma ödemesi",
     "settlementHint": "{category}: Toplamlarda, istatistiklerde veya bütçelerde harcama sayılmaz. Yine de kimin kime borcu olduğunu günceller.",

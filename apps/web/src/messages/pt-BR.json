@@ -551,7 +551,8 @@
     "dateTimePicker": {
       "yourTime": "seu horário",
       "invalidDate": "Insira uma data válida.",
-      "invalidTime": "Insira um horário válido (HH:mm)."
+      "invalidTime": "Insira um horário válido (HH:mm).",
+      "timeWheelHint": "Role ou toque para definir a hora. A data permanece a mesma."
     },
     "settlementTitle": "Pagamento de acerto",
     "settlementHint": "{category}: Não conta como gasto em totais, estatísticas ou orçamentos. Ainda atualiza quem deve a quem.",

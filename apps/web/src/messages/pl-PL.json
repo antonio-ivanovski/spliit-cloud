@@ -1108,7 +1108,15 @@
       "done": "Gotowe",
       "yourTime": "Twój czas",
       "invalidDate": "Wprowadź prawidłową datę.",
-      "invalidTime": "Wprowadź prawidłowy czas (HH:mm)."
+      "invalidTime": "Wprowadź prawidłowy czas (HH:mm).",
+      "hourLabel": "Godzina",
+      "minuteLabel": "Minuta",
+      "periodLabel": "Pora dnia",
+      "timeWheelHint": "Przewiń lub stuknij, aby ustawić godzinę. Data pozostanie bez zmian.",
+      "now": "Teraz",
+      "morning": "Rano",
+      "midday": "Południe",
+      "evening": "Wieczór"
     },
     "settlementTitle": "Płatność rozliczeniowa",
     "settlementHint": "{category}: Nie wlicza się do wydatków w sumach, statystykach ani budżetach. Nadal aktualizuje, kto komu jest winien.",

@@ -1101,7 +1101,15 @@
       "done": "סיום",
       "yourTime": "השעה שלך",
       "invalidDate": "הזן תאריך תקף.",
-      "invalidTime": "הזן שעה תקפה (HH:mm)."
+      "invalidTime": "הזן שעה תקפה (HH:mm).",
+      "hourLabel": "שעה",
+      "minuteLabel": "דקה",
+      "periodLabel": "לפנה״צ/אחה״צ",
+      "timeWheelHint": "גללו או הקישו כדי להגדיר את השעה. התאריך נשאר ללא שינוי.",
+      "now": "עכשיו",
+      "morning": "בוקר",
+      "midday": "צהריים",
+      "evening": "ערב"
     },
     "settlementTitle": "תשלום להסדרת היתרה",
     "settlementHint": "{category}: לא נספר כהוצאה בסיכומים, בסטטיסטיקה או בתקציבים. עדיין מעדכן מי חייב למי.",

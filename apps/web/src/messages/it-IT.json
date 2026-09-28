@@ -1101,7 +1101,15 @@
       "done": "Fatto",
       "yourTime": "la tua ora",
       "invalidDate": "Inserisci una data valida.",
-      "invalidTime": "Inserisci un orario valido (HH:mm)."
+      "invalidTime": "Inserisci un orario valido (HH:mm).",
+      "hourLabel": "Ora",
+      "minuteLabel": "Minuto",
+      "periodLabel": "a.m./p.m.",
+      "timeWheelHint": "Scorri o tocca per impostare l'ora. La data resta invariata.",
+      "now": "Adesso",
+      "morning": "Mattina",
+      "midday": "Mezzogiorno",
+      "evening": "Sera"
     },
     "settlementTitle": "Pagamento di liquidazione",
     "settlementHint": "{category}: Non conteggiato come spesa in totali, statistiche o budget. Aggiorna comunque chi deve cosa a chi.",

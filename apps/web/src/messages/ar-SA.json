@@ -1700,7 +1700,15 @@
       "done": "تم",
       "yourTime": "وقتك",
       "invalidDate": "أدخل تاريخًا صالحًا.",
-      "invalidTime": "أدخل وقتًا صالحًا (HH:mm)."
+      "invalidTime": "أدخل وقتًا صالحًا (HH:mm).",
+      "hourLabel": "الساعة",
+      "minuteLabel": "الدقيقة",
+      "periodLabel": "ص/م",
+      "timeWheelHint": "مرّر أو انقر لضبط الوقت. سيبقى التاريخ كما هو.",
+      "now": "الآن",
+      "morning": "الصباح",
+      "midday": "الظهر",
+      "evening": "المساء"
     },
     "settlementTitle": "دفعة التسوية",
     "settlementHint": "{category}: لا يُحتسب إنفاقًا في الإجماليات أو الإحصاءات أو الميزانيات. ما زال يحدّث من يدين لمن.",

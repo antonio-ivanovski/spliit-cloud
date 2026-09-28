@@ -1101,7 +1101,15 @@
       "done": "Terminé",
       "yourTime": "votre heure",
       "invalidDate": "Saisissez une date valide.",
-      "invalidTime": "Saisissez une heure valide (HH:mm)."
+      "invalidTime": "Saisissez une heure valide (HH:mm).",
+      "hourLabel": "Heures",
+      "minuteLabel": "Minutes",
+      "periodLabel": "a.m./p.m.",
+      "timeWheelHint": "Faites défiler ou touchez pour régler l'heure. La date reste inchangée.",
+      "now": "Maintenant",
+      "morning": "Matin",
+      "midday": "Midi",
+      "evening": "Soir"
     },
     "settlementTitle": "Paiement de règlement",
     "settlementHint": "{category} : Non compté comme une dépense dans les totaux, statistiques et budgets. Met tout de même à jour qui doit quoi à qui.",

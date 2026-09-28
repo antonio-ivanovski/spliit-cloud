@@ -1118,7 +1118,15 @@
       "done": "Klaar",
       "yourTime": "jouw tijd",
       "invalidDate": "Voer een geldige datum in.",
-      "invalidTime": "Voer een geldige tijd in (HH:mm)."
+      "invalidTime": "Voer een geldige tijd in (HH:mm).",
+      "hourLabel": "Uur",
+      "minuteLabel": "Minuut",
+      "periodLabel": "a.m./p.m.",
+      "timeWheelHint": "Scroll of tik om de tijd in te stellen. De datum blijft hetzelfde.",
+      "now": "Nu",
+      "morning": "Ochtend",
+      "midday": "Middag",
+      "evening": "Avond"
     },
     "settlementTitle": "Verrekeningsbetaling",
     "settlementHint": "{category}: Telt niet mee als uitgave in totalen, statistieken of budgetten. Werkt nog steeds bij wie wie iets verschuldigd is.",

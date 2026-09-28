@@ -66,6 +66,7 @@ import {
   resolveFormattingLocale,
 } from '@spliit/domain/i18n'
 
+import { ExpenseTimeQuickChips, ExpenseTimeWheel } from './expense-time-wheel'
 import { expenseTabPriority } from './focus-navigation'
 
 type Props = {
@@ -363,7 +364,7 @@ export function ExpenseDateTimeField({ form, readOnly, sExpense }: Props) {
   }
 
   useEffect(() => {
-    if (!open || activeView !== 'time') return
+    if (!open || activeView !== 'time' || !isDesktop) return
     let cancelled = false
     const scrollSelected = () => {
       if (cancelled) return
@@ -390,7 +391,7 @@ export function ExpenseDateTimeField({ form, readOnly, sExpense }: Props) {
       cancelAnimationFrame(raf)
       window.clearTimeout(timeout)
     }
-  }, [activeView, open, timelineAnchor])
+  }, [activeView, isDesktop, open, timelineAnchor])
 
   const anchorTimeline = (dateIso = validIso, time = validTime) => {
     setTimelineAnchor({ dateIso, time })
@@ -431,6 +432,15 @@ export function ExpenseDateTimeField({ form, readOnly, sExpense }: Props) {
     setTimeDraft(null)
     setTimeError(false)
     form.clearErrors('expenseTime' as never)
+  }
+  // Mobile wheels pick a pure time of day: the date never changes.
+  const selectWheelTime = (next: string) => {
+    if (tryParseTimeMinutes(next) == null) return
+    setTime(next)
+    setTimeDraft(null)
+    setTimeError(false)
+    form.clearErrors('expenseTime' as never)
+    setTimelineAnchor({ dateIso: validIso, time: next })
   }
   const moveTimeFocus = (
     event: KeyboardEvent<HTMLButtonElement>,
@@ -640,6 +650,22 @@ export function ExpenseDateTimeField({ form, readOnly, sExpense }: Props) {
           )
         })}
       </div>
+    </div>
+  )
+
+  const mobileTimePicker = (
+    <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-hidden">
+      <ExpenseTimeQuickChips
+        selectedTz={selectedTz}
+        value={validTime}
+        disabled={readOnly}
+        onChange={selectWheelTime}
+      />
+      <ExpenseTimeWheel
+        value={validTime}
+        disabled={readOnly}
+        onChange={selectWheelTime}
+      />
     </div>
   )
 
@@ -968,7 +994,7 @@ export function ExpenseDateTimeField({ form, readOnly, sExpense }: Props) {
                         ? timezonePicker
                         : activeView === 'date'
                           ? calendarChrome
-                          : timeTimeline}
+                          : mobileTimePicker}
                     </div>
                     <DrawerFooter className="shrink-0 gap-2 bg-background pt-2">
                       {activeView !== 'timezone' && timezoneFooter}

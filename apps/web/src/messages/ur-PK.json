@@ -1678,7 +1678,15 @@
       "done": "مکمل",
       "yourTime": "آپ کا وقت",
       "invalidDate": "درست تاریخ درج کریں۔",
-      "invalidTime": "درست وقت درج کریں (HH:mm)۔"
+      "invalidTime": "درست وقت درج کریں (HH:mm)۔",
+      "hourLabel": "گھنٹہ",
+      "minuteLabel": "منٹ",
+      "periodLabel": "قبل دوپہر/بعد دوپہر",
+      "timeWheelHint": "وقت مقرر کرنے کے لیے اسکرول کریں یا تھپتھپائیں۔ تاریخ وہی رہے گی۔",
+      "now": "ابھی",
+      "morning": "صبح",
+      "midday": "دوپہر",
+      "evening": "شام"
     },
     "settlementTitle": "تصفیہ کی ادائیگی",
     "settlementHint": "{category}: کل، اعداد و شمار یا بجٹ میں خرچ نہیں گنا جاتا۔ پھر بھی اپ ڈیٹ کرتا ہے کہ کون کس کا مقروض ہے۔",

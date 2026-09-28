@@ -1215,7 +1215,15 @@
       "done": "Concluído",
       "yourTime": "a tua hora",
       "invalidDate": "Introduz uma data válida.",
-      "invalidTime": "Introduz uma hora válida (HH:mm)."
+      "invalidTime": "Introduz uma hora válida (HH:mm).",
+      "hourLabel": "Hora",
+      "minuteLabel": "Minuto",
+      "periodLabel": "a.m./p.m.",
+      "timeWheelHint": "Desliza ou toca para definir a hora. A data mantém-se.",
+      "now": "Agora",
+      "morning": "Manhã",
+      "midday": "Meio-dia",
+      "evening": "Noite"
     },
     "settlementTitle": "Pagamento de liquidação",
     "settlementHint": "{category}: Não conta como despesa nos totais, estatísticas ou orçamentos. Continua a atualizar quem deve a quem.",

@@ -1101,7 +1101,15 @@
       "done": "Fet",
       "yourTime": "la teva hora",
       "invalidDate": "Introdueix una data vàlida.",
-      "invalidTime": "Introdueix una hora vàlida (HH:mm)."
+      "invalidTime": "Introdueix una hora vàlida (HH:mm).",
+      "hourLabel": "Hora",
+      "minuteLabel": "Minut",
+      "periodLabel": "a. m./p. m.",
+      "timeWheelHint": "Fes lliscar o toca per definir l'hora. La data no canvia.",
+      "now": "Ara",
+      "morning": "Matí",
+      "midday": "Migdia",
+      "evening": "Vespre"
     },
     "settlementTitle": "Pagament de liquidació",
     "settlementHint": "{category}: No es compta com a despesa als totals, estadístiques ni pressupostos. Tot i això actualitza qui deu a qui.",

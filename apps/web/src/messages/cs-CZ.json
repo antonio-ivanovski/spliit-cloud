@@ -1108,7 +1108,15 @@
       "done": "Hotovo",
       "yourTime": "váš čas",
       "invalidDate": "Zadejte platné datum.",
-      "invalidTime": "Zadejte platný čas (HH:mm)."
+      "invalidTime": "Zadejte platný čas (HH:mm).",
+      "hourLabel": "Hodina",
+      "minuteLabel": "Minuta",
+      "periodLabel": "dop./odp.",
+      "timeWheelHint": "Čas nastavíte posunutím nebo klepnutím. Datum zůstává stejné.",
+      "now": "Teď",
+      "morning": "Ráno",
+      "midday": "Poledne",
+      "evening": "Večer"
     },
     "settlementTitle": "Vyrovnávací platba",
     "settlementHint": "{category}: Nezapočítává se jako výdaj do součtů, statistik ani rozpočtů. Přesto aktualizuje, kdo komu dluží.",

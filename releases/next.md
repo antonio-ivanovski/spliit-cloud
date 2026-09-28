@@ -33,5 +33,6 @@ who is affected, and the exact migration steps.
 - Switching a scanned receipt to an itemized split no longer blocks saving when the item totals match the expense amount after currency rounding; a genuine overage now names the item total and the excess so the scan can be corrected. Thanks @VibhuAg for opening [#134](https://github.com/antonio-ivanovski/spliit-cloud/issues/134) (`TBD` by @TBD)
 - Saving an expense or reimbursement with a validation error now scrolls to the offending field or message instead of looking like the save button did nothing. Thanks @KihtrakRaknas for opening [#145](https://github.com/antonio-ivanovski/spliit-cloud/issues/145) (`TBD` by @TBD)
 - Expenses paid for one person now say “paid for” instead of “split between” in the expense list. Thanks @KihtrakRaknas for opening [#144](https://github.com/antonio-ivanovski/spliit-cloud/issues/144) (`TBD` by @TBD)
+- The mobile expense time picker now uses large scrollable hour and minute wheels with Now, Morning, Midday, and Evening shortcuts instead of the cramped time grid, so picking a time on small screens takes far less scrolling and tapping. Thanks @KihtrakRaknas for opening [#140](https://github.com/antonio-ivanovski/spliit-cloud/issues/140) (`TBD` by @TBD)
 
 **Full Changelog**: TBD

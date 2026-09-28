@@ -1861,7 +1861,15 @@
       "done": "all set",
       "yourTime": "your local time",
       "invalidDate": "enter a valid date.",
-      "invalidTime": "enter a valid time (HH:mm)."
+      "invalidTime": "enter a valid time (HH:mm).",
+      "hourLabel": "hour",
+      "minuteLabel": "minute",
+      "periodLabel": "am/pm",
+      "timeWheelHint": "scroll or tap to set the time. the date stays the same.",
+      "now": "now",
+      "morning": "morning",
+      "midday": "midday",
+      "evening": "evening"
     },
     "settlementTitle": "settlement payment",
     "settlementHint": "{category}: not counted as spending in totals, stats, or budgets. still updates who owes whom.",

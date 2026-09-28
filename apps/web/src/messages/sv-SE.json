@@ -1678,7 +1678,15 @@
       "done": "Klar",
       "yourTime": "din tid",
       "invalidDate": "Ange ett giltigt datum.",
-      "invalidTime": "Ange en giltig tid (HH:mm)."
+      "invalidTime": "Ange en giltig tid (HH:mm).",
+      "hourLabel": "Timme",
+      "minuteLabel": "Minut",
+      "periodLabel": "fm/em",
+      "timeWheelHint": "Scrolla eller tryck för att ställa in tiden. Datumet ändras inte.",
+      "now": "Nu",
+      "morning": "Morgon",
+      "midday": "Middag",
+      "evening": "Kväll"
     },
     "settlementTitle": "Regleringsbetalning",
     "settlementHint": "{category}: Räknas inte som utgift i totaler, statistik eller budgetar. Uppdaterar ändå vem som är skyldig vem.",

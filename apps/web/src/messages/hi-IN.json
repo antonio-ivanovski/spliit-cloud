@@ -1678,7 +1678,15 @@
       "done": "हो गया",
       "yourTime": "आपका समय",
       "invalidDate": "एक मान्य तिथि दर्ज करें।",
-      "invalidTime": "एक मान्य समय दर्ज करें (HH:mm)।"
+      "invalidTime": "एक मान्य समय दर्ज करें (HH:mm)।",
+      "hourLabel": "घंटा",
+      "minuteLabel": "मिनट",
+      "periodLabel": "am/pm",
+      "timeWheelHint": "समय सेट करने के लिए स्क्रॉल करें या टैप करें। तारीख वही रहेगी।",
+      "now": "अभी",
+      "morning": "सुबह",
+      "midday": "दोपहर",
+      "evening": "शाम"
     },
     "settlementTitle": "निपटान भुगतान",
     "settlementHint": "{category}: कुल, आँकड़ों या बजट में खर्च नहीं गिना जाता। फिर भी अपडेट करता है कि कौन किसे देता है।",

@@ -1087,7 +1087,15 @@
       "done": "Selesai",
       "yourTime": "waktu Anda",
       "invalidDate": "Masukkan tanggal yang valid.",
-      "invalidTime": "Masukkan waktu yang valid (HH:mm)."
+      "invalidTime": "Masukkan waktu yang valid (HH:mm).",
+      "hourLabel": "Jam",
+      "minuteLabel": "Menit",
+      "periodLabel": "Periode",
+      "timeWheelHint": "Gulir atau ketuk untuk mengatur waktu. Tanggal tidak berubah.",
+      "now": "Sekarang",
+      "morning": "Pagi",
+      "midday": "Siang",
+      "evening": "Malam"
     },
     "settlementTitle": "Pembayaran pelunasan",
     "settlementHint": "{category}: Tidak dihitung sebagai pengeluaran di total, statistik, atau anggaran. Tetap memperbarui siapa berutang kepada siapa.",

@@ -1087,7 +1087,15 @@
       "done": "完了",
       "yourTime": "お使いの地域の時刻",
       "invalidDate": "有効な日付を入力してください。",
-      "invalidTime": "有効な時刻を入力してください（HH:mm）。"
+      "invalidTime": "有効な時刻を入力してください（HH:mm）。",
+      "hourLabel": "時",
+      "minuteLabel": "分",
+      "periodLabel": "午前/午後",
+      "timeWheelHint": "スクロールまたはタップで時刻を設定します。日付は変わりません。",
+      "now": "今",
+      "morning": "朝",
+      "midday": "正午",
+      "evening": "夕方"
     },
     "settlementTitle": "精算金",
     "settlementHint": "{category}：合計・統計・予算では支出として数えません。誰が誰に払うべきかは更新されます。",

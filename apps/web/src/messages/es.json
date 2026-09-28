@@ -1119,7 +1119,15 @@
       "done": "Listo",
       "yourTime": "tu hora",
       "invalidDate": "Introduce una fecha válida.",
-      "invalidTime": "Introduce una hora válida (HH:mm)."
+      "invalidTime": "Introduce una hora válida (HH:mm).",
+      "hourLabel": "Hora",
+      "minuteLabel": "Minuto",
+      "periodLabel": "a. m./p. m.",
+      "timeWheelHint": "Desliza o toca para ajustar la hora. La fecha no cambia.",
+      "now": "Ahora",
+      "morning": "Mañana",
+      "midday": "Mediodía",
+      "evening": "Noche"
     },
     "settlementTitle": "Pago de liquidación",
     "settlementHint": "{category}: No cuenta como gasto en totales, estadísticas ni presupuestos. Sí actualiza quién debe a quién.",

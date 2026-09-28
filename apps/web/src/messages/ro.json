@@ -1101,7 +1101,15 @@
       "done": "Gata",
       "yourTime": "ora ta",
       "invalidDate": "Introdu o dată validă.",
-      "invalidTime": "Introdu o oră validă (HH:mm)."
+      "invalidTime": "Introdu o oră validă (HH:mm).",
+      "hourLabel": "Oră",
+      "minuteLabel": "Minut",
+      "periodLabel": "a.m./p.m.",
+      "timeWheelHint": "Derulează sau atinge pentru a seta ora. Data rămâne aceeași.",
+      "now": "Acum",
+      "morning": "Dimineața",
+      "midday": "Amiază",
+      "evening": "Seara"
     },
     "settlementTitle": "Plată de decontare",
     "settlementHint": "{category}: Nu se numără ca cheltuială în totaluri, statistici sau bugete. Actualizează totuși cine datorează cui.",
