@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import type * as DeliveryRepository from '@spliit/api/lib/notifications/delivery-repository'
 import {
   NotificationCategory,
   NotificationChannel,
@@ -70,10 +71,7 @@ vi.mock('@spliit/api/lib/notifications/delivery-senders', () => ({
 vi.mock(
   '@spliit/api/lib/notifications/delivery-repository',
   async (importOriginal) => {
-    const actual =
-      await importOriginal<
-        typeof import('@spliit/api/lib/notifications/delivery-repository')
-      >()
+    const actual = await importOriginal<typeof DeliveryRepository>()
     return {
       ...actual,
       claimDelivery: hoisted.claimDelivery,

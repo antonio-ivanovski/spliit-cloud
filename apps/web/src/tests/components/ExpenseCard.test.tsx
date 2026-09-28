@@ -534,7 +534,9 @@ describe('ExpenseCard', () => {
       />,
     )
 
-    expect(container.textContent).toContain('Paid by Alice, Bob · paid for Carol')
+    expect(container.textContent).toContain(
+      'Paid by Alice, Bob · paid for Carol',
+    )
     expect(container.textContent).not.toContain('split between')
   })
 

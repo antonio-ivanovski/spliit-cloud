@@ -1,4 +1,7 @@
+import type * as PrismaAdapterPg from '@prisma/adapter-pg'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+import type * as PrismaClientModule from './generated/prisma/client/client'
 
 // Module-level recording state so the top-level vi.mock factories
 // can expose call history without circular import gymnastics.
@@ -28,7 +31,7 @@ vi.mock('pg', () => {
 })
 
 vi.mock('@prisma/adapter-pg', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@prisma/adapter-pg')>()
+  const actual = await importOriginal<typeof PrismaAdapterPg>()
   return {
     ...actual,
     PrismaPg: class extends actual.PrismaPg {
@@ -41,8 +44,7 @@ vi.mock('@prisma/adapter-pg', async (importOriginal) => {
 })
 
 vi.mock('./generated/prisma/client/client', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('./generated/prisma/client/client')>()
+  const actual = await importOriginal<typeof PrismaClientModule>()
   return {
     ...actual,
     PrismaClient: class extends actual.PrismaClient {
