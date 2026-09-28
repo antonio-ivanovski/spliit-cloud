@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  formatExpenseAmount,
+  formatExpenseDualAmount,
+  resolveGroupDisplayName,
+} from './expense-notification-shared'
+import {
   formatNotificationAmount,
   formatNotificationDate,
   formatNotificationNumber,
   formatNotificationPercent,
 } from './format'
-import {
-  formatExpenseAmount,
-  formatExpenseDualAmount,
-  resolveGroupDisplayName,
-} from './expense-notification-shared'
 
 describe('notification formatting', () => {
   it('uses recipient locale and currency precision', () => {

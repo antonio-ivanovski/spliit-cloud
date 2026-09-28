@@ -1380,9 +1380,7 @@ describe('linkUnlinkedParticipantToPendingInvite', () => {
       pendingInvitationId,
       expectedMessage,
     ) => {
-      prismaMock.ledgerParticipant.findUnique.mockResolvedValue(
-        lpMock as never,
-      )
+      prismaMock.ledgerParticipant.findUnique.mockResolvedValue(lpMock as never)
       if (invMock !== undefined) {
         prismaMock.groupInvitation.findUnique.mockResolvedValue(
           invMock as never,

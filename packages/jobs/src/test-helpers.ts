@@ -4,9 +4,9 @@ import { vi } from 'vitest'
 import type { SpliitBoss } from './boss'
 
 /**
- * Shared pg-boss test double for boss/lifecycle/registry suites.
- * Provides every method those suites touch (queue admin, send/insert,
- * findJobs, work) so each test file does not maintain its own copy.
+ * Shared pg-boss test double for boss/lifecycle/registry suites. Provides every
+ * method those suites touch (queue admin, send/insert, findJobs, work) so each
+ * test file does not maintain its own copy.
  */
 export function createBossMock(
   getQueue: ReturnType<typeof vi.fn> = vi.fn().mockResolvedValue(null),

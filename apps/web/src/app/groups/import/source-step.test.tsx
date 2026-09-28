@@ -284,11 +284,10 @@ describe('pickParser', () => {
     provider: SourceMode
     fileName: string
     expected: 'csv' | 'json' | null
-  }>)('routes $provider $fileName to $expected', ({
-    provider,
-    fileName,
-    expected,
-  }) => {
-    expect(pickParser(provider, fileName).format).toBe(expected)
-  })
+  }>)(
+    'routes $provider $fileName to $expected',
+    ({ provider, fileName, expected }) => {
+      expect(pickParser(provider, fileName).format).toBe(expected)
+    },
+  )
 })

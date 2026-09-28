@@ -342,9 +342,9 @@ describe('appendImportedFromNote (folded from utils.test.ts)', () => {
         expect(
           appendImportedFromNote(null, 'https://spliit.app/groups/abc'),
         ).toBe('Imported from: https://spliit.app/groups/abc')
-        expect(appendImportedFromNote('', 'https://spliit.app/groups/abc')).toBe(
-          'Imported from: https://spliit.app/groups/abc',
-        )
+        expect(
+          appendImportedFromNote('', 'https://spliit.app/groups/abc'),
+        ).toBe('Imported from: https://spliit.app/groups/abc')
       },
     ],
     [

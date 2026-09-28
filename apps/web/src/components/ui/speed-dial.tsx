@@ -148,7 +148,7 @@ const SpeedDialItem = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('pointer-events-none flex items-center gap-2', className)}
+    className={cn('pointer-events-none flex items-center', className)}
     {...props}
   />
 ))
@@ -161,7 +161,7 @@ const SpeedDialLabel = React.forwardRef<
   <span
     ref={ref}
     className={cn(
-      'pointer-events-none rounded-md border bg-background/95 px-2.5 py-1.5 text-xs font-medium whitespace-nowrap shadow-md backdrop-blur',
+      'rounded-md border bg-background/95 px-2.5 py-1.5 text-xs font-medium whitespace-nowrap shadow-md backdrop-blur',
       className,
     )}
     {...props}
@@ -184,6 +184,7 @@ const SpeedDialAction = React.forwardRef<
       tabIndex={open ? 0 : -1}
       disabled={!interactive}
       className={cn(
+        'inline-flex items-center gap-2',
         interactive ? 'pointer-events-auto' : 'pointer-events-none',
         className,
       )}

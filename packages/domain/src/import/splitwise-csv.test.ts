@@ -3,10 +3,10 @@ import { join } from 'node:path'
 
 import { describe, expect, it } from 'vitest'
 
-import { tryParseSplitwiseCsv } from './splitwise-csv'
 import { anonymizeSplitwiseCsv } from './anonymize-splitwise-csv'
 import { guessGroupNameFromFilename } from './filename'
 import { splitwiseCategoryToId } from './splitwise-categories'
+import { tryParseSplitwiseCsv } from './splitwise-csv'
 import type { NormalizedSource } from './types'
 
 const HEADER = 'Date,Description,Category,Cost,Currency,John Doe,Jane Doe'
@@ -1505,32 +1505,20 @@ describe('tryParseSplitwiseCsv with fixtures', () => {
 
 describe('guessGroupNameFromFilename (folded from filename.test.ts)', () => {
   it.each([
-    [
-      'john-d-and-jane-d_2026-06-30_export.csv',
-      'John D. and Jane D.',
-    ],
+    ['john-d-and-jane-d_2026-06-30_export.csv', 'John D. and Jane D.'],
     [
       'mary-jane-and-peter-parker_2025-01-01_export.csv',
       'Mary Jane. and Peter Parker.',
     ],
-    [
-      'a-b-and-c-d-and-e-f_2025-01-01_export.csv',
-      'A B. and C D. and E F.',
-    ],
+    ['a-b-and-c-d-and-e-f_2025-01-01_export.csv', 'A B. and C D. and E F.'],
     ['test_2026-07-01_export.csv', 'Test'],
     ['london_2022_2026-07-01_export.csv', 'London 2022'],
-    [
-      'john-d-and-jane-d_2026-06-30_export.json',
-      'John D. and Jane D.',
-    ],
+    ['john-d-and-jane-d_2026-06-30_export.json', 'John D. and Jane D.'],
     ['family-zu-besuch_2026-09-06.csv', 'Family Zu Besuch'],
     ['osterreich-2026_2026-09-06.csv', 'Osterreich 2026'],
-  ] as Array<[string, string]>)(
-    'derives %s → %s',
-    (filename, expected) => {
-      expect(guessGroupNameFromFilename(filename)).toBe(expected)
-    },
-  )
+  ] as Array<[string, string]>)('derives %s → %s', (filename, expected) => {
+    expect(guessGroupNameFromFilename(filename)).toBe(expected)
+  })
 
   it.each([
     ['2026_2026-06-30_export.csv'],

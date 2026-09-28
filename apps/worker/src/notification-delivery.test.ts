@@ -67,19 +67,23 @@ vi.mock('@spliit/api/lib/notifications/delivery-senders', () => ({
   PermanentDeliveryError: hoisted.PermanentDeliveryError,
 }))
 
-vi.mock('@spliit/api/lib/notifications/delivery-repository', async (importOriginal) => {
-  const actual = await importOriginal<
-    typeof import('@spliit/api/lib/notifications/delivery-repository')
-  >()
-  return {
-    ...actual,
-    claimDelivery: hoisted.claimDelivery,
-    markPermanentFailure: hoisted.markPermanentFailure,
-    markRetryExhausted: hoisted.markRetryExhausted,
-    markSent: hoisted.markSent,
-    markTransientFailure: hoisted.markTransientFailure,
-  }
-})
+vi.mock(
+  '@spliit/api/lib/notifications/delivery-repository',
+  async (importOriginal) => {
+    const actual =
+      await importOriginal<
+        typeof import('@spliit/api/lib/notifications/delivery-repository')
+      >()
+    return {
+      ...actual,
+      claimDelivery: hoisted.claimDelivery,
+      markPermanentFailure: hoisted.markPermanentFailure,
+      markRetryExhausted: hoisted.markRetryExhausted,
+      markSent: hoisted.markSent,
+      markTransientFailure: hoisted.markTransientFailure,
+    }
+  },
+)
 
 vi.mock('@spliit/api/lib/notifications/email-delivery-sender', () => ({
   emailDeliverySender: { send: hoisted.emailSend },

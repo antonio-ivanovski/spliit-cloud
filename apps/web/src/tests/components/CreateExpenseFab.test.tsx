@@ -443,4 +443,35 @@ describe('CreateExpenseFab', () => {
 
     state.currentGroup = null
   })
+
+  it('activates mobile expense actions from their visible labels', async () => {
+    state.currentGroup = {
+      groupId: 'group-1',
+      group: { id: 'group-1', archived: false },
+      currentInvitation: null,
+    }
+
+    const { user } = render(
+      <CreateExpenseFab enableReceiptExtract enableVoiceExpense={false} />,
+    )
+
+    await user.click(
+      screen.getByRole('button', { name: 'Open expense actions' }),
+    )
+    await user.click(within(screen.getByRole('menu')).getByText('Add expense'))
+    expect(state.navigate).toHaveBeenCalledWith({
+      to: '/groups/$groupId/expenses/create',
+      params: { groupId: 'group-1' },
+    })
+
+    await user.click(
+      screen.getByRole('button', { name: 'Open expense actions' }),
+    )
+    await user.click(screen.getByText('Scan receipt'))
+    expect(
+      screen.getByRole('dialog', { name: 'Scan receipt' }),
+    ).toBeInTheDocument()
+
+    state.currentGroup = null
+  })
 })

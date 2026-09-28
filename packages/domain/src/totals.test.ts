@@ -1,6 +1,7 @@
 import { getBalances } from './balances'
 import { getCurrency } from './currency'
 import { exactAmountToNumber } from './exact-math'
+import { distributeRemainder } from './remainder-distribution'
 import {
   calculateExactShares,
   calculatePaidByShare,
@@ -13,7 +14,6 @@ import {
   serializePaidBy,
   serializePaidFor,
 } from './totals'
-import { distributeRemainder } from './remainder-distribution'
 
 type TotalsExpense = Parameters<typeof getTotalActiveUserPaidFor>[1][number]
 

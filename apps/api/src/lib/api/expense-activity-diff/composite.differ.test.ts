@@ -9,11 +9,11 @@ import { dateDiffer } from './date.differ'
 import { documentsDiffer } from './documents.differ'
 import { itemsDiffer } from './items.differ'
 import { notesDiffer } from './notes.differ'
+import { getAffectedParticipantIds } from './participant-collector'
 import { payersDiffer } from './payers.differ'
 import { recurrenceDiffer } from './recurrence.differ'
 import { splitDiffer } from './split.differ'
 import { titleDiffer } from './title.differ'
-import { getAffectedParticipantIds } from './participant-collector'
 import type { ChangeContext } from './types'
 
 function makeExpense(overrides: Partial<Expense> = {}): Expense {

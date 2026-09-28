@@ -59,8 +59,7 @@ describe('worker handler context', () => {
     for (const [name, options] of workMock.mock.calls as unknown as Array<
       [string, Record<string, unknown>]
     >) {
-      const expected =
-        JOB_WORK_OPTIONS[name as keyof typeof JOB_WORK_OPTIONS]
+      const expected = JOB_WORK_OPTIONS[name as keyof typeof JOB_WORK_OPTIONS]
       expect(options).toEqual(
         expect.objectContaining({
           batchSize: 1,
