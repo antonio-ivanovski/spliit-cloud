@@ -635,7 +635,10 @@ export function PaidForCard(props: {
         control={form.control}
         name="paidFor"
         render={() => (
-          <FormItem className="w-full min-w-0 space-y-0">
+          <FormItem
+            data-expense-error-anchor="paidFor"
+            className="w-full min-w-0 space-y-0"
+          >
             <SplitDistributionEditor
               participants={group.participants}
               selectedCount={paidFor.length}

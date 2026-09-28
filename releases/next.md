@@ -29,5 +29,6 @@ who is affected, and the exact migration steps.
 - Expenses split among every member of a group now show “everyone” in the expense list. Thanks @KihtrakRaknas for opening [#143](https://github.com/antonio-ivanovski/spliit-cloud/issues/143) (`TBD` by @TBD)
 - Viewing or editing an expense keeps your place and selected filters in the expense list when you return. Thanks @KihtrakRaknas for opening [#142](https://github.com/antonio-ivanovski/spliit-cloud/issues/142) (`TBD` by @TBD)
 - Switching a scanned receipt to an itemized split no longer blocks saving when the item totals match the expense amount after currency rounding; a genuine overage now names the item total and the excess so the scan can be corrected. Thanks @VibhuAg for opening [#134](https://github.com/antonio-ivanovski/spliit-cloud/issues/134) (`TBD` by @TBD)
+- Saving an expense or reimbursement with a validation error now scrolls to the offending field or message instead of looking like the save button did nothing. Thanks @KihtrakRaknas for opening [#145](https://github.com/antonio-ivanovski/spliit-cloud/issues/145) (`TBD` by @TBD)
 
 **Full Changelog**: TBD

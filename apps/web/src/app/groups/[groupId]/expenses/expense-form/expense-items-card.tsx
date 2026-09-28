@@ -446,7 +446,10 @@ export function ExpenseItemsCard({
                 control={form.control}
                 name="items"
                 render={() => (
-                  <FormItem className="space-y-0">
+                  <FormItem
+                    data-expense-error-anchor="items"
+                    className="space-y-0"
+                  >
                     <DefaultSplitAction
                       splitMode={displayedDefaultSplit?.splitMode ?? 'EVENLY'}
                       label={t('items.allItemsSplitLabel')}
