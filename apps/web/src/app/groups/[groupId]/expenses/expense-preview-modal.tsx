@@ -520,6 +520,13 @@ export function ExpensePreviewModal({
                   currency,
                 )}
                 locale={locale}
+                participants={participants}
+                itemizedRemainder={expense.itemizedRemainder}
+                expenseAmount={expense.amount}
+                otherLabel={tForm('items.other')}
+                proportionalText={tForm(
+                  'items.remainderAllocationProportional',
+                )}
               />
 
               <ExpenseAttachmentsPreview documents={expense.documents} />

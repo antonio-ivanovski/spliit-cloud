@@ -62,6 +62,126 @@ describe('ExpenseItemsSummary', () => {
       screen.queryByRole('button', { name: /more/i }),
     ).not.toBeInTheDocument()
   })
+
+  it('shows assignee names below items with split data', () => {
+    render(
+      <ExpenseItemsSummary
+        items={[
+          {
+            id: 'item-1',
+            title: 'Pizza',
+            amount: 1000,
+            splitMode: 'EVENLY',
+            paidFor: [
+              { ledgerParticipantId: 'a', shares: 1 },
+              { ledgerParticipantId: 'b', shares: 1 },
+            ],
+          },
+        ]}
+        currency={EUR}
+        locale="en-US"
+        participants={[
+          { id: 'a', name: 'Alice' },
+          { id: 'b', name: 'Bob' },
+        ]}
+      />,
+    )
+
+    expect(screen.getByText('Pizza')).toBeInTheDocument()
+    expect(screen.getByText('Alice, Bob')).toBeInTheDocument()
+  })
+
+  it('expands an item to reveal per-person amounts that sum to the total', async () => {
+    const { user } = render(
+      <ExpenseItemsSummary
+        items={[
+          {
+            id: 'item-1',
+            title: 'Pizza',
+            amount: 1001,
+            splitMode: 'EVENLY',
+            paidFor: [
+              { ledgerParticipantId: 'a', shares: 1 },
+              { ledgerParticipantId: 'b', shares: 1 },
+            ],
+          },
+        ]}
+        currency={EUR}
+        locale="en-US"
+        participants={[
+          { id: 'a', name: 'Alice' },
+          { id: 'b', name: 'Bob' },
+        ]}
+      />,
+    )
+
+    const toggle = screen.getByRole('button', { name: 'Alice, Bob' })
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+
+    await user.click(toggle)
+
+    expect(toggle).toHaveAttribute('aria-expanded', 'true')
+    // €10.01 split evenly: one pays €5.00, the other €5.01.
+    expect(screen.getByText('Alice')).toBeInTheDocument()
+    expect(screen.getByText('Bob')).toBeInTheDocument()
+  })
+
+  it('renders the unaccounted remainder row with its assignees', () => {
+    render(
+      <ExpenseItemsSummary
+        items={[
+          {
+            id: 'item-1',
+            title: 'Pizza',
+            amount: 1000,
+            splitMode: 'EVENLY',
+            paidFor: [{ ledgerParticipantId: 'a', shares: 1 }],
+          },
+        ]}
+        currency={EUR}
+        locale="en-US"
+        participants={[{ id: 'a', name: 'Alice' }]}
+        itemizedRemainder={{
+          splitMode: 'EVENLY',
+          allocationMode: 'CUSTOM',
+          paidFor: [{ ledgerParticipantId: 'a', shares: 1 }],
+        }}
+        expenseAmount={1200}
+        otherLabel="Other (unaccounted)"
+      />,
+    )
+
+    expect(screen.getByText('Other (unaccounted)')).toBeInTheDocument()
+  })
+
+  it('renders proportional remainder text instead of assignee amounts', () => {
+    render(
+      <ExpenseItemsSummary
+        items={[
+          {
+            id: 'item-1',
+            title: 'Pizza',
+            amount: 1000,
+            splitMode: 'EVENLY',
+            paidFor: [{ ledgerParticipantId: 'a', shares: 1 }],
+          },
+        ]}
+        currency={EUR}
+        locale="en-US"
+        participants={[{ id: 'a', name: 'Alice' }]}
+        itemizedRemainder={{
+          splitMode: 'EVENLY',
+          allocationMode: 'PROPORTIONAL',
+          paidFor: [],
+        }}
+        expenseAmount={1200}
+        otherLabel="Other (unaccounted)"
+        proportionalText="Proportional to items"
+      />,
+    )
+
+    expect(screen.getByText('Proportional to items')).toBeInTheDocument()
+  })
 })
 
 describe('resolveExpenseItemsCurrency', () => {

@@ -52,6 +52,11 @@ import {
   itemsExceedExpenseAmount,
 } from '@spliit/domain'
 
+import {
+  getBreakdownNames,
+  getFormItemBreakdown,
+  ItemAssignees,
+} from '../expense-item-breakdown'
 import { safeSharesToFixedUnits } from './currency-utils'
 import { applySplitToAll, getCommonItemSplit } from './default-item-split'
 import { getNeutralDefaultSplit } from './default-values'
@@ -552,16 +557,18 @@ export function ExpenseItemsCard({
                               )}
                             </span>
                           </div>
-                          <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                          <div className="mt-0.5 min-w-0 text-xs text-muted-foreground">
                             {isProportionalRemainder ? (
                               t('items.remainderAllocationProportional')
                             ) : (
-                              <SummarizeParticipants
-                                item={fillerItem}
+                              <FillerAssignees
+                                fillerItem={fillerItem}
                                 group={group}
+                                groupCurrency={groupCurrency}
+                                locale={locale}
                               />
                             )}
-                          </p>
+                          </div>
                         </div>
                         {!readOnly && (
                           <Button
@@ -833,4 +840,57 @@ function SummarizeParticipants({
   return names
     ? `${t(labelKeys[item.splitMode])}: ${names}`
     : t('items.noMembers')
+}
+
+function FillerAssignees({
+  fillerItem,
+  group,
+  groupCurrency,
+  locale,
+}: {
+  fillerItem: Pick<
+    ExpenseFormItemValues,
+    'unitPrice' | 'quantity' | 'splitMode' | 'paidFor'
+  >
+  group: Group
+  groupCurrency: Currency
+  locale: string
+}) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
+  const participantNameMap = new Map(
+    group.participants.map((p) => [p.id, p.name]),
+  )
+  const names = getBreakdownNames(fillerItem.paidFor, participantNameMap)
+  const namesText = names.length
+    ? `${t(labelKeys[fillerItem.splitMode])}: ${names.join(', ')}`
+    : t('items.noMembers')
+  const sharesByParticipant = getFormItemBreakdown(
+    {
+      unitPrice: Number(fillerItem.unitPrice) || 0,
+      quantity: Number(fillerItem.quantity) || 0,
+      splitMode: fillerItem.splitMode,
+      paidFor: fillerItem.paidFor,
+    },
+    groupCurrency,
+  )
+  const rows = fillerItem.paidFor.flatMap((pf) => {
+    const name = participantNameMap.get(pf.participant)
+    if (!name) return []
+    return [
+      {
+        participantId: pf.participant,
+        name,
+        amount: sharesByParticipant[pf.participant] ?? 0,
+      },
+    ]
+  })
+  return (
+    <ItemAssignees
+      namesText={namesText}
+      rows={rows}
+      currency={groupCurrency}
+      locale={locale}
+      emptyText={namesText}
+    />
+  )
 }
