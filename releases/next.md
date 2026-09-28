@@ -19,21 +19,10 @@ who is affected, and the exact migration steps.
 
 ### 🚀 Features
 
-- Itemized expenses now show “Itemized” as a selected “Split between” option with each person’s calculated share, so you can see at a glance who owes what from the items. Thanks @KihtrakRaknas for opening [#135](https://github.com/antonio-ivanovski/spliit-cloud/issues/135) (`TBD` by @TBD)
-- Itemized expenses now list who each item is assigned to in the expense details, with an expandable per-person amount breakdown, so the split is visible without opening the editor. Thanks @KihtrakRaknas for opening [#146](https://github.com/antonio-ivanovski/spliit-cloud/issues/146) (`TBD` by @TBD)
-- Group tabs now lead with Expenses, Balances, Activity, and Members, and you can set your own tab order for your account — including hiding tabs you don't use — from Account settings. Thanks @KihtrakRaknas for opening [#139](https://github.com/antonio-ivanovski/spliit-cloud/issues/139) (`TBD` by @TBD)
+- Short entry per user-facing change (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
 
-- Mobile expense action labels now respond to taps in the group button and mascot menu. Thanks @KihtrakRaknas for opening [#138](https://github.com/antonio-ivanovski/spliit-cloud/issues/138) (`TBD` by @TBD)
-- The group tab bar stays anchored to the bottom of the screen while scrolling in the iOS PWA. Thanks @KihtrakRaknas for opening [#137](https://github.com/antonio-ivanovski/spliit-cloud/issues/137) (`TBD` by @TBD)
-- Expense notifications now open the relevant expense directly in the app. Thanks @KihtrakRaknas for opening [#141](https://github.com/antonio-ivanovski/spliit-cloud/issues/141) (`TBD` by @TBD)
-- Expenses split among every member of a group now show “everyone” in the expense list. Thanks @KihtrakRaknas for opening [#143](https://github.com/antonio-ivanovski/spliit-cloud/issues/143) (`TBD` by @TBD)
-- Viewing or editing an expense keeps your place and selected filters in the expense list when you return. Thanks @KihtrakRaknas for opening [#142](https://github.com/antonio-ivanovski/spliit-cloud/issues/142) (`TBD` by @TBD)
-- Switching a scanned receipt to an itemized split no longer blocks saving when the item totals match the expense amount after currency rounding; a genuine overage now names the item total and the excess so the scan can be corrected. Thanks @VibhuAg for opening [#134](https://github.com/antonio-ivanovski/spliit-cloud/issues/134) (`TBD` by @TBD)
-- Saving an expense or reimbursement with a validation error now scrolls to the offending field or message instead of looking like the save button did nothing. Thanks @KihtrakRaknas for opening [#145](https://github.com/antonio-ivanovski/spliit-cloud/issues/145) (`TBD` by @TBD)
-- Expenses paid for one person now say “paid for” instead of “split between” in the expense list. Thanks @KihtrakRaknas for opening [#144](https://github.com/antonio-ivanovski/spliit-cloud/issues/144) (`TBD` by @TBD)
-- The mobile expense time picker now uses large scrollable hour and minute wheels with Now, Morning, Midday, and Evening shortcuts instead of the cramped time grid, so picking a time on small screens takes far less scrolling and tapping. Thanks @KihtrakRaknas for opening [#140](https://github.com/antonio-ivanovski/spliit-cloud/issues/140) (`TBD` by @TBD)
-- The browser tab title now always resets when leaving a group, so the dashboard and other pages no longer show a stale group name. (`TBD` by @TBD)
+- Short entry per fix (`TBD` by @TBD)
 
 **Full Changelog**: TBD
