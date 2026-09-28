@@ -307,6 +307,20 @@ function GlobalExpenseFilters({
               <div className="flex flex-col gap-2">
                 <Select
                   value={filters[matchKey]}
+                  items={[
+                    {
+                      value: 'any',
+                      label: t('Expenses.filters.matchModeAny'),
+                    },
+                    {
+                      value: 'all',
+                      label: t('Expenses.filters.matchModeAll'),
+                    },
+                    {
+                      value: 'exact',
+                      label: t('Expenses.filters.matchModeExact'),
+                    },
+                  ]}
                   onValueChange={(value) =>
                     onChange({
                       ...filters,
@@ -380,6 +394,16 @@ function GlobalExpenseFilters({
         <FilterChoice label={t('Expenses.globalCurrency')}>
           <Select
             value={filters.currencies[0] ?? 'all'}
+            items={[
+              {
+                value: 'all',
+                label: t('Expenses.globalAllCurrencies'),
+              },
+              ...options.currencies.map((currency) => ({
+                value: currency.key,
+                label: currency.currencyCode ?? currency.currency,
+              })),
+            ]}
             onValueChange={(value) => {
               if (value == null) return
               onChange({
@@ -470,6 +494,32 @@ function GlobalExpenseFilters({
           </span>
           <Select
             value={`${filters.sortBy}-${filters.sortDir}`}
+            items={[
+              {
+                value: 'expenseDate-desc',
+                label: t('Expenses.filters.sort.options.expenseDate.desc'),
+              },
+              {
+                value: 'expenseDate-asc',
+                label: t('Expenses.filters.sort.options.expenseDate.asc'),
+              },
+              {
+                value: 'createdAt-desc',
+                label: t('Expenses.filters.sort.options.createdAt.desc'),
+              },
+              {
+                value: 'createdAt-asc',
+                label: t('Expenses.filters.sort.options.createdAt.asc'),
+              },
+              {
+                value: 'amount-desc',
+                label: t('Expenses.filters.sort.options.amount.desc'),
+              },
+              {
+                value: 'amount-asc',
+                label: t('Expenses.filters.sort.options.amount.asc'),
+              },
+            ]}
             onValueChange={(value) => {
               if (value == null) return
               const [sortBy, sortDir] = value.split('-') as [

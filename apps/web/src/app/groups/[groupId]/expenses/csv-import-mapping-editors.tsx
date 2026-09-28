@@ -1579,6 +1579,20 @@ function TransformList({
               transform.kind === 'DEBIT_CREDIT' ? (
                 <Select
                   value={transform.format}
+                  items={[
+                    {
+                      value: 'AUTO',
+                      label: t('ExpenseImport.mapping.detectNumberFormat'),
+                    },
+                    {
+                      value: 'DOT',
+                      label: t('ExpenseImport.mapping.dotDecimalExample'),
+                    },
+                    {
+                      value: 'COMMA',
+                      label: t('ExpenseImport.mapping.commaDecimalExample'),
+                    },
+                  ]}
                   onValueChange={(value) =>
                     value &&
                     updateTransform(index, {
@@ -1766,6 +1780,20 @@ function SimpleFieldControls({
                   ? numberTransform.format
                   : 'AUTO'
               }
+              items={[
+                {
+                  value: 'AUTO',
+                  label: t('ExpenseImport.mapping.detectNumberFormat'),
+                },
+                {
+                  value: 'DOT',
+                  label: t('ExpenseImport.mapping.dotDecimalExample'),
+                },
+                {
+                  value: 'COMMA',
+                  label: t('ExpenseImport.mapping.commaDecimalExample'),
+                },
+              ]}
               onValueChange={(value) =>
                 value &&
                 updateTransform('PARSE_NUMBER', {
@@ -2604,6 +2632,20 @@ function SimpleMoneyMappingEditor({
             <Label>{t('ExpenseImport.mapping.numberFormatLabel')}</Label>
             <Select
               value={numberTransform?.format ?? 'AUTO'}
+              items={[
+                {
+                  value: 'AUTO',
+                  label: t('ExpenseImport.mapping.automaticOption'),
+                },
+                {
+                  value: 'DOT',
+                  label: t('ExpenseImport.mapping.dotDecimalMoney'),
+                },
+                {
+                  value: 'COMMA',
+                  label: t('ExpenseImport.mapping.commaDecimalMoney'),
+                },
+              ]}
               onValueChange={(value) =>
                 value &&
                 setAmountTransform('PARSE_NUMBER', {

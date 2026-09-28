@@ -23,6 +23,6 @@ who is affected, and the exact migration steps.
 
 ### 🐛 Bug fixes
 
-- Short entry per fix (`TBD` by @TBD)
+- Friend, member, and import dropdowns now keep showing names instead of raw IDs after selection (`TBD` by @TBD)
 
 **Full Changelog**: TBD

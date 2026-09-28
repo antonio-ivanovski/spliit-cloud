@@ -1654,6 +1654,26 @@ export function ExpenseFileImportPage({
                     <Select
                       disabled={isParsing}
                       value={delimiter}
+                      items={[
+                        {
+                          value: ',',
+                          label: t('ExpenseImport.wizard.delimiterNameComma'),
+                        },
+                        {
+                          value: ';',
+                          label: t(
+                            'ExpenseImport.wizard.delimiterNameSemicolon',
+                          ),
+                        },
+                        {
+                          value: '\t',
+                          label: t('ExpenseImport.wizard.delimiterNameTab'),
+                        },
+                        {
+                          value: '|',
+                          label: t('ExpenseImport.wizard.delimiterNamePipe'),
+                        },
+                      ]}
                       onValueChange={(nextDelimiter) => {
                         if (!nextDelimiter) return
                         void reparse({ delimiter: nextDelimiter })
@@ -1732,6 +1752,11 @@ export function ExpenseFileImportPage({
                     <Select
                       disabled={isParsing}
                       value={encoding}
+                      items={[
+                        { value: 'UTF-8', label: 'UTF-8' },
+                        { value: 'WINDOWS-1252', label: 'Windows-1252' },
+                        { value: 'UTF-16', label: 'UTF-16' },
+                      ]}
                       onValueChange={(value) => {
                         if (!value) return
                         const nextEncoding = value as DelimitedEncoding

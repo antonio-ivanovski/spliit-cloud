@@ -142,6 +142,14 @@ export function BudgetForm({
   )
   const [notifyOver, setNotifyOver] = useState(budget?.notifyOver ?? true)
   const [error, setError] = useState<string | null>(null)
+  const periodSelectItems = useMemo(
+    () =>
+      periodValues.map((period) => ({
+        value: period,
+        label: t(periodTranslationKeys[period]),
+      })),
+    [t],
+  )
 
   function clearError() {
     if (error) setError(null)
@@ -355,6 +363,7 @@ export function BudgetForm({
         <legend className="text-sm font-medium">{t('form.period')}</legend>
         <Select
           value={periodType}
+          items={periodSelectItems}
           onValueChange={(value) => {
             setPeriodType(value as BudgetPeriodType)
             clearError()

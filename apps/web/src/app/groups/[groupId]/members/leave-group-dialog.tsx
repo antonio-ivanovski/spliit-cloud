@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
@@ -68,6 +69,15 @@ export function LeaveGroupDialog({
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
 
+  const promotableMemberItems = useMemo(
+    () =>
+      promotableMembers.map((member) => ({
+        value: member.id,
+        label: member.name || '—',
+      })),
+    [promotableMembers],
+  )
+
   return (
     <ResponsiveDialog
       open={leaveDialogOpen}
@@ -127,6 +137,7 @@ export function LeaveGroupDialog({
                         </Label>
                         <Select
                           value={promoteMemberId ?? ''}
+                          items={promotableMemberItems}
                           onValueChange={(value) => {
                             if (value != null) onPromoteMemberChange(value)
                           }}
