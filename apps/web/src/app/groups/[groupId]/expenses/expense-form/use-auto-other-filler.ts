@@ -3,7 +3,11 @@ import type {
   ExpenseFormInputValues,
   ExpenseFormItemValues,
 } from '@spliit/domain'
-import { amountAsMinorUnits, itemsExceedExpenseAmount } from '@spliit/domain'
+import {
+  gapMinorAsMajor,
+  getItemizedFormMinorTotals,
+  itemsExceedExpenseAmount,
+} from '@spliit/domain'
 
 export type ExpenseFormDisplayItem = ExpenseFormItemValues & {
   isFiller?: boolean
@@ -22,23 +26,20 @@ export function withAutoOtherFiller(
   groupCurrency: Currency,
   itemizedRemainder?: ExpenseFormInputValues['itemizedRemainder'],
 ): ExpenseFormDisplayItem[] {
-  const itemsSumMajor = items.reduce(
-    (sum, item) => sum + Number(item.unitPrice) * Number(item.quantity),
-    0,
+  const { itemsMinor, amountMinor, gapMinor } = getItemizedFormMinorTotals(
+    items,
+    expenseAmountMajor,
+    groupCurrency,
   )
-  const itemsSumMinor = amountAsMinorUnits(itemsSumMajor, groupCurrency)
-  const amountMinor = amountAsMinorUnits(expenseAmountMajor, groupCurrency)
 
   if (
-    itemsSumMinor === amountMinor ||
-    itemsExceedExpenseAmount(itemsSumMinor, amountMinor)
+    itemsMinor === amountMinor ||
+    itemsExceedExpenseAmount(itemsMinor, amountMinor)
   ) {
     return items
   }
 
-  const gapMajor = Number(
-    (expenseAmountMajor - itemsSumMajor).toFixed(groupCurrency.decimal_digits),
-  )
+  const gapMajor = gapMinorAsMajor(gapMinor, groupCurrency)
 
   return [
     ...items,

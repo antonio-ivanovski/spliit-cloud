@@ -23,7 +23,7 @@ import {
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import {
-  expenseFormInputSchema,
+  createExpenseFormInputSchema,
   type Expense,
   type ExpenseFormInputValues,
 } from '@/lib/schemas'
@@ -215,9 +215,18 @@ export function ExpenseForm(props: {
   const suggestCategoryMutation =
     trpc.groups.expenses.suggestCategory.useMutation()
 
+  const groupCurrency = useMemo(
+    () => getCurrencyFromGroup(props.group),
+    [props.group],
+  )
+  const expenseFormSchema = useMemo(
+    () => createExpenseFormInputSchema(groupCurrency),
+    [groupCurrency],
+  )
+
   const form = useForm<ExpenseFormInputValues>({
     resolver: zodResolver(
-      expenseFormInputSchema,
+      expenseFormSchema,
     ) as Resolver<ExpenseFormInputValues>,
     // Focus choreography is handled by `handleInvalidSubmit` below, which
     // maps array/items roots onto real inputs; the default walker cannot
@@ -229,7 +238,7 @@ export function ExpenseForm(props: {
       isCopy: props.isCopy,
       searchParams: props.searchParams ?? {},
       group: props.group,
-      groupCurrency: getCurrencyFromGroup(props.group),
+      groupCurrency,
       currentLedgerParticipantId: props.currentLedgerParticipantId,
       settlementTitle: t('settlementTitle'),
       today: dateOnlyInAccountTimeZone(formNow, accountTimeZone),
@@ -373,8 +382,6 @@ export function ExpenseForm(props: {
   const shareInputRefs = useRef(new Map<ShareInputKey, HTMLInputElement>())
   const formElementRef = useRef<HTMLFormElement>(null)
   const tabNavigation = useExpenseFormTabNavigation(formElementRef)
-
-  const groupCurrency = getCurrencyFromGroup(props.group)
 
   const conversion = useExpenseCurrencyConversion({
     form,

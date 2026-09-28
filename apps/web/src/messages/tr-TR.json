@@ -1053,7 +1053,8 @@
       "allItemsSplitEdit": "Tüm kalemlerin bölüşümünü düzenle",
       "allItemsSplitModalTitle": "Tüm kalemlerin bölüşümü",
       "remainderAllocationProportional": "Kalemlerle orantılı",
-      "remainderProportionalHint": "Bu tutarı her kişinin kalem ara toplamına göre bölün. Vergi ve bahşişler için idealdir."
+      "remainderProportionalHint": "Bu tutarı her kişinin kalem ara toplamına göre bölün. Vergi ve bahşişler için idealdir.",
+      "errorExceedsAmountDetails": "Kalemlerin toplamı ({itemsTotal}) masraf tutarını {excess} aşıyor."
     },
     "leaveItemized": {
       "title": "Bölüşüm yöntemi değiştirilsin mi?",

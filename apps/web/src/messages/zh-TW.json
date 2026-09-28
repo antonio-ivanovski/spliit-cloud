@@ -1046,7 +1046,8 @@
       "allItemsSplitEdit": "編輯所有項目的分攤",
       "allItemsSplitModalTitle": "所有項目分攤",
       "remainderAllocationProportional": "按項目比例分攤",
-      "remainderProportionalHint": "根據每人的項目小計分攤此金額。適用於稅費和小費。"
+      "remainderProportionalHint": "根據每人的項目小計分攤此金額。適用於稅費和小費。",
+      "errorExceedsAmountDetails": "項目總額{itemsTotal}比支出金額多出{excess}。"
     },
     "leaveItemized": {
       "title": "切換分攤方式？",

@@ -1046,7 +1046,8 @@
       "allItemsSplitEdit": "编辑所有项目的分摊",
       "allItemsSplitModalTitle": "所有项目分摊",
       "remainderAllocationProportional": "按项目比例分摊",
-      "remainderProportionalHint": "根据每人的项目小计分摊此金额。适用于税费和小费。"
+      "remainderProportionalHint": "根据每人的项目小计分摊此金额。适用于税费和小费。",
+      "errorExceedsAmountDetails": "项目总额{itemsTotal}比支出金额多出{excess}。"
     },
     "leaveItemized": {
       "title": "切换分摊方式？",

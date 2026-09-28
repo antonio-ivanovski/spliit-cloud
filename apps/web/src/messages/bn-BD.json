@@ -1678,7 +1678,8 @@
       "allItemsSplitEdit": "সব আইটেমের বিভাজন সম্পাদনা করুন",
       "allItemsSplitModalTitle": "সব আইটেমের বিভাজন",
       "remainderAllocationProportional": "আইটেম অনুপাতে",
-      "remainderProportionalHint": "প্রত্যেক ব্যক্তির আইটেম উপ-মোটের ভিত্তিতে এই পরিমাণ ভাগ করুন। কর ও বখশিশের জন্য উপযোগী।"
+      "remainderProportionalHint": "প্রত্যেক ব্যক্তির আইটেম উপ-মোটের ভিত্তিতে এই পরিমাণ ভাগ করুন। কর ও বখশিশের জন্য উপযোগী।",
+      "errorExceedsAmountDetails": "আইটেমের মোট ({itemsTotal}) খরচের পরিমাণকে {excess} ছাড়িয়ে গেছে।"
     },
     "leaveItemized": {
       "title": "ভাগ মোড পরিবর্তন করবেন?",

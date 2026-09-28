@@ -1060,7 +1060,8 @@
       "allItemsSplitEdit": "Editează împărțirea tuturor articolelor",
       "allItemsSplitModalTitle": "Împărțirea tuturor articolelor",
       "remainderAllocationProportional": "Proporțional cu articolele",
-      "remainderProportionalHint": "Împarte această sumă în funcție de subtotalul articolelor fiecărei persoane. Util pentru taxe și bacșișuri."
+      "remainderProportionalHint": "Împarte această sumă în funcție de subtotalul articolelor fiecărei persoane. Util pentru taxe și bacșișuri.",
+      "errorExceedsAmountDetails": "Totalul articolelor ({itemsTotal}) depășește valoarea cheltuielii cu {excess}."
     },
     "leaveItemized": {
       "title": "Schimbi modul de împărțire?",

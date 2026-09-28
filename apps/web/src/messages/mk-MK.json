@@ -1539,7 +1539,8 @@
       "allItemsSplitEdit": "Уреди ја поделбата на сите ставки",
       "allItemsSplitModalTitle": "Поделба на сите ставки",
       "remainderAllocationProportional": "Пропорционално на ставките",
-      "remainderProportionalHint": "Поделете го овој износ врз основа на меѓузбирот на ставките на секое лице. Корисно за даноци и бакшиш."
+      "remainderProportionalHint": "Поделете го овој износ врз основа на меѓузбирот на ставките на секое лице. Корисно за даноци и бакшиш.",
+      "errorExceedsAmountDetails": "Вкупниот износ на ставките ({itemsTotal}) го надминува износот на трошокот за {excess}."
     },
     "leaveItemized": {
       "title": "Да се смени начинот на поделба?",

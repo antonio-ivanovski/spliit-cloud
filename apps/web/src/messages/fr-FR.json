@@ -1060,7 +1060,8 @@
       "allItemsSplitEdit": "Modifier le partage de tous les articles",
       "allItemsSplitModalTitle": "Partage de tous les articles",
       "remainderAllocationProportional": "Proportionnel aux articles",
-      "remainderProportionalHint": "Répartissez ce montant en fonction du sous-total des articles de chaque personne. Utile pour les taxes et les pourboires."
+      "remainderProportionalHint": "Répartissez ce montant en fonction du sous-total des articles de chaque personne. Utile pour les taxes et les pourboires.",
+      "errorExceedsAmountDetails": "Le total des articles ({itemsTotal}) dépasse le montant de la dépense de {excess}."
     },
     "leaveItemized": {
       "title": "Changer de mode de répartition ?",

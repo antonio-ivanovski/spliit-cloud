@@ -1078,7 +1078,8 @@
       "allItemsSplitEdit": "Editar la división de todos los artículos",
       "allItemsSplitModalTitle": "División de todos los artículos",
       "remainderAllocationProportional": "Proporcional a los artículos",
-      "remainderProportionalHint": "Divide este importe según el subtotal de artículos de cada persona. Útil para impuestos y propinas."
+      "remainderProportionalHint": "Divide este importe según el subtotal de artículos de cada persona. Útil para impuestos y propinas.",
+      "errorExceedsAmountDetails": "El total de los artículos ({itemsTotal}) supera el importe del gasto en {excess}."
     },
     "leaveItemized": {
       "title": "¿Cambiar el modo de división?",

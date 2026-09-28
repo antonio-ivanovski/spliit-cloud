@@ -1667,7 +1667,8 @@
       "allItemsSplitEdit": "Edit all-items split",
       "allItemsSplitModalTitle": "All-items split",
       "remainderAllocationProportional": "Proportional to items",
-      "remainderProportionalHint": "Split this amount based on each person's item subtotal. Useful for taxes and tips."
+      "remainderProportionalHint": "Split this amount based on each person's item subtotal. Useful for taxes and tips.",
+      "errorExceedsAmountDetails": "Items total {itemsTotal} exceeds the expense amount by {excess}."
     },
     "leaveItemized": {
       "title": "Switch split mode?",

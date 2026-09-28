@@ -963,7 +963,8 @@
       "allItemsSplitEdit": "모든 항목 분할 편집",
       "allItemsSplitModalTitle": "모든 항목 분할",
       "remainderAllocationProportional": "항목 비례 분할",
-      "remainderProportionalHint": "각 사람의 항목 소계에 따라 이 금액을 나눕니다. 세금이나 팁을 나눌 때 유용해요."
+      "remainderProportionalHint": "각 사람의 항목 소계에 따라 이 금액을 나눕니다. 세금이나 팁을 나눌 때 유용해요.",
+      "errorExceedsAmountDetails": "항목 합계 {itemsTotal}가 지출 금액을 {excess} 초과해요."
     },
     "leaveItemized": {
       "title": "분할 방식을 바꿀까요?",

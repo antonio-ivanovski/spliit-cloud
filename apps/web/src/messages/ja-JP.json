@@ -1046,7 +1046,8 @@
       "allItemsSplitEdit": "すべての項目の分割を編集",
       "allItemsSplitModalTitle": "すべての項目の分割",
       "remainderAllocationProportional": "品目に比例",
-      "remainderProportionalHint": "各メンバーの品目小計に基づいて、この金額を按分します。税金やチップの配分に便利です。"
+      "remainderProportionalHint": "各メンバーの品目小計に基づいて、この金額を按分します。税金やチップの配分に便利です。",
+      "errorExceedsAmountDetails": "品目の合計 {itemsTotal} が支出額を {excess} 上回っています。"
     },
     "leaveItemized": {
       "title": "分割方法を変更しますか？",

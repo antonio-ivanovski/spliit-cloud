@@ -1634,7 +1634,8 @@
       "allItemsSplitEdit": "Redigera fördelningen för alla artiklar",
       "allItemsSplitModalTitle": "Fördelning för alla artiklar",
       "remainderAllocationProportional": "Proportionell mot raderna",
-      "remainderProportionalHint": "Fördela beloppet utifrån varje persons radsubtotal. Praktiskt för skatter och dricks."
+      "remainderProportionalHint": "Fördela beloppet utifrån varje persons radsubtotal. Praktiskt för skatter och dricks.",
+      "errorExceedsAmountDetails": "Radernas total ({itemsTotal}) överstiger utgiftsbeloppet med {excess}."
     },
     "leaveItemized": {
       "title": "Byta fördelningssätt?",

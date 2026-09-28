@@ -1067,7 +1067,8 @@
       "allItemsSplitEdit": "Upravit rozdělení všech položek",
       "allItemsSplitModalTitle": "Rozdělení všech položek",
       "remainderAllocationProportional": "Poměrně k položkám",
-      "remainderProportionalHint": "Rozdělte tuto částku podle mezisoučtu položek každé osoby. Užitečné pro daně a spropitné."
+      "remainderProportionalHint": "Rozdělte tuto částku podle mezisoučtu položek každé osoby. Užitečné pro daně a spropitné.",
+      "errorExceedsAmountDetails": "Součet položek ({itemsTotal}) přesahuje částku výdaje o {excess}."
     },
     "leaveItemized": {
       "title": "Změnit způsob rozdělení?",

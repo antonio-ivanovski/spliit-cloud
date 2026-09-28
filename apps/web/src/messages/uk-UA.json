@@ -1067,7 +1067,8 @@
       "allItemsSplitEdit": "Редагувати розподіл усіх позицій",
       "allItemsSplitModalTitle": "Розподіл усіх позицій",
       "remainderAllocationProportional": "Пропорційно позиціям",
-      "remainderProportionalHint": "Розділіть цю суму пропорційно проміжному підсумку позицій кожного учасника. Зручно для податків і чайових."
+      "remainderProportionalHint": "Розділіть цю суму пропорційно проміжному підсумку позицій кожного учасника. Зручно для податків і чайових.",
+      "errorExceedsAmountDetails": "Сума позицій ({itemsTotal}) перевищує суму витрати на {excess}."
     },
     "leaveItemized": {
       "title": "Змінити спосіб розподілу?",

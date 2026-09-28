@@ -1067,7 +1067,8 @@
       "allItemsSplitEdit": "Edytuj podział wszystkich pozycji",
       "allItemsSplitModalTitle": "Podział wszystkich pozycji",
       "remainderAllocationProportional": "Proporcjonalnie do pozycji",
-      "remainderProportionalHint": "Podziel tę kwotę proporcjonalnie do sumy częściowej pozycji każdej osoby. Przydatne przy podatkach i napiwkach."
+      "remainderProportionalHint": "Podziel tę kwotę proporcjonalnie do sumy częściowej pozycji każdej osoby. Przydatne przy podatkach i napiwkach.",
+      "errorExceedsAmountDetails": "Suma pozycji ({itemsTotal}) przekracza kwotę wydatku o {excess}."
     },
     "leaveItemized": {
       "title": "Zmienić sposób podziału?",

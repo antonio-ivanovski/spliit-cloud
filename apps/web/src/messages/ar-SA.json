@@ -1462,7 +1462,8 @@
       "allItemsSplitEdit": "تعديل تقسيم كل البنود",
       "allItemsSplitModalTitle": "تقسيم كل البنود",
       "remainderAllocationProportional": "بشكل متناسب مع البنود",
-      "remainderProportionalHint": "قسّم هذا المبلغ بناءً على المجموع الفرعي لبنود كل شخص. مفيد للضرائب والإكراميات."
+      "remainderProportionalHint": "قسّم هذا المبلغ بناءً على المجموع الفرعي لبنود كل شخص. مفيد للضرائب والإكراميات.",
+      "errorExceedsAmountDetails": "مجموع البنود ({itemsTotal}) يتجاوز مبلغ المصروفات بمقدار {excess}."
     },
     "Expense": {
       "paidFor": {

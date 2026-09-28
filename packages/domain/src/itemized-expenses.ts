@@ -1,3 +1,4 @@
+import type { Currency } from './currency'
 import type { RemainderAllocationMode, SplitMode } from './enums'
 import {
   addExactAmount,
@@ -7,7 +8,7 @@ import {
 import { distributeRemainder } from './remainder-distribution'
 import type { ExpenseApiItem } from './schemas'
 import { calculateExactShares } from './totals'
-import { expenseIdSeed } from './utils'
+import { amountAsDecimal, amountAsMinorUnits, expenseIdSeed } from './utils'
 
 export type ItemPaidFor = Array<{ participant: string; shares: number }>
 
@@ -153,6 +154,62 @@ export function itemsExceedExpenseAmount(
   return expenseAmount < 0
     ? itemsAmount < expenseAmount
     : itemsAmount > expenseAmount
+}
+
+/** Form display-unit item (unitPrice/quantity may be raw text-input values). */
+export type FormItemLike = {
+  unitPrice: number | string
+  quantity: number | string
+}
+
+/**
+ * Item + expense totals in the selected expense currency's minor units,
+ * mirroring save serialization (`submit-values.ts`): each line's unit price is
+ * rounded to minor units first, then multiplied by the integer quantity.
+ *
+ * Summing raw JS decimals instead (`0.1 + 0.2 > 0.3`) produces false
+ * exceeds-errors for totals that are visually equal. All form comparisons
+ * (schema error, excess warning, "Other" filler) must use this helper.
+ */
+export function getItemizedFormMinorTotals(
+  items: readonly FormItemLike[],
+  expenseAmountMajor: number | string,
+  currency: Currency,
+): {
+  itemsMinor: number
+  amountMinor: number
+  /** Signed `items - amount` in minor units (positive = over). */
+  excessMinor: number
+  /** Signed `amount - items` in minor units (positive = under). */
+  gapMinor: number
+} {
+  const amountMinor = amountAsMinorUnits(
+    Number(expenseAmountMajor) || 0,
+    currency,
+  )
+  let itemsMinor = 0
+  for (const item of items) {
+    const unitPriceMinor = amountAsMinorUnits(
+      Number(item.unitPrice) || 0,
+      currency,
+    )
+    const quantity = Math.max(1, Math.round(Number(item.quantity) || 1))
+    itemsMinor += unitPriceMinor * quantity
+  }
+  return {
+    itemsMinor,
+    amountMinor,
+    excessMinor: itemsMinor - amountMinor,
+    gapMinor: amountMinor - itemsMinor,
+  }
+}
+
+/**
+ * "Other" filler price in major units for a minor-unit gap. Round-trips through
+ * `amountAsMinorUnits` back to `gapMinor`.
+ */
+export function gapMinorAsMajor(gapMinor: number, currency: Currency): number {
+  return amountAsDecimal(gapMinor, currency)
 }
 
 /**

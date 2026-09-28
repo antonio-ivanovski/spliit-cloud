@@ -1067,7 +1067,8 @@
       "allItemsSplitEdit": "Изменить распределение всех позиций",
       "allItemsSplitModalTitle": "Распределение всех позиций",
       "remainderAllocationProportional": "Пропорционально позициям",
-      "remainderProportionalHint": "Разделите эту сумму пропорционально промежуточному итогу позиций каждого участника. Удобно для налогов и чаевых."
+      "remainderProportionalHint": "Разделите эту сумму пропорционально промежуточному итогу позиций каждого участника. Удобно для налогов и чаевых.",
+      "errorExceedsAmountDetails": "Сумма позиций ({itemsTotal}) превышает сумму расхода на {excess}."
     },
     "leaveItemized": {
       "title": "Изменить способ распределения?",

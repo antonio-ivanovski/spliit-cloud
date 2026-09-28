@@ -1639,7 +1639,8 @@
       "allItemsSplitEdit": "Chỉnh sửa cách chia tất cả mục",
       "allItemsSplitModalTitle": "Cách chia cho tất cả mục",
       "remainderAllocationProportional": "Theo tỷ lệ các mục",
-      "remainderProportionalHint": "Chia số tiền này dựa trên tổng phụ các mục của từng người. Hữu ích cho thuế và tiền boa."
+      "remainderProportionalHint": "Chia số tiền này dựa trên tổng phụ các mục của từng người. Hữu ích cho thuế và tiền boa.",
+      "errorExceedsAmountDetails": "Tổng các mục ({itemsTotal}) vượt quá số tiền {excess}."
     },
     "leaveItemized": {
       "title": "Rời chế độ mục?",

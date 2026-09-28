@@ -1060,7 +1060,8 @@
       "allItemsSplitEdit": "Edita la divisió de tots els articles",
       "allItemsSplitModalTitle": "Divisió de tots els articles",
       "remainderAllocationProportional": "Proporcional als articles",
-      "remainderProportionalHint": "Reparteix aquest import segons el subtotal d’articles de cada persona. Útil per a impostos i propines."
+      "remainderProportionalHint": "Reparteix aquest import segons el subtotal d’articles de cada persona. Útil per a impostos i propines.",
+      "errorExceedsAmountDetails": "El total dels articles ({itemsTotal}) supera l’import de la despesa en {excess}."
     },
     "leaveItemized": {
       "title": "Vols canviar el mode de repartiment?",

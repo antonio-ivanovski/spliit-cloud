@@ -1053,7 +1053,8 @@
       "allItemsSplitEdit": "Muokkaa kaikkien nimikkeiden jakoa",
       "allItemsSplitModalTitle": "Kaikkien nimikkeiden jako",
       "remainderAllocationProportional": "Kohteiden suhteessa",
-      "remainderProportionalHint": "Jaa tämä summa kunkin henkilön kohdekohtaisen välisumman mukaan. Kätevä veroja ja tippejä varten."
+      "remainderProportionalHint": "Jaa tämä summa kunkin henkilön kohdekohtaisen välisumman mukaan. Kätevä veroja ja tippejä varten.",
+      "errorExceedsAmountDetails": "Kohteiden summa ({itemsTotal}) on {excess} suurempi kuin kulun summa."
     },
     "leaveItemized": {
       "title": "Vaihdetaanko jakotapaa?",

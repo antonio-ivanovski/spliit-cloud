@@ -1077,7 +1077,8 @@
       "allItemsSplitEdit": "Verdeling van alle artikelen bewerken",
       "allItemsSplitModalTitle": "Verdeling voor alle artikelen",
       "remainderAllocationProportional": "Proportioneel aan artikelen",
-      "remainderProportionalHint": "Verdeel dit bedrag op basis van het itemsubtotaal van elke persoon. Handig voor belastingen en fooien."
+      "remainderProportionalHint": "Verdeel dit bedrag op basis van het itemsubtotaal van elke persoon. Handig voor belastingen en fooien.",
+      "errorExceedsAmountDetails": "Het itemtotaal ({itemsTotal}) is {excess} hoger dan het uitgavenbedrag."
     },
     "leaveItemized": {
       "title": "Verdeelmethode wijzigen?",

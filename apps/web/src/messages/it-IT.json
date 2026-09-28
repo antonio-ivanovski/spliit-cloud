@@ -1060,7 +1060,8 @@
       "allItemsSplitEdit": "Modifica la divisione di tutti gli elementi",
       "allItemsSplitModalTitle": "Divisione di tutti gli elementi",
       "remainderAllocationProportional": "Proporzionale alle voci",
-      "remainderProportionalHint": "Dividi questo importo in base al subtotale delle voci di ogni persona. Utile per tasse e mance."
+      "remainderProportionalHint": "Dividi questo importo in base al subtotale delle voci di ogni persona. Utile per tasse e mance.",
+      "errorExceedsAmountDetails": "Il totale delle voci ({itemsTotal}) supera l’importo della spesa di {excess}."
     },
     "leaveItemized": {
       "title": "Cambiare modalità di divisione?",

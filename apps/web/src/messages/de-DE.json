@@ -1077,7 +1077,8 @@
       "allItemsSplitEdit": "Teilung aller Artikel bearbeiten",
       "allItemsSplitModalTitle": "Teilung aller Artikel",
       "remainderAllocationProportional": "Proportional zu Artikeln",
-      "remainderProportionalHint": "Teile diesen Betrag anhand der Artikelzwischensumme jeder Person auf. Nützlich für Steuern und Trinkgelder."
+      "remainderProportionalHint": "Teile diesen Betrag anhand der Artikelzwischensumme jeder Person auf. Nützlich für Steuern und Trinkgelder.",
+      "errorExceedsAmountDetails": "Die Artikelsumme ({itemsTotal}) übersteigt den Ausgabenbetrag um {excess}."
     },
     "leaveItemized": {
       "title": "Aufteilungsart wechseln?",

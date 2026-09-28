@@ -526,7 +526,8 @@
       "defaultSplitLabel": "Divisão padrão dos itens",
       "defaultSplitEdit": "Editar a divisão padrão dos itens",
       "defaultSplitModalTitle": "Divisão padrão dos itens",
-      "remainderProportionalHint": "Divida este valor com base no subtotal de itens de cada pessoa. Útil para impostos e gorjetas."
+      "remainderProportionalHint": "Divida este valor com base no subtotal de itens de cada pessoa. Útil para impostos e gorjetas.",
+      "errorExceedsAmountDetails": "O total dos itens ({itemsTotal}) excede o valor da despesa em {excess}."
     },
     "leaveItemized": {
       "title": "Mudar o modo de divisão?",

@@ -1634,7 +1634,8 @@
       "allItemsSplitEdit": "تمام آئٹمز کی تقسیم میں ترمیم کریں",
       "allItemsSplitModalTitle": "تمام آئٹمز کی تقسیم",
       "remainderAllocationProportional": "آئٹمز کے تناسب سے",
-      "remainderProportionalHint": "ہر شخص کے آئٹمز کے ذیلی مجموعے کی بنیاد پر یہ رقم تقسیم کریں۔ ٹیکس اور ٹپس کے لیے مفید۔"
+      "remainderProportionalHint": "ہر شخص کے آئٹمز کے ذیلی مجموعے کی بنیاد پر یہ رقم تقسیم کریں۔ ٹیکس اور ٹپس کے لیے مفید۔",
+      "errorExceedsAmountDetails": "آئٹمز کی کل رقم ({itemsTotal}) خرچے کی رقم سے {excess} زیادہ ہے۔"
     },
     "leaveItemized": {
       "title": "تقسیم کا طریقہ تبدیل کریں؟",

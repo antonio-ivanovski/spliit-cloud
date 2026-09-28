@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest'
 
 import type { ExpenseFormInputValues } from '@spliit/domain'
-import { getCurrency } from '@spliit/domain'
+import {
+  createExpenseFormInputSchema,
+  expenseApiSchema,
+  getCurrency,
+} from '@spliit/domain'
 
 import { buildSubmitValues } from './submit-values'
 
@@ -241,5 +245,56 @@ describe('buildSubmitValues', () => {
       splitMode: 'EVENLY',
       paidFor: [],
     })
+  })
+
+  // Regression (#134): a scanned receipt whose printed total matches the
+  // line items in display units (0.10 + 0.20 = 0.30) must validate and
+  // serialize to equal integer minor units end to end.
+  it('round-trips a scanned receipt with float-dust totals (0.10 + 0.20 = 0.30)', () => {
+    const groupCurrency = getCurrency('USD')!
+    const values: ExpenseFormInputValues = {
+      ...baseValues,
+      amount: 0.3,
+      originalCurrency: null,
+      conversionType: undefined,
+      conversionRate: undefined,
+      paidBySplitMode: 'EVENLY',
+      paidByList: [{ participant: 'p1', shares: 1 }],
+      splitMode: 'ITEMIZED',
+      paidFor: [{ participant: 'p1', shares: 1 }],
+      items: [
+        {
+          id: 'a',
+          title: 'Item A',
+          unitPrice: 0.1,
+          quantity: 1,
+          splitMode: 'EVENLY',
+          paidFor: [{ participant: 'p1', shares: 1 }],
+        },
+        {
+          id: 'b',
+          title: 'Item B',
+          unitPrice: 0.2,
+          quantity: 1,
+          splitMode: 'EVENLY',
+          paidFor: [{ participant: 'p1', shares: 1 }],
+        },
+      ],
+      itemizedRemainder: undefined,
+    }
+
+    expect(
+      createExpenseFormInputSchema(groupCurrency).safeParse(values).success,
+    ).toBe(true)
+
+    const result = buildSubmitValues(values, {
+      groupCurrency,
+      conversionRequired: false,
+    })
+    expect(result.amount).toBe(30)
+    expect(result.items?.reduce((sum, item) => sum + item.amount, 0)).toBe(
+      result.amount,
+    )
+    expect(expenseApiSchema.safeParse(result).success).toBe(true)
   })
 })

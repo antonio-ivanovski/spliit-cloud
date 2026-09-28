@@ -5,6 +5,7 @@ import {
   conversionSourceSchema,
   optionalExpenseConversionSchema,
 } from './conversion'
+import { getCurrency, type Currency } from './currency'
 import type { RecurrenceRule, SplitMode } from './enums'
 import {
   GROUP_COLOR_IDS,
@@ -13,6 +14,7 @@ import {
 } from './group-appearance'
 import {
   getProportionalRemainderError,
+  getItemizedFormMinorTotals,
   itemsExceedExpenseAmount,
 } from './itemized-expenses'
 import { recurrenceConfigSchema } from './recurring-expenses'
@@ -22,6 +24,7 @@ import {
   timeZoneSchema,
   toSecondPrecision,
 } from './timezones'
+import { amountAsDecimal } from './utils'
 
 const groupFormFields = {
   name: z.string().min(2, { error: 'min2' }).max(50, { error: 'max50' }),
@@ -756,240 +759,304 @@ function validateDisplayShareForMode(
 // numbers in display units (decimal major units for amounts,
 // display percentages for BY_PERCENTAGE). Conversion to storage units
 // happens in `submit-values.ts` before the values reach the API.
-export const expenseFormInputSchema = z
-  .object({
-    expenseDay: z.iso.date(),
-    expenseTime: z.string().refine((value) => {
-      try {
-        parseTimeMinutes(value)
-        return true
-      } catch {
-        return false
-      }
-    }, 'invalidTime'),
-    expenseTimeZone: timeZoneSchema,
-    title: z
-      .string({
-        error: (issue) =>
-          issue.input === undefined ? 'titleRequired' : undefined,
-      })
-      .min(2, { error: 'min2' }),
-    category: categoryIdSchema,
-    // Text inputs feed raw strings into react-hook-form; coerce at the
-    // schema boundary so empty / numeric strings round-trip to numbers
-    // before the major-unit refines run.
-    amount: z.coerce
-      .number()
-      .refine((amount) => !Number.isNaN(amount), 'invalidNumber')
-      .refine((amount) => amount != 0, 'amountNotZero')
-      // Major-unit ceiling: $10,000,000 equivalent (matches the prior
-      // 10_000_000_00 minor-unit ceiling; same error key for i18n).
-      .refine((amount) => amount <= 10_000_000, 'amountTenMillion'),
-    originalCurrency: z.union([
-      z.string().min(3).max(4).nullish(),
-      z.literal(''),
-    ]),
-    conversionRate: z.coerce
-      .number()
-      .refine((r) => !Number.isNaN(r), 'invalidNumber')
-      .refine((r) => r > 0, 'ratePositive')
-      .optional(),
-    exactAmount: z.preprocess(
-      (value) => (value === '' ? undefined : value),
-      z.coerce
-        .number()
-        .refine((amount) => !Number.isNaN(amount), 'invalidNumber')
-        .refine((amount) => amount !== 0, 'amountNotZero')
-        .refine((amount) => Math.abs(amount) <= 10_000_000, 'amountTenMillion')
-        .optional(),
-    ),
-    // Form-local toggle: EXCHANGE | CUSTOM | EXACT | undefined.
-    // Mapped to the API `conversion` discriminant in submit-values.
-    conversionType: conversionSourceSchema.optional(),
-    paidBySplitMode: paidBySplitModeSchema,
-    paidByList: z
-      .array(formPaidByRowSchema)
-      .min(1, { error: 'paidByMin1' })
-      .superRefine((paidByList, ctx) => {
-        paidByDuplicateGuard(paidByList, ctx)
-      }),
-    paidFor: z.array(formPaidForRowSchema).min(1, { error: 'paidForMin1' }),
-    isMultiPayer: z.boolean().default(false),
-    splitMode: splitModeSchema,
-    documents: documentsSchema,
-    notes: z.string().optional(),
-    // Authoritative series cadence. `recurrenceRule` below remains accepted
-    // for legacy imports until the API compatibility layer is removed.
-    recurrence: recurrenceConfigSchema.nullish(),
-    recurrenceRule: recurrenceRuleSchema,
-    items: z.array(expenseItemFormInputSchema).optional(),
-    itemizedRemainder: itemizedRemainderFormSchema.optional(),
-  })
-  .superRefine((expense, ctx) => {
-    if (expense.conversionType === 'EXACT') {
-      if (expense.exactAmount == null) {
-        ctx.addIssue({
-          code: 'custom',
-          message: 'amountNotZero',
-          path: ['exactAmount'],
-        })
-      } else if (Math.sign(expense.exactAmount) !== Math.sign(expense.amount)) {
-        ctx.addIssue({
-          code: 'custom',
-          message: 'amountSignMismatch',
-          path: ['exactAmount'],
-        })
-      }
-    }
-    // A zero amount is already invalid at the amount field. Avoid reporting
-    // the same state as a share-input problem while the user fixes it.
-    if (expense.amount !== 0) {
-      expense.paidByList.forEach(({ shares }, i) => {
-        validateDisplayShareForMode(
-          shares,
-          expense.paidBySplitMode,
-          ['paidByList', i, 'shares'],
-          ctx,
-          { allowNegative: true },
-        )
-      })
-      expense.paidFor.forEach(({ shares }, i) => {
-        validateDisplayShareForMode(
-          shares,
-          expense.splitMode,
-          ['paidFor', i, 'shares'],
-          ctx,
-        )
-      })
-    }
+//
+// Item totals are compared in the selected expense currency's minor units
+// (per-line rounding, matching save serialization) so visually equal totals
+// like `0.10 + 0.20 = 0.30` validate. Use `createExpenseFormInputSchema`
+// with the group currency so the fallback (when `originalCurrency` is empty)
+// uses the group's precision; the default export keeps the legacy 2-digit
+// fallback for callers without group context.
+const defaultFormFallbackCurrency: Currency = {
+  code: '',
+  symbol: '',
+  rounding: 0,
+  decimal_digits: 2,
+}
 
-    switch (expense.splitMode) {
-      case 'EVENLY':
-        break
-      case 'BY_SHARES':
-        break
-      case 'BY_AMOUNT': {
-        const sum = expense.paidFor.reduce((sum, { shares }) => sum + shares, 0)
-        // Two-decimal currencies can drift by ±0.01 due to rounding.
-        if (Math.abs(sum - expense.amount) > 0.01) {
-          ctx.addIssue({
-            code: 'custom',
-            message: 'amountSum',
-            path: ['paidFor'],
-          })
-        }
-        break
-      }
-      case 'BY_PERCENTAGE': {
-        const sum = expense.paidFor.reduce((sum, { shares }) => sum + shares, 0)
-        if (Math.abs(sum - 100) > 0.01) {
-          ctx.addIssue({
-            code: 'custom',
-            message: 'percentageSum',
-            path: ['paidFor'],
-          })
-        }
-        break
-      }
-    }
-    switch (expense.paidBySplitMode) {
-      case 'EVENLY':
-        break
-      case 'BY_SHARES':
-        break
-      case 'BY_AMOUNT': {
-        // paidBy shares are entered in the same currency as `amount` (the
-        // selected expense currency), so the sum always compares to it.
-        const sum = expense.paidByList.reduce(
-          (sum, { shares }) => sum + shares,
-          0,
-        )
-        if (Math.abs(sum - expense.amount) > 0.01) {
-          ctx.addIssue({
-            code: 'custom',
-            message: 'paidByAmountSum',
-            path: ['paidByList'],
-          })
-        }
-        break
-      }
-      case 'BY_PERCENTAGE': {
-        const sum = expense.paidByList.reduce(
-          (sum, { shares }) => sum + shares,
-          0,
-        )
-        if (Math.abs(sum - 100) > 0.01) {
-          ctx.addIssue({
-            code: 'custom',
-            message: 'paidByPercentageSum',
-            path: ['paidByList'],
-          })
-        }
-        break
-      }
-    }
-  })
-  .superRefine((expense, ctx) => {
-    const items = expense.items ?? []
-    if (expense.splitMode !== 'ITEMIZED') return
+function resolveFormInputCurrency(
+  originalCurrency: unknown,
+  fallback: Currency,
+): Currency {
+  if (typeof originalCurrency === 'string' && originalCurrency.length > 0) {
+    return getCurrency(originalCurrency) ?? fallback
+  }
+  return fallback
+}
 
-    if (items.length === 0) {
+function validateFormItemizedTotals(
+  expense: {
+    amount: number
+    originalCurrency?: string | null | undefined
+    splitMode: string
+    items?: Array<{
+      unitPrice: number
+      quantity: number
+      splitMode: SplitMode
+      paidFor: Array<{ participant: string; shares: number }>
+    }>
+    itemizedRemainder?: z.infer<typeof itemizedRemainderFormSchema>
+  },
+  ctx: z.RefinementCtx,
+  fallbackCurrency: Currency,
+): void {
+  const items = expense.items ?? []
+  if (expense.splitMode !== 'ITEMIZED') return
+
+  if (items.length === 0) {
+    ctx.addIssue({
+      code: 'custom',
+      message: 'paidForMin1',
+      path: ['items'],
+    })
+    return
+  }
+
+  items.forEach((item, index) => {
+    if (item.paidFor.length === 0) {
       ctx.addIssue({
         code: 'custom',
         message: 'paidForMin1',
-        path: ['items'],
+        path: ['items', index, 'paidFor'],
       })
-      return
-    }
-
-    items.forEach((item, index) => {
-      if (item.paidFor.length === 0) {
-        ctx.addIssue({
-          code: 'custom',
-          message: 'paidForMin1',
-          path: ['items', index, 'paidFor'],
-        })
-      }
-    })
-
-    const itemsSum = items.reduce(
-      (sum, item) => sum + item.unitPrice * item.quantity,
-      0,
-    )
-    if (itemsExceedExpenseAmount(itemsSum, expense.amount)) {
-      ctx.addIssue({
-        code: 'custom',
-        message: 'amountSum',
-        path: ['items'],
-      })
-    }
-
-    const remainderAmount = expense.amount - itemsSum
-    if (remainderAmount !== 0 && expense.itemizedRemainder) {
-      if (isProportionalRemainder(expense.itemizedRemainder)) {
-        reportProportionalBasisError(
-          items.map((item) => ({
-            amount: item.unitPrice * item.quantity,
-            splitMode: item.splitMode,
-            paidFor: item.paidFor,
-          })),
-          expense.amount,
-          ctx,
-        )
-      } else {
-        itemizedRemainderFormRows(expense.itemizedRemainder, ctx)
-        validateDisplayItemShareTotal(
-          expense.itemizedRemainder.paidFor,
-          expense.itemizedRemainder.splitMode,
-          remainderAmount,
-          ctx,
-          ['itemizedRemainder', 'paidFor'],
-          'amountSum',
-          'percentageSum',
-        )
-      }
     }
   })
+
+  const inputCurrency = resolveFormInputCurrency(
+    expense.originalCurrency,
+    fallbackCurrency,
+  )
+  const { itemsMinor, amountMinor, gapMinor } = getItemizedFormMinorTotals(
+    items,
+    expense.amount,
+    inputCurrency,
+  )
+  if (itemsExceedExpenseAmount(itemsMinor, amountMinor)) {
+    ctx.addIssue({
+      code: 'custom',
+      message: 'amountSum',
+      path: ['items'],
+    })
+  }
+
+  if (gapMinor !== 0 && expense.itemizedRemainder) {
+    if (isProportionalRemainder(expense.itemizedRemainder)) {
+      reportProportionalBasisError(
+        items.map((item) => ({
+          amount: item.unitPrice * item.quantity,
+          splitMode: item.splitMode,
+          paidFor: item.paidFor,
+        })),
+        expense.amount,
+        ctx,
+      )
+    } else {
+      itemizedRemainderFormRows(expense.itemizedRemainder, ctx)
+      validateDisplayItemShareTotal(
+        expense.itemizedRemainder.paidFor,
+        expense.itemizedRemainder.splitMode,
+        amountAsDecimal(gapMinor, inputCurrency),
+        ctx,
+        ['itemizedRemainder', 'paidFor'],
+        'amountSum',
+        'percentageSum',
+      )
+    }
+  }
+}
+
+export function createExpenseFormInputSchema(fallbackCurrency: Currency) {
+  return z
+    .object({
+      expenseDay: z.iso.date(),
+      expenseTime: z.string().refine((value) => {
+        try {
+          parseTimeMinutes(value)
+          return true
+        } catch {
+          return false
+        }
+      }, 'invalidTime'),
+      expenseTimeZone: timeZoneSchema,
+      title: z
+        .string({
+          error: (issue) =>
+            issue.input === undefined ? 'titleRequired' : undefined,
+        })
+        .min(2, { error: 'min2' }),
+      category: categoryIdSchema,
+      // Text inputs feed raw strings into react-hook-form; coerce at the
+      // schema boundary so empty / numeric strings round-trip to numbers
+      // before the major-unit refines run.
+      amount: z.coerce
+        .number()
+        .refine((amount) => !Number.isNaN(amount), 'invalidNumber')
+        .refine((amount) => amount != 0, 'amountNotZero')
+        // Major-unit ceiling: $10,000,000 equivalent (matches the prior
+        // 10_000_000_00 minor-unit ceiling; same error key for i18n).
+        .refine((amount) => amount <= 10_000_000, 'amountTenMillion'),
+      originalCurrency: z.union([
+        z.string().min(3).max(4).nullish(),
+        z.literal(''),
+      ]),
+      conversionRate: z.coerce
+        .number()
+        .refine((r) => !Number.isNaN(r), 'invalidNumber')
+        .refine((r) => r > 0, 'ratePositive')
+        .optional(),
+      exactAmount: z.preprocess(
+        (value) => (value === '' ? undefined : value),
+        z.coerce
+          .number()
+          .refine((amount) => !Number.isNaN(amount), 'invalidNumber')
+          .refine((amount) => amount !== 0, 'amountNotZero')
+          .refine(
+            (amount) => Math.abs(amount) <= 10_000_000,
+            'amountTenMillion',
+          )
+          .optional(),
+      ),
+      // Form-local toggle: EXCHANGE | CUSTOM | EXACT | undefined.
+      // Mapped to the API `conversion` discriminant in submit-values.
+      conversionType: conversionSourceSchema.optional(),
+      paidBySplitMode: paidBySplitModeSchema,
+      paidByList: z
+        .array(formPaidByRowSchema)
+        .min(1, { error: 'paidByMin1' })
+        .superRefine((paidByList, ctx) => {
+          paidByDuplicateGuard(paidByList, ctx)
+        }),
+      paidFor: z.array(formPaidForRowSchema).min(1, { error: 'paidForMin1' }),
+      isMultiPayer: z.boolean().default(false),
+      splitMode: splitModeSchema,
+      documents: documentsSchema,
+      notes: z.string().optional(),
+      // Authoritative series cadence. `recurrenceRule` below remains accepted
+      // for legacy imports until the API compatibility layer is removed.
+      recurrence: recurrenceConfigSchema.nullish(),
+      recurrenceRule: recurrenceRuleSchema,
+      items: z.array(expenseItemFormInputSchema).optional(),
+      itemizedRemainder: itemizedRemainderFormSchema.optional(),
+    })
+    .superRefine((expense, ctx) => {
+      if (expense.conversionType === 'EXACT') {
+        if (expense.exactAmount == null) {
+          ctx.addIssue({
+            code: 'custom',
+            message: 'amountNotZero',
+            path: ['exactAmount'],
+          })
+        } else if (
+          Math.sign(expense.exactAmount) !== Math.sign(expense.amount)
+        ) {
+          ctx.addIssue({
+            code: 'custom',
+            message: 'amountSignMismatch',
+            path: ['exactAmount'],
+          })
+        }
+      }
+      // A zero amount is already invalid at the amount field. Avoid reporting
+      // the same state as a share-input problem while the user fixes it.
+      if (expense.amount !== 0) {
+        expense.paidByList.forEach(({ shares }, i) => {
+          validateDisplayShareForMode(
+            shares,
+            expense.paidBySplitMode,
+            ['paidByList', i, 'shares'],
+            ctx,
+            { allowNegative: true },
+          )
+        })
+        expense.paidFor.forEach(({ shares }, i) => {
+          validateDisplayShareForMode(
+            shares,
+            expense.splitMode,
+            ['paidFor', i, 'shares'],
+            ctx,
+          )
+        })
+      }
+
+      switch (expense.splitMode) {
+        case 'EVENLY':
+          break
+        case 'BY_SHARES':
+          break
+        case 'BY_AMOUNT': {
+          const sum = expense.paidFor.reduce(
+            (sum, { shares }) => sum + shares,
+            0,
+          )
+          // Two-decimal currencies can drift by ±0.01 due to rounding.
+          if (Math.abs(sum - expense.amount) > 0.01) {
+            ctx.addIssue({
+              code: 'custom',
+              message: 'amountSum',
+              path: ['paidFor'],
+            })
+          }
+          break
+        }
+        case 'BY_PERCENTAGE': {
+          const sum = expense.paidFor.reduce(
+            (sum, { shares }) => sum + shares,
+            0,
+          )
+          if (Math.abs(sum - 100) > 0.01) {
+            ctx.addIssue({
+              code: 'custom',
+              message: 'percentageSum',
+              path: ['paidFor'],
+            })
+          }
+          break
+        }
+      }
+      switch (expense.paidBySplitMode) {
+        case 'EVENLY':
+          break
+        case 'BY_SHARES':
+          break
+        case 'BY_AMOUNT': {
+          // paidBy shares are entered in the same currency as `amount` (the
+          // selected expense currency), so the sum always compares to it.
+          const sum = expense.paidByList.reduce(
+            (sum, { shares }) => sum + shares,
+            0,
+          )
+          if (Math.abs(sum - expense.amount) > 0.01) {
+            ctx.addIssue({
+              code: 'custom',
+              message: 'paidByAmountSum',
+              path: ['paidByList'],
+            })
+          }
+          break
+        }
+        case 'BY_PERCENTAGE': {
+          const sum = expense.paidByList.reduce(
+            (sum, { shares }) => sum + shares,
+            0,
+          )
+          if (Math.abs(sum - 100) > 0.01) {
+            ctx.addIssue({
+              code: 'custom',
+              message: 'paidByPercentageSum',
+              path: ['paidByList'],
+            })
+          }
+          break
+        }
+      }
+    })
+    .superRefine((expense, ctx) => {
+      validateFormItemizedTotals(expense, ctx, fallbackCurrency)
+    })
+}
+
+export const expenseFormInputSchema = createExpenseFormInputSchema(
+  defaultFormFallbackCurrency,
+)
 
 /**
  * Shared cross-cutting item validations for both form and API schemas. Ensures

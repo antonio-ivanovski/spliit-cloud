@@ -45,8 +45,10 @@ import type {
   ExpenseFormItemValues,
 } from '@spliit/domain'
 import {
+  amountAsDecimal,
   amountAsMinorUnits,
   computePaidForFromItems,
+  getItemizedFormMinorTotals,
   itemsExceedExpenseAmount,
 } from '@spliit/domain'
 
@@ -162,14 +164,16 @@ export function ExpenseItemsCard({
     groupCurrency,
     itemizedRemainder,
   )
-  const itemsSumMajor = items.reduce(
-    (sum, item) => sum + Number(item.unitPrice) * Number(item.quantity),
-    0,
+  const itemizedTotals = getItemizedFormMinorTotals(
+    items,
+    amountMajor,
+    groupCurrency,
   )
   const exceedsAmount = itemsExceedExpenseAmount(
-    amountAsMinorUnits(itemsSumMajor, groupCurrency),
-    amountAsMinorUnits(amountMajor, groupCurrency),
+    itemizedTotals.itemsMinor,
+    itemizedTotals.amountMinor,
   )
+  const excessMinor = itemizedTotals.itemsMinor - itemizedTotals.amountMinor
   const fillerItem = itemsWithFiller.find(isFillerItem)
 
   const commonSplit = getCommonItemSplit(items)
@@ -222,11 +226,15 @@ export function ExpenseItemsCard({
   }
 
   const handleSetExpenseAmount = () => {
-    form.setValue('amount', itemsSumMajor, {
-      shouldDirty: true,
-      shouldTouch: true,
-      shouldValidate: true,
-    })
+    form.setValue(
+      'amount',
+      amountAsDecimal(itemizedTotals.itemsMinor, groupCurrency),
+      {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      },
+    )
   }
 
   const [editingTarget, setEditingTarget] = useState<EditingTarget | null>(null)
@@ -570,7 +578,23 @@ export function ExpenseItemsCard({
 
                     {exceedsAmount && (
                       <div className="mt-3 flex flex-col gap-2 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive sm:flex-row sm:items-center sm:justify-between">
-                        <span>{t('items.errorExceedsAmount')}</span>
+                        <div className="flex flex-col gap-1">
+                          <span>{t('items.errorExceedsAmount')}</span>
+                          <span>
+                            {t('items.errorExceedsAmountDetails', {
+                              itemsTotal: formatCurrency(
+                                groupCurrency,
+                                itemizedTotals.itemsMinor,
+                                locale,
+                              ),
+                              excess: formatCurrency(
+                                groupCurrency,
+                                Math.abs(excessMinor),
+                                locale,
+                              ),
+                            })}
+                          </span>
+                        </div>
                         {!readOnly && (
                           <Button
                             variant="outline"

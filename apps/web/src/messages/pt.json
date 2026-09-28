@@ -1174,7 +1174,8 @@
       "allItemsSplitEdit": "Editar a divisão de todos os itens",
       "allItemsSplitModalTitle": "Divisão de todos os itens",
       "remainderAllocationProportional": "Proporcional aos itens",
-      "remainderProportionalHint": "Divide este montante com base no subtotal de itens de cada pessoa. Útil para impostos e gorjetas."
+      "remainderProportionalHint": "Divide este montante com base no subtotal de itens de cada pessoa. Útil para impostos e gorjetas.",
+      "errorExceedsAmountDetails": "O total dos itens ({itemsTotal}) excede o montante da despesa em {excess}."
     },
     "leaveItemized": {
       "title": "Alterar o modo de divisão?",

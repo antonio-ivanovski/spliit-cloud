@@ -1634,7 +1634,8 @@
       "allItemsSplitEdit": "सभी आइटम का विभाजन संपादित करें",
       "allItemsSplitModalTitle": "सभी आइटम का विभाजन",
       "remainderAllocationProportional": "आइटम के अनुपात में",
-      "remainderProportionalHint": "प्रत्येक व्यक्ति के आइटम उप-योग के आधार पर यह राशि विभाजित करें। कर और टिप के लिए उपयोगी।"
+      "remainderProportionalHint": "प्रत्येक व्यक्ति के आइटम उप-योग के आधार पर यह राशि विभाजित करें। कर और टिप के लिए उपयोगी।",
+      "errorExceedsAmountDetails": "आइटम कुल ({itemsTotal}) खर्च राशि से {excess} अधिक है।"
     },
     "leaveItemized": {
       "title": "विभाजन मोड बदलें?",

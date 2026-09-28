@@ -1059,7 +1059,8 @@
       "allItemsSplitEdit": "Editatu elementu guztien banaketa",
       "allItemsSplitModalTitle": "Elementu guztien banaketa",
       "remainderAllocationProportional": "Proportzionala artikuluen arabera",
-      "remainderProportionalHint": "Banatu kopuru hau pertsona bakoitzaren artikulu-azpitotalaren arabera. Zerga eta eskupekoetarako erabilgarria."
+      "remainderProportionalHint": "Banatu kopuru hau pertsona bakoitzaren artikulu-azpitotalaren arabera. Zerga eta eskupekoetarako erabilgarria.",
+      "errorExceedsAmountDetails": "Artikuluen guztizkoa ({itemsTotal}) gastuaren zenbatekoa baino {excess} handiagoa da."
     },
     "leaveItemized": {
       "title": "Banaketa-modua aldatu?",
