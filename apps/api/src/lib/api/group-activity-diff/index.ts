@@ -3,8 +3,10 @@ import type {
   GroupChangedField,
 } from '@spliit/domain/activities'
 
+import { colorDiffer } from './color.differ'
 import { compositeGroupDiffer } from './composite.differ'
 import { currencyDiffer } from './currency.differ'
+import { emojiDiffer } from './emoji.differ'
 import { informationDiffer } from './information.differ'
 import { nameDiffer } from './name.differ'
 import type { DiffableGroup, GroupChangeContext } from './types'
@@ -18,7 +20,9 @@ export type {
   GroupDiffer,
 } from './types'
 
+export { colorDiffer } from './color.differ'
 export { currencyDiffer } from './currency.differ'
+export { emojiDiffer } from './emoji.differ'
 export { informationDiffer } from './information.differ'
 export { nameDiffer } from './name.differ'
 
@@ -26,6 +30,8 @@ const defaultDiffer = compositeGroupDiffer([
   nameDiffer,
   informationDiffer,
   currencyDiffer,
+  emojiDiffer,
+  colorDiffer,
 ])
 
 export function getGroupChangedFields(

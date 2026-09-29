@@ -2825,7 +2825,11 @@
         "currencyCode": "Currency code",
         "linkedParticipant": "Linked participant",
         "subgroupsEnabled": "Subgroups",
-        "publicViewLink": "Public view-only link"
+        "publicViewLink": "Public view-only link",
+        "emoji": "Emoji",
+        "color": "Color",
+        "subgroups": "Subgroups",
+        "splitPresets": "Split presets"
       }
     },
     "member": {
@@ -2848,7 +2852,8 @@
       }
     },
     "participant": {
-      "removed": "{participant} removed {target} from the group"
+      "removed": "{participant} removed {target} from the group",
+      "added": "{participant} added {target} to the group"
     },
     "import": {
       "imported_zero": "{participant} imported {count} expenses",

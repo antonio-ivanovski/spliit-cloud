@@ -19,7 +19,7 @@ who is affected, and the exact migration steps.
 
 ### 🚀 Features
 
-- Short entry per user-facing change (`TBD` by @TBD)
+- Group activity feed now records emoji and color changes, subgroup create/rename/delete, shared split-preset changes and group defaults, newly added participants, and friend invite creation/accepts. Expense comments no longer create feed rows but still send notifications (`TBD` by @TBD)
 - Expense added/updated email and push notifications now include your personal share ("You owe X · You paid Y", or "You lent/borrowed X" for settlements). Thanks @KihtrakRaknas for opening [#148](https://github.com/antonio-ivanovski/spliit-cloud/issues/148) (`TBD` by @TBD)
 
 ### 🐛 Bug fixes

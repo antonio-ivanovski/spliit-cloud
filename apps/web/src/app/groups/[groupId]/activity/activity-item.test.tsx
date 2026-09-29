@@ -354,6 +354,46 @@ describe('ActivityItem', () => {
     expect(screen.getByText(/Alice unarchived the group/)).toBeInTheDocument()
   })
 
+  it('renders participant added', () => {
+    renderItem(
+      makeActivity({
+        type: 'PARTICIPANT_ADDED',
+        subjectType: 'LEDGER_PARTICIPANT',
+        subjectId: 'lp-1',
+        data: { kind: 'group', summary: 'Bob' },
+      }),
+    )
+    expect(screen.getByText(/Alice added Bob to the group/)).toBeInTheDocument()
+  })
+
+  it('renders participant removed with the new name-only summary', () => {
+    renderItem(
+      makeActivity({
+        type: 'PARTICIPANT_REMOVED',
+        subjectType: 'LEDGER_PARTICIPANT',
+        subjectId: 'lp-1',
+        data: { kind: 'group', summary: 'Bob' },
+      }),
+    )
+    expect(
+      screen.getByText(/Alice removed Bob from the group/),
+    ).toBeInTheDocument()
+  })
+
+  it('renders participant removed with the legacy sentence summary', () => {
+    renderItem(
+      makeActivity({
+        type: 'PARTICIPANT_REMOVED',
+        subjectType: 'LEDGER_PARTICIPANT',
+        subjectId: 'lp-1',
+        data: { kind: 'group', summary: 'Participant Bob was removed' },
+      }),
+    )
+    expect(
+      screen.getByText(/Alice removed Bob from the group/),
+    ).toBeInTheDocument()
+  })
+
   it('renders invitation created', () => {
     renderItem(
       makeActivity({

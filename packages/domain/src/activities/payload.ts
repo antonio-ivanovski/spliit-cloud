@@ -95,8 +95,12 @@ export const groupChangedFields = [
   'information',
   'currency',
   'currencyCode',
+  'emoji',
+  'color',
   'linkedParticipant',
   'subgroupsEnabled',
+  'subgroups',
+  'splitPresets',
   'publicViewLink',
 ] as const
 export const groupChangedFieldSchema = z.enum(groupChangedFields)

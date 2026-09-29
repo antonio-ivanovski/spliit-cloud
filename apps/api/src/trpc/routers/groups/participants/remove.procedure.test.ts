@@ -136,7 +136,13 @@ describe('groupsRouter.participants.remove — soft remove', () => {
     )
     expect(prismaMock.activity.create).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: expect.objectContaining({ type: 'PARTICIPANT_REMOVED' }),
+        data: expect.objectContaining({
+          type: 'PARTICIPANT_REMOVED',
+          data: expect.objectContaining({
+            kind: 'group',
+            summary: 'Imported Alex',
+          }),
+        }),
       }),
     )
   })

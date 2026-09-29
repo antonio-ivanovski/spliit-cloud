@@ -20,13 +20,28 @@ type Props = {
   dateStyle: DateTimeStyle
 }
 
+/**
+ * Legacy `PARTICIPANT_REMOVED` rows stored the full sentence `Participant
+ * {name} was removed` as the summary; new rows store just the display name.
+ * Normalize both shapes to the bare name so the feed message reads correctly
+ * without a history rewrite.
+ */
+function participantSummaryToName(summary: string): string {
+  const prefix = 'Participant '
+  const suffix = ' was removed'
+  if (summary.startsWith(prefix) && summary.endsWith(suffix)) {
+    const name = summary.slice(prefix.length, -suffix.length)
+    return name.trim().length > 0 ? name : summary
+  }
+  return summary
+}
+
 function useMessage(activity: Activity) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Activities' })
   const data = parseActivityData(activity.data)
   const actor =
     activity.actorName ??
     (data?.kind === 'expense_comment' ? data.authorName : t('unknownActor'))
-
   if (!data) {
     return { message: t('fallback'), changes: null }
   }
@@ -102,11 +117,19 @@ function useMessage(activity: Activity) {
             message: t('group.unarchived', { participant: actor }),
             changes: null,
           }
+        case 'PARTICIPANT_ADDED':
+          return {
+            message: t('participant.added', {
+              participant: actor,
+              target: data.summary ?? '',
+            }),
+            changes: null,
+          }
         case 'PARTICIPANT_REMOVED':
           return {
             message: t('participant.removed', {
               participant: actor,
-              target: data.summary ?? '',
+              target: participantSummaryToName(data.summary ?? ''),
             }),
             changes: null,
           }

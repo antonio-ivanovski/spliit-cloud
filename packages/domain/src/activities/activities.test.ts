@@ -37,6 +37,7 @@ describe('activityTypeSchema', () => {
       'MEMBER_LEFT',
       'MEMBER_REMOVED',
       'MEMBER_ROLE_CHANGED',
+      'PARTICIPANT_ADDED',
       'PARTICIPANT_REMOVED',
     ]
     for (const value of values) {
