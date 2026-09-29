@@ -140,6 +140,11 @@ const ExpenseListForSearch = ({
       // `useRenderedViewMode` below freezes the timeline's mode to match
       // those stale rows, so the swap happens in one clean step.
       placeholderData: keepPreviousData,
+      // Wait for the group (and its server-resolved participant id) before
+      // fetching. Otherwise the first fetch runs with hideNotInvolving unset,
+      // mounts the timeline in "All" mode, then refetches in "For you" mode —
+      // a flicker plus a replay of the stagger animation on fresh app start.
+      enabled: group !== undefined,
     },
   )
   const expenses = data?.pages.flatMap((page) => page.expenses)
