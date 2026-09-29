@@ -59,15 +59,12 @@ const dateString = z
 /**
  * Internal return path for expense edit/create flows. Allows the global
  * expenses feed (`/expenses?...`) and the group activity tab
- * (`/groups/:groupId/activity`), so an edit started from an activity
- * preview can navigate back to the activity modal instead of the
- * expenses list.
+ * (`/groups/:groupId/activity`), so an edit started from an activity preview
+ * can navigate back to the activity modal instead of the expenses list.
  */
 const expenseReturnTo = z
   .string()
-  .regex(
-    /^(?:\/expenses(?:\?[^#]*)?|\/groups\/[^/]+\/activity(?:\?[^#]*)?)$/,
-  )
+  .regex(/^(?:\/expenses(?:\?[^#]*)?|\/groups\/[^/]+\/activity(?:\?[^#]*)?)$/)
   .optional()
   .catch(undefined)
 

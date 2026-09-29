@@ -270,11 +270,11 @@ describe('group access search retention', () => {
     expect(preview.pathname).toBe('/groups/grp-1/activity')
     expect(preview.search).toMatchObject({ expenseId: 'exp-1' })
 
-    const list = editRouter.buildLocation(expenseEditListLink('grp-1', returnTo))
+    const list = editRouter.buildLocation(
+      expenseEditListLink('grp-1', returnTo),
+    )
     expect(list.pathname).toBe('/groups/grp-1/activity')
-    expect(
-      (list.search as Record<string, unknown>).expenseId,
-    ).toBeUndefined()
+    expect((list.search as Record<string, unknown>).expenseId).toBeUndefined()
   })
 
   it('keeps the activity expense overlay in search params', async () => {

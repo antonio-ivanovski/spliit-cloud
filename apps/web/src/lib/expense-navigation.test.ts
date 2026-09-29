@@ -72,7 +72,9 @@ describe('activity return navigation', () => {
       resetScroll: false,
     })
     const cleared = (
-      list.search as (search: Record<string, unknown>) => Record<string, unknown>
+      list.search as (
+        search: Record<string, unknown>,
+      ) => Record<string, unknown>
     )({ expenseId: 'exp-1', returnTo: '/groups/grp-1/activity' })
     expect(cleared.expenseId).toBeUndefined()
     expect(cleared.returnTo).toBeUndefined()
