@@ -2679,7 +2679,11 @@
         "currencyCode": "通貨コード",
         "linkedParticipant": "リンクされた参加者",
         "subgroupsEnabled": "サブグループ",
-        "publicViewLink": "公開閲覧専用リンク"
+        "publicViewLink": "公開閲覧専用リンク",
+        "emoji": "絵文字",
+        "color": "色",
+        "subgroups": "サブグループ",
+        "splitPresets": "分割プリセット"
       }
     },
     "member": {
@@ -2708,7 +2712,8 @@
       "imported_other": "{participant}が支出を{count}件インポートしました"
     },
     "participant": {
-      "removed": "{participant}が{target}をグループから削除しました"
+      "removed": "{participant}が{target}をグループから削除しました",
+      "added": "{participant}が{target}をグループに追加しました"
     }
   },
   "OfflineBanner": {

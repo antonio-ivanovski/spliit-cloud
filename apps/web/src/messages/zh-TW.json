@@ -2679,7 +2679,11 @@
         "currencyCode": "貨幣代碼",
         "linkedParticipant": "關聯參與者",
         "subgroupsEnabled": "子群組",
-        "publicViewLink": "公開僅限檢視連結"
+        "publicViewLink": "公開僅限檢視連結",
+        "emoji": "表情符號",
+        "color": "顏色",
+        "subgroups": "子群組",
+        "splitPresets": "分攤預設"
       }
     },
     "member": {
@@ -2708,7 +2712,8 @@
       "imported_other": "{participant} 導入了 {count} 筆支出"
     },
     "participant": {
-      "removed": "{participant} 將 {target} 移出了群組"
+      "removed": "{participant} 將 {target} 移出了群組",
+      "added": "{participant} 將 {target} 添加到了群組"
     }
   },
   "OfflineBanner": {

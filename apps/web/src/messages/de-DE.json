@@ -2718,7 +2718,11 @@
         "currencyCode": "Währungscode",
         "linkedParticipant": "Verknüpfter Teilnehmer",
         "subgroupsEnabled": "Untergruppen",
-        "publicViewLink": "Öffentlicher Link mit Nur-Lese-Zugriff"
+        "publicViewLink": "Öffentlicher Link mit Nur-Lese-Zugriff",
+        "emoji": "Emoji",
+        "color": "Farbe",
+        "subgroups": "Untergruppen",
+        "splitPresets": "Teilungsvorlagen"
       }
     },
     "member": {
@@ -2752,7 +2756,8 @@
       "imported_other": "{participant} hat {count} Ausgaben importiert"
     },
     "participant": {
-      "removed": "{participant} entfernte {target} aus der Gruppe"
+      "removed": "{participant} entfernte {target} aus der Gruppe",
+      "added": "{participant} fügte {target} zur Gruppe hinzu"
     }
   },
   "OfflineBanner": {

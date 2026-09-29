@@ -464,7 +464,11 @@
         "currencyCode": "currency code",
         "linkedParticipant": "linked bestie",
         "subgroupsEnabled": "subgroups",
-        "publicViewLink": "public view-only link"
+        "publicViewLink": "public view-only link",
+        "emoji": "emoji",
+        "color": "color",
+        "subgroups": "subgroups",
+        "splitPresets": "split presets"
       }
     },
     "import": {
@@ -493,7 +497,8 @@
     "unknownActor": "some mysterious person",
     "openExpense": "open the expense",
     "participant": {
-      "removed": "{participant} removed {target} from the group chat"
+      "removed": "{participant} removed {target} from the group chat",
+      "added": "{participant} added {target} to the group chat"
     }
   },
   "Activity": {

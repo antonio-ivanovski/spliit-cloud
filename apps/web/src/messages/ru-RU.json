@@ -2706,7 +2706,11 @@
         "currencyCode": "Код валюты",
         "linkedParticipant": "Связанный участник",
         "subgroupsEnabled": "Подгруппы",
-        "publicViewLink": "Публичная ссылка только для просмотра"
+        "publicViewLink": "Публичная ссылка только для просмотра",
+        "emoji": "Эмодзи",
+        "color": "Цвет",
+        "subgroups": "Подгруппы",
+        "splitPresets": "Шаблоны распределения"
       }
     },
     "member": {
@@ -2738,7 +2742,8 @@
       "imported_other": "Пользователь {participant} импортировал {count} расходов"
     },
     "participant": {
-      "removed": "{participant} удалил(а) {target} из группы"
+      "removed": "{participant} удалил(а) {target} из группы",
+      "added": "{participant} добавил(а) {target} в группу"
     }
   },
   "OfflineBanner": {

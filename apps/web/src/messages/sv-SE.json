@@ -419,7 +419,11 @@
         "currencyCode": "Valutakod",
         "linkedParticipant": "Länkad deltagare",
         "subgroupsEnabled": "Subgrupper",
-        "publicViewLink": "Offentlig länk med endast visning"
+        "publicViewLink": "Offentlig länk med endast visning",
+        "emoji": "Emoji",
+        "color": "Färg",
+        "subgroups": "Subgrupper",
+        "splitPresets": "Delningsmallar"
       }
     },
     "import": {
@@ -448,7 +452,8 @@
     "unknownActor": "Någon",
     "openExpense": "Öppna utgift",
     "participant": {
-      "removed": "{participant} tog bort {target} från gruppen"
+      "removed": "{participant} tog bort {target} från gruppen",
+      "added": "{participant} lade till {target} i gruppen"
     }
   },
   "Activity": {

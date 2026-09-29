@@ -2706,7 +2706,11 @@
         "currencyCode": "Код валюти",
         "linkedParticipant": "Пов'язаний учасник",
         "subgroupsEnabled": "Підгрупи",
-        "publicViewLink": "Загальнодоступне посилання лише для перегляду"
+        "publicViewLink": "Загальнодоступне посилання лише для перегляду",
+        "emoji": "Емодзі",
+        "color": "Колір",
+        "subgroups": "Підгрупи",
+        "splitPresets": "Шаблони розподілу"
       }
     },
     "member": {
@@ -2738,7 +2742,8 @@
       "imported_other": "Користувач {participant} імпортував {count} витрат"
     },
     "participant": {
-      "removed": "{participant} видалив {target} з групи"
+      "removed": "{participant} видалив {target} з групи",
+      "added": "{participant} додав {target} до групи"
     }
   },
   "OfflineBanner": {

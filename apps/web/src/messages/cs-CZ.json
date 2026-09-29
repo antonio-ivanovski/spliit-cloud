@@ -2706,7 +2706,11 @@
         "currencyCode": "Kód měny",
         "linkedParticipant": "Propojený účastník",
         "subgroupsEnabled": "Podskupiny",
-        "publicViewLink": "Veřejný odkaz pro prohlížení"
+        "publicViewLink": "Veřejný odkaz pro prohlížení",
+        "emoji": "Emoji",
+        "color": "Barva",
+        "subgroups": "Podskupiny",
+        "splitPresets": "Předvolby rozdělení"
       }
     },
     "member": {
@@ -2738,7 +2742,8 @@
       "imported_other": "{participant} importoval(a) {count} výdajů"
     },
     "participant": {
-      "removed": "{participant} odstranil {target} ze skupiny"
+      "removed": "{participant} odstranil {target} ze skupiny",
+      "added": "{participant} přidal {target} do skupiny"
     }
   },
   "OfflineBanner": {

@@ -419,7 +419,11 @@
         "currencyCode": "মুদ্রা কোড",
         "linkedParticipant": "সংযুক্ত অংশগ্রহণকারী",
         "subgroupsEnabled": "উপগ্রুপ",
-        "publicViewLink": "পাবলিক শুধু দেখার লিংক"
+        "publicViewLink": "পাবলিক শুধু দেখার লিংক",
+        "emoji": "ইমোজি",
+        "color": "রঙ",
+        "subgroups": "উপগ্রুপ",
+        "splitPresets": "বিভাজন প্রিসেট"
       }
     },
     "import": {
@@ -452,7 +456,8 @@
     "unknownActor": "কেউ",
     "openExpense": "খরচ খুলুন",
     "participant": {
-      "removed": "{participant} {target}-কে গ্রুপ থেকে সরিয়েছেন"
+      "removed": "{participant} {target}-কে গ্রুপ থেকে সরিয়েছেন",
+      "added": "{participant} {target}-কে গ্রুপে যোগ করেছেন"
     }
   },
   "Activity": {

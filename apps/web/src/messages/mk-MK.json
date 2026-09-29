@@ -2686,7 +2686,11 @@
         "currencyCode": "Код на валута",
         "linkedParticipant": "Поврзан учесник",
         "subgroupsEnabled": "Подгрупи",
-        "publicViewLink": "Јавна врска само за преглед"
+        "publicViewLink": "Јавна врска само за преглед",
+        "emoji": "Емоџи",
+        "color": "Боја",
+        "subgroups": "Подгрупи",
+        "splitPresets": "Поставки за поделба"
       }
     },
     "member": {
@@ -2716,7 +2720,8 @@
       "imported_other": "{participant} увезе {count} трошоци"
     },
     "participant": {
-      "removed": "{participant} го отстрани {target} од групата"
+      "removed": "{participant} го отстрани {target} од групата",
+      "added": "{participant} го додаде {target} во групата"
     }
   },
   "OfflineBanner": {

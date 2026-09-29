@@ -2717,7 +2717,11 @@
         "currencyCode": "통화 코드",
         "linkedParticipant": "연결된 참가자",
         "subgroupsEnabled": "하위 그룹",
-        "publicViewLink": "공개 보기 전용 링크"
+        "publicViewLink": "공개 보기 전용 링크",
+        "emoji": "이모지",
+        "color": "색상",
+        "subgroups": "하위 그룹",
+        "splitPresets": "분할 프리셋"
       }
     },
     "member": {
@@ -2751,7 +2755,8 @@
       "imported_other": "{participant}님이 지출 {count}건을 가져왔어요"
     },
     "participant": {
-      "removed": "{participant}님이 {target}을(를) 그룹에서 제거했습니다"
+      "removed": "{participant}님이 {target}을(를) 그룹에서 제거했습니다",
+      "added": "{participant}님이 {target}을(를) 그룹에 추가했습니다"
     }
   },
   "OfflineBanner": {

@@ -2694,7 +2694,11 @@
         "currencyCode": "Moneta-kodea",
         "linkedParticipant": "Lotutako parte-hartzailea",
         "subgroupsEnabled": "Azpitaldeak",
-        "publicViewLink": "Ikusteko soilik den esteka publikoa"
+        "publicViewLink": "Ikusteko soilik den esteka publikoa",
+        "emoji": "Emojia",
+        "color": "Kolorea",
+        "subgroups": "Azpitaldeak",
+        "splitPresets": "Banaketa-aurrezarpenak"
       }
     },
     "member": {
@@ -2725,7 +2729,8 @@
       "imported_other": "{participant}(e)k {count} gastu inportatu ditu"
     },
     "participant": {
-      "removed": "{participant}(e)k {target} taldetik kendu du"
+      "removed": "{participant}(e)k {target} taldetik kendu du",
+      "added": "{participant}(e)k {target} taldera gehitu du"
     }
   },
   "OfflineBanner": {

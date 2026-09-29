@@ -159,5 +159,12 @@
     "categorize": {
       "description": "Suggest categories for existing uncategorised expenses with System One. Review every change before saving."
     }
+  },
+  "Activities": {
+    "group": {
+      "changedFields": {
+        "color": "Colour"
+      }
+    }
   }
 }

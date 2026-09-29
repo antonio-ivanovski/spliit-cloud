@@ -2696,7 +2696,11 @@
         "currencyCode": "Cod monedă",
         "linkedParticipant": "Participant legat",
         "subgroupsEnabled": "Subgrupuri",
-        "publicViewLink": "Link public de vizualizare"
+        "publicViewLink": "Link public de vizualizare",
+        "emoji": "Emoji",
+        "color": "Culoare",
+        "subgroups": "Subgrupuri",
+        "splitPresets": "Presetări de împărțire"
       }
     },
     "member": {
@@ -2727,7 +2731,8 @@
       "imported_other": "{participant} a importat {count} cheltuieli"
     },
     "participant": {
-      "removed": "{participant} a eliminat pe {target} din grup"
+      "removed": "{participant} a eliminat pe {target} din grup",
+      "added": "{participant} a adăugat pe {target} în grup"
     }
   },
   "OfflineBanner": {

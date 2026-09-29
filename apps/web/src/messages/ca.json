@@ -2696,7 +2696,11 @@
         "currencyCode": "Codi de moneda",
         "linkedParticipant": "Participant vinculat",
         "subgroupsEnabled": "Subgrups",
-        "publicViewLink": "Enllaç públic de només lectura"
+        "publicViewLink": "Enllaç públic de només lectura",
+        "emoji": "Emoji",
+        "color": "Color",
+        "subgroups": "Subgrups",
+        "splitPresets": "Predefinicions de divisió"
       }
     },
     "member": {
@@ -2727,7 +2731,8 @@
       "imported_other": "{participant} ha importat {count} despeses"
     },
     "participant": {
-      "removed": "{participant} ha eliminat {target} del grup"
+      "removed": "{participant} ha eliminat {target} del grup",
+      "added": "{participant} ha afegit {target} al grup"
     }
   },
   "OfflineBanner": {

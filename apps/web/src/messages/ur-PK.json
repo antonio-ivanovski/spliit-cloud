@@ -419,7 +419,11 @@
         "currencyCode": "کرنسی کوڈ",
         "linkedParticipant": "منسلک شریک",
         "subgroupsEnabled": "ذیلی گروپ",
-        "publicViewLink": "عوامی صرف دیکھنے کا لنک"
+        "publicViewLink": "عوامی صرف دیکھنے کا لنک",
+        "emoji": "ایموجی",
+        "color": "رنگ",
+        "subgroups": "ذیلی گروپ",
+        "splitPresets": "تقسیم پری سیٹس"
       }
     },
     "import": {
@@ -448,7 +452,8 @@
     "unknownActor": "کوئی",
     "openExpense": "خرچہ کھولیں",
     "participant": {
-      "removed": "{participant} نے {target} کو گروپ سے ہٹا دیا"
+      "removed": "{participant} نے {target} کو گروپ سے ہٹا دیا",
+      "added": "{participant} نے {target} کو گروپ میں شامل کیا"
     }
   },
   "Activity": {

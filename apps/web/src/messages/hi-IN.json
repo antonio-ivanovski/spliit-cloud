@@ -419,7 +419,11 @@
         "currencyCode": "मुद्रा कोड",
         "linkedParticipant": "लिंक किया गया सदस्य",
         "subgroupsEnabled": "उपसमूह",
-        "publicViewLink": "सार्वजनिक केवल-दृश्य लिंक"
+        "publicViewLink": "सार्वजनिक केवल-दृश्य लिंक",
+        "emoji": "इमोजी",
+        "color": "रंग",
+        "subgroups": "उपसमूह",
+        "splitPresets": "विभाजन प्रीसेट"
       }
     },
     "import": {
@@ -448,7 +452,8 @@
     "unknownActor": "कोई",
     "openExpense": "खर्च खोलें",
     "participant": {
-      "removed": "{participant} ने {target} को समूह से हटाया"
+      "removed": "{participant} ने {target} को समूह से हटाया",
+      "added": "{participant} ने {target} को समूह में जोड़ा"
     }
   },
   "Activity": {

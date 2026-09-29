@@ -2686,7 +2686,11 @@
         "currencyCode": "Valuuttakoodi",
         "linkedParticipant": "Linkitetty osallistuja",
         "subgroupsEnabled": "Alaryhmät",
-        "publicViewLink": "Julkinen vain katseluun tarkoitettu linkki"
+        "publicViewLink": "Julkinen vain katseluun tarkoitettu linkki",
+        "emoji": "Emoji",
+        "color": "Väri",
+        "subgroups": "Alaryhmät",
+        "splitPresets": "Jakomallit"
       }
     },
     "member": {
@@ -2716,7 +2720,8 @@
       "imported_other": "{participant} toi {count} kulua"
     },
     "participant": {
-      "removed": "{participant} poisti {target} ryhmästä"
+      "removed": "{participant} poisti {target} ryhmästä",
+      "added": "{participant} lisäsi {target} ryhmään"
     }
   },
   "OfflineBanner": {

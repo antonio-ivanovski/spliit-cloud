@@ -2686,7 +2686,11 @@
         "currencyCode": "Para birimi kodu",
         "linkedParticipant": "Bağlı katılımcı",
         "subgroupsEnabled": "Alt gruplar",
-        "publicViewLink": "Herkese açık salt görüntüleme bağlantısı"
+        "publicViewLink": "Herkese açık salt görüntüleme bağlantısı",
+        "emoji": "Emoji",
+        "color": "Renk",
+        "subgroups": "Alt gruplar",
+        "splitPresets": "Bölüşüm ön ayarları"
       }
     },
     "member": {
@@ -2716,7 +2720,8 @@
       "imported_other": "{participant}, {count} masraf aktardı"
     },
     "participant": {
-      "removed": "{participant}, {target} kullanıcısını gruptan kaldırdı"
+      "removed": "{participant}, {target} kullanıcısını gruptan kaldırdı",
+      "added": "{participant}, {target} kullanıcısını gruba ekledi"
     }
   },
   "OfflineBanner": {

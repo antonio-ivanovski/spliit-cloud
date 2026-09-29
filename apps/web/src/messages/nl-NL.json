@@ -2718,7 +2718,11 @@
         "currencyCode": "Valutacode",
         "linkedParticipant": "Gekoppelde deelnemer",
         "subgroupsEnabled": "Subgroepen",
-        "publicViewLink": "Openbare alleen-lezen link"
+        "publicViewLink": "Openbare alleen-lezen link",
+        "emoji": "Emoji",
+        "color": "Kleur",
+        "subgroups": "Subgroepen",
+        "splitPresets": "Deelvoorinstellingen"
       }
     },
     "member": {
@@ -2752,7 +2756,8 @@
       "imported_other": "{participant} importeerde {count} uitgaven"
     },
     "participant": {
-      "removed": "{participant} verwijderde {target} uit de groep"
+      "removed": "{participant} verwijderde {target} uit de groep",
+      "added": "{participant} voegde {target} toe aan de groep"
     }
   },
   "OfflineBanner": {

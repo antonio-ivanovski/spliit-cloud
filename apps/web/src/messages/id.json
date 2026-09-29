@@ -2677,7 +2677,11 @@
         "currencyCode": "Kode mata uang",
         "linkedParticipant": "Peserta terkait",
         "subgroupsEnabled": "Subgrup",
-        "publicViewLink": "Tautan publik hanya lihat"
+        "publicViewLink": "Tautan publik hanya lihat",
+        "emoji": "Emoji",
+        "color": "Warna",
+        "subgroups": "Subgrup",
+        "splitPresets": "Preset pembagian"
       }
     },
     "member": {
@@ -2706,7 +2710,8 @@
       "imported_other": "{participant} mengimpor {count} pengeluaran"
     },
     "participant": {
-      "removed": "{participant} menghapus {target} dari grup"
+      "removed": "{participant} menghapus {target} dari grup",
+      "added": "{participant} menambahkan {target} ke grup"
     }
   },
   "OfflineBanner": {

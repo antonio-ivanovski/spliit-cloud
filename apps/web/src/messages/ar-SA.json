@@ -3182,12 +3182,17 @@
         "name": "الاسم",
         "currencyCode": "رمز العملة",
         "subgroupsEnabled": "المجموعات الفرعية",
-        "publicViewLink": "رابط عام للعرض فقط"
+        "publicViewLink": "رابط عام للعرض فقط",
+        "emoji": "الإيموجي",
+        "color": "اللون",
+        "subgroups": "المجموعات الفرعية",
+        "splitPresets": "إعدادات التقسيم"
       }
     },
     "openExpense": "فتح المصروف",
     "participant": {
-      "removed": "أزال {participant} {target} من المجموعة"
+      "removed": "أزال {participant} {target} من المجموعة",
+      "added": "أضاف {participant} {target} إلى المجموعة"
     },
     "import": {
       "imported_two": "{participant} استورد {count} نفقتين",

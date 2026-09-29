@@ -2679,7 +2679,11 @@
         "currencyCode": "货币代码",
         "linkedParticipant": "关联参与者",
         "subgroupsEnabled": "子群组",
-        "publicViewLink": "公开仅限查看链接"
+        "publicViewLink": "公开仅限查看链接",
+        "emoji": "表情符号",
+        "color": "颜色",
+        "subgroups": "子群组",
+        "splitPresets": "分摊预设"
       }
     },
     "member": {
@@ -2708,7 +2712,8 @@
       "imported_other": "{participant} 导入了 {count} 笔支出"
     },
     "participant": {
-      "removed": "{participant} 将 {target} 移出了群组"
+      "removed": "{participant} 将 {target} 移出了群组",
+      "added": "{participant} 将 {target} 添加到了群组"
     }
   },
   "OfflineBanner": {

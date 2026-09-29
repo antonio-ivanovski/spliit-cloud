@@ -2792,7 +2792,11 @@
         "currencyCode": "Mã loại tiền",
         "linkedParticipant": "Người tham gia",
         "subgroupsEnabled": "Nhóm con",
-        "publicViewLink": "Liên kết công khai chỉ xem"
+        "publicViewLink": "Liên kết công khai chỉ xem",
+        "emoji": "Emoji",
+        "color": "Màu",
+        "subgroups": "Nhóm con",
+        "splitPresets": "Mẫu chia"
       }
     },
     "member": {
@@ -2815,7 +2819,8 @@
       }
     },
     "participant": {
-      "removed": "{participant} đã xóa {target} khỏi nhóm"
+      "removed": "{participant} đã xóa {target} khỏi nhóm",
+      "added": "{participant} đã thêm {target} vào nhóm"
     },
     "import": {
       "imported_zero": "{participant} đã nhập {count} chi phí",

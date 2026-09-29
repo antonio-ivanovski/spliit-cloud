@@ -2696,7 +2696,11 @@
         "currencyCode": "קוד מטבע",
         "linkedParticipant": "משתתף מקושר",
         "subgroupsEnabled": "תת־קבוצות",
-        "publicViewLink": "קישור ציבורי לצפייה בלבד"
+        "publicViewLink": "קישור ציבורי לצפייה בלבד",
+        "emoji": "אימוג'י",
+        "color": "צבע",
+        "subgroups": "תת־קבוצות",
+        "splitPresets": "תבניות חלוקה"
       }
     },
     "member": {
@@ -2727,7 +2731,8 @@
       "imported_other": "{participant} ייבא {count} הוצאות"
     },
     "participant": {
-      "removed": "{participant} הסיר את {target} מהקבוצה"
+      "removed": "{participant} הסיר את {target} מהקבוצה",
+      "added": "{participant} הוסיף את {target} לקבוצה"
     }
   },
   "OfflineBanner": {
