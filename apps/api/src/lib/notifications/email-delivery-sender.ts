@@ -21,6 +21,7 @@ import {
   formatNotificationNumber,
   formatNotificationPercent,
 } from './format'
+import { formatPersonalShareLine } from './personal-expense-share'
 import { buildEmailUnsubscribeMetadata } from './unsubscribe'
 
 const MESSAGE_ID_DOMAIN = 'spliit.app'
@@ -31,6 +32,37 @@ function deliveryMessageId(deliveryId: string): string {
 
 function actorName(snapshot: DeliverySnapshotV1): string {
   return snapshot.actor?.name ?? 'Someone'
+}
+
+/** "You" when the recipient is the actor, so the line reads personally. */
+function displayActorName(snapshot: DeliverySnapshotV1): string {
+  if (
+    snapshot.actor &&
+    snapshot.actor.id === snapshot.recipient.accountId &&
+    snapshot.actor.name
+  ) {
+    return 'You'
+  }
+  return actorName(snapshot)
+}
+
+/**
+ * Locale-formatted "You owe X" line for expense_created/expense_updated
+ * snapshots. Null when the snapshot carries no share (deleted rows, zero-share
+ * recipients, or pre-change snapshots).
+ */
+function expensePersonalLine(
+  snapshot: Extract<
+    DeliverySnapshotV1,
+    { kind: 'expense_created' } | { kind: 'expense_updated' }
+  >,
+  locale: string,
+): string | null {
+  if (!snapshot.personal) return null
+  const personal = snapshot.personal
+  return formatPersonalShareLine(personal, (cents) =>
+    formatNotificationAmount(cents, personal.currencyCode, locale),
+  )
 }
 
 function isTransientCode(code: string | undefined): boolean {
@@ -148,14 +180,16 @@ function renderSnapshotEmail(args: {
         unsubscribeUrl,
       })
     }
-    case 'expense_created':
+    case 'expense_created': {
+      const displayActor = displayActorName(snapshot)
+      const personalLine = expensePersonalLine(snapshot, locale)
       return renderExpenseActivityEmail({
         kind: 'expense',
-        subject: `[Spliit Cloud] ${actor} added "${snapshot.expense.description}" to ${groupDisplayName}`,
-        text: `${actor} added "${snapshot.expense.description}" in ${groupDisplayName}.\n\nView it here:\n${link}`,
+        subject: `[Spliit Cloud] ${displayActor} added "${snapshot.expense.description}" to ${groupDisplayName}`,
+        text: `${displayActor} added "${snapshot.expense.description}" in ${groupDisplayName}.${personalLine ? `\n\n${personalLine}` : ''}\n\nView it here:\n${link}`,
         brandBaseUrl,
         groupDisplayName: groupDisplayName,
-        actorName: actor,
+        actorName: displayActor,
         title: snapshot.expense.description,
         amountStr: formatNotificationAmount(
           snapshot.expense.amount,
@@ -165,16 +199,20 @@ function renderSnapshotEmail(args: {
         date: formatNotificationDate(snapshot.date, locale),
         expenseUrl: link,
         unsubscribeUrl,
+        personalLine,
         eventType: 'EXPENSE_CREATED',
       })
-    case 'expense_updated':
+    }
+    case 'expense_updated': {
+      const displayActor = displayActorName(snapshot)
+      const personalLine = expensePersonalLine(snapshot, locale)
       return renderExpenseActivityEmail({
         kind: 'expense',
-        subject: `[Spliit Cloud] ${actor} updated "${snapshot.expense.description}" in ${groupDisplayName}`,
-        text: `${actor} updated "${snapshot.expense.description}" in ${groupDisplayName}.\n\nChanged: ${snapshot.changedFields.join(', ')}\n\nView it here:\n${link}`,
+        subject: `[Spliit Cloud] ${displayActor} updated "${snapshot.expense.description}" in ${groupDisplayName}`,
+        text: `${displayActor} updated "${snapshot.expense.description}" in ${groupDisplayName}.\n\nChanged: ${snapshot.changedFields.join(', ')}${personalLine ? `\n\n${personalLine}` : ''}\n\nView it here:\n${link}`,
         brandBaseUrl,
         groupDisplayName: groupDisplayName,
-        actorName: actor,
+        actorName: displayActor,
         title: snapshot.expense.description,
         amountStr: formatNotificationAmount(
           snapshot.expense.amount,
@@ -185,8 +223,10 @@ function renderSnapshotEmail(args: {
         changedFields: snapshot.changedFields,
         expenseUrl: link,
         unsubscribeUrl,
+        personalLine,
         eventType: 'EXPENSE_UPDATED',
       })
+    }
     case 'expense_deleted':
       return renderExpenseActivityEmail({
         kind: 'expense',

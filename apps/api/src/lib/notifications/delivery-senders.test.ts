@@ -175,6 +175,119 @@ describe('EmailDeliverySenderImpl', () => {
     expect(message.html).toContain('123,45')
   })
 
+  it('renders the recipient share line when the snapshot carries personal', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({
+      email: 'bob@example.com',
+      emailVerified: true,
+    } as never)
+    const snapshot = deliverySnapshotV1Schema.parse({
+      ...buildExpenseCreatedSnapshot(),
+      personal: {
+        paid: 0,
+        owed: 1500,
+        currencyCode: 'EUR',
+        isSettlement: false,
+      },
+    })
+
+    await emailSender.send({
+      deliveryId: 'delivery-personal',
+      snapshot,
+      recipientAccountId: 'acct-bob',
+    })
+
+    const message = sendEmailMock.mock.calls[0][0]
+    expect(message.text).toContain('You owe')
+    expect(message.html).toContain('You owe')
+  })
+
+  it('renders the recipient share line for expense_updated snapshots', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({
+      email: 'bob@example.com',
+      emailVerified: true,
+    } as never)
+    const snapshot = deliverySnapshotV1Schema.parse({
+      version: 1,
+      kind: 'expense_updated',
+      category: NotificationCategory.EXPENSE_CHANGED,
+      occurredAt: '2026-07-02T12:00:00Z',
+      actor: { id: 'acct-alice', name: 'Alice' },
+      recipient: { accountId: 'acct-bob', displayName: 'Bob' },
+      group: { id: 'grp-1', name: 'Trip', type: 'GROUP' },
+      expense: {
+        id: 'exp-1',
+        description: 'Dinner',
+        amount: 5000,
+        currencyCode: 'EUR',
+      },
+      link: 'http://localhost:3000/groups/grp-1/expenses/exp-1',
+      changedFields: ['amount'],
+      personal: {
+        paid: 0,
+        owed: 2000,
+        currencyCode: 'EUR',
+        isSettlement: false,
+      },
+    })
+
+    await emailSender.send({
+      deliveryId: 'delivery-personal-updated',
+      snapshot,
+      recipientAccountId: 'acct-bob',
+    })
+
+    const message = sendEmailMock.mock.calls[0][0]
+    expect(message.text).toContain('You owe')
+    expect(message.html).toContain('You owe')
+  })
+
+  it('renders lent or borrowed for settlement shares', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({
+      email: 'bob@example.com',
+      emailVerified: true,
+    } as never)
+    const snapshot = deliverySnapshotV1Schema.parse({
+      ...buildExpenseCreatedSnapshot(),
+      personal: {
+        paid: 0,
+        owed: 2000,
+        currencyCode: 'EUR',
+        isSettlement: true,
+      },
+    })
+
+    await emailSender.send({
+      deliveryId: 'delivery-personal-settlement',
+      snapshot,
+      recipientAccountId: 'acct-bob',
+    })
+
+    const message = sendEmailMock.mock.calls[0][0]
+    expect(message.text).toContain('You borrowed')
+    expect(message.html).toContain('You borrowed')
+  })
+
+  it('addresses the actor as You when they are the recipient', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({
+      email: 'alice@example.com',
+      emailVerified: true,
+    } as never)
+    const snapshot = deliverySnapshotV1Schema.parse({
+      ...buildExpenseCreatedSnapshot(),
+      actor: { id: 'acct-alice', name: 'Alice' },
+      recipient: { accountId: 'acct-alice', displayName: 'Alice' },
+    })
+
+    await emailSender.send({
+      deliveryId: 'delivery-self',
+      snapshot,
+      recipientAccountId: 'acct-alice',
+    })
+
+    const message = sendEmailMock.mock.calls[0][0]
+    expect(message.subject).toContain('You added "Dinner"')
+  })
+
   it('throws PermanentDeliveryError when the account is missing', async () => {
     prismaMock.user.findUnique.mockResolvedValue(null as never)
     const snapshot = buildExpenseCreatedSnapshot()

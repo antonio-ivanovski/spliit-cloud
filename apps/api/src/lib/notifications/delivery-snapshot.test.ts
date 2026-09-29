@@ -214,6 +214,42 @@ describe('deliverySnapshotV1Schema', () => {
     }
   })
 
+  it('parses an optional personal share on expense_created and expense_updated', () => {
+    for (const kind of ['expense_created', 'expense_updated'] as const) {
+      const snapshot = {
+        ...emailSnapshotForKind(kind),
+        personal: {
+          paid: 0,
+          owed: 1500,
+          currencyCode: 'EUR',
+          isSettlement: false,
+        },
+      }
+      const parsed = deliverySnapshotV1Schema.parse(snapshot)
+      if (
+        parsed.kind === 'expense_created' ||
+        parsed.kind === 'expense_updated'
+      ) {
+        expect(parsed.personal).toEqual({
+          paid: 0,
+          owed: 1500,
+          currencyCode: 'EUR',
+          isSettlement: false,
+        })
+      } else {
+        throw new Error(`unexpected kind: ${parsed.kind}`)
+      }
+    }
+  })
+
+  it('rejects a personal share with negative amounts', () => {
+    const snapshot = {
+      ...emailSnapshotForKind('expense_created'),
+      personal: { paid: -1, owed: 0, currencyCode: 'EUR', isSettlement: false },
+    }
+    expect(() => deliverySnapshotV1Schema.parse(snapshot)).toThrow()
+  })
+
   it('rejects unsupported snapshot versions', () => {
     const snapshot = emailSnapshotForKind('expense_created')
     const invalid = { ...snapshot, version: 99 }
