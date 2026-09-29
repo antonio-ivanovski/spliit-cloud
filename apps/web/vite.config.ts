@@ -21,9 +21,6 @@ const publicWebHosts = (process.env.WEB_ORIGINS ?? '')
     }
   })
 
-const buildSha =
-  process.env.VITE_BUILD_SHA ?? process.env.CF_PAGES_COMMIT_SHA ?? 'unknown'
-
 export default defineConfig({
   // All workspace apps share the repository-level .env file. Vite otherwise
   // resolves env files relative to apps/web when this task runs via Turbo.
@@ -189,8 +186,5 @@ export default defineConfig({
     alias: {
       '@': path.resolve(import.meta.dirname, './src'),
     },
-  },
-  define: {
-    'import.meta.env.VITE_BUILD_SHA': JSON.stringify(buildSha),
   },
 })
