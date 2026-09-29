@@ -290,8 +290,10 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
     >
       {expenseExists && activity.expense && (
         <Link
-          to="/groups/$groupId/expenses/$expenseId"
-          params={{ groupId, expenseId: activity.expense.id }}
+          to="/groups/$groupId/activity"
+          params={{ groupId }}
+          search={(prev) => ({ ...prev, expenseId: activity.expense!.id })}
+          resetScroll={false}
           className="absolute inset-0 z-0 rounded-[inherit] outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
           aria-label={t('openExpense')}
         />

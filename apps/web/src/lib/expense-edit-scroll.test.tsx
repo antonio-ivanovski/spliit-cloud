@@ -126,4 +126,26 @@ describe('expense edit scroll restoration', () => {
     expect(nextFrame).toBeUndefined()
     expect(window.scrollTo).not.toHaveBeenCalled()
   })
+
+  it('restores the activity list after returning from edit', () => {
+    window.history.replaceState(
+      {},
+      '',
+      '/groups/grp-1/activity?expenseId=exp-1',
+    )
+    setPageScroll(700, 2000)
+    captureExpenseEditScroll('grp-1', 'exp-1', '/groups/grp-1/activity')
+
+    window.history.replaceState(
+      {},
+      '',
+      '/groups/grp-1/activity?expenseId=exp-1',
+    )
+    renderHook(() => useRestoreExpenseEditScroll(true, 'grp-1'))
+    renderNextFrame()
+    expect(window.scrollTo).toHaveBeenCalledWith({
+      top: 700,
+      behavior: 'auto',
+    })
+  })
 })

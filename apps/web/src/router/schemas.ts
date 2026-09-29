@@ -56,9 +56,18 @@ const dateString = z
   .optional()
   .catch(undefined)
 
-const globalExpensesReturnTo = z
+/**
+ * Internal return path for expense edit/create flows. Allows the global
+ * expenses feed (`/expenses?...`) and the group activity tab
+ * (`/groups/:groupId/activity`), so an edit started from an activity
+ * preview can navigate back to the activity modal instead of the
+ * expenses list.
+ */
+const expenseReturnTo = z
   .string()
-  .regex(/^\/expenses(?:\?[^#]*)?$/)
+  .regex(
+    /^(?:\/expenses(?:\?[^#]*)?|\/groups\/[^/]+\/activity(?:\?[^#]*)?)$/,
+  )
   .optional()
   .catch(undefined)
 
@@ -110,7 +119,7 @@ export const groupAccessSearchSchema = z.object({
 export const groupSearchSchema = groupAccessSearchSchema.extend({
   seriesId: optionalString,
   friendLinkInvite: optionalString,
-  returnTo: globalExpensesReturnTo,
+  returnTo: expenseReturnTo,
   expCategories: z.string().optional().catch(undefined),
   expPaidBy: z.string().optional().catch(undefined),
   expPaidByMatch: z.enum(['any', 'all', 'exact']).optional().catch(undefined),
@@ -141,7 +150,7 @@ export const expenseParamsSchema = z.object({
 
 export const editExpenseSearchSchema = groupAccessSearchSchema.extend({
   scope: z.enum(['OCCURRENCE', 'THIS_AND_FUTURE']).optional().catch(undefined),
-  returnTo: globalExpensesReturnTo,
+  returnTo: expenseReturnTo,
 })
 
 export const homeSearchSchema = z.object({
@@ -176,7 +185,11 @@ export const globalExpensesSearchSchema = z.object({
 })
 
 export const expensePreviewSearchSchema = groupAccessSearchSchema.extend({
-  returnTo: globalExpensesReturnTo,
+  returnTo: expenseReturnTo,
+})
+
+export const activitySearchSchema = groupAccessSearchSchema.extend({
+  expenseId: optionalString,
 })
 
 export const bulkCategorizeSearchSchema = z.object({
@@ -235,7 +248,7 @@ export const createExpenseSearchSchema = groupAccessSearchSchema.extend({
   // When set, the create form pre-populates from this source expense
   // and overrides `expenseDate` to today (a.k.a. "Make a copy" flow).
   fromExpenseId: z.string().optional().catch(undefined),
-  returnTo: globalExpensesReturnTo,
+  returnTo: expenseReturnTo,
 })
 
 export const balancesSearchSchema = groupAccessSearchSchema.extend({

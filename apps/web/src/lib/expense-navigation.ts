@@ -23,7 +23,7 @@ export function expenseEditSearch(
   scope?: 'OCCURRENCE' | 'THIS_AND_FUTURE',
   returnTo?: string,
 ) {
-  if (isGlobalExpensesReturnTo(returnTo)) {
+  if (isGlobalExpensesReturnTo(returnTo) || isActivityReturnTo(returnTo)) {
     return () => ({ scope, returnTo })
   }
   return (search: Record<string, unknown>) => ({
@@ -31,6 +31,11 @@ export function expenseEditSearch(
     ...(scope ? { scope } : {}),
     ...(returnTo ? { returnTo } : {}),
   })
+}
+
+/** Activity-tab return path for expense previews (`/groups/:id/activity`). */
+export function buildActivityReturnTo(groupId: string) {
+  return `/groups/${groupId}/activity`
 }
 
 /** Cancel and save from edit both return to the source preview. */
@@ -47,6 +52,15 @@ export function expenseEditPreviewLink(
         expenseId,
         expenseGroupId: groupId,
       } as ExpenseCancelLink['search'],
+      resetScroll: false,
+      replace: true,
+    }
+  }
+  if (isActivityReturnTo(returnTo)) {
+    return {
+      to: '/groups/$groupId/activity',
+      params: { groupId },
+      search: { expenseId } as ExpenseCancelLink['search'],
       resetScroll: false,
       replace: true,
     }
@@ -71,6 +85,19 @@ export function expenseEditListLink(
   if (isGlobalExpensesReturnTo(returnTo) && returnTo) {
     return { ...globalExpensesLink(returnTo), resetScroll: false }
   }
+  if (isActivityReturnTo(returnTo)) {
+    return {
+      to: '/groups/$groupId/activity',
+      params: { groupId },
+      search: (search: Record<string, unknown>) => ({
+        ...search,
+        expenseId: undefined,
+        returnTo: undefined,
+        scope: undefined,
+      }),
+      resetScroll: false,
+    }
+  }
   return {
     to: '/groups/$groupId/expenses',
     params: { groupId },
@@ -90,7 +117,7 @@ function globalExpensesLink(returnTo: string): ExpenseCancelLink {
   }
 }
 
-/** Cancel from the expense form: group home, or the global expenses feed. */
+/** Cancel from the expense form: group home, activity tab, or global feed. */
 export function expenseFormCancelLink(
   groupId: string,
   returnTo?: string,
@@ -98,19 +125,31 @@ export function expenseFormCancelLink(
   if (isGlobalExpensesReturnTo(returnTo) && returnTo) {
     return globalExpensesLink(returnTo)
   }
+  if (isActivityReturnTo(returnTo)) {
+    return {
+      to: '/groups/$groupId/activity',
+      params: { groupId },
+    }
+  }
   return {
     to: '/groups/$groupId',
     params: { groupId },
   }
 }
 
-/** Back to the group expense list, or the global expenses feed. */
+/** Back to the group expense list, activity tab, or global expenses feed. */
 export function expenseListLink(
   groupId: string,
   returnTo?: string,
 ): ExpenseCancelLink {
   if (isGlobalExpensesReturnTo(returnTo) && returnTo) {
     return globalExpensesLink(returnTo)
+  }
+  if (isActivityReturnTo(returnTo)) {
+    return {
+      to: '/groups/$groupId/activity',
+      params: { groupId },
+    }
   }
   return {
     to: '/groups/$groupId/expenses',
@@ -134,4 +173,19 @@ export function getGlobalExpensesSearch(returnTo?: string) {
 
 export function isGlobalExpensesReturnTo(returnTo?: string) {
   return getGlobalExpensesSearch(returnTo) !== undefined
+}
+
+/**
+ * Activity-tab return path (`/groups/:groupId/activity`). Validated as an
+ * internal path only, so a stale URL can never become an external target.
+ */
+export function isActivityReturnTo(returnTo?: string) {
+  if (!returnTo) return false
+  if (!/^\/groups\/[^/]+\/activity(?:\?[^#]*)?$/.test(returnTo)) return false
+  try {
+    const url = new URL(returnTo, 'http://spliit.local')
+    return /^\/groups\/[^/]+\/activity$/.test(url.pathname)
+  } catch {
+    return false
+  }
 }

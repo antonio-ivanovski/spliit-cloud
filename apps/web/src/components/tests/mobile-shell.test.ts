@@ -67,6 +67,18 @@ describe('mobile shell route policy', () => {
       resetScroll: false,
     })
     expect(
+      getFocusedRouteMeta(
+        '/groups/demo/expenses/123/edit',
+        translate,
+        '/groups/demo/activity',
+      ),
+    ).toMatchObject({
+      to: '/groups/$groupId/activity',
+      params: { groupId: 'demo' },
+      search: { expenseId: '123' },
+      resetScroll: false,
+    })
+    expect(
       getFocusedRouteMeta('/groups/bulk-categorize/demo', translate),
     ).toEqual({
       title: 'BulkCategorize.title',

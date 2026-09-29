@@ -16,6 +16,7 @@ import {
 } from '@/lib/expense-navigation'
 
 import {
+  activitySearchSchema,
   balancesSearchSchema,
   createExpenseSearchSchema,
   editExpenseSearchSchema,
@@ -76,6 +77,12 @@ async function createGroupRouter(initialPath: string) {
     component: Dummy,
     validateSearch: balancesSearchSchema,
   })
+  const activityRoute = createRoute({
+    getParentRoute: () => groupRoute,
+    path: 'activity',
+    component: Dummy,
+    validateSearch: activitySearchSchema,
+  })
   const routeTree = rootRoute.addChildren([
     groupRoute.addChildren([
       expensesRoute,
@@ -83,6 +90,7 @@ async function createGroupRouter(initialPath: string) {
       expensePreviewRoute,
       editExpenseRoute,
       balancesRoute,
+      activityRoute,
     ]),
     globalExpensesRoute,
   ])
@@ -240,6 +248,47 @@ describe('group access search retention', () => {
       sortBy: 'amount',
       expenseId: 'exp-1',
       expenseGroupId: 'grp-1',
+    })
+  })
+
+  it('returns from activity editing to the activity preview', async () => {
+    const returnTo = '/groups/grp-1/activity'
+    const activityRouter = await createGroupRouter(
+      '/groups/grp-1/activity?expenseId=exp-1',
+    )
+    const edit = activityRouter.buildLocation({
+      to: '/groups/$groupId/expenses/$expenseId/edit',
+      params: { groupId: 'grp-1', expenseId: 'exp-1' },
+      search: expenseEditSearch(undefined, returnTo),
+    })
+    expect((edit.search as Record<string, unknown>).returnTo).toBe(returnTo)
+
+    const editRouter = await createGroupRouter(edit.href)
+    const preview = editRouter.buildLocation(
+      expenseEditPreviewLink('grp-1', 'exp-1', returnTo),
+    )
+    expect(preview.pathname).toBe('/groups/grp-1/activity')
+    expect(preview.search).toMatchObject({ expenseId: 'exp-1' })
+
+    const list = editRouter.buildLocation(expenseEditListLink('grp-1', returnTo))
+    expect(list.pathname).toBe('/groups/grp-1/activity')
+    expect(
+      (list.search as Record<string, unknown>).expenseId,
+    ).toBeUndefined()
+  })
+
+  it('keeps the activity expense overlay in search params', async () => {
+    const router = await createGroupRouter(
+      '/groups/grp-1/activity?viewKey=public-secret&invite=invite-token',
+    )
+    const preview = router.buildLocation({
+      to: '/groups/$groupId/activity',
+      params: { groupId: 'grp-1' },
+      search: (prev) => ({ ...prev, expenseId: 'exp-1' }),
+    })
+    expect(preview.search).toMatchObject({
+      ...retained,
+      expenseId: 'exp-1',
     })
   })
 })

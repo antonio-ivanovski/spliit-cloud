@@ -13,6 +13,7 @@ import { ScanStickyHeading } from '@/components/layout/scan-surface'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
+import { useRestoreExpenseEditScroll } from '@/lib/expense-edit-scroll'
 import {
   useOfflineWithoutData,
   useServerUnreachableWithoutData,
@@ -84,6 +85,11 @@ export function ActivityList() {
   const hasMore = activitiesData?.pages.at(-1)?.hasMore ?? false
   const showOfflineEmpty = useOfflineWithoutData(!!activitiesData)
   const showServerEmpty = useServerUnreachableWithoutData(!!activitiesData)
+
+  useRestoreExpenseEditScroll(
+    !isLoading && !!activitiesData && !showOfflineEmpty && !showServerEmpty,
+    groupId,
+  )
 
   useEffect(() => {
     if (inView && hasMore && !isLoading) void fetchNextPage()

@@ -1,6 +1,9 @@
 import { useEffect } from 'react'
 
-import { isGlobalExpensesReturnTo } from './expense-navigation'
+import {
+  isActivityReturnTo,
+  isGlobalExpensesReturnTo,
+} from './expense-navigation'
 
 type ScrollSnapshot = {
   key: string
@@ -15,18 +18,27 @@ function normalizedPath(pathname: string) {
 }
 
 function listKey(url: URL, groupId?: string) {
+  const pathname = normalizedPath(url.pathname)
+  if (groupId && pathname === `/groups/${groupId}/activity`) {
+    return `/groups/${groupId}/activity`
+  }
   const params = new URLSearchParams(url.search)
   if (groupId) {
     params.delete('returnTo')
     params.delete('scope')
+    params.delete('expenseId')
   } else {
     params.delete('expenseId')
     params.delete('expenseGroupId')
   }
   params.sort()
   const query = params.toString()
-  const pathname = groupId ? `/groups/${groupId}/expenses` : '/expenses'
-  return query ? `${pathname}?${query}` : pathname
+  const listPathname = groupId ? `/groups/${groupId}/expenses` : '/expenses'
+  return query ? `${listPathname}?${query}` : listPathname
+}
+
+function activityKey(groupId: string) {
+  return `/groups/${groupId}/activity`
 }
 
 /** Capture only when a preview actually came from a mounted expense list. */
@@ -44,6 +56,17 @@ export function captureExpenseEditScroll(
       key: listKey(new URL(returnTo, current.origin)),
       scrollY: window.scrollY,
       allowedPaths: new Set(['/expenses', editPath]),
+    }
+    return
+  }
+
+  if (isActivityReturnTo(returnTo)) {
+    if (normalizedPath(current.pathname) !== `/groups/${groupId}/activity`)
+      return
+    pendingSnapshot = {
+      key: activityKey(groupId),
+      scrollY: window.scrollY,
+      allowedPaths: new Set([`/groups/${groupId}/activity`, editPath]),
     }
     return
   }

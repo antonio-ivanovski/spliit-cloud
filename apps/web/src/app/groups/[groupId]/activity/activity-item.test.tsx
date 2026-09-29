@@ -82,7 +82,7 @@ describe('ActivityItem', () => {
 
     expect(screen.getByRole('link', { name: 'Open expense' })).toHaveAttribute(
       'href',
-      '/groups/$groupId/expenses/$expenseId',
+      '/groups/$groupId/activity',
     )
   })
 
