@@ -93,7 +93,7 @@ jobs:
           deadline=$(( $(date +%s) + 45*60 ))
           echo "Waiting for CI runs on ${SHA}..."
           while [ "$(date +%s)" -lt "$deadline" ]; do
-            runs="$(gh run list --commit "$SHA" --workflow CI --limit 10 --json status,conclusion)"
+            runs="$(gh run list --commit "$SHA" --workflow CI --limit 10 --json status,conclusion --repo "${{ github.repository }}")"
             total="$(printf '%s' "$runs" | jq 'length')"
             if [ "$total" -eq 0 ]; then
               echo "No CI run found yet, retrying in 30s..."
