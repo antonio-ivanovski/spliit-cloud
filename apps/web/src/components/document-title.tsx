@@ -9,7 +9,8 @@ import {
   type PropsWithChildren,
 } from 'react'
 
-export const DEFAULT_DOCUMENT_TITLE = 'Spliit Cloud'
+export const DEFAULT_DOCUMENT_TITLE =
+  'Spliit Cloud — Share expenses with friends & family'
 
 type TitleEntry = { id: string; title: string | null }
 
