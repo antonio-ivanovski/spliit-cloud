@@ -182,6 +182,7 @@ services:
       MCP_PUBLIC_URL: ${MCP_PUBLIC_URL:?MCP_PUBLIC_URL must be set}
       MCP_API_URL: ${MCP_API_URL:?MCP_API_URL must be set}
       MCP_WEB_URL: ${MCP_WEB_URL:?MCP_WEB_URL must be set}
+      OPENAI_APPS_CHALLENGE: ${OPENAI_APPS_CHALLENGE:-}
     networks:
       - dokploy-network
     healthcheck:

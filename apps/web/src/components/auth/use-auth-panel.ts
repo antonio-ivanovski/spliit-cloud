@@ -34,7 +34,15 @@ function isSignupInviteRequired(
   )
 }
 
-export function useAuthPanel(options?: { redirectTo?: string }) {
+export function useAuthPanel(options?: {
+  redirectTo?: string
+  /**
+   * Tab shown first in the email section. Defaults to the last-used method,
+   * falling back to magic link. OAuth authorization screens pass `password` so
+   * reviewers with plain credentials land on the right form immediately.
+   */
+  initialEmailVariant?: EmailVariant
+}) {
   const mascot = useMascotController()
   const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
   const isOnline = useOnlineStatus()
@@ -83,8 +91,10 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
   const [lastLoginMethod] = useState<string | null>(() =>
     authClient.getLastUsedLoginMethod(),
   )
-  const [emailVariant, setEmailVariant] = useState<EmailVariant>(() =>
-    lastLoginMethod === 'email' ? 'password' : 'magic-link',
+  const [emailVariant, setEmailVariant] = useState<EmailVariant>(
+    () =>
+      options?.initialEmailVariant ??
+      (lastLoginMethod === 'email' ? 'password' : 'magic-link'),
   )
   const [email, setEmail] = useState<string>(initialEmail ?? '')
   const [password, setPassword] = useState('')

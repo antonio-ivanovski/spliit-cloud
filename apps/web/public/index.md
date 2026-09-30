@@ -41,6 +41,7 @@ Spliit Cloud is a free, open-source, community-maintained app for tracking share
 - Terms of use: https://spliit.cloud/terms
 - Privacy notice: https://spliit.cloud/privacy
 - Project notice: https://spliit.cloud/imprint
+- Support: https://spliit.cloud/support
 - Support the project: https://spliit.cloud/sponsor
 - Live service status: https://status.spliit.cloud/
 

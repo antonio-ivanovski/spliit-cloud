@@ -40,6 +40,11 @@ VITE_API_URL=https://api.spliit.example
 
 # Generate once with: openssl rand -hex 32
 ASSISTANT_CONFIRMATION_SECRET=replace-with-at-least-32-random-bytes
+
+# Fresh token per OpenAI plugin submission (Platform dashboard → MCPs →
+# domain verification). Leave empty until the first submission; the server
+# serves the previous submission's token as a fallback.
+OPENAI_APPS_CHALLENGE=
 ```
 
 The old `MCP_URL`, `SPLIIT_API_URL`, and `SPLIIT_WEB_URL` names are not
@@ -55,6 +60,11 @@ Keep these invariants:
    `/oauth/consent`.
 5. `ASSISTANT_CONFIRMATION_SECRET` is private, stable across API replicas and
    deployments, and at least 32 bytes.
+6. `OPENAI_APPS_CHALLENGE` holds the current OpenAI domain-verification token.
+   The dashboard issues a fresh token per submission; after setting it,
+   redeploy and confirm
+   `https://mcp.spliit.example/.well-known/openai-apps-challenge` returns
+   exactly that token as `text/plain`.
 
 In Dokploy:
 
@@ -128,7 +138,9 @@ bunx @modelcontextprotocol/inspector@latest
 ```
 
 Use `https://mcp.spliit.example/mcp` as the Streamable HTTP endpoint. Confirm
-that the four tools are discovered, read tools only expose the signed-in
+that the three model-facing tools are discovered (`get-expense-context`,
+`get-group-summary`, `prepare-expense`; `create-expense` is widget-only and
+`add-spliit-expense` is a prompt), read tools only expose the signed-in
 account, `prepare-expense` renders the widget, and the widget button creates
 exactly one expense.
 
@@ -190,28 +202,54 @@ Business workspaces may require recreating and republishing the app.
 ### Submit for public ChatGPT discovery
 
 Workspace publication is not public directory publication. For a public
-listing:
+listing, submit the plugin package from this repo (source of truth:
+[`apps/mcp/plugin/`](../apps/mcp/plugin/), packaging checklist in its
+`README.md`):
 
 1. In the OpenAI Platform organization, verify the individual or business
    identity that will publish Spliit.
 2. Ensure the submitter has **Apps Management: Write**.
-3. Prepare the name, descriptions, logo, category, website, support URL,
-   privacy policy, terms, starter prompts, at least five positive and three
-   negative test cases, country availability, demo account, and MCP/OAuth
-   instructions. Reviewer credentials must work without MFA, SMS, email
-   confirmation, or private-network access.
-4. Open the
-   [OpenAI plugin submission portal](https://platform.openai.com/apps-manage).
-5. Create an MCP-backed plugin submission and provide
-   `https://mcp.spliit.example/mcp`.
-6. Complete domain verification and the automated server scan.
-7. Supply reviewer credentials for a populated Spliit test account.
-8. Submit, respond to review feedback, and publish after approval.
+3. Bump `version` in `apps/mcp/plugin/plugin.json`, update
+   `publication.release_notes`, and replace the `example.com` demo-video
+   placeholder with a recording of the review cases below.
+4. Build the ZIP (`cd apps/mcp/plugin && zip -r spliit-chatgpt-plugin.zip
+plugin.json mcp.json skills assets`) and upload it at
+   [Plugins](https://platform.openai.com/plugins) via **Upload new or
+   existing plugin**. Keep secrets out of the ZIP.
+5. Open **MCPs**, connect the `spliit` server at
+   `https://mcp.spliit.example/mcp`, complete the domain-verification
+   challenge (set the shown token as `OPENAI_APPS_CHALLENGE` and redeploy),
+   and wait for the automated tool scan. Resolve every required finding
+   (metadata findings need a corrected ZIP + re-upload; tool findings need a
+   server fix + **Rescan**).
+6. Fill **Review information → Review details**: reviewer login + password,
+   login URL (`https://spliit.cloud/oauth/login` is reached automatically
+   through the OAuth flow; describe it), and sign-in instructions. The
+   OAuth login screen defaults to the password tab with no inbox step.
+7. Submit for review, respond to feedback by email, and choose **Publish
+   plugin** after approval.
+
+#### Reviewer account runbook
+
+Reviewer credentials are the highest-risk item: the account must work on the
+first try with no extra steps. Provision a dedicated, pre-verified email+password account
+— never a new sign-up, magic link, or social login — and keep it alive for
+re-reviews:
+
+- Verified email, password sign-in, no MFA, no email/SMS codes.
+- Populated with sample groups (including a `Portugal` group), participants,
+  balances, and recent expenses matching the five positive test cases in
+  `plugin.json`.
+- Sign-in smoke test in a clean browser: DCR → `/oauth/login` (password tab
+  first, no guest option) → `/oauth/consent` (account + scopes shown) →
+  token → refresh → all tools.
+- Credentials live only in the dashboard Review details form and the
+  operator's password manager — never in the repo or the ZIP.
 
 Review the current
 [OpenAI submission flow](https://developers.openai.com/plugins/deploy/submission)
 and
-[MCP server review requirements](https://developers.openai.com/plugins/deploy/app-review)
+[plugin guidelines](https://developers.openai.com/plugins/plugin-guidelines)
 immediately before submitting.
 
 ## 4. Add and test in Claude

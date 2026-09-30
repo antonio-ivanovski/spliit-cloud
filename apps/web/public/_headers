@@ -25,6 +25,10 @@
   Cache-Control: public, max-age=0, must-revalidate
   Content-Type: text/markdown; charset=utf-8
 
+/support.md
+  Cache-Control: public, max-age=0, must-revalidate
+  Content-Type: text/markdown; charset=utf-8
+
 /index.html
   Cache-Control: no-cache, max-age=0, must-revalidate
 

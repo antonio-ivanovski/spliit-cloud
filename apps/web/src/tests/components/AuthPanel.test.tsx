@@ -1288,4 +1288,20 @@ describe('AuthPanel', () => {
       screen.getByRole('button', { name: 'Sign in to anonymous account' }),
     ).toBeInTheDocument()
   })
+
+  it('defaults to the password tab when defaultEmailVariant is password', () => {
+    render(<AuthPanel defaultEmailVariant="password" />)
+
+    expect(screen.getByLabelText('Password')).toBeInTheDocument()
+  })
+
+  it('hides the anonymous option when hideAnonymous is true', () => {
+    mockDeploymentConfig.enableAnonymousAuth = true
+
+    render(<AuthPanel hideAnonymous />)
+
+    expect(
+      screen.queryByRole('button', { name: /Anonymous/ }),
+    ).not.toBeInTheDocument()
+  })
 })

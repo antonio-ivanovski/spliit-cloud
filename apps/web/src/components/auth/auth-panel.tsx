@@ -19,9 +19,22 @@ import { getErrorMessage, useAuthPanel } from './use-auth-panel'
 export function AuthPanel({
   redirectTo,
   embedded = false,
+  /**
+   * Email tab shown first. OAuth authorization screens pass `password` so a
+   * reviewer with plain login credentials lands on the working form instead of
+   * the magic-link form that needs inbox access.
+   */
+  defaultEmailVariant,
+  /**
+   * Hide the anonymous guest option. Guest placeholder accounts cannot serve as
+   * OAuth reviewer credentials, so the authorization screen omits them.
+   */
+  hideAnonymous = false,
 }: {
   redirectTo?: string
   embedded?: boolean
+  defaultEmailVariant?: 'magic-link' | 'password'
+  hideAnonymous?: boolean
 } = {}) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
   const isOnline = useOnlineStatus()
@@ -63,7 +76,7 @@ export function AuthPanel({
     emailAuth,
     magicLink,
     passkeyAuth,
-  } = useAuthPanel({ redirectTo })
+  } = useAuthPanel({ redirectTo, initialEmailVariant: defaultEmailVariant })
 
   // Conditional UI: offer a registered passkey through browser autofill when
   // the platform supports it. Fire once on mount; failures (including the
@@ -119,6 +132,7 @@ export function AuthPanel({
         passkeyEnabled={passkeyEnabled}
         passkeyPending={passkeyAuth.isPending}
         disabled={!isOnline || emailAuth.isPending || magicLink.isPending}
+        hideAnonymous={hideAnonymous}
         lastUsedMethod={lastLoginMethod}
         onGoogle={handleGoogle}
         onGithub={handleGithub}

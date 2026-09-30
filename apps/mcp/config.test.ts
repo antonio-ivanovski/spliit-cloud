@@ -20,7 +20,19 @@ describe('parseMcpEnv', () => {
       apiUrl: 'https://api.spliit.example',
       mcpUrl: 'https://mcp.spliit.example',
       webUrl: 'https://spliit.example',
+      openaiAppsChallenge: undefined,
     })
+  })
+
+  it('passes through a configured OpenAI Apps challenge token', () => {
+    expect(
+      parseMcpEnv({
+        MCP_API_URL: 'https://api.spliit.example',
+        MCP_PUBLIC_URL: 'https://mcp.spliit.example',
+        MCP_WEB_URL: 'https://spliit.example',
+        OPENAI_APPS_CHALLENGE: 'fresh-portal-token',
+      }).openaiAppsChallenge,
+    ).toBe('fresh-portal-token')
   })
 
   it('rejects malformed URLs and ports', () => {

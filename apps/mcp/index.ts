@@ -33,7 +33,7 @@ const runtimeEnv =
     }
   ).process?.env ?? {}
 const mcpEnv = parseMcpEnv(runtimeEnv)
-const { apiUrl, mcpUrl, webUrl } = mcpEnv
+const { apiUrl, mcpUrl, webUrl, openaiAppsChallenge } = mcpEnv
 const scopes = [
   'openid',
   'profile',
@@ -62,7 +62,7 @@ oauth.verifyToken = async (token) =>
 const server = new MCPServer({
   name: 'spliit-cloud',
   title: 'Spliit Cloud',
-  version: '1.0.0',
+  version: '1.0.1',
   description:
     'Create flat or receipt-itemized Spliit expenses from one conversational request with a safe, interactive confirmation preview. Also inspect the connected account’s groups, participants, balances, and recent expenses.',
   instructions: [
@@ -116,7 +116,7 @@ server.app.get('/health/readiness', async () => {
 })
 
 server.app.get('/.well-known/openai-apps-challenge', () =>
-  createOpenAiAppsChallengeResponse(),
+  createOpenAiAppsChallengeResponse(openaiAppsChallenge),
 )
 
 if (mcpEnv.nodeEnv === 'production') {

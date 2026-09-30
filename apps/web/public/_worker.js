@@ -47,6 +47,14 @@ const SEO_META = new Map([
         'Spliit Cloud is a non-commercial, community-maintained project. If it helps you split expenses with friends and family, consider chipping in for hosting and development.',
     },
   ],
+  [
+    '/support',
+    {
+      title: 'Support — Spliit Cloud',
+      description:
+        'How to get help with Spliit Cloud, report bugs, and contact the community maintainers.',
+    },
+  ],
 ])
 
 // Public static pages that have a hand-maintained Markdown companion. Agents
@@ -59,6 +67,7 @@ const MARKDOWN_PAGES = new Map([
   ['/privacy', '/privacy.md'],
   ['/imprint', '/imprint.md'],
   ['/sponsor', '/sponsor.md'],
+  ['/support', '/support.md'],
 ])
 
 function acceptsMarkdown(acceptHeader) {

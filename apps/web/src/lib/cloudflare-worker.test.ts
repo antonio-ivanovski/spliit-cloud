@@ -102,6 +102,7 @@ describe('Cloudflare Pages worker markdown negotiation', () => {
       { page: '/privacy', asset: '/privacy.md' },
       { page: '/imprint', asset: '/imprint.md' },
       { page: '/sponsor', asset: '/sponsor.md' },
+      { page: '/support', asset: '/support.md' },
     ])
 
     const publicMarkdownAssets = readdirSync(publicDir)

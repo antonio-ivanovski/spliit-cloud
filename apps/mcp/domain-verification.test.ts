@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 
-import { createOpenAiAppsChallengeResponse } from './domain-verification'
+import {
+  createOpenAiAppsChallengeResponse,
+  DEFAULT_OPENAI_APPS_CHALLENGE,
+} from './domain-verification'
 
 describe('OpenAI Apps domain verification', () => {
   it('returns the configured challenge token', async () => {
@@ -8,8 +11,12 @@ describe('OpenAI Apps domain verification', () => {
 
     expect(response.status).toBe(200)
     expect(response.headers.get('content-type')).toContain('text/plain')
-    await expect(response.text()).resolves.toBe(
-      'DSr2UeKW2yP07bHAMUvyidOy8MV3q0i9xe_C2GTZ3lY',
-    )
+    await expect(response.text()).resolves.toBe(DEFAULT_OPENAI_APPS_CHALLENGE)
+  })
+
+  it('serves a fresh portal token verbatim when configured', async () => {
+    const response = createOpenAiAppsChallengeResponse('  fresh-token  ')
+
+    await expect(response.text()).resolves.toBe('fresh-token')
   })
 })

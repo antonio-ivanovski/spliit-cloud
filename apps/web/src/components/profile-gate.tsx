@@ -9,6 +9,7 @@ const ungatedPaths = new Set([
   '/privacy',
   '/terms',
   '/imprint',
+  '/support',
   '/unsubscribe',
 ])
 

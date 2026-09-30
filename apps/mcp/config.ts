@@ -17,6 +17,10 @@ const mcpEnvSchema = z.object({
   MCP_PUBLIC_URL: serviceOrigin,
   MCP_API_URL: serviceUrl,
   MCP_WEB_URL: serviceUrl,
+  // Fresh token per OpenAI plugin submission (Platform dashboard →
+  // MCPs → domain verification). Falls back to the previous token so
+  // existing deployments keep verifying until the new value is set.
+  OPENAI_APPS_CHALLENGE: z.string().trim().min(1).optional(),
 })
 
 export function parseMcpEnv(source: Record<string, string | undefined>) {
@@ -28,6 +32,7 @@ export function parseMcpEnv(source: Record<string, string | undefined>) {
     apiUrl: stripTrailingSlash(parsed.MCP_API_URL),
     mcpUrl: stripTrailingSlash(parsed.MCP_PUBLIC_URL),
     webUrl: stripTrailingSlash(parsed.MCP_WEB_URL),
+    openaiAppsChallenge: parsed.OPENAI_APPS_CHALLENGE,
   }
 }
 

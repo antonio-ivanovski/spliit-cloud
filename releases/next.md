@@ -19,10 +19,11 @@ who is affected, and the exact migration steps.
 
 ### 🚀 Features
 
-- Short entry per user-facing change (`TBD` by @TBD)
+- Added a Support page (`/support`, with a Markdown companion and sitemap entry) as the public support contact for the app and the ChatGPT plugin listing (`TBD` by @TBD)
+- Hardened the privacy notice with data categories, purposes, recipients, retention, connected-application disclosure, and user controls (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
 
-- Short entry per fix (`TBD` by @TBD)
+- Prepared the ChatGPT plugin directory submission: password-first reviewer login without guest accounts, configurable domain-verification token, and a versioned submission package with review cases (`TBD` by @TBD)
 
 **Full Changelog**: TBD

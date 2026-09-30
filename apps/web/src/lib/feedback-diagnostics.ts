@@ -30,6 +30,7 @@ const exactRoutes = new Set([
   '/oauth/consent',
   '/oauth/login',
   '/privacy',
+  '/support',
   '/terms',
   '/unsubscribe',
 ])
