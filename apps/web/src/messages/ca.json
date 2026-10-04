@@ -2683,7 +2683,9 @@
       },
       "recurringCreated": "{participant} ha creat la despesa recurrent «{title}»",
       "stopped": "{participant} ha aturat la despesa recurrent {title}",
-      "commented": "{participant} ha comentat {title}: “{excerpt}”"
+      "commented": "{participant} ha comentat {title}: “{excerpt}”",
+      "yourShare": "La teva part:",
+      "notInvolved": "No ets implicat o implicada"
     },
     "group": {
       "updated": "{participant} ha actualitzat la configuració del grup",
@@ -2733,6 +2735,16 @@
     "participant": {
       "removed": "{participant} ha eliminat {target} del grup",
       "added": "{participant} ha afegit {target} al grup"
+    },
+    "hiddenActivitiesShowLess": "Mostra menys",
+    "hiddenActivities_one": "{count} activitat oculta que no t'implica",
+    "hiddenActivities_few": "{count} activitats ocultes que no t'impliquen",
+    "hiddenActivities_many": "{count} activitats ocultes que no t'impliquen",
+    "hiddenActivities_other": "{count} activitats ocultes que no t'impliquen",
+    "viewMode": {
+      "label": "Mode de vista d'activitats",
+      "forYou": "Per a tu",
+      "all": "Totes"
     }
   },
   "OfflineBanner": {

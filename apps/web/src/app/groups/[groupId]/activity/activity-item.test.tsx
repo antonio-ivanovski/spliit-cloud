@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
+import { getCurrency } from '@/lib/currency'
 import { render, screen } from '@/test/test-utils'
 
 import type { Activity } from './activity-item'
@@ -743,6 +744,161 @@ describe('ActivityItem', () => {
         'activity-item-act-1-change-amount',
       )
       expect(amountChange.textContent).toMatch(/EUR 12\.00.*→.*EUR 15\.00/)
+    })
+  })
+
+  describe('viewer share', () => {
+    const USD = getCurrency('USD')!
+    const share = (id: string, shares: number) => ({
+      ledgerParticipant: { id, account: null },
+      shares,
+    })
+
+    function makeExpenseActivity(
+      paidBy: Array<{ id: string; shares: number }>,
+      paidFor: Array<{ id: string; shares: number }>,
+    ) {
+      return makeActivity({
+        type: 'EXPENSE_CREATED',
+        data: { kind: 'expense', title: 'Dinner' },
+        expense: {
+          id: 'exp-1',
+          title: 'Dinner',
+          amount: 3000,
+          expenseDate: new Date('2025-06-15T12:00:00Z'),
+          categoryId: 'general',
+          splitMode: 'EVENLY',
+          paidBySplitMode: 'BY_AMOUNT',
+          originalAmount: null,
+          originalCurrency: null,
+          conversionRate: null,
+          conversionSource: null,
+          paidByList: paidBy.map((p) => share(p.id, p.shares)),
+          paidFor: paidFor.map((p) => share(p.id, p.shares)),
+        } as Activity['expense'],
+      })
+    }
+
+    function renderWithViewer(
+      activity: Activity,
+      viewerParticipantId: string | null,
+      viewerCurrency = USD,
+    ) {
+      return render(
+        <ActivityItem
+          groupId="group-1"
+          activity={activity}
+          dateStyle="medium"
+          viewerParticipantId={viewerParticipantId}
+          currency={viewerCurrency}
+        />,
+      )
+    }
+
+    it('shows the viewer share when they owe a portion', () => {
+      renderWithViewer(
+        makeExpenseActivity(
+          [{ id: 'lp-alice', shares: 3000 }],
+          [
+            { id: 'lp-alice', shares: 1 },
+            { id: 'lp-bob', shares: 1 },
+          ],
+        ),
+        'lp-bob',
+      )
+      const line = screen.getByTestId('activity-item-act-1-viewer-share')
+      expect(line.textContent).toMatch(/Your share:/)
+      expect(line.textContent).toMatch(/15/)
+    })
+
+    it('shows not-involved when the viewer has no share', () => {
+      renderWithViewer(
+        makeExpenseActivity(
+          [{ id: 'lp-alice', shares: 3000 }],
+          [{ id: 'lp-alice', shares: 1 }],
+        ),
+        'lp-bob',
+      )
+      expect(
+        screen.getByTestId('activity-item-act-1-viewer-share'),
+      ).toHaveTextContent('You are not involved')
+    })
+
+    it('prices cross-currency BY_AMOUNT shares in ledger currency', () => {
+      // USD 30.00 entered, EUR 27.00 in the ledger: bob's USD 20.00 share
+      // rescales to EUR 18.00 (without conversion fields it would read 20.00).
+      const EUR = getCurrency('EUR')!
+      renderWithViewer(
+        makeActivity({
+          type: 'EXPENSE_CREATED',
+          data: { kind: 'expense', title: 'Dinner' },
+          expense: {
+            id: 'exp-1',
+            title: 'Dinner',
+            amount: 2700,
+            expenseDate: new Date('2025-06-15T12:00:00Z'),
+            categoryId: 'general',
+            splitMode: 'BY_AMOUNT',
+            paidBySplitMode: 'BY_AMOUNT',
+            originalAmount: 3000,
+            originalCurrency: 'USD',
+            conversionRate: 0.9,
+            conversionSource: 'EXCHANGE',
+            paidByList: [share('lp-alice', 3000)],
+            paidFor: [share('lp-alice', 1000), share('lp-bob', 2000)],
+          } as Activity['expense'],
+        }),
+        'lp-bob',
+        EUR,
+      )
+      const line = screen.getByTestId('activity-item-act-1-viewer-share')
+      expect(line.textContent).toMatch(/Your share:/)
+      expect(line.textContent).toMatch(/18\.00/)
+    })
+
+    it('omits the share line without viewer identity', () => {
+      renderWithViewer(
+        makeExpenseActivity(
+          [{ id: 'lp-alice', shares: 3000 }],
+          [{ id: 'lp-alice', shares: 1 }],
+        ),
+        null,
+      )
+      expect(
+        screen.queryByTestId('activity-item-act-1-viewer-share'),
+      ).toBeNull()
+    })
+
+    it('omits the share line when the expense was deleted', () => {
+      renderWithViewer(
+        makeActivity({
+          type: 'EXPENSE_DELETED',
+          data: {
+            kind: 'expense',
+            title: 'Old Dinner',
+            affectedParticipants: ['lp-alice', 'lp-bob'],
+          },
+          expense: null,
+        }),
+        'lp-bob',
+      )
+      expect(
+        screen.queryByTestId('activity-item-act-1-viewer-share'),
+      ).toBeNull()
+    })
+
+    it('omits the share line for non-expense rows', () => {
+      renderWithViewer(
+        makeActivity({
+          type: 'GROUP_UPDATED',
+          data: { kind: 'group' },
+          expense: null,
+        }),
+        'lp-bob',
+      )
+      expect(
+        screen.queryByTestId('activity-item-act-1-viewer-share'),
+      ).toBeNull()
     })
   })
 })

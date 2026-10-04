@@ -190,6 +190,24 @@ export type ActivityListItem = Activity & {
     categoryId: string
     splitMode: string
     paidBySplitMode: string
+    originalAmount: number | null
+    originalCurrency: string | null
+    conversionRate: number | null
+    conversionSource: string | null
+    /**
+     * Minimal split projection for viewer involvement (`isInvolving`) and the
+     * per-row viewer share. Mirrors the expense-list wire shape minus display
+     * names — parties are ids only. Empty for deleted expenses (use the stored
+     * `affectedParticipants` snapshot instead).
+     */
+    paidByList: Array<{
+      ledgerParticipant: { id: string; account: { id: string } | null }
+      shares: number
+    }>
+    paidFor: Array<{
+      ledgerParticipant: { id: string; account: { id: string } | null }
+      shares: number
+    }>
   } | null
 }
 
@@ -234,7 +252,7 @@ export async function getActivities(
         activity.subjectType === 'EXPENSE' && activity.subjectId !== null,
     )
     .map((activity) => activity.subjectId as string)
-  const expenses = expenseSubjectIds.length
+  const expenseRows = expenseSubjectIds.length
     ? await prisma.expense.findMany({
         where: { ledgerId: group.ledgerId, id: { in: expenseSubjectIds } },
         select: {
@@ -245,6 +263,36 @@ export async function getActivities(
           categoryId: true,
           splitMode: true,
           paidBySplitMode: true,
+          originalAmount: true,
+          originalCurrency: true,
+          conversionRate: true,
+          conversionSource: true,
+          paidByList: {
+            select: {
+              ledgerParticipantId: true,
+              shares: true,
+              ledgerParticipant: {
+                select: {
+                  groupMember: {
+                    select: { account: { select: { id: true } } },
+                  },
+                },
+              },
+            },
+          },
+          paidFor: {
+            select: {
+              ledgerParticipantId: true,
+              shares: true,
+              ledgerParticipant: {
+                select: {
+                  groupMember: {
+                    select: { account: { select: { id: true } } },
+                  },
+                },
+              },
+            },
+          },
         },
       })
     : []
@@ -300,7 +348,7 @@ export async function getActivities(
       lpActorLabel,
       data,
     })
-    const expense = expenseFromActor(activity, expenses)
+    const expense = expenseFromActor(activity, expenseRows)
     return {
       ...activity,
       data,
@@ -353,11 +401,54 @@ function expenseFromActor(
     categoryId: string
     splitMode: string
     paidBySplitMode: string
+    originalAmount: number | null
+    originalCurrency: string | null
+    conversionRate: number | null
+    conversionSource: string | null
+    paidByList: Array<{
+      ledgerParticipantId: string
+      shares: number
+      ledgerParticipant: {
+        groupMember: { account: { id: string } | null } | null
+      }
+    }>
+    paidFor: Array<{
+      ledgerParticipantId: string
+      shares: number
+      ledgerParticipant: {
+        groupMember: { account: { id: string } | null } | null
+      }
+    }>
   }>,
 ): ActivityListItem['expense'] {
   if (activity.subjectType !== 'EXPENSE' || activity.subjectId === null) {
     return null
   }
   const found = expenses.find((e) => e.id === activity.subjectId) ?? null
-  return found
+  if (!found) return null
+  const toShare = (
+    row: (typeof found.paidByList)[number],
+  ): NonNullable<ActivityListItem['expense']>['paidByList'][number] => ({
+    ledgerParticipant: {
+      id: row.ledgerParticipantId,
+      account: row.ledgerParticipant.groupMember?.account ?? null,
+    },
+    shares: row.shares,
+  })
+  return {
+    id: found.id,
+    title: found.title,
+    amount: found.amount,
+    expenseDate: found.expenseDate,
+    categoryId: found.categoryId,
+    splitMode: found.splitMode,
+    paidBySplitMode: found.paidBySplitMode,
+    originalAmount: found.originalAmount,
+    originalCurrency: found.originalCurrency,
+    conversionRate:
+      found.conversionRate == null ? null : Number(found.conversionRate),
+    conversionSource: found.conversionSource,
+    paidByList: found.paidByList.map(toShare),
+    paidFor: found.paidFor.map(toShare),
+  }
 }

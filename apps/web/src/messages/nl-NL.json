@@ -2705,7 +2705,9 @@
       },
       "recurringCreated": "{participant} heeft de terugkerende uitgave ‘{title}’ aangemaakt",
       "stopped": "{participant} is de terugkerende uitgave {title} gestopt",
-      "commented": "{participant} plaatste een opmerking bij uitgave {title}: “{excerpt}”"
+      "commented": "{participant} plaatste een opmerking bij uitgave {title}: “{excerpt}”",
+      "yourShare": "Jouw aandeel:",
+      "notInvolved": "Je bent hier niet bij betrokken"
     },
     "group": {
       "updated": "{participant} werkte de groepsinstellingen bij",
@@ -2758,6 +2760,18 @@
     "participant": {
       "removed": "{participant} verwijderde {target} uit de groep",
       "added": "{participant} voegde {target} toe aan de groep"
+    },
+    "hiddenActivitiesShowLess": "Minder tonen",
+    "hiddenActivities_zero": "{count} verborgen activiteiten waar je niet bij betrokken bent",
+    "hiddenActivities_one": "{count} verborgen activiteit waar je niet bij betrokken bent",
+    "hiddenActivities_two": "{count} verborgen activiteiten waar je niet bij betrokken bent",
+    "hiddenActivities_few": "{count} verborgen activiteiten waar je niet bij betrokken bent",
+    "hiddenActivities_many": "{count} verborgen activiteiten waar je niet bij betrokken bent",
+    "hiddenActivities_other": "{count} verborgen activiteiten waar je niet bij betrokken bent",
+    "viewMode": {
+      "label": "Weergave van activiteiten",
+      "forYou": "Voor jou",
+      "all": "Alle"
     }
   },
   "OfflineBanner": {

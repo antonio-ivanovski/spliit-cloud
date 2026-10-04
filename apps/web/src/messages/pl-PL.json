@@ -2693,7 +2693,9 @@
       },
       "recurringCreated": "{participant} utworzył(a) cykliczny wydatek „{title}”",
       "stopped": "{participant} zatrzymał(a) cykliczny wydatek „{title}”",
-      "commented": "{participant} skomentował(a) {title}: „{excerpt}“"
+      "commented": "{participant} skomentował(a) {title}: „{excerpt}“",
+      "yourShare": "Twój udział:",
+      "notInvolved": "Nie jesteś zaangażowany"
     },
     "group": {
       "updated": "{participant} zaktualizował ustawienia grupy",
@@ -2744,6 +2746,18 @@
     "participant": {
       "removed": "{participant} usunął {target} z grupy",
       "added": "{participant} dodał {target} do grupy"
+    },
+    "hiddenActivitiesShowLess": "Pokaż mniej",
+    "hiddenActivities_zero": "{count} ukrytych aktywności, w których nie uczestniczysz",
+    "hiddenActivities_one": "{count} ukryta aktywność, w której nie uczestniczysz",
+    "hiddenActivities_two": "{count} ukryte aktywności, w których nie uczestniczysz",
+    "hiddenActivities_few": "{count} ukryte aktywności, w których nie uczestniczysz",
+    "hiddenActivities_many": "{count} ukrytych aktywności, w których nie uczestniczysz",
+    "hiddenActivities_other": "{count} ukrytych aktywności, w których nie uczestniczysz",
+    "viewMode": {
+      "label": "Tryb widoku aktywności",
+      "forYou": "Dla Ciebie",
+      "all": "Wszystkie"
     }
   },
   "OfflineBanner": {

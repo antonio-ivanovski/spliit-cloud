@@ -2664,7 +2664,9 @@
       },
       "recurringCreated": "{participant} membuat pengeluaran berulang “{title}”",
       "stopped": "{participant} menghentikan pengeluaran berulang “{title}”",
-      "commented": "{participant} mengomentari {title}: “{excerpt}”"
+      "commented": "{participant} mengomentari {title}: “{excerpt}”",
+      "yourShare": "Bagian Anda:",
+      "notInvolved": "Anda tidak terlibat"
     },
     "group": {
       "updated": "{participant} memperbarui pengaturan grup",
@@ -2712,6 +2714,13 @@
     "participant": {
       "removed": "{participant} menghapus {target} dari grup",
       "added": "{participant} menambahkan {target} ke grup"
+    },
+    "hiddenActivitiesShowLess": "Tampilkan lebih sedikit",
+    "hiddenActivities_other": "{count} aktivitas tersembunyi yang tidak melibatkan Anda",
+    "viewMode": {
+      "label": "Mode tampilan aktivitas",
+      "forYou": "Untuk Anda",
+      "all": "Semua"
     }
   },
   "OfflineBanner": {

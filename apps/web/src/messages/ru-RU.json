@@ -2693,7 +2693,9 @@
       },
       "recurringCreated": "{participant} создал(а) регулярный расход «{title}»",
       "stopped": "{participant} остановил(а) регулярный расход «{title}»",
-      "commented": "{participant} прокомментировал(а) {title}: «{excerpt}»"
+      "commented": "{participant} прокомментировал(а) {title}: «{excerpt}»",
+      "yourShare": "Ваша доля:",
+      "notInvolved": "Вы не участвуете"
     },
     "group": {
       "updated": "{participant} обновил(а) настройки группы",
@@ -2744,6 +2746,18 @@
     "participant": {
       "removed": "{participant} удалил(а) {target} из группы",
       "added": "{participant} добавил(а) {target} в группу"
+    },
+    "hiddenActivitiesShowLess": "Показать меньше",
+    "hiddenActivities_zero": "{count} скрытых активностей, в которых вы не участвуете",
+    "hiddenActivities_one": "{count} скрытая активность, в которой вы не участвуете",
+    "hiddenActivities_two": "{count} скрытые активности, в которых вы не участвуете",
+    "hiddenActivities_few": "{count} скрытые активности, в которых вы не участвуете",
+    "hiddenActivities_many": "{count} скрытых активностей, в которых вы не участвуете",
+    "hiddenActivities_other": "{count} скрытых активностей, в которых вы не участвуете",
+    "viewMode": {
+      "label": "Режим просмотра активностей",
+      "forYou": "Для вас",
+      "all": "Все"
     }
   },
   "OfflineBanner": {

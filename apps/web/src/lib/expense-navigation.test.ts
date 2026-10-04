@@ -5,6 +5,7 @@ import {
   expenseEditListLink,
   expenseEditPreviewLink,
   expenseEditSearch,
+  getActivitySearch,
   getGlobalExpensesSearch,
   isActivityReturnTo,
   isGlobalExpensesReturnTo,
@@ -42,6 +43,53 @@ describe('activity return navigation', () => {
 
   it('builds the activity list return path', () => {
     expect(buildActivityReturnTo('grp-1')).toBe('/groups/grp-1/activity')
+    expect(buildActivityReturnTo('grp-1', 'true')).toBe(
+      '/groups/grp-1/activity?actShowAll=true',
+    )
+    expect(buildActivityReturnTo('grp-1', 'false')).toBe(
+      '/groups/grp-1/activity',
+    )
+  })
+
+  it('restores the activity search from an internal path', () => {
+    expect(getActivitySearch('/groups/grp-1/activity?actShowAll=true')).toEqual(
+      { actShowAll: 'true' },
+    )
+    expect(getActivitySearch('/groups/grp-1/activity')).toEqual({})
+    expect(getActivitySearch('https://example.com/groups/a/activity')).toBe(
+      undefined,
+    )
+    expect(getActivitySearch('/groups/grp-1/expenses')).toBe(undefined)
+  })
+
+  it('preserves the activity view mode across the edit round-trip', () => {
+    expect(
+      expenseEditPreviewLink(
+        'grp-1',
+        'exp-1',
+        '/groups/grp-1/activity?actShowAll=true',
+      ),
+    ).toMatchObject({
+      to: '/groups/$groupId/activity',
+      params: { groupId: 'grp-1' },
+      search: { expenseId: 'exp-1', actShowAll: 'true' },
+    })
+
+    const list = expenseEditListLink(
+      'grp-1',
+      '/groups/grp-1/activity?actShowAll=true',
+    )
+    const kept = (
+      list.search as (
+        search: Record<string, unknown>,
+      ) => Record<string, unknown>
+    )({
+      expenseId: 'exp-1',
+      returnTo: '/groups/grp-1/activity?actShowAll=true',
+    })
+    expect(kept).toMatchObject({ actShowAll: 'true' })
+    expect(kept.expenseId).toBeUndefined()
+    expect(kept.returnTo).toBeUndefined()
   })
 
   it('keeps scope and returnTo isolated on the edit route', () => {

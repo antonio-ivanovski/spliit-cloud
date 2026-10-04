@@ -2704,7 +2704,9 @@
       },
       "recurringCreated": "{participant}님이 반복 지출 ‘{title}’을 만들었습니다",
       "stopped": "{participant}님이 반복 지출 ‘{title}’을 중지했습니다",
-      "commented": "{participant}님이 {title} 지출에 댓글을 남겼습니다: “{excerpt}”"
+      "commented": "{participant}님이 {title} 지출에 댓글을 남겼습니다: “{excerpt}”",
+      "yourShare": "내 몫:",
+      "notInvolved": "당신은 관련이 없어요"
     },
     "group": {
       "updated": "{participant}님이 그룹 설정을 업데이트했습니다",
@@ -2757,6 +2759,13 @@
     "participant": {
       "removed": "{participant}님이 {target}을(를) 그룹에서 제거했습니다",
       "added": "{participant}님이 {target}을(를) 그룹에 추가했습니다"
+    },
+    "hiddenActivitiesShowLess": "간략히 보기",
+    "hiddenActivities_other": "나와 관련 없는 숨겨진 활동 {count}개",
+    "viewMode": {
+      "label": "활동 보기 모드",
+      "forYou": "나와 관련",
+      "all": "전체"
     }
   },
   "OfflineBanner": {

@@ -34,8 +34,11 @@ export function expenseEditSearch(
 }
 
 /** Activity-tab return path for expense previews (`/groups/:id/activity`). */
-export function buildActivityReturnTo(groupId: string) {
-  return `/groups/${groupId}/activity`
+export function buildActivityReturnTo(
+  groupId: string,
+  actShowAll?: string | null,
+) {
+  return `/groups/${groupId}/activity${actShowAll === 'true' ? '?actShowAll=true' : ''}`
 }
 
 /** Cancel and save from edit both return to the source preview. */
@@ -60,7 +63,10 @@ export function expenseEditPreviewLink(
     return {
       to: '/groups/$groupId/activity',
       params: { groupId },
-      search: { expenseId } as ExpenseCancelLink['search'],
+      search: {
+        ...getActivitySearch(returnTo),
+        expenseId,
+      } as ExpenseCancelLink['search'],
       resetScroll: false,
       replace: true,
     }
@@ -91,6 +97,7 @@ export function expenseEditListLink(
       params: { groupId },
       search: (search: Record<string, unknown>) => ({
         ...search,
+        ...getActivitySearch(returnTo),
         expenseId: undefined,
         returnTo: undefined,
         scope: undefined,
@@ -129,6 +136,7 @@ export function expenseFormCancelLink(
     return {
       to: '/groups/$groupId/activity',
       params: { groupId },
+      search: getActivitySearch(returnTo) as ExpenseCancelLink['search'],
     }
   }
   return {
@@ -149,6 +157,7 @@ export function expenseListLink(
     return {
       to: '/groups/$groupId/activity',
       params: { groupId },
+      search: getActivitySearch(returnTo) as ExpenseCancelLink['search'],
     }
   }
   return {
@@ -173,6 +182,21 @@ export function getGlobalExpensesSearch(returnTo?: string) {
 
 export function isGlobalExpensesReturnTo(returnTo?: string) {
   return getGlobalExpensesSearch(returnTo) !== undefined
+}
+
+/**
+ * Convert a validated activity return path back into the search object expected
+ * by TanStack Router, so the activity view mode (`actShowAll`) survives the
+ * expense preview/edit round-trip. Mirrors `getGlobalExpensesSearch` for the
+ * global feed.
+ */
+export function getActivitySearch(returnTo?: string) {
+  if (!returnTo || !isActivityReturnTo(returnTo)) return undefined
+
+  const url = new URL(returnTo, 'http://spliit.local')
+  if (!/^\/groups\/[^/]+\/activity$/.test(url.pathname)) return undefined
+
+  return Object.fromEntries(url.searchParams.entries())
 }
 
 /**

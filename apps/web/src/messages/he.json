@@ -2683,7 +2683,9 @@
       },
       "recurringCreated": "{participant} יצר/ה את ההוצאה החוזרת „{title}”",
       "stopped": "{participant} עצר/ה את ההוצאה החוזרת „{title}”",
-      "commented": "{participant} הגיב/ה על {title}: “{excerpt}”"
+      "commented": "{participant} הגיב/ה על {title}: “{excerpt}”",
+      "yourShare": "החלק שלך:",
+      "notInvolved": "אתה לא מעורב"
     },
     "group": {
       "updated": "{participant} עדכן את הגדרות הקבוצה",
@@ -2733,6 +2735,18 @@
     "participant": {
       "removed": "{participant} הסיר את {target} מהקבוצה",
       "added": "{participant} הוסיף את {target} לקבוצה"
+    },
+    "hiddenActivitiesShowLess": "הצג פחות",
+    "hiddenActivities_zero": "{count} פעילויות נסתרות שלא כוללות אותך",
+    "hiddenActivities_one": "{count} פעילות נסתרת שלא כוללת אותך",
+    "hiddenActivities_two": "{count} פעילויות נסתרות שלא כוללות אותך",
+    "hiddenActivities_few": "{count} פעילויות נסתרות שלא כוללות אותך",
+    "hiddenActivities_many": "{count} פעילויות נסתרות שלא כוללות אותך",
+    "hiddenActivities_other": "{count} פעילויות נסתרות שלא כוללות אותך",
+    "viewMode": {
+      "label": "מצב תצוגת הפעילות",
+      "forYou": "עבורך",
+      "all": "הכול"
     }
   },
   "OfflineBanner": {

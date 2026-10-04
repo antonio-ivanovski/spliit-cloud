@@ -182,4 +182,75 @@ describe('Spliit import history', () => {
       }),
     ).toBe(0)
   })
+
+  it('stores item-level participants on imported expense activities', async () => {
+    const lpA = randomId()
+    const lpB = randomId()
+    const created = await caller().import({
+      requestId: crypto.randomUUID(),
+      groupFormValues: {
+        name: `Itemized import ${runId}`,
+        information: '',
+        currency: '€',
+        currencyCode: 'EUR',
+        participants: [{ name: 'Owner' }],
+      },
+      participants: [
+        {
+          mode: 'UNLINKED_PARTICIPANT',
+          sourceName: 'Item Payer',
+          destLedgerParticipantId: lpA,
+        },
+        {
+          mode: 'UNLINKED_PARTICIPANT',
+          sourceName: 'Item Only',
+          destLedgerParticipantId: lpB,
+        },
+      ],
+      expenses: [
+        {
+          title: 'Itemized import dinner',
+          amount: 3000,
+          expenseDate: new Date('2025-11-15'),
+          category: 'general',
+          splitMode: 'ITEMIZED',
+          paidBySplitMode: 'BY_AMOUNT',
+          paidByList: [{ participant: lpA, shares: 3000 }],
+          paidFor: [{ participant: lpA, shares: 1 }],
+          items: [
+            {
+              title: 'Shared dish',
+              unitPrice: 3000,
+              quantity: 1,
+              amount: 3000,
+              splitMode: 'EVENLY',
+              paidFor: [{ participant: lpB, shares: 1 }],
+            },
+          ],
+          documents: [],
+          recurrenceRule: 'NONE',
+        },
+      ],
+      sourceMeta: { provider: 'SPLIIT', sourceGroupId: `source-${runId}` },
+    })
+    const group = await prisma.group.findUniqueOrThrow({
+      where: { id: created.groupId },
+      select: { ledgerId: true },
+    })
+    ledgerIds.push(group.ledgerId!)
+    const expense = await prisma.expense.findFirstOrThrow({
+      where: { ledgerId: group.ledgerId!, title: 'Itemized import dinner' },
+    })
+    const activity = await prisma.activity.findFirstOrThrow({
+      where: {
+        ledgerId: group.ledgerId!,
+        type: 'EXPENSE_CREATED',
+        subjectId: expense.id,
+      },
+    })
+    const data = activity.data as Record<string, unknown>
+    expect(data.affectedParticipants).toEqual(
+      expect.arrayContaining([lpA, lpB]),
+    )
+  })
 })

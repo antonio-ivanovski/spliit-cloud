@@ -2673,7 +2673,9 @@
       },
       "recurringCreated": "{participant} loi toistuvan kulun ”{title}”",
       "stopped": "{participant} pysäytti toistuvan kulun {title}",
-      "commented": "{participant} kommentoi kulua {title}: “{excerpt}”"
+      "commented": "{participant} kommentoi kulua {title}: “{excerpt}”",
+      "yourShare": "Osuutesi:",
+      "notInvolved": "Et ole osallisena"
     },
     "group": {
       "updated": "{participant} päivitti ryhmän asetuksia",
@@ -2722,6 +2724,14 @@
     "participant": {
       "removed": "{participant} poisti {target} ryhmästä",
       "added": "{participant} lisäsi {target} ryhmään"
+    },
+    "hiddenActivitiesShowLess": "Näytä vähemmän",
+    "hiddenActivities_one": "{count} piilotettu sinuun liittymätön toiminto",
+    "hiddenActivities_other": "{count} piilotettua sinuun liittymätöntä toimintoa",
+    "viewMode": {
+      "label": "Tapahtumien näkymä",
+      "forYou": "Sinulle",
+      "all": "Kaikki"
     }
   },
   "OfflineBanner": {

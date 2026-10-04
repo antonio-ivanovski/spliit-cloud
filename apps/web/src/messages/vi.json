@@ -2779,7 +2779,9 @@
       "changeEmptyValue": "Chưa đặt",
       "recurringCreated": "{participant} đã tạo chi phí định kỳ \"{title}\"",
       "stopped": "{participant} đã dừng chi phí định kỳ {title}",
-      "commented": "{participant} đã bình luận về {title}: \"{excerpt}\""
+      "commented": "{participant} đã bình luận về {title}: \"{excerpt}\"",
+      "yourShare": "Phần của bạn",
+      "notInvolved": "Bạn không liên quan"
     },
     "group": {
       "updated": "{participant} đã cập nhật cài đặt nhóm",
@@ -2832,7 +2834,14 @@
     },
     "fallback": "Một hoạt động đã được ghi lại",
     "unknownActor": "Ai đó",
-    "openExpense": "Mở chi phí"
+    "openExpense": "Mở chi phí",
+    "hiddenActivitiesShowLess": "Thu gọn",
+    "hiddenActivities_other": "{count} hoạt động ẩn không liên quan đến bạn",
+    "viewMode": {
+      "label": "Chế độ xem hoạt động",
+      "forYou": "Dành cho bạn",
+      "all": "Tất cả"
+    }
   },
   "OfflineBanner": {
     "message": "Bạn đang ngoại tuyến. Các thay đổi hiện tại sẽ không được lưu cho đến khi bạn kết nối lại."

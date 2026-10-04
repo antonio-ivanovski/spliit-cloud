@@ -2673,7 +2673,9 @@
       },
       "recurringCreated": "{participant} го создаде повторливиот трошок „{title}“",
       "stopped": "{participant} го запре повторливиот трошок „{title}“",
-      "commented": "{participant} остави коментар на {title}: „{excerpt}“"
+      "commented": "{participant} остави коментар на {title}: „{excerpt}“",
+      "yourShare": "Ваш удел:",
+      "notInvolved": "Не сте вклучени"
     },
     "group": {
       "updated": "{participant} ажурираше поставки на групата",
@@ -2722,6 +2724,18 @@
     "participant": {
       "removed": "{participant} го отстрани {target} од групата",
       "added": "{participant} го додаде {target} во групата"
+    },
+    "hiddenActivitiesShowLess": "Прикажи помалку",
+    "hiddenActivities_zero": "{count} скриени активности во кои не сте вклучени",
+    "hiddenActivities_one": "{count} скриена активност во која не сте вклучени",
+    "hiddenActivities_two": "{count} скриени активности во кои не сте вклучени",
+    "hiddenActivities_few": "{count} скриени активности во кои не сте вклучени",
+    "hiddenActivities_many": "{count} скриени активности во кои не сте вклучени",
+    "hiddenActivities_other": "{count} скриени активности во кои не сте вклучени",
+    "viewMode": {
+      "label": "Режим на приказ на активности",
+      "forYou": "За вас",
+      "all": "Сите"
     }
   },
   "OfflineBanner": {

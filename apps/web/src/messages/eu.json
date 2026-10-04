@@ -2681,7 +2681,9 @@
       },
       "recurringCreated": "{participant}(e)k «{title}» gastu errepikaria sortu du",
       "stopped": "{participant}(e)k {title} gastu errepikaria gelditu du",
-      "commented": "{participant}(e)k {title}ri buruzko iruzkina egin du: “{excerpt}”"
+      "commented": "{participant}(e)k {title}ri buruzko iruzkina egin du: “{excerpt}”",
+      "yourShare": "Zure zatia:",
+      "notInvolved": "Ez duzu parte hartzen"
     },
     "group": {
       "updated": "{participant}(e)k taldearen ezarpenak eguneratu ditu",
@@ -2731,6 +2733,16 @@
     "participant": {
       "removed": "{participant}(e)k {target} taldetik kendu du",
       "added": "{participant}(e)k {target} taldera gehitu du"
+    },
+    "hiddenActivitiesShowLess": "Erakutsi gutxiago",
+    "hiddenActivities_one": "Parte hartzen ez duzun {count} jarduera ezkutu",
+    "hiddenActivities_few": "Parte hartzen ez dituzun {count} jarduera ezkutu",
+    "hiddenActivities_many": "Parte hartzen ez dituzun {count} jarduera ezkutu",
+    "hiddenActivities_other": "Parte hartzen ez dituzun {count} jarduera ezkutu",
+    "viewMode": {
+      "label": "Jarduerak bistaratzeko modua",
+      "forYou": "Zuretzat",
+      "all": "Guztiak"
     }
   },
   "OfflineBanner": {

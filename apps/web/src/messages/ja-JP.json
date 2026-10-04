@@ -2666,7 +2666,9 @@
       },
       "recurringCreated": "{participant}さんが定期支出「{title}」を作成しました",
       "stopped": "{participant}さんが定期支出「{title}」を停止しました",
-      "commented": "{participant}が支出{title}にコメントしました：「{excerpt}」"
+      "commented": "{participant}が支出{title}にコメントしました：「{excerpt}」",
+      "yourShare": "あなたのシェア:",
+      "notInvolved": "あなたは関係していません"
     },
     "group": {
       "updated": "{participant}がグループ設定を更新しました",
@@ -2714,6 +2716,13 @@
     "participant": {
       "removed": "{participant}が{target}をグループから削除しました",
       "added": "{participant}が{target}をグループに追加しました"
+    },
+    "hiddenActivitiesShowLess": "表示を減らす",
+    "hiddenActivities_other": "あなたに関係しない非表示のアクティビティ {count} 件",
+    "viewMode": {
+      "label": "アクティビティの表示モード",
+      "forYou": "あなたのみ",
+      "all": "すべて"
     }
   },
   "OfflineBanner": {

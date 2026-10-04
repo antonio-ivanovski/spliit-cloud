@@ -3150,7 +3150,9 @@
         "conversionRate": "سعر الصرف",
         "documents": "المستندات",
         "settlement": "دفعة التسوية"
-      }
+      },
+      "yourShare": "حصتك:",
+      "notInvolved": "أنت غير مشترك"
     },
     "member": {
       "left": "غادر {participant} المجموعة",
@@ -3202,7 +3204,19 @@
       "imported_one": "{participant} استورد {count} نفقة",
       "imported_zero": "لم يستورد {participant} أياً من {count} نفقات"
     },
-    "fallback": "نشاط غير معروف."
+    "fallback": "نشاط غير معروف.",
+    "hiddenActivitiesShowLess": "عرض أقل",
+    "hiddenActivities_zero": "{count} أنشطة مخفية لا تشملك",
+    "hiddenActivities_one": "{count} نشاط مخفي لا يشملك",
+    "hiddenActivities_two": "{count} نشاطان مخفيان لا يشملانك",
+    "hiddenActivities_few": "{count} أنشطة مخفية لا تشملك",
+    "hiddenActivities_many": "{count} نشاطا مخفيا لا يشملك",
+    "hiddenActivities_other": "{count} نشاط مخفي لا يشملك",
+    "viewMode": {
+      "label": "وضع عرض النشاط",
+      "forYou": "الخاصة بك",
+      "all": "الكل"
+    }
   },
   "Share": {
     "title": "مشاركة",

@@ -2666,7 +2666,9 @@
       },
       "recurringCreated": "{participant}创建了定期支出“{title}”",
       "stopped": "{participant}停止了定期支出“{title}”",
-      "commented": "{participant} 评论了支出 {title}：“{excerpt}”"
+      "commented": "{participant} 评论了支出 {title}：“{excerpt}”",
+      "yourShare": "你的份额：",
+      "notInvolved": "您无需支付"
     },
     "group": {
       "updated": "{participant} 更新了群组设置",
@@ -2714,6 +2716,13 @@
     "participant": {
       "removed": "{participant} 将 {target} 移出了群组",
       "added": "{participant} 将 {target} 添加到了群组"
+    },
+    "hiddenActivitiesShowLess": "收起",
+    "hiddenActivities_other": "与您无关的 {count} 条隐藏活动",
+    "viewMode": {
+      "label": "活动视图模式",
+      "forYou": "与我相关",
+      "all": "全部"
     }
   },
   "OfflineBanner": {

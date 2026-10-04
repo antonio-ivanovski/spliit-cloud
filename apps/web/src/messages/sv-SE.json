@@ -405,7 +405,9 @@
       },
       "recurringCreated": "{participant} skapade den återkommande utgiften ”{title}”",
       "stopped": "{participant} stoppade den återkommande utgiften {title}",
-      "commented": "{participant} kommenterade utgiften {title}: “{excerpt}”"
+      "commented": "{participant} kommenterade utgiften {title}: “{excerpt}”",
+      "yourShare": "Din andel:",
+      "notInvolved": "Du är inte inblandad"
     },
     "fallback": "En aktivitet registrerades",
     "group": {
@@ -454,6 +456,14 @@
     "participant": {
       "removed": "{participant} tog bort {target} från gruppen",
       "added": "{participant} lade till {target} i gruppen"
+    },
+    "hiddenActivitiesShowLess": "Visa mindre",
+    "hiddenActivities_one": "{count} dold aktivitet där du inte är inblandad",
+    "hiddenActivities_other": "{count} dolda aktiviteter där du inte är inblandad",
+    "viewMode": {
+      "label": "Aktivitetsvy",
+      "forYou": "För dig",
+      "all": "Alla"
     }
   },
   "Activity": {

@@ -2693,7 +2693,9 @@
       },
       "recurringCreated": "{participant} vytvořil(a) opakovaný výdaj „{title}“",
       "stopped": "{participant} zastavil(a) opakovaný výdaj „{title}“",
-      "commented": "{participant} okomentoval(a) {title}: „{excerpt}“"
+      "commented": "{participant} okomentoval(a) {title}: „{excerpt}“",
+      "yourShare": "Váš podíl:",
+      "notInvolved": "Nejste zapojeni"
     },
     "group": {
       "updated": "{participant} aktualizoval nastavení skupiny",
@@ -2744,6 +2746,18 @@
     "participant": {
       "removed": "{participant} odstranil {target} ze skupiny",
       "added": "{participant} přidal {target} do skupiny"
+    },
+    "hiddenActivitiesShowLess": "Zobrazit méně",
+    "hiddenActivities_zero": "{count} skrytých aktivit, které se vás netýkají",
+    "hiddenActivities_one": "{count} skrytá aktivita, která se vás netýká",
+    "hiddenActivities_two": "{count} skryté aktivity, které se vás netýkají",
+    "hiddenActivities_few": "{count} skryté aktivity, které se vás netýkají",
+    "hiddenActivities_many": "{count} skryté aktivity, která se vás netýká",
+    "hiddenActivities_other": "{count} skrytých aktivit, které se vás netýkají",
+    "viewMode": {
+      "label": "Režim zobrazení aktivit",
+      "forYou": "Pro vás",
+      "all": "Vše"
     }
   },
   "OfflineBanner": {

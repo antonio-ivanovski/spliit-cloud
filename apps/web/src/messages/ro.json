@@ -2683,7 +2683,9 @@
       },
       "recurringCreated": "{participant} a creat cheltuiala recurentă „{title}”",
       "stopped": "{participant} a oprit cheltuiala recurentă {title}",
-      "commented": "{participant} a comentat despre {title}: “{excerpt}”"
+      "commented": "{participant} a comentat despre {title}: “{excerpt}”",
+      "yourShare": "Partea ta:",
+      "notInvolved": "Nu ești implicat"
     },
     "group": {
       "updated": "{participant} a actualizat setările grupului",
@@ -2733,6 +2735,16 @@
     "participant": {
       "removed": "{participant} a eliminat pe {target} din grup",
       "added": "{participant} a adăugat pe {target} în grup"
+    },
+    "hiddenActivitiesShowLess": "Arată mai puțin",
+    "hiddenActivities_one": "{count} activitate ascunsă care nu te implică",
+    "hiddenActivities_few": "{count} activități ascunse care nu te implică",
+    "hiddenActivities_many": "{count} activități ascunse care nu te implică",
+    "hiddenActivities_other": "{count} activități ascunse care nu te implică",
+    "viewMode": {
+      "label": "Mod de vizualizare a activităților",
+      "forYou": "Pentru tine",
+      "all": "Toate"
     }
   },
   "OfflineBanner": {

@@ -405,7 +405,9 @@
       },
       "recurringCreated": "{participant} نے متواتر خرچہ \"{title}\" تخلیق کیا",
       "stopped": "{participant} نے متواتر خرچہ {title} روک دیا",
-      "commented": "{participant} نے {title} پر تبصرہ کیا: \"{excerpt}\""
+      "commented": "{participant} نے {title} پر تبصرہ کیا: \"{excerpt}\"",
+      "yourShare": "آپ کا حصہ:",
+      "notInvolved": "آپ شامل نہیں ہیں"
     },
     "fallback": "ایک سرگرمی ریکارڈ کی گئی",
     "group": {
@@ -454,6 +456,14 @@
     "participant": {
       "removed": "{participant} نے {target} کو گروپ سے ہٹا دیا",
       "added": "{participant} نے {target} کو گروپ میں شامل کیا"
+    },
+    "hiddenActivitiesShowLess": "کم دکھائیں",
+    "hiddenActivities_one": "{count} چھپی ہوئی سرگرمی جس میں آپ شامل نہیں ہیں",
+    "hiddenActivities_other": "{count} چھپی ہوئی سرگرمیاں جن میں آپ شامل نہیں ہیں",
+    "viewMode": {
+      "label": "سرگرمی دیکھنے کا طریقہ",
+      "forYou": "آپ کے لیے",
+      "all": "سبھی"
     }
   },
   "Activity": {

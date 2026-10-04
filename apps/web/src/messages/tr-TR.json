@@ -2673,7 +2673,9 @@
       },
       "recurringCreated": "{participant}, “{title}” yinelenen giderini oluşturdu",
       "stopped": "{participant}, “{title}” yinelenen giderini durdurdu",
-      "commented": "{participant} {title} giderine yorum yaptı: “{excerpt}”"
+      "commented": "{participant} {title} giderine yorum yaptı: “{excerpt}”",
+      "yourShare": "Payınız:",
+      "notInvolved": "Dahil değilsiniz"
     },
     "group": {
       "updated": "{participant} grup ayarlarını güncelledi",
@@ -2722,6 +2724,18 @@
     "participant": {
       "removed": "{participant}, {target} kullanıcısını gruptan kaldırdı",
       "added": "{participant}, {target} kullanıcısını gruba ekledi"
+    },
+    "hiddenActivitiesShowLess": "Daha az göster",
+    "hiddenActivities_zero": "{count} dahil olmadığınız gizli etkinlik",
+    "hiddenActivities_one": "{count} dahil olmadığınız gizli etkinlik",
+    "hiddenActivities_two": "{count} dahil olmadığınız gizli etkinlik",
+    "hiddenActivities_few": "{count} dahil olmadığınız gizli etkinlik",
+    "hiddenActivities_many": "{count} dahil olmadığınız gizli etkinlik",
+    "hiddenActivities_other": "{count} dahil olmadığınız gizli etkinlik",
+    "viewMode": {
+      "label": "Etkinlik görünüm modu",
+      "forYou": "Sizin için",
+      "all": "Tümü"
     }
   },
   "OfflineBanner": {

@@ -450,7 +450,9 @@
       },
       "recurringCreated": "{participant} spawned recurring expense “{title}”",
       "stopped": "{participant} called time on recurring expense {title}",
-      "commented": "{participant} left a comment on {title}: “{excerpt}”"
+      "commented": "{participant} left a comment on {title}: “{excerpt}”",
+      "yourShare": "your share:",
+      "notInvolved": "you are not involved, thankfully"
     },
     "fallback": "an activity happened somehow",
     "group": {
@@ -499,7 +501,15 @@
     "participant": {
       "removed": "{participant} removed {target} from the group chat",
       "added": "{participant} added {target} to the group chat"
-    }
+    },
+    "hiddenActivitiesShowLess": "fold these up",
+    "hiddenActivities_one": "{count} hidden activity that doesn't involve you",
+    "viewMode": {
+      "label": "activity view mode",
+      "forYou": "for you",
+      "all": "all"
+    },
+    "hiddenActivities_other": "{count} hidden activities that don't involve you"
   },
   "Activity": {
     "title": "activity tea",

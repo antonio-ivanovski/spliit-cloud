@@ -2693,7 +2693,9 @@
       },
       "recurringCreated": "{participant} створив(-ла) регулярну витрату «{title}»",
       "stopped": "{participant} зупинив(-ла) регулярну витрату «{title}»",
-      "commented": "{participant} прокоментував(ла) {title}: «{excerpt}»"
+      "commented": "{participant} прокоментував(ла) {title}: «{excerpt}»",
+      "yourShare": "Ваша частка:",
+      "notInvolved": "Ви не берете участі"
     },
     "group": {
       "updated": "{participant} оновив налаштування групи",
@@ -2744,6 +2746,18 @@
     "participant": {
       "removed": "{participant} видалив {target} з групи",
       "added": "{participant} додав {target} до групи"
+    },
+    "hiddenActivitiesShowLess": "Показати менше",
+    "hiddenActivities_zero": "{count} прихованих активностей, в яких ви не берете участі",
+    "hiddenActivities_one": "{count} прихована активність, в якій ви не берете участі",
+    "hiddenActivities_two": "{count} приховані активності, в яких ви не берете участі",
+    "hiddenActivities_few": "{count} приховані активності, в яких ви не берете участі",
+    "hiddenActivities_many": "{count} прихованих активностей, в яких ви не берете участі",
+    "hiddenActivities_other": "{count} прихованих активностей, в яких ви не берете участі",
+    "viewMode": {
+      "label": "Режим перегляду активностей",
+      "forYou": "Для вас",
+      "all": "Усі"
     }
   },
   "OfflineBanner": {

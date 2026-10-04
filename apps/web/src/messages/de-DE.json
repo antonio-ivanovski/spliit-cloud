@@ -2705,7 +2705,9 @@
       },
       "recurringCreated": "{participant} hat die wiederkehrende Ausgabe „{title}“ erstellt",
       "stopped": "{participant} hat die wiederkehrende Ausgabe {title} gestoppt",
-      "commented": "{participant} kommentierte {title}: “{excerpt}”"
+      "commented": "{participant} kommentierte {title}: “{excerpt}”",
+      "yourShare": "Dein Anteil:",
+      "notInvolved": "Du bist nicht involviert"
     },
     "group": {
       "updated": "{participant} aktualisierte die Gruppeneinstellungen",
@@ -2758,6 +2760,18 @@
     "participant": {
       "removed": "{participant} entfernte {target} aus der Gruppe",
       "added": "{participant} fügte {target} zur Gruppe hinzu"
+    },
+    "hiddenActivitiesShowLess": "Weniger anzeigen",
+    "hiddenActivities_zero": "{count} ausgeblendete Aktivitäten, an denen du nicht beteiligt bist",
+    "hiddenActivities_one": "{count} ausgeblendete Aktivität, an der du nicht beteiligt bist",
+    "hiddenActivities_two": "{count} ausgeblendete Aktivitäten, an denen du nicht beteiligt bist",
+    "hiddenActivities_few": "{count} ausgeblendete Aktivitäten, an denen du nicht beteiligt bist",
+    "hiddenActivities_many": "{count} ausgeblendete Aktivitäten, an denen du nicht beteiligt bist",
+    "hiddenActivities_other": "{count} ausgeblendete Aktivitäten, an denen du nicht beteiligt bist",
+    "viewMode": {
+      "label": "Aktivitätsansicht",
+      "forYou": "Für dich",
+      "all": "Alle"
     }
   },
   "OfflineBanner": {

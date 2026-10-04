@@ -17,10 +17,10 @@ const activityRouteApi = getRouteApi('/groups/$groupId/activity')
 export function ActivityPageClient() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Activity' })
   const { groupId } = activityRouteApi.useParams()
-  const { expenseId } = activityRouteApi.useSearch()
+  const { expenseId, actShowAll } = activityRouteApi.useSearch()
   const navigate = useNavigate({ from: '/groups/$groupId/activity' })
 
-  const returnTo = buildActivityReturnTo(groupId)
+  const returnTo = buildActivityReturnTo(groupId, actShowAll)
 
   const closeExpense = () => {
     void navigate({

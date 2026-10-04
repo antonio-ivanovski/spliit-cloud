@@ -760,6 +760,13 @@ export async function importGroup(
     const resolvedParticipantsByExpenseIndex: Array<
       ReturnType<typeof resolvePaidParticipants>
     > = []
+    // Per-expense destination participant snapshot for activity rows. Matches
+    // the `getAffectedParticipantIds` definition (paidBy ∪ paidFor ∪ items ∪
+    // remainder): item-only participants stay visible in For-you even though
+    // this path persists expense-level splits only. Keyed by expense index;
+    // also reused for historical activity rows that reference an imported
+    // expense.
+    const affectedByExpenseIndex = new Map<number, string[]>()
 
     for (const [expenseIndex, prepared] of preparedExpenses.entries()) {
       const { expense, expenseId, conversion } = prepared
@@ -777,6 +784,28 @@ export async function importGroup(
         affectedParticipantIds.add(row.ledgerParticipantId)
         paidForRows.push({ expenseId, ...row })
       }
+      affectedByExpenseIndex.set(expenseIndex, [
+        ...new Set([
+          ...resolvedParticipants.resolvedPaidByList.map(
+            (row) => row.ledgerParticipantId,
+          ),
+          ...resolvedParticipants.resolvedPaidFor.map(
+            (row) => row.ledgerParticipantId,
+          ),
+          // Match the `getAffectedParticipantIds` definition (paidBy ∪
+          // paidFor ∪ items ∪ remainder): item-only participants stay
+          // visible in For-you even though this path persists
+          // expense-level splits only.
+          ...(expense.items ?? []).flatMap((item) =>
+            item.paidFor
+              .map((row) => destIdByClientKey.get(row.participant))
+              .filter((id): id is string => id !== undefined),
+          ),
+          ...(expense.itemizedRemainder?.paidFor ?? [])
+            .map((row) => destIdByClientKey.get(row.participant))
+            .filter((id): id is string => id !== undefined),
+        ]),
+      ])
 
       const membership = membershipByExpenseIndex.get(expenseIndex)
       const recurringSeriesId = membership
@@ -812,10 +841,18 @@ export async function importGroup(
         })
       }
       if (input.historicalActivities === undefined) {
+        // Never persist an empty snapshot: `[]` reads as "involves nobody"
+        // while here it would mean "no split rows found" (unknown ⇒ visible).
+        const snapshot = affectedByExpenseIndex.get(expenseIndex)
         activityRows.push({
           ...prepared.activity,
           ledgerId,
-          data: prepared.activity.data,
+          data: {
+            ...prepared.activity.data,
+            ...(snapshot && snapshot.length > 0
+              ? { affectedParticipants: snapshot }
+              : {}),
+          },
         })
       }
     }
@@ -837,6 +874,18 @@ export async function importGroup(
       const isGroupActivity = historical.activityType === 'UPDATE_GROUP'
       const title =
         historical.data ?? preparedExpense?.expense.title ?? 'Imported expense'
+      // Historical rows that reference an imported expense inherit its
+      // participant snapshot; rows without one stay unknown (visible).
+      // Never persist an empty snapshot: `[]` reads as "involves nobody"
+      // while here it would mean "no split rows found".
+      const historicalAffected =
+        !isGroupActivity && preparedExpense && historical.expenseIndex !== null
+          ? affectedByExpenseIndex.get(historical.expenseIndex)
+          : undefined
+      const historicalSnapshot =
+        historicalAffected && historicalAffected.length > 0
+          ? historicalAffected
+          : undefined
       activityRows.push({
         id: randomId(),
         ledgerId,
@@ -856,7 +905,13 @@ export async function importGroup(
           ? buildGroupActivityData({
               summary: historical.data ?? undefined,
             })
-          : buildExpenseActivityData({ summary: title, title }),
+          : buildExpenseActivityData({
+              summary: title,
+              title,
+              ...(historicalSnapshot
+                ? { affectedParticipants: historicalSnapshot }
+                : {}),
+            }),
       })
     }
 

@@ -405,7 +405,9 @@
       },
       "recurringCreated": "{participant} “{title}” পুনরাবৃত্তিমূলক খরচ তৈরি করেছেন",
       "stopped": "{participant} {title} পুনরাবৃত্তিমূলক খরচ বন্ধ করেছেন",
-      "commented": "{participant} {title}-এ মন্তব্য করেছেন: “{excerpt}”"
+      "commented": "{participant} {title}-এ মন্তব্য করেছেন: “{excerpt}”",
+      "yourShare": "আপনার ভাগ:",
+      "notInvolved": "আপনি জড়িত নন"
     },
     "fallback": "একটি কার্যকলাপ রেকর্ড করা হয়েছে",
     "group": {
@@ -458,6 +460,14 @@
     "participant": {
       "removed": "{participant} {target}-কে গ্রুপ থেকে সরিয়েছেন",
       "added": "{participant} {target}-কে গ্রুপে যোগ করেছেন"
+    },
+    "hiddenActivitiesShowLess": "কম দেখান",
+    "hiddenActivities_one": "{count}টি লুকানো কার্যকলাপ যাতে আপনি জড়িত নন",
+    "hiddenActivities_other": "{count}টি লুকানো কার্যকলাপ যেগুলোতে আপনি জড়িত নন",
+    "viewMode": {
+      "label": "কার্যকলাপ দেখার পদ্ধতি",
+      "forYou": "আপনার জন্য",
+      "all": "সব"
     }
   },
   "Activity": {

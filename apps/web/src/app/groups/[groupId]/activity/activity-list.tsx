@@ -1,27 +1,41 @@
-import { forwardRef, useEffect } from 'react'
+import { getRouteApi, useNavigate } from '@tanstack/react-router'
+import { ChevronDown, ChevronUp, EyeOff } from 'lucide-react'
+import { Fragment, forwardRef, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useInView } from 'react-intersection-observer'
 
 import {
   DATE_GROUPS,
   getGroupedActivitiesByDate,
+  splitActivityRuns,
+  type ActivityDateGroup,
 } from '@/app/groups/[groupId]/activity/activity-grouping'
-import { ActivityItem } from '@/app/groups/[groupId]/activity/activity-item'
+import { isActivityInvolvingUser } from '@/app/groups/[groupId]/activity/activity-involvement'
+import {
+  ActivityItem,
+  type Activity,
+} from '@/app/groups/[groupId]/activity/activity-item'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { ScanStickyHeading } from '@/components/layout/scan-surface'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import { useRestoreExpenseEditScroll } from '@/lib/expense-edit-scroll'
+import { useActiveUser } from '@/lib/hooks'
+import { useCurrentAccount } from '@/lib/use-current-account'
 import {
   useOfflineWithoutData,
   useServerUnreachableWithoutData,
 } from '@/lib/use-online-status'
+import { cn, getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
 import { useCurrentGroup } from '../current-group-context'
 import { useGroupAccessSearch } from '../use-group-access-search'
+
+const activityRouteApi = getRouteApi('/groups/$groupId/activity')
 
 const PAGE_SIZE = 20
 
@@ -61,14 +75,99 @@ const ActivitiesLoading = forwardRef<HTMLDivElement>((_, ref) => {
 })
 ActivitiesLoading.displayName = 'ActivitiesLoading'
 
+function HiddenActivitiesToggle({
+  testId,
+  hiddenCount,
+  expanded,
+  onToggle,
+}: {
+  testId: string
+  hiddenCount: number
+  expanded: boolean
+  onToggle: () => void
+}) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'Activities' })
+  const Chevron = expanded ? ChevronUp : ChevronDown
+
+  return (
+    <button
+      type="button"
+      aria-expanded={expanded}
+      data-testid={testId}
+      onClick={onToggle}
+      className={cn(
+        'flex w-full cursor-pointer items-center gap-1.5 px-4 py-2.5 text-xs text-muted-foreground',
+        'hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden sm:px-6',
+      )}
+    >
+      <EyeOff className="h-4 w-4 shrink-0" aria-hidden="true" />
+      <span className="flex-1 text-start">
+        {expanded
+          ? t('hiddenActivitiesShowLess')
+          : t('hiddenActivities', { count: hiddenCount })}
+      </span>
+      <Chevron className="h-3 w-3 shrink-0" aria-hidden="true" />
+    </button>
+  )
+}
+
 export function ActivityList() {
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'Activity' })
+  const { t: tActivities } = useTranslation(undefined, {
+    keyPrefix: 'Activities',
+  })
   const locale = i18n.language || 'en-US'
   const { group, groupId } = useCurrentGroup()
   const { linkInviteToken, viewKey } = useGroupAccessSearch()
+  const { actShowAll } = activityRouteApi.useSearch()
+  const navigate = useNavigate({ from: '/groups/$groupId/activity' })
   const accountPreferences = useSyncedAccountPreferences()
   const accountTimeZone =
     accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
+
+  // Same rule as the expenses timeline: involvement can only be determined
+  // for members with a ledger participant id. Everyone else (logged-out
+  // viewers, pending invitees) sees everything and gets no toggle.
+  const participantId = useActiveUser(groupId)
+  const { data: account } = useCurrentAccount()
+  const canCollapse = participantId != null
+  const showAll = actShowAll === 'true' || !canCollapse
+  const currency = group ? getCurrencyFromGroup(group) : null
+  const isInvolving = (activity: Activity) =>
+    isActivityInvolvingUser(activity, participantId, account?.id ?? null)
+
+  // Per-run expansion is ephemeral UI state (not in the URL): each run is
+  // keyed by the date group plus its first hidden activity id. It resets
+  // when the view mode flips, so the incoming mode always starts collapsed.
+  const [expandedRuns, setExpandedRuns] = useState<ReadonlySet<string>>(
+    () => new Set(),
+  )
+  const prevShowAll = useRef(showAll)
+  useEffect(() => {
+    if (prevShowAll.current !== showAll) {
+      prevShowAll.current = showAll
+      setExpandedRuns(new Set())
+    }
+  }, [showAll])
+  const toggleRun = (runKey: string) => {
+    setExpandedRuns((prev) => {
+      const next = new Set(prev)
+      if (next.has(runKey)) next.delete(runKey)
+      else next.add(runKey)
+      return next
+    })
+  }
+
+  const setShowAll = (next: boolean) => {
+    void navigate({
+      search: (prev) => ({
+        ...prev,
+        actShowAll: next ? 'true' : undefined,
+      }),
+      replace: true,
+      resetScroll: false,
+    })
+  }
 
   const {
     data: activitiesData,
@@ -113,35 +212,95 @@ export function ActivityList() {
 
   if (isLoading || !activities || !group) return <ActivitiesLoading />
 
+  const collapseHidden = !showAll && activities.length > 0
   const groupedActivitiesByDate = getGroupedActivitiesByDate(
     activities,
     accountTimeZone,
     locale,
   )
 
+  const renderItem = (activity: Activity, dateStyle: 'medium' | undefined) => (
+    <ActivityItem
+      key={activity.id}
+      groupId={groupId}
+      activity={activity}
+      dateStyle={dateStyle}
+      viewerParticipantId={participantId}
+      currency={currency}
+    />
+  )
+
+  const renderDateGroup = (
+    dateGroup: ActivityDateGroup,
+    groupActivities: Activity[],
+  ) => {
+    if (groupActivities.length === 0) return null
+    const dateStyle =
+      dateGroup == DATE_GROUPS.TODAY || dateGroup == DATE_GROUPS.YESTERDAY
+        ? undefined
+        : 'medium'
+
+    if (!collapseHidden) {
+      return groupActivities.map((activity) => renderItem(activity, dateStyle))
+    }
+    const runs = splitActivityRuns(groupActivities, isInvolving)
+    return runs.map((run, runIndex) => {
+      if (run.type === 'visible') {
+        return run.items.map((activity) => renderItem(activity, dateStyle))
+      }
+      const runKey = `${dateGroup}:${run.items[0]!.id}`
+      const expanded = expandedRuns.has(runKey)
+      return (
+        <Fragment key={runKey}>
+          <HiddenActivitiesToggle
+            testId={`hidden-activities-toggle-${dateGroup}-${runIndex}`}
+            hiddenCount={run.items.length}
+            expanded={expanded}
+            onToggle={() => toggleRun(runKey)}
+          />
+          {expanded &&
+            run.items.map((activity) => renderItem(activity, dateStyle))}
+        </Fragment>
+      )
+    })
+  }
+
   return activities.length > 0 ? (
     <div data-testid="activity-list">
+      {canCollapse && (
+        <div className="flex items-center gap-2 px-4 py-2 sm:px-6">
+          <Tabs
+            value={showAll ? 'all' : 'for-you'}
+            onValueChange={(value) => setShowAll(value === 'all')}
+            aria-label={tActivities('viewMode.label')}
+          >
+            <TabsList className="h-9">
+              <TabsTrigger
+                value="for-you"
+                className="h-full min-h-0 py-0 text-xs sm:min-h-0"
+              >
+                {tActivities('viewMode.forYou')}
+              </TabsTrigger>
+              <TabsTrigger
+                value="all"
+                className="h-full min-h-0 py-0 text-xs sm:min-h-0"
+              >
+                {tActivities('viewMode.all')}
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+      )}
       {Object.values(DATE_GROUPS).map((dateGroup) => {
         const groupActivities = groupedActivitiesByDate[dateGroup]
         if (!groupActivities || groupActivities.length === 0) return null
-        const dateStyle =
-          dateGroup == DATE_GROUPS.TODAY || dateGroup == DATE_GROUPS.YESTERDAY
-            ? undefined
-            : 'medium'
 
         return (
           <div key={dateGroup} data-testid={`activity-date-group-${dateGroup}`}>
             <ScanStickyHeading>
               {t(DATE_GROUP_I18N_KEYS[dateGroup])}
             </ScanStickyHeading>
-            {groupActivities.map((activity) => (
-              <ActivityItem
-                key={activity.id}
-                groupId={groupId}
-                activity={activity}
-                dateStyle={dateStyle}
-              />
-            ))}
+            {renderDateGroup(dateGroup, groupActivities)}
           </div>
         )
       })}

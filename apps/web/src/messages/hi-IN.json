@@ -405,7 +405,9 @@
       },
       "recurringCreated": "{participant} ने आवर्ती खर्च “{title}” बनाया",
       "stopped": "{participant} ने आवर्ती खर्च {title} बंद किया",
-      "commented": "{participant} ने {title} पर टिप्पणी की: “{excerpt}”"
+      "commented": "{participant} ने {title} पर टिप्पणी की: “{excerpt}”",
+      "yourShare": "आपका हिस्सा:",
+      "notInvolved": "आप शामिल नहीं हैं"
     },
     "fallback": "एक गतिविधि दर्ज की गई",
     "group": {
@@ -454,6 +456,14 @@
     "participant": {
       "removed": "{participant} ने {target} को समूह से हटाया",
       "added": "{participant} ने {target} को समूह में जोड़ा"
+    },
+    "hiddenActivitiesShowLess": "कम दिखाएँ",
+    "hiddenActivities_one": "{count} छिपी हुई गतिविधि जिसमें आप शामिल नहीं हैं",
+    "hiddenActivities_other": "{count} छिपी हुई गतिविधियाँ जिनमें आप शामिल नहीं हैं",
+    "viewMode": {
+      "label": "गतिविधि देखने का तरीका",
+      "forYou": "आपके लिए",
+      "all": "सभी"
     }
   },
   "Activity": {

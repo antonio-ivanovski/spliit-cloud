@@ -2683,7 +2683,9 @@
       },
       "recurringCreated": "{participant} ha creato la spesa ricorrente «{title}»",
       "stopped": "{participant} ha interrotto la spesa ricorrente {title}",
-      "commented": "{participant} ha commentato {title}: “{excerpt}”"
+      "commented": "{participant} ha commentato {title}: “{excerpt}”",
+      "yourShare": "La tua quota:",
+      "notInvolved": "Non sei coinvolto"
     },
     "group": {
       "updated": "{participant} ha aggiornato le impostazioni del gruppo",
@@ -2733,6 +2735,16 @@
     "participant": {
       "removed": "{participant} ha rimosso {target} dal gruppo",
       "added": "{participant} ha aggiunto {target} al gruppo"
+    },
+    "hiddenActivitiesShowLess": "Mostra meno",
+    "hiddenActivities_one": "{count} attività nascosta che non ti riguarda",
+    "hiddenActivities_few": "{count} attività nascoste che non ti riguardano",
+    "hiddenActivities_many": "{count} attività nascoste che non ti riguardano",
+    "hiddenActivities_other": "{count} attività nascoste che non ti riguardano",
+    "viewMode": {
+      "label": "Modalità vista attività",
+      "forYou": "Per te",
+      "all": "Tutte"
     }
   },
   "OfflineBanner": {

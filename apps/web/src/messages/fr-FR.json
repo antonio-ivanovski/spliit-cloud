@@ -2683,7 +2683,9 @@
       },
       "recurringCreated": "{participant} a créé la dépense récurrente « {title} »",
       "stopped": "{participant} a arrêté la dépense récurrente {title}",
-      "commented": "{participant} a commenté {title} : “{excerpt}”"
+      "commented": "{participant} a commenté {title} : “{excerpt}”",
+      "yourShare": "Votre part :",
+      "notInvolved": "Vous n'êtes pas concerné"
     },
     "group": {
       "updated": "{participant} a modifié les paramètres du groupe",
@@ -2733,6 +2735,16 @@
     "participant": {
       "removed": "{participant} a supprimé {target} du groupe",
       "added": "{participant} a ajouté {target} au groupe"
+    },
+    "hiddenActivitiesShowLess": "Afficher moins",
+    "hiddenActivities_one": "{count} activité masquée ne vous concernant pas",
+    "hiddenActivities_few": "{count} activités masquées ne vous concernant pas",
+    "hiddenActivities_many": "{count} activités masquées ne vous concernant pas",
+    "hiddenActivities_other": "{count} activités masquées ne vous concernant pas",
+    "viewMode": {
+      "label": "Mode d'affichage des activités",
+      "forYou": "Pour vous",
+      "all": "Toutes"
     }
   },
   "OfflineBanner": {

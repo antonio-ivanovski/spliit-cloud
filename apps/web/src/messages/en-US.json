@@ -2812,7 +2812,9 @@
       "changeEmptyValue": "Not set",
       "recurringCreated": "{participant} created recurring expense “{title}”",
       "stopped": "{participant} stopped the recurring expense {title}",
-      "commented": "{participant} commented on {title}: “{excerpt}”"
+      "commented": "{participant} commented on {title}: “{excerpt}”",
+      "yourShare": "Your share:",
+      "notInvolved": "You are not involved"
     },
     "group": {
       "updated": "{participant} updated group settings",
@@ -2865,7 +2867,19 @@
     },
     "fallback": "An activity was recorded",
     "unknownActor": "Someone",
-    "openExpense": "Open expense"
+    "openExpense": "Open expense",
+    "viewMode": {
+      "label": "Activity view mode",
+      "forYou": "For you",
+      "all": "All"
+    },
+    "hiddenActivitiesShowLess": "Show less",
+    "hiddenActivities_zero": "{count} hidden activities not involving you",
+    "hiddenActivities_one": "{count} hidden activity not involving you",
+    "hiddenActivities_two": "{count} hidden activities not involving you",
+    "hiddenActivities_few": "{count} hidden activities not involving you",
+    "hiddenActivities_many": "{count} hidden activities not involving you",
+    "hiddenActivities_other": "{count} hidden activities not involving you"
   },
   "OfflineBanner": {
     "message": "You're offline. Changes you make now won't be saved until you reconnect."

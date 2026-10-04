@@ -1352,7 +1352,9 @@
         "reimbursement": "Pagamento de acerto",
         "settlement": "Pagamento de acerto"
       },
-      "recurringCreated": "{participant} criou a despesa recorrente “{title}”"
+      "recurringCreated": "{participant} criou a despesa recorrente “{title}”",
+      "yourShare": "Sua cota:",
+      "notInvolved": "Você não está envolvido"
     },
     "group": {
       "updated": "{participant} atualizou as configurações do grupo",
@@ -1365,7 +1367,13 @@
         "credential": "Link de convite"
       }
     },
-    "fallback": "Uma atividade foi registrada"
+    "fallback": "Uma atividade foi registrada",
+    "hiddenActivities_one": "{count} atividade oculta que não envolve você",
+    "hiddenActivities_many": "{count} atividades ocultas que não envolvem você",
+    "hiddenActivities_other": "{count} atividades ocultas que não envolvem você",
+    "viewMode": {
+      "forYou": "Para você"
+    }
   },
   "OfflineBanner": {
     "message": "Você está offline. As alterações que fizer agora não serão salvas até que você se reconecte."

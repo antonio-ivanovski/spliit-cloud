@@ -697,6 +697,28 @@ describe('getActivities', () => {
         categoryId: 'general',
         splitMode: 'EVENLY',
         paidBySplitMode: 'EVENLY',
+        originalAmount: null,
+        originalCurrency: null,
+        conversionRate: null,
+        conversionSource: null,
+        paidByList: [
+          {
+            ledgerParticipantId: 'lp-alice',
+            shares: 1000,
+            ledgerParticipant: {
+              groupMember: { account: { id: 'acct-alice' } },
+            },
+          },
+        ],
+        paidFor: [
+          {
+            ledgerParticipantId: 'lp-alice',
+            shares: 1,
+            ledgerParticipant: {
+              groupMember: { account: { id: 'acct-alice' } },
+            },
+          },
+        ],
       },
     ] as never)
     prismaMock.user.findMany.mockResolvedValue([
@@ -720,6 +742,18 @@ describe('getActivities', () => {
     expect(
       (activities[0] as Record<string, unknown>).ledgerParticipant,
     ).toBeUndefined()
+    // Split projection is mapped to the id-only wire shape.
+    expect(activities[0]).toMatchObject({
+      expense: {
+        id: 'exp-1',
+        originalAmount: null,
+        originalCurrency: null,
+        conversionRate: null,
+        conversionSource: null,
+        paidByList: [{ ledgerParticipant: { id: 'lp-alice' }, shares: 1000 }],
+        paidFor: [{ ledgerParticipant: { id: 'lp-alice' }, shares: 1 }],
+      },
+    })
   })
 
   it('resolves the actor name from a pending invitation when the participant is invitee-backed', async () => {

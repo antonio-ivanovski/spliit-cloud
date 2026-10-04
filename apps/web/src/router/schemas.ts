@@ -187,6 +187,11 @@ export const expensePreviewSearchSchema = groupAccessSearchSchema.extend({
 
 export const activitySearchSchema = groupAccessSearchSchema.extend({
   expenseId: optionalString,
+  /**
+   * Opts out of the default involving-only activity timeline (omitted when at
+   * the default `false`). Mirrors `expShowAll` on the expenses list.
+   */
+  actShowAll: booleanString,
 })
 
 export const bulkCategorizeSearchSchema = z.object({
