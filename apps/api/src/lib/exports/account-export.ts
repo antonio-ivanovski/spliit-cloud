@@ -34,6 +34,7 @@ function emptyAccountPreference() {
     aiVoiceExpenseEnabled: null,
     groupTabOrder: null,
     hiddenGroupTabs: null,
+    destructiveConfirmationLevel: null,
   }
 }
 

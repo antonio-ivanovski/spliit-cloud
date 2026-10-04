@@ -181,7 +181,13 @@
       "groupTabsHide": "{name} چھپائیں",
       "groupTabsShow": "{name} دکھائیں",
       "groupTabsMoveUp": "{name} اوپر لے جائیں",
-      "groupTabsMoveDown": "{name} نیچے لے جائیں"
+      "groupTabsMoveDown": "{name} نیچے لے جائیں",
+      "deleteConfirmation": "خرچہ حذف کرنے کی تصدیق",
+      "deleteConfirmationHelp": "فوری حذف میں ایک بار تصدیق مانگی جاتی ہے۔ لکھ کر حذف کرنے میں پہلے خرچے کا عنوان لکھنا ضروری ہے۔ گروپ حذف کرنے یا رکن ہٹانے کے لیے ہمیشہ لکھنا ضروری ہے۔",
+      "deleteConfirmationOptions": {
+        "standard": "تصدیقی ڈائیلاگ",
+        "strict": "لکھ کر تصدیقی ڈائیلاگ"
+      }
     },
     "aiPreferences": {
       "title": "AI فیچرز",
@@ -923,7 +929,10 @@
         "removeParticipant": "<target>{name}</target> کو اس گروپ سے ہٹانے کے لیے، ان کا نام بالکل ویسا ہی لکھیں جیسا نیچے دکھایا گیا ہے۔"
       },
       "placeholder": "یہاں “{name}” لکھیں",
-      "mismatch": "میل نہیں کھاتا۔ {name} بالکل ویسا ہی لکھیں۔"
+      "mismatch": "میل نہیں کھاتا۔ {name} بالکل ویسا ہی لکھیں۔",
+      "settingsNoteLink": "اکاؤنٹ کی ترتیبات میں تبدیل کریں",
+      "settingsNoteLead": "ٹائپنگ چھوڑنا چاہتے ہیں؟",
+      "settingsNoteTail": "سادہ تصدیقی ڈائیلاگ استعمال کرنے کے لیے۔"
     }
   },
   "CompleteProfile": {

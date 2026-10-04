@@ -15,6 +15,7 @@ import {
   accountMascotSchema,
   accountPreferenceSchema,
   accountThemeSchema,
+  destructiveConfirmationLevelSchema,
   groupTabIdSchema,
   hideableGroupTabIdSchema,
   supportedCurrencyCodeSchema,
@@ -71,6 +72,7 @@ const accountPreferenceSelect = {
   aiVoiceExpenseEnabled: true,
   groupTabOrder: true,
   hiddenGroupTabs: true,
+  destructiveConfirmationLevel: true,
 } as const
 
 const emptyAccountPreference = {
@@ -86,6 +88,7 @@ const emptyAccountPreference = {
   aiVoiceExpenseEnabled: null,
   groupTabOrder: null,
   hiddenGroupTabs: null,
+  destructiveConfirmationLevel: null,
 }
 
 function parseAccountPreference(preferences: unknown) {
@@ -107,6 +110,8 @@ function parseAccountPreference(preferences: unknown) {
     aiVoiceExpenseEnabled: parsed.aiVoiceExpenseEnabled ?? true,
     groupTabOrder: parsed.groupTabOrder ?? null,
     hiddenGroupTabs: parsed.hiddenGroupTabs ?? null,
+    destructiveConfirmationLevel:
+      parsed.destructiveConfirmationLevel ?? 'strict',
   }
 }
 
@@ -131,6 +136,11 @@ const updatePreferencesInputSchema = z.object({
   groupTabOrder: z.array(groupTabIdSchema).nullable().optional(),
   // `null` shows all tabs again (stored as the empty array).
   hiddenGroupTabs: z.array(hideableGroupTabIdSchema).nullable().optional(),
+  // `null` resets to the historical `strict` behaviour (stored as null and
+  // normalized at the API boundary).
+  destructiveConfirmationLevel: destructiveConfirmationLevelSchema
+    .nullable()
+    .optional(),
 })
 
 type CurrencyMembership = {

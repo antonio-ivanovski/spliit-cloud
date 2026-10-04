@@ -2459,7 +2459,13 @@
       "groupTabsHide": "Amaga {name}",
       "groupTabsShow": "Mostra {name}",
       "groupTabsMoveUp": "Mou {name} amunt",
-      "groupTabsMoveDown": "Mou {name} avall"
+      "groupTabsMoveDown": "Mou {name} avall",
+      "deleteConfirmation": "Confirmació de supressió de despeses",
+      "deleteConfirmationHelp": "Les supressions ràpides demanen confirmació una vegada. Les supressions amb escriptura et demanen escriure primer el títol de la despesa. Suprimir un grup o eliminar un membre sempre requereix escriure.",
+      "deleteConfirmationOptions": {
+        "standard": "Diàleg de confirmació",
+        "strict": "Diàleg amb escriptura"
+      }
     },
     "aiPreferences": {
       "title": "Funcions d'IA",
@@ -3067,7 +3073,10 @@
         "removeParticipant": "Per eliminar <target>{name}</target> d’aquest grup, escriu-ne el nom exactament com es mostra a continuació."
       },
       "placeholder": "Escriu «{name}» aquí",
-      "mismatch": "No coincideix. Escriu exactament {name}."
+      "mismatch": "No coincideix. Escriu exactament {name}.",
+      "settingsNoteLink": "Canvia-ho als paràmetres del compte",
+      "settingsNoteLead": "Vols ometre l'escriptura?",
+      "settingsNoteTail": "per utilitzar un diàleg de confirmació simple."
     }
   },
   "Theme": {

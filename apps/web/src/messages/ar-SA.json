@@ -14,7 +14,10 @@
         "removeParticipant": "لإزالة <target>{name}</target> من هذه المجموعة، اكتب الاسم تمامًا كما هو موضح أدناه."
       },
       "placeholder": "اكتب «{name}» هنا",
-      "mismatch": "النص غير مطابق. اكتب {name} تمامًا."
+      "mismatch": "النص غير مطابق. اكتب {name} تمامًا.",
+      "settingsNoteLink": "تغيير في إعدادات الحساب",
+      "settingsNoteLead": "تفضّل تخطّي الكتابة؟",
+      "settingsNoteTail": "لاستخدام حوار تأكيد بسيط."
     }
   },
   "OfflineBanner": {
@@ -2022,7 +2025,13 @@
       "groupTabsHide": "إخفاء {name}",
       "groupTabsShow": "إظهار {name}",
       "groupTabsMoveUp": "نقل {name} لأعلى",
-      "groupTabsMoveDown": "نقل {name} لأسفل"
+      "groupTabsMoveDown": "نقل {name} لأسفل",
+      "deleteConfirmation": "تأكيد حذف المصروفات",
+      "deleteConfirmationHelp": "الحذف السريع يطلب التأكيد مرة واحدة. الحذف بالكتابة يطلب كتابة عنوان المصروف أولًا. حذف المجموعة أو إزالة العضو يتطلب الكتابة دائمًا.",
+      "deleteConfirmationOptions": {
+        "standard": "مربع حوار التأكيد",
+        "strict": "مربع حوار التأكيد بالكتابة"
+      }
     },
     "aiPreferences": {
       "title": "ميزات الذكاء الاصطناعي",

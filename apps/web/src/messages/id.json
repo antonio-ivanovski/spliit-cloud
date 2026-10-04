@@ -2440,7 +2440,13 @@
       "groupTabsHide": "Sembunyikan {name}",
       "groupTabsShow": "Tampilkan {name}",
       "groupTabsMoveUp": "Pindahkan {name} ke atas",
-      "groupTabsMoveDown": "Pindahkan {name} ke bawah"
+      "groupTabsMoveDown": "Pindahkan {name} ke bawah",
+      "deleteConfirmation": "Konfirmasi hapus pengeluaran",
+      "deleteConfirmationHelp": "Hapus cepat hanya meminta konfirmasi sekali. Hapus dengan pengetikan meminta kamu mengetik judul pengeluaran terlebih dahulu. Menghapus grup atau mengeluarkan anggota selalu mewajibkan pengetikan.",
+      "deleteConfirmationOptions": {
+        "standard": "Dialog konfirmasi",
+        "strict": "Dialog dengan pengetikan"
+      }
     },
     "aiPreferences": {
       "title": "Fitur AI",
@@ -3027,7 +3033,10 @@
         "removeParticipant": "Untuk menghapus <target>{name}</target> dari grup ini, ketik namanya persis seperti yang ditampilkan di bawah."
       },
       "placeholder": "Ketik “{name}” di sini",
-      "mismatch": "Tidak cocok. Ketik {name} dengan tepat."
+      "mismatch": "Tidak cocok. Ketik {name} dengan tepat.",
+      "settingsNoteLink": "Ubah di pengaturan akun",
+      "settingsNoteLead": "Ingin melewati pengetikan?",
+      "settingsNoteTail": "untuk menggunakan dialog konfirmasi biasa."
     }
   },
   "Theme": {

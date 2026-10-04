@@ -27,6 +27,7 @@ const accountPreferenceSelect = {
   aiVoiceExpenseEnabled: true,
   groupTabOrder: true,
   hiddenGroupTabs: true,
+  destructiveConfirmationLevel: true,
 } as const
 
 export class InvalidAccountExportSelectionError extends Error {

@@ -2442,7 +2442,13 @@
       "groupTabsHide": "隐藏 {name}",
       "groupTabsShow": "显示 {name}",
       "groupTabsMoveUp": "将 {name} 上移",
-      "groupTabsMoveDown": "将 {name} 下移"
+      "groupTabsMoveDown": "将 {name} 下移",
+      "deleteConfirmation": "支出删除确认",
+      "deleteConfirmationHelp": "快速删除只需确认一次。输入删除需要先输入支出标题。删除群组或移除成员始终需要输入。",
+      "deleteConfirmationOptions": {
+        "standard": "确认对话框",
+        "strict": "输入确认对话框"
+      }
     },
     "aiPreferences": {
       "title": "AI 功能",
@@ -3029,7 +3035,10 @@
         "removeParticipant": "要从此群组中移除<target>{name}</target>，请输入与下方显示完全一致的姓名。"
       },
       "placeholder": "请在此输入 “{name}”",
-      "mismatch": "不匹配。请准确输入 {name}。"
+      "mismatch": "不匹配。请准确输入 {name}。",
+      "settingsNoteLink": "在账户设置中更改",
+      "settingsNoteLead": "想跳过输入吗？",
+      "settingsNoteTail": "以使用普通的确认对话框。"
     }
   },
   "Theme": {

@@ -181,7 +181,13 @@
       "groupTabsHide": "{name} লুকান",
       "groupTabsShow": "{name} দেখান",
       "groupTabsMoveUp": "{name} ওপরে নিন",
-      "groupTabsMoveDown": "{name} নিচে নিন"
+      "groupTabsMoveDown": "{name} নিচে নিন",
+      "deleteConfirmation": "খরচ মুছে ফেলার নিশ্চিতকরণ",
+      "deleteConfirmationHelp": "দ্রুত মুছে ফেলায় একবার নিশ্চিতকরণ চাওয়া হয়। লিখে মুছে ফেলায় প্রথমে খরচের শিরোনাম লিখতে হবে। গ্রুপ মুছে ফেলা বা সদস্য সরানো সবসময় লিখে নিশ্চিত করতে হবে।",
+      "deleteConfirmationOptions": {
+        "standard": "নিশ্চিতকরণ ডায়ালগ",
+        "strict": "লিখে নিশ্চিতকরণ ডায়ালগ"
+      }
     },
     "aiPreferences": {
       "title": "AI বৈশিষ্ট্য",
@@ -955,7 +961,10 @@
         "removeParticipant": "এই গ্রুপ থেকে <target>{name}</target>-কে সরাতে, নিচে যেভাবে দেখানো হয়েছে ঠিক সেভাবেই তার নাম লিখুন।"
       },
       "placeholder": "এখানে “{name}” লিখুন",
-      "mismatch": "মেলেনি। হুবহু {name} লিখুন।"
+      "mismatch": "মেলেনি। হুবহু {name} লিখুন।",
+      "settingsNoteLink": "অ্যাকাউন্ট সেটিংসে পরিবর্তন করুন",
+      "settingsNoteLead": "টাইপ করা এড়াতে চান?",
+      "settingsNoteTail": "সাধারণ নিশ্চিতকরণ ডায়ালগ ব্যবহার করতে।"
     }
   },
   "CompleteProfile": {

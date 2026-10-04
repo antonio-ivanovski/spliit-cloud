@@ -20,6 +20,7 @@ who is affected, and the exact migration steps.
 ### 🚀 Features
 
 - Added a Support page (`/support`, with a Markdown companion and sitemap entry) as the public support contact for the app and the ChatGPT plugin listing (`TBD` by @TBD)
+- Expense deletes now offer a plain confirmation mode: switch Account settings → Expense delete confirmation to Confirmation dialog to delete expenses with a simple confirm instead of typing the title, while deleting a group or removing a member always requires typing. Typed expense delete dialogs link straight to the setting (`TBD` by @TBD)
 - Activity tab is now personal: expense rows show your share (`Your share:`) or `You are not involved`, and a `For you / All` toggle with inline `N hidden activities not involving you` rows mirrors the expenses timeline. Past activity rows were backfilled with participant data where recoverable. Thanks @KihtrakRaknas for opening [#150](https://github.com/antonio-ivanovski/spliit-cloud/issues/150) (`TBD` by @TBD)
 - Hardened the privacy notice with data categories, purposes, recipients, retention, connected-application disclosure, and user controls (`TBD` by @TBD)
 

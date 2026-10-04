@@ -2442,7 +2442,13 @@
       "groupTabsHide": "{name}を非表示",
       "groupTabsShow": "{name}を表示",
       "groupTabsMoveUp": "{name}を上へ移動",
-      "groupTabsMoveDown": "{name}を下へ移動"
+      "groupTabsMoveDown": "{name}を下へ移動",
+      "deleteConfirmation": "支出削除の確認",
+      "deleteConfirmationHelp": "クイック削除では1回確認します。入力削除では最初に支出タイトルを入力する必要があります。グループの削除やメンバーの削除では常に入力が必要です。",
+      "deleteConfirmationOptions": {
+        "standard": "確認ダイアログ",
+        "strict": "入力確認ダイアログ"
+      }
     },
     "aiPreferences": {
       "title": "AI機能",
@@ -3029,7 +3035,10 @@
         "removeParticipant": "<target>{name}</target>をこのグループから削除するには、以下に表示されている名前を正確に入力してください。"
       },
       "placeholder": "ここに「{name}」を入力してください",
-      "mismatch": "一致しません。{name}を正確に入力してください。"
+      "mismatch": "一致しません。{name}を正確に入力してください。",
+      "settingsNoteLink": "アカウント設定で変更",
+      "settingsNoteLead": "入力をスキップしますか？",
+      "settingsNoteTail": "してシンプルな確認ダイアログを使う。"
     }
   },
   "Theme": {

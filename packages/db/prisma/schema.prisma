@@ -834,6 +834,10 @@ model AccountPreference {
   // Hideable group tab ids the account chose to hide. Empty means hide
   // nothing; Expenses and Settings can never be hidden.
   hiddenGroupTabs          String[] @default([])
+  // Delete-confirmation strictness (`standard` | `strict`). Null means the
+  // historical `strict` behaviour; validated by @spliit/domain at API
+  // boundaries and normalized to `strict` there.
+  destructiveConfirmationLevel String?
 }
 
 model AccountGroupPreference {

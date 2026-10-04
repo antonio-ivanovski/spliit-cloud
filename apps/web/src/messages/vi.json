@@ -94,7 +94,10 @@
         "removeParticipant": "Để xóa <target>{name}</target> khỏi nhóm này, hãy nhập chính xác tên như hiển thị bên dưới."
       },
       "placeholder": "Nhập “{name}” vào đây",
-      "mismatch": "Không khớp. Nhập chính xác {name}."
+      "mismatch": "Không khớp. Nhập chính xác {name}.",
+      "settingsNoteLink": "Thay đổi trong cài đặt tài khoản",
+      "settingsNoteLead": "Muốn bỏ qua bước nhập?",
+      "settingsNoteTail": "để dùng hộp thoại xác nhận đơn giản."
     }
   },
   "Theme": {
@@ -1013,7 +1016,13 @@
       "groupTabsHide": "Ẩn {name}",
       "groupTabsShow": "Hiện {name}",
       "groupTabsMoveUp": "Di chuyển {name} lên",
-      "groupTabsMoveDown": "Di chuyển {name} xuống"
+      "groupTabsMoveDown": "Di chuyển {name} xuống",
+      "deleteConfirmation": "Xác nhận xóa khoản chi",
+      "deleteConfirmationHelp": "Xóa nhanh chỉ yêu cầu xác nhận một lần. Xóa bằng cách nhập yêu cầu nhập tiêu đề khoản chi trước. Xóa nhóm hoặc xóa thành viên luôn yêu cầu nhập.",
+      "deleteConfirmationOptions": {
+        "standard": "Hộp thoại xác nhận",
+        "strict": "Hộp thoại xác nhận bằng nhập"
+      }
     },
     "aiPreferences": {
       "title": "Tính năng AI",

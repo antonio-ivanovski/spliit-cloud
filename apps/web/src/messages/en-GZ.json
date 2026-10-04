@@ -240,7 +240,13 @@
       "groupTabsHide": "hide {name}",
       "groupTabsShow": "show {name}",
       "groupTabsMoveUp": "move {name} up",
-      "groupTabsMoveDown": "move {name} down"
+      "groupTabsMoveDown": "move {name} down",
+      "deleteConfirmation": "expense delete confirmation",
+      "deleteConfirmationHelp": "quick deletes just ask once. typing deletes make you type the expense title first. deleting a group or removing someone always needs typing.",
+      "deleteConfirmationOptions": {
+        "standard": "confirmation pop-up",
+        "strict": "type-to-confirm pop-up"
+      }
     },
     "title": "account settings era",
     "profile": {
@@ -1090,7 +1096,10 @@
         "removeParticipant": "To take <target>{name}</target> out of this group, type their name exactly as shown below."
       },
       "placeholder": "Enter “{name}” here",
-      "mismatch": "No match. Enter {name} exactly."
+      "mismatch": "No match. Enter {name} exactly.",
+      "settingsNoteLink": "change in account settings",
+      "settingsNoteLead": "wanna skip the typing?",
+      "settingsNoteTail": "to swap to a plain confirmation with no typing."
     }
   },
   "CompleteProfile": {

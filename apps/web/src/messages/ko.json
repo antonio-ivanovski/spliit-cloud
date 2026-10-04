@@ -2480,7 +2480,13 @@
       "groupTabsHide": "{name} 숨기기",
       "groupTabsShow": "{name} 표시",
       "groupTabsMoveUp": "{name} 위로 이동",
-      "groupTabsMoveDown": "{name} 아래로 이동"
+      "groupTabsMoveDown": "{name} 아래로 이동",
+      "deleteConfirmation": "지출 삭제 확인",
+      "deleteConfirmationHelp": "빠른 삭제는 한 번 확인을 요청합니다. 입력 삭제는 먼저 지출 제목을 입력해야 합니다. 그룹 삭제나 멤버 제거는 항상 입력해야 합니다.",
+      "deleteConfirmationOptions": {
+        "standard": "확인 대화상자",
+        "strict": "입력 확인 대화상자"
+      }
     },
     "aiPreferences": {
       "title": "AI 기능",
@@ -3112,7 +3118,10 @@
         "removeParticipant": "이 그룹에서 <target>{name}</target> 참여자를 삭제하려면 아래에 표시된 이름을 정확히 입력하세요."
       },
       "placeholder": "여기에 “{name}”을(를) 입력하세요",
-      "mismatch": "일치하지 않습니다. {name}을(를) 정확히 입력하세요."
+      "mismatch": "일치하지 않습니다. {name}을(를) 정확히 입력하세요.",
+      "settingsNoteLink": "계정 설정에서 변경",
+      "settingsNoteLead": "입력을 건너뛰시겠어요?",
+      "settingsNoteTail": "하여 일반 확인 대화상자를 사용하세요."
     }
   },
   "Theme": {

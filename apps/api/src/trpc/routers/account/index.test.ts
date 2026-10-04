@@ -120,6 +120,7 @@ describe('accountRouter account preferences', () => {
         aiVoiceExpenseEnabled: true,
         groupTabOrder: null,
         hiddenGroupTabs: null,
+        destructiveConfirmationLevel: 'strict',
       },
     })
   })
@@ -176,6 +177,7 @@ describe('accountRouter account preferences', () => {
       aiVoiceExpenseEnabled: true,
       groupTabOrder: null,
       hiddenGroupTabs: null,
+      destructiveConfirmationLevel: 'strict',
     })
   })
 
@@ -588,6 +590,49 @@ describe('accountRouter account preferences', () => {
     expect(result.preferences.aiVoiceExpenseEnabled).toBe(true)
   })
 
+  it('persists the destructive confirmation level', async () => {
+    prismaMock.accountPreference.upsert.mockResolvedValue({
+      defaultCurrencyCode: null,
+      timeZone: null,
+      locale: null,
+      theme: null,
+      destructiveConfirmationLevel: 'standard',
+    } as never)
+
+    const result = await makeCaller('acct-1').updatePreferences({
+      destructiveConfirmationLevel: 'standard',
+    })
+
+    expect(prismaMock.accountPreference.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { accountId: 'acct-1' },
+        update: { destructiveConfirmationLevel: 'standard' },
+      }),
+    )
+    expect(result.preferences.destructiveConfirmationLevel).toBe('standard')
+  })
+
+  it('resets to strict when a null destructive confirmation level is written', async () => {
+    prismaMock.accountPreference.upsert.mockResolvedValue({
+      defaultCurrencyCode: null,
+      timeZone: null,
+      locale: null,
+      theme: null,
+      destructiveConfirmationLevel: null,
+    } as never)
+
+    const result = await makeCaller('acct-1').updatePreferences({
+      destructiveConfirmationLevel: null,
+    })
+
+    expect(prismaMock.accountPreference.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        update: { destructiveConfirmationLevel: null },
+      }),
+    )
+    expect(result.preferences.destructiveConfirmationLevel).toBe('strict')
+  })
+
   it.each([
     [{ defaultCurrencyCode: 'ZZZ' }, 'unsupported default currency'],
     [{ timeZone: 'Mars/Olympus' }, 'invalid timezone'],
@@ -596,6 +641,10 @@ describe('accountRouter account preferences', () => {
     [{ mascot: 'ghost' }, 'unsupported mascot'],
     [{ groupTabOrder: ['overview'] }, 'unknown group tab id'],
     [{ hiddenGroupTabs: ['expenses'] }, 'non-hideable group tab id'],
+    [
+      { destructiveConfirmationLevel: 'relaxed' },
+      'unknown destructive confirmation level',
+    ],
   ])('rejects %s (%s)', async (input) => {
     await expect(
       makeCaller('acct-1').updatePreferences(input as never),

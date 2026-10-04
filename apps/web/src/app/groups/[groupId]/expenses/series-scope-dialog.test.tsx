@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { SeriesScopeDialog } from '@/app/groups/[groupId]/expenses/series-scope-dialog'
+import { SyncedAccountPreferencesProvider } from '@/components/account-preferences-sync'
+import type { AccountPreferences } from '@/lib/account-preferences'
 import { render, screen } from '@/test/test-utils'
 
 function mockDesktopMediaQuery() {
@@ -41,6 +43,43 @@ describe('SeriesScopeDialog', () => {
       screen.getByRole('textbox', { name: /enter the name/i }),
       'Dinner',
     )
+    expect(continueButton).toBeEnabled()
+    await user.click(continueButton)
+
+    expect(onConfirm).toHaveBeenCalledWith('OCCURRENCE', false)
+  })
+
+  it('confirms a deletion scope without typing in standard mode', async () => {
+    mockDesktopMediaQuery()
+    const onConfirm = vi.fn()
+    const standardPreferences: AccountPreferences = {
+      defaultCurrencyCode: 'USD',
+      timeZone: 'UTC',
+      locale: 'en-US',
+      theme: 'system',
+      aiCategoryExtractEnabled: null,
+      aiReceiptScanEnabled: null,
+      aiVoiceExpenseEnabled: null,
+      destructiveConfirmationLevel: 'standard',
+    }
+    const { user } = render(
+      <SyncedAccountPreferencesProvider value={standardPreferences}>
+        <SeriesScopeDialog
+          open
+          mode="delete"
+          confirmationTarget="Dinner"
+          onOpenChange={vi.fn()}
+          onConfirm={onConfirm}
+        />
+      </SyncedAccountPreferencesProvider>,
+    )
+
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+    // The settings footnote only shows when typing is required.
+    expect(
+      screen.queryByRole('link', { name: /change in account settings/i }),
+    ).not.toBeInTheDocument()
+    const continueButton = screen.getByRole('button', { name: /continue/i })
     expect(continueButton).toBeEnabled()
     await user.click(continueButton)
 

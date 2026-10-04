@@ -2481,7 +2481,13 @@
       "groupTabsHide": "{name} ausblenden",
       "groupTabsShow": "{name} anzeigen",
       "groupTabsMoveUp": "{name} nach oben verschieben",
-      "groupTabsMoveDown": "{name} nach unten verschieben"
+      "groupTabsMoveDown": "{name} nach unten verschieben",
+      "deleteConfirmation": "Bestätigung zum Löschen von Ausgaben",
+      "deleteConfirmationHelp": "Schnelles Löschen fragt einmal nach. Löschen mit Eingabe verlangt, dass du zuerst den Ausgabetitel eingibst. Eine Gruppe zu löschen oder ein Mitglied zu entfernen erfordert immer die Eingabe.",
+      "deleteConfirmationOptions": {
+        "standard": "Bestätigungsdialog",
+        "strict": "Dialog mit Eingabe"
+      }
     },
     "aiPreferences": {
       "title": "KI-Funktionen",
@@ -3118,7 +3124,10 @@
         "removeParticipant": "Um <target>{name}</target> aus dieser Gruppe zu entfernen, gib den Namen genau wie unten angezeigt ein."
       },
       "placeholder": "Gib „{name}“ hier ein",
-      "mismatch": "Stimmt nicht überein. Gib {name} genau ein."
+      "mismatch": "Stimmt nicht überein. Gib {name} genau ein.",
+      "settingsNoteLink": "In den Kontoeinstellungen ändern",
+      "settingsNoteLead": "Lieber ohne Eintippen?",
+      "settingsNoteTail": "um einen einfachen Bestätigungsdialog zu verwenden."
     }
   },
   "Theme": {

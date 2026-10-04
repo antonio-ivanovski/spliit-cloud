@@ -2459,7 +2459,13 @@
       "groupTabsHide": "Nascondi {name}",
       "groupTabsShow": "Mostra {name}",
       "groupTabsMoveUp": "Sposta {name} su",
-      "groupTabsMoveDown": "Sposta {name} giù"
+      "groupTabsMoveDown": "Sposta {name} giù",
+      "deleteConfirmation": "Conferma eliminazione spese",
+      "deleteConfirmationHelp": "Le eliminazioni rapide chiedono una semplice conferma. Quelle con digitazione ti chiedono di digitare prima il titolo della spesa. Eliminare un gruppo o rimuovere un membro richiede sempre di digitare.",
+      "deleteConfirmationOptions": {
+        "standard": "Dialogo di conferma",
+        "strict": "Dialogo con digitazione"
+      }
     },
     "aiPreferences": {
       "title": "Funzioni IA",
@@ -3067,7 +3073,10 @@
         "removeParticipant": "Per rimuovere <target>{name}</target> da questo gruppo, digita il nome esattamente come mostrato di seguito."
       },
       "placeholder": "Digita «{name}» qui",
-      "mismatch": "Non corrisponde. Digita esattamente {name}."
+      "mismatch": "Non corrisponde. Digita esattamente {name}.",
+      "settingsNoteLink": "Modifica nelle impostazioni account",
+      "settingsNoteLead": "Preferisci evitare la digitazione?",
+      "settingsNoteTail": "per usare un semplice dialogo di conferma."
     }
   },
   "Theme": {

@@ -94,7 +94,10 @@
         "removeParticipant": "To remove <target>{name}</target> from this group, type their name exactly as shown below."
       },
       "placeholder": "Type “{name}” here",
-      "mismatch": "Doesn’t match. Type {name} exactly."
+      "mismatch": "Doesn’t match. Type {name} exactly.",
+      "settingsNoteLink": "Change in account settings",
+      "settingsNoteLead": "Prefer to skip the typing?",
+      "settingsNoteTail": "to use a plain confirmation dialog."
     }
   },
   "Theme": {
@@ -1018,7 +1021,13 @@
       "groupTabsHide": "Hide {name}",
       "groupTabsShow": "Show {name}",
       "groupTabsMoveUp": "Move {name} up",
-      "groupTabsMoveDown": "Move {name} down"
+      "groupTabsMoveDown": "Move {name} down",
+      "deleteConfirmation": "Expense delete confirmation",
+      "deleteConfirmationHelp": "Quick deletes ask once. Typing deletes ask you to type the expense title first. Deleting a group or removing a member always needs typing.",
+      "deleteConfirmationOptions": {
+        "standard": "Confirmation dialog",
+        "strict": "Typing confirmation dialog"
+      }
     },
     "aiPreferences": {
       "title": "AI features",

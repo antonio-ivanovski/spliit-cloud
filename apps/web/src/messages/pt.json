@@ -2459,7 +2459,13 @@
       "groupTabsHide": "Ocultar {name}",
       "groupTabsShow": "Mostrar {name}",
       "groupTabsMoveUp": "Mover {name} para cima",
-      "groupTabsMoveDown": "Mover {name} para baixo"
+      "groupTabsMoveDown": "Mover {name} para baixo",
+      "deleteConfirmation": "Confirmação de eliminação de despesas",
+      "deleteConfirmationHelp": "As eliminações rápidas pedem confirmação uma vez. As eliminações com escrita pedem para escreveres primeiro o título da despesa. Eliminar um grupo ou remover um membro exige sempre escrever.",
+      "deleteConfirmationOptions": {
+        "standard": "Diálogo de confirmação",
+        "strict": "Diálogo com escrita"
+      }
     },
     "aiPreferences": {
       "title": "Funcionalidades de IA",
@@ -3067,7 +3073,10 @@
         "removeParticipant": "Para remover <target>{name}</target> deste grupo, escreve o nome exatamente como apresentado abaixo."
       },
       "placeholder": "Escreve «{name}» aqui",
-      "mismatch": "Não corresponde. Escreve exatamente {name}."
+      "mismatch": "Não corresponde. Escreve exatamente {name}.",
+      "settingsNoteLink": "Alterar nas definições da conta",
+      "settingsNoteLead": "Preferes omitir a escrita?",
+      "settingsNoteTail": "para usar um diálogo de confirmação simples."
     }
   },
   "Theme": {

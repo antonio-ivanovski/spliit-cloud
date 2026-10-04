@@ -4,6 +4,8 @@ import {
   RecurringActionsMenu,
   type RecurringDeleteOption,
 } from '@/app/groups/[groupId]/expenses/recurring-actions-menu'
+import { SyncedAccountPreferencesProvider } from '@/components/account-preferences-sync'
+import type { AccountPreferences } from '@/lib/account-preferences'
 import { render, screen, waitFor } from '@/test/test-utils'
 
 function mockDesktopMediaQuery() {
@@ -191,5 +193,45 @@ describe('RecurringActionsMenu', () => {
     expect(deleteThisAndFuture.length).toBeGreaterThan(0)
     await user.click(deleteThisAndFuture[0])
     expect(screen.getByText(/recurrence will continue/i)).toBeInTheDocument()
+  })
+
+  it('confirms a recurring delete without typing in standard mode', async () => {
+    mockDesktopMediaQuery()
+    const onDelete = vi
+      .fn<(_: RecurringDeleteOption) => Promise<void>>()
+      .mockResolvedValue(undefined)
+    const standardPreferences: AccountPreferences = {
+      defaultCurrencyCode: 'USD',
+      timeZone: 'UTC',
+      locale: 'en-US',
+      theme: 'system',
+      aiCategoryExtractEnabled: null,
+      aiReceiptScanEnabled: null,
+      aiVoiceExpenseEnabled: null,
+      destructiveConfirmationLevel: 'standard',
+    }
+    const { user } = render(
+      <SyncedAccountPreferencesProvider value={standardPreferences}>
+        <RecurringActionsMenu
+          confirmationTarget="Dinner"
+          onEdit={vi.fn()}
+          onDelete={onDelete}
+          onStop={vi.fn().mockResolvedValue(undefined)}
+        />
+      </SyncedAccountPreferencesProvider>,
+    )
+
+    await user.click(screen.getByRole('button', { name: /recurring actions/i }))
+    await user.click(
+      screen.getByRole('button', { name: /delete only this occurrence/i }),
+    )
+
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+    // The settings footnote only shows when typing is required.
+    expect(
+      screen.queryByRole('link', { name: /change in account settings/i }),
+    ).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /^delete$/i }))
+    await waitFor(() => expect(onDelete).toHaveBeenCalledWith('OCCURRENCE'))
   })
 })

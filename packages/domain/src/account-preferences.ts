@@ -13,6 +13,62 @@ export const accountMascotSchema = z.enum(accountMascotValues)
 export type AccountMascot = z.infer<typeof accountMascotSchema>
 
 /**
+ * Delete-confirmation strictness. `strict` preserves the historical behaviour:
+ * every destructive dialog requires typing the target name. `standard` keeps
+ * typing only for critical, hard-to-recover deletes (group, participant) while
+ * expense deletes become a simple confirm.
+ */
+export const destructiveConfirmationLevelValues = [
+  'standard',
+  'strict',
+] as const
+export const destructiveConfirmationLevelSchema = z.enum(
+  destructiveConfirmationLevelValues,
+)
+export type DestructiveConfirmationLevel = z.infer<
+  typeof destructiveConfirmationLevelSchema
+>
+
+export const DEFAULT_DESTRUCTIVE_CONFIRMATION_LEVEL: DestructiveConfirmationLevel =
+  'strict'
+
+export const destructiveConfirmationKindValues = [
+  'deleteGroup',
+  'deleteExpense',
+  'deleteRecurringExpense',
+  'removeParticipant',
+] as const
+export const destructiveConfirmationKindSchema = z.enum(
+  destructiveConfirmationKindValues,
+)
+export type DestructiveConfirmationKind = z.infer<
+  typeof destructiveConfirmationKindSchema
+>
+
+/**
+ * Normalize a stored or cached level: `null`/`undefined` (including shapes that
+ * pre-date the field) means the historical `strict` behaviour.
+ */
+export function resolveDestructiveConfirmationLevel(
+  input: unknown,
+): DestructiveConfirmationLevel {
+  return input === 'standard' ? 'standard' : 'strict'
+}
+
+/**
+ * Whether `kind` requires typing the target name at `level`. Group and
+ * participant deletes are always typed; expense deletes are typed only in
+ * `strict` mode.
+ */
+export function requiresTypedConfirmation(
+  level: DestructiveConfirmationLevel | null | undefined,
+  kind: DestructiveConfirmationKind,
+): boolean {
+  if (kind === 'deleteGroup' || kind === 'removeParticipant') return true
+  return (level ?? DEFAULT_DESTRUCTIVE_CONFIRMATION_LEVEL) === 'strict'
+}
+
+/**
  * Group tab identifiers that can appear in an account's tab order. The order of
  * `groupTabIdValues` is the default tab order: Expenses, Balances, Activity,
  * Members, Stats, Budgets, Tools, Settings (`edit`).
@@ -110,6 +166,12 @@ export const accountLocaleSchema = z
  * `hiddenGroupTabs` follows the same convention: `null`, `undefined`, or an
  * empty array means "hide nothing". Only `hideableGroupTabIdValues` take
  * effect; Expenses and Settings can never be hidden.
+ *
+ * `destructiveConfirmationLevel` follows the same convention: a missing or
+ * `null` value means the historical `strict` behaviour and is normalized to
+ * `'strict'` at the API boundary. Use `resolveDestructiveConfirmationLevel` to
+ * normalize and `requiresTypedConfirmation` to decide whether a dialog needs
+ * typing.
  */
 export const accountPreferenceSchema = z.object({
   defaultCurrencyCode: supportedCurrencyCodeSchema.nullable(),
@@ -126,6 +188,7 @@ export const accountPreferenceSchema = z.object({
   aiVoiceExpenseEnabled: z.boolean().nullish(),
   groupTabOrder: z.array(groupTabIdSchema).nullish(),
   hiddenGroupTabs: z.array(hideableGroupTabIdSchema).nullish(),
+  destructiveConfirmationLevel: destructiveConfirmationLevelSchema.nullish(),
 })
 
 export type AccountPreference = z.infer<typeof accountPreferenceSchema>

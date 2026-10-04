@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import {
+  DestructiveConfirmationSettingsNote,
   isTypedConfirmationMatch,
   TypedDestructiveConfirmation,
   useTypedConfirmationValue,
@@ -16,6 +18,10 @@ import {
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
+import {
+  requiresTypedConfirmation,
+  resolveDestructiveConfirmationLevel,
+} from '@/lib/account-preferences'
 
 export type SeriesMutationScope = 'OCCURRENCE' | 'THIS_AND_FUTURE'
 export type SeriesDeleteOption =
@@ -47,8 +53,19 @@ export function SeriesScopeDialog({
   const isDelete = mode === 'delete'
   const isTerminal =
     seriesStatus === 'CANCELLED' || seriesStatus === 'COMPLETED'
+  const preferences = useSyncedAccountPreferences()
+  const requiresTyping =
+    isDelete &&
+    requiresTypedConfirmation(
+      resolveDestructiveConfirmationLevel(
+        preferences?.destructiveConfirmationLevel,
+      ),
+      'deleteRecurringExpense',
+    )
   const canConfirm =
-    !isDelete || isTypedConfirmationMatch(confirmationValue, confirmationTarget)
+    !isDelete ||
+    !requiresTyping ||
+    isTypedConfirmationMatch(confirmationValue, confirmationTarget)
 
   function confirmScope() {
     if (!canConfirm) return
@@ -98,14 +115,17 @@ export function SeriesScopeDialog({
             </RadioGroupItem>
           )}
         </RadioGroup>
-        {isDelete ? (
-          <TypedDestructiveConfirmation
-            kind="deleteRecurringExpense"
-            targetName={confirmationTarget}
-            value={confirmationValue}
-            onValueChange={setConfirmationValue}
-            onConfirm={confirmScope}
-          />
+        {isDelete && requiresTyping ? (
+          <div className="space-y-3">
+            <TypedDestructiveConfirmation
+              kind="deleteRecurringExpense"
+              targetName={confirmationTarget}
+              value={confirmationValue}
+              onValueChange={setConfirmationValue}
+              onConfirm={confirmScope}
+            />
+            <DestructiveConfirmationSettingsNote />
+          </div>
         ) : null}
         <ResponsiveDialogFooter>
           <Button

@@ -2449,7 +2449,13 @@
       "groupTabsHide": "Piilota {name}",
       "groupTabsShow": "Näytä {name}",
       "groupTabsMoveUp": "Siirrä {name} ylöspäin",
-      "groupTabsMoveDown": "Siirrä {name} alaspäin"
+      "groupTabsMoveDown": "Siirrä {name} alaspäin",
+      "deleteConfirmation": "Kulun poistovahvistus",
+      "deleteConfirmationHelp": "Nopea poisto kysyy vahvistusta kerran. Kirjoittamalla tehtävä poisto edellyttää kulun otsikon kirjoittamista ensin. Ryhmän poistaminen tai jäsenen poistaminen vaatii aina kirjoittamisen.",
+      "deleteConfirmationOptions": {
+        "standard": "Vahvistusikkuna",
+        "strict": "Vahvistus kirjoittamalla"
+      }
     },
     "aiPreferences": {
       "title": "Tekoälyominaisuudet",
@@ -3046,7 +3052,10 @@
         "removeParticipant": "Poista <target>{name}</target> tästä ryhmästä kirjoittamalla nimi täsmälleen alla näytetyssä muodossa."
       },
       "placeholder": "Kirjoita ”{name}” tähän",
-      "mismatch": "Ei täsmää. Kirjoita {name} täsmälleen."
+      "mismatch": "Ei täsmää. Kirjoita {name} täsmälleen.",
+      "settingsNoteLink": "Vaihda tilin asetuksissa",
+      "settingsNoteLead": "Haluatko ohittaa kirjoittamisen?",
+      "settingsNoteTail": "käyttääksesi tavallista vahvistusvalintaikkunaa."
     }
   },
   "Theme": {

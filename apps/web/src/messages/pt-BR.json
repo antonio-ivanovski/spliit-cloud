@@ -1212,7 +1212,12 @@
       "groupTabs": "Abas do grupo",
       "groupTabsHelp": "Escolha quais abas são mostradas e em que ordem em cada grupo.",
       "groupTabsSave": "Salvar",
-      "groupTabsReset": "Redefinir para o padrão"
+      "groupTabsReset": "Redefinir para o padrão",
+      "deleteConfirmation": "Confirmação de exclusão de despesas",
+      "deleteConfirmationHelp": "As exclusões rápidas pedem confirmação uma vez. As exclusões com digitação pedem para você digitar primeiro o título da despesa. Excluir um grupo ou remover um membro sempre exige digitar.",
+      "deleteConfirmationOptions": {
+        "strict": "Diálogo com digitação"
+      }
     },
     "aiPreferences": {
       "title": "Recursos de IA",
@@ -1570,7 +1575,10 @@
         "removeParticipant": "Para remover <target>{name}</target> deste grupo, digite o nome exatamente como mostrado abaixo."
       },
       "placeholder": "Digite “{name}” aqui",
-      "mismatch": "Não corresponde. Digite exatamente {name}."
+      "mismatch": "Não corresponde. Digite exatamente {name}.",
+      "settingsNoteLink": "Alterar nas configurações da conta",
+      "settingsNoteLead": "Prefere pular a digitação?",
+      "settingsNoteTail": "para usar uma caixa de diálogo de confirmação simples."
     }
   },
   "Theme": {

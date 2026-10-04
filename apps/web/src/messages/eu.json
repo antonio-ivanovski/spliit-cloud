@@ -2457,7 +2457,13 @@
       "groupTabsHide": "Ezkutatu {name}",
       "groupTabsShow": "Erakutsi {name}",
       "groupTabsMoveUp": "Mugitu {name} gora",
-      "groupTabsMoveDown": "Mugitu {name} behera"
+      "groupTabsMoveDown": "Mugitu {name} behera",
+      "deleteConfirmation": "Gastuen ezabatze-berrespena",
+      "deleteConfirmationHelp": "Ezabatze azkarrek behin eskatzen dute. Idazteko ezabatzeek gastuaren izenburua idaztea eskatzen dute lehenik. Talde bat ezabatzeak edo kide bat kentzeak beti eskatzen du idaztea.",
+      "deleteConfirmationOptions": {
+        "standard": "Berrespen-leihoa",
+        "strict": "Idazteko berrespen-leihoa"
+      }
     },
     "aiPreferences": {
       "title": "IAren ezaugarriak",
@@ -3065,7 +3071,10 @@
         "removeParticipant": "<target>{name}</target> talde honetatik kentzeko, idatzi haren izena behean agertzen den bezala, zehatz-mehatz."
       },
       "placeholder": "Idatzi «{name}» hemen",
-      "mismatch": "Ez dator bat. Idatzi {name} zehatz-mehatz."
+      "mismatch": "Ez dator bat. Idatzi {name} zehatz-mehatz.",
+      "settingsNoteLink": "Aldatu kontuaren ezarpenetan",
+      "settingsNoteLead": "Idaztea saihestu nahi duzu?",
+      "settingsNoteTail": "berrespen arrunt bat erabiltzeko."
     }
   },
   "Theme": {

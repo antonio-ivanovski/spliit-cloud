@@ -2442,7 +2442,13 @@
       "groupTabsHide": "隱藏 {name}",
       "groupTabsShow": "顯示 {name}",
       "groupTabsMoveUp": "將 {name} 上移",
-      "groupTabsMoveDown": "將 {name} 下移"
+      "groupTabsMoveDown": "將 {name} 下移",
+      "deleteConfirmation": "支出刪除確認",
+      "deleteConfirmationHelp": "快速刪除只需確認一次。輸入刪除需要先輸入支出標題。刪除群組或移除成員一律需要輸入。",
+      "deleteConfirmationOptions": {
+        "standard": "確認對話方塊",
+        "strict": "輸入確認對話方塊"
+      }
     },
     "aiPreferences": {
       "title": "AI 功能",
@@ -3029,7 +3035,10 @@
         "removeParticipant": "若要從此群組移除<target>{name}</target>，請輸入與下方顯示完全一致的姓名。"
       },
       "placeholder": "請在此輸入 「{name}」",
-      "mismatch": "不相符。請正確輸入 {name}。"
+      "mismatch": "不相符。請正確輸入 {name}。",
+      "settingsNoteLink": "在帳戶設定中變更",
+      "settingsNoteLead": "想要略過輸入嗎？",
+      "settingsNoteTail": "以使用一般的確認對話方塊。"
     }
   },
   "Theme": {

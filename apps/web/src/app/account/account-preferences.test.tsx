@@ -178,6 +178,27 @@ describe('AccountPreferences', () => {
     expect(mocks.patchPreferences).toHaveBeenCalledWith({ mascot: 'bill' })
   })
 
+  it('persists the delete confirmation level and exposes its deep-link row', async () => {
+    const { user } = render(<AccountPreferences />)
+
+    expect(
+      document.getElementById(
+        'account-preference-destructive-confirmation-level',
+      ),
+    ).not.toBeNull()
+
+    await user.click(
+      screen.getByText('Typing confirmation dialog').closest('button')!,
+    )
+    await user.click(
+      screen.getByRole('option', { name: 'Confirmation dialog' }),
+    )
+
+    expect(mocks.patchPreferences).toHaveBeenCalledWith({
+      destructiveConfirmationLevel: 'standard',
+    })
+  })
+
   it('associates every row label with its control via htmlFor', () => {
     render(<AccountPreferences />)
 
@@ -187,6 +208,7 @@ describe('AccountPreferences', () => {
       'Language',
       'Theme',
       'Mascot',
+      'Expense delete confirmation',
     ]) {
       const label = screen.getByText(labelText).closest('label')
       expect(label, `${labelText} should be a <label>`).not.toBeNull()

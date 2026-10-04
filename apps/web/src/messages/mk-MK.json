@@ -917,7 +917,13 @@
       "groupTabsHide": "Скриј {name}",
       "groupTabsShow": "Прикажи {name}",
       "groupTabsMoveUp": "Премести {name} нагоре",
-      "groupTabsMoveDown": "Премести {name} надолу"
+      "groupTabsMoveDown": "Премести {name} надолу",
+      "deleteConfirmation": "Потврда за бришење трошоци",
+      "deleteConfirmationHelp": "Брзото бришење прашува еднаш. Бришењето со внесување бара прво да го внесете насловот на трошокот. Бришењето на група или отстранувањето на член секогаш бара внесување.",
+      "deleteConfirmationOptions": {
+        "standard": "Дијалог за потврда",
+        "strict": "Дијалог со внесување"
+      }
     },
     "aiPreferences": {
       "title": "ВИ функции",
@@ -3050,7 +3056,10 @@
         "removeParticipant": "За да го отстраните <target>{name}</target> од оваа група, внесете го името точно како што е прикажано подолу."
       },
       "placeholder": "Внесете „{name}“ тука",
-      "mismatch": "Не се совпаѓа. Внесете точно {name}."
+      "mismatch": "Не се совпаѓа. Внесете точно {name}.",
+      "settingsNoteLink": "Променете во поставките на сметката",
+      "settingsNoteLead": "Сакате да го прескокнете внесувањето?",
+      "settingsNoteTail": "за да користите обичен дијалог за потврда."
     }
   },
   "Theme": {

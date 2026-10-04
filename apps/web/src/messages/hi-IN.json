@@ -181,7 +181,13 @@
       "groupTabsHide": "{name} छिपाएं",
       "groupTabsShow": "{name} दिखाएं",
       "groupTabsMoveUp": "{name} ऊपर ले जाएं",
-      "groupTabsMoveDown": "{name} नीचे ले जाएं"
+      "groupTabsMoveDown": "{name} नीचे ले जाएं",
+      "deleteConfirmation": "खर्च हटाने की पुष्टि",
+      "deleteConfirmationHelp": "त्वरित हटाने में एक बार पुष्टि माँगी जाती है। लिखकर हटाने में पहले खर्च का शीर्षक लिखना होता है। समूह हटाने या सदस्य हटाने के लिए हमेशा लिखना आवश्यक है।",
+      "deleteConfirmationOptions": {
+        "standard": "पुष्टि संवाद",
+        "strict": "लिखकर पुष्टि संवाद"
+      }
     },
     "aiPreferences": {
       "title": "AI सुविधाएँ",
@@ -923,7 +929,10 @@
         "removeParticipant": "<target>{name}</target> को इस समूह से हटाने के लिए, उनका नाम नीचे दिखाए गए रूप में हूबहू लिखें।"
       },
       "placeholder": "यहाँ “{name}” लिखें",
-      "mismatch": "मेल नहीं खाता। {name} हूबहू लिखें।"
+      "mismatch": "मेल नहीं खाता। {name} हूबहू लिखें।",
+      "settingsNoteLink": "खाता सेटिंग में बदलें",
+      "settingsNoteLead": "टाइप करना छोड़ना चाहते हैं?",
+      "settingsNoteTail": "साधारण पुष्टि संवाद का उपयोग करने के लिए।"
     }
   },
   "CompleteProfile": {

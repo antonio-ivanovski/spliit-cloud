@@ -65,12 +65,14 @@ describe('account preference bootstrap inputs', () => {
       mascot: 'bill',
       groupTabOrder: null,
       hiddenGroupTabs: null,
+      destructiveConfirmationLevel: null,
     })
     expect(readCachedAccountPreferences('account-b')).toEqual({
       ...second,
       mascot: 'bill',
       groupTabOrder: null,
       hiddenGroupTabs: null,
+      destructiveConfirmationLevel: null,
     })
     expect(readCachedAccountPreferences('account-c')).toBeNull()
   })
@@ -180,6 +182,57 @@ describe('account preference bootstrap inputs', () => {
       readCachedAccountPreferences('hidden-tabs')?.hiddenGroupTabs,
     ).toEqual(['stats', 'budgets'])
     expect(readCachedAccountPreferences('bad-hidden-tabs')).toBeNull()
+  })
+
+  it('validates the cached destructive confirmation level', () => {
+    localStorage.setItem(
+      'accountPreferences:legacy-confirmation',
+      JSON.stringify({
+        defaultCurrencyCode: 'USD',
+        timeZone: 'UTC',
+        locale: 'en-US',
+        theme: 'system',
+        aiCategoryExtractEnabled: null,
+        aiReceiptScanEnabled: null,
+        aiVoiceExpenseEnabled: null,
+      }),
+    )
+    localStorage.setItem(
+      'accountPreferences:standard-confirmation',
+      JSON.stringify({
+        defaultCurrencyCode: 'USD',
+        timeZone: 'UTC',
+        locale: 'en-US',
+        theme: 'system',
+        aiCategoryExtractEnabled: null,
+        aiReceiptScanEnabled: null,
+        aiVoiceExpenseEnabled: null,
+        destructiveConfirmationLevel: 'standard',
+      }),
+    )
+    localStorage.setItem(
+      'accountPreferences:bad-confirmation',
+      JSON.stringify({
+        defaultCurrencyCode: 'USD',
+        timeZone: 'UTC',
+        locale: 'en-US',
+        theme: 'system',
+        aiCategoryExtractEnabled: null,
+        aiReceiptScanEnabled: null,
+        aiVoiceExpenseEnabled: null,
+        destructiveConfirmationLevel: 'relaxed',
+      }),
+    )
+
+    expect(
+      readCachedAccountPreferences('legacy-confirmation')
+        ?.destructiveConfirmationLevel,
+    ).toBeNull()
+    expect(
+      readCachedAccountPreferences('standard-confirmation')
+        ?.destructiveConfirmationLevel,
+    ).toBe('standard')
+    expect(readCachedAccountPreferences('bad-confirmation')).toBeNull()
   })
 
   it('rejects corrupt or unsupported cached snapshots', () => {

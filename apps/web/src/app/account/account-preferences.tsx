@@ -52,6 +52,7 @@ import {
   type AccountMascot,
   type AccountPreferences as AccountPreferencesValue,
   type AccountTheme,
+  type DestructiveConfirmationLevel,
 } from '@/lib/account-preferences'
 import { useCurrencies } from '@/lib/currency'
 import { useDeploymentConfig } from '@/lib/deployment-config'
@@ -77,6 +78,10 @@ import {
 
 const themes: AccountTheme[] = ['light', 'dark', 'system']
 const mascots: AccountMascot[] = ['off', 'bill']
+const destructiveConfirmationLevels: DestructiveConfirmationLevel[] = [
+  'standard',
+  'strict',
+]
 const hideableGroupTabIds = new Set<string>(hideableGroupTabIdValues)
 
 function groupTabArraysEqual(
@@ -127,6 +132,14 @@ export function AccountPreferences() {
       mascots.map((mascot) => ({
         value: mascot,
         label: t(`mascotOptions.${mascot}`),
+      })),
+    [t],
+  )
+  const destructiveConfirmationItems = useMemo(
+    () =>
+      destructiveConfirmationLevels.map((level) => ({
+        value: level,
+        label: t(`deleteConfirmationOptions.${level}`),
       })),
     [t],
   )
@@ -383,6 +396,40 @@ export function AccountPreferences() {
                 </Button>
               ) : null}
             </div>
+          }
+        />
+        <SettingsFieldRow
+          id="account-preference-destructive-confirmation-level"
+          label={t('deleteConfirmation')}
+          description={t('deleteConfirmationHelp')}
+          control={
+            <Select
+              value={sourcePreferences.destructiveConfirmationLevel ?? 'strict'}
+              disabled={updater !== null && !updater.ready}
+              items={destructiveConfirmationItems}
+              onValueChange={(level) => {
+                void updater?.patchPreferences({
+                  destructiveConfirmationLevel:
+                    level as DestructiveConfirmationLevel,
+                })
+              }}
+            >
+              <SelectTrigger
+                id={settingsControlId(
+                  'account-preference-destructive-confirmation-level',
+                )}
+                className="w-full sm:max-w-xs"
+              >
+                <SelectValue placeholder={t('deleteConfirmation')} />
+              </SelectTrigger>
+              <SelectContent>
+                {destructiveConfirmationItems.map((level) => (
+                  <SelectItem key={level.value} value={level.value}>
+                    {level.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           }
         />
         <SettingsRow

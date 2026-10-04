@@ -2459,7 +2459,13 @@
       "groupTabsHide": "הסתר {name}",
       "groupTabsShow": "הצג {name}",
       "groupTabsMoveUp": "העבר את {name} למעלה",
-      "groupTabsMoveDown": "העבר את {name} למטה"
+      "groupTabsMoveDown": "העבר את {name} למטה",
+      "deleteConfirmation": "אישור מחיקת הוצאה",
+      "deleteConfirmationHelp": "מחיקה מהירה מבקשת אישור פעם אחת. מחיקה בהקלדה דורשת להקליד תחילה את כותרת ההוצאה. מחיקת קבוצה או הסרת חבר מחייבות הקלדה תמיד.",
+      "deleteConfirmationOptions": {
+        "standard": "דו־שיח לאישור",
+        "strict": "דו־שיח אישור בהקלדה"
+      }
     },
     "aiPreferences": {
       "title": "תכונות בינה מלאכותית",
@@ -3069,7 +3075,10 @@
         "removeParticipant": "כדי להסיר את <target>{name}</target> מהקבוצה הזו, יש להקליד את השם בדיוק כפי שמוצג למטה."
       },
       "placeholder": "יש להקליד כאן את ״{name}״",
-      "mismatch": "אין התאמה. יש להקליד את {name} בדיוק."
+      "mismatch": "אין התאמה. יש להקליד את {name} בדיוק.",
+      "settingsNoteLink": "שינוי בהגדרות החשבון",
+      "settingsNoteLead": "מעדיפים לדלג על ההקלדה?",
+      "settingsNoteTail": "כדי להשתמש בדו-שיח אישור פשוט."
     }
   },
   "Theme": {

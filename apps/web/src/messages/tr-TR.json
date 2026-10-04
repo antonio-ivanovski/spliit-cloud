@@ -2449,7 +2449,13 @@
       "groupTabsHide": "{name} sekmesini gizle",
       "groupTabsShow": "{name} sekmesini göster",
       "groupTabsMoveUp": "{name} sekmesini yukarı taşı",
-      "groupTabsMoveDown": "{name} sekmesini aşağı taşı"
+      "groupTabsMoveDown": "{name} sekmesini aşağı taşı",
+      "deleteConfirmation": "Masraf silme onayı",
+      "deleteConfirmationHelp": "Hızlı silme bir kez sorar. Yazarak silme önce masraf başlığını yazmanı ister. Grup silmek veya üye çıkarmak her zaman yazmayı gerektirir.",
+      "deleteConfirmationOptions": {
+        "standard": "Onay penceresi",
+        "strict": "Yazarak onay penceresi"
+      }
     },
     "aiPreferences": {
       "title": "Yapay zeka özellikleri",
@@ -3050,7 +3056,10 @@
         "removeParticipant": "<target>{name}</target> adlı katılımcıyı bu gruptan çıkarmak için aşağıda gösterilen adı birebir yazın."
       },
       "placeholder": "Buraya şunu yazın: “{name}”",
-      "mismatch": "Eşleşmiyor. Tam olarak şunu yazın: {name}."
+      "mismatch": "Eşleşmiyor. Tam olarak şunu yazın: {name}.",
+      "settingsNoteLink": "Hesap ayarlarında değiştir",
+      "settingsNoteLead": "Yazmayı atlamak ister misiniz?",
+      "settingsNoteTail": "sade bir onay penceresi kullanmak için."
     }
   },
   "Theme": {

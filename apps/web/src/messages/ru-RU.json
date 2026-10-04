@@ -2469,7 +2469,13 @@
       "groupTabsHide": "Скрыть {name}",
       "groupTabsShow": "Показать {name}",
       "groupTabsMoveUp": "Переместить {name} выше",
-      "groupTabsMoveDown": "Переместить {name} ниже"
+      "groupTabsMoveDown": "Переместить {name} ниже",
+      "deleteConfirmation": "Подтверждение удаления расходов",
+      "deleteConfirmationHelp": "Быстрое удаление спрашивает один раз. Удаление с вводом требует сначала ввести название расхода. Удаление группы или участника всегда требует ввода.",
+      "deleteConfirmationOptions": {
+        "standard": "Диалог подтверждения",
+        "strict": "Диалог с вводом"
+      }
     },
     "aiPreferences": {
       "title": "Функции ИИ",
@@ -3088,7 +3094,10 @@
         "removeParticipant": "Чтобы удалить участника <target>{name}</target> из этой группы, введите его имя точно так, как показано ниже."
       },
       "placeholder": "Введите здесь «{name}»",
-      "mismatch": "Не совпадает. Введите точно: {name}."
+      "mismatch": "Не совпадает. Введите точно: {name}.",
+      "settingsNoteLink": "Изменить в настройках аккаунта",
+      "settingsNoteLead": "Хотите пропустить ввод?",
+      "settingsNoteTail": "чтобы использовать обычное диалоговое окно подтверждения."
     }
   },
   "Theme": {

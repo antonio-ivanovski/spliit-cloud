@@ -2459,7 +2459,13 @@
       "groupTabsHide": "Masquer {name}",
       "groupTabsShow": "Afficher {name}",
       "groupTabsMoveUp": "Déplacer {name} vers le haut",
-      "groupTabsMoveDown": "Déplacer {name} vers le bas"
+      "groupTabsMoveDown": "Déplacer {name} vers le bas",
+      "deleteConfirmation": "Confirmation de suppression des dépenses",
+      "deleteConfirmationHelp": "Les suppressions rapides demandent une simple confirmation. Les suppressions avec saisie vous demandent de saisir d’abord le titre de la dépense. Supprimer un groupe ou retirer un membre exige toujours la saisie.",
+      "deleteConfirmationOptions": {
+        "standard": "Dialogue de confirmation",
+        "strict": "Dialogue avec saisie"
+      }
     },
     "aiPreferences": {
       "title": "Fonctionnalités d'IA",
@@ -3067,7 +3073,10 @@
         "removeParticipant": "Pour retirer <target>{name}</target> de ce groupe, saisissez son nom exactement comme indiqué ci-dessous."
       },
       "placeholder": "Saisissez « {name} » ici",
-      "mismatch": "Cela ne correspond pas. Saisissez exactement {name}."
+      "mismatch": "Cela ne correspond pas. Saisissez exactement {name}.",
+      "settingsNoteLink": "Modifier dans les paramètres du compte",
+      "settingsNoteLead": "Vous préférez éviter la saisie ?",
+      "settingsNoteTail": "pour utiliser une simple boîte de dialogue de confirmation."
     }
   },
   "Theme": {

@@ -2469,7 +2469,13 @@
       "groupTabsHide": "Приховати {name}",
       "groupTabsShow": "Показати {name}",
       "groupTabsMoveUp": "Перемістити {name} вище",
-      "groupTabsMoveDown": "Перемістити {name} нижче"
+      "groupTabsMoveDown": "Перемістити {name} нижче",
+      "deleteConfirmation": "Підтвердження видалення витрат",
+      "deleteConfirmationHelp": "Швидке видалення запитує один раз. Видалення з введенням вимагає спочатку ввести назву витрати. Видалення групи або учасника завжди вимагає введення.",
+      "deleteConfirmationOptions": {
+        "standard": "Діалог підтвердження",
+        "strict": "Діалог із введенням"
+      }
     },
     "aiPreferences": {
       "title": "Функції ШІ",
@@ -3088,7 +3094,10 @@
         "removeParticipant": "Щоб видалити <target>{name}</target> із цієї групи, введіть ім’я точно так, як показано нижче."
       },
       "placeholder": "Введіть тут «{name}»",
-      "mismatch": "Не збігається. Введіть точно: {name}."
+      "mismatch": "Не збігається. Введіть точно: {name}.",
+      "settingsNoteLink": "Змінити в налаштуваннях облікового запису",
+      "settingsNoteLead": "Хочете пропустити введення?",
+      "settingsNoteTail": "щоб використовувати звичайне діалогове вікно підтвердження."
     }
   },
   "Theme": {

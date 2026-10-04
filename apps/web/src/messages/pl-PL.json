@@ -2469,7 +2469,13 @@
       "groupTabsHide": "Ukryj {name}",
       "groupTabsShow": "Pokaż {name}",
       "groupTabsMoveUp": "Przenieś {name} wyżej",
-      "groupTabsMoveDown": "Przenieś {name} niżej"
+      "groupTabsMoveDown": "Przenieś {name} niżej",
+      "deleteConfirmation": "Potwierdzenie usuwania wydatków",
+      "deleteConfirmationHelp": "Szybkie usuwanie pyta raz. Usuwanie z wpisywaniem wymaga najpierw wpisania tytułu wydatku. Usunięcie grupy lub usunięcie członka zawsze wymaga wpisania.",
+      "deleteConfirmationOptions": {
+        "standard": "Dialog potwierdzenia",
+        "strict": "Dialog z wpisywaniem"
+      }
     },
     "aiPreferences": {
       "title": "Funkcje AI",
@@ -3088,7 +3094,10 @@
         "removeParticipant": "Aby usunąć z tej grupy osobę <target>{name}</target>, wpisz jej imię dokładnie tak, jak pokazano poniżej."
       },
       "placeholder": "Wpisz tutaj „{name}”",
-      "mismatch": "Wartość się nie zgadza. Wpisz dokładnie {name}."
+      "mismatch": "Wartość się nie zgadza. Wpisz dokładnie {name}.",
+      "settingsNoteLink": "Zmień w ustawieniach konta",
+      "settingsNoteLead": "Wolisz pominąć wpisywanie?",
+      "settingsNoteTail": "aby używać zwykłego okna potwierdzenia."
     }
   },
   "Theme": {

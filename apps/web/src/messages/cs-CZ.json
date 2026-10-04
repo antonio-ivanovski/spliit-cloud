@@ -2469,7 +2469,13 @@
       "groupTabsHide": "Skrýt {name}",
       "groupTabsShow": "Zobrazit {name}",
       "groupTabsMoveUp": "Posunout {name} nahoru",
-      "groupTabsMoveDown": "Posunout {name} dolů"
+      "groupTabsMoveDown": "Posunout {name} dolů",
+      "deleteConfirmation": "Potvrzení smazání výdaje",
+      "deleteConfirmationHelp": "Rychlé smazání se zeptá jednou. Smazání se zadáním vyžaduje nejprve zadat název výdaje. Smazání skupiny nebo odebrání člena vždy vyžaduje zadání.",
+      "deleteConfirmationOptions": {
+        "standard": "Potvrzovací dialog",
+        "strict": "Dialog se zadáním"
+      }
     },
     "aiPreferences": {
       "title": "Funkce AI",
@@ -3088,7 +3094,10 @@
         "removeParticipant": "Chcete-li ze skupiny odebrat účastníka <target>{name}</target>, zadejte jeho jméno přesně tak, jak je uvedeno níže."
       },
       "placeholder": "Sem zadejte „{name}“",
-      "mismatch": "Neshoduje se. Zadejte přesně {name}."
+      "mismatch": "Neshoduje se. Zadejte přesně {name}.",
+      "settingsNoteLink": "Změnit v nastavení účtu",
+      "settingsNoteLead": "Chcete přeskočit zadávání?",
+      "settingsNoteTail": "k použití jednoduchého potvrzovacího dialogu."
     }
   },
   "Theme": {

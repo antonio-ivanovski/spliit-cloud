@@ -181,7 +181,13 @@
       "groupTabsHide": "Dölj {name}",
       "groupTabsShow": "Visa {name}",
       "groupTabsMoveUp": "Flytta {name} uppåt",
-      "groupTabsMoveDown": "Flytta {name} nedåt"
+      "groupTabsMoveDown": "Flytta {name} nedåt",
+      "deleteConfirmation": "Bekräftelse vid borttagning av utgifter",
+      "deleteConfirmationHelp": "Snabb borttagning frågar en gång. Borttagning med skrift kräver att du skriver utgiftens titel först. Att ta bort en grupp eller ta bort en medlem kräver alltid skrift.",
+      "deleteConfirmationOptions": {
+        "standard": "Bekräftelsedialog",
+        "strict": "Dialog med skrift"
+      }
     },
     "aiPreferences": {
       "title": "AI-funktioner",
@@ -923,7 +929,10 @@
         "removeParticipant": "För att ta bort <target>{name}</target> från gruppen skriver du namnet exakt som det visas nedan."
       },
       "placeholder": "Skriv ”{name}” här",
-      "mismatch": "Stämmer inte. Skriv {name} exakt."
+      "mismatch": "Stämmer inte. Skriv {name} exakt.",
+      "settingsNoteLink": "Ändra i kontoinställningar",
+      "settingsNoteLead": "Vill du slippa skriva?",
+      "settingsNoteTail": "för att använda en vanlig bekräftelsedialog."
     }
   },
   "CompleteProfile": {

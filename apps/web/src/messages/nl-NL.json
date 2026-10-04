@@ -2481,7 +2481,13 @@
       "groupTabsHide": "{name} verbergen",
       "groupTabsShow": "{name} tonen",
       "groupTabsMoveUp": "{name} omhoog verplaatsen",
-      "groupTabsMoveDown": "{name} omlaag verplaatsen"
+      "groupTabsMoveDown": "{name} omlaag verplaatsen",
+      "deleteConfirmation": "Bevestiging voor het verwijderen van uitgaven",
+      "deleteConfirmationHelp": "Snel verwijderen vraagt één keer om bevestiging. Verwijderen met typen vereist dat je eerst de titel van de uitgave typt. Een groep verwijderen of een lid verwijderen vereist altijd typen.",
+      "deleteConfirmationOptions": {
+        "standard": "Bevestigingsdialoog",
+        "strict": "Dialoog met typen"
+      }
     },
     "aiPreferences": {
       "title": "AI-functies",
@@ -3118,7 +3124,10 @@
         "removeParticipant": "Typ de naam precies zoals hieronder weergegeven om <target>{name}</target> uit deze groep te verwijderen."
       },
       "placeholder": "Typ ‘{name}’ hier",
-      "mismatch": "Komt niet overeen. Typ {name} exact."
+      "mismatch": "Komt niet overeen. Typ {name} exact.",
+      "settingsNoteLink": "Wijzigen in accountinstellingen",
+      "settingsNoteLead": "Liever niet typen?",
+      "settingsNoteTail": "om een eenvoudig bevestigingsvenster te gebruiken."
     }
   },
   "Theme": {

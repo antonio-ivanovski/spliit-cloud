@@ -2,7 +2,9 @@ import { MoreHorizontal, Pencil, Repeat2, Trash } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import {
+  DestructiveConfirmationSettingsNote,
   isTypedConfirmationMatch,
   TypedDestructiveConfirmation,
   useTypedConfirmationValue,
@@ -18,6 +20,10 @@ import {
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
+import {
+  requiresTypedConfirmation,
+  resolveDestructiveConfirmationLevel,
+} from '@/lib/account-preferences'
 import { cn } from '@/lib/utils'
 
 import type { SeriesMutationScope } from './series-scope-dialog'
@@ -56,6 +62,14 @@ export function RecurringActionsMenu({
     `${open}:${pending?.kind ?? ''}:${pending?.kind === 'delete' ? pending.option : ''}:${confirmationTarget}`,
   )
 
+  const preferences = useSyncedAccountPreferences()
+  const requiresTyping = requiresTypedConfirmation(
+    resolveDestructiveConfirmationLevel(
+      preferences?.destructiveConfirmationLevel,
+    ),
+    'deleteRecurringExpense',
+  )
+
   const close = () => {
     setOpen(false)
     setPending(null)
@@ -77,6 +91,7 @@ export function RecurringActionsMenu({
     if (!pending || confirming) return
     if (
       pending.kind === 'delete' &&
+      requiresTyping &&
       !isTypedConfirmationMatch(confirmationValue, confirmationTarget)
     ) {
       return
@@ -221,20 +236,24 @@ export function RecurringActionsMenu({
           </ResponsiveDialogBody>
         ) : (
           <ResponsiveDialogBody>
-            {isDelete ? (
-              <TypedDestructiveConfirmation
-                kind="deleteRecurringExpense"
-                targetName={confirmationTarget}
-                value={confirmationValue}
-                onValueChange={setConfirmationValue}
-                disabled={confirming}
-                onConfirm={confirm}
-              />
-            ) : (
+            {isDelete && requiresTyping ? (
+              <div className="space-y-3">
+                <TypedDestructiveConfirmation
+                  kind="deleteRecurringExpense"
+                  targetName={confirmationTarget}
+                  value={confirmationValue}
+                  onValueChange={setConfirmationValue}
+                  disabled={confirming}
+                  onConfirm={confirm}
+                />
+                <DestructiveConfirmationSettingsNote />
+              </div>
+            ) : null}
+            {!isDelete ? (
               <div className="rounded-md bg-muted/40 px-4 py-3 text-sm">
                 {t('stopConfirmHint')}
               </div>
-            )}
+            ) : null}
           </ResponsiveDialogBody>
         )}
 
@@ -257,6 +276,7 @@ export function RecurringActionsMenu({
                 disabled={
                   confirming ||
                   (isDelete &&
+                    requiresTyping &&
                     !isTypedConfirmationMatch(
                       confirmationValue,
                       confirmationTarget,

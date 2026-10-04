@@ -2459,7 +2459,13 @@
       "groupTabsHide": "Ascunde {name}",
       "groupTabsShow": "Afișează {name}",
       "groupTabsMoveUp": "Mută {name} în sus",
-      "groupTabsMoveDown": "Mută {name} în jos"
+      "groupTabsMoveDown": "Mută {name} în jos",
+      "deleteConfirmation": "Confirmarea ștergerii cheltuielilor",
+      "deleteConfirmationHelp": "Ștergerile rapide cer o simplă confirmare. Ștergerile cu introducere îți cer să introduci mai întâi titlul cheltuielii. Ștergerea unui grup sau eliminarea unui membru necesită întotdeauna introducerea textului.",
+      "deleteConfirmationOptions": {
+        "standard": "Dialog de confirmare",
+        "strict": "Dialog cu introducere"
+      }
     },
     "aiPreferences": {
       "title": "Funcții AI",
@@ -3067,7 +3073,10 @@
         "removeParticipant": "Pentru a elimina <target>{name}</target> din acest grup, introdu numele exact așa cum apare mai jos."
       },
       "placeholder": "Introdu „{name}” aici",
-      "mismatch": "Nu se potrivește. Introdu exact {name}."
+      "mismatch": "Nu se potrivește. Introdu exact {name}.",
+      "settingsNoteLink": "Modifică în setările contului",
+      "settingsNoteLead": "Preferi să sari peste introducerea textului?",
+      "settingsNoteTail": "pentru a folosi un dialog de confirmare simplu."
     }
   },
   "Theme": {

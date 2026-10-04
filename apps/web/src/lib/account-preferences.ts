@@ -3,6 +3,9 @@ import { locales } from '@/i18n/request'
 import {
   groupTabIdValues,
   hideableGroupTabIdValues,
+  requiresTypedConfirmation,
+  resolveDestructiveConfirmationLevel,
+  type DestructiveConfirmationLevel,
   type GroupTabId,
   type HideableGroupTabId,
 } from '@spliit/domain/account-preferences'
@@ -11,7 +14,8 @@ import { currencyList } from '@spliit/domain/currency'
 export type AccountTheme = 'light' | 'dark' | 'system'
 export type AccountMascot = 'off' | 'bill'
 
-export type { GroupTabId, HideableGroupTabId }
+export type { GroupTabId, HideableGroupTabId, DestructiveConfirmationLevel }
+export { requiresTypedConfirmation, resolveDestructiveConfirmationLevel }
 
 export type AccountPreferences = {
   defaultCurrencyCode: string | null
@@ -36,6 +40,12 @@ export type AccountPreferences = {
   aiCategoryExtractEnabled: boolean | null
   aiReceiptScanEnabled: boolean | null
   aiVoiceExpenseEnabled: boolean | null
+  /**
+   * Delete-confirmation strictness. `null` (or a missing key on cached shapes
+   * that pre-date the field) means the historical `strict` behaviour; resolve
+   * with `resolveDestructiveConfirmationLevel` from `@spliit/domain`.
+   */
+  destructiveConfirmationLevel?: DestructiveConfirmationLevel | null
   /**
    * Custom group tab order. Missing, `null`, or an empty array means the
    * default order; resolve with `resolveGroupTabOrder` from `@spliit/domain`.
@@ -84,6 +94,7 @@ function parseAccountPreferences(value: unknown): AccountPreferences | null {
   const aiVoiceExpenseEnabled = candidate.aiVoiceExpenseEnabled
   const groupTabOrder = candidate.groupTabOrder
   const hiddenGroupTabs = candidate.hiddenGroupTabs
+  const destructiveConfirmationLevel = candidate.destructiveConfirmationLevel
 
   if (
     defaultCurrencyCode !== null &&
@@ -169,6 +180,15 @@ function parseAccountPreferences(value: unknown): AccountPreferences | null {
       ))
   )
     return null
+  // The confirmation level tolerates pre-dating cache shapes the same way;
+  // a missing key resolves to `null` (historical strict behaviour).
+  if (
+    destructiveConfirmationLevel !== undefined &&
+    destructiveConfirmationLevel !== null &&
+    destructiveConfirmationLevel !== 'standard' &&
+    destructiveConfirmationLevel !== 'strict'
+  )
+    return null
   return {
     defaultCurrencyCode: defaultCurrencyCode as string | null,
     timeZone: timeZone as string | null,
@@ -197,6 +217,10 @@ function parseAccountPreferences(value: unknown): AccountPreferences | null {
       hiddenGroupTabs === undefined
         ? null
         : (hiddenGroupTabs as HideableGroupTabId[]),
+    destructiveConfirmationLevel:
+      destructiveConfirmationLevel === undefined
+        ? null
+        : (destructiveConfirmationLevel as DestructiveConfirmationLevel | null),
   }
 }
 
