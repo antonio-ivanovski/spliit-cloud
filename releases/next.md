@@ -25,6 +25,7 @@ who is affected, and the exact migration steps.
 
 ### 🐛 Bug fixes
 
+- Fixed magic-link signup on invite-only instances when the group invitation is nested inside a sign-in redirect. Thanks @natekspencer for opening [#151](https://github.com/antonio-ivanovski/spliit-cloud/issues/151) (`TBD` by @TBD)
 - Prepared the ChatGPT plugin directory submission: password-first reviewer login without guest accounts, configurable domain-verification token, and a versioned submission package with review cases (`TBD` by @TBD)
 
 **Full Changelog**: TBD

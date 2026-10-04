@@ -384,7 +384,7 @@ describe('AuthPanel', () => {
   it('carries a group invite through magic-link signup', async () => {
     mockDeploymentConfig.signupMode = 'invite_only'
     mockDeploymentConfig.allowUninvitedSignup = false
-    mockSearch.redirect = '/groups/grp-1?invite=magic-invite-token'
+    mockSearch.redirect = `/?redirect=${encodeURIComponent('/groups/grp-1?invite=magic-invite-token&viewKey=view-key#members')}`
     mockSignInMagicLink.mockResolvedValue({ error: null })
     const { user } = render(<AuthPanel />)
 
@@ -399,6 +399,9 @@ describe('AuthPanel', () => {
       },
       { headers: { 'X-Spliit-Invite-Token': 'magic-invite-token' } },
     )
+    expect(
+      await screen.findByText('Check your inbox for a sign-in link.'),
+    ).toBeInTheDocument()
   })
 
   it('carries a group invite through password signup', async () => {

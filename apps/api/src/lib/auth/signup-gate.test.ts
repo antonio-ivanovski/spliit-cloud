@@ -93,27 +93,32 @@ describe('canCreateAccount', () => {
     ).resolves.toBe(true)
   })
 
-  it('rejects an expired link invite token', async () => {
-    env.SIGNUP_MODE = 'invite_only'
-    prismaMock.user.count.mockResolvedValue(3)
-    prismaMock.groupInvitation.findFirst
-      .mockResolvedValueOnce(null)
-      .mockResolvedValueOnce({
-        status: 'PENDING',
-        expiresAt: new Date(Date.now() - 60_000),
-        temporaryName: null,
-        role: 'MEMBER',
-        group: { id: 'grp-1', name: 'Trip', groupType: 'GROUP' },
-        invitedBy: { name: 'Alice' },
-      } as never)
+  it.each(['expired', 'REVOKED', 'ACCEPTED', 'DECLINED'])(
+    'rejects an unusable link invite token: %s',
+    async (state) => {
+      env.SIGNUP_MODE = 'invite_only'
+      prismaMock.user.count.mockResolvedValue(3)
+      prismaMock.groupInvitation.findFirst
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce({
+          status: state === 'expired' ? 'PENDING' : state,
+          expiresAt: new Date(
+            Date.now() + (state === 'expired' ? -60_000 : 60_000),
+          ),
+          temporaryName: null,
+          role: 'MEMBER',
+          group: { id: 'grp-1', name: 'Trip', groupType: 'GROUP' },
+          invitedBy: { name: 'Alice' },
+        } as never)
 
-    await expect(
-      canCreateAccount({
-        email: 'anyone@example.com',
-        linkInviteToken: 'd'.repeat(32),
-      }),
-    ).resolves.toBe(false)
-  })
+      await expect(
+        canCreateAccount({
+          email: 'anyone@example.com',
+          linkInviteToken: 'd'.repeat(32),
+        }),
+      ).resolves.toBe(false)
+    },
+  )
 })
 
 describe('enforceSignupGate', () => {
@@ -176,29 +181,46 @@ describe('readLinkInviteToken', () => {
     ).resolves.toBe('header-token-value')
   })
 
-  it('recovers a link token from a nested magic-link callback', async () => {
-    const destination = '/groups/grp-1?invite=magic-link-token-123456'
-    const completeProfile = `http://localhost:3000/auth/complete-profile?redirect=${encodeURIComponent(destination)}`
+  it.each(['profile', 'profile-and-home'])(
+    'recovers a link token from a nested %s magic-link callback',
+    async (wrapper) => {
+      const destination = '/groups/grp-1?invite=magic-link-token-123456'
+      const redirect =
+        wrapper === 'profile'
+          ? destination
+          : `/?redirect=${encodeURIComponent(destination)}`
+      const completeProfile = `http://localhost:3000/auth/complete-profile?redirect=${encodeURIComponent(redirect)}`
 
-    await expect(
-      readLinkInviteToken({
-        path: '/magic-link/verify',
-        query: { newUserCallbackURL: completeProfile },
-      }),
-    ).resolves.toBe('magic-link-token-123456')
-  })
+      await expect(
+        readLinkInviteToken({
+          path: '/magic-link/verify',
+          query: { newUserCallbackURL: completeProfile },
+        }),
+      ).resolves.toBe('magic-link-token-123456')
+    },
+  )
 
-  it('rejects invite tokens from external callback destinations', async () => {
-    await expect(
-      readLinkInviteToken({
-        path: '/magic-link/verify',
-        query: {
-          newUserCallbackURL:
-            'https://attacker.example/groups/grp-1?invite=stolen-token',
-        },
-      }),
-    ).resolves.toBeUndefined()
-  })
+  it.each([
+    'https://attacker.example/groups/grp-1?invite=stolen-token',
+    `http://localhost:3000/?redirect=${encodeURIComponent('https://attacker.example/groups/grp-1?invite=stolen-token')}`,
+    `http://localhost:3000/other?redirect=${encodeURIComponent('/groups/grp-1?invite=stolen-token')}`,
+    Array.from({ length: 4 }).reduce<string>(
+      (path) => `http://localhost:3000/?redirect=${encodeURIComponent(path)}`,
+      '/groups/grp-1?invite=stolen-token',
+    ),
+  ])(
+    'rejects invite tokens outside allowed callback paths: %s',
+    async (callback) => {
+      await expect(
+        readLinkInviteToken({
+          path: '/magic-link/verify',
+          query: {
+            newUserCallbackURL: callback,
+          },
+        }),
+      ).resolves.toBeUndefined()
+    },
+  )
 
   it('reads server-controlled invite proof on an OAuth callback', async () => {
     getOAuthStateMock.mockResolvedValue({
