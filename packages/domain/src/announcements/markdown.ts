@@ -331,10 +331,14 @@ function parseBlocks(body: string): AnnouncementBlock[] {
 
 export function renderAnnouncementHtml(
   body: string,
-  options?: { idPrefix?: string; referenceBody?: string },
+  options?: { idPrefix?: string; referenceBody?: string; anchors?: boolean },
 ): string {
   const blocks = parseBlocks(body)
   const ids = resolveHeadingIds(body, options?.referenceBody, options?.idPrefix)
+  // Heading self-link icons are a deep-linking affordance for the /updates
+  // page. Other surfaces (the modal, email) opt out via `anchors: false` so
+  // fragment links never appear where they cannot resolve usefully.
+  const anchors = options?.anchors ?? true
   let headingIndex = 0
   const parts: string[] = []
   let openSection = false
@@ -345,7 +349,10 @@ export function renderAnnouncementHtml(
       if (block.level === 1) {
         return `<h1>${renderInlineHtml(block.text)}</h1>`
       }
-      return `<h${block.level} id="${id}" class="announcement-heading group"><a class="announcement-anchor" href="#${id}" tabindex="-1" aria-hidden="true">${HEADING_LINK_ICON}</a>${renderInlineHtml(block.text)}</h${block.level}>`
+      const icon = anchors
+        ? `<a class="announcement-anchor" href="#${id}" tabindex="-1" aria-hidden="true">${HEADING_LINK_ICON}</a>`
+        : ''
+      return `<h${block.level} id="${id}" class="announcement-heading group">${icon}${renderInlineHtml(block.text)}</h${block.level}>`
     }
     if (block.type === 'list') {
       const tag = block.ordered ? 'ol' : 'ul'

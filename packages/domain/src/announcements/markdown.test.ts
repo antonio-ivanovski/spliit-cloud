@@ -83,6 +83,19 @@ describe('announcement markdown', () => {
     expect(html).not.toContain('announcement-anchor')
   })
 
+  it('omits heading anchors when disabled, keeping ids', () => {
+    const body = 'Intro.\n\n## First section\n\nBody one.\n'
+    const html = renderAnnouncementHtml(body, {
+      idPrefix: 'test-entry',
+      anchors: false,
+    })
+    expect(html).toContain(
+      '<h2 id="test-entry--first-section" class="announcement-heading group">First section</h2>',
+    )
+    expect(html).not.toContain('announcement-anchor')
+    expect(html).not.toContain('href="#test-entry--first-section"')
+  })
+
   it('derives heading ids from the reference body across locales', () => {
     const reference =
       'Intro.\n\n## First section\n\nBody one.\n\n### Sub point\n\nMore.\n'

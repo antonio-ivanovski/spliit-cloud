@@ -39,6 +39,7 @@ function normalizeLocale(locale: string | undefined): string {
 export function getAnnouncementContent(
   id: string,
   locale?: string,
+  options?: { anchors?: boolean },
 ): LocalizedAnnouncement | undefined {
   const definition = announcements.find(
     (announcement) => announcement.id === id,
@@ -84,6 +85,7 @@ export function getAnnouncementContent(
     bodyHtml: renderAnnouncementHtml(localized.body, {
       idPrefix: id,
       referenceBody,
+      anchors: options?.anchors,
     }),
     sections: extractAnnouncementSections(localized.body, {
       idPrefix: id,
