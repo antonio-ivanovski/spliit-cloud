@@ -52,6 +52,9 @@ vi.mock('@/components/app-image', () => ({
 vi.mock('@/components/install-promotion-dialog', () => ({
   InstallPromotionDialog: () => null,
 }))
+vi.mock('@/components/updates-modal', () => ({
+  UpdatesModal: () => null,
+}))
 vi.mock('@/components/push-notification-onboarding', () => ({
   PushNotificationOnboarding: () => null,
 }))
