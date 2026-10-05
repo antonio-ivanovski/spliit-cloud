@@ -11,7 +11,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 // transporter cache lives per-sender instance.
 vi.mock('nodemailer', async () => await import('nodemailer-mock'))
 
-import { createEmailSender } from './send'
+import { createCloudflareEmailSender, createEmailSender } from './send'
 
 beforeEach(() => {
   // Clear mock state (sent mail cache, shouldFail flag, transporters) so
@@ -24,7 +24,7 @@ afterEach(() => {
 })
 
 describe('sendEmail', () => {
-  it('throws when SMTP_HOST is unset', async () => {
+  it('throws when no transport is configured', async () => {
     const send = createEmailSender({})
 
     await expect(
@@ -34,7 +34,7 @@ describe('sendEmail', () => {
         text: 't',
         html: '<p>t</p>',
       }),
-    ).rejects.toThrow(/SMTP_HOST is not configured/)
+    ).rejects.toThrow(/No email transport is configured/)
   })
 
   it('sends through SMTP with full from/to/subject/text/html fields', async () => {
@@ -190,5 +190,166 @@ describe('sendEmail', () => {
     } finally {
       mocked.mock.setShouldFail(false)
     }
+  })
+})
+
+describe('createCloudflareEmailSender', () => {
+  const baseConfig = {
+    accountId: 'acct-123',
+    apiToken: 'cf-token',
+    from: 'Spliit Cloud <noreply@test>',
+  }
+
+  const message = {
+    to: 'recipient@example.com',
+    subject: 'Test subject',
+    text: 'plain text body',
+    html: '<p>html body</p>',
+  }
+
+  function okFetch(): typeof fetch {
+    return (async () =>
+      new Response(JSON.stringify({ success: true }), {
+        status: 200,
+      })) as typeof fetch
+  }
+
+  it('throws when the account ID or token is missing', async () => {
+    for (const config of [
+      {},
+      { accountId: 'acct-123' },
+      { apiToken: 'cf-token' },
+    ]) {
+      const send = createCloudflareEmailSender(config)
+      await expect(send(message)).rejects.toThrow(
+        /CF_EMAIL_ACCOUNT_ID\/CF_EMAIL_API_TOKEN/,
+      )
+    }
+  })
+
+  it('throws when EMAIL_FROM is missing', async () => {
+    const send = createCloudflareEmailSender({
+      ...baseConfig,
+      from: undefined,
+      fetchImpl: okFetch(),
+    })
+    await expect(send(message)).rejects.toThrow(/EMAIL_FROM is not configured/)
+  })
+
+  it.each([
+    { text: '', html: '<p>html body</p>' },
+    { text: 'plain text body', html: '' },
+  ])('rejects empty email bodies', async ({ text, html }) => {
+    const send = createCloudflareEmailSender({
+      ...baseConfig,
+      fetchImpl: okFetch(),
+    })
+    await expect(send({ ...message, text, html })).rejects.toThrow(
+      /Email text and html must be non-empty/,
+    )
+  })
+
+  it('posts from/to/subject/text/html/headers to the account send endpoint', async () => {
+    const calls: Array<{ url: unknown; init: RequestInit }> = []
+    const fetchImpl = (async (url: unknown, init: RequestInit) => {
+      calls.push({ url, init })
+      return new Response(JSON.stringify({ success: true }), { status: 200 })
+    }) as typeof fetch
+    const send = createCloudflareEmailSender({
+      ...baseConfig,
+      fetchImpl,
+    })
+
+    await send({
+      ...message,
+      headers: { 'List-Unsubscribe': '<https://example.com/unsub>' },
+    })
+
+    expect(calls).toHaveLength(1)
+    expect(calls[0].url).toBe(
+      'https://api.cloudflare.com/client/v4/accounts/acct-123/email/sending/send',
+    )
+    const init = calls[0].init
+    expect(init.method).toBe('POST')
+    expect(init.headers).toMatchObject({
+      Authorization: 'Bearer cf-token',
+      'Content-Type': 'application/json',
+    })
+    expect(init.signal).toBeInstanceOf(AbortSignal)
+    expect(JSON.parse(init.body as string)).toEqual({
+      from: 'Spliit Cloud <noreply@test>',
+      to: ['recipient@example.com'],
+      subject: 'Test subject',
+      text: 'plain text body',
+      html: '<p>html body</p>',
+      headers: { 'List-Unsubscribe': '<https://example.com/unsub>' },
+    })
+  })
+
+  it('omits the headers key when the message has none', async () => {
+    let body: Record<string, unknown> = {}
+    const fetchImpl = (async (_url: unknown, init: RequestInit) => {
+      body = JSON.parse(init.body as string) as Record<string, unknown>
+      return new Response(JSON.stringify({ success: true }), { status: 200 })
+    }) as typeof fetch
+    await createCloudflareEmailSender({ ...baseConfig, fetchImpl })(message)
+    expect(body).not.toHaveProperty('headers')
+  })
+
+  it('surfaces Cloudflare API errors with status and provider code', async () => {
+    const fetchImpl = (async () =>
+      new Response(
+        JSON.stringify({
+          success: false,
+          errors: [{ code: 6103, message: 'Invalid credentials' }],
+        }),
+        { status: 403 },
+      )) as typeof fetch
+    const send = createCloudflareEmailSender({ ...baseConfig, fetchImpl })
+
+    const error = await send(message).catch((err: unknown) => err)
+    expect(error).toBeInstanceOf(Error)
+    expect(error).toMatchObject({
+      code: 'CF_HTTP_403',
+      responseCode: 403,
+      provider: 'cloudflare-email',
+    })
+    expect((error as Error).message).toContain('6103')
+    expect((error as Error).message).toContain('Invalid credentials')
+  })
+
+  it('handles non-JSON error bodies without throwing a parse error', async () => {
+    const fetchImpl = (async () =>
+      new Response('Bad Gateway', { status: 502 })) as typeof fetch
+    const error = await createCloudflareEmailSender({
+      ...baseConfig,
+      fetchImpl,
+    })(message).catch((err: unknown) => err)
+    expect(error).toMatchObject({
+      code: 'CF_HTTP_502',
+      responseCode: 502,
+    })
+  })
+
+  it('maps network failures to a retryable code', async () => {
+    const fetchImpl = (async () => {
+      throw new TypeError('fetch failed')
+    }) as typeof fetch
+    const error = await createCloudflareEmailSender({
+      ...baseConfig,
+      fetchImpl,
+    })(message).catch((err: unknown) => err)
+    expect(error).toMatchObject({ code: 'CF_NETWORK' })
+  })
+
+  it('maps aborts to a timeout code', async () => {
+    const fetchImpl = (async () => {
+      throw new DOMException('The operation timed out', 'TimeoutError')
+    }) as typeof fetch
+    const error = await createCloudflareEmailSender({
+      ...baseConfig,
+      fetchImpl,
+    })(message).catch((err: unknown) => err)
+    expect(error).toMatchObject({ code: 'CF_TIMEOUT' })
   })
 })

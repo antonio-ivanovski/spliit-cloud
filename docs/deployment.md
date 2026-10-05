@@ -26,6 +26,11 @@ Copy `container.env.example` to `container.env` and set:
 - `SMTP_HOST`, `SMTP_PORT`, and `EMAIL_FROM`
 - both `SMTP_USER` and `SMTP_PASS` for authenticated SMTP, or neither for a
   trusted anonymous relay
+- alternative to SMTP on hosts that filter outbound SMTP ports (Hetzner blocks
+  `25`/`465` by default; Cloudflare SMTP only listens on `465`): Cloudflare
+  Email Sending over HTTPS (`CF_EMAIL_ACCOUNT_ID` plus `CF_EMAIL_API_TOKEN`
+  with Email Sending:Edit, on an onboarded sending domain). Set both or
+  neither; when set, REST on `443` is used instead of SMTP.
 - `EMAIL_UNSUBSCRIBE_SECRET` from `openssl rand -hex 32`
 - SSO-only instances only: set `ENABLE_EMAIL_AUTH=false` plus OIDC or social
   credentials instead — SMTP then becomes optional (see below).
@@ -112,11 +117,12 @@ may remain empty.
   signup passes by email match, friends auto-join on SSO sign-in, and groups
   accept from the in-app pending list — tell the invitee to sign in via SSO,
   or share a link invite instead.
-  Auth (`ENABLE_EMAIL_AUTH`) and delivery (`SMTP_HOST` plus `EMAIL_FROM` set)
-  are independent:
-  SMTP can be omitted on any instance, and then no EMAIL-channel notification
-  is planned, sent, or retried — stored email preferences are kept but stay
-  inert until SMTP returns. The UI reports this state: notification settings
+  Auth (`ENABLE_EMAIL_AUTH`) and delivery (a transport plus `EMAIL_FROM` set:
+  `SMTP_HOST`, or Cloudflare REST via `CF_EMAIL_ACCOUNT_ID` +
+  `CF_EMAIL_API_TOKEN`) are independent:
+  delivery can be omitted on any instance, and then no EMAIL-channel
+  notification is planned, sent, or retried — stored email preferences are
+  kept but stay inert until delivery returns. The UI reports this state: notification settings
   show a delivery warning with the Email option disabled, the push onboarding
   dialog stops offering email as a fallback, and the invite form keeps working
   with a warning banner.

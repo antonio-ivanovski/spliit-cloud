@@ -82,12 +82,41 @@ function isPermanentCode(code: string | undefined): boolean {
   return code === 'EENVELOPE' || code === 'EADDRINFO' || code === 'EINVAL'
 }
 
-function classifySmtpError(err: unknown): 'transient' | 'permanent' {
+function isCloudflareRestError(record: Record<string, unknown>): boolean {
+  if (record.provider === 'cloudflare-email') return true
+  const code = record.code
+  return typeof code === 'string' && code.startsWith('CF_')
+}
+
+/**
+ * Cloudflare REST (HTTPS) failures use HTTP semantics, which are inverted
+ * relative to SMTP reply codes: 4xx (auth, validation, domain not onboarded) is
+ * permanent, while 429/5xx/network/timeout is transient and worth retrying.
+ * Must branch before the SMTP responseCode mapping below, where 5xx means
+ * permanent (mailbox unavailable).
+ */
+function classifyCloudflareRestError(
+  code: string | undefined,
+  responseCode: number | undefined,
+): 'transient' | 'permanent' {
+  if (code === 'CF_TIMEOUT' || code === 'CF_NETWORK') return 'transient'
+  if (responseCode === 429 || responseCode === 408) return 'transient'
+  if (typeof responseCode === 'number') {
+    if (responseCode >= 500) return 'transient'
+    if (responseCode >= 400) return 'permanent'
+  }
+  return 'transient'
+}
+
+function classifyEmailError(err: unknown): 'transient' | 'permanent' {
   if (!err || typeof err !== 'object') return 'transient'
   const record = err as Record<string, unknown>
   const code = typeof record.code === 'string' ? record.code : undefined
   const responseCode =
     typeof record.responseCode === 'number' ? record.responseCode : undefined
+  if (isCloudflareRestError(record)) {
+    return classifyCloudflareRestError(code, responseCode)
+  }
   if (isPermanentCode(code)) return 'permanent'
   if (isTransientCode(code)) return 'transient'
   if (typeof responseCode === 'number') {
@@ -104,7 +133,7 @@ function describeError(err: unknown): {
   message: string
 } {
   if (!err || typeof err !== 'object') {
-    return { code: 'UNKNOWN', message: 'Unknown SMTP error' }
+    return { code: 'UNKNOWN', message: 'Unknown email error' }
   }
   const record = err as Record<string, unknown>
   const code =
@@ -116,7 +145,7 @@ function describeError(err: unknown): {
   const rawMessage =
     typeof record.message === 'string' && record.message.length > 0
       ? record.message
-      : 'SMTP send failed'
+      : 'Email send failed'
   const cleaned = rawMessage.replace(/\s+/g, ' ').trim().slice(0, 200)
   return { code, providerStatus, message: cleaned }
 }
@@ -569,15 +598,15 @@ export class EmailDeliverySenderImpl implements EmailDeliverySender {
       })
     } catch (error) {
       const { code, providerStatus, message } = describeError(error)
-      if (classifySmtpError(error) === 'permanent') {
+      if (classifyEmailError(error) === 'permanent') {
         throw new PermanentDeliveryError(
-          `SMTP send failed: ${message}`,
+          `Email send failed: ${message}`,
           code,
           providerStatus,
         )
       }
       throw new TransientDeliveryError(
-        `SMTP send failed: ${message}`,
+        `Email send failed: ${message}`,
         code,
         providerStatus,
       )

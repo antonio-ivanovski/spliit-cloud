@@ -445,6 +445,81 @@ describe('EmailDeliverySenderImpl', () => {
     ).rejects.toBeInstanceOf(TransientDeliveryError)
   })
 
+  it('classifies Cloudflare REST 4xx as PermanentDeliveryError', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({
+      email: 'bob@example.com',
+      emailVerified: true,
+    } as never)
+    sendEmailMock.mockRejectedValueOnce(
+      Object.assign(new Error('Cloudflare Email Sending failed (HTTP 403)'), {
+        code: 'CF_HTTP_403',
+        responseCode: 403,
+        provider: 'cloudflare-email',
+      }),
+    )
+
+    const error = await emailSender
+      .send({
+        deliveryId: 'delivery-cf-403',
+        snapshot: buildExpenseCreatedSnapshot(),
+        recipientAccountId: 'acct-bob',
+      })
+      .catch((err: unknown) => err)
+    expect(error).toBeInstanceOf(PermanentDeliveryError)
+    if (error instanceof PermanentDeliveryError) {
+      expect(error.providerStatus).toBe(403)
+    }
+  })
+
+  it.each([429, 500, 503])(
+    'classifies Cloudflare REST %i as TransientDeliveryError',
+    async (status) => {
+      prismaMock.user.findUnique.mockResolvedValue({
+        email: 'bob@example.com',
+        emailVerified: true,
+      } as never)
+      sendEmailMock.mockRejectedValueOnce(
+        Object.assign(
+          new Error(`Cloudflare Email Sending failed (HTTP ${status})`),
+          {
+            code: `CF_HTTP_${status}`,
+            responseCode: status,
+            provider: 'cloudflare-email',
+          },
+        ),
+      )
+
+      await expect(
+        emailSender.send({
+          deliveryId: `delivery-cf-${status}`,
+          snapshot: buildExpenseCreatedSnapshot(),
+          recipientAccountId: 'acct-bob',
+        }),
+      ).rejects.toBeInstanceOf(TransientDeliveryError)
+    },
+  )
+
+  it('classifies Cloudflare REST network failures as TransientDeliveryError', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({
+      email: 'bob@example.com',
+      emailVerified: true,
+    } as never)
+    sendEmailMock.mockRejectedValueOnce(
+      Object.assign(new Error('Cloudflare Email Sending failed'), {
+        code: 'CF_NETWORK',
+        provider: 'cloudflare-email',
+      }),
+    )
+
+    await expect(
+      emailSender.send({
+        deliveryId: 'delivery-cf-network',
+        snapshot: buildExpenseCreatedSnapshot(),
+        recipientAccountId: 'acct-bob',
+      }),
+    ).rejects.toBeInstanceOf(TransientDeliveryError)
+  })
+
   it('redacts long SMTP error messages before throwing', async () => {
     prismaMock.user.findUnique.mockResolvedValue({
       email: 'bob@example.com',

@@ -191,9 +191,10 @@ ignored by Git.
 1. Download `compose.yaml` and `container.env.example`, or clone this
    repository.
 2. Copy `container.env.example` to `container.env`.
-3. Set `APP_URL`, `POSTGRES_PASSWORD`, `BETTER_AUTH_SECRET`, the SMTP settings,
-   `EMAIL_FROM`, and `EMAIL_UNSUBSCRIBE_SECRET` (SMTP settings are optional when
-   `ENABLE_EMAIL_AUTH=false`).
+3. Set `APP_URL`, `POSTGRES_PASSWORD`, `BETTER_AUTH_SECRET`, the email delivery
+   settings (SMTP, or Cloudflare Email Sending via `CF_EMAIL_*` on hosts that
+   filter SMTP ports), `EMAIL_FROM`, and `EMAIL_UNSUBSCRIBE_SECRET` (delivery
+   settings are optional when `ENABLE_EMAIL_AUTH=false`).
 4. Start the stack:
 
    ```bash
@@ -241,8 +242,8 @@ Key requirements for a public instance:
 - `EMAIL_UNSUBSCRIBE_SECRET` generated with `openssl rand -hex 32`
 - HTTPS on the configured `APP_URL`
 - persistent PostgreSQL storage with off-server backups
-- working SMTP and correctly configured SPF/DKIM/DMARC (required unless the
-  instance is SSO-only with `ENABLE_EMAIL_AUTH=false` and no SMTP configured —
+- working email delivery and correctly configured SPF/DKIM/DMARC (required unless the
+  instance is SSO-only with `ENABLE_EMAIL_AUTH=false` and no delivery configured —
   see [docs/deployment.md](./docs/deployment.md))
 - only the web gateway reachable publicly
 - tested database restore procedure
