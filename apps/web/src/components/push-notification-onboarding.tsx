@@ -1,4 +1,3 @@
-import { useNavigate } from '@tanstack/react-router'
 import { BellRing, Mail, Smartphone } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -29,6 +28,7 @@ export const PUSH_ONBOARDING_ACTIVE_KEY = 'spliit-push-onboarding-active'
 export const PUSH_ONBOARDING_COMPLETE_PREFIX =
   'spliit-push-onboarding-complete:'
 export const PUSH_ONBOARDING_COMPLETE_EVENT = 'spliit:push-onboarding-complete'
+export const PUSH_AUTO_REQUEST_PREFIX = 'spliit-push-auto-requested:'
 const PUSH_ONBOARDING_ACTIVE_TTL_MS = 10_000
 const PUSH_ONBOARDING_ACTIVE_REFRESH_MS = 3_000
 
@@ -60,11 +60,23 @@ function recordCompleted(accountId: string) {
   }
 }
 
-export function clearPushOnboardingCompletion(accountId: string) {
+function autoRequestKey(accountId: string) {
+  return `${PUSH_AUTO_REQUEST_PREFIX}${accountId}`
+}
+
+function hasAutoRequested(accountId: string) {
   try {
-    localStorage.removeItem(completionKey(accountId))
+    return localStorage.getItem(autoRequestKey(accountId)) === 'true'
   } catch {
-    // A blocked storage API must not prevent logout.
+    return false
+  }
+}
+
+function recordAutoRequested(accountId: string) {
+  try {
+    localStorage.setItem(autoRequestKey(accountId), 'true')
+  } catch {
+    // A blocked storage API must not trigger repeated permission prompts.
   }
 }
 
@@ -134,21 +146,16 @@ function tryAcquireActive(token: string) {
   return readActive()?.token === token
 }
 
-type OnboardingMode = 'initial' | 'device' | 'email-only-device'
 type OnboardingResult = 'denied' | 'failed'
 
 type PreferenceData = {
   hasExplicitPreferences: boolean
-  categories: Array<{
-    category: string
-    effectiveChannels?: NotificationChannel[]
-  }>
+  hasPushTargets: boolean
 }
 
-/** Presents account-level delivery setup once per signed-in account/browser. */
+/** Presents account-level delivery setup once for new accounts. */
 export function PushNotificationOnboarding() {
   const { t } = useTranslation()
-  const navigate = useNavigate()
   const { data: account, isPending: accountPending } = useCurrentAccount()
   const timeZoneCheck = useStartupTimeZoneCheck()
   const push = usePushNotifications()
@@ -165,6 +172,7 @@ export function PushNotificationOnboarding() {
   const [coordinationVersion, setCoordinationVersion] = useState(0)
   const activeToken = useRef<string | null>(null)
   const enableAttempt = useRef<object | null>(null)
+  const autoAttempt = useRef<object | null>(null)
 
   const accountId = account?.id
   useEffect(() => {
@@ -177,6 +185,7 @@ export function PushNotificationOnboarding() {
     // oxlint-enable react/set-state-in-effect
     return () => {
       enableAttempt.current = null
+      autoAttempt.current = null
     }
   }, [accountId])
   // Instance-level delivery state. When email cannot be delivered, the modal
@@ -184,24 +193,10 @@ export function PushNotificationOnboarding() {
   // but push becomes the only working channel.
   const emailDeliveryDisabled =
     useDeploymentConfig().emailDeliveryEnabled === false
-  const mode = useMemo<OnboardingMode | null>(() => {
+  const isInitial = useMemo(() => {
     const data = preferences.data as PreferenceData | undefined
-    if (!data) return null
-    if (!data.hasExplicitPreferences) return 'initial'
-    const activeCategories = data.categories.filter((category) =>
-      (ACTIVE_NOTIFICATION_CATEGORIES as readonly string[]).includes(
-        category.category,
-      ),
-    )
-    const hasPushChoice = activeCategories.some((category) =>
-      category.effectiveChannels?.includes(NotificationChannel.PUSH),
-    )
-    if (hasPushChoice) return 'device'
-    const hasEmailChoice = activeCategories.some((category) =>
-      category.effectiveChannels?.includes(NotificationChannel.EMAIL),
-    )
-    if (!hasEmailChoice) return null
-    return 'email-only-device'
+    if (!data) return false
+    return !data.hasExplicitPreferences
   }, [preferences.data])
   const eligible = useMemo(
     () =>
@@ -212,7 +207,7 @@ export function PushNotificationOnboarding() {
       !needsDisplayName(account) &&
       !preferences.isPending &&
       !preferences.isError &&
-      !!mode &&
+      isInitial &&
       push.supported &&
       push.configured &&
       !push.iosHomeScreenRequired &&
@@ -224,7 +219,7 @@ export function PushNotificationOnboarding() {
       accountPending,
       timeZoneCheck.checked,
       timeZoneCheck.promptActive,
-      mode,
+      isInitial,
       preferences.isError,
       preferences.isPending,
       push,
@@ -234,6 +229,37 @@ export function PushNotificationOnboarding() {
       result,
     ],
   )
+  const autoEligible = useMemo(() => {
+    const data = preferences.data as PreferenceData | undefined
+    if (!data) return false
+    if (!data.hasExplicitPreferences) return false
+    if (!data.hasPushTargets) return false
+    return (
+      !!accountId &&
+      timeZoneCheck.checked &&
+      !timeZoneCheck.promptActive &&
+      !accountPending &&
+      !needsDisplayName(account) &&
+      !preferences.isPending &&
+      !preferences.isError &&
+      push.supported &&
+      push.configured &&
+      !push.iosHomeScreenRequired &&
+      !push.enabled &&
+      !push.isLoading &&
+      push.permission !== 'denied'
+    )
+  }, [
+    account,
+    accountId,
+    accountPending,
+    timeZoneCheck.checked,
+    timeZoneCheck.promptActive,
+    preferences.data,
+    preferences.isError,
+    preferences.isPending,
+    push,
+  ])
 
   useEffect(() => {
     if (!eligible || !accountId || hasCompleted(accountId)) return
@@ -269,6 +295,25 @@ export function PushNotificationOnboarding() {
       if (activeToken.current === token) activeToken.current = null
     }
   }, [accountId, coordinationVersion, eligible])
+
+  // Returning push users get a silent native permission request on a new
+  // device, once per browser. Denial or failure is suppressed forever;
+  // Settings remains the place to enable later. Email-only accounts
+  // (hasPushTargets=false) are never prompted.
+  useEffect(() => {
+    if (!autoEligible || !accountId) return
+    if (hasAutoRequested(accountId)) return
+    if (autoAttempt.current) return
+    const attempt = {}
+    autoAttempt.current = attempt
+    recordAutoRequested(accountId)
+    void push
+      .enable()
+      .catch(() => undefined)
+      .finally(() => {
+        if (autoAttempt.current === attempt) autoAttempt.current = null
+      })
+  }, [accountId, autoEligible, push])
 
   const releaseActive = useCallback(() => {
     if (!activeToken.current) return
@@ -315,7 +360,7 @@ export function PushNotificationOnboarding() {
   }, [accountId, saveChannels])
 
   const chooseEmail = useCallback(async () => {
-    if (mode !== 'initial' || emailDeliveryDisabled) return
+    if (!isInitial || emailDeliveryDisabled) return
     setPreferenceError(false)
     try {
       await saveEmailPreference()
@@ -323,7 +368,7 @@ export function PushNotificationOnboarding() {
     } catch {
       setPreferenceError(true)
     }
-  }, [emailDeliveryDisabled, finishAndClose, mode, saveEmailPreference])
+  }, [emailDeliveryDisabled, finishAndClose, isInitial, saveEmailPreference])
 
   const dismiss = useCallback(() => {
     finishAndClose()
@@ -357,7 +402,7 @@ export function PushNotificationOnboarding() {
   }, [accountId, releaseActive])
 
   async function enable() {
-    if (!mode || enableAttempt.current) return
+    if (!isInitial || enableAttempt.current) return
     const attempt = {}
     enableAttempt.current = attempt
     const isCurrentAttempt = () => enableAttempt.current === attempt
@@ -380,7 +425,7 @@ export function PushNotificationOnboarding() {
       }
       if (!isCurrentAttempt()) return
       try {
-        if (mode === 'initial') await saveRecommendedPreferences()
+        await saveRecommendedPreferences()
       } catch {
         if (!isCurrentAttempt()) return
         setPreferenceError(true)
@@ -389,9 +434,6 @@ export function PushNotificationOnboarding() {
       }
       if (!isCurrentAttempt()) return
       finishAndClose()
-      if (mode === 'email-only-device') {
-        void navigate({ to: '/account/settings', hash: 'notifications' })
-      }
     } finally {
       if (isCurrentAttempt()) {
         enableAttempt.current = null
@@ -413,7 +455,7 @@ export function PushNotificationOnboarding() {
           return
         }
         if (
-          mode === 'initial' &&
+          isInitial &&
           !emailDeliveryDisabled &&
           !result &&
           !preferenceError
@@ -495,7 +537,7 @@ export function PushNotificationOnboarding() {
                     {t('PushOnboarding.pushBenefit')}
                   </p>
                 </div>
-                {mode === 'initial' ? (
+                {isInitial ? (
                   emailDeliveryDisabled ? (
                     <div className="flex min-w-0 items-start gap-3 rounded-lg border bg-muted/30 p-3">
                       <Mail
@@ -517,18 +559,6 @@ export function PushNotificationOnboarding() {
                       </p>
                     </div>
                   )
-                ) : mode === 'email-only-device' ? (
-                  <div className="flex min-w-0 items-start gap-3 rounded-lg border bg-muted/30 p-3">
-                    <Mail
-                      className="mt-0.5 h-4 w-4 shrink-0 text-primary"
-                      aria-hidden="true"
-                    />
-                    <p className="min-w-0 break-words">
-                      {emailDeliveryDisabled
-                        ? t('PushOnboarding.emailDeliveryDisabled')
-                        : t('PushOnboarding.emailUsage')}
-                    </p>
-                  </div>
                 ) : null}
                 <p className="text-xs break-words text-muted-foreground">
                   {t('PushOnboarding.settingsHint')}
@@ -540,7 +570,7 @@ export function PushNotificationOnboarding() {
                   variant="outline"
                   className="max-w-full whitespace-normal"
                   onClick={() =>
-                    mode === 'initial' && !emailDeliveryDisabled
+                    isInitial && !emailDeliveryDisabled
                       ? void chooseEmail()
                       : dismiss()
                   }
@@ -548,7 +578,7 @@ export function PushNotificationOnboarding() {
                 >
                   {preferenceError
                     ? t('AccountSettings.notifications.retry')
-                    : mode === 'initial' && !emailDeliveryDisabled
+                    : isInitial && !emailDeliveryDisabled
                       ? t('PushOnboarding.useEmail')
                       : t('InstallPromotion.dismiss')}
                 </Button>

@@ -10,7 +10,6 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AccountAvatar } from '@/components/account-avatar'
-import { clearPushOnboardingCompletion } from '@/components/push-notification-onboarding'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -65,7 +64,6 @@ export function AccountMenu() {
     return null
   }
   const currentAccount = account
-  const accountId = account.id
 
   const accountTrigger = (
     <button
@@ -82,8 +80,7 @@ export function AccountMenu() {
     setSigningOut(true)
     setSignOutError(false)
     try {
-      const disconnected = await disconnectPushSubscription()
-      if (disconnected) clearPushOnboardingCompletion(accountId)
+      await disconnectPushSubscription()
       const result = await authClient.signOut()
       if (result?.error) throw new Error(result.error.message)
       clearLastAccount()

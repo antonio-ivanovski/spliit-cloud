@@ -8,13 +8,11 @@ import { render, screen, waitFor } from '@/test/test-utils'
 // ── Module mocks ────────────────────────────────────────────────────────
 
 const {
-  mockClearPushOnboardingCompletion,
   mockDisconnectPushSubscription,
   mockReplaceLocation,
   mockSignOut,
   mockToast,
 } = vi.hoisted(() => ({
-  mockClearPushOnboardingCompletion: vi.fn(),
   mockDisconnectPushSubscription: vi.fn(),
   mockReplaceLocation: vi.fn(),
   mockSignOut: vi
@@ -54,10 +52,6 @@ vi.mock('@/lib/use-current-account', () => ({
 
 vi.mock('@/lib/push-notifications', () => ({
   disconnectPushSubscription: mockDisconnectPushSubscription,
-}))
-
-vi.mock('@/components/push-notification-onboarding', () => ({
-  clearPushOnboardingCompletion: mockClearPushOnboardingCompletion,
 }))
 
 // ── Tests ───────────────────────────────────────────────────────────────
@@ -200,7 +194,7 @@ describe('AccountMenu', () => {
     await waitFor(() => expect(mockReplaceLocation).toHaveBeenCalledWith('/'))
   })
 
-  it('clears push onboarding completion when logout disconnects a device', async () => {
+  it('disconnects the device push subscription on sign out', async () => {
     mockDisconnectPushSubscription.mockResolvedValue(true)
     const user = userEvent.setup()
 
@@ -224,33 +218,7 @@ describe('AccountMenu', () => {
     await user.click(screen.getByRole('button', { name: /account/i }))
     await user.click(screen.getByText('Sign out'))
 
-    expect(mockClearPushOnboardingCompletion).toHaveBeenCalledWith('user-1')
-  })
-
-  it('keeps push onboarding completion when no device was connected', async () => {
-    const user = userEvent.setup()
-
-    vi.mocked(useCurrentAccount).mockReturnValue({
-      data: {
-        id: 'user-1',
-        name: 'Alice',
-        email: 'alice@example.com',
-        image: null,
-        emailVerified: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      isPending: false,
-      isRefetching: false,
-      error: null,
-      refetch: vi.fn(),
-    })
-
-    render(<AccountMenu />)
-    await user.click(screen.getByRole('button', { name: /account/i }))
-    await user.click(screen.getByText('Sign out'))
-
-    expect(mockClearPushOnboardingCompletion).not.toHaveBeenCalled()
+    expect(mockDisconnectPushSubscription).toHaveBeenCalled()
   })
 
   it('confirms anonymous sign-out with the app dialog', async () => {

@@ -34,6 +34,7 @@ who is affected, and the exact migration steps.
 - Hardened the privacy notice with data categories, purposes, recipients, retention, connected-application disclosure, and user controls (`TBD` by @TBD)
 - Delete your account from a dedicated review page, with a 48-hour cancellation period while your account stays active (`TBD` by @TBD)
 - Curated Updates now introduce selected releases once per account and keep past announcements in an in-app archive. Spliit Cloud news email can be switched off in notification settings or from any campaign email. (`TBD` by @TBD)
+- Push setup is quieter: new accounts see the “Choose how to stay up to date” choice once, returning push users get a one-time native permission prompt on a new device instead of the full modal, and email-only accounts are never nagged outside Settings. (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
 
