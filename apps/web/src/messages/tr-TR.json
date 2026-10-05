@@ -4547,5 +4547,11 @@
     "review": "Silme işlemini incele veya iptal et",
     "executing": "Hesap silme işlemi başladı.",
     "viewStatus": "Silme durumunu görüntüle"
+  },
+  "Updates": {
+    "title": "Güncellemeler",
+    "latest": "Yenilikler",
+    "viewAll": "Tüm güncellemeleri görün",
+    "dismiss": "Anladım"
   }
 }

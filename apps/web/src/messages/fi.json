@@ -4539,5 +4539,11 @@
     "review": "Tarkista tai peruuta poistaminen",
     "executing": "Tilin poistaminen on alkanut.",
     "viewStatus": "Näytä poistamisen tila"
+  },
+  "Updates": {
+    "title": "Päivitykset",
+    "latest": "Uutta",
+    "viewAll": "Näytä kaikki päivitykset",
+    "dismiss": "Selvä"
   }
 }

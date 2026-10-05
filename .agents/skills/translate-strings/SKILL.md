@@ -104,6 +104,19 @@ Follow `mode`: `noop` | `oneshot` (you translate) | `single` (one Task) | `paral
 
 ---
 
+## Announcements (`packages/domain/src/announcements/<id>/<locale>.md`)
+
+Whole-file translations, not key batches — the `bun i18n` CLI does not track
+these files. For each owned locale, author `<locale>.md` next to `en-US.md`:
+
+- Read `scripts/i18n/guides/default.md` plus the owned locale guide(s) first.
+- Copy the frontmatter `id`, `date`, `inApp`, `email` verbatim; translate only `title`.
+- Translate the body preserving structure (same headings, lists, link positions); link URLs stay verbatim, link labels are translated. Body nodes are constrained to headings, paragraphs, lists, bold/italic, and links — no images or HTML.
+- Keep the heading order and count identical to en-US: section anchor ids are derived from the en-US headings, so fragments stay the same in every locale. Never add, remove, merge, or reorder headings.
+- Validate with `bun scripts/generate-announcement-content.ts --check` (fails on missing locales or frontmatter/body violations).
+
+---
+
 ## CLI cheat sheet
 
 ```bash

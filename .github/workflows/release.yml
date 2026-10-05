@@ -71,6 +71,17 @@ jobs:
           fi
           echo "No placeholders left"
 
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+
+      - name: Validate announcement content
+        run: |
+          bun install --frozen-lockfile
+          bun scripts/generate-announcement-content.ts --check
+          bun i18n check
+
   # The tag push and the `main` push of the release commit fire CI and this
   # workflow in parallel. Block everything below until CI is green on the
   # exact tagged commit, so a single fire-and-forget
@@ -191,6 +202,7 @@ jobs:
           platforms: linux/${{ matrix.arch }}
           build-args: |
             APP_SCOPE=${{ matrix.scope }}
+            VITE_BUILD_SHA=${{ needs.validate-notes.outputs.sha }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

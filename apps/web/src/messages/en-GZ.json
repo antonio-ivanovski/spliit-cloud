@@ -4531,5 +4531,11 @@
     "review": "review or cancel deletion",
     "executing": "account deletion has started.",
     "viewStatus": "view deletion status"
+  },
+  "Updates": {
+    "title": "updates",
+    "latest": "what's new",
+    "viewAll": "see all updates",
+    "dismiss": "got it"
   }
 }

@@ -55,6 +55,7 @@ export const featuresRouter = createTRPCRouter({
          */
         passkeyFreshAgeSeconds: z.number().int().nonnegative(),
         emailDeliveryEnabled: z.boolean(),
+        cloudNewsEnabled: z.boolean(),
       }),
     )
     .query(async () => {
@@ -89,6 +90,7 @@ export const featuresRouter = createTRPCRouter({
         enablePasskeyAuth: isPasskeyAuthEnabled(),
         passkeyFreshAgeSeconds: SESSION_FRESH_AGE_SECONDS,
         emailDeliveryEnabled: isEmailDeliveryEnabled(),
+        cloudNewsEnabled: env.CLOUD_NEWS_ENABLED,
       }
     }),
 })

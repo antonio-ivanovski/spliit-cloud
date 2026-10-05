@@ -4620,5 +4620,11 @@
     "review": "Revisa o cancela la eliminación",
     "executing": "La eliminación de la cuenta ha comenzado.",
     "viewStatus": "Ver el estado de la eliminación"
+  },
+  "Updates": {
+    "title": "Actualizaciones",
+    "latest": "Novedades",
+    "viewAll": "Ver todas las actualizaciones",
+    "dismiss": "Entendido"
   }
 }

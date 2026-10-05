@@ -1,3 +1,4 @@
+import { processAnnouncementCampaigns } from '@spliit/api/lib/announcements/process'
 import { processCategorizationJob } from '@spliit/api/lib/api/bulk-categorization-run'
 import {
   materializeRecurringExpense,
@@ -18,6 +19,9 @@ import { JOB_NAMES, sendJob, type JobHandlers } from '@spliit/jobs'
 import { handleNotificationDelivery } from './notification-delivery'
 
 export const handlers: JobHandlers = {
+  [JOB_NAMES.ANNOUNCEMENT_PROCESS]: async () => {
+    await processAnnouncementCampaigns()
+  },
   [JOB_NAMES.BULK_CATEGORIZE]: async (payload) => {
     await processCategorizationJob(
       payload.runId,

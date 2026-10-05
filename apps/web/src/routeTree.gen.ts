@@ -21,6 +21,7 @@ import { Route as SponsorRouteImport } from './routes/sponsor'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
+import { Route as UpdatesRouteImport } from './routes/updates'
 import { Route as AccountDeleteRouteImport } from './routes/account/delete'
 import { Route as AccountSettingsRouteImport } from './routes/account/settings'
 import { Route as AuthCompleteProfileRouteImport } from './routes/auth/complete-profile'
@@ -115,6 +116,11 @@ const UnsubscribeRoute = UnsubscribeRouteImport.update({
   path: '/unsubscribe',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/unsubscribe.lazy').then((d) => d.Route))
+const UpdatesRoute = UpdatesRouteImport.update({
+  id: '/updates',
+  path: '/updates',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/updates.lazy').then((d) => d.Route))
 const AccountDeleteRoute = AccountDeleteRouteImport.update({
   id: '/account/delete',
   path: '/account/delete',
@@ -392,6 +398,7 @@ export interface FileRoutesByFullPath {
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/unsubscribe': typeof UnsubscribeRoute
+  '/updates': typeof UpdatesRoute
   '/groups/$groupId': typeof GroupsGroupIdRouteRouteWithChildren
   '/account/delete': typeof AccountDeleteRoute
   '/account/settings': typeof AccountSettingsRoute
@@ -440,6 +447,7 @@ export interface FileRoutesByTo {
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/unsubscribe': typeof UnsubscribeRoute
+  '/updates': typeof UpdatesRoute
   '/account/delete': typeof AccountDeleteRoute
   '/account/settings': typeof AccountSettingsRoute
   '/auth/complete-profile': typeof AuthCompleteProfileRoute
@@ -485,6 +493,7 @@ export interface FileRoutesById {
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/unsubscribe': typeof UnsubscribeRoute
+  '/updates': typeof UpdatesRoute
   '/groups/$groupId': typeof GroupsGroupIdRouteRouteWithChildren
   '/account/delete': typeof AccountDeleteRoute
   '/account/settings': typeof AccountSettingsRoute
@@ -535,6 +544,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/terms'
     | '/unsubscribe'
+    | '/updates'
     | '/groups/$groupId'
     | '/account/delete'
     | '/account/settings'
@@ -583,6 +593,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/terms'
     | '/unsubscribe'
+    | '/updates'
     | '/account/delete'
     | '/account/settings'
     | '/auth/complete-profile'
@@ -627,6 +638,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/terms'
     | '/unsubscribe'
+    | '/updates'
     | '/groups/$groupId'
     | '/account/delete'
     | '/account/settings'
@@ -676,6 +688,7 @@ export interface RootRouteChildren {
   SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
+  UpdatesRoute: typeof UpdatesRoute
   AccountDeleteRoute: typeof AccountDeleteRoute
   AccountSettingsRoute: typeof AccountSettingsRoute
   AuthCompleteProfileRoute: typeof AuthCompleteProfileRoute
@@ -758,6 +771,13 @@ declare module '@tanstack/react-router' {
       path: '/unsubscribe'
       fullPath: '/unsubscribe'
       preLoaderRoute: typeof UnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/updates': {
+      id: '/updates'
+      path: '/updates'
+      fullPath: '/updates'
+      preLoaderRoute: typeof UpdatesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account/delete': {
@@ -1130,6 +1150,7 @@ const rootRouteChildren: RootRouteChildren = {
   SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
   UnsubscribeRoute: UnsubscribeRoute,
+  UpdatesRoute: UpdatesRoute,
   AccountDeleteRoute: AccountDeleteRoute,
   AccountSettingsRoute: AccountSettingsRoute,
   AuthCompleteProfileRoute: AuthCompleteProfileRoute,

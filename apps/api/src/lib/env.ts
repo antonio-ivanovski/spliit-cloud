@@ -97,6 +97,10 @@ const optionalString = z.preprocess(
 const envSchema = z
   .object({
     NODE_ENV: optionalString,
+    CLOUD_NEWS_ENABLED: z.preprocess(
+      interpretEnvVarAsBool,
+      z.boolean().default(false),
+    ),
     PORT: z.coerce.number().int().positive().default(3001),
     WEB_ORIGINS: z.preprocess(
       normalizeWebOrigins,

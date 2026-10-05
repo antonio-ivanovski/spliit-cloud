@@ -11,6 +11,8 @@ import {
   ACCOUNT_DELETION_EXECUTE_DLQ,
   ACCOUNT_DELETION_EXECUTE_QUEUE,
   ANONYMOUS_ACCOUNT_CLEANUP_DLQ,
+  ANNOUNCEMENT_PROCESS_DLQ,
+  ANNOUNCEMENT_PROCESS_QUEUE,
   ANONYMOUS_ACCOUNT_CLEANUP_QUEUE,
   jobPayloadSchema,
   NOTIFICATION_CLEANUP_DLQ,
@@ -76,6 +78,12 @@ export const JOB_SEND_OPTIONS = {
     expireInSeconds: NOTIFICATION_MAINTENANCE_EXPIRE_SECONDS,
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
     deadLetter: NOTIFICATION_CLEANUP_DLQ,
+  },
+  [ANNOUNCEMENT_PROCESS_QUEUE]: {
+    retryLimit: 0,
+    expireInSeconds: 1800,
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+    deadLetter: ANNOUNCEMENT_PROCESS_DLQ,
   },
   [WEBHOOK_DELIVER_QUEUE]: {
     retryLimit: 8,
@@ -159,6 +167,11 @@ export const JOB_QUEUE_OPTIONS = {
     ...JOB_SEND_OPTIONS[NOTIFICATION_CLEANUP_QUEUE],
     notify: true,
   },
+  [ANNOUNCEMENT_PROCESS_QUEUE]: {
+    ...JOB_SEND_OPTIONS[ANNOUNCEMENT_PROCESS_QUEUE],
+    policy: 'exclusive',
+    notify: true,
+  },
   [WEBHOOK_DELIVER_QUEUE]: {
     ...JOB_SEND_OPTIONS[WEBHOOK_DELIVER_QUEUE],
     policy: 'exclusive',
@@ -219,6 +232,10 @@ export const JOB_WORK_OPTIONS = {
     pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
   },
   [NOTIFICATION_CLEANUP_QUEUE]: {
+    localConcurrency: 1,
+    pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
+  },
+  [ANNOUNCEMENT_PROCESS_QUEUE]: {
     localConcurrency: 1,
     pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
   },
@@ -360,6 +377,9 @@ export async function ensureQueues(boss: SpliitBoss): Promise<void> {
   await createOrConvergeQueue(boss, NOTIFICATION_CLEANUP_DLQ, {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
   })
+  await createOrConvergeQueue(boss, ANNOUNCEMENT_PROCESS_DLQ, {
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+  })
   await createOrConvergeQueue(boss, ANONYMOUS_ACCOUNT_CLEANUP_DLQ, {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
   })
@@ -415,6 +435,11 @@ export async function ensureQueues(boss: SpliitBoss): Promise<void> {
     boss,
     NOTIFICATION_CLEANUP_QUEUE,
     JOB_QUEUE_OPTIONS[NOTIFICATION_CLEANUP_QUEUE],
+  )
+  await createOrConvergeQueue(
+    boss,
+    ANNOUNCEMENT_PROCESS_QUEUE,
+    JOB_QUEUE_OPTIONS[ANNOUNCEMENT_PROCESS_QUEUE],
   )
   await createOrConvergeQueue(
     boss,

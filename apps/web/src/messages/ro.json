@@ -4574,5 +4574,11 @@
     "review": "Verifică sau anulează ștergerea",
     "executing": "Ștergerea contului a început.",
     "viewStatus": "Vezi starea ștergerii"
+  },
+  "Updates": {
+    "title": "Actualizări",
+    "latest": "Noutăți",
+    "viewAll": "Vezi toate actualizările",
+    "dismiss": "Am înțeles"
   }
 }

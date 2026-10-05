@@ -4535,5 +4535,11 @@
     "review": "Granska eller avbryt raderingen",
     "executing": "Kontoraderingen har börjat.",
     "viewStatus": "Visa raderingsstatus"
+  },
+  "Updates": {
+    "title": "Uppdateringar",
+    "latest": "Nytt",
+    "viewAll": "Visa alla uppdateringar",
+    "dismiss": "Okej"
   }
 }

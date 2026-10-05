@@ -4604,5 +4604,11 @@
     "review": "삭제 내용 검토 또는 취소",
     "executing": "계정 삭제가 시작되었습니다.",
     "viewStatus": "삭제 상태 보기"
+  },
+  "Updates": {
+    "title": "업데이트",
+    "latest": "새로운 소식",
+    "viewAll": "모든 업데이트 보기",
+    "dismiss": "알겠습니다"
   }
 }

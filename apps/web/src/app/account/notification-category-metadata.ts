@@ -89,7 +89,6 @@ export const NOTIFICATION_ROWS = {
       category: NotificationCategory.PRODUCT_UPDATES,
       titleKey: 'rows.cloudNews.title',
       descriptionKey: 'rows.cloudNews.description',
-      comingSoon: true,
     },
   ],
 } as const satisfies Record<string, readonly NotificationRow[]>

@@ -4567,5 +4567,11 @@
     "review": "Berrikusi edo bertan behera utzi ezabatzea",
     "executing": "Kontua ezabatzen hasi da.",
     "viewStatus": "Ikusi ezabatzearen egoera"
+  },
+  "Updates": {
+    "title": "Eguneraketak",
+    "latest": "Zer berri",
+    "viewAll": "Ikusi eguneratze guztiak",
+    "dismiss": "Ados"
   }
 }

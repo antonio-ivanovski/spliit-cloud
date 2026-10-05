@@ -4642,5 +4642,11 @@
     "review": "Review or cancel deletion",
     "executing": "Account deletion has started.",
     "viewStatus": "View deletion status"
+  },
+  "Updates": {
+    "title": "Updates",
+    "latest": "What's new",
+    "viewAll": "See all updates",
+    "dismiss": "Got it"
   }
 }

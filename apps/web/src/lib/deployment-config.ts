@@ -22,6 +22,7 @@ type BaseDeploymentConfig = Pick<
 >
 
 export type DeploymentConfig = BaseDeploymentConfig & {
+  cloudNewsEnabled: boolean
   /**
    * Whether the instance can deliver email. `null` while the features query has
    * not resolved (or offline) — consumers must treat unknown as neutral: no
@@ -53,6 +54,7 @@ function getBuildTimeFallback(): DeploymentConfig {
     // value wins.
     passkeyFreshAgeSeconds: 30 * 24 * 60 * 60,
     emailDeliveryEnabled: null,
+    cloudNewsEnabled: false,
     maxExpenseDocumentSize: MAX_EXPENSE_DOCUMENT_SIZE,
   }
 }
@@ -75,6 +77,7 @@ export function useDeploymentConfig(): DeploymentConfig {
       enablePasskeyAuth,
       passkeyFreshAgeSeconds,
       emailDeliveryEnabled,
+      cloudNewsEnabled,
       maxExpenseDocumentSize,
     }): DeploymentConfig => ({
       defaultCurrencyCode,
@@ -89,6 +92,7 @@ export function useDeploymentConfig(): DeploymentConfig {
       enablePasskeyAuth,
       passkeyFreshAgeSeconds,
       emailDeliveryEnabled,
+      cloudNewsEnabled,
       maxExpenseDocumentSize,
     }),
     staleTime: Infinity,

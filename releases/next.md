@@ -33,6 +33,7 @@ who is affected, and the exact migration steps.
 - Activity tab is now personal: expense rows show your share (`Your share:`) or `You are not involved`, and a `For you / All` toggle with inline `N hidden activities not involving you` rows mirrors the expenses timeline. Past activity rows were backfilled with participant data where recoverable. Thanks @KihtrakRaknas for opening [#150](https://github.com/antonio-ivanovski/spliit-cloud/issues/150) (`TBD` by @TBD)
 - Hardened the privacy notice with data categories, purposes, recipients, retention, connected-application disclosure, and user controls (`TBD` by @TBD)
 - Delete your account from a dedicated review page, with a 48-hour cancellation period while your account stays active (`TBD` by @TBD)
+- Curated Updates now introduce selected releases once per account and keep past announcements in an in-app archive. Spliit Cloud news email can be switched off in notification settings or from any campaign email. (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
 

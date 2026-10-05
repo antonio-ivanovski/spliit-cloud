@@ -4593,5 +4593,11 @@
     "review": "Zkontrolovat nebo zrušit smazání",
     "executing": "Smazání účtu bylo zahájeno.",
     "viewStatus": "Zobrazit stav smazání"
+  },
+  "Updates": {
+    "title": "Novinky",
+    "latest": "Co je nového",
+    "viewAll": "Zobrazit všechny novinky",
+    "dismiss": "Rozumím"
   }
 }

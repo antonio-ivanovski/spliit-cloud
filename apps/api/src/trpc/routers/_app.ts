@@ -3,6 +3,7 @@ import type { inferRouterOutputs } from '@trpc/server'
 import { createTRPCRouter } from '../init'
 import { accountRouter } from './account'
 import { aiRouter } from './ai'
+import { announcementsRouter } from './announcements'
 import { assistantRouter } from './assistant'
 import { currencyRouter } from './currency'
 import { globalExpensesRouter } from './expenses'
@@ -17,6 +18,7 @@ import { webhooksRouter } from './webhooks'
 
 export const appRouter = createTRPCRouter({
   account: accountRouter,
+  announcements: announcementsRouter,
   ai: aiRouter,
   assistant: assistantRouter,
   currency: currencyRouter,

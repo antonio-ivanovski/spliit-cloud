@@ -61,6 +61,8 @@ model User {
   pushSubscriptions             PushSubscription[]
   notificationPreferences       AccountNotificationPreference[]
   notificationDeliveries        NotificationDelivery[]
+  announcementViews             AnnouncementView[]
+  announcementEmailDeliveries   AnnouncementEmailDelivery[]
   webhookEndpoints              WebhookEndpoint[]
   anonymousRecoveryCredential   AnonymousRecoveryCredential?
   passkeys                      Passkey[]
@@ -205,6 +207,44 @@ model AccountNotificationPreference {
 
   @@unique([accountId, category])
   @@index([accountId])
+}
+
+model AnnouncementView {
+  account   User     @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String
+  announcementId String
+  viewedAt DateTime @default(now())
+
+  @@id([accountId, announcementId])
+  @@index([announcementId])
+}
+
+model AnnouncementCampaign {
+  id          String   @id
+  status      String   @default("PLANNING")
+  cursor      String?
+  preparedAt  DateTime?
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deliveries  AnnouncementEmailDelivery[]
+}
+
+model AnnouncementEmailDelivery {
+  id             String   @id
+  campaign       AnnouncementCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  campaignId     String
+  account        User     @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId      String
+  status         String   @default("PENDING")
+  attempts       Int      @default(0)
+  sentAt         DateTime?
+  lastError      String?  @db.Text
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([campaignId, accountId])
+  @@index([status])
 }
 
 model Account {

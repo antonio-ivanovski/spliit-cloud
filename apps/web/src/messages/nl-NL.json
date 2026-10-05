@@ -4611,5 +4611,11 @@
     "review": "Verwijdering bekijken of annuleren",
     "executing": "Het verwijderen van je account is begonnen.",
     "viewStatus": "Verwijderingsstatus bekijken"
+  },
+  "Updates": {
+    "title": "Nieuws",
+    "latest": "Wat is er nieuw",
+    "viewAll": "Alle updates bekijken",
+    "dismiss": "Begrepen"
   }
 }

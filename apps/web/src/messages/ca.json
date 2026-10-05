@@ -4569,5 +4569,11 @@
     "review": "Revisa o cancel·la l'eliminació",
     "executing": "L'eliminació del compte ha començat.",
     "viewStatus": "Mostra l'estat de l'eliminació"
+  },
+  "Updates": {
+    "title": "Actualitzacions",
+    "latest": "Novetats",
+    "viewAll": "Mostra totes les actualitzacions",
+    "dismiss": "Entesos"
   }
 }

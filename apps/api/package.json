@@ -10,6 +10,7 @@
     "./lib/api/activities": "./src/lib/api/activities.ts",
     "./lib/api/recurrence-series": "./src/lib/api/recurrence-series.ts",
     "./lib/api/bulk-categorization-run": "./src/lib/api/bulk-categorization-run.ts",
+    "./lib/announcements/process": "./src/lib/announcements/process.ts",
     "./lib/auth/anonymous-account-cleanup": "./src/lib/auth/anonymous-account-cleanup.ts",
     "./lib/auth/account-deletion": "./src/lib/auth/account-deletion.ts",
     "./lib/report/format": "./src/lib/report/format.ts",

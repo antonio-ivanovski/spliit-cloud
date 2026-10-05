@@ -6,6 +6,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./account-preferences": "./src/account-preferences.ts",
+    "./announcements": "./src/announcements.ts",
+    "./announcements/markdown": "./src/announcements/markdown.ts",
     "./activities": "./src/activities/index.ts",
     "./balances": "./src/balances.ts",
     "./currency": "./src/currency.ts",

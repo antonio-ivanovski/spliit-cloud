@@ -4569,5 +4569,11 @@
     "review": "Vérifier ou annuler la suppression",
     "executing": "La suppression du compte a commencé.",
     "viewStatus": "Voir l'état de la suppression"
+  },
+  "Updates": {
+    "title": "Mises à jour",
+    "latest": "Nouveautés",
+    "viewAll": "Voir toutes les mises à jour",
+    "dismiss": "Compris"
   }
 }

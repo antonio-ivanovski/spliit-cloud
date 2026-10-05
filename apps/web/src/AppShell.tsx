@@ -31,6 +31,7 @@ import { PwaUpdatePill } from '@/components/pwa-update-pill'
 import { ThemeProvider } from '@/components/theme-provider'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Toaster } from '@/components/ui/toaster'
+import { UpdatesModal } from '@/components/updates-modal'
 import { I18nProvider } from '@/i18n/react'
 import { discardExpenseEditScrollOutside } from '@/lib/expense-edit-scroll'
 import { isFocusedMobilePath, isMobileGroupTabPath } from '@/lib/mobile-nav'
@@ -145,6 +146,7 @@ function Content() {
             <PwaUpdatePill />
             {isAuthRoute ? null : <PushNotificationOnboarding />}
             {isAuthRoute ? null : <InstallPromotionDialog />}
+            {isAuthRoute ? null : <UpdatesModal />}
 
             <div className="relative z-20 flex flex-1 flex-col pt-(--app-header-height)">
               <div className="sticky top-(--app-header-height) z-40 shrink-0">

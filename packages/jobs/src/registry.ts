@@ -22,6 +22,7 @@ export const jobPayloadSchemas = {
     cursor: z.string().min(1).optional(),
   }),
   'notification.cleanup': z.object({}),
+  'announcement.process': z.object({}),
   'webhook.deliver': z.object({ deliveryId: z.string().min(1) }),
   'webhook.reconcile': z.object({
     cursor: z.string().min(1).optional(),
@@ -52,6 +53,7 @@ export const JOB_NAMES = {
   NOTIFICATION_DELIVER: 'notification.deliver',
   NOTIFICATION_RECONCILE: 'notification.reconcile',
   NOTIFICATION_CLEANUP: 'notification.cleanup',
+  ANNOUNCEMENT_PROCESS: 'announcement.process',
   WEBHOOK_DELIVER: 'webhook.deliver',
   WEBHOOK_RECONCILE: 'webhook.reconcile',
   WEBHOOK_CLEANUP: 'webhook.cleanup',
@@ -74,6 +76,8 @@ export const NOTIFICATION_CLEANUP_QUEUE = JOB_NAMES.NOTIFICATION_CLEANUP
 export const NOTIFICATION_DELIVER_DLQ = `${NOTIFICATION_DELIVER_QUEUE}.dead-letter`
 export const NOTIFICATION_RECONCILE_DLQ = `${NOTIFICATION_RECONCILE_QUEUE}.dead-letter`
 export const NOTIFICATION_CLEANUP_DLQ = `${NOTIFICATION_CLEANUP_QUEUE}.dead-letter`
+export const ANNOUNCEMENT_PROCESS_QUEUE = JOB_NAMES.ANNOUNCEMENT_PROCESS
+export const ANNOUNCEMENT_PROCESS_DLQ = `${ANNOUNCEMENT_PROCESS_QUEUE}.dead-letter`
 export const WEBHOOK_DELIVER_QUEUE = JOB_NAMES.WEBHOOK_DELIVER
 export const WEBHOOK_RECONCILE_QUEUE = JOB_NAMES.WEBHOOK_RECONCILE
 export const WEBHOOK_CLEANUP_QUEUE = JOB_NAMES.WEBHOOK_CLEANUP
@@ -96,6 +100,7 @@ export const DEAD_LETTER_QUEUE_BY_SOURCE = {
   [NOTIFICATION_DELIVER_QUEUE]: NOTIFICATION_DELIVER_DLQ,
   [NOTIFICATION_RECONCILE_QUEUE]: NOTIFICATION_RECONCILE_DLQ,
   [NOTIFICATION_CLEANUP_QUEUE]: NOTIFICATION_CLEANUP_DLQ,
+  [ANNOUNCEMENT_PROCESS_QUEUE]: ANNOUNCEMENT_PROCESS_DLQ,
   [WEBHOOK_DELIVER_QUEUE]: WEBHOOK_DELIVER_DLQ,
   [WEBHOOK_RECONCILE_QUEUE]: WEBHOOK_RECONCILE_DLQ,
   [WEBHOOK_CLEANUP_QUEUE]: WEBHOOK_CLEANUP_DLQ,

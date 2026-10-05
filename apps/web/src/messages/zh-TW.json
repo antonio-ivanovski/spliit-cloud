@@ -4520,5 +4520,11 @@
     "review": "檢視或取消刪除",
     "executing": "帳戶刪除已開始。",
     "viewStatus": "查看刪除狀態"
+  },
+  "Updates": {
+    "title": "更新",
+    "latest": "最新消息",
+    "viewAll": "查看所有更新",
+    "dismiss": "知道了"
   }
 }

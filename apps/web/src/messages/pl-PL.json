@@ -4593,5 +4593,11 @@
     "review": "Sprawdź lub anuluj usunięcie",
     "executing": "Usuwanie konta rozpoczęło się.",
     "viewStatus": "Zobacz status usuwania"
+  },
+  "Updates": {
+    "title": "Aktualizacje",
+    "latest": "Co nowego",
+    "viewAll": "Zobacz wszystkie aktualizacje",
+    "dismiss": "Rozumiem"
   }
 }

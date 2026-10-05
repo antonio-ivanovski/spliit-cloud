@@ -4602,5 +4602,11 @@
     "review": "Xem lại hoặc hủy việc xóa",
     "executing": "Quá trình xóa tài khoản đã bắt đầu.",
     "viewStatus": "Xem trạng thái xóa"
+  },
+  "Updates": {
+    "title": "Bản cập nhật",
+    "latest": "Có gì mới",
+    "viewAll": "Xem tất cả bản cập nhật",
+    "dismiss": "Đã hiểu"
   }
 }

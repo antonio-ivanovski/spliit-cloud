@@ -38,6 +38,7 @@ import {
   NOTIFICATION_CATEGORIES,
   NOTIFICATION_CHANNELS,
   NotificationChannel,
+  NotificationCategory as NotificationCategoryValue,
 } from '@spliit/domain/notifications'
 
 import {
@@ -225,6 +226,43 @@ function ChannelSelector({
   )
 }
 
+function CloudNewsSettings({
+  visible,
+  checked,
+  disabled,
+  onToggle,
+}: {
+  visible: boolean
+  checked: boolean
+  disabled: boolean
+  onToggle: (enabled: boolean) => void
+}) {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: 'AccountSettings.notifications',
+  })
+  if (!visible) return null
+  return (
+    <SettingsGroup
+      id="notification-group-cloud-news"
+      title={t('rows.cloudNews.title')}
+    >
+      <SettingsFieldRow
+        id="notification-cloud-news"
+        label={t('email')}
+        description={t('rows.cloudNews.description')}
+        control={
+          <Switch
+            aria-label={t('rows.cloudNews.title')}
+            checked={checked}
+            disabled={disabled}
+            onCheckedChange={onToggle}
+          />
+        }
+      />
+    </SettingsGroup>
+  )
+}
+
 export function NotificationsPreferences() {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'AccountSettings.notifications',
@@ -252,6 +290,7 @@ export function NotificationsPreferences() {
   // they resume if SMTP returns — so the draft is never stripped here.
   const emailDeliveryDisabled =
     useDeploymentConfig().emailDeliveryEnabled === false
+  const cloudNewsEnabled = useDeploymentConfig().cloudNewsEnabled
 
   useEffect(() => {
     if (!preferences.data || initializedData.current === preferences.data)
@@ -394,7 +433,9 @@ export function NotificationsPreferences() {
   const rows = NOTIFICATION_SECTIONS.map((section) => ({
     ...section,
     title: t(`sections.${section.id}` as 'sections.groups'),
-    items: section.rows as readonly NotificationRow[],
+    items: section.rows.filter(
+      (row) => row.category !== NotificationCategoryValue.PRODUCT_UPDATES,
+    ) as readonly NotificationRow[],
   }))
 
   const comingSoonBadge = <SettingsBadge>{t('comingSoon')}</SettingsBadge>
@@ -527,6 +568,25 @@ export function NotificationsPreferences() {
             ) : null}
           </>
         ) : null}
+
+        <CloudNewsSettings
+          visible={cloudNewsEnabled}
+          checked={draft[NotificationCategoryValue.PRODUCT_UPDATES].includes(
+            NotificationChannel.EMAIL,
+          )}
+          disabled={
+            pendingCategory !== null ||
+            emailDisabled ||
+            !account?.emailVerified ||
+            emailDeliveryDisabled
+          }
+          onToggle={(enabled) =>
+            void updateCategory(
+              NotificationCategoryValue.PRODUCT_UPDATES,
+              enabled ? [NotificationChannel.EMAIL] : [],
+            )
+          }
+        />
 
         <SettingsGroup
           id="notification-group-device"

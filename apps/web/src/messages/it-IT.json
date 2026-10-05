@@ -4569,5 +4569,11 @@
     "review": "Rivedi o annulla l'eliminazione",
     "executing": "L'eliminazione dell'account è iniziata.",
     "viewStatus": "Visualizza lo stato dell'eliminazione"
+  },
+  "Updates": {
+    "title": "Aggiornamenti",
+    "latest": "Novità",
+    "viewAll": "Vedi tutti gli aggiornamenti",
+    "dismiss": "Capito"
   }
 }

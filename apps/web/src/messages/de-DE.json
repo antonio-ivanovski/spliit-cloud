@@ -4611,5 +4611,11 @@
     "review": "Löschung überprüfen oder abbrechen",
     "executing": "Die Kontolöschung hat begonnen.",
     "viewStatus": "Löschstatus anzeigen"
+  },
+  "Updates": {
+    "title": "Neuigkeiten",
+    "latest": "Was ist neu",
+    "viewAll": "Alle Neuigkeiten anzeigen",
+    "dismiss": "Verstanden"
   }
 }

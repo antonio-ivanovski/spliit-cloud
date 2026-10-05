@@ -4519,5 +4519,11 @@
     "review": "Tinjau atau batalkan penghapusan",
     "executing": "Penghapusan akun telah dimulai.",
     "viewStatus": "Lihat status penghapusan"
+  },
+  "Updates": {
+    "title": "Pembaruan",
+    "latest": "Yang baru",
+    "viewAll": "Lihat semua pembaruan",
+    "dismiss": "Mengerti"
   }
 }
