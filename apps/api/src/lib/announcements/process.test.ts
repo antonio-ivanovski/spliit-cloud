@@ -21,7 +21,10 @@ vi.mock('../notifications/unsubscribe', () => ({
   }),
 }))
 
-import { processAnnouncementCampaigns } from './process'
+import {
+  assertValidAudiencePage,
+  processAnnouncementCampaigns,
+} from './process'
 
 function setupDelivery(channels: string[] | null) {
   prismaMock.announcementCampaign.findMany.mockResolvedValue([
@@ -87,5 +90,50 @@ describe('Cloud announcement delivery', () => {
       where: { id: 'delivery-1' },
       data: { status: 'SKIPPED' },
     })
+  })
+})
+
+describe('assertValidAudiencePage', () => {
+  it('accepts ids ordered by the database collation but not by JS code units', () => {
+    // better-auth ids are mixed-case alphanumeric. In a typical case-aware
+    // database collation `aaa…` sorts before `BBB…`, while JS compares
+    // UTF-16 code units (`B` < `a`). The old binary `<=` check rejected such
+    // pages with "Invalid audience page" on every worker tick.
+    expect(() =>
+      assertValidAudiencePage(
+        [{ id: 'aaa000' }, { id: 'BBB001' }],
+        null,
+        'spliit-cloud-2-5-0',
+      ),
+    ).not.toThrow()
+  })
+
+  it('rejects duplicates within a page', () => {
+    expect(() =>
+      assertValidAudiencePage(
+        [{ id: 'abc' }, { id: 'abc' }],
+        null,
+        'spliit-cloud-2-5-0',
+      ),
+    ).toThrow('Invalid audience page for spliit-cloud-2-5-0')
+  })
+
+  it('rejects the previous cursor reappearing in the page', () => {
+    expect(() =>
+      assertValidAudiencePage(
+        [{ id: 'def' }, { id: 'ghi' }],
+        'def',
+        'spliit-cloud-2-5-0',
+      ),
+    ).toThrow('Invalid audience page for spliit-cloud-2-5-0')
+  })
+
+  it('rejects oversized pages', () => {
+    const recipients = Array.from({ length: 501 }, (_, i) => ({
+      id: `id-${i}`,
+    }))
+    expect(() =>
+      assertValidAudiencePage(recipients, null, 'spliit-cloud-2-5-0'),
+    ).toThrow('Invalid audience page for spliit-cloud-2-5-0')
   })
 })

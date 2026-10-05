@@ -17,6 +17,35 @@ const PAGE_SIZE = 500
 const SEND_BATCH_SIZE = 10
 const MAX_ATTEMPTS = 5
 
+/**
+ * Validate one keyset page before writing deliveries. This must stay
+ * collation-agnostic: account ids are mixed-case alphanumeric (better-auth),
+ * and Postgres `ORDER BY id` / `id > cursor` use the database collation while
+ * JS `<`/`<=` compare UTF-16 code units. On typical `en_US.UTF-8` databases
+ * those orders disagree (e.g. `B < a` in JS but `a < B` in a case-insensitive
+ * collation), so a binary sortedness check rejects perfectly good pages. Keyset
+ * pagination is self-consistent in the database's own ordering, so here we only
+ * guard against what would loop forever or duplicate work: oversized pages,
+ * duplicates within the page, and the previous cursor reappearing (the query
+ * uses `id > cursor`, so it must not).
+ */
+export function assertValidAudiencePage(
+  recipients: Array<{ id: string }>,
+  cursor: string | null,
+  campaignId: string,
+): void {
+  if (recipients.length > PAGE_SIZE) {
+    throw new Error(`Invalid audience page for ${campaignId}`)
+  }
+  const seen = new Set<string>()
+  for (const recipient of recipients) {
+    if (seen.has(recipient.id) || recipient.id === cursor) {
+      throw new Error(`Invalid audience page for ${campaignId}`)
+    }
+    seen.add(recipient.id)
+  }
+}
+
 async function sendOne(deliveryId: string) {
   const claimed = await prisma.announcementEmailDelivery.updateMany({
     where: { id: deliveryId, status: { in: ['PENDING', 'RETRY'] } },
@@ -120,16 +149,7 @@ export async function processAnnouncementCampaigns(): Promise<void> {
         limit: PAGE_SIZE,
         createdBefore: campaign.createdAt,
       })
-      if (
-        recipients.length > PAGE_SIZE ||
-        recipients.some(
-          (recipient, index) =>
-            recipient.id <=
-            (recipients[index - 1]?.id ?? campaign.cursor ?? ''),
-        )
-      ) {
-        throw new Error(`Invalid audience page for ${campaign.id}`)
-      }
+      assertValidAudiencePage(recipients, campaign.cursor, campaign.id)
       await prisma.announcementEmailDelivery.createMany({
         data: recipients.map((account) => ({
           id: randomId(),
