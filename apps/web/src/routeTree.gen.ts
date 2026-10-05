@@ -21,6 +21,7 @@ import { Route as SponsorRouteImport } from './routes/sponsor'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
+import { Route as AccountDeleteRouteImport } from './routes/account/delete'
 import { Route as AccountSettingsRouteImport } from './routes/account/settings'
 import { Route as AuthCompleteProfileRouteImport } from './routes/auth/complete-profile'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
@@ -114,6 +115,13 @@ const UnsubscribeRoute = UnsubscribeRouteImport.update({
   path: '/unsubscribe',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/unsubscribe.lazy').then((d) => d.Route))
+const AccountDeleteRoute = AccountDeleteRouteImport.update({
+  id: '/account/delete',
+  path: '/account/delete',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/account/delete.lazy').then((d) => d.Route),
+)
 const AccountSettingsRoute = AccountSettingsRouteImport.update({
   id: '/account/settings',
   path: '/account/settings',
@@ -385,6 +393,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/groups/$groupId': typeof GroupsGroupIdRouteRouteWithChildren
+  '/account/delete': typeof AccountDeleteRoute
   '/account/settings': typeof AccountSettingsRoute
   '/auth/complete-profile': typeof AuthCompleteProfileRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -431,6 +440,7 @@ export interface FileRoutesByTo {
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/unsubscribe': typeof UnsubscribeRoute
+  '/account/delete': typeof AccountDeleteRoute
   '/account/settings': typeof AccountSettingsRoute
   '/auth/complete-profile': typeof AuthCompleteProfileRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -476,6 +486,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/groups/$groupId': typeof GroupsGroupIdRouteRouteWithChildren
+  '/account/delete': typeof AccountDeleteRoute
   '/account/settings': typeof AccountSettingsRoute
   '/auth/complete-profile': typeof AuthCompleteProfileRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -525,6 +536,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/unsubscribe'
     | '/groups/$groupId'
+    | '/account/delete'
     | '/account/settings'
     | '/auth/complete-profile'
     | '/auth/forgot-password'
@@ -571,6 +583,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/terms'
     | '/unsubscribe'
+    | '/account/delete'
     | '/account/settings'
     | '/auth/complete-profile'
     | '/auth/forgot-password'
@@ -615,6 +628,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/unsubscribe'
     | '/groups/$groupId'
+    | '/account/delete'
     | '/account/settings'
     | '/auth/complete-profile'
     | '/auth/forgot-password'
@@ -662,6 +676,7 @@ export interface RootRouteChildren {
   SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
+  AccountDeleteRoute: typeof AccountDeleteRoute
   AccountSettingsRoute: typeof AccountSettingsRoute
   AuthCompleteProfileRoute: typeof AuthCompleteProfileRoute
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
@@ -743,6 +758,13 @@ declare module '@tanstack/react-router' {
       path: '/unsubscribe'
       fullPath: '/unsubscribe'
       preLoaderRoute: typeof UnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account/delete': {
+      id: '/account/delete'
+      path: '/account/delete'
+      fullPath: '/account/delete'
+      preLoaderRoute: typeof AccountDeleteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account/settings': {
@@ -1108,6 +1130,7 @@ const rootRouteChildren: RootRouteChildren = {
   SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
   UnsubscribeRoute: UnsubscribeRoute,
+  AccountDeleteRoute: AccountDeleteRoute,
   AccountSettingsRoute: AccountSettingsRoute,
   AuthCompleteProfileRoute: AuthCompleteProfileRoute,
   AuthForgotPasswordRoute: AuthForgotPasswordRoute,

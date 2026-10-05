@@ -100,6 +100,26 @@ vi.mock('@/trpc/client', () => ({
       setProfileImage: {
         useMutation: () => ({ mutateAsync: vi.fn() }),
       },
+      deletionStatus: {
+        useQuery: () => ({
+          data: { request: null },
+          isPending: false,
+          isError: false,
+        }),
+      },
+      deletionPreview: {
+        useQuery: () => ({
+          data: null,
+          isPending: false,
+          isError: false,
+        }),
+      },
+      requestDeletion: {
+        useMutation: () => ({ mutate: vi.fn(), isPending: false }),
+      },
+      cancelDeletion: {
+        useMutation: () => ({ mutate: vi.fn(), isPending: false }),
+      },
     },
     uploads: {
       profileImagePresign: {
@@ -164,7 +184,7 @@ beforeEach(() => {
 })
 
 describe('AccountSettingsPage', () => {
-  it('renders a single h1 and seven h2 sections in the documented order', () => {
+  it('renders a single h1 and eight h2 sections in the documented order', () => {
     render(<AccountSettingsPage />)
 
     const headings = screen.getAllByRole('heading')
@@ -184,6 +204,7 @@ describe('AccountSettingsPage', () => {
       'Notifications',
       'Webhooks',
       'AI features',
+      'Danger zone',
     ])
   })
 

@@ -3,6 +3,7 @@ import {
   materializeRecurringExpense,
   reconcileDueRecurringExpenses,
 } from '@spliit/api/lib/api/recurrence-series'
+import { executeAccountDeletion } from '@spliit/api/lib/auth/account-deletion'
 import { runAnonymousAccountCleanup } from '@spliit/api/lib/auth/anonymous-account-cleanup'
 import { evaluateBudgets } from '@spliit/api/lib/budgets/evaluate'
 import { runNotificationCleanup } from '@spliit/api/lib/notifications/delivery-cleanup'
@@ -92,6 +93,21 @@ export const handlers: JobHandlers = {
       JSON.stringify({
         component: 'budget-evaluation',
         evaluated: results.length,
+      }),
+    )
+  },
+  [JOB_NAMES.EXECUTE_ACCOUNT_DELETION]: async (payload, context) => {
+    const result = await executeAccountDeletion(
+      payload.accountId,
+      context.boss,
+      new Date(),
+      payload.generation,
+    )
+    console.log(
+      JSON.stringify({
+        component: 'account-deletion-execution',
+        accountId: payload.accountId,
+        ...result,
       }),
     )
   },

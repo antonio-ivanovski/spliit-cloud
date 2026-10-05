@@ -413,6 +413,16 @@ export async function acceptLinkInvitation(
         throw new InvitationError('Invitation is missing its group ledger.')
       }
 
+      if (
+        invitation.group.groupType === GroupType.FRIEND &&
+        !invitation.invitedById
+      ) {
+        // The inviter's account was deleted (pending invites are revoked on
+        // deletion, but a concurrent accept can slip through). Without the
+        // inviter the friend pair key cannot be built.
+        throw new InvitationError('This invitation link is no longer valid.')
+      }
+
       const member = await tx.groupMember.upsert({
         where: {
           groupId_accountId: {
@@ -439,7 +449,11 @@ export async function acceptLinkInvitation(
 
       if (invitation.group.groupType === GroupType.FRIEND) {
         const pairKey = [opts.accountId, invitation.invitedById]
-          .sort()
+          .sort((a, b) => {
+            const left = a ?? ''
+            const right = b ?? ''
+            return left < right ? -1 : left > right ? 1 : 0
+          })
           .join(':')
         try {
           await tx.group.update({

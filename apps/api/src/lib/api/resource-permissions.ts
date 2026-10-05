@@ -89,7 +89,9 @@ export function canCreateInvitationWithRole(
 export function canRevokeInvitation(args: {
   role: GroupRole
   accountId: string
-  invitedById: string
+  // Null when the inviter's account was deleted: the self-revoke branch no
+  // longer matches anyone, admins keep revoke rights.
+  invitedById: string | null
   isUnused: boolean
 }): boolean {
   return (

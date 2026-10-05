@@ -18,6 +18,7 @@ import { useHashTargetFocus } from '@/lib/use-hash-target-focus'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
+import { AccountDeletionSettings } from './account-deletion-settings'
 import { AccountEmailSettings } from './account-email-settings'
 import { AccountExportModal } from './account-export-modal'
 import { AccountPasskeySettings } from './account-passkey-settings'
@@ -350,6 +351,7 @@ function AccountSettingsContent() {
         <WebhookSettings />
       ) : null}
       <AccountAiPreferences />
+      <AccountDeletionSettings />
     </PageShell>
   )
 }

@@ -80,6 +80,9 @@ vi.mock('@/components/mobile-shell', () => ({
     </div>
   ),
 }))
+vi.mock('@/components/account-deletion-banner', () => ({
+  AccountDeletionBanner: () => null,
+}))
 vi.mock('@/components/offline-banner', () => ({ OfflineBanner: () => null }))
 vi.mock('@/components/api-status-banner', () => ({
   ApiStatusBanner: () => null,

@@ -2,6 +2,7 @@ import { Outlet, Link, useLocation } from '@tanstack/react-router'
 import { Suspense, type ReactNode, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { AccountDeletionBanner } from '@/components/account-deletion-banner'
 import { AccountMenu } from '@/components/account-menu'
 import { AccountPreferencesSync } from '@/components/account-preferences-sync'
 import {
@@ -146,8 +147,11 @@ function Content() {
             {isAuthRoute ? null : <InstallPromotionDialog />}
 
             <div className="relative z-20 flex flex-1 flex-col pt-(--app-header-height)">
-              <OfflineBanner />
-              <ApiStatusBanner />
+              <div className="sticky top-(--app-header-height) z-40 shrink-0">
+                <OfflineBanner />
+                <ApiStatusBanner />
+                <AccountDeletionBanner hidden={isAuthRoute} />
+              </div>
               <ProfileGate>
                 <Outlet />
               </ProfileGate>

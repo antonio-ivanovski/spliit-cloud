@@ -865,7 +865,7 @@ function assertCanManagePendingInvitation(args: {
   accountId: string
   invitation: {
     groupId: string
-    invitedById: string
+    invitedById: string | null
     status: GroupInvitationStatus
   }
   requestedRole?: GroupRole | undefined
@@ -949,7 +949,7 @@ async function resolveCanRevoke(args: {
   group: { archived: boolean }
   memberRole: GroupRole
   accountId: string
-  invitedById: string
+  invitedById: string | null
   groupId: string
   ledgerParticipantId: string | null
 }): Promise<boolean> {
@@ -986,7 +986,7 @@ async function assertInvitationRevocationAllowed(args: {
   accountId: string
   role: GroupRole
   invitation: {
-    invitedById: string
+    invitedById: string | null
     ledgerParticipantId: string | null
     status: GroupInvitationStatus
   }

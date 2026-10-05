@@ -419,6 +419,13 @@ export async function autoAcceptPendingFriendInvitationsForAccount(opts: {
   if (pending.length === 0) return
 
   for (const invitation of pending) {
+    const invitedById = invitation.invitedById
+    if (!invitedById) {
+      // The inviter's account was deleted (pending invites are revoked on
+      // deletion, but a concurrent accept can slip through). Without the
+      // inviter the friend pair key cannot be built — skip this invitation.
+      continue
+    }
     await prisma
       .$transaction(async (tx) => {
         const flipped = await tx.groupInvitation.updateMany({
@@ -475,7 +482,7 @@ export async function autoAcceptPendingFriendInvitationsForAccount(opts: {
           })
         }
 
-        const pairKey = friendPairKey(accountId, invitation.invitedById)
+        const pairKey = friendPairKey(accountId, invitedById)
         try {
           await tx.group.update({
             where: { id: invitation.groupId },

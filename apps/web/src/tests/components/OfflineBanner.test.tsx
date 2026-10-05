@@ -92,15 +92,4 @@ describe('OfflineBanner', () => {
     expect(banner).toHaveAttribute('role', 'status')
     expect(banner).toHaveAttribute('aria-live', 'polite')
   })
-
-  it('occupies layout space instead of overlaying the page heading', () => {
-    Object.defineProperty(navigator, 'onLine', {
-      configurable: true,
-      value: false,
-    })
-    render(<OfflineBanner />)
-    const banner = screen.getByTestId('offline-banner')
-    expect(banner.className).toContain('sticky')
-    expect(banner.className).not.toMatch(/(?:^|\s)fixed(?:\s|$)/)
-  })
 })

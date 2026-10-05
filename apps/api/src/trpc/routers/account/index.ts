@@ -58,6 +58,7 @@ import {
   renamePasskeyOutputSchema,
   revokeAuthorizedClientOutputSchema,
 } from '../../outputs/account'
+import { accountDeletionProcedures } from './deletion'
 
 const accountPreferenceSelect = {
   defaultCurrencyCode: true,
@@ -249,6 +250,9 @@ async function hasOtherSignInMethod(
  * legacy anonymous behaviour.
  */
 export const accountRouter = createTRPCRouter({
+  // Account deletion (right-to-erasure) with a cancellable grace period.
+  ...accountDeletionProcedures,
+
   // Current account profile.
   me: protectedProcedure
     .output(z.object({ account: accountProfileSchema }))

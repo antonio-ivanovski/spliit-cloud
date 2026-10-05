@@ -34,6 +34,10 @@ export const jobPayloadSchemas = {
     phase: z.enum(['calibration', 'full', 'rerun']),
     attemptId: z.string().min(1),
   }),
+  'account-deletion.execute': z.object({
+    accountId: z.string().min(1),
+    generation: z.string().min(1).optional(),
+  }),
 } as const
 
 export type JobName = keyof typeof jobPayloadSchemas
@@ -54,6 +58,7 @@ export const JOB_NAMES = {
   ANONYMOUS_ACCOUNT_CLEANUP: 'anonymous-account.cleanup',
   EVALUATE_BUDGETS: 'budget.evaluate',
   BULK_CATEGORIZE: 'bulk-categorize.run',
+  EXECUTE_ACCOUNT_DELETION: 'account-deletion.execute',
 } as const satisfies Record<string, JobName>
 
 export const RECURRING_MATERIALIZATION_QUEUE =
@@ -82,6 +87,8 @@ export const BUDGET_EVALUATE_QUEUE = JOB_NAMES.EVALUATE_BUDGETS
 export const BUDGET_EVALUATE_DLQ = `${BUDGET_EVALUATE_QUEUE}.dead-letter`
 export const BULK_CATEGORIZE_QUEUE = JOB_NAMES.BULK_CATEGORIZE
 export const BULK_CATEGORIZE_DLQ = `${BULK_CATEGORIZE_QUEUE}.dead-letter`
+export const ACCOUNT_DELETION_EXECUTE_QUEUE = JOB_NAMES.EXECUTE_ACCOUNT_DELETION
+export const ACCOUNT_DELETION_EXECUTE_DLQ = `${ACCOUNT_DELETION_EXECUTE_QUEUE}.dead-letter`
 
 export const DEAD_LETTER_QUEUE_BY_SOURCE = {
   [RECURRING_MATERIALIZATION_QUEUE]: RECURRING_MATERIALIZATION_DLQ,
@@ -95,6 +102,7 @@ export const DEAD_LETTER_QUEUE_BY_SOURCE = {
   [ANONYMOUS_ACCOUNT_CLEANUP_QUEUE]: ANONYMOUS_ACCOUNT_CLEANUP_DLQ,
   [BUDGET_EVALUATE_QUEUE]: BUDGET_EVALUATE_DLQ,
   [BULK_CATEGORIZE_QUEUE]: BULK_CATEGORIZE_DLQ,
+  [ACCOUNT_DELETION_EXECUTE_QUEUE]: ACCOUNT_DELETION_EXECUTE_DLQ,
 } as const satisfies Record<JobName, string>
 
 export function deadLetterQueueFor(sourceQueue: string): string | null {

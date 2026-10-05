@@ -83,6 +83,54 @@ model AnonymousRecoveryCredential {
   updatedAt             DateTime  @updatedAt
 }
 
+enum AccountDeletionStatus {
+  PENDING
+  EXECUTING
+  CANCELLED
+  EXECUTED
+}
+
+// ---------------------------------------------------------------------------
+// Account deletion requests (right-to-erasure flow with a grace period).
+//
+// Deliberately NOT a foreign key to User: the row must survive the account
+// delete it authorizes (audit trail, idempotency guard, post-execution
+// tombstone). `accountId` is the deleted (or to-be-deleted) account id and
+// `emailSnapshot` lets the executor notify an address that no longer exists
+// as a User row. Only one PENDING request per account is allowed (enforced
+// in the API layer); history rows (CANCELLED/EXECUTED) are kept.
+// ---------------------------------------------------------------------------
+
+model AccountDeletionRequest {
+  accountId           String                @id
+  // Null for legacy jobs; each new schedule gets its own generation.
+  generation          String?
+  emailSnapshot       String
+  displayNameSnapshot String
+  // When true, shared history (ledger participant labels, comment authors)
+  // keeps the account's display name; otherwise it is replaced with the
+  // generic deleted-member label.
+  keepDisplayName     Boolean               @default(false)
+  // Optional custom label kept on shared history when keepDisplayName is
+  // true (falls back to displayNameSnapshot when null).
+  displayNameOverride String?
+  // When false, group exits skip settlement and remaining balances stay
+  // attributed to the remnant placeholder. Defaults true so requests recorded
+  // before the option existed keep the legacy settle behavior.
+  settleBalances      Boolean               @default(true)
+  requestedAt         DateTime              @default(now())
+  // Earliest time the worker may execute. The user can cancel before this.
+  executeAt           DateTime
+  status              AccountDeletionStatus @default(PENDING)
+  // pg-boss job id of the scheduled execution, for best-effort cancellation.
+  // The executor re-checks `status`, so a missed cancel is still safe.
+  jobId               String?
+  executedAt          DateTime?
+  cancelledAt         DateTime?
+
+  @@index([status, executeAt])
+}
+
 // ---------------------------------------------------------------------------
 // Passkeys (WebAuthn). Owned by better-auth's `passkey` plugin (`model:
 // "passkey"` in the adapter). One row per registered credential, keyed by
@@ -765,12 +813,15 @@ model GroupInvitation {
   role   GroupRole             @default(MEMBER)
   status GroupInvitationStatus @default(PENDING)
 
-  // The inviter (owner/admin who created the invitation).
-  invitedBy   User    @relation("InvitationInviter", fields: [invitedById], references: [id])
-  invitedById String
+  // The inviter (owner/admin who created the invitation). Nullable so
+  // account deletion preserves invitation history: deleting the inviter's
+  // account nulls this relation instead of blocking the delete.
+  invitedBy   User?   @relation("InvitationInviter", fields: [invitedById], references: [id], onDelete: SetNull)
+  invitedById String?
 
-  // The account that accepted the invitation, once accepted.
-  acceptedBy   User?     @relation("InvitationInviteeAccount", fields: [acceptedById], references: [id])
+  // The account that accepted the invitation, once accepted. SetNull so
+  // account deletion preserves invitation history.
+  acceptedBy   User?     @relation("InvitationInviteeAccount", fields: [acceptedById], references: [id], onDelete: SetNull)
   acceptedById String?
   acceptedAt   DateTime?
   revokedAt    DateTime?

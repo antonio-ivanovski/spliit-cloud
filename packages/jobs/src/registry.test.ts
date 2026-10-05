@@ -37,6 +37,23 @@ describe('notification job registry', () => {
     })
   })
 
+  it.each([undefined, 'request-generation'])(
+    'preserves account deletion generation %s through enqueue',
+    async (generation) => {
+      const boss = createBossMock()
+      const payload = {
+        accountId: 'account-1',
+        ...(generation ? { generation } : {}),
+      }
+      await sendJob(boss, JOB_NAMES.EXECUTE_ACCOUNT_DELETION, payload)
+      expect(boss.send).toHaveBeenCalledWith(
+        'account-deletion.execute',
+        payload,
+        expect.any(Object),
+      )
+    },
+  )
+
   it('declares every job name with a payload schema', () => {
     expect(JOB_NAMES.NOTIFICATION_DELIVER).toBe('notification.deliver')
     expect(JOB_NAMES.NOTIFICATION_RECONCILE).toBe('notification.reconcile')

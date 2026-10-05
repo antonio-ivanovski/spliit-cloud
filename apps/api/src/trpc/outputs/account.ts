@@ -117,3 +117,41 @@ export const renamePasskeyOutputSchema = z.object({
 export const afterPasskeyChangeOutputSchema = z.object({
   success: z.boolean(),
 })
+
+export const deletionGroupSummarySchema = z.object({
+  groupId: z.string(),
+  name: z.string(),
+  groupType: groupTypeSchema,
+  role: z.enum(['ADMIN', 'MEMBER']),
+  isLastAdmin: z.boolean(),
+  isLastActiveMember: z.boolean(),
+  hasUnsettledBalance: z.boolean(),
+  willDeleteGroup: z.boolean(),
+})
+
+export const deletionRequestSchema = z.object({
+  status: z.enum(['PENDING', 'EXECUTING']),
+  executeAt: z.date(),
+  keepDisplayName: z.boolean(),
+})
+
+export const deletionPreviewOutputSchema = z.object({
+  displayName: z.string(),
+  email: z.string(),
+  signInMethods: z.array(z.string()),
+  groups: z.array(deletionGroupSummarySchema),
+  pendingSentInvitations: z.number().int().nonnegative(),
+  request: deletionRequestSchema.nullable(),
+})
+
+export const deletionStatusOutputSchema = z.object({
+  request: deletionRequestSchema.nullable(),
+})
+
+export const requestDeletionOutputSchema = z.object({
+  executeAt: z.date(),
+})
+
+export const cancelDeletionOutputSchema = z.object({
+  cancelled: z.boolean(),
+})

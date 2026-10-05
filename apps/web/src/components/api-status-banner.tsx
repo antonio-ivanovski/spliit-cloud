@@ -22,7 +22,7 @@ export function ApiStatusBanner() {
     <div
       role="alert"
       data-testid="api-status-banner"
-      className="sticky top-(--app-header-height) z-40 shrink-0 border-b border-red-200 bg-red-50 text-red-900 dark:border-red-900 dark:bg-red-950 dark:text-red-100"
+      className="shrink-0 border-b border-red-200 bg-red-50 text-red-900 dark:border-red-900 dark:bg-red-950 dark:text-red-100"
     >
       <div className="flex items-center justify-center gap-2 px-4 py-2 text-sm">
         <CloudOff className="h-4 w-4 shrink-0" aria-hidden="true" />

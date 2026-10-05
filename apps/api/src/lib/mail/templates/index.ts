@@ -1,4 +1,12 @@
 export {
+  AccountDeletionCancelledEmail,
+  AccountDeletionExecutedEmail,
+  AccountDeletionRequestedEmail,
+  renderAccountDeletionCancelledEmail,
+  renderAccountDeletionExecutedEmail,
+  renderAccountDeletionRequestedEmail,
+} from './account-deletion'
+export {
   EmailChangedNoticeEmail,
   EmailChangeOtpEmail,
   MagicLinkEmail,

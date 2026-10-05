@@ -37,6 +37,7 @@ export const destructiveConfirmationKindValues = [
   'deleteExpense',
   'deleteRecurringExpense',
   'removeParticipant',
+  'deleteAccount',
 ] as const
 export const destructiveConfirmationKindSchema = z.enum(
   destructiveConfirmationKindValues,

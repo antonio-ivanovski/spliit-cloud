@@ -8,6 +8,8 @@ import { fromPrisma, PgBoss } from 'pg-boss'
 
 import { env } from './env'
 import {
+  ACCOUNT_DELETION_EXECUTE_DLQ,
+  ACCOUNT_DELETION_EXECUTE_QUEUE,
   ANONYMOUS_ACCOUNT_CLEANUP_DLQ,
   ANONYMOUS_ACCOUNT_CLEANUP_QUEUE,
   jobPayloadSchema,
@@ -113,6 +115,19 @@ export const JOB_SEND_OPTIONS = {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
     deadLetter: BULK_CATEGORIZE_DLQ,
   },
+  // Account deletion is idempotent (the executor claims the request row with
+  // an atomic PENDING → EXECUTING transition), so transient failures can be
+  // retried safely.
+  [ACCOUNT_DELETION_EXECUTE_QUEUE]: {
+    retryLimit: 3,
+    retryDelay: env.JOBS_RETRY_BACKOFF_SECONDS,
+    retryBackoff: true,
+    // Exceed the executor lock transaction timeout so slow erasure is not
+    // expired while the original worker still holds the lock.
+    expireInSeconds: 20 * 60,
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+    deadLetter: ACCOUNT_DELETION_EXECUTE_DLQ,
+  },
 } as const satisfies Record<JobName, SendOptions>
 
 export const JOB_QUEUE_OPTIONS = {
@@ -163,6 +178,11 @@ export const JOB_QUEUE_OPTIONS = {
   },
   [BUDGET_EVALUATE_QUEUE]: {
     ...JOB_SEND_OPTIONS[BUDGET_EVALUATE_QUEUE],
+    notify: true,
+  },
+  [ACCOUNT_DELETION_EXECUTE_QUEUE]: {
+    ...JOB_SEND_OPTIONS[ACCOUNT_DELETION_EXECUTE_QUEUE],
+    policy: 'exclusive',
     notify: true,
   },
 } as const satisfies Record<JobName, Omit<Queue, 'name'>>
@@ -219,6 +239,10 @@ export const JOB_WORK_OPTIONS = {
     pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
   },
   [BUDGET_EVALUATE_QUEUE]: {
+    localConcurrency: 1,
+    pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
+  },
+  [ACCOUNT_DELETION_EXECUTE_QUEUE]: {
     localConcurrency: 1,
     pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
   },
@@ -345,6 +369,9 @@ export async function ensureQueues(boss: SpliitBoss): Promise<void> {
   await createOrConvergeQueue(boss, BULK_CATEGORIZE_DLQ, {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
   })
+  await createOrConvergeQueue(boss, ACCOUNT_DELETION_EXECUTE_DLQ, {
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+  })
   await createOrConvergeQueue(boss, WEBHOOK_DELIVER_DLQ, {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
   })
@@ -408,6 +435,11 @@ export async function ensureQueues(boss: SpliitBoss): Promise<void> {
     boss,
     WEBHOOK_CLEANUP_QUEUE,
     JOB_QUEUE_OPTIONS[WEBHOOK_CLEANUP_QUEUE],
+  )
+  await createOrConvergeQueue(
+    boss,
+    ACCOUNT_DELETION_EXECUTE_QUEUE,
+    JOB_QUEUE_OPTIONS[ACCOUNT_DELETION_EXECUTE_QUEUE],
   )
 }
 
