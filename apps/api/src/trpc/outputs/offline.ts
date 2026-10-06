@@ -28,13 +28,10 @@ import { overviewGroupSchema } from './overview'
  * status: 'ok' }` plus a JSON content-type to reject captive-portal HTML. A
  * successful probe enables session verification, not writes.
  *
- * Snapshot cap decision: max 500 expenses per group, newest-first ordered by
- * expenseDate desc, createdAt desc, id desc. The capped response carries
- * `totalCount` (all expenses in the group), `downloadedCount` (expenses in this
- * payload), `hasMore` (totalCount > downloadedCount), and `truncatedAt`
- * (capturedAt when truncated, else null). The whole capped response succeeds or
- * fails atomically; clients preserve the existing snapshot on timeout. UI copy
- * will say the recent-500 are available offline.
+ * Snapshot history: all expenses are downloaded in database keyset pages within
+ * one RepeatableRead transaction. The client promotes the complete snapshot
+ * atomically and retains its previous copy on failure. Older capped snapshots
+ * remain readable until a complete replacement succeeds.
  *
  * Recurrence neighbor decision: neighbor IDs are built from each series ordered
  * by `recurrenceSequence` ascending. Expenses with a null sequence are excluded
@@ -58,6 +55,7 @@ import { overviewGroupSchema } from './overview'
  */
 
 export const OFFLINE_SCHEMA_VERSION = 1 as const
+/** Database page size; retained export name for existing consumers. */
 export const OFFLINE_MAX_EXPENSES = 500 as const
 
 export const offlineDocumentMetadataSchema = z.object({

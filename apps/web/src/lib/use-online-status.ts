@@ -1,58 +1,26 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useSyncExternalStore } from 'react'
 
-import {
-  hasFetchNetworkFailure,
-  reportNetworkSuccess,
-  subscribeConnectivity,
-} from '@/lib/connectivity'
+import { getDefaultConnectivityStore } from '@/lib/offline/connectivity'
 
 export type ConnectivityStatus = 'online' | 'offline' | 'server-unreachable'
 
-function readBrowserOnline(): boolean {
-  return typeof navigator === 'undefined' ? true : navigator.onLine
-}
-
-/**
- * Tri-state connectivity.
- *
- * - `offline`: the browser itself reports no connection (`navigator.onLine` is
- *   false). The user really is offline.
- * - `server-unreachable`: the browser thinks it is online, but API `fetch` calls
- *   keep failing (thrown connectivity errors) or return 5xx. The user is online
- *   — the API is down.
- * - `online`: everything works.
- *
- * DevTools "service worker offline" often leaves `navigator.onLine` true while
- * API calls fail, which is why the fetch-failure latch exists — but a latched
- * failure with an online browser must never be reported as the user being
- * offline.
- */
 export function useConnectivityStatus(): ConnectivityStatus {
-  const [browserOnline, setBrowserOnline] = useState<boolean>(readBrowserOnline)
-  const [fetchFailed, setFetchFailed] = useState(hasFetchNetworkFailure)
-
+  const store = getDefaultConnectivityStore()
   useEffect(() => {
-    const handleOnline = () => {
-      reportNetworkSuccess()
-      setBrowserOnline(true)
-    }
-    const handleOffline = () => setBrowserOnline(false)
-
-    window.addEventListener('online', handleOnline)
-    window.addEventListener('offline', handleOffline)
-    const unsubscribe = subscribeConnectivity(() => {
-      setFetchFailed(hasFetchNetworkFailure())
-    })
-
-    return () => {
-      window.removeEventListener('online', handleOnline)
-      window.removeEventListener('offline', handleOffline)
-      unsubscribe()
-    }
-  }, [])
-
-  if (!browserOnline) return 'offline'
-  if (fetchFailed) return 'server-unreachable'
+    store.start()
+  }, [store])
+  const snapshot = useSyncExternalStore(
+    store.subscribe,
+    store.getSnapshot,
+    store.getSnapshot,
+  )
+  if (
+    !snapshot.browserOnline ||
+    (typeof navigator !== 'undefined' && !navigator.onLine)
+  )
+    return 'offline'
+  if (snapshot.transport === 'unreachable' || snapshot.serverFailure !== null)
+    return 'server-unreachable'
   return 'online'
 }
 

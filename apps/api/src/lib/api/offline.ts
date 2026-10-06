@@ -24,6 +24,7 @@ import { accountSummarySelect } from './selects/account-summary'
 import {
   balanceExpenseSelect,
   toBalanceExpense,
+  type BalanceExpenseRow,
 } from './selects/balance-expense'
 import { participantDisplayNameSelect } from './selects/participant-display-name'
 import { mapSubgroup, subgroupWithMembersSelect } from './subgroups'
@@ -566,6 +567,7 @@ async function loadSingleGroupBase(
   tx: TxClient,
   accountId: string,
   groupId: string,
+  expenseRows: BalanceExpenseRow[],
 ): Promise<{
   memberships: MembershipWithGroup[]
   preferences: Map<string, { starred: boolean; hidden: boolean }>
@@ -613,10 +615,6 @@ async function loadSingleGroupBase(
   const financialByLedgerId = new Map<string, { summary: FinancialSummary }>()
   const ledgerId = membership?.group.ledger.id
   if (membership && ledgerId) {
-    const expenseRows = (await tx.expense.findMany({
-      where: { ledgerId },
-      select: catalogFinancialExpenseSelect,
-    })) as unknown as CatalogFinancialRow[]
     financialByLedgerId.set(ledgerId, {
       summary: getOfflineFinancialSummary(
         expenseRows,
@@ -845,11 +843,8 @@ async function loadOfflineBalances(
   tx: TxClient,
   group: { id: string; subgroupsEnabled: boolean },
   ledger: { id: string; currencyCode: string | null },
+  rows: BalanceExpenseRow[],
 ) {
-  const rows = await tx.expense.findMany({
-    where: { ledgerId: ledger.id },
-    select: balanceExpenseSelect,
-  })
   const expenses = rows.map(toBalanceExpense)
   const participantIds = Array.from(
     new Set(
@@ -998,7 +993,11 @@ export async function loadOfflineSnapshot(
     hasSavedView: false,
   }
 
-  const base = await loadSingleGroupBase(tx, accountId, groupId)
+  const financialRows = await tx.expense.findMany({
+    where: { ledgerId: groupRow.ledger.id },
+    select: balanceExpenseSelect,
+  })
+  const base = await loadSingleGroupBase(tx, accountId, groupId, financialRows)
   if (base.memberships.length === 0) {
     throw new TRPCError({
       code: 'FORBIDDEN',
@@ -1030,16 +1029,27 @@ export async function loadOfflineSnapshot(
         (groupRow as { subgroupsEnabled?: boolean }).subgroupsEnabled ?? false,
     },
     { id: groupRow.ledger.id, currencyCode: groupRow.ledger.currencyCode },
+    financialRows,
   )
 
   const ledgerId = groupRow.ledger.id
   const totalCount = await tx.expense.count({ where: { ledgerId } })
-  const downloadedRows = (await tx.expense.findMany({
-    where: { ledgerId },
-    orderBy: [{ expenseDate: 'desc' }, { createdAt: 'desc' }, { id: 'desc' }],
-    take: OFFLINE_MAX_EXPENSES,
-    select: offlineExpenseBulkSelect,
-  })) as unknown as OfflineExpenseBulkRow[]
+  // Keyset pages share the same RepeatableRead transaction. Promote only the
+  // complete response; a timeout preserves the previous client snapshot.
+  const downloadedRows: OfflineExpenseBulkRow[] = []
+  let cursor: string | undefined
+  for (;;) {
+    const page = await tx.expense.findMany({
+      where: { ledgerId },
+      orderBy: [{ expenseDate: 'desc' }, { createdAt: 'desc' }, { id: 'desc' }],
+      take: OFFLINE_MAX_EXPENSES,
+      ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+      select: offlineExpenseBulkSelect,
+    })
+    downloadedRows.push(...page)
+    if (page.length < OFFLINE_MAX_EXPENSES) break
+    cursor = page.at(-1)!.id
+  }
 
   const seriesIds = Array.from(
     new Set(

@@ -33,9 +33,10 @@ import type { OfflineRepository } from './repository'
  *
  * Triggers coalesce into one active pass + one pending rerun, never overlapping
  * account passes. Launch/reconnect/refresh passes download all catalog groups
- * once (capped 500 newest each). Mutation passes refresh catalog + affected
- * groups; mutations without a resolvable groupId request a full pass. The 5min
- * rule applies only to foreground return, never to polling while active.
+ * once (complete expense history each). Mutation passes refresh catalog +
+ * affected groups; mutations without a resolvable groupId request a full pass.
+ * The 5min rule applies only to foreground return, never to polling while
+ * active.
  *
  * Status exposes counts of complete groups (never byte progress) plus the
  * current group name with indeterminate activity for status UI. No UI is built
@@ -921,6 +922,7 @@ export function createOfflineSync(options: OfflineSyncOptions) {
           namespace,
           generation,
           expectedDataRevision: catalogRevision,
+          leaseOwner: owner,
           catalog,
         })
         generation = reconciled.generation
@@ -1579,10 +1581,24 @@ export function createOfflineSync(options: OfflineSyncOptions) {
      * Callers must not await this before resolving the mutation. Mutations
      * without a resolvable groupId request a full pass.
      */
-    handleMutationSuccess: (input?: { groupIds?: string[] }) => {
+    handleMutationSuccess: async (input?: { groupIds?: string[] }) => {
       if (disposed) return Promise.resolve()
       const ids = [...new Set(input?.groupIds ?? [])].sort()
       if (ids.length === 0) return requestFull('mutation')
+      const control = await repository.readControl(namespace)
+      if (!control) return
+      await repository.markDirty({
+        namespace,
+        generation: control.generation,
+        dirtyGroupIds: ids,
+      })
+      for (const groupId of ids)
+        broadcast({
+          type: 'dirty',
+          namespace,
+          generation: control.generation,
+          groupId,
+        })
       return requestSync({
         kind: 'targeted',
         groupIds: ids,
@@ -1645,11 +1661,11 @@ export function createOfflineSync(options: OfflineSyncOptions) {
           return
         }
       }
-      await requestSync({
+      void requestSync({
         kind: 'targeted',
         groupIds: [input.groupId],
         triggerKind: 'mutation',
-      })
+      }).catch(() => undefined)
     },
     /**
      * Successful online group delete/leave: immediately evicts the group and

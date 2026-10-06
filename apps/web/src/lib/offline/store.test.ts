@@ -123,16 +123,23 @@ describe('offline store opening', () => {
     store.close()
   })
 
-  it('notifies on versionchange close', async () => {
+  it('publishes storage unavailability when another tab upgrades the database', async () => {
+    let versionChange!: () => void
     const onStorageClose = vi.fn()
     const store = createOfflineStore({
       onStorageClose,
       openRepository: async ({ onVersionChange }) => {
-        onVersionChange()
+        versionChange = onVersionChange
         return fakeRepo()
       },
     })
     await store.open()
+    const changed = vi.fn()
+    store.subscribe(changed)
+    versionChange()
+    expect(store.getRepository()).toBeNull()
+    expect(store.getSnapshot().status).toBe('unavailable')
+    expect(changed).toHaveBeenCalled()
     expect(onStorageClose).toHaveBeenCalled()
     store.close()
   })

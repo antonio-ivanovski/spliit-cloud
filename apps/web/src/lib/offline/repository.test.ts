@@ -915,6 +915,21 @@ describe('offline repository', () => {
       }),
     ).rejects.toMatchObject({ code: 'lease-conflict' })
 
+    await expect(
+      repo.replaceCatalog({
+        namespace,
+        generation: 0,
+        expectedDataRevision: 0,
+        catalog: makeCatalog(ACCOUNT_A, []),
+        leaseOwner: 'owner-b',
+      } as Parameters<OfflineRepository['replaceCatalog']>[0]),
+    ).rejects.toMatchObject({ code: 'lease-conflict' })
+    const retained = await repo.readCatalog(namespace)
+    expect(
+      retained.status === 'ready' &&
+        retained.record.groups.map((entry) => entry.overview.id),
+    ).toEqual(['g1'])
+
     // Matching owner succeeds while the lease is active.
     await repo.commitGroup({
       namespace,

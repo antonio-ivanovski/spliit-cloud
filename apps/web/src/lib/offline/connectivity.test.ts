@@ -27,6 +27,21 @@ describe('offline connectivity store', () => {
     vi.restoreAllMocks()
   })
 
+  it('automatically probes a failure reported after startup', async () => {
+    const fetchFn = okJsonFetch()
+    const store = createConnectivityStore({
+      fetchFn,
+      isNavigatorOnline: () => true,
+      isVisible: () => true,
+    })
+    store.start()
+    store.reportNetworkFailure(new TypeError('Failed to fetch'))
+    await vi.advanceTimersByTimeAsync(5000)
+    expect(fetchFn).toHaveBeenCalledOnce()
+    expect(store.getSnapshot().transport).toBe('reachable')
+    store.dispose()
+  })
+
   it('starts unknown and reports online until unreachable', () => {
     const store = createConnectivityStore({
       fetchFn: okJsonFetch(),

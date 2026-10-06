@@ -409,7 +409,7 @@ export function createOfflineLifecycle(options: OfflineLifecycleOptions) {
   let verifyInFlight: Promise<void> | null = null
   let bootstrapped = false
   let disposed = false
-  let markerValueForCurrent: string | null = null
+  let verificationEpoch = 0
   let lastCleanupFailure: { namespace: string; generation: number } | null =
     null
 
@@ -549,7 +549,6 @@ export function createOfflineLifecycle(options: OfflineLifecycleOptions) {
       options.storage,
     )
     const generation = bumpGeneration(namespace)
-    markerValueForCurrent = marker
     return { generation, marker, markerWritten }
   }
 
@@ -597,13 +596,27 @@ export function createOfflineLifecycle(options: OfflineLifecycleOptions) {
     return { account: cached, namespace }
   }
 
-  async function runVerification(): Promise<void> {
+  function invalidateVerification(): void {
+    verificationEpoch += 1
+    verifyAbortController?.abort()
+    verifyAbortController = null
+    verifyInFlight = null
+  }
+
+  async function runVerification(input?: { fresh?: boolean }): Promise<void> {
+    if (input?.fresh) invalidateVerification()
+
     if (disposed) return
     if (verifyInFlight) return verifyInFlight
     const task = (async () => {
       verifyAbortController?.abort()
       verifyAbortController = new AbortController()
       const signal = verifyAbortController.signal
+      const epoch = verificationEpoch
+      const namespaceAtStart = snapshot.namespace
+      const markerAtStart = namespaceAtStart
+        ? readRevokedMarker(namespaceAtStart, options.storage)
+        : null
       const attempt = snapshot.verifyAttempt + 1
       setSnapshot({ ...snapshot, verifyAttempt: attempt })
       // Skip hanging session waits when the browser explicitly reports
@@ -617,46 +630,34 @@ export function createOfflineLifecycle(options: OfflineLifecycleOptions) {
         return
       }
       let result: SessionFetchResult
+      let timeoutId: ReturnType<typeof setTimeout> | undefined
+      let onAbort: (() => void) | undefined
       try {
-        const timeoutMs = SESSION_VERIFY_TIMEOUT_MS
         const timeout = new Promise<SessionFetchResult>((resolve) => {
-          const id = setTimeout(
+          timeoutId = setTimeout(
             () =>
               resolve({ kind: 'network-failure', error: new Error('timeout') }),
-            timeoutMs,
+            SESSION_VERIFY_TIMEOUT_MS,
           )
-          if (typeof id === 'object' && 'unref' in id) {
-            ;(id as { unref?: () => void }).unref?.()
-          }
-          signal.addEventListener('abort', () => {
-            clearTimeout(id)
-            resolve({ kind: 'aborted' })
-          })
+          onAbort = () => resolve({ kind: 'aborted' })
+          signal.addEventListener('abort', onAbort, { once: true })
         })
         result = await Promise.race([verifySessionFn(signal), timeout])
       } catch (error) {
         result = { kind: 'network-failure', error }
+      } finally {
+        clearTimeout(timeoutId)
+        if (onAbort) signal.removeEventListener('abort', onAbort)
       }
-      if (disposed || signal.aborted) return
-      // Marker may have changed during verification (cross-tab revoke):
-      // lifecycle callbacks capture the marker value and reject on change.
-      const activeNamespace = snapshot.namespace
-      const capturedMarker =
-        activeNamespace != null
-          ? readRevokedMarker(activeNamespace, options.storage)
-          : null
+      if (disposed || signal.aborted || epoch !== verificationEpoch) return
       if (
-        activeNamespace != null &&
-        markerValueForCurrent !== null &&
-        capturedMarker !== null &&
-        capturedMarker !== markerValueForCurrent
-      ) {
-        // A newer revocation landed mid-verify; stay fenced.
+        namespaceAtStart &&
+        readRevokedMarker(namespaceAtStart, options.storage) !== markerAtStart
+      )
         return
-      }
 
       if (result.kind === 'verified') {
-        await handleVerifiedAccount(result.account)
+        await handleVerifiedAccount(result.account, epoch)
       } else if (result.kind === 'signed-out') {
         // Successful get-session null revokes the read identity.
         handleConfirmedSignedOut()
@@ -683,13 +684,18 @@ export function createOfflineLifecycle(options: OfflineLifecycleOptions) {
         }
       }
     })()
-    verifyInFlight = task.finally(() => {
-      verifyInFlight = null
+    const pending = task.finally(() => {
+      if (verifyInFlight === pending) verifyInFlight = null
     })
-    return verifyInFlight
+    verifyInFlight = pending
+    return pending
   }
 
-  async function handleVerifiedAccount(verified: AuthAccount): Promise<void> {
+  async function handleVerifiedAccount(
+    verified: AuthAccount,
+    epoch = verificationEpoch,
+  ): Promise<void> {
+    if (disposed || epoch !== verificationEpoch) return
     const verifiedNamespace = resolveNamespace(verified.id)
     const current = snapshot.account
     const currentNamespace = snapshot.namespace
@@ -703,20 +709,23 @@ export function createOfflineLifecycle(options: OfflineLifecycleOptions) {
     // Same-account reactivation after a prior revocation: only from a fresh
     // uncached server session (this path), never from cached hook/probe.
     if (hasRevokedMarker(verifiedNamespace, options.storage)) {
-      await reactivateRevokedNamespace(verified, verifiedNamespace)
+      await reactivateRevokedNamespace(verified, verifiedNamespace, epoch)
       return
     }
     if (persisted.readControl) {
       try {
         const control = await persisted.readControl(verifiedNamespace)
+        if (disposed || epoch !== verificationEpoch) return
         if (control?.revoked) {
-          await reactivateRevokedNamespace(verified, verifiedNamespace)
+          await reactivateRevokedNamespace(verified, verifiedNamespace, epoch)
           return
         }
       } catch {
         // Ignore control read failures; proceed with verification.
       }
     }
+
+    if (disposed || epoch !== verificationEpoch) return
 
     // Fresh success clears cross-tab invalidation and (re)writes last-account
     // from this verified response only (stale hook data cannot repopulate).
@@ -751,63 +760,55 @@ export function createOfflineLifecycle(options: OfflineLifecycleOptions) {
   async function reactivateRevokedNamespace(
     verified: AuthAccount,
     namespace: string,
+    epoch = verificationEpoch,
   ): Promise<void> {
-    // Preserve the device's enabled/disabled preference across reactivation.
-    let preservedEnabled: boolean | null = null
-    try {
-      preservedEnabled = (await persisted.readEnabledPref?.(namespace)) ?? null
-    } catch {
-      preservedEnabled = null
-    }
-    // Finish deletion of old revoked payloads first.
+    const marker = readRevokedMarker(namespace, options.storage)
+    const isCurrent = () =>
+      !disposed &&
+      epoch === verificationEpoch &&
+      readRevokedMarker(namespace, options.storage) === marker
     try {
       await persisted.finishRevokedDeletion?.(namespace)
-    } catch {
-      setSnapshot({ ...snapshot, cleanupError: 'cleanup-failed' })
-    }
-    // Increment generation + reset dataRevision/lease for the new empty
-    // lifecycle, then clear the revocation marker last.
-    let nextGeneration = bumpGeneration(namespace) + 1
-    try {
+      if (!isCurrent()) return
       const reset = await persisted.resetLifecycle?.(namespace)
-      if (reset && typeof reset.generation === 'number') {
-        nextGeneration = reset.generation
-        fencedGenerations.set(namespace, nextGeneration)
-      } else {
-        fencedGenerations.set(namespace, nextGeneration)
-      }
-    } catch {
+      if (!isCurrent()) return
+      const nextGeneration = reset?.generation ?? bumpGeneration(namespace)
+      if (marker !== null && !clearRevokedMarker(namespace, options.storage))
+        throw new Error('Revocation marker could not be cleared')
       fencedGenerations.set(namespace, nextGeneration)
-      setSnapshot({ ...snapshot, cleanupError: 'cleanup-failed' })
-    }
-    // Only clear the marker after the new empty lifecycle is ready.
-    // (Enabled pref is preserved by the repository layer; this lifecycle
-    // intentionally does not flip it.)
-    void preservedEnabled
-    clearRevokedMarker(namespace, options.storage)
-    markerValueForCurrent = null
-    setSnapshot({
-      ...snapshot,
-      account: verified,
-      session: 'verified',
-      namespace,
-      generation: nextGeneration,
-      invalidated: false,
-      lastVerifiedAt: now(),
-    })
-    try {
-      writeLastAccount(verified)
+      setSnapshot({
+        ...snapshot,
+        account: verified,
+        session: 'verified',
+        namespace,
+        generation: nextGeneration,
+        invalidated: false,
+        cleanupError: null,
+        lastVerifiedAt: now(),
+      })
+      safeWriteLastAccount(verified)
+      broadcast({
+        type: 'catalog-changed',
+        namespace,
+        generation: nextGeneration,
+      })
     } catch {
-      // Ignore.
+      if (!isCurrent()) return
+      // Online identity is usable, but revoked downloads remain inaccessible.
+      setSnapshot({
+        ...snapshot,
+        account: verified,
+        session: 'verified',
+        namespace: null,
+        invalidated: true,
+        cleanupError: 'cleanup-failed',
+        lastVerifiedAt: now(),
+      })
     }
-    broadcast({
-      type: 'catalog-changed',
-      namespace,
-      generation: nextGeneration,
-    })
   }
 
   function handleConfirmedSignedOut(): void {
+    invalidateVerification()
     const leavingNamespace = snapshot.namespace
     if (leavingNamespace) {
       // Write the marker synchronously before async deletion.
@@ -844,6 +845,8 @@ export function createOfflineLifecycle(options: OfflineLifecycleOptions) {
     nextNamespace: string,
     prevNamespace: string,
   ): Promise<void> {
+    invalidateVerification()
+    const switchEpoch = verificationEpoch
     // Synchronously stop rendering A: abort A requests + drop query memory
     // before any B render. The provider remounts account content on
     // `account.id` key change; generation fencing rejects late A commits.
@@ -860,9 +863,16 @@ export function createOfflineLifecycle(options: OfflineLifecycleOptions) {
       namespace: prevNamespace,
       generation: fenced.generation,
     })
+    setSnapshot({
+      ...snapshot,
+      account: null,
+      namespace: null,
+      session: 'checking',
+      invalidated: true,
+    })
     // Clear A persisted data (fenced even on physical-delete failure).
     await deletePersistedOrFence(prevNamespace, fenced.generation)
-    if (disposed) return
+    if (disposed || switchEpoch !== verificationEpoch) return
     // Then mount B's read context. B's marker must be absent (fresh login);
     // if B was previously revoked, reactivate through the verified path.
     if (hasRevokedMarker(nextNamespace, options.storage)) {
@@ -893,7 +903,19 @@ export function createOfflineLifecycle(options: OfflineLifecycleOptions) {
   async function signOut(signOutOptions?: {
     navigateTo?: string
   }): Promise<void> {
+    invalidateVerification()
     const leavingNamespace = snapshot.namespace
+    const signOutEpoch = verificationEpoch
+    safeClearLastAccount()
+    clearQueryMemory()
+    setSnapshot({
+      ...snapshot,
+      account: null,
+      session: 'signed-out',
+      namespace: null,
+      invalidated: false,
+      lastVerifiedAt: null,
+    })
     if (leavingNamespace) {
       const fenced = fenceNamespaceSync(leavingNamespace)
       broadcast({
@@ -903,6 +925,7 @@ export function createOfflineLifecycle(options: OfflineLifecycleOptions) {
       })
       await deletePersistedOrFence(leavingNamespace, fenced.generation)
     }
+    if (disposed || signOutEpoch !== verificationEpoch) return
     safeClearLastAccount()
     clearQueryMemory()
     try {
@@ -951,7 +974,8 @@ export function createOfflineLifecycle(options: OfflineLifecycleOptions) {
       Math.max(event.generation, currentGeneration()),
     )
     clearQueryMemory()
-    if (event.type === 'revoked' || event.type === 'cleared') {
+    if (event.type === 'revoked') {
+      invalidateVerification()
       safeClearLastAccount()
       setSnapshot({
         ...snapshot,
@@ -1062,6 +1086,7 @@ export function createOfflineLifecycle(options: OfflineLifecycleOptions) {
 
   function dispose(): void {
     disposed = true
+    invalidateVerification()
     try {
       verifyAbortController?.abort()
     } catch {
@@ -1077,8 +1102,8 @@ export function createOfflineLifecycle(options: OfflineLifecycleOptions) {
 
   /** Test-only: reset fencing + session without touching storage. */
   function resetForTests(): void {
+    invalidateVerification()
     fencedGenerations.clear()
-    markerValueForCurrent = null
     lastCleanupFailure = null
     bootstrapped = false
     disposed = false

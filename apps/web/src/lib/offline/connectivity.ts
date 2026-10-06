@@ -33,6 +33,7 @@ export type ServerFailure =
   | null
 
 export type ConnectivitySnapshot = {
+  browserOnline: boolean
   transport: TransportState
   serverFailure: ServerFailure
   probeInFlight: boolean
@@ -116,6 +117,7 @@ export function createConnectivityStore(options?: ConnectivityStoreOptions) {
 
   const listeners = new Set<() => void>()
   let snapshot: ConnectivitySnapshot = {
+    browserOnline: isNavigatorOnline(),
     transport: 'unknown',
     serverFailure: null,
     probeInFlight: false,
@@ -135,6 +137,7 @@ export function createConnectivityStore(options?: ConnectivityStoreOptions) {
 
   function setSnapshot(next: ConnectivitySnapshot) {
     const changed =
+      next.browserOnline !== snapshot.browserOnline ||
       next.transport !== snapshot.transport ||
       next.serverFailure !== snapshot.serverFailure ||
       next.probeInFlight !== snapshot.probeInFlight ||
@@ -154,6 +157,8 @@ export function createConnectivityStore(options?: ConnectivityStoreOptions) {
   function setTransport(transport: TransportState) {
     if (snapshot.transport === transport) return
     setSnapshot({ ...snapshot, transport })
+    if (transport === 'unreachable') scheduleBackoff()
+    else clearBackoffTimer()
   }
 
   function setServerFailure(serverFailure: ServerFailure) {
@@ -224,9 +229,11 @@ export function createConnectivityStore(options?: ConnectivityStoreOptions) {
         transport: 'reachable',
         serverFailure: { kind: 'http-error', status, at: now() },
       })
+      scheduleBackoff()
       return
     }
     setServerFailure({ kind: 'http-error', status, at: now() })
+    scheduleBackoff()
   }
 
   function reportPortal(): void {
@@ -331,7 +338,8 @@ export function createConnectivityStore(options?: ConnectivityStoreOptions) {
     if (!started || disposed) return
     if (!isNavigatorOnline()) return
     if (!isVisible()) return
-    if (snapshot.transport !== 'unreachable') return
+    if (snapshot.transport !== 'unreachable' && snapshot.serverFailure === null)
+      return
     const delay =
       backoffMs[Math.min(snapshot.probeAttempt, backoffMs.length - 1)] ?? 60000
     backoffTimer = setTimeout(() => {
@@ -339,7 +347,11 @@ export function createConnectivityStore(options?: ConnectivityStoreOptions) {
       if (!started || disposed) return
       if (!isNavigatorOnline()) return
       if (!isVisible()) return
-      if (snapshot.transport !== 'unreachable') return
+      if (
+        snapshot.transport !== 'unreachable' &&
+        snapshot.serverFailure === null
+      )
+        return
       setSnapshot({ ...snapshot, probeAttempt: snapshot.probeAttempt + 1 })
       void probeOnce().then((ok) => {
         if (!ok) scheduleBackoff()
@@ -351,13 +363,9 @@ export function createConnectivityStore(options?: ConnectivityStoreOptions) {
   }
 
   function handleOnline() {
-    // Browser `online` is a hint, not proof. Hide offline UI optimistically
-    // (unknown reads as online) while a validating probe confirms; a failed
-    // probe returns to `unreachable` and re-shows offline UI.
+    // Browser online is a hint; keep transport failure until the probe succeeds.
+    setSnapshot({ ...snapshot, browserOnline: true })
     clearServerFailure()
-    if (snapshot.transport === 'unreachable') {
-      setSnapshot({ ...snapshot, transport: 'unknown' })
-    }
     void probeOnce().then((ok) => {
       if (!ok) scheduleBackoff()
     })
@@ -369,7 +377,7 @@ export function createConnectivityStore(options?: ConnectivityStoreOptions) {
     // `navigator.onLine === false` before awaiting verification).
     abortInFlightProbe()
     clearBackoffTimer()
-    setTransport('unreachable')
+    setSnapshot({ ...snapshot, browserOnline: false, transport: 'unreachable' })
   }
 
   function handleVisibility() {
@@ -476,6 +484,7 @@ export function createConnectivityStore(options?: ConnectivityStoreOptions) {
     abortInFlightProbe()
     inFlightProbe = null
     setSnapshot({
+      browserOnline: isNavigatorOnline(),
       transport: 'unknown',
       serverFailure: null,
       probeInFlight: false,

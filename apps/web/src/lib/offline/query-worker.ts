@@ -39,8 +39,8 @@ import {
  * paths never call it implicitly.
  *
  * Precaching: this module is loaded via `new Worker(new
- * URL('./query-worker.ts', import.meta.url), { type: 'module' })` so Vite emits
- * a separate JS chunk. `apps/web/vite.config.ts` precaches
+ * URL('./query-worker-entry.ts', import.meta.url), { type: 'module' })` so Vite
+ * emits a separate JS chunk. `apps/web/vite.config.ts` precaches
  * `**\/*.{html,js,css,svg,png,ico,webp,woff2,json,webmanifest}`, which includes
  * that chunk — no config change needed. Verified by inspecting the emitted SW
  * manifest for the worker chunk.
@@ -206,45 +206,6 @@ export function runOfflineWorkerQuery(request: OfflineWorkerRequest): unknown {
   }
 }
 
-// Worker entry: `self.onmessage` handles `{...request}` and posts back
-// `{requestId, generation, ok, result}`. Stale generations are still answered
-// (callers discard by requestId/generation); the cache itself is fenced above.
-if (
-  typeof self !== 'undefined' &&
-  typeof (self as { postMessage?: unknown }).postMessage === 'function'
-) {
-  const scope = self as unknown as {
-    onmessage: ((event: MessageEvent<OfflineWorkerRequest>) => void) | null
-  }
-  scope.onmessage = (event: MessageEvent<OfflineWorkerRequest>) => {
-    const request = event.data
-    try {
-      const result = runOfflineWorkerQuery(request)
-      ;(
-        self as unknown as {
-          postMessage: (message: OfflineWorkerResponse) => void
-        }
-      ).postMessage({
-        requestId: request.requestId,
-        generation: request.generation,
-        ok: true,
-        result,
-      })
-    } catch (error) {
-      ;(
-        self as unknown as {
-          postMessage: (message: OfflineWorkerResponse) => void
-        }
-      ).postMessage({
-        requestId: request.requestId,
-        generation: request.generation,
-        ok: false,
-        error: error instanceof Error ? error.message : String(error),
-      })
-    }
-  }
-}
-
 export type OfflineQueryClientOptions = {
   createWorker?: () => Worker | null
   chunkRows?: number
@@ -297,9 +258,12 @@ export function createOfflineQueryClient(options?: OfflineQueryClientOptions) {
       if (options?.createWorker) {
         worker = options.createWorker()
       } else if (typeof Worker !== 'undefined') {
-        worker = new Worker(new URL('./query-worker.ts', import.meta.url), {
-          type: 'module',
-        })
+        worker = new Worker(
+          new URL('./query-worker-entry.ts', import.meta.url),
+          {
+            type: 'module',
+          },
+        )
       } else {
         return null
       }
@@ -506,7 +470,7 @@ export function getDefaultOfflineQueryClient(): OfflineQueryClient {
   return defaultClient
 }
 
-export function resetDefaultOfflineQueryClientForTests(): void {
+export function clearOfflineQueryClient(): void {
   try {
     defaultClient?.dispose()
   } catch {
@@ -556,3 +520,5 @@ export function createInlineOfflineWorkerForTests(): Worker {
 
 // Re-export pure helpers for unit tests and benchmarks.
 export { sortGlobalRecords }
+
+export const resetDefaultOfflineQueryClientForTests = clearOfflineQueryClient

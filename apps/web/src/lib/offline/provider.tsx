@@ -33,6 +33,7 @@ import {
   type OfflineLifecycle,
   type SessionFetchResult,
 } from './lifecycle'
+import { clearOfflineQueryClient } from './query-worker'
 import { createOfflineStore, type OfflineStore } from './store'
 import {
   createOfflineDownloadFetchers,
@@ -217,6 +218,7 @@ export function OfflineProvider(props: OfflineProviderProps) {
       resolveNamespace: (accountId: string) =>
         buildNamespace(getApiBaseUrl(), accountId),
       verifySession,
+      onEventBroadcast: (event) => channelRef.current?.post(event),
       queryClient: {
         cancelQueries: () =>
           queryClientRef.current?.cancelQueries?.() ?? Promise.resolve(),
@@ -237,9 +239,7 @@ export function OfflineProvider(props: OfflineProviderProps) {
         }
       })(),
       persisted: {
-        clearWorkerMemory: () => {
-          // Worker working set; no-op when no worker exists.
-        },
+        clearWorkerMemory: clearOfflineQueryClient,
         readControl: async (namespace: string) => {
           try {
             const repo = storage.getRepository()
@@ -255,41 +255,13 @@ export function OfflineProvider(props: OfflineProviderProps) {
           const repo = storage.getRepository()
           // Storage unavailable: fencing (marker + generation) already ran
           // synchronously; there is nothing durable to delete.
-          if (!repo) return
+          if (!repo) throw new Error('Offline storage unavailable')
           await repo.revokeNamespace({ namespace, generation })
-        },
-        finishRevokedDeletion: async (namespace: string) => {
-          const repo = storage.getRepository()
-          if (!repo) return
-          const control = await repo.readControl(namespace).catch(() => null)
-          const generation = control?.generation ?? 0
-          await repo
-            .revokeNamespace({ namespace, generation })
-            .catch(() => undefined)
         },
         resetLifecycle: async (namespace: string) => {
           const repo = storage.getRepository()
-          if (!repo) {
-            const current = lifecycleRef.current?.getSnapshot().generation ?? 0
-            return { generation: current + 1 }
-          }
-          // Prefer an explicit reactivation when the repository supports it;
-          // otherwise fall back to ensuring a control record exists and
-          // fencing in-memory (durable dataRevision writes happen in the sync path).
-          const maybe = repo as unknown as {
-            reactivateNamespace?: (input: {
-              namespace: string
-            }) => Promise<{ generation: number }>
-          }
-          if (typeof maybe.reactivateNamespace === 'function') {
-            return maybe.reactivateNamespace({ namespace })
-          }
-          const control = await repo.ensureControl(namespace).catch(() => null)
-          const current =
-            control?.generation ??
-            lifecycleRef.current?.getSnapshot().generation ??
-            0
-          return { generation: current + 1 }
+          if (!repo) throw new Error('Offline storage unavailable')
+          return repo.reactivateNamespace({ namespace })
         },
         readEnabledPref: async (namespace: string) => {
           try {
@@ -839,7 +811,10 @@ export function OfflineSyncHost() {
   const connectivity =
     useOptionalOfflineConnectivity() ?? getDefaultConnectivityStore()
   const sync = useOptionalOfflineSync()
-  const launchedRef = useRef<string | null>(null)
+  const launchedRef = useRef<{ namespace: string; sync: OfflineSync } | null>(
+    null,
+  )
+  const reconnectPendingRef = useRef(false)
   const prevTransportRef = useRef<string | null>(null)
   const queryClientForMutations = useQueryClient() as unknown as {
     getMutationCache?: () => {
@@ -872,8 +847,12 @@ export function OfflineSyncHost() {
     const namespace = lifecycleSnapshot.namespace
     if (!namespace) return
     if (lifecycleSnapshot.session !== 'verified') return
-    if (launchedRef.current === namespace) return
-    launchedRef.current = namespace
+    if (
+      launchedRef.current?.namespace === namespace &&
+      launchedRef.current.sync === sync
+    )
+      return
+    launchedRef.current = { namespace, sync }
     void sync.handleLaunch().catch(() => undefined)
   }, [sync, lifecycle, lifecycleSnapshot.namespace, lifecycleSnapshot.session])
 
@@ -882,10 +861,20 @@ export function OfflineSyncHost() {
   useEffect(() => {
     const prev = prevTransportRef.current
     prevTransportRef.current = transport
-    if (!sync || !lifecycle) return
-    if (prev !== 'unreachable' || transport !== 'reachable') return
-    if (lifecycleSnapshot.session !== 'verified') return
-    if (!lifecycleSnapshot.namespace) return
+    if (prev === 'unreachable' && transport === 'reachable')
+      reconnectPendingRef.current = true
+    if (!lifecycle) return
+    if (transport !== 'reachable') return
+    if (
+      lifecycleSnapshot.session === 'offline-identity' &&
+      prev !== 'reachable'
+    ) {
+      void lifecycle.verifySession({ fresh: true })
+      return
+    }
+    if (!sync || lifecycleSnapshot.session !== 'verified') return
+    if (!reconnectPendingRef.current || !lifecycleSnapshot.namespace) return
+    reconnectPendingRef.current = false
     void sync.handleReconnect().catch(() => undefined)
   }, [
     sync,
@@ -912,11 +901,15 @@ export function OfflineSyncHost() {
               if (!event || typeof event !== 'object') return
               const record = event as {
                 type?: unknown
-                action?: { type?: unknown; variables?: unknown }
+                action?: { type?: unknown }
+                mutation?: {
+                  state: { variables?: unknown }
+                  options?: { mutationKey?: readonly unknown[] }
+                }
               }
               if (record.type !== 'updated') return
               if (record.action?.type !== 'success') return
-              const variables = record.action.variables as
+              const variables = record.mutation?.state.variables as
                 | { groupId?: unknown; groupIds?: unknown }
                 | null
                 | undefined
@@ -931,6 +924,14 @@ export function OfflineSyncHost() {
                   }
                 }
               }
+              // Only an unscoped group mutation (e.g. group creation) needs
+              // a catalog pass. Authentication and auxiliary requests do not.
+              const path = record.mutation?.options?.mutationKey?.[0]
+              if (
+                ids.length === 0 &&
+                (!Array.isArray(path) || path[0] !== 'groups')
+              )
+                return
               // Fire-and-forget: existing success stays immediate.
               void sync
                 .handleMutationSuccess(

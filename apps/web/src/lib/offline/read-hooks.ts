@@ -489,6 +489,9 @@ export type OfflineExpensesOptions = {
   sortDir?: GroupExpenseSortDir
   collapseInvolving?: boolean
   limit?: number
+  enabled?: boolean
+  linkInviteToken?: string
+  viewKey?: string
 }
 
 export function useOfflineExpenses(
@@ -519,6 +522,8 @@ export function useOfflineExpenses(
   const networkInput = useMemo(
     () => ({
       groupId,
+      linkInviteToken: options.linkInviteToken,
+      viewKey: options.viewKey,
       limit: limit ?? OFFLINE_LOCAL_PAGE_SIZE,
       filter: filter?.search,
       locale: filter?.locale,
@@ -537,9 +542,19 @@ export function useOfflineExpenses(
       sortDir,
       hideNotInvolving: collapseInvolving ? true : undefined,
     }),
-    [groupId, limit, filter, sortBy, sortDir, collapseInvolving],
+    [
+      groupId,
+      limit,
+      filter,
+      sortBy,
+      sortDir,
+      collapseInvolving,
+      options.linkInviteToken,
+      options.viewKey,
+    ],
   )
   const network = trpc.groups.expenses.list.useInfiniteQuery(networkInput, {
+    enabled: options.enabled ?? true,
     getNextPageParam: (page) =>
       (page as unknown as { nextCursor?: number | string }).nextCursor ??
       undefined,
@@ -586,8 +601,6 @@ export function useOfflineExpenses(
   const [localLoading, setLocalLoading] = useState(false)
   const [localError, setLocalError] = useState(false)
   const requestIdRef = useRef(0)
-  const sourceRef = useRef<OfflineSource>('download')
-  const [source, setSource] = useState<OfflineSource>('download')
 
   // Reset pagination when query/filter/sort/source version changes.
   useEffect(() => {
@@ -595,13 +608,15 @@ export function useOfflineExpenses(
     setLocalPages([])
     setLocalMeta({ nextOffset: null, hasMore: false })
     setLocalError(false)
-    // Local stays active for the current list until the first network page
-    // succeeds, then atomically reset source/pages to network.
-    if (sourceRef.current === 'download' && network.data?.pages?.length) {
-      sourceRef.current = 'network'
-      setSource('network')
-    }
-  }, [filterKey, version, namespace, generation, network.data?.pages?.length])
+  }, [
+    filterKey,
+    version,
+    namespace,
+    generation,
+    network.data?.pages?.length,
+    isOnline,
+    network.error,
+  ])
 
   // Cancel obsolete loads on account/source/filter changes.
   useEffect(() => {
@@ -613,7 +628,7 @@ export function useOfflineExpenses(
     const loadFirstPage = async () => {
       // While the network has a complete first page, it wins; otherwise use
       // the local snapshot immediately (cold direct routes included).
-      if (network.data?.pages?.length) return
+      if (isOnline && !network.error && network.data?.pages?.length) return
       setLocalLoading(true)
       setLocalError(false)
       try {
@@ -663,12 +678,14 @@ export function useOfflineExpenses(
     filterKey,
     groupId,
     network.data?.pages?.length,
+    isOnline,
+    network.error,
     participantId,
     accountId,
   ])
 
   const fetchNextPage = async (): Promise<void> => {
-    if (source === 'network') {
+    if (isOnline && !network.error && network.data?.pages?.length) {
       await network.fetchNextPage()
       return
     }
@@ -699,7 +716,8 @@ export function useOfflineExpenses(
     }
   }
 
-  const networkReady = !!network.data?.pages?.length && !network.error
+  const networkReady =
+    isOnline && !!network.data?.pages?.length && !network.error
   if (networkReady && network.data) {
     const pages = network.data.pages.map((page) => ({
       expenses: (page as unknown as { expenses: unknown[] }).expenses,
@@ -747,7 +765,7 @@ export function useOfflineExpenses(
       isLoading: localLoading,
     }
   }
-  if (record && (localPages.length > 0 || !localLoading)) {
+  if (record && localPages.length > 0) {
     const pages = localPages.map((expenses, index) => ({
       expenses,
       hasMore: index === localPages.length - 1 ? localMeta.hasMore : true,
@@ -975,7 +993,10 @@ export function useOfflineBalances(groupId: string): OfflineHookResult<{
 
 // --- Global expenses ----------------------------------------------------------
 
-export type OfflineGlobalOptions = GlobalQueryInput & { limit?: number }
+export type OfflineGlobalOptions = GlobalQueryInput & {
+  limit?: number
+  locale?: string
+}
 
 export function useOfflineGlobalExpenses(
   input: OfflineGlobalOptions,
@@ -988,12 +1009,14 @@ export function useOfflineGlobalExpenses(
   hasMore: boolean
   isLoading: boolean
 } {
+  const isOnline = useOnlineStatus()
   const { namespace, generation } = useOfflineSession()
   const repository = useOfflineRepository()
   const { catalog } = useOfflineCatalog()
   const network = trpc.expenses.list.useInfiniteQuery(
     {
       limit: input.limit ?? OFFLINE_LOCAL_PAGE_SIZE,
+      locale: input.locale,
       query:
         (input as { search?: string }).search ??
         (input as { query?: string }).query,
@@ -1019,6 +1042,11 @@ export function useOfflineGlobalExpenses(
       retry: false,
     },
   )
+  const inputRef = useRef(input)
+  useEffect(() => {
+    inputRef.current = input
+  }, [input])
+  const [localError, setLocalError] = useState(false)
   const inputKey = useMemo(() => JSON.stringify(input), [input])
   const [localPages, setLocalPages] = useState<unknown[][]>([])
   const [localState, setLocalState] = useState<{
@@ -1068,9 +1096,10 @@ export function useOfflineGlobalExpenses(
     const requestId = (requestIdRef.current += 1)
     if (!repository || !namespace || !catalog) return
     let cancelled = false
-    if (network.data?.pages?.length) return
+    if (isOnline && !network.error && network.data?.pages?.length) return
     const run = async () => {
       setLocalLoading(true)
+      setLocalError(false)
       try {
         const snapshots: GroupRecord[] = []
         for (const entry of catalog.groups) {
@@ -1082,7 +1111,7 @@ export function useOfflineGlobalExpenses(
           if (result.status === 'ready') snapshots.push(result.record)
         }
         if (cancelled || requestId !== requestIdRef.current) return
-        const parsed = JSON.parse(inputKey) as GlobalQueryInput
+        const parsed = inputRef.current
         const client = getDefaultOfflineQueryClient()
         const result = (await client.query({
           generation,
@@ -1114,6 +1143,11 @@ export function useOfflineGlobalExpenses(
           truncatedGroupCount: result.truncatedGroupCount ?? 0,
           truncatedTotalCount: result.truncatedTotalCount ?? null,
         })
+      } catch {
+        if (!cancelled && requestId === requestIdRef.current) {
+          setLocalPages([])
+          setLocalError(true)
+        }
       } finally {
         if (!cancelled && requestId === requestIdRef.current)
           setLocalLoading(false)
@@ -1131,10 +1165,12 @@ export function useOfflineGlobalExpenses(
     inputKey,
     commitTick,
     network.data?.pages?.length,
+    isOnline,
+    network.error,
   ])
 
   const fetchNextPage = async (): Promise<void> => {
-    if (network.data?.pages?.length) {
+    if (isOnline && !network.error && network.data?.pages?.length) {
       await network.fetchNextPage()
       return
     }
@@ -1142,7 +1178,7 @@ export function useOfflineGlobalExpenses(
       return
     const requestId = requestIdRef.current
     try {
-      const parsed = JSON.parse(inputKey) as GlobalQueryInput
+      const parsed = inputRef.current
       const snapshots: GroupRecord[] = []
       for (const entry of catalog.groups) {
         const result = await repository.readGroup(namespace, entry.overview.id)
@@ -1186,7 +1222,8 @@ export function useOfflineGlobalExpenses(
     }
   }
 
-  const networkReady = !!network.data?.pages?.length && !network.error
+  const networkReady =
+    isOnline && !!network.data?.pages?.length && !network.error
   if (networkReady && network.data) {
     return {
       data: {
@@ -1214,7 +1251,7 @@ export function useOfflineGlobalExpenses(
       isLoading: false,
     }
   }
-  if (catalog && (localPages.length > 0 || !localLoading)) {
+  if (catalog && localPages.length > 0) {
     const truncated = localState.truncatedGroupCount > 0
     return {
       data: {
@@ -1245,7 +1282,7 @@ export function useOfflineGlobalExpenses(
     meta: {
       source: 'download',
       capturedAt: null,
-      availability: network.error ? 'error' : 'loading',
+      availability: localError || network.error ? 'error' : 'loading',
       refreshing: network.isFetching || localLoading,
       incompleteGroupCount: 0,
     },

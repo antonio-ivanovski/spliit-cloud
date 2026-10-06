@@ -374,7 +374,7 @@ export function sortGroupRecords(
       const diff = compareDates(a.list.expenseDate, b.list.expenseDate)
       if (diff !== 0) return diff * primary
       const createdDiff = compareDates(a.list.createdAt, b.list.createdAt)
-      if (createdDiff !== 0) return createdDiff > 0 ? 1 : -1
+      if (createdDiff !== 0) return -createdDiff
       return a.list.id < b.list.id ? 1 : a.list.id > b.list.id ? -1 : 0
     }
     if (field === 'createdAt') {

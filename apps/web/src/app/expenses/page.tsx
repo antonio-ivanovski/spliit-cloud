@@ -764,9 +764,8 @@ export function GlobalExpensesContent() {
     ...(input as unknown as Record<string, never>),
     search: debouncedSearch || undefined,
   } as unknown as Parameters<typeof useOfflineGlobalExpenses>[0])
-  const networkHasPages = !!expensesQuery.data?.pages?.length
   const useOfflineSource =
-    !networkHasPages &&
+    offlineGlobal.meta.source === 'download' &&
     offlineGlobal.meta.availability === 'ready' &&
     !!offlineGlobal.data
   const expenses = useOfflineSource
@@ -918,7 +917,8 @@ export function GlobalExpensesContent() {
                 </p>
               )}
               {useOfflineSource &&
-                offlineGlobal.meta.incompleteGroupCount > 0 && (
+                (offlineGlobal.meta.incompleteGroupCount > 0 ||
+                  (offlineGlobal.data?.dirtyGroupCount ?? 0) > 0) && (
                   <output className="mx-4 mb-2 block text-xs text-muted-foreground sm:mx-6">
                     {t('OfflineDownloads.groupsNotDownloaded', {
                       count: offlineGlobal.meta.incompleteGroupCount,

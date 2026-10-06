@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useMascotController } from '@/components/mascot/mascot-context'
 import { useToast } from '@/components/ui/use-toast'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
+import { useOptionalOfflineSync } from '@/lib/offline/provider'
 import { trpc } from '@/trpc/client'
 
 function useArchiveTranslations() {
@@ -63,6 +64,7 @@ export function useArchiveGroupMutation({
 }
 
 export function useDeleteGroupMutation() {
+  const offlineSync = useOptionalOfflineSync()
   const utils = trpc.useUtils()
   const navigate = useNavigate()
   const { toast } = useToast()
@@ -70,7 +72,8 @@ export function useDeleteGroupMutation() {
   const mascot = useMascotController()
 
   return trpc.groups.delete.useMutation({
-    onSuccess: async () => {
+    onSuccess: async (_data, variables) => {
+      await offlineSync?.handleGroupRemoved({ groupId: variables.groupId })
       mascot.react('acknowledge')
       toast({ description: labels.deletedToast })
       await invalidateAccountGroupLists(utils)

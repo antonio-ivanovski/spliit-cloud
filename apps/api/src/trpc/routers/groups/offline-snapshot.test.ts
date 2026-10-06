@@ -348,6 +348,8 @@ function setupSnapshotMocks(args: {
       }
       select?: Record<string, unknown>
       orderBy?: unknown
+      cursor?: { id: string }
+      take?: number
     }
     if (q.where?.recurringSeriesId) {
       const filter = q.where.recurringSeriesId as string | { in?: string[] }
@@ -363,7 +365,13 @@ function setupSnapshotMocks(args: {
       return allRows as never
     }
     if (q.orderBy) {
-      return bulkRows as never
+      const start = q.cursor
+        ? bulkRows.findIndex((row) => row.id === q.cursor?.id) + 1
+        : 0
+      return bulkRows.slice(
+        start,
+        q.take === undefined ? undefined : start + q.take,
+      ) as never
     }
     if (q.select && 'version' in q.select) {
       return bulkRows as never
@@ -586,7 +594,7 @@ describe('groups.offlineSnapshot content', () => {
     expect(new Set(result.expenses.map((e) => e.list.id)).size).toBe(4)
   })
 
-  it('caps at 500 newest with correct ordering and pagination metadata', async () => {
+  it('downloads complete history across multiple database pages', async () => {
     const bulkRows = Array.from({ length: 600 }, (_, index) => {
       const n = 600 - index
       const id = `exp-${String(n).padStart(4, '0')}`
@@ -606,18 +614,17 @@ describe('groups.offlineSnapshot content', () => {
       if (createdDiff !== 0) return createdDiff
       return b.id.localeCompare(a.id)
     })
-    const capped = bulkRows.slice(0, 500)
-    setupSnapshotMocks({ bulkRows: capped, totalCount: 600 })
+    setupSnapshotMocks({ bulkRows, totalCount: 600 })
 
     const result = await makeCaller('acct-self').offlineSnapshot({
       groupId: 'grp-1',
     })
 
     expect(result.totalCount).toBe(600)
-    expect(result.downloadedCount).toBe(500)
-    expect(result.hasMore).toBe(true)
-    expect(result.truncatedAt).toBeInstanceOf(Date)
-    expect(result.expenses).toHaveLength(500)
+    expect(result.downloadedCount).toBe(600)
+    expect(result.hasMore).toBe(false)
+    expect(result.truncatedAt).toBeNull()
+    expect(result.expenses).toHaveLength(600)
     for (let i = 1; i < result.expenses.length; i++) {
       const prev = result.expenses[i - 1].list
       const curr = result.expenses[i].list
@@ -807,6 +814,8 @@ describe('groups.offlineSnapshot content', () => {
             where?: { ledgerId?: unknown; recurringSeriesId?: unknown }
             select?: Record<string, unknown>
             orderBy?: unknown
+            cursor?: { id: string }
+            take?: number
           },
       )
       .filter(
@@ -814,8 +823,7 @@ describe('groups.offlineSnapshot content', () => {
           args.where?.recurringSeriesId === undefined &&
           args.orderBy === undefined &&
           args.select !== undefined &&
-          'ledgerId' in args.select &&
-          !('id' in args.select),
+          'ledgerId' in args.select,
       )
     expect(financialCalls.length).toBeGreaterThan(0)
     for (const args of financialCalls) {

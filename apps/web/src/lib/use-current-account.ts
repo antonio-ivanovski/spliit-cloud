@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { authClient } from '@/lib/auth'
 import type { AuthAccount } from '@/lib/auth'
@@ -34,6 +34,16 @@ export function useCurrentAccount() {
   const live = (session.data?.user as AuthAccount | undefined) ?? null
   // Always subscribed (stable, no second latch): ignored outside the provider.
   const offline = useOfflineSession()
+
+  const lastLiveId = useRef(live?.id ?? null)
+  useEffect(() => {
+    const id = live?.id ?? null
+    const changed = id !== lastLiveId.current
+    lastLiveId.current = id
+    if (lifecycle && id && changed && !session.isPending && !session.error) {
+      void lifecycle.verifySession({ fresh: true })
+    }
+  }, [lifecycle, live?.id, session.isPending, session.error])
 
   useEffect(() => {
     // Single owner: when the lifecycle is present it owns last-account

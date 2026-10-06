@@ -164,6 +164,7 @@ export function createOfflineStore(options?: OfflineStoreOptions) {
       // Our old connection already closed in the repository's `blocking`
       // handler. Notify other tabs so they can close/reload.
       closeRepository()
+      setStatus('unavailable', { errorCode: 'storage-unavailable' })
       try {
         options?.onStorageClose?.()
       } catch {

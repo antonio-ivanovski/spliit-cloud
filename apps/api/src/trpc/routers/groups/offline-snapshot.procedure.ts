@@ -5,12 +5,11 @@ import { prisma } from '@spliit/db'
 
 import { loadOfflineSnapshot, offlineTxOptions } from '../../../lib/api/offline'
 import { protectedProcedure } from '../../init'
-import { OFFLINE_MAX_EXPENSES } from '../../outputs/offline'
 import { offlineSnapshotOutputSchema } from '../../outputs/offline'
 
 /**
- * Offline group snapshot: coherent group + overview + global + balances + up to
- * 500 newest expenses (expenseDate desc, createdAt desc, id desc).
+ * Offline group snapshot: coherent group + overview + global + balances +
+ * complete expense history (expenseDate desc, createdAt desc, id desc).
  *
  * Membership-only: strictly ACTIVE membership, no link-invite token or view-key
  * path, so this procedure never accepts an invitation as a side effect.
@@ -18,8 +17,8 @@ import { offlineSnapshotOutputSchema } from '../../outputs/offline'
  * whose group row disappeared -> NOT_FOUND.
  *
  * One RepeatableRead transaction (30s timeout) covers auth + rows + calcs;
- * `capturedAt` is the transaction start. The capped response succeeds or fails
- * atomically; clients preserve the existing snapshot on timeout.
+ * `capturedAt` is the transaction start. The complete response succeeds or
+ * fails atomically; clients preserve the existing snapshot on timeout.
  * Private/no-store. Recurrence neighbors come from each series ordered by
  * recurrenceSequence; null sequences are excluded from the chain.
  */
@@ -57,12 +56,6 @@ export const offlineSnapshotProcedure = protectedProcedure
       const capturedAt = new Date()
       const snapshot = await loadOfflineSnapshot(tx, accountId, input.groupId)
       const hasMore = snapshot.totalCount > snapshot.downloadedCount
-      if (snapshot.downloadedCount > OFFLINE_MAX_EXPENSES) {
-        throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Snapshot exceeds offline cap',
-        })
-      }
       const output = {
         schemaVersion: 1 as const,
         accountId,

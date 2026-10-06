@@ -155,6 +155,10 @@ const ExpenseListForSearch = ({
   const offlineEnabled = !linkInviteToken && !viewKey
   const offline = useOfflineExpenses({
     groupId,
+    limit: EXPENSE_LIST_PAGE_SIZE,
+    linkInviteToken,
+    viewKey,
+    enabled: group !== undefined,
     filter: {
       hideSettlements: queryInput.hideSettlements,
       categories: queryInput.categories,
@@ -174,9 +178,10 @@ const ExpenseListForSearch = ({
     sortDir: sort.sortDir,
     collapseInvolving: shouldPageByInvolvement(canCollapse, filters.showAll),
   })
-  const networkHasPages = !!data?.pages?.length
   const useOfflineSource =
-    offlineEnabled && !networkHasPages && offline.meta.availability === 'ready'
+    offlineEnabled &&
+    offline.meta.source === 'download' &&
+    offline.meta.availability === 'ready'
   type NetworkExpenses = NonNullable<typeof data>['pages'][number]['expenses']
   const expenses = (
     useOfflineSource

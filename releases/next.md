@@ -19,10 +19,10 @@ who is affected, and the exact migration steps.
 
 ### 🚀 Features
 
-- Read your groups offline: all member groups, recent expenses (newest 500 per group), and balances are automatically downloaded for read-only offline use; files and edits still require a connection (`TBD` by @TBD)
+- Read your groups offline: all member groups, complete expense history, and balances are automatically downloaded for read-only offline use; files and edits still require a connection (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
 
-- Short entry per fix (`TBD` by @TBD)
+- Offline reads now recover after connection failures, continue local pagination after disconnecting, and fence cached data against stale sign-in checks (`TBD` by @TBD)
 
 **Full Changelog**: TBD

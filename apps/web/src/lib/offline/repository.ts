@@ -83,6 +83,7 @@ export type ReplaceCatalogInput = {
   generation: number
   expectedDataRevision: number
   catalog: z.infer<typeof offlineCatalogOutputSchema>
+  leaseOwner?: string | null
 }
 
 export type CommitGroupInput = {
@@ -429,6 +430,17 @@ export class OfflineRepository {
       }
       if (control.dataRevision !== input.expectedDataRevision) {
         throw new OfflineStorageError('revision-changed', 'revision-changed', {
+          namespace: input.namespace,
+        })
+      }
+
+      if (
+        control.leaseOwner !== null &&
+        control.leaseUntil !== null &&
+        control.leaseUntil > Date.now() &&
+        input.leaseOwner !== control.leaseOwner
+      ) {
+        throw new OfflineStorageError('lease-conflict', 'lease-conflict', {
           namespace: input.namespace,
         })
       }

@@ -454,6 +454,81 @@ describe('offline lifecycle account transitions', () => {
     lifecycle.dispose()
   })
 
+  it.each(['sign-out', 'revoked'] as const)(
+    'discards a verification started before %s',
+    async (action) => {
+      let resolveVerify!: (value: SessionFetchResult) => void
+      const harness = makeHarness({
+        cached: makeAccount('a'),
+        verify: () =>
+          new Promise<SessionFetchResult>((resolve) => {
+            resolveVerify = resolve
+          }),
+      })
+      const boot = harness.lifecycle.bootstrap()
+      await vi.waitFor(() => expect(resolveVerify).toBeDefined())
+      if (action === 'sign-out')
+        await harness.lifecycle.signOut({ navigateTo: '' })
+      else
+        harness.lifecycle.handleCrossTabEvent({
+          type: 'revoked',
+          namespace: namespaceFor('a'),
+          generation: 1,
+          nonce: 'revoke',
+        })
+      resolveVerify({ kind: 'verified', account: makeAccount('a') })
+      await boot
+      expect(harness.lifecycle.getSnapshot().session).not.toBe('verified')
+      expect(harness.lastAccount).toBeNull()
+      harness.lifecycle.dispose()
+    },
+  )
+
+  it('keeps revoked data fenced when reactivation fails', async () => {
+    const storage = memoryStorage()
+    const namespace = namespaceFor('a')
+    storage.setItem(revokedKeyFor(namespace), 'revoked')
+    const lifecycle = createOfflineLifecycle({
+      readLastAccount: () => null,
+      writeLastAccount: vi.fn(),
+      clearLastAccount: vi.fn(),
+      resolveNamespace: namespaceFor,
+      storage,
+      verifySession: async () => ({
+        kind: 'verified',
+        account: makeAccount('a'),
+      }),
+      persisted: {
+        resetLifecycle: async () => {
+          throw new Error('storage unavailable')
+        },
+      },
+    })
+    await lifecycle.bootstrap()
+    expect(hasRevokedMarker(namespace, storage)).toBe(true)
+    expect(lifecycle.getSnapshot().namespace).toBeNull()
+    expect(lifecycle.getSnapshot().cleanupError).toBe('cleanup-failed')
+    lifecycle.dispose()
+  })
+
+  it('clearing downloads preserves the verified account in other tabs', async () => {
+    const harness = makeHarness({
+      cached: makeAccount('a'),
+      verify: { kind: 'verified', account: makeAccount('a') },
+    })
+    await harness.lifecycle.bootstrap()
+    harness.lifecycle.handleCrossTabEvent({
+      type: 'cleared',
+      namespace: namespaceFor('a'),
+      generation: 1,
+      nonce: 'clear',
+    })
+    expect(harness.lifecycle.getSnapshot().session).toBe('verified')
+    expect(harness.lifecycle.getSnapshot().invalidated).toBe(false)
+    expect(harness.lastAccount?.id).toBe('a')
+    harness.lifecycle.dispose()
+  })
+
   it('stale-tab reactivation only from a fresh verified session', async () => {
     const storage = memoryStorage()
     const namespace = namespaceFor('a')

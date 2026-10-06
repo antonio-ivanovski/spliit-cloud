@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { OfflineBanner } from '@/components/offline-banner'
 import { ApiStatusBanner } from '@/components/api-status-banner'
+import { OfflineBanner } from '@/components/offline-banner'
 import {
   OfflineMissingData,
   OfflineNeedsConnection,
@@ -93,9 +93,9 @@ describe('OfflineBanner honest copy', () => {
       })
       render(<OfflineBanner />)
       await waitFor(() => {
-        expect(
-          getDefaultConnectivityStore().getSnapshot().probeInFlight,
-        ).toBe(true)
+        expect(getDefaultConnectivityStore().getSnapshot().probeInFlight).toBe(
+          true,
+        )
       })
       // A pending probe is not proof of offline: no false offline claim.
       expect(screen.queryByTestId('offline-banner')).not.toBeInTheDocument()

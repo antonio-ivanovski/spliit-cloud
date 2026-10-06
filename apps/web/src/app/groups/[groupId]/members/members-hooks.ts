@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { useMascotController } from '@/components/mascot/mascot-context'
 import { useToast } from '@/components/ui/use-toast'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
+import { useOptionalOfflineSync } from '@/lib/offline/provider'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 import { resolveFormattingLocale } from '@spliit/domain'
@@ -452,8 +453,10 @@ export function useMembersDialogs() {
     },
   )
 
+  const offlineSync = useOptionalOfflineSync()
   const leaveMutation = trpc.groups.leave.useMutation({
     onSuccess: async () => {
+      await offlineSync?.handleGroupRemoved({ groupId })
       mascot.react('acknowledge')
       toast({ description: t('leave.toast.left') })
       setLeaveDialogOpen(false)
