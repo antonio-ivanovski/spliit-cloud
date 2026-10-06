@@ -5,6 +5,12 @@ import { render, screen } from '@/test/test-utils'
 const mocks = vi.hoisted(() => ({
   mockUseCurrentGroup: vi.fn(),
   mockUseIsReadOnlyGroupViewer: vi.fn(() => false),
+  mockUseGroupWriteEligibility: vi.fn(() => ({
+    canWrite: true,
+    serverReadOnly: false,
+    connectionReadOnly: false,
+    isRevalidating: false,
+  })),
   mockSplitPresetsList: vi.fn(),
   mockUseCurrentAccount: vi.fn((): { data: { id: string } | null } => ({
     data: null,
@@ -15,6 +21,14 @@ vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: mocks.mockUseCurrentGroup,
   useCurrentGroupOrNull: () => null,
   useIsReadOnlyGroupViewer: mocks.mockUseIsReadOnlyGroupViewer,
+  useGroupWriteEligibility: mocks.mockUseGroupWriteEligibility,
+}))
+
+vi.mock('@/lib/use-online-status', () => ({
+  useOnlineStatus: () => true,
+  useOfflineWithoutData: () => false,
+  useConnectivityStatus: () => 'online' as const,
+  useServerUnreachableWithoutData: () => false,
 }))
 
 vi.mock('@/lib/use-current-account', () => ({
