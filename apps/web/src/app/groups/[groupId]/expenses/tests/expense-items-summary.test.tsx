@@ -1,10 +1,12 @@
 import {
   ExpenseItemsSummary,
+  resolveExpenseItemsAmount,
   resolveExpenseItemsCurrency,
 } from '@/app/groups/[groupId]/expenses/expense-items-summary'
 import { render, screen } from '@/test/test-utils'
 
 const EUR = { code: 'EUR', symbol: '€', decimal_digits: 2, rounding: 0 }
+const USD = { code: 'USD', symbol: '$', decimal_digits: 2, rounding: 0 }
 
 const fourItems = [
   { id: 'item-1', title: 'Apples', amount: 1000 },
@@ -62,6 +64,126 @@ describe('ExpenseItemsSummary', () => {
       screen.queryByRole('button', { name: /more/i }),
     ).not.toBeInTheDocument()
   })
+
+  it('shows assignee names below items with split data', () => {
+    render(
+      <ExpenseItemsSummary
+        items={[
+          {
+            id: 'item-1',
+            title: 'Pizza',
+            amount: 1000,
+            splitMode: 'EVENLY',
+            paidFor: [
+              { ledgerParticipantId: 'a', shares: 1 },
+              { ledgerParticipantId: 'b', shares: 1 },
+            ],
+          },
+        ]}
+        currency={EUR}
+        locale="en-US"
+        participants={[
+          { id: 'a', name: 'Alice' },
+          { id: 'b', name: 'Bob' },
+        ]}
+      />,
+    )
+
+    expect(screen.getByText('Pizza')).toBeInTheDocument()
+    expect(screen.getByText('Alice, Bob')).toBeInTheDocument()
+  })
+
+  it('expands an item to reveal per-person amounts that sum to the total', async () => {
+    const { user } = render(
+      <ExpenseItemsSummary
+        items={[
+          {
+            id: 'item-1',
+            title: 'Pizza',
+            amount: 1001,
+            splitMode: 'EVENLY',
+            paidFor: [
+              { ledgerParticipantId: 'a', shares: 1 },
+              { ledgerParticipantId: 'b', shares: 1 },
+            ],
+          },
+        ]}
+        currency={EUR}
+        locale="en-US"
+        participants={[
+          { id: 'a', name: 'Alice' },
+          { id: 'b', name: 'Bob' },
+        ]}
+      />,
+    )
+
+    const toggle = screen.getByRole('button', { name: 'Alice, Bob' })
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+
+    await user.click(toggle)
+
+    expect(toggle).toHaveAttribute('aria-expanded', 'true')
+    // €10.01 split evenly: one pays €5.00, the other €5.01.
+    expect(screen.getByText('Alice')).toBeInTheDocument()
+    expect(screen.getByText('Bob')).toBeInTheDocument()
+  })
+
+  it('renders the unaccounted remainder row with its assignees', () => {
+    render(
+      <ExpenseItemsSummary
+        items={[
+          {
+            id: 'item-1',
+            title: 'Pizza',
+            amount: 1000,
+            splitMode: 'EVENLY',
+            paidFor: [{ ledgerParticipantId: 'a', shares: 1 }],
+          },
+        ]}
+        currency={EUR}
+        locale="en-US"
+        participants={[{ id: 'a', name: 'Alice' }]}
+        itemizedRemainder={{
+          splitMode: 'EVENLY',
+          allocationMode: 'CUSTOM',
+          paidFor: [{ ledgerParticipantId: 'a', shares: 1 }],
+        }}
+        expenseAmount={1200}
+        otherLabel="Other (unaccounted)"
+      />,
+    )
+
+    expect(screen.getByText('Other (unaccounted)')).toBeInTheDocument()
+  })
+
+  it('renders proportional remainder text instead of assignee amounts', () => {
+    render(
+      <ExpenseItemsSummary
+        items={[
+          {
+            id: 'item-1',
+            title: 'Pizza',
+            amount: 1000,
+            splitMode: 'EVENLY',
+            paidFor: [{ ledgerParticipantId: 'a', shares: 1 }],
+          },
+        ]}
+        currency={EUR}
+        locale="en-US"
+        participants={[{ id: 'a', name: 'Alice' }]}
+        itemizedRemainder={{
+          splitMode: 'EVENLY',
+          allocationMode: 'PROPORTIONAL',
+          paidFor: [],
+        }}
+        expenseAmount={1200}
+        otherLabel="Other (unaccounted)"
+        proportionalText="Proportional to items"
+      />,
+    )
+
+    expect(screen.getByText('Proportional to items')).toBeInTheDocument()
+  })
 })
 
 describe('resolveExpenseItemsCurrency', () => {
@@ -79,5 +201,77 @@ describe('resolveExpenseItemsCurrency', () => {
 
   it('falls back to the group currency for an unknown expense currency', () => {
     expect(resolveExpenseItemsCurrency('NOT_A_CURRENCY', EUR)).toBe(EUR)
+  })
+})
+
+describe('resolveExpenseItemsAmount', () => {
+  it('prefers the entered-currency total for converted expenses', () => {
+    expect(resolveExpenseItemsAmount(10000, 9200)).toBe(10000)
+  })
+
+  it('falls back to the ledger total without a conversion', () => {
+    expect(resolveExpenseItemsAmount(null, 9200)).toBe(9200)
+    expect(resolveExpenseItemsAmount(undefined, 9200)).toBe(9200)
+  })
+})
+
+describe('ExpenseItemsSummary with converted expenses', () => {
+  const remainder = {
+    splitMode: 'EVENLY',
+    allocationMode: 'CUSTOM' as const,
+    paidFor: [{ ledgerParticipantId: 'a', shares: 1 }],
+  }
+  const participants = [{ id: 'a', name: 'Alice' }]
+
+  it('shows no "Other" row when items cover the entered-currency total', () => {
+    // USD 100.00 of items on a converted expense (ledger total €92.00):
+    // the filler must compare against the entered total, not the ledger one.
+    render(
+      <ExpenseItemsSummary
+        items={[
+          {
+            id: 'item-1',
+            title: 'Pizza',
+            amount: 10000,
+            splitMode: 'EVENLY',
+            paidFor: [{ ledgerParticipantId: 'a', shares: 1 }],
+          },
+        ]}
+        currency={USD}
+        locale="en-US"
+        participants={participants}
+        itemizedRemainder={remainder}
+        expenseAmount={resolveExpenseItemsAmount(10000, 9200)}
+        otherLabel="Other (unaccounted)"
+      />,
+    )
+
+    expect(screen.queryByText('Other (unaccounted)')).not.toBeInTheDocument()
+  })
+
+  it('shows the "Other" gap in the entered currency, not the ledger total', () => {
+    render(
+      <ExpenseItemsSummary
+        items={[
+          {
+            id: 'item-1',
+            title: 'Pizza',
+            amount: 8000,
+            splitMode: 'EVENLY',
+            paidFor: [{ ledgerParticipantId: 'a', shares: 1 }],
+          },
+        ]}
+        currency={USD}
+        locale="en-US"
+        participants={participants}
+        itemizedRemainder={remainder}
+        expenseAmount={resolveExpenseItemsAmount(10000, 9200)}
+        otherLabel="Other (unaccounted)"
+      />,
+    )
+
+    expect(screen.getByText('Other (unaccounted)')).toBeInTheDocument()
+    // $20.00 gap in entered currency — not the €12.00 ledger difference.
+    expect(screen.getByText('$20.00')).toBeInTheDocument()
   })
 })

@@ -20,6 +20,7 @@ export const activityTypeSchema = z.enum([
   'MEMBER_LEFT',
   'MEMBER_REMOVED',
   'MEMBER_ROLE_CHANGED',
+  'PARTICIPANT_ADDED',
   'PARTICIPANT_REMOVED',
 ])
 

@@ -1,9 +1,14 @@
 import type { LinkProps } from '@tanstack/react-router'
 
+import { expenseEditPreviewLink } from './expense-navigation'
+
 type FocusedRouteMeta = {
   title: string
   to: LinkProps['to']
   params?: LinkProps['params']
+  search?: LinkProps['search']
+  resetScroll?: boolean
+  replace?: boolean
 }
 
 const groupIdFromPath = (pathname: string) =>
@@ -54,6 +59,7 @@ export function shouldHideMobileGroupTabs(pathname: string) {
 export function getFocusedRouteMeta(
   pathname: string,
   t: (key: string) => string,
+  returnTo?: string,
 ): FocusedRouteMeta | null {
   const groupId = groupIdFromPath(pathname)
   if (pathname === '/groups/create') {
@@ -114,10 +120,12 @@ export function getFocusedRouteMeta(
     }
   }
   if (groupId && /^\/groups\/[^/]+\/expenses\/[^/]+\/edit$/.test(pathname)) {
+    const expenseId = pathname.split('/').at(-2)!
+    const link = expenseEditPreviewLink(groupId, expenseId, returnTo)
     return {
       title: t('ExpensePreview.edit'),
-      to: '/groups/$groupId/expenses',
-      params: { groupId },
+      ...link,
+      to: link.to,
     }
   }
   return null

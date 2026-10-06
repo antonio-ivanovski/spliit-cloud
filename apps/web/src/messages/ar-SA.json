@@ -11,10 +11,14 @@
         "deleteGroup": "لحذف المجموعة <target>{name}</target> نهائيًا، اكتب اسمها تمامًا كما هو موضح أدناه.",
         "deleteExpense": "لحذف المصروف <target>{name}</target> نهائيًا، اكتب عنوانه تمامًا كما هو موضح أدناه.",
         "deleteRecurringExpense": "لتأكيد حذف <target>{name}</target>، اكتب عنوان المصروف تمامًا كما هو موضح أدناه.",
-        "removeParticipant": "لإزالة <target>{name}</target> من هذه المجموعة، اكتب الاسم تمامًا كما هو موضح أدناه."
+        "removeParticipant": "لإزالة <target>{name}</target> من هذه المجموعة، اكتب الاسم تمامًا كما هو موضح أدناه.",
+        "deleteAccount": "لحذف حسابك نهائيًا، اكتب <target>{name}</target> تمامًا كما هو موضح أدناه."
       },
       "placeholder": "اكتب «{name}» هنا",
-      "mismatch": "النص غير مطابق. اكتب {name} تمامًا."
+      "mismatch": "النص غير مطابق. اكتب {name} تمامًا.",
+      "settingsNoteLink": "تغيير في إعدادات الحساب",
+      "settingsNoteLead": "تفضّل تخطّي الكتابة؟",
+      "settingsNoteTail": "لاستخدام حوار تأكيد بسيط."
     }
   },
   "OfflineBanner": {
@@ -57,7 +61,7 @@
     "done": "تم",
     "deniedTitle": "الإشعارات الفورية محظورة",
     "deniedDescription": "متصفحك يمنع إذن الإشعارات. ستظل الإشعارات المهيأة للبريد الإلكتروني تُرسل عبر البريد الإلكتروني؛ ولا يُعاد توجيه خيار الإشعارات الفورية وحده.",
-    "emailDeliveryDisabled": "إرسال البريد الإلكتروني معطّل على هذا الخادم، لذا لن تصلك إشعارات البريد الإلكتروني. فعّل الإشعارات الفورية على هذا الجهاز لمواصلة تلقي التحديثات."
+    "emailDeliveryDisabled": "إرسال البريد الإلكتروني متوقف، لذا لن تصلك إشعارات البريد الإلكتروني. فعّل الإشعارات الفورية على هذا الجهاز لمواصلة تلقي التحديثات."
   },
   "Expenses": {
     "showSettlements": "إظهار التسويات",
@@ -362,8 +366,6 @@
     "introStepReview_two": "تراجع وتصحح حتى {count} مثالين مختارين ليتعلم الذكاء الاصطناعي فئات هذه المجموعة.",
     "introStepReview_many": "تراجع وتصحح حتى {count} مثالاً مختاراً ليتعلم الذكاء الاصطناعي فئات هذه المجموعة.",
     "saved_other": "تم إعادة تصنيف {count} مصروفاً.",
-    "calibrationDescription": "كل مثال تؤكده يساعد الذكاء الاصطناعي على تحسين اقتراحاته التالية. قد يكون جاهزاً بعد جولة واحدة أو يطلب المزيد من الأمثلة.",
-    "roundCount": "الجولة {round} من {max}",
     "introStepLook_two": "يراجع الذكاء الاصطناعي حتى {count} نفقتين للعثور على الأمثلة الأكثر فائدة.",
     "targetExceedsCap_two": "هناك عدد كبير جداً من النفقات للمعالجة ({count}). ضيق نطاق التاريخ أو عالج دفعات أصغر.",
     "applyError": "تعذر حفظ التحديث الجماعي للفئات: {message}",
@@ -383,7 +385,6 @@
     "reviewSample": "راجع هذه الأمثلة",
     "leftUncategorized_zero": "تركت {count} نفقة غير مصنفة لعدم كفاية ثقة الذكاء الاصطناعي.",
     "previewHint": "عرض {shown} من أصل {total} مرشحاً.",
-    "calibrationTitle": "معايرة الذكاء الاصطناعي",
     "saveAll_few": "حفظ {count} تغييرات",
     "introStepReview_other": "تقوم بمراجعة وتصحيح ما يصل إلى {count} عينة مختارة ليتعلم الذكاء الاصطناعي فئة هذه المجموعة.",
     "introStepPreview": "بمجرد توفر أمثلة كافية، يعد الذكاء الاصطناعي مراجعة كاملة ويترك المصروفات المشكوك فيها بدون فئة.",
@@ -449,7 +450,137 @@
     "saved_zero": "تم إعادة تصنيف {count} نفقة.",
     "saveAll_zero": "حفظ {count} تغيير",
     "description": "صنف نفقاتك تلقائياً باستخدام الذكاء الاصطناعي.",
-    "calibrationReady": "المعايرة جاهزة."
+    "calibrationReady": "المعايرة جاهزة.",
+    "simpleDescription": "راجع تطابقات الفئات للمصروفات في عام، ثم احفظ اختياراتك.",
+    "generateSuggestions": "اقتراح الفئات",
+    "backToStart": "رجوع",
+    "chooseMode": "اختر طريقة تصنيف المصروفات",
+    "localMode": "القاموس والسجل",
+    "localModeDescription": "استخدم سجل فئات هذه المجموعة والقاموس المدمج.",
+    "startRun": "بدء التصنيف",
+    "noCategory": "اتركه غير مصنّف",
+    "progressTitle": "تصنيف المصروفات",
+    "progressDescription": "يمكنك مغادرة هذه الصفحة والعودة لاحقًا. يتم حفظ تقدمك.",
+    "progressCount": "تم تصنيف {categorized} من {total} من المصروفات",
+    "applyProgressTitle": "حفظ الفئات",
+    "reviewTitle": "مراجعة الاقتراحات",
+    "reviewSummary": "{suggested} اقتراحات من {total} من المصروفات غير المصنّفة",
+    "sourceLocal": "محلي",
+    "saveSelected": "حفظ الفئات المحددة",
+    "retry": "إعادة المحاولة",
+    "restart": "بدء تشغيل جديد",
+    "failed": "توقف التشغيل: {message}",
+    "savedSummary": "تم تغيير {applied}، تم تخطي {skipped}",
+    "selectedCount": "تم تحديد {count}",
+    "selectAll": "تحديد الكل",
+    "clearAll": "مسح الكل",
+    "discardRun": "تجاهل التشغيل",
+    "partialSaveNotice": "ربما تم حفظ بعض الفئات بالفعل. تجاهل هذا التشغيل لن يتراجع عن تلك التغييرات.",
+    "restartOlderRunTitle": "بدء تشغيل تصنيف جديد",
+    "restartOlderRunDescription": "استخدم هذا التشغيل الأقدم مسار المراجعة السابق. ابدأ مجددًا لمراجعة كل المصروفات معًا.",
+    "runningMatches": "{count} من {total} من المصروفات لديها اقتراح فئة حتى الآن",
+    "failedTitle": "توقف التصنيف",
+    "reviewWorkload": "{total} من المصروفات في عام · {selected} محددة للتصنيف · {general} باقية في عام",
+    "categoryChoices": "خيارات الفئات",
+    "moreCategories": "اختر فئة أخرى",
+    "saveCount": "حفظ {count} من الفئات",
+    "finishWithoutChanges": "إنهاء دون تغييرات",
+    "completionSummary": "اكتمل التشغيل: تم تغيير {changed} من {total} من المصروفات. بقي {remaining} من المصروفات في عام.",
+    "viewExpenses": "عرض المصروفات",
+    "countLoading": "جارٍ عدّ المصروفات غير المصنّفة…",
+    "nothingToCategorize": "لا توجد مصروفات غير مصنّفة لتصنيفها.",
+    "startingCount": "يوجد حاليًا {count} من المصروفات في عام وجاهزة للمراجعة.",
+    "countError": "تعذّر عدّ المصروفات غير المصنّفة. أعد تحميل الصفحة للمحاولة مجددًا.",
+    "keepGeneral": "عام · اتركه غير مصنّف",
+    "calibrationRoundTitle": "جولة المعايرة {round}",
+    "calibrationLoading": "جارٍ تجهيز عينة متنوعة من المصروفات…",
+    "calibrationReviewDescription": "راجع وصحح هذه المصروفات الـ{count}. تبقى الاختيارات ضمن هذا التشغيل حتى تحفظ في النهاية.",
+    "confirmRound": "تأكيد الجولة",
+    "roundSummaryTitle": "تمت مراجعة الجولة {round}",
+    "roundSummaryDescription": "تمت مراجعة {reviewed} · تم تصنيف {categorized} مؤقتًا · تم ترك {general} كعام",
+    "roundQuality": "طابقت الاقتراحات الأولية {accuracy}% من اختياراتك؛ صححت {corrections}.",
+    "categorizeRemaining": "صنّف المصروفات المتبقية",
+    "nextRound": "مراجعة عينة أخرى",
+    "tableLabel": "المصروفات المراد تصنيفها",
+    "dateColumn": "التاريخ",
+    "amountColumn": "المبلغ",
+    "rerunSuggestions": "إعادة تشغيل الاقتراحات",
+    "roundQualityWithSuggestions": "تم قبول {accepted} من {proposed} من الفئات المقترحة · تم تغيير {changed} · تم العثور على {missed} من التطابقات من عام",
+    "roundQualityNoSuggestions": "لا توجد فئات مقترحة · تم العثور على {missed} من التطابقات من عام · تم ترك {abstained} في عام",
+    "rerunChanged": "غيّرت {changed} من {proposed} من الفئات المقترحة.",
+    "rerunAssignedSingle": "عيّنت فئة إلى مصروف واحد متبقٍّ في عام.",
+    "rerunAssignedMultiple": "عيّنت فئة إلى {count} من المصروفات المتبقية في عام.",
+    "rerunPotentialSingle": "قد تُحسّن تغييراتك تطابق مصروف واحد متبقٍّ في عام. أعد تشغيل الاقتراحات إذا أردت مرورًا آخر.",
+    "rerunPotentialMultiple": "قد تُحسّن تغييراتك تطابقات {count} من المصروفات المتبقية في عام. أعد تشغيل الاقتراحات إذا أردت مرورًا آخر.",
+    "rerunEligible": "مؤهل لمرور آخر: عام {general} · تطابقات تلقائية غير مؤكدة {uncertain}. قد تُحسّن تصحيحاتك هذه الاقتراحات.",
+    "rerunNoEligible": "لم يتبقَّ أي مصروف في عام دون تعديل أو أي تطابقات تلقائية غير مؤكدة لإعادة التشغيل. ستظل تصحيحاتك مشمولة في الفئات التي تحفظها.",
+    "rerunAlreadyUsed": "تم استخدام تصحيحاتك الأخيرة بالفعل لهذه الاقتراحات. أجرِ تصحيحًا آخر لتشغيلها مجددًا.",
+    "highMatch": "تطابق مرتفع",
+    "mediumMatch": "تطابق متوسط",
+    "lowMatch": "تطابق منخفض",
+    "belowMatchThreshold": "أقل من حد التطابق",
+    "refiningTitle": "تحسين التطابقات غير المؤكدة",
+    "runLimitSummary": "يشمل هذا التشغيل 10,000 من المصروفات. يمكن تصنيف {count} من المصروفات الإضافية في عام في تشغيل آخر بعد الحفظ.",
+    "pageLoading": "جارٍ تحميل المصروفات…",
+    "pageLoadError": "تعذّر تحميل المصروفات.",
+    "pageRetry": "إعادة المحاولة",
+    "pageCount": "عرض {loaded} من {total} من المصروفات",
+    "ledgerAmountNotice": "تُعرض المبالغ بعملة المجموعة.",
+    "viewExpenseDetails": "عرض تفاصيل المصروف",
+    "reviewFilterLabel": "عرض المصروفات",
+    "filterAll": "الكل {count}",
+    "filterGeneral": "عام {count}",
+    "improveSuggestions": "تحسين الاقتراحات المتبقية",
+    "rerunInfoLabel": "حول تحسين الاقتراحات",
+    "preparingNextStage": "جارٍ تجهيز الخطوة التالية",
+    "rerunProgressTitle": "جارٍ تحديث الاقتراحات",
+    "progressPreparing": "جارٍ تجهيز المصروفات…",
+    "noGeneralRows": "لا توجد مصروفات متبقية في عام في هذه المراجعة.",
+    "discardConfirmationTitle": "تجاهل تشغيل التصنيف هذا؟",
+    "discardConfirmationDescription": "سيؤدي هذا إلى إزالة التشغيل واقتراحاته والاختيارات التي أجريتها أنت أو المسؤولون الآخرون. لن يتم تغيير أي فئات للمصروفات.",
+    "discardConfirmationCancel": "الاحتفاظ بالتشغيل",
+    "progressCountDescription": "تُحتسب الفئات المؤكدة فقط والتطابقات المتوسطة والمرتفعة؛ أما عام والتطابقات الضعيفة فلا تُحتسب.",
+    "systemOneMode": "نموذج System One",
+    "systemOneModeDescription": "استخدم نموذج القرار System One لكل مصروف، مستعينًا بالمصروفات المصنّفة في هذه المجموعة وباختياراتك التي راجعتها كإشارات. يُعد TypeSafe Jev أحد هذه النماذج.",
+    "systemOneUnavailable": "نظام System One غير متاح. لا يزال القاموس والسجل متاحين.",
+    "systemOneConfidence": "درجة الثقة في System One: {confidence}%",
+    "systemOneOptionProbability": "احتمالية خيار System One: {probability}%",
+    "overallProgress": "التقدم العام",
+    "fullPassProcessed": "تمت معالجة {processed} من {total} من المصروفات",
+    "stageProcessed": "تمت معالجة {processed} من {total} من المصروفات في هذه الخطوة",
+    "saveSkipped": "تم تخطي {count} من المصروفات لأنها تغيرت.",
+    "sharedRunNotice": "هذا التشغيل مشترك مع مسؤولي المجموعة الآخرين. يرى الجميع الاقتراحات نفسها.",
+    "saveConflictTitle": "تغير {count} من المصروفات منذ بدء هذه المراجعة",
+    "saveConflictDescription": "عدل شخص ما هذه المصروفات أو غير فئتها خارج هذا التشغيل. احفظ المصروفات الأخرى، أو عدل الفئات مرة أخرى وحاول الحفظ مجددًا.",
+    "saveConflictMore": "و{count} أخرى.",
+    "saveOtherExpenses": "حفظ المصروفات الأخرى",
+    "receiptTitles": {
+      "freshMarket": "سوق المنتجات الطازجة",
+      "greenGrocer": "بقالة الخضار",
+      "fruitStand": "بسطة الفاكهة",
+      "cornerBistro": "مطعم الحي",
+      "noodleHouse": "مطعم النودلز",
+      "cafeLunch": "غداء المقهى",
+      "flightTicket": "تذكرة الطيران",
+      "airlineBaggage": "أمتعة الطيران",
+      "boardingPass": "بطاقة الصعود",
+      "homeSupplies": "مستلزمات المنزل",
+      "hardwareShop": "متجر الأدوات",
+      "cleaningGoods": "مستلزمات التنظيف",
+      "cinemaTickets": "تذاكر السينما",
+      "movieNight": "سهرة سينمائية",
+      "filmFestival": "مهرجان الأفلام",
+      "organicMarket": "سوق المنتجات العضوية",
+      "bakeryRun": "مشتريات المخبز",
+      "sushiBar": "مطعم السوشي",
+      "pizzaNight": "سهرة البيتزا",
+      "airportLounge": "صالة المطار",
+      "extraLegroom": "مساحة إضافية للأرجل",
+      "laundryDetergent": "مسحوق الغسيل",
+      "storageBoxes": "صناديق التخزين",
+      "popcornCombo": "وجبة الفشار",
+      "streamingRental": "استئجار عبر البث"
+    }
   },
   "ExpenseDocumentsInput": {
     "ErrorToast": {
@@ -563,7 +694,9 @@
     "yourBalance": "رصيدك:",
     "notInvolved": "أنت غير مشترك",
     "receivedBy": "استلم بواسطة <strong>{paidBy}</strong> · مخصص لـ <paidFor></paidFor>",
-    "incomeBadge": "دخل"
+    "incomeBadge": "دخل",
+    "paidBySingle": "دفع بواسطة <strong>{paidBy}</strong> · مدفوع لـ <paidFor></paidFor>",
+    "paidByMultipleSingle": "دفع بواسطة <paidByNames></paidByNames> · مدفوع لـ <paidFor></paidFor>"
   },
   "Homepage": {
     "features": {
@@ -1083,7 +1216,8 @@
             "monthly": "أشهر",
             "yearly": "سنوات"
           }
-        }
+        },
+        "categorizeWithSystemOne": "اقتراح فئات للمصروفات غير المصنّفة باستخدام نظام System One"
       },
       "Documents": {
         "title": "اصطحب إيصالاتك معك",
@@ -1212,7 +1346,9 @@
       "description": "يمكن للمجموعات الآن عرض إيموجي بجانب اسمها. لاحظنا {emoji} في “{name}”.",
       "openSettings": "افتح إعدادات المجموعة",
       "notNow": "ليس الآن"
-    }
+    },
+    "groupTabsHint": "تريد إعادة ترتيب تبويبات المجموعة أو إخفاء التي لا تستخدمها؟",
+    "groupTabsHintLink": "خصّص علامات التبويب في إعدادات حسابك"
   },
   "Unsubscribe": {
     "submitting": "جارٍ إلغاء الاشتراك…",
@@ -1336,7 +1472,8 @@
       "allItemsSplitEdit": "تعديل تقسيم كل البنود",
       "allItemsSplitModalTitle": "تقسيم كل البنود",
       "remainderAllocationProportional": "بشكل متناسب مع البنود",
-      "remainderProportionalHint": "قسّم هذا المبلغ بناءً على المجموع الفرعي لبنود كل شخص. مفيد للضرائب والإكراميات."
+      "remainderProportionalHint": "قسّم هذا المبلغ بناءً على المجموع الفرعي لبنود كل شخص. مفيد للضرائب والإكراميات.",
+      "errorExceedsAmountDetails": "مجموع البنود ({itemsTotal}) يتجاوز مبلغ المصروفات بمقدار {excess}."
     },
     "Expense": {
       "paidFor": {
@@ -1569,7 +1706,15 @@
       "done": "تم",
       "yourTime": "وقتك",
       "invalidDate": "أدخل تاريخًا صالحًا.",
-      "invalidTime": "أدخل وقتًا صالحًا (HH:mm)."
+      "invalidTime": "أدخل وقتًا صالحًا (HH:mm).",
+      "hourLabel": "الساعة",
+      "minuteLabel": "الدقيقة",
+      "periodLabel": "ص/م",
+      "timeWheelHint": "مرّر أو انقر لضبط الوقت. سيبقى التاريخ كما هو.",
+      "now": "الآن",
+      "morning": "الصباح",
+      "midday": "الظهر",
+      "evening": "المساء"
     },
     "settlementTitle": "دفعة التسوية",
     "settlementHint": "{category}: لا يُحتسب إنفاقًا في الإجماليات أو الإحصاءات أو الميزانيات. ما زال يحدّث من يدين لمن.",
@@ -1613,7 +1758,8 @@
       "description": "أدخل إجمالي المبلغ المُحصّل، بما في ذلك أي رسوم.",
       "impliedRate": "سعر الصرف الضمني: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "اقتراحات الفئات"
+    "otherSuggestions": "اقتراحات الفئات",
+    "paidForItemizedEmptyHint": "عيّن الأشخاص إلى البنود لرؤية حصة كل شخص."
   },
   "Categories": {
     "noCategory": "لا توجد فئة مطابقة.",
@@ -1852,7 +1998,7 @@
       "masterDescription": "عطِّله لإيقاف جميع إشعارات البريد الإلكتروني والإشعارات الفورية. ستُحفظ اختياراتك حسب الفئة.",
       "emailAddToEnable": "أضف بريداً إلكترونياً مؤكداً لتلقي إشعارات صندوق الوارد.",
       "emailAddLink": "إضافة بريد إلكتروني",
-      "emailDeliveryDisabled": "إرسال البريد الإلكتروني معطّل على هذا الخادم. تُحفظ خيارات بريدك الإلكتروني لكنها لن تُرسل حتى يُهيّئ المسؤول البريد الإلكتروني."
+      "emailDeliveryDisabled": "إرسال البريد الإلكتروني متوقف. تُحفظ خيارات بريدك الإلكتروني لكنها لن تُرسل حتى يتم إعداد البريد الإلكتروني."
     },
     "emailLabel": "البريد الإلكتروني",
     "preferences": {
@@ -1872,6 +2018,22 @@
       "mascotOptions": {
         "off": "إيقاف",
         "bill": "بيل، الإيصال"
+      },
+      "groupTabs": "تبويبات المجموعة",
+      "groupTabsHelp": "اختر علامات التبويب التي تظهر، وبأي ترتيب، في كل مجموعة.",
+      "groupTabsCustomize": "تخصيص",
+      "groupTabsSave": "حفظ",
+      "groupTabsDiscard": "تجاهل",
+      "groupTabsReset": "إعادة التعيين إلى الإعدادات الافتراضية",
+      "groupTabsHide": "إخفاء {name}",
+      "groupTabsShow": "إظهار {name}",
+      "groupTabsMoveUp": "نقل {name} لأعلى",
+      "groupTabsMoveDown": "نقل {name} لأسفل",
+      "deleteConfirmation": "تأكيد حذف المصروفات",
+      "deleteConfirmationHelp": "الحذف السريع يطلب التأكيد مرة واحدة. الحذف بالكتابة يطلب كتابة عنوان المصروف أولًا. حذف المجموعة أو إزالة العضو يتطلب الكتابة دائمًا.",
+      "deleteConfirmationOptions": {
+        "standard": "مربع حوار التأكيد",
+        "strict": "مربع حوار التأكيد بالكتابة"
       }
     },
     "aiPreferences": {
@@ -2064,7 +2226,111 @@
       "backedUp": "نسخة احتياطية",
       "removeWarning": "لا يمكن التراجع عن هذا. لن يعود هذا الجهاز يسجّل دخولك باستخدام مفتاح مرور — ويمكنك تسجيله مرة أخرى في أي وقت.",
       "removeLastWarning": "هذا هو آخر مفتاح مرور لديك. إذا كان طريقة تسجيل الدخول الوحيدة لديك، فلن تتمكن من إزالته حتى تحفظ رابط تسجيل الدخول أو طريقة تسجيل دخول أخرى.",
-      "anonymousHelpNoLink": "لا يوجد رابط تسجيل دخول محفوظ لحساب الضيف هذا. أنشئ واحدًا من صف رابط تسجيل الدخول أدناه — فهو يعمل على أي جهاز."
+      "anonymousHelpNoLink": "لا يوجد رابط تسجيل دخول محفوظ لحساب الضيف هذا. أنشئ واحدًا من صف رابط تسجيل الدخول أدناه — فهو يعمل على أي جهاز.",
+      "reauthTitle": "سجّل الدخول مجددًا لإضافة مفتاح مرور",
+      "reauthDescription": "لأمانك، تتطلب إضافة مفتاح مرور تسجيل دخول جديدًا. سيتم تسجيل خروجك، ثم تسجيل دخولك مرة أخرى، وستعود إلى هنا مباشرة للإتمام.",
+      "reauthConfirm": "سجّل الدخول مجددًا",
+      "reauthAnonymousTitle": "احفظ رابط تسجيل الدخول أولًا",
+      "reauthAnonymousDescription": "حساب الضيف هذا ليس لديه رابط تسجيل دخول ولا مفتاح مرور بعد. تسجيل الخروج الآن سيمنعك نهائيًا — احفظ رابط تسجيل الدخول في قسم رابط تسجيل الدخول أولًا، ثم عُد لإضافة مفتاح مرور."
+    },
+    "deletion": {
+      "sectionTitle": "منطقة الخطر",
+      "sectionDescription": "احذف حسابك نهائيًا وجميع طرق تسجيل الدخول.",
+      "rowLabel": "حذف الحساب",
+      "rowDescription": "يزيل ملفك الشخصي وجلساتك وإعداداتك بعد مهلة 48 ساعة. تبقى المصروفات المشتركة في مجموعات الأعضاء الآخرين دون بياناتك الشخصية.",
+      "open": "حذف الحساب…",
+      "scheduledTitle": "تمت جدولة حذف الحساب",
+      "scheduledDescription": "من المقرر بدء الحذف في {date} أو بعده. يبقى حسابك نشطًا حتى يبدأ الحذف. قد تتغير المجموعات والأعضاء والمصروفات خلال الانتظار؛ وتُطبَّق خياراتك على حالتها عند تنفيذ الحذف. يمكنك الإلغاء حتى يبدأ الحذف. أُرسلت رسالة تأكيد إلى {email}.",
+      "cancel": "إلغاء الحذف",
+      "cancelling": "جارٍ الإلغاء…",
+      "cancelled": "تم إلغاء حذف الحساب.",
+      "dialogTitle": "جدولة حذف الحساب؟",
+      "dialogDescription": "يُجدول هذا الحذف بعد فترة انتظار مدتها 48 ساعة؛ لا يُحذف شيء الآن. يمكنك الإلغاء حتى يبدأ الحذف. تُطبَّق خياراتك على المجموعات والأرصدة في ذلك الوقت. بعد بدء الحذف، لا يمكن التراجع عنه.",
+      "farewellTitle": "يؤسفنا رحيلك",
+      "farewellBody": "إذا كان هناك ما يمكننا فعله لتبقى معنا، <feedbackLink>شاركنا رأيك</feedbackLink> — يستغرق الأمر دقيقة ويساعدنا على التحسين.",
+      "groupsTitle": "ماذا سيحدث لمجموعاتك",
+      "leaveGroup": "ستغادر «{name}».",
+      "deleteGroup": "سيُحذف «{name}» نهائيًا — فأنت آخر عضو فيها.",
+      "lastAdmin": "أنت المدير الأخير لـ«{name}» — سيُرقَّى عضو آخر تلقائيًا.",
+      "settleBalances": "ستُسوَّى الأرصدة غير المسواة في «{name}» تلقائيًا.",
+      "friendLedger": "تمت تسوية دفتر حسابات الصديق مع {name} وإغلاقه.",
+      "friendLedgerUnnamed": "تمت تسوية دفتر حسابات الصديق وإغلاقه.",
+      "friendLedgerFallback": "دفتر حسابات صديق",
+      "noGroups": "لست عضوًا في أي مجموعة.",
+      "accessTitle": "تسجيل الدخول والدعوات",
+      "pendingInvites_zero": "عند تنفيذ الحذف، ستُلغى الدعوات المعلّقة التي أرسلتها وعددها {count}.",
+      "pendingInvites_one": "عند تنفيذ الحذف، ستُلغى الدعوة المعلّقة التي أرسلتها وعددها {count}.",
+      "pendingInvites_two": "عند تنفيذ الحذف، ستُلغى الدعوتان المعلّقتان اللتان أرسلتهما وعددهما {count}.",
+      "pendingInvites_few": "عند تنفيذ الحذف، ستُلغى {count} دعوات معلّقة أرسلتها.",
+      "pendingInvites_many": "عند تنفيذ الحذف، ستُلغى {count} دعوة معلّقة أرسلتها.",
+      "pendingInvites_other": "عند تنفيذ الحذف، ستُلغى الدعوات المعلّقة التي أرسلتها وعددها {count}.",
+      "keepNameLabel": "الاحتفاظ باسمي في السجل المشترك",
+      "keepNameDescription": "ستستمر المصروفات المشتركة في عرض «{name}». وإلا فسيُستبدل اسمك بـ«عضو محذوف» في كل مكان.",
+      "customNameLabel": "الاسم المراد الاحتفاظ به",
+      "settleLabel": "تحديد الأرصدة على أنها مُسوّاة عند تنفيذ الحذف",
+      "settleDescription": "تُسوَّى الأرصدة المتبقية تلقائيًا، وإلا بقيت مسجلة باسمك البديل.",
+      "leaveBalances": "الأرصدة غير المسواة في «{name}» ستبقى كما هي.",
+      "friendLeaveBalances": "رصيدك مع {name} سيبقى كما هو.",
+      "confirmWord": "حذف",
+      "ackLabel": "أدرك أن هذا الإجراء دائم، وأن المصروفات المشتركة تبقى في مجموعات الأعضاء الآخرين دون بياناتي الشخصية.",
+      "exportHint": "هل تريد نسخة أولًا؟ <exportLink>صدّر نسخة احتياطية</exportLink> قبل المتابعة.",
+      "schedule": "جدولة الحذف",
+      "scheduling": "جارٍ جدولة الحذف…",
+      "scheduled": "تمت جدولة الحذف. تحقق من بريدك الإلكتروني للمراجعة أو الإلغاء.",
+      "dialogCancel": "الاحتفاظ بحسابي",
+      "reauthTitle": "سجّل الدخول مجددًا لحذف حسابك",
+      "reauthDescription": "لأمانك، يتطلب حذف حسابك تسجيل دخول جديدًا. سيتم تسجيل خروجك، ثم تسجيل دخولك مرة أخرى، وستعود إلى هنا مباشرة للإتمام.",
+      "reauthConfirm": "سجّل الدخول مجددًا",
+      "errors": {
+        "generic": "حدث خطأ ما. حاول مرة أخرى.",
+        "loadFailed": "تعذّر تحميل تفاصيل الحذف.",
+        "emailMismatch": "البريد الإلكتروني المُدخل لا يطابق البريد الإلكتروني لحسابك.",
+        "alreadyRequested": "يوجد بالفعل طلب حذف معلّق لهذا الحساب.",
+        "sessionNotFresh": "جلستك قديمة جدًا لتنفيذ هذا الإجراء. سجّل الدخول مجددًا، ثم حاول مرة أخرى.",
+        "jobsDisabled": "يتطلب حذف الحساب عامل الخلفية، وهو معطّل في هذا النشر.",
+        "ackRequired": "أكّد أولًا أنك تدرك العواقب.",
+        "invalidDisplayName": "أدخل اسمًا من حرف واحد إلى 100 حرف.",
+        "cancelFailed": "تعذّر إلغاء الحذف. حاول مرة أخرى."
+      },
+      "groupsToDeleteTitle": "المجموعات التي ستُحذف",
+      "groupsToDeleteDescription": "عند تنفيذ الحذف، تُحذف نهائيًا المجموعات التي لا تزال فيها آخر عضو نشط.",
+      "groupsToLeaveTitle": "المجموعات التي ستغادرها",
+      "groupsToLeaveDescription": "عند تنفيذ الحذف، ستغادر المجموعات التي لا يزال فيها أعضاء نشطون آخرون. تبقى هذه المجموعات للجميع الآخرين.",
+      "friendsTitle": "الأصدقاء",
+      "friendsDescription": "أرصدتك الفردية مع هؤلاء الأصدقاء.",
+      "backToSettings": "العودة إلى الإعدادات",
+      "pageTitle": "حذف الحساب",
+      "loading": "جارٍ تحميل تفاصيل الحذف",
+      "choicesTitle": "خيارات حذف حسابك",
+      "nameTitle": "الاسم في السجل المشترك",
+      "removeNameLabel": "استبدال اسمي بـ«عضو محذوف»",
+      "balancesTitle": "الأرصدة المتبقية",
+      "keepBalancesLabel": "إبقاء الأرصدة المتبقية كما هي",
+      "balanceExplanation": "إذا اخترت التسوية، تُسجّل قيود التسوية عند حذف حسابك. لا تُحوّل أي أموال. بخلاف ذلك، تبقى الأرصدة في سجلك المشترك.",
+      "confirmationTitle": "تأكيد حذف الحساب",
+      "retry": "المحاولة مجددًا",
+      "pageDescription": "جدول حذف حسابك بعد فترة انتظار مدتها 48 ساعة. يبقى حسابك نشطًا حتى يبدأ الحذف، ويمكنك الإلغاء قبل ذلك.",
+      "reviewChoicesTitle": "خياراتك",
+      "consequencesTitle": "ما سيحدث",
+      "reviewConfirmTitle": "تأكيد الحذف",
+      "backupLink": "تصدير نسخة احتياطية",
+      "keptNameExplanation": "عند تنفيذ الحذف، ستعرض المصروفات المشتركة الاسم «{name}». يبقى اسم ملفك الشخصي دون تغيير حتى ذلك الوقت.",
+      "removedNameExplanation": "عند تنفيذ الحذف، ستعرض المصروفات المشتركة الاسم «عضو محذوف». يبقى اسم ملفك الشخصي دون تغيير حتى ذلك الوقت.",
+      "keptBalancesExplanation": "عند بدء الحذف، تبقى الأرصدة المتبقية في سجلك المشترك، بما فيها المصروفات المضافة خلال فترة الانتظار.",
+      "settledBalancesExplanation": "أثناء الحذف، تُسجَّل قيود تسوية لتحديد الأرصدة الموجودة حينها على أنها مُسوّاة في المجموعات التي لا تزال عضوًا فيها، بما فيها المجموعات المؤرشفة. تبقى أرصدتك في المجموعات التي غادرتها أو أُزيلت عضويتك منها دون تغيير. لا تُحوَّل أي أموال.",
+      "rowBalancesKept": "تبقى الأرصدة المتبقية كما هي.",
+      "rowBalancesSettled": "سيُحدَّد الرصيد الموجود وقت الحذف على أنه مُسوّى.",
+      "rowAdmin": "عند تنفيذ الحذف، سيصبح عضو آخر مشرفًا إذا كنت لا تزال المشرف الوحيد.",
+      "friendKept": "يبقى رصيدك كما هو.",
+      "friendSettled": "عند تنفيذ الحذف، سيُحدَّد رصيدك الموجود حينها على أنه مُسوّى ويُغلق السجل.",
+      "accessExplanation": "ستتوقف طرق تسجيل الدخول هذه عن العمل عند حذف حسابك.",
+      "invitesTitle": "الدعوات المعلّقة",
+      "balanceUnavailable": "الرصيد غير متاح",
+      "archivedBalancesKept": "ستبقى هذه المجموعة المؤرشفة للقراءة فقط. وسيُحتفظ برصيدك المتبقي.",
+      "signInMethodsRemoved": "ستتوقف طرق تسجيل الدخول التالية عن العمل: {methods}.",
+      "consequencesTiming": "تعكس هذه المراجعة حالة حسابك الآن. قد تتغير المجموعات والأعضاء والمصروفات قبل بدء الحذف. ستُطبَّق خياراتك على المجموعات التي تنتمي إليها وأرصدتها في ذلك الوقت. لا يحدث أي مما ورد هنا فورًا.",
+      "executingTitle": "بدأ حذف الحساب",
+      "executingDescription": "حذف حسابك قيد التنفيذ. قد تكون بعض التغييرات قد اكتملت بالفعل، ولا يمكن إلغاء الحذف أو التراجع عنه. إذا توقف التنفيذ، يُستأنف من حيث انتهت الخطوات المكتملة."
     }
   },
   "Header": {
@@ -2559,7 +2825,7 @@
         "joined_many": "انضم {count} شخصًا",
         "retry": "حاول مجدداً"
       },
-      "emailDeliveryDisabled": "إرسال البريد الإلكتروني معطّل على هذا الخادم. ستظل الدعوة منشأة وستظهر عند تسجيل دخول المدعو؛ استخدم رابط دعوة لتمنحه شيئًا يمكنه فتحه."
+      "emailDeliveryDisabled": "إرسال البريد الإلكتروني متوقف. ستظل الدعوة منشأة وستظهر عند تسجيل دخول المدعو؛ استخدم رابط دعوة لتمنحه شيئًا يمكنه فتحه."
     },
     "title": "الأعضاء",
     "removeDialog": {
@@ -2840,7 +3106,7 @@
       "passwordRequired": "كلمة المرور مطلوبة.",
       "emailRequired": "البريد الإلكتروني مطلوب.",
       "passwordPolicy": "استخدم 8 أحرف على الأقل تشمل حرفاً كبيراً وصغيراً ورقماً ورمزاً.",
-      "signupInviteRequired": "هذه النسخة متاحة بالدعوة فقط. استخدم رابط دعوة أو اطلب من شخص أن يدعوك إلى مجموعة.",
+      "signupInviteRequired": "التسجيل بالدعوة فقط. استخدم رابط دعوة أو اطلب من شخص أن يدعوك إلى مجموعة.",
       "passkeyFailed": "فشل تسجيل الدخول بمفتاح المرور. حاول مرة أخرى أو استخدم طريقة تسجيل دخول أخرى."
     },
     "loading": "جارٍ التحميل…",
@@ -2880,24 +3146,25 @@
       "uppercase": "حرف كبير واحد على الأقل"
     },
     "inviteOnly": {
-      "message": "هذه النسخة متاحة بالدعوة فقط. استخدم رابط دعوة أو اطلب من شخص أن يدعوك إلى مجموعة.",
+      "message": "التسجيل بالدعوة فقط. استخدم رابط دعوة أو اطلب من شخص أن يدعوك إلى مجموعة.",
       "useInvitedEmail": "استخدم عنوان البريد الإلكتروني الذي وردت عليه الدعوة."
     },
     "signInWithX": "تسجيل الدخول عبر X",
     "signInWithOidc": "تسجيل الدخول عبر {name}",
     "signInAnonymously": "مجهول",
     "lastUsed": "آخر استخدام",
-    "emailAuthDisabled": "تسجيل الدخول بالبريد الإلكتروني معطّل على هذا الخادم. يُرجى استخدام تسجيل الدخول الموحّد (SSO).",
+    "emailAuthDisabled": "تسجيل الدخول بالبريد الإلكتروني معطّل. يُرجى استخدام تسجيل الدخول الموحّد (SSO).",
     "signInWithPasskey": "تسجيل الدخول بمفتاح المرور"
   },
   "Footer": {
     "privacy": "الخصوصية",
+    "madeIn": "صنع من قبل <github>مجتمع المصادر المفتوحة</github> بحب ❤️",
     "legalNavigation": "روابط قانونية",
-    "madeIn": "صنع من قبل مجتمع المصادر المفتوحة بحب ❤️",
     "terms": "الشروط",
     "imprint": "إشعار المشروع",
     "sponsor": "رعاية",
-    "timeLabel": "الوقت من اليوم"
+    "timeLabel": "الوقت من اليوم",
+    "status": "الحالة"
   },
   "CreateFromReceipt": {
     "Dialog": {
@@ -2995,7 +3262,9 @@
         "conversionRate": "سعر الصرف",
         "documents": "المستندات",
         "settlement": "دفعة التسوية"
-      }
+      },
+      "yourShare": "حصتك:",
+      "notInvolved": "أنت غير مشترك"
     },
     "member": {
       "left": "غادر {participant} المجموعة",
@@ -3027,12 +3296,17 @@
         "name": "الاسم",
         "currencyCode": "رمز العملة",
         "subgroupsEnabled": "المجموعات الفرعية",
-        "publicViewLink": "رابط عام للعرض فقط"
+        "publicViewLink": "رابط عام للعرض فقط",
+        "emoji": "الإيموجي",
+        "color": "اللون",
+        "subgroups": "المجموعات الفرعية",
+        "splitPresets": "إعدادات التقسيم"
       }
     },
     "openExpense": "فتح المصروف",
     "participant": {
-      "removed": "أزال {participant} {target} من المجموعة"
+      "removed": "أزال {participant} {target} من المجموعة",
+      "added": "أضاف {participant} {target} إلى المجموعة"
     },
     "import": {
       "imported_two": "{participant} استورد {count} نفقتين",
@@ -3042,7 +3316,19 @@
       "imported_one": "{participant} استورد {count} نفقة",
       "imported_zero": "لم يستورد {participant} أياً من {count} نفقات"
     },
-    "fallback": "نشاط غير معروف."
+    "fallback": "نشاط غير معروف.",
+    "hiddenActivitiesShowLess": "عرض أقل",
+    "hiddenActivities_zero": "{count} أنشطة مخفية لا تشملك",
+    "hiddenActivities_one": "{count} نشاط مخفي لا يشملك",
+    "hiddenActivities_two": "{count} نشاطان مخفيان لا يشملانك",
+    "hiddenActivities_few": "{count} أنشطة مخفية لا تشملك",
+    "hiddenActivities_many": "{count} نشاطا مخفيا لا يشملك",
+    "hiddenActivities_other": "{count} نشاط مخفي لا يشملك",
+    "viewMode": {
+      "label": "وضع عرض النشاط",
+      "forYou": "الخاصة بك",
+      "all": "الكل"
+    }
   },
   "Share": {
     "title": "مشاركة",
@@ -3446,7 +3732,8 @@
     "hintTapToAddExpense": "أنا {name} — انقر عليّ لإضافة نفقة.",
     "hintTapToCreateGroup": "أنا {name} — انقر عليّ لإنشاء مجموعة.",
     "billName": "بيل",
-    "offlineMessage": "لا أستطيع إنشاء أي شيء وأنت غير متصل."
+    "offlineMessage": "لا أستطيع إنشاء أي شيء وأنت غير متصل.",
+    "serverUnreachableMessage": "تعذّر عليّ الوصول إلى خادم Spliit في الوقت الحالي — يبدو اتصالك جيدًا، إذن المشكلة من جانبنا."
   },
   "CreateSettlement": {
     "description": "سوِّ الحسابات مع عضو في المجموعة.",
@@ -3497,7 +3784,18 @@
       "existingPasskeyTitle": "هل سجّلت مفتاح مرور بالفعل؟",
       "existingPasskeyDescription": "سجّل الدخول مجددًا باستخدام مفتاح المرور على أحد أجهزتك المسجّلة.",
       "passkeySignIn": "تسجيل الدخول بمفتاح المرور",
-      "passkeySignInError": "تعذّر تسجيل الدخول بمفتاح المرور هذا. حاول مرة أخرى أو استخدم رابط تسجيل الدخول."
+      "passkeySignInError": "تعذّر تسجيل الدخول بمفتاح المرور هذا. حاول مرة أخرى أو استخدم رابط تسجيل الدخول.",
+      "passkeyNameLabel": "سمِّ مفتاح المرور هذا (اختياري)",
+      "passkeyNamePlaceholder": "مثال: MacBook Touch ID",
+      "nameTitle": "اختر اسماً ظاهراً",
+      "nameDescription": "يظهر على مفتاح المرور وفي مجموعاتك. يمكنك تغييره لاحقاً.",
+      "nameLabel": "الاسم الظاهر",
+      "namePlaceholder": "اسمك",
+      "nameSave": "حفظ",
+      "nameSaving": "جارٍ الحفظ…",
+      "nameRequired": "أدخل اسماً ظاهراً.",
+      "nameTooShort": "يجب ألا يقل الاسم عن حرفين.",
+      "nameError": "تعذّر حفظ الاسم الظاهر. حاول مرة أخرى."
     },
     "onboarding": {
       "title": "احفظ رابط تسجيل الدخول",
@@ -3636,6 +3934,29 @@
         "review": {
           "title": "المراجعة والاستيراد",
           "detail": "تحقق من المكررات وأكّد الاستيراد."
+        }
+      }
+    },
+    "categorize": {
+      "title": "تصنيف المصروفات",
+      "description": "اقتراح فئات للمصروفات الحالية غير المصنّفة باستخدام نظام System One. راجع كل تغيير قبل الحفظ.",
+      "start": "تصنيف المصروفات",
+      "steps": {
+        "choose": {
+          "title": "اختر طريقة",
+          "detail": "استخدم القاموس والسجل أو نموذج القرار System One."
+        },
+        "calibrate": {
+          "title": "مراجعة عينات صغيرة",
+          "detail": "صحح الاقتراحات لتتعلم الجولة التالية فئات مجموعتك."
+        },
+        "review": {
+          "title": "مراجعة كل مصروف",
+          "detail": "تظهر مصروفات عام أولًا في الجدول الكامل."
+        },
+        "save": {
+          "title": "حفظ الفئات",
+          "detail": "لا تتغير المصروفات إلا عند تأكيد المراجعة النهائية."
         }
       }
     }
@@ -4199,7 +4520,8 @@
       "importedCount_zero": "تم استيراد {count} مصروف",
       "matchingExpensesNotice_few": "{count} مصروفات لها عناوين مطابقة أو مشابهة.",
       "matchingExpensesNotice_two": "{count} مصروفين لهما عنوانان مطابقان أو متشابهان.",
-      "matchingExpensesNotice_zero": "{count} مصروف له عنوان مطابق أو مشابه."
+      "matchingExpensesNotice_zero": "{count} مصروف له عنوان مطابق أو مشابه.",
+      "categorizeWithSystemOne": "اقتراح فئات للمصروفات غير المصنّفة باستخدام نظام System One"
     }
   },
   "Sponsor": {
@@ -4354,5 +4676,26 @@
     "expenseMissing": "هذا المصروف ليس في تنزيل هذا الجهاز. أعد الاتصال للتحقق من المصروفات الأحدث أو الأقدم.",
     "groupMissing": "هذه المجموعة لم يكتمل تنزيلها.",
     "balancesStale": "قد تكون الأرصدة غير محدثة."
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit غير متاح حاليًا",
+    "description": "تعذّر الوصول إلى خادم Spliit في الوقت الحالي. يبدو اتصالك جيدًا — يُرجى المحاولة مجددًا بعد قليل.",
+    "retry": "إعادة المحاولة"
+  },
+  "ApiStatusBanner": {
+    "message": "تعذّر الوصول إلى Spliit في الوقت الحالي. يبدو اتصالك جيدًا — المشكلة من جانبنا.",
+    "statusLink": "التحقق من الحالة"
+  },
+  "AccountDeletionBanner": {
+    "scheduled": "من المقرر حذف الحساب في {date}.",
+    "review": "مراجعة الحذف أو إلغاؤه",
+    "executing": "بدأ حذف الحساب.",
+    "viewStatus": "عرض حالة الحذف"
+  },
+  "Updates": {
+    "title": "التحديثات",
+    "latest": "ما الجديد",
+    "viewAll": "عرض جميع التحديثات",
+    "dismiss": "حسنًا"
   }
 }

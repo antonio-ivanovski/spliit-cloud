@@ -180,7 +180,8 @@
         "rateFetchError": "Não foi possível buscar as taxas de câmbio. A importação está bloqueada até que o provedor de taxas esteja acessível novamente.",
         "currencyRateAsOfFormat": "Solicitado {requested} · provedor usou {asOf}",
         "currencyConversionDescription": "As despesas serão convertidas da moeda de origem para a moeda do livro de destino usando as taxas abaixo.",
-        "currencyRateForDateFormat": "Aplicado para despesas com data {date}"
+        "currencyRateForDateFormat": "Aplicado para despesas com data {date}",
+        "categorizeWithSystemOne": "Sugerir categorias para despesas não categorizadas usando o System One"
       },
       "Destination": {
         "heading": "Onde você gostaria de importar <strong>{name}</strong>? ({participantCount} participantes · {expenseCount} despesas)",
@@ -347,7 +348,9 @@
     "emojiIntro": {
       "description": "Os grupos agora podem mostrar um emoji ao lado do nome. Vimos {emoji} em “{name}”.",
       "openSettings": "Abrir as configurações do grupo"
-    }
+    },
+    "groupTabsHint": "Quer reordenar as abas do grupo ou ocultar as que você não usa?",
+    "groupTabsHintLink": "Personalizar as abas nas configurações da sua conta"
   },
   "GroupForm": {
     "NameField": {
@@ -526,7 +529,8 @@
       "defaultSplitLabel": "Divisão padrão dos itens",
       "defaultSplitEdit": "Editar a divisão padrão dos itens",
       "defaultSplitModalTitle": "Divisão padrão dos itens",
-      "remainderProportionalHint": "Divida este valor com base no subtotal de itens de cada pessoa. Útil para impostos e gorjetas."
+      "remainderProportionalHint": "Divida este valor com base no subtotal de itens de cada pessoa. Útil para impostos e gorjetas.",
+      "errorExceedsAmountDetails": "O total dos itens ({itemsTotal}) excede o valor da despesa em {excess}."
     },
     "leaveItemized": {
       "title": "Mudar o modo de divisão?",
@@ -548,7 +552,8 @@
     "dateTimePicker": {
       "yourTime": "seu horário",
       "invalidDate": "Insira uma data válida.",
-      "invalidTime": "Insira um horário válido (HH:mm)."
+      "invalidTime": "Insira um horário válido (HH:mm).",
+      "timeWheelHint": "Role ou toque para definir a hora. A data permanece a mesma."
     },
     "settlementTitle": "Pagamento de acerto",
     "settlementHint": "{category}: Não conta como gasto em totais, estatísticas ou orçamentos. Ainda atualiza quem deve a quem.",
@@ -571,7 +576,8 @@
       "action": "Edite o valor em {currency}",
       "description": "Insira o valor final, incluindo eventuais taxas.",
       "impliedRate": "Taxa implícita: 1 {source} = {rate} {target}"
-    }
+    },
+    "paidForItemizedEmptyHint": "Atribua pessoas aos itens para ver a parte de cada um."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Excluir documento",
@@ -874,7 +880,7 @@
       "nameRequired": "Insira um nome de exibição.",
       "generic": "Algo deu errado. Por favor, tente novamente.",
       "passwordPolicy": "Use pelo menos 8 caracteres com maiúsculas, minúsculas, um número e um símbolo.",
-      "signupInviteRequired": "Esta instância é apenas por convite. Use um link de convite ou peça a alguém que te convide para um grupo.",
+      "signupInviteRequired": "Os cadastros são apenas por convite. Use um link de convite ou peça a alguém que te convide para um grupo.",
       "passkeyFailed": "O login com chave de acesso falhou. Tente novamente ou use outro método de login."
     },
     "loading": "Carregando…",
@@ -882,12 +888,12 @@
     "required": "Você precisa entrar para acessar seus grupos.",
     "legalNotice": "Ao continuar, você aceita os <terms>Termos de uso</terms> e reconhece o <privacy>aviso de privacidade</privacy>.",
     "inviteOnly": {
-      "message": "Esta instância é apenas por convite. Use um link de convite ou peça a alguém que te convide para um grupo.",
+      "message": "Os cadastros são apenas por convite. Use um link de convite ou peça a alguém que te convide para um grupo.",
       "useInvitedEmail": "Use o endereço de e-mail com o qual você recebeu o convite."
     },
     "signInAnonymously": "Anônimo",
     "lastUsed": "Último uso",
-    "emailAuthDisabled": "O login com email está desativado nesta instância. Use o login único (SSO).",
+    "emailAuthDisabled": "O login com email está desativado. Use o login único (SSO).",
     "signInWithPasskey": "Entrar com chave de acesso"
   },
   "CompleteProfile": {
@@ -977,7 +983,7 @@
         "joined_other": "{count} pessoas entraram",
         "joined_zero": "{count} pessoas entraram até agora"
       },
-      "emailDeliveryDisabled": "O envio de e-mails está desativado nesta instância. O convite é criado mesmo assim e aparecerá quando a pessoa convidada entrar; use um link de convite para dar a ela algo que possa abrir."
+      "emailDeliveryDisabled": "O envio de e-mails está desativado. O convite é criado mesmo assim e aparecerá quando a pessoa convidada entrar; use um link de convite para dar a ela algo que possa abrir."
     },
     "invitations": {
       "description": "Convites aguardando aceitação.",
@@ -1191,7 +1197,7 @@
       },
       "masterDescription": "Desative para silenciar todos os e-mails e notificações push. Suas escolhas por categoria são preservadas.",
       "emailAddToEnable": "Adicione um e-mail verificado para receber notificações na caixa de entrada.",
-      "emailDeliveryDisabled": "O envio de e-mails está desativado nesta instância. Suas escolhas de e-mail são salvas, mas não serão enviadas até que o administrador configure o e-mail."
+      "emailDeliveryDisabled": "O envio de e-mails está desativado. Suas escolhas de e-mail são salvas, mas não serão enviadas até que o e-mail esteja configurado."
     },
     "preferences": {
       "title": "Preferências do aplicativo",
@@ -1203,6 +1209,15 @@
       "chooseMascot": "Escolha um mascote",
       "mascotOptions": {
         "off": "Desativado"
+      },
+      "groupTabs": "Abas do grupo",
+      "groupTabsHelp": "Escolha quais abas são mostradas e em que ordem em cada grupo.",
+      "groupTabsSave": "Salvar",
+      "groupTabsReset": "Redefinir para o padrão",
+      "deleteConfirmation": "Confirmação de exclusão de despesas",
+      "deleteConfirmationHelp": "As exclusões rápidas pedem confirmação uma vez. As exclusões com digitação pedem para você digitar primeiro o título da despesa. Excluir um grupo ou remover um membro sempre exige digitar.",
+      "deleteConfirmationOptions": {
+        "strict": "Diálogo com digitação"
       }
     },
     "aiPreferences": {
@@ -1328,7 +1343,95 @@
       "removing": "Removendo…",
       "errors": {
         "generic": "Algo deu errado. Tente novamente."
-      }
+      },
+      "reauthTitle": "Entre novamente para adicionar uma chave de acesso",
+      "reauthDescription": "Para sua segurança, adicionar uma chave de acesso exige um login recente. Você sairá da conta, entrará de novo e voltará aqui mesmo para concluir.",
+      "reauthConfirm": "Entrar novamente",
+      "reauthAnonymousTitle": "Salve primeiro um link de login",
+      "reauthAnonymousDescription": "Esta conta de convidado ainda não tem link de login nem chave de acesso. Se você sair agora, perderá o acesso para sempre — salve primeiro um link de login na seção Link de login e depois volte para adicionar uma chave de acesso."
+    },
+    "deletion": {
+      "sectionDescription": "Exclua permanentemente sua conta e todos os métodos de login.",
+      "rowLabel": "Excluir conta",
+      "rowDescription": "Remove seu perfil, suas sessões e suas configurações após um período de carência de 48 horas. As despesas compartilhadas permanecem nos grupos dos outros membros sem seus dados pessoais.",
+      "open": "Excluir conta…",
+      "scheduledTitle": "Exclusão da conta agendada",
+      "scheduledDescription": "A exclusão está agendada para começar em {date} ou depois. A conta continua ativa até começar. Os grupos, membros e despesas podem mudar durante a espera; suas opções serão aplicadas ao estado deles quando a exclusão for executada. Você pode cancelá-la até começar. Um email de confirmação foi enviado para {email}.",
+      "cancel": "Cancelar a exclusão",
+      "cancelling": "Cancelando…",
+      "cancelled": "Exclusão da conta cancelada.",
+      "dialogTitle": "Agendar a exclusão da conta?",
+      "dialogDescription": "Isso agenda a exclusão após uma espera de 48 horas; nada é excluído agora. Você pode cancelá-la até começar. Suas opções serão aplicadas aos grupos e saldos daquele momento. Depois de começar, a exclusão não pode ser desfeita.",
+      "farewellBody": "Se houver algo que possamos fazer para você ficar, <feedbackLink>compartilhe seu feedback</feedbackLink> — leva um minuto e nos ajuda a melhorar.",
+      "groupsTitle": "O que acontece com seus grupos",
+      "leaveGroup": "Você sairá de “{name}”.",
+      "deleteGroup": "“{name}” será excluído permanentemente — você é seu último membro.",
+      "lastAdmin": "Você é o último administrador de “{name}” — outro membro será promovido automaticamente.",
+      "settleBalances": "Os saldos pendentes em “{name}” são acertados automaticamente.",
+      "friendLedger": "Seu registro com {name} está acertado e encerrado.",
+      "friendLedgerFallback": "um registro com um amigo",
+      "noGroups": "Você não é membro de nenhum grupo.",
+      "accessTitle": "Login e convites",
+      "pendingInvites_zero": "Quando a exclusão for executada, serão revogados {count} convites pendentes que você enviou.",
+      "pendingInvites_one": "Quando a exclusão for executada, será revogado {count} convite pendente que você enviou.",
+      "pendingInvites_two": "Quando a exclusão for executada, serão revogados {count} convites pendentes que você enviou.",
+      "pendingInvites_few": "Quando a exclusão for executada, serão revogados {count} convites pendentes que você enviou.",
+      "pendingInvites_many": "Quando a exclusão for executada, serão revogados {count} convites pendentes que você enviou.",
+      "pendingInvites_other": "Quando a exclusão for executada, serão revogados {count} convites pendentes que você enviou.",
+      "keepNameLabel": "Manter meu nome no histórico compartilhado",
+      "keepNameDescription": "As despesas compartilhadas continuarão mostrando “{name}”. Caso contrário, seu nome será substituído por “Membro excluído” em todo lugar.",
+      "settleLabel": "Marcar os saldos como acertados quando a exclusão for executada",
+      "settleDescription": "Os saldos restantes são acertados automaticamente. Caso contrário, permanecem associados ao seu nome temporário.",
+      "leaveBalances": "Os saldos pendentes em “{name}” permanecerão como estão.",
+      "friendLeaveBalances": "Seu saldo com {name} permanecerá como está.",
+      "ackLabel": "Entendo que isso é permanente e que as despesas compartilhadas permanecem nos grupos dos outros membros sem meus dados pessoais.",
+      "exportHint": "Quer uma cópia primeiro? <exportLink>Exporte um backup</exportLink> antes de continuar.",
+      "schedule": "Agendar a exclusão",
+      "scheduling": "Agendando…",
+      "scheduled": "Exclusão agendada. Verifique seu e-mail para revisar ou cancelar.",
+      "dialogCancel": "Manter minha conta",
+      "reauthTitle": "Entre novamente para excluir sua conta",
+      "reauthDescription": "Para sua segurança, excluir sua conta exige um login recente. Você sairá da conta, entrará de novo e voltará aqui mesmo para concluir.",
+      "reauthConfirm": "Entrar novamente",
+      "errors": {
+        "generic": "Algo deu errado. Tente novamente.",
+        "loadFailed": "Não foi possível carregar os detalhes da exclusão.",
+        "emailMismatch": "O e-mail digitado não corresponde ao e-mail da sua conta.",
+        "alreadyRequested": "Já existe uma solicitação de exclusão pendente para esta conta.",
+        "sessionNotFresh": "Sua sessão é antiga demais para esta ação. Entre novamente e tente de novo.",
+        "jobsDisabled": "A exclusão da conta precisa do worker em segundo plano, que está desativado nesta instalação.",
+        "ackRequired": "Confirme primeiro que você entende as consequências.",
+        "invalidDisplayName": "Digite um nome entre 1 e 100 caracteres.",
+        "cancelFailed": "Não foi possível cancelar a exclusão. Tente novamente."
+      },
+      "groupsToDeleteDescription": "Quando a exclusão for executada, os grupos de que você ainda for o último membro ativo serão excluídos permanentemente.",
+      "groupsToLeaveTitle": "Grupos que você vai deixar",
+      "groupsToLeaveDescription": "Quando a exclusão for executada, você sairá dos grupos que ainda tenham outros membros ativos. Esses grupos permanecerão para os demais.",
+      "friendsDescription": "Seus saldos individuais com esses amigos.",
+      "backToSettings": "Voltar às configurações",
+      "pageTitle": "Excluir conta",
+      "loading": "Carregando os detalhes da exclusão",
+      "choicesTitle": "Suas opções de exclusão",
+      "nameTitle": "Nome no histórico compartilhado",
+      "removeNameLabel": "Substituir meu nome por “Membro excluído”",
+      "balanceExplanation": "Se você escolher acertar os saldos, serão registradas entradas de acerto quando sua conta for excluída. Nenhum dinheiro é transferido. Caso contrário, os saldos permanecem no seu histórico compartilhado.",
+      "confirmationTitle": "Confirmar a exclusão da conta",
+      "pageDescription": "Agende a exclusão da sua conta após um período de espera de 48 horas. A conta continua ativa até a exclusão começar, e você pode cancelá-la antes.",
+      "reviewChoicesTitle": "Suas opções",
+      "reviewConfirmTitle": "Confirmar a exclusão",
+      "keptNameExplanation": "Quando a exclusão for executada, as despesas compartilhadas mostrarão “{name}”. O nome do seu perfil permanecerá inalterado até lá.",
+      "removedNameExplanation": "Quando a exclusão for executada, as despesas compartilhadas mostrarão “Membro excluído”. O nome do seu perfil permanecerá inalterado até lá.",
+      "keptBalancesExplanation": "Quando a exclusão começar, os saldos restantes permanecerão no seu histórico compartilhado, incluindo despesas adicionadas durante a espera.",
+      "settledBalancesExplanation": "Durante a exclusão, as entradas de acerto marcam como acertados os saldos daquele momento dos grupos de que você ainda faz parte, incluindo os arquivados. Os saldos dos grupos que você já deixou ou dos quais foi removido permanecem inalterados. Nenhum dinheiro é transferido.",
+      "rowBalancesKept": "Os saldos restantes permanecem como estão.",
+      "rowBalancesSettled": "O saldo no momento da exclusão será marcado como acertado.",
+      "rowAdmin": "Quando a exclusão for executada, outro membro se tornará administrador se você ainda for o último administrador.",
+      "friendKept": "Seu saldo permanece como está.",
+      "friendSettled": "Quando a exclusão for executada, seu saldo daquele momento será marcado como acertado e o registro será fechado.",
+      "accessExplanation": "Estes métodos de login deixarão de funcionar quando sua conta for excluída.",
+      "consequencesTiming": "Este resumo reflete o estado atual da sua conta. Os grupos, membros e despesas podem mudar antes de a exclusão começar. Suas opções serão aplicadas aos grupos de que você fizer parte e aos saldos deles naquele momento. Nada do que está indicado aqui acontece imediatamente.",
+      "executingTitle": "A exclusão da conta começou",
+      "executingDescription": "A exclusão da sua conta está em processamento. Algumas alterações podem já estar concluídas, e a exclusão não pode ser cancelada nem desfeita. Se o processamento for interrompido, ele retoma a partir das etapas concluídas."
     }
   },
   "Activities": {
@@ -1338,7 +1441,9 @@
         "reimbursement": "Pagamento de acerto",
         "settlement": "Pagamento de acerto"
       },
-      "recurringCreated": "{participant} criou a despesa recorrente “{title}”"
+      "recurringCreated": "{participant} criou a despesa recorrente “{title}”",
+      "yourShare": "Sua cota:",
+      "notInvolved": "Você não está envolvido"
     },
     "group": {
       "updated": "{participant} atualizou as configurações do grupo",
@@ -1351,7 +1456,13 @@
         "credential": "Link de convite"
       }
     },
-    "fallback": "Uma atividade foi registrada"
+    "fallback": "Uma atividade foi registrada",
+    "hiddenActivities_one": "{count} atividade oculta que não envolve você",
+    "hiddenActivities_many": "{count} atividades ocultas que não envolvem você",
+    "hiddenActivities_other": "{count} atividades ocultas que não envolvem você",
+    "viewMode": {
+      "forYou": "Para você"
+    }
   },
   "OfflineBanner": {
     "message": "Você está offline. Os dados baixados são só para leitura.",
@@ -1400,9 +1511,6 @@
     "copiedInviteLink": "Link de convite copiado"
   },
   "BulkCategorize": {
-    "calibrationTitle": "Etapa 1 — Calibração",
-    "calibrationDescription": "Cada exemplo que você confirma se torna a verdade absoluta para a próxima passada da IA. Pode estar pronta após uma rodada, ou pedir mais exemplos.",
-    "roundCount": "Rodada {round} de {max}",
     "aiWantsMore": "A IA gostaria de mais alguns exemplos. Confirme ou corrija as sugestões abaixo e execute outra rodada.",
     "aiSaidReady": "A IA se sente preparada. Vá para a prévia para aplicar as alterações.",
     "emptySelection": "Nenhuma despesa precisa de revisão agora. Gere a prévia para aplicar categorias a todos os candidatos.",
@@ -1445,7 +1553,85 @@
     "leftUncategorized_many": "{count} despesas foram deixadas sem categorizar porque a IA não estava confiante o suficiente.",
     "leftUncategorized_other": "{count} despesas foram deixadas sem categorizar porque a IA não estava confiante o suficiente.",
     "retryPreview": "Tentar prévia novamente",
-    "doneTitle": "Categorias salvas"
+    "doneTitle": "Categorias salvas",
+    "simpleDescription": "Revise as correspondências de categoria para as despesas em Geral e salve suas escolhas.",
+    "chooseMode": "Escolha como categorizar as despesas",
+    "localModeDescription": "Use o histórico de categorias deste grupo e o dicionário integrado.",
+    "noCategory": "Deixar sem categorizar",
+    "progressTitle": "Categorizando as despesas",
+    "progressDescription": "Você pode sair desta página e voltar mais tarde. Seu progresso é salvo.",
+    "applyProgressTitle": "Salvando categorias",
+    "reviewTitle": "Revise as sugestões",
+    "saveSelected": "Salvar as categorias selecionadas",
+    "partialSaveNotice": "Algumas categorias podem já ter sido salvas. Descartar esta execução não desfará essas alterações.",
+    "restartOlderRunDescription": "Esta execução anterior usava o fluxo de revisão anterior. Comece novamente para revisar todas as despesas juntas.",
+    "runningMatches": "{count} de {total} despesas têm uma sugestão de categoria até o momento",
+    "reviewWorkload": "{total} despesas em Geral · {selected} selecionadas para categorização · {general} que continuam em Geral",
+    "moreCategories": "Escolha outra categoria",
+    "saveCount": "Salvar {count} categorias",
+    "finishWithoutChanges": "Concluir sem alterações",
+    "completionSummary": "Execução concluída: {changed} de {total} despesas alteradas. {remaining} despesas continuam em Geral.",
+    "countLoading": "Contando as despesas não categorizadas…",
+    "startingCount": "{count} despesas estão em Geral e prontas para revisão.",
+    "countError": "Não foi possível contar as despesas não categorizadas. Recarregue a página para tentar novamente.",
+    "keepGeneral": "Geral · deixar sem categorizar",
+    "calibrationRoundTitle": "Rodada de calibragem {round}",
+    "calibrationLoading": "Preparando uma amostra variada de despesas…",
+    "calibrationReviewDescription": "Revise e corrija estas {count} despesas. As escolhas permanecem nesta execução até você salvar no final.",
+    "confirmRound": "Confirmar a rodada",
+    "roundSummaryTitle": "Rodada {round} revisada",
+    "roundSummaryDescription": "{reviewed} revisadas · {categorized} categorizadas provisoriamente · {general} mantidas como Geral",
+    "roundQuality": "As sugestões iniciais corresponderam a {accuracy}% das suas escolhas; você corrigiu {corrections}.",
+    "categorizeRemaining": "Categorize as despesas restantes",
+    "nextRound": "Revise outra amostra",
+    "tableLabel": "Despesas para categorizar",
+    "amountColumn": "Valor",
+    "rerunSuggestions": "Gerar sugestões novamente",
+    "roundQualityWithSuggestions": "{accepted} de {proposed} categorias sugeridas aceitas · {changed} alteradas · {missed} correspondências encontradas em Geral",
+    "roundQualityNoSuggestions": "Nenhuma categoria sugerida · {missed} correspondências encontradas em Geral · {abstained} que continuam em Geral",
+    "rerunChanged": "Você alterou {changed} de {proposed} categorias sugeridas.",
+    "rerunAssignedSingle": "Você atribuiu uma categoria a 1 despesa que estava em Geral.",
+    "rerunAssignedMultiple": "Você atribuiu uma categoria a {count} despesas que estavam em Geral.",
+    "rerunPotentialSingle": "Suas alterações podem melhorar a correspondência de 1 despesa restante em Geral. Gere as sugestões novamente se quiser outra rodada.",
+    "rerunPotentialMultiple": "Suas alterações podem melhorar as correspondências de {count} despesas restantes em Geral. Gere as sugestões novamente se quiser outra rodada.",
+    "rerunEligible": "Elegível para outra rodada: Geral {general} · correspondências automáticas incertas {uncertain}.",
+    "rerunNoEligible": "Não há Geral intactos nem correspondências automáticas incertas para gerar novamente. Suas correções continuam incluídas nas categorias salvas.",
+    "rerunAlreadyUsed": "Suas últimas correções já foram usadas para estas sugestões. Faça outra correção para gerá-las novamente.",
+    "belowMatchThreshold": "Abaixo do limite de correspondência",
+    "refiningTitle": "Refinando as correspondências incertas",
+    "runLimitSummary": "Esta execução inclui 10,000 despesas. Mais {count} despesas de Geral podem ser categorizadas em outra execução depois de salvar.",
+    "pageLoading": "Carregando as despesas…",
+    "pageCount": "Exibindo {loaded} de {total} despesas",
+    "ledgerAmountNotice": "Os valores são exibidos na moeda do grupo.",
+    "reviewFilterLabel": "Exibir as despesas",
+    "improveSuggestions": "Melhore as sugestões restantes",
+    "rerunInfoLabel": "Sobre como melhorar as sugestões",
+    "preparingNextStage": "Preparando a próxima etapa",
+    "rerunProgressTitle": "Atualizando as sugestões",
+    "progressPreparing": "Preparando as despesas…",
+    "noGeneralRows": "Não há despesas em Geral nesta revisão.",
+    "discardConfirmationDescription": "Isso remove a execução, as sugestões e as escolhas feitas por você ou outros administradores. Nenhuma categoria de despesa será alterada.",
+    "progressCountDescription": "Somente as categorias confirmadas e as correspondências médias ou altas contam; Geral e as correspondências fracas não.",
+    "systemOneModeDescription": "Use o modelo de decisão do System One para cada despesa, usando como dicas as despesas categorizadas deste grupo e suas escolhas revisadas. O TypeSafe Jev é um desses modelos.",
+    "systemOneUnavailable": "O System One não está disponível. O dicionário e o histórico ainda estão disponíveis.",
+    "systemOneConfidence": "Confiança no System One: {confidence}%",
+    "systemOneOptionProbability": "Probabilidade da opção no System One: {probability}%",
+    "stageProcessed": "Processadas {processed} de {total} despesas nesta etapa",
+    "sharedRunNotice": "Esta execução é compartilhada com outros administradores do grupo. Todos veem as mesmas sugestões.",
+    "saveConflictDescription": "Alguém editou estas despesas ou alterou a categoria delas fora desta execução. Salve as outras despesas ou edite as categorias novamente e tente salvar mais uma vez.",
+    "saveOtherExpenses": "Salvar outras despesas",
+    "receiptTitles": {
+      "greenGrocer": "Quitanda",
+      "fruitStand": "Barraca de frutas",
+      "cornerBistro": "Bistrô da esquina",
+      "flightTicket": "Passagem de avião",
+      "cinemaTickets": "Ingressos de cinema",
+      "organicMarket": "Mercado orgânico",
+      "laundryDetergent": "Detergente para roupa",
+      "storageBoxes": "Caixas de armazenamento",
+      "popcornCombo": "Combo de pipoca",
+      "streamingRental": "Aluguel em streaming"
+    }
   },
   "ExpensePreview": {
     "title": "Prévia da despesa",
@@ -1475,7 +1661,10 @@
         "removeParticipant": "Para remover <target>{name}</target> deste grupo, digite o nome exatamente como mostrado abaixo."
       },
       "placeholder": "Digite “{name}” aqui",
-      "mismatch": "Não corresponde. Digite exatamente {name}."
+      "mismatch": "Não corresponde. Digite exatamente {name}.",
+      "settingsNoteLink": "Alterar nas configurações da conta",
+      "settingsNoteLead": "Prefere pular a digitação?",
+      "settingsNoteTail": "para usar uma caixa de diálogo de confirmação simples."
     }
   },
   "Theme": {
@@ -1491,7 +1680,7 @@
     "deniedDescription": "Seu navegador bloqueou a permissão para notificações. As notificações configuradas para e-mail continuarão sendo enviadas por e-mail; as opções somente push não serão redirecionadas.",
     "failedDescription": "Não foi possível registrar este dispositivo. As notificações configuradas para e-mail continuarão sendo enviadas por e-mail; as opções somente push não serão redirecionadas.",
     "emailUsage": "Somente as notificações configuradas para e-mail serão recebidas até que você ative um dispositivo. Permita notificações nas configurações do navegador e tente novamente em Configurações.",
-    "emailDeliveryDisabled": "O envio de e-mails está desativado nesta instância, por isso as notificações por e-mail não chegam até você. Ative as notificações push neste dispositivo para continuar recebendo atualizações."
+    "emailDeliveryDisabled": "O envio de e-mails está desativado, por isso as notificações por e-mail não chegam até você. Ative as notificações push neste dispositivo para continuar recebendo atualizações."
   },
   "Unsubscribe": {
     "submitting": "Cancelando inscrição…",
@@ -1734,7 +1923,8 @@
     "landingHintTap": "Toque em mim quando quiser. Eu não mordo — sou um recibo.",
     "hintTapToAddExpense": "Eu sou o {name} — toque em mim para adicionar uma despesa.",
     "hintTapToCreateGroup": "Eu sou o {name} — toque em mim para criar um grupo.",
-    "offlineMessage": "Não consigo criar nada enquanto você está offline."
+    "offlineMessage": "Não consigo criar nada enquanto você está offline.",
+    "serverUnreachableMessage": "Não consigo conectar ao servidor Spliit agora — sua conexão parece estar bem, então a culpa é nossa."
   },
   "CreateSettlement": {
     "description": "Revise o pagamento antes de registrá-lo.",
@@ -1877,6 +2067,26 @@
         "review": {
           "title": "Revisar e importar",
           "detail": "Verifique duplicadas e confirme a importação."
+        }
+      }
+    },
+    "categorize": {
+      "description": "Sugerir categorias para despesas existentes não categorizadas usando o System One. Revise todas as alterações antes de salvar.",
+      "steps": {
+        "choose": {
+          "title": "Escolha um método",
+          "detail": "Use o dicionário e o histórico ou o modelo de decisão do System One."
+        },
+        "calibrate": {
+          "title": "Revise amostras pequenas",
+          "detail": "Corrija as sugestões para que a próxima rodada aprenda as categorias do seu grupo."
+        },
+        "review": {
+          "title": "Revise todas as despesas"
+        },
+        "save": {
+          "title": "Salvar as categorias",
+          "detail": "As despesas só mudam quando você confirmar a revisão final."
         }
       }
     }
@@ -2073,7 +2283,8 @@
       "stepReviewDescription": "Verifique as despesas mapeadas, resolva duplicadas ou erros e importe as linhas selecionadas.",
       "stepReviewTitle": "Revisar despesas",
       "valuesRecomputedDescription": "A moeda ou o fuso horário mudou, por isso valores e datas foram recalculados. Suas seleções e linhas editadas foram mantidas.",
-      "waitDuplicate": "Aguarde a verificação de duplicadas terminar antes de importar."
+      "waitDuplicate": "Aguarde a verificação de duplicadas terminar antes de importar.",
+      "categorizeWithSystemOne": "Sugerir categorias para despesas não categorizadas usando o System One"
     },
     "parseErrors": {
       "CSV_MISSING_PARTICIPANT_COLUMNS": "Faltam colunas de participantes no CSV",
@@ -2195,5 +2406,18 @@
     "expenseMissing": "Essa despesa não está no download deste dispositivo. Reconecte para ver despesas mais recentes ou antigas.",
     "groupMissing": "Esse grupo ainda não terminou de baixar.",
     "balancesStale": "Os saldos podem estar desatualizados."
+  },
+  "ApiErrorEmptyState": {
+    "description": "Não foi possível conectar ao servidor Spliit agora. Sua conexão parece estar bem — tente novamente em instantes."
+  },
+  "ApiStatusBanner": {
+    "message": "Não foi possível acessar o Spliit agora. Sua conexão parece estar bem — o problema é do nosso lado.",
+    "statusLink": "Ver status"
+  },
+  "AccountDeletionBanner": {
+    "scheduled": "A exclusão da conta está agendada para {date}.",
+    "review": "Revisar ou cancelar a exclusão",
+    "executing": "A exclusão da conta começou.",
+    "viewStatus": "Ver o status da exclusão"
   }
 }

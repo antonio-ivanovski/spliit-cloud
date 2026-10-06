@@ -81,13 +81,14 @@
     "signOutOffline": "Connettiti per uscire"
   },
   "Footer": {
-    "madeIn": "Realizzato dalla comunità open-source con amore ❤️",
+    "madeIn": "Realizzato dalla <github>comunità open-source</github> con amore ❤️",
     "legalNavigation": "Collegamenti legali",
     "privacy": "Privacy",
     "terms": "Termini",
     "imprint": "Note legali",
     "sponsor": "Sponsorizza",
-    "timeLabel": "Momento della giornata"
+    "timeLabel": "Momento della giornata",
+    "status": "Stato"
   },
   "Expenses": {
     "title": "Spese",
@@ -229,7 +230,9 @@
       "showLess": "Mostra meno"
     },
     "copyToast": "Copia della spesa avviata. I dettagli della spesa esistente verranno usati per crearne una nuova.",
-    "incomeBadge": "Entrata"
+    "incomeBadge": "Entrata",
+    "paidBySingle": "Pagato da <strong>{paidBy}</strong> · pagato per <paidFor></paidFor>",
+    "paidByMultipleSingle": "Pagato da <paidByNames></paidByNames> · pagato per <paidFor></paidFor>"
   },
   "Groups": {
     "myGroups": "I miei gruppi",
@@ -373,7 +376,8 @@
             "monthly": "mesi",
             "yearly": "anni"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Suggerisci categorie per le spese non categorizzate con System One"
       },
       "Destination": {
         "heading": "Dove desideri importare <strong>{name}</strong>? ({participantCount} partecipanti · {expenseCount} spese)",
@@ -668,7 +672,9 @@
       "description": "I gruppi ora possono mostrare un emoji accanto al nome. Abbiamo notato {emoji} in “{name}”.",
       "openSettings": "Apri le impostazioni del gruppo",
       "notNow": "Non ora"
-    }
+    },
+    "groupTabsHint": "Vuoi riordinare le schede del gruppo o nascondere quelle che non usi?",
+    "groupTabsHintLink": "Personalizza le schede nelle impostazioni dell'account"
   },
   "GroupForm": {
     "title": "Informazioni del gruppo",
@@ -1059,7 +1065,8 @@
       "allItemsSplitEdit": "Modifica la divisione di tutti gli elementi",
       "allItemsSplitModalTitle": "Divisione di tutti gli elementi",
       "remainderAllocationProportional": "Proporzionale alle voci",
-      "remainderProportionalHint": "Dividi questo importo in base al subtotale delle voci di ogni persona. Utile per tasse e mance."
+      "remainderProportionalHint": "Dividi questo importo in base al subtotale delle voci di ogni persona. Utile per tasse e mance.",
+      "errorExceedsAmountDetails": "Il totale delle voci ({itemsTotal}) supera l’importo della spesa di {excess}."
     },
     "leaveItemized": {
       "title": "Cambiare modalità di divisione?",
@@ -1095,7 +1102,15 @@
       "done": "Fatto",
       "yourTime": "la tua ora",
       "invalidDate": "Inserisci una data valida.",
-      "invalidTime": "Inserisci un orario valido (HH:mm)."
+      "invalidTime": "Inserisci un orario valido (HH:mm).",
+      "hourLabel": "Ora",
+      "minuteLabel": "Minuto",
+      "periodLabel": "a.m./p.m.",
+      "timeWheelHint": "Scorri o tocca per impostare l'ora. La data resta invariata.",
+      "now": "Adesso",
+      "morning": "Mattina",
+      "midday": "Mezzogiorno",
+      "evening": "Sera"
     },
     "settlementTitle": "Pagamento di liquidazione",
     "settlementHint": "{category}: Non conteggiato come spesa in totali, statistiche o budget. Aggiorna comunque chi deve cosa a chi.",
@@ -1139,7 +1154,8 @@
       "description": "Inserisci l’importo finale, incluse le commissioni.",
       "impliedRate": "Tasso implicito: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Suggerimenti di categoria"
+    "otherSuggestions": "Suggerimenti di categoria",
+    "paidForItemizedEmptyHint": "Assegna le persone alle voci per vedere ogni quota."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Elimina documento",
@@ -1851,7 +1867,7 @@
       "passwordPolicy": "Usa almeno 8 caratteri con una maiuscola, una minuscola, un numero e un simbolo.",
       "generic": "Qualcosa è andato storto. Riprova.",
       "magicLinkFailed": "Impossibile inviare il link di accesso.",
-      "signupInviteRequired": "Questa istanza è accessibile solo su invito. Usa un link di invito o chiedi a qualcuno di invitarti in un gruppo.",
+      "signupInviteRequired": "Le registrazioni sono solo su invito. Usa un link di invito o chiedi a qualcuno di invitarti in un gruppo.",
       "passkeyFailed": "Accesso con chiave di accesso non riuscito. Riprova o usa un altro metodo di accesso."
     },
     "loading": "Caricamento…",
@@ -1861,14 +1877,14 @@
     "signInWithGithub": "Continua con GitHub",
     "legalNotice": "Continuando, accetti i <terms>Termini di utilizzo</terms> e riconosci l'<privacy>informativa sulla privacy</privacy>.",
     "inviteOnly": {
-      "message": "Questa istanza è accessibile solo su invito. Usa un link di invito o chiedi a qualcuno di invitarti in un gruppo.",
+      "message": "Le registrazioni sono solo su invito. Usa un link di invito o chiedi a qualcuno di invitarti in un gruppo.",
       "useInvitedEmail": "Usa l'indirizzo email con cui hai ricevuto l'invito."
     },
     "signInWithX": "Continua con X",
     "signInWithOidc": "Continua con {name}",
     "signInAnonymously": "Anonimo",
     "lastUsed": "Ultimo utilizzo",
-    "emailAuthDisabled": "L'accesso con email è disattivato su questa istanza. Usa il single sign-on (SSO).",
+    "emailAuthDisabled": "L'accesso con email è disattivato. Usa il single sign-on (SSO).",
     "signInWithPasskey": "Accedi con chiave di accesso"
   },
   "CompleteProfile": {
@@ -1993,7 +2009,7 @@
         "joined_many": "{count} persone si sono unite",
         "retry": "Riprova"
       },
-      "emailDeliveryDisabled": "L'invio delle email è disattivato su questa istanza. L'invito viene comunque creato e apparirà quando la persona invitata accede; usa un link di invito per darle qualcosa da aprire."
+      "emailDeliveryDisabled": "L'invio delle email è disattivato. L'invito viene comunque creato e apparirà quando la persona invitata accede; usa un link di invito per darle qualcosa da aprire."
     },
     "invitations": {
       "title": "Inviti in sospeso",
@@ -2415,7 +2431,7 @@
       "masterDescription": "Disattivale per silenziare tutte le notifiche via e-mail e push. Le tue scelte per categoria vengono conservate.",
       "emailAddToEnable": "Aggiungi un'e-mail verificata per ricevere le notifiche nella posta in arrivo.",
       "emailAddLink": "Aggiungi e-mail",
-      "emailDeliveryDisabled": "L'invio delle email è disattivato su questa istanza. Le tue scelte email vengono salvate, ma non saranno inviate finché l'amministratore non configura l'email."
+      "emailDeliveryDisabled": "L'invio delle email è disattivato. Le tue scelte email vengono salvate, ma non saranno inviate finché l'email non sarà configurata."
     },
     "preferences": {
       "title": "Preferenze dell'app",
@@ -2434,6 +2450,22 @@
       "mascotOptions": {
         "off": "Disattivata",
         "bill": "Bill, lo scontrino"
+      },
+      "groupTabs": "Schede del gruppo",
+      "groupTabsHelp": "Scegli quali schede mostrare e in che ordine in ogni gruppo.",
+      "groupTabsCustomize": "Personalizza",
+      "groupTabsSave": "Salva",
+      "groupTabsDiscard": "Abbandona",
+      "groupTabsReset": "Reimposta i valori predefiniti",
+      "groupTabsHide": "Nascondi {name}",
+      "groupTabsShow": "Mostra {name}",
+      "groupTabsMoveUp": "Sposta {name} su",
+      "groupTabsMoveDown": "Sposta {name} giù",
+      "deleteConfirmation": "Conferma eliminazione spese",
+      "deleteConfirmationHelp": "Le eliminazioni rapide chiedono una semplice conferma. Quelle con digitazione ti chiedono di digitare prima il titolo della spesa. Eliminare un gruppo o rimuovere un membro richiede sempre di digitare.",
+      "deleteConfirmationOptions": {
+        "standard": "Dialogo di conferma",
+        "strict": "Dialogo con digitazione"
       }
     },
     "aiPreferences": {
@@ -2626,7 +2658,111 @@
       "backedUp": "Con backup",
       "removeWarning": "Questa azione non può essere annullata. Il dispositivo non ti farà più accedere con una chiave di accesso — potrai registrarlo di nuovo in qualsiasi momento.",
       "removeLastWarning": "Questa è la tua ultima chiave di accesso. Se è il tuo unico metodo di accesso, la rimozione è bloccata finché non salvi un link di recupero o un altro metodo di accesso.",
-      "anonymousHelpNoLink": "Nessun link di accesso salvato per questo account ospite. Creane uno nella riga del link di accesso qui sotto — funziona su qualsiasi dispositivo."
+      "anonymousHelpNoLink": "Nessun link di accesso salvato per questo account ospite. Creane uno nella riga del link di accesso qui sotto — funziona su qualsiasi dispositivo.",
+      "reauthTitle": "Accedi di nuovo per aggiungere una chiave di accesso",
+      "reauthDescription": "Per la tua sicurezza, aggiungere una chiave di accesso richiede un accesso recente. Verrai disconnesso, dovrai accedere di nuovo e tornerai qui per finire.",
+      "reauthConfirm": "Accedi di nuovo",
+      "reauthAnonymousTitle": "Salva prima un collegamento per il ripristino",
+      "reauthAnonymousDescription": "Questo account ospite non ha ancora un collegamento per il ripristino né una chiave di accesso. Se esci adesso, perderai l'accesso per sempre — salva prima un collegamento per il ripristino nella sezione Collegamento per il ripristino, poi torna per aggiungere una chiave di accesso."
+    },
+    "deletion": {
+      "sectionTitle": "Zona pericolosa",
+      "sectionDescription": "Elimina definitivamente il tuo account e tutti i metodi di accesso.",
+      "rowLabel": "Elimina account",
+      "rowDescription": "Rimuove il tuo profilo, le tue sessioni e le tue impostazioni dopo un periodo di tolleranza di 48 ore. Le spese condivise restano nei gruppi degli altri membri senza i tuoi dati personali.",
+      "open": "Elimina account…",
+      "scheduledTitle": "Eliminazione dell'account programmata",
+      "scheduledDescription": "L’eliminazione è programmata per iniziare il {date} o successivamente. L’account resta attivo fino al suo inizio. Gruppi, membri e spese possono cambiare durante l’attesa; le tue scelte si applicheranno al loro stato quando verrà eseguita l’eliminazione. Puoi annullarla fino al suo inizio. Un’email di conferma è stata inviata a {email}.",
+      "cancel": "Annulla l'eliminazione",
+      "cancelling": "Annullamento…",
+      "cancelled": "Eliminazione dell'account annullata.",
+      "dialogTitle": "Programmare l’eliminazione dell’account?",
+      "dialogDescription": "L’eliminazione viene programmata dopo un’attesa di 48 ore; ora non viene eliminato nulla. Puoi annullarla fino al suo inizio. Le tue scelte si applicheranno ai gruppi e ai saldi di quel momento. Una volta iniziata, l’eliminazione non può essere annullata.",
+      "farewellTitle": "Ci dispiace vederti andare via",
+      "farewellBody": "Se c'è qualcosa che possiamo fare perché tu resti, <feedbackLink>condividi il tuo feedback</feedbackLink> — ci vuole un minuto e ci aiuta a migliorare.",
+      "groupsTitle": "Cosa succede ai tuoi gruppi",
+      "leaveGroup": "Lascerai «{name}».",
+      "deleteGroup": "«{name}» verrà eliminato definitivamente — ne sei l'ultimo membro.",
+      "lastAdmin": "Sei l'ultimo amministratore di «{name}» — un altro membro verrà promosso automaticamente.",
+      "settleBalances": "I saldi in sospeso in «{name}» vengono liquidati automaticamente.",
+      "friendLedger": "Il tuo registro con {name} è liquidato e chiuso.",
+      "friendLedgerUnnamed": "Il tuo registro è liquidato e chiuso.",
+      "friendLedgerFallback": "un registro con un amico",
+      "noGroups": "Non sei membro di alcun gruppo.",
+      "accessTitle": "Accesso e inviti",
+      "pendingInvites_zero": "Quando viene eseguita l’eliminazione, verranno revocati {count} inviti in sospeso che hai inviato.",
+      "pendingInvites_one": "Quando viene eseguita l’eliminazione, verrà revocato {count} invito in sospeso che hai inviato.",
+      "pendingInvites_two": "Quando viene eseguita l’eliminazione, verranno revocati {count} inviti in sospeso che hai inviato.",
+      "pendingInvites_few": "Quando viene eseguita l’eliminazione, verranno revocati {count} inviti in sospeso che hai inviato.",
+      "pendingInvites_many": "Quando viene eseguita l’eliminazione, verranno revocati {count} inviti in sospeso che hai inviato.",
+      "pendingInvites_other": "Quando viene eseguita l’eliminazione, verranno revocati {count} inviti in sospeso che hai inviato.",
+      "keepNameLabel": "Mantieni il mio nome nella cronologia condivisa",
+      "keepNameDescription": "Le spese condivise continueranno a mostrare «{name}». Altrimenti il tuo nome verrà sostituito ovunque con «Membro eliminato».",
+      "customNameLabel": "Nome da conservare",
+      "settleLabel": "Segna i saldi come liquidati quando viene eseguita l’eliminazione",
+      "settleDescription": "I saldi rimanenti vengono liquidati automaticamente. In caso contrario, resteranno associati al tuo nome temporaneo.",
+      "leaveBalances": "I saldi in sospeso in «{name}» resteranno invariati.",
+      "friendLeaveBalances": "Il tuo saldo con {name} resterà invariato.",
+      "confirmWord": "ELIMINA",
+      "ackLabel": "Ho capito che questa azione è permanente e che le spese condivise restano nei gruppi degli altri membri senza i miei dati personali.",
+      "exportHint": "Vuoi prima una copia? <exportLink>Esporta un backup</exportLink> prima di continuare.",
+      "schedule": "Programma l'eliminazione",
+      "scheduling": "Programmazione…",
+      "scheduled": "Eliminazione programmata. Controlla la tua e-mail per verificarla o annullarla.",
+      "dialogCancel": "Mantieni il mio account",
+      "reauthTitle": "Accedi di nuovo per eliminare il tuo account",
+      "reauthDescription": "Per la tua sicurezza, eliminare il tuo account richiede un accesso recente. Verrai disconnesso, dovrai accedere di nuovo e tornerai qui per finire.",
+      "reauthConfirm": "Accedi di nuovo",
+      "errors": {
+        "generic": "Qualcosa è andato storto. Riprova.",
+        "loadFailed": "Impossibile caricare i dettagli dell'eliminazione.",
+        "emailMismatch": "L'e-mail digitata non corrisponde a quella del tuo account.",
+        "alreadyRequested": "Esiste già una richiesta di eliminazione in sospeso per questo account.",
+        "sessionNotFresh": "La tua sessione è troppo vecchia per questa azione. Accedi di nuovo e riprova.",
+        "jobsDisabled": "L'eliminazione dell'account richiede il worker in background, che è disattivato in questo ambiente.",
+        "ackRequired": "Prima conferma di aver compreso le conseguenze.",
+        "invalidDisplayName": "Inserisci un nome da 1 a 100 caratteri.",
+        "cancelFailed": "Impossibile annullare l'eliminazione. Riprova."
+      },
+      "groupsToDeleteTitle": "Gruppi che verranno eliminati",
+      "groupsToDeleteDescription": "Quando viene eseguita l’eliminazione, i gruppi di cui sei ancora l’ultimo membro attivo verranno eliminati definitivamente.",
+      "groupsToLeaveTitle": "Gruppi che lascerai",
+      "groupsToLeaveDescription": "Quando viene eseguita l’eliminazione, lascerai i gruppi che hanno ancora altri membri attivi. Questi gruppi resteranno per gli altri.",
+      "friendsTitle": "Amici",
+      "friendsDescription": "I tuoi saldi individuali con questi amici.",
+      "backToSettings": "Torna alle impostazioni",
+      "pageTitle": "Elimina account",
+      "loading": "Caricamento dei dettagli dell'eliminazione",
+      "choicesTitle": "Le tue scelte per l'eliminazione",
+      "nameTitle": "Nome nella cronologia condivisa",
+      "removeNameLabel": "Sostituisci il mio nome con «Membro eliminato»",
+      "balancesTitle": "Saldi rimanenti",
+      "keepBalancesLabel": "Mantieni i saldi rimanenti come sono",
+      "balanceExplanation": "Se scegli di liquidare i saldi, verranno registrate voci di liquidazione quando il tuo account sarà eliminato. Non viene trasferito denaro. Altrimenti, i saldi rimangono nella cronologia condivisa.",
+      "confirmationTitle": "Conferma l'eliminazione dell'account",
+      "retry": "Riprova",
+      "pageDescription": "Programma l’eliminazione del tuo account dopo un periodo di attesa di 48 ore. L’account resta attivo fino all’inizio dell’eliminazione e puoi annullarla prima.",
+      "reviewChoicesTitle": "Le tue scelte",
+      "consequencesTitle": "Cosa succederà",
+      "reviewConfirmTitle": "Conferma l’eliminazione",
+      "backupLink": "Esporta una copia di backup",
+      "keptNameExplanation": "Quando viene eseguita l’eliminazione, le spese condivise mostreranno «{name}». Il nome del tuo profilo resterà invariato fino ad allora.",
+      "removedNameExplanation": "Quando viene eseguita l’eliminazione, le spese condivise mostreranno «Membro eliminato». Il nome del tuo profilo resterà invariato fino ad allora.",
+      "keptBalancesExplanation": "All’inizio dell’eliminazione, i saldi rimanenti restano nella cronologia condivisa, comprese le spese aggiunte durante l’attesa.",
+      "settledBalancesExplanation": "Durante l’eliminazione, le voci di liquidazione segnano come liquidati i saldi di quel momento nei gruppi di cui fai ancora parte, compresi quelli archiviati. I saldi nei gruppi che hai già lasciato o da cui sei stato rimosso restano invariati. Non viene trasferito denaro.",
+      "rowBalancesKept": "I saldi rimanenti restano invariati.",
+      "rowBalancesSettled": "Il saldo al momento dell’eliminazione verrà segnato come liquidato.",
+      "rowAdmin": "Quando viene eseguita l’eliminazione, un altro membro diventerà amministratore se sei ancora l’ultimo amministratore.",
+      "friendKept": "Il tuo saldo resta invariato.",
+      "friendSettled": "Quando viene eseguita l’eliminazione, il tuo saldo di quel momento verrà segnato come liquidato e il registro verrà chiuso.",
+      "accessExplanation": "Questi metodi di accesso smetteranno di funzionare quando il tuo account verrà eliminato.",
+      "invitesTitle": "Inviti in sospeso",
+      "balanceUnavailable": "Saldo non disponibile",
+      "archivedBalancesKept": "Questo gruppo archiviato rimarrà in sola lettura. Il tuo saldo rimanente verrà conservato.",
+      "signInMethodsRemoved": "Questi metodi di accesso smetteranno di funzionare: {methods}.",
+      "consequencesTiming": "Questo riepilogo riflette lo stato attuale del tuo account. Gruppi, membri e spese possono cambiare prima dell’inizio dell’eliminazione. Le tue scelte si applicheranno ai gruppi di cui farai parte e ai loro saldi in quel momento. Nulla di quanto indicato qui avviene immediatamente.",
+      "executingTitle": "L’eliminazione dell’account è iniziata",
+      "executingDescription": "L’eliminazione del tuo account è in corso. Alcune modifiche potrebbero già essere completate e l’eliminazione non può essere annullata né le modifiche ripristinate. Se l’elaborazione viene interrotta, riprende dai passaggi completati."
     }
   },
   "Activities": {
@@ -2653,7 +2789,9 @@
       },
       "recurringCreated": "{participant} ha creato la spesa ricorrente «{title}»",
       "stopped": "{participant} ha interrotto la spesa ricorrente {title}",
-      "commented": "{participant} ha commentato {title}: “{excerpt}”"
+      "commented": "{participant} ha commentato {title}: “{excerpt}”",
+      "yourShare": "La tua quota:",
+      "notInvolved": "Non sei coinvolto"
     },
     "group": {
       "updated": "{participant} ha aggiornato le impostazioni del gruppo",
@@ -2666,7 +2804,11 @@
         "currencyCode": "Codice valuta",
         "linkedParticipant": "Partecipante collegato",
         "subgroupsEnabled": "Sottogruppi",
-        "publicViewLink": "Link pubblico di sola lettura"
+        "publicViewLink": "Link pubblico di sola lettura",
+        "emoji": "Emoji",
+        "color": "Colore",
+        "subgroups": "Sottogruppi",
+        "splitPresets": "Preimpostazioni di divisione"
       }
     },
     "member": {
@@ -2697,7 +2839,18 @@
       "imported_other": "{participant} ha importato {count} spese"
     },
     "participant": {
-      "removed": "{participant} ha rimosso {target} dal gruppo"
+      "removed": "{participant} ha rimosso {target} dal gruppo",
+      "added": "{participant} ha aggiunto {target} al gruppo"
+    },
+    "hiddenActivitiesShowLess": "Mostra meno",
+    "hiddenActivities_one": "{count} attività nascosta che non ti riguarda",
+    "hiddenActivities_few": "{count} attività nascoste che non ti riguardano",
+    "hiddenActivities_many": "{count} attività nascoste che non ti riguardano",
+    "hiddenActivities_other": "{count} attività nascoste che non ti riguardano",
+    "viewMode": {
+      "label": "Modalità vista attività",
+      "forYou": "Per te",
+      "all": "Tutte"
     }
   },
   "OfflineBanner": {
@@ -2775,9 +2928,6 @@
   },
   "BulkCategorize": {
     "title": "Categorizzazione in blocco",
-    "calibrationTitle": "Passo 1 — Calibrazione",
-    "calibrationDescription": "Ogni esempio che confermi diventa la verità assoluta per la passata successiva dell'IA. Può essere pronta dopo un solo giro, o chiedere altri esempi.",
-    "roundCount": "Round {round} di {max}",
     "confidence": {
       "high": "Alta",
       "medium": "Media",
@@ -2845,7 +2995,137 @@
     "doneTitle": "Categorie salvate",
     "expenseColumn": "Spesa",
     "categoryColumn": "Categoria",
-    "confidenceColumn": "Confidenza"
+    "confidenceColumn": "Confidenza",
+    "simpleDescription": "Revisiona le corrispondenze di categoria per le spese in Generale, quindi salva le tue scelte.",
+    "generateSuggestions": "Suggerisci categorie",
+    "backToStart": "Indietro",
+    "chooseMode": "Scegli come categorizzare le spese",
+    "localMode": "Dizionario e cronologia",
+    "localModeDescription": "Usa la cronologia delle categorie di questo gruppo e il dizionario integrato.",
+    "startRun": "Inizia a categorizzare",
+    "noCategory": "Lascia non categorizzata",
+    "progressTitle": "Categorizzazione delle spese",
+    "progressDescription": "Puoi uscire da questa pagina e tornare più tardi. I tuoi progressi vengono salvati.",
+    "progressCount": "{categorized} spese su {total} categorizzate",
+    "applyProgressTitle": "Salvataggio categorie",
+    "reviewTitle": "Revisiona i suggerimenti",
+    "reviewSummary": "{suggested} suggerimenti da {total} spese non categorizzate",
+    "sourceLocal": "Locale",
+    "saveSelected": "Salva le categorie selezionate",
+    "retry": "Riprova",
+    "restart": "Avvia una nuova esecuzione",
+    "failed": "L’esecuzione si è interrotta: {message}",
+    "savedSummary": "{applied} modificate, {skipped} ignorate",
+    "selectedCount": "{count} selezionate",
+    "selectAll": "Seleziona tutto",
+    "clearAll": "Cancella tutto",
+    "discardRun": "Abbandona l’esecuzione",
+    "partialSaveNotice": "Alcune categorie potrebbero essere già state salvate. L’abbandono di questa esecuzione non annullerà tali modifiche.",
+    "restartOlderRunTitle": "Avvia una nuova esecuzione di categorizzazione",
+    "restartOlderRunDescription": "Questa esecuzione precedente usava il flusso di revisione precedente. Ricomincia per revisionare tutte le spese insieme.",
+    "runningMatches": "{count} spese su {total} hanno un suggerimento di categoria finora",
+    "failedTitle": "Categorizzazione interrotta",
+    "reviewWorkload": "{total} spese in Generale · {selected} selezionate per la categorizzazione · {general} che restano in Generale",
+    "categoryChoices": "Scelte di categoria",
+    "moreCategories": "Scegli un’altra categoria",
+    "saveCount": "Salva {count} categorie",
+    "finishWithoutChanges": "Termina senza modifiche",
+    "completionSummary": "Esecuzione completata: {changed} spese su {total} modificate. {remaining} spese restano in Generale.",
+    "viewExpenses": "Visualizza le spese",
+    "countLoading": "Conteggio delle spese non categorizzate…",
+    "nothingToCategorize": "Non ci sono spese non categorizzate da categorizzare.",
+    "startingCount": "{count} spese sono attualmente in Generale e pronte per la revisione.",
+    "countError": "Impossibile contare le spese non categorizzate. Ricarica la pagina per riprovare.",
+    "keepGeneral": "Generale · lascia non categorizzata",
+    "calibrationRoundTitle": "Turno di calibrazione {round}",
+    "calibrationLoading": "Preparazione di un campione vario di spese…",
+    "calibrationReviewDescription": "Revisiona e correggi queste {count} spese. Le scelte restano in questa esecuzione finché non salvi alla fine.",
+    "confirmRound": "Conferma il turno",
+    "roundSummaryTitle": "Turno {round} revisionato",
+    "roundSummaryDescription": "{reviewed} revisionate · {categorized} categorizzate in via provvisoria · {general} lasciate in Generale",
+    "roundQuality": "I suggerimenti iniziali corrispondevano al {accuracy}% delle tue scelte; ne hai corretti {corrections}.",
+    "categorizeRemaining": "Categorizza le spese rimanenti",
+    "nextRound": "Revisiona un altro campione",
+    "tableLabel": "Spese da categorizzare",
+    "dateColumn": "Data",
+    "amountColumn": "Importo",
+    "rerunSuggestions": "Rigenera i suggerimenti",
+    "roundQualityWithSuggestions": "{accepted} categorie suggerite su {proposed} accettate · {changed} modificate · {missed} corrispondenze trovate da Generale",
+    "roundQualityNoSuggestions": "Nessuna categoria suggerita · {missed} corrispondenze trovate da Generale · {abstained} rimaste in Generale",
+    "rerunChanged": "Hai modificato {changed} categorie suggerite su {proposed}.",
+    "rerunAssignedSingle": "Hai assegnato una categoria a 1 spesa rimasta in Generale.",
+    "rerunAssignedMultiple": "Hai assegnato una categoria a {count} spese rimaste in Generale.",
+    "rerunPotentialSingle": "Le tue modifiche possono migliorare la corrispondenza di 1 spesa rimanente in Generale. Genera di nuovo i suggerimenti per un altro passaggio.",
+    "rerunPotentialMultiple": "Le tue modifiche possono migliorare le corrispondenze di {count} spese rimanenti in Generale. Genera di nuovo i suggerimenti per un altro passaggio.",
+    "rerunEligible": "Idoneo per un altro passaggio: Generale {general} · corrispondenze automatiche incerte {uncertain}.",
+    "rerunNoEligible": "Non restano Generale intatti né corrispondenze automatiche incerte da rigenerare. Le tue correzioni restano incluse nelle categorie salvate.",
+    "rerunAlreadyUsed": "Le tue ultime correzioni sono già state usate per questi suggerimenti. Apporta un’altra correzione per generarli di nuovo.",
+    "highMatch": "Corrispondenza alta",
+    "mediumMatch": "Corrispondenza media",
+    "lowMatch": "Corrispondenza bassa",
+    "belowMatchThreshold": "Sotto la soglia di corrispondenza",
+    "refiningTitle": "Rifinitura delle corrispondenze incerte",
+    "runLimitSummary": "Questa esecuzione include 10,000 spese. Altre {count} spese in Generale possono essere categorizzate in un’altra esecuzione dopo il salvataggio.",
+    "pageLoading": "Caricamento delle spese…",
+    "pageLoadError": "Impossibile caricare le spese.",
+    "pageRetry": "Riprova",
+    "pageCount": "Visualizzazione di {loaded} spese su {total}",
+    "ledgerAmountNotice": "Gli importi sono mostrati nella valuta del gruppo.",
+    "viewExpenseDetails": "Visualizza i dettagli della spesa",
+    "reviewFilterLabel": "Mostra le spese",
+    "filterAll": "Tutte {count}",
+    "filterGeneral": "Generale {count}",
+    "improveSuggestions": "Migliora i suggerimenti rimanenti",
+    "rerunInfoLabel": "Informazioni sul miglioramento dei suggerimenti",
+    "preparingNextStage": "Preparazione del passaggio successivo",
+    "rerunProgressTitle": "Aggiornamento dei suggerimenti",
+    "progressPreparing": "Preparazione delle spese…",
+    "noGeneralRows": "Non restano spese in Generale in questa revisione.",
+    "discardConfirmationTitle": "Abbandonare questa esecuzione di categorizzazione?",
+    "discardConfirmationDescription": "Questo rimuove l’esecuzione, i suoi suggerimenti e le scelte fatte da te o da altri amministratori. Nessuna categoria di spesa verrà modificata.",
+    "discardConfirmationCancel": "Mantieni l’esecuzione",
+    "progressCountDescription": "Contano solo le categorie confermate e le corrispondenze medie o alte; Generale e le corrispondenze deboli, no.",
+    "systemOneMode": "Modello System One",
+    "systemOneModeDescription": "Usa il modello decisionale di System One per ogni spesa, usando come suggerimenti le spese categorizzate di questo gruppo e le tue scelte verificate. TypeSafe Jev è uno di questi modelli.",
+    "systemOneUnavailable": "System One non è disponibile. Il dizionario e la cronologia sono ancora disponibili.",
+    "systemOneConfidence": "Affidabilità di System One: {confidence}%",
+    "systemOneOptionProbability": "Probabilità dell’opzione di System One: {probability}%",
+    "overallProgress": "Progresso complessivo",
+    "fullPassProcessed": "Elaborate {processed} spese su {total}",
+    "stageProcessed": "Elaborate {processed} spese su {total} in questo passaggio",
+    "saveSkipped": "{count} spese ignorate perché modificate.",
+    "sharedRunNotice": "Questa esecuzione è condivisa con gli altri amministratori del gruppo. Tutti vedono gli stessi suggerimenti.",
+    "saveConflictTitle": "{count} spese modificate dall’inizio di questa revisione",
+    "saveConflictDescription": "Qualcuno ha modificato queste spese o ne ha cambiato la categoria fuori da questa esecuzione. Salva le altre spese, oppure modifica di nuovo le categorie e prova a salvare ancora una volta.",
+    "saveConflictMore": "E altre {count}.",
+    "saveOtherExpenses": "Salva le altre spese",
+    "receiptTitles": {
+      "freshMarket": "Mercato fresco",
+      "greenGrocer": "Fruttivendolo",
+      "fruitStand": "Bancarella di frutta",
+      "cornerBistro": "Bistrot all'angolo",
+      "noodleHouse": "Casa dei noodle",
+      "cafeLunch": "Pranzo al bar",
+      "flightTicket": "Biglietto aereo",
+      "airlineBaggage": "Bagaglio aereo",
+      "boardingPass": "Carta d'imbarco",
+      "homeSupplies": "Prodotti per la casa",
+      "hardwareShop": "Ferramenta",
+      "cleaningGoods": "Prodotti per le pulizie",
+      "cinemaTickets": "Biglietti del cinema",
+      "movieNight": "Serata cinema",
+      "filmFestival": "Festival del cinema",
+      "organicMarket": "Mercato biologico",
+      "bakeryRun": "Spesa in panetteria",
+      "sushiBar": "Sushi bar",
+      "pizzaNight": "Serata pizza",
+      "airportLounge": "Lounge aeroporto",
+      "extraLegroom": "Spazio extra per le gambe",
+      "laundryDetergent": "Detersivo per il bucato",
+      "storageBoxes": "Scatole contenitore",
+      "popcornCombo": "Combo popcorn",
+      "streamingRental": "Noleggio in streaming"
+    }
   },
   "ExpensePreview": {
     "title": "Anteprima della spesa",
@@ -2892,10 +3172,14 @@
         "deleteGroup": "Per eliminare definitivamente il gruppo <target>{name}</target>, digita il nome esattamente come mostrato di seguito.",
         "deleteExpense": "Per eliminare definitivamente la spesa <target>{name}</target>, digita il titolo esattamente come mostrato di seguito.",
         "deleteRecurringExpense": "Per confermare l’eliminazione di <target>{name}</target>, digita il titolo della spesa esattamente come mostrato di seguito.",
-        "removeParticipant": "Per rimuovere <target>{name}</target> da questo gruppo, digita il nome esattamente come mostrato di seguito."
+        "removeParticipant": "Per rimuovere <target>{name}</target> da questo gruppo, digita il nome esattamente come mostrato di seguito.",
+        "deleteAccount": "Per eliminare definitivamente il tuo account, digita <target>{name}</target> esattamente come mostrato di seguito."
       },
       "placeholder": "Digita «{name}» qui",
-      "mismatch": "Non corrisponde. Digita esattamente {name}."
+      "mismatch": "Non corrisponde. Digita esattamente {name}.",
+      "settingsNoteLink": "Modifica nelle impostazioni account",
+      "settingsNoteLead": "Preferisci evitare la digitazione?",
+      "settingsNoteTail": "per usare un semplice dialogo di conferma."
     }
   },
   "Theme": {
@@ -2919,7 +3203,7 @@
     "failedDescription": "Non è stato possibile registrare questo dispositivo. Le notifiche configurate per l’e-mail continueranno a essere inviate lì; le opzioni solo push non verranno reindirizzate.",
     "emailUsage": "Finché non abiliti un dispositivo, arriveranno solo le notifiche configurate per l’e-mail. Puoi consentire le notifiche nelle impostazioni del browser e riprovare dalle Impostazioni.",
     "done": "Fatto",
-    "emailDeliveryDisabled": "L'invio delle email è disattivato su questa istanza, quindi le notifiche email non possono raggiungerti. Attiva le notifiche push su questo dispositivo per continuare a ricevere gli aggiornamenti."
+    "emailDeliveryDisabled": "L'invio delle email è disattivato, quindi le notifiche email non possono raggiungerti. Attiva le notifiche push su questo dispositivo per continuare a ricevere gli aggiornamenti."
   },
   "Unsubscribe": {
     "title": "Disattivare queste e-mail?",
@@ -3390,7 +3674,8 @@
     "hintTapToAddExpense": "Sono {name} — toccami per aggiungere una spesa.",
     "hintTapToCreateGroup": "Sono {name} — toccami per creare un gruppo.",
     "billName": "Bill",
-    "offlineMessage": "Non posso creare nulla mentre sei offline."
+    "offlineMessage": "Non posso creare nulla mentre sei offline.",
+    "serverUnreachableMessage": "Non riesco a raggiungere il server di Spliit al momento — la tua connessione sembra a posto, quindi la colpa è nostra."
   },
   "CreateSettlement": {
     "description": "Rivedi il pagamento prima di registrarlo.",
@@ -3441,7 +3726,18 @@
       "existingPasskeyTitle": "Hai già registrato una chiave di accesso?",
       "existingPasskeyDescription": "Accedi di nuovo con la chiave di accesso su uno dei tuoi dispositivi registrati.",
       "passkeySignIn": "Accedi con chiave di accesso",
-      "passkeySignInError": "Impossibile accedere con questa chiave di accesso. Riprova o usa il tuo link di accesso."
+      "passkeySignInError": "Impossibile accedere con questa chiave di accesso. Riprova o usa il tuo link di accesso.",
+      "passkeyNameLabel": "Dai un nome a questa chiave di accesso (facoltativo)",
+      "passkeyNamePlaceholder": "es. Touch ID del MacBook",
+      "nameTitle": "Scegli un nome visualizzato",
+      "nameDescription": "Verrà mostrato sulla tua chiave di accesso e nei tuoi gruppi. Puoi cambiarlo in seguito.",
+      "nameLabel": "Nome visualizzato",
+      "namePlaceholder": "Il tuo nome",
+      "nameSave": "Salva e continua",
+      "nameSaving": "Salvataggio…",
+      "nameRequired": "Inserisci un nome visualizzato.",
+      "nameTooShort": "Il nome deve contenere almeno 2 caratteri.",
+      "nameError": "Impossibile salvare il nome visualizzato. Riprova."
     },
     "onboarding": {
       "title": "Salva il link di accesso",
@@ -3580,6 +3876,29 @@
         "review": {
           "title": "Rivedi e importa",
           "detail": "Controlla duplicati e conferma l'importazione."
+        }
+      }
+    },
+    "categorize": {
+      "title": "Categorizza le spese",
+      "description": "Suggerisci categorie per le spese esistenti non categorizzate con System One. Verifica ogni modifica prima di salvarla.",
+      "start": "Categorizza le spese",
+      "steps": {
+        "choose": {
+          "title": "Scegli un metodo",
+          "detail": "Usa il dizionario e la cronologia o il modello decisionale di System One."
+        },
+        "calibrate": {
+          "title": "Revisiona piccoli campioni",
+          "detail": "Correggi i suggerimenti così che il prossimo turno impari le categorie del tuo gruppo."
+        },
+        "review": {
+          "title": "Revisiona ogni spesa",
+          "detail": "Le spese in Generale appaiono per prime nella tabella completa."
+        },
+        "save": {
+          "title": "Salva le categorie",
+          "detail": "Le spese cambiano solo quando confermi la revisione finale."
         }
       }
     }
@@ -4075,7 +4394,8 @@
       "valuesRecomputedTitle": "Valori ricalcolati",
       "viewExpenses": "Vedi spese",
       "waitDuplicate": "Attendi la fine del controllo duplicati prima di importare.",
-      "invalidRowTitle": "Riga di importazione non valida"
+      "invalidRowTitle": "Riga di importazione non valida",
+      "categorizeWithSystemOne": "Suggerisci categorie per le spese non categorizzate con System One"
     },
     "apiErrors": {
       "IMPORT_DUPLICATE_CONFLICT": "Alcune righe selezionate hanno nuove corrispondenze duplicate o non approvate (righe {rows}). Controllale e riprova.",
@@ -4283,5 +4603,26 @@
     "expenseMissing": "Questa spesa non è nel download di questo dispositivo. Riconnettiti per vedere spese più recenti o precedenti.",
     "groupMissing": "Questo gruppo non ha finito di scaricarsi.",
     "balancesStale": "I saldi potrebbero non essere aggiornati."
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit non è disponibile",
+    "description": "Impossibile raggiungere il server di Spliit al momento. La tua connessione sembra a posto — riprova tra un momento.",
+    "retry": "Riprova"
+  },
+  "ApiStatusBanner": {
+    "message": "Impossibile raggiungere Spliit al momento. La tua connessione sembra a posto — il problema è nostro.",
+    "statusLink": "Controlla lo stato"
+  },
+  "AccountDeletionBanner": {
+    "scheduled": "L'eliminazione dell'account è programmata per il {date}.",
+    "review": "Rivedi o annulla l'eliminazione",
+    "executing": "L'eliminazione dell'account è iniziata.",
+    "viewStatus": "Visualizza lo stato dell'eliminazione"
+  },
+  "Updates": {
+    "title": "Aggiornamenti",
+    "latest": "Novità",
+    "viewAll": "Vedi tutti gli aggiornamenti",
+    "dismiss": "Capito"
   }
 }

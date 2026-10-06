@@ -1,9 +1,11 @@
-const UNKNOWN_BUILD = 'unknown'
+import { APP_VERSION } from '@/generated/app-version'
+
+const UNKNOWN_VERSION = 'unknown'
 
 type FeedbackDiagnosticsInput = {
   origin: string
   pathname: string
-  buildSha?: string
+  buildVersion?: string
   userAgent: string
   locale: string
   timeZone: string
@@ -28,6 +30,7 @@ const exactRoutes = new Set([
   '/oauth/consent',
   '/oauth/login',
   '/privacy',
+  '/support',
   '/terms',
   '/unsubscribe',
 ])
@@ -71,10 +74,14 @@ export function sanitizeFeedbackRoute(pathname: string): string {
   return topLevelSegment ? `/${topLevelSegment}/:other` : '/:other'
 }
 
+export function formatVersionLine(buildVersion?: string): string {
+  return `Version: ${buildVersion?.trim() || UNKNOWN_VERSION}`
+}
+
 export function formatFeedbackDiagnostics({
   origin,
   pathname,
-  buildSha = UNKNOWN_BUILD,
+  buildVersion = UNKNOWN_VERSION,
   userAgent,
   locale,
   timeZone,
@@ -85,7 +92,7 @@ export function formatFeedbackDiagnostics({
   return [
     'Spliit Cloud diagnostics',
     `Instance: ${origin}`,
-    `Build: ${buildSha.trim() || UNKNOWN_BUILD}`,
+    formatVersionLine(buildVersion),
     `Screen: ${sanitizeFeedbackRoute(pathname)}`,
     `Browser / OS: ${userAgent}`,
     `Locale: ${locale}`,
@@ -115,7 +122,7 @@ export function getBrowserFeedbackDiagnostics(): string {
   return formatFeedbackDiagnostics({
     origin: window.location.origin,
     pathname: window.location.pathname,
-    buildSha: import.meta.env.VITE_BUILD_SHA,
+    buildVersion: APP_VERSION,
     userAgent: navigator.userAgent,
     locale: navigator.language || 'unknown',
     timeZone: getTimeZone(),

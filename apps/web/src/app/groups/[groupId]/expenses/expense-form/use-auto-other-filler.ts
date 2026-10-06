@@ -3,7 +3,11 @@ import type {
   ExpenseFormInputValues,
   ExpenseFormItemValues,
 } from '@spliit/domain'
-import { amountAsMinorUnits, itemsExceedExpenseAmount } from '@spliit/domain'
+import {
+  gapMinorAsMajor,
+  getItemizedFormMinorTotals,
+  itemsExceedExpenseAmount,
+} from '@spliit/domain'
 
 export type ExpenseFormDisplayItem = ExpenseFormItemValues & {
   isFiller?: boolean
@@ -16,29 +20,32 @@ export function isFillerItem(
   return item.isFiller === true
 }
 
+/**
+ * Append a synthetic "Other" filler item when the item subtotal does not cover
+ * the expense total. All amounts are denominated in the expense's _input_
+ * currency (the currency the amount field is entered in) — never the ledger
+ * currency, which differs for converted expenses.
+ */
 export function withAutoOtherFiller(
   items: ExpenseFormItemValues[],
   expenseAmountMajor: number,
-  groupCurrency: Currency,
+  inputCurrency: Currency,
   itemizedRemainder?: ExpenseFormInputValues['itemizedRemainder'],
 ): ExpenseFormDisplayItem[] {
-  const itemsSumMajor = items.reduce(
-    (sum, item) => sum + Number(item.unitPrice) * Number(item.quantity),
-    0,
+  const { itemsMinor, amountMinor, gapMinor } = getItemizedFormMinorTotals(
+    items,
+    expenseAmountMajor,
+    inputCurrency,
   )
-  const itemsSumMinor = amountAsMinorUnits(itemsSumMajor, groupCurrency)
-  const amountMinor = amountAsMinorUnits(expenseAmountMajor, groupCurrency)
 
   if (
-    itemsSumMinor === amountMinor ||
-    itemsExceedExpenseAmount(itemsSumMinor, amountMinor)
+    itemsMinor === amountMinor ||
+    itemsExceedExpenseAmount(itemsMinor, amountMinor)
   ) {
     return items
   }
 
-  const gapMajor = Number(
-    (expenseAmountMajor - itemsSumMajor).toFixed(groupCurrency.decimal_digits),
-  )
+  const gapMajor = gapMinorAsMajor(gapMinor, inputCurrency)
 
   return [
     ...items,

@@ -4,11 +4,19 @@ import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
+import { Money } from '@/components/money'
 import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
+import type { Currency } from '@/lib/currency'
 import type { DateTimeStyle } from '@/lib/utils'
 import { cn, formatZonedDate } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
+import {
+  getBalances,
+  type BalanceExpense,
+  type ConversionSource,
+  type SplitMode,
+} from '@spliit/domain'
 import { parseActivityData } from '@spliit/domain/activities'
 
 export type Activity =
@@ -18,6 +26,28 @@ type Props = {
   groupId: string
   activity: Activity
   dateStyle: DateTimeStyle
+  /**
+   * Viewer identity for the personal share line. Optional so rows render
+   * without viewer context (tests, public previews) — the line is omitted.
+   */
+  viewerParticipantId?: string | null
+  currency?: Currency | null
+}
+
+/**
+ * Legacy `PARTICIPANT_REMOVED` rows stored the full sentence `Participant
+ * {name} was removed` as the summary; new rows store just the display name.
+ * Normalize both shapes to the bare name so the feed message reads correctly
+ * without a history rewrite.
+ */
+function participantSummaryToName(summary: string): string {
+  const prefix = 'Participant '
+  const suffix = ' was removed'
+  if (summary.startsWith(prefix) && summary.endsWith(suffix)) {
+    const name = summary.slice(prefix.length, -suffix.length)
+    return name.trim().length > 0 ? name : summary
+  }
+  return summary
 }
 
 function useMessage(activity: Activity) {
@@ -26,7 +56,6 @@ function useMessage(activity: Activity) {
   const actor =
     activity.actorName ??
     (data?.kind === 'expense_comment' ? data.authorName : t('unknownActor'))
-
   if (!data) {
     return { message: t('fallback'), changes: null }
   }
@@ -102,11 +131,19 @@ function useMessage(activity: Activity) {
             message: t('group.unarchived', { participant: actor }),
             changes: null,
           }
+        case 'PARTICIPANT_ADDED':
+          return {
+            message: t('participant.added', {
+              participant: actor,
+              target: data.summary ?? '',
+            }),
+            changes: null,
+          }
         case 'PARTICIPANT_REMOVED':
           return {
             message: t('participant.removed', {
               participant: actor,
-              target: data.summary ?? '',
+              target: participantSummaryToName(data.summary ?? ''),
             }),
             changes: null,
           }
@@ -266,7 +303,98 @@ function renderItemsDiff(before: string | null): ReactNode {
   )
 }
 
-export function ActivityItem({ groupId, activity, dateStyle }: Props) {
+/**
+ * Convert the activity expense projection into the participant-like shape the
+ * domain balance functions expect. Same mapping as the expense card's
+ * `ActiveUserBalance` — aggregate expense-level shares (no item detail) plus
+ * the conversion fields cross-currency math keys off.
+ */
+function toBalanceExpense(
+  expense: NonNullable<Activity['expense']>,
+): BalanceExpense {
+  return {
+    id: expense.id,
+    amount: expense.amount,
+    splitMode: expense.splitMode as SplitMode,
+    paidBySplitMode: expense.paidBySplitMode as SplitMode,
+    originalAmount: expense.originalAmount,
+    originalCurrency: expense.originalCurrency,
+    conversionRate: expense.conversionRate,
+    conversionSource: expense.conversionSource as ConversionSource | null,
+    paidByList: expense.paidByList.map((share) => ({
+      shares: share.shares,
+      participant: { id: share.ledgerParticipant.id },
+    })),
+    paidFor: expense.paidFor.map((share) => ({
+      shares: share.shares,
+      participant: { id: share.ledgerParticipant.id },
+    })),
+  }
+}
+
+/**
+ * Personal share line under the activity message ("Your share: −€12.50" / "You
+ * are not involved"). Only renders for expense rows whose expense still exists
+ * and when viewer identity + currency are provided — deleted expenses have no
+ * live splits to price, and anonymous viewers have no share.
+ */
+function ViewerShare({
+  activity,
+  viewerParticipantId,
+  currency,
+}: {
+  activity: Activity
+  viewerParticipantId: string | null | undefined
+  currency: Currency | null | undefined
+}) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'Activities' })
+  if (!viewerParticipantId || !currency || !activity.expense) return null
+  const data = parseActivityData(activity.data)
+  if (!data || data.kind !== 'expense') return null
+
+  const balances = getBalances([toBalanceExpense(activity.expense)])
+  let content: ReactNode
+  if (Object.hasOwn(balances, viewerParticipantId)) {
+    const balance = balances[viewerParticipantId]
+    let balanceDetail: ReactNode = null
+    if (balance.paid > 0 && balance.paidFor > 0) {
+      balanceDetail = (
+        <>
+          {' ('}
+          <Money currency={currency} amount={balance.paid} />
+          {' - '}
+          <Money currency={currency} amount={balance.paidFor} />
+          {')'}
+        </>
+      )
+    }
+    content = (
+      <>
+        {t('expense.yourShare')}{' '}
+        <Money currency={currency} amount={balance.total} bold colored />
+        {balanceDetail}
+      </>
+    )
+  } else {
+    content = <>{t('expense.notInvolved')}</>
+  }
+  return (
+    <div
+      className="mx-1 mt-0.5 mb-1 text-xs text-muted-foreground"
+      data-testid={`activity-item-${activity.id}-viewer-share`}
+    >
+      {content}
+    </div>
+  )
+}
+
+export function ActivityItem({
+  groupId,
+  activity,
+  dateStyle,
+  viewerParticipantId,
+  currency,
+}: Props) {
   const accountPreferences = useSyncedAccountPreferences()
   const accountTimeZone =
     accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
@@ -290,8 +418,10 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
     >
       {expenseExists && activity.expense && (
         <Link
-          to="/groups/$groupId/expenses/$expenseId"
-          params={{ groupId, expenseId: activity.expense.id }}
+          to="/groups/$groupId/activity"
+          params={{ groupId }}
+          search={(prev) => ({ ...prev, expenseId: activity.expense!.id })}
+          resetScroll={false}
           className="absolute inset-0 z-0 rounded-[inherit] outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
           aria-label={t('openExpense')}
         />
@@ -312,6 +442,11 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
       </div>
       <div className="min-w-0 flex-1">
         <div className="m-1 break-words">{message}</div>
+        <ViewerShare
+          activity={activity}
+          viewerParticipantId={viewerParticipantId}
+          currency={currency}
+        />
         {changes && changes.length > 0 && (
           <div className="mx-1 mt-0.5 mb-1 min-w-0 space-y-0.5 border-s-2 border-muted-foreground/20 ps-2">
             {changes.map((change) => (

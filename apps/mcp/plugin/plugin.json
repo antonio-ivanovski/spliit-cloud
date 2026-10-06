@@ -1,0 +1,99 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "spliit-cloud",
+  "version": "1.0.1",
+  "description": "Create and review shared Spliit group expenses from conversation, with a safe confirmation preview.",
+  "author": {
+    "name": "Spliit Cloud",
+    "email": "contact@spliit.cloud",
+    "url": "https://spliit.cloud"
+  },
+  "homepage": "https://spliit.cloud",
+  "repository": "https://github.com/antonio-ivanovski/spliit-cloud",
+  "license": "MIT",
+  "keywords": ["expenses", "split bills", "groups", "productivity"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Spliit Cloud",
+        "shortDescription": "Split group expenses fairly",
+        "longDescription": "Create flat or receipt-itemized shared expenses in your Spliit groups from conversation. Every expense is validated against your connected account and shown as a non-editable confirmation preview before anything is created. You can also inspect group balances and recent expenses. Spliit Cloud only accesses groups available to your connected account.",
+        "developerName": "Spliit Cloud",
+        "category": "Productivity",
+        "capabilities": ["Track shared expenses", "Split bills fairly"],
+        "websiteURL": "https://spliit.cloud",
+        "supportURL": "https://spliit.cloud/support",
+        "privacyPolicyURL": "https://spliit.cloud/privacy",
+        "termsOfServiceURL": "https://spliit.cloud/terms",
+        "defaultPrompt": [
+          "Add $50 for bar drinks and pizza to Portugal, split evenly.",
+          "Show balances and recent expenses for my trip group.",
+          "Add my 30 euro taxi ride for Alice and me."
+        ],
+        "brandColor": "#16735B",
+        "brandColorDark": "#8FD8B8",
+        "composerIcon": "./assets/icon.svg",
+        "composerIconDark": "./assets/icon-dark.svg",
+        "logo": "./assets/logo.svg",
+        "logoDark": "./assets/logo-dark.svg"
+      },
+      "onboardingSkill": "./skills/get-started/SKILL.md",
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Even-split expense with preview confirmation",
+              "prompt": "Add $50 for bar drinks and pizza to Portugal, split evenly.",
+              "tools_triggered": "get-expense-context, prepare-expense",
+              "expected_behavior": "Resolves the Portugal group, returns a non-editable expense preview card, and creates exactly one expense only after the preview button is pressed."
+            },
+            {
+              "description": "Named-participant split",
+              "prompt": "Add $40 for dinner to Portugal: Alice paid, split between Alice and Bruno.",
+              "tools_triggered": "get-expense-context, prepare-expense",
+              "expected_behavior": "Maps Alice and Bruno to their participant IDs, previews the expense with the correct payer and split, and creates it on confirmation."
+            },
+            {
+              "description": "Foreign-currency expense",
+              "prompt": "Add a 30 euro taxi ride to the Berlin group for Alice and me.",
+              "tools_triggered": "get-expense-context, prepare-expense",
+              "expected_behavior": "Previews the expense in euros, converts it with the authoritative date-based rate, and seals the converted total into the confirmation."
+            },
+            {
+              "description": "Group balances and recent expenses",
+              "prompt": "Who owes whom in the Portugal group?",
+              "tools_triggered": "get-expense-context, get-group-summary",
+              "expected_behavior": "Returns the group's balances and recent expenses for the connected account without creating anything."
+            },
+            {
+              "description": "No matching group handled gracefully",
+              "prompt": "Find my notes about Project Northstar expenses.",
+              "tools_triggered": "get-expense-context",
+              "expected_behavior": "Reports that no matching group was found in the connected account instead of inventing one."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Unsupported money transfer",
+              "prompt": "Transfer $100 to another account."
+            },
+            {
+              "description": "Unsupported bulk deletion",
+              "prompt": "Delete all my expenses."
+            },
+            {
+              "description": "Access outside the connected account",
+              "prompt": "Show expenses from a group I cannot access."
+            }
+          ]
+        },
+        "demo_recording_url": "https://example.com/review/spliit-cloud-demo",
+        "commerce": false,
+        "commerce_description": "This plugin does not sell products or process payments."
+      },
+      "publication": {
+        "release_notes": "Resubmission packaging: reviewer password sign-in path, configurable domain-verification token, formal privacy and support pages."
+      }
+    }
+  }
+}

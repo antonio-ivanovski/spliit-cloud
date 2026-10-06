@@ -11,7 +11,9 @@ import type { PropsWithChildren } from 'react'
 import { useEffect, useState, useSyncExternalStore } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { CopyButton } from '@/components/copy-button'
+import { useDocumentTitle } from '@/components/document-title'
 import { PageInset } from '@/components/layout/page-shell'
 import { GroupMobileAppBar, MobileGroupNav } from '@/components/mobile-shell'
 import { OfflineMissingData } from '@/components/offline-download-status'
@@ -31,7 +33,11 @@ import { useEffectiveRuntimeFeatureFlags } from '@/lib/effective-runtime-feature
 import { isFocusedMobilePath, isMobileGroupNavPath } from '@/lib/mobile-nav'
 import { useOfflineGroup } from '@/lib/offline/read-hooks'
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { useOnlineStatus } from '@/lib/use-online-status'
+import {
+  useOfflineWithoutData,
+  useOnlineStatus,
+  useServerUnreachableWithoutData,
+} from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 import { displayEmoji } from '@spliit/domain'
 
@@ -108,7 +114,8 @@ export function GroupLayoutClient({
         hasSavedView?: boolean
       }
     | undefined
-  const showOfflineEmpty = !isOnline && !data?.group && !offlineView
+  const showOfflineEmpty = useOfflineWithoutData(!!data?.group) && !offlineView
+  const showServerEmpty = useServerUnreachableWithoutData(!!data?.group)
   const { t: tNotFound } = useTranslation(undefined, {
     keyPrefix: 'Groups.NotFound',
   })
@@ -130,23 +137,25 @@ export function GroupLayoutClient({
   const { isPending: accountPending } = useCurrentAccount()
   const { flags: effectiveRuntimeFlags } = useEffectiveRuntimeFeatureFlags()
 
-  useEffect(() => {
-    if (!data?.group || focusedMobileRoute) return
-    const titleKey = pathname.endsWith('/balances')
-      ? 'Balances.title'
-      : pathname.endsWith('/stats')
-        ? 'Stats.title'
-        : pathname.endsWith('/activity')
-          ? 'Activity.title'
-          : pathname.includes('/budgets')
-            ? 'Budgets.title'
-            : pathname.endsWith('/members')
-              ? 'Members.title'
-              : 'Expenses.title'
-    const groupName = data.displayName ?? data.group.name
-    const emoji = displayEmoji(data.group.emoji)
-    document.title = `${emoji ? `${emoji} ` : ''}${groupName} · ${tTitles(titleKey)}`
-  }, [data, focusedMobileRoute, pathname, tTitles])
+  const titleKey = pathname.endsWith('/balances')
+    ? 'Balances.title'
+    : pathname.endsWith('/stats')
+      ? 'Stats.title'
+      : pathname.endsWith('/activity')
+        ? 'Activity.title'
+        : pathname.includes('/budgets')
+          ? 'Budgets.title'
+          : pathname.endsWith('/members')
+            ? 'Members.title'
+            : 'Expenses.title'
+  const group = data?.group
+  const groupName = data?.displayName ?? group?.name
+  const emoji = group ? displayEmoji(group.emoji) : undefined
+  useDocumentTitle(
+    group && groupName && !focusedMobileRoute
+      ? `${emoji ? `${emoji} ` : ''}${groupName} · ${tTitles(titleKey)}`
+      : null,
+  )
 
   useEffect(() => {
     if (data && !data.group) {
@@ -156,6 +165,14 @@ export function GroupLayoutClient({
       })
     }
   }, [data, tNotFound, toast])
+
+  if (showServerEmpty) {
+    return (
+      <main className="flex flex-1 flex-col">
+        <ApiErrorEmptyState variant="page" onRetry={() => void refetch()} />
+      </main>
+    )
+  }
 
   if (showOfflineEmpty) {
     const canRetry =

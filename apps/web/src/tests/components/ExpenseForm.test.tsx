@@ -1068,7 +1068,7 @@ describe('ExpenseForm', () => {
       screen.getByRole('combobox', { name: 'General' }),
     ).toBeInTheDocument()
     expect(
-      screen.getByRole('group', { name: 'Category suggestions' }),
+      await screen.findByRole('group', { name: 'Category suggestions' }),
     ).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Liquor' })).toBeInTheDocument()
     expect(

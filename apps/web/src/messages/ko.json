@@ -270,7 +270,8 @@
             "monthly": "개월",
             "yearly": "년"
           }
-        }
+        },
+        "categorizeWithSystemOne": "System One으로 분류되지 않은 지출의 카테고리를 제안"
       },
       "Destination": {
         "heading": "<strong>{name}</strong>을(를) 어디로 가져오시겠습니까? ({participantCount}명의 참가자 · {expenseCount}개의 지출)",
@@ -568,7 +569,9 @@
       "description": "이제 그룹 이름 옆에 이모지를 표시할 수 있습니다. “{name}”에서 {emoji}를 찾았습니다.",
       "openSettings": "그룹 설정 열기",
       "notNow": "나중에"
-    }
+    },
+    "groupTabsHint": "그룹 탭을 다시 정렬하거나 사용하지 않는 탭을 숨기고 싶으신가요?",
+    "groupTabsHintLink": "계정 설정에서 탭 맞춤 설정"
   },
   "GroupForm": {
     "title": "그룹 정보",
@@ -962,7 +965,8 @@
       "allItemsSplitEdit": "모든 항목 분할 편집",
       "allItemsSplitModalTitle": "모든 항목 분할",
       "remainderAllocationProportional": "항목 비례 분할",
-      "remainderProportionalHint": "각 사람의 항목 소계에 따라 이 금액을 나눕니다. 세금이나 팁을 나눌 때 유용해요."
+      "remainderProportionalHint": "각 사람의 항목 소계에 따라 이 금액을 나눕니다. 세금이나 팁을 나눌 때 유용해요.",
+      "errorExceedsAmountDetails": "항목 합계 {itemsTotal}가 지출 금액을 {excess} 초과해요."
     },
     "leaveItemized": {
       "title": "분할 방식을 바꿀까요?",
@@ -998,7 +1002,15 @@
       "done": "완료",
       "yourTime": "현지 시간",
       "invalidDate": "유효한 날짜를 입력하세요.",
-      "invalidTime": "유효한 시간을 입력하세요 (HH:mm)."
+      "invalidTime": "유효한 시간을 입력하세요 (HH:mm).",
+      "hourLabel": "시",
+      "minuteLabel": "분",
+      "periodLabel": "오전/오후",
+      "timeWheelHint": "스크롤하거나 탭해서 시간을 설정하세요. 날짜는 그대로 유지됩니다.",
+      "now": "지금",
+      "morning": "아침",
+      "midday": "정오",
+      "evening": "저녁"
     },
     "settlementTitle": "정산금",
     "settlementHint": "{category}: 합계, 통계, 예산에서 지출로 집계되지 않습니다. 누가 누구에게 빚졌는지는 계속 반영됩니다.",
@@ -1042,7 +1054,8 @@
       "description": "수수료를 포함한 총 청구 금액을 입력하세요.",
       "impliedRate": "계산된 환율: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "카테고리 제안"
+    "otherSuggestions": "카테고리 제안",
+    "paidForItemizedEmptyHint": "항목에 참여자를 지정하면 각자의 부담액을 볼 수 있어요."
   },
   "Balances": {
     "title": "잔액",
@@ -1395,13 +1408,14 @@
     "signOutOffline": "로그아웃하려면 연결하세요"
   },
   "Footer": {
-    "madeIn": "오픈소스 커뮤니티가 사랑을 담아 만들었어요 ❤️",
+    "madeIn": "<github>오픈소스 커뮤니티</github>가 사랑을 담아 만들었어요 ❤️",
     "legalNavigation": "법적 링크",
     "privacy": "개인정보 보호",
     "terms": "이용 약관",
     "imprint": "사업자 정보",
     "sponsor": "후원",
-    "timeLabel": "시간대"
+    "timeLabel": "시간대",
+    "status": "상태"
   },
   "Settings": {
     "title": "설정"
@@ -1433,7 +1447,9 @@
       "showLess": "간략히 보기"
     },
     "copyToast": "지출 복사가 시작되었습니다. 기존 지출 정보를 사용해 새 지출이 생성됩니다.",
-    "incomeBadge": "수입"
+    "incomeBadge": "수입",
+    "paidBySingle": "<strong>{paidBy}</strong>님이 결제 · <paidFor></paidFor>님을 위해 결제",
+    "paidByMultipleSingle": "<paidByNames></paidByNames>님이 결제 · <paidFor></paidFor>님을 위해 결제"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "문서 삭제",
@@ -1870,7 +1886,7 @@
       "generic": "문제가 발생했습니다. 다시 시도해 주세요.",
       "passwordPolicy": "대문자, 소문자, 숫자, 특수문자를 포함하여 최소 8자 이상 사용하세요。",
       "magicLinkFailed": "로그인 링크를 보낼 수 없습니다.",
-      "signupInviteRequired": "이 인스턴스는 초대 전용입니다. 초대 링크를 사용하거나 다른 사람에게 그룹으로 초대해 달라고 요청하세요.",
+      "signupInviteRequired": "회원가입은 초대 전용입니다. 초대 링크를 사용하거나 다른 사람에게 그룹으로 초대해 달라고 요청하세요.",
       "passkeyFailed": "패스키 로그인에 실패했어요. 다시 시도하거나 다른 로그인 방법을 사용해 보세요."
     },
     "loading": "로딩 중…",
@@ -1880,14 +1896,14 @@
     "signInWithGithub": "GitHub로 계속하기",
     "legalNotice": "계속하면 <terms>이용 약관</terms>에 동의하고 <privacy>개인정보 처리방침</privacy>을 확인한 것으로 간주합니다.",
     "inviteOnly": {
-      "message": "이 인스턴스는 초대 전용입니다. 초대 링크를 사용하거나 다른 사람에게 그룹으로 초대해 달라고 요청하세요.",
+      "message": "회원가입은 초대 전용입니다. 초대 링크를 사용하거나 다른 사람에게 그룹으로 초대해 달라고 요청하세요.",
       "useInvitedEmail": "초대받은 이메일 주소를 사용하세요."
     },
     "signInWithX": "X로 계속하기",
     "signInWithOidc": "{name}(으)로 계속하기",
     "signInAnonymously": "익명",
     "lastUsed": "최근 사용",
-    "emailAuthDisabled": "이 인스턴스에서는 이메일 로그인이 비활성화되어 있습니다. 싱글 사인온(SSO)을 사용하세요.",
+    "emailAuthDisabled": "이메일 로그인이 비활성화되어 있습니다. 싱글 사인온(SSO)을 사용하세요.",
     "signInWithPasskey": "패스키로 로그인"
   },
   "CompleteProfile": {
@@ -2011,7 +2027,7 @@
         "joined_zero": "지금까지 {count}명이 참여했습니다",
         "retry": "다시 시도"
       },
-      "emailDeliveryDisabled": "이 인스턴스에서는 이메일 발송이 꺼져 있습니다. 초대는 그대로 생성되며 초대받은 사람이 로그인하면 표시됩니다. 열어볼 수 있도록 초대 링크를 공유하세요."
+      "emailDeliveryDisabled": "이메일 발송이 꺼져 있습니다. 초대는 그대로 생성되며 초대받은 사람이 로그인하면 표시됩니다. 열어볼 수 있도록 초대 링크를 공유하세요."
     },
     "invitations": {
       "title": "대기 중인 초대",
@@ -2436,7 +2452,7 @@
       "masterDescription": "끄면 모든 이메일 및 푸시 알림이 전송되지 않습니다. 카테고리별 선택은 유지됩니다.",
       "emailAddToEnable": "받은편지함 알림을 받으려면 인증된 이메일을 추가하세요.",
       "emailAddLink": "이메일 추가",
-      "emailDeliveryDisabled": "이 인스턴스에서는 이메일 발송이 꺼져 있습니다. 이메일 설정은 저장되지만 관리자가 이메일을 구성할 때까지 전송되지 않습니다."
+      "emailDeliveryDisabled": "이메일 발송이 꺼져 있습니다. 이메일 설정은 저장되지만 이메일이 설정될 때까지 전송되지 않습니다."
     },
     "preferences": {
       "title": "앱 환경설정",
@@ -2455,6 +2471,22 @@
       "mascotOptions": {
         "off": "사용 안 함",
         "bill": "영수증 빌"
+      },
+      "groupTabs": "그룹 탭",
+      "groupTabsHelp": "모든 그룹에 표시할 탭과 순서를 선택하세요.",
+      "groupTabsCustomize": "맞춤 설정",
+      "groupTabsSave": "저장",
+      "groupTabsDiscard": "버리기",
+      "groupTabsReset": "기본값으로 초기화",
+      "groupTabsHide": "{name} 숨기기",
+      "groupTabsShow": "{name} 표시",
+      "groupTabsMoveUp": "{name} 위로 이동",
+      "groupTabsMoveDown": "{name} 아래로 이동",
+      "deleteConfirmation": "지출 삭제 확인",
+      "deleteConfirmationHelp": "빠른 삭제는 한 번 확인을 요청합니다. 입력 삭제는 먼저 지출 제목을 입력해야 합니다. 그룹 삭제나 멤버 제거는 항상 입력해야 합니다.",
+      "deleteConfirmationOptions": {
+        "standard": "확인 대화상자",
+        "strict": "입력 확인 대화상자"
       }
     },
     "aiPreferences": {
@@ -2647,7 +2679,111 @@
       "backedUp": "백업됨",
       "removeWarning": "이 작업은 되돌릴 수 없어요. 이 기기에서는 더 이상 패스키로 로그인할 수 없지만, 언제든지 다시 등록할 수 있어요.",
       "removeLastWarning": "마지막 패스키입니다. 유일한 로그인 방법인 경우, 로그인 링크를 저장하거나 다른 로그인 방법을 추가하기 전까지는 삭제할 수 없어요.",
-      "anonymousHelpNoLink": "이 익명 계정에 저장된 로그인 링크가 없어요. 아래 로그인 링크 항목에서 만들어 주세요. 어떤 기기에서든 사용할 수 있어요."
+      "anonymousHelpNoLink": "이 익명 계정에 저장된 로그인 링크가 없어요. 아래 로그인 링크 항목에서 만들어 주세요. 어떤 기기에서든 사용할 수 있어요.",
+      "reauthTitle": "패스키를 추가하려면 다시 로그인하세요",
+      "reauthDescription": "보안을 위해 패스키를 추가하려면 최근에 로그인해야 해요. 로그아웃한 뒤 다시 로그인하면 이 화면으로 돌아와 마무리할 수 있어요.",
+      "reauthConfirm": "다시 로그인",
+      "reauthAnonymousTitle": "먼저 로그인 링크를 저장하세요",
+      "reauthAnonymousDescription": "이 익명 계정에는 아직 로그인 링크도 패스키도 없어요. 지금 로그아웃하면 영원히 접속할 수 없게 돼요 — 먼저 로그인 링크 섹션에서 로그인 링크를 저장한 뒤 돌아와 패스키를 추가하세요."
+    },
+    "deletion": {
+      "sectionTitle": "위험 구역",
+      "sectionDescription": "계정과 모든 로그인 방법을 완전히 삭제합니다.",
+      "rowLabel": "계정 삭제",
+      "rowDescription": "48시간 유예 기간이 지나면 프로필, 세션, 설정이 삭제됩니다. 공동 지출은 내 개인정보 없이 다른 멤버의 그룹에 남습니다.",
+      "open": "계정 삭제…",
+      "scheduledTitle": "계정 삭제 예약됨",
+      "scheduledDescription": "삭제는 {date} 이후에 시작될 예정입니다. 시작될 때까지 계정을 사용할 수 있습니다. 대기 중 그룹, 회원, 지출이 바뀔 수 있으며, 선택한 옵션은 삭제 시점의 상태에 적용됩니다. 삭제가 시작될 때까지 취소할 수 있습니다. 확인 이메일을 {email} 주소로 보냈습니다.",
+      "cancel": "삭제 취소",
+      "cancelling": "취소 중…",
+      "cancelled": "계정 삭제가 취소되었습니다.",
+      "dialogTitle": "계정 삭제를 예약할까요?",
+      "dialogDescription": "48시간의 대기 기간 후 삭제되도록 예약하며, 지금 삭제되는 것은 없습니다. 삭제가 시작될 때까지 취소할 수 있습니다. 선택한 옵션은 당시 그룹과 잔액에 적용됩니다. 삭제가 시작되면 되돌릴 수 없습니다.",
+      "farewellTitle": "떠나신다니 아쉽습니다",
+      "farewellBody": "계속 이용해 주실 수 있도록 도울 수 있는 일이 있다면 <feedbackLink>의견을 남겨주세요</feedbackLink> — 1분이면 충분하고 서비스 개선에 도움이 됩니다.",
+      "groupsTitle": "그룹에 미치는 영향",
+      "leaveGroup": "“{name}”에서 나가게 됩니다.",
+      "deleteGroup": "“{name}”이(가) 완전히 삭제됩니다 — 마지막으로 남은 멤버입니다.",
+      "lastAdmin": "“{name}”의 마지막 관리자입니다 — 다른 멤버가 자동으로 승격됩니다.",
+      "settleBalances": "“{name}”의 미정산 잔액은 자동으로 정산됩니다.",
+      "friendLedger": "“{name}”와의 친구 원장이 정산되고 종료됩니다.",
+      "friendLedgerUnnamed": "친구 원장이 정산되고 종료됩니다.",
+      "friendLedgerFallback": "친구 원장",
+      "noGroups": "속한 그룹이 없습니다.",
+      "accessTitle": "로그인과 초대",
+      "pendingInvites_zero": "삭제 시 보낸 대기 중인 초대 {count}개가 취소됩니다.",
+      "pendingInvites_one": "삭제 시 보낸 대기 중인 초대 {count}개가 취소됩니다.",
+      "pendingInvites_two": "삭제 시 보낸 대기 중인 초대 {count}개가 취소됩니다.",
+      "pendingInvites_few": "삭제 시 보낸 대기 중인 초대 {count}개가 취소됩니다.",
+      "pendingInvites_many": "삭제 시 보낸 대기 중인 초대 {count}개가 취소됩니다.",
+      "pendingInvites_other": "삭제 시 보낸 대기 중인 초대 {count}개가 취소됩니다.",
+      "keepNameLabel": "공동 기록에 내 이름 유지",
+      "keepNameDescription": "공동 지출에는 계속 “{name}”으로 표시됩니다. 그렇지 않으면 모든 곳에서 이름이 “삭제된 멤버”로 바뀝니다.",
+      "customNameLabel": "유지할 이름",
+      "settleLabel": "삭제 시 잔액을 정산 완료로 표시",
+      "settleDescription": "남은 잔액은 자동으로 정산됩니다. 그렇지 않으면 임시 이름 그대로 남습니다.",
+      "leaveBalances": "“{name}”의 미정산 잔액은 그대로 유지됩니다.",
+      "friendLeaveBalances": "“{name}”와의 잔액은 그대로 유지됩니다.",
+      "confirmWord": "삭제",
+      "ackLabel": "이 작업은 되돌릴 수 없음을 이해했으며, 공동 지출은 내 개인정보 없이 다른 멤버의 그룹에 남습니다.",
+      "exportHint": "먼저 사본을 보관하시겠어요? 계속하기 전에 <exportLink>백업을 내보내세요</exportLink>.",
+      "schedule": "삭제 예약",
+      "scheduling": "예약 중…",
+      "scheduled": "삭제가 예약되었습니다. 이메일을 확인해 검토하거나 취소하세요.",
+      "dialogCancel": "계정 유지하기",
+      "reauthTitle": "계정을 삭제하려면 다시 로그인하세요",
+      "reauthDescription": "보안을 위해 계정을 삭제하려면 최근에 로그인해야 해요. 로그아웃한 뒤 다시 로그인하면 이 화면으로 돌아와 마무리할 수 있어요.",
+      "reauthConfirm": "다시 로그인",
+      "errors": {
+        "generic": "문제가 발생했습니다. 다시 시도해 주세요.",
+        "loadFailed": "삭제 정보를 불러오지 못했습니다.",
+        "emailMismatch": "입력한 이메일이 계정 이메일과 일치하지 않습니다.",
+        "alreadyRequested": "이 계정에 이미 삭제 요청이 진행 중입니다.",
+        "sessionNotFresh": "이 작업을 하기에는 세션이 너무 오래되었습니다. 다시 로그인한 뒤 다시 시도하세요.",
+        "jobsDisabled": "계정 삭제에는 백그라운드 워커가 필요하지만, 이 배포 환경에서는 비활성화되어 있습니다.",
+        "ackRequired": "먼저 내용을 이해했음을 확인해 주세요.",
+        "invalidDisplayName": "이름은 1자 이상 100자 이하로 입력해 주세요.",
+        "cancelFailed": "삭제를 취소하지 못했습니다. 다시 시도해 주세요."
+      },
+      "groupsToDeleteTitle": "삭제될 그룹",
+      "groupsToDeleteDescription": "삭제 시 여전히 마지막 활성 회원으로 남아 있는 그룹은 영구적으로 삭제됩니다.",
+      "groupsToLeaveTitle": "나가게 되는 그룹",
+      "groupsToLeaveDescription": "삭제 시 다른 활성 회원이 있는 그룹에서 나가게 됩니다. 이 그룹은 다른 회원을 위해 유지됩니다.",
+      "friendsTitle": "친구",
+      "friendsDescription": "이 친구들과의 일대일 잔액입니다.",
+      "backToSettings": "설정으로 돌아가기",
+      "pageTitle": "계정 삭제",
+      "loading": "삭제 정보 불러오는 중",
+      "choicesTitle": "삭제 시 선택 사항",
+      "nameTitle": "공유 내역에 표시할 이름",
+      "removeNameLabel": "이름을 “삭제된 멤버”로 변경",
+      "balancesTitle": "남은 잔액",
+      "keepBalancesLabel": "남은 잔액을 그대로 유지",
+      "balanceExplanation": "정산을 선택하면 계정이 삭제될 때 정산 내역이 기록됩니다. 돈이 이체되지는 않습니다. 정산하지 않으면 잔액이 공유 내역에 남습니다.",
+      "confirmationTitle": "계정 삭제 확인",
+      "retry": "다시 시도",
+      "pageDescription": "48시간의 대기 기간 후 계정이 삭제되도록 예약합니다. 삭제가 시작될 때까지 계정을 사용할 수 있으며, 그 전에 취소할 수 있습니다.",
+      "reviewChoicesTitle": "삭제 옵션",
+      "consequencesTitle": "삭제 후 달라지는 점",
+      "reviewConfirmTitle": "삭제 확인",
+      "backupLink": "백업 내보내기",
+      "keptNameExplanation": "삭제 시 공유 지출에 “{name}” 이름이 표시됩니다. 그때까지 프로필 이름은 바뀌지 않습니다.",
+      "removedNameExplanation": "삭제 시 공유 지출에 “삭제된 회원” 이름이 표시됩니다. 그때까지 프로필 이름은 바뀌지 않습니다.",
+      "keptBalancesExplanation": "삭제가 시작되면 대기 기간에 추가된 지출을 포함한 남은 잔액이 공유 내역에 유지됩니다.",
+      "settledBalancesExplanation": "삭제 시 보관된 그룹을 포함해 당시 속한 그룹의 잔액을 정산 완료로 표시하는 정산 내역이 기록됩니다. 이미 나갔거나 제외된 그룹의 잔액은 바뀌지 않습니다. 실제로 돈이 이체되지는 않습니다.",
+      "rowBalancesKept": "남은 잔액은 그대로 유지됩니다.",
+      "rowBalancesSettled": "삭제 시점의 잔액은 정산 완료로 표시됩니다.",
+      "rowAdmin": "삭제 시 여전히 마지막 관리자라면 다른 회원이 관리자가 됩니다.",
+      "friendKept": "잔액은 그대로 유지됩니다.",
+      "friendSettled": "삭제 시 당시 잔액은 정산 완료로 표시되고 장부는 닫힙니다.",
+      "accessExplanation": "계정이 삭제되면 이 로그인 방법은 더 이상 사용할 수 없게 됩니다.",
+      "invitesTitle": "대기 중인 초대",
+      "balanceUnavailable": "잔액을 확인할 수 없음",
+      "archivedBalancesKept": "보관된 이 그룹은 계속 읽기 전용으로 유지됩니다. 남은 잔액은 보존됩니다.",
+      "signInMethodsRemoved": "다음 로그인 방법은 더 이상 사용할 수 없습니다: {methods}.",
+      "consequencesTiming": "이 검토 내용은 현재 계정 상태를 보여 줍니다. 삭제가 시작되기 전에 그룹, 회원, 지출이 바뀔 수 있습니다. 선택한 옵션은 삭제 시점에 속한 그룹과 당시 잔액에 적용됩니다. 여기에 나열된 변경은 즉시 이루어지지 않습니다.",
+      "executingTitle": "계정 삭제가 시작되었습니다",
+      "executingDescription": "계정 삭제를 처리하고 있습니다. 일부 변경은 이미 완료되었을 수 있으며, 삭제를 취소하거나 되돌릴 수 없습니다. 처리가 중단되면 완료된 단계 다음부터 다시 시작됩니다."
     }
   },
   "Activities": {
@@ -2674,7 +2810,9 @@
       },
       "recurringCreated": "{participant}님이 반복 지출 ‘{title}’을 만들었습니다",
       "stopped": "{participant}님이 반복 지출 ‘{title}’을 중지했습니다",
-      "commented": "{participant}님이 {title} 지출에 댓글을 남겼습니다: “{excerpt}”"
+      "commented": "{participant}님이 {title} 지출에 댓글을 남겼습니다: “{excerpt}”",
+      "yourShare": "내 몫:",
+      "notInvolved": "당신은 관련이 없어요"
     },
     "group": {
       "updated": "{participant}님이 그룹 설정을 업데이트했습니다",
@@ -2687,7 +2825,11 @@
         "currencyCode": "통화 코드",
         "linkedParticipant": "연결된 참가자",
         "subgroupsEnabled": "하위 그룹",
-        "publicViewLink": "공개 보기 전용 링크"
+        "publicViewLink": "공개 보기 전용 링크",
+        "emoji": "이모지",
+        "color": "색상",
+        "subgroups": "하위 그룹",
+        "splitPresets": "분할 프리셋"
       }
     },
     "member": {
@@ -2721,7 +2863,15 @@
       "imported_other": "{participant}님이 지출 {count}건을 가져왔어요"
     },
     "participant": {
-      "removed": "{participant}님이 {target}을(를) 그룹에서 제거했습니다"
+      "removed": "{participant}님이 {target}을(를) 그룹에서 제거했습니다",
+      "added": "{participant}님이 {target}을(를) 그룹에 추가했습니다"
+    },
+    "hiddenActivitiesShowLess": "간략히 보기",
+    "hiddenActivities_other": "나와 관련 없는 숨겨진 활동 {count}개",
+    "viewMode": {
+      "label": "활동 보기 모드",
+      "forYou": "나와 관련",
+      "all": "전체"
     }
   },
   "OfflineBanner": {
@@ -2799,9 +2949,6 @@
   },
   "BulkCategorize": {
     "title": "일괄 카테고리 분류",
-    "calibrationTitle": "1단계 — 캘리브레이션",
-    "calibrationDescription": "확인한 예시가 쌓일수록 AI의 다음 추천이 더 정확해져요. 한 번에 준비될 수도 있고 예시를 더 요청할 수도 있어요.",
-    "roundCount": "라운드 {round} / {max}",
     "confidence": {
       "high": "높음",
       "medium": "중간",
@@ -2890,7 +3037,137 @@
     "doneTitle": "카테고리 저장됨",
     "expenseColumn": "지출",
     "categoryColumn": "카테고리",
-    "confidenceColumn": "신뢰도"
+    "confidenceColumn": "신뢰도",
+    "simpleDescription": "일반에 있는 지출의 카테고리 매칭을 검토한 뒤 선택 내용을 저장하세요.",
+    "generateSuggestions": "카테고리 제안하기",
+    "backToStart": "뒤로",
+    "chooseMode": "지출 분류 방법을 선택하세요",
+    "localMode": "사전 및 기록",
+    "localModeDescription": "이 그룹의 카테고리 기록과 내장 사전을 사용합니다.",
+    "startRun": "분류 시작하기",
+    "noCategory": "미분류로 두기",
+    "progressTitle": "지출 분류 중",
+    "progressDescription": "이 페이지를 나갔다가 나중에 돌아올 수 있습니다. 진행 상황은 저장됩니다.",
+    "progressCount": "{total}개 중 {categorized}개의 지출 분류됨",
+    "applyProgressTitle": "카테고리 저장 중",
+    "reviewTitle": "제안 검토하기",
+    "reviewSummary": "미분류 {total}개 중 {suggested}개의 제안",
+    "sourceLocal": "로컬",
+    "saveSelected": "선택한 카테고리 저장하기",
+    "retry": "다시 시도",
+    "restart": "새 실행 시작하기",
+    "failed": "실행이 중단되었습니다: {message}",
+    "savedSummary": "{applied}개 변경됨, {skipped}개 건너뜀",
+    "selectedCount": "{count}개 선택됨",
+    "selectAll": "모두 선택",
+    "clearAll": "모두 지우기",
+    "discardRun": "실행 삭제",
+    "partialSaveNotice": "일부 카테고리는 이미 저장되었을 수 있습니다. 이 실행을 삭제해도 해당 변경은 되돌리지 않습니다.",
+    "restartOlderRunTitle": "새 분류 실행 시작하기",
+    "restartOlderRunDescription": "이 이전 실행은 이전 검토 흐름을 사용했습니다. 모든 지출을 함께 검토하려면 다시 시작하세요.",
+    "runningMatches": "지금까지 {total}개 중 {count}개의 지출에 카테고리 제안이 있습니다",
+    "failedTitle": "분류가 중단됨",
+    "reviewWorkload": "일반 {total}개 · 분류 대상으로 선택 {selected}개 · 일반 유지 {general}개",
+    "categoryChoices": "카테고리 선택 항목",
+    "moreCategories": "다른 카테고리 선택하기",
+    "saveCount": "{count}개의 카테고리 저장하기",
+    "finishWithoutChanges": "변경 없이 마침",
+    "completionSummary": "실행 완료: {total}개 중 {changed}개의 지출이 변경되었습니다. {remaining}개의 지출은 일반으로 남아 있습니다.",
+    "viewExpenses": "지출 보기",
+    "countLoading": "미분류 지출을 세는 중…",
+    "nothingToCategorize": "분류할 미분류 지출이 없습니다.",
+    "startingCount": "현재 {count}개의 지출이 일반에 있으며 검토할 준비가 되었습니다.",
+    "countError": "미분류 지출을 셀 수 없습니다. 페이지를 새로고침하고 다시 시도하세요.",
+    "keepGeneral": "일반 · 미분류로 유지",
+    "calibrationRoundTitle": "보정 라운드 {round}",
+    "calibrationLoading": "다양한 지출 샘플을 준비하는 중…",
+    "calibrationReviewDescription": "이 {count}개의 지출을 검토하고 수정하세요. 저장하기 전까지 선택 내용은 이번 실행에만 유지됩니다.",
+    "confirmRound": "라운드 확인",
+    "roundSummaryTitle": "라운드 {round} 검토됨",
+    "roundSummaryDescription": "{reviewed}개 검토 · {categorized}개 임시 분류 · 일반 유지 {general}개",
+    "roundQuality": "초기 제안이 선택 내용의 {accuracy}%와 일치했습니다. {corrections}개를 수정했습니다.",
+    "categorizeRemaining": "남은 지출 분류하기",
+    "nextRound": "다른 샘플 검토하기",
+    "tableLabel": "분류할 지출",
+    "dateColumn": "날짜",
+    "amountColumn": "금액",
+    "rerunSuggestions": "제안 다시 실행",
+    "roundQualityWithSuggestions": "제안 {proposed}개 중 {accepted}개 수락 · {changed}개 변경 · 일반에서 찾은 매칭 {missed}개",
+    "roundQualityNoSuggestions": "제안 없음 · 일반에서 찾은 매칭 {missed}개 · 일반 유지 {abstained}개",
+    "rerunChanged": "제안된 {proposed}개 중 {changed}개의 카테고리를 변경했습니다.",
+    "rerunAssignedSingle": "일반에 남아 있던 1개의 지출에 카테고리를 지정했습니다.",
+    "rerunAssignedMultiple": "일반에 남아 있던 {count}개의 지출에 카테고리를 지정했습니다.",
+    "rerunPotentialSingle": "변경 내용으로 남은 일반 지출 1개의 매칭이 개선될 수 있습니다. 다시 실행하려면 제안을 다시 실행하세요.",
+    "rerunPotentialMultiple": "변경 내용으로 남은 일반 지출 {count}개의 매칭이 개선될 수 있습니다. 다시 실행하려면 제안을 다시 실행하세요.",
+    "rerunEligible": "추가 실행 가능: 일반 {general}개 · 불확실한 자동 매칭 {uncertain}개. 수정 내용이 제안을 개선할 수 있습니다.",
+    "rerunNoEligible": "다시 실행할 수 있는 미처리 일반 또는 불확실한 자동 매칭이 남아 있지 않습니다. 수정 내용은 저장하는 카테고리에 계속 포함됩니다.",
+    "rerunAlreadyUsed": "최근 수정 내용은 이미 이 제안에 반영되었습니다. 다시 실행하려면 추가로 수정하세요.",
+    "highMatch": "높은 매칭",
+    "mediumMatch": "중간 매칭",
+    "lowMatch": "낮은 매칭",
+    "belowMatchThreshold": "매칭 기준 미만",
+    "refiningTitle": "불확실한 매칭 다듬는 중",
+    "runLimitSummary": "이번 실행에는 10,000개의 지출이 포함됩니다. 저장 후 다른 실행에서 일반 지출 {count}개를 추가로 분류할 수 있습니다.",
+    "pageLoading": "지출을 불러오는 중…",
+    "pageLoadError": "지출을 불러오지 못했습니다.",
+    "pageRetry": "다시 시도",
+    "pageCount": "{total}개 중 {loaded}개의 지출 표시 중",
+    "ledgerAmountNotice": "금액은 그룹 통화로 표시됩니다.",
+    "viewExpenseDetails": "지출 상세 보기",
+    "reviewFilterLabel": "표시할 지출",
+    "filterAll": "전체 {count}개",
+    "filterGeneral": "일반 {count}개",
+    "improveSuggestions": "남은 제안 개선하기",
+    "rerunInfoLabel": "제안 개선에 대해",
+    "preparingNextStage": "다음 단계 준비 중",
+    "rerunProgressTitle": "제안 업데이트 중",
+    "progressPreparing": "지출을 준비하는 중…",
+    "noGeneralRows": "이번 검토에서 일반에 남아 있는 지출이 없습니다.",
+    "discardConfirmationTitle": "이 분류 실행을 삭제하시겠습니까?",
+    "discardConfirmationDescription": "실행, 제안, 나와 다른 관리자가 선택한 내용이 삭제됩니다. 지출 카테고리는 변경되지 않습니다.",
+    "discardConfirmationCancel": "실행 유지하기",
+    "progressCountDescription": "확정한 카테고리와 중간 또는 높은 매칭만 집계됩니다. 일반과 낮은 매칭은 포함되지 않습니다.",
+    "systemOneMode": "System One 모델",
+    "systemOneModeDescription": "모든 지출에 System One 결정 모델을 사용하고, 이 그룹에서 분류된 지출과 검토한 선택 항목을 힌트로 활용합니다. TypeSafe Jev는 이러한 모델 중 하나입니다.",
+    "systemOneUnavailable": "System One을 사용할 수 없습니다. 사전 및 기록은 계속 사용할 수 있습니다.",
+    "systemOneConfidence": "System One 신뢰도: {confidence}%",
+    "systemOneOptionProbability": "System One 옵션 확률: {probability}%",
+    "overallProgress": "전체 진행 상황",
+    "fullPassProcessed": "{total}개 중 {processed}개의 지출 처리됨",
+    "stageProcessed": "이 단계에서 {total}개 중 {processed}개의 지출 처리됨",
+    "saveSkipped": "변경되어 {count}개의 지출을 건너뛰었습니다.",
+    "sharedRunNotice": "이번 실행은 다른 그룹 관리자와 공유됩니다. 모두가 같은 제안을 봅니다.",
+    "saveConflictTitle": "검토 시작 이후 {count}개의 지출이 변경됨",
+    "saveConflictDescription": "이 지출들은 이번 실행 외부에서 수정되거나 카테고리가 변경되었습니다. 다른 지출을 저장하거나, 카테고리를 다시 수정한 뒤 다시 저장해 보세요.",
+    "saveConflictMore": "그 외 {count}개 더.",
+    "saveOtherExpenses": "다른 지출 저장하기",
+    "receiptTitles": {
+      "freshMarket": "신선 마켓",
+      "greenGrocer": "야채가게",
+      "fruitStand": "과일 가판대",
+      "cornerBistro": "동네 비스트로",
+      "noodleHouse": "국수집",
+      "cafeLunch": "카페 점심",
+      "flightTicket": "항공권",
+      "airlineBaggage": "항공 수하물",
+      "boardingPass": "탑승권",
+      "homeSupplies": "생활용품",
+      "hardwareShop": "철물점",
+      "cleaningGoods": "청소용품",
+      "cinemaTickets": "영화 티켓",
+      "movieNight": "영화의 밤",
+      "filmFestival": "영화제",
+      "organicMarket": "유기농 마켓",
+      "bakeryRun": "빵집",
+      "sushiBar": "스시바",
+      "pizzaNight": "피자 나이트",
+      "airportLounge": "공항 라운지",
+      "extraLegroom": "레그룸 추가",
+      "laundryDetergent": "세탁 세제",
+      "storageBoxes": "수납 박스",
+      "popcornCombo": "팝콘 콤보",
+      "streamingRental": "스트리밍 대여"
+    }
   },
   "ExpensePreview": {
     "title": "지출 미리보기",
@@ -2940,10 +3217,14 @@
         "deleteGroup": "<target>{name}</target> 그룹을 영구적으로 삭제하려면 아래에 표시된 이름을 정확히 입력하세요.",
         "deleteExpense": "<target>{name}</target> 지출을 영구적으로 삭제하려면 아래에 표시된 제목을 정확히 입력하세요.",
         "deleteRecurringExpense": "<target>{name}</target> 삭제를 확인하려면 아래에 표시된 지출 제목을 정확히 입력하세요.",
-        "removeParticipant": "이 그룹에서 <target>{name}</target> 참여자를 삭제하려면 아래에 표시된 이름을 정확히 입력하세요."
+        "removeParticipant": "이 그룹에서 <target>{name}</target> 참여자를 삭제하려면 아래에 표시된 이름을 정확히 입력하세요.",
+        "deleteAccount": "계정을 영구적으로 삭제하려면 아래에 표시된 대로 <target>{name}</target>을(를) 정확히 입력하세요."
       },
       "placeholder": "여기에 “{name}”을(를) 입력하세요",
-      "mismatch": "일치하지 않습니다. {name}을(를) 정확히 입력하세요."
+      "mismatch": "일치하지 않습니다. {name}을(를) 정확히 입력하세요.",
+      "settingsNoteLink": "계정 설정에서 변경",
+      "settingsNoteLead": "입력을 건너뛰시겠어요?",
+      "settingsNoteTail": "하여 일반 확인 대화상자를 사용하세요."
     }
   },
   "Theme": {
@@ -2967,7 +3248,7 @@
     "failedDescription": "이 기기를 등록하지 못했습니다. 이메일로 설정한 알림은 계속 이메일로 전송됩니다. 푸시만 선택한 알림은 이메일로 전환되지 않습니다.",
     "emailUsage": "기기를 활성화할 때까지 이메일로 설정한 알림만 도착합니다. 브라우저 설정에서 알림을 허용한 후 설정에서 다시 시도할 수 있습니다.",
     "done": "완료",
-    "emailDeliveryDisabled": "이 인스턴스에서는 이메일 발송이 꺼져 있어 이메일 알림을 받으실 수 없습니다. 업데이트를 계속 받으려면 이 기기에서 푸시를 켜세요."
+    "emailDeliveryDisabled": "이메일 발송이 꺼져 있어 이메일 알림을 받으실 수 없습니다. 업데이트를 계속 받으려면 이 기기에서 푸시를 켜세요."
   },
   "Unsubscribe": {
     "title": "이 이메일을 끄시겠어요?",
@@ -3438,7 +3719,8 @@
     "hintTapToAddExpense": "저는 {name}입니다. 나를 눌러 지출을 추가하세요.",
     "hintTapToCreateGroup": "저는 {name}입니다. 나를 눌러 그룹을 만드세요.",
     "billName": "빌",
-    "offlineMessage": "오프라인 상태에서는 아무것도 만들 수 없어요."
+    "offlineMessage": "오프라인 상태에서는 아무것도 만들 수 없어요.",
+    "serverUnreachableMessage": "지금 Spliit 서버에 연결할 수 없어요 — 연결 상태는 정상으로 보이니 저희 쪽 문제예요."
   },
   "CreateSettlement": {
     "description": "지불을 기록하기 전에 확인하세요.",
@@ -3489,7 +3771,18 @@
       "existingPasskeyTitle": "이미 패스키를 등록하셨나요?",
       "existingPasskeyDescription": "등록된 기기 중 하나에서 패스키로 다시 로그인하세요.",
       "passkeySignIn": "패스키로 로그인",
-      "passkeySignInError": "이 패스키로 로그인하지 못했어요. 다시 시도하거나 로그인 링크를 사용해 보세요."
+      "passkeySignInError": "이 패스키로 로그인하지 못했어요. 다시 시도하거나 로그인 링크를 사용해 보세요.",
+      "passkeyNameLabel": "이 패스키의 이름을 입력하세요 (선택 사항)",
+      "passkeyNamePlaceholder": "예: MacBook Touch ID",
+      "nameTitle": "표시 이름을 선택하세요",
+      "nameDescription": "패스키와 그룹에 표시됩니다. 나중에 변경할 수 있습니다.",
+      "nameLabel": "표시 이름",
+      "namePlaceholder": "이름",
+      "nameSave": "저장하고 계속하기",
+      "nameSaving": "저장 중…",
+      "nameRequired": "표시 이름을 입력하세요.",
+      "nameTooShort": "이름은 최소 2자 이상이어야 합니다.",
+      "nameError": "표시 이름을 저장하지 못했습니다. 다시 시도해 주세요."
     },
     "onboarding": {
       "title": "로그인 링크 저장",
@@ -3628,6 +3921,29 @@
         "review": {
           "title": "검토하고 가져오기",
           "detail": "중복을 확인하고 가져오기를 확정하세요."
+        }
+      }
+    },
+    "categorize": {
+      "title": "지출 분류하기",
+      "description": "기존의 분류되지 않은 지출에 대해 System One으로 카테고리를 제안합니다. 저장하기 전에 모든 변경 사항을 검토하세요.",
+      "start": "지출 분류하기",
+      "steps": {
+        "choose": {
+          "title": "방법 선택하기",
+          "detail": "사전 및 기록 또는 System One 결정 모델을 사용합니다."
+        },
+        "calibrate": {
+          "title": "작은 샘플 검토하기",
+          "detail": "제안을 수정하면 다음 라운드에서 그룹의 카테고리를 학습합니다."
+        },
+        "review": {
+          "title": "모든 지출 검토하기",
+          "detail": "일반 지출이 전체 표의 맨 앞에 표시됩니다."
+        },
+        "save": {
+          "title": "카테고리 저장하기",
+          "detail": "최종 검토를 확정해야만 지출이 변경됩니다."
         }
       }
     }
@@ -4166,7 +4482,8 @@
       "valuesRecomputedTitle": "값 다시 계산됨",
       "viewExpenses": "지출 보기",
       "waitDuplicate": "가져오기 전에 중복 검사가 끝날 때까지 기다리세요.",
-      "invalidRowTitle": "잘못된 가져오기 행"
+      "invalidRowTitle": "잘못된 가져오기 행",
+      "categorizeWithSystemOne": "System One으로 분류되지 않은 지출의 카테고리를 제안"
     }
   },
   "Sponsor": {
@@ -4321,5 +4638,26 @@
     "expenseMissing": "이 지출은 이 기기의 다운로드에 없어요. 새/오래된 지출을 확인하려면 다시 연결하세요.",
     "groupMissing": "이 그룹은 아직 다운로드가 끝나지 않았어요.",
     "balancesStale": "잔액이 최신이 아닐 수 있어요."
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit을 현재 사용할 수 없습니다",
+    "description": "지금 Spliit 서버에 연결할 수 없습니다. 연결 상태는 정상으로 보이니 잠시 후 다시 시도해 주세요.",
+    "retry": "다시 시도"
+  },
+  "ApiStatusBanner": {
+    "message": "지금 Spliit에 연결할 수 없습니다. 연결 상태는 정상으로 보이니 저희 쪽 문제입니다.",
+    "statusLink": "상태 확인"
+  },
+  "AccountDeletionBanner": {
+    "scheduled": "계정 삭제가 {date}에 예정되어 있습니다.",
+    "review": "삭제 내용 검토 또는 취소",
+    "executing": "계정 삭제가 시작되었습니다.",
+    "viewStatus": "삭제 상태 보기"
+  },
+  "Updates": {
+    "title": "업데이트",
+    "latest": "새로운 소식",
+    "viewAll": "모든 업데이트 보기",
+    "dismiss": "알겠습니다"
   }
 }

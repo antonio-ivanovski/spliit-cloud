@@ -130,7 +130,10 @@ export function RecoverAnonymousAccountPage() {
             <Input
               id="anonymous-recovery-link"
               value={recoveryLink}
-              onChange={(event) => setRecoveryLink(event.target.value)}
+              onChange={(event) => {
+                setRecoveryLink(event.target.value)
+                if (error) setError(false)
+              }}
               className="font-mono text-xs"
               autoComplete="off"
               autoCapitalize="none"

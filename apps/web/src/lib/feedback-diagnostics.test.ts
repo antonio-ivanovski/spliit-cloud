@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import {
   formatFeedbackDiagnostics,
+  formatVersionLine,
   sanitizeFeedbackRoute,
 } from './feedback-diagnostics'
 
@@ -24,13 +25,26 @@ describe('sanitizeFeedbackRoute', () => {
   })
 })
 
+describe('formatVersionLine', () => {
+  it.each([
+    ['v2.4.2', 'Version: v2.4.2'],
+    [undefined, 'Version: unknown'],
+    ['  ', 'Version: unknown'],
+  ])(
+    'formats version %s as %s',
+    (version: string | undefined, expected: string) => {
+      expect(formatVersionLine(version)).toBe(expected)
+    },
+  )
+})
+
 describe('formatFeedbackDiagnostics', () => {
   it('includes safe environment details without raw route identifiers', () => {
     const diagnostics = formatFeedbackDiagnostics({
       origin: 'https://example.test',
       pathname:
         '/groups/group-secret/expenses/expense-secret?token=invite-secret#private',
-      buildSha: 'abc123',
+      buildVersion: 'v2.4.2',
       userAgent: 'Example Browser',
       locale: 'en-US',
       timeZone: 'Europe/Skopje',
@@ -40,7 +54,7 @@ describe('formatFeedbackDiagnostics', () => {
     })
 
     expect(diagnostics).toContain('Instance: https://example.test')
-    expect(diagnostics).toContain('Build: abc123')
+    expect(diagnostics).toContain('Version: v2.4.2')
     expect(diagnostics).toContain(
       'Screen: /groups/:groupId/expenses/:expenseId',
     )
@@ -64,7 +78,7 @@ describe('formatFeedbackDiagnostics', () => {
       standalone: true,
     })
 
-    expect(diagnostics).toContain('Build: unknown')
+    expect(diagnostics).toContain('Version: unknown')
     expect(diagnostics).toContain('Display mode: standalone')
   })
 })

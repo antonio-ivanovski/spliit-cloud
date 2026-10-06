@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/speed-dial'
 import { isMobileGroupNavPath } from '@/lib/mobile-nav'
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { useOnlineStatus } from '@/lib/use-online-status'
+import { useConnectivityStatus, useOnlineStatus } from '@/lib/use-online-status'
 import { cn } from '@/lib/utils'
 
 import {
@@ -61,6 +61,7 @@ import {
   coachSpeechForActions,
   isCoachSpeechLine,
   OFFLINE_SPEECH_LINE,
+  SERVER_UNREACHABLE_SPEECH_LINE,
   type MascotSpeechLine,
 } from './mascot-speech'
 import { MascotSpeechBubble } from './mascot-speech-bubble'
@@ -125,6 +126,7 @@ export function MascotHost() {
   const { react } = useMascotController()
   const { data: account, isPending } = useCurrentAccount()
   const isOnline = useOnlineStatus()
+  const connectivityStatus = useConnectivityStatus()
   const offline = !isOnline
   const welcomedAccountRef = useRef<string | null>(null)
   const pathname = useLocation({ select: (location) => location.pathname })
@@ -270,8 +272,12 @@ export function MascotHost() {
   }, [account?.id, navigate])
 
   const handlePersonalityTap = useCallback(() => {
-    if (offline) {
+    if (connectivityStatus === 'offline') {
       setSpeech({ path: pathname, line: OFFLINE_SPEECH_LINE })
+      return
+    }
+    if (connectivityStatus === 'server-unreachable') {
+      setSpeech({ path: pathname, line: SERVER_UNREACHABLE_SPEECH_LINE })
       return
     }
     if (cycleRef.current.path !== pathname) {
@@ -281,7 +287,7 @@ export function MascotHost() {
     cycleRef.current.index += 1
     setSpeech({ path: pathname, line })
     mascot?.react('welcome', 900)
-  }, [mascot, offline, pathname, speechLines])
+  }, [mascot, connectivityStatus, pathname, speechLines])
 
   useEffect(() => {
     if (!speechLine) return
@@ -504,22 +510,7 @@ export function MascotHost() {
         )}
       >
         {actions.map(({ id, label, icon: Icon, onSelect, primary }) => (
-          <SpeedDialItem
-            key={id}
-            className={cn(
-              'gap-2.5',
-              placement.endsWith('start') && 'flex-row-reverse',
-            )}
-          >
-            <SpeedDialLabel
-              className={cn(
-                'border-border/80 px-3 py-2 text-sm backdrop-blur-none dark:border-white/18',
-                mascotActionFill,
-                mascotActionElevation,
-              )}
-            >
-              {label}
-            </SpeedDialLabel>
+          <SpeedDialItem key={id}>
             <SpeedDialAction
               aria-label={label}
               onClick={() => {
@@ -528,47 +519,65 @@ export function MascotHost() {
                 onSelect()
               }}
               className={cn(
-                'flex size-12 items-center justify-center rounded-2xl border transition-[transform,background-color] duration-200 hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring',
-                mascotActionElevation,
-                primary
-                  ? 'border-primary bg-primary text-primary-foreground hover:bg-primary/90 dark:border-primary dark:bg-primary dark:text-primary-foreground'
-                  : cn(
-                      'border-border/80 text-foreground hover:bg-accent dark:border-white/18',
-                      mascotActionFill,
-                    ),
+                'group gap-2.5 rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
+                placement.endsWith('start') && 'flex-row-reverse',
               )}
             >
-              <Icon className="size-5" aria-hidden="true" />
+              <SpeedDialLabel
+                className={cn(
+                  'border-border/80 px-3 py-2 text-sm backdrop-blur-none dark:border-white/18',
+                  mascotActionFill,
+                  mascotActionElevation,
+                )}
+              >
+                {label}
+              </SpeedDialLabel>
+              <span
+                className={cn(
+                  'flex size-12 items-center justify-center rounded-2xl border transition-[transform,background-color] duration-200 group-hover:-translate-y-0.5',
+                  mascotActionElevation,
+                  primary
+                    ? 'border-primary bg-primary text-primary-foreground group-hover:bg-primary/90 dark:border-primary dark:bg-primary dark:text-primary-foreground'
+                    : cn(
+                        'border-border/80 text-foreground group-hover:bg-accent dark:border-white/18',
+                        mascotActionFill,
+                      ),
+                )}
+              >
+                <Icon className="size-5" aria-hidden="true" />
+              </span>
             </SpeedDialAction>
           </SpeedDialItem>
         ))}
         {showSettings && (
-          <SpeedDialItem
-            className={cn(
-              'gap-2.5',
-              placement.endsWith('start') && 'flex-row-reverse',
-            )}
-          >
-            <SpeedDialLabel
-              className={cn(
-                'border-border/80 px-2.5 py-1.5 text-xs text-muted-foreground backdrop-blur-none dark:border-white/18',
-                mascotActionFill,
-                mascotActionElevation,
-              )}
-            >
-              {t('Mascot.settingsAction')}
-            </SpeedDialLabel>
+          <SpeedDialItem>
             <SpeedDialAction
               aria-label={t('Mascot.settingsAction')}
               data-testid="bill-mascot-settings"
               onClick={openMascotSettings}
               className={cn(
-                'flex size-9 items-center justify-center rounded-xl border border-border/80 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring dark:border-white/18',
-                mascotActionFill,
-                mascotActionElevation,
+                'group gap-2.5 rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
+                placement.endsWith('start') && 'flex-row-reverse',
               )}
             >
-              <Settings className="size-4" aria-hidden="true" />
+              <SpeedDialLabel
+                className={cn(
+                  'border-border/80 px-2.5 py-1.5 text-xs text-muted-foreground backdrop-blur-none dark:border-white/18',
+                  mascotActionFill,
+                  mascotActionElevation,
+                )}
+              >
+                {t('Mascot.settingsAction')}
+              </SpeedDialLabel>
+              <span
+                className={cn(
+                  'flex size-9 items-center justify-center rounded-xl border border-border/80 text-muted-foreground transition-colors group-hover:bg-accent group-hover:text-foreground dark:border-white/18',
+                  mascotActionFill,
+                  mascotActionElevation,
+                )}
+              >
+                <Settings className="size-4" aria-hidden="true" />
+              </span>
             </SpeedDialAction>
           </SpeedDialItem>
         )}

@@ -78,6 +78,7 @@ describe('features.get', () => {
       enableEmailAuth: true,
       enablePasskeyAuth: true,
       emailDeliveryEnabled: true,
+      passkeyFreshAgeSeconds: 30 * 24 * 60 * 60,
     })
   })
 

@@ -49,6 +49,30 @@ function getDateGroup(
 
 export type ActivityWithTime = { time: Date | string }
 
+export type ActivityRun<T> = { type: 'visible' | 'hidden'; items: T[] }
+
+/**
+ * Splits an ordered activity list into consecutive same-visibility runs, so
+ * hidden activities collapse inline at their chronological position instead of
+ * being lumped into a single block at the end of the group. Mirrors the expense
+ * timeline's run splitting.
+ */
+export function splitActivityRuns<T>(
+  activities: T[],
+  isInvolving: (activity: T) => boolean,
+): ActivityRun<T>[] {
+  const runs: ActivityRun<T>[] = []
+  for (const activity of activities) {
+    const type = isInvolving(activity) ? 'visible' : 'hidden'
+    const last = runs[runs.length - 1]
+    if (last !== undefined && last.type === type) {
+      last.items.push(activity)
+    } else {
+      runs.push({ type, items: [activity] })
+    }
+  }
+  return runs
+}
 export function getGroupedActivitiesByDate<T extends ActivityWithTime>(
   activities: T[],
   timeZone: string,

@@ -2,17 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://spliit.cloud/</loc>
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://spliit.cloud/privacy</loc>
+    <lastmod>2026-07-10</lastmod>
   </url>
   <url>
     <loc>https://spliit.cloud/terms</loc>
+    <lastmod>2026-07-10</lastmod>
   </url>
   <url>
     <loc>https://spliit.cloud/imprint</loc>
+    <lastmod>2026-07-10</lastmod>
   </url>
   <url>
     <loc>https://spliit.cloud/sponsor</loc>
+    <lastmod>2026-07-10</lastmod>
+  </url>
+  <url>
+    <loc>https://spliit.cloud/support</loc>
+    <lastmod>2026-09-30</lastmod>
   </url>
 </urlset>

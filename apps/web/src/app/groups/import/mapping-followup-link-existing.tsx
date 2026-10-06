@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Label } from '@/components/ui/label'
@@ -33,11 +34,23 @@ export function LinkExistingFollowUp({
   const members = destinationParticipants.filter((p) => !p.pending)
   const pending = destinationParticipants.filter((p) => p.pending)
 
+  const memberSelectItems = useMemo(
+    () =>
+      destinationParticipants.map((p) => ({
+        value: p.id,
+        label: p.pending
+          ? `${p.name} ${t('Groups.Import.Mapping.Row.pendingSuffix')}`
+          : p.name,
+      })),
+    [destinationParticipants, t],
+  )
+
   return (
     <div className="mt-2 grid gap-1.5">
       <Label>{t('Groups.Import.Mapping.Row.selectExistingMember')}</Label>
       <Select
         value={existingLedgerParticipantId ?? ''}
+        items={memberSelectItems}
         onValueChange={(value) => {
           if (value != null) onChange({ existingLedgerParticipantId: value })
         }}

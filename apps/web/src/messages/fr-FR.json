@@ -81,13 +81,14 @@
     "signOutOffline": "Connectez-vous pour vous déconnecter"
   },
   "Footer": {
-    "madeIn": "Créé par la communauté open-source avec amour ❤️",
+    "madeIn": "Créé par la <github>communauté open-source</github> avec amour ❤️",
     "legalNavigation": "Liens juridiques",
     "privacy": "Confidentialité",
     "terms": "Conditions",
     "imprint": "Mentions légales",
     "sponsor": "Soutenir",
-    "timeLabel": "Moment de la journée"
+    "timeLabel": "Moment de la journée",
+    "status": "Statut"
   },
   "Expenses": {
     "title": "Dépenses",
@@ -229,7 +230,9 @@
       "showLess": "Afficher moins"
     },
     "copyToast": "Copie de la dépense initiée. Les détails de la dépense existante seront utilisés pour en créer une nouvelle.",
-    "incomeBadge": "Revenu"
+    "incomeBadge": "Revenu",
+    "paidBySingle": "Payé par <strong>{paidBy}</strong> · payé pour <paidFor></paidFor>",
+    "paidByMultipleSingle": "Payé par <paidByNames></paidByNames> · payé pour <paidFor></paidFor>"
   },
   "Groups": {
     "myGroups": "Mes groupes",
@@ -373,7 +376,8 @@
             "monthly": "mois",
             "yearly": "ans"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Suggérer des catégories pour les dépenses non catégorisées avec System One"
       },
       "Destination": {
         "heading": "Où souhaitez-vous importer <strong>{name}</strong>? ({participantCount} participants · {expenseCount} dépenses)",
@@ -668,7 +672,9 @@
       "description": "Les groupes peuvent désormais afficher un emoji à côté de leur nom. Nous avons remarqué {emoji} dans « {name} ».",
       "openSettings": "Ouvrir les paramètres du groupe",
       "notNow": "Pas maintenant"
-    }
+    },
+    "groupTabsHint": "Vous souhaitez réorganiser les onglets du groupe ou masquer ceux que vous n'utilisez pas ?",
+    "groupTabsHintLink": "Personnaliser les onglets dans les paramètres de votre compte"
   },
   "GroupForm": {
     "title": "Informations sur le groupe",
@@ -1059,7 +1065,8 @@
       "allItemsSplitEdit": "Modifier le partage de tous les articles",
       "allItemsSplitModalTitle": "Partage de tous les articles",
       "remainderAllocationProportional": "Proportionnel aux articles",
-      "remainderProportionalHint": "Répartissez ce montant en fonction du sous-total des articles de chaque personne. Utile pour les taxes et les pourboires."
+      "remainderProportionalHint": "Répartissez ce montant en fonction du sous-total des articles de chaque personne. Utile pour les taxes et les pourboires.",
+      "errorExceedsAmountDetails": "Le total des articles ({itemsTotal}) dépasse le montant de la dépense de {excess}."
     },
     "leaveItemized": {
       "title": "Changer de mode de répartition ?",
@@ -1095,7 +1102,15 @@
       "done": "Terminé",
       "yourTime": "votre heure",
       "invalidDate": "Saisissez une date valide.",
-      "invalidTime": "Saisissez une heure valide (HH:mm)."
+      "invalidTime": "Saisissez une heure valide (HH:mm).",
+      "hourLabel": "Heures",
+      "minuteLabel": "Minutes",
+      "periodLabel": "a.m./p.m.",
+      "timeWheelHint": "Faites défiler ou touchez pour régler l'heure. La date reste inchangée.",
+      "now": "Maintenant",
+      "morning": "Matin",
+      "midday": "Midi",
+      "evening": "Soir"
     },
     "settlementTitle": "Paiement de règlement",
     "settlementHint": "{category} : Non compté comme une dépense dans les totaux, statistiques et budgets. Met tout de même à jour qui doit quoi à qui.",
@@ -1139,7 +1154,8 @@
       "description": "Saisissez le montant final, frais compris.",
       "impliedRate": "Taux implicite : 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Suggestions de catégorie"
+    "otherSuggestions": "Suggestions de catégorie",
+    "paidForItemizedEmptyHint": "Assignez des personnes aux articles pour voir la part de chacun."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Supprimer le document",
@@ -1851,7 +1867,7 @@
       "generic": "Une erreur s'est produite. Veuillez réessayer.",
       "passwordPolicy": "Utilisez au moins 8 caractères avec une majuscule, une minuscule, un chiffre et un symbole.",
       "magicLinkFailed": "Impossible d'envoyer le lien de connexion.",
-      "signupInviteRequired": "Cette instance est réservée aux invitations. Utilisez un lien d'invitation ou demandez à quelqu'un de vous inviter dans un groupe.",
+      "signupInviteRequired": "Les inscriptions se font uniquement sur invitation. Utilisez un lien d'invitation ou demandez à quelqu'un de vous inviter dans un groupe.",
       "passkeyFailed": "La connexion par clé d'accès a échoué. Réessayez ou utilisez une autre méthode de connexion."
     },
     "loading": "Chargement…",
@@ -1861,14 +1877,14 @@
     "signInWithGithub": "Continuer avec GitHub",
     "legalNotice": "En continuant, vous acceptez les <terms>Conditions d'utilisation</terms> et reconnaissez l'<privacy>avis de confidentialité</privacy>.",
     "inviteOnly": {
-      "message": "Cette instance est réservée aux invitations. Utilisez un lien d'invitation ou demandez à quelqu'un de vous inviter dans un groupe.",
+      "message": "Les inscriptions se font uniquement sur invitation. Utilisez un lien d'invitation ou demandez à quelqu'un de vous inviter dans un groupe.",
       "useInvitedEmail": "Utilisez l'adresse e-mail avec laquelle vous avez reçu l'invitation."
     },
     "signInWithX": "Continuer avec X",
     "signInWithOidc": "Continuer avec {name}",
     "signInAnonymously": "Anonyme",
     "lastUsed": "Dernière utilisation",
-    "emailAuthDisabled": "La connexion par e-mail est désactivée sur cette instance. Veuillez utiliser l'authentification unique (SSO).",
+    "emailAuthDisabled": "La connexion par e-mail est désactivée. Veuillez utiliser l'authentification unique (SSO).",
     "signInWithPasskey": "Se connecter avec une clé d'accès"
   },
   "CompleteProfile": {
@@ -1993,7 +2009,7 @@
         "joined_many": "{count} personnes ont rejoint le groupe",
         "retry": "Réessayer"
       },
-      "emailDeliveryDisabled": "L'envoi d'e-mails est désactivé sur cette instance. L'invitation est tout de même créée et apparaîtra lorsque la personne invitée se connectera ; utilisez un lien d'invitation pour lui donner quelque chose à ouvrir."
+      "emailDeliveryDisabled": "L'envoi d'e-mails est désactivé. L'invitation est tout de même créée et apparaîtra lorsque la personne invitée se connectera ; utilisez un lien d'invitation pour lui donner quelque chose à ouvrir."
     },
     "invitations": {
       "title": "Invitations en attente",
@@ -2415,7 +2431,7 @@
       "masterDescription": "Désactivez-les pour mettre en silence tous les e-mails et toutes les notifications push. Vos choix par catégorie sont conservés.",
       "emailAddToEnable": "Ajoutez un e-mail vérifié pour recevoir des notifications dans votre boîte de réception.",
       "emailAddLink": "Ajouter un e-mail",
-      "emailDeliveryDisabled": "L'envoi d'e-mails est désactivé sur cette instance. Vos choix d'e-mails sont enregistrés, mais ils ne seront envoyés que lorsque l'administrateur configurera l'e-mail."
+      "emailDeliveryDisabled": "L'envoi d'e-mails est désactivé. Vos choix d'e-mails sont enregistrés, mais ils ne seront envoyés que lorsque l'e-mail sera configuré."
     },
     "preferences": {
       "title": "Préférences de l’application",
@@ -2434,6 +2450,22 @@
       "mascotOptions": {
         "off": "Désactivée",
         "bill": "Bill, le reçu"
+      },
+      "groupTabs": "Onglets du groupe",
+      "groupTabsHelp": "Choisissez les onglets affichés et leur ordre dans chaque groupe.",
+      "groupTabsCustomize": "Personnaliser",
+      "groupTabsSave": "Enregistrer",
+      "groupTabsDiscard": "Abandonner",
+      "groupTabsReset": "Réinitialiser les valeurs par défaut",
+      "groupTabsHide": "Masquer {name}",
+      "groupTabsShow": "Afficher {name}",
+      "groupTabsMoveUp": "Déplacer {name} vers le haut",
+      "groupTabsMoveDown": "Déplacer {name} vers le bas",
+      "deleteConfirmation": "Confirmation de suppression des dépenses",
+      "deleteConfirmationHelp": "Les suppressions rapides demandent une simple confirmation. Les suppressions avec saisie vous demandent de saisir d’abord le titre de la dépense. Supprimer un groupe ou retirer un membre exige toujours la saisie.",
+      "deleteConfirmationOptions": {
+        "standard": "Dialogue de confirmation",
+        "strict": "Dialogue avec saisie"
       }
     },
     "aiPreferences": {
@@ -2626,7 +2658,111 @@
       "backedUp": "Sauvegardée",
       "removeWarning": "Cette action est irréversible. L'appareil ne vous connectera plus avec une clé d'accès — vous pourrez l'enregistrer à nouveau à tout moment.",
       "removeLastWarning": "Il s'agit de votre dernière clé d'accès. S'il s'agit de votre seule méthode de connexion, la suppression est bloquée jusqu'à ce que vous enregistriez un lien de récupération ou une autre méthode de connexion.",
-      "anonymousHelpNoLink": "Aucun lien de connexion n'est enregistré pour ce compte invité. Créez-en un dans la ligne du lien de connexion ci-dessous — il fonctionne sur n'importe quel appareil."
+      "anonymousHelpNoLink": "Aucun lien de connexion n'est enregistré pour ce compte invité. Créez-en un dans la ligne du lien de connexion ci-dessous — il fonctionne sur n'importe quel appareil.",
+      "reauthTitle": "Connectez-vous à nouveau pour ajouter une clé d'accès",
+      "reauthDescription": "Pour votre sécurité, l'ajout d'une clé d'accès nécessite une connexion récente. Vous serez déconnecté, puis reconnecté, et reviendrez ici pour terminer.",
+      "reauthConfirm": "Se connecter à nouveau",
+      "reauthAnonymousTitle": "Enregistrez d'abord un lien de connexion",
+      "reauthAnonymousDescription": "Ce compte invité n'a encore ni lien de connexion ni clé d'accès. Vous déconnecter maintenant vous bloquerait définitivement — enregistrez d'abord un lien de connexion dans la section Lien de connexion, puis revenez pour ajouter une clé d'accès."
+    },
+    "deletion": {
+      "sectionTitle": "Zone dangereuse",
+      "sectionDescription": "Supprimez définitivement votre compte et toutes les méthodes de connexion.",
+      "rowLabel": "Supprimer le compte",
+      "rowDescription": "Supprime votre profil, vos sessions et vos paramètres après un délai de grâce de 48 heures. Les dépenses partagées restent dans les groupes des autres membres sans vos données personnelles.",
+      "open": "Supprimer le compte…",
+      "scheduledTitle": "Suppression du compte programmée",
+      "scheduledDescription": "La suppression est prévue à partir du {date}. Votre compte reste actif jusqu’à son début. Les groupes, membres et dépenses peuvent changer pendant l’attente ; vos choix s’appliqueront à leur état lors de la suppression. Vous pouvez l’annuler jusqu’à son début. Un e-mail de confirmation a été envoyé à {email}.",
+      "cancel": "Annuler la suppression",
+      "cancelling": "Annulation…",
+      "cancelled": "Suppression du compte annulée.",
+      "dialogTitle": "Programmer la suppression du compte ?",
+      "dialogDescription": "La suppression est programmée après un délai de 48 heures ; rien n’est supprimé maintenant. Vous pouvez l’annuler jusqu’à son début. Vos choix s’appliqueront aux groupes et soldes à ce moment-là. Une fois commencée, la suppression est irréversible.",
+      "farewellTitle": "Désolé de vous voir partir",
+      "farewellBody": "S'il y a quelque chose que nous pouvons faire pour que vous restiez, <feedbackLink>partagez votre avis</feedbackLink> — cela ne prend qu'une minute et nous aide à nous améliorer.",
+      "groupsTitle": "Ce qu'il advient de vos groupes",
+      "leaveGroup": "Vous quitterez « {name} ».",
+      "deleteGroup": "« {name} » sera définitivement supprimé — vous en êtes le dernier membre.",
+      "lastAdmin": "Vous êtes le dernier administrateur de « {name} » — un autre membre sera promu automatiquement.",
+      "settleBalances": "Les soldes non réglés de « {name} » seront réglés automatiquement.",
+      "friendLedger": "Votre suivi des comptes avec {name} est réglé et clôturé.",
+      "friendLedgerUnnamed": "Votre suivi des comptes est réglé et clôturé.",
+      "friendLedgerFallback": "un suivi avec un proche",
+      "noGroups": "Vous n'êtes membre d'aucun groupe.",
+      "accessTitle": "Connexion et invitations",
+      "pendingInvites_zero": "Lors de la suppression, {count} invitations en attente que vous avez envoyées seront révoquées.",
+      "pendingInvites_one": "Lors de la suppression, {count} invitation en attente que vous avez envoyée sera révoquée.",
+      "pendingInvites_two": "Lors de la suppression, {count} invitations en attente que vous avez envoyées seront révoquées.",
+      "pendingInvites_few": "Lors de la suppression, {count} invitations en attente que vous avez envoyées seront révoquées.",
+      "pendingInvites_many": "Lors de la suppression, {count} invitations en attente que vous avez envoyées seront révoquées.",
+      "pendingInvites_other": "Lors de la suppression, {count} invitations en attente que vous avez envoyées seront révoquées.",
+      "keepNameLabel": "Conserver mon nom dans l'historique partagé",
+      "keepNameDescription": "Les dépenses partagées continueront d'afficher « {name} ». Sinon, votre nom sera remplacé par « Membre supprimé » partout.",
+      "customNameLabel": "Nom à conserver",
+      "settleLabel": "Marquer les soldes comme réglés lors de la suppression",
+      "settleDescription": "Les soldes restants sont réglés automatiquement. Sinon, ils resteront associés à votre nom temporaire.",
+      "leaveBalances": "Les soldes non réglés de « {name} » resteront tels quels.",
+      "friendLeaveBalances": "Votre solde avec {name} restera inchangé.",
+      "confirmWord": "SUPPRIMER",
+      "ackLabel": "Je comprends que cette action est définitive et que les dépenses partagées restent dans les groupes des autres membres sans mes données personnelles.",
+      "exportHint": "Vous voulez d'abord une copie ? <exportLink>Exportez une sauvegarde</exportLink> avant de continuer.",
+      "schedule": "Programmer la suppression",
+      "scheduling": "Programmation…",
+      "scheduled": "Suppression programmée. Vérifiez votre e-mail pour la vérifier ou l'annuler.",
+      "dialogCancel": "Conserver mon compte",
+      "reauthTitle": "Connectez-vous à nouveau pour supprimer votre compte",
+      "reauthDescription": "Pour votre sécurité, la suppression de votre compte nécessite une connexion récente. Vous serez déconnecté, puis reconnecté, et reviendrez ici pour terminer.",
+      "reauthConfirm": "Se connecter à nouveau",
+      "errors": {
+        "generic": "Une erreur est survenue. Veuillez réessayer.",
+        "loadFailed": "Impossible de charger les détails de la suppression.",
+        "emailMismatch": "L'e-mail saisi ne correspond pas à celui de votre compte.",
+        "alreadyRequested": "Une demande de suppression est déjà en cours pour ce compte.",
+        "sessionNotFresh": "Votre session est trop ancienne pour cette action. Connectez-vous à nouveau, puis réessayez.",
+        "jobsDisabled": "La suppression du compte nécessite le travailleur en arrière-plan, qui est désactivé sur ce déploiement.",
+        "ackRequired": "Confirmez d'abord que vous comprenez les conséquences.",
+        "invalidDisplayName": "Saisissez un nom de 1 à 100 caractères.",
+        "cancelFailed": "Impossible d'annuler la suppression. Veuillez réessayer."
+      },
+      "groupsToDeleteTitle": "Groupes qui seront supprimés",
+      "groupsToDeleteDescription": "Lors de la suppression, les groupes dont vous êtes encore le dernier membre actif seront définitivement supprimés.",
+      "groupsToLeaveTitle": "Groupes que vous quitterez",
+      "groupsToLeaveDescription": "Lors de la suppression, vous quitterez les groupes qui comptent encore d’autres membres actifs. Ces groupes resteront accessibles aux autres.",
+      "friendsTitle": "Amis",
+      "friendsDescription": "Vos soldes individuels avec ces amis.",
+      "backToSettings": "Retour aux paramètres",
+      "pageTitle": "Supprimer le compte",
+      "loading": "Chargement des détails de la suppression",
+      "choicesTitle": "Vos choix de suppression",
+      "nameTitle": "Nom dans l'historique partagé",
+      "removeNameLabel": "Remplacer mon nom par « Membre supprimé »",
+      "balancesTitle": "Soldes restants",
+      "keepBalancesLabel": "Conserver les soldes restants tels quels",
+      "balanceExplanation": "Si vous choisissez de régler les soldes, des écritures de règlement seront enregistrées lors de la suppression de votre compte. Aucun argent n'est transféré. Sinon, les soldes restent dans votre historique partagé.",
+      "confirmationTitle": "Confirmer la suppression du compte",
+      "retry": "Réessayer",
+      "pageDescription": "Programmez la suppression de votre compte après un délai de 48 heures. Votre compte reste actif jusqu’au début de la suppression, et vous pouvez l’annuler avant.",
+      "reviewChoicesTitle": "Vos choix",
+      "consequencesTitle": "Ce qui va se passer",
+      "reviewConfirmTitle": "Confirmer la suppression",
+      "backupLink": "Exporter une copie de sauvegarde",
+      "keptNameExplanation": "Lors de la suppression, les dépenses partagées afficheront « {name} ». Le nom de votre profil restera inchangé jusque-là.",
+      "removedNameExplanation": "Lors de la suppression, les dépenses partagées afficheront « Membre supprimé ». Le nom de votre profil restera inchangé jusque-là.",
+      "keptBalancesExplanation": "Au début de la suppression, les soldes restants sont conservés dans votre historique partagé, y compris les dépenses ajoutées pendant le délai d’attente.",
+      "settledBalancesExplanation": "Pendant la suppression, des écritures de règlement marquent comme réglés les soldes alors en cours des groupes dont vous faites encore partie, y compris les groupes archivés. Les soldes des groupes que vous avez déjà quittés ou dont vous avez été retiré restent inchangés. Aucun argent n’est transféré.",
+      "rowBalancesKept": "Les soldes restants restent inchangés.",
+      "rowBalancesSettled": "Le solde au moment de la suppression sera marqué comme réglé.",
+      "rowAdmin": "Lors de la suppression, un autre membre deviendra administrateur si vous êtes encore le dernier administrateur.",
+      "friendKept": "Votre solde reste inchangé.",
+      "friendSettled": "Lors de la suppression, votre solde à ce moment-là sera marqué comme réglé et le registre sera fermé.",
+      "accessExplanation": "Ces méthodes de connexion cesseront de fonctionner lors de la suppression de votre compte.",
+      "invitesTitle": "Invitations en attente",
+      "balanceUnavailable": "Solde indisponible",
+      "archivedBalancesKept": "Ce groupe archivé restera en lecture seule. Votre solde restant sera conservé.",
+      "signInMethodsRemoved": "Ces méthodes de connexion cesseront de fonctionner : {methods}.",
+      "consequencesTiming": "Ce récapitulatif reflète l’état actuel de votre compte. Les groupes, membres et dépenses peuvent changer avant le début de la suppression. Vos choix s’appliqueront aux groupes dont vous ferez partie et à leurs soldes à ce moment-là. Rien de ce qui est indiqué ici ne se produit immédiatement.",
+      "executingTitle": "La suppression du compte a commencé",
+      "executingDescription": "La suppression de votre compte est en cours. Certains changements peuvent déjà être terminés, et la suppression ne peut être ni annulée ni inversée. Si le traitement est interrompu, il reprend à partir des étapes terminées."
     }
   },
   "Activities": {
@@ -2653,7 +2789,9 @@
       },
       "recurringCreated": "{participant} a créé la dépense récurrente « {title} »",
       "stopped": "{participant} a arrêté la dépense récurrente {title}",
-      "commented": "{participant} a commenté {title} : “{excerpt}”"
+      "commented": "{participant} a commenté {title} : “{excerpt}”",
+      "yourShare": "Votre part :",
+      "notInvolved": "Vous n'êtes pas concerné"
     },
     "group": {
       "updated": "{participant} a modifié les paramètres du groupe",
@@ -2666,7 +2804,11 @@
         "currencyCode": "Code devise",
         "linkedParticipant": "Participant lié",
         "subgroupsEnabled": "Sous-groupes",
-        "publicViewLink": "Lien public en lecture seule"
+        "publicViewLink": "Lien public en lecture seule",
+        "emoji": "Emoji",
+        "color": "Couleur",
+        "subgroups": "Sous-groupes",
+        "splitPresets": "Préréglages de partage"
       }
     },
     "member": {
@@ -2697,7 +2839,18 @@
       "imported_other": "{participant} a importé {count} dépenses"
     },
     "participant": {
-      "removed": "{participant} a supprimé {target} du groupe"
+      "removed": "{participant} a supprimé {target} du groupe",
+      "added": "{participant} a ajouté {target} au groupe"
+    },
+    "hiddenActivitiesShowLess": "Afficher moins",
+    "hiddenActivities_one": "{count} activité masquée ne vous concernant pas",
+    "hiddenActivities_few": "{count} activités masquées ne vous concernant pas",
+    "hiddenActivities_many": "{count} activités masquées ne vous concernant pas",
+    "hiddenActivities_other": "{count} activités masquées ne vous concernant pas",
+    "viewMode": {
+      "label": "Mode d'affichage des activités",
+      "forYou": "Pour vous",
+      "all": "Toutes"
     }
   },
   "OfflineBanner": {
@@ -2775,9 +2928,6 @@
   },
   "BulkCategorize": {
     "title": "Catégorisation en lot",
-    "calibrationTitle": "Étape 1 — Calibration",
-    "calibrationDescription": "Chaque exemple que vous confirmez devient la vérité de référence pour le prochain passage de l'IA. Elle peut être prête après une seule passe, ou demander davantage d'exemples.",
-    "roundCount": "Tour {round} sur {max}",
     "confidence": {
       "high": "Élevée",
       "medium": "Moyenne",
@@ -2845,7 +2995,137 @@
     "doneTitle": "Catégories enregistrées",
     "expenseColumn": "Dépense",
     "categoryColumn": "Catégorie",
-    "confidenceColumn": "Confiance"
+    "confidenceColumn": "Confiance",
+    "simpleDescription": "Vérifiez les correspondances de catégorie pour les dépenses dans Général, puis enregistrez vos choix.",
+    "generateSuggestions": "Suggérer des catégories",
+    "backToStart": "Retour",
+    "chooseMode": "Choisissez comment catégoriser les dépenses",
+    "localMode": "Dictionnaire et historique",
+    "localModeDescription": "Utilisez l’historique des catégories de ce groupe et le dictionnaire intégré.",
+    "startRun": "Commencer la catégorisation",
+    "noCategory": "Laisser non catégorisé",
+    "progressTitle": "Catégorisation des dépenses",
+    "progressDescription": "Vous pouvez quitter cette page et revenir plus tard. Votre progression est enregistrée.",
+    "progressCount": "{categorized} dépenses sur {total} catégorisées",
+    "applyProgressTitle": "Enregistrement des catégories",
+    "reviewTitle": "Vérifier les suggestions",
+    "reviewSummary": "{suggested} suggestions sur {total} dépenses non catégorisées",
+    "sourceLocal": "Locale",
+    "saveSelected": "Enregistrer les catégories sélectionnées",
+    "retry": "Réessayer",
+    "restart": "Démarrer une nouvelle exécution",
+    "failed": "L’exécution s’est arrêtée : {message}",
+    "savedSummary": "{applied} modifiées, {skipped} ignorées",
+    "selectedCount": "{count} sélectionnées",
+    "selectAll": "Tout sélectionner",
+    "clearAll": "Tout effacer",
+    "discardRun": "Abandonner l’exécution",
+    "partialSaveNotice": "Certaines catégories ont peut-être déjà été enregistrées. Abandonner cette exécution n’annulera pas ces modifications.",
+    "restartOlderRunTitle": "Démarrer une nouvelle exécution de catégorisation",
+    "restartOlderRunDescription": "Cette exécution antérieure utilisait l’ancien flux de révision. Recommencez pour réviser toutes les dépenses ensemble.",
+    "runningMatches": "{count} dépenses sur {total} ont une suggestion de catégorie pour l’instant",
+    "failedTitle": "Catégorisation interrompue",
+    "reviewWorkload": "{total} dépenses dans Général · {selected} sélectionnées pour catégorisation · {general} restant dans Général",
+    "categoryChoices": "Choix de catégorie",
+    "moreCategories": "Choisir une autre catégorie",
+    "saveCount": "Enregistrer {count} catégories",
+    "finishWithoutChanges": "Terminer sans modifications",
+    "completionSummary": "Exécution terminée : {changed} dépenses sur {total} modifiées. {remaining} dépenses restent dans Général.",
+    "viewExpenses": "Voir les dépenses",
+    "countLoading": "Comptage des dépenses non catégorisées…",
+    "nothingToCategorize": "Aucune dépense non catégorisée à catégoriser.",
+    "startingCount": "{count} dépenses sont actuellement dans Général et prêtes à être révisées.",
+    "countError": "Impossible de compter les dépenses non catégorisées. Rechargez la page pour réessayer.",
+    "keepGeneral": "Général · laisser non catégorisé",
+    "calibrationRoundTitle": "Cycle de calibrage {round}",
+    "calibrationLoading": "Préparation d’un échantillon varié de dépenses…",
+    "calibrationReviewDescription": "Vérifiez et corrigez ces {count} dépenses. Les choix restent dans cette exécution jusqu’à l’enregistrement final.",
+    "confirmRound": "Confirmer le cycle",
+    "roundSummaryTitle": "Cycle {round} révisé",
+    "roundSummaryDescription": "{reviewed} révisées · {categorized} catégorisées provisoirement · {general} laissées dans Général",
+    "roundQuality": "Les suggestions initiales correspondaient à {accuracy}% de vos choix ; vous en avez corrigé {corrections}.",
+    "categorizeRemaining": "Catégoriser les dépenses restantes",
+    "nextRound": "Vérifier un autre échantillon",
+    "tableLabel": "Dépenses à catégoriser",
+    "dateColumn": "Date",
+    "amountColumn": "Montant",
+    "rerunSuggestions": "Générer à nouveau les suggestions",
+    "roundQualityWithSuggestions": "{accepted} catégories suggérées sur {proposed} acceptées · {changed} modifiées · {missed} correspondances trouvées depuis Général",
+    "roundQualityNoSuggestions": "Aucune catégorie suggérée · {missed} correspondances trouvées depuis Général · {abstained} restant dans Général",
+    "rerunChanged": "Vous avez modifié {changed} catégories suggérées sur {proposed}.",
+    "rerunAssignedSingle": "Vous avez attribué une catégorie à 1 dépense restée dans Général.",
+    "rerunAssignedMultiple": "Vous avez attribué une catégorie à {count} dépenses restées dans Général.",
+    "rerunPotentialSingle": "Vos modifications peuvent améliorer la correspondance d’1 dépense restante dans Général. Générez à nouveau les suggestions pour un autre passage.",
+    "rerunPotentialMultiple": "Vos modifications peuvent améliorer les correspondances de {count} dépenses restantes dans Général. Générez à nouveau les suggestions pour un autre passage.",
+    "rerunEligible": "Éligible pour un autre passage : Général {general} · correspondances automatiques incertaines {uncertain}.",
+    "rerunNoEligible": "Il ne reste ni Général intact ni correspondances automatiques incertaines à générer à nouveau. Vos corrections restent incluses dans les catégories enregistrées.",
+    "rerunAlreadyUsed": "Vos dernières corrections ont déjà été utilisées pour ces suggestions. Apportez une autre correction pour les générer à nouveau.",
+    "highMatch": "Correspondance élevée",
+    "mediumMatch": "Correspondance moyenne",
+    "lowMatch": "Correspondance faible",
+    "belowMatchThreshold": "Sous le seuil de correspondance",
+    "refiningTitle": "Affinage des correspondances incertaines",
+    "runLimitSummary": "Cette exécution comprend 10,000 dépenses. {count} dépenses Général supplémentaires peuvent être catégorisées dans une autre exécution après enregistrement.",
+    "pageLoading": "Chargement des dépenses…",
+    "pageLoadError": "Impossible de charger les dépenses.",
+    "pageRetry": "Réessayer",
+    "pageCount": "Affichage de {loaded} dépenses sur {total}",
+    "ledgerAmountNotice": "Les montants sont affichés dans la devise du groupe.",
+    "viewExpenseDetails": "Voir les détails de la dépense",
+    "reviewFilterLabel": "Afficher les dépenses",
+    "filterAll": "Toutes {count}",
+    "filterGeneral": "Général {count}",
+    "improveSuggestions": "Améliorer les suggestions restantes",
+    "rerunInfoLabel": "À propos de l’amélioration des suggestions",
+    "preparingNextStage": "Préparation de l’étape suivante",
+    "rerunProgressTitle": "Mise à jour des suggestions",
+    "progressPreparing": "Préparation des dépenses…",
+    "noGeneralRows": "Aucune dépense ne reste dans Général dans cette révision.",
+    "discardConfirmationTitle": "Abandonner cette exécution de catégorisation ?",
+    "discardConfirmationDescription": "Cela supprime l’exécution, ses suggestions et les choix effectués par vous ou d’autres administrateurs. Aucune catégorie de dépense ne sera modifiée.",
+    "discardConfirmationCancel": "Conserver l’exécution",
+    "progressCountDescription": "Seules les catégories confirmées et les correspondances moyennes ou élevées comptent ; Général et les correspondances faibles, non.",
+    "systemOneMode": "Modèle System One",
+    "systemOneModeDescription": "Utilisez le modèle de décision System One pour chaque dépense, en vous appuyant sur les dépenses catégorisées de ce groupe et vos choix vérifiés. TypeSafe Jev est l’un de ces modèles.",
+    "systemOneUnavailable": "System One n’est pas disponible. Le dictionnaire et l’historique restent disponibles.",
+    "systemOneConfidence": "Confiance de System One : {confidence} %",
+    "systemOneOptionProbability": "Probabilité de l’option System One : {probability} %",
+    "overallProgress": "Progression globale",
+    "fullPassProcessed": "{processed} dépenses traitées sur {total}",
+    "stageProcessed": "{processed} dépenses traitées sur {total} à cette étape",
+    "saveSkipped": "{count} dépenses ignorées parce qu’elles ont été modifiées.",
+    "sharedRunNotice": "Cette exécution est partagée avec les autres administrateurs du groupe. Tout le monde voit les mêmes suggestions.",
+    "saveConflictTitle": "{count} dépenses modifiées depuis le début de cette révision",
+    "saveConflictDescription": "Quelqu’un a modifié ces dépenses ou changé leur catégorie en dehors de cette exécution. Enregistrez les autres dépenses, ou modifiez à nouveau les catégories puis réessayez.",
+    "saveConflictMore": "Et {count} autres.",
+    "saveOtherExpenses": "Enregistrer les autres dépenses",
+    "receiptTitles": {
+      "freshMarket": "Marché frais",
+      "greenGrocer": "Primeur",
+      "fruitStand": "Stand de fruits",
+      "cornerBistro": "Bistrot du coin",
+      "noodleHouse": "Bar à nouilles",
+      "cafeLunch": "Déjeuner au café",
+      "flightTicket": "Billet d'avion",
+      "airlineBaggage": "Bagages avion",
+      "boardingPass": "Carte d'embarquement",
+      "homeSupplies": "Fournitures maison",
+      "hardwareShop": "Quincaillerie",
+      "cleaningGoods": "Produits de nettoyage",
+      "cinemaTickets": "Billets de cinéma",
+      "movieNight": "Soirée cinéma",
+      "filmFestival": "Festival de cinéma",
+      "organicMarket": "Marché bio",
+      "bakeryRun": "Tour à la boulangerie",
+      "sushiBar": "Bar à sushis",
+      "pizzaNight": "Soirée pizza",
+      "airportLounge": "Salon d'aéroport",
+      "extraLegroom": "Supplément espace jambes",
+      "laundryDetergent": "Lessive",
+      "storageBoxes": "Boîtes de rangement",
+      "popcornCombo": "Menu pop-corn",
+      "streamingRental": "Location en streaming"
+    }
   },
   "ExpensePreview": {
     "title": "Aperçu de la dépense",
@@ -2892,10 +3172,14 @@
         "deleteGroup": "Pour supprimer définitivement le groupe <target>{name}</target>, saisissez son nom exactement comme indiqué ci-dessous.",
         "deleteExpense": "Pour supprimer définitivement la dépense <target>{name}</target>, saisissez son titre exactement comme indiqué ci-dessous.",
         "deleteRecurringExpense": "Pour confirmer la suppression de <target>{name}</target>, saisissez le titre de la dépense exactement comme indiqué ci-dessous.",
-        "removeParticipant": "Pour retirer <target>{name}</target> de ce groupe, saisissez son nom exactement comme indiqué ci-dessous."
+        "removeParticipant": "Pour retirer <target>{name}</target> de ce groupe, saisissez son nom exactement comme indiqué ci-dessous.",
+        "deleteAccount": "Pour supprimer définitivement votre compte, saisissez <target>{name}</target> exactement comme indiqué ci-dessous."
       },
       "placeholder": "Saisissez « {name} » ici",
-      "mismatch": "Cela ne correspond pas. Saisissez exactement {name}."
+      "mismatch": "Cela ne correspond pas. Saisissez exactement {name}.",
+      "settingsNoteLink": "Modifier dans les paramètres du compte",
+      "settingsNoteLead": "Vous préférez éviter la saisie ?",
+      "settingsNoteTail": "pour utiliser une simple boîte de dialogue de confirmation."
     }
   },
   "Theme": {
@@ -2919,7 +3203,7 @@
     "failedDescription": "Nous n’avons pas pu enregistrer cet appareil. Les notifications configurées par e-mail continueront d’y être envoyées ; les choix uniquement push ne seront pas redirigés.",
     "emailUsage": "Seules les notifications configurées par e-mail seront reçues tant que vous n’aurez pas activé un appareil. Vous pouvez autoriser les notifications dans les paramètres du navigateur et réessayer depuis les paramètres.",
     "done": "Terminé",
-    "emailDeliveryDisabled": "L'envoi d'e-mails est désactivé sur cette instance, donc les notifications par e-mail ne peuvent pas vous parvenir. Activez les notifications push sur cet appareil pour continuer à recevoir les mises à jour."
+    "emailDeliveryDisabled": "L'envoi d'e-mails est désactivé, donc les notifications par e-mail ne peuvent pas vous parvenir. Activez les notifications push sur cet appareil pour continuer à recevoir les mises à jour."
   },
   "Unsubscribe": {
     "title": "Désactiver ces e-mails ?",
@@ -3390,7 +3674,8 @@
     "hintTapToAddExpense": "Je suis {name} — touchez-moi pour ajouter une dépense.",
     "hintTapToCreateGroup": "Je suis {name} — touchez-moi pour créer un groupe.",
     "billName": "Bill",
-    "offlineMessage": "Je ne peux rien créer tant que vous êtes hors ligne."
+    "offlineMessage": "Je ne peux rien créer tant que vous êtes hors ligne.",
+    "serverUnreachableMessage": "Impossible de joindre le serveur Spliit pour le moment — votre connexion semble correcte, le problème vient donc de notre côté."
   },
   "CreateSettlement": {
     "description": "Vérifiez le paiement avant de l'enregistrer.",
@@ -3441,7 +3726,18 @@
       "existingPasskeyTitle": "Vous avez déjà enregistré une clé d'accès ?",
       "existingPasskeyDescription": "Reconnectez-vous avec la clé d'accès sur l'un de vos appareils enregistrés.",
       "passkeySignIn": "Se connecter avec une clé d'accès",
-      "passkeySignInError": "Impossible de vous connecter avec cette clé d'accès. Réessayez ou utilisez votre lien de connexion."
+      "passkeySignInError": "Impossible de vous connecter avec cette clé d'accès. Réessayez ou utilisez votre lien de connexion.",
+      "passkeyNameLabel": "Nommez cette clé d'accès (facultatif)",
+      "passkeyNamePlaceholder": "p. ex. Touch ID du MacBook",
+      "nameTitle": "Choisissez un nom d'affichage",
+      "nameDescription": "Affiché sur votre clé d'accès et dans vos groupes. Vous pourrez le modifier plus tard.",
+      "nameLabel": "Nom d'affichage",
+      "namePlaceholder": "Votre nom",
+      "nameSave": "Enregistrer et continuer",
+      "nameSaving": "Enregistrement…",
+      "nameRequired": "Saisissez un nom d'affichage.",
+      "nameTooShort": "Le nom doit contenir au moins 2 caractères.",
+      "nameError": "Impossible d'enregistrer le nom d'affichage. Veuillez réessayer."
     },
     "onboarding": {
       "title": "Enregistrez votre lien de connexion",
@@ -3580,6 +3876,29 @@
         "review": {
           "title": "Vérifier et importer",
           "detail": "Vérifiez les doublons et confirmez l’import."
+        }
+      }
+    },
+    "categorize": {
+      "title": "Catégoriser les dépenses",
+      "description": "Suggérer des catégories pour les dépenses existantes non catégorisées avec System One. Vérifiez chaque modification avant de l’enregistrer.",
+      "start": "Catégoriser les dépenses",
+      "steps": {
+        "choose": {
+          "title": "Choisir une méthode",
+          "detail": "Utilisez le dictionnaire et l’historique ou le modèle de décision System One."
+        },
+        "calibrate": {
+          "title": "Vérifier de petits échantillons",
+          "detail": "Corrigez les suggestions pour que le prochain cycle apprenne les catégories de votre groupe."
+        },
+        "review": {
+          "title": "Vérifier chaque dépense",
+          "detail": "Les dépenses Général apparaissent en premier dans le tableau complet."
+        },
+        "save": {
+          "title": "Enregistrer les catégories",
+          "detail": "Les dépenses ne changent que lorsque vous confirmez la révision finale."
         }
       }
     }
@@ -4128,7 +4447,8 @@
       "valuesRecomputedTitle": "Valeurs recalculées",
       "viewExpenses": "Voir les dépenses",
       "waitDuplicate": "Attendez la fin de la vérification des doublons avant d’importer.",
-      "invalidRowTitle": "Ligne d’import invalide"
+      "invalidRowTitle": "Ligne d’import invalide",
+      "categorizeWithSystemOne": "Suggérer des catégories pour les dépenses non catégorisées avec System One"
     }
   },
   "Sponsor": {
@@ -4283,5 +4603,26 @@
     "expenseMissing": "Cette dépense n'est pas dans le téléchargement de cet appareil. Reconnectez-vous pour voir les dépenses plus récentes ou plus anciennes.",
     "groupMissing": "Ce groupe n'a pas fini de se télécharger.",
     "balancesStale": "Les soldes sont peut-être obsolètes."
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit est indisponible",
+    "description": "Impossible de joindre le serveur Spliit pour le moment. Votre connexion semble correcte — veuillez réessayer dans un instant.",
+    "retry": "Réessayer"
+  },
+  "ApiStatusBanner": {
+    "message": "Impossible de joindre Spliit pour le moment. Votre connexion semble correcte — le problème vient de notre côté.",
+    "statusLink": "Vérifier le statut"
+  },
+  "AccountDeletionBanner": {
+    "scheduled": "La suppression du compte est prévue pour le {date}.",
+    "review": "Vérifier ou annuler la suppression",
+    "executing": "La suppression du compte a commencé.",
+    "viewStatus": "Voir l'état de la suppression"
+  },
+  "Updates": {
+    "title": "Mises à jour",
+    "latest": "Nouveautés",
+    "viewAll": "Voir toutes les mises à jour",
+    "dismiss": "Compris"
   }
 }

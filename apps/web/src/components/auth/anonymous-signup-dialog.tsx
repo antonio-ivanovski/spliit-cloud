@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AnonymousSafeguardChoice } from '@/components/auth/anonymous-safeguard-choice'
+import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -31,6 +32,7 @@ import { replaceBrowserLocation } from '@/lib/browser-navigation'
 import { isPasskeySupported } from '@/lib/passkey'
 import { signupInviteFetchOptions } from '@/lib/signup-invite'
 import { useOnlineStatus } from '@/lib/use-online-status'
+import { trpc } from '@/trpc/client'
 
 export function AnonymousSignupDialog({
   open,
@@ -58,23 +60,37 @@ export function AnonymousSignupDialog({
   const [recoveryLink, setRecoveryLink] = useState('')
   const [passkeySignInPending, setPasskeySignInPending] = useState(false)
   const [passkeySignInError, setPasskeySignInError] = useState(false)
-  // Fresh anonymous session established: offer an explicit choice between
-  // the recovery link (primary) and a passkey (secondary) before leaving
-  // the dialog. The choice UI lives in AnonymousSafeguardChoice so the
-  // complete-profile gate offers the same options. Afterwards both
-  // credentials coexist and are managed in Account settings, and neither
-  // one ever removes the other implicitly.
+  // Fresh anonymous session established: collect the display name first,
+  // then offer an explicit choice between the recovery link (primary) and a
+  // passkey (secondary) before leaving the dialog. Name-first matters: the
+  // choice step passes the saved name as the passkey ceremony identity
+  // (`user.name`), so the authenticator entry carries the real name instead
+  // of the placeholder email. The choice UI lives in
+  // AnonymousSafeguardChoice so the complete-profile gate offers the same
+  // options. Afterwards both credentials coexist and are managed in Account
+  // settings, and neither one ever removes the other implicitly.
   const [created, setCreated] = useState(false)
+  const [nameSaved, setNameSaved] = useState(false)
+  const [displayName, setDisplayName] = useState('')
+  const [namePending, setNamePending] = useState(false)
+  const [nameError, setNameError] = useState<string | null>(null)
+  const updateProfile = trpc.account.updateProfile.useMutation()
 
-  const showChoice = created && passkeyEnabled && isPasskeySupported()
+  const passkeyChoiceAvailable = passkeyEnabled && isPasskeySupported()
+  const showNameStep = created && !nameSaved && passkeyChoiceAvailable
+  const showChoice = created && nameSaved && passkeyChoiceAvailable
 
   function setOpen(nextOpen: boolean) {
-    if (!nextOpen && (pending || passkeySignInPending)) return
+    if (!nextOpen && (pending || namePending || passkeySignInPending)) return
     onOpenChange(nextOpen)
     if (!nextOpen) {
       setRecoveryLink('')
       setError(null)
       setCreated(false)
+      setNameSaved(false)
+      setDisplayName('')
+      setNamePending(false)
+      setNameError(null)
       setPasskeySignInError(false)
     }
   }
@@ -98,6 +114,32 @@ export function AnonymousSignupDialog({
       setError('create')
       // react-doctor-disable-next-line react-doctor/no-unowned-async-error-clear -- Pending disables every dialog action, so a newer request cannot exist.
       setPending(false)
+    }
+  }
+
+  async function saveDisplayName() {
+    if (!isOnline || namePending) return
+    const trimmed = displayName.trim()
+    if (!trimmed) {
+      setNameError(t('nameRequired'))
+      return
+    }
+    if (trimmed.length < 2) {
+      setNameError(t('nameTooShort'))
+      return
+    }
+    setNamePending(true)
+    setNameError(null)
+    try {
+      await updateProfile.mutateAsync({ name: trimmed })
+      // Bust the cookie-cached session so the safeguard step below reads the
+      // fresh name and can pass it as the passkey ceremony identity.
+      await authClient.getSession({ query: { disableCookieCache: true } })
+      setNameSaved(true)
+    } catch {
+      setNameError(t('nameError'))
+    } finally {
+      setNamePending(false)
     }
   }
 
@@ -162,20 +204,82 @@ export function AnonymousSignupDialog({
             ) : (
               <HatGlasses className="h-5 w-5 text-primary" />
             )}
-            {showChoice ? t('choiceTitle') : t('title')}
+            {showChoice
+              ? t('choiceTitle')
+              : showNameStep
+                ? t('nameTitle')
+                : t('title')}
           </DialogTitle>
           <DialogDescription>
             {showChoice
               ? t('choiceDescription')
-              : creationEnabled
-                ? t('description')
-                : t('recoverDescription')}
+              : showNameStep
+                ? t('nameDescription')
+                : creationEnabled
+                  ? t('description')
+                  : t('recoverDescription')}
           </DialogDescription>
         </DialogHeader>
-        {showChoice ? (
+        {showNameStep ? (
+          <>
+            <DialogBody className="grid gap-3 py-2">
+              {!isOnline ? (
+                <OfflineEmptyState variant="plain" />
+              ) : (
+                <>
+                  <div className="grid gap-1.5">
+                    <Label htmlFor="anonymous-display-name">
+                      {t('nameLabel')}
+                    </Label>
+                    <Input
+                      id="anonymous-display-name"
+                      type="text"
+                      autoComplete="name"
+                      placeholder={t('namePlaceholder')}
+                      value={displayName}
+                      onChange={(event) => {
+                        setDisplayName(event.target.value)
+                        setNameError(null)
+                      }}
+                      disabled={namePending || !isOnline}
+                      required
+                    />
+                  </div>
+                  {nameError ? (
+                    <p className="text-sm text-destructive" role="alert">
+                      {nameError}
+                    </p>
+                  ) : null}
+                  <Button
+                    type="button"
+                    className="w-full"
+                    onClick={() => void saveDisplayName()}
+                    disabled={namePending || !isOnline || !displayName.trim()}
+                  >
+                    {namePending ? (
+                      <Loader2 className="me-2 h-4 w-4 animate-spin" />
+                    ) : null}
+                    {namePending ? t('nameSaving') : t('nameSave')}
+                  </Button>
+                </>
+              )}
+            </DialogBody>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setOpen(false)}
+                disabled={namePending}
+              >
+                {t('cancel')}
+              </Button>
+            </DialogFooter>
+          </>
+        ) : showChoice ? (
           <>
             <DialogBody className="grid gap-3 py-2">
               <AnonymousSafeguardChoice
+                displayName={displayName.trim()}
                 onComplete={() => replaceBrowserLocation(completeProfilePath)}
               />
             </DialogBody>

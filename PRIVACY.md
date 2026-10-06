@@ -1,8 +1,6 @@
 # Privacy
 
-Spliit Cloud is a community fork of [Spliit](https://github.com/spliit-app/spliit). This page describes what data the app stores and your options.
-
-> Informational, not legal advice. A formal privacy policy will be added before broader public usage.
+Spliit Cloud is a community fork of [Spliit](https://github.com/spliit-app/spliit). The published privacy notice for the public instance lives at [spliit.cloud/privacy](https://spliit.cloud/privacy) (source: [`apps/web/src/app/privacy.tsx`](./apps/web/src/app/privacy.tsx), mirrored in [`apps/web/public/privacy.md`](./apps/web/public/privacy.md)). This page summarizes the same data handling for contributors and self-hosters.
 
 ## Data we store
 

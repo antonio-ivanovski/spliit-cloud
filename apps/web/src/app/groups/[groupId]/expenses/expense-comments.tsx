@@ -25,13 +25,18 @@ const MAX_COMMENT_LENGTH = 500
 type ExpenseCommentsProps = {
   groupId: string
   expenseId: string
+  readOnly?: boolean
 }
 
 /**
  * Comments attached to an expense. Read access is available to every group
  * viewer; writing is reserved for accepted members of active groups.
  */
-export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
+export function ExpenseComments({
+  groupId,
+  expenseId,
+  readOnly = false,
+}: ExpenseCommentsProps) {
   const { group, currentMember } = useCurrentGroup()
   const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
   const { linkInviteToken, viewKey } = useGroupAccessSearch()
@@ -125,6 +130,7 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
       return
     }
     setDeletingCommentId(commentId)
+    if (deleteMutation.isError) deleteMutation.reset()
     try {
       await deleteMutation.mutateAsync({ groupId, expenseId, commentId })
       await invalidateComments()
@@ -201,19 +207,22 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
                       accountTimeZone,
                     )}
                   </time>
-                  {!isReadOnlyGroupViewer && comment.canDelete && isOnline && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="-me-2 -mt-2 h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
-                      aria-label={t('commentDelete')}
-                      disabled={deletingCommentId === comment.id}
-                      onClick={() => void handleDelete(comment.id)}
-                    >
-                      <Trash className="h-3.5 w-3.5" aria-hidden="true" />
-                    </Button>
-                  )}
+                  {!readOnly &&
+                    !isReadOnlyGroupViewer &&
+                    comment.canDelete &&
+                    isOnline && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="-me-2 -mt-2 h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
+                        aria-label={t('commentDelete')}
+                        disabled={deletingCommentId === comment.id}
+                        onClick={() => void handleDelete(comment.id)}
+                      >
+                        <Trash className="h-3.5 w-3.5" aria-hidden="true" />
+                      </Button>
+                    )}
                 </div>
                 <p className="mt-1 text-sm break-words whitespace-pre-wrap">
                   {comment.body}
@@ -224,7 +233,7 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
         </ul>
       )}
 
-      {canComment && (
+      {canComment && !readOnly && (
         <form className="space-y-2 pt-1" onSubmit={handleCreate}>
           <label htmlFor="expense-comment-input" className="sr-only">
             {t('commentInputLabel')}
@@ -237,6 +246,7 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
               onChange={(event) => {
                 setDraft(event.target.value)
                 if (validationError) setValidationError(null)
+                if (createMutation.isError) createMutation.reset()
               }}
               placeholder={t('commentPlaceholder')}
               maxLength={MAX_COMMENT_LENGTH}

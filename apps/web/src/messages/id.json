@@ -81,13 +81,14 @@
     "signOutOffline": "Hubungkan untuk keluar"
   },
   "Footer": {
-    "madeIn": "Dibuat oleh komunitas open-source dengan cinta ❤️",
+    "madeIn": "Dibuat oleh <github>komunitas open-source</github> dengan cinta ❤️",
     "legalNavigation": "Tautan hukum",
     "privacy": "Privasi",
     "terms": "Ketentuan",
     "imprint": "Pemberitahuan proyek",
     "sponsor": "Dukung",
-    "timeLabel": "Waktu dalam sehari"
+    "timeLabel": "Waktu dalam sehari",
+    "status": "Status"
   },
   "Expenses": {
     "title": "Pengeluaran",
@@ -223,7 +224,9 @@
       "showLess": "Tampilkan lebih sedikit"
     },
     "copyToast": "Penyalinan pengeluaran dimulai. Detail pengeluaran yang ada akan digunakan untuk membuat pengeluaran baru.",
-    "incomeBadge": "Pendapatan"
+    "incomeBadge": "Pendapatan",
+    "paidBySingle": "Dibayar oleh <strong>{paidBy}</strong> · dibayar untuk <paidFor></paidFor>",
+    "paidByMultipleSingle": "Dibayar oleh <paidByNames></paidByNames> · dibayar untuk <paidFor></paidFor>"
   },
   "Groups": {
     "myGroups": "Grup saya",
@@ -363,7 +366,8 @@
             "monthly": "bulan",
             "yearly": "tahun"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Sarankan kategori untuk pengeluaran yang belum dikategorikan dengan System One"
       },
       "Destination": {
         "heading": "Di mana Anda ingin mengimpor <strong>{name}</strong>? ({participantCount} peserta · {expenseCount} pengeluaran)",
@@ -656,7 +660,9 @@
       "description": "Grup kini dapat menampilkan emoji di samping namanya. Kami melihat {emoji} dalam “{name}”.",
       "openSettings": "Buka pengaturan grup",
       "notNow": "Nanti saja"
-    }
+    },
+    "groupTabsHint": "Ingin menyusun ulang tab grup atau menyembunyikan tab yang tidak digunakan?",
+    "groupTabsHintLink": "Sesuaikan tab di pengaturan akun"
   },
   "GroupForm": {
     "title": "Informasi grup",
@@ -1045,7 +1051,8 @@
       "allItemsSplitEdit": "Edit pembagian semua item",
       "allItemsSplitModalTitle": "Pembagian semua item",
       "remainderAllocationProportional": "Proporsional terhadap item",
-      "remainderProportionalHint": "Bagi jumlah ini berdasarkan subtotal item setiap orang. Berguna untuk pajak dan tip."
+      "remainderProportionalHint": "Bagi jumlah ini berdasarkan subtotal item setiap orang. Berguna untuk pajak dan tip.",
+      "errorExceedsAmountDetails": "Total item ({itemsTotal}) melebihi jumlah pengeluaran sebesar {excess}."
     },
     "leaveItemized": {
       "title": "Ganti metode pembagian?",
@@ -1081,7 +1088,15 @@
       "done": "Selesai",
       "yourTime": "waktu Anda",
       "invalidDate": "Masukkan tanggal yang valid.",
-      "invalidTime": "Masukkan waktu yang valid (HH:mm)."
+      "invalidTime": "Masukkan waktu yang valid (HH:mm).",
+      "hourLabel": "Jam",
+      "minuteLabel": "Menit",
+      "periodLabel": "Periode",
+      "timeWheelHint": "Gulir atau ketuk untuk mengatur waktu. Tanggal tidak berubah.",
+      "now": "Sekarang",
+      "morning": "Pagi",
+      "midday": "Siang",
+      "evening": "Malam"
     },
     "settlementTitle": "Pembayaran pelunasan",
     "settlementHint": "{category}: Tidak dihitung sebagai pengeluaran di total, statistik, atau anggaran. Tetap memperbarui siapa berutang kepada siapa.",
@@ -1125,7 +1140,8 @@
       "description": "Masukkan total yang dibebankan, termasuk semua biaya.",
       "impliedRate": "Kurs tersirat: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Saran kategori"
+    "otherSuggestions": "Saran kategori",
+    "paidForItemizedEmptyHint": "Tetapkan orang ke item untuk melihat bagian masing-masing."
   },
   "Currencies": {
     "search": "Cari mata uang...",
@@ -2415,6 +2431,22 @@
       "mascotOptions": {
         "off": "Nonaktif",
         "bill": "Bill si struk"
+      },
+      "groupTabs": "Tab grup",
+      "groupTabsHelp": "Pilih tab yang ditampilkan, dan urutannya, di setiap grup.",
+      "groupTabsCustomize": "Sesuaikan",
+      "groupTabsSave": "Simpan",
+      "groupTabsDiscard": "Buang",
+      "groupTabsReset": "Atur ulang ke default",
+      "groupTabsHide": "Sembunyikan {name}",
+      "groupTabsShow": "Tampilkan {name}",
+      "groupTabsMoveUp": "Pindahkan {name} ke atas",
+      "groupTabsMoveDown": "Pindahkan {name} ke bawah",
+      "deleteConfirmation": "Konfirmasi hapus pengeluaran",
+      "deleteConfirmationHelp": "Hapus cepat hanya meminta konfirmasi sekali. Hapus dengan pengetikan meminta kamu mengetik judul pengeluaran terlebih dahulu. Menghapus grup atau mengeluarkan anggota selalu mewajibkan pengetikan.",
+      "deleteConfirmationOptions": {
+        "standard": "Dialog konfirmasi",
+        "strict": "Dialog dengan pengetikan"
       }
     },
     "aiPreferences": {
@@ -2607,7 +2639,111 @@
       "backedUp": "Dicadangkan",
       "removeWarning": "Tindakan ini tidak dapat dibatalkan. Perangkat tidak akan lagi memasukkan Anda dengan passkey — daftarkan lagi kapan saja.",
       "removeLastWarning": "Ini passkey terakhir Anda. Jika ini satu-satunya metode masuk Anda, penghapusan diblokir hingga Anda menyimpan tautan pemulihan atau metode masuk lain.",
-      "anonymousHelpNoLink": "Tidak ada tautan masuk yang tersimpan untuk akun anonim ini. Buatlah di baris tautan masuk di bawah — tautan ini berfungsi di perangkat apa pun."
+      "anonymousHelpNoLink": "Tidak ada tautan masuk yang tersimpan untuk akun anonim ini. Buatlah di baris tautan masuk di bawah — tautan ini berfungsi di perangkat apa pun.",
+      "reauthTitle": "Masuk kembali untuk menambahkan passkey",
+      "reauthDescription": "Demi keamanan Anda, penambahan passkey memerlukan sesi masuk yang baru. Anda akan keluar, masuk kembali, dan langsung kembali ke sini untuk menyelesaikan.",
+      "reauthConfirm": "Masuk kembali",
+      "reauthAnonymousTitle": "Simpan tautan masuk terlebih dahulu",
+      "reauthAnonymousDescription": "Akun anonim ini belum memiliki tautan masuk maupun passkey. Keluar sekarang akan mengunci Anda selamanya — simpan tautan masuk di bagian Tautan masuk terlebih dahulu, lalu kembali untuk menambahkan passkey."
+    },
+    "deletion": {
+      "sectionTitle": "Zona berbahaya",
+      "sectionDescription": "Hapus akun Anda dan semua metode masuk secara permanen.",
+      "rowLabel": "Hapus akun",
+      "rowDescription": "Menghapus profil, sesi, dan pengaturan Anda setelah masa tenggang 48 jam. Pengeluaran bersama tetap ada di grup anggota lain tanpa detail pribadi Anda.",
+      "open": "Hapus akun…",
+      "scheduledTitle": "Penghapusan akun dijadwalkan",
+      "scheduledDescription": "Penghapusan dijadwalkan mulai pada atau setelah {date}. Akun Anda tetap aktif sampai penghapusan dimulai. Grup, anggota, dan pengeluaran dapat berubah selama masa tunggu; pilihan Anda berlaku untuk kondisi saat penghapusan dijalankan. Anda dapat membatalkan sampai penghapusan dimulai. Email konfirmasi telah dikirim ke {email}.",
+      "cancel": "Batalkan penghapusan",
+      "cancelling": "Membatalkan…",
+      "cancelled": "Penghapusan akun dibatalkan.",
+      "dialogTitle": "Jadwalkan penghapusan akun?",
+      "dialogDescription": "Ini menjadwalkan penghapusan setelah masa tunggu 48 jam; tidak ada yang dihapus sekarang. Anda dapat membatalkan sampai penghapusan dimulai. Pilihan Anda berlaku untuk grup dan saldo pada saat itu. Setelah dimulai, penghapusan tidak dapat dibatalkan.",
+      "farewellTitle": "Sedih melihat Anda pergi",
+      "farewellBody": "Jika ada yang bisa kami lakukan agar Anda tetap tinggal, <feedbackLink>bagikan masukan Anda</feedbackLink> — hanya butuh semenit dan sangat membantu kami.",
+      "groupsTitle": "Apa yang terjadi pada grup Anda",
+      "leaveGroup": "Anda akan keluar dari “{name}”.",
+      "deleteGroup": "“{name}” akan dihapus permanen — Anda adalah anggota terakhirnya.",
+      "lastAdmin": "Anda adalah admin terakhir “{name}” — anggota lain akan otomatis dipromosikan.",
+      "settleBalances": "Saldo yang belum dilunasi di “{name}” akan dilunasi secara otomatis.",
+      "friendLedger": "Catatan keuangan dengan {name} sudah dilunasi dan ditutup.",
+      "friendLedgerUnnamed": "Catatan keuangan Anda sudah dilunasi dan ditutup.",
+      "friendLedgerFallback": "catatan keuangan teman",
+      "noGroups": "Anda bukan anggota grup mana pun.",
+      "accessTitle": "Masuk dan undangan",
+      "pendingInvites_zero": "Saat penghapusan dijalankan, {count} undangan tertunda yang Anda kirim akan dicabut.",
+      "pendingInvites_one": "Saat penghapusan dijalankan, {count} undangan tertunda yang Anda kirim akan dicabut.",
+      "pendingInvites_two": "Saat penghapusan dijalankan, {count} undangan tertunda yang Anda kirim akan dicabut.",
+      "pendingInvites_few": "Saat penghapusan dijalankan, {count} undangan tertunda yang Anda kirim akan dicabut.",
+      "pendingInvites_many": "Saat penghapusan dijalankan, {count} undangan tertunda yang Anda kirim akan dicabut.",
+      "pendingInvites_other": "Saat penghapusan dijalankan, {count} undangan tertunda yang Anda kirim akan dicabut.",
+      "keepNameLabel": "Pertahankan nama saya di riwayat bersama",
+      "keepNameDescription": "Pengeluaran bersama tetap menampilkan “{name}”. Jika tidak, nama Anda akan diganti dengan “Anggota yang dihapus” di mana pun.",
+      "customNameLabel": "Nama yang dipertahankan",
+      "settleLabel": "Tandai saldo sebagai dilunasi saat penghapusan dijalankan",
+      "settleDescription": "Sisa saldo akan dilunasi secara otomatis. Jika tidak, saldo tersebut tetap tercatat pada nama pengganti Anda.",
+      "leaveBalances": "Saldo yang belum dilunasi di “{name}” tetap seperti semula.",
+      "friendLeaveBalances": "Saldo Anda dengan {name} tetap seperti semula.",
+      "confirmWord": "HAPUS",
+      "ackLabel": "Saya memahami bahwa ini permanen, dan pengeluaran bersama tetap ada di grup anggota lain tanpa detail pribadi saya.",
+      "exportHint": "Ingin salinannya dulu? <exportLink>Ekspor cadangan</exportLink> sebelum melanjutkan.",
+      "schedule": "Jadwalkan penghapusan",
+      "scheduling": "Menjadwalkan…",
+      "scheduled": "Penghapusan dijadwalkan. Periksa email Anda untuk meninjau atau membatalkan.",
+      "dialogCancel": "Pertahankan akun saya",
+      "reauthTitle": "Masuk lagi untuk menghapus akun Anda",
+      "reauthDescription": "Demi keamanan Anda, menghapus akun memerlukan sesi masuk yang baru. Anda akan keluar, masuk kembali, dan langsung kembali ke sini untuk menyelesaikan.",
+      "reauthConfirm": "Masuk lagi",
+      "errors": {
+        "generic": "Terjadi kesalahan. Coba lagi.",
+        "loadFailed": "Detail penghapusan tidak dapat dimuat.",
+        "emailMismatch": "Email yang diketik tidak cocok dengan email akun Anda.",
+        "alreadyRequested": "Permintaan penghapusan untuk akun ini sudah menunggu.",
+        "sessionNotFresh": "Sesi Anda terlalu lama untuk tindakan ini. Masuk lagi, lalu coba kembali.",
+        "jobsDisabled": "Penghapusan akun memerlukan pekerja latar belakang, yang dinonaktifkan pada deployment ini.",
+        "ackRequired": "Konfirmasikan bahwa Anda memahami konsekuensinya terlebih dahulu.",
+        "invalidDisplayName": "Masukkan nama antara 1 dan 100 karakter.",
+        "cancelFailed": "Penghapusan tidak dapat dibatalkan. Coba lagi."
+      },
+      "groupsToDeleteTitle": "Grup yang akan dihapus",
+      "groupsToDeleteDescription": "Saat penghapusan dijalankan, grup yang masih hanya memiliki Anda sebagai anggota aktif akan dihapus secara permanen.",
+      "groupsToLeaveTitle": "Grup yang akan Anda tinggalkan",
+      "groupsToLeaveDescription": "Saat penghapusan dijalankan, Anda akan keluar dari grup yang masih memiliki anggota aktif lain. Grup ini tetap ada untuk anggota lainnya.",
+      "friendsTitle": "Teman",
+      "friendsDescription": "Saldo satu lawan satu Anda dengan teman-teman ini.",
+      "backToSettings": "Kembali ke pengaturan",
+      "pageTitle": "Hapus akun",
+      "loading": "Memuat detail penghapusan",
+      "choicesTitle": "Pilihan penghapusan akun",
+      "nameTitle": "Nama dalam riwayat bersama",
+      "removeNameLabel": "Ganti nama saya dengan “Anggota yang dihapus”",
+      "balancesTitle": "Saldo yang tersisa",
+      "keepBalancesLabel": "Biarkan saldo yang tersisa tetap seperti sekarang",
+      "balanceExplanation": "Jika memilih untuk melunasi, entri pelunasan akan dicatat saat akun Anda dihapus. Tidak ada uang yang ditransfer. Jika tidak, saldo tetap ada dalam riwayat bersama.",
+      "confirmationTitle": "Konfirmasi penghapusan akun",
+      "retry": "Coba lagi",
+      "pageDescription": "Jadwalkan penghapusan akun setelah masa tunggu 48 jam. Akun Anda tetap aktif sampai penghapusan dimulai, dan Anda dapat membatalkannya sebelum itu.",
+      "reviewChoicesTitle": "Pilihan Anda",
+      "consequencesTitle": "Yang akan terjadi",
+      "reviewConfirmTitle": "Konfirmasi penghapusan",
+      "backupLink": "Ekspor cadangan",
+      "keptNameExplanation": "Saat penghapusan dijalankan, pengeluaran bersama akan menampilkan “{name}”. Nama profil Anda tetap seperti semula sampai saat itu.",
+      "removedNameExplanation": "Saat penghapusan dijalankan, pengeluaran bersama akan menampilkan “Anggota dihapus”. Nama profil Anda tetap seperti semula sampai saat itu.",
+      "keptBalancesExplanation": "Saat penghapusan dimulai, saldo yang tersisa tetap ada dalam riwayat bersama, termasuk pengeluaran yang ditambahkan selama masa tunggu.",
+      "settledBalancesExplanation": "Saat penghapusan, catatan pelunasan menandai saldo saat itu sebagai dilunasi dalam grup yang masih Anda ikuti, termasuk grup yang diarsipkan. Saldo dalam grup yang sudah Anda tinggalkan atau yang telah mengeluarkan Anda tetap seperti semula. Tidak ada uang yang ditransfer.",
+      "rowBalancesKept": "Saldo yang tersisa tetap seperti semula.",
+      "rowBalancesSettled": "Saldo pada saat penghapusan akan ditandai sebagai dilunasi.",
+      "rowAdmin": "Saat penghapusan dijalankan, anggota lain akan menjadi admin jika Anda masih menjadi satu-satunya admin.",
+      "friendKept": "Saldo Anda tetap seperti semula.",
+      "friendSettled": "Saat penghapusan dijalankan, saldo Anda pada saat itu akan ditandai sebagai dilunasi dan buku saldo akan ditutup.",
+      "accessExplanation": "Metode masuk ini tidak dapat digunakan lagi saat akun Anda dihapus.",
+      "invitesTitle": "Undangan tertunda",
+      "balanceUnavailable": "Saldo tidak tersedia",
+      "archivedBalancesKept": "Grup yang diarsipkan ini tetap hanya dapat dibaca. Sisa saldo Anda akan dipertahankan.",
+      "signInMethodsRemoved": "Metode masuk berikut tidak akan bisa digunakan lagi: {methods}.",
+      "consequencesTiming": "Tinjauan ini mencerminkan kondisi akun Anda sekarang. Grup, anggota, dan pengeluaran dapat berubah sebelum penghapusan dimulai. Pilihan Anda berlaku untuk grup yang Anda ikuti dan saldonya pada saat itu. Tidak ada hal yang tercantum di sini yang langsung terjadi.",
+      "executingTitle": "Penghapusan akun telah dimulai",
+      "executingDescription": "Penghapusan akun Anda sedang diproses. Sebagian perubahan mungkin sudah selesai, dan penghapusan tidak dapat dibatalkan atau diurungkan. Jika proses terhenti, proses akan dilanjutkan dari langkah yang sudah selesai."
     }
   },
   "Activities": {
@@ -2634,7 +2770,9 @@
       },
       "recurringCreated": "{participant} membuat pengeluaran berulang “{title}”",
       "stopped": "{participant} menghentikan pengeluaran berulang “{title}”",
-      "commented": "{participant} mengomentari {title}: “{excerpt}”"
+      "commented": "{participant} mengomentari {title}: “{excerpt}”",
+      "yourShare": "Bagian Anda:",
+      "notInvolved": "Anda tidak terlibat"
     },
     "group": {
       "updated": "{participant} memperbarui pengaturan grup",
@@ -2647,7 +2785,11 @@
         "currencyCode": "Kode mata uang",
         "linkedParticipant": "Peserta terkait",
         "subgroupsEnabled": "Subgrup",
-        "publicViewLink": "Tautan publik hanya lihat"
+        "publicViewLink": "Tautan publik hanya lihat",
+        "emoji": "Emoji",
+        "color": "Warna",
+        "subgroups": "Subgrup",
+        "splitPresets": "Preset pembagian"
       }
     },
     "member": {
@@ -2676,7 +2818,15 @@
       "imported_other": "{participant} mengimpor {count} pengeluaran"
     },
     "participant": {
-      "removed": "{participant} menghapus {target} dari grup"
+      "removed": "{participant} menghapus {target} dari grup",
+      "added": "{participant} menambahkan {target} ke grup"
+    },
+    "hiddenActivitiesShowLess": "Tampilkan lebih sedikit",
+    "hiddenActivities_other": "{count} aktivitas tersembunyi yang tidak melibatkan Anda",
+    "viewMode": {
+      "label": "Mode tampilan aktivitas",
+      "forYou": "Untuk Anda",
+      "all": "Semua"
     }
   },
   "OfflineBanner": {
@@ -2754,9 +2904,6 @@
   },
   "BulkCategorize": {
     "title": "Kategorisasi massal",
-    "calibrationTitle": "Langkah 1 — Kalibrasi",
-    "calibrationDescription": "Setiap contoh yang Anda konfirmasi membantu AI memperbaiki saran berikutnya. AI mungkin siap setelah satu putaran atau meminta contoh tambahan.",
-    "roundCount": "Putaran {round} dari {max}",
     "confidence": {
       "high": "Tinggi",
       "medium": "Sedang",
@@ -2810,7 +2957,137 @@
     "doneTitle": "Kategori tersimpan",
     "expenseColumn": "Pengeluaran",
     "categoryColumn": "Kategori",
-    "confidenceColumn": "Keyakinan"
+    "confidenceColumn": "Keyakinan",
+    "simpleDescription": "Tinjau kecocokan kategori untuk pengeluaran di Umum, lalu simpan pilihan Anda.",
+    "generateSuggestions": "Sarankan kategori",
+    "backToStart": "Kembali",
+    "chooseMode": "Pilih cara mengategorikan pengeluaran",
+    "localMode": "Kamus & riwayat",
+    "localModeDescription": "Gunakan riwayat kategori grup ini dan kamus bawaan.",
+    "startRun": "Mulai mengategorikan",
+    "noCategory": "Biarkan tanpa kategori",
+    "progressTitle": "Mengategorikan pengeluaran",
+    "progressDescription": "Anda dapat meninggalkan halaman ini dan kembali lagi nanti. Progres Anda tersimpan.",
+    "progressCount": "Dikategorikan {categorized} dari {total} pengeluaran",
+    "applyProgressTitle": "Menyimpan kategori",
+    "reviewTitle": "Tinjau saran",
+    "reviewSummary": "{suggested} saran dari {total} pengeluaran yang belum dikategorikan",
+    "sourceLocal": "Lokal",
+    "saveSelected": "Simpan kategori yang dipilih",
+    "retry": "Coba lagi",
+    "restart": "Mulai run baru",
+    "failed": "Run terhenti: {message}",
+    "savedSummary": "{applied} diubah, {skipped} dilewati",
+    "selectedCount": "{count} dipilih",
+    "selectAll": "Pilih semua",
+    "clearAll": "Hapus semua",
+    "discardRun": "Buang run",
+    "partialSaveNotice": "Sebagian kategori mungkin sudah disimpan. Membuang run ini tidak akan membatalkan perubahan tersebut.",
+    "restartOlderRunTitle": "Mulai run kategorisasi baru",
+    "restartOlderRunDescription": "Run sebelumnya ini menggunakan alur tinjauan lama. Mulai lagi untuk meninjau semua pengeluaran bersama-sama.",
+    "runningMatches": "{count} dari {total} pengeluaran sudah memiliki saran kategori sejauh ini",
+    "failedTitle": "Kategorisasi terhenti",
+    "reviewWorkload": "{total} pengeluaran di Umum · {selected} dipilih untuk dikategorikan · {general} tetap di Umum",
+    "categoryChoices": "Pilihan kategori",
+    "moreCategories": "Pilih kategori lain",
+    "saveCount": "Simpan {count} kategori",
+    "finishWithoutChanges": "Selesai tanpa perubahan",
+    "completionSummary": "Run selesai: {changed} dari {total} pengeluaran diubah. {remaining} pengeluaran tetap di Umum.",
+    "viewExpenses": "Lihat pengeluaran",
+    "countLoading": "Menghitung pengeluaran yang belum dikategorikan…",
+    "nothingToCategorize": "Tidak ada pengeluaran yang belum dikategorikan.",
+    "startingCount": "{count} pengeluaran saat ini berada di Umum dan siap ditinjau.",
+    "countError": "Tidak dapat menghitung pengeluaran yang belum dikategorikan. Muat ulang halaman untuk mencoba lagi.",
+    "keepGeneral": "Umum · biarkan tanpa kategori",
+    "calibrationRoundTitle": "Putaran kalibrasi {round}",
+    "calibrationLoading": "Menyiapkan contoh pengeluaran yang beragam…",
+    "calibrationReviewDescription": "Tinjau dan perbaiki {count} pengeluaran ini. Pilihan tetap dalam run ini sampai Anda menyimpan di akhir.",
+    "confirmRound": "Konfirmasi putaran",
+    "roundSummaryTitle": "Putaran {round} ditinjau",
+    "roundSummaryDescription": "{reviewed} ditinjau · {categorized} dikategorikan sementara · {general} dibiarkan sebagai Umum",
+    "roundQuality": "Saran awal cocok {accuracy}% dengan pilihan Anda; Anda mengoreksi {corrections}.",
+    "categorizeRemaining": "Kategorikan sisa pengeluaran",
+    "nextRound": "Tinjau contoh lain",
+    "tableLabel": "Pengeluaran yang akan dikategorikan",
+    "dateColumn": "Tanggal",
+    "amountColumn": "Jumlah",
+    "rerunSuggestions": "Jalankan ulang saran",
+    "roundQualityWithSuggestions": "{accepted} dari {proposed} kategori yang disarankan diterima · {changed} diubah · {missed} kecocokan ditemukan dari Umum",
+    "roundQualityNoSuggestions": "Tidak ada kategori disarankan · {missed} kecocokan ditemukan dari Umum · {abstained} tersisa di Umum",
+    "rerunChanged": "Anda mengubah {changed} dari {proposed} kategori yang disarankan.",
+    "rerunAssignedSingle": "Anda menetapkan kategori untuk 1 pengeluaran yang tersisa di Umum.",
+    "rerunAssignedMultiple": "Anda menetapkan kategori untuk {count} pengeluaran yang tersisa di Umum.",
+    "rerunPotentialSingle": "Perubahan Anda dapat meningkatkan kecocokan untuk 1 pengeluaran Umum yang tersisa. Jalankan ulang saran jika ingin putaran berikutnya.",
+    "rerunPotentialMultiple": "Perubahan Anda dapat meningkatkan kecocokan untuk {count} pengeluaran Umum yang tersisa. Jalankan ulang saran jika ingin putaran berikutnya.",
+    "rerunEligible": "Layak untuk putaran berikutnya: Umum {general} · kecocokan otomatis yang belum pasti {uncertain}. Koreksi Anda dapat meningkatkan saran ini.",
+    "rerunNoEligible": "Tidak ada Umum yang belum disentuh atau kecocokan otomatis yang belum pasti tersisa untuk dijalankan ulang. Koreksi Anda tetap disertakan dalam kategori yang disimpan.",
+    "rerunAlreadyUsed": "Koreksi terbaru Anda sudah digunakan untuk saran ini. Buat koreksi lain untuk menjalankannya lagi.",
+    "highMatch": "Kecocokan tinggi",
+    "mediumMatch": "Kecocokan sedang",
+    "lowMatch": "Kecocokan rendah",
+    "belowMatchThreshold": "Di bawah ambang kecocokan",
+    "refiningTitle": "Memperbaiki kecocokan yang belum pasti",
+    "runLimitSummary": "Run ini mencakup 10,000 pengeluaran. {count} pengeluaran Umum lainnya dapat dikategorikan dalam run berikutnya setelah Anda menyimpan.",
+    "pageLoading": "Memuat pengeluaran…",
+    "pageLoadError": "Tidak dapat memuat pengeluaran.",
+    "pageRetry": "Coba lagi",
+    "pageCount": "Menampilkan {loaded} dari {total} pengeluaran",
+    "ledgerAmountNotice": "Jumlah ditampilkan dalam mata uang grup.",
+    "viewExpenseDetails": "Lihat detail pengeluaran",
+    "reviewFilterLabel": "Tampilkan pengeluaran",
+    "filterAll": "Semua {count}",
+    "filterGeneral": "Umum {count}",
+    "improveSuggestions": "Tingkatkan saran yang tersisa",
+    "rerunInfoLabel": "Tentang meningkatkan saran",
+    "preparingNextStage": "Menyiapkan langkah berikutnya",
+    "rerunProgressTitle": "Memperbarui saran",
+    "progressPreparing": "Menyiapkan pengeluaran…",
+    "noGeneralRows": "Tidak ada pengeluaran yang tersisa di Umum dalam tinjauan ini.",
+    "discardConfirmationTitle": "Buang run kategorisasi ini?",
+    "discardConfirmationDescription": "Tindakan ini menghapus run, sarannya, dan pilihan yang dibuat oleh Anda atau admin lain. Tidak ada kategori pengeluaran yang akan diubah.",
+    "discardConfirmationCancel": "Pertahankan run",
+    "progressCountDescription": "Hanya kategori yang dikonfirmasi dan kecocokan sedang atau tinggi yang dihitung; Umum dan kecocokan rendah tidak.",
+    "systemOneMode": "Model System One",
+    "systemOneModeDescription": "Gunakan model keputusan System One yang dikonfigurasi untuk setiap pengeluaran, dengan pengeluaran yang telah dikategorikan di grup ini dan pilihan yang telah Anda tinjau sebagai petunjuk. TypeSafe Jev adalah salah satu model tersebut.",
+    "systemOneUnavailable": "System One tidak tersedia. Kamus & riwayat tetap tersedia.",
+    "systemOneConfidence": "Tingkat keyakinan System One: {confidence}%",
+    "systemOneOptionProbability": "Probabilitas pilihan System One: {probability}%",
+    "overallProgress": "Kemajuan keseluruhan",
+    "fullPassProcessed": "Diproses {processed} dari {total} pengeluaran",
+    "stageProcessed": "Diproses {processed} dari {total} pengeluaran pada langkah ini",
+    "saveSkipped": "{count} pengeluaran dilewati karena telah berubah.",
+    "sharedRunNotice": "Run ini dibagikan dengan admin grup lainnya. Semua orang melihat saran yang sama.",
+    "saveConflictTitle": "{count} pengeluaran berubah sejak peninjauan ini dimulai",
+    "saveConflictDescription": "Seseorang mengedit pengeluaran ini atau mengubah kategorinya di luar run ini. Simpan pengeluaran lainnya, atau edit lagi kategorinya lalu coba simpan sekali lagi.",
+    "saveConflictMore": "Dan {count} lainnya.",
+    "saveOtherExpenses": "Simpan pengeluaran lainnya",
+    "receiptTitles": {
+      "freshMarket": "Pasar Segar",
+      "greenGrocer": "Toko Buah dan Sayur",
+      "fruitStand": "Kios Buah",
+      "cornerBistro": "Bistro Pojok",
+      "noodleHouse": "Kedai Mi",
+      "cafeLunch": "Makan Siang di Kafe",
+      "flightTicket": "Tiket Pesawat",
+      "airlineBaggage": "Bagasi Maskapai",
+      "boardingPass": "Kartu Boarding",
+      "homeSupplies": "Perlengkapan Rumah",
+      "hardwareShop": "Toko Perkakas",
+      "cleaningGoods": "Perlengkapan Kebersihan",
+      "cinemaTickets": "Tiket Bioskop",
+      "movieNight": "Malam Film",
+      "filmFestival": "Festival Film",
+      "organicMarket": "Pasar Organik",
+      "bakeryRun": "Belanja Roti",
+      "sushiBar": "Bar Sushi",
+      "pizzaNight": "Malam Pizza",
+      "airportLounge": "Ruang Tunggu Bandara",
+      "extraLegroom": "Ruang Kaki Ekstra",
+      "laundryDetergent": "Deterjen Cucian",
+      "storageBoxes": "Kotak Penyimpanan",
+      "popcornCombo": "Paket Popcorn",
+      "streamingRental": "Sewa Streaming"
+    }
   },
   "ExpensePreview": {
     "title": "Pratinjau pengeluaran",
@@ -2855,10 +3132,14 @@
         "deleteGroup": "Untuk menghapus grup <target>{name}</target> secara permanen, ketik namanya persis seperti yang ditampilkan di bawah.",
         "deleteExpense": "Untuk menghapus pengeluaran <target>{name}</target> secara permanen, ketik judulnya persis seperti yang ditampilkan di bawah.",
         "deleteRecurringExpense": "Untuk mengonfirmasi penghapusan <target>{name}</target>, ketik judul pengeluaran persis seperti yang ditampilkan di bawah.",
-        "removeParticipant": "Untuk menghapus <target>{name}</target> dari grup ini, ketik namanya persis seperti yang ditampilkan di bawah."
+        "removeParticipant": "Untuk menghapus <target>{name}</target> dari grup ini, ketik namanya persis seperti yang ditampilkan di bawah.",
+        "deleteAccount": "Untuk menghapus akun Anda secara permanen, ketik <target>{name}</target> persis seperti yang ditampilkan di bawah."
       },
       "placeholder": "Ketik “{name}” di sini",
-      "mismatch": "Tidak cocok. Ketik {name} dengan tepat."
+      "mismatch": "Tidak cocok. Ketik {name} dengan tepat.",
+      "settingsNoteLink": "Ubah di pengaturan akun",
+      "settingsNoteLead": "Ingin melewati pengetikan?",
+      "settingsNoteTail": "untuk menggunakan dialog konfirmasi biasa."
     }
   },
   "Theme": {
@@ -3353,7 +3634,8 @@
     "hintTapToAddExpense": "Saya {name} — ketuk saya untuk menambah pengeluaran.",
     "hintTapToCreateGroup": "Saya {name} — ketuk saya untuk membuat grup.",
     "billName": "Bill",
-    "offlineMessage": "Saya tidak bisa membuat apa pun selama Anda offline."
+    "offlineMessage": "Saya tidak bisa membuat apa pun selama Anda offline.",
+    "serverUnreachableMessage": "Saya tidak dapat menjangkau server Spliit saat ini — koneksi Anda tampaknya baik-baik saja, jadi ini kesalahan kami."
   },
   "CreateSettlement": {
     "description": "Tinjau pembayaran sebelum mencatatnya.",
@@ -3404,7 +3686,18 @@
       "existingPasskeyTitle": "Sudah mendaftarkan passkey?",
       "existingPasskeyDescription": "Masuk kembali dengan passkey di salah satu perangkat terdaftar Anda.",
       "passkeySignIn": "Masuk dengan passkey",
-      "passkeySignInError": "Tidak dapat masuk dengan passkey ini. Coba lagi atau gunakan tautan masuk Anda."
+      "passkeySignInError": "Tidak dapat masuk dengan passkey ini. Coba lagi atau gunakan tautan masuk Anda.",
+      "passkeyNameLabel": "Beri nama passkey ini (opsional)",
+      "passkeyNamePlaceholder": "cth. MacBook Touch ID",
+      "nameTitle": "Pilih nama tampilan",
+      "nameDescription": "Ditampilkan pada passkey dan di grup Anda. Anda dapat mengubahnya nanti.",
+      "nameLabel": "Nama tampilan",
+      "namePlaceholder": "Nama Anda",
+      "nameSave": "Simpan dan lanjutkan",
+      "nameSaving": "Menyimpan…",
+      "nameRequired": "Masukkan nama tampilan.",
+      "nameTooShort": "Nama harus minimal 2 karakter.",
+      "nameError": "Nama tampilan tidak dapat disimpan. Silakan coba lagi."
     },
     "onboarding": {
       "title": "Simpan tautan masuk Anda",
@@ -3543,6 +3836,29 @@
         "review": {
           "title": "Tinjau dan impor",
           "detail": "Periksa duplikat dan konfirmasi impor."
+        }
+      }
+    },
+    "categorize": {
+      "title": "Kategorikan pengeluaran",
+      "description": "Sarankan kategori untuk pengeluaran yang sudah ada dan belum dikategorikan dengan System One. Tinjau setiap perubahan sebelum menyimpan.",
+      "start": "Kategorikan pengeluaran",
+      "steps": {
+        "choose": {
+          "title": "Pilih metode",
+          "detail": "Gunakan kamus & riwayat atau model keputusan System One."
+        },
+        "calibrate": {
+          "title": "Tinjau sampel kecil",
+          "detail": "Perbaiki saran agar putaran berikutnya mempelajari kategori grup Anda."
+        },
+        "review": {
+          "title": "Tinjau setiap pengeluaran",
+          "detail": "Pengeluaran Umum muncul pertama di tabel lengkap."
+        },
+        "save": {
+          "title": "Simpan kategori",
+          "detail": "Pengeluaran hanya berubah saat Anda mengonfirmasi tinjauan akhir."
         }
       }
     }
@@ -4081,7 +4397,8 @@
       "valuesRecomputedTitle": "Nilai dihitung ulang",
       "viewExpenses": "Lihat pengeluaran",
       "waitDuplicate": "Tunggu pemeriksaan duplikat selesai sebelum mengimpor.",
-      "invalidRowTitle": "Baris impor tidak valid"
+      "invalidRowTitle": "Baris impor tidak valid",
+      "categorizeWithSystemOne": "Sarankan kategori untuk pengeluaran yang belum dikategorikan dengan System One"
     }
   },
   "Sponsor": {
@@ -4236,5 +4553,26 @@
     "expenseMissing": "Pengeluaran ini tidak ada di unduhan perangkat ini. Sambung lagi untuk cek pengeluaran baru/lama.",
     "groupMissing": "Grup ini belum selesai diunduh.",
     "balancesStale": "Saldo mungkin kedaluwarsa."
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit tidak tersedia",
+    "description": "Kami tidak dapat menjangkau server Spliit saat ini. Koneksi Anda tampaknya baik-baik saja — silakan coba lagi sebentar lagi.",
+    "retry": "Coba lagi"
+  },
+  "ApiStatusBanner": {
+    "message": "Spliit tidak dapat dijangkau saat ini. Koneksi Anda tampaknya baik-baik saja — masalahnya ada di pihak kami.",
+    "statusLink": "Periksa status"
+  },
+  "AccountDeletionBanner": {
+    "scheduled": "Penghapusan akun dijadwalkan pada {date}.",
+    "review": "Tinjau atau batalkan penghapusan",
+    "executing": "Penghapusan akun telah dimulai.",
+    "viewStatus": "Lihat status penghapusan"
+  },
+  "Updates": {
+    "title": "Pembaruan",
+    "latest": "Yang baru",
+    "viewAll": "Lihat semua pembaruan",
+    "dismiss": "Mengerti"
   }
 }

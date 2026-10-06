@@ -45,7 +45,7 @@ describe('InviteEmailTab', () => {
 
     expect(
       screen.getByText(
-        'Email delivery is turned off on this instance. The invitation is still created and will appear when the invitee signs in; use a link invite to give them something to open.',
+        'Email delivery is turned off. The invitation is still created and will appear when the invitee signs in; use a link invite to give them something to open.',
       ),
     ).toBeInTheDocument()
   })

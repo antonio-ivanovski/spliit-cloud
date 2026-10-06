@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { FileSpreadsheet } from 'lucide-react'
+import { FileSpreadsheet, Sparkles } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useCurrentGroupOrNull } from '@/app/groups/[groupId]/current-group-context'
@@ -27,12 +27,32 @@ const IMPORT_STEPS = [
   },
 ] as const
 
+const CATEGORIZE_STEPS = [
+  {
+    titleKey: 'Tools.categorize.steps.choose.title',
+    detailKey: 'Tools.categorize.steps.choose.detail',
+  },
+  {
+    titleKey: 'Tools.categorize.steps.calibrate.title',
+    detailKey: 'Tools.categorize.steps.calibrate.detail',
+  },
+  {
+    titleKey: 'Tools.categorize.steps.review.title',
+    detailKey: 'Tools.categorize.steps.review.detail',
+  },
+  {
+    titleKey: 'Tools.categorize.steps.save.title',
+    detailKey: 'Tools.categorize.steps.save.detail',
+  },
+] as const
+
 export default function GroupToolsPage() {
   const { t } = useTranslation()
   // Keep the page usable in isolated renders as well as inside the group
   // layout; the optional context returns null when no provider is mounted.
   const groupContext = useCurrentGroupOrNull()
-  const { group, groupId, viewer, currentInvitation } = groupContext ?? {}
+  const { group, groupId, viewer, currentInvitation, currentMember } =
+    groupContext ?? {}
   const resolvedGroupId = groupId ?? ''
   // The tab itself stays visible to everyone so the tools remain
   // discoverable; each card gates its own action.
@@ -109,6 +129,60 @@ export default function GroupToolsPage() {
           </div>
         </CardContent>
       </Card>
+      {currentMember?.role === 'ADMIN' && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Sparkles
+                className="size-5 text-muted-foreground"
+                aria-hidden="true"
+              />
+              {t('Tools.categorize.title')}
+            </CardTitle>
+            <CardDescription>
+              {t('Tools.categorize.description')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-5">
+            <ol className="grid gap-3 text-sm">
+              {CATEGORIZE_STEPS.map((step, index) => (
+                <li key={step.titleKey} className="flex items-start gap-3">
+                  <span
+                    aria-hidden="true"
+                    className="flex size-6 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold"
+                  >
+                    {index + 1}
+                  </span>
+                  <p>
+                    <span className="font-medium">{t(step.titleKey)}</span>
+                    <span className="text-muted-foreground">
+                      {' — '}
+                      {t(step.detailKey)}
+                    </span>
+                  </p>
+                </li>
+              ))}
+            </ol>
+            <div className="border-t border-border/70 pt-5">
+              <Button
+                type="button"
+                disabled={!canMutate}
+                nativeButton={!canMutate || !resolvedGroupId}
+                render={
+                  canMutate && resolvedGroupId ? (
+                    <Link
+                      to="/groups/bulk-categorize/$groupId"
+                      params={{ groupId: resolvedGroupId }}
+                    />
+                  ) : undefined
+                }
+              >
+                {t('Tools.categorize.start')}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }

@@ -4,6 +4,10 @@ import { z } from 'zod'
 import { GroupType, LedgerParticipantKind } from '@spliit/db'
 
 import {
+  buildGroupActivityData,
+  logActivity,
+} from '../../../../lib/api/activities'
+import {
   CREATE_OPERATIONS,
   createRequestIdSchema,
   runIdempotentCreate,
@@ -66,10 +70,27 @@ export const createParticipantProcedure = apiProcedure('spliit:groups:manage')
             },
             select: { id: true, displayName: true },
           })
-          .then((participant) => ({
-            ledgerParticipantId: participant.id,
-            displayName: participant.displayName!,
-          })),
+          .then(async (participant) => {
+            await logActivity(
+              input.groupId,
+              {
+                type: 'PARTICIPANT_ADDED',
+                actor: { type: 'ACCOUNT', id: ctx.auth.user.id },
+                subject: {
+                  type: 'LEDGER_PARTICIPANT',
+                  id: participant.id,
+                },
+                data: buildGroupActivityData({
+                  summary: participant.displayName!,
+                }),
+              },
+              tx,
+            )
+            return {
+              ledgerParticipantId: participant.id,
+              displayName: participant.displayName!,
+            }
+          }),
     })
     return value
   })

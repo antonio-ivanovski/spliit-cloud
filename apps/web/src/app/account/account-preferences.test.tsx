@@ -178,6 +178,27 @@ describe('AccountPreferences', () => {
     expect(mocks.patchPreferences).toHaveBeenCalledWith({ mascot: 'bill' })
   })
 
+  it('persists the delete confirmation level and exposes its deep-link row', async () => {
+    const { user } = render(<AccountPreferences />)
+
+    expect(
+      document.getElementById(
+        'account-preference-destructive-confirmation-level',
+      ),
+    ).not.toBeNull()
+
+    await user.click(
+      screen.getByText('Typing confirmation dialog').closest('button')!,
+    )
+    await user.click(
+      screen.getByRole('option', { name: 'Confirmation dialog' }),
+    )
+
+    expect(mocks.patchPreferences).toHaveBeenCalledWith({
+      destructiveConfirmationLevel: 'standard',
+    })
+  })
+
   it('associates every row label with its control via htmlFor', () => {
     render(<AccountPreferences />)
 
@@ -187,6 +208,7 @@ describe('AccountPreferences', () => {
       'Language',
       'Theme',
       'Mascot',
+      'Expense delete confirmation',
     ]) {
       const label = screen.getByText(labelText).closest('label')
       expect(label, `${labelText} should be a <label>`).not.toBeNull()
@@ -226,5 +248,69 @@ describe('AccountPreferences', () => {
         'Sets the default timezone for new expense times and recurring schedules, and is used to display timestamps and relative dates.',
       ),
     ).toBeVisible()
+  })
+
+  it('summarizes visible group tabs with a customize action', () => {
+    render(<AccountPreferences />)
+
+    const row = document.getElementById('account-preference-group-tabs')
+    expect(row).not.toBeNull()
+    expect(row!.textContent).toContain('Group tabs')
+    expect(
+      screen.getByText(
+        'Expenses · Balances · Activity · Members · Stats · Budgets · Tools · Settings',
+      ),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Customize' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Move Balances down' }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('persists a moved group tab when saved', async () => {
+    const { user } = render(<AccountPreferences />)
+
+    await user.click(screen.getByRole('button', { name: 'Customize' }))
+    await user.click(screen.getByRole('button', { name: 'Move Balances down' }))
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+
+    expect(mocks.patchPreferences).toHaveBeenCalledWith({
+      groupTabOrder: [
+        'expenses',
+        'activity',
+        'balances',
+        'members',
+        'stats',
+        'budgets',
+        'tools',
+        'edit',
+      ],
+      hiddenGroupTabs: null,
+    })
+  })
+
+  it('persists hidden group tabs when saved', async () => {
+    const { user } = render(<AccountPreferences />)
+
+    await user.click(screen.getByRole('button', { name: 'Customize' }))
+    await user.click(screen.getByRole('button', { name: 'Hide Stats' }))
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+
+    expect(mocks.patchPreferences).toHaveBeenCalledWith({
+      groupTabOrder: null,
+      hiddenGroupTabs: ['stats'],
+    })
+  })
+
+  it('discards draft changes without persisting', async () => {
+    const { user } = render(<AccountPreferences />)
+
+    await user.click(screen.getByRole('button', { name: 'Customize' }))
+    await user.click(screen.getByRole('button', { name: 'Move Balances down' }))
+    await user.click(screen.getByRole('button', { name: 'Discard' }))
+
+    expect(mocks.patchPreferences).not.toHaveBeenCalled()
   })
 })

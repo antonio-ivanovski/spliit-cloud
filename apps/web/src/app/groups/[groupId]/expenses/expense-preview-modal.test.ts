@@ -2,7 +2,10 @@ import { describe, expect, it } from 'vitest'
 
 import { getCurrency } from '@/lib/currency'
 
-import { formatExpenseConversionDetails } from './expense-preview-modal'
+import {
+  formatExpenseConversionDetails,
+  toBalanceExpense,
+} from './expense-preview-modal'
 import { expenseShareRatioLabel } from './expense-share-ratio-label'
 
 describe('formatExpenseConversionDetails', () => {
@@ -79,6 +82,61 @@ describe('formatExpenseConversionDetails', () => {
         'en-US',
       ),
     ).toBeNull()
+  })
+})
+
+describe('toBalanceExpense', () => {
+  it('preserves the itemized remainder allocation mode', () => {
+    const expense = {
+      id: 'e1',
+      amount: 9200,
+      categoryId: 'general',
+      splitMode: 'ITEMIZED',
+      paidBySplitMode: 'BY_AMOUNT',
+      originalAmount: 10000,
+      originalCurrency: 'USD',
+      conversionRate: 0.92,
+      conversionSource: 'EXCHANGE',
+      paidByList: [],
+      paidFor: [],
+      items: [],
+      itemizedRemainder: {
+        splitMode: 'EVENLY',
+        allocationMode: 'PROPORTIONAL',
+        paidFor: [],
+      },
+    } as never
+
+    expect(toBalanceExpense(expense, []).itemizedRemainder).toMatchObject({
+      allocationMode: 'PROPORTIONAL',
+    })
+  })
+
+  it('keeps custom remainders intact', () => {
+    const expense = {
+      id: 'e1',
+      amount: 1200,
+      categoryId: 'general',
+      splitMode: 'ITEMIZED',
+      paidBySplitMode: 'BY_AMOUNT',
+      originalAmount: null,
+      originalCurrency: null,
+      conversionRate: null,
+      conversionSource: null,
+      paidByList: [],
+      paidFor: [],
+      items: [],
+      itemizedRemainder: {
+        splitMode: 'EVENLY',
+        allocationMode: 'CUSTOM',
+        paidFor: [{ ledgerParticipantId: 'a', shares: 1 }],
+      },
+    } as never
+
+    expect(toBalanceExpense(expense, []).itemizedRemainder).toMatchObject({
+      allocationMode: 'CUSTOM',
+      splitMode: 'EVENLY',
+    })
   })
 })
 

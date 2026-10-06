@@ -1,8 +1,7 @@
 import { Navigate, useRouterState } from '@tanstack/react-router'
 import type { PropsWithChildren } from 'react'
 
-import { needsAccountOnboarding } from '@/lib/account'
-import { useCurrentAccount } from '@/lib/use-current-account'
+import { useOnboardingStatus } from '@/lib/use-onboarding-status'
 
 const ungatedPaths = new Set([
   '/auth/complete-profile',
@@ -10,6 +9,7 @@ const ungatedPaths = new Set([
   '/privacy',
   '/terms',
   '/imprint',
+  '/support',
   '/unsubscribe',
 ])
 
@@ -23,9 +23,14 @@ const ungatedPaths = new Set([
  * excluded so people can always read them.
  *
  * Signed-out visitors pass through unchanged.
+ *
+ * Onboarding state comes from `useOnboardingStatus`: the session user cannot
+ * see the server's safeguard flag, so a named-but-unsafeguarded guest would
+ * otherwise sail through on its display name alone. While that status is
+ * unresolved the session predicate decides (fail open, self-heals).
  */
 export function ProfileGate({ children }: PropsWithChildren) {
-  const { data: account } = useCurrentAccount()
+  const { account, needsOnboarding } = useOnboardingStatus()
   const routerState = useRouterState()
   const currentPath = routerState.location.pathname
 
@@ -41,7 +46,7 @@ export function ProfileGate({ children }: PropsWithChildren) {
   }
 
   // Signed in but missing display name or anonymous recovery setup
-  if (needsAccountOnboarding(account)) {
+  if (needsOnboarding) {
     const target =
       typeof window !== 'undefined'
         ? `${currentPath}${window.location.search}${window.location.hash}`

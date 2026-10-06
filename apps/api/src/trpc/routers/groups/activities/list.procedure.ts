@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import { getActivities } from '../../../../lib/api'
+import type { ActivityListItem } from '../../../../lib/api/activities'
 import { redactViewerDisplayName } from '../../../../lib/group-view'
 import {
   groupAccessFields,
@@ -9,6 +10,28 @@ import {
   loadGroupViewer,
 } from '../../../init'
 import { listActivitiesOutputSchema } from '../../../outputs/activities'
+
+/**
+ * Read-only viewers have no participant identity, so stored participant
+ * snapshots would only leak pseudonymous ids — drop them alongside the live
+ * splits (unknown ⇒ visible in the feed).
+ */
+function stripParticipantSnapshot(
+  data: ActivityListItem['data'],
+): ActivityListItem['data'] {
+  if (
+    data?.kind !== 'expense' &&
+    data?.kind !== 'import_summary' &&
+    data?.kind !== 'recurring_expense_summary' &&
+    data?.kind !== 'recurring_expense_stopped'
+  ) {
+    return data
+  }
+  if (data.affectedParticipants === undefined) return data
+  const { affectedParticipants: _dropped, ...rest } = data
+  void _dropped
+  return rest
+}
 
 export const listGroupActivitiesProcedure = scopedGroupReadProcedure(
   'spliit:groups:read',
@@ -58,9 +81,17 @@ export const listGroupActivitiesProcedure = scopedGroupReadProcedure(
                             : change,
                         ),
                       }
-                    : activity.data,
+                    : stripParticipantSnapshot(activity.data),
               }
-        return { ...publicActivity, expense: activity.expense ?? null }
+        // Read-only viewers have no participant identity, so splits would
+        // only leak pseudonymous ids — strip them (unknown ⇒ visible).
+        const expense =
+          activity.expense && viewer.kind === 'ACTIVE'
+            ? activity.expense
+            : activity.expense
+              ? { ...activity.expense, paidByList: [], paidFor: [] }
+              : null
+        return { ...publicActivity, expense }
       }),
       hasMore: !!activities[limit],
       nextCursor: cursor + limit,

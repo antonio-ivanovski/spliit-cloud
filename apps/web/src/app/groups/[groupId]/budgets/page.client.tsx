@@ -15,10 +15,14 @@ import {
 } from '@/app/groups/[groupId]/current-group-context'
 import { useGroupAccessSearch } from '@/app/groups/[groupId]/use-group-access-search'
 import { CollapsibleSection } from '@/app/groups/collapsible-section'
+import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { useOfflineWithoutData } from '@/lib/use-online-status'
+import {
+  useOfflineWithoutData,
+  useServerUnreachableWithoutData,
+} from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 import { useBudgetTranslation } from './budget-i18n'
@@ -114,6 +118,11 @@ export default function GroupBudgetsPageClient() {
     viewKey,
   })
   const showOfflineEmpty = useOfflineWithoutData(!!budgetsQuery.data)
+  const showServerEmpty = useServerUnreachableWithoutData(!!budgetsQuery.data)
+
+  if (showServerEmpty) {
+    return <ApiErrorEmptyState onRetry={() => void budgetsQuery.refetch()} />
+  }
 
   if (showOfflineEmpty) {
     return <OfflineEmptyState onRetry={() => void budgetsQuery.refetch()} />

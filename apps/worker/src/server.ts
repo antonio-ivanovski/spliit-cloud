@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import {
   assertDeliveryTimeoutOrdering,
   DELIVERY_LEASE_MS,
@@ -57,6 +58,12 @@ async function main() {
     '0 * * * *',
     {},
     { retryLimit: 0, key: 'notification-cleanup' },
+  )
+  await boss.schedule(
+    JOB_NAMES.ANNOUNCEMENT_PROCESS,
+    '* * * * *',
+    {},
+    { retryLimit: 0, key: 'announcement-process' },
   )
   await boss.schedule(
     JOB_NAMES.WEBHOOK_RECONCILE,

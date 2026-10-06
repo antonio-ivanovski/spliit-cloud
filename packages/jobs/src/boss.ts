@@ -8,13 +8,19 @@ import { fromPrisma, PgBoss } from 'pg-boss'
 
 import { env } from './env'
 import {
+  ACCOUNT_DELETION_EXECUTE_DLQ,
+  ACCOUNT_DELETION_EXECUTE_QUEUE,
   ANONYMOUS_ACCOUNT_CLEANUP_DLQ,
+  ANNOUNCEMENT_PROCESS_DLQ,
+  ANNOUNCEMENT_PROCESS_QUEUE,
   ANONYMOUS_ACCOUNT_CLEANUP_QUEUE,
   jobPayloadSchema,
   NOTIFICATION_CLEANUP_DLQ,
   NOTIFICATION_CLEANUP_QUEUE,
   BUDGET_EVALUATE_QUEUE,
   BUDGET_EVALUATE_DLQ,
+  BULK_CATEGORIZE_QUEUE,
+  BULK_CATEGORIZE_DLQ,
   NOTIFICATION_DELIVER_DLQ,
   NOTIFICATION_DELIVER_QUEUE,
   NOTIFICATION_RECONCILE_DLQ,
@@ -73,6 +79,12 @@ export const JOB_SEND_OPTIONS = {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
     deadLetter: NOTIFICATION_CLEANUP_DLQ,
   },
+  [ANNOUNCEMENT_PROCESS_QUEUE]: {
+    retryLimit: 0,
+    expireInSeconds: 1800,
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+    deadLetter: ANNOUNCEMENT_PROCESS_DLQ,
+  },
   [WEBHOOK_DELIVER_QUEUE]: {
     retryLimit: 8,
     retryDelay: 300,
@@ -105,6 +117,25 @@ export const JOB_SEND_OPTIONS = {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
     deadLetter: BUDGET_EVALUATE_DLQ,
   },
+  [BULK_CATEGORIZE_QUEUE]: {
+    retryLimit: 0,
+    expireInSeconds: 6 * 3600,
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+    deadLetter: BULK_CATEGORIZE_DLQ,
+  },
+  // Account deletion is idempotent (the executor claims the request row with
+  // an atomic PENDING → EXECUTING transition), so transient failures can be
+  // retried safely.
+  [ACCOUNT_DELETION_EXECUTE_QUEUE]: {
+    retryLimit: 3,
+    retryDelay: env.JOBS_RETRY_BACKOFF_SECONDS,
+    retryBackoff: true,
+    // Exceed the executor lock transaction timeout so slow erasure is not
+    // expired while the original worker still holds the lock.
+    expireInSeconds: 20 * 60,
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+    deadLetter: ACCOUNT_DELETION_EXECUTE_DLQ,
+  },
 } as const satisfies Record<JobName, SendOptions>
 
 export const JOB_QUEUE_OPTIONS = {
@@ -123,12 +154,22 @@ export const JOB_QUEUE_OPTIONS = {
     policy: 'exclusive',
     notify: true,
   },
+  [BULK_CATEGORIZE_QUEUE]: {
+    ...JOB_SEND_OPTIONS[BULK_CATEGORIZE_QUEUE],
+    policy: 'exclusive',
+    notify: true,
+  },
   [NOTIFICATION_RECONCILE_QUEUE]: {
     ...JOB_SEND_OPTIONS[NOTIFICATION_RECONCILE_QUEUE],
     notify: true,
   },
   [NOTIFICATION_CLEANUP_QUEUE]: {
     ...JOB_SEND_OPTIONS[NOTIFICATION_CLEANUP_QUEUE],
+    notify: true,
+  },
+  [ANNOUNCEMENT_PROCESS_QUEUE]: {
+    ...JOB_SEND_OPTIONS[ANNOUNCEMENT_PROCESS_QUEUE],
+    policy: 'exclusive',
     notify: true,
   },
   [WEBHOOK_DELIVER_QUEUE]: {
@@ -152,6 +193,11 @@ export const JOB_QUEUE_OPTIONS = {
     ...JOB_SEND_OPTIONS[BUDGET_EVALUATE_QUEUE],
     notify: true,
   },
+  [ACCOUNT_DELETION_EXECUTE_QUEUE]: {
+    ...JOB_SEND_OPTIONS[ACCOUNT_DELETION_EXECUTE_QUEUE],
+    policy: 'exclusive',
+    notify: true,
+  },
 } as const satisfies Record<JobName, Omit<Queue, 'name'>>
 
 export type JobWorkOptions = {
@@ -165,6 +211,10 @@ export type JobWorkOptions = {
  * empty-fetches do not dominate VPS CPU when LISTEN/NOTIFY is unavailable.
  */
 export const JOB_WORK_OPTIONS = {
+  [BULK_CATEGORIZE_QUEUE]: {
+    localConcurrency: 1,
+    pollingIntervalSeconds: env.JOBS_POLLING_INTERVAL_SECONDS,
+  },
   [NOTIFICATION_DELIVER_QUEUE]: {
     localConcurrency: env.JOBS_MAX_CONCURRENCY,
     pollingIntervalSeconds: env.JOBS_POLLING_INTERVAL_SECONDS,
@@ -185,6 +235,10 @@ export const JOB_WORK_OPTIONS = {
     localConcurrency: 1,
     pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
   },
+  [ANNOUNCEMENT_PROCESS_QUEUE]: {
+    localConcurrency: 1,
+    pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
+  },
   [WEBHOOK_DELIVER_QUEUE]: {
     localConcurrency: env.JOBS_MAX_CONCURRENCY,
     pollingIntervalSeconds: env.JOBS_POLLING_INTERVAL_SECONDS,
@@ -202,6 +256,10 @@ export const JOB_WORK_OPTIONS = {
     pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
   },
   [BUDGET_EVALUATE_QUEUE]: {
+    localConcurrency: 1,
+    pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
+  },
+  [ACCOUNT_DELETION_EXECUTE_QUEUE]: {
     localConcurrency: 1,
     pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
   },
@@ -319,10 +377,19 @@ export async function ensureQueues(boss: SpliitBoss): Promise<void> {
   await createOrConvergeQueue(boss, NOTIFICATION_CLEANUP_DLQ, {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
   })
+  await createOrConvergeQueue(boss, ANNOUNCEMENT_PROCESS_DLQ, {
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+  })
   await createOrConvergeQueue(boss, ANONYMOUS_ACCOUNT_CLEANUP_DLQ, {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
   })
   await createOrConvergeQueue(boss, BUDGET_EVALUATE_DLQ, {
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+  })
+  await createOrConvergeQueue(boss, BULK_CATEGORIZE_DLQ, {
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+  })
+  await createOrConvergeQueue(boss, ACCOUNT_DELETION_EXECUTE_DLQ, {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
   })
   await createOrConvergeQueue(boss, WEBHOOK_DELIVER_DLQ, {
@@ -346,6 +413,11 @@ export async function ensureQueues(boss: SpliitBoss): Promise<void> {
   )
   await createOrConvergeQueue(
     boss,
+    BULK_CATEGORIZE_QUEUE,
+    JOB_QUEUE_OPTIONS[BULK_CATEGORIZE_QUEUE],
+  )
+  await createOrConvergeQueue(
+    boss,
     RECURRING_RECONCILIATION_QUEUE,
     JOB_QUEUE_OPTIONS[RECURRING_RECONCILIATION_QUEUE],
   )
@@ -366,6 +438,11 @@ export async function ensureQueues(boss: SpliitBoss): Promise<void> {
   )
   await createOrConvergeQueue(
     boss,
+    ANNOUNCEMENT_PROCESS_QUEUE,
+    JOB_QUEUE_OPTIONS[ANNOUNCEMENT_PROCESS_QUEUE],
+  )
+  await createOrConvergeQueue(
+    boss,
     ANONYMOUS_ACCOUNT_CLEANUP_QUEUE,
     JOB_QUEUE_OPTIONS[ANONYMOUS_ACCOUNT_CLEANUP_QUEUE],
   )
@@ -383,6 +460,11 @@ export async function ensureQueues(boss: SpliitBoss): Promise<void> {
     boss,
     WEBHOOK_CLEANUP_QUEUE,
     JOB_QUEUE_OPTIONS[WEBHOOK_CLEANUP_QUEUE],
+  )
+  await createOrConvergeQueue(
+    boss,
+    ACCOUNT_DELETION_EXECUTE_QUEUE,
+    JOB_QUEUE_OPTIONS[ACCOUNT_DELETION_EXECUTE_QUEUE],
   )
 }
 

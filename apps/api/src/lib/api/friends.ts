@@ -19,6 +19,8 @@ import {
   LINK_INVITATION_DEFAULT_TTL_MS,
   reconcileMemberLedgerParticipant,
 } from '../invitations'
+import { getInvitationDisplayName } from '../invitations/display'
+import { buildInvitationActivityData, logActivity } from './activities'
 import { randomId } from './shared'
 
 type TxClient = PrismaType.TransactionClient
@@ -314,6 +316,20 @@ export async function createFriendLedger(
           ledgerParticipantId: pendingParticipant.id,
         },
       })
+      await logActivity(
+        group.id,
+        {
+          type: 'INVITATION_CREATED',
+          actor: { type: 'ACCOUNT', id: callerAccountId },
+          subject: { type: 'INVITATION', id: invitation.id },
+          data: buildInvitationActivityData({
+            displayLabel: getInvitationDisplayName(invitation),
+            invitationType: 'EMAIL',
+            role: GroupRole.ADMIN,
+          }),
+        },
+        tx,
+      )
       return {
         groupId: group.id,
         existed: false as const,
@@ -337,6 +353,20 @@ export async function createFriendLedger(
         ledgerParticipantId: pendingParticipant.id,
       },
     })
+    await logActivity(
+      group.id,
+      {
+        type: 'INVITATION_CREATED',
+        actor: { type: 'ACCOUNT', id: callerAccountId },
+        subject: { type: 'INVITATION', id: invitation.id },
+        data: buildInvitationActivityData({
+          displayLabel: getInvitationDisplayName(invitation),
+          invitationType: 'LINK',
+          role: GroupRole.ADMIN,
+        }),
+      },
+      tx,
+    )
     const webBase = getWebBaseUrl()
     const inviteUrl = `${webBase}/groups/${group.id}?invite=${token}`
     return {
@@ -380,6 +410,8 @@ export async function autoAcceptPendingFriendInvitationsForAccount(opts: {
       groupId: true,
       invitedById: true,
       role: true,
+      email: true,
+      temporaryName: true,
       ledgerParticipantId: true,
     },
   })
@@ -387,6 +419,13 @@ export async function autoAcceptPendingFriendInvitationsForAccount(opts: {
   if (pending.length === 0) return
 
   for (const invitation of pending) {
+    const invitedById = invitation.invitedById
+    if (!invitedById) {
+      // The inviter's account was deleted (pending invites are revoked on
+      // deletion, but a concurrent accept can slip through). Without the
+      // inviter the friend pair key cannot be built — skip this invitation.
+      continue
+    }
     await prisma
       .$transaction(async (tx) => {
         const flipped = await tx.groupInvitation.updateMany({
@@ -443,7 +482,7 @@ export async function autoAcceptPendingFriendInvitationsForAccount(opts: {
           })
         }
 
-        const pairKey = friendPairKey(accountId, invitation.invitedById)
+        const pairKey = friendPairKey(accountId, invitedById)
         try {
           await tx.group.update({
             where: { id: invitation.groupId },
@@ -459,6 +498,19 @@ export async function autoAcceptPendingFriendInvitationsForAccount(opts: {
           }
           throw err
         }
+
+        await logActivity(
+          invitation.groupId,
+          {
+            type: 'INVITATION_ACCEPTED',
+            actor: { type: 'ACCOUNT', id: accountId },
+            subject: { type: 'INVITATION', id: invitation.id },
+            data: buildInvitationActivityData({
+              displayLabel: getInvitationDisplayName(invitation),
+            }),
+          },
+          tx,
+        )
       })
       .catch((err) => {
         if (err instanceof DuplicateFriendLedgerError) {

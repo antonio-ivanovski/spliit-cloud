@@ -1,8 +1,27 @@
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import '../../../../../test/mocks'
+import type * as DeliveryPlanner from '../../../../../lib/notifications/delivery-planner'
+import { planActivityNotificationDeliveries } from '../../../../../lib/notifications/delivery-planner'
 import { prismaMock } from '../../../../../test/state'
 import { groupsRouter } from '../../index'
+
+vi.mock(
+  '../../../../../lib/notifications/delivery-planner',
+  async (importOriginal) => {
+    const actual = await importOriginal<typeof DeliveryPlanner>()
+    return {
+      ...actual,
+      planActivityNotificationDeliveries: vi.fn(async () => []),
+    }
+  },
+)
+
+const planDeliveriesMock = vi.mocked(planActivityNotificationDeliveries)
+
+beforeEach(() => {
+  planDeliveriesMock.mockClear()
+})
 
 const groupId = 'group-1'
 const expenseId = 'expense-1'
@@ -124,7 +143,7 @@ describe('groups.expenses.comments', () => {
     ])
   })
 
-  it('trims and atomically creates a comment activity', async () => {
+  it('trims and notifies without writing a comment activity', async () => {
     activeMember()
     prismaMock.expense.findFirst.mockResolvedValue({
       id: expenseId,
@@ -138,10 +157,6 @@ describe('groups.expenses.comments', () => {
       authorAccount: { image: 'alice.png' },
       text: 'Hello',
       createdAt: new Date('2026-01-01T00:00:00Z'),
-    } as never)
-    prismaMock.activity.create.mockResolvedValue({
-      id: 'activity-1',
-      time: new Date('2026-01-01T00:00:00Z'),
     } as never)
 
     const result = await caller().expenses.comments.create({
@@ -157,13 +172,53 @@ describe('groups.expenses.comments', () => {
         data: expect.objectContaining({ text: 'Hello' }),
       }),
     )
-    expect(prismaMock.activity.create).toHaveBeenCalledWith(
+    expect(prismaMock.activity.create).not.toHaveBeenCalled()
+    expect(planDeliveriesMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: expect.objectContaining({
+        event: expect.objectContaining({
+          activityId: null,
           type: 'EXPENSE_COMMENTED',
-          subjectType: 'EXPENSE',
-          subjectId: expenseId,
-          expenseCommentId: 'comment-1',
+          groupId,
+          subject: { type: 'EXPENSE', id: expenseId },
+        }),
+      }),
+    )
+  })
+
+  it('bounds the comment activity excerpt to 160 characters', async () => {
+    activeMember()
+    prismaMock.expense.findFirst.mockResolvedValue({
+      id: expenseId,
+      title: 'Dinner',
+    } as never)
+    prismaMock.expenseComment.create.mockResolvedValue({
+      id: 'comment-1',
+      expenseId,
+      authorAccountId: accountId,
+      authorName: 'Alice',
+      authorAccount: { image: 'alice.png' },
+      text: 'x'.repeat(200),
+      createdAt: new Date('2026-01-01T00:00:00Z'),
+    } as never)
+
+    await caller().expenses.comments.create({
+      requestId: crypto.randomUUID(),
+      groupId,
+      expenseId,
+      body: 'x'.repeat(200),
+    })
+
+    expect(planDeliveriesMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        event: expect.objectContaining({
+          type: 'EXPENSE_COMMENTED',
+          data: expect.objectContaining({
+            kind: 'expense_comment',
+            commentId: 'comment-1',
+            expenseTitle: 'Dinner',
+            authorName: 'Alice',
+            excerpt: 'x'.repeat(160),
+          }),
         }),
       }),
     )

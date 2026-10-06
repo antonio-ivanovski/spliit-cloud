@@ -8,6 +8,7 @@ import {
   getGroupExpenses,
   getGroupExpensesParticipants,
 } from './queries'
+import { expenseTextSearchOr } from './title-search'
 
 describe('getGroupExpensesParticipants', () => {
   it('returns distinct top-level payers and beneficiaries without loading expenses', async () => {
@@ -169,6 +170,23 @@ describe('getGroupExpenses', () => {
           categoryId: { not: 'settlement' },
         }),
       }),
+    )
+  })
+})
+
+describe('expenseTextSearchOr notes and items branch', () => {
+  it('includes notes and item titles when requested (global search)', () => {
+    expect(
+      expenseTextSearchOr({ query: 'pizza', includeNotesAndItems: true }).OR,
+    ).toEqual(
+      expect.arrayContaining([
+        { notes: { contains: 'pizza', mode: 'insensitive' } },
+        {
+          items: {
+            some: { title: { contains: 'pizza', mode: 'insensitive' } },
+          },
+        },
+      ]),
     )
   })
 })

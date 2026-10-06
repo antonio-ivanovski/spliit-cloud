@@ -225,6 +225,22 @@ export const createSubgroupProcedure = protectedProcedure
             },
             select: subgroupWithMembersSelect,
           })
+          await logActivity(
+            input.groupId,
+            {
+              type: 'GROUP_UPDATED',
+              actor: { type: 'ACCOUNT', id: ctx.auth.user.id },
+              subject: { type: 'GROUP', id: input.groupId },
+              data: buildGroupActivityData({
+                summary: 'subgroup:created',
+                changedFields: ['subgroups'],
+                changes: [
+                  { field: 'subgroups', before: null, after: input.name },
+                ],
+              }),
+            },
+            tx,
+          )
           return { subgroup: mapSubgroup(subgroup) }
         },
       })
@@ -253,7 +269,7 @@ export const updateSubgroupProcedure = protectedProcedure
       const subgroup = await prisma.$transaction(async (tx) => {
         const existing = await tx.subgroup.findFirst({
           where: { id: input.subgroupId, groupId: input.groupId },
-          select: { id: true },
+          select: { id: true, name: true },
         })
         if (!existing) {
           throw new TRPCError({
@@ -270,7 +286,7 @@ export const updateSubgroupProcedure = protectedProcedure
         await tx.subgroupMember.deleteMany({
           where: { subgroupId: input.subgroupId },
         })
-        return tx.subgroup.update({
+        const updated = await tx.subgroup.update({
           where: { id: input.subgroupId },
           data: {
             name: input.name,
@@ -282,6 +298,29 @@ export const updateSubgroupProcedure = protectedProcedure
           },
           select: subgroupWithMembersSelect,
         })
+        if (existing.name !== input.name) {
+          await logActivity(
+            input.groupId,
+            {
+              type: 'GROUP_UPDATED',
+              actor: { type: 'ACCOUNT', id: ctx.auth.user.id },
+              subject: { type: 'GROUP', id: input.groupId },
+              data: buildGroupActivityData({
+                summary: 'subgroup:renamed',
+                changedFields: ['subgroups'],
+                changes: [
+                  {
+                    field: 'subgroups',
+                    before: existing.name,
+                    after: input.name,
+                  },
+                ],
+              }),
+            },
+            tx,
+          )
+        }
+        return updated
       })
       return { subgroup: mapSubgroup(subgroup) }
     } catch (error) {
@@ -294,11 +333,37 @@ export const deleteSubgroupProcedure = protectedProcedure
   .output(subgroupDeletedOutputSchema)
   .mutation(async ({ input, ctx }) => {
     await requireAdmin(input.groupId, ctx.auth.user.id)
-    const deleted = await prisma.subgroup.deleteMany({
-      where: { id: input.subgroupId, groupId: input.groupId },
+    await prisma.$transaction(async (tx) => {
+      const existing = await tx.subgroup.findFirst({
+        where: { id: input.subgroupId, groupId: input.groupId },
+        select: { id: true, name: true },
+      })
+      if (!existing) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Subgroup not found',
+        })
+      }
+      await tx.subgroup.deleteMany({
+        where: { id: input.subgroupId, groupId: input.groupId },
+      })
+      await logActivity(
+        input.groupId,
+        {
+          type: 'GROUP_UPDATED',
+          actor: { type: 'ACCOUNT', id: ctx.auth.user.id },
+          subject: { type: 'GROUP', id: input.groupId },
+          data: buildGroupActivityData({
+            summary: 'subgroup:deleted',
+            changedFields: ['subgroups'],
+            changes: [
+              { field: 'subgroups', before: existing.name, after: null },
+            ],
+          }),
+        },
+        tx,
+      )
     })
-    if (deleted.count === 0)
-      throw new TRPCError({ code: 'NOT_FOUND', message: 'Subgroup not found' })
     return { deleted: true }
   })
 

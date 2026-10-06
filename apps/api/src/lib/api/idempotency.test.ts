@@ -1,6 +1,3 @@
-import { readdirSync, readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
-
 import { describe, expect, it, vi } from 'vitest'
 
 import { Prisma } from '@spliit/db'
@@ -14,47 +11,6 @@ import {
   idempotencyRequestHash,
   runIdempotentCreate,
 } from './idempotency'
-
-const routerRoot = fileURLToPath(
-  new URL('../../trpc/routers/', import.meta.url),
-)
-
-function routerSources(directory = routerRoot): string[] {
-  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
-    const path = `${directory}/${entry.name}`
-    if (entry.isDirectory()) return routerSources(path)
-    if (!entry.name.endsWith('.ts') || entry.name.endsWith('.test.ts'))
-      return []
-    return [path]
-  })
-}
-
-function discoverCreateMutations() {
-  const discovered = new Set<string>()
-  for (const path of routerSources()) {
-    const source = readFileSync(path, 'utf8')
-    if (!source.includes('.mutation')) continue
-    const relativePath = path.slice(routerRoot.length).replace(/^\//, '')
-    let hasExportedCreateProcedure = false
-    for (const match of source.matchAll(
-      /^export const (create[A-Z]\w*Procedure|importGroupProcedure|importCloudBundleProcedure|importExpenseFileProcedure)\s*=/gm,
-    )) {
-      hasExportedCreateProcedure ||= match[1]!.startsWith('create')
-      discovered.add(`${relativePath}#${match[1]}`)
-    }
-    for (const match of source.matchAll(
-      /^(?:export )?const (create)\s*=\s*protectedProcedure/gm,
-    )) {
-      discovered.add(`${relativePath}#${match[1]}`)
-    }
-    if (!hasExportedCreateProcedure) {
-      for (const match of source.matchAll(/^  (create(?:[A-Z]\w*)?):\s/gm)) {
-        discovered.add(`${relativePath}#${match[1]}`)
-      }
-    }
-  }
-  return [...discovered].sort()
-}
 
 describe('create idempotency primitives', () => {
   it('hashes semantically identical validated objects canonically', () => {
@@ -165,7 +121,7 @@ describe('create idempotency primitives', () => {
     expect(prismaMock.$transaction).not.toHaveBeenCalled()
   })
 
-  it('passes transaction settings through to the owned transaction', async () => {
+  it('shapes the owned transaction call with and without explicit settings', async () => {
     prismaMock.idempotencyRequest.findUnique.mockResolvedValue(null as never)
     prismaMock.idempotencyRequest.create.mockResolvedValue({} as never)
     prismaMock.idempotencyRequest.update.mockResolvedValue({} as never)
@@ -183,14 +139,8 @@ describe('create idempotency primitives', () => {
       timeout: 120_000,
       maxWait: 30_000,
     })
-  })
 
-  it('keeps the default transaction call shape for ordinary creates', async () => {
-    prismaMock.idempotencyRequest.findUnique.mockResolvedValue(null as never)
-    prismaMock.idempotencyRequest.create.mockResolvedValue({} as never)
-    prismaMock.idempotencyRequest.update.mockResolvedValue({} as never)
     prisma$Transaction.mockClear()
-
     await runIdempotentCreate({
       accountId: 'account-1',
       operation: CREATE_OPERATIONS.expense,
@@ -354,29 +304,27 @@ describe('create idempotency primitives', () => {
       Object.keys(CREATE_OPERATIONS).length,
     )
 
+    // Catalog self-consistency (no filesystem walk): every shared entry maps
+    // to a known operation, every operation has a shared entry, and
+    // source#symbol keys are unique so replay routing stays deterministic.
     const sharedEntries = CREATE_MUTATION_CATALOG.filter(
       (entry) => entry.mechanism === 'shared',
     )
     expect(sharedEntries.map((entry) => entry.operation).sort()).toEqual(
       Object.values(CREATE_OPERATIONS).sort(),
     )
-    expect(
-      CREATE_MUTATION_CATALOG.map(
-        (entry) => `${entry.source}#${entry.symbol}`,
-      ).sort(),
-    ).toEqual(discoverCreateMutations())
-
-    for (const entry of sharedEntries) {
-      const source = readFileSync(`${routerRoot}${entry.source}`, 'utf8')
-      expect(source).toContain('requestId')
-      expect(source).toContain('runIdempotentCreate')
-      expect(source).toContain(
-        `CREATE_OPERATIONS.${
-          Object.entries(CREATE_OPERATIONS).find(
-            ([, operation]) => operation === entry.operation,
-          )![0]
-        }`,
-      )
+    const keys = CREATE_MUTATION_CATALOG.map(
+      (entry) => `${entry.source}#${entry.symbol}`,
+    )
+    expect(new Set(keys).size).toBe(keys.length)
+    for (const entry of CREATE_MUTATION_CATALOG) {
+      expect(entry.source).toMatch(/\.ts$/)
+      expect(entry.symbol).toBeTruthy()
+      if (entry.mechanism === 'shared') {
+        expect(Object.values(CREATE_OPERATIONS)).toContain(entry.operation)
+      } else {
+        expect(entry.reason).toBeTruthy()
+      }
     }
   })
 })

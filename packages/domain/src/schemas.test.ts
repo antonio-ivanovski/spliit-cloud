@@ -1,4 +1,6 @@
+import { getCurrency } from './currency'
 import {
+  createExpenseFormInputSchema,
   defaultSplitSchema,
   expenseApiSchema,
   expenseFormInputSchema,
@@ -1626,6 +1628,201 @@ describe('friendFormSchema', () => {
       currencyCode: 'USD',
       information: 'Notes',
     })
+    expect(result.success).toBe(true)
+  })
+})
+
+describe('Ledger conversion metadata (folded from ledger.test.ts)', () => {
+  it('expenseFormInputSchema preserves conversion metadata through parse', () => {
+    // The form schema no longer carries `originalAmount` — the typed
+    // input amount lives in `amount`, and the conversion metadata is
+    // the audit/display pair (`originalCurrency` + `conversionRate`).
+    const raw = {
+      title: 'Test expense',
+      expenseDay: '2026-06-24',
+      expenseTime: '12:00',
+      expenseTimeZone: 'UTC',
+      category: 'general',
+      amount: 50,
+      isMultiPayer: false,
+      paidBySplitMode: 'EVENLY' as const,
+      paidByList: [{ participant: 'lp-alice', shares: 50 }],
+      paidFor: [
+        { participant: 'lp-alice', shares: 25 },
+        { participant: 'lp-bob', shares: 25 },
+      ],
+      splitMode: 'BY_AMOUNT' as const,
+      originalCurrency: 'EUR',
+      conversionRate: 0.85,
+    }
+    const result = expenseFormInputSchema.parse(raw)
+    expect(result.originalCurrency).toBe('EUR')
+    expect(result.conversionRate).toBe(0.85)
+    expect(result.amount).toBe(50)
+  })
+
+  it('expenseFormInputSchema rejects BY_AMOUNT when shares do not sum to amount', () => {
+    const raw = {
+      title: 'Test',
+      expenseDay: '2026-06-24',
+      category: 'general',
+      amount: 100,
+      isMultiPayer: false,
+      paidBySplitMode: 'EVENLY' as const,
+      paidByList: [{ participant: 'lp-a', shares: 30 }],
+      paidFor: [
+        { participant: 'lp-a', shares: 30 },
+        { participant: 'lp-b', shares: 30 },
+        { participant: 'lp-c', shares: 30 },
+      ],
+      splitMode: 'BY_AMOUNT' as const,
+    }
+    expect(() => expenseFormInputSchema.parse(raw)).toThrow()
+  })
+})
+
+describe('expenseFormInputSchema itemized minor-unit totals (#134)', () => {
+  const itemizedBase = {
+    ...baseInput,
+    splitMode: 'ITEMIZED',
+  }
+  const evenRow = (participant = 'p0') => ({
+    splitMode: 'EVENLY',
+    paidFor: [{ participant, shares: 1 }],
+  })
+
+  it('saves visually equal totals like 0.10 + 0.20 = 0.30', () => {
+    const result = expenseFormInputSchema.safeParse({
+      ...itemizedBase,
+      amount: 0.3,
+      items: [
+        { title: 'a', unitPrice: 0.1, quantity: 1, ...evenRow() },
+        { title: 'b', unitPrice: 0.2, quantity: 1, ...evenRow() },
+      ],
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('blocks a genuine one-cent excess with amountSum on items', () => {
+    const result = expenseFormInputSchema.safeParse({
+      ...itemizedBase,
+      amount: 0.3,
+      items: [
+        { title: 'a', unitPrice: 0.2, quantity: 1, ...evenRow() },
+        { title: 'b', unitPrice: 0.11, quantity: 1, ...evenRow() },
+      ],
+    })
+    expect(result.success).toBe(false)
+    if (result.success) return
+    expect(
+      result.error.issues.some(
+        (issue) =>
+          issue.path.join('.') === 'items' && issue.message === 'amountSum',
+      ),
+    ).toBe(true)
+  })
+
+  it('matches save serialization with per-line rounding (quantity multiplier)', () => {
+    // Each 0.07 line rounds to 7c; 3 lines = 21c. An amount of 0.20 (20c)
+    // is a genuine 1c excess per line-serialization and must stay blocked.
+    const blocked = expenseFormInputSchema.safeParse({
+      ...itemizedBase,
+      amount: 0.2,
+      items: [{ title: 'a', unitPrice: 0.07, quantity: 3, ...evenRow() }],
+    })
+    expect(blocked.success).toBe(false)
+
+    const ok = expenseFormInputSchema.safeParse({
+      ...itemizedBase,
+      amount: 0.21,
+      items: [{ title: 'a', unitPrice: 0.07, quantity: 3, ...evenRow() }],
+    })
+    expect(ok.success).toBe(true)
+  })
+
+  it('uses the selected expense currency precision (JPY 0 digits, BHD 3 digits)', () => {
+    const jpy = getCurrency('JPY')!
+    const jpySchema = createExpenseFormInputSchema(jpy)
+    expect(
+      jpySchema.safeParse({
+        ...itemizedBase,
+        amount: 300,
+        items: [
+          { title: 'a', unitPrice: 100, quantity: 1, ...evenRow() },
+          { title: 'b', unitPrice: 200, quantity: 1, ...evenRow() },
+        ],
+      }).success,
+    ).toBe(true)
+    const jpyExcess = jpySchema.safeParse({
+      ...itemizedBase,
+      amount: 300,
+      items: [
+        { title: 'a', unitPrice: 100, quantity: 1, ...evenRow() },
+        { title: 'b', unitPrice: 201, quantity: 1, ...evenRow() },
+      ],
+    })
+    expect(jpyExcess.success).toBe(false)
+
+    const bhd = getCurrency('BHD')!
+    const bhdSchema = createExpenseFormInputSchema(bhd)
+    expect(
+      bhdSchema.safeParse({
+        ...itemizedBase,
+        amount: 0.3,
+        originalCurrency: 'BHD',
+        items: [
+          { title: 'a', unitPrice: 0.1, quantity: 1, ...evenRow() },
+          { title: 'b', unitPrice: 0.2, quantity: 1, ...evenRow() },
+        ],
+      }).success,
+    ).toBe(true)
+    // 1 fils (0.001 BHD) excess is blocked.
+    expect(
+      bhdSchema.safeParse({
+        ...itemizedBase,
+        amount: 0.3,
+        originalCurrency: 'BHD',
+        items: [
+          { title: 'a', unitPrice: 0.1, quantity: 1, ...evenRow() },
+          { title: 'b', unitPrice: 0.201, quantity: 1, ...evenRow() },
+        ],
+      }).success,
+    ).toBe(false)
+  })
+
+  it('resolves the selected expense currency from originalCurrency', () => {
+    // Group fallback is USD (2 digits); the receipt switched the expense to
+    // JPY (0 digits). 0.5 JPY rounds to 1 yen per line, so two lines = 2 yen.
+    const usd = getCurrency('USD')!
+    const schema = createExpenseFormInputSchema(usd)
+    const result = schema.safeParse({
+      ...itemizedBase,
+      amount: 2,
+      originalCurrency: 'JPY',
+      items: [
+        { title: 'a', unitPrice: 0.5, quantity: 1, ...evenRow() },
+        { title: 'b', unitPrice: 0.5, quantity: 1, ...evenRow() },
+      ],
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('does not report a remainder for float dust below one minor unit', () => {
+    const result = expenseFormInputSchema.safeParse({
+      ...itemizedBase,
+      amount: 0.3,
+      items: [
+        { title: 'a', unitPrice: 0.1, quantity: 1, ...evenRow() },
+        { title: 'b', unitPrice: 0.2, quantity: 1, ...evenRow() },
+      ],
+      itemizedRemainder: {
+        allocationMode: 'CUSTOM',
+        splitMode: 'BY_AMOUNT',
+        paidFor: [{ participant: 'p0', shares: 0.01 }],
+      },
+    })
+    // Minor-unit remainder is zero, so the stray remainder rows are ignored
+    // rather than failing amountSum.
     expect(result.success).toBe(true)
   })
 })

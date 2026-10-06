@@ -30,6 +30,7 @@
  * `/docs` from the running API server.
  */
 
+import 'reflect-metadata'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -167,22 +168,6 @@ const PUBLIC_PROCEDURES = new Set<string>([
   'invitations.previewLink',
   'ai.extractExpenseInformationFromImage',
 ])
-
-// Procedures behind the `PUBLIC_ENABLE_BULK_CATEGORIZE` feature flag
-// (default off). Marked `deprecated: true` in the spec and tagged with a
-// description note so Scalar renders them with a warning badge and
-// external consumers know not to depend on them. The flag is a
-// frontend-only gate today — these procedures remain callable by admins
-// regardless — but the whole flow is undergoing rework (see
-// `handoff/bulk-categorizer-spike.md`) and the wire shape may change.
-const DEPRECATED_PROCEDURES = new Set<string>([
-  'ai.bulkCategorize.listCandidates',
-  'ai.bulkCategorize.calibrate',
-  'ai.bulkCategorize.preview',
-  'groups.expenses.bulkUpdateCategories',
-])
-const DEPRECATION_NOTE =
-  'Behind the `PUBLIC_ENABLE_BULK_CATEGORIZE` feature flag (default off). Undergoing rework — not for external consumption.'
 
 // Session cookie name. better-auth uses `better-auth.session_token` by
 // default; under `useSecureCookies` (production) it becomes
@@ -343,10 +328,6 @@ export async function postProcessOpenApiDocument(
               `OAuth bearer authentication required; cookie sessions are not accepted.\n\n${op.description ?? ''}`.trim()
           }
         }
-      }
-      if (DEPRECATED_PROCEDURES.has(procPath)) {
-        op.deprecated = true
-        op.description = `${DEPRECATION_NOTE}\n\n${op.description ?? ''}`.trim()
       }
     }
   }

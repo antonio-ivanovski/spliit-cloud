@@ -2,10 +2,13 @@ import { Navigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import type { PropsWithChildren } from 'react'
 
+import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
-import { needsAccountOnboarding } from '@/lib/account'
-import { useCurrentAccount } from '@/lib/use-current-account'
-import { useOnlineStatus } from '@/lib/use-online-status'
+import { useOnboardingStatus } from '@/lib/use-onboarding-status'
+import {
+  useOfflineWithoutData,
+  useServerUnreachableWithoutData,
+} from '@/lib/use-online-status'
 
 function currentPathWithSearch(): string {
   if (typeof window === 'undefined') return '/'
@@ -35,8 +38,9 @@ function hasGroupViewerCredential(): boolean {
  * dead-end unauthorized page.
  */
 export function RequireAuth({ children }: PropsWithChildren) {
-  const { data: account, isPending, refetch } = useCurrentAccount()
-  const isOnline = useOnlineStatus()
+  const { account, isPending, refetch, needsOnboarding } = useOnboardingStatus()
+  const showOfflineEmpty = useOfflineWithoutData(!!account)
+  const showServerEmpty = useServerUnreachableWithoutData(!!account)
   const permitsGroupViewer =
     typeof window !== 'undefined' &&
     /^\/groups\/(?!create(?:\/|$)|import(?:\/|$)|bulk-categorize(?:\/|$))[^/]+(?:\/|$)/.test(
@@ -45,15 +49,12 @@ export function RequireAuth({ children }: PropsWithChildren) {
     hasGroupViewerCredential()
 
   if (isPending && !account) {
-    // Bounded `checking` only; offline skips the hanging wait entirely.
-    if (!isOnline) {
-      const canRetry =
-        typeof navigator === 'undefined' ? true : navigator.onLine !== false
+    if (showOfflineEmpty) {
+      return <OfflineEmptyState variant="page" onRetry={() => void refetch()} />
+    }
+    if (showServerEmpty) {
       return (
-        <OfflineEmptyState
-          variant="page"
-          onRetry={canRetry ? () => void refetch() : undefined}
-        />
+        <ApiErrorEmptyState variant="page" onRetry={() => void refetch()} />
       )
     }
     return (
@@ -65,14 +66,12 @@ export function RequireAuth({ children }: PropsWithChildren) {
 
   if (!account) {
     if (permitsGroupViewer) return <>{children}</>
-    if (!isOnline) {
-      const canRetry =
-        typeof navigator === 'undefined' ? true : navigator.onLine !== false
+    if (showOfflineEmpty) {
+      return <OfflineEmptyState variant="page" onRetry={() => void refetch()} />
+    }
+    if (showServerEmpty) {
       return (
-        <OfflineEmptyState
-          variant="page"
-          onRetry={canRetry ? () => void refetch() : undefined}
-        />
+        <ApiErrorEmptyState variant="page" onRetry={() => void refetch()} />
       )
     }
     return (
@@ -80,7 +79,10 @@ export function RequireAuth({ children }: PropsWithChildren) {
     )
   }
 
-  if (needsAccountOnboarding(account)) {
+  // The session user cannot see the server's safeguard flag: route through
+  // the authoritative onboarding status so named-but-unsafeguarded guests
+  // finish setup instead of landing on 412s.
+  if (needsOnboarding) {
     const target = currentPathWithSearch()
     return (
       <Navigate

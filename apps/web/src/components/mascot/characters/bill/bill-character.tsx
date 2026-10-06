@@ -21,13 +21,22 @@ const spring = {
   mass: 0.72,
 } as const
 
+export type BillSortingPhase = 'waiting' | 'catching' | 'reading' | 'filing'
+
+type BillCharacterProps = MascotCharacterProps & {
+  sortingPhase?: BillSortingPhase
+  sortingArms?: boolean
+}
+
 export function BillCharacter({
   className,
   docked = false,
   open = false,
   reaction = 'idle',
   reactionKey = 0,
-}: MascotCharacterProps) {
+  sortingPhase,
+  sortingArms = true,
+}: BillCharacterProps) {
   return (
     <LazyMotion features={domAnimation} strict>
       <BillArtwork
@@ -36,6 +45,8 @@ export function BillCharacter({
         open={open}
         reaction={reaction}
         reactionKey={reactionKey}
+        sortingPhase={sortingPhase}
+        sortingArms={sortingArms}
       />
     </LazyMotion>
   )
@@ -47,7 +58,13 @@ function BillArtwork({
   open,
   reaction,
   reactionKey,
-}: Required<Omit<MascotCharacterProps, 'className'>> & { className?: string }) {
+  sortingPhase,
+  sortingArms,
+}: Required<Omit<MascotCharacterProps, 'className'>> & {
+  className?: string
+  sortingPhase?: BillSortingPhase
+  sortingArms: boolean
+}) {
   const reducedMotion = useReducedMotion()
   const resumeCycle = useSyncExternalStore(
     subscribeMascotResume,
@@ -55,7 +72,8 @@ function BillArtwork({
     () => 0,
   )
   const id = useId().replaceAll(':', '')
-  const ambient = !reducedMotion && reaction === 'idle' && !open
+  const ambient =
+    !reducedMotion && reaction === 'idle' && !open && !sortingPhase
   const clap = reaction === 'celebrate'
   const splitDistance = docked ? 7 : 15
 
@@ -285,6 +303,13 @@ function BillArtwork({
         />
       )}
 
+      {sortingPhase && sortingArms && (
+        <SortingArms
+          phase={sortingPhase}
+          reducedMotion={Boolean(reducedMotion)}
+        />
+      )}
+
       <ReceiptHalf
         side="left"
         id={id}
@@ -342,7 +367,11 @@ function BillArtwork({
             transition={{ duration: reducedMotion ? 0 : 0.2 }}
             style={{ transformOrigin: '70px 65px' }}
           >
-            <FullFace reaction={reaction} ambient={ambient} />
+            <FullFace
+              reaction={reaction}
+              ambient={ambient}
+              sortingPhase={sortingPhase}
+            />
           </m.g>
         )}
       </AnimatePresence>
@@ -545,10 +574,52 @@ function HappyEyes() {
 function FullFace({
   reaction,
   ambient,
+  sortingPhase,
 }: {
   reaction: MascotReaction
   ambient: boolean
+  sortingPhase?: BillSortingPhase
 }) {
+  if (sortingPhase) {
+    const reading = sortingPhase === 'reading'
+    const filing = sortingPhase === 'filing'
+    return (
+      <g data-mascot-sorting-face={sortingPhase} fill="hsl(var(--mascot-ink))">
+        <ellipse
+          cx={filing ? 59 : reading ? 56 : 55}
+          cy="62"
+          rx="4.8"
+          ry="6.6"
+        />
+        <ellipse
+          cx={filing ? 85 : reading ? 83 : 81}
+          cy="62"
+          rx="4.8"
+          ry="6.6"
+        />
+        <circle
+          cx={filing ? 60 : reading ? 57 : 56}
+          cy="60"
+          r="1.3"
+          fill="hsl(var(--mascot-paper))"
+        />
+        <circle
+          cx={filing ? 86 : reading ? 84 : 82}
+          cy="60"
+          r="1.3"
+          fill="hsl(var(--mascot-paper))"
+        />
+        <path
+          d={reading ? 'M62 80Q70 84 78 80' : 'M58 78Q70 88 82 78'}
+          fill="none"
+          stroke="hsl(var(--mascot-ink))"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+      </g>
+    )
+  }
+
   if (reaction === 'success' || reaction === 'celebrate') {
     return (
       <g fill="none" stroke="hsl(var(--mascot-ink))" strokeLinecap="round">
@@ -764,6 +835,55 @@ function TwinFace({ x }: { x: number }) {
         strokeWidth="2.5"
         strokeLinecap="round"
       />
+    </g>
+  )
+}
+
+function SortingArms({
+  phase,
+  reducedMotion,
+}: {
+  phase: BillSortingPhase
+  reducedMotion: boolean
+}) {
+  const transition = {
+    duration: reducedMotion ? 0 : 0.28,
+    ease: [0.23, 1, 0.32, 1],
+  } as const
+  return (
+    <g data-mascot-sorting-arms={phase}>
+      <m.g
+        animate={{
+          rotate: phase === 'catching' || phase === 'reading' ? -26 : 8,
+        }}
+        transition={transition}
+        style={{ transformOrigin: '40px 83px' }}
+      >
+        <path
+          d="M41 83L17 65"
+          fill="none"
+          stroke="hsl(var(--mascot-ink))"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+        />
+        <circle cx="17" cy="65" r="3.3" fill="hsl(var(--mascot-ink))" />
+      </m.g>
+      <m.g
+        animate={{
+          rotate: phase === 'filing' ? -46 : phase === 'reading' ? -13 : 12,
+        }}
+        transition={transition}
+        style={{ transformOrigin: '100px 83px' }}
+      >
+        <path
+          d="M100 83L125 67"
+          fill="none"
+          stroke="hsl(var(--mascot-ink))"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+        />
+        <circle cx="125" cy="67" r="3.3" fill="hsl(var(--mascot-ink))" />
+      </m.g>
     </g>
   )
 }

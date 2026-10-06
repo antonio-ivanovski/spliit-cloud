@@ -143,6 +143,12 @@ function SortControl() {
   return (
     <Select
       value={`${sort.sortBy}-${sort.sortDir}`}
+      items={SORT_OPTIONS.map((option) => ({
+        value: option.value,
+        label: tFilters(
+          `sort.options.${option.sort.sortBy}.${option.sort.sortDir}`,
+        ),
+      }))}
       onValueChange={(value) => {
         const option = SORT_OPTIONS.find((o) => o.value === value)
         if (option) setSort(option.sort)

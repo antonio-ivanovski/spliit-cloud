@@ -92,10 +92,14 @@
         "deleteGroup": "Để xóa vĩnh viễn nhóm <target>{name}</target>, hãy nhập chính xác tên nhóm như hiển thị bên dưới.",
         "deleteExpense": "Để xóa vĩnh viễn khoản chi <target>{name}</target>, hãy nhập chính xác tiêu đề như hiển thị bên dưới.",
         "deleteRecurringExpense": "Để xác nhận xóa <target>{name}</target>, hãy nhập chính xác tiêu đề khoản chi như hiển thị bên dưới.",
-        "removeParticipant": "Để xóa <target>{name}</target> khỏi nhóm này, hãy nhập chính xác tên như hiển thị bên dưới."
+        "removeParticipant": "Để xóa <target>{name}</target> khỏi nhóm này, hãy nhập chính xác tên như hiển thị bên dưới.",
+        "deleteAccount": "Để xóa vĩnh viễn tài khoản, hãy nhập <target>{name}</target> chính xác như hiển thị bên dưới."
       },
       "placeholder": "Nhập “{name}” vào đây",
-      "mismatch": "Không khớp. Nhập chính xác {name}."
+      "mismatch": "Không khớp. Nhập chính xác {name}.",
+      "settingsNoteLink": "Thay đổi trong cài đặt tài khoản",
+      "settingsNoteLead": "Muốn bỏ qua bước nhập?",
+      "settingsNoteTail": "để dùng hộp thoại xác nhận đơn giản."
     }
   },
   "Theme": {
@@ -105,13 +109,14 @@
     "system": "Hệ thống"
   },
   "Footer": {
-    "madeIn": "Được tạo bởi cộng đồng mã nguồn mở với tình yêu ❤️",
+    "madeIn": "Được tạo bởi <github>cộng đồng mã nguồn mở</github> với tình yêu ❤️",
     "legalNavigation": "Pháp lý",
     "privacy": "Quyền riêng tư",
     "terms": "Điều khoản",
     "imprint": "Thông tin pháp lý",
     "sponsor": "Tài trợ",
-    "timeLabel": "Thời điểm trong ngày"
+    "timeLabel": "Thời điểm trong ngày",
+    "status": "Trạng thái"
   },
   "Expenses": {
     "title": "Chi phí",
@@ -257,7 +262,9 @@
       "showLess": "Thu gọn"
     },
     "copyToast": "Đã bắt đầu sao chép chi phí. Chi tiết chi phí hiện tại sẽ được dùng để tạo chi phí mới.",
-    "incomeBadge": "Thu nhập"
+    "incomeBadge": "Thu nhập",
+    "paidBySingle": "Được trả bởi <strong>{paidBy}</strong> · trả cho <paidFor></paidFor>",
+    "paidByMultipleSingle": "Được trả bởi <paidByNames></paidByNames> · trả cho <paidFor></paidFor>"
   },
   "ExpenseSeries": {
     "badge": "Định kỳ",
@@ -620,7 +627,8 @@
             "monthly": "tháng",
             "yearly": "năm"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Đề xuất danh mục cho các khoản chi chưa được phân loại bằng System One"
       },
       "Done": {
         "importComplete": "Nhập hoàn tất!",
@@ -758,7 +766,9 @@
       "description": "Nhóm giờ đây có thể hiển thị emoji bên cạnh tên. Đã phát hiện {emoji} trong “{name}”.",
       "openSettings": "Mở cài đặt nhóm",
       "notNow": "Để sau"
-    }
+    },
+    "groupTabsHint": "Muốn sắp xếp lại các tab nhóm hoặc ẩn những tab bạn không dùng?",
+    "groupTabsHintLink": "Tùy chỉnh các tab trong cài đặt tài khoản"
   },
   "Auth": {
     "title": "Đăng nhập",
@@ -998,6 +1008,22 @@
       "mascotOptions": {
         "off": "Tắt",
         "bill": "Bill hóa đơn"
+      },
+      "groupTabs": "Tab nhóm",
+      "groupTabsHelp": "Chọn các tab được hiển thị và thứ tự của chúng trong mọi nhóm.",
+      "groupTabsCustomize": "Tùy chỉnh",
+      "groupTabsSave": "Lưu",
+      "groupTabsDiscard": "Hủy bỏ",
+      "groupTabsReset": "Đặt lại về mặc định",
+      "groupTabsHide": "Ẩn {name}",
+      "groupTabsShow": "Hiện {name}",
+      "groupTabsMoveUp": "Di chuyển {name} lên",
+      "groupTabsMoveDown": "Di chuyển {name} xuống",
+      "deleteConfirmation": "Xác nhận xóa khoản chi",
+      "deleteConfirmationHelp": "Xóa nhanh chỉ yêu cầu xác nhận một lần. Xóa bằng cách nhập yêu cầu nhập tiêu đề khoản chi trước. Xóa nhóm hoặc xóa thành viên luôn yêu cầu nhập.",
+      "deleteConfirmationOptions": {
+        "standard": "Hộp thoại xác nhận",
+        "strict": "Hộp thoại xác nhận bằng nhập"
       }
     },
     "aiPreferences": {
@@ -1190,7 +1216,111 @@
       "backedUp": "Đã sao lưu",
       "removeWarning": "Không thể hoàn tác hành động này. Thiết bị sẽ không còn đăng nhập cho bạn bằng passkey nữa — bạn có thể đăng ký lại bất cứ lúc nào.",
       "removeLastWarning": "Đây là passkey cuối cùng của bạn. Nếu đây là phương thức đăng nhập duy nhất, việc xóa sẽ bị chặn cho đến khi bạn lưu liên kết khôi phục hoặc một phương thức đăng nhập khác.",
-      "anonymousHelpNoLink": "Không có liên kết đăng nhập nào được lưu cho tài khoản ẩn danh này. Hãy tạo một liên kết ở hàng liên kết đăng nhập bên dưới — liên kết này hoạt động trên mọi thiết bị."
+      "anonymousHelpNoLink": "Không có liên kết đăng nhập nào được lưu cho tài khoản ẩn danh này. Hãy tạo một liên kết ở hàng liên kết đăng nhập bên dưới — liên kết này hoạt động trên mọi thiết bị.",
+      "reauthTitle": "Đăng nhập lại để thêm passkey",
+      "reauthDescription": "Vì sự an toàn của bạn, việc thêm passkey cần một lần đăng nhập mới. Bạn sẽ đăng xuất, đăng nhập lại rồi quay lại ngay đây để hoàn tất.",
+      "reauthConfirm": "Đăng nhập lại",
+      "reauthAnonymousTitle": "Lưu liên kết đăng nhập trước",
+      "reauthAnonymousDescription": "Tài khoản khách này chưa có liên kết đăng nhập và chưa có passkey. Đăng xuất ngay bây giờ sẽ khóa bạn vĩnh viễn — hãy lưu liên kết đăng nhập trong mục Liên kết đăng nhập trước, rồi quay lại để thêm passkey."
+    },
+    "deletion": {
+      "sectionTitle": "Vùng nguy hiểm",
+      "sectionDescription": "Xóa vĩnh viễn tài khoản và mọi phương thức đăng nhập.",
+      "rowLabel": "Xóa tài khoản",
+      "rowDescription": "Xóa hồ sơ, phiên đăng nhập và cài đặt sau thời gian chờ 48 giờ. Các chi phí chung vẫn ở lại trong nhóm của các thành viên khác mà không có thông tin cá nhân của bạn.",
+      "open": "Xóa tài khoản…",
+      "scheduledTitle": "Đã lên lịch xóa tài khoản",
+      "scheduledDescription": "Việc xóa được lên lịch bắt đầu vào hoặc sau {date}. Tài khoản vẫn hoạt động cho đến khi bắt đầu xóa. Nhóm, thành viên và chi phí có thể thay đổi trong thời gian chờ; lựa chọn của bạn áp dụng cho trạng thái khi thực hiện xóa. Bạn có thể hủy cho đến khi bắt đầu xóa. Email xác nhận đã được gửi đến {email}.",
+      "cancel": "Hủy xóa",
+      "cancelling": "Đang hủy…",
+      "cancelled": "Đã hủy xóa tài khoản.",
+      "dialogTitle": "Lên lịch xóa tài khoản?",
+      "dialogDescription": "Thao tác này lên lịch xóa sau thời gian chờ 48 giờ; chưa có gì bị xóa ngay bây giờ. Bạn có thể hủy cho đến khi bắt đầu xóa. Lựa chọn của bạn áp dụng cho nhóm và số dư tại thời điểm đó. Khi đã bắt đầu xóa, không thể hoàn tác.",
+      "farewellTitle": "Rất tiếc khi bạn rời đi",
+      "farewellBody": "Nếu có điều gì chúng tôi có thể làm để bạn ở lại, <feedbackLink>hãy chia sẻ phản hồi của bạn</feedbackLink> — chỉ mất một phút và giúp chúng tôi cải thiện.",
+      "groupsTitle": "Điều gì xảy ra với các nhóm",
+      "leaveGroup": "Bạn sẽ rời khỏi “{name}”.",
+      "deleteGroup": "“{name}” sẽ bị xóa vĩnh viễn — bạn là thành viên cuối cùng của nhóm.",
+      "lastAdmin": "Bạn là quản trị viên cuối cùng của “{name}” — một thành viên khác sẽ tự động được nâng quyền.",
+      "settleBalances": "Các số dư chưa tất toán trong “{name}” sẽ được tất toán tự động.",
+      "friendLedger": "Sổ ghi chép với {name} đã được tất toán và đóng lại.",
+      "friendLedgerUnnamed": "Sổ ghi chép của bạn đã được tất toán và đóng lại.",
+      "friendLedgerFallback": "sổ ghi chép với bạn bè",
+      "noGroups": "Bạn không phải là thành viên của nhóm nào.",
+      "accessTitle": "Đăng nhập và lời mời",
+      "pendingInvites_zero": "Khi thực hiện xóa, {count} lời mời đang chờ mà bạn đã gửi sẽ bị thu hồi.",
+      "pendingInvites_one": "Khi thực hiện xóa, {count} lời mời đang chờ mà bạn đã gửi sẽ bị thu hồi.",
+      "pendingInvites_two": "Khi thực hiện xóa, {count} lời mời đang chờ mà bạn đã gửi sẽ bị thu hồi.",
+      "pendingInvites_few": "Khi thực hiện xóa, {count} lời mời đang chờ mà bạn đã gửi sẽ bị thu hồi.",
+      "pendingInvites_many": "Khi thực hiện xóa, {count} lời mời đang chờ mà bạn đã gửi sẽ bị thu hồi.",
+      "pendingInvites_other": "Khi thực hiện xóa, {count} lời mời đang chờ mà bạn đã gửi sẽ bị thu hồi.",
+      "keepNameLabel": "Giữ tên trong lịch sử chung",
+      "keepNameDescription": "Các chi phí chung vẫn hiển thị “{name}”. Nếu không, tên sẽ được thay bằng “Thành viên đã xóa” ở mọi nơi.",
+      "customNameLabel": "Tên muốn giữ lại",
+      "settleLabel": "Đánh dấu số dư đã tất toán khi thực hiện xóa",
+      "settleDescription": "Các số dư còn lại sẽ được tất toán tự động. Nếu không, chúng sẽ được giữ nguyên dưới tên thay thế của bạn.",
+      "leaveBalances": "Các số dư chưa tất toán trong “{name}” sẽ được giữ nguyên.",
+      "friendLeaveBalances": "Số dư của bạn với {name} sẽ được giữ nguyên.",
+      "confirmWord": "XÓA",
+      "ackLabel": "Tôi hiểu rằng việc này là vĩnh viễn, và các chi phí chung vẫn ở lại trong nhóm của các thành viên khác mà không có thông tin cá nhân của tôi.",
+      "exportHint": "Muốn giữ một bản sao trước? Hãy <exportLink>xuất bản sao lưu</exportLink> trước khi tiếp tục.",
+      "schedule": "Lên lịch xóa",
+      "scheduling": "Đang lên lịch…",
+      "scheduled": "Đã lên lịch xóa. Hãy kiểm tra email để xem lại hoặc hủy.",
+      "dialogCancel": "Giữ lại tài khoản",
+      "reauthTitle": "Đăng nhập lại để xóa tài khoản",
+      "reauthDescription": "Vì lý do bảo mật, việc xóa tài khoản cần đăng nhập mới. Bạn sẽ đăng xuất, đăng nhập lại rồi quay lại đây để hoàn tất.",
+      "reauthConfirm": "Đăng nhập lại",
+      "errors": {
+        "generic": "Đã xảy ra lỗi. Vui lòng thử lại.",
+        "loadFailed": "Không thể tải chi tiết xóa.",
+        "emailMismatch": "Email đã nhập không khớp với email tài khoản.",
+        "alreadyRequested": "Tài khoản này đã có yêu cầu xóa đang chờ xử lý.",
+        "sessionNotFresh": "Phiên đăng nhập quá cũ cho thao tác này. Vui lòng đăng nhập lại rồi thử tiếp.",
+        "jobsDisabled": "Việc xóa tài khoản cần tiến trình nền, vốn đang bị tắt trên bản triển khai này.",
+        "ackRequired": "Vui lòng xác nhận đã hiểu các hậu quả trước.",
+        "invalidDisplayName": "Nhập tên từ 1 đến 100 ký tự.",
+        "cancelFailed": "Không thể hủy việc xóa. Vui lòng thử lại."
+      },
+      "groupsToDeleteTitle": "Các nhóm sẽ bị xóa",
+      "groupsToDeleteDescription": "Khi thực hiện xóa, các nhóm mà bạn vẫn là thành viên hoạt động cuối cùng sẽ bị xóa vĩnh viễn.",
+      "groupsToLeaveTitle": "Các nhóm bạn sẽ rời khỏi",
+      "groupsToLeaveDescription": "Khi thực hiện xóa, bạn sẽ rời các nhóm vẫn còn thành viên hoạt động khác. Các nhóm này vẫn được giữ cho những thành viên khác.",
+      "friendsTitle": "Bạn bè",
+      "friendsDescription": "Số dư một đối một với những người bạn này.",
+      "backToSettings": "Quay lại cài đặt",
+      "pageTitle": "Xóa tài khoản",
+      "loading": "Đang tải thông tin xóa tài khoản",
+      "choicesTitle": "Lựa chọn khi xóa tài khoản",
+      "nameTitle": "Tên trong lịch sử chung",
+      "removeNameLabel": "Thay tên bằng “Thành viên đã xóa”",
+      "balancesTitle": "Số dư còn lại",
+      "keepBalancesLabel": "Giữ nguyên số dư còn lại",
+      "balanceExplanation": "Nếu chọn tất toán, các mục tất toán sẽ được ghi lại khi tài khoản bị xóa. Không có tiền được chuyển. Nếu không, số dư vẫn được giữ trong lịch sử chung.",
+      "confirmationTitle": "Xác nhận xóa tài khoản",
+      "retry": "Thử lại",
+      "pageDescription": "Lên lịch xóa tài khoản sau thời gian chờ 48 giờ. Tài khoản vẫn hoạt động cho đến khi bắt đầu xóa, và bạn có thể hủy trước đó.",
+      "reviewChoicesTitle": "Lựa chọn của bạn",
+      "consequencesTitle": "Điều gì sẽ xảy ra",
+      "reviewConfirmTitle": "Xác nhận xóa",
+      "backupLink": "Xuất bản sao lưu",
+      "keptNameExplanation": "Khi thực hiện xóa, chi phí chung sẽ hiển thị “{name}”. Tên hồ sơ của bạn được giữ nguyên cho đến lúc đó.",
+      "removedNameExplanation": "Khi thực hiện xóa, chi phí chung sẽ hiển thị “Thành viên đã xóa”. Tên hồ sơ của bạn được giữ nguyên cho đến lúc đó.",
+      "keptBalancesExplanation": "Khi bắt đầu xóa, số dư còn lại được giữ trong lịch sử chung, bao gồm chi phí được thêm trong thời gian chờ.",
+      "settledBalancesExplanation": "Trong quá trình xóa, các mục tất toán đánh dấu số dư tại thời điểm đó là đã tất toán trong các nhóm bạn vẫn tham gia, kể cả nhóm đã lưu trữ. Số dư trong các nhóm bạn đã rời hoặc bị loại khỏi được giữ nguyên. Không có tiền được chuyển.",
+      "rowBalancesKept": "Số dư còn lại được giữ nguyên.",
+      "rowBalancesSettled": "Số dư tại thời điểm xóa sẽ được đánh dấu đã tất toán.",
+      "rowAdmin": "Khi thực hiện xóa, một thành viên khác sẽ trở thành quản trị viên nếu bạn vẫn là quản trị viên cuối cùng.",
+      "friendKept": "Số dư của bạn được giữ nguyên.",
+      "friendSettled": "Khi thực hiện xóa, số dư lúc đó của bạn sẽ được đánh dấu đã tất toán và sổ theo dõi sẽ đóng.",
+      "accessExplanation": "Các phương thức đăng nhập này sẽ không còn dùng được khi tài khoản bị xóa.",
+      "invitesTitle": "Lời mời đang chờ",
+      "balanceUnavailable": "Không thể xem số dư",
+      "archivedBalancesKept": "Nhóm đã lưu trữ này vẫn ở chế độ chỉ đọc. Số dư còn lại sẽ được giữ nguyên.",
+      "signInMethodsRemoved": "Các phương thức đăng nhập sau sẽ không còn dùng được: {methods}.",
+      "consequencesTiming": "Nội dung xem xét này phản ánh trạng thái tài khoản hiện tại. Nhóm, thành viên và chi phí có thể thay đổi trước khi bắt đầu xóa. Lựa chọn của bạn sẽ áp dụng cho các nhóm bạn tham gia và số dư của chúng tại thời điểm đó. Không có thay đổi nào được liệt kê ở đây diễn ra ngay lập tức.",
+      "executingTitle": "Đã bắt đầu xóa tài khoản",
+      "executingDescription": "Việc xóa tài khoản đang được xử lý. Một số thay đổi có thể đã hoàn tất, và không thể hủy hay hoàn tác việc xóa. Nếu quá trình bị gián đoạn, hệ thống sẽ tiếp tục từ các bước đã hoàn tất."
     }
   },
   "CompleteProfile": {
@@ -1633,7 +1763,8 @@
       "allItemsSplitEdit": "Chỉnh sửa cách chia tất cả mục",
       "allItemsSplitModalTitle": "Cách chia cho tất cả mục",
       "remainderAllocationProportional": "Theo tỷ lệ các mục",
-      "remainderProportionalHint": "Chia số tiền này dựa trên tổng phụ các mục của từng người. Hữu ích cho thuế và tiền boa."
+      "remainderProportionalHint": "Chia số tiền này dựa trên tổng phụ các mục của từng người. Hữu ích cho thuế và tiền boa.",
+      "errorExceedsAmountDetails": "Tổng các mục ({itemsTotal}) vượt quá số tiền {excess}."
     },
     "leaveItemized": {
       "title": "Rời chế độ mục?",
@@ -1669,7 +1800,15 @@
       "done": "Xong",
       "yourTime": "giờ của bạn",
       "invalidDate": "Nhập ngày hợp lệ.",
-      "invalidTime": "Nhập giờ hợp lệ (HH:mm)."
+      "invalidTime": "Nhập giờ hợp lệ (HH:mm).",
+      "hourLabel": "Giờ",
+      "minuteLabel": "Phút",
+      "periodLabel": "SA/CH",
+      "timeWheelHint": "Cuộn hoặc chạm để đặt giờ. Ngày vẫn giữ nguyên.",
+      "now": "Bây giờ",
+      "morning": "Sáng",
+      "midday": "Trưa",
+      "evening": "Tối"
     },
     "settlementTitle": "Thanh toán tất toán",
     "settlementHint": "{category}: Không tính là chi tiêu trong tổng, thống kê hoặc ngân sách. Vẫn cập nhật ai nợ ai.",
@@ -1713,7 +1852,8 @@
       "description": "Nhập tổng số tiền bị tính, bao gồm mọi khoản phí.",
       "impliedRate": "Tỷ giá suy ra: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Gợi ý danh mục"
+    "otherSuggestions": "Gợi ý danh mục",
+    "paidForItemizedEmptyHint": "Gán người vào các mục để xem phần của mỗi người."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Xóa tài liệu",
@@ -2749,7 +2889,9 @@
       "changeEmptyValue": "Chưa đặt",
       "recurringCreated": "{participant} đã tạo chi phí định kỳ \"{title}\"",
       "stopped": "{participant} đã dừng chi phí định kỳ {title}",
-      "commented": "{participant} đã bình luận về {title}: \"{excerpt}\""
+      "commented": "{participant} đã bình luận về {title}: \"{excerpt}\"",
+      "yourShare": "Phần của bạn",
+      "notInvolved": "Bạn không liên quan"
     },
     "group": {
       "updated": "{participant} đã cập nhật cài đặt nhóm",
@@ -2762,7 +2904,11 @@
         "currencyCode": "Mã loại tiền",
         "linkedParticipant": "Người tham gia",
         "subgroupsEnabled": "Nhóm con",
-        "publicViewLink": "Liên kết công khai chỉ xem"
+        "publicViewLink": "Liên kết công khai chỉ xem",
+        "emoji": "Emoji",
+        "color": "Màu",
+        "subgroups": "Nhóm con",
+        "splitPresets": "Mẫu chia"
       }
     },
     "member": {
@@ -2785,7 +2931,8 @@
       }
     },
     "participant": {
-      "removed": "{participant} đã xóa {target} khỏi nhóm"
+      "removed": "{participant} đã xóa {target} khỏi nhóm",
+      "added": "{participant} đã thêm {target} vào nhóm"
     },
     "import": {
       "imported_zero": "{participant} đã nhập {count} chi phí",
@@ -2797,7 +2944,14 @@
     },
     "fallback": "Một hoạt động đã được ghi lại",
     "unknownActor": "Ai đó",
-    "openExpense": "Mở chi phí"
+    "openExpense": "Mở chi phí",
+    "hiddenActivitiesShowLess": "Thu gọn",
+    "hiddenActivities_other": "{count} hoạt động ẩn không liên quan đến bạn",
+    "viewMode": {
+      "label": "Chế độ xem hoạt động",
+      "forYou": "Dành cho bạn",
+      "all": "Tất cả"
+    }
   },
   "OfflineBanner": {
     "message": "Bạn đang ngoại tuyến. Dữ liệu đã tải chỉ để đọc.",
@@ -2891,9 +3045,6 @@
   },
   "BulkCategorize": {
     "title": "Phân loại hàng loạt",
-    "calibrationTitle": "Hiệu chỉnh AI",
-    "calibrationDescription": "Cung cấp ví dụ để AI học.",
-    "roundCount": "Vòng {round} trên {max}",
     "confidence": {
       "high": "Cao",
       "medium": "Trung bình",
@@ -2982,7 +3133,137 @@
     "doneTitle": "Hoàn tất!",
     "expenseColumn": "Chi phí",
     "categoryColumn": "Danh mục",
-    "confidenceColumn": "Độ tin cậy"
+    "confidenceColumn": "Độ tin cậy",
+    "simpleDescription": "Xem lại kết quả khớp phân loại cho các khoản chi ở Chung, rồi lưu lựa chọn.",
+    "generateSuggestions": "Gợi ý phân loại",
+    "backToStart": "Quay lại",
+    "chooseMode": "Chọn cách phân loại chi phí",
+    "localMode": "Từ điển & lịch sử",
+    "localModeDescription": "Dùng lịch sử phân loại của nhóm này và từ điển tích hợp.",
+    "startRun": "Bắt đầu phân loại",
+    "noCategory": "Giữ chưa phân loại",
+    "progressTitle": "Đang phân loại chi phí",
+    "progressDescription": "Có thể rời trang này và quay lại sau. Tiến trình được lưu.",
+    "progressCount": "Đã phân loại {categorized} trên {total} khoản chi",
+    "applyProgressTitle": "Đang lưu phân loại",
+    "reviewTitle": "Xem lại gợi ý",
+    "reviewSummary": "{suggested} gợi ý từ {total} khoản chi chưa phân loại",
+    "sourceLocal": "Cục bộ",
+    "saveSelected": "Lưu các phân loại đã chọn",
+    "retry": "Thử lại",
+    "restart": "Bắt đầu lần chạy mới",
+    "failed": "Lần chạy đã dừng: {message}",
+    "savedSummary": "{applied} đã đổi, {skipped} đã bỏ qua",
+    "selectedCount": "{count} đã chọn",
+    "selectAll": "Chọn tất cả",
+    "clearAll": "Xóa tất cả",
+    "discardRun": "Hủy lần chạy",
+    "partialSaveNotice": "Một số phân loại có thể đã được lưu. Hủy lần chạy này sẽ không hoàn tác các thay đổi đó.",
+    "restartOlderRunTitle": "Bắt đầu lần chạy phân loại mới",
+    "restartOlderRunDescription": "Lần chạy trước đó dùng quy trình xem lại cũ. Hãy bắt đầu lại để xem lại tất cả các khoản chi cùng nhau.",
+    "runningMatches": "{count} trên {total} khoản chi đã có gợi ý phân loại cho đến nay",
+    "failedTitle": "Phân loại đã dừng",
+    "reviewWorkload": "{total} khoản chi ở Chung · {selected} được chọn để phân loại · {general} giữ ở Chung",
+    "categoryChoices": "Lựa chọn phân loại",
+    "moreCategories": "Chọn phân loại khác",
+    "saveCount": "Lưu {count} phân loại",
+    "finishWithoutChanges": "Hoàn tất mà không thay đổi",
+    "completionSummary": "Lần chạy hoàn tất: {changed} trên {total} khoản chi đã đổi. {remaining} khoản chi vẫn ở Chung.",
+    "viewExpenses": "Xem các khoản chi",
+    "countLoading": "Đang đếm các khoản chi chưa phân loại…",
+    "nothingToCategorize": "Không có khoản chi chưa phân loại nào cần phân loại.",
+    "startingCount": "{count} khoản chi hiện ở Chung và sẵn sàng để xem lại.",
+    "countError": "Không thể đếm các khoản chi chưa phân loại. Tải lại trang để thử lại.",
+    "keepGeneral": "Chung · giữ chưa phân loại",
+    "calibrationRoundTitle": "Vòng hiệu chỉnh {round}",
+    "calibrationLoading": "Đang chuẩn bị mẫu chi phí đa dạng…",
+    "calibrationReviewDescription": "Xem lại và sửa {count} khoản chi này. Các lựa chọn được giữ trong lần chạy này cho đến khi lưu ở cuối.",
+    "confirmRound": "Xác nhận vòng",
+    "roundSummaryTitle": "Vòng {round} đã xem lại",
+    "roundSummaryDescription": "{reviewed} đã xem lại · {categorized} đã phân loại tạm · {general} giữ làm Chung",
+    "roundQuality": "Gợi ý ban đầu khớp {accuracy}% với lựa chọn của bạn; bạn đã sửa {corrections}.",
+    "categorizeRemaining": "Phân loại các khoản chi còn lại",
+    "nextRound": "Xem lại mẫu khác",
+    "tableLabel": "Các khoản chi cần phân loại",
+    "dateColumn": "Ngày",
+    "amountColumn": "Số tiền",
+    "rerunSuggestions": "Chạy lại gợi ý",
+    "roundQualityWithSuggestions": "{accepted} trên {proposed} phân loại được gợi ý đã được chấp nhận · {changed} đã đổi · {missed} kết quả khớp tìm được từ Chung",
+    "roundQualityNoSuggestions": "Không có phân loại nào được gợi ý · {missed} kết quả khớp tìm được từ Chung · {abstained} còn ở Chung",
+    "rerunChanged": "Đã thay đổi {changed} trên {proposed} phân loại được gợi ý.",
+    "rerunAssignedSingle": "Đã gán phân loại cho 1 khoản chi còn ở Chung.",
+    "rerunAssignedMultiple": "Đã gán phân loại cho {count} khoản chi còn ở Chung.",
+    "rerunPotentialSingle": "Thay đổi của bạn có thể cải thiện kết quả khớp cho 1 khoản chi Chung còn lại. Hãy chạy lại gợi ý nếu muốn thêm một lần nữa.",
+    "rerunPotentialMultiple": "Thay đổi của bạn có thể cải thiện kết quả khớp cho {count} khoản chi Chung còn lại. Hãy chạy lại gợi ý nếu muốn thêm một lần nữa.",
+    "rerunEligible": "Đủ điều kiện chạy thêm lần nữa: Chung {general} · kết quả tự động chưa chắc chắn {uncertain}. Các chỉnh sửa của bạn có thể cải thiện các gợi ý này.",
+    "rerunNoEligible": "Không còn khoản Chung chưa xử lý hay kết quả tự động chưa chắc chắn nào để chạy lại. Các chỉnh sửa của bạn vẫn được tính trong các phân loại đã lưu.",
+    "rerunAlreadyUsed": "Các chỉnh sửa mới nhất đã được dùng cho các gợi ý này. Hãy thực hiện thêm một chỉnh sửa để chạy lại.",
+    "highMatch": "Khớp cao",
+    "mediumMatch": "Khớp trung bình",
+    "lowMatch": "Khớp thấp",
+    "belowMatchThreshold": "Dưới ngưỡng khớp",
+    "refiningTitle": "Đang tinh chỉnh các kết quả khớp chưa chắc chắn",
+    "runLimitSummary": "Lần chạy này gồm 10,000 khoản chi. {count} khoản chi Chung nữa có thể được phân loại trong lần chạy khác sau khi lưu.",
+    "pageLoading": "Đang tải các khoản chi…",
+    "pageLoadError": "Không thể tải các khoản chi.",
+    "pageRetry": "Thử lại",
+    "pageCount": "Đang hiển thị {loaded} trên {total} khoản chi",
+    "ledgerAmountNotice": "Số tiền hiển thị theo đơn vị tiền của nhóm.",
+    "viewExpenseDetails": "Xem chi tiết khoản chi",
+    "reviewFilterLabel": "Hiển thị các khoản chi",
+    "filterAll": "Tất cả {count}",
+    "filterGeneral": "Chung {count}",
+    "improveSuggestions": "Cải thiện các gợi ý còn lại",
+    "rerunInfoLabel": "Về việc cải thiện gợi ý",
+    "preparingNextStage": "Đang chuẩn bị bước tiếp theo",
+    "rerunProgressTitle": "Đang cập nhật gợi ý",
+    "progressPreparing": "Đang chuẩn bị các khoản chi…",
+    "noGeneralRows": "Không còn khoản chi nào ở Chung trong lần xem lại này.",
+    "discardConfirmationTitle": "Hủy lần chạy phân loại này?",
+    "discardConfirmationDescription": "Thao tác này sẽ xóa lần chạy, các gợi ý và các lựa chọn do bạn hoặc các quản trị viên khác thực hiện. Không có phân loại chi phí nào bị thay đổi.",
+    "discardConfirmationCancel": "Giữ lần chạy",
+    "progressCountDescription": "Chỉ tính các phân loại đã xác nhận và mức khớp trung bình hoặc cao; Chung và mức khớp thấp thì không.",
+    "systemOneMode": "Mô hình System One",
+    "systemOneModeDescription": "Sử dụng mô hình quyết định System One đã được cấu hình cho mọi khoản chi, dựa trên các khoản chi đã phân loại trong nhóm này và các lựa chọn bạn đã xem xét làm gợi ý. TypeSafe Jev là một mô hình như vậy.",
+    "systemOneUnavailable": "System One không khả dụng. Vẫn có thể dùng từ điển & lịch sử.",
+    "systemOneConfidence": "Độ tin cậy của System One: {confidence}%",
+    "systemOneOptionProbability": "Xác suất lựa chọn của System One: {probability}%",
+    "overallProgress": "Tiến trình tổng thể",
+    "fullPassProcessed": "Đã xử lý {processed} trên {total} chi phí",
+    "stageProcessed": "Đã xử lý {processed} trên {total} chi phí trong bước này",
+    "saveSkipped": "{count} chi phí đã bị bỏ qua vì đã thay đổi.",
+    "sharedRunNotice": "Lần chạy này được chia sẻ với các quản trị viên khác trong nhóm. Mọi người đều thấy cùng các gợi ý.",
+    "saveConflictTitle": "{count} chi phí đã thay đổi kể từ khi bắt đầu đợt xem xét này",
+    "saveConflictDescription": "Ai đó đã chỉnh sửa các chi phí này hoặc đổi phân loại của chúng bên ngoài lần chạy này. Hãy lưu các chi phí khác, hoặc chỉnh sửa lại phân loại rồi thử lưu một lần nữa.",
+    "saveConflictMore": "Và {count} mục nữa.",
+    "saveOtherExpenses": "Lưu các chi phí khác",
+    "receiptTitles": {
+      "freshMarket": "Chợ tươi sống",
+      "greenGrocer": "Cửa hàng rau củ",
+      "fruitStand": "Quầy trái cây",
+      "cornerBistro": "Quán bistro góc phố",
+      "noodleHouse": "Quán mì",
+      "cafeLunch": "Bữa trưa ở quán cà phê",
+      "flightTicket": "Vé máy bay",
+      "airlineBaggage": "Hành lý hàng không",
+      "boardingPass": "Thẻ lên máy bay",
+      "homeSupplies": "Đồ dùng gia đình",
+      "hardwareShop": "Cửa hàng đồ kim khí",
+      "cleaningGoods": "Đồ dùng vệ sinh",
+      "cinemaTickets": "Vé rạp chiếu phim",
+      "movieNight": "Buổi tối xem phim",
+      "filmFestival": "Liên hoan phim",
+      "organicMarket": "Chợ hữu cơ",
+      "bakeryRun": "Mua bánh ở tiệm bánh",
+      "sushiBar": "Quán sushi",
+      "pizzaNight": "Buổi tối ăn pizza",
+      "airportLounge": "Phòng chờ sân bay",
+      "extraLegroom": "Chỗ để chân rộng rãi",
+      "laundryDetergent": "Bột giặt",
+      "storageBoxes": "Hộp đựng đồ",
+      "popcornCombo": "Combo bắp rang",
+      "streamingRental": "Thuê phim trực tuyến"
+    }
   },
   "ExpensePreview": {
     "title": "Chi phí",
@@ -3436,7 +3717,8 @@
     "hintTapToAddExpense": "Tôi là {name} — chạm vào tôi để thêm khoản chi.",
     "hintTapToCreateGroup": "Tôi là {name} — chạm vào tôi để tạo nhóm.",
     "billName": "Bill",
-    "offlineMessage": "Tôi không thể tạo gì khi bạn đang ngoại tuyến."
+    "offlineMessage": "Tôi không thể tạo gì khi bạn đang ngoại tuyến.",
+    "serverUnreachableMessage": "Hiện không thể kết nối đến máy chủ Spliit — kết nối mạng vẫn ổn, nên đây là lỗi từ phía chúng tôi."
   },
   "CreateSettlement": {
     "description": "Xem lại khoản thanh toán tất toán trước khi ghi nhận.",
@@ -3487,7 +3769,18 @@
       "existingPasskeyTitle": "Đã đăng ký passkey?",
       "existingPasskeyDescription": "Đăng nhập lại bằng passkey trên một trong các thiết bị đã đăng ký của bạn.",
       "passkeySignIn": "Đăng nhập bằng passkey",
-      "passkeySignInError": "Không thể đăng nhập bằng passkey này. Hãy thử lại hoặc dùng liên kết đăng nhập của bạn."
+      "passkeySignInError": "Không thể đăng nhập bằng passkey này. Hãy thử lại hoặc dùng liên kết đăng nhập của bạn.",
+      "passkeyNameLabel": "Đặt tên cho passkey này (tùy chọn)",
+      "passkeyNamePlaceholder": "vd. MacBook Touch ID",
+      "nameTitle": "Chọn tên hiển thị",
+      "nameDescription": "Hiển thị trên passkey và trong các nhóm của bạn. Bạn có thể thay đổi sau.",
+      "nameLabel": "Tên hiển thị",
+      "namePlaceholder": "Tên của bạn",
+      "nameSave": "Hoàn tất",
+      "nameSaving": "Đang lưu…",
+      "nameRequired": "Vui lòng nhập tên.",
+      "nameTooShort": "Tên phải có ít nhất 2 ký tự.",
+      "nameError": "Không thể lưu tên hiển thị. Vui lòng thử lại."
     },
     "onboarding": {
       "title": "Lưu liên kết đăng nhập của bạn",
@@ -3626,6 +3919,29 @@
         "review": {
           "title": "Xem lại và nhập",
           "detail": "Kiểm tra bản trùng và xác nhận nhập."
+        }
+      }
+    },
+    "categorize": {
+      "title": "Phân loại chi phí",
+      "description": "Đề xuất danh mục cho các khoản chi hiện có chưa được phân loại bằng System One. Hãy xem lại mọi thay đổi trước khi lưu.",
+      "start": "Phân loại chi phí",
+      "steps": {
+        "choose": {
+          "title": "Chọn phương thức",
+          "detail": "Sử dụng từ điển & lịch sử hoặc mô hình quyết định System One."
+        },
+        "calibrate": {
+          "title": "Xem lại các mẫu nhỏ",
+          "detail": "Sửa các gợi ý để vòng tiếp theo học được các phân loại của nhóm."
+        },
+        "review": {
+          "title": "Xem lại mọi khoản chi",
+          "detail": "Các khoản chi Chung hiện trước trong bảng đầy đủ."
+        },
+        "save": {
+          "title": "Lưu phân loại",
+          "detail": "Các khoản chi chỉ thay đổi khi xác nhận lần xem lại cuối."
         }
       }
     }
@@ -4164,7 +4480,8 @@
       "valuesRecomputedTitle": "Giá trị đã tính lại",
       "viewExpenses": "Xem chi phí",
       "waitDuplicate": "Chờ kiểm tra trùng lặp xong trước khi nhập.",
-      "invalidRowTitle": "Hàng nhập không hợp lệ"
+      "invalidRowTitle": "Hàng nhập không hợp lệ",
+      "categorizeWithSystemOne": "Đề xuất danh mục cho các khoản chi chưa được phân loại bằng System One"
     }
   },
   "Sponsor": {
@@ -4319,5 +4636,26 @@
     "expenseMissing": "Chi phí này không có trong bản tải của thiết bị này. Kết nối lại để xem chi phí mới hơn/cũ hơn.",
     "groupMissing": "Nhóm này chưa tải xong.",
     "balancesStale": "Số dư có thể đã cũ."
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit hiện không khả dụng",
+    "description": "Hiện không thể kết nối đến máy chủ Spliit. Kết nối mạng vẫn ổn — vui lòng thử lại sau giây lát.",
+    "retry": "Thử lại"
+  },
+  "ApiStatusBanner": {
+    "message": "Hiện không thể kết nối đến Spliit. Kết nối mạng vẫn ổn — sự cố nằm ở phía chúng tôi.",
+    "statusLink": "Xem trạng thái"
+  },
+  "AccountDeletionBanner": {
+    "scheduled": "Tài khoản được lên lịch xóa vào {date}.",
+    "review": "Xem lại hoặc hủy việc xóa",
+    "executing": "Quá trình xóa tài khoản đã bắt đầu.",
+    "viewStatus": "Xem trạng thái xóa"
+  },
+  "Updates": {
+    "title": "Bản cập nhật",
+    "latest": "Có gì mới",
+    "viewAll": "Xem tất cả bản cập nhật",
+    "dismiss": "Đã hiểu"
   }
 }

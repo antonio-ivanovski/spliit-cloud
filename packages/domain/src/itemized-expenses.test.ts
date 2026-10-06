@@ -787,3 +787,49 @@ describe('buildDefaultPaidForForSplitMode', () => {
     expect(result).toEqual([])
   })
 })
+
+describe('getItemizedFormMinorTotals', () => {
+  it('rounds each line like save serialization (matches submit-values)', async () => {
+    const { getItemizedFormMinorTotals, gapMinorAsMajor } =
+      await import('./itemized-expenses')
+    const { getCurrency, amountAsMinorUnits } = await import('./index')
+    const USD = getCurrency('USD')!
+
+    // 0.1 + 0.2 float dust collapses to equal minor totals.
+    expect(
+      getItemizedFormMinorTotals(
+        [
+          { unitPrice: 0.1, quantity: 1 },
+          { unitPrice: 0.2, quantity: 1 },
+        ],
+        0.3,
+        USD,
+      ),
+    ).toEqual({ itemsMinor: 30, amountMinor: 30, excessMinor: 0, gapMinor: 0 })
+
+    // Quantity multiplies after per-line rounding.
+    expect(
+      getItemizedFormMinorTotals([{ unitPrice: 0.07, quantity: 3 }], 0.21, USD)
+        .itemsMinor,
+    ).toBe(21)
+
+    // Filler gap round-trips through minor units.
+    for (const gap of [1, -3, 99]) {
+      const major = gapMinorAsMajor(gap, USD)
+      expect(amountAsMinorUnits(major, USD)).toBe(gap)
+    }
+
+    // JPY has no minor units.
+    const JPY = getCurrency('JPY')!
+    expect(
+      getItemizedFormMinorTotals(
+        [
+          { unitPrice: 100, quantity: 1 },
+          { unitPrice: 200, quantity: 1 },
+        ],
+        300,
+        JPY,
+      ).gapMinor,
+    ).toBe(0)
+  })
+})

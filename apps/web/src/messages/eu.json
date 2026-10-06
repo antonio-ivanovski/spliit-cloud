@@ -81,13 +81,14 @@
     "signOutOffline": "Konektatu saioa amaitzeko"
   },
   "Footer": {
-    "madeIn": "Kode irekiko komunitateak maitasunez egina ❤️",
+    "madeIn": "<github>Kode irekiko komunitateak</github> maitasunez egina ❤️",
     "legalNavigation": "Esteka legalak",
     "privacy": "Pribatutasuna",
     "terms": "Baldintzak",
     "imprint": "Lege-oharra",
     "sponsor": "Babesle",
-    "timeLabel": "Eguneko ordua"
+    "timeLabel": "Eguneko ordua",
+    "status": "Egoera"
   },
   "Expenses": {
     "title": "Gastuak",
@@ -228,7 +229,9 @@
       "showLess": "Erakutsi gutxiago"
     },
     "copyToast": "Gastuaren kopia hasi da. Lehendik dagoen gastuaren datuak erabiliko dira berri bat sortzeko.",
-    "incomeBadge": "Diru-sarrera"
+    "incomeBadge": "Diru-sarrera",
+    "paidBySingle": "<strong>{paidBy}</strong>(e)k ordaindua · <paidFor></paidFor>(r)entzat ordaindua",
+    "paidByMultipleSingle": "<paidByNames></paidByNames> hauek ordaindua · <paidFor></paidFor>(r)entzat ordaindua"
   },
   "Groups": {
     "myGroups": "Nire taldeak",
@@ -372,7 +375,8 @@
             "monthly": "hilabete",
             "yearly": "urte"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Iradoki kategoriak System One erabiliz kategoriatu gabeko gastuetarako"
       },
       "Destination": {
         "heading": "Nora inportatu nahi duzu <strong>{name}</strong>? ({participantCount} parte-hartzaile · {expenseCount} gastu)",
@@ -667,7 +671,9 @@
       "description": "Taldeek emoji bat erakutsi dezakete orain izenaren ondoan. {emoji} ikusi dugu “{name}” izenean.",
       "openSettings": "Ireki taldearen ezarpenak",
       "notNow": "Orain ez"
-    }
+    },
+    "groupTabsHint": "Taldeko fitxak berrantolatu edo erabiltzen ez dituzunak ezkutatu nahi dituzu?",
+    "groupTabsHintLink": "Pertsonalizatu fitxak kontuaren ezarpenetan"
   },
   "GroupForm": {
     "title": "Taldeko informazioa",
@@ -1058,7 +1064,8 @@
       "allItemsSplitEdit": "Editatu elementu guztien banaketa",
       "allItemsSplitModalTitle": "Elementu guztien banaketa",
       "remainderAllocationProportional": "Proportzionala artikuluen arabera",
-      "remainderProportionalHint": "Banatu kopuru hau pertsona bakoitzaren artikulu-azpitotalaren arabera. Zerga eta eskupekoetarako erabilgarria."
+      "remainderProportionalHint": "Banatu kopuru hau pertsona bakoitzaren artikulu-azpitotalaren arabera. Zerga eta eskupekoetarako erabilgarria.",
+      "errorExceedsAmountDetails": "Artikuluen guztizkoa ({itemsTotal}) gastuaren zenbatekoa baino {excess} handiagoa da."
     },
     "leaveItemized": {
       "title": "Banaketa-modua aldatu?",
@@ -1094,7 +1101,15 @@
       "done": "Eginda",
       "yourTime": "zure ordua",
       "invalidDate": "Sartu data baliozko bat.",
-      "invalidTime": "Sartu ordu baliozko bat (HH:mm)."
+      "invalidTime": "Sartu ordu baliozko bat (HH:mm).",
+      "hourLabel": "Ordua",
+      "minuteLabel": "Minutua",
+      "periodLabel": "Aldi",
+      "timeWheelHint": "Irristatu edo ukitu ordua ezartzeko. Data ez da aldatzen.",
+      "now": "Orain",
+      "morning": "Goiza",
+      "midday": "Eguerdia",
+      "evening": "Arratsaldea"
     },
     "settlementTitle": "Zor-kitapenaren ordainketa",
     "settlementHint": "{category}: Ez da gastutzat hartzen guztizkoetan, estatistiketan edo aurrekontuetan. Hala ere, nork nori zor dion eguneratzen du.",
@@ -1138,7 +1153,8 @@
       "description": "Sartu azken zenbatekoa, komisioak barne.",
       "impliedRate": "Inplizituko tasa: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Kategoria-iradokizunak"
+    "otherSuggestions": "Kategoria-iradokizunak",
+    "paidForItemizedEmptyHint": "Esleitu pertsonak artikuluei, bakoitzaren zatia ikusteko."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Ezabatu dokumentua",
@@ -1850,7 +1866,7 @@
       "generic": "Zerbaitek huts egin du. Saiatu berriro mesedez.",
       "passwordPolicy": "Erabili gutxienez 8 karaktere, letra larri eta xehez, zenbaki batez eta ikur batez.",
       "magicLinkFailed": "Ezin izan da saioa hasteko esteka bidali.",
-      "signupInviteRequired": "Instantzia hau gonbidapen bidezkoa da soilik. Erabili gonbidapen-esteka bat edo eskatu norbaiti talde batera gonbidatzeko.",
+      "signupInviteRequired": "Erregistroak gonbidapen bidezkoak dira soilik. Erabili gonbidapen-esteka bat edo eskatu norbaiti talde batera gonbidatzeko.",
       "passkeyFailed": "Huts egin du passkeyarekin saioa hasteak. Saiatu berriro edo erabili beste saio-hasiera metodo bat."
     },
     "loading": "Kargatzen…",
@@ -1860,14 +1876,14 @@
     "signInWithGithub": "Jarraitu GitHub-ekin",
     "legalNotice": "Jarraituz gero, <terms>erabilera-baldintzak</terms> onartzen dituzu eta <privacy>pribatutasun-oharra</privacy> aitortzen duzu.",
     "inviteOnly": {
-      "message": "Instantzia hau gonbidapen bidezkoa da soilik. Erabili gonbidapen-esteka bat edo eskatu norbaiti talde batera gonbidatzeko.",
+      "message": "Erregistroak gonbidapen bidezkoak dira soilik. Erabili gonbidapen-esteka bat edo eskatu norbaiti talde batera gonbidatzeko.",
       "useInvitedEmail": "Erabili gonbidapena jaso zenuen helbide elektronikoa."
     },
     "signInWithX": "Jarraitu X-ekin",
     "signInWithOidc": "Jarraitu {name}-rekin",
     "signInAnonymously": "Anonimoa",
     "lastUsed": "Azken erabilera",
-    "emailAuthDisabled": "Posta elektronikoaren bidezko saioa hasteko aukera desgaituta dago instantzia honetan. Erabili saio-hasiera bakarra (SSO).",
+    "emailAuthDisabled": "Posta elektronikoaren bidezko saioa hasteko aukera desgaituta dago. Erabili saio-hasiera bakarra (SSO).",
     "signInWithPasskey": "Hasi saioa passkeyarekin"
   },
   "CompleteProfile": {
@@ -1991,7 +2007,7 @@
         "joined_zero": "{count} pertsona batu dira orain arte",
         "retry": "Saiatu berriro"
       },
-      "emailDeliveryDisabled": "Instantzia honetan mezu elektronikoak bidaltzea desgaituta dago. Gonbidapena hala ere sortuko da eta gonbidatuak saioa hasten duenean agertuko da; erabili gonbidapen-esteka bat irekitzeko zerbait emateko."
+      "emailDeliveryDisabled": "Mezu elektronikoak bidaltzea desgaituta dago. Gonbidapena hala ere sortuko da eta gonbidatuak saioa hasten duenean agertuko da; erabili gonbidapen-esteka bat irekitzeko zerbait emateko."
     },
     "invitations": {
       "title": "Gonbidapen zain",
@@ -2413,7 +2429,7 @@
       "masterDescription": "Desaktibatu posta- eta push-jakinarazpen guztiak isiltzeko. Kategorien araberako aukerak gordeta mantentzen dira.",
       "emailAddToEnable": "Gehitu egiaztatutako helbide elektroniko bat sarrerako ontziko jakinarazpenak jasotzeko.",
       "emailAddLink": "Gehitu helbidea",
-      "emailDeliveryDisabled": "Instantzia honetan mezu elektronikoak bidaltzea desgaituta dago. Zure posta-elektronikoko aukerak gordetzen dira, baina ez dira bidaliko administratzaileak posta konfiguratzen duen arte."
+      "emailDeliveryDisabled": "Mezu elektronikoak bidaltzea desgaituta dago. Zure posta-elektronikoko aukerak gordetzen dira, baina ez dira bidaliko posta konfiguratzen den arte."
     },
     "preferences": {
       "title": "Aplikazioaren hobespenak",
@@ -2432,6 +2448,22 @@
       "mascotOptions": {
         "off": "Desaktibatuta",
         "bill": "Bill ordainagiria"
+      },
+      "groupTabs": "Taldeko fitxak",
+      "groupTabsHelp": "Aukeratu zein fitxa erakusten diren eta zein ordenatan talde guztietan.",
+      "groupTabsCustomize": "Pertsonalizatu",
+      "groupTabsSave": "Gorde",
+      "groupTabsDiscard": "Baztertu",
+      "groupTabsReset": "Berrezarri lehenetsitako balioak",
+      "groupTabsHide": "Ezkutatu {name}",
+      "groupTabsShow": "Erakutsi {name}",
+      "groupTabsMoveUp": "Mugitu {name} gora",
+      "groupTabsMoveDown": "Mugitu {name} behera",
+      "deleteConfirmation": "Gastuen ezabatze-berrespena",
+      "deleteConfirmationHelp": "Ezabatze azkarrek behin eskatzen dute. Idazteko ezabatzeek gastuaren izenburua idaztea eskatzen dute lehenik. Talde bat ezabatzeak edo kide bat kentzeak beti eskatzen du idaztea.",
+      "deleteConfirmationOptions": {
+        "standard": "Berrespen-leihoa",
+        "strict": "Idazteko berrespen-leihoa"
       }
     },
     "aiPreferences": {
@@ -2624,7 +2656,111 @@
       "backedUp": "Babeskopia eginda",
       "removeWarning": "Hau ezin da desegin. Gailu honek ez du jada passkeyarekin saioa hasiko — nahi duzunean erregistra dezakezu berriro.",
       "removeLastWarning": "Hau da zure azken passkeya. Zure saioa hasteko metodo bakarra bada, kentzea blokeatuta egongo da berreskuratzeko esteka bat edo beste saio-hasiera metodo bat gordetzen duzun arte.",
-      "anonymousHelpNoLink": "Ez dago saioa hasteko estekarik gordeta kontu gonbidatu honetarako. Sortu bat beheko saioa hasteko estekaren errenkadan — edozein gailutan funtzionatzen du."
+      "anonymousHelpNoLink": "Ez dago saioa hasteko estekarik gordeta kontu gonbidatu honetarako. Sortu bat beheko saioa hasteko estekaren errenkadan — edozein gailutan funtzionatzen du.",
+      "reauthTitle": "Hasi saioa berriro passkey bat gehitzeko",
+      "reauthDescription": "Zure segurtasunagatik, passkey bat gehitzeak saio-hasiera berria behar du. Saioa amaituko da, berriro hasiko duzu eta hemen bertan amaituko duzu.",
+      "reauthConfirm": "Hasi saioa berriro",
+      "reauthAnonymousTitle": "Gorde saioa hasteko esteka bat lehenik",
+      "reauthAnonymousDescription": "Kontu gonbidatu honek ez du oraindik saioa hasteko estekarik ez passkeyrik. Orain saioa amaituz gero, sarbidea betiko galduko duzu — gorde saioa hasteko esteka bat Saioa hasteko esteka atalean lehenik, eta gero itzuli passkey bat gehitzera."
+    },
+    "deletion": {
+      "sectionTitle": "Arrisku-eremua",
+      "sectionDescription": "Ezabatu behin betiko zure kontua eta saioa hasteko metodo guztiak.",
+      "rowLabel": "Ezabatu kontua",
+      "rowDescription": "Zure profila, saioak eta ezarpenak kentzen ditu 48 orduko tartearen ondoren. Partekatutako gastuak beste kideen taldeetan geratzen dira zure datu pertsonalik gabe.",
+      "open": "Ezabatu kontua…",
+      "scheduledTitle": "Kontua ezabatzea programatuta",
+      "scheduledDescription": "Ezabaketa {date} egunean edo geroago hasteko programatu da. Kontuak aktibo jarraituko du hasi arte. Taldeak, kideak eta gastuak alda daitezke itxaronaldian; zure aukerak ezabaketa gauzatzean duten egoerari aplikatuko zaizkio. Hasi arte bertan behera utz dezakezu. Berrespen-mezua bidali da {email} helbidera.",
+      "cancel": "Ezabatzea utzi",
+      "cancelling": "Uzten…",
+      "cancelled": "Kontua ezabatzea utzi da.",
+      "dialogTitle": "Kontuaren ezabaketa programatu?",
+      "dialogDescription": "Honek ezabaketa programatzen du 48 orduko itxaronaldiaren ondoren; orain ez da ezer ezabatuko. Hasi arte bertan behera utz dezakezu. Zure aukerak une horretako talde eta saldoei aplikatuko zaizkie. Ezabaketa hasi ondoren, ezin da desegin.",
+      "farewellTitle": "Atsekabetzen gaitu joatea",
+      "farewellBody": "Geltitzea nahi baduzu egin dezakegun zerbait badago, <feedbackLink>partekatu zure iritzia</feedbackLink> — minutu bat besterik ez da eta hobetzen laguntzen digu.",
+      "groupsTitle": "Zer gertatuko da zure taldeekin",
+      "leaveGroup": "«{name}» taldetik irtengo zara.",
+      "deleteGroup": "«{name}» behin betiko ezabatuko da — zu zara haren azken kidea.",
+      "lastAdmin": "«{name}» taldeko azken administratzailea zara — beste kide bat automatikoki igoko da.",
+      "settleBalances": "«{name}»-ko kitatu gabeko saldoak automatikoki kitatzen dira.",
+      "friendLedger": "{name}-(r)ekin duzun lagun-liburua kitatuta eta itxita dago.",
+      "friendLedgerUnnamed": "Zure lagun-liburua kitatuta eta itxita dago.",
+      "friendLedgerFallback": "lagun-liburu bat",
+      "noGroups": "Ez zara inongo taldetako kidea.",
+      "accessTitle": "Saio-hasiera eta gonbidapenak",
+      "pendingInvites_zero": "Ezabaketa gauzatzen denean, bidali dituzun eta zain dauden {count} gonbidapen baliogabetuko dira.",
+      "pendingInvites_one": "Ezabaketa gauzatzen denean, bidali duzun eta zain dagoen gonbidapen {count} baliogabetuko da.",
+      "pendingInvites_two": "Ezabaketa gauzatzen denean, bidali dituzun eta zain dauden {count} gonbidapen baliogabetuko dira.",
+      "pendingInvites_few": "Ezabaketa gauzatzen denean, bidali dituzun eta zain dauden {count} gonbidapen baliogabetuko dira.",
+      "pendingInvites_many": "Ezabaketa gauzatzen denean, bidali dituzun eta zain dauden {count} gonbidapen baliogabetuko dira.",
+      "pendingInvites_other": "Ezabaketa gauzatzen denean, bidali dituzun eta zain dauden {count} gonbidapen baliogabetuko dira.",
+      "keepNameLabel": "Mantendu nire izena partekatutako historian",
+      "keepNameDescription": "Partekatutako gastuetan «{name}» erakusten jarraituko du. Bestela, zure izena «Ezabatutako kidea» testuarekin ordezkatuko da nonahi.",
+      "customNameLabel": "Gordeko den izena",
+      "settleLabel": "Markatu saldoak kitatutzat ezabaketa gauzatzean",
+      "settleDescription": "Gainerako saldoak automatikoki kitatzen dira. Bestela, zure behin-behineko izenari lotuta geratuko dira.",
+      "leaveBalances": "«{name}»-ko kitatu gabeko saldoak bere horretan geratuko dira.",
+      "friendLeaveBalances": "{name}-(r)ekin duzun saldoa bere horretan mantenduko da.",
+      "confirmWord": "EZABATU",
+      "ackLabel": "Ulertzen dut hau behin betikoa dela, eta partekatutako gastuak beste kideen taldeetan geratuko direla nire datu pertsonalik gabe.",
+      "exportHint": "Kopia bat nahi duzu lehenik? <exportLink>Esportatu babeskopia bat</exportLink> jarraitu aurretik.",
+      "schedule": "Programatu ezabatzea",
+      "scheduling": "Programatzen…",
+      "scheduled": "Ezabatzea programatu da. Begiratu zure posta elektronikoa berrikusteko edo uzteko.",
+      "dialogCancel": "Mantendu nire kontua",
+      "reauthTitle": "Hasi saioa berriro kontua ezabatzeko",
+      "reauthDescription": "Zure segurtasunagatik, kontua ezabatzeak saio-hasiera berria behar du. Saioa amaituko da, berriro hasiko duzu eta hemen bertan amaituko duzu.",
+      "reauthConfirm": "Hasi saioa berriro",
+      "errors": {
+        "generic": "Zerbait gaizki joan da. Saiatu berriro.",
+        "loadFailed": "Ezin izan dira ezabatzearen xehetasunak kargatu.",
+        "emailMismatch": "Idatzitako helbidea ez dator bat zure kontuko helbidearekin.",
+        "alreadyRequested": "Kontu honetarako ezabatze-eskaera bat dago zain dagoeneko.",
+        "sessionNotFresh": "Zure saioa zaharregia da ekintza honetarako. Hasi saioa berriro eta saiatu berriro.",
+        "jobsDisabled": "Kontua ezabatzeak atzeko planoko langilea behar du, eta hura desgaituta dago hedapen honetan.",
+        "ackRequired": "Berretsi lehenik ondorioak ulertzen dituzula.",
+        "invalidDisplayName": "Idatzi 1 eta 100 karaktere arteko izen bat.",
+        "cancelFailed": "Ezin izan da ezabatzea utzi. Saiatu berriro."
+      },
+      "groupsToDeleteTitle": "Ezabatuko diren taldeak",
+      "groupsToDeleteDescription": "Ezabaketa gauzatzen denean, oraindik azken kide aktiboa zaren taldeak behin betiko ezabatuko dira.",
+      "groupsToLeaveTitle": "Irtengo zaren taldeak",
+      "groupsToLeaveDescription": "Ezabaketa gauzatzen denean, beste kide aktibo batzuk dituzten taldeak utziko dituzu. Talde horiek gainerakoentzat mantenduko dira.",
+      "friendsTitle": "Lagunak",
+      "friendsDescription": "Lagun hauekin dituzun banakako saldoak.",
+      "backToSettings": "Itzuli ezarpenetara",
+      "pageTitle": "Ezabatu kontua",
+      "loading": "Ezabatzearen xehetasunak kargatzen",
+      "choicesTitle": "Ezabatzeko aukerak",
+      "nameTitle": "Izena partekatutako historian",
+      "removeNameLabel": "Ordezkatu nire izena «Ezabatutako kidea» testuarekin",
+      "balancesTitle": "Geratzen diren saldoak",
+      "keepBalancesLabel": "Mantendu geratzen diren saldoak dauden bezala",
+      "balanceExplanation": "Saldoak kitatzea aukeratzen baduzu, zor-kitapeneko sarrerak erregistratuko dira zure kontua ezabatzen denean. Ez da dirurik transferituko. Bestela, saldoak partekatutako historian mantenduko dira.",
+      "confirmationTitle": "Berretsi kontuaren ezabatzea",
+      "retry": "Saiatu berriro",
+      "pageDescription": "Programatu kontua ezabatzea 48 orduko itxaronaldiaren ondoren. Kontuak aktibo jarraituko du ezabaketa hasi arte, eta aurretik bertan behera utz dezakezu.",
+      "reviewChoicesTitle": "Zure aukerak",
+      "consequencesTitle": "Zer gertatuko den",
+      "reviewConfirmTitle": "Berretsi ezabaketa",
+      "backupLink": "Esportatu babeskopia",
+      "keptNameExplanation": "Ezabaketa gauzatzen denean, partekatutako gastuek «{name}» erakutsiko dute. Ordura arte zure profileko izena ez da aldatuko.",
+      "removedNameExplanation": "Ezabaketa gauzatzen denean, partekatutako gastuek «Ezabatutako kidea» erakutsiko dute. Ordura arte zure profileko izena ez da aldatuko.",
+      "keptBalancesExplanation": "Ezabaketa hasten denean, geratzen diren saldoak partekatutako historian mantenduko dira, itxaronaldian gehitutako gastuak barne.",
+      "settledBalancesExplanation": "Ezabatzean, zor-kitapeneko sarrerek une horretako saldoak kitatutzat markatuko dituzte oraindik kide zaren taldeetan, artxibatutakoak barne. Jada utzi dituzun edo kendu zaituzten taldeetako saldoak ez dira aldatuko. Ez da dirurik transferituko.",
+      "rowBalancesKept": "Geratzen diren saldoak dauden bezala mantenduko dira.",
+      "rowBalancesSettled": "Ezabaketaren uneko saldoa kitatutzat markatuko da.",
+      "rowAdmin": "Ezabaketa gauzatzen denean, beste kide bat administratzaile bihurtuko da oraindik azken administratzailea bazara.",
+      "friendKept": "Zure saldoa dagoen bezala mantenduko da.",
+      "friendSettled": "Ezabaketa gauzatzen denean, une horretako zure saldoa kitatutzat markatuko da eta erregistroa itxiko da.",
+      "accessExplanation": "Saioa hasteko metodo hauek ez dute funtzionatuko zure kontua ezabatzen denean.",
+      "invitesTitle": "Zain dauden gonbidapenak",
+      "balanceUnavailable": "Saldoa ez dago erabilgarri",
+      "archivedBalancesKept": "Artxibatutako talde hau irakurtzeko soilik izango da aurrerantzean ere. Geratzen zaizun saldoa mantenduko da.",
+      "signInMethodsRemoved": "Saioa hasteko metodo hauek ez dute funtzionatuko: {methods}.",
+      "consequencesTiming": "Laburpen honek zure kontuaren oraingo egoera erakusten du. Taldeak, kideak eta gastuak alda daitezke ezabaketa hasi aurretik. Zure aukerak une horretan kide zaren taldeei eta haien saldoei aplikatuko zaizkie. Hemen adierazitako ezer ez da berehala gertatuko.",
+      "executingTitle": "Kontuaren ezabaketa hasi da",
+      "executingDescription": "Zure kontuaren ezabaketa prozesatzen ari da. Baliteke aldaketa batzuk jada osatuta egotea, eta ezabaketa ezin da bertan behera utzi edo desegin. Prozesua eteten bada, osatutako urratsetatik jarraituko du."
     }
   },
   "Activities": {
@@ -2651,7 +2787,9 @@
       },
       "recurringCreated": "{participant}(e)k «{title}» gastu errepikaria sortu du",
       "stopped": "{participant}(e)k {title} gastu errepikaria gelditu du",
-      "commented": "{participant}(e)k {title}ri buruzko iruzkina egin du: “{excerpt}”"
+      "commented": "{participant}(e)k {title}ri buruzko iruzkina egin du: “{excerpt}”",
+      "yourShare": "Zure zatia:",
+      "notInvolved": "Ez duzu parte hartzen"
     },
     "group": {
       "updated": "{participant}(e)k taldearen ezarpenak eguneratu ditu",
@@ -2664,7 +2802,11 @@
         "currencyCode": "Moneta-kodea",
         "linkedParticipant": "Lotutako parte-hartzailea",
         "subgroupsEnabled": "Azpitaldeak",
-        "publicViewLink": "Ikusteko soilik den esteka publikoa"
+        "publicViewLink": "Ikusteko soilik den esteka publikoa",
+        "emoji": "Emojia",
+        "color": "Kolorea",
+        "subgroups": "Azpitaldeak",
+        "splitPresets": "Banaketa-aurrezarpenak"
       }
     },
     "member": {
@@ -2695,7 +2837,18 @@
       "imported_other": "{participant}(e)k {count} gastu inportatu ditu"
     },
     "participant": {
-      "removed": "{participant}(e)k {target} taldetik kendu du"
+      "removed": "{participant}(e)k {target} taldetik kendu du",
+      "added": "{participant}(e)k {target} taldera gehitu du"
+    },
+    "hiddenActivitiesShowLess": "Erakutsi gutxiago",
+    "hiddenActivities_one": "Parte hartzen ez duzun {count} jarduera ezkutu",
+    "hiddenActivities_few": "Parte hartzen ez dituzun {count} jarduera ezkutu",
+    "hiddenActivities_many": "Parte hartzen ez dituzun {count} jarduera ezkutu",
+    "hiddenActivities_other": "Parte hartzen ez dituzun {count} jarduera ezkutu",
+    "viewMode": {
+      "label": "Jarduerak bistaratzeko modua",
+      "forYou": "Zuretzat",
+      "all": "Guztiak"
     }
   },
   "OfflineBanner": {
@@ -2773,9 +2926,6 @@
   },
   "BulkCategorize": {
     "title": "Kategorizazio multzokatua",
-    "calibrationTitle": "1. urratsa — Kalibrazioa",
-    "calibrationDescription": "Zuk berresten duzun adibide bakoitza IAren hurrengo pasarako egia absolutua da. Ronda bat ostean prest egon daiteke, edo eska itzazu adibide gehiago.",
-    "roundCount": "{round}. erronda, {max}tik",
     "confidence": {
       "high": "Handia",
       "medium": "Ertaina",
@@ -2843,7 +2993,137 @@
     "doneTitle": "Kategoriak gordeta",
     "expenseColumn": "Gastua",
     "categoryColumn": "Kategoria",
-    "confidenceColumn": "Konfiantza"
+    "confidenceColumn": "Konfiantza",
+    "simpleDescription": "Berrikusi Orokorra ataleko gastuen kategoria-bat-etortzeak eta gorde zure aukerak.",
+    "generateSuggestions": "Iradoki kategoriak",
+    "backToStart": "Atzera",
+    "chooseMode": "Aukeratu gastuak nola kategorizatu",
+    "localMode": "Hiztegia eta historia",
+    "localModeDescription": "Erabili talde honen kategorien historia eta integratutako hiztegia.",
+    "startRun": "Hasi kategorizatzen",
+    "noCategory": "Utzi kategorizatu gabe",
+    "progressTitle": "Gastuak kategorizatzen",
+    "progressDescription": "Orri honetatik irten eta geroago itzuli zaitezke. Zure aurrerapena gordetzen da.",
+    "progressCount": "{total} gastutik {categorized} kategorizatuta",
+    "applyProgressTitle": "Kategoriak gordetzen",
+    "reviewTitle": "Berrikusi iradokizunak",
+    "reviewSummary": "{total} kategorizatu gabeko gastutik {suggested} iradokizun",
+    "sourceLocal": "Lokala",
+    "saveSelected": "Gorde hautatutako kategoriak",
+    "retry": "Saiatu berriro",
+    "restart": "Hasi exekuzio berri bat",
+    "failed": "Exekuzioa gelditu da: {message}",
+    "savedSummary": "{applied} aldatu, {skipped} saltatu",
+    "selectedCount": "{count} hautatuta",
+    "selectAll": "Hautatu dena",
+    "clearAll": "Garbitu dena",
+    "discardRun": "Baztertu exekuzioa",
+    "partialSaveNotice": "Baliteke kategoria batzuk jada gorde izana. Exekuzio hau baztertzeak ez ditu aldaketa horiek desegingo.",
+    "restartOlderRunTitle": "Hasi kategorizazio-exekuzio berri bat",
+    "restartOlderRunDescription": "Exekuzio zahar honek aurreko berrikuspen-fluxua erabili zuen. Hasi berriro gastu guztiak batera berrikusteko.",
+    "runningMatches": "{total} gastutik {count}k kategoria-iradokizuna dute orain arte",
+    "failedTitle": "Kategorizazioa gelditu da",
+    "reviewWorkload": "{total} gastu Orokorra atalean · {selected} kategorizatzeko hautatuta · {general} Orokorra atalean geratzen",
+    "categoryChoices": "Kategoria-aukerak",
+    "moreCategories": "Aukeratu beste kategoria bat",
+    "saveCount": "Gorde {count} kategoria",
+    "finishWithoutChanges": "Amaitu aldaketarik gabe",
+    "completionSummary": "Exekuzioa osatu da: {total} gastutik {changed} aldatu dira. {remaining} gastu geratzen dira Orokorra atalean.",
+    "viewExpenses": "Ikusi gastuak",
+    "countLoading": "Kategorizatu gabeko gastuak zenbatzen…",
+    "nothingToCategorize": "Ez dago kategorizatzeko kategorizatu gabeko gasturik.",
+    "startingCount": "{count} gastu daude une honetan Orokorra atalean eta prest berrikusteko.",
+    "countError": "Ezin izan dira kategorizatu gabeko gastuak zenbatu. Birkargatu orria berriro saiatzeko.",
+    "keepGeneral": "Orokorra · utzi kategorizatu gabe",
+    "calibrationRoundTitle": "Kalibrazio-txanda {round}",
+    "calibrationLoading": "Gastuen lagin askotarikoa prestatzen…",
+    "calibrationReviewDescription": "Berrikusi eta zuzendu {count} gastu hauek. Aukerak exekuzio honetan geratzen dira amaieran gorde arte.",
+    "confirmRound": "Berretsi txanda",
+    "roundSummaryTitle": "{round}. txanda berrikusita",
+    "roundSummaryDescription": "{reviewed} berrikusita · {categorized} behin-behinean kategorizatuta · {general} Orokorra gisa utzita",
+    "roundQuality": "Hasierako iradokizunek zure aukeren {accuracy}%ekin bat egin dute; {corrections} zuzendu dituzu.",
+    "categorizeRemaining": "Kategorizatu gainerako gastuak",
+    "nextRound": "Berrikusi beste lagin bat",
+    "tableLabel": "Kategorizatzeko gastuak",
+    "dateColumn": "Data",
+    "amountColumn": "Zenbatekoa",
+    "rerunSuggestions": "Exekutatu iradokizunak berriro",
+    "roundQualityWithSuggestions": "Iradokitako {proposed} kategorietatik {accepted} onartuta · {changed} aldatuta · {missed} bat-etortze aurkitu dira Orokorra ataletik",
+    "roundQualityNoSuggestions": "Ez da kategoriarik iradoki · {missed} bat-etortze aurkitu dira Orokorra ataletik · {abstained} geratzen dira Orokorra atalean",
+    "rerunChanged": "Iradokitako {proposed} kategorietatik {changed} aldatu dituzu.",
+    "rerunAssignedSingle": "Kategoria bat esleitu diozu Orokorra atalean geratzen zen gastu 1i.",
+    "rerunAssignedMultiple": "Kategoria bat esleitu diozu Orokorra atalean geratzen ziren {count} gasturi.",
+    "rerunPotentialSingle": "Zure aldaketek Orokorra ataleko gastu 1en bat-etortzea hobe dezakete. Exekutatu iradokizunak berriro beste pasada bat nahi baduzu.",
+    "rerunPotentialMultiple": "Zure aldaketek Orokorra ataleko {count} gasturen bat-etortzeak hobe ditzakete. Exekutatu iradokizunak berriro beste pasada bat nahi baduzu.",
+    "rerunEligible": "Beste pasada baterako hautagai: Orokorra {general} · bat-etortze automatiko zalantzazkoak {uncertain}.",
+    "rerunNoEligible": "Ez da geratzen berriro exekutatzeko ukitu gabeko Orokorra edo bat-etortze automatiko zalantzazkorik. Zure zuzenketak gordetzen dituzun kategorietan sartuta jarraitzen dute.",
+    "rerunAlreadyUsed": "Zure azken zuzenketak iradokizun hauetarako erabili dira jada. Egin beste zuzenketa bat berriro exekutatzeko.",
+    "highMatch": "Bat-etortze altua",
+    "mediumMatch": "Bat-etortze ertaina",
+    "lowMatch": "Bat-etortze baxua",
+    "belowMatchThreshold": "Bat-etortze atalasearen azpitik",
+    "refiningTitle": "Bat-etortze zalantzazkoak fintzen",
+    "runLimitSummary": "Exekuzio honek 10,000 gastu barne hartzen ditu. Orokorra ataleko {count} gastu gehiago kategoriza daitezke beste exekuzio batean gorde ondoren.",
+    "pageLoading": "Gastuak kargatzen…",
+    "pageLoadError": "Ezin izan dira gastuak kargatu.",
+    "pageRetry": "Saiatu berriro",
+    "pageCount": "{total} gastutik {loaded} erakusten",
+    "ledgerAmountNotice": "Zenbatekoak taldearen monetan agertzen dira.",
+    "viewExpenseDetails": "Ikusi gastuaren xehetasunak",
+    "reviewFilterLabel": "Erakutsi gastuak",
+    "filterAll": "Guztiak {count}",
+    "filterGeneral": "Orokorra {count}",
+    "improveSuggestions": "Hobetu gainerako iradokizunak",
+    "rerunInfoLabel": "Iradokizunak hobetzeari buruz",
+    "preparingNextStage": "Hurrengo urratsa prestatzen",
+    "rerunProgressTitle": "Iradokizunak eguneratzen",
+    "progressPreparing": "Gastuak prestatzen…",
+    "noGeneralRows": "Ez da gasturik geratzen Orokorra atalean berrikuspen honetan.",
+    "discardConfirmationTitle": "Baztertu kategorizazio-exekuzio hau?",
+    "discardConfirmationDescription": "Honek exekuzioa, bere iradokizunak eta zuk edo beste administratzaileek egindako aukerak ezabatzen ditu. Ez da gastuen kategoriarik aldatuko.",
+    "discardConfirmationCancel": "Mantendu exekuzioa",
+    "progressCountDescription": "Berretsitako kategoriek eta bat-etortze ertain edo altuek bakarrik zenbatzen dute; Orokorra eta bat-etortze ahulek ez.",
+    "systemOneMode": "System One eredua",
+    "systemOneModeDescription": "Erabili System One erabaki-eredua gastu bakoitzerako, talde honetako kategorizatutako gastuak eta berrikusitako aukerak argibide gisa erabiliz. TypeSafe Jev eredu horietako bat da.",
+    "systemOneUnavailable": "System One ez dago erabilgarri. Hiztegia eta historia erabilgarri daude oraindik.",
+    "systemOneConfidence": "System One-ren konfiantza: {confidence}%",
+    "systemOneOptionProbability": "System One aukeraren probabilitatea: {probability}%",
+    "overallProgress": "Aurrerapen orokorra",
+    "fullPassProcessed": "{total} gastutatik {processed} prozesatu dira",
+    "stageProcessed": "Urrats honetan {total} gastutatik {processed} prozesatu dira",
+    "saveSkipped": "{count} gastu omisi dira aldatu egin direlako.",
+    "sharedRunNotice": "Exekuzio hau taldeko beste administratzaileekin partekatzen da. Denek iradokizun berberak ikusten dituzte.",
+    "saveConflictTitle": "{count} gastu aldatu dira berrikuspen hau hasi zenetik",
+    "saveConflictDescription": "Norbaitz gastu horiek editatu ditu edo haien kategoria aldatu du exekuzio honetatik kanpo. Gorde beste gastuak, edo editatu kategoriak berriro eta saiatu berriro gordetzen.",
+    "saveConflictMore": "Eta {count} gehiago.",
+    "saveOtherExpenses": "Gorde beste gastuak",
+    "receiptTitles": {
+      "freshMarket": "Azoka freskoa",
+      "greenGrocer": "Barazki-denda",
+      "fruitStand": "Fruta-postua",
+      "cornerBistro": "Izkinako bistroa",
+      "noodleHouse": "Fideo-jatetxea",
+      "cafeLunch": "Kafetegiko bazkaria",
+      "flightTicket": "Hegazkin-txartela",
+      "airlineBaggage": "Hegazkineko ekipajea",
+      "boardingPass": "Ontziratze-txartela",
+      "homeSupplies": "Etxeko hornigaiak",
+      "hardwareShop": "Burdindegia",
+      "cleaningGoods": "Garbiketa-produktuak",
+      "cinemaTickets": "Zinemako sarrerak",
+      "movieNight": "Zine-gaua",
+      "filmFestival": "Zinemaldia",
+      "organicMarket": "Azoka ekologikoa",
+      "bakeryRun": "Okindegiko erosketa",
+      "sushiBar": "Sushi-taberna",
+      "pizzaNight": "Pizza-gaua",
+      "airportLounge": "Aireportuko egongela",
+      "extraLegroom": "Hanketarako tarte extra",
+      "laundryDetergent": "Arropa-garbigarria",
+      "storageBoxes": "Biltegiratze-kutxak",
+      "popcornCombo": "Palomita-konboa",
+      "streamingRental": "Streaming-alokairua"
+    }
   },
   "ExpensePreview": {
     "title": "Gastuaren aurrebista",
@@ -2890,10 +3170,14 @@
         "deleteGroup": "<target>{name}</target> taldea behin betiko ezabatzeko, idatzi haren izena behean agertzen den bezala, zehatz-mehatz.",
         "deleteExpense": "<target>{name}</target> gastua behin betiko ezabatzeko, idatzi haren izenburua behean agertzen den bezala, zehatz-mehatz.",
         "deleteRecurringExpense": "<target>{name}</target> ezabatzea berresteko, idatzi gastuaren izenburua behean agertzen den bezala, zehatz-mehatz.",
-        "removeParticipant": "<target>{name}</target> talde honetatik kentzeko, idatzi haren izena behean agertzen den bezala, zehatz-mehatz."
+        "removeParticipant": "<target>{name}</target> talde honetatik kentzeko, idatzi haren izena behean agertzen den bezala, zehatz-mehatz.",
+        "deleteAccount": "Zure kontua behin betiko ezabatzeko, idatzi <target>{name}</target> behean agertzen den bezala, zehatz-mehatz."
       },
       "placeholder": "Idatzi «{name}» hemen",
-      "mismatch": "Ez dator bat. Idatzi {name} zehatz-mehatz."
+      "mismatch": "Ez dator bat. Idatzi {name} zehatz-mehatz.",
+      "settingsNoteLink": "Aldatu kontuaren ezarpenetan",
+      "settingsNoteLead": "Idaztea saihestu nahi duzu?",
+      "settingsNoteTail": "berrespen arrunt bat erabiltzeko."
     }
   },
   "Theme": {
@@ -2917,7 +3201,7 @@
     "failedDescription": "Ezin izan dugu gailu hau erregistratu. Posta elektronikorako konfiguratuta dauden jakinarazpenak posta elektronikoz jasotzen jarraituko duzu; push hutseko aukerak ez dira birbideratuko.",
     "emailUsage": "Gailu bat aktibatu arte, posta elektronikorako konfiguratuta dauden jakinarazpenak baino ez dira iritsiko. Jakinarazpenak arakatzailearen ezarpenetan baimendu eta berriro saiatu zaitezke Ezarpenetatik.",
     "done": "Eginda",
-    "emailDeliveryDisabled": "Instantzia honetan mezu elektronikoak bidaltzea desgaituta dago, eta, beraz, posta-jakinarazpenak ezin dira zugana iritsi. Gaitu push jakinarazpenak gailu honetan eguneratzeak jasotzen jarraitzeko."
+    "emailDeliveryDisabled": "Mezu elektronikoak bidaltzea desgaituta dago, eta, beraz, posta-jakinarazpenak ezin dira zugana iritsi. Gaitu push jakinarazpenak gailu honetan eguneratzeak jasotzen jarraitzeko."
   },
   "Unsubscribe": {
     "title": "Desaktibatu mezu elektroniko hauek?",
@@ -3388,7 +3672,8 @@
     "hintTapToAddExpense": "{name} naiz — sakatu niri gastu bat gehitzeko.",
     "hintTapToCreateGroup": "{name} naiz — sakatu niri talde bat sortzeko.",
     "billName": "Bill",
-    "offlineMessage": "Ezin dut ezer sortu lineaz kanpo zauden bitartean."
+    "offlineMessage": "Ezin dut ezer sortu lineaz kanpo zauden bitartean.",
+    "serverUnreachableMessage": "Ezin dut Spliit zerbitzariarekin konektatu une honetan — zure konexioa ondo dagoela dirudi, beraz arazoa gurea da."
   },
   "CreateSettlement": {
     "description": "Berrikusi ordainketa erregistratu aurretik.",
@@ -3439,7 +3724,18 @@
       "existingPasskeyTitle": "Erregistratu al duzu passkey bat?",
       "existingPasskeyDescription": "Hasi saioa berriro erregistratutako gailuetako bateko passkeyarekin.",
       "passkeySignIn": "Hasi saioa passkeyarekin",
-      "passkeySignInError": "Ezin izan da passkey honekin saioa hasi. Saiatu berriro edo erabili saioa hasteko esteka."
+      "passkeySignInError": "Ezin izan da passkey honekin saioa hasi. Saiatu berriro edo erabili saioa hasteko esteka.",
+      "passkeyNameLabel": "Eman izena passkey honi (aukerakoa)",
+      "passkeyNamePlaceholder": "adib. MacBook Touch ID",
+      "nameTitle": "Aukeratu erakusteko izen bat",
+      "nameDescription": "Zure passkey-ean eta taldeetan agertuko da. Geroago alda dezakezu.",
+      "nameLabel": "Erakusteko izena",
+      "namePlaceholder": "Zure izena",
+      "nameSave": "Gorde eta jarraitu",
+      "nameSaving": "Gordetzen…",
+      "nameRequired": "Sartu erakusteko izen bat.",
+      "nameTooShort": "Izenak gutxienez 2 karaktere izan behar ditu.",
+      "nameError": "Ezin izan da erakusteko izena gorde. Saiatu berriro mesedez."
     },
     "onboarding": {
       "title": "Gorde saioa hasteko esteka",
@@ -3578,6 +3874,29 @@
         "review": {
           "title": "Berrikusi eta inportatu",
           "detail": "Egiaztatu bikoiztuak eta berretsi inportazioa."
+        }
+      }
+    },
+    "categorize": {
+      "title": "Kategorizatu gastuak",
+      "description": "Iradoki kategoriak System One erabiliz lehendik kategoriatu gabeko gastuetarako. Berrikusi aldaketa guztiak gorde aurretik.",
+      "start": "Kategorizatu gastuak",
+      "steps": {
+        "choose": {
+          "title": "Aukeratu metodo bat",
+          "detail": "Erabili hiztegia eta historia edo System One erabaki-eredua."
+        },
+        "calibrate": {
+          "title": "Berrikusi lagin txikiak",
+          "detail": "Zuzendu iradokizunak hurrengo txandak zure taldearen kategoriak ikas ditzan."
+        },
+        "review": {
+          "title": "Berrikusi gastu guztiak",
+          "detail": "Orokorra ataleko gastuak agertzen dira lehenik taula osoan."
+        },
+        "save": {
+          "title": "Gorde kategoriak",
+          "detail": "Gastuak azken berrikuspena berresten duzunean bakarrik aldatzen dira."
         }
       }
     }
@@ -4126,7 +4445,8 @@
       "valuesRecomputedTitle": "Balioak birkalkulatuta",
       "viewExpenses": "Ikusi gastuak",
       "waitDuplicate": "Itxaron bikoiztuen egiaztapena amaitu arte inportatu aurretik.",
-      "invalidRowTitle": "Baliogabeko inportazio errenkada"
+      "invalidRowTitle": "Baliogabeko inportazio errenkada",
+      "categorizeWithSystemOne": "Iradoki kategoriak System One erabiliz kategoriatu gabeko gastuetarako"
     }
   },
   "Sponsor": {
@@ -4281,5 +4601,26 @@
     "expenseMissing": "Gastu hau ez dago gailu honen deskargan. Konektatu gastu berriagoak edo zaharragoak ikusteko.",
     "groupMissing": "Talde honek ez du deskarga amaitu.",
     "balancesStale": "Saldoak zaharkituta egon daitezke."
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit ez dago erabilgarri",
+    "description": "Ezin dugu Spliit zerbitzariarekin konektatu une honetan. Zure konexioa ondo dagoela dirudi — saiatu berriro pixka bat barru.",
+    "retry": "Saiatu berriro"
+  },
+  "ApiStatusBanner": {
+    "message": "Ezin da Spliitekin konektatu une honetan. Zure konexioa ondo dagoela dirudi — arazoa gurea da.",
+    "statusLink": "Egiaztatu egoera"
+  },
+  "AccountDeletionBanner": {
+    "scheduled": "Kontua ezabatzea {date} datarako programatuta dago.",
+    "review": "Berrikusi edo bertan behera utzi ezabatzea",
+    "executing": "Kontua ezabatzen hasi da.",
+    "viewStatus": "Ikusi ezabatzearen egoera"
+  },
+  "Updates": {
+    "title": "Eguneraketak",
+    "latest": "Zer berri",
+    "viewAll": "Ikusi eguneratze guztiak",
+    "dismiss": "Ados"
   }
 }

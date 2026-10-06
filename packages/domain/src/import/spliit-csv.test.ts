@@ -2,6 +2,7 @@ import Papa from 'papaparse'
 import { describe, expect, it } from 'vitest'
 
 import { tryParseSpliitCsv } from './spliit-csv'
+import { recoverSpliitOriginalAmount } from './spliit-original-amount'
 
 const sampleCsv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
 "2026-01-12","Kafe plazha ","Dining Out","EUR","3.60",,,,"No","Unevenly – By shares",-2.16,1.44
@@ -270,5 +271,17 @@ describe('tryParseSpliitCsv', () => {
     const e = result.source.expenses[0]
     expect(e.amount).toBe(5000)
     expect(e.paidFor[0].shares).toBe(5000)
+  })
+})
+
+describe('recoverSpliitOriginalAmount decimal-digits scaling (folded from spliit-original-amount.test.ts)', () => {
+  it('scales when ledger and original currencies have different decimal_digits', () => {
+    // 15_000 JPY ledger at 150 JPY/USD → 10000 USD cents
+    expect(
+      recoverSpliitOriginalAmount(15_000, 150, {
+        originalCurrency: 'USD',
+        ledgerCurrency: 'JPY',
+      }),
+    ).toBe(10000)
   })
 })

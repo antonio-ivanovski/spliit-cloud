@@ -1,7 +1,10 @@
+import { processAnnouncementCampaigns } from '@spliit/api/lib/announcements/process'
+import { processCategorizationJob } from '@spliit/api/lib/api/bulk-categorization-run'
 import {
   materializeRecurringExpense,
   reconcileDueRecurringExpenses,
 } from '@spliit/api/lib/api/recurrence-series'
+import { executeAccountDeletion } from '@spliit/api/lib/auth/account-deletion'
 import { runAnonymousAccountCleanup } from '@spliit/api/lib/auth/anonymous-account-cleanup'
 import { evaluateBudgets } from '@spliit/api/lib/budgets/evaluate'
 import { runNotificationCleanup } from '@spliit/api/lib/notifications/delivery-cleanup'
@@ -16,6 +19,16 @@ import { JOB_NAMES, sendJob, type JobHandlers } from '@spliit/jobs'
 import { handleNotificationDelivery } from './notification-delivery'
 
 export const handlers: JobHandlers = {
+  [JOB_NAMES.ANNOUNCEMENT_PROCESS]: async () => {
+    await processAnnouncementCampaigns()
+  },
+  [JOB_NAMES.BULK_CATEGORIZE]: async (payload) => {
+    await processCategorizationJob(
+      payload.runId,
+      payload.phase,
+      payload.attemptId,
+    )
+  },
   [JOB_NAMES.MATERIALIZE_RECURRING_EXPENSE]: async (payload, context) => {
     await materializeRecurringExpense(payload, context.boss)
   },
@@ -84,6 +97,21 @@ export const handlers: JobHandlers = {
       JSON.stringify({
         component: 'budget-evaluation',
         evaluated: results.length,
+      }),
+    )
+  },
+  [JOB_NAMES.EXECUTE_ACCOUNT_DELETION]: async (payload, context) => {
+    const result = await executeAccountDeletion(
+      payload.accountId,
+      context.boss,
+      new Date(),
+      payload.generation,
+    )
+    console.log(
+      JSON.stringify({
+        component: 'account-deletion-execution',
+        accountId: payload.accountId,
+        ...result,
       }),
     )
   },

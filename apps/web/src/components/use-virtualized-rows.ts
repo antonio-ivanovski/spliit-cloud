@@ -7,7 +7,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
  */
 export function useVirtualizedRows(options: {
   count: number
-  estimateSize: number
+  estimateSize: number | ((index: number) => number)
   remeasureKey?: unknown
   enabled?: boolean
   overscan?: number
@@ -39,11 +39,15 @@ export function useVirtualizedRows(options: {
     (element: HTMLDivElement | null) => setScrollElement(element),
     [],
   )
+  const estimateAt =
+    typeof options.estimateSize === 'number'
+      ? (_index: number) => options.estimateSize as number
+      : options.estimateSize
   // oxlint-disable-next-line react/incompatible-library -- TanStack Virtual exposes measurement refs through its virtualizer result.
   const virtualizer = useVirtualizer({
     count: options.count,
     getScrollElement: () => scrollElement,
-    estimateSize: () => options.estimateSize,
+    estimateSize: estimateAt,
     getItemKey: options.getItemKey,
     initialRect: { width: 1024, height: 560 },
     initialOffset: options.initialScrollOffset ?? 0,
@@ -107,14 +111,15 @@ export function useVirtualizedRows(options: {
   ])
 
   const measuredItems = virtualizer.getVirtualItems()
+  let fallbackStart = 0
   const items = measuredItems.length
     ? measuredItems
-    : Array.from({ length: Math.min(options.count, 20) }, (_, index) => ({
-        index,
-        start: index * options.estimateSize,
-        size: options.estimateSize,
-        key: index,
-      }))
+    : Array.from({ length: Math.min(options.count, 20) }, (_, index) => {
+        const size = estimateAt(index)
+        const item = { index, start: fallbackStart, size, key: index }
+        fallbackStart += size
+        return item
+      })
 
   const measureElement = useCallback(
     (element: HTMLElement | null) => {
@@ -136,6 +141,10 @@ export function useVirtualizedRows(options: {
     // whenever the real rows are shorter than the estimate.
     totalSize: measuredItems.length
       ? virtualizer.getTotalSize()
-      : options.count * options.estimateSize,
+      : typeof options.estimateSize === 'number'
+        ? options.count * options.estimateSize
+        : Array.from({ length: options.count }, (_, index) =>
+            estimateAt(index),
+          ).reduce((total, size) => total + size, 0),
   }
 }

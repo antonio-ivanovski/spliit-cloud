@@ -21,16 +21,42 @@ import {
   formatNotificationNumber,
   formatNotificationPercent,
 } from './format'
+import { formatPersonalShareLine } from './personal-expense-share'
 import { buildEmailUnsubscribeMetadata } from './unsubscribe'
-
-const MESSAGE_ID_DOMAIN = 'spliit.app'
-
-function deliveryMessageId(deliveryId: string): string {
-  return `<${deliveryId}@${MESSAGE_ID_DOMAIN}>`
-}
 
 function actorName(snapshot: DeliverySnapshotV1): string {
   return snapshot.actor?.name ?? 'Someone'
+}
+
+/** "You" when the recipient is the actor, so the line reads personally. */
+function displayActorName(snapshot: DeliverySnapshotV1): string {
+  if (
+    snapshot.actor &&
+    snapshot.actor.id === snapshot.recipient.accountId &&
+    snapshot.actor.name
+  ) {
+    return 'You'
+  }
+  return actorName(snapshot)
+}
+
+/**
+ * Locale-formatted "You owe X" line for expense_created/expense_updated
+ * snapshots. Null when the snapshot carries no share (deleted rows, zero-share
+ * recipients, or pre-change snapshots).
+ */
+function expensePersonalLine(
+  snapshot: Extract<
+    DeliverySnapshotV1,
+    { kind: 'expense_created' } | { kind: 'expense_updated' }
+  >,
+  locale: string,
+): string | null {
+  if (!snapshot.personal) return null
+  const personal = snapshot.personal
+  return formatPersonalShareLine(personal, (cents) =>
+    formatNotificationAmount(cents, personal.currencyCode, locale),
+  )
 }
 
 function isTransientCode(code: string | undefined): boolean {
@@ -50,12 +76,44 @@ function isPermanentCode(code: string | undefined): boolean {
   return code === 'EENVELOPE' || code === 'EADDRINFO' || code === 'EINVAL'
 }
 
-function classifySmtpError(err: unknown): 'transient' | 'permanent' {
+function isCloudflareRestError(record: Record<string, unknown>): boolean {
+  if (record.provider === 'cloudflare-email') return true
+  const code = record.code
+  return typeof code === 'string' && code.startsWith('CF_')
+}
+
+/**
+ * Cloudflare REST (HTTPS) failures use HTTP semantics, which are inverted
+ * relative to SMTP reply codes: 4xx (auth, validation, domain not onboarded) is
+ * permanent, while 429/5xx/network/timeout is transient and worth retrying.
+ * Must branch before the SMTP responseCode mapping below, where 5xx means
+ * permanent (mailbox unavailable).
+ */
+function classifyCloudflareRestError(
+  code: string | undefined,
+  responseCode: number | undefined,
+): 'transient' | 'permanent' {
+  if (code === 'CF_TIMEOUT' || code === 'CF_NETWORK') return 'transient'
+  // The provider accepted the request but will never deliver to this
+  // recipient (bounce or suppression list): retrying cannot succeed.
+  if (code === 'CF_PERMANENT_BOUNCE') return 'permanent'
+  if (responseCode === 429 || responseCode === 408) return 'transient'
+  if (typeof responseCode === 'number') {
+    if (responseCode >= 500) return 'transient'
+    if (responseCode >= 400) return 'permanent'
+  }
+  return 'transient'
+}
+
+export function classifyEmailError(err: unknown): 'transient' | 'permanent' {
   if (!err || typeof err !== 'object') return 'transient'
   const record = err as Record<string, unknown>
   const code = typeof record.code === 'string' ? record.code : undefined
   const responseCode =
     typeof record.responseCode === 'number' ? record.responseCode : undefined
+  if (isCloudflareRestError(record)) {
+    return classifyCloudflareRestError(code, responseCode)
+  }
   if (isPermanentCode(code)) return 'permanent'
   if (isTransientCode(code)) return 'transient'
   if (typeof responseCode === 'number') {
@@ -72,7 +130,7 @@ function describeError(err: unknown): {
   message: string
 } {
   if (!err || typeof err !== 'object') {
-    return { code: 'UNKNOWN', message: 'Unknown SMTP error' }
+    return { code: 'UNKNOWN', message: 'Unknown email error' }
   }
   const record = err as Record<string, unknown>
   const code =
@@ -84,7 +142,7 @@ function describeError(err: unknown): {
   const rawMessage =
     typeof record.message === 'string' && record.message.length > 0
       ? record.message
-      : 'SMTP send failed'
+      : 'Email send failed'
   const cleaned = rawMessage.replace(/\s+/g, ' ').trim().slice(0, 200)
   return { code, providerStatus, message: cleaned }
 }
@@ -148,14 +206,16 @@ function renderSnapshotEmail(args: {
         unsubscribeUrl,
       })
     }
-    case 'expense_created':
+    case 'expense_created': {
+      const displayActor = displayActorName(snapshot)
+      const personalLine = expensePersonalLine(snapshot, locale)
       return renderExpenseActivityEmail({
         kind: 'expense',
-        subject: `[Spliit Cloud] ${actor} added "${snapshot.expense.description}" to ${groupDisplayName}`,
-        text: `${actor} added "${snapshot.expense.description}" in ${groupDisplayName}.\n\nView it here:\n${link}`,
+        subject: `[Spliit Cloud] ${displayActor} added "${snapshot.expense.description}" to ${groupDisplayName}`,
+        text: `${displayActor} added "${snapshot.expense.description}" in ${groupDisplayName}.${personalLine ? `\n\n${personalLine}` : ''}\n\nView it here:\n${link}`,
         brandBaseUrl,
         groupDisplayName: groupDisplayName,
-        actorName: actor,
+        actorName: displayActor,
         title: snapshot.expense.description,
         amountStr: formatNotificationAmount(
           snapshot.expense.amount,
@@ -165,16 +225,20 @@ function renderSnapshotEmail(args: {
         date: formatNotificationDate(snapshot.date, locale),
         expenseUrl: link,
         unsubscribeUrl,
+        personalLine,
         eventType: 'EXPENSE_CREATED',
       })
-    case 'expense_updated':
+    }
+    case 'expense_updated': {
+      const displayActor = displayActorName(snapshot)
+      const personalLine = expensePersonalLine(snapshot, locale)
       return renderExpenseActivityEmail({
         kind: 'expense',
-        subject: `[Spliit Cloud] ${actor} updated "${snapshot.expense.description}" in ${groupDisplayName}`,
-        text: `${actor} updated "${snapshot.expense.description}" in ${groupDisplayName}.\n\nChanged: ${snapshot.changedFields.join(', ')}\n\nView it here:\n${link}`,
+        subject: `[Spliit Cloud] ${displayActor} updated "${snapshot.expense.description}" in ${groupDisplayName}`,
+        text: `${displayActor} updated "${snapshot.expense.description}" in ${groupDisplayName}.\n\nChanged: ${snapshot.changedFields.join(', ')}${personalLine ? `\n\n${personalLine}` : ''}\n\nView it here:\n${link}`,
         brandBaseUrl,
         groupDisplayName: groupDisplayName,
-        actorName: actor,
+        actorName: displayActor,
         title: snapshot.expense.description,
         amountStr: formatNotificationAmount(
           snapshot.expense.amount,
@@ -185,8 +249,10 @@ function renderSnapshotEmail(args: {
         changedFields: snapshot.changedFields,
         expenseUrl: link,
         unsubscribeUrl,
+        personalLine,
         eventType: 'EXPENSE_UPDATED',
       })
+    }
     case 'expense_deleted':
       return renderExpenseActivityEmail({
         kind: 'expense',
@@ -511,7 +577,10 @@ export class EmailDeliverySenderImpl implements EmailDeliverySender {
     }
 
     const headers: Record<string, string> = {
-      'Message-ID': deliveryMessageId(args.deliveryId),
+      // No Message-ID: Cloudflare generates it and rejects the whole
+      // request when callers set platform-controlled headers. The delivery
+      // id stays traceable via an allowed X- header instead.
+      'X-Spliit-Delivery-Id': args.deliveryId,
     }
     if (unsubscribeHeaders) {
       headers['List-Unsubscribe'] = unsubscribeHeaders['List-Unsubscribe']
@@ -529,15 +598,15 @@ export class EmailDeliverySenderImpl implements EmailDeliverySender {
       })
     } catch (error) {
       const { code, providerStatus, message } = describeError(error)
-      if (classifySmtpError(error) === 'permanent') {
+      if (classifyEmailError(error) === 'permanent') {
         throw new PermanentDeliveryError(
-          `SMTP send failed: ${message}`,
+          `Email send failed: ${message}`,
           code,
           providerStatus,
         )
       }
       throw new TransientDeliveryError(
-        `SMTP send failed: ${message}`,
+        `Email send failed: ${message}`,
         code,
         providerStatus,
       )

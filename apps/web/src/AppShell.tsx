@@ -2,14 +2,17 @@ import { Outlet, Link, useLocation } from '@tanstack/react-router'
 import { Suspense, type ReactNode, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { AccountDeletionBanner } from '@/components/account-deletion-banner'
 import { AccountMenu } from '@/components/account-menu'
 import { AccountPreferencesSync } from '@/components/account-preferences-sync'
 import {
   AmbientAccentProvider,
   AmbientBackdrop,
 } from '@/components/ambient-backdrop'
+import { ApiStatusBanner } from '@/components/api-status-banner'
 import Image from '@/components/app-image'
 import { CurrencyConverterButton } from '@/components/currency-converter/currency-converter'
+import { DocumentTitleProvider } from '@/components/document-title'
 import { InstallPromotionDialog } from '@/components/install-promotion-dialog'
 import { LocaleSwitcher } from '@/components/locale-switcher'
 import { MascotProvider } from '@/components/mascot/mascot-context'
@@ -28,7 +31,9 @@ import { PwaUpdatePill } from '@/components/pwa-update-pill'
 import { ThemeProvider } from '@/components/theme-provider'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Toaster } from '@/components/ui/toaster'
+import { UpdatesModal } from '@/components/updates-modal'
 import { I18nProvider } from '@/i18n/react'
+import { discardExpenseEditScrollOutside } from '@/lib/expense-edit-scroll'
 import { isFocusedMobilePath, isMobileGroupTabPath } from '@/lib/mobile-nav'
 import { OfflineProvider, OfflineSyncHost } from '@/lib/offline/provider'
 import { markPwaUpdateProtectionInitialized } from '@/lib/pwa-update-blockers'
@@ -54,6 +59,7 @@ function AccountPreferencesBoundary({
 function Content() {
   const { t } = useTranslation()
   const pathname = useLocation({ select: (location) => location.pathname })
+  useEffect(() => discardExpenseEditScrollOutside(pathname), [pathname])
   const isAuthRoute = pathname.startsWith('/auth/')
   const focusedMobileRoute = isFocusedMobilePath(pathname)
   const groupTabMobileRoute = isMobileGroupTabPath(pathname)
@@ -147,9 +153,14 @@ function Content() {
               <PwaUpdatePill />
               {isAuthRoute ? null : <PushNotificationOnboarding />}
               {isAuthRoute ? null : <InstallPromotionDialog />}
+              {isAuthRoute ? null : <UpdatesModal />}
 
               <div className="relative z-20 flex flex-1 flex-col pt-(--app-header-height)">
-                <OfflineBanner />
+                <div className="sticky top-(--app-header-height) z-40 shrink-0">
+                  <OfflineBanner />
+                  <ApiStatusBanner />
+                  <AccountDeletionBanner hidden={isAuthRoute} />
+                </div>
                 <ProfileGate>
                   <Outlet />
                 </ProfileGate>
@@ -181,7 +192,9 @@ export function AppShell() {
           <ProgressBar />
         </Suspense>
         <AmbientAccentProvider>
-          <Content />
+          <DocumentTitleProvider>
+            <Content />
+          </DocumentTitleProvider>
         </AmbientAccentProvider>
       </ThemeProvider>
     </I18nProvider>

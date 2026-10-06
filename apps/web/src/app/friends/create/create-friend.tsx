@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { ArrowLeft } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { z } from 'zod'
@@ -96,6 +96,15 @@ export function CreateFriend() {
     useSyncedAccountPreferences() as AccountPreferences | null
   const friends = friendsQuery.data?.friends ?? []
   const hasInvitableFriend = friends.length > 0
+  const friendAccounts = friendsQuery.data?.friends
+  const friendSelectItems = useMemo(
+    () =>
+      (friendAccounts ?? []).map((f) => ({
+        value: f.accountId,
+        label: f.name,
+      })),
+    [friendAccounts],
+  )
 
   const { mutateAsync: createFriend } = trpc.friends.create.useMutation({
     onSuccess: () => {
@@ -313,6 +322,7 @@ export function CreateFriend() {
                           <FormLabel>{t('peerFriendsTab')}</FormLabel>
                           <Select
                             value={field.value ?? ''}
+                            items={friendSelectItems}
                             onValueChange={(value) => {
                               field.onChange(value || undefined)
                             }}

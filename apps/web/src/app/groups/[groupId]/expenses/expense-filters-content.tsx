@@ -179,6 +179,7 @@ function MatchModeSelect({
   return (
     <Select
       value={value}
+      items={options}
       onValueChange={(v) => onChange(v as ExpenseMatchMode)}
     >
       <SelectTrigger className="h-9 w-[130px] text-xs">

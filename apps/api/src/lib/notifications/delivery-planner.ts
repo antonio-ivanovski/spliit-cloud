@@ -1,4 +1,11 @@
 import { type Prisma } from '@spliit/db'
+import {
+  getBalances,
+  isSettlementCategory,
+  type Balances,
+  type RemainderAllocationMode,
+  type SplitMode,
+} from '@spliit/domain'
 import { parseActivityData } from '@spliit/domain/activities'
 import {
   NotificationSnapshotVersion,
@@ -24,7 +31,13 @@ import {
   type DeliverySnapshotKind,
   type DeliverySnapshotV1,
 } from './delivery-snapshot'
+import { formatNotificationAmount } from './format'
 import { defaultActivityHandlers } from './handlers'
+import {
+  formatPersonalShareLine,
+  personalShareForRecipient,
+  type PersonalExpenseShare,
+} from './personal-expense-share'
 import type { ActivityNotificationEvent } from './types'
 
 type PlannerClient = Prisma.TransactionClient
@@ -58,6 +71,18 @@ type PreloadedSnapshotContext = {
     description: string
     amount: number
     currencyCode: string | null
+  } | null
+  /**
+   * Single-expense balances for the personal share line on
+   * expense_created/expense_updated snapshots. Null unless the expense row
+   * (with splits) loaded successfully. Keys of `balances` are ledger
+   * participant ids; `participantIdByAccountId` maps accounts back to them.
+   */
+  expenseShares: {
+    balances: Balances
+    participantIdByAccountId: Map<string, string>
+    currencyCode: string | null
+    isSettlement: boolean
   } | null
 }
 
@@ -280,6 +305,12 @@ async function preloadSnapshotContext(args: {
 
   let expense: PreloadedSnapshotContext['expense'] = null
   const snapshotKind = pickSnapshotKind(event)
+  // The personal share line only covers expense_created/expense_updated:
+  // UPDATED reads the new share from the current row, DELETED has no source
+  // row left to compute from, and summaries stay generic by design.
+  const needsShares =
+    snapshotKind === 'expense_created' || snapshotKind === 'expense_updated'
+  let expenseShares: PreloadedSnapshotContext['expenseShares'] = null
   if (
     event.subject?.id &&
     (snapshotKind === 'expense_created' ||
@@ -296,7 +327,33 @@ async function preloadSnapshotContext(args: {
         id: true,
         title: true,
         amount: true,
+        categoryId: true,
+        splitMode: true,
+        paidBySplitMode: true,
+        originalAmount: true,
+        originalCurrency: true,
+        conversionRate: true,
         ledger: { select: { currencyCode: true } },
+        paidByList: { select: { ledgerParticipantId: true, shares: true } },
+        paidFor: { select: { ledgerParticipantId: true, shares: true } },
+        items: {
+          select: {
+            amount: true,
+            splitMode: true,
+            paidFor: {
+              select: { ledgerParticipantId: true, shares: true },
+            },
+          },
+        },
+        itemizedRemainder: {
+          select: {
+            splitMode: true,
+            allocationMode: true,
+            paidFor: {
+              select: { ledgerParticipantId: true, shares: true },
+            },
+          },
+        },
       },
     })
     expense = row
@@ -307,13 +364,139 @@ async function preloadSnapshotContext(args: {
           currencyCode: row.ledger.currencyCode,
         }
       : null
+    if (expense && needsShares && row) {
+      expenseShares = await loadExpenseShares(tx, row)
+    }
   }
 
   return {
     accountsById,
     group,
     expense,
+    expenseShares,
   }
+}
+
+/**
+ * Compute single-expense balances and map split participants back to accounts.
+ * Runs once per event inside the planner preload, so fan-out stays O(1) in
+ * database round-trips. Never throws: a share computation failure drops the
+ * personal line, not the notification.
+ */
+async function loadExpenseShares(
+  tx: PlannerClient,
+  row: {
+    amount: number
+    categoryId: string
+    splitMode: string
+    paidBySplitMode: string
+    originalAmount: number | null
+    originalCurrency: string | null
+    conversionRate: number | null
+    ledger: { currencyCode: string | null }
+    paidByList: Array<{ ledgerParticipantId: string; shares: number }>
+    paidFor: Array<{ ledgerParticipantId: string; shares: number }>
+    items: Array<{
+      amount: number
+      splitMode: string
+      paidFor: Array<{ ledgerParticipantId: string; shares: number }>
+    }>
+    itemizedRemainder: {
+      splitMode: string
+      allocationMode: string
+      paidFor: Array<{ ledgerParticipantId: string; shares: number }>
+    } | null
+  },
+): Promise<PreloadedSnapshotContext['expenseShares']> {
+  try {
+    const participantIds = new Set<string>()
+    for (const entry of row.paidByList)
+      participantIds.add(entry.ledgerParticipantId)
+    for (const entry of row.paidFor)
+      participantIds.add(entry.ledgerParticipantId)
+    for (const item of row.items) {
+      for (const entry of item.paidFor)
+        participantIds.add(entry.ledgerParticipantId)
+    }
+    for (const entry of row.itemizedRemainder?.paidFor ?? []) {
+      participantIds.add(entry.ledgerParticipantId)
+    }
+    if (participantIds.size === 0) return null
+    const participants = await tx.ledgerParticipant.findMany({
+      where: { id: { in: [...participantIds] } },
+      select: { id: true, groupMember: { select: { accountId: true } } },
+    })
+    const participantIdByAccountId = new Map<string, string>()
+    for (const participant of participants) {
+      if (participant.groupMember) {
+        participantIdByAccountId.set(
+          participant.groupMember.accountId,
+          participant.id,
+        )
+      }
+    }
+    const balances = getBalances([
+      {
+        amount: row.amount,
+        splitMode: row.splitMode as SplitMode,
+        paidBySplitMode: row.paidBySplitMode as SplitMode,
+        paidByList: row.paidByList.map((entry) => ({
+          shares: entry.shares,
+          participant: { id: entry.ledgerParticipantId },
+        })),
+        paidFor: row.paidFor.map((entry) => ({
+          shares: entry.shares,
+          participant: { id: entry.ledgerParticipantId },
+        })),
+        originalAmount: row.originalAmount,
+        originalCurrency: row.originalCurrency,
+        conversionRate: row.conversionRate,
+        items: row.items.map((item) => ({
+          amount: item.amount,
+          splitMode: item.splitMode as SplitMode,
+          paidFor: item.paidFor.map((entry) => ({
+            participant: entry.ledgerParticipantId,
+            shares: entry.shares,
+          })),
+        })),
+        itemizedRemainder: row.itemizedRemainder
+          ? {
+              splitMode: row.itemizedRemainder.splitMode as SplitMode,
+              paidFor: row.itemizedRemainder.paidFor.map((entry) => ({
+                participant: entry.ledgerParticipantId,
+                shares: entry.shares,
+              })),
+              allocationMode: row.itemizedRemainder
+                .allocationMode as RemainderAllocationMode,
+            }
+          : null,
+      },
+    ])
+    return {
+      balances,
+      participantIdByAccountId,
+      currencyCode: row.ledger.currencyCode,
+      isSettlement: isSettlementCategory(row.categoryId),
+    }
+  } catch {
+    return null
+  }
+}
+
+/** Resolve one draft recipient's share from the preloaded expense balances. */
+function resolvePersonalShare(
+  preloaded: PreloadedSnapshotContext,
+  recipientAccountId: string,
+): PersonalExpenseShare | null {
+  const shares = preloaded.expenseShares
+  if (!shares) return null
+  return personalShareForRecipient({
+    balances: shares.balances,
+    ledgerParticipantId:
+      shares.participantIdByAccountId.get(recipientAccountId),
+    currencyCode: shares.currencyCode,
+    isSettlement: shares.isSettlement,
+  })
 }
 
 function buildSnapshot(args: {
@@ -361,18 +544,44 @@ function buildSnapshot(args: {
     ? { id: group.id, name: group.name, type: group.groupType }
     : { id: event.groupId, name: '', type: 'GROUP' }
   const baseLink = `${getWebBaseUrl()}/groups/${event.groupId}`
+  const kind = pickSnapshotKind(event)
+  const hasViewableExpense =
+    kind === 'expense_created' ||
+    kind === 'expense_updated' ||
+    kind === 'expense_comment' ||
+    kind === 'recurring_created' ||
+    kind === 'recurring_occurrence' ||
+    kind === 'settlement'
+  const link =
+    hasViewableExpense && expense
+      ? `${baseLink}/expenses/${encodeURIComponent(expense.id)}`
+      : baseLink
   const unsubscribeCategory = category
+  // Per-recipient share for the "how much you owe" line. Only
+  // expense_created/expense_updated carry it; every other kind renders the
+  // generic copy.
+  const personal =
+    kind === 'expense_created' || kind === 'expense_updated'
+      ? resolvePersonalShare(preloaded, recipientAccountId)
+      : null
+  const recipientLocale = recipientAccount?.locale ?? 'en-US'
+  const personalSuffix = personal
+    ? formatPersonalShareLine(personal, (cents) =>
+        formatNotificationAmount(cents, personal.currencyCode, recipientLocale),
+      )
+    : null
   const pushFields =
     channel === NotificationChannel.PUSH && pushSubscriptionId
       ? {
           subscriptionId: pushSubscriptionId,
           title: pushTitle(event),
-          body: pushBody(event),
-          url: baseLink,
+          body: personalSuffix
+            ? `${pushBody(event)} · ${personalSuffix}`
+            : pushBody(event),
+          url: link,
           tag: eventKey,
         }
       : undefined
-  const kind = pickSnapshotKind(event)
   const summary = summaryFromParsed(parsed)
   const draft: Record<string, unknown> = {
     version: NotificationSnapshotVersion.V1,
@@ -382,7 +591,7 @@ function buildSnapshot(args: {
     actor: actorSnapshot,
     recipient: recipientSnapshot,
     unsubscribeCategory,
-    link: baseLink,
+    link,
   }
   if (pushFields) draft.push = pushFields
   if (group) {
@@ -434,6 +643,9 @@ function buildSnapshot(args: {
         currencyCode: null,
       }
     }
+  }
+  if (personal && (kind === 'expense_created' || kind === 'expense_updated')) {
+    draft.personal = personal
   }
   if (kind === 'expense_comment' && event.subject?.id) {
     draft.expense = {

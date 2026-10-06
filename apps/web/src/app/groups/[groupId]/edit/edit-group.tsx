@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { Archive, ArchiveRestore, Sparkles, Trash } from 'lucide-react'
+import { Archive, ArchiveRestore, Trash } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -13,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 
 import {
@@ -33,6 +34,7 @@ import { PublicViewOnlyLinkSection } from './group-view-link-card'
 export const EditGroup = () => {
   const { groupId, group, currentMember } = useCurrentGroup()
   const isReadOnlyViewer = useIsReadOnlyGroupViewer()
+  const { data: account } = useCurrentAccount()
   const { linkInviteToken, viewKey } = useGroupAccessSearch()
   const { data, isLoading } = trpc.groups.getDetails.useQuery({
     groupId,
@@ -41,8 +43,6 @@ export const EditGroup = () => {
   })
   const updateMutation = useUpdateGroupMutation()
   const deleteMutation = useDeleteGroupMutation()
-  const { data: features } = trpc.features.get.useQuery()
-  const { t } = useTranslation(undefined, { keyPrefix: 'GroupForm' })
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const { t: tExpenses } = useTranslation(undefined, { keyPrefix: 'Expenses' })
   const [forceArchiveOpen, setForceArchiveOpen] = useState(false)
@@ -75,6 +75,19 @@ export const EditGroup = () => {
         }
       />
 
+      {account ? (
+        <p className="rounded-md border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+          {tGroups('groupTabsHint')}{' '}
+          <Link
+            to="/account/settings"
+            hash="account-preference-group-tabs"
+            className="underline underline-offset-2"
+          >
+            {tGroups('groupTabsHintLink')}
+          </Link>
+        </p>
+      ) : null}
+
       {currentMember ? (
         <SplitPresetsCard
           groupId={groupId}
@@ -99,32 +112,6 @@ export const EditGroup = () => {
           </CardContent>
         </Card>
       ) : null}
-
-      {canArchive && !isArchived && features?.enableBulkCategorize && (
-        <Card className="mb-2">
-          <CardHeader>
-            <CardTitle>{t('bulkCategorizeSectionTitle')}</CardTitle>
-            <CardDescription>
-              {t('bulkCategorizeSectionDescription')}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button
-              variant="secondary"
-              nativeButton={false}
-              render={
-                <Link
-                  to="/groups/bulk-categorize/$groupId"
-                  params={{ groupId }}
-                />
-              }
-            >
-              <Sparkles className="me-2 h-4 w-4" />
-              {t('bulkCategorizeButton')}
-            </Button>
-          </CardContent>
-        </Card>
-      )}
 
       {canArchive && (
         <Card className="mb-2">

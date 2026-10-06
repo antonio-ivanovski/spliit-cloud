@@ -15,6 +15,7 @@ import { useLocale } from '@/i18n/react'
 import type { getGroupExpenses } from '@/lib/api'
 import { getCurrency, type Currency } from '@/lib/currency'
 import { formatExpenseClosed } from '@/lib/expense-display'
+import { expensePreviewSearch } from '@/lib/expense-navigation'
 import { cn, formatCurrency } from '@/lib/utils'
 import { isSettlementCategory } from '@spliit/domain'
 
@@ -25,7 +26,9 @@ type Expense = Awaited<ReturnType<typeof getGroupExpenses>>[number]
 
 const participantsKey = {
   paidBy: 'ExpenseCard.paidBy',
+  paidBySingle: 'ExpenseCard.paidBySingle',
   paidByMultiple: 'ExpenseCard.paidByMultiple',
+  paidByMultipleSingle: 'ExpenseCard.paidByMultipleSingle',
   receivedBy: 'ExpenseCard.receivedBy',
   receivedByMultiple: 'ExpenseCard.receivedByMultiple',
 } as const
@@ -76,22 +79,28 @@ function Participants({
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseCard' })
   const locale = useLocale()
   const paidFor =
-    expense.paidFor.length == participantCount && participantCount >= 4 ? (
-      <strong>{t('everyone')}</strong>
-    ) : (
-      expense.paidFor.map((paidFor, index) => (
-        <span key={index}>
-          {index !== 0 && <>, </>}
-          <strong>{paidFor.ledgerParticipant.name}</strong>
-        </span>
-      ))
-    )
+    expense.paidFor.length === participantCount && participantCount >= 4
+      ? [<strong key="everyone">{t('everyone')}</strong>]
+      : expense.paidFor.map((paidFor, index) => (
+          <span key={index}>
+            {index !== 0 && <>, </>}
+            <strong>{paidFor.ledgerParticipant.name}</strong>
+          </span>
+        ))
 
   const isMultiPayer = expense.paidByList.length > 1
   const direction = expense.amount > 0 ? 'paidBy' : 'receivedBy'
-  const i18nKey = isMultiPayer
-    ? participantsKey[`${direction}Multiple`]
-    : participantsKey[direction]
+  const isEveryone =
+    expense.paidFor.length === participantCount && participantCount >= 4
+  const isSingleBeneficiary = !isEveryone && expense.paidFor.length === 1
+  const i18nKey =
+    direction === 'paidBy' && isSingleBeneficiary
+      ? isMultiPayer
+        ? participantsKey.paidByMultipleSingle
+        : participantsKey.paidBySingle
+      : isMultiPayer
+        ? participantsKey[`${direction}Multiple`]
+        : participantsKey[direction]
 
   if (isMultiPayer) {
     // Decision #13: sort payers alphabetically by resolved display name.
@@ -204,6 +213,7 @@ export function ExpenseCard({
         <Link
           to="/expenses"
           search={expensesSearch}
+          resetScroll={false}
           className={overlayClassName}
           aria-label={expense.title}
         />
@@ -211,7 +221,8 @@ export function ExpenseCard({
         <Link
           to="/groups/$groupId/expenses/$expenseId"
           params={{ groupId, expenseId: expense.id }}
-          search={returnTo ? { returnTo } : undefined}
+          search={expensePreviewSearch(returnTo)}
+          resetScroll={false}
           className={overlayClassName}
           aria-label={expense.title}
         />

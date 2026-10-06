@@ -13,6 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import {
   expenseFormCancelLink,
   getGlobalExpensesSearch,
+  isActivityReturnTo,
   isGlobalExpensesReturnTo,
 } from '@/lib/expense-navigation'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
@@ -213,6 +214,13 @@ export function CreateExpenseForm({
                 to: '/expenses',
                 search: getGlobalExpensesSearch(searchParams.returnTo) as never,
                 replace: true,
+              })
+            } else if (isActivityReturnTo(searchParams.returnTo)) {
+              await navigate({
+                to: '/groups/$groupId/activity',
+                params: { groupId: group.id },
+                replace: true,
+                resetScroll: false,
               })
             } else {
               await navigate({

@@ -99,17 +99,30 @@ export async function updateGroup(
       throw new Error('Cannot modify settings of an archived group')
     }
 
+    const isFriendLedger = existingGroup.groupType === GroupType.FRIEND
+    const effectiveEmoji =
+      isFriendLedger || groupFormValues.emoji === undefined
+        ? (existingGroup.emoji ?? null)
+        : groupFormValues.emoji
+    const effectiveColor =
+      isFriendLedger || groupFormValues.color === undefined
+        ? (existingGroup.color ?? null)
+        : (groupFormValues.color ?? null)
     const oldGroup: DiffableGroup = {
       name: existingGroup.name,
       information: existingGroup.information,
       currency: existingGroup.ledger.currency,
       currencyCode: existingGroup.ledger.currencyCode,
+      emoji: existingGroup.emoji ?? null,
+      color: existingGroup.color ?? null,
     }
     const newGroup: DiffableGroup = {
       name: groupFormValues.name,
       information: groupFormValues.information ?? null,
       currency: groupFormValues.currency,
       currencyCode: groupFormValues.currencyCode || null,
+      emoji: effectiveEmoji,
+      color: effectiveColor,
     }
     const currencyChanged =
       oldGroup.currency !== newGroup.currency ||

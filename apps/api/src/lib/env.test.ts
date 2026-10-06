@@ -4,10 +4,12 @@ import {
   getConfiguredOidcProvider,
   getMaxExpenseDocumentSizeBytes,
   getWebhookRelayConfig,
+  isCloudflareEmailEnabled,
   isEmailAuthEnabled,
   isEmailDeliveryEnabled,
   isPasskeyAuthEnabled,
   parseEnv,
+  resolveEmailTransportKind,
 } from './env'
 
 // Pure env-schema tests. Each case passes an isolated literal object to
@@ -94,6 +96,47 @@ describe('envSchema — production', () => {
     expect(() =>
       parseTestEnv({ ...productionBase, SMTP_PASS: undefined }),
     ).toThrow(/SMTP_USER and SMTP_PASS must be configured together/)
+  })
+
+  it('allows Cloudflare REST instead of SMTP in production', () => {
+    const env = parseTestEnv({
+      ...productionBase,
+      SMTP_HOST: undefined,
+      SMTP_USER: undefined,
+      SMTP_PASS: undefined,
+      CF_EMAIL_ACCOUNT_ID: 'acct-123',
+      CF_EMAIL_API_TOKEN: 'cf-token',
+    })
+    expect(env.CF_EMAIL_ACCOUNT_ID).toBe('acct-123')
+    expect(isEmailDeliveryEnabled(env)).toBe(true)
+    expect(resolveEmailTransportKind(env)).toBe('cloudflare')
+  })
+
+  it('rejects partial Cloudflare email credentials', () => {
+    expect(() =>
+      parseTestEnv({
+        ...productionBase,
+        CF_EMAIL_ACCOUNT_ID: 'acct-123',
+      }),
+    ).toThrow(
+      /CF_EMAIL_ACCOUNT_ID and CF_EMAIL_API_TOKEN must be configured together/,
+    )
+  })
+
+  it('requires the unsubscribe secret when Cloudflare delivery is configured', () => {
+    expect(() =>
+      parseTestEnv({
+        ...productionBase,
+        SMTP_HOST: undefined,
+        SMTP_USER: undefined,
+        SMTP_PASS: undefined,
+        CF_EMAIL_ACCOUNT_ID: 'acct-123',
+        CF_EMAIL_API_TOKEN: 'cf-token',
+        EMAIL_UNSUBSCRIBE_SECRET: 'too-short',
+      }),
+    ).toThrow(
+      /EMAIL_UNSUBSCRIBE_SECRET must be at least 32 bytes in production/,
+    )
   })
 
   it('throws when the unsubscribe secret is too short', () => {
@@ -453,6 +496,29 @@ describe('envSchema — AI', () => {
     expect(env.AI_SYSTEM_ONE_TIMEOUT_SECONDS).toBe(10)
   })
 
+  it.each([
+    'http://models.example.com/v1/systemone',
+    'http://192.168.1.10:8009/v1/systemone',
+  ])(
+    'rejects a non-loopback plaintext HTTP System One endpoint (%s)',
+    (url) => {
+      expect(() => parseTestEnv({ AI_SYSTEM_ONE_BASE_URL: url })).toThrow(
+        /AI_SYSTEM_ONE_BASE_URL must use HTTPS/,
+      )
+    },
+  )
+
+  it.each([
+    'https://models.example.com/v1/systemone',
+    'http://localhost:8009/v1/systemone',
+    'http://127.0.0.1:8009/v1/systemone',
+    'http://[::1]:8009/v1/systemone',
+  ])('accepts an HTTPS or loopback System One endpoint (%s)', (url) => {
+    expect(
+      parseTestEnv({ AI_SYSTEM_ONE_BASE_URL: url }).AI_SYSTEM_ONE_BASE_URL,
+    ).toBe(url)
+  })
+
   it('defaults the local suggest stages to enabled with calibrated thresholds', () => {
     const env = parseTestEnv()
     expect(env.CATEGORY_DICTIONARY_ENABLED).toBe(true)
@@ -728,5 +794,46 @@ describe('email auth helpers', () => {
         EMAIL_FROM: 'noreply@test',
       }),
     ).toBe(true)
+  })
+
+  it('reports delivery for Cloudflare REST without SMTP', () => {
+    expect(
+      isEmailDeliveryEnabled({
+        CF_EMAIL_ACCOUNT_ID: 'acct-123',
+        CF_EMAIL_API_TOKEN: 'cf-token',
+        EMAIL_FROM: 'noreply@test',
+      }),
+    ).toBe(true)
+    expect(
+      isEmailDeliveryEnabled({
+        CF_EMAIL_ACCOUNT_ID: 'acct-123',
+        EMAIL_FROM: 'noreply@test',
+      }),
+    ).toBe(false)
+    expect(
+      isCloudflareEmailEnabled({
+        CF_EMAIL_ACCOUNT_ID: 'acct-123',
+        CF_EMAIL_API_TOKEN: 'cf-token',
+        EMAIL_FROM: 'noreply@test',
+      }),
+    ).toBe(true)
+    expect(
+      isCloudflareEmailEnabled({
+        CF_EMAIL_ACCOUNT_ID: 'acct-123',
+        CF_EMAIL_API_TOKEN: 'cf-token',
+      }),
+    ).toBe(false)
+  })
+
+  it('prefers Cloudflare REST when both transports are configured', () => {
+    expect(
+      resolveEmailTransportKind({
+        SMTP_HOST: 'smtp.test',
+        CF_EMAIL_ACCOUNT_ID: 'acct-123',
+        CF_EMAIL_API_TOKEN: 'cf-token',
+      }),
+    ).toBe('cloudflare')
+    expect(resolveEmailTransportKind({ SMTP_HOST: 'smtp.test' })).toBe('smtp')
+    expect(resolveEmailTransportKind({})).toBe('none')
   })
 })

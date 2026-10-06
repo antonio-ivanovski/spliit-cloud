@@ -66,6 +66,7 @@ type UseCurrencyRateResult = {
     provider: 'frankfurter' | 'coinbase'
     base: string
     target: string
+    inverted?: boolean
   }>
   error: Error | null
   isLoading: boolean
@@ -161,6 +162,7 @@ export type CurrencyRatesResponse = Array<
           provider: 'frankfurter' | 'coinbase'
           base: string
           target: string
+          inverted?: boolean
         }>
         via?: string[]
       }

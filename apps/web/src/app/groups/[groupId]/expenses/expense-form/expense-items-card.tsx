@@ -45,11 +45,18 @@ import type {
   ExpenseFormItemValues,
 } from '@spliit/domain'
 import {
+  amountAsDecimal,
   amountAsMinorUnits,
   computePaidForFromItems,
+  getItemizedFormMinorTotals,
   itemsExceedExpenseAmount,
 } from '@spliit/domain'
 
+import {
+  getBreakdownNames,
+  getFormItemBreakdown,
+  ItemAssignees,
+} from '../expense-item-breakdown'
 import { safeSharesToFixedUnits } from './currency-utils'
 import { applySplitToAll, getCommonItemSplit } from './default-item-split'
 import { getNeutralDefaultSplit } from './default-values'
@@ -113,6 +120,12 @@ export function ExpenseItemsCard({
 }: {
   form: UseFormReturn<ExpenseFormInputValues>
   group: Group
+  /**
+   * Expense input (payer) currency — the currency the amount field and item
+   * prices are entered in. Callers pass `payerCurrency`, not the ledger
+   * currency: item math must run in input minor units, especially for converted
+   * expenses where the two differ.
+   */
   groupCurrency: Currency
   readOnly?: boolean
   presets: SplitPreset[]
@@ -162,14 +175,16 @@ export function ExpenseItemsCard({
     groupCurrency,
     itemizedRemainder,
   )
-  const itemsSumMajor = items.reduce(
-    (sum, item) => sum + Number(item.unitPrice) * Number(item.quantity),
-    0,
+  const itemizedTotals = getItemizedFormMinorTotals(
+    items,
+    amountMajor,
+    groupCurrency,
   )
   const exceedsAmount = itemsExceedExpenseAmount(
-    amountAsMinorUnits(itemsSumMajor, groupCurrency),
-    amountAsMinorUnits(amountMajor, groupCurrency),
+    itemizedTotals.itemsMinor,
+    itemizedTotals.amountMinor,
   )
+  const excessMinor = itemizedTotals.itemsMinor - itemizedTotals.amountMinor
   const fillerItem = itemsWithFiller.find(isFillerItem)
 
   const commonSplit = getCommonItemSplit(items)
@@ -222,11 +237,15 @@ export function ExpenseItemsCard({
   }
 
   const handleSetExpenseAmount = () => {
-    form.setValue('amount', itemsSumMajor, {
-      shouldDirty: true,
-      shouldTouch: true,
-      shouldValidate: true,
-    })
+    form.setValue(
+      'amount',
+      amountAsDecimal(itemizedTotals.itemsMinor, groupCurrency),
+      {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      },
+    )
   }
 
   const [editingTarget, setEditingTarget] = useState<EditingTarget | null>(null)
@@ -438,7 +457,10 @@ export function ExpenseItemsCard({
                 control={form.control}
                 name="items"
                 render={() => (
-                  <FormItem className="space-y-0">
+                  <FormItem
+                    data-expense-error-anchor="items"
+                    className="space-y-0"
+                  >
                     <DefaultSplitAction
                       splitMode={displayedDefaultSplit?.splitMode ?? 'EVENLY'}
                       label={t('items.allItemsSplitLabel')}
@@ -541,16 +563,18 @@ export function ExpenseItemsCard({
                               )}
                             </span>
                           </div>
-                          <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                          <div className="mt-0.5 min-w-0 text-xs text-muted-foreground">
                             {isProportionalRemainder ? (
                               t('items.remainderAllocationProportional')
                             ) : (
-                              <SummarizeParticipants
-                                item={fillerItem}
+                              <FillerAssignees
+                                fillerItem={fillerItem}
                                 group={group}
+                                groupCurrency={groupCurrency}
+                                locale={locale}
                               />
                             )}
-                          </p>
+                          </div>
                         </div>
                         {!readOnly && (
                           <Button
@@ -570,7 +594,23 @@ export function ExpenseItemsCard({
 
                     {exceedsAmount && (
                       <div className="mt-3 flex flex-col gap-2 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive sm:flex-row sm:items-center sm:justify-between">
-                        <span>{t('items.errorExceedsAmount')}</span>
+                        <div className="flex flex-col gap-1">
+                          <span>{t('items.errorExceedsAmount')}</span>
+                          <span>
+                            {t('items.errorExceedsAmountDetails', {
+                              itemsTotal: formatCurrency(
+                                groupCurrency,
+                                itemizedTotals.itemsMinor,
+                                locale,
+                              ),
+                              excess: formatCurrency(
+                                groupCurrency,
+                                Math.abs(excessMinor),
+                                locale,
+                              ),
+                            })}
+                          </span>
+                        </div>
                         {!readOnly && (
                           <Button
                             variant="outline"
@@ -806,4 +846,57 @@ function SummarizeParticipants({
   return names
     ? `${t(labelKeys[item.splitMode])}: ${names}`
     : t('items.noMembers')
+}
+
+function FillerAssignees({
+  fillerItem,
+  group,
+  groupCurrency,
+  locale,
+}: {
+  fillerItem: Pick<
+    ExpenseFormItemValues,
+    'unitPrice' | 'quantity' | 'splitMode' | 'paidFor'
+  >
+  group: Group
+  groupCurrency: Currency
+  locale: string
+}) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
+  const participantNameMap = new Map(
+    group.participants.map((p) => [p.id, p.name]),
+  )
+  const names = getBreakdownNames(fillerItem.paidFor, participantNameMap)
+  const namesText = names.length
+    ? `${t(labelKeys[fillerItem.splitMode])}: ${names.join(', ')}`
+    : t('items.noMembers')
+  const sharesByParticipant = getFormItemBreakdown(
+    {
+      unitPrice: Number(fillerItem.unitPrice) || 0,
+      quantity: Number(fillerItem.quantity) || 0,
+      splitMode: fillerItem.splitMode,
+      paidFor: fillerItem.paidFor,
+    },
+    groupCurrency,
+  )
+  const rows = fillerItem.paidFor.flatMap((pf) => {
+    const name = participantNameMap.get(pf.participant)
+    if (!name) return []
+    return [
+      {
+        participantId: pf.participant,
+        name,
+        amount: sharesByParticipant[pf.participant] ?? 0,
+      },
+    ]
+  })
+  return (
+    <ItemAssignees
+      namesText={namesText}
+      rows={rows}
+      currency={groupCurrency}
+      locale={locale}
+      emptyText={namesText}
+    />
+  )
 }

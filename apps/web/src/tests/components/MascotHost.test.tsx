@@ -218,7 +218,7 @@ describe('MascotHost', () => {
     )
     expect(screen.queryByRole('menuitem', { name: 'Create group' })).toBeNull()
 
-    await user.click(screen.getByRole('menuitem', { name: 'Add expense' }))
+    await user.click(screen.getByText('Add expense'))
     expect(state.groupAction).toHaveBeenCalledOnce()
   })
 

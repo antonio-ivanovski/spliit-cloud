@@ -1,6 +1,6 @@
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
-import { sendJob, type SpliitBoss } from './boss'
+import { sendJob } from './boss'
 import {
   ANONYMOUS_ACCOUNT_CLEANUP_DLQ,
   ANONYMOUS_ACCOUNT_CLEANUP_QUEUE,
@@ -20,12 +20,7 @@ import {
   RECURRING_RECONCILIATION_QUEUE,
   sourceQueueForDeadLetter,
 } from './registry'
-
-function createBossMock() {
-  return {
-    send: vi.fn(async () => 'job-id'),
-  } as unknown as SpliitBoss
-}
+import { createBossMock } from './test-helpers'
 
 describe('notification job registry', () => {
   it('accepts legacy v1 materialization payloads without a schedule version', () => {
@@ -41,6 +36,23 @@ describe('notification job registry', () => {
       occurrenceDate: '2026-07-22',
     })
   })
+
+  it.each([undefined, 'request-generation'])(
+    'preserves account deletion generation %s through enqueue',
+    async (generation) => {
+      const boss = createBossMock()
+      const payload = {
+        accountId: 'account-1',
+        ...(generation ? { generation } : {}),
+      }
+      await sendJob(boss, JOB_NAMES.EXECUTE_ACCOUNT_DELETION, payload)
+      expect(boss.send).toHaveBeenCalledWith(
+        'account-deletion.execute',
+        payload,
+        expect.any(Object),
+      )
+    },
+  )
 
   it('declares every job name with a payload schema', () => {
     expect(JOB_NAMES.NOTIFICATION_DELIVER).toBe('notification.deliver')

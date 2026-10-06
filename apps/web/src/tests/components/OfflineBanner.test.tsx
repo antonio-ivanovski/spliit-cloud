@@ -86,7 +86,7 @@ describe('OfflineBanner', () => {
     }
   })
 
-  it('shows the banner when a fetch fails even if navigator.onLine is true', async () => {
+  it('stays hidden when a fetch fails while navigator.onLine is true (server down, not offline)', async () => {
     render(<OfflineBanner />)
     expect(screen.queryByTestId('offline-banner')).not.toBeInTheDocument()
 
@@ -94,7 +94,9 @@ describe('OfflineBanner', () => {
       reportNetworkFailure(new TypeError('Failed to fetch'))
     })
 
-    expect(await screen.findByTestId('offline-banner')).toBeInTheDocument()
+    // The offline banner must not blame the user's connection when the
+    // browser is online — the API status banner takes over instead.
+    expect(screen.queryByTestId('offline-banner')).not.toBeInTheDocument()
   })
 
   it('exposes role=status and aria-live=polite for screen readers', () => {
@@ -106,16 +108,5 @@ describe('OfflineBanner', () => {
     const banner = screen.getByTestId('offline-banner')
     expect(banner).toHaveAttribute('role', 'status')
     expect(banner).toHaveAttribute('aria-live', 'polite')
-  })
-
-  it('occupies layout space instead of overlaying the page heading', () => {
-    Object.defineProperty(navigator, 'onLine', {
-      configurable: true,
-      value: false,
-    })
-    render(<OfflineBanner />)
-    const banner = screen.getByTestId('offline-banner')
-    expect(banner.className).toContain('sticky')
-    expect(banner.className).not.toMatch(/(?:^|\s)fixed(?:\s|$)/)
   })
 })

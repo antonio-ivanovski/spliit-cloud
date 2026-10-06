@@ -81,13 +81,14 @@
     "signOutOffline": "Připojte se pro odhlášení"
   },
   "Footer": {
-    "madeIn": "Vytvořeno open-source komunitou s láskou ❤️",
+    "madeIn": "Vytvořeno <github>open-source komunitou</github> s láskou ❤️",
     "legalNavigation": "Právní odkazy",
     "privacy": "Ochrana soukromí",
     "terms": "Podmínky",
     "imprint": "Podrobnosti o projektu",
     "sponsor": "Sponzor",
-    "timeLabel": "Denní doba"
+    "timeLabel": "Denní doba",
+    "status": "Stav"
   },
   "Expenses": {
     "title": "Výdaje",
@@ -232,7 +233,9 @@
       "showLess": "Zobrazit méně"
     },
     "copyToast": "Vytvoření kopie výdaje zahájeno. Stávající údaje výdaje budou použity k vytvoření nového.",
-    "incomeBadge": "Příjem"
+    "incomeBadge": "Příjem",
+    "paidBySingle": "Zaplatil(a) <strong>{paidBy}</strong> · zaplaceno za <paidFor></paidFor>",
+    "paidByMultipleSingle": "Zaplatili <paidByNames></paidByNames> · zaplaceno za <paidFor></paidFor>"
   },
   "Groups": {
     "myGroups": "Moje skupiny",
@@ -378,7 +381,8 @@
             "monthly": "měsíce",
             "yearly": "roky"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Navrhnout kategorie nekategorizovaných výdajů pomocí System One"
       },
       "Destination": {
         "heading": "Kam chcete importovat <strong>{name}</strong>? ({participantCount} účastníků · {expenseCount} výdajů)",
@@ -674,7 +678,9 @@
       "description": "Skupiny nyní mohou mít emoji vedle názvu. V názvu „{name}“ jsme si všimli {emoji}.",
       "openSettings": "Otevřít nastavení skupiny",
       "notNow": "Teď ne"
-    }
+    },
+    "groupTabsHint": "Chcete změnit pořadí karet skupiny nebo skrýt ty, které nepoužíváte?",
+    "groupTabsHintLink": "Přizpůsobit karty v nastavení účtu"
   },
   "GroupForm": {
     "title": "Informace o skupině",
@@ -1066,7 +1072,8 @@
       "allItemsSplitEdit": "Upravit rozdělení všech položek",
       "allItemsSplitModalTitle": "Rozdělení všech položek",
       "remainderAllocationProportional": "Poměrně k položkám",
-      "remainderProportionalHint": "Rozdělte tuto částku podle mezisoučtu položek každé osoby. Užitečné pro daně a spropitné."
+      "remainderProportionalHint": "Rozdělte tuto částku podle mezisoučtu položek každé osoby. Užitečné pro daně a spropitné.",
+      "errorExceedsAmountDetails": "Součet položek ({itemsTotal}) přesahuje částku výdaje o {excess}."
     },
     "leaveItemized": {
       "title": "Změnit způsob rozdělení?",
@@ -1102,7 +1109,15 @@
       "done": "Hotovo",
       "yourTime": "váš čas",
       "invalidDate": "Zadejte platné datum.",
-      "invalidTime": "Zadejte platný čas (HH:mm)."
+      "invalidTime": "Zadejte platný čas (HH:mm).",
+      "hourLabel": "Hodina",
+      "minuteLabel": "Minuta",
+      "periodLabel": "dop./odp.",
+      "timeWheelHint": "Čas nastavíte posunutím nebo klepnutím. Datum zůstává stejné.",
+      "now": "Teď",
+      "morning": "Ráno",
+      "midday": "Poledne",
+      "evening": "Večer"
     },
     "settlementTitle": "Vyrovnávací platba",
     "settlementHint": "{category}: Nezapočítává se jako výdaj do součtů, statistik ani rozpočtů. Přesto aktualizuje, kdo komu dluží.",
@@ -1146,7 +1161,8 @@
       "description": "Zadejte celkovou účtovanou částku včetně poplatků.",
       "impliedRate": "Odvozený kurz: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Návrhy kategorií"
+    "otherSuggestions": "Návrhy kategorií",
+    "paidForItemizedEmptyHint": "Přiřaďte osoby k položkám, aby bylo vidět podíl každého."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Smazat dokument",
@@ -1550,7 +1566,7 @@
       "generic": "Něco se pokazilo. Zkuste to prosím znovu.",
       "passwordPolicy": "Použijte alespoň 8 znaků s velkým písmenem, malým písmenem, číslicí a symbolem.",
       "magicLinkFailed": "Odeslání přihlašovacího odkazu se nezdařilo.",
-      "signupInviteRequired": "Tato instance je pouze na pozvánku. Použijte odkaz pozvánky nebo požádejte někoho, aby vás pozval do skupiny.",
+      "signupInviteRequired": "Registrace jsou pouze na pozvánku. Použijte odkaz pozvánky nebo požádejte někoho, aby vás pozval do skupiny.",
       "passkeyFailed": "Přihlášení přístupovým klíčem se nezdařilo. Zkuste to znovu nebo použijte jiný způsob přihlášení."
     },
     "loading": "Načítání…",
@@ -1560,14 +1576,14 @@
     "signInWithGithub": "Pokračovat přes GitHub",
     "legalNotice": "Pokračováním souhlasíte s <terms>Obchodními podmínkami</terms> a berete na vědomí <privacy>Zásady ochrany soukromí</privacy>.",
     "inviteOnly": {
-      "message": "Tato instance je pouze na pozvánku. Použijte odkaz pozvánky nebo požádejte někoho, aby vás pozval do skupiny.",
+      "message": "Registrace jsou pouze na pozvánku. Použijte odkaz pozvánky nebo požádejte někoho, aby vás pozval do skupiny.",
       "useInvitedEmail": "Použijte e-mailovou adresu, na kterou vám přišla pozvánka."
     },
     "signInWithX": "Pokračovat přes X",
     "signInWithOidc": "Pokračovat přes {name}",
     "signInAnonymously": "Anonymní",
     "lastUsed": "Naposledy použito",
-    "emailAuthDisabled": "Přihlášení e-mailem je na této instanci zakázáno. Použijte jednotné přihlášení (SSO).",
+    "emailAuthDisabled": "Přihlášení e-mailem je zakázáno. Použijte jednotné přihlášení (SSO).",
     "signInWithPasskey": "Přihlásit se pomocí přístupového klíče"
   },
   "CompleteProfile": {
@@ -2002,7 +2018,7 @@
         "joined_many": "{count} lidí se připojilo",
         "retry": "Zkusit znovu"
       },
-      "emailDeliveryDisabled": "Doručování e-mailů je na této instanci vypnuté. Pozvánka se přesto vytvoří a zobrazí se, až se pozvaný přihlásí; použijte odkaz pozvánky, abyste mu dali něco k otevření."
+      "emailDeliveryDisabled": "Doručování e-mailů je vypnuté. Pozvánka se přesto vytvoří a zobrazí se, až se pozvaný přihlásí; použijte odkaz pozvánky, abyste mu dali něco k otevření."
     },
     "invitations": {
       "title": "Čekající pozvánky",
@@ -2425,7 +2441,7 @@
       "masterDescription": "Vypnutím ztlumíte e-mailová i push oznámení. Vaše volby podle kategorií zůstanou zachovány.",
       "emailAddToEnable": "Přidejte ověřený e-mail, abyste dostávali oznámení do schránky.",
       "emailAddLink": "Přidat e-mail",
-      "emailDeliveryDisabled": "Doručování e-mailů je na této instanci vypnuté. Vaše volby e-mailů se ukládají, ale nebudou se odesílat, dokud administrátor nenastaví e-mail."
+      "emailDeliveryDisabled": "Doručování e-mailů je vypnuté. Vaše volby e-mailů se ukládají, ale nebudou se odesílat, dokud nebude e-mail nastaven."
     },
     "preferences": {
       "title": "Předvolby aplikace",
@@ -2444,6 +2460,22 @@
       "mascotOptions": {
         "off": "Vypnuto",
         "bill": "Bill, účtenkový maskot"
+      },
+      "groupTabs": "Karty skupiny",
+      "groupTabsHelp": "Vyberte, které karty se zobrazují a v jakém pořadí, v každé skupině.",
+      "groupTabsCustomize": "Přizpůsobit",
+      "groupTabsSave": "Uložit",
+      "groupTabsDiscard": "Zahodit",
+      "groupTabsReset": "Obnovit výchozí nastavení",
+      "groupTabsHide": "Skrýt {name}",
+      "groupTabsShow": "Zobrazit {name}",
+      "groupTabsMoveUp": "Posunout {name} nahoru",
+      "groupTabsMoveDown": "Posunout {name} dolů",
+      "deleteConfirmation": "Potvrzení smazání výdaje",
+      "deleteConfirmationHelp": "Rychlé smazání se zeptá jednou. Smazání se zadáním vyžaduje nejprve zadat název výdaje. Smazání skupiny nebo odebrání člena vždy vyžaduje zadání.",
+      "deleteConfirmationOptions": {
+        "standard": "Potvrzovací dialog",
+        "strict": "Dialog se zadáním"
       }
     },
     "aiPreferences": {
@@ -2636,7 +2668,111 @@
       "backedUp": "Zálohovaný",
       "removeWarning": "Toto nelze vzít zpět. Zařízení vás už pomocí přístupového klíče nepřihlásí — kdykoli ho můžete zaregistrovat znovu.",
       "removeLastWarning": "Toto je váš poslední přístupový klíč. Pokud je to vaše jediná metoda přihlášení, odebrání je zablokováno, dokud si neuložíte přihlašovací odkaz nebo jinou metodu přihlášení.",
-      "anonymousHelpNoLink": "Pro tento anonymní účet není uložen žádný přihlašovací odkaz. Vytvořte si ho v řádku s přihlašovacím odkazem níže — funguje na jakémkoli zařízení."
+      "anonymousHelpNoLink": "Pro tento anonymní účet není uložen žádný přihlašovací odkaz. Vytvořte si ho v řádku s přihlašovacím odkazem níže — funguje na jakémkoli zařízení.",
+      "reauthTitle": "Přihlaste se znovu pro přidání přístupového klíče",
+      "reauthDescription": "Z bezpečnostních důvodů vyžaduje přidání přístupového klíče čerstvé přihlášení. Budete odhlášeni, znovu se přihlásíte a vrátíte se přímo sem k dokončení.",
+      "reauthConfirm": "Přihlásit se znovu",
+      "reauthAnonymousTitle": "Nejprve si uložte odkaz pro obnovení",
+      "reauthAnonymousDescription": "Tento anonymní účet zatím nemá odkaz pro obnovení ani přístupový klíč. Pokud se nyní odhlásíte, natrvalo ztratíte přístup — nejprve si uložte odkaz pro obnovení v části Odkaz pro obnovení a pak se vraťte pro přidání přístupového klíče."
+    },
+    "deletion": {
+      "sectionTitle": "Nebezpečná zóna",
+      "sectionDescription": "Trvale smažte svůj účet a všechny způsoby přihlášení.",
+      "rowLabel": "Smazat účet",
+      "rowDescription": "Po 48hodinové ochranné lhůtě odstraní váš profil, relace a nastavení. Sdílené výdaje zůstanou ve skupinách ostatních členů bez vašich osobních údajů.",
+      "open": "Smazat účet…",
+      "scheduledTitle": "Smazání účtu naplánováno",
+      "scheduledDescription": "Smazání je naplánováno na {date} nebo později. Účet zůstane aktivní, dokud smazání nezačne. Skupiny, členové a výdaje se mohou během čekání změnit; vaše volby se použijí na jejich stav v době smazání. Smazání můžete zrušit, dokud nezačne. Potvrzovací e-mail byl odeslán na {email}.",
+      "cancel": "Zrušit smazání",
+      "cancelling": "Ruší se…",
+      "cancelled": "Smazání účtu bylo zrušeno.",
+      "dialogTitle": "Naplánovat smazání účtu?",
+      "dialogDescription": "Tímto naplánujete smazání po 48hodinové čekací době; nyní se nic nesmaže. Smazání můžete zrušit, dokud nezačne. Vaše volby se použijí na tehdejší skupiny a zůstatky. Jakmile smazání začne, nelze ho vrátit zpět.",
+      "farewellTitle": "Je nám líto, že odcházíte",
+      "farewellBody": "Pokud můžeme udělat něco pro to, abyste zůstali, <feedbackLink>sdílejte nám zpětnou vazbu</feedbackLink> — zabere to minutu a pomůže nám se zlepšit.",
+      "groupsTitle": "Co se stane s vašimi skupinami",
+      "leaveGroup": "Opustíte skupinu „{name}“.",
+      "deleteGroup": "„{name}“ bude trvale smazána — jste jejím posledním členem.",
+      "lastAdmin": "Jste posledním správcem skupiny „{name}“ — jiný člen bude automaticky povýšen.",
+      "settleBalances": "Nevyrovnané zůstatky ve skupině „{name}“ se vyrovnají automaticky.",
+      "friendLedger": "Vaše společné výdaje s {name} jsou vyrovnány a uzavřeny.",
+      "friendLedgerUnnamed": "Vaše společné výdaje jsou vyrovnány a uzavřeny.",
+      "friendLedgerFallback": "společné výdaje s přítelem",
+      "noGroups": "Nejste členem žádné skupiny.",
+      "accessTitle": "Přihlášení a pozvánky",
+      "pendingInvites_zero": "Při smazání bude odvoláno {count} čekajících pozvánek, které jste odeslali.",
+      "pendingInvites_one": "Při smazání bude odvolána {count} čekající pozvánka, kterou jste odeslali.",
+      "pendingInvites_two": "Při smazání budou odvolány {count} čekající pozvánky, které jste odeslali.",
+      "pendingInvites_few": "Při smazání budou odvolány {count} čekající pozvánky, které jste odeslali.",
+      "pendingInvites_many": "Při smazání bude odvoláno {count} čekající pozvánky, které jste odeslali.",
+      "pendingInvites_other": "Při smazání bude odvoláno {count} čekajících pozvánek, které jste odeslali.",
+      "keepNameLabel": "Ponechat mé jméno ve sdílené historii",
+      "keepNameDescription": "U sdílených výdajů se bude dále zobrazovat „{name}“. Jinak bude vaše jméno všude nahrazeno textem „Smazaný člen“.",
+      "customNameLabel": "Jméno k ponechání",
+      "settleLabel": "Označit zůstatky jako vyrovnané při smazání",
+      "settleDescription": "Zbývající zůstatky se vyrovnají automaticky. Jinak zůstanou vedeny pod vaším zástupným jménem.",
+      "leaveBalances": "Nevyrovnané zůstatky ve skupině „{name}“ zůstanou, jak jsou.",
+      "friendLeaveBalances": "Váš zůstatek s {name} zůstane, jak je.",
+      "confirmWord": "SMAZAT",
+      "ackLabel": "Rozumím, že se jedná o trvalé smazání a že sdílené výdaje zůstanou ve skupinách ostatních členů bez mých osobních údajů.",
+      "exportHint": "Chcete si nejdřív udělat kopii? Před pokračováním <exportLink>exportujte zálohu</exportLink>.",
+      "schedule": "Naplánovat smazání",
+      "scheduling": "Plánuje se…",
+      "scheduled": "Smazání naplánováno. Zkontrolujte svůj e-mail, kde je můžete zkontrolovat nebo zrušit.",
+      "dialogCancel": "Ponechat můj účet",
+      "reauthTitle": "Pro smazání účtu se znovu přihlaste",
+      "reauthDescription": "Z bezpečnostních důvodů vyžaduje smazání účtu čerstvé přihlášení. Budete odhlášeni, znovu se přihlásíte a vrátíte se přímo sem, kde akci dokončíte.",
+      "reauthConfirm": "Přihlásit se znovu",
+      "errors": {
+        "generic": "Něco se pokazilo. Zkuste to znovu.",
+        "loadFailed": "Podrobnosti o smazání se nepodařilo načíst.",
+        "emailMismatch": "Zadaný e-mail se neshoduje s e-mailem vašeho účtu.",
+        "alreadyRequested": "Pro tento účet již čeká žádost o smazání.",
+        "sessionNotFresh": "Vaše relace je pro tuto akci příliš stará. Přihlaste se znovu a zkuste to opět.",
+        "jobsDisabled": "Smazání účtu vyžaduje pracovníka na pozadí, který je v tomto nasazení vypnutý.",
+        "ackRequired": "Nejprve potvrďte, že rozumíte důsledkům.",
+        "invalidDisplayName": "Zadejte jméno o délce 1 až 100 znaků.",
+        "cancelFailed": "Smazání se nepodařilo zrušit. Zkuste to znovu."
+      },
+      "groupsToDeleteTitle": "Skupiny, které budou smazány",
+      "groupsToDeleteDescription": "Při smazání budou trvale smazány skupiny, ve kterých budete stále posledním aktivním členem.",
+      "groupsToLeaveTitle": "Skupiny, které opustíte",
+      "groupsToLeaveDescription": "Při smazání opustíte skupiny, které budou stále mít další aktivní členy. Tyto skupiny zůstanou ostatním.",
+      "friendsTitle": "Přátelé",
+      "friendsDescription": "Vaše zůstatky jeden na jednoho s těmito přáteli.",
+      "backToSettings": "Zpět do nastavení",
+      "pageTitle": "Smazat účet",
+      "loading": "Načítání podrobností o smazání",
+      "choicesTitle": "Možnosti smazání účtu",
+      "nameTitle": "Jméno ve sdílené historii",
+      "removeNameLabel": "Nahradit mé jméno označením „Smazaný člen“",
+      "balancesTitle": "Zbývající zůstatky",
+      "keepBalancesLabel": "Ponechat zbývající zůstatky beze změny",
+      "balanceExplanation": "Pokud zvolíte vyrovnání, při smazání účtu se zaznamenají vyrovnávací platby. Žádné peníze se nepřevádějí. Jinak zůstatky zůstanou ve sdílené historii.",
+      "confirmationTitle": "Potvrdit smazání účtu",
+      "retry": "Zkusit znovu",
+      "pageDescription": "Naplánujte smazání účtu po 48hodinové čekací době. Účet zůstane aktivní, dokud nezačne smazání, a do té doby ho můžete zrušit.",
+      "reviewChoicesTitle": "Vaše volby",
+      "consequencesTitle": "Co se stane",
+      "reviewConfirmTitle": "Potvrdit smazání",
+      "backupLink": "Exportovat zálohu",
+      "keptNameExplanation": "Při smazání se u sdílených výdajů bude zobrazovat „{name}“. Do té doby zůstane jméno v profilu beze změny.",
+      "removedNameExplanation": "Při smazání se u sdílených výdajů bude zobrazovat „Smazaný člen“. Do té doby zůstane jméno v profilu beze změny.",
+      "keptBalancesExplanation": "Po zahájení smazání zůstanou zbývající zůstatky ve sdílené historii, včetně výdajů přidaných během čekací doby.",
+      "settledBalancesExplanation": "Během smazání se zaznamenají položky vyrovnání a označí tehdejší zůstatky jako vyrovnané ve skupinách, kterých jste stále členem, včetně archivovaných skupin. Zůstatky ve skupinách, které jste již opustili nebo ze kterých vás někdo odebral, zůstanou beze změny. Žádné peníze se nepřevádějí.",
+      "rowBalancesKept": "Zbývající zůstatky zůstanou beze změny.",
+      "rowBalancesSettled": "Zůstatek v době smazání bude označen jako vyrovnaný.",
+      "rowAdmin": "Při smazání se jiný člen stane správcem, pokud budete stále posledním správcem.",
+      "friendKept": "Váš zůstatek zůstane beze změny.",
+      "friendSettled": "Při smazání bude váš tehdejší zůstatek označen jako vyrovnaný a přehled s přítelem se uzavře.",
+      "accessExplanation": "Tyto způsoby přihlášení přestanou fungovat po smazání vašeho účtu.",
+      "invitesTitle": "Čekající pozvánky",
+      "balanceUnavailable": "Zůstatek není dostupný",
+      "archivedBalancesKept": "Tato archivovaná skupina zůstane pouze pro čtení. Váš zbývající zůstatek bude zachován.",
+      "signInMethodsRemoved": "Tyto způsoby přihlášení přestanou fungovat: {methods}.",
+      "consequencesTiming": "Tento přehled odpovídá současnému stavu vašeho účtu. Skupiny, členové a výdaje se mohou před začátkem smazání změnit. Vaše volby se použijí na skupiny, kterých budete v té době členem, a na jejich tehdejší zůstatky. Nic z uvedeného se nestane okamžitě.",
+      "executingTitle": "Smazání účtu začalo",
+      "executingDescription": "Probíhá smazání vašeho účtu. Některé změny už mohou být dokončené a smazání nelze zrušit ani vrátit zpět. Pokud se zpracování přeruší, naváže na dokončené kroky."
     }
   },
   "Activities": {
@@ -2663,7 +2799,9 @@
       },
       "recurringCreated": "{participant} vytvořil(a) opakovaný výdaj „{title}“",
       "stopped": "{participant} zastavil(a) opakovaný výdaj „{title}“",
-      "commented": "{participant} okomentoval(a) {title}: „{excerpt}“"
+      "commented": "{participant} okomentoval(a) {title}: „{excerpt}“",
+      "yourShare": "Váš podíl:",
+      "notInvolved": "Nejste zapojeni"
     },
     "group": {
       "updated": "{participant} aktualizoval nastavení skupiny",
@@ -2676,7 +2814,11 @@
         "currencyCode": "Kód měny",
         "linkedParticipant": "Propojený účastník",
         "subgroupsEnabled": "Podskupiny",
-        "publicViewLink": "Veřejný odkaz pro prohlížení"
+        "publicViewLink": "Veřejný odkaz pro prohlížení",
+        "emoji": "Emoji",
+        "color": "Barva",
+        "subgroups": "Podskupiny",
+        "splitPresets": "Předvolby rozdělení"
       }
     },
     "member": {
@@ -2708,7 +2850,20 @@
       "imported_other": "{participant} importoval(a) {count} výdajů"
     },
     "participant": {
-      "removed": "{participant} odstranil {target} ze skupiny"
+      "removed": "{participant} odstranil {target} ze skupiny",
+      "added": "{participant} přidal {target} do skupiny"
+    },
+    "hiddenActivitiesShowLess": "Zobrazit méně",
+    "hiddenActivities_zero": "{count} skrytých aktivit, které se vás netýkají",
+    "hiddenActivities_one": "{count} skrytá aktivita, která se vás netýká",
+    "hiddenActivities_two": "{count} skryté aktivity, které se vás netýkají",
+    "hiddenActivities_few": "{count} skryté aktivity, které se vás netýkají",
+    "hiddenActivities_many": "{count} skryté aktivity, která se vás netýká",
+    "hiddenActivities_other": "{count} skrytých aktivit, které se vás netýkají",
+    "viewMode": {
+      "label": "Režim zobrazení aktivit",
+      "forYou": "Pro vás",
+      "all": "Vše"
     }
   },
   "OfflineBanner": {
@@ -2786,9 +2941,6 @@
   },
   "BulkCategorize": {
     "title": "Hromadná kategorizace",
-    "calibrationTitle": "Krok 1 — Kalibrace",
-    "calibrationDescription": "Každý potvrzený příklad pomáhá AI zlepšit další návrhy. Může být hotová po jednom kole nebo si vyžádat další příklady.",
-    "roundCount": "Kolo {round} z {max}",
     "confidence": {
       "high": "Vysoká",
       "medium": "Střední",
@@ -2863,7 +3015,137 @@
     "doneTitle": "Kategorie uloženy",
     "expenseColumn": "Výdaj",
     "categoryColumn": "Kategorie",
-    "confidenceColumn": "Spolehlivost"
+    "confidenceColumn": "Spolehlivost",
+    "simpleDescription": "Zkontrolujte shody kategorií u výdajů v Obecných a pak své volby uložte.",
+    "generateSuggestions": "Navrhnout kategorie",
+    "backToStart": "Zpět",
+    "chooseMode": "Zvolte, jak kategorizovat výdaje",
+    "localMode": "Slovník a historie",
+    "localModeDescription": "Použije historii kategorií této skupiny a vestavěný slovník.",
+    "startRun": "Začít kategorizovat",
+    "noCategory": "Ponechat bez kategorie",
+    "progressTitle": "Kategorizuji výdaje",
+    "progressDescription": "Tuto stránku můžete opustit a vrátit se později. Váš postup je uložen.",
+    "progressCount": "Kategorizováno {categorized} z {total} výdajů",
+    "applyProgressTitle": "Ukládání kategorií",
+    "reviewTitle": "Zkontrolovat návrhy",
+    "reviewSummary": "{suggested} návrhů z {total} nekategorizovaných výdajů",
+    "sourceLocal": "Místní",
+    "saveSelected": "Uložit vybrané kategorie",
+    "retry": "Zkusit znovu",
+    "restart": "Zahájit nový běh",
+    "failed": "Běh se zastavil: {message}",
+    "savedSummary": "{applied} změněno, {skipped} přeskočeno",
+    "selectedCount": "{count} vybráno",
+    "selectAll": "Vybrat vše",
+    "clearAll": "Vymazat vše",
+    "discardRun": "Zahodit běh",
+    "partialSaveNotice": "Některé kategorie už mohly být uloženy. Zahození běhu tyto změny nevrátí.",
+    "restartOlderRunTitle": "Zahájit nový kategorizační běh",
+    "restartOlderRunDescription": "Tento starší běh používal předchozí kontrolní postup. Začněte znovu, abyste zkontrolovali všechny výdaje společně.",
+    "runningMatches": "{count} z {total} výdajů má zatím návrh kategorie",
+    "failedTitle": "Kategorizace se zastavila",
+    "reviewWorkload": "{total} výdajů jako Obecné · {selected} vybráno ke kategorizaci · {general} zůstává jako Obecné",
+    "categoryChoices": "Volby kategorií",
+    "moreCategories": "Zvolit jinou kategorii",
+    "saveCount": "Uložit {count} kategorií",
+    "finishWithoutChanges": "Dokončit beze změn",
+    "completionSummary": "Běh dokončen: {changed} z {total} výdajů změněno. {remaining} výdajů zůstává jako Obecné.",
+    "viewExpenses": "Zobrazit výdaje",
+    "countLoading": "Počítám nekategorizované výdaje…",
+    "nothingToCategorize": "Nejsou tu žádné nekategorizované výdaje ke kategorizaci.",
+    "startingCount": "{count} výdajů je právě v Obecných a připraveno ke kontrole.",
+    "countError": "Nepodařilo se spočítat nekategorizované výdaje. Obnovte stránku a zkuste to znovu.",
+    "keepGeneral": "Obecné · ponechat bez kategorie",
+    "calibrationRoundTitle": "Kalibrační kolo {round}",
+    "calibrationLoading": "Připravuji různorodý vzorek výdajů…",
+    "calibrationReviewDescription": "Zkontrolujte a opravte těchto {count} výdajů. Volby zůstávají v tomto běhu, dokud je na konci neuložíte.",
+    "confirmRound": "Potvrdit kolo",
+    "roundSummaryTitle": "Kolo {round} zkontrolováno",
+    "roundSummaryDescription": "{reviewed} zkontrolováno · {categorized} předběžně kategorizováno · {general} ponecháno jako Obecné",
+    "roundQuality": "Počáteční návrhy odpovídaly {accuracy}% vašich voleb; opravili jste {corrections}.",
+    "categorizeRemaining": "Kategorizovat zbývající výdaje",
+    "nextRound": "Zkontrolovat další vzorek",
+    "tableLabel": "Výdaje ke kategorizaci",
+    "dateColumn": "Datum",
+    "amountColumn": "Částka",
+    "rerunSuggestions": "Spustit návrhy znovu",
+    "roundQualityWithSuggestions": "{accepted} z {proposed} navržených kategorií přijato · {changed} změněno · {missed} shod nalezeno z Obecných",
+    "roundQualityNoSuggestions": "Žádné kategorie nenavrženy · {missed} shod nalezeno z Obecných · {abstained} ponecháno jako Obecné",
+    "rerunChanged": "Změnili jste {changed} z {proposed} navržených kategorií.",
+    "rerunAssignedSingle": "Přiřadili jste kategorii 1 výdaji ponechanému jako Obecné.",
+    "rerunAssignedMultiple": "Přiřadili jste kategorii {count} výdajům ponechaným jako Obecné.",
+    "rerunPotentialSingle": "Vaše změny mohou vylepšit shodu u 1 zbývajícího Obecného výdaje. Pokud chcete další průchod, spusťte návrhy znovu.",
+    "rerunPotentialMultiple": "Vaše změny mohou vylepšit shody u {count} zbývajících Obecných výdajů. Pokud chcete další průchod, spusťte návrhy znovu.",
+    "rerunEligible": "Vhodné pro další průchod: Obecné {general} · nejisté automatické shody {uncertain}. Vaše opravy mohou tyto návrhy vylepšit.",
+    "rerunNoEligible": "Nezbývají žádné nedotčené Obecné ani nejisté automatické shody k novému spuštění. Vaše opravy jsou stále součástí kategorií, které uložíte.",
+    "rerunAlreadyUsed": "Vaše poslední opravy už byly pro tyto návrhy použity. Proveďte další opravu, abyste je mohli spustit znovu.",
+    "highMatch": "Vysoká shoda",
+    "mediumMatch": "Střední shoda",
+    "lowMatch": "Nízká shoda",
+    "belowMatchThreshold": "Pod prahem shody",
+    "refiningTitle": "Zpřesňování nejistých shod",
+    "runLimitSummary": "Tento běh zahrnuje 10,000 výdajů. Po uložení můžete v dalším běhu kategorizovat dalších {count} Obecných výdajů.",
+    "pageLoading": "Načítám výdaje…",
+    "pageLoadError": "Výdaje se nepodařilo načíst.",
+    "pageRetry": "Zkusit znovu",
+    "pageCount": "Zobrazeno {loaded} z {total} výdajů",
+    "ledgerAmountNotice": "Částky jsou uvedeny v měně skupiny.",
+    "viewExpenseDetails": "Zobrazit podrobnosti výdaje",
+    "reviewFilterLabel": "Zobrazit výdaje",
+    "filterAll": "Vše {count}",
+    "filterGeneral": "Obecné {count}",
+    "improveSuggestions": "Vylepšit zbývající návrhy",
+    "rerunInfoLabel": "O vylepšování návrhů",
+    "preparingNextStage": "Připravuji další krok",
+    "rerunProgressTitle": "Aktualizuji návrhy",
+    "progressPreparing": "Připravuji výdaje…",
+    "noGeneralRows": "V této kontrole nezůstaly žádné výdaje v kategorii Obecné.",
+    "discardConfirmationTitle": "Zahodit tento kategorizační běh?",
+    "discardConfirmationDescription": "Tím se odstraní běh, jeho návrhy i volby provedené vámi nebo jinými správci. Kategorie žádného výdaje se nezmění.",
+    "discardConfirmationCancel": "Ponechat běh",
+    "progressCountDescription": "Počítají se jen potvrzené kategorie a střední nebo vysoké shody; Obecné a slabé shody ne.",
+    "systemOneMode": "Model System One",
+    "systemOneModeDescription": "Použijte rozhodovací model System One pro každý výdaj a jako vodítko využijte kategorizované výdaje této skupiny a své zkontrolované volby. TypeSafe Jev je jedním z takových modelů.",
+    "systemOneUnavailable": "System One není dostupný. Slovník a historie jsou stále k dispozici.",
+    "systemOneConfidence": "Spolehlivost System One: {confidence} %",
+    "systemOneOptionProbability": "Pravděpodobnost možnosti System One: {probability} %",
+    "overallProgress": "Celkový průběh",
+    "fullPassProcessed": "Zpracováno {processed} z {total} výdajů",
+    "stageProcessed": "V tomto kroku zpracováno {processed} z {total} výdajů",
+    "saveSkipped": "{count} výdajů bylo přeskočeno, protože se změnily.",
+    "sharedRunNotice": "Tento běh je sdílen s ostatními správci skupiny. Všichni vidí stejné návrhy.",
+    "saveConflictTitle": "{count} výdajů se od začátku této revize změnilo.",
+    "saveConflictDescription": "Někdo tyto výdaje upravil nebo změnil jejich kategorii mimo tento běh. Uložte ostatní výdaje, nebo kategorie upravte znovu a zkuste uložení zopakovat.",
+    "saveConflictMore": "A {count} dalších výdajů.",
+    "saveOtherExpenses": "Uložit ostatní výdaje",
+    "receiptTitles": {
+      "freshMarket": "Farmářský trh",
+      "greenGrocer": "Zelinář",
+      "fruitStand": "Ovocný stánek",
+      "cornerBistro": "Bistro za rohem",
+      "noodleHouse": "Nudlárna",
+      "cafeLunch": "Oběd v kavárně",
+      "flightTicket": "Letenka",
+      "airlineBaggage": "Letecká zavazadla",
+      "boardingPass": "Palubní vstupenka",
+      "homeSupplies": "Potřeby do domácnosti",
+      "hardwareShop": "Železářství",
+      "cleaningGoods": "Čisticí potřeby",
+      "cinemaTickets": "Lístky do kina",
+      "movieNight": "Filmový večer",
+      "filmFestival": "Filmový festival",
+      "organicMarket": "Bio trh",
+      "bakeryRun": "Nákup v pekárně",
+      "sushiBar": "Sushi bar",
+      "pizzaNight": "Večer s pizzou",
+      "airportLounge": "Letištní salonek",
+      "extraLegroom": "Extra prostor na nohy",
+      "laundryDetergent": "Prací prostředek",
+      "storageBoxes": "Úložné krabice",
+      "popcornCombo": "Popcornové menu",
+      "streamingRental": "Online půjčení filmu"
+    }
   },
   "ExpensePreview": {
     "title": "Náhled výdaje",
@@ -2911,10 +3193,14 @@
         "deleteGroup": "Chcete-li skupinu <target>{name}</target> trvale smazat, zadejte její název přesně tak, jak je uveden níže.",
         "deleteExpense": "Chcete-li výdaj <target>{name}</target> trvale smazat, zadejte jeho název přesně tak, jak je uveden níže.",
         "deleteRecurringExpense": "Chcete-li potvrdit smazání položky <target>{name}</target>, zadejte název výdaje přesně tak, jak je uveden níže.",
-        "removeParticipant": "Chcete-li ze skupiny odebrat účastníka <target>{name}</target>, zadejte jeho jméno přesně tak, jak je uvedeno níže."
+        "removeParticipant": "Chcete-li ze skupiny odebrat účastníka <target>{name}</target>, zadejte jeho jméno přesně tak, jak je uvedeno níže.",
+        "deleteAccount": "Chcete-li svůj účet trvale smazat, zadejte <target>{name}</target> přesně tak, jak je uvedeno níže."
       },
       "placeholder": "Sem zadejte „{name}“",
-      "mismatch": "Neshoduje se. Zadejte přesně {name}."
+      "mismatch": "Neshoduje se. Zadejte přesně {name}.",
+      "settingsNoteLink": "Změnit v nastavení účtu",
+      "settingsNoteLead": "Chcete přeskočit zadávání?",
+      "settingsNoteTail": "k použití jednoduchého potvrzovacího dialogu."
     }
   },
   "Theme": {
@@ -2938,7 +3224,7 @@
     "failedDescription": "Toto zařízení se nepodařilo zaregistrovat. Oznámení nastavená pro e-mail budou i nadále chodit tam; volby pouze pro Push se nepřesměrují.",
     "emailUsage": "Dokud nepovolíte zařízení, budou přicházet pouze oznámení nastavená pro e-mail. Povolte oznámení v nastavení prohlížeče a zkuste to znovu v Nastavení.",
     "done": "Hotovo",
-    "emailDeliveryDisabled": "Doručování e-mailů je na této instanci vypnuté, takže vás e-mailová oznámení nemohou zastihnout. Zapněte si push na tomto zařízení, abyste i nadále dostávali aktualizace."
+    "emailDeliveryDisabled": "Doručování e-mailů je vypnuté, takže vás e-mailová oznámení nemohou zastihnout. Zapněte si push na tomto zařízení, abyste i nadále dostávali aktualizace."
   },
   "Unsubscribe": {
     "title": "Vypnout tyto e-maily?",
@@ -3407,7 +3693,8 @@
     "hintTapToAddExpense": "Jsem {name} — klepni na mě a přidej výdaj.",
     "hintTapToCreateGroup": "Jsem {name} — klepni na mě a vytvoř skupinu.",
     "billName": "Bill",
-    "offlineMessage": "Nemůžu nic vytvořit, když jsi offline."
+    "offlineMessage": "Nemůžu nic vytvořit, když jsi offline.",
+    "serverUnreachableMessage": "Se serverem Spliit se právě teď nemohu spojit — vaše připojení vypadá v pořádku, takže chyba je na naší straně."
   },
   "CreateSettlement": {
     "description": "Zkontrolujte platbu před jejím zaznamenáním.",
@@ -3458,7 +3745,18 @@
       "existingPasskeyTitle": "Už máte registrovaný přístupový klíč?",
       "existingPasskeyDescription": "Přihlaste se zpět pomocí přístupového klíče na jednom ze svých registrovaných zařízení.",
       "passkeySignIn": "Přihlásit se pomocí přístupového klíče",
-      "passkeySignInError": "Pomocí tohoto přístupového klíče se nepodařilo přihlásit. Zkuste to znovu nebo použijte svůj přihlašovací odkaz."
+      "passkeySignInError": "Pomocí tohoto přístupového klíče se nepodařilo přihlásit. Zkuste to znovu nebo použijte svůj přihlašovací odkaz.",
+      "passkeyNameLabel": "Pojmenujte tento přístupový klíč (volitelné)",
+      "passkeyNamePlaceholder": "např. MacBook Touch ID",
+      "nameTitle": "Zvolte zobrazované jméno",
+      "nameDescription": "Zobrazuje se na vašem přístupovém klíči a ve vašich skupinách. Později ho můžete změnit.",
+      "nameLabel": "Zobrazované jméno",
+      "namePlaceholder": "Vaše jméno",
+      "nameSave": "Uložit a pokračovat",
+      "nameSaving": "Ukládání…",
+      "nameRequired": "Zadejte zobrazované jméno.",
+      "nameTooShort": "Jméno musí mít alespoň 2 znaky.",
+      "nameError": "Zobrazované jméno se nepodařilo uložit. Zkuste to prosím znovu."
     },
     "onboarding": {
       "title": "Uložte přihlašovací odkaz",
@@ -3597,6 +3895,29 @@
         "review": {
           "title": "Zkontrolovat a importovat",
           "detail": "Zkontrolujte duplikáty a potvrďte import."
+        }
+      }
+    },
+    "categorize": {
+      "title": "Kategorizovat výdaje",
+      "description": "Navrhnout kategorie existujících nekategorizovaných výdajů pomocí System One. Před uložením zkontrolujte každou změnu.",
+      "start": "Kategorizovat výdaje",
+      "steps": {
+        "choose": {
+          "title": "Zvolte metodu",
+          "detail": "Použijte slovník a historii nebo rozhodovací model System One."
+        },
+        "calibrate": {
+          "title": "Zkontrolujte malé vzorky",
+          "detail": "Opravte návrhy, aby se další kolo naučilo kategorie vaší skupiny."
+        },
+        "review": {
+          "title": "Zkontrolujte každý výdaj",
+          "detail": "Obecné výdaje se v celé tabulce zobrazí jako první."
+        },
+        "save": {
+          "title": "Uložte kategorie",
+          "detail": "Výdaje se změní, až potvrdíte závěrečnou kontrolu."
         }
       }
     }
@@ -4150,7 +4471,8 @@
       "applyToExpenses_few": "Použít pro {count} výdaje",
       "importExpenses_few": "Importovat {count} výdaje",
       "importedCount_few": "Importovány {count} výdaje",
-      "matchingExpensesNotice_few": "{count} výdaje mají odpovídající nebo podobné názvy."
+      "matchingExpensesNotice_few": "{count} výdaje mají odpovídající nebo podobné názvy.",
+      "categorizeWithSystemOne": "Navrhnout kategorie nekategorizovaných výdajů pomocí System One"
     }
   },
   "Sponsor": {
@@ -4305,5 +4627,26 @@
     "expenseMissing": "Tento výdaj není ve staženém obsahu tohoto zařízení. Připoj se a zkontroluj novější/starší výdaje.",
     "groupMissing": "Tato skupina se ještě nestáhla celá.",
     "balancesStale": "Zůstatky nemusí být aktuální."
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit je nedostupný",
+    "description": "Se serverem Spliit se právě teď nelze spojit. Vaše připojení vypadá v pořádku — zkuste to prosím za chvíli znovu.",
+    "retry": "Zkusit znovu"
+  },
+  "ApiStatusBanner": {
+    "message": "Spliit je právě teď nedostupný. Vaše připojení vypadá v pořádku — problém je na naší straně.",
+    "statusLink": "Zkontrolovat stav"
+  },
+  "AccountDeletionBanner": {
+    "scheduled": "Smazání účtu je naplánováno na {date}.",
+    "review": "Zkontrolovat nebo zrušit smazání",
+    "executing": "Smazání účtu bylo zahájeno.",
+    "viewStatus": "Zobrazit stav smazání"
+  },
+  "Updates": {
+    "title": "Novinky",
+    "latest": "Co je nového",
+    "viewAll": "Zobrazit všechny novinky",
+    "dismiss": "Rozumím"
   }
 }

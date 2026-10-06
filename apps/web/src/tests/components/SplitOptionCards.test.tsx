@@ -271,6 +271,47 @@ describe('PaidForSplitOptionCards', () => {
   })
 })
 
+describe('PaidForSplitOptionCards — itemized option', () => {
+  it('hides the Itemized option in normal mode', () => {
+    render(<PaidForSplitOptionCards value="EVENLY" onChange={vi.fn()} />)
+    expect(screen.queryByRole('radio', { name: /itemized/i })).toBeNull()
+    expect(screen.getAllByRole('radio')).toHaveLength(4)
+  })
+
+  it('prepends Itemized selected first with its content when value is ITEMIZED', () => {
+    render(
+      <PaidForSplitOptionCards
+        value="ITEMIZED"
+        onChange={vi.fn()}
+        renderItemizedContent={<div data-testid="itemized-content">Totals</div>}
+      />,
+    )
+    const radios = screen.getAllByRole('radio')
+    expect(radios).toHaveLength(5)
+    expect(radios[0]).toHaveAccessibleName(/itemized/i)
+    expect(radios[0]).toHaveAttribute('aria-checked', 'true')
+    expect(radios[0]).toHaveAttribute('data-checked')
+    // The four standard modes remain visible below, none selected.
+    expect(screen.getByRole('radio', { name: /evenly/i })).toHaveAttribute(
+      'aria-checked',
+      'false',
+    )
+    expect(screen.getByTestId('itemized-content')).toHaveTextContent('Totals')
+  })
+
+  it('routes non-itemized clicks to onChange and ignores clicks back to Itemized', async () => {
+    const onChange = vi.fn()
+    const { user } = render(
+      <PaidForSplitOptionCards value="ITEMIZED" onChange={onChange} />,
+    )
+    await user.click(screen.getByRole('radio', { name: /evenly/i }))
+    expect(onChange).toHaveBeenCalledWith('EVENLY')
+    onChange.mockClear()
+    await user.click(screen.getByRole('radio', { name: /itemized/i }))
+    expect(onChange).not.toHaveBeenCalled()
+  })
+})
+
 describe('PaidForSplitOptionCards — proportional option', () => {
   it('is absent by default', () => {
     render(<PaidForSplitOptionCards value="EVENLY" onChange={vi.fn()} />)

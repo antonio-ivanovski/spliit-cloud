@@ -3,7 +3,7 @@
  * not prod-grade — delete or rewrite if it ever needs to run regularly.
  *
  * Replays Main-dump.csv (prod Expense export) through the real local matcher
- * and, in phase 2, through the live Jev decision model.
+ * and, in phase 2, through a live System One decision model (Jev by default).
  *
  * Usage (from apps/api): bun run scripts/calibrate-category-thresholds.ts
  * --csv=../../Main-dump.csv --phase=1 --limit=500 TYPESAFE_CALIB_API_KEY=xxx
@@ -67,7 +67,9 @@ const model = flag('model') ?? 'jev-latest'
 const timeoutSeconds = Number(flag('timeout') ?? 15)
 const apiKey = process.env['TYPESAFE_CALIB_API_KEY']
 if ((phase === '2' || phase === 'blind' || phase === 'all') && !apiKey) {
-  throw new Error('Set TYPESAFE_CALIB_API_KEY env var for live Jev phases')
+  throw new Error(
+    'Set TYPESAFE_CALIB_API_KEY env var for live System One phases',
+  )
 }
 
 mkdirSync(outDir, { recursive: true })
@@ -373,18 +375,18 @@ async function phase1(rows: DumpRow[]) {
   return best
 }
 
-// --- phase 2 + blind: live Jev ---
+// --- phase 2 + blind: live System One ---
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-async function callJev(
+async function callSystemOne(
   title: string,
   recent: Memory,
   groupName: string | null,
   blind: boolean,
 ): Promise<{
-  jevId: string
+  categoryId: string
   confidence: number
   margin: number
   error: string
@@ -404,7 +406,7 @@ async function callJev(
             : undefined,
       })
       return {
-        jevId: res.categoryId ?? '',
+        categoryId: res.categoryId ?? '',
         confidence: res.confidence,
         margin: res.marginTopTwo,
         error: '',
@@ -419,14 +421,19 @@ async function callJev(
         continue
       }
       return {
-        jevId: '',
+        categoryId: '',
         confidence: 0,
         margin: 0,
         error: message.slice(0, 200),
       }
     }
   }
-  return { jevId: '', confidence: 0, margin: 0, error: 'retries exhausted' }
+  return {
+    categoryId: '',
+    confidence: 0,
+    margin: 0,
+    error: 'retries exhausted',
+  }
 }
 
 function loadDoneIds(file: string): Set<string> {
@@ -444,7 +451,7 @@ function parseCsvSync(file: string): string[][] {
 
 const JEV_HEADER = 'expense_id,title,stored,jev_id,confidence,margin,mode,error'
 
-async function runJevPass(
+async function runSystemOnePass(
   rows: DumpRow[],
   mode: 'history' | 'blind',
   onlyIds?: Set<string>,
@@ -459,7 +466,7 @@ async function runJevPass(
     (r) => !done.has(r.expenseId) && (!onlyIds || onlyIds.has(r.expenseId)),
   )
   console.log(
-    `Jev ${mode}: ${todo.length} to call (${done.size} already done), concurrency ${concurrency}`,
+    `System One ${mode}: ${todo.length} to call (${done.size} already done), concurrency ${concurrency}`,
   )
   const ledgers = new Map<string, DumpRow[]>()
   for (const r of rows) {
@@ -490,7 +497,7 @@ async function runJevPass(
         const r = queue.shift()
         if (!r) break
         const recent = memoryByExpense.get(r.expenseId) ?? []
-        const out = await callJev(
+        const out = await callSystemOne(
           r.title,
           recent,
           r.groupName,
@@ -498,7 +505,7 @@ async function runJevPass(
         )
         appendFileSync(
           file,
-          `${r.expenseId},${esc(r.title)},${r.stored},${out.jevId},${out.confidence.toFixed(4)},${out.margin.toFixed(4)},${mode},${esc(out.error)}\n`,
+          `${r.expenseId},${esc(r.title)},${r.stored},${out.categoryId},${out.confidence.toFixed(4)},${out.margin.toFixed(4)},${mode},${esc(out.error)}\n`,
         )
         if (++completed % 200 === 0)
           console.log(`  ...${completed}/${todo.length}`)
@@ -506,7 +513,7 @@ async function runJevPass(
     },
   )
   await Promise.all(workers)
-  console.log(`Jev ${mode} done: ${completed} calls → ${file}`)
+  console.log(`System One ${mode} done: ${completed} calls → ${file}`)
 }
 
 function floorAnalysis() {
@@ -518,13 +525,17 @@ function floorAnalysis() {
   const lines = parseCsvSync(file).slice(1)
   const ok = lines
     .filter((p) => !p[7] && p[3])
-    .map((p) => ({ stored: p[2]!, jevId: p[3]!, confidence: Number(p[4]!) }))
+    .map((p) => ({
+      stored: p[2]!,
+      categoryId: p[3]!,
+      confidence: Number(p[4]!),
+    }))
     .filter((r) => r.stored !== GENERAL && asCategoryId(r.stored))
   const out = ['floor,coverage,precision,n']
   let proposal = 'Could not propose a floor — inspect jev_floor_table.csv.\n'
   for (const floor of [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95]) {
     const above = ok.filter((r) => r.confidence >= floor)
-    const correct = above.filter((r) => r.jevId === r.stored).length
+    const correct = above.filter((r) => r.categoryId === r.stored).length
     const precision = above.length > 0 ? correct / above.length : 0
     out.push(
       `${floor},${(above.length / Math.max(1, ok.length)).toFixed(4)},${precision.toFixed(4)},${above.length}`,
@@ -557,7 +568,7 @@ async function blindLift() {
   const histFile = join(outDir, 'jev_results.csv')
   const blindFile = join(outDir, 'blind_results.csv')
   if (!existsSync(histFile) || !existsSync(blindFile)) {
-    console.log('Missing jev/blind results — skipping lift comparison')
+    console.log('Missing System One/blind results — skipping lift comparison')
     return
   }
   const hist = new Map(
@@ -578,7 +589,7 @@ async function blindLift() {
   }
   const text =
     n > 0
-      ? `Blind vs with-history Jev accuracy on ${n} shared titles:\nblind=${(blindCorrect / n).toFixed(4)} with_history=${(histCorrect / n).toFixed(4)} lift=${((histCorrect - blindCorrect) / n).toFixed(4)}\n`
+      ? `Blind vs with-history System One accuracy on ${n} shared titles:\nblind=${(blindCorrect / n).toFixed(4)} with_history=${(histCorrect / n).toFixed(4)} lift=${((histCorrect - blindCorrect) / n).toFixed(4)}\n`
       : 'No overlapping blind/history results to compare.\n'
   writeFileSync(join(outDir, 'blind_lift.txt'), text)
   console.log(text.trim())
@@ -591,7 +602,7 @@ console.log(`Loaded ${rows.length} expenses`)
 
 if (phase === '1' || phase === 'all') await phase1(rows)
 if (phase === '2' || phase === 'all') {
-  await runJevPass(rows, 'history')
+  await runSystemOnePass(rows, 'history')
   floorAnalysis()
 }
 if (phase === 'blind' || phase === 'all') {
@@ -604,7 +615,7 @@ if (phase === 'blind' || phase === 'all') {
     ids = new Set(doneIds.filter((_, i) => i % step === 0).slice(0, 500))
   }
   if (ids && ids.size > 0) {
-    await runJevPass(rows, 'blind', ids)
+    await runSystemOnePass(rows, 'blind', ids)
     await blindLift()
   } else {
     console.log('Blind pass needs phase-2 results first — skipping')

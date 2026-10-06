@@ -225,7 +225,7 @@ export function BasicDetailsCard(props: {
       items: formItems,
       split: seed,
       expenseAmount: totalDisplay,
-      groupCurrency,
+      groupCurrency: inputCurrency,
     })
     form.setValue('items', seeded.items, {
       shouldDirty: true,

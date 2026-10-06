@@ -23,15 +23,20 @@ import {
 } from '@/app/groups/[groupId]/expenses/use-expense-filters'
 import { useRenderedViewMode } from '@/app/groups/[groupId]/expenses/use-rendered-view-mode'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
+import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { Button } from '@/components/ui/button'
 import { SearchBar } from '@/components/ui/search-bar'
 import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
+import { useRestoreExpenseEditScroll } from '@/lib/expense-edit-scroll'
 import { useActiveUser } from '@/lib/hooks'
 import { useOfflineExpenses } from '@/lib/offline/read-hooks'
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { useOfflineWithoutData } from '@/lib/use-online-status'
+import {
+  useOfflineWithoutData,
+  useServerUnreachableWithoutData,
+} from '@/lib/use-online-status'
 import { getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
@@ -137,6 +142,11 @@ const ExpenseListForSearch = ({
       // `useRenderedViewMode` below freezes the timeline's mode to match
       // those stale rows, so the swap happens in one clean step.
       placeholderData: keepPreviousData,
+      // Wait for the group (and its server-resolved participant id) before
+      // fetching. Otherwise the first fetch runs with hideNotInvolving unset,
+      // mounts the timeline in "All" mode, then refetches in "For you" mode —
+      // a flicker plus a replay of the stagger animation on fresh app start.
+      enabled: group !== undefined,
     },
   )
   // Offline adapter (membership-only; link/view visitors stay online-only).
@@ -180,6 +190,7 @@ const ExpenseListForSearch = ({
   const showOfflineEmpty =
     useOfflineWithoutData(!!data) &&
     !(offlineEnabled && offlineMeta.availability === 'ready')
+  const showServerEmpty = useServerUnreachableWithoutData(!!data)
   const fetchNextPageUnified = useOfflineSource
     ? offline.fetchNextPage
     : fetchNextPage
@@ -191,9 +202,22 @@ const ExpenseListForSearch = ({
     ? offline.isLoading || !expenses || !group
     : expensesAreLoading || !expenses || !group
 
+  useRestoreExpenseEditScroll(
+    !isLoading && !showServerEmpty && !showOfflineEmpty,
+    groupId,
+  )
+
   useEffect(() => {
     if (inView && hasMore && !isLoading) void fetchNextPageUnified()
   }, [fetchNextPageUnified, hasMore, inView, isLoading])
+
+  if (showServerEmpty) {
+    return (
+      <div className="px-4 sm:px-6">
+        <ApiErrorEmptyState variant="plain" onRetry={() => void refetch()} />
+      </div>
+    )
+  }
 
   if (showOfflineEmpty) {
     // No network pages and no complete local snapshot: honest missing state.

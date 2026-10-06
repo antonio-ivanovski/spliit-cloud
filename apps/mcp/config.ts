@@ -11,12 +11,24 @@ const serviceOrigin = serviceUrl.refine(
   },
 )
 
+const emptyStringAsUndefined = (val: unknown) =>
+  typeof val === 'string' && val.trim() === '' ? undefined : val
+
 const mcpEnvSchema = z.object({
   NODE_ENV: z.string().optional(),
   PORT: z.coerce.number().int().positive().default(3002),
   MCP_PUBLIC_URL: serviceOrigin,
   MCP_API_URL: serviceUrl,
   MCP_WEB_URL: serviceUrl,
+  // Fresh token per OpenAI plugin submission (Platform dashboard →
+  // MCPs → domain verification). Falls back to the previous token so
+  // existing deployments keep verifying until the new value is set.
+  // Empty strings count as unset: compose interpolation (`${VAR:-}`) and
+  // env files produce those when the operator leaves the value empty.
+  OPENAI_APPS_CHALLENGE: z.preprocess(
+    emptyStringAsUndefined,
+    z.string().trim().min(1).optional(),
+  ),
 })
 
 export function parseMcpEnv(source: Record<string, string | undefined>) {
@@ -28,6 +40,7 @@ export function parseMcpEnv(source: Record<string, string | undefined>) {
     apiUrl: stripTrailingSlash(parsed.MCP_API_URL),
     mcpUrl: stripTrailingSlash(parsed.MCP_PUBLIC_URL),
     webUrl: stripTrailingSlash(parsed.MCP_WEB_URL),
+    openaiAppsChallenge: parsed.OPENAI_APPS_CHALLENGE,
   }
 }
 

@@ -4,12 +4,35 @@ import { Trans, useTranslation } from 'react-i18next'
 import { CopyButton } from '@/components/copy-button'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
+import type { DestructiveConfirmationKind } from '@spliit/domain/account-preferences'
 
-export type DestructiveConfirmationKind =
-  | 'deleteGroup'
-  | 'deleteExpense'
-  | 'deleteRecurringExpense'
-  | 'removeParticipant'
+export type { DestructiveConfirmationKind }
+
+export const DESTRUCTIVE_CONFIRMATION_SETTINGS_HASH =
+  'account-preference-destructive-confirmation-level'
+
+/**
+ * Footnote for typed expense-delete dialogs (strict mode only) offering the
+ * plain confirmation dialog as an alternative. Deep-links to the setting so it
+ * can be changed without hunting through account settings.
+ */
+export function DestructiveConfirmationSettingsNote() {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: 'Common.destructiveConfirmation',
+  })
+  return (
+    <p className="text-xs text-muted-foreground">
+      {t('settingsNoteLead')}{' '}
+      <a
+        href={`/account/settings#${DESTRUCTIVE_CONFIRMATION_SETTINGS_HASH}`}
+        className="underline underline-offset-2"
+      >
+        {t('settingsNoteLink')}
+      </a>{' '}
+      {t('settingsNoteTail')}
+    </p>
+  )
+}
 
 type Props = {
   kind: DestructiveConfirmationKind

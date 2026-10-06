@@ -15,6 +15,9 @@ import {
   accountMascotSchema,
   accountPreferenceSchema,
   accountThemeSchema,
+  destructiveConfirmationLevelSchema,
+  groupTabIdSchema,
+  hideableGroupTabIdSchema,
   supportedCurrencyCodeSchema,
   timeZoneSchema,
 } from '@spliit/domain'
@@ -40,6 +43,7 @@ import {
   createTRPCRouter,
   protectedProcedure,
   rateLimitedSessionProcedure,
+  sessionProcedure,
 } from '../../init'
 import {
   accountFriendsOutputSchema,
@@ -51,8 +55,10 @@ import {
   afterPasskeyChangeOutputSchema,
   authorizedClientsOutputSchema,
   deletePasskeyOutputSchema,
+  renamePasskeyOutputSchema,
   revokeAuthorizedClientOutputSchema,
 } from '../../outputs/account'
+import { accountDeletionProcedures } from './deletion'
 
 const accountPreferenceSelect = {
   defaultCurrencyCode: true,
@@ -65,6 +71,9 @@ const accountPreferenceSelect = {
   aiCategoryExtractEnabled: true,
   aiReceiptScanEnabled: true,
   aiVoiceExpenseEnabled: true,
+  groupTabOrder: true,
+  hiddenGroupTabs: true,
+  destructiveConfirmationLevel: true,
 } as const
 
 const emptyAccountPreference = {
@@ -78,6 +87,9 @@ const emptyAccountPreference = {
   aiCategoryExtractEnabled: null,
   aiReceiptScanEnabled: null,
   aiVoiceExpenseEnabled: null,
+  groupTabOrder: null,
+  hiddenGroupTabs: null,
+  destructiveConfirmationLevel: null,
 }
 
 function parseAccountPreference(preferences: unknown) {
@@ -86,6 +98,9 @@ function parseAccountPreference(preferences: unknown) {
   )
   // Normalize nullable toggles to real booleans: `null` ≡ enabled so the
   // web sees a consistent shape and the gating hooks can compare directly.
+  // `groupTabOrder` stays nullable: `null` (or an empty array from the
+  // database default) means "use the default tab order". Same for
+  // `hiddenGroupTabs`: `null`/empty means "hide nothing".
   return {
     ...parsed,
     mascot: parsed.mascot ?? 'bill',
@@ -94,6 +109,10 @@ function parseAccountPreference(preferences: unknown) {
     aiCategoryExtractEnabled: parsed.aiCategoryExtractEnabled ?? true,
     aiReceiptScanEnabled: parsed.aiReceiptScanEnabled ?? true,
     aiVoiceExpenseEnabled: parsed.aiVoiceExpenseEnabled ?? true,
+    groupTabOrder: parsed.groupTabOrder ?? null,
+    hiddenGroupTabs: parsed.hiddenGroupTabs ?? null,
+    destructiveConfirmationLevel:
+      parsed.destructiveConfirmationLevel ?? 'strict',
   }
 }
 
@@ -114,6 +133,15 @@ const updatePreferencesInputSchema = z.object({
   aiCategoryExtractEnabled: z.boolean().nullable().optional(),
   aiReceiptScanEnabled: z.boolean().nullable().optional(),
   aiVoiceExpenseEnabled: z.boolean().nullable().optional(),
+  // `null` resets to the default tab order (stored as the empty array).
+  groupTabOrder: z.array(groupTabIdSchema).nullable().optional(),
+  // `null` shows all tabs again (stored as the empty array).
+  hiddenGroupTabs: z.array(hideableGroupTabIdSchema).nullable().optional(),
+  // `null` resets to the historical `strict` behaviour (stored as null and
+  // normalized at the API boundary).
+  destructiveConfirmationLevel: destructiveConfirmationLevelSchema
+    .nullable()
+    .optional(),
 })
 
 type CurrencyMembership = {
@@ -222,6 +250,9 @@ async function hasOtherSignInMethod(
  * legacy anonymous behaviour.
  */
 export const accountRouter = createTRPCRouter({
+  // Account deletion (right-to-erasure) with a cancellable grace period.
+  ...accountDeletionProcedures,
+
   // Current account profile.
   me: protectedProcedure
     .output(z.object({ account: accountProfileSchema }))
@@ -232,6 +263,28 @@ export const accountRouter = createTRPCRouter({
           image: ctx.auth.user.image ?? null,
           isAnonymous: ctx.auth.user.isAnonymous === true,
         },
+      }
+    }),
+
+  /**
+   * Whether the caller's anonymous onboarding is complete. The web client's
+   * session user never carries `anonymousOnboardingCompleted` (it is computed
+   * server-side, not a column), so name-first onboarding cannot tell a
+   * named-but-unsafeguarded account from a finished one — and would route it
+   * out of `complete-profile` into 412s. This query is the authoritative source
+   * for that routing.
+   *
+   * Gate-exempt on purpose: incomplete accounts must be able to ask whether
+   * they are done. Read-only and row-scoped, so there is nothing to guard. A
+   * query spends no authenticated-mutation budget (`sessionProcedure` limits
+   * mutations only).
+   */
+  onboardingStatus: sessionProcedure
+    .output(z.object({ anonymousOnboardingCompleted: z.boolean() }))
+    .query(async ({ ctx }) => {
+      return {
+        anonymousOnboardingCompleted:
+          ctx.auth.user.anonymousOnboardingCompleted === true,
       }
     }),
 
@@ -330,6 +383,59 @@ export const accountRouter = createTRPCRouter({
         }
       })
       invalidateAccountCache(accountId)
+      return { success: true }
+    }),
+
+  /**
+   * Rename one of the caller's passkeys (the nickname shown in Account settings
+   * — not the authenticator-side entry, which the password manager baked from
+   * the ceremony identity at creation and no API can rewrite).
+   *
+   * Separate from registration on purpose: the WebAuthn ceremony always carries
+   * the account display name as its identity, while this nickname is free text
+   * ("MacBook", …). Fresh anonymous accounts register their first passkey
+   * before onboarding completes and the safeguard step renames it right after,
+   * so like `deletePasskey` this is gate-exempt. Still spends the shared
+   * authenticated-mutation budget. No cache invalidation: the nickname is not
+   * part of the cached account row.
+   */
+  renamePasskey: rateLimitedSessionProcedure
+    .input(
+      z.object({
+        id: z.string().min(1),
+        name: z.string().trim().min(1).max(100),
+      }),
+    )
+    .output(renamePasskeyOutputSchema)
+    .mutation(async ({ ctx, input }) => {
+      const accountId = ctx.auth.user.id
+      const passkey = await prisma.passkey.findUnique({
+        where: { id: input.id },
+        select: { id: true, userId: true },
+      })
+      if (!passkey || passkey.userId !== accountId) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Passkey not found',
+        })
+      }
+      try {
+        await prisma.passkey.update({
+          where: { id: input.id },
+          data: { name: input.name },
+        })
+      } catch (error) {
+        if (
+          error instanceof Prisma.PrismaClientKnownRequestError &&
+          error.code === 'P2025'
+        ) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Passkey not found',
+          })
+        }
+        throw error
+      }
       return { success: true }
     }),
 
@@ -454,25 +560,50 @@ export const accountRouter = createTRPCRouter({
     .input(updatePreferencesInputSchema)
     .output(accountPreferenceOutputSchema)
     .mutation(async ({ input, ctx }) => {
+      // The tab columns are non-nullable: `null` (reset to the default
+      // order / show all tabs) is stored as the empty array.
+      const { groupTabOrder, hiddenGroupTabs, ...rest } = input
+      const data = {
+        ...rest,
+        ...(groupTabOrder !== undefined
+          ? { groupTabOrder: groupTabOrder ?? [] }
+          : {}),
+        ...(hiddenGroupTabs !== undefined
+          ? { hiddenGroupTabs: hiddenGroupTabs ?? [] }
+          : {}),
+      }
       const preferences = await prisma.accountPreference.upsert({
         where: { accountId: ctx.auth.user.id },
         create: {
           id: randomId(),
           accountId: ctx.auth.user.id,
-          ...input,
+          ...data,
         },
-        update: input,
+        update: data,
         select: accountPreferenceSelect,
       })
       invalidateAccountCache(ctx.auth.user.id)
       return { preferences: parseAccountPreference(preferences) }
     }),
 
-  /** Update the display name. Used by the post-signup complete-profile flow. */
-  // Update the current account's display name. Used by the
-  // `complete-profile` flow that runs after a magic-link sign-up (or any
-  // other first-time sign-in) when the account has no display name yet.
-  updateProfile: protectedProcedure
+  /**
+   * Update the display name. Used by the post-signup complete-profile flow
+   * (anonymous and magic-link first-run) and by Account settings.
+   *
+   * Gate-exempt on purpose: name-first onboarding collects the display name
+   * before the safeguard step, and the safeguard step passes it as the WebAuthn
+   * ceremony identity (`user.name`) when registering a passkey — so the
+   * authenticator entry carries the real name instead of the
+   * `guest-…@anonymous.placeholder.local` placeholder (baked at creation and
+   * unfixable afterwards). Note the ceremony `user.displayName` still derives
+   * from the session email (better-auth passkey plugin behavior on the session
+   * path); only `user.name` follows the display name, and the Spliit-side
+   * nickname is set separately via `renamePasskey`. The mutation only writes
+   * the caller's own `name` — zod strips anything else — so it grants no access
+   * and the onboarding gate still guards everything else. Still spends the
+   * shared authenticated-mutation budget.
+   */
+  updateProfile: rateLimitedSessionProcedure
     .input(
       z.object({
         name: z

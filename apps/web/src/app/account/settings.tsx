@@ -18,6 +18,7 @@ import { useHashTargetFocus } from '@/lib/use-hash-target-focus'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
+import { AccountDeletionSettings } from './account-deletion-settings'
 import { AccountEmailSettings } from './account-email-settings'
 import { AccountExportModal } from './account-export-modal'
 import { AccountPasskeySettings } from './account-passkey-settings'
@@ -310,7 +311,10 @@ function AccountSettingsContent() {
                     type="text"
                     autoComplete="name"
                     value={name}
-                    onChange={(e) => setDirtyName(e.target.value)}
+                    onChange={(e) => {
+                      setDirtyName(e.target.value)
+                      if (error) setError(null)
+                    }}
                     required
                     maxLength={50}
                     className={cn('w-full sm:max-w-xs')}
@@ -331,6 +335,7 @@ function AccountSettingsContent() {
             />
             {deployment.enablePasskeyAuth ? (
               <AccountPasskeySettings
+                displayName={account.name ?? ''}
                 isAnonymous={account.isAnonymous}
                 onUpdated={refreshAccount}
               />
@@ -348,6 +353,7 @@ function AccountSettingsContent() {
         <WebhookSettings />
       ) : null}
       <AccountAiPreferences />
+      <AccountDeletionSettings />
     </PageShell>
   )
 }

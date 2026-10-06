@@ -71,3 +71,8 @@ Label-distribution.csv
 Ledger-sizes.csv
 Stats queries.csv
 calibration-out/
+
+# Database dumps (prod PII, never commit)
+*.sql.gz
+/*.sql
+/*.dump

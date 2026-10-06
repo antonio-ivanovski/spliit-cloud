@@ -81,13 +81,14 @@
     "signOutOffline": "Conectează-te pentru a te deconecta"
   },
   "Footer": {
-    "madeIn": "Realizat de comunitatea open-source cu dragoste ❤️",
+    "madeIn": "Realizat de <github>comunitatea open-source</github> cu dragoste ❤️",
     "legalNavigation": "Linkuri legale",
     "privacy": "Confidențialitate",
     "terms": "Termeni",
     "imprint": "Mențiuni legale",
     "sponsor": "Susține",
-    "timeLabel": "Momentul zilei"
+    "timeLabel": "Momentul zilei",
+    "status": "Stare"
   },
   "Expenses": {
     "title": "Cheltuieli",
@@ -229,7 +230,9 @@
       "showLess": "Arată mai puțin"
     },
     "copyToast": "Copierea cheltuielii a fost inițiată. Detaliile cheltuielii existente vor fi folosite pentru a crea una nouă.",
-    "incomeBadge": "Venit"
+    "incomeBadge": "Venit",
+    "paidBySingle": "Plătit de <strong>{paidBy}</strong> · plătit pentru <paidFor></paidFor>",
+    "paidByMultipleSingle": "Plătit de <paidByNames></paidByNames> · plătit pentru <paidFor></paidFor>"
   },
   "Groups": {
     "myGroups": "Grupurile mele",
@@ -373,7 +376,8 @@
             "monthly": "luni",
             "yearly": "ani"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Sugerează categorii pentru cheltuielile necategorizate folosind System One"
       },
       "Destination": {
         "heading": "Unde doriți să importați <strong>{name}</strong>? ({participantCount} participanți · {expenseCount} cheltuieli)",
@@ -668,7 +672,9 @@
       "description": "Grupurile pot afișa acum un emoji lângă nume. Am observat {emoji} în “{name}”.",
       "openSettings": "Deschide setările grupului",
       "notNow": "Nu acum"
-    }
+    },
+    "groupTabsHint": "Vrei să rearanjezi filele grupului sau să le ascunzi pe cele pe care nu le folosești?",
+    "groupTabsHintLink": "Personalizează filele în setările contului tău"
   },
   "GroupForm": {
     "title": "Informații despre grup",
@@ -1059,7 +1065,8 @@
       "allItemsSplitEdit": "Editează împărțirea tuturor articolelor",
       "allItemsSplitModalTitle": "Împărțirea tuturor articolelor",
       "remainderAllocationProportional": "Proporțional cu articolele",
-      "remainderProportionalHint": "Împarte această sumă în funcție de subtotalul articolelor fiecărei persoane. Util pentru taxe și bacșișuri."
+      "remainderProportionalHint": "Împarte această sumă în funcție de subtotalul articolelor fiecărei persoane. Util pentru taxe și bacșișuri.",
+      "errorExceedsAmountDetails": "Totalul articolelor ({itemsTotal}) depășește valoarea cheltuielii cu {excess}."
     },
     "leaveItemized": {
       "title": "Schimbi modul de împărțire?",
@@ -1095,7 +1102,15 @@
       "done": "Gata",
       "yourTime": "ora ta",
       "invalidDate": "Introdu o dată validă.",
-      "invalidTime": "Introdu o oră validă (HH:mm)."
+      "invalidTime": "Introdu o oră validă (HH:mm).",
+      "hourLabel": "Oră",
+      "minuteLabel": "Minut",
+      "periodLabel": "a.m./p.m.",
+      "timeWheelHint": "Derulează sau atinge pentru a seta ora. Data rămâne aceeași.",
+      "now": "Acum",
+      "morning": "Dimineața",
+      "midday": "Amiază",
+      "evening": "Seara"
     },
     "settlementTitle": "Plată de decontare",
     "settlementHint": "{category}: Nu se numără ca cheltuială în totaluri, statistici sau bugete. Actualizează totuși cine datorează cui.",
@@ -1139,7 +1154,8 @@
       "description": "Introdu suma finală, inclusiv comisioanele.",
       "impliedRate": "Curs implicit: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Sugestii de categorii"
+    "otherSuggestions": "Sugestii de categorii",
+    "paidForItemizedEmptyHint": "Atribuie persoane articolelor pentru a vedea partea fiecăruia."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Șterge documentul",
@@ -1851,7 +1867,7 @@
       "generic": "Ceva a mers greșit. Te rugăm să încerci din nou.",
       "passwordPolicy": "Folosește cel puțin 8 caractere cu majuscule, minuscule, un număr și un simbol.",
       "magicLinkFailed": "Nu s-a putut trimite linkul de autentificare.",
-      "signupInviteRequired": "Această instanță este doar pe bază de invitație. Folosește un link de invitație sau cere cuiva să te invite într-un grup.",
+      "signupInviteRequired": "Înregistrările sunt doar pe bază de invitație. Folosește un link de invitație sau cere cuiva să te invite într-un grup.",
       "passkeyFailed": "Conectarea cu cheia de acces a eșuat. Încearcă din nou sau folosește altă metodă de conectare."
     },
     "loading": "Se încarcă…",
@@ -1861,14 +1877,14 @@
     "signInWithGithub": "Continuă cu GitHub",
     "legalNotice": "Prin continuare, acceptați <terms>Termenii de utilizare</terms> și recunoașteți <privacy>nota de confidențialitate</privacy>.",
     "inviteOnly": {
-      "message": "Această instanță este doar pe bază de invitație. Folosește un link de invitație sau cere cuiva să te invite într-un grup.",
+      "message": "Înregistrările sunt doar pe bază de invitație. Folosește un link de invitație sau cere cuiva să te invite într-un grup.",
       "useInvitedEmail": "Folosește adresa de email cu care ai primit invitația."
     },
     "signInWithX": "Continuă cu X",
     "signInWithOidc": "Continuă cu {name}",
     "signInAnonymously": "Anonim",
     "lastUsed": "Ultima utilizare",
-    "emailAuthDisabled": "Autentificarea prin e-mail este dezactivată pe această instanță. Folosește autentificarea unică (SSO).",
+    "emailAuthDisabled": "Autentificarea prin e-mail este dezactivată. Folosește autentificarea unică (SSO).",
     "signInWithPasskey": "Autentifică-te cu cheia de acces"
   },
   "CompleteProfile": {
@@ -1993,7 +2009,7 @@
         "joined_few": "{count} persoane s-au alăturat",
         "retry": "Reîncearcă"
       },
-      "emailDeliveryDisabled": "Trimiterea e-mailurilor este dezactivată pe această instanță. Invitația este totuși creată și va apărea când persoana invitată se autentifică; folosește un link de invitație ca să aibă ceva de deschis."
+      "emailDeliveryDisabled": "Trimiterea e-mailurilor este dezactivată. Invitația este totuși creată și va apărea când persoana invitată se autentifică; folosește un link de invitație ca să aibă ceva de deschis."
     },
     "invitations": {
       "title": "Invitații în așteptare",
@@ -2415,7 +2431,7 @@
       "masterDescription": "Dezactivează-le pentru a reduce la tăcere toate e-mailurile și notificările push. Alegerile tale pe categorii sunt păstrate.",
       "emailAddToEnable": "Adaugă un e-mail verificat pentru a primi notificări în căsuța de e-mail.",
       "emailAddLink": "Adaugă e-mail",
-      "emailDeliveryDisabled": "Trimiterea e-mailurilor este dezactivată pe această instanță. Opțiunile tale de e-mail sunt salvate, dar nu vor fi trimise până când administratorul configurează e-mailul."
+      "emailDeliveryDisabled": "Trimiterea e-mailurilor este dezactivată. Opțiunile tale de e-mail sunt salvate, dar nu vor fi trimise până când e-mailul va fi configurat."
     },
     "preferences": {
       "title": "Preferințele aplicației",
@@ -2434,6 +2450,22 @@
       "mascotOptions": {
         "off": "Dezactivată",
         "bill": "Bill, bonul"
+      },
+      "groupTabs": "Filele grupului",
+      "groupTabsHelp": "Alege ce file sunt afișate și în ce ordine în fiecare grup.",
+      "groupTabsCustomize": "Personalizează",
+      "groupTabsSave": "Salvează",
+      "groupTabsDiscard": "Renunță",
+      "groupTabsReset": "Resetează valorile implicite",
+      "groupTabsHide": "Ascunde {name}",
+      "groupTabsShow": "Afișează {name}",
+      "groupTabsMoveUp": "Mută {name} în sus",
+      "groupTabsMoveDown": "Mută {name} în jos",
+      "deleteConfirmation": "Confirmarea ștergerii cheltuielilor",
+      "deleteConfirmationHelp": "Ștergerile rapide cer o simplă confirmare. Ștergerile cu introducere îți cer să introduci mai întâi titlul cheltuielii. Ștergerea unui grup sau eliminarea unui membru necesită întotdeauna introducerea textului.",
+      "deleteConfirmationOptions": {
+        "standard": "Dialog de confirmare",
+        "strict": "Dialog cu introducere"
       }
     },
     "aiPreferences": {
@@ -2626,7 +2658,111 @@
       "backedUp": "Cu backup",
       "removeWarning": "Această acțiune nu poate fi anulată. Dispozitivul nu te va mai conecta cu o cheie de acces — îl poți înregistra din nou oricând.",
       "removeLastWarning": "Aceasta este ultima ta cheie de acces. Dacă este singura ta metodă de conectare, eliminarea este blocată până salvezi un link de recuperare sau o altă metodă de conectare.",
-      "anonymousHelpNoLink": "Niciun link de conectare nu este salvat pentru acest cont de invitat. Creează unul în rândul linkului de conectare de mai jos — funcționează pe orice dispozitiv."
+      "anonymousHelpNoLink": "Niciun link de conectare nu este salvat pentru acest cont de invitat. Creează unul în rândul linkului de conectare de mai jos — funcționează pe orice dispozitiv.",
+      "reauthTitle": "Autentifică-te din nou pentru a adăuga o cheie de acces",
+      "reauthDescription": "Pentru siguranța ta, adăugarea unei chei de acces necesită o autentificare recentă. Vei fi deconectat, te vei autentifica din nou și vei reveni chiar aici pentru a finaliza.",
+      "reauthConfirm": "Autentifică-te din nou",
+      "reauthAnonymousTitle": "Salvează mai întâi un link de conectare",
+      "reauthAnonymousDescription": "Acest cont de invitat nu are încă un link de conectare și nicio cheie de acces. Dacă te deconectezi acum, vei pierde accesul definitiv — salvează mai întâi un link de conectare în secțiunea Link de conectare, apoi revino pentru a adăuga o cheie de acces."
+    },
+    "deletion": {
+      "sectionTitle": "Zonă periculoasă",
+      "sectionDescription": "Șterge definitiv contul tău și toate metodele de autentificare.",
+      "rowLabel": "Șterge contul",
+      "rowDescription": "Îți elimină profilul, sesiunile și setările după o perioadă de grație de 48 de ore. Cheltuielile comune rămân în grupurile celorlalți membri fără datele tale personale.",
+      "open": "Șterge contul…",
+      "scheduledTitle": "Ștergerea contului a fost programată",
+      "scheduledDescription": "Ștergerea este programată să înceapă la {date} sau mai târziu. Contul rămâne activ până atunci. Grupurile, membrii și cheltuielile se pot schimba în timpul așteptării; opțiunile tale se vor aplica stării lor când se execută ștergerea. O poți anula până când începe. Un email de confirmare a fost trimis la {email}.",
+      "cancel": "Anulează ștergerea",
+      "cancelling": "Se anulează…",
+      "cancelled": "Ștergerea contului a fost anulată.",
+      "dialogTitle": "Programezi ștergerea contului?",
+      "dialogDescription": "Aceasta programează ștergerea după o așteptare de 48 de ore; acum nu se șterge nimic. O poți anula până când începe. Opțiunile tale se vor aplica grupurilor și soldurilor din acel moment. Odată începută, ștergerea nu poate fi anulată.",
+      "farewellTitle": "Ne pare rău că pleci",
+      "farewellBody": "Dacă putem face ceva ca să rămâi, <feedbackLink>trimite-ne feedbackul tău</feedbackLink> — durează un minut și ne ajută să ne îmbunătățim.",
+      "groupsTitle": "Ce se întâmplă cu grupurile tale",
+      "leaveGroup": "Vei părăsi „{name}”.",
+      "deleteGroup": "„{name}” va fi șters definitiv — ești ultimul său membru.",
+      "lastAdmin": "Ești ultimul administrator al „{name}” — alt membru va fi promovat automat.",
+      "settleBalances": "Soldurile nedecontate din „{name}” sunt decontate automat.",
+      "friendLedger": "Registrul tău de prieten cu {name} este decontat și închis.",
+      "friendLedgerUnnamed": "Registrul tău de prieten este decontat și închis.",
+      "friendLedgerFallback": "un registru de prieten",
+      "noGroups": "Nu ești membru al niciunui grup.",
+      "accessTitle": "Autentificare și invitații",
+      "pendingInvites_zero": "Când se execută ștergerea, vor fi revocate {count} invitații în așteptare pe care le-ai trimis.",
+      "pendingInvites_one": "Când se execută ștergerea, va fi revocată {count} invitație în așteptare pe care ai trimis-o.",
+      "pendingInvites_two": "Când se execută ștergerea, vor fi revocate {count} invitații în așteptare pe care le-ai trimis.",
+      "pendingInvites_few": "Când se execută ștergerea, vor fi revocate {count} invitații în așteptare pe care le-ai trimis.",
+      "pendingInvites_many": "Când se execută ștergerea, vor fi revocate {count} de invitații în așteptare pe care le-ai trimis.",
+      "pendingInvites_other": "Când se execută ștergerea, vor fi revocate {count} de invitații în așteptare pe care le-ai trimis.",
+      "keepNameLabel": "Păstrează-mi numele în istoricul comun",
+      "keepNameDescription": "Cheltuielile comune vor afișa în continuare „{name}”. În rest, numele tău va fi înlocuit cu „Membru șters” peste tot.",
+      "customNameLabel": "Numele de păstrat",
+      "settleLabel": "Marchează soldurile ca decontate când se execută ștergerea",
+      "settleDescription": "Soldurile rămase sunt decontate automat. În rest, rămân asociate numelui tău provizoriu.",
+      "leaveBalances": "Soldurile nedecontate din „{name}” rămân așa cum sunt.",
+      "friendLeaveBalances": "Soldul tău cu {name} rămâne așa cum este.",
+      "confirmWord": "ȘTERGE",
+      "ackLabel": "Înțeleg că acest lucru este permanent, iar cheltuielile comune rămân în grupurile celorlalți membri fără datele mele personale.",
+      "exportHint": "Vrei mai întâi o copie? <exportLink>Exportă un backup</exportLink> înainte de a continua.",
+      "schedule": "Programează ștergerea",
+      "scheduling": "Se programează…",
+      "scheduled": "Ștergerea a fost programată. Verifică-ți e-mailul pentru a o revizui sau anula.",
+      "dialogCancel": "Păstrează-mi contul",
+      "reauthTitle": "Autentifică-te din nou pentru a-ți șterge contul",
+      "reauthDescription": "Pentru siguranța ta, ștergerea contului necesită o autentificare recentă. Vei fi deconectat, te vei autentifica din nou și vei reveni chiar aici pentru a finaliza.",
+      "reauthConfirm": "Autentifică-te din nou",
+      "errors": {
+        "generic": "Ceva a mers greșit. Încearcă din nou.",
+        "loadFailed": "Nu s-au putut încărca detaliile ștergerii.",
+        "emailMismatch": "E-mailul introdus nu corespunde cu e-mailul contului tău.",
+        "alreadyRequested": "Există deja o solicitare de ștergere în așteptare pentru acest cont.",
+        "sessionNotFresh": "Sesiunea ta este prea veche pentru această acțiune. Autentifică-te din nou, apoi reîncearcă.",
+        "jobsDisabled": "Ștergerea contului necesită workerul în fundal, care este dezactivat pe această instalare.",
+        "ackRequired": "Confirmă mai întâi că înțelegi consecințele.",
+        "invalidDisplayName": "Introdu un nume între 1 și 100 de caractere.",
+        "cancelFailed": "Ștergerea nu a putut fi anulată. Încearcă din nou."
+      },
+      "groupsToDeleteTitle": "Grupuri care vor fi șterse",
+      "groupsToDeleteDescription": "Când se execută ștergerea, grupurile în care încă ești ultimul membru activ vor fi șterse definitiv.",
+      "groupsToLeaveTitle": "Grupuri pe care le vei părăsi",
+      "groupsToLeaveDescription": "Când se execută ștergerea, vei părăsi grupurile care încă au alți membri activi. Aceste grupuri rămân pentru ceilalți.",
+      "friendsTitle": "Prieteni",
+      "friendsDescription": "Soldurile tale individuale cu acești prieteni.",
+      "backToSettings": "Înapoi la setări",
+      "pageTitle": "Șterge contul",
+      "loading": "Se încarcă detaliile ștergerii",
+      "choicesTitle": "Opțiunile tale de ștergere",
+      "nameTitle": "Nume în istoricul comun",
+      "removeNameLabel": "Înlocuiește numele meu cu „Membru șters”",
+      "balancesTitle": "Solduri rămase",
+      "keepBalancesLabel": "Păstrează soldurile rămase așa cum sunt",
+      "balanceExplanation": "Dacă alegi să decontezi soldurile, vor fi înregistrate operațiuni de decontare când contul tău este șters. Nu se transferă bani. În caz contrar, soldurile rămân în istoricul comun.",
+      "confirmationTitle": "Confirmă ștergerea contului",
+      "retry": "Încearcă din nou",
+      "pageDescription": "Programează ștergerea contului după o perioadă de așteptare de 48 de ore. Contul rămâne activ până începe ștergerea și o poți anula înainte.",
+      "reviewChoicesTitle": "Opțiunile tale",
+      "consequencesTitle": "Ce se va întâmpla",
+      "reviewConfirmTitle": "Confirmă ștergerea",
+      "backupLink": "Exportă o copie de siguranță",
+      "keptNameExplanation": "Când se execută ștergerea, cheltuielile partajate vor afișa „{name}”. Numele profilului tău rămâne neschimbat până atunci.",
+      "removedNameExplanation": "Când se execută ștergerea, cheltuielile partajate vor afișa „Membru șters”. Numele profilului tău rămâne neschimbat până atunci.",
+      "keptBalancesExplanation": "Când începe ștergerea, soldurile rămase se păstrează în istoricul partajat, inclusiv cheltuielile adăugate în timpul așteptării.",
+      "settledBalancesExplanation": "În timpul ștergerii, operațiunile de decontare marchează ca decontate soldurile din acel moment ale grupurilor din care încă faci parte, inclusiv cele arhivate. Soldurile din grupurile pe care le-ai părăsit deja sau din care ai fost eliminat rămân neschimbate. Nu se transferă bani.",
+      "rowBalancesKept": "Soldurile rămase se păstrează neschimbate.",
+      "rowBalancesSettled": "Soldul din momentul ștergerii va fi marcat ca decontat.",
+      "rowAdmin": "Când se execută ștergerea, un alt membru va deveni administrator dacă încă ești ultimul administrator.",
+      "friendKept": "Soldul tău rămâne neschimbat.",
+      "friendSettled": "Când se execută ștergerea, soldul tău din acel moment va fi marcat ca decontat, iar registrul va fi închis.",
+      "accessExplanation": "Aceste metode de conectare nu vor mai funcționa când contul tău va fi șters.",
+      "invitesTitle": "Invitații în așteptare",
+      "balanceUnavailable": "Sold indisponibil",
+      "archivedBalancesKept": "Acest grup arhivat va rămâne doar pentru citire. Soldul tău rămas va fi păstrat.",
+      "signInMethodsRemoved": "Aceste metode de autentificare nu vor mai funcționa: {methods}.",
+      "consequencesTiming": "Acest rezumat reflectă starea actuală a contului tău. Grupurile, membrii și cheltuielile se pot schimba înainte să înceapă ștergerea. Opțiunile tale se vor aplica grupurilor din care vei face parte și soldurilor lor din acel moment. Nimic din cele indicate aici nu se întâmplă imediat.",
+      "executingTitle": "Ștergerea contului a început",
+      "executingDescription": "Ștergerea contului tău este în curs. Unele modificări pot fi deja finalizate, iar ștergerea nu poate fi anulată sau inversată. Dacă procesarea este întreruptă, se reia de la pașii finalizați."
     }
   },
   "Activities": {
@@ -2653,7 +2789,9 @@
       },
       "recurringCreated": "{participant} a creat cheltuiala recurentă „{title}”",
       "stopped": "{participant} a oprit cheltuiala recurentă {title}",
-      "commented": "{participant} a comentat despre {title}: “{excerpt}”"
+      "commented": "{participant} a comentat despre {title}: “{excerpt}”",
+      "yourShare": "Partea ta:",
+      "notInvolved": "Nu ești implicat"
     },
     "group": {
       "updated": "{participant} a actualizat setările grupului",
@@ -2666,7 +2804,11 @@
         "currencyCode": "Cod monedă",
         "linkedParticipant": "Participant legat",
         "subgroupsEnabled": "Subgrupuri",
-        "publicViewLink": "Link public de vizualizare"
+        "publicViewLink": "Link public de vizualizare",
+        "emoji": "Emoji",
+        "color": "Culoare",
+        "subgroups": "Subgrupuri",
+        "splitPresets": "Presetări de împărțire"
       }
     },
     "member": {
@@ -2697,7 +2839,18 @@
       "imported_other": "{participant} a importat {count} cheltuieli"
     },
     "participant": {
-      "removed": "{participant} a eliminat pe {target} din grup"
+      "removed": "{participant} a eliminat pe {target} din grup",
+      "added": "{participant} a adăugat pe {target} în grup"
+    },
+    "hiddenActivitiesShowLess": "Arată mai puțin",
+    "hiddenActivities_one": "{count} activitate ascunsă care nu te implică",
+    "hiddenActivities_few": "{count} activități ascunse care nu te implică",
+    "hiddenActivities_many": "{count} activități ascunse care nu te implică",
+    "hiddenActivities_other": "{count} activități ascunse care nu te implică",
+    "viewMode": {
+      "label": "Mod de vizualizare a activităților",
+      "forYou": "Pentru tine",
+      "all": "Toate"
     }
   },
   "OfflineBanner": {
@@ -2775,9 +2928,6 @@
   },
   "BulkCategorize": {
     "title": "Categorizare în lot",
-    "calibrationTitle": "Pasul 1 — Calibrare",
-    "calibrationDescription": "Fiecare exemplu pe care îl confirmi devine adevărul absolut pentru următoarea trecere a IA. Poate fi gata după un singur tur, sau poate cere mai multe exemple.",
-    "roundCount": "Runda {round} din {max}",
     "confidence": {
       "high": "Ridicată",
       "medium": "Medie",
@@ -2845,7 +2995,137 @@
     "doneTitle": "Categorii salvate",
     "expenseColumn": "Cheltuială",
     "categoryColumn": "Categorie",
-    "confidenceColumn": "Încredere"
+    "confidenceColumn": "Încredere",
+    "simpleDescription": "Verifică potrivirile de categorii pentru cheltuielile din General, apoi salvează-ți opțiunile.",
+    "generateSuggestions": "Sugerează categorii",
+    "backToStart": "Înapoi",
+    "chooseMode": "Alege cum să categorizezi cheltuielile",
+    "localMode": "Dicționar și istoric",
+    "localModeDescription": "Folosește istoricul categoriilor acestui grup și dicționarul integrat.",
+    "startRun": "Începe categorizarea",
+    "noCategory": "Lasă necategorizat",
+    "progressTitle": "Se categorisesc cheltuielile",
+    "progressDescription": "Poți părăsi această pagină și reveni mai târziu. Progresul tău este salvat.",
+    "progressCount": "{categorized} din {total} cheltuieli categorizate",
+    "applyProgressTitle": "Se salvează categoriile",
+    "reviewTitle": "Verifică sugestiile",
+    "reviewSummary": "{suggested} sugestii din {total} cheltuieli necategorizate",
+    "sourceLocal": "Locală",
+    "saveSelected": "Salvează categoriile selectate",
+    "retry": "Încearcă din nou",
+    "restart": "Începe o nouă execuție",
+    "failed": "Execuția s-a oprit: {message}",
+    "savedSummary": "{applied} modificate, {skipped} omise",
+    "selectedCount": "{count} selectate",
+    "selectAll": "Selectează tot",
+    "clearAll": "Șterge tot",
+    "discardRun": "Renunță la execuție",
+    "partialSaveNotice": "Este posibil ca unele categorii să fi fost deja salvate. Renunțarea la această execuție nu va anula acele modificări.",
+    "restartOlderRunTitle": "Începe o nouă execuție de categorizare",
+    "restartOlderRunDescription": "Această execuție anterioară folosea fluxul de verificare anterior. Începe din nou pentru a verifica toate cheltuielile împreună.",
+    "runningMatches": "{count} din {total} cheltuieli au o sugestie de categorie până acum",
+    "failedTitle": "Categorizarea s-a oprit",
+    "reviewWorkload": "{total} cheltuieli în General · {selected} selectate pentru categorizare · {general} rămân în General",
+    "categoryChoices": "Opțiuni de categorie",
+    "moreCategories": "Alege altă categorie",
+    "saveCount": "Salvează {count} categorii",
+    "finishWithoutChanges": "Finalizează fără modificări",
+    "completionSummary": "Execuție finalizată: {changed} din {total} cheltuieli modificate. {remaining} cheltuieli rămân în General.",
+    "viewExpenses": "Vezi cheltuielile",
+    "countLoading": "Se numără cheltuielile necategorizate…",
+    "nothingToCategorize": "Nu există cheltuieli necategorizate de categorizat.",
+    "startingCount": "{count} cheltuieli sunt în prezent în General și gata de verificat.",
+    "countError": "Nu s-au putut număra cheltuielile necategorizate. Reîncarcă pagina pentru a încerca din nou.",
+    "keepGeneral": "General · lasă necategorizat",
+    "calibrationRoundTitle": "Runda de calibrare {round}",
+    "calibrationLoading": "Se pregătește un eșantion variat de cheltuieli…",
+    "calibrationReviewDescription": "Verifică și corectează aceste {count} cheltuieli. Opțiunile rămân în această execuție până salvezi la final.",
+    "confirmRound": "Confirmă runda",
+    "roundSummaryTitle": "Runda {round} verificată",
+    "roundSummaryDescription": "{reviewed} verificate · {categorized} categorizate provizoriu · {general} lăsate ca General",
+    "roundQuality": "Sugestiile inițiale au corespuns cu {accuracy}% din opțiunile tale; ai corectat {corrections}.",
+    "categorizeRemaining": "Categorizează cheltuielile rămase",
+    "nextRound": "Verifică alt eșantion",
+    "tableLabel": "Cheltuieli de categorizat",
+    "dateColumn": "Data",
+    "amountColumn": "Sumă",
+    "rerunSuggestions": "Rulează din nou sugestiile",
+    "roundQualityWithSuggestions": "{accepted} din {proposed} categorii sugerate acceptate · {changed} modificate · {missed} potriviri găsite din General",
+    "roundQualityNoSuggestions": "Nicio categorie sugerată · {missed} potriviri găsite din General · {abstained} rămase în General",
+    "rerunChanged": "Ai modificat {changed} din {proposed} categorii sugerate.",
+    "rerunAssignedSingle": "Ai atribuit o categorie pentru 1 cheltuială rămasă în General.",
+    "rerunAssignedMultiple": "Ai atribuit o categorie pentru {count} cheltuieli rămase în General.",
+    "rerunPotentialSingle": "Modificările tale pot îmbunătăți potrivirea pentru 1 cheltuială rămasă în General. Rulează din nou sugestiile dacă vrei încă o trecere.",
+    "rerunPotentialMultiple": "Modificările tale pot îmbunătăți potrivirile pentru {count} cheltuieli rămase în General. Rulează din nou sugestiile dacă vrei încă o trecere.",
+    "rerunEligible": "Eligibil pentru încă o trecere: General {general} · potriviri automate incerte {uncertain}.",
+    "rerunNoEligible": "Nu au rămas General neatinse sau potriviri automate incerte de rulat din nou. Corecțiile tale rămân incluse în categoriile salvate.",
+    "rerunAlreadyUsed": "Ultimele tale corecții au fost deja folosite pentru aceste sugestii. Fă o altă corecție pentru a le rula din nou.",
+    "highMatch": "Potrivire ridicată",
+    "mediumMatch": "Potrivire medie",
+    "lowMatch": "Potrivire scăzută",
+    "belowMatchThreshold": "Sub pragul de potrivire",
+    "refiningTitle": "Se rafinează potrivirile incerte",
+    "runLimitSummary": "Această execuție include 10,000 cheltuieli. Alte {count} cheltuieli din General pot fi categorizate într-o altă execuție după salvare.",
+    "pageLoading": "Se încarcă cheltuielile…",
+    "pageLoadError": "Nu s-au putut încărca cheltuielile.",
+    "pageRetry": "Încearcă din nou",
+    "pageCount": "Se afișează {loaded} din {total} cheltuieli",
+    "ledgerAmountNotice": "Sumele sunt afișate în moneda grupului.",
+    "viewExpenseDetails": "Vezi detaliile cheltuielii",
+    "reviewFilterLabel": "Afișează cheltuielile",
+    "filterAll": "Toate {count}",
+    "filterGeneral": "General {count}",
+    "improveSuggestions": "Îmbunătățește sugestiile rămase",
+    "rerunInfoLabel": "Despre îmbunătățirea sugestiilor",
+    "preparingNextStage": "Se pregătește pasul următor",
+    "rerunProgressTitle": "Se actualizează sugestiile",
+    "progressPreparing": "Se pregătesc cheltuielile…",
+    "noGeneralRows": "Nu au rămas cheltuieli în General în această verificare.",
+    "discardConfirmationTitle": "Renunți la această execuție de categorizare?",
+    "discardConfirmationDescription": "Aceasta elimină execuția, sugestiile sale și opțiunile alese de tine sau de alți administratori. Nicio categorie de cheltuieli nu va fi modificată.",
+    "discardConfirmationCancel": "Păstrează execuția",
+    "progressCountDescription": "Se iau în calcul doar categoriile confirmate și potrivirile medii sau ridicate; General și potrivirile slabe, nu.",
+    "systemOneMode": "Modelul System One",
+    "systemOneModeDescription": "Folosește modelul de decizie System One pentru fiecare cheltuială, folosind ca indicii cheltuielile categorizate din acest grup și opțiunile tale verificate. TypeSafe Jev este un astfel de model.",
+    "systemOneUnavailable": "System One nu este disponibil. Dicționarul și istoricul sunt în continuare disponibile.",
+    "systemOneConfidence": "Nivelul de încredere System One: {confidence}%",
+    "systemOneOptionProbability": "Probabilitatea opțiunii System One: {probability}%",
+    "overallProgress": "Progres general",
+    "fullPassProcessed": "Procesate {processed} din {total} cheltuieli",
+    "stageProcessed": "Procesate {processed} din {total} cheltuieli în acest pas",
+    "saveSkipped": "{count} cheltuieli au fost omise pentru că s-au modificat.",
+    "sharedRunNotice": "Această execuție este partajată cu alți administratori ai grupului. Toată lumea vede aceleași sugestii.",
+    "saveConflictTitle": "{count} cheltuieli s-au modificat de când a început această revizuire",
+    "saveConflictDescription": "Cineva a editat aceste cheltuieli sau le-a schimbat categoria în afara acestei execuții. Salvează celelalte cheltuieli sau editează din nou categoriile și încearcă să salvezi încă o dată.",
+    "saveConflictMore": "Și încă {count}.",
+    "saveOtherExpenses": "Salvează celelalte cheltuieli",
+    "receiptTitles": {
+      "freshMarket": "Piață de produse proaspete",
+      "greenGrocer": "Aprozar",
+      "fruitStand": "Tarabă cu fructe",
+      "cornerBistro": "Bistroul din colț",
+      "noodleHouse": "Casă de noodles",
+      "cafeLunch": "Prânz la cafenea",
+      "flightTicket": "Bilet de avion",
+      "airlineBaggage": "Bagaj de avion",
+      "boardingPass": "Carte de îmbarcare",
+      "homeSupplies": "Produse pentru casă",
+      "hardwareShop": "Magazin de bricolaj",
+      "cleaningGoods": "Produse de curățenie",
+      "cinemaTickets": "Bilete la cinema",
+      "movieNight": "Seară de film",
+      "filmFestival": "Festival de film",
+      "organicMarket": "Piață bio",
+      "bakeryRun": "Cumpărături de la brutărie",
+      "sushiBar": "Sushi bar",
+      "pizzaNight": "Seară de pizza",
+      "airportLounge": "Salon VIP aeroport",
+      "extraLegroom": "Spațiu extra pentru picioare",
+      "laundryDetergent": "Detergent de rufe",
+      "storageBoxes": "Cutii de depozitare",
+      "popcornCombo": "Meniu cu popcorn",
+      "streamingRental": "Închiriere streaming"
+    }
   },
   "ExpensePreview": {
     "title": "Previzualizarea cheltuielii",
@@ -2892,10 +3172,14 @@
         "deleteGroup": "Pentru a șterge definitiv grupul <target>{name}</target>, introdu numele acestuia exact așa cum apare mai jos.",
         "deleteExpense": "Pentru a șterge definitiv cheltuiala <target>{name}</target>, introdu titlul acesteia exact așa cum apare mai jos.",
         "deleteRecurringExpense": "Pentru a confirma ștergerea <target>{name}</target>, introdu titlul cheltuielii exact așa cum apare mai jos.",
-        "removeParticipant": "Pentru a elimina <target>{name}</target> din acest grup, introdu numele exact așa cum apare mai jos."
+        "removeParticipant": "Pentru a elimina <target>{name}</target> din acest grup, introdu numele exact așa cum apare mai jos.",
+        "deleteAccount": "Pentru a-ți șterge definitiv contul, introdu <target>{name}</target> exact așa cum apare mai jos."
       },
       "placeholder": "Introdu „{name}” aici",
-      "mismatch": "Nu se potrivește. Introdu exact {name}."
+      "mismatch": "Nu se potrivește. Introdu exact {name}.",
+      "settingsNoteLink": "Modifică în setările contului",
+      "settingsNoteLead": "Preferi să sari peste introducerea textului?",
+      "settingsNoteTail": "pentru a folosi un dialog de confirmare simplu."
     }
   },
   "Theme": {
@@ -2919,7 +3203,7 @@
     "failedDescription": "Nu am putut înregistra acest dispozitiv. Notificările configurate pentru e-mail vor continua să fie trimise acolo; opțiunile doar push nu sunt redirecționate.",
     "emailUsage": "Până când activezi un dispozitiv, vor ajunge doar notificările configurate pentru e-mail. Poți permite notificările din setările browserului și încerca din nou din Setări.",
     "done": "Gata",
-    "emailDeliveryDisabled": "Trimiterea e-mailurilor este dezactivată pe această instanță, așa că notificările prin e-mail nu pot ajunge la tine. Activează notificările push pe acest dispozitiv pentru a primi în continuare actualizări."
+    "emailDeliveryDisabled": "Trimiterea e-mailurilor este dezactivată, așa că notificările prin e-mail nu pot ajunge la tine. Activează notificările push pe acest dispozitiv pentru a primi în continuare actualizări."
   },
   "Unsubscribe": {
     "title": "Dezactivezi aceste e-mailuri?",
@@ -3390,7 +3674,8 @@
     "hintTapToAddExpense": "Sunt {name} — atinge-mă ca să adaugi o cheltuială.",
     "hintTapToCreateGroup": "Sunt {name} — atinge-mă ca să creezi un grup.",
     "billName": "Bill",
-    "offlineMessage": "Nu pot crea nimic cât timp ești offline."
+    "offlineMessage": "Nu pot crea nimic cât timp ești offline.",
+    "serverUnreachableMessage": "Nu pot contacta serverul Spliit chiar acum — conexiunea ta pare în regulă, deci vina este a noastră."
   },
   "CreateSettlement": {
     "description": "Revizuiește plata înainte de a o înregistra.",
@@ -3441,7 +3726,18 @@
       "existingPasskeyTitle": "Ai înregistrat deja o cheie de acces?",
       "existingPasskeyDescription": "Conectează-te din nou cu cheia de acces pe unul dintre dispozitivele tale înregistrate.",
       "passkeySignIn": "Autentifică-te cu cheia de acces",
-      "passkeySignInError": "Nu te-ai putut conecta cu această cheie de acces. Încearcă din nou sau folosește linkul de conectare."
+      "passkeySignInError": "Nu te-ai putut conecta cu această cheie de acces. Încearcă din nou sau folosește linkul de conectare.",
+      "passkeyNameLabel": "Dă un nume acestei chei de acces (opțional)",
+      "passkeyNamePlaceholder": "de ex. Touch ID de pe MacBook",
+      "nameTitle": "Alege un nume de afișare",
+      "nameDescription": "Se afișează pe cheia ta de acces și în grupurile tale. Poți să-l schimbi mai târziu.",
+      "nameLabel": "Nume de afișare",
+      "namePlaceholder": "Numele tău",
+      "nameSave": "Salvează și continuă",
+      "nameSaving": "Se salvează…",
+      "nameRequired": "Introdu un nume de afișare.",
+      "nameTooShort": "Numele trebuie să aibă cel puțin 2 caractere.",
+      "nameError": "Numele de afișare nu a putut fi salvat. Te rugăm să încerci din nou."
     },
     "onboarding": {
       "title": "Salvați linkul de recuperare",
@@ -3580,6 +3876,29 @@
         "review": {
           "title": "Revizuiește și importă",
           "detail": "Verifică duplicatele și confirmă importul."
+        }
+      }
+    },
+    "categorize": {
+      "title": "Categorizează cheltuielile",
+      "description": "Sugerează categorii pentru cheltuielile existente necategorizate folosind System One. Verifică fiecare modificare înainte de salvare.",
+      "start": "Categorizează cheltuielile",
+      "steps": {
+        "choose": {
+          "title": "Alege o metodă",
+          "detail": "Folosește dicționarul și istoricul sau modelul de decizie System One."
+        },
+        "calibrate": {
+          "title": "Verifică eșantioane mici",
+          "detail": "Corectează sugestiile astfel încât runda următoare să învețe categoriile grupului tău."
+        },
+        "review": {
+          "title": "Verifică fiecare cheltuială",
+          "detail": "Cheltuielile din General apar primele în tabelul complet."
+        },
+        "save": {
+          "title": "Salvează categoriile",
+          "detail": "Cheltuielile se modifică doar când confirmi verificarea finală."
         }
       }
     }
@@ -4133,7 +4452,8 @@
       "applyToExpenses_few": "Aplică la {count} cheltuieli",
       "importExpenses_few": "Importă {count} cheltuieli",
       "importedCount_few": "{count} cheltuieli importate",
-      "matchingExpensesNotice_few": "{count} cheltuieli au titluri potrivite sau similare."
+      "matchingExpensesNotice_few": "{count} cheltuieli au titluri potrivite sau similare.",
+      "categorizeWithSystemOne": "Sugerează categorii pentru cheltuielile necategorizate folosind System One"
     }
   },
   "Sponsor": {
@@ -4288,5 +4608,26 @@
     "expenseMissing": "Această cheltuială nu este în descărcarea acestui dispozitiv. Reconectează-te pentru cheltuieli mai noi sau mai vechi.",
     "groupMissing": "Acest grup nu a terminat de descărcat.",
     "balancesStale": "Soldurile pot fi învechite."
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit este indisponibil",
+    "description": "Nu putem contacta serverul Spliit chiar acum. Conexiunea ta pare în regulă — încearcă din nou peste puțin timp.",
+    "retry": "Încearcă din nou"
+  },
+  "ApiStatusBanner": {
+    "message": "Spliit nu poate fi contactat chiar acum. Conexiunea ta pare în regulă — problema este la noi.",
+    "statusLink": "Vezi starea"
+  },
+  "AccountDeletionBanner": {
+    "scheduled": "Ștergerea contului este programată pentru {date}.",
+    "review": "Verifică sau anulează ștergerea",
+    "executing": "Ștergerea contului a început.",
+    "viewStatus": "Vezi starea ștergerii"
+  },
+  "Updates": {
+    "title": "Actualizări",
+    "latest": "Noutăți",
+    "viewAll": "Vezi toate actualizările",
+    "dismiss": "Am înțeles"
   }
 }

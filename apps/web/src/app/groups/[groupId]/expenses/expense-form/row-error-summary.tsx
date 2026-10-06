@@ -33,6 +33,7 @@ export function RowErrorSummary({
 
   return (
     <div
+      data-expense-row-errors
       className={cn(
         'mb-3 rounded-md border border-destructive/40 bg-destructive/5 px-3 py-2 text-sm text-destructive',
         className,

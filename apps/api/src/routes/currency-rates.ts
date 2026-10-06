@@ -40,6 +40,7 @@ export type CurrencyRatesResponse = Array<
           provider: 'frankfurter' | 'coinbase'
           base: string
           target: string
+          inverted?: boolean
         }>
         via?: string[]
       }

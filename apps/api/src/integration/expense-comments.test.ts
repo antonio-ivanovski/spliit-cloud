@@ -43,7 +43,7 @@ describe('Expense comments — real DB', () => {
     await prisma.user.delete({ where: { id: accountId } }).catch(() => {})
   })
 
-  it('preserves author snapshots and cascades comment activities with the expense', async () => {
+  it('preserves author snapshots and notifies without a feed row', async () => {
     const { groupId } = await caller.create({
       requestId: crypto.randomUUID(),
       groupFormValues: {
@@ -93,14 +93,11 @@ describe('Expense comments — real DB', () => {
       author: { accountId, name: 'Comment Author' },
       canDelete: true,
     })
-    const activity = await prisma.activity.findUnique({
-      where: { expenseCommentId: comment.id },
-    })
-    expect(activity).toMatchObject({
-      type: 'EXPENSE_COMMENTED',
-      subjectType: 'EXPENSE',
-      subjectId: expenseId,
-    })
+    // New comments notify interested accounts but write no activity feed
+    // row, so deletion can never orphan one.
+    await expect(
+      prisma.activity.findUnique({ where: { expenseCommentId: comment.id } }),
+    ).resolves.toBeNull()
 
     await prisma.user.delete({ where: { id: accountId } })
     const preserved = await prisma.expenseComment.findUniqueOrThrow({
@@ -115,9 +112,6 @@ describe('Expense comments — real DB', () => {
     await prisma.expense.delete({ where: { id: expenseId } })
     await expect(
       prisma.expenseComment.findUnique({ where: { id: comment.id } }),
-    ).resolves.toBeNull()
-    await expect(
-      prisma.activity.findUnique({ where: { id: activity!.id } }),
     ).resolves.toBeNull()
   })
 })

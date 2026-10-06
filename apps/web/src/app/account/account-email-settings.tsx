@@ -247,7 +247,10 @@ export function AccountEmailSettings({
                     type="email"
                     autoComplete="email"
                     value={nextEmail}
-                    onChange={(event) => setNextEmail(event.target.value)}
+                    onChange={(event) => {
+                      setNextEmail(event.target.value)
+                      if (errorCode) setErrorCode(null)
+                    }}
                     required
                     disabled={busy}
                   />

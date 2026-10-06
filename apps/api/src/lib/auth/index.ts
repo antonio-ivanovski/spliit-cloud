@@ -66,6 +66,7 @@ import {
 } from './oauth-revocation-barrier'
 import { passwordSet } from './password-set'
 import { ALL_SCOPES, DEFAULT_CLIENT_SCOPES } from './scopes'
+import { SESSION_FRESH_AGE_SECONDS } from './session-policy'
 import {
   assertCanCreateAccount,
   captureOAuthSignupInvite,
@@ -636,6 +637,10 @@ export const auth = betterAuth({
     // 180-day (6 months) rolling sessions; better-auth handles refresh/sliding expiry.
     expiresIn: 60 * 60 * 24 * 180,
     updateAge: 60 * 60 * 24,
+    // 30-day freshness window for passkey enrollment, OAuth unlink, and
+    // session listing (measured against session creation, which never
+    // slides). See session-policy.ts.
+    freshAge: SESSION_FRESH_AGE_SECONDS,
     cookieCache: {
       enabled: true,
       maxAge: 60 * 5,

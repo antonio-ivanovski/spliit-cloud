@@ -22,6 +22,7 @@ export const jobPayloadSchemas = {
     cursor: z.string().min(1).optional(),
   }),
   'notification.cleanup': z.object({}),
+  'announcement.process': z.object({}),
   'webhook.deliver': z.object({ deliveryId: z.string().min(1) }),
   'webhook.reconcile': z.object({
     cursor: z.string().min(1).optional(),
@@ -29,6 +30,15 @@ export const jobPayloadSchemas = {
   'webhook.cleanup': z.object({}),
   'anonymous-account.cleanup': z.object({}),
   'budget.evaluate': z.object({ groupId: z.string().min(1).optional() }),
+  'bulk-categorize.run': z.object({
+    runId: z.string().min(1),
+    phase: z.enum(['calibration', 'full', 'rerun']),
+    attemptId: z.string().min(1),
+  }),
+  'account-deletion.execute': z.object({
+    accountId: z.string().min(1),
+    generation: z.string().min(1).optional(),
+  }),
 } as const
 
 export type JobName = keyof typeof jobPayloadSchemas
@@ -43,11 +53,14 @@ export const JOB_NAMES = {
   NOTIFICATION_DELIVER: 'notification.deliver',
   NOTIFICATION_RECONCILE: 'notification.reconcile',
   NOTIFICATION_CLEANUP: 'notification.cleanup',
+  ANNOUNCEMENT_PROCESS: 'announcement.process',
   WEBHOOK_DELIVER: 'webhook.deliver',
   WEBHOOK_RECONCILE: 'webhook.reconcile',
   WEBHOOK_CLEANUP: 'webhook.cleanup',
   ANONYMOUS_ACCOUNT_CLEANUP: 'anonymous-account.cleanup',
   EVALUATE_BUDGETS: 'budget.evaluate',
+  BULK_CATEGORIZE: 'bulk-categorize.run',
+  EXECUTE_ACCOUNT_DELETION: 'account-deletion.execute',
 } as const satisfies Record<string, JobName>
 
 export const RECURRING_MATERIALIZATION_QUEUE =
@@ -63,6 +76,8 @@ export const NOTIFICATION_CLEANUP_QUEUE = JOB_NAMES.NOTIFICATION_CLEANUP
 export const NOTIFICATION_DELIVER_DLQ = `${NOTIFICATION_DELIVER_QUEUE}.dead-letter`
 export const NOTIFICATION_RECONCILE_DLQ = `${NOTIFICATION_RECONCILE_QUEUE}.dead-letter`
 export const NOTIFICATION_CLEANUP_DLQ = `${NOTIFICATION_CLEANUP_QUEUE}.dead-letter`
+export const ANNOUNCEMENT_PROCESS_QUEUE = JOB_NAMES.ANNOUNCEMENT_PROCESS
+export const ANNOUNCEMENT_PROCESS_DLQ = `${ANNOUNCEMENT_PROCESS_QUEUE}.dead-letter`
 export const WEBHOOK_DELIVER_QUEUE = JOB_NAMES.WEBHOOK_DELIVER
 export const WEBHOOK_RECONCILE_QUEUE = JOB_NAMES.WEBHOOK_RECONCILE
 export const WEBHOOK_CLEANUP_QUEUE = JOB_NAMES.WEBHOOK_CLEANUP
@@ -74,6 +89,10 @@ export const ANONYMOUS_ACCOUNT_CLEANUP_QUEUE =
 export const ANONYMOUS_ACCOUNT_CLEANUP_DLQ = `${ANONYMOUS_ACCOUNT_CLEANUP_QUEUE}.dead-letter`
 export const BUDGET_EVALUATE_QUEUE = JOB_NAMES.EVALUATE_BUDGETS
 export const BUDGET_EVALUATE_DLQ = `${BUDGET_EVALUATE_QUEUE}.dead-letter`
+export const BULK_CATEGORIZE_QUEUE = JOB_NAMES.BULK_CATEGORIZE
+export const BULK_CATEGORIZE_DLQ = `${BULK_CATEGORIZE_QUEUE}.dead-letter`
+export const ACCOUNT_DELETION_EXECUTE_QUEUE = JOB_NAMES.EXECUTE_ACCOUNT_DELETION
+export const ACCOUNT_DELETION_EXECUTE_DLQ = `${ACCOUNT_DELETION_EXECUTE_QUEUE}.dead-letter`
 
 export const DEAD_LETTER_QUEUE_BY_SOURCE = {
   [RECURRING_MATERIALIZATION_QUEUE]: RECURRING_MATERIALIZATION_DLQ,
@@ -81,11 +100,14 @@ export const DEAD_LETTER_QUEUE_BY_SOURCE = {
   [NOTIFICATION_DELIVER_QUEUE]: NOTIFICATION_DELIVER_DLQ,
   [NOTIFICATION_RECONCILE_QUEUE]: NOTIFICATION_RECONCILE_DLQ,
   [NOTIFICATION_CLEANUP_QUEUE]: NOTIFICATION_CLEANUP_DLQ,
+  [ANNOUNCEMENT_PROCESS_QUEUE]: ANNOUNCEMENT_PROCESS_DLQ,
   [WEBHOOK_DELIVER_QUEUE]: WEBHOOK_DELIVER_DLQ,
   [WEBHOOK_RECONCILE_QUEUE]: WEBHOOK_RECONCILE_DLQ,
   [WEBHOOK_CLEANUP_QUEUE]: WEBHOOK_CLEANUP_DLQ,
   [ANONYMOUS_ACCOUNT_CLEANUP_QUEUE]: ANONYMOUS_ACCOUNT_CLEANUP_DLQ,
   [BUDGET_EVALUATE_QUEUE]: BUDGET_EVALUATE_DLQ,
+  [BULK_CATEGORIZE_QUEUE]: BULK_CATEGORIZE_DLQ,
+  [ACCOUNT_DELETION_EXECUTE_QUEUE]: ACCOUNT_DELETION_EXECUTE_DLQ,
 } as const satisfies Record<JobName, string>
 
 export function deadLetterQueueFor(sourceQueue: string): string | null {

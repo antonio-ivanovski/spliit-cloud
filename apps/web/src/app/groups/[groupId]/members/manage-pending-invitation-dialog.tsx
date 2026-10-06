@@ -130,7 +130,6 @@ export function ManagePendingInvitationDialog({
     },
   })
 
-  // oxlint-disable-next-line react/incompatible-library -- react-hook-form watch reads during render by design.
   const delivery = form.watch('delivery')
   const emailValue = form.watch('email')
   const formState = form.formState
@@ -160,6 +159,17 @@ export function ManagePendingInvitationDialog({
     setLinkReady(null)
     setApiError(null)
   }, [open, invitation, form])
+
+  // Dismiss a previous save error as soon as any field is edited. The
+  // subscription fires only on form value changes, so setting apiError after
+  // a failed save does not immediately clear itself.
+  useEffect(() => {
+    // oxlint-disable-next-line react/incompatible-library -- subscription-style watch is the documented RHF change listener.
+    const subscription = form.watch(() => {
+      setApiError((prev) => (prev === null ? prev : null))
+    })
+    return () => subscription.unsubscribe()
+  }, [form])
 
   const hasProfile = !!invitation?.recipientProfile
   const emailUnchanged =
@@ -208,6 +218,7 @@ export function ManagePendingInvitationDialog({
   function handleTabChange(value: string) {
     const tab = value as 'friends' | 'email' | 'link'
     setInviteTab(tab)
+    if (apiError) setApiError(null)
     // The tab is the delivery selector: friends/email mean EMAIL
     // delivery, link means LINK. Marking the field dirty is what
     // enables the footer Save button (mirrors the old radio toggle).
@@ -219,6 +230,7 @@ export function ManagePendingInvitationDialog({
   function handleSelectFriend(accountId: string) {
     const friend = friends.find((f) => f.accountId === accountId)
     setSelectedFriendAccountId(accountId)
+    if (apiError) setApiError(null)
     if (!friend) return
     // Selecting a friend targets the form at their email + profile
     // name and enables the footer Save button.

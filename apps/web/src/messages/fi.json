@@ -81,13 +81,14 @@
     "signOutOffline": "Yhdistä kirjautuaksesi ulos"
   },
   "Footer": {
-    "madeIn": "Avoimen lähdekoodin yhteisön rakkaudella tekemä ❤️",
+    "madeIn": "<github>Avoimen lähdekoodin yhteisön</github> rakkaudella tekemä ❤️",
     "legalNavigation": "Oikeudelliset linkit",
     "privacy": "Tietosuoja",
     "terms": "Käyttöehdot",
     "imprint": "Julkaisutiedot",
     "sponsor": "Sponsori",
-    "timeLabel": "Vuorokaudenaika"
+    "timeLabel": "Vuorokaudenaika",
+    "status": "Tila"
   },
   "Expenses": {
     "title": "Kulut",
@@ -226,7 +227,9 @@
       "showLess": "Näytä vähemmän"
     },
     "copyToast": "Kulun kopiointi aloitettu. Olemassa olevia kulun tietoja käytetään uuden kulun luomiseen.",
-    "incomeBadge": "Tulo"
+    "incomeBadge": "Tulo",
+    "paidBySingle": "Maksaja <strong>{paidBy}</strong> · maksettu henkilölle <paidFor></paidFor>",
+    "paidByMultipleSingle": "Maksajat <paidByNames></paidByNames> · maksettu henkilölle <paidFor></paidFor>"
   },
   "Groups": {
     "myGroups": "Omat ryhmät",
@@ -368,7 +371,8 @@
             "monthly": "kuukausi",
             "yearly": "vuosi"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Ehdota luokittelemattomille kuluille luokkia System Onen avulla"
       },
       "Destination": {
         "heading": "Mihin haluat tuoda <strong>{name}</strong>? ({participantCount} osallistujaa · {expenseCount} kulua)",
@@ -662,7 +666,9 @@
       "description": "Ryhmät voivat nyt näyttää emojin nimensä vieressä. Huomasimme {emoji} nimessä ”{name}”.",
       "openSettings": "Avaa ryhmän asetukset",
       "notNow": "Ei nyt"
-    }
+    },
+    "groupTabsHint": "Haluatko järjestää ryhmän välilehdet uudelleen tai piilottaa ne, joita et käytä?",
+    "groupTabsHintLink": "Mukauta välilehtiä tilisi asetuksissa"
   },
   "GroupForm": {
     "title": "Ryhmän tiedot",
@@ -1052,7 +1058,8 @@
       "allItemsSplitEdit": "Muokkaa kaikkien nimikkeiden jakoa",
       "allItemsSplitModalTitle": "Kaikkien nimikkeiden jako",
       "remainderAllocationProportional": "Kohteiden suhteessa",
-      "remainderProportionalHint": "Jaa tämä summa kunkin henkilön kohdekohtaisen välisumman mukaan. Kätevä veroja ja tippejä varten."
+      "remainderProportionalHint": "Jaa tämä summa kunkin henkilön kohdekohtaisen välisumman mukaan. Kätevä veroja ja tippejä varten.",
+      "errorExceedsAmountDetails": "Kohteiden summa ({itemsTotal}) on {excess} suurempi kuin kulun summa."
     },
     "leaveItemized": {
       "title": "Vaihdetaanko jakotapaa?",
@@ -1088,7 +1095,15 @@
       "done": "Valmis",
       "yourTime": "paikallinen aikasi",
       "invalidDate": "Anna kelvollinen päivämäärä.",
-      "invalidTime": "Anna kelvollinen kellonaika (HH:mm)."
+      "invalidTime": "Anna kelvollinen kellonaika (HH:mm).",
+      "hourLabel": "Tunti",
+      "minuteLabel": "Minuutti",
+      "periodLabel": "ap./ip.",
+      "timeWheelHint": "Aseta aika vierittämällä tai napauttamalla. Päivämäärä pysyy samana.",
+      "now": "Nyt",
+      "morning": "Aamu",
+      "midday": "Keskipäivä",
+      "evening": "Ilta"
     },
     "settlementTitle": "Tasausmaksu",
     "settlementHint": "{category}: Ei lasketa kuluksi kokonaissummiin, tilastoihin tai budjetteihin. Päivittää silti, kuka on velkaa kenelle.",
@@ -1132,7 +1147,8 @@
       "description": "Syötä lopullinen summa kaikkine kuluineen.",
       "impliedRate": "Laskennallinen kurssi: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Kategoriaehdotukset"
+    "otherSuggestions": "Kategoriaehdotukset",
+    "paidForItemizedEmptyHint": "Liitä osallistujat kohteisiin nähdäksesi kunkin osuuden."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Poista asiakirja",
@@ -1843,7 +1859,7 @@
       "generic": "Jokin meni vikaan. Yritä uudelleen.",
       "passwordPolicy": "Käytä vähintään 8 merkkiä, joissa on iso kirjain, pieni kirjain, numero ja erikoismerkki.",
       "magicLinkFailed": "Kirjautumislinkkiä ei voitu lähettää.",
-      "signupInviteRequired": "Tämä instanssi on vain kutsutuille. Käytä kutsulinkkiä tai pyydä jotakuta kutsumaan sinut ryhmään.",
+      "signupInviteRequired": "Rekisteröityminen on vain kutsutuille. Käytä kutsulinkkiä tai pyydä jotakuta kutsumaan sinut ryhmään.",
       "passkeyFailed": "Pääsyavaimella kirjautuminen epäonnistui. Yritä uudelleen tai käytä toista kirjautumistapaa."
     },
     "loading": "Ladataan…",
@@ -1853,14 +1869,14 @@
     "signInWithGithub": "Jatka GitHubilla",
     "legalNotice": "Jatkamalla hyväksyt <terms>käyttöehdot</terms> ja vahvistat, että olet lukenut <privacy>tietosuojailmoituksen</privacy>.",
     "inviteOnly": {
-      "message": "Tämä instanssi on vain kutsutuille. Käytä kutsulinkkiä tai pyydä jotakuta kutsumaan sinut ryhmään.",
+      "message": "Rekisteröityminen on vain kutsutuille. Käytä kutsulinkkiä tai pyydä jotakuta kutsumaan sinut ryhmään.",
       "useInvitedEmail": "Käytä sähköpostiosoitetta, jolla sinut kutsuttiin."
     },
     "signInWithX": "Jatka X:llä",
     "signInWithOidc": "Jatka: {name}",
     "signInAnonymously": "Nimetön",
     "lastUsed": "Viimeksi käytetty",
-    "emailAuthDisabled": "Sähköpostilla kirjautuminen on poistettu käytöstä tässä instanssissa. Käytä kertakirjautumista (SSO).",
+    "emailAuthDisabled": "Sähköpostilla kirjautuminen on poistettu käytöstä. Käytä kertakirjautumista (SSO).",
     "signInWithPasskey": "Kirjaudu pääsyavaimella"
   },
   "CompleteProfile": {
@@ -1984,7 +2000,7 @@
         "joined_zero": "{count} henkilöä on liittynyt toistaiseksi",
         "retry": "Yritä uudelleen"
       },
-      "emailDeliveryDisabled": "Sähköpostin lähetys on poistettu käytöstä tässä instanssissa. Kutsu luodaan silti ja se näkyy, kun kutsuttu kirjautuu sisään; käytä kutsulinkkiä, jotta hänellä on jotain avattavaa."
+      "emailDeliveryDisabled": "Sähköpostin lähetys on poistettu käytöstä. Kutsu luodaan silti ja se näkyy, kun kutsuttu kirjautuu sisään; käytä kutsulinkkiä, jotta hänellä on jotain avattavaa."
     },
     "invitations": {
       "title": "Odottavat kutsut",
@@ -2405,7 +2421,7 @@
       "masterDescription": "Poista käytöstä mykistääksesi kaikki sähköposti- ja push-ilmoitukset. Luokkakohtaiset valintasi säilyvät ennallaan.",
       "emailAddToEnable": "Lisää vahvistettu sähköposti vastaanottaaksesi ilmoituksia postilaatikkoosi.",
       "emailAddLink": "Lisää sähköposti",
-      "emailDeliveryDisabled": "Sähköpostin lähetys on poistettu käytöstä tässä instanssissa. Sähköpostivalintasi tallennetaan, mutta niitä ei lähetetä ennen kuin ylläpitäjä määrittää sähköpostin."
+      "emailDeliveryDisabled": "Sähköpostin lähetys on poistettu käytöstä. Sähköpostivalintasi tallennetaan, mutta niitä ei lähetetä ennen kuin sähköposti on määritetty."
     },
     "preferences": {
       "title": "Sovellusasetukset",
@@ -2424,6 +2440,22 @@
       "mascotOptions": {
         "off": "Pois käytöstä",
         "bill": "Bill-kuitti"
+      },
+      "groupTabs": "Ryhmän välilehdet",
+      "groupTabsHelp": "Valitse, mitkä välilehdet näkyvät jokaisessa ryhmässä ja missä järjestyksessä.",
+      "groupTabsCustomize": "Muokkaa",
+      "groupTabsSave": "Tallenna",
+      "groupTabsDiscard": "Hylkää",
+      "groupTabsReset": "Palauta oletukset",
+      "groupTabsHide": "Piilota {name}",
+      "groupTabsShow": "Näytä {name}",
+      "groupTabsMoveUp": "Siirrä {name} ylöspäin",
+      "groupTabsMoveDown": "Siirrä {name} alaspäin",
+      "deleteConfirmation": "Kulun poistovahvistus",
+      "deleteConfirmationHelp": "Nopea poisto kysyy vahvistusta kerran. Kirjoittamalla tehtävä poisto edellyttää kulun otsikon kirjoittamista ensin. Ryhmän poistaminen tai jäsenen poistaminen vaatii aina kirjoittamisen.",
+      "deleteConfirmationOptions": {
+        "standard": "Vahvistusikkuna",
+        "strict": "Vahvistus kirjoittamalla"
       }
     },
     "aiPreferences": {
@@ -2616,7 +2648,107 @@
       "backedUp": "Varmuuskopioitu",
       "removeWarning": "Tätä ei voi kumota. Laite ei enää kirjaa sinua sisään pääsyavaimella — voit rekisteröidä sen uudelleen milloin tahansa.",
       "removeLastWarning": "Tämä on viimeinen pääsyavaimesi. Jos se on ainoa kirjautumistapasi, poistaminen on estetty, kunnes olet tallentanut kirjautumislinkin tai lisännyt toisen kirjautumistavan.",
-      "anonymousHelpNoLink": "Tälle vierastilille ei ole tallennettu kirjautumislinkkiä. Luo sellainen alla olevalla kirjautumislinkkirivillä — se toimii millä tahansa laitteella."
+      "anonymousHelpNoLink": "Tälle vierastilille ei ole tallennettu kirjautumislinkkiä. Luo sellainen alla olevalla kirjautumislinkkirivillä — se toimii millä tahansa laitteella.",
+      "reauthTitle": "Kirjaudu uudelleen sisään lisätäksesi pääsyavaimen",
+      "reauthDescription": "Turvallisuutesi vuoksi pääsyavaimen lisääminen vaatii tuoreen kirjautumisen. Sinut kirjataan ulos, kirjaudut uudelleen sisään ja palaat takaisin tänne viimeistelläksesi.",
+      "reauthConfirm": "Kirjaudu uudelleen sisään",
+      "reauthAnonymousTitle": "Tallenna kirjautumislinkki ensin",
+      "reauthAnonymousDescription": "Tällä vierastilillä ei ole vielä kirjautumislinkkiä eikä pääsyavainta. Jos kirjaudut ulos nyt, menetät käyttöoikeuden lopullisesti — tallenna ensin kirjautumislinkki Kirjautumislinkki-osiossa ja palaa sitten lisäämään pääsyavain."
+    },
+    "deletion": {
+      "sectionTitle": "Vaaravyöhyke",
+      "sectionDescription": "Poista tilisi ja kaikki kirjautumistavat pysyvästi.",
+      "rowLabel": "Poista tili",
+      "rowDescription": "Poistaa profiilisi, istuntosi ja asetuksesi 48 tunnin odotusajan jälkeen. Jaetut kulut jäävät muiden jäsenten ryhmiin ilman henkilötietojasi.",
+      "open": "Poista tili…",
+      "scheduledTitle": "Tilin poisto ajastettu",
+      "scheduledDescription": "Poistaminen on ajastettu alkamaan aikaisintaan {date}. Tilisi pysyy aktiivisena siihen asti. Ryhmät, jäsenet ja kulut voivat muuttua odotusaikana; valintasi koskevat niiden tilaa poistamishetkellä. Voit peruuttaa poistamisen sen alkamiseen asti. Vahvistusviesti lähetettiin osoitteeseen {email}.",
+      "cancel": "Peruuta poisto",
+      "cancelling": "Perutaan…",
+      "cancelled": "Tilin poisto peruttu.",
+      "dialogTitle": "Ajastetaanko tilin poistaminen?",
+      "dialogDescription": "Tämä ajastaa poistamisen 48 tunnin odotusajan jälkeen; nyt ei poisteta mitään. Voit peruuttaa poistamisen sen alkamiseen asti. Valintasi koskevat senhetkisiä ryhmiä ja saldoja. Kun poistaminen alkaa, sitä ei voi kumota.",
+      "farewellTitle": "Harmi, että lähdet",
+      "farewellBody": "Jos voimme tehdä jotain, jotta jäisit, <feedbackLink>jaa palautteesi</feedbackLink> — siihen menee minuutti ja se auttaa meitä kehittymään.",
+      "groupsTitle": "Mitä ryhmillesi tapahtuu",
+      "leaveGroup": "Poistut ryhmästä “{name}”.",
+      "deleteGroup": "“{name}” poistetaan pysyvästi — olet sen viimeinen jäsen.",
+      "lastAdmin": "Olet ryhmän “{name}” viimeinen ylläpitäjä — toinen jäsen ylennetään automaattisesti.",
+      "settleBalances": "Ryhmän “{name}” tasaamattomat saldot tasataan automaattisesti.",
+      "friendLedger": "Kaverisaldosi {name}n kanssa on tasattu ja suljettu.",
+      "friendLedgerUnnamed": "Kaverisaldosi on tasattu ja suljettu.",
+      "friendLedgerFallback": "kaverisaldo",
+      "noGroups": "Et ole minkään ryhmän jäsen.",
+      "accessTitle": "Kirjautuminen ja kutsut",
+      "pendingInvites_one": "Poistamisen yhteydessä perutaan {count} lähettämäsi odottava kutsu.",
+      "pendingInvites_other": "Poistamisen yhteydessä perutaan {count} lähettämääsi odottavaa kutsua.",
+      "keepNameLabel": "Säilytä nimeni jaetussa historiassa",
+      "keepNameDescription": "Jaetuissa kuluissa näkyy edelleen “{name}”. Muuten nimesi korvataan kaikkialla tekstillä “Poistettu jäsen”.",
+      "customNameLabel": "Säilytettävä nimi",
+      "settleLabel": "Merkitse saldot tasatuiksi poistamisen yhteydessä",
+      "settleDescription": "Loput saldot tasataan automaattisesti. Muussa tapauksessa ne säilyvät korvikenimelläsi.",
+      "leaveBalances": "Ryhmän “{name}” tasaamattomat saldot pysyvät ennallaan.",
+      "friendLeaveBalances": "Saldosi {name}n kanssa pysyy sellaisenaan.",
+      "confirmWord": "POISTA",
+      "ackLabel": "Ymmärrän, että tämä on pysyvää ja että jaetut kulut jäävät muiden jäsenten ryhmiin ilman henkilötietojani.",
+      "exportHint": "Haluatko kopion ensin? <exportLink>Vie varmuuskopio</exportLink> ennen kuin jatkat.",
+      "schedule": "Ajasta poisto",
+      "scheduling": "Ajastetaan…",
+      "scheduled": "Poisto ajastettu. Tarkista sähköpostisi, niin voit tarkastella tai peruuttaa.",
+      "dialogCancel": "Pidä tilini",
+      "reauthTitle": "Kirjaudu uudelleen sisään poistaaksesi tilisi",
+      "reauthDescription": "Turvallisuutesi vuoksi tilin poistaminen vaatii tuoreen kirjautumisen. Sinut kirjataan ulos, kirjaudut uudelleen sisään ja palaat takaisin tänne viimeistelläksesi.",
+      "reauthConfirm": "Kirjaudu uudelleen sisään",
+      "errors": {
+        "generic": "Jotain meni pieleen. Yritä uudelleen.",
+        "loadFailed": "Poiston tietoja ei voitu ladata.",
+        "emailMismatch": "Kirjoittamasi sähköposti ei vastaa tilisi sähköpostia.",
+        "alreadyRequested": "Tälle tilille on jo vireillä poistopyyntö.",
+        "sessionNotFresh": "Istuntosi on liian vanha tähän toimintoon. Kirjaudu uudelleen sisään ja yritä sitten uudelleen.",
+        "jobsDisabled": "Tilin poistaminen vaatii taustatyöntekijän, joka on poistettu käytöstä tässä ympäristössä.",
+        "ackRequired": "Vahvista ensin, että ymmärrät seuraukset.",
+        "invalidDisplayName": "Syötä 1–100 merkin pituinen nimi.",
+        "cancelFailed": "Poistoa ei voitu peruuttaa. Yritä uudelleen."
+      },
+      "groupsToDeleteTitle": "Ryhmät, jotka poistetaan",
+      "groupsToDeleteDescription": "Poistamisen yhteydessä poistetaan pysyvästi ryhmät, joissa olet edelleen viimeinen aktiivinen jäsen.",
+      "groupsToLeaveTitle": "Ryhmät, joista lähdet",
+      "groupsToLeaveDescription": "Poistamisen yhteydessä poistut ryhmistä, joissa on edelleen muita aktiivisia jäseniä. Nämä ryhmät säilyvät muille.",
+      "friendsTitle": "Ystävät",
+      "friendsDescription": "Kahdenkeskiset saldosi näiden ystävien kanssa.",
+      "backToSettings": "Takaisin asetuksiin",
+      "pageTitle": "Poista tili",
+      "loading": "Ladataan poistamisen tietoja",
+      "choicesTitle": "Poistamiseen liittyvät valintasi",
+      "nameTitle": "Nimi jaetussa historiassa",
+      "removeNameLabel": "Korvaa nimeni tekstillä “Poistettu jäsen”",
+      "balancesTitle": "Jäljellä olevat saldot",
+      "keepBalancesLabel": "Säilytä jäljellä olevat saldot ennallaan",
+      "balanceExplanation": "Jos valitset tasauksen, tasausmerkinnät kirjataan, kun tilisi poistetaan. Rahaa ei siirretä. Muussa tapauksessa saldot säilyvät jaetussa historiassasi.",
+      "confirmationTitle": "Vahvista tilin poistaminen",
+      "retry": "Yritä uudelleen",
+      "pageDescription": "Ajasta tilisi poistaminen 48 tunnin odotusajan jälkeen. Tilisi pysyy aktiivisena poistamisen alkamiseen asti, ja voit peruuttaa sitä ennen.",
+      "reviewChoicesTitle": "Valintasi",
+      "consequencesTitle": "Mitä tapahtuu",
+      "reviewConfirmTitle": "Vahvista poistaminen",
+      "backupLink": "Vie varmuuskopio",
+      "keptNameExplanation": "Poistamisen yhteydessä jaetuissa kuluissa näkyy “{name}”. Profiilinimesi säilyy siihen asti ennallaan.",
+      "removedNameExplanation": "Poistamisen yhteydessä jaetuissa kuluissa näkyy “Poistettu jäsen”. Profiilinimesi säilyy siihen asti ennallaan.",
+      "keptBalancesExplanation": "Kun poistaminen alkaa, jäljellä olevat saldot säilyvät yhteisessä historiassasi, myös odotusaikana lisätyt kulut.",
+      "settledBalancesExplanation": "Poistamisen aikana tasausmerkinnät merkitsevät senhetkiset saldot tasatuiksi ryhmissä, joihin edelleen kuulut, myös arkistoiduissa ryhmissä. Saldot ryhmissä, joista olet jo poistunut tai joista sinut on poistettu, säilyvät ennallaan. Rahaa ei siirretä.",
+      "rowBalancesKept": "Jäljellä olevat saldot säilyvät ennallaan.",
+      "rowBalancesSettled": "Poistamishetken saldo merkitään tasatuksi.",
+      "rowAdmin": "Poistamisen yhteydessä toisesta jäsenestä tulee ylläpitäjä, jos olet edelleen viimeinen ylläpitäjä.",
+      "friendKept": "Saldosi säilyy ennallaan.",
+      "friendSettled": "Poistamisen yhteydessä senhetkinen saldosi merkitään tasatuksi ja kaverisaldo suljetaan.",
+      "accessExplanation": "Nämä kirjautumistavat lakkaavat toimimasta, kun tilisi on poistettu.",
+      "invitesTitle": "Odottavat kutsut",
+      "balanceUnavailable": "Saldo ei ole saatavilla",
+      "archivedBalancesKept": "Tämä arkistoitu ryhmä pysyy vain luku -tilassa. Jäljellä oleva saldosi säilytetään.",
+      "signInMethodsRemoved": "Nämä kirjautumistavat lakkaavat toimimasta: {methods}.",
+      "consequencesTiming": "Tämä yhteenveto kuvaa tilisi nykyistä tilaa. Ryhmät, jäsenet ja kulut voivat muuttua ennen poistamisen alkamista. Valintasi koskevat ryhmiä, joihin silloin kuulut, ja niiden senhetkisiä saldoja. Mitään tässä lueteltua ei tapahdu heti.",
+      "executingTitle": "Tilin poistaminen on alkanut",
+      "executingDescription": "Tilisi poistamista käsitellään. Osa muutoksista voi olla jo valmis, eikä poistamista voi peruuttaa tai kumota. Jos käsittely keskeytyy, sitä jatketaan valmiiden vaiheiden jälkeen."
     }
   },
   "Activities": {
@@ -2643,7 +2775,9 @@
       },
       "recurringCreated": "{participant} loi toistuvan kulun ”{title}”",
       "stopped": "{participant} pysäytti toistuvan kulun {title}",
-      "commented": "{participant} kommentoi kulua {title}: “{excerpt}”"
+      "commented": "{participant} kommentoi kulua {title}: “{excerpt}”",
+      "yourShare": "Osuutesi:",
+      "notInvolved": "Et ole osallisena"
     },
     "group": {
       "updated": "{participant} päivitti ryhmän asetuksia",
@@ -2656,7 +2790,11 @@
         "currencyCode": "Valuuttakoodi",
         "linkedParticipant": "Linkitetty osallistuja",
         "subgroupsEnabled": "Alaryhmät",
-        "publicViewLink": "Julkinen vain katseluun tarkoitettu linkki"
+        "publicViewLink": "Julkinen vain katseluun tarkoitettu linkki",
+        "emoji": "Emoji",
+        "color": "Väri",
+        "subgroups": "Alaryhmät",
+        "splitPresets": "Jakomallit"
       }
     },
     "member": {
@@ -2686,7 +2824,16 @@
       "imported_other": "{participant} toi {count} kulua"
     },
     "participant": {
-      "removed": "{participant} poisti {target} ryhmästä"
+      "removed": "{participant} poisti {target} ryhmästä",
+      "added": "{participant} lisäsi {target} ryhmään"
+    },
+    "hiddenActivitiesShowLess": "Näytä vähemmän",
+    "hiddenActivities_one": "{count} piilotettu sinuun liittymätön toiminto",
+    "hiddenActivities_other": "{count} piilotettua sinuun liittymätöntä toimintoa",
+    "viewMode": {
+      "label": "Tapahtumien näkymä",
+      "forYou": "Sinulle",
+      "all": "Kaikki"
     }
   },
   "OfflineBanner": {
@@ -2764,9 +2911,6 @@
   },
   "BulkCategorize": {
     "title": "Joukkokategorisointi",
-    "calibrationTitle": "Vaihe 1 — Kalibrointi",
-    "calibrationDescription": "Jokainen vahvistamasi esimerkki auttaa tekoälyä parantamaan seuraavia ehdotuksiaan. Se voi olla valmis yhden kierroksen jälkeen tai pyytää lisää esimerkkejä.",
-    "roundCount": "Kierros {round} / {max}",
     "confidence": {
       "high": "Korkea",
       "medium": "Kohtalainen",
@@ -2827,7 +2971,137 @@
     "doneTitle": "Kategoriat tallennettu",
     "expenseColumn": "Kulu",
     "categoryColumn": "Kategoria",
-    "confidenceColumn": "Varmuus"
+    "confidenceColumn": "Varmuus",
+    "simpleDescription": "Tarkista Yleinen-kategorian kulujen kategoriavastaavuudet ja tallenna valintasi.",
+    "generateSuggestions": "Ehdota kategorioita",
+    "backToStart": "Takaisin",
+    "chooseMode": "Valitse, miten kulut luokitellaan",
+    "localMode": "Sanakirja ja historia",
+    "localModeDescription": "Käyttää tämän ryhmän kategoriahistoriaa ja sisäänrakennettua sanakirjaa.",
+    "startRun": "Aloita luokittelu",
+    "noCategory": "Jätä luokittelematta",
+    "progressTitle": "Luokitellaan kuluja",
+    "progressDescription": "Voit poistua sivulta ja palata myöhemmin. Edistymisesi tallennetaan.",
+    "progressCount": "{categorized} / {total} kulua luokiteltu",
+    "applyProgressTitle": "Tallennetaan kategorioita",
+    "reviewTitle": "Tarkista ehdotukset",
+    "reviewSummary": "{suggested} ehdotusta {total} luokittelemattomasta kulusta",
+    "sourceLocal": "Paikallinen",
+    "saveSelected": "Tallenna valitut kategoriat",
+    "retry": "Yritä uudelleen",
+    "restart": "Aloita uusi ajo",
+    "failed": "Ajo pysähtyi: {message}",
+    "savedSummary": "{applied} muutettu, {skipped} ohitettu",
+    "selectedCount": "{count} valittu",
+    "selectAll": "Valitse kaikki",
+    "clearAll": "Poista valinnat",
+    "discardRun": "Hylkää ajo",
+    "partialSaveNotice": "Jotkin kategoriat on ehkä jo tallennettu. Ajon hylkääminen ei kumoa näitä muutoksia.",
+    "restartOlderRunTitle": "Aloita uusi luokitteluajo",
+    "restartOlderRunDescription": "Tämä aiempi ajo käytti edellistä tarkistusnäkymää. Aloita alusta tarkistaaksesi kaikki kulut yhdessä.",
+    "runningMatches": "{count} / {total} kululla on toistaiseksi kategoriaehdotus",
+    "failedTitle": "Luokittelu pysähtyi",
+    "reviewWorkload": "{total} kulua Yleinen-kategoriassa · {selected} valittu luokiteltavaksi · {general} jää Yleinen-kategoriaan",
+    "categoryChoices": "Kategoriavalinnat",
+    "moreCategories": "Valitse toinen kategoria",
+    "saveCount": "Tallenna {count} kategoriaa",
+    "finishWithoutChanges": "Valmis ilman muutoksia",
+    "completionSummary": "Ajo valmis: {changed} / {total} kulua muutettu. {remaining} kulua jää Yleinen-kategoriaan.",
+    "viewExpenses": "Näytä kulut",
+    "countLoading": "Lasketaan luokittelemattomia kuluja…",
+    "nothingToCategorize": "Luokittelemattomia kuluja ei ole.",
+    "startingCount": "{count} kulua on parhaillaan Yleinen-kategoriassa valmiina tarkistettavaksi.",
+    "countError": "Luokittelemattomien kulujen laskeminen epäonnistui. Lataa sivu uudelleen ja yritä uudelleen.",
+    "keepGeneral": "Yleinen · jätä luokittelematta",
+    "calibrationRoundTitle": "Kalibrointikierros {round}",
+    "calibrationLoading": "Valmistellaan monipuolista otosta kuluista…",
+    "calibrationReviewDescription": "Tarkista ja korjaa nämä {count} kulua. Valinnat säilyvät tässä ajossa, kunnes tallennat lopuksi.",
+    "confirmRound": "Vahvista kierros",
+    "roundSummaryTitle": "Kierros {round} tarkistettu",
+    "roundSummaryDescription": "{reviewed} tarkistettu · {categorized} alustavasti luokiteltu · {general} jätetty Yleinen-kategoriaan",
+    "roundQuality": "Alkuperäiset ehdotukset vastasivat {accuracy} % valinnoistasi; korjasit {corrections}.",
+    "categorizeRemaining": "Luokittele jäljellä olevat kulut",
+    "nextRound": "Tarkista toinen otos",
+    "tableLabel": "Luokiteltavat kulut",
+    "dateColumn": "Päivämäärä",
+    "amountColumn": "Summa",
+    "rerunSuggestions": "Suorita ehdotukset uudelleen",
+    "roundQualityWithSuggestions": "{accepted} / {proposed} ehdotetusta kategoriasta hyväksytty · {changed} muutettu · {missed} vastaavuutta löytyi Yleinen-kategoriasta",
+    "roundQualityNoSuggestions": "Ei ehdotettuja kategorioita · {missed} vastaavuutta löytyi Yleinen-kategoriasta · {abstained} jätetty Yleinen-kategoriaan",
+    "rerunChanged": "Muutit {changed} / {proposed} ehdotetusta kategoriasta.",
+    "rerunAssignedSingle": "Annoit kategorian 1 kuluun, joka oli jäänyt Yleinen-kategoriaan.",
+    "rerunAssignedMultiple": "Annoit kategorian {count} kululle, jotka olivat jääneet Yleinen-kategoriaan.",
+    "rerunPotentialSingle": "Muutoksesi voivat parantaa 1 jäljellä olevan Yleinen-kulun vastaavuutta. Suorita ehdotukset uudelleen, jos haluat uuden kierroksen.",
+    "rerunPotentialMultiple": "Muutoksesi voivat parantaa {count} jäljellä olevan Yleinen-kulun vastaavuuksia. Suorita ehdotukset uudelleen, jos haluat uuden kierroksen.",
+    "rerunEligible": "Soveltuu uudelle kierrokselle: Yleinen {general} · epävarmat automaattiset vastaavuudet {uncertain}. Korjauksesi voivat parantaa näitä ehdotuksia.",
+    "rerunNoEligible": "Uudelleen suoritettavia koskemattomia Yleinen-kuluja tai epävarmoja automaattisia vastaavuuksia ei ole jäljellä. Korjauksesi sisältyvät silti tallentamiisi kategorioihin.",
+    "rerunAlreadyUsed": "Viimeisimmät korjauksesi on jo käytetty näissä ehdotuksissa. Tee uusi korjaus suorittaaksesi ne uudelleen.",
+    "highMatch": "Korkea vastaavuus",
+    "mediumMatch": "Kohtalainen vastaavuus",
+    "lowMatch": "Matala vastaavuus",
+    "belowMatchThreshold": "Vastaavuuskynnyksen alapuolella",
+    "refiningTitle": "Tarkennetaan epävarmoja vastaavuuksia",
+    "runLimitSummary": "Tämä ajo sisältää 10 000 kulua. {count} Yleinen-kategorian kulua lisää voidaan luokitella toisessa ajossa tallentamisen jälkeen.",
+    "pageLoading": "Ladataan kuluja…",
+    "pageLoadError": "Kulujen lataaminen epäonnistui.",
+    "pageRetry": "Yritä uudelleen",
+    "pageCount": "Näytetään {loaded} / {total} kulua",
+    "ledgerAmountNotice": "Summat näytetään ryhmän valuutassa.",
+    "viewExpenseDetails": "Näytä kulun tiedot",
+    "reviewFilterLabel": "Näytä kulut",
+    "filterAll": "Kaikki {count}",
+    "filterGeneral": "Yleinen {count}",
+    "improveSuggestions": "Paranna jäljellä olevia ehdotuksia",
+    "rerunInfoLabel": "Tietoa ehdotusten parantamisesta",
+    "preparingNextStage": "Valmistellaan seuraavaa vaihetta",
+    "rerunProgressTitle": "Päivitetään ehdotuksia",
+    "progressPreparing": "Valmistellaan kuluja…",
+    "noGeneralRows": "Tässä tarkistuksessa ei ole enää Yleinen-kategorian kuluja.",
+    "discardConfirmationTitle": "Hylätäänkö tämä luokitteluajo?",
+    "discardConfirmationDescription": "Tämä poistaa ajon, sen ehdotukset ja sinun tai muiden ylläpitäjien tekemät valinnat. Kulujen kategorioita ei muuteta.",
+    "discardConfirmationCancel": "Säilytä ajo",
+    "progressCountDescription": "Vain vahvistetut kategoriat sekä kohtalaiset ja korkeat vastaavuudet lasketaan; Yleinen-kategoriaa ja heikkoja vastaavuuksia ei lasketa.",
+    "systemOneMode": "System One -malli",
+    "systemOneModeDescription": "Käytä System One -päätösmallia jokaiselle kululle ja hyödynnä vihjeinä tämän ryhmän luokiteltuja kuluja sekä tarkistamiasi valintoja. TypeSafe Jev on yksi tällainen malli.",
+    "systemOneUnavailable": "System One ei ole käytettävissä. Sanakirja ja historia on edelleen käytettävissä.",
+    "systemOneConfidence": "System Onen luottamus: {confidence}%",
+    "systemOneOptionProbability": "System One -vaihtoehdon todennäköisyys: {probability}%",
+    "overallProgress": "Kokonaisedistyminen",
+    "fullPassProcessed": "{processed} / {total} kulua käsitelty",
+    "stageProcessed": "{processed} / {total} kulua käsitelty tässä vaiheessa",
+    "saveSkipped": "{count} kulua ohitettiin, koska ne muuttuivat.",
+    "sharedRunNotice": "Tämä ajo on jaettu muiden ryhmän ylläpitäjien kanssa. Kaikki näkevät samat ehdotukset.",
+    "saveConflictTitle": "{count} kulua on muuttunut tarkistuksen aloittamisen jälkeen",
+    "saveConflictDescription": "Joku muokkasi näitä kuluja tai muutti niiden kategorian tämän ajon ulkopuolella. Tallenna muut kulut tai muokkaa kategorioita uudelleen ja yritä tallentaa vielä kerran.",
+    "saveConflictMore": "Ja {count} lisää.",
+    "saveOtherExpenses": "Tallenna muut kulut",
+    "receiptTitles": {
+      "freshMarket": "Tuoretori",
+      "greenGrocer": "Vihanneskauppa",
+      "fruitStand": "Hedelmäkoju",
+      "cornerBistro": "Kulmabistro",
+      "noodleHouse": "Nuudeliravintola",
+      "cafeLunch": "Kahvilalounas",
+      "flightTicket": "Lentolippu",
+      "airlineBaggage": "Lentolaukku",
+      "boardingPass": "Maihinnousukortti",
+      "homeSupplies": "Kotitarvikkeet",
+      "hardwareShop": "Rautakauppa",
+      "cleaningGoods": "Siivoustarvikkeet",
+      "cinemaTickets": "Elokuvaliput",
+      "movieNight": "Elokuvailta",
+      "filmFestival": "Elokuvafestivaali",
+      "organicMarket": "Luomukauppa",
+      "bakeryRun": "Leipomoreissu",
+      "sushiBar": "Sushibaari",
+      "pizzaNight": "Pizzailta",
+      "airportLounge": "Lentokenttälounge",
+      "extraLegroom": "Lisäjalkatila",
+      "laundryDetergent": "Pyykinpesuaine",
+      "storageBoxes": "Säilytyslaatikot",
+      "popcornCombo": "Popcornsetti",
+      "streamingRental": "Suoratoistovuokra"
+    }
   },
   "ExpensePreview": {
     "title": "Kulun esikatselu",
@@ -2873,10 +3147,14 @@
         "deleteGroup": "Poista ryhmä <target>{name}</target> pysyvästi kirjoittamalla sen nimi täsmälleen alla näytetyssä muodossa.",
         "deleteExpense": "Poista kulu <target>{name}</target> pysyvästi kirjoittamalla sen otsikko täsmälleen alla näytetyssä muodossa.",
         "deleteRecurringExpense": "Vahvista kohteen <target>{name}</target> poistaminen kirjoittamalla kulun otsikko täsmälleen alla näytetyssä muodossa.",
-        "removeParticipant": "Poista <target>{name}</target> tästä ryhmästä kirjoittamalla nimi täsmälleen alla näytetyssä muodossa."
+        "removeParticipant": "Poista <target>{name}</target> tästä ryhmästä kirjoittamalla nimi täsmälleen alla näytetyssä muodossa.",
+        "deleteAccount": "Poista tilisi pysyvästi kirjoittamalla <target>{name}</target> täsmälleen alla näytetyssä muodossa."
       },
       "placeholder": "Kirjoita ”{name}” tähän",
-      "mismatch": "Ei täsmää. Kirjoita {name} täsmälleen."
+      "mismatch": "Ei täsmää. Kirjoita {name} täsmälleen.",
+      "settingsNoteLink": "Vaihda tilin asetuksissa",
+      "settingsNoteLead": "Haluatko ohittaa kirjoittamisen?",
+      "settingsNoteTail": "käyttääksesi tavallista vahvistusvalintaikkunaa."
     }
   },
   "Theme": {
@@ -2900,7 +3178,7 @@
     "failedDescription": "Laitteen rekisteröinti epäonnistui. Sähköpostiin määritetyt ilmoitukset toimitetaan edelleen sähköpostitse; vain pushille valittuja ei ohjata sähköpostiin.",
     "emailUsage": "Saat sähköpostitse vain ilmoitukset, jotka on määritetty sähköpostiin, kunnes otat laitteen käyttöön. Voit sallia ilmoitukset selaimesi asetuksissa ja yrittää uudelleen asetuksissa.",
     "done": "Valmis",
-    "emailDeliveryDisabled": "Sähköpostin lähetys on poistettu käytöstä tässä instanssissa, joten sähköposti-ilmoitukset eivät tavoita sinua. Ota push-ilmoitukset käyttöön tällä laitteella, jotta saat päivityksiä jatkossakin."
+    "emailDeliveryDisabled": "Sähköpostin lähetys on poistettu käytöstä, joten sähköposti-ilmoitukset eivät tavoita sinua. Ota push-ilmoitukset käyttöön tällä laitteella, jotta saat päivityksiä jatkossakin."
   },
   "Unsubscribe": {
     "title": "Poistetaanko nämä sähköpostit käytöstä?",
@@ -3371,7 +3649,8 @@
     "hintTapToAddExpense": "Olen {name} — napauta minua lisätäksesi kulun.",
     "hintTapToCreateGroup": "Olen {name} — napauta minua luodaksesi ryhmän.",
     "billName": "Bill",
-    "offlineMessage": "En voi luoda mitään, kun et ole yhteydessä."
+    "offlineMessage": "En voi luoda mitään, kun et ole yhteydessä.",
+    "serverUnreachableMessage": "En saa yhteyttä Spliit-palvelimeen juuri nyt — yhteytesi näyttää toimivan, joten vika on meidän."
   },
   "CreateSettlement": {
     "description": "Tarkista maksu ennen sen tallentamista.",
@@ -3422,7 +3701,18 @@
       "existingPasskeyTitle": "Oletko jo rekisteröinyt pääsyavaimen?",
       "existingPasskeyDescription": "Kirjaudu takaisin sisään jonkin rekisteröidyn laitteesi pääsyavaimella.",
       "passkeySignIn": "Kirjaudu pääsyavaimella",
-      "passkeySignInError": "Tällä pääsyavaimella ei voitu kirjautua. Yritä uudelleen tai käytä kirjautumislinkkiäsi."
+      "passkeySignInError": "Tällä pääsyavaimella ei voitu kirjautua. Yritä uudelleen tai käytä kirjautumislinkkiäsi.",
+      "passkeyNameLabel": "Nimeä tämä pääsyavain (valinnainen)",
+      "passkeyNamePlaceholder": "esim. MacBook Touch ID",
+      "nameTitle": "Valitse näyttönimi",
+      "nameDescription": "Näkyy pääsyavaimessasi ja ryhmissäsi. Voit muuttaa sitä myöhemmin.",
+      "nameLabel": "Näyttönimi",
+      "namePlaceholder": "Nimesi",
+      "nameSave": "Tallenna ja jatka",
+      "nameSaving": "Tallennetaan…",
+      "nameRequired": "Syötä näyttönimi.",
+      "nameTooShort": "Nimen on oltava vähintään 2 merkkiä pitkä.",
+      "nameError": "Näyttönimeä ei voitu tallentaa. Yritä uudelleen."
     },
     "onboarding": {
       "title": "Tallenna kirjautumislinkki",
@@ -3561,6 +3851,29 @@
         "review": {
           "title": "Tarkista ja tuo",
           "detail": "Tarkista kaksoiskappaleet ja vahvista tuonti."
+        }
+      }
+    },
+    "categorize": {
+      "title": "Luokittele kulut",
+      "description": "Ehdota System Onen avulla luokkia olemassa oleville luokittelemattomille kuluille. Tarkista jokainen muutos ennen tallentamista.",
+      "start": "Luokittele kulut",
+      "steps": {
+        "choose": {
+          "title": "Valitse menetelmä",
+          "detail": "Käytä sanakirjaa ja historiaa tai System One -päätösmallia."
+        },
+        "calibrate": {
+          "title": "Tarkista pieniä otoksia",
+          "detail": "Korjaa ehdotuksia, jotta seuraava kierros oppii ryhmäsi kategoriat."
+        },
+        "review": {
+          "title": "Tarkista jokainen kulu",
+          "detail": "Yleinen-kategorian kulut näkyvät ensin koko taulukossa."
+        },
+        "save": {
+          "title": "Tallenna kategoriat",
+          "detail": "Kulut muuttuvat vasta, kun vahvistat lopullisen tarkistuksen."
         }
       }
     }
@@ -4104,7 +4417,8 @@
       "valuesRecomputedTitle": "Arvot laskettu uudelleen",
       "viewExpenses": "Näytä kulut",
       "waitDuplicate": "Odota kaksoiskappaletarkistuksen valmistumista ennen tuontia.",
-      "invalidRowTitle": "Virheellinen tuontirivi"
+      "invalidRowTitle": "Virheellinen tuontirivi",
+      "categorizeWithSystemOne": "Ehdota luokittelemattomille kuluille luokkia System Onen avulla"
     }
   },
   "Sponsor": {
@@ -4259,5 +4573,26 @@
     "expenseMissing": "Tämä kulu ei ole tämän laitteen latauksessa. Yhdistä uudempien/vanhempien kulujen tarkistamiseksi.",
     "groupMissing": "Tämä ryhmä ei ole vielä latautunut.",
     "balancesStale": "Saldot voivat olla vanhentuneita."
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit ei ole käytettävissä",
+    "description": "Spliit-palvelimeen ei saada yhteyttä juuri nyt. Yhteytesi näyttää toimivan — yritä hetken kuluttua uudelleen.",
+    "retry": "Yritä uudelleen"
+  },
+  "ApiStatusBanner": {
+    "message": "Spliitiin ei saada yhteyttä juuri nyt. Yhteytesi näyttää toimivan — vika on meidän päässämme.",
+    "statusLink": "Tarkista tila"
+  },
+  "AccountDeletionBanner": {
+    "scheduled": "Tilin poistaminen on ajastettu ajankohtaan {date}.",
+    "review": "Tarkista tai peruuta poistaminen",
+    "executing": "Tilin poistaminen on alkanut.",
+    "viewStatus": "Näytä poistamisen tila"
+  },
+  "Updates": {
+    "title": "Päivitykset",
+    "latest": "Uutta",
+    "viewAll": "Näytä kaikki päivitykset",
+    "dismiss": "Selvä"
   }
 }

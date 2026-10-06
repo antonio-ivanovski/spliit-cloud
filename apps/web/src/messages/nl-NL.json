@@ -81,13 +81,14 @@
     "signOutOffline": "Maak verbinding om uit te loggen"
   },
   "Footer": {
-    "madeIn": "Gemaakt met liefde door de open-source community ❤️",
+    "madeIn": "Gemaakt met liefde door de <github>open-source community</github> ❤️",
     "legalNavigation": "Juridische links",
     "privacy": "Privacy",
     "terms": "Voorwaarden",
     "imprint": "Colofon",
     "sponsor": "Sponsoring",
-    "timeLabel": "Tijd van de dag"
+    "timeLabel": "Tijd van de dag",
+    "status": "Status"
   },
   "Expenses": {
     "title": "Uitgaven",
@@ -234,7 +235,9 @@
       "showLess": "Minder tonen"
     },
     "copyToast": "Kopiëren gestart. De bestaande uitgavedetails worden gebruikt om een nieuwe aan te maken.",
-    "incomeBadge": "Inkomen"
+    "incomeBadge": "Inkomen",
+    "paidBySingle": "Betaald door <strong>{paidBy}</strong> · betaald voor <paidFor></paidFor>",
+    "paidByMultipleSingle": "Betaald door <paidByNames></paidByNames> · betaald voor <paidFor></paidFor>"
   },
   "Groups": {
     "myGroups": "Mijn groepen",
@@ -384,7 +387,8 @@
             "monthly": "maanden",
             "yearly": "jaren"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Categorieën voorstellen voor uitgaven zonder categorie met System One"
       },
       "Destination": {
         "heading": "Waar wil je <strong>{name}</strong> importeren? ({participantCount} deelnemers · {expenseCount} uitgaven)",
@@ -682,7 +686,9 @@
       "description": "Groepen kunnen nu een emoji naast hun naam tonen. We hebben {emoji} gezien in “{name}”.",
       "openSettings": "Groepsinstellingen openen",
       "notNow": "Niet nu"
-    }
+    },
+    "groupTabsHint": "Wil je de groepstabbladen anders ordenen of de groepstabbladen verbergen die je niet gebruikt?",
+    "groupTabsHintLink": "Tabbladen aanpassen in je accountinstellingen"
   },
   "GroupForm": {
     "title": "Groepsinformatie",
@@ -1076,7 +1082,8 @@
       "allItemsSplitEdit": "Verdeling van alle artikelen bewerken",
       "allItemsSplitModalTitle": "Verdeling voor alle artikelen",
       "remainderAllocationProportional": "Proportioneel aan artikelen",
-      "remainderProportionalHint": "Verdeel dit bedrag op basis van het itemsubtotaal van elke persoon. Handig voor belastingen en fooien."
+      "remainderProportionalHint": "Verdeel dit bedrag op basis van het itemsubtotaal van elke persoon. Handig voor belastingen en fooien.",
+      "errorExceedsAmountDetails": "Het itemtotaal ({itemsTotal}) is {excess} hoger dan het uitgavenbedrag."
     },
     "leaveItemized": {
       "title": "Verdeelmethode wijzigen?",
@@ -1112,7 +1119,15 @@
       "done": "Klaar",
       "yourTime": "jouw tijd",
       "invalidDate": "Voer een geldige datum in.",
-      "invalidTime": "Voer een geldige tijd in (HH:mm)."
+      "invalidTime": "Voer een geldige tijd in (HH:mm).",
+      "hourLabel": "Uur",
+      "minuteLabel": "Minuut",
+      "periodLabel": "a.m./p.m.",
+      "timeWheelHint": "Scroll of tik om de tijd in te stellen. De datum blijft hetzelfde.",
+      "now": "Nu",
+      "morning": "Ochtend",
+      "midday": "Middag",
+      "evening": "Avond"
     },
     "settlementTitle": "Verrekeningsbetaling",
     "settlementHint": "{category}: Telt niet mee als uitgave in totalen, statistieken of budgetten. Werkt nog steeds bij wie wie iets verschuldigd is.",
@@ -1156,7 +1171,8 @@
       "description": "Voer het uiteindelijke bedrag inclusief kosten in.",
       "impliedRate": "Afgeleide koers: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Categoriesuggesties"
+    "otherSuggestions": "Categoriesuggesties",
+    "paidForItemizedEmptyHint": "Wijs personen toe aan artikelen om ieders aandeel te zien."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Document verwijderen",
@@ -1871,7 +1887,7 @@
       "generic": "Er is iets misgegaan. Probeer het opnieuw.",
       "passwordPolicy": "Gebruik minstens 8 tekens met een hoofdletter, een kleine letter, een cijfer en een symbool.",
       "magicLinkFailed": "Kon de inloglink niet verzenden.",
-      "signupInviteRequired": "Deze instantie is alleen op uitnodiging. Gebruik een uitnodigingslink of vraag iemand om je uit te nodigen voor een groep.",
+      "signupInviteRequired": "Aanmelden is alleen mogelijk op uitnodiging. Gebruik een uitnodigingslink of vraag iemand om je uit te nodigen voor een groep.",
       "passkeyFailed": "Inloggen met passkey is mislukt. Probeer het opnieuw of gebruik een andere inlogmethode."
     },
     "loading": "Laden…",
@@ -1881,14 +1897,14 @@
     "signInWithGithub": "Doorgaan met GitHub",
     "legalNotice": "Door verder te gaan ga je akkoord met de <terms>algemene voorwaarden</terms> en erken je de <privacy>privacyverklaring</privacy>.",
     "inviteOnly": {
-      "message": "Deze instantie is alleen op uitnodiging. Gebruik een uitnodigingslink of vraag iemand om je uit te nodigen voor een groep.",
+      "message": "Aanmelden is alleen mogelijk op uitnodiging. Gebruik een uitnodigingslink of vraag iemand om je uit te nodigen voor een groep.",
       "useInvitedEmail": "Gebruik het e-mailadres waarmee je bent uitgenodigd."
     },
     "signInWithX": "Doorgaan met X",
     "signInWithOidc": "Doorgaan met {name}",
     "signInAnonymously": "Anoniem",
     "lastUsed": "Laatst gebruikt",
-    "emailAuthDisabled": "Inloggen met e-mail is uitgeschakeld op deze instantie. Gebruik single sign-on (SSO).",
+    "emailAuthDisabled": "Inloggen met e-mail is uitgeschakeld. Gebruik single sign-on (SSO).",
     "signInWithPasskey": "Inloggen met passkey"
   },
   "CompleteProfile": {
@@ -2012,7 +2028,7 @@
         "joined_zero": "{count} personen zijn tot nu toe lid geworden",
         "retry": "Opnieuw proberen"
       },
-      "emailDeliveryDisabled": "E-mailbezorging is uitgeschakeld op deze instantie. De uitnodiging wordt alsnog aangemaakt en verschijnt wanneer de genodigde inlogt; gebruik een uitnodigingslink zodat diegene iets kan openen."
+      "emailDeliveryDisabled": "E-mailbezorging is uitgeschakeld. De uitnodiging wordt alsnog aangemaakt en verschijnt wanneer de genodigde inlogt; gebruik een uitnodigingslink zodat diegene iets kan openen."
     },
     "invitations": {
       "title": "Openstaande uitnodigingen",
@@ -2437,7 +2453,7 @@
       "masterDescription": "Zet dit uit om alle e-mail- en pushmeldingen te dempen. Je keuzes per categorie blijven bewaard.",
       "emailAddToEnable": "Voeg een geverifieerd e-mailadres toe om meldingen in je inbox te ontvangen.",
       "emailAddLink": "E-mail toevoegen",
-      "emailDeliveryDisabled": "E-mailbezorging is uitgeschakeld op deze instantie. Je e-mailkeuzes worden wel opgeslagen, maar pas verzonden als de beheerder e-mail instelt."
+      "emailDeliveryDisabled": "E-mailbezorging is uitgeschakeld. Je e-mailkeuzes worden wel opgeslagen, maar pas verzonden als e-mail is ingesteld."
     },
     "preferences": {
       "title": "Appvoorkeuren",
@@ -2456,6 +2472,22 @@
       "mascotOptions": {
         "off": "Uit",
         "bill": "Bill, het bonnetje"
+      },
+      "groupTabs": "Groepstabbladen",
+      "groupTabsHelp": "Kies welke tabbladen worden weergegeven in elke groep, en in welke volgorde.",
+      "groupTabsCustomize": "Aanpassen",
+      "groupTabsSave": "Opslaan",
+      "groupTabsDiscard": "Weggooien",
+      "groupTabsReset": "Terugzetten naar standaard",
+      "groupTabsHide": "{name} verbergen",
+      "groupTabsShow": "{name} tonen",
+      "groupTabsMoveUp": "{name} omhoog verplaatsen",
+      "groupTabsMoveDown": "{name} omlaag verplaatsen",
+      "deleteConfirmation": "Bevestiging voor het verwijderen van uitgaven",
+      "deleteConfirmationHelp": "Snel verwijderen vraagt één keer om bevestiging. Verwijderen met typen vereist dat je eerst de titel van de uitgave typt. Een groep verwijderen of een lid verwijderen vereist altijd typen.",
+      "deleteConfirmationOptions": {
+        "standard": "Bevestigingsdialoog",
+        "strict": "Dialoog met typen"
       }
     },
     "aiPreferences": {
@@ -2648,7 +2680,107 @@
       "backedUp": "Back-up",
       "removeWarning": "Dit kan niet ongedaan worden gemaakt. Het apparaat logt je dan niet meer in met een passkey — je kunt het op elk moment opnieuw registreren.",
       "removeLastWarning": "Dit is je laatste passkey. Als dit je enige inlogmethode is, is verwijderen geblokkeerd totdat je een inloglink opslaat of een andere inlogmethode toevoegt.",
-      "anonymousHelpNoLink": "Er is geen inloglink opgeslagen voor dit gastaccount. Maak er een aan in de inloglinkrij hieronder — hij werkt op elk apparaat."
+      "anonymousHelpNoLink": "Er is geen inloglink opgeslagen voor dit gastaccount. Maak er een aan in de inloglinkrij hieronder — hij werkt op elk apparaat.",
+      "reauthTitle": "Log opnieuw in om een passkey toe te voegen",
+      "reauthDescription": "Voor je veiligheid vereist het toevoegen van een passkey een recente login. Je wordt uitgelogd, logt opnieuw in en komt direct hier terug om af te ronden.",
+      "reauthConfirm": "Opnieuw inloggen",
+      "reauthAnonymousTitle": "Bewaar eerst een inloglink",
+      "reauthAnonymousDescription": "Dit gastaccount heeft nog geen inloglink en nog geen passkey. Als je nu uitlogt, raak je voorgoed buitengesloten — bewaar eerst een inloglink in de sectie Inloglink en kom dan terug om een passkey toe te voegen."
+    },
+    "deletion": {
+      "sectionTitle": "Gevarenzone",
+      "sectionDescription": "Verwijder je account en elke inlogmethode definitief.",
+      "rowLabel": "Account verwijderen",
+      "rowDescription": "Verwijdert je profiel, sessies en instellingen na een bedenktijd van 48 uur. Gedeelde uitgaven blijven zonder je persoonlijke gegevens in de groepen van andere leden.",
+      "open": "Account verwijderen…",
+      "scheduledTitle": "Accountverwijdering gepland",
+      "scheduledDescription": "De verwijdering begint op zijn vroegst op {date}. Je account blijft actief tot die tijd. Groepen, leden en uitgaven kunnen tijdens het wachten veranderen; je keuzes gelden voor hun staat op het moment van verwijdering. Je kunt annuleren tot de verwijdering begint. Er is een bevestigingsmail verstuurd naar {email}.",
+      "cancel": "Verwijdering annuleren",
+      "cancelling": "Annuleren…",
+      "cancelled": "Accountverwijdering geannuleerd.",
+      "dialogTitle": "Accountverwijdering plannen?",
+      "dialogDescription": "Hiermee plan je de verwijdering na een wachttijd van 48 uur; er wordt nu niets verwijderd. Je kunt annuleren tot de verwijdering begint. Je keuzes gelden voor de groepen en saldi op dat moment. Zodra de verwijdering begint, kan deze niet ongedaan worden gemaakt.",
+      "farewellTitle": "Jammer dat je gaat",
+      "farewellBody": "Als we iets kunnen doen zodat je blijft, <feedbackLink>deel je feedback</feedbackLink> — het kost een minuutje en helpt ons verbeteren.",
+      "groupsTitle": "Wat er met je groepen gebeurt",
+      "leaveGroup": "Je verlaat “{name}”.",
+      "deleteGroup": "“{name}” wordt definitief verwijderd — je bent het laatste lid.",
+      "lastAdmin": "Je bent de laatste beheerder van “{name}” — een ander lid wordt automatisch gepromoveerd.",
+      "settleBalances": "Niet-verrekende saldi in “{name}” worden automatisch verrekend.",
+      "friendLedger": "Je vriendensaldo met {name} is verrekend en gesloten.",
+      "friendLedgerUnnamed": "Je vriendensaldo is verrekend en gesloten.",
+      "friendLedgerFallback": "een vriendensaldo",
+      "noGroups": "Je bent geen lid van een groep.",
+      "accessTitle": "Inloggen en uitnodigingen",
+      "pendingInvites_one": "Bij de verwijdering wordt {count} openstaande uitnodiging die je hebt verstuurd ingetrokken.",
+      "pendingInvites_other": "Bij de verwijdering worden {count} openstaande uitnodigingen die je hebt verstuurd ingetrokken.",
+      "keepNameLabel": "Mijn naam behouden in de gedeelde geschiedenis",
+      "keepNameDescription": "Gedeelde uitgaven blijven “{name}” tonen. Anders wordt je naam overal vervangen door “Verwijderd lid”.",
+      "customNameLabel": "Te behouden naam",
+      "settleLabel": "Saldi als verrekend markeren bij de verwijdering",
+      "settleDescription": "Resterende saldi worden automatisch verrekend. Anders blijven ze op je tijdelijke naam staan.",
+      "leaveBalances": "Niet-verrekende saldi in “{name}” blijven zoals ze zijn.",
+      "friendLeaveBalances": "Je saldo met {name} blijft zoals het is.",
+      "confirmWord": "VERWIJDEREN",
+      "ackLabel": "Ik begrijp dat dit definitief is en dat gedeelde uitgaven zonder mijn persoonlijke gegevens in de groepen van andere leden blijven staan.",
+      "exportHint": "Eerst een kopie bewaren? <exportLink>Exporteer een back-up</exportLink> voordat je doorgaat.",
+      "schedule": "Verwijdering plannen",
+      "scheduling": "Plannen…",
+      "scheduled": "Verwijdering gepland. Controleer je e-mail om te beoordelen of te annuleren.",
+      "dialogCancel": "Mijn account behouden",
+      "reauthTitle": "Log opnieuw in om je account te verwijderen",
+      "reauthDescription": "Voor je veiligheid vereist het verwijderen van je account een recente login. Je wordt uitgelogd, logt opnieuw in en komt direct hier terug om af te ronden.",
+      "reauthConfirm": "Opnieuw inloggen",
+      "errors": {
+        "generic": "Er is iets misgegaan. Probeer het opnieuw.",
+        "loadFailed": "De verwijderingsdetails konden niet worden geladen.",
+        "emailMismatch": "De getypte e-mail komt niet overeen met je account-e-mail.",
+        "alreadyRequested": "Er is al een verwijderingsverzoek voor dit account in behandeling.",
+        "sessionNotFresh": "Je sessie is te oud voor deze actie. Log opnieuw in en probeer het dan opnieuw.",
+        "jobsDisabled": "Voor het verwijderen van accounts is de achtergrondwerker nodig, die op deze installatie is uitgeschakeld.",
+        "ackRequired": "Bevestig eerst dat je de gevolgen begrijpt.",
+        "invalidDisplayName": "Voer een naam in van 1 tot 100 tekens.",
+        "cancelFailed": "De verwijdering kon niet worden geannuleerd. Probeer het opnieuw."
+      },
+      "groupsToDeleteTitle": "Groepen die worden verwijderd",
+      "groupsToDeleteDescription": "Bij de verwijdering worden groepen waarvan je nog steeds het laatste actieve lid bent permanent verwijderd.",
+      "groupsToLeaveTitle": "Groepen die je verlaat",
+      "groupsToLeaveDescription": "Bij de verwijdering verlaat je groepen die nog andere actieve leden hebben. Deze groepen blijven voor alle anderen bestaan.",
+      "friendsTitle": "Vrienden",
+      "friendsDescription": "Je één-op-één-saldi met deze vrienden.",
+      "backToSettings": "Terug naar instellingen",
+      "pageTitle": "Account verwijderen",
+      "loading": "Verwijderingsgegevens laden",
+      "choicesTitle": "Je keuzes voor verwijdering",
+      "nameTitle": "Naam in gedeelde geschiedenis",
+      "removeNameLabel": "Mijn naam vervangen door “Verwijderd lid”",
+      "balancesTitle": "Resterende saldi",
+      "keepBalancesLabel": "Resterende saldi ongewijzigd laten",
+      "balanceExplanation": "Als je kiest voor verrekenen, worden verrekeningen vastgelegd wanneer je account wordt verwijderd. Er wordt geen geld overgemaakt. Anders blijven de saldi in je gedeelde geschiedenis staan.",
+      "confirmationTitle": "Accountverwijdering bevestigen",
+      "retry": "Opnieuw proberen",
+      "pageDescription": "Plan de verwijdering van je account na een wachttijd van 48 uur. Je account blijft actief tot de verwijdering begint en je kunt vooraf annuleren.",
+      "reviewChoicesTitle": "Je keuzes",
+      "consequencesTitle": "Wat er gebeurt",
+      "reviewConfirmTitle": "Verwijdering bevestigen",
+      "backupLink": "Een back-up exporteren",
+      "keptNameExplanation": "Bij de verwijdering tonen gedeelde uitgaven “{name}”. Je profielnaam blijft tot die tijd ongewijzigd.",
+      "removedNameExplanation": "Bij de verwijdering tonen gedeelde uitgaven “Verwijderd lid”. Je profielnaam blijft tot die tijd ongewijzigd.",
+      "keptBalancesExplanation": "Wanneer de verwijdering begint, blijven resterende saldi in je gedeelde geschiedenis staan, inclusief uitgaven die tijdens de wachttijd zijn toegevoegd.",
+      "settledBalancesExplanation": "Tijdens de verwijdering markeren verrekeningen de saldi op dat moment als verrekend in groepen waarvan je nog lid bent, ook in gearchiveerde groepen. Saldi in groepen die je al hebt verlaten of waaruit je bent verwijderd blijven ongewijzigd. Er wordt geen geld overgemaakt.",
+      "rowBalancesKept": "Resterende saldi blijven zoals ze zijn.",
+      "rowBalancesSettled": "Het saldo op het moment van verwijdering wordt als verrekend gemarkeerd.",
+      "rowAdmin": "Bij de verwijdering wordt een ander lid beheerder als je nog steeds de laatste beheerder bent.",
+      "friendKept": "Je saldo blijft zoals het is.",
+      "friendSettled": "Bij de verwijdering wordt je saldo op dat moment als verrekend gemarkeerd en wordt het vriendensaldo gesloten.",
+      "accessExplanation": "Deze aanmeldmethoden werken niet meer zodra je account is verwijderd.",
+      "invitesTitle": "Openstaande uitnodigingen",
+      "balanceUnavailable": "Saldo niet beschikbaar",
+      "archivedBalancesKept": "Deze gearchiveerde groep blijft alleen-lezen. Je resterende saldo blijft behouden.",
+      "signInMethodsRemoved": "Deze aanmeldmethoden werken hierna niet meer: {methods}.",
+      "consequencesTiming": "Dit overzicht toont de huidige staat van je account. Groepen, leden en uitgaven kunnen veranderen voordat de verwijdering begint. Je keuzes gelden voor de groepen waarvan je dan lid bent en hun saldi op dat moment. Niets in dit overzicht gebeurt meteen.",
+      "executingTitle": "De accountverwijdering is begonnen",
+      "executingDescription": "Je account wordt verwijderd. Sommige wijzigingen kunnen al zijn voltooid en de verwijdering kan niet worden geannuleerd of ongedaan worden gemaakt. Als de verwerking wordt onderbroken, gaat deze verder na de voltooide stappen."
     }
   },
   "Activities": {
@@ -2675,7 +2807,9 @@
       },
       "recurringCreated": "{participant} heeft de terugkerende uitgave ‘{title}’ aangemaakt",
       "stopped": "{participant} is de terugkerende uitgave {title} gestopt",
-      "commented": "{participant} plaatste een opmerking bij uitgave {title}: “{excerpt}”"
+      "commented": "{participant} plaatste een opmerking bij uitgave {title}: “{excerpt}”",
+      "yourShare": "Jouw aandeel:",
+      "notInvolved": "Je bent hier niet bij betrokken"
     },
     "group": {
       "updated": "{participant} werkte de groepsinstellingen bij",
@@ -2688,7 +2822,11 @@
         "currencyCode": "Valutacode",
         "linkedParticipant": "Gekoppelde deelnemer",
         "subgroupsEnabled": "Subgroepen",
-        "publicViewLink": "Openbare alleen-lezen link"
+        "publicViewLink": "Openbare alleen-lezen link",
+        "emoji": "Emoji",
+        "color": "Kleur",
+        "subgroups": "Subgroepen",
+        "splitPresets": "Deelvoorinstellingen"
       }
     },
     "member": {
@@ -2722,7 +2860,20 @@
       "imported_other": "{participant} importeerde {count} uitgaven"
     },
     "participant": {
-      "removed": "{participant} verwijderde {target} uit de groep"
+      "removed": "{participant} verwijderde {target} uit de groep",
+      "added": "{participant} voegde {target} toe aan de groep"
+    },
+    "hiddenActivitiesShowLess": "Minder tonen",
+    "hiddenActivities_zero": "{count} verborgen activiteiten waar je niet bij betrokken bent",
+    "hiddenActivities_one": "{count} verborgen activiteit waar je niet bij betrokken bent",
+    "hiddenActivities_two": "{count} verborgen activiteiten waar je niet bij betrokken bent",
+    "hiddenActivities_few": "{count} verborgen activiteiten waar je niet bij betrokken bent",
+    "hiddenActivities_many": "{count} verborgen activiteiten waar je niet bij betrokken bent",
+    "hiddenActivities_other": "{count} verborgen activiteiten waar je niet bij betrokken bent",
+    "viewMode": {
+      "label": "Weergave van activiteiten",
+      "forYou": "Voor jou",
+      "all": "Alle"
     }
   },
   "OfflineBanner": {
@@ -2800,9 +2951,6 @@
   },
   "BulkCategorize": {
     "title": "Bulkcategoriseren",
-    "calibrationTitle": "Stap 1 — Kalibratie",
-    "calibrationDescription": "Elk voorbeeld dat je bevestigt, helpt de AI om de volgende suggesties te verbeteren. De AI kan na één ronde klaar zijn of om meer voorbeelden vragen.",
-    "roundCount": "Ronde {round} van {max}",
     "confidence": {
       "high": "Hoog",
       "medium": "Gemiddeld",
@@ -2891,7 +3039,137 @@
     "doneTitle": "Categorieën opgeslagen",
     "expenseColumn": "Uitgave",
     "categoryColumn": "Categorie",
-    "confidenceColumn": "Betrouwbaarheid"
+    "confidenceColumn": "Betrouwbaarheid",
+    "simpleDescription": "Controleer de categorieovereenkomsten voor uitgaven in Algemeen en sla daarna je keuzes op.",
+    "generateSuggestions": "Categorieën voorstellen",
+    "backToStart": "Terug",
+    "chooseMode": "Kies hoe uitgaven worden gecategoriseerd",
+    "localMode": "Woordenboek & geschiedenis",
+    "localModeDescription": "Gebruikt de categoriegeschiedenis van deze groep en het ingebouwde woordenboek.",
+    "startRun": "Start met categoriseren",
+    "noCategory": "Niet categoriseren",
+    "progressTitle": "Uitgaven worden gecategoriseerd",
+    "progressDescription": "Je kunt deze pagina verlaten en later terugkomen. Je voortgang wordt opgeslagen.",
+    "progressCount": "{categorized} van {total} uitgaven gecategoriseerd",
+    "applyProgressTitle": "Categorieën worden opgeslagen",
+    "reviewTitle": "Suggesties controleren",
+    "reviewSummary": "{suggested} suggesties uit {total} uitgaven zonder categorie",
+    "sourceLocal": "Lokaal",
+    "saveSelected": "Geselecteerde categorieën opslaan",
+    "retry": "Opnieuw proberen",
+    "restart": "Start een nieuwe run",
+    "failed": "De run is gestopt: {message}",
+    "savedSummary": "{applied} gewijzigd, {skipped} overgeslagen",
+    "selectedCount": "{count} geselecteerd",
+    "selectAll": "Alles selecteren",
+    "clearAll": "Selectie wissen",
+    "discardRun": "Run weggooien",
+    "partialSaveNotice": "Sommige categorieën zijn mogelijk al opgeslagen. Het weggooien van deze run maakt die wijzigingen niet ongedaan.",
+    "restartOlderRunTitle": "Start een nieuwe categorisatierun",
+    "restartOlderRunDescription": "Deze eerdere run gebruikte de vorige controleflow. Begin opnieuw om alle uitgaven samen te controleren.",
+    "runningMatches": "{count} van {total} uitgaven hebben tot nu toe een categoriesuggestie",
+    "failedTitle": "Categoriseren gestopt",
+    "reviewWorkload": "{total} uitgaven in Algemeen · {selected} geselecteerd voor categoriseren · {general} blijven in Algemeen",
+    "categoryChoices": "Categoriekeuzes",
+    "moreCategories": "Kies een andere categorie",
+    "saveCount": "{count} categorieën opslaan",
+    "finishWithoutChanges": "Afronden zonder wijzigingen",
+    "completionSummary": "Run voltooid: {changed} van {total} uitgaven gewijzigd. {remaining} uitgaven blijven in Algemeen staan.",
+    "viewExpenses": "Uitgaven bekijken",
+    "countLoading": "Uitgaven zonder categorie worden geteld…",
+    "nothingToCategorize": "Er zijn geen uitgaven zonder categorie om te categoriseren.",
+    "startingCount": "Er staan nu {count} uitgaven in Algemeen klaar voor controle.",
+    "countError": "De uitgaven zonder categorie konden niet worden geteld. Herlaad de pagina om het opnieuw te proberen.",
+    "keepGeneral": "Algemeen · niet categoriseren",
+    "calibrationRoundTitle": "Kalibratieronde {round}",
+    "calibrationLoading": "Een gevarieerde steekproef van uitgaven wordt voorbereid…",
+    "calibrationReviewDescription": "Controleer en corrigeer deze {count} uitgaven. Keuzes blijven in deze run staan tot je aan het einde opslaat.",
+    "confirmRound": "Ronde bevestigen",
+    "roundSummaryTitle": "Ronde {round} gecontroleerd",
+    "roundSummaryDescription": "{reviewed} gecontroleerd · {categorized} voorlopig gecategoriseerd · {general} blijven Algemeen",
+    "roundQuality": "De eerste suggesties kwamen in {accuracy}% overeen met je keuzes; je hebt er {corrections} gecorrigeerd.",
+    "categorizeRemaining": "Resterende uitgaven categoriseren",
+    "nextRound": "Controleer een andere steekproef",
+    "tableLabel": "Te categoriseren uitgaven",
+    "dateColumn": "Datum",
+    "amountColumn": "Bedrag",
+    "rerunSuggestions": "Suggesties opnieuw uitvoeren",
+    "roundQualityWithSuggestions": "{accepted} van {proposed} voorgestelde categorieën overgenomen · {changed} gewijzigd · {missed} overeenkomsten gevonden vanuit Algemeen",
+    "roundQualityNoSuggestions": "Geen categorieën voorgesteld · {missed} overeenkomsten gevonden vanuit Algemeen · {abstained} blijven in Algemeen",
+    "rerunChanged": "Je hebt {changed} van {proposed} voorgestelde categorieën gewijzigd.",
+    "rerunAssignedSingle": "Je hebt 1 uitgave die in Algemeen was achtergebleven een categorie gegeven.",
+    "rerunAssignedMultiple": "Je hebt {count} uitgaven die in Algemeen waren achtergebleven een categorie gegeven.",
+    "rerunPotentialSingle": "Je wijzigingen kunnen de overeenkomst voor 1 resterende Algemeen-uitgave verbeteren. Voer de suggesties opnieuw uit als je nog een ronde wilt.",
+    "rerunPotentialMultiple": "Je wijzigingen kunnen de overeenkomsten voor {count} resterende Algemeen-uitgaven verbeteren. Voer de suggesties opnieuw uit als je nog een ronde wilt.",
+    "rerunEligible": "Geschikt voor nog een ronde: Algemeen {general} · onzekere automatische overeenkomsten {uncertain}. Je correcties kunnen deze suggesties verbeteren.",
+    "rerunNoEligible": "Er zijn geen onaangeraakte Algemeen-uitgaven of onzekere automatische overeenkomsten meer om opnieuw uit te voeren. Je correcties zitten nog wel in de categorieën die je opslaat.",
+    "rerunAlreadyUsed": "Je laatste correcties zijn al gebruikt voor deze suggesties. Maak nog een correctie om ze opnieuw uit te voeren.",
+    "highMatch": "Hoge overeenkomst",
+    "mediumMatch": "Gemiddelde overeenkomst",
+    "lowMatch": "Lage overeenkomst",
+    "belowMatchThreshold": "Onder de overeenkomstdrempel",
+    "refiningTitle": "Onzekere overeenkomsten worden verfijnd",
+    "runLimitSummary": "Deze run omvat 10.000 uitgaven. {count} extra Algemeen-uitgaven kunnen na het opslaan in een nieuwe run worden gecategoriseerd.",
+    "pageLoading": "Uitgaven worden geladen…",
+    "pageLoadError": "Kon de uitgaven niet laden.",
+    "pageRetry": "Opnieuw proberen",
+    "pageCount": "{loaded} van {total} uitgaven weergegeven",
+    "ledgerAmountNotice": "Bedragen worden weergegeven in de groepsvaluta.",
+    "viewExpenseDetails": "Uitgavedetails bekijken",
+    "reviewFilterLabel": "Uitgaven tonen",
+    "filterAll": "Alle {count}",
+    "filterGeneral": "Algemeen {count}",
+    "improveSuggestions": "Resterende suggesties verbeteren",
+    "rerunInfoLabel": "Over het verbeteren van suggesties",
+    "preparingNextStage": "Volgende stap wordt voorbereid",
+    "rerunProgressTitle": "Suggesties worden bijgewerkt",
+    "progressPreparing": "Uitgaven worden voorbereid…",
+    "noGeneralRows": "Er zijn in deze controle geen uitgaven meer in Algemeen.",
+    "discardConfirmationTitle": "Deze categorisatierun weggooien?",
+    "discardConfirmationDescription": "Hiermee worden de run, de suggesties en de door jou of andere beheerders gemaakte keuzes verwijderd. Er worden geen uitgavecategorieën gewijzigd.",
+    "discardConfirmationCancel": "Run behouden",
+    "progressCountDescription": "Alleen bevestigde categorieën en gemiddelde of hoge overeenkomsten tellen mee; Algemeen en zwakke overeenkomsten niet.",
+    "systemOneMode": "System One-model",
+    "systemOneModeDescription": "Gebruik voor elke uitgave het System One-beslismodel en gebruik de gecategoriseerde uitgaven van deze groep en je gecontroleerde keuzes als aanwijzingen. TypeSafe Jev is zo’n model.",
+    "systemOneUnavailable": "System One is niet beschikbaar. Woordenboek & geschiedenis blijft beschikbaar.",
+    "systemOneConfidence": "Zekerheid van System One: {confidence}%",
+    "systemOneOptionProbability": "Waarschijnlijkheid van de System One-optie: {probability}%",
+    "overallProgress": "Algehele voortgang",
+    "fullPassProcessed": "{processed} van {total} uitgaven verwerkt",
+    "stageProcessed": "{processed} van {total} uitgaven verwerkt in deze stap",
+    "saveSkipped": "{count} uitgaven zijn overgeslagen omdat ze zijn gewijzigd.",
+    "sharedRunNotice": "Deze run wordt gedeeld met andere groepsbeheerders. Iedereen ziet dezelfde suggesties.",
+    "saveConflictTitle": "{count} uitgaven zijn gewijzigd sinds deze controle is begonnen",
+    "saveConflictDescription": "Iemand heeft deze uitgaven buiten deze run bewerkt of hun categorie gewijzigd. Sla de andere uitgaven op, of bewerk de categorieën opnieuw en probeer nogmaals op te slaan.",
+    "saveConflictMore": "En nog {count} meer.",
+    "saveOtherExpenses": "Andere uitgaven opslaan",
+    "receiptTitles": {
+      "freshMarket": "Versmarkt",
+      "greenGrocer": "Groenteboer",
+      "fruitStand": "Fruitkraam",
+      "cornerBistro": "Buurtbistro",
+      "noodleHouse": "Noedelhuis",
+      "cafeLunch": "Cafélunch",
+      "flightTicket": "Vliegticket",
+      "airlineBaggage": "Vliegtuigbagage",
+      "boardingPass": "Boardingpass",
+      "homeSupplies": "Huishoudspullen",
+      "hardwareShop": "Bouwmarkt",
+      "cleaningGoods": "Schoonmaakspullen",
+      "cinemaTickets": "Bioscoopkaartjes",
+      "movieNight": "Filmavond",
+      "filmFestival": "Filmfestival",
+      "organicMarket": "Biologische markt",
+      "bakeryRun": "Bakkerbezoek",
+      "sushiBar": "Sushibar",
+      "pizzaNight": "Pizza-avond",
+      "airportLounge": "Airportlounge",
+      "extraLegroom": "Extra beenruimte",
+      "laundryDetergent": "Wasmiddel",
+      "storageBoxes": "Opbergdozen",
+      "popcornCombo": "Popcorncombo",
+      "streamingRental": "Streaminghuur"
+    }
   },
   "ExpensePreview": {
     "title": "Voorbeeld van uitgave",
@@ -2941,10 +3219,14 @@
         "deleteGroup": "Typ de naam precies zoals hieronder weergegeven om de groep <target>{name}</target> permanent te verwijderen.",
         "deleteExpense": "Typ de titel precies zoals hieronder weergegeven om de uitgave <target>{name}</target> permanent te verwijderen.",
         "deleteRecurringExpense": "Typ de titel van de uitgave precies zoals hieronder weergegeven om het verwijderen van <target>{name}</target> te bevestigen.",
-        "removeParticipant": "Typ de naam precies zoals hieronder weergegeven om <target>{name}</target> uit deze groep te verwijderen."
+        "removeParticipant": "Typ de naam precies zoals hieronder weergegeven om <target>{name}</target> uit deze groep te verwijderen.",
+        "deleteAccount": "Typ <target>{name}</target> precies zoals hieronder weergegeven om je account permanent te verwijderen."
       },
       "placeholder": "Typ ‘{name}’ hier",
-      "mismatch": "Komt niet overeen. Typ {name} exact."
+      "mismatch": "Komt niet overeen. Typ {name} exact.",
+      "settingsNoteLink": "Wijzigen in accountinstellingen",
+      "settingsNoteLead": "Liever niet typen?",
+      "settingsNoteTail": "om een eenvoudig bevestigingsvenster te gebruiken."
     }
   },
   "Theme": {
@@ -2968,7 +3250,7 @@
     "failedDescription": "We konden dit apparaat niet registreren. Meldingen die voor e-mail zijn ingesteld, blijven daar aankomen; keuzes met alleen push worden niet omgeleid.",
     "emailUsage": "Er komen alleen meldingen aan die voor e-mail zijn ingesteld totdat je een apparaat inschakelt. Je kunt meldingen toestaan in je browserinstellingen en het daarna opnieuw proberen via Instellingen.",
     "done": "Klaar",
-    "emailDeliveryDisabled": "E-mailbezorging is uitgeschakeld op deze instantie, dus e-mailmeldingen kunnen je niet bereiken. Schakel pushmeldingen in op dit apparaat om updates te blijven ontvangen."
+    "emailDeliveryDisabled": "E-mailbezorging is uitgeschakeld, dus e-mailmeldingen kunnen je niet bereiken. Schakel pushmeldingen in op dit apparaat om updates te blijven ontvangen."
   },
   "Unsubscribe": {
     "title": "Deze e-mails uitschakelen?",
@@ -3439,7 +3721,8 @@
     "hintTapToAddExpense": "Ik ben {name} — tik op me om een uitgave toe te voegen.",
     "hintTapToCreateGroup": "Ik ben {name} — tik op me om een groep aan te maken.",
     "billName": "Bill",
-    "offlineMessage": "Ik kan niets aanmaken zolang je offline bent."
+    "offlineMessage": "Ik kan niets aanmaken zolang je offline bent.",
+    "serverUnreachableMessage": "Ik kan de Spliit-server op dit moment niet bereiken — je verbinding lijkt in orde, dus het ligt aan ons."
   },
   "CreateSettlement": {
     "description": "Controleer de betaling voordat je deze vastlegt.",
@@ -3490,7 +3773,18 @@
       "existingPasskeyTitle": "Al een passkey geregistreerd?",
       "existingPasskeyDescription": "Log weer in met de passkey op een van uw geregistreerde apparaten.",
       "passkeySignIn": "Inloggen met passkey",
-      "passkeySignInError": "Kon niet inloggen met deze passkey. Probeer het opnieuw of gebruik uw inloglink."
+      "passkeySignInError": "Kon niet inloggen met deze passkey. Probeer het opnieuw of gebruik uw inloglink.",
+      "passkeyNameLabel": "Geef deze passkey een naam (optioneel)",
+      "passkeyNamePlaceholder": "bijv. MacBook Touch ID",
+      "nameTitle": "Kies een weergavenaam",
+      "nameDescription": "Wordt getoond op je passkey en in je groepen. Je kunt deze later wijzigen.",
+      "nameLabel": "Weergavenaam",
+      "namePlaceholder": "Jouw naam",
+      "nameSave": "Opslaan en doorgaan",
+      "nameSaving": "Aan het opslaan…",
+      "nameRequired": "Voer een weergavenaam in.",
+      "nameTooShort": "Naam moet minimaal 2 tekens bevatten.",
+      "nameError": "De weergavenaam kon niet worden opgeslagen. Probeer het opnieuw."
     },
     "onboarding": {
       "title": "Sla uw inloglink op",
@@ -3629,6 +3923,29 @@
         "review": {
           "title": "Controleren en importeren",
           "detail": "Controleer duplicaten en bevestig de import."
+        }
+      }
+    },
+    "categorize": {
+      "title": "Uitgaven categoriseren",
+      "description": "Stel met System One categorieën voor bestaande uitgaven zonder categorie voor. Controleer elke wijziging voordat je opslaat.",
+      "start": "Uitgaven categoriseren",
+      "steps": {
+        "choose": {
+          "title": "Kies een methode",
+          "detail": "Gebruik woordenboek & geschiedenis of het System One-beslismodel."
+        },
+        "calibrate": {
+          "title": "Kleine steekproeven controleren",
+          "detail": "Corrigeer suggesties, zodat de volgende ronde de categorieën van je groep leert."
+        },
+        "review": {
+          "title": "Controleer elke uitgave",
+          "detail": "Algemeen-uitgaven staan eerst in de volledige tabel."
+        },
+        "save": {
+          "title": "Categorieën opslaan",
+          "detail": "Uitgaven wijzigen pas zodra je de laatste controle bevestigt."
         }
       }
     }
@@ -4172,7 +4489,8 @@
       "valuesRecomputedTitle": "Waarden opnieuw berekend",
       "viewExpenses": "Uitgaven bekijken",
       "waitDuplicate": "Wacht tot de duplicaatcontrole klaar is voordat je importeert.",
-      "invalidRowTitle": "Ongeldige importrij"
+      "invalidRowTitle": "Ongeldige importrij",
+      "categorizeWithSystemOne": "Categorieën voorstellen voor uitgaven zonder categorie met System One"
     }
   },
   "Sponsor": {
@@ -4327,5 +4645,26 @@
     "expenseMissing": "Deze uitgave staat niet in de download van dit apparaat. Maak verbinding om nieuwere/oudere uitgaven te controleren.",
     "groupMissing": "Deze groep is nog niet volledig gedownload.",
     "balancesStale": "Saldo's zijn mogelijk verouderd."
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit is niet beschikbaar",
+    "description": "We kunnen de Spliit-server op dit moment niet bereiken. Je verbinding lijkt in orde — probeer het over een moment opnieuw.",
+    "retry": "Probeer opnieuw"
+  },
+  "ApiStatusBanner": {
+    "message": "Spliit is op dit moment niet bereikbaar. Je verbinding lijkt in orde — het probleem ligt bij ons.",
+    "statusLink": "Status bekijken"
+  },
+  "AccountDeletionBanner": {
+    "scheduled": "Het verwijderen van je account staat gepland voor {date}.",
+    "review": "Verwijdering bekijken of annuleren",
+    "executing": "Het verwijderen van je account is begonnen.",
+    "viewStatus": "Verwijderingsstatus bekijken"
+  },
+  "Updates": {
+    "title": "Nieuws",
+    "latest": "Wat is er nieuw",
+    "viewAll": "Alle updates bekijken",
+    "dismiss": "Begrepen"
   }
 }

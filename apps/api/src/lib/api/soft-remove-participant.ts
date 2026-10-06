@@ -246,8 +246,11 @@ export async function softRemoveParticipant(opts: {
       type: 'LEDGER_PARTICIPANT' as const,
       id: participant.id,
     },
+    // Summary carries only the display name. Legacy rows stored the full
+    // sentence `Participant {name} was removed`; the web feed normalizes
+    // both shapes (see activity-item participant normalization).
     data: buildGroupActivityData({
-      summary: `Participant ${participantName} was removed`,
+      summary: participantName,
     }),
   }
 

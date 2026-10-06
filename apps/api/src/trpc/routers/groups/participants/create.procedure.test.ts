@@ -69,6 +69,15 @@ describe('groupsRouter.participants.create', () => {
       }),
       select: { id: true, displayName: true },
     })
+    expect(prismaMock.activity.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        type: 'PARTICIPANT_ADDED',
+        actorType: 'ACCOUNT',
+        actorId: 'acct-member',
+        subjectType: 'LEDGER_PARTICIPANT',
+        subjectId: 'lp-unlinked',
+      }),
+    })
   })
 
   it('rejects blank names at the input boundary', async () => {

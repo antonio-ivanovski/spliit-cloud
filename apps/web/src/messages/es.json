@@ -81,13 +81,14 @@
     "signOutOffline": "Conéctate para cerrar sesión"
   },
   "Footer": {
-    "madeIn": "Hecho por la comunidad de código abierto con amor ❤️",
+    "madeIn": "Hecho por la <github>comunidad de código abierto</github> con amor ❤️",
     "legalNavigation": "Enlaces legales",
     "privacy": "Privacidad",
     "terms": "Términos",
     "imprint": "Aviso legal",
     "sponsor": "Patrocinar",
-    "timeLabel": "Momento del día"
+    "timeLabel": "Momento del día",
+    "status": "Estado"
   },
   "Expenses": {
     "title": "Gastos",
@@ -235,7 +236,9 @@
       "showLess": "Mostrar menos"
     },
     "copyToast": "Se ha iniciado la copia del gasto. Los datos del gasto existente se utilizarán para crear uno nuevo.",
-    "incomeBadge": "Ingreso"
+    "incomeBadge": "Ingreso",
+    "paidBySingle": "Pagado por <strong>{paidBy}</strong> · pagado para <paidFor></paidFor>",
+    "paidByMultipleSingle": "Pagado por <paidByNames></paidByNames> · pagado para <paidFor></paidFor>"
   },
   "Groups": {
     "myGroups": "Mis grupos",
@@ -385,7 +388,8 @@
             "monthly": "meses",
             "yearly": "años"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Sugerir categorías para gastos sin categorizar con System One"
       },
       "Destination": {
         "heading": "¿Dónde te gustaría importar <strong>{name}</strong>? ({participantCount} participantes · {expenseCount} gastos)",
@@ -683,7 +687,9 @@
       "description": "Los grupos ahora pueden mostrar un emoji junto a su nombre. Hemos visto {emoji} en “{name}”.",
       "openSettings": "Abrir los ajustes del grupo",
       "notNow": "Ahora no"
-    }
+    },
+    "groupTabsHint": "¿Quieres reordenar las pestañas del grupo u ocultar las que no usas?",
+    "groupTabsHintLink": "Personalizar las pestañas en la configuración de tu cuenta"
   },
   "GroupForm": {
     "title": "Información del grupo",
@@ -1077,7 +1083,8 @@
       "allItemsSplitEdit": "Editar la división de todos los artículos",
       "allItemsSplitModalTitle": "División de todos los artículos",
       "remainderAllocationProportional": "Proporcional a los artículos",
-      "remainderProportionalHint": "Divide este importe según el subtotal de artículos de cada persona. Útil para impuestos y propinas."
+      "remainderProportionalHint": "Divide este importe según el subtotal de artículos de cada persona. Útil para impuestos y propinas.",
+      "errorExceedsAmountDetails": "El total de los artículos ({itemsTotal}) supera el importe del gasto en {excess}."
     },
     "leaveItemized": {
       "title": "¿Cambiar el modo de división?",
@@ -1113,7 +1120,15 @@
       "done": "Listo",
       "yourTime": "tu hora",
       "invalidDate": "Introduce una fecha válida.",
-      "invalidTime": "Introduce una hora válida (HH:mm)."
+      "invalidTime": "Introduce una hora válida (HH:mm).",
+      "hourLabel": "Hora",
+      "minuteLabel": "Minuto",
+      "periodLabel": "a. m./p. m.",
+      "timeWheelHint": "Desliza o toca para ajustar la hora. La fecha no cambia.",
+      "now": "Ahora",
+      "morning": "Mañana",
+      "midday": "Mediodía",
+      "evening": "Noche"
     },
     "settlementTitle": "Pago de liquidación",
     "settlementHint": "{category}: No cuenta como gasto en totales, estadísticas ni presupuestos. Sí actualiza quién debe a quién.",
@@ -1157,7 +1172,8 @@
       "description": "Introduce la cantidad final, incluidas las comisiones.",
       "impliedRate": "Tipo de cambio implícito: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Sugerencias de categoría"
+    "otherSuggestions": "Sugerencias de categoría",
+    "paidForItemizedEmptyHint": "Asigna personas a los artículos para ver la parte de cada uno."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Eliminar documento",
@@ -1872,7 +1888,7 @@
       "generic": "Algo salió mal. Inténtalo de nuevo.",
       "passwordPolicy": "Usa al menos 8 caracteres con mayúsculas, minúsculas, un número y un símbolo.",
       "magicLinkFailed": "No se pudo enviar el enlace de inicio de sesión.",
-      "signupInviteRequired": "Esta instancia es solo por invitación. Usa un enlace de invitación o pide a alguien que te invite a un grupo.",
+      "signupInviteRequired": "Los registros son solo por invitación. Usa un enlace de invitación o pide a alguien que te invite a un grupo.",
       "passkeyFailed": "El inicio de sesión con clave de acceso ha fallado. Inténtalo de nuevo o usa otro método de inicio de sesión."
     },
     "loading": "Cargando…",
@@ -1882,14 +1898,14 @@
     "signInWithGithub": "Continuar con GitHub",
     "legalNotice": "Al continuar, aceptas los <terms>Términos de uso</terms> y reconoces el <privacy>aviso de privacidad</privacy>.",
     "inviteOnly": {
-      "message": "Esta instancia es solo por invitación. Usa un enlace de invitación o pide a alguien que te invite a un grupo.",
+      "message": "Los registros son solo por invitación. Usa un enlace de invitación o pide a alguien que te invite a un grupo.",
       "useInvitedEmail": "Usa la dirección de correo electrónico con la que te invitaron."
     },
     "signInWithX": "Continuar con X",
     "signInWithOidc": "Continuar con {name}",
     "signInAnonymously": "Anónimo",
     "lastUsed": "Último uso",
-    "emailAuthDisabled": "El inicio de sesión con correo electrónico está desactivado en esta instancia. Usa el inicio de sesión único (SSO).",
+    "emailAuthDisabled": "El inicio de sesión con correo electrónico está desactivado. Usa el inicio de sesión único (SSO).",
     "signInWithPasskey": "Iniciar sesión con clave de acceso"
   },
   "CompleteProfile": {
@@ -2014,7 +2030,7 @@
         "joined_many": "Se han unido {count} personas",
         "retry": "Reintentar"
       },
-      "emailDeliveryDisabled": "El envío de correos está desactivado en esta instancia. La invitación se crea igualmente y aparecerá cuando la persona invitada inicie sesión; usa un enlace de invitación para darle algo que abrir."
+      "emailDeliveryDisabled": "El envío de correos está desactivado. La invitación se crea igualmente y aparecerá cuando la persona invitada inicie sesión; usa un enlace de invitación para darle algo que abrir."
     },
     "invitations": {
       "title": "Invitaciones pendientes",
@@ -2439,7 +2455,7 @@
       "masterDescription": "Desactívalas para silenciar todos los correos y las notificaciones push. Tus preferencias por categoría se conservan.",
       "emailAddToEnable": "Añade un correo verificado para recibir notificaciones en la bandeja de entrada.",
       "emailAddLink": "Añadir correo",
-      "emailDeliveryDisabled": "El envío de correos está desactivado en esta instancia. Tus elecciones de correo se guardan, pero no se enviarán hasta que el administrador configure el correo."
+      "emailDeliveryDisabled": "El envío de correos está desactivado. Tus elecciones de correo se guardan, pero no se enviarán hasta que el correo esté configurado."
     },
     "preferences": {
       "title": "Preferencias de la aplicación",
@@ -2458,6 +2474,22 @@
       "mascotOptions": {
         "off": "Desactivada",
         "bill": "Bill, el recibo"
+      },
+      "groupTabs": "Pestañas del grupo",
+      "groupTabsHelp": "Elige qué pestañas se muestran y en qué orden en cada grupo.",
+      "groupTabsCustomize": "Personalizar",
+      "groupTabsSave": "Guardar",
+      "groupTabsDiscard": "Descartar",
+      "groupTabsReset": "Restablecer los valores predeterminados",
+      "groupTabsHide": "Ocultar {name}",
+      "groupTabsShow": "Mostrar {name}",
+      "groupTabsMoveUp": "Mover {name} hacia arriba",
+      "groupTabsMoveDown": "Mover {name} hacia abajo",
+      "deleteConfirmation": "Confirmación de eliminación de gastos",
+      "deleteConfirmationHelp": "Las eliminaciones rápidas piden confirmación una vez. Las eliminaciones con escritura te piden escribir primero el título del gasto. Eliminar un grupo o a un miembro siempre requiere escribir.",
+      "deleteConfirmationOptions": {
+        "standard": "Diálogo de confirmación",
+        "strict": "Diálogo con escritura"
       }
     },
     "aiPreferences": {
@@ -2650,7 +2682,111 @@
       "backedUp": "Con copia de seguridad",
       "removeWarning": "Esto no se puede deshacer. El dispositivo dejará de iniciar sesión con una clave de acceso — podrás registrarlo de nuevo en cualquier momento.",
       "removeLastWarning": "Esta es tu última clave de acceso. Si es tu único método de inicio de sesión, la eliminación quedará bloqueada hasta que guardes un enlace de recuperación u otro método de inicio de sesión.",
-      "anonymousHelpNoLink": "No hay ningún enlace de inicio de sesión guardado para esta cuenta de invitado. Crea uno en la fila del enlace de inicio de sesión de abajo — funciona en cualquier dispositivo."
+      "anonymousHelpNoLink": "No hay ningún enlace de inicio de sesión guardado para esta cuenta de invitado. Crea uno en la fila del enlace de inicio de sesión de abajo — funciona en cualquier dispositivo.",
+      "reauthTitle": "Inicia sesión de nuevo para añadir una clave de acceso",
+      "reauthDescription": "Por tu seguridad, añadir una clave de acceso requiere un inicio de sesión reciente. Se cerrará tu sesión, volverás a iniciarla y volverás aquí mismo para terminar.",
+      "reauthConfirm": "Inicia sesión de nuevo",
+      "reauthAnonymousTitle": "Guarda primero un enlace de inicio de sesión",
+      "reauthAnonymousDescription": "Esta cuenta de invitado aún no tiene enlace de inicio de sesión ni clave de acceso. Si cierras sesión ahora, perderás el acceso para siempre — guarda primero un enlace de inicio de sesión en la sección Enlace de inicio de sesión y vuelve después a añadir una clave de acceso."
+    },
+    "deletion": {
+      "sectionTitle": "Zona peligrosa",
+      "sectionDescription": "Elimina permanentemente tu cuenta y todos los métodos de inicio de sesión.",
+      "rowLabel": "Eliminar cuenta",
+      "rowDescription": "Elimina tu perfil, tus sesiones y tu configuración tras un período de gracia de 48 horas. Los gastos compartidos permanecen en los grupos de los demás miembros sin tus datos personales.",
+      "open": "Eliminar cuenta…",
+      "scheduledTitle": "Eliminación de la cuenta programada",
+      "scheduledDescription": "La eliminación está programada para comenzar el {date} o más tarde. Tu cuenta sigue activa hasta que comience. Los grupos, miembros y gastos pueden cambiar durante la espera; tus opciones se aplicarán a su estado cuando se ejecute la eliminación. Puedes cancelarla hasta que comience. Se ha enviado un correo de confirmación a {email}.",
+      "cancel": "Cancelar la eliminación",
+      "cancelling": "Cancelando…",
+      "cancelled": "Eliminación de la cuenta cancelada.",
+      "dialogTitle": "¿Programar la eliminación de la cuenta?",
+      "dialogDescription": "Esto programa la eliminación tras una espera de 48 horas; ahora no se elimina nada. Puedes cancelarla hasta que comience. Tus opciones se aplicarán a los grupos y saldos de ese momento. Una vez que comience la eliminación, no se podrá deshacer.",
+      "farewellTitle": "Lamentamos que te vayas",
+      "farewellBody": "Si hay algo que podamos hacer para que te quedes, <feedbackLink>comparte tus comentarios</feedbackLink> — solo te llevará un minuto y nos ayudará a mejorar.",
+      "groupsTitle": "Qué pasará con tus grupos",
+      "leaveGroup": "Saldrás de «{name}».",
+      "deleteGroup": "«{name}» se eliminará permanentemente — eres su último miembro.",
+      "lastAdmin": "Eres el último administrador de «{name}» — otro miembro será promovido automáticamente.",
+      "settleBalances": "Los saldos pendientes de «{name}» se liquidan automáticamente.",
+      "friendLedger": "Tu registro con {name} está liquidado y cerrado.",
+      "friendLedgerUnnamed": "Tu registro está liquidado y cerrado.",
+      "friendLedgerFallback": "un registro con un amigo",
+      "noGroups": "No eres miembro de ningún grupo.",
+      "accessTitle": "Inicio de sesión e invitaciones",
+      "pendingInvites_zero": "Cuando se ejecute la eliminación, se revocarán {count} invitaciones pendientes que has enviado.",
+      "pendingInvites_one": "Cuando se ejecute la eliminación, se revocará {count} invitación pendiente que has enviado.",
+      "pendingInvites_two": "Cuando se ejecute la eliminación, se revocarán {count} invitaciones pendientes que has enviado.",
+      "pendingInvites_few": "Cuando se ejecute la eliminación, se revocarán {count} invitaciones pendientes que has enviado.",
+      "pendingInvites_many": "Cuando se ejecute la eliminación, se revocarán {count} invitaciones pendientes que has enviado.",
+      "pendingInvites_other": "Cuando se ejecute la eliminación, se revocarán {count} invitaciones pendientes que has enviado.",
+      "keepNameLabel": "Conservar mi nombre en el historial compartido",
+      "keepNameDescription": "Los gastos compartidos seguirán mostrando «{name}». Por lo demás, tu nombre se reemplazará por «Miembro eliminado» en todas partes.",
+      "customNameLabel": "Nombre a conservar",
+      "settleLabel": "Marcar los saldos como liquidados al ejecutarse la eliminación",
+      "settleDescription": "Los saldos restantes se liquidan automáticamente. De lo contrario, quedarán asociados a tu nombre provisional.",
+      "leaveBalances": "Los saldos pendientes de «{name}» se mantendrán como están.",
+      "friendLeaveBalances": "Tu saldo con {name} se mantendrá como está.",
+      "confirmWord": "ELIMINAR",
+      "ackLabel": "Entiendo que esto es permanente y que los gastos compartidos permanecen en los grupos de los demás miembros sin mis datos personales.",
+      "exportHint": "¿Quieres una copia primero? <exportLink>Exporta una copia de seguridad</exportLink> antes de continuar.",
+      "schedule": "Programar la eliminación",
+      "scheduling": "Programando…",
+      "scheduled": "Eliminación programada. Revisa tu correo para revisarla o cancelarla.",
+      "dialogCancel": "Conservar mi cuenta",
+      "reauthTitle": "Inicia sesión de nuevo para eliminar tu cuenta",
+      "reauthDescription": "Por tu seguridad, eliminar tu cuenta requiere un inicio de sesión reciente. Se cerrará tu sesión, volverás a iniciarla y volverás aquí mismo para terminar.",
+      "reauthConfirm": "Inicia sesión de nuevo",
+      "errors": {
+        "generic": "Algo salió mal. Inténtalo de nuevo.",
+        "loadFailed": "No se pudieron cargar los detalles de la eliminación.",
+        "emailMismatch": "El correo escrito no coincide con el de tu cuenta.",
+        "alreadyRequested": "Ya hay una solicitud de eliminación pendiente para esta cuenta.",
+        "sessionNotFresh": "Tu sesión es demasiado antigua para esta acción. Inicia sesión de nuevo e inténtalo otra vez.",
+        "jobsDisabled": "La eliminación de la cuenta necesita el trabajador en segundo plano, que está desactivado en este despliegue.",
+        "ackRequired": "Confirma primero que entiendes las consecuencias.",
+        "invalidDisplayName": "Introduce un nombre de entre 1 y 100 caracteres.",
+        "cancelFailed": "No se pudo cancelar la eliminación. Inténtalo de nuevo."
+      },
+      "groupsToDeleteTitle": "Grupos que se eliminarán",
+      "groupsToDeleteDescription": "Cuando se ejecute la eliminación, se eliminarán permanentemente los grupos de los que sigas siendo el último miembro activo.",
+      "groupsToLeaveTitle": "Grupos de los que saldrás",
+      "groupsToLeaveDescription": "Cuando se ejecute la eliminación, dejarás los grupos que aún tengan otros miembros activos. Estos grupos se mantendrán para los demás.",
+      "friendsTitle": "Amigos",
+      "friendsDescription": "Tus saldos individuales con estos amigos.",
+      "backToSettings": "Volver a la configuración",
+      "pageTitle": "Eliminar cuenta",
+      "loading": "Cargando los detalles de eliminación",
+      "choicesTitle": "Opciones de eliminación",
+      "nameTitle": "Nombre en el historial compartido",
+      "removeNameLabel": "Reemplazar mi nombre por «Miembro eliminado»",
+      "balancesTitle": "Saldos pendientes",
+      "keepBalancesLabel": "Mantener los saldos pendientes tal como están",
+      "balanceExplanation": "Si eliges liquidar los saldos, se registrarán entradas de liquidación cuando se elimine tu cuenta. No se transfiere dinero. De lo contrario, los saldos permanecen en tu historial compartido.",
+      "confirmationTitle": "Confirmar la eliminación de la cuenta",
+      "retry": "Volver a intentar",
+      "pageDescription": "Programa la eliminación de tu cuenta tras un período de espera de 48 horas. Tu cuenta sigue activa hasta que comience la eliminación y puedes cancelarla antes.",
+      "reviewChoicesTitle": "Tus opciones",
+      "consequencesTitle": "Qué ocurrirá",
+      "reviewConfirmTitle": "Confirma la eliminación",
+      "backupLink": "Exporta una copia de seguridad",
+      "keptNameExplanation": "Cuando se ejecute la eliminación, los gastos compartidos mostrarán «{name}». Tu nombre de perfil no cambiará hasta entonces.",
+      "removedNameExplanation": "Cuando se ejecute la eliminación, los gastos compartidos mostrarán «Miembro eliminado». Tu nombre de perfil no cambiará hasta entonces.",
+      "keptBalancesExplanation": "Cuando comience la eliminación, los saldos pendientes se mantendrán en tu historial compartido, incluidos los gastos añadidos durante la espera.",
+      "settledBalancesExplanation": "Durante la eliminación, las entradas de liquidación marcan como liquidados los saldos de ese momento de los grupos a los que aún perteneces, incluidos los archivados. Los saldos de los grupos que ya has dejado o de los que te han eliminado no cambian. No se transfiere dinero.",
+      "rowBalancesKept": "Los saldos pendientes se mantienen como están.",
+      "rowBalancesSettled": "El saldo en el momento de la eliminación se marcará como liquidado.",
+      "rowAdmin": "Cuando se ejecute la eliminación, otro miembro pasará a ser administrador si sigues siendo el último administrador.",
+      "friendKept": "Tu saldo se mantiene como está.",
+      "friendSettled": "Cuando se ejecute la eliminación, tu saldo de ese momento se marcará como liquidado y se cerrará el registro.",
+      "accessExplanation": "Estos métodos de inicio de sesión dejarán de funcionar cuando se elimine tu cuenta.",
+      "invitesTitle": "Invitaciones pendientes",
+      "balanceUnavailable": "Saldo no disponible",
+      "archivedBalancesKept": "Este grupo archivado seguirá siendo de solo lectura. Se conservará tu saldo restante.",
+      "signInMethodsRemoved": "Estos métodos de inicio de sesión dejarán de funcionar: {methods}.",
+      "consequencesTiming": "Este resumen refleja tu cuenta ahora. Los grupos, miembros y gastos pueden cambiar antes de que comience la eliminación. Tus opciones se aplicarán a los grupos a los que pertenezcas y a sus saldos en ese momento. Nada de lo indicado aquí ocurre inmediatamente.",
+      "executingTitle": "La eliminación de la cuenta ha comenzado",
+      "executingDescription": "La eliminación de tu cuenta se está procesando. Algunos cambios ya pueden haberse completado y la eliminación no se puede cancelar ni deshacer. Si el proceso se interrumpe, se reanudará a partir de los pasos completados."
     }
   },
   "Activities": {
@@ -2677,7 +2813,9 @@
       },
       "recurringCreated": "{participant} creó el gasto recurrent «{title}»",
       "stopped": "{participant} detuvo el gasto recurrente {title}",
-      "commented": "{participant} comentó sobre {title}: “{excerpt}”"
+      "commented": "{participant} comentó sobre {title}: “{excerpt}”",
+      "yourShare": "Tu parte:",
+      "notInvolved": "No estás incluido"
     },
     "group": {
       "updated": "{participant} actualizó la configuración del grupo",
@@ -2690,7 +2828,11 @@
         "currencyCode": "Código de moneda",
         "linkedParticipant": "Participante vinculado",
         "subgroupsEnabled": "Subgrupos",
-        "publicViewLink": "Enlace público de solo lectura"
+        "publicViewLink": "Enlace público de solo lectura",
+        "emoji": "Emoji",
+        "color": "Color",
+        "subgroups": "Subgrupos",
+        "splitPresets": "Preajustes de división"
       }
     },
     "member": {
@@ -2724,7 +2866,18 @@
       "imported_other": "{participant} importó {count} gastos"
     },
     "participant": {
-      "removed": "{participant} eliminó a {target} del grupo"
+      "removed": "{participant} eliminó a {target} del grupo",
+      "added": "{participant} añadió a {target} al grupo"
+    },
+    "hiddenActivitiesShowLess": "Mostrar menos",
+    "hiddenActivities_one": "{count} actividad oculta en la que no participas",
+    "hiddenActivities_few": "{count} actividades ocultas en las que no participas",
+    "hiddenActivities_many": "{count} actividades ocultas en las que no participas",
+    "hiddenActivities_other": "{count} actividades ocultas en las que no participas",
+    "viewMode": {
+      "label": "Modo de vista de actividades",
+      "forYou": "Para ti",
+      "all": "Todas"
     }
   },
   "OfflineBanner": {
@@ -2802,9 +2955,6 @@
   },
   "BulkCategorize": {
     "title": "Categorización en lote",
-    "calibrationTitle": "Paso 1 — Calibración",
-    "calibrationDescription": "Cada ejemplo que confirmas ayuda a la IA a mejorar sus próximas sugerencias. Puede estar lista después de una ronda o pedir más ejemplos.",
-    "roundCount": "Ronda {round} de {max}",
     "confidence": {
       "high": "Alto",
       "medium": "Medio",
@@ -2893,7 +3043,137 @@
     "doneTitle": "Categorías guardadas",
     "expenseColumn": "Gasto",
     "categoryColumn": "Categoría",
-    "confidenceColumn": "Confianza"
+    "confidenceColumn": "Confianza",
+    "simpleDescription": "Revisa las coincidencias de categoría para los gastos en General y guarda tus opciones.",
+    "generateSuggestions": "Sugerir categorías",
+    "backToStart": "Atrás",
+    "chooseMode": "Elige cómo categorizar los gastos",
+    "localMode": "Diccionario e historial",
+    "localModeDescription": "Usa el historial de categorías de este grupo y el diccionario integrado.",
+    "startRun": "Empezar a categorizar",
+    "noCategory": "Dejar sin categoría",
+    "progressTitle": "Categorizando los gastos",
+    "progressDescription": "Puedes salir de esta página y volver más tarde. Tu progreso se guarda.",
+    "progressCount": "{categorized} de {total} gastos categorizados",
+    "applyProgressTitle": "Guardando categorías",
+    "reviewTitle": "Revisa las sugerencias",
+    "reviewSummary": "{suggested} sugerencias de {total} gastos sin categoría",
+    "sourceLocal": "Local",
+    "saveSelected": "Guardar las categorías seleccionadas",
+    "retry": "Reintentar",
+    "restart": "Iniciar una nueva ejecución",
+    "failed": "La ejecución se detuvo: {message}",
+    "savedSummary": "{applied} modificados, {skipped} omitidos",
+    "selectedCount": "{count} seleccionados",
+    "selectAll": "Seleccionar todo",
+    "clearAll": "Borrar todo",
+    "discardRun": "Descartar la ejecución",
+    "partialSaveNotice": "Es posible que algunas categorías ya se hayan guardado. Descartar esta ejecución no deshará esos cambios.",
+    "restartOlderRunTitle": "Iniciar una nueva ejecución de categorización",
+    "restartOlderRunDescription": "Esta ejecución anterior usaba el flujo de revisión previo. Empieza de nuevo para revisar todos los gastos juntos.",
+    "runningMatches": "{count} de {total} gastos tienen una sugerencia de categoría hasta ahora",
+    "failedTitle": "Categorización detenida",
+    "reviewWorkload": "{total} gastos en General · {selected} seleccionados para categorizar · {general} que quedan en General",
+    "categoryChoices": "Opciones de categoría",
+    "moreCategories": "Elige otra categoría",
+    "saveCount": "Guardar {count} categorías",
+    "finishWithoutChanges": "Terminar sin cambios",
+    "completionSummary": "Ejecución completa: {changed} de {total} gastos modificados. {remaining} gastos quedan en General.",
+    "viewExpenses": "Ver los gastos",
+    "countLoading": "Contando los gastos sin categoría…",
+    "nothingToCategorize": "No hay gastos sin categoría para categorizar.",
+    "startingCount": "{count} gastos están actualmente en General y listos para revisar.",
+    "countError": "No se pudieron contar los gastos sin categoría. Recarga la página para intentarlo de nuevo.",
+    "keepGeneral": "General · dejar sin categoría",
+    "calibrationRoundTitle": "Ronda de calibración {round}",
+    "calibrationLoading": "Preparando una muestra variada de gastos…",
+    "calibrationReviewDescription": "Revisa y corrige estos {count} gastos. Las opciones se mantienen en esta ejecución hasta que guardes al final.",
+    "confirmRound": "Confirma la ronda",
+    "roundSummaryTitle": "Ronda {round} revisada",
+    "roundSummaryDescription": "{reviewed} revisados · {categorized} categorizados provisionalmente · {general} que quedan como General",
+    "roundQuality": "Las sugerencias iniciales coincidieron con el {accuracy}% de tus opciones; corregiste {corrections}.",
+    "categorizeRemaining": "Categoriza los gastos restantes",
+    "nextRound": "Revisa otra muestra",
+    "tableLabel": "Gastos por categorizar",
+    "dateColumn": "Fecha",
+    "amountColumn": "Cantidad",
+    "rerunSuggestions": "Generar sugerencias de nuevo",
+    "roundQualityWithSuggestions": "{accepted} de {proposed} categorías sugeridas aceptadas · {changed} modificadas · {missed} coincidencias encontradas desde General",
+    "roundQualityNoSuggestions": "Ninguna categoría sugerida · {missed} coincidencias encontradas desde General · {abstained} que quedan en General",
+    "rerunChanged": "Cambiaste {changed} de {proposed} categorías sugeridas.",
+    "rerunAssignedSingle": "Asignaste una categoría a 1 gasto que quedaba en General.",
+    "rerunAssignedMultiple": "Asignaste una categoría a {count} gastos que quedaban en General.",
+    "rerunPotentialSingle": "Tus cambios pueden mejorar la coincidencia de 1 gasto restante de General. Genera las sugerencias de nuevo si quieres otra pasada.",
+    "rerunPotentialMultiple": "Tus cambios pueden mejorar las coincidencias de {count} gastos restantes de General. Genera las sugerencias de nuevo si quieres otra pasada.",
+    "rerunEligible": "Apto para otra pasada: General {general} · coincidencias automáticas inciertas {uncertain}.",
+    "rerunNoEligible": "No quedan General intactos ni coincidencias automáticas inciertas para generar de nuevo. Tus correcciones siguen incluidas en las categorías que guardes.",
+    "rerunAlreadyUsed": "Tus últimas correcciones ya se han usado para estas sugerencias. Haz otra corrección para generarlas de nuevo.",
+    "highMatch": "Coincidencia alta",
+    "mediumMatch": "Coincidencia media",
+    "lowMatch": "Coincidencia baja",
+    "belowMatchThreshold": "Por debajo del umbral de coincidencia",
+    "refiningTitle": "Refinando las coincidencias inciertas",
+    "runLimitSummary": "Esta ejecución incluye 10,000 gastos. {count} gastos más de General se pueden categorizar en otra ejecución después de guardar.",
+    "pageLoading": "Cargando los gastos…",
+    "pageLoadError": "No se pudieron cargar los gastos.",
+    "pageRetry": "Reintentar",
+    "pageCount": "Mostrando {loaded} de {total} gastos",
+    "ledgerAmountNotice": "Los importes se muestran en la moneda del grupo.",
+    "viewExpenseDetails": "Ver los detalles del gasto",
+    "reviewFilterLabel": "Mostrar los gastos",
+    "filterAll": "Todos {count}",
+    "filterGeneral": "General {count}",
+    "improveSuggestions": "Mejora las sugerencias restantes",
+    "rerunInfoLabel": "Acerca de mejorar las sugerencias",
+    "preparingNextStage": "Preparando el siguiente paso",
+    "rerunProgressTitle": "Actualizando las sugerencias",
+    "progressPreparing": "Preparando los gastos…",
+    "noGeneralRows": "No quedan gastos en General en esta revisión.",
+    "discardConfirmationTitle": "¿Descartar esta ejecución de categorización?",
+    "discardConfirmationDescription": "Esto elimina la ejecución, sus sugerencias y las opciones elegidas por ti u otros administradores. No se cambiará ninguna categoría de gasto.",
+    "discardConfirmationCancel": "Mantener la ejecución",
+    "progressCountDescription": "Solo cuentan las categorías confirmadas y las coincidencias medias o altas; General y las coincidencias débiles, no.",
+    "systemOneMode": "Modelo de System One",
+    "systemOneModeDescription": "Usa el modelo de decisión de System One para cada gasto, utilizando como pistas los gastos categorizados de este grupo y tus opciones revisadas. TypeSafe Jev es uno de esos modelos.",
+    "systemOneUnavailable": "System One no está disponible. El diccionario y el historial siguen disponibles.",
+    "systemOneConfidence": "Confianza de System One: {confidence}%",
+    "systemOneOptionProbability": "Probabilidad de la opción de System One: {probability}%",
+    "overallProgress": "Progreso general",
+    "fullPassProcessed": "Procesados {processed} de {total} gastos",
+    "stageProcessed": "Procesados {processed} de {total} gastos en este paso",
+    "saveSkipped": "{count} gastos se omitieron porque cambiaron.",
+    "sharedRunNotice": "Esta ejecución se comparte con otros administradores del grupo. Todos ven las mismas sugerencias.",
+    "saveConflictTitle": "{count} gastos cambiaron desde que empezó esta revisión",
+    "saveConflictDescription": "Alguien editó estos gastos o cambió su categoría fuera de esta ejecución. Guarda los otros gastos o edita de nuevo las categorías e intenta guardar una vez más.",
+    "saveConflictMore": "Y {count} más.",
+    "saveOtherExpenses": "Guardar otros gastos",
+    "receiptTitles": {
+      "freshMarket": "Mercado fresco",
+      "greenGrocer": "Verdulería",
+      "fruitStand": "Puesto de fruta",
+      "cornerBistro": "Bistró de la esquina",
+      "noodleHouse": "Casa de fideos",
+      "cafeLunch": "Almuerzo en café",
+      "flightTicket": "Billete de avión",
+      "airlineBaggage": "Equipaje de avión",
+      "boardingPass": "Tarjeta de embarque",
+      "homeSupplies": "Artículos del hogar",
+      "hardwareShop": "Ferretería",
+      "cleaningGoods": "Productos de limpieza",
+      "cinemaTickets": "Entradas de cine",
+      "movieNight": "Noche de cine",
+      "filmFestival": "Festival de cine",
+      "organicMarket": "Mercado ecológico",
+      "bakeryRun": "Compra en panadería",
+      "sushiBar": "Bar de sushi",
+      "pizzaNight": "Noche de pizza",
+      "airportLounge": "Sala VIP del aeropuerto",
+      "extraLegroom": "Espacio extra para piernas",
+      "laundryDetergent": "Detergente para ropa",
+      "storageBoxes": "Cajas de almacenamiento",
+      "popcornCombo": "Combo de palomitas",
+      "streamingRental": "Alquiler en streaming"
+    }
   },
   "ExpensePreview": {
     "title": "Vista previa del gasto",
@@ -2943,10 +3223,14 @@
         "deleteGroup": "Para eliminar permanentemente el grupo <target>{name}</target>, escribe su nombre exactamente como se muestra a continuación.",
         "deleteExpense": "Para eliminar permanentemente el gasto <target>{name}</target>, escribe su título exactamente como se muestra a continuación.",
         "deleteRecurringExpense": "Para confirmar la eliminación de <target>{name}</target>, escribe el título del gasto exactamente como se muestra a continuación.",
-        "removeParticipant": "Para eliminar a <target>{name}</target> de este grupo, escribe su nombre exactamente como se muestra a continuación."
+        "removeParticipant": "Para eliminar a <target>{name}</target> de este grupo, escribe su nombre exactamente como se muestra a continuación.",
+        "deleteAccount": "Para eliminar permanentemente tu cuenta, escribe <target>{name}</target> exactamente como se muestra a continuación."
       },
       "placeholder": "Escribe «{name}» aquí",
-      "mismatch": "No coincide. Escribe exactamente {name}."
+      "mismatch": "No coincide. Escribe exactamente {name}.",
+      "settingsNoteLink": "Cambiar en los ajustes de la cuenta",
+      "settingsNoteLead": "¿Prefieres omitir la escritura?",
+      "settingsNoteTail": "para usar un diálogo de confirmación simple."
     }
   },
   "Theme": {
@@ -2970,7 +3254,7 @@
     "failedDescription": "No hemos podido registrar este dispositivo. Las notificaciones configuradas para correo electrónico seguirán llegando allí; las opciones solo push no se redirigen.",
     "emailUsage": "Solo llegarán las notificaciones configuradas para correo electrónico hasta que actives un dispositivo. Puedes permitir las notificaciones en la configuración del navegador y volver a intentarlo desde Ajustes.",
     "done": "Listo",
-    "emailDeliveryDisabled": "El envío de correos está desactivado en esta instancia, por lo que las notificaciones por correo no pueden llegarte. Activa las notificaciones push en este dispositivo para seguir recibiendo actualizaciones."
+    "emailDeliveryDisabled": "El envío de correos está desactivado, por lo que las notificaciones por correo no pueden llegarte. Activa las notificaciones push en este dispositivo para seguir recibiendo actualizaciones."
   },
   "Unsubscribe": {
     "title": "¿Desactivar estos correos?",
@@ -3441,7 +3725,8 @@
     "hintTapToAddExpense": "Soy {name} — tócame para añadir un gasto.",
     "hintTapToCreateGroup": "Soy {name} — tócame para crear un grupo.",
     "billName": "Bill",
-    "offlineMessage": "No puedo crear nada mientras estás sin conexión."
+    "offlineMessage": "No puedo crear nada mientras estás sin conexión.",
+    "serverUnreachableMessage": "No puedo conectar con el servidor de Spliit en este momento — tu conexión parece estar bien, así que la culpa es nuestra."
   },
   "CreateSettlement": {
     "description": "Revisa el pago antes de registrarlo.",
@@ -3492,7 +3777,18 @@
       "existingPasskeyTitle": "¿Ya has registrado una clave de acceso?",
       "existingPasskeyDescription": "Vuelve a iniciar sesión con la clave de acceso en uno de tus dispositivos registrados.",
       "passkeySignIn": "Iniciar sesión con clave de acceso",
-      "passkeySignInError": "No se pudo iniciar sesión con esta clave de acceso. Inténtalo de nuevo o usa tu enlace de inicio de sesión."
+      "passkeySignInError": "No se pudo iniciar sesión con esta clave de acceso. Inténtalo de nuevo o usa tu enlace de inicio de sesión.",
+      "passkeyNameLabel": "Ponle un nombre a esta clave de acceso (opcional)",
+      "passkeyNamePlaceholder": "p. ej., Touch ID del MacBook",
+      "nameTitle": "Elige un nombre para mostrar",
+      "nameDescription": "Se muestra en tu clave de acceso y en tus grupos. Puedes cambiarlo más tarde.",
+      "nameLabel": "Nombre para mostrar",
+      "namePlaceholder": "Tu nombre",
+      "nameSave": "Guardar y continuar",
+      "nameSaving": "Guardando…",
+      "nameRequired": "Introduce un nombre para mostrar.",
+      "nameTooShort": "El nombre debe tener al menos 2 caracteres.",
+      "nameError": "No se pudo guardar el nombre para mostrar. Inténtalo de nuevo."
     },
     "onboarding": {
       "title": "Guarde su enlace de inicio de sesión",
@@ -3631,6 +3927,29 @@
         "review": {
           "title": "Revisar e importar",
           "detail": "Revisa duplicados y confirma la importación."
+        }
+      }
+    },
+    "categorize": {
+      "title": "Categorizar los gastos",
+      "description": "Sugerir categorías para los gastos existentes sin categorizar con System One. Revisa cada cambio antes de guardarlo.",
+      "start": "Categorizar los gastos",
+      "steps": {
+        "choose": {
+          "title": "Elige un método",
+          "detail": "Usa el diccionario y el historial o el modelo de decisión de System One."
+        },
+        "calibrate": {
+          "title": "Revisa muestras pequeñas",
+          "detail": "Corrige las sugerencias para que la siguiente ronda aprenda las categorías de tu grupo."
+        },
+        "review": {
+          "title": "Revisa todos los gastos",
+          "detail": "Los gastos de General aparecen primero en la tabla completa."
+        },
+        "save": {
+          "title": "Guardar las categorías",
+          "detail": "Los gastos solo cambian cuando confirmas la revisión final."
         }
       }
     }
@@ -4179,7 +4498,8 @@
       "valuesRecomputedTitle": "Valores recalculados",
       "viewExpenses": "Ver gastos",
       "waitDuplicate": "Espera a que termine la comprobación de duplicados antes de importar.",
-      "invalidRowTitle": "Fila de importación no válida"
+      "invalidRowTitle": "Fila de importación no válida",
+      "categorizeWithSystemOne": "Sugerir categorías para gastos sin categorizar con System One"
     }
   },
   "Sponsor": {
@@ -4334,5 +4654,26 @@
     "expenseMissing": "Este gasto no está en la descarga de este dispositivo. Reconecta para ver gastos más nuevos o antiguos.",
     "groupMissing": "Este grupo aún no terminó de descargarse.",
     "balancesStale": "Los saldos pueden estar desactualizados."
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit no está disponible",
+    "description": "No podemos conectar con el servidor de Spliit en este momento. Tu conexión parece estar bien — inténtalo de nuevo en unos instantes.",
+    "retry": "Intentar de nuevo"
+  },
+  "ApiStatusBanner": {
+    "message": "No se puede contactar con Spliit en este momento. Tu conexión parece estar bien — el problema está de nuestro lado.",
+    "statusLink": "Ver estado"
+  },
+  "AccountDeletionBanner": {
+    "scheduled": "La eliminación de la cuenta está programada para el {date}.",
+    "review": "Revisa o cancela la eliminación",
+    "executing": "La eliminación de la cuenta ha comenzado.",
+    "viewStatus": "Ver el estado de la eliminación"
+  },
+  "Updates": {
+    "title": "Actualizaciones",
+    "latest": "Novedades",
+    "viewAll": "Ver todas las actualizaciones",
+    "dismiss": "Entendido"
   }
 }

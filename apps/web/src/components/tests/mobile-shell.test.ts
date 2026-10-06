@@ -49,10 +49,34 @@ describe('mobile shell route policy', () => {
     })
     expect(
       getFocusedRouteMeta('/groups/demo/expenses/123/edit', translate),
-    ).toEqual({
+    ).toMatchObject({
       title: 'ExpensePreview.edit',
-      to: '/groups/$groupId/expenses',
+      to: '/groups/$groupId/expenses/$expenseId',
+      params: { groupId: 'demo', expenseId: '123' },
+      resetScroll: false,
+    })
+    expect(
+      getFocusedRouteMeta(
+        '/groups/demo/expenses/123/edit',
+        translate,
+        '/expenses?q=dinner',
+      ),
+    ).toMatchObject({
+      to: '/expenses',
+      search: { q: 'dinner', expenseId: '123', expenseGroupId: 'demo' },
+      resetScroll: false,
+    })
+    expect(
+      getFocusedRouteMeta(
+        '/groups/demo/expenses/123/edit',
+        translate,
+        '/groups/demo/activity',
+      ),
+    ).toMatchObject({
+      to: '/groups/$groupId/activity',
       params: { groupId: 'demo' },
+      search: { expenseId: '123' },
+      resetScroll: false,
     })
     expect(
       getFocusedRouteMeta('/groups/bulk-categorize/demo', translate),

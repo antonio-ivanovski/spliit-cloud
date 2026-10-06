@@ -11,15 +11,25 @@ Spliit is a Bun monorepo (web, api, domain, db). Explore `package.json`, workspa
 - Never hand-edit `apps/web/src/messages/*`. Use `bun i18n` and [`.agents/skills/translate-strings/SKILL.md`](.agents/skills/translate-strings/SKILL.md).
 - Prisma migrations: create with `bun --filter @spliit/db prisma-create-migration`. Never invent, backdate, or reuse a `YYYYMMDDHHmmss` folder prefix; the new directory must sort after every existing `packages/db/prisma/migrations/*` folder. See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
-## Releases
+## Done gate (run before reporting done, scoped to touched packages/files)
 
-Push a `v*.*.*` tag; `.github/workflows/release.yml` publishes images (`:vX.Y.Z` + `:latest`), creates the GitHub Release from `releases/vX.Y.Z.md`, and deploys prod. Write the notes file first — the workflow fails without it.
+- Run `check` and address issues. `format` is cheap, just run it; `lint:fix` only auto-fixes some issues, fix the rest manually.
+- Affected unit tests (+ `test:integration` files if API logic changed and DB is up; `i18n check --changes-only` if messages changed).
 
-`releases/next.md` is the evergreen draft: append an entry under the right section for every user-facing change, ending it with ``(`TBD` by @handle)`` — never invent a SHA or handle, the maintainer fills them at cut time with `bun release:prepare vX.Y.Z` (which renames the draft, substitutes `vNEXT`, and lists leftover `TBD`s). Structure the file like Immich releases: welcome line, `## Highlights` (bullet list, then a `###` subsection with screenshot per headline), `## What's Changed` (`### 🚨 Breaking Changes`, `### 🚀 Features`, `### 🐛 Bug fixes`), `**Full Changelog**` compare link. Screenshots go in `releases/assets/next/`, referenced as `./assets/next/<file>`. See `releases/README.md`.
+## Parallel agents
+
+- Scope validation to files you touched. If a repo-wide failure is in files you didn't touch, check for active neighbors in your directory (`opencode api session.list`, or for Codex: `find ~/.codex/sessions -type f -mmin -30 -exec grep -l "\"cwd\":\"$PWD\"" {} +`) plus `git status --short`; report it and keep finishing your own work to the best of your ability.
+- Only wait or stop if the conflict severely blocks you from finishing. Never `stash`, `reset`, or revert others' changes to green your gate — it undoes their work and they will escalate, making it worse for everyone.
+
+## Gotchas
+
+- No inline `typeof import(...)` types; use top-level `import type`.
 
 ## Skills
 
 - Translations: `.agents/skills/translate-strings/SKILL.md`
+- User-facing feature and fix work: `.agents/skills/release-notes/SKILL.md`
+- Preparing, publishing, or checking a release: `.agents/skills/cut-release/SKILL.md` (pushing a version tag deploys production).
 
 ## Environment-specific instructions
 

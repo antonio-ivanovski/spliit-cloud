@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -102,10 +102,24 @@ describe('Cloudflare Pages worker markdown negotiation', () => {
       { page: '/privacy', asset: '/privacy.md' },
       { page: '/imprint', asset: '/imprint.md' },
       { page: '/sponsor', asset: '/sponsor.md' },
+      { page: '/support', asset: '/support.md' },
     ])
+
+    const publicMarkdownAssets = readdirSync(publicDir)
+      .filter((file) => file.endsWith('.md') && file !== 'auth.md')
+      .map((file) => `/${file}`)
+      .sort()
+    expect(markdownPages.map(({ asset }) => asset).sort()).toEqual(
+      publicMarkdownAssets,
+    )
 
     for (const { asset } of markdownPages) {
       expect(existsSync(join(publicDir, asset)), asset).toBe(true)
+    }
+
+    for (const file of publicMarkdownAssets) {
+      if (file === '/auth.md') continue
+      expect(existsSync(join(publicDir, file)), file).toBe(true)
     }
   })
 
@@ -256,5 +270,114 @@ describe('Cloudflare Pages worker markdown negotiation', () => {
     )
     expect(response.headers.get('x-markdown-tokens')).toBeNull()
     expect(await response.text()).toBe('')
+  })
+})
+
+describe('Cloudflare Pages worker SEO head injection', () => {
+  const htmlShell = (title = 'Old title') =>
+    `<!doctype html><html lang="en"><head><title>${title}</title><meta name="description" content="Old description"><link rel="canonical" href="https://spliit.cloud/old"><meta property="og:title" content="Old"><meta property="og:description" content="Old"><meta property="og:url" content="https://spliit.cloud/old"><meta name="twitter:title" content="Old"><meta name="twitter:description" content="Old"><meta property="og:image" content="https://spliit.cloud/old.png"><meta name="twitter:image" content="https://spliit.cloud/old.png"><link rel="alternate" type="text/markdown" title="Old" href="/old.md"><script type="application/ld+json">{"old":true}</script></head><body><div id="root"></div></body></html>`
+
+  const htmlResponse = (title = 'Old title') =>
+    new Response(htmlShell(title), {
+      status: 200,
+      headers: { 'Content-Type': 'text/html; charset=utf-8' },
+    })
+
+  it('rewrites the homepage head with the canonical SEO title and description', async () => {
+    const fetchAsset = vi.fn(async () => htmlResponse())
+
+    const response = await worker.fetch(requestFor('/'), {
+      ASSETS: { fetch: fetchAsset },
+    })
+
+    const html = await response.text()
+    expect(html).toContain(
+      '<title>Spliit Cloud — Share expenses with friends &amp; family</title>',
+    )
+    expect(html).toContain(
+      '<meta name="description" content="Track shared expenses and settle up. Free and open source, synced and secured by your account.">',
+    )
+    expect(html).toContain(
+      '<link rel="canonical" href="https://spliit.cloud/">',
+    )
+    expect(html).toContain(
+      '<meta property="og:url" content="https://spliit.cloud/">',
+    )
+    expect(html).toContain('"@type":"WebApplication"')
+    expect(html).toContain('href="/index.md"')
+    expect(response.headers.get('Link')).toBe(
+      '</index.md>; rel="alternate"; type="text/markdown"',
+    )
+  })
+
+  it('rewrites the SPA fallback shell for /privacy with its own canonical', async () => {
+    const fetchAsset = vi.fn(async (input: AssetInput) => {
+      if (pathnameFrom(input) === '/') return htmlResponse()
+      return new Response('Not found', { status: 404 })
+    })
+
+    const response = await worker.fetch(requestFor('/privacy'), {
+      ASSETS: { fetch: fetchAsset },
+    })
+
+    const html = await response.text()
+    expect(html).toContain('<title>Privacy notice — Spliit Cloud</title>')
+    expect(html).toContain('How the public Spliit Cloud instance handles')
+    expect(html).toContain(
+      '<link rel="canonical" href="https://spliit.cloud/privacy">',
+    )
+    expect(html).toContain('"@type":"WebPage"')
+    expect(html).toContain('href="/privacy.md"')
+  })
+
+  it('normalizes trailing slashes to the canonical path', async () => {
+    const fetchAsset = vi.fn(async (input: AssetInput) => {
+      if (pathnameFrom(input) === '/') return htmlResponse()
+      return new Response('Not found', { status: 404 })
+    })
+
+    const response = await worker.fetch(requestFor('/terms/'), {
+      ASSETS: { fetch: fetchAsset },
+    })
+
+    const html = await response.text()
+    expect(html).toContain('<title>Terms of use — Spliit Cloud</title>')
+    expect(html).toContain(
+      '<link rel="canonical" href="https://spliit.cloud/terms">',
+    )
+    expect(response.headers.get('Link')).toBe(
+      '</terms.md>; rel="alternate"; type="text/markdown"',
+    )
+  })
+
+  it('leaves app routes without SEO metadata untouched', async () => {
+    const fetchAsset = vi.fn(async (input: AssetInput) => {
+      if (pathnameFrom(input) === '/') return htmlResponse('App shell')
+      return new Response('Not found', { status: 404 })
+    })
+
+    const response = await worker.fetch(requestFor('/groups/abc123'), {
+      ASSETS: { fetch: fetchAsset },
+    })
+
+    expect(await response.text()).toContain('<title>App shell</title>')
+    expect(response.headers.get('Link')).toBeNull()
+  })
+
+  it('leaves non-HTML responses untouched', async () => {
+    const jsonFetch = vi.fn(
+      async () =>
+        new Response('{"ok":true}', {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }),
+    )
+
+    const response = await worker.fetch(requestFor('/'), {
+      ASSETS: { fetch: jsonFetch },
+    })
+
+    expect(response.headers.get('Content-Type')).toBe('application/json')
+    expect(await response.text()).toBe('{"ok":true}')
   })
 })

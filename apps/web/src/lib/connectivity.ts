@@ -64,11 +64,13 @@ export async function trackedFetch(
 ): Promise<Response> {
   try {
     const response = await fetch(input, init)
-    // HTTP 5xx is a server response, not proof of offline: record it
-    // distinctly but clear the unreachable latch (the server answered).
+    // HTTP 5xx is a server response, not proof of offline: latch it the same
+    // way as a thrown connectivity error (so the UI blames the server instead
+    // of the user) and mirror it distinctly into the shared offline store.
     // HTTP 4xx (401 anonymous, 403/404 guards) is normal: the server
     // answered, so treat as success and clear any stale failure.
     if (response.status >= 500 && response.status <= 599) {
+      reportNetworkFailure()
       try {
         sharedStore()?.reportServerResponse(response.status)
       } catch {

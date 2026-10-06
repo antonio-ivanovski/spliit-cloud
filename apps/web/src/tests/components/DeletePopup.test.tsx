@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+import { SyncedAccountPreferencesProvider } from '@/components/account-preferences-sync'
 import { DeletePopup } from '@/components/delete-popup'
+import type { AccountPreferences } from '@/lib/account-preferences'
 import { render, screen, waitFor } from '@/test/test-utils'
 
 // The component now uses the responsive primitive, which switches between
@@ -126,5 +128,57 @@ describe('DeletePopup', () => {
 
     expect(onDelete).toHaveBeenCalledTimes(1)
     resolveDelete?.()
+  })
+
+  it('links to the delete confirmation setting from the typed dialog', async () => {
+    mockDesktopMediaQuery()
+    const { user } = render(
+      <DeletePopup onDelete={vi.fn()} confirmationTarget="Dinner" />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /delete/i }))
+
+    expect(screen.getByText(/prefer to skip the typing/i)).toBeInTheDocument()
+    expect(
+      screen.getByText(/to use a plain confirmation dialog/i),
+    ).toBeInTheDocument()
+    const settingsLink = screen.getByRole('link', {
+      name: /change in account settings/i,
+    })
+    expect(settingsLink).toHaveAttribute(
+      'href',
+      '/account/settings#account-preference-destructive-confirmation-level',
+    )
+  })
+
+  it('offers a quick confirm without typing in standard mode', async () => {
+    mockDesktopMediaQuery()
+    const onDelete = vi.fn().mockResolvedValue(undefined)
+    const standardPreferences: AccountPreferences = {
+      defaultCurrencyCode: 'USD',
+      timeZone: 'UTC',
+      locale: 'en-US',
+      theme: 'system',
+      aiCategoryExtractEnabled: null,
+      aiReceiptScanEnabled: null,
+      aiVoiceExpenseEnabled: null,
+      destructiveConfirmationLevel: 'standard',
+    }
+    const { user } = render(
+      <SyncedAccountPreferencesProvider value={standardPreferences}>
+        <DeletePopup onDelete={onDelete} confirmationTarget="Dinner" />
+      </SyncedAccountPreferencesProvider>,
+    )
+
+    await user.click(screen.getByRole('button', { name: /delete/i }))
+
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+    // The settings footnote only shows when typing is required.
+    expect(
+      screen.queryByRole('link', { name: /change in account settings/i }),
+    ).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /^yes$/i }))
+    await waitFor(() => expect(onDelete).toHaveBeenCalledTimes(1))
   })
 })

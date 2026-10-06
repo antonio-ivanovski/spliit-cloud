@@ -22,10 +22,26 @@ export const expenseIdParamSchema = cuidLike
 
 const optionalString = z.string().optional().catch(undefined)
 
+// TanStack Router parses bare `true`/`false` URL values as booleans before
+// route validation. Keep filter flags as strings for their URL-backed readers.
+const booleanString = z
+  .preprocess(
+    (value) => (typeof value === 'boolean' ? String(value) : value),
+    z.enum(['true', 'false']).optional(),
+  )
+  .catch(undefined)
+
 const numericString = z
-  .string()
-  .regex(/^-?\d+(\.\d+)?$/, 'expected a numeric string')
-  .optional()
+  .preprocess(
+    (value) =>
+      typeof value === 'number' && Number.isFinite(value)
+        ? String(value)
+        : value,
+    z
+      .string()
+      .regex(/^-?\d+(\.\d+)?$/, 'expected a numeric string')
+      .optional(),
+  )
   .catch(undefined)
 
 const integerString = z
@@ -40,9 +56,15 @@ const dateString = z
   .optional()
   .catch(undefined)
 
-const globalExpensesReturnTo = z
+/**
+ * Internal return path for expense edit/create flows. Allows the global
+ * expenses feed (`/expenses?...`) and the group activity tab
+ * (`/groups/:groupId/activity`), so an edit started from an activity preview
+ * can navigate back to the activity modal instead of the expenses list.
+ */
+const expenseReturnTo = z
   .string()
-  .regex(/^\/expenses(?:\?[^#]*)?$/)
+  .regex(/^(?:\/expenses(?:\?[^#]*)?|\/groups\/[^/]+\/activity(?:\?[^#]*)?)$/)
   .optional()
   .catch(undefined)
 
@@ -94,7 +116,7 @@ export const groupAccessSearchSchema = z.object({
 export const groupSearchSchema = groupAccessSearchSchema.extend({
   seriesId: optionalString,
   friendLinkInvite: optionalString,
-  returnTo: globalExpensesReturnTo,
+  returnTo: expenseReturnTo,
   expCategories: z.string().optional().catch(undefined),
   expPaidBy: z.string().optional().catch(undefined),
   expPaidByMatch: z.enum(['any', 'all', 'exact']).optional().catch(undefined),
@@ -105,8 +127,8 @@ export const groupSearchSchema = groupAccessSearchSchema.extend({
   expMinAmount: numericString,
   expMaxAmount: numericString,
   expCurrencies: z.string().optional().catch(undefined),
-  expShowSettlements: z.enum(['true', 'false']).optional().catch(undefined),
-  expShowAll: z.enum(['true', 'false']).optional().catch(undefined),
+  expShowSettlements: booleanString,
+  expShowAll: booleanString,
   expSortBy: z
     .enum(['expenseDate', 'createdAt', 'amount'])
     .optional()
@@ -125,7 +147,7 @@ export const expenseParamsSchema = z.object({
 
 export const editExpenseSearchSchema = groupAccessSearchSchema.extend({
   scope: z.enum(['OCCURRENCE', 'THIS_AND_FUTURE']).optional().catch(undefined),
-  returnTo: globalExpensesReturnTo,
+  returnTo: expenseReturnTo,
 })
 
 export const homeSearchSchema = z.object({
@@ -148,8 +170,8 @@ export const globalExpensesSearchSchema = z.object({
   minAmount: numericString,
   maxAmount: numericString,
   currencies: optionalString,
-  showSettlements: z.enum(['true', 'false']).optional().catch(undefined),
-  includeArchived: z.enum(['true', 'false']).optional().catch(undefined),
+  showSettlements: booleanString,
+  includeArchived: booleanString,
   sortBy: z
     .enum(['expenseDate', 'createdAt', 'amount'])
     .optional()
@@ -160,7 +182,20 @@ export const globalExpensesSearchSchema = z.object({
 })
 
 export const expensePreviewSearchSchema = groupAccessSearchSchema.extend({
-  returnTo: globalExpensesReturnTo,
+  returnTo: expenseReturnTo,
+})
+
+export const activitySearchSchema = groupAccessSearchSchema.extend({
+  expenseId: optionalString,
+  /**
+   * Opts out of the default involving-only activity timeline (omitted when at
+   * the default `false`). Mirrors `expShowAll` on the expenses list.
+   */
+  actShowAll: booleanString,
+})
+
+export const bulkCategorizeSearchSchema = z.object({
+  expenseId: z.string().min(1).optional().catch(undefined),
 })
 
 export const expenseImportSearchSchema = groupAccessSearchSchema.extend({
@@ -215,7 +250,7 @@ export const createExpenseSearchSchema = groupAccessSearchSchema.extend({
   // When set, the create form pre-populates from this source expense
   // and overrides `expenseDate` to today (a.k.a. "Make a copy" flow).
   fromExpenseId: z.string().optional().catch(undefined),
-  returnTo: globalExpensesReturnTo,
+  returnTo: expenseReturnTo,
 })
 
 export const balancesSearchSchema = groupAccessSearchSchema.extend({

@@ -1,6 +1,121 @@
 import type { LinkProps } from '@tanstack/react-router'
 
-export type ExpenseCancelLink = Pick<LinkProps, 'to' | 'params' | 'search'>
+export type ExpenseCancelLink = Pick<
+  LinkProps,
+  'to' | 'params' | 'search' | 'resetScroll' | 'replace'
+>
+
+/** Keep the list's URL-backed filters and sort while opening a preview. */
+export function expensePreviewSearch(returnTo?: string) {
+  return (search: Record<string, unknown>) => ({
+    ...search,
+    ...(returnTo ? { returnTo } : {}),
+  })
+}
+
+/** Drop only the preview's return path when going back to the group list. */
+export function expensePreviewCloseSearch(search: Record<string, unknown>) {
+  return { ...search, returnTo: undefined }
+}
+
+/** Keep the source list's search state when moving into the edit page. */
+export function expenseEditSearch(
+  scope?: 'OCCURRENCE' | 'THIS_AND_FUTURE',
+  returnTo?: string,
+) {
+  if (isGlobalExpensesReturnTo(returnTo) || isActivityReturnTo(returnTo)) {
+    return () => ({ scope, returnTo })
+  }
+  return (search: Record<string, unknown>) => ({
+    ...search,
+    ...(scope ? { scope } : {}),
+    ...(returnTo ? { returnTo } : {}),
+  })
+}
+
+/** Activity-tab return path for expense previews (`/groups/:id/activity`). */
+export function buildActivityReturnTo(
+  groupId: string,
+  actShowAll?: string | null,
+) {
+  return `/groups/${groupId}/activity${actShowAll === 'true' ? '?actShowAll=true' : ''}`
+}
+
+/** Cancel and save from edit both return to the source preview. */
+export function expenseEditPreviewLink(
+  groupId: string,
+  expenseId: string,
+  returnTo?: string,
+): ExpenseCancelLink {
+  if (isGlobalExpensesReturnTo(returnTo)) {
+    return {
+      to: '/expenses',
+      search: {
+        ...getGlobalExpensesSearch(returnTo),
+        expenseId,
+        expenseGroupId: groupId,
+      } as ExpenseCancelLink['search'],
+      resetScroll: false,
+      replace: true,
+    }
+  }
+  if (isActivityReturnTo(returnTo)) {
+    return {
+      to: '/groups/$groupId/activity',
+      params: { groupId },
+      search: {
+        ...getActivitySearch(returnTo),
+        expenseId,
+      } as ExpenseCancelLink['search'],
+      resetScroll: false,
+      replace: true,
+    }
+  }
+  return {
+    to: '/groups/$groupId/expenses/$expenseId',
+    params: { groupId, expenseId },
+    search: (search: Record<string, unknown>) => ({
+      ...search,
+      scope: undefined,
+    }),
+    resetScroll: false,
+    replace: true,
+  }
+}
+
+/** Deletion has no preview to return to, so retain the source list instead. */
+export function expenseEditListLink(
+  groupId: string,
+  returnTo?: string,
+): ExpenseCancelLink {
+  if (isGlobalExpensesReturnTo(returnTo) && returnTo) {
+    return { ...globalExpensesLink(returnTo), resetScroll: false }
+  }
+  if (isActivityReturnTo(returnTo)) {
+    return {
+      to: '/groups/$groupId/activity',
+      params: { groupId },
+      search: (search: Record<string, unknown>) => ({
+        ...search,
+        ...getActivitySearch(returnTo),
+        expenseId: undefined,
+        returnTo: undefined,
+        scope: undefined,
+      }),
+      resetScroll: false,
+    }
+  }
+  return {
+    to: '/groups/$groupId/expenses',
+    params: { groupId },
+    search: (search: Record<string, unknown>) => ({
+      ...search,
+      returnTo: undefined,
+      scope: undefined,
+    }),
+    resetScroll: false,
+  }
+}
 
 function globalExpensesLink(returnTo: string): ExpenseCancelLink {
   return {
@@ -9,7 +124,7 @@ function globalExpensesLink(returnTo: string): ExpenseCancelLink {
   }
 }
 
-/** Cancel from the expense form: group home, or the global expenses feed. */
+/** Cancel from the expense form: group home, activity tab, or global feed. */
 export function expenseFormCancelLink(
   groupId: string,
   returnTo?: string,
@@ -17,19 +132,33 @@ export function expenseFormCancelLink(
   if (isGlobalExpensesReturnTo(returnTo) && returnTo) {
     return globalExpensesLink(returnTo)
   }
+  if (isActivityReturnTo(returnTo)) {
+    return {
+      to: '/groups/$groupId/activity',
+      params: { groupId },
+      search: getActivitySearch(returnTo) as ExpenseCancelLink['search'],
+    }
+  }
   return {
     to: '/groups/$groupId',
     params: { groupId },
   }
 }
 
-/** Back to the group expense list, or the global expenses feed. */
+/** Back to the group expense list, activity tab, or global expenses feed. */
 export function expenseListLink(
   groupId: string,
   returnTo?: string,
 ): ExpenseCancelLink {
   if (isGlobalExpensesReturnTo(returnTo) && returnTo) {
     return globalExpensesLink(returnTo)
+  }
+  if (isActivityReturnTo(returnTo)) {
+    return {
+      to: '/groups/$groupId/activity',
+      params: { groupId },
+      search: getActivitySearch(returnTo) as ExpenseCancelLink['search'],
+    }
   }
   return {
     to: '/groups/$groupId/expenses',
@@ -53,4 +182,34 @@ export function getGlobalExpensesSearch(returnTo?: string) {
 
 export function isGlobalExpensesReturnTo(returnTo?: string) {
   return getGlobalExpensesSearch(returnTo) !== undefined
+}
+
+/**
+ * Convert a validated activity return path back into the search object expected
+ * by TanStack Router, so the activity view mode (`actShowAll`) survives the
+ * expense preview/edit round-trip. Mirrors `getGlobalExpensesSearch` for the
+ * global feed.
+ */
+export function getActivitySearch(returnTo?: string) {
+  if (!returnTo || !isActivityReturnTo(returnTo)) return undefined
+
+  const url = new URL(returnTo, 'http://spliit.local')
+  if (!/^\/groups\/[^/]+\/activity$/.test(url.pathname)) return undefined
+
+  return Object.fromEntries(url.searchParams.entries())
+}
+
+/**
+ * Activity-tab return path (`/groups/:groupId/activity`). Validated as an
+ * internal path only, so a stale URL can never become an external target.
+ */
+export function isActivityReturnTo(returnTo?: string) {
+  if (!returnTo) return false
+  if (!/^\/groups\/[^/]+\/activity(?:\?[^#]*)?$/.test(returnTo)) return false
+  try {
+    const url = new URL(returnTo, 'http://spliit.local')
+    return /^\/groups\/[^/]+\/activity$/.test(url.pathname)
+  } catch {
+    return false
+  }
 }

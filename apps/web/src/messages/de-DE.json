@@ -81,13 +81,14 @@
     "signOutOffline": "Zum Abmelden verbinden"
   },
   "Footer": {
-    "madeIn": "Von der Open-Source-Community mit Liebe gemacht ❤️",
+    "madeIn": "Von der <github>Open-Source-Community</github> mit Liebe gemacht ❤️",
     "legalNavigation": "Rechtliche Links",
     "privacy": "Datenschutz",
     "terms": "Nutzungsbedingungen",
     "imprint": "Impressum",
     "sponsor": "Sponsoring",
-    "timeLabel": "Tageszeit"
+    "timeLabel": "Tageszeit",
+    "status": "Status"
   },
   "Expenses": {
     "title": "Ausgaben",
@@ -234,7 +235,9 @@
       "showLess": "Weniger anzeigen"
     },
     "copyToast": "Ausgabe wird kopiert. Die bestehenden Ausgabedetails werden zum Erstellen einer neuen Ausgabe verwendet.",
-    "incomeBadge": "Einnahme"
+    "incomeBadge": "Einnahme",
+    "paidBySingle": "Bezahlt von <strong>{paidBy}</strong> · bezahlt für <paidFor></paidFor>",
+    "paidByMultipleSingle": "Bezahlt von <paidByNames></paidByNames> · bezahlt für <paidFor></paidFor>"
   },
   "Groups": {
     "myGroups": "Meine Gruppen",
@@ -383,7 +386,8 @@
             "monthly": "Monate",
             "yearly": "Jahre"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Kategorien für nicht kategorisierte Ausgaben mit System One vorschlagen"
       },
       "Destination": {
         "heading": "Wohin möchtest du <strong>{name}</strong> importieren? ({participantCount} Teilnehmer · {expenseCount} Ausgaben)",
@@ -682,7 +686,9 @@
       "description": "Gruppen können jetzt ein Emoji neben ihrem Namen anzeigen. Wir haben {emoji} in „{name}“ bemerkt.",
       "openSettings": "Gruppeneinstellungen öffnen",
       "notNow": "Nicht jetzt"
-    }
+    },
+    "groupTabsHint": "Möchtest du die Gruppenreiter neu anordnen oder nicht genutzte Gruppenreiter ausblenden?",
+    "groupTabsHintLink": "Reiter in den Kontoeinstellungen anpassen"
   },
   "GroupForm": {
     "title": "Gruppeninformationen",
@@ -1076,7 +1082,8 @@
       "allItemsSplitEdit": "Teilung aller Artikel bearbeiten",
       "allItemsSplitModalTitle": "Teilung aller Artikel",
       "remainderAllocationProportional": "Proportional zu Artikeln",
-      "remainderProportionalHint": "Teile diesen Betrag anhand der Artikelzwischensumme jeder Person auf. Nützlich für Steuern und Trinkgelder."
+      "remainderProportionalHint": "Teile diesen Betrag anhand der Artikelzwischensumme jeder Person auf. Nützlich für Steuern und Trinkgelder.",
+      "errorExceedsAmountDetails": "Die Artikelsumme ({itemsTotal}) übersteigt den Ausgabenbetrag um {excess}."
     },
     "leaveItemized": {
       "title": "Aufteilungsart wechseln?",
@@ -1112,7 +1119,15 @@
       "done": "Fertig",
       "yourTime": "deine Zeit",
       "invalidDate": "Gib ein gültiges Datum ein.",
-      "invalidTime": "Gib eine gültige Uhrzeit ein (HH:mm)."
+      "invalidTime": "Gib eine gültige Uhrzeit ein (HH:mm).",
+      "hourLabel": "Stunden",
+      "minuteLabel": "Minuten",
+      "periodLabel": "vorm./nachm.",
+      "timeWheelHint": "Scrolle oder tippe, um die Uhrzeit einzustellen. Das Datum bleibt gleich.",
+      "now": "Jetzt",
+      "morning": "Morgen",
+      "midday": "Mittag",
+      "evening": "Abend"
     },
     "settlementTitle": "Ausgleichszahlung",
     "settlementHint": "{category}: Zählt in Totals, Statistiken und Budgets nicht als Ausgabe. Aktualisiert trotzdem, wer wem etwas schuldet.",
@@ -1156,7 +1171,8 @@
       "description": "Gib den endgültigen Betrag einschließlich aller Gebühren ein.",
       "impliedRate": "Impliziter Wechselkurs: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Kategorievorschläge"
+    "otherSuggestions": "Kategorievorschläge",
+    "paidForItemizedEmptyHint": "Weise Personen den Artikeln zu, um den Anteil jeder Person zu sehen."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Dokument löschen",
@@ -1871,7 +1887,7 @@
       "nameRequired": "Gib einen Anzeigenamen ein.",
       "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
       "magicLinkFailed": "Der Anmeldelink konnte nicht gesendet werden.",
-      "signupInviteRequired": "Diese Instanz ist nur auf Einladung zugänglich. Nutze einen Einladungslink oder bitte jemanden, dich in eine Gruppe einzuladen.",
+      "signupInviteRequired": "Anmeldungen sind nur auf Einladung möglich. Nutze einen Einladungslink oder bitte jemanden, dich in eine Gruppe einzuladen.",
       "passkeyFailed": "Anmeldung mit Passkey fehlgeschlagen. Versuche es erneut oder nutze eine andere Anmeldemethode."
     },
     "loading": "Lädt…",
@@ -1881,14 +1897,14 @@
     "signInWithGithub": "Weiter mit GitHub",
     "legalNotice": "Mit der Fortsetzung stimmst du den <terms>Nutzungsbedingungen</terms> zu und nimmst den <privacy>Datenschutzhinweis</privacy> zur Kenntnis.",
     "inviteOnly": {
-      "message": "Diese Instanz ist nur auf Einladung zugänglich. Nutze einen Einladungslink oder bitte jemanden, dich in eine Gruppe einzuladen.",
+      "message": "Anmeldungen sind nur auf Einladung möglich. Nutze einen Einladungslink oder bitte jemanden, dich in eine Gruppe einzuladen.",
       "useInvitedEmail": "Verwende die E-Mail-Adresse, mit der du eingeladen wurdest."
     },
     "signInWithX": "Weiter mit X",
     "signInWithOidc": "Weiter mit {name}",
     "signInAnonymously": "Anonym",
     "lastUsed": "Zuletzt verwendet",
-    "emailAuthDisabled": "Die Anmeldung per E-Mail ist in dieser Instanz deaktiviert. Bitte nutze Single Sign-on (SSO).",
+    "emailAuthDisabled": "Die Anmeldung per E-Mail ist deaktiviert. Bitte nutze Single Sign-on (SSO).",
     "signInWithPasskey": "Mit Passkey anmelden"
   },
   "CompleteProfile": {
@@ -2012,7 +2028,7 @@
         "joined_zero": "{count} Personen sind bisher beigetreten",
         "retry": "Erneut versuchen"
       },
-      "emailDeliveryDisabled": "Der E-Mail-Versand ist in dieser Instanz deaktiviert. Die Einladung wird trotzdem erstellt und erscheint, sobald die eingeladene Person sich anmeldet; nutze einen Einladungslink, damit sie etwas zum Öffnen hat."
+      "emailDeliveryDisabled": "Der E-Mail-Versand ist deaktiviert. Die Einladung wird trotzdem erstellt und erscheint, sobald die eingeladene Person sich anmeldet; nutze einen Einladungslink, damit sie etwas zum Öffnen hat."
     },
     "invitations": {
       "title": "Ausstehende Einladungen",
@@ -2437,7 +2453,7 @@
       "masterDescription": "Deaktivieren, um alle E-Mail- und Push-Benachrichtigungen stummzuschalten. Deine Auswahl pro Kategorie bleibt erhalten.",
       "emailAddToEnable": "Füge eine bestätigte E-Mail hinzu, um Benachrichtigungen im Posteingang zu erhalten.",
       "emailAddLink": "E-Mail hinzufügen",
-      "emailDeliveryDisabled": "Der E-Mail-Versand ist in dieser Instanz deaktiviert. Deine E-Mail-Auswahl wird gespeichert, aber erst versendet, wenn der Administrator E-Mail konfiguriert."
+      "emailDeliveryDisabled": "Der E-Mail-Versand ist deaktiviert. Deine E-Mail-Auswahl wird gespeichert, aber erst versendet, wenn E-Mail eingerichtet ist."
     },
     "preferences": {
       "title": "App-Einstellungen",
@@ -2456,6 +2472,22 @@
       "mascotOptions": {
         "off": "Aus",
         "bill": "Bill, der Beleg"
+      },
+      "groupTabs": "Gruppenreiter",
+      "groupTabsHelp": "Wähle aus, welche Reiter in jeder Gruppe angezeigt werden und in welcher Reihenfolge.",
+      "groupTabsCustomize": "Anpassen",
+      "groupTabsSave": "Speichern",
+      "groupTabsDiscard": "Verwerfen",
+      "groupTabsReset": "Auf Standard zurücksetzen",
+      "groupTabsHide": "{name} ausblenden",
+      "groupTabsShow": "{name} anzeigen",
+      "groupTabsMoveUp": "{name} nach oben verschieben",
+      "groupTabsMoveDown": "{name} nach unten verschieben",
+      "deleteConfirmation": "Bestätigung zum Löschen von Ausgaben",
+      "deleteConfirmationHelp": "Schnelles Löschen fragt einmal nach. Löschen mit Eingabe verlangt, dass du zuerst den Ausgabetitel eingibst. Eine Gruppe zu löschen oder ein Mitglied zu entfernen erfordert immer die Eingabe.",
+      "deleteConfirmationOptions": {
+        "standard": "Bestätigungsdialog",
+        "strict": "Dialog mit Eingabe"
       }
     },
     "aiPreferences": {
@@ -2648,7 +2680,107 @@
       "backedUp": "Gesichert",
       "removeWarning": "Das kann nicht rückgängig gemacht werden. Das Gerät meldet dich dann nicht mehr per Passkey an — du kannst es jederzeit erneut registrieren.",
       "removeLastWarning": "Das ist dein letzter Passkey. Wenn es deine einzige Anmeldemethode ist, ist das Entfernen blockiert, bis du einen Anmeldelink gespeichert oder eine weitere Anmeldemethode hinzugefügt hast.",
-      "anonymousHelpNoLink": "Für dieses Gastkonto ist kein Anmeldelink gespeichert. Erstelle einen in der Anmeldelink-Zeile unten — er funktioniert auf jedem Gerät."
+      "anonymousHelpNoLink": "Für dieses Gastkonto ist kein Anmeldelink gespeichert. Erstelle einen in der Anmeldelink-Zeile unten — er funktioniert auf jedem Gerät.",
+      "reauthTitle": "Melde dich erneut an, um einen Passkey hinzuzufügen",
+      "reauthDescription": "Zu deiner Sicherheit erfordert das Hinzufügen eines Passkeys eine aktuelle Anmeldung. Du wirst abgemeldet, meldest dich erneut an und landest direkt wieder hier, um den Vorgang abzuschließen.",
+      "reauthConfirm": "Melde dich erneut an",
+      "reauthAnonymousTitle": "Speichere zuerst einen Anmeldelink",
+      "reauthAnonymousDescription": "Dieses Gastkonto hat noch keinen Anmeldelink und noch keinen Passkey. Wenn du dich jetzt abmeldest, verlierst du den Zugang für immer — speichere zuerst einen Anmeldelink im Bereich Anmeldelink und komm dann zurück, um einen Passkey hinzuzufügen."
+    },
+    "deletion": {
+      "sectionTitle": "Gefahrenzone",
+      "sectionDescription": "Lösche dein Konto und jede Anmeldemethode endgültig.",
+      "rowLabel": "Konto löschen",
+      "rowDescription": "Entfernt dein Profil, deine Sitzungen und deine Einstellungen nach einer Karenzzeit von 48 Stunden. Geteilte Ausgaben bleiben ohne deine persönlichen Daten in den Gruppen anderer Mitglieder.",
+      "open": "Konto löschen…",
+      "scheduledTitle": "Kontolöschung geplant",
+      "scheduledDescription": "Die Löschung beginnt frühestens am {date}. Dein Konto bleibt aktiv, bis sie beginnt. Gruppen, Mitglieder und Ausgaben können sich während der Wartezeit ändern; deine Auswahl gilt für ihren Stand zum Zeitpunkt der Löschung. Du kannst bis zum Beginn der Löschung abbrechen. Eine Bestätigungs-E-Mail wurde an {email} gesendet.",
+      "cancel": "Löschung abbrechen",
+      "cancelling": "Wird abgebrochen…",
+      "cancelled": "Kontolöschung abgebrochen.",
+      "dialogTitle": "Kontolöschung planen?",
+      "dialogDescription": "Damit wird die Löschung nach einer Wartezeit von 48 Stunden geplant; jetzt wird nichts gelöscht. Du kannst bis zum Beginn der Löschung abbrechen. Deine Auswahl gilt für die Gruppen und Salden zu diesem Zeitpunkt. Sobald die Löschung beginnt, lässt sie sich nicht rückgängig machen.",
+      "farewellTitle": "Schade, dass du gehst",
+      "farewellBody": "Wenn wir etwas tun können, damit du bleibst, <feedbackLink>teile uns dein Feedback mit</feedbackLink> – das dauert eine Minute und hilft uns, besser zu werden.",
+      "groupsTitle": "Was mit deinen Gruppen passiert",
+      "leaveGroup": "Du wirst „{name}“ verlassen.",
+      "deleteGroup": "„{name}“ wird endgültig gelöscht – du bist das letzte Mitglied.",
+      "lastAdmin": "Du bist der letzte Admin von „{name}“ – ein anderes Mitglied wird automatisch befördert.",
+      "settleBalances": "Offene Salden in „{name}“ werden automatisch ausgeglichen.",
+      "friendLedger": "Dein Freundeskonto mit {name} ist ausgeglichen und geschlossen.",
+      "friendLedgerUnnamed": "Dein Freundeskonto ist ausgeglichen und geschlossen.",
+      "friendLedgerFallback": "ein Freundeskonto",
+      "noGroups": "Du bist kein Mitglied einer Gruppe.",
+      "accessTitle": "Anmeldung und Einladungen",
+      "pendingInvites_one": "Bei der Löschung wird {count} ausstehende Einladung, die du gesendet hast, widerrufen.",
+      "pendingInvites_other": "Bei der Löschung werden {count} ausstehende Einladungen, die du gesendet hast, widerrufen.",
+      "keepNameLabel": "Meinen Namen in der geteilten Historie behalten",
+      "keepNameDescription": "Geteilte Ausgaben zeigen weiterhin „{name}“. Ansonsten wird dein Name überall durch „Gelöschtes Mitglied“ ersetzt.",
+      "customNameLabel": "Zu behaltender Name",
+      "settleLabel": "Salden bei der Löschung als ausgeglichen markieren",
+      "settleDescription": "Übrige Salden werden automatisch ausgeglichen. Andernfalls bleiben sie auf deinem Platzhalternamen.",
+      "leaveBalances": "Offene Salden in „{name}“ bleiben, wie sie sind.",
+      "friendLeaveBalances": "Dein Saldo mit {name} bleibt, wie er ist.",
+      "confirmWord": "LÖSCHEN",
+      "ackLabel": "Ich verstehe, dass dies endgültig ist und geteilte Ausgaben ohne meine persönlichen Daten in den Gruppen der anderen Mitglieder bleiben.",
+      "exportHint": "Erst eine Kopie sichern? <exportLink>Exportiere ein Backup</exportLink>, bevor du fortfährst.",
+      "schedule": "Löschung planen",
+      "scheduling": "Wird geplant…",
+      "scheduled": "Löschung geplant. Prüfe deine E-Mails, um sie zu überprüfen oder abzubrechen.",
+      "dialogCancel": "Mein Konto behalten",
+      "reauthTitle": "Melde dich erneut an, um dein Konto zu löschen",
+      "reauthDescription": "Zu deiner Sicherheit erfordert das Löschen deines Kontos eine aktuelle Anmeldung. Du wirst abgemeldet, meldest dich erneut an und landest direkt wieder hier, um den Vorgang abzuschließen.",
+      "reauthConfirm": "Melde dich erneut an",
+      "errors": {
+        "generic": "Etwas ist schiefgelaufen. Versuch es erneut.",
+        "loadFailed": "Die Löschdetails konnten nicht geladen werden.",
+        "emailMismatch": "Die eingegebene E-Mail stimmt nicht mit deiner Konto-E-Mail überein.",
+        "alreadyRequested": "Für dieses Konto liegt bereits eine Löschanfrage vor.",
+        "sessionNotFresh": "Deine Sitzung ist zu alt für diese Aktion. Melde dich erneut an und versuch es dann noch einmal.",
+        "jobsDisabled": "Zum Löschen des Kontos ist der Hintergrunddienst nötig, der in dieser Bereitstellung deaktiviert ist.",
+        "ackRequired": "Bestätige zuerst, dass du die Folgen verstehst.",
+        "invalidDisplayName": "Gib einen Namen mit 1 bis 100 Zeichen ein.",
+        "cancelFailed": "Die Löschung konnte nicht abgebrochen werden. Versuch es erneut."
+      },
+      "groupsToDeleteTitle": "Gruppen, die gelöscht werden",
+      "groupsToDeleteDescription": "Bei der Löschung werden Gruppen dauerhaft gelöscht, in denen du weiterhin das letzte aktive Mitglied bist.",
+      "groupsToLeaveTitle": "Gruppen, die du verlässt",
+      "groupsToLeaveDescription": "Bei der Löschung verlässt du Gruppen, die weiterhin andere aktive Mitglieder haben. Diese Gruppen bleiben für alle anderen erhalten.",
+      "friendsTitle": "Freunde",
+      "friendsDescription": "Deine direkten Salden mit diesen Freunden.",
+      "backToSettings": "Zurück zu den Einstellungen",
+      "pageTitle": "Konto löschen",
+      "loading": "Löschdetails werden geladen",
+      "choicesTitle": "Deine Löschoptionen",
+      "nameTitle": "Name im geteilten Verlauf",
+      "removeNameLabel": "Meinen Namen durch „Gelöschtes Mitglied“ ersetzen",
+      "balancesTitle": "Verbleibende Salden",
+      "keepBalancesLabel": "Verbleibende Salden unverändert lassen",
+      "balanceExplanation": "Wenn du den Ausgleich wählst, werden beim Löschen deines Kontos Ausgleichseinträge erfasst. Es wird kein Geld übertragen. Andernfalls bleiben die Salden in deinem geteilten Verlauf bestehen.",
+      "confirmationTitle": "Kontolöschung bestätigen",
+      "retry": "Erneut versuchen",
+      "pageDescription": "Plane die Löschung deines Kontos nach einer Wartezeit von 48 Stunden. Dein Konto bleibt aktiv, bis die Löschung beginnt, und du kannst vorher abbrechen.",
+      "reviewChoicesTitle": "Deine Auswahl",
+      "consequencesTitle": "Was passieren wird",
+      "reviewConfirmTitle": "Löschung bestätigen",
+      "backupLink": "Sicherung exportieren",
+      "keptNameExplanation": "Bei der Löschung zeigen geteilte Ausgaben „{name}“. Dein Profilname bleibt bis dahin unverändert.",
+      "removedNameExplanation": "Bei der Löschung zeigen geteilte Ausgaben „Gelöschtes Mitglied“. Dein Profilname bleibt bis dahin unverändert.",
+      "keptBalancesExplanation": "Wenn die Löschung beginnt, bleiben offene Salden in deinem gemeinsamen Verlauf erhalten, einschließlich der während der Wartezeit hinzugefügten Ausgaben.",
+      "settledBalancesExplanation": "Bei der Löschung markieren Ausgleichseinträge die dann aktuellen Salden in Gruppen, denen du weiterhin angehörst, als ausgeglichen, auch in archivierten Gruppen. Salden in Gruppen, die du bereits verlassen hast oder aus denen du entfernt wurdest, bleiben unverändert. Dabei wird kein Geld übertragen.",
+      "rowBalancesKept": "Offene Salden bleiben unverändert.",
+      "rowBalancesSettled": "Der Saldo zum Zeitpunkt der Löschung wird als ausgeglichen markiert.",
+      "rowAdmin": "Bei der Löschung wird ein anderes Mitglied Admin, falls du weiterhin der letzte Admin bist.",
+      "friendKept": "Dein Saldo bleibt unverändert.",
+      "friendSettled": "Bei der Löschung wird dein dann aktueller Saldo als ausgeglichen markiert und das Freundeskonto geschlossen.",
+      "accessExplanation": "Diese Anmeldemethoden funktionieren nicht mehr, sobald dein Konto gelöscht ist.",
+      "invitesTitle": "Ausstehende Einladungen",
+      "balanceUnavailable": "Saldo nicht verfügbar",
+      "archivedBalancesKept": "Diese archivierte Gruppe bleibt schreibgeschützt. Dein verbleibender Saldo bleibt erhalten.",
+      "signInMethodsRemoved": "Diese Anmeldemethoden funktionieren danach nicht mehr: {methods}.",
+      "consequencesTiming": "Diese Übersicht zeigt den aktuellen Stand deines Kontos. Gruppen, Mitglieder und Ausgaben können sich bis zum Beginn der Löschung ändern. Deine Auswahl gilt für die Gruppen, denen du dann angehörst, und deren Salden zu diesem Zeitpunkt. Nichts davon passiert sofort.",
+      "executingTitle": "Die Kontolöschung hat begonnen",
+      "executingDescription": "Dein Konto wird gerade gelöscht. Einige Änderungen können bereits abgeschlossen sein. Die Löschung kann weder abgebrochen noch rückgängig gemacht werden. Wird die Verarbeitung unterbrochen, wird sie nach den bereits abgeschlossenen Schritten fortgesetzt."
     }
   },
   "Activities": {
@@ -2675,7 +2807,9 @@
       },
       "recurringCreated": "{participant} hat die wiederkehrende Ausgabe „{title}“ erstellt",
       "stopped": "{participant} hat die wiederkehrende Ausgabe {title} gestoppt",
-      "commented": "{participant} kommentierte {title}: “{excerpt}”"
+      "commented": "{participant} kommentierte {title}: “{excerpt}”",
+      "yourShare": "Dein Anteil:",
+      "notInvolved": "Du bist nicht involviert"
     },
     "group": {
       "updated": "{participant} aktualisierte die Gruppeneinstellungen",
@@ -2688,7 +2822,11 @@
         "currencyCode": "Währungscode",
         "linkedParticipant": "Verknüpfter Teilnehmer",
         "subgroupsEnabled": "Untergruppen",
-        "publicViewLink": "Öffentlicher Link mit Nur-Lese-Zugriff"
+        "publicViewLink": "Öffentlicher Link mit Nur-Lese-Zugriff",
+        "emoji": "Emoji",
+        "color": "Farbe",
+        "subgroups": "Untergruppen",
+        "splitPresets": "Teilungsvorlagen"
       }
     },
     "member": {
@@ -2722,7 +2860,20 @@
       "imported_other": "{participant} hat {count} Ausgaben importiert"
     },
     "participant": {
-      "removed": "{participant} entfernte {target} aus der Gruppe"
+      "removed": "{participant} entfernte {target} aus der Gruppe",
+      "added": "{participant} fügte {target} zur Gruppe hinzu"
+    },
+    "hiddenActivitiesShowLess": "Weniger anzeigen",
+    "hiddenActivities_zero": "{count} ausgeblendete Aktivitäten, an denen du nicht beteiligt bist",
+    "hiddenActivities_one": "{count} ausgeblendete Aktivität, an der du nicht beteiligt bist",
+    "hiddenActivities_two": "{count} ausgeblendete Aktivitäten, an denen du nicht beteiligt bist",
+    "hiddenActivities_few": "{count} ausgeblendete Aktivitäten, an denen du nicht beteiligt bist",
+    "hiddenActivities_many": "{count} ausgeblendete Aktivitäten, an denen du nicht beteiligt bist",
+    "hiddenActivities_other": "{count} ausgeblendete Aktivitäten, an denen du nicht beteiligt bist",
+    "viewMode": {
+      "label": "Aktivitätsansicht",
+      "forYou": "Für dich",
+      "all": "Alle"
     }
   },
   "OfflineBanner": {
@@ -2800,9 +2951,6 @@
   },
   "BulkCategorize": {
     "title": "Massenkategorisierung",
-    "calibrationTitle": "Schritt 1 — Kalibrierung",
-    "calibrationDescription": "Jedes bestätigte Beispiel hilft der KI, ihre nächsten Vorschläge zu verbessern. Sie kann nach einem Durchlauf bereit sein oder weitere Beispiele anfordern.",
-    "roundCount": "Runde {round} von {max}",
     "confidence": {
       "high": "Hoch",
       "medium": "Mittel",
@@ -2891,7 +3039,137 @@
     "doneTitle": "Kategorien gespeichert",
     "expenseColumn": "Ausgabe",
     "categoryColumn": "Kategorie",
-    "confidenceColumn": "Konfidenz"
+    "confidenceColumn": "Konfidenz",
+    "simpleDescription": "Überprüfe die Kategorieübereinstimmungen für Ausgaben in Allgemein und speichere dann deine Auswahl.",
+    "generateSuggestions": "Kategorien vorschlagen",
+    "backToStart": "Zurück",
+    "chooseMode": "Wähle, wie Ausgaben kategorisiert werden",
+    "localMode": "Wörterbuch & Verlauf",
+    "localModeDescription": "Nutzt den Kategorienverlauf dieser Gruppe und das integrierte Wörterbuch.",
+    "startRun": "Kategorisierung starten",
+    "noCategory": "Nicht kategorisiert lassen",
+    "progressTitle": "Ausgaben werden kategorisiert",
+    "progressDescription": "Du kannst diese Seite verlassen und später zurückkehren. Dein Fortschritt wird gespeichert.",
+    "progressCount": "{categorized} von {total} Ausgaben kategorisiert",
+    "applyProgressTitle": "Kategorien werden gespeichert",
+    "reviewTitle": "Vorschläge überprüfen",
+    "reviewSummary": "{suggested} Vorschläge aus {total} nicht kategorisierten Ausgaben",
+    "sourceLocal": "Lokal",
+    "saveSelected": "Ausgewählte Kategorien speichern",
+    "retry": "Wiederholen",
+    "restart": "Neuen Durchlauf starten",
+    "failed": "Der Durchlauf wurde gestoppt: {message}",
+    "savedSummary": "{applied} geändert, {skipped} übersprungen",
+    "selectedCount": "{count} ausgewählt",
+    "selectAll": "Alle auswählen",
+    "clearAll": "Alle abwählen",
+    "discardRun": "Durchlauf verwerfen",
+    "partialSaveNotice": "Einige Kategorien wurden möglicherweise bereits gespeichert. Das Verwerfen dieses Durchlaufs macht diese Änderungen nicht rückgängig.",
+    "restartOlderRunTitle": "Neuen Kategorisierungsdurchlauf starten",
+    "restartOlderRunDescription": "Dieser frühere Durchlauf nutzte den vorherigen Überprüfungsablauf. Beginne von vorn, um alle Ausgaben gemeinsam zu überprüfen.",
+    "runningMatches": "{count} von {total} Ausgaben haben bisher einen Kategorievorschlag",
+    "failedTitle": "Kategorisierung gestoppt",
+    "reviewWorkload": "{total} Ausgaben in Allgemein · {selected} zur Kategorisierung ausgewählt · {general} bleiben in Allgemein",
+    "categoryChoices": "Kategorieauswahl",
+    "moreCategories": "Andere Kategorie wählen",
+    "saveCount": "{count} Kategorien speichern",
+    "finishWithoutChanges": "Ohne Änderungen abschließen",
+    "completionSummary": "Durchlauf abgeschlossen: {changed} von {total} Ausgaben geändert. {remaining} Ausgaben bleiben in Allgemein.",
+    "viewExpenses": "Ausgaben anzeigen",
+    "countLoading": "Nicht kategorisierte Ausgaben werden gezählt…",
+    "nothingToCategorize": "Es gibt keine nicht kategorisierten Ausgaben.",
+    "startingCount": "{count} Ausgaben sind derzeit in Allgemein und bereit zur Überprüfung.",
+    "countError": "Nicht kategorisierte Ausgaben konnten nicht gezählt werden. Lade die Seite neu, um es erneut zu versuchen.",
+    "keepGeneral": "Allgemein · nicht kategorisiert lassen",
+    "calibrationRoundTitle": "Kalibrierungsrunde {round}",
+    "calibrationLoading": "Vielfältige Ausgabenstichprobe wird vorbereitet…",
+    "calibrationReviewDescription": "Überprüfe und korrigiere diese {count} Ausgaben. Die Auswahl bleibt in diesem Durchlauf erhalten, bis du am Ende speicherst.",
+    "confirmRound": "Runde bestätigen",
+    "roundSummaryTitle": "Runde {round} überprüft",
+    "roundSummaryDescription": "{reviewed} überprüft · {categorized} vorläufig kategorisiert · {general} bleiben Allgemein",
+    "roundQuality": "Die ersten Vorschläge stimmten bei {accuracy} % mit deiner Auswahl überein; du hast {corrections} korrigiert.",
+    "categorizeRemaining": "Verbleibende Ausgaben kategorisieren",
+    "nextRound": "Weitere Stichprobe überprüfen",
+    "tableLabel": "Zu kategorisierende Ausgaben",
+    "dateColumn": "Datum",
+    "amountColumn": "Betrag",
+    "rerunSuggestions": "Vorschläge erneut ausführen",
+    "roundQualityWithSuggestions": "{accepted} von {proposed} vorgeschlagenen Kategorien übernommen · {changed} geändert · {missed} Übereinstimmungen aus Allgemein gefunden",
+    "roundQualityNoSuggestions": "Keine Kategorien vorgeschlagen · {missed} Übereinstimmungen aus Allgemein gefunden · {abstained} bleiben in Allgemein",
+    "rerunChanged": "Du hast {changed} von {proposed} vorgeschlagenen Kategorien geändert.",
+    "rerunAssignedSingle": "Du hast einer in Allgemein verbliebenen Ausgabe eine Kategorie zugewiesen.",
+    "rerunAssignedMultiple": "Du hast {count} in Allgemein verbliebenen Ausgaben eine Kategorie zugewiesen.",
+    "rerunPotentialSingle": "Deine Änderungen können die Übereinstimmung für 1 verbleibende Allgemein-Ausgabe verbessern. Führe die Vorschläge erneut aus, wenn du einen weiteren Durchlauf möchtest.",
+    "rerunPotentialMultiple": "Deine Änderungen können die Übereinstimmungen für {count} verbleibende Allgemein-Ausgaben verbessern. Führe die Vorschläge erneut aus, wenn du einen weiteren Durchlauf möchtest.",
+    "rerunEligible": "Für einen weiteren Durchlauf geeignet: Allgemein {general} · unsichere automatische Übereinstimmungen {uncertain}. Deine Korrekturen können diese Vorschläge verbessern.",
+    "rerunNoEligible": "Es gibt keine unberührten Allgemein-Ausgaben oder unsicheren automatischen Übereinstimmungen mehr für einen erneuten Durchlauf. Deine Korrekturen sind weiterhin in den Kategorien enthalten, die du speicherst.",
+    "rerunAlreadyUsed": "Deine neuesten Korrekturen wurden für diese Vorschläge bereits verwendet. Nimm eine weitere Korrektur vor, um sie erneut auszuführen.",
+    "highMatch": "Hohe Übereinstimmung",
+    "mediumMatch": "Mittlere Übereinstimmung",
+    "lowMatch": "Niedrige Übereinstimmung",
+    "belowMatchThreshold": "Unterhalb der Übereinstimmungsschwelle",
+    "refiningTitle": "Unsichere Übereinstimmungen werden verfeinert",
+    "runLimitSummary": "Dieser Durchlauf umfasst 10.000 Ausgaben. {count} weitere Ausgaben in Allgemein können nach dem Speichern in einem weiteren Durchlauf kategorisiert werden.",
+    "pageLoading": "Ausgaben werden geladen…",
+    "pageLoadError": "Ausgaben konnten nicht geladen werden.",
+    "pageRetry": "Wiederholen",
+    "pageCount": "{loaded} von {total} Ausgaben werden angezeigt",
+    "ledgerAmountNotice": "Beträge werden in der Gruppenwährung angezeigt.",
+    "viewExpenseDetails": "Ausgabendetails anzeigen",
+    "reviewFilterLabel": "Ausgaben anzeigen",
+    "filterAll": "Alle {count}",
+    "filterGeneral": "Allgemein {count}",
+    "improveSuggestions": "Verbleibende Vorschläge verbessern",
+    "rerunInfoLabel": "Über das Verbessern von Vorschlägen",
+    "preparingNextStage": "Nächster Schritt wird vorbereitet",
+    "rerunProgressTitle": "Vorschläge werden aktualisiert",
+    "progressPreparing": "Ausgaben werden vorbereitet…",
+    "noGeneralRows": "In dieser Überprüfung sind keine Ausgaben mehr in Allgemein.",
+    "discardConfirmationTitle": "Diesen Kategorisierungsdurchlauf verwerfen?",
+    "discardConfirmationDescription": "Dadurch werden der Durchlauf, seine Vorschläge und die von dir oder anderen Administratoren getroffenen Auswahlmöglichkeiten entfernt. Es werden keine Ausgabenkategorien geändert.",
+    "discardConfirmationCancel": "Durchlauf behalten",
+    "progressCountDescription": "Nur bestätigte Kategorien sowie mittlere und hohe Übereinstimmungen zählen; Allgemein und schwache Übereinstimmungen zählen nicht.",
+    "systemOneMode": "System-One-Modell",
+    "systemOneModeDescription": "Verwende für jede Ausgabe das System-One-Entscheidungsmodell und nutze die kategorisierten Ausgaben dieser Gruppe sowie deine überprüften Auswahlmöglichkeiten als Hinweise. TypeSafe Jev ist ein solches Modell.",
+    "systemOneUnavailable": "System One ist nicht verfügbar. Wörterbuch & Verlauf ist weiterhin verfügbar.",
+    "systemOneConfidence": "System-One-Konfidenz: {confidence}%",
+    "systemOneOptionProbability": "Wahrscheinlichkeit der System-One-Option: {probability}%",
+    "overallProgress": "Gesamtfortschritt",
+    "fullPassProcessed": "{processed} von {total} Ausgaben verarbeitet",
+    "stageProcessed": "{processed} von {total} Ausgaben in diesem Schritt verarbeitet",
+    "saveSkipped": "{count} Ausgaben wurden übersprungen, weil sie geändert wurden.",
+    "sharedRunNotice": "Dieser Durchlauf wird mit anderen Gruppenadministratoren geteilt. Alle sehen dieselben Vorschläge.",
+    "saveConflictTitle": "{count} Ausgaben wurden geändert, seit diese Überprüfung begonnen hat",
+    "saveConflictDescription": "Jemand hat diese Ausgaben außerhalb dieses Durchlaufs bearbeitet oder ihre Kategorie geändert. Speichere die anderen Ausgaben oder bearbeite die Kategorien erneut und speichere noch einmal.",
+    "saveConflictMore": "Und {count} weitere.",
+    "saveOtherExpenses": "Andere Ausgaben speichern",
+    "receiptTitles": {
+      "freshMarket": "Frischmarkt",
+      "greenGrocer": "Gemüseladen",
+      "fruitStand": "Obststand",
+      "cornerBistro": "Eck-Bistro",
+      "noodleHouse": "Nudelhaus",
+      "cafeLunch": "Café-Mittagessen",
+      "flightTicket": "Flugticket",
+      "airlineBaggage": "Fluggepäck",
+      "boardingPass": "Bordkarte",
+      "homeSupplies": "Haushaltsbedarf",
+      "hardwareShop": "Baumarkt",
+      "cleaningGoods": "Reinigungsmittel",
+      "cinemaTickets": "Kinokarten",
+      "movieNight": "Filmabend",
+      "filmFestival": "Filmfestival",
+      "organicMarket": "Biomarkt",
+      "bakeryRun": "Bäckerei-Einkauf",
+      "sushiBar": "Sushi-Bar",
+      "pizzaNight": "Pizzaabend",
+      "airportLounge": "Flughafen-Lounge",
+      "extraLegroom": "Extra-Beinfreiheit",
+      "laundryDetergent": "Waschmittel",
+      "storageBoxes": "Aufbewahrungsboxen",
+      "popcornCombo": "Popcorn-Menü",
+      "streamingRental": "Streaming-Leihe"
+    }
   },
   "ExpensePreview": {
     "title": "Ausgabenvorschau",
@@ -2941,10 +3219,14 @@
         "deleteGroup": "Um die Gruppe <target>{name}</target> dauerhaft zu löschen, gib ihren Namen genau wie unten angezeigt ein.",
         "deleteExpense": "Um die Ausgabe <target>{name}</target> dauerhaft zu löschen, gib ihren Titel genau wie unten angezeigt ein.",
         "deleteRecurringExpense": "Um das Löschen von <target>{name}</target> zu bestätigen, gib den Titel der Ausgabe genau wie unten angezeigt ein.",
-        "removeParticipant": "Um <target>{name}</target> aus dieser Gruppe zu entfernen, gib den Namen genau wie unten angezeigt ein."
+        "removeParticipant": "Um <target>{name}</target> aus dieser Gruppe zu entfernen, gib den Namen genau wie unten angezeigt ein.",
+        "deleteAccount": "Um dein Konto dauerhaft zu löschen, gib <target>{name}</target> genau wie unten angezeigt ein."
       },
       "placeholder": "Gib „{name}“ hier ein",
-      "mismatch": "Stimmt nicht überein. Gib {name} genau ein."
+      "mismatch": "Stimmt nicht überein. Gib {name} genau ein.",
+      "settingsNoteLink": "In den Kontoeinstellungen ändern",
+      "settingsNoteLead": "Lieber ohne Eintippen?",
+      "settingsNoteTail": "um einen einfachen Bestätigungsdialog zu verwenden."
     }
   },
   "Theme": {
@@ -2968,7 +3250,7 @@
     "failedDescription": "Dieses Gerät konnte nicht registriert werden. Für E-Mail konfigurierte Benachrichtigungen werden weiterhin per E-Mail zugestellt; Nur-Push-Auswahlen werden nicht umgeleitet.",
     "emailUsage": "Es werden nur Benachrichtigungen zugestellt, die für E-Mail konfiguriert sind, bis du ein Gerät aktivierst. Du kannst Benachrichtigungen in deinen Browsereinstellungen erlauben und es anschließend in den Einstellungen erneut versuchen.",
     "done": "Fertig",
-    "emailDeliveryDisabled": "Der E-Mail-Versand ist in dieser Instanz deaktiviert, deshalb können dich E-Mail-Benachrichtigungen nicht erreichen. Aktiviere Push-Benachrichtigungen auf diesem Gerät, um weiterhin Updates zu erhalten."
+    "emailDeliveryDisabled": "Der E-Mail-Versand ist deaktiviert, deshalb können dich E-Mail-Benachrichtigungen nicht erreichen. Aktiviere Push-Benachrichtigungen auf diesem Gerät, um weiterhin Updates zu erhalten."
   },
   "Unsubscribe": {
     "title": "Diese E-Mails deaktivieren?",
@@ -3439,7 +3721,8 @@
     "hintTapToAddExpense": "Ich bin {name} — tippe mich an, um eine Ausgabe hinzuzufügen.",
     "hintTapToCreateGroup": "Ich bin {name} — tippe mich an, um eine Gruppe zu erstellen.",
     "billName": "Bill",
-    "offlineMessage": "Ich kann nichts erstellen, während du offline bist."
+    "offlineMessage": "Ich kann nichts erstellen, während du offline bist.",
+    "serverUnreachableMessage": "Ich kann den Spliit-Server gerade nicht erreichen — deine Verbindung scheint in Ordnung zu sein, also liegt es an uns."
   },
   "CreateSettlement": {
     "description": "Überprüfe die Zahlung, bevor du sie aufzeichnest.",
@@ -3490,7 +3773,18 @@
       "existingPasskeyTitle": "Bereits einen Passkey registriert?",
       "existingPasskeyDescription": "Melde dich mit dem Passkey auf einem deiner registrierten Geräte wieder an.",
       "passkeySignIn": "Mit Passkey anmelden",
-      "passkeySignInError": "Mit diesem Passkey konnte nicht angemeldet werden. Versuche es erneut oder nutze deinen Anmeldelink."
+      "passkeySignInError": "Mit diesem Passkey konnte nicht angemeldet werden. Versuche es erneut oder nutze deinen Anmeldelink.",
+      "passkeyNameLabel": "Gib diesem Passkey einen Namen (optional)",
+      "passkeyNamePlaceholder": "z. B. MacBook Touch ID",
+      "nameTitle": "Wähle einen Anzeigenamen",
+      "nameDescription": "Wird auf deinem Passkey und in deinen Gruppen angezeigt. Du kannst ihn später ändern.",
+      "nameLabel": "Anzeigename",
+      "namePlaceholder": "Dein Name",
+      "nameSave": "Speichern und fortfahren",
+      "nameSaving": "Speichert…",
+      "nameRequired": "Gib einen Anzeigenamen ein.",
+      "nameTooShort": "Der Name muss mindestens 2 Zeichen lang sein.",
+      "nameError": "Der Anzeigename konnte nicht gespeichert werden. Bitte versuche es erneut."
     },
     "onboarding": {
       "title": "Speichere deinen Anmeldelink",
@@ -3629,6 +3923,29 @@
         "review": {
           "title": "Prüfen und importieren",
           "detail": "Duplikate prüfen und Import bestätigen."
+        }
+      }
+    },
+    "categorize": {
+      "title": "Ausgaben kategorisieren",
+      "description": "Schlage mit System One Kategorien für vorhandene, nicht kategorisierte Ausgaben vor. Überprüfe jede Änderung vor dem Speichern.",
+      "start": "Ausgaben kategorisieren",
+      "steps": {
+        "choose": {
+          "title": "Methode wählen",
+          "detail": "Verwende Wörterbuch & Verlauf oder das System-One-Entscheidungsmodell."
+        },
+        "calibrate": {
+          "title": "Kleine Stichproben überprüfen",
+          "detail": "Korrigiere Vorschläge, damit die nächste Runde die Kategorien deiner Gruppe lernt."
+        },
+        "review": {
+          "title": "Jede Ausgabe überprüfen",
+          "detail": "Ausgaben in Allgemein erscheinen zuerst in der vollständigen Tabelle."
+        },
+        "save": {
+          "title": "Kategorien speichern",
+          "detail": "Ausgaben ändern sich erst, wenn du die abschließende Überprüfung bestätigst."
         }
       }
     }
@@ -4172,7 +4489,8 @@
       "valuesRecomputedTitle": "Werte neu berechnet",
       "viewExpenses": "Ausgaben ansehen",
       "waitDuplicate": "Warte, bis die Duplikatprüfung abgeschlossen ist, bevor du importierst.",
-      "invalidRowTitle": "Ungültige Importzeile"
+      "invalidRowTitle": "Ungültige Importzeile",
+      "categorizeWithSystemOne": "Kategorien für nicht kategorisierte Ausgaben mit System One vorschlagen"
     }
   },
   "Sponsor": {
@@ -4327,5 +4645,26 @@
     "expenseMissing": "Diese Ausgabe ist nicht im Download dieses Geräts. Verbinde dich, um neuere/ältere Ausgaben zu prüfen.",
     "groupMissing": "Diese Gruppe wurde noch nicht vollständig heruntergeladen.",
     "balancesStale": "Salden sind möglicherweise veraltet."
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit ist nicht verfügbar",
+    "description": "Der Spliit-Server ist gerade nicht erreichbar. Deine Verbindung scheint in Ordnung zu sein — versuche es bitte gleich noch einmal.",
+    "retry": "Erneut versuchen"
+  },
+  "ApiStatusBanner": {
+    "message": "Spliit ist gerade nicht erreichbar. Deine Verbindung scheint in Ordnung zu sein — das Problem liegt bei uns.",
+    "statusLink": "Status prüfen"
+  },
+  "AccountDeletionBanner": {
+    "scheduled": "Die Kontolöschung ist für {date} geplant.",
+    "review": "Löschung überprüfen oder abbrechen",
+    "executing": "Die Kontolöschung hat begonnen.",
+    "viewStatus": "Löschstatus anzeigen"
+  },
+  "Updates": {
+    "title": "Neuigkeiten",
+    "latest": "Was ist neu",
+    "viewAll": "Alle Neuigkeiten anzeigen",
+    "dismiss": "Verstanden"
   }
 }

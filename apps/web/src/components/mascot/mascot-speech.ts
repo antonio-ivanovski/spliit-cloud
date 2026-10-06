@@ -1,6 +1,7 @@
 export type MascotSpeechMessageKey =
   | 'Mascot.noActionMessage'
   | 'Mascot.offlineMessage'
+  | 'Mascot.serverUnreachableMessage'
   | 'Mascot.hintReceiptVoice'
   | 'Mascot.hintSettle'
   | 'Mascot.hintSettings'
@@ -74,6 +75,12 @@ export function buildMascotSpeechCycle({
 export const OFFLINE_SPEECH_LINE: MascotSpeechLine = {
   id: 'offline',
   messageKey: 'Mascot.offlineMessage',
+  showSettings: false,
+}
+
+export const SERVER_UNREACHABLE_SPEECH_LINE: MascotSpeechLine = {
+  id: 'server-unreachable',
+  messageKey: 'Mascot.serverUnreachableMessage',
   showSettings: false,
 }
 

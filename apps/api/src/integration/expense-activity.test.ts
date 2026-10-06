@@ -186,6 +186,9 @@ describe('Expense activity — real DB', () => {
     expect(data.kind).toBe('expense')
     expect(data.title).toBe('Test Dinner')
     expect(data.amount).toBe(3000)
+    expect(data.affectedParticipants).toEqual(
+      expect.arrayContaining([adminParticipantId, recipientParticipantId]),
+    )
 
     // Assert dispatcher event
     await waitForScheduledNotificationDispatchesForTest()
@@ -351,5 +354,54 @@ describe('Expense activity — real DB', () => {
     const event = capture.events.find((e) => e.activityId === activity!.id)
     expect(event).toBeDefined()
     expect(event!.type).toBe('EXPENSE_DELETED')
+  })
+
+  // ------------------------------------------------------------------------
+  // 5. Activity list exposes splits + participant snapshot for the feed
+  // ------------------------------------------------------------------------
+  it('exposes splits and affectedParticipants via activities.list', async () => {
+    const caller = makeCaller()
+    const created = await caller.expenses.create({
+      requestId: crypto.randomUUID(),
+      groupId,
+      expense: {
+        title: 'Listed Lunch',
+        amount: 2000,
+        paidByList: [{ participant: adminParticipantId, shares: 2000 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
+        paidFor: [
+          { participant: adminParticipantId, shares: 1 },
+          { participant: recipientParticipantId, shares: 1 },
+        ],
+        category: 'general',
+        splitMode: 'EVENLY',
+        expenseDate: new Date('2026-07-03').toISOString(),
+        expenseTimeZone: 'UTC',
+        documents: [],
+        recurrenceRule: 'NONE',
+      },
+    })
+
+    const result = await caller.activities.list({ groupId, limit: 10 })
+    const row = result.activities.find(
+      (activity) =>
+        activity.type === 'EXPENSE_CREATED' &&
+        activity.subjectId === created.expenseId,
+    )
+    expect(row).toBeDefined()
+    expect(row!.expense).not.toBeNull()
+    expect(
+      row!.expense!.paidByList.map((share) => share.ledgerParticipant.id),
+    ).toEqual([adminParticipantId])
+    expect(
+      row!.expense!.paidFor.map((share) => share.ledgerParticipant.id).sort(),
+    ).toEqual([adminParticipantId, recipientParticipantId].sort())
+    expect(row!.data).toMatchObject({ kind: 'expense' })
+    expect(
+      (row!.data as { affectedParticipants?: string[] }).affectedParticipants,
+    ).toEqual(
+      expect.arrayContaining([adminParticipantId, recipientParticipantId]),
+    )
   })
 })

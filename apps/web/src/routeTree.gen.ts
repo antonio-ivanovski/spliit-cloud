@@ -18,8 +18,11 @@ import { Route as GroupsRouteRouteImport } from './routes/groups/route'
 import { Route as ImprintRouteImport } from './routes/imprint'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SponsorRouteImport } from './routes/sponsor'
+import { Route as SupportRouteImport } from './routes/support'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
+import { Route as UpdatesRouteImport } from './routes/updates'
+import { Route as AccountDeleteRouteImport } from './routes/account/delete'
 import { Route as AccountSettingsRouteImport } from './routes/account/settings'
 import { Route as AuthCompleteProfileRouteImport } from './routes/auth/complete-profile'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
@@ -98,6 +101,11 @@ const SponsorRoute = SponsorRouteImport.update({
   path: '/sponsor',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/sponsor.lazy').then((d) => d.Route))
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/support.lazy').then((d) => d.Route))
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
@@ -108,6 +116,18 @@ const UnsubscribeRoute = UnsubscribeRouteImport.update({
   path: '/unsubscribe',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/unsubscribe.lazy').then((d) => d.Route))
+const UpdatesRoute = UpdatesRouteImport.update({
+  id: '/updates',
+  path: '/updates',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/updates.lazy').then((d) => d.Route))
+const AccountDeleteRoute = AccountDeleteRouteImport.update({
+  id: '/account/delete',
+  path: '/account/delete',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/account/delete.lazy').then((d) => d.Route),
+)
 const AccountSettingsRoute = AccountSettingsRouteImport.update({
   id: '/account/settings',
   path: '/account/settings',
@@ -375,9 +395,12 @@ export interface FileRoutesByFullPath {
   '/imprint': typeof ImprintRoute
   '/privacy': typeof PrivacyRoute
   '/sponsor': typeof SponsorRoute
+  '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/unsubscribe': typeof UnsubscribeRoute
+  '/updates': typeof UpdatesRoute
   '/groups/$groupId': typeof GroupsGroupIdRouteRouteWithChildren
+  '/account/delete': typeof AccountDeleteRoute
   '/account/settings': typeof AccountSettingsRoute
   '/auth/complete-profile': typeof AuthCompleteProfileRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -421,8 +444,11 @@ export interface FileRoutesByTo {
   '/imprint': typeof ImprintRoute
   '/privacy': typeof PrivacyRoute
   '/sponsor': typeof SponsorRoute
+  '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/unsubscribe': typeof UnsubscribeRoute
+  '/updates': typeof UpdatesRoute
+  '/account/delete': typeof AccountDeleteRoute
   '/account/settings': typeof AccountSettingsRoute
   '/auth/complete-profile': typeof AuthCompleteProfileRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -464,9 +490,12 @@ export interface FileRoutesById {
   '/imprint': typeof ImprintRoute
   '/privacy': typeof PrivacyRoute
   '/sponsor': typeof SponsorRoute
+  '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/unsubscribe': typeof UnsubscribeRoute
+  '/updates': typeof UpdatesRoute
   '/groups/$groupId': typeof GroupsGroupIdRouteRouteWithChildren
+  '/account/delete': typeof AccountDeleteRoute
   '/account/settings': typeof AccountSettingsRoute
   '/auth/complete-profile': typeof AuthCompleteProfileRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -512,9 +541,12 @@ export interface FileRouteTypes {
     | '/imprint'
     | '/privacy'
     | '/sponsor'
+    | '/support'
     | '/terms'
     | '/unsubscribe'
+    | '/updates'
     | '/groups/$groupId'
+    | '/account/delete'
     | '/account/settings'
     | '/auth/complete-profile'
     | '/auth/forgot-password'
@@ -558,8 +590,11 @@ export interface FileRouteTypes {
     | '/imprint'
     | '/privacy'
     | '/sponsor'
+    | '/support'
     | '/terms'
     | '/unsubscribe'
+    | '/updates'
+    | '/account/delete'
     | '/account/settings'
     | '/auth/complete-profile'
     | '/auth/forgot-password'
@@ -600,9 +635,12 @@ export interface FileRouteTypes {
     | '/imprint'
     | '/privacy'
     | '/sponsor'
+    | '/support'
     | '/terms'
     | '/unsubscribe'
+    | '/updates'
     | '/groups/$groupId'
+    | '/account/delete'
     | '/account/settings'
     | '/auth/complete-profile'
     | '/auth/forgot-password'
@@ -647,8 +685,11 @@ export interface RootRouteChildren {
   ImprintRoute: typeof ImprintRoute
   PrivacyRoute: typeof PrivacyRoute
   SponsorRoute: typeof SponsorRoute
+  SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
+  UpdatesRoute: typeof UpdatesRoute
+  AccountDeleteRoute: typeof AccountDeleteRoute
   AccountSettingsRoute: typeof AccountSettingsRoute
   AuthCompleteProfileRoute: typeof AuthCompleteProfileRoute
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
@@ -711,6 +752,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SponsorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/terms': {
       id: '/terms'
       path: '/terms'
@@ -723,6 +771,20 @@ declare module '@tanstack/react-router' {
       path: '/unsubscribe'
       fullPath: '/unsubscribe'
       preLoaderRoute: typeof UnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/updates': {
+      id: '/updates'
+      path: '/updates'
+      fullPath: '/updates'
+      preLoaderRoute: typeof UpdatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account/delete': {
+      id: '/account/delete'
+      path: '/account/delete'
+      fullPath: '/account/delete'
+      preLoaderRoute: typeof AccountDeleteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account/settings': {
@@ -1085,8 +1147,11 @@ const rootRouteChildren: RootRouteChildren = {
   ImprintRoute: ImprintRoute,
   PrivacyRoute: PrivacyRoute,
   SponsorRoute: SponsorRoute,
+  SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
   UnsubscribeRoute: UnsubscribeRoute,
+  UpdatesRoute: UpdatesRoute,
+  AccountDeleteRoute: AccountDeleteRoute,
   AccountSettingsRoute: AccountSettingsRoute,
   AuthCompleteProfileRoute: AuthCompleteProfileRoute,
   AuthForgotPasswordRoute: AuthForgotPasswordRoute,

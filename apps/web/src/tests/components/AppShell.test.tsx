@@ -52,6 +52,9 @@ vi.mock('@/components/app-image', () => ({
 vi.mock('@/components/install-promotion-dialog', () => ({
   InstallPromotionDialog: () => null,
 }))
+vi.mock('@/components/updates-modal', () => ({
+  UpdatesModal: () => null,
+}))
 vi.mock('@/components/push-notification-onboarding', () => ({
   PushNotificationOnboarding: () => null,
 }))
@@ -80,7 +83,13 @@ vi.mock('@/components/mobile-shell', () => ({
     </div>
   ),
 }))
+vi.mock('@/components/account-deletion-banner', () => ({
+  AccountDeletionBanner: () => null,
+}))
 vi.mock('@/components/offline-banner', () => ({ OfflineBanner: () => null }))
+vi.mock('@/components/api-status-banner', () => ({
+  ApiStatusBanner: () => null,
+}))
 vi.mock('@/components/pwa-register', () => ({ PwaRegister: () => null }))
 vi.mock('@/components/profile-gate', () => ({
   ProfileGate: ({ children }: React.PropsWithChildren) => children,

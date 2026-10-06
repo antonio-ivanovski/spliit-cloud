@@ -1,3 +1,4 @@
+import type * as TanStackReactRouter from '@tanstack/react-router'
 import { describe, expect, it, vi } from 'vitest'
 
 import { render, screen } from '@/test/test-utils'
@@ -5,6 +6,22 @@ import { render, screen } from '@/test/test-utils'
 vi.mock('@/app/groups/[groupId]/activity/activity-list', () => ({
   ActivityList: () => <div data-testid="activity-list" />,
 }))
+
+vi.mock('@/app/groups/[groupId]/expenses/expense-preview-modal', () => ({
+  ExpensePreviewModal: () => <div data-testid="expense-preview-modal" />,
+}))
+
+vi.mock('@tanstack/react-router', async (importOriginal) => {
+  const actual = await importOriginal<typeof TanStackReactRouter>()
+  return {
+    ...actual,
+    getRouteApi: () => ({
+      useParams: () => ({ groupId: 'group-1' }),
+      useSearch: () => ({ expenseId: undefined }),
+    }),
+    useNavigate: () => vi.fn(),
+  }
+})
 
 import { ActivityPageClient } from '@/app/groups/[groupId]/activity/page.client'
 

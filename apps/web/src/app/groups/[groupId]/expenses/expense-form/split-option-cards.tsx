@@ -1,4 +1,4 @@
-import { Coins, Hash, Percent, Scale, User, Users } from 'lucide-react'
+import { Coins, Hash, List, Percent, Scale, User, Users } from 'lucide-react'
 import type { ComponentType, ReactNode, SVGProps } from 'react'
 import { Fragment } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -268,6 +268,11 @@ export function PaidForSplitOptionCards(props: {
   readOnly?: boolean
   renderContent?: (mode: Exclude<SplitMode, 'ITEMIZED'>) => ReactNode
   /**
+   * Content for the selected Itemized option (shown only when value is
+   * ITEMIZED).
+   */
+  renderItemizedContent?: ReactNode
+  /**
    * Modes to omit from the rendered radio group. The selected mode is NOT
    * auto-snapped — callers must ensure `value` is not in the hidden list, or no
    * card will appear as selected.
@@ -292,6 +297,7 @@ export function PaidForSplitOptionCards(props: {
     onChange,
     readOnly,
     renderContent,
+    renderItemizedContent,
     hiddenModes,
     contentClassName,
     showProportionalOption,
@@ -303,8 +309,21 @@ export function PaidForSplitOptionCards(props: {
 
   const PROPORTIONAL_OPTION_ID = 'PROPORTIONAL'
 
+  const ITEMIZED_OPTION = {
+    id: 'ITEMIZED' as const,
+    labelKey: 'paidForOptionItemized',
+    helperKey: 'paidForOptionItemizedHelper',
+    icon: List,
+  } as const
+
   const hidden = new Set(hiddenModes ?? [])
-  const visibleOptions = PAID_FOR_OPTIONS.filter((opt) => !hidden.has(opt.id))
+  const standardOptions = PAID_FOR_OPTIONS.filter((opt) => !hidden.has(opt.id))
+  // The Itemized option is entry-only via item editing: hidden in normal
+  // mode, prepended first and selected only when value is ITEMIZED.
+  const visibleOptions =
+    value === 'ITEMIZED'
+      ? [ITEMIZED_OPTION, ...standardOptions]
+      : standardOptions
   const showProportional = !!showProportionalOption && !hidden.has('EVENLY')
 
   return (
@@ -312,8 +331,7 @@ export function PaidForSplitOptionCards(props: {
       value={
         showProportional && proportionalSelected
           ? PROPORTIONAL_OPTION_ID
-          : value === 'ITEMIZED' ||
-              hidden.has(value as Exclude<SplitMode, 'ITEMIZED'>)
+          : hidden.has(value as Exclude<SplitMode, 'ITEMIZED'>)
             ? undefined
             : value
       }
@@ -322,6 +340,8 @@ export function PaidForSplitOptionCards(props: {
           onProportionalSelect?.()
           return
         }
+        // Entry remains through item editing; there is no radio path back.
+        if (next === 'ITEMIZED') return
         onChange(next as SplitMode)
       }}
       aria-label={t('paidForSection')}
@@ -341,7 +361,13 @@ export function PaidForSplitOptionCards(props: {
               card
               disabled={disabled}
               data-expense-tab-priority={props.focusPriority}
-              content={selected ? renderContent?.(opt.id) : undefined}
+              content={
+                selected
+                  ? opt.id === 'ITEMIZED'
+                    ? renderItemizedContent
+                    : renderContent?.(opt.id as Exclude<SplitMode, 'ITEMIZED'>)
+                  : undefined
+              }
               contentClassName={contentClassName}
               aria-label={t('splitOptionAria', { title })}
             >

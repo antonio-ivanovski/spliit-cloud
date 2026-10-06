@@ -9,7 +9,10 @@
     "./server": "./src/server.ts",
     "./lib/api/activities": "./src/lib/api/activities.ts",
     "./lib/api/recurrence-series": "./src/lib/api/recurrence-series.ts",
+    "./lib/api/bulk-categorization-run": "./src/lib/api/bulk-categorization-run.ts",
+    "./lib/announcements/process": "./src/lib/announcements/process.ts",
     "./lib/auth/anonymous-account-cleanup": "./src/lib/auth/anonymous-account-cleanup.ts",
+    "./lib/auth/account-deletion": "./src/lib/auth/account-deletion.ts",
     "./lib/report/format": "./src/lib/report/format.ts",
     "./lib/report/labels": "./src/lib/report/labels.ts",
     "./lib/notifications/delivery-repository": "./src/lib/notifications/delivery-repository.ts",
@@ -71,6 +74,7 @@
     "openapi-types": "^12.1.3",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "reflect-metadata": "^0.2.2",
     "superjson": "^2.2.6",
     "web-push": "^3.6.7",
     "zod": "^4.4.3"

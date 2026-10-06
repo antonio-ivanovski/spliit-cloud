@@ -26,6 +26,8 @@ export type ExpenseActivityInput = {
   changedFields?: string[]
   expenseUrl: string
   unsubscribeUrl?: string
+  /** Per-recipient share line, e.g. "You owe EUR 15.00". */
+  personalLine?: string | null
   /** Human-readable recurrence description, e.g. "Monthly, 12 total". */
   recurrence?: string
   /** When true the recurrence was cancelled as part of this action. */
@@ -134,6 +136,11 @@ export function ExpenseActivityEmail(
         {props.amountStr ? <> · {props.amountStr}</> : null}
         {props.date ? <> · {props.date}</> : null}.
       </Text>
+      {props.personalLine ? (
+        <Text className="m-0 mb-4 text-[15px] leading-[22px] text-[#0f172a]">
+          <strong>{props.personalLine}</strong>
+        </Text>
+      ) : null}
       <Section className="my-4 rounded-md border border-solid border-[#e5e7eb] bg-[#f8fafc] px-5 py-4">
         <Text className="m-0 text-[14px] leading-[22px] text-[#0f172a]">
           <strong>Expense:</strong> "{props.title}"

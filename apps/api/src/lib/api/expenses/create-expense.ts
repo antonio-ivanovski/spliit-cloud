@@ -22,6 +22,7 @@ import {
   planNotificationForActivity,
 } from '../activities'
 import { getApiBoss } from '../boss'
+import { getAffectedParticipantIds } from '../expense-activity-diff'
 import {
   buildRecurringTemplate,
   createSeriesForExpense,
@@ -315,6 +316,13 @@ export async function createExpense(
           amount: expenseAmount,
           currencyCode: conversion.originalCurrency,
           date: expenseDateStr,
+          affectedParticipants: [
+            ...getAffectedParticipantIds({
+              // Persisted ITEMIZED rows store the computed aggregate
+              // `paidFor` — snapshot that, not the raw input split.
+              newExpense: { ...expense, paidFor: recurringPaidFor },
+            }),
+          ],
           originalAmount: conversion.originalAmount ?? undefined,
           conversionRate: conversion.conversionRate ?? undefined,
           conversionSource: conversion.conversionSource,

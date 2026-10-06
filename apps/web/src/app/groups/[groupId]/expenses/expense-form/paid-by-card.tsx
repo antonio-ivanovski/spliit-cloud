@@ -271,7 +271,10 @@ export function PaidByCard(props: {
           render={() => {
             const selectedPayer = paidByList[0]?.participant ?? ''
             return (
-              <FormItem data-expense-tab-priority={expenseTabPriority.paidBy}>
+              <FormItem
+                data-expense-error-anchor="paidByList"
+                data-expense-tab-priority={expenseTabPriority.paidBy}
+              >
                 <SinglePayerDistributionEditor
                   participants={group.participants}
                   value={selectedPayer}
@@ -311,7 +314,10 @@ export function PaidByCard(props: {
         control={form.control}
         name="paidByList"
         render={() => (
-          <FormItem className="w-full min-w-0 space-y-0">
+          <FormItem
+            data-expense-error-anchor="paidByList"
+            className="w-full min-w-0 space-y-0"
+          >
             <SplitDistributionEditor
               participants={group.participants}
               selectedCount={paidByList.length}

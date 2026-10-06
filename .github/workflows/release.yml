@@ -22,7 +22,7 @@ env:
   REGISTRY: ghcr.io
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release-${{ github.event.inputs.tag || github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -31,6 +31,7 @@ jobs:
     runs-on: ubuntu-24.04-arm
     outputs:
       tag: ${{ steps.resolve.outputs.tag }}
+      sha: ${{ steps.sha.outputs.sha }}
     steps:
       - name: Resolve tag
         id: resolve
@@ -47,11 +48,15 @@ jobs:
           ref: ${{ steps.resolve.outputs.tag }}
           fetch-depth: 1
 
+      - name: Resolve commit SHA
+        id: sha
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
       - name: Check releases/<tag>.md exists
         run: |
           TAG="${{ steps.resolve.outputs.tag }}"
           if [ ! -f "releases/${TAG}.md" ]; then
-            echo "::error::Missing releases/${TAG}.md. Cut the release with 'bun release:prepare ${TAG}' first — see releases/README.md."
+            echo "::error::Missing releases/${TAG}.md. Cut the release with 'bun release:prepare ${TAG}' first — see .agents/skills/cut-release/SKILL.md."
             exit 1
           fi
           echo "Found releases/${TAG}.md"
@@ -66,9 +71,66 @@ jobs:
           fi
           echo "No placeholders left"
 
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+
+      - name: Validate announcement content
+        run: |
+          bun install --frozen-lockfile
+          bun scripts/generate-announcement-content.ts --check
+          bun i18n check
+
+  # The tag push and the `main` push of the release commit fire CI and this
+  # workflow in parallel. Block everything below until CI is green on the
+  # exact tagged commit, so a single fire-and-forget
+  # `git push origin main <tag>` can never publish or deploy a broken build.
+  await-ci:
+    name: Wait for CI on release commit
+    needs: validate-notes
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 50
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - name: Wait for CI workflow to succeed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHA: ${{ needs.validate-notes.outputs.sha }}
+        run: |
+          set -euo pipefail
+          deadline=$(( $(date +%s) + 45*60 ))
+          echo "Waiting for CI runs on ${SHA}..."
+          while [ "$(date +%s)" -lt "$deadline" ]; do
+            runs="$(gh run list --commit "$SHA" --workflow CI --limit 10 --json status,conclusion --repo "${{ github.repository }}")"
+            total="$(printf '%s' "$runs" | jq 'length')"
+            if [ "$total" -eq 0 ]; then
+              echo "No CI run found yet, retrying in 30s..."
+              sleep 30
+              continue
+            fi
+            failures="$(printf '%s' "$runs" | jq '[.[] | select(.status == "completed" and .conclusion != "success")] | length')"
+            if [ "$failures" -gt 0 ]; then
+              echo "::error::CI failed for ${SHA} — refusing to release:"
+              printf '%s' "$runs" | jq .
+              exit 1
+            fi
+            pending="$(printf '%s' "$runs" | jq '[.[] | select(.status != "completed")] | length')"
+            if [ "$pending" -eq 0 ]; then
+              echo "CI is green for ${SHA}."
+              exit 0
+            fi
+            echo "CI still running (${pending} pending), retrying in 30s..."
+            sleep 30
+          done
+          echo "::error::Timed out after 45m waiting for CI on ${SHA}. Push the release commit to main first, then re-run."
+          exit 1
+
   build-and-push:
     name: Build ${{ matrix.app }} (${{ matrix.arch }})
-    needs: validate-notes
+    needs: [validate-notes, await-ci]
     runs-on: ${{ matrix.arch == 'amd64' && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
     strategy:
       fail-fast: false
@@ -140,7 +202,7 @@ jobs:
           platforms: linux/${{ matrix.arch }}
           build-args: |
             APP_SCOPE=${{ matrix.scope }}
-            VITE_BUILD_SHA=${{ github.sha }}
+            VITE_BUILD_SHA=${{ needs.validate-notes.outputs.sha }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -205,7 +267,7 @@ jobs:
 
   deploy-relay-worker:
     name: Deploy webhook relay worker
-    needs: validate-notes
+    needs: [validate-notes, await-ci]
     runs-on: ubuntu-24.04-arm
     steps:
       - name: Checkout
@@ -295,9 +357,12 @@ jobs:
             echo "Release $TAG already exists, updating notes..."
             gh release edit "$TAG" --notes-file /tmp/notes.md --repo "${{ github.repository }}"
           else
-            # Target the checked-out commit SHA: the API rejects a tag name
-            # as target_commitish (422), and the tag already exists.
-            gh release create "$TAG" --target "$(git rev-parse HEAD)" --title "$TAG" --notes-file /tmp/notes.md --latest --repo "${{ github.repository }}"
+            # Target a branch, not a SHA: the API rejects a tag name as
+            # target_commitish (422), and full SHAs 404 as of 2026-09-29.
+            # The value is unused when the tag already exists (always true
+            # here — the tag is pushed before this workflow runs), so the
+            # default branch is the safe choice.
+            gh release create "$TAG" --target main --title "$TAG" --notes-file /tmp/notes.md --latest --repo "${{ github.repository }}"
           fi
 
           echo "Done: $TAG"

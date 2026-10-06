@@ -61,6 +61,8 @@ model User {
   pushSubscriptions             PushSubscription[]
   notificationPreferences       AccountNotificationPreference[]
   notificationDeliveries        NotificationDelivery[]
+  announcementViews             AnnouncementView[]
+  announcementEmailDeliveries   AnnouncementEmailDelivery[]
   webhookEndpoints              WebhookEndpoint[]
   anonymousRecoveryCredential   AnonymousRecoveryCredential?
   passkeys                      Passkey[]
@@ -81,6 +83,54 @@ model AnonymousRecoveryCredential {
   onboardingCompletedAt DateTime?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
+}
+
+enum AccountDeletionStatus {
+  PENDING
+  EXECUTING
+  CANCELLED
+  EXECUTED
+}
+
+// ---------------------------------------------------------------------------
+// Account deletion requests (right-to-erasure flow with a grace period).
+//
+// Deliberately NOT a foreign key to User: the row must survive the account
+// delete it authorizes (audit trail, idempotency guard, post-execution
+// tombstone). `accountId` is the deleted (or to-be-deleted) account id and
+// `emailSnapshot` lets the executor notify an address that no longer exists
+// as a User row. Only one PENDING request per account is allowed (enforced
+// in the API layer); history rows (CANCELLED/EXECUTED) are kept.
+// ---------------------------------------------------------------------------
+
+model AccountDeletionRequest {
+  accountId           String                @id
+  // Null for legacy jobs; each new schedule gets its own generation.
+  generation          String?
+  emailSnapshot       String
+  displayNameSnapshot String
+  // When true, shared history (ledger participant labels, comment authors)
+  // keeps the account's display name; otherwise it is replaced with the
+  // generic deleted-member label.
+  keepDisplayName     Boolean               @default(false)
+  // Optional custom label kept on shared history when keepDisplayName is
+  // true (falls back to displayNameSnapshot when null).
+  displayNameOverride String?
+  // When false, group exits skip settlement and remaining balances stay
+  // attributed to the remnant placeholder. Defaults true so requests recorded
+  // before the option existed keep the legacy settle behavior.
+  settleBalances      Boolean               @default(true)
+  requestedAt         DateTime              @default(now())
+  // Earliest time the worker may execute. The user can cancel before this.
+  executeAt           DateTime
+  status              AccountDeletionStatus @default(PENDING)
+  // pg-boss job id of the scheduled execution, for best-effort cancellation.
+  // The executor re-checks `status`, so a missed cancel is still safe.
+  jobId               String?
+  executedAt          DateTime?
+  cancelledAt         DateTime?
+
+  @@index([status, executeAt])
 }
 
 // ---------------------------------------------------------------------------
@@ -157,6 +207,44 @@ model AccountNotificationPreference {
 
   @@unique([accountId, category])
   @@index([accountId])
+}
+
+model AnnouncementView {
+  account   User     @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String
+  announcementId String
+  viewedAt DateTime @default(now())
+
+  @@id([accountId, announcementId])
+  @@index([announcementId])
+}
+
+model AnnouncementCampaign {
+  id          String   @id
+  status      String   @default("PLANNING")
+  cursor      String?
+  preparedAt  DateTime?
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deliveries  AnnouncementEmailDelivery[]
+}
+
+model AnnouncementEmailDelivery {
+  id             String   @id
+  campaign       AnnouncementCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  campaignId     String
+  account        User     @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId      String
+  status         String   @default("PENDING")
+  attempts       Int      @default(0)
+  sentAt         DateTime?
+  lastError      String?  @db.Text
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([campaignId, accountId])
+  @@index([status])
 }
 
 model Account {
@@ -596,6 +684,66 @@ model Group {
   // A partial unique index guarantees at most one FRIEND group per pair.
   friendPairKey      String?
   webhookEvents      WebhookEvent[]
+  bulkCategorizationRun BulkCategorizationRun?
+}
+
+model BulkCategorizationRun {
+  id             String                  @id
+  group          Group                   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId        String                  @unique
+  accountId      String
+  mode           String
+  status         String
+  locale         String                  @default("en-US")
+  total          Int                     @default(0)
+  processed      Int                     @default(0)
+  round          Int                     @default(0)
+  applied        Int                     @default(0)
+  skipped        Int                     @default(0)
+  candidateTotal Int                     @default(0)
+  omitted        Int                     @default(0)
+  revision       Int                     @default(0)
+  attemptId      String?
+  workerToken    String?
+  leaseUntil     DateTime?
+  calibration    Json                    @default("[]")
+  examples       Json                    @default("[]")
+  error          String?
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+  rows           BulkCategorizationRow[]
+}
+
+model BulkCategorizationRow {
+  run               BulkCategorizationRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  runId             String
+  expenseId         String
+  position          Int
+  reviewOrder       Int?
+  title             String
+  expenseVersion    Int
+  expenseDate       DateTime              @db.Timestamptz(0)
+  amount            Int
+  currency          String
+  stage             String                @default("PENDING")
+  categoryId        String                @default("general")
+  initialCategoryId String?
+  rerunFeedback     Boolean               @default(false)
+  manualCorrection  Boolean               @default(false)
+  rerunEligible     Boolean               @default(false)
+  rerunTarget       Boolean               @default(false)
+  secondPassTarget  Boolean               @default(false)
+  source            String                @default("none")
+  choices           Json                  @default("[]")
+  firstPass         Json?
+  secondPass        Json?
+
+  @@id([runId, expenseId])
+  @@unique([runId, position])
+  @@index([runId, stage, position])
+  @@index([runId, reviewOrder])
+  @@index([runId, rerunTarget, position])
+  @@index([runId, secondPassTarget, position])
 }
 
 model Subgroup {
@@ -705,12 +853,15 @@ model GroupInvitation {
   role   GroupRole             @default(MEMBER)
   status GroupInvitationStatus @default(PENDING)
 
-  // The inviter (owner/admin who created the invitation).
-  invitedBy   User    @relation("InvitationInviter", fields: [invitedById], references: [id])
-  invitedById String
+  // The inviter (owner/admin who created the invitation). Nullable so
+  // account deletion preserves invitation history: deleting the inviter's
+  // account nulls this relation instead of blocking the delete.
+  invitedBy   User?   @relation("InvitationInviter", fields: [invitedById], references: [id], onDelete: SetNull)
+  invitedById String?
 
-  // The account that accepted the invitation, once accepted.
-  acceptedBy   User?     @relation("InvitationInviteeAccount", fields: [acceptedById], references: [id])
+  // The account that accepted the invitation, once accepted. SetNull so
+  // account deletion preserves invitation history.
+  acceptedBy   User?     @relation("InvitationInviteeAccount", fields: [acceptedById], references: [id], onDelete: SetNull)
   acceptedById String?
   acceptedAt   DateTime?
   revokedAt    DateTime?
@@ -768,6 +919,16 @@ model AccountPreference {
   aiCategoryExtractEnabled Boolean? @default(true)
   aiReceiptScanEnabled     Boolean? @default(true)
   aiVoiceExpenseEnabled    Boolean? @default(true)
+  // Ordered group tab ids customized by the account (`GroupTabs` order).
+  // Empty means the default order (`defaultGroupTabOrder` in @spliit/domain).
+  groupTabOrder            String[] @default([])
+  // Hideable group tab ids the account chose to hide. Empty means hide
+  // nothing; Expenses and Settings can never be hidden.
+  hiddenGroupTabs          String[] @default([])
+  // Delete-confirmation strictness (`standard` | `strict`). Null means the
+  // historical `strict` behaviour; validated by @spliit/domain at API
+  // boundaries and normalized to `strict` there.
+  destructiveConfirmationLevel String?
 }
 
 model AccountGroupPreference {

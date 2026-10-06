@@ -4,12 +4,18 @@ import { render, screen } from '@/test/test-utils'
 
 const mocks = vi.hoisted(() => ({
   mockUseCurrentGroup: vi.fn(),
+  mockSyncedPreferences: vi.fn(),
 }))
 
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: mocks.mockUseCurrentGroup,
   useCurrentGroupOrNull: () => null,
   useIsReadOnlyGroupViewer: () => false,
+}))
+
+vi.mock('@/components/account-preferences-sync', () => ({
+  useSyncedAccountPreferences: mocks.mockSyncedPreferences,
+  useAccountPreferenceUpdater: () => null,
 }))
 
 vi.mock('@/trpc/client', () => ({
@@ -71,6 +77,7 @@ describe('GroupTabs', () => {
       group: { id: 'group-1', groupType: 'GROUP' },
       currentMember: { role: 'ADMIN' },
     })
+    mocks.mockSyncedPreferences.mockReturnValue(null)
   })
 
   it('renders Members tab when groupType is GROUP', () => {
@@ -106,5 +113,57 @@ describe('GroupTabs', () => {
     expect(toolsIndex).toBeGreaterThan(-1)
     expect(settingsIndex).toBeGreaterThan(-1)
     expect(toolsIndex).toBe(settingsIndex - 1)
+  })
+
+  it('orders activity and members before stats and budgets by default', () => {
+    mocks.mockUseCurrentGroup.mockReturnValue({
+      group: { id: 'group-1', groupType: 'GROUP' },
+      currentMember: { role: 'ADMIN' },
+      viewer: { source: 'MEMBER' },
+    })
+    render(<GroupTabs groupId="group-1" />)
+
+    const tabs = screen.getAllByRole('tab').map((tab) => tab.textContent ?? '')
+    const order = ['Expenses', 'Balances', 'Activity', 'Members', 'Stats']
+    const indexes = order.map((label) =>
+      tabs.findIndex((text) => text.startsWith(label)),
+    )
+    for (const index of indexes) expect(index).toBeGreaterThan(-1)
+    expect([...indexes].sort((a, b) => a - b)).toEqual(indexes)
+  })
+
+  it('follows the account tab order preference', () => {
+    mocks.mockUseCurrentGroup.mockReturnValue({
+      group: { id: 'group-1', groupType: 'GROUP' },
+      currentMember: { role: 'ADMIN' },
+      viewer: { source: 'MEMBER' },
+    })
+    mocks.mockSyncedPreferences.mockReturnValue({
+      groupTabOrder: ['tools', 'expenses'],
+    })
+    render(<GroupTabs groupId="group-1" />)
+
+    const tabs = screen.getAllByRole('tab').map((tab) => tab.textContent ?? '')
+    expect(tabs[0]).toBe('Tools')
+    expect(tabs[1]).toBe('Expenses')
+  })
+
+  it('hides account-hidden tabs', () => {
+    mocks.mockUseCurrentGroup.mockReturnValue({
+      group: { id: 'group-1', groupType: 'GROUP' },
+      currentMember: { role: 'ADMIN' },
+      viewer: { source: 'MEMBER' },
+    })
+    mocks.mockSyncedPreferences.mockReturnValue({
+      groupTabOrder: null,
+      hiddenGroupTabs: ['stats', 'budgets'],
+    })
+    render(<GroupTabs groupId="group-1" />)
+
+    expect(screen.queryByRole('tab', { name: 'Stats' })).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('tab', { name: 'Budgets' }),
+    ).not.toBeInTheDocument()
+    expect(screen.getByRole('tab', { name: 'Expenses' })).toBeInTheDocument()
   })
 })

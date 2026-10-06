@@ -58,6 +58,13 @@ const snapshotImportSchema = z.object({
   source: z.string().nullable(),
 })
 
+const snapshotPersonalShareSchema = z.object({
+  paid: z.number().int().nonnegative(),
+  owed: z.number().int().nonnegative(),
+  currencyCode: z.string().nullable(),
+  isSettlement: z.boolean(),
+})
+
 const expenseCreatedSnapshotSchema = z.object({
   version: snapshotVersionSchema,
   kind: z.literal('expense_created'),
@@ -71,6 +78,7 @@ const expenseCreatedSnapshotSchema = z.object({
   group: snapshotGroupSchema,
   link: z.string(),
   date: z.string().optional(),
+  personal: snapshotPersonalShareSchema.optional(),
 })
 
 const expenseUpdatedSnapshotSchema = z.object({
@@ -86,6 +94,7 @@ const expenseUpdatedSnapshotSchema = z.object({
   group: snapshotGroupSchema,
   link: z.string(),
   changedFields: z.array(z.string()),
+  personal: snapshotPersonalShareSchema.optional(),
 })
 
 const expenseDeletedSnapshotSchema = z.object({

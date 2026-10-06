@@ -202,6 +202,15 @@ describe('ExpenseComments', () => {
     ).not.toBeInTheDocument()
   })
 
+  it('shows existing comments without mutation controls in a read-only preview', () => {
+    render(<ExpenseComments groupId="group-1" expenseId="expense-1" readOnly />)
+    expect(screen.getByText('Bring the receipt next time.')).toBeInTheDocument()
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Delete comment' }),
+    ).not.toBeInTheDocument()
+  })
+
   it('only renders delete controls for comments marked deletable', async () => {
     mocks.listQuery.mockReturnValue({
       data: {

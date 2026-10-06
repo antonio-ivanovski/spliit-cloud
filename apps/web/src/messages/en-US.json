@@ -92,10 +92,14 @@
         "deleteGroup": "To permanently delete the group <target>{name}</target>, type its name exactly as shown below.",
         "deleteExpense": "To permanently delete the expense <target>{name}</target>, type its title exactly as shown below.",
         "deleteRecurringExpense": "To confirm this deletion for <target>{name}</target>, type the expense title exactly as shown below.",
-        "removeParticipant": "To remove <target>{name}</target> from this group, type their name exactly as shown below."
+        "removeParticipant": "To remove <target>{name}</target> from this group, type their name exactly as shown below.",
+        "deleteAccount": "To permanently delete your account, type <target>{name}</target> exactly as shown below."
       },
       "placeholder": "Type “{name}” here",
-      "mismatch": "Doesn’t match. Type {name} exactly."
+      "mismatch": "Doesn’t match. Type {name} exactly.",
+      "settingsNoteLink": "Change in account settings",
+      "settingsNoteLead": "Prefer to skip the typing?",
+      "settingsNoteTail": "to use a plain confirmation dialog."
     }
   },
   "Theme": {
@@ -105,13 +109,14 @@
     "system": "System default"
   },
   "Footer": {
-    "madeIn": "Made by the open-source community with love ❤️",
+    "madeIn": "Made by the <github>open-source community</github> with love ❤️",
     "legalNavigation": "Legal links",
     "privacy": "Privacy",
     "terms": "Terms",
     "imprint": "Project notice",
     "sponsor": "Sponsor",
-    "timeLabel": "Time of day"
+    "timeLabel": "Time of day",
+    "status": "Status"
   },
   "Expenses": {
     "title": "Expenses",
@@ -262,7 +267,9 @@
       "showLess": "Show less"
     },
     "copyToast": "Copy expense initiated. The existing expense details will be used to create a new one.",
-    "incomeBadge": "Income"
+    "incomeBadge": "Income",
+    "paidBySingle": "Paid by <strong>{paidBy}</strong> · paid for <paidFor></paidFor>",
+    "paidByMultipleSingle": "Paid by <paidByNames></paidByNames> · paid for <paidFor></paidFor>"
   },
   "ExpenseSeries": {
     "badge": "Recurring",
@@ -625,7 +632,8 @@
             "yearly": "years"
           }
         },
-        "documentCount": "Documents: {imported} recovered, {skipped} skipped"
+        "documentCount": "Documents: {imported} recovered, {skipped} skipped",
+        "categorizeWithSystemOne": "Suggest categories for uncategorized expenses with System One"
       },
       "Done": {
         "importComplete": "Import complete",
@@ -763,7 +771,9 @@
       "description": "Groups can now show an emoji next to their name. We noticed {emoji} in “{name}”.",
       "openSettings": "Open group settings",
       "notNow": "Not now"
-    }
+    },
+    "groupTabsHint": "Looking to reorder the group tabs or hide the ones you don't use?",
+    "groupTabsHintLink": "Customize tabs in your account settings"
   },
   "Auth": {
     "title": "Sign in to Spliit Cloud",
@@ -811,7 +821,7 @@
       "generic": "Something went wrong. Please try again.",
       "magicLinkFailed": "Could not send the sign-in link.",
       "passwordPolicy": "Use at least 8 characters with uppercase, lowercase, a number, and a symbol.",
-      "signupInviteRequired": "This instance is invite-only. Use an invitation link or ask someone to invite you to a group.",
+      "signupInviteRequired": "Sign-ups are invite-only. Use an invitation link or ask someone to invite you to a group.",
       "passkeyFailed": "Passkey sign-in failed. Try again or use another sign-in method."
     },
     "loading": "Loading…",
@@ -821,14 +831,14 @@
     "signInWithGithub": "Continue with GitHub",
     "legalNotice": "By continuing, you agree to the <terms>Terms of use</terms> and acknowledge the <privacy>Privacy notice</privacy>.",
     "inviteOnly": {
-      "message": "This instance is invite-only. Use an invitation link or ask someone to invite you to a group.",
+      "message": "Sign-ups are invite-only. Use an invitation link or ask someone to invite you to a group.",
       "useInvitedEmail": "Use the email address you were invited with."
     },
     "signInWithX": "Continue with X",
     "signInWithOidc": "Continue with {name}",
     "signInAnonymously": "Anonymous",
     "lastUsed": "Last used",
-    "emailAuthDisabled": "Sign-in with email is disabled on this instance. Please use single sign-on.",
+    "emailAuthDisabled": "Sign-in with email is disabled. Please use single sign-on.",
     "signInWithPasskey": "Sign in with passkey"
   },
   "AccountSettings": {
@@ -984,7 +994,7 @@
       "masterDescription": "Turn off to silence all email and push notifications. Your per-category choices are preserved.",
       "emailAddToEnable": "Add a verified email to receive inbox notifications.",
       "emailAddLink": "Add email",
-      "emailDeliveryDisabled": "Email delivery is turned off on this instance. Your email choices are saved but won't send until the administrator configures email."
+      "emailDeliveryDisabled": "Email delivery is turned off. Your email choices are saved but won’t send until email is set up."
     },
     "preferences": {
       "title": "App preferences",
@@ -1003,6 +1013,22 @@
       "mascotOptions": {
         "off": "Off",
         "bill": "Bill the receipt"
+      },
+      "groupTabs": "Group tabs",
+      "groupTabsHelp": "Choose which tabs are shown, and in which order, in every group.",
+      "groupTabsCustomize": "Customize",
+      "groupTabsSave": "Save",
+      "groupTabsDiscard": "Discard",
+      "groupTabsReset": "Reset to defaults",
+      "groupTabsHide": "Hide {name}",
+      "groupTabsShow": "Show {name}",
+      "groupTabsMoveUp": "Move {name} up",
+      "groupTabsMoveDown": "Move {name} down",
+      "deleteConfirmation": "Expense delete confirmation",
+      "deleteConfirmationHelp": "Quick deletes ask once. Typing deletes ask you to type the expense title first. Deleting a group or removing a member always needs typing.",
+      "deleteConfirmationOptions": {
+        "standard": "Confirmation dialog",
+        "strict": "Typing confirmation dialog"
       }
     },
     "aiPreferences": {
@@ -1195,7 +1221,111 @@
       "backedUp": "Backed up",
       "removeWarning": "This cannot be undone. The device will no longer sign you in with a passkey — register it again at any time.",
       "removeLastWarning": "This is your last passkey. If it is your only sign-in method, removal is blocked until you save a recovery link or another sign-in method.",
-      "anonymousHelpNoLink": "No sign in link is saved for this guest account. Create one in the sign in link row below — it works on any device."
+      "anonymousHelpNoLink": "No sign in link is saved for this guest account. Create one in the sign in link row below — it works on any device.",
+      "reauthTitle": "Sign in again to add a passkey",
+      "reauthDescription": "For your security, adding a passkey needs a fresh sign-in. You will sign out, sign back in, and land right back here to finish.",
+      "reauthConfirm": "Sign in again",
+      "reauthAnonymousTitle": "Save a sign-in link first",
+      "reauthAnonymousDescription": "This guest account has no sign-in link and no passkey yet. Signing out now would lock you out for good — save a sign-in link in the Sign in link section first, then come back to add a passkey."
+    },
+    "deletion": {
+      "sectionTitle": "Danger zone",
+      "sectionDescription": "Permanently delete your account and every sign-in method.",
+      "rowLabel": "Delete account",
+      "rowDescription": "Removes your profile, sessions, and settings after a 48-hour grace period. Shared expenses stay in other members' groups without your personal details.",
+      "open": "Delete account…",
+      "scheduledTitle": "Account deletion scheduled",
+      "scheduledDescription": "Deletion is scheduled to start on or after {date}. Your account stays active until it starts. Groups, members, and expenses can change during the wait; your choices apply to their state when deletion runs. You can cancel until deletion starts. A confirmation email was sent to {email}.",
+      "cancel": "Cancel deletion",
+      "cancelling": "Cancelling…",
+      "cancelled": "Account deletion cancelled.",
+      "dialogTitle": "Schedule account deletion?",
+      "dialogDescription": "This schedules deletion after a 48-hour waiting period; nothing is deleted now. You can cancel until deletion starts. Your choices apply to the groups and balances at that time. Once deletion starts, it cannot be undone.",
+      "farewellTitle": "Sorry to see you go",
+      "farewellBody": "If there's anything we can do so you stay, <feedbackLink>share your feedback</feedbackLink> — it takes a minute and helps us improve.",
+      "groupsTitle": "What happens to your groups",
+      "leaveGroup": "You will leave “{name}”.",
+      "deleteGroup": "“{name}” will be permanently deleted — you are its last member.",
+      "lastAdmin": "You are the last admin of “{name}” — another member is promoted automatically.",
+      "settleBalances": "Unsettled balances in “{name}” are settled automatically.",
+      "friendLedger": "Your friend ledger with {name} is settled and closed.",
+      "friendLedgerUnnamed": "Your friend ledger is settled and closed.",
+      "friendLedgerFallback": "a friend ledger",
+      "noGroups": "You are not a member of any group.",
+      "accessTitle": "Sign-in and invites",
+      "pendingInvites_zero": "When deletion runs, {count} pending invitations you sent will be revoked.",
+      "pendingInvites_one": "When deletion runs, {count} pending invitation you sent will be revoked.",
+      "pendingInvites_two": "When deletion runs, {count} pending invitations you sent will be revoked.",
+      "pendingInvites_few": "When deletion runs, {count} pending invitations you sent will be revoked.",
+      "pendingInvites_many": "When deletion runs, {count} pending invitations you sent will be revoked.",
+      "pendingInvites_other": "When deletion runs, {count} pending invitations you sent will be revoked.",
+      "keepNameLabel": "Keep my name on shared history",
+      "keepNameDescription": "Shared expenses keep showing “{name}”. Otherwise your name is replaced with “Deleted member” everywhere.",
+      "customNameLabel": "Name to keep",
+      "settleLabel": "Mark balances settled when deletion runs",
+      "settleDescription": "Remaining balances are settled automatically. Otherwise they stay on your placeholder name.",
+      "leaveBalances": "Unsettled balances in “{name}” stay as they are.",
+      "friendLeaveBalances": "Your balance with {name} stays as it is.",
+      "confirmWord": "DELETE",
+      "ackLabel": "I understand this is permanent, and shared expenses stay in other members' groups without my personal details.",
+      "exportHint": "Want a copy first? <exportLink>Export a backup</exportLink> before you continue.",
+      "schedule": "Schedule deletion",
+      "scheduling": "Scheduling…",
+      "scheduled": "Deletion scheduled. Check your email to review or cancel.",
+      "dialogCancel": "Keep my account",
+      "reauthTitle": "Sign in again to delete your account",
+      "reauthDescription": "For your security, deleting your account needs a fresh sign-in. You will sign out, sign back in, and land right back here to finish.",
+      "reauthConfirm": "Sign in again",
+      "errors": {
+        "generic": "Something went wrong. Try again.",
+        "loadFailed": "Could not load deletion details.",
+        "emailMismatch": "The typed email does not match your account email.",
+        "alreadyRequested": "A deletion request is already pending for this account.",
+        "sessionNotFresh": "Your session is too old for this action. Sign in again, then retry.",
+        "jobsDisabled": "Account deletion needs the background worker, which is disabled on this deployment.",
+        "ackRequired": "Confirm you understand the consequences first.",
+        "invalidDisplayName": "Enter a name between 1 and 100 characters.",
+        "cancelFailed": "Could not cancel the deletion. Try again."
+      },
+      "groupsToDeleteTitle": "Groups that will be deleted",
+      "groupsToDeleteDescription": "When deletion runs, groups where you are still the last active member will be permanently deleted.",
+      "groupsToLeaveTitle": "Groups you will leave",
+      "groupsToLeaveDescription": "When deletion runs, you will leave groups that still have other active members. These groups stay for everyone else.",
+      "friendsTitle": "Friends",
+      "friendsDescription": "Your one-to-one balances with these friends.",
+      "backToSettings": "Back to settings",
+      "pageTitle": "Delete account",
+      "loading": "Loading deletion details",
+      "choicesTitle": "Your deletion choices",
+      "nameTitle": "Name on shared history",
+      "removeNameLabel": "Replace my name with “Deleted member”",
+      "balancesTitle": "Remaining balances",
+      "keepBalancesLabel": "Keep remaining balances as they are",
+      "balanceExplanation": "If you choose to settle, settlement entries are recorded when your account is deleted. No money is transferred. Otherwise, balances remain on your shared history.",
+      "confirmationTitle": "Confirm account deletion",
+      "retry": "Try again",
+      "pageDescription": "Schedule your account for deletion after a 48-hour waiting period. Your account stays active until deletion starts, and you can cancel beforehand.",
+      "reviewChoicesTitle": "Your choices",
+      "consequencesTitle": "What will happen",
+      "reviewConfirmTitle": "Confirm deletion",
+      "backupLink": "Export a backup",
+      "keptNameExplanation": "When deletion runs, shared expenses will show “{name}”. Your profile name stays unchanged until then.",
+      "removedNameExplanation": "When deletion runs, shared expenses will show “Deleted member”. Your profile name stays unchanged until then.",
+      "keptBalancesExplanation": "When deletion starts, remaining balances stay on your shared history, including expenses added during the waiting period.",
+      "settledBalancesExplanation": "During deletion, settlement entries mark the then-current balances settled in groups you still belong to, including archived groups. Balances in groups you have already left or been removed from stay unchanged. No money is transferred.",
+      "rowBalancesKept": "Remaining balances stay as they are.",
+      "rowBalancesSettled": "The balance at deletion time will be marked settled.",
+      "rowAdmin": "When deletion runs, another member will become admin if you are still the last admin.",
+      "friendKept": "Your balance stays as it is.",
+      "friendSettled": "When deletion runs, your then-current balance will be marked settled and the ledger closed.",
+      "accessExplanation": "These sign-in methods will stop working when your account is deleted.",
+      "invitesTitle": "Pending invitations",
+      "balanceUnavailable": "Balance unavailable",
+      "archivedBalancesKept": "This archived group stays read-only. Your remaining balance will be kept.",
+      "signInMethodsRemoved": "These sign-in methods will stop working: {methods}.",
+      "consequencesTiming": "This review reflects your account now. Groups, members, and expenses can change before deletion starts. Your choices will apply to the groups you belong to and their balances at that time. Nothing listed here happens immediately.",
+      "executingTitle": "Account deletion has started",
+      "executingDescription": "Your account deletion is processing. Some changes may already be complete, and deletion cannot be cancelled or undone. If processing is interrupted, it resumes from the completed steps."
     }
   },
   "AccountAuthorizedClients": {
@@ -1661,7 +1791,8 @@
       "allItemsSplitEdit": "Edit all-items split",
       "allItemsSplitModalTitle": "All-items split",
       "remainderAllocationProportional": "Proportional to items",
-      "remainderProportionalHint": "Split this amount based on each person's item subtotal. Useful for taxes and tips."
+      "remainderProportionalHint": "Split this amount based on each person's item subtotal. Useful for taxes and tips.",
+      "errorExceedsAmountDetails": "Items total {itemsTotal} exceeds the expense amount by {excess}."
     },
     "leaveItemized": {
       "title": "Switch split mode?",
@@ -1697,7 +1828,15 @@
       "done": "Done",
       "yourTime": "your time",
       "invalidDate": "Enter a valid date.",
-      "invalidTime": "Enter a valid time (HH:mm)."
+      "invalidTime": "Enter a valid time (HH:mm).",
+      "hourLabel": "Hour",
+      "minuteLabel": "Minute",
+      "periodLabel": "AM/PM",
+      "timeWheelHint": "Scroll or tap to set the time. The date stays the same.",
+      "now": "Now",
+      "morning": "Morning",
+      "midday": "Midday",
+      "evening": "Evening"
     },
     "settlementTitle": "Settlement payment",
     "settlementHint": "{category}: Not counted as spending in totals, stats, or budgets. Still updates who owes whom.",
@@ -1741,7 +1880,8 @@
       "description": "Enter the final amount, including any fees.",
       "impliedRate": "Implied rate: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Category suggestions"
+    "otherSuggestions": "Category suggestions",
+    "paidForItemizedEmptyHint": "Assign people to items to see each share."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Delete document",
@@ -2516,7 +2656,7 @@
       "temporaryNameRequired": "Temporary name",
       "noAccountNameDescription": "Shown in expenses and balances until this participant is linked to an account.",
       "addParticipant": "Add participant",
-      "emailDeliveryDisabled": "Email delivery is turned off on this instance. The invitation is still created and will appear when the invitee signs in; use a link invite to give them something to open."
+      "emailDeliveryDisabled": "Email delivery is turned off. The invitation is still created and will appear when the invitee signs in; use a link invite to give them something to open."
     },
     "invitations": {
       "title": "Pending invitations",
@@ -2782,7 +2922,9 @@
       "changeEmptyValue": "Not set",
       "recurringCreated": "{participant} created recurring expense “{title}”",
       "stopped": "{participant} stopped the recurring expense {title}",
-      "commented": "{participant} commented on {title}: “{excerpt}”"
+      "commented": "{participant} commented on {title}: “{excerpt}”",
+      "yourShare": "Your share:",
+      "notInvolved": "You are not involved"
     },
     "group": {
       "updated": "{participant} updated group settings",
@@ -2795,7 +2937,11 @@
         "currencyCode": "Currency code",
         "linkedParticipant": "Linked participant",
         "subgroupsEnabled": "Subgroups",
-        "publicViewLink": "Public view-only link"
+        "publicViewLink": "Public view-only link",
+        "emoji": "Emoji",
+        "color": "Color",
+        "subgroups": "Subgroups",
+        "splitPresets": "Split presets"
       }
     },
     "member": {
@@ -2818,7 +2964,8 @@
       }
     },
     "participant": {
-      "removed": "{participant} removed {target} from the group"
+      "removed": "{participant} removed {target} from the group",
+      "added": "{participant} added {target} to the group"
     },
     "import": {
       "imported_zero": "{participant} imported {count} expenses",
@@ -2830,7 +2977,19 @@
     },
     "fallback": "An activity was recorded",
     "unknownActor": "Someone",
-    "openExpense": "Open expense"
+    "openExpense": "Open expense",
+    "viewMode": {
+      "label": "Activity view mode",
+      "forYou": "For you",
+      "all": "All"
+    },
+    "hiddenActivitiesShowLess": "Show less",
+    "hiddenActivities_zero": "{count} hidden activities not involving you",
+    "hiddenActivities_one": "{count} hidden activity not involving you",
+    "hiddenActivities_two": "{count} hidden activities not involving you",
+    "hiddenActivities_few": "{count} hidden activities not involving you",
+    "hiddenActivities_many": "{count} hidden activities not involving you",
+    "hiddenActivities_other": "{count} hidden activities not involving you"
   },
   "OfflineBanner": {
     "message": "You're offline. Downloaded data is read-only.",
@@ -2874,7 +3033,7 @@
     "failedDescription": "We could not register this device. Notifications configured for Email will continue there; Push-only choices are not rerouted.",
     "emailUsage": "Only notifications configured for Email will arrive until you enable a device. You can allow notifications in your browser settings and try again from Settings.",
     "done": "Done",
-    "emailDeliveryDisabled": "Email delivery is turned off on this instance, so email notifications can't reach you. Enable push on this device to keep receiving updates."
+    "emailDeliveryDisabled": "Email delivery is turned off, so email notifications can’t reach you. Enable push on this device to keep receiving updates."
   },
   "Friends": {
     "title": "Track expenses with a friend",
@@ -2924,9 +3083,6 @@
   },
   "BulkCategorize": {
     "title": "Bulk categorize",
-    "calibrationTitle": "Step 1 — Calibration",
-    "calibrationDescription": "Each example you confirm helps the AI improve its next suggestions. It may be ready after one round or ask for more examples.",
-    "roundCount": "Round {round} of {max}",
     "confidence": {
       "high": "High",
       "medium": "Medium",
@@ -3012,10 +3168,140 @@
     "leftUncategorized_many": "{count} expenses were left uncategorized because the AI was not confident enough.",
     "leftUncategorized_other": "{count} expenses were left uncategorized because the AI was not confident enough.",
     "retryPreview": "Try preview again",
-    "doneTitle": "Categories saved",
+    "doneTitle": "Categorization complete",
     "expenseColumn": "Expense",
     "categoryColumn": "Category",
-    "confidenceColumn": "Confidence"
+    "confidenceColumn": "Confidence",
+    "simpleDescription": "Review category matches for expenses in General, then save your choices.",
+    "generateSuggestions": "Suggest categories",
+    "backToStart": "Back",
+    "chooseMode": "Choose how to categorize expenses",
+    "localMode": "Dictionary & history",
+    "localModeDescription": "Use the built-in dictionary and this group's category history.",
+    "startRun": "Start categorizing",
+    "noCategory": "Leave uncategorized",
+    "progressTitle": "Categorizing expenses",
+    "progressDescription": "You can leave this page and return later. Your progress is saved.",
+    "progressCount": "Categorized {categorized} of {total} expenses",
+    "applyProgressTitle": "Saving categories",
+    "reviewTitle": "Review suggestions",
+    "reviewSummary": "{suggested} suggestions from {total} uncategorized expenses",
+    "sourceLocal": "Local",
+    "saveSelected": "Save selected categories",
+    "retry": "Retry",
+    "restart": "Start a new run",
+    "failed": "The run stopped: {message}",
+    "savedSummary": "{applied} changed, {skipped} skipped",
+    "selectedCount": "{count} selected",
+    "selectAll": "Select all",
+    "clearAll": "Clear all",
+    "discardRun": "Discard run",
+    "partialSaveNotice": "Some categories may already have been saved. Discarding this run will not undo those changes.",
+    "restartOlderRunTitle": "Start a new categorization run",
+    "restartOlderRunDescription": "This earlier run used the previous review flow. Start again to review all expenses together.",
+    "runningMatches": "{count} of {total} expenses have a category suggestion so far",
+    "failedTitle": "Categorization stopped",
+    "reviewWorkload": "{total} expenses in General · {selected} selected for categorization · {general} staying in General",
+    "categoryChoices": "Category choices",
+    "moreCategories": "Choose another category",
+    "saveCount": "Save {count} categories",
+    "finishWithoutChanges": "Finish without changes",
+    "completionSummary": "Run complete: {changed} of {total} expenses changed. {remaining} expenses remain in General.",
+    "viewExpenses": "View expenses",
+    "countLoading": "Counting uncategorized expenses…",
+    "nothingToCategorize": "There are no uncategorized expenses to categorize.",
+    "startingCount": "{count} expenses are currently in General and ready to review.",
+    "countError": "Could not count uncategorized expenses. Reload the page to try again.",
+    "keepGeneral": "General · leave uncategorized",
+    "calibrationRoundTitle": "Calibration round {round}",
+    "calibrationLoading": "Preparing a varied sample of expenses…",
+    "calibrationReviewDescription": "Review and correct these {count} expenses. Choices stay in this run until you save at the end.",
+    "confirmRound": "Confirm round",
+    "roundSummaryTitle": "Round {round} reviewed",
+    "roundSummaryDescription": "{reviewed} reviewed · {categorized} provisionally categorized · {general} left as General",
+    "roundQuality": "Initial suggestions matched {accuracy}% of your choices; you corrected {corrections}.",
+    "categorizeRemaining": "Categorize remaining expenses",
+    "nextRound": "Review another sample",
+    "tableLabel": "Expenses to categorize",
+    "dateColumn": "Date",
+    "amountColumn": "Amount",
+    "rerunSuggestions": "Re-run suggestions",
+    "roundQualityWithSuggestions": "{accepted} of {proposed} suggested categories accepted · {changed} changed · {missed} matches found from General",
+    "roundQualityNoSuggestions": "No categories suggested · {missed} matches found from General · {abstained} left in General",
+    "rerunChanged": "You changed {changed} of {proposed} suggested categories.",
+    "rerunAssignedSingle": "You assigned a category to 1 expense left in General.",
+    "rerunAssignedMultiple": "You assigned a category to {count} expenses left in General.",
+    "rerunPotentialSingle": "Your changes may improve the match for 1 remaining General expense. Re-run suggestions if you want another pass.",
+    "rerunPotentialMultiple": "Your changes may improve matches for {count} remaining General expenses. Re-run suggestions if you want another pass.",
+    "rerunEligible": "Eligible for another pass: General {general} · uncertain automatic matches {uncertain}. Your corrections may improve these suggestions.",
+    "rerunNoEligible": "No untouched General or uncertain automatic matches remain to re-run. Your corrections are still included in the categories you save.",
+    "rerunAlreadyUsed": "Your latest corrections have already been used for these suggestions. Make another correction to run them again.",
+    "highMatch": "High match",
+    "mediumMatch": "Medium match",
+    "lowMatch": "Low match",
+    "belowMatchThreshold": "Below match threshold",
+    "refiningTitle": "Refining uncertain matches",
+    "runLimitSummary": "This run includes 10,000 expenses. {count} more General expenses can be categorized in another run after you save.",
+    "pageLoading": "Loading expenses…",
+    "pageLoadError": "Could not load expenses.",
+    "pageRetry": "Retry",
+    "pageCount": "Showing {loaded} of {total} expenses",
+    "ledgerAmountNotice": "Amounts are shown in the group currency.",
+    "viewExpenseDetails": "View expense details",
+    "reviewFilterLabel": "Show expenses",
+    "filterAll": "All {count}",
+    "filterGeneral": "General {count}",
+    "improveSuggestions": "Improve remaining suggestions",
+    "rerunInfoLabel": "About improving suggestions",
+    "preparingNextStage": "Preparing the next step",
+    "rerunProgressTitle": "Updating suggestions",
+    "progressPreparing": "Preparing expenses…",
+    "noGeneralRows": "No expenses are left in General in this review.",
+    "discardConfirmationTitle": "Discard this categorization run?",
+    "discardConfirmationDescription": "This removes the run, its suggestions, and choices made by you or other admins. No expense categories will be changed.",
+    "discardConfirmationCancel": "Keep run",
+    "progressCountDescription": "Only confirmed categories and medium or high matches count; General and low-strength matches do not.",
+    "systemOneMode": "System One model",
+    "systemOneModeDescription": "Use the System One decision model for every expense, using this group’s categorized expenses and your reviewed choices as hints. TypeSafe Jev is one such model.",
+    "systemOneUnavailable": "System One is unavailable. Dictionary & history is still available.",
+    "systemOneConfidence": "System One confidence: {confidence}%",
+    "systemOneOptionProbability": "System One option probability: {probability}%",
+    "overallProgress": "Overall progress",
+    "fullPassProcessed": "Processed {processed} of {total} expenses",
+    "stageProcessed": "Processed {processed} of {total} expenses in this step",
+    "saveSkipped": "{count} expenses were skipped because they changed.",
+    "sharedRunNotice": "This run is shared with other group admins. Everyone sees the same suggestions.",
+    "saveConflictTitle": "{count} expenses changed since this review started",
+    "saveConflictDescription": "Someone edited these expenses or changed their category outside this run. Save the other expenses, or edit the categories again and try saving once more.",
+    "saveConflictMore": "And {count} more.",
+    "saveOtherExpenses": "Save other expenses",
+    "receiptTitles": {
+      "freshMarket": "Fresh Market",
+      "greenGrocer": "Green Grocer",
+      "fruitStand": "Fruit Stand",
+      "cornerBistro": "Corner Bistro",
+      "noodleHouse": "Noodle House",
+      "cafeLunch": "Cafe Lunch",
+      "flightTicket": "Flight Ticket",
+      "airlineBaggage": "Airline Baggage",
+      "boardingPass": "Boarding Pass",
+      "homeSupplies": "Home Supplies",
+      "hardwareShop": "Hardware Shop",
+      "cleaningGoods": "Cleaning Goods",
+      "cinemaTickets": "Cinema Tickets",
+      "movieNight": "Movie Night",
+      "filmFestival": "Film Festival",
+      "organicMarket": "Organic Market",
+      "bakeryRun": "Bakery Run",
+      "sushiBar": "Sushi Bar",
+      "pizzaNight": "Pizza Night",
+      "airportLounge": "Airport Lounge",
+      "extraLegroom": "Extra Legroom",
+      "laundryDetergent": "Laundry Detergent",
+      "storageBoxes": "Storage Boxes",
+      "popcornCombo": "Popcorn Combo",
+      "streamingRental": "Streaming Rental"
+    }
   },
   "ExpensePreview": {
     "title": "Expense preview",
@@ -3469,7 +3755,8 @@
     "hintTapToAddExpense": "I'm {name} — tap me to add an expense.",
     "hintTapToCreateGroup": "I'm {name} — tap me to create a group.",
     "billName": "Bill",
-    "offlineMessage": "I can't create anything while you're offline."
+    "offlineMessage": "I can't create anything while you're offline.",
+    "serverUnreachableMessage": "I can't reach the Spliit server right now — your connection looks fine, so this one's on us."
   },
   "CreateSettlement": {
     "description": "Review the payment before recording it.",
@@ -3520,7 +3807,18 @@
       "existingPasskeyTitle": "Already registered a passkey?",
       "existingPasskeyDescription": "Sign back in with the passkey on one of your registered devices.",
       "passkeySignIn": "Sign in with passkey",
-      "passkeySignInError": "Could not sign in with this passkey. Try again or use your sign in link."
+      "passkeySignInError": "Could not sign in with this passkey. Try again or use your sign in link.",
+      "passkeyNameLabel": "Name this passkey (optional)",
+      "passkeyNamePlaceholder": "e.g. MacBook Touch ID",
+      "nameTitle": "Choose a display name",
+      "nameDescription": "Shown on your passkey and in your groups. You can change it later.",
+      "nameLabel": "Display name",
+      "namePlaceholder": "Your name",
+      "nameSave": "Save and continue",
+      "nameSaving": "Saving…",
+      "nameRequired": "Enter a display name.",
+      "nameTooShort": "Name must be at least 2 characters.",
+      "nameError": "Could not save the display name. Please try again."
     },
     "onboarding": {
       "title": "Save your sign in link",
@@ -3638,6 +3936,29 @@
       "start": "Start import",
       "archivedNotice": "This group is archived.",
       "readOnlyNotice": "Only active group members can import expenses."
+    },
+    "categorize": {
+      "title": "Categorize expenses",
+      "description": "Suggest categories for existing uncategorized expenses with System One. Review every change before saving.",
+      "start": "Categorize expenses",
+      "steps": {
+        "choose": {
+          "title": "Choose a method",
+          "detail": "Use Dictionary & history or the System One decision model."
+        },
+        "calibrate": {
+          "title": "Review small samples",
+          "detail": "Correct suggestions so the next round learns your group's categories."
+        },
+        "review": {
+          "title": "Review every expense",
+          "detail": "General expenses appear first in the full table."
+        },
+        "save": {
+          "title": "Save categories",
+          "detail": "Expenses change only when you confirm the final review."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -3774,7 +4095,8 @@
       "importedCount_zero": "{count} expenses imported",
       "matchingExpensesNotice_few": "{count} expenses have matching or similar titles.",
       "matchingExpensesNotice_two": "{count} expenses have matching or similar titles.",
-      "matchingExpensesNotice_zero": "{count} expenses have matching or similar titles."
+      "matchingExpensesNotice_zero": "{count} expenses have matching or similar titles.",
+      "categorizeWithSystemOne": "Suggest categories for uncategorized expenses with System One"
     },
     "mapping": {
       "addFallbackColumn": "Add fallback column",
@@ -4354,5 +4676,26 @@
     "expenseMissing": "This expense isn't in this device's download. Reconnect to check for newer/older expenses.",
     "groupMissing": "This group hasn't finished downloading.",
     "balancesStale": "Balances may be out of date."
+  },
+  "ApiStatusBanner": {
+    "message": "Spliit can't be reached right now. Your connection looks fine — the problem is on our end.",
+    "statusLink": "Check status"
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit is unavailable",
+    "description": "We can't reach the Spliit server right now. Your connection looks fine — please try again in a moment.",
+    "retry": "Try again"
+  },
+  "AccountDeletionBanner": {
+    "scheduled": "Account deletion is scheduled for {date}.",
+    "review": "Review or cancel deletion",
+    "executing": "Account deletion has started.",
+    "viewStatus": "View deletion status"
+  },
+  "Updates": {
+    "title": "Updates",
+    "latest": "What's new",
+    "viewAll": "See all updates",
+    "dismiss": "Got it"
   }
 }

@@ -5,6 +5,8 @@ import {
   supportedCurrencyCodeSchema,
 } from '@spliit/domain'
 
+import { isLoopbackHostname } from './ai/system-one-base-url'
+
 const interpretEnvVarAsBool = (val: unknown): boolean => {
   if (typeof val !== 'string') return false
   return ['true', 'yes', '1', 'on'].includes(val.toLowerCase())
@@ -95,6 +97,10 @@ const optionalString = z.preprocess(
 const envSchema = z
   .object({
     NODE_ENV: optionalString,
+    CLOUD_NEWS_ENABLED: z.preprocess(
+      interpretEnvVarAsBool,
+      z.boolean().default(false),
+    ),
     PORT: z.coerce.number().int().positive().default(3001),
     WEB_ORIGINS: z.preprocess(
       normalizeWebOrigins,
@@ -137,10 +143,6 @@ const envSchema = z
       z.boolean().default(false),
     ),
     PUBLIC_ENABLE_CATEGORY_EXTRACT: z.preprocess(
-      interpretEnvVarAsBool,
-      z.boolean().default(false),
-    ),
-    PUBLIC_ENABLE_BULK_CATEGORIZE: z.preprocess(
       interpretEnvVarAsBool,
       z.boolean().default(false),
     ),
@@ -305,6 +307,13 @@ const envSchema = z
     SMTP_USER: optionalString,
     SMTP_PASS: optionalString,
     EMAIL_FROM: optionalString,
+    // Cloudflare Email Sending over HTTPS (REST). Preferred over SMTP on
+    // hosts that filter outbound SMTP ports (Hetzner blocks 25/465 by
+    // default): the REST endpoint runs on 443, which stays open. Requires
+    // an onboarded sending domain plus a token with Email Sending:Edit.
+    // Distinct from CI's CLOUDFLARE_API_TOKEN (Workers deploy scope).
+    CF_EMAIL_ACCOUNT_ID: optionalString,
+    CF_EMAIL_API_TOKEN: optionalString,
 
     // Web Push delivery. These are intentionally optional outside production
     // so local development can run without a VAPID key pair.
@@ -384,20 +393,26 @@ const envSchema = z
           'ASSISTANT_CONFIRMATION_SECRET must be at least 32 bytes when ENABLE_MCP is true',
       })
     }
-    // SMTP is required in production only while email auth is enabled.
-    // SSO-only instances (ENABLE_EMAIL_AUTH=false) may run without SMTP;
-    // email invitations then skip delivery and rely on the in-app pending
-    // list (see email-invitations.ts), and link invites work fully offline.
+    // SMTP or Cloudflare REST is required in production while email auth is
+    // enabled. SSO-only instances (ENABLE_EMAIL_AUTH=false) may run without
+    // either; email invitations then skip delivery and rely on the in-app
+    // pending list (see email-invitations.ts), and link invites work fully
+    // offline. Cloudflare REST (CF_EMAIL_*) counts because it delivers over
+    // HTTPS:443, which stays open on hosts that filter SMTP ports 25/465.
+    const hasCloudflareEmail = !!(
+      env.CF_EMAIL_ACCOUNT_ID && env.CF_EMAIL_API_TOKEN
+    )
     if (
       env.NODE_ENV === 'production' &&
       env.ENABLE_EMAIL_AUTH &&
-      !env.SMTP_HOST
+      !env.SMTP_HOST &&
+      !hasCloudflareEmail
     ) {
       ctx.addIssue({
         code: 'custom',
         path: ['SMTP_HOST'],
         message:
-          'SMTP_HOST is required in production when ENABLE_EMAIL_AUTH is true (set ENABLE_EMAIL_AUTH=false for SSO-only instances without SMTP)',
+          'SMTP_HOST is required in production when ENABLE_EMAIL_AUTH is true unless Cloudflare email (CF_EMAIL_ACCOUNT_ID and CF_EMAIL_API_TOKEN) is configured (set ENABLE_EMAIL_AUTH=false for SSO-only instances without email delivery)',
       })
     }
     if (
@@ -457,6 +472,17 @@ const envSchema = z
         message: 'SMTP_USER and SMTP_PASS must be configured together',
       })
     }
+    // Cloudflare Email Sending requires both values; omitting both keeps
+    // SMTP as the delivery transport. Partial configuration is a boot error
+    // so a missing account ID or revoked token is caught at startup.
+    if (!!env.CF_EMAIL_ACCOUNT_ID !== !!env.CF_EMAIL_API_TOKEN) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['CF_EMAIL_ACCOUNT_ID'],
+        message:
+          'CF_EMAIL_ACCOUNT_ID and CF_EMAIL_API_TOKEN must be configured together',
+      })
+    }
     // The webhook relay is deployment configuration: both values together or
     // neither. A relayed delivery cannot reach private networks, so combining
     // a production (HTTPS) relay with private endpoints is a boot error. An
@@ -510,7 +536,10 @@ const envSchema = z
         })
       }
     }
-    if (env.NODE_ENV === 'production' && env.SMTP_HOST) {
+    if (
+      env.NODE_ENV === 'production' &&
+      (env.SMTP_HOST || hasCloudflareEmail)
+    ) {
       if (
         !env.EMAIL_UNSUBSCRIBE_SECRET ||
         Buffer.byteLength(env.EMAIL_UNSUBSCRIBE_SECRET, 'utf8') < 32
@@ -560,6 +589,24 @@ const envSchema = z
         message:
           'AI_SYSTEM_ONE_API_KEY must be specified when PUBLIC_ENABLE_CATEGORY_EXTRACT is enabled with AI_CATEGORY_ENGINE=system-one',
       })
+    }
+    // The bearer key and expense context travel to this endpoint, so a
+    // non-loopback `http:` URL would leak both in cleartext. Fail boot fast;
+    // loopback HTTP stays available for local self-hosted development.
+    if (env.AI_SYSTEM_ONE_BASE_URL) {
+      try {
+        const url = new URL(env.AI_SYSTEM_ONE_BASE_URL)
+        if (url.protocol === 'http:' && !isLoopbackHostname(url.hostname)) {
+          ctx.addIssue({
+            code: 'custom',
+            path: ['AI_SYSTEM_ONE_BASE_URL'],
+            message:
+              'AI_SYSTEM_ONE_BASE_URL must use HTTPS (HTTP is only allowed for local loopback development, e.g. http://localhost or http://127.0.0.1)',
+          })
+        }
+      } catch {
+        // Invalid URLs are already reported by the `z.url()` schema.
+      }
     }
     if (env.PUBLIC_ENABLE_VOICE_EXPENSE && !env.AI_VOICE_MODEL) {
       ctx.addIssue({
@@ -705,15 +752,62 @@ export function isPasskeyAuthEnabled(
 }
 
 /**
- * Whether outbound email can be delivered. Requires both the transport
- * (`SMTP_HOST`) and a sender identity (`EMAIL_FROM`): a host without a from
- * address cannot produce sendable mail, so it counts as undeliverable rather
- * than silently misconfigured. Drives the web delivery hint and the quiet skip
- * for best-effort sends on instances that run without SMTP. Accepts an explicit
+ * Whether Cloudflare Email Sending (REST over HTTPS:443) is configured.
+ * Requires the account ID, an API token with Email Sending:Edit, and a sender
+ * identity (`EMAIL_FROM`) on an onboarded sending domain. Accepts an explicit
  * source so tests can pass isolated env objects without mutating global env.
  */
-export function isEmailDeliveryEnabled(
-  source: { SMTP_HOST?: string; EMAIL_FROM?: string } = env,
+export function isCloudflareEmailEnabled(
+  source: {
+    CF_EMAIL_ACCOUNT_ID?: string
+    CF_EMAIL_API_TOKEN?: string
+    EMAIL_FROM?: string
+  } = env,
 ): boolean {
-  return !!source.SMTP_HOST && !!source.EMAIL_FROM
+  return (
+    !!source.CF_EMAIL_ACCOUNT_ID &&
+    !!source.CF_EMAIL_API_TOKEN &&
+    !!source.EMAIL_FROM
+  )
+}
+
+/**
+ * Whether outbound email can be delivered. Requires a sender identity
+ * (`EMAIL_FROM`) plus a transport: SMTP (`SMTP_HOST`) or Cloudflare REST
+ * (`CF_EMAIL_ACCOUNT_ID` + `CF_EMAIL_API_TOKEN`). A transport without a from
+ * address cannot produce sendable mail, so it counts as undeliverable rather
+ * than silently misconfigured. Drives the web delivery hint and the quiet skip
+ * for best-effort sends on instances that run without delivery. Accepts an
+ * explicit source so tests can pass isolated env objects without mutating
+ * global env.
+ */
+export function isEmailDeliveryEnabled(
+  source: {
+    SMTP_HOST?: string
+    EMAIL_FROM?: string
+    CF_EMAIL_ACCOUNT_ID?: string
+    CF_EMAIL_API_TOKEN?: string
+  } = env,
+): boolean {
+  if (!source.EMAIL_FROM) return false
+  return !!source.SMTP_HOST || isCloudflareEmailEnabled(source)
+}
+
+/**
+ * Which outbound email transport the default `sendEmail` sender uses.
+ * Cloudflare REST wins when fully configured (it runs on 443, which stays open
+ * where SMTP ports are filtered); otherwise SMTP; otherwise none. Accepts an
+ * explicit source so tests can pass isolated env objects.
+ */
+export function resolveEmailTransportKind(
+  source: {
+    SMTP_HOST?: string
+    CF_EMAIL_ACCOUNT_ID?: string
+    CF_EMAIL_API_TOKEN?: string
+  } = env,
+): 'cloudflare' | 'smtp' | 'none' {
+  if (source.CF_EMAIL_ACCOUNT_ID && source.CF_EMAIL_API_TOKEN)
+    return 'cloudflare'
+  if (source.SMTP_HOST) return 'smtp'
+  return 'none'
 }

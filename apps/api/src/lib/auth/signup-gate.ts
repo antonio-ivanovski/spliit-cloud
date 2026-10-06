@@ -100,7 +100,9 @@ function extractLinkInviteTokenFromReturnUrl(
     if (!allowedWebOrigins.has(url.origin)) return undefined
     const token = url.searchParams.get('invite')?.trim()
     if (token) return token
-    if (url.pathname !== '/auth/complete-profile') return undefined
+    if (url.pathname !== '/' && url.pathname !== '/auth/complete-profile') {
+      return undefined
+    }
     const nested = url.searchParams.get('redirect')
     if (!nested) return undefined
     current = nested

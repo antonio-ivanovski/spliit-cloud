@@ -18,6 +18,7 @@ import {
 } from '@/app/groups/[groupId]/expenses/expense-timeline'
 import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
+import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { PageShell } from '@/components/layout/page-shell'
 import { ScanSurface } from '@/components/layout/scan-surface'
 import { OfflineMissingData } from '@/components/offline-download-status'
@@ -42,12 +43,16 @@ import {
   enforceCurrencyPattern,
   localizeCurrencyInput,
 } from '@/lib/currency-input'
+import { useRestoreExpenseEditScroll } from '@/lib/expense-edit-scroll'
 import {
   useOfflineFilterOptions,
   useOfflineGlobalExpenses,
   useOfflineGroup,
 } from '@/lib/offline/read-hooks'
-import { useOfflineWithoutData } from '@/lib/use-online-status'
+import {
+  useOfflineWithoutData,
+  useServerUnreachableWithoutData,
+} from '@/lib/use-online-status'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
@@ -307,6 +312,20 @@ function GlobalExpenseFilters({
               <div className="flex flex-col gap-2">
                 <Select
                   value={filters[matchKey]}
+                  items={[
+                    {
+                      value: 'any',
+                      label: t('Expenses.filters.matchModeAny'),
+                    },
+                    {
+                      value: 'all',
+                      label: t('Expenses.filters.matchModeAll'),
+                    },
+                    {
+                      value: 'exact',
+                      label: t('Expenses.filters.matchModeExact'),
+                    },
+                  ]}
                   onValueChange={(value) =>
                     onChange({
                       ...filters,
@@ -380,6 +399,16 @@ function GlobalExpenseFilters({
         <FilterChoice label={t('Expenses.globalCurrency')}>
           <Select
             value={filters.currencies[0] ?? 'all'}
+            items={[
+              {
+                value: 'all',
+                label: t('Expenses.globalAllCurrencies'),
+              },
+              ...options.currencies.map((currency) => ({
+                value: currency.key,
+                label: currency.currencyCode ?? currency.currency,
+              })),
+            ]}
             onValueChange={(value) => {
               if (value == null) return
               onChange({
@@ -470,6 +499,32 @@ function GlobalExpenseFilters({
           </span>
           <Select
             value={`${filters.sortBy}-${filters.sortDir}`}
+            items={[
+              {
+                value: 'expenseDate-desc',
+                label: t('Expenses.filters.sort.options.expenseDate.desc'),
+              },
+              {
+                value: 'expenseDate-asc',
+                label: t('Expenses.filters.sort.options.expenseDate.asc'),
+              },
+              {
+                value: 'createdAt-desc',
+                label: t('Expenses.filters.sort.options.createdAt.desc'),
+              },
+              {
+                value: 'createdAt-asc',
+                label: t('Expenses.filters.sort.options.createdAt.asc'),
+              },
+              {
+                value: 'amount-desc',
+                label: t('Expenses.filters.sort.options.amount.desc'),
+              },
+              {
+                value: 'amount-asc',
+                label: t('Expenses.filters.sort.options.amount.asc'),
+              },
+            ]}
             onValueChange={(value) => {
               if (value == null) return
               const [sortBy, sortDir] = value.split('-') as [
@@ -670,6 +725,7 @@ export function GlobalExpensesContent() {
       to: '/expenses',
       search: filtersToSearch(filters) as never,
       replace: true,
+      resetScroll: false,
     })
   }
 
@@ -724,6 +780,11 @@ export function GlobalExpensesContent() {
   const showOfflineEmpty =
     useOfflineWithoutData(!!expensesQuery.data) &&
     !(offlineGlobal.meta.availability === 'ready')
+  const showServerEmpty = useServerUnreachableWithoutData(!!expensesQuery.data)
+
+  useRestoreExpenseEditScroll(
+    !!options && !!expensesQuery.data && !showOfflineEmpty && !showServerEmpty,
+  )
 
   useEffect(() => {
     if (inView && hasMore && !expensesQuery.isFetching) {
@@ -884,7 +945,17 @@ export function GlobalExpensesContent() {
                     {t('OfflineDownloads.recent500Note')}
                   </output>
                 )}
-              {showOfflineEmpty ? (
+              {showServerEmpty ? (
+                <div className="mx-4 sm:mx-6">
+                  <ApiErrorEmptyState
+                    variant="plain"
+                    onRetry={() => {
+                      void optionsQuery.refetch()
+                      void expensesQuery.refetch()
+                    }}
+                  />
+                </div>
+              ) : showOfflineEmpty ? (
                 <div className="mx-4 sm:mx-6">
                   <OfflineMissingData
                     description={t('OfflineDownloads.totalsIncomplete')}

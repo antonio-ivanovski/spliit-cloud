@@ -33,6 +33,35 @@ vi.mock('@/lib/use-current-account', () => ({
   useCurrentAccount: vi.fn(),
 }))
 
+const { mockOnboardingStatus } = vi.hoisted(() => ({
+  mockOnboardingStatus: {
+    data: undefined as { anonymousOnboardingCompleted: boolean } | undefined,
+    isPending: false,
+    isFetching: false,
+    refetch: vi.fn(),
+  },
+}))
+
+vi.mock('@/trpc/client', () => ({
+  trpc: {
+    account: {
+      onboardingStatus: {
+        // Mirror real TanStack semantics: a disabled query is pending with
+        // no fetch in flight.
+        useQuery: (_input: unknown, opts?: { enabled?: boolean }) =>
+          opts?.enabled === false
+            ? {
+                data: undefined,
+                isPending: true,
+                isFetching: false,
+                refetch: mockOnboardingStatus.refetch,
+              }
+            : mockOnboardingStatus,
+      },
+    },
+  },
+}))
+
 // ── SUT ─────────────────────────────────────────────────────────────────
 
 import { RequireAuth } from '@/components/require-auth'
@@ -42,6 +71,9 @@ import { RequireAuth } from '@/components/require-auth'
 describe('RequireAuth', () => {
   afterEach(() => {
     vi.clearAllMocks()
+    mockOnboardingStatus.data = undefined
+    mockOnboardingStatus.isPending = false
+    mockOnboardingStatus.isFetching = false
     window.sessionStorage.clear()
     window.history.replaceState(null, '', '/')
     Object.defineProperty(navigator, 'onLine', {
@@ -177,7 +209,7 @@ describe('RequireAuth', () => {
     expect(screen.queryByTestId('child')).not.toBeInTheDocument()
   })
 
-  it('shows the offline empty state when get-session fails and navigator.onLine is still true', () => {
+  it('shows the server-down empty state when get-session fails and navigator.onLine is still true', () => {
     reportNetworkFailure(new TypeError('Failed to fetch'))
     vi.mocked(useCurrentAccount).mockReturnValue({
       data: null,
@@ -195,7 +227,8 @@ describe('RequireAuth', () => {
       </RequireAuth>,
     )
 
-    expect(screen.getByTestId('offline-empty-state')).toBeInTheDocument()
+    expect(screen.getByTestId('api-error-empty-state')).toBeInTheDocument()
+    expect(screen.queryByTestId('offline-empty-state')).not.toBeInTheDocument()
     expect(screen.queryByTestId('navigate')).not.toBeInTheDocument()
   })
 
@@ -286,6 +319,38 @@ describe('RequireAuth', () => {
     const navigate = screen.getByTestId('navigate')
     expect(navigate).toHaveAttribute('data-to', '/auth/complete-profile')
     expect(navigate.getAttribute('data-search')).toContain('redirect')
+    expect(screen.queryByTestId('child')).not.toBeInTheDocument()
+  })
+
+  it('redirects a named guest the server still awaits its safeguard from', () => {
+    mockOnboardingStatus.data = { anonymousOnboardingCompleted: false }
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: {
+        id: 'guest-1',
+        name: 'New Guest',
+        email: 'guest-1@anonymous.placeholder.local',
+        isAnonymous: true,
+        image: null,
+        emailVerified: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(
+      <RequireAuth>
+        <div data-testid="child">protected content</div>
+      </RequireAuth>,
+    )
+
+    expect(screen.getByTestId('navigate')).toHaveAttribute(
+      'data-to',
+      '/auth/complete-profile',
+    )
     expect(screen.queryByTestId('child')).not.toBeInTheDocument()
   })
 

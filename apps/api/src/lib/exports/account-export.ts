@@ -32,6 +32,9 @@ function emptyAccountPreference() {
     aiCategoryExtractEnabled: null,
     aiReceiptScanEnabled: null,
     aiVoiceExpenseEnabled: null,
+    groupTabOrder: null,
+    hiddenGroupTabs: null,
+    destructiveConfirmationLevel: null,
   }
 }
 

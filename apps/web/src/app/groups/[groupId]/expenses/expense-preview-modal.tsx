@@ -12,6 +12,7 @@ import { ExpenseAttachmentsPreview } from '@/app/groups/[groupId]/expenses/expen
 import { ExpenseComments } from '@/app/groups/[groupId]/expenses/expense-comments'
 import {
   ExpenseItemsSummary,
+  resolveExpenseItemsAmount,
   resolveExpenseItemsCurrency,
 } from '@/app/groups/[groupId]/expenses/expense-items-summary'
 import {
@@ -26,6 +27,7 @@ import { Button } from '@/components/ui/button'
 import {
   ResponsiveDialog,
   ResponsiveDialogBody,
+  ResponsiveDialogClose,
   ResponsiveDialogContent,
   ResponsiveDialogDescription,
   ResponsiveDialogFooter,
@@ -39,6 +41,8 @@ import type { BalanceExpense } from '@/lib/balances'
 import { getBalances } from '@/lib/balances'
 import { getCurrency } from '@/lib/currency'
 import { formatExpenseClosed } from '@/lib/expense-display'
+import { captureExpenseEditScroll } from '@/lib/expense-edit-scroll'
+import { expenseEditSearch } from '@/lib/expense-navigation'
 import { useOfflineExpense } from '@/lib/offline/read-hooks'
 import { useOnlineStatus } from '@/lib/use-online-status'
 import {
@@ -132,9 +136,11 @@ export type ExpensePreviewModalProps = {
    * expense.
    */
   onMakeCopy?: () => void
+  /** Hide expense and comment mutations when used for review. */
+  readOnly?: boolean
 }
 
-function toBalanceExpense(
+export function toBalanceExpense(
   expense: Expense,
   participants: Array<{ id: string; name: string }>,
 ): BalanceExpense {
@@ -172,6 +178,7 @@ function toBalanceExpense(
     itemizedRemainder: expense.itemizedRemainder
       ? {
           splitMode: expense.itemizedRemainder.splitMode,
+          allocationMode: expense.itemizedRemainder.allocationMode,
           paidFor: expense.itemizedRemainder.paidFor.map((entry) => ({
             participant: entry.ledgerParticipantId,
             shares: entry.shares,
@@ -191,6 +198,7 @@ export function ExpensePreviewModal({
   onClose,
   onEdit,
   onMakeCopy,
+  readOnly = false,
 }: ExpensePreviewModalProps) {
   const { group, currentLedgerParticipantId, currentMember } = useCurrentGroup()
   const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
@@ -199,6 +207,7 @@ export function ExpensePreviewModal({
   const navigate = useNavigate()
   const { toast } = useToast()
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpensePreview' })
+  const { t: tCommon } = useTranslation(undefined, { keyPrefix: 'Common' })
   const { t: tForm } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const { t: tCard } = useTranslation(undefined, { keyPrefix: 'ExpenseCard' })
   const { t: tCategories } = useTranslation(undefined, {
@@ -345,6 +354,7 @@ export function ExpensePreviewModal({
       void navigate({
         to: '/groups/$groupId/expenses',
         params: { groupId },
+        resetScroll: false,
       })
     }
     if (!nextOpen) onClose?.()
@@ -354,6 +364,7 @@ export function ExpensePreviewModal({
     // Edit affordances are already disabled offline; this entry check
     // is defence in depth. The footer output explains the blocked state.
     if (!isOnline) return
+    captureExpenseEditScroll(groupId, expenseId, returnTo)
     if (onEdit) {
       onEdit(scope)
       return
@@ -361,10 +372,7 @@ export function ExpensePreviewModal({
     await navigate({
       to: '/groups/$groupId/expenses/$expenseId/edit',
       params: { groupId, expenseId },
-      search: {
-        ...(scope ? { scope } : {}),
-        ...(returnTo ? { returnTo } : {}),
-      },
+      search: expenseEditSearch(scope, returnTo),
     })
   }
 
@@ -538,7 +546,6 @@ export function ExpensePreviewModal({
                     </div>
                   </div>
                 )}
-
                 {expense.notes?.trim() && (
                   <div className="space-y-1">
                     <div className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
@@ -559,6 +566,16 @@ export function ExpensePreviewModal({
                     currency,
                   )}
                   locale={locale}
+                  participants={participants}
+                  itemizedRemainder={expense.itemizedRemainder}
+                  expenseAmount={resolveExpenseItemsAmount(
+                    expense.originalAmount,
+                    expense.amount,
+                  )}
+                  otherLabel={tForm('items.other')}
+                  proportionalText={tForm(
+                    'items.remainderAllocationProportional',
+                  )}
                 />
 
                 {useOfflineSource ? (
@@ -575,7 +592,7 @@ export function ExpensePreviewModal({
                   <ExpenseAttachmentsPreview documents={expense.documents} />
                 )}
 
-                {series && (
+                {series && !readOnly && (
                   <>
                     <SeriesControls
                       groupId={groupId}
@@ -597,84 +614,116 @@ export function ExpensePreviewModal({
               </div>
             )}
           {expense && (
-            <ExpenseComments groupId={groupId} expenseId={expenseId} />
+            <ExpenseComments
+              groupId={groupId}
+              expenseId={expenseId}
+              readOnly={readOnly}
+            />
           )}
         </ResponsiveDialogBody>
 
-        <ResponsiveDialogFooter className="flex-row flex-wrap gap-2 sm:flex-nowrap sm:justify-end">
-          {!isOnline && expense && (
-            <output className="block w-full text-sm text-muted-foreground">
-              {tOffline('OfflineReadOnly.reconnectToEdit')}
-            </output>
-          )}
-          {series ? (
-            canManageRecurrence ? (
-              <RecurringActionsMenu
-                className="me-auto"
-                seriesStatus={series.status}
-                confirmationTarget={expense?.title ?? ''}
-                onEdit={handleEdit}
-                onDelete={(option) => handleDelete(option)}
-                onStop={
-                  series.status === 'CANCELLED' || series.status === 'COMPLETED'
-                    ? undefined
-                    : handleStopRecurrence
-                }
-              />
-            ) : null
-          ) : canDelete ? (
-            <DeletePopup
-              onDelete={() => handleDelete()}
-              confirmationTarget={expense?.title ?? ''}
-              className="me-auto shrink-0 px-3 sm:px-4"
+        {readOnly ? (
+          <ResponsiveDialogFooter>
+            <ResponsiveDialogClose
+              render={
+                <Button type="button" variant="outline">
+                  {tCommon('close')}
+                </Button>
+              }
             />
-          ) : null}
-          {canCopy && (
-            <>
-              <Button
-                variant="outline"
-                className="min-w-0 flex-1 px-3 sm:flex-none sm:px-4"
-                nativeButton={!!onMakeCopy}
-                render={
-                  onMakeCopy ? undefined : (
-                    <Link
-                      to="/groups/$groupId/expenses/create"
-                      params={{ groupId }}
-                      search={{
-                        fromExpenseId: expenseId,
-                        ...(returnTo ? { returnTo } : {}),
-                      }}
-                    />
-                  )
-                }
-                onClick={handleMakeCopy}
-                data-testid="expense-make-copy"
-              >
-                <FileInput className="me-1.5 h-4 w-4 shrink-0 sm:me-2" />
-                <span className="truncate">{t('makeCopy')}</span>
-              </Button>
-              {canEdit && !series && (
-                <EditButton
-                  label={t('edit')}
-                  className="min-w-0 px-3 sm:px-4"
-                  nativeButton={!!onEdit}
+          </ResponsiveDialogFooter>
+        ) : (
+          <ResponsiveDialogFooter className="flex-row flex-wrap gap-2 sm:flex-nowrap sm:justify-end">
+            {!isOnline && expense && (
+              <output className="block w-full text-sm text-muted-foreground">
+                {tOffline('OfflineReadOnly.reconnectToEdit')}
+              </output>
+            )}
+            {series ? (
+              canManageRecurrence ? (
+                <RecurringActionsMenu
+                  className="me-auto"
+                  seriesStatus={series.status}
+                  confirmationTarget={expense?.title ?? ''}
+                  onEdit={handleEdit}
+                  onDelete={(option) => handleDelete(option)}
+                  onStop={
+                    series.status === 'CANCELLED' ||
+                    series.status === 'COMPLETED'
+                      ? undefined
+                      : handleStopRecurrence
+                  }
+                />
+              ) : null
+            ) : canDelete ? (
+              <DeletePopup
+                onDelete={() => handleDelete()}
+                confirmationTarget={expense?.title ?? ''}
+                className="me-auto shrink-0 px-3 sm:px-4"
+              />
+            ) : null}
+            {canCopy && (
+              <>
+                <Button
+                  variant="outline"
+                  className="min-w-0 flex-1 px-3 sm:flex-none sm:px-4"
+                  nativeButton={!!onMakeCopy}
                   render={
-                    onEdit ? undefined : (
+                    onMakeCopy ? undefined : (
                       <Link
-                        to="/groups/$groupId/expenses/$expenseId/edit"
-                        params={{ groupId, expenseId }}
-                        search={returnTo ? { returnTo } : undefined}
+                        to="/groups/$groupId/expenses/create"
+                        params={{ groupId }}
+                        search={{
+                          fromExpenseId: expenseId,
+                          ...(returnTo ? { returnTo } : {}),
+                        }}
                       />
                     )
                   }
-                  onClick={onEdit ? () => void handleEdit() : undefined}
-                />
-              )}
-            </>
-          )}
-        </ResponsiveDialogFooter>
+                  onClick={handleMakeCopy}
+                  data-testid="expense-make-copy"
+                >
+                  <FileInput className="me-1.5 h-4 w-4 shrink-0 sm:me-2" />
+                  <span className="truncate">{t('makeCopy')}</span>
+                </Button>
+                {canEdit && !series && (
+                  <EditButton
+                    label={t('edit')}
+                    className="min-w-0 px-3 sm:px-4"
+                    nativeButton={!!onEdit}
+                    render={
+                      onEdit ? undefined : (
+                        <Link
+                          to="/groups/$groupId/expenses/$expenseId/edit"
+                          params={{ groupId, expenseId }}
+                          search={expenseEditSearch(undefined, returnTo)}
+                          onClick={(event) => {
+                            if (
+                              event.button === 0 &&
+                              !event.metaKey &&
+                              !event.ctrlKey &&
+                              !event.shiftKey &&
+                              !event.altKey
+                            ) {
+                              captureExpenseEditScroll(
+                                groupId,
+                                expenseId,
+                                returnTo,
+                              )
+                            }
+                          }}
+                        />
+                      )
+                    }
+                    onClick={onEdit ? () => void handleEdit() : undefined}
+                  />
+                )}
+              </>
+            )}
+          </ResponsiveDialogFooter>
+        )}
       </ResponsiveDialogContent>
-      {series && (
+      {series && !readOnly && (
         <SeriesListDialog
           groupId={groupId}
           seriesId={series.id}

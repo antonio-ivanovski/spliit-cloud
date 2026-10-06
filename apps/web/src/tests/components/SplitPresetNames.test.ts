@@ -1,9 +1,10 @@
-import { describe, expect, it } from 'vitest'
+import { beforeAll, describe, expect, it } from 'vitest'
 
 import {
   generatedSplitPresetName,
   uniqueGeneratedSplitPresetName,
 } from '@/app/groups/[groupId]/expenses/expense-form/split-preset-names'
+import { i18n, loadLocale } from '@/i18n/setup'
 
 const participants = [
   { id: 'ada', name: 'Ada' },
@@ -12,39 +13,15 @@ const participants = [
   { id: 'mary', name: 'Mary' },
 ]
 
-const t = (key: string, options?: Record<string, unknown>) => {
-  const values = options ?? {}
-  switch (key) {
-    case 'splitPresets.autoName.paidBySingle':
-      return `${String(values.name)} pays`
-    case 'splitPresets.autoName.paidByFull':
-      return `${String(values.name)} pays the full amount`
-    case 'splitPresets.autoName.paidByEveryone':
-      return 'Everyone pays equally'
-    case 'splitPresets.autoName.paidByEvenly':
-      return `${String(values.names)} pay equally`
-    case 'splitPresets.autoName.paidForEveryone':
-      return 'Everyone splits equally'
-    case 'splitPresets.autoName.paidForFull':
-      return `${String(values.name)} owes the full amount`
-    case 'splitPresets.autoName.paidForEvenly':
-      return `${String(values.names)} split equally`
-    case 'splitPresets.autoName.paidByItem':
-      return `${String(values.name)} pays ${String(values.value)}`
-    case 'splitPresets.autoName.paidForItem':
-      return `${String(values.name)} owes ${String(values.value)}`
-    case 'splitPresets.autoName.paidByGroup':
-      return `${String(values.names)} pay ${String(values.value)}`
-    case 'splitPresets.autoName.paidForGroup':
-      return `${String(values.names)} owe ${String(values.value)}`
-    case 'splitPresets.autoName.moreParticipants':
-      return `and ${String(values.formattedCount)} others`
-    case 'splitPresets.autoName.share':
-      return 'shares'
-    default:
-      return key
-  }
-}
+beforeAll(async () => {
+  await loadLocale('en-US')
+  await i18n.changeLanguage('en-US')
+})
+
+const t = i18n.getFixedT('en-US', 'translation', 'Members') as (
+  key: string,
+  options?: Record<string, unknown>,
+) => string
 
 describe('split preset generated names', () => {
   it('describes a single payer and an all-participant even split', () => {

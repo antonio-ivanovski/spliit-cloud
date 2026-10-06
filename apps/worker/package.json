@@ -18,7 +18,8 @@
     "@spliit/api": "workspace:*",
     "@spliit/db": "workspace:*",
     "@spliit/domain": "workspace:*",
-    "@spliit/jobs": "workspace:*"
+    "@spliit/jobs": "workspace:*",
+    "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
     "@spliit/config": "workspace:*",

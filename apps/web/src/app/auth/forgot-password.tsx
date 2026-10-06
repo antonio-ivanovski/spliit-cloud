@@ -113,7 +113,10 @@ export function ForgotPasswordPage() {
                   autoComplete="email"
                   placeholder="you@example.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value)
+                    if (requestReset.isError) requestReset.reset()
+                  }}
                   required
                 />
               </div>

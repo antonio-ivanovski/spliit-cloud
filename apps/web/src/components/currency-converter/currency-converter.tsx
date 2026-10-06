@@ -3,6 +3,7 @@ import { ArrowDownUp, Loader2, Star } from 'lucide-react'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { CurrencyRateProviderAttribution } from '@/components/currency-rate-provider-attribution'
 import { CurrencySelector } from '@/components/currency-selector'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
@@ -25,7 +26,7 @@ import {
 } from '@/lib/currency-input'
 import { useCurrencyRate } from '@/lib/hooks'
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { useOnlineStatus } from '@/lib/use-online-status'
+import { useConnectivityStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 import {
   amountAsMinorUnits,
@@ -167,8 +168,11 @@ function getDeviceCurrency(availableCodes: Set<string>): string {
 
 export function CurrencyConverterButton() {
   const { t } = useTranslation(undefined, { keyPrefix: 'CurrencyConverter' })
+  const { t: tRoot } = useTranslation()
   const { data: account, isPending } = useCurrentAccount()
-  const isOnline = useOnlineStatus()
+  const status = useConnectivityStatus()
+  const isOnline = status === 'online'
+  const isOffline = status === 'offline'
   const [open, setOpen] = useState(false)
 
   if (isPending || !account) return null
@@ -198,18 +202,24 @@ export function CurrencyConverterButton() {
           <ResponsiveDialogDescription
             className={isOnline ? 'text-start' : 'sr-only'}
           >
-            {isOnline ? t('description') : t('offlineDescription')}
+            {isOnline
+              ? t('description')
+              : isOffline
+                ? t('offlineDescription')
+                : tRoot('ApiErrorEmptyState.description')}
           </ResponsiveDialogDescription>
         </ResponsiveDialogHeader>
         <ResponsiveDialogBody className="min-w-0">
           {isOnline ? (
             <ConverterContent />
-          ) : (
+          ) : isOffline ? (
             <OfflineEmptyState
               variant="plain"
               description={t('offlineDescription')}
               detail={t('offlineComingSoon')}
             />
+          ) : (
+            <ApiErrorEmptyState variant="plain" />
           )}
         </ResponsiveDialogBody>
       </ResponsiveDialogContent>
@@ -221,7 +231,9 @@ export function ConverterContent() {
   const { t } = useTranslation(undefined, { keyPrefix: 'CurrencyConverter' })
   const locale = useLocale()
   const currencies = useCurrencies('')
-  const isOnline = useOnlineStatus()
+  const status = useConnectivityStatus()
+  const isOnline = status === 'online'
+  const isOffline = status === 'offline'
 
   const resolveInitialCode = useCallback(
     (key: string) => {
@@ -300,12 +312,14 @@ export function ConverterContent() {
   const toCurrency = currencies.find((c) => c.code === toCode)
 
   if (!isOnline) {
-    return (
+    return isOffline ? (
       <OfflineEmptyState
         variant="plain"
         description={t('offlineDescription')}
         detail={t('offlineComingSoon')}
       />
+    ) : (
+      <ApiErrorEmptyState variant="plain" />
     )
   }
 

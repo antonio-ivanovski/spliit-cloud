@@ -35,6 +35,21 @@ describe('extractLinkInviteTokenFromRedirect', () => {
       linkInviteToken: 'deep-token',
     })
   })
+
+  it.each([
+    '/other?redirect=%2Fgroups%2Fg1%3Finvite%3Dtoken',
+    '/?redirect=https%3A%2F%2Fattacker.example%2Fgroups%2Fg1%3Finvite%3Dtoken',
+    '/?redirect=%2F%2Fattacker.example%2Fgroups%2Fg1%3Finvite%3Dtoken',
+    Array.from({ length: 4 }).reduce<string>(
+      (path) => `/?redirect=${encodeURIComponent(path)}`,
+      '/groups/g1?invite=token',
+    ),
+  ])(
+    'does not recover invite proof beyond allowed return paths: %s',
+    (redirect) => {
+      expect(extractLinkInviteTokenFromRedirect(redirect)).toBeUndefined()
+    },
+  )
 })
 
 describe('safeLocalReturnPath', () => {

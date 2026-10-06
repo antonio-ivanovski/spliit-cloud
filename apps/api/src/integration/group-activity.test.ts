@@ -286,6 +286,44 @@ describe('Group activity — real DB', () => {
     expect(eventsForGroup(capture, fixture.groupId)).toHaveLength(0)
   })
 
+  it('logs GROUP_UPDATED with emoji and color change rows', async () => {
+    fixture = await createGroupActivityFixture()
+    const capture = new CapturingDispatcher()
+    setDefaultActivityNotificationDispatchers([capture])
+
+    const caller = makeCaller(fixture)
+    const group = await prisma.group.findUniqueOrThrow({
+      where: { id: fixture.groupId },
+    })
+    await caller.update({
+      groupId: fixture.groupId,
+      groupFormValues: {
+        name: group.name,
+        currency: '$',
+        currencyCode: 'USD',
+        emoji: '🎉',
+        color: '#ff0000',
+        participants: [{ name: 'Admin' }],
+      },
+    })
+
+    const activity = await prisma.activity.findFirst({
+      where: {
+        ledger: { group: { id: fixture.groupId } },
+        type: 'GROUP_UPDATED',
+      },
+      orderBy: { time: 'desc' },
+    })
+    expect(activity).not.toBeNull()
+    const appearance = activity!.data as Record<string, unknown>
+    expect(appearance.changedFields).toEqual(
+      expect.arrayContaining(['emoji', 'color']),
+    )
+
+    await waitForScheduledNotificationDispatchesForTest()
+    expect(eventsForGroup(capture, fixture.groupId)).toHaveLength(0)
+  })
+
   // ------------------------------------------------------------------------
   // 2. Group archive — no unsettled balances, no force, no dispatch
   // ------------------------------------------------------------------------

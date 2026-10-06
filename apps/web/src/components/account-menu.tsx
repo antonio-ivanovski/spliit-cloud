@@ -3,13 +3,13 @@ import { Link } from '@tanstack/react-router'
 import {
   LogOut,
   MessageSquareText,
+  Megaphone,
   Settings as SettingsIcon,
 } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AccountAvatar } from '@/components/account-avatar'
-import { clearPushOnboardingCompletion } from '@/components/push-notification-onboarding'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -48,6 +48,7 @@ import { useOnlineStatus } from '@/lib/use-online-status'
 export function AccountMenu() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Header' })
   const { t: tOffline } = useTranslation()
+  const { t: tUpdates } = useTranslation()
   const queryClient = useQueryClient()
   const { toast } = useToast()
   const { data: account, isPending } = useCurrentAccount()
@@ -73,7 +74,6 @@ export function AccountMenu() {
     return null
   }
   const currentAccount = account
-  const accountId = account.id
 
   const accountTrigger = (
     <button
@@ -98,8 +98,7 @@ export function AccountMenu() {
     setSigningOut(true)
     setSignOutError(false)
     try {
-      const disconnected = await disconnectPushSubscription()
-      if (disconnected) clearPushOnboardingCompletion(accountId)
+      await disconnectPushSubscription()
       const result = await authClient.signOut()
       if (result?.error) throw new Error(result.error.message)
       // Local revocation runs even if durable cleanup fails; the lifecycle
@@ -194,6 +193,10 @@ export function AccountMenu() {
               <MessageSquareText className="me-2 h-4 w-4" />
               {t('feedback')}
             </DropdownMenuItem>
+            <DropdownMenuItem render={<Link to="/updates" />}>
+              <Megaphone className="me-2 h-4 w-4" />
+              {tUpdates('Updates.title')}
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="text-destructive focus:text-destructive"
@@ -242,6 +245,20 @@ export function AccountMenu() {
                       aria-hidden="true"
                     />
                     {t('feedback')}
+                  </Link>
+                }
+              />
+              <ResponsiveDialogClose
+                render={
+                  <Link
+                    to="/updates"
+                    className="flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden"
+                  >
+                    <Megaphone
+                      className="size-5 text-muted-foreground"
+                      aria-hidden="true"
+                    />
+                    {tUpdates('Updates.title')}
                   </Link>
                 }
               />

@@ -23,7 +23,7 @@ import {
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import {
-  expenseFormInputSchema,
+  createExpenseFormInputSchema,
   type Expense,
   type ExpenseFormInputValues,
 } from '@/lib/schemas'
@@ -51,6 +51,13 @@ import {
   importDraftAsLoadedExpense,
 } from './default-values'
 import { DocumentsCard } from './documents-card'
+import {
+  focusAndScrollError,
+  getErrorScrollBehavior,
+  resolveErrorAnchorKey,
+  scrollErrorElementIntoView,
+  scrollToAnchoredError,
+} from './error-scroll'
 import { ExpenseItemsCard } from './expense-items-card'
 import { useExpenseFormTabNavigation } from './focus-navigation'
 import { FormActions } from './form-actions'
@@ -215,9 +222,18 @@ export function ExpenseForm(props: {
   const suggestCategoryMutation =
     trpc.groups.expenses.suggestCategory.useMutation()
 
+  const groupCurrency = useMemo(
+    () => getCurrencyFromGroup(props.group),
+    [props.group],
+  )
+  const expenseFormSchema = useMemo(
+    () => createExpenseFormInputSchema(groupCurrency),
+    [groupCurrency],
+  )
+
   const form = useForm<ExpenseFormInputValues>({
     resolver: zodResolver(
-      expenseFormInputSchema,
+      expenseFormSchema,
     ) as Resolver<ExpenseFormInputValues>,
     // Focus choreography is handled by `handleInvalidSubmit` below, which
     // maps array/items roots onto real inputs; the default walker cannot
@@ -229,7 +245,7 @@ export function ExpenseForm(props: {
       isCopy: props.isCopy,
       searchParams: props.searchParams ?? {},
       group: props.group,
-      groupCurrency: getCurrencyFromGroup(props.group),
+      groupCurrency,
       currentLedgerParticipantId: props.currentLedgerParticipantId,
       settlementTitle: t('settlementTitle'),
       today: dateOnlyInAccountTimeZone(formNow, accountTimeZone),
@@ -374,8 +390,6 @@ export function ExpenseForm(props: {
   const formElementRef = useRef<HTMLFormElement>(null)
   const tabNavigation = useExpenseFormTabNavigation(formElementRef)
 
-  const groupCurrency = getCurrencyFromGroup(props.group)
-
   const conversion = useExpenseCurrencyConversion({
     form,
     group: props.group,
@@ -494,6 +508,17 @@ export function ExpenseForm(props: {
     }
   }
 
+  const focusFieldAndScroll = (name: FieldPath<ExpenseFormInputValues>) => {
+    form.setFocus(name)
+    const active = document.activeElement
+    if (
+      active instanceof HTMLElement &&
+      formElementRef.current?.contains(active)
+    ) {
+      scrollErrorElementIntoView(active, getErrorScrollBehavior())
+    }
+  }
+
   const submit = async (values: ExpenseFormInputValues) => {
     if (props.readOnly || persisted) return
     setPostSaveFailure(false)
@@ -507,6 +532,7 @@ export function ExpenseForm(props: {
         type: 'manual',
         message: 'ratePositive',
       })
+      focusFieldAndScroll('conversionRate')
       return
     }
     if (
@@ -520,6 +546,7 @@ export function ExpenseForm(props: {
         type: 'manual',
         message: values.exactAmount ? 'amountSignMismatch' : 'amountNotZero',
       })
+      focusFieldAndScroll('exactAmount')
       return
     }
     let outcome: ExpenseSubmitOutcome | null = null
@@ -568,6 +595,16 @@ export function ExpenseForm(props: {
   const handleInvalidSubmit = (errors: FieldErrors<ExpenseFormInputValues>) => {
     const path = firstErrorPath(errors)
     if (!path) return
+    const behavior = getErrorScrollBehavior()
+    const root = formElementRef.current
+    const scrollActiveElement = () => {
+      const active = document.activeElement
+      if (active instanceof HTMLElement && root?.contains(active)) {
+        scrollErrorElementIntoView(active, behavior)
+        return true
+      }
+      return false
+    }
     // Share errors focus through the section-qualified input registry;
     // everything else falls back to RHF's setFocus.
     const target = shareErrorTarget(path, form)
@@ -576,7 +613,12 @@ export function ExpenseForm(props: {
         `${target.arrayName}:${target.participantId}`,
       )
       if (shareInput) {
-        shareInput.focus()
+        focusAndScrollError(shareInput, behavior)
+        return
+      }
+      // No share input rendered (e.g. EVENLY mode or single-payer): scroll
+      // to where the error is shown instead of leaving the user at Save.
+      if (root && scrollToAnchoredError(root, target.arrayName, behavior)) {
         return
       }
     }
@@ -592,11 +634,20 @@ export function ExpenseForm(props: {
           : '[data-expense-time-input]',
       )
       if (target) {
-        target.focus()
+        focusAndScrollError(target, behavior)
         return
       }
     }
     form.setFocus(focusableErrorPath(path) as FieldPath<ExpenseFormInputValues>)
+    if (scrollActiveElement()) return
+    // The focused path has no rendered input (e.g. an array-root sum error
+    // or an empty item list): scroll to where its message is displayed, or
+    // to the validation summary as a last resort.
+    const anchorKey = resolveErrorAnchorKey(path)
+    if (root && anchorKey && scrollToAnchoredError(root, anchorKey, behavior)) {
+      return
+    }
+    if (root) scrollToAnchoredError(root, 'summary', behavior)
   }
 
   return (
@@ -819,6 +870,7 @@ function ValidationSummary({
     <div
       role="alert"
       aria-live="assertive"
+      data-expense-error-anchor="summary"
       className="mb-3 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive"
     >
       <p>{t('validationSummary')}</p>

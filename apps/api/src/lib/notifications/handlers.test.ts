@@ -4,6 +4,7 @@ import { NotificationCategory } from '@spliit/domain/notifications'
 
 import '../../test/mocks'
 import { prismaMock } from '../../test/state'
+import { buildExpenseCommentActivityData } from '../api/activity-payloads'
 import { ExpenseActivityHandler } from './handlers'
 import type { ActivityNotificationEvent } from './types'
 
@@ -111,5 +112,24 @@ describe('ExpenseActivityHandler recurring recipients', () => {
       'account-carol',
     ])
     expect(intents[0]?.category).toBe(NotificationCategory.EXPENSE_COMMENT)
+  })
+})
+
+describe('buildExpenseCommentActivityData snapshot', () => {
+  it('keeps the typed snapshot fields and bounds the excerpt', () => {
+    const payload = buildExpenseCommentActivityData({
+      commentId: 'comment-1',
+      expenseTitle: 'Dinner',
+      authorName: 'Alice',
+      excerpt: `${'x'.repeat(160)}ignored`,
+    })
+
+    expect(payload).toEqual({
+      kind: 'expense_comment',
+      commentId: 'comment-1',
+      expenseTitle: 'Dinner',
+      authorName: 'Alice',
+      excerpt: 'x'.repeat(160),
+    })
   })
 })

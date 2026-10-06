@@ -4,10 +4,7 @@ import type { ActivityData } from '@spliit/domain/activities'
 
 import {
   CompositeActivityNotificationDispatcher,
-  getDefaultActivityNotificationDispatcher,
-  scheduleDefaultNotificationDispatch,
   scheduleNotificationDispatch,
-  setDefaultActivityNotificationDispatchers,
   waitForScheduledNotificationDispatchesForTest,
 } from './dispatcher'
 import type {
@@ -45,12 +42,8 @@ class ThrowingDispatcher implements ActivityNotificationDispatcher {
 }
 
 afterEach(async () => {
-  try {
-    await waitForScheduledNotificationDispatchesForTest()
-  } finally {
-    setDefaultActivityNotificationDispatchers([])
-    vi.restoreAllMocks()
-  }
+  await waitForScheduledNotificationDispatchesForTest()
+  vi.restoreAllMocks()
 })
 
 describe('CompositeActivityNotificationDispatcher', () => {
@@ -136,50 +129,26 @@ describe('scheduleNotificationDispatch', () => {
   })
 })
 
-describe('default singleton dispatcher', () => {
-  it('returns the same composite instance until reset', () => {
-    const before = getDefaultActivityNotificationDispatcher()
-    const after = getDefaultActivityNotificationDispatcher()
-    expect(before).toBe(after)
-  })
-
-  it('routes events through every registered dispatcher', async () => {
+describe('scheduled composite dispatch (injected, no global)', () => {
+  it('routes scheduled events through every dispatcher in an injected composite', async () => {
     const a = new CapturingDispatcher()
     const b = new CapturingDispatcher()
-    setDefaultActivityNotificationDispatchers([a, b])
-    try {
-      const capture = getDefaultActivityNotificationDispatcher()
-      const event = buildEvent({ activityId: 'singleton-1' })
-      await capture.dispatch(event)
-      expect(a.events.map((e) => e.activityId)).toEqual(['singleton-1'])
-      expect(b.events.map((e) => e.activityId)).toEqual(['singleton-1'])
-    } finally {
-      setDefaultActivityNotificationDispatchers([])
-    }
-  })
-
-  it('scheduleDefaultNotificationDispatch forwards to the singleton', async () => {
-    const capture = new CapturingDispatcher()
-    setDefaultActivityNotificationDispatchers([capture])
-    try {
-      scheduleDefaultNotificationDispatch(buildEvent({ activityId: 'sd-1' }))
-      await waitForScheduledNotificationDispatchesForTest()
-      expect(capture.events.map((e) => e.activityId)).toEqual(['sd-1'])
-    } finally {
-      setDefaultActivityNotificationDispatchers([])
-    }
-  })
-
-  it('starts empty so the singleton is a safe no-op', async () => {
-    setDefaultActivityNotificationDispatchers([])
-    const dispatch = vi.spyOn(
-      CompositeActivityNotificationDispatcher.prototype,
-      'dispatch',
+    const composite = new CompositeActivityNotificationDispatcher([a, b])
+    scheduleNotificationDispatch(
+      composite,
+      buildEvent({ activityId: 'injected-1' }),
     )
-    scheduleDefaultNotificationDispatch(buildEvent())
+    await waitForScheduledNotificationDispatchesForTest()
+    expect(a.events.map((e) => e.activityId)).toEqual(['injected-1'])
+    expect(b.events.map((e) => e.activityId)).toEqual(['injected-1'])
+  })
+
+  it('scheduled dispatch on an empty injected composite is a safe no-op', async () => {
+    const composite = new CompositeActivityNotificationDispatcher([])
+    const dispatch = vi.spyOn(composite, 'dispatch')
+    scheduleNotificationDispatch(composite, buildEvent())
     await waitForScheduledNotificationDispatchesForTest()
     expect(dispatch).toHaveBeenCalled()
-    // No events landed anywhere because the registry is empty.
     dispatch.mockRestore()
   })
 })

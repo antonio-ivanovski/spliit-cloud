@@ -24,6 +24,7 @@ vi.mock(import('@spliit/jobs'), async (importOriginal) => {
 })
 
 import { resumeRecurringExpenseSeries } from './recurrence-series'
+import { catchUpDueThrough } from './recurrence/catch-up-date'
 
 describe('resumeRecurringExpenseSeries', () => {
   beforeEach(() => {
@@ -258,5 +259,22 @@ describe('resumeRecurringExpenseSeries', () => {
     expect(prismaMock.recurringExpenseSeries.findMany).not.toHaveBeenCalled()
     expect(prismaMock.recurringExpenseSeries.update).not.toHaveBeenCalled()
     expect(jobMocks.sendJob).not.toHaveBeenCalled()
+  })
+})
+
+describe('catchUpDueThrough', () => {
+  it('returns the positive-offset account day for initial recurring expense creation', () => {
+    expect(
+      catchUpDueThrough(new Date('2026-01-01T23:30:00.000Z'), 'Asia/Tokyo'),
+    ).toBe('2026-01-02')
+  })
+
+  it('returns the negative-offset account day for initial recurring expense creation', () => {
+    expect(
+      catchUpDueThrough(
+        new Date('2026-01-02T00:30:00.000Z'),
+        'America/Los_Angeles',
+      ),
+    ).toBe('2026-01-01')
   })
 })

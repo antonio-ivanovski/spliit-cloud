@@ -1,11 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { OfflineBanner } from '@/components/offline-banner'
+import { ApiStatusBanner } from '@/components/api-status-banner'
 import {
   OfflineMissingData,
   OfflineNeedsConnection,
 } from '@/components/offline-download-status'
-import { resetConnectivityForTests } from '@/lib/connectivity'
+import { resetConnectivityForTests, trackedFetch } from '@/lib/connectivity'
 import {
   getDefaultConnectivityStore,
   resetDefaultConnectivityStoreForTests,
@@ -35,22 +36,45 @@ describe('OfflineBanner honest copy', () => {
     )
   })
 
-  it('shows server outage copy when the server answers with failure', () => {
+  it('defers to the server banner when the server answers with failure', async () => {
+    // Split-banner architecture: OfflineBanner covers browser-offline only.
+    // A 5xx while online is the API's outage, so ApiStatusBanner takes over
+    // and OfflineBanner stays hidden instead of wrongly blaming the user's
+    // connection. A 5xx also mirrors into the offline store distinctly
+    // (serverFailure, not unreachable transport).
     Object.defineProperty(navigator, 'onLine', {
       configurable: true,
       value: true,
     })
-    const store = getDefaultConnectivityStore()
-    act(() => {
-      store.reportServerResponse(503)
-    })
-    render(<OfflineBanner />)
-    expect(screen.getByTestId('offline-banner')).toHaveTextContent(
-      /can't reach spliit right now/i,
-    )
+    const originalFetch = globalThis.fetch
+    globalThis.fetch = (async () =>
+      new Response('{}', {
+        status: 503,
+        headers: { 'content-type': 'application/json' },
+      })) as unknown as typeof fetch
+    try {
+      render(
+        <>
+          <OfflineBanner />
+          <ApiStatusBanner />
+        </>,
+      )
+      await act(async () => {
+        await trackedFetch('https://api.example.test/health/liveness')
+      })
+      expect(
+        getDefaultConnectivityStore().getSnapshot().serverFailure,
+      ).not.toBeNull()
+      expect(screen.queryByTestId('offline-banner')).not.toBeInTheDocument()
+      expect(screen.getByTestId('api-status-banner')).toHaveTextContent(
+        /can't be reached/i,
+      )
+    } finally {
+      globalThis.fetch = originalFetch
+    }
   })
 
-  it('shows recovering copy while a probe is in flight', async () => {
+  it('claims nothing offline while a recovery probe is in flight', async () => {
     // Hold the liveness probe open so `unknown + probeInFlight` is observable.
     const originalFetch = globalThis.fetch
     let release!: (value: Response) => void
@@ -69,10 +93,12 @@ describe('OfflineBanner honest copy', () => {
       })
       render(<OfflineBanner />)
       await waitFor(() => {
-        expect(screen.getByTestId('offline-banner')).toHaveTextContent(
-          /reconnecting/i,
-        )
+        expect(
+          getDefaultConnectivityStore().getSnapshot().probeInFlight,
+        ).toBe(true)
       })
+      // A pending probe is not proof of offline: no false offline claim.
+      expect(screen.queryByTestId('offline-banner')).not.toBeInTheDocument()
       act(() => {
         release(
           new Response(JSON.stringify({ status: 'ok' }), {
@@ -95,9 +121,10 @@ describe('OfflineBanner honest copy', () => {
     const banner = screen.getByTestId('offline-banner')
     expect(banner).toHaveAttribute('role', 'status')
     expect(banner).toHaveAttribute('aria-live', 'polite')
-    expect(banner.className).toContain('sticky')
+    // In-flow inside the shell's sticky notice stack (the parent provides
+    // stickiness): occupies layout space, never overlays the page heading.
+    expect(banner.className).toContain('shrink-0')
     expect(banner.className).not.toMatch(/(?:^|\s)fixed(?:\s|$)/)
-    expect(banner.className).toContain('motion-reduce:animate-none')
   })
 })
 

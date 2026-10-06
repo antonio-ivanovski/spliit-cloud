@@ -79,6 +79,7 @@ beforeEach(() => {
 })
 
 afterEach(() => {
+  expect(console.info).not.toHaveBeenCalled()
   vi.unstubAllGlobals()
   vi.restoreAllMocks()
 })
@@ -99,9 +100,6 @@ describe('suggestExpenseCategory', () => {
     expect(prismaMock.expense.findMany).not.toHaveBeenCalled()
     expect(generateText).not.toHaveBeenCalled()
     expect(beforeAi).not.toHaveBeenCalled()
-    expect(console.info).toHaveBeenCalledWith(
-      expect.stringContaining('"hit":"dictionary"'),
-    )
   })
 
   it('returns null for 1–2 letter titles without querying or calling the model', async () => {
@@ -130,9 +128,18 @@ describe('suggestExpenseCategory', () => {
     ).resolves.toEqual({ categoryId: 'dining-out', candidates: [] })
     expect(prismaMock.expense.findMany).toHaveBeenCalled()
     expect(generateText).not.toHaveBeenCalled()
-    expect(console.info).toHaveBeenCalledWith(
-      expect.stringContaining('"hit":"history"'),
-    )
+  })
+
+  it('uses the same joint Local policy as the form when history beats a weaker dictionary match', async () => {
+    prismaMock.expense.findMany.mockResolvedValue([
+      { title: 'weekly shop', categoryId: 'dining-out' },
+      { title: 'weekly shop', categoryId: 'dining-out' },
+    ] as never)
+
+    await expect(
+      suggestExpenseCategory({ groupId: 'group-1', title: 'weekly shop' }),
+    ).resolves.toEqual({ categoryId: 'dining-out', candidates: [] })
+    expect(generateText).not.toHaveBeenCalled()
   })
 
   it('returns null when history misses and AI is off', async () => {
@@ -170,9 +177,46 @@ describe('suggestExpenseCategory', () => {
     expect(beforeAi.mock.invocationCallOrder[0]).toBeLessThan(
       generateText.mock.invocationCallOrder[0]!,
     )
-    expect(console.info).toHaveBeenCalledWith(
-      expect.stringContaining('"engine":"llm"'),
-    )
+  })
+
+  it('does not offer settlement as an LLM category', async () => {
+    envState.PUBLIC_ENABLE_CATEGORY_EXTRACT = true
+    prismaMock.expense.findMany.mockResolvedValue([
+      { title: 'Luigi mysterious trattoria', categoryId: 'dining-out' },
+    ] as never)
+
+    await suggestExpenseCategory({
+      groupId: 'group-1',
+      title: 'Luigi mysterious trattoria xyzzy',
+      allowAi: true,
+    })
+
+    const instructions = (
+      generateText.mock.calls[0]?.[0] as { instructions?: string }
+    )?.instructions
+    expect(instructions).not.toContain('settlement')
+  })
+
+  it('truncates LLM input to 40 characters with no retries and configured timeout', async () => {
+    envState.PUBLIC_ENABLE_CATEGORY_EXTRACT = true
+    prismaMock.expense.findMany.mockResolvedValue([
+      { title: 'Luigi mysterious trattoria', categoryId: 'dining-out' },
+    ] as never)
+
+    await suggestExpenseCategory({
+      groupId: 'group-1',
+      title: 'a'.repeat(100),
+      allowAi: true,
+    })
+
+    const request = generateText.mock.calls[0]?.[0] as {
+      prompt?: string
+      maxRetries?: number
+      timeout?: number
+    }
+    expect(request.prompt).toBe('a'.repeat(40))
+    expect(request.maxRetries).toBe(0)
+    expect(request.timeout).toBe(30_000)
   })
 
   it('returns null when the LLM confidence is below the minimum', async () => {
@@ -197,12 +241,6 @@ describe('suggestExpenseCategory', () => {
       categoryId: null,
       candidates: [{ id: 'groceries', score: 1, source: 'ai' }],
     })
-    expect(console.info).toHaveBeenCalledWith(
-      expect.stringContaining('"hit":"none"'),
-    )
-    expect(console.info).toHaveBeenCalledWith(
-      expect.stringContaining('"confidence":0.4'),
-    )
   })
 
   it('returns null when the LLM verdict is unparsable and the floor is above zero', async () => {
@@ -257,9 +295,6 @@ describe('suggestExpenseCategory', () => {
         allowAi: true,
       }),
     ).resolves.toEqual({ categoryId: null, candidates: [] })
-    expect(console.info).toHaveBeenCalledWith(
-      expect.stringContaining('"hit":"none"'),
-    )
   })
 
   it('rethrows non-timeout model errors', async () => {
@@ -340,12 +375,6 @@ describe('suggestExpenseCategory with AI_CATEGORY_ENGINE=system-one', () => {
     expect(body.state.recentExpenses).toEqual([])
     expect(generateText).not.toHaveBeenCalled()
     expect(beforeAi).toHaveBeenCalledOnce()
-    expect(console.info).toHaveBeenCalledWith(
-      expect.stringContaining('"hit":"system-one"'),
-    )
-    expect(console.info).toHaveBeenCalledWith(
-      expect.stringContaining('"engine":"system-one"'),
-    )
   })
 
   it('still prefers dictionary hits over System One', async () => {
@@ -417,9 +446,6 @@ describe('suggestExpenseCategory with AI_CATEGORY_ENGINE=system-one', () => {
         allowAi: true,
       }),
     ).resolves.toEqual({ categoryId: null, candidates: [] })
-    expect(console.info).toHaveBeenCalledWith(
-      expect.stringContaining('"hit":"none"'),
-    )
   })
 
   it('returns null when System One confidence is below the minimum', async () => {
@@ -437,10 +463,28 @@ describe('suggestExpenseCategory with AI_CATEGORY_ENGINE=system-one', () => {
       categoryId: null,
       candidates: [{ id: 'groceries', score: 0.9, source: 'ai' }],
     })
-    expect(console.info).toHaveBeenCalledWith(
-      expect.stringContaining('"hit":"none"'),
-    )
   })
+
+  it.each([
+    ['unknown probability key', { groceries: 0.9, unknown: 0.7 }],
+    ['empty distribution', {}],
+    ['missing winner key', { 'dining-out': 0.9 }],
+  ])(
+    'returns null when System One distribution is malformed (%s)',
+    async (_label, probabilities) => {
+      fetchMock.mockResolvedValueOnce(
+        systemOneSplitResponse(probabilities, 'groceries', 0.9),
+      )
+
+      await expect(
+        suggestExpenseCategory({
+          groupId: 'group-1',
+          title: 'xyzzy-unknown',
+          allowAi: true,
+        }),
+      ).resolves.toEqual({ categoryId: null, candidates: [] })
+    },
+  )
 
   it('returns null instead of failing when System One times out', async () => {
     fetchMock.mockRejectedValueOnce(
@@ -454,9 +498,6 @@ describe('suggestExpenseCategory with AI_CATEGORY_ENGINE=system-one', () => {
         allowAi: true,
       }),
     ).resolves.toEqual({ categoryId: null, candidates: [] })
-    expect(console.info).toHaveBeenCalledWith(
-      expect.stringContaining('"hit":"none"'),
-    )
   })
 
   it('rethrows non-timeout System One errors', async () => {

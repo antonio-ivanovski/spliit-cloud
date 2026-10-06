@@ -48,11 +48,15 @@ export const accountInvitationSchema = invitationSchema.extend({
     id: z.string(),
     name: z.string(),
   }),
-  invitedBy: z.object({
-    id: z.string(),
-    name: z.string(),
-    email: z.string(),
-  }),
+  // Null when the inviter's account was deleted (invitation history is
+  // preserved with a nulled inviter relation).
+  invitedBy: z
+    .object({
+      id: z.string(),
+      name: z.string(),
+      email: z.string(),
+    })
+    .nullable(),
 })
 
 export const invitationsListOutputSchema = z.object({

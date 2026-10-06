@@ -81,13 +81,14 @@
     "signOutOffline": "Connecta't per tancar la sessió"
   },
   "Footer": {
-    "madeIn": "Fet per la comunitat de codi obert amb amor ❤️",
+    "madeIn": "Fet per la <github>comunitat de codi obert</github> amb amor ❤️",
     "legalNavigation": "Enllaços legals",
     "privacy": "Privadesa",
     "terms": "Termes",
     "imprint": "Avís legal",
     "sponsor": "Patrocini",
-    "timeLabel": "Moment del dia"
+    "timeLabel": "Moment del dia",
+    "status": "Estat"
   },
   "Expenses": {
     "title": "Despeses",
@@ -229,7 +230,9 @@
       "showLess": "Mostra menys"
     },
     "copyToast": "S'ha iniciat la còpia de la despesa. Les dades de la despesa existent s'utilitzaran per crear-ne una de nova.",
-    "incomeBadge": "Ingressos"
+    "incomeBadge": "Ingressos",
+    "paidBySingle": "Pagat per <strong>{paidBy}</strong> · pagat per a <paidFor></paidFor>",
+    "paidByMultipleSingle": "Pagat per <paidByNames></paidByNames> · pagat per a <paidFor></paidFor>"
   },
   "Groups": {
     "myGroups": "Els meus grups",
@@ -373,7 +376,8 @@
             "monthly": "mesos",
             "yearly": "anys"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Suggerir categories per a les despeses sense categoritzar amb System One"
       },
       "Destination": {
         "heading": "On voleu importar <strong>{name}</strong>? ({participantCount} participants · {expenseCount} despeses)",
@@ -668,7 +672,9 @@
       "description": "Els grups ara poden mostrar un emoji al costat del nom. Hem vist {emoji} a «{name}».",
       "openSettings": "Obre la configuració del grup",
       "notNow": "Ara no"
-    }
+    },
+    "groupTabsHint": "Vols reordenar les pestanyes del grup o amagar les que no fas servir?",
+    "groupTabsHintLink": "Personalitza les pestanyes a la configuració del compte"
   },
   "GroupForm": {
     "title": "Informació del grup",
@@ -1059,7 +1065,8 @@
       "allItemsSplitEdit": "Edita la divisió de tots els articles",
       "allItemsSplitModalTitle": "Divisió de tots els articles",
       "remainderAllocationProportional": "Proporcional als articles",
-      "remainderProportionalHint": "Reparteix aquest import segons el subtotal d’articles de cada persona. Útil per a impostos i propines."
+      "remainderProportionalHint": "Reparteix aquest import segons el subtotal d’articles de cada persona. Útil per a impostos i propines.",
+      "errorExceedsAmountDetails": "El total dels articles ({itemsTotal}) supera l’import de la despesa en {excess}."
     },
     "leaveItemized": {
       "title": "Vols canviar el mode de repartiment?",
@@ -1095,7 +1102,15 @@
       "done": "Fet",
       "yourTime": "la teva hora",
       "invalidDate": "Introdueix una data vàlida.",
-      "invalidTime": "Introdueix una hora vàlida (HH:mm)."
+      "invalidTime": "Introdueix una hora vàlida (HH:mm).",
+      "hourLabel": "Hora",
+      "minuteLabel": "Minut",
+      "periodLabel": "a. m./p. m.",
+      "timeWheelHint": "Fes lliscar o toca per definir l'hora. La data no canvia.",
+      "now": "Ara",
+      "morning": "Matí",
+      "midday": "Migdia",
+      "evening": "Vespre"
     },
     "settlementTitle": "Pagament de liquidació",
     "settlementHint": "{category}: No es compta com a despesa als totals, estadístiques ni pressupostos. Tot i això actualitza qui deu a qui.",
@@ -1139,7 +1154,8 @@
       "description": "Introdueix l’import final, incloses les comissions.",
       "impliedRate": "Tipus implícit: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Suggeriments de categoria"
+    "otherSuggestions": "Suggeriments de categoria",
+    "paidForItemizedEmptyHint": "Assigna persones als articles per veure la part de cadascú."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Suprimeix el document",
@@ -1851,7 +1867,7 @@
       "generic": "Alguna cosa ha anat malament. Si us plau, torna-ho a intentar.",
       "passwordPolicy": "Utilitza almenys 8 caràcters amb majúscules, minúscules, un número i un símbol.",
       "magicLinkFailed": "No s'ha pogut enviar l'enllaç d'inici de sessió.",
-      "signupInviteRequired": "Aquesta instància és només per invitació. Utilitza un enllaç d'invitació o demana a algú que t'inviti a un grup.",
+      "signupInviteRequired": "Els registres són només per invitació. Utilitza un enllaç d'invitació o demana a algú que t'inviti a un grup.",
       "passkeyFailed": "L'inici de sessió amb clau d'accés ha fallat. Torna-ho a provar o utilitza un altre mètode d'inici de sessió."
     },
     "loading": "Carregant…",
@@ -1861,14 +1877,14 @@
     "signInWithGithub": "Continua amb GitHub",
     "legalNotice": "En continuar, acceptes els <terms>Termes d'ús</terms> i reconeixes l'<privacy>avís de privadesa</privacy>.",
     "inviteOnly": {
-      "message": "Aquesta instància és només per invitació. Utilitza un enllaç d'invitació o demana a algú que t'inviti a un grup.",
+      "message": "Els registres són només per invitació. Utilitza un enllaç d'invitació o demana a algú que t'inviti a un grup.",
       "useInvitedEmail": "Utilitza l'adreça de correu electrònic amb què t'han convidat."
     },
     "signInWithX": "Continua amb X",
     "signInWithOidc": "Continua amb {name}",
     "signInAnonymously": "Anònim",
     "lastUsed": "Darrer ús",
-    "emailAuthDisabled": "L'inici de sessió amb correu electrònic està desactivat en aquesta instància. Utilitza l'inici de sessió únic (SSO).",
+    "emailAuthDisabled": "L'inici de sessió amb correu electrònic està desactivat. Utilitza l'inici de sessió únic (SSO).",
     "signInWithPasskey": "Inicia sessió amb clau d'accés"
   },
   "CompleteProfile": {
@@ -1993,7 +2009,7 @@
         "joined_many": "S'hi han unit {count} persones",
         "retry": "Torna-ho a provar"
       },
-      "emailDeliveryDisabled": "El lliurament de correu electrònic està desactivat en aquesta instància. La invitació es crea igualment i apareixerà quan la persona convidada iniciï sessió; fes servir un enllaç d'invitació per donar-li alguna cosa per obrir."
+      "emailDeliveryDisabled": "El lliurament de correu electrònic està desactivat. La invitació es crea igualment i apareixerà quan la persona convidada iniciï sessió; fes servir un enllaç d'invitació per donar-li alguna cosa per obrir."
     },
     "invitations": {
       "title": "Invitacions pendents",
@@ -2415,7 +2431,7 @@
       "masterDescription": "Desactiva-les per silenciar tots els correus electrònics i les notificacions push. Les teves preferències per categoria es conserven.",
       "emailAddToEnable": "Afegeix un correu verificat per rebre notificacions a la safata d'entrada.",
       "emailAddLink": "Afegeix un correu",
-      "emailDeliveryDisabled": "El lliurament de correu electrònic està desactivat en aquesta instància. Les teves eleccions de correu es desen, però no s'enviaran fins que l'administrador configuri el correu electrònic."
+      "emailDeliveryDisabled": "El lliurament de correu electrònic està desactivat. Les teves eleccions de correu es desen, però no s'enviaran fins que el correu estigui configurat."
     },
     "preferences": {
       "title": "Preferències de l'aplicació",
@@ -2434,6 +2450,22 @@
       "mascotOptions": {
         "off": "Desactivada",
         "bill": "Bill, el rebut"
+      },
+      "groupTabs": "Pestanyes del grup",
+      "groupTabsHelp": "Tria quines pestanyes es mostren i en quin ordre a cada grup.",
+      "groupTabsCustomize": "Personalitza",
+      "groupTabsSave": "Desa",
+      "groupTabsDiscard": "Descarta",
+      "groupTabsReset": "Restableix els valors per defecte",
+      "groupTabsHide": "Amaga {name}",
+      "groupTabsShow": "Mostra {name}",
+      "groupTabsMoveUp": "Mou {name} amunt",
+      "groupTabsMoveDown": "Mou {name} avall",
+      "deleteConfirmation": "Confirmació de supressió de despeses",
+      "deleteConfirmationHelp": "Les supressions ràpides demanen confirmació una vegada. Les supressions amb escriptura et demanen escriure primer el títol de la despesa. Suprimir un grup o eliminar un membre sempre requereix escriure.",
+      "deleteConfirmationOptions": {
+        "standard": "Diàleg de confirmació",
+        "strict": "Diàleg amb escriptura"
       }
     },
     "aiPreferences": {
@@ -2626,7 +2658,111 @@
       "backedUp": "Amb còpia de seguretat",
       "removeWarning": "Això no es pot desfer. El dispositiu deixarà d'iniciar sessió amb una clau d'accés — torna'l a registrar en qualsevol moment.",
       "removeLastWarning": "Aquesta és la teva última clau d'accés. Si és el teu únic mètode d'inici de sessió, l'eliminació quedarà bloquejada fins que desis un enllaç de recuperació o un altre mètode d'inici de sessió.",
-      "anonymousHelpNoLink": "No hi ha cap enllaç d'inici de sessió desat per a aquest compte de convidat. Crea'n un a la fila de l'enllaç d'inici de sessió de sota — funciona en qualsevol dispositiu."
+      "anonymousHelpNoLink": "No hi ha cap enllaç d'inici de sessió desat per a aquest compte de convidat. Crea'n un a la fila de l'enllaç d'inici de sessió de sota — funciona en qualsevol dispositiu.",
+      "reauthTitle": "Torna a iniciar sessió per afegir una clau d'accés",
+      "reauthDescription": "Per la teva seguretat, afegir una clau d'accés necessita una sessió recent. La sessió es tancarà, tornaràs a iniciar sessió i tornaràs aquí mateix per acabar.",
+      "reauthConfirm": "Torna a iniciar sessió",
+      "reauthAnonymousTitle": "Desa primer un enllaç d'inici de sessió",
+      "reauthAnonymousDescription": "Aquest compte de convidat encara no té cap enllaç d'inici de sessió ni cap clau d'accés. Si tanques la sessió ara, perdràs l'accés per sempre — desa un enllaç d'inici de sessió a la secció Enllaç d'inici de sessió primer i després torna per afegir una clau d'accés."
+    },
+    "deletion": {
+      "sectionTitle": "Zona perillosa",
+      "sectionDescription": "Suprimeix permanentment el teu compte i tots els mètodes d'inici de sessió.",
+      "rowLabel": "Suprimeix el compte",
+      "rowDescription": "Elimina el teu perfil, les sessions i la configuració després d'un període de gràcia de 48 hores. Les despeses compartides es mantenen als grups dels altres membres sense les teves dades personals.",
+      "open": "Suprimeix el compte…",
+      "scheduledTitle": "Supressió del compte programada",
+      "scheduledDescription": "L’eliminació està programada per començar el {date} o més tard. El compte continua actiu fins que comenci. Els grups, els membres i les despeses poden canviar durant l’espera; les teves opcions s’aplicaran al seu estat quan s’executi l’eliminació. Pots cancel·lar-la fins que comenci. S’ha enviat un correu de confirmació a {email}.",
+      "cancel": "Cancel·la la supressió",
+      "cancelling": "Cancel·lant…",
+      "cancelled": "Supressió del compte cancel·lada.",
+      "dialogTitle": "Programar l’eliminació del compte?",
+      "dialogDescription": "Això programa l’eliminació després d’una espera de 48 hores; ara no s’elimina res. Pots cancel·lar-la fins que comenci. Les teves opcions s’aplicaran als grups i saldos d’aquell moment. Un cop comenci l’eliminació, no es podrà desfer.",
+      "farewellTitle": "Quina pena que marxis",
+      "farewellBody": "Si hi ha alguna cosa que puguem fer perquè et quedis, <feedbackLink>comparteix la teva opinió</feedbackLink> — només et prendrà un minut i ens ajuda a millorar.",
+      "groupsTitle": "Què passa amb els teus grups",
+      "leaveGroup": "Sortiràs de «{name}».",
+      "deleteGroup": "«{name}» se suprimirà permanentment — n'ets l'últim membre.",
+      "lastAdmin": "Ets l'últim administrador de «{name}» — un altre membre hi serà promogut automàticament.",
+      "settleBalances": "Els saldos pendents de «{name}» es liquiden automàticament.",
+      "friendLedger": "El teu registre d'amistat amb {name} està liquidat i tancat.",
+      "friendLedgerUnnamed": "El teu registre d'amistat està liquidat i tancat.",
+      "friendLedgerFallback": "un registre d'amistat",
+      "noGroups": "No ets membre de cap grup.",
+      "accessTitle": "Inici de sessió i invitacions",
+      "pendingInvites_zero": "Quan s’executi l’eliminació, es revocaran {count} invitacions pendents que has enviat.",
+      "pendingInvites_one": "Quan s’executi l’eliminació, es revocarà {count} invitació pendent que has enviat.",
+      "pendingInvites_two": "Quan s’executi l’eliminació, es revocaran {count} invitacions pendents que has enviat.",
+      "pendingInvites_few": "Quan s’executi l’eliminació, es revocaran {count} invitacions pendents que has enviat.",
+      "pendingInvites_many": "Quan s’executi l’eliminació, es revocaran {count} invitacions pendents que has enviat.",
+      "pendingInvites_other": "Quan s’executi l’eliminació, es revocaran {count} invitacions pendents que has enviat.",
+      "keepNameLabel": "Conserva el meu nom a l'historial compartit",
+      "keepNameDescription": "Les despeses compartides continuaran mostrant «{name}». En cas contrari, el teu nom se substituirà per «Membre suprimit» arreu.",
+      "customNameLabel": "Nom a conservar",
+      "settleLabel": "Marca els saldos com a liquidats quan s’executi l’eliminació",
+      "settleDescription": "Els saldos restants es liquiden automàticament. Si no, quedaran associats al teu nom provisional.",
+      "leaveBalances": "Els saldos pendents de «{name}» es mantindran com estan.",
+      "friendLeaveBalances": "El teu saldo amb {name} quedarà com està.",
+      "confirmWord": "SUPRIMEIX",
+      "ackLabel": "Entenc que això és permanent i que les despeses compartides es mantenen als grups dels altres membres sense les meves dades personals.",
+      "exportHint": "Vols una còpia primer? <exportLink>Exporta una còpia de seguretat</exportLink> abans de continuar.",
+      "schedule": "Programa la supressió",
+      "scheduling": "Programant…",
+      "scheduled": "Supressió programada. Consulta el teu correu per revisar-la o cancel·lar-la.",
+      "dialogCancel": "Conserva el meu compte",
+      "reauthTitle": "Torna a iniciar sessió per suprimir el teu compte",
+      "reauthDescription": "Per la teva seguretat, suprimir el teu compte necessita una sessió recent. La sessió es tancarà, tornaràs a iniciar sessió i tornaràs aquí mateix per acabar.",
+      "reauthConfirm": "Torna a iniciar sessió",
+      "errors": {
+        "generic": "Alguna cosa ha anat malament. Torna-ho a provar.",
+        "loadFailed": "No s'han pogut carregar els detalls de la supressió.",
+        "emailMismatch": "El correu escrit no coincideix amb el del teu compte.",
+        "alreadyRequested": "Ja hi ha una sol·licitud de supressió pendent per a aquest compte.",
+        "sessionNotFresh": "La teva sessió és massa antiga per a aquesta acció. Torna a iniciar sessió i torna-ho a provar.",
+        "jobsDisabled": "La supressió del compte necessita el treballador en segon pla, que està desactivat en aquest desplegament.",
+        "ackRequired": "Primer confirma que entens les conseqüències.",
+        "invalidDisplayName": "Introdueix un nom d'entre 1 i 100 caràcters.",
+        "cancelFailed": "No s'ha pogut cancel·lar la supressió. Torna-ho a provar."
+      },
+      "groupsToDeleteTitle": "Grups que se suprimiran",
+      "groupsToDeleteDescription": "Quan s’executi l’eliminació, s’eliminaran permanentment els grups dels quals encara siguis l’últim membre actiu.",
+      "groupsToLeaveTitle": "Grups que deixaràs",
+      "groupsToLeaveDescription": "Quan s’executi l’eliminació, deixaràs els grups que encara tinguin altres membres actius. Aquests grups es mantindran per a la resta.",
+      "friendsTitle": "Amics",
+      "friendsDescription": "Els teus saldos individuals amb aquests amics.",
+      "backToSettings": "Torna a la configuració",
+      "pageTitle": "Suprimeix el compte",
+      "loading": "S'estan carregant els detalls de la supressió",
+      "choicesTitle": "Opcions de supressió",
+      "nameTitle": "Nom a l'historial compartit",
+      "removeNameLabel": "Substitueix el meu nom per «Membre suprimit»",
+      "balancesTitle": "Saldos pendents",
+      "keepBalancesLabel": "Mantén els saldos pendents tal com estan",
+      "balanceExplanation": "Si tries liquidar els saldos, es registraran entrades de liquidació quan se suprimeixi el teu compte. No es transfereixen diners. En cas contrari, els saldos es mantenen a l'historial compartit.",
+      "confirmationTitle": "Confirma la supressió del compte",
+      "retry": "Torna-ho a provar",
+      "pageDescription": "Programa l’eliminació del teu compte després d’un període d’espera de 48 hores. El compte continua actiu fins que comenci l’eliminació, i pots cancel·lar-la abans.",
+      "reviewChoicesTitle": "Les teves opcions",
+      "consequencesTitle": "Què passarà",
+      "reviewConfirmTitle": "Confirma l’eliminació",
+      "backupLink": "Exporta una còpia de seguretat",
+      "keptNameExplanation": "Quan s’executi l’eliminació, les despeses compartides mostraran «{name}». El nom del teu perfil no canviarà fins aleshores.",
+      "removedNameExplanation": "Quan s’executi l’eliminació, les despeses compartides mostraran «Membre eliminat». El nom del teu perfil no canviarà fins aleshores.",
+      "keptBalancesExplanation": "Quan comenci l’eliminació, els saldos pendents es mantindran a l’historial compartit, incloses les despeses afegides durant l’espera.",
+      "settledBalancesExplanation": "Durant l’eliminació, les entrades de liquidació marquen com a liquidats els saldos d’aquell moment dels grups dels quals encara formes part, inclosos els arxivats. Els saldos dels grups que ja has deixat o dels quals t’han eliminat no canvien. No es transfereixen diners.",
+      "rowBalancesKept": "Els saldos pendents es mantenen com estan.",
+      "rowBalancesSettled": "El saldo en el moment de l’eliminació es marcarà com a liquidat.",
+      "rowAdmin": "Quan s’executi l’eliminació, un altre membre es convertirà en administrador si encara ets l’últim administrador.",
+      "friendKept": "El teu saldo es manté com està.",
+      "friendSettled": "Quan s’executi l’eliminació, el teu saldo d’aquell moment es marcarà com a liquidat i es tancarà el registre.",
+      "accessExplanation": "Aquests mètodes d’inici de sessió deixaran de funcionar quan s’elimini el teu compte.",
+      "invitesTitle": "Invitacions pendents",
+      "balanceUnavailable": "Saldo no disponible",
+      "archivedBalancesKept": "Aquest grup arxivat continuarà sent de només lectura. Es conservarà el vostre saldo restant.",
+      "signInMethodsRemoved": "Aquests mètodes d'inici de sessió deixaran de funcionar: {methods}.",
+      "consequencesTiming": "Aquest resum reflecteix el teu compte ara. Els grups, els membres i les despeses poden canviar abans que comenci l’eliminació. Les teves opcions s’aplicaran als grups dels quals formis part i als seus saldos en aquell moment. Res del que s’indica aquí passa immediatament.",
+      "executingTitle": "L’eliminació del compte ha començat",
+      "executingDescription": "L’eliminació del teu compte s’està processant. Alguns canvis ja poden haver-se completat, i l’eliminació no es pot cancel·lar ni desfer. Si el procés s’interromp, es reprendrà a partir dels passos completats."
     }
   },
   "Activities": {
@@ -2653,7 +2789,9 @@
       },
       "recurringCreated": "{participant} ha creat la despesa recurrent «{title}»",
       "stopped": "{participant} ha aturat la despesa recurrent {title}",
-      "commented": "{participant} ha comentat {title}: “{excerpt}”"
+      "commented": "{participant} ha comentat {title}: “{excerpt}”",
+      "yourShare": "La teva part:",
+      "notInvolved": "No ets implicat o implicada"
     },
     "group": {
       "updated": "{participant} ha actualitzat la configuració del grup",
@@ -2666,7 +2804,11 @@
         "currencyCode": "Codi de moneda",
         "linkedParticipant": "Participant vinculat",
         "subgroupsEnabled": "Subgrups",
-        "publicViewLink": "Enllaç públic de només lectura"
+        "publicViewLink": "Enllaç públic de només lectura",
+        "emoji": "Emoji",
+        "color": "Color",
+        "subgroups": "Subgrups",
+        "splitPresets": "Predefinicions de divisió"
       }
     },
     "member": {
@@ -2697,7 +2839,18 @@
       "imported_other": "{participant} ha importat {count} despeses"
     },
     "participant": {
-      "removed": "{participant} ha eliminat {target} del grup"
+      "removed": "{participant} ha eliminat {target} del grup",
+      "added": "{participant} ha afegit {target} al grup"
+    },
+    "hiddenActivitiesShowLess": "Mostra menys",
+    "hiddenActivities_one": "{count} activitat oculta que no t'implica",
+    "hiddenActivities_few": "{count} activitats ocultes que no t'impliquen",
+    "hiddenActivities_many": "{count} activitats ocultes que no t'impliquen",
+    "hiddenActivities_other": "{count} activitats ocultes que no t'impliquen",
+    "viewMode": {
+      "label": "Mode de vista d'activitats",
+      "forYou": "Per a tu",
+      "all": "Totes"
     }
   },
   "OfflineBanner": {
@@ -2775,9 +2928,6 @@
   },
   "BulkCategorize": {
     "title": "Categorització en lots",
-    "calibrationTitle": "Pas 1 — Calibració",
-    "calibrationDescription": "Cada exemple que confirmes ajuda la IA a millorar els suggeriments següents. Pot estar preparada després d’una ronda o demanar més exemples.",
-    "roundCount": "Ronda {round} de {max}",
     "confidence": {
       "high": "Alt",
       "medium": "Mitjà",
@@ -2845,7 +2995,137 @@
     "doneTitle": "Categories desades",
     "expenseColumn": "Despesa",
     "categoryColumn": "Categoria",
-    "confidenceColumn": "Confiança"
+    "confidenceColumn": "Confiança",
+    "simpleDescription": "Revisa les concordances de categoria per a les despeses de General i desa les teves opcions.",
+    "generateSuggestions": "Suggerir categories",
+    "backToStart": "Tornar",
+    "chooseMode": "Tria com categoritzar les despeses",
+    "localMode": "Diccionari i historial",
+    "localModeDescription": "Utilitza l'historial de categories d'aquest grup i el diccionari integrat.",
+    "startRun": "Comença a categoritzar",
+    "noCategory": "Deixa sense categoria",
+    "progressTitle": "Categoritzant les despeses",
+    "progressDescription": "Pots sortir d'aquesta pàgina i tornar-hi més tard. El teu progrés es desa.",
+    "progressCount": "{categorized} de {total} despeses categoritzades",
+    "applyProgressTitle": "Desant les categories",
+    "reviewTitle": "Revisa els suggeriments",
+    "reviewSummary": "{suggested} suggeriments de {total} despeses sense categoria",
+    "sourceLocal": "Local",
+    "saveSelected": "Desa les categories seleccionades",
+    "retry": "Torna-ho a provar",
+    "restart": "Inicia una nova execució",
+    "failed": "L'execució s'ha aturat: {message}",
+    "savedSummary": "{applied} modificades, {skipped} omeses",
+    "selectedCount": "{count} seleccionades",
+    "selectAll": "Selecciona-ho tot",
+    "clearAll": "Esborra-ho tot",
+    "discardRun": "Descarta l'execució",
+    "partialSaveNotice": "És possible que algunes categories ja s'hagin desat. Descartar aquesta execució no desfarà aquests canvis.",
+    "restartOlderRunTitle": "Inicia una nova execució de categorització",
+    "restartOlderRunDescription": "Aquesta execució anterior utilitzava el flux de revisió previ. Torna a començar per revisar totes les despeses juntes.",
+    "runningMatches": "{count} de {total} despeses tenen un suggeriment de categoria fins ara",
+    "failedTitle": "Categorització aturada",
+    "reviewWorkload": "{total} despeses a General · {selected} seleccionades per categoritzar · {general} que queden a General",
+    "categoryChoices": "Opcions de categoria",
+    "moreCategories": "Tria una altra categoria",
+    "saveCount": "Desa {count} categories",
+    "finishWithoutChanges": "Acaba sense canvis",
+    "completionSummary": "Execució completa: {changed} de {total} despeses modificades. {remaining} despeses queden a General.",
+    "viewExpenses": "Mostra les despeses",
+    "countLoading": "Comptant les despeses sense categoria…",
+    "nothingToCategorize": "No hi ha despeses sense categoria per categoritzar.",
+    "startingCount": "{count} despeses són actualment a General i estan llestes per revisar.",
+    "countError": "No s'han pogut comptar les despeses sense categoria. Torna a carregar la pàgina per tornar-ho a provar.",
+    "keepGeneral": "General · deixa sense categoria",
+    "calibrationRoundTitle": "Ronda de calibratge {round}",
+    "calibrationLoading": "Preparant una mostra variada de despeses…",
+    "calibrationReviewDescription": "Revisa i corregeix aquestes {count} despeses. Les opcions es mantenen en aquesta execució fins que desis al final.",
+    "confirmRound": "Confirma la ronda",
+    "roundSummaryTitle": "Ronda {round} revisada",
+    "roundSummaryDescription": "{reviewed} revisades · {categorized} categoritzades provisionalment · {general} que queden com a General",
+    "roundQuality": "Els suggeriments inicials han coincidit amb el {accuracy}% de les teves opcions; n'has corregit {corrections}.",
+    "categorizeRemaining": "Categoritza les despeses restants",
+    "nextRound": "Revisa una altra mostra",
+    "tableLabel": "Despeses per categoritzar",
+    "dateColumn": "Data",
+    "amountColumn": "Quantitat",
+    "rerunSuggestions": "Torna a generar els suggeriments",
+    "roundQualityWithSuggestions": "{accepted} de {proposed} categories suggerides acceptades · {changed} modificades · {missed} concordances trobades des de General",
+    "roundQualityNoSuggestions": "Cap categoria suggerida · {missed} concordances trobades des de General · {abstained} que queden a General",
+    "rerunChanged": "Has canviat {changed} de {proposed} categories suggerides.",
+    "rerunAssignedSingle": "Has assignat una categoria a 1 despesa que quedava a General.",
+    "rerunAssignedMultiple": "Has assignat una categoria a {count} despeses que quedaven a General.",
+    "rerunPotentialSingle": "Els teus canvis poden millorar la concordança d'1 despesa restant de General. Torna a generar els suggeriments si vols una altra passada.",
+    "rerunPotentialMultiple": "Els teus canvis poden millorar les concordances de {count} despeses restants de General. Torna a generar els suggeriments si vols una altra passada.",
+    "rerunEligible": "Apte per a una altra passada: General {general} · concordances automàtiques incertes {uncertain}.",
+    "rerunNoEligible": "No queden General intactes ni concordances automàtiques incertes per tornar a generar. Les teves correccions continuen incloses en les categories que desis.",
+    "rerunAlreadyUsed": "Les teves últimes correccions ja s'han utilitzat per a aquests suggeriments. Fes una altra correcció per tornar-los a generar.",
+    "highMatch": "Concordança alta",
+    "mediumMatch": "Concordança mitjana",
+    "lowMatch": "Concordança baixa",
+    "belowMatchThreshold": "Per sota del llindar de concordança",
+    "refiningTitle": "Afinant les concordances incertes",
+    "runLimitSummary": "Aquesta execució inclou 10,000 despeses. {count} despeses més de General es poden categoritzar en una altra execució després de desar.",
+    "pageLoading": "Carregant les despeses…",
+    "pageLoadError": "No s'han pogut carregar les despeses.",
+    "pageRetry": "Torna-ho a provar",
+    "pageCount": "S'estan mostrant {loaded} de {total} despeses",
+    "ledgerAmountNotice": "Els imports es mostren en la moneda del grup.",
+    "viewExpenseDetails": "Mostra els detalls de la despesa",
+    "reviewFilterLabel": "Mostra les despeses",
+    "filterAll": "Totes {count}",
+    "filterGeneral": "General {count}",
+    "improveSuggestions": "Millora els suggeriments restants",
+    "rerunInfoLabel": "Sobre la millora dels suggeriments",
+    "preparingNextStage": "Preparant el següent pas",
+    "rerunProgressTitle": "Actualitzant els suggeriments",
+    "progressPreparing": "Preparant les despeses…",
+    "noGeneralRows": "No queden despeses a General en aquesta revisió.",
+    "discardConfirmationTitle": "Vols descartar aquesta execució de categorització?",
+    "discardConfirmationDescription": "Això elimina l'execució, els seus suggeriments i les opcions triades per tu o per altres administradors. No es canviarà cap categoria de despesa.",
+    "discardConfirmationCancel": "Conserva l'execució",
+    "progressCountDescription": "Només compten les categories confirmades i les concordances mitjanes o altes; General i les concordances febles, no.",
+    "systemOneMode": "Model de System One",
+    "systemOneModeDescription": "Utilitza el model de decisions de System One per a cada despesa, fent servir com a pistes les despeses categoritzades d’aquest grup i les teves opcions revisades. TypeSafe Jev és un d’aquests models.",
+    "systemOneUnavailable": "System One no està disponible. El diccionari i l'historial continuen disponibles.",
+    "systemOneConfidence": "Confiança de System One: {confidence}%",
+    "systemOneOptionProbability": "Probabilitat de l’opció de System One: {probability}%",
+    "overallProgress": "Progrés general",
+    "fullPassProcessed": "Processades {processed} de {total} despeses",
+    "stageProcessed": "Processades {processed} de {total} despeses en aquest pas",
+    "saveSkipped": "S'han omès {count} despeses perquè han canviat.",
+    "sharedRunNotice": "Aquesta execució es comparteix amb altres administradors del grup. Tothom veu els mateixos suggeriments.",
+    "saveConflictTitle": "{count} despeses han canviat des que ha començat aquesta revisió",
+    "saveConflictDescription": "Algú ha editat aquestes despeses o n'ha canviat la categoria fora d'aquesta execució. Desa les altres despeses, o torna a editar les categories i prova de desar-les una altra vegada.",
+    "saveConflictMore": "I {count} més.",
+    "saveOtherExpenses": "Desa les altres despeses",
+    "receiptTitles": {
+      "freshMarket": "Mercat fresc",
+      "greenGrocer": "Verduleria",
+      "fruitStand": "Parada de fruita",
+      "cornerBistro": "Bistrot de la cantonada",
+      "noodleHouse": "Casa de fideus",
+      "cafeLunch": "Dinar al cafè",
+      "flightTicket": "Bitllet d'avió",
+      "airlineBaggage": "Equipatge d'avió",
+      "boardingPass": "Targeta d'embarcament",
+      "homeSupplies": "Articles per a la llar",
+      "hardwareShop": "Ferreteria",
+      "cleaningGoods": "Productes de neteja",
+      "cinemaTickets": "Entrades de cinema",
+      "movieNight": "Nit de cinema",
+      "filmFestival": "Festival de cinema",
+      "organicMarket": "Mercat ecològic",
+      "bakeryRun": "Compra al forn",
+      "sushiBar": "Bar de sushi",
+      "pizzaNight": "Nit de pizza",
+      "airportLounge": "Sala VIP de l'aeroport",
+      "extraLegroom": "Espai extra per a les cames",
+      "laundryDetergent": "Detergent per a la roba",
+      "storageBoxes": "Caixes d'emmagatzematge",
+      "popcornCombo": "Combo de crispetes",
+      "streamingRental": "Lloguer en streaming"
+    }
   },
   "ExpensePreview": {
     "title": "Vista prèvia de la despesa",
@@ -2892,10 +3172,14 @@
         "deleteGroup": "Per suprimir permanentment el grup <target>{name}</target>, escriu-ne el nom exactament com es mostra a continuació.",
         "deleteExpense": "Per suprimir permanentment la despesa <target>{name}</target>, escriu-ne el títol exactament com es mostra a continuació.",
         "deleteRecurringExpense": "Per confirmar la supressió de <target>{name}</target>, escriu el títol de la despesa exactament com es mostra a continuació.",
-        "removeParticipant": "Per eliminar <target>{name}</target> d’aquest grup, escriu-ne el nom exactament com es mostra a continuació."
+        "removeParticipant": "Per eliminar <target>{name}</target> d’aquest grup, escriu-ne el nom exactament com es mostra a continuació.",
+        "deleteAccount": "Per suprimir permanentment el teu compte, escriu <target>{name}</target> exactament com es mostra a continuació."
       },
       "placeholder": "Escriu «{name}» aquí",
-      "mismatch": "No coincideix. Escriu exactament {name}."
+      "mismatch": "No coincideix. Escriu exactament {name}.",
+      "settingsNoteLink": "Canvia-ho als paràmetres del compte",
+      "settingsNoteLead": "Vols ometre l'escriptura?",
+      "settingsNoteTail": "per utilitzar un diàleg de confirmació simple."
     }
   },
   "Theme": {
@@ -2919,7 +3203,7 @@
     "failedDescription": "No s'ha pogut registrar aquest dispositiu. Les notificacions configurades per correu electrònic continuaran arribant-hi; les opcions només push no es redirigeixen.",
     "emailUsage": "Només arribaran les notificacions configurades per correu electrònic fins que activis un dispositiu. Pots permetre les notificacions a la configuració del navegador i tornar-ho a provar des de Configuració.",
     "done": "Fet",
-    "emailDeliveryDisabled": "El lliurament de correu electrònic està desactivat en aquesta instància, de manera que les notificacions per correu no et poden arribar. Activa les notificacions push en aquest dispositiu per continuar rebent actualitzacions."
+    "emailDeliveryDisabled": "El lliurament de correu electrònic està desactivat, de manera que les notificacions per correu no et poden arribar. Activa les notificacions push en aquest dispositiu per continuar rebent actualitzacions."
   },
   "Unsubscribe": {
     "title": "Desactiva aquests correus?",
@@ -3390,7 +3674,8 @@
     "hintTapToAddExpense": "Sóc {name} — toca'm per afegir una despesa.",
     "hintTapToCreateGroup": "Sóc {name} — toca'm per crear un grup.",
     "billName": "Bill",
-    "offlineMessage": "No puc crear res mentre no tens connexió."
+    "offlineMessage": "No puc crear res mentre no tens connexió.",
+    "serverUnreachableMessage": "No puc connectar amb el servidor de Spliit ara mateix — la teva connexió sembla correcta, així que la culpa és nostra."
   },
   "CreateSettlement": {
     "description": "Revisa el pagament abans de registrar-lo.",
@@ -3441,7 +3726,18 @@
       "existingPasskeyTitle": "Ja has registrat una clau d'accés?",
       "existingPasskeyDescription": "Torna a iniciar sessió amb la clau d'accés en un dels teus dispositius registrats.",
       "passkeySignIn": "Inicia sessió amb clau d'accés",
-      "passkeySignInError": "No s'ha pogut iniciar sessió amb aquesta clau d'accés. Torna-ho a provar o utilitza l'enllaç d'inici de sessió."
+      "passkeySignInError": "No s'ha pogut iniciar sessió amb aquesta clau d'accés. Torna-ho a provar o utilitza l'enllaç d'inici de sessió.",
+      "passkeyNameLabel": "Anomena aquesta clau d'accés (opcional)",
+      "passkeyNamePlaceholder": "p. ex., Touch ID del MacBook",
+      "nameTitle": "Tria un nom de visualització",
+      "nameDescription": "Es mostra a la teva clau d'accés i als teus grups. Pots canviar-lo més tard.",
+      "nameLabel": "Nom de visualització",
+      "namePlaceholder": "El teu nom",
+      "nameSave": "Desa i continua",
+      "nameSaving": "Desant…",
+      "nameRequired": "Introdueix un nom de visualització.",
+      "nameTooShort": "El nom ha de tenir almenys 2 caràcters.",
+      "nameError": "No s'ha pogut desar el nom de visualització. Torna-ho a intentar."
     },
     "onboarding": {
       "title": "Desa l'enllaç d'inici de sessió",
@@ -3580,6 +3876,29 @@
         "review": {
           "title": "Revisa i importa",
           "detail": "Revisa duplicats i confirma la importació."
+        }
+      }
+    },
+    "categorize": {
+      "title": "Categoritza les despeses",
+      "description": "Suggerir categories per a les despeses existents sense categoritzar amb System One. Revisa tots els canvis abans de desar-los.",
+      "start": "Categoritza les despeses",
+      "steps": {
+        "choose": {
+          "title": "Tria un mètode",
+          "detail": "Utilitza el diccionari i l'historial o el model de decisions de System One."
+        },
+        "calibrate": {
+          "title": "Revisa mostres petites",
+          "detail": "Corregeix els suggeriments perquè la següent ronda aprengui les categories del teu grup."
+        },
+        "review": {
+          "title": "Revisa totes les despeses",
+          "detail": "Les despeses de General apareixen primer a la taula completa."
+        },
+        "save": {
+          "title": "Desa les categories",
+          "detail": "Les despeses només canvien quan confirmes la revisió final."
         }
       }
     }
@@ -4128,7 +4447,8 @@
       "valuesRecomputedTitle": "Valors recalculats",
       "viewExpenses": "Mostra despeses",
       "waitDuplicate": "Espera que acabi la comprovació de duplicats abans d'importar.",
-      "invalidRowTitle": "Fila d'importació no vàlida"
+      "invalidRowTitle": "Fila d'importació no vàlida",
+      "categorizeWithSystemOne": "Suggerir categories per a les despeses sense categoritzar amb System One"
     }
   },
   "Sponsor": {
@@ -4283,5 +4603,26 @@
     "expenseMissing": "Aquesta despesa no és a la descàrrega d'aquest dispositiu. Reconnecta per veure despeses més noves o anteriors.",
     "groupMissing": "Aquest grup encara no s'ha acabat de descarregar.",
     "balancesStale": "Els saldos poden estar desactualitzats."
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit no està disponible",
+    "description": "No podem connectar amb el servidor de Spliit ara mateix. La teva connexió sembla correcta — torna-ho a provar d'aquí a una estona.",
+    "retry": "Torna-ho a provar"
+  },
+  "ApiStatusBanner": {
+    "message": "No es pot contactar amb Spliit ara mateix. La teva connexió sembla correcta — el problema és nostre.",
+    "statusLink": "Consulta l'estat"
+  },
+  "AccountDeletionBanner": {
+    "scheduled": "L'eliminació del compte està programada per al {date}.",
+    "review": "Revisa o cancel·la l'eliminació",
+    "executing": "L'eliminació del compte ha començat.",
+    "viewStatus": "Mostra l'estat de l'eliminació"
+  },
+  "Updates": {
+    "title": "Actualitzacions",
+    "latest": "Novetats",
+    "viewAll": "Mostra totes les actualitzacions",
+    "dismiss": "Entesos"
   }
 }

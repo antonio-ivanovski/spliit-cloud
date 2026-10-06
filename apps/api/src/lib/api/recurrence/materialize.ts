@@ -374,6 +374,7 @@ export async function materializeRecurringExpense(
       amount: expense.amount,
       currencyCode: conversion.originalCurrency,
       date,
+      affectedParticipants: recurringTemplateParticipantIds(template),
       originalAmount: conversion.originalAmount ?? undefined,
       conversionRate: conversion.conversionRate ?? undefined,
       conversionSource: conversion.conversionSource,

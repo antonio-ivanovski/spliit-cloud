@@ -2,11 +2,13 @@ import { Link, useLocation, useNavigate } from '@tanstack/react-router'
 import { Archive as ArchiveIcon, ArchiveRestore } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useToast } from '@/components/ui/use-toast'
+import { getVisibleGroupTabs } from '@/lib/group-tabs'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { shouldHideMobileGroupTabs } from '@/lib/mobile-nav'
 import {
@@ -21,10 +23,10 @@ import { useCurrentGroup } from './current-group-context'
 const GROUP_TAB_TO = {
   expenses: '/groups/$groupId/expenses',
   balances: '/groups/$groupId/balances',
-  stats: '/groups/$groupId/stats',
-  budgets: '/groups/$groupId/budgets',
   activity: '/groups/$groupId/activity',
   members: '/groups/$groupId/members',
+  stats: '/groups/$groupId/stats',
+  budgets: '/groups/$groupId/budgets',
   tools: '/groups/$groupId/tools',
   edit: '/groups/$groupId/edit',
 } as const
@@ -66,6 +68,16 @@ export function GroupTabs({ groupId }: Props) {
   // FRIEND-typed ledgers are strictly 2 people, so the Members tab is
   // redundant (the peer is shown on the card already) and is hidden.
   const isFriendLedger = group?.groupType === 'FRIEND'
+
+  const syncedPreferences = useSyncedAccountPreferences()
+  const visibleTabs = getVisibleGroupTabs(
+    syncedPreferences?.groupTabOrder,
+    {
+      isFriendLedger,
+      canViewSettings,
+    },
+    syncedPreferences?.hiddenGroupTabs,
+  )
 
   async function handleUnarchive() {
     // UI entry check before success toast/invalidation: offline never claims
@@ -133,75 +145,63 @@ export function GroupTabs({ groupId }: Props) {
           }}
         >
           <TabsList>
-            <TabsTrigger
-              value="expenses"
-              nativeButton={false}
-              render={<Link to={GROUP_TAB_TO.expenses} params={{ groupId }} />}
-            >
-              {t('Expenses.title')}
-            </TabsTrigger>
-            <TabsTrigger
-              value="balances"
-              nativeButton={false}
-              render={<Link to={GROUP_TAB_TO.balances} params={{ groupId }} />}
-            >
-              {t('Balances.title')}
-            </TabsTrigger>
-            <TabsTrigger
-              value="stats"
-              nativeButton={false}
-              render={<Link to={GROUP_TAB_TO.stats} params={{ groupId }} />}
-            >
-              {t('Stats.title')}
-            </TabsTrigger>
-            <TabsTrigger
-              value="budgets"
-              nativeButton={false}
-              render={<Link to={GROUP_TAB_TO.budgets} params={{ groupId }} />}
-            >
-              {t('Budgets.title')}
-            </TabsTrigger>
-            <TabsTrigger
-              value="activity"
-              nativeButton={false}
-              render={<Link to={GROUP_TAB_TO.activity} params={{ groupId }} />}
-            >
-              {t('Activity.title')}
-            </TabsTrigger>
-            {!isFriendLedger && (
-              <TabsTrigger
-                value="members"
-                className="flex items-center gap-2"
-                nativeButton={false}
-                render={<Link to={GROUP_TAB_TO.members} params={{ groupId }} />}
-              >
-                <span>{t('Members.title')}</span>
-                {memberCount > 0 && (
-                  <Badge
-                    variant="outline"
-                    className="border-current px-1.5 py-0 text-current"
+            {visibleTabs.map((tab) => {
+              if (tab === 'members') {
+                return (
+                  <TabsTrigger
+                    key={tab}
+                    value="members"
+                    className="flex items-center gap-2"
+                    nativeButton={false}
+                    render={
+                      <Link to={GROUP_TAB_TO.members} params={{ groupId }} />
+                    }
                   >
-                    {memberCount}
-                  </Badge>
-                )}
-              </TabsTrigger>
-            )}
-            <TabsTrigger
-              value="tools"
-              nativeButton={false}
-              render={<Link to={GROUP_TAB_TO.tools} params={{ groupId }} />}
-            >
-              {t('Tools.title')}
-            </TabsTrigger>
-            {canViewSettings && (
-              <TabsTrigger
-                value="edit"
-                nativeButton={false}
-                render={<Link to={GROUP_TAB_TO.edit} params={{ groupId }} />}
-              >
-                {t('Settings.title')}
-              </TabsTrigger>
-            )}
+                    <span>{t('Members.title')}</span>
+                    {memberCount > 0 && (
+                      <Badge
+                        variant="outline"
+                        className="border-current px-1.5 py-0 text-current"
+                      >
+                        {memberCount}
+                      </Badge>
+                    )}
+                  </TabsTrigger>
+                )
+              }
+              if (tab === 'edit') {
+                return (
+                  <TabsTrigger
+                    key={tab}
+                    value="edit"
+                    nativeButton={false}
+                    render={
+                      <Link to={GROUP_TAB_TO.edit} params={{ groupId }} />
+                    }
+                  >
+                    {t('Settings.title')}
+                  </TabsTrigger>
+                )
+              }
+              const titles = {
+                expenses: t('Expenses.title'),
+                balances: t('Balances.title'),
+                activity: t('Activity.title'),
+                stats: t('Stats.title'),
+                budgets: t('Budgets.title'),
+                tools: t('Tools.title'),
+              } as const
+              return (
+                <TabsTrigger
+                  key={tab}
+                  value={tab}
+                  nativeButton={false}
+                  render={<Link to={GROUP_TAB_TO[tab]} params={{ groupId }} />}
+                >
+                  {titles[tab]}
+                </TabsTrigger>
+              )
+            })}
           </TabsList>
         </Tabs>
       </div>

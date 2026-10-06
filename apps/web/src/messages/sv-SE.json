@@ -147,7 +147,7 @@
       "masterDescription": "Stäng av för att tysta alla e-post- och push-aviseringar. Dina val per kategori behålls.",
       "emailAddToEnable": "Lägg till en verifierad e-postadress för att ta emot aviseringar i inkorgen.",
       "emailAddLink": "Lägg till e-post",
-      "emailDeliveryDisabled": "E-postutskick är avstängt i den här instansen. Dina e-postval sparas men skickas inte förrän administratören konfigurerar e-post."
+      "emailDeliveryDisabled": "E-postutskick är avstängt. Dina e-postval sparas men skickas inte förrän e-post har konfigurerats."
     },
     "title": "Kontoinställningar",
     "profile": {
@@ -171,6 +171,22 @@
       "mascotOptions": {
         "off": "Av",
         "bill": "Bill, kvittot"
+      },
+      "groupTabs": "Gruppflikar",
+      "groupTabsHelp": "Välj vilka flikar som visas i varje grupp och i vilken ordning.",
+      "groupTabsCustomize": "Anpassa",
+      "groupTabsSave": "Spara",
+      "groupTabsDiscard": "Kassera",
+      "groupTabsReset": "Återställ till standard",
+      "groupTabsHide": "Dölj {name}",
+      "groupTabsShow": "Visa {name}",
+      "groupTabsMoveUp": "Flytta {name} uppåt",
+      "groupTabsMoveDown": "Flytta {name} nedåt",
+      "deleteConfirmation": "Bekräftelse vid borttagning av utgifter",
+      "deleteConfirmationHelp": "Snabb borttagning frågar en gång. Borttagning med skrift kräver att du skriver utgiftens titel först. Att ta bort en grupp eller ta bort en medlem kräver alltid skrift.",
+      "deleteConfirmationOptions": {
+        "standard": "Bekräftelsedialog",
+        "strict": "Dialog med skrift"
       }
     },
     "aiPreferences": {
@@ -363,7 +379,107 @@
       "backedUp": "Säkerhetskopierad",
       "removeWarning": "Det här kan inte ångras. Enheten loggar inte längre in dig med en passnyckel — registrera den igen när som helst.",
       "removeLastWarning": "Det här är din sista passnyckel. Om det är din enda inloggningsmetod är borttagning blockerad tills du har sparat en inloggningslänk eller lagt till en annan inloggningsmetod.",
-      "anonymousHelpNoLink": "Ingen inloggningslänk är sparad för det här gästkontot. Skapa en på inloggningslänksraden nedan — den fungerar på alla enheter."
+      "anonymousHelpNoLink": "Ingen inloggningslänk är sparad för det här gästkontot. Skapa en på inloggningslänksraden nedan — den fungerar på alla enheter.",
+      "reauthTitle": "Logga in igen för att lägga till en passnyckel",
+      "reauthDescription": "För din säkerhet kräver tillägg av en passnyckel en ny inloggning. Du loggas ut, loggar in igen och hamnar här igen för att slutföra.",
+      "reauthConfirm": "Logga in igen",
+      "reauthAnonymousTitle": "Spara en inloggningslänk först",
+      "reauthAnonymousDescription": "Det här gästkontot har ännu ingen inloggningslänk och ingen passnyckel. Om du loggar ut nu blir du utelåst för alltid — spara först en inloggningslänk i avsnittet Inloggningslänk och kom sedan tillbaka för att lägga till en passnyckel."
+    },
+    "deletion": {
+      "sectionTitle": "Farozon",
+      "sectionDescription": "Ta bort ditt konto och alla inloggningsmetoder permanent.",
+      "rowLabel": "Ta bort konto",
+      "rowDescription": "Tar bort din profil, dina sessioner och dina inställningar efter en karenstid på 48 timmar. Delade utgifter stannar kvar i andra medlemmars grupper utan dina personuppgifter.",
+      "open": "Ta bort konto…",
+      "scheduledTitle": "Borttagning av kontot schemalagd",
+      "scheduledDescription": "Borttagningen börjar tidigast {date}. Ditt konto är aktivt tills den börjar. Grupper, medlemmar och utgifter kan ändras under väntetiden; dina val gäller deras tillstånd när borttagningen sker. Du kan avbryta tills borttagningen börjar. Ett bekräftelsemejl har skickats till {email}.",
+      "cancel": "Avbryt borttagning",
+      "cancelling": "Avbryter…",
+      "cancelled": "Borttagningen av kontot har avbrutits.",
+      "dialogTitle": "Schemalägga borttagning av kontot?",
+      "dialogDescription": "Detta schemalägger borttagning efter en väntetid på 48 timmar; inget tas bort nu. Du kan avbryta tills borttagningen börjar. Dina val gäller grupperna och balanserna vid den tidpunkten. När borttagningen har börjat går den inte att ångra.",
+      "farewellTitle": "Tråkigt att du lämnar oss",
+      "farewellBody": "Om det finns något vi kan göra för att du ska stanna, <feedbackLink>dela din feedback</feedbackLink> — det tar en minut och hjälper oss att bli bättre.",
+      "groupsTitle": "Vad som händer med dina grupper",
+      "leaveGroup": "Du lämnar “{name}”.",
+      "deleteGroup": "“{name}” raderas permanent – du är den sista medlemmen.",
+      "lastAdmin": "Du är den sista administratören för “{name}” – en annan medlem befordras automatiskt.",
+      "settleBalances": "Oreglerade balanser i “{name}” regleras automatiskt.",
+      "friendLedger": "Din vänbalans med {name} är reglerad och avslutad.",
+      "friendLedgerUnnamed": "Din vänbalans är reglerad och avslutad.",
+      "friendLedgerFallback": "en vänbalans",
+      "noGroups": "Du är inte medlem i någon grupp.",
+      "accessTitle": "Inloggning och inbjudningar",
+      "pendingInvites_one": "Vid borttagningen återkallas {count} väntande inbjudan som du har skickat.",
+      "pendingInvites_other": "Vid borttagningen återkallas {count} väntande inbjudningar som du har skickat.",
+      "keepNameLabel": "Behåll mitt namn i den delade historiken",
+      "keepNameDescription": "Delade utgifter visar fortfarande “{name}”. Annars ersätts ditt namn överallt med “Borttagen medlem”.",
+      "customNameLabel": "Namn att behålla",
+      "settleLabel": "Markera balanser som reglerade vid borttagningen",
+      "settleDescription": "Kvarvarande balanser regleras automatiskt. Annars stannar de kvar på ditt platshållarnamn.",
+      "leaveBalances": "Oreglerade balanser i “{name}” förblir som de är.",
+      "friendLeaveBalances": "Din balans med {name} förblir som den är.",
+      "confirmWord": "RADERA",
+      "ackLabel": "Jag förstår att detta är permanent och att delade utgifter stannar kvar i andra medlemmars grupper utan mina personuppgifter.",
+      "exportHint": "Vill du ha en kopia först? <exportLink>Exportera en säkerhetskopia</exportLink> innan du fortsätter.",
+      "schedule": "Schemalägg borttagning",
+      "scheduling": "Schemalägger…",
+      "scheduled": "Borttagning schemalagd. Kontrollera din e-post för att granska eller avbryta.",
+      "dialogCancel": "Behåll mitt konto",
+      "reauthTitle": "Logga in igen för att ta bort ditt konto",
+      "reauthDescription": "För din säkerhet kräver borttagning av ditt konto en ny inloggning. Du loggas ut, loggar in igen och hamnar här igen för att slutföra.",
+      "reauthConfirm": "Logga in igen",
+      "errors": {
+        "generic": "Något gick fel. Försök igen.",
+        "loadFailed": "Det gick inte att läsa in borttagningsinformationen.",
+        "emailMismatch": "Den angivna e-posten matchar inte ditt kontos e-post.",
+        "alreadyRequested": "En begäran om borttagning väntar redan för det här kontot.",
+        "sessionNotFresh": "Din session är för gammal för den här åtgärden. Logga in igen och försök på nytt.",
+        "jobsDisabled": "Borttagning av kontot kräver bakgrundsarbetaren, som är inaktiverad i den här driftsättningen.",
+        "ackRequired": "Bekräfta först att du förstår konsekvenserna.",
+        "invalidDisplayName": "Ange ett namn med 1–100 tecken.",
+        "cancelFailed": "Det gick inte att avbryta borttagningen. Försök igen."
+      },
+      "groupsToDeleteTitle": "Grupper som raderas",
+      "groupsToDeleteDescription": "Vid borttagningen raderas grupper där du fortfarande är den sista aktiva medlemmen permanent.",
+      "groupsToLeaveTitle": "Grupper som du lämnar",
+      "groupsToLeaveDescription": "Vid borttagningen lämnar du grupper som fortfarande har andra aktiva medlemmar. Dessa grupper finns kvar för alla andra.",
+      "friendsTitle": "Vänner",
+      "friendsDescription": "Dina en-till-en-balanser med dessa vänner.",
+      "backToSettings": "Tillbaka till inställningarna",
+      "pageTitle": "Ta bort konto",
+      "loading": "Laddar information om borttagning",
+      "choicesTitle": "Dina val inför borttagningen",
+      "nameTitle": "Namn i delad historik",
+      "removeNameLabel": "Ersätt mitt namn med “Borttagen medlem”",
+      "balancesTitle": "Återstående saldon",
+      "keepBalancesLabel": "Behåll återstående saldon som de är",
+      "balanceExplanation": "Om du väljer att reglera saldona registreras regleringar när ditt konto tas bort. Inga pengar överförs. Annars finns saldona kvar i din delade historik.",
+      "confirmationTitle": "Bekräfta borttagning av kontot",
+      "retry": "Försök igen",
+      "pageDescription": "Schemalägg borttagning av ditt konto efter en väntetid på 48 timmar. Ditt konto är aktivt tills borttagningen börjar, och du kan avbryta innan dess.",
+      "reviewChoicesTitle": "Dina val",
+      "consequencesTitle": "Vad som händer",
+      "reviewConfirmTitle": "Bekräfta borttagning",
+      "backupLink": "Exportera en säkerhetskopia",
+      "keptNameExplanation": "Vid borttagningen visar delade utgifter ”{name}”. Ditt profilnamn är oförändrat tills dess.",
+      "removedNameExplanation": "Vid borttagningen visar delade utgifter ”Borttagen medlem”. Ditt profilnamn är oförändrat tills dess.",
+      "keptBalancesExplanation": "När borttagningen börjar finns återstående balanser kvar i din delade historik, även utgifter som lagts till under väntetiden.",
+      "settledBalancesExplanation": "Under borttagningen markerar regleringar de dåvarande balanserna som reglerade i grupper du fortfarande tillhör, även arkiverade grupper. Balanser i grupper som du redan har lämnat eller tagits bort från förblir oförändrade. Inga pengar överförs.",
+      "rowBalancesKept": "Återstående balanser förblir oförändrade.",
+      "rowBalancesSettled": "Balansen vid tidpunkten för borttagningen markeras som reglerad.",
+      "rowAdmin": "Vid borttagningen blir en annan medlem administratör om du fortfarande är den sista administratören.",
+      "friendKept": "Din balans förblir oförändrad.",
+      "friendSettled": "Vid borttagningen markeras din dåvarande balans som reglerad och vänbalansen avslutas.",
+      "accessExplanation": "Dessa inloggningsmetoder slutar fungera när ditt konto har tagits bort.",
+      "invitesTitle": "Väntande inbjudningar",
+      "balanceUnavailable": "Saldot är inte tillgängligt",
+      "archivedBalancesKept": "Den här arkiverade gruppen förblir skrivskyddad. Ditt återstående saldo behålls.",
+      "signInMethodsRemoved": "De här inloggningsmetoderna slutar fungera: {methods}.",
+      "consequencesTiming": "Den här översikten visar ditt konto som det ser ut nu. Grupper, medlemmar och utgifter kan ändras innan borttagningen börjar. Dina val gäller de grupper du då tillhör och deras balanser vid den tidpunkten. Inget som visas här händer omedelbart.",
+      "executingTitle": "Borttagningen av kontot har börjat",
+      "executingDescription": "Ditt konto håller på att tas bort. Vissa ändringar kan redan vara klara, och borttagningen kan inte avbrytas eller ångras. Om behandlingen avbryts fortsätter den efter de slutförda stegen."
     }
   },
   "Activities": {
@@ -390,7 +506,9 @@
       },
       "recurringCreated": "{participant} skapade den återkommande utgiften ”{title}”",
       "stopped": "{participant} stoppade den återkommande utgiften {title}",
-      "commented": "{participant} kommenterade utgiften {title}: “{excerpt}”"
+      "commented": "{participant} kommenterade utgiften {title}: “{excerpt}”",
+      "yourShare": "Din andel:",
+      "notInvolved": "Du är inte inblandad"
     },
     "fallback": "En aktivitet registrerades",
     "group": {
@@ -404,7 +522,11 @@
         "currencyCode": "Valutakod",
         "linkedParticipant": "Länkad deltagare",
         "subgroupsEnabled": "Subgrupper",
-        "publicViewLink": "Offentlig länk med endast visning"
+        "publicViewLink": "Offentlig länk med endast visning",
+        "emoji": "Emoji",
+        "color": "Färg",
+        "subgroups": "Subgrupper",
+        "splitPresets": "Delningsmallar"
       }
     },
     "import": {
@@ -433,7 +555,16 @@
     "unknownActor": "Någon",
     "openExpense": "Öppna utgift",
     "participant": {
-      "removed": "{participant} tog bort {target} från gruppen"
+      "removed": "{participant} tog bort {target} från gruppen",
+      "added": "{participant} lade till {target} i gruppen"
+    },
+    "hiddenActivitiesShowLess": "Visa mindre",
+    "hiddenActivities_one": "{count} dold aktivitet där du inte är inblandad",
+    "hiddenActivities_other": "{count} dolda aktiviteter där du inte är inblandad",
+    "viewMode": {
+      "label": "Aktivitetsvy",
+      "forYou": "För dig",
+      "all": "Alla"
     }
   },
   "Activity": {
@@ -499,7 +630,7 @@
       "generic": "Något gick fel. Försök igen.",
       "magicLinkFailed": "Kunde inte skicka inloggningslänken.",
       "passwordPolicy": "Använd minst 8 tecken med versal, gemen, en siffra och en symbol.",
-      "signupInviteRequired": "Den här instansen är endast för inbjudna. Använd en inbjudningslänk eller be någon att bjuda in dig till en grupp.",
+      "signupInviteRequired": "Registrering är endast möjlig med inbjudan. Använd en inbjudningslänk eller be någon att bjuda in dig till en grupp.",
       "passkeyFailed": "Inloggningen med passnyckel misslyckades. Försök igen eller använd en annan inloggningsmetod."
     },
     "signInWithGithub": "Fortsätt med GitHub",
@@ -513,14 +644,14 @@
       "symbol": "Symbol"
     },
     "inviteOnly": {
-      "message": "Den här instansen är endast för inbjudna. Använd en inbjudningslänk eller be någon att bjuda in dig till en grupp.",
+      "message": "Registrering är endast möjlig med inbjudan. Använd en inbjudningslänk eller be någon att bjuda in dig till en grupp.",
       "useInvitedEmail": "Använd den e-postadress du blev inbjuden med."
     },
     "signInWithX": "Fortsätt med X",
     "signInWithOidc": "Fortsätt med {name}",
     "signInAnonymously": "Anonym",
     "lastUsed": "Senast använt",
-    "emailAuthDisabled": "Inloggning med e-post är inaktiverad i den här instansen. Använd enkel inloggning (SSO).",
+    "emailAuthDisabled": "Inloggning med e-post är inaktiverad. Använd enkel inloggning (SSO).",
     "signInWithPasskey": "Logga in med passnyckel"
   },
   "Balances": {
@@ -601,8 +732,6 @@
   },
   "BulkCategorize": {
     "title": "Bulkkategorisera",
-    "calibrationTitle": "Steg 1 — Kalibrering",
-    "calibrationDescription": "Varje exempel du bekräftar hjälper AI:n att förbättra sina nästa förslag. Den kan vara redo efter en omgång eller be om fler exempel.",
     "aiWantsMore": "AI:n vill gärna ha några fler exempel. Bekräfta eller korrigera förslagen nedan och kör en ny omgång.",
     "aiSaidReady": "AI:n är redo. Gå till förhandsgranskningen för att bekräfta.",
     "feedbackTableTitle": "Valda utgifter",
@@ -658,13 +787,142 @@
     "doneTitle": "Kategorier sparade",
     "expenseColumn": "Utgift",
     "categoryColumn": "Kategori",
-    "roundCount": "Omgång {round} av {max}",
     "confidence": {
       "high": "Hög",
       "medium": "Mellan",
       "low": "Låg"
     },
-    "confidenceColumn": "Säkerhet"
+    "confidenceColumn": "Säkerhet",
+    "simpleDescription": "Granska kategorimatchningar för utgifter i Allmänt och spara sedan dina val.",
+    "generateSuggestions": "Föreslå kategorier",
+    "backToStart": "Tillbaka",
+    "chooseMode": "Välj hur utgifter ska kategoriseras",
+    "localMode": "Ordbok och historik",
+    "localModeDescription": "Använder den här gruppens kategorihistorik och den inbyggda ordlistan.",
+    "startRun": "Börja kategorisera",
+    "noCategory": "Lämna okategoriserad",
+    "progressTitle": "Kategoriserar utgifter",
+    "progressDescription": "Du kan lämna sidan och komma tillbaka senare. Dina framsteg sparas.",
+    "progressCount": "{categorized} av {total} utgifter kategoriserade",
+    "applyProgressTitle": "Sparar kategorier",
+    "reviewTitle": "Granska förslag",
+    "reviewSummary": "{suggested} förslag från {total} okategoriserade utgifter",
+    "sourceLocal": "Lokal",
+    "saveSelected": "Spara valda kategorier",
+    "retry": "Försök igen",
+    "restart": "Starta en ny körning",
+    "failed": "Körningen stoppades: {message}",
+    "savedSummary": "{applied} ändrade, {skipped} överhoppade",
+    "selectedCount": "{count} valda",
+    "selectAll": "Välj alla",
+    "clearAll": "Rensa val",
+    "discardRun": "Kassera körning",
+    "partialSaveNotice": "Vissa kategorier kan redan ha sparats. Att kassera den här körningen ångrar inte de ändringarna.",
+    "restartOlderRunTitle": "Starta en ny kategoriseringskörning",
+    "restartOlderRunDescription": "Den här tidigare körningen använde det tidigare granskningsflödet. Börja om för att granska alla utgifter tillsammans.",
+    "runningMatches": "{count} av {total} utgifter har hittills ett kategoriförslag",
+    "failedTitle": "Kategoriseringen stoppades",
+    "reviewWorkload": "{total} utgifter i Allmänt · {selected} valda för kategorisering · {general} stannar i Allmänt",
+    "categoryChoices": "Kategorival",
+    "moreCategories": "Välj en annan kategori",
+    "saveCount": "Spara {count} kategorier",
+    "finishWithoutChanges": "Avsluta utan ändringar",
+    "completionSummary": "Körning klar: {changed} av {total} utgifter ändrade. {remaining} utgifter finns kvar i Allmänt.",
+    "viewExpenses": "Visa utgifter",
+    "countLoading": "Räknar okategoriserade utgifter…",
+    "nothingToCategorize": "Det finns inga okategoriserade utgifter att kategorisera.",
+    "startingCount": "{count} utgifter ligger just nu i Allmänt och är redo att granskas.",
+    "countError": "Kunde inte räkna okategoriserade utgifter. Ladda om sidan för att försöka igen.",
+    "keepGeneral": "Allmänt · lämna okategoriserad",
+    "calibrationRoundTitle": "Kalibreringsomgång {round}",
+    "calibrationLoading": "Förbereder ett varierat urval av utgifter…",
+    "calibrationReviewDescription": "Granska och korrigera dessa {count} utgifter. Valen stannar i den här körningen tills du sparar i slutet.",
+    "confirmRound": "Bekräfta omgång",
+    "roundSummaryTitle": "Omgång {round} granskad",
+    "roundSummaryDescription": "{reviewed} granskade · {categorized} preliminärt kategoriserade · {general} kvar som Allmänt",
+    "roundQuality": "De första förslagen stämde i {accuracy} % med dina val; du korrigerade {corrections}.",
+    "categorizeRemaining": "Kategorisera återstående utgifter",
+    "nextRound": "Granska ytterligare ett urval",
+    "tableLabel": "Utgifter att kategorisera",
+    "dateColumn": "Datum",
+    "amountColumn": "Belopp",
+    "rerunSuggestions": "Kör förslagen igen",
+    "roundQualityWithSuggestions": "{accepted} av {proposed} föreslagna kategorier accepterade · {changed} ändrade · {missed} matchningar hittade från Allmänt",
+    "roundQualityNoSuggestions": "Inga kategorier föreslagna · {missed} matchningar hittade från Allmänt · {abstained} kvar i Allmänt",
+    "rerunChanged": "Du ändrade {changed} av {proposed} föreslagna kategorier.",
+    "rerunAssignedSingle": "Du tilldelade en kategori till 1 utgift som blivit kvar i Allmänt.",
+    "rerunAssignedMultiple": "Du tilldelade en kategori till {count} utgifter som blivit kvar i Allmänt.",
+    "rerunPotentialSingle": "Dina ändringar kan förbättra matchningen för 1 återstående Allmänt-utgift. Kör förslagen igen om du vill ha en ny omgång.",
+    "rerunPotentialMultiple": "Dina ändringar kan förbättra matchningar för {count} återstående Allmänt-utgifter. Kör förslagen igen om du vill ha en ny omgång.",
+    "rerunEligible": "Aktuella för en ny omgång: Allmänt {general} · osäkra automatiska matchningar {uncertain}. Dina korrigeringar kan förbättra de här förslagen.",
+    "rerunNoEligible": "Det finns inga orörda Allmänt-utgifter eller osäkra automatiska matchningar kvar att köra om. Dina korrigeringar ingår ändå i kategorierna du sparar.",
+    "rerunAlreadyUsed": "Dina senaste korrigeringar har redan använts för de här förslagen. Gör en ny korrigering för att köra dem igen.",
+    "highMatch": "Hög matchning",
+    "mediumMatch": "Mellanmatchning",
+    "lowMatch": "Låg matchning",
+    "belowMatchThreshold": "Under matchningströskeln",
+    "refiningTitle": "Förfinar osäkra matchningar",
+    "runLimitSummary": "Den här körningen omfattar 10 000 utgifter. {count} fler Allmänt-utgifter kan kategoriseras i en ny körning efter att du har sparat.",
+    "pageLoading": "Laddar utgifter…",
+    "pageLoadError": "Kunde inte ladda utgifter.",
+    "pageRetry": "Försök igen",
+    "pageCount": "Visar {loaded} av {total} utgifter",
+    "ledgerAmountNotice": "Belopp visas i gruppens valuta.",
+    "viewExpenseDetails": "Visa utgiftsdetaljer",
+    "reviewFilterLabel": "Visa utgifter",
+    "filterAll": "Alla {count}",
+    "filterGeneral": "Allmänt {count}",
+    "improveSuggestions": "Förbättra återstående förslag",
+    "rerunInfoLabel": "Om att förbättra förslag",
+    "preparingNextStage": "Förbereder nästa steg",
+    "rerunProgressTitle": "Uppdaterar förslag",
+    "progressPreparing": "Förbereder utgifter…",
+    "noGeneralRows": "Det finns inga utgifter kvar i Allmänt i den här granskningen.",
+    "discardConfirmationTitle": "Kassera den här kategoriseringskörningen?",
+    "discardConfirmationDescription": "Detta tar bort körningen, dess förslag och val som gjorts av dig eller andra administratörer. Inga utgiftskategorier ändras.",
+    "discardConfirmationCancel": "Behåll körning",
+    "progressCountDescription": "Endast bekräftade kategorier samt mellan- och högmatchningar räknas; Allmänt och svaga matchningar räknas inte.",
+    "systemOneMode": "System One-modell",
+    "systemOneModeDescription": "Använd beslutsmodellen System One för varje utgift och använd den här gruppens kategoriserade utgifter och dina granskade val som ledtrådar. TypeSafe Jev är en sådan modell.",
+    "systemOneUnavailable": "System One är inte tillgängligt. Ordbok och historik är fortfarande tillgängliga.",
+    "systemOneConfidence": "System Ones säkerhet: {confidence}%",
+    "systemOneOptionProbability": "Sannolikhet för System One-alternativet: {probability}%",
+    "overallProgress": "Totala framsteg",
+    "fullPassProcessed": "{processed} av {total} utgifter bearbetade",
+    "stageProcessed": "{processed} av {total} utgifter bearbetade i detta steg",
+    "saveSkipped": "{count} utgifter hoppades över eftersom de ändrades.",
+    "sharedRunNotice": "Den här körningen delas med andra gruppadministratörer. Alla ser samma förslag.",
+    "saveConflictTitle": "{count} utgifter har ändrats sedan den här granskningen startade",
+    "saveConflictDescription": "Någon redigerade dessa utgifter eller ändrade deras kategori utanför den här körningen. Spara de övriga utgifterna, eller redigera kategorierna igen och försök spara en gång till.",
+    "saveConflictMore": "Och {count} till.",
+    "saveOtherExpenses": "Spara övriga utgifter",
+    "receiptTitles": {
+      "freshMarket": "Färskmarknad",
+      "greenGrocer": "Grönsaksbutik",
+      "fruitStand": "Fruktstånd",
+      "cornerBistro": "Hörnbistro",
+      "noodleHouse": "Nudelbar",
+      "cafeLunch": "Cafélunch",
+      "flightTicket": "Flygbiljett",
+      "airlineBaggage": "Flygbagage",
+      "boardingPass": "Boardingkort",
+      "homeSupplies": "Hemartiklar",
+      "hardwareShop": "Järnaffär",
+      "cleaningGoods": "Städvaror",
+      "cinemaTickets": "Biobiljetter",
+      "movieNight": "Filmkväll",
+      "filmFestival": "Filmfestival",
+      "organicMarket": "Ekomarknad",
+      "bakeryRun": "Bageribesök",
+      "sushiBar": "Sushibar",
+      "pizzaNight": "Pizzakväll",
+      "airportLounge": "Flygplatslounge",
+      "extraLegroom": "Extra benutrymme",
+      "laundryDetergent": "Tvättmedel",
+      "storageBoxes": "Förvaringslådor",
+      "popcornCombo": "Popcornmeny",
+      "streamingRental": "Streaminghyra"
+    }
   },
   "Categories": {
     "Entertainment": {
@@ -763,10 +1021,14 @@
         "deleteGroup": "För att ta bort gruppen <target>{name}</target> permanent skriver du dess namn exakt som det visas nedan.",
         "deleteExpense": "För att ta bort utgiften <target>{name}</target> permanent skriver du dess titel exakt som den visas nedan.",
         "deleteRecurringExpense": "För att bekräfta borttagningen av <target>{name}</target> skriver du utgiftens titel exakt som den visas nedan.",
-        "removeParticipant": "För att ta bort <target>{name}</target> från gruppen skriver du namnet exakt som det visas nedan."
+        "removeParticipant": "För att ta bort <target>{name}</target> från gruppen skriver du namnet exakt som det visas nedan.",
+        "deleteAccount": "För att ta bort ditt konto permanent skriver du <target>{name}</target> exakt som det visas nedan."
       },
       "placeholder": "Skriv ”{name}” här",
-      "mismatch": "Stämmer inte. Skriv {name} exakt."
+      "mismatch": "Stämmer inte. Skriv {name} exakt.",
+      "settingsNoteLink": "Ändra i kontoinställningar",
+      "settingsNoteLead": "Vill du slippa skriva?",
+      "settingsNoteTail": "för att använda en vanlig bekräftelsedialog."
     }
   },
   "CompleteProfile": {
@@ -1175,7 +1437,9 @@
       "participants": "{names}",
       "showLess": "Visa mindre"
     },
-    "incomeBadge": "Inkomst"
+    "incomeBadge": "Inkomst",
+    "paidBySingle": "Betald av <strong>{paidBy}</strong> · betald för <paidFor></paidFor>",
+    "paidByMultipleSingle": "Betald av <paidByNames></paidByNames> · betald för <paidFor></paidFor>"
   },
   "ExpenseDocumentsInput": {
     "ErrorToast": {
@@ -1502,7 +1766,8 @@
       "allItemsSplitEdit": "Redigera fördelningen för alla artiklar",
       "allItemsSplitModalTitle": "Fördelning för alla artiklar",
       "remainderAllocationProportional": "Proportionell mot raderna",
-      "remainderProportionalHint": "Fördela beloppet utifrån varje persons radsubtotal. Praktiskt för skatter och dricks."
+      "remainderProportionalHint": "Fördela beloppet utifrån varje persons radsubtotal. Praktiskt för skatter och dricks.",
+      "errorExceedsAmountDetails": "Radernas total ({itemsTotal}) överstiger utgiftsbeloppet med {excess}."
     },
     "leaveItemized": {
       "title": "Byta fördelningssätt?",
@@ -1533,7 +1798,15 @@
       "done": "Klar",
       "yourTime": "din tid",
       "invalidDate": "Ange ett giltigt datum.",
-      "invalidTime": "Ange en giltig tid (HH:mm)."
+      "invalidTime": "Ange en giltig tid (HH:mm).",
+      "hourLabel": "Timme",
+      "minuteLabel": "Minut",
+      "periodLabel": "fm/em",
+      "timeWheelHint": "Scrolla eller tryck för att ställa in tiden. Datumet ändras inte.",
+      "now": "Nu",
+      "morning": "Morgon",
+      "midday": "Middag",
+      "evening": "Kväll"
     },
     "settlementTitle": "Regleringsbetalning",
     "settlementHint": "{category}: Räknas inte som utgift i totaler, statistik eller budgetar. Uppdaterar ändå vem som är skyldig vem.",
@@ -1577,7 +1850,8 @@
       "description": "Ange det slutliga beloppet, inklusive eventuella avgifter.",
       "impliedRate": "Härledd kurs: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Kategoriförslag"
+    "otherSuggestions": "Kategoriförslag",
+    "paidForItemizedEmptyHint": "Koppla personer till rader för att se vars och ens andel."
   },
   "ExpensePreview": {
     "title": "Utgiftsförhandsvisning",
@@ -1781,13 +2055,14 @@
     "hiddenExpenses_other": "{count} dolda utgifter där du inte är inblandad"
   },
   "Footer": {
-    "madeIn": "Gjord med kärlek av open source-communityn ❤️",
+    "madeIn": "Gjord med kärlek av <github>open source-communityn</github> ❤️",
     "legalNavigation": "Juridiska länkar",
     "privacy": "Integritet",
     "terms": "Villkor",
     "imprint": "Projektinformation",
     "sponsor": "Sponsra",
-    "timeLabel": "Tid på dygnet"
+    "timeLabel": "Tid på dygnet",
+    "status": "Status"
   },
   "ForgotPassword": {
     "title": "Återställ ditt lösenord",
@@ -1975,7 +2250,8 @@
             "monthly": "månader",
             "yearly": "år"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Föreslå kategorier för okategoriserade utgifter med System One"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -2354,7 +2630,9 @@
       "description": "Grupper kan nu visa en emoji bredvid sitt namn. Vi såg {emoji} i ”{name}”.",
       "openSettings": "Öppna gruppens inställningar",
       "notNow": "Inte nu"
-    }
+    },
+    "groupTabsHint": "Vill du ändra ordningen på gruppflikarna eller dölja dem du inte använder?",
+    "groupTabsHintLink": "Anpassa flikar i dina kontoinställningar"
   },
   "Header": {
     "signIn": "Logga in",
@@ -2566,7 +2844,7 @@
         "joined_zero": "{count} personer har gått med hittills",
         "retry": "Försök igen"
       },
-      "emailDeliveryDisabled": "E-postutskick är avstängt i den här instansen. Inbjudan skapas ändå och visas när den inbjudna loggar in; använd en inbjudningslänk så att personen har något att öppna."
+      "emailDeliveryDisabled": "E-postutskick är avstängt. Inbjudan skapas ändå och visas när den inbjudna loggar in; använd en inbjudningslänk så att personen har något att öppna."
     },
     "leave": {
       "button": "Lämna grupp",
@@ -2829,7 +3107,7 @@
     "failedDescription": "Vi kunde inte registrera denna enhet. Notiser konfigurerade för e-post fortsätter dit; val med endast push omdirigeras inte.",
     "emailUsage": "Endast notiser konfigurerade för e-post kommer fram tills du aktiverar en enhet. Du kan tillåta notiser i webbläsarens inställningar och försöka igen från Inställningar.",
     "done": "Klar",
-    "emailDeliveryDisabled": "E-postutskick är avstängt i den här instansen, så e-postaviseringar kan inte nå dig. Aktivera push på den här enheten för att fortsätta få uppdateringar."
+    "emailDeliveryDisabled": "E-postutskick är avstängt, så e-postaviseringar kan inte nå dig. Aktivera push på den här enheten för att fortsätta få uppdateringar."
   },
   "ResetPassword": {
     "title": "Välj ett nytt lösenord",
@@ -3367,7 +3645,8 @@
     "hintTapToAddExpense": "Jag är {name} — tryck på mig för att lägga till en utgift.",
     "hintTapToCreateGroup": "Jag är {name} — tryck på mig för att skapa en grupp.",
     "billName": "Bill",
-    "offlineMessage": "Jag kan inte skapa något medan du är offline."
+    "offlineMessage": "Jag kan inte skapa något medan du är offline.",
+    "serverUnreachableMessage": "Jag kan inte nå Spliit-servern just nu — din anslutning ser bra ut, så det här felet ligger hos oss."
   },
   "CreateSettlement": {
     "description": "Granska betalningen innan du registrerar den.",
@@ -3418,7 +3697,18 @@
       "existingPasskeyTitle": "Har du redan registrerat en passnyckel?",
       "existingPasskeyDescription": "Logga in igen med passnyckeln på en av dina registrerade enheter.",
       "passkeySignIn": "Logga in med passnyckel",
-      "passkeySignInError": "Det gick inte att logga in med den här passnyckeln. Försök igen eller använd din inloggningslänk."
+      "passkeySignInError": "Det gick inte att logga in med den här passnyckeln. Försök igen eller använd din inloggningslänk.",
+      "passkeyNameLabel": "Ge den här passnyckeln ett namn (valfritt)",
+      "passkeyNamePlaceholder": "t.ex. MacBook Touch ID",
+      "nameTitle": "Välj ett visningsnamn",
+      "nameDescription": "Visas på din passnyckel och i dina grupper. Du kan ändra det senare.",
+      "nameLabel": "Visningsnamn",
+      "namePlaceholder": "Ditt namn",
+      "nameSave": "Spara och fortsätt",
+      "nameSaving": "Sparar…",
+      "nameRequired": "Ange ett visningsnamn.",
+      "nameTooShort": "Namnet måste vara minst 2 tecken.",
+      "nameError": "Visningsnamnet kunde inte sparas. Försök igen."
     },
     "onboarding": {
       "title": "Spara din inloggningslänk",
@@ -3557,6 +3847,29 @@
         "review": {
           "title": "Granska och importera",
           "detail": "Kontrollera dubletter och bekräfta importen."
+        }
+      }
+    },
+    "categorize": {
+      "title": "Kategorisera utgifter",
+      "description": "Föreslå kategorier för befintliga okategoriserade utgifter med System One. Granska varje ändring innan du sparar.",
+      "start": "Kategorisera utgifter",
+      "steps": {
+        "choose": {
+          "title": "Välj en metod",
+          "detail": "Använd ordbok och historik eller beslutsmodellen System One."
+        },
+        "calibrate": {
+          "title": "Granska små urval",
+          "detail": "Korrigera förslag så att nästa omgång lär sig din grupps kategorier."
+        },
+        "review": {
+          "title": "Granska varje utgift",
+          "detail": "Allmänt-utgifter visas först i den fullständiga tabellen."
+        },
+        "save": {
+          "title": "Spara kategorier",
+          "detail": "Utgifter ändras först när du bekräftar den slutliga granskningen."
         }
       }
     }
@@ -4100,7 +4413,8 @@
       "valuesRecomputedTitle": "Värden omräknade",
       "viewExpenses": "Visa utgifter",
       "waitDuplicate": "Vänta tills dubblettkontrollen är klar innan du importerar.",
-      "invalidRowTitle": "Ogiltig importrad"
+      "invalidRowTitle": "Ogiltig importrad",
+      "categorizeWithSystemOne": "Föreslå kategorier för okategoriserade utgifter med System One"
     }
   },
   "Sponsor": {
@@ -4255,5 +4569,26 @@
     "expenseMissing": "Den här utgiften finns inte i enhetens nedladdning. Anslut för att se nyare/äldre utgifter.",
     "groupMissing": "Den här gruppen har inte laddats ned klart.",
     "balancesStale": "Saldon kan vara inaktuella."
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit är inte tillgängligt",
+    "description": "Vi kan inte nå Spliit-servern just nu. Din anslutning ser bra ut — försök igen om en stund.",
+    "retry": "Försök igen"
+  },
+  "ApiStatusBanner": {
+    "message": "Det går inte att nå Spliit just nu. Din anslutning ser bra ut — problemet ligger hos oss.",
+    "statusLink": "Kontrollera status"
+  },
+  "AccountDeletionBanner": {
+    "scheduled": "Kontot ska raderas {date}.",
+    "review": "Granska eller avbryt raderingen",
+    "executing": "Kontoraderingen har börjat.",
+    "viewStatus": "Visa raderingsstatus"
+  },
+  "Updates": {
+    "title": "Uppdateringar",
+    "latest": "Nytt",
+    "viewAll": "Visa alla uppdateringar",
+    "dismiss": "Okej"
   }
 }

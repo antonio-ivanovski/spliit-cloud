@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
+import { globalExpensesSearchSchema } from '@/router/schemas'
 import { render, screen } from '@/test/test-utils'
 
 const mocks = vi.hoisted(() => ({
@@ -199,6 +200,22 @@ describe('GlobalExpensesContent', () => {
 })
 
 describe('global expense filter URL mapping', () => {
+  it('keeps boolean and amount filters after parsing a preview URL', () => {
+    const search = globalExpensesSearchSchema.parse({
+      showSettlements: false,
+      includeArchived: true,
+      minAmount: 15.5,
+      expenseId: 'expense-1',
+      expenseGroupId: 'group-1',
+    })
+
+    expect(readFilters(search)).toMatchObject({
+      showSettlements: false,
+      includeArchived: true,
+      minAmount: '15.5',
+    })
+  })
+
   it('reads the archived opt-in from search params', () => {
     expect(readFilters({}).includeArchived).toBe(false)
     expect(readFilters({ includeArchived: 'true' }).includeArchived).toBe(true)

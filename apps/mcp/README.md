@@ -64,6 +64,10 @@ between ChatGPT and Claude.
 - `MCP_PUBLIC_URL`: public origin of this service, for example `https://mcp.example.com`
 - `MCP_API_URL`: public Spliit API origin used by the MCP server
 - `MCP_WEB_URL`: public Spliit web origin used by expense links
+- `OPENAI_APPS_CHALLENGE`: OpenAI plugin domain-verification token (optional).
+  The Platform dashboard issues a fresh token per submission; set it before
+  submitting and redeploy. When empty, the previous submission's token is
+  served.
 
 These three variables are required by the MCP process. It validates them before
 constructing the server or binding its port, so `dev:mcp` and production `start`

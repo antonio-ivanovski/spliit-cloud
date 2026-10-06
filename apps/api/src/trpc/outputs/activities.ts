@@ -7,6 +7,14 @@ import {
   activityTypeSchema,
 } from '@spliit/domain/activities'
 
+const activityExpenseShareSchema = z.object({
+  ledgerParticipant: z.object({
+    id: z.string(),
+    account: z.object({ id: z.string() }).nullable(),
+  }),
+  shares: z.number().int(),
+})
+
 const activityExpenseSchema = z.object({
   id: z.string(),
   title: z.string(),
@@ -15,6 +23,12 @@ const activityExpenseSchema = z.object({
   categoryId: z.string(),
   splitMode: z.string(),
   paidBySplitMode: z.string(),
+  originalAmount: z.number().int().nullable(),
+  originalCurrency: z.string().nullable(),
+  conversionRate: z.number().nullable(),
+  conversionSource: z.string().nullable(),
+  paidByList: z.array(activityExpenseShareSchema),
+  paidFor: z.array(activityExpenseShareSchema),
 })
 
 export const activityListItemSchema = z.object({

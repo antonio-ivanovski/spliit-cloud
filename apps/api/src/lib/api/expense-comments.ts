@@ -3,11 +3,9 @@ import { TRPCError } from '@trpc/server'
 import { prisma, type Prisma } from '@spliit/db'
 import type { SpliitBoss } from '@spliit/jobs'
 
-import {
-  buildExpenseCommentActivityData,
-  logActivity,
-  planNotificationForActivity,
-} from './activities'
+import { planActivityNotificationDeliveries } from '../notifications/delivery-planner'
+import { getDefaultActivityNotificationDispatcher } from '../notifications/dispatcher'
+import { buildExpenseCommentActivityData } from './activities'
 import { getApiBoss } from './boss'
 import { randomId } from './shared'
 
@@ -111,25 +109,38 @@ export async function createExpenseComment(args: {
       authorName: args.authorName,
       excerpt: args.text,
     })
-    const activity = await logActivity(
-      args.groupId,
-      {
-        type: 'EXPENSE_COMMENTED',
-        actor: { type: 'ACCOUNT', id: args.authorAccountId },
-        subject: { type: 'EXPENSE', id: expense.id },
-        data: activityData,
-        expenseCommentId: comment.id,
-      },
+    // Comments notify interested accounts but never write an activity feed
+    // row: there is no auditable state change worth keeping, and a feed row
+    // would orphan on comment deletion. The synthetic event (no Activity row)
+    // still fans out through the regular EXPENSE_COMMENT notification
+    // pipeline with dedupe keyed by the comment id.
+    const notificationEvent = {
+      activityId: null,
+      customEventKey: `comment:${comment.id}`,
+      type: 'EXPENSE_COMMENTED',
+      groupId: args.groupId,
+      actor: { type: 'ACCOUNT', id: args.authorAccountId },
+      subject: { type: 'EXPENSE', id: expense.id },
+      data: activityData,
+      occurredAt: comment.createdAt,
+    } as const
+    const deliveryIds = await planActivityNotificationDeliveries({
+      event: notificationEvent,
       tx,
-    )
-    await planNotificationForActivity(tx, activity, {}, { boss })
+      boss,
+    })
+    if (deliveryIds.length > 0) {
+      await getDefaultActivityNotificationDispatcher().dispatch(
+        notificationEvent,
+      )
+    }
     const { authorAccount, ...commentFields } = comment
     return {
       comment: {
         ...commentFields,
         authorImage: authorAccount?.image ?? null,
       },
-      activity,
+      activity: null,
       activityData,
     }
   }

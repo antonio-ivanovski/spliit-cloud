@@ -6,6 +6,10 @@ import { splitPresetSchema } from '@spliit/domain'
 import type { SavedSplitPreset } from '@spliit/domain'
 
 import {
+  buildGroupActivityData,
+  logActivity,
+} from '../../../../lib/api/activities'
+import {
   CREATE_OPERATIONS,
   createRequestIdSchema,
   runIdempotentCreate,
@@ -193,6 +197,51 @@ function defaultChoice(
   return { mode, presetId: mode === 'PRESET' ? presetId : null }
 }
 
+/**
+ * Feed-only audit row for shared-library changes. Personal presets and
+ * per-account defaults never log: they are invisible to other members and would
+ * turn the group feed into preference noise.
+ */
+async function logSharedSplitPresetActivity(
+  tx: Prisma.TransactionClient,
+  args: {
+    groupId: string
+    accountId: string
+    summary: string
+    before: string | null
+    after: string | null
+  },
+) {
+  await logActivity(
+    args.groupId,
+    {
+      type: 'GROUP_UPDATED',
+      actor: { type: 'ACCOUNT', id: args.accountId },
+      subject: { type: 'GROUP', id: args.groupId },
+      data: buildGroupActivityData({
+        summary: args.summary,
+        changedFields: ['splitPresets'],
+        changes: [
+          { field: 'splitPresets', before: args.before, after: args.after },
+        ],
+      }),
+    },
+    tx,
+  )
+}
+
+async function splitPresetName(
+  tx: Prisma.TransactionClient,
+  presetId: string | null,
+): Promise<string | null> {
+  if (!presetId) return null
+  const preset = await tx.splitPreset.findUnique({
+    where: { id: presetId },
+    select: { name: true },
+  })
+  return preset?.name ?? null
+}
+
 async function readPreference(accountId: string, groupId: string) {
   return prisma.accountGroupPreference.findUnique({
     where: { accountId_groupId: { accountId, groupId } },
@@ -363,6 +412,15 @@ export const createSplitPresetProcedure = protectedProcedure
             },
             select: presetSelect,
           })
+          if (input.scope === 'SHARED') {
+            await logSharedSplitPresetActivity(tx, {
+              groupId: context.group.id,
+              accountId: ctx.auth.user.id,
+              summary: 'splitPresets:created',
+              before: null,
+              after: normalizedName.name,
+            })
+          }
           return { preset: mapPreset(preset) }
         },
       })
@@ -406,7 +464,7 @@ export const updateSplitPresetProcedure = protectedProcedure
             groupId: context.group.id,
             ...scopeWhere(input.scope, ctx.auth.user.id),
           },
-          select: { id: true, updatedAt: true, target: true },
+          select: { id: true, updatedAt: true, target: true, name: true },
         })
         if (!existing) {
           throw new TRPCError({
@@ -516,6 +574,17 @@ export const updateSplitPresetProcedure = protectedProcedure
             message: 'The split preset changed; reload and try again',
           })
         }
+        if (input.scope === 'SHARED' || nextScope === 'SHARED') {
+          const before = input.scope === 'SHARED' ? existing.name : null
+          const after = nextScope === 'SHARED' ? normalizedName.name : null
+          await logSharedSplitPresetActivity(tx, {
+            groupId: context.group.id,
+            accountId: ctx.auth.user.id,
+            summary: 'splitPresets:updated',
+            before,
+            after,
+          })
+        }
         return updated
       })
       return { preset: mapPreset(preset) }
@@ -543,7 +612,7 @@ export const deleteSplitPresetProcedure = protectedProcedure
           groupId: context.group.id,
           ...scopeWhere(input.scope, ctx.auth.user.id),
         },
-        select: { id: true, target: true },
+        select: { id: true, target: true, name: true },
       })
       if (!existing) {
         throw new TRPCError({
@@ -557,6 +626,15 @@ export const deleteSplitPresetProcedure = protectedProcedure
         tx,
       )
       await tx.splitPreset.delete({ where: { id: existing.id } })
+      if (input.scope === 'SHARED') {
+        await logSharedSplitPresetActivity(tx, {
+          groupId: context.group.id,
+          accountId: ctx.auth.user.id,
+          summary: 'splitPresets:deleted',
+          before: existing.name,
+          after: null,
+        })
+      }
     })
     return { deleted: true as const }
   })
@@ -655,6 +733,10 @@ export const setGroupDefaultProcedure = protectedProcedure
           }
         }
       }
+      const previousDefaultId =
+        input.target === 'PAID_BY'
+          ? (context.group.defaultPaidByPresetId ?? null)
+          : (context.group.defaultPaidForPresetId ?? null)
       await tx.group.update({
         where: { id: context.group.id },
         data:
@@ -662,6 +744,15 @@ export const setGroupDefaultProcedure = protectedProcedure
             ? { defaultPaidByPresetId: input.presetId }
             : { defaultPaidForPresetId: input.presetId },
       })
+      if (previousDefaultId !== input.presetId) {
+        await logSharedSplitPresetActivity(tx, {
+          groupId: context.group.id,
+          accountId: ctx.auth.user.id,
+          summary: 'splitPresets:default-changed',
+          before: await splitPresetName(tx, previousDefaultId),
+          after: await splitPresetName(tx, input.presetId),
+        })
+      }
     })
     const refreshed = await loadGroupMutationContext({
       groupId: input.groupId,

@@ -135,7 +135,11 @@ describe('EmailDeliverySenderImpl', () => {
     expect(message.subject).toContain('Trip')
     expect(message.subject).not.toContain('Bob')
     expect(message.html).toContain('Dinner')
-    expect(message.headers?.['Message-ID']).toBe('<delivery-1@spliit.app>')
+    // Message-ID is platform-controlled: Cloudflare rejects the whole
+    // request when callers set it. Delivery correlation travels in an
+    // allowed X- header instead.
+    expect(message.headers?.['Message-ID']).toBeUndefined()
+    expect(message.headers?.['X-Spliit-Delivery-Id']).toBe('delivery-1')
     expect(buildEmailUnsubscribeMetadataMock).not.toHaveBeenCalled()
     expect(allowUserGeneratedEmailMock).not.toHaveBeenCalled()
     expect(message.headers?.['List-Unsubscribe']).toBeUndefined()
@@ -173,6 +177,119 @@ describe('EmailDeliverySenderImpl', () => {
     const message = sendEmailMock.mock.calls[0][0]
     expect(message.html).toContain('1.234 expenses')
     expect(message.html).toContain('123,45')
+  })
+
+  it('renders the recipient share line when the snapshot carries personal', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({
+      email: 'bob@example.com',
+      emailVerified: true,
+    } as never)
+    const snapshot = deliverySnapshotV1Schema.parse({
+      ...buildExpenseCreatedSnapshot(),
+      personal: {
+        paid: 0,
+        owed: 1500,
+        currencyCode: 'EUR',
+        isSettlement: false,
+      },
+    })
+
+    await emailSender.send({
+      deliveryId: 'delivery-personal',
+      snapshot,
+      recipientAccountId: 'acct-bob',
+    })
+
+    const message = sendEmailMock.mock.calls[0][0]
+    expect(message.text).toContain('You owe')
+    expect(message.html).toContain('You owe')
+  })
+
+  it('renders the recipient share line for expense_updated snapshots', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({
+      email: 'bob@example.com',
+      emailVerified: true,
+    } as never)
+    const snapshot = deliverySnapshotV1Schema.parse({
+      version: 1,
+      kind: 'expense_updated',
+      category: NotificationCategory.EXPENSE_CHANGED,
+      occurredAt: '2026-07-02T12:00:00Z',
+      actor: { id: 'acct-alice', name: 'Alice' },
+      recipient: { accountId: 'acct-bob', displayName: 'Bob' },
+      group: { id: 'grp-1', name: 'Trip', type: 'GROUP' },
+      expense: {
+        id: 'exp-1',
+        description: 'Dinner',
+        amount: 5000,
+        currencyCode: 'EUR',
+      },
+      link: 'http://localhost:3000/groups/grp-1/expenses/exp-1',
+      changedFields: ['amount'],
+      personal: {
+        paid: 0,
+        owed: 2000,
+        currencyCode: 'EUR',
+        isSettlement: false,
+      },
+    })
+
+    await emailSender.send({
+      deliveryId: 'delivery-personal-updated',
+      snapshot,
+      recipientAccountId: 'acct-bob',
+    })
+
+    const message = sendEmailMock.mock.calls[0][0]
+    expect(message.text).toContain('You owe')
+    expect(message.html).toContain('You owe')
+  })
+
+  it('renders lent or borrowed for settlement shares', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({
+      email: 'bob@example.com',
+      emailVerified: true,
+    } as never)
+    const snapshot = deliverySnapshotV1Schema.parse({
+      ...buildExpenseCreatedSnapshot(),
+      personal: {
+        paid: 0,
+        owed: 2000,
+        currencyCode: 'EUR',
+        isSettlement: true,
+      },
+    })
+
+    await emailSender.send({
+      deliveryId: 'delivery-personal-settlement',
+      snapshot,
+      recipientAccountId: 'acct-bob',
+    })
+
+    const message = sendEmailMock.mock.calls[0][0]
+    expect(message.text).toContain('You borrowed')
+    expect(message.html).toContain('You borrowed')
+  })
+
+  it('addresses the actor as You when they are the recipient', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({
+      email: 'alice@example.com',
+      emailVerified: true,
+    } as never)
+    const snapshot = deliverySnapshotV1Schema.parse({
+      ...buildExpenseCreatedSnapshot(),
+      actor: { id: 'acct-alice', name: 'Alice' },
+      recipient: { accountId: 'acct-alice', displayName: 'Alice' },
+    })
+
+    await emailSender.send({
+      deliveryId: 'delivery-self',
+      snapshot,
+      recipientAccountId: 'acct-alice',
+    })
+
+    const message = sendEmailMock.mock.calls[0][0]
+    expect(message.subject).toContain('You added "Dinner"')
   })
 
   it('throws PermanentDeliveryError when the account is missing', async () => {
@@ -326,6 +443,103 @@ describe('EmailDeliverySenderImpl', () => {
     await expect(
       emailSender.send({
         deliveryId: 'delivery-6',
+        snapshot: buildExpenseCreatedSnapshot(),
+        recipientAccountId: 'acct-bob',
+      }),
+    ).rejects.toBeInstanceOf(TransientDeliveryError)
+  })
+
+  it('classifies Cloudflare REST 4xx as PermanentDeliveryError', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({
+      email: 'bob@example.com',
+      emailVerified: true,
+    } as never)
+    sendEmailMock.mockRejectedValueOnce(
+      Object.assign(new Error('Cloudflare Email Sending failed (HTTP 403)'), {
+        code: 'CF_HTTP_403',
+        responseCode: 403,
+        provider: 'cloudflare-email',
+      }),
+    )
+
+    const error = await emailSender
+      .send({
+        deliveryId: 'delivery-cf-403',
+        snapshot: buildExpenseCreatedSnapshot(),
+        recipientAccountId: 'acct-bob',
+      })
+      .catch((err: unknown) => err)
+    expect(error).toBeInstanceOf(PermanentDeliveryError)
+    if (error instanceof PermanentDeliveryError) {
+      expect(error.providerStatus).toBe(403)
+    }
+  })
+
+  it('classifies dropped recipients as PermanentDeliveryError', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({
+      email: 'bob@example.com',
+      emailVerified: true,
+    } as never)
+    sendEmailMock.mockRejectedValueOnce(
+      Object.assign(new Error('Cloudflare Email Sending dropped recipient'), {
+        code: 'CF_PERMANENT_BOUNCE',
+        provider: 'cloudflare-email',
+      }),
+    )
+
+    const error = await emailSender
+      .send({
+        deliveryId: 'delivery-cf-bounce',
+        snapshot: buildExpenseCreatedSnapshot(),
+        recipientAccountId: 'acct-bob',
+      })
+      .catch((err: unknown) => err)
+    expect(error).toBeInstanceOf(PermanentDeliveryError)
+  })
+
+  it.each([429, 500, 503])(
+    'classifies Cloudflare REST %i as TransientDeliveryError',
+    async (status) => {
+      prismaMock.user.findUnique.mockResolvedValue({
+        email: 'bob@example.com',
+        emailVerified: true,
+      } as never)
+      sendEmailMock.mockRejectedValueOnce(
+        Object.assign(
+          new Error(`Cloudflare Email Sending failed (HTTP ${status})`),
+          {
+            code: `CF_HTTP_${status}`,
+            responseCode: status,
+            provider: 'cloudflare-email',
+          },
+        ),
+      )
+
+      await expect(
+        emailSender.send({
+          deliveryId: `delivery-cf-${status}`,
+          snapshot: buildExpenseCreatedSnapshot(),
+          recipientAccountId: 'acct-bob',
+        }),
+      ).rejects.toBeInstanceOf(TransientDeliveryError)
+    },
+  )
+
+  it('classifies Cloudflare REST network failures as TransientDeliveryError', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({
+      email: 'bob@example.com',
+      emailVerified: true,
+    } as never)
+    sendEmailMock.mockRejectedValueOnce(
+      Object.assign(new Error('Cloudflare Email Sending failed'), {
+        code: 'CF_NETWORK',
+        provider: 'cloudflare-email',
+      }),
+    )
+
+    await expect(
+      emailSender.send({
+        deliveryId: 'delivery-cf-network',
         snapshot: buildExpenseCreatedSnapshot(),
         recipientAccountId: 'acct-bob',
       }),

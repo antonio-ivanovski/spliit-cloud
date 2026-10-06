@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { AuthPanel } from '@/components/auth/auth-panel'
 import { resetConnectivityForTests } from '@/lib/connectivity'
-import { render, screen } from '@/test/test-utils'
+import { fireEvent, render, screen } from '@/test/test-utils'
 
 // ── Hoisted mocks ───────────────────────────────────────────────────────
 
@@ -14,6 +14,7 @@ const {
   mockSignInAnonymous,
   mockSignInPasskey,
   mockAddPasskey,
+  mockRenamePasskey,
   mockMarkPasskeyLastUsed,
   mockNotifyPasskeyChanged,
   mockRecoveryStatus,
@@ -29,6 +30,7 @@ const {
   mockGetLastUsedLoginMethod,
   mockReplaceBrowserLocation,
   mockPasskeySupported,
+  mockUpdateProfile,
 } = vi.hoisted(() => ({
   mockSignInEmail: vi.fn(),
   mockSignUpEmail: vi.fn(),
@@ -37,6 +39,7 @@ const {
   mockSignInAnonymous: vi.fn(),
   mockSignInPasskey: vi.fn(),
   mockAddPasskey: vi.fn(),
+  mockRenamePasskey: vi.fn(),
   mockMarkPasskeyLastUsed: vi.fn(),
   mockNotifyPasskeyChanged: vi.fn(),
   mockRecoveryStatus: vi.fn(),
@@ -64,6 +67,7 @@ const {
   mockGetLastUsedLoginMethod: vi.fn(),
   mockReplaceBrowserLocation: vi.fn(),
   mockPasskeySupported: { value: false },
+  mockUpdateProfile: vi.fn(),
   mockSearch: {
     redirect: undefined as string | undefined,
     mode: undefined as 'sign-in' | 'sign-up' | undefined,
@@ -97,6 +101,7 @@ vi.mock('@/lib/passkey', () => ({
   addPasskey: mockAddPasskey,
   markPasskeyAsLastUsedLoginMethod: mockMarkPasskeyLastUsed,
   notifyPasskeyChanged: mockNotifyPasskeyChanged,
+  renamePasskey: mockRenamePasskey,
 }))
 
 vi.mock('@/lib/deployment-config', () => ({
@@ -105,6 +110,18 @@ vi.mock('@/lib/deployment-config', () => ({
 
 vi.mock('@/lib/browser-navigation', () => ({
   replaceBrowserLocation: mockReplaceBrowserLocation,
+}))
+
+vi.mock('@/trpc/client', () => ({
+  trpc: {
+    account: {
+      updateProfile: {
+        useMutation: () => ({
+          mutateAsync: mockUpdateProfile,
+        }),
+      },
+    },
+  },
 }))
 
 vi.mock('@/lib/anonymous-recovery', () => ({
@@ -188,6 +205,7 @@ describe('AuthPanel', () => {
     mockSearch.invitation = undefined
     mockPasskeySupported.value = false
     mockNotifyPasskeyChanged.mockResolvedValue(undefined)
+    mockRenamePasskey.mockResolvedValue(undefined)
     mockRecoveryStatus.mockResolvedValue({
       isAnonymous: true,
       hasRecoveryKey: false,
@@ -366,7 +384,7 @@ describe('AuthPanel', () => {
   it('carries a group invite through magic-link signup', async () => {
     mockDeploymentConfig.signupMode = 'invite_only'
     mockDeploymentConfig.allowUninvitedSignup = false
-    mockSearch.redirect = '/groups/grp-1?invite=magic-invite-token'
+    mockSearch.redirect = `/?redirect=${encodeURIComponent('/groups/grp-1?invite=magic-invite-token&viewKey=view-key#members')}`
     mockSignInMagicLink.mockResolvedValue({ error: null })
     const { user } = render(<AuthPanel />)
 
@@ -381,6 +399,9 @@ describe('AuthPanel', () => {
       },
       { headers: { 'X-Spliit-Invite-Token': 'magic-invite-token' } },
     )
+    expect(
+      await screen.findByText('Check your inbox for a sign-in link.'),
+    ).toBeInTheDocument()
   })
 
   it('carries a group invite through password signup', async () => {
@@ -546,7 +567,7 @@ describe('AuthPanel', () => {
     expect(screen.queryByText('Create an account')).not.toBeInTheDocument()
     expect(
       screen.getByText(
-        'This instance is invite-only. Use an invitation link or ask someone to invite you to a group.',
+        'Sign-ups are invite-only. Use an invitation link or ask someone to invite you to a group.',
       ),
     ).toBeInTheDocument()
   })
@@ -791,7 +812,7 @@ describe('AuthPanel', () => {
 
     expect(
       screen.getByText(
-        'Sign-in with email is disabled on this instance. Please use single sign-on.',
+        'Sign-in with email is disabled. Please use single sign-on.',
       ),
     ).toBeInTheDocument()
     expect(screen.queryByLabelText('Email')).not.toBeInTheDocument()
@@ -811,12 +832,12 @@ describe('AuthPanel', () => {
 
     expect(
       screen.getByText(
-        'Sign-in with email is disabled on this instance. Please use single sign-on.',
+        'Sign-in with email is disabled. Please use single sign-on.',
       ),
     ).toBeInTheDocument()
     expect(
       screen.getByText(
-        'This instance is invite-only. Use an invitation link or ask someone to invite you to a group.',
+        'Sign-ups are invite-only. Use an invitation link or ask someone to invite you to a group.',
       ),
     ).toBeInTheDocument()
   })
@@ -871,27 +892,124 @@ describe('AuthPanel', () => {
 
   // ── Anonymous signup safeguard choice ───────────────────────────────
 
+  // Name-first: after anonymous creation the dialog collects the display
+  // name before offering the safeguard choice, so a passkey registered
+  // there already carries the real name.
+  async function createAnonymousAccount(
+    user: ReturnType<typeof render>['user'],
+  ) {
+    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
+    await user.click(
+      screen.getByRole('button', { name: 'Create anonymous account' }),
+    )
+    expect(await screen.findByText('Choose a display name')).toBeInTheDocument()
+    expect(
+      screen.queryByText('Choose your backup sign-in'),
+    ).not.toBeInTheDocument()
+  }
+
+  async function saveDialogDisplayName(
+    user: ReturnType<typeof render>['user'],
+    name = 'New Guest',
+  ) {
+    await user.type(screen.getByLabelText('Display name'), name)
+    await user.click(screen.getByRole('button', { name: 'Save and continue' }))
+    expect(mockUpdateProfile).toHaveBeenCalledWith({ name })
+    expect(mockGetSession).toHaveBeenCalledWith({
+      query: { disableCookieCache: true },
+    })
+    expect(
+      await screen.findByText('Choose your backup sign-in'),
+    ).toBeInTheDocument()
+  }
+
+  it('collects the display name before the choice after anonymous creation', async () => {
+    mockDeploymentConfig.enableAnonymousAuth = true
+    mockDeploymentConfig.enablePasskeyAuth = true
+    mockPasskeySupported.value = true
+    mockSignInAnonymous.mockResolvedValue({ data: {}, error: null })
+    mockUpdateProfile.mockResolvedValue({ account: { name: 'New Guest' } })
+    const { user } = render(<AuthPanel redirectTo="/groups" />)
+
+    await createAnonymousAccount(user)
+    await saveDialogDisplayName(user)
+    expect(mockReplaceBrowserLocation).not.toHaveBeenCalled()
+  })
+
+  it('rejects a too-short display name in the dialog', async () => {
+    mockDeploymentConfig.enableAnonymousAuth = true
+    mockDeploymentConfig.enablePasskeyAuth = true
+    mockPasskeySupported.value = true
+    mockSignInAnonymous.mockResolvedValue({ data: {}, error: null })
+    const { user } = render(<AuthPanel redirectTo="/groups" />)
+
+    await createAnonymousAccount(user)
+    await user.type(screen.getByLabelText('Display name'), 'A')
+    await user.click(screen.getByRole('button', { name: 'Save and continue' }))
+
+    expect(
+      await screen.findByText('Name must be at least 2 characters.'),
+    ).toBeInTheDocument()
+    expect(mockUpdateProfile).not.toHaveBeenCalled()
+    expect(
+      screen.queryByText('Choose your backup sign-in'),
+    ).not.toBeInTheDocument()
+  })
+
+  it('shows the offline state on the dialog name step when offline', async () => {
+    mockDeploymentConfig.enableAnonymousAuth = true
+    mockDeploymentConfig.enablePasskeyAuth = true
+    mockPasskeySupported.value = true
+    mockSignInAnonymous.mockResolvedValue({ data: {}, error: null })
+    const { user } = render(<AuthPanel redirectTo="/groups" />)
+
+    await createAnonymousAccount(user)
+
+    // Connectivity drops mid-flow: the name form (a network mutation)
+    // yields to the offline state instead of a dead form…
+    fireEvent(window, new Event('offline'))
+    expect(await screen.findByTestId('offline-empty-state')).toBeInTheDocument()
+    expect(screen.queryByLabelText('Display name')).not.toBeInTheDocument()
+    expect(mockUpdateProfile).not.toHaveBeenCalled()
+
+    // …and the form returns with connectivity.
+    fireEvent(window, new Event('online'))
+    expect(await screen.findByLabelText('Display name')).toBeInTheDocument()
+  })
+
+  it('stays on the name step when saving the display name fails', async () => {
+    mockDeploymentConfig.enableAnonymousAuth = true
+    mockDeploymentConfig.enablePasskeyAuth = true
+    mockPasskeySupported.value = true
+    mockSignInAnonymous.mockResolvedValue({ data: {}, error: null })
+    mockUpdateProfile.mockRejectedValue(new Error('offline'))
+    const { user } = render(<AuthPanel redirectTo="/groups" />)
+
+    await createAnonymousAccount(user)
+    await user.type(screen.getByLabelText('Display name'), 'New Guest')
+    await user.click(screen.getByRole('button', { name: 'Save and continue' }))
+
+    expect(
+      await screen.findByText(
+        'Could not save the display name. Please try again.',
+      ),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByText('Choose your backup sign-in'),
+    ).not.toBeInTheDocument()
+  })
+
   it('offers link-first choice after anonymous creation when supported', async () => {
     mockDeploymentConfig.enableAnonymousAuth = true
     mockDeploymentConfig.enablePasskeyAuth = true
     mockPasskeySupported.value = true
     mockSignInAnonymous.mockResolvedValue({ data: {}, error: null })
+    mockUpdateProfile.mockResolvedValue({ account: { name: 'New Guest' } })
     mockAddPasskey.mockResolvedValue({ id: 'pk-1' })
     const { user } = render(<AuthPanel redirectTo="/groups" />)
 
-    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
-    expect(
-      screen.getByText(/add a passkey right after creation/i),
-    ).toBeInTheDocument()
-    await user.click(
-      screen.getByRole('button', { name: 'Create anonymous account' }),
-    )
-
-    // Choice step instead of an immediate redirect: radio cards, recovery
-    // link pre-selected with its setup shown below the group, no skip.
-    expect(
-      await screen.findByText('Choose your backup sign-in'),
-    ).toBeInTheDocument()
+    await createAnonymousAccount(user)
+    await saveDialogDisplayName(user)
     expect(
       screen.getByRole('radio', { name: /Save a recovery link/ }),
     ).toBeInTheDocument()
@@ -906,9 +1024,17 @@ describe('AuthPanel', () => {
     await user.click(
       screen.getByRole('radio', { name: /Use a passkey instead/ }),
     )
+    // Optional credential name travels with the registration.
+    await user.type(
+      screen.getByLabelText('Name this passkey (optional)'),
+      'My iPhone',
+    )
     await user.click(screen.getByRole('button', { name: 'Add a passkey' }))
 
-    expect(mockAddPasskey).toHaveBeenCalled()
+    // The ceremony always carries the display name; the typed label only
+    // renames the Spliit-side nickname afterwards.
+    expect(mockAddPasskey).toHaveBeenCalledWith('New Guest')
+    expect(mockRenamePasskey).toHaveBeenCalledWith('pk-1', 'My iPhone')
     expect(mockNotifyPasskeyChanged).toHaveBeenCalled()
     // Passkey-onboarded: the login screen hints at the passkey next time.
     expect(mockMarkPasskeyLastUsed).toHaveBeenCalled()
@@ -920,20 +1046,41 @@ describe('AuthPanel', () => {
     )
   })
 
+  it('skips the rename when the passkey label is left empty', async () => {
+    mockDeploymentConfig.enableAnonymousAuth = true
+    mockDeploymentConfig.enablePasskeyAuth = true
+    mockPasskeySupported.value = true
+    mockSignInAnonymous.mockResolvedValue({ data: {}, error: null })
+    mockUpdateProfile.mockResolvedValue({ account: { name: 'New Guest' } })
+    mockAddPasskey.mockResolvedValue({ id: 'pk-1' })
+    const { user } = render(<AuthPanel redirectTo="/groups" />)
+
+    await createAnonymousAccount(user)
+    await saveDialogDisplayName(user)
+
+    await user.click(
+      screen.getByRole('radio', { name: /Use a passkey instead/ }),
+    )
+    await user.click(screen.getByRole('button', { name: 'Add a passkey' }))
+
+    // Ceremony still carries the display name; nothing to rename.
+    expect(mockAddPasskey).toHaveBeenCalledWith('New Guest')
+    expect(mockRenamePasskey).not.toHaveBeenCalled()
+    expect(mockReplaceBrowserLocation).toHaveBeenCalledWith(
+      '/auth/complete-profile?redirect=%2Fgroups',
+    )
+  })
+
   it('saves a recovery link from the choice step', async () => {
     mockDeploymentConfig.enableAnonymousAuth = true
     mockDeploymentConfig.enablePasskeyAuth = true
     mockPasskeySupported.value = true
     mockSignInAnonymous.mockResolvedValue({ data: {}, error: null })
+    mockUpdateProfile.mockResolvedValue({ account: { name: 'New Guest' } })
     const { user } = render(<AuthPanel redirectTo="/groups" />)
 
-    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
-    await user.click(
-      screen.getByRole('button', { name: 'Create anonymous account' }),
-    )
-    expect(
-      await screen.findByText('Choose your backup sign-in'),
-    ).toBeInTheDocument()
+    await createAnonymousAccount(user)
+    await saveDialogDisplayName(user)
 
     // Link pre-selected: its setup shows below the group, no extra click.
     // The dialog header owns the title, so the onboarding hides its
@@ -959,12 +1106,11 @@ describe('AuthPanel', () => {
     mockDeploymentConfig.enablePasskeyAuth = true
     mockPasskeySupported.value = true
     mockSignInAnonymous.mockResolvedValue({ data: {}, error: null })
+    mockUpdateProfile.mockResolvedValue({ account: { name: 'New Guest' } })
     const { user } = render(<AuthPanel redirectTo="/groups" />)
 
-    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
-    await user.click(
-      screen.getByRole('button', { name: 'Create anonymous account' }),
-    )
+    await createAnonymousAccount(user)
+    await saveDialogDisplayName(user)
     expect(
       await screen.findByRole('button', { name: 'Start using Spliit' }),
     ).toBeInTheDocument()
@@ -1008,16 +1154,12 @@ describe('AuthPanel', () => {
     mockDeploymentConfig.enablePasskeyAuth = true
     mockPasskeySupported.value = true
     mockSignInAnonymous.mockResolvedValue({ data: {}, error: null })
+    mockUpdateProfile.mockResolvedValue({ account: { name: 'New Guest' } })
     mockAddPasskey.mockRejectedValue(new Error('PASSKEY_ADD_FAILED'))
     const { user } = render(<AuthPanel redirectTo="/groups" />)
 
-    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
-    await user.click(
-      screen.getByRole('button', { name: 'Create anonymous account' }),
-    )
-    expect(
-      await screen.findByText('Choose your backup sign-in'),
-    ).toBeInTheDocument()
+    await createAnonymousAccount(user)
+    await saveDialogDisplayName(user)
 
     await user.click(
       screen.getByRole('radio', { name: /Use a passkey instead/ }),
@@ -1148,5 +1290,21 @@ describe('AuthPanel', () => {
     expect(
       screen.getByRole('button', { name: 'Sign in to anonymous account' }),
     ).toBeInTheDocument()
+  })
+
+  it('defaults to the password tab when defaultEmailVariant is password', () => {
+    render(<AuthPanel defaultEmailVariant="password" />)
+
+    expect(screen.getByLabelText('Password')).toBeInTheDocument()
+  })
+
+  it('hides the anonymous option when hideAnonymous is true', () => {
+    mockDeploymentConfig.enableAnonymousAuth = true
+
+    render(<AuthPanel hideAnonymous />)
+
+    expect(
+      screen.queryByRole('button', { name: /Anonymous/ }),
+    ).not.toBeInTheDocument()
   })
 })

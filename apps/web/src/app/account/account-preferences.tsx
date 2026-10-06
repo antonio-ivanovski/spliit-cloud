@@ -1,5 +1,13 @@
-import { CircleOff, SlidersHorizontal, type LucideIcon } from 'lucide-react'
-import { useMemo, useSyncExternalStore } from 'react'
+import {
+  ArrowDown,
+  ArrowUp,
+  CircleOff,
+  Eye,
+  EyeOff,
+  SlidersHorizontal,
+  type LucideIcon,
+} from 'lucide-react'
+import { useMemo, useState, useSyncExternalStore } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -22,6 +30,15 @@ import { useTheme } from '@/components/theme-provider'
 import { TimeZoneField } from '@/components/time-zone-field'
 import { Button } from '@/components/ui/button'
 import {
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog'
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -35,15 +52,24 @@ import {
   type AccountMascot,
   type AccountPreferences as AccountPreferencesValue,
   type AccountTheme,
+  type DestructiveConfirmationLevel,
 } from '@/lib/account-preferences'
 import { useCurrencies } from '@/lib/currency'
 import { useDeploymentConfig } from '@/lib/deployment-config'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
+import {
+  defaultGroupTabOrder,
+  hideableGroupTabIdValues,
+  resolveGroupTabOrder,
+  type GroupTabId,
+  type HideableGroupTabId,
+} from '@spliit/domain'
 
 import {
   SettingsFieldRow,
   SettingsList,
+  SettingsRow,
   SettingsSaving,
   SettingsSection,
   SettingsSectionSkeleton,
@@ -52,6 +78,27 @@ import {
 
 const themes: AccountTheme[] = ['light', 'dark', 'system']
 const mascots: AccountMascot[] = ['off', 'bill']
+const destructiveConfirmationLevels: DestructiveConfirmationLevel[] = [
+  'standard',
+  'strict',
+]
+const hideableGroupTabIds = new Set<string>(hideableGroupTabIdValues)
+
+function groupTabArraysEqual(
+  first: readonly GroupTabId[],
+  second: readonly GroupTabId[],
+) {
+  return (
+    first.length === second.length && first.every((id, i) => id === second[i])
+  )
+}
+
+function hiddenTabSetsEqual(
+  first: ReadonlySet<HideableGroupTabId>,
+  second: ReadonlySet<HideableGroupTabId>,
+) {
+  return first.size === second.size && [...first].every((id) => second.has(id))
+}
 
 export function AccountPreferences() {
   const { t } = useTranslation(undefined, {
@@ -88,14 +135,45 @@ export function AccountPreferences() {
       })),
     [t],
   )
+  const destructiveConfirmationItems = useMemo(
+    () =>
+      destructiveConfirmationLevels.map((level) => ({
+        value: level,
+        label: t(`deleteConfirmationOptions.${level}`),
+      })),
+    [t],
+  )
   const currencies = useMemo(
     () => allCurrencies.filter((currency) => currency.code.length === 3),
     [allCurrencies],
+  )
+  const groupTabLabels = useMemo(
+    () =>
+      ({
+        expenses: tBase('Expenses.title'),
+        balances: tBase('Balances.title'),
+        activity: tBase('Activity.title'),
+        members: tBase('Members.title'),
+        stats: tBase('Stats.title'),
+        budgets: tBase('Budgets.title'),
+        tools: tBase('Tools.title'),
+        edit: tBase('Settings.title'),
+      }) as Record<GroupTabId, string>,
+    [tBase],
   )
   const sourcePreferences =
     syncedPreferences ??
     (query.data?.preferences as AccountPreferencesValue | undefined)
   const deploymentCurrency = deployment.defaultCurrencyCode
+  const [groupTabsOpen, setGroupTabsOpen] = useState(false)
+  const [draftOrder, setDraftOrder] = useState<GroupTabId[]>([])
+  const [draftHidden, setDraftHidden] = useState<Set<HideableGroupTabId>>(
+    () => new Set(),
+  )
+  const currentHidden = useMemo(
+    () => new Set(sourcePreferences?.hiddenGroupTabs ?? []),
+    [sourcePreferences?.hiddenGroupTabs],
+  )
 
   if (!sourcePreferences) {
     return (
@@ -104,12 +182,68 @@ export function AccountPreferences() {
         title={t('title')}
         description={t('description')}
         icon={SlidersHorizontal as LucideIcon}
-        rows={5}
+        rows={6}
       />
     )
   }
 
   const MascotPreview = getMascotDefinition(sourcePreferences.mascot)?.Character
+
+  const preferencesReady = updater === null || updater.ready
+
+  const currentOrder = resolveGroupTabOrder(sourcePreferences.groupTabOrder)
+  const visibleTabLabels = currentOrder
+    .filter((tab) => !currentHidden.has(tab as HideableGroupTabId))
+    .map((tab) => groupTabLabels[tab])
+    .join(' · ')
+  const draftDirty =
+    !groupTabArraysEqual(draftOrder, currentOrder) ||
+    !hiddenTabSetsEqual(draftHidden, currentHidden)
+
+  function openGroupTabsDialog() {
+    setDraftOrder([...currentOrder])
+    setDraftHidden(new Set(currentHidden))
+    setGroupTabsOpen(true)
+  }
+
+  function moveDraftTab(index: number, direction: -1 | 1) {
+    setDraftOrder((order) => {
+      const target = index + direction
+      if (target < 0 || target >= order.length) return order
+      const next = [...order]
+      const [moved] = next.splice(index, 1)
+      next.splice(target, 0, moved)
+      return next
+    })
+  }
+
+  function toggleDraftHidden(tab: GroupTabId) {
+    if (!hideableGroupTabIds.has(tab)) return
+    const hideable = tab as HideableGroupTabId
+    setDraftHidden((hidden) => {
+      const next = new Set(hidden)
+      if (next.has(hideable)) next.delete(hideable)
+      else next.add(hideable)
+      return next
+    })
+  }
+
+  function resetDraftTabs() {
+    setDraftOrder([...defaultGroupTabOrder])
+    setDraftHidden(new Set())
+  }
+
+  async function saveDraftTabs() {
+    const order = groupTabArraysEqual(draftOrder, [...defaultGroupTabOrder])
+      ? null
+      : draftOrder
+    const hidden = draftHidden.size === 0 ? null : [...draftHidden]
+    const ok = await updater?.patchPreferences({
+      groupTabOrder: order,
+      hiddenGroupTabs: hidden,
+    })
+    if (ok !== false) setGroupTabsOpen(false)
+  }
 
   return (
     <SettingsSection
@@ -264,7 +398,164 @@ export function AccountPreferences() {
             </div>
           }
         />
+        <SettingsFieldRow
+          id="account-preference-destructive-confirmation-level"
+          label={t('deleteConfirmation')}
+          description={t('deleteConfirmationHelp')}
+          control={
+            <Select
+              value={sourcePreferences.destructiveConfirmationLevel ?? 'strict'}
+              disabled={updater !== null && !updater.ready}
+              items={destructiveConfirmationItems}
+              onValueChange={(level) => {
+                void updater?.patchPreferences({
+                  destructiveConfirmationLevel:
+                    level as DestructiveConfirmationLevel,
+                })
+              }}
+            >
+              <SelectTrigger
+                id={settingsControlId(
+                  'account-preference-destructive-confirmation-level',
+                )}
+                className="w-full sm:max-w-xs"
+              >
+                <SelectValue placeholder={t('deleteConfirmation')} />
+              </SelectTrigger>
+              <SelectContent>
+                {destructiveConfirmationItems.map((level) => (
+                  <SelectItem key={level.value} value={level.value}>
+                    {level.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          }
+        />
+        <SettingsRow
+          id="account-preference-group-tabs"
+          label={t('groupTabs')}
+          description={
+            <>
+              <p>{t('groupTabsHelp')}</p>
+              <p className="mt-1 min-w-0 break-words">{visibleTabLabels}</p>
+            </>
+          }
+          control={
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="shrink-0"
+              disabled={!preferencesReady}
+              onClick={openGroupTabsDialog}
+            >
+              {t('groupTabsCustomize')}
+            </Button>
+          }
+        />
       </SettingsList>
+
+      <ResponsiveDialog open={groupTabsOpen} onOpenChange={setGroupTabsOpen}>
+        <ResponsiveDialogContent className="sm:max-w-md">
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle>{t('groupTabs')}</ResponsiveDialogTitle>
+            <ResponsiveDialogDescription>
+              {t('groupTabsHelp')}
+            </ResponsiveDialogDescription>
+          </ResponsiveDialogHeader>
+          <ResponsiveDialogBody className="flex flex-col gap-3">
+            <ol className="divide-y divide-border/70 rounded-lg border border-border/70 bg-background">
+              {draftOrder.map((tab, index) => {
+                const hideable = hideableGroupTabIds.has(tab)
+                const hidden = draftHidden.has(tab as HideableGroupTabId)
+                const HiddenIcon = hidden ? EyeOff : Eye
+                return (
+                  <li
+                    key={tab}
+                    data-hidden={hidden || undefined}
+                    className="flex min-w-0 items-center gap-1 py-1 ps-3 pe-1 data-[hidden]:opacity-60"
+                  >
+                    <span className="min-w-0 flex-1 truncate text-sm font-medium">
+                      {groupTabLabels[tab]}
+                    </span>
+                    {hideable ? (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="size-8 shrink-0"
+                        aria-label={
+                          hidden
+                            ? t('groupTabsShow', { name: groupTabLabels[tab] })
+                            : t('groupTabsHide', { name: groupTabLabels[tab] })
+                        }
+                        aria-pressed={hidden}
+                        onClick={() => toggleDraftHidden(tab)}
+                      >
+                        <HiddenIcon className="size-4" aria-hidden="true" />
+                      </Button>
+                    ) : null}
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="size-8 shrink-0"
+                      disabled={index === 0}
+                      aria-label={t('groupTabsMoveUp', {
+                        name: groupTabLabels[tab],
+                      })}
+                      onClick={() => moveDraftTab(index, -1)}
+                    >
+                      <ArrowUp className="size-4" aria-hidden="true" />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="size-8 shrink-0"
+                      disabled={index === draftOrder.length - 1}
+                      aria-label={t('groupTabsMoveDown', {
+                        name: groupTabLabels[tab],
+                      })}
+                      onClick={() => moveDraftTab(index, 1)}
+                    >
+                      <ArrowDown className="size-4" aria-hidden="true" />
+                    </Button>
+                  </li>
+                )
+              })}
+            </ol>
+            <div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="self-start text-muted-foreground"
+                onClick={resetDraftTabs}
+              >
+                {t('groupTabsReset')}
+              </Button>
+            </div>
+          </ResponsiveDialogBody>
+          <ResponsiveDialogFooter>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setGroupTabsOpen(false)}
+            >
+              {t('groupTabsDiscard')}
+            </Button>
+            <Button
+              type="button"
+              disabled={!draftDirty || updater?.isUpdating}
+              onClick={() => void saveDraftTabs()}
+            >
+              {t('groupTabsSave')}
+            </Button>
+          </ResponsiveDialogFooter>
+        </ResponsiveDialogContent>
+      </ResponsiveDialog>
     </SettingsSection>
   )
 }

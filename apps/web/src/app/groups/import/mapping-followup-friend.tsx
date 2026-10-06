@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Label } from '@/components/ui/label'
@@ -34,11 +35,21 @@ export function FriendFollowUp({
 }) {
   const { t } = useTranslation()
 
+  const friendSelectItems = useMemo(
+    () =>
+      friends.map((f) => ({
+        value: f.accountId,
+        label: f.name,
+      })),
+    [friends],
+  )
+
   return (
     <div className="mt-2 grid gap-1.5">
       <Label>{t('Groups.Import.Mapping.Row.selectFriendLabel')}</Label>
       <Select
         value={friendAccountId ?? ''}
+        items={friendSelectItems}
         onValueChange={(value) => {
           const friend = friends.find((f) => f.accountId === value)
           if (friend) {

@@ -2,11 +2,17 @@ import { Trash } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import {
+  DestructiveConfirmationSettingsNote,
   isTypedConfirmationMatch,
   TypedDestructiveConfirmation,
   useTypedConfirmationValue,
 } from '@/components/typed-destructive-confirmation'
+import {
+  requiresTypedConfirmation,
+  resolveDestructiveConfirmationLevel,
+} from '@/lib/account-preferences'
 import { cn } from '@/lib/utils'
 
 import { AsyncButton } from './async-button'
@@ -38,7 +44,11 @@ type Props = {
     deleting?: string
     cancel?: string
   }
-  /** When provided, the destructive action requires typing this exact name. */
+  /**
+   * When provided, the dialog participates in the typing system: the
+   * destructive action requires typing this exact name unless the account's
+   * `destructiveConfirmationLevel` is `standard`.
+   */
   confirmationTarget?: string
   /**
    * Controlled open state for callers whose trigger lives outside the popup
@@ -71,7 +81,17 @@ export function DeletePopup({
   const [confirmationValue, setConfirmationValue] = useTypedConfirmationValue(
     `${dialogOpen}:${confirmationTarget ?? ''}`,
   )
-  const requiresConfirmation = confirmationTarget != null
+  const preferences = useSyncedAccountPreferences()
+  const confirmationLevel = resolveDestructiveConfirmationLevel(
+    preferences?.destructiveConfirmationLevel,
+  )
+  // `confirmationTarget` marks dialogs that participate in the typing system
+  // (single-expense deletes). Webhook/budget deletes pass no target and stay
+  // a simple confirm with no settings footnote.
+  const participatesInTyping = confirmationTarget != null
+  const requiresConfirmation =
+    participatesInTyping &&
+    requiresTypedConfirmation(confirmationLevel, 'deleteExpense')
   const canDelete =
     !requiresConfirmation ||
     isTypedConfirmationMatch(confirmationValue, confirmationTarget)
@@ -132,6 +152,9 @@ export function DeletePopup({
               disabled={submitting}
               onConfirm={confirmDelete}
             />
+            <div className="mt-3">
+              <DestructiveConfirmationSettingsNote />
+            </div>
           </ResponsiveDialogBody>
         ) : null}
         <ResponsiveDialogFooter className="flex flex-col gap-2">

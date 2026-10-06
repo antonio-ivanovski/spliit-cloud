@@ -62,7 +62,15 @@ export function OAuthLoginPage() {
 
   return (
     <OAuthShell title={t('signInTitle')} description={t('signInDescription')}>
-      <AuthPanel embedded redirectTo={resumePath} />
+      {/* Reviewers sign in with the provided password credentials: default to
+          the password tab (no inbox needed) and hide guest accounts, which
+          cannot complete an OAuth review. */}
+      <AuthPanel
+        embedded
+        redirectTo={resumePath}
+        defaultEmailVariant="password"
+        hideAnonymous
+      />
     </OAuthShell>
   )
 }

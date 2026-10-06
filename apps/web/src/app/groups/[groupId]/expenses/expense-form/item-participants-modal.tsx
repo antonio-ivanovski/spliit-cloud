@@ -63,6 +63,11 @@ export function ItemParticipantsModal(props: {
   form: UseFormReturn<ExpenseFormInputValues>
   itemIndex: number
   group: GroupShape
+  /**
+   * Expense input (payer) currency for item amounts — not the ledger currency.
+   * Callers pass `payerCurrency` so BY_AMOUNT shares keep the input currency's
+   * precision for converted expenses.
+   */
   groupCurrency: Currency
   item: ExpenseFormItemValues
   onSaveItem?: (item: ExpenseFormItemValues) => void

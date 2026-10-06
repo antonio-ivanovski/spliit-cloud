@@ -146,6 +146,75 @@ describe('groupsRouter.subgroups', () => {
     ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
   })
 
+  it('logs subgroup create, rename, and delete as GROUP_UPDATED rows', async () => {
+    usePrismaMemoryStore(baseData())
+    const caller = makeCaller()
+
+    const created = await caller.subgroups.create({
+      requestId: crypto.randomUUID(),
+      groupId: 'grp-1',
+      name: 'Couple',
+      participantIds: ['lp-a', 'lp-b'],
+    })
+    expect(prismaMock.activity.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          type: 'GROUP_UPDATED',
+          data: expect.objectContaining({
+            kind: 'group',
+            summary: 'subgroup:created',
+            changedFields: ['subgroups'],
+          }),
+        }),
+      }),
+    )
+
+    const callsAfterCreate = prismaMock.activity.create.mock.calls.length
+    await caller.subgroups.update({
+      groupId: 'grp-1',
+      subgroupId: created.subgroup.id,
+      name: 'Couple',
+      participantIds: ['lp-a', 'lp-c'],
+    })
+    expect(prismaMock.activity.create.mock.calls.length).toBe(callsAfterCreate)
+
+    await caller.subgroups.update({
+      groupId: 'grp-1',
+      subgroupId: created.subgroup.id,
+      name: 'Renamed',
+      participantIds: ['lp-a', 'lp-c'],
+    })
+    expect(prismaMock.activity.create).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          type: 'GROUP_UPDATED',
+          data: expect.objectContaining({
+            kind: 'group',
+            summary: 'subgroup:renamed',
+            changedFields: ['subgroups'],
+          }),
+        }),
+      }),
+    )
+
+    await caller.subgroups.delete({
+      groupId: 'grp-1',
+      subgroupId: created.subgroup.id,
+    })
+    expect(prismaMock.activity.create).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          type: 'GROUP_UPDATED',
+          data: expect.objectContaining({
+            kind: 'group',
+            summary: 'subgroup:deleted',
+            changedFields: ['subgroups'],
+          }),
+        }),
+      }),
+    )
+  })
+
   it('disabling subgroups deletes definitions atomically', async () => {
     usePrismaMemoryStore(baseData())
     const caller = makeCaller()

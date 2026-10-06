@@ -1,5 +1,6 @@
 import { z } from 'zod'
 
+import { SESSION_FRESH_AGE_SECONDS } from '../../../lib/auth/session-policy'
 import { allowUninvitedSignup } from '../../../lib/auth/signup-gate'
 import {
   env,
@@ -21,6 +22,7 @@ export const featuresRouter = createTRPCRouter({
         enableVoiceExpense: z.boolean(),
         enableCategoryExtract: z.boolean(),
         enableBulkCategorize: z.boolean(),
+        bulkCategorizeSystemOneAvailable: z.boolean(),
         enableDictionarySuggest: z.boolean(),
         enableHistorySuggest: z.boolean(),
         categoryEngine: z.enum(['llm', 'system-one']),
@@ -45,7 +47,15 @@ export const featuresRouter = createTRPCRouter({
         enableAnonymousAuth: z.boolean(),
         enableEmailAuth: z.boolean(),
         enablePasskeyAuth: z.boolean(),
+        /**
+         * Session freshness window (seconds) the server enforces on passkey
+         * enrollment. The client mirrors the check proactively so stale
+         * sessions get a re-auth prompt instead of a `SESSION_NOT_FRESH`
+         * failure mid-ceremony.
+         */
+        passkeyFreshAgeSeconds: z.number().int().nonnegative(),
         emailDeliveryEnabled: z.boolean(),
+        cloudNewsEnabled: z.boolean(),
       }),
     )
     .query(async () => {
@@ -56,7 +66,8 @@ export const featuresRouter = createTRPCRouter({
         enableReceiptExtract: env.PUBLIC_ENABLE_RECEIPT_EXTRACT,
         enableVoiceExpense: env.PUBLIC_ENABLE_VOICE_EXPENSE,
         enableCategoryExtract: env.PUBLIC_ENABLE_CATEGORY_EXTRACT,
-        enableBulkCategorize: env.PUBLIC_ENABLE_BULK_CATEGORIZE,
+        enableBulkCategorize: true,
+        bulkCategorizeSystemOneAvailable: Boolean(env.AI_SYSTEM_ONE_API_KEY),
         enableDictionarySuggest: env.CATEGORY_DICTIONARY_ENABLED,
         enableHistorySuggest: env.CATEGORY_HISTORY_ENABLED,
         categoryEngine: env.AI_CATEGORY_ENGINE,
@@ -77,7 +88,9 @@ export const featuresRouter = createTRPCRouter({
         enableAnonymousAuth: env.ENABLE_ANONYMOUS_AUTH,
         enableEmailAuth: isEmailAuthEnabled(),
         enablePasskeyAuth: isPasskeyAuthEnabled(),
+        passkeyFreshAgeSeconds: SESSION_FRESH_AGE_SECONDS,
         emailDeliveryEnabled: isEmailDeliveryEnabled(),
+        cloudNewsEnabled: env.CLOUD_NEWS_ENABLED,
       }
     }),
 })

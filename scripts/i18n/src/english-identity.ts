@@ -74,6 +74,32 @@ const LOCALE_COGNATES = new Set([
   'sv-SE:Cyan',
   'sv-SE:Fuchsia',
   'sv-SE:Indigo',
+  // "Status" is the correct native spelling (service-status loanword) —
+  // matches the established ApiStatusBanner.statusLink wording in each locale.
+  'de-DE:Status',
+  'id:Status',
+  'nl-NL:Status',
+  'pl-PL:Status',
+  'sv-SE:Status',
+  // "Color" is the correct native spelling in Catalan and Spanish.
+  'ca:Color',
+  'es:Color',
+  // "Emoji" is a universal loanword with identical spelling.
+  'ca:Emoji',
+  'cs-CZ:Emoji',
+  'de-DE:Emoji',
+  'es:Emoji',
+  'fi:Emoji',
+  'fr-FR:Emoji',
+  'it-IT:Emoji',
+  'id:Emoji',
+  'nl-NL:Emoji',
+  'pl-PL:Emoji',
+  'pt:Emoji',
+  'ro:Emoji',
+  'sv-SE:Emoji',
+  'tr-TR:Emoji',
+  'vi:Emoji',
 ])
 
 export function isAllowedLocaleCognate(

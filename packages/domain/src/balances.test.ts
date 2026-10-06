@@ -4,6 +4,7 @@ import {
   getPublicBalances,
   getSuggestedSettlements,
 } from './balances'
+import { getTotalGroupSpending, type TotalsExpense } from './totals'
 
 type BalancesExpense = Parameters<typeof getBalances>[0][number]
 
@@ -1475,5 +1476,179 @@ describe('getPublicBalances + getSuggestedSettlements (UI pipeline)', () => {
     expect(balances.p0.paidFor).toBe(3336)
     expect(balances.p1.paidFor).toBe(3332)
     expect(balances.p2.paidFor).toBe(3332)
+  })
+})
+
+describe('Ledger balance inputs (folded from ledger.test.ts)', () => {
+  it('getBalances produces integer results for ledger minor-unit amounts', () => {
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'le-1',
+        amount: 333,
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'EVENLY',
+        paidByList: [{ participant: { id: 'lp-a', name: 'A' }, shares: 1 }],
+        paidFor: [
+          { participant: { id: 'lp-a', name: 'A' }, shares: 1 },
+          { participant: { id: 'lp-b', name: 'B' }, shares: 1 },
+          { participant: { id: 'lp-c', name: 'C' }, shares: 1 },
+        ],
+      }),
+    ]
+
+    const balances = getBalances(expenses)
+    for (const key of Object.keys(balances)) {
+      expect(Number.isInteger(balances[key].paid)).toBe(true)
+      expect(Number.isInteger(balances[key].paidFor)).toBe(true)
+      expect(Number.isInteger(balances[key].total)).toBe(true)
+    }
+  })
+
+  it('currency conversion metadata does not affect balance math', () => {
+    const ledgerCents = 1000
+    const expenses: BalancesExpense[] = [
+      {
+        id: 'le-1',
+        amount: ledgerCents,
+        splitMode: 'BY_AMOUNT',
+        paidBySplitMode: 'EVENLY',
+        paidByList: [{ participant: { id: 'lp-a', name: 'A' }, shares: 1 }],
+        paidFor: [
+          { participant: { id: 'lp-a', name: 'A' }, shares: 400 },
+          { participant: { id: 'lp-b', name: 'B' }, shares: 600 },
+        ],
+      } as BalancesExpense,
+    ]
+
+    const balances = getBalances(expenses)
+    expect(balances['lp-a'].paid).toBe(1000)
+    expect(balances['lp-a'].paidFor).toBe(400)
+    expect(balances['lp-b'].paidFor).toBe(600)
+    expect(balances['lp-a'].total).toBe(600)
+    expect(balances['lp-b'].total).toBe(-600)
+  })
+
+  it('settlement does not affect split math from ledger amounts', () => {
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'le-1',
+        amount: 5000,
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'EVENLY',
+        categoryId: 'settlement',
+        paidByList: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+        ],
+        paidFor: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+          { participant: { id: 'lp-bob', name: 'Bob' }, shares: 1 },
+        ],
+      }),
+    ]
+
+    const totals: TotalsExpense[] = [
+      {
+        id: 'le-1',
+        amount: 5000,
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'EVENLY',
+        categoryId: 'settlement',
+        paidByList: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+        ],
+        paidFor: [
+          { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
+          { participant: { id: 'lp-bob', name: 'Bob' }, shares: 1 },
+        ],
+      } as TotalsExpense,
+    ]
+
+    const balances = getBalances(expenses)
+    expect(balances['lp-alice'].paid).toBe(5000)
+    expect(balances['lp-alice'].paidFor).toBe(2500)
+
+    const totalSpending = getTotalGroupSpending(totals)
+    expect(totalSpending).toBe(0)
+  })
+
+  it('getBalances is unaffected when extra conversion metadata is present', () => {
+    const amount = 1000
+    const expenses: BalancesExpense[] = [
+      {
+        id: 'le-1',
+        amount,
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'EVENLY',
+        paidByList: [{ participant: { id: 'lp-a', name: 'A' }, shares: 1 }],
+        paidFor: [
+          { participant: { id: 'lp-a', name: 'A' }, shares: 1 },
+          { participant: { id: 'lp-b', name: 'B' }, shares: 1 },
+        ],
+        originalAmount: 2000,
+        originalCurrency: 'EUR',
+        conversionRate: 0.5,
+      } as unknown as BalancesExpense,
+    ]
+    const balances = getBalances(expenses)
+    expect(balances['lp-a'].paid).toBe(1000)
+    expect(balances['lp-a'].paidFor).toBe(500)
+  })
+
+  it('handles zero-decimal currency amounts (JPY/minor units only)', () => {
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'le-1',
+        amount: 1000,
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'EVENLY',
+        paidByList: [{ participant: { id: 'lp-a', name: 'A' }, shares: 1 }],
+        paidFor: [
+          { participant: { id: 'lp-a', name: 'A' }, shares: 1 },
+          { participant: { id: 'lp-b', name: 'B' }, shares: 1 },
+        ],
+      }),
+    ]
+    const balances = getBalances(expenses)
+    expect(balances['lp-a'].paid).toBe(1000)
+    expect(balances['lp-a'].paidFor).toBe(500)
+    expect(balances['lp-b'].paidFor).toBe(500)
+  })
+
+  it('getPublicBalances with ledger participant IDs', () => {
+    const suggestedSettlements = [
+      { from: 'lp-bob', to: 'lp-alice', amount: 2500 },
+      { from: 'lp-carol', to: 'lp-alice', amount: 1500 },
+    ]
+    const balances = getPublicBalances(suggestedSettlements)
+    expect(balances['lp-alice'].paid).toBe(4000)
+    expect(balances['lp-alice'].paidFor).toBe(0)
+    expect(balances['lp-alice'].total).toBe(4000)
+    expect(balances['lp-bob'].paidFor).toBe(2500)
+    expect(balances['lp-bob'].total).toBe(-2500)
+    expect(balances['lp-carol'].paidFor).toBe(1500)
+    expect(balances['lp-carol'].total).toBe(-1500)
+  })
+
+  it('supports UUID-style ledger participant IDs', () => {
+    const aliceId = 'lp-a1b2c3d4-e5f6-7890-abcd-ef1234567890'
+    const bobId = 'lp-b2c3d4e5-f6a7-8901-bcde-f12345678901'
+    const expenses: BalancesExpense[] = [
+      makeExpense({
+        id: 'le-1',
+        amount: 2000,
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'EVENLY',
+        paidByList: [
+          { participant: { id: aliceId, name: 'Alice' }, shares: 1 },
+        ],
+        paidFor: [
+          { participant: { id: aliceId, name: 'Alice' }, shares: 1 },
+          { participant: { id: bobId, name: 'Bob' }, shares: 1 },
+        ],
+      }),
+    ]
+    const balances = getBalances(expenses)
+    expect(balances[aliceId].paidFor).toBe(1000)
+    expect(balances[bobId].paidFor).toBe(1000)
   })
 })

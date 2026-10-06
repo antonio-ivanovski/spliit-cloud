@@ -90,6 +90,54 @@ describe('Public view-only query param — real DB', () => {
     expect(stats).toHaveProperty('dashboard')
   })
 
+  it('strips participant splits and snapshots from activity rows for public viewers', async () => {
+    const participant = await prisma.ledgerParticipant.findFirstOrThrow({
+      where: { ledgerId },
+    })
+    const created = await adminCaller().expenses.create({
+      requestId: crypto.randomUUID(),
+      groupId,
+      expense: {
+        title: 'Public-view dinner',
+        amount: 1000,
+        paidByList: [{ participant: participant.id, shares: 1000 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
+        paidFor: [{ participant: participant.id, shares: 1 }],
+        category: 'general',
+        splitMode: 'EVENLY',
+        expenseDate: new Date().toISOString(),
+        expenseTimeZone: 'UTC',
+        documents: [],
+        recurrenceRule: 'NONE',
+      },
+    })
+
+    const listed = await publicCaller().activities.list({ groupId, viewKey })
+    const row = listed.activities.find(
+      (activity) =>
+        activity.type === 'EXPENSE_CREATED' &&
+        activity.subjectId === created.expenseId,
+    )
+    expect(row).toBeDefined()
+    expect(row!.expense!.paidByList).toEqual([])
+    expect(row!.expense!.paidFor).toEqual([])
+    expect(row!.data).toMatchObject({ kind: 'expense' })
+    expect(row!.data).not.toHaveProperty('affectedParticipants')
+
+    // Control: the active member sees both splits and the snapshot.
+    const adminListed = await adminCaller().activities.list({ groupId })
+    const adminRow = adminListed.activities.find(
+      (activity) =>
+        activity.type === 'EXPENSE_CREATED' &&
+        activity.subjectId === created.expenseId,
+    )
+    expect(adminRow!.expense!.paidByList).toHaveLength(1)
+    expect(adminRow!.data).toHaveProperty('affectedParticipants', [
+      participant.id,
+    ])
+  })
+
   it('upgrades an active member who opens the public view link', async () => {
     await expect(
       adminCaller().get({ groupId, viewKey }),

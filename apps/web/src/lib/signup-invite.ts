@@ -39,7 +39,7 @@ function authReturnChain(value: string | undefined): string[] {
     chain.push(current)
     seen.add(current)
     const url = new URL(current, LOCAL_URL_BASE)
-    if (url.pathname !== '/auth/complete-profile') break
+    if (url.pathname !== '/' && url.pathname !== '/auth/complete-profile') break
     const nested = url.searchParams.get('redirect') ?? undefined
     const next = safeLocalReturnPath(nested)
     if (!nested || next === '/' || seen.has(next)) break

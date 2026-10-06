@@ -258,36 +258,42 @@ export function CreateExpenseFab({
         <SpeedDialContent>
           {enableReceiptExtract && (
             <SpeedDialItem>
-              <SpeedDialLabel>{t('receiptAction')}</SpeedDialLabel>
               <SpeedDialAction
                 aria-label={t('receiptAction')}
                 onClick={openReceipt}
-                className="flex size-11 items-center justify-center rounded-full border bg-background text-foreground shadow-lg transition-transform hover:scale-105 hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
+                className="group rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
               >
-                <Camera className="size-5" />
+                <SpeedDialLabel>{t('receiptAction')}</SpeedDialLabel>
+                <span className="flex size-11 items-center justify-center rounded-full border bg-background text-foreground shadow-lg transition-transform group-hover:scale-105 group-hover:bg-accent">
+                  <Camera className="size-5" />
+                </span>
               </SpeedDialAction>
             </SpeedDialItem>
           )}
           {enableVoiceExpense && (
             <SpeedDialItem>
-              <SpeedDialLabel>{t('voiceAction')}</SpeedDialLabel>
               <SpeedDialAction
                 aria-label={t('voiceAction')}
                 onClick={openVoice}
-                className="flex size-11 items-center justify-center rounded-full border bg-background text-foreground shadow-lg transition-transform hover:scale-105 hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
+                className="group rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
               >
-                <Mic className="size-5" />
+                <SpeedDialLabel>{t('voiceAction')}</SpeedDialLabel>
+                <span className="flex size-11 items-center justify-center rounded-full border bg-background text-foreground shadow-lg transition-transform group-hover:scale-105 group-hover:bg-accent">
+                  <Mic className="size-5" />
+                </span>
               </SpeedDialAction>
             </SpeedDialItem>
           )}
           <SpeedDialItem>
-            <SpeedDialLabel>{t('addExpenseAction')}</SpeedDialLabel>
             <SpeedDialAction
               aria-label={t('addExpenseAction')}
               onClick={goToManualExpense}
-              className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform hover:scale-105 hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring"
+              className="group rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
-              <Plus className="size-5" />
+              <SpeedDialLabel>{t('addExpenseAction')}</SpeedDialLabel>
+              <span className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform group-hover:scale-105 group-hover:bg-primary/90">
+                <Plus className="size-5" />
+              </span>
             </SpeedDialAction>
           </SpeedDialItem>
         </SpeedDialContent>

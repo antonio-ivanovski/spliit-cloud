@@ -271,6 +271,7 @@ export class LeaveGroupPreconditionError extends Error {
 export async function deleteGroup(opts: {
   groupId: string
   actor: { accountId: string }
+  onlyIfLastActiveMember?: boolean
 }): Promise<{ deleted: true }> {
   const { groupId } = opts
 
@@ -284,9 +285,33 @@ export async function deleteGroup(opts: {
     where: { ledgerId: group.ledgerId },
     select: { url: true },
   })
-  await Promise.all(documents.map((doc) => deleteS3Object(doc.url)))
-
+  if (!opts.onlyIfLastActiveMember) {
+    await Promise.all(documents.map((doc) => deleteS3Object(doc.url)))
+  }
   await prisma.$transaction(async (tx) => {
+    if (opts.onlyIfLastActiveMember) {
+      // Lock the FK parent so a joining member cannot race the final count.
+      await tx.$queryRaw`SELECT "id" FROM "Group" WHERE "id" = ${groupId} FOR UPDATE`
+      const others = await tx.groupMember.count({
+        where: {
+          groupId,
+          status: GroupMemberStatus.ACTIVE,
+          accountId: { not: opts.actor.accountId },
+        },
+      })
+      const member = await tx.groupMember.findUnique({
+        where: {
+          groupId_accountId: { groupId, accountId: opts.actor.accountId },
+        },
+        select: { status: true },
+      })
+      if (others > 0 || member?.status !== GroupMemberStatus.ACTIVE) {
+        throw new Error(
+          'Group membership changed during account deletion; retry',
+        )
+      }
+      await Promise.all(documents.map((doc) => deleteS3Object(doc.url)))
+    }
     if (await hasEligibleWebhookEndpoints(tx, groupId, 'deleted')) {
       const expenseRows =
         (await tx.expense.findMany({
@@ -326,10 +351,25 @@ export async function leaveGroup(opts: {
   actor: { accountId: string }
   force?: boolean
   promoteMemberId?: string
+  /**
+   * Settle the leaver's balances with settlement expenses (default). Pass false
+   * to leave balances untouched — used by account deletion when the user opts
+   * out of settling, so remaining debts stay on their placeholder.
+   */
+  settle?: boolean
+  /** Account erasure also exits archived groups; ordinary leave stays read-only. */
+  allowArchived?: boolean
 }): Promise<{
   promotedMemberId: string | null
 }> {
-  const { groupId, actor, force = false, promoteMemberId } = opts
+  const {
+    groupId,
+    actor,
+    force = false,
+    promoteMemberId,
+    settle = true,
+    allowArchived = false,
+  } = opts
 
   const member = await prisma.groupMember.findUnique({
     where: { groupId_accountId: { groupId, accountId: actor.accountId } },
@@ -344,7 +384,7 @@ export async function leaveGroup(opts: {
     select: { archived: true },
   })
   if (!group) throw new Error('Invalid group ID')
-  if (group.archived) {
+  if (group.archived && !allowArchived) {
     throw new Error('Cannot leave an archived group')
   }
 
@@ -421,7 +461,7 @@ export async function leaveGroup(opts: {
   const boss = await getApiBoss()
   const result = await prisma.$transaction(async (tx) => {
     let settlementActivities: SettlementActivityMeta[] = []
-    if (needsSettlement && participantId) {
+    if (needsSettlement && participantId && settle) {
       const settlement = await createSettlementExpensesForLeave(
         groupId,
         participantId,

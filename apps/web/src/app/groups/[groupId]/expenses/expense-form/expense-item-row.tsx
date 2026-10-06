@@ -22,6 +22,11 @@ import type {
   SplitMode,
 } from '@spliit/domain'
 
+import {
+  getBreakdownNames,
+  getFormItemBreakdown,
+  ItemAssignees,
+} from '../expense-item-breakdown'
 import { AmountInput } from './amount-input'
 import {
   amountPlaceholder,
@@ -101,16 +106,33 @@ export function ExpenseItemRow({
   const participantNameMap = new Map(
     group.participants.map((p) => [p.id, p.name]),
   )
-  const participantNames =
-    paidFor
-      ?.flatMap((pf: { participant: string }) => {
-        const name = participantNameMap.get(pf.participant)
-        return name ? [name] : []
-      })
-      .join(', ') ?? ''
+  const names = getBreakdownNames(paidFor, participantNameMap)
+  const participantNames = names.join(', ')
   const participantsLabel = participantNames
     ? `${t(splitModeLabelKeys[splitMode])}: ${participantNames}`
     : t('items.noMembers')
+  const sharesByParticipant = getFormItemBreakdown(
+    {
+      unitPrice: Number(unitPrice) || 0,
+      quantity: Number(quantity) || 0,
+      splitMode,
+      paidFor: paidFor ?? [],
+    },
+    groupCurrency,
+  )
+  const breakdownRows = (paidFor ?? []).flatMap(
+    (pf: { participant: string }) => {
+      const name = participantNameMap.get(pf.participant)
+      if (!name) return []
+      return [
+        {
+          participantId: pf.participant,
+          name,
+          amount: sharesByParticipant[pf.participant] ?? 0,
+        },
+      ]
+    },
+  )
 
   const priceDisplay = formatCurrency(
     groupCurrency,
@@ -132,7 +154,7 @@ export function ExpenseItemRow({
     <div className={cn('border-t py-3', isFiller && 'bg-muted/25')}>
       <div
         className={cn(
-          'grid grid-cols-[minmax(0,1fr)_minmax(0,5.5rem)_minmax(0,4.5rem)] items-center gap-1 md:items-start md:gap-x-3',
+          'grid grid-cols-[minmax(0,1fr)_minmax(0,5.5rem)_minmax(0,4.5rem)] items-start gap-1 md:gap-x-3',
           expenseItemGridClass,
         )}
       >
@@ -311,16 +333,26 @@ export function ExpenseItemRow({
           name={itemPath(itemIndex, 'paidFor')}
           render={() => (
             <FormItem className="mt-2 min-w-0 space-y-1 text-xs leading-5 md:pe-16">
-              <span className="block truncate text-muted-foreground">
-                {participantsLabel}
-              </span>
+              <ItemAssignees
+                namesText={participantsLabel}
+                rows={breakdownRows}
+                currency={groupCurrency}
+                locale={locale}
+                emptyText={participantsLabel}
+              />
               <FormMessage />
             </FormItem>
           )}
         />
       ) : (
         <div className="mt-2 min-w-0 text-xs leading-5 text-muted-foreground md:pe-16">
-          <span className="block truncate">{participantsLabel}</span>
+          <ItemAssignees
+            namesText={participantsLabel}
+            rows={breakdownRows}
+            currency={groupCurrency}
+            locale={locale}
+            emptyText={participantsLabel}
+          />
         </div>
       )}
     </div>

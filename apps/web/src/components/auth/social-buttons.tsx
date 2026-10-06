@@ -15,6 +15,7 @@ export function SocialButtons({
   passkeyEnabled,
   passkeyPending,
   disabled,
+  hideAnonymous = false,
   lastUsedMethod,
   onGoogle,
   onGithub,
@@ -30,6 +31,7 @@ export function SocialButtons({
   passkeyEnabled: boolean
   passkeyPending: boolean
   disabled: boolean
+  hideAnonymous?: boolean
   lastUsedMethod: string | null
   onGoogle: () => void
   onGithub: () => void
@@ -115,17 +117,19 @@ export function SocialButtons({
           {lastUsedBadge(provider.id)}
         </Button>
       ))}
-      <Button
-        type="button"
-        variant="outline"
-        className="w-full justify-center border-border/80 bg-background"
-        onClick={onAnonymous}
-        disabled={disabled}
-      >
-        <HatGlasses className="me-2 h-4 w-4" />
-        {t('signInAnonymously')}
-        {lastUsedBadge('anonymous')}
-      </Button>
+      {hideAnonymous ? null : (
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full justify-center border-border/80 bg-background"
+          onClick={onAnonymous}
+          disabled={disabled}
+        >
+          <HatGlasses className="me-2 h-4 w-4" />
+          {t('signInAnonymously')}
+          {lastUsedBadge('anonymous')}
+        </Button>
+      )}
     </section>
   )
 }

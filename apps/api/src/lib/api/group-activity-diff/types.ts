@@ -10,6 +10,8 @@ export type DiffableGroup = {
   information: string | null
   currency: string
   currencyCode: string | null
+  emoji: string | null
+  color: string | null
 }
 
 export type GroupChangeContext = Record<string, never>

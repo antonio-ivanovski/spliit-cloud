@@ -33,7 +33,10 @@ bun --filter @spliit/webhook-relay dev:relay    # Cloudflare relay on :8787
 
 Service state lives under `storage/` at the repository root. Stop local
 service containers with `bun dev:down` when you are done; remove `storage/`
-for a clean reset.
+for a clean reset (`bun dev:up` recreates it owned by your user). If your
+`storage/` predates this fix and is root-owned (maxio unhealthy, maildev
+crashing on received mail), one-time: `sudo chown -R $(id -u):$(id -g)
+storage`, then `bun dev:up` again.
 
 Other useful commands:
 
@@ -75,14 +78,12 @@ bun test:integration
 
 ## Releases
 
-Releases are versioned (`v2.0.0`, first stable). `releases/next.md` is the
-evergreen draft for the upcoming release — append an entry under the
-right section for every user-facing change in your PR, ending it with
-``(`TBD` by @your-handle)`` (hashes are filled at cut time, never
-invent a SHA). Screenshots go in `releases/assets/next/`. To cut a
-release, the maintainer runs `bun release:prepare vX.Y.Z` (see
-`releases/README.md`), fills the hashes, commits, and pushes the tag —
-which publishes `:vX.Y.Z` + `:latest` and deploys prod immediately.
+Update `releases/next.md` for the finished user-facing outcome of your PR;
+revise a related entry instead of adding a progress log. If the work addresses
+a GitHub issue, link it and credit its author. Follow the
+[release-notes skill](./.agents/skills/release-notes/SKILL.md) for the draft
+format and the [cut-release skill](./.agents/skills/cut-release/SKILL.md)
+when preparing a versioned release.
 
 If your change breaks compatibility or needs manual migration steps, say
 so in the PR (`Migration:` field) so it lands in the release notes.

@@ -16,6 +16,7 @@ import {
 import { useState, Suspense, lazy } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { PageInset } from '@/components/layout/page-shell'
 import { useMascotController } from '@/components/mascot/mascot-context'
 import { Money } from '@/components/money'
@@ -43,7 +44,10 @@ import { useMediaQuery } from '@/lib/hooks'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { useOfflineOverview } from '@/lib/offline/read-hooks'
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { useOfflineWithoutData } from '@/lib/use-online-status'
+import {
+  useOfflineWithoutData,
+  useServerUnreachableWithoutData,
+} from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 import { CollapsibleSection } from './collapsible-section'
@@ -113,6 +117,7 @@ export function RecentGroupList() {
   // complete result. Totals render only when every catalog group is ready and
   // none is dirty; otherwise show the reconnect hint (never invented zeros).
   const offlineOverview = useOfflineOverview()
+  const showServerEmpty = useServerUnreachableWithoutData(!!data)
   const [forceArchiveTarget, setForceArchiveTarget] =
     useState<AccountGroup | null>(null)
   const [scanOpen, setScanOpen] = useState(false)
@@ -323,6 +328,8 @@ export function RecentGroupList() {
         )}
       </div>
     )
+  } else if (showServerEmpty) {
+    body = <ApiErrorEmptyState onRetry={() => void refetch()} />
   } else if (showOfflineEmpty) {
     const canRetry =
       typeof navigator === 'undefined' ? true : navigator.onLine !== false

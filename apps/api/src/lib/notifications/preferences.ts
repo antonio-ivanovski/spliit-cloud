@@ -9,7 +9,7 @@ import {
   notificationCategorySchema,
   notificationCategoryValues,
   notificationChannelsSchema,
-  type NotificationCategory,
+  NotificationCategory,
 } from '@spliit/domain/notifications'
 
 import { randomId } from '../api/shared'
@@ -37,6 +37,18 @@ export const preferenceInputSchema = z
         })
       }
       seen.add(preference.category)
+      if (
+        preference.category === NotificationCategory.PRODUCT_UPDATES &&
+        preference.channels?.some(
+          (channel) => channel !== NotificationChannel.EMAIL,
+        )
+      ) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['preferences', index, 'channels'],
+          message: 'Cloud news supports email only',
+        })
+      }
     })
   })
 

@@ -188,7 +188,11 @@ export function ResetPasswordPage() {
                 type="password"
                 autoComplete="new-password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value)
+                  if (clientError) setClientError(null)
+                  if (resetPassword.isError) resetPassword.reset()
+                }}
                 required
               />
             </div>
@@ -202,7 +206,11 @@ export function ResetPasswordPage() {
                 type="password"
                 autoComplete="new-password"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value)
+                  if (clientError) setClientError(null)
+                  if (resetPassword.isError) resetPassword.reset()
+                }}
                 required
               />
             </div>

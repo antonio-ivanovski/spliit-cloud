@@ -81,13 +81,14 @@
     "signOutOffline": "Çıkış yapmak için bağlan"
   },
   "Footer": {
-    "madeIn": "Açık kaynak topluluğu tarafından sevgiyle yapıldı ❤️",
+    "madeIn": "<github>Açık kaynak topluluğu</github> tarafından sevgiyle yapıldı ❤️",
     "legalNavigation": "Yasal bağlantılar",
     "privacy": "Gizlilik",
     "terms": "Şartlar",
     "imprint": "Proje bildirimi",
     "sponsor": "Sponsor Ol",
-    "timeLabel": "Günün saati"
+    "timeLabel": "Günün saati",
+    "status": "Durum"
   },
   "Expenses": {
     "title": "Masraflar",
@@ -226,7 +227,9 @@
       "showLess": "Daha az göster"
     },
     "copyToast": "Masraf kopyalama başlatıldı. Mevcut masraf ayrıntıları yeni bir tane oluşturmak için kullanılacak.",
-    "incomeBadge": "Gelir"
+    "incomeBadge": "Gelir",
+    "paidBySingle": "<strong>{paidBy}</strong> ödedi · <paidFor></paidFor> için ödedi",
+    "paidByMultipleSingle": "<paidByNames></paidByNames> ödedi · <paidFor></paidFor> için ödedi"
   },
   "Groups": {
     "myGroups": "Gruplarım",
@@ -368,7 +371,8 @@
             "monthly": "ay",
             "yearly": "yıl"
           }
-        }
+        },
+        "categorizeWithSystemOne": "Kategorilendirilmemiş masraflar için System One ile kategori öner"
       },
       "Destination": {
         "heading": "<strong>{name}</strong> grubunu nereye içe aktarmak istersiniz? ({participantCount} katılımcı · {expenseCount} harcama)",
@@ -662,7 +666,9 @@
       "description": "Gruplar artık adlarının yanında bir emoji gösterebiliyor. “{name}” içinde {emoji} fark edildi.",
       "openSettings": "Grup ayarlarını aç",
       "notNow": "Şimdi değil"
-    }
+    },
+    "groupTabsHint": "Grup sekmelerini yeniden sıralamak veya kullanmadıklarınızı gizlemek ister misiniz?",
+    "groupTabsHintLink": "Hesap ayarlarınızda sekmeleri özelleştirin"
   },
   "GroupForm": {
     "title": "Grup bilgileri",
@@ -1052,7 +1058,8 @@
       "allItemsSplitEdit": "Tüm kalemlerin bölüşümünü düzenle",
       "allItemsSplitModalTitle": "Tüm kalemlerin bölüşümü",
       "remainderAllocationProportional": "Kalemlerle orantılı",
-      "remainderProportionalHint": "Bu tutarı her kişinin kalem ara toplamına göre bölün. Vergi ve bahşişler için idealdir."
+      "remainderProportionalHint": "Bu tutarı her kişinin kalem ara toplamına göre bölün. Vergi ve bahşişler için idealdir.",
+      "errorExceedsAmountDetails": "Kalemlerin toplamı ({itemsTotal}) masraf tutarını {excess} aşıyor."
     },
     "leaveItemized": {
       "title": "Bölüşüm yöntemi değiştirilsin mi?",
@@ -1088,7 +1095,15 @@
       "done": "Bitti",
       "yourTime": "yerel saatiniz",
       "invalidDate": "Geçerli bir tarih girin.",
-      "invalidTime": "Geçerli bir saat girin (HH:mm)."
+      "invalidTime": "Geçerli bir saat girin (HH:mm).",
+      "hourLabel": "Saat",
+      "minuteLabel": "Dakika",
+      "periodLabel": "ÖÖ/ÖS",
+      "timeWheelHint": "Saati ayarlamak için kaydırın veya dokunun. Tarih aynı kalır.",
+      "now": "Şimdi",
+      "morning": "Sabah",
+      "midday": "Öğle",
+      "evening": "Akşam"
     },
     "settlementTitle": "Borç kapatma ödemesi",
     "settlementHint": "{category}: Toplamlarda, istatistiklerde veya bütçelerde harcama sayılmaz. Yine de kimin kime borcu olduğunu günceller.",
@@ -1132,7 +1147,8 @@
       "description": "Ücretler dâhil olmak üzere tahsil edilen toplam tutarı girin.",
       "impliedRate": "Hesaplanan kur: 1 {source} = {rate} {target}"
     },
-    "otherSuggestions": "Kategori önerileri"
+    "otherSuggestions": "Kategori önerileri",
+    "paidForItemizedEmptyHint": "Her kişinin payını görmek için kalemlere kişi atayın."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Belgeyi sil",
@@ -1534,7 +1550,7 @@
       "generic": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin.",
       "passwordPolicy": "En az 8 karakter kullanın ve büyük harf, küçük harf, rakam ve sembol içersin.",
       "magicLinkFailed": "Oturum açma bağlantısı gönderilemedi.",
-      "signupInviteRequired": "Bu kurulum yalnızca davetle erişilebilir. Bir davet bağlantısı kullanın veya birinden sizi bir gruba davet etmesini isteyin.",
+      "signupInviteRequired": "Kayıtlar yalnızca davetle mümkündür. Bir davet bağlantısı kullanın veya birinden sizi bir gruba davet etmesini isteyin.",
       "passkeyFailed": "Geçiş anahtarıyla oturum açılamadı. Lütfen tekrar deneyin veya başka bir oturum açma yöntemi kullanın."
     },
     "loading": "Yükleniyor…",
@@ -1544,14 +1560,14 @@
     "signInWithGithub": "GitHub ile devam et",
     "legalNotice": "Devam ederek <terms>Kullanım Şartları</terms>'nı kabul eder ve <privacy>Gizlilik Bildirimi</privacy>'ni onaylarsınız.",
     "inviteOnly": {
-      "message": "Bu kurulum yalnızca davetle erişilebilir. Bir davet bağlantısı kullanın veya birinden sizi bir gruba davet etmesini isteyin.",
+      "message": "Kayıtlar yalnızca davetle mümkündür. Bir davet bağlantısı kullanın veya birinden sizi bir gruba davet etmesini isteyin.",
       "useInvitedEmail": "Davet edildiğiniz e-posta adresini kullanın."
     },
     "signInWithX": "X ile devam et",
     "signInWithOidc": "{name} ile devam et",
     "signInAnonymously": "Anonim",
     "lastUsed": "Son kullanılan",
-    "emailAuthDisabled": "Bu örnekte e-posta ile oturum açma devre dışı bırakıldı. Lütfen tek oturum açma (SSO) kullanın.",
+    "emailAuthDisabled": "E-posta ile oturum açma devre dışı. Lütfen tek oturum açma (SSO) kullanın.",
     "signInWithPasskey": "Geçiş anahtarıyla oturum aç"
   },
   "CompleteProfile": {
@@ -1984,7 +2000,7 @@
         "joined_zero": "Şimdiye kadar {count} kişi katıldı",
         "retry": "Tekrar dene"
       },
-      "emailDeliveryDisabled": "Bu örnekte e-posta gönderimi kapalı. Davet yine de oluşturulur ve davetli oturum açtığında görünür; açabileceği bir şey olması için bir davet bağlantısı kullanın."
+      "emailDeliveryDisabled": "E-posta gönderimi kapalı. Davet yine de oluşturulur ve davetli oturum açtığında görünür; açabileceği bir şey olması için bir davet bağlantısı kullanın."
     },
     "invitations": {
       "title": "Bekleyen davetler",
@@ -2405,7 +2421,7 @@
       "masterDescription": "Kapatarak tüm e-posta ve anlık bildirimleri susturun. Kategori bazlı seçimleriniz korunur.",
       "emailAddToEnable": "Gelen kutusu bildirimleri almak için doğrulanmış bir e-posta ekleyin.",
       "emailAddLink": "E-posta ekle",
-      "emailDeliveryDisabled": "Bu örnekte e-posta gönderimi kapalı. E-posta tercihleriniz kaydedilir, ancak yönetici e-postayı yapılandırana kadar gönderilmez."
+      "emailDeliveryDisabled": "E-posta gönderimi kapalı. E-posta tercihleriniz kaydedilir ancak e-posta ayarlanana kadar gönderilmez."
     },
     "preferences": {
       "title": "Uygulama tercihleri",
@@ -2424,6 +2440,22 @@
       "mascotOptions": {
         "off": "Kapalı",
         "bill": "Fiş Bill"
+      },
+      "groupTabs": "Grup sekmeleri",
+      "groupTabsHelp": "Her grupta hangi sekmelerin gösterileceğini ve hangi sırada olacaklarını seçin.",
+      "groupTabsCustomize": "Özelleştir",
+      "groupTabsSave": "Kaydet",
+      "groupTabsDiscard": "At",
+      "groupTabsReset": "Varsayılanlara sıfırla",
+      "groupTabsHide": "{name} sekmesini gizle",
+      "groupTabsShow": "{name} sekmesini göster",
+      "groupTabsMoveUp": "{name} sekmesini yukarı taşı",
+      "groupTabsMoveDown": "{name} sekmesini aşağı taşı",
+      "deleteConfirmation": "Masraf silme onayı",
+      "deleteConfirmationHelp": "Hızlı silme bir kez sorar. Yazarak silme önce masraf başlığını yazmanı ister. Grup silmek veya üye çıkarmak her zaman yazmayı gerektirir.",
+      "deleteConfirmationOptions": {
+        "standard": "Onay penceresi",
+        "strict": "Yazarak onay penceresi"
       }
     },
     "aiPreferences": {
@@ -2616,7 +2648,111 @@
       "backedUp": "Yedeklendi",
       "removeWarning": "Bu işlem geri alınamaz. Bu cihaz artık geçiş anahtarıyla oturum açamayacak — istediğiniz zaman yeniden kaydedebilirsiniz.",
       "removeLastWarning": "Bu, son geçiş anahtarınız. Tek oturum açma yönteminiz buysa, bir kurtarma bağlantısı kaydedene veya başka bir oturum açma yöntemi ekleyene kadar kaldırma engellenir.",
-      "anonymousHelpNoLink": "Bu anonim hesap için kayıtlı oturum açma bağlantısı yok. Aşağıdaki oturum açma bağlantısı satırında bir tane oluşturun — her cihazda çalışır."
+      "anonymousHelpNoLink": "Bu anonim hesap için kayıtlı oturum açma bağlantısı yok. Aşağıdaki oturum açma bağlantısı satırında bir tane oluşturun — her cihazda çalışır.",
+      "reauthTitle": "Geçiş anahtarı eklemek için yeniden oturum aç",
+      "reauthDescription": "Güvenliğiniz için geçiş anahtarı eklemek yeni bir oturum gerektirir. Oturumunuz kapatılacak, yeniden oturum açacak ve işlemi tamamlamak için doğrudan buraya döneceksiniz.",
+      "reauthConfirm": "Yeniden oturum aç",
+      "reauthAnonymousTitle": "Önce oturum açma bağlantısı kaydedin",
+      "reauthAnonymousDescription": "Bu misafir hesapta henüz oturum açma bağlantısı ve geçiş anahtarı yok. Şimdi oturum kapatırsanız kalıcı olarak kilitlenirsiniz — önce Oturum açma bağlantısı bölümüne bir oturum açma bağlantısı kaydedin, ardından geçiş anahtarı eklemek için geri dönün."
+    },
+    "deletion": {
+      "sectionTitle": "Tehlikeli bölge",
+      "sectionDescription": "Hesabınızı ve tüm giriş yöntemlerinizi kalıcı olarak silin.",
+      "rowLabel": "Hesabı sil",
+      "rowDescription": "48 saatlik bekleme süresinden sonra profilinizi, oturumlarınızı ve ayarlarınızı kaldırır. Paylaşılan masraflar, kişisel bilgileriniz olmadan diğer üyelerin gruplarında kalır.",
+      "open": "Hesabı sil…",
+      "scheduledTitle": "Hesap silme zamanlandı",
+      "scheduledDescription": "Silme işlemi {date} tarihinde veya sonrasında başlayacak şekilde planlandı. Başlayana kadar hesabınız etkin kalır. Beklerken gruplar, üyeler ve harcamalar değişebilir; seçimleriniz silme sırasındaki durumlarına uygulanır. Silme başlayana kadar iptal edebilirsiniz. {email} adresine bir onay e-postası gönderildi.",
+      "cancel": "Silmeyi iptal et",
+      "cancelling": "İptal ediliyor…",
+      "cancelled": "Hesap silme iptal edildi.",
+      "dialogTitle": "Hesap silme planlansın mı?",
+      "dialogDescription": "Bu işlem silmeyi 48 saatlik bekleme süresinin sonrasına planlar; şu anda hiçbir şey silinmez. Silme başlayana kadar iptal edebilirsiniz. Seçimleriniz o sıradaki gruplara ve bakiyelere uygulanır. Silme başladıktan sonra geri alınamaz.",
+      "farewellTitle": "Aramızdan ayrıldığınıza üzüldük",
+      "farewellBody": "Kalmanız için yapabileceğimiz bir şey varsa, <feedbackLink>geri bildiriminizi paylaşın</feedbackLink> — bir dakikanızı alır ve gelişmemize yardımcı olur.",
+      "groupsTitle": "Gruplarınıza ne olacak",
+      "leaveGroup": "“{name}” grubundan ayrılacaksınız.",
+      "deleteGroup": "“{name}” kalıcı olarak silinecek — son üyesi sizsiniz.",
+      "lastAdmin": "“{name}” grubunun son yöneticisisiniz — başka bir üye otomatik olarak yönetici yapılacak.",
+      "settleBalances": "“{name}” grubundaki kapatılmamış bakiyeler otomatik olarak kapatılacak.",
+      "friendLedger": "{name} ile olan arkadaş defterinizin borcu kapatıldı ve defter kapatıldı.",
+      "friendLedgerUnnamed": "Arkadaş defterinizin borcu kapatıldı ve defter kapatıldı.",
+      "friendLedgerFallback": "bir arkadaş defteri",
+      "noGroups": "Hiçbir grubun üyesi değilsiniz.",
+      "accessTitle": "Giriş ve davetler",
+      "pendingInvites_zero": "Silme gerçekleştiğinde gönderdiğiniz {count} bekleyen davet iptal edilir.",
+      "pendingInvites_one": "Silme gerçekleştiğinde gönderdiğiniz {count} bekleyen davet iptal edilir.",
+      "pendingInvites_two": "Silme gerçekleştiğinde gönderdiğiniz {count} bekleyen davet iptal edilir.",
+      "pendingInvites_few": "Silme gerçekleştiğinde gönderdiğiniz {count} bekleyen davet iptal edilir.",
+      "pendingInvites_many": "Silme gerçekleştiğinde gönderdiğiniz {count} bekleyen davet iptal edilir.",
+      "pendingInvites_other": "Silme gerçekleştiğinde gönderdiğiniz {count} bekleyen davet iptal edilir.",
+      "keepNameLabel": "Adımı paylaşılan geçmişte koru",
+      "keepNameDescription": "Paylaşılan masraflarda “{name}” görünmeye devam edecek. Aksi takdirde adınız her yerde “Silinen üye” olarak değiştirilecek.",
+      "customNameLabel": "Korunacak ad",
+      "settleLabel": "Silme gerçekleştiğinde bakiyeleri kapatılmış olarak işaretle",
+      "settleDescription": "Kalan bakiyeler otomatik olarak kapatılacak. Aksi takdirde yer tutucu adınızda kalacak.",
+      "leaveBalances": "“{name}” grubundaki kapatılmamış bakiyeler olduğu gibi kalacak.",
+      "friendLeaveBalances": "{name} ile olan bakiyeniz olduğu gibi kalacak.",
+      "confirmWord": "SİL",
+      "ackLabel": "Bunun kalıcı olduğunu anlıyorum; paylaşılan masraflar, kişisel bilgilerim olmadan diğer üyelerin gruplarında kalmaya devam edecek.",
+      "exportHint": "Önce bir kopya mı istiyorsunuz? Devam etmeden önce <exportLink>yedek dışa aktarın</exportLink>.",
+      "schedule": "Silmeyi zamanla",
+      "scheduling": "Zamanlanıyor…",
+      "scheduled": "Silme zamanlandı. İncelemek veya iptal etmek için e-postanızı kontrol edin.",
+      "dialogCancel": "Hesabımı koru",
+      "reauthTitle": "Hesabınızı silmek için tekrar giriş yapın",
+      "reauthDescription": "Güvenliğiniz için hesabınızı silmek yeni bir giriş gerektirir. Oturumunuz kapatılacak, tekrar giriş yapacaksınız ve bitirmek için doğrudan buraya döneceksiniz.",
+      "reauthConfirm": "Tekrar giriş yap",
+      "errors": {
+        "generic": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin.",
+        "loadFailed": "Silme ayrıntıları yüklenemedi.",
+        "emailMismatch": "Yazdığınız e-posta, hesap e-postanızla eşleşmiyor.",
+        "alreadyRequested": "Bu hesap için zaten bekleyen bir silme isteği var.",
+        "sessionNotFresh": "Oturumunuz bu işlem için çok eski. Tekrar giriş yapıp yeniden deneyin.",
+        "jobsDisabled": "Hesap silme için arka plan çalışanı gerekir; bu dağıtımda devre dışı.",
+        "ackRequired": "Önce sonuçları anladığınızı onaylayın.",
+        "invalidDisplayName": "1 ile 100 karakter arasında bir ad girin.",
+        "cancelFailed": "Silme işlemi iptal edilemedi. Tekrar deneyin."
+      },
+      "groupsToDeleteTitle": "Silinecek gruplar",
+      "groupsToDeleteDescription": "Silme gerçekleştiğinde hâlâ son etkin üyesi olduğunuz gruplar kalıcı olarak silinir.",
+      "groupsToLeaveTitle": "Ayrılacağınız gruplar",
+      "groupsToLeaveDescription": "Silme gerçekleştiğinde hâlâ başka etkin üyeleri olan gruplardan ayrılırsınız. Bu gruplar diğer herkes için kalır.",
+      "friendsTitle": "Arkadaşlar",
+      "friendsDescription": "Bu arkadaşlarla bire bir bakiyeleriniz.",
+      "backToSettings": "Ayarlara dön",
+      "pageTitle": "Hesabı sil",
+      "loading": "Silme ayrıntıları yükleniyor",
+      "choicesTitle": "Hesap silme tercihleri",
+      "nameTitle": "Ortak geçmişteki ad",
+      "removeNameLabel": "Adımı “Silinmiş üye” olarak değiştir",
+      "balancesTitle": "Kalan bakiyeler",
+      "keepBalancesLabel": "Kalan bakiyeleri olduğu gibi bırak",
+      "balanceExplanation": "Borçları kapatmayı seçerseniz, hesabınız silindiğinde borç kapatma kayıtları oluşturulur. Para aktarılmaz. Aksi halde bakiyeler ortak geçmişinizde kalır.",
+      "confirmationTitle": "Hesap silmeyi onayla",
+      "retry": "Tekrar dene",
+      "pageDescription": "Hesabınızı 48 saatlik bekleme süresinin ardından silinecek şekilde planlayın. Silme başlayana kadar hesabınız etkin kalır; öncesinde iptal edebilirsiniz.",
+      "reviewChoicesTitle": "Seçimleriniz",
+      "consequencesTitle": "Neler olacak",
+      "reviewConfirmTitle": "Silmeyi onayla",
+      "backupLink": "Yedeği dışa aktar",
+      "keptNameExplanation": "Silme işlemi gerçekleştiğinde ortak harcamalarda “{name}” adı görünür. O zamana kadar profil adınız değişmez.",
+      "removedNameExplanation": "Silme işlemi gerçekleştiğinde ortak harcamalarda “Silinmiş üye” adı görünür. O zamana kadar profil adınız değişmez.",
+      "keptBalancesExplanation": "Silme başladığında, bekleme süresinde eklenen harcamalar dahil kalan bakiyeler ortak geçmişinizde kalır.",
+      "settledBalancesExplanation": "Silme sırasında, arşivlenmiş gruplar dahil hâlâ üyesi olduğunuz gruplardaki o anki bakiyeler borç kapatma kayıtlarıyla kapatılmış olarak işaretlenir. Daha önce ayrıldığınız veya çıkarıldığınız gruplardaki bakiyeler değişmez. Para aktarılmaz.",
+      "rowBalancesKept": "Kalan bakiyeler olduğu gibi kalır.",
+      "rowBalancesSettled": "Silme anındaki bakiye kapatılmış olarak işaretlenir.",
+      "rowAdmin": "Silme gerçekleştiğinde hâlâ son yönetici sizseniz başka bir üye yönetici olur.",
+      "friendKept": "Bakiyeniz olduğu gibi kalır.",
+      "friendSettled": "Silme gerçekleştiğinde o anki bakiyeniz kapatılmış olarak işaretlenir ve hesap defteri kapatılır.",
+      "accessExplanation": "Hesabınız silindiğinde bu giriş yöntemleri artık çalışmayacak.",
+      "invitesTitle": "Bekleyen davetler",
+      "balanceUnavailable": "Bakiye bilgisi alınamıyor",
+      "archivedBalancesKept": "Arşivlenmiş bu grup salt okunur olarak kalacak. Kalan bakiyeniz korunacak.",
+      "signInMethodsRemoved": "Şu giriş yöntemleri artık kullanılamayacak: {methods}.",
+      "consequencesTiming": "Bu inceleme hesabınızın şu anki durumunu yansıtır. Silme başlamadan önce gruplar, üyeler ve harcamalar değişebilir. Seçimleriniz o sırada üyesi olduğunuz gruplara ve bu grupların bakiyelerine uygulanır. Burada listelenenlerin hiçbiri hemen gerçekleşmez.",
+      "executingTitle": "Hesap silme başladı",
+      "executingDescription": "Hesabınızın silinmesi devam ediyor. Bazı değişiklikler tamamlanmış olabilir; silme iptal edilemez veya geri alınamaz. İşlem kesintiye uğrarsa tamamlanan adımlardan sonra devam eder."
     }
   },
   "Activities": {
@@ -2643,7 +2779,9 @@
       },
       "recurringCreated": "{participant}, “{title}” yinelenen giderini oluşturdu",
       "stopped": "{participant}, “{title}” yinelenen giderini durdurdu",
-      "commented": "{participant} {title} giderine yorum yaptı: “{excerpt}”"
+      "commented": "{participant} {title} giderine yorum yaptı: “{excerpt}”",
+      "yourShare": "Payınız:",
+      "notInvolved": "Dahil değilsiniz"
     },
     "group": {
       "updated": "{participant} grup ayarlarını güncelledi",
@@ -2656,7 +2794,11 @@
         "currencyCode": "Para birimi kodu",
         "linkedParticipant": "Bağlı katılımcı",
         "subgroupsEnabled": "Alt gruplar",
-        "publicViewLink": "Herkese açık salt görüntüleme bağlantısı"
+        "publicViewLink": "Herkese açık salt görüntüleme bağlantısı",
+        "emoji": "Emoji",
+        "color": "Renk",
+        "subgroups": "Alt gruplar",
+        "splitPresets": "Bölüşüm ön ayarları"
       }
     },
     "member": {
@@ -2686,7 +2828,20 @@
       "imported_other": "{participant}, {count} masraf aktardı"
     },
     "participant": {
-      "removed": "{participant}, {target} kullanıcısını gruptan kaldırdı"
+      "removed": "{participant}, {target} kullanıcısını gruptan kaldırdı",
+      "added": "{participant}, {target} kullanıcısını gruba ekledi"
+    },
+    "hiddenActivitiesShowLess": "Daha az göster",
+    "hiddenActivities_zero": "{count} dahil olmadığınız gizli etkinlik",
+    "hiddenActivities_one": "{count} dahil olmadığınız gizli etkinlik",
+    "hiddenActivities_two": "{count} dahil olmadığınız gizli etkinlik",
+    "hiddenActivities_few": "{count} dahil olmadığınız gizli etkinlik",
+    "hiddenActivities_many": "{count} dahil olmadığınız gizli etkinlik",
+    "hiddenActivities_other": "{count} dahil olmadığınız gizli etkinlik",
+    "viewMode": {
+      "label": "Etkinlik görünüm modu",
+      "forYou": "Sizin için",
+      "all": "Tümü"
     }
   },
   "OfflineBanner": {
@@ -2764,9 +2919,6 @@
   },
   "BulkCategorize": {
     "title": "Toplu kategorilendirme",
-    "calibrationTitle": "Adım 1 — Kalibrasyon",
-    "calibrationDescription": "Onayladığınız her örnek, AI’ın sonraki önerilerini geliştirmesine yardımcı olur. Tek turdan sonra hazır olabilir veya daha fazla örnek isteyebilir.",
-    "roundCount": "Tur {round} / {max}",
     "confidence": {
       "high": "Yüksek",
       "medium": "Orta",
@@ -2827,7 +2979,137 @@
     "doneTitle": "Kategoriler kaydedildi",
     "expenseColumn": "Harcama",
     "categoryColumn": "Kategori",
-    "confidenceColumn": "Güven"
+    "confidenceColumn": "Güven",
+    "simpleDescription": "Genel'deki masrafların kategori eşleşmelerini inceleyin, ardından seçimlerinizi kaydedin.",
+    "generateSuggestions": "Kategori öner",
+    "backToStart": "Geri",
+    "chooseMode": "Masrafları kategorilendirme yöntemini seçin",
+    "localMode": "Sözlük ve geçmiş",
+    "localModeDescription": "Bu grubun kategori geçmişini ve yerleşik sözlüğü kullanır.",
+    "startRun": "Kategorilendirmeyi başlat",
+    "noCategory": "Kategorisiz bırak",
+    "progressTitle": "Masraflar kategorilendiriliyor",
+    "progressDescription": "Bu sayfadan ayrılıp daha sonra dönebilirsiniz. İlerlemeniz kaydedilir.",
+    "progressCount": "{total} masraftan {categorized} tanesi kategorilendirildi",
+    "applyProgressTitle": "Kategoriler kaydediliyor",
+    "reviewTitle": "Önerileri inceleyin",
+    "reviewSummary": "{total} kategorisiz masraftan {suggested} öneri",
+    "sourceLocal": "Yerel",
+    "saveSelected": "Seçili kategorileri kaydet",
+    "retry": "Yeniden dene",
+    "restart": "Yeni tur başlat",
+    "failed": "Tur durdu: {message}",
+    "savedSummary": "{applied} değişti, {skipped} atlandı",
+    "selectedCount": "{count} seçili",
+    "selectAll": "Tümünü seç",
+    "clearAll": "Tümünü temizle",
+    "discardRun": "Turu at",
+    "partialSaveNotice": "Bazı kategoriler zaten kaydedilmiş olabilir. Bu turun atılması bu değişiklikleri geri almaz.",
+    "restartOlderRunTitle": "Yeni kategorilendirme turu başlat",
+    "restartOlderRunDescription": "Bu eski tur önceki inceleme akışını kullanıyordu. Tüm masrafları birlikte incelemek için yeniden başlayın.",
+    "runningMatches": "Şu ana kadar {total} masraftan {count} tanesinde kategori önerisi var",
+    "failedTitle": "Kategorilendirme durdu",
+    "reviewWorkload": "Genel'de {total} masraf · kategorilendirme için {selected} seçili · Genel'de kalan {general}",
+    "categoryChoices": "Kategori seçenekleri",
+    "moreCategories": "Başka kategori seç",
+    "saveCount": "{count} kategoriyi kaydet",
+    "finishWithoutChanges": "Değişiklik yapmadan bitir",
+    "completionSummary": "Tur tamamlandı: {total} masraftan {changed} tanesi değişti. {remaining} masraf Genel'de kaldı.",
+    "viewExpenses": "Masrafları görüntüle",
+    "countLoading": "Kategorilendirilmemiş masraflar sayılıyor…",
+    "nothingToCategorize": "Kategorilendirilecek kategorisiz masraf yok.",
+    "startingCount": "Şu anda {count} masraf Genel'de ve incelemeye hazır.",
+    "countError": "Kategorilendirilmemiş masraflar sayılamadı. Yeniden denemek için sayfayı yeniden yükleyin.",
+    "keepGeneral": "Genel · kategorisiz bırak",
+    "calibrationRoundTitle": "Kalibrasyon turu {round}",
+    "calibrationLoading": "Çeşitli masraflardan oluşan bir örnek hazırlanıyor…",
+    "calibrationReviewDescription": "Bu {count} masrafı inceleyin ve düzeltin. Seçimler en sonda kaydedilene kadar bu turda kalır.",
+    "confirmRound": "Turu onayla",
+    "roundSummaryTitle": "Tur {round} incelendi",
+    "roundSummaryDescription": "{reviewed} incelendi · {categorized} geçici olarak kategorilendirildi · Genel olarak bırakılan {general}",
+    "roundQuality": "İlk öneriler seçimlerinizle %{accuracy} eşleşti; {corrections} tanesini düzelttiniz.",
+    "categorizeRemaining": "Kalan masrafları kategorilendirin",
+    "nextRound": "Başka bir örneği incele",
+    "tableLabel": "Kategorilendirilecek masraflar",
+    "dateColumn": "Tarih",
+    "amountColumn": "Tutar",
+    "rerunSuggestions": "Önerileri yeniden çalıştır",
+    "roundQualityWithSuggestions": "Önerilen {proposed} kategoriden {accepted} tanesi kabul edildi · {changed} tanesi değiştirildi · Genel'den bulunan {missed} eşleşme",
+    "roundQualityNoSuggestions": "Önerilen kategori yok · Genel'den bulunan {missed} eşleşme · Genel'de bırakılan {abstained}",
+    "rerunChanged": "Önerilen {proposed} kategoriden {changed} tanesini değiştirdiniz.",
+    "rerunAssignedSingle": "Genel'de kalan 1 masrafa kategori atadınız.",
+    "rerunAssignedMultiple": "Genel'de kalan {count} masrafa kategori atadınız.",
+    "rerunPotentialSingle": "Değişiklikleriniz kalan 1 Genel masrafın eşleşmesini iyileştirebilir. Başka bir tur isterseniz önerileri yeniden çalıştırın.",
+    "rerunPotentialMultiple": "Değişiklikleriniz kalan {count} Genel masrafın eşleşmelerini iyileştirebilir. Başka bir tur isterseniz önerileri yeniden çalıştırın.",
+    "rerunEligible": "Başka bir tur için uygun: Genel {general} · belirsiz otomatik eşleşme {uncertain}. Düzeltmeleriniz bu önerileri iyileştirebilir.",
+    "rerunNoEligible": "Yeniden çalıştırılacak el değmemiş Genel veya belirsiz otomatik eşleşme kalmadı. Düzeltmeleriniz kaydettiğiniz kategorilere yine de dahil edilir.",
+    "rerunAlreadyUsed": "Son düzeltmeleriniz bu öneriler için zaten kullanıldı. Yeniden çalıştırmak için başka bir düzeltme yapın.",
+    "highMatch": "Yüksek eşleşme",
+    "mediumMatch": "Orta eşleşme",
+    "lowMatch": "Düşük eşleşme",
+    "belowMatchThreshold": "Eşleşme eşiğinin altında",
+    "refiningTitle": "Belirsiz eşleşmeler iyileştiriliyor",
+    "runLimitSummary": "Bu tur 10.000 masraf içeriyor. Kaydettikten sonra başka bir turda {count} Genel masraf daha kategorilendirilebilir.",
+    "pageLoading": "Masraflar yükleniyor…",
+    "pageLoadError": "Masraflar yüklenemedi.",
+    "pageRetry": "Yeniden dene",
+    "pageCount": "{total} masraftan {loaded} tanesi gösteriliyor",
+    "ledgerAmountNotice": "Tutarlar grup para birimiyle gösterilir.",
+    "viewExpenseDetails": "Masraf ayrıntılarını görüntüle",
+    "reviewFilterLabel": "Masrafları göster",
+    "filterAll": "Tümü {count}",
+    "filterGeneral": "Genel {count}",
+    "improveSuggestions": "Kalan önerileri iyileştir",
+    "rerunInfoLabel": "Önerileri iyileştirme hakkında",
+    "preparingNextStage": "Sonraki adım hazırlanıyor",
+    "rerunProgressTitle": "Öneriler güncelleniyor",
+    "progressPreparing": "Masraflar hazırlanıyor…",
+    "noGeneralRows": "Bu incelemede Genel'de masraf kalmadı.",
+    "discardConfirmationTitle": "Bu kategorilendirme turu atılsın mı?",
+    "discardConfirmationDescription": "Bu, turu, önerilerini ve sizin ya da diğer yöneticilerin yaptığı seçimleri kaldırır. Hiçbir masrafın kategorisi değişmez.",
+    "discardConfirmationCancel": "Turu koru",
+    "progressCountDescription": "Yalnızca onaylanan kategoriler ile orta ve yüksek eşleşmeler sayılır; Genel ve düşük güçlü eşleşmeler sayılmaz.",
+    "systemOneMode": "System One modeli",
+    "systemOneModeDescription": "Her masraf için System One karar modelini kullanır; bu grubun kategorilendirilmiş masraflarını ve gözden geçirdiğiniz seçimleri ipucu olarak alır. TypeSafe Jev bu tür modellerden biridir.",
+    "systemOneUnavailable": "System One kullanılamıyor. Sözlük ve geçmiş yine de kullanılabilir.",
+    "systemOneConfidence": "System One güven düzeyi: {confidence}%",
+    "systemOneOptionProbability": "System One seçeneği olasılığı: {probability}%",
+    "overallProgress": "Genel ilerleme",
+    "fullPassProcessed": "{total} masraftan {processed} tanesi işlendi",
+    "stageProcessed": "Bu adımda {total} masraftan {processed} tanesi işlendi",
+    "saveSkipped": "{count} masraf değiştiği için atlandı.",
+    "sharedRunNotice": "Bu tur diğer grup yöneticileriyle paylaşılıyor. Herkes aynı önerileri görür.",
+    "saveConflictTitle": "Bu inceleme başladığından beri {count} masraf değişti",
+    "saveConflictDescription": "Bu masraflar bu turun dışında düzenlendi veya kategorileri değiştirildi. Diğer masrafları kaydedin ya da kategorileri yeniden düzenleyip kaydetmeyi tekrar deneyin.",
+    "saveConflictMore": "Ve {count} tane daha.",
+    "saveOtherExpenses": "Diğer masrafları kaydet",
+    "receiptTitles": {
+      "freshMarket": "Taze Pazar",
+      "greenGrocer": "Manav",
+      "fruitStand": "Meyve Tezgâhı",
+      "cornerBistro": "Köşe Bistro",
+      "noodleHouse": "Noodle Evi",
+      "cafeLunch": "Kafede Öğle Yemeği",
+      "flightTicket": "Uçak Bileti",
+      "airlineBaggage": "Havayolu Bagajı",
+      "boardingPass": "Biniş Kartı",
+      "homeSupplies": "Ev Gereçleri",
+      "hardwareShop": "Hırdavat Dükkânı",
+      "cleaningGoods": "Temizlik Ürünleri",
+      "cinemaTickets": "Sinema Biletleri",
+      "movieNight": "Film Gecesi",
+      "filmFestival": "Film Festivali",
+      "organicMarket": "Organik Pazar",
+      "bakeryRun": "Fırın Alışverişi",
+      "sushiBar": "Suşi Bar",
+      "pizzaNight": "Pizza Gecesi",
+      "airportLounge": "Havalimanı Salonu",
+      "extraLegroom": "Ekstra Diz Mesafesi",
+      "laundryDetergent": "Çamaşır Deterjanı",
+      "storageBoxes": "Saklama Kutuları",
+      "popcornCombo": "Patlamış Mısır Menüsü",
+      "streamingRental": "Dijital Film Kiralama"
+    }
   },
   "ExpensePreview": {
     "title": "Masraf önizlemesi",
@@ -2873,10 +3155,14 @@
         "deleteGroup": "<target>{name}</target> adlı grubu kalıcı olarak silmek için aşağıda gösterilen adı birebir yazın.",
         "deleteExpense": "<target>{name}</target> adlı masrafı kalıcı olarak silmek için aşağıda gösterilen başlığı birebir yazın.",
         "deleteRecurringExpense": "<target>{name}</target> adlı masrafın silinmesini onaylamak için aşağıda gösterilen masraf başlığını birebir yazın.",
-        "removeParticipant": "<target>{name}</target> adlı katılımcıyı bu gruptan çıkarmak için aşağıda gösterilen adı birebir yazın."
+        "removeParticipant": "<target>{name}</target> adlı katılımcıyı bu gruptan çıkarmak için aşağıda gösterilen adı birebir yazın.",
+        "deleteAccount": "Hesabınızı kalıcı olarak silmek için <target>{name}</target> ifadesini aşağıda gösterildiği gibi birebir yazın."
       },
       "placeholder": "Buraya şunu yazın: “{name}”",
-      "mismatch": "Eşleşmiyor. Tam olarak şunu yazın: {name}."
+      "mismatch": "Eşleşmiyor. Tam olarak şunu yazın: {name}.",
+      "settingsNoteLink": "Hesap ayarlarında değiştir",
+      "settingsNoteLead": "Yazmayı atlamak ister misiniz?",
+      "settingsNoteTail": "sade bir onay penceresi kullanmak için."
     }
   },
   "Theme": {
@@ -2900,7 +3186,7 @@
     "failedDescription": "Bu cihaz kaydedilemedi. E-posta için yapılandırılan bildirimler e-posta üzerinden devam eder; yalnızca anlık bildirim seçenekleri başka kanala yönlendirilmez.",
     "emailUsage": "Bir cihaz etkinleştirene kadar yalnızca e-posta için yapılandırılan bildirimler gelir. Tarayıcı ayarlarınızdan bildirimlere izin verin ve Ayarlar'dan tekrar deneyin.",
     "done": "Tamam",
-    "emailDeliveryDisabled": "Bu örnekte e-posta gönderimi kapalı, bu yüzden e-posta bildirimleri size ulaşamaz. Güncellemeleri almaya devam etmek için bu cihazda push bildirimlerini açın."
+    "emailDeliveryDisabled": "E-posta gönderimi kapalı olduğundan e-posta bildirimleri size ulaşamaz. Güncellemeleri almaya devam etmek için bu cihazda anlık bildirimleri açın."
   },
   "Unsubscribe": {
     "title": "Bu e-postaları kapat?",
@@ -3371,7 +3657,8 @@
     "hintTapToAddExpense": "Ben {name} — gider eklemek için bana dokun.",
     "hintTapToCreateGroup": "Ben {name} — grup oluşturmak için bana dokun.",
     "billName": "Bill",
-    "offlineMessage": "Çevrimdışıyken hiçbir şey oluşturamam."
+    "offlineMessage": "Çevrimdışıyken hiçbir şey oluşturamam.",
+    "serverUnreachableMessage": "Şu anda Spliit sunucusuna ulaşamıyorum — bağlantın normal görünüyor, yani sorun bizde."
   },
   "CreateSettlement": {
     "description": "Ödemeyi kaydetmeden önce gözden geçirin.",
@@ -3422,7 +3709,18 @@
       "existingPasskeyTitle": "Zaten kayıtlı bir geçiş anahtarınız var mı?",
       "existingPasskeyDescription": "Kayıtlı cihazlarınızdan birindeki geçiş anahtarıyla yeniden oturum açın.",
       "passkeySignIn": "Geçiş anahtarıyla oturum aç",
-      "passkeySignInError": "Bu geçiş anahtarıyla oturum açılamadı. Tekrar deneyin veya oturum açma bağlantınızı kullanın."
+      "passkeySignInError": "Bu geçiş anahtarıyla oturum açılamadı. Tekrar deneyin veya oturum açma bağlantınızı kullanın.",
+      "passkeyNameLabel": "Bu geçiş anahtarına bir ad verin (isteğe bağlı)",
+      "passkeyNamePlaceholder": "örn. MacBook Touch ID",
+      "nameTitle": "Bir görünen ad seçin",
+      "nameDescription": "Geçiş anahtarınızda ve gruplarınızda görünür. Daha sonra değiştirebilirsiniz.",
+      "nameLabel": "Görünen ad",
+      "namePlaceholder": "Adınız",
+      "nameSave": "Kaydet ve devam et",
+      "nameSaving": "Kaydediliyor…",
+      "nameRequired": "Bir görünen ad girin.",
+      "nameTooShort": "Ad en az 2 karakter olmalıdır.",
+      "nameError": "Görünen ad kaydedilemedi. Lütfen tekrar deneyin."
     },
     "onboarding": {
       "title": "Kurtarma bağlantınızı kaydedin",
@@ -3561,6 +3859,29 @@
         "review": {
           "title": "İncele ve içe aktar",
           "detail": "Yinelenenleri denetle ve içe aktarmayı onayla."
+        }
+      }
+    },
+    "categorize": {
+      "title": "Masrafları kategorilendir",
+      "description": "Mevcut kategorilendirilmemiş masraflar için System One ile kategori önerin. Kaydetmeden önce her değişikliği inceleyin.",
+      "start": "Masrafları kategorilendir",
+      "steps": {
+        "choose": {
+          "title": "Yöntem seçin",
+          "detail": "Sözlük ve geçmişi veya System One karar modelini kullanın."
+        },
+        "calibrate": {
+          "title": "Küçük örnekleri inceleyin",
+          "detail": "Önerileri düzeltin, sonraki tur grubunuzun kategorilerini öğrensin."
+        },
+        "review": {
+          "title": "Her masrafı inceleyin",
+          "detail": "Genel masraflar tam tabloda önce görünür."
+        },
+        "save": {
+          "title": "Kategorileri kaydedin",
+          "detail": "Masraflar yalnızca son incelemeyi onayladığınızda değişir."
         }
       }
     }
@@ -4104,7 +4425,8 @@
       "valuesRecomputedTitle": "Değerler yeniden hesaplandı",
       "viewExpenses": "Masrafları görüntüle",
       "waitDuplicate": "İçe aktarmadan önce yinelenen denetiminin bitmesini bekle.",
-      "invalidRowTitle": "Geçersiz içe aktarma satırı"
+      "invalidRowTitle": "Geçersiz içe aktarma satırı",
+      "categorizeWithSystemOne": "Kategorilendirilmemiş masraflar için System One ile kategori öner"
     }
   },
   "Sponsor": {
@@ -4259,5 +4581,26 @@
     "expenseMissing": "Bu gider bu cihazdaki indirmede yok. Daha yeni/eski giderler için yeniden bağlan.",
     "groupMissing": "Bu grup henüz indirilmedi.",
     "balancesStale": "Bakiyeler güncel olmayabilir."
+  },
+  "ApiErrorEmptyState": {
+    "title": "Spliit kullanılamıyor",
+    "description": "Şu anda Spliit sunucusuna ulaşamıyoruz. Bağlantın normal görünüyor — lütfen birazdan tekrar dene.",
+    "retry": "Tekrar dene"
+  },
+  "ApiStatusBanner": {
+    "message": "Şu anda Spliit'e ulaşılamıyor. Bağlantın normal görünüyor — sorun bizden kaynaklanıyor.",
+    "statusLink": "Durumu kontrol et"
+  },
+  "AccountDeletionBanner": {
+    "scheduled": "Hesabın {date} tarihinde silinmesi planlandı.",
+    "review": "Silme işlemini incele veya iptal et",
+    "executing": "Hesap silme işlemi başladı.",
+    "viewStatus": "Silme durumunu görüntüle"
+  },
+  "Updates": {
+    "title": "Güncellemeler",
+    "latest": "Yenilikler",
+    "viewAll": "Tüm güncellemeleri görün",
+    "dismiss": "Anladım"
   }
 }

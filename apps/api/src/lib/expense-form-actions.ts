@@ -44,7 +44,7 @@ export type SuggestCategoryWithAIOptions = {
  * (`AI_CATEGORY_MIN_CONFIDENCE`) applies as for System One verdicts.
  * `runnersUp` holds up to 3 alternative categories, each with its own
  * independent 0–1 confidence (rated on their own, not summing to 1); the caller
- * normalizes them into a Jev-style distribution.
+ * normalizes them into a System One option distribution.
  */
 const categoryRunnerSchema = z.object({
   categoryId: z.string(),

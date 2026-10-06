@@ -94,8 +94,10 @@ describe('ReportPrintPage', () => {
 
     await screen.findByRole('heading', { name: 'Trip to Lisbon' })
 
-    expect(document.title).toBe(
-      'Spliit Cloud - Trip to Lisbon - Expense report (2026-07-01 to 2026-07-31)',
+    await waitFor(() =>
+      expect(document.title).toBe(
+        'Spliit Cloud - Trip to Lisbon - Expense report (2026-07-01 to 2026-07-31)',
+      ),
     )
   })
 
