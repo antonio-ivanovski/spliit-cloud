@@ -35,6 +35,19 @@ describe('parseMcpEnv', () => {
     ).toBe('fresh-portal-token')
   })
 
+  it('treats an empty OpenAI Apps challenge as unset', () => {
+    for (const challenge of ['', '   ']) {
+      expect(
+        parseMcpEnv({
+          MCP_API_URL: 'https://api.spliit.example',
+          MCP_PUBLIC_URL: 'https://mcp.spliit.example',
+          MCP_WEB_URL: 'https://spliit.example',
+          OPENAI_APPS_CHALLENGE: challenge,
+        }).openaiAppsChallenge,
+      ).toBeUndefined()
+    }
+  })
+
   it('rejects malformed URLs and ports', () => {
     expect(() =>
       parseMcpEnv({
