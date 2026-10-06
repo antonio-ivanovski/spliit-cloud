@@ -29,6 +29,7 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
@@ -57,9 +58,15 @@ type FormState = {
 
 export function WebhookSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'AccountWebhooks' })
+  const { t: tRoot } = useTranslation()
   const { toast } = useToast()
   const utils = trpc.useUtils()
-  const endpoints = trpc.webhooks.list.useQuery()
+  const isOnline = useOnlineStatus()
+  // Remote account data is connection-required: never launch the query
+  // offline and never spin forever on loading.
+  const endpoints = trpc.webhooks.list.useQuery(undefined, {
+    enabled: isOnline,
+  })
   const [form, setForm] = useState<FormState | null>(null)
   const [secret, setSecret] = useState<string | null>(null)
   const [historyEndpoint, setHistoryEndpoint] = useState<Endpoint | null>(null)
@@ -90,6 +97,7 @@ export function WebhookSettings() {
             <Button
               type="button"
               size="sm"
+              disabled={!isOnline}
               onClick={() => setForm({ mode: 'create', endpoint: null })}
             >
               <Plus className="me-2 size-4" />
@@ -98,7 +106,11 @@ export function WebhookSettings() {
           </div>
         }
       >
-        {endpoints.isPending ? (
+        {!isOnline && !endpoints.data ? (
+          <p className="px-4 pb-4 text-sm text-muted-foreground sm:px-6">
+            {tRoot('OfflineReadOnly.needsConnection')}
+          </p>
+        ) : endpoints.isPending ? (
           <p className="px-4 pb-4 text-sm text-muted-foreground sm:px-6">
             {t('loading')}
           </p>
@@ -202,6 +214,7 @@ function EndpointRow({
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'AccountWebhooks' })
   const { toast } = useToast()
+  const isOnline = useOnlineStatus()
   const [deleteOpen, setDeleteOpen] = useState(false)
   const test = trpc.webhooks.test.useMutation({
     onSuccess: () => toast({ title: t('testQueued') }),
@@ -234,6 +247,7 @@ function EndpointRow({
       }),
   })
   const pending = test.isPending || rotate.isPending || remove.isPending
+  const actionsDisabled = pending || !isOnline
 
   return (
     <SettingsRow
@@ -300,7 +314,7 @@ function EndpointRow({
                   type="button"
                   size="icon"
                   variant="outline"
-                  disabled={pending}
+                  disabled={actionsDisabled}
                   aria-label={t('actions')}
                 />
               }
@@ -310,16 +324,16 @@ function EndpointRow({
             <DropdownMenuContent align="end" className="w-52">
               <DropdownMenuItem
                 onClick={() => test.mutate({ endpointId: endpoint.id })}
-                disabled={pending}
+                disabled={actionsDisabled}
               >
                 {t('test')}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={onHistory}>
+              <DropdownMenuItem onClick={onHistory} disabled={!isOnline}>
                 {t('history')}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => rotate.mutate({ endpointId: endpoint.id })}
-                disabled={pending}
+                disabled={actionsDisabled}
               >
                 {t('rotate')}
               </DropdownMenuItem>
@@ -327,7 +341,7 @@ function EndpointRow({
               <DropdownMenuItem
                 className="text-destructive focus:text-destructive"
                 onClick={() => setDeleteOpen(true)}
-                disabled={pending}
+                disabled={actionsDisabled}
               >
                 {t('delete')}
               </DropdownMenuItem>

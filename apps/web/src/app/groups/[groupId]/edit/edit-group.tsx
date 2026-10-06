@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { ForceArchiveDialog } from '@/components/force-archive-dialog'
 import { GroupForm } from '@/components/group-form'
+import { OfflineNeedsConnection } from '@/components/offline-download-status'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -14,10 +15,12 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useOfflineWithoutData, useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 import {
   useCurrentGroup,
+  useGroupWriteEligibility,
   useIsReadOnlyGroupViewer,
 } from '../current-group-context'
 import { ExportOptionsCard } from '../export-options-card'
@@ -36,11 +39,16 @@ export const EditGroup = () => {
   const isReadOnlyViewer = useIsReadOnlyGroupViewer()
   const { data: account } = useCurrentAccount()
   const { linkInviteToken, viewKey } = useGroupAccessSearch()
-  const { data, isLoading } = trpc.groups.getDetails.useQuery({
-    groupId,
-    linkInviteToken,
-    viewKey,
-  })
+  const isOnline = useOnlineStatus()
+  const { connectionReadOnly } = useGroupWriteEligibility()
+  const { data, isLoading } = trpc.groups.getDetails.useQuery(
+    {
+      groupId,
+      linkInviteToken,
+      viewKey,
+    },
+    { enabled: isOnline },
+  )
   const updateMutation = useUpdateGroupMutation()
   const deleteMutation = useDeleteGroupMutation()
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
@@ -51,6 +59,19 @@ export const EditGroup = () => {
   const archiveMutation = useArchiveGroupMutation({
     onUnsettledBalances: () => setForceArchiveOpen(true),
   })
+
+  const showOfflineEmpty = useOfflineWithoutData(!!data)
+  if (!isOnline || showOfflineEmpty) {
+    // Group details are not part of the offline snapshot: never initialize
+    // an editable form from stale/absent data offline. Archive/delete stay
+    // unavailable until reconnect (write guard also rejects).
+    return (
+      <OfflineNeedsConnection
+        backLabel={tGroups('backToGroups')}
+        backHref={`/groups/${groupId}`}
+      />
+    )
+  }
 
   if (isLoading) return <></>
   if (!group) return null
@@ -125,7 +146,7 @@ export const EditGroup = () => {
             <Button
               type="button"
               variant="secondary"
-              disabled={archiveMutation.isPending}
+              disabled={archiveMutation.isPending || connectionReadOnly}
               onClick={() =>
                 archiveMutation.mutate({
                   groupId,
@@ -163,6 +184,7 @@ export const EditGroup = () => {
             <Button
               type="button"
               variant="destructive"
+              disabled={connectionReadOnly}
               onClick={() => setDeleteDialogOpen(true)}
             >
               <Trash className="me-2 h-4 w-4" />

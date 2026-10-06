@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { useOnlineStatus } from '@/lib/use-online-status'
 
 const IMPORT_STEPS = [
   {
@@ -54,12 +55,14 @@ export default function GroupToolsPage() {
   const { group, groupId, viewer, currentInvitation, currentMember } =
     groupContext ?? {}
   const resolvedGroupId = groupId ?? ''
-  // The tab itself stays visible to everyone so the tools remain
-  // discoverable; each card gates its own action.
+  const isOnline = useOnlineStatus()
+  // Offline is read-only: import/AI require connection even for members.
+  // Keep the page discoverable but disable actions with honest copy.
   const canMutate =
     Boolean(group) &&
     (viewer?.canMutate ?? !currentInvitation) &&
-    !group?.archived
+    !group?.archived &&
+    isOnline
 
   return (
     <div className="mb-4 flex flex-col gap-4">
@@ -121,9 +124,11 @@ export default function GroupToolsPage() {
             </Button>
             {!canMutate ? (
               <p className="text-xs text-muted-foreground">
-                {group?.archived
-                  ? t('Tools.import.archivedNotice')
-                  : t('Tools.import.readOnlyNotice')}
+                {!isOnline
+                  ? t('OfflineReadOnly.reconnectToEdit')
+                  : group?.archived
+                    ? t('Tools.import.archivedNotice')
+                    : t('Tools.import.readOnlyNotice')}
               </p>
             ) : null}
           </div>
@@ -163,7 +168,7 @@ export default function GroupToolsPage() {
                 </li>
               ))}
             </ol>
-            <div className="border-t border-border/70 pt-5">
+            <div className="space-y-2 border-t border-border/70 pt-5">
               <Button
                 type="button"
                 disabled={!canMutate}
@@ -179,6 +184,15 @@ export default function GroupToolsPage() {
               >
                 {t('Tools.categorize.start')}
               </Button>
+              {!canMutate ? (
+                <p className="text-xs text-muted-foreground">
+                  {!isOnline
+                    ? t('OfflineReadOnly.reconnectToEdit')
+                    : group?.archived
+                      ? t('Tools.import.archivedNotice')
+                      : t('Tools.import.readOnlyNotice')}
+                </p>
+              ) : null}
             </div>
           </CardContent>
         </Card>

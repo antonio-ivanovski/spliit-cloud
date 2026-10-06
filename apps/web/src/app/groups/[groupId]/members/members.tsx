@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { AccountAvatar } from '@/components/account-avatar'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
+import { OfflineNeedsConnection } from '@/components/offline-download-status'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -17,6 +18,7 @@ import {
 import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
+import { useOfflineWithoutData } from '@/lib/use-online-status'
 
 import { useCurrentGroup } from '../current-group-context'
 import { InviteCard } from './invite-card'
@@ -134,6 +136,7 @@ function ReadOnlyMembers() {
 
 function GroupMembersBody() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
+  const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const locale = useLocale()
   const accountPreferences = useSyncedAccountPreferences()
   const accountTimeZone =
@@ -217,6 +220,18 @@ function GroupMembersBody() {
   } as const
 
   const isOnlyActiveMember = !isArchived && listMembers.length <= 1
+
+  const showOfflineEmpty = useOfflineWithoutData(!!membersQuery.data)
+  if (showOfflineEmpty) {
+    // Member administration is connection-required offline: never show a
+    // false empty member list and never promise persisted invites.
+    return (
+      <OfflineNeedsConnection
+        backLabel={tGroups('backToGroups')}
+        backHref={`/groups/${groupId}`}
+      />
+    )
+  }
 
   return (
     <div className="flex flex-col gap-6">
