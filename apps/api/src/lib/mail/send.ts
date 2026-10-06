@@ -8,7 +8,11 @@ export type EmailMessage = {
   subject: string
   text: string
   html: string
-  /** Controlled RFC 5322 headers (for example List-Unsubscribe). */
+  /**
+   * Controlled RFC 5322 headers (for example List-Unsubscribe). The Cloudflare
+   * REST sender only accepts the provider allowlist (plus `X-` headers) and
+   * rejects anything else — see `assertCloudflareHeaders`.
+   */
   headers?: Record<string, string>
 }
 
@@ -198,6 +202,7 @@ export function createCloudflareEmailSender(
     }
 
     assertNonEmptyBodies(message)
+    assertCloudflareHeaders(message.headers)
 
     if (!loggedConfig) {
       loggedConfig = true
@@ -215,7 +220,7 @@ export function createCloudflareEmailSender(
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: config.from,
+          from: toCloudflareAddress(config.from),
           to: [message.to],
           subject: message.subject,
           text: message.text,
@@ -253,6 +258,116 @@ export function createCloudflareEmailSender(
         response.status,
       )
     }
+    await throwOnRecipientDrop(response, message.to)
+  }
+}
+
+/**
+ * Cloudflare Email Sending accepts headers on an allowlist (plus `X-` headers)
+ * and rejects the entire request when anything else is present — including
+ * platform-controlled headers it generates itself (`Message-ID`, `Date`, …) and
+ * first-class API fields (`From`, `Subject`, …). Fail fast locally with a clear
+ * error instead of burning an API round-trip that can only come back HTTP 400
+ * (`email.sending.error.email.invalid`).
+ */
+const CLOUDFLARE_PLATFORM_HEADERS = new Set([
+  'date',
+  'message-id',
+  'mime-version',
+  'content-type',
+  'content-transfer-encoding',
+  'dkim-signature',
+  'return-path',
+  'received',
+  'feedback-id',
+  'arc-seal',
+  'arc-message-signature',
+  'arc-authentication-results',
+  'tls-required',
+  'tls-report-domain',
+  'tls-report-submitter',
+  'cfbl-address',
+  'cfbl-feedback-id',
+  // First-class API fields must use the dedicated `from`/`to`/`subject`
+  // properties instead of the `headers` object.
+  'from',
+  'to',
+  'cc',
+  'bcc',
+  'subject',
+  'reply-to',
+])
+
+function assertCloudflareHeaders(
+  headers: Record<string, string> | undefined,
+): void {
+  if (!headers) return
+  for (const name of Object.keys(headers)) {
+    const lower = name.toLowerCase()
+    if (lower.startsWith('arc-') || CLOUDFLARE_PLATFORM_HEADERS.has(lower)) {
+      throw new Error(
+        `[mail] Email header '${name}' is not allowed by Cloudflare Email ` +
+          'Sending and would reject the whole request. Use the dedicated ' +
+          'API fields or an `X-` tracking header instead.',
+      )
+    }
+  }
+}
+
+/**
+ * The REST `from` field accepts a bare address or an `{address, name}` object —
+ * not a display-name string (`Name <addr>`), which the schema does not
+ * document. Normalize that common `EMAIL_FROM` form to the object shape so
+ * provider validation cannot reject it.
+ */
+function toCloudflareAddress(
+  from: string,
+): string | { address: string; name: string } {
+  const match = from.match(/^(.*?)\s*<([^<>\s]+@[^<>\s]+)>\s*$/)
+  const name = match?.[1]?.trim()
+  const address = match?.[2]?.trim()
+  if (address && name) return { address, name }
+  return address ?? from
+}
+
+/**
+ * A 2xx response can still mean our recipient never got the message
+ * (`permanent_bounces`, or `suppressed_recipients` when suppression dropping is
+ * enabled). Treat that as a permanent failure instead of recording a phantom
+ * SENT. Anything else — including an unparseable body — keeps the previous
+ * accept semantics.
+ */
+async function throwOnRecipientDrop(
+  response: Response,
+  recipient: string,
+): Promise<void> {
+  let body: unknown
+  try {
+    body = await response.json()
+  } catch {
+    return
+  }
+  if (!body || typeof body !== 'object') return
+  const result = (body as { result?: unknown }).result
+  if (!result || typeof result !== 'object') return
+  const dropped: string[] = []
+  for (const bucket of [
+    'permanent_bounces',
+    'suppressed_recipients',
+  ] as const) {
+    const list = (result as Record<string, unknown>)[bucket]
+    if (Array.isArray(list)) {
+      for (const entry of list) {
+        if (typeof entry === 'string') dropped.push(entry)
+      }
+    }
+  }
+  if (dropped.includes(recipient)) {
+    throw cloudflareRestError(
+      'CF_PERMANENT_BOUNCE',
+      `Cloudflare Email Sending dropped recipient ${recipient}: ` +
+        'permanent bounce or suppression list.',
+    )
   }
 }
 

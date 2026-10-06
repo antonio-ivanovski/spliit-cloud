@@ -277,13 +277,129 @@ describe('createCloudflareEmailSender', () => {
     })
     expect(init.signal).toBeInstanceOf(AbortSignal)
     expect(JSON.parse(init.body as string)).toEqual({
-      from: 'Spliit Cloud <noreply@test>',
+      from: { address: 'noreply@test', name: 'Spliit Cloud' },
       to: ['recipient@example.com'],
       subject: 'Test subject',
       text: 'plain text body',
       html: '<p>html body</p>',
       headers: { 'List-Unsubscribe': '<https://example.com/unsub>' },
     })
+  })
+
+  it('passes a bare from address through unchanged', async () => {
+    let body: Record<string, unknown> = {}
+    const fetchImpl = (async (_url: unknown, init: RequestInit) => {
+      body = JSON.parse(init.body as string) as Record<string, unknown>
+      return new Response(JSON.stringify({ success: true }), { status: 200 })
+    }) as typeof fetch
+    await createCloudflareEmailSender({
+      ...baseConfig,
+      from: 'noreply@test',
+      fetchImpl,
+    })(message)
+    expect(body.from).toBe('noreply@test')
+  })
+
+  it.each([
+    { 'Message-ID': '<a@test>' },
+    { 'message-id': '<a@test>' },
+    { Date: 'Thu, 01 Jan 2026 00:00:00 GMT' },
+    { From: 'someone@test' },
+    { Subject: 'other' },
+    { 'ARC-Seal': 'seal' },
+  ])(
+    'rejects disallowed header %o without calling the API',
+    async (headers) => {
+      let called = false
+      const fetchImpl = (async () => {
+        called = true
+        return new Response(JSON.stringify({ success: true }), { status: 200 })
+      }) as typeof fetch
+      const send = createCloudflareEmailSender({
+        ...baseConfig,
+        fetchImpl,
+      })
+      await expect(send({ ...message, headers })).rejects.toThrow(
+        /not allowed by Cloudflare Email Sending/,
+      )
+      expect(called).toBe(false)
+    },
+  )
+
+  it('accepts allowlisted and X- headers', async () => {
+    const fetchImpl = okFetch()
+    const send = createCloudflareEmailSender({
+      ...baseConfig,
+      fetchImpl,
+    })
+    await expect(
+      send({
+        ...message,
+        headers: {
+          'List-Unsubscribe': '<https://example.com/unsub>',
+          'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+          'X-Spliit-Delivery-Id': 'delivery-1',
+        },
+      }),
+    ).resolves.toBeUndefined()
+  })
+
+  it.each([
+    {
+      name: 'permanent bounces',
+      result: { delivered: [], permanent_bounces: ['recipient@example.com'] },
+    },
+    {
+      name: 'suppressed recipients',
+      result: {
+        delivered: [],
+        suppressed_recipients: ['recipient@example.com'],
+      },
+    },
+  ])(
+    'throws a permanent error on $name instead of recording a phantom send',
+    async ({ result }) => {
+      const fetchImpl = (async () =>
+        new Response(JSON.stringify({ success: true, result }), {
+          status: 200,
+        })) as typeof fetch
+      const error = await createCloudflareEmailSender({
+        ...baseConfig,
+        fetchImpl,
+      })(message).catch((err: unknown) => err)
+      expect(error).toMatchObject({
+        code: 'CF_PERMANENT_BOUNCE',
+        provider: 'cloudflare-email',
+      })
+    },
+  )
+
+  it('treats queued recipients and unparseable bodies as accepted', async () => {
+    const send = createCloudflareEmailSender({
+      ...baseConfig,
+      fetchImpl: okFetch(),
+    })
+    await expect(send(message)).resolves.toBeUndefined()
+    const queuedFetch = (async () =>
+      new Response(
+        JSON.stringify({
+          success: true,
+          result: { queued: ['recipient@example.com'] },
+        }),
+        { status: 200 },
+      )) as typeof fetch
+    await expect(
+      createCloudflareEmailSender({ ...baseConfig, fetchImpl: queuedFetch })(
+        message,
+      ),
+    ).resolves.toBeUndefined()
+    const textFetch = (async () =>
+      new Response('ok', { status: 200 })) as typeof fetch
+    await expect(
+      createCloudflareEmailSender({ ...baseConfig, fetchImpl: textFetch })(
+        message,
+      ),
+    ).resolves.toBeUndefined()
   })
 
   it('omits the headers key when the message has none', async () => {

@@ -24,5 +24,6 @@ who is affected, and the exact migration steps.
 ### 🐛 Bug fixes
 
 - Short entry per fix (`TBD` by @TBD)
+- Fixed all Cloudflare-sent email failing with HTTP 400 (`email.invalid`): callers set the platform-controlled `Message-ID` header, which Cloudflare rejects on the whole request. Tracking now travels in an allowed `X-Spliit-Delivery-Id` header, display-name senders use the documented `{address, name}` shape, and permanent bounces no longer record phantom sends (`TBD` by @TBD)
 
 **Full Changelog**: TBD

@@ -80,6 +80,37 @@ describe('Cloud announcement delivery', () => {
     expect(sendEmailMock.mock.calls[0]?.[0]?.html).toContain(
       'Unsubscribe from these email notifications',
     )
+    // Message-ID is platform-controlled: Cloudflare rejects the whole
+    // request when callers set it (HTTP 400 email.invalid).
+    const headers = sendEmailMock.mock.calls[0]?.[0]?.headers as
+      | Record<string, string>
+      | undefined
+    expect(headers).not.toHaveProperty('Message-ID')
+    expect(headers?.['X-Spliit-Delivery-Id']).toBe('delivery-1')
+  })
+
+  it('fails fast on permanent provider rejections instead of retrying', async () => {
+    setupDelivery(null)
+    sendEmailMock.mockRejectedValueOnce(
+      Object.assign(
+        new Error(
+          'Cloudflare Email Sending failed (HTTP 400): 10202: email.sending.error.email.invalid',
+        ),
+        {
+          code: 'CF_HTTP_400',
+          responseCode: 400,
+          provider: 'cloudflare-email',
+        },
+      ),
+    )
+    await processAnnouncementCampaigns()
+    expect(prismaMock.announcementEmailDelivery.update).toHaveBeenCalledWith({
+      where: { id: 'delivery-1' },
+      data: {
+        status: 'FAILED',
+        lastError: expect.stringContaining('10202'),
+      },
+    })
   })
 
   it('skips a recipient who opted out after audience selection', async () => {

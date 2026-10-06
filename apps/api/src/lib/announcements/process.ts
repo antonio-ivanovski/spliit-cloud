@@ -9,6 +9,7 @@ import { randomId } from '../api/shared'
 import { getWebBaseUrl } from '../auth/urls'
 import { env, isEmailDeliveryEnabled } from '../env'
 import { sendEmail } from '../mail/send'
+import { classifyEmailError } from '../notifications/email-delivery-sender'
 import { buildEmailUnsubscribeMetadata } from '../notifications/unsubscribe'
 import { campaignHooks } from './campaigns'
 import { renderAnnouncementEmail } from './render'
@@ -104,7 +105,10 @@ async function sendOne(deliveryId: string) {
       text,
       html,
       headers: {
-        'Message-ID': `<announcement-${delivery.id}@spliit.app>`,
+        // No Message-ID: Cloudflare generates it and rejects the whole
+        // request when callers set platform-controlled headers. The
+        // delivery id stays traceable via an allowed X- header instead.
+        'X-Spliit-Delivery-Id': delivery.id,
         'List-Unsubscribe': unsubscribe.headers['List-Unsubscribe'],
         'List-Unsubscribe-Post': unsubscribe.headers['List-Unsubscribe-Post'],
       },
@@ -114,10 +118,15 @@ async function sendOne(deliveryId: string) {
       data: { status: 'SENT', sentAt: new Date(), lastError: null },
     })
   } catch (error) {
+    // Permanent provider rejections (bad address, disabled sending) fail
+    // fast instead of burning all attempts on retries that cannot succeed.
+    const permanent =
+      classifyEmailError(error) === 'permanent' ||
+      delivery.attempts >= MAX_ATTEMPTS
     await prisma.announcementEmailDelivery.update({
       where: { id: deliveryId },
       data: {
-        status: delivery.attempts >= MAX_ATTEMPTS ? 'FAILED' : 'RETRY',
+        status: permanent ? 'FAILED' : 'RETRY',
         lastError:
           error instanceof Error
             ? error.message.slice(0, 500)

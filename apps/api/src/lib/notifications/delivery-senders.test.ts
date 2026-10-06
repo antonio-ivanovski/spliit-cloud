@@ -135,7 +135,11 @@ describe('EmailDeliverySenderImpl', () => {
     expect(message.subject).toContain('Trip')
     expect(message.subject).not.toContain('Bob')
     expect(message.html).toContain('Dinner')
-    expect(message.headers?.['Message-ID']).toBe('<delivery-1@spliit.app>')
+    // Message-ID is platform-controlled: Cloudflare rejects the whole
+    // request when callers set it. Delivery correlation travels in an
+    // allowed X- header instead.
+    expect(message.headers?.['Message-ID']).toBeUndefined()
+    expect(message.headers?.['X-Spliit-Delivery-Id']).toBe('delivery-1')
     expect(buildEmailUnsubscribeMetadataMock).not.toHaveBeenCalled()
     expect(allowUserGeneratedEmailMock).not.toHaveBeenCalled()
     expect(message.headers?.['List-Unsubscribe']).toBeUndefined()
@@ -469,6 +473,28 @@ describe('EmailDeliverySenderImpl', () => {
     if (error instanceof PermanentDeliveryError) {
       expect(error.providerStatus).toBe(403)
     }
+  })
+
+  it('classifies dropped recipients as PermanentDeliveryError', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({
+      email: 'bob@example.com',
+      emailVerified: true,
+    } as never)
+    sendEmailMock.mockRejectedValueOnce(
+      Object.assign(new Error('Cloudflare Email Sending dropped recipient'), {
+        code: 'CF_PERMANENT_BOUNCE',
+        provider: 'cloudflare-email',
+      }),
+    )
+
+    const error = await emailSender
+      .send({
+        deliveryId: 'delivery-cf-bounce',
+        snapshot: buildExpenseCreatedSnapshot(),
+        recipientAccountId: 'acct-bob',
+      })
+      .catch((err: unknown) => err)
+    expect(error).toBeInstanceOf(PermanentDeliveryError)
   })
 
   it.each([429, 500, 503])(

@@ -24,12 +24,6 @@ import {
 import { formatPersonalShareLine } from './personal-expense-share'
 import { buildEmailUnsubscribeMetadata } from './unsubscribe'
 
-const MESSAGE_ID_DOMAIN = 'spliit.app'
-
-function deliveryMessageId(deliveryId: string): string {
-  return `<${deliveryId}@${MESSAGE_ID_DOMAIN}>`
-}
-
 function actorName(snapshot: DeliverySnapshotV1): string {
   return snapshot.actor?.name ?? 'Someone'
 }
@@ -100,6 +94,9 @@ function classifyCloudflareRestError(
   responseCode: number | undefined,
 ): 'transient' | 'permanent' {
   if (code === 'CF_TIMEOUT' || code === 'CF_NETWORK') return 'transient'
+  // The provider accepted the request but will never deliver to this
+  // recipient (bounce or suppression list): retrying cannot succeed.
+  if (code === 'CF_PERMANENT_BOUNCE') return 'permanent'
   if (responseCode === 429 || responseCode === 408) return 'transient'
   if (typeof responseCode === 'number') {
     if (responseCode >= 500) return 'transient'
@@ -108,7 +105,7 @@ function classifyCloudflareRestError(
   return 'transient'
 }
 
-function classifyEmailError(err: unknown): 'transient' | 'permanent' {
+export function classifyEmailError(err: unknown): 'transient' | 'permanent' {
   if (!err || typeof err !== 'object') return 'transient'
   const record = err as Record<string, unknown>
   const code = typeof record.code === 'string' ? record.code : undefined
@@ -580,7 +577,10 @@ export class EmailDeliverySenderImpl implements EmailDeliverySender {
     }
 
     const headers: Record<string, string> = {
-      'Message-ID': deliveryMessageId(args.deliveryId),
+      // No Message-ID: Cloudflare generates it and rejects the whole
+      // request when callers set platform-controlled headers. The delivery
+      // id stays traceable via an allowed X- header instead.
+      'X-Spliit-Delivery-Id': args.deliveryId,
     }
     if (unsubscribeHeaders) {
       headers['List-Unsubscribe'] = unsubscribeHeaders['List-Unsubscribe']
