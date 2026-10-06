@@ -1,0 +1,8 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/agents-inc/cli/main/src/schemas/metadata.schema.json
+category: web-pwa
+slug: offline-first
+domain: web
+author: "@vince"
+displayName: Offline First
+cliDescription: Offline-first patterns
+usageGuidance: Use when building offline-first apps with IndexedDB or sync queues.
