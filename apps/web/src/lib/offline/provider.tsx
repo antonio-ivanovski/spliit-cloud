@@ -263,16 +263,6 @@ export function OfflineProvider(props: OfflineProviderProps) {
           if (!repo) throw new Error('Offline storage unavailable')
           return repo.reactivateNamespace({ namespace })
         },
-        readEnabledPref: async (namespace: string) => {
-          try {
-            const repo = storage.getRepository()
-            if (!repo) return null
-            const control = await repo.readControl(namespace)
-            return control ? control.enabled : null
-          } catch {
-            return null
-          }
-        },
       },
     })
     lifecycleRef.current = created
@@ -312,6 +302,7 @@ export function OfflineProvider(props: OfflineProviderProps) {
     void lifecycle.bootstrap().catch(() => undefined)
     // On focus, recheck the control record even if messages were missed.
     const handleFocus = () => {
+      void storage.recover().catch(() => undefined)
       void lifecycle.recheckOnFocus().catch(() => undefined)
       // Foreground return refreshes downloads only when the last full pass
       // is older than 5min (sync owns the rule, never polls while active).
@@ -322,17 +313,7 @@ export function OfflineProvider(props: OfflineProviderProps) {
       }
     }
     const handleVisibility = () => {
-      if (
-        typeof document !== 'undefined' &&
-        document.visibilityState === 'visible'
-      ) {
-        void lifecycle.recheckOnFocus().catch(() => undefined)
-        try {
-          void syncRef.current?.handleForeground().catch(() => undefined)
-        } catch {
-          // Ignore foreground refresh failures.
-        }
-      }
+      if (document.visibilityState === 'visible') handleFocus()
     }
     window.addEventListener('focus', handleFocus)
     if (typeof document !== 'undefined') {
@@ -977,9 +958,7 @@ export function useNotifyOfflineMutation(): {
 
 /**
  * Explicit recovery retry for status UI: probe, verify, then reconnect the sync
- * engine. Callers that need Refresh-now vs Retry-failed semantics should call
- * `sync.refreshNow()` / `sync.retryFailed()` directly via
- * `useOptionalOfflineSync()` after this probe succeeds.
+ * engine. Ordinary error screens can retry without exposing cache management.
  */
 export function useOfflineRetry(): {
   retry: () => Promise<boolean>

@@ -899,99 +899,20 @@ export class OfflineRepository {
     }
   }
 
-  async setEnabled(options: {
+  /** Normalize a retired preference only after the caller verifies the session. */
+  async enableAutomaticCaching(options: {
     namespace: string
     generation: number
-    enabled: boolean
-  }): Promise<{ generation: number }> {
+  }): Promise<void> {
     const tx = this.db.transaction('control', 'readwrite')
     try {
-      const controlRaw = await tx.objectStore('control').get(options.namespace)
-      const control = requireControl(
-        controlRaw,
-        options.namespace,
-        options.generation,
-      )
+      const raw = await tx.objectStore('control').get(options.namespace)
+      const control = requireControl(raw, options.namespace, options.generation)
       requireNotRevoked(control)
-      if (control.enabled === options.enabled) {
-        // Even when already disabled, drop any stale lease in the same
-        // transaction so a later re-enable starts without an old owner
-        // blocking new commits (mirror clearDownloads).
-        if (
-          !options.enabled &&
-          (control.leaseOwner !== null || control.leaseUntil !== null)
-        ) {
-          await tx
-            .objectStore('control')
-            .put({ ...control, leaseOwner: null, leaseUntil: null })
-        }
-        await tx.done
-        return { generation: control.generation }
-      }
-      // Disabling cancels the pass: fence in-flight commits, retain completed
-      // snapshots, clear the download lease, and prevent new commits until
-      // re-enabled.
-      const generation =
-        !options.enabled && control.enabled
-          ? control.generation + 1
-          : control.generation
-      await tx.objectStore('control').put({
-        ...control,
-        enabled: options.enabled,
-        generation,
-        // Clear the lease when disabling so disable->enable->commit with a
-        // new owner succeeds (mirror clearDownloads, same-tx).
-        ...(!options.enabled ? { leaseOwner: null, leaseUntil: null } : {}),
-      })
-      await tx.done
-      return { generation }
-    } catch (error) {
-      mapTxError(error, { namespace: options.namespace })
-    }
-  }
-
-  async clearDownloads(options: {
-    namespace: string
-    generation: number
-  }): Promise<{ generation: number }> {
-    const tx = this.db.transaction(
-      ['control', 'catalog', 'groups', 'status'],
-      'readwrite',
-    )
-    try {
-      const controlRaw = await tx.objectStore('control').get(options.namespace)
-      const control = requireControl(
-        controlRaw,
-        options.namespace,
-        options.generation,
-      )
-      const generation = control.generation + 1
-      await tx.objectStore('control').put({
-        ...control,
-        generation,
-        enabled: false,
-        leaseOwner: null,
-        leaseUntil: null,
-      })
-      await tx.objectStore('catalog').delete(options.namespace)
-      const groupKeys = await collectGroupKeysForNamespace(
-        tx as never,
-        'groups',
-        options.namespace,
-      )
-      for (const key of groupKeys) {
-        await tx.objectStore('groups').delete(key)
-      }
-      const statusKeys = await collectGroupKeysForNamespace(
-        tx as never,
-        'status',
-        options.namespace,
-      )
-      for (const key of statusKeys) {
-        await tx.objectStore('status').delete(key)
+      if (!control.enabled) {
+        await tx.objectStore('control').put({ ...control, enabled: true })
       }
       await tx.done
-      return { generation }
     } catch (error) {
       mapTxError(error, { namespace: options.namespace })
     }
@@ -1116,9 +1037,9 @@ export class OfflineRepository {
    * session for the same account.
    *
    * Finishes deletion of old revoked payloads, increments generation, resets
-   * dataRevision/lease for the new empty lifecycle, preserves the device's
-   * enabled/disabled preference, and clears the revoked flag. Callers clear the
-   * localStorage revocation marker only after this resolves.
+   * dataRevision/lease for the new empty lifecycle, retains the compatibility
+   * flag, and clears the revoked flag. Callers clear the localStorage
+   * revocation marker only after this resolves.
    */
   async reactivateNamespace(options: {
     namespace: string
@@ -1197,18 +1118,4 @@ export type { OfflineErrorCode }
  * never a reason to auto-evict; quota failures are handled per transaction
  * above.
  */
-export async function estimateStorage(): Promise<{
-  quota?: number
-  usage?: number
-} | null> {
-  try {
-    const storage = globalThis.navigator?.storage
-    if (!storage?.estimate) return null
-    const estimate = await storage.estimate()
-    return { quota: estimate.quota, usage: estimate.usage }
-  } catch {
-    return null
-  }
-}
-
 export { OFFLINE_SCHEMA_VERSION }

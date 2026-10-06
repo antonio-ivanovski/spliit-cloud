@@ -2830,7 +2830,7 @@
     }
   },
   "OfflineBanner": {
-    "message": "Kamu offline. Data yang diunduh hanya-baca.",
+    "message": "Anda sedang offline. Data bisa dilihat, tetapi perubahan memerlukan koneksi.",
     "serverUnavailable": "Tak bisa menjangkau Spliit sekarang. Menampilkan data yang diunduh.",
     "reconnecting": "Menyambung lagi… Kamu bisa terus membaca data yang diunduh."
   },
@@ -4544,15 +4544,17 @@
     "statusQuotaError": "Penyimpanan offline penuh",
     "storageRetry": "Coba penyimpanan lagi",
     "schemaUnsupported": "Perbarui aplikasi untuk membaca unduhan",
-    "cleanupFailed": "Tidak dapat menghapus unduhan. Coba lagi."
+    "cleanupFailed": "Tidak dapat menghapus data akun dari perangkat ini. Coba lagi."
   },
   "OfflineReadOnly": {
     "reconnectToEdit": "Sambung lagi untuk mengubah",
     "attachmentsNeedConnection": "Sambung untuk lihat lampiran",
     "needsConnection": "Fitur ini butuh koneksi",
-    "expenseMissing": "Pengeluaran ini tidak ada di unduhan perangkat ini. Sambung lagi untuk cek pengeluaran baru/lama.",
-    "groupMissing": "Grup ini belum selesai diunduh.",
-    "balancesStale": "Saldo mungkin kedaluwarsa."
+    "expenseMissing": "Pengeluaran ini sedang tidak tersedia. Sambungkan kembali untuk memuatnya.",
+    "groupMissing": "Grup ini sedang tidak tersedia. Sambungkan kembali untuk memuatnya.",
+    "balancesStale": "Saldo mungkin kedaluwarsa.",
+    "dataUnavailable": "Sebagian data tidak tersedia. Sambungkan kembali untuk memuatnya.",
+    "dataStale": "Sebagian data mungkin sudah tidak terbaru."
   },
   "ApiErrorEmptyState": {
     "title": "Spliit tidak tersedia",

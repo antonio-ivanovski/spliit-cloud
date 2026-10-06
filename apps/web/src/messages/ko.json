@@ -2875,7 +2875,7 @@
     }
   },
   "OfflineBanner": {
-    "message": "오프라인입니다. 다운로드한 데이터는 읽기 전용입니다.",
+    "message": "오프라인이에요. 데이터를 둘러볼 수 있지만 변경하려면 연결이 필요해요.",
     "serverUnavailable": "지금 Spliit에 닿지 않아요. 다운로드한 데이터를 보여줍니다.",
     "reconnecting": "다시 연결 중… 다운로드한 데이터를 계속 읽을 수 있어요."
   },
@@ -4629,15 +4629,17 @@
     "statusQuotaError": "오프라인 저장소가 가득 찼어요",
     "storageRetry": "저장소 다시 시도",
     "schemaUnsupported": "다운로드를 읽으려면 앱을 업데이트하세요",
-    "cleanupFailed": "오프라인 다운로드를 지우지 못했습니다. 다시 시도하세요."
+    "cleanupFailed": "이 기기에서 계정 데이터를 지우지 못했어요. 다시 시도하세요."
   },
   "OfflineReadOnly": {
     "reconnectToEdit": "바꾸려면 다시 연결하세요",
     "attachmentsNeedConnection": "첨부를 보려면 연결하세요",
     "needsConnection": "이 기능은 연결이 필요해요",
-    "expenseMissing": "이 지출은 이 기기의 다운로드에 없어요. 새/오래된 지출을 확인하려면 다시 연결하세요.",
-    "groupMissing": "이 그룹은 아직 다운로드가 끝나지 않았어요.",
-    "balancesStale": "잔액이 최신이 아닐 수 있어요."
+    "expenseMissing": "이 지출은 지금 사용할 수 없어요. 불러오려면 다시 연결하세요.",
+    "groupMissing": "이 그룹은 지금 사용할 수 없어요. 불러오려면 다시 연결하세요.",
+    "balancesStale": "잔액이 최신이 아닐 수 있어요.",
+    "dataUnavailable": "일부 데이터를 사용할 수 없어요. 불러오려면 다시 연결하세요.",
+    "dataStale": "일부 데이터가 최신 정보가 아닐 수 있어요."
   },
   "ApiErrorEmptyState": {
     "title": "Spliit을 현재 사용할 수 없습니다",

@@ -2854,7 +2854,7 @@
     }
   },
   "OfflineBanner": {
-    "message": "Estàs sense connexió. Les dades descarregades són de només lectura.",
+    "message": "Estàs sense connexió. Pots navegar, però cal connexió per fer canvis.",
     "serverUnavailable": "No es pot contactar amb Spliit ara mateix. Mostrant les dades descarregades.",
     "reconnecting": "Reconnectant… Pots continuar llegint les dades descarregades."
   },
@@ -4594,15 +4594,17 @@
     "statusQuotaError": "Emmagatzematge sense connexió ple",
     "storageRetry": "Reintenta l'emmagatzematge",
     "schemaUnsupported": "Actualitza l'app per llegir les baixades",
-    "cleanupFailed": "No s'han pogut esborrar les baixades. Torna-ho a provar."
+    "cleanupFailed": "No s'han pogut esborrar les dades del compte d'aquest dispositiu. Torna-ho a provar."
   },
   "OfflineReadOnly": {
     "reconnectToEdit": "Reconnecta per fer canvis",
     "attachmentsNeedConnection": "Connecta't per veure els adjunts",
     "needsConnection": "Aquesta funció necessita connexió",
-    "expenseMissing": "Aquesta despesa no és a la descàrrega d'aquest dispositiu. Reconnecta per veure despeses més noves o anteriors.",
-    "groupMissing": "Aquest grup encara no s'ha acabat de descarregar.",
-    "balancesStale": "Els saldos poden estar desactualitzats."
+    "expenseMissing": "Aquesta despesa no està disponible ara mateix. Reconnecta per carregar-la.",
+    "groupMissing": "Aquest grup no està disponible ara mateix. Reconnecta per carregar-lo.",
+    "balancesStale": "Els saldos poden estar desactualitzats.",
+    "dataUnavailable": "Algunes dades no estan disponibles. Reconnecta per carregar-les.",
+    "dataStale": "Algunes dades poden estar desactualitzades."
   },
   "ApiErrorEmptyState": {
     "title": "Spliit no està disponible",

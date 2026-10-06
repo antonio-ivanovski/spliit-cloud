@@ -3398,7 +3398,7 @@
     }
   },
   "OfflineBanner": {
-    "message": "You're offline rn. Downloaded stuff is read-only.",
+    "message": "You're offline rn. You can browse, but edits need a connection.",
     "serverUnavailable": "Can't reach Spliit rn. Showing your downloads.",
     "reconnecting": "Reconnecting… hang tight, you can keep reading your downloads."
   },
@@ -4556,15 +4556,17 @@
     "statusQuotaError": "Offline storage is full",
     "storageRetry": "Give storage another shot",
     "schemaUnsupported": "Update the app to read downloads",
-    "cleanupFailed": "couldn't clear offline downloads, try again"
+    "cleanupFailed": "Couldn't clear account data from this device. Give it another try."
   },
   "OfflineReadOnly": {
     "reconnectToEdit": "Hop back online to edit",
     "attachmentsNeedConnection": "Connect to check attachments",
     "needsConnection": "This one needs a connection",
-    "expenseMissing": "This expense isn't in this device's download. Hop back online to check newer or older ones.",
-    "groupMissing": "This group hasn't finished downloading yet.",
-    "balancesStale": "Balances might be a lil stale."
+    "expenseMissing": "This expense isn't available rn. Hop back online to load it.",
+    "groupMissing": "This group isn't available rn. Hop back online to load it.",
+    "balancesStale": "Balances might be a lil stale.",
+    "dataUnavailable": "Some data isn't available. Hop back online to load it.",
+    "dataStale": "Some data might be a bit outdated."
   },
   "ApiErrorEmptyState": {
     "title": "Spliit is down rn",

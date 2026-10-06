@@ -2877,7 +2877,7 @@
     }
   },
   "OfflineBanner": {
-    "message": "Du bist offline. Heruntergeladene Daten sind schreibgeschützt.",
+    "message": "Du bist offline. Du kannst Daten ansehen, aber Änderungen brauchen eine Verbindung.",
     "serverUnavailable": "Spliit ist gerade nicht erreichbar. Heruntergeladene Daten werden gezeigt.",
     "reconnecting": "Verbinde erneut… Du kannst heruntergeladene Daten weiter lesen."
   },
@@ -4636,15 +4636,17 @@
     "statusQuotaError": "Offline-Speicher voll",
     "storageRetry": "Speicher erneut versuchen",
     "schemaUnsupported": "App aktualisieren, um Downloads zu lesen",
-    "cleanupFailed": "Offline-Downloads konnten nicht gelöscht werden. Erneut versuchen."
+    "cleanupFailed": "Die Kontodaten konnten nicht von diesem Gerät gelöscht werden. Versuche es erneut."
   },
   "OfflineReadOnly": {
     "reconnectToEdit": "Verbinde dich, um Änderungen zu machen",
     "attachmentsNeedConnection": "Verbinde dich, um Anhänge zu sehen",
     "needsConnection": "Diese Funktion braucht eine Verbindung",
-    "expenseMissing": "Diese Ausgabe ist nicht im Download dieses Geräts. Verbinde dich, um neuere/ältere Ausgaben zu prüfen.",
-    "groupMissing": "Diese Gruppe wurde noch nicht vollständig heruntergeladen.",
-    "balancesStale": "Salden sind möglicherweise veraltet."
+    "expenseMissing": "Diese Ausgabe ist gerade nicht verfügbar. Verbinde dich erneut, um sie zu laden.",
+    "groupMissing": "Diese Gruppe ist gerade nicht verfügbar. Verbinde dich erneut, um sie zu laden.",
+    "balancesStale": "Salden sind möglicherweise veraltet.",
+    "dataUnavailable": "Einige Daten sind nicht verfügbar. Verbinde dich erneut, um sie zu laden.",
+    "dataStale": "Einige Daten sind möglicherweise nicht aktuell."
   },
   "ApiErrorEmptyState": {
     "title": "Spliit ist nicht verfügbar",

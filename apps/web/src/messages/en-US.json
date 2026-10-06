@@ -2992,7 +2992,7 @@
     "hiddenActivities_other": "{count} hidden activities not involving you"
   },
   "OfflineBanner": {
-    "message": "You're offline. Downloaded data is read-only.",
+    "message": "You're offline. You can browse, but changes need a connection.",
     "serverUnavailable": "Can't reach Spliit right now. Showing downloaded data.",
     "reconnecting": "Reconnecting… You can keep reading downloaded data."
   },
@@ -4667,15 +4667,17 @@
     "statusQuotaError": "Offline storage full",
     "storageRetry": "Retry storage",
     "schemaUnsupported": "Update app to read downloads",
-    "cleanupFailed": "Couldn't clear offline downloads. Try again."
+    "cleanupFailed": "Couldn't clear account data from this device. Try again."
   },
   "OfflineReadOnly": {
     "reconnectToEdit": "Reconnect to make changes",
     "attachmentsNeedConnection": "Connect to view attachments",
     "needsConnection": "This feature needs a connection",
-    "expenseMissing": "This expense isn't in this device's download. Reconnect to check for newer/older expenses.",
-    "groupMissing": "This group hasn't finished downloading.",
-    "balancesStale": "Balances may be out of date."
+    "expenseMissing": "This expense is unavailable right now. Reconnect to load it.",
+    "groupMissing": "This group is unavailable right now. Reconnect to load it.",
+    "balancesStale": "Balances may be out of date.",
+    "dataUnavailable": "Some data is unavailable. Reconnect to load it.",
+    "dataStale": "Some data may be out of date."
   },
   "ApiStatusBanner": {
     "message": "Spliit can't be reached right now. Your connection looks fine — the problem is on our end.",

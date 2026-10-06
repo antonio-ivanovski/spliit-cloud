@@ -352,13 +352,12 @@ describe('offline repository', () => {
       expectedDataRevision: 0,
       catalog: makeCatalog(ACCOUNT_A, ['g1']),
     })
-    // Disabling fences in-flight passes by bumping generation.
-    const disabled = await repo.setEnabled({
+    // Revocation fences in-flight passes by bumping generation.
+    const revoked = await repo.revokeNamespace({
       namespace,
       generation: 0,
-      enabled: false,
     })
-    expect(disabled.generation).toBe(1)
+    expect(revoked.generation).toBe(1)
 
     await expect(
       repo.commitGroup({
@@ -370,7 +369,7 @@ describe('offline repository', () => {
     ).rejects.toMatchObject({ code: 'generation-mismatch' })
   })
 
-  it('does not resurrect cleared data from a late response', async () => {
+  it('does not resurrect revoked data from a late response', async () => {
     const repo = await openRepo()
     const namespace = namespaceFor(ACCOUNT_A)
     await repo.ensureControl(namespace)
@@ -387,7 +386,7 @@ describe('offline repository', () => {
       snapshot: makeSnapshot(ACCOUNT_A, 'g1'),
     })
 
-    const cleared = await repo.clearDownloads({ namespace, generation: 0 })
+    const cleared = await repo.revokeNamespace({ namespace, generation: 0 })
     expect(cleared.generation).toBe(1)
 
     // Late snapshot captured before the clear carries the old generation.
@@ -737,6 +736,11 @@ describe('offline repository', () => {
     expect(revoked.generation).toBe(1)
     const control = await repo.readControl(namespace)
     expect(control?.revoked).toBe(true)
+    await expect(
+      repo.enableAutomaticCaching({ namespace, generation: 1 }),
+    ).rejects.toMatchObject({ code: 'namespace-revoked' })
+    expect((await repo.readControl(namespace))?.revoked).toBe(true)
+
     expect(await repo.readGroup(namespace, 'g1')).toEqual({
       status: 'missing',
     })
@@ -763,7 +767,7 @@ describe('offline repository', () => {
     })
     expect(await repo.listGroupStatus(namespace)).toHaveLength(1)
 
-    const cleared = await repo.clearDownloads({ namespace, generation: 0 })
+    const cleared = await repo.revokeNamespace({ namespace, generation: 0 })
     expect(cleared.generation).toBe(1)
     expect(await repo.listGroupStatus(namespace)).toEqual([])
 
@@ -839,47 +843,6 @@ describe('offline repository', () => {
         >[0]['snapshot'],
       }),
     ).rejects.toMatchObject({ code: 'invalid-payload' })
-  })
-
-  it('clears the lease on disable so re-enable allows a new owner', async () => {
-    const repo = await openRepo()
-    const namespace = namespaceFor(ACCOUNT_A)
-    await repo.ensureControl(namespace)
-    await repo.replaceCatalog({
-      namespace,
-      generation: 0,
-      expectedDataRevision: 0,
-      catalog: makeCatalog(ACCOUNT_A, ['g1']),
-    })
-
-    const raw = await openDB(OFFLINE_DB_NAME, OFFLINE_DB_VERSION)
-    const control = await raw.get('control', namespace)
-    await raw.put('control', {
-      ...control,
-      leaseOwner: 'owner-a',
-      leaseUntil: Date.now() + 30_000,
-    })
-    raw.close()
-
-    const disabled = await repo.setEnabled({
-      namespace,
-      generation: 0,
-      enabled: false,
-    })
-    expect(disabled.generation).toBe(1)
-    const afterDisable = await repo.readControl(namespace)
-    expect(afterDisable?.leaseOwner).toBeNull()
-    expect(afterDisable?.leaseUntil).toBeNull()
-
-    await repo.setEnabled({ namespace, generation: 1, enabled: true })
-    const committed = await repo.commitGroup({
-      namespace,
-      generation: 1,
-      expectedDataRevision: 0,
-      snapshot: makeSnapshot(ACCOUNT_A, 'g1'),
-      leaseOwner: 'owner-b',
-    })
-    expect(committed.commitNonce).toMatch(/.+/)
   })
 
   it('enforces lease ownership and expiry', async () => {

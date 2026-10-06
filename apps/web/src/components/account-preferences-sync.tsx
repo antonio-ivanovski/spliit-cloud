@@ -164,7 +164,7 @@ function AccountPreferenceSession({
 
   useEffect(() => {
     // Never push the bootstrap fill while offline. Local
-    // theme/locale/download settings stay usable; the effect reruns after
+    // theme/locale settings stay usable; the effect reruns after
     // reconnect when server data refetches.
     if (!canPushPreferences) {
       bootstrapInFlight.current = false
@@ -265,7 +265,7 @@ function AccountPreferenceSession({
       const current = latestPreferences.current
       if (!current) return Promise.resolve(false)
 
-      // Local theme/locale/download settings may change offline, but
+      // Local theme/locale settings may change offline, but
       // remote preference writes are never queued. Apply the local
       // presentation + in-memory/cache value immediately, report "not saved
       // remotely" (false), and leave confirmedPreferences/pendingPatches

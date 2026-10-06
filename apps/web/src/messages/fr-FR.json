@@ -2854,7 +2854,7 @@
     }
   },
   "OfflineBanner": {
-    "message": "Vous êtes hors ligne. Les données téléchargées sont en lecture seule.",
+    "message": "Vous êtes hors ligne. Vous pouvez consulter les données, mais une connexion est nécessaire pour les modifier.",
     "serverUnavailable": "Spliit est injoignable pour le moment. Affichage des données téléchargées.",
     "reconnecting": "Reconnexion… Vous pouvez continuer à lire vos données téléchargées."
   },
@@ -4594,15 +4594,17 @@
     "statusQuotaError": "Stockage hors ligne plein",
     "storageRetry": "Réessayer le stockage",
     "schemaUnsupported": "Mettez à jour l’app pour lire les téléchargements",
-    "cleanupFailed": "Impossible d’effacer les téléchargements. Réessayez."
+    "cleanupFailed": "Impossible d’effacer les données du compte de cet appareil. Réessayez."
   },
   "OfflineReadOnly": {
     "reconnectToEdit": "Reconnectez-vous pour modifier",
     "attachmentsNeedConnection": "Connectez-vous pour voir les pièces jointes",
     "needsConnection": "Cette fonction nécessite une connexion",
-    "expenseMissing": "Cette dépense n'est pas dans le téléchargement de cet appareil. Reconnectez-vous pour voir les dépenses plus récentes ou plus anciennes.",
-    "groupMissing": "Ce groupe n'a pas fini de se télécharger.",
-    "balancesStale": "Les soldes sont peut-être obsolètes."
+    "expenseMissing": "Cette dépense est indisponible pour le moment. Reconnectez-vous pour la charger.",
+    "groupMissing": "Ce groupe est indisponible pour le moment. Reconnectez-vous pour le charger.",
+    "balancesStale": "Les soldes sont peut-être obsolètes.",
+    "dataUnavailable": "Certaines données sont indisponibles. Reconnectez-vous pour les charger.",
+    "dataStale": "Certaines données peuvent ne pas être à jour."
   },
   "ApiErrorEmptyState": {
     "title": "Spliit est indisponible",

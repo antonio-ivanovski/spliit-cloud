@@ -32,8 +32,8 @@ import type { OfflineRepository } from './repository'
  * groupId tie-breaker.
  *
  * Triggers coalesce into one active pass + one pending rerun, never overlapping
- * account passes. Launch/reconnect/refresh passes download all catalog groups
- * once (complete expense history each). Mutation passes refresh catalog +
+ * account passes. Launch/reconnect/foreground passes download all catalog
+ * groups once (complete expense history each). Mutation passes refresh catalog +
  * affected groups; mutations without a resolvable groupId request a full pass.
  * The 5min rule applies only to foreground return, never to polling while
  * active.
@@ -54,18 +54,15 @@ export const OFFLINE_SYNC_FOREGROUND_STALE_MS = 5 * 60 * 1000
 export type SyncTriggerKind =
   | 'launch'
   | 'reconnect'
-  | 'refresh'
-  | 'retry'
   | 'foreground'
   | 'mutation'
   | 'unknown-outcome'
 
-export type SyncPassKind = 'full' | 'targeted' | 'retry'
+export type SyncPassKind = 'full' | 'targeted'
 
 export type SyncPassRequest = {
   kind: SyncPassKind
   groupIds?: string[]
-  explicit?: boolean
   triggerKind: SyncTriggerKind
 }
 
@@ -429,30 +426,16 @@ function mergePassRequests(
   next: SyncPassRequest,
 ): SyncPassRequest {
   if (!existing) return next
-  const explicit = existing.explicit === true || next.explicit === true
   if (existing.kind === 'full' || next.kind === 'full') {
-    return {
-      kind: 'full',
-      explicit,
-      triggerKind: next.triggerKind,
-    }
+    return { kind: 'full', triggerKind: next.triggerKind }
   }
-  if (existing.kind === next.kind) {
-    if (existing.kind === 'targeted' && next.kind === 'targeted') {
-      const union = [
-        ...new Set([...(existing.groupIds ?? []), ...(next.groupIds ?? [])]),
-      ].sort()
-      return {
-        kind: 'targeted',
-        groupIds: union,
-        explicit,
-        triggerKind: next.triggerKind,
-      }
-    }
-    return { ...existing, explicit, triggerKind: next.triggerKind }
+  return {
+    kind: 'targeted',
+    groupIds: [
+      ...new Set([...(existing.groupIds ?? []), ...(next.groupIds ?? [])]),
+    ].sort(),
+    triggerKind: next.triggerKind,
   }
-  // Mixed targeted + retry: a full pass covers both without losing work.
-  return { kind: 'full', explicit, triggerKind: next.triggerKind }
 }
 
 /**
@@ -740,22 +723,15 @@ export function createOfflineSync(options: OfflineSyncOptions) {
 
     try {
       if (disposed || signal.aborted) return
-      // Disabled passes never start: Refresh now is only available when
-      // enabled, and Retry restarts missing/failed only when enabled.
+      // Revoked namespaces cannot begin work, even with a verified session.
       const ensured = await repository.ensureControl(namespace)
       generation = ensured.generation
       if (ensured.revoked) {
         setStatus({ phase: 'cancelled', activity: null })
         return
       }
-      if (!ensured.enabled) {
-        setStatus({ phase: 'disabled', activity: null })
-        return
-      }
-      // Retry-After deadline blocks every kind (full/targeted/retry), even
-      // explicit Retry. Explicit bypasses transient backoff only, never the
-      // server deadline. Clear an elapsed deadline or a deadline with no
-      // remaining groups so earliestRetryAt never sticks.
+      // Retry-After blocks full and targeted passes. Clear elapsed deadlines
+      // or deadlines with no remaining groups so earliestRetryAt never sticks.
       if (rateLimitedUntil !== null && now() >= rateLimitedUntil) {
         rateLimitedUntil = null
         rateLimitedGroups.clear()
@@ -793,6 +769,10 @@ export function createOfflineSync(options: OfflineSyncOptions) {
         return
       }
 
+      // Session verification authorizes automatic caching, including devices
+      // with the retired disabled preference. Revocation remains authoritative.
+      await repository.enableAutomaticCaching({ namespace, generation })
+      if (disposed || signal.aborted) return
       const lease = await acquireOwnerLease(generation, signal)
       if (!lease.ok) {
         // Loser tabs keep committed results; disabled/cleared tabs stop.
@@ -889,17 +869,16 @@ export function createOfflineSync(options: OfflineSyncOptions) {
             continue
           }
           if (classified.kind === 'transient' && catalogAttempts === 1) {
-            if (!request.explicit) {
-              await sleepFn(OFFLINE_SYNC_GROUP_RETRY_DELAY_MS, signal).catch(
-                () => {
-                  throw new DOMException('Aborted', 'AbortError')
-                },
-              )
-              if (signal.aborted) {
-                setStatus({ phase: 'cancelled', activity: null })
-                return
-              }
+            await sleepFn(OFFLINE_SYNC_GROUP_RETRY_DELAY_MS, signal).catch(
+              () => {
+                throw new DOMException('Aborted', 'AbortError')
+              },
+            )
+            if (signal.aborted) {
+              setStatus({ phase: 'cancelled', activity: null })
+              return
             }
+
             continue
           }
           // Catalog failure retains prior catalog/snapshots; never evict on
@@ -1026,50 +1005,6 @@ export function createOfflineSync(options: OfflineSyncOptions) {
           dirtyGroupIds: targetedDirty,
           unsupportedGroupIds: unsupported,
         })
-      } else if (request.kind === 'retry') {
-        // Union in-memory failures with persisted status so a reload that
-        // drops status.errors still retries failed groups.
-        let persistedFailed: string[] = []
-        try {
-          const rows = await repository.listGroupStatus(namespace)
-          persistedFailed = rows
-            .filter((row) => row.lastResult === 'error')
-            .map((row) => row.groupId)
-        } catch {
-          // Persisted status unavailable: fall back to in-memory errors.
-        }
-        if (signal.aborted || disposed) {
-          setStatus({ phase: 'cancelled', activity: null })
-          return
-        }
-        const failedIds = new Set(
-          [...Object.keys(status.errors), ...persistedFailed].filter((id) =>
-            catalogIds.includes(id),
-          ),
-        )
-        const retryMissing = new Set(
-          [...missing, ...failedIds].filter((id) => {
-            if (
-              rateLimitedGroups.has(id) &&
-              rateLimitedUntil !== null &&
-              now() < rateLimitedUntil
-            ) {
-              return false
-            }
-            return true
-          }),
-        )
-        if (retryMissing.size === 0 && failedIds.size === 0) {
-          setStatus({ phase: 'done', activity: null })
-          return
-        }
-        ordered = orderSyncGroups({
-          catalog,
-          currentGroupId,
-          missingGroupIds: retryMissing,
-          dirtyGroupIds: new Set<string>(),
-          unsupportedGroupIds: unsupported,
-        }).filter((id) => retryMissing.has(id))
       } else {
         ordered = orderSyncGroups({
           catalog,
@@ -1103,7 +1038,7 @@ export function createOfflineSync(options: OfflineSyncOptions) {
           completedAll = false
           break
         }
-        // Retry-After deadline is never bypassed, even by explicit Retry.
+        // Retry-After deadline is never bypassed, by reconnect or foreground triggers.
         if (
           rateLimitedGroups.has(groupId) &&
           rateLimitedUntil !== null &&
@@ -1248,7 +1183,7 @@ export function createOfflineSync(options: OfflineSyncOptions) {
             ) {
               if (classified.kind === 'quota') {
                 // Quota abort preserves old data; stop new writes for the
-                // pass and surface Retry/Clear (status UI reads status).
+                // pass; future automatic passes remain suspended.
                 errors[groupId] = 'quota-exceeded'
                 await recordGroupResult(generation, groupId, false, classified)
                 setStatus({
@@ -1290,22 +1225,22 @@ export function createOfflineSync(options: OfflineSyncOptions) {
               !retriedTransient.has(groupId)
             ) {
               retriedTransient.add(groupId)
-              if (!request.explicit) {
-                try {
-                  await sleepFn(OFFLINE_SYNC_GROUP_RETRY_DELAY_MS, signal)
-                } catch {
-                  completedAll = false
-                  groupDone = true
-                  snapshot = null
-                  break
-                }
-                if (signal.aborted || disposed) {
-                  completedAll = false
-                  groupDone = true
-                  snapshot = null
-                  break
-                }
+
+              try {
+                await sleepFn(OFFLINE_SYNC_GROUP_RETRY_DELAY_MS, signal)
+              } catch {
+                completedAll = false
+                groupDone = true
+                snapshot = null
+                break
               }
+              if (signal.aborted || disposed) {
+                completedAll = false
+                groupDone = true
+                snapshot = null
+                break
+              }
+
               continue
             }
             errors[groupId] =
@@ -1408,6 +1343,15 @@ export function createOfflineSync(options: OfflineSyncOptions) {
           errors[groupId] =
             classified.kind === 'schema' ? classified.code : classified.kind
           await recordGroupResult(generation, groupId, false, classified)
+          if (classified.kind === 'quota') {
+            completedAll = false
+            setStatus({
+              phase: 'quota-error',
+              activity: null,
+              errors: { ...errors },
+            })
+            break
+          }
           setStatus({ errors: { ...errors } })
           continue
         }
@@ -1427,7 +1371,7 @@ export function createOfflineSync(options: OfflineSyncOptions) {
       }
       if (needsRerunForRevision) {
         pending = mergePassRequests(pending, {
-          kind: request.kind === 'retry' ? 'retry' : request.kind,
+          kind: request.kind,
           groupIds: [...rerunForRevision],
           triggerKind: request.triggerKind,
         })
@@ -1460,9 +1404,15 @@ export function createOfflineSync(options: OfflineSyncOptions) {
       if (signal.aborted || disposed) {
         setStatus({ phase: 'cancelled', activity: null })
       } else {
-        setStatus({ phase: 'failed', activity: null })
+        setStatus({
+          phase:
+            classifySyncError(error, now(), isConnectivityError).kind ===
+            'quota'
+              ? 'quota-error'
+              : 'failed',
+          activity: null,
+        })
       }
-      void error
     } finally {
       stopRenew?.()
       try {
@@ -1481,6 +1431,11 @@ export function createOfflineSync(options: OfflineSyncOptions) {
 
   async function pump(): Promise<void> {
     if (active || disposed) return
+    if (status.phase === 'quota-error') {
+      pending = null
+      resolveIdle()
+      return
+    }
     const next = pending
     if (!next) {
       resolveIdle()
@@ -1510,18 +1465,17 @@ export function createOfflineSync(options: OfflineSyncOptions) {
   }
 
   function requestSync(request: SyncPassRequest): Promise<void> {
-    if (disposed) return Promise.resolve()
+    // Storage pressure cannot be repaired by more network traffic. Keep the
+    // last snapshots and retry only in a new app lifecycle.
+    if (disposed || status.phase === 'quota-error') return Promise.resolve()
     pending = mergePassRequests(pending, request)
     const idle = waitForIdle()
     void pump()
     return idle
   }
 
-  function requestFull(
-    triggerKind: SyncTriggerKind,
-    explicit = false,
-  ): Promise<void> {
-    return requestSync({ kind: 'full', explicit, triggerKind })
+  function requestFull(triggerKind: SyncTriggerKind): Promise<void> {
+    return requestSync({ kind: 'full', triggerKind })
   }
 
   return {
@@ -1535,35 +1489,6 @@ export function createOfflineSync(options: OfflineSyncOptions) {
      * (idempotent) then downloads all groups.
      */
     handleReconnect: () => requestFull('reconnect'),
-    /** Explicit Refresh now: only when enabled; downloads all groups once. */
-    refreshNow: async () => {
-      const control = await repository.readControl(namespace).catch(() => null)
-      if (!control || !control.enabled || control.revoked) {
-        setStatus({
-          phase: control && !control.enabled ? 'disabled' : status.phase,
-        })
-        return
-      }
-      await requestFull('refresh')
-    },
-    /**
-     * Explicit Retry: bypasses transient backoff once, never the server
-     * Retry-After deadline. Restarts missing/failed work when enabled.
-     */
-    retryFailed: async () => {
-      const control = await repository.readControl(namespace).catch(() => null)
-      if (!control || !control.enabled || control.revoked) {
-        setStatus({
-          phase: control && !control.enabled ? 'disabled' : status.phase,
-        })
-        return
-      }
-      if (rateLimitedUntil !== null && now() < rateLimitedUntil) {
-        setStatus({ phase: 'rate-limited', activity: null })
-        return
-      }
-      await requestSync({ kind: 'retry', explicit: true, triggerKind: 'retry' })
-    },
     /** Foreground return: full pass only when the last one is older than 5min. */
     handleForeground: () => {
       if (disposed) return Promise.resolve()
@@ -1724,143 +1649,6 @@ export function createOfflineSync(options: OfflineSyncOptions) {
         kind: 'targeted',
         groupIds: ids,
         triggerKind: 'mutation',
-      })
-    },
-    /**
-     * Disabling cancels the pass, fences in-flight commits via generation,
-     * retains completed snapshots, and prevents new commits. Re-enabling starts
-     * a fresh full pass.
-     */
-    setEnabled: async (enabled: boolean) => {
-      try {
-        activeController?.abort(
-          new DOMException('Downloads disabled', 'AbortError'),
-        )
-      } catch {
-        // Ignore abort failures.
-      }
-      const control = await repository.readControl(namespace).catch(() => null)
-      const generation = control?.generation ?? 0
-      const applyEnabled = async (attemptGeneration: number) => {
-        await repository.setEnabled({
-          namespace,
-          generation: attemptGeneration,
-          enabled,
-        })
-      }
-      try {
-        await applyEnabled(generation)
-      } catch (error) {
-        // Stale-generation race: retry once with a fresh readControl.
-        if (
-          isOfflineStorageError(error) &&
-          error.code === 'generation-mismatch'
-        ) {
-          const fresh = await repository
-            .readControl(namespace)
-            .catch(() => null)
-          if (fresh) {
-            try {
-              await applyEnabled(fresh.generation)
-            } catch {
-              // Generation fencing failures mean another tab already disabled
-              // or cleared; reflect the latest control state.
-              const latest = await repository
-                .readControl(namespace)
-                .catch(() => null)
-              if (latest && !latest.enabled) {
-                setStatus({ phase: 'disabled', activity: null })
-              }
-              return
-            }
-          } else {
-            return
-          }
-        } else {
-          // Generation fencing failures mean another tab already disabled or
-          // cleared; reflect the latest control state.
-          const fresh = await repository
-            .readControl(namespace)
-            .catch(() => null)
-          if (fresh && !fresh.enabled) {
-            setStatus({ phase: 'disabled', activity: null })
-          }
-          return
-        }
-      }
-      if (!enabled) {
-        setStatus({
-          phase: 'disabled',
-          activity: null,
-          currentGroupId: null,
-          currentGroupName: null,
-        })
-      } else {
-        setStatus({ phase: 'idle', activity: null })
-        await requestFull('refresh')
-      }
-    },
-    /**
-     * Destructive local removal. The caller confirms the UI: "Remove downloaded
-     * groups and expenses from this device? Your server data stays safe.
-     * Automatic downloads will be turned off." Increments generation, sets
-     * enabled=false, deletes catalog/group/status, broadcasts clearance. Never
-     * clears SW caches, appearance, or server data, and never repopulates via
-     * query callbacks (enabled=false blocks new passes).
-     */
-    clearDownloads: async () => {
-      try {
-        activeController?.abort(
-          new DOMException('Downloads cleared', 'AbortError'),
-        )
-      } catch {
-        // Ignore abort failures.
-      }
-      const control = await repository.readControl(namespace).catch(() => null)
-      const generation = control?.generation ?? 0
-      let next: { generation: number } | null = null
-      try {
-        next = await repository.clearDownloads({ namespace, generation })
-      } catch (error) {
-        // Stale-generation race: retry once with a fresh readControl.
-        if (
-          isOfflineStorageError(error) &&
-          error.code === 'generation-mismatch'
-        ) {
-          const fresh = await repository
-            .readControl(namespace)
-            .catch(() => null)
-          if (!fresh) return
-          try {
-            next = await repository.clearDownloads({
-              namespace,
-              generation: fresh.generation,
-            })
-          } catch {
-            // Failed storage access is never treated as successful clearance;
-            // retain the current phase so Retry/Clear remain available.
-            return
-          }
-        } else {
-          // Failed storage access is never treated as successful clearance;
-          // retain the current phase so Retry/Clear remain available.
-          return
-        }
-      }
-      if (!next) return
-      try {
-        broadcast({ type: 'cleared', namespace, generation: next.generation })
-      } catch {
-        // Ignore broadcast failures.
-      }
-      setStatus({
-        phase: 'cleared',
-        activity: null,
-        totalGroups: 0,
-        readyGroups: 0,
-        currentGroupId: null,
-        currentGroupName: null,
-        errors: {},
       })
     },
     getStatus: (): SyncStatusSnapshot => status,

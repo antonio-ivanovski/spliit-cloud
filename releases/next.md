@@ -19,7 +19,7 @@ who is affected, and the exact migration steps.
 
 ### 🚀 Features
 
-- Read your groups offline: all member groups, complete expense history, and balances are automatically downloaded for read-only offline use; files and edits still require a connection (`TBD` by @TBD)
+- Read your groups offline: all member groups, complete expense history, and balances remain available for read-only offline use without download settings or progress notices; files and edits still require a connection (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
 

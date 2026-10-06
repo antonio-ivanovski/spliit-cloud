@@ -77,7 +77,7 @@ describe('OfflineProvider', () => {
     }
   })
 
-  it('renders public content while storage is unavailable', async () => {
+  it('keeps public content visible and silently recovers storage on foreground return', async () => {
     mocks.useSession.mockReturnValue({
       data: null,
       error: null,
@@ -86,11 +86,13 @@ describe('OfflineProvider', () => {
       refetch: vi.fn(),
     })
     mocks.getSession.mockResolvedValue({ data: null, error: null })
+    const repository = { close: vi.fn() } as unknown as never
     const storage = createOfflineStore({
       openTimeoutMs: 5,
-      openRepository: async () => {
-        throw new Error('blocked')
-      },
+      openRepository: vi
+        .fn()
+        .mockRejectedValueOnce(new Error('unavailable'))
+        .mockResolvedValueOnce(repository),
     })
     const connectivity = createConnectivityStore({
       isNavigatorOnline: () => true,
@@ -121,6 +123,11 @@ describe('OfflineProvider', () => {
     await waitFor(() => {
       expect(storage.getSnapshot().status).not.toBe('opening')
     })
+    expect(screen.getByTestId('public-page')).toBeInTheDocument()
+    act(() => {
+      window.dispatchEvent(new Event('focus'))
+    })
+    await waitFor(() => expect(storage.getRepository()).toBe(repository))
     expect(screen.getByTestId('public-page')).toBeInTheDocument()
     lifecycle.dispose()
     connectivity.dispose()

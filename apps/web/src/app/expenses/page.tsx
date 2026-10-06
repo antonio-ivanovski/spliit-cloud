@@ -21,7 +21,7 @@ import { useSyncedAccountPreferences } from '@/components/account-preferences-sy
 import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { PageShell } from '@/components/layout/page-shell'
 import { ScanSurface } from '@/components/layout/scan-surface'
-import { OfflineMissingData } from '@/components/offline-download-status'
+import { OfflineMissingData } from '@/components/offline-empty-state'
 import { RequireAuth } from '@/components/require-auth'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -908,41 +908,17 @@ export function GlobalExpensesContent() {
               </div>
             )}
             <section aria-label={t('Expenses.globalTitle')}>
-              {useOfflineSource && debouncedSearch.trim() && (
-                <p
-                  className="mx-4 mb-2 text-xs text-muted-foreground sm:mx-6"
-                  role="note"
-                >
-                  {t('OfflineDownloads.offlineSearchHint')}
-                </p>
-              )}
               {useOfflineSource &&
                 (offlineGlobal.meta.incompleteGroupCount > 0 ||
-                  (offlineGlobal.data?.dirtyGroupCount ?? 0) > 0) && (
+                  offlineGlobal.meta.hasMore) && (
                   <output className="mx-4 mb-2 block text-xs text-muted-foreground sm:mx-6">
-                    {t('OfflineDownloads.groupsNotDownloaded', {
-                      count: offlineGlobal.meta.incompleteGroupCount,
-                    })}
-                    {(offlineGlobal.data?.dirtyGroupCount ?? 0) > 0 &&
-                      ` · ${t('OfflineDownloads.groupsNeedUpdating', {
-                        count: offlineGlobal.data?.dirtyGroupCount ?? 0,
-                      })}`}
+                    {t('OfflineReadOnly.dataUnavailable')}
                   </output>
                 )}
               {useOfflineSource &&
-                offlineGlobal.meta.hasMore &&
-                offlineGlobal.meta.totalCount != null && (
+                (offlineGlobal.data?.dirtyGroupCount ?? 0) > 0 && (
                   <output className="mx-4 mb-2 block text-xs text-muted-foreground sm:mx-6">
-                    {t('OfflineDownloads.recent500WithCount', {
-                      count: offlineGlobal.meta.totalCount,
-                    })}
-                  </output>
-                )}
-              {useOfflineSource &&
-                offlineGlobal.meta.hasMore &&
-                offlineGlobal.meta.totalCount == null && (
-                  <output className="mx-4 mb-2 block text-xs text-muted-foreground sm:mx-6">
-                    {t('OfflineDownloads.recent500Note')}
+                    {t('OfflineReadOnly.dataStale')}
                   </output>
                 )}
               {showServerEmpty ? (
@@ -958,7 +934,7 @@ export function GlobalExpensesContent() {
               ) : showOfflineEmpty ? (
                 <div className="mx-4 sm:mx-6">
                   <OfflineMissingData
-                    description={t('OfflineDownloads.totalsIncomplete')}
+                    description={t('OfflineReadOnly.dataUnavailable')}
                     onRetry={
                       typeof navigator !== 'undefined' &&
                       navigator.onLine === false

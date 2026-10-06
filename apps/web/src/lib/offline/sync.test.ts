@@ -447,7 +447,7 @@ describe('offline sync resilience', () => {
     expect(sync.getStatus().readyGroups).toBe(2)
   })
 
-  it('cancels an in-flight pass on disable and never commits late responses', async () => {
+  it('cancels an in-flight pass on revocation and never commits late responses', async () => {
     const repo = await openRepo()
     const namespace = namespaceFor()
     await repo.ensureControl(namespace)
@@ -479,77 +479,126 @@ describe('offline sync resilience', () => {
     )
     const pass = sync.handleLaunch()
     // Wait until g1 fetch starts (control revision already captured), then
-    // disable: bumps generation and aborts the pass.
+    // revoke: bumps generation and fences the pass.
     await g1Started
-    await sync.setEnabled(false)
-    // Late response captured before disable must not resurrect.
+    await repo.revokeNamespace({ namespace, generation: 0 })
+    // Late response captured before revocation must not resurrect.
     releaseG1(makeSnapshot(ACCOUNT, 'g1'))
     await pass
 
     const control = await repo.readControl(namespace)
-    expect(control?.enabled).toBe(false)
+    expect(control?.revoked).toBe(true)
     expect(control?.generation).toBe(1)
     expect(await repo.readGroup(namespace, 'g1')).toEqual({ status: 'missing' })
     expect(g2Calls).toBe(0)
   })
+})
 
-  it('clears in-flight downloads and never repopulates via late commits', async () => {
+describe('automatic caching', () => {
+  it('retains the previous snapshot and stops automatic retries after a quota failure', async () => {
     const repo = await openRepo()
     const namespace = namespaceFor()
     await repo.ensureControl(namespace)
-    const catalog = makeCatalog(ACCOUNT, ['g1'])
-    await repo.replaceCatalog({
-      namespace,
-      generation: 0,
-      expectedDataRevision: 0,
-      catalog,
-    })
     await repo.commitGroup({
       namespace,
       generation: 0,
       expectedDataRevision: 0,
-      snapshot: makeSnapshot(ACCOUNT, 'g1', ['exp-1']),
+      snapshot: makeSnapshot(ACCOUNT, 'g1', ['original']),
     })
-    expect((await repo.readGroup(namespace, 'g1')).status).toBe('ready')
-
-    let releaseFetch!: (value: ReturnType<typeof makeSnapshot>) => void
-    const gate = new Promise<ReturnType<typeof makeSnapshot>>((resolve) => {
-      releaseFetch = resolve
-    })
-    let fetchStarted!: () => void
-    const started = new Promise<void>((resolve) => {
-      fetchStarted = resolve
-    })
-    const cleared: Array<{ type: string }> = []
+    vi.spyOn(repo, 'commitGroup').mockRejectedValue(
+      new DOMException('full', 'QuotaExceededError'),
+    )
+    const fetchSnapshot = vi.fn(async (id: string) =>
+      makeSnapshot(ACCOUNT, id, ['new']),
+    )
     const sync = trackSync(
       createOfflineSync({
         namespace,
         repository: repo,
         verifySession: async () => true,
-        fetchCatalog: async () => catalog,
-        fetchSnapshot: async () => {
-          fetchStarted()
-          return gate
-        },
-        broadcast: (event) => {
-          cleared.push({ type: event.type })
-        },
+        fetchCatalog: async () => makeCatalog(ACCOUNT, ['g1']),
+        fetchSnapshot,
       }),
     )
-    const pass = sync.handleLaunch()
-    await started
-    await sync.clearDownloads()
-    releaseFetch(makeSnapshot(ACCOUNT, 'g1', ['exp-1']))
-    await pass
+    await sync.handleLaunch()
+    await sync.handleForeground()
+    await sync.handleReconnect()
+    expect(fetchSnapshot).toHaveBeenCalledTimes(1)
+    expect(sync.getStatus().phase).toBe('quota-error')
+    const saved = await repo.readGroup(namespace, 'g1')
+    expect(saved.status).toBe('ready')
+    if (saved.status !== 'ready') throw new Error('Expected retained snapshot')
+    expect(saved.record.payload.expenses[0]?.list.id).toBe('original')
+  })
 
-    expect(await repo.readCatalog(namespace)).toEqual({ status: 'missing' })
-    expect(await repo.readGroup(namespace, 'g1')).toEqual({ status: 'missing' })
-    const control = await repo.readControl(namespace)
-    expect(control?.enabled).toBe(false)
-    expect(cleared.map((event) => event.type)).toContain('cleared')
-    // Enabled=false blocks repopulation: an explicit refresh is a no-op.
-    await sync.refreshNow()
-    expect(await repo.readGroup(namespace, 'g1')).toEqual({ status: 'missing' })
+  it.each([true, false])(
+    'caches all groups after verification with legacy enabled=%s',
+    async (enabled) => {
+      const repo = await openRepo()
+      const namespace = namespaceFor()
+      await repo.ensureControl(namespace)
+      await repo.commitGroup({
+        namespace,
+        generation: 0,
+        expectedDataRevision: 0,
+        snapshot: makeSnapshot(ACCOUNT, 'g1', ['saved']),
+      })
+      const raw = await openDB(OFFLINE_DB_NAME, OFFLINE_DB_VERSION)
+      const original = await raw.get('control', namespace)
+      await raw.put('control', { ...original, enabled })
+      raw.close()
+      const sync = trackSync(
+        createOfflineSync({
+          namespace,
+          repository: repo,
+          verifySession: async () => true,
+          fetchCatalog: async () => makeCatalog(ACCOUNT, ['g1', 'g2']),
+          fetchSnapshot: async (id) => {
+            if (id === 'g1') {
+              const saved = await repo.readGroup(namespace, id)
+              expect(saved.status).toBe('ready')
+              if (saved.status !== 'ready')
+                throw new Error('Expected preserved snapshot')
+              expect(saved.record.payload.expenses[0]?.list.id).toBe('saved')
+            }
+            return makeSnapshot(ACCOUNT, id)
+          },
+        }),
+      )
+      await sync.handleLaunch()
+      expect(sync.getStatus().phase).toBe('done')
+      expect((await repo.readGroup(namespace, 'g1')).status).toBe('ready')
+      expect((await repo.readGroup(namespace, 'g2')).status).toBe('ready')
+      expect((await repo.readControl(namespace))?.generation).toBe(
+        original.generation,
+      )
+      expect((await repo.readControl(namespace))?.enabled).toBe(true)
+    },
+  )
+
+  it('does not normalize disabled storage before successful verification', async () => {
+    const repo = await openRepo()
+    const namespace = namespaceFor()
+    await repo.ensureControl(namespace)
+    const raw = await openDB(OFFLINE_DB_NAME, OFFLINE_DB_VERSION)
+    await raw.put('control', {
+      ...(await raw.get('control', namespace)),
+      enabled: false,
+    })
+    raw.close()
+    const fetchCatalog = vi.fn()
+    const sync = trackSync(
+      createOfflineSync({
+        namespace,
+        repository: repo,
+        verifySession: async () => false,
+        fetchCatalog,
+        fetchSnapshot: vi.fn(),
+      }),
+    )
+    await sync.handleLaunch()
+    expect((await repo.readControl(namespace))?.enabled).toBe(false)
+    expect(fetchCatalog).not.toHaveBeenCalled()
   })
 })
 
@@ -984,13 +1033,13 @@ describe('offline sync rate limiting', () => {
     expect(sync.getStatus().earliestRetryAt).toBeNull()
   })
 
-  it('explicit retry bypasses transient backoff but never Retry-After', async () => {
+  it('automatically retries transient failures after backoff', async () => {
     const repo = await openRepo()
     const namespace = namespaceFor()
     await repo.ensureControl(namespace)
-    const catalog = makeCatalog(ACCOUNT, ['g1'])
-    // Transient bypass: explicit skips 5s sleep but still retries.
+    // A retry waits once before repeating the failed request.
     {
+      const catalog = makeCatalog(ACCOUNT, ['g1'])
       const calls = new Map<string, number>()
       const sleeps: number[] = []
       const sync = trackSync(
@@ -1009,82 +1058,10 @@ describe('offline sync rate limiting', () => {
           },
         }),
       )
-      await sync.requestSync({
-        kind: 'full',
-        explicit: true,
-        triggerKind: 'retry',
-      })
-      expect(calls.get('g1')).toBe(2)
-      expect(sleeps).toEqual([])
-      expect(sync.getStatus().phase).toBe('done')
-    }
-    // Non-explicit sleeps once for the same transient (separate namespace).
-    {
-      const namespace2 = namespaceFor('account-sync-explicit-2')
-      await repo.ensureControl(namespace2)
-      const catalog2 = makeCatalog('account-sync-explicit-2', ['g1'])
-      const calls = new Map<string, number>()
-      const sleeps: number[] = []
-      const sync = trackSync(
-        createOfflineSync({
-          namespace: namespace2,
-          repository: repo,
-          verifySession: async () => true,
-          fetchCatalog: async () => catalog2,
-          fetchSnapshot: async (groupId: string) => {
-            calls.set(groupId, (calls.get(groupId) ?? 0) + 1)
-            if ((calls.get(groupId) ?? 0) === 1) throw { status: 500 }
-            return makeSnapshot('account-sync-explicit-2', groupId)
-          },
-          sleep: async (ms: number) => {
-            sleeps.push(ms)
-          },
-        }),
-      )
       await sync.handleLaunch()
       expect(calls.get('g1')).toBe(2)
       expect(sleeps).toEqual([OFFLINE_SYNC_GROUP_RETRY_DELAY_MS])
     }
-  })
-
-  it('explicit retry never bypasses Retry-After deadline via public paths', async () => {
-    const repo = await openRepo()
-    const namespace = namespaceFor()
-    await repo.ensureControl(namespace)
-    const catalog = makeCatalog(ACCOUNT, ['g1'])
-    let currentTime = Date.now()
-    let catalogCalls = 0
-    const sync = trackSync(
-      createOfflineSync({
-        namespace,
-        repository: repo,
-        verifySession: async () => true,
-        fetchCatalog: async () => {
-          catalogCalls += 1
-          return catalog
-        },
-        fetchSnapshot: async () => {
-          throw { status: 429, retryAfter: '120' }
-        },
-        now: () => currentTime,
-        sleep: async () => undefined,
-      }),
-    )
-    await sync.handleLaunch()
-    expect(sync.getStatus().phase).toBe('rate-limited')
-    const before = catalogCalls
-    // Public retryFailed pre-checks and blocks.
-    await sync.retryFailed()
-    expect(catalogCalls).toBe(before)
-    expect(sync.getStatus().phase).toBe('rate-limited')
-    // Direct requestSync with explicit retry must also enforce the deadline.
-    await sync.requestSync({
-      kind: 'retry',
-      explicit: true,
-      triggerKind: 'retry',
-    })
-    expect(catalogCalls).toBe(before)
-    expect(sync.getStatus().phase).toBe('rate-limited')
   })
 })
 
@@ -1132,53 +1109,10 @@ describe('offline sync retry persistence', () => {
       }),
     )
     expect(syncB.getStatus().errors).toEqual({})
-    await syncB.retryFailed()
+    await syncB.handleLaunch()
     expect(secondCalls).toContain('g-fail')
     expect((await repo.readGroup(namespace, 'g-fail')).status).toBe('ready')
     expect(syncB.getStatus().phase).toBe('done')
-  })
-
-  it('retry kind path downloads only missing and failed groups', async () => {
-    const repo = await openRepo()
-    const namespace = namespaceFor()
-    await repo.ensureControl(namespace)
-    const catalog = makeCatalog(ACCOUNT, ['g1', 'g2'])
-    await repo.replaceCatalog({
-      namespace,
-      generation: 0,
-      expectedDataRevision: 0,
-      catalog,
-    })
-    await repo.commitGroup({
-      namespace,
-      generation: 0,
-      expectedDataRevision: 0,
-      snapshot: makeSnapshot(ACCOUNT, 'g1'),
-    })
-    // g1 ready, g2 missing. Retry pass fetches only the missing group.
-    const fetched: string[] = []
-    // First retry pass: g2 fails twice (auto retry) then marked failed.
-    // Force persistent failure by always throwing for g2 on first pass.
-    const syncFail = trackSync(
-      createOfflineSync({
-        namespace,
-        repository: repo,
-        verifySession: async () => true,
-        fetchCatalog: async () => catalog,
-        fetchSnapshot: async (groupId: string) => {
-          fetched.push(groupId)
-          if (groupId === 'g2') throw { status: 500 }
-          return makeSnapshot(ACCOUNT, groupId)
-        },
-        sleep: async () => undefined,
-      }),
-    )
-    await syncFail.requestSync({
-      kind: 'retry',
-      triggerKind: 'retry',
-    })
-    expect(fetched).toEqual(expect.arrayContaining(['g2']))
-    expect(fetched).not.toContain('g1')
   })
 })
 
@@ -1467,82 +1401,5 @@ describe('offline sync triggers, visibility, and classification', () => {
       expect(sleeps).toEqual([])
       expect(Object.keys(sync.getStatus().errors)).toContain('g1')
     }
-  })
-
-  it('retries setEnabled once on stale generation', async () => {
-    const repo = await openRepo()
-    const namespace = namespaceFor()
-    await repo.ensureControl(namespace)
-    const catalog = makeCatalog(ACCOUNT, ['g1'])
-    const sync = trackSync(
-      createOfflineSync({
-        namespace,
-        repository: repo,
-        verifySession: async () => true,
-        fetchCatalog: async () => catalog,
-        fetchSnapshot: async (groupId: string) =>
-          makeSnapshot(ACCOUNT, groupId),
-      }),
-    )
-    // Simulate another tab bumping generation after our read: first
-    // setEnabled attempt throws generation-mismatch, retry with fresh reads.
-    const realSetEnabled = repo.setEnabled.bind(repo)
-    let attempts = 0
-    vi.spyOn(repo, 'setEnabled').mockImplementation(async (input) => {
-      attempts += 1
-      if (attempts === 1) {
-        const { OfflineStorageError } = await import('./errors')
-        throw new OfflineStorageError(
-          'generation-mismatch',
-          'generation-mismatch',
-        )
-      }
-      return realSetEnabled(input)
-    })
-    await sync.setEnabled(false)
-    expect(attempts).toBe(2)
-    const control = await repo.readControl(namespace)
-    expect(control?.enabled).toBe(false)
-    expect(sync.getStatus().phase).toBe('disabled')
-  })
-
-  it('retries clearDownloads once on stale generation', async () => {
-    const repo = await openRepo()
-    const namespace = namespaceFor()
-    await repo.ensureControl(namespace)
-    const catalog = makeCatalog(ACCOUNT, ['g1'])
-    await repo.replaceCatalog({
-      namespace,
-      generation: 0,
-      expectedDataRevision: 0,
-      catalog,
-    })
-    const sync = trackSync(
-      createOfflineSync({
-        namespace,
-        repository: repo,
-        verifySession: async () => true,
-        fetchCatalog: async () => catalog,
-        fetchSnapshot: async (groupId: string) =>
-          makeSnapshot(ACCOUNT, groupId),
-      }),
-    )
-    const realClear = repo.clearDownloads.bind(repo)
-    let attempts = 0
-    vi.spyOn(repo, 'clearDownloads').mockImplementation(async (input) => {
-      attempts += 1
-      if (attempts === 1) {
-        const { OfflineStorageError } = await import('./errors')
-        throw new OfflineStorageError(
-          'generation-mismatch',
-          'generation-mismatch',
-        )
-      }
-      return realClear(input)
-    })
-    await sync.clearDownloads()
-    expect(attempts).toBe(2)
-    expect(await repo.readCatalog(namespace)).toEqual({ status: 'missing' })
-    expect(sync.getStatus().phase).toBe('cleared')
   })
 })

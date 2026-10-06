@@ -18,7 +18,7 @@ import {
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { ScanStickyHeading } from '@/components/layout/scan-surface'
-import { OfflineNeedsConnection } from '@/components/offline-download-status'
+import { OfflineNeedsConnection } from '@/components/offline-empty-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'

@@ -2954,7 +2954,7 @@
     }
   },
   "OfflineBanner": {
-    "message": "Bạn đang ngoại tuyến. Dữ liệu đã tải chỉ để đọc.",
+    "message": "Bạn đang ngoại tuyến. Có thể xem dữ liệu, nhưng cần kết nối để thay đổi.",
     "serverUnavailable": "Hiện không tới được Spliit. Đang hiện dữ liệu đã tải.",
     "reconnecting": "Đang kết nối lại… Bạn vẫn có thể đọc dữ liệu đã tải."
   },
@@ -4627,15 +4627,17 @@
     "statusQuotaError": "Bộ nhớ ngoại tuyến đã đầy",
     "storageRetry": "Thử lại bộ nhớ",
     "schemaUnsupported": "Cập nhật ứng dụng để đọc nội dung đã tải",
-    "cleanupFailed": "Không thể xóa nội dung đã tải. Thử lại."
+    "cleanupFailed": "Không thể xóa dữ liệu tài khoản khỏi thiết bị này. Thử lại."
   },
   "OfflineReadOnly": {
     "reconnectToEdit": "Kết nối lại để thay đổi",
     "attachmentsNeedConnection": "Kết nối để xem đính kèm",
     "needsConnection": "Tính năng này cần mạng",
-    "expenseMissing": "Chi phí này không có trong bản tải của thiết bị này. Kết nối lại để xem chi phí mới hơn/cũ hơn.",
-    "groupMissing": "Nhóm này chưa tải xong.",
-    "balancesStale": "Số dư có thể đã cũ."
+    "expenseMissing": "Chi phí này hiện không khả dụng. Kết nối lại để tải chi phí.",
+    "groupMissing": "Nhóm này hiện không khả dụng. Kết nối lại để tải nhóm.",
+    "balancesStale": "Số dư có thể đã cũ.",
+    "dataUnavailable": "Một số dữ liệu không khả dụng. Kết nối lại để tải dữ liệu.",
+    "dataStale": "Một số dữ liệu có thể đã lỗi thời."
   },
   "ApiErrorEmptyState": {
     "title": "Spliit hiện không khả dụng",

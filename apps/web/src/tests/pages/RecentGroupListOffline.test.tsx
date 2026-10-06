@@ -179,7 +179,7 @@ describe('RecentGroupList offline fallback', () => {
 
     expect(screen.getByText('Partial Trip')).toBeInTheDocument()
     // Reconnect hint shows, but settled-up balances never render from partial data.
-    expect(screen.getByText(/reconnect to update totals/i)).toBeInTheDocument()
+    expect(screen.getByText(/some data is unavailable/i)).toBeInTheDocument()
     expect(screen.queryByText('Settled up')).not.toBeInTheDocument()
     expect(
       screen.queryByRole('region', { name: 'Balances' }),

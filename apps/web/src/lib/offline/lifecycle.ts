@@ -341,8 +341,6 @@ export type LifecyclePersistedHooks = {
   readControl?: (
     namespace: string,
   ) => Promise<{ revoked: boolean; generation: number } | null>
-  /** Preserve enabled/disabled pref across reactivation. */
-  readEnabledPref?: (namespace: string) => Promise<boolean | null>
   /** Clear in-memory worker working set (no-op when no worker exists). */
   clearWorkerMemory?: () => void
 }

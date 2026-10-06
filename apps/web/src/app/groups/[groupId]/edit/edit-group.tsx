@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { ForceArchiveDialog } from '@/components/force-archive-dialog'
 import { GroupForm } from '@/components/group-form'
-import { OfflineNeedsConnection } from '@/components/offline-download-status'
+import { OfflineNeedsConnection } from '@/components/offline-empty-state'
 import { Button } from '@/components/ui/button'
 import {
   Card,

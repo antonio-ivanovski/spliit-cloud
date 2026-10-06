@@ -88,8 +88,7 @@ export function AccountMenu() {
   async function signOut() {
     if (signingOut) return
     // Offline sign-out is not introduced: server-confirmed sign-out only.
-    // Clearing downloads (settings) stays available offline and never revokes
-    // the server session. Offline uses a distinct "Connect to sign out" hint,
+    // Offline uses a distinct "Connect to sign out" hint,
     // never the generic failure copy.
     if (!isOnline) {
       toast({ description: t('signOutOffline'), variant: 'destructive' })

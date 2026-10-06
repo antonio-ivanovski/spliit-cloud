@@ -3084,7 +3084,7 @@
     }
   },
   "OfflineBanner": {
-    "message": "Du är offline. Nedladdad data är skrivskyddad.",
+    "message": "Du är offline. Du kan bläddra, men ändringar kräver en anslutning.",
     "serverUnavailable": "Spliit är inte nåbart just nu. Visar nedladdad data.",
     "reconnecting": "Återansluter… Du kan fortsätta läsa nedladdad data."
   },
@@ -4560,15 +4560,17 @@
     "statusQuotaError": "Offline-lagring full",
     "storageRetry": "Försök lagring igen",
     "schemaUnsupported": "Uppdatera appen för att läsa nedladdningar",
-    "cleanupFailed": "Kunde inte rensa nedladdningar. Försök igen."
+    "cleanupFailed": "Kunde inte rensa kontodata från den här enheten. Försök igen."
   },
   "OfflineReadOnly": {
     "reconnectToEdit": "Anslut för att göra ändringar",
     "attachmentsNeedConnection": "Anslut för att visa bilagor",
     "needsConnection": "Den här funktionen behöver anslutning",
-    "expenseMissing": "Den här utgiften finns inte i enhetens nedladdning. Anslut för att se nyare/äldre utgifter.",
-    "groupMissing": "Den här gruppen har inte laddats ned klart.",
-    "balancesStale": "Saldon kan vara inaktuella."
+    "expenseMissing": "Den här utgiften är inte tillgänglig just nu. Anslut igen för att läsa in den.",
+    "groupMissing": "Den här gruppen är inte tillgänglig just nu. Anslut igen för att läsa in den.",
+    "balancesStale": "Saldon kan vara inaktuella.",
+    "dataUnavailable": "Vissa uppgifter är inte tillgängliga. Anslut igen för att läsa in dem.",
+    "dataStale": "Vissa uppgifter kan vara inaktuella."
   },
   "ApiErrorEmptyState": {
     "title": "Spliit är inte tillgängligt",

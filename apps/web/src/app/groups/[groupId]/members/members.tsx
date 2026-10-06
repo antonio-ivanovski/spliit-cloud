@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { AccountAvatar } from '@/components/account-avatar'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
-import { OfflineNeedsConnection } from '@/components/offline-download-status'
+import { OfflineNeedsConnection } from '@/components/offline-empty-state'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {

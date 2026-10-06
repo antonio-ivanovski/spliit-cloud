@@ -20,7 +20,6 @@ import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { PageInset } from '@/components/layout/page-shell'
 import { useMascotController } from '@/components/mascot/mascot-context'
 import { Money } from '@/components/money'
-import { OfflineDownloadStatus } from '@/components/offline-download-status'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { ParticipantAvatar } from '@/components/participant-avatar'
 import { Button } from '@/components/ui/button'
@@ -255,11 +254,11 @@ export function RecentGroupList() {
       <div className="flex flex-col gap-5">
         {!offlineOverview.data.totalsAvailable && (
           <output className="rounded-lg border bg-muted/40 px-4 py-2 text-sm text-muted-foreground">
-            {offlineOverview.meta.incompleteGroupCount > 0
-              ? tOffline('OfflineDownloads.totalsIncompleteWithCount', {
-                  count: offlineOverview.meta.incompleteGroupCount,
-                })
-              : tOffline('OfflineDownloads.totalsIncomplete')}
+            {tOffline(
+              offlineOverview.meta.incompleteGroupCount > 0
+                ? 'OfflineReadOnly.dataUnavailable'
+                : 'OfflineDownloads.totalsIncomplete',
+            )}
           </output>
         )}
         <CollapsibleSection
@@ -488,9 +487,6 @@ export function RecentGroupList() {
     <>
       <WelcomeBar name={account?.name} />
       <PendingInvitations />
-      <div className="mb-3">
-        <OfflineDownloadStatus />
-      </div>
       {body}
       {scanOpen ? (
         <Suspense

@@ -2832,7 +2832,7 @@
     }
   },
   "OfflineBanner": {
-    "message": "你已離線。已下載的資料為唯讀。",
+    "message": "你已離線。可以瀏覽資料，但變更需要連線。",
     "serverUnavailable": "現在無法連到 Spliit。正在顯示已下載的資料。",
     "reconnecting": "正在重新連線…你可以繼續閱讀已下載的資料。"
   },
@@ -4545,15 +4545,17 @@
     "statusQuotaError": "離線儲存空間已滿",
     "storageRetry": "重試儲存空間",
     "schemaUnsupported": "更新應用程式以讀取下載內容",
-    "cleanupFailed": "無法清除離線下載。請再試一次。"
+    "cleanupFailed": "無法清除此裝置上的帳號資料。請再試一次。"
   },
   "OfflineReadOnly": {
     "reconnectToEdit": "重新連線後進行變更",
     "attachmentsNeedConnection": "連線後查看附件",
     "needsConnection": "此功能需要連線",
-    "expenseMissing": "這筆支出不在此裝置的下載中。重新連線後查看較新或較早的支出。",
-    "groupMissing": "此群組尚未下載完成。",
-    "balancesStale": "餘額可能已過期。"
+    "expenseMissing": "這筆支出目前無法使用。請重新連線以載入。",
+    "groupMissing": "此群組目前無法使用。請重新連線以載入。",
+    "balancesStale": "餘額可能已過期。",
+    "dataUnavailable": "部分資料無法使用。請重新連線以載入。",
+    "dataStale": "部分資料可能已過時。"
   },
   "ApiErrorEmptyState": {
     "title": "Spliit 暫時無法使用",

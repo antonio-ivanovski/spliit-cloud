@@ -5,7 +5,7 @@ import { OfflineBanner } from '@/components/offline-banner'
 import {
   OfflineMissingData,
   OfflineNeedsConnection,
-} from '@/components/offline-download-status'
+} from '@/components/offline-empty-state'
 import { resetConnectivityForTests, trackedFetch } from '@/lib/connectivity'
 import {
   getDefaultConnectivityStore,
@@ -30,7 +30,7 @@ describe('OfflineBanner honest copy', () => {
     })
     render(<OfflineBanner />)
     const banner = screen.getByTestId('offline-banner')
-    expect(banner).toHaveTextContent(/downloaded data is read-only/i)
+    expect(banner).toHaveTextContent(/changes need a connection/i)
     expect(banner.textContent).not.toMatch(
       /won't be saved|sync later|saved.*reconnect/i,
     )
@@ -146,14 +146,14 @@ describe('OfflineNeedsConnection / OfflineMissingData', () => {
     })
     const { user } = render(
       <OfflineMissingData
-        description="This group hasn't finished downloading."
+        description="This group is unavailable right now. Reconnect to load it."
         onRetry={onRetry}
         backLabel="Back to groups"
         backHref="/"
       />,
     )
     expect(screen.getByTestId('offline-missing-data')).toHaveTextContent(
-      /hasn't finished downloading/i,
+      /unavailable right now/i,
     )
     await user.click(screen.getByRole('button', { name: /try again/i }))
     expect(onRetry).toHaveBeenCalledOnce()
@@ -169,7 +169,7 @@ describe('OfflineNeedsConnection / OfflineMissingData', () => {
     })
     render(
       <OfflineMissingData
-        description="This group hasn't finished downloading."
+        description="This group is unavailable right now. Reconnect to load it."
         onRetry={vi.fn()}
         backLabel="Back to groups"
         backHref="/"

@@ -2877,7 +2877,7 @@
     }
   },
   "OfflineBanner": {
-    "message": "Je bent offline. Gedownloade gegevens zijn alleen-lezen.",
+    "message": "Je bent offline. Je kunt gegevens bekijken, maar voor wijzigingen heb je een verbinding nodig.",
     "serverUnavailable": "Spliit is nu niet bereikbaar. Gedownloade gegevens worden getoond.",
     "reconnecting": "Opnieuw verbinden… Je kunt gedownloade gegevens blijven lezen."
   },
@@ -4636,15 +4636,17 @@
     "statusQuotaError": "Offline-opslag vol",
     "storageRetry": "Opslag opnieuw proberen",
     "schemaUnsupported": "Werk de app bij om downloads te lezen",
-    "cleanupFailed": "Offline downloads konden niet worden gewist. Probeer opnieuw."
+    "cleanupFailed": "De accountgegevens konden niet van dit apparaat worden gewist. Probeer opnieuw."
   },
   "OfflineReadOnly": {
     "reconnectToEdit": "Maak verbinding om wijzigingen te maken",
     "attachmentsNeedConnection": "Maak verbinding om bijlagen te bekijken",
     "needsConnection": "Deze functie heeft een verbinding nodig",
-    "expenseMissing": "Deze uitgave staat niet in de download van dit apparaat. Maak verbinding om nieuwere/oudere uitgaven te controleren.",
-    "groupMissing": "Deze groep is nog niet volledig gedownload.",
-    "balancesStale": "Saldo's zijn mogelijk verouderd."
+    "expenseMissing": "Deze uitgave is nu niet beschikbaar. Maak opnieuw verbinding om deze te laden.",
+    "groupMissing": "Deze groep is nu niet beschikbaar. Maak opnieuw verbinding om deze te laden.",
+    "balancesStale": "Saldo's zijn mogelijk verouderd.",
+    "dataUnavailable": "Sommige gegevens zijn niet beschikbaar. Maak opnieuw verbinding om ze te laden.",
+    "dataStale": "Sommige gegevens zijn mogelijk verouderd."
   },
   "ApiErrorEmptyState": {
     "title": "Spliit is niet beschikbaar",

@@ -38,7 +38,7 @@ describe('offline store opening', () => {
     })
     void store.open()
     await sleep(30)
-    // Blocking spinner removed; retry hook exposed via `retry()`.
+    // Blocking spinner removed; foreground recovery stays available.
     expect(store.getSnapshot().status).toBe('unavailable')
     expect(store.getRepository()).toBeNull()
 
@@ -75,7 +75,7 @@ describe('offline store opening', () => {
     expect(stale.close).toHaveBeenCalled()
     expect(store.getRepository()).toBeNull()
 
-    await store.retry()
+    await store.recover()
     expect(store.getSnapshot().status).toBe('available')
     expect(store.getRepository()).toBe(fresh)
     store.close()
@@ -204,6 +204,49 @@ describe('offline store opening', () => {
     expect(store.getSnapshot().status).toBe('available')
     expect(store.getRepository()).toBe(second)
     expect(first.close).toHaveBeenCalled()
+    store.close()
+  })
+})
+
+describe('silent foreground storage recovery', () => {
+  it('recovers a failed open once without interrupting a pending attempt', async () => {
+    const repo = fakeRepo()
+    let resolveOpen!: (repo: OfflineRepository) => void
+    const openRepository = vi
+      .fn()
+      .mockRejectedValueOnce(new Error('temporarily unavailable'))
+      .mockImplementationOnce(
+        () =>
+          new Promise<OfflineRepository>((resolve) => {
+            resolveOpen = resolve
+          }),
+      )
+    const store = createOfflineStore({ openRepository, openTimeoutMs: 5 })
+    await store.open()
+    expect(store.getSnapshot().status).toBe('unavailable')
+    const recovery = store.recover()
+    await sleep(20)
+    // Even after the timeout, focus/visibility events must not restart opening.
+    await store.recover()
+    expect(openRepository).toHaveBeenCalledTimes(2)
+    resolveOpen(repo)
+    await recovery
+    expect(store.getRepository()).toBe(repo)
+    await store.recover()
+    expect(openRepository).toHaveBeenCalledTimes(2)
+    store.close()
+  })
+
+  it('retains existing storage and does not retry quota failures automatically', async () => {
+    const repo = fakeRepo()
+    const openRepository = vi.fn(async () => repo)
+    const store = createOfflineStore({ openRepository })
+    await store.open()
+    store.reportError(new DOMException('full', 'QuotaExceededError'))
+    await store.recover()
+    expect(store.getSnapshot().status).toBe('quota-error')
+    expect(openRepository).toHaveBeenCalledTimes(1)
+    expect(repo.close).not.toHaveBeenCalled()
     store.close()
   })
 })

@@ -2867,7 +2867,7 @@
     }
   },
   "OfflineBanner": {
-    "message": "Jesteś offline. Pobrane dane są tylko do odczytu.",
+    "message": "Jesteś offline. Możesz przeglądać dane, ale zmiany wymagają połączenia.",
     "serverUnavailable": "Brak połączenia ze Spliit. Wyświetlam pobrane dane.",
     "reconnecting": "Łączenie ponownie… Możesz dalej czytać pobrane dane."
   },
@@ -4618,15 +4618,17 @@
     "statusQuotaError": "Pamięć offline pełna",
     "storageRetry": "Spróbuj pamięć ponownie",
     "schemaUnsupported": "Zaktualizuj aplikację, aby odczytać pobrane dane",
-    "cleanupFailed": "Nie udało się wyczyścić pobranych danych. Spróbuj ponownie."
+    "cleanupFailed": "Nie udało się usunąć danych konta z tego urządzenia. Spróbuj ponownie."
   },
   "OfflineReadOnly": {
     "reconnectToEdit": "Połącz się, aby wprowadzać zmiany",
     "attachmentsNeedConnection": "Połącz się, aby zobaczyć załączniki",
     "needsConnection": "Ta funkcja wymaga połączenia",
-    "expenseMissing": "Tego wydatku nie ma w pobranym pliku tego urządzenia. Połącz się, aby sprawdzić nowsze/starsze wydatki.",
-    "groupMissing": "Ta grupa jeszcze się nie pobrała.",
-    "balancesStale": "Salda mogą być nieaktualne."
+    "expenseMissing": "Ten wydatek jest teraz niedostępny. Połącz się ponownie, aby go wczytać.",
+    "groupMissing": "Ta grupa jest teraz niedostępna. Połącz się ponownie, aby ją wczytać.",
+    "balancesStale": "Salda mogą być nieaktualne.",
+    "dataUnavailable": "Niektóre dane są niedostępne. Połącz się ponownie, aby je wczytać.",
+    "dataStale": "Niektóre dane mogą być nieaktualne."
   },
   "ApiErrorEmptyState": {
     "title": "Spliit jest niedostępny",

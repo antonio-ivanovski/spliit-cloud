@@ -279,23 +279,11 @@ const ExpenseListForSearch = ({
 
   return (
     <>
-      {useOfflineSource && searchText.trim() && (
-        <p
-          className="mx-4 mb-2 text-xs text-muted-foreground sm:mx-6"
-          role="note"
-        >
-          {tOffline('OfflineDownloads.offlineSearchHint')}
-        </p>
+      {useOfflineSource && offlineMeta.hasMore && (
+        <output className="mx-4 mb-2 block text-xs text-muted-foreground sm:mx-6">
+          {tOffline('OfflineReadOnly.dataUnavailable')}
+        </output>
       )}
-      {useOfflineSource &&
-        offlineMeta.hasMore &&
-        offlineMeta.totalCount != null && (
-          <output className="mx-4 mb-2 block text-xs text-muted-foreground sm:mx-6">
-            {tOffline('OfflineDownloads.recent500WithCount', {
-              count: offlineMeta.totalCount,
-            })}
-          </output>
-        )}
       <ExpenseTimeline
         expenses={expenses}
         sortBy={sort.sortBy}

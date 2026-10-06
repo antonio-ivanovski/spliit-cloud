@@ -1,5 +1,3 @@
-import { useSyncExternalStore } from 'react'
-
 import {
   OFFLINE_OPEN_TIMEOUT_MS,
   OFFLINE_STORAGE_BLOCKED_MESSAGE,
@@ -14,12 +12,12 @@ import { OfflineRepository } from './repository'
  * This owns only IndexedDB opening status for the durable repository. It does
  * not implement account lifecycle, session verification, cross-tab events, sync
  * passes, or any UI (lifecycle/sync own those and must keep `useCurrentAccount`
- * stable). It returns status values so retry UI can mount; it never mounts UI
+ * stable). It returns internal status values for recovery; it never mounts UI
  * itself.
  *
  * Opening rules: after {@link OFFLINE_OPEN_TIMEOUT_MS} a still-pending open
- * stops blocking and reports `unavailable` with a retry hook while the open
- * keeps running. Stale/late results after `cancel`/`retry` are ignored and
+ * stops blocking and reports `unavailable` with foreground recovery while the
+ * open keeps running. Stale/late results after `cancel`/`open` are ignored and
  * their connections closed; an eventual success is accepted only when its
  * lifecycle generation is still current.
  */
@@ -35,7 +33,6 @@ export type OfflineStoreSnapshot = {
   status: OfflineStorageStatus
   blockedMessage: string | null
   errorCode: OfflineErrorCode | null
-  retryCount: number
   lifecycleGeneration: number
 }
 
@@ -69,7 +66,7 @@ export function createOfflineStore(options?: OfflineStoreOptions) {
 
   const listeners = new Set<() => void>()
   let lifecycleGeneration = 0
-  let retryCount = 0
+  let openingInFlight = false
   let repository: OfflineRepository | null = null
   let controller: AbortController | null = null
   let timeoutId: ReturnType<typeof setTimeout> | null = null
@@ -77,7 +74,6 @@ export function createOfflineStore(options?: OfflineStoreOptions) {
     status: 'opening',
     blockedMessage: null,
     errorCode: null,
-    retryCount: 0,
     lifecycleGeneration: 0,
   }
 
@@ -100,7 +96,6 @@ export function createOfflineStore(options?: OfflineStoreOptions) {
             ? OFFLINE_STORAGE_BLOCKED_MESSAGE
             : null,
       errorCode: extra?.errorCode ?? null,
-      retryCount,
       lifecycleGeneration,
       ...extra,
     })
@@ -129,6 +124,7 @@ export function createOfflineStore(options?: OfflineStoreOptions) {
     // generation may publish `available`.
     lifecycleGeneration += 1
     const generation = lifecycleGeneration
+    openingInFlight = true
     controller?.abort()
     controller = new AbortController()
     const signal = controller.signal
@@ -179,7 +175,7 @@ export function createOfflineStore(options?: OfflineStoreOptions) {
         signal,
       })
       if (generation !== lifecycleGeneration || signal.aborted) {
-        // Stale/late success after cancel/retry: close and ignore.
+        // Stale/late success after cancellation or a newer open: close and ignore.
         // The retained previous repository (if any) stays owned by its
         // successful generation; a later successful open swaps it.
         try {
@@ -207,23 +203,27 @@ export function createOfflineStore(options?: OfflineStoreOptions) {
         return
       }
       setStatus('unavailable', { errorCode: toStatusErrorCode(error) })
+    } finally {
+      if (generation === lifecycleGeneration) openingInFlight = false
     }
   }
 
-  async function retry(): Promise<void> {
-    retryCount += 1
+  /** Foreground recovery is silent and never interrupts an existing open. */
+  async function recover(): Promise<void> {
+    if (openingInFlight || snapshot.status !== 'unavailable') return
     await open()
   }
 
   function cancel(): void {
     // Bump the generation so any late open result is ignored.
     lifecycleGeneration += 1
+    openingInFlight = false
     controller?.abort()
     controller = null
     clearTimer()
     if (snapshot.status === 'opening') {
       // Never leave the machine stuck in `opening` after cancellation;
-      // report `unavailable` so retry UI can take over.
+      // report `unavailable` so foreground recovery can take over.
       setStatus('unavailable', { errorCode: 'storage-unavailable' })
       return
     }
@@ -234,6 +234,7 @@ export function createOfflineStore(options?: OfflineStoreOptions) {
     // Explicit terminal state: bump fencing, drop the connection, and never
     // leave `available` (which would keep getRepository() non-null).
     lifecycleGeneration += 1
+    openingInFlight = false
     controller?.abort()
     controller = null
     clearTimer()
@@ -276,7 +277,7 @@ export function createOfflineStore(options?: OfflineStoreOptions) {
     getSnapshot,
     getRepository,
     open,
-    retry,
+    recover,
     cancel,
     close,
     reportError,
@@ -284,15 +285,5 @@ export function createOfflineStore(options?: OfflineStoreOptions) {
 }
 
 export type OfflineStore = ReturnType<typeof createOfflineStore>
-
-/**
- * Retry-UI hook. Returns storage status without mounting UI. Other modules own
- * lifecycle/sync; this hook only subscribes to open status.
- */
-export function useOfflineStorageStatus(
-  store: OfflineStore,
-): OfflineStoreSnapshot {
-  return useSyncExternalStore(store.subscribe, store.getSnapshot)
-}
 
 export { OFFLINE_STORAGE_BLOCKED_MESSAGE }

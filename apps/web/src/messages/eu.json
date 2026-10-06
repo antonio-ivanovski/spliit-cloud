@@ -2852,7 +2852,7 @@
     }
   },
   "OfflineBanner": {
-    "message": "Lineaz kanpo zaude. Deskargatutako datuak irakurtzeko soilik dira.",
+    "message": "Lineaz kanpo zaude. Nabiga dezakezu, baina aldaketak egiteko konexioa behar da.",
     "serverUnavailable": "Ezin da Spliit-ekin konektatu une honetan. Deskargatutako datuak erakusten.",
     "reconnecting": "Berriro konektatzen… Deskargatutako datuak irakurtzen jarrai dezakezu."
   },
@@ -4592,15 +4592,17 @@
     "statusQuotaError": "Offline biltegia beteta",
     "storageRetry": "Saiatu biltegia berriro",
     "schemaUnsupported": "Eguneratu aplikazioa deskargak irakurtzeko",
-    "cleanupFailed": "Ezin izan dira deskargak garbitu. Saiatu berriro."
+    "cleanupFailed": "Ezin izan dira kontuko datuak gailu honetatik ezabatu. Saiatu berriro."
   },
   "OfflineReadOnly": {
     "reconnectToEdit": "Konektatu aldaketak egiteko",
     "attachmentsNeedConnection": "Konektatu eranskinak ikusteko",
     "needsConnection": "Eginbide honek konexioa behar du",
-    "expenseMissing": "Gastu hau ez dago gailu honen deskargan. Konektatu gastu berriagoak edo zaharragoak ikusteko.",
-    "groupMissing": "Talde honek ez du deskarga amaitu.",
-    "balancesStale": "Saldoak zaharkituta egon daitezke."
+    "expenseMissing": "Gastu hau ez dago erabilgarri une honetan. Konektatu berriro kargatzeko.",
+    "groupMissing": "Talde hau ez dago erabilgarri une honetan. Konektatu berriro kargatzeko.",
+    "balancesStale": "Saldoak zaharkituta egon daitezke.",
+    "dataUnavailable": "Datu batzuk ez daude erabilgarri. Konektatu berriro kargatzeko.",
+    "dataStale": "Baliteke datu batzuk eguneratuta ez egotea."
   },
   "ApiErrorEmptyState": {
     "title": "Spliit ez dago erabilgarri",

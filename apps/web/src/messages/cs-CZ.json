@@ -2867,7 +2867,7 @@
     }
   },
   "OfflineBanner": {
-    "message": "Jsi offline. Stažená data jsou jen ke čtení.",
+    "message": "Jsi offline. Můžeš procházet data, ale změny vyžadují připojení.",
     "serverUnavailable": "Spliit je momentálně nedostupný. Zobrazuji stažená data.",
     "reconnecting": "Připojuji znovu… Stažená data můžeš dál číst."
   },
@@ -4618,15 +4618,17 @@
     "statusQuotaError": "Offline úložiště je plné",
     "storageRetry": "Zkusit úložiště znovu",
     "schemaUnsupported": "Aktualizujte aplikaci pro čtení stažených dat",
-    "cleanupFailed": "Offline stažené soubory se nepodařilo vymazat. Zkuste to znovu."
+    "cleanupFailed": "Data účtu se nepodařilo z tohoto zařízení vymazat. Zkus to znovu."
   },
   "OfflineReadOnly": {
     "reconnectToEdit": "Připoj se pro úpravy",
     "attachmentsNeedConnection": "Připoj se pro zobrazení příloh",
     "needsConnection": "Tato funkce potřebuje připojení",
-    "expenseMissing": "Tento výdaj není ve staženém obsahu tohoto zařízení. Připoj se a zkontroluj novější/starší výdaje.",
-    "groupMissing": "Tato skupina se ještě nestáhla celá.",
-    "balancesStale": "Zůstatky nemusí být aktuální."
+    "expenseMissing": "Tento výdaj teď není dostupný. Připoj se znovu, aby se načetl.",
+    "groupMissing": "Tato skupina teď není dostupná. Připoj se znovu, aby se načetla.",
+    "balancesStale": "Zůstatky nemusí být aktuální.",
+    "dataUnavailable": "Některá data nejsou dostupná. Připoj se znovu, aby se načetla.",
+    "dataStale": "Některá data mohou být zastaralá."
   },
   "ApiErrorEmptyState": {
     "title": "Spliit je nedostupný",

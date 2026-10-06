@@ -39,6 +39,7 @@ export const controlRecordSchema = z.object({
   namespace: z.string().min(1),
   generation: nonNegativeInt,
   dataRevision: nonNegativeInt,
+  // Legacy storage compatibility. Verified sessions normalize this to true.
   enabled: z.boolean(),
   revoked: z.boolean(),
   leaseOwner: z.string().nullable(),

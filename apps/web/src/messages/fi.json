@@ -2837,7 +2837,7 @@
     }
   },
   "OfflineBanner": {
-    "message": "Olet offline. Ladatut tiedot ovat vain luku -tilassa.",
+    "message": "Olet offline. Voit selata tietoja, mutta muutokset vaativat yhteyden.",
     "serverUnavailable": "Spliit ei ole juuri nyt tavoitettavissa. Näytetään ladatut tiedot.",
     "reconnecting": "Yhdistetään uudelleen… Voit jatkaa ladattujen tietojen lukemista."
   },
@@ -4564,15 +4564,17 @@
     "statusQuotaError": "Offline-tallennus täynnä",
     "storageRetry": "Yritä tallennusta uudelleen",
     "schemaUnsupported": "Päivitä sovellus ladattujen tietojen lukemiseksi",
-    "cleanupFailed": "Offline-latauksia ei voitu tyhjentää. Yritä uudelleen."
+    "cleanupFailed": "Tilin tietoja ei voitu poistaa tältä laitteelta. Yritä uudelleen."
   },
   "OfflineReadOnly": {
     "reconnectToEdit": "Yhdistä tehdäksesi muutoksia",
     "attachmentsNeedConnection": "Yhdistä nähdäksesi liitteet",
     "needsConnection": "Tämä toiminto tarvitsee yhteyden",
-    "expenseMissing": "Tämä kulu ei ole tämän laitteen latauksessa. Yhdistä uudempien/vanhempien kulujen tarkistamiseksi.",
-    "groupMissing": "Tämä ryhmä ei ole vielä latautunut.",
-    "balancesStale": "Saldot voivat olla vanhentuneita."
+    "expenseMissing": "Tämä kulu ei ole juuri nyt saatavilla. Yhdistä uudelleen ladataksesi sen.",
+    "groupMissing": "Tämä ryhmä ei ole juuri nyt saatavilla. Yhdistä uudelleen ladataksesi sen.",
+    "balancesStale": "Saldot voivat olla vanhentuneita.",
+    "dataUnavailable": "Osa tiedoista ei ole saatavilla. Yhdistä uudelleen ladataksesi ne.",
+    "dataStale": "Osa tiedoista voi olla vanhentuneita."
   },
   "ApiErrorEmptyState": {
     "title": "Spliit ei ole käytettävissä",

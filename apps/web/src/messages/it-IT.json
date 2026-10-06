@@ -2854,7 +2854,7 @@
     }
   },
   "OfflineBanner": {
-    "message": "Sei offline. I dati scaricati sono in sola lettura.",
+    "message": "Sei offline. Puoi consultare i dati, ma serve una connessione per fare modifiche.",
     "serverUnavailable": "Spliit non è raggiungibile al momento. Mostro i dati scaricati.",
     "reconnecting": "Riconnessione… Puoi continuare a leggere i dati scaricati."
   },
@@ -4594,15 +4594,17 @@
     "statusQuotaError": "Archiviazione offline piena",
     "storageRetry": "Riprova archiviazione",
     "schemaUnsupported": "Aggiorna l'app per leggere i download",
-    "cleanupFailed": "Impossibile cancellare i download. Riprova."
+    "cleanupFailed": "Impossibile cancellare i dati dell'account da questo dispositivo. Riprova."
   },
   "OfflineReadOnly": {
     "reconnectToEdit": "Riconnettiti per modificare",
     "attachmentsNeedConnection": "Connettiti per vedere gli allegati",
     "needsConnection": "Questa funzione richiede una connessione",
-    "expenseMissing": "Questa spesa non è nel download di questo dispositivo. Riconnettiti per vedere spese più recenti o precedenti.",
-    "groupMissing": "Questo gruppo non ha finito di scaricarsi.",
-    "balancesStale": "I saldi potrebbero non essere aggiornati."
+    "expenseMissing": "Questa spesa non è disponibile al momento. Riconnettiti per caricarla.",
+    "groupMissing": "Questo gruppo non è disponibile al momento. Riconnettiti per caricarlo.",
+    "balancesStale": "I saldi potrebbero non essere aggiornati.",
+    "dataUnavailable": "Alcuni dati non sono disponibili. Riconnettiti per caricarli.",
+    "dataStale": "Alcuni dati potrebbero non essere aggiornati."
   },
   "ApiErrorEmptyState": {
     "title": "Spliit non è disponibile",

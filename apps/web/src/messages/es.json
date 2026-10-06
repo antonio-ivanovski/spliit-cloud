@@ -2881,7 +2881,7 @@
     }
   },
   "OfflineBanner": {
-    "message": "Estás sin conexión. Los datos descargados son de solo lectura.",
+    "message": "Estás sin conexión. Puedes navegar, pero necesitas conexión para hacer cambios.",
     "serverUnavailable": "No se puede contactar con Spliit ahora mismo. Mostrando datos descargados.",
     "reconnecting": "Reconectando… Puedes seguir leyendo los datos descargados."
   },
@@ -4645,15 +4645,17 @@
     "statusQuotaError": "Almacenamiento sin conexión lleno",
     "storageRetry": "Reintentar almacenamiento",
     "schemaUnsupported": "Actualiza la app para leer las descargas",
-    "cleanupFailed": "No se pudieron borrar las descargas. Inténtalo de nuevo."
+    "cleanupFailed": "No se pudieron borrar los datos de la cuenta de este dispositivo. Inténtalo de nuevo."
   },
   "OfflineReadOnly": {
     "reconnectToEdit": "Reconecta para hacer cambios",
     "attachmentsNeedConnection": "Conéctate para ver adjuntos",
     "needsConnection": "Esta función necesita conexión",
-    "expenseMissing": "Este gasto no está en la descarga de este dispositivo. Reconecta para ver gastos más nuevos o antiguos.",
-    "groupMissing": "Este grupo aún no terminó de descargarse.",
-    "balancesStale": "Los saldos pueden estar desactualizados."
+    "expenseMissing": "Este gasto no está disponible ahora mismo. Vuelve a conectarte para cargarlo.",
+    "groupMissing": "Este grupo no está disponible ahora mismo. Vuelve a conectarte para cargarlo.",
+    "balancesStale": "Los saldos pueden estar desactualizados.",
+    "dataUnavailable": "Algunos datos no están disponibles. Vuelve a conectarte para cargarlos.",
+    "dataStale": "Algunos datos pueden estar desactualizados."
   },
   "ApiErrorEmptyState": {
     "title": "Spliit no está disponible",

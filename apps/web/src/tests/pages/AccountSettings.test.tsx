@@ -187,6 +187,9 @@ describe('AccountSettingsPage', () => {
   it('renders a single h1 and eight h2 sections in the documented order', () => {
     render(<AccountSettingsPage />)
 
+    expect(
+      screen.queryByText(/automatic downloads|refresh now|clear downloads/i),
+    ).not.toBeInTheDocument()
     const headings = screen.getAllByRole('heading')
     const h1Count = headings.filter(
       (heading) => heading.tagName === 'H1',

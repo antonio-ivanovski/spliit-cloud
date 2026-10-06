@@ -2845,7 +2845,7 @@
     }
   },
   "OfflineBanner": {
-    "message": "Çevrimdışısın. İndirilen veriler salt okunur.",
+    "message": "Çevrimdışısın. Verilere göz atabilirsin, ancak değişiklikler için bağlantı gerekir.",
     "serverUnavailable": "Şu an Spliit'e ulaşılamıyor. İndirilen veriler gösteriliyor.",
     "reconnecting": "Yeniden bağlanıyor… İndirilen verileri okumaya devam edebilirsin."
   },
@@ -4572,15 +4572,17 @@
     "statusQuotaError": "Çevrimdışı depolama dolu",
     "storageRetry": "Depolamayı tekrar dene",
     "schemaUnsupported": "İndirilenleri okumak için uygulamayı güncelle",
-    "cleanupFailed": "Çevrimdışı indirilenler temizlenemedi. Tekrar dene."
+    "cleanupFailed": "Hesap verileri bu cihazdan temizlenemedi. Tekrar dene."
   },
   "OfflineReadOnly": {
     "reconnectToEdit": "Değişiklik için yeniden bağlan",
     "attachmentsNeedConnection": "Ekleri görmek için bağlan",
     "needsConnection": "Bu özellik bağlantı gerektirir",
-    "expenseMissing": "Bu gider bu cihazdaki indirmede yok. Daha yeni/eski giderler için yeniden bağlan.",
-    "groupMissing": "Bu grup henüz indirilmedi.",
-    "balancesStale": "Bakiyeler güncel olmayabilir."
+    "expenseMissing": "Bu gider şu anda kullanılamıyor. Yüklemek için yeniden bağlan.",
+    "groupMissing": "Bu grup şu anda kullanılamıyor. Yüklemek için yeniden bağlan.",
+    "balancesStale": "Bakiyeler güncel olmayabilir.",
+    "dataUnavailable": "Bazı veriler kullanılamıyor. Yüklemek için yeniden bağlan.",
+    "dataStale": "Bazı veriler güncel olmayabilir."
   },
   "ApiErrorEmptyState": {
     "title": "Spliit kullanılamıyor",
