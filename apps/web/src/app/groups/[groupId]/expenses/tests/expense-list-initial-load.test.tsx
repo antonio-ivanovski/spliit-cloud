@@ -3,20 +3,23 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@/test/test-utils'
 
 const mocks = vi.hoisted(() => ({
-  mockUseInfiniteQuery: vi.fn(),
+  mockUseOfflineExpenses: vi.fn(),
   mockUseCurrentGroup: vi.fn(),
   mockUseCurrentGroupOrNull: vi.fn(),
   mockUseCurrentAccount: vi.fn(() => ({ data: null })),
   mockUseSyncedAccountPreferences: vi.fn(() => null),
 }))
 
+// Single source: ExpenseList no longer runs its own tRPC infinite query.
+// The unified offline-first hook owns the network query internally.
+vi.mock('@/lib/offline/read-hooks', () => ({
+  useOfflineExpenses: mocks.mockUseOfflineExpenses,
+}))
+
 vi.mock('@/trpc/client', () => ({
   trpc: {
     groups: {
       expenses: {
-        list: {
-          useInfiniteQuery: mocks.mockUseInfiniteQuery,
-        },
         commonCurrencies: {
           useQuery: () => ({ data: { currencies: ['EUR'] }, isLoading: false }),
         },
@@ -40,18 +43,6 @@ vi.mock('@/lib/use-current-account', () => ({
 
 vi.mock('@/components/account-preferences-sync', () => ({
   useSyncedAccountPreferences: mocks.mockUseSyncedAccountPreferences,
-}))
-
-// The offline adapter also reads the expenses query internally; isolate this
-// test to the network gating by reporting no local snapshot.
-vi.mock('@/lib/offline/read-hooks', () => ({
-  useOfflineExpenses: () => ({
-    meta: { availability: 'missing' },
-    data: undefined,
-    hasMore: false,
-    isLoading: false,
-    fetchNextPage: vi.fn(),
-  }),
 }))
 
 vi.mock('react-intersection-observer', () => ({
@@ -123,6 +114,17 @@ function loadedGroup() {
   mocks.mockUseCurrentGroupOrNull.mockReturnValue(value)
 }
 
+function emptyReady() {
+  return {
+    data: { pages: [{ expenses: [], hasMore: false, nextOffset: null }] },
+    meta: { availability: 'ready', source: 'network', refreshing: false },
+    hasMore: false,
+    isLoading: false,
+    fetchNextPage: vi.fn(),
+    refetch: vi.fn(),
+  }
+}
+
 describe('ExpenseList initial load', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -132,10 +134,11 @@ describe('ExpenseList initial load', () => {
     })
     mocks.mockUseCurrentAccount.mockReturnValue({ data: null })
     mocks.mockUseSyncedAccountPreferences.mockReturnValue(null)
-    mocks.mockUseInfiniteQuery.mockReturnValue({
+    mocks.mockUseOfflineExpenses.mockReturnValue({
       data: undefined,
+      meta: { availability: 'loading', source: 'download', refreshing: true },
+      hasMore: false,
       isLoading: true,
-      isPlaceholderData: false,
       fetchNextPage: vi.fn(),
       refetch: vi.fn(),
     })
@@ -145,11 +148,10 @@ describe('ExpenseList initial load', () => {
     loadingGroup()
     render(<ExpenseList />)
 
-    expect(mocks.mockUseInfiniteQuery).toHaveBeenCalled()
-    const [, options] = mocks.mockUseInfiniteQuery.mock.calls.at(-1) as [
-      unknown,
-      { enabled?: boolean }?,
-    ]
+    expect(mocks.mockUseOfflineExpenses).toHaveBeenCalled()
+    const options = mocks.mockUseOfflineExpenses.mock.calls.at(-1)?.[0] as {
+      enabled?: boolean
+    }
     // Bug reproduction: before the fix the query is enabled while the group
     // is still loading, so it fetches once with hideNotInvolving=undefined
     // and again with hideNotInvolving=true after the group resolves.
@@ -162,30 +164,16 @@ describe('ExpenseList initial load', () => {
     vi.clearAllMocks()
 
     loadedGroup()
-    mocks.mockUseInfiniteQuery.mockReturnValue({
-      data: {
-        pages: [
-          {
-            expenses: [],
-            hasMore: false,
-            nextCursor: null,
-          },
-        ],
-      },
-      isLoading: false,
-      isPlaceholderData: false,
-      fetchNextPage: vi.fn(),
-      refetch: vi.fn(),
-    })
+    mocks.mockUseOfflineExpenses.mockReturnValue(emptyReady())
     view.rerender(<ExpenseList />)
 
-    expect(mocks.mockUseInfiniteQuery).toHaveBeenCalled()
-    const [input, options] = mocks.mockUseInfiniteQuery.mock.calls.at(-1) as [
-      { hideNotInvolving?: boolean },
-      { enabled?: boolean }?,
-    ]
+    expect(mocks.mockUseOfflineExpenses).toHaveBeenCalled()
+    const options = mocks.mockUseOfflineExpenses.mock.calls.at(-1)?.[0] as {
+      enabled?: boolean
+      collapseInvolving?: boolean
+    }
     expect(options?.enabled ?? true).toBe(true)
-    expect(input.hideNotInvolving).toBe(true)
+    expect(options?.collapseInvolving).toBe(true)
     expect(screen.getByText(/any expense/i)).toBeInTheDocument()
   })
 })

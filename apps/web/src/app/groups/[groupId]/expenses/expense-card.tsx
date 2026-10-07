@@ -1,6 +1,6 @@
 import { Link, type LinkProps } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { ActiveUserBalance } from '@/app/groups/[groupId]/expenses/active-user-balance'
@@ -162,7 +162,7 @@ type Props = {
   groupLabel?: string
 }
 
-export function ExpenseCard({
+export const ExpenseCard = memo(function ExpenseCard({
   expense,
   currency,
   groupId,
@@ -316,4 +316,4 @@ export function ExpenseCard({
       />
     </div>
   )
-}
+})

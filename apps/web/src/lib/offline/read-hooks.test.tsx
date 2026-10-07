@@ -1061,6 +1061,177 @@ describe('offline read hooks', () => {
     expect(row).not.toHaveProperty('detail')
   })
 
+  it('merges network rows over cached rows without swapping the list', async () => {
+    const { clearPendingExpensesForTests } = await import('./pending-expenses')
+    clearPendingExpensesForTests()
+    mocks.useOnlineStatus.mockReturnValue(true)
+    const catalog = catalogWith(['g1'])
+    const record = groupRecord('g1', ['a'])
+    await setupLocal({
+      catalog,
+      groups: new Map([['g1', record]]),
+    })
+    const localRow = (
+      record.payload.expenses[0] as { list: Record<string, unknown> }
+    ).list
+    const networkA = { ...localRow }
+    const networkB = {
+      ...localRow,
+      id: 'b',
+      title: 'Expense b',
+      expenseDate: new Date('2026-05-01T12:00:00Z'),
+      createdAt: new Date('2026-05-01T13:00:00Z'),
+    }
+    // Stage 1: slow network — cached rows render immediately.
+    mocks.trpcGroupsExpensesList.mockReturnValue({
+      data: undefined,
+      error: undefined,
+      isFetching: true,
+      fetchNextPage: vi.fn(),
+      refetch: vi.fn(),
+    })
+    const { Wrapper } = makeWrapper()
+    const { result, rerender } = renderHook(
+      () => useOfflineExpenses({ groupId: 'g1' }),
+      { wrapper: Wrapper },
+    )
+    await waitFor(() => {
+      expect(result.current.meta.availability).toBe('ready')
+    })
+    expect(result.current.meta.source).toBe('download')
+    // Stage 2: network arrives — rows merge in place, no source swap flash.
+    mocks.trpcGroupsExpensesList.mockReturnValue({
+      data: {
+        pages: [{ expenses: [networkA, networkB], hasMore: false }],
+      },
+      error: undefined,
+      isFetching: false,
+      fetchNextPage: vi.fn(),
+      refetch: vi.fn(),
+    })
+    rerender()
+    await waitFor(() => {
+      expect(result.current.meta.source).toBe('network')
+    })
+    await waitFor(() => {
+      expect(
+        result.current.data?.pages[0]?.expenses.map(
+          (expense) => (expense as { id: string }).id,
+        ),
+      ).toEqual(['b', 'a'])
+    })
+    // Incremental insert, not a wholesale swap: unchanged rows keep the
+    // on-screen (local) reference so memoized cards bail out.
+    expect(result.current.data?.addedIds).toEqual(['b'])
+    const firstPage = result.current.data?.pages[0]?.expenses as
+      | Array<Record<string, unknown>>
+      | undefined
+    expect(firstPage?.map((expense) => expense.title)).toEqual([
+      'Expense b',
+      'Expense a',
+    ])
+    expect(result.current.meta.source).toBe('network')
+  })
+
+  it('terminates the list when the network paginates to exhaustion', async () => {
+    const { clearPendingExpensesForTests } = await import('./pending-expenses')
+    clearPendingExpensesForTests()
+    mocks.useOnlineStatus.mockReturnValue(true)
+    // Multi-page snapshot (>20 rows): the downloaded first page reports
+    // hasMore while the network is still slow.
+    const ids = Array.from({ length: 25 }, (_, index) => `e${index}`)
+    const catalog = catalogWith(['g1'])
+    const record = groupRecord('g1', ids)
+    await setupLocal({
+      catalog,
+      groups: new Map([['g1', record]]),
+    })
+    mocks.trpcGroupsExpensesList.mockReturnValue({
+      data: undefined,
+      error: undefined,
+      isFetching: true,
+      fetchNextPage: vi.fn(),
+      refetch: vi.fn(),
+    })
+    const { Wrapper } = makeWrapper()
+    const { result, rerender } = renderHook(
+      () => useOfflineExpenses({ groupId: 'g1' }),
+      { wrapper: Wrapper },
+    )
+    await waitFor(() => {
+      expect(result.current.meta.availability).toBe('ready')
+    })
+    expect(result.current.meta.source).toBe('download')
+    expect(result.current.hasMore).toBe(true)
+    // Network arrives already exhausted: termination must be network-driven.
+    // A stale local hasMore must not keep the sentinel spinner alive.
+    const localRow = (
+      record.payload.expenses[0] as { list: Record<string, unknown> }
+    ).list
+    mocks.trpcGroupsExpensesList.mockReturnValue({
+      data: {
+        pages: [{ expenses: [{ ...localRow }], hasMore: false }],
+      },
+      error: undefined,
+      isFetching: false,
+      fetchNextPage: vi.fn(),
+      refetch: vi.fn(),
+    })
+    rerender()
+    await waitFor(() => {
+      expect(result.current.meta.source).toBe('network')
+    })
+    await waitFor(() => {
+      expect(result.current.hasMore).toBe(false)
+    })
+    expect(result.current.meta.hasMore).toBe(false)
+  })
+
+  it('overlays pending offline-created rows on the merged list', async () => {
+    const { clearPendingExpensesForTests, enqueuePendingExpenseForTests } =
+      await import('./pending-expenses')
+    clearPendingExpensesForTests()
+    const catalog = catalogWith(['g1'])
+    const record = groupRecord('g1', ['a'])
+    await setupLocal({
+      catalog,
+      groups: new Map([['g1', record]]),
+    })
+    enqueuePendingExpenseForTests('g1', {
+      id: 'pending-1',
+      clientId: 'pending-1',
+      requestId: 'req-1',
+      status: 'pending',
+      expenseDate: new Date('2026-03-04T12:00:00Z'),
+      createdAt: new Date('2026-03-04T13:00:00Z'),
+      amount: 500,
+      title: 'Pending coffee',
+      expenseTimeZone: 'UTC',
+      version: 0,
+    })
+    mocks.trpcGroupsExpensesList.mockReturnValue({
+      data: undefined,
+      error: new Error('offline'),
+      isFetching: false,
+      fetchNextPage: vi.fn(),
+      refetch: vi.fn(),
+    })
+    const { Wrapper } = makeWrapper()
+    const { result } = renderHook(() => useOfflineExpenses({ groupId: 'g1' }), {
+      wrapper: Wrapper,
+    })
+    await waitFor(() => {
+      expect(result.current.meta.availability).toBe('ready')
+    })
+    expect(
+      result.current.data?.pages[0]?.expenses.map(
+        (expense) => (expense as { id: string }).id,
+      ),
+    ).toContain('pending-1')
+    expect(result.current.data?.pendingIds).toEqual(['pending-1'])
+    clearPendingExpensesForTests()
+  })
+
   it('maps global download records to list items with group context', async () => {
     const catalog = catalogWith(['g1'])
     const record = groupRecord('g1', ['a'])

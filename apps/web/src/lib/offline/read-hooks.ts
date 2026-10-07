@@ -1,5 +1,9 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import {
+  keepPreviousData,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useActiveUser } from '@/lib/hooks'
 import { EFFECT_BRIDGE_QUERY_DEFAULTS } from '@/lib/services/transport-integration'
@@ -8,6 +12,8 @@ import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 import type { CatalogRecord, GroupRecord } from './contract'
+import { mergeExpenseLists, type MergeableExpense } from './merge-expenses'
+import { usePendingExpenses } from './pending-expenses'
 import { useOfflineSession, useOptionalOfflineStorage } from './provider'
 import { getDefaultOfflineQueryClient } from './query-worker'
 import { offlineQueryKey, snapshotVersion } from './read-model'
@@ -561,10 +567,17 @@ export function useOfflineExpenses(
   totalFiltered?: number
   involvingReturned?: number
   hiddenPending?: boolean
+  /** Ids present in network but not in the previous local window. */
+  addedIds?: string[]
+  /** Ids whose content changed between local and network. */
+  updatedIds?: string[]
+  /** Pending offline-created ids overlaid on top (future writes). */
+  pendingIds?: string[]
 }> & {
   fetchNextPage: () => Promise<void>
   hasMore: boolean
   isLoading: boolean
+  refetch: () => Promise<unknown>
 } {
   const { groupId, filter, sortBy, sortDir, collapseInvolving, limit } = options
   const { namespace, generation, account } = useOfflineSession()
@@ -615,6 +628,10 @@ export function useOfflineExpenses(
       (page as unknown as { nextCursor?: number | string }).nextCursor ??
       undefined,
     retry: false,
+    // Keep stale rows on screen while a filter/sort/mode switch refetches:
+    // the merged selector below keeps local rows mounted, this keeps network
+    // rows mounted across network-only refetches.
+    placeholderData: keepPreviousData,
   })
 
   const {
@@ -662,21 +679,16 @@ export function useOfflineExpenses(
   // publications.
   const revisionRef = useRef<string | null>(null)
 
-  // Reset pagination when query/filter/sort/source version changes.
+  // Reset pagination when query/filter/sort/source version changes. Network
+  // arrival alone never resets: cached rows stay mounted and merge in place
+  // (see `merged` below). Resetting on `network.data.pages.length` would wipe
+  // the cache on the slow-network path we optimize for.
   useEffect(() => {
     requestIdRef.current += 1
     setLocalPages([])
     setLocalMeta({ nextOffset: null, hasMore: false })
     setLocalError(false)
-  }, [
-    filterKey,
-    version,
-    namespace,
-    generation,
-    network.data?.pages?.length,
-    isOnline,
-    network.error,
-  ])
+  }, [filterKey, version, namespace, generation, isOnline, network.error])
 
   // Cancel obsolete loads on account/source/filter changes.
   useEffect(() => {
@@ -749,7 +761,7 @@ export function useOfflineExpenses(
     accountId,
   ])
 
-  const fetchNextPage = async (): Promise<void> => {
+  const fetchNextPage = useCallback(async (): Promise<void> => {
     if (isOnline && !network.error && network.data?.pages?.length) {
       await network.fetchNextPage()
       return
@@ -794,40 +806,155 @@ export function useOfflineExpenses(
     } catch {
       // Ignore page failures; the current pages stay readable.
     }
-  }
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- depend on network data/error identity (structurally shared, stable when unchanged), never the whole query object: its identity churns every render and would defeat the callback memo.
+  }, [
+    isOnline,
+    network.data,
+    network.error,
+    record,
+    namespace,
+    localMeta.nextOffset,
+    generation,
+    groupId,
+    filterKey,
+    limit,
+    participantId,
+    accountId,
+  ])
 
   const networkReady =
     isOnline && !!network.data?.pages?.length && !network.error
-  if (networkReady && network.data) {
-    const pages = network.data.pages.map((page) => ({
+
+  // Merged offline-first view: local rows stay mounted while network rows
+  // merge in place. Pending offline-created rows overlay both and are never
+  // dropped by network absence (future offline writes; empty today).
+  const pending = usePendingExpenses(groupId)
+  const localFlat = useMemo(
+    () => localPages.flat() as MergeableExpense[],
+    [localPages],
+  )
+  const networkFlat = useMemo(() => {
+    if (!network.data?.pages?.length) return null
+    return network.data.pages.flatMap(
+      (page) => (page as unknown as { expenses: unknown[] }).expenses,
+    ) as MergeableExpense[]
+  }, [network.data])
+  const merged = useMemo(() => {
+    if (localFlat.length === 0 && networkFlat === null) return null
+    const lastNetworkPage = network.data?.pages.at(-1) as unknown as
+      | { hasMore?: boolean }
+      | undefined
+    return mergeExpenseLists({
+      local: localFlat,
+      network: networkFlat,
+      pending,
+      sortBy,
+      sortDir,
+      // Only a complete window (no further pages) proves a local-only row
+      // is a deletion; partial windows retain it (unloaded page boundary).
+      networkComplete:
+        networkFlat !== null && (lastNetworkPage?.hasMore ?? false) === false,
+    })
+  }, [localFlat, networkFlat, pending, sortBy, sortDir, network.data])
+
+  // Stable page containers: the branches below must not mint fresh arrays per
+  // render or the timeline/grouping memos never bail out.
+  const networkHasMore = useMemo(() => {
+    const lastPage = network.data?.pages.at(-1) as unknown as
+      | { hasMore?: boolean }
+      | undefined
+    return lastPage?.hasMore ?? false
+  }, [network.data])
+  const mergedViewPages = useMemo(() => {
+    if (!merged) return null
+    // Network-driven termination: once the network window is authoritative,
+    // a stale local `hasMore` must not keep the infinite-scroll sentinel
+    // alive after the network paginates to exhaustion (its own pages drain
+    // via `fetchNextPage`, which prefers network whenever it has data).
+    return [
+      {
+        expenses: merged.expenses as unknown[],
+        hasMore: networkHasMore,
+        nextOffset: null,
+      },
+    ]
+  }, [merged, networkHasMore])
+  const localViewPages = useMemo(() => {
+    if (!merged) return null
+    return [
+      {
+        expenses: merged.expenses as unknown[],
+        hasMore: localMeta.hasMore,
+        nextOffset: localMeta.nextOffset,
+      },
+    ]
+  }, [merged, localMeta])
+
+  // Network-only fallback containers (no local snapshot): memoized for the
+  // same reason — fresh wrappers per render would churn the consumer memo.
+  const networkOnlyPages = useMemo(() => {
+    if (!network.data?.pages?.length) return null
+    return network.data.pages.map((page) => ({
       expenses: (page as unknown as { expenses: unknown[] }).expenses,
       hasMore: (page as unknown as { hasMore: boolean }).hasMore,
       nextOffset: null,
     }))
+  }, [network.data])
+  const networkOnlyResolvedPages = useMemo(() => {
+    if (!networkOnlyPages) return null
+    if (pending.length === 0) return networkOnlyPages
+    return [
+      {
+        expenses: [
+          ...(pending as unknown[]),
+          ...networkOnlyPages.flatMap((page) => page.expenses),
+        ],
+        hasMore: networkOnlyPages.at(-1)?.hasMore ?? false,
+        nextOffset: null,
+      },
+    ]
+  }, [networkOnlyPages, pending])
+
+  if (
+    networkReady &&
+    network.data &&
+    merged &&
+    mergedViewPages &&
+    networkOnlyPages &&
+    networkOnlyResolvedPages
+  ) {
+    // When both sources are loaded the merged list wins: added rows insert,
+    // unchanged rows reuse the on-screen (local) reference so memoized cards
+    // bail out instead of re-rendering the whole timeline.
+    const useMergedView = localFlat.length > 0
+    // Pending overlay when only network is loaded (no local snapshot):
+    // merge already includes pending in the merged branch; for the
+    // network-only branch overlay pending explicitly.
+    const resolvedPages = !useMergedView
+      ? networkOnlyResolvedPages
+      : mergedViewPages
     return {
-      data: { pages },
+      data: {
+        pages: resolvedPages,
+        addedIds: merged.addedIds,
+        updatedIds: merged.updatedIds,
+        pendingIds: merged.pendingIds,
+      },
       meta: {
         source: 'network',
         capturedAt: record?.capturedAt ?? null,
         availability: 'ready',
         refreshing: network.isFetching,
         incompleteGroupCount: 0,
-        hasMore:
-          (
-            network.data.pages.at(-1) as unknown as
-              | { hasMore?: boolean }
-              | undefined
-          )?.hasMore ?? false,
+        hasMore: networkHasMore,
         totalCount: record?.payload.totalCount,
       },
       fetchNextPage,
-      hasMore:
-        (
-          network.data.pages.at(-1) as unknown as
-            | { hasMore?: boolean }
-            | undefined
-        )?.hasMore ?? false,
+      hasMore: networkHasMore,
       isLoading: false,
+      refetch: async () => {
+        await network.refetch()
+      },
     }
   }
   if (record && localError && localPages.length === 0) {
@@ -843,20 +970,21 @@ export function useOfflineExpenses(
       fetchNextPage,
       hasMore: false,
       isLoading: localLoading,
+      refetch: async () => {
+        await network.refetch()
+      },
     }
   }
-  if (record && localPages.length > 0) {
-    const pages = localPages.map((expenses, index) => ({
-      expenses,
-      hasMore: index === localPages.length - 1 ? localMeta.hasMore : true,
-      nextOffset: index === localPages.length - 1 ? localMeta.nextOffset : null,
-    }))
+  if (record && localPages.length > 0 && localViewPages) {
+    // Local-first with pending overlay. `merged` already includes pending and
+    // reuses on-screen references.
+    const pages = localViewPages
     return {
       data: {
-        pages:
-          pages.length > 0
-            ? pages
-            : [{ expenses: [], hasMore: false, nextOffset: null }],
+        pages,
+        addedIds: merged?.addedIds ?? [],
+        updatedIds: merged?.updatedIds ?? [],
+        pendingIds: merged?.pendingIds ?? pending.map((row) => row.id),
       },
       meta: {
         source: 'download',
@@ -870,6 +998,9 @@ export function useOfflineExpenses(
       fetchNextPage,
       hasMore: localMeta.hasMore,
       isLoading: localLoading,
+      refetch: async () => {
+        await network.refetch()
+      },
     }
   }
   if (!record && groupStatus === 'unsupported') {
@@ -885,6 +1016,9 @@ export function useOfflineExpenses(
       fetchNextPage,
       hasMore: false,
       isLoading: false,
+      refetch: async () => {
+        await network.refetch()
+      },
     }
   }
   if (!record && network.error) {
@@ -900,6 +1034,9 @@ export function useOfflineExpenses(
       fetchNextPage,
       hasMore: false,
       isLoading: network.isLoading || localLoading,
+      refetch: async () => {
+        await network.refetch()
+      },
     }
   }
   const networkStalled = network.isPaused ?? false
@@ -919,6 +1056,9 @@ export function useOfflineExpenses(
     fetchNextPage,
     hasMore: false,
     isLoading: !networkStalled,
+    refetch: async () => {
+      await network.refetch()
+    },
   }
 }
 

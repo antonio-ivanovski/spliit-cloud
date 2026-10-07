@@ -1,6 +1,14 @@
 import type { Dayjs } from 'dayjs'
 import { ChevronDown, ChevronUp, EyeOff } from 'lucide-react'
-import { forwardRef, Fragment, useEffect, useRef, useState } from 'react'
+import {
+  forwardRef,
+  Fragment,
+  memo,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ScanStickyHeading } from '@/components/layout/scan-surface'
@@ -124,7 +132,7 @@ function splitRuns<T>(
   return runs
 }
 
-export function ExpenseTimeline<T extends TimelineExpense>({
+function ExpenseTimelineInner<T extends TimelineExpense>({
   expenses,
   sortBy,
   timeZone,
@@ -203,6 +211,17 @@ export function ExpenseTimeline<T extends TimelineExpense>({
     })
   }
 
+  // Grouping is referentially stable for identical inputs: unchanged date
+  // groups keep their array identity so section wrappers don't remount when
+  // network rows merge in elsewhere. Only the affected group re-renders.
+  const groupedExpenses = useMemo(
+    () =>
+      useDateGrouping
+        ? getGroupedExpensesByDate(expenses, timeZone, locale)
+        : null,
+    [useDateGrouping, expenses, timeZone, locale],
+  )
+
   if (!useDateGrouping) {
     return (
       <>
@@ -216,12 +235,10 @@ export function ExpenseTimeline<T extends TimelineExpense>({
     )
   }
 
-  const groupedExpenses = getGroupedExpensesByDate(expenses, timeZone, locale)
-
   return (
     <>
       {Object.values(EXPENSE_GROUPS).map((expenseGroup) => {
-        const groupExpenses = groupedExpenses[expenseGroup]
+        const groupExpenses = groupedExpenses?.[expenseGroup] ?? []
         if (groupExpenses.length === 0) return null
 
         return (
@@ -239,6 +256,15 @@ export function ExpenseTimeline<T extends TimelineExpense>({
     </>
   )
 }
+
+/**
+ * Memoized timeline shell: identical expense references skip re-render, so a
+ * network merge that only appends rows remounts exactly the new cards. The cast
+ * preserves the generic signature (`memo` alone would erase it).
+ */
+export const ExpenseTimeline = memo(
+  ExpenseTimelineInner,
+) as typeof ExpenseTimelineInner
 
 function HiddenExpensesToggle({
   testId,
