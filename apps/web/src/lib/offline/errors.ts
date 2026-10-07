@@ -16,7 +16,6 @@ export type OfflineErrorCode =
   | 'generation-mismatch'
   | 'revision-changed'
   | 'namespace-revoked'
-  | 'downloads-disabled'
   | 'lease-conflict'
   | 'invalid-payload'
 
@@ -55,15 +54,22 @@ export function isOfflineStorageError(
  * complete data; callers must stop new background writes for that pass and
  * surface Retry/Clear actions instead of auto-evicting arbitrary groups.
  */
-export function isQuotaError(error: unknown): boolean {
-  if (!error || typeof error !== 'object') return false
+export function isQuotaError(error: unknown, depth = 0): boolean {
+  if (!error || typeof error !== 'object' || depth > 3) return false
   const name = 'name' in error ? String(error.name) : ''
   if (name === 'QuotaExceededError') return true
   const code = 'code' in error ? error.code : undefined
   // DOMException.QUOTA_EXCEEDED_ERR is 22 in legacy implementations.
   if (code === 22) return true
   const message = 'message' in error ? String(error.message) : ''
-  return /quota/i.test(`${name} ${message}`) && /exceed/i.test(message)
+  if (/quota/i.test(`${name} ${message}`) && /exceed/i.test(message)) {
+    return true
+  }
+  // Dexie and storage wrappers nest the original failure under
+  // `cause`/`inner`; a quota failure must still stop writes.
+  if ('cause' in error && isQuotaError(error.cause, depth + 1)) return true
+  if ('inner' in error && isQuotaError(error.inner, depth + 1)) return true
+  return false
 }
 
 /**

@@ -12,6 +12,25 @@ const mocks = vi.hoisted(() => ({
   useCurrentGroup: vi.fn(),
   useIsReadOnlyGroupViewer: vi.fn(),
   useGroupAccessSearch: vi.fn(),
+  mockUseOnlineStatus: vi.fn(() => true),
+  mockUseOfflineExpenseComments: vi.fn(() => ({
+    data: undefined,
+    meta: {
+      source: 'network',
+      capturedAt: null,
+      availability: 'ready',
+      refreshing: false,
+      incompleteGroupCount: 0,
+    },
+  })),
+}))
+
+vi.mock('@/lib/use-online-status', () => ({
+  useOnlineStatus: mocks.mockUseOnlineStatus,
+}))
+
+vi.mock('@/lib/offline/read-hooks', () => ({
+  useOfflineExpenseComments: mocks.mockUseOfflineExpenseComments,
 }))
 
 vi.mock('@/trpc/client', () => ({
@@ -74,6 +93,17 @@ const comment = {
 describe('ExpenseComments', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mocks.mockUseOnlineStatus.mockReturnValue(true)
+    mocks.mockUseOfflineExpenseComments.mockReturnValue({
+      data: undefined,
+      meta: {
+        source: 'network',
+        capturedAt: null,
+        availability: 'ready',
+        refreshing: false,
+        incompleteGroupCount: 0,
+      },
+    })
     mocks.useCurrentGroup.mockReturnValue({
       group: { archived: false },
       currentMember: { id: 'member-1' },
@@ -233,5 +263,34 @@ describe('ExpenseComments', () => {
         commentId: 'comment-1',
       }),
     )
+  })
+
+  it('renders downloaded comments read-only while offline', () => {
+    mocks.mockUseOnlineStatus.mockReturnValue(false)
+    mocks.listQuery.mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+    mocks.mockUseOfflineExpenseComments.mockReturnValue({
+      data: { comments: [comment] },
+      meta: {
+        source: 'download',
+        capturedAt: new Date('2026-07-27T00:00:00Z'),
+        availability: 'ready',
+        refreshing: false,
+        incompleteGroupCount: 0,
+      },
+    })
+    render(<ExpenseComments groupId="group-1" expenseId="expense-1" />)
+
+    expect(screen.getByText('Bring the receipt next time.')).toBeInTheDocument()
+    expect(screen.getByText('Reconnect to make changes')).toBeInTheDocument()
+    // Composer and delete controls stay unavailable offline.
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Delete comment' }),
+    ).not.toBeInTheDocument()
   })
 })

@@ -78,7 +78,8 @@
     "signOutTitle": "Uscire?",
     "signOutError": "Impossibile uscire. Riprova.",
     "cancel": "Annulla",
-    "signOutOffline": "Connettiti per uscire"
+    "signOutOffline": "Connettiti per uscire",
+    "installApp": "Installa l'app"
   },
   "Footer": {
     "madeIn": "Realizzato dalla <github>comunità open-source</github> con amore ❤️",
@@ -2878,6 +2879,12 @@
       "description": "Aggiungi Spliit Cloud alla schermata Home dal menu del browser.",
       "step1": "Tocca il pulsante del menu (⋮) in alto a destra",
       "step2": "Tocca Installa"
+    },
+    "safari": {
+      "title": "Installa Spliit Cloud",
+      "description": "Aggiungi Spliit Cloud al Dock per accedervi con un solo clic.",
+      "step1": "In Safari, apri il menu File",
+      "step2": "Scegli Aggiungi al Dock, poi fai clic su Aggiungi"
     }
   },
   "EmptyState": {

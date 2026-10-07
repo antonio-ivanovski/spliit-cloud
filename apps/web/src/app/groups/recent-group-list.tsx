@@ -185,16 +185,19 @@ export function RecentGroupList() {
     return (
       <>
         {list.map((group) => {
-          // Offline dirty flag: last-known balances may be out of date.
-          // Online groups never carry dirtySince, so this stays false there.
+          // Offline freshness: dirty or aged confirmations warn that
+          // last-known balances may be out of date. Online groups never
+          // carry these flags, so this stays false there.
           const dirtySince = (group as unknown as { dirtySince?: Date | null })
             .dirtySince
+          const workerStale =
+            (group as unknown as { stale?: boolean }).stale === true
           return (
             <GroupCard
               key={group.id}
               group={group}
               variant={variant}
-              stale={dirtySince != null}
+              stale={dirtySince != null || workerStale}
               onToggleStar={() =>
                 updatePreference(group.id, {
                   starred: !group.preference.starred,
@@ -261,6 +264,13 @@ export function RecentGroupList() {
             )}
           </output>
         )}
+        {offlineOverview.data.totalsAvailable &&
+          (offlineOverview.data.totalsFreshness === 'stale' ||
+            offlineOverview.data.totalsFreshness === 'dirty') && (
+            <output className="rounded-lg border bg-muted/40 px-4 py-2 text-sm text-muted-foreground">
+              {tOffline('OfflineDownloads.totalsIncomplete')}
+            </output>
+          )}
         <CollapsibleSection
           storageKey={STORAGE_KEYS.groups}
           defaultOpen

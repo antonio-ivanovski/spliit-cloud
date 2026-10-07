@@ -78,7 +78,8 @@
     "signOutTitle": "Đăng xuất?",
     "signOutError": "Không thể đăng xuất. Vui lòng thử lại.",
     "cancel": "Hủy",
-    "signOutOffline": "Kết nối để đăng xuất"
+    "signOutOffline": "Kết nối để đăng xuất",
+    "installApp": "Cài đặt ứng dụng"
   },
   "Common": {
     "close": "Đóng",
@@ -2978,6 +2979,12 @@
       "description": "Cài như ứng dụng.",
       "step1": "Nhấn menu",
       "step2": "Chọn 'Cài đặt ứng dụng'"
+    },
+    "safari": {
+      "title": "Cài trên Safari",
+      "description": "Thêm Spliit Cloud vào dock để truy cập chỉ bằng một cú nhấp chuột.",
+      "step1": "Trong Safari, mở menu Tệp",
+      "step2": "Chọn 'Thêm vào Dock', rồi nhấp vào Thêm"
     }
   },
   "PushOnboarding": {

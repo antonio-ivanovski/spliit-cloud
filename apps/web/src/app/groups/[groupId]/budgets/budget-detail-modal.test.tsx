@@ -1,7 +1,22 @@
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { BudgetDetailModal } from '@/app/groups/[groupId]/budgets/detail.client'
 import { render, screen } from '@/test/test-utils'
+
+const mocks = vi.hoisted(() => ({
+  mockBudgetGetQuery: vi.fn(),
+  mockUseOnlineStatus: vi.fn(() => true),
+  mockUseOfflineBudget: vi.fn(() => ({
+    data: undefined,
+    meta: {
+      source: 'download',
+      capturedAt: null,
+      availability: 'missing',
+      refreshing: false,
+      incompleteGroupCount: 0,
+    },
+  })),
+}))
 
 const mockToast = vi.fn()
 const mockInvalidateGet = vi.fn()
@@ -183,6 +198,14 @@ const fakeBudget = {
   },
 }
 
+vi.mock('@/lib/use-online-status', () => ({
+  useOnlineStatus: mocks.mockUseOnlineStatus,
+}))
+
+vi.mock('@/lib/offline/read-hooks', () => ({
+  useOfflineBudget: mocks.mockUseOfflineBudget,
+}))
+
 vi.mock('@/trpc/client', () => ({
   trpc: {
     useUtils: () => ({
@@ -196,11 +219,7 @@ vi.mock('@/trpc/client', () => ({
     groups: {
       budgets: {
         get: {
-          useQuery: () => ({
-            data: { budget: fakeBudget },
-            isLoading: false,
-            error: null,
-          }),
+          useQuery: (...args: unknown[]) => mocks.mockBudgetGetQuery(...args),
         },
         archive: {
           useMutation: () => ({ mutate: mockArchiveMutate, isPending: false }),
@@ -224,6 +243,26 @@ vi.mock('@/trpc/client', () => ({
 }))
 
 describe('BudgetDetailModal', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mocks.mockUseOnlineStatus.mockReturnValue(true)
+    mocks.mockBudgetGetQuery.mockReturnValue({
+      data: { budget: fakeBudget },
+      isLoading: false,
+      error: null,
+    })
+    mocks.mockUseOfflineBudget.mockReturnValue({
+      data: undefined,
+      meta: {
+        source: 'download',
+        capturedAt: null,
+        availability: 'missing',
+        refreshing: false,
+        incompleteGroupCount: 0,
+      },
+    })
+  })
+
   it('renders the budget hero, sections, and matching expenses', () => {
     render(<BudgetDetailModal budgetId="budget-1" onClose={vi.fn()} />)
 
@@ -299,5 +338,41 @@ describe('BudgetDetailModal', () => {
       groupId: 'group-1',
       budgetId: 'budget-1',
     })
+  })
+
+  it('renders the downloaded budget read-only while offline', () => {
+    mocks.mockUseOnlineStatus.mockReturnValue(false)
+    mocks.mockBudgetGetQuery.mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      error: null,
+    })
+    mocks.mockUseOfflineBudget.mockReturnValue({
+      data: { budget: fakeBudget, dirtySince: null },
+      meta: {
+        source: 'download',
+        capturedAt: new Date('2026-07-01T00:00:00Z'),
+        availability: 'ready',
+        refreshing: false,
+        incompleteGroupCount: 0,
+      },
+    })
+    render(<BudgetDetailModal budgetId="budget-1" onClose={vi.fn()} />)
+
+    expect(
+      screen.getByRole('heading', { name: 'Groceries' }),
+    ).toBeInTheDocument()
+    expect(screen.getByText('Supermarket')).toBeInTheDocument()
+    expect(screen.getByText('Reconnect to make changes')).toBeInTheDocument()
+    // Management actions stay hidden offline.
+    expect(
+      screen.queryByRole('button', { name: 'Edit' }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Archive' }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: /Delete/i }),
+    ).not.toBeInTheDocument()
   })
 })

@@ -2,7 +2,10 @@ import { prisma } from '@spliit/db'
 
 import { loadOfflineCatalog, offlineTxOptions } from '../../../lib/api/offline'
 import { protectedProcedure } from '../../init'
-import { offlineCatalogOutputSchema } from '../../outputs/offline'
+import {
+  OFFLINE_CONTRACT_VERSION,
+  offlineCatalogOutputSchema,
+} from '../../outputs/offline'
 
 /**
  * Offline catalog download: all ACTIVE memberships including
@@ -24,7 +27,7 @@ export const offlineCatalogProcedure = protectedProcedure
       const capturedAt = new Date()
       const groups = await loadOfflineCatalog(tx, accountId)
       const output = {
-        schemaVersion: 1 as const,
+        schemaVersion: OFFLINE_CONTRACT_VERSION,
         accountId,
         capturedAt,
         groups,

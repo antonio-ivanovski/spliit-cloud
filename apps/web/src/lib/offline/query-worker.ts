@@ -1,24 +1,42 @@
 import type { OfflineSnapshotOutput } from '@spliit/api/offline-contract'
+import { expandCategorySelection } from '@spliit/domain'
 
-import type { CatalogRecord, GroupRecord } from './contract'
+import type {
+  CatalogRecord,
+  ExpenseListRow,
+  GroupRecord,
+  OfflineCatalogEntry,
+} from './contract'
+import { parseNamespace } from './contract'
+import { openOfflineDatabase, type OfflineDexieDatabase } from './database'
 import {
   OFFLINE_FALLBACK_CHUNK_ROWS,
   OFFLINE_LOCAL_PAGE_SIZE,
+  applyGlobalFilters,
+  applyGroupFilters,
   buildOfflineFilterOptions,
   buildOfflineOverview,
-  getOfflineExpense,
+  listShellFromRow,
+  liteGroupRecord,
+  getOfflineFreshnessState,
   paginateInvolvementLocal,
   paginateLocal,
-  queryGlobalExpensesOffline,
   queryGlobalExpensesOfflineChunked,
-  queryGroupExpensesOffline,
+  revisionDigest,
   sortGlobalRecords,
   sortGroupRecords,
-  applyGroupFilters,
+  yieldToEventLoop,
   type GlobalQueryInput,
+  type GlobalQueryResult,
   type GroupExpenseFilter,
   type GroupExpenseSortBy,
   type GroupExpenseSortDir,
+  type GroupQueryResult,
+  type OfflineExpenseLookup,
+  type OfflineFreshness,
+  type OfflineExpenseRecord,
+  type OfflineFilterOptions,
+  type OfflineOverview,
 } from './read-model'
 
 /**
@@ -26,10 +44,12 @@ import {
  *
  * Filtering/sorting/pagination run in a dedicated Web Worker so large accounts
  * (acceptance: 20 groups / 10k expenses, one group with 8k) never block
- * scroll/search. The worker caches only the current query working set
- * (snapshots passed with the request) and drops account data on generation
- * events. Every reply carries `requestId` + `generation`; callers discard
- * obsolete responses.
+ * scroll/search. The worker opens Dexie itself and is stateless across queries:
+ * requests carry query args + namespace/generation only, never histories, and
+ * results are bounded pages plus the publication identity (`serverRevision` /
+ * `revisionDigest`) so callers pin pagination and reset on revision change.
+ * Every reply carries `requestId` + `generation`; late account/source responses
+ * are discarded AND settled.
  *
  * Worker use is mandatory: when no Worker can be created (CSP block,
  * unsupported runtime), `query()` rejects with `OfflineWorkerUnavailableError`
@@ -85,125 +105,628 @@ export type OfflineWorkerResponse = {
   error?: string
 }
 
-type CachedWorkingSet = {
-  namespace: string
-  generation: number
-  catalog: CatalogRecord | null
-  byGroupId: Map<string, GroupRecord>
+/** Control message: abort an in-flight worker query. Never a query itself. */
+export type OfflineWorkerCancelMessage = {
+  type: 'cancel'
+  requestId: string
 }
 
-let cachedWorkingSet: CachedWorkingSet | null = null
+export const OFFLINE_WORKER_REQUEST_TIMEOUT_MS = 30_000
 
-function updateWorkingSet(request: OfflineWorkerRequest): {
-  catalog: CatalogRecord | null
-  byGroupId: Map<string, GroupRecord>
-} {
-  // Drop account data on generation events: a newer generation replaces the
-  // cache wholesale; a different namespace replaces it too.
+const WORKER_SCAN_CHUNK_ROWS = 500
+const MIN_INDEX_KEY = 0
+const MAX_INDEX_KEY = Number.MAX_SAFE_INTEGER
+const MAX_TEXT_KEY = '\uffff'
+
+let workerDb: OfflineDexieDatabase | null = null
+
+async function getWorkerDatabase(): Promise<OfflineDexieDatabase> {
+  if (workerDb) return workerDb
+  const db = await openOfflineDatabase({
+    onVersionChange: () => {
+      if (workerDb === db) {
+        try {
+          db.close()
+        } catch {}
+        workerDb = null
+      }
+    },
+  })
+  workerDb = db
+  return db
+}
+
+function throwIfAborted(signal?: AbortSignal): void {
+  if (signal?.aborted) throw new DOMException('Aborted', 'AbortError')
+}
+
+async function yieldToWorkerLoop(signal?: AbortSignal): Promise<void> {
+  throwIfAborted(signal)
+  await yieldToEventLoop()
+}
+
+export type GroupEntitiesQueryResult = GroupQueryResult & {
+  serverRevision: string | null
+  capturedAt: Date | null
+  dirtySince: Date | null
+}
+
+export type GlobalEntitiesQueryResult = GlobalQueryResult & {
+  revisionDigest: string
+}
+
+export type OverviewEntitiesResult = OfflineOverview & {
+  revisionDigest: string
+  totalsFreshness: OfflineFreshness
+}
+
+export type FilterOptionsEntitiesResult = OfflineFilterOptions & {
+  revisionDigest: string
+}
+
+async function fetchGroupListRows(
+  db: OfflineDexieDatabase,
+  namespace: string,
+  groupId: string,
+  options: {
+    sortBy?: GroupExpenseSortBy
+    sortDir?: GroupExpenseSortDir
+    categories?: string[]
+    minAmount?: number
+    maxAmount?: number
+  },
+  signal?: AbortSignal,
+): Promise<ExpenseListRow[]> {
+  throwIfAborted(signal)
+  if (options.categories && options.categories.length > 0) {
+    const expanded = expandCategorySelection(options.categories)
+    if (expanded.length === 1) {
+      const category = expanded[0] as string
+      return db.expenseList
+        .where('[namespace+groupId+categoryId+id]')
+        .between(
+          [namespace, groupId, category, ''],
+          [namespace, groupId, category, MAX_TEXT_KEY],
+        )
+        .toArray()
+    }
+  }
+  if (options.minAmount !== undefined || options.maxAmount !== undefined) {
+    return db.expenseList
+      .where('[namespace+groupId+amount+id]')
+      .between(
+        [namespace, groupId, options.minAmount ?? MIN_INDEX_KEY],
+        [namespace, groupId, options.maxAmount ?? MAX_INDEX_KEY],
+      )
+      .toArray()
+  }
+  const collection = db.expenseList
+    .where('[namespace+groupId+expenseDateMs+createdAtMs+id]')
+    .between(
+      [namespace, groupId, MIN_INDEX_KEY, MIN_INDEX_KEY, ''],
+      [namespace, groupId, MAX_INDEX_KEY, MAX_INDEX_KEY, MAX_TEXT_KEY],
+    )
   if (
-    !cachedWorkingSet ||
-    cachedWorkingSet.namespace !== request.namespace ||
-    cachedWorkingSet.generation !== request.generation
+    (options.sortBy ?? 'expenseDate') === 'expenseDate' &&
+    (options.sortDir ?? 'desc') === 'desc'
   ) {
-    cachedWorkingSet = {
-      namespace: request.namespace,
-      generation: request.generation,
-      catalog: request.catalog ?? null,
-      byGroupId: new Map(),
+    return collection.reverse().toArray()
+  }
+  return collection.toArray()
+}
+
+async function fetchDetailsForIds(
+  db: OfflineDexieDatabase,
+  namespace: string,
+  groupId: string,
+  ids: string[],
+  signal?: AbortSignal,
+): Promise<Map<string, OfflineExpenseRecord['detail']>> {
+  const out = new Map<string, OfflineExpenseRecord['detail']>()
+  if (ids.length === 0) return out
+  const keys = ids.map(
+    (id) => [namespace, groupId, id] as [string, string, string],
+  )
+  for (let index = 0; index < keys.length; index += WORKER_SCAN_CHUNK_ROWS) {
+    throwIfAborted(signal)
+    const chunk = keys.slice(index, index + WORKER_SCAN_CHUNK_ROWS)
+    const rows = await db.expenseDetail
+      .where('[namespace+groupId+id]')
+      .anyOf(chunk)
+      .toArray()
+    for (const row of rows) out.set(row.id, row.record)
+    if (index + WORKER_SCAN_CHUNK_ROWS < keys.length) {
+      await yieldToEventLoop()
     }
   }
-  if (request.catalog !== undefined) {
-    cachedWorkingSet.catalog = request.catalog
+  return out
+}
+
+async function runGroupExpenses(
+  db: OfflineDexieDatabase,
+  request: OfflineWorkerRequest,
+  signal?: AbortSignal,
+): Promise<GroupEntitiesQueryResult> {
+  const namespace = request.namespace
+  const groupId = request.groupId ?? ''
+  const empty: GroupEntitiesQueryResult = {
+    rows: [],
+    totalFiltered: 0,
+    nextOffset: null,
+    hasMore: false,
+    serverRevision: null,
+    capturedAt: null,
+    dirtySince: null,
   }
-  const byGroupId =
-    cachedWorkingSet.byGroupId ??
-    (cachedWorkingSet.byGroupId = new Map<string, GroupRecord>())
-  if (request.snapshots) {
-    for (const snapshot of request.snapshots) {
-      byGroupId.set(snapshot.groupId, snapshot)
+  if (!groupId) return empty
+  const meta = await db.groupMeta.get([namespace, groupId])
+  if (!meta) return empty
+  throwIfAborted(signal)
+  const filter = (request.filter as GroupExpenseFilter | undefined) ?? {}
+  const listRows = await fetchGroupListRows(
+    db,
+    namespace,
+    groupId,
+    {
+      sortBy: request.sortBy,
+      sortDir: request.sortDir,
+      categories: filter.categories,
+      minAmount: filter.minAmount,
+      maxAmount: filter.maxAmount,
+    },
+    signal,
+  )
+  const shells: OfflineExpenseRecord[] = []
+  for (let index = 0; index < listRows.length; index += 1) {
+    shells.push(listShellFromRow(listRows[index] as ExpenseListRow))
+    if (index % WORKER_SCAN_CHUNK_ROWS === WORKER_SCAN_CHUNK_ROWS - 1) {
+      await yieldToWorkerLoop(signal)
     }
   }
-  if (request.snapshot) {
-    byGroupId.set(request.snapshot.groupId, request.snapshot)
+  const filtered = applyGroupFilters(shells, filter)
+  const sorted = sortGroupRecords(filtered, request.sortBy, request.sortDir)
+  const limit = request.limit ?? OFFLINE_LOCAL_PAGE_SIZE
+  const involvement = request.collapseInvolving
+    ? paginateInvolvementLocal(
+        sorted,
+        request.offset ?? 0,
+        request.participantId ?? null,
+        request.accountId ?? null,
+        limit,
+      )
+    : null
+  const page = involvement ?? paginateLocal(sorted, request.offset ?? 0, limit)
+  const details = await fetchDetailsForIds(
+    db,
+    namespace,
+    groupId,
+    page.rows.map((row) => row.list.id),
+    signal,
+  )
+  const rows: OfflineExpenseRecord[] = []
+  for (const shell of page.rows) {
+    const detail = details.get(shell.list.id)
+    if (!detail) continue
+    rows.push({ list: shell.list, detail })
   }
-  // Cache only the current query working set: when the request carries an
-  // explicit snapshot list, drop groups not in the list so a large account
-  // never accumulates every group in worker memory.
-  if (request.kind === 'group-expenses') {
-    const wanted = new Set<string>()
-    if (request.groupId) wanted.add(request.groupId)
-    if (request.snapshot) wanted.add(request.snapshot.groupId)
-    if (request.snapshots) {
-      for (const snapshot of request.snapshots) wanted.add(snapshot.groupId)
+  return {
+    rows,
+    totalFiltered: filtered.length,
+    nextOffset: page.nextOffset,
+    hasMore: page.hasMore,
+    involvingReturned: involvement?.involvingReturned,
+    hiddenPending: involvement?.hiddenPending,
+    serverRevision: meta.serverRevision,
+    capturedAt: meta.capturedAt,
+    dirtySince: meta.dirtySince,
+  }
+}
+
+async function runGlobalExpenses(
+  db: OfflineDexieDatabase,
+  request: OfflineWorkerRequest,
+  signal?: AbortSignal,
+): Promise<GlobalEntitiesQueryResult> {
+  const namespace = request.namespace
+  const input = (request.filter as GlobalQueryInput | undefined) ?? {}
+  const empty: GlobalEntitiesQueryResult = {
+    rows: [],
+    totalFiltered: 0,
+    nextOffset: null,
+    hasMore: false,
+    incompleteGroupCount: 0,
+    dirtyGroupCount: 0,
+    truncatedGroupCount: 0,
+    truncatedTotalCount: null,
+    totalsAuthoritative: false,
+    currencyError: null,
+    revisionDigest: '',
+  }
+  if (
+    (input.minAmount !== undefined ||
+      input.maxAmount !== undefined ||
+      input.sortBy === 'amount') &&
+    input.currencies?.length !== 1
+  ) {
+    return { ...empty, currencyError: 'currency-required' }
+  }
+  const catalog = await db.catalogs.get(namespace)
+  if (!catalog) return empty
+  throwIfAborted(signal)
+  const metas = await db.groupMeta
+    .where('namespace')
+    .equals(namespace)
+    .toArray()
+  const metaByGroupId = new Map(metas.map((meta) => [meta.groupId, meta]))
+  const explicitIds =
+    input.groupIds && input.groupIds.length > 0 ? new Set(input.groupIds) : null
+  const includeArchived = input.includeArchived ?? false
+  let incompleteGroupCount = 0
+  let dirtyGroupCount = 0
+  const selected: Array<{
+    groupId: string
+    global: OfflineCatalogEntry['global']
+    revision: string
+  }> = []
+  for (const entry of catalog.groups) {
+    const groupId = entry.overview.id
+    const global = entry.global
+    const explicitlySelected = explicitIds?.has(groupId) ?? false
+    if (!explicitIds) {
+      if (global.hidden) continue
+      if (global.archived && !includeArchived) continue
+    } else if (!explicitlySelected) {
+      continue
     }
-    if (wanted.size > 0) {
-      for (const key of Array.from(byGroupId.keys())) {
-        if (!wanted.has(key)) byGroupId.delete(key)
+    if (input.currencies && input.currencies.length > 0) {
+      const key = (global.currencyCode ?? '') + ':' + global.currency
+      if (!input.currencies.includes(key)) continue
+    }
+    const meta = metaByGroupId.get(groupId)
+    if (!meta) {
+      incompleteGroupCount += 1
+      continue
+    }
+    if (meta.dirtySince !== null) dirtyGroupCount += 1
+    selected.push({ groupId, global, revision: meta.serverRevision })
+  }
+  const needsDetails =
+    typeof input.search === 'string' && input.search.trim() !== ''
+  const candidates: Array<{
+    record: OfflineExpenseRecord
+    global: OfflineCatalogEntry['global']
+  }> = []
+  for (const selectedGroup of selected) {
+    const listRows = await db.expenseList
+      .where('[namespace+groupId]')
+      .equals([namespace, selectedGroup.groupId])
+      .toArray()
+    const detailById = needsDetails
+      ? await fetchDetailsForIds(
+          db,
+          namespace,
+          selectedGroup.groupId,
+          listRows.map((row) => row.id),
+          signal,
+        )
+      : new Map<string, OfflineExpenseRecord['detail']>()
+    for (let index = 0; index < listRows.length; index += 1) {
+      const row = listRows[index] as ExpenseListRow
+      const detail = detailById.get(row.id) ?? null
+      candidates.push({
+        record: {
+          list: row.record,
+          detail: detail as OfflineExpenseRecord['detail'],
+        },
+        global: selectedGroup.global,
+      })
+      if (index % WORKER_SCAN_CHUNK_ROWS === WORKER_SCAN_CHUNK_ROWS - 1) {
+        await yieldToWorkerLoop(signal)
       }
     }
   }
-  if (request.snapshots && request.kind === 'global-expenses') {
-    const wanted = new Set(
-      request.snapshots.map((snapshot) => snapshot.groupId),
-    )
-    for (const key of Array.from(byGroupId.keys())) {
-      if (!wanted.has(key)) byGroupId.delete(key)
+  const filtered = applyGlobalFilters(candidates, input)
+  const combined = filtered.map(({ record, global }) => ({
+    ...record,
+    group: global,
+    groupId: global.id,
+  }))
+  const sorted = sortGlobalRecords(
+    combined as Array<OfflineExpenseRecord & { groupId: string }>,
+    input.sortBy,
+    input.sortDir,
+  )
+  const page = paginateLocal(
+    sorted,
+    input.offset ?? 0,
+    input.limit ?? OFFLINE_LOCAL_PAGE_SIZE,
+  )
+  let rows: GlobalEntitiesQueryResult['rows'] = page.rows.map((row) => ({
+    ...(row as unknown as OfflineExpenseRecord),
+    group: (row as unknown as { group: OfflineCatalogEntry['global'] }).group,
+  }))
+  if (!needsDetails) {
+    const idsByGroup = new Map<string, string[]>()
+    for (const row of page.rows) {
+      const group = (row as unknown as { group: { id: string } }).group
+      const ids = idsByGroup.get(group.id) ?? []
+      ids.push((row as unknown as OfflineExpenseRecord).list.id)
+      idsByGroup.set(group.id, ids)
+    }
+    const detailByKey = new Map<string, OfflineExpenseRecord['detail']>()
+    for (const [groupId, ids] of idsByGroup) {
+      const details = await fetchDetailsForIds(
+        db,
+        namespace,
+        groupId,
+        ids,
+        signal,
+      )
+      for (const [id, detail] of details) {
+        detailByKey.set(groupId + ':' + id, detail)
+      }
+    }
+    rows = page.rows.map((row) => {
+      const typed = row as unknown as OfflineExpenseRecord & {
+        group: OfflineCatalogEntry['global']
+      }
+      return {
+        ...typed,
+        detail:
+          detailByKey.get(typed.group.id + ':' + typed.list.id) ?? typed.detail,
+      }
+    })
+  }
+  let truncatedGroupCount = 0
+  let truncatedTotal = 0
+  for (const selectedGroup of selected) {
+    const meta = metaByGroupId.get(selectedGroup.groupId)
+    if (meta?.hasMore) {
+      truncatedGroupCount += 1
+      truncatedTotal += meta.totalCount ?? 0
     }
   }
-  return { catalog: cachedWorkingSet.catalog, byGroupId }
+  return {
+    rows,
+    totalFiltered: sorted.length,
+    nextOffset: page.nextOffset,
+    hasMore: page.hasMore,
+    incompleteGroupCount,
+    dirtyGroupCount,
+    truncatedGroupCount,
+    truncatedTotalCount: truncatedGroupCount > 0 ? truncatedTotal : null,
+    totalsAuthoritative: false,
+    currencyError: null,
+    revisionDigest: revisionDigest(
+      selected.map((entry) => ({
+        groupId: entry.groupId,
+        revision: entry.revision,
+      })),
+    ),
+  }
+}
+
+async function runOverview(
+  db: OfflineDexieDatabase,
+  request: OfflineWorkerRequest,
+  signal?: AbortSignal,
+): Promise<OverviewEntitiesResult> {
+  const namespace = request.namespace
+  const catalog = await db.catalogs.get(namespace)
+  const accountId = parseNamespace(namespace)?.accountId ?? ''
+  if (!catalog) {
+    return {
+      ...buildOfflineOverview(null, new Map()),
+      revisionDigest: '',
+      totalsFreshness: 'fresh' as const,
+    }
+  }
+  throwIfAborted(signal)
+  const metas = await db.groupMeta
+    .where('namespace')
+    .equals(namespace)
+    .toArray()
+  const datas = await db.groupData
+    .where('namespace')
+    .equals(namespace)
+    .toArray()
+  const dataByGroupId = new Map(datas.map((data) => [data.groupId, data]))
+  const lite = new Map<string, GroupRecord>()
+  const revisions: Array<{ groupId: string; revision: string }> = []
+  for (const meta of metas) {
+    const data = dataByGroupId.get(meta.groupId)
+    if (!data) continue
+    lite.set(meta.groupId, liteGroupRecord(meta, data, accountId))
+    revisions.push({ groupId: meta.groupId, revision: meta.serverRevision })
+  }
+  const overview = buildOfflineOverview(catalog, lite)
+  const now = Date.now()
+  const freshnessByGroupId = new Map(
+    metas.map((meta) => [
+      meta.groupId,
+      getOfflineFreshnessState({
+        dirtySince: meta.dirtySince,
+        lastConfirmedAt: meta.lastConfirmedAt,
+        capturedAt: meta.capturedAt,
+        now,
+      }),
+    ]),
+  )
+  const groups = overview.groups.map((group) => ({
+    ...group,
+    // Missing groups stay unstaled: their availability drives separate UI.
+    stale:
+      group.availability === 'ready' &&
+      (freshnessByGroupId.get(group.id) ?? 'stale') !== 'fresh',
+  }))
+  // Aggregate freshness = oldest contributor over ready groups.
+  let totalsFreshness: OfflineFreshness = 'fresh'
+  for (const meta of metas) {
+    if (!dataByGroupId.has(meta.groupId)) continue
+    const state = freshnessByGroupId.get(meta.groupId) ?? 'stale'
+    if (state === 'dirty') {
+      totalsFreshness = 'dirty'
+      break
+    }
+    if (state === 'stale') totalsFreshness = 'stale'
+  }
+  return {
+    ...overview,
+    groups,
+    revisionDigest: revisionDigest(revisions),
+    totalsFreshness,
+  }
+}
+
+async function runFilterOptions(
+  db: OfflineDexieDatabase,
+  request: OfflineWorkerRequest,
+  signal?: AbortSignal,
+): Promise<FilterOptionsEntitiesResult> {
+  const namespace = request.namespace
+  const catalog = await db.catalogs.get(namespace)
+  const accountId = parseNamespace(namespace)?.accountId ?? ''
+  if (!catalog) {
+    return {
+      ...buildOfflineFilterOptions(null, new Map()),
+      revisionDigest: '',
+    }
+  }
+  throwIfAborted(signal)
+  const metas = await db.groupMeta
+    .where('namespace')
+    .equals(namespace)
+    .toArray()
+  const datas = await db.groupData
+    .where('namespace')
+    .equals(namespace)
+    .toArray()
+  const dataByGroupId = new Map(datas.map((data) => [data.groupId, data]))
+  const lite = new Map<string, GroupRecord>()
+  const revisions: Array<{ groupId: string; revision: string }> = []
+  for (const meta of metas) {
+    const data = dataByGroupId.get(meta.groupId)
+    if (!data) continue
+    const record = liteGroupRecord(meta, data, accountId)
+    const listRows = await db.expenseList
+      .where('[namespace+groupId]')
+      .equals([namespace, meta.groupId])
+      .toArray()
+    const shells: OfflineExpenseRecord[] = []
+    for (let index = 0; index < listRows.length; index += 1) {
+      shells.push(listShellFromRow(listRows[index] as ExpenseListRow))
+      if (index % WORKER_SCAN_CHUNK_ROWS === WORKER_SCAN_CHUNK_ROWS - 1) {
+        await yieldToWorkerLoop(signal)
+      }
+    }
+    record.payload.expenses = shells
+    lite.set(meta.groupId, record)
+    revisions.push({ groupId: meta.groupId, revision: meta.serverRevision })
+  }
+  return {
+    ...buildOfflineFilterOptions(catalog, lite),
+    revisionDigest: revisionDigest(revisions),
+  }
+}
+
+async function runExpenseDetail(
+  db: OfflineDexieDatabase,
+  request: OfflineWorkerRequest,
+  signal?: AbortSignal,
+): Promise<OfflineExpenseLookup> {
+  const namespace = request.namespace
+  const groupId = request.groupId ?? ''
+  const expenseId = request.expenseId ?? ''
+  if (!groupId || !expenseId) return { status: 'missing' }
+  const [listRow, detailRow] = await Promise.all([
+    db.expenseList.get([namespace, groupId, expenseId]),
+    db.expenseDetail.get([namespace, groupId, expenseId]),
+  ])
+  if (!listRow || !detailRow) return { status: 'missing' }
+  throwIfAborted(signal)
+  const detail = detailRow.record
+  const previousExpenseId = detail.previousExpenseId ?? null
+  const nextExpenseId = detail.nextExpenseId ?? null
+  const [previousRow, nextRow] = await Promise.all([
+    previousExpenseId
+      ? db.expenseList.get([namespace, groupId, previousExpenseId])
+      : null,
+    nextExpenseId
+      ? db.expenseList.get([namespace, groupId, nextExpenseId])
+      : null,
+  ])
+  let seriesExpenseIds: string[] | undefined
+  const seriesId =
+    detail.recurringSeriesId ?? listRow.record.recurringSeriesId ?? null
+  if (seriesId) {
+    const rows = await db.expenseList
+      .where('[namespace+groupId]')
+      .equals([namespace, groupId])
+      .toArray()
+    const siblings: Array<{ id: string; sequence: number }> = []
+    for (let index = 0; index < rows.length; index += 1) {
+      const row = rows[index] as ExpenseListRow
+      if ((row.record.recurringSeriesId ?? null) === seriesId) {
+        siblings.push({
+          id: row.id,
+          sequence: row.record.recurrenceSequence ?? Number.MAX_SAFE_INTEGER,
+        })
+      }
+      if (index % WORKER_SCAN_CHUNK_ROWS === WORKER_SCAN_CHUNK_ROWS - 1) {
+        await yieldToWorkerLoop(signal)
+      }
+    }
+    siblings.sort((a, b) => a.sequence - b.sequence)
+    seriesExpenseIds = siblings.map((sibling) => sibling.id)
+  }
+  return {
+    status: 'found',
+    list: listRow.record,
+    detail,
+    previousExpenseId,
+    nextExpenseId,
+    previousAvailable: previousExpenseId ? !!previousRow : undefined,
+    nextAvailable: nextExpenseId ? !!nextRow : undefined,
+    seriesExpenseIds,
+  }
+}
+
+export type OfflineWorkerQueryOptions = {
+  signal?: AbortSignal
+}
+
+export async function runOfflineWorkerQuery(
+  request: OfflineWorkerRequest,
+  options?: OfflineWorkerQueryOptions,
+): Promise<unknown> {
+  const db = await getWorkerDatabase()
+  throwIfAborted(options?.signal)
+  switch (request.kind) {
+    case 'group-expenses':
+      return runGroupExpenses(db, request, options?.signal)
+    case 'global-expenses':
+      return runGlobalExpenses(db, request, options?.signal)
+    case 'expense-detail':
+      return runExpenseDetail(db, request, options?.signal)
+    case 'overview':
+      return runOverview(db, request, options?.signal)
+    case 'filter-options':
+      return runFilterOptions(db, request, options?.signal)
+    default:
+      throw new Error(
+        'unknown offline worker query: ' + (request as { kind: string }).kind,
+      )
+  }
 }
 
 export function dropWorkerWorkingSet(): void {
-  cachedWorkingSet = null
-}
-
-export function runOfflineWorkerQuery(request: OfflineWorkerRequest): unknown {
-  const { catalog, byGroupId } = updateWorkingSet(request)
-  switch (request.kind) {
-    case 'group-expenses': {
-      const snapshot =
-        request.snapshot ??
-        (request.groupId ? byGroupId.get(request.groupId) : undefined)
-      if (!snapshot)
-        return { rows: [], totalFiltered: 0, nextOffset: null, hasMore: false }
-      return queryGroupExpensesOffline(snapshot.payload, {
-        filter: (request.filter as GroupExpenseFilter | undefined) ?? {},
-        sortBy: request.sortBy,
-        sortDir: request.sortDir,
-        offset: request.offset ?? 0,
-        limit: request.limit ?? OFFLINE_LOCAL_PAGE_SIZE,
-        collapseInvolving: request.collapseInvolving,
-        participantId: request.participantId ?? null,
-        accountId: request.accountId ?? null,
-      })
-    }
-    case 'global-expenses': {
-      const baseFilter: GlobalQueryInput =
-        (request.filter as GlobalQueryInput | undefined) ?? {}
-      return queryGlobalExpensesOffline(catalog, byGroupId, {
-        ...baseFilter,
-        offset: request.offset ?? 0,
-        limit: request.limit ?? OFFLINE_LOCAL_PAGE_SIZE,
-      })
-    }
-    case 'expense-detail': {
-      const snapshot =
-        request.snapshot ??
-        (request.groupId ? byGroupId.get(request.groupId) : undefined)
-      if (!snapshot || !request.expenseId) return { status: 'missing' }
-      return getOfflineExpense(snapshot.payload, request.expenseId)
-    }
-    case 'overview': {
-      return buildOfflineOverview(catalog, byGroupId)
-    }
-    case 'filter-options': {
-      return buildOfflineFilterOptions(catalog, byGroupId)
-    }
-    default:
-      throw new Error(
-        `unknown offline worker query: ${(request as { kind: string }).kind}`,
-      )
-  }
+  // Stateless engine: no cached rows. Reset the worker connection so tests
+  // reopen fresh databases (and versionchange recovery starts clean).
+  const db = workerDb
+  workerDb = null
+  try {
+    db?.close()
+  } catch {}
 }
 
 export type OfflineQueryClientOptions = {
@@ -223,10 +746,22 @@ export class OfflineWorkerUnavailableError extends Error {
   }
 }
 
+export type OfflineQueryRequestOptions = {
+  signal?: AbortSignal
+  timeoutMs?: number
+}
+
+const WORKER_FAIL_WINDOW_MS = 10_000
+const WORKER_MAX_RAPID_FAILURES = 3
+const WORKER_FAIL_COOLDOWN_MS = 30_000
+
 type PendingRequest = {
   resolve: (value: unknown) => void
   reject: (error: unknown) => void
   generation: number
+  timer: ReturnType<typeof setTimeout> | null
+  cleanupSignal: (() => void) | null
+  settled: boolean
 }
 
 function newRequestId(): string {
@@ -248,12 +783,52 @@ function newRequestId(): string {
 export function createOfflineQueryClient(options?: OfflineQueryClientOptions) {
   const chunkRows = options?.chunkRows ?? OFFLINE_FALLBACK_CHUNK_ROWS
   let worker: Worker | null = null
-  let workerFailed = false
+  let consecutiveFailures = 0
+  let lastFailureAt = 0
   const pending = new Map<string, PendingRequest>()
 
+  function settlePending(
+    requestId: string,
+    action: (entry: PendingRequest) => void,
+  ): void {
+    const entry = pending.get(requestId)
+    if (!entry || entry.settled) return
+    entry.settled = true
+    if (entry.timer !== null) clearTimeout(entry.timer)
+    entry.cleanupSignal?.()
+    pending.delete(requestId)
+    action(entry)
+  }
+
+  function noteWorkerFailure(): void {
+    const now = Date.now()
+    consecutiveFailures =
+      now - lastFailureAt < WORKER_FAIL_WINDOW_MS ? consecutiveFailures + 1 : 1
+    lastFailureAt = now
+  }
+
+  function workerCoolingDown(): boolean {
+    return (
+      consecutiveFailures >= WORKER_MAX_RAPID_FAILURES &&
+      Date.now() - lastFailureAt < WORKER_FAIL_COOLDOWN_MS
+    )
+  }
+
+  function recreate(): void {
+    consecutiveFailures = 0
+    try {
+      worker?.terminate()
+    } catch {}
+    worker = null
+  }
+
+  function recreateIfFailed(): void {
+    if (consecutiveFailures > 0) recreate()
+  }
+
   function ensureWorker(): Worker | null {
-    if (workerFailed) return null
     if (worker) return worker
+    if (workerCoolingDown()) return null
     try {
       if (options?.createWorker) {
         worker = options.createWorker()
@@ -271,23 +846,31 @@ export function createOfflineQueryClient(options?: OfflineQueryClientOptions) {
       worker.onmessage = (event: MessageEvent<OfflineWorkerResponse>) => {
         const response = event.data
         const entry = pending.get(response.requestId)
-        if (!entry) return
-        // Discard obsolete replies: generation mismatch means the account or
-        // source changed while the worker was computing.
+        if (!entry || entry.settled) return
+        // Late account/source responses are discarded AND settled: a
+        // generation mismatch means the account or source changed while the
+        // worker was computing, so the caller must not hang.
         if (response.generation !== entry.generation) {
-          pending.delete(response.requestId)
+          settlePending(response.requestId, (stale) =>
+            stale.reject(new DOMException('Aborted', 'AbortError')),
+          )
           return
         }
-        pending.delete(response.requestId)
-        if (response.ok) entry.resolve(response.result)
-        else entry.reject(new Error(response.error ?? 'offline query failed'))
+        settlePending(response.requestId, (settled) => {
+          if (response.ok) settled.resolve(response.result)
+          else if (response.error === 'Aborted')
+            settled.reject(new DOMException('Aborted', 'AbortError'))
+          else
+            settled.reject(new Error(response.error ?? 'offline query failed'))
+        })
       }
       worker.onerror = () => {
-        workerFailed = true
-        for (const [id, entry] of pending) {
-          pending.delete(id)
-          entry.reject(
-            new OfflineWorkerUnavailableError('offline worker failed'),
+        noteWorkerFailure()
+        for (const [id] of pending) {
+          settlePending(id, (entry) =>
+            entry.reject(
+              new OfflineWorkerUnavailableError('offline worker failed'),
+            ),
           )
         }
         try {
@@ -299,7 +882,7 @@ export function createOfflineQueryClient(options?: OfflineQueryClientOptions) {
       }
       return worker
     } catch {
-      workerFailed = true
+      noteWorkerFailure()
       return null
     }
   }
@@ -387,15 +970,21 @@ export function createOfflineQueryClient(options?: OfflineQueryClientOptions) {
         chunkRows,
       )
     }
-    return runOfflineWorkerQuery(request)
+    throw new OfflineWorkerUnavailableError(
+      'fallback supports snapshot group/global queries only',
+    )
   }
 
   async function query(
     request: Omit<OfflineWorkerRequest, 'requestId'> & { requestId?: string },
+    requestOptions?: OfflineQueryRequestOptions,
   ): Promise<unknown> {
     const full: OfflineWorkerRequest = {
       ...request,
       requestId: request.requestId ?? newRequestId(),
+    }
+    if (requestOptions?.signal?.aborted) {
+      return Promise.reject(new DOMException('Aborted', 'AbortError'))
     }
     const active = ensureWorker()
     if (!active)
@@ -405,16 +994,52 @@ export function createOfflineQueryClient(options?: OfflineQueryClientOptions) {
         ),
       )
     return new Promise<unknown>((resolve, reject) => {
-      pending.set(full.requestId, {
+      const timeoutMs =
+        requestOptions?.timeoutMs ?? OFFLINE_WORKER_REQUEST_TIMEOUT_MS
+      const entry: PendingRequest = {
         resolve,
         reject,
         generation: full.generation,
-      })
+        timer: null,
+        cleanupSignal: null,
+        settled: false,
+      }
+      pending.set(full.requestId, entry)
+      const onAbort = () => {
+        try {
+          active.postMessage({ type: 'cancel', requestId: full.requestId })
+        } catch {}
+        settlePending(full.requestId, (aborted) =>
+          aborted.reject(new DOMException('Aborted', 'AbortError')),
+        )
+      }
+      const signal = requestOptions?.signal
+      if (signal) {
+        entry.cleanupSignal = () => signal.removeEventListener('abort', onAbort)
+        signal.addEventListener('abort', onAbort, { once: true })
+      }
+      entry.timer = setTimeout(() => {
+        try {
+          active.postMessage({ type: 'cancel', requestId: full.requestId })
+        } catch {}
+        settlePending(full.requestId, (timedOut) =>
+          timedOut.reject(
+            new DOMException('offline query timed out', 'TimeoutError'),
+          ),
+        )
+        noteWorkerFailure()
+      }, timeoutMs)
       try {
-        active.postMessage(full)
+        // Histories never cross into the worker: strip any test-only
+        // snapshot working set before posting; the engine reads Dexie.
+        const { catalog, snapshots, snapshot, ...postable } = full
+        void catalog
+        void snapshots
+        void snapshot
+        active.postMessage(postable)
       } catch (error) {
-        pending.delete(full.requestId)
-        workerFailed = true
+        settlePending(full.requestId, () => {})
+        noteWorkerFailure()
         try {
           active.terminate()
         } catch {
@@ -429,26 +1054,25 @@ export function createOfflineQueryClient(options?: OfflineQueryClientOptions) {
               ),
         )
       }
-      // If the worker never answers (terminated/CSP), the caller cancels via
-      // its own AbortSignal/requestId tracking; pending entries are cleared
-      // on `dispose()` and on generation changes via `discardGeneration`.
     })
   }
 
   function discardGeneration(generation: number): void {
     for (const [id, entry] of pending) {
       if (entry.generation !== generation) {
-        pending.delete(id)
-        entry.reject(new DOMException('Aborted', 'AbortError'))
+        settlePending(id, (stale) =>
+          stale.reject(new DOMException('Aborted', 'AbortError')),
+        )
       }
     }
     dropWorkerWorkingSet()
   }
 
   function dispose(): void {
-    for (const [id, entry] of pending) {
-      pending.delete(id)
-      entry.reject(new DOMException('Aborted', 'AbortError'))
+    for (const [id] of pending) {
+      settlePending(id, (entry) =>
+        entry.reject(new DOMException('Aborted', 'AbortError')),
+      )
     }
     try {
       worker?.terminate()
@@ -459,7 +1083,14 @@ export function createOfflineQueryClient(options?: OfflineQueryClientOptions) {
     dropWorkerWorkingSet()
   }
 
-  return { query, discardGeneration, dispose, fallback }
+  return {
+    query,
+    discardGeneration,
+    dispose,
+    fallback,
+    recreate,
+    recreateIfFailed,
+  }
 }
 
 export type OfflineQueryClient = ReturnType<typeof createOfflineQueryClient>
@@ -468,6 +1099,17 @@ let defaultClient: OfflineQueryClient | null = null
 export function getDefaultOfflineQueryClient(): OfflineQueryClient {
   if (!defaultClient) defaultClient = createOfflineQueryClient()
   return defaultClient
+}
+
+/**
+ * One controlled worker recreation after a failure (foreground return or
+ * explicit retry). No-op when the worker is healthy; clears a rapid-failure
+ * cooldown so the next query attempts a fresh worker instead of rejecting.
+ */
+export function recreateOfflineWorkerIfFailed(): void {
+  try {
+    getDefaultOfflineQueryClient().recreateIfFailed()
+  } catch {}
 }
 
 export function clearOfflineQueryClient(): void {
@@ -488,29 +1130,46 @@ export function clearOfflineQueryClient(): void {
  * worker rejects with {@link OfflineWorkerUnavailableError}.
  */
 export function createInlineOfflineWorkerForTests(): Worker {
+  const controllers = new Map<string, AbortController>()
   const worker = {
     onmessage: null as ((event: { data: unknown }) => void) | null,
     onerror: null as ((event: unknown) => void) | null,
-    postMessage(message: OfflineWorkerRequest) {
+    postMessage(message: OfflineWorkerRequest | OfflineWorkerCancelMessage) {
+      if (
+        typeof (message as OfflineWorkerCancelMessage).type === 'string' &&
+        (message as OfflineWorkerCancelMessage).type === 'cancel'
+      ) {
+        controllers
+          .get((message as OfflineWorkerCancelMessage).requestId)
+          ?.abort()
+        return
+      }
+      const query = message as OfflineWorkerRequest
+      const controller = new AbortController()
+      controllers.set(query.requestId, controller)
       queueMicrotask(() => {
         const reply = (data: OfflineWorkerResponse) =>
           worker.onmessage?.({ data } as MessageEvent)
-        try {
-          const result = runOfflineWorkerQuery(message)
-          reply({
-            requestId: message.requestId,
-            generation: message.generation,
-            ok: true,
-            result,
-          })
-        } catch (error) {
-          reply({
-            requestId: message.requestId,
-            generation: message.generation,
-            ok: false,
-            error: error instanceof Error ? error.message : String(error),
-          })
-        }
+        runOfflineWorkerQuery(query, { signal: controller.signal }).then(
+          (result) => {
+            controllers.delete(query.requestId)
+            reply({
+              requestId: query.requestId,
+              generation: query.generation,
+              ok: true,
+              result,
+            })
+          },
+          (error: unknown) => {
+            controllers.delete(query.requestId)
+            reply({
+              requestId: query.requestId,
+              generation: query.generation,
+              ok: false,
+              error: error instanceof Error ? error.message : String(error),
+            })
+          },
+        )
       })
     },
     terminate() {},

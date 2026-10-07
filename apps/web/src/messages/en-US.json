@@ -78,7 +78,8 @@
     "signOutTitle": "Sign out?",
     "signOutError": "Could not sign out. Please try again.",
     "cancel": "Cancel",
-    "signOutOffline": "Connect to sign out"
+    "signOutOffline": "Connect to sign out",
+    "installApp": "Install app"
   },
   "Common": {
     "close": "Close",
@@ -3016,6 +3017,12 @@
       "description": "Add Spliit Cloud to your home screen from the browser menu.",
       "step1": "Tap the menu button (⋮) at the top right",
       "step2": "Tap Install"
+    },
+    "safari": {
+      "title": "Install Spliit Cloud",
+      "description": "Add Spliit Cloud to your dock for one-click access.",
+      "step1": "In Safari, open the File menu",
+      "step2": "Choose Add to Dock, then click Add"
     }
   },
   "PushOnboarding": {

@@ -671,6 +671,12 @@
       "title": "تثبيت Spliit Cloud",
       "step1": "اضغط على زر القائمة (⋮) في الأعلى يميناً",
       "step2": "اضغط على تثبيت"
+    },
+    "safari": {
+      "title": "تثبيت Spliit Cloud",
+      "description": "أضف Spliit Cloud إلى Dock للوصول بنقرة واحدة.",
+      "step1": "في Safari، افتح قائمة ملف",
+      "step2": "اختر إضافة إلى Dock، ثم انقر على إضافة"
     }
   },
   "ExpenseCard": {
@@ -2345,7 +2351,8 @@
     "signOutTitle": "هل تريد الخروج؟",
     "signOutError": "تعذر تسجيل الخروج. يرجى المحاولة مرة أخرى.",
     "cancel": "إلغاء",
-    "signOutOffline": "اتصل بالإنترنت لتسجيل الخروج"
+    "signOutOffline": "اتصل بالإنترنت لتسجيل الخروج",
+    "installApp": "تثبيت التطبيق"
   },
   "ForgotPassword": {
     "errors": {

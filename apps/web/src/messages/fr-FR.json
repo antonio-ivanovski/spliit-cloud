@@ -78,7 +78,8 @@
     "signOutTitle": "Se déconnecter ?",
     "signOutError": "Impossible de se déconnecter. Veuillez réessayer.",
     "cancel": "Annuler",
-    "signOutOffline": "Connectez-vous pour vous déconnecter"
+    "signOutOffline": "Connectez-vous pour vous déconnecter",
+    "installApp": "Installer l'application"
   },
   "Footer": {
     "madeIn": "Créé par la <github>communauté open-source</github> avec amour ❤️",
@@ -2878,6 +2879,12 @@
       "description": "Ajoutez Spliit Cloud à votre écran d'accueil depuis le menu du navigateur.",
       "step1": "Appuyez sur le bouton de menu (⋮) en haut à droite",
       "step2": "Appuyez sur Installer"
+    },
+    "safari": {
+      "title": "Installer Spliit Cloud",
+      "description": "Ajoutez Spliit Cloud à votre Dock pour y accéder en un clic.",
+      "step1": "Dans Safari, ouvrez le menu Fichier",
+      "step2": "Choisissez Ajouter au Dock, puis cliquez sur Ajouter"
     }
   },
   "EmptyState": {

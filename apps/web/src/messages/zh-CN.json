@@ -78,7 +78,8 @@
     "signOutTitle": "退出？",
     "signOutError": "无法注销。请再试一次。",
     "cancel": "取消",
-    "signOutOffline": "连接以退出登录"
+    "signOutOffline": "连接以退出登录",
+    "installApp": "安装应用"
   },
   "Footer": {
     "madeIn": "由<github>开源社区</github>用爱打造 ❤️",
@@ -2856,6 +2857,12 @@
       "description": "通过浏览器菜单将 Spliit Cloud 添加到主屏幕。",
       "step1": "点击右上角的菜单按钮（⋮）",
       "step2": "点击「安装」"
+    },
+    "safari": {
+      "title": "安装 Spliit Cloud",
+      "description": "将 Spliit Cloud 添加到程序坞，一键即可访问。",
+      "step1": "在 Safari 中，打开“文件”菜单",
+      "step2": "选取“添加到程序坞”，然后点按“添加”"
     }
   },
   "EmptyState": {

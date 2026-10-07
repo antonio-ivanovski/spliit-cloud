@@ -78,7 +78,8 @@
     "signOutTitle": "サインアウトしますか?",
     "signOutError": "サインアウトできませんでした。もう一度試してください。",
     "cancel": "キャンセル",
-    "signOutOffline": "サインアウトするには接続してください"
+    "signOutOffline": "サインアウトするには接続してください",
+    "installApp": "アプリをインストール"
   },
   "Footer": {
     "madeIn": "<github>オープンソースコミュニティ</github>によって愛を込めて作られました ❤️",
@@ -2856,6 +2857,12 @@
       "description": "ブラウザのメニューからSpliit Cloudをホーム画面に追加できます。",
       "step1": "右上のメニューボタン（⋮）をタップ",
       "step2": "「インストール」をタップ"
+    },
+    "safari": {
+      "title": "Spliit Cloudをインストール",
+      "description": "Spliit CloudをDockに追加して、ワンクリックでアクセス。",
+      "step1": "Safariで「ファイル」メニューを開く",
+      "step2": "「Dock に追加」を選択して、「追加」をクリック"
     }
   },
   "EmptyState": {

@@ -2868,7 +2868,8 @@
     "signOutTitle": "Sign out, yeah?",
     "signOutError": "Couldn't sign out. Give it another go.",
     "cancel": "Nah, go back",
-    "signOutOffline": "connect to sign out fr"
+    "signOutOffline": "connect to sign out fr",
+    "installApp": "install the app"
   },
   "Homepage": {
     "title": "Split <strong>Expenses</strong> with <strong>Besties & Family</strong>",
@@ -2962,6 +2963,12 @@
       "step1": "tap the Share button",
       "step2": "scroll down and tap Add to Home Screen",
       "step3": "tap Add in the top-right corner"
+    },
+    "safari": {
+      "title": "install Spliit Cloud",
+      "description": "add Spliit Cloud to your dock for one-tap access.",
+      "step1": "in Safari, open the File menu",
+      "step2": "choose Add to Dock, then click Add"
     }
   },
   "LanguageSwitcher": {

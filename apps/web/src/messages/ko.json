@@ -1405,7 +1405,8 @@
     "signOutTitle": "로그아웃하시겠습니까?",
     "signOutError": "로그아웃할 수 없습니다. 다시 시도해 주세요.",
     "cancel": "취소",
-    "signOutOffline": "로그아웃하려면 연결하세요"
+    "signOutOffline": "로그아웃하려면 연결하세요",
+    "installApp": "앱 설치"
   },
   "Footer": {
     "madeIn": "<github>오픈소스 커뮤니티</github>가 사랑을 담아 만들었어요 ❤️",
@@ -2899,6 +2900,12 @@
       "description": "브라우저 메뉴에서 홈 화면으로 Spliit Cloud을 추가하세요.",
       "step1": "오른쪽 상단의 메뉴 버튼(⋮)을 탭하세요",
       "step2": "'설치'를 탭하세요"
+    },
+    "safari": {
+      "title": "Spliit Cloud 설치",
+      "description": "Spliit Cloud를 Dock에 추가하여 한 번의 클릭으로 이용하세요.",
+      "step1": "Safari에서 파일 메뉴를 여세요",
+      "step2": "'Dock에 추가'를 선택한 다음 '추가'를 클릭하세요"
     }
   },
   "EmptyState": {

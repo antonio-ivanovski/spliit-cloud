@@ -27,7 +27,9 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { Switch } from '@/components/ui/switch'
 import { useToast } from '@/components/ui/use-toast'
+import { useOfflineSubgroups } from '@/lib/offline/read-hooks'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 import { useGroupAccessSearch } from '../use-group-access-search'
@@ -56,6 +58,7 @@ export function SubgroupsCard({
   canManage: boolean
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
+  const { t: tOffline } = useTranslation()
   const { toast } = useToast()
   const mascot = useMascotController()
   const utils = trpc.useUtils()
@@ -65,6 +68,97 @@ export function SubgroupsCard({
     linkInviteToken,
     viewKey,
   })
+  const isOnline = useOnlineStatus()
+  // Offline read-only: the downloaded snapshot carries exact subgroup
+  // definitions (names + member ids + enabled flag). Render those read-only;
+  // enable/create/edit/delete stay connection-required.
+  const offlineSubgroupsQuery = useOfflineSubgroups({
+    groupId,
+    linkInviteToken,
+    viewKey,
+  })
+  const offlineSubgroups = offlineSubgroupsQuery.data?.subgroups ?? []
+  const offlineSubgroupsEnabled = offlineSubgroupsQuery.data?.enabled ?? false
+  const offlineDirtySince = offlineSubgroupsQuery.data?.dirtySince ?? null
+  const showOfflineReadonly =
+    !isOnline && offlineSubgroupsQuery.meta.availability === 'ready'
+  const offlineReadonlyCard = (
+    <Card className="overflow-hidden">
+      <CardHeader className="border-b border-border/60 bg-muted/10">
+        <div className="flex items-start gap-4">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Layers3 className="size-4" aria-hidden="true" />
+              </span>
+              <CardTitle>{t('subgroups.title')}</CardTitle>
+            </div>
+            <CardDescription className="mt-2 max-w-2xl">
+              {t('subgroups.description')}
+            </CardDescription>
+            <output className="mt-2 block text-xs text-muted-foreground">
+              {tOffline('OfflineReadOnly.reconnectToEdit')}
+            </output>
+            {offlineDirtySince ? (
+              <output className="mt-1 block text-xs text-muted-foreground">
+                {tOffline('OfflineReadOnly.dataStale')}
+              </output>
+            ) : null}
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4 pt-5">
+        {offlineSubgroups.length === 0 || !offlineSubgroupsEnabled ? (
+          <div className="rounded-2xl border border-dashed border-border/80 px-4 py-6 text-center">
+            <p className="text-sm font-medium">{t('subgroups.emptyTitle')}</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {t('subgroups.emptyDescription')}
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-3 sm:grid-cols-2">
+            {offlineSubgroups.map((subgroup) => {
+              const members = subgroup.participantIds
+                .map((participantId) =>
+                  participants.find(({ id }) => id === participantId),
+                )
+                .filter((participant): participant is Participant =>
+                  Boolean(participant),
+                )
+              return (
+                <article
+                  key={subgroup.id}
+                  className="rounded-2xl border border-border/70 bg-background p-4 shadow-xs"
+                >
+                  <div className="flex min-w-0 items-center gap-3">
+                    <AvatarStack
+                      accounts={members.map(
+                        (member) =>
+                          member.account ?? {
+                            id: member.id,
+                            name: member.name,
+                          },
+                      )}
+                      size="md"
+                      label={subgroup.name}
+                    />
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold">
+                        {subgroup.name}
+                      </p>
+                      <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                        {members.map(({ name }) => name).join(' · ')}
+                      </p>
+                    </div>
+                  </div>
+                </article>
+              )
+            })}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  )
   const [editor, setEditor] = useState<EditState | null>(null)
   const [disableDialogOpen, setDisableDialogOpen] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<{
@@ -121,6 +215,8 @@ export function SubgroupsCard({
     onError: (error) =>
       toast({ description: error.message, variant: 'destructive' }),
   })
+
+  if (showOfflineReadonly) return offlineReadonlyCard
 
   if (subgroupsQuery.isError) {
     return (

@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
+import { useOfflineExpenseComments } from '@/lib/offline/read-hooks'
 import { isOfflineWriteError } from '@/lib/offline/write-guard'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { useOnlineStatus } from '@/lib/use-online-status'
@@ -57,6 +58,15 @@ export function ExpenseComments({
     { groupId, expenseId, linkInviteToken, viewKey },
     { retry: false, enabled: isOnline },
   )
+  // Offline read-only: the snapshot carries the full comment history inside
+  // the downloaded expense detail. Delete actions stay hidden offline.
+  const offlineComments = useOfflineExpenseComments(groupId, expenseId)
+  const downloadedComments = (offlineComments.data?.comments ?? null) as
+    | CommentItem[]
+    | null
+  // The downloaded history renders only when the network has no live list:
+  // online the live query stays authoritative.
+  const useOfflineSource = !isOnline && downloadedComments !== null
   const [draft, setDraft] = useState('')
   const [validationError, setValidationError] = useState<string | null>(null)
   const [deletingCommentId, setDeletingCommentId] = useState<string | null>(
@@ -145,9 +155,11 @@ export function ExpenseComments({
     | { comments?: CommentItem[] }
     | CommentItem[]
     | undefined
-  const comments = Array.isArray(queryData)
-    ? queryData
-    : (queryData?.comments ?? [])
+  const comments = useOfflineSource
+    ? (downloadedComments ?? [])
+    : Array.isArray(queryData)
+      ? queryData
+      : (queryData?.comments ?? [])
 
   return (
     <section
@@ -161,11 +173,11 @@ export function ExpenseComments({
         {t('commentsTitle')}
       </h3>
 
-      {commentsQuery.isLoading ? (
+      {commentsQuery.isLoading && !useOfflineSource ? (
         <p className="text-sm text-muted-foreground" aria-live="polite">
           {t('commentsLoading')}
         </p>
-      ) : commentsQuery.error ? (
+      ) : commentsQuery.error && !useOfflineSource ? (
         <div className="space-y-2" role="alert">
           <p className="text-sm text-destructive">{t('commentsError')}</p>
           <Button

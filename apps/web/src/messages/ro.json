@@ -78,7 +78,8 @@
     "signOutTitle": "Deconectați-vă?",
     "signOutError": "Nu s-a putut deconecta. Vă rugăm să încercați din nou.",
     "cancel": "Anulează",
-    "signOutOffline": "Conectează-te pentru a te deconecta"
+    "signOutOffline": "Conectează-te pentru a te deconecta",
+    "installApp": "Instalează aplicația"
   },
   "Footer": {
     "madeIn": "Realizat de <github>comunitatea open-source</github> cu dragoste ❤️",
@@ -2878,6 +2879,12 @@
       "description": "Adaugă Spliit Cloud pe ecranul principal din meniul browserului.",
       "step1": "Apasă pe butonul de meniu (⋮) din dreapta sus",
       "step2": "Apasă pe Instalează"
+    },
+    "safari": {
+      "title": "Instalează Spliit Cloud",
+      "description": "Adaugă Spliit Cloud în Dock pentru acces cu un singur clic.",
+      "step1": "În Safari, deschide meniul Fișier",
+      "step2": "Alege Adaugă în Dock, apoi apasă pe Adaugă"
     }
   },
   "EmptyState": {

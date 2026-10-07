@@ -232,6 +232,7 @@ describe('offline parity with live endpoints', () => {
           createdAt: new Date('2026-01-01T00:00:00Z'),
           groupType: 'GROUP',
           friendPairKey: null,
+          offlineContentRevision: 7n,
           ledger: {
             id: ledgerId,
             currency: '$',
@@ -248,6 +249,14 @@ describe('offline parity with live endpoints', () => {
     ] as never)
     prismaMock.expense.count.mockResolvedValue(1 as never)
     prismaMock.subgroup.findMany.mockResolvedValue([] as never)
+    prismaMock.expenseComment.findMany.mockResolvedValue([] as never)
+    prismaMock.groupBudget.findMany.mockResolvedValue([] as never)
+    prismaMock.splitPreset.findMany.mockResolvedValue([] as never)
+    prismaMock.accountGroupPreference.findUnique.mockResolvedValue(
+      null as never,
+    )
+    prismaMock.activity.count.mockResolvedValue(0 as never)
+    prismaMock.activity.findMany.mockResolvedValue([] as never)
     prismaMock.expense.findMany.mockImplementation(async (q: unknown) => {
       const qq = q as {
         where?: { recurringSeriesId?: string; ledgerId?: unknown }

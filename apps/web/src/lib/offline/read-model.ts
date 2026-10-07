@@ -8,7 +8,14 @@ import {
   expandExpenseQueryForLocale,
 } from '@spliit/domain'
 
-import type { CatalogRecord, GroupRecord } from './contract'
+import {
+  OFFLINE_CONTRACT_VERSION,
+  type CatalogRecord,
+  type ExpenseListRow,
+  type GroupDataRecord,
+  type GroupMetaRecord,
+  type GroupRecord,
+} from './contract'
 
 /**
  * Offline read model.
@@ -42,6 +49,38 @@ export const OFFLINE_COPY = {
     'Offline search uses exact text; typo matching needs a connection.',
 } as const
 
+/**
+ * Financial freshness threshold: a complete last-known snapshot older than this
+ * without a trustworthy server confirmation warns instead of passing as
+ * current. Confirmations advance on every matching revision token (even when no
+ * history bytes move); captures stay pinned to the original content capture.
+ */
+export const OFFLINE_FRESHNESS_STALE_MS = 5 * 60_000
+
+export type OfflineFreshness = 'fresh' | 'stale' | 'dirty'
+
+/**
+ * Contextual financial freshness: dirty (locally mutated after capture) always
+ * warns; otherwise the age is measured from the last trustworthy server
+ * confirmation, falling back to the original capture when a confirmation was
+ * never recorded.
+ */
+export function getOfflineFreshnessState(args: {
+  dirtySince: Date | null
+  lastConfirmedAt: Date | null
+  capturedAt: Date | null
+  now?: number
+}): OfflineFreshness {
+  if (args.dirtySince !== null) return 'dirty'
+  const reference =
+    args.lastConfirmedAt?.getTime() ?? args.capturedAt?.getTime() ?? null
+  if (reference === null) return 'stale'
+  return args.now !== undefined &&
+    args.now - reference > OFFLINE_FRESHNESS_STALE_MS
+    ? 'stale'
+    : 'fresh'
+}
+
 export type OfflineSource = 'network' | 'download'
 export type OfflineAvailability =
   | 'loading'
@@ -56,6 +95,8 @@ export type OfflineReadMeta = {
   availability: OfflineAvailability
   refreshing: boolean
   incompleteGroupCount: number
+  freshness?: OfflineFreshness
+  lastConfirmedAt?: Date | null
   hasMore?: boolean
   totalCount?: number
   truncatedGroupCount?: number
@@ -908,6 +949,12 @@ export type OfflineOverviewGroup = OfflineCatalogEntry['overview'] & {
   availability: 'ready' | 'missing'
   capturedAt: Date | null
   dirtySince: Date | null
+  /**
+   * Aged-confirmation flag set by the worker (which owns confirmation
+   * timestamps). Absent on records built before confirmations existed; callers
+   * treat absent as "derive from dirtySince only".
+   */
+  stale?: boolean
 }
 
 export type OfflineOverview = {
@@ -1228,6 +1275,70 @@ function personMatchesGlobal(
 }
 
 /**
+ * Shared global predicate stage: category/settlement/date/amount/person/ search
+ * filters over candidate records. Pure and list-driven (only global text search
+ * consults detail notes); used by the snapshot query below and by the
+ * entity-native worker engine so both paths share semantics.
+ */
+export function applyGlobalFilters(
+  candidates: Array<{
+    record: OfflineExpenseRecord
+    global: OfflineCatalogEntry['global']
+  }>,
+  input: GlobalExpenseFilter,
+): Array<{
+  record: OfflineExpenseRecord
+  global: OfflineCatalogEntry['global']
+}> {
+  const hasExplicitCategories =
+    !!input.categories && input.categories.length > 0
+  const expandedCategories = hasExplicitCategories
+    ? expandCategorySelection(input.categories ?? [])
+    : []
+  return candidates.filter(({ record: entry }) => {
+    const list = entry.list
+    if (hasExplicitCategories) {
+      const accepted =
+        expandedCategories.length > 0
+          ? expandedCategories.includes(list.categoryId)
+          : (input.categories ?? []).includes(list.categoryId)
+      if (!accepted) return false
+    } else if (input.hideSettlements) {
+      if (list.categoryId === SETTLEMENT_CATEGORY_ID) return false
+    }
+    if (!inDateBounds(list.expenseDate, input.dateFrom, input.dateTo))
+      return false
+    if (!inAmountBounds(list.amount, input.minAmount, input.maxAmount))
+      return false
+    if (
+      !personMatchesGlobal(
+        list,
+        entry.detail,
+        input.paidBy,
+        input.paidByMatch,
+        'paidBy',
+      )
+    ) {
+      return false
+    }
+    if (
+      !personMatchesGlobal(
+        list,
+        entry.detail,
+        input.paidFor,
+        input.paidForMatch,
+        'paidFor',
+      )
+    ) {
+      return false
+    }
+    if (!matchesGlobalSearch(list, entry.detail, input.search, input.locale))
+      return false
+    return true
+  })
+}
+
+/**
  * Global list: union all ready snapshots joined to stored global group
  * metadata. Default excludes hidden+archived like the server; explicit groupIds
  * take precedence; includeArchived defaults false. Global amount filters/sort
@@ -1297,62 +1408,24 @@ export function queryGlobalExpensesOffline(
     selected.push({ record, global })
   }
 
-  const hasExplicitCategories =
-    !!input.categories && input.categories.length > 0
-  const expandedCategories = hasExplicitCategories
-    ? expandCategorySelection(input.categories ?? [])
-    : []
-  const combined: Array<
-    OfflineExpenseRecord & { group: OfflineCatalogEntry['global'] }
-  > = []
+  const candidates: Array<{
+    record: OfflineExpenseRecord
+    global: OfflineCatalogEntry['global']
+  }> = []
   for (const { record, global } of selected) {
     for (const entry of record.payload.expenses) {
-      const list = entry.list
-      if (hasExplicitCategories) {
-        const accepted =
-          expandedCategories.length > 0
-            ? expandedCategories.includes(list.categoryId)
-            : (input.categories ?? []).includes(list.categoryId)
-        if (!accepted) continue
-      } else if (input.hideSettlements) {
-        if (list.categoryId === SETTLEMENT_CATEGORY_ID) continue
-      }
-      if (!inDateBounds(list.expenseDate, input.dateFrom, input.dateTo))
-        continue
-      if (!inAmountBounds(list.amount, input.minAmount, input.maxAmount))
-        continue
-      if (
-        !personMatchesGlobal(
-          list,
-          entry.detail,
-          input.paidBy,
-          input.paidByMatch,
-          'paidBy',
-        )
-      ) {
-        continue
-      }
-      if (
-        !personMatchesGlobal(
-          list,
-          entry.detail,
-          input.paidFor,
-          input.paidForMatch,
-          'paidFor',
-        )
-      ) {
-        continue
-      }
-      if (!matchesGlobalSearch(list, entry.detail, input.search, input.locale))
-        continue
-      combined.push({
-        ...entry,
-        group: global,
-      } as unknown as OfflineExpenseRecord & {
-        group: OfflineCatalogEntry['global']
-      })
+      candidates.push({ record: entry, global })
     }
   }
+  const combined = applyGlobalFilters(candidates, input).map(
+    ({ record: entry, global }) =>
+      ({
+        ...entry,
+        group: global,
+      }) as unknown as OfflineExpenseRecord & {
+        group: OfflineCatalogEntry['global']
+      },
+  )
   const sorted = sortGlobalRecords(
     combined as unknown as Array<OfflineExpenseRecord & { groupId: string }>,
     input.sortBy,
@@ -1736,4 +1809,84 @@ export async function chunkedFilterGroupRecords(
     }
   }
   return out
+}
+
+// --- Entity-native worker queries -------------------------------------------
+
+/**
+ * List-only shell for the filter/sort/paginate stages. Group filtering,
+ * sorting, and involvement pagination read list fields exclusively; global
+ * search falls back to list item titles when detail is absent. The worker
+ * engine attaches real detail rows only to the returned page, so full histories
+ * never cross the worker boundary and the main thread never copies them.
+ */
+export function listShellFromRow(row: ExpenseListRow): OfflineExpenseRecord {
+  return {
+    list: row.record,
+    detail: undefined as unknown as OfflineExpenseRecord['detail'],
+  }
+}
+
+/**
+ * Lightweight group record assembled from metadata + data blobs, without
+ * expense rows. Powers overview/filter-options/balances/group views in the
+ * worker and in hooks: every consumer below reads overview/global/balances,
+ * roster participants, captured/dirty freshness, and completeness counters,
+ * never expense history.
+ */
+export function liteGroupRecord(
+  meta: GroupMetaRecord,
+  data: GroupDataRecord,
+  accountId: string,
+): GroupRecord {
+  return {
+    namespace: meta.namespace,
+    groupId: meta.groupId,
+    schemaVersion: meta.schemaVersion,
+    capturedAt: meta.capturedAt,
+    storedAt: meta.storedAt,
+    commitNonce: meta.commitNonce,
+    dirtySince: meta.dirtySince,
+    payload: {
+      schemaVersion: OFFLINE_CONTRACT_VERSION,
+      accountId,
+      groupId: meta.groupId,
+      capturedAt: meta.capturedAt,
+      group: data.data.group,
+      overview: data.data.overview,
+      global: data.data.global,
+      balances: data.data.balances,
+      revision: meta.serverRevision,
+      expenses: [],
+      totalCount: meta.totalCount,
+      downloadedCount: 0,
+      hasMore: meta.hasMore,
+      truncatedAt: meta.truncatedAt,
+      subgroups: data.data.subgroups,
+      splitPresets: data.data.splitPresets,
+      budgets: data.data.budgets,
+      activities: data.data.activities,
+      activityTotalCount: data.data.activityTotalCount,
+      activityHasMore: data.data.activityHasMore,
+    },
+  }
+}
+
+/**
+ * Revision digest over a group set: sorted groupId:revision pairs joined into
+ * one opaque string. Hooks reset pagination when the digest moves;
+ * equality-only, like the tokens it summarizes.
+ */
+export function revisionDigest(
+  revisions: Array<{ groupId: string; revision: string }>,
+): string {
+  return revisions
+    .map((entry) => entry.groupId + ':' + entry.revision)
+    .sort()
+    .join('|')
+}
+
+/** Cooperative yield point for bounded worker scans (bounded batches). */
+export async function yieldToEventLoop(): Promise<void> {
+  await new Promise<void>((resolve) => setTimeout(resolve, 0))
 }

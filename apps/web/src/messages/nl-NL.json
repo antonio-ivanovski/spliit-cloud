@@ -78,7 +78,8 @@
     "signOutTitle": "Uitloggen?",
     "signOutError": "Kan niet afmelden. Probeer het opnieuw.",
     "cancel": "Annuleren",
-    "signOutOffline": "Maak verbinding om uit te loggen"
+    "signOutOffline": "Maak verbinding om uit te loggen",
+    "installApp": "App installeren"
   },
   "Footer": {
     "madeIn": "Gemaakt met liefde door de <github>open-source community</github> ❤️",
@@ -2901,6 +2902,12 @@
       "description": "Voeg Spliit Cloud toe aan je startscherm vanuit het browsermenu.",
       "step1": "Tik rechtsboven op de menuknop (⋮)",
       "step2": "Tik op Installeren"
+    },
+    "safari": {
+      "title": "Spliit Cloud installeren",
+      "description": "Voeg Spliit Cloud toe aan je Dock voor toegang met één klik.",
+      "step1": "Open in Safari het menu Archief",
+      "step2": "Kies Voeg toe aan Dock en klik op Voeg toe"
     }
   },
   "EmptyState": {

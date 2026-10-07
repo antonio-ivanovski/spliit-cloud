@@ -107,13 +107,13 @@ describe('Offline catalog/snapshot — real DB', () => {
     expect(entry!.overview.access).toBe('MEMBER')
     expect(entry!.overview.viewKey).toBeNull()
     expect(catalog.accountId).toBe(adminId)
-    expect(catalog.schemaVersion).toBe(1)
+    expect(catalog.schemaVersion).toBe(2)
   })
 
   it('returns a coherent snapshot with matching list/detail ids and no URLs', async () => {
     const { groupId } = await createGroupWithExpense(`Snapshot ${runId}`)
     const snapshot = await makeCaller().offlineSnapshot({ groupId })
-    expect(snapshot.schemaVersion).toBe(1)
+    expect(snapshot.schemaVersion).toBe(2)
     expect(snapshot.accountId).toBe(adminId)
     expect(snapshot.groupId).toBe(groupId)
     expect(snapshot.group.viewer.source).toBe('MEMBER')
@@ -141,6 +141,96 @@ describe('Offline catalog/snapshot — real DB', () => {
     expect(snapshot.downloadedCount).toBe(snapshot.expenses.length)
     expect(snapshot.hasMore).toBe(
       snapshot.totalCount > snapshot.downloadedCount,
+    )
+  })
+
+  it('snapshots comments, budgets, presets, subgroups, and recent activity', async () => {
+    const { groupId } = await createGroupWithExpense(`Sections ${runId}`)
+    const group = await prisma.group.findUniqueOrThrow({
+      where: { id: groupId },
+      include: {
+        ledger: true,
+        members: { include: { ledgerParticipant: true } },
+      },
+    })
+    const expense = await prisma.expense.findFirstOrThrow({
+      where: { ledgerId: group.ledger.id },
+    })
+    const participantId = group.members[0]!.ledgerParticipant!.id
+    await prisma.expenseComment.create({
+      data: {
+        id: `cmt-off-${runId}`,
+        expenseId: expense.id,
+        authorAccountId: adminId,
+        authorName: 'Offline',
+        text: 'Remember the receipt',
+      },
+    })
+    await prisma.groupBudget.create({
+      data: {
+        id: `bud-off-${runId}`,
+        groupId,
+        ledgerId: group.ledger.id,
+        name: 'Groceries',
+        amount: 50000,
+        period: 'MONTHLY',
+        timeZone: 'UTC',
+        createdByAccountId: adminId,
+      },
+    })
+    await prisma.splitPreset.create({
+      data: {
+        id: `preset-off-${runId}`,
+        groupId,
+        scopeKey: 'GROUP',
+        name: 'Equal',
+        nameKey: 'equal',
+        target: 'PAID_FOR',
+        splitMode: 'EVENLY',
+        participants: {
+          create: [{ participantId, shares: 1 }],
+        },
+      },
+    })
+    await prisma.subgroup.create({
+      data: {
+        id: `sg-off-${runId}`,
+        groupId,
+        name: 'Trip crew',
+        members: { create: [{ ledgerParticipantId: participantId }] },
+      },
+    })
+    await prisma.activity.create({
+      data: {
+        id: `act-off-${runId}`,
+        ledgerId: group.ledger.id,
+        type: 'GROUP_UPDATED',
+      },
+    })
+
+    const snapshot = await makeCaller().offlineSnapshot({ groupId })
+    const detail = snapshot.expenses.find((e) => e.detail.id === expense.id)!
+    expect(detail).toBeDefined()
+    expect(detail.detail.comments.map((comment) => comment.id)).toContain(
+      `cmt-off-${runId}`,
+    )
+    expect(snapshot.budgets.map((budget) => budget.id)).toContain(
+      `bud-off-${runId}`,
+    )
+    expect(snapshot.splitPresets.presets.map((preset) => preset.id)).toContain(
+      `preset-off-${runId}`,
+    )
+    expect(snapshot.subgroups.subgroups.map((sub) => sub.id)).toContain(
+      `sg-off-${runId}`,
+    )
+    expect(snapshot.activities.map((activity) => activity.id)).toContain(
+      `act-off-${runId}`,
+    )
+    expect(snapshot.activityTotalCount).toBeGreaterThanOrEqual(
+      snapshot.activities.length,
+    )
+    expect(snapshot.activityHasMore).toBe(
+      snapshot.activityTotalCount > snapshot.activities.length,
     )
   })
 

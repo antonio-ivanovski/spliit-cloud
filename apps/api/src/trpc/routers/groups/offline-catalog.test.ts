@@ -73,6 +73,7 @@ function mockMembershipRow(args: {
       createdAt,
       groupType: args.groupType ?? 'GROUP',
       friendPairKey: null,
+      offlineContentRevision: 7n,
       ledger: {
         id: args.ledgerId,
         currency: args.currency ?? '$',
@@ -103,7 +104,7 @@ describe('groups.offlineCatalog', () => {
     const result = await makeCaller('acct-self').offlineCatalog()
 
     expect(result).toEqual({
-      schemaVersion: 1,
+      schemaVersion: 2,
       accountId: 'acct-self',
       capturedAt: expect.any(Date),
       groups: [],
@@ -147,8 +148,18 @@ describe('groups.offlineCatalog', () => {
       }),
     ] as never)
     prismaMock.accountGroupPreference.findMany.mockResolvedValue([
-      { groupId: 'grp-a', starred: false, hidden: true },
-      { groupId: 'grp-b', starred: true, hidden: false },
+      {
+        groupId: 'grp-a',
+        starred: false,
+        hidden: true,
+        offlineViewerRevision: 3n,
+      },
+      {
+        groupId: 'grp-b',
+        starred: true,
+        hidden: false,
+        offlineViewerRevision: 3n,
+      },
     ] as never)
     prismaMock.groupInvitation.findMany.mockResolvedValue([] as never)
     prismaMock.expense.findMany.mockResolvedValue([] as never)
@@ -171,6 +182,14 @@ describe('groups.offlineCatalog', () => {
     )!.overview
     expect(archived.archived).toBe(true)
     expect(archived.financialSummary.state).toBe('NO_EXPENSES')
+
+    const tokens = new Map(
+      result.groups.map((g) => [g.overview.id, g.revision]),
+    )
+    expect(tokens.get('grp-a')).toBe('o2.c7.v3')
+    expect(tokens.get('grp-b')).toBe('o2.c7.v3')
+    // No preference row: viewer part falls back to 0, content part matches.
+    expect(tokens.get('grp-friend')).toBe('o2.c7.v0')
 
     const hidden = result.groups.find((g) => g.overview.id === 'grp-a')!
     expect(hidden.overview.preference.hidden).toBe(true)

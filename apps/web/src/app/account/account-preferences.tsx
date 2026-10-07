@@ -57,6 +57,7 @@ import {
 import { useCurrencies } from '@/lib/currency'
 import { useDeploymentConfig } from '@/lib/deployment-config'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 import {
   defaultGroupTabOrder,
@@ -106,7 +107,10 @@ export function AccountPreferences() {
   })
   const { t: tBase } = useTranslation()
   const { setTheme } = useTheme()
-  const query = trpc.account.getPreferences.useQuery()
+  const isOnline = useOnlineStatus()
+  const query = trpc.account.getPreferences.useQuery(undefined, {
+    enabled: isOnline,
+  })
   const syncedPreferences = useSyncedAccountPreferences()
   const updater = useAccountPreferenceUpdater()
   const { data: account } = useCurrentAccount()
@@ -176,6 +180,22 @@ export function AccountPreferences() {
   )
 
   if (!sourcePreferences) {
+    // First load needs the server; cached preferences (via the sync provider)
+    // render immediately when they exist. Never skeleton-spin forever offline.
+    if (!isOnline) {
+      return (
+        <SettingsSection
+          id="app-preferences"
+          title={t('title')}
+          description={t('description')}
+          icon={SlidersHorizontal as LucideIcon}
+        >
+          <p className="px-4 pb-4 text-sm text-muted-foreground sm:px-6 sm:pb-5">
+            {tBase('OfflineReadOnly.needsConnection')}
+          </p>
+        </SettingsSection>
+      )
+    }
     return (
       <SettingsSectionSkeleton
         id="app-preferences"

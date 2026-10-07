@@ -45,12 +45,15 @@ describe('offline-contract browser safety', () => {
     expect(source).toContain('listBalancesOutputSchema')
 
     const contract = await import('../outputs/offline')
-    expect(contract.OFFLINE_SCHEMA_VERSION).toBe(1)
+    expect(contract.OFFLINE_SCHEMA_VERSION).toBe(2)
     expect(contract.OFFLINE_MAX_EXPENSES).toBe(500)
+    expect(contract.OFFLINE_MAX_ACTIVITIES).toBe(200)
     expect(contract.offlineCatalogOutputSchema).toBeDefined()
     expect(contract.offlineSnapshotOutputSchema).toBeDefined()
     expect(contract.offlineExpenseRecordSchema).toBeDefined()
     expect(contract.offlineDocumentMetadataSchema).toBeDefined()
+    expect(contract.offlineExpenseCommentSchema).toBeDefined()
+    expect(contract.offlineGroupDataSchema).toBeDefined()
 
     const pkgPath = resolve(__dirname, '..', '..', '..', 'package.json')
     const pkg = JSON.parse(readFileSync(pkgPath, 'utf8')) as {
@@ -59,6 +62,63 @@ describe('offline-contract browser safety', () => {
     expect(pkg.exports['./offline-contract']).toBe(
       './src/trpc/outputs/offline.ts',
     )
+  })
+
+  it('composes stable revision tokens from content and viewer revisions', async () => {
+    const {
+      buildOfflineRevisionToken,
+      parseOfflineRevisionToken,
+      isSameOfflineRevision,
+      OFFLINE_CONTRACT_VERSION,
+    } = await import('../outputs/offline')
+
+    expect(
+      buildOfflineRevisionToken({ contentRevision: 7n, viewerRevision: 3n }),
+    ).toBe(`o${OFFLINE_CONTRACT_VERSION}.c7.v3`)
+    expect(
+      buildOfflineRevisionToken({ contentRevision: 7, viewerRevision: 0 }),
+    ).toBe(`o${OFFLINE_CONTRACT_VERSION}.c7.v0`)
+
+    const parsed = parseOfflineRevisionToken(
+      buildOfflineRevisionToken({ contentRevision: 12n, viewerRevision: 0n }),
+    )
+    expect(parsed).toMatchObject({
+      contractVersion: OFFLINE_CONTRACT_VERSION,
+      contentRevision: '12',
+      viewerRevision: '0',
+    })
+    expect(parseOfflineRevisionToken('o1.cundefined.v0')).toBeNull()
+    expect(parseOfflineRevisionToken('stale')).toBeNull()
+
+    const token = buildOfflineRevisionToken({
+      contentRevision: 1n,
+      viewerRevision: 0n,
+    })
+    expect(isSameOfflineRevision(token, token)).toBe(true)
+    expect(
+      isSameOfflineRevision(
+        token,
+        buildOfflineRevisionToken({ contentRevision: 2n, viewerRevision: 0n }),
+      ),
+    ).toBe(false)
+    // Cross-contract tokens never match, even when counters coincide.
+    expect(
+      isSameOfflineRevision(
+        token,
+        buildOfflineRevisionToken({
+          contentRevision: 1n,
+          viewerRevision: 0n,
+          contractVersion: OFFLINE_CONTRACT_VERSION + 1,
+        }),
+      ),
+    ).toBe(false)
+  })
+
+  it('requires revision tokens on catalog entries and snapshots', async () => {
+    const { offlineCatalogEntrySchema, offlineSnapshotOutputSchema } =
+      await import('../outputs/offline')
+    expect(Object.keys(offlineCatalogEntrySchema.shape)).toContain('revision')
+    expect(Object.keys(offlineSnapshotOutputSchema.shape)).toContain('revision')
   })
 
   it('strips document URLs from metadata', async () => {

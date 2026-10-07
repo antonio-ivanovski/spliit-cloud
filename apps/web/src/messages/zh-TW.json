@@ -78,7 +78,8 @@
     "signOutTitle": "退出？",
     "signOutError": "無法登出。請再試一次。",
     "cancel": "取消",
-    "signOutOffline": "連線以登出"
+    "signOutOffline": "連線以登出",
+    "installApp": "安裝應用程式"
   },
   "Footer": {
     "madeIn": "由<github>開源社群</github>用愛打造 ❤️",
@@ -2856,6 +2857,12 @@
       "description": "從瀏覽器選單將 Spliit Cloud 加入主畫面。",
       "step1": "點一下右上角的選單按鈕（⋮）",
       "step2": "點一下「安裝」"
+    },
+    "safari": {
+      "title": "安裝 Spliit Cloud",
+      "description": "將 Spliit Cloud 加入 Dock，一鍵即可取用。",
+      "step1": "在 Safari 中，打開「檔案」選單",
+      "step2": "選擇「加入 Dock」，然後按一下「加入」"
     }
   },
   "EmptyState": {

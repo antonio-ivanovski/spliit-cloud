@@ -62,15 +62,11 @@ export const EditGroup = () => {
 
   const showOfflineEmpty = useOfflineWithoutData(!!data)
   if (!isOnline || showOfflineEmpty) {
-    // Group details are not part of the offline snapshot: never initialize
-    // an editable form from stale/absent data offline. Archive/delete stay
-    // unavailable until reconnect (write guard also rejects).
-    return (
-      <OfflineNeedsConnection
-        backLabel={tGroups('backToGroups')}
-        backHref={`/groups/${groupId}`}
-      />
-    )
+    // Offline read-only: group metadata already lives in the downloaded
+    // snapshot, so render a read-only summary (never the editable form).
+    // Edits, archive/delete, invites, split presets, and exports stay
+    // connection-required (write guard rejects).
+    return <OfflineGroupSettings groupId={groupId} />
   }
 
   if (isLoading) return <></>
@@ -206,6 +202,60 @@ export const EditGroup = () => {
         onOpenChange={setDeleteDialogOpen}
         onConfirm={() => deleteMutation.mutate({ groupId })}
       />
+    </div>
+  )
+}
+
+/**
+ * Offline read-only group summary. Group metadata already lives in the
+ * downloaded snapshot; the editable form, archive/delete, invites, split
+ * presets, and exports stay connection-required. Narrowing goes through the
+ * `isLoading` discriminant so `displayName`/`group` stay correctly typed.
+ */
+function OfflineGroupSettings({ groupId }: { groupId: string }) {
+  const context = useCurrentGroup()
+  const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
+  const { t: tExpenses } = useTranslation(undefined, { keyPrefix: 'Expenses' })
+  const { t: tOffline } = useTranslation()
+  if (context.isLoading || !context.group) {
+    return (
+      <OfflineNeedsConnection
+        backLabel={tGroups('backToGroups')}
+        backHref={`/groups/${groupId}`}
+      />
+    )
+  }
+  const { group, displayName } = context
+  return (
+    <div className="flex flex-col gap-3">
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            {group.emoji ? `${group.emoji} ` : null}
+            {displayName || group.name}
+          </CardTitle>
+          <CardDescription>
+            {tOffline('OfflineReadOnly.reconnectToEdit')}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-2 text-sm">
+          {group.information ? <p>{group.information}</p> : null}
+          <p className="text-muted-foreground">
+            {tExpenses('filters.currency')}: {group.currency}
+          </p>
+          {group.archived ? (
+            <p className="text-muted-foreground">{tGroups('archivedBadge')}</p>
+          ) : null}
+        </CardContent>
+      </Card>
+      {context.currentMember ? (
+        <SplitPresetsCard
+          groupId={groupId}
+          group={group}
+          canManage={false}
+          isArchived={!!group.archived}
+        />
+      ) : null}
     </div>
   )
 }

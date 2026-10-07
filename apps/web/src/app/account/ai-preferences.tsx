@@ -6,6 +6,7 @@ import {
   useSyncedAccountPreferences,
 } from '@/components/account-preferences-sync'
 import { Switch } from '@/components/ui/switch'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 import {
@@ -50,12 +51,33 @@ export function AccountAiPreferences() {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'AccountSettings.aiPreferences',
   })
-  const query = trpc.features.get.useQuery()
+  const { t: tRoot } = useTranslation()
+  const isOnline = useOnlineStatus()
+  // Deployment flags are connection-required: never launch the query offline
+  // and never spin forever on loading.
+  const query = trpc.features.get.useQuery(undefined, {
+    enabled: isOnline,
+  })
   const preferences = useSyncedAccountPreferences()
   const updater = useAccountPreferenceUpdater()
   const patchesDisabled = updater !== null && !updater.ready
 
   const deploymentFeatures = query.data as DeploymentFeatures | undefined
+
+  if (!isOnline && !deploymentFeatures) {
+    return (
+      <SettingsSection
+        id="ai-preferences"
+        title={t('title')}
+        description={t('description')}
+        icon={Sparkles as LucideIcon}
+      >
+        <p className="px-4 pb-4 text-sm text-muted-foreground sm:px-6">
+          {tRoot('OfflineReadOnly.needsConnection')}
+        </p>
+      </SettingsSection>
+    )
+  }
 
   if (!deploymentFeatures) {
     return (

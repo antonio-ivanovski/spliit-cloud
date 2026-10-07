@@ -1,6 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import {
+  Download as DownloadIcon,
   LogOut,
   MessageSquareText,
   Megaphone,
@@ -43,6 +44,10 @@ import {
 } from '@/lib/offline/provider'
 import { disconnectPushSubscription } from '@/lib/push-notifications'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import {
+  requestManualInstallOpen,
+  useInstallPrompt,
+} from '@/lib/use-install-prompt'
 import { useOnlineStatus } from '@/lib/use-online-status'
 
 export function AccountMenu() {
@@ -61,6 +66,25 @@ export function AccountMenu() {
   const [signingOut, setSigningOut] = useState(false)
   const [signOutError, setSignOutError] = useState(false)
   const [retryingCleanup, setRetryingCleanup] = useState(false)
+  const { browserSupport, installed, install } = useInstallPrompt()
+  const showInstallItem = browserSupport !== 'unsupported' && !installed
+
+  function requestInstall() {
+    setMenuOpen(false)
+    // Explicit user action: offer the system install dialog directly when
+    // supported instead of our promo. Falls back to our dialog
+    // (instructions, or uncaptured prompt) when native is unavailable.
+    // install() invokes the deferred prompt synchronously in this gesture
+    // (activation boundary); the fallback opens our dialog after the async
+    // gap, which needs no gesture.
+    if (browserSupport === 'native-install') {
+      void install().then((outcome) => {
+        if (outcome === 'unavailable') requestManualInstallOpen()
+      })
+      return
+    }
+    requestManualInstallOpen()
+  }
 
   if (isPending) {
     return (
@@ -192,6 +216,12 @@ export function AccountMenu() {
               <MessageSquareText className="me-2 h-4 w-4" />
               {t('feedback')}
             </DropdownMenuItem>
+            {showInstallItem ? (
+              <DropdownMenuItem onClick={requestInstall}>
+                <DownloadIcon className="me-2 h-4 w-4" />
+                {t('installApp')}
+              </DropdownMenuItem>
+            ) : null}
             <DropdownMenuItem render={<Link to="/updates" />}>
               <Megaphone className="me-2 h-4 w-4" />
               {tUpdates('Updates.title')}
@@ -261,6 +291,23 @@ export function AccountMenu() {
                   </Link>
                 }
               />
+              {showInstallItem ? (
+                <ResponsiveDialogClose
+                  render={
+                    <button
+                      type="button"
+                      className="flex min-h-11 items-center gap-3 rounded-lg px-3 text-start text-sm font-medium hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden"
+                      onClick={requestInstall}
+                    >
+                      <DownloadIcon
+                        className="size-5 text-muted-foreground"
+                        aria-hidden="true"
+                      />
+                      {t('installApp')}
+                    </button>
+                  }
+                />
+              ) : null}
               <button
                 type="button"
                 className="flex min-h-11 items-center gap-3 rounded-lg px-3 text-start text-sm font-medium text-destructive hover:bg-destructive/10 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden"

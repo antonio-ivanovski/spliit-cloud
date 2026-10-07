@@ -27,6 +27,7 @@ import {
   type AnonymousRecoveryKey,
   type AnonymousRecoveryRotation,
 } from '@/lib/anonymous-recovery'
+import { useOnlineStatus } from '@/lib/use-online-status'
 
 import { SettingsRow } from './settings-ui'
 
@@ -38,9 +39,13 @@ export function AnonymousAccountSettings() {
   })
   const { toast } = useToast()
   const queryClient = useQueryClient()
+  const isOnline = useOnlineStatus()
+  // Recovery status is connection-required: never launch the query offline
+  // and never leave the actions stuck on loading.
   const statusQuery = useQuery({
     queryKey: RECOVERY_STATUS_QUERY_KEY,
     queryFn: getAnonymousRecoveryStatus,
+    enabled: isOnline,
   })
   const status = statusQuery.data
   // Optimistic while loading: this row historically always managed a link.
@@ -212,7 +217,9 @@ export function AnonymousAccountSettings() {
                   variant="outline"
                   className="min-w-0 whitespace-normal"
                   onClick={() => setRemove(true)}
-                  disabled={removeDisabled || statusQuery.isPending}
+                  disabled={
+                    removeDisabled || statusQuery.isPending || !isOnline
+                  }
                 >
                   <Trash className="me-2 h-4 w-4 shrink-0" />
                   {t('remove')}
@@ -222,7 +229,7 @@ export function AnonymousAccountSettings() {
                   variant="outline"
                   className="min-w-0 whitespace-normal"
                   onClick={() => setOpen(true)}
-                  disabled={statusQuery.isPending}
+                  disabled={statusQuery.isPending || !isOnline}
                 >
                   <RefreshCw className="me-2 h-4 w-4 shrink-0" />
                   {t('replace')}
@@ -239,7 +246,7 @@ export function AnonymousAccountSettings() {
               type="button"
               variant="outline"
               onClick={() => setCreate(true)}
-              disabled={statusQuery.isPending}
+              disabled={statusQuery.isPending || !isOnline}
             >
               <Plus className="me-2 h-4 w-4" />
               {t('create')}

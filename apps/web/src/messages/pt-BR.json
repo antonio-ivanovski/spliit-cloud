@@ -1480,6 +1480,11 @@
     },
     "firefox": {
       "description": "Adicione o Spliit Cloud à sua tela inicial pelo menu do navegador."
+    },
+    "safari": {
+      "description": "Adicione o Spliit Cloud ao seu Dock para acesso com um clique.",
+      "step1": "No Safari, abra o menu Arquivo",
+      "step2": "Escolha Adicionar ao Dock e clique em Adicionar"
     }
   },
   "EmptyState": {

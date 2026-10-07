@@ -13,9 +13,27 @@ import {
   getSubgroupSettlementPlan,
 } from '@spliit/domain/subgroup-settlements'
 
-import { OFFLINE_MAX_EXPENSES } from '../../trpc/outputs/offline'
+import {
+  OFFLINE_MAX_ACTIVITIES,
+  OFFLINE_MAX_EXPENSES,
+  buildOfflineRevisionToken,
+} from '../../trpc/outputs/offline'
+import {
+  loadSharedCurrentRows,
+  output as outputBudget,
+  summary as summarizeBudget,
+} from '../../trpc/routers/groups/budgets'
+import {
+  comparePreset,
+  defaultChoice,
+  effectiveDefault,
+  mapPreset,
+  presetSelect,
+  readPreference,
+} from '../../trpc/routers/groups/split-presets'
 import { getInvitationDisplayName } from '../invitations/display'
 import { resolveParticipantDisplayName } from '../invitations/display'
+import { getActivities } from './activities'
 import { narrowCategoryId, resolveCategory } from './expenses/helpers'
 import { getGroup } from './groups'
 import { toRecurrenceConfig } from './recurrence-series'
@@ -27,6 +45,7 @@ import {
   type BalanceExpenseRow,
 } from './selects/balance-expense'
 import { participantDisplayNameSelect } from './selects/participant-display-name'
+import { scopeKeyFor } from './split-presets'
 import { mapSubgroup, subgroupWithMembersSelect } from './subgroups'
 
 type TxClient = Prisma.TransactionClient
@@ -272,6 +291,7 @@ type MembershipWithGroup = {
     createdAt: Date
     groupType: GroupType
     friendPairKey: string | null
+    offlineContentRevision: bigint
     ledger: {
       id: string
       currency: string
@@ -309,7 +329,10 @@ function resolveOfflineDisplayName(args: {
 
 function buildOfflineCatalogEntries(args: {
   memberships: MembershipWithGroup[]
-  preferences: Map<string, { starred: boolean; hidden: boolean }>
+  preferences: Map<
+    string,
+    { starred: boolean; hidden: boolean; viewerRevision: bigint }
+  >
   pendingByGroupId: Map<string, { name: string | null; email: string }>
   financialByLedgerId: Map<string, { summary: FinancialSummary }>
   accountId: string
@@ -333,10 +356,21 @@ function buildOfflineCatalogEntries(args: {
       viewerAccountId: args.accountId,
       pendingInvitation,
     })
-    const preference = args.preferences.get(group.id) ?? {
+    const storedPreference = args.preferences.get(group.id) ?? {
       starred: false,
       hidden: false,
+      viewerRevision: 0n,
     }
+    // The overview projection carries only the visible preference fields;
+    // the viewer revision feeds the revision token below.
+    const preference = {
+      starred: storedPreference.starred,
+      hidden: storedPreference.hidden,
+    }
+    const revision = buildOfflineRevisionToken({
+      contentRevision: group.offlineContentRevision,
+      viewerRevision: storedPreference.viewerRevision,
+    })
     const financialSummary =
       args.financialByLedgerId.get(group.ledger.id)?.summary ??
       ({
@@ -379,11 +413,15 @@ function buildOfflineCatalogEntries(args: {
       currencyCode: group.ledger.currencyCode,
       participantCount: group.ledger._count.participants,
     }
-    return { overview, global, groupId: group.id }
+    return { overview, global, groupId: group.id, revision }
   })
 
   entries.sort((a, b) => a.groupId.localeCompare(b.groupId))
-  return entries.map(({ overview, global }) => ({ overview, global }))
+  return entries.map(({ overview, global, revision }) => ({
+    overview,
+    global,
+    revision,
+  }))
 }
 
 const catalogMembershipSelect = {
@@ -399,6 +437,7 @@ const catalogMembershipSelect = {
       createdAt: true,
       groupType: true,
       friendPairKey: true,
+      offlineContentRevision: true,
       ledger: {
         select: {
           id: true,
@@ -427,7 +466,10 @@ async function loadCatalogBase(
   accountId: string,
 ): Promise<{
   memberships: MembershipWithGroup[]
-  preferences: Map<string, { starred: boolean; hidden: boolean }>
+  preferences: Map<
+    string,
+    { starred: boolean; hidden: boolean; viewerRevision: bigint }
+  >
   pendingByGroupId: Map<string, { name: string | null; email: string }>
   financialByLedgerId: Map<string, { summary: FinancialSummary }>
 }> {
@@ -439,12 +481,21 @@ async function loadCatalogBase(
 
   const preferenceRows = await tx.accountGroupPreference.findMany({
     where: { accountId },
-    select: { groupId: true, starred: true, hidden: true },
+    select: {
+      groupId: true,
+      starred: true,
+      hidden: true,
+      offlineViewerRevision: true,
+    },
   })
   const preferences = new Map(
     preferenceRows.map((preference) => [
       preference.groupId,
-      { starred: preference.starred, hidden: preference.hidden },
+      {
+        starred: preference.starred,
+        hidden: preference.hidden,
+        viewerRevision: preference.offlineViewerRevision,
+      },
     ]),
   )
 
@@ -570,7 +621,10 @@ async function loadSingleGroupBase(
   expenseRows: BalanceExpenseRow[],
 ): Promise<{
   memberships: MembershipWithGroup[]
-  preferences: Map<string, { starred: boolean; hidden: boolean }>
+  preferences: Map<
+    string,
+    { starred: boolean; hidden: boolean; viewerRevision: bigint }
+  >
   pendingByGroupId: Map<string, { name: string | null; email: string }>
   financialByLedgerId: Map<string, { summary: FinancialSummary }>
 }> {
@@ -582,12 +636,21 @@ async function loadSingleGroupBase(
 
   const preferenceRows = await tx.accountGroupPreference.findMany({
     where: { accountId, groupId },
-    select: { groupId: true, starred: true, hidden: true },
+    select: {
+      groupId: true,
+      starred: true,
+      hidden: true,
+      offlineViewerRevision: true,
+    },
   })
   const preferences = new Map(
     preferenceRows.map((preference) => [
       preference.groupId,
-      { starred: preference.starred, hidden: preference.hidden },
+      {
+        starred: preference.starred,
+        hidden: preference.hidden,
+        viewerRevision: preference.offlineViewerRevision,
+      },
     ]),
   )
 
@@ -744,12 +807,21 @@ function toOfflineListItem(
   }
 }
 
+type OfflineCommentProjection = {
+  id: string
+  body: string
+  createdAt: Date
+  author: { accountId: string | null; name: string; image: string | null }
+  canDelete: boolean
+}
+
 function toOfflineDetail(
   row: OfflineExpenseBulkRow,
   member: { role: 'ADMIN' | 'MEMBER' },
   accountId: string,
   archived: boolean,
   neighbors: { previousExpenseId: string | null; nextExpenseId: string | null },
+  comments: OfflineCommentProjection[],
 ) {
   return {
     id: row.id,
@@ -799,6 +871,7 @@ function toOfflineDetail(
       width: document.width,
       height: document.height,
     })),
+    comments,
     paidByList: row.paidByList.map((entry) => ({
       ledgerParticipantId: entry.ledgerParticipantId,
       shares: entry.shares,
@@ -1101,6 +1174,39 @@ export async function loadOfflineSnapshot(
     }
   }
 
+  // Comments: full history in one bulk query (same ACTIVE-viewer mapping as
+  // the comments list procedure). canDelete is a captured fact, never an
+  // offline grant.
+  const commentRows = await tx.expenseComment.findMany({
+    where: { expense: { ledgerId } },
+    orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+    select: {
+      id: true,
+      expenseId: true,
+      authorAccountId: true,
+      authorName: true,
+      authorAccount: { select: { image: true } },
+      text: true,
+      createdAt: true,
+    },
+  })
+  const commentsByExpenseId = new Map<string, OfflineCommentProjection[]>()
+  for (const comment of commentRows) {
+    const list = commentsByExpenseId.get(comment.expenseId) ?? []
+    list.push({
+      id: comment.id,
+      body: comment.text,
+      createdAt: comment.createdAt,
+      author: {
+        accountId: comment.authorAccountId,
+        name: comment.authorName,
+        image: comment.authorAccount?.image ?? null,
+      },
+      canDelete: !groupRow.archived && comment.authorAccountId === accountId,
+    })
+    commentsByExpenseId.set(comment.expenseId, list)
+  }
+
   const expenses = downloadedRows.map((row) => {
     if (row.ledgerId !== ledgerId) {
       throw new TRPCError({
@@ -1125,6 +1231,7 @@ export async function loadOfflineSnapshot(
         accountId,
         groupRow.archived,
         neighbors,
+        commentsByExpenseId.get(row.id) ?? [],
       ),
     }
   })
@@ -1156,14 +1263,170 @@ export async function loadOfflineSnapshot(
       })
     }
   }
+  const downloadedIds = new Set(ids)
+  for (const expenseId of commentsByExpenseId.keys()) {
+    if (!downloadedIds.has(expenseId)) {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Comment expense relation mismatch',
+      })
+    }
+  }
+
+  // Budgets: definitions with server-computed summaries (history included so
+  // the budget detail view renders offline). Same viewer mapping as the list
+  // procedure; the snapshot viewer is always an ACTIVE member.
+  const budgetRows = await tx.groupBudget.findMany({
+    where: { groupId },
+    orderBy: { createdAt: 'desc' },
+  })
+  const sharedBudgetRows = await loadSharedCurrentRows(budgetRows, tx)
+  const budgets = await Promise.all(
+    budgetRows.map(async (budget) => {
+      if (budget.groupId !== groupId) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Budget group relation mismatch',
+        })
+      }
+      return outputBudget(
+        budget,
+        await summarizeBudget(budget, true, sharedBudgetRows, tx),
+        {
+          role: member.role,
+          accountId,
+          groupArchived: groupRow.archived,
+        },
+      )
+    }),
+  )
+
+  // Split presets: shared presets plus the viewer's personal presets, with
+  // the same ordering and default resolution as the list procedure.
+  const presetRows = await tx.splitPreset.findMany({
+    where: {
+      groupId,
+      OR: [
+        { ownerAccountId: null, scopeKey: 'GROUP' },
+        {
+          ownerAccountId: accountId,
+          scopeKey: scopeKeyFor('PERSONAL', accountId),
+        },
+      ],
+    },
+    orderBy: [{ nameKey: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
+    select: presetSelect,
+  })
+  const preference = await readPreference(accountId, groupId, tx)
+  const paidByMode = preference?.paidByDefaultMode ?? 'INHERIT'
+  const paidForMode = preference?.paidForDefaultMode ?? 'INHERIT'
+  const groupPaidBy =
+    (groupRow as { defaultPaidByPresetId?: string | null })
+      .defaultPaidByPresetId ?? null
+  const groupPaidFor =
+    (groupRow as { defaultPaidForPresetId?: string | null })
+      .defaultPaidForPresetId ?? null
+  const defaultIds = new Set(
+    [
+      groupPaidBy,
+      groupPaidFor,
+      preference?.paidByDefaultMode === 'PRESET'
+        ? preference.paidByDefaultPresetId
+        : null,
+      preference?.paidForDefaultMode === 'PRESET'
+        ? preference.paidForDefaultPresetId
+        : null,
+    ].filter((id): id is string => !!id),
+  )
+  const orderedPresets = presetRows
+    .toSorted((left, right) => comparePreset(left, right, defaultIds))
+    .map(mapPreset)
+  const splitPresets = {
+    presets: orderedPresets,
+    canManageShared: member.role === 'ADMIN' && !groupRow.archived,
+    canManagePersonal: !groupRow.archived,
+    groupDefaults: {
+      paidByPresetId: groupPaidBy,
+      paidForPresetId: groupPaidFor,
+    },
+    personalDefaults: {
+      paidBy: defaultChoice(
+        paidByMode,
+        preference?.paidByDefaultPresetId ?? null,
+      ),
+      paidFor: defaultChoice(
+        paidForMode,
+        preference?.paidForDefaultPresetId ?? null,
+      ),
+    },
+    effectiveDefaults: {
+      paidByPresetId: effectiveDefault(
+        paidByMode,
+        preference?.paidByDefaultPresetId ?? null,
+        groupPaidBy,
+      ),
+      paidForPresetId: effectiveDefault(
+        paidForMode,
+        preference?.paidForDefaultPresetId ?? null,
+        groupPaidFor,
+      ),
+    },
+  }
+
+  // Subgroups: exact definitions with the enabled flag. The balances section
+  // already carries the settlement plan; this carries the manageable roster.
+  const subgroupRows = await tx.subgroup.findMany({
+    where: { groupId },
+    orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+    select: subgroupWithMembersSelect,
+  })
+  const subgroups = {
+    enabled:
+      (groupRow as { subgroupsEnabled?: boolean }).subgroupsEnabled ?? false,
+    subgroups: subgroupRows.map(mapSubgroup),
+  }
+
+  // Activities: recent group-feed window, newest first. Older history stays
+  // online-only; activityHasMore discloses the boundary.
+  const activityTotalCount = await tx.activity.count({
+    where: { ledgerId, visibleInGroupFeed: true },
+  })
+  const activities = await getActivities(
+    groupId,
+    { offset: 0, length: OFFLINE_MAX_ACTIVITIES },
+    tx,
+  )
+  for (const activity of activities) {
+    if (activity.ledgerId !== ledgerId) {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Activity group relation mismatch',
+      })
+    }
+  }
+  const activityHasMore = activityTotalCount > activities.length
+
+  // Coherence: every row above — including the group content revision and
+  // the viewer preference revision behind `catalogEntry.revision` — was read
+  // in this same RepeatableRead transaction, so the token identifies exactly
+  // this payload. Reusing the catalog entry token keeps one canonical
+  // composition site (buildOfflineCatalogEntries).
+  const revision = catalogEntry.revision
 
   return {
     group: groupOutput,
     overview: catalogEntry.overview,
     global: catalogEntry.global,
     balances,
+    revision,
     expenses,
     totalCount,
     downloadedCount: downloadedRows.length,
+    budgets,
+    splitPresets,
+    subgroups,
+    activities,
+    activityTotalCount,
+    activityHasMore,
   }
 }

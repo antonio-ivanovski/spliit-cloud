@@ -78,7 +78,8 @@
     "signOutTitle": "Kirjaudu ulos?",
     "signOutError": "Uloskirjautuminen ei onnistunut. Yritä uudelleen.",
     "cancel": "Peruuta",
-    "signOutOffline": "Yhdistä kirjautuaksesi ulos"
+    "signOutOffline": "Yhdistä kirjautuaksesi ulos",
+    "installApp": "Asenna sovellus"
   },
   "Footer": {
     "madeIn": "<github>Avoimen lähdekoodin yhteisön</github> rakkaudella tekemä ❤️",
@@ -2861,6 +2862,12 @@
       "description": "Lisää Spliit Cloud aloitusnäytölle selaimen valikosta.",
       "step1": "Napauta valikkopainiketta (⋮) oikeasta yläkulmasta",
       "step2": "Napauta Asenna"
+    },
+    "safari": {
+      "title": "Asenna Spliit Cloud",
+      "description": "Lisää Spliit Cloud Dockiin, jotta se avautuu yhdellä klikkauksella.",
+      "step1": "Avaa Safarissa Arkisto-valikko",
+      "step2": "Valitse Lisää Dockiin ja klikkaa Lisää"
     }
   },
   "EmptyState": {

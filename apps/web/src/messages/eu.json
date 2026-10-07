@@ -78,7 +78,8 @@
     "signOutTitle": "Saioa amaitu?",
     "signOutError": "Ezin izan da saioa amaitu. Mesedez, saiatu berriro.",
     "cancel": "Utzi",
-    "signOutOffline": "Konektatu saioa amaitzeko"
+    "signOutOffline": "Konektatu saioa amaitzeko",
+    "installApp": "Instalatu aplikazioa"
   },
   "Footer": {
     "madeIn": "<github>Kode irekiko komunitateak</github> maitasunez egina ❤️",
@@ -2876,6 +2877,12 @@
       "description": "Gehitu Spliit Cloud zure hasierako pantailan nabigatzailearen menutik.",
       "step1": "Sakatu menu-botoia (⋮) goi-eskuinean",
       "step2": "Sakatu Instalatu"
+    },
+    "safari": {
+      "title": "Instalatu Spliit Cloud",
+      "description": "Gehitu Spliit Cloud zure Dockean klik bakar batekin sartzeko.",
+      "step1": "Safarin, ireki Fitxategia menua",
+      "step2": "Aukeratu Gehitu Dockean eta sakatu Gehitu"
     }
   },
   "EmptyState": {

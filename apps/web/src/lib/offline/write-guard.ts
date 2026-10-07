@@ -1,6 +1,8 @@
 import { MutationCache } from '@tanstack/react-query'
 import type { TRPCLink } from '@trpc/client'
 
+import { checkAdmission } from '@/lib/services/admission'
+
 import { getDefaultConnectivityStore } from './connectivity'
 import type { SessionState } from './lifecycle'
 
@@ -147,19 +149,20 @@ function readNavigatorOnline(): boolean {
 }
 
 /**
- * Known-offline transport: explicit `unreachable` OR the browser reporting
- * `navigator.onLine === false`. `unknown` fails open (not proven offline) so
- * normal online startup mutations are never blocked before the first probe.
+ * Known-offline transport check. Policy lives in the admission service
+ * (lib/services/admission.ts); this wrapper keeps the guard-link and
+ * MutationCache positions while delegating to the single owner.
  */
 export function isKnownOfflineTransport(deps?: WriteGuardDeps): boolean {
   const transport = deps?.getTransport
     ? safeGetTransport(deps.getTransport)
     : readTransport()
-  if (transport === 'unreachable') return true
   const online = deps?.isNavigatorOnline
     ? safeGetNavigatorOnline(deps.isNavigatorOnline)
     : readNavigatorOnline()
-  return online === false
+  return (
+    checkAdmission({ transport, navigatorOnline: online }) === 'blocked-offline'
+  )
 }
 
 function safeGetTransport(fn: () => WriteGuardTransport): WriteGuardTransport {

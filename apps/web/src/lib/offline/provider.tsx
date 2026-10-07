@@ -1,4 +1,5 @@
 import { onlineManager, useQueryClient } from '@tanstack/react-query'
+import { Effect } from 'effect'
 import {
   createContext,
   useCallback,
@@ -11,13 +12,19 @@ import {
 } from 'react'
 
 import { getApiBaseUrl } from '@/lib/api-url'
-import { authClient, type AuthAccount } from '@/lib/auth'
+import type { AuthAccount } from '@/lib/auth'
 import {
   clearLastAccount,
   readLastAccount,
   writeLastAccount,
 } from '@/lib/last-account'
-import { isNetworkError } from '@/lib/network-error'
+import {
+  defaultPersistenceEnvironment,
+  ensurePersistentStorageOnce,
+} from '@/lib/pwa-persistence'
+import { ProbeOrchestrator } from '@/lib/services/probe-orchestrator'
+import { getPageRuntime } from '@/lib/services/runtime'
+import { SessionService } from '@/lib/services/session'
 
 import {
   getDefaultConnectivityStore,
@@ -33,7 +40,10 @@ import {
   type OfflineLifecycle,
   type SessionFetchResult,
 } from './lifecycle'
-import { clearOfflineQueryClient } from './query-worker'
+import {
+  clearOfflineQueryClient,
+  recreateOfflineWorkerIfFailed,
+} from './query-worker'
 import { createOfflineStore, type OfflineStore } from './store'
 import {
   createOfflineDownloadFetchers,
@@ -87,38 +97,52 @@ export function useOptionalOfflineStorage(): OfflineStore | null {
   return useContext(OfflineStorageContext)
 }
 
-function toSessionResult(
-  data: { user?: unknown } | null,
-  error: unknown,
-): SessionFetchResult {
-  if (data?.user && typeof data.user === 'object') {
-    return { kind: 'verified', account: data.user as AuthAccount }
-  }
-  if (data === null && (error === null || error === undefined)) {
-    // Successful get-session null revokes the read identity.
-    return { kind: 'signed-out' }
-  }
-  if (error !== null && error !== undefined) {
-    if (isNetworkError(error)) return { kind: 'network-failure', error }
-    const status =
-      (error as { status?: unknown }).status ??
-      (error as { statusCode?: unknown }).statusCode ??
-      (error as { data?: { httpStatus?: unknown } }).data?.httpStatus
-    if (typeof status === 'number' && status >= 500 && status <= 599) {
-      return { kind: 'server-failure', status }
+/**
+ * Session verification delegated to the page runtime's SessionService
+ * (better-auth SDK boundary, 8s bound, typed verdicts — see
+ * lib/services/session-integration.ts). Components keep presentation + command
+ * dispatch; orchestration lives in services.
+ *
+ * Verdict mapping preserves the lifecycle contract: only a successful null
+ * revokes the read identity; every failure shape preserves it. Caller aborts
+ * stay aborts and never touch session state.
+ */
+async function verifySessionViaService(
+  signal: AbortSignal,
+): Promise<SessionFetchResult> {
+  if (signal.aborted) return { kind: 'aborted' }
+  try {
+    const verification = await getPageRuntime().runPromise(
+      Effect.gen(function* () {
+        const service = yield* SessionService
+        return yield* service.verify({ signal })
+      }),
+    )
+    if (signal.aborted) return { kind: 'aborted' }
+    switch (verification.verdict) {
+      case 'verified':
+        return verification.account
+          ? {
+              kind: 'verified',
+              account: verification.account as unknown as AuthAccount,
+            }
+          : { kind: 'network-failure' }
+      case 'signed-out':
+        return { kind: 'signed-out' }
+      case 'preserved-unavailable':
+        return { kind: 'network-failure' }
     }
-    // Non-network, non-5xx errors preserve the read identity (never infer a
-    // verified session or a sign-out from a failed check).
-    if (
-      typeof status === 'number' &&
-      Number.isInteger(status) &&
-      status >= 400
-    ) {
-      return { kind: 'server-failure', status }
+  } catch (error) {
+    if (signal.aborted) return { kind: 'aborted' }
+    const name =
+      error && typeof error === 'object' && 'name' in error
+        ? String((error as { name: unknown }).name)
+        : ''
+    if (name === 'AbortError' || name === 'TimeoutError') {
+      return { kind: 'aborted' }
     }
     return { kind: 'network-failure', error }
   }
-  return { kind: 'network-failure' }
 }
 
 export type OfflineProviderProps = {
@@ -180,36 +204,9 @@ export function OfflineProvider(props: OfflineProviderProps) {
     if (props.lifecycle) return props.lifecycle
     if (lifecycleRef.current) return lifecycleRef.current
 
-    const verifySession = async (
-      signal: AbortSignal,
-    ): Promise<SessionFetchResult> => {
-      if (signal.aborted) return { kind: 'aborted' }
-      try {
-        // Credentialed, uncached verification with the approved 8s bound.
-        // The lifecycle races this against its own timeout; this fetch uses
-        // plain credentials (never disabled by the offline state it repairs).
-        const result = await authClient.getSession({
-          query: { disableCookieCache: true },
-          fetchOptions: { signal },
-        })
-        if (signal.aborted) return { kind: 'aborted' }
-        return toSessionResult(
-          result.data as { user?: unknown } | null,
-          result.error,
-        )
-      } catch (error) {
-        if (signal.aborted) return { kind: 'aborted' }
-        const name =
-          error && typeof error === 'object' && 'name' in error
-            ? String((error as { name: unknown }).name)
-            : ''
-        if (name === 'AbortError' || name === 'TimeoutError') {
-          return { kind: 'aborted' }
-        }
-        if (isNetworkError(error)) return { kind: 'network-failure', error }
-        return toSessionResult(null, error)
-      }
-    }
+    // Session verification runs inside the page runtime (SessionService);
+    // this closure only adapts the service verdict to the lifecycle shape.
+    const verifySession = verifySessionViaService
 
     const created = createOfflineLifecycle({
       readLastAccount,
@@ -303,6 +300,7 @@ export function OfflineProvider(props: OfflineProviderProps) {
     // On focus, recheck the control record even if messages were missed.
     const handleFocus = () => {
       void storage.recover().catch(() => undefined)
+      recreateOfflineWorkerIfFailed()
       void lifecycle.recheckOnFocus().catch(() => undefined)
       // Foreground return refreshes downloads only when the last full pass
       // is older than 5min (sync owns the rule, never polls while active).
@@ -440,6 +438,23 @@ export function OfflineProvider(props: OfflineProviderProps) {
     getLifecycleSnapshotForSync,
   )
   const syncNamespace = lifecycleSnapshotForSync.namespace
+  // Persistent storage, once after verified use: protects IndexedDB/caches
+  // from quota eviction. Chromium-only silent approval; denied/unsupported
+  // outcomes are nonblocking and never retried.
+  useEffect(() => {
+    if (lifecycleSnapshotForSync.session !== 'verified') return
+    void ensurePersistentStorageOnce({
+      environment: defaultPersistenceEnvironment(),
+      storage: (() => {
+        try {
+          return typeof localStorage === 'undefined' ? undefined : localStorage
+        } catch {
+          return undefined
+        }
+      })(),
+      navigatorRef: typeof navigator === 'undefined' ? undefined : navigator,
+    }).catch(() => undefined)
+  }, [lifecycleSnapshotForSync.session])
   const getStorageSnapshotForSync = useCallback(
     () => storage.getSnapshot(),
     [storage],
@@ -464,28 +479,12 @@ export function OfflineProvider(props: OfflineProviderProps) {
     const namespace = syncNamespace
     const repository = repositoryForSync
     const fetchers = createOfflineDownloadFetchers()
+    // Sync-engine verification shares the same service verdict; only a
+    // verified identity authorizes a download pass.
     const verify: SyncVerifyFn = async (signal) => {
       if (signal.aborted) return false
-      try {
-        const result = await authClient.getSession({
-          query: { disableCookieCache: true },
-          fetchOptions: { signal },
-        })
-        if (signal.aborted) return false
-        const mapped = toSessionResult(
-          result.data as { user?: unknown } | null,
-          result.error,
-        )
-        return mapped.kind === 'verified'
-      } catch (error) {
-        if (signal.aborted) return false
-        const name =
-          error && typeof error === 'object' && 'name' in error
-            ? String((error as { name: unknown }).name)
-            : ''
-        if (name === 'AbortError' || name === 'TimeoutError') return false
-        return false
-      }
+      const mapped = await verifySessionViaService(signal)
+      return mapped.kind === 'verified'
     }
     const created = createOfflineSync({
       namespace,
@@ -522,6 +521,17 @@ export function OfflineProvider(props: OfflineProviderProps) {
               ...event,
               nonce: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`,
             }),
+          )
+        } catch {
+          // Ignore broadcast failures.
+        }
+        try {
+          // Same-tab notification: `storage` events never fire in the
+          // sender tab, so hooks relying solely on them stay stale until
+          // the next filter/input change. Dispatch a local event so the
+          // current tab reloads global pagination immediately.
+          window.dispatchEvent(
+            new CustomEvent('spliit:offline:event-local', { detail: event }),
           )
         } catch {
           // Ignore broadcast failures.
@@ -957,18 +967,31 @@ export function useNotifyOfflineMutation(): {
 }
 
 /**
- * Explicit recovery retry for status UI: probe, verify, then reconnect the sync
- * engine. Ordinary error screens can retry without exposing cache management.
+ * Explicit recovery retry for status UI (Task 8): probe + verify through the
+ * probe orchestrator (single-flight, one classification owner feeding both the
+ * legacy store projection and AppStatus), then reconnect the sync engine.
+ * Ordinary error screens can retry without exposing cache management. The
+ * legacy connectivity.retryNow stays as the store's own entry point; this is
+ * the production driver.
  */
 export function useOfflineRetry(): {
   retry: () => Promise<boolean>
 } {
   const lifecycle = useOptionalOfflineLifecycle()
-  const connectivity =
-    useOptionalOfflineConnectivity() ?? getDefaultConnectivityStore()
   const sync = useOptionalOfflineSync()
   const retry = useCallback(async () => {
-    const reachable = await connectivity.retryNow()
+    const outcome = await getPageRuntime()
+      .runPromise(
+        Effect.gen(function* () {
+          const orchestrator = yield* ProbeOrchestrator
+          return yield* orchestrator.probeThenVerify()
+        }),
+      )
+      .catch(() => null)
+    // Only a valid liveness answer proceeds (parity with the legacy
+    // retryNow boolean): server-failure/portal answers return false without
+    // spending the session-verify bound against a known-down backend.
+    const reachable = outcome !== null && outcome.outcome === 'reachable'
     if (reachable && lifecycle) {
       await lifecycle.verifySession().catch(() => undefined)
       const verified = lifecycle.getSnapshot().session === 'verified'
@@ -980,7 +1003,7 @@ export function useOfflineRetry(): {
       return verified
     }
     return reachable
-  }, [connectivity, lifecycle, sync])
+  }, [lifecycle, sync])
   return { retry }
 }
 

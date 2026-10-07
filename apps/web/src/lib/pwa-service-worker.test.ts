@@ -14,6 +14,9 @@ describe('registerPwaServiceWorker', () => {
     await expect(registerPwaServiceWorker(container)).resolves.toBe(
       registration,
     )
-    expect(register).toHaveBeenCalledWith('/sw.js', { scope: '/' })
+    expect(register).toHaveBeenCalledWith('/sw.js', {
+      scope: '/',
+      updateViaCache: 'none',
+    })
   })
 })

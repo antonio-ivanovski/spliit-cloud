@@ -78,7 +78,8 @@
     "signOutTitle": "Abmelden?",
     "signOutError": "Konntest dich nicht abmelden. Bitte versuche es erneut.",
     "cancel": "Abbrechen",
-    "signOutOffline": "Zum Abmelden verbinden"
+    "signOutOffline": "Zum Abmelden verbinden",
+    "installApp": "App installieren"
   },
   "Footer": {
     "madeIn": "Von der <github>Open-Source-Community</github> mit Liebe gemacht ❤️",
@@ -2901,6 +2902,12 @@
       "description": "Füge Spliit Cloud über das Browser-Menü zu deinem Startbildschirm hinzu.",
       "step1": "Tippe oben rechts auf die Menü-Schaltfläche (⋮)",
       "step2": "Tippe auf Installieren"
+    },
+    "safari": {
+      "title": "Spliit Cloud installieren",
+      "description": "Füge Spliit Cloud deinem Dock hinzu, um es mit einem Klick zu öffnen.",
+      "step1": "Öffne in Safari das Menü Ablage",
+      "step2": "Wähle Zum Dock hinzufügen und klicke auf Hinzufügen"
     }
   },
   "EmptyState": {

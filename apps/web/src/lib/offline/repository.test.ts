@@ -4,15 +4,11 @@
 // Chromium, airplane-mode relaunch, two tabs, upgrade-blocked, quota) must
 // still be executed manually before release.
 import 'fake-indexeddb/auto'
-import { openDB } from 'idb'
+import { Dexie } from 'dexie'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import {
-  OFFLINE_DB_NAME,
-  OFFLINE_DB_VERSION,
-  buildNamespace,
-  type GroupRecord,
-} from './contract'
+import { OFFLINE_DB_NAME, OFFLINE_DB_VERSION, buildNamespace } from './contract'
+import { OFFLINE_DB_STORES } from './database'
 import { isQuotaError, toStatusErrorCode } from './errors'
 import { OfflineRepository } from './repository'
 
@@ -63,6 +59,7 @@ function overviewEntry(groupId: string) {
       currencyCode: 'USD',
       participantCount: 2,
     },
+    revision: 'o2.c0.v0',
   }
 }
 
@@ -72,7 +69,7 @@ function makeCatalog(
   capturedAt = new Date(),
 ) {
   return {
-    schemaVersion: 1 as const,
+    schemaVersion: 2 as const,
     accountId,
     capturedAt,
     groups: groupIds.map((groupId) => overviewEntry(groupId)),
@@ -141,6 +138,7 @@ function makeExpenseRecord(expenseId: string, expenseDate: Date) {
       createdAt,
       notes: null,
       documents: [],
+      comments: [],
       paidByList: [],
       paidFor: [],
       items: [],
@@ -167,7 +165,7 @@ function makeSnapshot(
   const expenses = opts?.expenses ?? []
   const stamp = new Date(capturedAt)
   return {
-    schemaVersion: 1 as const,
+    schemaVersion: 2 as const,
     accountId,
     groupId,
     capturedAt,
@@ -224,11 +222,28 @@ function makeSnapshot(
         individual: { suggestedSettlements: [], policy: 'standard' as const },
       },
     },
+    revision: 'o2.c0.v0',
     expenses,
     totalCount: expenses.length,
     downloadedCount: expenses.length,
     hasMore: false,
     truncatedAt: null,
+    budgets: [],
+    splitPresets: {
+      presets: [],
+      canManageShared: false,
+      canManagePersonal: false,
+      groupDefaults: { paidByPresetId: null, paidForPresetId: null },
+      personalDefaults: {
+        paidBy: { mode: 'INHERIT' as const, presetId: null },
+        paidFor: { mode: 'INHERIT' as const, presetId: null },
+      },
+      effectiveDefaults: { paidByPresetId: null, paidForPresetId: null },
+    },
+    subgroups: { enabled: false, subgroups: [] },
+    activities: [],
+    activityTotalCount: 0,
+    activityHasMore: false,
   }
 }
 
@@ -263,7 +278,11 @@ describe('offline repository', () => {
     const repo = await openRepo()
     const namespace = namespaceFor(ACCOUNT_A)
     const control = await repo.ensureControl(namespace)
-    expect(control.enabled).toBe(true)
+    expect(control).toMatchObject({
+      generation: 0,
+      dataRevision: 0,
+      revoked: false,
+    })
 
     const expenseDate = new Date('2026-09-01T12:00:00.000Z')
     const capturedAt = new Date('2026-09-10T08:30:00.000Z')
@@ -479,19 +498,12 @@ describe('offline repository', () => {
       snapshot: makeSnapshot(ACCOUNT_A, 'bad'),
     })
 
-    // Corrupt the stored payload directly, bypassing commit validation.
-    const raw = await openDB(OFFLINE_DB_NAME, OFFLINE_DB_VERSION)
-    await raw.put('groups', {
+    // Corrupt the stored group data directly, bypassing commit validation.
+    await repo.database.groupData.put({
       namespace,
       groupId: 'bad',
-      schemaVersion: 1,
-      capturedAt: new Date(),
-      storedAt: new Date(),
-      commitNonce: 'nonce-bad',
-      dirtySince: null,
-      payload: { bogus: true },
-    } as unknown as GroupRecord)
-    raw.close()
+      data: { bogus: true },
+    } as never)
 
     const bad = await repo.readGroup(namespace, 'bad')
     expect(bad.status).toBe('corrupt')
@@ -526,14 +538,12 @@ describe('offline repository', () => {
       snapshot: makeSnapshot(ACCOUNT_A, 'g1'),
     })
 
-    const raw = await openDB(OFFLINE_DB_NAME, OFFLINE_DB_VERSION)
-    await raw.put('catalog', {
+    await repo.database.catalogs.put({
       namespace,
       capturedAt: new Date(),
       groups: [{ bogus: true }],
-      schemaVersion: 1,
-    })
-    raw.close()
+      schemaVersion: 2,
+    } as never)
 
     const catalog = await repo.readCatalog(namespace)
     expect(catalog.status).toBe('corrupt')
@@ -592,13 +602,8 @@ describe('offline repository', () => {
       snapshot: makeSnapshot(ACCOUNT_A, 'g1'),
     })
 
-    const raw = await openDB(OFFLINE_DB_NAME, OFFLINE_DB_VERSION)
-    const existing = await raw.get('groups', [
-      namespace,
-      'g1',
-    ] as unknown as IDBKeyRange)
-    await raw.put('groups', { ...existing, schemaVersion: 99 })
-    raw.close()
+    const existing = await repo.database.groupMeta.get([namespace, 'g1'])
+    await repo.database.groupMeta.put({ ...existing!, schemaVersion: 99 })
 
     const unsupported = await repo.readGroup(namespace, 'g1')
     expect(unsupported).toEqual({ status: 'unsupported', schemaVersion: 99 })
@@ -622,22 +627,148 @@ describe('offline repository', () => {
     const onVersionChange = vi.fn()
     const repo = await openRepo({ onVersionChange })
 
-    const upgraded = await openDB(OFFLINE_DB_NAME, OFFLINE_DB_VERSION + 1, {
-      upgrade(db) {
-        // Keep existing stores; the version bump only exercises the
-        // versionchange/blocking path.
-        if (!db.objectStoreNames.contains('control')) {
-          db.createObjectStore('control', { keyPath: 'namespace' })
-        }
-      },
-    })
+    // A newer-client upgrade (same stores, higher declared version)
+    // exercises the versionchange/blocking path in Dexie version space.
+    // Raw IDB version numbers must not appear here: Dexie maps declared
+    // versions to IDB-level numbers internally.
+    const newer = new Dexie(OFFLINE_DB_NAME)
+    newer.version(OFFLINE_DB_VERSION + 1).stores(OFFLINE_DB_STORES)
+    await newer.open()
+    newer.close()
     // fake-indexeddb delivers versionchange asynchronously.
-    await new Promise((resolve) => setTimeout(resolve, 10))
+    await new Promise((resolve) => setTimeout(resolve, 50))
     expect(onVersionChange).toHaveBeenCalled()
-    upgraded.close()
     // The old connection was closed; avoid reusing it after this test.
     opened.splice(opened.indexOf(repo), 1)
     repo.close()
+  })
+
+  it('leaves a newer unsupported database untouched', async () => {
+    const repo = await openRepo()
+    const namespace = namespaceFor(ACCOUNT_A)
+    await repo.ensureControl(namespace)
+    await repo.replaceCatalog({
+      namespace,
+      generation: 0,
+      expectedDataRevision: 0,
+      catalog: makeCatalog(ACCOUNT_A, ['g1']),
+    })
+    await repo.commitGroup({
+      namespace,
+      generation: 0,
+      expectedDataRevision: 0,
+      snapshot: makeSnapshot(ACCOUNT_A, 'g1'),
+    })
+    repo.close()
+
+    // Simulate a newer client upgrading the database with the same stores.
+    const newer = new Dexie(OFFLINE_DB_NAME)
+    newer.version(OFFLINE_DB_VERSION + 1).stores(OFFLINE_DB_STORES)
+    await newer.open()
+    newer.close()
+
+    await expect(OfflineRepository.open()).rejects.toMatchObject({
+      code: 'schema-unsupported',
+    })
+
+    // Untouched: the newer client still reads its data back.
+    const probe = new Dexie(OFFLINE_DB_NAME)
+    probe.version(OFFLINE_DB_VERSION + 1).stores(OFFLINE_DB_STORES)
+    await probe.open()
+    await expect(probe.table('groupMeta').count()).resolves.toBe(1)
+    probe.close()
+  })
+
+  it('stores expense entities with revision metadata and reassembles the snapshot', async () => {
+    const repo = await openRepo()
+    const namespace = namespaceFor(ACCOUNT_A)
+    await repo.ensureControl(namespace)
+    await repo.replaceCatalog({
+      namespace,
+      generation: 0,
+      expectedDataRevision: 0,
+      catalog: makeCatalog(ACCOUNT_A, ['g1']),
+    })
+    const expenseDate = new Date('2026-09-01T12:00:00.000Z')
+    await repo.commitGroup({
+      namespace,
+      generation: 0,
+      expectedDataRevision: 0,
+      snapshot: makeSnapshot(ACCOUNT_A, 'g1', {
+        expenses: [
+          makeExpenseRecord('exp-2', expenseDate),
+          makeExpenseRecord('exp-1', expenseDate),
+        ],
+      }),
+    })
+
+    const meta = await repo.database.groupMeta.get([namespace, 'g1'])
+    expect(meta?.serverRevision).toBe('o2.c0.v0')
+    expect(meta?.dirtySince).toBeNull()
+    expect(meta?.lastConfirmedAt).toBeInstanceOf(Date)
+    expect(await repo.database.expenseList.count()).toBe(2)
+    expect(await repo.database.expenseDetail.count()).toBe(2)
+    // Indexed scalars serve sort orders without deserializing blobs.
+    const byDate = await repo.database.expenseList
+      .where('[namespace+groupId+expenseDateMs+createdAtMs+id]')
+      .between(
+        [namespace, 'g1', 0, 0, ''],
+        [
+          namespace,
+          'g1',
+          Number.MAX_SAFE_INTEGER,
+          Number.MAX_SAFE_INTEGER,
+          '\uffff',
+        ],
+      )
+      .primaryKeys()
+    expect(byDate).toHaveLength(2)
+
+    const group = await repo.readGroup(namespace, 'g1')
+    expect(group.status).toBe('ready')
+    if (group.status !== 'ready') throw new Error('expected group')
+    // Server order (expenseDate desc, createdAt desc, id desc) survives the
+    // entity round-trip.
+    expect(group.record.payload.expenses.map((e) => e.list.id)).toEqual([
+      'exp-2',
+      'exp-1',
+    ])
+    expect(group.record.payload.downloadedCount).toBe(2)
+    expect(group.record.payload.revision).toBe('o2.c0.v0')
+  })
+
+  it('marks groups dirty without rewriting expense history', async () => {
+    const repo = await openRepo()
+    const namespace = namespaceFor(ACCOUNT_A)
+    await repo.ensureControl(namespace)
+    await repo.replaceCatalog({
+      namespace,
+      generation: 0,
+      expectedDataRevision: 0,
+      catalog: makeCatalog(ACCOUNT_A, ['g1']),
+    })
+    await repo.commitGroup({
+      namespace,
+      generation: 0,
+      expectedDataRevision: 0,
+      snapshot: makeSnapshot(ACCOUNT_A, 'g1', {
+        expenses: [makeExpenseRecord('exp-1', new Date())],
+      }),
+    })
+
+    const before = await repo.database.expenseList.toArray()
+    const { dataRevision } = await repo.markDirty({
+      namespace,
+      generation: 0,
+      dirtyGroupIds: ['g1'],
+    })
+    expect(dataRevision).toBe(1)
+    // History rows are byte-identical; only the metadata flag moved.
+    expect(await repo.database.expenseList.toArray()).toEqual(before)
+    const meta = await repo.database.groupMeta.get([namespace, 'g1'])
+    expect(meta?.dirtySince).toBeInstanceOf(Date)
+    const group = await repo.readGroup(namespace, 'g1')
+    expect(group.status).toBe('ready')
   })
 
   it('fences stale snapshots with markDirty dataRevision', async () => {
@@ -737,7 +868,7 @@ describe('offline repository', () => {
     const control = await repo.readControl(namespace)
     expect(control?.revoked).toBe(true)
     await expect(
-      repo.enableAutomaticCaching({ namespace, generation: 1 }),
+      repo.markDirty({ namespace, generation: 1, dirtyGroupIds: [] }),
     ).rejects.toMatchObject({ code: 'namespace-revoked' })
     expect((await repo.readControl(namespace))?.revoked).toBe(true)
 
@@ -788,22 +919,15 @@ describe('offline repository', () => {
     const namespace = namespaceFor(ACCOUNT_A)
     await repo.ensureControl(namespace)
 
-    const raw = await openDB(OFFLINE_DB_NAME, OFFLINE_DB_VERSION)
-    await raw.put('catalog', {
+    await repo.database.catalogs.put({
       namespace,
       capturedAt: new Date(),
       groups: [],
-    })
-    await raw.put('groups', {
+    } as never)
+    await repo.database.groupMeta.put({
       namespace,
       groupId: 'g1',
-      capturedAt: new Date(),
-      storedAt: new Date(),
-      commitNonce: 'nonce-1',
-      dirtySince: null,
-      payload: makeSnapshot(ACCOUNT_A, 'g1'),
-    })
-    raw.close()
+    } as never)
 
     const catalog = await repo.readCatalog(namespace)
     expect(catalog.status).toBe('corrupt')
@@ -857,14 +981,12 @@ describe('offline repository', () => {
     })
 
     async function setLease(owner: string | null, until: number | null) {
-      const raw = await openDB(OFFLINE_DB_NAME, OFFLINE_DB_VERSION)
-      const current = await raw.get('control', namespace)
-      await raw.put('control', {
-        ...current,
+      const current = await repo.database.controls.get(namespace)
+      await repo.database.controls.put({
+        ...current!,
         leaseOwner: owner,
         leaseUntil: until,
       })
-      raw.close()
     }
 
     await setLease('owner-a', Date.now() + 30_000)
@@ -1044,15 +1166,107 @@ describe('offline repository', () => {
     ).rejects.toMatchObject({ code: 'invalid-payload' })
   })
 
+  it('confirms unchanged revisions without rewriting history', async () => {
+    const repo = await openRepo()
+    const namespace = namespaceFor(ACCOUNT_A)
+    await repo.ensureControl(namespace)
+    await repo.replaceCatalog({
+      namespace,
+      generation: 0,
+      expectedDataRevision: 0,
+      catalog: makeCatalog(ACCOUNT_A, ['g1']),
+    })
+    await repo.commitGroup({
+      namespace,
+      generation: 0,
+      expectedDataRevision: 0,
+      snapshot: makeSnapshot(ACCOUNT_A, 'g1', {
+        expenses: [makeExpenseRecord('exp-1', new Date())],
+      }),
+    })
+    const before = await repo.database.groupMeta.get([namespace, 'g1'])
+    const rowsBefore = await repo.database.expenseList.toArray()
+    const confirmed = await repo.confirmGroup({
+      namespace,
+      generation: 0,
+      groupId: 'g1',
+      serverRevision: 'o2.c0.v0',
+      now: new Date('2026-10-01T00:00:00.000Z'),
+    })
+    expect(confirmed).toEqual({ confirmed: true })
+    const after = await repo.database.groupMeta.get([namespace, 'g1'])
+    // Only the confirmation moves; capture, nonce, and history are pinned.
+    expect(after?.lastConfirmedAt).toEqual(new Date('2026-10-01T00:00:00.000Z'))
+    expect(after?.capturedAt.getTime()).toBe(before?.capturedAt.getTime())
+    expect(after?.commitNonce).toBe(before?.commitNonce)
+    expect(after?.serverRevision).toBe(before?.serverRevision)
+    expect(await repo.database.expenseList.toArray()).toEqual(rowsBefore)
+  })
+
+  it('refuses confirmation on changed, dirty, or fenced groups', async () => {
+    const repo = await openRepo()
+    const namespace = namespaceFor(ACCOUNT_A)
+    await repo.ensureControl(namespace)
+    await repo.replaceCatalog({
+      namespace,
+      generation: 0,
+      expectedDataRevision: 0,
+      catalog: makeCatalog(ACCOUNT_A, ['g1']),
+    })
+    await repo.commitGroup({
+      namespace,
+      generation: 0,
+      expectedDataRevision: 0,
+      snapshot: makeSnapshot(ACCOUNT_A, 'g1'),
+    })
+    // Changed token: next pass must refetch, not confirm.
+    await expect(
+      repo.confirmGroup({
+        namespace,
+        generation: 0,
+        groupId: 'g1',
+        serverRevision: 'o2.c99.v0',
+      }),
+    ).resolves.toEqual({ confirmed: false })
+    // Dirty groups are never confirmed.
+    await repo.markDirty({ namespace, generation: 0, dirtyGroupIds: ['g1'] })
+    await expect(
+      repo.confirmGroup({
+        namespace,
+        generation: 0,
+        groupId: 'g1',
+        serverRevision: 'o2.c0.v0',
+      }),
+    ).resolves.toEqual({ confirmed: false })
+    // Missing groups and stale generations fail closed.
+    await expect(
+      repo.confirmGroup({
+        namespace,
+        generation: 0,
+        groupId: 'absent',
+        serverRevision: 'o2.c0.v0',
+      }),
+    ).resolves.toEqual({ confirmed: false })
+    await expect(
+      repo.confirmGroup({
+        namespace,
+        generation: 7,
+        groupId: 'g1',
+        serverRevision: 'o2.c0.v0',
+      }),
+    ).rejects.toMatchObject({ code: 'generation-mismatch' })
+  })
+
   it('throws corrupt-record for malformed control rows', async () => {
     const repo = await openRepo()
     const namespace = namespaceFor(ACCOUNT_A)
     await repo.ensureControl(namespace)
 
-    const raw = await openDB(OFFLINE_DB_NAME, OFFLINE_DB_VERSION)
-    const existing = await raw.get('control', namespace)
-    await raw.put('control', { ...existing, generation: 'bad' })
-    raw.close()
+    const existing = await repo.database.controls.get(namespace)
+    await repo.database.controls.put({
+      ...existing!,
+      generation: 'bad',
+    } as never)
 
     await expect(
       repo.replaceCatalog({

@@ -6,6 +6,15 @@ import { isNetworkError } from '@/lib/network-error'
 /**
  * Central transport + recovery-probe store.
  *
+ * Task 8: this store is a PROJECTION fed by the single-classification reporter
+ * in services/transport-integration (reportFetchOutcomeToServices), which also
+ * feeds the AppStatus bridge. The store keeps no independent fetch
+ * classification:
+ * reportNetworkFailure/reportNetworkSuccess/reportServerResponse here only
+ * apply an already-classified outcome. Explicit recovery (Retry UI) drives the
+ * probe orchestrator (services/probe-orchestrator), not store.retryNow directly
+ * — see useOfflineRetry.
+ *
  * Owns the `transport` dimension (`unknown | reachable | unreachable`) and a
  * distinct `serverFailure` dimension (HTTP 5xx or captive-portal HTML is a
  * server response, not proof of offline). User cancellation / account-switch

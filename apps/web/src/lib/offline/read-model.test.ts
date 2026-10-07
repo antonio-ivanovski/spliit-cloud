@@ -5,6 +5,8 @@ import type { OfflineSnapshotOutput } from '@spliit/api/offline-contract'
 import type { CatalogRecord, GroupRecord } from './contract'
 import {
   OFFLINE_COPY,
+  OFFLINE_FRESHNESS_STALE_MS,
+  getOfflineFreshnessState,
   OFFLINE_INVOLVEMENT_HIDDEN_CAP,
   OFFLINE_LOCAL_PAGE_SIZE,
   applyGroupFilters,
@@ -131,7 +133,7 @@ function snapshot(
   overrides: Partial<Record<string, unknown>> = {},
 ) {
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     accountId: 'account-alice',
     groupId,
     capturedAt: BASE_TIME,
@@ -251,7 +253,7 @@ function catalogWith(
   return {
     namespace: JSON.stringify(['http://localhost:3001', 'account-alice']),
     capturedAt: BASE_TIME,
-    schemaVersion: 1,
+    schemaVersion: 2,
     groups: groups.map(({ id, hidden, archived }) => ({
       overview: {
         id,
@@ -312,6 +314,43 @@ describe('offline copy (500-cap amendment)', () => {
     )
     expect(OFFLINE_COPY.balancesStale).toBe('Balances may be out of date.')
     expect(OFFLINE_COPY.totalsIncomplete).toBe('Reconnect to update totals.')
+    expect(OFFLINE_FRESHNESS_STALE_MS).toBe(5 * 60_000)
+    const at = (iso: string) => new Date(iso)
+    // Dirty always warns, even with a fresh confirmation.
+    expect(
+      getOfflineFreshnessState({
+        dirtySince: at('2026-10-01T00:00:00.000Z'),
+        lastConfirmedAt: at('2026-10-01T00:04:00.000Z'),
+        capturedAt: at('2026-10-01T00:00:00.000Z'),
+        now: at('2026-10-01T00:04:00.000Z').getTime(),
+      }),
+    ).toBe('dirty')
+    // Aged confirmations warn; fresh ones pass.
+    expect(
+      getOfflineFreshnessState({
+        dirtySince: null,
+        lastConfirmedAt: at('2026-10-01T00:00:00.000Z'),
+        capturedAt: at('2026-10-01T00:00:00.000Z'),
+        now: at('2026-10-01T00:05:01.000Z').getTime(),
+      }),
+    ).toBe('stale')
+    expect(
+      getOfflineFreshnessState({
+        dirtySince: null,
+        lastConfirmedAt: at('2026-10-01T00:04:00.000Z'),
+        capturedAt: at('2026-10-01T00:00:00.000Z'),
+        now: at('2026-10-01T00:04:00.000Z').getTime(),
+      }),
+    ).toBe('fresh')
+    // Unprovable freshness (no capture, no confirmation) warns.
+    expect(
+      getOfflineFreshnessState({
+        dirtySince: null,
+        lastConfirmedAt: null,
+        capturedAt: null,
+        now: 0,
+      }),
+    ).toBe('stale')
     expect(OFFLINE_COPY.offlineSearchHint).toBe(
       'Offline search uses exact text; typo matching needs a connection.',
     )
@@ -897,7 +936,7 @@ describe('global union and filter options', () => {
     const usdCatalog: CatalogRecord = {
       namespace: JSON.stringify(['http://localhost:3001', 'account-alice']),
       capturedAt: BASE_TIME,
-      schemaVersion: 1,
+      schemaVersion: 2,
       groups: [
         {
           overview: {

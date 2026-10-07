@@ -78,7 +78,8 @@
     "signOutTitle": "Keluar?",
     "signOutError": "Tidak dapat keluar. Silakan coba lagi.",
     "cancel": "Batal",
-    "signOutOffline": "Hubungkan untuk keluar"
+    "signOutOffline": "Hubungkan untuk keluar",
+    "installApp": "Pasang aplikasi"
   },
   "Footer": {
     "madeIn": "Dibuat oleh <github>komunitas open-source</github> dengan cinta ❤️",
@@ -2854,6 +2855,12 @@
       "description": "Tambahkan Spliit Cloud ke layar utama dari menu browser.",
       "step1": "Ketuk tombol menu (⋮) di kanan atas",
       "step2": "Ketuk Pasang"
+    },
+    "safari": {
+      "title": "Pasang Spliit Cloud",
+      "description": "Tambahkan Spliit Cloud ke dock untuk akses sekali klik.",
+      "step1": "Di Safari, buka menu File",
+      "step2": "Pilih Tambahkan ke Dock, lalu klik Tambah"
     }
   },
   "EmptyState": {

@@ -78,7 +78,8 @@
     "signOutTitle": "Tancar la sessió?",
     "signOutError": "No s'ha pogut tancar la sessió. Si us plau, torna-ho a provar.",
     "cancel": "Cancel·la",
-    "signOutOffline": "Connecta't per tancar la sessió"
+    "signOutOffline": "Connecta't per tancar la sessió",
+    "installApp": "Instal·la l'app"
   },
   "Footer": {
     "madeIn": "Fet per la <github>comunitat de codi obert</github> amb amor ❤️",
@@ -2878,6 +2879,12 @@
       "description": "Afegeix Spliit Cloud a la pantalla d'inici des del menú del navegador.",
       "step1": "Toca el botó de menú (⋮) a la part superior dreta",
       "step2": "Toca Instal·la"
+    },
+    "safari": {
+      "title": "Instal·la Spliit Cloud",
+      "description": "Afegeix Spliit Cloud al Dock per accedir-hi amb un sol clic.",
+      "step1": "A Safari, obre el menú Fitxer",
+      "step2": "Tria Afegeix al Dock i fes clic a Afegeix"
     }
   },
   "EmptyState": {

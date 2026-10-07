@@ -5,11 +5,28 @@ import { createRoot } from 'react-dom/client'
 
 import { initI18n } from '@/i18n/setup'
 import { initPwaAppMode } from '@/lib/pwa-app-mode'
-import { startPwaUpdateManager } from '@/lib/pwa-update-manager'
+import { createPwaPageServices } from '@/lib/services/pwa-wiring'
+import { bootstrapPageRuntime } from '@/lib/services/runtime'
 import { router } from '@/router'
 
-initPwaAppMode()
-startPwaUpdateManager()
+// One page runtime before React renders. The PWA service bundle owns browser
+// listeners, update checks/coordination, notification navigation, and install
+// capture from here (single owners — no legacy singletons beside them); the
+// runtime owns their disposal (StrictMode/HMR safe, no duplicate runs).
+const pwaServices = createPwaPageServices({
+  navigate: (url) => {
+    void router.navigate({ to: url })
+  },
+})
+bootstrapPageRuntime({
+  initAppMode: initPwaAppMode,
+  startPwaServices: () => {
+    pwaServices.start()
+    return () => {
+      pwaServices.stop()
+    }
+  },
+})
 await initI18n()
 
 createRoot(document.getElementById('root')!).render(

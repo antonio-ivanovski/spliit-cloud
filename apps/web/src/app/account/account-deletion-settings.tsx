@@ -6,6 +6,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 import { SettingsRow, SettingsSection } from './settings-ui'
@@ -14,9 +15,12 @@ export function AccountDeletionSettings() {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'AccountSettings.deletion',
   })
+  const isOnline = useOnlineStatus()
+  // Deletion status is connection-required: never poll offline.
   const status = trpc.account.deletionStatus.useQuery(undefined, {
     staleTime: 30_000,
     refetchInterval: (query) => (query.state.data?.request ? 5000 : false),
+    enabled: isOnline,
   })
   return (
     <SettingsSection

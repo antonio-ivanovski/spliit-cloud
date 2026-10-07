@@ -262,7 +262,9 @@ export default function BalancesAndSettlements() {
 
   return (
     <>
-      {offlineDirtySince && (
+      {(offlineDirtySince ||
+        offline.meta.freshness === 'stale' ||
+        offline.meta.freshness === 'dirty') && (
         <PageInset className="mb-3 sm:mb-4">
           <output className="block border-s-2 border-primary/40 ps-3 text-sm text-muted-foreground">
             {tOffline('OfflineReadOnly.balancesStale')}

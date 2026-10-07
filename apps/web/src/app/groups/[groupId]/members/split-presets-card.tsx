@@ -41,6 +41,7 @@ import {
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
 import { localizeCurrencyInput } from '@/lib/currency-input'
+import { useOfflineSplitPresets } from '@/lib/offline/read-hooks'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
@@ -176,6 +177,7 @@ export function SplitPresetsCard(props: {
 }) {
   const { groupId, group, canManage, isArchived } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
+  const { t: tOffline } = useTranslation()
   const { t: schemaT } = useTranslation(undefined, {
     keyPrefix: 'SchemaErrors',
   })
@@ -184,6 +186,28 @@ export function SplitPresetsCard(props: {
   const utils = trpc.useUtils()
   const request = useIdempotentCreate()
   const query = trpc.groups.splitPresets.list.useQuery({ groupId })
+  // Offline read-only: stored presets render with captured defaults.
+  // Creation, editing, deletion, and default changes stay hidden offline.
+  const offline = useOfflineSplitPresets(groupId)
+  const useOfflineSource = !query.data && offline.meta.availability === 'ready'
+  const offlineDirtySince = useOfflineSource
+    ? ((offline.data?.dirtySince as Date | null | undefined) ?? null)
+    : null
+  const source = (useOfflineSource ? offline.data : query.data) as
+    | {
+        presets: SplitPreset[]
+        canManageShared: boolean
+        canManagePersonal: boolean
+        groupDefaults: {
+          paidByPresetId: string | null
+          paidForPresetId: string | null
+        }
+        personalDefaults: {
+          paidBy: { presetId: string | null }
+          paidFor: { presetId: string | null }
+        }
+      }
+    | undefined
   const [editor, setEditor] = useState<EditorState | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<SplitPreset | null>(null)
   const createMutation = trpc.groups.splitPresets.create.useMutation()
@@ -193,10 +217,11 @@ export function SplitPresetsCard(props: {
   const setPersonalDefault =
     trpc.groups.splitPresets.setPersonalDefault.useMutation()
 
-  const presets = query.data?.presets ?? []
+  const presets = source?.presets ?? []
   const canManageShared =
-    !isArchived && canManage && !!query.data?.canManageShared
-  const canManagePersonal = !isArchived && !!query.data?.canManagePersonal
+    !useOfflineSource && !isArchived && canManage && !!source?.canManageShared
+  const canManagePersonal =
+    !useOfflineSource && !isArchived && !!source?.canManagePersonal
   const currency: Currency = {
     code: group.currencyCode ?? '',
     symbol: group.currency,
@@ -209,14 +234,14 @@ export function SplitPresetsCard(props: {
   const personal = presets.filter((preset) => preset.scope === 'PERSONAL')
   const groupDefaultIds = new Set(
     [
-      query.data?.groupDefaults?.paidByPresetId,
-      query.data?.groupDefaults?.paidForPresetId,
+      source?.groupDefaults?.paidByPresetId,
+      source?.groupDefaults?.paidForPresetId,
     ].filter((id): id is string => !!id),
   )
   const personalDefaultIds = new Set(
     [
-      query.data?.personalDefaults.paidBy.presetId,
-      query.data?.personalDefaults.paidFor.presetId,
+      source?.personalDefaults.paidBy.presetId,
+      source?.personalDefaults.paidFor.presetId,
     ].filter((id): id is string => !!id),
   )
   const saveEditor = async () => {
@@ -570,6 +595,16 @@ export function SplitPresetsCard(props: {
                 <span className="block">
                   {t('splitPresets.descriptionDefaults')}
                 </span>
+                {useOfflineSource ? (
+                  <span className="block">
+                    {tOffline('OfflineReadOnly.reconnectToEdit')}
+                  </span>
+                ) : null}
+                {useOfflineSource && offlineDirtySince ? (
+                  <span className="block">
+                    {tOffline('OfflineReadOnly.dataStale')}
+                  </span>
+                ) : null}
               </CardDescription>
             </div>
             <div className="flex shrink-0 items-center gap-1">
@@ -596,7 +631,7 @@ export function SplitPresetsCard(props: {
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
-          {query.isLoading ? (
+          {!useOfflineSource && query.isLoading ? (
             <p className="text-sm text-muted-foreground">
               {t('splitPresets.loading')}
             </p>

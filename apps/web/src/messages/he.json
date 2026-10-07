@@ -78,7 +78,8 @@
     "signOutTitle": "לצאת?",
     "signOutError": "לא ניתן היה לצאת. אנא נסה שוב.",
     "cancel": "בטל",
-    "signOutOffline": "התחבר כדי להתנתק"
+    "signOutOffline": "התחבר כדי להתנתק",
+    "installApp": "התקן את האפליקציה"
   },
   "Footer": {
     "madeIn": "נוצר על ידי <github>קהילת הקוד הפתוח</github> באהבה ❤️",
@@ -2880,6 +2881,12 @@
       "description": "הוסף את Spliit Cloud למסך הבית מתפריט הדפדפן.",
       "step1": "הקש על כפתור התפריט (⋮) בפינה הימנית העליונה",
       "step2": "הקש על התקן"
+    },
+    "safari": {
+      "title": "התקן את Spliit Cloud",
+      "description": "הוסף את Spliit Cloud ל-Dock לגישה בלחיצה אחת.",
+      "step1": "ב-Safari, פתח את תפריט קובץ",
+      "step2": "בחר הוסף ל-Dock ולחץ על הוסף"
     }
   },
   "EmptyState": {

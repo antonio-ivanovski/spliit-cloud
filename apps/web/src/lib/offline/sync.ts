@@ -10,7 +10,7 @@ import type {
 } from '@spliit/api/offline-contract'
 import type { AppRouter } from '@spliit/api/router'
 
-import { catalogGroupIds } from './contract'
+import { catalogGroupIds, isSameOfflineRevision } from './contract'
 import { isOfflineStorageError, isQuotaError } from './errors'
 import type { OfflineRepository } from './repository'
 
@@ -127,7 +127,8 @@ export type OfflineSyncOptions = {
   isConnectivityError?: (error: unknown) => boolean
 }
 
-type SyncErrorClassification =
+/** Shared with the Effect download service (services/offline-downloads.ts). */
+export type SyncErrorClassification =
   | { kind: 'cancelled' }
   | { kind: 'revision' }
   | { kind: 'lease' }
@@ -308,7 +309,6 @@ export function classifySyncError(
     switch (error.code) {
       case 'generation-mismatch':
       case 'namespace-revoked':
-      case 'downloads-disabled':
         return { kind: 'disabled' }
       case 'revision-changed':
         return { kind: 'revision' }
@@ -321,7 +321,12 @@ export function classifySyncError(
       case 'corrupt-record':
         return { kind: 'schema', code: error.code }
       default:
-        return { kind: 'cancelled' }
+        // storage-unavailable / storage-blocked (and any future storage
+        // code): preserve the specific code so the per-group errors map
+        // never leaks the internal 'cancelled' lifecycle word. The
+        // schema kind carries the code through to errors + persisted
+        // status via toPersistedCode below.
+        return { kind: 'schema', code: error.code }
     }
   }
   if (isQuotaError(error)) return { kind: 'quota' }
@@ -378,7 +383,8 @@ function overviewRecencyMs(
 /**
  * Deterministic download order: current group first, then missing, then dirty,
  * then remaining by overview recency (newest first) with groupId tie-breaker.
- * Unsupported groups are excluded (callers surface an app-update request).
+ * Unsupported groups are excluded (callers surface an app-update request), as
+ * are unchanged groups (their tokens matched: confirmed, not downloaded).
  */
 export function orderSyncGroups(input: {
   catalog: OfflineCatalogOutput
@@ -386,8 +392,10 @@ export function orderSyncGroups(input: {
   missingGroupIds: Set<string>
   dirtyGroupIds: Set<string>
   unsupportedGroupIds?: Set<string>
+  skipGroupIds?: Set<string>
 }): string[] {
   const unsupported = input.unsupportedGroupIds ?? new Set<string>()
+  const skip = input.skipGroupIds ?? new Set<string>()
   const byId = new Map(
     input.catalog.groups.map((entry) => [entry.overview.id, entry]),
   )
@@ -403,25 +411,61 @@ export function orderSyncGroups(input: {
   const current =
     input.currentGroupId &&
     byId.has(input.currentGroupId) &&
-    !unsupported.has(input.currentGroupId)
+    !unsupported.has(input.currentGroupId) &&
+    !skip.has(input.currentGroupId)
       ? [input.currentGroupId]
       : []
   const currentSet = new Set(current)
   const missing = [...input.missingGroupIds]
-    .filter((id) => byId.has(id) && !unsupported.has(id) && !currentSet.has(id))
+    .filter(
+      (id) =>
+        byId.has(id) &&
+        !unsupported.has(id) &&
+        !skip.has(id) &&
+        !currentSet.has(id),
+    )
     .sort(byRecency)
   const missingSet = new Set([...current, ...missing])
   const dirty = [...input.dirtyGroupIds]
-    .filter((id) => byId.has(id) && !unsupported.has(id) && !missingSet.has(id))
+    .filter(
+      (id) =>
+        byId.has(id) &&
+        !unsupported.has(id) &&
+        !skip.has(id) &&
+        !missingSet.has(id),
+    )
     .sort(byRecency)
   const doneSet = new Set([...missingSet, ...dirty])
   const remaining = catalogGroupIds(input.catalog.groups)
-    .filter((id) => !unsupported.has(id) && !doneSet.has(id))
+    .filter((id) => !unsupported.has(id) && !skip.has(id) && !doneSet.has(id))
     .sort(byRecency)
   return [...current, ...missing, ...dirty, ...remaining]
 }
 
-function mergePassRequests(
+/**
+ * Map a pass classification to the persisted per-group status code. Shared with
+ * the Effect download service (services/offline-downloads.ts).
+ */
+export function toPersistedCode(
+  kind: SyncErrorClassification,
+):
+  | 'storage-unavailable'
+  | 'storage-blocked'
+  | 'quota-exceeded'
+  | 'schema-unsupported'
+  | 'invalid-payload' {
+  if (kind.kind === 'quota') return 'quota-exceeded'
+  if (kind.kind === 'schema') {
+    if (kind.code === 'invalid-payload') return 'invalid-payload'
+    if (kind.code === 'storage-blocked') return 'storage-blocked'
+    if (kind.code === 'storage-unavailable') return 'storage-unavailable'
+    return 'schema-unsupported'
+  }
+  return 'storage-unavailable'
+}
+
+/** Shared with the Effect download service (services/offline-downloads.ts). */
+export function mergePassRequests(
   existing: SyncPassRequest | null,
   next: SyncPassRequest,
 ): SyncPassRequest {
@@ -664,22 +708,6 @@ export function createOfflineSync(options: OfflineSyncOptions) {
     if (!disposed) setStatus({ isOwner: false, activity: null })
   }
 
-  function toPersistedCode(
-    kind: SyncErrorClassification,
-  ):
-    | 'storage-unavailable'
-    | 'quota-exceeded'
-    | 'schema-unsupported'
-    | 'invalid-payload' {
-    if (kind.kind === 'quota') return 'quota-exceeded'
-    if (kind.kind === 'schema') {
-      return kind.code === 'invalid-payload'
-        ? 'invalid-payload'
-        : 'schema-unsupported'
-    }
-    return 'storage-unavailable'
-  }
-
   async function recordGroupResult(
     generation: number,
     groupId: string,
@@ -769,9 +797,8 @@ export function createOfflineSync(options: OfflineSyncOptions) {
         return
       }
 
-      // Session verification authorizes automatic caching, including devices
-      // with the retired disabled preference. Revocation remains authoritative.
-      await repository.enableAutomaticCaching({ namespace, generation })
+      // Verified sessions cache automatically; revocation remains the only
+      // lifecycle gate. The retired download preference is gone.
       if (disposed || signal.aborted) return
       const lease = await acquireOwnerLease(generation, signal)
       if (!lease.ok) {
@@ -807,11 +834,8 @@ export function createOfflineSync(options: OfflineSyncOptions) {
         return
       }
       generation = controlBeforeCatalog.generation
-      if (!controlBeforeCatalog.enabled || controlBeforeCatalog.revoked) {
-        setStatus({
-          phase: controlBeforeCatalog.revoked ? 'cancelled' : 'disabled',
-          activity: null,
-        })
+      if (controlBeforeCatalog.revoked) {
+        setStatus({ phase: 'cancelled', activity: null })
         return
       }
       const catalogRevision = controlBeforeCatalog.dataRevision
@@ -955,24 +979,36 @@ export function createOfflineSync(options: OfflineSyncOptions) {
         return
       }
 
-      // Snapshot inventory for ordering: missing / dirty / remaining.
+      // Metadata inventory for ordering: missing / dirty / unchanged /
+      // remaining. Reads metadata only (never histories): a stored token
+      // equal to the published catalog token proves the history unchanged,
+      // so those groups confirm freshness below instead of downloading.
       // Unsupported schemas are never interpreted or overwritten.
       const missing = new Set<string>()
       const dirty = new Set<string>()
+      const unchanged = new Set<string>()
+      const unchangedTokens = new Map<string, string>()
       const unsupported = new Set<string>()
       const names = new Map<string, string>()
       let initialReady = 0
       for (const entry of catalog.groups) {
         const id = entry.overview.id
         names.set(id, entry.overview.displayName ?? entry.overview.name)
-        const read = await repository.readGroup(namespace, id)
+        const read = await repository.readGroupMeta(namespace, id)
         if (signal.aborted || disposed) {
           setStatus({ phase: 'cancelled', activity: null })
           return
         }
         if (read.status === 'ready') {
           initialReady += 1
-          if (read.record.dirtySince !== null) dirty.add(id)
+          if (read.record.dirtySince !== null) {
+            dirty.add(id)
+          } else if (
+            isSameOfflineRevision(read.record.serverRevision, entry.revision)
+          ) {
+            unchanged.add(id)
+            unchangedTokens.set(id, entry.revision)
+          }
         } else if (read.status === 'unsupported') {
           unsupported.add(id)
         } else {
@@ -980,6 +1016,28 @@ export function createOfflineSync(options: OfflineSyncOptions) {
         }
       }
       setStatus({ readyGroups: initialReady })
+      // Confirm unchanged tokens without expense rewrites: only
+      // `lastConfirmedAt` advances, the original capture stays pinned.
+      // Best-effort freshness (a failed confirmation retries next pass);
+      // it never fails the download pass.
+      for (const groupId of unchanged) {
+        if (disposed || signal.aborted) {
+          setStatus({ phase: 'cancelled', activity: null })
+          return
+        }
+        try {
+          await repository.confirmGroup({
+            namespace,
+            generation,
+            groupId,
+            serverRevision: unchangedTokens.get(groupId) ?? '',
+            now: new Date(now()),
+          })
+        } catch {
+          // Confirmation is advisory; the token match observed this pass
+          // already proves the data current.
+        }
+      }
       const currentGroupId = getCurrentGroupId()
 
       let ordered: string[]
@@ -1004,6 +1062,7 @@ export function createOfflineSync(options: OfflineSyncOptions) {
           missingGroupIds: targetedMissing,
           dirtyGroupIds: targetedDirty,
           unsupportedGroupIds: unsupported,
+          skipGroupIds: unchanged,
         })
       } else {
         ordered = orderSyncGroups({
@@ -1012,6 +1071,7 @@ export function createOfflineSync(options: OfflineSyncOptions) {
           missingGroupIds: missing,
           dirtyGroupIds: dirty,
           unsupportedGroupIds: unsupported,
+          skipGroupIds: unchanged,
         })
       }
 
@@ -1067,12 +1127,9 @@ export function createOfflineSync(options: OfflineSyncOptions) {
           setStatus({ phase: 'cancelled', activity: null })
           break
         }
-        if (!controlBefore.enabled || controlBefore.revoked) {
+        if (controlBefore.revoked) {
           completedAll = false
-          setStatus({
-            phase: controlBefore.revoked ? 'cancelled' : 'disabled',
-            activity: null,
-          })
+          setStatus({ phase: 'cancelled', activity: null })
           break
         }
         const expectedDataRevision = controlBefore.dataRevision

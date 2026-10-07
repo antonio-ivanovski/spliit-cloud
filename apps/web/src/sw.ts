@@ -10,6 +10,12 @@ import { NavigationRoute, registerRoute } from 'workbox-routing'
 
 import { APP_SHELL_NAVIGATION_DENYLIST } from '@/lib/pwa-navigation'
 import {
+  NOTIFICATION_NAV_ACK_TIMEOUT_MS,
+  runNotificationClickFlow,
+  toSameOriginPath,
+  waitForNavigationAck,
+} from '@/lib/pwa-notification-protocol'
+import {
   coordinatorBeginAttempt,
   coordinatorEndAttempt,
   runCoordinatedActivation,
@@ -245,14 +251,7 @@ function parsePayload(data: PushMessageData | null): PushPayload | null {
 }
 
 function safeUrl(value: string): string {
-  try {
-    const url = new URL(value, self.location.origin)
-    return url.origin === self.location.origin
-      ? `${url.pathname}${url.search}${url.hash}`
-      : '/'
-  } catch {
-    return '/'
-  }
+  return toSameOriginPath(value, self.location.origin)
 }
 
 self.addEventListener('push', (event) => {
@@ -278,23 +277,65 @@ self.addEventListener('notificationclick', (event) => {
       ? event.notification.data.url
       : '/',
   )
-  const absoluteTarget = new URL(target, self.location.origin).href
-
+  // Never navigate an existing document blindly: focus a window already
+  // showing the target, else ask the app to navigate when safe, else open
+  // another window (blocked or >2s without ack).
+  const notificationId =
+    typeof event.notification.tag === 'string' &&
+    event.notification.tag.length > 0
+      ? event.notification.tag
+      : `spliit-${Date.now().toString(36)}`
   event.waitUntil(
-    (async () => {
-      const windows = await self.clients.matchAll({
-        type: 'window',
-        includeUncontrolled: true,
-      })
-      const existing = windows.find((client): client is WindowClient =>
-        client.url.startsWith(self.location.origin),
-      )
-      if (existing) {
-        await existing.navigate(absoluteTarget)
-        await existing.focus()
-        return
-      }
-      await self.clients.openWindow(absoluteTarget)
-    })(),
+    runNotificationClickFlow(
+      {
+        matchAllWindows: async () => {
+          const windows = await self.clients.matchAll({
+            type: 'window',
+            includeUncontrolled: true,
+          })
+          return windows.map((client) => ({
+            id: client.id,
+            url: client.url,
+            focus: () =>
+              Promise.resolve().then(() =>
+                'focus' in client
+                  ? (client as WindowClient).focus()
+                  : undefined,
+              ),
+          }))
+        },
+        openWindow: (url) =>
+          self.clients.openWindow(new URL(url, self.location.origin).href),
+        requestNavigation: async (clientId, message) => {
+          const windows = await self.clients.matchAll({
+            type: 'window',
+            includeUncontrolled: true,
+          })
+          const client = windows.find((entry) => entry.id === clientId)
+          if (!client) return 'timeout'
+          const channel =
+            typeof MessageChannel !== 'undefined' ? new MessageChannel() : null
+          if (!channel) return 'timeout'
+          try {
+            client.postMessage(message, [channel.port2])
+          } catch {
+            return 'timeout'
+          }
+          return waitForNavigationAck(
+            (handler) => {
+              channel.port1.onmessage = (portEvent: MessageEvent) =>
+                handler(portEvent.data)
+              return () => channel.port1.close()
+            },
+            notificationId,
+            { timeoutMs: NOTIFICATION_NAV_ACK_TIMEOUT_MS },
+          )
+        },
+      },
+      { targetPath: target, notificationId },
+    ).then(
+      () => undefined,
+      () => undefined,
+    ),
   )
 })

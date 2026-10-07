@@ -199,6 +199,67 @@ function setupSnapshotMocks(args: {
     string,
     Array<{ id: string; recurrenceSequence: number | null }>
   >
+  comments?: Array<{
+    id: string
+    expenseId: string
+    authorAccountId: string | null
+    authorName: string
+    authorImage?: string | null
+    text: string
+    createdAt?: Date
+  }>
+  budgets?: Array<{
+    id: string
+    groupId?: string
+    ledgerId?: string
+    name?: string
+    amount?: number
+    period?: 'WEEKLY' | 'MONTHLY' | 'YEARLY' | 'CUSTOM'
+    timeZone?: string
+    customStartDate?: Date | null
+    customEndDate?: Date | null
+    categoryScope?: 'ALL' | 'SELECTED'
+    categoryNodeIds?: string[]
+    participantScope?: 'ALL' | 'SELECTED'
+    participantIds?: string[]
+    notifyTrending?: boolean
+    notifyOver?: boolean
+    archived?: boolean
+    createdByAccountId?: string
+    createdAt?: Date
+  }>
+  presets?: Array<{
+    id: string
+    name?: string
+    nameKey?: string
+    scopeKey?: string
+    ownerAccountId?: string | null
+    target?: 'PAID_BY' | 'PAID_FOR'
+    splitMode?: 'EVENLY' | 'BY_SHARES' | 'BY_PERCENTAGE'
+    participantIds?: string[]
+    createdAt?: Date
+  }>
+  snapshotSubgroups?: Array<{
+    id: string
+    name: string
+    participantIds: string[]
+  }>
+  preference?: {
+    paidByDefaultMode?: 'INHERIT' | 'PRESET' | 'NEUTRAL'
+    paidByDefaultPresetId?: string | null
+    paidForDefaultMode?: 'INHERIT' | 'PRESET' | 'NEUTRAL'
+    paidForDefaultPresetId?: string | null
+  } | null
+  activities?: Array<{
+    id: string
+    time?: Date
+    type?: string
+    actorType?: string | null
+    actorId?: string | null
+    subjectType?: string | null
+    subjectId?: string | null
+  }>
+  activityTotalCount?: number
 }) {
   const groupId = args.groupId ?? 'grp-1'
   const ledgerId = args.ledgerId ?? 'ledger-1'
@@ -322,6 +383,7 @@ function setupSnapshotMocks(args: {
         createdAt: new Date('2026-01-01T00:00:00Z'),
         groupType: 'GROUP',
         friendPairKey: null,
+        offlineContentRevision: 7n,
         ledger: {
           id: ledgerId,
           currency: '$',
@@ -338,7 +400,105 @@ function setupSnapshotMocks(args: {
   ] as never)
 
   prismaMock.expense.count.mockResolvedValue(totalCount as never)
-  prismaMock.subgroup.findMany.mockResolvedValue([] as never)
+  // New snapshot sections default to empty; individual tests override via
+  // the fixture params above.
+  prismaMock.expenseComment.findMany.mockResolvedValue(
+    (args.comments ?? []).map((comment) => ({
+      id: comment.id,
+      expenseId: comment.expenseId,
+      authorAccountId: comment.authorAccountId,
+      authorName: comment.authorName,
+      authorAccount:
+        comment.authorImage !== undefined
+          ? { image: comment.authorImage }
+          : null,
+      text: comment.text,
+      createdAt: comment.createdAt ?? new Date('2026-06-02T00:00:00Z'),
+    })) as never,
+  )
+  prismaMock.groupBudget.findMany.mockResolvedValue(
+    (args.budgets ?? []).map((budget) => ({
+      id: budget.id,
+      groupId: budget.groupId ?? groupId,
+      ledgerId: budget.ledgerId ?? ledgerId,
+      name: budget.name ?? 'Groceries',
+      amount: budget.amount ?? 50000,
+      period: budget.period ?? 'MONTHLY',
+      timeZone: budget.timeZone ?? 'UTC',
+      customStartDate: budget.customStartDate ?? null,
+      customEndDate: budget.customEndDate ?? null,
+      categoryScope: budget.categoryScope ?? 'ALL',
+      categoryNodeIds: budget.categoryNodeIds ?? [],
+      participantScope: budget.participantScope ?? 'ALL',
+      participantIds: budget.participantIds ?? [],
+      notifyTrending: budget.notifyTrending ?? false,
+      notifyOver: budget.notifyOver ?? false,
+      archived: budget.archived ?? false,
+      archivedAt: null,
+      createdByAccountId: budget.createdByAccountId ?? accountId,
+      createdAt: budget.createdAt ?? new Date('2026-01-01T00:00:00Z'),
+      updatedAt: new Date('2026-01-01T00:00:00Z'),
+    })) as never,
+  )
+  prismaMock.splitPreset.findMany.mockImplementation(async (query: unknown) => {
+    const all = (args.presets ?? []).map((preset) => ({
+      id: preset.id,
+      name: preset.name ?? `Preset ${preset.id}`,
+      nameKey: preset.nameKey ?? preset.id,
+      scopeKey: preset.scopeKey ?? 'GROUP',
+      ownerAccountId: preset.ownerAccountId ?? null,
+      createdAt: preset.createdAt ?? new Date('2026-01-01T00:00:00Z'),
+      updatedAt: new Date('2026-01-01T00:00:00Z'),
+      target: preset.target ?? 'PAID_FOR',
+      splitMode: preset.splitMode ?? 'EVENLY',
+      participants: (preset.participantIds ?? ['lp-self', 'lp-other']).map(
+        (participantId) => ({ participantId, shares: 1 }),
+      ),
+    }))
+    // Honor the viewer's where clause like the database would: shared
+    // presets plus only the requesting account's personal presets.
+    const q = query as {
+      where?: { OR?: Array<Record<string, unknown>> }
+    }
+    if (!q.where?.OR) return all as never
+    return all.filter((preset) =>
+      q.where!.OR!.some(
+        (condition) =>
+          (condition.ownerAccountId ?? null) ===
+            (preset.ownerAccountId ?? null) &&
+          condition.scopeKey === preset.scopeKey,
+      ),
+    ) as never
+  })
+  prismaMock.accountGroupPreference.findUnique.mockResolvedValue(
+    (args.preference === undefined ? null : args.preference) as never,
+  )
+  prismaMock.subgroup.findMany.mockResolvedValue(
+    (args.snapshotSubgroups ?? []).map((subgroup) => ({
+      id: subgroup.id,
+      name: subgroup.name,
+      members: subgroup.participantIds.map((ledgerParticipantId) => ({
+        ledgerParticipantId,
+      })),
+    })) as never,
+  )
+  const activityRows = (args.activities ?? []).map((activity, index) => ({
+    id: activity.id,
+    ledgerId,
+    time:
+      activity.time ?? new Date(Date.UTC(2026, 5, 10 - (index % 10), 12, 0, 0)),
+    visibleInGroupFeed: true,
+    type: activity.type ?? 'EXPENSE_CREATED',
+    actorType: activity.actorType ?? null,
+    actorId: activity.actorId ?? null,
+    subjectType: activity.subjectType ?? null,
+    subjectId: activity.subjectId ?? null,
+    data: null,
+  }))
+  prismaMock.activity.count.mockResolvedValue(
+    (args.activityTotalCount ?? activityRows.length) as never,
+  )
+  prismaMock.activity.findMany.mockResolvedValue(activityRows as never)
 
   prismaMock.expense.findMany.mockImplementation(async (query: unknown) => {
     const q = query as {
@@ -374,6 +534,16 @@ function setupSnapshotMocks(args: {
       ) as never
     }
     if (q.select && 'version' in q.select) {
+      return bulkRows as never
+    }
+    // Budget summary windows (groupExpenseListCardSelect: id + expenseDate +
+    // recurrenceSequence, no version, no orderBy) reuse the bulk rows, which
+    // carry every field the summary projection needs.
+    if (
+      q.select &&
+      'recurrenceSequence' in q.select &&
+      !('version' in q.select)
+    ) {
       return bulkRows as never
     }
     if (q.select && 'ledgerId' in q.select && !('id' in q.select)) {
@@ -433,9 +603,12 @@ describe('groups.offlineSnapshot content', () => {
       groupId: 'grp-1',
     })
 
-    expect(result.schemaVersion).toBe(1)
+    expect(result.schemaVersion).toBe(2)
     expect(result.accountId).toBe('acct-self')
     expect(result.groupId).toBe('grp-1')
+    // Same RepeatableRead inputs as the catalog entry: content revision 7,
+    // no preference row, so the snapshot token matches the catalog token.
+    expect(result.revision).toBe('o2.c7.v0')
     expect(result.capturedAt).toBeInstanceOf(Date)
     expect(result.totalCount).toBe(0)
     expect(result.downloadedCount).toBe(0)
@@ -829,5 +1002,221 @@ describe('groups.offlineSnapshot content', () => {
     for (const args of financialCalls) {
       expect(args.where?.ledgerId).toBe('ledger-1')
     }
+  })
+
+  it('attaches the full comment history to each expense detail', async () => {
+    setupSnapshotMocks({
+      bulkRows: [
+        bulkRow('ledger-1', 'lp-self', ['lp-self', 'lp-other'], {
+          id: 'exp-1',
+        }),
+      ],
+      comments: [
+        {
+          id: 'cmt-1',
+          expenseId: 'exp-1',
+          authorAccountId: 'acct-other',
+          authorName: 'Bob',
+          text: 'First!',
+          createdAt: new Date('2026-06-02T00:00:00Z'),
+        },
+        {
+          id: 'cmt-2',
+          expenseId: 'exp-1',
+          authorAccountId: 'acct-self',
+          authorName: 'Alice',
+          text: 'Agreed',
+          createdAt: new Date('2026-06-03T00:00:00Z'),
+        },
+      ],
+    })
+
+    const result = await makeCaller('acct-self').offlineSnapshot({
+      groupId: 'grp-1',
+    })
+
+    const detail = result.expenses[0]!.detail
+    expect(detail.comments).toHaveLength(2)
+    // Oldest first, matching the live list ordering.
+    expect(detail.comments.map((comment) => comment.id)).toEqual([
+      'cmt-1',
+      'cmt-2',
+    ])
+    expect(detail.comments[0]).toMatchObject({
+      body: 'First!',
+      author: { accountId: 'acct-other', name: 'Bob', image: null },
+      canDelete: false,
+    })
+    expect(detail.comments[1]).toMatchObject({
+      body: 'Agreed',
+      author: { accountId: 'acct-self', name: 'Alice', image: null },
+      canDelete: true,
+    })
+    for (const comment of detail.comments) {
+      expect(Object.keys(comment).sort()).toEqual(
+        ['author', 'body', 'canDelete', 'createdAt', 'id'].sort(),
+      )
+    }
+  })
+
+  it('rejects comments that reference unknown expenses', async () => {
+    setupSnapshotMocks({
+      bulkRows: [bulkRow('ledger-1', 'lp-self', ['lp-self'], { id: 'exp-1' })],
+      comments: [
+        {
+          id: 'cmt-orphan',
+          expenseId: 'exp-unknown',
+          authorAccountId: 'acct-other',
+          authorName: 'Bob',
+          text: 'Lost',
+        },
+      ],
+    })
+
+    await expect(
+      makeCaller('acct-self').offlineSnapshot({ groupId: 'grp-1' }),
+    ).rejects.toMatchObject({ code: 'INTERNAL_SERVER_ERROR' })
+  })
+
+  it('snapshots budgets with server-computed summaries', async () => {
+    setupSnapshotMocks({
+      bulkRows: [
+        bulkRow('ledger-1', 'lp-self', ['lp-self', 'lp-other'], {
+          id: 'exp-1',
+          amount: 10000,
+          expenseDate: new Date('2026-06-15T00:00:00Z'),
+        }),
+      ],
+      budgets: [
+        {
+          id: 'bud-1',
+          period: 'CUSTOM',
+          customStartDate: new Date('2026-06-01T00:00:00Z'),
+          customEndDate: new Date('2026-06-30T00:00:00Z'),
+        },
+      ],
+    })
+
+    const result = await makeCaller('acct-self').offlineSnapshot({
+      groupId: 'grp-1',
+    })
+
+    expect(result.budgets).toHaveLength(1)
+    const budget = result.budgets[0]!
+    expect(budget.id).toBe('bud-1')
+    expect(budget.groupId).toBe('grp-1')
+    expect(budget.summary.limit).toBe(50000)
+    expect(budget.summary.used).toBeGreaterThan(0)
+    expect(budget.summary.history).toBeDefined()
+    expect(budget.permissions).toMatchObject({
+      canEdit: true,
+      canArchive: true,
+      canDelete: true,
+    })
+  })
+
+  it('snapshots shared and personal split presets with defaults', async () => {
+    setupSnapshotMocks({
+      bulkRows: [],
+      role: 'ADMIN',
+      presets: [
+        { id: 'preset-shared', nameKey: 'shared', scopeKey: 'GROUP' },
+        {
+          id: 'preset-personal',
+          nameKey: 'personal',
+          scopeKey: 'ACCOUNT:acct-self',
+          ownerAccountId: 'acct-self',
+        },
+        {
+          id: 'preset-other',
+          nameKey: 'other',
+          scopeKey: 'ACCOUNT:acct-other',
+          ownerAccountId: 'acct-other',
+        },
+      ],
+    })
+
+    const result = await makeCaller('acct-self').offlineSnapshot({
+      groupId: 'grp-1',
+    })
+
+    // Only shared presets and the viewer's own personal presets are stored;
+    // another account's personal preset never enters the snapshot.
+    expect(result.splitPresets.presets.map((preset) => preset.id)).toEqual([
+      'preset-personal',
+      'preset-shared',
+    ])
+    expect(result.splitPresets.presets.map((preset) => preset.scope)).toEqual([
+      'PERSONAL',
+      'SHARED',
+    ])
+    expect(result.splitPresets.canManageShared).toBe(true)
+    expect(result.splitPresets.groupDefaults).toEqual({
+      paidByPresetId: null,
+      paidForPresetId: null,
+    })
+  })
+
+  it('snapshots subgroup definitions with the enabled flag', async () => {
+    setupSnapshotMocks({
+      bulkRows: [],
+      subgroupsEnabled: true,
+      snapshotSubgroups: [
+        {
+          id: 'sg-1',
+          name: 'Trip crew',
+          participantIds: ['lp-self', 'lp-other'],
+        },
+      ],
+    })
+
+    const result = await makeCaller('acct-self').offlineSnapshot({
+      groupId: 'grp-1',
+    })
+
+    expect(result.subgroups).toEqual({
+      enabled: true,
+      subgroups: [
+        {
+          id: 'sg-1',
+          name: 'Trip crew',
+          participantIds: ['lp-self', 'lp-other'],
+        },
+      ],
+    })
+  })
+
+  it('snapshots the recent activity window with a has-more disclosure', async () => {
+    setupSnapshotMocks({
+      bulkRows: [],
+      activities: [{ id: 'act-1' }, { id: 'act-2' }],
+      activityTotalCount: 5,
+    })
+
+    const result = await makeCaller('acct-self').offlineSnapshot({
+      groupId: 'grp-1',
+    })
+
+    expect(result.activities.map((activity) => activity.id)).toEqual([
+      'act-1',
+      'act-2',
+    ])
+    expect(result.activityTotalCount).toBe(5)
+    expect(result.activityHasMore).toBe(true)
+  })
+
+  it('marks the activity window complete when fully downloaded', async () => {
+    setupSnapshotMocks({ bulkRows: [] })
+
+    const result = await makeCaller('acct-self').offlineSnapshot({
+      groupId: 'grp-1',
+    })
+
+    expect(result.activities).toEqual([])
+    expect(result.activityTotalCount).toBe(0)
+    expect(result.activityHasMore).toBe(false)
+    expect(result.budgets).toEqual([])
+    expect(result.splitPresets.presets).toEqual([])
+    expect(result.subgroups).toEqual({ enabled: false, subgroups: [] })
   })
 })

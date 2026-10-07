@@ -131,7 +131,7 @@ function normalizeBudgetCategoryIds(scope: 'ALL' | 'SELECTED', ids: string[]) {
   return scope === 'SELECTED' ? normalized : []
 }
 
-async function summary(
+export async function summary(
   budget: GroupBudget,
   includeHistory = true,
   sharedCurrentRows?: ExpenseListDbRow[],
@@ -358,7 +358,10 @@ async function summary(
   }
 }
 
-async function loadSharedCurrentRows(budgets: GroupBudget[]) {
+export async function loadSharedCurrentRows(
+  budgets: GroupBudget[],
+  client: Prisma.TransactionClient | typeof prisma = prisma,
+) {
   if (budgets.length === 0) return [] as ExpenseListDbRow[]
   const bounds = budgets.map((budget) =>
     getBudgetPeriodBounds(toRule(budget), budget.archivedAt ?? new Date()),
@@ -370,7 +373,7 @@ async function loadSharedCurrentRows(budgets: GroupBudget[]) {
   const to = new Date(
     Math.max(...bounds.map((period) => period.end.getTime())) + padMs,
   )
-  return prisma.expense.findMany({
+  return client.expense.findMany({
     where: {
       ledgerId: budgets[0]!.ledgerId,
       expenseDate: { gte: from, lte: to },
@@ -379,7 +382,7 @@ async function loadSharedCurrentRows(budgets: GroupBudget[]) {
   })
 }
 
-function output(
+export function output(
   budget: GroupBudget,
   budgetSummary: Awaited<ReturnType<typeof summary>>,
   viewer: {

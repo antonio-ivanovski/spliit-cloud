@@ -2646,7 +2646,8 @@
     "signOutTitle": "Logga ut?",
     "signOutError": "Kunde inte logga ut. Försök igen.",
     "cancel": "Avbryt",
-    "signOutOffline": "Anslut för att logga ut"
+    "signOutOffline": "Anslut för att logga ut",
+    "installApp": "Installera appen"
   },
   "Homepage": {
     "title": "Dela <strong>utgifter</strong> med <strong>vänner & familj</strong>",
@@ -2740,6 +2741,12 @@
       "step1": "Tryck på Dela-knappen",
       "step2": "Scrolla ner och tryck på Lägg till på startskärmen",
       "step3": "Tryck på Lägg till i det övre högra hörnet"
+    },
+    "safari": {
+      "title": "Installera Spliit Cloud",
+      "description": "Lägg till Spliit Cloud i Dock för åtkomst med ett klick.",
+      "step1": "Öppna Arkiv-menyn i Safari",
+      "step2": "Välj Lägg till i Dock och klicka på Lägg till"
     }
   },
   "Members": {

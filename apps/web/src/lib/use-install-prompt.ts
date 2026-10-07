@@ -1,4 +1,17 @@
-import { useCallback, useEffect, useState } from 'react'
+import { Effect } from 'effect'
+import { useCallback, useEffect } from 'react'
+
+import { hasPwaUpdateBlockers } from '@/lib/pwa-update-blockers'
+import {
+  selectInstallReady,
+  type PwaInstallService,
+  type PwaInstallSnapshot,
+} from '@/lib/services/pwa-install'
+import { getPwaPageServices } from '@/lib/services/pwa-wiring'
+import {
+  createSnapshotBridge,
+  useServiceSnapshot,
+} from '@/lib/services/snapshot'
 
 /**
  * `BeforeInstallPromptEvent` is not yet in lib.dom typings — Chrome / Edge /
@@ -14,6 +27,7 @@ export type BrowserSupport =
   | 'native-install'
   | 'ios-instructions'
   | 'firefox-android-instructions'
+  | 'safari-desktop-instructions'
   | 'unsupported'
 
 export type InstallStatus =
@@ -23,33 +37,46 @@ export type InstallStatus =
   | 'installed' // launched inside the installed app window
   | 'unsupported' // no install path for this browser
 
-const DISMISS_KEY = 'spliit-pwa-install-dismissed'
-const REMIND_KEY = 'spliit-pwa-install-remind-at'
-const REMIND_DELAY_MS = 24 * 60 * 60 * 1000 // 24h
-const AUTO_OPEN_DELAY_MS = 2000
+const REMIND_DELAY_MS = 7 * 24 * 60 * 60 * 1000 // 7 days
+const AUTO_OPEN_QUIET_MS = 10_000
 
-/**
- * Display modes that prove the page runs inside its installed app window rather
- * than a regular browser tab. Which one matches depends on the platform and the
- * manifest `display` value.
- */
-const INSTALLED_DISPLAY_MODES = [
-  'fullscreen',
-  'standalone',
-  'minimal-ui',
-  'window-controls-overlay',
-  'picture-in-picture',
-] as const
+// Manual helper requests: the app menu opens the promotion dialog on demand,
+// bypassing auto-promotion cooldowns. The dialog instance subscribes. This is
+// UI event plumbing (a void fan-out), not an async coordinator: state lives in
+// the install service.
+const manualListeners = new Set<() => void>()
 
-function detectBrowserSupport(): BrowserSupport {
-  if (typeof navigator === 'undefined') return 'unsupported'
-  const ua = navigator.userAgent
+export function requestManualInstallOpen(): void {
+  for (const listener of Array.from(manualListeners)) {
+    try {
+      listener()
+    } catch {
+      // Listener failures must not break menu interaction.
+    }
+  }
+}
+
+export function subscribeManualInstallRequests(
+  listener: () => void,
+): () => void {
+  manualListeners.add(listener)
+  return () => {
+    manualListeners.delete(listener)
+  }
+}
+
+export function detectBrowserSupport(
+  userAgent = typeof navigator === 'undefined' ? '' : navigator.userAgent,
+  maxTouchPoints = typeof navigator === 'undefined'
+    ? 0
+    : (navigator.maxTouchPoints ?? 0),
+): BrowserSupport {
+  const ua = userAgent
 
   // iPadOS 13+ sends desktop Safari UA unless the user requests mobile; the
   // touch-points heuristic picks up the iPad case.
   const isIOS =
-    /iPad|iPhone|iPod/.test(ua) ||
-    (ua.includes('Mac') && navigator.maxTouchPoints > 1)
+    /iPad|iPhone|iPod/.test(ua) || (ua.includes('Mac') && maxTouchPoints > 1)
   const isAndroid = /Android/.test(ua)
   // Firefox on desktop never ships a PWA install path; only Firefox on
   // Android exposes "Install" via the browser menu.
@@ -59,214 +86,191 @@ function detectBrowserSupport(): BrowserSupport {
   // fire `beforeinstallprompt` once the manifest and browser installability
   // criteria are satisfied.
   const isChromium = /Chrome|Chromium|OPR/.test(ua) && !isFirefox
+  const isDesktopSafari =
+    /Safari/.test(ua) &&
+    !/Chrome|Chromium|OPR|Edg|Firefox/.test(ua) &&
+    !isIOS &&
+    !isAndroid
 
   if (isIOS) return 'ios-instructions'
   if (isAndroid && isFirefox) return 'firefox-android-instructions'
   if (isChromium || isEdge) return 'native-install'
+  if (isDesktopSafari) return 'safari-desktop-instructions'
   return 'unsupported'
-}
-
-function readDismissed(): boolean {
-  if (typeof localStorage === 'undefined') return false
-  return localStorage.getItem(DISMISS_KEY) === 'true'
-}
-
-function readRemindAt(): number | null {
-  if (typeof localStorage === 'undefined') return null
-  const raw = localStorage.getItem(REMIND_KEY)
-  if (!raw) return null
-  const parsed = Date.parse(raw)
-  return Number.isNaN(parsed) ? null : parsed
-}
-
-function readInstalled(): boolean {
-  if (typeof window === 'undefined') return false
-  // An installed PWA can launch in any of these display modes depending on
-  // the platform and the manifest `display` value — checking only
-  // `standalone` misses e.g. minimal-ui and window-controls-overlay launches.
-  const launchedAsApp =
-    typeof window.matchMedia === 'function' &&
-    INSTALLED_DISPLAY_MODES.some(
-      (mode) => window.matchMedia(`(display-mode: ${mode})`).matches,
-    )
-  // iOS Safari exposes its own private flag for "added to home screen".
-  const iosStandalone =
-    (navigator as Navigator & { standalone?: boolean }).standalone === true
-  // Android TWA / Play-wrapper launches carry an android-app:// referrer.
-  const twaReferrer =
-    typeof document !== 'undefined' &&
-    typeof document.referrer === 'string' &&
-    document.referrer.startsWith('android-app://')
-  return launchedAsApp || iosStandalone || twaReferrer
 }
 
 export interface UseInstallPromptResult {
   browserSupport: BrowserSupport
   /** Whether the dialog currently has anything actionable to show. */
   readyToShow: boolean
+  /** False once launched inside the installed app window. */
+  installed: boolean
   /** Whether the dialog is currently open. */
   isOpen: boolean
-  /** Open the dialog (no-op if `readyToShow` is false). */
+  /** True when the open dialog was triggered by an explicit user action. */
+  manualOpen: boolean
+  /** Open the dialog (no-op unless auto-promotion is ready). */
   open: () => void
+  /** Open the dialog on explicit user request, bypassing cooldowns. */
+  openManual: () => void
   /** Close the dialog without recording any dismissal state. */
   close: () => void
-  /** "Not now" — 24h cooldown via localStorage. */
+  /** "Not now" — 7-day cooldown via localStorage. */
   remindLater: () => void
   /** "Don't ask again" — permanent suppression via localStorage. */
   dismiss: () => void
   /**
    * Trigger the deferred prompt (native-install only). Resolves to the user
-   * choice.
+   * choice; a native dismissal cools down like "Not now".
    */
   install: () => Promise<'accepted' | 'dismissed' | 'unavailable'>
 }
 
+// Closed-state bridge for renders without a page bundle (SSR, unit tests
+// that render presentation without injecting a service). Never publishes;
+// it only satisfies the subscription hook shape.
+const CLOSED_SNAPSHOT: PwaInstallSnapshot = {
+  browserSupport: 'unsupported',
+  eligible: false,
+  installed: false,
+  promptCaptured: false,
+  dismissed: false,
+  remindAt: null,
+  isOpen: false,
+  manualOpen: false,
+}
+const CLOSED_BRIDGE = createSnapshotBridge(CLOSED_SNAPSHOT)
+
+function resolveInstallService(
+  injected?: PwaInstallService,
+): PwaInstallService | null {
+  if (injected) return injected
+  try {
+    return getPwaPageServices()?.install ?? null
+  } catch {
+    return null
+  }
+}
+
 /**
- * Drives the install promotion dialog. Combines: - UA-based browser support
- * detection - The `beforeinstallprompt` / `appinstalled` window events - The
- * current display mode (already-installed check) - Two localStorage flags for
- * the user's dismiss / remind preferences
+ * Thin presentation binding over the page install service (Task 8).
  *
- * The hook never opens the dialog itself; it exposes `readyToShow` so the
- * component can decide when (and whether) to pop it.
+ * Native-prompt capture, eligibility, suppression, and promotion gating live
+ * ONLY in PwaInstallService (page bundle, started in main.tsx before React
+ * renders). This hook owns no listeners, no timers, no module capture state: it
+ * subscribes to the service bridge and runs its (synchronous, infallible)
+ * command Effects directly — Promise conversion at the React boundary only.
+ *
+ * The optional service parameter is the test seam (fresh instances per test, no
+ * reset globals); production callers omit it and resolve the page bundle.
+ * Without a bundle the hook renders a closed state and every command no-ops.
+ *
+ * The ACTIVATION BOUNDARY is preserved: install() takes the deferred prompt and
+ * invokes prompt.prompt() DIRECTLY in the gesture callback, then adopts the
+ * userChoice outcome into the service. No async scheduling runs before
+ * invocation.
+ *
+ * Module note: services/pwa-install imports the pure helpers above (detection,
+ * timing, blockers) while this module resolves the service through
+ * services/pwa-wiring. All cross-module uses are deferred (inside factories,
+ * effects, and renders), so the cycle never observes a half-initialized
+ * binding.
  */
-export function useInstallPrompt(): UseInstallPromptResult {
-  const browserSupport = detectBrowserSupport()
-  const [deferredPrompt, setDeferredPrompt] =
-    useState<BeforeInstallPromptEvent | null>(null)
-  const [installed, setInstalled] = useState<boolean>(readInstalled)
-  const [dismissed, setDismissed] = useState<boolean>(readDismissed)
-  const [remindAt, setRemindAt] = useState<number | null>(readRemindAt)
-  const [isOpen, setIsOpen] = useState(false)
+export function useInstallPrompt(
+  injected?: PwaInstallService,
+): UseInstallPromptResult {
+  const service = resolveInstallService(injected)
+  const snapshot = useServiceSnapshot(
+    service?.bridge ?? CLOSED_BRIDGE,
+    (current) => current,
+  )
 
-  // beforeinstallprompt only ever fires on Chromium-class browsers.
-  // We also listen for `appinstalled` so we can clear any persisted
-  // dismissal state when the user installs from the browser UI directly.
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-
-    const handleBeforeInstallPrompt = (event: Event) => {
-      event.preventDefault()
-      setDeferredPrompt(event as BeforeInstallPromptEvent)
-    }
-    const handleAppInstalled = () => {
-      setInstalled(true)
-      setDeferredPrompt(null)
-      try {
-        localStorage.removeItem(DISMISS_KEY)
-        localStorage.removeItem(REMIND_KEY)
-      } catch {
-        // localStorage may be unavailable (e.g. disabled cookies); not fatal.
-      }
-    }
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-    window.addEventListener('appinstalled', handleAppInstalled)
-    // If the page moves into an installed display mode while open (install
-    // completed in another tab, browser UI install), suppress from now on.
-    // One-way: leaving the app window mid-session must not re-arm the promo.
-    const handleDisplayModeChange = () => {
-      if (readInstalled()) setInstalled(true)
-    }
-    const modeQueries =
-      typeof window.matchMedia === 'function'
-        ? INSTALLED_DISPLAY_MODES.map((mode) =>
-            window.matchMedia(`(display-mode: ${mode})`),
-          )
-        : []
-    for (const query of modeQueries) {
-      if (typeof query.addEventListener === 'function') {
-        query.addEventListener('change', handleDisplayModeChange)
-      }
-    }
-    return () => {
-      window.removeEventListener(
-        'beforeinstallprompt',
-        handleBeforeInstallPrompt,
-      )
-      window.removeEventListener('appinstalled', handleAppInstalled)
-      for (const query of modeQueries) {
-        if (typeof query.removeEventListener === 'function') {
-          query.removeEventListener('change', handleDisplayModeChange)
-        }
-      }
-    }
+  const run = useCallback((effect: Effect.Effect<unknown>): void => {
+    // Service commands are synchronous and infallible by contract; a
+    // rejection here is a defect backstop, never user-visible state.
+    void Effect.runPromise(effect).catch(() => undefined)
   }, [])
 
-  // Drive auto-open: when conditions first become favourable, schedule the
-  // dialog to open after a brief delay so the page has time to settle.
-  // Re-runs whenever any gate flips on.
-  const inRemindLater =
-    remindAt !== null &&
-    // oxlint-disable-next-line react/purity -- current time is intentionally sampled during render for the reminder gate.
-    Date.now() < remindAt
-      ? remindAt
-      : null
+  // Manual helper requests bypass auto-promotion cooldowns but never an
+  // installed state (the service guards both).
+  useEffect(() => {
+    if (!service) return
+    return subscribeManualInstallRequests(() => {
+      run(service.openManual)
+    })
+  }, [service, run])
 
-  const readyToShow =
-    browserSupport !== 'unsupported' &&
-    !installed &&
-    !dismissed &&
-    inRemindLater === null &&
-    // For native install we wait for `beforeinstallprompt` to fire before
-    // showing anything — without it the Install button has nothing to do.
-    (browserSupport !== 'native-install' || deferredPrompt !== null)
+  // oxlint-disable-next-line react/purity -- current time is intentionally sampled during render for the reminder gate.
+  const readyToShow = service ? selectInstallReady(snapshot, Date.now()) : false
 
   // Auto-close: when conditions flip off (install completes, user dismisses,
-  // remind-later kicks in, …) the open dialog must follow.
+  // remind-later kicks in, …) the open dialog must follow. Manual helper
+  // opens are exempt: the user explicitly asked.
+  const isOpen = snapshot.isOpen
+  const manualOpen = snapshot.manualOpen
   useEffect(() => {
-    if (!readyToShow && isOpen) {
-      // oxlint-disable-next-line react/set-state-in-effect -- close when install eligibility disappears.
-      setIsOpen(false)
+    if (!service) return
+    if (!readyToShow && isOpen && !manualOpen) {
+      run(service.close)
     }
-  }, [readyToShow, isOpen])
+  }, [service, readyToShow, isOpen, manualOpen, run])
 
   const open = useCallback(() => {
-    if (!readyToShow) return
-    setIsOpen(true)
-  }, [readyToShow])
+    if (service) run(service.open)
+  }, [service, run])
 
-  const close = useCallback(() => setIsOpen(false), [])
+  const openManual = useCallback(() => {
+    if (service) run(service.openManual)
+  }, [service, run])
+
+  const close = useCallback(() => {
+    if (service) run(service.close)
+  }, [service, run])
 
   const install = useCallback(async (): Promise<
     'accepted' | 'dismissed' | 'unavailable'
   > => {
-    if (!deferredPrompt) return 'unavailable'
-    await deferredPrompt.prompt()
-    const choice = await deferredPrompt.userChoice
-    setDeferredPrompt(null)
-    if (choice.outcome === 'accepted') {
-      setInstalled(true)
+    if (!service) return 'unavailable'
+    const prompt = service.takePromptForGesture()
+    if (!prompt) {
+      await Effect.runPromise(service.reportPromptUnavailable).catch(
+        () => undefined,
+      )
+      return 'unavailable'
     }
-    return choice.outcome
-  }, [deferredPrompt])
+    try {
+      await prompt.prompt()
+      const choice = await prompt.userChoice
+      await Effect.runPromise(
+        service.reportPromptOutcome(choice.outcome),
+      ).catch(() => undefined)
+      return choice.outcome
+    } catch {
+      // A throwing prompt (detached event, restricted storage) behaves
+      // like an unavailable native path, never a crash.
+      await Effect.runPromise(service.reportPromptUnavailable).catch(
+        () => undefined,
+      )
+      return 'unavailable'
+    }
+  }, [service])
 
   const remindLater = useCallback(() => {
-    const next = Date.now() + REMIND_DELAY_MS
-    try {
-      localStorage.setItem(REMIND_KEY, new Date(next).toISOString())
-    } catch {
-      // localStorage may be disabled; the in-memory state still applies.
-    }
-    setRemindAt(next)
-    setIsOpen(false)
-  }, [])
+    if (service) run(service.remindLater)
+  }, [service, run])
 
   const dismiss = useCallback(() => {
-    try {
-      localStorage.setItem(DISMISS_KEY, 'true')
-    } catch {
-      // ignore
-    }
-    setDismissed(true)
-    setIsOpen(false)
-  }, [])
+    if (service) run(service.dismiss)
+  }, [service, run])
 
   return {
-    browserSupport,
+    browserSupport: snapshot.browserSupport,
     readyToShow,
+    installed: snapshot.installed,
     isOpen,
+    manualOpen,
     open,
+    openManual,
     close,
     remindLater,
     dismiss,
@@ -275,9 +279,29 @@ export function useInstallPrompt(): UseInstallPromptResult {
 }
 
 /**
- * Helper used by tests to introspect / reset the auto-open delay without
+ * Idle-gated auto-open delay and cooldown introspection for tests, without
  * importing internal module state.
  */
 export const INSTALL_PROMPT_TIMING = {
-  AUTO_OPEN_DELAY_MS,
+  AUTO_OPEN_QUIET_MS,
+  REMIND_DELAY_MS,
 } as const
+
+/**
+ * Whether routine update work must wait: unfinished-work blockers OR the user
+ * was recently active. Shared by the promotion auto-open path.
+ */
+export function shouldDeferPromotionForActivity(
+  lastActivityAt: number,
+  now: number = Date.now(),
+): boolean {
+  return now - lastActivityAt < AUTO_OPEN_QUIET_MS
+}
+
+export function isPromotionBlockedByWork(): boolean {
+  try {
+    return hasPwaUpdateBlockers()
+  } catch {
+    return false
+  }
+}

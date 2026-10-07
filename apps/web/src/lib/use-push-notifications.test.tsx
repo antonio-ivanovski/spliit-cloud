@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen, waitFor } from '@/test/test-utils'
 
 const mocks = vi.hoisted(() => ({
+  getPushRegistration: vi.fn(),
   getPushSubscription: vi.fn(),
   subscribeToPush: vi.fn(),
   serializePushSubscription: vi.fn(),
@@ -15,6 +16,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('@/lib/push-notifications', () => ({
   disconnectPushSubscription: vi.fn(),
+  getPushRegistration: mocks.getPushRegistration,
   getPushSubscription: mocks.getPushSubscription,
   isIosHomeScreenRequired: () => false,
   isPushSupported: () => true,
@@ -100,6 +102,7 @@ describe('usePushNotifications synchronization', () => {
         return true
       }),
     } as unknown as PushSubscription
+    mocks.getPushRegistration.mockImplementation(async () => ({}))
     mocks.getPushSubscription.mockImplementation(
       async () => browserSubscription,
     )

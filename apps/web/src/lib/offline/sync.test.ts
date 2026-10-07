@@ -1,8 +1,8 @@
 import 'fake-indexeddb/auto'
-import { openDB } from 'idb'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { buildNamespace, OFFLINE_DB_NAME, OFFLINE_DB_VERSION } from './contract'
+import { buildNamespace } from './contract'
+import { OfflineStorageError } from './errors'
 import { OfflineRepository } from './repository'
 import {
   OFFLINE_SYNC_FOREGROUND_STALE_MS,
@@ -10,7 +10,9 @@ import {
   OFFLINE_SYNC_MAX_RETRY_AFTER_MS,
   classifySyncError,
   createOfflineSync,
+  orderSyncGroups,
   parseRetryAfterMs,
+  toPersistedCode,
 } from './sync'
 
 const API_ORIGIN = 'http://localhost:3001'
@@ -20,7 +22,11 @@ function namespaceFor(accountId: string = ACCOUNT): string {
   return buildNamespace(API_ORIGIN, accountId)
 }
 
-function overviewEntry(groupId: string, latest: string | null = null) {
+function overviewEntry(
+  groupId: string,
+  latest: string | null = null,
+  revision = 'o2.c0.v0',
+) {
   return {
     overview: {
       id: groupId,
@@ -59,6 +65,7 @@ function overviewEntry(groupId: string, latest: string | null = null) {
       currencyCode: 'USD',
       participantCount: 2,
     },
+    revision,
   }
 }
 
@@ -66,12 +73,15 @@ function makeCatalog(
   accountId: string,
   groupIds: string[],
   recency?: Record<string, string | null>,
+  revisions?: Record<string, string>,
 ) {
   return {
-    schemaVersion: 1 as const,
+    schemaVersion: 2 as const,
     accountId,
     capturedAt: new Date(),
-    groups: groupIds.map((id) => overviewEntry(id, recency?.[id] ?? null)),
+    groups: groupIds.map((id) =>
+      overviewEntry(id, recency?.[id] ?? null, revisions?.[id]),
+    ),
   }
 }
 
@@ -137,6 +147,7 @@ function makeExpenseRecord(expenseId: string) {
       createdAt: stamp,
       notes: null,
       documents: [],
+      comments: [],
       paidByList: [],
       paidFor: [],
       items: [],
@@ -159,7 +170,7 @@ function makeSnapshot(
   const capturedAt = new Date()
   const stamp = new Date(capturedAt)
   return {
-    schemaVersion: 1 as const,
+    schemaVersion: 2 as const,
     accountId,
     groupId,
     capturedAt,
@@ -216,11 +227,28 @@ function makeSnapshot(
         individual: { suggestedSettlements: [], policy: 'standard' as const },
       },
     },
+    revision: 'o2.c0.v0',
     expenses: expenseIds.map((id) => makeExpenseRecord(id)),
     totalCount: expenseIds.length,
     downloadedCount: expenseIds.length,
     hasMore: false,
     truncatedAt: null,
+    budgets: [],
+    splitPresets: {
+      presets: [],
+      canManageShared: false,
+      canManagePersonal: false,
+      groupDefaults: { paidByPresetId: null, paidForPresetId: null },
+      personalDefaults: {
+        paidBy: { mode: 'INHERIT' as const, presetId: null },
+        paidFor: { mode: 'INHERIT' as const, presetId: null },
+      },
+      effectiveDefaults: { paidByPresetId: null, paidForPresetId: null },
+    },
+    subgroups: { enabled: false, subgroups: [] },
+    activities: [],
+    activityTotalCount: 0,
+    activityHasMore: false,
   }
 }
 
@@ -516,7 +544,8 @@ describe('automatic caching', () => {
         namespace,
         repository: repo,
         verifySession: async () => true,
-        fetchCatalog: async () => makeCatalog(ACCOUNT, ['g1']),
+        fetchCatalog: async () =>
+          makeCatalog(ACCOUNT, ['g1'], undefined, { g1: 'o2.c1.v0' }),
         fetchSnapshot,
       }),
     )
@@ -531,61 +560,48 @@ describe('automatic caching', () => {
     expect(saved.record.payload.expenses[0]?.list.id).toBe('original')
   })
 
-  it.each([true, false])(
-    'caches all groups after verification with legacy enabled=%s',
-    async (enabled) => {
-      const repo = await openRepo()
-      const namespace = namespaceFor()
-      await repo.ensureControl(namespace)
-      await repo.commitGroup({
-        namespace,
-        generation: 0,
-        expectedDataRevision: 0,
-        snapshot: makeSnapshot(ACCOUNT, 'g1', ['saved']),
-      })
-      const raw = await openDB(OFFLINE_DB_NAME, OFFLINE_DB_VERSION)
-      const original = await raw.get('control', namespace)
-      await raw.put('control', { ...original, enabled })
-      raw.close()
-      const sync = trackSync(
-        createOfflineSync({
-          namespace,
-          repository: repo,
-          verifySession: async () => true,
-          fetchCatalog: async () => makeCatalog(ACCOUNT, ['g1', 'g2']),
-          fetchSnapshot: async (id) => {
-            if (id === 'g1') {
-              const saved = await repo.readGroup(namespace, id)
-              expect(saved.status).toBe('ready')
-              if (saved.status !== 'ready')
-                throw new Error('Expected preserved snapshot')
-              expect(saved.record.payload.expenses[0]?.list.id).toBe('saved')
-            }
-            return makeSnapshot(ACCOUNT, id)
-          },
-        }),
-      )
-      await sync.handleLaunch()
-      expect(sync.getStatus().phase).toBe('done')
-      expect((await repo.readGroup(namespace, 'g1')).status).toBe('ready')
-      expect((await repo.readGroup(namespace, 'g2')).status).toBe('ready')
-      expect((await repo.readControl(namespace))?.generation).toBe(
-        original.generation,
-      )
-      expect((await repo.readControl(namespace))?.enabled).toBe(true)
-    },
-  )
-
-  it('does not normalize disabled storage before successful verification', async () => {
+  it('caches all groups after verification', async () => {
     const repo = await openRepo()
     const namespace = namespaceFor()
     await repo.ensureControl(namespace)
-    const raw = await openDB(OFFLINE_DB_NAME, OFFLINE_DB_VERSION)
-    await raw.put('control', {
-      ...(await raw.get('control', namespace)),
-      enabled: false,
+    const original = await repo.readControl(namespace)
+    await repo.commitGroup({
+      namespace,
+      generation: 0,
+      expectedDataRevision: 0,
+      snapshot: makeSnapshot(ACCOUNT, 'g1', ['saved']),
     })
-    raw.close()
+    const sync = trackSync(
+      createOfflineSync({
+        namespace,
+        repository: repo,
+        verifySession: async () => true,
+        fetchCatalog: async () => makeCatalog(ACCOUNT, ['g1', 'g2']),
+        fetchSnapshot: async (id) => {
+          if (id === 'g1') {
+            const saved = await repo.readGroup(namespace, id)
+            expect(saved.status).toBe('ready')
+            if (saved.status !== 'ready')
+              throw new Error('Expected preserved snapshot')
+            expect(saved.record.payload.expenses[0]?.list.id).toBe('saved')
+          }
+          return makeSnapshot(ACCOUNT, id)
+        },
+      }),
+    )
+    await sync.handleLaunch()
+    expect(sync.getStatus().phase).toBe('done')
+    expect((await repo.readGroup(namespace, 'g1')).status).toBe('ready')
+    expect((await repo.readGroup(namespace, 'g2')).status).toBe('ready')
+    expect((await repo.readControl(namespace))?.generation).toBe(
+      original?.generation,
+    )
+  })
+
+  it('does not fetch before successful verification', async () => {
+    const repo = await openRepo()
+    const namespace = namespaceFor()
+    await repo.ensureControl(namespace)
     const fetchCatalog = vi.fn()
     const sync = trackSync(
       createOfflineSync({
@@ -597,7 +613,6 @@ describe('automatic caching', () => {
       }),
     )
     await sync.handleLaunch()
-    expect((await repo.readControl(namespace))?.enabled).toBe(false)
     expect(fetchCatalog).not.toHaveBeenCalled()
   })
 })
@@ -607,7 +622,9 @@ describe('offline sync fencing', () => {
     const repo = await openRepo()
     const namespace = namespaceFor()
     await repo.ensureControl(namespace)
-    const catalog = makeCatalog(ACCOUNT, ['g1'])
+    const catalog = makeCatalog(ACCOUNT, ['g1'], undefined, {
+      g1: 'o2.c1.v0',
+    })
     await repo.replaceCatalog({
       namespace,
       generation: 0,
@@ -674,7 +691,9 @@ describe('offline sync fencing', () => {
     const repo = await openRepo()
     const namespace = namespaceFor()
     await repo.ensureControl(namespace)
-    const catalog = makeCatalog(ACCOUNT, ['g1'])
+    const catalog = makeCatalog(ACCOUNT, ['g1'], undefined, {
+      g1: 'o2.c1.v0',
+    })
     await repo.replaceCatalog({
       namespace,
       generation: 0,
@@ -765,14 +784,12 @@ describe('offline sync fencing', () => {
     // g2 fetch starts only after g1 committed, so stealing now fences g2.
     await g2FetchStarted
     // Intruder steals the lease inside the same generation.
-    const raw = await openDB(OFFLINE_DB_NAME, OFFLINE_DB_VERSION)
-    const control = await raw.get('control', namespace)
-    await raw.put('control', {
-      ...control,
+    const control = await repo.database.controls.get(namespace)
+    await repo.database.controls.put({
+      ...control!,
       leaseOwner: 'intruder-tab',
       leaseUntil: Date.now() + 30_000,
     })
-    raw.close()
 
     releaseG2(makeSnapshot(ACCOUNT, 'g2'))
     await pass
@@ -1213,7 +1230,11 @@ describe('offline sync triggers, visibility, and classification', () => {
     expect(fetched).toEqual(['g2'])
     fetched.length = 0
     await sync.handleMutationSuccess()
-    expect([...fetched].sort()).toEqual(['g1', 'g2', 'g3'])
+    // g2 is unchanged since the targeted pass: its history is skipped and
+    // only its confirmation advances; missing g1/g3 still download.
+    expect([...fetched].sort()).toEqual(['g1', 'g3'])
+    const g2 = await repo.readGroup(namespace, 'g2')
+    expect(g2.status).toBe('ready')
   })
 
   it('handleWriteUnknownOutcome refreshes reads without replaying the write', async () => {
@@ -1237,10 +1258,91 @@ describe('offline sync triggers, visibility, and classification', () => {
     await sync.handleWriteUnknownOutcome({ groupIds: ['g1'] })
     // Targeted refresh only, no write replay (no throw, only reads fetched).
     expect(fetched).toEqual(['g1'])
+    const before = await repo.database.groupMeta.get([namespace, 'g1'])
     expect((await repo.readGroup(namespace, 'g1')).status).toBe('ready')
     fetched.length = 0
     await sync.handleWriteUnknownOutcome()
+    // g1 unchanged since the targeted pass: confirmed, not refetched.
+    expect([...fetched].sort()).toEqual(['g2'])
+    const after = await repo.database.groupMeta.get([namespace, 'g1'])
+    expect(after?.serverRevision).toBe(before?.serverRevision)
+    expect(after?.capturedAt.getTime()).toBe(before?.capturedAt.getTime())
+    expect(after?.lastConfirmedAt?.getTime() ?? 0).toBeGreaterThanOrEqual(
+      before?.lastConfirmedAt?.getTime() ?? 0,
+    )
+  })
+
+  it('skips histories for unchanged groups and confirms freshness', async () => {
+    const repo = await openRepo()
+    const namespace = namespaceFor()
+    await repo.ensureControl(namespace)
+    const catalog = makeCatalog(ACCOUNT, ['g1', 'g2'])
+    const fetched: string[] = []
+    const sync = trackSync(
+      createOfflineSync({
+        namespace,
+        repository: repo,
+        verifySession: async () => true,
+        fetchCatalog: async () => catalog,
+        fetchSnapshot: async (groupId: string) => {
+          fetched.push(groupId)
+          return makeSnapshot(ACCOUNT, groupId)
+        },
+      }),
+    )
+    await sync.handleLaunch()
     expect([...fetched].sort()).toEqual(['g1', 'g2'])
+    const firstMeta = await repo.database.groupMeta.get([namespace, 'g1'])
+    fetched.length = 0
+    await sync.handleReconnect()
+    // Nothing changed server-side: no history request, confirmation only.
+    expect(fetched).toEqual([])
+    expect(sync.getStatus().phase).toBe('done')
+    const secondMeta = await repo.database.groupMeta.get([namespace, 'g1'])
+    expect(secondMeta?.serverRevision).toBe(firstMeta?.serverRevision)
+    expect(secondMeta?.capturedAt.getTime()).toBe(
+      firstMeta?.capturedAt.getTime(),
+    )
+    expect(
+      (secondMeta?.lastConfirmedAt?.getTime() ?? 0) >=
+        (firstMeta?.lastConfirmedAt?.getTime() ?? 0),
+    ).toBe(true)
+    // Expense rows are byte-identical: confirmation never rewrites history.
+    const before = await repo.database.expenseList
+      .where('[namespace+groupId]')
+      .equals([namespace, 'g1'])
+      .toArray()
+    await sync.handleForeground()
+    const after = await repo.database.expenseList
+      .where('[namespace+groupId]')
+      .equals([namespace, 'g1'])
+      .toArray()
+    expect(after).toEqual(before)
+    expect(fetched).toEqual([])
+  })
+
+  it('excludes unchanged groups from download ordering', async () => {
+    const catalog = makeCatalog(ACCOUNT, ['g1', 'g2', 'g3'])
+    expect(
+      orderSyncGroups({
+        catalog,
+        currentGroupId: null,
+        missingGroupIds: new Set(['g1']),
+        dirtyGroupIds: new Set(['g2']),
+        skipGroupIds: new Set(['g3']),
+      }),
+    ).toEqual(['g1', 'g2'])
+    // Unchanged groups are confirmed, not downloaded — including an
+    // unchanged current group; changed groups still download.
+    expect(
+      orderSyncGroups({
+        catalog,
+        currentGroupId: 'g3',
+        missingGroupIds: new Set(['g1']),
+        dirtyGroupIds: new Set(),
+        skipGroupIds: new Set(['g2', 'g3']),
+      }),
+    ).toEqual(['g1'])
   })
 
   it('waits for visible before catalog fetch', async () => {
@@ -1339,6 +1441,33 @@ describe('offline sync triggers, visibility, and classification', () => {
     expect(
       classifySyncError(new DOMException('Aborted', 'AbortError'), now),
     ).toEqual({ kind: 'cancelled' })
+  })
+
+  it('preserves storage codes instead of leaking cancelled', () => {
+    // Regression: storage-unavailable/blocked fell to `{kind:'cancelled'}`,
+    // recording the internal lifecycle word in the per-group errors map.
+    const now = Date.now()
+    expect(
+      classifySyncError(
+        new OfflineStorageError('storage-unavailable', 'storage-unavailable'),
+        now,
+      ),
+    ).toEqual({ kind: 'schema', code: 'storage-unavailable' })
+    expect(
+      classifySyncError(
+        new OfflineStorageError('storage-blocked', 'storage-blocked'),
+        now,
+      ),
+    ).toEqual({ kind: 'schema', code: 'storage-blocked' })
+    expect(
+      toPersistedCode({
+        kind: 'schema',
+        code: 'storage-unavailable',
+      }),
+    ).toBe('storage-unavailable')
+    expect(toPersistedCode({ kind: 'schema', code: 'storage-blocked' })).toBe(
+      'storage-blocked',
+    )
   })
 
   it('retries TimeoutError once then succeeds', async () => {

@@ -78,7 +78,8 @@
     "signOutTitle": "Çıkış yapılsın mı?",
     "signOutError": "Oturum kapatılamadı. Lütfen tekrar deneyin.",
     "cancel": "İptal",
-    "signOutOffline": "Çıkış yapmak için bağlan"
+    "signOutOffline": "Çıkış yapmak için bağlan",
+    "installApp": "Uygulamayı Yükle"
   },
   "Footer": {
     "madeIn": "<github>Açık kaynak topluluğu</github> tarafından sevgiyle yapıldı ❤️",
@@ -2869,6 +2870,12 @@
       "description": "Tarayıcı menüsünden Spliit Cloud'i ana ekranınıza ekleyin.",
       "step1": "Sağ üst köşedeki menü düğmesine (⋮) dokunun",
       "step2": "Yükle'ye dokunun"
+    },
+    "safari": {
+      "title": "Spliit Cloud'ı Yükle",
+      "description": "Tek tıklamayla erişim için Spliit Cloud'u Dock'a ekleyin.",
+      "step1": "Safari'de Dosya menüsünü açın",
+      "step2": "Dock'a Ekle'yi seçin, ardından Ekle'ye tıklayın"
     }
   },
   "EmptyState": {

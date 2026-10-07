@@ -78,7 +78,8 @@
     "signOutTitle": "Odhlásit se?",
     "signOutError": "Nelze se odhlásit. Zkuste to prosím znovu.",
     "cancel": "Zrušit",
-    "signOutOffline": "Připojte se pro odhlášení"
+    "signOutOffline": "Připojte se pro odhlášení",
+    "installApp": "Nainstalovat aplikaci"
   },
   "Footer": {
     "madeIn": "Vytvořeno <github>open-source komunitou</github> s láskou ❤️",
@@ -2891,6 +2892,12 @@
       "description": "Přidejte si Spliit Cloud na domovskou obrazovku z nabídky prohlížeče.",
       "step1": "Klepněte na tlačítko nabídky (⋮) v pravém horním rohu",
       "step2": "Klepněte na Instalovat"
+    },
+    "safari": {
+      "title": "Nainstalovat Spliit Cloud",
+      "description": "Přidejte si Spliit Cloud do docku pro přístup jedním kliknutím.",
+      "step1": "V Safari otevřete nabídku Soubor",
+      "step2": "Zvolte Přidat do Docku a klikněte na Přidat"
     }
   },
   "EmptyState": {

@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { useActiveUser } from '@/lib/hooks'
+import { EFFECT_BRIDGE_QUERY_DEFAULTS } from '@/lib/services/transport-integration'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
@@ -13,8 +14,11 @@ import { offlineQueryKey, snapshotVersion } from './read-model'
 import {
   OFFLINE_LOCAL_PAGE_SIZE,
   getOfflineBalances,
-  getOfflineExpense,
+  getOfflineFreshnessState,
+  liteGroupRecord,
+  type OfflineFreshness,
   toOfflineGroupView,
+  type OfflineExpenseLookup,
   type GlobalQueryInput,
   type GroupExpenseFilter,
   type GroupExpenseSortBy,
@@ -75,6 +79,7 @@ function metaFor(args: {
   networkData: boolean
   networkError: boolean
   networkFetching: boolean
+  networkPaused?: boolean
   localReady: boolean
   localMissing: boolean
   capturedAt: Date | null
@@ -141,10 +146,14 @@ function metaFor(args: {
       incompleteGroupCount,
     }
   }
+  // A paused network (offline-suspended query) can never resolve: report
+  // missing instead of loading forever. Callers with readable local data
+  // already returned above.
+  const paused = args.networkPaused ?? false
   return {
     source: 'download',
-    availability: 'loading',
-    refreshing: args.networkFetching,
+    availability: paused ? 'missing' : 'loading',
+    refreshing: paused ? false : args.networkFetching,
     capturedAt: args.capturedAt,
     incompleteGroupCount,
   }
@@ -188,9 +197,10 @@ function useOfflineCatalog(): {
       return repository.readCatalog(namespace)
     },
     enabled: !!repository && !!namespace,
-    networkMode: 'always',
+    // Effect-owned local bridge: TanStack retry stays OFF so service retries
+    // never double with query retries (EFFECT_BRIDGE_QUERY_DEFAULTS).
+    ...EFFECT_BRIDGE_QUERY_DEFAULTS,
     staleTime: 5_000,
-    retry: false,
   })
   const result = query.data
   if (!namespace || !repository) {
@@ -216,8 +226,9 @@ function useOfflineGroupRecord(groupId: string): {
   record: GroupRecord | null
   status: 'loading' | 'ready' | 'missing' | 'error' | 'unsupported'
   version: string | null
+  lastConfirmedAt: Date | null
 } {
-  const { namespace, generation } = useOfflineSession()
+  const { namespace, generation, account } = useOfflineSession()
   const repository = useOfflineRepository()
   const groupQueryKey = offlineQueryKey(
     namespace ?? '',
@@ -230,51 +241,80 @@ function useOfflineGroupRecord(groupId: string): {
     queryKey: groupQueryKey,
     queryFn: async () => {
       if (!repository || !namespace) return { status: 'missing' as const }
-      const result = await repository.readGroup(namespace, groupId)
-      if (result.status === 'ready')
-        return { status: 'ready' as const, record: result.record }
-      if (result.status === 'missing') return { status: 'missing' as const }
-      if (result.status === 'unsupported')
+      const accountId = account?.id ?? ''
+      const [meta, data] = await Promise.all([
+        repository.readGroupMeta(namespace, groupId),
+        repository.readGroupData(namespace, groupId),
+      ])
+      if (meta.status === 'unsupported')
         return {
           status: 'unsupported' as const,
-          schemaVersion: result.schemaVersion,
+          schemaVersion: meta.schemaVersion,
         }
-      // Corrupt entries evict to missing (repository layer owns eviction on
-      // next sync). Unsupported schemas propagate distinctly so callers show
-      // "Update app" instead of a dead Retry. Never synthesize readiness.
-      return { status: 'missing' as const }
+      if (meta.status !== 'ready' || data.status !== 'ready')
+        return { status: 'missing' as const }
+      // Lightweight assembly (metadata + blobs, no expense rows): home and
+      // detail views read directly instead of copying histories on the main
+      // thread. Corrupt entries evict to missing (repository layer owns
+      // eviction on next sync). Never synthesize readiness.
+      return {
+        status: 'ready' as const,
+        record: liteGroupRecord(meta.record, data.record, accountId),
+        lastConfirmedAt: meta.record.lastConfirmedAt,
+      }
     },
     enabled: !!repository && !!namespace && !!groupId,
-    networkMode: 'always',
+    // Effect-owned local bridge: TanStack retry stays OFF so service retries
+    // never double with query retries (EFFECT_BRIDGE_QUERY_DEFAULTS).
+    ...EFFECT_BRIDGE_QUERY_DEFAULTS,
     staleTime: 5_000,
-    retry: false,
   })
   if (query.isLoading || !query.data) {
-    return { record: null, status: 'loading', version: null }
+    return {
+      record: null,
+      status: 'loading',
+      version: null,
+      lastConfirmedAt: null,
+    }
   }
   if (query.data.status === 'ready') {
     const record = query.data.record
-    return { record, status: 'ready', version: snapshotVersion(record) }
+    return {
+      record,
+      status: 'ready',
+      version: snapshotVersion(record),
+      lastConfirmedAt: query.data.lastConfirmedAt,
+    }
   }
   if (query.data.status === 'unsupported') {
-    return { record: null, status: 'unsupported', version: null }
+    return {
+      record: null,
+      status: 'unsupported',
+      version: null,
+      lastConfirmedAt: null,
+    }
   }
-  return { record: null, status: 'missing', version: null }
+  return {
+    record: null,
+    status: 'missing',
+    version: null,
+    lastConfirmedAt: null,
+  }
 }
 
 function useInvalidateOnCommit(keys: unknown[][]): void {
   const queryClient = useQueryClient()
   useEffect(() => {
+    const shouldInvalidate = (type?: string) =>
+      type === 'committed' ||
+      type === 'catalog-changed' ||
+      type === 'dirty' ||
+      type === 'cleared'
     const handler = (event: StorageEvent) => {
       if (event.key !== 'spliit:offline:event' || !event.newValue) return
       try {
         const parsed = JSON.parse(event.newValue) as { type?: string }
-        if (
-          parsed.type === 'committed' ||
-          parsed.type === 'catalog-changed' ||
-          parsed.type === 'dirty' ||
-          parsed.type === 'cleared'
-        ) {
+        if (shouldInvalidate(parsed.type)) {
           for (const key of keys) {
             void queryClient.invalidateQueries({ queryKey: key as string[] })
           }
@@ -283,8 +323,20 @@ function useInvalidateOnCommit(keys: unknown[][]): void {
         // Ignore malformed fallback events.
       }
     }
+    const localHandler = (event: Event) => {
+      const type = (event as CustomEvent).detail?.type as string | undefined
+      if (shouldInvalidate(type)) {
+        for (const key of keys) {
+          void queryClient.invalidateQueries({ queryKey: key as string[] })
+        }
+      }
+    }
     window.addEventListener('storage', handler)
-    return () => window.removeEventListener('storage', handler)
+    window.addEventListener('spliit:offline:event-local', localHandler)
+    return () => {
+      window.removeEventListener('storage', handler)
+      window.removeEventListener('spliit:offline:event-local', localHandler)
+    }
   }, [queryClient, keys])
 }
 
@@ -294,6 +346,7 @@ export function useOfflineOverview(): OfflineHookResult<{
   groups: ReturnType<typeof buildOfflineOverview>['groups']
   stats: { balanceSummaries: unknown; peopleBalances: unknown }
   totalsAvailable: boolean
+  totalsFreshness: OfflineFreshness
   oldestCapturedAt: Date | null
   dirtyGroupCount: number
 }> {
@@ -310,25 +363,24 @@ export function useOfflineOverview(): OfflineHookResult<{
     queryKey: overviewQueryKey,
     queryFn: async () => {
       if (!repository || !namespace || !catalog) return null
-      const snapshots: GroupRecord[] = []
-      for (const entry of catalog.groups) {
-        const result = await repository.readGroup(namespace, entry.overview.id)
-        if (result.status === 'ready') snapshots.push(result.record)
-      }
+      // The worker reads the catalog and lightweight records itself; only
+      // query args cross the boundary.
       const client = getDefaultOfflineQueryClient()
       const result = (await client.query({
         generation,
         namespace,
         kind: 'overview',
-        catalog,
-        snapshots,
-      })) as ReturnType<typeof buildOfflineOverview>
+      })) as ReturnType<typeof buildOfflineOverview> & {
+        revisionDigest: string
+        totalsFreshness: OfflineFreshness
+      }
       return result
     },
     enabled: !!repository && !!namespace && !!catalog,
-    networkMode: 'always',
+    // Effect-owned local bridge: TanStack retry stays OFF so service retries
+    // never double with query retries (EFFECT_BRIDGE_QUERY_DEFAULTS).
+    ...EFFECT_BRIDGE_QUERY_DEFAULTS,
     staleTime: 5_000,
-    retry: false,
   })
   useInvalidateOnCommit([overviewQueryKey])
 
@@ -352,6 +404,7 @@ export function useOfflineOverview(): OfflineHookResult<{
           peopleBalances: unknown
         },
         totalsAvailable: true,
+        totalsFreshness: 'fresh',
         oldestCapturedAt: null,
         dirtyGroupCount: 0,
       },
@@ -373,6 +426,7 @@ export function useOfflineOverview(): OfflineHookResult<{
           peopleBalances: localOverview.peopleBalances,
         },
         totalsAvailable: localOverview.totalsAvailable,
+        totalsFreshness: localOverview.totalsFreshness ?? 'fresh',
         oldestCapturedAt: localOverview.oldestCapturedAt,
         dirtyGroupCount: localOverview.dirtyGroupCount,
       },
@@ -389,6 +443,7 @@ export function useOfflineOverview(): OfflineHookResult<{
     networkData: false,
     networkError: !!network.error,
     networkFetching: network.isFetching,
+    networkPaused: network.isPaused ?? false,
     localReady: false,
     localMissing: !local.isLoading,
     capturedAt: null,
@@ -473,6 +528,7 @@ export function useOfflineGroup(groupId: string): OfflineHookResult<{
     networkData: false,
     networkError: !!network.error,
     networkFetching: network.isFetching,
+    networkPaused: network.isPaused ?? false,
     localReady: false,
     localMissing: status === 'missing',
     capturedAt: null,
@@ -601,6 +657,10 @@ export function useOfflineExpenses(
   const [localLoading, setLocalLoading] = useState(false)
   const [localError, setLocalError] = useState(false)
   const requestIdRef = useRef(0)
+  // Published revision pin: worker results echo the server revision they were
+  // computed from. A move restarts pagination instead of mixing pages across
+  // publications.
+  const revisionRef = useRef<string | null>(null)
 
   // Reset pagination when query/filter/sort/source version changes.
   useEffect(() => {
@@ -646,9 +706,14 @@ export function useOfflineExpenses(
           collapseInvolving,
           participantId,
           accountId,
-          snapshot: activeRecord,
-        })) as { rows: unknown[]; nextOffset: number | null; hasMore: boolean }
+        })) as {
+          rows: unknown[]
+          nextOffset: number | null
+          hasMore: boolean
+          serverRevision: string | null
+        }
         if (cancelled || requestId !== requestIdRef.current) return
+        revisionRef.current = result.serverRevision
         setLocalPages([toOfflineListRows(result.rows)])
         setLocalMeta({ nextOffset: result.nextOffset, hasMore: result.hasMore })
         setLocalError(false)
@@ -706,10 +771,25 @@ export function useOfflineExpenses(
         collapseInvolving,
         participantId,
         accountId,
-        snapshot: record,
-      })) as { rows: unknown[]; nextOffset: number | null; hasMore: boolean }
+      })) as {
+        rows: unknown[]
+        nextOffset: number | null
+        hasMore: boolean
+        serverRevision: string | null
+      }
       if (requestId !== requestIdRef.current) return
-      setLocalPages((pages) => [...pages, toOfflineListRows(result.rows)])
+      if (
+        revisionRef.current !== null &&
+        result.serverRevision !== revisionRef.current
+      ) {
+        // Publication moved mid-pagination: restart from this page instead
+        // of appending rows from another revision.
+        revisionRef.current = result.serverRevision
+        setLocalPages([toOfflineListRows(result.rows)])
+      } else {
+        revisionRef.current = result.serverRevision
+        setLocalPages((pages) => [...pages, toOfflineListRows(result.rows)])
+      }
       setLocalMeta({ nextOffset: result.nextOffset, hasMore: result.hasMore })
     } catch {
       // Ignore page failures; the current pages stay readable.
@@ -822,18 +902,23 @@ export function useOfflineExpenses(
       isLoading: network.isLoading || localLoading,
     }
   }
+  const networkStalled = network.isPaused ?? false
   return {
     data: undefined,
     meta: {
       source: 'download',
       capturedAt: null,
-      availability: network.error ? 'error' : 'loading',
-      refreshing: network.isFetching || localLoading,
+      availability: network.error
+        ? 'error'
+        : networkStalled
+          ? 'missing'
+          : 'loading',
+      refreshing: networkStalled ? false : network.isFetching || localLoading,
       incompleteGroupCount: 0,
     },
     fetchNextPage,
     hasMore: false,
-    isLoading: true,
+    isLoading: !networkStalled,
   }
 }
 
@@ -856,6 +941,38 @@ export function useOfflineExpense(
   )
   const { record, status: expenseGroupStatus } = useOfflineGroupRecord(groupId)
   const networkReady = !!network.data?.expense && !network.error
+  const { namespace, generation } = useOfflineSession()
+  const repository = useOfflineRepository()
+  const lookupQueryKey = offlineQueryKey(
+    namespace ?? '',
+    generation,
+    'expense',
+    groupId,
+    expenseId,
+  )
+  useInvalidateOnCommit([lookupQueryKey])
+  const local = useQuery({
+    queryKey: lookupQueryKey,
+    queryFn: async () => {
+      if (!repository || !namespace) return null
+      // Indexed key reads in the worker: the main thread never copies
+      // histories for a single detail view.
+      const client = getDefaultOfflineQueryClient()
+      const result = (await client.query({
+        generation,
+        namespace,
+        kind: 'expense-detail',
+        groupId,
+        expenseId,
+      })) as OfflineExpenseLookup
+      return result.status === 'found' ? result : null
+    },
+    enabled: !!repository && !!namespace && !networkReady,
+    // Effect-owned local bridge: TanStack retry stays OFF so service retries
+    // never double with query retries (EFFECT_BRIDGE_QUERY_DEFAULTS).
+    ...EFFECT_BRIDGE_QUERY_DEFAULTS,
+    staleTime: 5_000,
+  })
   if (networkReady && network.data) {
     return {
       data: { expense: network.data.expense },
@@ -880,8 +997,8 @@ export function useOfflineExpense(
       },
     }
   }
-  if (record) {
-    const lookup = getOfflineExpense(record.payload, expenseId)
+  const lookup = local.data ?? null
+  if (record && lookup) {
     if (lookup.status === 'found') {
       // Attachment-metadata variant: stored detail carries id/fileName/
       // contentType/width/height without a URL. Consumers render filename +
@@ -921,6 +1038,7 @@ export function useOfflineExpense(
     networkData: false,
     networkError: !!network.error,
     networkFetching: network.isFetching,
+    networkPaused: network.isPaused ?? false,
     localReady: false,
     localMissing: true,
     capturedAt: null,
@@ -939,7 +1057,11 @@ export function useOfflineBalances(groupId: string): OfflineHookResult<{
     { groupId },
     { retry: false },
   )
-  const { record, status: balancesGroupStatus } = useOfflineGroupRecord(groupId)
+  const {
+    record,
+    status: balancesGroupStatus,
+    lastConfirmedAt: balancesConfirmedAt,
+  } = useOfflineGroupRecord(groupId)
   const networkReady = !!network.data && !network.error
   if (networkReady) {
     return {
@@ -967,13 +1089,103 @@ export function useOfflineBalances(groupId: string): OfflineHookResult<{
   }
   if (record) {
     // Stored server response (full-ledger correct, not capped). Totals are
-    // never inferred from filtered/list pages.
+    // never inferred from filtered/list pages. Dirty or aged confirmations
+    // warn through `freshness` instead of passing as current.
     const view = getOfflineBalances(record)
     return {
       data: { balances: view.balances, dirtySince: view.dirtySince },
       meta: {
         source: 'download',
         capturedAt: view.capturedAt,
+        availability: 'ready',
+        refreshing: network.isFetching,
+        incompleteGroupCount: 0,
+        freshness: getOfflineFreshnessState({
+          dirtySince: view.dirtySince,
+          lastConfirmedAt: balancesConfirmedAt,
+          capturedAt: view.capturedAt,
+        }),
+        lastConfirmedAt: balancesConfirmedAt,
+      },
+    }
+  }
+  const selection = metaFor({
+    networkData: false,
+    networkError: !!network.error,
+    networkFetching: network.isFetching,
+    networkPaused: network.isPaused ?? false,
+    localReady: false,
+    localMissing: true,
+    capturedAt: null,
+  })
+  return { data: undefined, meta: selection }
+}
+
+// --- Subgroups ---------------------------------------------------------------
+
+export type OfflineSubgroupsOptions = {
+  groupId: string
+  linkInviteToken?: string
+  viewKey?: string
+}
+
+export function useOfflineSubgroups(
+  options: OfflineSubgroupsOptions,
+): OfflineHookResult<{
+  enabled: boolean
+  subgroups: Array<{ id: string; name: string; participantIds: string[] }>
+  dirtySince: Date | null
+}> {
+  const { groupId, linkInviteToken, viewKey } = options
+  // Snapshots are membership-only; link/view-key contexts never read them.
+  const offlineEnabled = !linkInviteToken && !viewKey
+  const network = trpc.groups.subgroups.list.useQuery(
+    { groupId, linkInviteToken, viewKey },
+    { retry: false },
+  )
+  const { record, status: subgroupsGroupStatus } =
+    useOfflineGroupRecord(groupId)
+  const networkReady = !!network.data && !network.error
+  if (networkReady) {
+    return {
+      data: {
+        enabled: network.data.enabled,
+        subgroups: network.data.subgroups,
+        dirtySince: record?.dirtySince ?? null,
+      },
+      meta: {
+        source: 'network',
+        capturedAt: record?.capturedAt ?? null,
+        availability: 'ready',
+        refreshing: network.isFetching,
+        incompleteGroupCount: 0,
+      },
+    }
+  }
+  if (subgroupsGroupStatus === 'unsupported') {
+    return {
+      data: undefined,
+      meta: {
+        source: 'download',
+        capturedAt: null,
+        availability: 'unsupported',
+        refreshing: false,
+        incompleteGroupCount: 0,
+      },
+    }
+  }
+  if (offlineEnabled && record) {
+    // Exact stored definitions (names + member ids + enabled flag), not the
+    // settlement plan. Management stays connection-required.
+    return {
+      data: {
+        enabled: record.payload.subgroups.enabled,
+        subgroups: record.payload.subgroups.subgroups,
+        dirtySince: record.dirtySince,
+      },
+      meta: {
+        source: 'download',
+        capturedAt: record.capturedAt,
         availability: 'ready',
         refreshing: network.isFetching,
         incompleteGroupCount: 0,
@@ -984,11 +1196,455 @@ export function useOfflineBalances(groupId: string): OfflineHookResult<{
     networkData: false,
     networkError: !!network.error,
     networkFetching: network.isFetching,
+    networkPaused: network.isPaused ?? false,
     localReady: false,
     localMissing: true,
     capturedAt: null,
   })
   return { data: undefined, meta: selection }
+}
+
+// --- Split presets -----------------------------------------------------------
+
+export function useOfflineSplitPresets(groupId: string): OfflineHookResult<{
+  presets: unknown
+  canManageShared: boolean
+  canManagePersonal: boolean
+  groupDefaults: unknown
+  personalDefaults: unknown
+  effectiveDefaults: unknown
+  dirtySince: Date | null
+}> {
+  const network = trpc.groups.splitPresets.list.useQuery(
+    { groupId },
+    { retry: false },
+  )
+  const { record, status: presetsGroupStatus } = useOfflineGroupRecord(groupId)
+  const networkReady = !!network.data && !network.error
+  if (networkReady) {
+    return {
+      data: {
+        presets: network.data.presets,
+        canManageShared: network.data.canManageShared,
+        canManagePersonal: network.data.canManagePersonal,
+        groupDefaults: network.data.groupDefaults,
+        personalDefaults: network.data.personalDefaults,
+        effectiveDefaults: network.data.effectiveDefaults,
+        dirtySince: record?.dirtySince ?? null,
+      },
+      meta: {
+        source: 'network',
+        capturedAt: record?.capturedAt ?? null,
+        availability: 'ready',
+        refreshing: network.isFetching,
+        incompleteGroupCount: 0,
+      },
+    }
+  }
+  if (presetsGroupStatus === 'unsupported') {
+    return {
+      data: undefined,
+      meta: {
+        source: 'download',
+        capturedAt: null,
+        availability: 'unsupported',
+        refreshing: false,
+        incompleteGroupCount: 0,
+      },
+    }
+  }
+  if (record) {
+    // Viewer-scoped stored presets (shared + the viewer's personal presets).
+    // Captured management flags never grant offline writes.
+    const stored = record.payload.splitPresets
+    return {
+      data: {
+        presets: stored.presets,
+        canManageShared: stored.canManageShared,
+        canManagePersonal: stored.canManagePersonal,
+        groupDefaults: stored.groupDefaults,
+        personalDefaults: stored.personalDefaults,
+        effectiveDefaults: stored.effectiveDefaults,
+        dirtySince: record.dirtySince,
+      },
+      meta: {
+        source: 'download',
+        capturedAt: record.capturedAt,
+        availability: 'ready',
+        refreshing: network.isFetching,
+        incompleteGroupCount: 0,
+      },
+    }
+  }
+  const selection = metaFor({
+    networkData: false,
+    networkError: !!network.error,
+    networkFetching: network.isFetching,
+    networkPaused: network.isPaused ?? false,
+    localReady: false,
+    localMissing: true,
+    capturedAt: null,
+  })
+  return { data: undefined, meta: selection }
+}
+
+// --- Budgets -----------------------------------------------------------------
+
+export type OfflineBudgetsOptions = {
+  groupId: string
+  includeArchived?: boolean
+  linkInviteToken?: string
+  viewKey?: string
+}
+
+export function useOfflineBudgets(
+  options: OfflineBudgetsOptions,
+): OfflineHookResult<{
+  budgets: unknown[]
+  dirtySince: Date | null
+}> {
+  const { groupId, linkInviteToken, viewKey } = options
+  const includeArchived = options?.includeArchived ?? false
+  // Snapshots are membership-only; link/view-key contexts never read them.
+  const offlineEnabled = !linkInviteToken && !viewKey
+  const network = trpc.groups.budgets.list.useQuery(
+    { groupId, includeArchived, linkInviteToken, viewKey },
+    { retry: false },
+  )
+  const { record, status: budgetsGroupStatus } = useOfflineGroupRecord(groupId)
+  const networkReady = !!network.data && !network.error
+  if (networkReady) {
+    return {
+      data: {
+        budgets: network.data.budgets as unknown[],
+        dirtySince: record?.dirtySince ?? null,
+      },
+      meta: {
+        source: 'network',
+        capturedAt: record?.capturedAt ?? null,
+        availability: 'ready',
+        refreshing: network.isFetching,
+        incompleteGroupCount: 0,
+      },
+    }
+  }
+  if (budgetsGroupStatus === 'unsupported') {
+    return {
+      data: undefined,
+      meta: {
+        source: 'download',
+        capturedAt: null,
+        availability: 'unsupported',
+        refreshing: false,
+        incompleteGroupCount: 0,
+      },
+    }
+  }
+  if (offlineEnabled && record) {
+    // Stored budgets with server-computed summaries. Same archive filtering
+    // as the live list; dirty snapshots warn instead of passing as current.
+    const stored = (
+      record.payload.budgets as Array<{ archived?: boolean }>
+    ).filter((budget) => includeArchived || !budget.archived)
+    return {
+      data: { budgets: stored, dirtySince: record.dirtySince },
+      meta: {
+        source: 'download',
+        capturedAt: record.capturedAt,
+        availability: 'ready',
+        refreshing: network.isFetching,
+        incompleteGroupCount: 0,
+      },
+    }
+  }
+  const selection = metaFor({
+    networkData: false,
+    networkError: !!network.error,
+    networkFetching: network.isFetching,
+    networkPaused: network.isPaused ?? false,
+    localReady: false,
+    localMissing: true,
+    capturedAt: null,
+  })
+  return { data: undefined, meta: selection }
+}
+
+export type OfflineBudgetOptions = {
+  groupId: string
+  budgetId: string
+  linkInviteToken?: string
+  viewKey?: string
+}
+
+export function useOfflineBudget(
+  options: OfflineBudgetOptions,
+): OfflineHookResult<{
+  budget: unknown
+  dirtySince: Date | null
+}> {
+  const { groupId, budgetId, linkInviteToken, viewKey } = options
+  // Snapshots are membership-only; link/view-key contexts never read them.
+  const offlineEnabled = !linkInviteToken && !viewKey
+  const network = trpc.groups.budgets.get.useQuery(
+    { groupId, budgetId, linkInviteToken, viewKey },
+    { retry: false, enabled: !!budgetId },
+  )
+  const { record, status: budgetGroupStatus } = useOfflineGroupRecord(groupId)
+  const networkReady = !!network.data && !network.error
+  if (networkReady) {
+    return {
+      data: {
+        budget: (network.data as { budget?: unknown }).budget,
+        dirtySince: record?.dirtySince ?? null,
+      },
+      meta: {
+        source: 'network',
+        capturedAt: record?.capturedAt ?? null,
+        availability: 'ready',
+        refreshing: network.isFetching,
+        incompleteGroupCount: 0,
+      },
+    }
+  }
+  if (budgetGroupStatus === 'unsupported') {
+    return {
+      data: undefined,
+      meta: {
+        source: 'download',
+        capturedAt: null,
+        availability: 'unsupported',
+        refreshing: false,
+        incompleteGroupCount: 0,
+      },
+    }
+  }
+  if (offlineEnabled && record) {
+    const stored = (record.payload.budgets as Array<{ id?: string }>).find(
+      (budget) => budget.id === budgetId,
+    )
+    if (stored) {
+      return {
+        data: { budget: stored, dirtySince: record.dirtySince },
+        meta: {
+          source: 'download',
+          capturedAt: record.capturedAt,
+          availability: 'ready',
+          refreshing: network.isFetching,
+          incompleteGroupCount: 0,
+        },
+      }
+    }
+    return {
+      data: undefined,
+      meta: {
+        source: 'download',
+        capturedAt: record.capturedAt,
+        availability: 'missing',
+        refreshing: network.isFetching,
+        incompleteGroupCount: 0,
+      },
+    }
+  }
+  const selection = metaFor({
+    networkData: false,
+    networkError: !!network.error,
+    networkFetching: network.isFetching,
+    networkPaused: network.isPaused ?? false,
+    localReady: false,
+    localMissing: true,
+    capturedAt: null,
+  })
+  return { data: undefined, meta: selection }
+}
+
+// --- Expense comments ----------------------------------------------------------
+
+export function useOfflineExpenseComments(
+  groupId: string,
+  expenseId: string,
+): OfflineHookResult<{
+  comments: unknown[]
+}> {
+  const detail = useOfflineExpense(groupId, expenseId)
+  if (
+    detail.meta.source === 'download' &&
+    detail.meta.availability === 'ready'
+  ) {
+    const comments = (
+      detail.data as { expense?: { comments?: unknown[] } } | undefined
+    )?.expense?.comments
+    if (Array.isArray(comments)) {
+      return { data: { comments }, meta: detail.meta }
+    }
+  }
+  return { data: undefined, meta: detail.meta }
+}
+
+// --- Activities ----------------------------------------------------------------
+
+export type OfflineActivitiesOptions = {
+  groupId: string
+  limit?: number
+  enabled?: boolean
+  linkInviteToken?: string
+  viewKey?: string
+}
+
+export function useOfflineActivities(
+  options: OfflineActivitiesOptions,
+): OfflineHookResult<{
+  pages: Array<{ activities: unknown[]; hasMore: boolean }>
+  activityTotalCount: number
+  activityHasMore: boolean
+  dirtySince?: Date | null
+}> & {
+  fetchNextPage: () => Promise<void>
+  hasMore: boolean
+  isLoading: boolean
+} {
+  const { groupId, limit = 20, linkInviteToken, viewKey } = options
+  // Snapshots are membership-only; link/view-key contexts never read them.
+  const offlineEnabled = !linkInviteToken && !viewKey
+  const network = trpc.groups.activities.list.useInfiniteQuery(
+    { groupId, limit, linkInviteToken, viewKey },
+    {
+      enabled: options.enabled ?? true,
+      getNextPageParam: (page) =>
+        (page as unknown as { hasMore?: boolean; nextCursor?: number }).hasMore
+          ? ((page as unknown as { nextCursor?: number }).nextCursor ??
+            undefined)
+          : undefined,
+      retry: false,
+    },
+  )
+  const {
+    record,
+    status: activitiesGroupStatus,
+    version,
+  } = useOfflineGroupRecord(groupId)
+  const [pageCount, setPageCount] = useState(1)
+  // Reset pagination when the group or its snapshot version changes.
+  useEffect(() => {
+    // oxlint-disable-next-line react/set-state-in-effect -- reset local pagination after the source version changes.
+    setPageCount(1)
+  }, [groupId, version])
+
+  const fetchNextPage = async (): Promise<void> => {
+    if (network.data?.pages?.length && !network.error) {
+      await network.fetchNextPage()
+      return
+    }
+    if (!record) return
+    const cached = record.payload.activities as unknown[]
+    if (cached.length > pageCount * limit) {
+      setPageCount((count) => count + 1)
+    }
+  }
+
+  const networkReady = !!network.data?.pages?.length && !network.error
+  if (networkReady && network.data) {
+    const pages = network.data.pages.map((page) => ({
+      activities: (page as unknown as { activities: unknown[] }).activities,
+      hasMore: (page as unknown as { hasMore: boolean }).hasMore,
+    }))
+    const last = network.data.pages.at(-1) as unknown as
+      | { hasMore?: boolean }
+      | undefined
+    return {
+      data: {
+        pages,
+        activityTotalCount: 0,
+        activityHasMore: false,
+      },
+      meta: {
+        source: 'network',
+        capturedAt: record?.capturedAt ?? null,
+        availability: 'ready',
+        refreshing: network.isFetching,
+        incompleteGroupCount: 0,
+      },
+      fetchNextPage,
+      hasMore: last?.hasMore ?? false,
+      isLoading: false,
+    }
+  }
+  if (activitiesGroupStatus === 'unsupported') {
+    return {
+      data: undefined,
+      meta: {
+        source: 'download',
+        capturedAt: null,
+        availability: 'unsupported',
+        refreshing: false,
+        incompleteGroupCount: 0,
+      },
+      fetchNextPage,
+      hasMore: false,
+      isLoading: false,
+    }
+  }
+  if (offlineEnabled && record) {
+    // Cached recent window, newest first. Older feed history stays
+    // online-only; activityHasMore discloses the boundary instead of passing
+    // the window off as complete. Membership-only: link/view-key contexts
+    // never read the snapshot.
+    const cached = record.payload.activities as unknown[]
+    const visible = cached.slice(0, pageCount * limit)
+    const localHasMore = visible.length < cached.length
+    const pages = [
+      {
+        activities: visible,
+        hasMore: localHasMore,
+      },
+    ]
+    return {
+      data: {
+        pages,
+        activityTotalCount: record.payload.activityTotalCount,
+        activityHasMore: record.payload.activityHasMore,
+        dirtySince: record.dirtySince,
+      },
+      meta: {
+        source: 'download',
+        capturedAt: record.capturedAt,
+        availability: 'ready',
+        refreshing: network.isFetching,
+        incompleteGroupCount: 0,
+      },
+      fetchNextPage,
+      hasMore: localHasMore,
+      isLoading: false,
+    }
+  }
+  if (network.error) {
+    return {
+      data: undefined,
+      meta: {
+        source: 'download',
+        capturedAt: null,
+        availability: 'missing',
+        refreshing: false,
+        incompleteGroupCount: 0,
+      },
+      fetchNextPage,
+      hasMore: false,
+      isLoading: network.isLoading,
+    }
+  }
+  const networkStalled = network.isPaused ?? false
+  return {
+    data: undefined,
+    meta: {
+      source: 'download',
+      capturedAt: null,
+      availability: networkStalled ? 'missing' : 'loading',
+      refreshing: networkStalled ? false : network.isFetching,
+      incompleteGroupCount: 0,
+    },
+    fetchNextPage,
+    hasMore: false,
+    isLoading: !networkStalled,
+  }
 }
 
 // --- Global expenses ----------------------------------------------------------
@@ -1068,28 +1724,39 @@ export function useOfflineGlobalExpenses(
   })
   const [localLoading, setLocalLoading] = useState(false)
   const requestIdRef = useRef(0)
+  // Publication digest pin: a move restarts pagination instead of mixing
+  // pages across publications.
+  const digestRef = useRef<string | null>(null)
   // Recommit tick: a new commitNonce (same-second recommit included) must
   // reload global pagination even though the catalog is unchanged.
   const [commitTick, setCommitTick] = useState(0)
   useEffect(() => {
+    const shouldBump = (type?: string) =>
+      type === 'committed' ||
+      type === 'catalog-changed' ||
+      type === 'dirty' ||
+      type === 'cleared'
     const handler = (event: StorageEvent) => {
       if (event.key !== 'spliit:offline:event' || !event.newValue) return
       try {
         const parsed = JSON.parse(event.newValue) as { type?: string }
-        if (
-          parsed.type === 'committed' ||
-          parsed.type === 'catalog-changed' ||
-          parsed.type === 'dirty' ||
-          parsed.type === 'cleared'
-        ) {
+        if (shouldBump(parsed.type)) {
           setCommitTick((value) => value + 1)
         }
       } catch {
         // Ignore malformed fallback events.
       }
     }
+    const localHandler = (event: Event) => {
+      const type = (event as CustomEvent).detail?.type as string | undefined
+      if (shouldBump(type)) setCommitTick((value) => value + 1)
+    }
     window.addEventListener('storage', handler)
-    return () => window.removeEventListener('storage', handler)
+    window.addEventListener('spliit:offline:event-local', localHandler)
+    return () => {
+      window.removeEventListener('storage', handler)
+      window.removeEventListener('spliit:offline:event-local', localHandler)
+    }
   }, [])
 
   useEffect(() => {
@@ -1101,24 +1768,12 @@ export function useOfflineGlobalExpenses(
       setLocalLoading(true)
       setLocalError(false)
       try {
-        const snapshots: GroupRecord[] = []
-        for (const entry of catalog.groups) {
-          const result = await repository.readGroup(
-            namespace,
-            entry.overview.id,
-          )
-          if (cancelled || requestId !== requestIdRef.current) return
-          if (result.status === 'ready') snapshots.push(result.record)
-        }
-        if (cancelled || requestId !== requestIdRef.current) return
         const parsed = inputRef.current
         const client = getDefaultOfflineQueryClient()
         const result = (await client.query({
           generation,
           namespace,
           kind: 'global-expenses',
-          catalog,
-          snapshots,
           filter: parsed,
           offset: 0,
           limit: parsed.limit ?? OFFLINE_LOCAL_PAGE_SIZE,
@@ -1131,8 +1786,10 @@ export function useOfflineGlobalExpenses(
           currencyError: 'currency-required' | null
           truncatedGroupCount: number
           truncatedTotalCount: number | null
+          revisionDigest: string
         }
         if (cancelled || requestId !== requestIdRef.current) return
+        digestRef.current = result.revisionDigest
         setLocalPages([toOfflineListRows(result.rows)])
         setLocalState({
           nextOffset: result.nextOffset,
@@ -1179,20 +1836,11 @@ export function useOfflineGlobalExpenses(
     const requestId = requestIdRef.current
     try {
       const parsed = inputRef.current
-      const snapshots: GroupRecord[] = []
-      for (const entry of catalog.groups) {
-        const result = await repository.readGroup(namespace, entry.overview.id)
-        if (requestId !== requestIdRef.current) return
-        if (result.status === 'ready') snapshots.push(result.record)
-      }
-      if (requestId !== requestIdRef.current) return
       const client = getDefaultOfflineQueryClient()
       const result = (await client.query({
         generation,
         namespace,
         kind: 'global-expenses',
-        catalog,
-        snapshots,
         filter: parsed,
         offset: localState.nextOffset,
         limit: parsed.limit ?? OFFLINE_LOCAL_PAGE_SIZE,
@@ -1205,9 +1853,19 @@ export function useOfflineGlobalExpenses(
         currencyError: 'currency-required' | null
         truncatedGroupCount: number
         truncatedTotalCount: number | null
+        revisionDigest: string
       }
       if (requestId !== requestIdRef.current) return
-      setLocalPages((pages) => [...pages, toOfflineListRows(result.rows)])
+      if (
+        digestRef.current !== null &&
+        result.revisionDigest !== digestRef.current
+      ) {
+        digestRef.current = result.revisionDigest
+        setLocalPages([toOfflineListRows(result.rows)])
+      } else {
+        digestRef.current = result.revisionDigest
+        setLocalPages((pages) => [...pages, toOfflineListRows(result.rows)])
+      }
       setLocalState({
         nextOffset: result.nextOffset,
         hasMore: result.hasMore,
@@ -1277,18 +1935,24 @@ export function useOfflineGlobalExpenses(
       isLoading: localLoading,
     }
   }
+  const globallyStalled = network.isPaused ?? false
   return {
     data: undefined,
     meta: {
       source: 'download',
       capturedAt: null,
-      availability: localError || network.error ? 'error' : 'loading',
-      refreshing: network.isFetching || localLoading,
+      availability:
+        localError || network.error
+          ? 'error'
+          : globallyStalled
+            ? 'missing'
+            : 'loading',
+      refreshing: globallyStalled ? false : network.isFetching || localLoading,
       incompleteGroupCount: 0,
     },
     fetchNextPage,
     hasMore: false,
-    isLoading: true,
+    isLoading: !globallyStalled,
   }
 }
 
@@ -1312,27 +1976,23 @@ export function useOfflineFilterOptions(): OfflineHookResult<
     queryKey: filterOptionsQueryKey,
     queryFn: async () => {
       if (!repository || !namespace || !catalog) return null
-      const snapshots: GroupRecord[] = []
-      for (const entry of catalog.groups) {
-        const result = await repository.readGroup(namespace, entry.overview.id)
-        if (result.status === 'ready') snapshots.push(result.record)
-      }
-      // No remote prerequisite before offline list rendering: derive from
-      // complete downloaded records/group context via the Worker.
+      // No remote prerequisite before offline list rendering: the worker
+      // derives options from lightweight records via Dexie.
       const client = getDefaultOfflineQueryClient()
       const result = (await client.query({
         generation,
         namespace,
         kind: 'filter-options',
-        catalog,
-        snapshots,
-      })) as ReturnType<typeof buildOfflineFilterOptions>
+      })) as ReturnType<typeof buildOfflineFilterOptions> & {
+        revisionDigest: string
+      }
       return result
     },
     enabled: !!repository && !!namespace && !!catalog,
-    networkMode: 'always',
+    // Effect-owned local bridge: TanStack retry stays OFF so service retries
+    // never double with query retries (EFFECT_BRIDGE_QUERY_DEFAULTS).
+    ...EFFECT_BRIDGE_QUERY_DEFAULTS,
     staleTime: 5_000,
-    retry: false,
   })
   useInvalidateOnCommit([filterOptionsQueryKey])
   const networkReady = !!network.data && !network.error
@@ -1366,6 +2026,7 @@ export function useOfflineFilterOptions(): OfflineHookResult<
     networkData: false,
     networkError: !!network.error,
     networkFetching: network.isFetching,
+    networkPaused: network.isPaused ?? false,
     localReady: false,
     localMissing: !local.isLoading,
     capturedAt: null,

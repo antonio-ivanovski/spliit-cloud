@@ -29,6 +29,7 @@ import {
 } from '@/lib/anonymous-recovery'
 import { authClient } from '@/lib/auth'
 import { replaceBrowserLocation } from '@/lib/browser-navigation'
+import { markInstallEligible } from '@/lib/install-eligibility'
 import { isPasskeySupported } from '@/lib/passkey'
 import { signupInviteFetchOptions } from '@/lib/signup-invite'
 import { useOnlineStatus } from '@/lib/use-online-status'
@@ -104,6 +105,7 @@ export function AnonymousSignupDialog({
         fetchOptions: signupInviteFetchOptions(linkInviteToken),
       })
       if (result.error) throw new Error(result.error.message)
+      markInstallEligible()
       if (passkeyEnabled && isPasskeySupported()) {
         setCreated(true)
         setPending(false)
@@ -181,6 +183,7 @@ export function AnonymousSignupDialog({
         }
         throw new Error('passkey sign-in failed')
       }
+      markInstallEligible()
       const session = await authClient.getSession({
         query: { disableCookieCache: true },
       })

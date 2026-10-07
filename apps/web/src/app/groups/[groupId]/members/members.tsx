@@ -137,6 +137,7 @@ function ReadOnlyMembers() {
 function GroupMembersBody() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
+  const { t: tOffline } = useTranslation()
   const locale = useLocale()
   const accountPreferences = useSyncedAccountPreferences()
   const accountTimeZone =
@@ -223,8 +224,20 @@ function GroupMembersBody() {
 
   const showOfflineEmpty = useOfflineWithoutData(!!membersQuery.data)
   if (showOfflineEmpty) {
-    // Member administration is connection-required offline: never show a
-    // false empty member list and never promise persisted invites.
+    // Offline read-only: the member roster already lives in the downloaded
+    // group snapshot, so render it read-only instead of blocking the page.
+    // Invites, role changes, removals, and leaving stay connection-required
+    // (the write guard also rejects them) and are never promised offline.
+    if (group) {
+      return (
+        <div className="flex flex-col gap-4">
+          <output className="block text-sm text-muted-foreground">
+            {tOffline('OfflineReadOnly.reconnectToEdit')}
+          </output>
+          <ReadOnlyMembers />
+        </div>
+      )
+    }
     return (
       <OfflineNeedsConnection
         backLabel={tGroups('backToGroups')}

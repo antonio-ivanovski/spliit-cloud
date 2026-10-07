@@ -41,7 +41,7 @@ const scopeSchema = z.enum(['SHARED', 'PERSONAL'])
 const presetInputSchema = splitPresetSchema
 const defaultModeSchema = z.enum(['INHERIT', 'PRESET', 'NEUTRAL'])
 
-const presetSelect = {
+export const presetSelect = {
   id: true,
   name: true,
   nameKey: true,
@@ -57,11 +57,11 @@ const presetSelect = {
   },
 } as const satisfies Prisma.SplitPresetSelect
 
-type PresetRecord = Prisma.SplitPresetGetPayload<{
+export type PresetRecord = Prisma.SplitPresetGetPayload<{
   select: typeof presetSelect
 }>
 
-function mapPreset(preset: PresetRecord) {
+export function mapPreset(preset: PresetRecord) {
   return {
     id: preset.id,
     name: preset.name,
@@ -187,7 +187,7 @@ function scopeWhere(
     : { ownerAccountId: accountId, scopeKey: scopeKeyFor(scope, accountId) }
 }
 
-function defaultChoice(
+export function defaultChoice(
   mode: 'INHERIT' | 'PRESET' | 'NEUTRAL',
   presetId: string | null,
 ) {
@@ -242,8 +242,12 @@ async function splitPresetName(
   return preset?.name ?? null
 }
 
-async function readPreference(accountId: string, groupId: string) {
-  return prisma.accountGroupPreference.findUnique({
+export async function readPreference(
+  accountId: string,
+  groupId: string,
+  client: Prisma.TransactionClient | typeof prisma = prisma,
+) {
+  return client.accountGroupPreference.findUnique({
     where: { accountId_groupId: { accountId, groupId } },
     select: {
       paidByDefaultMode: true,
@@ -254,7 +258,7 @@ async function readPreference(accountId: string, groupId: string) {
   })
 }
 
-function effectiveDefault(
+export function effectiveDefault(
   personalMode: 'INHERIT' | 'PRESET' | 'NEUTRAL',
   personalId: string | null,
   groupId: string | null,
@@ -264,7 +268,7 @@ function effectiveDefault(
   return groupId
 }
 
-function comparePreset(
+export function comparePreset(
   left: PresetRecord,
   right: PresetRecord,
   defaultIds: ReadonlySet<string>,

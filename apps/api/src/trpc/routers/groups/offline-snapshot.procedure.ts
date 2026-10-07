@@ -5,7 +5,10 @@ import { prisma } from '@spliit/db'
 
 import { loadOfflineSnapshot, offlineTxOptions } from '../../../lib/api/offline'
 import { protectedProcedure } from '../../init'
-import { offlineSnapshotOutputSchema } from '../../outputs/offline'
+import {
+  OFFLINE_CONTRACT_VERSION,
+  offlineSnapshotOutputSchema,
+} from '../../outputs/offline'
 
 /**
  * Offline group snapshot: coherent group + overview + global + balances +
@@ -57,7 +60,7 @@ export const offlineSnapshotProcedure = protectedProcedure
       const snapshot = await loadOfflineSnapshot(tx, accountId, input.groupId)
       const hasMore = snapshot.totalCount > snapshot.downloadedCount
       const output = {
-        schemaVersion: 1 as const,
+        schemaVersion: OFFLINE_CONTRACT_VERSION,
         accountId,
         groupId: input.groupId,
         capturedAt,
@@ -65,11 +68,18 @@ export const offlineSnapshotProcedure = protectedProcedure
         overview: snapshot.overview,
         global: snapshot.global,
         balances: snapshot.balances,
+        revision: snapshot.revision,
         expenses: snapshot.expenses,
         totalCount: snapshot.totalCount,
         downloadedCount: snapshot.downloadedCount,
         hasMore,
         truncatedAt: hasMore ? capturedAt : null,
+        budgets: snapshot.budgets,
+        splitPresets: snapshot.splitPresets,
+        subgroups: snapshot.subgroups,
+        activities: snapshot.activities,
+        activityTotalCount: snapshot.activityTotalCount,
+        activityHasMore: snapshot.activityHasMore,
       }
       const parsed = offlineSnapshotOutputSchema.safeParse(output)
       if (!parsed.success) {

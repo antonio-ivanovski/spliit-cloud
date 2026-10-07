@@ -371,15 +371,19 @@ function DeliveryHistory({
   onClose: () => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'AccountWebhooks' })
+  const { t: tRoot } = useTranslation()
   const { toast } = useToast()
+  const isOnline = useOnlineStatus()
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  // Delivery history is connection-required: never launch the queries offline
+  // and never spin forever on loading.
   const history = trpc.webhooks.deliveries.useQuery(
     { endpointId: endpoint?.id ?? '', limit: 25 },
-    { enabled: endpoint !== null },
+    { enabled: endpoint !== null && isOnline },
   )
   const detail = trpc.webhooks.delivery.useQuery(
     { deliveryId: selectedId ?? '' },
-    { enabled: selectedId !== null },
+    { enabled: selectedId !== null && isOnline },
   )
   const redeliver = trpc.webhooks.redeliver.useMutation({
     onSuccess: () => history.refetch(),
@@ -410,7 +414,11 @@ function DeliveryHistory({
           </ResponsiveDialogDescription>
         </ResponsiveDialogHeader>
         <ResponsiveDialogBody className="max-h-[65vh] overflow-y-auto">
-          {history.isPending ? (
+          {!isOnline && !history.data ? (
+            <p className="text-sm text-muted-foreground">
+              {tRoot('OfflineReadOnly.needsConnection')}
+            </p>
+          ) : history.isPending ? (
             <Loader2 className="size-5 animate-spin" />
           ) : null}
           {history.data?.deliveries.length === 0 ? (
