@@ -6,7 +6,11 @@ import {
   useSyncedAccountPreferences,
 } from '@/components/account-preferences-sync'
 import { Switch } from '@/components/ui/switch'
-import { useOnlineStatus } from '@/lib/use-online-status'
+import {
+  useConnectionRequired,
+  useOfflineQueryEnabled,
+  useRemoteControlState,
+} from '@/lib/use-offline-controls'
 import { trpc } from '@/trpc/client'
 
 import {
@@ -52,19 +56,24 @@ export function AccountAiPreferences() {
     keyPrefix: 'AccountSettings.aiPreferences',
   })
   const { t: tRoot } = useTranslation()
-  const isOnline = useOnlineStatus()
   // Deployment flags are connection-required: never launch the query offline
   // and never spin forever on loading.
   const query = trpc.features.get.useQuery(undefined, {
-    enabled: isOnline,
+    enabled: useOfflineQueryEnabled(),
   })
   const preferences = useSyncedAccountPreferences()
   const updater = useAccountPreferenceUpdater()
-  const patchesDisabled = updater !== null && !updater.ready
+  // All AI toggles are remote writes: disable offline (previously only
+  // `patchesDisabled`, so they stayed enabled while disconnected).
+  const remoteControl = useRemoteControlState({
+    ready: updater === null || updater.ready,
+    busy: updater?.isUpdating,
+  })
+  const needsConnection = useConnectionRequired(!!query.data)
 
   const deploymentFeatures = query.data as DeploymentFeatures | undefined
 
-  if (!isOnline && !deploymentFeatures) {
+  if (needsConnection) {
     return (
       <SettingsSection
         id="ai-preferences"

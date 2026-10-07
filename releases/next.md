@@ -25,5 +25,6 @@ who is affected, and the exact migration steps.
 ### 🐛 Bug fixes
 
 - Offline reads now recover after connection failures, continue local pagination after disconnecting, and fence cached data against stale sign-in checks (`TBD` by @TBD)
+- Account settings toggles that need a connection are now consistently disabled offline instead of staying editable, and entering a group no longer shifts the page when the tab bar loads (`TBD` by @TBD)
 
 **Full Changelog**: TBD
