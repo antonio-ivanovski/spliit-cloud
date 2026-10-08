@@ -2729,7 +2729,7 @@
     "dismiss": "Fråga inte igen",
     "chrome": {
       "title": "Installera Spliit Cloud",
-      "description": "Lägg till Spliit Cloud på din startskärm för snabbare koll på utgifterna — fungerar som en native app."
+      "description": "Lägg till Spliit Cloud på din startskärm för snabbare koll på utgifterna — fungerar som en native app. Dina grupper laddas ner för offline läsning när du har loggat in."
     },
     "firefox": {
       "title": "Installera Spliit Cloud",
@@ -2739,7 +2739,7 @@
     },
     "ios": {
       "title": "Installera Spliit Cloud",
-      "description": "Lägg till Spliit Cloud på din startskärm för åtkomst med ett tryck.",
+      "description": "Lägg till Spliit Cloud på din startskärm för åtkomst med ett tryck. Dina grupper laddas ner för offline läsning när du har loggat in.",
       "step1": "Tryck på Dela-knappen",
       "step2": "Scrolla ner och tryck på Lägg till på startskärmen",
       "step3": "Tryck på Lägg till i det övre högra hörnet"

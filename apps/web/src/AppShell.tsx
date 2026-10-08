@@ -19,6 +19,7 @@ import { MascotProvider } from '@/components/mascot/mascot-context'
 import { MascotHost } from '@/components/mascot/mascot-host'
 import { MobileAppBar, MobileAppHeaderActions } from '@/components/mobile-shell'
 import { OfflineBanner } from '@/components/offline-banner'
+import { OfflineDownloadToasts } from '@/components/offline-download-toasts'
 import { ProfileGate } from '@/components/profile-gate'
 import { ProgressBar } from '@/components/progress-bar'
 import { PushNotificationOnboarding } from '@/components/push-notification-onboarding'
@@ -80,6 +81,7 @@ function Content() {
     <TRPCProvider>
       <OfflineProvider>
         <OfflineSyncHost />
+        <OfflineDownloadToasts />
         <MergeDeviceSavedViews />
         <PwaUpdateMutationGuard />
         <PwaUpdateCompositionGuard />

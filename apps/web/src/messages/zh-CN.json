@@ -2845,11 +2845,11 @@
     "dismiss": "不再询问",
     "chrome": {
       "title": "安装 Spliit Cloud",
-      "description": "将 Spliit Cloud 添加到主屏幕，更快地跟踪支出 — 像原生应用一样运行。"
+      "description": "将 Spliit Cloud 添加到主屏幕，更快地跟踪支出 — 像原生应用一样运行。登录后，您的群组将会下载以便离线阅读。"
     },
     "ios": {
       "title": "安装 Spliit Cloud",
-      "description": "将 Spliit Cloud 添加到主屏幕，一键即可访问。",
+      "description": "将 Spliit Cloud 添加到主屏幕，一键即可访问。登录后，您的群组将会下载以便离线阅读。",
       "step1": "点击分享按钮",
       "step2": "向下滚动并点击「添加到主屏幕」",
       "step3": "点击右上角的「添加」"

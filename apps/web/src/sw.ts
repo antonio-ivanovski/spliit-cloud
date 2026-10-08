@@ -9,6 +9,11 @@ import {
 } from 'workbox-precaching'
 import { NavigationRoute, registerRoute } from 'workbox-routing'
 
+import {
+  LOCALE_CHUNK_CACHE_NAME,
+  MAX_LOCALE_CHUNK_ENTRIES,
+  isLocaleChunkPath,
+} from '@/lib/pwa-locale-chunks'
 import { APP_SHELL_NAVIGATION_DENYLIST } from '@/lib/pwa-navigation'
 import {
   NOTIFICATION_NAV_ACK_TIMEOUT_MS,
@@ -26,6 +31,7 @@ import {
   PWA_UPDATE_PROTOCOL_VERSION,
   REQUEST_COORDINATED_ACTIVATION,
 } from '@/lib/pwa-update-protocol'
+import { locales } from '@spliit/domain/i18n'
 
 declare const self: ServiceWorkerGlobalScope
 
@@ -65,8 +71,11 @@ const appShellHandler = createHandlerBoundToURL('/index.html')
 
 // `/` also matches precached index.html. The generic precache route preserves
 // the browser's Accept header, which misses HTML cached with Vary: Accept
-// (Pages negotiates Markdown). Use the bound shell request for these document
-// URLs first, then let the precache route handle assets as usual.
+// (Pages negotiates Markdown in public/_worker.js withMarkdownAlternate).
+// Use the bound shell request for these document URLs first, then let the
+// precache route handle assets as usual. Keep this handler if the edge ever
+// changes Vary/Cache-Control for HTML: the precache lookup must not depend
+// on the browser's Accept value.
 registerRoute(
   new NavigationRoute(appShellHandler, {
     allowlist: [/^\/(?:index\.html)?(?:$|\?)/],
@@ -78,6 +87,41 @@ registerRoute(
   new NavigationRoute(appShellHandler, {
     denylist: [...APP_SHELL_NAVIGATION_DENYLIST],
   }),
+)
+
+// On-demand locale chunks (all bundles except en-US/en-GB, excluded from the
+// precache in vite.config.ts): cache-first by immutable hashed URL. A chunk
+// missing from both cache and network (offline first switch) rejects the
+// dynamic import, and i18n/setup.ts falls back to the loaded bundle so the
+// screen still renders.
+registerRoute(
+  ({ url, request }) => {
+    if (request.method !== 'GET') return false
+    if (new URL(url).origin !== self.location.origin) return false
+    return isLocaleChunkPath(new URL(url).pathname, locales)
+  },
+  async ({ request }) => {
+    const cache = await caches.open(LOCALE_CHUNK_CACHE_NAME)
+    const hit = await cache.match(request)
+    if (hit) return hit
+    const response = await fetch(request)
+    if (response.ok) {
+      try {
+        await cache.put(request, response.clone())
+        const keys = await cache.keys()
+        if (keys.length > MAX_LOCALE_CHUNK_ENTRIES) {
+          await Promise.all(
+            keys
+              .slice(0, keys.length - MAX_LOCALE_CHUNK_ENTRIES)
+              .map((key) => cache.delete(key)),
+          )
+        }
+      } catch {
+        // Runtime caching is best-effort; the network response still serves.
+      }
+    }
+    return response
+  },
 )
 
 self.addEventListener('message', (event) => {

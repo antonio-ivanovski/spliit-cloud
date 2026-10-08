@@ -2865,11 +2865,11 @@
     "dismiss": "Ez galdetu berriro",
     "chrome": {
       "title": "Instalatu Spliit Cloud",
-      "description": "Gehitu Spliit Cloud zure hasierako pantailan gastuen jarraipena azkarrago egiteko — aplikazio natibo batek bezala funtzionatzen du."
+      "description": "Gehitu Spliit Cloud zure hasierako pantailan gastuen jarraipena azkarrago egiteko — aplikazio natibo batek bezala funtzionatzen du. Zure taldeak offline irakurtzeko deskargatuko dira saioa hasten duzunean."
     },
     "ios": {
       "title": "Instalatu Spliit Cloud",
-      "description": "Gehitu Spliit Cloud zure hasierako pantailan ukipen bakar batekin sartzeko.",
+      "description": "Gehitu Spliit Cloud zure hasierako pantailan ukipen bakar batekin sartzeko. Zure taldeak offline irakurtzeko deskargatuko dira saioa hasten duzunean.",
       "step1": "Sakatu Partekatu botoia",
       "step2": "Korritu behera eta sakatu Gehitu hasierako pantailan",
       "step3": "Sakatu Gehitu goi-eskuineko izkinan"

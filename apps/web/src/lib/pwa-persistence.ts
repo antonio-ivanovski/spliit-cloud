@@ -3,10 +3,11 @@
  *
  * Installed/persisted storage survives quota pressure that would otherwise
  * evict IndexedDB and caches. The request goes out at most once per device
- * (marker-guarded, never retried or re-prompted) and only on recognized
- * Chromium-based engines where `persist()` resolves silently: Firefox prompts
- * the user (skipped) and unknown engines are skipped rather than probed.
- * Denied/unsupported outcomes are nonblocking by design.
+ * (marker-guarded) and only on recognized Chromium-based engines where
+ * `persist()` resolves silently: Firefox prompts the user (skipped) and unknown
+ * engines are skipped rather than probed. Denied/unsupported outcomes are
+ * nonblocking by design. A successful PWA install clears the marker so Chrome
+ * gets one more chance to grant persistence when it matters most.
  */
 
 export const PWA_PERSIST_ATTEMPT_KEY = 'spliit:storage-persist-attempted'
@@ -61,9 +62,12 @@ export type PersistentStorageHost = {
   persist?: () => Promise<boolean>
 }
 
+export type PersistenceMarkerStorage = Pick<Storage, 'getItem' | 'setItem'> &
+  Partial<Pick<Storage, 'removeItem'>>
+
 export type PersistenceRequestDeps = {
   environment?: PersistenceEnvironment
-  storage?: Pick<Storage, 'getItem' | 'setItem'> | undefined
+  storage?: PersistenceMarkerStorage | undefined
   navigatorRef?: { storage?: PersistentStorageHost | undefined } | undefined
 }
 
@@ -77,7 +81,8 @@ export type PersistenceRequestOutcome =
 /**
  * Request persistent storage exactly once. Never throws: every outcome maps to
  * a status and the attempt marker is written before resolving so no path
- * retries or re-prompts.
+ * retries or re-prompts (except an explicit post-install retry via
+ * `clearPersistenceAttempt`, which removes the marker after `appinstalled`).
  */
 export async function ensurePersistentStorageOnce(
   deps: PersistenceRequestDeps = {},
@@ -101,16 +106,33 @@ export async function ensurePersistentStorageOnce(
     markAttempted()
     return 'skipped'
   }
-  const persist = deps.navigatorRef?.storage?.persist
-  if (typeof persist !== 'function') {
+  const storageHost = deps.navigatorRef?.storage
+  if (typeof storageHost?.persist !== 'function') {
     markAttempted()
     return 'unsupported'
   }
   markAttempted()
   try {
-    return (await persist()) ? 'persisted' : 'declined'
+    // Call as a method so the StorageManager receiver is preserved.
+    // A destructured `persist()` throws "Illegal invocation" in Chrome.
+    return (await storageHost.persist()) ? 'persisted' : 'declined'
   } catch {
     return 'declined'
+  }
+}
+
+/**
+ * Clear the once-per-device marker so a later trigger (PWA `appinstalled`, when
+ * Chrome is most likely to grant persistence) gets one more attempt. Tolerates
+ * marker stores without `removeItem`. Never throws.
+ */
+export function clearPersistenceAttempt(
+  storage?: PersistenceMarkerStorage,
+): void {
+  try {
+    storage?.removeItem?.(PWA_PERSIST_ATTEMPT_KEY)
+  } catch {
+    // Marker clearing must never break the install transition.
   }
 }
 

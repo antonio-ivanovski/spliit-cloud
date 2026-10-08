@@ -2850,11 +2850,11 @@
     "dismiss": "Älä kysy uudelleen",
     "chrome": {
       "title": "Asenna Spliit Cloud",
-      "description": "Lisää Spliit Cloud aloitusnäytölle kulujen nopeampaa seurantaa varten — toimii kuin natiivisovellus."
+      "description": "Lisää Spliit Cloud aloitusnäytölle kulujen nopeampaa seurantaa varten — toimii kuin natiivisovellus. Ryhmäsi ladataan offline lukemista varten, kun kirjaudut sisään."
     },
     "ios": {
       "title": "Asenna Spliit Cloud",
-      "description": "Lisää Spliit Cloud aloitusnäytölle, jotta se avautuu yhdellä napautuksella.",
+      "description": "Lisää Spliit Cloud aloitusnäytölle, jotta se avautuu yhdellä napautuksella. Ryhmäsi ladataan offline lukemista varten, kun kirjaudut sisään.",
       "step1": "Napauta Jaa-painiketta",
       "step2": "Vieritä alas ja napauta Lisää aloitusnäytölle",
       "step3": "Napauta oikeasta yläkulmasta Lisää"

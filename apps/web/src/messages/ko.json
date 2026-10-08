@@ -2888,11 +2888,11 @@
     "dismiss": "다시 묻지 않기",
     "chrome": {
       "title": "Spliit Cloud 설치",
-      "description": "Spliit Cloud를 홈 화면에 추가하여 지출을 더 빠르게 관리하세요 — 네이티브 앱처럼 동작합니다."
+      "description": "Spliit Cloud를 홈 화면에 추가하여 지출을 더 빠르게 관리하세요 — 네이티브 앱처럼 동작합니다. 로그인하면 오프라인에서 읽을 수 있도록 그룹이 다운로드돼요."
     },
     "ios": {
       "title": "Spliit Cloud 설치",
-      "description": "홈 화면에 Spliit Cloud을 추가하여 한 번의 탭으로 접근하세요.",
+      "description": "홈 화면에 Spliit Cloud을 추가하여 한 번의 탭으로 접근하세요. 로그인하면 오프라인에서 읽을 수 있도록 그룹이 다운로드돼요.",
       "step1": "공유 버튼을 탭하세요",
       "step2": "아래로 스크롤하여 '홈 화면에 추가'를 탭하세요",
       "step3": "오른쪽 상단의 '추가'를 탭하세요"

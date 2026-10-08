@@ -2880,11 +2880,11 @@
     "dismiss": "Už se neptat",
     "chrome": {
       "title": "Nainstalovat Spliit Cloud",
-      "description": "Přidejte si Spliit Cloud na domovskou obrazovku pro rychlejší sledování výdajů — funguje jako nativní aplikace."
+      "description": "Přidejte si Spliit Cloud na domovskou obrazovku pro rychlejší sledování výdajů — funguje jako nativní aplikace. Vaše skupiny se po přihlášení stáhnou pro offline čtení."
     },
     "ios": {
       "title": "Nainstalovat Spliit Cloud",
-      "description": "Přidejte si Spliit Cloud na domovskou obrazovku pro přístup jedním klepnutím.",
+      "description": "Přidejte si Spliit Cloud na domovskou obrazovku pro přístup jedním klepnutím. Vaše skupiny se po přihlášení stáhnou pro offline čtení.",
       "step1": "Klepněte na tlačítko Sdílet",
       "step2": "Přejděte dolů a klepněte na Přidat na plochu",
       "step3": "Klepněte na Přidat v pravém horním rohu"

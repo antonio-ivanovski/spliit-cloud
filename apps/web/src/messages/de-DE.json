@@ -2890,11 +2890,11 @@
     "dismiss": "Nicht mehr fragen",
     "chrome": {
       "title": "Spliit Cloud installieren",
-      "description": "Füge Spliit Cloud deinem Startbildschirm hinzu, um Ausgaben schneller zu erfassen — funktioniert wie eine native App."
+      "description": "Füge Spliit Cloud deinem Startbildschirm hinzu, um Ausgaben schneller zu erfassen — funktioniert wie eine native App. Deine Gruppen werden nach dem Anmelden zum Offline-Lesen heruntergeladen."
     },
     "ios": {
       "title": "Spliit Cloud installieren",
-      "description": "Füge Spliit Cloud deinem Startbildschirm hinzu, um es mit einem Tipp zu öffnen.",
+      "description": "Füge Spliit Cloud deinem Startbildschirm hinzu, um es mit einem Tipp zu öffnen. Deine Gruppen werden nach dem Anmelden zum Offline-Lesen heruntergeladen.",
       "step1": "Tippe auf den Teilen-Button",
       "step2": "Scrolle nach unten und tippe auf Zum Home-Bildschirm hinzufügen",
       "step3": "Tippe oben rechts auf Hinzufügen"

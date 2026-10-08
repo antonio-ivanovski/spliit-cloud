@@ -105,4 +105,35 @@ describe('persistence service', () => {
     })
     expect(await Effect.runPromise(throwing.ensureOnce)).toBe('declined')
   })
+
+  it('retries once after install via retryAfterInstall', async () => {
+    const data = new Map<string, string>()
+    const storage = {
+      getItem: (key: string) =>
+        data.has(key) ? (data.get(key) as string) : null,
+      setItem: (key: string, value: string) => {
+        data.set(key, value)
+      },
+      removeItem: (key: string) => {
+        data.delete(key)
+      },
+    }
+    let calls = 0
+    const service = makePwaPersistence({
+      environment: CHROMIUM_BRANDS,
+      storage,
+      navigatorRef: {
+        storage: {
+          persist: () => {
+            calls += 1
+            return Promise.resolve(calls > 1)
+          },
+        },
+      },
+    })
+    expect(await Effect.runPromise(service.ensureOnce)).toBe('declined')
+    expect(await Effect.runPromise(service.ensureOnce)).toBe('already')
+    expect(await Effect.runPromise(service.retryAfterInstall)).toBe('persisted')
+    expect(calls).toBe(2)
+  })
 })

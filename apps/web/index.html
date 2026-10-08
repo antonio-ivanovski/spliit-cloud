@@ -134,8 +134,17 @@
 
       // A deployment can invalidate a lazy chunk while an existing tab is
       // still running the previous entry point. Recover once per tab; the
-      // revalidated HTML then points at the current module graph.
+      // revalidated HTML then points at the current module graph. Offline
+      // chunk failures must not reload: the service worker serves the shell
+      // from cache and the missing chunk is still missing after a reload.
       const reloadAfterAssetError = () => {
+        try {
+          if (typeof navigator !== 'undefined' && navigator.onLine === false)
+            return
+        } catch {
+          // Navigator probing must never turn a chunk error into another
+          // exception; fall through to the normal reload path.
+        }
         try {
           if (sessionStorage.getItem('spliit-preload-reloaded')) return
           sessionStorage.setItem('spliit-preload-reloaded', '1')
@@ -178,8 +187,26 @@
     <div id="pwa-bootstrap" role="status" aria-live="polite">
       <div id="pwa-bootstrap-content">
         <img src="/logo-with-text.svg" alt="Spliit" />
+        <p
+          id="pwa-bootstrap-offline"
+          hidden
+          style="font-size: 0.875rem; text-align: center"
+        >
+          You're offline — loading your saved groups…
+        </p>
       </div>
     </div>
+    <script>
+      try {
+        if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+          document
+            .getElementById('pwa-bootstrap-offline')
+            ?.removeAttribute('hidden')
+        }
+      } catch {
+        // Offline hint is best-effort; the shell still loads without it.
+      }
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

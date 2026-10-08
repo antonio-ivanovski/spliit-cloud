@@ -3005,11 +3005,11 @@
     "dismiss": "Don't ask again",
     "chrome": {
       "title": "Install Spliit Cloud",
-      "description": "Add Spliit Cloud to your home screen for faster expense tracking — works like a native app."
+      "description": "Add Spliit Cloud to your home screen for faster expense tracking — works like a native app. Your groups download for offline reading after you sign in."
     },
     "ios": {
       "title": "Install Spliit Cloud",
-      "description": "Add Spliit Cloud to your home screen for one-tap access.",
+      "description": "Add Spliit Cloud to your home screen for one-tap access. Your groups download for offline reading after you sign in.",
       "step1": "Tap the Share button",
       "step2": "Scroll down and tap Add to Home Screen",
       "step3": "Tap Add in the top-right corner"

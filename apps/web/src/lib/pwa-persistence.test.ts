@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 
 import {
+  clearPersistenceAttempt,
   PWA_PERSIST_ATTEMPT_KEY,
   ensurePersistentStorageOnce,
   isPersistenceWorthRequesting,
@@ -114,5 +115,65 @@ describe('persistent storage request', () => {
       }),
     ).resolves.toBe('persisted')
     expect(persist).toHaveBeenCalledOnce()
+  })
+
+  it('preserves the StorageManager receiver when calling persist()', async () => {
+    // Regression: a destructured `persist()` loses its receiver and Chrome
+    // throws "Illegal invocation", which the app swallowed as a decline with
+    // no retry. The host below models the real StorageManager behavior.
+    const storage = {
+      getItem: () => null,
+      setItem: vi.fn(),
+    }
+    const storageHost = {
+      persist(this: unknown) {
+        if (this !== storageHost) {
+          return Promise.reject(new TypeError('Illegal invocation'))
+        }
+        return Promise.resolve(true)
+      },
+    }
+    await expect(
+      ensurePersistentStorageOnce({
+        environment: CHROME,
+        storage,
+        navigatorRef: { storage: storageHost },
+      }),
+    ).resolves.toBe('persisted')
+  })
+
+  it('retries once after a post-install marker clear', async () => {
+    const store = new Map<string, string>()
+    const storage = {
+      getItem: (key: string) => store.get(key) ?? null,
+      setItem: (key: string, value: string) => {
+        store.set(key, value)
+      },
+      removeItem: (key: string) => {
+        store.delete(key)
+      },
+    }
+    const persist = vi
+      .fn()
+      .mockResolvedValueOnce(false)
+      .mockResolvedValueOnce(true)
+    const deps = {
+      environment: CHROME,
+      storage,
+      navigatorRef: { storage: { persist } },
+    }
+    await expect(ensurePersistentStorageOnce(deps)).resolves.toBe('declined')
+    await expect(ensurePersistentStorageOnce(deps)).resolves.toBe('already')
+    expect(persist).toHaveBeenCalledTimes(1)
+    clearPersistenceAttempt(storage)
+    await expect(ensurePersistentStorageOnce(deps)).resolves.toBe('persisted')
+    expect(persist).toHaveBeenCalledTimes(2)
+  })
+
+  it('tolerates marker stores without removeItem', () => {
+    expect(() =>
+      clearPersistenceAttempt({ getItem: () => null, setItem: () => {} }),
+    ).not.toThrow()
+    expect(() => clearPersistenceAttempt(undefined)).not.toThrow()
   })
 })

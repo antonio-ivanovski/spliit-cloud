@@ -105,6 +105,10 @@ function markdownAlternateLink(markdownPath) {
 
 function withMarkdownAlternate(response, markdownPath) {
   const headers = new globalThis.Headers(response.headers)
+  // Vary: Accept differentiates the HTML shell from the Markdown companion
+  // served on the same URL. The PWA service worker (src/sw.ts) serves the
+  // precached shell through a bound /index.html request that ignores the
+  // browser's Accept value — keep that handler if this header ever changes.
   headers.set('Vary', 'Accept')
   headers.append('Link', markdownAlternateLink(markdownPath))
   return new globalThis.Response(response.body, {

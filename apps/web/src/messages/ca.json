@@ -2867,11 +2867,11 @@
     "dismiss": "No m'ho tornis a demanar",
     "chrome": {
       "title": "Instal·la Spliit Cloud",
-      "description": "Afegeix Spliit Cloud a la pantalla d'inici per fer un seguiment de les despeses més ràpidament — funciona com una aplicació nativa."
+      "description": "Afegeix Spliit Cloud a la pantalla d'inici per fer un seguiment de les despeses més ràpidament — funciona com una aplicació nativa. Els teus grups es descarregaran per llegir-los sense connexió quan iniciïs sessió."
     },
     "ios": {
       "title": "Instal·la Spliit Cloud",
-      "description": "Afegeix Spliit Cloud a la pantalla d'inici per accedir-hi amb un sol toc.",
+      "description": "Afegeix Spliit Cloud a la pantalla d'inici per accedir-hi amb un sol toc. Els teus grups es descarregaran per llegir-los sense connexió quan iniciïs sessió.",
       "step1": "Toca el botó Compartir",
       "step2": "Desplaça't cap avall i toca Afegeix a la pantalla d'inici",
       "step3": "Toca Afegeix a la cantonada superior dreta"

@@ -2890,11 +2890,11 @@
     "dismiss": "Niet opnieuw vragen",
     "chrome": {
       "title": "Spliit Cloud installeren",
-      "description": "Voeg Spliit Cloud toe aan je startscherm om sneller je uitgaven bij te houden — werkt als een native app."
+      "description": "Voeg Spliit Cloud toe aan je startscherm om sneller je uitgaven bij te houden — werkt als een native app. Je groepen worden gedownload om offline te lezen zodra je bent ingelogd."
     },
     "ios": {
       "title": "Spliit Cloud installeren",
-      "description": "Voeg Spliit Cloud toe aan je startscherm voor snelle toegang met één tik.",
+      "description": "Voeg Spliit Cloud toe aan je startscherm voor snelle toegang met één tik. Je groepen worden gedownload om offline te lezen zodra je bent ingelogd.",
       "step1": "Tik op de Deel-knop",
       "step2": "Scroll naar beneden en tik op Zet op beginscherm",
       "step3": "Tik rechtsboven op Voeg toe"

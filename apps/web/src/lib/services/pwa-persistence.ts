@@ -1,6 +1,7 @@
 import { Context, Effect, Layer } from 'effect'
 
 import {
+  clearPersistenceAttempt,
   ensurePersistentStorageOnce,
   isPersistenceWorthRequesting,
   PWA_PERSIST_ATTEMPT_KEY,
@@ -37,7 +38,10 @@ export const INITIAL_PERSISTENCE: PwaPersistenceSnapshot = {
 
 export interface PwaPersistenceDeps {
   readonly environment?: PersistenceEnvironment
-  readonly storage?: Pick<Storage, 'getItem' | 'setItem'> | undefined
+  readonly storage?:
+    | (Pick<Storage, 'getItem' | 'setItem'> &
+        Partial<Pick<Storage, 'removeItem'>>)
+    | undefined
   readonly navigatorRef?:
     | { storage?: { persist?: () => Promise<boolean> } | undefined }
     | undefined
@@ -48,6 +52,12 @@ export interface PwaPersistenceService {
   readonly snapshot: Effect.Effect<PwaPersistenceSnapshot>
   /** Request persistence at most once. Never fails. */
   readonly ensureOnce: Effect.Effect<PersistenceRequestOutcome>
+  /**
+   * Post-install retry: clears the once-marker and requests again. Call on
+   * `appinstalled`, when Chrome is most likely to grant persistence. Never
+   * fails.
+   */
+  readonly retryAfterInstall: Effect.Effect<PersistenceRequestOutcome>
   /** Pure engine pre-check (no marker written). */
   readonly isWorthRequesting: Effect.Effect<boolean>
 }
@@ -89,6 +99,26 @@ export function makePwaPersistence(
     bridge,
     snapshot: bridge.readEffect,
     ensureOnce,
+    retryAfterInstall: Effect.matchEffect(
+      Effect.tryPromise({
+        try: () => {
+          clearPersistenceAttempt(deps?.storage)
+          return ensurePersistentStorageOnce({
+            environment: deps?.environment,
+            storage: deps?.storage,
+            navigatorRef: deps?.navigatorRef,
+          })
+        },
+        catch: (error: unknown) => error,
+      }),
+      {
+        onFailure: () =>
+          Effect.succeed('declined' as PersistenceRequestOutcome),
+        onSuccess: (outcome) => Effect.succeed(outcome),
+      },
+    ).pipe(
+      Effect.tap((outcome) => bridge.writeEffect({ attempted: true, outcome })),
+    ),
     isWorthRequesting: Effect.sync(() =>
       isPersistenceWorthRequesting(deps?.environment ?? {}),
     ),

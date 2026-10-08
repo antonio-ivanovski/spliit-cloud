@@ -2867,11 +2867,11 @@
     "dismiss": "Ne plus demander",
     "chrome": {
       "title": "Installer Spliit Cloud",
-      "description": "Ajoutez Spliit Cloud à votre écran d'accueil pour un suivi des dépenses plus rapide — fonctionne comme une application native."
+      "description": "Ajoutez Spliit Cloud à votre écran d'accueil pour un suivi des dépenses plus rapide — fonctionne comme une application native. Vos groupes seront téléchargés pour la lecture hors ligne après votre connexion."
     },
     "ios": {
       "title": "Installer Spliit Cloud",
-      "description": "Ajoutez Spliit Cloud à votre écran d'accueil pour y accéder en un seul geste.",
+      "description": "Ajoutez Spliit Cloud à votre écran d'accueil pour y accéder en un seul geste. Vos groupes seront téléchargés pour la lecture hors ligne après votre connexion.",
       "step1": "Appuyez sur le bouton Partager",
       "step2": "Faites défiler vers le bas et appuyez sur Sur l'écran d'accueil",
       "step3": "Appuyez sur Ajouter en haut à droite"

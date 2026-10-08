@@ -1,3 +1,4 @@
+import fs from 'node:fs'
 import path from 'node:path'
 
 import tailwindcss from '@tailwindcss/vite'
@@ -5,6 +6,8 @@ import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
+
+import { buildLocaleChunkIgnores } from './src/lib/pwa-locale-chunks.js'
 
 const publicWebHosts = (process.env.WEB_ORIGINS ?? '')
   .split(',')
@@ -20,6 +23,15 @@ const publicWebHosts = (process.env.WEB_ORIGINS ?? '')
       return []
     }
   })
+
+/** Locale codes from src/messages/*.json (node-side, build time only). */
+function readMessageLocales(): string[] {
+  const dir = path.resolve(import.meta.dirname, './src/messages')
+  return fs
+    .readdirSync(dir)
+    .filter((file) => file.endsWith('.json'))
+    .map((file) => file.slice(0, -'.json'.length))
+}
 
 export default defineConfig({
   // All workspace apps share the repository-level .env file. Vite otherwise
@@ -168,6 +180,11 @@ export default defineConfig({
           'screenshots/*',
           // ~3 MiB receipt-upload codec; not needed to launch the app offline.
           'assets/heic-to-*.js',
+          // Locale bundles (~7 MB for all 32): only the default bundle and
+          // its overlay stay precached. The rest load on demand into the
+          // service worker's runtime cache (see sw.ts); the list derives
+          // from messages/*.json so new locales are excluded automatically.
+          ...buildLocaleChunkIgnores(readMessageLocales()),
         ],
       },
     }),

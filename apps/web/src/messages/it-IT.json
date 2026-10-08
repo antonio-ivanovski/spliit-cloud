@@ -2867,11 +2867,11 @@
     "dismiss": "Non chiedere più",
     "chrome": {
       "title": "Installa Spliit Cloud",
-      "description": "Aggiungi Spliit Cloud alla schermata Home per tenere traccia delle spese più velocemente — funziona come un'app nativa."
+      "description": "Aggiungi Spliit Cloud alla schermata Home per tenere traccia delle spese più velocemente — funziona come un'app nativa. I tuoi gruppi saranno scaricati per leggerli offline una volta effettuato l'accesso."
     },
     "ios": {
       "title": "Installa Spliit Cloud",
-      "description": "Aggiungi Spliit Cloud alla schermata Home per accedervi con un solo tocco.",
+      "description": "Aggiungi Spliit Cloud alla schermata Home per accedervi con un solo tocco. I tuoi gruppi saranno scaricati per leggerli offline una volta effettuato l'accesso.",
       "step1": "Tocca il pulsante Condividi",
       "step2": "Scorri verso il basso e tocca Aggiungi alla schermata Home",
       "step3": "Tocca Aggiungi nell'angolo in alto a destra"

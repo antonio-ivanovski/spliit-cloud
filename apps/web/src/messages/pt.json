@@ -2867,11 +2867,11 @@
     "dismiss": "Não perguntar novamente",
     "chrome": {
       "title": "Instalar Spliit Cloud",
-      "description": "Adicione o Spliit Cloud ao seu ecrã inicial para um acompanhamento de despesas mais rápido — funciona como uma aplicação nativa."
+      "description": "Adicione o Spliit Cloud ao seu ecrã inicial para um acompanhamento de despesas mais rápido — funciona como uma aplicação nativa. Os teus grupos serão descarregados para leitura offline depois de iniciares sessão."
     },
     "ios": {
       "title": "Instalar Spliit Cloud",
-      "description": "Adicione o Spliit Cloud ao seu ecrã inicial para acesso com um só toque.",
+      "description": "Adicione o Spliit Cloud ao seu ecrã inicial para acesso com um só toque. Os teus grupos serão descarregados para leitura offline depois de iniciares sessão.",
       "step1": "Toque no botão Partilhar",
       "step2": "Desloque-se para baixo e toque em Adicionar ao ecrã principal",
       "step3": "Toque em Adicionar no canto superior direito"

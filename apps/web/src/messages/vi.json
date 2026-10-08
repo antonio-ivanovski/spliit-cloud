@@ -2967,11 +2967,11 @@
     "dismiss": "Đừng hỏi lại",
     "chrome": {
       "title": "Cài trên Chrome",
-      "description": "Thêm Spliit Cloud vào màn hình chính để theo dõi chi tiêu nhanh hơn — hoạt động như ứng dụng gốc."
+      "description": "Thêm Spliit Cloud vào màn hình chính để theo dõi chi tiêu nhanh hơn — hoạt động như ứng dụng gốc. Các nhóm của bạn sẽ được tải xuống để đọc ngoại tuyến sau khi bạn đăng nhập."
     },
     "ios": {
       "title": "Cài trên iOS",
-      "description": "Thêm vào màn hình chính.",
+      "description": "Thêm vào màn hình chính. Các nhóm của bạn sẽ được tải xuống để đọc ngoại tuyến sau khi bạn đăng nhập.",
       "step1": "Nhấn Chia sẻ",
       "step2": "Chọn 'Thêm vào màn hình chính'",
       "step3": "Nhấn 'Thêm'"

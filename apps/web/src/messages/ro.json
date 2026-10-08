@@ -2867,11 +2867,11 @@
     "dismiss": "Nu mă mai întreba",
     "chrome": {
       "title": "Instalează Spliit Cloud",
-      "description": "Adaugă Spliit Cloud pe ecranul principal pentru o urmărire mai rapidă a cheltuielilor — funcționează ca o aplicație nativă."
+      "description": "Adaugă Spliit Cloud pe ecranul principal pentru o urmărire mai rapidă a cheltuielilor — funcționează ca o aplicație nativă. Grupurile tale se vor descărca pentru citire offline după ce te autentifici."
     },
     "ios": {
       "title": "Instalează Spliit Cloud",
-      "description": "Adaugă Spliit Cloud pe ecranul principal pentru acces cu o singură atingere.",
+      "description": "Adaugă Spliit Cloud pe ecranul principal pentru acces cu o singură atingere. Grupurile tale se vor descărca pentru citire offline după ce te autentifici.",
       "step1": "Apasă pe butonul Partajare",
       "step2": "Derulează în jos și apasă pe Adaugă pe ecranul principal",
       "step3": "Apasă pe Adaugă în colțul din dreapta sus"

@@ -2858,11 +2858,11 @@
     "dismiss": "Bir daha sorma",
     "chrome": {
       "title": "Spliit Cloud'ı Yükle",
-      "description": "Harcamaları daha hızlı takip etmek için Spliit Cloud'u ana ekranınıza ekleyin — yerel bir uygulama gibi çalışır."
+      "description": "Harcamaları daha hızlı takip etmek için Spliit Cloud'u ana ekranınıza ekleyin — yerel bir uygulama gibi çalışır. Oturum açtıktan sonra gruplarınız çevrimdışı okuma için indirilir."
     },
     "ios": {
       "title": "Spliit Cloud'ı Yükle",
-      "description": "Tek dokunuşla erişim için Spliit Cloud'i ana ekranınıza ekleyin.",
+      "description": "Tek dokunuşla erişim için Spliit Cloud'i ana ekranınıza ekleyin. Oturum açtıktan sonra gruplarınız çevrimdışı okuma için indirilir.",
       "step1": "Paylaş düğmesine dokunun",
       "step2": "Aşağı kaydırın ve Ana Ekrana Ekle'ye dokunun",
       "step3": "Sağ üst köşedeki Ekle'ye dokunun"

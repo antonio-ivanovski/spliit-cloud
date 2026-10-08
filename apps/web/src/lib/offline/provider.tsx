@@ -19,6 +19,7 @@ import {
   writeLastAccount,
 } from '@/lib/last-account'
 import {
+  clearPersistenceAttempt,
   defaultPersistenceEnvironment,
   ensurePersistentStorageOnce,
 } from '@/lib/pwa-persistence'
@@ -442,20 +443,39 @@ export function OfflineProvider(props: OfflineProviderProps) {
   const syncNamespace = lifecycleSnapshotForSync.namespace
   // Persistent storage, once after verified use: protects IndexedDB/caches
   // from quota eviction. Chromium-only silent approval; denied/unsupported
-  // outcomes are nonblocking and never retried.
+  // outcomes are nonblocking. A PWA install clears the marker for one more
+  // attempt, when Chrome is most likely to grant persistence.
   useEffect(() => {
     if (lifecycleSnapshotForSync.session !== 'verified') return
-    void ensurePersistentStorageOnce({
-      environment: defaultPersistenceEnvironment(),
-      storage: (() => {
-        try {
-          return typeof localStorage === 'undefined' ? undefined : localStorage
-        } catch {
-          return undefined
-        }
-      })(),
-      navigatorRef: typeof navigator === 'undefined' ? undefined : navigator,
-    }).catch(() => undefined)
+    const request = () =>
+      ensurePersistentStorageOnce({
+        environment: defaultPersistenceEnvironment(),
+        storage: (() => {
+          try {
+            return typeof localStorage === 'undefined'
+              ? undefined
+              : localStorage
+          } catch {
+            return undefined
+          }
+        })(),
+        navigatorRef: typeof navigator === 'undefined' ? undefined : navigator,
+      }).catch(() => undefined)
+    void request()
+    const handleAppInstalled = () => {
+      try {
+        clearPersistenceAttempt(
+          typeof localStorage === 'undefined' ? undefined : localStorage,
+        )
+      } catch {
+        // Marker clearing must never break the install transition.
+      }
+      void request()
+    }
+    window.addEventListener('appinstalled', handleAppInstalled)
+    return () => {
+      window.removeEventListener('appinstalled', handleAppInstalled)
+    }
   }, [lifecycleSnapshotForSync.session])
   const getStorageSnapshotForSync = useCallback(
     () => storage.getSnapshot(),

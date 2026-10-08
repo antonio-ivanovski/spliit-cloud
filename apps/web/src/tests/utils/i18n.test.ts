@@ -134,6 +134,22 @@ describe('loadLocale', () => {
     await loadLocale(locale)
     expect(i18n.hasResourceBundle(locale, 'translation')).toBe(true)
   })
+
+  it('skips an unreachable chunk instead of failing the switch', async () => {
+    // Offline switch to a locale whose chunk was never cached: the dynamic
+    // import rejects, and the screen must still render through the loaded
+    // fallback bundle instead of throwing.
+    const modules = {
+      '/locales/fr-FR.json': () => Promise.reject(new Error('Network offline')),
+      '/locales/en-US.json': () =>
+        Promise.resolve({ default: { offlineProbe: 'online-value' } }),
+    }
+    await expect(loadLocale('fr-FR', modules as never)).resolves.toBeUndefined()
+    // The fallback bundle still loads so i18next resolves through it.
+    expect(i18n.getResource('en-US', 'translation', 'offlineProbe')).toBe(
+      'online-value',
+    )
+  })
 })
 
 // ── setUserLocale ──────────────────────────────────────────────────────

@@ -17,11 +17,15 @@ const messageModules = import.meta.glob<{ default: unknown }>(
   '@/messages/*.json',
 )
 
+type MessageModuleLoader = () => Promise<{ default: unknown }>
+type MessageModuleMap = Record<string, MessageModuleLoader>
+
 function loaderFor(
   locale: Locale,
-): (() => Promise<{ default: unknown }>) | undefined {
+  modules: MessageModuleMap = messageModules as MessageModuleMap,
+): MessageModuleLoader | undefined {
   const suffix = `/${locale}.json`
-  for (const [path, loader] of Object.entries(messageModules)) {
+  for (const [path, loader] of Object.entries(modules)) {
     if (path === suffix || path.endsWith(suffix)) return loader
   }
   return undefined
@@ -44,14 +48,29 @@ const canonicalLocaleMap = new Map(
   locales.map((locale) => [new Intl.Locale(locale).toString(), locale]),
 )
 
-export async function loadLocale(locale: Locale) {
+export async function loadLocale(
+  locale: Locale,
+  modules?: MessageModuleMap,
+): Promise<void> {
   // Load the locale plus its fallback chain (e.g. pt-BR → pt → en-US) so
   // sparse overlay locales resolve inherited keys at runtime.
   for (const lng of [locale, ...fallbackChain(locale)]) {
-    if (loadedLocales.has(lng)) continue
-    const messages = await loadLocaleMessages(lng)
+    if (!modules && loadedLocales.has(lng)) continue
+    const loader = loaderFor(lng, modules)
+    if (!loader) {
+      throw new Error(`No message bundle registered for locale "${lng}"`)
+    }
+    let messages: unknown
+    try {
+      messages = (await loader()).default
+    } catch {
+      // The chunk is unreachable (offline switch to a locale never cached).
+      // Skip it: i18next resolves through fallbackLng to the loaded bundle,
+      // so the screen still renders instead of failing the switch.
+      continue
+    }
     i18n.addResourceBundle(lng, defaultNS, messages, true, true)
-    loadedLocales.add(lng)
+    if (!modules) loadedLocales.add(lng)
   }
 }
 
