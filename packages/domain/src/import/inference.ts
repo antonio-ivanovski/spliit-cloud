@@ -279,9 +279,9 @@ export function inferDelimitedExpenseMapping(
     p.coverage && p.numeric >= 0.6
       ? p.numeric +
         p.coverage +
-        (/transaction amount|^amount$/.test(p.name)
+        (/transaction amount|^amount$|^cost$|^price$/.test(p.name)
           ? 5
-          : /\bamount\b/.test(p.name)
+          : /\bamount\b|\bcost\b|\bprice\b/.test(p.name)
             ? 4
             : /^value$|^total$/.test(p.name)
               ? 3

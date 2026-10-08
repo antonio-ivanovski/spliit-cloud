@@ -13,7 +13,7 @@ All your member groups remain available for read-only offline use: complete expe
 ### 🚀 Features
 
 - Read your groups offline with instant lists that merge updates in place, plus install Spliit as an app with step-by-step guidance (`TBD` by @TBD)
-- Browse every feature on the new public `/features` page, with a live split + settle demo that runs without an account (`TBD` by @TBD)
+- Browse every feature on the new public `/features` page, with a static illustration on each of the 15 cards — from the offline-first app and smart splits to the open platform (`TBD` by @TBD)
 - Create expenses while offline: new expenses queue locally and sync automatically on reconnect (`TBD` by @TBD)
 - Unknown links now show a helpful not-found page instead of a blank screen, and deleted expenses or budgets explain what happened instead of showing an error (`TBD` by @TBD)
 - See the latest product update in a banner on the signed-out landing page, with a link to all updates (`TBD` by @TBD)
@@ -25,5 +25,6 @@ All your member groups remain available for read-only offline use: complete expe
 - Create expenses by voice again: recordings no longer fail with a processing error (`TBD` by @TBD)
 - The signed-out landing page no longer jumps back to the top while loading (`TBD` by @TBD)
 - Pages that fail to load no longer leave a blank screen, offering a retry option instead (`TBD` by @TBD)
+- The CSV importer detects Cost-like amount columns instead of blocking on equally-plausible balance columns, and unresolved column confirmations now show a prominent alert with a confirm action instead of silently disabling Continue (`TBD` by @TBD)
 
 **Full Changelog**: TBD

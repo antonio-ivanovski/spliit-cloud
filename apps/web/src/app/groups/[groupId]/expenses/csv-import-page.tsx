@@ -90,7 +90,10 @@ import {
   MoneyMappingCard,
   MoneyMappingEditor,
 } from './csv-import-mapping-editors'
-import { translateImportError } from './csv-import-messages'
+import {
+  translateImportDetection,
+  translateImportError,
+} from './csv-import-messages'
 import { duplicateReason, ReviewExpensesList } from './csv-import-review-list'
 import {
   applyCategoryBindingAssignment,
@@ -2057,6 +2060,96 @@ export function ExpenseFileImportPage({
               />
             </>
           )}
+          {mappingPreviewDisplayStatus !== 'initializing' &&
+          mappingPreviewDisplayStatus !== 'error' &&
+          (detections.some((entry) => entry.requiresConfirmation) ||
+            (ambiguousDate && !dateFormatConfirmed)) ? (
+            <Alert>
+              <AlertCircle className="size-4" />
+              <AlertTitle>{t('ExpenseImport.wizard.errorTitle')}</AlertTitle>
+              <AlertDescription>
+                <ul className="space-y-3">
+                  {detections
+                    .filter((entry) => entry.requiresConfirmation)
+                    .map((entry, index) => {
+                      const fieldLabel =
+                        entry.field === 'money'
+                          ? t('ExpenseImport.mapping.moneyTitle')
+                          : entry.field === 'dateTime'
+                            ? t('ExpenseImport.viewers.fields.dateTime.title')
+                            : t('ExpenseImport.viewers.fields.title.title')
+                      const isTied = entry.code === 'DETECTION_TIED_COLUMN'
+                      return (
+                        <li
+                          key={`${entry.field}-${entry.code}-${index}`}
+                          className="space-y-1"
+                        >
+                          <p>
+                            <span className="font-medium">{fieldLabel}: </span>
+                            {translateImportDetection(entry, t)}
+                          </p>
+                          {isTied ? (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                if (entry.field === 'money') {
+                                  setDetections((current) =>
+                                    current.filter(
+                                      (candidate) =>
+                                        candidate.field !== 'money' ||
+                                        candidate.candidates.length === 0,
+                                    ),
+                                  )
+                                } else {
+                                  setDetections((current) =>
+                                    current.filter(
+                                      (candidate) =>
+                                        candidate.field !== entry.field,
+                                    ),
+                                  )
+                                }
+                              }}
+                            >
+                              {t('ExpenseImport.mapping.useDetectedColumn')}
+                            </Button>
+                          ) : (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setEditingField(entry.field)}
+                            >
+                              {t('ExpenseImport.mapping.editMappingButton')}
+                            </Button>
+                          )}
+                        </li>
+                      )
+                    })}
+                  {ambiguousDate && !dateFormatConfirmed ? (
+                    <li className="space-y-1">
+                      <p>
+                        <span className="font-medium">
+                          {t('ExpenseImport.viewers.fields.dateTime.title')}
+                          :{' '}
+                        </span>
+                        {t('ExpenseImport.wizard.blockerDateConfirmed')}
+                      </p>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setDateFormatConfirmed(true)}
+                      >
+                        {t('ExpenseImport.mapping.confirmDateTitle')}
+                      </Button>
+                    </li>
+                  ) : null}
+                </ul>
+              </AlertDescription>
+            </Alert>
+          ) : null}
           <WizardNav
             back={{
               label: t('ExpenseImport.wizard.backToFile'),

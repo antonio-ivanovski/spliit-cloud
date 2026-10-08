@@ -360,7 +360,7 @@ export function MappingCard({
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
-        {!isUpdating ? detectionFeedback : null}
+        {detectionFeedback}
         <div className="border-b pb-3 text-sm">
           <div className="flex items-center gap-2">
             <span className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
@@ -640,7 +640,7 @@ export function MoneyMappingCard({
         </Button>
       </CardHeader>
       <CardContent className="space-y-4">
-        {!isUpdating ? detectionFeedback : null}
+        {detectionFeedback}
         <div className="border-b pb-3 text-sm">
           <div className="flex items-center gap-2">
             <span className="text-xs font-medium tracking-wide text-muted-foreground uppercase">

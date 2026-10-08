@@ -434,6 +434,25 @@ describe('csv import follow-ups', () => {
         : undefined,
     ).toBe('price#1')
   })
+  it('prefers the Cost column over per-person balance columns without blocking', () => {
+    const table = parse(
+      'Date,Description,Category,Currency,Cost,Sarka,Diego\n2026-04-04,Dinner,Dining Out,EUR,61.00,-30.5,30.5\n2026-04-04,Market,Groceries,EUR,7.85,-3.92,3.93',
+    )
+    const { mapping, detections } = inferDelimitedExpenseMapping(
+      table,
+      'EUR',
+      'MDY',
+    )
+    expect(
+      detections.find((entry) => entry.field === 'money')?.requiresConfirmation,
+    ).toBe(false)
+    expect(mapping.mappings.money.mode).toBe('VISUAL')
+    if (mapping.mappings.money.mode !== 'VISUAL')
+      throw new Error('Expected visual money')
+    expect(mapping.mappings.money.amount.sourceValues[0]?.primary).toBe(
+      'cost#1',
+    )
+  })
   it('refuses to claim the same column as both date and title', () => {
     const table = parse('Info,Amount\nMeeting 3/2/2022,50\nLunch 4/2/2022,20')
     const { mapping, detections } = inferDelimitedExpenseMapping(
