@@ -2,9 +2,10 @@
 
 import { clientsClaim } from 'workbox-core'
 import {
+  addRoute,
   cleanupOutdatedCaches,
   createHandlerBoundToURL,
-  precacheAndRoute,
+  precache,
 } from 'workbox-precaching'
 import { NavigationRoute, registerRoute } from 'workbox-routing'
 
@@ -56,12 +57,25 @@ const manifest = self.__WB_MANIFEST
 // the protocol. A tab that defers its own reload after another tab activated
 // must reload before lazily importing chunks the cleanup may have removed,
 // especially offline.
-precacheAndRoute(manifest)
+precache(manifest)
 cleanupOutdatedCaches()
 clientsClaim()
 
+const appShellHandler = createHandlerBoundToURL('/index.html')
+
+// `/` also matches precached index.html. The generic precache route preserves
+// the browser's Accept header, which misses HTML cached with Vary: Accept
+// (Pages negotiates Markdown). Use the bound shell request for these document
+// URLs first, then let the precache route handle assets as usual.
 registerRoute(
-  new NavigationRoute(createHandlerBoundToURL('/index.html'), {
+  new NavigationRoute(appShellHandler, {
+    allowlist: [/^\/(?:index\.html)?(?:$|\?)/],
+  }),
+)
+addRoute()
+
+registerRoute(
+  new NavigationRoute(appShellHandler, {
     denylist: [...APP_SHELL_NAVIGATION_DENYLIST],
   }),
 )
