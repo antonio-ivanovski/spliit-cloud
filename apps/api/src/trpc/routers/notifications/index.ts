@@ -75,7 +75,12 @@ export const notificationsRouter = createTRPCRouter({
       ),
   }),
   push: createTRPCRouter({
-    getConfig: protectedProcedure.output(pushConfigOutputSchema).query(() => ({
+    /**
+     * Public by nature: returns only whether push is configured plus the VAPID
+     * public key (distributed to every browser by Web Push design). The private
+     * key and subject never leave the server env.
+     */
+    getConfig: publicProcedure.output(pushConfigOutputSchema).query(() => ({
       configured: isPushConfigured,
       vapidPublicKey: pushVapidPublicKey,
     })),

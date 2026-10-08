@@ -286,11 +286,14 @@ describe('OfflineProvider', () => {
       isVisible: () => true,
     })
     const lifecycle = createOfflineLifecycle({
-      readLastAccount: () => null,
+      readLastAccount: () => makeAccount('a'),
       writeLastAccount: () => {},
       clearLastAccount: () => {},
       resolveNamespace: (id) => JSON.stringify(['http://localhost:3001', id]),
-      verifySession: async () => ({ kind: 'signed-out' }),
+      verifySession: async () => ({
+        kind: 'verified',
+        account: makeAccount('a'),
+      }),
       storage: memoryStorage(),
     })
     const storage = createOfflineStore({
@@ -352,7 +355,7 @@ describe('OfflineProvider', () => {
     storage.close()
   })
 
-  it('forwards useSession UNAUTHORIZED errors to verification, ignores FORBIDDEN (P1-1)', async () => {
+  it('ignores UNAUTHORIZED query failures when signed out with no identity', async () => {
     mocks.useSession.mockReturnValue({
       data: null,
       error: null,
@@ -370,6 +373,75 @@ describe('OfflineProvider', () => {
       clearLastAccount: () => {},
       resolveNamespace: (id) => JSON.stringify(['http://localhost:3001', id]),
       verifySession: async () => ({ kind: 'signed-out' }),
+      storage: memoryStorage(),
+    })
+    const storage = createOfflineStore({
+      openRepository: async () => ({ close: vi.fn() }) as unknown as never,
+    })
+    const queryClient = makeQueryClient()
+    render(
+      <QueryClientProvider client={queryClient}>
+        <OfflineProvider
+          lifecycle={lifecycle}
+          connectivity={connectivity}
+          storage={storage}
+        >
+          <div>child</div>
+        </OfflineProvider>
+      </QueryClientProvider>,
+    )
+    // Wait for cold-start bootstrap verification to settle to signed-out.
+    await waitFor(() => {
+      expect(lifecycle.getSnapshot().verifyAttempt).toBeGreaterThan(0)
+      expect(lifecycle.getSnapshot().session).toBe('signed-out')
+    })
+    const baseline = lifecycle.getSnapshot().verifyAttempt
+
+    // An expected 401 with no identity (e.g. a protected query mounted on a
+    // public page) must not re-verify: that is the verify -> clear ->
+    // refetch -> 401 loop.
+    await act(async () => {
+      await queryClient
+        .fetchQuery({
+          queryKey: ['signed-out-unauthorized'],
+          queryFn: async () => {
+            throw { data: { code: 'UNAUTHORIZED' } }
+          },
+          retry: false,
+        })
+        .catch(() => undefined)
+    })
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 50))
+    })
+    expect(lifecycle.getSnapshot().verifyAttempt).toBe(baseline)
+
+    lifecycle.dispose()
+    connectivity.dispose()
+    storage.close()
+  })
+
+  it('forwards useSession UNAUTHORIZED errors to verification, ignores FORBIDDEN (P1-1)', async () => {
+    mocks.useSession.mockReturnValue({
+      data: { user: makeAccount('a'), session: {} },
+      error: null,
+      isPending: false,
+      isRefetching: false,
+      refetch: vi.fn(),
+    })
+    const connectivity = createConnectivityStore({
+      isNavigatorOnline: () => true,
+      isVisible: () => true,
+    })
+    const lifecycle = createOfflineLifecycle({
+      readLastAccount: () => makeAccount('a'),
+      writeLastAccount: () => {},
+      clearLastAccount: () => {},
+      resolveNamespace: (id) => JSON.stringify(['http://localhost:3001', id]),
+      verifySession: async () => ({
+        kind: 'verified',
+        account: makeAccount('a'),
+      }),
       storage: memoryStorage(),
     })
     const storage = createOfflineStore({

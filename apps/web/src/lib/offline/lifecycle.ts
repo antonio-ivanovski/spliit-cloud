@@ -806,6 +806,16 @@ export function createOfflineLifecycle(options: OfflineLifecycleOptions) {
   }
 
   function handleConfirmedSignedOut(): void {
+    // Idempotent: a repeated signed-out verdict with no identity must not
+    // clear the query cache again — that drop is what refetches mounted
+    // public queries and re-triggers the 401 -> verify cycle.
+    if (
+      !snapshot.account &&
+      !snapshot.namespace &&
+      snapshot.session === 'signed-out'
+    ) {
+      return
+    }
     invalidateVerification()
     const leavingNamespace = snapshot.namespace
     if (leavingNamespace) {
@@ -1068,6 +1078,12 @@ export function createOfflineLifecycle(options: OfflineLifecycleOptions) {
   function notifyAuthError(error: unknown): void {
     if (isForbiddenError(error)) return
     if (!shouldVerifySessionOnError(error)) return
+    // Already signed-out with no identity: there is nothing to revoke, and
+    // re-verifying on every expected 401 (e.g. a protected query mounted on
+    // a public page) creates a verify -> clear -> refetch -> 401 loop.
+    // Cold-start `checking` still verifies; explicit sign-in flows call
+    // verifySession({ fresh: true }) directly and bypass this guard.
+    if (!snapshot.account && snapshot.session === 'signed-out') return
     void runVerification()
   }
 

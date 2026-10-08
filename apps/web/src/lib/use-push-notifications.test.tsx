@@ -12,6 +12,9 @@ const mocks = vi.hoisted(() => ({
   remove: vi.fn(),
   invalidateStatus: vi.fn(),
   invalidatePreferences: vi.fn(),
+  currentAccount: vi.fn(),
+  getConfigOptions: null as null | { enabled?: unknown },
+  statusOptions: null as null | { enabled?: unknown },
 }))
 
 vi.mock('@/lib/push-notifications', () => ({
@@ -22,6 +25,10 @@ vi.mock('@/lib/push-notifications', () => ({
   isPushSupported: () => true,
   serializePushSubscription: mocks.serializePushSubscription,
   subscribeToPush: mocks.subscribeToPush,
+}))
+
+vi.mock('@/lib/use-current-account', () => ({
+  useCurrentAccount: mocks.currentAccount,
 }))
 
 vi.mock('@/trpc/client', () => ({
@@ -35,11 +42,14 @@ vi.mock('@/trpc/client', () => ({
     notifications: {
       push: {
         getConfig: {
-          useQuery: () => ({
-            data: { configured: true, vapidPublicKey: 'public-key' },
-            isPending: false,
-            error: null,
-          }),
+          useQuery: (_input: unknown, options?: { enabled?: unknown }) => {
+            mocks.getConfigOptions = options ?? null
+            return {
+              data: { configured: true, vapidPublicKey: 'public-key' },
+              isPending: false,
+              error: null,
+            }
+          },
         },
         register: {
           useMutation: () => ({
@@ -54,12 +64,15 @@ vi.mock('@/trpc/client', () => ({
           }),
         },
         status: {
-          useQuery: () => ({
-            data: { subscribed: true },
-            isPending: false,
-            isFetching: false,
-            error: null,
-          }),
+          useQuery: (_input: unknown, options?: { enabled?: unknown }) => {
+            mocks.statusOptions = options ?? null
+            return {
+              data: { subscribed: true },
+              isPending: false,
+              isFetching: false,
+              error: null,
+            }
+          },
         },
       },
     },
@@ -90,6 +103,23 @@ describe('usePushNotifications synchronization', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    mocks.getConfigOptions = null
+    mocks.statusOptions = null
+    mocks.currentAccount.mockReturnValue({
+      data: {
+        id: 'acct-1',
+        name: 'Alice',
+        email: 'alice@example.com',
+        image: null,
+        emailVerified: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
     browserSubscription = null
     Object.defineProperty(globalThis, 'Notification', {
       configurable: true,
@@ -157,5 +187,31 @@ describe('usePushNotifications synchronization', () => {
         'disabled',
       )
     })
+  })
+
+  it('fetches push config when signed in', async () => {
+    render(<PushProbe name="signed-in" />)
+
+    await waitFor(() => {
+      expect(screen.getByTestId('signed-in-status')).toBeInTheDocument()
+    })
+    expect(mocks.getConfigOptions?.enabled).toBe(true)
+  })
+
+  it('does not fetch push config or status when signed out', async () => {
+    mocks.currentAccount.mockReturnValue({
+      data: null,
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+    render(<PushProbe name="signed-out" />)
+
+    await waitFor(() => {
+      expect(screen.getByTestId('signed-out-status')).toBeInTheDocument()
+    })
+    expect(mocks.getConfigOptions?.enabled).toBe(false)
+    expect(mocks.statusOptions?.enabled).toBe(false)
   })
 })

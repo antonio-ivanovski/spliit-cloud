@@ -167,6 +167,7 @@ const PUBLIC_PROCEDURES = new Set<string>([
   'currency.getRate',
   'invitations.previewLink',
   'ai.extractExpenseInformationFromImage',
+  'notifications.push.getConfig',
 ])
 
 // Session cookie name. better-auth uses `better-auth.session_token` by

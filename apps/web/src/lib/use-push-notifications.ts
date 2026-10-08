@@ -15,6 +15,7 @@ import {
   type PushService,
   type PushSubscriptionRecord,
 } from '@/lib/services/push'
+import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 
 export const PUSH_SUBSCRIPTION_CHANGED_EVENT =
@@ -51,6 +52,11 @@ function toRecord(subscription: PushSubscription): PushSubscriptionRecord {
  */
 export function usePushNotifications() {
   const supported = isPushSupported()
+  // No unauthed consumer needs push state (onboarding + settings both require
+  // an account). Gating here stops protected `status` from 401ing on public
+  // pages like the signed-out landing, which previously fed the global
+  // auth-error -> verifySession -> query clear -> refetch loop.
+  const { data: account } = useCurrentAccount()
   const [subscription, setSubscription] = useState<PushSubscription | null>(
     null,
   )
@@ -58,8 +64,9 @@ export function usePushNotifications() {
   const [error, setError] = useState<Error | null>(null)
   const subscriptionLoad = useRef(0)
   const config = trpc.notifications.push.getConfig.useQuery(undefined, {
-    enabled: supported,
+    enabled: supported && !!account,
     staleTime: Infinity,
+    retry: false,
   })
   const utils = trpc.useUtils()
   const register = trpc.notifications.push.register.useMutation()
@@ -67,7 +74,7 @@ export function usePushNotifications() {
   const status = trpc.notifications.push.status.useQuery(
     { endpoint: subscription?.endpoint ?? 'https://invalid.local/disabled' },
     {
-      enabled: supported && !!subscription,
+      enabled: supported && !!subscription && !!account,
       staleTime: 30_000,
       retry: false,
     },

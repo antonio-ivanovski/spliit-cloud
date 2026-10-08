@@ -38,6 +38,16 @@ describe('notifications.push', () => {
     expect(result).not.toHaveProperty('privateKey')
   })
 
+  it('exposes getConfig publicly without a session', async () => {
+    const result = await notificationsRouter
+      .createCaller({ auth: null } as never)
+      .push.getConfig()
+
+    expect(result).toHaveProperty('configured')
+    expect(result).toHaveProperty('vapidPublicKey')
+    expect(result).not.toHaveProperty('privateKey')
+  })
+
   it('registers a subscription for the authenticated account', async () => {
     prismaMock.pushSubscription.findUnique.mockResolvedValue(null)
     prismaMock.pushSubscription.create.mockResolvedValue({

@@ -676,12 +676,14 @@ describe('auth error verification and bounded server-failure (P1)', () => {
     })
     expect(harness.lifecycle.getSnapshot().verifyAttempt).toBe(0)
 
+    // Cold-start `checking` with no account still verifies once.
     harness.lifecycle.notifyAuthError({ data: { code: 'UNAUTHORIZED' } })
     expect(harness.lifecycle.getSnapshot().verifyAttempt).toBe(1)
     // Wait for the in-flight verification to settle so the next assertion
     // measures exclusion, not single-flight dedupe.
     await harness.lifecycle.verifySession()
     expect(harness.lifecycle.getSnapshot().verifyAttempt).toBe(1)
+    expect(harness.lifecycle.getSnapshot().session).toBe('signed-out')
 
     const beforeForbidden = harness.lifecycle.getSnapshot().verifyAttempt
     harness.lifecycle.notifyAuthError({ data: { code: 'FORBIDDEN' } })
@@ -689,18 +691,40 @@ describe('auth error verification and bounded server-failure (P1)', () => {
     await Promise.resolve()
     expect(harness.lifecycle.getSnapshot().verifyAttempt).toBe(beforeForbidden)
 
-    // Direct HTTP 401 shape also verifies; 403 never does.
+    // Already signed-out with no identity: expected 401s (e.g. a protected
+    // query mounted on a public page) must not re-verify in a loop.
     harness.lifecycle.notifyAuthError({ status: 401 })
-    expect(harness.lifecycle.getSnapshot().verifyAttempt).toBe(
-      beforeForbidden + 1,
-    )
-    await harness.lifecycle.verifySession()
-    const before403 = harness.lifecycle.getSnapshot().verifyAttempt
+    await vi.advanceTimersByTimeAsync(0)
+    await Promise.resolve()
+    expect(harness.lifecycle.getSnapshot().verifyAttempt).toBe(beforeForbidden)
+
+    // Direct HTTP 403 shape never verifies either.
     harness.lifecycle.notifyAuthError({ status: 403 })
     await vi.advanceTimersByTimeAsync(0)
     await Promise.resolve()
-    expect(harness.lifecycle.getSnapshot().verifyAttempt).toBe(before403)
+    expect(harness.lifecycle.getSnapshot().verifyAttempt).toBe(beforeForbidden)
     harness.lifecycle.dispose()
+  })
+
+  it('UNAUTHORIZED still verifies when an identity exists', async () => {
+    const harness = makeHarness({
+      cached: makeAccount('a'),
+      verify: { kind: 'signed-out' },
+    })
+    await harness.lifecycle.bootstrap()
+    // Bootstrap with a cached account + signed-out verdict revokes to
+    // signed-out with no account; re-seed a verified identity instead.
+    harness.lifecycle.dispose()
+    const verified = makeHarness({
+      cached: makeAccount('a'),
+      verify: { kind: 'verified', account: makeAccount('a') },
+    })
+    await verified.lifecycle.bootstrap()
+    expect(verified.lifecycle.getSnapshot().session).toBe('verified')
+    const before = verified.lifecycle.getSnapshot().verifyAttempt
+    verified.lifecycle.notifyAuthError({ data: { code: 'UNAUTHORIZED' } })
+    expect(verified.lifecycle.getSnapshot().verifyAttempt).toBe(before + 1)
+    verified.lifecycle.dispose()
   })
 
   it('cold start with no cached account bounds server-failure to signed-out (P1-2)', async () => {
@@ -714,5 +738,36 @@ describe('auth error verification and bounded server-failure (P1)', () => {
     expect(harness.lifecycle.getSnapshot().account).toBeNull()
     expect(harness.lifecycle.getSnapshot().session).toBe('signed-out')
     harness.lifecycle.dispose()
+  })
+
+  it('repeated signed-out verdicts do not clear the query cache again', async () => {
+    const clear = vi.fn()
+    const cancelQueries = vi.fn(async () => undefined)
+    let lastAccount: AuthAccount | null = makeAccount('a')
+    const lifecycle = createOfflineLifecycle({
+      readLastAccount: () => lastAccount,
+      writeLastAccount: (account) => {
+        lastAccount = account
+      },
+      clearLastAccount: () => {
+        lastAccount = null
+      },
+      resolveNamespace: (id) => namespaceFor(id),
+      verifySession: async () => ({ kind: 'signed-out' }),
+      queryClient: { cancelQueries, clear },
+      storage: memoryStorage(),
+      persisted: {
+        deleteNamespace: async () => {},
+      },
+    })
+    await lifecycle.bootstrap()
+    // First signed-out verdict revokes the cached identity and clears once.
+    expect(lifecycle.getSnapshot().session).toBe('signed-out')
+    expect(clear).toHaveBeenCalledTimes(1)
+    // A repeated verdict (e.g. another 401 racing in) is a no-op: clearing
+    // again would drop mounted public queries and restart the refetch cycle.
+    lifecycle.handleConfirmedSignedOut()
+    expect(clear).toHaveBeenCalledTimes(1)
+    lifecycle.dispose()
   })
 })
