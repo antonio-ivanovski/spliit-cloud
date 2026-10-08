@@ -24,11 +24,13 @@ export function SupportPageShell({ children }: { children: ReactNode }) {
 
 export function SupportPageHeader({
   icon: Icon,
+  eyebrow = 'Spliit Cloud',
   title,
   description,
   children,
 }: {
-  icon: LucideIcon
+  icon?: LucideIcon
+  eyebrow?: ReactNode
   title: ReactNode
   description?: ReactNode
   children?: ReactNode
@@ -36,12 +38,16 @@ export function SupportPageHeader({
   return (
     <PageInset>
       <header className="mx-auto max-w-3xl text-center">
-        <div className="mx-auto mb-5 flex size-12 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary shadow-sm">
-          <Icon className="size-6" aria-hidden="true" />
-        </div>
-        <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">
-          Spliit Cloud
-        </p>
+        {Icon ? (
+          <div className="mx-auto mb-5 flex size-12 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary shadow-sm">
+            <Icon className="size-6" aria-hidden="true" />
+          </div>
+        ) : null}
+        {eyebrow ? (
+          <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">
+            {eyebrow}
+          </p>
+        ) : null}
         <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
           {title}
         </h1>

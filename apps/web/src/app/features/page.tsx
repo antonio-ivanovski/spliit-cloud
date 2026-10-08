@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { ExternalLink, Sparkles } from 'lucide-react'
+import { ExternalLink } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -24,7 +24,7 @@ export default function FeaturesPage() {
   return (
     <SupportPageShell>
       <SupportPageHeader
-        icon={Sparkles}
+        eyebrow={null}
         title={t('hero.title')}
         description={t('hero.description')}
       />
