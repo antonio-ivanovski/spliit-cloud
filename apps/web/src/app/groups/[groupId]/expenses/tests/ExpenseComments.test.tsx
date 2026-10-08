@@ -1,6 +1,7 @@
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import type { OfflineHookResult } from '@/lib/offline/read-hooks'
 import { fireEvent, render, screen, waitFor } from '@/test/test-utils'
 
 const mocks = vi.hoisted(() => ({
@@ -13,16 +14,18 @@ const mocks = vi.hoisted(() => ({
   useIsReadOnlyGroupViewer: vi.fn(),
   useGroupAccessSearch: vi.fn(),
   mockUseOnlineStatus: vi.fn(() => true),
-  mockUseOfflineExpenseComments: vi.fn(() => ({
-    data: undefined,
-    meta: {
-      source: 'network',
-      capturedAt: null,
-      availability: 'ready',
-      refreshing: false,
-      incompleteGroupCount: 0,
-    },
-  })),
+  mockUseOfflineExpenseComments: vi.fn(
+    (): OfflineHookResult<{ comments: unknown[] }> => ({
+      data: undefined,
+      meta: {
+        source: 'network',
+        capturedAt: null,
+        availability: 'ready',
+        refreshing: false,
+        incompleteGroupCount: 0,
+      },
+    }),
+  ),
 }))
 
 vi.mock('@/lib/use-online-status', () => ({

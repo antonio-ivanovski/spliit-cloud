@@ -1,21 +1,24 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { BudgetDetailModal } from '@/app/groups/[groupId]/budgets/detail.client'
+import type { OfflineHookResult } from '@/lib/offline/read-hooks'
 import { render, screen } from '@/test/test-utils'
 
 const mocks = vi.hoisted(() => ({
   mockBudgetGetQuery: vi.fn(),
   mockUseOnlineStatus: vi.fn(() => true),
-  mockUseOfflineBudget: vi.fn(() => ({
-    data: undefined,
-    meta: {
-      source: 'download',
-      capturedAt: null,
-      availability: 'missing',
-      refreshing: false,
-      incompleteGroupCount: 0,
-    },
-  })),
+  mockUseOfflineBudget: vi.fn(
+    (): OfflineHookResult<{ budget: unknown; dirtySince: Date | null }> => ({
+      data: undefined,
+      meta: {
+        source: 'download',
+        capturedAt: null,
+        availability: 'missing',
+        refreshing: false,
+        incompleteGroupCount: 0,
+      },
+    }),
+  ),
 }))
 
 const mockToast = vi.fn()

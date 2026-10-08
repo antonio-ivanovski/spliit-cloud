@@ -1,21 +1,32 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import type { OfflineHookResult } from '@/lib/offline/read-hooks'
 import { render, screen } from '@/test/test-utils'
 
 import { SplitPresetsCard } from './split-presets-card'
 
 const mocks = vi.hoisted(() => ({
   mockPresetsListQuery: vi.fn(),
-  mockUseOfflineSplitPresets: vi.fn(() => ({
-    data: undefined,
-    meta: {
-      source: 'download',
-      capturedAt: null,
-      availability: 'missing',
-      refreshing: false,
-      incompleteGroupCount: 0,
-    },
-  })),
+  mockUseOfflineSplitPresets: vi.fn(
+    (): OfflineHookResult<{
+      presets: unknown
+      canManageShared: boolean
+      canManagePersonal: boolean
+      groupDefaults: unknown
+      personalDefaults: unknown
+      effectiveDefaults: unknown
+      dirtySince: Date | null
+    }> => ({
+      data: undefined,
+      meta: {
+        source: 'download',
+        capturedAt: null,
+        availability: 'missing',
+        refreshing: false,
+        incompleteGroupCount: 0,
+      },
+    }),
+  ),
 }))
 
 vi.mock('@/lib/offline/read-hooks', () => ({

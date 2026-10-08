@@ -127,7 +127,7 @@ export function AccountAiPreferences() {
             id="account-ai-preferences-enabled"
             aria-label={t('masterLabel')}
             checked={pref?.aiFeaturesEnabled !== false}
-            disabled={patchesDisabled}
+            disabled={remoteControl.disabled}
             onCheckedChange={(value) =>
               void updater?.patchPreferences({ aiFeaturesEnabled: value })
             }
@@ -149,7 +149,7 @@ export function AccountAiPreferences() {
                       'account-ai-preferences-category-extract',
                     )}
                     checked={pref?.aiCategoryExtractEnabled !== false}
-                    disabled={patchesDisabled}
+                    disabled={remoteControl.disabled}
                     onCheckedChange={(value) =>
                       void updater?.patchPreferences({
                         aiCategoryExtractEnabled: value,
@@ -170,7 +170,7 @@ export function AccountAiPreferences() {
                       'account-ai-preferences-receipt-scan',
                     )}
                     checked={pref?.aiReceiptScanEnabled !== false}
-                    disabled={patchesDisabled}
+                    disabled={remoteControl.disabled}
                     onCheckedChange={(value) =>
                       void updater?.patchPreferences({
                         aiReceiptScanEnabled: value,
@@ -199,7 +199,7 @@ export function AccountAiPreferences() {
                       'account-ai-preferences-voice-expense',
                     )}
                     checked={pref?.aiVoiceExpenseEnabled !== false}
-                    disabled={patchesDisabled}
+                    disabled={remoteControl.disabled}
                     onCheckedChange={(value) =>
                       void updater?.patchPreferences({
                         aiVoiceExpenseEnabled: value,
