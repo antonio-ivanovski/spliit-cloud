@@ -93,7 +93,7 @@ export default function FeedbackPage() {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-11 w-full items-center justify-between gap-3 rounded-xl border bg-background px-3.5 text-sm font-medium transition-colors group-hover:border-primary/30 group-hover:text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden"
+                className="inline-flex min-h-11 w-full items-center justify-between gap-3 rounded-lg border bg-background px-3.5 text-sm font-medium transition-colors group-hover:border-primary/30 group-hover:text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden"
               >
                 {t(`categories.${key}.action`)}
                 <ExternalLink className="size-4" aria-hidden="true" />
@@ -122,7 +122,7 @@ export default function FeedbackPage() {
           </SupportNotice>
         </div>
 
-        <div className="overflow-hidden rounded-2xl border bg-card shadow-sm">
+        <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
           <div className="flex flex-col gap-4 border-b p-5 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <h2 className="font-semibold">{t('diagnostics.title')}</h2>

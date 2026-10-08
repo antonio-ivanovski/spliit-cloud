@@ -168,7 +168,7 @@ export default function UnsubscribePage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 px-6 pb-6 sm:px-8 sm:pb-8">
-          <div className="rounded-xl border bg-muted/20 p-4 sm:p-5">
+          <div className="rounded-lg border bg-muted/20 p-4 sm:p-5">
             <div className="flex items-start gap-3">
               <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border bg-background">
                 <Mail className="h-4 w-4 text-primary" aria-hidden="true" />

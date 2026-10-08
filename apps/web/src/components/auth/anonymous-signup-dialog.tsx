@@ -301,7 +301,7 @@ export function AnonymousSignupDialog({
           <>
             <DialogBody className="grid gap-5 py-2">
               {creationEnabled ? (
-                <div className="grid gap-3 rounded-xl border bg-muted/20 p-4">
+                <div className="grid gap-3 rounded-lg border bg-muted/20 p-4">
                   <div className="grid gap-1">
                     <p className="font-medium">{t('createTitle')}</p>
                     <p className="text-sm leading-5 text-muted-foreground">
@@ -333,7 +333,7 @@ export function AnonymousSignupDialog({
               ) : null}
               <div className="grid gap-3">
                 <p className="text-sm font-medium">{t('recoverTitle')}</p>
-                <div className="grid gap-3 rounded-xl border bg-muted/20 p-4">
+                <div className="grid gap-3 rounded-lg border bg-muted/20 p-4">
                   <p className="text-sm leading-5 text-muted-foreground">
                     {creationEnabled
                       ? t('recoverDescription')
@@ -382,7 +382,7 @@ export function AnonymousSignupDialog({
                   ) : null}
                 </div>
                 {passkeyEnabled && isPasskeySupported() ? (
-                  <div className="grid gap-3 rounded-xl border bg-muted/20 p-4">
+                  <div className="grid gap-3 rounded-lg border bg-muted/20 p-4">
                     <div className="grid gap-1">
                       <p className="font-medium">{t('existingPasskeyTitle')}</p>
                       <p className="text-sm leading-5 text-muted-foreground">

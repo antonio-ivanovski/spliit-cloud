@@ -88,7 +88,7 @@ function LandingIntro() {
         ) : null}
       </div>
       <div className="motion-enter flex flex-col gap-4">
-        <h1 className="landing-header py-2 text-3xl leading-none! font-bold sm:text-4xl lg:text-5xl">
+        <h1 className="landing-header py-2 font-rounded text-3xl leading-none! font-bold sm:text-4xl lg:text-5xl">
           <Trans i18nKey="Homepage.title" components={{ strong: <strong /> }} />
         </h1>
         <p className="text-base leading-7 text-muted-foreground sm:text-lg">

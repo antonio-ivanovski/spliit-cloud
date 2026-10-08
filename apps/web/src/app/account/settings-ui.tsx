@@ -278,7 +278,7 @@ export function SettingsBadge({
   return (
     <span
       className={cn(
-        'shrink-0 rounded-full bg-muted px-2 py-0.5 text-[10px] font-semibold tracking-wide text-muted-foreground uppercase',
+        'shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase',
         className,
       )}
     >

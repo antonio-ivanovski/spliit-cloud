@@ -576,7 +576,7 @@ function AccountDeletionReview() {
             </section>
             <section
               aria-labelledby="deletion-confirmation"
-              className="space-y-6 rounded-xl border bg-muted/30 p-5 sm:p-6"
+              className="space-y-6 rounded-lg border bg-muted/30 p-5 sm:p-6"
             >
               <h2
                 id="deletion-confirmation"

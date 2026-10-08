@@ -39,7 +39,7 @@ export function SupportPageHeader({
     <PageInset>
       <header className="mx-auto max-w-3xl text-center">
         {Icon ? (
-          <div className="mx-auto mb-5 flex size-12 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary shadow-sm">
+          <div className="mx-auto mb-5 flex size-12 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary shadow-sm">
             <Icon className="size-6" aria-hidden="true" />
           </div>
         ) : null}
@@ -48,7 +48,7 @@ export function SupportPageHeader({
             {eyebrow}
           </p>
         ) : null}
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+        <h1 className="mt-3 font-rounded text-3xl font-semibold tracking-tight sm:text-4xl">
           {title}
         </h1>
         {description ? (
@@ -86,10 +86,10 @@ export function SupportOptionCard({
 }) {
   if (visual) {
     return (
-      <article className="flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm">
+      <article className="flex flex-col overflow-hidden rounded-lg border bg-card shadow-sm">
         {visual}
         <div
-          className={`relative z-10 -mt-5 ml-4 flex size-9 items-center justify-center rounded-xl border shadow-sm ${accent}`}
+          className={`relative z-10 -mt-5 ml-4 flex size-9 items-center justify-center rounded-md border shadow-sm ${accent}`}
         >
           <Icon className="size-4" aria-hidden="true" />
         </div>
@@ -110,9 +110,9 @@ export function SupportOptionCard({
     )
   }
   return (
-    <article className="group flex min-h-64 flex-col rounded-2xl border bg-card p-5 shadow-sm transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg">
+    <article className="group flex min-h-64 flex-col rounded-lg border bg-card p-5 shadow-sm transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg">
       <div
-        className={`flex size-11 items-center justify-center rounded-xl border ${accent}`}
+        className={`flex size-11 items-center justify-center rounded-md border ${accent}`}
       >
         <Icon className="size-5" aria-hidden="true" />
       </div>
@@ -156,7 +156,7 @@ export function SupportNotice({
 }) {
   const tones = noticeTones[tone]
   return (
-    <div className={`rounded-2xl p-5 ${tones.box}`}>
+    <div className={`rounded-lg p-5 ${tones.box}`}>
       <div className="flex gap-3">
         <Icon
           className={`mt-0.5 size-5 shrink-0 ${tones.icon}`}

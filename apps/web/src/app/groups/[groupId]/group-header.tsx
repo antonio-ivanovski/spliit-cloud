@@ -201,7 +201,7 @@ export const GroupHeader = ({
     >
       <div className="mobile-contents items-center justify-between gap-3 sm:flex">
         <h1
-          className={`-mx-2 flex min-w-0 items-center gap-2 rounded-lg px-2 py-0.5 text-2xl font-bold ${
+          className={`-mx-2 flex min-w-0 items-center gap-2 rounded-lg px-2 py-0.5 font-rounded text-2xl font-bold ${
             focusedMobileRoute || mobileGroupTabRoute ? 'hidden sm:flex' : ''
           }`}
         >

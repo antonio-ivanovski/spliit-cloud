@@ -28,9 +28,9 @@ export function OAuthShell({
     >
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.1),transparent_42%)]" />
       <div className="grid w-full max-w-4xl gap-3.5">
-        <section className="flex min-w-0 items-center justify-between gap-4 rounded-2xl border border-primary/15 bg-primary/[0.045] px-3.5 py-3 sm:px-4">
+        <section className="flex min-w-0 items-center justify-between gap-4 rounded-lg border border-primary/15 bg-primary/[0.045] px-3.5 py-3 sm:px-4">
           <div className="flex min-w-0 items-center gap-3">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm shadow-primary/20">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-sm shadow-primary/20">
               <Plug className="size-5" aria-hidden="true" />
             </div>
             <div className="min-w-0">

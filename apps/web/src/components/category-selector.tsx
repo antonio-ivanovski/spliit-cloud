@@ -678,7 +678,7 @@ function CategoryBadgeView({ badge }: { badge?: CategorySelectorBadge }) {
     <span
       aria-hidden="true"
       className={cn(
-        'shrink-0 rounded-full border px-1.5 py-0.5 text-[11px] leading-4 font-medium whitespace-nowrap',
+        'shrink-0 rounded-full border px-1.5 py-0.5 text-xs leading-4 font-medium whitespace-nowrap',
         badge.className ?? 'border-border bg-muted text-muted-foreground',
       )}
     >

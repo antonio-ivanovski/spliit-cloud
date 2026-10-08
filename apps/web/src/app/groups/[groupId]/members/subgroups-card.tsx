@@ -88,7 +88,7 @@ export function SubgroupsCard({
         <div className="flex items-start gap-4">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
                 <Layers3 className="size-4" aria-hidden="true" />
               </span>
               <CardTitle>{t('subgroups.title')}</CardTitle>
@@ -109,7 +109,7 @@ export function SubgroupsCard({
       </CardHeader>
       <CardContent className="space-y-4 pt-5">
         {offlineSubgroups.length === 0 || !offlineSubgroupsEnabled ? (
-          <div className="rounded-2xl border border-dashed border-border/80 px-4 py-6 text-center">
+          <div className="rounded-lg border border-dashed border-border/80 px-4 py-6 text-center">
             <p className="text-sm font-medium">{t('subgroups.emptyTitle')}</p>
             <p className="mt-1 text-xs text-muted-foreground">
               {t('subgroups.emptyDescription')}
@@ -128,7 +128,7 @@ export function SubgroupsCard({
               return (
                 <article
                   key={subgroup.id}
-                  className="rounded-2xl border border-border/70 bg-background p-4 shadow-xs"
+                  className="rounded-lg border border-border/70 bg-background p-4 shadow-xs"
                 >
                   <div className="flex min-w-0 items-center gap-3">
                     <AvatarStack
@@ -321,7 +321,7 @@ export function SubgroupsCard({
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
                 <Layers3 className="size-4" aria-hidden="true" />
               </span>
               <CardTitle>{t('subgroups.title')}</CardTitle>
@@ -346,7 +346,7 @@ export function SubgroupsCard({
       {subgroupData.enabled && (
         <CardContent className="space-y-4 pt-5">
           {subgroupData.subgroups.length === 0 && !editor && (
-            <div className="rounded-2xl border border-dashed border-border/80 px-4 py-6 text-center">
+            <div className="rounded-lg border border-dashed border-border/80 px-4 py-6 text-center">
               <p className="text-sm font-medium">{t('subgroups.emptyTitle')}</p>
               <p className="mt-1 text-xs text-muted-foreground">
                 {t('subgroups.emptyDescription')}
@@ -366,7 +366,7 @@ export function SubgroupsCard({
               return (
                 <article
                   key={subgroup.id}
-                  className="rounded-2xl border border-border/70 bg-background p-4 shadow-xs"
+                  className="rounded-lg border border-border/70 bg-background p-4 shadow-xs"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex min-w-0 items-center gap-3">
@@ -443,7 +443,7 @@ export function SubgroupsCard({
                 {ungroupedParticipants.map((participant) => (
                   <div
                     key={participant.id}
-                    className="flex min-h-11 items-center gap-3 rounded-xl border border-border/60 bg-muted/20 px-3 py-2"
+                    className="flex min-h-11 items-center gap-3 rounded-md border border-border/60 bg-muted/20 px-3 py-2"
                   >
                     <ParticipantAvatar participant={participant} size="sm" />
                     <span className="min-w-0 truncate text-sm">
@@ -621,7 +621,7 @@ function SubgroupEditorDialog({
     return (
       <label
         key={participant.id}
-        className={`flex min-h-12 items-center gap-3 rounded-xl px-3 py-2 transition-colors ${isDisabled ? 'cursor-not-allowed opacity-45' : 'cursor-pointer hover:bg-muted/70'}`}
+        className={`flex min-h-12 items-center gap-3 rounded-md px-3 py-2 transition-colors ${isDisabled ? 'cursor-not-allowed opacity-45' : 'cursor-pointer hover:bg-muted/70'}`}
       >
         <Checkbox
           checked={isSelected}

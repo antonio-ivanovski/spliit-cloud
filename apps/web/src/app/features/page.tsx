@@ -16,7 +16,7 @@ import { FEATURE_ILLUSTRATIONS } from './illustrations/illustration-registry'
 const GITHUB_URL = 'https://github.com/antonio-ivanovski/spliit-cloud'
 
 const footerLinkClassName =
-  'inline-flex min-h-11 w-full items-center justify-between gap-3 rounded-xl border bg-background px-3.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden'
+  'inline-flex min-h-11 w-full items-center justify-between gap-3 rounded-lg border bg-background px-3.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden'
 
 export default function FeaturesPage() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Features' })
@@ -92,7 +92,7 @@ export default function FeaturesPage() {
         </div>
       </section>
 
-      <section className="rounded-2xl bg-card px-5 py-6 text-center sm:px-8">
+      <section className="rounded-lg bg-card px-5 py-6 text-center sm:px-8">
         <h2 className="text-lg font-semibold tracking-tight">
           {t('cta.title')}
         </h2>

@@ -45,28 +45,28 @@ export function ParticipantDistributionFooter({
     const formattedTotal = formatCurrency(currency, amountTarget, locale)
     if (Math.abs(diff) < 0.5) {
       message = t('matches', { total: formattedTotal })
-      colorClass = 'text-emerald-600'
+      colorClass = 'text-emerald-600 dark:text-emerald-400'
     } else if (diff > 0) {
       const formattedMissing = formatCurrency(currency, diff, locale)
       message = t('missing', {
         missing: formattedMissing,
         total: formattedTotal,
       })
-      colorClass = 'text-red-600'
+      colorClass = 'text-red-600 dark:text-red-400'
     } else {
       const formattedExtra = formatCurrency(currency, -diff, locale)
       message = t('surplus', {
         extra: formattedExtra,
         total: formattedTotal,
       })
-      colorClass = 'text-red-600'
+      colorClass = 'text-red-600 dark:text-red-400'
     }
   } else if (splitMode === 'BY_PERCENTAGE') {
     const sum = shares.reduce((s, x) => s + x, 0)
     const diff = 100 - sum
     if (Math.abs(diff) < 0.001) {
       message = t('percentageMatches')
-      colorClass = 'text-emerald-600'
+      colorClass = 'text-emerald-600 dark:text-emerald-400'
     } else {
       const pct = formatNumber(Math.abs(diff), locale, {
         maximumFractionDigits: 2,
@@ -76,7 +76,7 @@ export function ParticipantDistributionFooter({
         diff > 0
           ? t('percentageMissing', { pct })
           : t('percentageSurplus', { pct })
-      colorClass = 'text-red-600'
+      colorClass = 'text-red-600 dark:text-red-400'
     }
   } else if (
     splitMode === 'EVENLY' &&

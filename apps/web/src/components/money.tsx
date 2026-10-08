@@ -20,9 +20,9 @@ export function Money({
     <span
       className={cn(
         colored && amount <= 1
-          ? 'text-red-600'
+          ? 'text-red-600 dark:text-red-400'
           : colored && amount >= 1
-            ? 'text-green-600'
+            ? 'text-green-600 dark:text-green-400'
             : '',
         bold && 'font-bold',
       )}

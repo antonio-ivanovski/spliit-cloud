@@ -197,7 +197,7 @@ export function SubgroupSettlementCard({
             {t('subgroups.suggestedPayments')}
           </h3>
           {subgroupLegs.length === 0 ? (
-            <p className="rounded-xl border border-dashed px-4 py-5 text-sm text-muted-foreground">
+            <p className="rounded-lg border border-dashed px-4 py-5 text-sm text-muted-foreground">
               {t('subgroups.emptyPayments')}
             </p>
           ) : (

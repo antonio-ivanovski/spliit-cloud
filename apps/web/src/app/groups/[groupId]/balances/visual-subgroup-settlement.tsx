@@ -114,7 +114,7 @@ export function VisualSubgroupSettlement({
       ) : null}
 
       {legs.length === 0 ? (
-        <p className="rounded-xl border border-dashed px-4 py-5 text-sm text-muted-foreground">
+        <p className="rounded-lg border border-dashed px-4 py-5 text-sm text-muted-foreground">
           {t('subgroups.emptyPayments')}
         </p>
       ) : (

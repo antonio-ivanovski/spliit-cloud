@@ -78,7 +78,7 @@ export function GroupEmojiIntroDialog() {
         <ResponsiveDialogBody>
           <div
             aria-hidden="true"
-            className="mx-auto flex size-20 items-center justify-center rounded-2xl bg-muted text-4xl"
+            className="mx-auto flex size-20 items-center justify-center rounded-lg bg-muted text-4xl"
           >
             {detectedEmoji}
           </div>

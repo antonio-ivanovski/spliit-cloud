@@ -129,7 +129,7 @@ export function OAuthConsentPage() {
     >
       <div className="grid gap-3">
         <section
-          className="relative min-w-0 overflow-hidden rounded-xl border border-primary/20 bg-primary/[0.045] px-3 py-2.5 sm:px-3.5"
+          className="relative min-w-0 overflow-hidden rounded-lg border border-primary/20 bg-primary/[0.045] px-3 py-2.5 sm:px-3.5"
           aria-label={t('connectionDetails')}
           data-testid="oauth-connection-panel"
         >
@@ -259,7 +259,7 @@ export function OAuthConsentPage() {
 
         <div className="grid gap-2 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
           <section
-            className="rounded-xl border border-amber-500/25 bg-amber-500/[0.06] p-2.5"
+            className="rounded-lg border border-amber-500/25 bg-amber-500/[0.06] p-2.5"
             aria-labelledby="risk-title"
           >
             <div className="flex gap-2">
@@ -278,7 +278,7 @@ export function OAuthConsentPage() {
             </div>
           </section>
 
-          <div className="flex items-start gap-2 rounded-xl bg-muted/35 px-2.5 py-2">
+          <div className="flex items-start gap-2 rounded-lg bg-muted/35 px-2.5 py-2">
             <ShieldCheck
               className="mt-0.5 size-4 shrink-0 text-primary"
               aria-hidden="true"
@@ -292,7 +292,7 @@ export function OAuthConsentPage() {
         {redirectDestination?.isLoopback && (
           <section
             role="note"
-            className="rounded-xl border border-amber-500/25 bg-amber-500/[0.06] p-2.5"
+            className="rounded-lg border border-amber-500/25 bg-amber-500/[0.06] p-2.5"
             data-testid="oauth-loopback-warning"
           >
             <div className="flex gap-2">

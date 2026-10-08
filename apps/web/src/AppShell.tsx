@@ -92,7 +92,7 @@ function Content() {
               {showAmbientBackdrop && <AmbientBackdrop />}
               <header
                 data-app-header
-                className="fixed inset-x-0 top-0 z-50 hidden h-16 justify-between border-b bg-white/50 p-2 backdrop-blur-xs sm:flex dark:bg-gray-950/50"
+                className="fixed inset-x-0 top-0 z-50 hidden h-16 justify-between border-b bg-background/80 p-2 backdrop-blur-md supports-backdrop-filter:bg-background/80 sm:flex"
               >
                 <Link
                   className="flex items-center gap-2 transition-transform hover:scale-105"

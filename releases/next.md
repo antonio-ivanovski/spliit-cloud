@@ -19,7 +19,7 @@ who is affected, and the exact migration steps.
 
 ### 🚀 Features
 
-- Short entry per user-facing change (`TBD` by @TBD)
+- Streamlined the app UI with a sharper, more consistent look: unified card and button radii, consistent footer pills, small type-scale cleanups, and better dark-mode contrast (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
 

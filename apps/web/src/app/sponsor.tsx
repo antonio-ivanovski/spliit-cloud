@@ -54,7 +54,7 @@ function AddressBlock({
 
   return (
     <div className="flex flex-col items-center gap-3">
-      <div className="rounded-xl bg-white p-3 shadow-xs">
+      <div className="rounded-lg bg-white p-3 shadow-xs">
         <QRCodeSVG value={qrValue} size={160} level="M" aria-label={qrLabel} />
       </div>
       <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
@@ -119,7 +119,7 @@ export default function SponsorPage() {
     <SupportPageShell>
       <SupportPageHeader icon={HeartHandshake} title={t('title')} />
 
-      <div className="rounded-2xl bg-card px-5 py-5 text-center sm:px-8 sm:py-6">
+      <div className="rounded-lg bg-card px-5 py-5 text-center sm:px-8 sm:py-6">
         <div className="mx-auto max-w-3xl">
           <p className="text-sm leading-6 text-muted-foreground sm:text-base">
             {t('description')}
@@ -156,8 +156,8 @@ export default function SponsorPage() {
         </div>
       </div>
 
-      <article className="group flex flex-col gap-5 rounded-2xl border border-primary/25 bg-card p-5 shadow-sm sm:flex-row sm:items-center sm:p-6">
-        <div className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-rose-200/80 bg-rose-50/60 text-rose-700 dark:border-rose-900/70 dark:bg-rose-950/25 dark:text-rose-300">
+      <article className="group flex flex-col gap-5 rounded-lg border border-primary/25 bg-card p-5 shadow-sm sm:flex-row sm:items-center sm:p-6">
+        <div className="flex size-11 shrink-0 items-center justify-center rounded-md border border-rose-200/80 bg-rose-50/60 text-rose-700 dark:border-rose-900/70 dark:bg-rose-950/25 dark:text-rose-300">
           <HeartHandshake className="size-5" aria-hidden="true" />
         </div>
         <div className="min-w-0 flex-1">
@@ -172,7 +172,7 @@ export default function SponsorPage() {
           href={GITHUB_SPONSORS_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex min-h-11 shrink-0 items-center justify-between gap-3 rounded-xl border bg-background px-3.5 text-sm font-medium transition-colors group-hover:border-primary/30 group-hover:text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden sm:min-w-52"
+          className="inline-flex min-h-11 shrink-0 items-center justify-between gap-3 rounded-lg border bg-background px-3.5 text-sm font-medium transition-colors group-hover:border-primary/30 group-hover:text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden sm:min-w-52"
         >
           {t('github.action')}
           <ExternalLink className="size-4" aria-hidden="true" />

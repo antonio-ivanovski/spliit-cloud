@@ -104,7 +104,7 @@ export function OAuthManualCallbackPage() {
         </output>
 
         <section
-          className="grid gap-2 rounded-xl border bg-muted/35 px-2.5 py-2"
+          className="grid gap-2 rounded-lg border bg-muted/35 px-2.5 py-2"
           aria-label={t('codeLabel')}
         >
           <div className="flex items-center justify-between gap-2">
@@ -130,7 +130,7 @@ export function OAuthManualCallbackPage() {
           ) : null}
         </section>
 
-        <div className="flex gap-2 rounded-xl border border-amber-500/25 bg-amber-500/[0.06] p-2.5">
+        <div className="flex gap-2 rounded-lg border border-amber-500/25 bg-amber-500/[0.06] p-2.5">
           <TriangleAlert
             className="mt-0.5 size-4 shrink-0 text-amber-700 dark:text-amber-400"
             aria-hidden="true"

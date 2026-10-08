@@ -40,7 +40,7 @@ export function AvatarStack({
       {hiddenCount > 0 && (
         <span
           className={cn(
-            '-ms-2 grid place-items-center rounded-full border-2 border-background bg-muted text-[10px] font-medium text-muted-foreground',
+            '-ms-2 grid place-items-center rounded-full border-2 border-background bg-muted text-xs font-medium text-muted-foreground',
             sizeClass[size],
           )}
         >

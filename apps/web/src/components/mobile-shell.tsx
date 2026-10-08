@@ -47,7 +47,7 @@ export function MobileAppHeaderActions() {
   return (
     <div
       data-mobile-header-actions
-      className="flex shrink-0 items-center gap-0"
+      className="flex shrink-0 items-center gap-0.5"
     >
       <CurrencyConverterButton />
       <LocaleSwitcher />
@@ -210,7 +210,7 @@ export function MobileGroupNav({ groupId }: GroupNavProps) {
                   params={{ groupId }}
                   search={{ invite: linkInviteToken, viewKey }}
                   aria-current={active ? 'page' : undefined}
-                  className={`flex min-h-11 min-w-0 flex-col items-center justify-center gap-0.5 rounded-lg px-1 text-center text-[10px] leading-tight font-medium transition-colors ${active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+                  className={`flex min-h-11 min-w-0 flex-col items-center justify-center gap-0.5 rounded-lg px-1 text-center text-xs leading-tight font-medium transition-colors ${active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
                 >
                   <Icon
                     className="motion-nav-icon size-5"
@@ -226,7 +226,7 @@ export function MobileGroupNav({ groupId }: GroupNavProps) {
               aria-label={t('Groups.groupActions')}
               aria-current={activeMore ? 'page' : undefined}
               onClick={() => setMoreOpen(true)}
-              className={`flex min-h-11 min-w-0 flex-col items-center justify-center gap-0.5 rounded-lg px-1 text-center text-[10px] leading-tight font-medium transition-colors ${activeMore ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+              className={`flex min-h-11 min-w-0 flex-col items-center justify-center gap-0.5 rounded-lg px-1 text-center text-xs leading-tight font-medium transition-colors ${activeMore ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
             >
               <MoreHorizontal
                 className="motion-nav-icon size-5"

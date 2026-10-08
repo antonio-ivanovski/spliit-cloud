@@ -116,7 +116,7 @@ export function SettlementBalanceList({
 
   if (orderedIdentities.length === 0) {
     return emptyMessage ? (
-      <p className="rounded-xl border border-dashed px-4 py-5 text-center text-sm text-muted-foreground">
+      <p className="rounded-lg border border-dashed px-4 py-5 text-center text-sm text-muted-foreground">
         {emptyMessage}
       </p>
     ) : null
@@ -192,7 +192,7 @@ export function SettlementGroupCard({
   children: ReactNode
 }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-border/80 bg-card shadow-xs">
+    <div className="overflow-hidden rounded-lg border border-border/80 bg-card shadow-xs">
       <div className="flex min-h-14 items-center justify-between gap-2 border-b border-dashed border-border/70 bg-background/70 px-3 py-2.5">
         <div className="flex min-w-0 flex-1 items-center gap-2">
           <SettlementAvatar members={identity.members} label={identity.name} />

@@ -15,12 +15,12 @@ export function LegalPage({
 }: LegalPageProps) {
   return (
     <PageShell width="full" className="block py-10 sm:py-16">
-      <article className="mx-auto max-w-3xl rounded-2xl border bg-card px-5 py-8 shadow-sm sm:px-10 sm:py-12">
+      <article className="mx-auto max-w-3xl rounded-lg border bg-card px-5 py-8 shadow-sm sm:px-10 sm:py-12">
         <header className="mb-10 border-b pb-7">
           <p className="mb-2 text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">
             Spliit Cloud
           </p>
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h2 className="font-rounded text-3xl font-semibold tracking-tight sm:text-4xl">
             {title}
           </h2>
           <p className="mt-3 text-sm text-muted-foreground">
