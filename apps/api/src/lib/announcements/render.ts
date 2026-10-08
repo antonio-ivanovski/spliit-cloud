@@ -23,9 +23,8 @@ export async function renderAnnouncementEmail(input: {
   if (!content)
     throw new Error(`Unknown announcement: ${input.announcement.id}`)
   const { title, body } = content
-  // Deep-link straight to the announcement so email readers land on it.
-  // The /updates page scrolls to the hash once entries have loaded.
-  const updatesUrl = `${input.webBaseUrl}/updates#${input.announcement.id}`
+  // Link straight to the announcement's page so email readers land on it.
+  const updatesUrl = `${input.webBaseUrl}/updates/${input.announcement.id}`
   const text = [
     title,
     '',

@@ -4610,7 +4610,9 @@
     "title": "اپ ڈیٹس",
     "latest": "نیا کیا ہے",
     "viewAll": "تمام اپ ڈیٹس دیکھیں",
-    "dismiss": "ٹھیک ہے"
+    "dismiss": "ٹھیک ہے",
+    "archive": "پچھلی اپ ڈیٹس",
+    "backToUpdates": "اپ ڈیٹس پر واپس جائیں"
   },
   "Features": {
     "catalogLabel": "مکمل کیٹلاگ",

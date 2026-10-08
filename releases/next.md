@@ -17,6 +17,7 @@ All your member groups remain available for read-only offline use: complete expe
 - Create expenses while offline: new expenses queue locally and sync automatically on reconnect (`TBD` by @TBD)
 - Unknown links now show a helpful not-found page instead of a blank screen, and deleted expenses or budgets explain what happened instead of showing an error (`TBD` by @TBD)
 - See the latest product update in a banner on the signed-out landing page, with a link to all updates (`TBD` by @TBD)
+- Browse updates with only the latest announcement expanded and previous ones as links to their own pages, which announcement emails now point to directly (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
 

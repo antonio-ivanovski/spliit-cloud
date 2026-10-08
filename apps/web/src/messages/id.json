@@ -4584,7 +4584,9 @@
     "title": "Pembaruan",
     "latest": "Yang baru",
     "viewAll": "Lihat semua pembaruan",
-    "dismiss": "Mengerti"
+    "dismiss": "Mengerti",
+    "archive": "Pembaruan sebelumnya",
+    "backToUpdates": "Kembali ke pembaruan"
   },
   "Features": {
     "catalogLabel": "Katalog lengkap",

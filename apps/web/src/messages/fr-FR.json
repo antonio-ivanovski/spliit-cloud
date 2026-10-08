@@ -4634,7 +4634,9 @@
     "title": "Mises à jour",
     "latest": "Nouveautés",
     "viewAll": "Voir toutes les mises à jour",
-    "dismiss": "Compris"
+    "dismiss": "Compris",
+    "archive": "Mises à jour précédentes",
+    "backToUpdates": "Retour aux mises à jour"
   },
   "Features": {
     "catalogLabel": "Catalogue complet",

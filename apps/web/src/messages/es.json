@@ -4685,7 +4685,9 @@
     "title": "Actualizaciones",
     "latest": "Novedades",
     "viewAll": "Ver todas las actualizaciones",
-    "dismiss": "Entendido"
+    "dismiss": "Entendido",
+    "archive": "Actualizaciones anteriores",
+    "backToUpdates": "Volver a las actualizaciones"
   },
   "Features": {
     "catalogLabel": "Catálogo completo",

@@ -4658,7 +4658,9 @@
     "title": "Aktualizacje",
     "latest": "Co nowego",
     "viewAll": "Zobacz wszystkie aktualizacje",
-    "dismiss": "Rozumiem"
+    "dismiss": "Rozumiem",
+    "archive": "Poprzednie aktualizacje",
+    "backToUpdates": "Wróć do aktualizacji"
   },
   "Features": {
     "catalogLabel": "Pełny katalog",

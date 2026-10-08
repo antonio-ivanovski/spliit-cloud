@@ -4585,7 +4585,9 @@
     "title": "更新",
     "latest": "最新动态",
     "viewAll": "查看所有更新",
-    "dismiss": "知道了"
+    "dismiss": "知道了",
+    "archive": "往期更新",
+    "backToUpdates": "返回更新"
   },
   "Features": {
     "catalogLabel": "完整目录",

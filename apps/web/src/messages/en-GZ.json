@@ -4596,7 +4596,9 @@
     "title": "updates",
     "latest": "what's new",
     "viewAll": "see all updates",
-    "dismiss": "got it"
+    "dismiss": "got it",
+    "archive": "previous updates",
+    "backToUpdates": "back to updates"
   },
   "Features": {
     "catalog": {

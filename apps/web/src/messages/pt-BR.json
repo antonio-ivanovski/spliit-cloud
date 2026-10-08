@@ -2519,5 +2519,8 @@
     "budgetDescription": "Este orçamento não existe ou foi excluído.",
     "errorTitle": "Algo deu errado",
     "errorDescription": "Ocorreu um erro inesperado. Tente novamente ou volte ao início."
+  },
+  "Updates": {
+    "backToUpdates": "Voltar para as atualizações"
   }
 }

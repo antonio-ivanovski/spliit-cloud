@@ -4641,7 +4641,9 @@
     "title": "עדכונים",
     "latest": "מה חדש",
     "viewAll": "הצגת כל העדכונים",
-    "dismiss": "הבנתי"
+    "dismiss": "הבנתי",
+    "archive": "עדכונים קודמים",
+    "backToUpdates": "בחזרה לעדכונים"
   },
   "Features": {
     "catalogLabel": "הקטלוג המלא",

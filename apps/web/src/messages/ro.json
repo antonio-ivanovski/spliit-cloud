@@ -4639,7 +4639,9 @@
     "title": "Actualizări",
     "latest": "Noutăți",
     "viewAll": "Vezi toate actualizările",
-    "dismiss": "Am înțeles"
+    "dismiss": "Am înțeles",
+    "archive": "Actualizări anterioare",
+    "backToUpdates": "Înapoi la actualizări"
   },
   "Features": {
     "catalogLabel": "Catalog complet",

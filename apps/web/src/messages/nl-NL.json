@@ -4676,7 +4676,9 @@
     "title": "Nieuws",
     "latest": "Wat is er nieuw",
     "viewAll": "Alle updates bekijken",
-    "dismiss": "Begrepen"
+    "dismiss": "Begrepen",
+    "archive": "Vorige updates",
+    "backToUpdates": "Terug naar updates"
   },
   "Features": {
     "catalogLabel": "Volledige catalogus",

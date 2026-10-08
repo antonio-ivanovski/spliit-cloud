@@ -53,8 +53,8 @@ export function LandingUpdatesTeaser() {
       </p>
       <h2 className="mt-1.5 text-base font-semibold tracking-tight">
         <Link
-          to="/updates"
-          hash={content.id}
+          to="/updates/$announcementId"
+          params={{ announcementId: content.id }}
           className="rounded-sm underline-offset-4 hover:text-primary hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           {content.title}

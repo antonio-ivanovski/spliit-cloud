@@ -4669,7 +4669,9 @@
     "title": "업데이트",
     "latest": "새로운 소식",
     "viewAll": "모든 업데이트 보기",
-    "dismiss": "알겠습니다"
+    "dismiss": "알겠습니다",
+    "archive": "이전 업데이트",
+    "backToUpdates": "업데이트로 돌아가기"
   },
   "Features": {
     "catalogLabel": "전체 카탈로그",

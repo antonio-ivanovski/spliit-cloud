@@ -4609,7 +4609,9 @@
     "title": "अपडेट",
     "latest": "क्या नया है",
     "viewAll": "सभी अपडेट देखें",
-    "dismiss": "ठीक है"
+    "dismiss": "ठीक है",
+    "archive": "पिछले अपडेट",
+    "backToUpdates": "अपडेट पर वापस जाएं"
   },
   "Features": {
     "catalogLabel": "पूर्ण सूची",

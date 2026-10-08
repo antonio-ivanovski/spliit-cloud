@@ -4707,7 +4707,9 @@
     "title": "Updates",
     "latest": "What's new",
     "viewAll": "See all updates",
-    "dismiss": "Got it"
+    "dismiss": "Got it",
+    "archive": "Previous updates",
+    "backToUpdates": "Back to updates"
   },
   "Features": {
     "hero": {

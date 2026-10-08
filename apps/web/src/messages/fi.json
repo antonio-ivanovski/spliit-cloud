@@ -4604,7 +4604,9 @@
     "title": "Päivitykset",
     "latest": "Uutta",
     "viewAll": "Näytä kaikki päivitykset",
-    "dismiss": "Selvä"
+    "dismiss": "Selvä",
+    "archive": "Aiemmat päivitykset",
+    "backToUpdates": "Takaisin päivityksiin"
   },
   "Features": {
     "catalogLabel": "Koko luettelo",

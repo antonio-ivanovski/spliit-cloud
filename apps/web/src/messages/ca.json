@@ -4634,7 +4634,9 @@
     "title": "Actualitzacions",
     "latest": "Novetats",
     "viewAll": "Mostra totes les actualitzacions",
-    "dismiss": "Entesos"
+    "dismiss": "Entesos",
+    "archive": "Actualitzacions anteriors",
+    "backToUpdates": "Torna a les actualitzacions"
   },
   "Features": {
     "catalogLabel": "Catàleg complet",

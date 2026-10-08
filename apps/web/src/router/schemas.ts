@@ -145,6 +145,12 @@ export const expenseParamsSchema = z.object({
   expenseId: expenseIdParamSchema,
 })
 
+export const announcementIdParamSchema = z.string().min(1).catch('')
+
+export const announcementParamsSchema = z.object({
+  announcementId: announcementIdParamSchema,
+})
+
 export const editExpenseSearchSchema = groupAccessSearchSchema.extend({
   scope: z.enum(['OCCURRENCE', 'THIS_AND_FUTURE']).optional().catch(undefined),
   returnTo: expenseReturnTo,

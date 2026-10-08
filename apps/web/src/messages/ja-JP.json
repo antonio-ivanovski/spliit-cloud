@@ -4585,7 +4585,9 @@
     "title": "更新情報",
     "latest": "新着情報",
     "viewAll": "すべての更新を見る",
-    "dismiss": "了解しました"
+    "dismiss": "了解しました",
+    "archive": "過去の更新情報",
+    "backToUpdates": "更新情報に戻る"
   },
   "Features": {
     "catalogLabel": "全カタログ",

@@ -4667,7 +4667,9 @@
     "title": "Bản cập nhật",
     "latest": "Có gì mới",
     "viewAll": "Xem tất cả bản cập nhật",
-    "dismiss": "Đã hiểu"
+    "dismiss": "Đã hiểu",
+    "archive": "Các bản cập nhật trước",
+    "backToUpdates": "Quay lại các bản cập nhật"
   },
   "Features": {
     "catalogLabel": "Danh mục đầy đủ",

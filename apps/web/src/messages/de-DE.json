@@ -4676,7 +4676,9 @@
     "title": "Neuigkeiten",
     "latest": "Was ist neu",
     "viewAll": "Alle Neuigkeiten anzeigen",
-    "dismiss": "Verstanden"
+    "dismiss": "Verstanden",
+    "archive": "Vorherige Neuigkeiten",
+    "backToUpdates": "Zurück zu den Neuigkeiten"
   },
   "Features": {
     "catalogLabel": "Gesamtkatalog",

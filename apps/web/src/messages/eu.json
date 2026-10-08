@@ -4632,7 +4632,9 @@
     "title": "Eguneraketak",
     "latest": "Zer berri",
     "viewAll": "Ikusi eguneratze guztiak",
-    "dismiss": "Ados"
+    "dismiss": "Ados",
+    "archive": "Aurreko eguneraketak",
+    "backToUpdates": "Itzuli eguneraketetara"
   },
   "Features": {
     "catalogLabel": "Katalogo osoa",

@@ -4681,7 +4681,9 @@
     "title": "আপডেট",
     "latest": "নতুন কী আছে",
     "viewAll": "সব আপডেট দেখুন",
-    "dismiss": "বুঝেছি"
+    "dismiss": "বুঝেছি",
+    "archive": "পূর্ববর্তী আপডেট",
+    "backToUpdates": "আপডেটে ফিরে যান"
   },
   "Features": {
     "catalogLabel": "পূর্ণ ক্যাটালগ",

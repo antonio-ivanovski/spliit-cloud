@@ -4707,7 +4707,9 @@
     "title": "التحديثات",
     "latest": "ما الجديد",
     "viewAll": "عرض جميع التحديثات",
-    "dismiss": "حسنًا"
+    "dismiss": "حسنًا",
+    "archive": "التحديثات السابقة",
+    "backToUpdates": "العودة إلى التحديثات"
   },
   "Features": {
     "catalogLabel": "الكتالوج الكامل",

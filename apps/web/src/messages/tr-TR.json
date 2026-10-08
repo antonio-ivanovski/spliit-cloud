@@ -4612,7 +4612,9 @@
     "title": "Güncellemeler",
     "latest": "Yenilikler",
     "viewAll": "Tüm güncellemeleri görün",
-    "dismiss": "Anladım"
+    "dismiss": "Anladım",
+    "archive": "Önceki güncellemeler",
+    "backToUpdates": "Güncellemelere dön"
   },
   "Features": {
     "catalogLabel": "Tüm katalog",

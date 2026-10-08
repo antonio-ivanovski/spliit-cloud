@@ -22,7 +22,7 @@ import { Route as SponsorRouteImport } from './routes/sponsor'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
-import { Route as UpdatesRouteImport } from './routes/updates'
+import { Route as UpdatesRouteRouteImport } from './routes/updates/route'
 import { Route as AccountDeleteRouteImport } from './routes/account/delete'
 import { Route as AccountSettingsRouteImport } from './routes/account/settings'
 import { Route as AuthCompleteProfileRouteImport } from './routes/auth/complete-profile'
@@ -36,6 +36,8 @@ import { Route as GroupsImportRouteImport } from './routes/groups/import'
 import { Route as OauthConsentRouteImport } from './routes/oauth/consent'
 import { Route as OauthLoginRouteImport } from './routes/oauth/login'
 import { Route as OauthManualCallbackRouteImport } from './routes/oauth/manual-callback'
+import { Route as UpdatesIndexRouteImport } from './routes/updates/index'
+import { Route as UpdatesAnnouncementIdRouteImport } from './routes/updates/$announcementId'
 import { Route as GroupsGroupIdIndexRouteImport } from './routes/groups/$groupId/index'
 import { Route as GroupsGroupIdActivityRouteImport } from './routes/groups/$groupId/activity'
 import { Route as GroupsGroupIdBalancesRouteImport } from './routes/groups/$groupId/balances'
@@ -122,11 +124,11 @@ const UnsubscribeRoute = UnsubscribeRouteImport.update({
   path: '/unsubscribe',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/unsubscribe.lazy').then((d) => d.Route))
-const UpdatesRoute = UpdatesRouteImport.update({
+const UpdatesRouteRoute = UpdatesRouteRouteImport.update({
   id: '/updates',
   path: '/updates',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/updates.lazy').then((d) => d.Route))
+} as any).lazy(() => import('./routes/updates/route.lazy').then((d) => d.Route))
 const AccountDeleteRoute = AccountDeleteRouteImport.update({
   id: '/account/delete',
   path: '/account/delete',
@@ -207,6 +209,18 @@ const OauthManualCallbackRoute = OauthManualCallbackRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() =>
   import('./routes/oauth/manual-callback.lazy').then((d) => d.Route),
+)
+const UpdatesIndexRoute = UpdatesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => UpdatesRouteRoute,
+} as any).lazy(() => import('./routes/updates/index.lazy').then((d) => d.Route))
+const UpdatesAnnouncementIdRoute = UpdatesAnnouncementIdRouteImport.update({
+  id: '/$announcementId',
+  path: '/$announcementId',
+  getParentRoute: () => UpdatesRouteRoute,
+} as any).lazy(() =>
+  import('./routes/updates/$announcementId.lazy').then((d) => d.Route),
 )
 const GroupsGroupIdIndexRoute = GroupsGroupIdIndexRouteImport.update({
   id: '/',
@@ -396,6 +410,7 @@ const GroupsGroupIdExpensesExpenseIdEditRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/groups': typeof GroupsRouteRouteWithChildren
+  '/updates': typeof UpdatesRouteRouteWithChildren
   '/expenses': typeof ExpensesRoute
   '/features': typeof FeaturesRoute
   '/feedback': typeof FeedbackRoute
@@ -405,7 +420,6 @@ export interface FileRoutesByFullPath {
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/unsubscribe': typeof UnsubscribeRoute
-  '/updates': typeof UpdatesRoute
   '/groups/$groupId': typeof GroupsGroupIdRouteRouteWithChildren
   '/account/delete': typeof AccountDeleteRoute
   '/account/settings': typeof AccountSettingsRoute
@@ -419,6 +433,8 @@ export interface FileRoutesByFullPath {
   '/oauth/consent': typeof OauthConsentRoute
   '/oauth/login': typeof OauthLoginRoute
   '/oauth/manual-callback': typeof OauthManualCallbackRoute
+  '/updates/$announcementId': typeof UpdatesAnnouncementIdRoute
+  '/updates/': typeof UpdatesIndexRoute
   '/groups/$groupId/activity': typeof GroupsGroupIdActivityRoute
   '/groups/$groupId/balances': typeof GroupsGroupIdBalancesRoute
   '/groups/$groupId/budgets': typeof GroupsGroupIdBudgetsRouteWithChildren
@@ -455,7 +471,6 @@ export interface FileRoutesByTo {
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/unsubscribe': typeof UnsubscribeRoute
-  '/updates': typeof UpdatesRoute
   '/account/delete': typeof AccountDeleteRoute
   '/account/settings': typeof AccountSettingsRoute
   '/auth/complete-profile': typeof AuthCompleteProfileRoute
@@ -468,6 +483,8 @@ export interface FileRoutesByTo {
   '/oauth/consent': typeof OauthConsentRoute
   '/oauth/login': typeof OauthLoginRoute
   '/oauth/manual-callback': typeof OauthManualCallbackRoute
+  '/updates/$announcementId': typeof UpdatesAnnouncementIdRoute
+  '/updates': typeof UpdatesIndexRoute
   '/groups/$groupId/activity': typeof GroupsGroupIdActivityRoute
   '/groups/$groupId/balances': typeof GroupsGroupIdBalancesRoute
   '/groups/$groupId/edit': typeof GroupsGroupIdEditRoute
@@ -493,6 +510,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/groups': typeof GroupsRouteRouteWithChildren
+  '/updates': typeof UpdatesRouteRouteWithChildren
   '/expenses': typeof ExpensesRoute
   '/features': typeof FeaturesRoute
   '/feedback': typeof FeedbackRoute
@@ -502,7 +520,6 @@ export interface FileRoutesById {
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/unsubscribe': typeof UnsubscribeRoute
-  '/updates': typeof UpdatesRoute
   '/groups/$groupId': typeof GroupsGroupIdRouteRouteWithChildren
   '/account/delete': typeof AccountDeleteRoute
   '/account/settings': typeof AccountSettingsRoute
@@ -516,6 +533,8 @@ export interface FileRoutesById {
   '/oauth/consent': typeof OauthConsentRoute
   '/oauth/login': typeof OauthLoginRoute
   '/oauth/manual-callback': typeof OauthManualCallbackRoute
+  '/updates/$announcementId': typeof UpdatesAnnouncementIdRoute
+  '/updates/': typeof UpdatesIndexRoute
   '/groups/$groupId/activity': typeof GroupsGroupIdActivityRoute
   '/groups/$groupId/balances': typeof GroupsGroupIdBalancesRoute
   '/groups/$groupId/budgets': typeof GroupsGroupIdBudgetsRouteWithChildren
@@ -545,6 +564,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/groups'
+    | '/updates'
     | '/expenses'
     | '/features'
     | '/feedback'
@@ -554,7 +574,6 @@ export interface FileRouteTypes {
     | '/support'
     | '/terms'
     | '/unsubscribe'
-    | '/updates'
     | '/groups/$groupId'
     | '/account/delete'
     | '/account/settings'
@@ -568,6 +587,8 @@ export interface FileRouteTypes {
     | '/oauth/consent'
     | '/oauth/login'
     | '/oauth/manual-callback'
+    | '/updates/$announcementId'
+    | '/updates/'
     | '/groups/$groupId/activity'
     | '/groups/$groupId/balances'
     | '/groups/$groupId/budgets'
@@ -604,7 +625,6 @@ export interface FileRouteTypes {
     | '/support'
     | '/terms'
     | '/unsubscribe'
-    | '/updates'
     | '/account/delete'
     | '/account/settings'
     | '/auth/complete-profile'
@@ -617,6 +637,8 @@ export interface FileRouteTypes {
     | '/oauth/consent'
     | '/oauth/login'
     | '/oauth/manual-callback'
+    | '/updates/$announcementId'
+    | '/updates'
     | '/groups/$groupId/activity'
     | '/groups/$groupId/balances'
     | '/groups/$groupId/edit'
@@ -641,6 +663,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/groups'
+    | '/updates'
     | '/expenses'
     | '/features'
     | '/feedback'
@@ -650,7 +673,6 @@ export interface FileRouteTypes {
     | '/support'
     | '/terms'
     | '/unsubscribe'
-    | '/updates'
     | '/groups/$groupId'
     | '/account/delete'
     | '/account/settings'
@@ -664,6 +686,8 @@ export interface FileRouteTypes {
     | '/oauth/consent'
     | '/oauth/login'
     | '/oauth/manual-callback'
+    | '/updates/$announcementId'
+    | '/updates/'
     | '/groups/$groupId/activity'
     | '/groups/$groupId/balances'
     | '/groups/$groupId/budgets'
@@ -692,6 +716,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GroupsRouteRoute: typeof GroupsRouteRouteWithChildren
+  UpdatesRouteRoute: typeof UpdatesRouteRouteWithChildren
   ExpensesRoute: typeof ExpensesRoute
   FeaturesRoute: typeof FeaturesRoute
   FeedbackRoute: typeof FeedbackRoute
@@ -701,7 +726,6 @@ export interface RootRouteChildren {
   SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
-  UpdatesRoute: typeof UpdatesRoute
   AccountDeleteRoute: typeof AccountDeleteRoute
   AccountSettingsRoute: typeof AccountSettingsRoute
   AuthCompleteProfileRoute: typeof AuthCompleteProfileRoute
@@ -797,7 +821,7 @@ declare module '@tanstack/react-router' {
       id: '/updates'
       path: '/updates'
       fullPath: '/updates'
-      preLoaderRoute: typeof UpdatesRouteImport
+      preLoaderRoute: typeof UpdatesRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account/delete': {
@@ -890,6 +914,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/oauth/manual-callback'
       preLoaderRoute: typeof OauthManualCallbackRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/updates/': {
+      id: '/updates/'
+      path: '/'
+      fullPath: '/updates/'
+      preLoaderRoute: typeof UpdatesIndexRouteImport
+      parentRoute: typeof UpdatesRouteRoute
+    }
+    '/updates/$announcementId': {
+      id: '/updates/$announcementId'
+      path: '/$announcementId'
+      fullPath: '/updates/$announcementId'
+      preLoaderRoute: typeof UpdatesAnnouncementIdRouteImport
+      parentRoute: typeof UpdatesRouteRoute
     }
     '/groups/$groupId/': {
       id: '/groups/$groupId/'
@@ -1159,9 +1197,24 @@ const GroupsRouteRouteWithChildren = GroupsRouteRoute._addFileChildren(
   GroupsRouteRouteChildren,
 )
 
+interface UpdatesRouteRouteChildren {
+  UpdatesAnnouncementIdRoute: typeof UpdatesAnnouncementIdRoute
+  UpdatesIndexRoute: typeof UpdatesIndexRoute
+}
+
+const UpdatesRouteRouteChildren: UpdatesRouteRouteChildren = {
+  UpdatesAnnouncementIdRoute: UpdatesAnnouncementIdRoute,
+  UpdatesIndexRoute: UpdatesIndexRoute,
+}
+
+const UpdatesRouteRouteWithChildren = UpdatesRouteRoute._addFileChildren(
+  UpdatesRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GroupsRouteRoute: GroupsRouteRouteWithChildren,
+  UpdatesRouteRoute: UpdatesRouteRouteWithChildren,
   ExpensesRoute: ExpensesRoute,
   FeaturesRoute: FeaturesRoute,
   FeedbackRoute: FeedbackRoute,
@@ -1171,7 +1224,6 @@ const rootRouteChildren: RootRouteChildren = {
   SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
   UnsubscribeRoute: UnsubscribeRoute,
-  UpdatesRoute: UpdatesRoute,
   AccountDeleteRoute: AccountDeleteRoute,
   AccountSettingsRoute: AccountSettingsRoute,
   AuthCompleteProfileRoute: AuthCompleteProfileRoute,

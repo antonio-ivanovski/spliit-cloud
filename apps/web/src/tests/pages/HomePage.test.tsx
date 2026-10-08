@@ -364,7 +364,8 @@ describe('HomePage (signed-out)', () => {
     const teaser = screen.getByTestId('landing-updates')
     expect(teaser).toBeInTheDocument()
     expect(teaser).toHaveTextContent("What's new")
-    // Latest entry only, with its title, excerpt, and a link to /updates.
+    // Latest entry only, with its title, excerpt, a link to its detail page,
+    // and a link to /updates.
     expect(teaser).toHaveTextContent('Spliit Cloud 2.5.0 is here')
     expect(teaser).toHaveTextContent('Spliit Cloud 2.5.0 is out')
     expect(
@@ -372,7 +373,7 @@ describe('HomePage (signed-out)', () => {
     ).toHaveAttribute('href', '/updates')
     expect(
       screen.getByRole('link', { name: 'Spliit Cloud 2.5.0 is here' }),
-    ).toHaveAttribute('href', '/updates')
+    ).toHaveAttribute('href', '/updates/$announcementId')
   })
 
   it('hides the updates teaser while updates are loading', () => {

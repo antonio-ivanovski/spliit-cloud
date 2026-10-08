@@ -4658,7 +4658,9 @@
     "title": "Novinky",
     "latest": "Co je nového",
     "viewAll": "Zobrazit všechny novinky",
-    "dismiss": "Rozumím"
+    "dismiss": "Rozumím",
+    "archive": "Předchozí novinky",
+    "backToUpdates": "Zpět na novinky"
   },
   "Features": {
     "catalogLabel": "Plný katalog",
