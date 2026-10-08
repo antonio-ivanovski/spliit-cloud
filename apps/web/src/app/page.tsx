@@ -14,6 +14,7 @@ import { useCurrentAccount } from '@/lib/use-current-account'
 
 import { RecentGroupList } from './groups/recent-group-list'
 import { SignedOutSavedGroupsEntry } from './groups/signed-out-saved-view-list'
+import { LandingUpdatesTeaser } from './landing-updates'
 
 const homeRouteApi = getRouteApi('/')
 
@@ -97,6 +98,7 @@ function LandingIntro() {
           />
         </p>
         <SignedOutSavedGroupsEntry />
+        <LandingUpdatesTeaser />
       </div>
     </section>
   )

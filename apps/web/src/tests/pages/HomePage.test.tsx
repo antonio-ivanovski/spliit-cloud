@@ -13,12 +13,23 @@ import { act, render, screen } from '@/test/test-utils'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
-const { mockHomeSearch } = vi.hoisted(() => ({
+const { mockHomeSearch, mockAnnouncementsListQuery } = vi.hoisted(() => ({
   mockHomeSearch: { redirect: undefined as string | undefined },
+  mockAnnouncementsListQuery: vi.fn(),
 }))
 
 vi.mock('@/lib/use-current-account', () => ({
   useCurrentAccount: vi.fn(),
+}))
+
+vi.mock('@/trpc/client', () => ({
+  trpc: {
+    announcements: {
+      list: {
+        useQuery: mockAnnouncementsListQuery,
+      },
+    },
+  },
 }))
 
 // Mock @tanstack/react-router for Link and navigation
@@ -70,6 +81,10 @@ vi.mock('@/app/groups/recent-group-list', () => ({
 
 import HomePage from '@/app/page'
 import { LANDING_FIRST_SPEECH_MS } from '@/components/mascot/use-landing-mascot'
+
+// Default: updates query still loading → teaser hidden, so existing tests are
+// unaffected unless they opt in by setting list data.
+mockAnnouncementsListQuery.mockReturnValue({ data: undefined })
 
 // ── Tests ───────────────────────────────────────────────────────────────
 
@@ -311,6 +326,67 @@ describe('HomePage (signed-out)', () => {
     expect(screen.queryByText('Share')).not.toBeInTheDocument()
     expect(screen.getByTestId('recent-group-list')).toBeInTheDocument()
   })
+
+  it('shows a teaser for the latest update on the signed-out landing', () => {
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: null,
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+    mockAnnouncementsListQuery.mockReturnValue({
+      data: [
+        { id: 'unknown-older-id', date: '2026-09-01' },
+        { id: 'spliit-cloud-2-5-0', date: '2026-10-05' },
+      ],
+    })
+
+    render(<HomePage />)
+
+    const teaser = screen.getByTestId('landing-updates')
+    expect(teaser).toBeInTheDocument()
+    expect(teaser).toHaveTextContent("What's new")
+    // Latest entry only, with its title, excerpt, and a link to /updates.
+    expect(teaser).toHaveTextContent('Spliit Cloud 2.5.0 is here')
+    expect(teaser).toHaveTextContent('Spliit Cloud 2.5.0 is out')
+    expect(
+      screen.getByRole('link', { name: 'See all updates' }),
+    ).toHaveAttribute('href', '/updates')
+    expect(
+      screen.getByRole('link', { name: 'Spliit Cloud 2.5.0 is here' }),
+    ).toHaveAttribute('href', '/updates')
+  })
+
+  it('hides the updates teaser while updates are loading', () => {
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: null,
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+    mockAnnouncementsListQuery.mockReturnValue({ data: undefined })
+
+    render(<HomePage />)
+
+    expect(screen.queryByTestId('landing-updates')).not.toBeInTheDocument()
+  })
+
+  it('hides the updates teaser when there are no updates', () => {
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: null,
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+    mockAnnouncementsListQuery.mockReturnValue({ data: [] })
+
+    render(<HomePage />)
+
+    expect(screen.queryByTestId('landing-updates')).not.toBeInTheDocument()
+  })
 })
 
 describe('HomePage (signed-in)', () => {
@@ -365,6 +441,32 @@ describe('HomePage (signed-in)', () => {
     render(<HomePage />)
 
     expect(screen.getByTestId('recent-group-list')).toBeInTheDocument()
+  })
+
+  it('does not show the updates teaser on the signed-in dashboard', () => {
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: {
+        id: 'user-1',
+        name: 'Alice',
+        email: 'alice@example.com',
+        image: null,
+        emailVerified: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+    mockAnnouncementsListQuery.mockReturnValue({
+      data: [{ id: 'spliit-cloud-2-5-0', date: '2026-10-05' }],
+    })
+
+    render(<HomePage />)
+
+    expect(screen.getByTestId('recent-group-list')).toBeInTheDocument()
+    expect(screen.queryByTestId('landing-updates')).not.toBeInTheDocument()
   })
 
   it('continues an authenticated visitor to the preserved destination', () => {

@@ -14,6 +14,7 @@ All your member groups remain available for read-only offline use: complete expe
 
 - Read your groups offline with instant lists that merge updates in place, plus install Spliit as an app with step-by-step guidance (`TBD` by @TBD)
 - Create expenses while offline: new expenses queue locally and sync automatically on reconnect (`TBD` by @TBD)
+- See the latest product update in a banner on the signed-out landing page, with a link to all updates (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
 
