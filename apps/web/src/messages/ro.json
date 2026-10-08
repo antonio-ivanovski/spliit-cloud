@@ -4644,85 +4644,89 @@
   "Features": {
     "catalogLabel": "Catalog complet",
     "catalog": {
-      "activity": {
-        "title": "Activitate, comentarii și căutare",
-        "description": "Istoric și comentarii per cheltuială, cronologie Pentru tine, filtrare, sortare și căutare în grupuri arhivate."
-      },
-      "ai-assist": {
-        "title": "Cheltuieli asistate de IA",
-        "description": "Dicționar local plus istoricul grupului plus un motor IA; scanează bonuri și descrie cheltuieli prin voce."
-      },
-      "anonymous-accounts": {
-        "title": "Conturi anonime",
-        "description": "Începe în câteva clicuri doar cu un nume afișat — fără e-mail sau autentificare socială. Recuperează accesul cu o legătură sau o cheie de acces."
-      },
-      "archive": {
-        "title": "Arhivare și ștergere",
-        "description": "Arhivează grupuri pentru a le face doar pentru vizualizare sau șterge-le definitiv când ai terminat."
-      },
       "balances": {
         "title": "Solduri și decontări",
-        "description": "Direcție de plată clară, decontare rapidă, plăți combinate și subunități precum cuplurile."
-      },
-      "bulk-categorize": {
-        "title": "Categorizare IA în masă",
-        "description": "Rulează categorizatorul IA pe multe cheltuieli odată — ideal după un import."
-      },
-      "calculator": {
-        "title": "Calculator de sume",
-        "description": "Calcule rapide direct în câmpul sumei când introduci cheltuieli."
-      },
-      "core-expenses": {
-        "title": "Cheltuieli, bonuri și împărțiri",
-        "description": "Grupuri, categorii, atașamente de bonuri, împărțiri avansate și o experiență PWA fără reclame."
+        "description": "Vezi mereu cine cui datorează ce, cu o direcție de plată clară, apoi decontează cu o atingere — inclusiv plăți combinate. Cuplurile și unitățile familiale pot deconta ca o singură entitate, ca gospodăria comună să rămână simplă."
       },
       "currency": {
         "title": "Multivalută și cripto",
-        "description": "Conversie pe server, sume exacte cu cursul implicit afișat și suport pentru criptomonede."
-      },
-      "developers": {
-        "title": "API, MCP, OAuth și webhook-uri",
-        "description": "Documentație OpenAPI plus Scalar, asistent MCP, domenii delegate OAuth 2.1 și webhook-uri semnate de ieșire."
-      },
-      "export": {
-        "title": "Export și rapoarte",
-        "description": "CSV, rapoarte PDF imprimabile și arhive ZIP complete de grup sau cont, inclusiv documente."
-      },
-      "identity": {
-        "title": "Identitatea grupului și legături",
-        "description": "Emoji și culori, legături publice doar pentru vizualizare, presetări de împărțire și gestionarea membrilor."
-      },
-      "import": {
-        "title": "Importă orice",
-        "description": "CSV Splitwise, CSV-uri de extrase bancare cu asistent de mapare și detectare duplicate, Cospend și pachete Spliit."
-      },
-      "multi-payer": {
-        "title": "Plătitori multipli și detaliat",
-        "description": "Mai mulți plătitori, linii de detaliu, taxe și bacșiș, plus cote precise per persoană într-o singură cheltuială."
-      },
-      "notifications": {
-        "title": "Notificări e-mail și push",
-        "description": "Actualizări de grup și cheltuieli prin e-mail sau push, cu preferințe per categorie pentru fiecare utilizator."
-      },
-      "passkeys-security": {
-        "title": "Chei de acces și securitate",
-        "description": "Autentificare fără parolă pentru orice tip de cont, opțiune de rezervă și mod doar pe bază de invitație pentru instanțele private."
-      },
-      "qr-sharing": {
-        "title": "Invitații QR din apropiere",
-        "description": "Sesiuni QR reutilizabile de 15 minute cu alăturare prin scanare pe mobil."
+        "description": "Împarte cheltuielile peste granițe cu conversie pe server și cursuri de schimb live — fiat de la Frankfurter, cripto de la Coinbase — plus ajustări ale sumelor exacte cu cursul implicit afișat."
       },
       "recurring": {
         "title": "Cheltuieli recurente durabile",
-        "description": "Serii reale cu intervale, încheieri, recuperare, reîncercări, previzualizări și oprire, editare sau ștergere explicite."
+        "description": "Serii reale cu intervale, încheieri, recuperări, reîncercări și previzualizări ale celor ce urmează. Pauzează, editează sau oprește explicit o serie — fiecare cheltuială generată rămâne editabilă individual."
       },
       "stats-budgets": {
         "title": "Statistici, grafice și bugete",
-        "description": "Grafice de cheltuieli, vizualizări lunare per categorie, total inter-grupuri și bugete cu alerte de depășire."
+        "description": "Înțelege cheltuielile cu grafice, vizualizări lunare per categorie și un total inter-grupuri. Stabilește bugete per grup și primește alerte de depășire înainte ca micile pierderi să devină mari."
       },
-      "synced-groups": {
-        "title": "Grupuri și prieteni sincronizați",
-        "description": "Grupurile te urmează pe toate dispozitivele cu apartenență reală, registre individuale cu prieteni și editări atribuite."
+      "languages": {
+        "title": "30 de limbi",
+        "description": "Tot produsul în 30 de limbi, fiecare cu propriul ghid de traducere. Oricine își împarte cheltuielile în limba în care se simte confortabil."
+      },
+      "accounts-signin": {
+        "title": "Conectează-te în felul tău",
+        "description": "Începe în câteva secunde doar cu un nume de afișare — fără email — apoi securizează contul cu o cheie de acces, un link magic, o parolă sau contul tău Google, GitHub sau X. Fiecare metodă funcționează pentru toate tipurile de cont."
+      },
+      "ai-help": {
+        "title": "Asistență AI",
+        "description": "Descrie cheltuielile prin voce, scanează chitanțele și primește sugestii în trei etape: verificări instantanee ale dicționarului local și istoricului, apoi motorul ales de tine — modelul decizional System One superrapid (TypeSafe Jev) sau un LLM mai lent, dar mai precis. Ambele învață din cheltuielile tale anterioare."
+      },
+      "data-portability": {
+        "title": "Import și export",
+        "description": "Adu istoricul din CSV Splitwise, CSV-uri de extrase bancare cu asistent de mapare și detectare a duplicatelor, Cospend sau pachete Spliit. Suportul pentru Tricount și Settle Up este pe foaia de parcurs. Scoate totul înapoi ca CSV, rapoarte PDF de tipărit sau arhive ZIP complete cu documente."
+      },
+      "expenses-splits": {
+        "title": "Cheltuieli și împărțiri inteligente",
+        "description": "Creează cheltuieli cu categorii, bonuri atașate și împărțiri avansate — egal, pe cote sau pe procente. Mai multe persoane pot plăti într-o singură cheltuială, liniile se împart individual, iar taxele și bacșișul se distribuie proporțional în părți precise per persoană."
+      },
+      "fast-entry": {
+        "title": "Introducere rapidă",
+        "description": "Salvează șabloane de împărțire cu o atingere per grup și aplică-le oricărei cheltuieli în câteva secunde. Fă calcule rapide direct în câmpul sumei în timp ce introduci datele — fără o aplicație de calculator separată."
+      },
+      "groups-friends": {
+        "title": "Grupuri și prieteni",
+        "description": "Calitatea de membru real te urmează între dispozitive, fiecare editare fiind atribuită autorului ei. Păstrează un registru curent unu-la-unu cu un prieten în afara oricărui grup, lasă cuplurile să deconteze ca o unitate și arhivează grupurile încheiate ca doar-lectură în loc să le ștergi."
+      },
+      "offline-app": {
+        "title": "Aplicație instalabilă",
+        "description": "Instalează Spliit ca aplicație pe orice dispozitiv pentru încărcare instantanee și o experiență pe tot ecranul. Grupurile tale rămân lizibile fără conexiune, iar cheltuielile noi stau local în coadă și se sincronizează la reconectare — editarea extinsă offline este pe foaia de parcurs."
+      },
+      "share-identity": {
+        "title": "Invitații și identitatea grupului",
+        "description": "Adu-i pe ceilalți cum îți convine: printr-un link de partajat, o invitație prin e-mail sau o sesiune QR reutilizabilă cu alăturare prin scanare pe mobil. Dă fiecărui grup propriul emoji, culori și listă de membri."
+      },
+      "activity": {
+        "title": "Activitate și istoric",
+        "description": "Urmărește fiecare grup cu o cronologie „Pentru tine”, istoric și comentarii per cheltuială, filtrare, sortare și căutare în grupurile arhivate."
+      },
+      "developers": {
+        "title": "API, MCP și OAuth",
+        "description": "Documentație OpenAPI și Scalar, asistent MCP și domenii de aplicare delegate OAuth 2.1.",
+        "action": "Consultă documentația API"
+      },
+      "notifications": {
+        "title": "Notificări",
+        "description": "Primește noutăți despre grupuri și cheltuieli prin e-mail sau push, cu preferințe de categorie per utilizator, ca fiecare să-și aleagă propriul nivel de alerte.",
+        "action": "Setări de notificări"
+      },
+      "open-source": {
+        "title": "Sursă deschisă",
+        "description": "Întreaga bază de cod este deschisă pentru audit și contribuții, cu opțiune de auto-găzduire pentru instanțele private.",
+        "action": "Vezi pe GitHub"
+      },
+      "webhooks": {
+        "title": "Webhookuri",
+        "description": "Evenimente de ieșire semnate cu reîncercări de livrare, ca sistemele tale să rămână sincronizate cu fiecare modificare.",
+        "action": "Gestionează webhookurile"
+      },
+      "bulk-categorize": {
+        "title": "Categorizare în lot",
+        "description": "Categorizează în lot cheltuielile importate cu un model decizional System One precum TypeSafe Jev, folosind istoricul grupului tău și alegerile revizuite ca indicii. Fiecare sugestie își arată încrederea înainte s-o aplici."
+      },
+      "data-security": {
+        "title": "Copii de rezervă și recuperare",
+        "description": "Datele tale sunt stocate într-o bază de date PostgreSQL gestionată, cu backupuri rotative păstrate 30 de zile într-un bucket S3 separat, în afara serverului de producție. Chiar dacă se întâmplă ceva grav cu producția, recuperarea este simplă."
       }
     },
     "cta": {
@@ -4730,26 +4734,9 @@
       "description": "Creează un cont gratuit — anonim, fără e-mail — iar grupurile tale se sincronizează pe toate dispozitivele.",
       "action": "Începe"
     },
-    "demo": {
-      "eyebrow": "Demo interactiv",
-      "splitSettle": {
-        "title": "Vizualizator împărțire + decontare",
-        "description": "Schimbă suma, plătitorul sau cotele și vezi soldurile și decontările minime actualizându-se live. Acest demo rulează complet în browserul tău — fără cont.",
-        "amountLabel": "Suma cheltuielii",
-        "payerLabel": "Plătit de",
-        "modeLabel": "Mod de împărțire",
-        "modeEqual": "Egal",
-        "modeCustom": "Personalizat",
-        "balancesTitle": "Solduri",
-        "settlementsTitle": "Decontări sugerate",
-        "settledLabel": "Totul e decontat — nicio decontare necesară.",
-        "comingTitle": "Mai multe demo-uri în curând",
-        "comingDescription": "Calculatorul de sume, conversia valutară și tururile ghidate vor apărea aici în continuare."
-      }
-    },
     "hero": {
       "title": "Tot ce ai nevoie pentru a împărți cheltuieli",
-      "description": "De la autentificarea anonimă la instrumente IA în masă: încearcă demo-ul de decontare de mai jos, apoi răsfoiește catalogul complet. Demo-uri interactive noi apar aici unul câte unul."
+      "description": "De la conectare la platforma deschisă: răsfoiește catalogul complet de mai jos. Fiecare card include o ilustrație statică a funcționalității."
     },
     "sections": {
       "developers": {

@@ -4590,85 +4590,89 @@
   "Features": {
     "catalogLabel": "完整目錄",
     "catalog": {
-      "activity": {
-        "title": "動態、留言與搜尋",
-        "description": "按筆支出的歷史記錄與留言、為你推薦的時間軸、篩選、排序，以及已封存群組搜尋。"
-      },
-      "ai-assist": {
-        "title": "AI 輔助記帳",
-        "description": "本地詞典加上群組歷史再加一個 AI 引擎；可掃描收據，也能用語音描述支出。"
-      },
-      "anonymous-accounts": {
-        "title": "匿名帳號",
-        "description": "只需顯示名稱，點幾下即可開始 — 不需電子郵件或社群登入。用連結或通行金鑰即可復原。"
-      },
-      "archive": {
-        "title": "封存與刪除",
-        "description": "將群組封存設為唯讀，或在完成後將其永久刪除。"
-      },
       "balances": {
         "title": "餘額與結算",
-        "description": "清楚的付款方向、快速結算、合併付款，以及情侶等子群組單位。"
-      },
-      "bulk-categorize": {
-        "title": "批次 AI 分類",
-        "description": "對多筆支出一次執行 AI 分類 — 特別適合匯入之後使用。"
-      },
-      "calculator": {
-        "title": "金額計算機",
-        "description": "在輸入支出時，直接在金額欄中快速計算。"
-      },
-      "core-expenses": {
-        "title": "支出、收據與分攤",
-        "description": "群組、分類、收據附件、進階分攤，以及無廣告的 PWA 體驗。"
+        "description": "隨時清楚查看誰欠誰的付款方向，一鍵結算，包含合併付款。情侶和家庭可以作為一個整體結算，讓共同生活的帳目保持簡單。"
       },
       "currency": {
         "title": "多幣別與加密貨幣",
-        "description": "伺服器端換算、顯示隱含匯率的精確金額覆寫，以及加密貨幣支援。"
-      },
-      "developers": {
-        "title": "API、MCP、OAuth 與 Webhook",
-        "description": "OpenAPI 加 Scalar 文件、MCP 助手、可委派的 OAuth 2.1 權限，以及帶簽章的對外 Webhook。"
-      },
-      "export": {
-        "title": "匯出與報告",
-        "description": "CSV、可列印的 PDF 報告，以及包含文件的完整群組或帳號 ZIP 封存。"
-      },
-      "identity": {
-        "title": "群組形象與連結",
-        "description": "表情符號與色彩、公開唯讀連結、分攤預設，以及成員管理。"
-      },
-      "import": {
-        "title": "匯入所有內容",
-        "description": "支援 Splitwise CSV、具對應精靈和重複偵測的銀行對帳單 CSV、Cospend 和 Spliit 資料包。"
-      },
-      "multi-payer": {
-        "title": "多位付款人與明細分攤",
-        "description": "支援多位付款人、項目明細、稅金與小費，在一筆支出中算清每人應分攤金額。"
-      },
-      "notifications": {
-        "title": "電子郵件與推播通知",
-        "description": "透過電子郵件或推播傳送群組與支出更新，並支援按使用者設定分類偏好。"
-      },
-      "passkeys-security": {
-        "title": "通行金鑰與安全性",
-        "description": "所有帳號類型均可免密碼登入、備用登入方式，以及面向私人實例的僅邀請模式。"
-      },
-      "qr-sharing": {
-        "title": "附近 QR 碼邀請",
-        "description": "15 分鐘內可多次使用的 QR 碼工作階段，在手機上掃碼即可加入。"
+        "description": "透過伺服器端換算和即時匯率實現跨境分帳：法幣匯率來自 Frankfurter，加密貨幣來自 Coinbase，還可在顯示推算匯率的情況下覆寫精確金額。"
       },
       "recurring": {
         "title": "穩定的週期性支出",
-        "description": "真正的序列：支援間隔、結束、補記、重試、預覽，以及明確的停止／編輯／刪除。"
+        "description": "真正的序列：支援間隔、結束、補記、重試與未來預覽。可明確暫停、編輯或停止序列，每筆產生的支出都可單獨編輯。"
       },
       "stats-budgets": {
         "title": "統計、圖表與預算",
-        "description": "支出圖表、按月分類檢視、跨群組彙總，以及附超支提醒的預算。"
+        "description": "透過圖表、按月分類視覺化和跨群組彙總了解支出。為每個群組設定預算，在小額漏損變大之前收到超支提醒。"
       },
-      "synced-groups": {
-        "title": "同步群組與好友",
-        "description": "群組跟著你在裝置間同步，具備真實成員關係、一對一好友帳本和可追溯的編輯。"
+      "languages": {
+        "title": "30 種語言",
+        "description": "完整產品支援 30 個地區設定，每個地區都有專屬翻譯指南。每個人都可以用自己熟悉的語言分帳。"
+      },
+      "accounts-signin": {
+        "title": "隨心登入",
+        "description": "只需顯示名稱，幾秒即可開始，無需電子郵件。之後可用通行金鑰、魔術連結、密碼，或 Google、GitHub、X 帳號保護帳號。每種方式都適用於所有帳號類型。"
+      },
+      "ai-help": {
+        "title": "AI 助手",
+        "description": "用語音描述支出、掃描收據，分三個階段取得建議：先即時進行本機詞典和歷史紀錄檢查，再任選一種引擎——超快的 System One 決策模型（TypeSafe Jev），或速度較慢但更準確的 LLM。兩者都會從您以往的支出中學習。"
+      },
+      "data-portability": {
+        "title": "匯入與匯出",
+        "description": "可從 Splitwise CSV、附對應精靈和重複偵測的銀行對帳單 CSV、Cospend 或 Spliit 資料包匯入歷史紀錄。對 Tricount 和 Settle Up 的支援已列入路線圖。也可全部匯出為 CSV、可列印的 PDF 報告，或包含文件的完整 ZIP 封存。"
+      },
+      "expenses-splits": {
+        "title": "支出與智慧分攤",
+        "description": "建立附分類、收據附件與進階分攤（均攤、份額或百分比）的支出。一筆支出可由多人付款，行項目可個別分攤，稅金和小費按比例分配，得出精確到每人的份額。"
+      },
+      "fast-entry": {
+        "title": "快速輸入",
+        "description": "為每個群組儲存一鍵分攤範本，幾秒鐘即可套用到任何支出。輸入時可直接在金額欄中快速計算，不需要另外的計算機 App。"
+      },
+      "groups-friends": {
+        "title": "群組與好友",
+        "description": "真實成員身分可跨裝置跟隨，每次編輯都會標示作者。可與群組外的朋友保留一對一往來帳，情侶可作為一個整體結算，已結束的群組可封存為唯讀，而非刪除。"
+      },
+      "offline-app": {
+        "title": "可安裝應用程式",
+        "description": "在任何裝置上將 Spliit 安裝為應用程式，即時載入、全螢幕體驗。沒有連線時仍可查看群組，新支出會在本機排隊，恢復連線後自動同步；更全面的離線編輯已列入路線圖。"
+      },
+      "share-identity": {
+        "title": "邀請與群組形象",
+        "description": "可依需求邀請成員：分享連結、傳送電子郵件邀請，或使用可在手機上掃碼加入的多人次 QR 工作階段。為每個群組設定專屬表情符號、色彩和成員清單。"
+      },
+      "activity": {
+        "title": "動態與歷史",
+        "description": "透過 For-you 時間軸跟進每個群組，查看每筆支出的歷史和留言，支援篩選、排序，還能搜尋已封存的群組。"
+      },
+      "developers": {
+        "title": "API、MCP 與 OAuth",
+        "description": "提供 OpenAPI 與 Scalar 文件、MCP 助理，以及可委派的 OAuth 2.1 授權範圍。",
+        "action": "瀏覽 API 文件"
+      },
+      "notifications": {
+        "title": "通知",
+        "description": "透過電子郵件或推播取得群組和支出動態，還可依使用者設定分類偏好，每個人都能選擇適合自己的提醒強度。",
+        "action": "通知設定"
+      },
+      "open-source": {
+        "title": "開放原始碼",
+        "description": "完整程式碼庫開放稽核與貢獻，並可選擇自託管私人實例。",
+        "action": "在 GitHub 上查看"
+      },
+      "webhooks": {
+        "title": "網路鉤子",
+        "description": "傳送帶有簽章的輸出事件並支援失敗重試，讓您的系統與每一次變更保持同步。",
+        "action": "管理 Webhook"
+      },
+      "bulk-categorize": {
+        "title": "批次分類",
+        "description": "使用 TypeSafe Jev 等 System One 決策模型批次分類匯入的支出，以群組歷史和已審核的選擇為提示。每條建議在套用前都會顯示其信賴度。"
+      },
+      "data-security": {
+        "title": "備份與復原",
+        "description": "您的資料儲存在受管的 PostgreSQL 資料庫中，輪替備份保留 30 天，存放於與正式伺服器分離的獨立 S3 儲存貯體。即使正式環境發生問題，復原也很簡單。"
       }
     },
     "cta": {
@@ -4676,26 +4680,9 @@
       "description": "建立免費帳號 — 匿名、不需電子郵件 — 你的群組將在裝置間同步。",
       "action": "開始使用"
     },
-    "demo": {
-      "eyebrow": "互動式示範",
-      "splitSettle": {
-        "title": "分攤與結算視覺化",
-        "description": "變更金額、付款人或分攤比例，即可即時查看餘額和最佳結算方案更新。此示範完全在瀏覽器中執行 — 不需要帳號。",
-        "amountLabel": "支出金額",
-        "payerLabel": "付款人",
-        "modeLabel": "分攤方式",
-        "modeEqual": "均攤",
-        "modeCustom": "自訂",
-        "balancesTitle": "餘額",
-        "settlementsTitle": "建議結算方案",
-        "settledLabel": "已全部結清 — 不需結算。",
-        "comingTitle": "更多示範即將到來",
-        "comingDescription": "金額計算機、貨幣換算和導覽教學將陸續顯示在這裡。"
-      }
-    },
     "hero": {
       "title": "分攤支出所需的一切",
-      "description": "從匿名登入到批次 AI 工具：先試用下面的結算示範，再瀏覽完整目錄。新的互動式示範將陸續上線。"
+      "description": "從登入到開放平台：在下方瀏覽完整目錄。每張卡片都包含一張展示該功能的靜態插圖。"
     },
     "sections": {
       "developers": {

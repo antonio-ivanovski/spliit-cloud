@@ -4590,85 +4590,89 @@
   "Features": {
     "catalogLabel": "完整目录",
     "catalog": {
-      "activity": {
-        "title": "动态、评论与搜索",
-        "description": "按笔支出的历史记录与评论、为你推荐的时间线、筛选、排序，以及已归档分组搜索。"
-      },
-      "ai-assist": {
-        "title": "AI 辅助记账",
-        "description": "本地词典加分组历史再加一个 AI 引擎；可扫描收据，还能用语音描述支出。"
-      },
-      "anonymous-accounts": {
-        "title": "匿名账户",
-        "description": "只需显示名称，点击几次即可开始 — 无需邮箱或社交登录。用链接或通行密钥即可恢复。"
-      },
-      "archive": {
-        "title": "归档与删除",
-        "description": "将分组归档设为只读，或在完成后将其永久删除。"
-      },
       "balances": {
         "title": "余额与结算",
-        "description": "清晰的付款方向、快速结算、合并付款，以及情侣等子分组单位。"
-      },
-      "bulk-categorize": {
-        "title": "批量 AI 分类",
-        "description": "对多笔支出一次运行 AI 分类 — 特别适合导入之后使用。"
-      },
-      "calculator": {
-        "title": "金额计算器",
-        "description": "在录入支出时，直接在金额栏中快速计算。"
-      },
-      "core-expenses": {
-        "title": "支出、收据与分摊",
-        "description": "分组、分类、收据附件、高级分摊，以及无广告的 PWA 体验。"
+        "description": "始终清晰地查看谁欠谁的款项方向，一键结算，包括合并付款。情侣和家庭可以作为一个整体结算，让共同生活的账目保持简单。"
       },
       "currency": {
         "title": "多币种与加密货币",
-        "description": "服务端换算、显示隐含汇率的精确金额覆盖，以及加密货币支持。"
-      },
-      "developers": {
-        "title": "API、MCP、OAuth 与 Webhook",
-        "description": "OpenAPI 加 Scalar 文档、MCP 助手、可委托的 OAuth 2.1 权限，以及带签名的出站 Webhook。"
-      },
-      "export": {
-        "title": "导出与报告",
-        "description": "CSV、可打印的 PDF 报告，以及包含文档的完整分组或账户 ZIP 归档。"
-      },
-      "identity": {
-        "title": "分组形象与链接",
-        "description": "表情符号与颜色、公开只读链接、分摊预设，以及成员管理。"
-      },
-      "import": {
-        "title": "导入一切",
-        "description": "支持 Splitwise CSV、带映射向导和重复检测的银行对账单 CSV、Cospend 和 Spliit 数据包。"
-      },
-      "multi-payer": {
-        "title": "多付款人与明细分摊",
-        "description": "支持多付款人、项目明细、税费与小费，在一笔支出中算清每人应分摊金额。"
-      },
-      "notifications": {
-        "title": "邮件与推送通知",
-        "description": "通过邮件或推送发送分组与支出更新，并支持按用户设置分类偏好。"
-      },
-      "passkeys-security": {
-        "title": "通行密钥与安全",
-        "description": "所有账户类型均可免密登录、备用登录方式，以及面向私有实例的仅邀请模式。"
-      },
-      "qr-sharing": {
-        "title": "附近二维码邀请",
-        "description": "15 分钟内可多次使用的二维码会话，在手机上扫码即可加入。"
+        "description": "通过服务端换算和实时汇率实现跨境分账：法币汇率来自 Frankfurter，加密货币来自 Coinbase，还可在显示推算汇率的情况下覆盖精确金额。"
       },
       "recurring": {
         "title": "可靠的周期性支出",
-        "description": "真正的序列：支持间隔、结束、补记、重试、预览，以及明确的停止/编辑/删除。"
+        "description": "真正的序列：支持间隔、结束、补记、重试和未来预览。可明确暂停、编辑或停止序列，每笔生成的支出都可单独编辑。"
       },
       "stats-budgets": {
         "title": "统计、图表与预算",
-        "description": "支出图表、按月分类视图、跨分组汇总，以及带超支提醒的预算。"
+        "description": "通过图表、按月分类可视化和跨群组汇总了解支出。为每个群组设置预算，在小额漏损变大之前收到超支提醒。"
       },
-      "synced-groups": {
-        "title": "同步分组与好友",
-        "description": "分组跟随你在设备间同步，具备真实成员关系、一对一好友账本和可追溯的编辑。"
+      "languages": {
+        "title": "30 种语言",
+        "description": "完整产品支持 30 个区域设置，每个区域都有专属翻译指南。每个人都可以用自己熟悉的语言分账。"
+      },
+      "accounts-signin": {
+        "title": "随心登录",
+        "description": "只需显示名称，几秒即可开始，无需邮箱。之后可用通行密钥、魔术链接、密码，或 Google、GitHub、X 账号保护账号。每种方式适用于所有账号类型。"
+      },
+      "ai-help": {
+        "title": "AI 助手",
+        "description": "用语音描述支出、扫描收据，分三个阶段获取建议：先即时进行本地词典和历史记录检查，再任选一种引擎——超快的 System One 决策模型（TypeSafe Jev），或速度较慢但更准确的 LLM。两者都会从您以往的支出中学习。"
+      },
+      "data-portability": {
+        "title": "导入与导出",
+        "description": "可从 Splitwise CSV、附带映射向导和重复检测的银行对账单 CSV、Cospend 或 Spliit 数据包导入历史记录。对 Tricount 和 Settle Up 的支持已列入路线图。也可全部导出为 CSV、可打印的 PDF 报告，或包含文档的完整 ZIP 归档。"
+      },
+      "expenses-splits": {
+        "title": "支出与智能分摊",
+        "description": "创建带有分类、收据附件和高级分摊（均摊、份额或百分比）的支出。一笔支出可由多人支付，行项目可单独分摊，税费和小费按比例分配，得出精确到每人的份额。"
+      },
+      "fast-entry": {
+        "title": "快速录入",
+        "description": "为每个群组保存一键分摊模板，几秒钟即可应用到任何支出。输入时可直接在金额栏中快速计算，无需单独的计算器应用。"
+      },
+      "groups-friends": {
+        "title": "群组与好友",
+        "description": "真实成员身份可跨设备跟随，每次编辑都会标明作者。可与群组外的朋友保留一对一往来账，情侣可作为一个整体结算，已结束的群组可归档为只读，而非删除。"
+      },
+      "offline-app": {
+        "title": "可安装应用",
+        "description": "在任何设备上将 Spliit 安装为应用，即时加载、全屏体验。无网络时仍可查看群组，新支出会在本地排队，恢复连接后自动同步；更全面的离线编辑已列入路线图。"
+      },
+      "share-identity": {
+        "title": "邀请与群组形象",
+        "description": "可按需邀请成员：分享链接、发送邮件邀请，或使用可在手机上扫码加入的多人次 QR 会话。为每个群组设置专属表情、颜色和成员列表。"
+      },
+      "activity": {
+        "title": "动态与历史",
+        "description": "通过 For-you 时间线跟进每个群组，查看每笔支出的历史和评论，支持筛选、排序，还能搜索已归档的群组。"
+      },
+      "developers": {
+        "title": "API、MCP 与 OAuth",
+        "description": "提供 OpenAPI 与 Scalar 文档、MCP 助手，以及可委派的 OAuth 2.1 权限范围。",
+        "action": "浏览 API 文档"
+      },
+      "notifications": {
+        "title": "通知",
+        "description": "通过电子邮件或推送获取群组和支出动态，还可按用户设置分类偏好，每个人都能选择适合自己的提醒强度。",
+        "action": "通知设置"
+      },
+      "open-source": {
+        "title": "开源",
+        "description": "完整代码库开放审计与贡献，并可选择自托管私有实例。",
+        "action": "在 GitHub 上查看"
+      },
+      "webhooks": {
+        "title": "网络钩子",
+        "description": "发送带签名的出站事件并支持失败重试，让您的系统与每一次变更保持同步。",
+        "action": "管理 Webhook"
+      },
+      "bulk-categorize": {
+        "title": "批量分类",
+        "description": "使用 TypeSafe Jev 等 System One 决策模型批量分类导入的支出，以群组历史和已审核的选择为提示。每条建议在应用前都会显示其置信度。"
+      },
+      "data-security": {
+        "title": "备份与恢复",
+        "description": "您的数据存储在托管的 PostgreSQL 数据库中，轮换备份保留 30 天，存放在与生产服务器分离的独立 S3 存储桶中。即使生产环境出现问题，恢复也很简单。"
       }
     },
     "cta": {
@@ -4676,26 +4680,9 @@
       "description": "创建免费账户 — 匿名、无需邮箱 — 你的分组将在设备间同步。",
       "action": "开始使用"
     },
-    "demo": {
-      "eyebrow": "互动演示",
-      "splitSettle": {
-        "title": "分摊与结算可视化",
-        "description": "更改金额、付款人或分摊比例，即可实时查看余额和最优结算方案更新。此演示完全在浏览器中运行 — 无需账户。",
-        "amountLabel": "支出金额",
-        "payerLabel": "付款人",
-        "modeLabel": "分摊方式",
-        "modeEqual": "均摊",
-        "modeCustom": "自定义",
-        "balancesTitle": "余额",
-        "settlementsTitle": "建议结算方案",
-        "settledLabel": "已全部结清 — 无需结算。",
-        "comingTitle": "更多演示即将到来",
-        "comingDescription": "金额计算器、货币换算和引导教程将陆续显示在这里。"
-      }
-    },
     "hero": {
       "title": "分摊支出所需的一切",
-      "description": "从匿名登录到批量 AI 工具：先试用下面的结算演示，再浏览完整目录。新的互动演示将陆续上线。"
+      "description": "从登录到开放平台：在下方浏览完整目录。每张卡片都包含一张展示该功能的静态插图。"
     },
     "sections": {
       "developers": {

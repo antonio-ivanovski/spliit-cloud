@@ -13,7 +13,7 @@ All your member groups remain available for read-only offline use: complete expe
 ### 🚀 Features
 
 - Read your groups offline with instant lists that merge updates in place, plus install Spliit as an app with step-by-step guidance (`TBD` by @TBD)
-- Browse every feature on the new public `/features` page, with a static illustration on each of the 15 cards — from the offline-first app and smart splits to the open platform (`TBD` by @TBD)
+- Browse every feature on the new public `/features` page, with a static illustration on each of the 20 cards — from fast sign-in and backups to the developer platform (`TBD` by @TBD)
 - Create expenses while offline: new expenses queue locally and sync automatically on reconnect (`TBD` by @TBD)
 - Unknown links now show a helpful not-found page instead of a blank screen, and deleted expenses or budgets explain what happened instead of showing an error (`TBD` by @TBD)
 - See the latest product update in a banner on the signed-out landing page, with a link to all updates (`TBD` by @TBD)

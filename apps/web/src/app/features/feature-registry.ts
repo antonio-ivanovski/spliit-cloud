@@ -1,24 +1,25 @@
 import type { LucideIcon } from 'lucide-react'
 import {
-  Archive,
   ArrowLeftRight,
   BarChart3,
   Bell,
-  Calculator,
+  Bookmark,
   Code2,
   Coins,
-  FileDown,
+  FingerprintPattern,
+  GitFork,
   History,
-  KeyRound,
-  Palette,
+  Languages,
   QrCode,
   Receipt,
   Repeat,
+  ShieldCheck,
+  Smartphone,
   Sparkles,
   Tags,
   Upload,
-  UserRound,
   Users,
+  Webhook,
 } from 'lucide-react'
 
 export type FeatureSectionId =
@@ -30,34 +31,30 @@ export type FeatureSectionId =
   | 'developers'
 
 export type FeatureCatalogId =
-  | 'anonymous-accounts'
-  | 'passkeys-security'
-  | 'synced-groups'
-  | 'core-expenses'
-  | 'multi-payer'
-  | 'calculator'
+  | 'accounts-signin'
+  | 'groups-friends'
+  | 'offline-app'
+  | 'data-security'
+  | 'expenses-splits'
+  | 'fast-entry'
   | 'currency'
-  | 'ai-assist'
+  | 'ai-help'
   | 'recurring'
+  | 'data-portability'
   | 'bulk-categorize'
-  | 'import'
-  | 'export'
-  | 'archive'
-  | 'qr-sharing'
-  | 'identity'
+  | 'share-identity'
   | 'activity'
+  | 'notifications'
+  | 'languages'
   | 'balances'
   | 'stats-budgets'
-  | 'notifications'
   | 'developers'
+  | 'webhooks'
+  | 'open-source'
 
 export type FeatureItem = {
   id: FeatureCatalogId
   icon: LucideIcon
-  /** Set when the card links somewhere real; otherwise a static listing. */
-  href?: string
-  /** Only one item owns the interactive demo in v1; the rest are static. */
-  demo?: 'split-settle'
 }
 
 export type FeatureSection = {
@@ -68,63 +65,59 @@ export type FeatureSection = {
 /**
  * Registry for the public features page. Static listings live here with
  * title/description keys under `Features.catalog.<id>`; sections own
- * `Features.sections.<id>.title`. Add new interactive demos by setting `demo`
- * on an item and rendering it in the page — no layout refactor.
+ * `Features.sections.<id>.title`. Each item renders its static illustration
+ * from `./illustrations/illustration-registry` as a top banner inside its
+ * card.
  */
 export const FEATURE_SECTIONS: FeatureSection[] = [
   {
     id: 'foundation',
     items: [
-      { id: 'anonymous-accounts', icon: UserRound },
-      { id: 'passkeys-security', icon: KeyRound },
-      { id: 'synced-groups', icon: Users },
+      { id: 'accounts-signin', icon: FingerprintPattern },
+      { id: 'groups-friends', icon: Users },
+      { id: 'offline-app', icon: Smartphone },
+      { id: 'data-security', icon: ShieldCheck },
     ],
   },
   {
     id: 'everyday',
     items: [
-      { id: 'core-expenses', icon: Receipt, demo: 'split-settle' },
-      { id: 'multi-payer', icon: Users },
-      { id: 'calculator', icon: Calculator },
+      { id: 'expenses-splits', icon: Receipt },
+      { id: 'fast-entry', icon: Bookmark },
       { id: 'currency', icon: Coins },
-      { id: 'ai-assist', icon: Sparkles },
+      { id: 'ai-help', icon: Sparkles },
     ],
   },
   {
     id: 'power',
     items: [
       { id: 'recurring', icon: Repeat },
+      { id: 'data-portability', icon: Upload },
       { id: 'bulk-categorize', icon: Tags },
-      { id: 'import', icon: Upload },
-      { id: 'export', icon: FileDown },
-      { id: 'archive', icon: Archive },
     ],
   },
   {
     id: 'sharing',
     items: [
-      { id: 'qr-sharing', icon: QrCode },
-      { id: 'identity', icon: Palette },
+      { id: 'share-identity', icon: QrCode },
       { id: 'activity', icon: History },
+      { id: 'notifications', icon: Bell },
+      { id: 'languages', icon: Languages },
     ],
   },
   {
     id: 'insights',
     items: [
-      { id: 'balances', icon: ArrowLeftRight, demo: 'split-settle' },
+      { id: 'balances', icon: ArrowLeftRight },
       { id: 'stats-budgets', icon: BarChart3 },
-      { id: 'notifications', icon: Bell },
     ],
   },
   {
     id: 'developers',
-    items: [{ id: 'developers', icon: Code2 }],
+    items: [
+      { id: 'developers', icon: Code2 },
+      { id: 'webhooks', icon: Webhook },
+      { id: 'open-source', icon: GitFork },
+    ],
   },
 ]
-
-/** Catalog ids that point at the live demo section instead of a static card. */
-export const DEMO_ITEM_IDS = new Set(
-  FEATURE_SECTIONS.flatMap((s) => s.items)
-    .filter((item) => item.demo === 'split-settle')
-    .map((item) => item.id),
-)

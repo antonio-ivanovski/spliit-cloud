@@ -1,78 +1,96 @@
-import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+import { FEATURE_SECTIONS } from '@/app/features/feature-registry'
+import { FEATURE_ILLUSTRATIONS } from '@/app/features/illustrations/illustration-registry'
 import FeaturesPage from '@/app/features/page'
 import { render, screen } from '@/test/test-utils'
 
 vi.mock('@tanstack/react-router', () => ({
   Link: ({
     to,
+    hash,
     children,
     ...props
   }: {
     to: string
+    hash?: string
     children?: React.ReactNode
     [key: string]: unknown
   }) => (
-    <a href={to} {...props}>
+    <a href={hash ? `${to}#${hash}` : to} {...props}>
       {children}
     </a>
   ),
 }))
+
+const EXPECTED_ILLUSTRATION_IDS = FEATURE_SECTIONS.flatMap((s) =>
+  s.items.map((item) => item.id),
+)
 
 describe('FeaturesPage', () => {
   afterEach(() => {
     vi.clearAllMocks()
   })
 
-  it('renders the hero, live demo, and full catalog', () => {
-    render(<FeaturesPage />)
+  it('covers every catalog item with an illustration', () => {
+    expect(EXPECTED_ILLUSTRATION_IDS).toHaveLength(20)
+    for (const id of EXPECTED_ILLUSTRATION_IDS) {
+      expect(FEATURE_ILLUSTRATIONS[id]).toBeDefined()
+    }
+  })
+
+  it('renders the hero, all illustrations, and the full catalog', () => {
+    const { container } = render(<FeaturesPage />)
 
     expect(
       screen.getByRole('heading', {
         name: 'Everything you need to split expenses',
       }),
     ).toBeInTheDocument()
-    expect(screen.getByTestId('split-settle-demo')).toBeInTheDocument()
-    // Default: $90 paid by Alex, split equally.
-    expect(screen.getByTestId('demo-balance-alex')).toHaveTextContent('+$60.00')
-    expect(screen.getByTestId('demo-settlements')).toHaveTextContent(
-      'Blake → Alex',
+
+    const illustrations = container.querySelectorAll(
+      '[data-testid$="-illustration"]',
     )
-    // Spot-check catalog coverage from auth basics to batch tools.
-    expect(screen.getByText('Anonymous accounts')).toBeInTheDocument()
-    expect(screen.getByText('Bulk AI categorization')).toBeInTheDocument()
-    expect(screen.getByText('API, MCP, OAuth & webhooks')).toBeInTheDocument()
+    expect(illustrations).toHaveLength(20)
+    expect(screen.getByTestId('balances-illustration')).toBeInTheDocument()
+    expect(
+      screen.getByTestId('expenses-splits-illustration'),
+    ).toBeInTheDocument()
+    expect(screen.getByTestId('offline-app-illustration')).toBeInTheDocument()
+    expect(screen.getByTestId('developers-illustration')).toBeInTheDocument()
+    expect(
+      screen.getByTestId('bulk-categorize-illustration'),
+    ).toBeInTheDocument()
+    expect(screen.getByTestId('data-security-illustration')).toBeInTheDocument()
+    expect(screen.getByTestId('notifications-illustration')).toBeInTheDocument()
+
+    // Spot-check catalog coverage from sign-in to open source.
+    expect(screen.getByText('Sign in your way')).toBeInTheDocument()
+    expect(screen.getByText('Expenses & smart splits')).toBeInTheDocument()
+    expect(screen.getByText('API, MCP & OAuth')).toBeInTheDocument()
+    expect(screen.getByText('Installable app')).toBeInTheDocument()
+    expect(screen.getByText('Bulk categorization')).toBeInTheDocument()
+    expect(screen.getByText('Backups & recovery')).toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: 'Manage webhooks' }),
+    ).toHaveAttribute('href', '/account/settings#webhooks')
+    expect(
+      screen.getByRole('link', { name: 'Notification settings' }),
+    ).toHaveAttribute('href', '/account/settings#notifications')
+    expect(
+      screen
+        .getByRole('link', { name: 'Browse API docs' })
+        .getAttribute('href'),
+    )?.toMatch(/\/docs$/)
+    expect(
+      screen.getByRole('link', { name: 'View on GitHub' }),
+    ).toHaveAttribute(
+      'href',
+      'https://github.com/antonio-ivanovski/spliit-cloud',
+    )
     expect(screen.getByRole('link', { name: 'Get started' })).toHaveAttribute(
       'href',
       '/',
     )
-  })
-
-  it('updates settlements when the payer changes', async () => {
-    const user = userEvent.setup()
-    render(<FeaturesPage />)
-
-    await user.click(screen.getByTestId('demo-payer-blake'))
-
-    expect(screen.getByTestId('demo-balance-blake')).toHaveTextContent(
-      '+$60.00',
-    )
-    expect(screen.getByTestId('demo-settlements')).toHaveTextContent(
-      'Alex → Blake',
-    )
-  })
-
-  it('supports custom share weights', async () => {
-    const user = userEvent.setup()
-    render(<FeaturesPage />)
-
-    await user.click(screen.getByTestId('demo-mode-custom'))
-    const alexWeight = screen.getByTestId('demo-weight-alex')
-    await user.clear(alexWeight)
-    await user.type(alexWeight, '2')
-
-    // $90 split 2:1:1 → Alex owes $45, balances shift accordingly.
-    expect(screen.getByTestId('demo-balance-alex')).toHaveTextContent('+$45.00')
   })
 })

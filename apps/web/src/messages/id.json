@@ -4589,85 +4589,89 @@
   "Features": {
     "catalogLabel": "Katalog lengkap",
     "catalog": {
-      "activity": {
-        "title": "Aktivitas, komentar & pencarian",
-        "description": "Riwayat dan komentar per pengeluaran, linimasa Untuk Anda, pemfilteran, pengurutan, dan pencarian grup yang diarsipkan."
-      },
-      "ai-assist": {
-        "title": "Pengeluaran berbantuan AI",
-        "description": "Kamus lokal plus riwayat grup plus satu mesin AI; pindai struk dan jelaskan pengeluaran lewat suara."
-      },
-      "anonymous-accounts": {
-        "title": "Akun anonim",
-        "description": "Mulai dalam beberapa klik hanya dengan nama tampilan — tanpa email atau login sosial. Pulihkan dengan tautan atau kunci sandi."
-      },
-      "archive": {
-        "title": "Arsip & hapus",
-        "description": "Arsipkan grup agar menjadi hanya-lihat, atau hapus permanen setelah selesai."
-      },
       "balances": {
         "title": "Saldo & pelunasan",
-        "description": "Arah pembayaran yang jelas, pelunasan cepat, pembayaran gabungan, dan unit subgrup seperti pasangan."
-      },
-      "bulk-categorize": {
-        "title": "Kategorisasi AI massal",
-        "description": "Jalankan pengkategorisasi AI ke banyak pengeluaran sekaligus — ideal setelah impor."
-      },
-      "calculator": {
-        "title": "Kalkulator jumlah",
-        "description": "Hitung cepat langsung di kolom jumlah saat mencatat pengeluaran."
-      },
-      "core-expenses": {
-        "title": "Pengeluaran, struk & pembagian",
-        "description": "Grup, kategori, lampiran struk, pembagian lanjutan, dan pengalaman PWA tanpa iklan."
+        "description": "Selalu lihat siapa berutang kepada siapa dengan arah pembayaran yang jelas, lalu lunasi dalam satu ketukan — termasuk pembayaran gabungan. Pasangan dan unit keluarga dapat melunasi sebagai satu kesatuan, sehingga rumah tangga bersama tetap sederhana."
       },
       "currency": {
         "title": "Multi-mata uang & kripto",
-        "description": "Konversi sisi server, penimpaan jumlah pasti dengan kurs tersirat yang ditampilkan, dan dukungan mata uang kripto."
-      },
-      "developers": {
-        "title": "API, MCP, OAuth & webhook",
-        "description": "Dokumen OpenAPI plus Scalar, asisten MCP, cakupan OAuth 2.1 yang didelegasikan, dan webhook keluar bertanda tangan."
-      },
-      "export": {
-        "title": "Ekspor & laporan",
-        "description": "CSV, laporan PDF yang dapat dicetak, dan arsip ZIP seluruh grup atau akun termasuk dokumen."
-      },
-      "identity": {
-        "title": "Identitas grup & tautan",
-        "description": "Emoji dan warna, tautan publik hanya-lihat, preset pembagian, dan pengelolaan anggota."
-      },
-      "import": {
-        "title": "Impor apa pun",
-        "description": "CSV Splitwise, CSV rekening bank dengan panduan pemetaan dan deteksi duplikat, Cospend, dan bundel Spliit."
-      },
-      "multi-payer": {
-        "title": "Beberapa pembayar & per item",
-        "description": "Beberapa pembayar, item baris, pajak dan tip, serta porsi per orang yang tepat dalam satu pengeluaran."
-      },
-      "notifications": {
-        "title": "Notifikasi email & push",
-        "description": "Pembaruan grup dan pengeluaran lewat email atau push, dengan preferensi kategori per pengguna."
-      },
-      "passkeys-security": {
-        "title": "Kunci sandi & keamanan",
-        "description": "Masuk tanpa kata sandi untuk semua jenis akun, pilihan masuk cadangan, dan mode khusus undangan untuk instansi privat."
-      },
-      "qr-sharing": {
-        "title": "Undangan QR terdekat",
-        "description": "Sesi QR multi-pakai 15 menit dengan pindai-untuk-bergabung di ponsel."
+        "description": "Berbagi biaya lintas negara dengan konversi sisi server dan kurs terkini — fiat dari Frankfurter, kripto dari Coinbase — plus penimpaan jumlah pasti dengan kurs tersirat yang ditampilkan."
       },
       "recurring": {
         "title": "Pengeluaran berulang yang andal",
-        "description": "Seri nyata dengan interval, akhir, susulan, percobaan ulang, pratinjau, dan berhenti/edit/hapus yang eksplisit."
+        "description": "Seri nyata dengan interval, akhir, susulan, percobaan ulang, dan pratinjau yang akan datang. Jeda, sunting, atau hentikan seri secara eksplisit — setiap pengeluaran yang dihasilkan tetap dapat disunting sendiri."
       },
       "stats-budgets": {
         "title": "Statistik, grafik & anggaran",
-        "description": "Grafik pengeluaran, visual kategori bulanan, rekap lintas grup, dan anggaran dengan peringatan saat melebihi anggaran."
+        "description": "Pahami pengeluaran dengan grafik, visual kategori bulanan, dan rekap lintas grup. Tetapkan anggaran per grup dan dapatkan peringatan saat melebihi anggaran sebelum kebocoran kecil menjadi besar."
       },
-      "synced-groups": {
-        "title": "Grup tersinkron & teman",
-        "description": "Grup mengikuti Anda di semua perangkat dengan keanggotaan nyata, buku besar pertemanan 1 lawan 1, dan edit yang dapat ditelusuri."
+      "languages": {
+        "title": "30 bahasa",
+        "description": "Produk lengkap dalam 30 bahasa, masing-masing dengan panduan penerjemahannya sendiri. Setiap orang berbagi biaya dalam bahasa yang paling nyaman bagi mereka."
+      },
+      "accounts-signin": {
+        "title": "Masuk dengan caramu",
+        "description": "Mulai dalam hitungan detik hanya dengan nama tampilan — tanpa email — lalu amankan akun dengan kunci sandi, tautan ajaib, kata sandi, atau akun Google, GitHub, atau X. Setiap metode berlaku untuk semua jenis akun."
+      },
+      "ai-help": {
+        "title": "Bantuan AI",
+        "description": "Jelaskan pengeluaran lewat suara, pindai struk, dan dapatkan saran dalam tiga tahap: pemeriksaan instan kamus lokal dan riwayat, lalu pilih mesinnya — model keputusan System One yang super cepat (TypeSafe Jev) atau LLM yang lebih lambat tetapi lebih akurat. Keduanya belajar dari pengeluaran Anda sebelumnya."
+      },
+      "data-portability": {
+        "title": "Impor & ekspor",
+        "description": "Bawa riwayat dari CSV Splitwise, CSV rekening bank dengan panduan pemetaan dan deteksi duplikat, Cospend, atau bundel Spliit. Dukungan Tricount dan Settle Up sudah ada di roadmap. Ekspor semuanya kembali sebagai CSV, laporan PDF yang dapat dicetak, atau arsip ZIP lengkap termasuk dokumen."
+      },
+      "expenses-splits": {
+        "title": "Pengeluaran & pembagian cerdas",
+        "description": "Buat pengeluaran dengan kategori, lampiran struk, dan pembagian lanjutan — setara, bagian, atau persentase. Beberapa orang dapat membayar dalam satu pengeluaran, item baris dibagi satu per satu, dan pajak plus tip terbagi proporsional menjadi bagian presisi per orang."
+      },
+      "fast-entry": {
+        "title": "Entri cepat",
+        "description": "Simpan templat pembagian sekali ketuk per grup dan terapkan ke pengeluaran mana pun dalam hitungan detik. Hitung cepat langsung di kolom jumlah saat memasukkan — tanpa aplikasi kalkulator terpisah."
+      },
+      "groups-friends": {
+        "title": "Grup & teman",
+        "description": "Keanggotaan nyata mengikutimu di semua perangkat, dengan setiap suntingan dikaitkan ke penulisnya. Simpan buku besar 1 lawan 1 berjalan dengan teman di luar grup mana pun, biarkan pasangan melunasi sebagai satu unit, dan arsipkan grup yang selesai menjadi hanya-lihat alih-alih menghapusnya."
+      },
+      "offline-app": {
+        "title": "Aplikasi yang bisa dipasang",
+        "description": "Pasang Spliit sebagai aplikasi di perangkat apa pun untuk pemuatan instan dan pengalaman layar penuh. Grupmu tetap terbaca saat offline, dan pengeluaran baru antre secara lokal lalu tersinkron saat tersambung kembali — pengeditan offline yang lebih luas sudah ada di roadmap."
+      },
+      "share-identity": {
+        "title": "Undangan & identitas grup",
+        "description": "Ajak orang dengan cara yang paling cocok: tautan yang bisa dibagikan, undangan email, atau sesi QR multi-guna dengan pindai-untuk-bergabung di ponsel. Beri setiap grup emoji, warna, dan daftar anggotanya sendiri."
+      },
+      "activity": {
+        "title": "Aktivitas & riwayat",
+        "description": "Ikuti setiap grup dengan lini masa Untuk Anda, riwayat dan komentar per pengeluaran, filter, pengurutan, dan pencarian grup yang diarsipkan."
+      },
+      "developers": {
+        "title": "API, MCP & OAuth",
+        "description": "Dokumentasi OpenAPI dan Scalar, asisten MCP, serta cakupan OAuth 2.1 yang didelegasikan.",
+        "action": "Lihat dokumen API"
+      },
+      "notifications": {
+        "title": "Notifikasi",
+        "description": "Dapatkan pembaruan grup dan pengeluaran lewat email atau push, dengan preferensi kategori per pengguna agar setiap orang mengatur level notifikasinya sendiri.",
+        "action": "Pengaturan notifikasi"
+      },
+      "open-source": {
+        "title": "Sumber terbuka",
+        "description": "Seluruh kode sumber terbuka untuk audit dan kontribusi, dengan opsi hosting mandiri untuk instans privat.",
+        "action": "Lihat di GitHub"
+      },
+      "webhooks": {
+        "title": "Webhook",
+        "description": "Event keluar bertanda tangan dengan percobaan ulang pengiriman, agar sistemmu selalu sinkron dengan setiap perubahan.",
+        "action": "Kelola webhook"
+      },
+      "bulk-categorize": {
+        "title": "Kategorisasi massal",
+        "description": "Kategorikan pengeluaran impor secara massal dengan model keputusan System One seperti TypeSafe Jev, memakai riwayat grup dan pilihan yang telah ditinjau sebagai petunjuk. Setiap saran menampilkan tingkat kepercayaannya sebelum diterapkan."
+      },
+      "data-security": {
+        "title": "Pencadangan & pemulihan",
+        "description": "Data Anda tersimpan di database PostgreSQL terkelola dengan cadangan bergilir yang disimpan selama 30 hari di bucket S3 terpisah di luar server produksi. Kalaupun server produksi bermasalah, pemulihannya mudah."
       }
     },
     "cta": {
@@ -4675,26 +4679,9 @@
       "description": "Buat akun gratis — anonim, tanpa email — dan grup Anda tersinkron di semua perangkat.",
       "action": "Mulai"
     },
-    "demo": {
-      "eyebrow": "Demo interaktif",
-      "splitSettle": {
-        "title": "Visualisasi pembagian + pelunasan",
-        "description": "Ubah jumlah, pembayar, atau porsi lalu lihat saldo dan pembayaran minimal diperbarui langsung. Demo ini berjalan sepenuhnya di browser Anda — tanpa perlu akun.",
-        "amountLabel": "Jumlah pengeluaran",
-        "payerLabel": "Dibayar oleh",
-        "modeLabel": "Mode pembagian",
-        "modeEqual": "Sama rata",
-        "modeCustom": "Kustom",
-        "balancesTitle": "Saldo",
-        "settlementsTitle": "Saran pelunasan",
-        "settledLabel": "Semua sudah lunas — tidak perlu pembayaran.",
-        "comingTitle": "Demo lainnya segera hadir",
-        "comingDescription": "Kalkulator jumlah, konversi mata uang, dan tur panduan akan muncul di sini berikutnya."
-      }
-    },
     "hero": {
       "title": "Semua yang Anda butuhkan untuk berbagi pengeluaran",
-      "description": "Dari masuk anonim hingga alat AI massal: coba demo pelunasan di bawah, lalu jelajahi katalog lengkap. Demo interaktif baru hadir di sini satu per satu."
+      "description": "Dari masuk hingga platform terbuka: jelajahi katalog lengkap di bawah. Setiap kartu menyertakan ilustrasi statis fitur tersebut."
     },
     "sections": {
       "developers": {

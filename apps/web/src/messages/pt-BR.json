@@ -2428,94 +2428,81 @@
   },
   "Features": {
     "catalog": {
-      "activity": {
-        "title": "Atividade, comentários e busca",
-        "description": "Histórico e comentários por despesa, linha do tempo Para você, filtragem, ordenação e busca em grupos arquivados."
-      },
-      "ai-assist": {
-        "title": "Despesas assistidas por IA",
-        "description": "Dicionário local mais histórico do grupo mais um motor de IA; escaneie recibos e descreva despesas por voz."
-      },
-      "anonymous-accounts": {
-        "title": "Contas anônimas",
-        "description": "Comece em poucos cliques só com um nome de exibição — sem e-mail nem login social. Recupere com um link ou chave de acesso."
-      },
-      "archive": {
-        "title": "Arquivar e excluir",
-        "description": "Arquive grupos para deixá-los somente leitura ou exclua-os permanentemente quando terminar."
-      },
       "balances": {
         "title": "Saldos e acertos",
-        "description": "Direção de pagamento clara, acerto rápido, pagamentos combinados e subunidades como casais."
-      },
-      "bulk-categorize": {
-        "title": "Categorização em massa com IA",
-        "description": "Rode o categorizador de IA em muitas despesas de uma vez — ideal após uma importação."
-      },
-      "calculator": {
-        "description": "Cálculos rápidos direto no campo do valor ao lançar despesas."
-      },
-      "core-expenses": {
-        "description": "Grupos, categorias, recibos anexados, divisões avançadas e uma experiência PWA sem anúncios."
+        "description": "Veja sempre quem deve o quê a quem com uma direção de pagamento clara e acerte com um toque — incluindo pagamentos combinados. Casais e unidades familiares podem acertar como uma só entidade, para que a casa compartilhada continue simples."
       },
       "currency": {
-        "description": "Conversão no servidor, valores exatos com taxa implícita exibida e suporte a criptomoedas."
-      },
-      "developers": {
-        "description": "Documentação OpenAPI mais Scalar, assistente MCP, escopos delegados OAuth 2.1 e webhooks de saída assinados."
-      },
-      "export": {
-        "description": "CSV, relatórios PDF para impressão e arquivos ZIP completos do grupo ou da conta, incluindo documentos."
-      },
-      "identity": {
-        "title": "Identidade do grupo e links",
-        "description": "Emojis e cores, links públicos somente leitura, presets de divisão e gerenciamento de membros."
-      },
-      "import": {
-        "title": "Importe o que quiser",
-        "description": "CSV do Splitwise, CSVs de extratos bancários com assistente de mapeamento e detecção de duplicados, Cospend e pacotes Spliit."
-      },
-      "multi-payer": {
-        "title": "Vários pagadores e por itens",
-        "description": "Vários pagadores, itens detalhados, impostos e gorjeta, e valores precisos por pessoa em uma só despesa."
-      },
-      "notifications": {
-        "description": "Atualizações do grupo e das despesas por e-mail ou push, com preferências por categoria para cada usuário."
-      },
-      "passkeys-security": {
-        "description": "Login sem senha para todos os tipos de conta, opção de acesso reserva e modo somente por convite para instâncias privadas."
-      },
-      "qr-sharing": {
-        "title": "Convites QR por perto",
-        "description": "Sessões QR reutilizáveis de 15 minutos com entrada por escaneamento no celular."
+        "description": "Divida despesas além-fronteiras com conversão no servidor e taxas em tempo real — fiat da Frankfurter, cripto da Coinbase — além de ajustes de valores exatos com a taxa implícita exibida."
       },
       "recurring": {
-        "description": "Séries reais com intervalos, términos, atualizações, novas tentativas, pré-visualizações e parar, editar ou excluir explícitos."
+        "description": "Séries reais com intervalos, términos, atualizações, novas tentativas e prévias do que vem por aí. Pause, edite ou pare uma série explicitamente — cada despesa gerada continua editável por conta própria."
       },
       "stats-budgets": {
-        "description": "Gráficos de despesas, visuais mensais por categoria, resumo entre grupos e orçamentos com alertas de estouro."
+        "description": "Entenda as despesas com gráficos, visuais mensais por categoria e um resumo entre grupos. Defina orçamentos por grupo e receba alertas de estouro antes que os pequenos vazamentos se tornem grandes."
       },
-      "synced-groups": {
-        "description": "Seus grupos acompanham você em todos os dispositivos com participação real, registros individuais com amigos e edições atribuídas."
+      "languages": {
+        "description": "Todo o produto em 30 idiomas, cada um com seu guia de tradução. Todo mundo pode dividir as despesas no idioma em que se sente mais à vontade."
+      },
+      "accounts-signin": {
+        "title": "Entre do seu jeito",
+        "description": "Comece em segundos só com um nome de exibição — sem e-mail — e proteja depois a conta com uma chave de acesso, um link mágico, uma senha ou sua conta Google, GitHub ou X. Todos os métodos funcionam para todos os tipos de conta."
+      },
+      "ai-help": {
+        "description": "Descreva as despesas por voz, digitalize recibos e receba sugestões em três etapas: verificações instantâneas do dicionário local e do histórico, depois o motor de sua escolha — o modelo de decisão System One ultrarrápido (TypeSafe Jev) ou um LLM mais lento, porém mais preciso. Ambos aprendem com suas despesas anteriores."
+      },
+      "data-portability": {
+        "description": "Traga o histórico de CSV do Splitwise, CSV de extratos bancários com assistente de mapeamento e detecção de duplicados, Cospend ou pacotes Spliit. O suporte para Tricount e Settle Up está no roteiro. Exporte tudo como CSV, relatórios PDF para imprimir ou arquivos ZIP completos com documentos."
+      },
+      "expenses-splits": {
+        "description": "Crie despesas com categorias, recibos anexados e divisões avançadas — em partes iguais, por cotas ou por porcentagens. Várias pessoas podem pagar dentro da mesma despesa, as linhas se dividem uma a uma e os impostos e as gorjetas se distribuem proporcionalmente em partes exatas por pessoa."
+      },
+      "fast-entry": {
+        "description": "Guarde modelos de divisão de um toque por grupo e aplique-os a qualquer despesa em segundos. Faça contas rápidas diretamente no campo do valor enquanto insere a despesa — sem precisar de outro app de calculadora."
+      },
+      "groups-friends": {
+        "description": "A participação real acompanha você entre dispositivos, com cada edição atribuída ao seu autor. Mantenha uma conta-corrente individual com um amigo fora de qualquer grupo, deixe os casais acertar como uma unidade e arquive os grupos encerrados como somente leitura em vez de excluí-los."
+      },
+      "offline-app": {
+        "title": "App instalável",
+        "description": "Instale o Spliit como um app em qualquer dispositivo para carregamento instantâneo e uma experiência de tela cheia. Seus grupos ficam legíveis sem conexão e as novas despesas entram em fila localmente, sincronizando ao restabelecer a conexão — a edição ampliada offline está no roteiro."
+      },
+      "share-identity": {
+        "title": "Convites e identidade do grupo",
+        "description": "Traga pessoas como preferir: um link compartilhável, um convite por e-mail ou uma sessão QR multiuso com adesão por leitura no celular. Dê a cada grupo seu próprio emoji, cores e lista de membros."
+      },
+      "activity": {
+        "description": "Acompanhe cada grupo com uma linha do tempo \"Para você\", histórico e comentários por despesa, filtros, ordenação e pesquisa de grupos arquivados."
+      },
+      "developers": {
+        "description": "Documentação OpenAPI e Scalar, assistente MCP e escopos delegados de OAuth 2.1."
+      },
+      "notifications": {
+        "description": "Receba novidades de grupos e despesas por e-mail ou push, com preferências de categoria por usuário para cada um escolher seu nível de avisos.",
+        "action": "Configurações de notificação"
+      },
+      "open-source": {
+        "description": "Todo o código é aberto para auditoria e contribuições, com opção de auto-hospedagem para instâncias privadas."
+      },
+      "webhooks": {
+        "description": "Eventos de saída assinados com novas tentativas de entrega, para seus sistemas ficarem sempre sincronizados com cada alteração.",
+        "action": "Gerenciar webhooks"
+      },
+      "bulk-categorize": {
+        "description": "Categorize em lote as despesas importadas com um modelo de decisão System One como o TypeSafe Jev, usando o histórico do seu grupo e as escolhas revisadas como dicas. Cada sugestão mostra sua confiança antes de aplicá-la."
+      },
+      "data-security": {
+        "title": "Backup e recuperação",
+        "description": "Os seus dados ficam em um banco de dados PostgreSQL gerenciado, com backups rotativos guardados por 30 dias em um bucket S3 separado fora do servidor de produção. Mesmo que algo grave aconteça com a produção, a recuperação é simples."
       }
     },
     "cta": {
       "title": "Pronto para testar com seu grupo?",
       "description": "Crie uma conta gratuita — anônima, sem e-mail — e seus grupos se sincronizam em todos os dispositivos."
     },
-    "demo": {
-      "splitSettle": {
-        "title": "Visualizador de divisão + acerto",
-        "description": "Altere o valor, o pagador ou as partes e veja os saldos e os acertos mínimos atualizarem ao vivo. Esta demonstração roda totalmente no seu navegador — sem conta.",
-        "settlementsTitle": "Acertos sugeridos",
-        "settledLabel": "Tudo acertado — sem acertos necessários.",
-        "comingTitle": "Mais demos a caminho",
-        "comingDescription": "A calculadora de valores, a conversão de moeda e os tours guiados vão aparecer aqui a seguir."
-      }
-    },
     "hero": {
       "title": "Tudo o que você precisa para dividir despesas",
-      "description": "Do login anônimo às ferramentas massivas de IA: teste a demonstração de acerto abaixo e explore o catálogo completo. Novas demonstrações interativas chegam uma a uma."
+      "description": "Do login à plataforma aberta: explore o catálogo completo abaixo. Cada cartão inclui uma ilustração estática do recurso."
     },
     "sections": {
       "developers": {

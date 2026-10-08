@@ -62,6 +62,7 @@ export function SupportOptionCard({
   title,
   eyebrow,
   description,
+  visual,
   extra,
   footer,
 }: {
@@ -70,11 +71,38 @@ export function SupportOptionCard({
   title: ReactNode
   eyebrow?: ReactNode
   description: ReactNode
+  /** Decorative visual rendered between the icon and the title. */
+  visual?: ReactNode
   /** Rendered between the description and the footer (e.g. per-card notes). */
   extra?: ReactNode
   /** Bottom action; pushed to the card bottom so cards in a row align. */
   footer?: ReactNode
 }) {
+  if (visual) {
+    return (
+      <article className="flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm">
+        {visual}
+        <div
+          className={`relative z-10 -mt-5 ml-4 flex size-9 items-center justify-center rounded-xl border shadow-sm ${accent}`}
+        >
+          <Icon className="size-4" aria-hidden="true" />
+        </div>
+        <h2 className="px-4 pt-2.5 text-base font-semibold tracking-tight">
+          {title}
+        </h2>
+        {eyebrow ? (
+          <p className="px-4 pt-0.5 text-xs font-medium tracking-wide text-muted-foreground uppercase">
+            {eyebrow}
+          </p>
+        ) : null}
+        <p className="flex-1 px-4 pt-1 pb-4 text-sm leading-6 text-muted-foreground">
+          {description}
+        </p>
+        {extra}
+        {footer ? <div className="px-4 pb-4">{footer}</div> : null}
+      </article>
+    )
+  }
   return (
     <article className="group flex min-h-64 flex-col rounded-2xl border bg-card p-5 shadow-sm transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg">
       <div
@@ -82,6 +110,7 @@ export function SupportOptionCard({
       >
         <Icon className="size-5" aria-hidden="true" />
       </div>
+      {visual ? <div className="mt-4">{visual}</div> : null}
       <h2 className="mt-5 text-lg font-semibold tracking-tight">{title}</h2>
       {eyebrow ? (
         <p className="mt-1 text-xs font-medium tracking-wide text-muted-foreground uppercase">

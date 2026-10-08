@@ -4712,26 +4712,9 @@
   "Features": {
     "hero": {
       "title": "Everything you need to split expenses",
-      "description": "From anonymous sign-in to bulk AI tools: try the settlement demo below, then browse the full catalog. New interactive demos land here one by one."
+      "description": "From sign-in to the open platform: browse the full catalog below. Every card includes a static illustration of the feature."
     },
     "catalogLabel": "Full catalog",
-    "demo": {
-      "eyebrow": "Interactive demo",
-      "splitSettle": {
-        "title": "Split + settle visualizer",
-        "description": "Change the amount, payer, or shares and watch balances and minimal repayments update live. This demo runs entirely in your browser — no account needed.",
-        "amountLabel": "Expense amount",
-        "payerLabel": "Paid by",
-        "modeLabel": "Split mode",
-        "modeEqual": "Equal",
-        "modeCustom": "Custom",
-        "balancesTitle": "Balances",
-        "settlementsTitle": "Suggested repayments",
-        "settledLabel": "Everyone is settled — no repayments needed.",
-        "comingTitle": "More demos coming",
-        "comingDescription": "Amount calculator, currency conversion, and guided tours will appear here next."
-      }
-    },
     "cta": {
       "title": "Ready to try it with your group?",
       "description": "Create a free account — anonymous, no email required — and your groups sync across devices.",
@@ -4758,85 +4741,89 @@
       }
     },
     "catalog": {
-      "anonymous-accounts": {
-        "title": "Anonymous accounts",
-        "description": "Start in a few clicks with just a display name — no email or social login. Recover with a link or passkey."
-      },
-      "passkeys-security": {
-        "title": "Passkeys & security",
-        "description": "Passwordless sign-in for every account type, backup sign-in choice, and invite-only mode for private instances."
-      },
-      "synced-groups": {
-        "title": "Synced groups & friends",
-        "description": "Groups follow you across devices with real membership, 1-on-1 friend ledgers, and attributable edits."
-      },
-      "core-expenses": {
-        "title": "Expenses, receipts & splits",
-        "description": "Groups, categories, receipt attachments, advanced splits, and an ad-free PWA experience."
-      },
-      "multi-payer": {
-        "title": "Multiple payers & itemized",
-        "description": "Several payers, line items, tax and tip, and precise per-person shares in one expense."
-      },
-      "calculator": {
-        "title": "Amount calculator",
-        "description": "Quick arithmetic right in the amount field while entering expenses."
-      },
       "currency": {
         "title": "Multi-currency & crypto",
-        "description": "Server-side conversion, exact amount overrides with implied rate shown, and cryptocurrency support."
-      },
-      "ai-assist": {
-        "title": "AI-assisted expenses",
-        "description": "Local dictionary plus group history plus one AI engine; scan receipts and describe expenses by voice."
+        "description": "Split across borders with server-side conversion and live rates — fiat from Frankfurter, crypto from Coinbase — plus exact amount overrides with the implied rate shown."
       },
       "recurring": {
         "title": "Durable recurring expenses",
-        "description": "Real series with intervals, endings, catch-up, retries, previews, and explicit stop/edit/delete."
-      },
-      "bulk-categorize": {
-        "title": "Bulk AI categorization",
-        "description": "Run the AI categorizer across many expenses at once — ideal after an import."
-      },
-      "import": {
-        "title": "Import anything",
-        "description": "Splitwise CSV, bank-statement CSVs with mapping wizard and duplicate detection, Cospend, and Spliit bundles."
-      },
-      "export": {
-        "title": "Export & reports",
-        "description": "CSV, printable PDF reports, and full group or account ZIP archives including documents."
-      },
-      "archive": {
-        "title": "Archive & delete",
-        "description": "Archive groups to make them view-only, or permanently delete them when done."
-      },
-      "qr-sharing": {
-        "title": "Nearby QR invites",
-        "description": "Multi-use 15-minute QR sessions with scan-to-join on mobile."
-      },
-      "identity": {
-        "title": "Group identity & links",
-        "description": "Emoji and colors, public view-only links, split presets, and member management."
-      },
-      "activity": {
-        "title": "Activity, comments & search",
-        "description": "Per-expense history and comments, For-you timeline, filtering, sorting, and archived-group search."
+        "description": "Real series with intervals, endings, catch-up, retries, and previews of what's coming. Pause, edit, or stop a series explicitly — every generated expense stays editable on its own."
       },
       "balances": {
         "title": "Balances & settlements",
-        "description": "Clear payment direction, quick settlement, combined payments, and subgroup units like couples."
+        "description": "Always see who owes whom with clear payment direction, then settle in one tap — including combined payments. Couples and family units can settle as one entity, so shared households stay simple."
       },
       "stats-budgets": {
         "title": "Stats, charts & budgets",
-        "description": "Spending charts, monthly category visuals, cross-group roll-up, and budgets with over-budget alerts."
+        "description": "Understand spending with charts, monthly category visuals, and a cross-group roll-up. Set budgets per group and get over-budget alerts before small leaks become big ones."
+      },
+      "languages": {
+        "title": "30 languages",
+        "description": "The full product in 30 locales, each with its own translation guide. Everyone splits in the language they're comfortable with."
+      },
+      "accounts-signin": {
+        "title": "Sign in your way",
+        "description": "Start in seconds with just a display name — no email required — then secure the account with a passkey, a magic link, a password, or your Google, GitHub, or X account. Every method works for every account type."
+      },
+      "groups-friends": {
+        "title": "Groups & friends",
+        "description": "Real membership follows you across devices, with every edit attributed to its author. Keep a running 1-on-1 ledger with a friend outside any group, let couples settle as one unit, and archive finished groups to view-only instead of deleting them."
+      },
+      "offline-app": {
+        "title": "Installable app",
+        "description": "Install Spliit as an app on any device for instant loading and a full-screen experience. Your groups stay readable offline, and new expenses queue locally, syncing on reconnect — broader offline editing is on the roadmap."
+      },
+      "expenses-splits": {
+        "title": "Expenses & smart splits",
+        "description": "Create expenses with categories, receipt attachments, and advanced splits — equal, shares, or percentages. Several people can pay inside one expense, line items split individually, and tax plus tip distribute proportionally into precise per-person shares."
+      },
+      "fast-entry": {
+        "title": "Fast entry",
+        "description": "Save one-tap split templates per group and apply them to any expense in seconds. Do quick arithmetic right in the amount field while entering — no separate calculator app needed."
+      },
+      "ai-help": {
+        "title": "AI assistance",
+        "description": "Describe expenses by voice, scan receipts, and get suggestions in three stages: instant local dictionary and history checks, then your choice of engine — the super-fast System One decision model (TypeSafe Jev) or a slower LLM with greater accuracy. Both learn from your previous expenses."
+      },
+      "data-portability": {
+        "title": "Import & export",
+        "description": "Bring history from Splitwise CSV, bank-statement CSVs with a mapping wizard and duplicate detection, Cospend, or Spliit bundles. Tricount and Settle Up support is on the roadmap. Take everything back out as CSV, printable PDF reports, or full ZIP archives including documents."
+      },
+      "share-identity": {
+        "title": "Invites & group identity",
+        "description": "Bring people in however suits you: a shareable link, an email invitation, or a multi-use QR session with scan-to-join on mobile. Give each group its own emoji, colors, and member list."
+      },
+      "activity": {
+        "title": "Activity & history",
+        "description": "Follow every group with a For-you timeline, per-expense history and comments, filtering, sorting, and archived-group search."
       },
       "notifications": {
-        "title": "Email & push notifications",
-        "description": "Group and expense updates by email or push, with per-user category preferences."
+        "title": "Notifications",
+        "description": "Get group and expense updates by email or push, with per-user category preferences so everyone chooses their own signal level.",
+        "action": "Notification settings"
       },
       "developers": {
-        "title": "API, MCP, OAuth & webhooks",
-        "description": "OpenAPI plus Scalar docs, MCP assistant, delegated OAuth 2.1 scopes, and signed outbound webhooks."
+        "title": "API, MCP & OAuth",
+        "description": "OpenAPI plus Scalar docs, MCP assistant, and delegated OAuth 2.1 scopes.",
+        "action": "Browse API docs"
+      },
+      "webhooks": {
+        "title": "Webhooks",
+        "description": "Signed outbound events with delivery retries, so your systems stay in sync with every change.",
+        "action": "Manage webhooks"
+      },
+      "open-source": {
+        "title": "Open source",
+        "description": "The full codebase is open for audit and contributions, with a self-host option for private instances.",
+        "action": "View on GitHub"
+      },
+      "bulk-categorize": {
+        "title": "Bulk categorization",
+        "description": "Categorize imported expenses in bulk with a System One decision model such as TypeSafe Jev, using your group's history and reviewed choices as hints. Every suggestion shows its confidence before you apply it."
+      },
+      "data-security": {
+        "title": "Backups & recovery",
+        "description": "Your data lives in a managed PostgreSQL database with rotating backups kept for 30 days on a separate S3 bucket off the production server. Even if something bad happens to prod, recovery is straightforward."
       }
     }
   },

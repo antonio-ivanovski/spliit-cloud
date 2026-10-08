@@ -4663,85 +4663,89 @@
   "Features": {
     "catalogLabel": "Pełny katalog",
     "catalog": {
-      "activity": {
-        "title": "Aktywność, komentarze i wyszukiwanie",
-        "description": "Historia i komentarze do każdego wydatku, oś czasu Dla Ciebie, filtrowanie, sortowanie oraz wyszukiwanie w zarchiwizowanych grupach."
-      },
-      "ai-assist": {
-        "title": "Wydatki wspomagane przez AI",
-        "description": "Lokalny słownik plus historia grupy plus jeden silnik AI; skanuj paragony i opisuj wydatki głosowo."
-      },
-      "anonymous-accounts": {
-        "title": "Anonimowe konta",
-        "description": "Zacznij w kilku kliknięciach, podając tylko nazwę wyświetlaną — bez adresu e-mail i logowania społecznościowego. Odzyskaj dostęp linkiem lub kluczem passkey."
-      },
-      "archive": {
-        "title": "Archiwizacja i usuwanie",
-        "description": "Archiwizuj grupy, aby były tylko do odczytu, albo trwale je usuwaj, gdy są już niepotrzebne."
-      },
       "balances": {
         "title": "Salda i rozliczenia",
-        "description": "Jasny kierunek płatności, szybkie rozliczenie, łączone płatności oraz jednostki podgrup, takie jak pary."
-      },
-      "bulk-categorize": {
-        "title": "Masowa kategoryzacja AI",
-        "description": "Uruchom kategoryzator AI na wielu wydatkach naraz — idealne po imporcie."
-      },
-      "calculator": {
-        "title": "Kalkulator kwot",
-        "description": "Szybkie obliczenia bezpośrednio w polu kwoty podczas dodawania wydatków."
-      },
-      "core-expenses": {
-        "title": "Wydatki, paragony i podziały",
-        "description": "Grupy, kategorie, załączniki paragonów, zaawansowane podziały oraz korzystanie z PWA bez reklam."
+        "description": "Zawsze widzisz, kto komu jest winien, z jasnym kierunkiem płatności, a potem rozliczysz się jednym dotknięciem — łącznie z płatnościami łączonymi. Pary i jednostki rodzinne mogą rozliczyć się jako jeden podmiot, dzięki czemu wspólne gospodarstwa domowe pozostają proste."
       },
       "currency": {
         "title": "Wiele walut i krypto",
-        "description": "Konwersja po stronie serwera, nadpisywanie dokładnych kwot z pokazanym kursem wynikowym oraz obsługa kryptowalut."
-      },
-      "developers": {
-        "title": "API, MCP, OAuth i webhooki",
-        "description": "Dokumentacja OpenAPI i Scalar, asystent MCP, delegowane zakresy OAuth 2.1 oraz podpisane wychodzące webhooki."
-      },
-      "export": {
-        "title": "Eksport i raporty",
-        "description": "Pliki CSV, raporty PDF do druku oraz pełne archiwa ZIP grupy lub konta, w tym dokumenty."
-      },
-      "identity": {
-        "title": "Tożsamość grupy i linki",
-        "description": "Emoji i kolory, publiczne linki tylko do odczytu, presety podziału oraz zarządzanie członkami."
-      },
-      "import": {
-        "title": "Importuj wszystko",
-        "description": "Pliki CSV ze Splitwise, wyciągi bankowe CSV z kreatorem mapowania i wykrywaniem duplikatów, Cospend oraz pakiety Spliit."
-      },
-      "multi-payer": {
-        "title": "Wielu płatników i pozycje",
-        "description": "Wielu płatników, pozycje, podatki i napiwki oraz precyzyjne udziały każdej osoby w jednym wydatku."
-      },
-      "notifications": {
-        "title": "Powiadomienia e-mail i push",
-        "description": "Powiadomienia o grupach i wydatkach e-mailem lub push, z preferencjami kategorii dla każdego użytkownika."
-      },
-      "passkeys-security": {
-        "title": "Klucze passkey i bezpieczeństwo",
-        "description": "Logowanie bez hasła dla każdego typu konta, zapasowa metoda logowania oraz tryb tylko na zaproszenia dla prywatnych instancji."
-      },
-      "qr-sharing": {
-        "title": "Zaproszenia QR w pobliżu",
-        "description": "Wielokrotne 15-minutowe sesje QR z dołączaniem przez skanowanie na telefonie."
+        "description": "Dziel wydatki ponad granicami z konwersją po stronie serwera i kursami na żywo — fiat z Frankfurter, krypto z Coinbase — a do tego nadpisuj dokładne kwoty przy widocznym wyliczonym kursie."
       },
       "recurring": {
         "title": "Trwałe wydatki cykliczne",
-        "description": "Prawdziwe serie z interwałami, zakończeniami, nadrabianiem zaległości, ponowieniami, podglądami oraz jawnym zatrzymywaniem, edycją i usuwaniem."
+        "description": "Prawdziwe serie z interwałami, zakończeniami, nadrabianiem zaległości, ponawianiem i podglądem nadchodzących. Wstrzymaj, edytuj lub jawnie zakończ serię — każdy wygenerowany wydatek pozostaje edytowalny osobno."
       },
       "stats-budgets": {
         "title": "Statystyki, wykresy i budżety",
-        "description": "Wykresy wydatków, miesięczne wizualizacje kategorii, podsumowanie między grupami oraz budżety z alertami o przekroczeniu."
+        "description": "Poznaj wydatki dzięki wykresom, miesięcznym wizualizacjom kategorii i podsumowaniu między grupami. Ustaw budżety dla każdej grupy i dostawaj alerty o przekroczeniu, zanim drobne wycieki staną się dużymi."
       },
-      "synced-groups": {
-        "title": "Zsynchronizowane grupy i znajomi",
-        "description": "Grupy podążają za Tobą na różnych urządzeniach, z prawdziwym członkostwem, rozliczeniami 1 na 1 ze znajomymi oraz przypisanymi edycjami."
+      "languages": {
+        "title": "30 języków",
+        "description": "Cały produkt w 30 językach, każdy z własnym przewodnikiem tłumaczenia. Każdy rozlicza się w języku, w którym czuje się swobodnie."
+      },
+      "accounts-signin": {
+        "title": "Loguj się po swojemu",
+        "description": "Zacznij w kilka sekund, podając tylko nazwę wyświetlaną — bez adresu e-mail — a potem zabezpiecz konto kluczem passkey, magicznym linkiem, hasłem albo kontem Google, GitHub lub X. Każda metoda działa dla każdego typu konta."
+      },
+      "ai-help": {
+        "title": "Pomoc AI",
+        "description": "Opisuj wydatki głosowo, skanuj paragony i otrzymuj sugestie w trzech etapach: błyskawiczne sprawdzenie lokalnego słownika i historii, a potem wybrany przez Ciebie silnik — superszybki decyzyjny model System One (TypeSafe Jev) albo wolniejszy LLM o większej dokładności. Oba uczą się na Twoich wcześniejszych wydatkach."
+      },
+      "data-portability": {
+        "title": "Import i eksport",
+        "description": "Przenieś historię z CSV ze Splitwise, wyciągów bankowych CSV z kreatorem mapowania i wykrywaniem duplikatów, z Cospend albo z pakietów Spliit. Wsparcie dla Tricount i Settle Up jest w planach. Wszystko wyeksportujesz z powrotem jako CSV, raporty PDF do druku albo pełne archiwa ZIP z dokumentami."
+      },
+      "expenses-splits": {
+        "title": "Wydatki i sprytne podziały",
+        "description": "Twórz wydatki z kategoriami, załącznikami paragonów i zaawansowanymi podziałami — po równo, udziałami lub procentami. W jednym wydatku może płacić kilka osób, pozycje dzielą się osobno, a podatek z napiwkiem rozkłada się proporcjonalnie na dokładne udziały na osobę."
+      },
+      "fast-entry": {
+        "title": "Szybkie wpisywanie",
+        "description": "Zapisuj szablony podziału na jedno dotknięcie dla każdej grupy i stosuj je do dowolnego wydatku w kilka sekund. Licz od razu w polu kwoty podczas wpisywania — bez osobnej aplikacji kalkulatora."
+      },
+      "groups-friends": {
+        "title": "Grupy i znajomi",
+        "description": "Prawdziwe członkostwo podąża za Tobą na różnych urządzeniach, a każda edycja ma swojego autora. Prowadź bieżące rozliczenie 1 na 1 ze znajomym poza grupą, pozwól parom rozliczać się jako jedna jednostka i archiwizuj ukończone grupy do trybu tylko do odczytu zamiast je usuwać."
+      },
+      "offline-app": {
+        "title": "Aplikacja do zainstalowania",
+        "description": "Zainstaluj Spliit jako aplikację na dowolnym urządzeniu, by ładował się błyskawicznie i działał na pełnym ekranie. Twoje grupy pozostają czytelne bez połączenia, a nowe wydatki czekają lokalnie w kolejce i synchronizują się automatycznie po powrocie do sieci. Szersza edycja offline jest w planach."
+      },
+      "share-identity": {
+        "title": "Zaproszenia i tożsamość grupy",
+        "description": "Zaproś ludzi tak, jak Ci wygodnie: linkiem do udostępnienia, zaproszeniem e-mail albo wielorazową sesją QR z dołączaniem przez skanowanie na telefonie. Nadaj każdej grupie własne emoji, kolory i listę członków."
+      },
+      "activity": {
+        "title": "Aktywność i historia",
+        "description": "Śledź każdą grupę na osi czasu „Dla Ciebie”, z historią i komentarzami do każdego wydatku, filtrowaniem, sortowaniem i wyszukiwaniem w zarchiwizowanych grupach."
+      },
+      "developers": {
+        "title": "API, MCP i OAuth",
+        "description": "Dokumentacja OpenAPI i Scalar, asystent MCP oraz delegowane zakresy OAuth 2.1.",
+        "action": "Zobacz dokumentację API"
+      },
+      "notifications": {
+        "title": "Powiadomienia",
+        "description": "Otrzymuj aktualizacje o grupach i wydatkach e-mailem lub push, z preferencjami kategorii dla każdego użytkownika, dzięki czemu każdy sam wybiera, ile powiadomień dostaje.",
+        "action": "Ustawienia powiadomień"
+      },
+      "open-source": {
+        "title": "Otwarty kod",
+        "description": "Cały kod źródłowy jest otwarty do audytu i współpracy, z opcją własnego hostingu dla prywatnych instancji.",
+        "action": "Zobacz na GitHubie"
+      },
+      "webhooks": {
+        "title": "Webhooki",
+        "description": "Podpisane zdarzenia wychodzące z ponawianiem dostaw, dzięki czemu Twoje systemy pozostają zsynchronizowane z każdą zmianą.",
+        "action": "Zarządzaj webhookami"
+      },
+      "bulk-categorize": {
+        "title": "Zbiorcza kategoryzacja",
+        "description": "Kategoryzuj zbiorczo zaimportowane wydatki przy użyciu decyzyjnego modelu System One, takiego jak TypeSafe Jev, wykorzystując historię swojej grupy i zweryfikowane wybory jako wskazówki. Każda sugestia pokazuje swój poziom pewności, zanim ją zastosujesz."
+      },
+      "data-security": {
+        "title": "Kopie zapasowe i odzyskiwanie",
+        "description": "Twoje dane znajdują się w zarządzanej bazie danych PostgreSQL z rotowanymi kopiami zapasowymi przechowywanymi przez 30 dni w osobnym buckecie S3 poza serwerem produkcyjnym. Nawet jeśli produkcję spotka coś złego, odzyskanie danych jest proste."
       }
     },
     "cta": {
@@ -4749,26 +4753,9 @@
       "description": "Utwórz darmowe konto — anonimowo, bez adresu e-mail — a Twoje grupy zsynchronizują się na różnych urządzeniach.",
       "action": "Zacznij"
     },
-    "demo": {
-      "eyebrow": "Interaktywne demo",
-      "splitSettle": {
-        "title": "Wizualizator podziału i rozliczeń",
-        "description": "Zmień kwotę, płatnika lub udziały i obserwuj, jak salda oraz minimalne spłaty aktualizują się na żywo. To demo działa w całości w Twojej przeglądarce — konto nie jest potrzebne.",
-        "amountLabel": "Kwota wydatku",
-        "payerLabel": "Płatnik",
-        "modeLabel": "Tryb podziału",
-        "modeEqual": "Po równo",
-        "modeCustom": "Własny",
-        "balancesTitle": "Salda",
-        "settlementsTitle": "Sugerowane spłaty",
-        "settledLabel": "Wszyscy są rozliczeni — nie są potrzebne żadne spłaty.",
-        "comingTitle": "Więcej dem w drodze",
-        "comingDescription": "Kalkulator kwot, konwersja walut i przewodniki pojawią się tu jako następne."
-      }
-    },
     "hero": {
       "title": "Wszystko, czego potrzebujesz, by dzielić wydatki",
-      "description": "Od anonimowego logowania po masowe narzędzia AI: wypróbuj poniższe demo rozliczeń, a potem przeglądnij pełny katalog. Nowe interaktywne dema będą się tu pojawiać jedno po drugim."
+      "description": "Od logowania po otwartą platformę: przeglądaj pełny katalog poniżej. Każda karta zawiera statyczną ilustrację funkcji."
     },
     "sections": {
       "developers": {

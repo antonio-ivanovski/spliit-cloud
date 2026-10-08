@@ -4609,85 +4609,89 @@
   "Features": {
     "catalogLabel": "Koko luettelo",
     "catalog": {
-      "activity": {
-        "title": "Toiminta, kommentit ja haku",
-        "description": "Kulukohtainen historia ja kommentit, Sinulle-aikajana, suodatus, lajittelu ja arkistoitujen ryhmien haku."
-      },
-      "ai-assist": {
-        "title": "Tekoälyavusteiset kulut",
-        "description": "Paikallinen sanakirja sekä ryhmähistoria sekä yksi tekoälymoottori; skannaa kuitteja ja kuvaa kuluja äänellä."
-      },
-      "anonymous-accounts": {
-        "title": "Anonyymit tilit",
-        "description": "Aloita muutamalla klikkauksella pelkällä näyttönimellä — ei sähköpostia eikä sosiaalista kirjautumista. Palauta linkillä tai passkeyllä."
-      },
-      "archive": {
-        "title": "Arkistointi ja poisto",
-        "description": "Arkistoi ryhmät luku-tilaan tai poista ne pysyvästi, kun olet valmis."
-      },
       "balances": {
         "title": "Saldot ja tasaukset",
-        "description": "Selkeä maksusuunta, nopea tasaus, yhdistetyt maksut ja alaryhmäyksiköt kuten pariskunnat."
-      },
-      "bulk-categorize": {
-        "title": "Tekoälyluokittelu massana",
-        "description": "Aja tekoälyluokittelu monelle kululle kerralla — ihanteellinen tuonnin jälkeen."
-      },
-      "calculator": {
-        "title": "Summalaskin",
-        "description": "Nopea laskutoimitus suoraan summakentässä kuluja kirjattaessa."
-      },
-      "core-expenses": {
-        "title": "Kulut, kuitit ja jaot",
-        "description": "Ryhmät, kategoriat, kuittiliitteet, edistyneet jaot ja mainokseton PWA-kokemus."
+        "description": "Näe aina, kuka on velkaa kenelle, selkeällä maksusuunnalla ja tasaa sitten yhdellä napautuksella — mukaan lukien yhdistetyt maksut. Pariskunnat ja perheyksiköt voivat tasata yhtenä yksikkönä, joten yhteiset taloudet pysyvät yksinkertaisina."
       },
       "currency": {
         "title": "Monivaluutta ja krypto",
-        "description": "Palvelinpuolen muunto, tarkkojen summien ohitukset näytetyllä implisiittisellä kurssilla sekä kryptovaluuttatuki."
-      },
-      "developers": {
-        "title": "API, MCP, OAuth ja webhookit",
-        "description": "OpenAPI ja Scalar-dokumentaatio, MCP-avustaja, delegoidut OAuth 2.1 -valtuudet ja allekirjoitetut lähtevät webhookit."
-      },
-      "export": {
-        "title": "Vienti ja raportit",
-        "description": "CSV, tulostettavat PDF-raportit sekä täydet ryhmä- tai tili-ZIP-arkistot asiakirjoineen."
-      },
-      "identity": {
-        "title": "Ryhmän ilme ja linkit",
-        "description": "Emojit ja värit, julkiset vain-luku-linkit, jakoesitykset ja jäsenten hallinta."
-      },
-      "import": {
-        "title": "Tuo mitä vain",
-        "description": "Splitwise-CSV, tiliote-CSV:t yhdistämisvelholla ja kaksoiskappaleiden tunnistuksella, Cospend ja Spliit-paketit."
-      },
-      "multi-payer": {
-        "title": "Useita maksajia ja Nimikkeittäin",
-        "description": "Useita maksajia, nimikkeitä, vero ja tippi sekä tarkat henkilökohtaiset osuudet yhdessä kulussa."
-      },
-      "notifications": {
-        "title": "Sähköposti- ja push-ilmoitukset",
-        "description": "Ryhmä- ja kulupäivitykset sähköpostilla tai pushina, käyttäjäkohtaisilla kategoria-asetuksilla."
-      },
-      "passkeys-security": {
-        "title": "Passkeyt ja turvallisuus",
-        "description": "Salasanaton kirjautuminen kaikille tilityypeille, varakirjautumisvaihtoehto ja kutsutila yksityisille instansseille."
-      },
-      "qr-sharing": {
-        "title": "Lähellä olevat QR-kutsut",
-        "description": "Monikäyttöiset 15 minuutin QR-istunnot, joihin liitytään skannaamalla mobiililla."
+        "description": "Jaa kuluja yli rajojen palvelinpuolen muunnoksella ja live-kursseilla – perinteiset valuutat Frankfurterista, kryptovaluutat Coinbasesta – ja ohita tarkkoja summia niin, että implisiittinen kurssi näytetään."
       },
       "recurring": {
         "title": "Kestävät toistuvat kulut",
-        "description": "Aitoja sarjoja väleillä, päättymisillä, kiinniotoilla, uudelleenyrityksillä, esikatseluilla sekä selkeä lopetus, muokkaus ja poisto."
+        "description": "Aitoja sarjoja väleillä, päättymisillä, kiinniotoilla, uudelleenyrityksillä ja tulevan esikatseluilla. Keskeytä, muokkaa tai lopeta sarja erikseen — jokainen luotu kulu pysyy erikseen muokattavana."
       },
       "stats-budgets": {
         "title": "Tilastot, kaaviot ja budjetit",
-        "description": "Kulukaaviot, kuukausittaiset kategorianäkymät, ryhmien välinen yhteenveto sekä budjetit ylitysvaroituksilla."
+        "description": "Ymmärrä rahankäyttöä kaavioilla, kuukausittaisilla kategorianäkymillä ja ryhmien välisellä yhteenvedolla. Aseta budjetit ryhmäkohtaisesti ja saa ylitysvaroitukset ennen kuin pienistä vuodoista tulee suuria."
       },
-      "synced-groups": {
-        "title": "Synkronoidut ryhmät ja kaverit",
-        "description": "Ryhmät seuraavat sinua laitteelta toiselle todellisella jäsenyydellä, kahdenkeskisillä kaverisaldoilla ja jäljitettävillä muokkauksilla."
+      "languages": {
+        "title": "30 kieltä",
+        "description": "Koko tuote 30 kielellä, jokaisella oma käännösohjeensa. Jokainen voi jakaa kuluja itselleen sopivimmalla kielellä."
+      },
+      "accounts-signin": {
+        "title": "Kirjaudu omalla tavallasi",
+        "description": "Aloita sekunneissa pelkällä näyttönimellä – sähköpostia ei tarvita – ja suojaa tili sen jälkeen pääsyavaimella, taikalinkillä, salasanalla tai Google-, GitHub- tai X-tililläsi. Jokainen tapa toimii jokaiselle tilille."
+      },
+      "ai-help": {
+        "title": "Tekoälyapu",
+        "description": "Kuvaile kuluja äänellä, skannaa kuitteja ja saa ehdotuksia kolmessa vaiheessa: välittömät paikallisen sanakirjan ja historian tarkistukset ja sitten valintasi mukaan joko erittäin nopea System One -päätösmalli (TypeSafe Jev) tai hitaampi mutta tarkempi LLM. Molemmat oppivat aiemmista kuluistasi."
+      },
+      "data-portability": {
+        "title": "Tuonti ja vienti",
+        "description": "Tuo historia Splitwise-CSV:stä, tiliote-CSV:istä yhdistämisvelholla ja kaksoiskappaleiden tunnistuksella, Cospendistä tai Spliit-paketeista. Tricount- ja Settle Up -tuki on tulossa. Vie kaikki takaisin CSV:nä, tulostettavina PDF-raportteina tai täysinä ZIP-arkistoina asiakirjoineen."
+      },
+      "expenses-splits": {
+        "title": "Kulut ja älykkäät jaot",
+        "description": "Luo kuluja kategorioilla, kuittiliitteillä ja edistyneillä jaoilla — tasan, osuuksina tai prosentteina. Useampi henkilö voi maksaa saman kulun sisällä, rivikohtaiset nimikkeet jaetaan erikseen, ja verot plus tipit jakautuvat suhteellisesti tarkoiksi henkilökohtaisiksi osuuksiksi."
+      },
+      "fast-entry": {
+        "title": "Nopea kirjaus",
+        "description": "Tallenna yhden napautuksen jakomalleja ryhmäkohtaisesti ja käytä niitä mihin tahansa kuluun sekunneissa. Laske nopeasti suoraan summakentässä kirjatessasi — erillistä laskinsovellusta ei tarvita."
+      },
+      "groups-friends": {
+        "title": "Ryhmät ja kaverit",
+        "description": "Todellinen jäsenyys seuraa sinua laitteelta toiselle, ja jokainen muokkaus on liitetty tekijäänsä. Pidä jatkuvaa 1-vastaan-1-seurantaa kaverin kanssa minkä tahansa ryhmän ulkopuolella, anna pariskuntien tasata yhtenä yksikkönä ja arkistoi valmiit ryhmät vain-luku-tilaan poistamisen sijaan."
+      },
+      "offline-app": {
+        "title": "Asennettava sovellus",
+        "description": "Asenna Spliit sovelluksena mille tahansa laitteelle välitöntä latausta ja koko näytön kokemusta varten. Ryhmäsi pysyvät luettavina ilman verkkoyhteyttä, ja uudet kulut jonoutuvat paikallisesti synkronoituen uudelleen yhdistettäessä — laajempi offline-muokkaus on tulossa."
+      },
+      "share-identity": {
+        "title": "Kutsut ja ryhmäidentiteetti",
+        "description": "Tuo ihmiset mukaan tavalla, joka sopii sinulle: jaettavalla linkillä, sähköpostikutsulla tai monikäyttöisellä QR-istunnolla, johon liitytään skannaamalla mobiililla. Anna jokaiselle ryhmälle oma emoji, värit ja jäsenluettelo."
+      },
+      "activity": {
+        "title": "Toiminta ja historia",
+        "description": "Seuraa jokaista ryhmää Sinulle-aikajanalla, kulukohtaisella historialla ja kommenteilla, suodatuksella, lajittelulla ja arkistoitujen ryhmien haulla."
+      },
+      "developers": {
+        "title": "API, MCP ja OAuth",
+        "description": "OpenAPI- ja Scalar-dokumentaatio, MCP-avustaja ja delegoidut OAuth 2.1 -valtuudet.",
+        "action": "Selaa API-dokumentaatiota"
+      },
+      "notifications": {
+        "title": "Ilmoitukset",
+        "description": "Saat ryhmä- ja kulupäivitykset sähköpostilla tai push-ilmoituksina, käyttäjäkohtaisilla luokka-asetuksilla, jotta jokainen valitsee oman ilmoitustasonsa.",
+        "action": "Ilmoitusasetukset"
+      },
+      "open-source": {
+        "title": "Avoin lähdekoodi",
+        "description": "Koko koodikanta on avoin tarkastelulle ja kehityspanoksille, ja yksityisiä instansseja varten on itseisännöintimahdollisuus.",
+        "action": "Katso GitHubissa"
+      },
+      "webhooks": {
+        "title": "Webhookit",
+        "description": "Allekirjoitetut lähtevät tapahtumat ja toimitusten uudelleenyritykset, joten järjestelmäsi pysyvät ajan tasalla jokaisen muutoksen myötä.",
+        "action": "Hallitse webhookeja"
+      },
+      "bulk-categorize": {
+        "title": "Massaluokittelu",
+        "description": "Luokittele tuodut kulut massoittain System One -päätösmallilla, kuten TypeSafe Jev, käyttäen ryhmäsi historiaa ja tarkistettuja valintoja vihjeinä. Jokainen ehdotus näyttää varmuutensa ennen kuin otat sen käyttöön."
+      },
+      "data-security": {
+        "title": "Varmuuskopiot ja palautus",
+        "description": "Tietosi ovat hallinnoidussa PostgreSQL-tietokannassa, jonka kiertävät varmuuskopiot säilytetään 30 päivää erillisessä S3-säilössä tuotantopalvelimen ulkopuolella. Vaikka tuotannossa sattuisi jotain pahaa, tietojen palauttaminen on suoraviivaista."
       }
     },
     "cta": {
@@ -4695,26 +4699,9 @@
       "description": "Luo ilmainen tili — anonyymisti, ilman sähköpostia — ja ryhmäsi synkronoituvat laitteidesi välillä.",
       "action": "Aloita"
     },
-    "demo": {
-      "eyebrow": "Interaktiivinen demo",
-      "splitSettle": {
-        "title": "Jako- ja tasausvisualisointi",
-        "description": "Muuta summaa, maksajaa tai osuuksia ja katso saldojen ja vähimmäistasausten päivittyvän livenä. Tämä demo toimii kokonaan selaimessasi — tiliä ei tarvita.",
-        "amountLabel": "Kulun summa",
-        "payerLabel": "Maksaja",
-        "modeLabel": "Jakotapa",
-        "modeEqual": "Tasan",
-        "modeCustom": "Mukautettu",
-        "balancesTitle": "Saldot",
-        "settlementsTitle": "Ehdotetut tasaukset",
-        "settledLabel": "Kaikki on tasattu — tasauksia ei tarvita.",
-        "comingTitle": "Lisää demoja tulossa",
-        "comingDescription": "Summalaskin, valuuttamuunnos ja opastetut kierrokset ilmestyvät tänne seuraavaksi."
-      }
-    },
     "hero": {
       "title": "Kaikki mitä tarvitset kulujen jakamiseen",
-      "description": "Anonyymistä kirjautumisesta massatekoälytyökaluihin: kokeile alla tasausdemoa ja selaa sitten koko luetteloa. Uudet interaktiiviset demot ilmestyvät tänne yksi kerrallaan."
+      "description": "Kirjautumisesta avoimeen alustaan: selaa koko luetteloa alla. Jokainen kortti sisältää staattisen kuvituksen ominaisuudesta."
     },
     "sections": {
       "developers": {

@@ -4639,85 +4639,89 @@
   "Features": {
     "catalogLabel": "Catalogue complet",
     "catalog": {
-      "activity": {
-        "title": "Activité, commentaires et recherche",
-        "description": "Historique et commentaires par dépense, fil Pour vous, filtrage, tri et recherche dans les groupes archivés."
-      },
-      "ai-assist": {
-        "title": "Dépenses assistées par IA",
-        "description": "Dictionnaire local plus historique du groupe plus un moteur IA ; scannez les reçus et décrivez les dépenses à la voix."
-      },
-      "anonymous-accounts": {
-        "title": "Comptes anonymes",
-        "description": "Commencez en quelques clics avec un simple pseudo, sans e-mail ni connexion sociale. Récupérez l'accès avec un lien ou une clé d'accès."
-      },
-      "archive": {
-        "title": "Archiver et supprimer",
-        "description": "Archivez les groupes pour les passer en lecture seule, ou supprimez-les définitivement quand vous avez terminé."
-      },
       "balances": {
         "title": "Soldes et règlements",
-        "description": "Sens de paiement clair, règlement rapide, paiements combinés et sous-unités comme les couples."
-      },
-      "bulk-categorize": {
-        "title": "Catégorisation IA en masse",
-        "description": "Lancez le catégoriseur IA sur de nombreuses dépenses à la fois — idéal après un import."
-      },
-      "calculator": {
-        "title": "Calculatrice de montant",
-        "description": "Des calculs rapides directement dans le champ du montant lors de la saisie des dépenses."
-      },
-      "core-expenses": {
-        "title": "Dépenses, reçus et partages",
-        "description": "Groupes, catégories, reçus joints, partages avancés et une PWA sans publicité."
+        "description": "Voyez toujours qui doit quoi à qui avec un sens de paiement clair, puis réglez en un geste — y compris les paiements combinés. Les couples et les foyers peuvent régler comme une seule entité, pour une vie partagée toute simple."
       },
       "currency": {
         "title": "Multidevise et crypto",
-        "description": "Conversion côté serveur, montants exacts avec taux implicite affiché et prise en charge des cryptomonnaies."
-      },
-      "developers": {
-        "title": "API, MCP, OAuth et webhooks",
-        "description": "Docs OpenAPI plus Scalar, assistant MCP, portées OAuth 2.1 déléguées et webhooks sortants signés."
-      },
-      "export": {
-        "title": "Export et rapports",
-        "description": "CSV, rapports PDF imprimables et archives ZIP complètes du groupe ou du compte, documents inclus."
-      },
-      "identity": {
-        "title": "Identité du groupe et liens",
-        "description": "Emoji et couleurs, liens publics en lecture seule, préréglages de partage et gestion des membres."
-      },
-      "import": {
-        "title": "Importez tout",
-        "description": "CSV Splitwise, CSV de relevés bancaires avec assistant de correspondance et détection des doublons, Cospend et paquets Spliit."
-      },
-      "multi-payer": {
-        "title": "Payeurs multiples et détaillé",
-        "description": "Plusieurs payeurs, lignes détaillées, taxes et pourboire, et parts précises par personne en une seule dépense."
-      },
-      "notifications": {
-        "title": "Notifications par e-mail et push",
-        "description": "Nouveautés du groupe et des dépenses par e-mail ou push, avec préférences par catégorie pour chaque utilisateur."
-      },
-      "passkeys-security": {
-        "title": "Clés d'accès et sécurité",
-        "description": "Connexion sans mot de passe pour tous les types de compte, option de connexion de secours et mode sur invitation pour les instances privées."
-      },
-      "qr-sharing": {
-        "title": "Invitations QR à proximité",
-        "description": "Sessions QR réutilisables de 15 minutes avec participation par scan sur mobile."
+        "description": "Partagez au-delà des frontières avec la conversion côté serveur et des taux en direct — fiat via Frankfurter, crypto via Coinbase — plus des ajustements de montants exacts avec le taux implicite affiché."
       },
       "recurring": {
         "title": "Dépenses récurrentes durables",
-        "description": "Vraies séries avec intervalles, fins, rattrapage, nouvelles tentatives, aperçus et arrêt, modification ou suppression explicites."
+        "description": "De vraies séries avec intervalles, fins, rattrapage, nouvelles tentatives et aperçus de ce qui vient. Mettez une série en pause, modifiez-la ou arrêtez-la explicitement — chaque dépense générée reste modifiable séparément."
       },
       "stats-budgets": {
         "title": "Stats, graphiques et budgets",
-        "description": "Graphiques de dépenses, visuels mensuels par catégorie, synthèse intergroupes et budgets avec alertes de dépassement."
+        "description": "Comprenez vos dépenses avec des graphiques, des visuels mensuels par catégorie et une synthèse intergroupes. Définissez des budgets par groupe et recevez des alertes de dépassement avant que les petites fuites ne deviennent grandes."
       },
-      "synced-groups": {
-        "title": "Groupes et proches synchronisés",
-        "description": "Vos groupes vous suivent sur tous les appareils avec une vraie appartenance, des registres individuels avec vos proches et des modifications attribuées."
+      "languages": {
+        "title": "30 langues",
+        "description": "Tout le produit en 30 langues, chacune avec son guide de traduction. Chacun partage ses dépenses dans la langue qui lui convient."
+      },
+      "accounts-signin": {
+        "title": "Connectez-vous à votre façon",
+        "description": "Commencez en quelques secondes avec un simple nom d'affichage — sans e-mail — puis sécurisez le compte avec une clé d'accès, un lien magique, un mot de passe ou votre compte Google, GitHub ou X. Chaque méthode fonctionne pour tous les types de compte."
+      },
+      "ai-help": {
+        "title": "Assistance IA",
+        "description": "Décrivez vos dépenses à la voix, scannez les reçus et obtenez des suggestions en trois étapes : vérifications instantanées du dictionnaire local et de l'historique, puis le moteur de votre choix — le modèle de décision System One ultrarapide (TypeSafe Jev) ou un LLM plus lent mais plus précis. Les deux apprennent de vos dépenses précédentes."
+      },
+      "data-portability": {
+        "title": "Import et export",
+        "description": "Importez votre historique depuis un CSV Splitwise, des CSV de relevés bancaires avec assistant de correspondance et détection des doublons, Cospend ou des paquets Spliit. La prise en charge de Tricount et Settle Up est sur la feuille de route. Exportez tout en CSV, en rapports PDF imprimables ou en archives ZIP complètes avec documents."
+      },
+      "expenses-splits": {
+        "title": "Dépenses et partages intelligents",
+        "description": "Créez des dépenses avec catégories, reçus joints et partages avancés — à parts égales, en quotes-parts ou en pourcentages. Plusieurs personnes peuvent payer dans une même dépense, les lignes se partagent une par une, et taxes et pourboires se répartissent au prorata en parts précises par personne."
+      },
+      "fast-entry": {
+        "title": "Saisie rapide",
+        "description": "Enregistrez des modèles de partage en un geste par groupe et appliquez-les à n'importe quelle dépense en quelques secondes. Faites vos petits calculs directement dans le champ du montant pendant la saisie — sans application de calculatrice séparée."
+      },
+      "groups-friends": {
+        "title": "Groupes et amis",
+        "description": "Votre appartenance vous suit d'un appareil à l'autre, chaque modification étant attribuée à son auteur. Tenez un compte courant en tête-à-tête avec un ami hors de tout groupe, laissez les couples régler comme une seule unité et archivez les groupes terminés en lecture seule au lieu de les supprimer."
+      },
+      "offline-app": {
+        "title": "Application installable",
+        "description": "Installez Spliit comme une application sur n'importe quel appareil pour un chargement instantané et une expérience plein écran. Vos groupes restent lisibles hors ligne, et les nouvelles dépenses s'ajoutent en file locale puis se synchronisent à la reconnexion — l'édition élargie hors ligne est sur la feuille de route."
+      },
+      "share-identity": {
+        "title": "Invitations et identité du groupe",
+        "description": "Faites venir les gens comme vous voulez : un lien partageable, une invitation par e-mail ou une session QR multi-usages avec inscription par scan sur mobile. Donnez à chaque groupe son emoji, ses couleurs et sa liste de membres."
+      },
+      "activity": {
+        "title": "Activité et historique",
+        "description": "Suivez chaque groupe avec un fil « Pour vous », l'historique et les commentaires par dépense, le filtrage, le tri et la recherche dans les groupes archivés."
+      },
+      "developers": {
+        "title": "API, MCP et OAuth",
+        "description": "Documentation OpenAPI et Scalar, assistant MCP et portées OAuth 2.1 déléguées.",
+        "action": "Parcourir la documentation de l'API"
+      },
+      "notifications": {
+        "title": "Notifications",
+        "description": "Recevez les nouveautés des groupes et des dépenses par e-mail ou push, avec des préférences de catégories par utilisateur pour que chacun choisisse son niveau d'alertes.",
+        "action": "Paramètres de notification"
+      },
+      "open-source": {
+        "title": "Open source",
+        "description": "Tout le code est ouvert pour audit et contributions, avec une option auto-hébergée pour les instances privées.",
+        "action": "Voir sur GitHub"
+      },
+      "webhooks": {
+        "title": "Webhooks",
+        "description": "Des événements sortants signés avec nouvelles tentatives d'envoi, pour que vos systèmes restent synchronisés à chaque changement.",
+        "action": "Gérer les webhooks"
+      },
+      "bulk-categorize": {
+        "title": "Catégorisation en lot",
+        "description": "Catégorisez en lot les dépenses importées avec un modèle de décision System One tel que TypeSafe Jev, en utilisant l'historique de votre groupe et les choix validés comme indices. Chaque suggestion affiche son niveau de confiance avant application."
+      },
+      "data-security": {
+        "title": "Sauvegardes et récupération",
+        "description": "Vos données sont hébergées dans une base PostgreSQL gérée, avec des sauvegardes tournantes conservées 30 jours dans un bucket S3 séparé, hors du serveur de production. Même en cas de problème grave en production, la récupération est simple."
       }
     },
     "cta": {
@@ -4725,26 +4729,9 @@
       "description": "Créez un compte gratuit — anonyme, sans e-mail — et vos groupes se synchronisent sur tous les appareils.",
       "action": "Commencer"
     },
-    "demo": {
-      "eyebrow": "Démo interactive",
-      "splitSettle": {
-        "title": "Visualiseur de partage + règlement",
-        "description": "Modifiez le montant, le payeur ou les parts et voyez les soldes et les règlements minimaux se mettre à jour en direct. Cette démo tourne entièrement dans votre navigateur — sans compte.",
-        "amountLabel": "Montant de la dépense",
-        "payerLabel": "Payé par",
-        "modeLabel": "Mode de partage",
-        "modeEqual": "Parts égales",
-        "modeCustom": "Personnalisé",
-        "balancesTitle": "Soldes",
-        "settlementsTitle": "Règlements suggérés",
-        "settledLabel": "Tout est réglé — aucun règlement nécessaire.",
-        "comingTitle": "D'autres démos arrivent",
-        "comingDescription": "La calculatrice de montant, la conversion de devises et les visites guidées apparaîtront ici prochainement."
-      }
-    },
     "hero": {
       "title": "Tout ce qu'il faut pour partager vos dépenses",
-      "description": "De la connexion anonyme aux outils IA en masse : essayez la démo de règlement ci-dessous, puis parcourez le catalogue complet. De nouvelles démos interactives arrivent une par une."
+      "description": "De la connexion à la plateforme ouverte : parcourez le catalogue complet ci-dessous. Chaque carte inclut une illustration statique de la fonctionnalité."
     },
     "sections": {
       "developers": {

@@ -4600,85 +4600,89 @@
   },
   "Features": {
     "catalog": {
-      "activity": {
-        "title": "Activity feed, comments & search",
-        "description": "Per-expense history + comments, a For-you feed, filters, sorting, and search across archived groups."
-      },
-      "ai-assist": {
-        "title": "AI-powered expenses",
-        "description": "Local dictionary + group history + one AI engine; scan receipts and describe expenses with your voice."
-      },
-      "anonymous-accounts": {
-        "title": "Anonymous sign-up",
-        "description": "Start in a few clicks with just a display name — no email or social login. Get back in with a link or passkey."
-      },
-      "archive": {
-        "title": "Archive or delete",
-        "description": "Archive groups to make them view-only, or permanently delete them when you're done."
-      },
       "balances": {
         "title": "Balances & who owes who",
-        "description": "Clear who pays whom, quick settlement, combined payments, and couple-style subgroups."
-      },
-      "bulk-categorize": {
-        "title": "AI categorization in bulk",
-        "description": "Run the AI categorizer over tons of expenses at once — perfect right after an import."
-      },
-      "calculator": {
-        "title": "Built-in amount calculator",
-        "description": "Quick math right in the amount field while you add expenses."
-      },
-      "core-expenses": {
-        "title": "Expenses, receipts & bill splits",
-        "description": "Groups, categories, receipt uploads, advanced splits, and an ad-free PWA vibe."
+        "description": "Always see who owes who with clear payment direction, then settle up in one tap — combined payments included. Couples and family units can settle as one squad, so shared households stay low-effort."
       },
       "currency": {
         "title": "Currencies & crypto",
-        "description": "Server-side conversion, exact amount overrides with the implied rate shown, plus crypto support."
-      },
-      "developers": {
-        "title": "API + MCP + OAuth + webhooks",
-        "description": "OpenAPI + Scalar docs, an MCP assistant, delegated OAuth 2.1 scopes, and signed outbound webhooks."
-      },
-      "export": {
-        "title": "Exports & reports",
-        "description": "CSV, printable PDF reports, and full group or account ZIP archives with your docs included."
-      },
-      "import": {
-        "title": "Import from anywhere",
-        "description": "Splitwise CSV, bank-statement CSVs with a mapping wizard and duplicate detection, Cospend, and Spliit bundles."
-      },
-      "multi-payer": {
-        "title": "Multiple payers & line items",
-        "description": "Several payers, line items, tax and tip, and exact per-person shares in one expense."
-      },
-      "notifications": {
-        "title": "Email & push alerts",
-        "description": "Group and expense updates by email or push, with category picks per user."
-      },
-      "passkeys-security": {
-        "title": "Passkeys & account security",
-        "description": "Passwordless sign-in for every account type, a backup sign-in option, and invite-only mode for private instances."
-      },
-      "qr-sharing": {
-        "title": "QR invites IRL",
-        "description": "Multi-use 15-minute QR sessions with scan-to-join from your phone."
+        "description": "Split across borders with server-side conversion and live rates — fiat via Frankfurter, crypto via Coinbase — plus exact amount overrides with the implied rate on display."
       },
       "recurring": {
         "title": "Set-and-forget recurring expenses",
-        "description": "Real series with intervals, end dates, catch-up, retries, previews, and explicit stop/edit/delete."
+        "description": "Real series with intervals, endings, catch-up, retries, and sneak peeks of what is next. Pause, edit, or stop a series on purpose — every generated expense stays editable solo."
       },
       "stats-budgets": {
         "title": "Spending stats, charts & budgets",
-        "description": "Spending charts, monthly category visuals, cross-group roll-ups, and budgets with over-budget heads-ups."
+        "description": "Read your spending with charts, monthly category visuals, and a cross-group roll-up. Set budgets per group and get over-budget nudges before small leaks turn into big ones."
       },
-      "synced-groups": {
-        "title": "Groups & friends, synced",
-        "description": "Groups follow you across devices with real membership, 1-on-1 friend ledgers, and edits you can trace."
+      "languages": {
+        "title": "30 fully-translated languages",
+        "description": "The full product in 30 locales, each with its own translation guide. Everyone splits in whatever language feels most like home."
       },
-      "identity": {
-        "title": "Group identity + share links",
-        "description": "Emoji and colors, public view-only links, saved split presets, and member management."
+      "accounts-signin": {
+        "title": "Sign in your way, no stress",
+        "description": "Jump in in seconds with just a display name — no email needed — then lock down your account with a passkey, a magic link, a password, or your Google, GitHub, or X account. Every method works for every account type."
+      },
+      "ai-help": {
+        "title": "AI glow-up for expenses",
+        "description": "Talk through an expense, scan the receipt, and get suggestions in three passes: instant local dictionary and history checks, then your pick of engine — the stupid-fast System One decision model (TypeSafe Jev) or a slower LLM that is more on-point. Both learn from your past expenses."
+      },
+      "data-portability": {
+        "title": "Import & export, easy both ways",
+        "description": "Bring your history from Splitwise CSV, bank-statement CSVs with a mapping wizard and duplicate detection, Cospend, or Spliit bundles. Tricount and Settle Up support is on the way. Take it all back out as CSV, printable PDF reports, or full ZIP archives with your docs included."
+      },
+      "expenses-splits": {
+        "title": "Expenses + smart splits",
+        "description": "Create expenses with categories, receipt pics, and advanced splits — equal, shares, or percentages. Multiple people can pay inside one expense, line items split on their own, and tax + tip spread out proportionally into exact per-person shares."
+      },
+      "fast-entry": {
+        "title": "Speedy entry",
+        "description": "Save one-tap split templates per group and drop them onto any expense in seconds. Do quick math right in the amount field as you type — no side-quest calculator app needed."
+      },
+      "groups-friends": {
+        "title": "Groups + friends",
+        "description": "Real membership follows you across devices, with every edit credited to its author. Keep a running 1-on-1 tab with a friend outside any group, let couples settle as one unit, and archive done groups to view-only instead of deleting them."
+      },
+      "offline-app": {
+        "title": "Installable app, works offline",
+        "description": "Install Spliit as an app on any device for instant loading and full-screen vibes. Your groups stay readable with zero bars, and new expenses queue up locally and sync on reconnect — fuller offline editing is on the roadmap."
+      },
+      "share-identity": {
+        "title": "Invites & group vibes",
+        "description": "Bring people in however works for you: a shareable link, an email invite, or a reusable QR session with scan-to-join on mobile. Give each group its own emoji, colors, and member lineup."
+      },
+      "activity": {
+        "title": "Activity & full history",
+        "description": "Keep tabs on every group with a For-you timeline, per-expense history and comments, plus filtering, sorting, and search across archived groups."
+      },
+      "developers": {
+        "title": "Dev tools: API, MCP & OAuth",
+        "description": "OpenAPI plus Scalar docs, an MCP sidekick, and delegated OAuth 2.1 scopes.",
+        "action": "Browse the API docs"
+      },
+      "notifications": {
+        "title": "Notifications, your call",
+        "description": "Get group and expense updates by email or push, with per-person category prefs so everyone sets their own signal level.",
+        "action": "Tune your notifications"
+      },
+      "open-source": {
+        "title": "Open source, for real",
+        "description": "The whole codebase is open for audits and contributions, with a self-host option if you want your own private setup.",
+        "action": "Check it out on GitHub"
+      },
+      "webhooks": {
+        "title": "Webhooks that keep up",
+        "description": "Signed outbound events with delivery retries, so your stack stays in sync with every change.",
+        "action": "Manage your webhooks"
+      },
+      "bulk-categorize": {
+        "title": "Bulk categorization in one go",
+        "description": "Power through imported expenses in bulk with a System One decision model such as TypeSafe Jev, using your group's history and reviewed choices as hints. Every suggestion shows its confidence before you apply it."
+      },
+      "data-security": {
+        "title": "Backups & easy recovery",
+        "description": "Your data lives in a managed PostgreSQL database with rotating backups kept for 30 days in a separate S3 bucket off the production server. Even if prod has a really bad day, getting everything back is no drama."
       }
     },
     "cta": {
@@ -4687,26 +4691,9 @@
       "action": "Let's go"
     },
     "catalogLabel": "The full catalog",
-    "demo": {
-      "eyebrow": "Live interactive demo",
-      "splitSettle": {
-        "title": "Split + settle playground",
-        "description": "Tweak the amount, payer, or shares and watch balances and minimal repayments update live. This demo runs fully in your browser — no account needed.",
-        "amountLabel": "Expense total",
-        "payerLabel": "Who paid?",
-        "modeLabel": "How to split it",
-        "modeEqual": "Even split",
-        "modeCustom": "Custom split",
-        "balancesTitle": "Who owes what",
-        "settlementsTitle": "Who pays whom",
-        "settledLabel": "Everyone's settled — no repayments needed.",
-        "comingTitle": "More demos dropping soon",
-        "comingDescription": "Amount calculator, currency conversion, and guided tours landing here next."
-      }
-    },
     "hero": {
       "title": "Everything you need to split the bill",
-      "description": "From anonymous sign-in to bulk AI tools: try the settlement demo below, then browse the full catalog. New interactive demos keep landing here."
+      "description": "From sign-in to the open platform: browse the full catalog below. Every card comes with a static illustration of the feature."
     },
     "sections": {
       "developers": {

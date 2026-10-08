@@ -103,6 +103,7 @@ describe('Cloudflare Pages worker markdown negotiation', () => {
       { page: '/imprint', asset: '/imprint.md' },
       { page: '/sponsor', asset: '/sponsor.md' },
       { page: '/support', asset: '/support.md' },
+      { page: '/features', asset: '/features.md' },
     ])
 
     const publicMarkdownAssets = readdirSync(publicDir)
@@ -328,6 +329,26 @@ describe('Cloudflare Pages worker SEO head injection', () => {
     )
     expect(html).toContain('"@type":"WebPage"')
     expect(html).toContain('href="/privacy.md"')
+  })
+
+  it('rewrites the SPA fallback shell for /features with its own canonical', async () => {
+    const fetchAsset = vi.fn(async (input: AssetInput) => {
+      if (pathnameFrom(input) === '/') return htmlResponse()
+      return new Response('Not found', { status: 404 })
+    })
+
+    const response = await worker.fetch(requestFor('/features'), {
+      ASSETS: { fetch: fetchAsset },
+    })
+
+    const html = await response.text()
+    expect(html).toContain('<title>Features — Spliit Cloud</title>')
+    expect(html).toContain('Every Spliit feature in one catalog')
+    expect(html).toContain(
+      '<link rel="canonical" href="https://spliit.cloud/features">',
+    )
+    expect(html).toContain('"@type":"WebPage"')
+    expect(html).toContain('href="/features.md"')
   })
 
   it('normalizes trailing slashes to the canonical path', async () => {

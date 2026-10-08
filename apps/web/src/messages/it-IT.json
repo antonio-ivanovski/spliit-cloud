@@ -4639,85 +4639,89 @@
   "Features": {
     "catalogLabel": "Catalogo completo",
     "catalog": {
-      "activity": {
-        "title": "Attività, commenti e ricerca",
-        "description": "Cronologia e commenti per spesa, sequenza Per te, filtri, ordinamento e ricerca nei gruppi archiviati."
-      },
-      "ai-assist": {
-        "title": "Spese assistite dall'IA",
-        "description": "Dizionario locale più cronologia del gruppo più un motore IA; scansiona gli scontrini e descrivi le spese a voce."
-      },
-      "anonymous-accounts": {
-        "title": "Account anonimi",
-        "description": "Inizia in pochi clic con solo un nome visualizzato, senza email né accesso social. Recupera l'accesso con un link o una passkey."
-      },
-      "archive": {
-        "title": "Archiviazione ed eliminazione",
-        "description": "Archivia i gruppi per renderli di sola lettura oppure eliminali definitivamente quando hai finito."
-      },
       "balances": {
         "title": "Saldi e liquidazioni",
-        "description": "Direzione di pagamento chiara, liquidazione rapida, pagamenti combinati e sotto-unità come le coppie."
-      },
-      "bulk-categorize": {
-        "title": "Categorizzazione IA in blocco",
-        "description": "Esegui il categorizzatore IA su molte spese in una volta — ideale dopo un'importazione."
-      },
-      "calculator": {
-        "title": "Calcolatrice dell'importo",
-        "description": "Calcoli rapidi direttamente nel campo dell'importo mentre inserisci le spese."
-      },
-      "core-expenses": {
-        "title": "Spese, scontrini e suddivisioni",
-        "description": "Gruppi, categorie, allegati degli scontrini, suddivisioni avanzate e un'esperienza PWA senza pubblicità."
+        "description": "Vedi sempre chi deve cosa a chi con una direzione di pagamento chiara, poi liquida con un tocco — inclusi i pagamenti combinati. Le coppie e i nuclei familiari possono liquidare come un'unica entità, così la casa condivisa resta semplice."
       },
       "currency": {
         "title": "Multivaluta e cripto",
-        "description": "Conversione lato server, importi esatti con tasso implicito visibile e supporto alle criptovalute."
-      },
-      "developers": {
-        "title": "API, MCP, OAuth e webhook",
-        "description": "Documentazione OpenAPI più Scalar, assistente MCP, ambiti OAuth 2.1 delegati e webhook in uscita firmati."
-      },
-      "export": {
-        "title": "Esportazione e report",
-        "description": "CSV, report PDF stampabili e archivi ZIP completi di gruppo o account, documenti inclusi."
-      },
-      "identity": {
-        "title": "Identità del gruppo e link",
-        "description": "Emoji e colori, link pubblici di sola lettura, preset di suddivisione e gestione dei membri."
-      },
-      "import": {
-        "title": "Importa qualsiasi cosa",
-        "description": "CSV di Splitwise, CSV di estratti conto con procedura guidata di mapping e rilevamento duplicati, Cospend e pacchetti Spliit."
-      },
-      "multi-payer": {
-        "title": "Paganti multipli e per voci",
-        "description": "Più paganti, voci di dettaglio, tasse e mancia, e quote precise per persona in un'unica spesa."
-      },
-      "notifications": {
-        "title": "Notifiche email e push",
-        "description": "Aggiornamenti di gruppo e spese via email o push, con preferenze per categoria per ogni utente."
-      },
-      "passkeys-security": {
-        "title": "Passkey e sicurezza",
-        "description": "Accesso senza password per ogni tipo di account, opzione di accesso di riserva e modalità solo su invito per le istanze private."
-      },
-      "qr-sharing": {
-        "title": "Inviti QR nelle vicinanze",
-        "description": "Sessioni QR riutilizzabili da 15 minuti con partecipazione via scansione su mobile."
+        "description": "Dividi le spese oltre confine con la conversione lato server e tassi in tempo reale — fiat da Frankfurter, crypto da Coinbase — più modifiche degli importi esatti con il tasso implicito visibile."
       },
       "recurring": {
         "title": "Spese ricorrenti durature",
-        "description": "Serie reali con intervalli, scadenze, recuperi, riprovazioni, anteprime e arresto, modifica o eliminazione espliciti."
+        "description": "Serie reali con intervalli, scadenze, recuperi, nuovi tentativi e anteprime di ciò che verrà. Metti in pausa, modifica o interrompi esplicitamente una serie — ogni spesa generata resta modificabile singolarmente."
       },
       "stats-budgets": {
         "title": "Statistiche, grafici e budget",
-        "description": "Grafici di spesa, viste mensili per categoria, riepilogo tra gruppi e budget con avvisi di superamento."
+        "description": "Capisci le spese con grafici, viste mensili per categoria e un riepilogo tra gruppi. Imposta budget per gruppo e ricevi avvisi di superamento prima che le piccole perdite diventino grandi."
       },
-      "synced-groups": {
-        "title": "Gruppi e amici sincronizzati",
-        "description": "I gruppi ti seguono su tutti i dispositivi con appartenenza reale, registri individuali con amici e modifiche attribuite."
+      "languages": {
+        "title": "30 lingue",
+        "description": "L'intero prodotto in 30 lingue, ciascuna con la sua guida di traduzione. Ognuno divide le spese nella lingua che preferisce."
+      },
+      "accounts-signin": {
+        "title": "Accedi a modo tuo",
+        "description": "Inizia in pochi secondi con solo un nome visualizzato — senza email — poi proteggi l'account con una chiave di accesso, un link magico, una password o il tuo account Google, GitHub o X. Ogni metodo funziona per tutti i tipi di account."
+      },
+      "ai-help": {
+        "title": "Assistenza IA",
+        "description": "Descrivi le spese a voce, scansiona gli scontrini e ricevi suggerimenti in tre fasi: controlli istantanei del dizionario locale e della cronologia, poi il motore che scegli — il modello decisionale System One superveloce (TypeSafe Jev) o un LLM più lento ma più accurato. Entrambi imparano dalle tue spese precedenti."
+      },
+      "data-portability": {
+        "title": "Importazione ed esportazione",
+        "description": "Porta la cronologia da CSV di Splitwise, CSV di estratti conto con procedura guidata di mappatura e rilevamento dei duplicati, Cospend o pacchetti Spliit. Il supporto per Tricount e Settle Up è sulla roadmap. Esporta tutto come CSV, report PDF stampabili o archivi ZIP completi con documenti."
+      },
+      "expenses-splits": {
+        "title": "Spese e divisioni intelligenti",
+        "description": "Crea spese con categorie, scontrini allegati e divisioni avanzate — in parti uguali, per quote o in percentuale. Più persone possono pagare dentro una stessa spesa, le voci si dividono una per una e tasse e mance si distribuiscono in proporzione in quote precise per persona."
+      },
+      "fast-entry": {
+        "title": "Inserimento rapido",
+        "description": "Salva modelli di divisione con un tocco per gruppo e applicali a qualsiasi spesa in pochi secondi. Fai calcoli rapidi direttamente nel campo dell'importo mentre inserisci — senza bisogno di un'app calcolatrice separata."
+      },
+      "groups-friends": {
+        "title": "Gruppi e amici",
+        "description": "L'appartenenza reale ti segue tra i dispositivi, con ogni modifica attribuita al suo autore. Mantieni un conto corrente individuale con un amico fuori da ogni gruppo, lascia che le coppie liquidino come un'unità e archivia i gruppi finiti in sola lettura invece di eliminarli."
+      },
+      "offline-app": {
+        "title": "App installabile",
+        "description": "Installa Spliit come app su qualsiasi dispositivo per un caricamento istantaneo e un'esperienza a schermo intero. I tuoi gruppi restano leggibili offline e le nuove spese si accodano in locale, sincronizzandosi alla riconnessione — la modifica offline estesa è sulla roadmap."
+      },
+      "share-identity": {
+        "title": "Inviti e identità del gruppo",
+        "description": "Porta le persone come preferisci: un link condivisibile, un invito via e-mail o una sessione QR multiuso con iscrizione tramite scansione su mobile. Dai a ogni gruppo la sua emoji, i suoi colori e l'elenco dei membri."
+      },
+      "activity": {
+        "title": "Attività e cronologia",
+        "description": "Segui ogni gruppo con una timeline «Per te», cronologia e commenti per spesa, filtri, ordinamento e ricerca nei gruppi archiviati."
+      },
+      "developers": {
+        "title": "API, MCP e OAuth",
+        "description": "Documentazione OpenAPI e Scalar, assistente MCP e ambiti OAuth 2.1 delegati.",
+        "action": "Sfoglia la documentazione delle API"
+      },
+      "notifications": {
+        "title": "Notifiche",
+        "description": "Ricevi aggiornamenti su gruppi e spese via e-mail o push, con preferenze di categoria per utente così ognuno sceglie il proprio livello di avvisi.",
+        "action": "Impostazioni notifiche"
+      },
+      "open-source": {
+        "title": "Open source",
+        "description": "L'intero codice è aperto per audit e contributi, con opzione self-hosted per le istanze private.",
+        "action": "Vedi su GitHub"
+      },
+      "webhooks": {
+        "title": "Webhook",
+        "description": "Eventi in uscita firmati con tentativi di invio, così i tuoi sistemi restano sincronizzati a ogni modifica.",
+        "action": "Gestisci i webhook"
+      },
+      "bulk-categorize": {
+        "title": "Categorizzazione in blocco",
+        "description": "Categorizza in blocco le spese importate con un modello decisionale System One come TypeSafe Jev, usando la cronologia del tuo gruppo e le scelte revisionate come indicazioni. Ogni suggerimento mostra la sua confidenza prima di applicarlo."
+      },
+      "data-security": {
+        "title": "Backup e ripristino",
+        "description": "I tuoi dati sono ospitati in un database PostgreSQL gestito, con backup a rotazione conservati per 30 giorni in un bucket S3 separato fuori dal server di produzione. Anche se succede qualcosa di grave alla produzione, il ripristino è semplice."
       }
     },
     "cta": {
@@ -4725,26 +4729,9 @@
       "description": "Crea un account gratuito — anonimo, senza email — e i tuoi gruppi si sincronizzano su tutti i dispositivi.",
       "action": "Inizia"
     },
-    "demo": {
-      "eyebrow": "Demo interattiva",
-      "splitSettle": {
-        "title": "Visualizzatore di suddivisione + liquidazione",
-        "description": "Cambia importo, pagante o quote e guarda saldi e liquidazioni minime aggiornarsi in diretta. Questa demo gira interamente nel tuo browser — senza account.",
-        "amountLabel": "Importo della spesa",
-        "payerLabel": "Pagato da",
-        "modeLabel": "Modalità di suddivisione",
-        "modeEqual": "In parti uguali",
-        "modeCustom": "Personalizzata",
-        "balancesTitle": "Saldi",
-        "settlementsTitle": "Liquidazioni suggerite",
-        "settledLabel": "Tutto liquidato — nessuna liquidazione necessaria.",
-        "comingTitle": "Altre demo in arrivo",
-        "comingDescription": "Calcolatrice dell'importo, conversione valuta e tour guidati appariranno qui a breve."
-      }
-    },
     "hero": {
       "title": "Tutto ciò che serve per dividere le spese",
-      "description": "Dall'accesso anonimo agli strumenti IA in blocco: prova la demo di liquidazione qui sotto, poi sfoglia il catalogo completo. Nuove demo interattive arrivano una alla volta."
+      "description": "Dall'accesso alla piattaforma aperta: sfoglia il catalogo completo qui sotto. Ogni scheda include un'illustrazione statica della funzione."
     },
     "sections": {
       "developers": {

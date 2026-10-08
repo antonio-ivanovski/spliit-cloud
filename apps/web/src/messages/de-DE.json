@@ -4681,85 +4681,89 @@
   "Features": {
     "catalogLabel": "Gesamtkatalog",
     "catalog": {
-      "activity": {
-        "title": "Aktivitäten, Kommentare & Suche",
-        "description": "Verlauf und Kommentare pro Ausgabe, Für-dich-Timeline, Filter, Sortierung und Suche in archivierten Gruppen."
-      },
-      "ai-assist": {
-        "title": "KI-gestützte Ausgaben",
-        "description": "Lokales Wörterbuch plus Gruppenverlauf plus eine KI-Engine; scanne Belege und beschreibe Ausgaben per Sprache."
-      },
-      "anonymous-accounts": {
-        "title": "Anonyme Konten",
-        "description": "Starte mit wenigen Klicks und nur einem Anzeigenamen — ganz ohne E-Mail oder Social Login. Stelle den Zugang per Link oder Passkey wieder her."
-      },
-      "archive": {
-        "title": "Archivieren & löschen",
-        "description": "Archiviere Gruppen, um sie schreibgeschützt zu machen, oder lösche sie endgültig, wenn du fertig bist."
-      },
       "balances": {
         "title": "Salden & Ausgleiche",
-        "description": "Klare Zahlungsrichtung, schneller Ausgleich, zusammengefasste Zahlungen und Untergruppen wie Paare."
-      },
-      "bulk-categorize": {
-        "title": "KI-Kategorisierung im Stapel",
-        "description": "Führe die KI-Kategorisierung für viele Ausgaben auf einmal aus — ideal nach einem Import."
-      },
-      "calculator": {
-        "title": "Betragsrechner",
-        "description": "Schnelles Rechnen direkt im Betragsfeld beim Erfassen von Ausgaben."
-      },
-      "core-expenses": {
-        "title": "Ausgaben, Belege & Splits",
-        "description": "Gruppen, Kategorien, Beleganhänge, erweiterte Aufteilungen und ein werbefreies PWA-Erlebnis."
+        "description": "Sieh immer, wer wem etwas schuldet, mit klarer Zahlungsrichtung, und gleiche dann mit einem Fingertipp aus – inklusive zusammengefasster Zahlungen. Paare und Familieneinheiten können als eine Einheit ausgleichen, sodass gemeinsame Haushalte einfach bleiben."
       },
       "currency": {
         "title": "Mehrere Währungen & Krypto",
-        "description": "Serverseitige Umrechnung, exakte Betragsüberschreibung mit angezeigtem implizitem Kurs sowie Unterstützung für Kryptowährungen."
-      },
-      "developers": {
-        "title": "API, MCP, OAuth & Webhooks",
-        "description": "OpenAPI plus Scalar-Docs, MCP-Assistent, delegierte OAuth-2.1-Scopes und signierte ausgehende Webhooks."
-      },
-      "export": {
-        "title": "Export & Berichte",
-        "description": "CSV, druckbare PDF-Berichte sowie vollständige Gruppen- oder Konto-ZIP-Archive inklusive Dokumente."
-      },
-      "identity": {
-        "title": "Gruppenidentität & Links",
-        "description": "Emoji und Farben, öffentliche schreibgeschützte Links, Aufteilungsvorlagen und Mitgliederverwaltung."
-      },
-      "import": {
-        "title": "Alles importieren",
-        "description": "Splitwise-CSV, Kontoauszugs-CSVs mit Zuordnungsassistent und Duplikaterkennung, Cospend und Spliit-Bundles."
-      },
-      "multi-payer": {
-        "title": "Mehrere Zahler & Aufteilung nach Artikeln",
-        "description": "Mehrere Zahler, Einzelpositionen, Steuern und Trinkgeld sowie präzise Anteile pro Person in einer Ausgabe."
-      },
-      "notifications": {
-        "title": "E-Mail- & Push-Benachrichtigungen",
-        "description": "Gruppen- und Ausgaben-Updates per E-Mail oder Push, mit Kategorieeinstellungen pro Person."
-      },
-      "passkeys-security": {
-        "title": "Passkeys & Sicherheit",
-        "description": "Passwortlose Anmeldung für jeden Kontotyp, Backup-Anmeldeoption und Einladungsmodus für private Instanzen."
-      },
-      "qr-sharing": {
-        "title": "QR-Einladungen in der Nähe",
-        "description": "Mehrfach verwendbare 15-Minuten-QR-Sitzungen mit Beitritt per Scan auf dem Handy."
+        "description": "Teile Ausgaben grenzüberschreitend mit serverseitiger Umrechnung und Live-Kursen – Fiatgeld von Frankfurter, Krypto von Coinbase – und überschreibe exakte Beträge, wobei der implizite Kurs angezeigt wird."
       },
       "recurring": {
         "title": "Langlebige wiederkehrende Ausgaben",
-        "description": "Echte Serien mit Intervallen, Enddaten, Nachholung, Wiederholungen, Vorschau und explizitem Stoppen, Bearbeiten und Löschen."
+        "description": "Echte Serien mit Intervallen, Enddaten, Nachholung, Wiederholungen und Vorschau auf Kommendes. Pausiere, bearbeite oder stoppe eine Serie gezielt – jede erzeugte Ausgabe bleibt einzeln bearbeitbar."
       },
       "stats-budgets": {
         "title": "Statistiken, Diagramme & Budgets",
-        "description": "Ausgabendiagramme, monatliche Kategorieansichten, gruppenübergreifende Auswertung und Budgets mit Warnung bei Überschreitung."
+        "description": "Verstehe deine Ausgaben mit Diagrammen, monatlichen Kategorieansichten und gruppenübergreifender Auswertung. Lege Budgets pro Gruppe fest und erhalte Warnungen bei Budgetüberschreitung, bevor aus kleinen Lecks große werden."
       },
-      "synced-groups": {
-        "title": "Synchronisierte Gruppen & Freunde",
-        "description": "Gruppen folgen dir über Geräte hinweg mit echter Mitgliedschaft, 1:1-Freundekonten und nachvollziehbaren Bearbeitungen."
+      "languages": {
+        "title": "30 Sprachen",
+        "description": "Das komplette Produkt in 30 Sprachen, jede mit eigenem Übersetzungsleitfaden. Alle teilen in der Sprache, in der sie sich wohlfühlen."
+      },
+      "accounts-signin": {
+        "title": "Anmeldung auf deine Art",
+        "description": "Starte in Sekunden mit nur einem Anzeigenamen – ganz ohne E-Mail – und sichere dein Konto danach mit Passkey, Magic-Link, Passwort oder deinem Google-, GitHub- oder X-Konto ab. Jede Methode funktioniert für jeden Kontotyp."
+      },
+      "ai-help": {
+        "title": "KI-Unterstützung",
+        "description": "Beschreibe Ausgaben per Sprache, scanne Belege und erhalte Vorschläge in drei Stufen: sofortige Prüfungen von lokalem Wörterbuch und Verlauf, dann deine Wahl der Engine – das superschnelle System-One-Entscheidungsmodell (TypeSafe Jev) oder ein langsameres LLM mit höherer Genauigkeit. Beide lernen aus deinen bisherigen Ausgaben."
+      },
+      "data-portability": {
+        "title": "Import & Export",
+        "description": "Bring deine Historie aus Splitwise-CSV, Kontoauszugs-CSVs mit Zuordnungsassistent und Duplikaterkennung, Cospend oder Spliit-Bundles mit. Tricount- und Settle-Up-Support sind auf der Roadmap. Exportiere alles wieder als CSV, druckbare PDF-Berichte oder vollständige ZIP-Archive inklusive Dokumente."
+      },
+      "expenses-splits": {
+        "title": "Ausgaben & clevere Aufteilung",
+        "description": "Erstelle Ausgaben mit Kategorien, Beleganhängen und erweiterten Aufteilungen – gleichmäßig, nach Anteilen oder in Prozent. Mehrere Personen können innerhalb einer Ausgabe zahlen, Einzelpositionen werden separat aufgeteilt, und Steuer plus Trinkgeld verteilen sich anteilig zu präzisen Pro-Person-Anteilen."
+      },
+      "fast-entry": {
+        "title": "Schnelle Eingabe",
+        "description": "Speichere One-Tap-Aufteilungsvorlagen pro Gruppe und wende sie in Sekunden auf jede Ausgabe an. Rechne direkt im Betragsfeld beim Eingeben – ganz ohne separate Taschenrechner-App."
+      },
+      "groups-friends": {
+        "title": "Gruppen & Freunde",
+        "description": "Echte Mitgliedschaft begleitet dich über Geräte hinweg, jede Bearbeitung ist dem Autor zugeordnet. Führe ein laufendes 1-zu-1-Konto mit einem Freund außerhalb jeder Gruppe, lasse Paare als eine Einheit ausgleichen und archiviere beendete Gruppen schreibgeschützt statt sie zu löschen."
+      },
+      "offline-app": {
+        "title": "Installierbare App",
+        "description": "Installiere Spliit als App auf jedem Gerät für sofortiges Laden und Vollbild-Erlebnis. Deine Gruppen bleiben offline lesbar, und neue Ausgaben werden lokal zwischengespeichert und beim Wiederverbinden synchronisiert – umfassendere Offline-Bearbeitung ist auf der Roadmap."
+      },
+      "share-identity": {
+        "title": "Einladungen & Gruppenidentität",
+        "description": "Hole Personen dazu, wie es dir passt: per teilbarem Link, E-Mail-Einladung oder mehrfach nutzbarer QR-Sitzung mit Scan-to-Join auf dem Handy. Gib jeder Gruppe ein eigenes Emoji, Farben und eine Mitgliederliste."
+      },
+      "activity": {
+        "title": "Aktivität & Verlauf",
+        "description": "Folge jeder Gruppe mit einer Für-dich-Timeline, Verlauf und Kommentaren pro Ausgabe, Filterung, Sortierung und Suche in archivierten Gruppen."
+      },
+      "developers": {
+        "title": "API, MCP und OAuth",
+        "description": "OpenAPI- plus Scalar-Doku, MCP-Assistent und delegierte OAuth-2.1-Scopes.",
+        "action": "API-Doku ansehen"
+      },
+      "notifications": {
+        "title": "Benachrichtigungen",
+        "description": "Erhalte Updates zu Gruppen und Ausgaben per E-Mail oder Push – mit Kategorie-Einstellungen pro Benutzer, sodass jeder sein eigenes Benachrichtigungsniveau wählt.",
+        "action": "Benachrichtigungseinstellungen"
+      },
+      "open-source": {
+        "title": "Open Source",
+        "description": "Die gesamte Codebasis ist offen für Prüfung und Beiträge – mit Self-Hosting-Option für private Instanzen.",
+        "action": "Auf GitHub ansehen"
+      },
+      "webhooks": {
+        "title": "Webhooks",
+        "description": "Signierte ausgehende Events mit Zustell-Wiederholungen, sodass deine Systeme bei jeder Änderung synchron bleiben.",
+        "action": "Webhooks verwalten"
+      },
+      "bulk-categorize": {
+        "title": "Massenkategorisierung",
+        "description": "Kategorisiere importierte Ausgaben gesammelt mit dem System-One-Entscheidungsmodell wie TypeSafe Jev – mit den kategorisierten Ausgaben deiner Gruppe und deinen überprüften Auswahlmöglichkeiten als Hinweisen. Jeder Vorschlag zeigt seine Konfidenz, bevor du ihn übernimmst."
+      },
+      "data-security": {
+        "title": "Backups & Wiederherstellung",
+        "description": "Deine Daten liegen in einer verwalteten PostgreSQL-Datenbank mit rotierenden Backups, die 30 Tage lang in einem separaten S3-Bucket außerhalb des Produktionsservers gespeichert werden. Sollte dem Produktionsserver etwas zustoßen, ist die Wiederherstellung unkompliziert."
       }
     },
     "cta": {
@@ -4767,26 +4771,9 @@
       "description": "Erstelle ein kostenloses Konto — anonym, ganz ohne E-Mail — und deine Gruppen synchronisieren sich über alle Geräte.",
       "action": "Jetzt starten"
     },
-    "demo": {
-      "eyebrow": "Interaktive Demo",
-      "splitSettle": {
-        "title": "Split- und Ausgleichsvisualisierung",
-        "description": "Ändere Betrag, Zahler oder Anteile und beobachte live, wie sich Salden und minimale Rückzahlungen aktualisieren. Diese Demo läuft komplett in deinem Browser — ganz ohne Konto.",
-        "amountLabel": "Ausgabenbetrag",
-        "payerLabel": "Gezahlt von",
-        "modeLabel": "Aufteilungsmodus",
-        "modeEqual": "Gleichmäßig",
-        "modeCustom": "Benutzerdefiniert",
-        "balancesTitle": "Salden",
-        "settlementsTitle": "Vorgeschlagene Rückzahlungen",
-        "settledLabel": "Alle sind ausgeglichen — keine Rückzahlungen nötig.",
-        "comingTitle": "Weitere Demos folgen",
-        "comingDescription": "Betragsrechner, Währungsumrechnung und geführte Touren erscheinen als Nächstes hier."
-      }
-    },
     "hero": {
       "title": "Alles, was du zum Aufteilen von Ausgaben brauchst",
-      "description": "Von der anonymen Anmeldung bis zu Stapel-KI-Tools: Probiere unten die Ausgleichs-Demo aus und stöbere dann im Gesamtkatalog. Neue interaktive Demos erscheinen hier nach und nach."
+      "description": "Von der Anmeldung bis zur offenen Plattform: Stöbere unten im Gesamtkatalog. Jede Karte enthält eine statische Illustration der Funktion."
     },
     "sections": {
       "developers": {

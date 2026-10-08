@@ -4637,85 +4637,89 @@
   "Features": {
     "catalogLabel": "Katalogo osoa",
     "catalog": {
-      "activity": {
-        "title": "Jarduera, iruzkinak eta bilaketa",
-        "description": "Gastuko historia eta iruzkinak, Zuretzat kronologia, iragazketa, ordena eta talde artxibatuetan bilaketa."
-      },
-      "ai-assist": {
-        "title": "IAz lagundutako gastuak",
-        "description": "Tokiko hiztegia gehi taldearen historia gehi IA motor bat; eskaneatu ordainagiriak eta deskribatu gastuak ahotsaz."
-      },
-      "anonymous-accounts": {
-        "title": "Kontu anonimoak",
-        "description": "Hasi klik gutxitan bistaratze-izen batekin soilik, e-posta edo saio sozialik gabe. Berreskuratu sarbidea esteka edo passkey batekin."
-      },
-      "archive": {
-        "title": "Artxibatu eta ezabatu",
-        "description": "Artxibatu taldeak irakurtzeko soilik uzteko, edo ezabatu betiko amaitzean."
-      },
       "balances": {
         "title": "Saldoak eta zor-kitapenak",
-        "description": "Ordainketa-norabide argia, kitatze azkarra, ordainketa konbinatuak eta azpitalde-unitateak, bikoteak adibidez."
-      },
-      "bulk-categorize": {
-        "title": "IA sailkapen masiboa",
-        "description": "Exekutatu IA sailkatzailea gastu askotan aldi berean — aproposa inportazio baten ondoren."
-      },
-      "calculator": {
-        "title": "Zenbateko-kalkulagailua",
-        "description": "Eragiketa azkarrak zenbatekoaren eremuan bertan, gastuak sartzean."
-      },
-      "core-expenses": {
-        "title": "Gastuak, ordainagiriak eta banaketak",
-        "description": "Taldeak, kategoriak, ordainagiri-eranskinak, banaketa aurreratuak eta iragarkirik gabeko PWA esperientzia."
+        "description": "Ikusi beti nork nori zor dion ordainketa-norabide argiarekin, eta kitatu ukitu batekin — ordainketa konbinatuak barne. Bikoteek eta familia-unitateek entitate bakar gisa kita dezakete, etxe partekatua erraz mantentzeko."
       },
       "currency": {
         "title": "Moneta anitz eta kripto",
-        "description": "Zerbitzari-aldeko bihurketa, zenbateko zehatzen gainidazketa tasa inplizituarekin, eta kriptomoneta-laguntza."
-      },
-      "developers": {
-        "title": "API, MCP, OAuth eta webhook-ak",
-        "description": "OpenAPI gehi Scalar docs, MCP laguntzailea, OAuth 2.1 baimen delegatuak eta sinatutako irteerako webhook-ak."
-      },
-      "export": {
-        "title": "Esportatu eta txostenak",
-        "description": "CSV, PDF inprimagarriak, eta talde edo kontu osoaren ZIP artxiboak agiriekin."
-      },
-      "identity": {
-        "title": "Talde-identitatea eta estekak",
-        "description": "Emojiak eta koloreak, irakurtzeko soilikeko esteka publikoak, banaketa-aurrezarpenak eta kideen kudeaketa."
-      },
-      "import": {
-        "title": "Inportatu edozer",
-        "description": "Splitwise CSV, banku-laburpenen CSVak mapatze-laguntzailearekin eta bikoiztuen detekzioarekin, Cospend eta Spliit paketeak."
-      },
-      "multi-payer": {
-        "title": "Ordaintzaile anitz eta xehatua",
-        "description": "Ordaintzaile anitz, lerro-xehetasunak, zergak eta eskupekoak, eta pertsonako kuota zehatzak gastu bakarrean."
-      },
-      "notifications": {
-        "title": "E-posta eta push jakinarazpenak",
-        "description": "Talde eta gastuen eguneraketak e-postaz edo push bidez, erabiltzaile bakoitzaren kategoria-hobespenekin."
-      },
-      "passkeys-security": {
-        "title": "Passkey-ak eta segurtasuna",
-        "description": "Pasahitzik gabeko saioa kontu-mota guztietarako, segurtasuneko saio-aukera eta gonbidapen bidezko modua instantzia pribatuetarako."
-      },
-      "qr-sharing": {
-        "title": "Inguruko QR gonbidapenak",
-        "description": "15 minutuko QR saio berrerabilgarriak, mugikorrean eskaneatuz sartzeko."
+        "description": "Banatu gastuak mugetatik haratago zerbitzari-aldeko bihurketarekin eta zuzeneko tasekin — fiat Frankfurterretik, kripto Coinbase-tik — eta egokitu zenbateko zehatzak tasa inplizitu ikusgaiarekin."
       },
       "recurring": {
         "title": "Gastu errepikakor iraunkorrak",
-        "description": "Benetako serieak tarteekin, amaierarekin, eguneratzearekin, saiakera-errepikapenekin, aurrebistekin eta gelditu, editatu edo ezabatu esplizituarekin."
+        "description": "Benetako serieak tarteekin, amaierarekin, eguneratzearekin, saiakera-errepikapenekin eta datozenaren aurrebistekin. Pausatu, editatu edo gelditu serie bat esplizituki — sortutako gastu bakoitza bere aldetik editagarri mantentzen da."
       },
       "stats-budgets": {
         "title": "Estatistikak, grafikoak eta aurrekontuak",
-        "description": "Gastu-grafikoak, hileko kategoria-ikuspegiak, taldeen arteko laburpena eta aurrekontuak gainditze-abisuekin."
+        "description": "Ulertu gastua grafikoekin, hileko kategoria-ikuspegiekin eta taldeen arteko laburpenarekin. Ezarri aurrekontuak taldeko eta jaso gainditze-abisuak ihes txikiak handi bihurtu aurretik."
       },
-      "synced-groups": {
-        "title": "Talde eta lagun sinkronizatuak",
-        "description": "Taldeak zurekin doaz gailu guztietan benetako kidetzarekin, lagunekiko banakako erregistroekin eta egotzitako edizioekin."
+      "languages": {
+        "title": "30 hizkuntza",
+        "description": "Produktu osoa 30 hizkuntzatan, bakoitza bere itzulpen-gidarekin. Edonork bana ditzake gastuak erosoen duen hizkuntzan."
+      },
+      "accounts-signin": {
+        "title": "Hasi saioa zure erara",
+        "description": "Hasi segundotan erakusteko izen batekin — helbide elektronikorik behar gabe — eta segurtatu kontua passkey batekin, esteka magiko batekin, pasahitz batekin edo zure Google, GitHub edo X kontuarekin. Metodo guztiek balio dute kontu mota guztietarako."
+      },
+      "ai-help": {
+        "title": "IA laguntza",
+        "description": "Deskribatu gastuak ahotsaz, eskaneatu ordainagiriak eta jaso iradokizunak hiru fasetan: tokiko hiztegiaren eta historiaren berehalako egiaztapenak, eta gero zuk aukeratutako motorra — System One erabaki-eredu ultralasterra (TypeSafe Jev) edo LLM motelago baina zehatzagoa. Biek zure aurreko gastuetatik ikasten dute."
+      },
+      "data-portability": {
+        "title": "Inportatu eta esportatu",
+        "description": "Ekari historia Splitwise CSVtik, banku-laburpenen CSVetatik mapatze-laguntzailearekin eta bikoiztuen detekzioarekin, Cospendetik edo Spliit paketeetatik. Tricount eta Settle Up euskarria bide-orrian dago. Atera dena berriro CSV gisa, inprimatzeko PDF txosten gisa edo dokumentuak barne dituzten ZIP artxibo oso gisa."
+      },
+      "expenses-splits": {
+        "title": "Gastuak eta banaketa adimendunak",
+        "description": "Sortu gastuak kategoriekin, ordainagiri-eranskinekin eta banaketa aurreratuekin — berdin, partaidetzen arabera edo ehunekotan. Pertsona batzuek ordain dezakete gastu bakarrean, lerroak banaka banatzen dira, eta zergak eta propinak proportzionalki banatzen dira pertsonako zati zehatzetan."
+      },
+      "fast-entry": {
+        "title": "Sarrera azkarra",
+        "description": "Gorde ukitu bakarreko banaketa-txantiloiak taldeko, eta aplikatu edozein gasturi segundotan. Egin kalkulu azkarrak zenbatekoaren eremuan bertan sartzen ari zarela — ez duzu kalkulagailu-aplikazio bereizirik behar."
+      },
+      "groups-friends": {
+        "title": "Taldeak eta lagunak",
+        "description": "Benetako kidetzak gailuz gailu jarraitzen dizu, edizio bakoitza bere egileari egozten zaiola. Mantendu banakako kontu-korrontea lagun batekin edozein taldetatik kanpo, utzi bikoteei unitate gisa kitatzen eta artxibatu amaitutako taldeak irakurtzeko soilik gisa ezabatu beharrean."
+      },
+      "offline-app": {
+        "title": "Aplikazio instalagarria",
+        "description": "Instalatu Spliit aplikazio gisa edozein gailutan berehala kargatzeko eta pantaila osoko esperientziaz gozatzeko. Zure taldeak irakurgarri mantentzen dira konexiorik gabe, eta gastu berriak lokalean ilaran gordetzen dira, berriro konektatzean sinkronizatuz — konexiorik gabeko edizio zabalagoa bide-orrian dago."
+      },
+      "share-identity": {
+        "title": "Gonbidapenak eta talde-identitatea",
+        "description": "Ekarri jendea nahi duzun moduan: partekatzeko esteka batekin, posta elektronikoko gonbidapen batekin edo mugikorrean eskaneatuz batzeko erabilera anitzeko QR saio batekin. Eman talde bakoitzari bere emoji, kolore eta kide-zerrenda."
+      },
+      "activity": {
+        "title": "Jarduera eta historia",
+        "description": "Jarraitu talde bakoitza «Zuretzat» kronologiarekin, gastu bakoitzeko historiarekin eta iruzkinekin, iragazkiekin, ordenazioarekin eta artxibatutako taldeen bilaketarekin."
+      },
+      "developers": {
+        "title": "API, MCP eta OAuth",
+        "description": "OpenAPI eta Scalar dokumentazioa, MCP laguntzailea eta OAuth 2.1 eskuordetutako esparruak.",
+        "action": "Arakatu API dokumentazioa"
+      },
+      "notifications": {
+        "title": "Jakinarazpenak",
+        "description": "Jaso talde eta gastuen eguneraketak posta elektronikoz edo push bidez, erabiltzaile bakoitzeko kategoria-hobespenekin, bakoitzak bere jakinarazpen-maila aukera dezan.",
+        "action": "Jakinarazpen-ezarpenak"
+      },
+      "open-source": {
+        "title": "Kode irekia",
+        "description": "Kode-oinarri osoa irekita dago auditatzeko eta ekarpenak egiteko, instantzia pribatuetarako auto-ostatatze aukerarekin.",
+        "action": "Ikusi GitHub-en"
+      },
+      "webhooks": {
+        "title": "Webhookak",
+        "description": "Sinatutako irteerako gertaerak bidalketa-saiakerekin, zure sistemak aldaketa bakoitzarekin sinkronizatuta mantentzeko.",
+        "action": "Kudeatu webhookak"
+      },
+      "bulk-categorize": {
+        "title": "Kategorizazio multzokatua",
+        "description": "Kategorizatu inportatutako gastuak multzoka System One erabaki-eredu batekin, hala nola TypeSafe Jev, zure taldearen historia eta berrikusitako aukerak pistatzat erabiliz. Iradokizun bakoitzak bere konfiantza erakusten du aplikatu aurretik."
+      },
+      "data-security": {
+        "title": "Babeskopiak eta berreskurapena",
+        "description": "Zure datuak PostgreSQL datu-base kudeatu batean daude, ekoizpen-zerbitzaritik kanpoko S3 ontzi bereizi batean 30 egunez gordetako babeskopia txandakatuekin. Produkzioan zerbait larria gertatuta ere, berreskurapena erraza da."
       }
     },
     "cta": {
@@ -4723,26 +4727,9 @@
       "description": "Sortu doako kontu bat — anonimoa, e-postarik gabe — eta zure taldeak gailu guztietan sinkronizatzen dira.",
       "action": "Hasi"
     },
-    "demo": {
-      "eyebrow": "Demo interaktiboa",
-      "splitSettle": {
-        "title": "Banaketa + kitatze bisualizatzailea",
-        "description": "Aldatu zenbatekoa, ordaintzailea edo kuotak eta ikusi saldoak eta gutxieneko zor-kitapenak zuzenean eguneratzen. Demo hau zure nabigatzailean exekutatzen da osorik — konturik gabe.",
-        "amountLabel": "Gastuaren zenbatekoa",
-        "payerLabel": "Ordaintzailea",
-        "modeLabel": "Banaketa-modua",
-        "modeEqual": "Berdina",
-        "modeCustom": "Pertsonalizatua",
-        "balancesTitle": "Saldoak",
-        "settlementsTitle": "Gomendatutako zor-kitapenak",
-        "settledLabel": "Dena kitatuta — ez da zor-kitapenik behar.",
-        "comingTitle": "Demo gehiago bidean",
-        "comingDescription": "Zenbateko-kalkulagailua, moneta-bihurketa eta bisita gidatuak hemen agertuko dira hurrena."
-      }
-    },
     "hero": {
       "title": "Gastuak banatzeko behar duzun guztia",
-      "description": "Saio anonimotik IA tresna masiboetara: probatu kitatze-demoa eta arakatu katalogo osoa. Demo interaktibo berriak banan-banan iristen dira."
+      "description": "Saio-hasieratik plataforma irekira: arakatu katalogo osoa behean. Txartel bakoitzak eginbidearen ilustrazio estatiko bat dakar."
     },
     "sections": {
       "developers": {

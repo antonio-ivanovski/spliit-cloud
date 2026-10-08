@@ -4672,85 +4672,89 @@
   "Features": {
     "catalogLabel": "Danh mục đầy đủ",
     "catalog": {
-      "activity": {
-        "title": "Hoạt động, bình luận & tìm kiếm",
-        "description": "Lịch sử và bình luận từng khoản chi, dòng thời gian Dành cho bạn, lọc, sắp xếp và tìm kiếm nhóm đã lưu trữ."
-      },
-      "ai-assist": {
-        "title": "Khoản chi có AI hỗ trợ",
-        "description": "Từ điển cục bộ kết hợp lịch sử nhóm và một công cụ AI; quét hóa đơn và mô tả khoản chi bằng giọng nói."
-      },
-      "anonymous-accounts": {
-        "title": "Tài khoản ẩn danh",
-        "description": "Bắt đầu chỉ với vài cú nhấp chuột bằng tên hiển thị — không cần email hay đăng nhập mạng xã hội. Khôi phục bằng liên kết hoặc passkey."
-      },
-      "archive": {
-        "title": "Lưu trữ & xóa",
-        "description": "Lưu trữ nhóm để chuyển sang chỉ xem, hoặc xóa vĩnh viễn khi xong."
-      },
       "balances": {
         "title": "Số dư & tất toán",
-        "description": "Hướng thanh toán rõ ràng, tất toán nhanh, thanh toán gộp và đơn vị nhóm nhỏ như cặp đôi."
-      },
-      "bulk-categorize": {
-        "title": "Phân loại AI hàng loạt",
-        "description": "Chạy công cụ phân loại AI cho nhiều khoản chi cùng lúc — lý tưởng sau khi nhập dữ liệu."
-      },
-      "calculator": {
-        "title": "Máy tính số tiền",
-        "description": "Tính toán nhanh ngay trong ô số tiền khi nhập khoản chi."
-      },
-      "core-expenses": {
-        "title": "Khoản chi, hóa đơn & chia tiền",
-        "description": "Nhóm, danh mục, hóa đơn đính kèm, chia tiền nâng cao và trải nghiệm PWA không quảng cáo."
+        "description": "Luôn thấy ai nợ ai với hướng thanh toán rõ ràng, rồi tất toán chỉ bằng một chạm — kể cả thanh toán gộp. Các cặp đôi và hộ gia đình có thể tất toán như một đơn vị chung, giúp chi tiêu chung luôn đơn giản."
       },
       "currency": {
         "title": "Đa tiền tệ & crypto",
-        "description": "Quy đổi phía máy chủ, ghi đè số tiền chính xác có hiển thị tỷ giá suy ra và hỗ trợ tiền mã hóa."
-      },
-      "developers": {
-        "title": "API, MCP, OAuth & webhook",
-        "description": "Tài liệu OpenAPI và Scalar, trợ lý MCP, phạm vi OAuth 2.1 được ủy quyền và webhook gửi đi có chữ ký."
-      },
-      "export": {
-        "title": "Xuất & báo cáo",
-        "description": "CSV, báo cáo PDF để in và kho lưu trữ ZIP toàn nhóm hoặc tài khoản kèm tài liệu."
-      },
-      "identity": {
-        "title": "Nhận diện nhóm & liên kết",
-        "description": "Emoji và màu sắc, liên kết công khai chỉ xem, mẫu chia tiền và quản lý thành viên."
-      },
-      "import": {
-        "title": "Nhập mọi thứ",
-        "description": "CSV Splitwise, CSV sao kê ngân hàng với trình hướng dẫn ánh xạ và phát hiện trùng lặp, Cospend và gói Spliit."
-      },
-      "multi-payer": {
-        "title": "Nhiều người trả & theo mục",
-        "description": "Nhiều người trả, mục chi tiết, thuế và tiền tip, cùng phần chia chính xác cho từng người trong một khoản chi."
-      },
-      "notifications": {
-        "title": "Thông báo email & đẩy",
-        "description": "Cập nhật nhóm và khoản chi qua email hoặc đẩy, với tùy chọn danh mục cho từng người dùng."
-      },
-      "passkeys-security": {
-        "title": "Passkey & bảo mật",
-        "description": "Đăng nhập không mật khẩu cho mọi loại tài khoản, phương thức đăng nhập dự phòng và chế độ chỉ mời cho phiên bản riêng tư."
-      },
-      "qr-sharing": {
-        "title": "Lời mời QR gần bạn",
-        "description": "Phiên QR dùng nhiều lần trong 15 phút với quét-để-tham gia trên điện thoại."
+        "description": "Chia chi phí xuyên biên giới với quy đổi phía máy chủ và tỷ giá trực tiếp — tiền fiat từ Frankfurter, tiền mã hóa từ Coinbase — cùng khả năng ghi đè số tiền chính xác kèm tỷ giá suy ra được hiển thị."
       },
       "recurring": {
         "title": "Khoản chi định kỳ bền vững",
-        "description": "Chuỗi thực với khoảng lặp, thời điểm kết thúc, bắt kịp kỳ lỡ, thử lại, xem trước và dừng/sửa/xóa rõ ràng."
+        "description": "Chuỗi thực với khoảng lặp, thời điểm kết thúc, bắt kịp kỳ lỡ, thử lại và xem trước sắp tới. Tạm dừng, sửa hoặc dừng chuỗi một cách rõ ràng — mọi chi phí được tạo ra vẫn chỉnh sửa riêng được."
       },
       "stats-budgets": {
         "title": "Thống kê, biểu đồ & ngân sách",
-        "description": "Biểu đồ chi tiêu, hình ảnh danh mục hằng tháng, tổng hợp nhiều nhóm và ngân sách có cảnh báo vượt ngân sách."
+        "description": "Hiểu rõ chi tiêu bằng biểu đồ, hình ảnh danh mục hằng tháng và tổng hợp liên nhóm. Đặt ngân sách cho từng nhóm và nhận cảnh báo vượt ngân sách trước khi rò rỉ nhỏ thành lớn."
       },
-      "synced-groups": {
-        "title": "Nhóm đồng bộ & bạn bè",
-        "description": "Nhóm theo bạn trên mọi thiết bị với tư cách thành viên thực, sổ đối chiếu bạn bè 1-1 và lịch sử chỉnh sửa rõ người thực hiện."
+      "languages": {
+        "title": "30 ngôn ngữ",
+        "description": "Toàn bộ sản phẩm bằng 30 ngôn ngữ, mỗi ngôn ngữ có hướng dẫn dịch riêng. Ai cũng chia chi phí bằng ngôn ngữ mình thấy thoải mái nhất."
+      },
+      "accounts-signin": {
+        "title": "Đăng nhập theo cách của bạn",
+        "description": "Bắt đầu trong vài giây chỉ với tên hiển thị — không cần email — rồi bảo mật tài khoản bằng khóa truy cập, liên kết ma thuật, mật khẩu, hoặc tài khoản Google, GitHub hay X. Mọi phương thức đều dùng được cho mọi loại tài khoản."
+      },
+      "ai-help": {
+        "title": "Trợ lý AI",
+        "description": "Mô tả chi phí bằng giọng nói, quét hóa đơn và nhận gợi ý theo ba giai đoạn: tra cứu tức thì từ từ điển cục bộ và lịch sử, rồi tự chọn công cụ — mô hình quyết định System One siêu nhanh (TypeSafe Jev) hoặc LLM chậm hơn nhưng chính xác hơn. Cả hai đều học từ các chi phí trước đây của bạn."
+      },
+      "data-portability": {
+        "title": "Nhập & xuất",
+        "description": "Mang lịch sử từ CSV Splitwise, CSV sao kê ngân hàng với trình hướng dẫn ánh xạ và phát hiện trùng lặp, Cospend hoặc gói Spliit. Hỗ trợ Tricount và Settle Up đang nằm trong lộ trình. Xuất mọi thứ trở lại dưới dạng CSV, báo cáo PDF để in, hoặc kho lưu trữ ZIP đầy đủ kèm tài liệu."
+      },
+      "expenses-splits": {
+        "title": "Chi phí & chia thông minh",
+        "description": "Tạo chi phí với danh mục, ảnh hóa đơn đính kèm và kiểu chia nâng cao — chia đều, theo phần, hoặc theo phần trăm. Nhiều người có thể cùng trả trong một chi phí, từng dòng mục chia riêng, còn thuế và tiền tip được phân bổ theo tỷ lệ thành phần chia chính xác cho từng người."
+      },
+      "fast-entry": {
+        "title": "Nhập nhanh",
+        "description": "Lưu mẫu chia một chạm cho từng nhóm và áp dụng cho mọi chi phí trong vài giây. Tính toán nhanh ngay trong ô số tiền khi nhập — không cần ứng dụng máy tính riêng."
+      },
+      "groups-friends": {
+        "title": "Nhóm & bạn bè",
+        "description": "Tư cách thành viên thực theo bạn trên mọi thiết bị, với mọi chỉnh sửa đều ghi rõ tác giả. Giữ sổ đối chiếu 1-1 liên tục với bạn bè ngoài mọi nhóm, để các cặp đôi tất toán như một đơn vị chung, và lưu trữ nhóm đã xong ở chế độ chỉ xem thay vì xóa."
+      },
+      "offline-app": {
+        "title": "Ứng dụng có thể cài đặt",
+        "description": "Cài đặt Spliit như một ứng dụng trên mọi thiết bị để tải tức thì và trải nghiệm toàn màn hình. Nhóm của bạn vẫn đọc được khi ngoại tuyến, còn chi phí mới sẽ xếp hàng cục bộ và đồng bộ khi có mạng trở lại — chỉnh sửa ngoại tuyến mở rộng hơn đang nằm trong lộ trình."
+      },
+      "share-identity": {
+        "title": "Lời mời & nhận diện nhóm",
+        "description": "Mời mọi người theo cách phù hợp nhất: liên kết có thể chia sẻ, lời mời qua email hoặc phiên QR dùng nhiều lần với quét để tham gia trên di động. Đặt cho mỗi nhóm một emoji, màu sắc và danh sách thành viên riêng."
+      },
+      "activity": {
+        "title": "Hoạt động & lịch sử",
+        "description": "Theo dõi mọi nhóm bằng dòng thời gian Dành cho bạn, lịch sử và bình luận từng chi phí, bộ lọc, sắp xếp và tìm kiếm nhóm đã lưu trữ."
+      },
+      "developers": {
+        "title": "API, MCP & OAuth",
+        "description": "Tài liệu OpenAPI cùng Scalar, trợ lý MCP và phạm vi OAuth 2.1 được ủy quyền.",
+        "action": "Xem tài liệu API"
+      },
+      "notifications": {
+        "title": "Thông báo",
+        "description": "Nhận cập nhật nhóm và chi phí qua email hoặc push, với tùy chọn danh mục cho từng người để mỗi người tự chọn mức độ thông báo.",
+        "action": "Cài đặt thông báo"
+      },
+      "open-source": {
+        "title": "Mã nguồn mở",
+        "description": "Toàn bộ mã nguồn mở để kiểm tra và đóng góp, kèm tùy chọn tự lưu trữ cho phiên bản riêng.",
+        "action": "Xem trên GitHub"
+      },
+      "webhooks": {
+        "title": "Webhook",
+        "description": "Sự kiện gửi đi có chữ ký kèm thử lại khi gửi, giúp hệ thống của bạn luôn đồng bộ với mọi thay đổi.",
+        "action": "Quản lý webhook"
+      },
+      "bulk-categorize": {
+        "title": "Phân loại hàng loạt",
+        "description": "Phân loại hàng loạt các chi phí đã nhập bằng mô hình quyết định System One như TypeSafe Jev, dựa trên lịch sử nhóm và các lựa chọn đã được duyệt làm gợi ý. Mỗi đề xuất đều cho thấy độ tin cậy trước khi bạn áp dụng."
+      },
+      "data-security": {
+        "title": "Sao lưu & khôi phục",
+        "description": "Dữ liệu của bạn được lưu trong cơ sở dữ liệu PostgreSQL được quản lý, với các bản sao lưu luân phiên giữ trong 30 ngày trên một bucket S3 riêng ngoài máy chủ production. Dù máy chủ production có gặp sự cố, việc khôi phục vẫn đơn giản."
       }
     },
     "cta": {
@@ -4758,26 +4762,9 @@
       "description": "Tạo tài khoản miễn phí — ẩn danh, không cần email — và các nhóm của bạn đồng bộ trên mọi thiết bị.",
       "action": "Bắt đầu"
     },
-    "demo": {
-      "eyebrow": "Demo tương tác",
-      "splitSettle": {
-        "title": "Trực quan hóa chia tiền + tất toán",
-        "description": "Thay đổi số tiền, người trả hoặc phần chia và xem số dư cùng các khoản tất toán tối thiểu cập nhật trực tiếp. Demo này chạy hoàn toàn trong trình duyệt của bạn — không cần tài khoản.",
-        "amountLabel": "Số tiền chi",
-        "payerLabel": "Người trả",
-        "modeLabel": "Chế độ chia",
-        "modeEqual": "Chia đều",
-        "modeCustom": "Tùy chỉnh",
-        "balancesTitle": "Số dư",
-        "settlementsTitle": "Các khoản tất toán đề xuất",
-        "settledLabel": "Mọi người đã tất toán xong — không cần khoản nào nữa.",
-        "comingTitle": "Sắp có thêm demo",
-        "comingDescription": "Máy tính số tiền, quy đổi tiền tệ và hướng dẫn sử dụng sẽ xuất hiện tiếp tại đây."
-      }
-    },
     "hero": {
       "title": "Mọi thứ bạn cần để chia chi phí",
-      "description": "Từ đăng nhập ẩn danh đến công cụ AI hàng loạt: thử demo tất toán bên dưới, rồi duyệt toàn bộ danh mục. Các demo tương tác mới sẽ lần lượt xuất hiện tại đây."
+      "description": "Từ đăng nhập đến nền tảng mở: duyệt toàn bộ danh mục bên dưới. Mỗi thẻ gồm một hình minh họa tĩnh về tính năng."
     },
     "sections": {
       "developers": {

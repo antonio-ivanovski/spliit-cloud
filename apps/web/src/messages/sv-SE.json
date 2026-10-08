@@ -4605,85 +4605,89 @@
   "Features": {
     "catalogLabel": "Fullständig katalog",
     "catalog": {
-      "activity": {
-        "title": "Aktivitet, kommentarer & sökning",
-        "description": "Historik och kommentarer per utgift, För-dig-tidslinje, filtrering, sortering och sökning i arkiverade grupper."
-      },
-      "ai-assist": {
-        "title": "AI-assisterade utgifter",
-        "description": "Lokal ordlista plus grupphistorik plus en AI-motor; skanna kvitton och beskriv utgifter med rösten."
-      },
-      "anonymous-accounts": {
-        "title": "Anonyma konton",
-        "description": "Kom igång med några klick och bara ett visningsnamn — ingen e-post eller social inloggning. Återställ med en länk eller passkey."
-      },
-      "archive": {
-        "title": "Arkivera & radera",
-        "description": "Arkivera grupper för att göra dem skrivskyddade, eller radera dem permanent när du är klar."
-      },
       "balances": {
         "title": "Saldon & regleringar",
-        "description": "Tydlig betalningsriktning, snabb reglering, kombinerade betalningar och undergrupper som par."
-      },
-      "bulk-categorize": {
-        "title": "AI-kategorisering i bulk",
-        "description": "Kör AI-kategoriseringen över många utgifter på en gång — perfekt efter en import."
-      },
-      "calculator": {
-        "title": "Beloppsräknare",
-        "description": "Snabb huvudräkning direkt i beloppsfältet när du lägger till utgifter."
-      },
-      "core-expenses": {
-        "title": "Utgifter, kvitton & uppdelningar",
-        "description": "Grupper, kategorier, kvittobilagor, avancerade uppdelningar och en annonsfri PWA-upplevelse."
+        "description": "Se alltid vem som är skyldig vem med tydlig betalningsriktning och reglera sedan med ett tryck — inklusive kombinerade betalningar. Par och familjeenheter kan reglera som en enhet, så att gemensamma hushåll förblir enkla."
       },
       "currency": {
         "title": "Flera valutor & krypto",
-        "description": "Serverbaserad konvertering, exakta beloppsåsidosättningar med visad underförstådd kurs och stöd för kryptovalutor."
-      },
-      "developers": {
-        "title": "API, MCP, OAuth & webhooks",
-        "description": "OpenAPI plus Scalar-docs, MCP-assistent, delegerade OAuth 2.1-behörigheter och signerade utgående webhooks."
-      },
-      "export": {
-        "title": "Export & rapporter",
-        "description": "CSV, utskrivbara PDF-rapporter och fullständiga grupp- eller konto-ZIP-arkiv inklusive dokument."
-      },
-      "identity": {
-        "title": "Gruppidentitet & länkar",
-        "description": "Emoji och färger, offentliga skrivskyddade länkar, uppdelningsförval och medlemshantering."
-      },
-      "import": {
-        "title": "Importera vad som helst",
-        "description": "Splitwise-CSV, kontoutdrags-CSV:er med mappningsguide och dubblettidentifiering, Cospend och Spliit-paket."
-      },
-      "multi-payer": {
-        "title": "Flera betalare & radposter",
-        "description": "Flera betalare, radposter, skatt och dricks samt exakta andelar per person i en utgift."
-      },
-      "notifications": {
-        "title": "E-post- & pushnotiser",
-        "description": "Grupp- och utgiftsuppdateringar via e-post eller push, med kategoriinställningar per användare."
-      },
-      "passkeys-security": {
-        "title": "Passkeys & säkerhet",
-        "description": "Lösenordsfri inloggning för alla kontotyper, reservinloggning och inbjudningsläge för privata instanser."
-      },
-      "qr-sharing": {
-        "title": "QR-inbjudningar i närheten",
-        "description": "Återanvändbara 15-minuters QR-sessioner med skanna-för-att-gå-med på mobilen."
+        "description": "Dela över gränser med serverbaserad konvertering och livekurser – fiat från Frankfurter, krypto från Coinbase – och åsidosätt exakta belopp medan den underförstådda kursen visas."
       },
       "recurring": {
         "title": "Hållbara återkommande utgifter",
-        "description": "Äkta serier med intervall, slutdatum, ikappfångning, nya försök, förhandsvisningar och explicit stopp, redigering och radering."
+        "description": "Äkta serier med intervall, slutdatum, ikappfångning, nya försök och förhandsvisningar av kommande. Pausa, redigera eller stoppa en serie uttryckligen — varje genererad utgift förblir redigerbar på egen hand."
       },
       "stats-budgets": {
         "title": "Statistik, diagram & budgetar",
-        "description": "Utgiftsdiagram, månatliga kategorivyer, gruppgemensam sammanställning och budgetar med överträdelselarm."
+        "description": "Förstå utgifterna med diagram, månatliga kategorivyer och en gruppövergripande sammanställning. Ställ in budgetar per grupp och få överträdelselarm innan små läckor blir stora."
       },
-      "synced-groups": {
-        "title": "Synkade grupper & vänner",
-        "description": "Grupper följer dig mellan enheter med äkta medlemskap, 1-mot-1-vänsaldon och spårbara redigeringar."
+      "languages": {
+        "title": "30 språk",
+        "description": "Hela produkten på 30 språk, vart och ett med egen översättningsguide. Alla delar på det språk de trivs bäst med."
+      },
+      "data-portability": {
+        "title": "Import och export",
+        "description": "Ta med historik från Splitwise-CSV, kontoutdrags-CSV:er med mappningsguide och dubblettidentifiering, Cospend eller Spliit-paket. Stöd för Tricount och Settle Up finns på färdplanen. Ta ut allt igen som CSV, utskrivbara PDF-rapporter eller fullständiga ZIP-arkiv inklusive dokument."
+      },
+      "accounts-signin": {
+        "title": "Logga in på ditt sätt",
+        "description": "Kom igång på några sekunder med bara ett visningsnamn – ingen e-post behövs – och säkra sedan kontot med en passnyckel, en magisk länk, ett lösenord eller ditt Google-, GitHub- eller X-konto. Varje metod fungerar för alla kontotyper."
+      },
+      "ai-help": {
+        "title": "AI-hjälp",
+        "description": "Beskriv utgifter med rösten, skanna kvitton och få förslag i tre steg: direkta kontroller av den lokala ordlistan och historiken, sedan en motor efter eget val – den supersnabba System One-beslutsmodellen (TypeSafe Jev) eller en långsammare LLM med högre precision. Båda lär sig av dina tidigare utgifter."
+      },
+      "expenses-splits": {
+        "title": "Utgifter & smarta delningar",
+        "description": "Skapa utgifter med kategorier, kvittobilagor och avancerade delningar — lika, andelar eller procent. Flera personer kan betala inom en utgift, radposter delas individuellt och skatt plus dricks fördelas proportionellt till exakta andelar per person."
+      },
+      "fast-entry": {
+        "title": "Snabb inmatning",
+        "description": "Spara splitmallar med ett tryck per grupp och tillämpa dem på valfri utgift på sekunder. Räkna snabbt direkt i beloppsfältet medan du matar in — ingen separat miniräknarapp behövs."
+      },
+      "groups-friends": {
+        "title": "Grupper & vänner",
+        "description": "Riktigt medlemskap följer dig mellan enheter, med varje redigering tillskriven sin författare. Håll en löpande 1-mot-1-reskontra med en vän utanför varje grupp, låt par reglera som en enhet och arkivera avslutade grupper som skrivskyddade i stället för att radera dem."
+      },
+      "offline-app": {
+        "title": "Installerbar app",
+        "description": "Installera Spliit som en app på valfri enhet för omedelbar laddning och fullskärmsupplevelse. Dina grupper förblir läsbara offline, och nya utgifter köas lokalt och synkas vid återanslutning — bredare offlineredigering finns på färdplanen."
+      },
+      "share-identity": {
+        "title": "Inbjudningar & gruppidentitet",
+        "description": "Få med folk på det sätt som passar dig: en delbar länk, en e-postinbjudan eller en fleranvändnings-QR-session med skanna-för-att-gå-med på mobilen. Ge varje grupp en egen emoji, färger och medlemslista."
+      },
+      "activity": {
+        "title": "Aktivitet & historik",
+        "description": "Följ varje grupp med en För-dig-tidslinje, historik och kommentarer per utgift, filtrering, sortering och sökning i arkiverade grupper."
+      },
+      "developers": {
+        "title": "API, MCP och OAuth",
+        "description": "OpenAPI- plus Scalar-dokumentation, MCP-assistent och delegerade OAuth 2.1-behörigheter.",
+        "action": "Visa API-dokumentationen"
+      },
+      "notifications": {
+        "title": "Notiser",
+        "description": "Få uppdateringar om grupper och utgifter via e-post eller push, med kategoriinställningar per användare så att alla väljer sin egen signalnivå.",
+        "action": "Notisinställningar"
+      },
+      "open-source": {
+        "title": "Öppen källkod",
+        "description": "Hela kodbasen är öppen för granskning och bidrag, med möjlighet till egen drift för privata instanser.",
+        "action": "Visa på GitHub"
+      },
+      "webhooks": {
+        "title": "Webhookar",
+        "description": "Signerade utgående händelser med återförsök vid leverans, så att dina system hålls synkade med varje ändring.",
+        "action": "Hantera webhookar"
+      },
+      "bulk-categorize": {
+        "title": "Bulkkategorisering",
+        "description": "Kategorisera importerade utgifter i bulk med beslutsmodellen System One som TypeSafe Jev, med din grupps kategoriserade utgifter och granskade val som ledtrådar. Varje förslag visar sin säkerhet innan du tillämpar det."
+      },
+      "data-security": {
+        "title": "Säkerhetskopior & återställning",
+        "description": "Dina data lagras i en hanterad PostgreSQL-databas med roterande säkerhetskopior som behålls i 30 dagar i en separat S3-bucket utanför produktionsservern. Även om något skulle hända med produktionen är återställningen enkel."
       }
     },
     "cta": {
@@ -4691,26 +4695,9 @@
       "description": "Skapa ett gratis konto — anonymt, ingen e-post krävs — och dina grupper synkas mellan enheter.",
       "action": "Kom igång"
     },
-    "demo": {
-      "eyebrow": "Interaktiv demo",
-      "splitSettle": {
-        "title": "Split- och regleringsvisualisering",
-        "description": "Ändra belopp, betalare eller andelar och se saldon och minimala återbetalningar uppdateras live. Den här demon körs helt i din webbläsare — inget konto behövs.",
-        "amountLabel": "Utgiftsbelopp",
-        "payerLabel": "Betalad av",
-        "modeLabel": "Uppdelningsläge",
-        "modeEqual": "Lika",
-        "modeCustom": "Anpassad",
-        "balancesTitle": "Saldon",
-        "settlementsTitle": "Föreslagna återbetalningar",
-        "settledLabel": "Alla är reglerade — inga återbetalningar behövs.",
-        "comingTitle": "Fler demos på gång",
-        "comingDescription": "Beloppsräknare, valutakonvertering och guidade turer dyker upp härnäst."
-      }
-    },
     "hero": {
       "title": "Allt du behöver för att dela utgifter",
-      "description": "Från anonym inloggning till AI-verktyg i bulk: testa regleringsdemon nedan och bläddra sedan i hela katalogen. Nya interaktiva demos landar här en efter en."
+      "description": "Från inloggning till den öppna plattformen: bläddra i hela katalogen nedan. Varje kort innehåller en statisk illustration av funktionen."
     },
     "sections": {
       "developers": {

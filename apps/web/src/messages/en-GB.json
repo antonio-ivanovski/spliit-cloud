@@ -168,16 +168,13 @@
     }
   },
   "Features": {
+    "hero": {
+      "description": "From sign-in to the open platform: browse the full catalogue below. Every card includes a static illustration of the feature."
+    },
     "catalog": {
       "bulk-categorize": {
-        "title": "Bulk AI categorisation",
-        "description": "Run the AI categoriser across many expenses at once — ideal after an import."
-      },
-      "identity": {
-        "description": "Emoji and colours, public view-only links, split presets, and member management."
-      },
-      "multi-payer": {
-        "title": "Multiple payers & itemised"
+        "title": "Bulk categorisation",
+        "description": "Categorise imported expenses in bulk with a System One decision model such as TypeSafe Jev, using your group's history and reviewed choices as hints. Every suggestion shows its confidence before you apply it."
       }
     }
   }

@@ -4681,85 +4681,89 @@
   "Features": {
     "catalogLabel": "Volledige catalogus",
     "catalog": {
-      "activity": {
-        "title": "Activiteit, opmerkingen & zoeken",
-        "description": "Geschiedenis en opmerkingen per uitgave, Voor-jou-tijdlijn, filteren, sorteren en zoeken in gearchiveerde groepen."
-      },
-      "ai-assist": {
-        "title": "Uitgaven met AI-hulp",
-        "description": "Lokaal woordenboek plus groepsgeschiedenis plus één AI-engine; scan bonnetjes en beschrijf uitgaven met je stem."
-      },
-      "anonymous-accounts": {
-        "title": "Anonieme accounts",
-        "description": "Begin in een paar klikken met alleen een weergegevenaam — geen e-mail of social login. Herstel met een link of passkey."
-      },
-      "archive": {
-        "title": "Archiveren & verwijderen",
-        "description": "Archiveer groepen om ze alleen-lezen te maken, of verwijder ze definitief als je klaar bent."
-      },
       "balances": {
         "title": "Saldi & verrekeningen",
-        "description": "Duidelijke betalingsrichting, snelle verrekening, gecombineerde betalingen en subgroepen zoals stellen."
-      },
-      "bulk-categorize": {
-        "title": "AI-categorisering in bulk",
-        "description": "Voer de AI-categorisering in één keer uit voor veel uitgaven — ideaal na een import."
-      },
-      "calculator": {
-        "title": "Bedragcalculator",
-        "description": "Snel rekenen direct in het bedragveld tijdens het invoeren van uitgaven."
-      },
-      "core-expenses": {
-        "title": "Uitgaven, bonnetjes & verdelingen",
-        "description": "Groepen, categorieën, bonbijlagen, geavanceerde verdelingen en een advertentievrije PWA-ervaring."
+        "description": "Zie altijd wie wat aan wie verschuldigd is met een duidelijke betalingsrichting en verreken in één tik — inclusief gecombineerde betalingen. Stellen en gezinseenheden kunnen als één geheel verrekenen, zodat gedeelde huishoudens eenvoudig blijven."
       },
       "currency": {
         "title": "Meerdere valuta & crypto",
-        "description": "Conversie op de server, exacte bedragsoverschrijving met getoonde impliciete koers, en ondersteuning voor cryptovaluta."
-      },
-      "developers": {
-        "title": "API, MCP, OAuth & webhooks",
-        "description": "OpenAPI plus Scalar-docs, MCP-assistent, gedelegeerde OAuth 2.1-scopes en ondertekende uitgaande webhooks."
-      },
-      "export": {
-        "title": "Exporteren & rapporten",
-        "description": "CSV, afdrukbare PDF-rapporten en volledige groeps- of account-ZIP-archieven inclusief documenten."
-      },
-      "identity": {
-        "title": "Groepsidentiteit & links",
-        "description": "Emoji en kleuren, openbare alleen-lezen-links, verdeelpresets en ledenbeheer."
-      },
-      "import": {
-        "title": "Importeer alles",
-        "description": "Splitwise-CSV, bankafschrift-CSV's met mappingwizard en duplicatendetectie, Cospend en Spliit-bundels."
-      },
-      "multi-payer": {
-        "title": "Meerdere betalers & Per artikel",
-        "description": "Meerdere betalers, artikelen, belasting en fooi, en precieze aandelen per persoon in één uitgave."
-      },
-      "notifications": {
-        "title": "E-mail- & pushmeldingen",
-        "description": "Groeps- en uitgave-updates per e-mail of push, met categorievoorkeuren per gebruiker."
-      },
-      "passkeys-security": {
-        "title": "Passkeys & beveiliging",
-        "description": "Wachtwoordloos inloggen voor elk accounttype, back-up-inlogoptie en modus op uitnodiging voor privé-instanties."
-      },
-      "qr-sharing": {
-        "title": "QR-uitnodigingen in de buurt",
-        "description": "Meermaals bruikbare QR-sessies van 15 minuten met scan-om-deel-te-nemen op mobiel."
+        "description": "Splits over grenzen heen met conversie op de server en livekoersen – fiatgeld via Frankfurter, crypto via Coinbase – en schrijf exacte bedragen over waarbij de impliciete koers wordt getoond."
       },
       "recurring": {
         "title": "Duurzame terugkerende uitgaven",
-        "description": "Echte reeksen met intervallen, einddatums, inhaalacties, nieuwe pogingen, previews en expliciet stoppen, bewerken en verwijderen."
+        "description": "Echte reeksen met intervallen, einddatums, inhaalacties, nieuwe pogingen en previews van wat eraan komt. Pauzeer, bewerk of stop een reeks expliciet — elke gegenereerde uitgave blijft afzonderlijk bewerkbaar."
       },
       "stats-budgets": {
         "title": "Statistieken, grafieken & budgetten",
-        "description": "Uitgavengrafieken, maandelijkse categorieweergaven, groepsoverstijgende totalen en budgetten met waarschuwingen bij overschrijding."
+        "description": "Begrijp je uitgaven met grafieken, maandelijkse categorieweergaven en een groepsoverstijgend overzicht. Stel budgetten per groep in en ontvang waarschuwingen bij overschrijding voordat kleine lekken grote worden."
       },
-      "synced-groups": {
-        "title": "Gesynchroniseerde groepen & vrienden",
-        "description": "Groepen volgen je op alle apparaten met echt lidmaatschap, 1-op-1-vriendensaldi en toerekenbare bewerkingen."
+      "languages": {
+        "title": "30 talen",
+        "description": "Het volledige product in 30 talen, elk met een eigen vertaalgids. Iedereen deelt uitgaven in de taal die het prettigst voelt."
+      },
+      "accounts-signin": {
+        "title": "Log in op jouw manier",
+        "description": "Begin in seconden met alleen een weergavenaam – geen e-mail nodig – en beveilig je account daarna met een passkey, een magische link, een wachtwoord of je Google-, GitHub- of X-account. Elke methode werkt voor elk accounttype."
+      },
+      "ai-help": {
+        "title": "AI-hulp",
+        "description": "Beschrijf uitgaven met je stem, scan bonnetjes en krijg suggesties in drie fasen: directe controles van het lokale woordenboek en de geschiedenis, daarna een engine naar keuze – het razendsnelle System One-beslismodel (TypeSafe Jev) of een tragere LLM met grotere nauwkeurigheid. Beide leren van je eerdere uitgaven."
+      },
+      "data-portability": {
+        "title": "Importeren & exporteren",
+        "description": "Neem je geschiedenis mee uit Splitwise-CSV, bankafschrift-CSVs met een koppelwizard en dubbeledetectie, Cospend of Spliit-bundels. Tricount- en Settle Up-ondersteuning staat op de roadmap. Exporteer alles weer als CSV, afdrukbare pdf-rapporten of volledige ZIP-archieven inclusief documenten."
+      },
+      "expenses-splits": {
+        "title": "Uitgaven & slimme verdelingen",
+        "description": "Maak uitgaven met categorieën, bonbijlagen en geavanceerde verdelingen — gelijk, in aandelen of in procenten. Meerdere personen kunnen binnen één uitgave betalen, regelitems worden apart verdeeld en belasting plus fooi worden evenredig verdeeld tot precieze aandelen per persoon."
+      },
+      "fast-entry": {
+        "title": "Snelle invoer",
+        "description": "Bewaar splitssjablonen met één tik per groep en pas ze in seconden toe op elke uitgave. Reken snel direct in het bedragveld tijdens het invoeren — geen aparte rekenmachine-app nodig."
+      },
+      "groups-friends": {
+        "title": "Groepen & vrienden",
+        "description": "Echt lidmaatschap volgt je op alle apparaten, waarbij elke bewerking aan de auteur wordt toegeschreven. Houd een doorlopend 1-op-1-overzicht bij met een vriend buiten elke groep, laat stellen als één geheel verrekenen en archiveer afgeronde groepen als alleen-lezen in plaats van ze te verwijderen."
+      },
+      "offline-app": {
+        "title": "Installeerbare app",
+        "description": "Installeer Spliit als app op elk apparaat voor direct laden en een volledige-schermervaring. Je groepen blijven offline leesbaar en nieuwe uitgaven worden lokaal in de wachtrij geplaatst en gesynchroniseerd bij het opnieuw verbinden — bredere offline-bewerking staat op de roadmap."
+      },
+      "share-identity": {
+        "title": "Uitnodigingen & groepsidentiteit",
+        "description": "Haal mensen erbij zoals het jou uitkomt: met een deelbare link, een e-mailuitnodiging of een meermaals bruikbare QR-sessie met scan-om-deel-te-nemen op mobiel. Geef elke groep een eigen emoji, kleuren en ledenlijst."
+      },
+      "activity": {
+        "title": "Activiteit & geschiedenis",
+        "description": "Volg elke groep met een Voor-jou-tijdlijn, geschiedenis en reacties per uitgave, filteren, sorteren en zoeken in gearchiveerde groepen."
+      },
+      "developers": {
+        "title": "API, MCP en OAuth",
+        "description": "OpenAPI- plus Scalar-docs, MCP-assistent en gedelegeerde OAuth 2.1-scopes.",
+        "action": "API-docs bekijken"
+      },
+      "notifications": {
+        "title": "Meldingen",
+        "description": "Ontvang groeps- en uitgave-updates per e-mail of push, met categorievoorkeuren per gebruiker zodat iedereen zijn eigen signaalniveau kiest.",
+        "action": "Meldingsinstellingen"
+      },
+      "open-source": {
+        "title": "Opensource",
+        "description": "De volledige codebase staat open voor audit en bijdragen, met een selfhost-optie voor privé-instanties.",
+        "action": "Bekijk op GitHub"
+      },
+      "webhooks": {
+        "title": "Webhooks",
+        "description": "Ondertekende uitgaande events met nieuwe bezorgpogingen, zodat je systemen bij elke wijziging synchroon blijven.",
+        "action": "Webhooks beheren"
+      },
+      "bulk-categorize": {
+        "title": "Bulkcategorisatie",
+        "description": "Categoriseer geïmporteerde uitgaven in bulk met het System One-beslismodel zoals TypeSafe Jev, met de gecategoriseerde uitgaven van je groep en je gecontroleerde keuzes als aanwijzingen. Elke suggestie toont de betrouwbaarheid voordat je deze toepast."
+      },
+      "data-security": {
+        "title": "Back-ups & herstel",
+        "description": "Je gegevens staan in een beheerde PostgreSQL-database met roterende back-ups die 30 dagen worden bewaard in een aparte S3-bucket buiten de productieserver. Zelfs als er iets misgaat met de productie, is herstellen eenvoudig."
       }
     },
     "cta": {
@@ -4767,26 +4771,9 @@
       "description": "Maak een gratis account — anoniem, geen e-mail nodig — en je groepen synchroniseren op al je apparaten.",
       "action": "Aan de slag"
     },
-    "demo": {
-      "eyebrow": "Interactieve demo",
-      "splitSettle": {
-        "title": "Verdeel- en verrekenvisualisatie",
-        "description": "Wijzig het bedrag, de betaler of de aandelen en zie live hoe saldi en minimale terugbetalingen worden bijgewerkt. Deze demo draait volledig in je browser — geen account nodig.",
-        "amountLabel": "Bedrag van uitgave",
-        "payerLabel": "Betaald door",
-        "modeLabel": "Verdeelmodus",
-        "modeEqual": "Gelijk",
-        "modeCustom": "Aangepast",
-        "balancesTitle": "Saldi",
-        "settlementsTitle": "Voorgestelde terugbetalingen",
-        "settledLabel": "Iedereen is verrekend — geen terugbetalingen nodig.",
-        "comingTitle": "Meer demo's volgen",
-        "comingDescription": "Bedragcalculator, valutaconversie en rondleidingen verschijnen hier als volgende."
-      }
-    },
     "hero": {
       "title": "Alles wat je nodig hebt om uitgaven te verdelen",
-      "description": "Van anoniem inloggen tot AI-tools in bulk: probeer hieronder de verrekendemo en blader daarna door de volledige catalogus. Nieuwe interactieve demo's verschijnen hier één voor één."
+      "description": "Van inloggen tot het open platform: bekijk hieronder de volledige catalogus. Elke kaart bevat een statische illustratie van de functie."
     },
     "sections": {
       "developers": {

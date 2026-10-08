@@ -55,6 +55,14 @@ const SEO_META = new Map([
         'How to get help with Spliit Cloud, report bugs, and contact the community maintainers.',
     },
   ],
+  [
+    '/features',
+    {
+      title: 'Features — Spliit Cloud',
+      description:
+        'Every Spliit feature in one catalog: sign-in, smart splits, the installable app, imports, and an open developer platform.',
+    },
+  ],
 ])
 
 // Public static pages that have a hand-maintained Markdown companion. Agents
@@ -68,6 +76,7 @@ const MARKDOWN_PAGES = new Map([
   ['/imprint', '/imprint.md'],
   ['/sponsor', '/sponsor.md'],
   ['/support', '/support.md'],
+  ['/features', '/features.md'],
 ])
 
 function acceptsMarkdown(acceptHeader) {

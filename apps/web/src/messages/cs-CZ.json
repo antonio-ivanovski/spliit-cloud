@@ -4663,85 +4663,89 @@
   "Features": {
     "catalogLabel": "Plný katalog",
     "catalog": {
-      "activity": {
-        "title": "Aktivita, komentáře a vyhledávání",
-        "description": "Historie a komentáře u každého výdaje, časová osa Pro vás, filtrování, řazení a vyhledávání v archivovaných skupinách."
-      },
-      "ai-assist": {
-        "title": "Výdaje s pomocí AI",
-        "description": "Místní slovník plus historie skupiny plus jeden AI engine; skenujte účtenky a popisujte výdaje hlasem."
-      },
-      "anonymous-accounts": {
-        "title": "Anonymní účty",
-        "description": "Začněte na pár kliknutí jen s přezdívkou — bez e-mailu i přihlášení přes sítě. Obnovení odkazem nebo passkey."
-      },
-      "archive": {
-        "title": "Archivace a smazání",
-        "description": "Archivujte skupiny, aby byly jen ke čtení, nebo je trvale smažte, až už je nebudete potřebovat."
-      },
       "balances": {
         "title": "Zůstatky a vyrovnání",
-        "description": "Jasný směr plateb, rychlé vyrovnání, sloučené platby a jednotky podskupin, třeba páry."
-      },
-      "bulk-categorize": {
-        "title": "Hromadná AI kategorizace",
-        "description": "Spusťte AI kategorizaci na mnoha výdajích najednou — ideální po importu."
-      },
-      "calculator": {
-        "title": "Kalkulačka částky",
-        "description": "Rychlé počty přímo v poli částky při zadávání výdajů."
-      },
-      "core-expenses": {
-        "title": "Výdaje, účtenky a dělení",
-        "description": "Skupiny, kategorie, přílohy účtenek, pokročilé dělení a PWA bez reklam."
+        "description": "Vždy vidíte, kdo komu dluží, s jasným směrem plateb, a pak jedním klepnutím vyrovnáte — včetně sloučených plateb. Páry a rodinné jednotky se mohou vyrovnat jako jeden celek, takže společné domácnosti zůstanou jednoduché."
       },
       "currency": {
         "title": "Více měn a krypto",
-        "description": "Převod na serveru, přepsání přesné částky se zobrazeným výsledným kurzem a podpora kryptoměn."
-      },
-      "developers": {
-        "title": "API, MCP, OAuth a webhooky",
-        "description": "Dokumentace OpenAPI a Scalar, asistent MCP, delegované OAuth 2.1 scopy a podepsané odchozí webhooky."
-      },
-      "export": {
-        "title": "Export a reporty",
-        "description": "CSV, tisknutelné PDF reporty a plné ZIP archivy skupiny nebo účtu včetně dokumentů."
-      },
-      "identity": {
-        "title": "Identita skupiny a odkazy",
-        "description": "Emoji a barvy, veřejné odkazy jen ke čtení, předvolby dělení a správa členů."
-      },
-      "import": {
-        "title": "Import čehokoli",
-        "description": "CSV ze Splitwise, bankovní výpisy CSV s průvodcem mapováním a detekcí duplicit, Cospend a balíčky Spliit."
-      },
-      "multi-payer": {
-        "title": "Více plátců a podle položek",
-        "description": "Více plátců, položky, daně a spropitné a přesné podíly každého v jednom výdaji."
-      },
-      "notifications": {
-        "title": "E-mailová a push oznámení",
-        "description": "Aktualizace skupin a výdajů e-mailem nebo push, s preferencemi kategorií pro každého uživatele."
-      },
-      "passkeys-security": {
-        "title": "Passkeys a zabezpečení",
-        "description": "Přihlášení bez hesla pro každý typ účtu, záložní způsob přihlášení a režim jen na pozvánky pro soukromé instance."
-      },
-      "qr-sharing": {
-        "title": "QR pozvánky v okolí",
-        "description": "Opakovaně použitelné 15minutové QR relace s připojením naskenováním na mobilu."
+        "description": "Dělte výdaje přes hranice s převodem na serveru a živými kurzy — fiat z Frankfurter, krypto z Coinbase — a přesné částky přepište se zobrazeným odvozeným kurzem."
       },
       "recurring": {
         "title": "Odolné opakované výdaje",
-        "description": "Skutečné série s intervaly, ukončením, doháněním, opakováním, náhledy a explicitním zastavením, úpravou a smazáním."
+        "description": "Skutečné série s intervaly, ukončením, doháněním, opakováním a náhledem toho, co přijde. Sérii explicitně pozastavte, upravte nebo zastavte — každý vygenerovaný výdaj zůstane samostatně upravitelný."
       },
       "stats-budgets": {
         "title": "Statistiky, grafy a rozpočty",
-        "description": "Grafy útrat, měsíční vizualizace kategorií, souhrn napříč skupinami a rozpočty s upozorněním na překročení."
+        "description": "Porozumějte útratám s grafy, měsíčními vizualizacemi kategorií a souhrnem napříč skupinami. Nastavte si rozpočty pro každou skupinu a dostávejte upozornění na překročení, než se z malých úniků stanou velké."
       },
-      "synced-groups": {
-        "title": "Synchronizované skupiny a přátelé",
-        "description": "Skupiny vás následují napříč zařízeními, se skutečným členstvím, přehledy s přáteli 1 na 1 a přiřaditelnými úpravami."
+      "languages": {
+        "title": "30 jazyků",
+        "description": "Celý produkt ve 30 jazycích, každý s vlastní překladatelskou příručkou. Každý tak dělí výdaje v jazyce, který mu vyhovuje."
+      },
+      "accounts-signin": {
+        "title": "Přihlaste se po svém",
+        "description": "Začněte během chvilky jen se zobrazovaným jménem — e-mail není potřeba — a pak účet zabezpečte passkey, magickým odkazem, heslem, nebo svým účtem Google, GitHub či X. Každá metoda funguje pro každý typ účtu."
+      },
+      "ai-help": {
+        "title": "Pomoc AI",
+        "description": "Popište výdaje hlasem, naskenujte účtenky a získejte návrhy ve třech fázích: okamžité kontroly místního slovníku a historie, a pak engine podle vaší volby — superrychlý rozhodovací model System One (TypeSafe Jev), nebo pomalejší LLM s vyšší přesností. Oba se učí z vašich předchozích výdajů."
+      },
+      "data-portability": {
+        "title": "Import a export",
+        "description": "Přeneste si historii z CSV ze Splitwise, z bankovních výpisů CSV s průvodcem mapováním a detekcí duplicit, z Cospendu nebo z balíčků Spliit. Podpora Tricount a Settle Up je v plánu. Vše si zase vyvezete jako CSV, tisknutelné PDF reporty nebo úplné ZIP archivy včetně dokumentů."
+      },
+      "expenses-splits": {
+        "title": "Výdaje a chytré dělení",
+        "description": "Vytvářejte výdaje s kategoriemi, přílohami účtenek a pokročilým dělením — rovným dílem, podíly nebo procenty. V jednom výdaji může platit více lidí, řádkové položky se dělí jednotlivě a daň se spropitným se rozdělí poměrně do přesných podílů na osobu."
+      },
+      "fast-entry": {
+        "title": "Rychlé zadávání",
+        "description": "Uložte si šablony dělení na jedno klepnutí pro každou skupinu a použijte je na jakýkoli výdaj během chvilky. Počítejte rovnou v poli částky při zadávání — žádná samostatná kalkulačka není potřeba."
+      },
+      "groups-friends": {
+        "title": "Skupiny a přátelé",
+        "description": "Skutečné členství vás provází napříč zařízeními a každá úprava nese jméno autora. Veďte si průběžnou bilanci 1 na 1 s přítelem i mimo skupinu, nechte páry vyrovnat se jako jedna jednotka a hotové skupiny místo mazání archivujte do režimu jen pro čtení."
+      },
+      "offline-app": {
+        "title": "Instalovatelná aplikace",
+        "description": "Nainstalujte si Spliit jako aplikaci na jakékoli zařízení pro okamžité načítání a celoobrazovkový zážitek. Vaše skupiny zůstanou čitelné i bez připojení a nové výdaje se zařadí do fronty lokálně a po návratu se automaticky synchronizují. Širší offline úpravy jsou v plánu."
+      },
+      "share-identity": {
+        "title": "Pozvánky a identita skupiny",
+        "description": "Zvěte lidi, jak vám to vyhovuje: sdílecím odkazem, e-mailovou pozvánkou, nebo víceúčelovou QR relací s připojením naskenováním na mobilu. Dejte každé skupině vlastní emoji, barvy a seznam členů."
+      },
+      "activity": {
+        "title": "Aktivita a historie",
+        "description": "Sledujte každou skupinu s časovou osou „Pro vás“, historií a komentáři u každého výdaje, filtrováním, řazením a vyhledáváním v archivovaných skupinách."
+      },
+      "developers": {
+        "title": "API, MCP a OAuth",
+        "description": "Dokumentace OpenAPI a Scalar, asistent MCP a delegované scopy OAuth 2.1.",
+        "action": "Zobrazit dokumentaci API"
+      },
+      "notifications": {
+        "title": "Oznámení",
+        "description": "Dostávejte novinky o skupinách a výdajích e-mailem nebo push notifikacemi, s předvolbami kategorií pro každého uživatele, takže si míru upozornění volí každý sám.",
+        "action": "Nastavení oznámení"
+      },
+      "open-source": {
+        "title": "Otevřený kód",
+        "description": "Celý zdrojový kód je otevřený ke kontrole i příspěvkům, s možností vlastního hostování pro soukromé instance.",
+        "action": "Zobrazit na GitHubu"
+      },
+      "webhooks": {
+        "title": "Webhooky",
+        "description": "Podepsané odchozí události s opakovanými pokusy o doručení, takže vaše systémy zůstanou synchronizované s každou změnou.",
+        "action": "Spravovat webhooky"
+      },
+      "bulk-categorize": {
+        "title": "Hromadná kategorizace",
+        "description": "Kategorizujte hromadně importované výdaje pomocí rozhodovacího modelu System One, jako je TypeSafe Jev, s využitím historie vaší skupiny a zkontrolovaných voleb jako nápovědy. Každý návrh před použitím ukáže míru své jistoty."
+      },
+      "data-security": {
+        "title": "Zálohy a obnova",
+        "description": "Vaše data jsou uložena ve spravované databázi PostgreSQL s průběžně obměňovanými zálohami, které se 30 dní uchovávají v odděleném S3 bucketu mimo produkční server. I kdyby produkci potkalo něco zlého, obnova je jednoduchá."
       }
     },
     "cta": {
@@ -4749,26 +4753,9 @@
       "description": "Vytvořte si účet zdarma — anonymně, bez e-mailu — a vaše skupiny se synchronizují napříč zařízeními.",
       "action": "Začít"
     },
-    "demo": {
-      "eyebrow": "Interaktivní demo",
-      "splitSettle": {
-        "title": "Vizualizér dělení a vyrovnání",
-        "description": "Změňte částku, plátce nebo podíly a sledujte, jak se zůstatky a minimální splátky aktualizují živě. Toto demo běží celé ve vašem prohlížeči — účet není potřeba.",
-        "amountLabel": "Částka výdaje",
-        "payerLabel": "Plátce",
-        "modeLabel": "Režim dělení",
-        "modeEqual": "Rovným dílem",
-        "modeCustom": "Vlastní",
-        "balancesTitle": "Zůstatky",
-        "settlementsTitle": "Navrhované splátky",
-        "settledLabel": "Všichni jsou vyrovnaní — nejsou potřeba žádné splátky.",
-        "comingTitle": "Další dema přijdou",
-        "comingDescription": "Kalkulačka částky, převod měn a průvodci se tu objeví příště."
-      }
-    },
     "hero": {
       "title": "Vše, co potřebujete k dělení výdajů",
-      "description": "Od anonymního přihlášení po hromadné AI nástroje: vyzkoušejte níže demo vyrovnání a pak procházejte plný katalog. Nová interaktivní dema tu budou přibývat jedno po druhém."
+      "description": "Od přihlášení po otevřenou platformu: níže procházejte celý katalog. Každá karta obsahuje statickou ilustraci funkce."
     },
     "sections": {
       "developers": {

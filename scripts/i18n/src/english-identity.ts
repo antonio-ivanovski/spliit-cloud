@@ -98,10 +98,24 @@ const LOCALE_COGNATES = new Set([
   'pt:Emoji',
   'ro:Emoji',
   'sv-SE:Emoji',
-  // "API, MCP, OAuth & webhooks" is acronyms plus a loanword with identical
-  // spelling in Dutch and Swedish — the correct native form, not a placeholder.
-  'nl-NL:API, MCP, OAuth & webhooks',
-  'sv-SE:API, MCP, OAuth & webhooks',
+  // "API, MCP & OAuth" is acronyms plus a proper noun with identical spelling
+  // in some locales — the correct native form, not a placeholder.
+  'id:API, MCP & OAuth',
+  'vi:API, MCP & OAuth',
+  // "Webhooks" is the established plural loanword in German and Dutch tech
+  // UI, already used across committed keys in both locales.
+  'de-DE:Webhooks',
+  'nl-NL:Webhooks',
+  // "Webhooks" is the standard plural loanword in these locales.
+  'ca:Webhooks',
+  'es:Webhooks',
+  'pt:Webhooks',
+  'fr-FR:Webhooks',
+  // "Notifications" is the correct French spelling, identical to English.
+  'fr-FR:Notifications',
+  // "Open source" is used as a loanword title label in French and Italian.
+  'fr-FR:Open source',
+  'it-IT:Open source',
 ])
 
 export function isAllowedLocaleCognate(
