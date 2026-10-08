@@ -121,6 +121,23 @@ describe('HomePage (signed-out)', () => {
     )
   })
 
+  it('links the signed-out landing to the features page', () => {
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: null,
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(<HomePage />)
+
+    expect(screen.getByTestId('landing-features-link')).toHaveAttribute(
+      'href',
+      '/features',
+    )
+  })
+
   it('shows AuthPanel / sign-in card', () => {
     vi.mocked(useCurrentAccount).mockReturnValue({
       data: null,

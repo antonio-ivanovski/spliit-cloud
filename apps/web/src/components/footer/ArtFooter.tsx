@@ -63,6 +63,9 @@ export function ArtFooter({ hiddenOnMobile }: { hiddenOnMobile: boolean }) {
             <Link to="/imprint" className="art-footer__link">
               {t('Footer.imprint')}
             </Link>
+            <Link to="/features" className="art-footer__link">
+              {t('Footer.features')}
+            </Link>
             <Link to="/feedback" className="art-footer__link">
               {t('Feedback.navigationLabel')}
             </Link>

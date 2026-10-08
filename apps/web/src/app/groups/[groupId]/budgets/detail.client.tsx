@@ -25,6 +25,7 @@ import { ExpenseCard } from '@/app/groups/[groupId]/expenses/expense-card'
 import { useGroupAccessSearch } from '@/app/groups/[groupId]/use-group-access-search'
 import { DeletePopup } from '@/components/delete-popup'
 import { EditButton } from '@/components/edit-button'
+import { NotFoundPage } from '@/components/not-found-page'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -247,7 +248,17 @@ export function BudgetDetailModal({
             )}
             {!useOfflineSource &&
               !budgetQuery.isLoading &&
-              budgetQuery.error && (
+              budgetQuery.error &&
+              (budgetQuery.error.data?.code === 'NOT_FOUND' ? (
+                <NotFoundPage
+                  variant="plain"
+                  title={tCommon('NotFoundPage.budgetTitle')}
+                  description={tCommon('NotFoundPage.budgetDescription')}
+                  showHomeLink={false}
+                  backLabel={tCommon('Common.close')}
+                  onBack={onClose}
+                />
+              ) : (
                 <div className="flex flex-col items-start gap-3">
                   <p role="alert" className="text-sm text-destructive">
                     {budgetQuery.error.message}
@@ -262,7 +273,7 @@ export function BudgetDetailModal({
                     {t('retry')}
                   </Button>
                 </div>
-              )}
+              ))}
             {budget && period && currency && (
               <>
                 <div className="space-y-3">

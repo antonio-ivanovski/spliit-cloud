@@ -64,7 +64,8 @@
       "foreignDescription": "Es öffnet {origin} in diesem Browser. Fahre nur fort, wenn du der Person vertraust, die ihn gezeigt hat.",
       "foreignConfirm": "Link öffnen",
       "foreignCancel": "Zurück"
-    }
+    },
+    "viewFeatures": "Funktionen entdecken"
   },
   "Header": {
     "signIn": "Anmelden",
@@ -89,7 +90,8 @@
     "imprint": "Impressum",
     "sponsor": "Sponsoring",
     "timeLabel": "Tageszeit",
-    "status": "Status"
+    "status": "Status",
+    "features": "Funktionen"
   },
   "Expenses": {
     "title": "Ausgaben",
@@ -4675,5 +4677,149 @@
     "latest": "Was ist neu",
     "viewAll": "Alle Neuigkeiten anzeigen",
     "dismiss": "Verstanden"
+  },
+  "Features": {
+    "catalogLabel": "Gesamtkatalog",
+    "catalog": {
+      "activity": {
+        "title": "Aktivitäten, Kommentare & Suche",
+        "description": "Verlauf und Kommentare pro Ausgabe, Für-dich-Timeline, Filter, Sortierung und Suche in archivierten Gruppen."
+      },
+      "ai-assist": {
+        "title": "KI-gestützte Ausgaben",
+        "description": "Lokales Wörterbuch plus Gruppenverlauf plus eine KI-Engine; scanne Belege und beschreibe Ausgaben per Sprache."
+      },
+      "anonymous-accounts": {
+        "title": "Anonyme Konten",
+        "description": "Starte mit wenigen Klicks und nur einem Anzeigenamen — ganz ohne E-Mail oder Social Login. Stelle den Zugang per Link oder Passkey wieder her."
+      },
+      "archive": {
+        "title": "Archivieren & löschen",
+        "description": "Archiviere Gruppen, um sie schreibgeschützt zu machen, oder lösche sie endgültig, wenn du fertig bist."
+      },
+      "balances": {
+        "title": "Salden & Ausgleiche",
+        "description": "Klare Zahlungsrichtung, schneller Ausgleich, zusammengefasste Zahlungen und Untergruppen wie Paare."
+      },
+      "bulk-categorize": {
+        "title": "KI-Kategorisierung im Stapel",
+        "description": "Führe die KI-Kategorisierung für viele Ausgaben auf einmal aus — ideal nach einem Import."
+      },
+      "calculator": {
+        "title": "Betragsrechner",
+        "description": "Schnelles Rechnen direkt im Betragsfeld beim Erfassen von Ausgaben."
+      },
+      "core-expenses": {
+        "title": "Ausgaben, Belege & Splits",
+        "description": "Gruppen, Kategorien, Beleganhänge, erweiterte Aufteilungen und ein werbefreies PWA-Erlebnis."
+      },
+      "currency": {
+        "title": "Mehrere Währungen & Krypto",
+        "description": "Serverseitige Umrechnung, exakte Betragsüberschreibung mit angezeigtem implizitem Kurs sowie Unterstützung für Kryptowährungen."
+      },
+      "developers": {
+        "title": "API, MCP, OAuth & Webhooks",
+        "description": "OpenAPI plus Scalar-Docs, MCP-Assistent, delegierte OAuth-2.1-Scopes und signierte ausgehende Webhooks."
+      },
+      "export": {
+        "title": "Export & Berichte",
+        "description": "CSV, druckbare PDF-Berichte sowie vollständige Gruppen- oder Konto-ZIP-Archive inklusive Dokumente."
+      },
+      "identity": {
+        "title": "Gruppenidentität & Links",
+        "description": "Emoji und Farben, öffentliche schreibgeschützte Links, Aufteilungsvorlagen und Mitgliederverwaltung."
+      },
+      "import": {
+        "title": "Alles importieren",
+        "description": "Splitwise-CSV, Kontoauszugs-CSVs mit Zuordnungsassistent und Duplikaterkennung, Cospend und Spliit-Bundles."
+      },
+      "multi-payer": {
+        "title": "Mehrere Zahler & Aufteilung nach Artikeln",
+        "description": "Mehrere Zahler, Einzelpositionen, Steuern und Trinkgeld sowie präzise Anteile pro Person in einer Ausgabe."
+      },
+      "notifications": {
+        "title": "E-Mail- & Push-Benachrichtigungen",
+        "description": "Gruppen- und Ausgaben-Updates per E-Mail oder Push, mit Kategorieeinstellungen pro Person."
+      },
+      "passkeys-security": {
+        "title": "Passkeys & Sicherheit",
+        "description": "Passwortlose Anmeldung für jeden Kontotyp, Backup-Anmeldeoption und Einladungsmodus für private Instanzen."
+      },
+      "qr-sharing": {
+        "title": "QR-Einladungen in der Nähe",
+        "description": "Mehrfach verwendbare 15-Minuten-QR-Sitzungen mit Beitritt per Scan auf dem Handy."
+      },
+      "recurring": {
+        "title": "Langlebige wiederkehrende Ausgaben",
+        "description": "Echte Serien mit Intervallen, Enddaten, Nachholung, Wiederholungen, Vorschau und explizitem Stoppen, Bearbeiten und Löschen."
+      },
+      "stats-budgets": {
+        "title": "Statistiken, Diagramme & Budgets",
+        "description": "Ausgabendiagramme, monatliche Kategorieansichten, gruppenübergreifende Auswertung und Budgets mit Warnung bei Überschreitung."
+      },
+      "synced-groups": {
+        "title": "Synchronisierte Gruppen & Freunde",
+        "description": "Gruppen folgen dir über Geräte hinweg mit echter Mitgliedschaft, 1:1-Freundekonten und nachvollziehbaren Bearbeitungen."
+      }
+    },
+    "cta": {
+      "title": "Bereit, es mit deiner Gruppe auszuprobieren?",
+      "description": "Erstelle ein kostenloses Konto — anonym, ganz ohne E-Mail — und deine Gruppen synchronisieren sich über alle Geräte.",
+      "action": "Jetzt starten"
+    },
+    "demo": {
+      "eyebrow": "Interaktive Demo",
+      "splitSettle": {
+        "title": "Split- und Ausgleichsvisualisierung",
+        "description": "Ändere Betrag, Zahler oder Anteile und beobachte live, wie sich Salden und minimale Rückzahlungen aktualisieren. Diese Demo läuft komplett in deinem Browser — ganz ohne Konto.",
+        "amountLabel": "Ausgabenbetrag",
+        "payerLabel": "Gezahlt von",
+        "modeLabel": "Aufteilungsmodus",
+        "modeEqual": "Gleichmäßig",
+        "modeCustom": "Benutzerdefiniert",
+        "balancesTitle": "Salden",
+        "settlementsTitle": "Vorgeschlagene Rückzahlungen",
+        "settledLabel": "Alle sind ausgeglichen — keine Rückzahlungen nötig.",
+        "comingTitle": "Weitere Demos folgen",
+        "comingDescription": "Betragsrechner, Währungsumrechnung und geführte Touren erscheinen als Nächstes hier."
+      }
+    },
+    "hero": {
+      "title": "Alles, was du zum Aufteilen von Ausgaben brauchst",
+      "description": "Von der anonymen Anmeldung bis zu Stapel-KI-Tools: Probiere unten die Ausgleichs-Demo aus und stöbere dann im Gesamtkatalog. Neue interaktive Demos erscheinen hier nach und nach."
+    },
+    "sections": {
+      "developers": {
+        "title": "Entwickler & Benachrichtigungen"
+      },
+      "everyday": {
+        "title": "Alltägliche Ausgaben"
+      },
+      "foundation": {
+        "title": "Konten & Synchronisierung"
+      },
+      "insights": {
+        "title": "Einblicke & Budgets"
+      },
+      "power": {
+        "title": "Power-Tools & Stapel"
+      },
+      "sharing": {
+        "title": "Teilen & Identität"
+      }
+    }
+  },
+  "NotFoundPage": {
+    "title": "Seite nicht gefunden",
+    "description": "Die Seite, die du suchst, existiert nicht oder wurde verschoben.",
+    "goHome": "Zur Startseite",
+    "goBack": "Zurück",
+    "expenseTitle": "Ausgabe nicht gefunden",
+    "expenseDescription": "Diese Ausgabe existiert nicht oder wurde gelöscht.",
+    "budgetTitle": "Budget nicht gefunden",
+    "budgetDescription": "Dieses Budget existiert nicht oder wurde gelöscht.",
+    "errorTitle": "Etwas ist schiefgelaufen",
+    "errorDescription": "Ein unerwarteter Fehler ist aufgetreten. Versuche es erneut oder kehre zur Startseite zurück.",
+    "retry": "Erneut versuchen"
   }
 }

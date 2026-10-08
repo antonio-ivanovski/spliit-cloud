@@ -64,7 +64,8 @@
       "foreignDescription": "Cela ouvrira {origin} dans ce navigateur. Ne continuez que si vous faites confiance à l'hôte qui vous l'a montré.",
       "foreignConfirm": "Ouvrir le lien",
       "foreignCancel": "Retour"
-    }
+    },
+    "viewFeatures": "Explorer les fonctionnalités"
   },
   "Header": {
     "signIn": "Se connecter",
@@ -89,7 +90,8 @@
     "imprint": "Mentions légales",
     "sponsor": "Soutenir",
     "timeLabel": "Moment de la journée",
-    "status": "Statut"
+    "status": "Statut",
+    "features": "Fonctionnalités"
   },
   "Expenses": {
     "title": "Dépenses",
@@ -4633,5 +4635,149 @@
     "latest": "Nouveautés",
     "viewAll": "Voir toutes les mises à jour",
     "dismiss": "Compris"
+  },
+  "Features": {
+    "catalogLabel": "Catalogue complet",
+    "catalog": {
+      "activity": {
+        "title": "Activité, commentaires et recherche",
+        "description": "Historique et commentaires par dépense, fil Pour vous, filtrage, tri et recherche dans les groupes archivés."
+      },
+      "ai-assist": {
+        "title": "Dépenses assistées par IA",
+        "description": "Dictionnaire local plus historique du groupe plus un moteur IA ; scannez les reçus et décrivez les dépenses à la voix."
+      },
+      "anonymous-accounts": {
+        "title": "Comptes anonymes",
+        "description": "Commencez en quelques clics avec un simple pseudo, sans e-mail ni connexion sociale. Récupérez l'accès avec un lien ou une clé d'accès."
+      },
+      "archive": {
+        "title": "Archiver et supprimer",
+        "description": "Archivez les groupes pour les passer en lecture seule, ou supprimez-les définitivement quand vous avez terminé."
+      },
+      "balances": {
+        "title": "Soldes et règlements",
+        "description": "Sens de paiement clair, règlement rapide, paiements combinés et sous-unités comme les couples."
+      },
+      "bulk-categorize": {
+        "title": "Catégorisation IA en masse",
+        "description": "Lancez le catégoriseur IA sur de nombreuses dépenses à la fois — idéal après un import."
+      },
+      "calculator": {
+        "title": "Calculatrice de montant",
+        "description": "Des calculs rapides directement dans le champ du montant lors de la saisie des dépenses."
+      },
+      "core-expenses": {
+        "title": "Dépenses, reçus et partages",
+        "description": "Groupes, catégories, reçus joints, partages avancés et une PWA sans publicité."
+      },
+      "currency": {
+        "title": "Multidevise et crypto",
+        "description": "Conversion côté serveur, montants exacts avec taux implicite affiché et prise en charge des cryptomonnaies."
+      },
+      "developers": {
+        "title": "API, MCP, OAuth et webhooks",
+        "description": "Docs OpenAPI plus Scalar, assistant MCP, portées OAuth 2.1 déléguées et webhooks sortants signés."
+      },
+      "export": {
+        "title": "Export et rapports",
+        "description": "CSV, rapports PDF imprimables et archives ZIP complètes du groupe ou du compte, documents inclus."
+      },
+      "identity": {
+        "title": "Identité du groupe et liens",
+        "description": "Emoji et couleurs, liens publics en lecture seule, préréglages de partage et gestion des membres."
+      },
+      "import": {
+        "title": "Importez tout",
+        "description": "CSV Splitwise, CSV de relevés bancaires avec assistant de correspondance et détection des doublons, Cospend et paquets Spliit."
+      },
+      "multi-payer": {
+        "title": "Payeurs multiples et détaillé",
+        "description": "Plusieurs payeurs, lignes détaillées, taxes et pourboire, et parts précises par personne en une seule dépense."
+      },
+      "notifications": {
+        "title": "Notifications par e-mail et push",
+        "description": "Nouveautés du groupe et des dépenses par e-mail ou push, avec préférences par catégorie pour chaque utilisateur."
+      },
+      "passkeys-security": {
+        "title": "Clés d'accès et sécurité",
+        "description": "Connexion sans mot de passe pour tous les types de compte, option de connexion de secours et mode sur invitation pour les instances privées."
+      },
+      "qr-sharing": {
+        "title": "Invitations QR à proximité",
+        "description": "Sessions QR réutilisables de 15 minutes avec participation par scan sur mobile."
+      },
+      "recurring": {
+        "title": "Dépenses récurrentes durables",
+        "description": "Vraies séries avec intervalles, fins, rattrapage, nouvelles tentatives, aperçus et arrêt, modification ou suppression explicites."
+      },
+      "stats-budgets": {
+        "title": "Stats, graphiques et budgets",
+        "description": "Graphiques de dépenses, visuels mensuels par catégorie, synthèse intergroupes et budgets avec alertes de dépassement."
+      },
+      "synced-groups": {
+        "title": "Groupes et proches synchronisés",
+        "description": "Vos groupes vous suivent sur tous les appareils avec une vraie appartenance, des registres individuels avec vos proches et des modifications attribuées."
+      }
+    },
+    "cta": {
+      "title": "Prêt à l'essayer avec votre groupe ?",
+      "description": "Créez un compte gratuit — anonyme, sans e-mail — et vos groupes se synchronisent sur tous les appareils.",
+      "action": "Commencer"
+    },
+    "demo": {
+      "eyebrow": "Démo interactive",
+      "splitSettle": {
+        "title": "Visualiseur de partage + règlement",
+        "description": "Modifiez le montant, le payeur ou les parts et voyez les soldes et les règlements minimaux se mettre à jour en direct. Cette démo tourne entièrement dans votre navigateur — sans compte.",
+        "amountLabel": "Montant de la dépense",
+        "payerLabel": "Payé par",
+        "modeLabel": "Mode de partage",
+        "modeEqual": "Parts égales",
+        "modeCustom": "Personnalisé",
+        "balancesTitle": "Soldes",
+        "settlementsTitle": "Règlements suggérés",
+        "settledLabel": "Tout est réglé — aucun règlement nécessaire.",
+        "comingTitle": "D'autres démos arrivent",
+        "comingDescription": "La calculatrice de montant, la conversion de devises et les visites guidées apparaîtront ici prochainement."
+      }
+    },
+    "hero": {
+      "title": "Tout ce qu'il faut pour partager vos dépenses",
+      "description": "De la connexion anonyme aux outils IA en masse : essayez la démo de règlement ci-dessous, puis parcourez le catalogue complet. De nouvelles démos interactives arrivent une par une."
+    },
+    "sections": {
+      "developers": {
+        "title": "Développeurs et notifications"
+      },
+      "everyday": {
+        "title": "Dépenses quotidiennes"
+      },
+      "foundation": {
+        "title": "Comptes et synchronisation"
+      },
+      "insights": {
+        "title": "Analyses et budgets"
+      },
+      "power": {
+        "title": "Outils avancés et en lot"
+      },
+      "sharing": {
+        "title": "Partage et identité"
+      }
+    }
+  },
+  "NotFoundPage": {
+    "title": "Page introuvable",
+    "description": "La page que vous recherchez n'existe pas ou a été déplacée.",
+    "goHome": "Aller à l'accueil",
+    "goBack": "Retour",
+    "expenseTitle": "Dépense introuvable",
+    "expenseDescription": "Cette dépense n'existe pas ou a été supprimée.",
+    "budgetTitle": "Budget introuvable",
+    "budgetDescription": "Ce budget n'existe pas ou a été supprimé.",
+    "errorTitle": "Une erreur s'est produite",
+    "errorDescription": "Une erreur inattendue s'est produite. Veuillez réessayer ou retourner à l'accueil.",
+    "retry": "Réessayer"
   }
 }

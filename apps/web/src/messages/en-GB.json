@@ -166,5 +166,19 @@
         "color": "Colour"
       }
     }
+  },
+  "Features": {
+    "catalog": {
+      "bulk-categorize": {
+        "title": "Bulk AI categorisation",
+        "description": "Run the AI categoriser across many expenses at once — ideal after an import."
+      },
+      "identity": {
+        "description": "Emoji and colours, public view-only links, split presets, and member management."
+      },
+      "multi-payer": {
+        "title": "Multiple payers & itemised"
+      }
+    }
   }
 }

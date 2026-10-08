@@ -64,7 +64,8 @@
       "foreignDescription": "V tomto prohlížeči se otevře {origin}. Pokračujte, pouze pokud důvěřujete hostiteli, který vám kód ukázal.",
       "foreignConfirm": "Otevřít odkaz",
       "foreignCancel": "Zpět"
-    }
+    },
+    "viewFeatures": "Prozkoumat funkce"
   },
   "Header": {
     "signIn": "Přihlásit se",
@@ -89,7 +90,8 @@
     "imprint": "Podrobnosti o projektu",
     "sponsor": "Sponzor",
     "timeLabel": "Denní doba",
-    "status": "Stav"
+    "status": "Stav",
+    "features": "Funkce"
   },
   "Expenses": {
     "title": "Výdaje",
@@ -4657,5 +4659,149 @@
     "latest": "Co je nového",
     "viewAll": "Zobrazit všechny novinky",
     "dismiss": "Rozumím"
+  },
+  "Features": {
+    "catalogLabel": "Plný katalog",
+    "catalog": {
+      "activity": {
+        "title": "Aktivita, komentáře a vyhledávání",
+        "description": "Historie a komentáře u každého výdaje, časová osa Pro vás, filtrování, řazení a vyhledávání v archivovaných skupinách."
+      },
+      "ai-assist": {
+        "title": "Výdaje s pomocí AI",
+        "description": "Místní slovník plus historie skupiny plus jeden AI engine; skenujte účtenky a popisujte výdaje hlasem."
+      },
+      "anonymous-accounts": {
+        "title": "Anonymní účty",
+        "description": "Začněte na pár kliknutí jen s přezdívkou — bez e-mailu i přihlášení přes sítě. Obnovení odkazem nebo passkey."
+      },
+      "archive": {
+        "title": "Archivace a smazání",
+        "description": "Archivujte skupiny, aby byly jen ke čtení, nebo je trvale smažte, až už je nebudete potřebovat."
+      },
+      "balances": {
+        "title": "Zůstatky a vyrovnání",
+        "description": "Jasný směr plateb, rychlé vyrovnání, sloučené platby a jednotky podskupin, třeba páry."
+      },
+      "bulk-categorize": {
+        "title": "Hromadná AI kategorizace",
+        "description": "Spusťte AI kategorizaci na mnoha výdajích najednou — ideální po importu."
+      },
+      "calculator": {
+        "title": "Kalkulačka částky",
+        "description": "Rychlé počty přímo v poli částky při zadávání výdajů."
+      },
+      "core-expenses": {
+        "title": "Výdaje, účtenky a dělení",
+        "description": "Skupiny, kategorie, přílohy účtenek, pokročilé dělení a PWA bez reklam."
+      },
+      "currency": {
+        "title": "Více měn a krypto",
+        "description": "Převod na serveru, přepsání přesné částky se zobrazeným výsledným kurzem a podpora kryptoměn."
+      },
+      "developers": {
+        "title": "API, MCP, OAuth a webhooky",
+        "description": "Dokumentace OpenAPI a Scalar, asistent MCP, delegované OAuth 2.1 scopy a podepsané odchozí webhooky."
+      },
+      "export": {
+        "title": "Export a reporty",
+        "description": "CSV, tisknutelné PDF reporty a plné ZIP archivy skupiny nebo účtu včetně dokumentů."
+      },
+      "identity": {
+        "title": "Identita skupiny a odkazy",
+        "description": "Emoji a barvy, veřejné odkazy jen ke čtení, předvolby dělení a správa členů."
+      },
+      "import": {
+        "title": "Import čehokoli",
+        "description": "CSV ze Splitwise, bankovní výpisy CSV s průvodcem mapováním a detekcí duplicit, Cospend a balíčky Spliit."
+      },
+      "multi-payer": {
+        "title": "Více plátců a podle položek",
+        "description": "Více plátců, položky, daně a spropitné a přesné podíly každého v jednom výdaji."
+      },
+      "notifications": {
+        "title": "E-mailová a push oznámení",
+        "description": "Aktualizace skupin a výdajů e-mailem nebo push, s preferencemi kategorií pro každého uživatele."
+      },
+      "passkeys-security": {
+        "title": "Passkeys a zabezpečení",
+        "description": "Přihlášení bez hesla pro každý typ účtu, záložní způsob přihlášení a režim jen na pozvánky pro soukromé instance."
+      },
+      "qr-sharing": {
+        "title": "QR pozvánky v okolí",
+        "description": "Opakovaně použitelné 15minutové QR relace s připojením naskenováním na mobilu."
+      },
+      "recurring": {
+        "title": "Odolné opakované výdaje",
+        "description": "Skutečné série s intervaly, ukončením, doháněním, opakováním, náhledy a explicitním zastavením, úpravou a smazáním."
+      },
+      "stats-budgets": {
+        "title": "Statistiky, grafy a rozpočty",
+        "description": "Grafy útrat, měsíční vizualizace kategorií, souhrn napříč skupinami a rozpočty s upozorněním na překročení."
+      },
+      "synced-groups": {
+        "title": "Synchronizované skupiny a přátelé",
+        "description": "Skupiny vás následují napříč zařízeními, se skutečným členstvím, přehledy s přáteli 1 na 1 a přiřaditelnými úpravami."
+      }
+    },
+    "cta": {
+      "title": "Chcete to vyzkoušet se svou skupinou?",
+      "description": "Vytvořte si účet zdarma — anonymně, bez e-mailu — a vaše skupiny se synchronizují napříč zařízeními.",
+      "action": "Začít"
+    },
+    "demo": {
+      "eyebrow": "Interaktivní demo",
+      "splitSettle": {
+        "title": "Vizualizér dělení a vyrovnání",
+        "description": "Změňte částku, plátce nebo podíly a sledujte, jak se zůstatky a minimální splátky aktualizují živě. Toto demo běží celé ve vašem prohlížeči — účet není potřeba.",
+        "amountLabel": "Částka výdaje",
+        "payerLabel": "Plátce",
+        "modeLabel": "Režim dělení",
+        "modeEqual": "Rovným dílem",
+        "modeCustom": "Vlastní",
+        "balancesTitle": "Zůstatky",
+        "settlementsTitle": "Navrhované splátky",
+        "settledLabel": "Všichni jsou vyrovnaní — nejsou potřeba žádné splátky.",
+        "comingTitle": "Další dema přijdou",
+        "comingDescription": "Kalkulačka částky, převod měn a průvodci se tu objeví příště."
+      }
+    },
+    "hero": {
+      "title": "Vše, co potřebujete k dělení výdajů",
+      "description": "Od anonymního přihlášení po hromadné AI nástroje: vyzkoušejte níže demo vyrovnání a pak procházejte plný katalog. Nová interaktivní dema tu budou přibývat jedno po druhém."
+    },
+    "sections": {
+      "developers": {
+        "title": "Vývojáři a oznámení"
+      },
+      "everyday": {
+        "title": "Každodenní výdaje"
+      },
+      "foundation": {
+        "title": "Účty a synchronizace"
+      },
+      "insights": {
+        "title": "Přehledy a rozpočty"
+      },
+      "power": {
+        "title": "Výkonné nástroje a hromadně"
+      },
+      "sharing": {
+        "title": "Sdílení a identita"
+      }
+    }
+  },
+  "NotFoundPage": {
+    "title": "Stránka nenalezena",
+    "description": "Stránka, kterou hledáte, neexistuje nebo byla přesunuta.",
+    "goHome": "Přejít na domovskou stránku",
+    "goBack": "Zpět",
+    "expenseTitle": "Výdaj nenalezen",
+    "expenseDescription": "Tento výdaj neexistuje nebo byl smazán.",
+    "budgetTitle": "Rozpočet nenalezen",
+    "budgetDescription": "Tento rozpočet neexistuje nebo byl smazán.",
+    "errorTitle": "Něco se pokazilo",
+    "errorDescription": "Došlo k neočekávané chybě. Zkuste to znovu, nebo přejděte na domovskou stránku.",
+    "retry": "Zkusit znovu"
   }
 }

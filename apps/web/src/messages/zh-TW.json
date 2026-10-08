@@ -64,7 +64,8 @@
       "foreignDescription": "將在此瀏覽器中開啟 {origin}。只有在信任出示該代碼的主辦者時才能繼續。",
       "foreignConfirm": "開啟連結",
       "foreignCancel": "返回"
-    }
+    },
+    "viewFeatures": "探索功能"
   },
   "Header": {
     "signIn": "登入",
@@ -89,7 +90,8 @@
     "imprint": "專案聲明",
     "sponsor": "贊助",
     "timeLabel": "一天中的時間",
-    "status": "狀態"
+    "status": "狀態",
+    "features": "功能"
   },
   "Expenses": {
     "title": "消費",
@@ -4584,5 +4586,149 @@
     "latest": "最新消息",
     "viewAll": "查看所有更新",
     "dismiss": "知道了"
+  },
+  "Features": {
+    "catalogLabel": "完整目錄",
+    "catalog": {
+      "activity": {
+        "title": "動態、留言與搜尋",
+        "description": "按筆支出的歷史記錄與留言、為你推薦的時間軸、篩選、排序，以及已封存群組搜尋。"
+      },
+      "ai-assist": {
+        "title": "AI 輔助記帳",
+        "description": "本地詞典加上群組歷史再加一個 AI 引擎；可掃描收據，也能用語音描述支出。"
+      },
+      "anonymous-accounts": {
+        "title": "匿名帳號",
+        "description": "只需顯示名稱，點幾下即可開始 — 不需電子郵件或社群登入。用連結或通行金鑰即可復原。"
+      },
+      "archive": {
+        "title": "封存與刪除",
+        "description": "將群組封存設為唯讀，或在完成後將其永久刪除。"
+      },
+      "balances": {
+        "title": "餘額與結算",
+        "description": "清楚的付款方向、快速結算、合併付款，以及情侶等子群組單位。"
+      },
+      "bulk-categorize": {
+        "title": "批次 AI 分類",
+        "description": "對多筆支出一次執行 AI 分類 — 特別適合匯入之後使用。"
+      },
+      "calculator": {
+        "title": "金額計算機",
+        "description": "在輸入支出時，直接在金額欄中快速計算。"
+      },
+      "core-expenses": {
+        "title": "支出、收據與分攤",
+        "description": "群組、分類、收據附件、進階分攤，以及無廣告的 PWA 體驗。"
+      },
+      "currency": {
+        "title": "多幣別與加密貨幣",
+        "description": "伺服器端換算、顯示隱含匯率的精確金額覆寫，以及加密貨幣支援。"
+      },
+      "developers": {
+        "title": "API、MCP、OAuth 與 Webhook",
+        "description": "OpenAPI 加 Scalar 文件、MCP 助手、可委派的 OAuth 2.1 權限，以及帶簽章的對外 Webhook。"
+      },
+      "export": {
+        "title": "匯出與報告",
+        "description": "CSV、可列印的 PDF 報告，以及包含文件的完整群組或帳號 ZIP 封存。"
+      },
+      "identity": {
+        "title": "群組形象與連結",
+        "description": "表情符號與色彩、公開唯讀連結、分攤預設，以及成員管理。"
+      },
+      "import": {
+        "title": "匯入所有內容",
+        "description": "支援 Splitwise CSV、具對應精靈和重複偵測的銀行對帳單 CSV、Cospend 和 Spliit 資料包。"
+      },
+      "multi-payer": {
+        "title": "多位付款人與明細分攤",
+        "description": "支援多位付款人、項目明細、稅金與小費，在一筆支出中算清每人應分攤金額。"
+      },
+      "notifications": {
+        "title": "電子郵件與推播通知",
+        "description": "透過電子郵件或推播傳送群組與支出更新，並支援按使用者設定分類偏好。"
+      },
+      "passkeys-security": {
+        "title": "通行金鑰與安全性",
+        "description": "所有帳號類型均可免密碼登入、備用登入方式，以及面向私人實例的僅邀請模式。"
+      },
+      "qr-sharing": {
+        "title": "附近 QR 碼邀請",
+        "description": "15 分鐘內可多次使用的 QR 碼工作階段，在手機上掃碼即可加入。"
+      },
+      "recurring": {
+        "title": "穩定的週期性支出",
+        "description": "真正的序列：支援間隔、結束、補記、重試、預覽，以及明確的停止／編輯／刪除。"
+      },
+      "stats-budgets": {
+        "title": "統計、圖表與預算",
+        "description": "支出圖表、按月分類檢視、跨群組彙總，以及附超支提醒的預算。"
+      },
+      "synced-groups": {
+        "title": "同步群組與好友",
+        "description": "群組跟著你在裝置間同步，具備真實成員關係、一對一好友帳本和可追溯的編輯。"
+      }
+    },
+    "cta": {
+      "title": "準備好和你的群組一起試試了嗎？",
+      "description": "建立免費帳號 — 匿名、不需電子郵件 — 你的群組將在裝置間同步。",
+      "action": "開始使用"
+    },
+    "demo": {
+      "eyebrow": "互動式示範",
+      "splitSettle": {
+        "title": "分攤與結算視覺化",
+        "description": "變更金額、付款人或分攤比例，即可即時查看餘額和最佳結算方案更新。此示範完全在瀏覽器中執行 — 不需要帳號。",
+        "amountLabel": "支出金額",
+        "payerLabel": "付款人",
+        "modeLabel": "分攤方式",
+        "modeEqual": "均攤",
+        "modeCustom": "自訂",
+        "balancesTitle": "餘額",
+        "settlementsTitle": "建議結算方案",
+        "settledLabel": "已全部結清 — 不需結算。",
+        "comingTitle": "更多示範即將到來",
+        "comingDescription": "金額計算機、貨幣換算和導覽教學將陸續顯示在這裡。"
+      }
+    },
+    "hero": {
+      "title": "分攤支出所需的一切",
+      "description": "從匿名登入到批次 AI 工具：先試用下面的結算示範，再瀏覽完整目錄。新的互動式示範將陸續上線。"
+    },
+    "sections": {
+      "developers": {
+        "title": "開發者與通知"
+      },
+      "everyday": {
+        "title": "日常支出"
+      },
+      "foundation": {
+        "title": "帳號與同步"
+      },
+      "insights": {
+        "title": "洞察與預算"
+      },
+      "power": {
+        "title": "效率工具與批次處理"
+      },
+      "sharing": {
+        "title": "分享與形象"
+      }
+    }
+  },
+  "NotFoundPage": {
+    "title": "找不到頁面",
+    "description": "您要尋找的頁面不存在或已被移動。",
+    "goHome": "返回首頁",
+    "goBack": "返回",
+    "expenseTitle": "找不到支出",
+    "expenseDescription": "這筆支出不存在或已被刪除。",
+    "budgetTitle": "找不到預算",
+    "budgetDescription": "這筆預算不存在或已被刪除。",
+    "errorTitle": "出了點問題",
+    "errorDescription": "發生未預期的錯誤，請再試一次或返回首頁。",
+    "retry": "重試"
   }
 }

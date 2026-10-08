@@ -2062,7 +2062,8 @@
     "imprint": "Projektinformation",
     "sponsor": "Sponsra",
     "timeLabel": "Tid på dygnet",
-    "status": "Status"
+    "status": "Status",
+    "features": "Funktioner"
   },
   "ForgotPassword": {
     "title": "Återställ ditt lösenord",
@@ -2714,7 +2715,8 @@
       "foreignDescription": "Den öppnar {origin} i den här webbläsaren. Fortsätt bara om du litar på värden som visade den.",
       "foreignConfirm": "Öppna länk",
       "foreignCancel": "Gå tillbaka"
-    }
+    },
+    "viewFeatures": "Utforska funktioner"
   },
   "Information": {
     "title": "Information",
@@ -4599,5 +4601,149 @@
     "latest": "Nytt",
     "viewAll": "Visa alla uppdateringar",
     "dismiss": "Okej"
+  },
+  "Features": {
+    "catalogLabel": "Fullständig katalog",
+    "catalog": {
+      "activity": {
+        "title": "Aktivitet, kommentarer & sökning",
+        "description": "Historik och kommentarer per utgift, För-dig-tidslinje, filtrering, sortering och sökning i arkiverade grupper."
+      },
+      "ai-assist": {
+        "title": "AI-assisterade utgifter",
+        "description": "Lokal ordlista plus grupphistorik plus en AI-motor; skanna kvitton och beskriv utgifter med rösten."
+      },
+      "anonymous-accounts": {
+        "title": "Anonyma konton",
+        "description": "Kom igång med några klick och bara ett visningsnamn — ingen e-post eller social inloggning. Återställ med en länk eller passkey."
+      },
+      "archive": {
+        "title": "Arkivera & radera",
+        "description": "Arkivera grupper för att göra dem skrivskyddade, eller radera dem permanent när du är klar."
+      },
+      "balances": {
+        "title": "Saldon & regleringar",
+        "description": "Tydlig betalningsriktning, snabb reglering, kombinerade betalningar och undergrupper som par."
+      },
+      "bulk-categorize": {
+        "title": "AI-kategorisering i bulk",
+        "description": "Kör AI-kategoriseringen över många utgifter på en gång — perfekt efter en import."
+      },
+      "calculator": {
+        "title": "Beloppsräknare",
+        "description": "Snabb huvudräkning direkt i beloppsfältet när du lägger till utgifter."
+      },
+      "core-expenses": {
+        "title": "Utgifter, kvitton & uppdelningar",
+        "description": "Grupper, kategorier, kvittobilagor, avancerade uppdelningar och en annonsfri PWA-upplevelse."
+      },
+      "currency": {
+        "title": "Flera valutor & krypto",
+        "description": "Serverbaserad konvertering, exakta beloppsåsidosättningar med visad underförstådd kurs och stöd för kryptovalutor."
+      },
+      "developers": {
+        "title": "API, MCP, OAuth & webhooks",
+        "description": "OpenAPI plus Scalar-docs, MCP-assistent, delegerade OAuth 2.1-behörigheter och signerade utgående webhooks."
+      },
+      "export": {
+        "title": "Export & rapporter",
+        "description": "CSV, utskrivbara PDF-rapporter och fullständiga grupp- eller konto-ZIP-arkiv inklusive dokument."
+      },
+      "identity": {
+        "title": "Gruppidentitet & länkar",
+        "description": "Emoji och färger, offentliga skrivskyddade länkar, uppdelningsförval och medlemshantering."
+      },
+      "import": {
+        "title": "Importera vad som helst",
+        "description": "Splitwise-CSV, kontoutdrags-CSV:er med mappningsguide och dubblettidentifiering, Cospend och Spliit-paket."
+      },
+      "multi-payer": {
+        "title": "Flera betalare & radposter",
+        "description": "Flera betalare, radposter, skatt och dricks samt exakta andelar per person i en utgift."
+      },
+      "notifications": {
+        "title": "E-post- & pushnotiser",
+        "description": "Grupp- och utgiftsuppdateringar via e-post eller push, med kategoriinställningar per användare."
+      },
+      "passkeys-security": {
+        "title": "Passkeys & säkerhet",
+        "description": "Lösenordsfri inloggning för alla kontotyper, reservinloggning och inbjudningsläge för privata instanser."
+      },
+      "qr-sharing": {
+        "title": "QR-inbjudningar i närheten",
+        "description": "Återanvändbara 15-minuters QR-sessioner med skanna-för-att-gå-med på mobilen."
+      },
+      "recurring": {
+        "title": "Hållbara återkommande utgifter",
+        "description": "Äkta serier med intervall, slutdatum, ikappfångning, nya försök, förhandsvisningar och explicit stopp, redigering och radering."
+      },
+      "stats-budgets": {
+        "title": "Statistik, diagram & budgetar",
+        "description": "Utgiftsdiagram, månatliga kategorivyer, gruppgemensam sammanställning och budgetar med överträdelselarm."
+      },
+      "synced-groups": {
+        "title": "Synkade grupper & vänner",
+        "description": "Grupper följer dig mellan enheter med äkta medlemskap, 1-mot-1-vänsaldon och spårbara redigeringar."
+      }
+    },
+    "cta": {
+      "title": "Redo att testa med din grupp?",
+      "description": "Skapa ett gratis konto — anonymt, ingen e-post krävs — och dina grupper synkas mellan enheter.",
+      "action": "Kom igång"
+    },
+    "demo": {
+      "eyebrow": "Interaktiv demo",
+      "splitSettle": {
+        "title": "Split- och regleringsvisualisering",
+        "description": "Ändra belopp, betalare eller andelar och se saldon och minimala återbetalningar uppdateras live. Den här demon körs helt i din webbläsare — inget konto behövs.",
+        "amountLabel": "Utgiftsbelopp",
+        "payerLabel": "Betalad av",
+        "modeLabel": "Uppdelningsläge",
+        "modeEqual": "Lika",
+        "modeCustom": "Anpassad",
+        "balancesTitle": "Saldon",
+        "settlementsTitle": "Föreslagna återbetalningar",
+        "settledLabel": "Alla är reglerade — inga återbetalningar behövs.",
+        "comingTitle": "Fler demos på gång",
+        "comingDescription": "Beloppsräknare, valutakonvertering och guidade turer dyker upp härnäst."
+      }
+    },
+    "hero": {
+      "title": "Allt du behöver för att dela utgifter",
+      "description": "Från anonym inloggning till AI-verktyg i bulk: testa regleringsdemon nedan och bläddra sedan i hela katalogen. Nya interaktiva demos landar här en efter en."
+    },
+    "sections": {
+      "developers": {
+        "title": "Utvecklare & notiser"
+      },
+      "everyday": {
+        "title": "Vardagsutgifter"
+      },
+      "foundation": {
+        "title": "Konton & synk"
+      },
+      "insights": {
+        "title": "Insikter & budgetar"
+      },
+      "power": {
+        "title": "Kraftverktyg & bulk"
+      },
+      "sharing": {
+        "title": "Delning & identitet"
+      }
+    }
+  },
+  "NotFoundPage": {
+    "title": "Sidan hittades inte",
+    "description": "Sidan du letar efter finns inte eller har flyttats.",
+    "goHome": "Gå till startsidan",
+    "goBack": "Tillbaka",
+    "expenseTitle": "Utgiften hittades inte",
+    "expenseDescription": "Denna utgift finns inte eller har tagits bort.",
+    "budgetTitle": "Budgeten hittades inte",
+    "budgetDescription": "Denna budget finns inte eller har tagits bort.",
+    "errorTitle": "Något gick fel",
+    "errorDescription": "Ett oväntat fel uppstod. Försök igen eller gå tillbaka till startsidan.",
+    "retry": "Försök igen"
   }
 }

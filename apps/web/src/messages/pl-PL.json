@@ -64,7 +64,8 @@
       "foreignDescription": "W tej przeglądarce zostanie otwarty adres {origin}. Kontynuuj tylko wtedy, gdy ufasz osobie, która pokazała ten kod.",
       "foreignConfirm": "Otwórz link",
       "foreignCancel": "Wróć"
-    }
+    },
+    "viewFeatures": "Poznaj funkcje"
   },
   "Header": {
     "signIn": "Zaloguj się",
@@ -89,7 +90,8 @@
     "imprint": "Informacja o projekcie",
     "sponsor": "Sponsoring",
     "timeLabel": "Pora dnia",
-    "status": "Status"
+    "status": "Status",
+    "features": "Funkcje"
   },
   "Expenses": {
     "title": "Wydatki",
@@ -4657,5 +4659,149 @@
     "latest": "Co nowego",
     "viewAll": "Zobacz wszystkie aktualizacje",
     "dismiss": "Rozumiem"
+  },
+  "Features": {
+    "catalogLabel": "Pełny katalog",
+    "catalog": {
+      "activity": {
+        "title": "Aktywność, komentarze i wyszukiwanie",
+        "description": "Historia i komentarze do każdego wydatku, oś czasu Dla Ciebie, filtrowanie, sortowanie oraz wyszukiwanie w zarchiwizowanych grupach."
+      },
+      "ai-assist": {
+        "title": "Wydatki wspomagane przez AI",
+        "description": "Lokalny słownik plus historia grupy plus jeden silnik AI; skanuj paragony i opisuj wydatki głosowo."
+      },
+      "anonymous-accounts": {
+        "title": "Anonimowe konta",
+        "description": "Zacznij w kilku kliknięciach, podając tylko nazwę wyświetlaną — bez adresu e-mail i logowania społecznościowego. Odzyskaj dostęp linkiem lub kluczem passkey."
+      },
+      "archive": {
+        "title": "Archiwizacja i usuwanie",
+        "description": "Archiwizuj grupy, aby były tylko do odczytu, albo trwale je usuwaj, gdy są już niepotrzebne."
+      },
+      "balances": {
+        "title": "Salda i rozliczenia",
+        "description": "Jasny kierunek płatności, szybkie rozliczenie, łączone płatności oraz jednostki podgrup, takie jak pary."
+      },
+      "bulk-categorize": {
+        "title": "Masowa kategoryzacja AI",
+        "description": "Uruchom kategoryzator AI na wielu wydatkach naraz — idealne po imporcie."
+      },
+      "calculator": {
+        "title": "Kalkulator kwot",
+        "description": "Szybkie obliczenia bezpośrednio w polu kwoty podczas dodawania wydatków."
+      },
+      "core-expenses": {
+        "title": "Wydatki, paragony i podziały",
+        "description": "Grupy, kategorie, załączniki paragonów, zaawansowane podziały oraz korzystanie z PWA bez reklam."
+      },
+      "currency": {
+        "title": "Wiele walut i krypto",
+        "description": "Konwersja po stronie serwera, nadpisywanie dokładnych kwot z pokazanym kursem wynikowym oraz obsługa kryptowalut."
+      },
+      "developers": {
+        "title": "API, MCP, OAuth i webhooki",
+        "description": "Dokumentacja OpenAPI i Scalar, asystent MCP, delegowane zakresy OAuth 2.1 oraz podpisane wychodzące webhooki."
+      },
+      "export": {
+        "title": "Eksport i raporty",
+        "description": "Pliki CSV, raporty PDF do druku oraz pełne archiwa ZIP grupy lub konta, w tym dokumenty."
+      },
+      "identity": {
+        "title": "Tożsamość grupy i linki",
+        "description": "Emoji i kolory, publiczne linki tylko do odczytu, presety podziału oraz zarządzanie członkami."
+      },
+      "import": {
+        "title": "Importuj wszystko",
+        "description": "Pliki CSV ze Splitwise, wyciągi bankowe CSV z kreatorem mapowania i wykrywaniem duplikatów, Cospend oraz pakiety Spliit."
+      },
+      "multi-payer": {
+        "title": "Wielu płatników i pozycje",
+        "description": "Wielu płatników, pozycje, podatki i napiwki oraz precyzyjne udziały każdej osoby w jednym wydatku."
+      },
+      "notifications": {
+        "title": "Powiadomienia e-mail i push",
+        "description": "Powiadomienia o grupach i wydatkach e-mailem lub push, z preferencjami kategorii dla każdego użytkownika."
+      },
+      "passkeys-security": {
+        "title": "Klucze passkey i bezpieczeństwo",
+        "description": "Logowanie bez hasła dla każdego typu konta, zapasowa metoda logowania oraz tryb tylko na zaproszenia dla prywatnych instancji."
+      },
+      "qr-sharing": {
+        "title": "Zaproszenia QR w pobliżu",
+        "description": "Wielokrotne 15-minutowe sesje QR z dołączaniem przez skanowanie na telefonie."
+      },
+      "recurring": {
+        "title": "Trwałe wydatki cykliczne",
+        "description": "Prawdziwe serie z interwałami, zakończeniami, nadrabianiem zaległości, ponowieniami, podglądami oraz jawnym zatrzymywaniem, edycją i usuwaniem."
+      },
+      "stats-budgets": {
+        "title": "Statystyki, wykresy i budżety",
+        "description": "Wykresy wydatków, miesięczne wizualizacje kategorii, podsumowanie między grupami oraz budżety z alertami o przekroczeniu."
+      },
+      "synced-groups": {
+        "title": "Zsynchronizowane grupy i znajomi",
+        "description": "Grupy podążają za Tobą na różnych urządzeniach, z prawdziwym członkostwem, rozliczeniami 1 na 1 ze znajomymi oraz przypisanymi edycjami."
+      }
+    },
+    "cta": {
+      "title": "Gotowy, by wypróbować z Twoją grupą?",
+      "description": "Utwórz darmowe konto — anonimowo, bez adresu e-mail — a Twoje grupy zsynchronizują się na różnych urządzeniach.",
+      "action": "Zacznij"
+    },
+    "demo": {
+      "eyebrow": "Interaktywne demo",
+      "splitSettle": {
+        "title": "Wizualizator podziału i rozliczeń",
+        "description": "Zmień kwotę, płatnika lub udziały i obserwuj, jak salda oraz minimalne spłaty aktualizują się na żywo. To demo działa w całości w Twojej przeglądarce — konto nie jest potrzebne.",
+        "amountLabel": "Kwota wydatku",
+        "payerLabel": "Płatnik",
+        "modeLabel": "Tryb podziału",
+        "modeEqual": "Po równo",
+        "modeCustom": "Własny",
+        "balancesTitle": "Salda",
+        "settlementsTitle": "Sugerowane spłaty",
+        "settledLabel": "Wszyscy są rozliczeni — nie są potrzebne żadne spłaty.",
+        "comingTitle": "Więcej dem w drodze",
+        "comingDescription": "Kalkulator kwot, konwersja walut i przewodniki pojawią się tu jako następne."
+      }
+    },
+    "hero": {
+      "title": "Wszystko, czego potrzebujesz, by dzielić wydatki",
+      "description": "Od anonimowego logowania po masowe narzędzia AI: wypróbuj poniższe demo rozliczeń, a potem przeglądnij pełny katalog. Nowe interaktywne dema będą się tu pojawiać jedno po drugim."
+    },
+    "sections": {
+      "developers": {
+        "title": "Deweloperzy i powiadomienia"
+      },
+      "everyday": {
+        "title": "Codzienne wydatki"
+      },
+      "foundation": {
+        "title": "Konta i synchronizacja"
+      },
+      "insights": {
+        "title": "Statystyki i budżety"
+      },
+      "power": {
+        "title": "Zaawansowane narzędzia i tryb masowy"
+      },
+      "sharing": {
+        "title": "Udostępnianie i tożsamość"
+      }
+    }
+  },
+  "NotFoundPage": {
+    "title": "Nie znaleziono strony",
+    "description": "Strona, której szukasz, nie istnieje lub została przeniesiona.",
+    "goHome": "Przejdź do strony głównej",
+    "goBack": "Wróć",
+    "expenseTitle": "Nie znaleziono wydatku",
+    "expenseDescription": "Ten wydatek nie istnieje lub został usunięty.",
+    "budgetTitle": "Nie znaleziono budżetu",
+    "budgetDescription": "Ten budżet nie istnieje lub został usunięty.",
+    "errorTitle": "Coś poszło nie tak",
+    "errorDescription": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie lub wróć na stronę główną.",
+    "retry": "Spróbuj ponownie"
   }
 }

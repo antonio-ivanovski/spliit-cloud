@@ -64,7 +64,8 @@
       "foreignDescription": "Vai abrir {origin} neste navegador. Continua apenas se confiares no anfitrião que to mostrou.",
       "foreignConfirm": "Abrir ligação",
       "foreignCancel": "Voltar"
-    }
+    },
+    "viewFeatures": "Explorar funcionalidades"
   },
   "Header": {
     "signIn": "Iniciar sessão",
@@ -89,7 +90,8 @@
     "imprint": "Aviso legal",
     "sponsor": "Patrocinar",
     "timeLabel": "Hora do dia",
-    "status": "Estado"
+    "status": "Estado",
+    "features": "Funcionalidades"
   },
   "Expenses": {
     "title": "Despesas",
@@ -4633,5 +4635,149 @@
     "latest": "Novidades",
     "viewAll": "Ver todas as atualizações",
     "dismiss": "Percebido"
+  },
+  "Features": {
+    "catalogLabel": "Catálogo completo",
+    "catalog": {
+      "activity": {
+        "title": "Atividade, comentários e pesquisa",
+        "description": "Histórico e comentários por despesa, cronologia Para ti, filtragem, ordenação e pesquisa em grupos arquivados."
+      },
+      "ai-assist": {
+        "title": "Despesas com ajuda de IA",
+        "description": "Dicionário local mais histórico do grupo mais um motor de IA; digitaliza recibos e descreve despesas por voz."
+      },
+      "anonymous-accounts": {
+        "title": "Contas anónimas",
+        "description": "Começa em poucos cliques só com um nome visível — sem e-mail nem início de sessão social. Recupera com uma ligação ou chave de acesso."
+      },
+      "archive": {
+        "title": "Arquivar e eliminar",
+        "description": "Arquiva grupos para os tornar só de leitura ou elimina-os permanentemente quando terminares."
+      },
+      "balances": {
+        "title": "Saldos e liquidações",
+        "description": "Direção de pagamento clara, liquidação rápida, pagamentos combinados e subunidades como casais."
+      },
+      "bulk-categorize": {
+        "title": "Categorização massiva com IA",
+        "description": "Executa o categorizador de IA em muitas despesas de uma vez — ideal após uma importação."
+      },
+      "calculator": {
+        "title": "Calculadora de valores",
+        "description": "Cálculos rápidos diretamente no campo do valor ao introduzir despesas."
+      },
+      "core-expenses": {
+        "title": "Despesas, recibos e divisões",
+        "description": "Grupos, categorias, anexos de recibos, divisões avançadas e uma experiência PWA sem anúncios."
+      },
+      "currency": {
+        "title": "Multimoeda e cripto",
+        "description": "Conversão no servidor, valores exatos com taxa implícita visível e suporte a criptomoedas."
+      },
+      "developers": {
+        "title": "API, MCP, OAuth e webhooks",
+        "description": "Documentação OpenAPI mais Scalar, assistente MCP, âmbitos delegados OAuth 2.1 e webhooks de saída assinados."
+      },
+      "export": {
+        "title": "Exportação e relatórios",
+        "description": "CSV, relatórios PDF para impressão e ficheiros ZIP completos do grupo ou da conta, incluindo documentos."
+      },
+      "identity": {
+        "title": "Identidade do grupo e ligações",
+        "description": "Emojis e cores, ligações públicas só de leitura, predefinições de divisão e gestão de membros."
+      },
+      "import": {
+        "title": "Importa o que quiseres",
+        "description": "CSV do Splitwise, CSV de extratos bancários com assistente de mapeamento e deteção de duplicados, Cospend e pacotes Spliit."
+      },
+      "multi-payer": {
+        "title": "Vários pagadores e detalhado",
+        "description": "Vários pagadores, linhas de detalhe, impostos e gorjeta, e partes precisas por pessoa numa só despesa."
+      },
+      "notifications": {
+        "title": "Notificações por e-mail e push",
+        "description": "Atualizações do grupo e das despesas por e-mail ou push, com preferências por categoria para cada utilizador."
+      },
+      "passkeys-security": {
+        "title": "Chaves de acesso e segurança",
+        "description": "Início de sessão sem palavra-passe para todos os tipos de conta, opção de acesso de reserva e modo só por convite para instâncias privadas."
+      },
+      "qr-sharing": {
+        "title": "Convites QR próximos",
+        "description": "Sessões QR reutilizáveis de 15 minutos com adesão por leitura no telemóvel."
+      },
+      "recurring": {
+        "title": "Despesas recorrentes duradouras",
+        "description": "Séries reais com intervalos, términos, atualizações, novas tentativas, pré-visualizações e parar, editar ou eliminar explícitos."
+      },
+      "stats-budgets": {
+        "title": "Estatísticas, gráficos e orçamentos",
+        "description": "Gráficos de despesas, visuais mensais por categoria, resumo entre grupos e orçamentos com alertas de excesso."
+      },
+      "synced-groups": {
+        "title": "Grupos e amigos sincronizados",
+        "description": "Os teus grupos acompanham-te em todos os dispositivos com participação real, registos individuais com amigos e edições atribuídas."
+      }
+    },
+    "cta": {
+      "title": "Pronto para experimentar com o teu grupo?",
+      "description": "Cria uma conta gratuita — anónima, sem e-mail — e os teus grupos sincronizam-se em todos os dispositivos.",
+      "action": "Começar"
+    },
+    "demo": {
+      "eyebrow": "Demonstração interativa",
+      "splitSettle": {
+        "title": "Visualizador de divisão + liquidação",
+        "description": "Altera o valor, o pagador ou as partes e vê os saldos e as liquidações mínimas atualizarem-se em direto. Esta demonstração corre totalmente no teu navegador — sem conta.",
+        "amountLabel": "Valor da despesa",
+        "payerLabel": "Pago por",
+        "modeLabel": "Modo de divisão",
+        "modeEqual": "Em partes iguais",
+        "modeCustom": "Personalizada",
+        "balancesTitle": "Saldos",
+        "settlementsTitle": "Liquidações sugeridas",
+        "settledLabel": "Tudo liquidado — sem liquidações necessárias.",
+        "comingTitle": "Mais demonstrações a caminho",
+        "comingDescription": "A calculadora de valores, a conversão de moeda e as visitas guiadas vão aparecer aqui a seguir."
+      }
+    },
+    "hero": {
+      "title": "Tudo o que precisas para dividir despesas",
+      "description": "Do início de sessão anónimo às ferramentas massivas de IA: experimenta a demonstração de liquidação abaixo e explora o catálogo completo. Novas demonstrações interativas chegam uma a uma."
+    },
+    "sections": {
+      "developers": {
+        "title": "Programadores e notificações"
+      },
+      "everyday": {
+        "title": "Despesas do dia a dia"
+      },
+      "foundation": {
+        "title": "Contas e sincronização"
+      },
+      "insights": {
+        "title": "Análises e orçamentos"
+      },
+      "power": {
+        "title": "Ferramentas avançadas e em lote"
+      },
+      "sharing": {
+        "title": "Partilha e identidade"
+      }
+    }
+  },
+  "NotFoundPage": {
+    "title": "Página não encontrada",
+    "description": "A página que procuras não existe ou foi movida.",
+    "goHome": "Ir para o início",
+    "goBack": "Voltar",
+    "expenseTitle": "Despesa não encontrada",
+    "expenseDescription": "Esta despesa não existe ou foi eliminada.",
+    "budgetTitle": "Orçamento não encontrado",
+    "budgetDescription": "Este orçamento não existe ou foi eliminado.",
+    "errorTitle": "Algo correu mal",
+    "errorDescription": "Ocorreu um erro inesperado. Tenta novamente ou volta ao início.",
+    "retry": "Tentar novamente"
   }
 }

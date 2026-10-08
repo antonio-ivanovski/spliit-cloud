@@ -64,7 +64,8 @@
       "foreignDescription": "このブラウザで {origin} が開きます。このコードを表示したホストを信頼できる場合のみ続行してください。",
       "foreignConfirm": "リンクを開く",
       "foreignCancel": "戻る"
-    }
+    },
+    "viewFeatures": "機能を見る"
   },
   "Header": {
     "signIn": "サインイン",
@@ -89,7 +90,8 @@
     "imprint": "運営者情報",
     "sponsor": "スポンサー",
     "timeLabel": "時刻",
-    "status": "ステータス"
+    "status": "ステータス",
+    "features": "機能"
   },
   "Expenses": {
     "title": "支出",
@@ -4584,5 +4586,149 @@
     "latest": "新着情報",
     "viewAll": "すべての更新を見る",
     "dismiss": "了解しました"
+  },
+  "Features": {
+    "catalogLabel": "全カタログ",
+    "catalog": {
+      "activity": {
+        "title": "アクティビティ・コメント・検索",
+        "description": "支出ごとの履歴とコメント、おすすめタイムライン、絞り込み・並べ替え、アーカイブ済みグループの検索。"
+      },
+      "ai-assist": {
+        "title": "AIアシスト支出入力",
+        "description": "ローカル辞書とグループ履歴にAIエンジンを組み合わせ、レシートのスキャンや音声での支出入力ができます。"
+      },
+      "anonymous-accounts": {
+        "title": "匿名アカウント",
+        "description": "表示名だけで数クリックで開始 — メールやソーシャルログインは不要です。リンクやパスキーで復旧できます。"
+      },
+      "archive": {
+        "title": "アーカイブと削除",
+        "description": "グループをアーカイブして閲覧専用にするか、不要になったら完全に削除できます。"
+      },
+      "balances": {
+        "title": "残高と精算",
+        "description": "支払いの方向を明確にし、クイック精算、合算支払い、カップルなどのサブグループ単位に対応します。"
+      },
+      "bulk-categorize": {
+        "title": "AI一括分類",
+        "description": "AI分類を多数の支出に一括適用 — インポート直後に最適です。"
+      },
+      "calculator": {
+        "title": "金額計算機",
+        "description": "支出入力時に金額欄でそのまま素早く計算ができます。"
+      },
+      "core-expenses": {
+        "title": "支出・レシート・割り勘",
+        "description": "グループ、カテゴリー、レシート添付、高度な割り勘、広告なしのPWA体験。"
+      },
+      "currency": {
+        "title": "マルチ通貨・暗号資産",
+        "description": "サーバー側の換算、適用レート表示付きの金額直接指定、暗号資産のサポート。"
+      },
+      "developers": {
+        "title": "API・MCP・OAuth・Webhook",
+        "description": "OpenAPIとScalarドキュメント、MCPアシスタント、委任OAuth 2.1スコープ、署名付きアウトバウンドWebhook。"
+      },
+      "export": {
+        "title": "エクスポートとレポート",
+        "description": "CSV、印刷用PDFレポート、書類を含むグループやアカウント全体のZIPアーカイブ。"
+      },
+      "identity": {
+        "title": "グループの個性とリンク",
+        "description": "絵文字とカラー、公開閲覧専用リンク、割り勘プリセット、メンバー管理。"
+      },
+      "import": {
+        "title": "何でもインポート",
+        "description": "SplitwiseのCSV、対応付けウィザードと重複検出付き銀行明細CSV、Cospend、Spliitバンドルに対応します。"
+      },
+      "multi-payer": {
+        "title": "複数支払者・品目別",
+        "description": "複数の支払者、品目、税金とチップに対応し、1件の支出で正確な個人別負担を計算します。"
+      },
+      "notifications": {
+        "title": "メール・プッシュ通知",
+        "description": "グループや支出の更新をメールやプッシュで通知し、ユーザーごとのカテゴリー設定に対応します。"
+      },
+      "passkeys-security": {
+        "title": "パスキーとセキュリティ",
+        "description": "すべてのアカウント種別でパスワードレスサインイン、予備のサインイン手段、プライベートインスタンス向け招待制モードに対応します。"
+      },
+      "qr-sharing": {
+        "title": "近くのQR招待",
+        "description": "15分間有効で繰り返し使えるQRセッション、モバイルでスキャンして参加できます。"
+      },
+      "recurring": {
+        "title": "堅牢な定期支出",
+        "description": "間隔・終了・追いつき・再試行・プレビュー、停止・編集・削除の明示操作を備えた本格的な定期支出シリーズです。"
+      },
+      "stats-budgets": {
+        "title": "統計・チャート・予算",
+        "description": "支出チャート、月別カテゴリー表示、グループ横断の集計、超過アラート付き予算。"
+      },
+      "synced-groups": {
+        "title": "同期グループと友人",
+        "description": "正式なメンバーシップでグループがデバイス間で同期し、1対1の友人台帳と編集者表示に対応します。"
+      }
+    },
+    "cta": {
+      "title": "グループで試す準備はできましたか?",
+      "description": "無料アカウントを作成 — 匿名でメール不要 — グループはデバイス間で同期されます。",
+      "action": "はじめる"
+    },
+    "demo": {
+      "eyebrow": "インタラクティブデモ",
+      "splitSettle": {
+        "title": "割り勘・精算ビジュアライザー",
+        "description": "金額、支払者、負担割合を変えると、残高と最小の精算方法がリアルタイムに更新されます。このデモはブラウザー内だけで動作し、アカウントは不要です。",
+        "amountLabel": "支出金額",
+        "payerLabel": "支払者",
+        "modeLabel": "割り勘モード",
+        "modeEqual": "均等",
+        "modeCustom": "カスタム",
+        "balancesTitle": "残高",
+        "settlementsTitle": "おすすめの精算方法",
+        "settledLabel": "全員精算済み — 精算は不要です。",
+        "comingTitle": "その他のデモを準備中",
+        "comingDescription": "金額計算機、通貨換算、ガイドツアーはこちらに順次追加されます。"
+      }
+    },
+    "hero": {
+      "title": "支出の割り勘に必要なすべてがここに",
+      "description": "匿名サインインから一括AIツールまで、下の精算デモを試して全カタログをご覧ください。新しいインタラクティブデモを順次追加します。"
+    },
+    "sections": {
+      "developers": {
+        "title": "開発者と通知"
+      },
+      "everyday": {
+        "title": "日常の支出"
+      },
+      "foundation": {
+        "title": "アカウントと同期"
+      },
+      "insights": {
+        "title": "インサイトと予算"
+      },
+      "power": {
+        "title": "パワーツールと一括処理"
+      },
+      "sharing": {
+        "title": "共有とアイデンティティ"
+      }
+    }
+  },
+  "NotFoundPage": {
+    "title": "ページが見つかりません",
+    "description": "お探しのページは存在しないか、移動しました。",
+    "goHome": "ホームへ移動",
+    "goBack": "戻る",
+    "expenseTitle": "支出が見つかりません",
+    "expenseDescription": "この支出は存在しないか、削除されました。",
+    "budgetTitle": "予算が見つかりません",
+    "budgetDescription": "この予算は存在しないか、削除されました。",
+    "errorTitle": "問題が発生しました",
+    "errorDescription": "予期しないエラーが発生しました。もう一度お試しいただくか、ホームにお戻りください。",
+    "retry": "再試行"
   }
 }

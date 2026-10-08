@@ -64,7 +64,8 @@
       "foreignDescription": "S'obrirà {origin} en aquest navegador. Continua només si confies en l'amfitrió que te l'ha mostrat.",
       "foreignConfirm": "Obre l'enllaç",
       "foreignCancel": "Enrere"
-    }
+    },
+    "viewFeatures": "Explora les funcionalitats"
   },
   "Header": {
     "signIn": "Inicia sessió",
@@ -89,7 +90,8 @@
     "imprint": "Avís legal",
     "sponsor": "Patrocini",
     "timeLabel": "Moment del dia",
-    "status": "Estat"
+    "status": "Estat",
+    "features": "Funcionalitats"
   },
   "Expenses": {
     "title": "Despeses",
@@ -4633,5 +4635,149 @@
     "latest": "Novetats",
     "viewAll": "Mostra totes les actualitzacions",
     "dismiss": "Entesos"
+  },
+  "Features": {
+    "catalogLabel": "Catàleg complet",
+    "catalog": {
+      "activity": {
+        "title": "Activitat, comentaris i cerca",
+        "description": "Historial i comentaris per despesa, cronologia Per a tu, filtratge, ordenació i cerca en grups arxivats."
+      },
+      "ai-assist": {
+        "title": "Despeses amb ajuda d'IA",
+        "description": "Diccionari local més historial del grup més un motor d'IA; escaneja rebuts i descriu despeses per veu."
+      },
+      "anonymous-accounts": {
+        "title": "Comptes anònims",
+        "description": "Comença en pocs clics només amb un nom visible, sense correu ni inici social. Recupera l'accés amb un enllaç o una clau d'accés."
+      },
+      "archive": {
+        "title": "Arxivar i suprimir",
+        "description": "Arxiva grups per deixar-los de només lectura o suprimeix-los definitivament quan hagis acabat."
+      },
+      "balances": {
+        "title": "Saldos i liquidacions",
+        "description": "Direcció de pagament clara, liquidació ràpida, pagaments combinats i subunitats com parelles."
+      },
+      "bulk-categorize": {
+        "title": "Categorització massiva amb IA",
+        "description": "Executa el categoritzador d'IA en moltes despeses alhora, ideal després d'una importació."
+      },
+      "calculator": {
+        "title": "Calculadora d'imports",
+        "description": "Operacions ràpides directament al camp de l'import en introduir despeses."
+      },
+      "core-expenses": {
+        "title": "Despeses, rebuts i repartiments",
+        "description": "Grups, categories, adjunts de rebuts, repartiments avançats i una PWA sense anuncis."
+      },
+      "currency": {
+        "title": "Multimoneda i cripto",
+        "description": "Conversió al servidor, ajustos exactes de l'import amb el tipus implícit visible i compatibilitat amb criptomonedes."
+      },
+      "developers": {
+        "title": "API, MCP, OAuth i webhooks",
+        "description": "OpenAPI més docs de Scalar, assistent MCP, àmbits delegats d'OAuth 2.1 i webhooks sortints signats."
+      },
+      "export": {
+        "title": "Exportació i informes",
+        "description": "CSV, informes PDF imprimibles i arxius ZIP complets del grup o del compte, amb documents."
+      },
+      "identity": {
+        "title": "Identitat del grup i enllaços",
+        "description": "Emojis i colors, enllaços públics de només lectura, valors predeterminats de repartiment i gestió de participants."
+      },
+      "import": {
+        "title": "Importa el que sigui",
+        "description": "CSV de Splitwise, CSV d'extractes bancaris amb assistent de correspondència i detecció de duplicats, Cospend i paquets de Spliit."
+      },
+      "multi-payer": {
+        "title": "Múltiples pagadors i per articles",
+        "description": "Diversos pagadors, línies de detall, impostos i propines, i parts precises per persona en una sola despesa."
+      },
+      "notifications": {
+        "title": "Notificacions per correu i push",
+        "description": "Novetats del grup i de les despeses per correu o notificacions push, amb preferències per categoria per a cada participant."
+      },
+      "passkeys-security": {
+        "title": "Claus d'accés i seguretat",
+        "description": "Inici sense contrasenya per a tots els tipus de compte, opció d'accés de seguretat i mode només per invitació per a instàncies privades."
+      },
+      "qr-sharing": {
+        "title": "Invitacions QR properes",
+        "description": "Sessions QR reutilitzables de 15 minuts amb unió per escaneig al mòbil."
+      },
+      "recurring": {
+        "title": "Despeses periòdiques duradores",
+        "description": "Sèries reals amb intervals, finalització, posada al dia, reintents, vistes prèvies i aturada, edició o supressió explícites."
+      },
+      "stats-budgets": {
+        "title": "Estadístiques, gràfics i pressupostos",
+        "description": "Gràfics de despesa, visuals mensuals per categoria, resum entre grups i pressupostos amb alertes d'excés."
+      },
+      "synced-groups": {
+        "title": "Grups i amistats sincronitzats",
+        "description": "Els teus grups t'acompanyen en tots els dispositius amb participació real, registres individuals amb amistats i edicions atribuïdes."
+      }
+    },
+    "cta": {
+      "title": "A punt per provar-ho amb el teu grup?",
+      "description": "Crea un compte gratuït, anònim i sense correu, i els teus grups se sincronitzen en tots els dispositius.",
+      "action": "Comença"
+    },
+    "demo": {
+      "eyebrow": "Demostració interactiva",
+      "splitSettle": {
+        "title": "Visualitzador de repartiment i liquidació",
+        "description": "Canvia l'import, el pagador o les parts i observa com s'actualitzen els saldos i els pagaments mínims de liquidació en directe. Aquesta demo funciona del tot al teu navegador, sense cap compte.",
+        "amountLabel": "Import de la despesa",
+        "payerLabel": "Pagat per",
+        "modeLabel": "Mode de repartiment",
+        "modeEqual": "A parts iguals",
+        "modeCustom": "Personalitzat",
+        "balancesTitle": "Saldos",
+        "settlementsTitle": "Liquidacions suggerides",
+        "settledLabel": "Tot liquidat: no cal cap liquidació.",
+        "comingTitle": "Més demostracions en camí",
+        "comingDescription": "La calculadora d'imports, la conversió de moneda i les visites guiades apareixeran aquí properament."
+      }
+    },
+    "hero": {
+      "title": "Tot el que necessites per dividir despeses",
+      "description": "De l'inici anònim a les eines massives amb IA: prova la demostració de liquidació i explora el catàleg complet. Les noves demostracions interactives hi arriben una a una."
+    },
+    "sections": {
+      "developers": {
+        "title": "Desenvolupadors i notificacions"
+      },
+      "everyday": {
+        "title": "Despeses del dia a dia"
+      },
+      "foundation": {
+        "title": "Comptes i sincronització"
+      },
+      "insights": {
+        "title": "Anàlisis i pressupostos"
+      },
+      "power": {
+        "title": "Eines potents i en lot"
+      },
+      "sharing": {
+        "title": "Compartició i identitat"
+      }
+    }
+  },
+  "NotFoundPage": {
+    "title": "Pàgina no trobada",
+    "description": "La pàgina que busques no existeix o s'ha mogut.",
+    "goHome": "Ves a l'inici",
+    "goBack": "Torna enrere",
+    "expenseTitle": "Despesa no trobada",
+    "expenseDescription": "Aquesta despesa no existeix o s'ha eliminat.",
+    "budgetTitle": "Pressupost no trobat",
+    "budgetDescription": "Aquest pressupost no existeix o s'ha eliminat.",
+    "errorTitle": "Alguna cosa ha anat malament",
+    "errorDescription": "S'ha produït un error inesperat. Torna-ho a provar o torna a l'inici.",
+    "retry": "Torna-ho a provar"
   }
 }

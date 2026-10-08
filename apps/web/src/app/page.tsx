@@ -1,4 +1,4 @@
-import { getRouteApi, Navigate } from '@tanstack/react-router'
+import { getRouteApi, Link, Navigate } from '@tanstack/react-router'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { AuthPanel } from '@/components/auth/auth-panel'
@@ -98,6 +98,15 @@ function LandingIntro() {
           />
         </p>
         <SignedOutSavedGroupsEntry />
+        <p className="mt-1">
+          <Link
+            to="/features"
+            data-testid="landing-features-link"
+            className="rounded-sm text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          >
+            {t('Homepage.viewFeatures')}
+          </Link>
+        </p>
         <LandingUpdatesTeaser />
       </div>
     </section>

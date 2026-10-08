@@ -98,8 +98,10 @@ const LOCALE_COGNATES = new Set([
   'pt:Emoji',
   'ro:Emoji',
   'sv-SE:Emoji',
-  'tr-TR:Emoji',
-  'vi:Emoji',
+  // "API, MCP, OAuth & webhooks" is acronyms plus a loanword with identical
+  // spelling in Dutch and Swedish — the correct native form, not a placeholder.
+  'nl-NL:API, MCP, OAuth & webhooks',
+  'sv-SE:API, MCP, OAuth & webhooks',
 ])
 
 export function isAllowedLocaleCognate(

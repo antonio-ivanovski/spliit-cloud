@@ -64,7 +64,8 @@
       "foreignDescription": "将在此浏览器中打开 {origin}。只有在信任出示该二维码的组织者时才能继续。",
       "foreignConfirm": "打开链接",
       "foreignCancel": "返回"
-    }
+    },
+    "viewFeatures": "探索功能"
   },
   "Header": {
     "signIn": "登录",
@@ -89,7 +90,8 @@
     "imprint": "项目声明",
     "sponsor": "赞助",
     "timeLabel": "一天中的时间",
-    "status": "状态"
+    "status": "状态",
+    "features": "功能"
   },
   "Expenses": {
     "title": "消费",
@@ -4584,5 +4586,149 @@
     "latest": "最新动态",
     "viewAll": "查看所有更新",
     "dismiss": "知道了"
+  },
+  "Features": {
+    "catalogLabel": "完整目录",
+    "catalog": {
+      "activity": {
+        "title": "动态、评论与搜索",
+        "description": "按笔支出的历史记录与评论、为你推荐的时间线、筛选、排序，以及已归档分组搜索。"
+      },
+      "ai-assist": {
+        "title": "AI 辅助记账",
+        "description": "本地词典加分组历史再加一个 AI 引擎；可扫描收据，还能用语音描述支出。"
+      },
+      "anonymous-accounts": {
+        "title": "匿名账户",
+        "description": "只需显示名称，点击几次即可开始 — 无需邮箱或社交登录。用链接或通行密钥即可恢复。"
+      },
+      "archive": {
+        "title": "归档与删除",
+        "description": "将分组归档设为只读，或在完成后将其永久删除。"
+      },
+      "balances": {
+        "title": "余额与结算",
+        "description": "清晰的付款方向、快速结算、合并付款，以及情侣等子分组单位。"
+      },
+      "bulk-categorize": {
+        "title": "批量 AI 分类",
+        "description": "对多笔支出一次运行 AI 分类 — 特别适合导入之后使用。"
+      },
+      "calculator": {
+        "title": "金额计算器",
+        "description": "在录入支出时，直接在金额栏中快速计算。"
+      },
+      "core-expenses": {
+        "title": "支出、收据与分摊",
+        "description": "分组、分类、收据附件、高级分摊，以及无广告的 PWA 体验。"
+      },
+      "currency": {
+        "title": "多币种与加密货币",
+        "description": "服务端换算、显示隐含汇率的精确金额覆盖，以及加密货币支持。"
+      },
+      "developers": {
+        "title": "API、MCP、OAuth 与 Webhook",
+        "description": "OpenAPI 加 Scalar 文档、MCP 助手、可委托的 OAuth 2.1 权限，以及带签名的出站 Webhook。"
+      },
+      "export": {
+        "title": "导出与报告",
+        "description": "CSV、可打印的 PDF 报告，以及包含文档的完整分组或账户 ZIP 归档。"
+      },
+      "identity": {
+        "title": "分组形象与链接",
+        "description": "表情符号与颜色、公开只读链接、分摊预设，以及成员管理。"
+      },
+      "import": {
+        "title": "导入一切",
+        "description": "支持 Splitwise CSV、带映射向导和重复检测的银行对账单 CSV、Cospend 和 Spliit 数据包。"
+      },
+      "multi-payer": {
+        "title": "多付款人与明细分摊",
+        "description": "支持多付款人、项目明细、税费与小费，在一笔支出中算清每人应分摊金额。"
+      },
+      "notifications": {
+        "title": "邮件与推送通知",
+        "description": "通过邮件或推送发送分组与支出更新，并支持按用户设置分类偏好。"
+      },
+      "passkeys-security": {
+        "title": "通行密钥与安全",
+        "description": "所有账户类型均可免密登录、备用登录方式，以及面向私有实例的仅邀请模式。"
+      },
+      "qr-sharing": {
+        "title": "附近二维码邀请",
+        "description": "15 分钟内可多次使用的二维码会话，在手机上扫码即可加入。"
+      },
+      "recurring": {
+        "title": "可靠的周期性支出",
+        "description": "真正的序列：支持间隔、结束、补记、重试、预览，以及明确的停止/编辑/删除。"
+      },
+      "stats-budgets": {
+        "title": "统计、图表与预算",
+        "description": "支出图表、按月分类视图、跨分组汇总，以及带超支提醒的预算。"
+      },
+      "synced-groups": {
+        "title": "同步分组与好友",
+        "description": "分组跟随你在设备间同步，具备真实成员关系、一对一好友账本和可追溯的编辑。"
+      }
+    },
+    "cta": {
+      "title": "准备好和你的分组一起试试了吗？",
+      "description": "创建免费账户 — 匿名、无需邮箱 — 你的分组将在设备间同步。",
+      "action": "开始使用"
+    },
+    "demo": {
+      "eyebrow": "互动演示",
+      "splitSettle": {
+        "title": "分摊与结算可视化",
+        "description": "更改金额、付款人或分摊比例，即可实时查看余额和最优结算方案更新。此演示完全在浏览器中运行 — 无需账户。",
+        "amountLabel": "支出金额",
+        "payerLabel": "付款人",
+        "modeLabel": "分摊方式",
+        "modeEqual": "均摊",
+        "modeCustom": "自定义",
+        "balancesTitle": "余额",
+        "settlementsTitle": "建议结算方案",
+        "settledLabel": "已全部结清 — 无需结算。",
+        "comingTitle": "更多演示即将到来",
+        "comingDescription": "金额计算器、货币换算和引导教程将陆续显示在这里。"
+      }
+    },
+    "hero": {
+      "title": "分摊支出所需的一切",
+      "description": "从匿名登录到批量 AI 工具：先试用下面的结算演示，再浏览完整目录。新的互动演示将陆续上线。"
+    },
+    "sections": {
+      "developers": {
+        "title": "开发者与通知"
+      },
+      "everyday": {
+        "title": "日常支出"
+      },
+      "foundation": {
+        "title": "账户与同步"
+      },
+      "insights": {
+        "title": "洞察与预算"
+      },
+      "power": {
+        "title": "效率工具与批量处理"
+      },
+      "sharing": {
+        "title": "分享与形象"
+      }
+    }
+  },
+  "NotFoundPage": {
+    "title": "找不到页面",
+    "description": "您要查找的页面不存在或已被移动。",
+    "goHome": "返回首页",
+    "goBack": "返回",
+    "expenseTitle": "找不到支出",
+    "expenseDescription": "这笔支出不存在或已被删除。",
+    "budgetTitle": "找不到预算",
+    "budgetDescription": "这笔预算不存在或已被删除。",
+    "errorTitle": "出了点问题",
+    "errorDescription": "发生意外错误，请重试或返回首页。",
+    "retry": "重试"
   }
 }

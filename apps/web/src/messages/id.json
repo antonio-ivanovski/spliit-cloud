@@ -64,7 +64,8 @@
       "foreignDescription": "Ini akan membuka {origin} di browser ini. Lanjutkan hanya jika Anda memercayai penyelenggara yang menunjukkannya.",
       "foreignConfirm": "Buka tautan",
       "foreignCancel": "Kembali"
-    }
+    },
+    "viewFeatures": "Jelajahi fitur"
   },
   "Header": {
     "signIn": "Masuk",
@@ -89,7 +90,8 @@
     "imprint": "Pemberitahuan proyek",
     "sponsor": "Dukung",
     "timeLabel": "Waktu dalam sehari",
-    "status": "Status"
+    "status": "Status",
+    "features": "Fitur"
   },
   "Expenses": {
     "title": "Pengeluaran",
@@ -4583,5 +4585,149 @@
     "latest": "Yang baru",
     "viewAll": "Lihat semua pembaruan",
     "dismiss": "Mengerti"
+  },
+  "Features": {
+    "catalogLabel": "Katalog lengkap",
+    "catalog": {
+      "activity": {
+        "title": "Aktivitas, komentar & pencarian",
+        "description": "Riwayat dan komentar per pengeluaran, linimasa Untuk Anda, pemfilteran, pengurutan, dan pencarian grup yang diarsipkan."
+      },
+      "ai-assist": {
+        "title": "Pengeluaran berbantuan AI",
+        "description": "Kamus lokal plus riwayat grup plus satu mesin AI; pindai struk dan jelaskan pengeluaran lewat suara."
+      },
+      "anonymous-accounts": {
+        "title": "Akun anonim",
+        "description": "Mulai dalam beberapa klik hanya dengan nama tampilan — tanpa email atau login sosial. Pulihkan dengan tautan atau kunci sandi."
+      },
+      "archive": {
+        "title": "Arsip & hapus",
+        "description": "Arsipkan grup agar menjadi hanya-lihat, atau hapus permanen setelah selesai."
+      },
+      "balances": {
+        "title": "Saldo & pelunasan",
+        "description": "Arah pembayaran yang jelas, pelunasan cepat, pembayaran gabungan, dan unit subgrup seperti pasangan."
+      },
+      "bulk-categorize": {
+        "title": "Kategorisasi AI massal",
+        "description": "Jalankan pengkategorisasi AI ke banyak pengeluaran sekaligus — ideal setelah impor."
+      },
+      "calculator": {
+        "title": "Kalkulator jumlah",
+        "description": "Hitung cepat langsung di kolom jumlah saat mencatat pengeluaran."
+      },
+      "core-expenses": {
+        "title": "Pengeluaran, struk & pembagian",
+        "description": "Grup, kategori, lampiran struk, pembagian lanjutan, dan pengalaman PWA tanpa iklan."
+      },
+      "currency": {
+        "title": "Multi-mata uang & kripto",
+        "description": "Konversi sisi server, penimpaan jumlah pasti dengan kurs tersirat yang ditampilkan, dan dukungan mata uang kripto."
+      },
+      "developers": {
+        "title": "API, MCP, OAuth & webhook",
+        "description": "Dokumen OpenAPI plus Scalar, asisten MCP, cakupan OAuth 2.1 yang didelegasikan, dan webhook keluar bertanda tangan."
+      },
+      "export": {
+        "title": "Ekspor & laporan",
+        "description": "CSV, laporan PDF yang dapat dicetak, dan arsip ZIP seluruh grup atau akun termasuk dokumen."
+      },
+      "identity": {
+        "title": "Identitas grup & tautan",
+        "description": "Emoji dan warna, tautan publik hanya-lihat, preset pembagian, dan pengelolaan anggota."
+      },
+      "import": {
+        "title": "Impor apa pun",
+        "description": "CSV Splitwise, CSV rekening bank dengan panduan pemetaan dan deteksi duplikat, Cospend, dan bundel Spliit."
+      },
+      "multi-payer": {
+        "title": "Beberapa pembayar & per item",
+        "description": "Beberapa pembayar, item baris, pajak dan tip, serta porsi per orang yang tepat dalam satu pengeluaran."
+      },
+      "notifications": {
+        "title": "Notifikasi email & push",
+        "description": "Pembaruan grup dan pengeluaran lewat email atau push, dengan preferensi kategori per pengguna."
+      },
+      "passkeys-security": {
+        "title": "Kunci sandi & keamanan",
+        "description": "Masuk tanpa kata sandi untuk semua jenis akun, pilihan masuk cadangan, dan mode khusus undangan untuk instansi privat."
+      },
+      "qr-sharing": {
+        "title": "Undangan QR terdekat",
+        "description": "Sesi QR multi-pakai 15 menit dengan pindai-untuk-bergabung di ponsel."
+      },
+      "recurring": {
+        "title": "Pengeluaran berulang yang andal",
+        "description": "Seri nyata dengan interval, akhir, susulan, percobaan ulang, pratinjau, dan berhenti/edit/hapus yang eksplisit."
+      },
+      "stats-budgets": {
+        "title": "Statistik, grafik & anggaran",
+        "description": "Grafik pengeluaran, visual kategori bulanan, rekap lintas grup, dan anggaran dengan peringatan saat melebihi anggaran."
+      },
+      "synced-groups": {
+        "title": "Grup tersinkron & teman",
+        "description": "Grup mengikuti Anda di semua perangkat dengan keanggotaan nyata, buku besar pertemanan 1 lawan 1, dan edit yang dapat ditelusuri."
+      }
+    },
+    "cta": {
+      "title": "Siap mencobanya bersama grup Anda?",
+      "description": "Buat akun gratis — anonim, tanpa email — dan grup Anda tersinkron di semua perangkat.",
+      "action": "Mulai"
+    },
+    "demo": {
+      "eyebrow": "Demo interaktif",
+      "splitSettle": {
+        "title": "Visualisasi pembagian + pelunasan",
+        "description": "Ubah jumlah, pembayar, atau porsi lalu lihat saldo dan pembayaran minimal diperbarui langsung. Demo ini berjalan sepenuhnya di browser Anda — tanpa perlu akun.",
+        "amountLabel": "Jumlah pengeluaran",
+        "payerLabel": "Dibayar oleh",
+        "modeLabel": "Mode pembagian",
+        "modeEqual": "Sama rata",
+        "modeCustom": "Kustom",
+        "balancesTitle": "Saldo",
+        "settlementsTitle": "Saran pelunasan",
+        "settledLabel": "Semua sudah lunas — tidak perlu pembayaran.",
+        "comingTitle": "Demo lainnya segera hadir",
+        "comingDescription": "Kalkulator jumlah, konversi mata uang, dan tur panduan akan muncul di sini berikutnya."
+      }
+    },
+    "hero": {
+      "title": "Semua yang Anda butuhkan untuk berbagi pengeluaran",
+      "description": "Dari masuk anonim hingga alat AI massal: coba demo pelunasan di bawah, lalu jelajahi katalog lengkap. Demo interaktif baru hadir di sini satu per satu."
+    },
+    "sections": {
+      "developers": {
+        "title": "Pengembang & notifikasi"
+      },
+      "everyday": {
+        "title": "Pengeluaran sehari-hari"
+      },
+      "foundation": {
+        "title": "Akun & sinkronisasi"
+      },
+      "insights": {
+        "title": "Wawasan & anggaran"
+      },
+      "power": {
+        "title": "Alat canggih & massal"
+      },
+      "sharing": {
+        "title": "Berbagi & identitas"
+      }
+    }
+  },
+  "NotFoundPage": {
+    "title": "Halaman tidak ditemukan",
+    "description": "Halaman yang Anda cari tidak ada atau telah dipindahkan.",
+    "goHome": "Pergi ke beranda",
+    "goBack": "Kembali",
+    "expenseTitle": "Pengeluaran tidak ditemukan",
+    "expenseDescription": "Pengeluaran ini tidak ada atau telah dihapus.",
+    "budgetTitle": "Anggaran tidak ditemukan",
+    "budgetDescription": "Anggaran ini tidak ada atau telah dihapus.",
+    "errorTitle": "Terjadi kesalahan",
+    "errorDescription": "Terjadi kesalahan tak terduga. Coba lagi atau kembali ke beranda.",
+    "retry": "Coba lagi"
   }
 }

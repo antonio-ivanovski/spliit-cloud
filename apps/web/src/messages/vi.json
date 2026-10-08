@@ -64,7 +64,8 @@
       "foreignDescription": "Liên kết sẽ mở {origin} trong trình duyệt này. Chỉ tiếp tục nếu bạn tin tưởng chủ nhóm đã hiển thị mã này.",
       "foreignConfirm": "Mở liên kết",
       "foreignCancel": "Quay lại"
-    }
+    },
+    "viewFeatures": "Khám phá các tính năng"
   },
   "Header": {
     "signIn": "Đăng nhập",
@@ -117,7 +118,8 @@
     "imprint": "Thông tin pháp lý",
     "sponsor": "Tài trợ",
     "timeLabel": "Thời điểm trong ngày",
-    "status": "Trạng thái"
+    "status": "Trạng thái",
+    "features": "Tính năng"
   },
   "Expenses": {
     "title": "Chi phí",
@@ -4666,5 +4668,149 @@
     "latest": "Có gì mới",
     "viewAll": "Xem tất cả bản cập nhật",
     "dismiss": "Đã hiểu"
+  },
+  "Features": {
+    "catalogLabel": "Danh mục đầy đủ",
+    "catalog": {
+      "activity": {
+        "title": "Hoạt động, bình luận & tìm kiếm",
+        "description": "Lịch sử và bình luận từng khoản chi, dòng thời gian Dành cho bạn, lọc, sắp xếp và tìm kiếm nhóm đã lưu trữ."
+      },
+      "ai-assist": {
+        "title": "Khoản chi có AI hỗ trợ",
+        "description": "Từ điển cục bộ kết hợp lịch sử nhóm và một công cụ AI; quét hóa đơn và mô tả khoản chi bằng giọng nói."
+      },
+      "anonymous-accounts": {
+        "title": "Tài khoản ẩn danh",
+        "description": "Bắt đầu chỉ với vài cú nhấp chuột bằng tên hiển thị — không cần email hay đăng nhập mạng xã hội. Khôi phục bằng liên kết hoặc passkey."
+      },
+      "archive": {
+        "title": "Lưu trữ & xóa",
+        "description": "Lưu trữ nhóm để chuyển sang chỉ xem, hoặc xóa vĩnh viễn khi xong."
+      },
+      "balances": {
+        "title": "Số dư & tất toán",
+        "description": "Hướng thanh toán rõ ràng, tất toán nhanh, thanh toán gộp và đơn vị nhóm nhỏ như cặp đôi."
+      },
+      "bulk-categorize": {
+        "title": "Phân loại AI hàng loạt",
+        "description": "Chạy công cụ phân loại AI cho nhiều khoản chi cùng lúc — lý tưởng sau khi nhập dữ liệu."
+      },
+      "calculator": {
+        "title": "Máy tính số tiền",
+        "description": "Tính toán nhanh ngay trong ô số tiền khi nhập khoản chi."
+      },
+      "core-expenses": {
+        "title": "Khoản chi, hóa đơn & chia tiền",
+        "description": "Nhóm, danh mục, hóa đơn đính kèm, chia tiền nâng cao và trải nghiệm PWA không quảng cáo."
+      },
+      "currency": {
+        "title": "Đa tiền tệ & crypto",
+        "description": "Quy đổi phía máy chủ, ghi đè số tiền chính xác có hiển thị tỷ giá suy ra và hỗ trợ tiền mã hóa."
+      },
+      "developers": {
+        "title": "API, MCP, OAuth & webhook",
+        "description": "Tài liệu OpenAPI và Scalar, trợ lý MCP, phạm vi OAuth 2.1 được ủy quyền và webhook gửi đi có chữ ký."
+      },
+      "export": {
+        "title": "Xuất & báo cáo",
+        "description": "CSV, báo cáo PDF để in và kho lưu trữ ZIP toàn nhóm hoặc tài khoản kèm tài liệu."
+      },
+      "identity": {
+        "title": "Nhận diện nhóm & liên kết",
+        "description": "Emoji và màu sắc, liên kết công khai chỉ xem, mẫu chia tiền và quản lý thành viên."
+      },
+      "import": {
+        "title": "Nhập mọi thứ",
+        "description": "CSV Splitwise, CSV sao kê ngân hàng với trình hướng dẫn ánh xạ và phát hiện trùng lặp, Cospend và gói Spliit."
+      },
+      "multi-payer": {
+        "title": "Nhiều người trả & theo mục",
+        "description": "Nhiều người trả, mục chi tiết, thuế và tiền tip, cùng phần chia chính xác cho từng người trong một khoản chi."
+      },
+      "notifications": {
+        "title": "Thông báo email & đẩy",
+        "description": "Cập nhật nhóm và khoản chi qua email hoặc đẩy, với tùy chọn danh mục cho từng người dùng."
+      },
+      "passkeys-security": {
+        "title": "Passkey & bảo mật",
+        "description": "Đăng nhập không mật khẩu cho mọi loại tài khoản, phương thức đăng nhập dự phòng và chế độ chỉ mời cho phiên bản riêng tư."
+      },
+      "qr-sharing": {
+        "title": "Lời mời QR gần bạn",
+        "description": "Phiên QR dùng nhiều lần trong 15 phút với quét-để-tham gia trên điện thoại."
+      },
+      "recurring": {
+        "title": "Khoản chi định kỳ bền vững",
+        "description": "Chuỗi thực với khoảng lặp, thời điểm kết thúc, bắt kịp kỳ lỡ, thử lại, xem trước và dừng/sửa/xóa rõ ràng."
+      },
+      "stats-budgets": {
+        "title": "Thống kê, biểu đồ & ngân sách",
+        "description": "Biểu đồ chi tiêu, hình ảnh danh mục hằng tháng, tổng hợp nhiều nhóm và ngân sách có cảnh báo vượt ngân sách."
+      },
+      "synced-groups": {
+        "title": "Nhóm đồng bộ & bạn bè",
+        "description": "Nhóm theo bạn trên mọi thiết bị với tư cách thành viên thực, sổ đối chiếu bạn bè 1-1 và lịch sử chỉnh sửa rõ người thực hiện."
+      }
+    },
+    "cta": {
+      "title": "Sẵn sàng thử cùng nhóm của bạn?",
+      "description": "Tạo tài khoản miễn phí — ẩn danh, không cần email — và các nhóm của bạn đồng bộ trên mọi thiết bị.",
+      "action": "Bắt đầu"
+    },
+    "demo": {
+      "eyebrow": "Demo tương tác",
+      "splitSettle": {
+        "title": "Trực quan hóa chia tiền + tất toán",
+        "description": "Thay đổi số tiền, người trả hoặc phần chia và xem số dư cùng các khoản tất toán tối thiểu cập nhật trực tiếp. Demo này chạy hoàn toàn trong trình duyệt của bạn — không cần tài khoản.",
+        "amountLabel": "Số tiền chi",
+        "payerLabel": "Người trả",
+        "modeLabel": "Chế độ chia",
+        "modeEqual": "Chia đều",
+        "modeCustom": "Tùy chỉnh",
+        "balancesTitle": "Số dư",
+        "settlementsTitle": "Các khoản tất toán đề xuất",
+        "settledLabel": "Mọi người đã tất toán xong — không cần khoản nào nữa.",
+        "comingTitle": "Sắp có thêm demo",
+        "comingDescription": "Máy tính số tiền, quy đổi tiền tệ và hướng dẫn sử dụng sẽ xuất hiện tiếp tại đây."
+      }
+    },
+    "hero": {
+      "title": "Mọi thứ bạn cần để chia chi phí",
+      "description": "Từ đăng nhập ẩn danh đến công cụ AI hàng loạt: thử demo tất toán bên dưới, rồi duyệt toàn bộ danh mục. Các demo tương tác mới sẽ lần lượt xuất hiện tại đây."
+    },
+    "sections": {
+      "developers": {
+        "title": "Nhà phát triển & thông báo"
+      },
+      "everyday": {
+        "title": "Chi tiêu hằng ngày"
+      },
+      "foundation": {
+        "title": "Tài khoản & đồng bộ"
+      },
+      "insights": {
+        "title": "Thông tin chi tiết & ngân sách"
+      },
+      "power": {
+        "title": "Công cụ mạnh & hàng loạt"
+      },
+      "sharing": {
+        "title": "Chia sẻ & nhận diện"
+      }
+    }
+  },
+  "NotFoundPage": {
+    "title": "Không tìm thấy trang",
+    "description": "Trang bạn đang tìm không tồn tại hoặc đã được di chuyển.",
+    "goHome": "Về trang chủ",
+    "goBack": "Quay lại",
+    "expenseTitle": "Không tìm thấy chi phí",
+    "expenseDescription": "Chi phí này không tồn tại hoặc đã bị xóa.",
+    "budgetTitle": "Không tìm thấy ngân sách",
+    "budgetDescription": "Ngân sách này không tồn tại hoặc đã bị xóa.",
+    "errorTitle": "Đã xảy ra lỗi",
+    "errorDescription": "Đã xảy ra lỗi không mong muốn. Hãy thử lại hoặc về trang chủ.",
+    "retry": "Thử lại"
   }
 }

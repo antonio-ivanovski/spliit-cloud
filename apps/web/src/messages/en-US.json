@@ -64,7 +64,8 @@
       "foreignDescription": "It will open {origin} in this browser. Only continue if you trust the host who showed it.",
       "foreignConfirm": "Open link",
       "foreignCancel": "Go back"
-    }
+    },
+    "viewFeatures": "Explore features"
   },
   "Header": {
     "signIn": "Sign in",
@@ -117,7 +118,8 @@
     "imprint": "Project notice",
     "sponsor": "Sponsor",
     "timeLabel": "Time of day",
-    "status": "Status"
+    "status": "Status",
+    "features": "Features"
   },
   "Expenses": {
     "title": "Expenses",
@@ -4706,5 +4708,149 @@
     "latest": "What's new",
     "viewAll": "See all updates",
     "dismiss": "Got it"
+  },
+  "Features": {
+    "hero": {
+      "title": "Everything you need to split expenses",
+      "description": "From anonymous sign-in to bulk AI tools: try the settlement demo below, then browse the full catalog. New interactive demos land here one by one."
+    },
+    "catalogLabel": "Full catalog",
+    "demo": {
+      "eyebrow": "Interactive demo",
+      "splitSettle": {
+        "title": "Split + settle visualizer",
+        "description": "Change the amount, payer, or shares and watch balances and minimal repayments update live. This demo runs entirely in your browser — no account needed.",
+        "amountLabel": "Expense amount",
+        "payerLabel": "Paid by",
+        "modeLabel": "Split mode",
+        "modeEqual": "Equal",
+        "modeCustom": "Custom",
+        "balancesTitle": "Balances",
+        "settlementsTitle": "Suggested repayments",
+        "settledLabel": "Everyone is settled — no repayments needed.",
+        "comingTitle": "More demos coming",
+        "comingDescription": "Amount calculator, currency conversion, and guided tours will appear here next."
+      }
+    },
+    "cta": {
+      "title": "Ready to try it with your group?",
+      "description": "Create a free account — anonymous, no email required — and your groups sync across devices.",
+      "action": "Get started"
+    },
+    "sections": {
+      "foundation": {
+        "title": "Accounts & sync"
+      },
+      "everyday": {
+        "title": "Everyday expenses"
+      },
+      "power": {
+        "title": "Power tools & batch"
+      },
+      "sharing": {
+        "title": "Sharing & identity"
+      },
+      "insights": {
+        "title": "Insights & budgets"
+      },
+      "developers": {
+        "title": "Developers & notifications"
+      }
+    },
+    "catalog": {
+      "anonymous-accounts": {
+        "title": "Anonymous accounts",
+        "description": "Start in a few clicks with just a display name — no email or social login. Recover with a link or passkey."
+      },
+      "passkeys-security": {
+        "title": "Passkeys & security",
+        "description": "Passwordless sign-in for every account type, backup sign-in choice, and invite-only mode for private instances."
+      },
+      "synced-groups": {
+        "title": "Synced groups & friends",
+        "description": "Groups follow you across devices with real membership, 1-on-1 friend ledgers, and attributable edits."
+      },
+      "core-expenses": {
+        "title": "Expenses, receipts & splits",
+        "description": "Groups, categories, receipt attachments, advanced splits, and an ad-free PWA experience."
+      },
+      "multi-payer": {
+        "title": "Multiple payers & itemized",
+        "description": "Several payers, line items, tax and tip, and precise per-person shares in one expense."
+      },
+      "calculator": {
+        "title": "Amount calculator",
+        "description": "Quick arithmetic right in the amount field while entering expenses."
+      },
+      "currency": {
+        "title": "Multi-currency & crypto",
+        "description": "Server-side conversion, exact amount overrides with implied rate shown, and cryptocurrency support."
+      },
+      "ai-assist": {
+        "title": "AI-assisted expenses",
+        "description": "Local dictionary plus group history plus one AI engine; scan receipts and describe expenses by voice."
+      },
+      "recurring": {
+        "title": "Durable recurring expenses",
+        "description": "Real series with intervals, endings, catch-up, retries, previews, and explicit stop/edit/delete."
+      },
+      "bulk-categorize": {
+        "title": "Bulk AI categorization",
+        "description": "Run the AI categorizer across many expenses at once — ideal after an import."
+      },
+      "import": {
+        "title": "Import anything",
+        "description": "Splitwise CSV, bank-statement CSVs with mapping wizard and duplicate detection, Cospend, and Spliit bundles."
+      },
+      "export": {
+        "title": "Export & reports",
+        "description": "CSV, printable PDF reports, and full group or account ZIP archives including documents."
+      },
+      "archive": {
+        "title": "Archive & delete",
+        "description": "Archive groups to make them view-only, or permanently delete them when done."
+      },
+      "qr-sharing": {
+        "title": "Nearby QR invites",
+        "description": "Multi-use 15-minute QR sessions with scan-to-join on mobile."
+      },
+      "identity": {
+        "title": "Group identity & links",
+        "description": "Emoji and colors, public view-only links, split presets, and member management."
+      },
+      "activity": {
+        "title": "Activity, comments & search",
+        "description": "Per-expense history and comments, For-you timeline, filtering, sorting, and archived-group search."
+      },
+      "balances": {
+        "title": "Balances & settlements",
+        "description": "Clear payment direction, quick settlement, combined payments, and subgroup units like couples."
+      },
+      "stats-budgets": {
+        "title": "Stats, charts & budgets",
+        "description": "Spending charts, monthly category visuals, cross-group roll-up, and budgets with over-budget alerts."
+      },
+      "notifications": {
+        "title": "Email & push notifications",
+        "description": "Group and expense updates by email or push, with per-user category preferences."
+      },
+      "developers": {
+        "title": "API, MCP, OAuth & webhooks",
+        "description": "OpenAPI plus Scalar docs, MCP assistant, delegated OAuth 2.1 scopes, and signed outbound webhooks."
+      }
+    }
+  },
+  "NotFoundPage": {
+    "title": "Page not found",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "goHome": "Go to home",
+    "goBack": "Go back",
+    "expenseTitle": "Expense not found",
+    "expenseDescription": "This expense doesn't exist or was deleted.",
+    "budgetTitle": "Budget not found",
+    "budgetDescription": "This budget doesn't exist or was deleted.",
+    "errorTitle": "Something went wrong",
+    "errorDescription": "An unexpected error occurred. Try again or go back home.",
+    "retry": "Try again"
   }
 }

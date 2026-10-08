@@ -64,7 +64,8 @@
       "foreignDescription": "Verrà aperto {origin} in questo browser. Continua solo se ti fidi dell'host che te l'ha mostrato.",
       "foreignConfirm": "Apri link",
       "foreignCancel": "Indietro"
-    }
+    },
+    "viewFeatures": "Esplora le funzionalità"
   },
   "Header": {
     "signIn": "Accedi",
@@ -89,7 +90,8 @@
     "imprint": "Note legali",
     "sponsor": "Sponsorizza",
     "timeLabel": "Momento della giornata",
-    "status": "Stato"
+    "status": "Stato",
+    "features": "Funzionalità"
   },
   "Expenses": {
     "title": "Spese",
@@ -4633,5 +4635,149 @@
     "latest": "Novità",
     "viewAll": "Vedi tutti gli aggiornamenti",
     "dismiss": "Capito"
+  },
+  "Features": {
+    "catalogLabel": "Catalogo completo",
+    "catalog": {
+      "activity": {
+        "title": "Attività, commenti e ricerca",
+        "description": "Cronologia e commenti per spesa, sequenza Per te, filtri, ordinamento e ricerca nei gruppi archiviati."
+      },
+      "ai-assist": {
+        "title": "Spese assistite dall'IA",
+        "description": "Dizionario locale più cronologia del gruppo più un motore IA; scansiona gli scontrini e descrivi le spese a voce."
+      },
+      "anonymous-accounts": {
+        "title": "Account anonimi",
+        "description": "Inizia in pochi clic con solo un nome visualizzato, senza email né accesso social. Recupera l'accesso con un link o una passkey."
+      },
+      "archive": {
+        "title": "Archiviazione ed eliminazione",
+        "description": "Archivia i gruppi per renderli di sola lettura oppure eliminali definitivamente quando hai finito."
+      },
+      "balances": {
+        "title": "Saldi e liquidazioni",
+        "description": "Direzione di pagamento chiara, liquidazione rapida, pagamenti combinati e sotto-unità come le coppie."
+      },
+      "bulk-categorize": {
+        "title": "Categorizzazione IA in blocco",
+        "description": "Esegui il categorizzatore IA su molte spese in una volta — ideale dopo un'importazione."
+      },
+      "calculator": {
+        "title": "Calcolatrice dell'importo",
+        "description": "Calcoli rapidi direttamente nel campo dell'importo mentre inserisci le spese."
+      },
+      "core-expenses": {
+        "title": "Spese, scontrini e suddivisioni",
+        "description": "Gruppi, categorie, allegati degli scontrini, suddivisioni avanzate e un'esperienza PWA senza pubblicità."
+      },
+      "currency": {
+        "title": "Multivaluta e cripto",
+        "description": "Conversione lato server, importi esatti con tasso implicito visibile e supporto alle criptovalute."
+      },
+      "developers": {
+        "title": "API, MCP, OAuth e webhook",
+        "description": "Documentazione OpenAPI più Scalar, assistente MCP, ambiti OAuth 2.1 delegati e webhook in uscita firmati."
+      },
+      "export": {
+        "title": "Esportazione e report",
+        "description": "CSV, report PDF stampabili e archivi ZIP completi di gruppo o account, documenti inclusi."
+      },
+      "identity": {
+        "title": "Identità del gruppo e link",
+        "description": "Emoji e colori, link pubblici di sola lettura, preset di suddivisione e gestione dei membri."
+      },
+      "import": {
+        "title": "Importa qualsiasi cosa",
+        "description": "CSV di Splitwise, CSV di estratti conto con procedura guidata di mapping e rilevamento duplicati, Cospend e pacchetti Spliit."
+      },
+      "multi-payer": {
+        "title": "Paganti multipli e per voci",
+        "description": "Più paganti, voci di dettaglio, tasse e mancia, e quote precise per persona in un'unica spesa."
+      },
+      "notifications": {
+        "title": "Notifiche email e push",
+        "description": "Aggiornamenti di gruppo e spese via email o push, con preferenze per categoria per ogni utente."
+      },
+      "passkeys-security": {
+        "title": "Passkey e sicurezza",
+        "description": "Accesso senza password per ogni tipo di account, opzione di accesso di riserva e modalità solo su invito per le istanze private."
+      },
+      "qr-sharing": {
+        "title": "Inviti QR nelle vicinanze",
+        "description": "Sessioni QR riutilizzabili da 15 minuti con partecipazione via scansione su mobile."
+      },
+      "recurring": {
+        "title": "Spese ricorrenti durature",
+        "description": "Serie reali con intervalli, scadenze, recuperi, riprovazioni, anteprime e arresto, modifica o eliminazione espliciti."
+      },
+      "stats-budgets": {
+        "title": "Statistiche, grafici e budget",
+        "description": "Grafici di spesa, viste mensili per categoria, riepilogo tra gruppi e budget con avvisi di superamento."
+      },
+      "synced-groups": {
+        "title": "Gruppi e amici sincronizzati",
+        "description": "I gruppi ti seguono su tutti i dispositivi con appartenenza reale, registri individuali con amici e modifiche attribuite."
+      }
+    },
+    "cta": {
+      "title": "Pronto a provarlo con il tuo gruppo?",
+      "description": "Crea un account gratuito — anonimo, senza email — e i tuoi gruppi si sincronizzano su tutti i dispositivi.",
+      "action": "Inizia"
+    },
+    "demo": {
+      "eyebrow": "Demo interattiva",
+      "splitSettle": {
+        "title": "Visualizzatore di suddivisione + liquidazione",
+        "description": "Cambia importo, pagante o quote e guarda saldi e liquidazioni minime aggiornarsi in diretta. Questa demo gira interamente nel tuo browser — senza account.",
+        "amountLabel": "Importo della spesa",
+        "payerLabel": "Pagato da",
+        "modeLabel": "Modalità di suddivisione",
+        "modeEqual": "In parti uguali",
+        "modeCustom": "Personalizzata",
+        "balancesTitle": "Saldi",
+        "settlementsTitle": "Liquidazioni suggerite",
+        "settledLabel": "Tutto liquidato — nessuna liquidazione necessaria.",
+        "comingTitle": "Altre demo in arrivo",
+        "comingDescription": "Calcolatrice dell'importo, conversione valuta e tour guidati appariranno qui a breve."
+      }
+    },
+    "hero": {
+      "title": "Tutto ciò che serve per dividere le spese",
+      "description": "Dall'accesso anonimo agli strumenti IA in blocco: prova la demo di liquidazione qui sotto, poi sfoglia il catalogo completo. Nuove demo interattive arrivano una alla volta."
+    },
+    "sections": {
+      "developers": {
+        "title": "Sviluppatori e notifiche"
+      },
+      "everyday": {
+        "title": "Spese quotidiane"
+      },
+      "foundation": {
+        "title": "Account e sincronizzazione"
+      },
+      "insights": {
+        "title": "Analisi e budget"
+      },
+      "power": {
+        "title": "Strumenti potenti e in blocco"
+      },
+      "sharing": {
+        "title": "Condivisione e identità"
+      }
+    }
+  },
+  "NotFoundPage": {
+    "title": "Pagina non trovata",
+    "description": "La pagina che stai cercando non esiste o è stata spostata.",
+    "goHome": "Vai alla home",
+    "goBack": "Indietro",
+    "expenseTitle": "Spesa non trovata",
+    "expenseDescription": "Questa spesa non esiste o è stata eliminata.",
+    "budgetTitle": "Budget non trovato",
+    "budgetDescription": "Questo budget non esiste o è stato eliminato.",
+    "errorTitle": "Qualcosa è andato storto",
+    "errorDescription": "Si è verificato un errore imprevisto. Riprova o torna alla home.",
+    "retry": "Riprova"
   }
 }

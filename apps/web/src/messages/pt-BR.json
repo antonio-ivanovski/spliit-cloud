@@ -2425,5 +2425,112 @@
     "review": "Revisar ou cancelar a exclusão",
     "executing": "A exclusão da conta começou.",
     "viewStatus": "Ver o status da exclusão"
+  },
+  "Features": {
+    "catalog": {
+      "activity": {
+        "title": "Atividade, comentários e busca",
+        "description": "Histórico e comentários por despesa, linha do tempo Para você, filtragem, ordenação e busca em grupos arquivados."
+      },
+      "ai-assist": {
+        "title": "Despesas assistidas por IA",
+        "description": "Dicionário local mais histórico do grupo mais um motor de IA; escaneie recibos e descreva despesas por voz."
+      },
+      "anonymous-accounts": {
+        "title": "Contas anônimas",
+        "description": "Comece em poucos cliques só com um nome de exibição — sem e-mail nem login social. Recupere com um link ou chave de acesso."
+      },
+      "archive": {
+        "title": "Arquivar e excluir",
+        "description": "Arquive grupos para deixá-los somente leitura ou exclua-os permanentemente quando terminar."
+      },
+      "balances": {
+        "title": "Saldos e acertos",
+        "description": "Direção de pagamento clara, acerto rápido, pagamentos combinados e subunidades como casais."
+      },
+      "bulk-categorize": {
+        "title": "Categorização em massa com IA",
+        "description": "Rode o categorizador de IA em muitas despesas de uma vez — ideal após uma importação."
+      },
+      "calculator": {
+        "description": "Cálculos rápidos direto no campo do valor ao lançar despesas."
+      },
+      "core-expenses": {
+        "description": "Grupos, categorias, recibos anexados, divisões avançadas e uma experiência PWA sem anúncios."
+      },
+      "currency": {
+        "description": "Conversão no servidor, valores exatos com taxa implícita exibida e suporte a criptomoedas."
+      },
+      "developers": {
+        "description": "Documentação OpenAPI mais Scalar, assistente MCP, escopos delegados OAuth 2.1 e webhooks de saída assinados."
+      },
+      "export": {
+        "description": "CSV, relatórios PDF para impressão e arquivos ZIP completos do grupo ou da conta, incluindo documentos."
+      },
+      "identity": {
+        "title": "Identidade do grupo e links",
+        "description": "Emojis e cores, links públicos somente leitura, presets de divisão e gerenciamento de membros."
+      },
+      "import": {
+        "title": "Importe o que quiser",
+        "description": "CSV do Splitwise, CSVs de extratos bancários com assistente de mapeamento e detecção de duplicados, Cospend e pacotes Spliit."
+      },
+      "multi-payer": {
+        "title": "Vários pagadores e por itens",
+        "description": "Vários pagadores, itens detalhados, impostos e gorjeta, e valores precisos por pessoa em uma só despesa."
+      },
+      "notifications": {
+        "description": "Atualizações do grupo e das despesas por e-mail ou push, com preferências por categoria para cada usuário."
+      },
+      "passkeys-security": {
+        "description": "Login sem senha para todos os tipos de conta, opção de acesso reserva e modo somente por convite para instâncias privadas."
+      },
+      "qr-sharing": {
+        "title": "Convites QR por perto",
+        "description": "Sessões QR reutilizáveis de 15 minutos com entrada por escaneamento no celular."
+      },
+      "recurring": {
+        "description": "Séries reais com intervalos, términos, atualizações, novas tentativas, pré-visualizações e parar, editar ou excluir explícitos."
+      },
+      "stats-budgets": {
+        "description": "Gráficos de despesas, visuais mensais por categoria, resumo entre grupos e orçamentos com alertas de estouro."
+      },
+      "synced-groups": {
+        "description": "Seus grupos acompanham você em todos os dispositivos com participação real, registros individuais com amigos e edições atribuídas."
+      }
+    },
+    "cta": {
+      "title": "Pronto para testar com seu grupo?",
+      "description": "Crie uma conta gratuita — anônima, sem e-mail — e seus grupos se sincronizam em todos os dispositivos."
+    },
+    "demo": {
+      "splitSettle": {
+        "title": "Visualizador de divisão + acerto",
+        "description": "Altere o valor, o pagador ou as partes e veja os saldos e os acertos mínimos atualizarem ao vivo. Esta demonstração roda totalmente no seu navegador — sem conta.",
+        "settlementsTitle": "Acertos sugeridos",
+        "settledLabel": "Tudo acertado — sem acertos necessários.",
+        "comingTitle": "Mais demos a caminho",
+        "comingDescription": "A calculadora de valores, a conversão de moeda e os tours guiados vão aparecer aqui a seguir."
+      }
+    },
+    "hero": {
+      "title": "Tudo o que você precisa para dividir despesas",
+      "description": "Do login anônimo às ferramentas massivas de IA: teste a demonstração de acerto abaixo e explore o catálogo completo. Novas demonstrações interativas chegam uma a uma."
+    },
+    "sections": {
+      "developers": {
+        "title": "Desenvolvedores e notificações"
+      },
+      "sharing": {
+        "title": "Compartilhamento e identidade"
+      }
+    }
+  },
+  "NotFoundPage": {
+    "description": "A página que você procura não existe ou foi movida.",
+    "expenseDescription": "Esta despesa não existe ou foi excluída.",
+    "budgetDescription": "Este orçamento não existe ou foi excluído.",
+    "errorTitle": "Algo deu errado",
+    "errorDescription": "Ocorreu um erro inesperado. Tente novamente ou volte ao início."
   }
 }

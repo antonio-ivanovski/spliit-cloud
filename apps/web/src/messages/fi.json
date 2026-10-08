@@ -64,7 +64,8 @@
       "foreignDescription": "Se avaa {origin} tässä selaimessa. Jatka vain, jos luotat kutsujaan, joka sen näytti.",
       "foreignConfirm": "Avaa linkki",
       "foreignCancel": "Takaisin"
-    }
+    },
+    "viewFeatures": "Tutustu ominaisuuksiin"
   },
   "Header": {
     "signIn": "Kirjaudu sisään",
@@ -89,7 +90,8 @@
     "imprint": "Julkaisutiedot",
     "sponsor": "Sponsori",
     "timeLabel": "Vuorokaudenaika",
-    "status": "Tila"
+    "status": "Tila",
+    "features": "Ominaisuudet"
   },
   "Expenses": {
     "title": "Kulut",
@@ -4603,5 +4605,149 @@
     "latest": "Uutta",
     "viewAll": "Näytä kaikki päivitykset",
     "dismiss": "Selvä"
+  },
+  "Features": {
+    "catalogLabel": "Koko luettelo",
+    "catalog": {
+      "activity": {
+        "title": "Toiminta, kommentit ja haku",
+        "description": "Kulukohtainen historia ja kommentit, Sinulle-aikajana, suodatus, lajittelu ja arkistoitujen ryhmien haku."
+      },
+      "ai-assist": {
+        "title": "Tekoälyavusteiset kulut",
+        "description": "Paikallinen sanakirja sekä ryhmähistoria sekä yksi tekoälymoottori; skannaa kuitteja ja kuvaa kuluja äänellä."
+      },
+      "anonymous-accounts": {
+        "title": "Anonyymit tilit",
+        "description": "Aloita muutamalla klikkauksella pelkällä näyttönimellä — ei sähköpostia eikä sosiaalista kirjautumista. Palauta linkillä tai passkeyllä."
+      },
+      "archive": {
+        "title": "Arkistointi ja poisto",
+        "description": "Arkistoi ryhmät luku-tilaan tai poista ne pysyvästi, kun olet valmis."
+      },
+      "balances": {
+        "title": "Saldot ja tasaukset",
+        "description": "Selkeä maksusuunta, nopea tasaus, yhdistetyt maksut ja alaryhmäyksiköt kuten pariskunnat."
+      },
+      "bulk-categorize": {
+        "title": "Tekoälyluokittelu massana",
+        "description": "Aja tekoälyluokittelu monelle kululle kerralla — ihanteellinen tuonnin jälkeen."
+      },
+      "calculator": {
+        "title": "Summalaskin",
+        "description": "Nopea laskutoimitus suoraan summakentässä kuluja kirjattaessa."
+      },
+      "core-expenses": {
+        "title": "Kulut, kuitit ja jaot",
+        "description": "Ryhmät, kategoriat, kuittiliitteet, edistyneet jaot ja mainokseton PWA-kokemus."
+      },
+      "currency": {
+        "title": "Monivaluutta ja krypto",
+        "description": "Palvelinpuolen muunto, tarkkojen summien ohitukset näytetyllä implisiittisellä kurssilla sekä kryptovaluuttatuki."
+      },
+      "developers": {
+        "title": "API, MCP, OAuth ja webhookit",
+        "description": "OpenAPI ja Scalar-dokumentaatio, MCP-avustaja, delegoidut OAuth 2.1 -valtuudet ja allekirjoitetut lähtevät webhookit."
+      },
+      "export": {
+        "title": "Vienti ja raportit",
+        "description": "CSV, tulostettavat PDF-raportit sekä täydet ryhmä- tai tili-ZIP-arkistot asiakirjoineen."
+      },
+      "identity": {
+        "title": "Ryhmän ilme ja linkit",
+        "description": "Emojit ja värit, julkiset vain-luku-linkit, jakoesitykset ja jäsenten hallinta."
+      },
+      "import": {
+        "title": "Tuo mitä vain",
+        "description": "Splitwise-CSV, tiliote-CSV:t yhdistämisvelholla ja kaksoiskappaleiden tunnistuksella, Cospend ja Spliit-paketit."
+      },
+      "multi-payer": {
+        "title": "Useita maksajia ja Nimikkeittäin",
+        "description": "Useita maksajia, nimikkeitä, vero ja tippi sekä tarkat henkilökohtaiset osuudet yhdessä kulussa."
+      },
+      "notifications": {
+        "title": "Sähköposti- ja push-ilmoitukset",
+        "description": "Ryhmä- ja kulupäivitykset sähköpostilla tai pushina, käyttäjäkohtaisilla kategoria-asetuksilla."
+      },
+      "passkeys-security": {
+        "title": "Passkeyt ja turvallisuus",
+        "description": "Salasanaton kirjautuminen kaikille tilityypeille, varakirjautumisvaihtoehto ja kutsutila yksityisille instansseille."
+      },
+      "qr-sharing": {
+        "title": "Lähellä olevat QR-kutsut",
+        "description": "Monikäyttöiset 15 minuutin QR-istunnot, joihin liitytään skannaamalla mobiililla."
+      },
+      "recurring": {
+        "title": "Kestävät toistuvat kulut",
+        "description": "Aitoja sarjoja väleillä, päättymisillä, kiinniotoilla, uudelleenyrityksillä, esikatseluilla sekä selkeä lopetus, muokkaus ja poisto."
+      },
+      "stats-budgets": {
+        "title": "Tilastot, kaaviot ja budjetit",
+        "description": "Kulukaaviot, kuukausittaiset kategorianäkymät, ryhmien välinen yhteenveto sekä budjetit ylitysvaroituksilla."
+      },
+      "synced-groups": {
+        "title": "Synkronoidut ryhmät ja kaverit",
+        "description": "Ryhmät seuraavat sinua laitteelta toiselle todellisella jäsenyydellä, kahdenkeskisillä kaverisaldoilla ja jäljitettävillä muokkauksilla."
+      }
+    },
+    "cta": {
+      "title": "Valmiina kokeilemaan ryhmäsi kanssa?",
+      "description": "Luo ilmainen tili — anonyymisti, ilman sähköpostia — ja ryhmäsi synkronoituvat laitteidesi välillä.",
+      "action": "Aloita"
+    },
+    "demo": {
+      "eyebrow": "Interaktiivinen demo",
+      "splitSettle": {
+        "title": "Jako- ja tasausvisualisointi",
+        "description": "Muuta summaa, maksajaa tai osuuksia ja katso saldojen ja vähimmäistasausten päivittyvän livenä. Tämä demo toimii kokonaan selaimessasi — tiliä ei tarvita.",
+        "amountLabel": "Kulun summa",
+        "payerLabel": "Maksaja",
+        "modeLabel": "Jakotapa",
+        "modeEqual": "Tasan",
+        "modeCustom": "Mukautettu",
+        "balancesTitle": "Saldot",
+        "settlementsTitle": "Ehdotetut tasaukset",
+        "settledLabel": "Kaikki on tasattu — tasauksia ei tarvita.",
+        "comingTitle": "Lisää demoja tulossa",
+        "comingDescription": "Summalaskin, valuuttamuunnos ja opastetut kierrokset ilmestyvät tänne seuraavaksi."
+      }
+    },
+    "hero": {
+      "title": "Kaikki mitä tarvitset kulujen jakamiseen",
+      "description": "Anonyymistä kirjautumisesta massatekoälytyökaluihin: kokeile alla tasausdemoa ja selaa sitten koko luetteloa. Uudet interaktiiviset demot ilmestyvät tänne yksi kerrallaan."
+    },
+    "sections": {
+      "developers": {
+        "title": "Kehittäjät ja ilmoitukset"
+      },
+      "everyday": {
+        "title": "Arjen kulut"
+      },
+      "foundation": {
+        "title": "Tilit ja synkronointi"
+      },
+      "insights": {
+        "title": "Oivallukset ja budjetit"
+      },
+      "power": {
+        "title": "Tehotyökalut ja massa-ajo"
+      },
+      "sharing": {
+        "title": "Jakaminen ja identiteetti"
+      }
+    }
+  },
+  "NotFoundPage": {
+    "title": "Sivua ei löytynyt",
+    "description": "Etsimääsi sivua ei ole olemassa tai se on siirretty.",
+    "goHome": "Siirry etusivulle",
+    "goBack": "Takaisin",
+    "expenseTitle": "Kulua ei löytynyt",
+    "expenseDescription": "Tätä kulua ei ole olemassa tai se on poistettu.",
+    "budgetTitle": "Budjettia ei löytynyt",
+    "budgetDescription": "Tätä budjettia ei ole olemassa tai se on poistettu.",
+    "errorTitle": "Jokin meni pieleen",
+    "errorDescription": "Tapahtui odottamaton virhe. Yritä uudelleen tai palaa etusivulle.",
+    "retry": "Yritä uudelleen"
   }
 }

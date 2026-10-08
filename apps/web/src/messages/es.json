@@ -64,7 +64,8 @@
       "foreignDescription": "Se abrirá {origin} en este navegador. Continúa solo si confías en el anfitrión que te lo mostró.",
       "foreignConfirm": "Abrir enlace",
       "foreignCancel": "Volver"
-    }
+    },
+    "viewFeatures": "Explorar funciones"
   },
   "Header": {
     "signIn": "Iniciar sesión",
@@ -89,7 +90,8 @@
     "imprint": "Aviso legal",
     "sponsor": "Patrocinar",
     "timeLabel": "Momento del día",
-    "status": "Estado"
+    "status": "Estado",
+    "features": "Funciones"
   },
   "Expenses": {
     "title": "Gastos",
@@ -4684,5 +4686,149 @@
     "latest": "Novedades",
     "viewAll": "Ver todas las actualizaciones",
     "dismiss": "Entendido"
+  },
+  "Features": {
+    "catalogLabel": "Catálogo completo",
+    "catalog": {
+      "activity": {
+        "title": "Actividad, comentarios y búsqueda",
+        "description": "Historial y comentarios por gasto, cronología Para ti, filtrado, ordenación y búsqueda en grupos archivados."
+      },
+      "ai-assist": {
+        "title": "Gastos con ayuda de IA",
+        "description": "Diccionario local más historial del grupo más un motor de IA; escanea recibos y describe gastos por voz."
+      },
+      "anonymous-accounts": {
+        "title": "Cuentas anónimas",
+        "description": "Empieza en unos clics solo con un nombre visible, sin correo ni inicio social. Recupera el acceso con un enlace o una llave de acceso."
+      },
+      "archive": {
+        "title": "Archivar y eliminar",
+        "description": "Archiva grupos para dejarlos como solo lectura o elimínalos definitivamente cuando termines."
+      },
+      "balances": {
+        "title": "Saldos y liquidaciones",
+        "description": "Dirección de pago clara, liquidación rápida, pagos combinados y subunidades como parejas."
+      },
+      "bulk-categorize": {
+        "title": "Categorización masiva con IA",
+        "description": "Ejecuta el categorizador de IA en muchos gastos a la vez, ideal después de una importación."
+      },
+      "calculator": {
+        "title": "Calculadora de importes",
+        "description": "Operaciones rápidas directamente en el campo del importe al introducir gastos."
+      },
+      "core-expenses": {
+        "title": "Gastos, recibos y repartos",
+        "description": "Grupos, categorías, adjuntos de recibos, repartos avanzados y una PWA sin anuncios."
+      },
+      "currency": {
+        "title": "Multidivisa y cripto",
+        "description": "Conversión en el servidor, ajustes exactos del importe con tipo implícito visible y compatibilidad con criptomonedas."
+      },
+      "developers": {
+        "title": "API, MCP, OAuth y webhooks",
+        "description": "OpenAPI más docs de Scalar, asistente MCP, ámbitos delegados de OAuth 2.1 y webhooks salientes firmados."
+      },
+      "export": {
+        "title": "Exportación e informes",
+        "description": "CSV, informes PDF imprimibles y archivos ZIP completos del grupo o la cuenta, con documentos."
+      },
+      "identity": {
+        "title": "Identidad del grupo y enlaces",
+        "description": "Emojis y colores, enlaces públicos de solo lectura, ajustes predefinidos de reparto y gestión de miembros."
+      },
+      "import": {
+        "title": "Importa lo que sea",
+        "description": "CSV de Splitwise, CSV de extractos bancarios con asistente de correspondencia y detección de duplicados, Cospend y paquetes de Spliit."
+      },
+      "multi-payer": {
+        "title": "Múltiples pagadores y por artículos",
+        "description": "Varios pagadores, líneas de detalle, impuestos y propinas, y partes precisas por persona en un solo gasto."
+      },
+      "notifications": {
+        "title": "Notificaciones por correo y push",
+        "description": "Novedades del grupo y los gastos por correo o notificaciones push, con preferencias por categoría para cada usuario."
+      },
+      "passkeys-security": {
+        "title": "Llaves de acceso y seguridad",
+        "description": "Inicio sin contraseña para todo tipo de cuenta, opción de acceso de respaldo y modo solo por invitación para instancias privadas."
+      },
+      "qr-sharing": {
+        "title": "Invitaciones QR cercanas",
+        "description": "Sesiones QR reutilizables de 15 minutos con unión por escaneo en el móvil."
+      },
+      "recurring": {
+        "title": "Gastos periódicos duraderos",
+        "description": "Series reales con intervalos, finalización, puesta al día, reintentos, vistas previas y detener, editar o eliminar explícitos."
+      },
+      "stats-budgets": {
+        "title": "Estadísticas, gráficos y presupuestos",
+        "description": "Gráficos de gasto, visuales mensuales por categoría, resumen entre grupos y presupuestos con alertas de exceso."
+      },
+      "synced-groups": {
+        "title": "Grupos y amigos sincronizados",
+        "description": "Tus grupos te acompañan en todos los dispositivos con membresía real, registros uno a uno con amigos y ediciones atribuidas."
+      }
+    },
+    "cta": {
+      "title": "¿Listo para probarlo con tu grupo?",
+      "description": "Crea una cuenta gratis, anónima y sin correo, y tus grupos se sincronizan en todos los dispositivos.",
+      "action": "Empezar"
+    },
+    "demo": {
+      "eyebrow": "Demostración interactiva",
+      "splitSettle": {
+        "title": "Visualizador de reparto y liquidación",
+        "description": "Cambia el importe, el pagador o las partes y observa cómo se actualizan los saldos y los pagos mínimos de liquidación en directo. Esta demo funciona por completo en tu navegador, sin necesidad de cuenta.",
+        "amountLabel": "Importe del gasto",
+        "payerLabel": "Pagado por",
+        "modeLabel": "Modo de reparto",
+        "modeEqual": "A partes iguales",
+        "modeCustom": "Personalizado",
+        "balancesTitle": "Saldos",
+        "settlementsTitle": "Liquidaciones sugeridas",
+        "settledLabel": "Todo liquidado: no se necesitan liquidaciones.",
+        "comingTitle": "Más demostraciones en camino",
+        "comingDescription": "La calculadora de importes, la conversión de moneda y las visitas guiadas aparecerán aquí próximamente."
+      }
+    },
+    "hero": {
+      "title": "Todo lo que necesitas para dividir gastos",
+      "description": "Del inicio anónimo a las herramientas masivas con IA: prueba la demo de liquidación y explora el catálogo completo. Nuevas demos interactivas llegan una a una."
+    },
+    "sections": {
+      "developers": {
+        "title": "Desarrolladores y notificaciones"
+      },
+      "everyday": {
+        "title": "Gastos del día a día"
+      },
+      "foundation": {
+        "title": "Cuentas y sincronización"
+      },
+      "insights": {
+        "title": "Análisis y presupuestos"
+      },
+      "power": {
+        "title": "Herramientas potentes y en lote"
+      },
+      "sharing": {
+        "title": "Compartir e identidad"
+      }
+    }
+  },
+  "NotFoundPage": {
+    "title": "Página no encontrada",
+    "description": "La página que buscas no existe o se ha movido.",
+    "goHome": "Ir al inicio",
+    "goBack": "Volver",
+    "expenseTitle": "Gasto no encontrado",
+    "expenseDescription": "Este gasto no existe o fue eliminado.",
+    "budgetTitle": "Presupuesto no encontrado",
+    "budgetDescription": "Este presupuesto no existe o fue eliminado.",
+    "errorTitle": "Algo salió mal",
+    "errorDescription": "Ocurrió un error inesperado. Inténtalo de nuevo o vuelve al inicio.",
+    "retry": "Reintentar"
   }
 }

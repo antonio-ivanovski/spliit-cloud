@@ -64,7 +64,8 @@
       "foreignDescription": "Va deschide {origin} în acest browser. Continuă doar dacă ai încredere în gazda care ți l-a arătat.",
       "foreignConfirm": "Deschide linkul",
       "foreignCancel": "Înapoi"
-    }
+    },
+    "viewFeatures": "Explorează funcționalitățile"
   },
   "Header": {
     "signIn": "Autentifică-te",
@@ -89,7 +90,8 @@
     "imprint": "Mențiuni legale",
     "sponsor": "Susține",
     "timeLabel": "Momentul zilei",
-    "status": "Stare"
+    "status": "Stare",
+    "features": "Funcționalități"
   },
   "Expenses": {
     "title": "Cheltuieli",
@@ -4638,5 +4640,149 @@
     "latest": "Noutăți",
     "viewAll": "Vezi toate actualizările",
     "dismiss": "Am înțeles"
+  },
+  "Features": {
+    "catalogLabel": "Catalog complet",
+    "catalog": {
+      "activity": {
+        "title": "Activitate, comentarii și căutare",
+        "description": "Istoric și comentarii per cheltuială, cronologie Pentru tine, filtrare, sortare și căutare în grupuri arhivate."
+      },
+      "ai-assist": {
+        "title": "Cheltuieli asistate de IA",
+        "description": "Dicționar local plus istoricul grupului plus un motor IA; scanează bonuri și descrie cheltuieli prin voce."
+      },
+      "anonymous-accounts": {
+        "title": "Conturi anonime",
+        "description": "Începe în câteva clicuri doar cu un nume afișat — fără e-mail sau autentificare socială. Recuperează accesul cu o legătură sau o cheie de acces."
+      },
+      "archive": {
+        "title": "Arhivare și ștergere",
+        "description": "Arhivează grupuri pentru a le face doar pentru vizualizare sau șterge-le definitiv când ai terminat."
+      },
+      "balances": {
+        "title": "Solduri și decontări",
+        "description": "Direcție de plată clară, decontare rapidă, plăți combinate și subunități precum cuplurile."
+      },
+      "bulk-categorize": {
+        "title": "Categorizare IA în masă",
+        "description": "Rulează categorizatorul IA pe multe cheltuieli odată — ideal după un import."
+      },
+      "calculator": {
+        "title": "Calculator de sume",
+        "description": "Calcule rapide direct în câmpul sumei când introduci cheltuieli."
+      },
+      "core-expenses": {
+        "title": "Cheltuieli, bonuri și împărțiri",
+        "description": "Grupuri, categorii, atașamente de bonuri, împărțiri avansate și o experiență PWA fără reclame."
+      },
+      "currency": {
+        "title": "Multivalută și cripto",
+        "description": "Conversie pe server, sume exacte cu cursul implicit afișat și suport pentru criptomonede."
+      },
+      "developers": {
+        "title": "API, MCP, OAuth și webhook-uri",
+        "description": "Documentație OpenAPI plus Scalar, asistent MCP, domenii delegate OAuth 2.1 și webhook-uri semnate de ieșire."
+      },
+      "export": {
+        "title": "Export și rapoarte",
+        "description": "CSV, rapoarte PDF imprimabile și arhive ZIP complete de grup sau cont, inclusiv documente."
+      },
+      "identity": {
+        "title": "Identitatea grupului și legături",
+        "description": "Emoji și culori, legături publice doar pentru vizualizare, presetări de împărțire și gestionarea membrilor."
+      },
+      "import": {
+        "title": "Importă orice",
+        "description": "CSV Splitwise, CSV-uri de extrase bancare cu asistent de mapare și detectare duplicate, Cospend și pachete Spliit."
+      },
+      "multi-payer": {
+        "title": "Plătitori multipli și detaliat",
+        "description": "Mai mulți plătitori, linii de detaliu, taxe și bacșiș, plus cote precise per persoană într-o singură cheltuială."
+      },
+      "notifications": {
+        "title": "Notificări e-mail și push",
+        "description": "Actualizări de grup și cheltuieli prin e-mail sau push, cu preferințe per categorie pentru fiecare utilizator."
+      },
+      "passkeys-security": {
+        "title": "Chei de acces și securitate",
+        "description": "Autentificare fără parolă pentru orice tip de cont, opțiune de rezervă și mod doar pe bază de invitație pentru instanțele private."
+      },
+      "qr-sharing": {
+        "title": "Invitații QR din apropiere",
+        "description": "Sesiuni QR reutilizabile de 15 minute cu alăturare prin scanare pe mobil."
+      },
+      "recurring": {
+        "title": "Cheltuieli recurente durabile",
+        "description": "Serii reale cu intervale, încheieri, recuperare, reîncercări, previzualizări și oprire, editare sau ștergere explicite."
+      },
+      "stats-budgets": {
+        "title": "Statistici, grafice și bugete",
+        "description": "Grafice de cheltuieli, vizualizări lunare per categorie, total inter-grupuri și bugete cu alerte de depășire."
+      },
+      "synced-groups": {
+        "title": "Grupuri și prieteni sincronizați",
+        "description": "Grupurile te urmează pe toate dispozitivele cu apartenență reală, registre individuale cu prieteni și editări atribuite."
+      }
+    },
+    "cta": {
+      "title": "Gata să încerci cu grupul tău?",
+      "description": "Creează un cont gratuit — anonim, fără e-mail — iar grupurile tale se sincronizează pe toate dispozitivele.",
+      "action": "Începe"
+    },
+    "demo": {
+      "eyebrow": "Demo interactiv",
+      "splitSettle": {
+        "title": "Vizualizator împărțire + decontare",
+        "description": "Schimbă suma, plătitorul sau cotele și vezi soldurile și decontările minime actualizându-se live. Acest demo rulează complet în browserul tău — fără cont.",
+        "amountLabel": "Suma cheltuielii",
+        "payerLabel": "Plătit de",
+        "modeLabel": "Mod de împărțire",
+        "modeEqual": "Egal",
+        "modeCustom": "Personalizat",
+        "balancesTitle": "Solduri",
+        "settlementsTitle": "Decontări sugerate",
+        "settledLabel": "Totul e decontat — nicio decontare necesară.",
+        "comingTitle": "Mai multe demo-uri în curând",
+        "comingDescription": "Calculatorul de sume, conversia valutară și tururile ghidate vor apărea aici în continuare."
+      }
+    },
+    "hero": {
+      "title": "Tot ce ai nevoie pentru a împărți cheltuieli",
+      "description": "De la autentificarea anonimă la instrumente IA în masă: încearcă demo-ul de decontare de mai jos, apoi răsfoiește catalogul complet. Demo-uri interactive noi apar aici unul câte unul."
+    },
+    "sections": {
+      "developers": {
+        "title": "Dezvoltatori și notificări"
+      },
+      "everyday": {
+        "title": "Cheltuieli zilnice"
+      },
+      "foundation": {
+        "title": "Conturi și sincronizare"
+      },
+      "insights": {
+        "title": "Analize și bugete"
+      },
+      "power": {
+        "title": "Instrumente puternice și în lot"
+      },
+      "sharing": {
+        "title": "Partajare și identitate"
+      }
+    }
+  },
+  "NotFoundPage": {
+    "title": "Pagina nu a fost găsită",
+    "description": "Pagina pe care o cauți nu există sau a fost mutată.",
+    "goHome": "Mergi la pagina principală",
+    "goBack": "Înapoi",
+    "expenseTitle": "Cheltuiala nu a fost găsită",
+    "expenseDescription": "Această cheltuială nu există sau a fost ștearsă.",
+    "budgetTitle": "Bugetul nu a fost găsit",
+    "budgetDescription": "Acest buget nu există sau a fost șters.",
+    "errorTitle": "Ceva a mers greșit",
+    "errorDescription": "A apărut o eroare neașteptată. Încearcă din nou sau întoarce-te la pagina principală.",
+    "retry": "Reîncearcă"
   }
 }

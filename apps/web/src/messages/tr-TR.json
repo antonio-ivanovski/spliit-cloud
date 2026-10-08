@@ -64,7 +64,8 @@
       "foreignDescription": "{origin} bu tarayıcıda açılacak. Yalnızca bunu gösteren ev sahibine güveniyorsanız devam edin.",
       "foreignConfirm": "Bağlantıyı aç",
       "foreignCancel": "Geri dön"
-    }
+    },
+    "viewFeatures": "Özellikleri keşfet"
   },
   "Header": {
     "signIn": "Oturum aç",
@@ -89,7 +90,8 @@
     "imprint": "Proje bildirimi",
     "sponsor": "Sponsor Ol",
     "timeLabel": "Günün saati",
-    "status": "Durum"
+    "status": "Durum",
+    "features": "Özellikler"
   },
   "Expenses": {
     "title": "Masraflar",
@@ -4611,5 +4613,149 @@
     "latest": "Yenilikler",
     "viewAll": "Tüm güncellemeleri görün",
     "dismiss": "Anladım"
+  },
+  "Features": {
+    "catalogLabel": "Tüm katalog",
+    "catalog": {
+      "activity": {
+        "title": "Aktivite, yorumlar ve arama",
+        "description": "Gider başına geçmiş ve yorumlar, Sana özel zaman akışı, filtreleme, sıralama ve arşivlenmiş grup araması."
+      },
+      "ai-assist": {
+        "title": "Yapay zekâ destekli giderler",
+        "description": "Yerel sözlük, grup geçmişi ve tek bir yapay zekâ motoru; fişleri tarayın ve giderleri sesle anlatın."
+      },
+      "anonymous-accounts": {
+        "title": "Anonim hesaplar",
+        "description": "Yalnızca görünen adla birkaç tıklamada başlayın — e-posta veya sosyal giriş yok. Bağlantı veya geçiş anahtarıyla kurtarın."
+      },
+      "archive": {
+        "title": "Arşivle ve sil",
+        "description": "Grupları salt görüntülenir yapmak için arşivleyin veya işiniz bitince kalıcı olarak silin."
+      },
+      "balances": {
+        "title": "Bakiyeler ve borç kapatma",
+        "description": "Net ödeme yönü, hızlı borç kapatma, birleştirilmiş ödemeler ve çiftler gibi alt grup birimleri."
+      },
+      "bulk-categorize": {
+        "title": "Toplu yapay zekâ sınıflandırma",
+        "description": "Yapay zekâ sınıflandırmayı birçok gidere birden uygulayın — içe aktarma sonrası için ideal."
+      },
+      "calculator": {
+        "title": "Tutar hesaplayıcı",
+        "description": "Gider girerken tutar alanının içinde hızlı dört işlem yapın."
+      },
+      "core-expenses": {
+        "title": "Giderler, fişler ve bölüşümler",
+        "description": "Gruplar, kategoriler, fiş ekleri, gelişmiş bölüşümler ve reklamsız PWA deneyimi."
+      },
+      "currency": {
+        "title": "Çoklu para birimi ve kripto",
+        "description": "Sunucu tarafı dönüştürme, hesaplanan kur gösterilen tam tutar geçersiz kılmaları ve kripto para desteği."
+      },
+      "developers": {
+        "title": "API, MCP, OAuth ve webhook'lar",
+        "description": "OpenAPI ve Scalar belgeleri, MCP asistanı, devredilmiş OAuth 2.1 kapsamları ve imzalı giden webhook'lar."
+      },
+      "export": {
+        "title": "Dışa aktar ve raporlar",
+        "description": "CSV, yazdırılabilir PDF raporlar ve belgeler dahil tam grup veya hesap ZIP arşivleri."
+      },
+      "identity": {
+        "title": "Grup kimliği ve bağlantılar",
+        "description": "Emoji ve renkler, herkese açık salt görüntüleme bağlantıları, bölüşüm hazır ayarları ve üye yönetimi."
+      },
+      "import": {
+        "title": "Her şeyi içe aktar",
+        "description": "Splitwise CSV, eşleştirme sihirbazlı ve yinelenen tespitli banka ekstresi CSV'leri, Cospend ve Spliit paketleri."
+      },
+      "multi-payer": {
+        "title": "Çoklu ödeyen ve kalem bazında",
+        "description": "Tek giderde birden çok ödeyen, kalem bazında satırlar, vergi ve bahşiş ile kişi başına net paylar."
+      },
+      "notifications": {
+        "title": "E-posta ve anlık bildirimler",
+        "description": "Kullanıcı başına kategori tercihleriyle e-posta veya anlık bildirimle grup ve gider güncellemeleri."
+      },
+      "passkeys-security": {
+        "title": "Geçiş anahtarları ve güvenlik",
+        "description": "Her hesap türü için şifresiz giriş, yedek giriş seçeneği ve özel kurulumlar için yalnızca davet modu."
+      },
+      "qr-sharing": {
+        "title": "Yakındaki QR davetleri",
+        "description": "Mobilde taraflayarak katılmalı, çok kullanımlı 15 dakikalık QR oturumları."
+      },
+      "recurring": {
+        "title": "Dayanıklı yinelenen giderler",
+        "description": "Aralıklı, bitişli, yakalamalı, yeniden denemeli, önizlemeli ve açık durdurma/düzenleme/silme özellikli gerçek seriler."
+      },
+      "stats-budgets": {
+        "title": "İstatistikler, grafikler ve bütçeler",
+        "description": "Harcama grafikleri, aylık kategori görünümleri, gruplar arası toplu görünüm ve bütçe aşımı uyarılı bütçeler."
+      },
+      "synced-groups": {
+        "title": "Senkron gruplar ve arkadaşlar",
+        "description": "Gerçek üyelikle gruplar tüm cihazlarda sizi takip eder; bire bir arkadaş defterleri ve kime ait olduğu belli düzenlemeler."
+      }
+    },
+    "cta": {
+      "title": "Grubunuzla denemeye hazır mısınız?",
+      "description": "Ücretsiz hesap oluşturun — anonim, e-posta gerekmez — gruplarınız tüm cihazlarda eşitlenir.",
+      "action": "Hemen başla"
+    },
+    "demo": {
+      "eyebrow": "İnteraktif demo",
+      "splitSettle": {
+        "title": "Bölüşüm + kapatma görselleştirici",
+        "description": "Tutarı, ödeyeni veya payları değiştirin; bakiyelerin ve en az borç kapatmanın anında güncellendiğini izleyin. Bu demo tamamen tarayıcınızda çalışır — hesap gerekmez.",
+        "amountLabel": "Gider tutarı",
+        "payerLabel": "Ödeyen",
+        "modeLabel": "Bölüşüm modu",
+        "modeEqual": "Eşit",
+        "modeCustom": "Özel",
+        "balancesTitle": "Bakiyeler",
+        "settlementsTitle": "Önerilen borç kapatmalar",
+        "settledLabel": "Herkesin hesabı kapandı — kapatılacak borç yok.",
+        "comingTitle": "Yeni demolar yolda",
+        "comingDescription": "Tutar hesaplayıcı, para birimi dönüştürme ve rehberli turlar burada görünecek."
+      }
+    },
+    "hero": {
+      "title": "Giderleri bölüşmek için ihtiyacınız olan her şey",
+      "description": "Anonim girişten toplu yapay zekâ araçlarına: aşağıdaki borç kapatma demosunu deneyin, ardından tüm kataloğa göz atın. Yeni interaktif demolar tek tek buraya ekleniyor."
+    },
+    "sections": {
+      "developers": {
+        "title": "Geliştiriciler ve bildirimler"
+      },
+      "everyday": {
+        "title": "Günlük giderler"
+      },
+      "foundation": {
+        "title": "Hesaplar ve senkronizasyon"
+      },
+      "insights": {
+        "title": "İstatistikler ve bütçeler"
+      },
+      "power": {
+        "title": "Güçlü araçlar ve toplu işlemler"
+      },
+      "sharing": {
+        "title": "Paylaşım ve kimlik"
+      }
+    }
+  },
+  "NotFoundPage": {
+    "title": "Sayfa bulunamadı",
+    "description": "Aradığınız sayfa mevcut değil veya taşınmış.",
+    "goHome": "Ana sayfaya git",
+    "goBack": "Geri dön",
+    "expenseTitle": "Masraf bulunamadı",
+    "expenseDescription": "Bu masraf mevcut değil veya silindi.",
+    "budgetTitle": "Bütçe bulunamadı",
+    "budgetDescription": "Bu bütçe mevcut değil veya silindi.",
+    "errorTitle": "Bir şeyler ters gitti",
+    "errorDescription": "Beklenmeyen bir hata oluştu. Tekrar deneyin veya ana sayfaya dönün.",
+    "retry": "Tekrar dene"
   }
 }

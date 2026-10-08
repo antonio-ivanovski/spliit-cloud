@@ -23,6 +23,7 @@ import { ExpenseSplitBars } from '@/app/groups/[groupId]/expenses/expense-split-
 import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
 import { DeletePopup } from '@/components/delete-popup'
 import { EditButton } from '@/components/edit-button'
+import { NotFoundPage } from '@/components/not-found-page'
 import { Button } from '@/components/ui/button'
 import {
   ResponsiveDialog,
@@ -463,9 +464,20 @@ export function ExpensePreviewModal({
               <Skeleton className="h-20 w-full" />
             </div>
           )}
-          {!isLoading && error && !useOfflineSource && (
-            <p className="text-sm text-muted-foreground">{error.message}</p>
-          )}
+          {!isLoading && error && !useOfflineSource ? (
+            error.data?.code === 'NOT_FOUND' ? (
+              <NotFoundPage
+                variant="plain"
+                title={tOffline('NotFoundPage.expenseTitle')}
+                description={tOffline('NotFoundPage.expenseDescription')}
+                showHomeLink={false}
+                backLabel={tCommon('close')}
+                onBack={() => handleOpenChange(false)}
+              />
+            ) : (
+              <p className="text-sm text-muted-foreground">{error.message}</p>
+            )
+          ) : null}
           {(!isLoading || useOfflineSource) &&
             (!error || useOfflineSource) &&
             expense &&
