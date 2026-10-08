@@ -8,7 +8,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
+import { useOfflineExpenseComments } from '@/lib/offline/read-hooks'
+import { isOfflineWriteError } from '@/lib/offline/write-guard'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { formatZonedDate } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
@@ -43,13 +46,27 @@ export function ExpenseComments({
   const accountTimeZone =
     accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpensePreview' })
+  const { t: tOffline } = useTranslation()
   const utils = trpc.useUtils()
   const createAttempt = useIdempotentCreate()
+  const isOnline = useOnlineStatus()
 
+  // Comments need a connection. Do not launch the list query offline;
+  // reads stay available via the downloaded expense detail. Writes are gated
+  // below and at the transport guard; the draft is preserved on failure.
   const commentsQuery = trpc.groups.expenses.comments.list.useQuery(
     { groupId, expenseId, linkInviteToken, viewKey },
-    { retry: false },
+    { retry: false, enabled: isOnline },
   )
+  // Offline read-only: the snapshot carries the full comment history inside
+  // the downloaded expense detail. Delete actions stay hidden offline.
+  const offlineComments = useOfflineExpenseComments(groupId, expenseId)
+  const downloadedComments = (offlineComments.data?.comments ?? null) as
+    | CommentItem[]
+    | null
+  // The downloaded history renders only when the network has no live list:
+  // online the live query stays authoritative.
+  const useOfflineSource = !isOnline && downloadedComments !== null
   const [draft, setDraft] = useState('')
   const [validationError, setValidationError] = useState<string | null>(null)
   const [deletingCommentId, setDeletingCommentId] = useState<string | null>(
@@ -60,7 +77,11 @@ export function ExpenseComments({
   const deleteMutation = trpc.groups.expenses.comments.delete.useMutation()
 
   const canComment = Boolean(
-    group && !group.archived && !isReadOnlyGroupViewer && currentMember,
+    group &&
+    !group.archived &&
+    !isReadOnlyGroupViewer &&
+    currentMember &&
+    isOnline,
   )
 
   const invalidateComments = async () => {
@@ -82,6 +103,12 @@ export function ExpenseComments({
 
   const handleCreate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    // UI entry check before optimism/dirty clearing: keep the draft and rely
+    // on the persistent output below. No toast here so the global 3s dedupe
+    // stays free for mutations that do toast.
+    if (!isOnline) {
+      return
+    }
     const body = draft.trim()
     if (!body) {
       setValidationError(t('commentRequired'))
@@ -100,12 +127,18 @@ export function ExpenseComments({
       if (result === null) return
       setDraft('')
       await invalidateComments()
-    } catch {
+    } catch (error) {
       // Keep the draft in place so a transient failure never loses a comment.
+      // Offline rejections are already explained once; suppress the duplicate
+      // generic error for guard errors.
+      if (isOfflineWriteError(error)) return
     }
   }
 
   const handleDelete = async (commentId: string) => {
+    if (!isOnline) {
+      return
+    }
     setDeletingCommentId(commentId)
     if (deleteMutation.isError) deleteMutation.reset()
     try {
@@ -122,9 +155,11 @@ export function ExpenseComments({
     | { comments?: CommentItem[] }
     | CommentItem[]
     | undefined
-  const comments = Array.isArray(queryData)
-    ? queryData
-    : (queryData?.comments ?? [])
+  const comments = useOfflineSource
+    ? (downloadedComments ?? [])
+    : Array.isArray(queryData)
+      ? queryData
+      : (queryData?.comments ?? [])
 
   return (
     <section
@@ -138,11 +173,11 @@ export function ExpenseComments({
         {t('commentsTitle')}
       </h3>
 
-      {commentsQuery.isLoading ? (
+      {commentsQuery.isLoading && !useOfflineSource ? (
         <p className="text-sm text-muted-foreground" aria-live="polite">
           {t('commentsLoading')}
         </p>
-      ) : commentsQuery.error ? (
+      ) : commentsQuery.error && !useOfflineSource ? (
         <div className="space-y-2" role="alert">
           <p className="text-sm text-destructive">{t('commentsError')}</p>
           <Button
@@ -184,19 +219,22 @@ export function ExpenseComments({
                       accountTimeZone,
                     )}
                   </time>
-                  {!readOnly && !isReadOnlyGroupViewer && comment.canDelete && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="-me-2 -mt-2 h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
-                      aria-label={t('commentDelete')}
-                      disabled={deletingCommentId === comment.id}
-                      onClick={() => void handleDelete(comment.id)}
-                    >
-                      <Trash className="h-3.5 w-3.5" aria-hidden="true" />
-                    </Button>
-                  )}
+                  {!readOnly &&
+                    !isReadOnlyGroupViewer &&
+                    comment.canDelete &&
+                    isOnline && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="-me-2 -mt-2 h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
+                        aria-label={t('commentDelete')}
+                        disabled={deletingCommentId === comment.id}
+                        onClick={() => void handleDelete(comment.id)}
+                      >
+                        <Trash className="h-3.5 w-3.5" aria-hidden="true" />
+                      </Button>
+                    )}
                 </div>
                 <p className="mt-1 text-sm break-words whitespace-pre-wrap">
                   {comment.body}
@@ -266,7 +304,13 @@ export function ExpenseComments({
         </form>
       )}
 
-      {deleteMutation.error && (
+      {!isOnline && (
+        <output className="block text-xs text-muted-foreground">
+          {tOffline('OfflineReadOnly.reconnectToEdit')}
+        </output>
+      )}
+
+      {deleteMutation.error && !isOfflineWriteError(deleteMutation.error) && (
         <p className="text-xs text-destructive" role="alert">
           {deleteMutation.error.message}
         </p>

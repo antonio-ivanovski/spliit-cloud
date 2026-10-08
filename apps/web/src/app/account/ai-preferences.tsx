@@ -6,6 +6,11 @@ import {
   useSyncedAccountPreferences,
 } from '@/components/account-preferences-sync'
 import { Switch } from '@/components/ui/switch'
+import {
+  useConnectionRequired,
+  useOfflineQueryEnabled,
+  useRemoteControlState,
+} from '@/lib/use-offline-controls'
 import { trpc } from '@/trpc/client'
 
 import {
@@ -50,12 +55,38 @@ export function AccountAiPreferences() {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'AccountSettings.aiPreferences',
   })
-  const query = trpc.features.get.useQuery()
+  const { t: tRoot } = useTranslation()
+  // Deployment flags are connection-required: never launch the query offline
+  // and never spin forever on loading.
+  const query = trpc.features.get.useQuery(undefined, {
+    enabled: useOfflineQueryEnabled(),
+  })
   const preferences = useSyncedAccountPreferences()
   const updater = useAccountPreferenceUpdater()
-  const patchesDisabled = updater !== null && !updater.ready
+  // All AI toggles are remote writes: disable offline (previously only
+  // `patchesDisabled`, so they stayed enabled while disconnected).
+  const remoteControl = useRemoteControlState({
+    ready: updater === null || updater.ready,
+    busy: updater?.isUpdating,
+  })
+  const needsConnection = useConnectionRequired(!!query.data)
 
   const deploymentFeatures = query.data as DeploymentFeatures | undefined
+
+  if (needsConnection) {
+    return (
+      <SettingsSection
+        id="ai-preferences"
+        title={t('title')}
+        description={t('description')}
+        icon={Sparkles as LucideIcon}
+      >
+        <p className="px-4 pb-4 text-sm text-muted-foreground sm:px-6">
+          {tRoot('OfflineReadOnly.needsConnection')}
+        </p>
+      </SettingsSection>
+    )
+  }
 
   if (!deploymentFeatures) {
     return (
@@ -96,7 +127,7 @@ export function AccountAiPreferences() {
             id="account-ai-preferences-enabled"
             aria-label={t('masterLabel')}
             checked={pref?.aiFeaturesEnabled !== false}
-            disabled={patchesDisabled}
+            disabled={remoteControl.disabled}
             onCheckedChange={(value) =>
               void updater?.patchPreferences({ aiFeaturesEnabled: value })
             }
@@ -118,7 +149,7 @@ export function AccountAiPreferences() {
                       'account-ai-preferences-category-extract',
                     )}
                     checked={pref?.aiCategoryExtractEnabled !== false}
-                    disabled={patchesDisabled}
+                    disabled={remoteControl.disabled}
                     onCheckedChange={(value) =>
                       void updater?.patchPreferences({
                         aiCategoryExtractEnabled: value,
@@ -139,7 +170,7 @@ export function AccountAiPreferences() {
                       'account-ai-preferences-receipt-scan',
                     )}
                     checked={pref?.aiReceiptScanEnabled !== false}
-                    disabled={patchesDisabled}
+                    disabled={remoteControl.disabled}
                     onCheckedChange={(value) =>
                       void updater?.patchPreferences({
                         aiReceiptScanEnabled: value,
@@ -168,7 +199,7 @@ export function AccountAiPreferences() {
                       'account-ai-preferences-voice-expense',
                     )}
                     checked={pref?.aiVoiceExpenseEnabled !== false}
-                    disabled={patchesDisabled}
+                    disabled={remoteControl.disabled}
                     onCheckedChange={(value) =>
                       void updater?.patchPreferences({
                         aiVoiceExpenseEnabled: value,

@@ -34,6 +34,20 @@ function decodeBase64Url(value: string): ArrayBuffer {
     .buffer as ArrayBuffer
 }
 
+/**
+ * Resolve the active worker registration, or null when no worker is registered.
+ * Never waits on serviceWorker.ready (which pends forever on a worker-less host
+ * and would hang callers such as logout).
+ */
+export async function getPushRegistration(): Promise<ServiceWorkerRegistration | null> {
+  try {
+    if (!isPushSupported()) return null
+    return (await navigator.serviceWorker.getRegistration()) ?? null
+  } catch {
+    return null
+  }
+}
+
 export async function getPushSubscription(): Promise<PushSubscription | null> {
   if (!isPushSupported()) return null
   // `serviceWorker.ready` only resolves while a worker is active; with none

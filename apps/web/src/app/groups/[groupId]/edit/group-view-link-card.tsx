@@ -27,10 +27,16 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
+import {
+  isOfflineWriteError,
+  notifyOfflineWriteBlocked,
+} from '@/lib/offline/write-guard'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 export function PublicViewOnlyLinkSection({ groupId }: { groupId: string }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'GroupViewLink' })
+  const { t: tOffline } = useTranslation()
   const { toast } = useToast()
   const utils = trpc.useUtils()
   const publicView = trpc.groups.view.get.useQuery({ groupId })
@@ -38,13 +44,23 @@ export function PublicViewOnlyLinkSection({ groupId }: { groupId: string }) {
     null,
   )
   const copyButtonRef = useRef<HTMLButtonElement>(null)
+  // Sharing/generating authenticated links requires connection.
+  // Copying the already-present plain-text URL stays usable offline.
+  const isOnline = useOnlineStatus()
 
   const refresh = async () => {
     setConfirmation(null)
     await utils.groups.view.get.invalidate({ groupId })
   }
-  const failure = (error: { message: string }) =>
+  const failure = (error: { message: string }) => {
+    if (isOfflineWriteError(error)) {
+      notifyOfflineWriteBlocked((message) =>
+        toast({ description: message, variant: 'destructive' }),
+      )
+      return
+    }
     toast({ description: error.message, variant: 'destructive' })
+  }
   const enable = trpc.groups.view.enable.useMutation({
     onSuccess: () => {
       toast({ description: t('enableSuccess') })
@@ -70,6 +86,7 @@ export function PublicViewOnlyLinkSection({ groupId }: { groupId: string }) {
   const url = publicView.data?.url ?? null
   const canManage = publicView.data?.canManage === true
   const pending = enable.isPending || replace.isPending || remove.isPending
+  const manageDisabled = pending || !isOnline
 
   return (
     <>
@@ -79,6 +96,11 @@ export function PublicViewOnlyLinkSection({ groupId }: { groupId: string }) {
           <CardDescription>{t('description')}</CardDescription>
         </CardHeader>
         <CardContent>
+          {!isOnline && (
+            <output className="mb-3 block text-sm text-muted-foreground">
+              {tOffline('OfflineReadOnly.reconnectToEdit')}
+            </output>
+          )}
           {url ? (
             <div className="space-y-3">
               <p className="text-sm text-muted-foreground">
@@ -108,9 +130,11 @@ export function PublicViewOnlyLinkSection({ groupId }: { groupId: string }) {
                       size="icon"
                       variant="ghost"
                       className="hidden shrink-0 rounded-none border-s sm:inline-flex"
-                      disabled={pending}
+                      disabled={manageDisabled}
                       aria-label={t('replace')}
-                      onClick={() => setConfirmation('replace')}
+                      onClick={() =>
+                        isOnline ? setConfirmation('replace') : undefined
+                      }
                     >
                       <RotateCw className="size-4" aria-hidden="true" />
                     </Button>
@@ -119,9 +143,11 @@ export function PublicViewOnlyLinkSection({ groupId }: { groupId: string }) {
                       size="icon"
                       variant="ghost"
                       className="hidden shrink-0 rounded-none border-s text-destructive hover:text-destructive sm:inline-flex"
-                      disabled={pending}
+                      disabled={manageDisabled}
                       aria-label={t('remove')}
-                      onClick={() => setConfirmation('remove')}
+                      onClick={() =>
+                        isOnline ? setConfirmation('remove') : undefined
+                      }
                     >
                       <Trash className="size-4" aria-hidden="true" />
                     </Button>
@@ -134,7 +160,7 @@ export function PublicViewOnlyLinkSection({ groupId }: { groupId: string }) {
                               size="icon"
                               variant="ghost"
                               className="shrink-0 rounded-none border-s"
-                              disabled={pending}
+                              disabled={manageDisabled}
                               aria-label={`${t('replace')} / ${t('remove')}`}
                             />
                           }
@@ -143,7 +169,11 @@ export function PublicViewOnlyLinkSection({ groupId }: { groupId: string }) {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-52">
                           <DropdownMenuItem
-                            onClick={() => setConfirmation('replace')}
+                            disabled={manageDisabled}
+                            onClick={() => {
+                              if (!isOnline) return
+                              setConfirmation('replace')
+                            }}
                           >
                             <RotateCw
                               className="me-2 size-4"
@@ -153,7 +183,11 @@ export function PublicViewOnlyLinkSection({ groupId }: { groupId: string }) {
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-destructive focus:text-destructive"
-                            onClick={() => setConfirmation('remove')}
+                            disabled={manageDisabled}
+                            onClick={() => {
+                              if (!isOnline) return
+                              setConfirmation('remove')
+                            }}
                           >
                             <Trash className="me-2 size-4" aria-hidden="true" />
                             {t('remove')}
@@ -171,8 +205,11 @@ export function PublicViewOnlyLinkSection({ groupId }: { groupId: string }) {
               <Button
                 type="button"
                 variant="secondary"
-                disabled={pending || publicView.isLoading}
-                onClick={() => enable.mutate({ groupId })}
+                disabled={manageDisabled || publicView.isLoading}
+                onClick={() => {
+                  if (!isOnline) return
+                  enable.mutate({ groupId })
+                }}
               >
                 <KeyRound className="me-2 size-4" aria-hidden="true" />
                 {t('enable')}
@@ -213,8 +250,9 @@ export function PublicViewOnlyLinkSection({ groupId }: { groupId: string }) {
             <Button
               type="button"
               variant={confirmation === 'remove' ? 'destructive' : 'default'}
-              disabled={pending}
+              disabled={manageDisabled}
               onClick={() => {
+                if (!isOnline) return
                 if (confirmation === 'replace') {
                   replace.mutate({ groupId, confirmed: true })
                 } else if (confirmation === 'remove') {

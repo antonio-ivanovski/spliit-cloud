@@ -77,7 +77,9 @@
     "anonymousSignOutWarning": "Tämä anonyymi tili voidaan palauttaa vain tallennetulla palautuslinkilläsi. Kirjaudu ulos nyt?",
     "signOutTitle": "Kirjaudu ulos?",
     "signOutError": "Uloskirjautuminen ei onnistunut. Yritä uudelleen.",
-    "cancel": "Peruuta"
+    "cancel": "Peruuta",
+    "signOutOffline": "Yhdistä kirjautuaksesi ulos",
+    "installApp": "Asenna sovellus"
   },
   "Footer": {
     "madeIn": "<github>Avoimen lähdekoodin yhteisön</github> rakkaudella tekemä ❤️",
@@ -2836,7 +2838,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "Et ole yhteydessä internetiin. Nyt tekemiäsi muutoksia ei tallenneta, ennen kuin muodostat yhteyden uudelleen."
+    "message": "Olet offline. Voit selata tietoja, mutta muutokset vaativat yhteyden.",
+    "serverUnavailable": "Spliit ei ole juuri nyt tavoitettavissa. Näytetään ladatut tiedot.",
+    "reconnecting": "Yhdistetään uudelleen… Voit jatkaa ladattujen tietojen lukemista."
   },
   "InstallPromotion": {
     "install": "Asenna",
@@ -2858,6 +2862,12 @@
       "description": "Lisää Spliit Cloud aloitusnäytölle selaimen valikosta.",
       "step1": "Napauta valikkopainiketta (⋮) oikeasta yläkulmasta",
       "step2": "Napauta Asenna"
+    },
+    "safari": {
+      "title": "Asenna Spliit Cloud",
+      "description": "Lisää Spliit Cloud Dockiin, jotta se avautuu yhdellä klikkauksella.",
+      "step1": "Avaa Safarissa Arkisto-valikko",
+      "step2": "Valitse Lisää Dockiin ja klikkaa Lisää"
     }
   },
   "EmptyState": {
@@ -4524,6 +4534,54 @@
     "involvedOnlyBadge": "Vain omat",
     "deleteConfirmDescription": "Tämä webhook ja sen toimitushistoria poistetaan pysyvästi. Odottavat toimitukset peruutetaan.",
     "deleteConfirm": "Poista"
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "Ladataan ryhmiä ({ready}/{total})",
+    "statusAvailable": "Saatavilla offline",
+    "statusPartial": "Joitakin ryhmiä ei ole ladattu",
+    "statusPaused": "Lataukset tauotettu",
+    "statusUnavailable": "Offline tallennus ei käytössä",
+    "statusNeedsUpdate": "Lataukset pitää päivittää",
+    "statusEmpty": "Ei ladattavia ryhmiä.",
+    "recent500Note": "Näytetään uusimmat 500. Yhdistä vanhempia varten.",
+    "title": "Offline lataukset",
+    "description": "Lue ladattuja ryhmiä ja kuluja ilman yhteyttä. Tiedostot tarvitsevat yhä yhteyden.",
+    "automatic": "Automaattiset lataukset",
+    "automaticDescription": "Lataa ryhmät offline lukemista varten kun olet online.",
+    "lastUpdated": "Päivitetty viimeksi {date}",
+    "storageEstimate": "Käyttää noin {size} offline tietoihin",
+    "refreshNow": "Päivitä nyt",
+    "clear": "Tyhjennä lataukset",
+    "clearConfirm": "Poistetaanko ladatut ryhmät ja kulut tältä laitteelta? Palvelimen tiedot pysyvät turvassa. Automaattiset lataukset kytketään pois.",
+    "keepOnDevice": "Säilytä lataukset tällä laitteella",
+    "keepOnDeviceDescription": "Pyydä selainta säilyttämään offline tiedot. Selain voi silti tyhjentää ne tilan loppuessa.",
+    "keepOnDeviceKept": "Selain yrittää säilyttää offline tiedot.",
+    "keepOnDeviceNotKept": "Selain ei säilyttänyt offline tietoja. Lataukset toimivat silti.",
+    "groupNotDownloaded": "Ei ladattu",
+    "downloadFailed": "Lataus epäonnistui",
+    "totalsIncomplete": "Yhdistä summien päivittämiseksi.",
+    "totalsIncompleteWithCount": "Yhdistä summien päivittämiseksi. ({count} odottaa)",
+    "recent500WithCount": "Näytetään uusimmat 500 / {count}. Yhdistä vanhempia varten.",
+    "offlineSearchHint": "Offline-haku käyttää tarkkaa tekstiä; kirjoitusvirheiden sieto tarvitsee yhteyden.",
+    "groupsNotDownloaded": "{count} ryhmää ei ladattu",
+    "groupsNeedUpdating": "{count} pitää päivittää",
+    "storageBlocked": "Sulje muut Spliit-välilehdet offline-tallennuksen päivityksen viimeistelemiseksi.",
+    "storageQuota": "Offline-tallennus on täynnä. Yritä uudelleen tai tyhjennä latauksia tilan vapauttamiseksi.",
+    "statusBlocked": "Offline-tallennus estetty",
+    "statusQuotaError": "Offline-tallennus täynnä",
+    "storageRetry": "Yritä tallennusta uudelleen",
+    "schemaUnsupported": "Päivitä sovellus ladattujen tietojen lukemiseksi",
+    "cleanupFailed": "Tilin tietoja ei voitu poistaa tältä laitteelta. Yritä uudelleen."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "Yhdistä tehdäksesi muutoksia",
+    "attachmentsNeedConnection": "Yhdistä nähdäksesi liitteet",
+    "needsConnection": "Tämä toiminto tarvitsee yhteyden",
+    "expenseMissing": "Tämä kulu ei ole juuri nyt saatavilla. Yhdistä uudelleen ladataksesi sen.",
+    "groupMissing": "Tämä ryhmä ei ole juuri nyt saatavilla. Yhdistä uudelleen ladataksesi sen.",
+    "balancesStale": "Saldot voivat olla vanhentuneita.",
+    "dataUnavailable": "Osa tiedoista ei ole saatavilla. Yhdistä uudelleen ladataksesi ne.",
+    "dataStale": "Osa tiedoista voi olla vanhentuneita."
   },
   "ApiErrorEmptyState": {
     "title": "Spliit ei ole käytettävissä",

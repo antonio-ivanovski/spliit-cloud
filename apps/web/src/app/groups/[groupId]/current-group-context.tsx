@@ -1,6 +1,10 @@
 import type { PropsWithChildren } from 'react'
 import { createContext, useContext } from 'react'
 
+import {
+  useOfflineWriteEligibility,
+  useRevalidateVisiblePermissions,
+} from '@/lib/offline/provider'
 import type { AppRouterOutput } from '@spliit/api/router'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
@@ -84,6 +88,51 @@ export const useCurrentGroupOrNull = () => useContext(CurrentGroupContext)
 export function useIsReadOnlyGroupViewer() {
   const { viewer, currentInvitation } = useCurrentGroup()
   return viewer ? viewer.access === 'READ_ONLY' : currentInvitation != null
+}
+
+/**
+ * Independent connection read-only state. This is NOT a fabricated
+ * `PENDING_INVITATION` access: server authorization
+ * (`useIsReadOnlyGroupViewer`
+ *
+ * - Per-expense `permissions`) stays unchanged. Effective actions are the
+ *   intersection of server permission and connectivity/session eligibility
+ *   (verified session + reachable transport + refetched visible permissions).
+ *   Browse/filter/expand/close/back/copy plain text remain usable while this is
+ *   true; create/edit/delete/archive/settle/invite/comment/import/AI/export and
+ *   sharing/generating authenticated links require `false`.
+ */
+// react-doctor-disable-next-line react-doctor/only-export-components -- hook export (use[A-Z]) allowed per rule docs
+export function useIsConnectionReadOnly() {
+  const { eligible } = useOfflineWriteEligibility()
+  return !eligible
+}
+
+/**
+ * Effective group write eligibility: server access allows writes AND the
+ * connection/session layer allows writes AND visible permission revalidation is
+ * not pending. Callers must still refetch the visible screen's
+ * permission/version after reconnect before enabling actions (see
+ * `useRevalidateVisiblePermissions`); unrelated downloads never unblock this.
+ * Server remains authoritative: a READ_ONLY viewer never becomes writable via
+ * reconnect alone.
+ */
+// react-doctor-disable-next-line react-doctor/only-export-components -- hook export (use[A-Z]) allowed per rule docs
+export function useGroupWriteEligibility(): {
+  canWrite: boolean
+  serverReadOnly: boolean
+  connectionReadOnly: boolean
+  isRevalidating: boolean
+} {
+  const serverReadOnly = useIsReadOnlyGroupViewer()
+  const connectionReadOnly = useIsConnectionReadOnly()
+  const { isRevalidating } = useRevalidateVisiblePermissions()
+  return {
+    canWrite: !serverReadOnly && !connectionReadOnly && !isRevalidating,
+    serverReadOnly,
+    connectionReadOnly,
+    isRevalidating,
+  }
 }
 
 export const CurrentGroupProvider = ({

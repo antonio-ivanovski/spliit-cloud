@@ -232,14 +232,15 @@ export type ActivityListItem = Activity & {
 export async function getActivities(
   groupId: string,
   options?: { offset?: number; length?: number },
+  client: Prisma.TransactionClient | typeof prisma = prisma,
 ): Promise<ActivityListItem[]> {
-  const group = await prisma.group.findUnique({
+  const group = await client.group.findUnique({
     where: { id: groupId },
     select: { ledgerId: true },
   })
   if (!group?.ledgerId) return []
 
-  const activities = await prisma.activity.findMany({
+  const activities = await client.activity.findMany({
     where: { ledgerId: group.ledgerId, visibleInGroupFeed: true },
     orderBy: [{ time: 'desc' }],
     skip: options?.offset,
@@ -253,7 +254,7 @@ export async function getActivities(
     )
     .map((activity) => activity.subjectId as string)
   const expenseRows = expenseSubjectIds.length
-    ? await prisma.expense.findMany({
+    ? await client.expense.findMany({
         where: { ledgerId: group.ledgerId, id: { in: expenseSubjectIds } },
         select: {
           id: true,
@@ -306,7 +307,7 @@ export async function getActivities(
   const accountActors =
     accountActorIds.length === 0
       ? []
-      : await prisma.user.findMany({
+      : await client.user.findMany({
           where: { id: { in: accountActorIds } },
           select: { id: true, name: true },
         })
@@ -318,7 +319,7 @@ export async function getActivities(
   const lpActors =
     lpActorIds.length === 0
       ? []
-      : await prisma.ledgerParticipant.findMany({
+      : await client.ledgerParticipant.findMany({
           where: { id: { in: lpActorIds } },
           select: participantDisplayNameSelect(),
         })

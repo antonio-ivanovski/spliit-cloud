@@ -6,7 +6,9 @@ import { z } from 'zod'
 import { useMascotController } from '@/components/mascot/mascot-context'
 import { useToast } from '@/components/ui/use-toast'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
+import { useOptionalOfflineSync } from '@/lib/offline/provider'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 import { resolveFormattingLocale } from '@spliit/domain'
 
@@ -262,9 +264,19 @@ export function useMembersDialogs() {
   const { toast } = useToast()
   const mascot = useMascotController()
   const navigate = useNavigate()
+  const isOnline = useOnlineStatus()
 
-  const membersQuery = trpc.account.members.useQuery({ groupId })
-  const invitationsQuery = trpc.invitations.list.useQuery({ groupId })
+  // Member administration is connection-required: never launch member/invite
+  // network queries while offline; the body renders OfflineNeedsConnection
+  // instead of a false empty list.
+  const membersQuery = trpc.account.members.useQuery(
+    { groupId },
+    { enabled: isOnline },
+  )
+  const invitationsQuery = trpc.invitations.list.useQuery(
+    { groupId },
+    { enabled: isOnline },
+  )
 
   const role = currentMember?.role
   const isArchived = !!group?.archived
@@ -452,8 +464,10 @@ export function useMembersDialogs() {
     },
   )
 
+  const offlineSync = useOptionalOfflineSync()
   const leaveMutation = trpc.groups.leave.useMutation({
     onSuccess: async () => {
+      await offlineSync?.handleGroupRemoved({ groupId })
       mascot.react('acknowledge')
       toast({ description: t('leave.toast.left') })
       setLeaveDialogOpen(false)

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { ForceArchiveDialog } from '@/components/force-archive-dialog'
 import { GroupForm } from '@/components/group-form'
+import { OfflineNeedsConnection } from '@/components/offline-empty-state'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -14,10 +15,12 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useOfflineWithoutData, useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 import {
   useCurrentGroup,
+  useGroupWriteEligibility,
   useIsReadOnlyGroupViewer,
 } from '../current-group-context'
 import { ExportOptionsCard } from '../export-options-card'
@@ -36,11 +39,16 @@ export const EditGroup = () => {
   const isReadOnlyViewer = useIsReadOnlyGroupViewer()
   const { data: account } = useCurrentAccount()
   const { linkInviteToken, viewKey } = useGroupAccessSearch()
-  const { data, isLoading } = trpc.groups.getDetails.useQuery({
-    groupId,
-    linkInviteToken,
-    viewKey,
-  })
+  const isOnline = useOnlineStatus()
+  const { connectionReadOnly } = useGroupWriteEligibility()
+  const { data, isLoading } = trpc.groups.getDetails.useQuery(
+    {
+      groupId,
+      linkInviteToken,
+      viewKey,
+    },
+    { enabled: isOnline },
+  )
   const updateMutation = useUpdateGroupMutation()
   const deleteMutation = useDeleteGroupMutation()
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
@@ -51,6 +59,15 @@ export const EditGroup = () => {
   const archiveMutation = useArchiveGroupMutation({
     onUnsettledBalances: () => setForceArchiveOpen(true),
   })
+
+  const showOfflineEmpty = useOfflineWithoutData(!!data)
+  if (!isOnline || showOfflineEmpty) {
+    // Offline read-only: group metadata already lives in the downloaded
+    // snapshot, so render a read-only summary (never the editable form).
+    // Edits, archive/delete, invites, split presets, and exports stay
+    // connection-required (write guard rejects).
+    return <OfflineGroupSettings groupId={groupId} />
+  }
 
   if (isLoading) return <></>
   if (!group) return null
@@ -125,7 +142,7 @@ export const EditGroup = () => {
             <Button
               type="button"
               variant="secondary"
-              disabled={archiveMutation.isPending}
+              disabled={archiveMutation.isPending || connectionReadOnly}
               onClick={() =>
                 archiveMutation.mutate({
                   groupId,
@@ -163,6 +180,7 @@ export const EditGroup = () => {
             <Button
               type="button"
               variant="destructive"
+              disabled={connectionReadOnly}
               onClick={() => setDeleteDialogOpen(true)}
             >
               <Trash className="me-2 h-4 w-4" />
@@ -184,6 +202,60 @@ export const EditGroup = () => {
         onOpenChange={setDeleteDialogOpen}
         onConfirm={() => deleteMutation.mutate({ groupId })}
       />
+    </div>
+  )
+}
+
+/**
+ * Offline read-only group summary. Group metadata already lives in the
+ * downloaded snapshot; the editable form, archive/delete, invites, split
+ * presets, and exports stay connection-required. Narrowing goes through the
+ * `isLoading` discriminant so `displayName`/`group` stay correctly typed.
+ */
+function OfflineGroupSettings({ groupId }: { groupId: string }) {
+  const context = useCurrentGroup()
+  const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
+  const { t: tExpenses } = useTranslation(undefined, { keyPrefix: 'Expenses' })
+  const { t: tOffline } = useTranslation()
+  if (context.isLoading || !context.group) {
+    return (
+      <OfflineNeedsConnection
+        backLabel={tGroups('backToGroups')}
+        backHref={`/groups/${groupId}`}
+      />
+    )
+  }
+  const { group, displayName } = context
+  return (
+    <div className="flex flex-col gap-3">
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            {group.emoji ? `${group.emoji} ` : null}
+            {displayName || group.name}
+          </CardTitle>
+          <CardDescription>
+            {tOffline('OfflineReadOnly.reconnectToEdit')}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-2 text-sm">
+          {group.information ? <p>{group.information}</p> : null}
+          <p className="text-muted-foreground">
+            {tExpenses('filters.currency')}: {group.currency}
+          </p>
+          {group.archived ? (
+            <p className="text-muted-foreground">{tGroups('archivedBadge')}</p>
+          ) : null}
+        </CardContent>
+      </Card>
+      {context.currentMember ? (
+        <SplitPresetsCard
+          groupId={groupId}
+          group={group}
+          canManage={false}
+          isArchived={!!group.archived}
+        />
+      ) : null}
     </div>
   )
 }

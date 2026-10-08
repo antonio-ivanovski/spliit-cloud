@@ -77,7 +77,9 @@
     "anonymousSignOutWarning": "Questo account anonimo può essere recuperato solo con il link di accesso salvato. Uscire adesso?",
     "signOutTitle": "Uscire?",
     "signOutError": "Impossibile uscire. Riprova.",
-    "cancel": "Annulla"
+    "cancel": "Annulla",
+    "signOutOffline": "Connettiti per uscire",
+    "installApp": "Installa l'app"
   },
   "Footer": {
     "madeIn": "Realizzato dalla <github>comunità open-source</github> con amore ❤️",
@@ -2853,7 +2855,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "Sei offline. Le modifiche che farai adesso non verranno salvate finché non tornerai online."
+    "message": "Sei offline. Puoi consultare i dati, ma serve una connessione per fare modifiche.",
+    "serverUnavailable": "Spliit non è raggiungibile al momento. Mostro i dati scaricati.",
+    "reconnecting": "Riconnessione… Puoi continuare a leggere i dati scaricati."
   },
   "InstallPromotion": {
     "install": "Installa",
@@ -2875,6 +2879,12 @@
       "description": "Aggiungi Spliit Cloud alla schermata Home dal menu del browser.",
       "step1": "Tocca il pulsante del menu (⋮) in alto a destra",
       "step2": "Tocca Installa"
+    },
+    "safari": {
+      "title": "Installa Spliit Cloud",
+      "description": "Aggiungi Spliit Cloud al Dock per accedervi con un solo clic.",
+      "step1": "In Safari, apri il menu File",
+      "step2": "Scegli Aggiungi al Dock, poi fai clic su Aggiungi"
     }
   },
   "EmptyState": {
@@ -4554,6 +4564,54 @@
     "involvedOnlyBadge": "Solo coinvolti",
     "deleteConfirmDescription": "Questo webhook e la sua cronologia di consegne verranno rimossi definitivamente. Le consegne in sospeso verranno annullate.",
     "deleteConfirm": "Elimina"
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "Scaricamento gruppi ({ready}/{total})",
+    "statusAvailable": "Disponibile offline",
+    "statusPartial": "Alcuni gruppi non sono scaricati",
+    "statusPaused": "Download in pausa",
+    "statusUnavailable": "Archiviazione offline non disponibile",
+    "statusNeedsUpdate": "I download devono essere aggiornati",
+    "statusEmpty": "Nessun gruppo da scaricare.",
+    "recent500Note": "Mostro i 500 recenti. Riconnettiti per i precedenti.",
+    "title": "Download offline",
+    "description": "Leggi gruppi e spese scaricati senza connessione. I file richiedono comunque una connessione.",
+    "automatic": "Download automatici",
+    "automaticDescription": "Scarica i gruppi per leggerli offline quando sei online.",
+    "lastUpdated": "Ultimo aggiornamento {date}",
+    "storageEstimate": "Circa {size} per i dati offline",
+    "refreshNow": "Aggiorna ora",
+    "clear": "Elimina i download",
+    "clearConfirm": "Rimuovere gruppi e spese scaricati da questo dispositivo? I tuoi dati sul server restano al sicuro. I download automatici verranno disattivati.",
+    "keepOnDevice": "Conserva i download su questo dispositivo",
+    "keepOnDeviceDescription": "Chiedi al browser di conservare i dati offline. Potrebbe comunque eliminarli se manca spazio.",
+    "keepOnDeviceKept": "Il browser proverà a conservare i dati offline.",
+    "keepOnDeviceNotKept": "Il browser non ha conservato i dati offline. I download funzionano comunque.",
+    "groupNotDownloaded": "Non scaricato",
+    "downloadFailed": "Download non riuscito",
+    "totalsIncomplete": "Riconnettiti per aggiornare i totali.",
+    "totalsIncompleteWithCount": "Riconnettiti per aggiornare i totali. ({count} in sospeso)",
+    "recent500WithCount": "Mostro i 500 recenti di {count}. Riconnettiti per i precedenti.",
+    "offlineSearchHint": "La ricerca offline usa il testo esatto; per la tolleranza agli errori serve una connessione.",
+    "groupsNotDownloaded": "{count} gruppo(i) non scaricato(i)",
+    "groupsNeedUpdating": "{count} da aggiornare",
+    "storageBlocked": "Chiudi le altre schede di Spliit per completare l'aggiornamento dell'archiviazione offline.",
+    "storageQuota": "L'archiviazione offline è piena. Riprova o elimina dei download per liberare spazio.",
+    "statusBlocked": "Archiviazione offline bloccata",
+    "statusQuotaError": "Archiviazione offline piena",
+    "storageRetry": "Riprova archiviazione",
+    "schemaUnsupported": "Aggiorna l'app per leggere i download",
+    "cleanupFailed": "Impossibile cancellare i dati dell'account da questo dispositivo. Riprova."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "Riconnettiti per modificare",
+    "attachmentsNeedConnection": "Connettiti per vedere gli allegati",
+    "needsConnection": "Questa funzione richiede una connessione",
+    "expenseMissing": "Questa spesa non è disponibile al momento. Riconnettiti per caricarla.",
+    "groupMissing": "Questo gruppo non è disponibile al momento. Riconnettiti per caricarlo.",
+    "balancesStale": "I saldi potrebbero non essere aggiornati.",
+    "dataUnavailable": "Alcuni dati non sono disponibili. Riconnettiti per caricarli.",
+    "dataStale": "Alcuni dati potrebbero non essere aggiornati."
   },
   "ApiErrorEmptyState": {
     "title": "Spliit non è disponibile",

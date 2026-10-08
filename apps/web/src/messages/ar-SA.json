@@ -22,7 +22,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "أنت غير متصل. التغييرات التي تجريها الآن لن تُحفظ حتى تعود متصلاً."
+    "message": "أنت دون اتصال. يمكنك التصفح، لكن إجراء التغييرات يتطلب اتصالًا.",
+    "serverUnavailable": "تعذر الوصول إلى Spliit الآن. يتم عرض البيانات المنزلة.",
+    "reconnecting": "جارٍ إعادة الاتصال… يمكنك مواصلة قراءة البيانات المنزلة."
   },
   "EmptyState": {
     "description": {
@@ -669,6 +671,12 @@
       "title": "تثبيت Spliit Cloud",
       "step1": "اضغط على زر القائمة (⋮) في الأعلى يميناً",
       "step2": "اضغط على تثبيت"
+    },
+    "safari": {
+      "title": "تثبيت Spliit Cloud",
+      "description": "أضف Spliit Cloud إلى Dock للوصول بنقرة واحدة.",
+      "step1": "في Safari، افتح قائمة ملف",
+      "step2": "اختر إضافة إلى Dock، ثم انقر على إضافة"
     }
   },
   "ExpenseCard": {
@@ -2342,7 +2350,9 @@
     "anonymousSignOutWarning": "لا يمكن استرداد هذا الحساب المجهول إلا باستخدام رابط تسجيل الدخول المحفوظ الخاص بك. تسجيل الخروج الآن؟",
     "signOutTitle": "هل تريد الخروج؟",
     "signOutError": "تعذر تسجيل الخروج. يرجى المحاولة مرة أخرى.",
-    "cancel": "إلغاء"
+    "cancel": "إلغاء",
+    "signOutOffline": "اتصل بالإنترنت لتسجيل الخروج",
+    "installApp": "تثبيت التطبيق"
   },
   "ForgotPassword": {
     "errors": {
@@ -4627,6 +4637,54 @@
     "involvedOnlyBadge": "مشارَكتي فقط",
     "deleteConfirmDescription": "ستتم إزالة خطاف الويب هذا وسجلّ تسليماته نهائيًا، وسيتم إلغاء عمليات التسليم المعلّقة.",
     "deleteConfirm": "حذف"
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "تنزيل المجموعات ({ready}/{total})",
+    "statusAvailable": "متاح دون اتصال",
+    "statusPartial": "بعض المجموعات غير منزلة",
+    "statusPaused": "التنزيلات متوقفة",
+    "statusUnavailable": "تخزين عدم الاتصال غير متاح",
+    "statusNeedsUpdate": "التنزيلات تحتاج إلى تحديث",
+    "statusEmpty": "لا توجد مجموعات للتنزيل.",
+    "recent500Note": "عرض أحدث 500. أعد الاتصال للقديم.",
+    "title": "تنزيلات دون اتصال",
+    "description": "اقرأ المجموعات والمصاريف المنزلة دون اتصال. الملفات ما زالت تحتاج اتصالًا.",
+    "automatic": "تنزيلات تلقائية",
+    "automaticDescription": "نزّل المجموعات للقراءة دون اتصال عندما تكون متصلًا.",
+    "lastUpdated": "آخر تحديث {date}",
+    "storageEstimate": "حوالي {size} لبيانات عدم الاتصال",
+    "refreshNow": "تحديث الآن",
+    "clear": "مسح التنزيلات",
+    "clearConfirm": "إزالة المجموعات والمصاريف المنزلة من هذا الجهاز؟ بيانات الخادم تبقى آمنة. سيتم إيقاف التنزيلات التلقائية.",
+    "keepOnDevice": "الاحتفاظ بالتنزيلات على هذا الجهاز",
+    "keepOnDeviceDescription": "اطلب من المتصفح الاحتفاظ ببيانات عدم الاتصال. قد يمسحها عند ضيق المساحة.",
+    "keepOnDeviceKept": "سيحاول المتصفح الاحتفاظ ببيانات عدم الاتصال.",
+    "keepOnDeviceNotKept": "لم يحتفظ المتصفح ببيانات عدم الاتصال. التنزيلات ما زالت تعمل.",
+    "groupNotDownloaded": "غير منزل",
+    "downloadFailed": "فشل التنزيل",
+    "totalsIncomplete": "أعد الاتصال لتحديث الإجماليات.",
+    "totalsIncompleteWithCount": "أعد الاتصال لتحديث الإجماليات. ({count} معلّقة)",
+    "recent500WithCount": "عرض أحدث 500 من {count}. أعد الاتصال للقديم.",
+    "offlineSearchHint": "البحث دون اتصال يستخدم النص الدقيق؛ تحمّل الأخطاء الإملائية يحتاج اتصالًا.",
+    "groupsNotDownloaded": "{count} مجموعة لم تُنزَّل",
+    "groupsNeedUpdating": "{count} تحتاج إلى تحديث",
+    "storageBlocked": "أغلق تبويبات Spliit الأخرى لإتمام تحديث التخزين دون اتصال.",
+    "storageQuota": "التخزين دون اتصال ممتلئ. أعد المحاولة أو امسح التنزيلات لإخلاء مساحة.",
+    "statusBlocked": "التخزين دون اتصال محظور",
+    "statusQuotaError": "التخزين دون اتصال ممتلئ",
+    "storageRetry": "إعادة محاولة التخزين",
+    "schemaUnsupported": "حدّث التطبيق لقراءة التنزيلات",
+    "cleanupFailed": "تعذر مسح بيانات الحساب من هذا الجهاز. حاول مرة أخرى."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "أعد الاتصال لإجراء التغييرات",
+    "attachmentsNeedConnection": "اتصل لعرض المرفقات",
+    "needsConnection": "هذه الميزة تحتاج اتصالًا",
+    "expenseMissing": "هذا المصروف غير متاح الآن. أعد الاتصال لتحميله.",
+    "groupMissing": "هذه المجموعة غير متاحة الآن. أعد الاتصال لتحميلها.",
+    "balancesStale": "قد تكون الأرصدة غير محدثة.",
+    "dataUnavailable": "بعض البيانات غير متاحة. أعد الاتصال لتحميلها.",
+    "dataStale": "قد تكون بعض البيانات غير محدثة."
   },
   "ApiErrorEmptyState": {
     "title": "Spliit غير متاح حاليًا",

@@ -1,28 +1,23 @@
-Welcome to `vNEXT`! One or two sentences on what this release is about.
+Welcome to `vNEXT`! Spliit now works offline: your groups stay readable without a connection, and new expenses queue to sync on reconnect.
 
 ## Highlights
 
-- Headline one
+- Spliit works offline
 
-### Headline one
+### Spliit works offline
 
-A short paragraph per headline, with a screenshot where it helps.
-
-![caption](./assets/next/shot.webp)
+All your member groups remain available for read-only offline use: complete expense history with comments, balances, the member roster, subgroup assignments, split presets, budgets, group settings, and recent activity. Downloaded history opens instantly and merges new changes in place, unchanged groups are not re-downloaded, and balances warn when stale. You can also install Spliit as an app and create expenses while offline — they queue locally and sync automatically on reconnect. Files, edits, and older activity beyond the downloaded window still need a connection.
 
 ## What's Changed
 
-### 🚨 Breaking Changes
-
-Omit this section when there are none. Each entry names what breaks,
-who is affected, and the exact migration steps.
-
 ### 🚀 Features
 
-- Short entry per user-facing change (`TBD` by @TBD)
+- Read your groups offline with instant lists that merge updates in place, plus install Spliit as an app with step-by-step guidance (`TBD` by @TBD)
+- Create expenses while offline: new expenses queue locally and sync automatically on reconnect (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
 
-- Short entry per fix (`TBD` by @TBD)
+- Offline reads recover after connection failures, continue local pagination after disconnecting, and fence cached data against stale sign-in checks (`TBD` by @TBD)
+- Account settings toggles that need a connection are now consistently disabled offline (`TBD` by @TBD)
 
 **Full Changelog**: TBD

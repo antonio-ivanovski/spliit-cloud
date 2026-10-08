@@ -7,6 +7,8 @@ import { useMascotController } from '@/components/mascot/mascot-context'
 import { needsDisplayName } from '@/lib/account'
 import { authClient } from '@/lib/auth'
 import { useDeploymentConfig } from '@/lib/deployment-config'
+import { markInstallEligible } from '@/lib/install-eligibility'
+import { useOptionalOfflineLifecycle } from '@/lib/offline/provider'
 import {
   hasSignupInviteProof,
   resolveAuthReturnContext,
@@ -43,6 +45,7 @@ export function useAuthPanel(options?: {
    */
   initialEmailVariant?: EmailVariant
 }) {
+  const lifecycle = useOptionalOfflineLifecycle()
   const mascot = useMascotController()
   const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
   const isOnline = useOnlineStatus()
@@ -153,10 +156,12 @@ export function useAuthPanel(options?: {
       mascot.react('failure')
     },
     async onSuccess(data) {
+      markInstallEligible()
       if (data.mode === 'sign-up') {
         mascot.react('success')
         setSuccessState('verification')
       } else {
+        await lifecycle?.verifySession({ fresh: true })
         const session = await authClient.getSession({
           query: { disableCookieCache: true },
         })
@@ -197,6 +202,7 @@ export function useAuthPanel(options?: {
     },
     onSuccess() {
       mascot.react('success')
+      markInstallEligible()
       setSuccessState('magic-link')
     },
     onError() {
@@ -297,6 +303,8 @@ export function useAuthPanel(options?: {
     },
     async onSuccess() {
       mascot.react('success')
+      markInstallEligible()
+      await lifecycle?.verifySession({ fresh: true })
       const session = await authClient.getSession({
         query: { disableCookieCache: true },
       })
@@ -324,6 +332,7 @@ export function useAuthPanel(options?: {
 
   function handleGoogle() {
     if (!isOnline) return
+    markInstallEligible()
     void authClient.signIn.social(
       {
         provider: 'google',
@@ -335,6 +344,7 @@ export function useAuthPanel(options?: {
 
   function handleGithub() {
     if (!isOnline) return
+    markInstallEligible()
     void authClient.signIn.social(
       {
         provider: 'github',
@@ -346,6 +356,7 @@ export function useAuthPanel(options?: {
 
   function handleTwitter() {
     if (!isOnline) return
+    markInstallEligible()
     void authClient.signIn.social(
       {
         provider: 'twitter',
@@ -357,6 +368,7 @@ export function useAuthPanel(options?: {
 
   function handleOidc(providerId: string) {
     if (!isOnline) return
+    markInstallEligible()
     void authClient.signIn.social(
       {
         provider: providerId,

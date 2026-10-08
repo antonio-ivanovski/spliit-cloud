@@ -31,6 +31,7 @@ import {
   signOutAndReturnToSignIn,
   type PasskeyInfo,
 } from '@/lib/passkey'
+import { useOnlineStatus } from '@/lib/use-online-status'
 
 import { SettingsBadge, SettingsRow } from './settings-ui'
 
@@ -56,15 +57,19 @@ export function AccountPasskeySettings({
   const { t, i18n } = useTranslation(undefined, {
     keyPrefix: 'AccountSettings',
   })
+  const { t: tRoot } = useTranslation()
   const { toast } = useToast()
   const queryClient = useQueryClient()
   const deploymentConfig = useDeploymentConfig()
+  const isOnline = useOnlineStatus()
 
   const supported = isPasskeySupported()
+  // Credential status is connection-required: never launch the queries offline
+  // and never leave the action stuck on loading.
   const passkeysQuery = useQuery({
     queryKey: ['auth', 'passkey', 'list'],
     queryFn: listPasskeys,
-    enabled: supported,
+    enabled: supported && isOnline,
   })
   // Same status query as the sign in link row below (shared cache): the
   // backup guidance differs when no link exists. Anonymous-only — the
@@ -72,7 +77,7 @@ export function AccountPasskeySettings({
   const recoveryStatusQuery = useQuery({
     queryKey: ['auth', 'anonymous-recovery', 'status'],
     queryFn: getAnonymousRecoveryStatus,
-    enabled: supported && isAnonymous === true,
+    enabled: supported && isAnonymous === true && isOnline,
   })
 
   const passkeys = passkeysQuery.data ?? []
@@ -223,6 +228,8 @@ export function AccountPasskeySettings({
   }
 
   const description = (() => {
+    if (!isOnline && !passkeysQuery.data)
+      return tRoot('OfflineReadOnly.needsConnection')
     if (!supported) return t('passkey.unsupported')
     if (passkeysQuery.isError) return t('passkey.errors.loadFailed')
     if (isAnonymous === true) {
@@ -252,7 +259,10 @@ export function AccountPasskeySettings({
               size="sm"
               className="shrink-0"
               disabled={
-                !supported || passkeysQuery.isPending || checkingFreshness
+                !supported ||
+                !isOnline ||
+                passkeysQuery.isPending ||
+                checkingFreshness
               }
               onClick={() => void handleAddClick()}
             >

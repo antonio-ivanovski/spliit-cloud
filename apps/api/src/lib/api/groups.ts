@@ -209,8 +209,11 @@ export async function dismissGroupEmojiIntro(groupId: string) {
   })
 }
 
-export async function getGroup(groupId: string) {
-  const group = await prisma.group.findUnique({
+export async function getGroup(
+  groupId: string,
+  client: Prisma.TransactionClient | typeof prisma = prisma,
+) {
+  const group = await client.group.findUnique({
     where: { id: groupId },
     include: {
       ledger: true,
@@ -231,7 +234,7 @@ export async function getGroup(groupId: string) {
 
   const invitationsWithParticipants =
     group.invitations.length > 0
-      ? await prisma.groupInvitation.findMany({
+      ? await client.groupInvitation.findMany({
           where: { groupId, status: 'PENDING' },
           include: { ledgerParticipant: true },
           orderBy: [{ createdAt: 'asc' }],
@@ -239,7 +242,7 @@ export async function getGroup(groupId: string) {
       : []
 
   const allUnlinkedParticipants = group.ledgerId
-    ? await prisma.ledgerParticipant.findMany({
+    ? await client.ledgerParticipant.findMany({
         where: {
           ledgerId: group.ledgerId,
           kind: 'UNLINKED_PARTICIPANT',
@@ -313,8 +316,11 @@ export async function getGroup(groupId: string) {
   }
 }
 
-export async function getGroups(groupIds: string[]) {
-  const groups = await prisma.group.findMany({
+export async function getGroups(
+  groupIds: string[],
+  client: Prisma.TransactionClient | typeof prisma = prisma,
+) {
+  const groups = await client.group.findMany({
     where: { id: { in: groupIds } },
     include: {
       ledger: {

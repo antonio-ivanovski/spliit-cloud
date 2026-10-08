@@ -14,6 +14,7 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
@@ -57,11 +58,16 @@ export function AuthorizedClients() {
   const { t, i18n } = useTranslation()
   const { toast } = useToast()
   const utils = trpc.useUtils()
+  const isOnline = useOnlineStatus()
   const [pendingRevoke, setPendingRevoke] = useState<AuthorizedClient | null>(
     null,
   )
 
-  const authorized = trpc.account.authorizedClients.useQuery()
+  // Remote account data is connection-required: never launch the query
+  // offline and never spin forever on loading.
+  const authorized = trpc.account.authorizedClients.useQuery(undefined, {
+    enabled: isOnline,
+  })
   const revoke = trpc.account.revokeAuthorizedClient.useMutation({
     onSuccess: async () => {
       await utils.account.authorizedClients.invalidate()
@@ -89,7 +95,13 @@ export function AuthorizedClients() {
         description={t('AccountAuthorizedClients.description')}
         icon={KeyRound}
       >
-        {authorized.isPending || authorized.isError || clients.length === 0 ? (
+        {!isOnline && !authorized.data ? (
+          <p className="px-4 pb-4 text-sm text-muted-foreground sm:px-6 sm:pb-5">
+            {t('OfflineReadOnly.needsConnection')}
+          </p>
+        ) : authorized.isPending ||
+          authorized.isError ||
+          clients.length === 0 ? (
           <p
             className={cn(
               'px-4 pb-4 text-sm sm:px-6 sm:pb-5',
@@ -137,6 +149,7 @@ export function AuthorizedClients() {
                     variant="outline"
                     size="sm"
                     className="w-full sm:w-auto"
+                    disabled={!isOnline}
                     onClick={() => setPendingRevoke(client)}
                   >
                     {t('AccountAuthorizedClients.revoke')}

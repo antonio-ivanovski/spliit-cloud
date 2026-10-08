@@ -17,7 +17,12 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { isFocusedMobilePath, isMobileGroupTabPath } from '@/lib/mobile-nav'
+import {
+  isOfflineWriteError,
+  notifyOfflineWriteBlocked,
+} from '@/lib/offline/write-guard'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 import { useCurrentGroup } from './current-group-context'
@@ -60,6 +65,9 @@ export const GroupHeader = ({
   })
   const navigate = useNavigate({ from: '/groups/$groupId' })
   const utils = trpc.useUtils()
+  // Invite accept/decline are writes — gate entry offline with the
+  // single deduped explanation. The transport guard also rejects.
+  const isOnline = useOnlineStatus()
   const pathname = useLocation({ select: (location) => location.pathname })
   const searchStr = useLocation({ select: (location) => location.searchStr })
   const focusedMobileRoute = isFocusedMobilePath(pathname)
@@ -87,6 +95,12 @@ export const GroupHeader = ({
       void utils.invitations.list.invalidate({ groupId })
     },
     onError: (err) => {
+      if (isOfflineWriteError(err)) {
+        notifyOfflineWriteBlocked((message) =>
+          toast({ description: message, variant: 'destructive' }),
+        )
+        return
+      }
       toast({
         description: err.message,
         variant: 'destructive',
@@ -106,6 +120,12 @@ export const GroupHeader = ({
       window.location.reload()
     },
     onError: (err) => {
+      if (isOfflineWriteError(err)) {
+        notifyOfflineWriteBlocked((message) =>
+          toast({ description: message, variant: 'destructive' }),
+        )
+        return
+      }
       toast({
         description: err.message,
         variant: 'destructive',
@@ -121,6 +141,12 @@ export const GroupHeader = ({
       window.location.reload()
     },
     onError: (err) => {
+      if (isOfflineWriteError(err)) {
+        notifyOfflineWriteBlocked((message) =>
+          toast({ description: message, variant: 'destructive' }),
+        )
+        return
+      }
       toast({
         description: err.message,
         variant: 'destructive',
@@ -244,62 +270,92 @@ export const GroupHeader = ({
               )}
             </div>
             {account ? (
-              <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  onClick={() =>
-                    isLinkBanner
-                      ? inviteToken
-                        ? acceptLinkMutation.mutate({
+              <div className="flex flex-col gap-2">
+                {!isOnline && (
+                  <output className="block text-sm text-muted-foreground">
+                    Reconnect to make changes
+                  </output>
+                )}
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    onClick={() => {
+                      if (!isOnline) {
+                        notifyOfflineWriteBlocked((message) =>
+                          toast({
+                            description: message,
+                            variant: 'destructive',
+                          }),
+                        )
+                        return
+                      }
+                      if (isLinkBanner) {
+                        if (inviteToken) {
+                          acceptLinkMutation.mutate({
                             token: inviteToken,
                           })
-                        : undefined
-                      : acceptMutation.mutate({
-                          invitationId: currentInvitation.id,
-                        })
-                  }
-                  disabled={
-                    acceptMutation.isPending ||
-                    declineMutation.isPending ||
-                    acceptLinkMutation.isPending ||
-                    (isLinkBanner && !inviteToken)
-                  }
-                >
-                  <Check className="me-2 h-4 w-4" />
-                  {tGroups('invitationAccept')}
-                </Button>
-                {isLinkBanner ? (
-                  // Link invites are one-shot: declining just drops the
-                  // token from the URL. The viewer is a non-member so
-                  // the bare group URL would surface the "no access"
-                  // page — send them to the groups list instead.
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    nativeButton={false}
-                    render={<Link to="/" />}
-                    disabled={acceptLinkMutation.isPending}
-                  >
-                    <X className="me-2 h-4 w-4" />
-                    {tGroups('invitationDecline')}
-                  </Button>
-                ) : (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() =>
-                      declineMutation.mutate({
+                        }
+                        return
+                      }
+                      acceptMutation.mutate({
                         invitationId: currentInvitation.id,
                       })
-                    }
+                    }}
                     disabled={
-                      acceptMutation.isPending || declineMutation.isPending
+                      acceptMutation.isPending ||
+                      declineMutation.isPending ||
+                      acceptLinkMutation.isPending ||
+                      (isLinkBanner && !inviteToken) ||
+                      !isOnline
                     }
                   >
-                    <X className="me-2 h-4 w-4" />
-                    {tGroups('invitationDecline')}
+                    <Check className="me-2 h-4 w-4" />
+                    {tGroups('invitationAccept')}
                   </Button>
-                )}
+                  {isLinkBanner ? (
+                    // Link invites are one-shot: declining just drops the
+                    // token from the URL. The viewer is a non-member so
+                    // the bare group URL would surface the "no access"
+                    // page — send them to the groups list instead.
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      nativeButton={false}
+                      render={<Link to="/" />}
+                      disabled={acceptLinkMutation.isPending}
+                    >
+                      <X className="me-2 h-4 w-4" />
+                      {tGroups('invitationDecline')}
+                    </Button>
+                  ) : (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => {
+                        if (!isOnline) {
+                          notifyOfflineWriteBlocked((message) =>
+                            toast({
+                              description: message,
+                              variant: 'destructive',
+                            }),
+                          )
+                          return
+                        }
+                        declineMutation.mutate({
+                          invitationId: currentInvitation.id,
+                        })
+                      }}
+                      disabled={
+                        acceptMutation.isPending ||
+                        declineMutation.isPending ||
+                        !isOnline
+                      }
+                    >
+                      <X className="me-2 h-4 w-4" />
+                      {tGroups('invitationDecline')}
+                    </Button>
+                  )}
+                </div>
               </div>
             ) : (
               <Button

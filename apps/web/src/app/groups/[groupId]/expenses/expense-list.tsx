@@ -1,6 +1,5 @@
-import { keepPreviousData } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useInView } from 'react-intersection-observer'
 import { useDebounce } from 'use-debounce'
@@ -31,13 +30,13 @@ import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import { useRestoreExpenseEditScroll } from '@/lib/expense-edit-scroll'
 import { useActiveUser } from '@/lib/hooks'
+import { useOfflineExpenses } from '@/lib/offline/read-hooks'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import {
   useOfflineWithoutData,
   useServerUnreachableWithoutData,
 } from '@/lib/use-online-status'
 import { getCurrencyFromGroup } from '@/lib/utils'
-import { trpc } from '@/trpc/client'
 
 import {
   useCurrentGroup,
@@ -50,6 +49,14 @@ import {
 } from './expense-involvement'
 import { EXPENSE_LIST_PAGE_SIZE } from './expense-list-query'
 import { ExpenseTimeline, ExpensesLoading } from './expense-timeline'
+
+type ListExpense = InvolvementExpense & {
+  id: string
+  expenseDate: Date | string
+  expenseTimeZone: string
+  createdAt: Date | string
+  amount: number
+} & Record<string, unknown>
 
 export function ExpenseList() {
   const { groupId } = useCurrentGroup()
@@ -96,6 +103,7 @@ const ExpenseListForSearch = ({
   const { t: tFilters } = useTranslation(undefined, {
     keyPrefix: 'Expenses.filters',
   })
+  const { t: tOffline } = useTranslation()
   const locale = useLocale()
   const { ref: loadingRef, inView } = useInView()
   // Involvement can only be determined for members with a ledger participant
@@ -105,57 +113,104 @@ const ExpenseListForSearch = ({
   const { data: account } = useCurrentAccount()
   const canCollapse = participantId != null
   const showAll = filters.showAll || !canCollapse
-  const isInvolving = (expense: InvolvementExpense) =>
-    isExpenseInvolvingUser(expense, participantId, account?.id ?? null)
+  // Stable callbacks so memoized cards bail out when unrelated rows merge.
+  // Captures only the identity inputs; the expense object itself stays the
+  // hook's merged reference (local reused when unchanged).
+  const accountId = account?.id ?? null
+  const isInvolving = useCallback(
+    (expense: InvolvementExpense) =>
+      isExpenseInvolvingUser(expense, participantId, accountId),
+    [participantId, accountId],
+  )
 
   const hasActiveFiltersOrSort =
     activeCount > 0 ||
     sort.sortBy !== DEFAULT_SORT.sortBy ||
     sort.sortDir !== DEFAULT_SORT.sortDir
 
-  const {
-    data,
-    isLoading: expensesAreLoading,
-    isPlaceholderData,
-    fetchNextPage,
-    refetch,
-  } = trpc.groups.expenses.list.useInfiniteQuery(
-    {
-      groupId,
-      limit: EXPENSE_LIST_PAGE_SIZE,
-      filter: searchText,
+  // Single source: the unified offline-first hook owns the network query
+  // internally and merges live rows over cached rows in place. No second
+  // network subscription here (previously a duplicate `useInfiniteQuery`).
+  // Local keys stay disjoint (`['offline', ...]`); merge happens in the
+  // selector, never by writing snapshots into live pages.
+  const merged = useOfflineExpenses({
+    groupId,
+    limit: EXPENSE_LIST_PAGE_SIZE,
+    linkInviteToken,
+    viewKey,
+    enabled: group !== undefined,
+    filter: {
+      hideSettlements: queryInput.hideSettlements,
+      categories: queryInput.categories,
+      paidBy: queryInput.paidBy,
+      paidByMatch: queryInput.paidByMatch,
+      paidFor: queryInput.paidFor,
+      paidForMatch: queryInput.paidForMatch,
+      dateFrom: queryInput.dateFrom,
+      dateTo: queryInput.dateTo,
+      minAmount: queryInput.minAmount,
+      maxAmount: queryInput.maxAmount,
+      currencies: queryInput.currencies,
+      search: searchText,
       locale,
-      linkInviteToken,
-      viewKey,
-      ...queryInput,
-      // Mirror the collapse UI: when hidden runs render, page around
-      // involving expenses so each page holds a meaningful row count.
-      hideNotInvolving: shouldPageByInvolvement(canCollapse, filters.showAll)
-        ? true
-        : undefined,
     },
-    {
-      getNextPageParam: ({ nextCursor }) => nextCursor,
-      // Keep the current rows on screen while a mode switch refetches.
-      // `useRenderedViewMode` below freezes the timeline's mode to match
-      // those stale rows, so the swap happens in one clean step.
-      placeholderData: keepPreviousData,
-      // Wait for the group (and its server-resolved participant id) before
-      // fetching. Otherwise the first fetch runs with hideNotInvolving unset,
-      // mounts the timeline in "All" mode, then refetches in "For you" mode —
-      // a flicker plus a replay of the stagger animation on fresh app start.
-      enabled: group !== undefined,
-    },
+    sortBy: sort.sortBy,
+    sortDir: sort.sortDir,
+    collapseInvolving: shouldPageByInvolvement(canCollapse, filters.showAll),
+  })
+  type MergedExpenses = ListExpense[]
+  const mergedPages = merged.data?.pages
+  const expenses = useMemo(
+    () =>
+      mergedPages?.flatMap((page) => page.expenses) as
+        | MergedExpenses
+        | undefined,
+    [mergedPages],
   )
-  const expenses = data?.pages.flatMap((page) => page.expenses)
-  const hasMore = data?.pages.at(-1)?.hasMore ?? false
-  const showOfflineEmpty = useOfflineWithoutData(!!data)
-  const showServerEmpty = useServerUnreachableWithoutData(!!data)
+  const hasMore = merged.hasMore
+  const mergedMeta = merged.meta
+  const hasReadableData = !!merged.data
+  const showOfflineEmpty =
+    useOfflineWithoutData(hasReadableData) &&
+    mergedMeta.availability !== 'ready'
+  const showServerEmpty = useServerUnreachableWithoutData(hasReadableData)
+  const fetchNextPageUnified = merged.fetchNextPage
+  const refetch = merged.refetch
   // While a mode switch refetches, render the stale rows under their own
-  // (previous) mode so the list never flashes a half-state.
+  // (previous) mode so the list never flashes a half-state. `refreshing`
+  // covers both network-only and merged refetches.
+  const isPlaceholderData =
+    mergedMeta.refreshing && !!expenses && expenses.length > 0
   const renderedShowAll = useRenderedViewMode(showAll, isPlaceholderData)
 
-  const isLoading = expensesAreLoading || !expenses || !group
+  const isLoading = merged.isLoading || !expenses || !group
+
+  const currency = useMemo(
+    () =>
+      group
+        ? getCurrencyFromGroup(group as never)
+        : getCurrencyFromGroup({ currency: 'USD' } as never),
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- group object identity changes per render; depend on stable currency fields only.
+    [group?.currency, group?.currencyCode],
+  )
+  const participantCount = group?.participants.length ?? 0
+  const renderExpense = useCallback(
+    (expense: ListExpense) => (
+      <ExpenseCard
+        key={expense.id}
+        expense={expense as never}
+        currency={currency}
+        groupId={groupId}
+        participantCount={participantCount}
+      />
+    ),
+    [currency, groupId, participantCount],
+  )
+
+  useRestoreExpenseEditScroll(
+    !isLoading && !showServerEmpty && !showOfflineEmpty,
+    groupId,
+  )
 
   useRestoreExpenseEditScroll(
     !isLoading && !showServerEmpty && !showOfflineEmpty,
@@ -163,8 +218,21 @@ const ExpenseListForSearch = ({
   )
 
   useEffect(() => {
-    if (inView && hasMore && !isLoading) void fetchNextPage()
-  }, [fetchNextPage, hasMore, inView, isLoading])
+    // Serialize infinite-scroll prefetches: without the `refreshing` gate a
+    // short list keeps the sentinel in view and fires concurrent
+    // `fetchNextPage` calls on every render, merging pages in quick
+    // succession (visible re-refresh). One page at a time settles instead.
+    if (inView && hasMore && !isLoading && !mergedMeta.refreshing)
+      void fetchNextPageUnified()
+  }, [fetchNextPageUnified, hasMore, inView, isLoading, mergedMeta.refreshing])
+
+  if (showServerEmpty) {
+    return (
+      <div className="px-4 sm:px-6">
+        <ApiErrorEmptyState variant="plain" onRetry={() => void refetch()} />
+      </div>
+    )
+  }
 
   if (showServerEmpty) {
     return (
@@ -175,6 +243,9 @@ const ExpenseListForSearch = ({
   }
 
   if (showOfflineEmpty) {
+    // No network pages and no complete local snapshot: honest missing state.
+    // A missing group snapshot shows the download hint via the layout shell;
+    // this list stays generic to avoid duplicate banners.
     return (
       <div className="px-4 sm:px-6">
         <OfflineEmptyState variant="plain" onRetry={() => void refetch()} />
@@ -182,7 +253,7 @@ const ExpenseListForSearch = ({
     )
   }
 
-  if (isLoading) return <ExpensesLoading />
+  if (isLoading || !expenses || !group) return <ExpensesLoading />
 
   if (expenses.length === 0)
     return (
@@ -225,23 +296,25 @@ const ExpenseListForSearch = ({
     )
 
   return (
-    <ExpenseTimeline
-      expenses={expenses}
-      sortBy={sort.sortBy}
-      timeZone={accountTimeZone}
-      hasMore={hasMore}
-      loadingRef={loadingRef}
-      isInvolving={isInvolving}
-      showAll={renderedShowAll}
-      renderExpense={(expense) => (
-        <ExpenseCard
-          key={expense.id}
-          expense={expense}
-          currency={getCurrencyFromGroup(group)}
-          groupId={groupId}
-          participantCount={group.participants.length}
-        />
+    // Stable list viewport: a minimum height keeps the page footer and the
+    // infinite-scroll sentinel from jumping while pages merge in, and
+    // `aria-busy` marks background refetches so they never read as a reload.
+    <div className="min-h-[30vh]" aria-busy={mergedMeta.refreshing}>
+      {mergedMeta.source === 'download' && mergedMeta.hasMore && (
+        <output className="mx-4 mb-2 block text-xs text-muted-foreground sm:mx-6">
+          {tOffline('OfflineReadOnly.dataUnavailable')}
+        </output>
       )}
-    />
+      <ExpenseTimeline<ListExpense>
+        expenses={expenses}
+        sortBy={sort.sortBy}
+        timeZone={accountTimeZone}
+        hasMore={hasMore}
+        loadingRef={loadingRef}
+        isInvolving={isInvolving}
+        showAll={renderedShowAll}
+        renderExpense={renderExpense}
+      />
+    </div>
   )
 }

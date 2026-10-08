@@ -7,17 +7,23 @@ import {
   removeDeviceView,
 } from '@/lib/saved-view-groups'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 /** Uploads signed-out device bookmarks onto the account once per page load. */
 export function MergeDeviceSavedViews() {
   const { data: account } = useCurrentAccount()
+  const isOnline = useOnlineStatus()
+  const canWrite = isOnline
   const utils = trpc.useUtils()
   const mergingFor = useRef<string | null>(null)
   const merge = trpc.groups.savedViews.merge.useMutation()
   const mergeMutateAsync = merge.mutateAsync
 
   useEffect(() => {
+    // Automatic merge is a write effect — never run it offline. Device
+    // bookmarks stay local until reconnect; no queue, no retry loop.
+    if (!canWrite) return
     if (!account) {
       mergingFor.current = null
       return
@@ -55,7 +61,7 @@ export function MergeDeviceSavedViews() {
         // Keep mergingFor set so a network failure does not retry in a loop.
       }
     })()
-  }, [account, mergeMutateAsync, utils])
+  }, [account, canWrite, mergeMutateAsync, utils])
 
   return null
 }

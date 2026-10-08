@@ -1,8 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { AuthPanel } from '@/components/auth/auth-panel'
-import { resetConnectivityForTests } from '@/lib/connectivity'
-import { fireEvent, render, screen } from '@/test/test-utils'
+import {
+  reportNetworkSuccess,
+  resetConnectivityForTests,
+} from '@/lib/connectivity'
+import { act, fireEvent, render, screen } from '@/test/test-utils'
 
 // ── Hoisted mocks ───────────────────────────────────────────────────────
 
@@ -974,6 +977,7 @@ describe('AuthPanel', () => {
 
     // …and the form returns with connectivity.
     fireEvent(window, new Event('online'))
+    act(() => reportNetworkSuccess())
     expect(await screen.findByLabelText('Display name')).toBeInTheDocument()
   })
 

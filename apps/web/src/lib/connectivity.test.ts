@@ -31,10 +31,76 @@ describe('connectivity latch', () => {
     globalThis.fetch = (async () => {
       throw new TypeError('Failed to fetch')
     }) as typeof fetch
-    await expect(trackedFetch('/auth/get-session')).rejects.toThrow(
-      /Failed to fetch/,
-    )
+    try {
+      await expect(trackedFetch('/auth/get-session')).rejects.toThrow(
+        /Failed to fetch/,
+      )
+      expect(hasFetchNetworkFailure()).toBe(true)
+    } finally {
+      globalThis.fetch = original
+    }
+  })
+
+  it('trackedFetch treats HTTP 401 as reachable, not a server outage', async () => {
+    const { getDefaultConnectivityStore } =
+      await import('@/lib/offline/connectivity')
+    const original = globalThis.fetch
+    globalThis.fetch = (async () =>
+      new Response('{}', {
+        status: 401,
+        headers: { 'content-type': 'application/json' },
+      })) as typeof fetch
+    try {
+      const response = await trackedFetch('/trpc/push.getConfig')
+      expect(response.status).toBe(401)
+      expect(getDefaultConnectivityStore().getSnapshot().serverFailure).toBe(
+        null,
+      )
+      expect(getDefaultConnectivityStore().isOnline()).toBe(true)
+    } finally {
+      globalThis.fetch = original
+    }
+  })
+
+  it('trackedFetch records HTTP 503 as a server outage but clears on next success', async () => {
+    const { getDefaultConnectivityStore } =
+      await import('@/lib/offline/connectivity')
+    const original = globalThis.fetch
+    try {
+      globalThis.fetch = (async () =>
+        new Response('{}', {
+          status: 503,
+          headers: { 'content-type': 'application/json' },
+        })) as typeof fetch
+      await trackedFetch('/trpc/push.getConfig')
+      expect(
+        getDefaultConnectivityStore().getSnapshot().serverFailure,
+      ).toMatchObject({ kind: 'http-error', status: 503 })
+
+      globalThis.fetch = (async () =>
+        new Response('{}', {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        })) as typeof fetch
+      await trackedFetch('/trpc/push.getConfig')
+      expect(getDefaultConnectivityStore().getSnapshot().serverFailure).toBe(
+        null,
+      )
+    } finally {
+      globalThis.fetch = original
+    }
+  })
+
+  it('trackedFetch latches on 5xx responses but clears on 4xx/2xx', async () => {
+    const original = globalThis.fetch
+    globalThis.fetch = (async () =>
+      new Response('{}', { status: 503 })) as typeof fetch
+    await trackedFetch('/trpc')
     expect(hasFetchNetworkFailure()).toBe(true)
+    globalThis.fetch = (async () =>
+      new Response('{}', { status: 401 })) as typeof fetch
+    await trackedFetch('/trpc')
+    expect(hasFetchNetworkFailure()).toBe(false)
     globalThis.fetch = original
   })
 

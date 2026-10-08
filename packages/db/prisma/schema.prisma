@@ -678,6 +678,11 @@ model Group {
   budgets            GroupBudget[]
   subgroupsEnabled   Boolean                    @default(false)
   subgroups          Subgroup[]
+  // Offline read-revision counter. Bumped in-transaction by PostgreSQL
+  // triggers on every table projected into the offline snapshot/catalog
+  // (see migration `offline_revision_tokens`). Part of the offline revision
+  // token; clients skip history refetch while the token is unchanged.
+  offlineContentRevision BigInt @default(0)
   // Two-person friend ledgers: the unordered account pair key stored as
   // "accountAId:accountBId" where accountAId < accountBId. Null during the
   // pending-invitation window (peer hasn't joined yet), populated on accept.
@@ -941,6 +946,10 @@ model AccountGroupPreference {
   group     Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId   String
 
+  // Viewer-specific offline revision. Bumped in-transaction by a trigger
+  // when this preference row changes. Combined with the group content
+  // revision into the offline revision token.
+  offlineViewerRevision BigInt @default(0)
   starred Boolean @default(false)
   // Per-account "hide" preference: removes the group from this user's list
   // without affecting other members. Distinct from `Group.archived`, the

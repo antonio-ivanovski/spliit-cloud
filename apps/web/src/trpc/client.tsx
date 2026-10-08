@@ -6,10 +6,14 @@ import { useState } from 'react'
 import superjson from 'superjson'
 
 import { getApiBaseUrl } from '@/lib/api-url'
-import { trackedFetch } from '@/lib/connectivity'
+import { createOfflineWriteGuardLink } from '@/lib/offline/write-guard'
+import {
+  createEffectFetch,
+  reportFetchOutcomeToServices,
+} from '@/lib/services/transport-integration'
 import type { AppRouter } from '@spliit/api/router'
 
-import { makeQueryClient } from './query-client'
+import { enqueueOfflineExpenseCreate, makeQueryClient } from './query-client'
 
 // react-doctor-disable-next-line react-doctor/only-export-components -- tRPC client singleton co-exported with provider
 export const trpc = createTRPCReact<AppRouter>()
@@ -30,14 +34,33 @@ function getUrl() {
   return `${getApiBaseUrl()}/trpc`
 }
 
+// Effect-backed transport for tRPC (Task 8): TanStack query signals reach
+// the underlying fetch; each outcome is classified once and projected to both
+// the legacy connectivity store (trackedFetch parity) and the AppStatus bridge
+// through the canonical reporter in transport-integration. No inline fan-out
+// here. The write-guard link still rejects known-offline mutations before any
+// request; probes/verification bypass it by construction.
+const effectFetch = createEffectFetch({
+  report: reportFetchOutcomeToServices,
+})
+
 export function getTrpcClient() {
   return (trpcClientSingleton ??= trpc.createClient({
     links: [
+      // Write guard: rechecks transport immediately before any
+      // imperative tRPC mutation and throws OfflineWriteError without sending
+      // a request. Queries pass through (offline adapters use disjoint keys).
+      // Probes/session verification bypass by construction (plain fetch).
+      // Phase 1: offline expenses.create diverts into the pending-expenses
+      // outbox (synthetic queued result, no fetch); all other mutations throw.
+      createOfflineWriteGuardLink({
+        enqueueExpenseCreate: enqueueOfflineExpenseCreate,
+      }),
       httpBatchLink({
         transformer: superjson,
         url: getUrl(),
         fetch(url, options) {
-          return trackedFetch(url, {
+          return effectFetch(url, {
             ...options,
             credentials: 'include',
           })

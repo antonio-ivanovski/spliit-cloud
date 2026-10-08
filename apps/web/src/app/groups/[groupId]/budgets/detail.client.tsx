@@ -39,6 +39,8 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
+import { useOfflineBudget } from '@/lib/offline/read-hooks'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import {
   cn,
   formatCurrency,
@@ -72,12 +74,26 @@ export function BudgetDetailModal({
   const [detailOpen, setDetailOpen] = useState(true)
   const { toast } = useToast()
   const utils = trpc.useUtils()
+  const isOnline = useOnlineStatus()
   const budgetQuery = trpc.groups.budgets.get.useQuery({
     groupId,
     budgetId,
     linkInviteToken,
     viewKey,
   })
+  // Offline read-only: the stored budget renders with its server-computed
+  // summary. Archive/delete/edit stay hidden offline (write guard rejects).
+  const offline = useOfflineBudget({
+    groupId,
+    budgetId,
+    linkInviteToken,
+    viewKey,
+  })
+  const useOfflineSource =
+    !budgetQuery.data && offline.meta.availability === 'ready'
+  const offlineDirtySince = useOfflineSource
+    ? ((offline.data?.dirtySince as Date | null | undefined) ?? null)
+    : null
   const archiveMutation = trpc.groups.budgets.archive.useMutation({
     onSuccess: async (_data, variables) => {
       await utils.groups.budgets.get.invalidate({ groupId, budgetId })
@@ -101,13 +117,13 @@ export function BudgetDetailModal({
       toast({ description: error.message, variant: 'destructive' }),
   })
 
-  const rawBudget = budgetQuery.data?.budget
-  const budget = rawBudget
-    ? normalizeBudgetDetail(rawBudget as unknown as Record<string, unknown>)
-    : null
-  const canEdit = Boolean(budget?.permissions.canEdit)
-  const canArchive = Boolean(budget?.permissions.canArchive)
-  const canDelete = Boolean(budget?.permissions.canDelete)
+  const rawBudget = (
+    useOfflineSource ? offline.data?.budget : budgetQuery.data?.budget
+  ) as Record<string, unknown> | undefined
+  const budget = rawBudget ? normalizeBudgetDetail(rawBudget) : null
+  const canEdit = Boolean(budget?.permissions.canEdit) && isOnline
+  const canArchive = Boolean(budget?.permissions.canArchive) && isOnline
+  const canDelete = Boolean(budget?.permissions.canDelete) && isOnline
   const currency = group ? getCurrencyFromGroup(group) : null
   const period = budget?.period
   const lifecycle = budget?.archived ? 'ARCHIVED' : period?.lifecycle
@@ -209,7 +225,19 @@ export function BudgetDetailModal({
           </ResponsiveDialogHeader>
 
           <ResponsiveDialogBody className="max-h-[70vh] space-y-5 overflow-y-auto">
-            {budgetQuery.isLoading && (
+            {useOfflineSource ? (
+              <div className="space-y-1">
+                <output className="block text-xs text-muted-foreground">
+                  {tCommon('OfflineReadOnly.reconnectToEdit')}
+                </output>
+                {offlineDirtySince ? (
+                  <output className="block text-xs text-muted-foreground">
+                    {tCommon('OfflineReadOnly.dataStale')}
+                  </output>
+                ) : null}
+              </div>
+            ) : null}
+            {!useOfflineSource && budgetQuery.isLoading && (
               <div className="space-y-4" aria-label={t('detailTitle')}>
                 <Skeleton className="h-10 w-36" />
                 <Skeleton className="h-4 w-full" />
@@ -217,22 +245,24 @@ export function BudgetDetailModal({
                 <Skeleton className="h-20 w-full" />
               </div>
             )}
-            {!budgetQuery.isLoading && budgetQuery.error && (
-              <div className="flex flex-col items-start gap-3">
-                <p role="alert" className="text-sm text-destructive">
-                  {budgetQuery.error.message}
-                </p>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => void budgetQuery.refetch()}
-                >
-                  <RefreshCw className="me-2 size-4" aria-hidden="true" />
-                  {t('retry')}
-                </Button>
-              </div>
-            )}
+            {!useOfflineSource &&
+              !budgetQuery.isLoading &&
+              budgetQuery.error && (
+                <div className="flex flex-col items-start gap-3">
+                  <p role="alert" className="text-sm text-destructive">
+                    {budgetQuery.error.message}
+                  </p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => void budgetQuery.refetch()}
+                  >
+                    <RefreshCw className="me-2 size-4" aria-hidden="true" />
+                    {t('retry')}
+                  </Button>
+                </div>
+              )}
             {budget && period && currency && (
               <>
                 <div className="space-y-3">

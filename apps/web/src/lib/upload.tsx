@@ -1,5 +1,9 @@
 import { useMutation } from '@tanstack/react-query'
+import { Effect } from 'effect'
 
+import { assertTransportOnline } from '@/lib/offline/write-guard'
+import { UploadError } from '@/lib/services/errors'
+import { makeUploadPipeline } from '@/lib/services/uploads'
 import { trpc } from '@/trpc/client'
 
 const MAX_DIMENSION = 2560
@@ -154,25 +158,67 @@ export async function uploadToPresignedUrl({
   if (!response.ok) throw new PresignedUploadError(response.status)
 }
 
+/**
+ * Expense-document upload through the UploadPipeline service (Task 8).
+ *
+ * The component keeps presentation + dispatch; the service owns Effect
+ * composition (scoped decode/cleanup, exactly-once presign/transfer, explicit
+ * unknown outcomes, no blanket retry of mutating stages). React/TanStack is the
+ * Promise boundary: the mutation runs the pipeline Effect and maps its typed
+ * outcome back to the long-standing { url } / throw contract.
+ *
+ * The optional HEIC codec stays lazy (maybeDecodeHeic dynamic-imports heic-to
+ * at the call site); documents upload as-is with no conversion here.
+ */
 export function useExpenseDocumentUpload(ledgerId?: string | null) {
   const presignMutation = trpc.uploads.presign.useMutation()
 
   // react-doctor-disable-next-line react-doctor/query-mutation-missing-invalidation -- S3 upload, caller invalidates with returned URL
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
-      const contentType = file.type || 'application/octet-stream'
-      const { uploadUrl, fileUrl } = await presignMutation.mutateAsync({
-        ledgerId: ledgerId ?? '',
-        fileName: file.name,
-        contentType,
-        fileSize: file.size,
+      // UI entry check before the presign fetch + S3 PUT: uploads
+      // require connection. The presign tRPC mutation is also covered by the
+      // global guard; this check prevents the S3 PUT fetch from firing.
+      assertTransportOnline()
+      const pipeline = makeUploadPipeline({
+        decode: (blob) =>
+          Promise.resolve({
+            file: blob,
+            name: file.name,
+            contentType: file.type || 'application/octet-stream',
+          }),
+        presign: (input) =>
+          presignMutation
+            .mutateAsync({
+              ledgerId: input.ledgerId,
+              fileName: input.fileName,
+              contentType: input.contentType,
+              fileSize: input.fileSize,
+            })
+            .then(({ uploadUrl, fileUrl }) => ({ uploadUrl, fileUrl })),
+        transfer: (input, signal) =>
+          uploadToPresignedUrl({
+            uploadUrl: input.uploadUrl,
+            contentType: input.contentType,
+            body: input.body,
+            signal,
+          }),
       })
-      await uploadToPresignedUrl({
-        uploadUrl,
-        contentType,
-        body: file,
+      const outcome = await Effect.runPromise(
+        pipeline.upload({
+          file,
+          fileName: file.name,
+          ledgerId: ledgerId ?? '',
+        }),
+      ).catch((error: unknown) => {
+        throw toUploadError(error)
       })
-      return { url: fileUrl }
+      if (outcome.status === 'unknown') {
+        // Explicit unknown (unreadable transfer/finalize outcome): surface,
+        // never report as done and never auto-retry the mutating PUT.
+        throw new Error('Upload failed')
+      }
+      return { url: outcome.url }
     },
   })
 
@@ -180,4 +226,22 @@ export function useExpenseDocumentUpload(ledgerId?: string | null) {
     uploadToS3: uploadMutation.mutateAsync,
     isUploading: uploadMutation.isPending,
   }
+}
+
+/**
+ * Map the pipeline's typed failure back to the hook's historical errors:
+ * definitive transfer rejections keep PresignedUploadError(status); every other
+ * stage failure surfaces as a plain Error (same as presign failures before). No
+ * new user-facing copy.
+ */
+function toUploadError(error: unknown): Error {
+  if (error instanceof UploadError && error.stage === 'transfer') {
+    const prefix = 'transfer-rejected:'
+    if (error.reason.startsWith(prefix)) {
+      const status = Number.parseInt(error.reason.slice(prefix.length), 10)
+      if (Number.isInteger(status)) return new PresignedUploadError(status)
+    }
+  }
+  if (error instanceof Error) return error
+  return new Error('Upload failed')
 }

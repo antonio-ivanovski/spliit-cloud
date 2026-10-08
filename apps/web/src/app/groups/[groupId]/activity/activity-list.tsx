@@ -18,12 +18,13 @@ import {
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { ScanStickyHeading } from '@/components/layout/scan-surface'
-import { OfflineEmptyState } from '@/components/offline-empty-state'
+import { OfflineNeedsConnection } from '@/components/offline-empty-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import { useRestoreExpenseEditScroll } from '@/lib/expense-edit-scroll'
 import { useActiveUser } from '@/lib/hooks'
+import { useOfflineActivities } from '@/lib/offline/read-hooks'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import {
   useOfflineWithoutData,
@@ -113,6 +114,8 @@ function HiddenActivitiesToggle({
 
 export function ActivityList() {
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'Activity' })
+  const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
+  const { t: tOffline } = useTranslation()
   const { t: tActivities } = useTranslation(undefined, {
     keyPrefix: 'Activities',
   })
@@ -180,19 +183,43 @@ export function ActivityList() {
   )
   const { ref: loadingRef, inView } = useInView()
 
-  const activities = activitiesData?.pages.flatMap((page) => page.activities)
-  const hasMore = activitiesData?.pages.at(-1)?.hasMore ?? false
-  const showOfflineEmpty = useOfflineWithoutData(!!activitiesData)
+  // Offline read-only: the snapshot carries the recent activity window.
+  // Older feed history stays online-only and is disclosed, never implied.
+  const offline = useOfflineActivities({
+    groupId,
+    limit: PAGE_SIZE,
+    linkInviteToken,
+    viewKey,
+  })
+  const useOfflineSource =
+    !activitiesData && offline.meta.availability === 'ready'
+  const offlineDirtySince = useOfflineSource
+    ? ((offline.data?.dirtySince as Date | null | undefined) ?? null)
+    : null
+  const activities = (
+    useOfflineSource
+      ? (offline.data?.pages.flatMap((page) => page.activities) ?? [])
+      : (activitiesData?.pages.flatMap((page) => page.activities) ?? [])
+  ) as Activity[]
+  const hasMore = useOfflineSource
+    ? offline.hasMore
+    : (activitiesData?.pages.at(-1)?.hasMore ?? false)
+  const fetchNextPageUnified = useOfflineSource
+    ? offline.fetchNextPage
+    : fetchNextPage
+  const isLoadingUnified = useOfflineSource ? offline.isLoading : isLoading
+  const showOfflineEmpty =
+    useOfflineWithoutData(!!activitiesData) && !useOfflineSource
   const showServerEmpty = useServerUnreachableWithoutData(!!activitiesData)
 
   useRestoreExpenseEditScroll(
-    !isLoading && !!activitiesData && !showOfflineEmpty && !showServerEmpty,
+    !isLoadingUnified && !showOfflineEmpty && !showServerEmpty,
     groupId,
   )
 
   useEffect(() => {
-    if (inView && hasMore && !isLoading) void fetchNextPage()
-  }, [fetchNextPage, hasMore, inView, isLoading])
+    if (inView && hasMore && !isLoadingUnified) void fetchNextPageUnified()
+  }, [fetchNextPageUnified, hasMore, inView, isLoadingUnified])
 
   if (showServerEmpty) {
     return (
@@ -203,14 +230,23 @@ export function ActivityList() {
   }
 
   if (showOfflineEmpty) {
+    // Extras (activity) are connection-required: never launch the network
+    // query offline and never promise persisted data. In-flow only, with back
+    // navigation; never a generic full-page error.
     return (
       <div className="px-4 sm:px-6">
-        <OfflineEmptyState variant="plain" onRetry={() => void refetch()} />
+        <OfflineNeedsConnection
+          backLabel={tGroups('backToGroups')}
+          backHref={`/groups/${groupId}`}
+        />
       </div>
     )
   }
 
-  if (isLoading || !activities || !group) return <ActivitiesLoading />
+  if (isLoadingUnified || !group) return <ActivitiesLoading />
+
+  const showWindowDisclosure =
+    useOfflineSource && (offline.data?.activityHasMore ?? false)
 
   const collapseHidden = !showAll && activities.length > 0
   const groupedActivitiesByDate = getGroupedActivitiesByDate(
@@ -267,6 +303,23 @@ export function ActivityList() {
 
   return activities.length > 0 ? (
     <div data-testid="activity-list">
+      {useOfflineSource ? (
+        <div className="space-y-1 px-4 py-2 sm:px-6">
+          <output className="block text-xs text-muted-foreground">
+            {tOffline('OfflineReadOnly.reconnectToEdit')}
+          </output>
+          {showWindowDisclosure ? (
+            <output className="block text-xs text-muted-foreground">
+              {tOffline('OfflineReadOnly.dataUnavailable')}
+            </output>
+          ) : null}
+          {offlineDirtySince ? (
+            <output className="block text-xs text-muted-foreground">
+              {tOffline('OfflineReadOnly.dataStale')}
+            </output>
+          ) : null}
+        </div>
+      ) : null}
       {canCollapse && (
         <div className="flex items-center gap-2 px-4 py-2 sm:px-6">
           <Tabs

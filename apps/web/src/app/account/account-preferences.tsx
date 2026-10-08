@@ -57,6 +57,11 @@ import {
 import { useCurrencies } from '@/lib/currency'
 import { useDeploymentConfig } from '@/lib/deployment-config'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import {
+  useOfflineQueryEnabled,
+  useRemoteControlState,
+} from '@/lib/use-offline-controls'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 import {
   defaultGroupTabOrder,
@@ -106,9 +111,19 @@ export function AccountPreferences() {
   })
   const { t: tBase } = useTranslation()
   const { setTheme } = useTheme()
-  const query = trpc.account.getPreferences.useQuery()
+  const isOnline = useOnlineStatus()
+  const query = trpc.account.getPreferences.useQuery(undefined, {
+    enabled: useOfflineQueryEnabled(),
+  })
   const syncedPreferences = useSyncedAccountPreferences()
   const updater = useAccountPreferenceUpdater()
+  // Remote-write controls (destructive-confirmation level, group-tab
+  // customization) disable offline. Local presentation controls below
+  // (language, theme, mascot) stay enabled offline by design.
+  const remoteControl = useRemoteControlState({
+    ready: updater === null || updater.ready,
+    busy: updater?.isUpdating,
+  })
   const { data: account } = useCurrentAccount()
   const pin = useSyncExternalStore(
     subscribeMascotPin,
@@ -176,6 +191,22 @@ export function AccountPreferences() {
   )
 
   if (!sourcePreferences) {
+    // First load needs the server; cached preferences (via the sync provider)
+    // render immediately when they exist. Never skeleton-spin forever offline.
+    if (!isOnline) {
+      return (
+        <SettingsSection
+          id="app-preferences"
+          title={t('title')}
+          description={t('description')}
+          icon={SlidersHorizontal as LucideIcon}
+        >
+          <p className="px-4 pb-4 text-sm text-muted-foreground sm:px-6 sm:pb-5">
+            {tBase('OfflineReadOnly.needsConnection')}
+          </p>
+        </SettingsSection>
+      )
+    }
     return (
       <SettingsSectionSkeleton
         id="app-preferences"
@@ -188,8 +219,6 @@ export function AccountPreferences() {
   }
 
   const MascotPreview = getMascotDefinition(sourcePreferences.mascot)?.Character
-
-  const preferencesReady = updater === null || updater.ready
 
   const currentOrder = resolveGroupTabOrder(sourcePreferences.groupTabOrder)
   const visibleTabLabels = currentOrder
@@ -405,7 +434,7 @@ export function AccountPreferences() {
           control={
             <Select
               value={sourcePreferences.destructiveConfirmationLevel ?? 'strict'}
-              disabled={updater !== null && !updater.ready}
+              disabled={remoteControl.disabled}
               items={destructiveConfirmationItems}
               onValueChange={(level) => {
                 void updater?.patchPreferences({
@@ -447,7 +476,7 @@ export function AccountPreferences() {
               variant="outline"
               size="sm"
               className="shrink-0"
-              disabled={!preferencesReady}
+              disabled={remoteControl.disabled}
               onClick={openGroupTabsDialog}
             >
               {t('groupTabsCustomize')}
@@ -548,7 +577,7 @@ export function AccountPreferences() {
             </Button>
             <Button
               type="button"
-              disabled={!draftDirty || updater?.isUpdating}
+              disabled={!draftDirty || remoteControl.disabled}
               onClick={() => void saveDraftTabs()}
             >
               {t('groupTabsSave')}

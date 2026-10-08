@@ -1,4 +1,4 @@
-import { Menu, Share, Smartphone } from 'lucide-react'
+import { AppWindowMac, Menu, Share, Smartphone } from 'lucide-react'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/responsive-dialog'
 import {
   INSTALL_PROMPT_TIMING,
+  isPromotionBlockedByWork,
   useInstallPrompt,
 } from '@/lib/use-install-prompt'
 
@@ -34,29 +35,39 @@ import {
  * expose `beforeinstallprompt`). - Other browsers (Firefox desktop, Safari
  * desktop, etc.): renders nothing.
  *
- * Persistence via localStorage: - "Not now" sets a 24h cooldown. - "Don't ask
- * again" sets a permanent dismissal flag. - Successful install (`appinstalled`)
- * clears both flags.
+ * Persistence via localStorage: - "Not now" sets a 7-day cooldown. - "Don't ask
+ * again" sets a permanent dismissal flag (auto-opened prompts only; explicit
+ * menu opens hide it because the user just asked). - Successful install
+ * (`appinstalled`) clears both flags.
  *
  * Esc / backdrop close count as "Not now" so an accidental dismissal does not
  * silently suppress the prompt forever.
  */
-export function InstallPromotionDialog() {
+export function InstallPromotionDialog(props?: {
+  /**
+   * Test seam: fresh service instance per test. Production omits it and
+   * resolves the page bundle (single capture owner, started in main.tsx).
+   */
+  readonly service?: Parameters<typeof useInstallPrompt>[0]
+}) {
   const { t } = useTranslation()
   const {
     browserSupport,
     readyToShow,
     isOpen,
+    manualOpen,
     open,
     remindLater,
     dismiss,
     install,
-  } = useInstallPrompt()
+  } = useInstallPrompt(props?.service)
   const timeZoneCheck = useStartupTimeZoneCheck()
 
-  // Auto-open the dialog a short moment after every gate flips on, so the
-  // user is greeted by it once the page has settled and the PWA install
-  // signal has fired. The timer is re-armed on every `readyToShow` transition.
+  // Auto-open after a successful sign-in, once the page has settled: 10s of
+  // user quiet, a visible document, no unfinished-work blockers, and no other
+  // onboarding dialog. Redirect landings (OAuth/magic link) satisfy the
+  // redirect-finish rule because eligibility is only set across the completed
+  // round-trip. The timer re-arms on every `readyToShow` transition.
   useEffect(() => {
     if (
       !readyToShow ||
@@ -66,18 +77,50 @@ export function InstallPromotionDialog() {
     )
       return
     let timer: number | undefined
-    const schedule = (delay: number) => {
-      timer = window.setTimeout(() => {
-        if (isPushOnboardingActive()) {
-          schedule(500)
-          return
-        }
-        open()
-      }, delay)
+    let lastActivity = Date.now()
+    const onActivity = () => {
+      lastActivity = Date.now()
     }
-    schedule(INSTALL_PROMPT_TIMING.AUTO_OPEN_DELAY_MS)
+    const activityEvents = [
+      'pointerdown',
+      'keydown',
+      'touchstart',
+      'scroll',
+    ] as const
+    for (const type of activityEvents) {
+      window.addEventListener(type, onActivity, { passive: true })
+    }
+    const attempt = () => {
+      if (isPushOnboardingActive()) {
+        timer = window.setTimeout(attempt, 500)
+        return
+      }
+      if (document.hidden) return
+      if (isPromotionBlockedByWork()) {
+        timer = window.setTimeout(attempt, 5000)
+        return
+      }
+      const quietFor = Date.now() - lastActivity
+      if (quietFor < INSTALL_PROMPT_TIMING.AUTO_OPEN_QUIET_MS) {
+        timer = window.setTimeout(
+          attempt,
+          INSTALL_PROMPT_TIMING.AUTO_OPEN_QUIET_MS - quietFor,
+        )
+        return
+      }
+      open()
+    }
+    const onVisible = () => {
+      if (!document.hidden) attempt()
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    timer = window.setTimeout(attempt, INSTALL_PROMPT_TIMING.AUTO_OPEN_QUIET_MS)
     return () => {
       if (timer !== undefined) window.clearTimeout(timer)
+      document.removeEventListener('visibilitychange', onVisible)
+      for (const type of activityEvents) {
+        window.removeEventListener(type, onActivity)
+      }
     }
   }, [
     readyToShow,
@@ -112,23 +155,28 @@ export function InstallPromotionDialog() {
         {browserSupport === 'firefox-android-instructions' && (
           <FirefoxContent />
         )}
+        {browserSupport === 'safari-desktop-instructions' && <SafariContent />}
 
         <ResponsiveDialogFooter className="flex-col-reverse gap-2 sm:flex-row sm:items-center">
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={dismiss}
-            data-testid="install-promotion-dismiss"
-            className="w-full sm:mr-auto sm:w-auto sm:justify-start"
-          >
-            {t('InstallPromotion.dismiss')}
-          </Button>
+          {!manualOpen && (
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={dismiss}
+              data-testid="install-promotion-dismiss"
+              className="w-full sm:mr-auto sm:w-auto sm:justify-start"
+            >
+              {t('InstallPromotion.dismiss')}
+            </Button>
+          )}
           <Button
             type="button"
             variant="outline"
             onClick={remindLater}
             data-testid="install-promotion-remind-later"
-            className="w-full sm:w-auto"
+            className={
+              manualOpen ? 'w-full sm:mr-auto sm:w-auto' : 'w-full sm:w-auto'
+            }
           >
             {t('InstallPromotion.remindLater')}
           </Button>
@@ -136,7 +184,10 @@ export function InstallPromotionDialog() {
             <Button
               type="button"
               onClick={() => {
-                void install()
+                void install().then((outcome) => {
+                  // A native dismissal cools down like "Not now".
+                  if (outcome === 'dismissed') remindLater()
+                })
               }}
               data-testid="install-promotion-install"
               className="w-full sm:w-auto"
@@ -212,6 +263,33 @@ function FirefoxContent() {
             {t('InstallPromotion.firefox.step1')}
           </InstallStep>
           <InstallStep n={2}>{t('InstallPromotion.firefox.step2')}</InstallStep>
+        </ol>
+      </ResponsiveDialogBody>
+    </>
+  )
+}
+
+function SafariContent() {
+  const { t } = useTranslation()
+  return (
+    <>
+      <ResponsiveDialogHeader>
+        <ResponsiveDialogTitle>
+          {t('InstallPromotion.safari.title')}
+        </ResponsiveDialogTitle>
+        <ResponsiveDialogDescription>
+          {t('InstallPromotion.safari.description')}
+        </ResponsiveDialogDescription>
+      </ResponsiveDialogHeader>
+      <ResponsiveDialogBody>
+        <ol className="flex flex-col gap-3 text-sm">
+          <InstallStep
+            n={1}
+            icon={<AppWindowMac className="h-4 w-4 text-primary" />}
+          >
+            {t('InstallPromotion.safari.step1')}
+          </InstallStep>
+          <InstallStep n={2}>{t('InstallPromotion.safari.step2')}</InstallStep>
         </ol>
       </ResponsiveDialogBody>
     </>

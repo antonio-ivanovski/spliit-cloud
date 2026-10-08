@@ -26,6 +26,7 @@ import {
   removePassword,
   setPassword,
 } from '@/lib/password'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { isStrongPassword } from '@spliit/domain/password'
 
 import { SettingsRow } from './settings-ui'
@@ -60,16 +61,21 @@ export function AccountPasswordSettings({
   onUpdated: () => Promise<void>
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'AccountSettings' })
+  const { t: tRoot } = useTranslation()
   const { toast } = useToast()
   const queryClient = useQueryClient()
+  const isOnline = useOnlineStatus()
 
   const realEmail = hasRealEmail(email)
   const verifiedEmail = Boolean(emailVerified) && realEmail
   const isAnon = isAnonymous === true
 
+  // Credential status is connection-required: never launch the query offline
+  // and never leave the action stuck on loading.
   const passwordStatusQuery = useQuery({
     queryKey: ['auth', 'password', 'status'],
     queryFn: getPasswordStatus,
+    enabled: isOnline,
   })
 
   const hasPassword = passwordStatusQuery.data?.hasPassword ?? null
@@ -237,6 +243,8 @@ export function AccountPasswordSettings({
     (removeErrorCode ? errorMessage(removeErrorCode) : null)
 
   const description = (() => {
+    if (!isOnline && !passwordStatusQuery.data)
+      return tRoot('OfflineReadOnly.needsConnection')
     if (hasPassword === null && statusError) return t('password.loadError')
     if (isAnon) return t('password.anonymousHelp')
     if (!realEmail) return t('password.addEmailHelp')
@@ -245,7 +253,7 @@ export function AccountPasswordSettings({
     return t('password.noPasswordHelp')
   })()
 
-  const setDisabled = passwordStatusQuery.isPending || !canSet
+  const setDisabled = !isOnline || passwordStatusQuery.isPending || !canSet
 
   return (
     <>
@@ -262,7 +270,7 @@ export function AccountPasswordSettings({
                   variant="ghost"
                   size="sm"
                   className="shrink-0"
-                  disabled={passwordStatusQuery.isPending}
+                  disabled={!isOnline || passwordStatusQuery.isPending}
                   onClick={() => openDialog('change')}
                 >
                   <Pencil className="me-2 h-4 w-4" aria-hidden="true" />
@@ -273,7 +281,7 @@ export function AccountPasswordSettings({
                   variant="ghost"
                   size="sm"
                   className="shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                  disabled={passwordStatusQuery.isPending}
+                  disabled={!isOnline || passwordStatusQuery.isPending}
                   onClick={openRemoveDialog}
                 >
                   <Trash className="me-2 h-4 w-4" aria-hidden="true" />

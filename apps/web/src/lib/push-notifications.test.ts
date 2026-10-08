@@ -1,6 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { getPushSubscription, subscribeToPush } from './push-notifications'
+import {
+  getPushRegistration,
+  getPushSubscription,
+  subscribeToPush,
+} from './push-notifications'
 
 function stubPushEnv(options?: {
   getRegistration?: () => Promise<unknown>
@@ -47,6 +51,25 @@ describe('getPushSubscription', () => {
       }),
     })
     await expect(getPushSubscription()).resolves.toBe(subscription)
+  })
+})
+
+describe('getPushRegistration', () => {
+  it('returns null when push is unsupported', async () => {
+    await expect(getPushRegistration()).resolves.toBeNull()
+  })
+
+  it('returns null without waiting when no worker is registered', async () => {
+    stubPushEnv()
+    await expect(getPushRegistration()).resolves.toBeNull()
+  })
+
+  it('returns the registration when a worker is registered', async () => {
+    const registration = { scope: '/test' }
+    stubPushEnv({
+      getRegistration: async () => registration,
+    })
+    await expect(getPushRegistration()).resolves.toBe(registration)
   })
 })
 

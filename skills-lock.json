@@ -1,11 +1,29 @@
 {
   "version": 1,
   "skills": {
+    "playwright-best-practices": {
+      "source": "currents-dev/playwright-best-practices-skill",
+      "sourceType": "github",
+      "skillPath": "playwright-best-practices/SKILL.md",
+      "computedHash": "7eb144f734450fee649dc1d209114775ddda07cbf45be84fe969d3d4f3971dce"
+    },
     "typesafe-ai": {
       "source": "typesafe-ai/skills",
       "sourceType": "github",
       "skillPath": "skills/typesafe-ai/SKILL.md",
       "computedHash": "9cd84c5e535dec8dec59917c110f9c00b4a61faadb86b432ec7e41051170af12"
+    },
+    "web-pwa-offline-first": {
+      "source": "agents-inc/skills",
+      "sourceType": "github",
+      "skillPath": "src/skills/web-pwa-offline-first/SKILL.md",
+      "computedHash": "1b54d9c11974c48abb298f3778db669f939d4992784a4daadaf0ce3ecc83d35d"
+    },
+    "web-pwa-service-workers": {
+      "source": "agents-inc/skills",
+      "sourceType": "github",
+      "skillPath": "src/skills/web-pwa-service-workers/SKILL.md",
+      "computedHash": "a72fc96b13e0391b9a37761834d126536778d54ccd03b0ec2bdace455d5218e8"
     }
   }
 }

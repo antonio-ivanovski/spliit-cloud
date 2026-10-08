@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/responsive-dialog'
 import { Switch } from '@/components/ui/switch'
 import { getApiBaseUrl } from '@/lib/api-url'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
 import {
@@ -68,11 +69,15 @@ export function AccountExportModal() {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'AccountSettings.export',
   })
+  const { t: tRoot } = useTranslation()
   const [open, setOpen] = useState(false)
   const [selection, setSelection] = useState(initialSelection)
+  const isOnline = useOnlineStatus()
+  // Group list is connection-required: never launch the query offline and
+  // never spin forever on loading.
   const { data, isPending, isError, refetch } = trpc.account.groups.useQuery(
     { includeArchived: true },
-    { enabled: open },
+    { enabled: open && isOnline },
   )
   const groups = data?.groups ?? emptyGroups
   const apiUrl = getApiBaseUrl()
@@ -259,7 +264,11 @@ export function AccountExportModal() {
                       </span>
                     </div>
 
-                    {isPending ? (
+                    {!isOnline && !data ? (
+                      <p className="rounded-lg border px-3 py-8 text-center text-sm text-muted-foreground">
+                        {tRoot('OfflineReadOnly.needsConnection')}
+                      </p>
+                    ) : isPending ? (
                       <div className="flex items-center justify-center rounded-lg border py-8 text-sm text-muted-foreground">
                         <Loader2
                           className="me-2 h-4 w-4 animate-spin"
@@ -410,7 +419,7 @@ export function AccountExportModal() {
                     />
                     <Button
                       type="submit"
-                      disabled={!canExport || isPending || isError}
+                      disabled={!canExport || isPending || isError || !isOnline}
                     >
                       <Download className="me-2 h-4 w-4" aria-hidden="true" />
                       {t('download')}

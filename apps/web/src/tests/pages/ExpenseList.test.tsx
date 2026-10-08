@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { resetConnectivityForTests } from '@/lib/connectivity'
 import { render, screen, waitFor } from '@/test/test-utils'
 
 /**
@@ -155,6 +156,7 @@ describe('ExpenseList', () => {
       configurable: true,
       value: true,
     })
+    resetConnectivityForTests()
     setDefaultGroup()
     mocks.mockUseInfiniteQuery.mockReturnValue(defaultInfiniteReturnValue)
     mocks.mockUseIsReadOnlyGroupViewer.mockReturnValue(false)

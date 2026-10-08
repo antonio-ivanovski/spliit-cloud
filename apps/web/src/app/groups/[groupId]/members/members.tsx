@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { AccountAvatar } from '@/components/account-avatar'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
+import { OfflineNeedsConnection } from '@/components/offline-empty-state'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -17,6 +18,7 @@ import {
 import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
+import { useOfflineWithoutData } from '@/lib/use-online-status'
 
 import { useCurrentGroup } from '../current-group-context'
 import { InviteCard } from './invite-card'
@@ -134,6 +136,8 @@ function ReadOnlyMembers() {
 
 function GroupMembersBody() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
+  const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
+  const { t: tOffline } = useTranslation()
   const locale = useLocale()
   const accountPreferences = useSyncedAccountPreferences()
   const accountTimeZone =
@@ -217,6 +221,30 @@ function GroupMembersBody() {
   } as const
 
   const isOnlyActiveMember = !isArchived && listMembers.length <= 1
+
+  const showOfflineEmpty = useOfflineWithoutData(!!membersQuery.data)
+  if (showOfflineEmpty) {
+    // Offline read-only: the member roster already lives in the downloaded
+    // group snapshot, so render it read-only instead of blocking the page.
+    // Invites, role changes, removals, and leaving stay connection-required
+    // (the write guard also rejects them) and are never promised offline.
+    if (group) {
+      return (
+        <div className="flex flex-col gap-4">
+          <output className="block text-sm text-muted-foreground">
+            {tOffline('OfflineReadOnly.reconnectToEdit')}
+          </output>
+          <ReadOnlyMembers />
+        </div>
+      )
+    }
+    return (
+      <OfflineNeedsConnection
+        backLabel={tGroups('backToGroups')}
+        backHref={`/groups/${groupId}`}
+      />
+    )
+  }
 
   return (
     <div className="flex flex-col gap-6">

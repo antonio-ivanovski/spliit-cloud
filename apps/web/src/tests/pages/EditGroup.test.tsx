@@ -5,6 +5,14 @@ import { render, screen } from '@/test/test-utils'
 const mocks = vi.hoisted(() => ({
   mockUseCurrentGroup: vi.fn(),
   mockUseIsReadOnlyGroupViewer: vi.fn(() => false),
+  mockUseOnlineStatus: vi.fn(() => true),
+  mockUseOfflineWithoutData: vi.fn(() => false),
+  mockUseGroupWriteEligibility: vi.fn(() => ({
+    canWrite: true,
+    serverReadOnly: false,
+    connectionReadOnly: false,
+    isRevalidating: false,
+  })),
   mockSplitPresetsList: vi.fn(),
   mockUseCurrentAccount: vi.fn((): { data: { id: string } | null } => ({
     data: null,
@@ -15,6 +23,14 @@ vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: mocks.mockUseCurrentGroup,
   useCurrentGroupOrNull: () => null,
   useIsReadOnlyGroupViewer: mocks.mockUseIsReadOnlyGroupViewer,
+  useGroupWriteEligibility: mocks.mockUseGroupWriteEligibility,
+}))
+
+vi.mock('@/lib/use-online-status', () => ({
+  useOnlineStatus: mocks.mockUseOnlineStatus,
+  useOfflineWithoutData: mocks.mockUseOfflineWithoutData,
+  useConnectivityStatus: () => 'online' as const,
+  useServerUnreachableWithoutData: () => false,
 }))
 
 vi.mock('@/lib/use-current-account', () => ({
@@ -185,6 +201,8 @@ describe('EditGroup', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mocks.mockUseIsReadOnlyGroupViewer.mockReturnValue(false)
+    mocks.mockUseOnlineStatus.mockReturnValue(true)
+    mocks.mockUseOfflineWithoutData.mockReturnValue(false)
     mocks.mockUseCurrentAccount.mockReturnValue({ data: null })
     setFriendGroup()
     mocks.mockSplitPresetsList.mockReturnValue({
@@ -525,6 +543,41 @@ describe('EditGroup', () => {
     expect(
       screen.queryByRole('link', { name: 'Download CSV' }),
     ).not.toBeInTheDocument()
+  })
+
+  // ── Offline read-only ──────────────────────────────────────────
+
+  it('renders a read-only summary offline from the downloaded snapshot', () => {
+    setGroupGroup()
+    mocks.mockUseOnlineStatus.mockReturnValue(false)
+    mocks.mockUseOfflineWithoutData.mockReturnValue(true)
+    render(<EditGroup />)
+
+    expect(screen.getByText('Regular Group')).toBeInTheDocument()
+    expect(screen.getByText('Reconnect to make changes')).toBeInTheDocument()
+    expect(screen.queryByTestId('group-form')).not.toBeInTheDocument()
+    expect(
+      screen.queryByTestId('offline-needs-connection'),
+    ).not.toBeInTheDocument()
+  })
+
+  it('shows the connection state offline without a downloaded snapshot', () => {
+    mocks.mockUseCurrentGroup.mockReturnValue({
+      isLoading: true,
+      groupId: 'group-2',
+      group: undefined,
+      displayName: undefined,
+      currentLedgerParticipantId: undefined,
+      currentMember: undefined,
+      currentInvitation: undefined,
+      linkInviteState: undefined,
+    })
+    mocks.mockUseOnlineStatus.mockReturnValue(false)
+    mocks.mockUseOfflineWithoutData.mockReturnValue(true)
+    render(<EditGroup />)
+
+    expect(screen.getByTestId('offline-needs-connection')).toBeInTheDocument()
+    expect(screen.queryByTestId('group-form')).not.toBeInTheDocument()
   })
 
   // GroupTabs Members tab is tested in apps/web/src/tests/components/GroupTabs.test.tsx

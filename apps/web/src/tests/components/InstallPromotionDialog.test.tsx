@@ -1,7 +1,18 @@
 import userEvent from '@testing-library/user-event'
+import { Effect } from 'effect'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { InstallPromotionDialog } from '@/components/install-promotion-dialog'
+import { markInstallEligible } from '@/lib/install-eligibility'
+import { registerPwaUpdateBlocker } from '@/lib/pwa-update-blockers'
+import {
+  makePwaInstallService,
+  type PwaInstallService,
+} from '@/lib/services/pwa-install'
+import { requestManualInstallOpen } from '@/lib/use-install-prompt'
+
+// Auto-open waits out a 10s user-quiet period in real time.
+vi.setConfig({ testTimeout: 20_000 })
 import { act, render, screen, waitFor } from '@/test/test-utils'
 
 // Mirror the hook's local interface so tests can fabricate the event.
@@ -21,7 +32,21 @@ const FIREFOX_ANDROID_UA =
 const FIREFOX_DESKTOP_UA =
   'Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0'
 
-const AUTO_OPEN_TIMEOUT_MS = 3000
+const AUTO_OPEN_TIMEOUT_MS = 15_000
+
+const SAFARI_DESKTOP_UA =
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15'
+
+function markEligible() {
+  try {
+    sessionStorage.setItem(
+      'spliit-pwa-install-eligible',
+      new Date().toISOString(),
+    )
+  } catch {
+    // ignore
+  }
+}
 
 function setUserAgent(ua: string) {
   Object.defineProperty(navigator, 'userAgent', {
@@ -69,6 +94,7 @@ function clearStorageFlags() {
   try {
     localStorage.removeItem('spliit-pwa-install-dismissed')
     localStorage.removeItem('spliit-pwa-install-remind-at')
+    sessionStorage.removeItem('spliit-pwa-install-eligible')
   } catch {
     // ignore
   }
@@ -77,29 +103,51 @@ function clearStorageFlags() {
 // ── Suite ───────────────────────────────────────────────────────────────
 
 describe('InstallPromotionDialog', () => {
+  // One started install service per test (the single capture owner for that
+  // test's dialog). Fresh instances replace the deleted reset global; real
+  // window beforeinstallprompt events reach the default event source.
+  const installServices: PwaInstallService[] = []
+
+  async function renderDialog(service?: PwaInstallService) {
+    const resolved = service ?? makePwaInstallService()
+    if (!service) installServices.push(resolved)
+    await Effect.runPromise(resolved.start)
+    const rendered = render(<InstallPromotionDialog service={resolved} />)
+    return { service: resolved, ...rendered }
+  }
+
   beforeEach(() => {
     // Default to Chrome Android — each test overrides as needed.
     setUserAgent(CHROME_ANDROID_UA)
     setMaxTouchPoints(0)
     mockMatchMedia(false)
     clearStorageFlags()
+    // Eligible by default (fresh auth this tab); the eligibility test below
+    // clears the flag explicitly. The per-test service reads it at creation.
+    markEligible()
   })
 
-  afterEach(() => {
+  afterEach(async () => {
     vi.restoreAllMocks()
+    while (installServices.length > 0) {
+      const service = installServices.pop()
+      if (service) {
+        await Effect.runPromise(service.stop).catch(() => undefined)
+      }
+    }
   })
 
   // ── Browser-support matrix ────────────────────────────────────────────
 
   it('renders nothing on Firefox desktop (no install path)', async () => {
     setUserAgent(FIREFOX_DESKTOP_UA)
-    render(<InstallPromotionDialog />)
+    await renderDialog()
     // No auto-open → nothing to wait for.
     expect(screen.queryByTestId('install-promotion-dialog')).toBeNull()
   })
 
   it('shows the Chrome copy and an Install button when beforeinstallprompt fires', async () => {
-    render(<InstallPromotionDialog />)
+    await renderDialog()
     fireBeforeInstallPrompt()
     expect(
       await screen.findByTestId(
@@ -116,7 +164,7 @@ describe('InstallPromotionDialog', () => {
   })
 
   it('renders all actions in a single footer with Install last', async () => {
-    render(<InstallPromotionDialog />)
+    await renderDialog()
     fireBeforeInstallPrompt()
     const installBtn = await screen.findByTestId(
       'install-promotion-install',
@@ -147,7 +195,7 @@ describe('InstallPromotionDialog', () => {
 
   it('shows the iOS instructions on iOS Safari without beforeinstallprompt', async () => {
     setUserAgent(IOS_UA)
-    render(<InstallPromotionDialog />)
+    await renderDialog()
     const dialog = await screen.findByTestId(
       'install-promotion-dialog',
       {},
@@ -163,7 +211,7 @@ describe('InstallPromotionDialog', () => {
 
   it('shows the Firefox Android menu-based instructions', async () => {
     setUserAgent(FIREFOX_ANDROID_UA)
-    render(<InstallPromotionDialog />)
+    await renderDialog()
     const dialog = await screen.findByTestId(
       'install-promotion-dialog',
       {},
@@ -181,7 +229,7 @@ describe('InstallPromotionDialog', () => {
 
   it('clicking Install calls the deferred prompt on Chrome', async () => {
     const user = userEvent.setup()
-    render(<InstallPromotionDialog />)
+    await renderDialog()
     const event = fireBeforeInstallPrompt()
     const installBtn = await screen.findByTestId(
       'install-promotion-install',
@@ -197,7 +245,7 @@ describe('InstallPromotionDialog', () => {
 
   it('hides the dialog after the user accepts the install prompt', async () => {
     const user = userEvent.setup()
-    render(<InstallPromotionDialog />)
+    await renderDialog()
     fireBeforeInstallPrompt('accepted')
     const installBtn = await screen.findByTestId(
       'install-promotion-install',
@@ -219,7 +267,7 @@ describe('InstallPromotionDialog', () => {
 
   it('clicking "Don\'t ask again" sets a permanent localStorage flag', async () => {
     const user = userEvent.setup()
-    render(<InstallPromotionDialog />)
+    await renderDialog()
     fireBeforeInstallPrompt()
     const dismissBtn = await screen.findByTestId(
       'install-promotion-dismiss',
@@ -231,10 +279,10 @@ describe('InstallPromotionDialog', () => {
     expect(localStorage.getItem('spliit-pwa-install-dismissed')).toBe('true')
   })
 
-  it('clicking "Not now" sets a 24h timestamp in localStorage', async () => {
+  it('clicking "Not now" sets a 7-day timestamp in localStorage', async () => {
     const user = userEvent.setup()
     const before = Date.now()
-    render(<InstallPromotionDialog />)
+    await renderDialog()
     fireBeforeInstallPrompt()
     const remindBtn = await screen.findByTestId(
       'install-promotion-remind-later',
@@ -246,15 +294,16 @@ describe('InstallPromotionDialog', () => {
     const raw = localStorage.getItem('spliit-pwa-install-remind-at')
     expect(raw).not.toBeNull()
     const remindAt = Date.parse(raw as string)
-    // Should be ~24h ahead of now (give a generous tolerance).
-    const twentyFourHours = 24 * 60 * 60 * 1000
-    expect(remindAt - before).toBeGreaterThan(twentyFourHours - 5_000)
-    expect(remindAt - before).toBeLessThan(twentyFourHours + 5_000)
+    // Should be ~7 days ahead of now (give a generous tolerance).
+    const sevenDays = 7 * 24 * 60 * 60 * 1000
+    expect(remindAt - before).toBeGreaterThan(sevenDays - 5_000)
+    // Upper slack covers the 10s quiet wait before the dialog opened.
+    expect(remindAt - before).toBeLessThan(sevenDays + 15_000)
   })
 
   it('does not auto-open when the dismissed flag is already set', async () => {
     localStorage.setItem('spliit-pwa-install-dismissed', 'true')
-    render(<InstallPromotionDialog />)
+    await renderDialog()
     fireBeforeInstallPrompt()
     // Wait a moment to be sure nothing pops up.
     await new Promise((r) => setTimeout(r, 100))
@@ -264,7 +313,7 @@ describe('InstallPromotionDialog', () => {
   it('does not auto-open while the remind-later timestamp is in the future', async () => {
     const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
     localStorage.setItem('spliit-pwa-install-remind-at', tomorrow)
-    render(<InstallPromotionDialog />)
+    await renderDialog()
     fireBeforeInstallPrompt()
     await new Promise((r) => setTimeout(r, 100))
     expect(screen.queryByTestId('install-promotion-dialog')).toBeNull()
@@ -273,7 +322,7 @@ describe('InstallPromotionDialog', () => {
   it('re-opens once the remind-later timestamp has passed', async () => {
     const yesterday = new Date(Date.now() - 1000).toISOString()
     localStorage.setItem('spliit-pwa-install-remind-at', yesterday)
-    render(<InstallPromotionDialog />)
+    await renderDialog()
     fireBeforeInstallPrompt()
     expect(
       await screen.findByTestId(
@@ -286,7 +335,7 @@ describe('InstallPromotionDialog', () => {
 
   it('does not auto-open when display-mode is standalone (already installed)', async () => {
     mockMatchMedia(true)
-    render(<InstallPromotionDialog />)
+    await renderDialog()
     fireBeforeInstallPrompt()
     await new Promise((r) => setTimeout(r, 100))
     expect(screen.queryByTestId('install-promotion-dialog')).toBeNull()
@@ -303,7 +352,7 @@ describe('InstallPromotionDialog', () => {
       removeEventListener: vi.fn(),
       dispatchEvent: vi.fn(() => false),
     }))
-    render(<InstallPromotionDialog />)
+    await renderDialog()
     fireBeforeInstallPrompt()
     await new Promise((r) => setTimeout(r, 100))
     expect(screen.queryByTestId('install-promotion-dialog')).toBeNull()
@@ -313,14 +362,14 @@ describe('InstallPromotionDialog', () => {
     vi.spyOn(document, 'referrer', 'get').mockReturnValue(
       'android-app://cloud.spliit.app',
     )
-    render(<InstallPromotionDialog />)
+    await renderDialog()
     fireBeforeInstallPrompt()
     await new Promise((r) => setTimeout(r, 100))
     expect(screen.queryByTestId('install-promotion-dialog')).toBeNull()
   })
 
   it('hides itself after appinstalled fires', async () => {
-    render(<InstallPromotionDialog />)
+    await renderDialog()
     fireBeforeInstallPrompt()
     await screen.findByTestId(
       'install-promotion-install',
@@ -348,7 +397,7 @@ describe('InstallPromotionDialog', () => {
 
   it('treats Esc / backdrop dismiss as "not now" (not permanent)', async () => {
     const user = userEvent.setup()
-    render(<InstallPromotionDialog />)
+    await renderDialog()
     fireBeforeInstallPrompt()
     await screen.findByTestId(
       'install-promotion-install',
@@ -363,5 +412,149 @@ describe('InstallPromotionDialog', () => {
 
     expect(localStorage.getItem('spliit-pwa-install-dismissed')).toBeNull()
     expect(localStorage.getItem('spliit-pwa-install-remind-at')).not.toBeNull()
+  })
+
+  // ── Auth-success eligibility ──────────────────────────────────────────
+
+  it('does not auto-open without a fresh auth event in this tab', async () => {
+    sessionStorage.removeItem('spliit-pwa-install-eligible')
+    await renderDialog()
+    fireBeforeInstallPrompt()
+    await new Promise((r) => setTimeout(r, 100))
+    expect(screen.queryByTestId('install-promotion-dialog')).toBeNull()
+  })
+
+  it(
+    'shares one service capture across remounts (routes)',
+    { timeout: 40_000 },
+    async () => {
+      const first = await renderDialog()
+      fireBeforeInstallPrompt()
+      await screen.findByTestId(
+        'install-promotion-dialog',
+        {},
+        { timeout: AUTO_OPEN_TIMEOUT_MS },
+      )
+      // A route change remounts the dialog on the same service: no second
+      // event needed.
+      first.unmount()
+      await renderDialog(first.service)
+      expect(
+        await screen.findByTestId(
+          'install-promotion-dialog',
+          {},
+          { timeout: AUTO_OPEN_TIMEOUT_MS },
+        ),
+      ).toBeInTheDocument()
+    },
+  )
+
+  it('treats a native dismissal like "Not now" (7-day cooldown)', async () => {
+    const user = userEvent.setup()
+    await renderDialog()
+    fireBeforeInstallPrompt('dismissed')
+    const installBtn = await screen.findByTestId(
+      'install-promotion-install',
+      {},
+      { timeout: AUTO_OPEN_TIMEOUT_MS },
+    )
+    await user.click(installBtn)
+    await waitFor(() => {
+      expect(
+        localStorage.getItem('spliit-pwa-install-remind-at'),
+      ).not.toBeNull()
+    })
+    expect(localStorage.getItem('spliit-pwa-install-dismissed')).toBeNull()
+  })
+
+  it(
+    'defers auto-open while unfinished work blocks, resumes after',
+    { timeout: 40_000 },
+    async () => {
+      const release = registerPwaUpdateBlocker('test-form')
+      try {
+        await renderDialog()
+        fireBeforeInstallPrompt()
+        await new Promise((r) => setTimeout(r, 11_000))
+        expect(screen.queryByTestId('install-promotion-dialog')).toBeNull()
+      } finally {
+        release()
+      }
+      expect(
+        await screen.findByTestId(
+          'install-promotion-dialog',
+          {},
+          { timeout: AUTO_OPEN_TIMEOUT_MS },
+        ),
+      ).toBeInTheDocument()
+    },
+  )
+
+  it('opens after delayed eligibility lands post-mount', async () => {
+    sessionStorage.removeItem('spliit-pwa-install-eligible')
+    await renderDialog()
+    fireBeforeInstallPrompt()
+    await new Promise((r) => setTimeout(r, 100))
+    expect(screen.queryByTestId('install-promotion-dialog')).toBeNull()
+    markInstallEligible()
+    expect(
+      await screen.findByTestId(
+        'install-promotion-dialog',
+        {},
+        { timeout: AUTO_OPEN_TIMEOUT_MS },
+      ),
+    ).toBeInTheDocument()
+  })
+
+  it('survives restricted storage without crashing', async () => {
+    const user = userEvent.setup()
+    await renderDialog()
+    fireBeforeInstallPrompt()
+    const installBtn = await screen.findByTestId(
+      'install-promotion-install',
+      {},
+      { timeout: AUTO_OPEN_TIMEOUT_MS },
+    )
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('denied')
+    })
+    try {
+      await user.click(installBtn)
+      await waitFor(() => {
+        expect(
+          screen.queryByTestId('install-promotion-dialog'),
+        ).not.toBeInTheDocument()
+      })
+    } finally {
+      vi.restoreAllMocks()
+    }
+  })
+
+  it('shows desktop Safari Add to Dock instructions', async () => {
+    setUserAgent(SAFARI_DESKTOP_UA)
+    setMaxTouchPoints(0)
+    await renderDialog()
+    const dialog = await screen.findByTestId(
+      'install-promotion-dialog',
+      {},
+      { timeout: AUTO_OPEN_TIMEOUT_MS },
+    )
+    expect(dialog.textContent).toMatch(/add to dock/i)
+    expect(screen.queryByTestId('install-promotion-install')).toBeNull()
+  })
+
+  it('opens on manual request despite an active remind-later cooldown', async () => {
+    const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+    localStorage.setItem('spliit-pwa-install-remind-at', tomorrow)
+    await renderDialog()
+    fireBeforeInstallPrompt()
+    await new Promise((r) => setTimeout(r, 100))
+    expect(screen.queryByTestId('install-promotion-dialog')).toBeNull()
+    await act(async () => {
+      requestManualInstallOpen()
+    })
+    expect(
+      await screen.findByTestId('install-promotion-dialog'),
+    ).toBeInTheDocument()
   })
 })

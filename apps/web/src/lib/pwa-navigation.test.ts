@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { shouldUseAppShellNavigation } from '@/lib/pwa-navigation'
+import { toSameOriginPath } from '@/lib/pwa-notification-protocol'
 
 describe('shouldUseAppShellNavigation', () => {
   it('serves the SPA shell for app routes', () => {
@@ -37,5 +38,20 @@ describe('shouldUseAppShellNavigation', () => {
       false,
     )
     expect(shouldUseAppShellNavigation('/auth/sign-in/email')).toBe(false)
+  })
+
+  it('serves notification deep links from the app shell offline', () => {
+    // Push payload URLs resolve same-origin, then hit the cached shell:
+    // cold offline launches land in-app instead of a browser error page.
+    const targets = [
+      '/groups/abc',
+      '/groups/abc/expenses/exp-1',
+      '/groups/abc/balances',
+      '/expenses',
+    ]
+    for (const target of targets) {
+      const path = toSameOriginPath(target, 'https://app.test')
+      expect(shouldUseAppShellNavigation(path)).toBe(true)
+    }
   })
 })

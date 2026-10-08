@@ -22,9 +22,20 @@ import {
   REQUEST_COORDINATED_ACTIVATION,
   type CoordinationResult,
 } from '@/lib/pwa-update-protocol'
+import {
+  clearRestartScrollState,
+  readRestartScrollState,
+  restoreRestartScroll,
+} from '@/lib/pwa-update-recovery'
 
 export const PWA_UPDATE_RESTART_KEY = 'spliit-pwa-update-restart'
+export const PWA_UPDATE_RESTART_STATE_KEY = 'spliit-pwa-update-restart-state'
 export const PWA_ASSET_ERROR_EVENT = 'spliit:pwa-asset-error'
+/** Routine updates wait for this long without user interaction. */
+export const PWA_UPDATE_IDLE_MS = 30_000
+/** Asset-error reloads stop retrying after this many attempts per session. */
+export const PWA_ASSET_ERROR_MAX_RELOADS = 2
+const PWA_ASSET_ERROR_COUNT_KEY = 'spliit-pwa-asset-error-count'
 
 const DEFAULT_ACTIVATION_TIMEOUT_MS = 10_000
 const DEFAULT_RETRY_INTERVAL_MS = 15_000
@@ -55,7 +66,7 @@ type PwaUpdateManagerOptions = {
   registerServiceWorker?: (
     container: PwaServiceWorkerContainer,
   ) => Promise<ServiceWorkerRegistration>
-  storage?: Pick<Storage, 'setItem' | 'removeItem'>
+  storage?: Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>
   reload?: () => void
   setTimeout?: typeof globalThis.setTimeout
   clearTimeout?: typeof globalThis.clearTimeout
@@ -72,7 +83,18 @@ type PwaUpdateManagerOptions = {
   subscribeWindowFocus?: (listener: () => void) => () => void
   subscribeOnline?: (listener: () => void) => () => void
   subscribeAssetErrors?: (listener: () => void) => () => void
+  subscribeActivity?: (listener: () => void) => () => void
+  /**
+   * Task 8 single-owner update checks: when false, the manager skips its
+   * internal check subscription AND its one-shot registration.update() — the
+   * PWA update service owns all check cadence through its checkNow gate and
+   * constructs the manager with this disabled. updatefound observation and
+   * coordinated activation stay here. Defaults true (standalone use, tests).
+   */
+  enableUpdateChecks?: boolean
   isVisible?: () => boolean
+  readScroll?: () => { x: number; y: number }
+  currentUrl?: () => string
 }
 
 export type PwaUpdateManager = {
@@ -92,6 +114,61 @@ function safeSetRestartMarker(
     else storage?.removeItem(PWA_UPDATE_RESTART_KEY)
   } catch {
     // Storage can be unavailable in privacy modes. Reloading still works.
+  }
+}
+
+function recoverRestartScroll(
+  options: PwaUpdateManagerOptions,
+  storage: PwaUpdateManagerOptions['storage'],
+): void {
+  if (typeof window === 'undefined') return
+  let restart: { url: string; x: number; y: number } | null = null
+  try {
+    restart = readRestartScrollState(storage, PWA_UPDATE_RESTART_STATE_KEY)
+  } catch {
+    return
+  }
+  if (!restart) return
+  try {
+    clearRestartScrollState(storage, PWA_UPDATE_RESTART_STATE_KEY)
+  } catch {
+    // Best-effort cleanup only.
+  }
+  const current =
+    options.currentUrl?.() ??
+    window.location.pathname + window.location.search + window.location.hash
+  if (restart.url !== current || (restart.x <= 0 && restart.y <= 0)) return
+  const target = { x: restart.x, y: restart.y }
+  const begin = () => {
+    void restoreRestartScroll(
+      {
+        readPosition: () => ({ x: window.scrollX, y: window.scrollY }),
+        readMaxScroll: () => ({
+          maxX: document.documentElement.scrollWidth - window.innerWidth,
+          maxY: document.documentElement.scrollHeight - window.innerHeight,
+        }),
+        writePosition: (x, y) => window.scrollTo(x, y),
+        currentUrl: () => current,
+        requestFrame: (fn) => requestAnimationFrame(fn),
+        onUserScroll: (listener) => {
+          const opts = { passive: true, once: true } as AddEventListenerOptions
+          window.addEventListener('wheel', listener, opts)
+          window.addEventListener('touchmove', listener, opts)
+          window.addEventListener('keydown', listener, opts)
+          return () => {
+            window.removeEventListener('wheel', listener)
+            window.removeEventListener('touchmove', listener)
+            window.removeEventListener('keydown', listener)
+          }
+        },
+      },
+      target,
+    ).catch(() => {})
+  }
+  if (document.readyState !== 'complete') {
+    window.addEventListener('load', begin, { once: true })
+  } else {
+    begin()
   }
 }
 
@@ -145,6 +222,47 @@ export function createPwaUpdateManager(
     }
     window.addEventListener(PWA_ASSET_ERROR_EVENT, onAssetError)
     return () => window.removeEventListener(PWA_ASSET_ERROR_EVENT, onAssetError)
+  }
+
+  // Last user interaction across pointer/keyboard/touch/scroll. Routine
+  // updates wait for 30s of quiet so reading/scrolling never reloads
+  // underneath the user; unfinished-work blockers still gate separately.
+  // Boot counts as quiet (no interaction with this load yet).
+  let lastActivityAt = now() - PWA_UPDATE_IDLE_MS
+  const defaultActivitySubscription = (listener: () => void) => {
+    if (typeof window === 'undefined') return () => {}
+    const onActivity = () => {
+      listener()
+    }
+    const events = ['pointerdown', 'keydown', 'touchstart', 'scroll'] as const
+    for (const type of events) {
+      window.addEventListener(type, onActivity, { passive: true })
+    }
+    return () => {
+      for (const type of events) {
+        window.removeEventListener(type, onActivity)
+      }
+    }
+  }
+  const isIdle = () => now() - lastActivityAt >= PWA_UPDATE_IDLE_MS
+
+  const readAssetErrorCount = (): number => {
+    try {
+      return Number.parseInt(
+        storage?.getItem?.(PWA_ASSET_ERROR_COUNT_KEY) ?? '0',
+        10,
+      )
+    } catch {
+      return 0
+    }
+  }
+  const writeAssetErrorCount = (count: number): void => {
+    try {
+      storage?.setItem?.(PWA_ASSET_ERROR_COUNT_KEY, String(count))
+    } catch {
+      // Storage can be unavailable in privacy modes; the in-memory
+      // lifecycle still bounds retries within this boot.
+    }
   }
 
   let lifecycle: PwaUpdateLifecycle = { status: 'idle' }
@@ -232,12 +350,36 @@ export function createPwaUpdateManager(
 
   const isBlocked = () => !isReady() || hasBlockers()
 
+  const saveRestartState = (): void => {
+    // Route/search survive via location.reload itself; persist the scroll
+    // offset so boot recovery can restore it after data renders.
+    try {
+      const readScroll =
+        options.readScroll ?? (() => ({ x: window.scrollX, y: window.scrollY }))
+      const url =
+        options.currentUrl?.() ??
+        (typeof window === 'undefined'
+          ? ''
+          : window.location.pathname +
+            window.location.search +
+            window.location.hash)
+      const scroll = readScroll()
+      storage?.setItem?.(
+        PWA_UPDATE_RESTART_STATE_KEY,
+        JSON.stringify({ url, x: scroll.x, y: scroll.y, at: now() }),
+      )
+    } catch {
+      // Best-effort: the reload still preserves route/search.
+    }
+  }
+
   const reloadNow = (
     operation: Extract<RetryOperation, { type: 'reload' }>,
   ) => {
     if (disposed || lifecycle.status === 'reloading') return
     setLifecycle({ status: 'reloading', retry: operation })
     safeSetRestartMarker(storage, true)
+    saveRestartState()
     armActivationTimer(operation)
     try {
       reload()
@@ -326,12 +468,15 @@ export function createPwaUpdateManager(
   function reconcile() {
     if (disposed) return
     if (lifecycle.status === 'waiting') {
-      if (isBlocked()) return
+      // Clean/ready is not enough: an unblocked tab mid-read still waits
+      // for 30s of quiet. The periodic retry re-evaluates; there is no
+      // max-wait forced reload.
+      if (isBlocked() || !isIdle()) return
       void coordinate(registration?.waiting ?? lifecycle.worker)
       return
     }
     if (lifecycle.status === 'reload-pending') {
-      if (isBlocked()) return
+      if (isBlocked() || !isIdle()) return
       reloadNow({
         type: 'reload',
         cause: lifecycle.cause,
@@ -469,6 +614,8 @@ export function createPwaUpdateManager(
     }
   }
 
+  recoverRestartScroll(options, storage)
+
   if (enabled && serviceWorker) {
     serviceWorker.addEventListener('controllerchange', onControllerChange)
     serviceWorker.addEventListener('message', onServiceWorkerMessage)
@@ -504,12 +651,31 @@ export function createPwaUpdateManager(
       )(reconcile),
     )
     subscribeSafely(() =>
+      (options.subscribeActivity ?? defaultActivitySubscription)(() => {
+        lastActivityAt = now()
+        if (disposed) return
+        // Activity only resets the quiet timer; the periodic retry (and
+        // blocker/visibility/focus/online signals) re-evaluates idleness.
+        if (lifecycle.status === 'waiting') reconcile()
+      }),
+    )
+    subscribeSafely(() =>
       (options.subscribeAssetErrors ?? defaultAssetErrorSubscription)(() => {
         if (
           lifecycle.status === 'reloading' ||
           lifecycle.status === 'reload-pending'
         )
           return
+        // Asset-error recovery is separate from update coordination and
+        // bounded per tab-session: repeated chunk failures fail visibly
+        // (manual Retry stays available) instead of reload-looping.
+        // Blockers and idleness still gate the reload: no discarded forms.
+        const attempts = readAssetErrorCount()
+        if (attempts >= PWA_ASSET_ERROR_MAX_RELOADS) {
+          fail({ type: 'reload', cause: 'asset-error' })
+          return
+        }
+        writeAssetErrorCount(attempts + 1)
         setLifecycle({ status: 'reload-pending', cause: 'asset-error' })
         reconcile()
       }),
@@ -526,12 +692,14 @@ export function createPwaUpdateManager(
         observeInstallingWorker(nextRegistration.installing)
         if (nextRegistration.waiting && currentController)
           queueWaitingWorker(nextRegistration.waiting)
-        try {
-          unsubscribeChecks = subscribeChecks(nextRegistration)
-        } catch {
-          unsubscribeChecks = undefined
+        if (options.enableUpdateChecks ?? true) {
+          try {
+            unsubscribeChecks = subscribeChecks(nextRegistration)
+          } catch {
+            unsubscribeChecks = undefined
+          }
+          void Promise.resolve(nextRegistration.update()).catch(() => {})
         }
-        void Promise.resolve(nextRegistration.update()).catch(() => {})
       })
       .catch(() => {})
   }
@@ -581,12 +749,7 @@ export function createPwaUpdateManager(
   }
 }
 
-let manager: PwaUpdateManager | undefined
-
-export function startPwaUpdateManager(): PwaUpdateManager {
-  return (manager ??= createPwaUpdateManager())
-}
-
-export function getPwaUpdateManager(): PwaUpdateManager {
-  return startPwaUpdateManager()
-}
+// Task 8: no module singleton. The page owns one manager per update service
+// instance (created on start, disposed on stop/scope exit); tests own theirs
+// through the createPwaUpdateManager factory. Deleted: startPwaUpdateManager,
+// getPwaUpdateManager, stopPwaUpdateManager.

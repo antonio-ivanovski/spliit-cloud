@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { Plus, RefreshCw, WalletCards } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import {
   BudgetCard,
@@ -19,8 +20,10 @@ import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { useOfflineBudgets } from '@/lib/offline/read-hooks'
 import {
   useOfflineWithoutData,
+  useOnlineStatus,
   useServerUnreachableWithoutData,
 } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
@@ -106,18 +109,34 @@ export function BudgetEmptyState({
 
 export default function GroupBudgetsPageClient() {
   const t = useBudgetTranslation()
+  const { t: tOffline } = useTranslation()
   const { groupId, group, currentMember } = useCurrentGroup()
   const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
   const { linkInviteToken, viewKey } = useGroupAccessSearch()
+  const isOnline = useOnlineStatus()
   const canCreate =
-    !!currentMember && !group?.archived && !isReadOnlyGroupViewer
+    !!currentMember && !group?.archived && !isReadOnlyGroupViewer && isOnline
   const budgetsQuery = trpc.groups.budgets.list.useQuery({
     groupId,
     includeArchived: true,
     linkInviteToken,
     viewKey,
   })
-  const showOfflineEmpty = useOfflineWithoutData(!!budgetsQuery.data)
+  // Offline read-only: stored budgets render with server-computed summaries.
+  // Creation and management stay connection-required.
+  const offline = useOfflineBudgets({
+    groupId,
+    includeArchived: true,
+    linkInviteToken,
+    viewKey,
+  })
+  const useOfflineSource =
+    !budgetsQuery.data && offline.meta.availability === 'ready'
+  const offlineDirtySince = useOfflineSource
+    ? ((offline.data?.dirtySince as Date | null | undefined) ?? null)
+    : null
+  const showOfflineEmpty =
+    useOfflineWithoutData(!!budgetsQuery.data) && !useOfflineSource
   const showServerEmpty = useServerUnreachableWithoutData(!!budgetsQuery.data)
 
   if (showServerEmpty) {
@@ -128,7 +147,7 @@ export default function GroupBudgetsPageClient() {
     return <OfflineEmptyState onRetry={() => void budgetsQuery.refetch()} />
   }
 
-  if (budgetsQuery.isLoading) {
+  if (!useOfflineSource && budgetsQuery.isLoading) {
     return (
       <div className="flex flex-col gap-4">
         <BudgetCardSkeleton />
@@ -138,7 +157,7 @@ export default function GroupBudgetsPageClient() {
   }
 
   if (!group) return null
-  if (budgetsQuery.isError) {
+  if (!useOfflineSource && budgetsQuery.isError) {
     return (
       <Card>
         <CardContent className="flex flex-col items-start gap-3 py-8">
@@ -158,7 +177,11 @@ export default function GroupBudgetsPageClient() {
       </Card>
     )
   }
-  const budgets = (budgetsQuery.data?.budgets ?? []).map((budget) =>
+  const budgets = (
+    (useOfflineSource
+      ? (offline.data?.budgets as BudgetSummary[] | undefined)
+      : (budgetsQuery.data?.budgets as BudgetSummary[] | undefined)) ?? []
+  ).map((budget) =>
     normalizeBudget(budget as unknown as Record<string, unknown>),
   ) as BudgetSummary[]
   const active = budgets.filter((budget) => !budget.archived)
@@ -172,6 +195,18 @@ export default function GroupBudgetsPageClient() {
 
   return (
     <div className="flex flex-col gap-4">
+      {useOfflineSource ? (
+        <div className="space-y-1">
+          <output className="block text-xs text-muted-foreground">
+            {tOffline('OfflineReadOnly.reconnectToEdit')}
+          </output>
+          {offlineDirtySince ? (
+            <output className="block text-xs text-muted-foreground">
+              {tOffline('OfflineReadOnly.dataStale')}
+            </output>
+          ) : null}
+        </div>
+      ) : null}
       {active.length === 0 ? (
         <BudgetEmptyState groupId={groupId} canCreate={canCreate} />
       ) : (

@@ -22,10 +22,15 @@ function hasGroupViewerCredential(): boolean {
 }
 
 /**
- * Route guard. Shows a loader only while the session is unresolved and there is
- * no cached account, redirects unauthenticated users to `/` (preserving the
- * original target in a `redirect` query parameter), and otherwise renders the
- * protected content.
+ * Route guard. Shows a loader only while the bounded session verification is
+ * unresolved and there is no cached account, redirects unauthenticated users to
+ * `/` (preserving the original target in a `redirect` query parameter), and
+ * otherwise renders the protected content.
+ *
+ * Session bootstrap uses the same 8s-bounded verification machinery as the
+ * offline lifecycle: when the browser explicitly reports offline, the hanging
+ * wait is skipped and the offline empty state renders instead of an indefinite
+ * spinner.
  *
  * Anonymous visitors may enter `/groups/:id` only when the URL carries a
  * retained `viewKey` or `invite` search param. Everyone else is sent through
@@ -44,6 +49,14 @@ export function RequireAuth({ children }: PropsWithChildren) {
     hasGroupViewerCredential()
 
   if (isPending && !account) {
+    if (showOfflineEmpty) {
+      return <OfflineEmptyState variant="page" onRetry={() => void refetch()} />
+    }
+    if (showServerEmpty) {
+      return (
+        <ApiErrorEmptyState variant="page" onRetry={() => void refetch()} />
+      )
+    }
     return (
       <div className="flex flex-1 items-center justify-center py-10">
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />

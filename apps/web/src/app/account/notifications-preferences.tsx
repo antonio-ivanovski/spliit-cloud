@@ -30,6 +30,7 @@ import { isPlaceholderEmail } from '@/lib/account'
 import { useDeploymentConfig } from '@/lib/deployment-config'
 import { useMediaQuery } from '@/lib/hooks'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { usePushNotifications } from '@/lib/use-push-notifications'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
@@ -273,12 +274,15 @@ export function NotificationsPreferences() {
   const { data: account } = useCurrentAccount()
   const accountPrefs = useSyncedAccountPreferences()
   const updater = useAccountPreferenceUpdater()
+  const isOnline = useOnlineStatus()
   const patchesDisabled = updater !== null && !updater.ready
   const notificationsEnabled = accountPrefs?.notificationsEnabled !== false
   const utils = trpc.useUtils()
+  // Remote notification state is connection-required: never launch the query
+  // offline and never spin forever on loading.
   const preferences = trpc.notifications.preferences.get.useQuery(
     { accountId: account?.id ?? '' },
-    { enabled: !!account },
+    { enabled: !!account && isOnline },
   )
   const save = trpc.notifications.preferences.save.useMutation()
   const [draft, setDraft] = useState<Record<Category, Channel[]> | null>(null)
@@ -414,6 +418,21 @@ export function NotificationsPreferences() {
             </Button>
           </div>
         </div>
+      </SettingsSection>
+    )
+  }
+
+  if (!isOnline && !preferences.data) {
+    return (
+      <SettingsSection
+        id="notifications"
+        title={sectionTitle}
+        description={sectionDescription}
+        icon={Bell}
+      >
+        <p className="px-4 pb-4 text-sm text-muted-foreground sm:px-6 sm:pb-6">
+          {tCommon('OfflineReadOnly.needsConnection')}
+        </p>
       </SettingsSection>
     )
   }

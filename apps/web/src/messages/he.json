@@ -77,7 +77,9 @@
     "anonymousSignOutWarning": "ניתן לשחזר חשבון אנונימי זה רק באמצעות קישור הכניסה השמור שלך. לצאת עכשיו?",
     "signOutTitle": "לצאת?",
     "signOutError": "לא ניתן היה לצאת. אנא נסה שוב.",
-    "cancel": "בטל"
+    "cancel": "בטל",
+    "signOutOffline": "התחבר כדי להתנתק",
+    "installApp": "התקן את האפליקציה"
   },
   "Footer": {
     "madeIn": "נוצר על ידי <github>קהילת הקוד הפתוח</github> באהבה ❤️",
@@ -2855,7 +2857,9 @@
     }
   },
   "OfflineBanner": {
-    "message": "אתה לא מחובר לרשת. השינויים שתבצע כעת לא יישמרו עד שתתחבר מחדש."
+    "message": "אין חיבור לרשת. אפשר לעיין בנתונים, אך שינויים דורשים חיבור.",
+    "serverUnavailable": "לא ניתן להגיע ל־Spliit כרגע. מוצגים הנתונים שהורדו.",
+    "reconnecting": "מתחבר מחדש… אפשר להמשיך לקרוא את הנתונים שהורדו."
   },
   "InstallPromotion": {
     "install": "התקן",
@@ -2877,6 +2881,12 @@
       "description": "הוסף את Spliit Cloud למסך הבית מתפריט הדפדפן.",
       "step1": "הקש על כפתור התפריט (⋮) בפינה הימנית העליונה",
       "step2": "הקש על התקן"
+    },
+    "safari": {
+      "title": "התקן את Spliit Cloud",
+      "description": "הוסף את Spliit Cloud ל-Dock לגישה בלחיצה אחת.",
+      "step1": "ב-Safari, פתח את תפריט קובץ",
+      "step2": "בחר הוסף ל-Dock ולחץ על הוסף"
     }
   },
   "EmptyState": {
@@ -4561,6 +4571,54 @@
     "involvedOnlyBadge": "מעורבות בלבד",
     "deleteConfirmDescription": "הוובהוק הזה והיסטוריית המסירות שלו יוסרו לצמיתות. מסירות ממתינות יבוטלו.",
     "deleteConfirm": "מחיקה"
+  },
+  "OfflineDownloads": {
+    "statusDownloading": "מוריד קבוצות ({ready}/{total})",
+    "statusAvailable": "זמין במצב לא מקוון",
+    "statusPartial": "חלק מהקבוצות לא הורדו",
+    "statusPaused": "ההורדות מושהות",
+    "statusUnavailable": "אחסון לא מקוון לא זמין",
+    "statusNeedsUpdate": "צריך לעדכן את ההורדות",
+    "statusEmpty": "אין קבוצות להורדה.",
+    "recent500Note": "מוצגים 500 האחרונים. התחבר לחיבור כדי לראות ישנים.",
+    "title": "הורדות לא מקוונות",
+    "description": "קרא קבוצות והוצאות שהורדו בלי חיבור. קבצים עדיין צריכים חיבור.",
+    "automatic": "הורדות אוטומטיות",
+    "automaticDescription": "הורד קבוצות לקריאה לא מקוונת כשאתה מחובר.",
+    "lastUpdated": "עודכן {date}",
+    "storageEstimate": "בערך {size} לנתוני לא מקוון",
+    "refreshNow": "רענן עכשיו",
+    "clear": "נקה הורדות",
+    "clearConfirm": "להסיר את הקבוצות וההוצאות שהורדו מהמכשיר? נתוני השרת נשארים בטוחים. ההורדות האוטומטיות יכובו.",
+    "keepOnDevice": "שמור הורדות במכשיר הזה",
+    "keepOnDeviceDescription": "בקש מהדפדפן לשמור נתוני לא מקוון. הוא עלול למחוק אותם כשאין מקום.",
+    "keepOnDeviceKept": "הדפדפן ינסה לשמור נתוני לא מקוון.",
+    "keepOnDeviceNotKept": "הדפדפן לא שמר נתוני לא מקוון. ההורדות עדיין עובדות.",
+    "groupNotDownloaded": "לא הורד",
+    "downloadFailed": "ההורדה נכשלה",
+    "totalsIncomplete": "התחבר מחדש כדי לעדכן סכומים.",
+    "totalsIncompleteWithCount": "התחבר מחדש כדי לעדכן סכומים. ({count} ממתינים)",
+    "recent500WithCount": "מוצגים 500 האחרונים מתוך {count}. התחבר מחדש לישנים.",
+    "offlineSearchHint": "חיפוש לא מקוון משתמש בטקסט מדויק; סובלנות לשגיאות הקלדה צריכה חיבור.",
+    "groupsNotDownloaded": "{count} קבוצות לא הורדו",
+    "groupsNeedUpdating": "{count} צריכות עדכון",
+    "storageBlocked": "סגור לשוניות Spliit אחרות כדי לסיים את עדכון האחסון הלא מקוון.",
+    "storageQuota": "האחסון הלא מקוון מלא. נסה שוב או נקה הורדות כדי לפנות מקום.",
+    "statusBlocked": "אחסון לא מקוון חסום",
+    "statusQuotaError": "אחסון לא מקוון מלא",
+    "storageRetry": "נסה אחסון שוב",
+    "schemaUnsupported": "עדכן את האפליקציה כדי לקרוא את ההורדות",
+    "cleanupFailed": "לא ניתן היה למחוק את נתוני החשבון מהמכשיר הזה. יש לנסות שוב."
+  },
+  "OfflineReadOnly": {
+    "reconnectToEdit": "התחבר מחדש כדי לערוך",
+    "attachmentsNeedConnection": "התחבר כדי לראות קבצים מצורפים",
+    "needsConnection": "תכונה זו צריכה חיבור",
+    "expenseMissing": "ההוצאה הזו אינה זמינה כרגע. יש להתחבר מחדש כדי לטעון אותה.",
+    "groupMissing": "הקבוצה הזו אינה זמינה כרגע. יש להתחבר מחדש כדי לטעון אותה.",
+    "balancesStale": "היתרות עשויות להיות לא מעודכנות.",
+    "dataUnavailable": "חלק מהנתונים אינם זמינים. יש להתחבר מחדש כדי לטעון אותם.",
+    "dataStale": "ייתכן שחלק מהנתונים אינם מעודכנים."
   },
   "ApiErrorEmptyState": {
     "title": "Spliit אינו זמין כרגע",

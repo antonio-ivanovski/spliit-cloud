@@ -4,6 +4,7 @@ import type { PwaServiceWorkerContainer } from './pwa-service-worker'
 import {
   createPwaUpdateManager,
   PWA_UPDATE_RESTART_KEY,
+  PWA_UPDATE_RESTART_STATE_KEY,
 } from './pwa-update-manager'
 
 type Activation = 'accepted' | 'blocked' | 'failed' | 'timeout' | 'manual'
@@ -33,6 +34,8 @@ function createHarness(
   const visibilityListeners = new Set<() => void>()
   const onlineListeners = new Set<() => void>()
   const assetListeners = new Set<() => void>()
+  const activityListeners = new Set<() => void>()
+  let nowValue = Date.now()
   const workerReplies: unknown[] = []
   const finalMessage = (value: Record<string, unknown>) => ({
     type: 'COORDINATION_RESULT',
@@ -92,7 +95,11 @@ function createHarness(
   } as unknown as ServiceWorkerRegistration
   const registerServiceWorker = vi.fn().mockResolvedValue(registration)
   const reload = vi.fn()
-  const storage = { setItem: vi.fn(), removeItem: vi.fn() }
+  const storage = {
+    getItem: vi.fn((_key: string) => null as string | null),
+    setItem: vi.fn(),
+    removeItem: vi.fn(),
+  }
   const subscribeUpdateChecks = vi.fn(() => vi.fn())
   const container = {
     get controller() {
@@ -120,6 +127,10 @@ function createHarness(
     subscribeVisibility: subscribe(visibilityListeners),
     subscribeOnline: subscribe(onlineListeners),
     subscribeAssetErrors: subscribe(assetListeners),
+    subscribeActivity: subscribe(activityListeners),
+    now: () => nowValue,
+    readScroll: () => ({ x: 0, y: 120 }),
+    currentUrl: () => '/groups/g1?tab=expenses',
     isVisible: () => visible,
     clientCheckTimeoutMs: 50,
     retryIntervalMs: 100,
@@ -169,6 +180,10 @@ function createHarness(
     },
     focus: () => focusListeners.forEach((listener) => listener()),
     assetError: () => assetListeners.forEach((listener) => listener()),
+    activity: () => activityListeners.forEach((listener) => listener()),
+    setNow: (value: number) => {
+      nowValue = value
+    },
     changeController(next: ServiceWorker = waitingWorker) {
       controller = next
       workerEvents.dispatchEvent(new Event('controllerchange'))
@@ -406,6 +421,61 @@ describe('createPwaUpdateManager', () => {
     const harness = createHarness({ initialController: false, waiting: false })
     await harness.settleRegistration()
     harness.changeController({} as ServiceWorker)
+    expect(harness.reload).not.toHaveBeenCalled()
+  })
+
+  it('defers coordination while the tab is active, proceeds when quiet', async () => {
+    const harness = createHarness()
+    harness.setNow(Date.now())
+    harness.activity()
+    await harness.settleRegistration()
+    await new Promise((resolve) => setTimeout(resolve, 250))
+    expect(harness.waitingWorker.postMessage).not.toHaveBeenCalled()
+    harness.setNow(Date.now() + 31_000)
+    await vi.waitFor(() => {
+      expect(harness.waitingWorker.postMessage).toHaveBeenCalled()
+    })
+  })
+
+  it('never force-reloads a blocked tab (no max-wait)', async () => {
+    const harness = createHarness({ blocked: true })
+    await harness.settleRegistration()
+    await new Promise((resolve) => setTimeout(resolve, 350))
+    expect(harness.reload).not.toHaveBeenCalled()
+    expect(harness.manager.getSnapshot()).toEqual({ status: 'hidden' })
+  })
+
+  it('bounds asset-error reloads per session and saves restart state', async () => {
+    const harness = createHarness()
+    await harness.settleRegistration()
+    harness.assetError()
+    await vi.waitFor(() => {
+      expect(harness.reload).toHaveBeenCalledOnce()
+    })
+    const stateCalls = harness.storage.setItem.mock.calls.filter(
+      ([key]) => key === PWA_UPDATE_RESTART_STATE_KEY,
+    )
+    expect(stateCalls).toHaveLength(1)
+    expect(JSON.parse(stateCalls[0]![1] as string)).toMatchObject({
+      url: '/groups/g1?tab=expenses',
+      x: 0,
+      y: 120,
+    })
+  })
+
+  it('fails visibly instead of reload-looping past the asset bound', async () => {
+    const harness = createHarness()
+    harness.storage.getItem.mockImplementation((key: string) =>
+      key === 'spliit-pwa-asset-error-count' ? '2' : null,
+    )
+    await harness.settleRegistration()
+    harness.assetError()
+    await vi.waitFor(() => {
+      expect(harness.manager.getSnapshot()).toEqual({
+        status: 'failed',
+        dismissed: false,
+      })
+    })
     expect(harness.reload).not.toHaveBeenCalled()
   })
 

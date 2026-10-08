@@ -287,4 +287,46 @@ describe('ExpenseTimeline hidden-expenses collapse', () => {
     expect(toggle.querySelector('svg.lucide-eye-off')).not.toBeNull()
     expect(container.querySelector('svg.lucide-more-vertical')).toBeNull()
   })
+
+  it('keeps a hidden run expanded when a prepend extends it', async () => {
+    const involvingIds = new Set(['m1'])
+    const renderAt = (expenses: FakeExpense[]) => (
+      <ExpenseTimeline
+        expenses={expenses}
+        sortBy="expenseDate"
+        timeZone="UTC"
+        hasMore={false}
+        isInvolving={(expense) => involvingIds.has(expense.id)}
+        showAll={false}
+        renderExpense={(expense) => (
+          <div key={expense.id}>{`Expense ${expense.id}`}</div>
+        )}
+      />
+    )
+    const { user, rerender } = render(
+      renderAt([makeExpense('t1', TODAY), makeExpense('t2', TODAY)]),
+    )
+
+    await user.click(
+      screen.getByRole('button', {
+        name: /2 hidden expenses? not involving you/i,
+      }),
+    )
+    expect(screen.getByText('Expense t1')).toBeInTheDocument()
+
+    // Newest-first insert extends the leading hidden run: the toggle stays
+    // expanded instead of remounting collapsed (position-keyed runs).
+    rerender(
+      renderAt([
+        makeExpense('t0', TODAY),
+        makeExpense('t1', TODAY),
+        makeExpense('t2', TODAY),
+      ]),
+    )
+    expect(screen.getByText('Expense t0')).toBeInTheDocument()
+    expect(screen.getByText('Expense t1')).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /^show less$/i }),
+    ).toHaveAttribute('aria-expanded', 'true')
+  })
 })

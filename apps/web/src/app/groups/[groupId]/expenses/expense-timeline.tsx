@@ -1,6 +1,14 @@
 import type { Dayjs } from 'dayjs'
 import { ChevronDown, ChevronUp, EyeOff } from 'lucide-react'
-import { forwardRef, Fragment, useEffect, useRef, useState } from 'react'
+import {
+  forwardRef,
+  Fragment,
+  memo,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ScanStickyHeading } from '@/components/layout/scan-surface'
@@ -124,7 +132,7 @@ function splitRuns<T>(
   return runs
 }
 
-export function ExpenseTimeline<T extends TimelineExpense>({
+function ExpenseTimelineInner<T extends TimelineExpense>({
   expenses,
   sortBy,
   timeZone,
@@ -155,11 +163,13 @@ export function ExpenseTimeline<T extends TimelineExpense>({
     !showAll && isInvolving !== undefined && expenses.length > 0
   const isInvolvingFn = isInvolving ?? (() => true)
   // Per-run expansion is ephemeral UI state (not in the URL): each run is
-  // keyed by the group plus its first hidden expense id, so it survives
-  // infinite-scroll appends and resets naturally on remount. It also resets
-  // when the view mode flips, so the incoming mode always starts from its
-  // canonical state (runs collapsed in "For you", everything visible in
-  // "All") instead of inheriting stale expansion.
+  // keyed by the group plus its hidden-run position, so it survives
+  // infinite-scroll appends and prepended newest-first inserts without
+  // remounting. Keying by the first hidden id instead would change the key on
+  // every prepend (the common online insert path) and collapse the toggle
+  // mid-read. It also resets when the view mode flips, so the incoming mode
+  // always starts from its canonical state (runs collapsed in "For you",
+  // everything visible in "All") instead of inheriting stale expansion.
   const [expandedRuns, setExpandedRuns] = useState<ReadonlySet<string>>(
     () => new Set(),
   )
@@ -187,7 +197,9 @@ export function ExpenseTimeline<T extends TimelineExpense>({
         return run.items.map((expense) => renderExpense(expense))
       }
       hiddenRunIndex += 1
-      const runKey = `${groupKey}:${run.items[0].id}`
+      // Position-based key (matches the toggle test id): stable across
+      // prepended inserts and appended pages that extend neighboring runs.
+      const runKey = `${groupKey}:hidden-${hiddenRunIndex}`
       const expanded = expandedRuns.has(runKey)
       return (
         <Fragment key={runKey}>
@@ -203,6 +215,17 @@ export function ExpenseTimeline<T extends TimelineExpense>({
     })
   }
 
+  // Grouping rebuilds per merge, but section wrappers keyed by stable group
+  // names reconcile in place (no remount), and memoized cards below skip
+  // unchanged rows via reused row references from the merge selector.
+  const groupedExpenses = useMemo(
+    () =>
+      useDateGrouping
+        ? getGroupedExpensesByDate(expenses, timeZone, locale)
+        : null,
+    [useDateGrouping, expenses, timeZone, locale],
+  )
+
   if (!useDateGrouping) {
     return (
       <>
@@ -211,17 +234,15 @@ export function ExpenseTimeline<T extends TimelineExpense>({
             ? renderRuns(FLAT_GROUP_KEY, expenses)
             : expenses.map((expense) => renderExpense(expense))}
         </div>
-        {hasMore && <ExpensesLoading ref={loadingRef} />}
+        {hasMore && <ExpensesLoadingMore ref={loadingRef} />}
       </>
     )
   }
 
-  const groupedExpenses = getGroupedExpensesByDate(expenses, timeZone, locale)
-
   return (
     <>
       {Object.values(EXPENSE_GROUPS).map((expenseGroup) => {
-        const groupExpenses = groupedExpenses[expenseGroup]
+        const groupExpenses = groupedExpenses?.[expenseGroup] ?? []
         if (groupExpenses.length === 0) return null
 
         return (
@@ -235,10 +256,19 @@ export function ExpenseTimeline<T extends TimelineExpense>({
           </div>
         )
       })}
-      {hasMore && <ExpensesLoading ref={loadingRef} />}
+      {hasMore && <ExpensesLoadingMore ref={loadingRef} />}
     </>
   )
 }
+
+/**
+ * Memoized timeline shell: identical expense references skip re-render, so a
+ * network merge that only appends rows remounts exactly the new cards. The cast
+ * preserves the generic signature (`memo` alone would erase it).
+ */
+export const ExpenseTimeline = memo(
+  ExpenseTimelineInner,
+) as typeof ExpenseTimelineInner
 
 function HiddenExpensesToggle({
   testId,
@@ -275,6 +305,17 @@ function HiddenExpensesToggle({
     </button>
   )
 }
+
+export const ExpensesLoadingMore = forwardRef<HTMLDivElement>((_, ref) => {
+  // Compact infinite-scroll sentinel: fixed height, no headings, so paginated
+  // appends don't shift the list by a full 3-card skeleton on every page.
+  return (
+    <div ref={ref} aria-hidden="true" className="px-4 py-3 sm:px-6">
+      <Skeleton className="h-12 w-full rounded-lg" />
+    </div>
+  )
+})
+ExpensesLoadingMore.displayName = 'ExpensesLoadingMore'
 
 export const ExpensesLoading = forwardRef<HTMLDivElement>((_, ref) => {
   return (

@@ -1,6 +1,6 @@
 import { getRouteApi, Navigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AnonymousRecoveryOnboarding } from '@/components/auth/anonymous-recovery-onboarding'
@@ -19,6 +19,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { isPlaceholderEmail } from '@/lib/account'
 import { useDeploymentConfig } from '@/lib/deployment-config'
+import { markInstallEligible } from '@/lib/install-eligibility'
 import { isPasskeySupported } from '@/lib/passkey'
 import { safeLocalReturnPath } from '@/lib/signup-invite'
 import { useOnboardingStatus } from '@/lib/use-onboarding-status'
@@ -61,6 +62,14 @@ export function CompleteProfilePage() {
   const isOnline = useOnlineStatus()
   const [recoveryAcknowledged, setRecoveryAcknowledged] = useState(false)
 
+  // Fresh-account landing (sign-up verification, OAuth/magic-link first
+  // login, anonymous upgrade): needing setup here counts as the successful
+  // account creation that arms install promotion. Accounts with nothing to
+  // do redirect out below without marking, so restored sessions stay out.
+  const onboardingActive = !isPending && !!account && needsOnboarding
+  useEffect(() => {
+    if (onboardingActive) markInstallEligible()
+  }, [onboardingActive])
   const [name, setName] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)

@@ -1,6 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import {
+  Download as DownloadIcon,
   LogOut,
   MessageSquareText,
   Megaphone,
@@ -37,20 +38,53 @@ import { authClient } from '@/lib/auth'
 import { replaceBrowserLocation } from '@/lib/browser-navigation'
 import { useMediaQuery } from '@/lib/hooks'
 import { clearLastAccount } from '@/lib/last-account'
+import {
+  useOfflineSession,
+  useOptionalOfflineLifecycle,
+} from '@/lib/offline/provider'
 import { disconnectPushSubscription } from '@/lib/push-notifications'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import {
+  requestManualInstallOpen,
+  useInstallPrompt,
+} from '@/lib/use-install-prompt'
+import { useOnlineStatus } from '@/lib/use-online-status'
 
 export function AccountMenu() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Header' })
+  const { t: tOffline } = useTranslation()
   const { t: tUpdates } = useTranslation()
   const queryClient = useQueryClient()
   const { toast } = useToast()
   const { data: account, isPending } = useCurrentAccount()
+  const isOnline = useOnlineStatus()
+  const lifecycle = useOptionalOfflineLifecycle()
+  const { cleanupError } = useOfflineSession()
   const isDesktop = useMediaQuery('(min-width: 640px)')
   const [menuOpen, setMenuOpen] = useState(false)
   const [signOutOpen, setSignOutOpen] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
   const [signOutError, setSignOutError] = useState(false)
+  const [retryingCleanup, setRetryingCleanup] = useState(false)
+  const { browserSupport, installed, install } = useInstallPrompt()
+  const showInstallItem = browserSupport !== 'unsupported' && !installed
+
+  function requestInstall() {
+    setMenuOpen(false)
+    // Explicit user action: offer the system install dialog directly when
+    // supported instead of our promo. Falls back to our dialog
+    // (instructions, or uncaptured prompt) when native is unavailable.
+    // install() invokes the deferred prompt synchronously in this gesture
+    // (activation boundary); the fallback opens our dialog after the async
+    // gap, which needs no gesture.
+    if (browserSupport === 'native-install') {
+      void install().then((outcome) => {
+        if (outcome === 'unavailable') requestManualInstallOpen()
+      })
+      return
+    }
+    requestManualInstallOpen()
+  }
 
   if (isPending) {
     return (
@@ -77,15 +111,34 @@ export function AccountMenu() {
 
   async function signOut() {
     if (signingOut) return
+    // Offline sign-out is not introduced: server-confirmed sign-out only.
+    // Offline uses a distinct "Connect to sign out" hint,
+    // never the generic failure copy.
+    if (!isOnline) {
+      toast({ description: t('signOutOffline'), variant: 'destructive' })
+      return
+    }
     setSigningOut(true)
     setSignOutError(false)
     try {
       await disconnectPushSubscription()
       const result = await authClient.signOut()
       if (result?.error) throw new Error(result.error.message)
-      clearLastAccount()
-      queryClient.clear()
-      replaceBrowserLocation('/')
+      // Local revocation runs even if durable cleanup fails; the lifecycle
+      // fences the namespace via marker + generation and surfaces a cleanup
+      // failure instead of claiming silent disk success.
+      if (lifecycle) {
+        await lifecycle.signOut({ navigateTo: '' })
+        // Lifecycle owns last-account + query fencing; navigate out without
+        // relying on SPA caches.
+        clearLastAccount()
+        queryClient.clear()
+        replaceBrowserLocation('/')
+      } else {
+        clearLastAccount()
+        queryClient.clear()
+        replaceBrowserLocation('/')
+      }
     } catch {
       setSignOutError(true)
       toast({ description: t('signOutError'), variant: 'destructive' })
@@ -104,8 +157,42 @@ export function AccountMenu() {
     void signOut()
   }
 
+  async function handleRetryCleanup() {
+    if (retryingCleanup || !lifecycle?.retryCleanup) return
+    setRetryingCleanup(true)
+    try {
+      const ok = await lifecycle.retryCleanup()
+      if (!ok) {
+        toast({
+          description: tOffline('OfflineDownloads.cleanupFailed'),
+          variant: 'destructive',
+        })
+      }
+    } finally {
+      setRetryingCleanup(false)
+    }
+  }
+
   return (
     <>
+      {cleanupError ? (
+        <div
+          className="flex items-center gap-2 rounded-md border border-destructive/30 bg-destructive/5 px-2 py-1 text-xs text-destructive"
+          role="alert"
+          data-testid="offline-cleanup-error"
+        >
+          <span>{tOffline('OfflineDownloads.cleanupFailed')}</span>
+          <button
+            type="button"
+            data-testid="cleanup-retry"
+            disabled={retryingCleanup}
+            onClick={() => void handleRetryCleanup()}
+            className="font-medium underline underline-offset-4 hover:no-underline disabled:opacity-50"
+          >
+            {tOffline('OfflineEmptyState.retry')}
+          </button>
+        </div>
+      ) : null}
       {isDesktop ? (
         <DropdownMenu>
           <DropdownMenuTrigger render={accountTrigger} />
@@ -129,6 +216,12 @@ export function AccountMenu() {
               <MessageSquareText className="me-2 h-4 w-4" />
               {t('feedback')}
             </DropdownMenuItem>
+            {showInstallItem ? (
+              <DropdownMenuItem onClick={requestInstall}>
+                <DownloadIcon className="me-2 h-4 w-4" />
+                {t('installApp')}
+              </DropdownMenuItem>
+            ) : null}
             <DropdownMenuItem render={<Link to="/updates" />}>
               <Megaphone className="me-2 h-4 w-4" />
               {tUpdates('Updates.title')}
@@ -198,6 +291,23 @@ export function AccountMenu() {
                   </Link>
                 }
               />
+              {showInstallItem ? (
+                <ResponsiveDialogClose
+                  render={
+                    <button
+                      type="button"
+                      className="flex min-h-11 items-center gap-3 rounded-lg px-3 text-start text-sm font-medium hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden"
+                      onClick={requestInstall}
+                    >
+                      <DownloadIcon
+                        className="size-5 text-muted-foreground"
+                        aria-hidden="true"
+                      />
+                      {t('installApp')}
+                    </button>
+                  }
+                />
+              ) : null}
               <button
                 type="button"
                 className="flex min-h-11 items-center gap-3 rounded-lg px-3 text-start text-sm font-medium text-destructive hover:bg-destructive/10 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden"
