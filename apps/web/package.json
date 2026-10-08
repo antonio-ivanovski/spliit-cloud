@@ -12,7 +12,8 @@
     "format": "oxfmt .",
     "lint": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives .",
     "lint:fix": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives --fix .",
-    "preview": "vite preview",
+    "preview": "portless preview.spliit vite preview",
+    "preview:app": "vite preview",
     "test": "vitest run",
     "test:integration": "vitest run --config vitest.integration.config.ts --reporter=verbose",
     "test:watch": "vitest"

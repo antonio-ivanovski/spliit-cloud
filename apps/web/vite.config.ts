@@ -182,10 +182,14 @@ export default defineConfig({
     allowedHosts: publicWebHosts,
   },
   preview: {
-    // Keep preview off the dev port: a production service worker persists at
-    // the origin scope, so sharing :3000 lets a previewed build keep serving
-    // its precache to dev pages (most visibly in Firefox on localhost:3000).
-    port: 4173,
+    // Keep preview off the dev port and on its own portless name
+    // (https://preview.spliit.localhost): a production service worker
+    // persists at the origin scope, so sharing the dev origin lets a
+    // previewed build keep serving its precache to dev pages (most visibly
+    // in Firefox on localhost:3000).
+    host: '127.0.0.1',
+    port: Number(process.env.PORT || 4173),
+    strictPort: true,
   },
   resolve: {
     alias: {

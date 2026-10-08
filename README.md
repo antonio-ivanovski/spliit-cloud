@@ -173,18 +173,19 @@ local HTTPS certificate).
    Pre-starting the proxy matters: otherwise each service auto-starts the
    default plain-HTTP proxy and the https origins won't resolve. Verify with
    `portless list`. People without portless installed can run the underlying
-   commands directly (`dev:app` / `dev:server` / `dev:relay:app` scripts).
+   commands directly (`dev:app` / `preview:app` / `dev:server` / `dev:relay:app` scripts).
 
-   | Service      | URL (portless)                 | Bypass (`PORTLESS=0`)     |
-   | ------------ | ------------------------------ | ------------------------- |
-   | Web          | https://spliit.localhost       | http://localhost:3000     |
-   | API          | https://api.spliit.localhost   | http://localhost:3001     |
-   | Worker admin | https://jobs.spliit.localhost  | http://localhost:3003     |
-   | MCP          | https://mcp.spliit.localhost   | http://localhost:3002     |
-   | Relay        | https://relay.spliit.localhost | http://localhost:8787     |
-   | PostgreSQL   | localhost:5432                 | localhost:5432            |
-   | MaxIO        | http://localhost:9000/ui/      | http://localhost:9000/ui/ |
-   | MailDev      | http://localhost:1080          | http://localhost:1080     |
+   | Service      | URL (portless)                   | Bypass (`PORTLESS=0`)     |
+   | ------------ | -------------------------------- | ------------------------- |
+   | Web          | https://spliit.localhost         | http://localhost:3000     |
+   | Web preview  | https://preview.spliit.localhost | http://localhost:4173     |
+   | API          | https://api.spliit.localhost     | http://localhost:3001     |
+   | Worker admin | https://jobs.spliit.localhost    | http://localhost:3003     |
+   | MCP          | https://mcp.spliit.localhost     | http://localhost:3002     |
+   | Relay        | https://relay.spliit.localhost   | http://localhost:8787     |
+   | PostgreSQL   | localhost:5432                   | localhost:5432            |
+   | MaxIO        | http://localhost:9000/ui/        | http://localhost:9000/ui/ |
+   | MailDev      | http://localhost:1080            | http://localhost:1080     |
 
    Infra (PostgreSQL, MaxIO, MailDev) stays on localhost ports in both modes.
    The bypass also needs the https URL envs overridden back to plain ports
