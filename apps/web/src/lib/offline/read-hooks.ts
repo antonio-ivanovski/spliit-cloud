@@ -678,17 +678,28 @@ export function useOfflineExpenses(
   // computed from. A move restarts pagination instead of mixing pages across
   // publications.
   const revisionRef = useRef<string | null>(null)
+  // Tracks whether the current filter window already has local rows. A
+  // connectivity flip must not truncate a populated window back to the first
+  // page: the loader below backfills only empty windows, so paginated history
+  // survives offline<->online transitions without a skeleton flash.
+  const localPagesRef = useRef<unknown[][]>([])
+  useEffect(() => {
+    localPagesRef.current = localPages
+  }, [localPages])
 
   // Reset pagination when query/filter/sort/source version changes. Network
   // arrival alone never resets: cached rows stay mounted and merge in place
   // (see `merged` below). Resetting on `network.data.pages.length` would wipe
-  // the cache on the slow-network path we optimize for.
+  // the cache on the slow-network path we optimize for. Connectivity flips
+  // (`isOnline`) and transient `network.error` also never reset: clearing here
+  // would flash a skeleton over a readable list on every reconnect. The loader
+  // below backfills an empty window instead of truncating a populated one.
   useEffect(() => {
     requestIdRef.current += 1
     setLocalPages([])
     setLocalMeta({ nextOffset: null, hasMore: false })
     setLocalError(false)
-  }, [filterKey, version, namespace, generation, isOnline, network.error])
+  }, [filterKey, version, namespace, generation])
 
   // Cancel obsolete loads on account/source/filter changes.
   useEffect(() => {
@@ -701,6 +712,12 @@ export function useOfflineExpenses(
       // While the network has a complete first page, it wins; otherwise use
       // the local snapshot immediately (cold direct routes included).
       if (isOnline && !network.error && network.data?.pages?.length) return
+      // Never truncate a populated window (e.g. on a connectivity flip that
+      // re-runs this effect): the reset above already cleared genuine
+      // filter/version changes, so non-empty here means this window is
+      // loaded. An empty window (online->offline with no local yet) still
+      // backfills below.
+      if (localPagesRef.current.length > 0) return
       setLocalLoading(true)
       setLocalError(false)
       try {

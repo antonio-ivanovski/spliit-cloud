@@ -1133,6 +1133,54 @@ describe('offline read hooks', () => {
     expect(result.current.meta.source).toBe('network')
   })
 
+  it('keeps cached rows mounted across connectivity flips (no skeleton flash)', async () => {
+    mocks.useOnlineStatus.mockReturnValue(false)
+    const catalog = catalogWith(['g1'])
+    const record = groupRecord('g1', ['a'])
+    await setupLocal({
+      catalog,
+      groups: new Map([['g1', record]]),
+    })
+    mocks.trpcGroupsExpensesList.mockReturnValue({
+      data: undefined,
+      error: new Error('offline'),
+      isFetching: false,
+      fetchNextPage: vi.fn(),
+      refetch: vi.fn(),
+    })
+    const { Wrapper } = makeWrapper()
+    const { result, rerender } = renderHook(
+      () => useOfflineExpenses({ groupId: 'g1' }),
+      { wrapper: Wrapper },
+    )
+    await waitFor(() => {
+      expect(result.current.meta.availability).toBe('ready')
+    })
+    expect(
+      result.current.data?.pages[0]?.expenses.map(
+        (expense) => (expense as { id: string }).id,
+      ),
+    ).toEqual(['a'])
+    // Flip online while the network is still slow: cached rows must stay
+    // mounted instead of resetting to an empty window (skeleton flash).
+    mocks.useOnlineStatus.mockReturnValue(true)
+    mocks.trpcGroupsExpensesList.mockReturnValue({
+      data: undefined,
+      error: undefined,
+      isFetching: true,
+      fetchNextPage: vi.fn(),
+      refetch: vi.fn(),
+    })
+    rerender()
+    expect(result.current.data).toBeDefined()
+    expect(
+      result.current.data?.pages[0]?.expenses.map(
+        (expense) => (expense as { id: string }).id,
+      ),
+    ).toEqual(['a'])
+    expect(result.current.meta.availability).toBe('ready')
+  })
+
   it('terminates the list when the network paginates to exhaustion', async () => {
     const { clearPendingExpensesForTests } = await import('./pending-expenses')
     clearPendingExpensesForTests()

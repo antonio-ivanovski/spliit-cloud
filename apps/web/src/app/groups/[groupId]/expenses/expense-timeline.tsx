@@ -163,11 +163,13 @@ function ExpenseTimelineInner<T extends TimelineExpense>({
     !showAll && isInvolving !== undefined && expenses.length > 0
   const isInvolvingFn = isInvolving ?? (() => true)
   // Per-run expansion is ephemeral UI state (not in the URL): each run is
-  // keyed by the group plus its first hidden expense id, so it survives
-  // infinite-scroll appends and resets naturally on remount. It also resets
-  // when the view mode flips, so the incoming mode always starts from its
-  // canonical state (runs collapsed in "For you", everything visible in
-  // "All") instead of inheriting stale expansion.
+  // keyed by the group plus its hidden-run position, so it survives
+  // infinite-scroll appends and prepended newest-first inserts without
+  // remounting. Keying by the first hidden id instead would change the key on
+  // every prepend (the common online insert path) and collapse the toggle
+  // mid-read. It also resets when the view mode flips, so the incoming mode
+  // always starts from its canonical state (runs collapsed in "For you",
+  // everything visible in "All") instead of inheriting stale expansion.
   const [expandedRuns, setExpandedRuns] = useState<ReadonlySet<string>>(
     () => new Set(),
   )
@@ -195,7 +197,9 @@ function ExpenseTimelineInner<T extends TimelineExpense>({
         return run.items.map((expense) => renderExpense(expense))
       }
       hiddenRunIndex += 1
-      const runKey = `${groupKey}:${run.items[0].id}`
+      // Position-based key (matches the toggle test id): stable across
+      // prepended inserts and appended pages that extend neighboring runs.
+      const runKey = `${groupKey}:hidden-${hiddenRunIndex}`
       const expanded = expandedRuns.has(runKey)
       return (
         <Fragment key={runKey}>
@@ -211,9 +215,9 @@ function ExpenseTimelineInner<T extends TimelineExpense>({
     })
   }
 
-  // Grouping is referentially stable for identical inputs: unchanged date
-  // groups keep their array identity so section wrappers don't remount when
-  // network rows merge in elsewhere. Only the affected group re-renders.
+  // Grouping rebuilds per merge, but section wrappers keyed by stable group
+  // names reconcile in place (no remount), and memoized cards below skip
+  // unchanged rows via reused row references from the merge selector.
   const groupedExpenses = useMemo(
     () =>
       useDateGrouping
@@ -230,7 +234,7 @@ function ExpenseTimelineInner<T extends TimelineExpense>({
             ? renderRuns(FLAT_GROUP_KEY, expenses)
             : expenses.map((expense) => renderExpense(expense))}
         </div>
-        {hasMore && <ExpensesLoading ref={loadingRef} />}
+        {hasMore && <ExpensesLoadingMore ref={loadingRef} />}
       </>
     )
   }
@@ -252,7 +256,7 @@ function ExpenseTimelineInner<T extends TimelineExpense>({
           </div>
         )
       })}
-      {hasMore && <ExpensesLoading ref={loadingRef} />}
+      {hasMore && <ExpensesLoadingMore ref={loadingRef} />}
     </>
   )
 }
@@ -301,6 +305,17 @@ function HiddenExpensesToggle({
     </button>
   )
 }
+
+export const ExpensesLoadingMore = forwardRef<HTMLDivElement>((_, ref) => {
+  // Compact infinite-scroll sentinel: fixed height, no headings, so paginated
+  // appends don't shift the list by a full 3-card skeleton on every page.
+  return (
+    <div ref={ref} aria-hidden="true" className="px-4 py-3 sm:px-6">
+      <Skeleton className="h-12 w-full rounded-lg" />
+    </div>
+  )
+})
+ExpensesLoadingMore.displayName = 'ExpensesLoadingMore'
 
 export const ExpensesLoading = forwardRef<HTMLDivElement>((_, ref) => {
   return (

@@ -213,8 +213,13 @@ const ExpenseListForSearch = ({
   )
 
   useEffect(() => {
-    if (inView && hasMore && !isLoading) void fetchNextPageUnified()
-  }, [fetchNextPageUnified, hasMore, inView, isLoading])
+    // Serialize infinite-scroll prefetches: without the `refreshing` gate a
+    // short list keeps the sentinel in view and fires concurrent
+    // `fetchNextPage` calls on every render, merging pages in quick
+    // succession (visible re-refresh). One page at a time settles instead.
+    if (inView && hasMore && !isLoading && !mergedMeta.refreshing)
+      void fetchNextPageUnified()
+  }, [fetchNextPageUnified, hasMore, inView, isLoading, mergedMeta.refreshing])
 
   if (showServerEmpty) {
     return (
@@ -278,7 +283,10 @@ const ExpenseListForSearch = ({
     )
 
   return (
-    <>
+    // Stable list viewport: a minimum height keeps the page footer and the
+    // infinite-scroll sentinel from jumping while pages merge in, and
+    // `aria-busy` marks background refetches so they never read as a reload.
+    <div className="min-h-[30vh]" aria-busy={mergedMeta.refreshing}>
       {mergedMeta.source === 'download' && mergedMeta.hasMore && (
         <output className="mx-4 mb-2 block text-xs text-muted-foreground sm:mx-6">
           {tOffline('OfflineReadOnly.dataUnavailable')}
@@ -294,6 +302,6 @@ const ExpenseListForSearch = ({
         showAll={renderedShowAll}
         renderExpense={renderExpense}
       />
-    </>
+    </div>
   )
 }
