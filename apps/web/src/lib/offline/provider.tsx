@@ -40,6 +40,8 @@ import {
   type OfflineLifecycle,
   type SessionFetchResult,
 } from './lifecycle'
+import { buildPendingExpenseFlushProgram } from './pending-expense-queue'
+import { applyPendingExpenseResolution } from './pending-expenses'
 import {
   clearOfflineQueryClient,
   recreateOfflineWorkerIfFailed,
@@ -844,7 +846,10 @@ export function OfflineSyncHost() {
     )
       return
     launchedRef.current = { namespace, sync }
-    void sync.handleLaunch().catch(() => undefined)
+    void (async () => {
+      await flushPendingExpensesBestEffort(namespace)
+      await sync.handleLaunch().catch(() => undefined)
+    })()
   }, [sync, lifecycle, lifecycleSnapshot.namespace, lifecycleSnapshot.session])
 
   // Successful reconnect auto path: after the recovery probe reports
@@ -866,7 +871,11 @@ export function OfflineSyncHost() {
     if (!sync || lifecycleSnapshot.session !== 'verified') return
     if (!reconnectPendingRef.current || !lifecycleSnapshot.namespace) return
     reconnectPendingRef.current = false
-    void sync.handleReconnect().catch(() => undefined)
+    const namespace = lifecycleSnapshot.namespace
+    void (async () => {
+      await flushPendingExpensesBestEffort(namespace)
+      await sync.handleReconnect().catch(() => undefined)
+    })()
   }, [
     sync,
     lifecycle,
@@ -967,6 +976,31 @@ export function useNotifyOfflineMutation(): {
 }
 
 /**
+ * Best-effort flush of the offline-created expense outbox. Runs BEFORE a
+ * download pass so the pass already carries the real rows (delete-temp +
+ * insert-real reconcile). Never throws and never blocks the caller: flush
+ * failures must not break launch, reconnect, or manual retry. Shared by all
+ * three paths so no reconnect route can leave queued expenses pending.
+ */
+async function flushPendingExpensesBestEffort(
+  namespace: string | null,
+): Promise<void> {
+  if (!namespace) return
+  try {
+    await getPageRuntime()
+      .runPromise(
+        buildPendingExpenseFlushProgram({
+          namespace,
+          onResolved: applyPendingExpenseResolution,
+        }),
+      )
+      .catch(() => undefined)
+  } catch {
+    // Flush failures must never break reconnect/launch.
+  }
+}
+
+/**
  * Explicit recovery retry for status UI (Task 8): probe + verify through the
  * probe orchestrator (single-flight, one classification owner feeding both the
  * legacy store projection and AppStatus), then reconnect the sync engine.
@@ -996,6 +1030,11 @@ export function useOfflineRetry(): {
       await lifecycle.verifySession().catch(() => undefined)
       const verified = lifecycle.getSnapshot().session === 'verified'
       if (verified && sync) {
+        // Phase 1: flush offline-created expenses BEFORE the download pass,
+        // so it already carries the real rows (delete-temp + insert-real
+        // reconcile). Best-effort: flush failures never block the download
+        // or the retry outcome.
+        await flushPendingExpensesBestEffort(lifecycle.getSnapshot().namespace)
         // Successful reconnect auto path: the pass
         // verifies again idempotently then downloads all groups.
         await sync.handleReconnect().catch(() => undefined)

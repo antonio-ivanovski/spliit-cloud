@@ -1,4 +1,17 @@
 import { createTRPCClient, httpLink } from '@trpc/client'
+import {
+  Cause,
+  Clock,
+  Deferred,
+  Duration,
+  Effect,
+  Exit,
+  Fiber,
+  Layer,
+  ManagedRuntime,
+  Schedule,
+  Scope,
+} from 'effect'
 import superjson from 'superjson'
 
 import { getApiBaseUrl } from '@/lib/api-url'
@@ -11,7 +24,7 @@ import type {
 import type { AppRouter } from '@spliit/api/router'
 
 import { catalogGroupIds, isSameOfflineRevision } from './contract'
-import { isOfflineStorageError, isQuotaError } from './errors'
+import { toOfflineSyncFailure, type OfflineSyncFailure } from './errors'
 import type { OfflineRepository } from './repository'
 
 /**
@@ -300,36 +313,58 @@ function isAbortLike(error: unknown): boolean {
   return name === 'AbortError' || name === 'TimeoutError'
 }
 
+/**
+ * MapError at the repository boundary.
+ *
+ * Repository throws enter the typed `OfflineSyncFailure` channel here before
+ * classification. Network/fetch rejections are NOT storage failures: the
+ * normalizer returns null for them and they pass through untouched for the
+ * code/status/connectivity probes in {@link classifySyncError}.
+ */
+function normalizeRepositoryError(error: unknown): unknown {
+  return toOfflineSyncFailure(error) ?? error
+}
+
+/**
+ * Tag-based dispatch for the typed offline failure channel. Mapping is
+ * identical to the legacy `OfflineStorageError` code switch below: fencing
+ * codes split into disabled/revision/lease, quota stays quota, and
+ * storage-unavailable/storage-blocked preserve their specific code through the
+ * schema kind (never the internal 'cancelled' lifecycle word) so
+ * {@link toPersistedCode} keeps recording the same persisted codes.
+ */
+function classifyTaggedFailure(
+  failure: OfflineSyncFailure,
+): SyncErrorClassification {
+  switch (failure._tag) {
+    case 'OfflineQuotaFailure':
+      return { kind: 'quota' }
+    case 'OfflineSchemaFailure':
+    case 'OfflineStorageFailure':
+      return { kind: 'schema', code: failure.code }
+    case 'OfflineFencingFailure':
+      switch (failure.code) {
+        case 'generation-mismatch':
+        case 'namespace-revoked':
+          return { kind: 'disabled' }
+        case 'revision-changed':
+          return { kind: 'revision' }
+        case 'lease-conflict':
+          return { kind: 'lease' }
+      }
+  }
+}
+
 export function classifySyncError(
   error: unknown,
   now: number,
   isConnectivityError?: (cause: unknown) => boolean,
 ): SyncErrorClassification {
-  if (isOfflineStorageError(error)) {
-    switch (error.code) {
-      case 'generation-mismatch':
-      case 'namespace-revoked':
-        return { kind: 'disabled' }
-      case 'revision-changed':
-        return { kind: 'revision' }
-      case 'lease-conflict':
-        return { kind: 'lease' }
-      case 'quota-exceeded':
-        return { kind: 'quota' }
-      case 'schema-unsupported':
-      case 'invalid-payload':
-      case 'corrupt-record':
-        return { kind: 'schema', code: error.code }
-      default:
-        // storage-unavailable / storage-blocked (and any future storage
-        // code): preserve the specific code so the per-group errors map
-        // never leaks the internal 'cancelled' lifecycle word. The
-        // schema kind carries the code through to errors + persisted
-        // status via toPersistedCode below.
-        return { kind: 'schema', code: error.code }
-    }
-  }
-  if (isQuotaError(error)) return { kind: 'quota' }
+  // Typed error channel first: storage/quota/fencing failures normalized at
+  // the repository boundary dispatch on `_tag`. Anything else falls through
+  // to the legacy probes below, unchanged.
+  const tagged = toOfflineSyncFailure(error)
+  if (tagged !== null) return classifyTaggedFailure(tagged)
   if (isAbortLike(error)) {
     const name =
       error && typeof error === 'object' && 'name' in error
@@ -483,6 +518,206 @@ export function mergePassRequests(
 }
 
 /**
+ * Effect orchestration for sync passes (Phase 3).
+ *
+ * What converted:
+ *
+ * - Short retries (catalog/per-group transient 1-retry-after-5s, short
+ *   Retry-After 1-retry) run through `Effect.retry` with composed Schedules
+ *   (`singleRetrySchedule`: fixed delay + max 1 recurrence, gated on a failure
+ *   predicate). Long Retry-After (>60s) keeps the
+ *   rateLimitedUntil/rateLimitedGroups deadline mechanism with identical status
+ *   writes.
+ * - Lease acquire/release runs through `Effect.acquireRelease` in an explicit
+ *   pass `Scope` (released quietly at pass end on every exit); renewal ticks on
+ *   a forked renew fiber (`runLeaseRenewLoop`, 10s interval of the 30s TTL).
+ *   Lease loss aborts the pass exactly as before (controller abort).
+ * - Pass coalescing runs on a forked pass `Fiber` with `Deferred` idle waiters,
+ *   preserving the merge policy (`mergePassRequests`), the single-pending-slot
+ *   (max-one-rerun) bound, quota-error gating, and wait-for-idle promise
+ *   semantics.
+ * - Public methods stay Promise-based via one `ManagedRuntime` per engine;
+ *   Effects run only at these edges.
+ *
+ * Deliberately left promise-based (and why):
+ *
+ * - Per-attempt fetch timeout + AbortSignal wiring (`combineWithTimeout`): the
+ *   60s bound must stay on real time. Routing it through the retry Clock would
+ *   fire instantly under immediate test sleeps and break gated-fetch fencing
+ *   tests; there is no Effect equivalent without changing timing. It is wrapped
+ *   at the Effect boundary with `Effect.tryPromise`.
+ * - Repository/verify/fetch calls: the repository and network clients are Promise
+ *   APIs; they are bridged with `Effect.tryPromise` at the call sites instead
+ *   of growing an Effect service layer (no parallel orchestrator, no new
+ *   services).
+ * - Status snapshot + listeners: React `useSyncExternalStore` requires
+ *   synchronous getSnapshot/subscribe, so status stays a plain mutable snapshot
+ *   updated with `Effect.sync` where inside Effects.
+ * - Retry delays execute through the injected abortable `sleep` via a narrow
+ *   `Clock` override scoped to the retry effects only, so existing exact-delay
+ *   assertions (5s transient, exact Retry-After minima) and abortable-sleep
+ *   semantics hold unchanged. Renewal ticks and timeouts never flow through
+ *   that Clock.
+ */
+
+/** Retry policy for a single delayed re-attempt. */
+export type SingleRetryPolicy = {
+  /** Fixed delay before the transient re-attempt (exact, no jitter). */
+  readonly transientDelayMs: number
+  /** True for failures retried after `transientDelayMs`. */
+  readonly isTransientFailure: (error: unknown) => boolean
+  /**
+   * Exact delay for a short Retry-After follow-up, or null when the failure
+   * must not retry (long delays keep the deadline mechanism).
+   */
+  readonly shortRetryDelayMs: (error: unknown) => number | null
+}
+
+/**
+ * One delayed re-attempt after a fixed delay (max 1 recurrence).
+ *
+ * `Schedule.max` continues only while both schedules continue and waits the
+ * slowest delay: `recurs(1)` caps the retry at one, `spaced(delayMs)` sets the
+ * fixed wait, and `while` stops immediately for failures the predicate rejects
+ * so they propagate untouched after a single fetch. sync.ts keeps exact delays
+ * (no jitter): tests assert the 5s transient wait and exact Retry-After
+ * minima.
+ */
+export function singleRetrySchedule(
+  delayMs: number,
+  shouldRetry: (error: unknown) => boolean,
+) {
+  return Schedule.max([Schedule.spaced(delayMs), Schedule.recurs(1)]).pipe(
+    Schedule.setInputType<unknown>(),
+    Schedule.while(({ input }) => shouldRetry(input)),
+  )
+}
+
+/**
+ * Run-once bound for the short Retry-After follow-up (no further recurrence).
+ * The exact delay runs first as a Clock sleep; this schedule only enforces the
+ * single-attempt bound inside `Effect.retry`.
+ */
+export function followUpAttemptSchedule() {
+  return Schedule.recurs(0).pipe(Schedule.setInputType<unknown>())
+}
+
+/**
+ * Fetch with at most one delayed re-attempt, driven by `Effect.retry`.
+ *
+ * Phase A retries transient failures once after `transientDelayMs`. Phase B
+ * runs only when phase A used exactly one fetch and failed with a short
+ * Retry-After: one follow-up after the exact delay, bounded by
+ * `followUpAttemptSchedule`. Long Retry-After, auth/access/connectivity/
+ * quota/schema/disabled/lease/revision/cancelled failures propagate after a
+ * single fetch — callers keep their existing branches for those (including the
+ * rateLimitedUntil deadline mechanism).
+ *
+ * Delays run on the ambient Clock (`TestClock` in tests); interruption
+ * propagates as an interrupt cause so callers take their existing cancelled
+ * paths.
+ */
+export const fetchWithSingleRetry = Effect.fnUntraced(function* <A>(
+  fetchOnce: () => Effect.Effect<A, unknown>,
+  policy: SingleRetryPolicy,
+): Effect.fn.Return<A, unknown> {
+  let fetches = 0
+  const counted = Effect.andThen(
+    Effect.sync(() => {
+      fetches += 1
+    }),
+    Effect.suspend(fetchOnce),
+  )
+  const transientSchedule = singleRetrySchedule(
+    policy.transientDelayMs,
+    policy.isTransientFailure,
+  )
+  const phaseA = yield* Effect.exit(Effect.retry(counted, transientSchedule))
+  if (Exit.isSuccess(phaseA)) return phaseA.value
+  if (Cause.hasInterruptsOnly(phaseA.cause)) {
+    return yield* Effect.interrupt
+  }
+  const firstFailure = Cause.findErrorOption(phaseA.cause)
+  if (fetches === 1 && firstFailure._tag === 'Some') {
+    const delayMs = policy.shortRetryDelayMs(firstFailure.value)
+    if (delayMs !== null) {
+      const followUp = yield* Effect.exit(
+        Effect.retry(
+          Effect.andThen(Effect.sleep(delayMs), counted),
+          followUpAttemptSchedule(),
+        ),
+      )
+      if (Exit.isSuccess(followUp)) return followUp.value
+      if (Cause.hasInterruptsOnly(followUp.cause)) {
+        return yield* Effect.interrupt
+      }
+      return yield* Effect.failCause(followUp.cause)
+    }
+  }
+  return yield* Effect.failCause(phaseA.cause)
+})
+
+/** Tick schedule for lease renewal (every 10s of the 30s TTL). */
+export function leaseRenewSchedule() {
+  return Schedule.spaced(OFFLINE_SYNC_LEASE_RENEW_MS)
+}
+
+/** Fencing outcome that stops renewal and aborts the pass. */
+export type LeaseLostReason = 'lease' | 'disabled' | 'revision'
+
+export type LeaseRenewDeps = {
+  /** Single renewal attempt; rejections become classification input. */
+  readonly renewLease: () => Effect.Effect<unknown, unknown>
+  /**
+   * Map a renewal failure to a fencing outcome (`transient` swallows the tick:
+   * the transactional commit fence still guards every write).
+   */
+  readonly classifyRenewFailure: (
+    error: unknown,
+  ) => LeaseLostReason | 'transient'
+}
+
+/**
+ * Renew until a fencing failure (lease/disabled/revision) fails the loop;
+ * transient storage hiccups are swallowed and renewal continues. Interruption
+ * (pass end) stops the loop quietly.
+ */
+export const runLeaseRenewLoop = Effect.fnUntraced(function* (
+  deps: LeaseRenewDeps,
+): Effect.fn.Return<never, LeaseLostReason> {
+  for (;;) {
+    yield* Effect.sleep(OFFLINE_SYNC_LEASE_RENEW_MS)
+    const outcome = yield* Effect.exit(deps.renewLease())
+    if (Exit.isSuccess(outcome)) continue
+    if (Cause.hasInterruptsOnly(outcome.cause)) {
+      return yield* Effect.interrupt
+    }
+    const failure = Cause.findErrorOption(outcome.cause)
+    const decision =
+      failure._tag === 'Some'
+        ? deps.classifyRenewFailure(failure.value)
+        : 'transient'
+    if (decision !== 'transient') {
+      return yield* Effect.fail(decision)
+    }
+  }
+})
+
+/**
+ * Foreground 5-minute rule as a pure predicate: full pass only when no full
+ * pass ever completed, or the last one is older than 5 minutes.
+ */
+export function isForegroundPassStale(
+  lastCompletedFullPassAt: number | null,
+  nowMs: number,
+): boolean {
+  return (
+    lastCompletedFullPassAt === null ||
+    nowMs - lastCompletedFullPassAt > OFFLINE_SYNC_FOREGROUND_STALE_MS
+  )
+}
+
+/**
  * Dedicated unbatched download client.
  *
  * A large snapshot must not block UI request batches, so downloads use
@@ -546,13 +781,103 @@ export function createOfflineSync(options: OfflineSyncOptions) {
   const owner = randomUUID()
   const listeners = new Set<() => void>()
   let disposed = false
-  let active: Promise<void> | null = null
+  // Pass coalescing: one active pass fiber + one merged pending request
+  // (max-one-rerun bound), never overlapping account passes. Idle waiters
+  // resolve when the queue fully drains (wait-for-idle semantics).
+  let driverActive = false
+  let activeFiber: Fiber.Fiber<void, unknown> | null = null
   let activeController: AbortController | null = null
   let pending: SyncPassRequest | null = null
-  let idleWaiters: Array<() => void> = []
+  let idleWaiters: Array<Deferred.Deferred<void>> = []
   let rateLimitedUntil: number | null = null
   let rateLimitedGroups = new Set<string>()
   let lastCompletedFullPassAt: number | null = null
+
+  // Promise boundary: the React/provider surface stays Promise-based; every
+  // Effect below runs through this runtime at the existing public-method
+  // edges only. The layer is empty (no services to release), so the runtime
+  // itself is never disposed; per-pass Scopes own the lease lifecycle.
+  const runtime = ManagedRuntime.make(Layer.empty)
+
+  /**
+   * Narrow Clock override routing retry-schedule delays through the injected
+   * abortable `sleep` with exact milliseconds. Scoped to the fetch-retry
+   * effects only: renewal ticks and per-attempt timeouts stay on the live
+   * clock. Aborts interrupt the retry so callers take their existing cancelled
+   * paths.
+   */
+  const makeRetryClock = (signal: AbortSignal): Clock.Clock => ({
+    currentTimeMillisUnsafe: () => now(),
+    currentTimeMillis: Effect.sync(() => now()),
+    currentTimeNanosUnsafe: () => BigInt(now()) * 1_000_000n,
+    currentTimeNanos: Effect.sync(() => BigInt(now()) * 1_000_000n),
+    monotonicTimeNanosUnsafe: () =>
+      BigInt(Math.floor(performance.now() * 1_000_000)),
+    monotonicTimeNanos: Effect.sync(() =>
+      BigInt(Math.floor(performance.now() * 1_000_000)),
+    ),
+    sleep: (duration) =>
+      Effect.tryPromise({
+        try: () => sleepFn(Duration.toMillis(duration), signal),
+        catch: (error: unknown) => error,
+      }).pipe(
+        Effect.catch((error: unknown) =>
+          isAbortLike(error) ? Effect.interrupt : Effect.die(error),
+        ),
+      ),
+  })
+
+  // Single-retry policy shared by catalog and per-group fetches: transient
+  // failures retry once after 5s; short Retry-After retries once after the
+  // exact delay; everything else (including long Retry-After) propagates
+  // after one fetch for the existing per-site branches.
+  const singleRetryPolicy: SingleRetryPolicy = {
+    transientDelayMs: OFFLINE_SYNC_GROUP_RETRY_DELAY_MS,
+    isTransientFailure: (error) =>
+      classifySyncError(error, now(), isConnectivityError).kind === 'transient',
+    shortRetryDelayMs: (error) => {
+      const classified = classifySyncError(error, now(), isConnectivityError)
+      return classified.kind === 'rate-limited' &&
+        classified.delayMs <= OFFLINE_SYNC_MAX_RETRY_AFTER_MS
+        ? classified.delayMs
+        : null
+    },
+  }
+
+  /**
+   * Run one fetch through the single-retry policy on the retry Clock.
+   * Interruptions (aborted sleeps, disposal) surface as `interrupted` so
+   * callers take their existing cancelled paths with identical phases.
+   */
+  async function runFetchWithPolicy<A>(
+    fetchOnce: () => Effect.Effect<A, unknown>,
+    clock: Clock.Clock,
+  ): Promise<
+    | { readonly ok: true; readonly value: A }
+    | {
+        readonly ok: false
+        readonly error: unknown
+        readonly interrupted: boolean
+      }
+  > {
+    const exit = await runtime.runPromiseExit(
+      Effect.provideService(
+        fetchWithSingleRetry(fetchOnce, singleRetryPolicy),
+        Clock.Clock,
+        clock,
+      ),
+    )
+    if (Exit.isSuccess(exit)) return { ok: true, value: exit.value }
+    if (Cause.hasInterruptsOnly(exit.cause)) {
+      return { ok: false, error: undefined, interrupted: true }
+    }
+    const failure = Cause.findErrorOption(exit.cause)
+    return {
+      ok: false,
+      error: failure._tag === 'Some' ? failure.value : exit.cause,
+      interrupted: false,
+    }
+  }
 
   let status: SyncStatusSnapshot = {
     phase: 'idle',
@@ -580,20 +905,13 @@ export function createOfflineSync(options: OfflineSyncOptions) {
   function resolveIdle() {
     const waiters = idleWaiters
     idleWaiters = []
-    for (const resolve of waiters) {
+    for (const waiter of waiters) {
       try {
-        resolve()
+        Effect.runSync(Deferred.succeed(waiter, undefined))
       } catch {
         // Ignore waiter failures.
       }
     }
-  }
-
-  function waitForIdle(): Promise<void> {
-    if (!active && !pending) return Promise.resolve()
-    return new Promise<void>((resolve) => {
-      idleWaiters.push(resolve)
-    })
   }
 
   function combineWithTimeout(
@@ -632,70 +950,110 @@ export function createOfflineSync(options: OfflineSyncOptions) {
   async function acquireOwnerLease(
     generation: number,
     signal: AbortSignal,
+    leaseScope: Scope.Scope,
+    getGeneration: () => number,
   ): Promise<{ ok: true } | { ok: false; reason: 'lease' | 'disabled' }> {
     if (signal.aborted) return { ok: false, reason: 'disabled' }
-    try {
-      await repository.acquireLease({
-        namespace,
-        generation,
-        owner,
-        ttlMs: OFFLINE_SYNC_LEASE_TTL_MS,
-        now: now(),
-      })
+    // Lease lifecycle in an explicit pass Scope: a successful acquire
+    // registers the quiet release as a finalizer, so pass end releases on
+    // every exit (Scope.close in the runPass finalizer). A failed acquire
+    // registers nothing and needs no release.
+    const exit = await runtime.runPromiseExit(
+      Scope.provide(leaseScope)(
+        Effect.acquireRelease(
+          Effect.tryPromise({
+            try: () =>
+              repository.acquireLease({
+                namespace,
+                generation,
+                owner,
+                ttlMs: OFFLINE_SYNC_LEASE_TTL_MS,
+                now: now(),
+              }),
+            catch: (error: unknown) => error,
+          }),
+          () =>
+            Effect.tryPromise({
+              try: () => releaseOwnerLeaseQuietly(getGeneration()),
+              catch: (error: unknown) => error,
+            }).pipe(Effect.ignore),
+        ),
+      ),
+    )
+    if (Exit.isSuccess(exit)) {
       setStatus({ isOwner: true })
       return { ok: true }
-    } catch (error) {
-      const classified = classifySyncError(error, now(), isConnectivityError)
-      if (classified.kind === 'lease') {
-        // Loser tabs read committed results instead of downloading.
-        setStatus({ isOwner: false })
-        return { ok: false, reason: 'lease' }
-      }
+    }
+    if (Cause.hasInterruptsOnly(exit.cause)) {
       return { ok: false, reason: 'disabled' }
     }
+    const failure = Cause.findErrorOption(exit.cause)
+    const classified = classifySyncError(
+      normalizeRepositoryError(
+        failure._tag === 'Some' ? failure.value : exit.cause,
+      ),
+      now(),
+      isConnectivityError,
+    )
+    if (classified.kind === 'lease') {
+      // Loser tabs read committed results instead of downloading.
+      setStatus({ isOwner: false })
+      return { ok: false, reason: 'lease' }
+    }
+    return { ok: false, reason: 'disabled' }
   }
 
-  function startRenewLoop(
-    getGeneration: () => number,
-    signal: AbortSignal,
-  ): () => void {
-    const id = setInterval(() => {
-      if (signal.aborted || disposed) return
-      void repository
-        .renewLease({
-          namespace,
-          generation: getGeneration(),
-          owner,
-          ttlMs: OFFLINE_SYNC_LEASE_TTL_MS,
-          now: now(),
-        })
-        .catch((error: unknown) => {
+  /**
+   * Start the renew fiber for an acquired lease. Ticks use the live clock
+   * (never the retry Clock, never the sleep spy). A fencing failure aborts the
+   * pass exactly as the previous renew callback did; generation/lease fencing
+   * in the repository already blocks further commits from this owner. Returns a
+   * stop function for pass end (replaces clearInterval).
+   */
+  function startRenewFiber(getGeneration: () => number): () => void {
+    const renewFiber = runtime.runFork(
+      runLeaseRenewLoop({
+        renewLease: () =>
+          Effect.tryPromise({
+            try: () =>
+              repository.renewLease({
+                namespace,
+                generation: getGeneration(),
+                owner,
+                ttlMs: OFFLINE_SYNC_LEASE_TTL_MS,
+                now: now(),
+              }),
+            catch: (error: unknown) => error,
+          }),
+        classifyRenewFailure: (error) => {
           const classified = classifySyncError(
-            error,
+            normalizeRepositoryError(error),
             now(),
             isConnectivityError,
           )
-          // Renewal loss cancels the pass; generation/lease fencing in the
-          // repository already blocks further commits from this owner.
           if (
             classified.kind === 'lease' ||
             classified.kind === 'disabled' ||
             classified.kind === 'revision'
           ) {
-            try {
-              activeController?.abort(
-                new DOMException('Lease lost', 'AbortError'),
-              )
-            } catch {
-              // Ignore abort failures.
-            }
+            return classified.kind
           }
-        })
-    }, OFFLINE_SYNC_LEASE_RENEW_MS)
-    if (typeof id === 'object' && id !== null && 'unref' in id) {
-      ;(id as { unref?: () => void }).unref?.()
+          return 'transient'
+        },
+      }),
+    )
+    void runtime.runPromiseExit(Fiber.join(renewFiber)).then((exit) => {
+      if (Exit.isFailure(exit) && !Cause.hasInterruptsOnly(exit.cause)) {
+        try {
+          activeController?.abort(new DOMException('Lease lost', 'AbortError'))
+        } catch {
+          // Ignore abort failures.
+        }
+      }
+    })
+    return () => {
+      void runtime.runPromiseExit(Fiber.interrupt(renewFiber))
     }
-    return () => clearInterval(id)
   }
 
   async function releaseOwnerLeaseQuietly(generation: number) {
@@ -741,11 +1099,13 @@ export function createOfflineSync(options: OfflineSyncOptions) {
     const passController = new AbortController()
     activeController = passController
     const signal = passController.signal
+    // Explicit pass Scope: the lease acquire registers its quiet release
+    // here, and the finalizer below closes it on every exit.
+    const leaseScope = await runtime.runPromise(Scope.make())
+    const retryClock = makeRetryClock(signal)
     let generation = 0
     let stopRenew: (() => void) | null = null
     const getGeneration = () => generation
-    // Per-pass transient retry bookkeeping: one auto retry per group.
-    const retriedTransient = new Set<string>()
     const rerunForRevision = new Set<string>()
     let needsRerunForRevision = false
 
@@ -800,7 +1160,12 @@ export function createOfflineSync(options: OfflineSyncOptions) {
       // Verified sessions cache automatically; revocation remains the only
       // lifecycle gate. The retired download preference is gone.
       if (disposed || signal.aborted) return
-      const lease = await acquireOwnerLease(generation, signal)
+      const lease = await acquireOwnerLease(
+        generation,
+        signal,
+        leaseScope,
+        getGeneration,
+      )
       if (!lease.ok) {
         // Loser tabs keep committed results; disabled/cleared tabs stop.
         setStatus({
@@ -809,7 +1174,7 @@ export function createOfflineSync(options: OfflineSyncOptions) {
         })
         return
       }
-      stopRenew = startRenewLoop(getGeneration, signal)
+      stopRenew = startRenewFiber(getGeneration)
 
       // Catalog: capture dataRevision before starting; reject the commit if
       // a concurrent markDirty (e.g. a confirmed delete) changed it.
@@ -840,83 +1205,76 @@ export function createOfflineSync(options: OfflineSyncOptions) {
       }
       const catalogRevision = controlBeforeCatalog.dataRevision
 
-      let catalog: OfflineCatalogOutput | null = null
-      let catalogAttempts = 0
-      while (catalog === null) {
-        catalogAttempts += 1
-        const combined = combineWithTimeout(
-          signal,
-          OFFLINE_SYNC_CATALOG_TIMEOUT_MS,
-        )
-        try {
-          catalog = await fetchCatalog(combined.signal)
-        } catch (error) {
-          if (signal.aborted || disposed) {
-            setStatus({ phase: 'cancelled', activity: null })
-            return
-          }
-          const classified = classifySyncError(
-            error,
-            now(),
-            isConnectivityError,
-          )
-          if (classified.kind === 'connectivity') {
-            setStatus({ phase: 'paused-connectivity', activity: null })
-            onConnectivityFailure(error)
-            return
-          }
-          if (classified.kind === 'auth') {
-            setStatus({ phase: 'cancelled', activity: null })
-            return
-          }
-          if (classified.kind === 'rate-limited') {
-            if (classified.delayMs > OFFLINE_SYNC_MAX_RETRY_AFTER_MS) {
-              rateLimitedUntil = now() + classified.delayMs
-              setStatus({
-                phase: 'rate-limited',
-                activity: null,
-                earliestRetryAt: rateLimitedUntil,
-              })
-              return
-            }
-            if (catalogAttempts > 1) {
-              setStatus({ phase: 'failed', activity: null })
-              return
-            }
-            await sleepFn(classified.delayMs, signal).catch(() => {
-              throw new DOMException('Aborted', 'AbortError')
-            })
-            if (signal.aborted) {
-              setStatus({ phase: 'cancelled', activity: null })
-              return
-            }
-            continue
-          }
-          if (classified.kind === 'transient' && catalogAttempts === 1) {
-            await sleepFn(OFFLINE_SYNC_GROUP_RETRY_DELAY_MS, signal).catch(
-              () => {
-                throw new DOMException('Aborted', 'AbortError')
-              },
+      // Catalog fetch through the single-retry policy: transient failures
+      // retry once after 5s and short Retry-After retries once after the
+      // exact delay (both via Effect.retry Schedules); every other failure
+      // — including long Retry-After — propagates after one fetch for the
+      // branches below. The per-attempt 60s bound keeps its real-time
+      // timeout + abort wiring, wrapped at the Effect boundary.
+      let catalogFetches = 0
+      const catalogFetchOnce = () =>
+        Effect.tryPromise({
+          try: async () => {
+            catalogFetches += 1
+            const combined = combineWithTimeout(
+              signal,
+              OFFLINE_SYNC_CATALOG_TIMEOUT_MS,
             )
-            if (signal.aborted) {
-              setStatus({ phase: 'cancelled', activity: null })
-              return
+            try {
+              return await fetchCatalog(combined.signal)
+            } finally {
+              combined.cleanup()
             }
-
-            continue
+          },
+          catch: (error: unknown) => error,
+        })
+      const catalogOutcome = await runFetchWithPolicy(
+        catalogFetchOnce,
+        retryClock,
+      )
+      let catalog: OfflineCatalogOutput | null = null
+      if (!catalogOutcome.ok) {
+        if (catalogOutcome.interrupted || signal.aborted || disposed) {
+          setStatus({ phase: 'cancelled', activity: null })
+          return
+        }
+        const classified = classifySyncError(
+          catalogOutcome.error,
+          now(),
+          isConnectivityError,
+        )
+        if (classified.kind === 'connectivity') {
+          setStatus({ phase: 'paused-connectivity', activity: null })
+          onConnectivityFailure(catalogOutcome.error)
+          return
+        }
+        if (classified.kind === 'auth') {
+          setStatus({ phase: 'cancelled', activity: null })
+          return
+        }
+        if (classified.kind === 'rate-limited') {
+          if (classified.delayMs > OFFLINE_SYNC_MAX_RETRY_AFTER_MS) {
+            rateLimitedUntil = now() + classified.delayMs
+            setStatus({
+              phase: 'rate-limited',
+              activity: null,
+              earliestRetryAt: rateLimitedUntil,
+            })
+            return
           }
-          // Catalog failure retains prior catalog/snapshots; never evict on
-          // error or partial responses.
+          // A short Retry-After reaching here already consumed its single
+          // retry inside the policy (catalogFetches > 1).
           setStatus({ phase: 'failed', activity: null })
           return
-        } finally {
-          combined.cleanup()
         }
-      }
-      if (!catalog) {
+        // Transient failures reaching here already consumed their single
+        // 5s retry inside the policy.
+        // Catalog failure retains prior catalog/snapshots; never evict on
+        // error or partial responses.
         setStatus({ phase: 'failed', activity: null })
         return
       }
+      catalog = catalogOutcome.value
 
       // Commit/reconcile the catalog atomically; absent memberships are
       // evicted and fenced by generation so older downloads cannot resurrect.
@@ -930,7 +1288,11 @@ export function createOfflineSync(options: OfflineSyncOptions) {
         })
         generation = reconciled.generation
       } catch (error) {
-        const classified = classifySyncError(error, now(), isConnectivityError)
+        const classified = classifySyncError(
+          normalizeRepositoryError(error),
+          now(),
+          isConnectivityError,
+        )
         if (classified.kind === 'revision') {
           // A mutation fenced the catalog commit: restart affected work via
           // one pending rerun instead of resurrecting deletes.
@@ -1134,47 +1496,55 @@ export function createOfflineSync(options: OfflineSyncOptions) {
         }
         const expectedDataRevision = controlBefore.dataRevision
 
+        // Group fetch through the single-retry policy: transient failures
+        // retry once after 5s and short Retry-After retries once after the
+        // exact delay (both via Effect.retry Schedules); every other failure
+        // propagates after one fetch for the branches below. The single
+        // retry budget previously tracked by a per-pass set is now enforced
+        // by the schedule (max 1 recurrence); each group is still visited
+        // once per pass.
         let snapshot: OfflineSnapshotOutput | null = null
-        let attempts = 0
-        let groupDone = false
-        while (!groupDone) {
-          attempts += 1
-          const combined = combineWithTimeout(
-            signal,
-            OFFLINE_SYNC_SNAPSHOT_TIMEOUT_MS,
-          )
-          try {
-            snapshot = await fetchSnapshot(groupId, combined.signal)
-            groupDone = true
-          } catch (error) {
-            if (signal.aborted || disposed) {
-              completedAll = false
-              groupDone = true
-              snapshot = null
-              break
-            }
+        let fetches = 0
+        const snapshotFetchOnce = () =>
+          Effect.tryPromise({
+            try: async () => {
+              fetches += 1
+              const combined = combineWithTimeout(
+                signal,
+                OFFLINE_SYNC_SNAPSHOT_TIMEOUT_MS,
+              )
+              try {
+                return await fetchSnapshot(groupId, combined.signal)
+              } finally {
+                combined.cleanup()
+              }
+            },
+            catch: (error: unknown) => error,
+          })
+        const outcome = await runFetchWithPolicy(snapshotFetchOnce, retryClock)
+        if (outcome.ok) {
+          snapshot = outcome.value
+        } else {
+          if (outcome.interrupted || signal.aborted || disposed) {
+            completedAll = false
+            snapshot = null
+          } else {
             const classified = classifySyncError(
-              error,
+              outcome.error,
               now(),
               isConnectivityError,
             )
             if (classified.kind === 'connectivity') {
               // Global failure pauses the pass and hands to recovery probes.
               completedAll = false
-              groupDone = true
               snapshot = null
               setStatus({ phase: 'paused-connectivity', activity: null })
-              onConnectivityFailure(error)
-              break
-            }
-            if (classified.kind === 'auth') {
+              onConnectivityFailure(outcome.error)
+            } else if (classified.kind === 'auth') {
               errors[groupId] = 'auth'
               await recordGroupResult(generation, groupId, false, classified)
-              groupDone = true
               snapshot = null
-              break
-            }
-            if (classified.kind === 'access') {
+            } else if (classified.kind === 'access') {
               // Confirmed FORBIDDEN/NOT_FOUND evicts the local copy so
               // aggregates invalidate immediately. No retry.
               try {
@@ -1191,11 +1561,8 @@ export function createOfflineSync(options: OfflineSyncOptions) {
               }
               errors[groupId] = classified.code
               await recordGroupResult(generation, groupId, false, classified)
-              groupDone = true
               snapshot = null
-              break
-            }
-            if (classified.kind === 'rate-limited') {
+            } else if (classified.kind === 'rate-limited') {
               if (classified.delayMs > OFFLINE_SYNC_MAX_RETRY_AFTER_MS) {
                 // End automatic work for the pass, retain error/readiness,
                 // store the deadline; later triggers retry only after it.
@@ -1210,28 +1577,15 @@ export function createOfflineSync(options: OfflineSyncOptions) {
                   errors: { ...errors },
                 })
                 completedAll = false
-                groupDone = true
                 snapshot = null
-                break
-              }
-              if (attempts > 1) {
+              } else {
+                // A short Retry-After reaching here already consumed its
+                // single retry inside the policy (fetches > 1).
                 errors[groupId] = 'rate-limited'
                 await recordGroupResult(generation, groupId, false, classified)
-                groupDone = true
                 snapshot = null
-                break
               }
-              try {
-                await sleepFn(classified.delayMs, signal)
-              } catch {
-                completedAll = false
-                groupDone = true
-                snapshot = null
-                break
-              }
-              continue
-            }
-            if (
+            } else if (
               classified.kind === 'schema' ||
               classified.kind === 'quota' ||
               classified.kind === 'disabled' ||
@@ -1249,67 +1603,37 @@ export function createOfflineSync(options: OfflineSyncOptions) {
                   errors: { ...errors },
                 })
                 completedAll = false
-                groupDone = true
                 snapshot = null
-                break
-              }
-              if (classified.kind === 'revision') {
+              } else if (classified.kind === 'revision') {
                 // Concurrent mutation fenced this capture: restart affected
                 // work via a pending rerun instead of resurrecting deletes.
                 needsRerunForRevision = true
-                groupDone = true
                 snapshot = null
-                break
+              } else {
+                errors[groupId] =
+                  classified.kind === 'schema'
+                    ? classified.code
+                    : classified.kind
+                await recordGroupResult(generation, groupId, false, classified)
+                if (
+                  classified.kind === 'disabled' ||
+                  classified.kind === 'lease'
+                ) {
+                  completedAll = false
+                }
+                snapshot = null
               }
+            } else {
+              // Transient failures reaching here already consumed their single
+              // 5s retry inside the policy, so a failed group never starves
+              // the rest: record and continue to other groups.
               errors[groupId] =
-                classified.kind === 'schema' ? classified.code : classified.kind
+                classified.kind === 'transient'
+                  ? classified.code
+                  : classified.kind
               await recordGroupResult(generation, groupId, false, classified)
-              if (
-                classified.kind === 'disabled' ||
-                classified.kind === 'lease'
-              ) {
-                completedAll = false
-              }
-              groupDone = true
               snapshot = null
-              break
             }
-            // Transient: one auto retry after 5s per group per pass, then
-            // continue to other groups so a failed large group never starves.
-            if (
-              classified.kind === 'transient' &&
-              attempts === 1 &&
-              !retriedTransient.has(groupId)
-            ) {
-              retriedTransient.add(groupId)
-
-              try {
-                await sleepFn(OFFLINE_SYNC_GROUP_RETRY_DELAY_MS, signal)
-              } catch {
-                completedAll = false
-                groupDone = true
-                snapshot = null
-                break
-              }
-              if (signal.aborted || disposed) {
-                completedAll = false
-                groupDone = true
-                snapshot = null
-                break
-              }
-
-              continue
-            }
-            errors[groupId] =
-              classified.kind === 'transient'
-                ? classified.code
-                : classified.kind
-            await recordGroupResult(generation, groupId, false, classified)
-            groupDone = true
-            snapshot = null
-            break
-          } finally {
-            combined.cleanup()
           }
         }
 
@@ -1371,7 +1695,7 @@ export function createOfflineSync(options: OfflineSyncOptions) {
           }
         } catch (error) {
           const classified = classifySyncError(
-            error,
+            normalizeRepositoryError(error),
             now(),
             isConnectivityError,
           )
@@ -1463,8 +1787,11 @@ export function createOfflineSync(options: OfflineSyncOptions) {
       } else {
         setStatus({
           phase:
-            classifySyncError(error, now(), isConnectivityError).kind ===
-            'quota'
+            classifySyncError(
+              normalizeRepositoryError(error),
+              now(),
+              isConnectivityError,
+            ).kind === 'quota'
               ? 'quota-error'
               : 'failed',
           activity: null,
@@ -1472,8 +1799,13 @@ export function createOfflineSync(options: OfflineSyncOptions) {
       }
     } finally {
       stopRenew?.()
+      // Close the pass Scope: runs the acquireRelease finalizer, releasing
+      // the lease quietly on every exit (pass end still releases, including
+      // deferral and interruption — no long lease is ever held). The
+      // finalizer itself swallows release failures; expiry fences a crashed
+      // owner and generation fencing blocks stale commits regardless.
       try {
-        await releaseOwnerLeaseQuietly(generation)
+        await runtime.runPromise(Scope.close(leaseScope, Exit.void))
       } catch {
         // Ignore release failures.
       }
@@ -1486,8 +1818,30 @@ export function createOfflineSync(options: OfflineSyncOptions) {
     }
   }
 
-  async function pump(): Promise<void> {
-    if (active || disposed) return
+  /**
+   * Settle the active pass fiber: clear the driver slot, then either drain
+   * (stay active while a merged pending request exists) or complete idle
+   * waiters. Runs as an Effect finalizer on every fiber exit, including
+   * interruption, mirroring the previous promise-finally chain.
+   */
+  function onPassSettled(): void {
+    activeFiber = null
+    driverActive = false
+    if (disposed) {
+      pending = null
+      return
+    }
+    // One pending rerun coalesces triggers that arrived mid-pass; never
+    // overlapping account passes.
+    if (pending) {
+      pump()
+    } else {
+      resolveIdle()
+    }
+  }
+
+  function pump(): void {
+    if (driverActive || disposed) return
     if (status.phase === 'quota-error') {
       pending = null
       resolveIdle()
@@ -1499,36 +1853,24 @@ export function createOfflineSync(options: OfflineSyncOptions) {
       return
     }
     pending = null
-    active = runPass(next).finally(() => {
-      active = null
-      if (disposed) {
-        pending = null
-        resolveIdle()
-        return
-      }
-      // One pending rerun coalesces triggers that arrived mid-pass; never
-      // overlapping account passes.
-      if (pending) {
-        void pump()
-      } else {
-        resolveIdle()
-      }
-    })
-    try {
-      await active
-    } catch {
-      // runPass never rejects with actionable errors; phase carries state.
-    }
+    driverActive = true
+    activeFiber = runtime.runFork(
+      Effect.tryPromise({
+        try: () => runPass(next),
+        catch: (error: unknown) => error,
+      }).pipe(Effect.ensuring(Effect.sync(onPassSettled))),
+    )
   }
 
   function requestSync(request: SyncPassRequest): Promise<void> {
     // Storage pressure cannot be repaired by more network traffic. Keep the
     // last snapshots and retry only in a new app lifecycle.
     if (disposed || status.phase === 'quota-error') return Promise.resolve()
+    const waiter = Effect.runSync(Deferred.make<void>())
+    idleWaiters.push(waiter)
     pending = mergePassRequests(pending, request)
-    const idle = waitForIdle()
-    void pump()
-    return idle
+    pump()
+    return runtime.runPromise(Deferred.await(waiter))
   }
 
   function requestFull(triggerKind: SyncTriggerKind): Promise<void> {
@@ -1549,10 +1891,7 @@ export function createOfflineSync(options: OfflineSyncOptions) {
     /** Foreground return: full pass only when the last one is older than 5min. */
     handleForeground: () => {
       if (disposed) return Promise.resolve()
-      if (
-        lastCompletedFullPassAt !== null &&
-        now() - lastCompletedFullPassAt <= OFFLINE_SYNC_FOREGROUND_STALE_MS
-      ) {
+      if (!isForegroundPassStale(lastCompletedFullPassAt, now())) {
         return Promise.resolve()
       }
       return requestFull('foreground')
@@ -1727,6 +2066,15 @@ export function createOfflineSync(options: OfflineSyncOptions) {
         activeController?.abort(new DOMException('Disposed', 'AbortError'))
       } catch {
         // Ignore abort failures.
+      }
+      // Backup interruption for Effect-managed waits that ignore the signal;
+      // the abort above already unwinds every signal-aware wait with
+      // identical timing. Never awaited: disposal must not hang on a
+      // signal-ignorant promise.
+      const fiber = activeFiber
+      activeFiber = null
+      if (fiber) {
+        runtime.runFork(Fiber.interrupt(fiber))
       }
       listeners.clear()
       idleWaiters = []

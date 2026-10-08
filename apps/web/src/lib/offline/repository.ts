@@ -13,6 +13,7 @@ import {
   catalogRecordSchema,
   controlRecordSchema,
   OFFLINE_DB_VERSION,
+  OFFLINE_SUPPORTED_GROUP_META_VERSIONS,
   groupDataRecordSchema,
   groupMetaRecordSchema,
   groupRecordSchema,
@@ -144,7 +145,7 @@ function requireMetaVersion(meta: GroupMetaRecord, namespace: string): void {
   if (
     typeof meta.schemaVersion === 'number' &&
     Number.isInteger(meta.schemaVersion) &&
-    meta.schemaVersion !== OFFLINE_DB_VERSION
+    !OFFLINE_SUPPORTED_GROUP_META_VERSIONS.has(meta.schemaVersion)
   ) {
     throw new OfflineStorageError('schema-unsupported', 'schema-unsupported', {
       namespace,

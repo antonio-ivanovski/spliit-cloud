@@ -1,10 +1,14 @@
 import { MutationCache } from '@tanstack/react-query'
-import type { TRPCLink } from '@trpc/client'
+import type { OperationResultObservable, TRPCLink } from '@trpc/client'
 
 import { checkAdmission } from '@/lib/services/admission'
 
 import { getDefaultConnectivityStore } from './connectivity'
 import type { SessionState } from './lifecycle'
+import {
+  isExpenseCreateMutation,
+  isExpenseCreateOpPath,
+} from './pending-expense-queue'
 
 /**
  * Offline write guard.
@@ -210,10 +214,69 @@ export const WRITE_GUARD_MUTATION_DEFAULTS = {
  * Global `MutationCache` config. `onMutate` runs BEFORE per-mutation `onMutate`
  * (installed query-core ordering, see module doc), so throwing here prevents
  * optimism, fetch, paused entries, retries, and replay.
+ *
+ * Phase 1 diversion: `groups.expenses.create` while known-offline enqueues into
+ * the pending-expenses outbox (via the injected handler, wired at the
+ * composition roots) instead of throwing, then lets the mutation proceed to the
+ * tRPC link — which short-circuits the same procedure to a synthetic queued
+ * result without sending a request. Everything else still throws
+ * `OfflineWriteError`. Without an injected handler the diversion is inert and
+ * creates also throw, preserving the pre-diversion behavior.
  */
-export function createWriteGuardMutationCache(): MutationCache {
+export type OfflineExpenseCreateVariables = {
+  readonly groupId: string
+  readonly requestId: string
+  readonly expense: unknown
+}
+
+export type OfflineExpenseCreateEnqueue = (
+  input: OfflineExpenseCreateVariables,
+) => Promise<unknown>
+
+export type WriteGuardMutationCacheOptions = {
+  readonly enqueueExpenseCreate?: OfflineExpenseCreateEnqueue
+}
+
+export type WriteGuardLinkOptions = {
+  readonly enqueueExpenseCreate?: OfflineExpenseCreateEnqueue
+}
+
+function isEnqueueableExpenseCreate(
+  variables: unknown,
+): variables is OfflineExpenseCreateVariables {
+  if (!variables || typeof variables !== 'object') return false
+  const record = variables as Record<string, unknown>
+  return (
+    typeof record.groupId === 'string' &&
+    typeof record.requestId === 'string' &&
+    record.expense !== undefined
+  )
+}
+
+export function createWriteGuardMutationCache(
+  options?: WriteGuardMutationCacheOptions,
+): MutationCache {
+  const enqueueExpenseCreate = options?.enqueueExpenseCreate
   return new MutationCache({
-    onMutate: () => {
+    onMutate: async (variables, mutation) => {
+      if (!isKnownOfflineTransport()) {
+        return
+      }
+      if (
+        enqueueExpenseCreate &&
+        isExpenseCreateMutation({
+          mutationKey: mutation.options.mutationKey,
+          meta: mutation.options.meta,
+        }) &&
+        isEnqueueableExpenseCreate(variables)
+      ) {
+        // Enqueue (idempotent by requestId; the link re-enqueues the same
+        // row) and proceed: the link short-circuits the network send.
+        // Validation/storage failures throw OfflineWriteError — the old
+        // closed behavior for input that could never flush.
+        await enqueueExpenseCreate(variables)
+        return
+      }
       assertTransportOnline()
     },
   })
@@ -259,14 +322,95 @@ export function resetOfflineWriteBlockedToastForTests(): void {
  * TRPC guard link. Mount BEFORE terminating links so blocked mutations never
  * reach `fetch`. Only `mutation` operations are checked; queries/subscriptions
  * (including offline adapters with `networkMode:'always'`) pass through.
+ *
+ * Phase 1 diversion: `groups.expenses.create` while known-offline enqueues
+ * (idempotent by requestId) and resolves a synthetic queued result shaped like
+ * the procedure output — no request is sent. The result carries the temp id;
+ * the real id arrives via the post-flush download. Without an injected handler,
+ * creates throw like every other mutation.
+ */
+type GuardLinkObserver = {
+  next?: (value: unknown) => void
+  error?: (error: unknown) => void
+  complete?: () => void
+}
+
+/**
+ * Single-shot result observable with `@trpc/server/observable` semantics (no
+ * delivery after error/complete, teardown on unsubscribe, pipe reducer). The
+ * client only subscribes/unsubscribes link results, but the declared link
+ * return type requires the full shape — the local pipe keeps the runtime
+ * contract honest under the cast below.
  */
 // oxlint-disable-next-line no-explicit-any -- tRPC router generic is supplied by the caller (AppRouter) at mount time.
-export function createOfflineWriteGuardLink(): TRPCLink<any> {
+type GuardLinkResult = OperationResultObservable<any, unknown>
+
+function queuedResultObservable(run: () => Promise<unknown>): GuardLinkResult {
+  const self: {
+    subscribe: (observer: GuardLinkObserver) => { unsubscribe: () => void }
+    pipe: (...operations: Array<(source: unknown) => unknown>) => unknown
+  } = {
+    subscribe: (observer) => {
+      let isDone = false
+      let cancelled = false
+      void run().then(
+        (data) => {
+          if (isDone || cancelled) return
+          // Same envelope the batch link emits for a data result; upstream
+          // of transformer handling, so plain JS is correct.
+          observer.next?.({ result: { type: 'data', data } })
+          if (isDone || cancelled) return
+          isDone = true
+          observer.complete?.()
+        },
+        (error) => {
+          if (isDone || cancelled) return
+          isDone = true
+          observer.error?.(error)
+        },
+      )
+      return {
+        unsubscribe: () => {
+          cancelled = true
+        },
+      }
+    },
+    pipe: (...operations) =>
+      operations.reduce<unknown>((prev, fn) => fn(prev), self),
+  }
+  return self as unknown as GuardLinkResult
+}
+
+// oxlint-disable-next-line no-explicit-any -- tRPC router generic is supplied by the caller (AppRouter) at mount time.
+type AnyTRPCLink = TRPCLink<any>
+
+export function createOfflineWriteGuardLink(
+  options?: WriteGuardLinkOptions,
+): AnyTRPCLink {
+  const enqueueExpenseCreate = options?.enqueueExpenseCreate
   return () => {
     return ({ op, next }) => {
-      if (op.type === 'mutation') {
-        assertTransportOnline()
+      if (op.type !== 'mutation') {
+        return next(op)
       }
+      const divertedInput =
+        enqueueExpenseCreate && isExpenseCreateOpPath(op.path)
+          ? op.input
+          : undefined
+      if (
+        enqueueExpenseCreate !== undefined &&
+        divertedInput !== undefined &&
+        isEnqueueableExpenseCreate(divertedInput) &&
+        // Diversion is offline-only: online creates must reach the server.
+        // Without this gate every online create would resolve with a synthetic
+        // temp-id result and never send a request.
+        isKnownOfflineTransport()
+      ) {
+        const variables = divertedInput
+        const enqueue = enqueueExpenseCreate
+        return queuedResultObservable(() => enqueue(variables))
+      }
+      assertTransportOnline()
       return next(op)
     }
   }

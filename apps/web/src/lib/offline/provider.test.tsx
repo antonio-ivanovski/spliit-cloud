@@ -15,12 +15,20 @@ import { useCurrentAccount } from '@/lib/use-current-account'
 
 import { createConnectivityStore } from './connectivity'
 import { createOfflineLifecycle } from './lifecycle'
-import { OfflineProvider, useRevalidateVisiblePermissions } from './provider'
+import type { OfflineLifecycle } from './lifecycle'
+import {
+  OfflineProvider,
+  OfflineSyncHost,
+  useRevalidateVisiblePermissions,
+} from './provider'
 import { createOfflineStore } from './store'
+import type { OfflineSync } from './sync'
 
 const mocks = vi.hoisted(() => ({
   getSession: vi.fn(),
   useSession: vi.fn(),
+  runPromise: vi.fn(async () => undefined),
+  buildFlush: vi.fn(() => 'flush-effect' as never),
 }))
 
 vi.mock('@/lib/auth', () => ({
@@ -29,6 +37,15 @@ vi.mock('@/lib/auth', () => ({
     useSession: mocks.useSession,
   },
 }))
+
+vi.mock('@/lib/services/runtime', () => ({
+  getPageRuntime: () => ({ runPromise: mocks.runPromise }),
+}))
+
+vi.mock('./pending-expense-queue', async (importOriginal) => {
+  const mod = await importOriginal<Record<string, unknown>>()
+  return { ...mod, buildPendingExpenseFlushProgram: mocks.buildFlush }
+})
 
 function makeAccount(id: string): AuthAccount {
   return {
@@ -471,5 +488,78 @@ describe('OfflineProvider', () => {
     expect(groupsGetCalls).toBeGreaterThan(1)
     expect(offlineCalls).toBe(1)
     expect(result.current.isRevalidating).toBe(false)
+  })
+
+  it('flushes the outbox before the launch download pass', async () => {
+    // Regression: the flush was wired only into manual retry, so queued
+    // expenses sat pending on the launch and auto-reconnect paths.
+    mocks.useSession.mockReturnValue({
+      data: { user: makeAccount('a'), session: {} },
+      error: null,
+      isPending: false,
+      isRefetching: false,
+      refetch: vi.fn(),
+    })
+    const namespace = JSON.stringify(['http://localhost:3001', 'a'])
+    const snapshot = {
+      account: makeAccount('a'),
+      session: 'verified' as const,
+      namespace,
+      generation: 1,
+      cleanupError: null,
+      invalidated: false,
+      lastVerifiedAt: Date.now(),
+      verifyAttempt: 1,
+    }
+    const lifecycle = {
+      getSnapshot: () => snapshot,
+      subscribe: () => () => {},
+      verifySession: vi.fn(async () => undefined),
+      recheckOnFocus: vi.fn(),
+      bootstrap: vi.fn(async () => undefined),
+      dispose: vi.fn(),
+    } as unknown as OfflineLifecycle
+    const sync = {
+      handleLaunch: vi.fn(async () => undefined),
+      handleReconnect: vi.fn(async () => undefined),
+    } as unknown as OfflineSync
+    const connectivity = createConnectivityStore({
+      isNavigatorOnline: () => true,
+      isVisible: () => true,
+    })
+    const storage = createOfflineStore({
+      openRepository: async () => ({ close: vi.fn() }) as unknown as never,
+    })
+    const queryClient = makeQueryClient()
+    render(
+      <QueryClientProvider client={queryClient}>
+        <OfflineProvider
+          lifecycle={lifecycle}
+          connectivity={connectivity}
+          storage={storage}
+          sync={sync}
+        >
+          <OfflineSyncHost />
+          <div data-testid="launch-page">content</div>
+        </OfflineProvider>
+      </QueryClientProvider>,
+    )
+
+    await waitFor(() => {
+      expect(sync.handleLaunch).toHaveBeenCalledTimes(1)
+    })
+    // Outbox flushed first with the launch namespace, then the download pass.
+    expect(mocks.buildFlush).toHaveBeenCalledTimes(1)
+    expect(mocks.buildFlush).toHaveBeenCalledWith({
+      namespace,
+      onResolved: expect.any(Function),
+    })
+    const flushOrder = mocks.buildFlush.mock.invocationCallOrder[0]
+    const launchOrder = (sync.handleLaunch as ReturnType<typeof vi.fn>).mock
+      .invocationCallOrder[0]
+    expect(flushOrder).toBeLessThan(launchOrder)
+
+    connectivity.dispose()
+    storage.close()
   })
 })

@@ -1113,7 +1113,7 @@ describe('offline repository', () => {
     expect(group.status).toBe('ready')
     if (group.status !== 'ready') throw new Error('expected group')
     expect(group.record.commitNonce).toBe(first.commitNonce)
-    expect(group.record.schemaVersion).toBe(1)
+    expect(group.record.schemaVersion).toBe(OFFLINE_DB_VERSION)
   })
 
   it('uses a unique commitNonce for successive commits', async () => {

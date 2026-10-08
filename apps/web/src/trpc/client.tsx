@@ -13,7 +13,7 @@ import {
 } from '@/lib/services/transport-integration'
 import type { AppRouter } from '@spliit/api/router'
 
-import { makeQueryClient } from './query-client'
+import { enqueueOfflineExpenseCreate, makeQueryClient } from './query-client'
 
 // react-doctor-disable-next-line react-doctor/only-export-components -- tRPC client singleton co-exported with provider
 export const trpc = createTRPCReact<AppRouter>()
@@ -51,7 +51,11 @@ export function getTrpcClient() {
       // imperative tRPC mutation and throws OfflineWriteError without sending
       // a request. Queries pass through (offline adapters use disjoint keys).
       // Probes/session verification bypass by construction (plain fetch).
-      createOfflineWriteGuardLink(),
+      // Phase 1: offline expenses.create diverts into the pending-expenses
+      // outbox (synthetic queued result, no fetch); all other mutations throw.
+      createOfflineWriteGuardLink({
+        enqueueExpenseCreate: enqueueOfflineExpenseCreate,
+      }),
       httpBatchLink({
         transformer: superjson,
         url: getUrl(),

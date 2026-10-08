@@ -10,6 +10,7 @@ import {
   type GroupDataRecord,
   type GroupMetaRecord,
   type GroupStatusRecord,
+  type PendingExpenseRecord,
 } from './contract'
 import { OfflineStorageError, isQuotaError } from './errors'
 
@@ -42,8 +43,14 @@ import { OfflineStorageError, isQuotaError } from './errors'
  * Versioned store declarations shared by the production database and by tests
  * that simulate upgrades from newer clients. Declared once so the two can never
  * drift: a newer-client simulation uses these same stores.
+ *
+ * Version 1 is frozen (the initial Dexie release); version 2 adds the
+ * `pendingExpenses` outbox for offline-created expenses. The v2 upgrade step is
+ * intentionally a no-op: the outbox starts empty and every v1 table is retained
+ * untouched until fresh commits replace it — the upgrade never deletes user
+ * data as a shortcut.
  */
-export const OFFLINE_DB_STORES: { [tableName: string]: string } = {
+export const OFFLINE_DB_STORES_V1: { [tableName: string]: string } = {
   controls: '&namespace',
   catalogs: '&namespace',
   groupMeta: '&[namespace+groupId], namespace',
@@ -57,6 +64,11 @@ export const OFFLINE_DB_STORES: { [tableName: string]: string } = {
   statuses: '&[namespace+groupId], namespace',
 }
 
+export const OFFLINE_DB_STORES: { [tableName: string]: string } = {
+  ...OFFLINE_DB_STORES_V1,
+  pendingExpenses: '&[namespace+groupId+clientId], [namespace+groupId]',
+}
+
 export class OfflineDexieDatabase extends Dexie {
   controls!: Table<ControlRecord, string>
   catalogs!: Table<CatalogRecord, string>
@@ -65,10 +77,19 @@ export class OfflineDexieDatabase extends Dexie {
   expenseList!: Table<ExpenseListRow, [string, string, string]>
   expenseDetail!: Table<ExpenseDetailRow, [string, string, string]>
   statuses!: Table<GroupStatusRecord, [string, string]>
+  pendingExpenses!: Table<PendingExpenseRecord, [string, string, string]>
 
   constructor(name: string = OFFLINE_DB_NAME) {
     super(name)
-    this.version(OFFLINE_DB_VERSION).stores(OFFLINE_DB_STORES)
+    this.version(1).stores(OFFLINE_DB_STORES_V1)
+    this.version(2)
+      .stores(OFFLINE_DB_STORES)
+      .upgrade(() => {})
+    if (OFFLINE_DB_VERSION !== 2) {
+      throw new Error(
+        'OfflineDexieDatabase version declarations do not match OFFLINE_DB_VERSION',
+      )
+    }
   }
 }
 

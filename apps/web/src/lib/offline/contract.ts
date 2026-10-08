@@ -18,6 +18,7 @@ import {
   type OfflineGroupData,
   type OfflineSnapshotOutput,
 } from '@spliit/api/offline-contract'
+import { expenseApiSchema } from '@spliit/domain'
 
 import type { OfflineErrorCode } from './errors'
 
@@ -62,7 +63,23 @@ export type {
  */
 
 export const OFFLINE_DB_NAME = 'spliit-offline-v2'
-export const OFFLINE_DB_VERSION = 1
+/**
+ * Storage structure version 2 adds the `pendingExpenses` outbox for
+ * offline-created expenses (Phase 1 flush pipeline). The group snapshot payload
+ * format is unchanged, so v1 snapshots stay readable and refresh in place — see
+ * OFFLINE_SUPPORTED_GROUP_META_VERSIONS. The Dexie upgrade step retains every
+ * existing table untouched.
+ */
+export const OFFLINE_DB_VERSION = 2
+/**
+ * Group-meta storage versions this client can read. Additive storage changes
+ * (new tables, new indexes) extend this set; a group payload format change
+ * retires old entries instead. Never reinterpret persisted rows across a
+ * payload break — but do not retire them for a table-only bump either, or every
+ * existing offline cache bricks until manual storage clear.
+ */
+export const OFFLINE_SUPPORTED_GROUP_META_VERSIONS: ReadonlySet<number> =
+  new Set([1, OFFLINE_DB_VERSION])
 /** After this long, `opening` stops blocking and offers a retry hook. */
 export const OFFLINE_OPEN_TIMEOUT_MS = 3000
 export const OFFLINE_STORAGE_BLOCKED_MESSAGE =
@@ -174,6 +191,31 @@ export const groupStatusRecordSchema = z.object({
 })
 
 export type GroupStatusRecord = z.infer<typeof groupStatusRecordSchema>
+
+/**
+ * Durable outbox row for one offline-created expense (Phase 1 flush).
+ *
+ * Written at the write-guard diversion with the caller-provided `requestId` as
+ * the idempotency key (`clientId` is the `pending-` temp id derived from it, so
+ * overlay and outbox can never collide with server ids). The `expense` payload
+ * is validated with the shared `expenseApiSchema` — the exact schema the create
+ * procedure enforces — so the flush maps field-by-field with no translation
+ * layer. `createdAtMs` is the enqueue order key (flush sends oldest first);
+ * `status` flips to `failed` on permanent rejection and is never retried after
+ * that. Rows delete on success (delete-temp + insert-real reconcile via the
+ * following download, never in-place mutation).
+ */
+export const pendingExpenseRecordSchema = z.object({
+  namespace: z.string().min(1),
+  groupId: z.string().min(1),
+  clientId: z.string().min(1),
+  requestId: z.uuid(),
+  createdAtMs: z.number().int().nonnegative(),
+  status: z.enum(['pending', 'failed']),
+  expense: expenseApiSchema,
+})
+
+export type PendingExpenseRecord = z.infer<typeof pendingExpenseRecordSchema>
 
 /**
  * Reassembled group snapshot for read-model compatibility. Repository reads

@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 import type { GroupExpenseSortBy, GroupExpenseSortDir } from './read-model'
 
 /**
@@ -34,6 +36,30 @@ export type PendingExpenseRow = MergeableExpense & {
 export function isPendingExpenseId(id: string): boolean {
   return id.startsWith('pending-')
 }
+
+/**
+ * Validation for overlay rows read back from the legacy localStorage seam.
+ * Dates survive the JSON round-trip as ISO strings (fresh rows hold `Date`s),
+ * so both shapes validate; anything else is dropped as corrupt instead of
+ * reaching the merge. Unknown extra fields pass through: list rows carry
+ * projection fields this seam never interprets.
+ */
+const pendingDateSchema = z.union([z.date(), z.string().min(1)])
+
+export const pendingExpenseRowSchema = z
+  .object({
+    id: z.string().min(1),
+    expenseDate: pendingDateSchema,
+    createdAt: pendingDateSchema,
+    amount: z.number(),
+    title: z.string().nullable().optional(),
+    clientId: z.string().min(1),
+    requestId: z.string().min(1),
+    status: z.enum(['pending', 'failed']),
+  })
+  .catchall(z.unknown())
+
+export type ValidatedPendingExpenseRow = z.infer<typeof pendingExpenseRowSchema>
 
 function timeOf(value: Date | string | null | undefined): number {
   if (value == null) return 0

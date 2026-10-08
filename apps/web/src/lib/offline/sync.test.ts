@@ -1,4 +1,6 @@
 import 'fake-indexeddb/auto'
+import { Cause, Clock, Effect, Exit, Fiber } from 'effect'
+import { TestClock } from 'effect/testing'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { buildNamespace } from './contract'
@@ -7,12 +9,18 @@ import { OfflineRepository } from './repository'
 import {
   OFFLINE_SYNC_FOREGROUND_STALE_MS,
   OFFLINE_SYNC_GROUP_RETRY_DELAY_MS,
+  OFFLINE_SYNC_LEASE_RENEW_MS,
+  OFFLINE_SYNC_LEASE_TTL_MS,
   OFFLINE_SYNC_MAX_RETRY_AFTER_MS,
   classifySyncError,
   createOfflineSync,
+  fetchWithSingleRetry,
+  isForegroundPassStale,
   orderSyncGroups,
   parseRetryAfterMs,
+  runLeaseRenewLoop,
   toPersistedCode,
+  type SingleRetryPolicy,
 } from './sync'
 
 const API_ORIGIN = 'http://localhost:3001'
@@ -1530,5 +1538,276 @@ describe('offline sync triggers, visibility, and classification', () => {
       expect(sleeps).toEqual([])
       expect(Object.keys(sync.getStatus().errors)).toContain('g1')
     }
+  })
+})
+
+describe('effect orchestration (TestClock)', () => {
+  // Authoring gate (test-audit): this block owns the Effect timing contracts
+  // the Phase 3 migration rests on — the single-retry Schedules (one 5s
+  // transient retry, one exact short Retry-After follow-up, never a sleep
+  // for long delays), the 10s lease-renew tick of the 30s TTL with its loss
+  // path, the TTL expiry path without renewal, and the 5-minute foreground
+  // gate. End-to-end pass behavior (phases, status writes, deferral +
+  // resume across the deadline, coalescing) stays owned by the wall-clock
+  // blocks above, which run unchanged against the migrated engine.
+
+  /**
+   * Drive a TestClock fiber to settlement. Clock adjusts race the fiber
+   * reaching its next sleep, so a single upfront adjust can fire with nothing
+   * scheduled and strand the fiber; stepping until the observable condition
+   * holds (or the fiber exits) keeps timing deterministic.
+   */
+  const settleTestFiber = (
+    fiber: Fiber.Fiber<unknown, unknown>,
+    until: () => boolean,
+    maxSteps = 400,
+  ): Effect.Effect<void> =>
+    Effect.gen(function* () {
+      for (let step = 0; step < maxSteps; step += 1) {
+        if (until()) return
+        const polled = yield* Effect.sync(() => fiber.pollUnsafe())
+        if (polled !== undefined) return
+        yield* TestClock.adjust('1 second')
+      }
+      throw new Error('test fiber did not settle in time')
+    })
+
+  const transientPolicy: SingleRetryPolicy = {
+    transientDelayMs: OFFLINE_SYNC_GROUP_RETRY_DELAY_MS,
+    isTransientFailure: () => true,
+    shortRetryDelayMs: () => null,
+  }
+
+  function failingFetch(
+    onAttempt: () => void,
+    error: unknown,
+  ): () => Effect.Effect<string, unknown> {
+    return () =>
+      Effect.tryPromise({
+        try: async () => {
+          onAttempt()
+          throw error
+        },
+        catch: (failure: unknown) => failure,
+      })
+  }
+
+  it('retries a transient failure once after 5s, then surfaces the error for recording', async () => {
+    const program = Effect.gen(function* () {
+      const startedAt = yield* Clock.currentTimeMillis
+      let fetches = 0
+      const fiber = yield* Effect.forkDetach(
+        Effect.exit(
+          fetchWithSingleRetry(
+            failingFetch(
+              () => {
+                fetches += 1
+              },
+              new DOMException('Snapshot timeout', 'TimeoutError'),
+            ),
+            transientPolicy,
+          ),
+        ),
+      )
+      yield* settleTestFiber(fiber, () => fetches >= 2)
+      const exit = yield* Fiber.join(fiber)
+      expect(Exit.isFailure(exit)).toBe(true)
+      // Single retry, then stop: the caller records the surfaced error.
+      expect(fetches).toBe(2)
+      // The one retry waited exactly one 5s delay on the virtual clock.
+      expect(
+        (yield* Clock.currentTimeMillis) - startedAt,
+      ).toBeGreaterThanOrEqual(OFFLINE_SYNC_GROUP_RETRY_DELAY_MS)
+    }).pipe(Effect.provide(TestClock.layer()))
+    await Effect.runPromise(program)
+  })
+
+  it('succeeds on the transient retry without a third fetch', async () => {
+    const program = Effect.gen(function* () {
+      let fetches = 0
+      const fetchOnce = () =>
+        Effect.tryPromise({
+          try: async () => {
+            fetches += 1
+            if (fetches === 1) throw { status: 503 }
+            return 'snapshot'
+          },
+          catch: (failure: unknown) => failure,
+        })
+      const fiber = yield* Effect.forkDetach(
+        Effect.exit(fetchWithSingleRetry(fetchOnce, transientPolicy)),
+      )
+      yield* settleTestFiber(fiber, () => fetches >= 2)
+      const exit = yield* Fiber.join(fiber)
+      expect(Exit.isSuccess(exit)).toBe(true)
+      if (Exit.isSuccess(exit)) expect(exit.value).toBe('snapshot')
+      expect(fetches).toBe(2)
+    }).pipe(Effect.provide(TestClock.layer()))
+    await Effect.runPromise(program)
+  })
+
+  it('sleeps a short Retry-After exactly once, then succeeds', async () => {
+    const program = Effect.gen(function* () {
+      const startedAt = yield* Clock.currentTimeMillis
+      let fetches = 0
+      const policy: SingleRetryPolicy = {
+        transientDelayMs: OFFLINE_SYNC_GROUP_RETRY_DELAY_MS,
+        isTransientFailure: () => false,
+        shortRetryDelayMs: (error) =>
+          typeof error === 'object' &&
+          error !== null &&
+          (error as { status?: unknown }).status === 429
+            ? 1_000
+            : null,
+      }
+      const fetchOnce = () =>
+        Effect.tryPromise({
+          try: async () => {
+            fetches += 1
+            if (fetches === 1) throw { status: 429 }
+            return 'snapshot'
+          },
+          catch: (failure: unknown) => failure,
+        })
+      const fiber = yield* Effect.forkDetach(
+        Effect.exit(fetchWithSingleRetry(fetchOnce, policy)),
+      )
+      yield* settleTestFiber(fiber, () => fetches >= 2)
+      const exit = yield* Fiber.join(fiber)
+      expect(Exit.isSuccess(exit)).toBe(true)
+      if (Exit.isSuccess(exit)) expect(exit.value).toBe('snapshot')
+      expect(fetches).toBe(2)
+      expect(
+        (yield* Clock.currentTimeMillis) - startedAt,
+      ).toBeGreaterThanOrEqual(1_000)
+    }).pipe(Effect.provide(TestClock.layer()))
+    await Effect.runPromise(program)
+  })
+
+  it('never sleeps for a long Retry-After: one fetch, then defer to the deadline mechanism', async () => {
+    const program = Effect.gen(function* () {
+      const startedAt = yield* Clock.currentTimeMillis
+      let fetches = 0
+      const policy: SingleRetryPolicy = {
+        transientDelayMs: OFFLINE_SYNC_GROUP_RETRY_DELAY_MS,
+        isTransientFailure: () => false,
+        // 120s exceeds the 60s bound: no retry, the engine defers via
+        // rateLimitedUntil and resumes after the deadline instead.
+        shortRetryDelayMs: () => null,
+      }
+      const fiber = yield* Effect.forkDetach(
+        Effect.exit(
+          fetchWithSingleRetry(
+            failingFetch(
+              () => {
+                fetches += 1
+              },
+              { status: 429, retryAfter: '120' },
+            ),
+            policy,
+          ),
+        ),
+      )
+      // No sleep is pending, so no clock adjust is needed: joining drives
+      // the fiber to settlement on microtasks alone.
+      const exit = yield* Fiber.join(fiber)
+      expect(Exit.isFailure(exit)).toBe(true)
+      expect(fetches).toBe(1)
+      // No sleep ran: virtual time is untouched.
+      expect(yield* Clock.currentTimeMillis).toBe(startedAt)
+    }).pipe(Effect.provide(TestClock.layer()))
+    await Effect.runPromise(program)
+  })
+
+  it('renews the lease every 10s and fails the loop on lease loss', async () => {
+    const program = Effect.gen(function* () {
+      const startedAt = yield* Clock.currentTimeMillis
+      let renewals = 0
+      let stolen = false
+      const fiber = yield* Effect.forkDetach(
+        Effect.exit(
+          runLeaseRenewLoop({
+            renewLease: () =>
+              Effect.tryPromise({
+                try: async () => {
+                  renewals += 1
+                  if (stolen) throw { code: 'lease-conflict' }
+                  return { leaseOwner: 'owner-test', leaseUntil: 0 }
+                },
+                catch: (failure: unknown) => failure,
+              }),
+            classifyRenewFailure: (error) =>
+              typeof error === 'object' &&
+              error !== null &&
+              (error as { code?: unknown }).code === 'lease-conflict'
+                ? 'lease'
+                : 'transient',
+          }),
+        ),
+      )
+      yield* settleTestFiber(fiber, () => renewals >= 3)
+      // Three 10s ticks cover the 30s TTL window.
+      expect(renewals).toBe(3)
+      expect(
+        (yield* Clock.currentTimeMillis) - startedAt,
+      ).toBeGreaterThanOrEqual(3 * OFFLINE_SYNC_LEASE_RENEW_MS)
+      // Another tab steals the lease: the next tick fails the loop so the
+      // pass aborts exactly as before.
+      stolen = true
+      yield* settleTestFiber(fiber, () => fiber.pollUnsafe() !== undefined)
+      const exit = yield* Fiber.join(fiber)
+      expect(Exit.isFailure(exit)).toBe(true)
+      if (Exit.isFailure(exit)) {
+        expect(Cause.squash(exit.cause)).toBe('lease')
+      }
+    }).pipe(Effect.provide(TestClock.layer()))
+    await Effect.runPromise(program)
+  })
+
+  it('lets the lease expire after the 30s TTL without renewal', async () => {
+    const repo = await openRepo()
+    const namespace = namespaceFor()
+    await repo.ensureControl(namespace)
+    let currentTime = Date.now()
+    await repo.acquireLease({
+      namespace,
+      generation: 0,
+      owner: 'owner-a',
+      ttlMs: OFFLINE_SYNC_LEASE_TTL_MS,
+      now: currentTime,
+    })
+    // No renewal for longer than the TTL: the lease becomes replaceable.
+    currentTime += OFFLINE_SYNC_LEASE_TTL_MS + 1_000
+    await repo.acquireLease({
+      namespace,
+      generation: 0,
+      owner: 'owner-b',
+      ttlMs: OFFLINE_SYNC_LEASE_TTL_MS,
+      now: currentTime,
+    })
+    expect((await repo.readControl(namespace))?.leaseOwner).toBe('owner-b')
+  })
+
+  it('gates foreground passes on the 5-minute rule', async () => {
+    const program = Effect.gen(function* () {
+      const nowMs = yield* Clock.currentTimeMillis
+      // Never completed: foreground always runs.
+      expect(isForegroundPassStale(null, nowMs)).toBe(true)
+      // Within 5 minutes (boundary inclusive): skip.
+      expect(
+        isForegroundPassStale(nowMs, nowMs + OFFLINE_SYNC_FOREGROUND_STALE_MS),
+      ).toBe(false)
+      // Past 5 minutes: run.
+      expect(
+        isForegroundPassStale(
+          nowMs,
+          nowMs + OFFLINE_SYNC_FOREGROUND_STALE_MS + 1,
+        ),
+      ).toBe(true)
+      yield* TestClock.adjust('6 minutes')
+      const later = yield* Clock.currentTimeMillis
+      expect(isForegroundPassStale(nowMs, later)).toBe(true)
+    }).pipe(Effect.provide(TestClock.layer()))
+    await Effect.runPromise(program)
   })
 })

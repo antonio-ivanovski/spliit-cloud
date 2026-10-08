@@ -19,6 +19,7 @@ import {
   shouldSuppressGenericToast,
   WRITE_GUARD_MUTATION_DEFAULTS,
 } from './write-guard'
+import type { OfflineExpenseCreateEnqueue } from './write-guard'
 
 function offlineDeps() {
   return {
@@ -294,5 +295,283 @@ describe('offline write guard', () => {
     }) => unknown
     expect(() => operate({ op: { type: 'mutation' }, next })).not.toThrow()
     expect(next).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('offline expenses.create diversion (Phase 1)', () => {
+  const CREATE_KEY = [['groups', 'expenses', 'create']]
+  const UPDATE_KEY = [['groups', 'expenses', 'update']]
+  const variables = {
+    groupId: 'g1',
+    requestId: '00000000-0000-4000-8000-000000000001',
+    expense: { title: 'Dinner', amount: 300 },
+  }
+
+  beforeEach(() => {
+    resetWriteGuardForTests()
+    resetOfflineWriteBlockedToastForTests()
+  })
+
+  afterEach(() => {
+    resetWriteGuardForTests()
+    resetOfflineWriteBlockedToastForTests()
+    vi.restoreAllMocks()
+  })
+
+  function offlineCache(enqueue?: OfflineExpenseCreateEnqueue) {
+    return new QueryClient({
+      defaultOptions: {
+        mutations: {
+          networkMode: WRITE_GUARD_MUTATION_DEFAULTS.networkMode,
+          retry: WRITE_GUARD_MUTATION_DEFAULTS.retry,
+        },
+      },
+      mutationCache: createWriteGuardMutationCache(
+        enqueue ? { enqueueExpenseCreate: enqueue } : undefined,
+      ),
+    })
+  }
+
+  it('enqueues expenses.create offline and lets the mutation proceed', async () => {
+    configureWriteGuardForTests(offlineDeps())
+    const enqueue = vi.fn(async () => ({ queued: true }))
+    const mutationFn = vi.fn(async () => 'sent')
+    const client = offlineCache(enqueue)
+    const mutation = client.getMutationCache().build(client, {
+      mutationKey: CREATE_KEY,
+      mutationFn,
+      retry: 0,
+      networkMode: 'always',
+    })
+    await expect(mutation.execute(variables)).resolves.toBe('sent')
+    expect(enqueue).toHaveBeenCalledTimes(1)
+    expect(enqueue).toHaveBeenCalledWith(variables)
+    expect(mutationFn).toHaveBeenCalledTimes(1)
+    client.clear()
+  })
+
+  it('still throws for every other mutation while offline', async () => {
+    configureWriteGuardForTests(offlineDeps())
+    const enqueue = vi.fn(async () => ({ queued: true }))
+    const mutationFn = vi.fn(async () => 'sent')
+    const client = offlineCache(enqueue)
+    const mutation = client.getMutationCache().build(client, {
+      mutationKey: UPDATE_KEY,
+      mutationFn,
+      retry: 0,
+      networkMode: 'always',
+    })
+    await expect(mutation.execute(variables)).rejects.toBeInstanceOf(
+      OfflineWriteError,
+    )
+    expect(enqueue).not.toHaveBeenCalled()
+    expect(mutationFn).not.toHaveBeenCalled()
+    client.clear()
+  })
+
+  it('throws when expenses.create variables are not enqueueable', async () => {
+    configureWriteGuardForTests(offlineDeps())
+    const enqueue = vi.fn(async () => ({ queued: true }))
+    const client = offlineCache(enqueue)
+    const mutation = client.getMutationCache().build(client, {
+      mutationKey: CREATE_KEY,
+      mutationFn: vi.fn(async () => 'sent'),
+      retry: 0,
+      networkMode: 'always',
+    })
+    await expect(mutation.execute({ groupId: 'g1' })).rejects.toBeInstanceOf(
+      OfflineWriteError,
+    )
+    expect(enqueue).not.toHaveBeenCalled()
+    client.clear()
+  })
+
+  it('propagates enqueue failures as OfflineWriteError', async () => {
+    configureWriteGuardForTests(offlineDeps())
+    const enqueue = vi.fn(async () => {
+      throw new OfflineWriteError()
+    })
+    const mutationFn = vi.fn(async () => 'sent')
+    const client = offlineCache(enqueue)
+    const mutation = client.getMutationCache().build(client, {
+      mutationKey: CREATE_KEY,
+      mutationFn,
+      retry: 0,
+      networkMode: 'always',
+    })
+    await expect(mutation.execute(variables)).rejects.toBeInstanceOf(
+      OfflineWriteError,
+    )
+    expect(mutationFn).not.toHaveBeenCalled()
+    client.clear()
+  })
+
+  it('stays inert without a handler and passes online creates through', async () => {
+    // No handler: offline creates throw like before (pre-diversion behavior).
+    configureWriteGuardForTests(offlineDeps())
+    const bare = offlineCache()
+    const blocked = bare.getMutationCache().build(bare, {
+      mutationKey: CREATE_KEY,
+      mutationFn: vi.fn(async () => 'sent'),
+      retry: 0,
+      networkMode: 'always',
+    })
+    await expect(blocked.execute(variables)).rejects.toBeInstanceOf(
+      OfflineWriteError,
+    )
+    bare.clear()
+
+    // Online: the handler never runs, the mutation proceeds normally.
+    configureWriteGuardForTests(onlineDeps())
+    const enqueue = vi.fn(async () => ({ queued: true }))
+    const mutationFn = vi.fn(async () => 'sent')
+    const online = offlineCache(enqueue)
+    const mutation = online.getMutationCache().build(online, {
+      mutationKey: CREATE_KEY,
+      mutationFn,
+      retry: 0,
+      networkMode: 'always',
+    })
+    await expect(mutation.execute(variables)).resolves.toBe('sent')
+    expect(enqueue).not.toHaveBeenCalled()
+    online.clear()
+  })
+
+  function divertedLink(enqueue?: OfflineExpenseCreateEnqueue) {
+    const link = createOfflineWriteGuardLink(
+      enqueue ? { enqueueExpenseCreate: enqueue } : undefined,
+    )
+    const next = vi.fn(
+      () =>
+        ({
+          subscribe: () => undefined,
+        }) as never,
+    )
+    const operate = link({} as never) as unknown as (args: {
+      op: { type: string; path?: string; input?: unknown }
+      next: typeof next
+    }) => {
+      subscribe: (observer: {
+        next?: (value: unknown) => void
+        error?: (error: unknown) => void
+        complete?: () => void
+      }) => { unsubscribe: () => void }
+    }
+    return { operate, next }
+  }
+
+  async function subscribeOnce(observable: {
+    subscribe: (observer: {
+      next?: (value: unknown) => void
+      error?: (error: unknown) => void
+      complete?: () => void
+    }) => { unsubscribe: () => void }
+  }): Promise<unknown> {
+    return new Promise<unknown>((resolve, reject) => {
+      observable.subscribe({
+        next: (value) => resolve(value),
+        error: (error) => reject(error),
+      })
+    })
+  }
+
+  it('link short-circuits expenses.create to a synthetic queued result', async () => {
+    configureWriteGuardForTests(offlineDeps())
+    const queued = { expenseId: 'pending-req', recurringSeriesId: null }
+    const enqueue = vi.fn(async () => queued)
+    const { operate, next } = divertedLink(enqueue)
+
+    const result = await subscribeOnce(
+      operate({
+        op: {
+          type: 'mutation',
+          path: 'groups.expenses.create',
+          input: variables,
+        },
+        next,
+      }),
+    )
+    expect(enqueue).toHaveBeenCalledTimes(1)
+    expect(enqueue).toHaveBeenCalledWith(variables)
+    expect(next).not.toHaveBeenCalled()
+    expect(result).toEqual({ result: { type: 'data', data: queued } })
+  })
+
+  it('link passes expenses.create through when online even with a handler', () => {
+    // Regression: the diversion once ignored transport, so every online
+    // create resolved with a synthetic temp id and never reached the server.
+    configureWriteGuardForTests(onlineDeps())
+    const enqueue = vi.fn(async () => ({ queued: true }))
+    const { operate, next } = divertedLink(enqueue)
+    operate({
+      op: {
+        type: 'mutation',
+        path: 'groups.expenses.create',
+        input: variables,
+      },
+      next,
+    })
+    expect(enqueue).not.toHaveBeenCalled()
+    expect(next).toHaveBeenCalledTimes(1)
+  })
+
+  it('link still throws for other paths, invalid input, and missing handler', () => {
+    configureWriteGuardForTests(offlineDeps())
+    const enqueue = vi.fn(async () => ({ queued: true }))
+    const { operate, next } = divertedLink(enqueue)
+    expect(() =>
+      operate({
+        op: {
+          type: 'mutation',
+          path: 'groups.expenses.update',
+          input: variables,
+        },
+        next,
+      }),
+    ).toThrow(OfflineWriteError)
+    expect(() =>
+      operate({
+        op: {
+          type: 'mutation',
+          path: 'groups.expenses.create',
+          input: { groupId: 'g1' },
+        },
+        next,
+      }),
+    ).toThrow(OfflineWriteError)
+    expect(enqueue).not.toHaveBeenCalled()
+
+    const bare = divertedLink()
+    expect(() =>
+      bare.operate({
+        op: {
+          type: 'mutation',
+          path: 'groups.expenses.create',
+          input: variables,
+        },
+        next: bare.next,
+      }),
+    ).toThrow(OfflineWriteError)
+  })
+
+  it('link surfaces enqueue failures through the observable error', async () => {
+    configureWriteGuardForTests(offlineDeps())
+    const failure = new OfflineWriteError()
+    const { operate, next } = divertedLink(async () => {
+      throw failure
+    })
+    await expect(
+      subscribeOnce(
+        operate({
+          op: {
+            type: 'mutation',
+            path: 'groups.expenses.create',
+            input: variables,
+          },
+          next,
+        }),
+      ),
+    ).rejects.toBe(failure)
+    expect(next).not.toHaveBeenCalled()
   })
 })
