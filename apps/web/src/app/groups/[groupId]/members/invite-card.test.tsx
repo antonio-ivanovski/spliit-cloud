@@ -1,7 +1,7 @@
 import type { ComponentProps } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { render, screen } from '@/test/test-utils'
+import { render, screen, waitFor } from '@/test/test-utils'
 
 import { InviteCard } from './invite-card'
 import { useQrSession } from './members-hooks'
@@ -123,7 +123,7 @@ describe('InviteCard responsive navigation', () => {
     await user.type(name, 'Charlie')
     await user.click(screen.getByRole('button', { name: 'Add participant' }))
 
-    await vi.waitFor(() => expect(onAddParticipant).toHaveBeenCalledOnce())
+    await waitFor(() => expect(onAddParticipant).toHaveBeenCalledOnce())
     expect(name).toHaveValue('Charlie')
   })
 
@@ -140,7 +140,7 @@ describe('InviteCard responsive navigation', () => {
       screen.getByRole('button', { name: 'Generate invite link' }),
     )
 
-    await vi.waitFor(() => expect(onGenerateLink).toHaveBeenCalledOnce())
+    await waitFor(() => expect(onGenerateLink).toHaveBeenCalledOnce())
     expect(name).toHaveValue('Charlie')
   })
 })
@@ -227,7 +227,7 @@ describe('InviteCard QR nearby session', () => {
 
     await user.click(screen.getByRole('tab', { name: 'QR code' }))
     await user.click(screen.getByRole('button', { name: 'Show QR code' }))
-    await vi.waitFor(() =>
+    await waitFor(() =>
       expect(screen.getByTestId('qr-invite-code')).toBeInTheDocument(),
     )
 
@@ -258,7 +258,7 @@ describe('InviteCard QR nearby session', () => {
 
     await user.click(screen.getByRole('tab', { name: 'QR code' }))
 
-    await vi.waitFor(() =>
+    await waitFor(() =>
       expect(screen.queryByTestId('qr-invite-code')).not.toBeInTheDocument(),
     )
     expect(
@@ -317,12 +317,12 @@ describe('InviteCard QR nearby session', () => {
       screen.getByRole('button', { name: 'Take over & show new code' }),
     )
 
-    await vi.waitFor(() =>
+    await waitFor(() =>
       expect(mocks.revokeMutateAsync).toHaveBeenCalledWith({
         invitationId: 'inv-qr-other',
       }),
     )
-    await vi.waitFor(() =>
+    await waitFor(() =>
       expect(mocks.createQrLinkMutateAsync).toHaveBeenCalledOnce(),
     )
   })
@@ -332,18 +332,18 @@ describe('InviteCard QR nearby session', () => {
 
     await user.click(screen.getByRole('tab', { name: 'QR code' }))
     await user.click(screen.getByRole('button', { name: 'Show QR code' }))
-    await vi.waitFor(() =>
+    await waitFor(() =>
       expect(screen.getByTestId('qr-invite-code')).toBeInTheDocument(),
     )
 
     await user.click(screen.getByRole('button', { name: 'Stop sharing' }))
 
-    await vi.waitFor(() =>
+    await waitFor(() =>
       expect(mocks.revokeMutateAsync).toHaveBeenCalledWith({
         invitationId: 'inv-qr-1',
       }),
     )
-    await vi.waitFor(() =>
+    await waitFor(() =>
       expect(screen.queryByTestId('qr-invite-code')).not.toBeInTheDocument(),
     )
   })

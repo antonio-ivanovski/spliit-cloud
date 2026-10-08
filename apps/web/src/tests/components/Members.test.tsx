@@ -4,7 +4,7 @@ import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
 import GroupMembers from '@/app/groups/[groupId]/members/members'
 import type { Group } from '@/lib/api'
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { act, render, screen } from '@/test/test-utils'
+import { act, render, screen, waitFor } from '@/test/test-utils'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
@@ -444,7 +444,7 @@ describe('GroupMembers', () => {
     const inviteButton = screen.getByRole('button', { name: /send invite/i })
     await user.click(inviteButton)
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(mockCreateMutation).toHaveBeenCalledWith({
         groupId: 'group-1',
         email: 'charlie@example.com',
@@ -474,7 +474,7 @@ describe('GroupMembers', () => {
     const generateButton = screen.getByRole('button', { name: /generate/i })
     await user.click(generateButton)
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(mockCreateLinkMutation).toHaveBeenCalled()
     })
 
@@ -486,7 +486,7 @@ describe('GroupMembers', () => {
     }
 
     // The generated link section should appear
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(
         screen.getByDisplayValue('https://spliit.app/invite/abc123'),
       ).toBeInTheDocument()

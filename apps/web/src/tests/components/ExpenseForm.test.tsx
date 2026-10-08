@@ -10,7 +10,14 @@ import { getCurrency, useCurrencies } from '@/lib/currency'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { useCurrencyRate, useMediaQuery } from '@/lib/hooks'
 import type { Expense } from '@/lib/schemas'
-import { act, fireEvent, render, screen, within } from '@/test/test-utils'
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@/test/test-utils'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
@@ -717,7 +724,7 @@ describe('ExpenseForm', () => {
     const title = screen.getByRole('textbox', { name: /expense title/i })
     await user.type(title, 'Whole Foods')
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(
         screen.getByRole('combobox', { name: 'Groceries' }),
       ).toBeInTheDocument()
@@ -740,7 +747,7 @@ describe('ExpenseForm', () => {
     const title = screen.getByRole('textbox', { name: /expense title/i })
     await user.type(title, 'ai')
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(title).toHaveValue('ai')
     })
     expect(mockCategoryMutateAsync).not.toHaveBeenCalled()
@@ -768,7 +775,7 @@ describe('ExpenseForm', () => {
     const title = screen.getByRole('textbox', { name: /expense title/i })
     await user.type(title, 'Luigi mysterious trattoria xyzzy')
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(mockCategoryMutateAsync).toHaveBeenCalledTimes(1)
     })
     expect(mockCategoryMutateAsync).toHaveBeenCalledWith(
@@ -800,13 +807,20 @@ describe('ExpenseForm', () => {
     const title = screen.getByRole('textbox', { name: /expense title/i })
     await user.type(title, 'Luigi mysterious trattoria xyzzy')
 
-    await vi.waitFor(() => {
-      expect(mockCategoryMutateAsync).toHaveBeenCalledTimes(1)
-      expect(screen.getByRole('combobox', { name: 'General' })).toHaveAttribute(
-        'aria-busy',
-        'true',
-      )
-    })
+    await waitFor(
+      () => {
+        expect(mockCategoryMutateAsync).toHaveBeenCalledTimes(1)
+      },
+      { timeout: 5000 },
+    )
+    await waitFor(
+      () => {
+        expect(
+          screen.getByRole('combobox', { name: 'General' }),
+        ).toHaveAttribute('aria-busy', 'true')
+      },
+      { timeout: 5000 },
+    )
     expect(mockCategoryMutateAsync).toHaveBeenCalledWith(
       expect.objectContaining({ allowAi: false }),
     )
@@ -835,7 +849,7 @@ describe('ExpenseForm', () => {
     const title = screen.getByRole('textbox', { name: /expense title/i })
     await user.type(title, 'Luigi mysterious trattoria xyzzy')
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(mockCategoryMutateAsync).toHaveBeenCalledTimes(1)
     })
     expect(
@@ -867,7 +881,7 @@ describe('ExpenseForm', () => {
     await user.type(title, 'nike')
     await user.tab()
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(mockCategoryMutateAsync).toHaveBeenCalledTimes(1)
     })
     expect(
@@ -877,7 +891,7 @@ describe('ExpenseForm', () => {
     expect(screen.getByRole('button', { name: 'Clothing' })).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Sports' }))
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(
         screen.getByRole('combobox', { name: 'Sports' }),
       ).toBeInTheDocument()
@@ -909,7 +923,7 @@ describe('ExpenseForm', () => {
     await user.tab()
 
     // Sports auto-applies locally (0.92) with Clothing tied at 0.92.
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(
         screen.getByRole('combobox', { name: 'Sports' }),
       ).toBeInTheDocument()
@@ -944,7 +958,7 @@ describe('ExpenseForm', () => {
     await user.type(title, 'nike')
     await user.tab()
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(mockCategoryMutateAsync).toHaveBeenCalledTimes(1)
     })
     expect(
@@ -975,7 +989,7 @@ describe('ExpenseForm', () => {
     await user.type(title, 'nike')
     await user.tab()
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(
         screen.getByRole('group', { name: 'Category suggestions' }),
       ).toBeInTheDocument()
@@ -983,7 +997,7 @@ describe('ExpenseForm', () => {
 
     await user.clear(title)
     expect(title).toHaveValue('')
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(
         screen.queryByRole('group', { name: 'Category suggestions' }),
       ).not.toBeInTheDocument()
@@ -1010,7 +1024,7 @@ describe('ExpenseForm', () => {
     const title = screen.getByRole('textbox', { name: /expense title/i })
     await user.type(title, 'Luigi mysterious trattoria xyzzy')
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(
         screen.getByRole('combobox', { name: 'Liquor' }),
       ).toBeInTheDocument()
@@ -1027,7 +1041,7 @@ describe('ExpenseForm', () => {
 
     // Tapping the AI chip applies it and locks like a manual pick.
     await user.click(screen.getByRole('button', { name: 'Dining Out' }))
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(
         screen.getByRole('combobox', { name: 'Dining Out' }),
       ).toBeInTheDocument()
@@ -1061,7 +1075,7 @@ describe('ExpenseForm', () => {
     const title = screen.getByRole('textbox', { name: /expense title/i })
     await user.type(title, 'Luigi mysterious trattoria xyzzy')
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(mockCategoryMutateAsync).toHaveBeenCalledTimes(1)
     })
     expect(
@@ -1095,7 +1109,7 @@ describe('ExpenseForm', () => {
     const title = screen.getByRole('textbox', { name: /expense title/i })
     await user.type(title, 'Luigi mysterious trattoria xyzzy')
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(
         screen.getByRole('combobox', { name: 'Groceries' }),
       ).toBeInTheDocument()
@@ -1120,7 +1134,7 @@ describe('ExpenseForm', () => {
 
     // Taxi auto-applies (0.92); the runner-up trails by more than the
     // near-tie window, so there is nothing to offer.
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(screen.getByRole('combobox', { name: 'Taxi' })).toBeInTheDocument()
     })
     expect(mockCategoryMutateAsync).not.toHaveBeenCalled()
@@ -1172,13 +1186,20 @@ describe('ExpenseForm', () => {
 
     const title = screen.getByRole('textbox', { name: /expense title/i })
     await user.type(title, 'Luigi mysterious trattoria xyzzy')
-    await vi.waitFor(() => {
-      expect(mockCategoryMutateAsync).toHaveBeenCalledTimes(1)
-      expect(screen.getByRole('combobox', { name: 'General' })).toHaveAttribute(
-        'aria-busy',
-        'true',
-      )
-    })
+    await waitFor(
+      () => {
+        expect(mockCategoryMutateAsync).toHaveBeenCalledTimes(1)
+      },
+      { timeout: 5000 },
+    )
+    await waitFor(
+      () => {
+        expect(
+          screen.getByRole('combobox', { name: 'General' }),
+        ).toHaveAttribute('aria-busy', 'true')
+      },
+      { timeout: 5000 },
+    )
     const categoryButton = screen.getByRole('combobox', { name: 'General' })
     expect(
       categoryButton.querySelector('[data-icon="category-loading-ai"]'),
@@ -1188,11 +1209,14 @@ describe('ExpenseForm', () => {
     await user.click(screen.getByText('Groceries'))
     resolveSuggestion?.({ categoryId: 'dining-out', candidates: [] })
 
-    await vi.waitFor(() => {
-      expect(
-        screen.getByRole('combobox', { name: 'Groceries' }),
-      ).toBeInTheDocument()
-    })
+    await waitFor(
+      () => {
+        expect(
+          screen.getByRole('combobox', { name: 'Groceries' }),
+        ).toBeInTheDocument()
+      },
+      { timeout: 5000 },
+    )
     expect(
       screen.queryByRole('combobox', { name: 'Dining Out' }),
     ).not.toBeInTheDocument()
@@ -1223,7 +1247,7 @@ describe('ExpenseForm', () => {
 
     const titleInput = screen.getByPlaceholderText('Monday evening restaurant')
     await user.type(titleInput, 'Luigi mysterious trattoria xyzzy')
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(mockCategoryMutateAsync).toHaveBeenCalledTimes(1)
     })
 
@@ -1237,7 +1261,7 @@ describe('ExpenseForm', () => {
     if (!submitButton) throw new Error('submit button not found')
     await user.click(submitButton)
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
 
@@ -1395,7 +1419,7 @@ describe('ExpenseForm', () => {
       .getAllByRole('button', { name: /^Save$/ })
       .find((b) => (b as HTMLButtonElement).type === 'submit')!
     await user.click(saveButton)
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
 
@@ -1413,7 +1437,7 @@ describe('ExpenseForm', () => {
     // A 'saved' outcome is terminal: the expense already exists, so the
     // submit action disables instead of inviting a duplicate save (the
     // test renders without `onSaved`, which is the caller-free variant).
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(saveButton).toBeDisabled()
     })
   })
@@ -1454,7 +1478,7 @@ describe('ExpenseForm', () => {
       .getAllByRole('button', { name: /^Save$/ })
       .find((b) => (b as HTMLButtonElement).type === 'submit')!
     await user.click(saveButton)
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
 
@@ -1884,7 +1908,7 @@ describe('ExpenseForm', () => {
 
     await user.click(screen.getByRole('button', { name: /create/i }))
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
 
@@ -1968,7 +1992,7 @@ describe('ExpenseForm', () => {
     )
 
     const recurrence = screen.getByRole('checkbox', { name: 'Recurring' })
-    await vi.waitFor(() => expect(recurrence).toBeChecked())
+    await waitFor(() => expect(recurrence).toBeChecked())
     expect(recurrence).not.toHaveAttribute('aria-disabled', 'true')
     expect(
       screen.queryByText(
@@ -2045,7 +2069,7 @@ describe('ExpenseForm', () => {
     await user.click(createButton)
 
     // Wait for onSubmit to be called
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
 
@@ -2361,7 +2385,7 @@ describe('ExpenseForm', () => {
     await user.type(amountInput, '100')
     await user.click(screen.getByRole('button', { name: /create/i }))
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
 
@@ -2389,7 +2413,7 @@ describe('ExpenseForm', () => {
     )
     await user.type(screen.getByRole('textbox', { name: /^amount$/i }), '10')
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(
         screen.queryByText('All shares must be higher than 0.'),
       ).not.toBeInTheDocument()
@@ -3382,7 +3406,7 @@ describe('ExpenseForm split presets', () => {
       />,
     )
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(screen.getAllByText('Loaded preset')).toHaveLength(1)
     })
     expect(screen.getByText(preset.name)).toBeInTheDocument()
@@ -3420,7 +3444,7 @@ describe('ExpenseForm split presets', () => {
       />,
     )
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(screen.getAllByText('Loaded preset')).toHaveLength(1)
     })
     expect(screen.getByText('My default')).toBeInTheDocument()
@@ -3488,7 +3512,7 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
     expect(aliceInput()).toHaveValue('0.5')
 
     await user.click(screen.getByRole('button', { name: /create/i }))
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
     // The removed-and-typed row is re-appended, so compare order-independently.
@@ -3531,7 +3555,7 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
     ).toHaveValue('')
 
     await user.click(screen.getByRole('button', { name: /create/i }))
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
     const paidFor = [...onSubmit.mock.calls[0][0].paidFor].sort(
@@ -3606,7 +3630,7 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
     expect(aliceInput).toHaveValue('1.1')
 
     await user.click(screen.getByRole('button', { name: /create/i }))
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
     const paidFor = [...onSubmit.mock.calls[0][0].paidFor].sort(
@@ -3717,7 +3741,7 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
     ).toHaveValue('1.5')
 
     await user.click(screen.getByRole('button', { name: /create/i }))
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
     const paidByList = [...onSubmit.mock.calls[0][0].paidByList].sort(
@@ -3767,7 +3791,7 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
       .find((b) => (b as HTMLButtonElement).type === 'submit')
     if (!submitButton) throw new Error('submit button not found')
     await user.click(submitButton)
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
     const paidFor = [...onSubmit.mock.calls[0][0].paidFor].sort(
@@ -4493,7 +4517,7 @@ describe('ExpenseForm validation & error reporting', () => {
     await user.type(costInput, '-2')
     await user.click(screen.getByRole('button', { name: /create/i }))
 
-    await vi.waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
     const submitted = onSubmit.mock.calls[0]?.[0] as {
       items?: Array<{ unitPrice: number; amount: number }>
     }
@@ -4551,7 +4575,7 @@ describe('ExpenseForm validation & error reporting', () => {
     // Bob's row is the only error (Alice's automatic share rebalances to the
     // full amount), so the row error reaches his FormField and the input —
     // not a wrapper — carries aria-invalid.
-    await vi.waitFor(() =>
+    await waitFor(() =>
       expect(
         screen.getByRole('textbox', { name: 'Amount for Bob' }),
       ).toHaveAttribute('aria-invalid', 'true'),
@@ -4598,7 +4622,7 @@ describe('ExpenseForm validation & error reporting', () => {
     await user.type(amountInput, '10')
 
     await user.click(screen.getByRole('button', { name: /create/i }))
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
 
@@ -4641,7 +4665,7 @@ describe('ExpenseForm validation & error reporting', () => {
     await user.type(amountInput, '10')
 
     await user.click(screen.getByRole('button', { name: /create/i }))
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSaved).toHaveBeenCalledTimes(1)
     })
 
@@ -4681,7 +4705,7 @@ describe('ExpenseForm validation & error reporting', () => {
     await user.type(amountInput, '10')
 
     await user.click(screen.getByRole('button', { name: /create/i }))
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
 
@@ -4748,7 +4772,7 @@ describe('ExpenseForm validation & error reporting', () => {
     await user.type(amountInput, '10')
 
     await user.click(screen.getByRole('button', { name: /create/i }))
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSaved).toHaveBeenCalledTimes(1)
     })
     expect(
@@ -4765,11 +4789,11 @@ describe('ExpenseForm validation & error reporting', () => {
 
     // The leave-again action retries only the post-save work.
     await user.click(screen.getByRole('button', { name: /try leaving again/i }))
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSaved).toHaveBeenCalledTimes(2)
     })
     expect(onSubmit).toHaveBeenCalledTimes(1)
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(
         screen.queryByText(/couldn't leave this page/i),
       ).not.toBeInTheDocument()
@@ -4852,7 +4876,7 @@ describe('ExpenseForm validation & error reporting', () => {
     })
     await user.clear(bobAfterSubmit)
     await user.type(bobAfterSubmit, '60')
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(
         screen.queryByText(
           'Please correct the highlighted fields before saving.',

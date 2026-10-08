@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 
 import { AsyncButton } from '@/components/async-button'
-import { act, render, screen } from '@/test/test-utils'
+import { act, render, screen, waitFor } from '@/test/test-utils'
 
 describe('AsyncButton', () => {
   it('renders children when idle', () => {
@@ -82,7 +82,7 @@ describe('AsyncButton', () => {
       await deferred
     })
     // Wait for the state update
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(screen.getByRole('button')).toHaveTextContent('Click me')
     })
   })

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { BudgetFormPage } from '@/app/groups/[groupId]/budgets/budget-form-page'
-import { render, screen } from '@/test/test-utils'
+import { render, screen, waitFor } from '@/test/test-utils'
 
 const mockToast = vi.fn()
 const mockNavigate = vi.fn()
@@ -185,7 +185,7 @@ describe('BudgetFormPage', () => {
     await user.type(screen.getByLabelText('Amount'), '500')
     await user.click(screen.getByRole('button', { name: 'Save budget' }))
 
-    await vi.waitFor(() => expect(mockCreateAttemptRun).toHaveBeenCalledOnce())
+    await waitFor(() => expect(mockCreateAttemptRun).toHaveBeenCalledOnce())
     expect(mockCreateMutateAsync).not.toHaveBeenCalled()
     expect(mockNavigate).not.toHaveBeenCalled()
   })

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { render, screen, within } from '@/test/test-utils'
+import { render, screen, waitFor, within } from '@/test/test-utils'
 
 const mocks = vi.hoisted(() => ({
   mockFriendsQuery: vi.fn(),
@@ -197,7 +197,7 @@ describe('CreateFriend', () => {
       screen.getByRole('button', { name: 'Track expenses with a friend' }),
     )
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(mocks.mockCreateFriend).toHaveBeenCalled()
     })
     expect(
@@ -225,7 +225,7 @@ describe('CreateFriend', () => {
       screen.getByRole('button', { name: 'Track expenses with a friend' }),
     )
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(mocks.mockCreateFriend).toHaveBeenCalled()
     })
     expect(
@@ -250,7 +250,7 @@ describe('CreateFriend', () => {
       screen.getByRole('button', { name: 'Track expenses with a friend' }),
     )
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(mocks.mockCreateFriend).toHaveBeenCalled()
     })
     expect(
@@ -298,7 +298,7 @@ describe('CreateFriend', () => {
       screen.getByRole('button', { name: 'Track expenses with a friend' }),
     )
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(mocks.mockCreateFriend).toHaveBeenCalled()
     })
     expect(
@@ -342,7 +342,7 @@ describe('CreateFriend', () => {
       screen.getByRole('button', { name: 'Track expenses with a friend' }),
     )
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(mocks.mockNavigate).toHaveBeenCalled()
     })
     expect(mocks.mockNavigate).toHaveBeenCalledWith(
@@ -384,7 +384,7 @@ describe('CreateFriend', () => {
       screen.getByRole('button', { name: 'Track expenses with a friend' }),
     )
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(mocks.mockNavigate).toHaveBeenCalled()
     })
     expect(mocks.mockNavigate).toHaveBeenCalledWith(
@@ -424,7 +424,7 @@ describe('CreateFriend', () => {
       screen.getByRole('button', { name: 'Track expenses with a friend' }),
     )
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(mocks.mockToast).toHaveBeenCalledWith(
         expect.objectContaining({
           description: 'Network error',
@@ -460,7 +460,7 @@ describe('CreateFriend', () => {
       screen.getByRole('button', { name: 'Track expenses with a friend' }),
     )
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(mocks.mockToast).toHaveBeenCalledWith({
         description: 'Could not create friend expenses',
         variant: 'destructive',
@@ -488,7 +488,7 @@ describe('CreateFriend', () => {
       screen.getByRole('button', { name: 'Track expenses with a friend' }),
     )
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(
         screen.getByText('temporaryName is required for link invites'),
       ).toBeInTheDocument()

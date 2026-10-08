@@ -34,7 +34,7 @@ describe('ArtFooter', () => {
     expect(screen.queryByAltText('Spliit')).not.toBeInTheDocument()
   })
 
-  it('renders the four legal link buttons without GitHub', () => {
+  it('renders the five legal link buttons without GitHub', () => {
     vi.stubEnv('VITE_STATUS_PAGE_URL', '')
     const { container } = render(<ArtFooter hiddenOnMobile={false} />)
 
@@ -42,7 +42,7 @@ describe('ArtFooter', () => {
       '[data-testid="art-footer"] .art-footer__links',
     )
     expect(links).not.toBeNull()
-    expect(links?.querySelectorAll('a')).toHaveLength(4)
+    expect(links?.querySelectorAll('a')).toHaveLength(5)
     expect(links).not.toHaveTextContent('open-source community')
   })
 

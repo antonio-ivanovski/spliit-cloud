@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { SyncedAccountPreferencesProvider } from '@/components/account-preferences-sync'
 import { GroupForm, type Props } from '@/components/group-form'
 import { getCurrency, useCurrencies } from '@/lib/currency'
-import { render, screen, within } from '@/test/test-utils'
+import { render, screen, waitFor, within } from '@/test/test-utils'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
@@ -130,7 +130,7 @@ describe('GroupForm', () => {
 
     await user.click(screen.getByRole('button', { name: /create/i }))
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
     expect(onSubmit.mock.calls[0][0]).toMatchObject({
@@ -274,7 +274,7 @@ describe('GroupForm', () => {
     await user.click(createButton)
 
     // Wait for onSubmit to be called
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
 
@@ -410,7 +410,7 @@ describe('GroupForm', () => {
 
     await user.click(screen.getByRole('button', { name: /save/i }))
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
 
@@ -441,7 +441,7 @@ describe('GroupForm', () => {
     await user.click(screen.getByRole('radio', { name: 'Teal' }))
     await user.click(screen.getByRole('button', { name: /create/i }))
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
     expect(onSubmit.mock.calls[0][0]).toMatchObject({
@@ -468,7 +468,7 @@ describe('GroupForm', () => {
     expect(screen.getByText(/Moved .* out of the name/)).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: /create/i }))
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
     expect(onSubmit.mock.calls[0][0]).toMatchObject({
@@ -493,7 +493,7 @@ describe('GroupForm', () => {
     )
 
     await user.click(screen.getByRole('button', { name: /create/i }))
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
     expect(onSubmit.mock.calls[0][0]).toMatchObject({
@@ -520,7 +520,7 @@ describe('GroupForm', () => {
     expect(screen.queryByText(/Moved .* out of the name/)).toBeNull()
 
     await user.click(screen.getByRole('button', { name: /create/i }))
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
     // The server stores the name verbatim now; the emoji stays undecided.
@@ -549,7 +549,7 @@ describe('GroupForm', () => {
     )
 
     await user.click(screen.getByRole('button', { name: /create/i }))
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
     expect(onSubmit.mock.calls[0][0]).toMatchObject({
@@ -574,7 +574,7 @@ describe('GroupForm', () => {
     expect(screen.queryByText(/Moved .* out of the name/)).toBeNull()
 
     await user.click(screen.getByRole('button', { name: /create/i }))
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
     expect(onSubmit.mock.calls[0][0]).toMatchObject({
@@ -726,7 +726,7 @@ describe('GroupForm', () => {
 
     // The hidden name must never be rewritten by the mount-time extraction.
     await user.click(screen.getByRole('button', { name: /save/i }))
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
     expect(onSubmit.mock.calls[0][0]).toMatchObject({ name: '🏝️ Test Group' })
@@ -750,7 +750,7 @@ describe('GroupForm', () => {
     expect(screen.getByText(/Moved .* out of the name/)).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: /save/i }))
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
     expect(onSubmit.mock.calls[0][0]).toMatchObject({
@@ -775,7 +775,7 @@ describe('GroupForm', () => {
     )
 
     await user.click(screen.getByRole('button', { name: /save/i }))
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
     expect(onSubmit.mock.calls[0][0]).toMatchObject({
@@ -812,7 +812,7 @@ describe('GroupForm', () => {
     await view2.user.click(
       within(view2.container).getByRole('button', { name: /save/i }),
     )
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
     expect(onSubmit.mock.calls[0][0]).toMatchObject({ emoji: '' })
@@ -831,7 +831,7 @@ describe('GroupForm', () => {
     await user.type(hexInput, '#a1b2c3')
     await user.click(screen.getByRole('button', { name: /create/i }))
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
     expect(onSubmit.mock.calls[0][0]).toMatchObject({ color: '#a1b2c3' })
@@ -848,7 +848,7 @@ describe('GroupForm', () => {
     await user.type(screen.getByLabelText('Custom emoji'), '🦄')
     await user.click(screen.getByRole('button', { name: /create/i }))
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
     expect(onSubmit.mock.calls[0][0]).toMatchObject({ emoji: '🦄' })

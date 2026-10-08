@@ -1,7 +1,7 @@
 import type * as TanStackRouter from '@tanstack/react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { render, screen } from '@/test/test-utils'
+import { render, screen, waitFor } from '@/test/test-utils'
 
 import { ScanToJoinDialog } from './scan-to-join-dialog'
 
@@ -48,7 +48,7 @@ function renderDialog() {
 }
 
 async function simulateScan(text: string) {
-  await vi.waitFor(() => expect(mocks.scanCallback).not.toBeNull())
+  await waitFor(() => expect(mocks.scanCallback).not.toBeNull())
   mocks.scanCallback?.({ getText: () => text }, undefined)
 }
 
@@ -82,7 +82,7 @@ describe('ScanToJoinDialog', () => {
 
     await simulateScan(inviteUrl)
 
-    await vi.waitFor(() =>
+    await waitFor(() =>
       expect(mocks.navigate).toHaveBeenCalledWith({
         to: '/groups/$groupId',
         params: { groupId: 'grp-1' },
@@ -143,7 +143,7 @@ describe('ScanToJoinDialog', () => {
     // no same-origin navigation slipping through underneath.
     await simulateScan(foreignUrl)
     await simulateScan(`${window.location.origin}/groups/grp-1?invite=${TOKEN}`)
-    await vi.waitFor(() =>
+    await waitFor(() =>
       expect(
         screen.getAllByRole('alertdialog', {
           name: 'This code points to another Spliit',

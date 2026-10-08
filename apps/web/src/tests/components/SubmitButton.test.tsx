@@ -3,7 +3,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { describe, expect, it, vi } from 'vitest'
 
 import { SubmitButton } from '@/components/submit-button'
-import { act, render, screen } from '@/test/test-utils'
+import { act, render, screen, waitFor } from '@/test/test-utils'
 
 /**
  * A test wrapper that provides react-hook-form context via FormProvider. It
@@ -64,7 +64,7 @@ describe('SubmitButton', () => {
       await submitPromise
     })
     // Wait for state to settle
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(screen.getByRole('button')).toHaveTextContent('Save')
     })
   })
@@ -91,7 +91,7 @@ describe('SubmitButton', () => {
       resolveSubmit()
       await submitPromise
     })
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(screen.getByRole('button')).not.toBeDisabled()
     })
   })

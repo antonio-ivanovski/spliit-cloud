@@ -28,7 +28,13 @@ export function useLocaleCategoryDictionary(
     let cancelled = false
     void loadLocaleDictionary(locale).then((loaded) => {
       if (cancelled) return
-      setState({ locale, dictionary: loaded })
+      setState((prev) => {
+        // English (and any cached locale) is already available synchronously
+        // via peek; setting a new wrapper object would trigger a redundant
+        // re-render (and an act() warning in tests) with identical data.
+        if (prev.locale === locale && prev.dictionary === loaded) return prev
+        return { locale, dictionary: loaded }
+      })
     })
     return () => {
       cancelled = true
