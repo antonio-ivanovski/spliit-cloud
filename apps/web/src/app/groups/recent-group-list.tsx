@@ -609,7 +609,9 @@ function AcrossGroupsBalanceCard({
                 />
               </div>
               {!peopleBalances.some((person) =>
-                person.currencies.some((currency) => currency.netAmount !== 0),
+                person.currencies.some(
+                  (currency) => currency.groups.length > 0,
+                ),
               ) && <SettledSummary label={tBalances('direction.settledUp')} />}
             </TabsContent>
           </Tabs>
@@ -642,9 +644,20 @@ function PeopleBalanceDirection({
   const rows = people
     .map((person) => ({
       person,
-      currencies: person.currencies.filter((currency) =>
-        isOwed ? currency.netAmount > 0 : currency.netAmount < 0,
-      ),
+      currencies: person.currencies.filter((currency) => {
+        if (isOwed) {
+          if (currency.netAmount > 0) return true
+          return (
+            currency.netAmount === 0 &&
+            currency.groups.some((group) => group.amount > 0)
+          )
+        }
+        if (currency.netAmount < 0) return true
+        return (
+          currency.netAmount === 0 &&
+          currency.groups.some((group) => group.amount < 0)
+        )
+      }),
     }))
     .filter(({ currencies }) => currencies.length > 0)
   const Icon = isOwed ? BanknoteArrowDown : BanknoteArrowUp

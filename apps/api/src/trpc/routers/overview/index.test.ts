@@ -256,6 +256,210 @@ describe('overview financial summaries', () => {
       },
     ])
   })
+
+  it('merges pending invitees sharing one real email across groups and friend ledgers', () => {
+    const result = summarizePeopleBalances(
+      [
+        {
+          id: 'group-1',
+          displayName: 'Imported one',
+          currency: { currency: '$', currencyCode: 'USD' },
+          currentParticipantId: 'alice-1',
+          balances: {
+            'alice-1': { paid: 100, paidFor: 0, total: 100 },
+            'bob-1': { paid: 0, paidFor: 100, total: -100 },
+          },
+        },
+        {
+          id: 'group-2',
+          displayName: 'Imported two',
+          currency: { currency: '$', currencyCode: 'USD' },
+          currentParticipantId: 'alice-2',
+          balances: {
+            'alice-2': { paid: 100, paidFor: 0, total: 100 },
+            'bob-2': { paid: 0, paidFor: 100, total: -100 },
+          },
+        },
+        {
+          id: 'friend-1',
+          displayName: 'Bob',
+          currency: { currency: '$', currencyCode: 'USD' },
+          currentParticipantId: 'alice-3',
+          balances: {
+            'alice-3': { paid: 50, paidFor: 0, total: 50 },
+            'bob-3': { paid: 0, paidFor: 50, total: -50 },
+          },
+        },
+      ],
+      [
+        {
+          id: 'bob-1',
+          name: 'bob@example.com',
+          account: null,
+          inviteEmail: 'bob@example.com',
+        },
+        {
+          id: 'bob-2',
+          name: 'bob@example.com',
+          account: null,
+          inviteEmail: ' Bob@Example.com ',
+        },
+        {
+          id: 'bob-3',
+          name: 'bob@example.com',
+          account: null,
+          inviteEmail: 'bob@example.com',
+        },
+      ],
+    )
+
+    expect(result).toHaveLength(1)
+    expect(result[0]?.key).toBe('email:bob@example.com')
+    expect(result[0]?.currencies).toHaveLength(1)
+    expect(result[0]?.currencies[0]?.netAmount).toBe(250)
+    expect(result[0]?.currencies[0]?.groups).toHaveLength(3)
+  })
+
+  it('folds a pending invite into its accepted account entry', () => {
+    const result = summarizePeopleBalances(
+      [
+        {
+          id: 'group-1',
+          displayName: 'Imported',
+          currency: { currency: '$', currencyCode: 'USD' },
+          currentParticipantId: 'alice-1',
+          balances: {
+            'alice-1': { paid: 100, paidFor: 0, total: 100 },
+            'bob-1': { paid: 0, paidFor: 100, total: -100 },
+          },
+        },
+        {
+          id: 'friend-1',
+          displayName: 'Bob',
+          currency: { currency: '$', currencyCode: 'USD' },
+          currentParticipantId: 'alice-2',
+          balances: {
+            'alice-2': { paid: 50, paidFor: 0, total: 50 },
+            'bob-2': { paid: 0, paidFor: 50, total: -50 },
+          },
+        },
+      ],
+      [
+        {
+          id: 'bob-1',
+          name: 'bob@example.com',
+          account: null,
+          inviteEmail: 'bob@example.com',
+        },
+        {
+          id: 'bob-2',
+          name: 'Bob',
+          account: { id: 'account-bob', name: 'Bob', image: null },
+          inviteEmail: 'bob@example.com',
+        },
+      ],
+      new Map([
+        ['bob@example.com', { id: 'account-bob', name: 'Bob', image: null }],
+      ]),
+    )
+
+    expect(result).toHaveLength(1)
+    expect(result[0]?.key).toBe('account:account-bob')
+    expect(result[0]?.currencies[0]?.netAmount).toBe(150)
+    expect(result[0]?.currencies[0]?.groups).toHaveLength(2)
+  })
+
+  it('never merges placeholder link emails', () => {
+    const result = summarizePeopleBalances(
+      [
+        {
+          id: 'group-1',
+          displayName: 'One',
+          currency: { currency: '$', currencyCode: 'USD' },
+          currentParticipantId: 'alice-1',
+          balances: {
+            'alice-1': { paid: 50, paidFor: 0, total: 50 },
+            'person-1': { paid: 0, paidFor: 50, total: -50 },
+          },
+        },
+        {
+          id: 'group-2',
+          displayName: 'Two',
+          currency: { currency: '$', currencyCode: 'USD' },
+          currentParticipantId: 'alice-2',
+          balances: {
+            'alice-2': { paid: 50, paidFor: 0, total: 50 },
+            'person-2': { paid: 0, paidFor: 50, total: -50 },
+          },
+        },
+      ],
+      [
+        {
+          id: 'person-1',
+          name: 'Link',
+          account: null,
+          inviteEmail: 'abc@link.placeholder.local',
+        },
+        {
+          id: 'person-2',
+          name: 'Link',
+          account: null,
+          inviteEmail: 'xyz@link.placeholder.local',
+        },
+      ],
+    )
+
+    expect(result.map((person) => person.key).sort()).toEqual([
+      'participant:person-1',
+      'participant:person-2',
+    ])
+  })
+
+  it('keeps offsetting groups visible when the net is zero', () => {
+    const result = summarizePeopleBalances(
+      [
+        {
+          id: 'group-1',
+          displayName: 'Owed',
+          currency: { currency: '$', currencyCode: 'USD' },
+          currentParticipantId: 'alice-1',
+          balances: {
+            'alice-1': { paid: 100, paidFor: 0, total: 100 },
+            'bob-1': { paid: 0, paidFor: 100, total: -100 },
+          },
+        },
+        {
+          id: 'group-2',
+          displayName: 'Owe',
+          currency: { currency: '$', currencyCode: 'USD' },
+          currentParticipantId: 'alice-2',
+          balances: {
+            'alice-2': { paid: 0, paidFor: 100, total: -100 },
+            'bob-2': { paid: 100, paidFor: 0, total: 100 },
+          },
+        },
+      ],
+      [
+        {
+          id: 'bob-1',
+          name: 'Bob',
+          account: { id: 'account-bob', name: 'Bob', image: null },
+        },
+        {
+          id: 'bob-2',
+          name: 'Bob',
+          account: { id: 'account-bob', name: 'Bob', image: null },
+        },
+      ],
+    )
+
+    expect(result).toHaveLength(1)
+    expect(result[0]?.currencies[0]?.netAmount).toBe(0)
+    expect(result[0]?.currencies[0]?.groups).toEqual([
+      { groupId: 'group-1', groupName: 'Owed', amount: 100 },
+      { groupId: 'group-2', groupName: 'Owe', amount: -100 },
+    ])
+  })
 })
 
 describe('overviewRouter.get', () => {

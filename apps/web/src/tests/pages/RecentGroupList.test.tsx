@@ -414,6 +414,51 @@ describe('RecentGroupList', () => {
     ).toBeInTheDocument()
   })
 
+  it('shows a zero-net person in both directions with offsetting groups', async () => {
+    mocks.mockUseOverviewQuery.mockReturnValue({
+      data: {
+        groups: [makeGroup()],
+        stats: {
+          balanceSummaries: [],
+          peopleBalances: [
+            {
+              key: 'account:account-bob',
+              name: 'Bob',
+              account: { id: 'account-bob', name: 'Bob', image: null },
+              currencies: [
+                {
+                  currency: '$',
+                  currencyCode: 'USD',
+                  netAmount: 0,
+                  groups: [
+                    {
+                      groupId: 'group-1',
+                      groupName: 'Owed group',
+                      amount: 100,
+                    },
+                    {
+                      groupId: 'group-2',
+                      groupName: 'Owe group',
+                      amount: -100,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      },
+      isLoading: false,
+    })
+
+    const { user } = render(<RecentGroupList />)
+    await user.click(screen.getByRole('tab', { name: 'People' }))
+
+    const overview = within(screen.getByRole('region', { name: 'Balances' }))
+    expect(overview.getAllByText('Bob')).toHaveLength(2)
+    expect(overview.queryByText('Settled up')).not.toBeInTheDocument()
+  })
+
   it('keeps each populated direction independently scrollable', async () => {
     mocks.mockUseOverviewQuery.mockReturnValue({
       data: {

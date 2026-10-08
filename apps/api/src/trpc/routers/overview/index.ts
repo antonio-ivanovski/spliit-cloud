@@ -16,6 +16,7 @@ import { accountSummarySelect } from '../../../lib/api/selects/account-summary'
 import { participantDisplayNameSelect } from '../../../lib/api/selects/participant-display-name'
 import {
   getInvitationDisplayName,
+  isPlaceholderEmail,
   resolveParticipantDisplayName,
 } from '../../../lib/invitations'
 import { createTRPCRouter, protectedProcedure } from '../../init'
@@ -204,6 +205,16 @@ type OverviewPeopleParticipant = {
   id: string
   name: string
   account: { id: string; name: string; image: string | null } | null
+  inviteEmail?: string | null
+}
+
+export function normalizeOverviewInviteEmail(
+  email: string | null | undefined,
+): string | null {
+  const normalized = (email ?? '').trim().toLowerCase()
+  if (!normalized) return null
+  if (isPlaceholderEmail(normalized)) return null
+  return normalized
 }
 
 type PeopleBalanceGroup = {
@@ -228,16 +239,47 @@ export type OverviewPeopleBalance = {
 
 /**
  * Aggregate the current user's suggested settlement legs by counterparty.
- * Account-backed participants are merged across ledgers; name-only participants
- * remain scoped to their ledger participant id.
+ * Account-backed participants are merged across ledgers. Pending invitees
+ * sharing one real invitation email merge even before accept (placeholder link
+ * emails never merge). Pure name-only participants without an email remain
+ * scoped to their ledger participant id.
  */
 export function summarizePeopleBalances(
   groups: OverviewPeopleGroup[],
   participants: OverviewPeopleParticipant[],
+  emailToAccount?: Map<
+    string,
+    { id: string; name: string; image: string | null }
+  >,
 ): OverviewPeopleBalance[] {
   const participantsById = new Map(
     participants.map((participant) => [participant.id, participant]),
   )
+  const resolvedEmailToAccount = new Map<
+    string,
+    { id: string; name: string; image: string | null }
+  >(emailToAccount)
+  const normalizedEmailFor = (
+    participant: OverviewPeopleParticipant,
+  ): string | null => normalizeOverviewInviteEmail(participant.inviteEmail)
+  for (const participant of participants) {
+    const normalized = normalizedEmailFor(participant)
+    if (participant.account && normalized) {
+      if (!resolvedEmailToAccount.has(normalized)) {
+        resolvedEmailToAccount.set(normalized, participant.account)
+      }
+    }
+  }
+  const effectiveAccountFor = (
+    participant: OverviewPeopleParticipant,
+  ): { id: string; name: string; image: string | null } | null => {
+    if (participant.account) return participant.account
+    const normalized = normalizedEmailFor(participant)
+    if (normalized) {
+      return resolvedEmailToAccount.get(normalized) ?? null
+    }
+    return null
+  }
   const people = new Map<
     string,
     OverviewPeopleBalance & {
@@ -261,9 +303,13 @@ export function summarizePeopleBalances(
 
       const participant = participantsById.get(counterpartyId)
       if (!participant) continue
-      const personKey = participant.account
-        ? `account:${participant.account.id}`
-        : `participant:${participant.id}`
+      const effectiveAccount = effectiveAccountFor(participant)
+      const normalizedInviteEmail = normalizedEmailFor(participant)
+      const personKey = effectiveAccount
+        ? `account:${effectiveAccount.id}`
+        : normalizedInviteEmail
+          ? `email:${normalizedInviteEmail}`
+          : `participant:${participant.id}`
       const currencyKey = `${group.currency.currencyCode ?? ''}:${group.currency.currency}`
       const signedAmount =
         leg.to === currentParticipantId ? leg.amount : -leg.amount
@@ -271,8 +317,8 @@ export function summarizePeopleBalances(
       if (!person) {
         person = {
           key: personKey,
-          name: participant.name,
-          account: participant.account,
+          name: effectiveAccount?.name ?? participant.name,
+          account: effectiveAccount,
           currencies: [],
           currenciesByKey: new Map(),
         }
@@ -310,7 +356,6 @@ export function summarizePeopleBalances(
     .map(({ currenciesByKey: _currenciesByKey, ...person }) => ({
       ...person,
       currencies: person.currencies
-        .filter((currency) => currency.netAmount !== 0)
         .map((currency) => ({
           ...currency,
           groups: currency.groups.filter((group) => group.amount !== 0),
@@ -602,7 +647,41 @@ export const overviewRouter = createTRPCRouter({
         id: participant.id,
         name: resolveParticipantDisplayName(participant),
         account: participant.groupMember?.account ?? null,
+        inviteEmail: normalizeOverviewInviteEmail(
+          participant.invitations[0]?.email,
+        ),
       }))
+      const pendingEmails = Array.from(
+        new Set(
+          peopleParticipants
+            .filter(
+              (participant) =>
+                participant.account === null &&
+                participant.inviteEmail !== null,
+            )
+            .map((participant) => participant.inviteEmail as string),
+        ),
+      )
+      const emailToAccount = new Map<
+        string,
+        { id: string; name: string; image: string | null }
+      >()
+      if (pendingEmails.length > 0) {
+        const matchedUsers = await prisma.user.findMany({
+          where: { email: { in: pendingEmails, mode: 'insensitive' } },
+          select: { id: true, name: true, image: true, email: true },
+        })
+        for (const user of matchedUsers) {
+          const normalized = normalizeOverviewInviteEmail(user.email)
+          if (normalized) {
+            emailToAccount.set(normalized, {
+              id: user.id,
+              name: user.name,
+              image: user.image,
+            })
+          }
+        }
+      }
       const peopleBalances = summarizePeopleBalances(
         memberships.map((membership) => ({
           id: membership.group.id,
@@ -617,6 +696,7 @@ export const overviewRouter = createTRPCRouter({
           balances: balancesByLedgerId.get(membership.group.ledger.id) ?? {},
         })),
         peopleParticipants,
+        emailToAccount,
       )
 
       return {

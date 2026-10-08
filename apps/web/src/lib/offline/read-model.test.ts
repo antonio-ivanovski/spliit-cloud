@@ -22,6 +22,7 @@ import {
   snapshotVersion,
   sortGlobalRecords,
   sortGroupRecords,
+  summarizeOfflinePeopleBalances,
 } from './read-model'
 
 const BASE_TIME = new Date('2026-03-08T12:00:00.000Z')
@@ -766,6 +767,100 @@ describe('overview aggregates', () => {
     )
     expect(overview.incompleteGroupCount).toBe(0)
     expect(overview.groups[0]?.availability).toBe('ready')
+  })
+})
+
+describe('offline people balances', () => {
+  it('merges pending invitees sharing one real email', () => {
+    const result = summarizeOfflinePeopleBalances(
+      [
+        {
+          id: 'g1',
+          displayName: 'One',
+          currency: { currency: '$', currencyCode: 'USD' },
+          currentParticipantId: 'alice-1',
+          balances: {
+            'alice-1': { total: 100 },
+            'bob-1': { total: -100 },
+          },
+          suggestedSettlements: [{ from: 'bob-1', to: 'alice-1', amount: 100 }],
+        },
+        {
+          id: 'g2',
+          displayName: 'Two',
+          currency: { currency: '$', currencyCode: 'USD' },
+          currentParticipantId: 'alice-2',
+          balances: {
+            'alice-2': { total: 60 },
+            'bob-2': { total: -60 },
+          },
+          suggestedSettlements: [{ from: 'bob-2', to: 'alice-2', amount: 60 }],
+        },
+      ],
+      [
+        {
+          id: 'bob-1',
+          name: 'bob@example.com',
+          account: null,
+          inviteEmail: 'bob@example.com',
+        },
+        {
+          id: 'bob-2',
+          name: 'bob@example.com',
+          account: null,
+          inviteEmail: 'BOB@example.com',
+        },
+      ],
+    )
+
+    expect(result).toHaveLength(1)
+    expect(result[0]?.key).toBe('email:bob@example.com')
+    expect(result[0]?.currencies[0]?.netAmount).toBe(160)
+  })
+
+  it('keeps offsetting groups visible when the net is zero', () => {
+    const result = summarizeOfflinePeopleBalances(
+      [
+        {
+          id: 'g1',
+          displayName: 'Owed',
+          currency: { currency: '$', currencyCode: 'USD' },
+          currentParticipantId: 'alice-1',
+          balances: {
+            'alice-1': { total: 100 },
+            'bob-1': { total: -100 },
+          },
+          suggestedSettlements: [{ from: 'bob-1', to: 'alice-1', amount: 100 }],
+        },
+        {
+          id: 'g2',
+          displayName: 'Owe',
+          currency: { currency: '$', currencyCode: 'USD' },
+          currentParticipantId: 'alice-2',
+          balances: {
+            'alice-2': { total: -100 },
+            'bob-2': { total: 100 },
+          },
+          suggestedSettlements: [{ from: 'alice-2', to: 'bob-2', amount: 100 }],
+        },
+      ],
+      [
+        {
+          id: 'bob-1',
+          name: 'Bob',
+          account: { id: 'account-bob', name: 'Bob', image: null },
+        },
+        {
+          id: 'bob-2',
+          name: 'Bob',
+          account: { id: 'account-bob', name: 'Bob', image: null },
+        },
+      ],
+    )
+
+    expect(result).toHaveLength(1)
+    expect(result[0]?.currencies[0]?.netAmount).toBe(0)
+    expect(result[0]?.currencies[0]?.groups).toHaveLength(2)
   })
 })
 

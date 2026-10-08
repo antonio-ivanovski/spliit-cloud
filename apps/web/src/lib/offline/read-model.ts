@@ -845,14 +845,32 @@ type PeopleInputParticipant = {
   id: string
   name: string
   account: { id: string; name: string; image: string | null } | null
+  inviteEmail?: string | null
+}
+
+const PLACEHOLDER_EMAIL_SUFFIX = '.placeholder.local'
+
+function normalizeOfflineInviteEmail(
+  email: string | null | undefined,
+): string | null {
+  const normalized = (email ?? '').trim().toLowerCase()
+  if (!normalized) return null
+  if (normalized.endsWith(PLACEHOLDER_EMAIL_SUFFIX)) return null
+  return normalized
 }
 
 /**
  * Pure people-balances helper extracted from the existing overview route
  * (`summarizePeopleBalances`). Counterparty identity merges account-backed
- * participants across ledgers; name-only participants stay ledger-scoped.
- * Callers feed stored server balances + participant account identities from
- * ready snapshots (never filtered pages).
+ * participants across ledgers and pending invitees sharing one real invitation
+ * email; placeholder link emails and pure name-only participants stay
+ * ledger-scoped. Zero-net currencies with offsetting groups are kept; only
+ * ledgers without amounts are hidden. Callers feed stored server balances +
+ * participant account identities from ready snapshots (never filtered pages).
+ * Offline limitation: snapshots carry PENDING invitations only, so a pending
+ * invite folds into its accepted account entry only when the snapshot still
+ * links both sides. Full pending-to-accepted folding happens online via the
+ * User email lookup.
  */
 export function summarizeOfflinePeopleBalances(
   groups: PeopleInputGroup[],
@@ -861,6 +879,26 @@ export function summarizeOfflinePeopleBalances(
   const byId = new Map(
     participants.map((participant) => [participant.id, participant]),
   )
+  const emailToAccount = new Map<
+    string,
+    { id: string; name: string; image: string | null }
+  >()
+  for (const participant of participants) {
+    const inviteEmail = normalizeOfflineInviteEmail(participant.inviteEmail)
+    if (participant.account && inviteEmail) {
+      if (!emailToAccount.has(inviteEmail)) {
+        emailToAccount.set(inviteEmail, participant.account)
+      }
+    }
+  }
+  const effectiveAccountFor = (
+    participant: PeopleInputParticipant,
+  ): { id: string; name: string; image: string | null } | null => {
+    if (participant.account) return participant.account
+    const inviteEmail = normalizeOfflineInviteEmail(participant.inviteEmail)
+    if (inviteEmail) return emailToAccount.get(inviteEmail) ?? null
+    return null
+  }
   const people = new Map<
     string,
     OverviewPeopleBalance & {
@@ -881,9 +919,13 @@ export function summarizeOfflinePeopleBalances(
       if (counterpartyId === null) continue
       const participant = byId.get(counterpartyId)
       if (!participant) continue
-      const personKey = participant.account
-        ? `account:${participant.account.id}`
-        : `participant:${participant.id}`
+      const effectiveAccount = effectiveAccountFor(participant)
+      const inviteEmail = normalizeOfflineInviteEmail(participant.inviteEmail)
+      const personKey = effectiveAccount
+        ? `account:${effectiveAccount.id}`
+        : inviteEmail
+          ? `email:${inviteEmail}`
+          : `participant:${participant.id}`
       const currencyKey = `${group.currency.currencyCode ?? ''}:${group.currency.currency}`
       const signedAmount =
         leg.to === currentParticipantId ? leg.amount : -leg.amount
@@ -891,8 +933,8 @@ export function summarizeOfflinePeopleBalances(
       if (!person) {
         person = {
           key: personKey,
-          name: participant.name,
-          account: participant.account,
+          name: effectiveAccount?.name ?? participant.name,
+          account: effectiveAccount,
           currencies: [],
           currenciesByKey: new Map(),
         }
@@ -928,7 +970,6 @@ export function summarizeOfflinePeopleBalances(
     .map(({ currenciesByKey: _ignored, ...person }) => ({
       ...person,
       currencies: person.currencies
-        .filter((currency) => currency.netAmount !== 0)
         .map((currency) => ({
           ...currency,
           groups: currency.groups.filter((group) => group.amount !== 0),
@@ -1035,6 +1076,8 @@ export function buildOfflineOverview(
     readyOverviews.push(record.payload.overview)
     const balances = record.payload.balances
     const groupParticipants = snapshotGroupEntity(record).participants ?? []
+    const inviteEmailByParticipantId =
+      snapshotInviteEmailByParticipantId(record)
     for (const participant of groupParticipants) {
       if (!peopleParticipants.has(participant.id)) {
         peopleParticipants.set(participant.id, {
@@ -1047,6 +1090,7 @@ export function buildOfflineOverview(
                 image: participant.account.image ?? null,
               }
             : null,
+          inviteEmail: inviteEmailByParticipantId.get(participant.id) ?? null,
         })
       }
     }
@@ -1056,6 +1100,7 @@ export function buildOfflineOverview(
           id: participant.id,
           name: participant.name,
           account: null,
+          inviteEmail: inviteEmailByParticipantId.get(participant.id) ?? null,
         })
       }
     }
@@ -1116,6 +1161,10 @@ function snapshotGroupEntity(record: GroupRecord): {
     accountId?: string
     ledgerParticipant?: { id: string } | null
   }>
+  invitations?: Array<{
+    email?: string | null
+    ledgerParticipantId?: string | null
+  }>
 } {
   const output = record.payload.group as unknown as {
     group?: {
@@ -1128,6 +1177,10 @@ function snapshotGroupEntity(record: GroupRecord): {
         accountId?: string
         ledgerParticipant?: { id: string } | null
       }>
+      invitations?: Array<{
+        email?: string | null
+        ledgerParticipantId?: string | null
+      }>
     }
     participants?: Array<{
       id: string
@@ -1137,6 +1190,10 @@ function snapshotGroupEntity(record: GroupRecord): {
     members?: Array<{
       accountId?: string
       ledgerParticipant?: { id: string } | null
+    }>
+    invitations?: Array<{
+      email?: string | null
+      ledgerParticipantId?: string | null
     }>
   }
   return (output.group ?? output) as {
@@ -1149,7 +1206,26 @@ function snapshotGroupEntity(record: GroupRecord): {
       accountId?: string
       ledgerParticipant?: { id: string } | null
     }>
+    invitations?: Array<{
+      email?: string | null
+      ledgerParticipantId?: string | null
+    }>
   }
+}
+
+function snapshotInviteEmailByParticipantId(
+  record: GroupRecord,
+): Map<string, string> {
+  const entity = snapshotGroupEntity(record)
+  const map = new Map<string, string>()
+  for (const invitation of entity.invitations ?? []) {
+    if (!invitation.ledgerParticipantId) continue
+    const normalized = normalizeOfflineInviteEmail(invitation.email)
+    if (normalized && !map.has(invitation.ledgerParticipantId)) {
+      map.set(invitation.ledgerParticipantId, normalized)
+    }
+  }
+  return map
 }
 
 function resolveCurrentParticipantId(record: GroupRecord): string | null {

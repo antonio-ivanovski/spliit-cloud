@@ -27,5 +27,6 @@ All your member groups remain available for read-only offline use: complete expe
 - The signed-out landing page no longer jumps back to the top while loading (`TBD` by @TBD)
 - Pages that fail to load no longer leave a blank screen, offering a retry option instead (`TBD` by @TBD)
 - The CSV importer detects Cost-like amount columns instead of blocking on equally-plausible balance columns, and unresolved column confirmations now show a prominent alert with a confirm action instead of silently disabling Continue (`TBD` by @TBD)
+- The dashboard People tab now combines imported-group and one-on-one balances for the same person — including pending email invites — and keeps offsetting groups visible instead of cancelling them out (`TBD` by @TBD). Thanks @natekspencer for opening [#153](https://github.com/antonio-ivanovski/spliit-cloud/issues/153)
 
 **Full Changelog**: TBD
