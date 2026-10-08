@@ -7,7 +7,7 @@ import {
   getCurrency,
 } from '@spliit/domain'
 
-import { getModel } from './ai'
+import { getVoiceModel } from './ai'
 import { buildLocaleHint } from './ai/prompt'
 import { timeoutSecondsToMs } from './ai/timeout'
 import { env } from './env'
@@ -187,7 +187,9 @@ export async function extractExpenseInformationFromAudio(
     .toISOString()
     .slice(0, 10)
   const { output } = await generateText({
-    model: await getModel(env.AI_VOICE_MODEL),
+    // The Responses API rejects audio file parts, so voice extraction goes
+    // through the chat-completions client (see getVoiceModel).
+    model: await getVoiceModel(env.AI_VOICE_MODEL),
     // Bound slow self-hosted models so the tRPC handler cannot hang, and
     // fail fast instead of retrying an already-timed-out request.
     maxRetries: 0,

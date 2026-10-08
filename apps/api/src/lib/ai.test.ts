@@ -157,3 +157,68 @@ describe('getModel OpenCode Go headers', () => {
     expect(headers).toEqual({})
   })
 })
+
+describe('getVoiceModel audio routing', () => {
+  let originalProvider: unknown
+  let originalBaseUrl: unknown
+  let originalApiKey: unknown
+
+  beforeEach(async () => {
+    const { env } = await import('./env')
+    originalProvider ??= env.AI_PROVIDER
+    originalBaseUrl ??= env.AI_BASE_URL
+    originalApiKey ??= env.AI_API_KEY
+    Object.values(mocks).forEach((fn) => fn.mockReset())
+    env.AI_API_KEY = 'test-key'
+  })
+
+  afterEach(async () => {
+    const { env } = await import('./env')
+    env.AI_PROVIDER = originalProvider as never
+    env.AI_BASE_URL = originalBaseUrl as never
+    env.AI_API_KEY = originalApiKey as never
+  })
+
+  it('routes the openai provider through chat completions so audio file parts map to input_audio', async () => {
+    vi.resetModules()
+    const { env } = await import('./env')
+    const chat = vi.fn((id: string) => ({ id }))
+    const responses = vi.fn((id: string) => ({ id }))
+    mocks.createOpenAI.mockReturnValue({ chat, responses })
+    env.AI_PROVIDER = 'openai'
+    env.AI_BASE_URL = 'https://api.openai.com/v1'
+    env.AI_API_KEY = 'test-key'
+    const { getVoiceModel } = await import('./ai')
+    const model = await getVoiceModel('gpt-4o-mini-audio-preview')
+    expect(chat).toHaveBeenCalledTimes(1)
+    expect(chat).toHaveBeenCalledWith('gpt-4o-mini-audio-preview')
+    expect(responses).not.toHaveBeenCalled()
+    expect(model).toEqual({ id: 'gpt-4o-mini-audio-preview' })
+  })
+
+  it('delegates non-openai providers to the shared text-path client', async () => {
+    for (const provider of [
+      'anthropic',
+      'google',
+      'openai-compatible',
+    ] as const) {
+      vi.resetModules()
+      const { env } = await import('./env')
+      const factory =
+        provider === 'anthropic'
+          ? mocks.createAnthropic
+          : provider === 'google'
+            ? mocks.createGoogle
+            : mocks.createOpenAICompatible
+      factory.mockReset()
+      factory.mockReturnValue((id: string) => ({ id }))
+      env.AI_PROVIDER = provider
+      env.AI_BASE_URL = 'https://example.com/v1'
+      env.AI_API_KEY = 'test-key'
+      const { getVoiceModel } = await import('./ai')
+      const model = await getVoiceModel('test-model')
+      expect(factory).toHaveBeenCalledTimes(1)
+      expect(model).toEqual({ id: 'test-model' })
+    }
+  })
+})

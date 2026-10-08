@@ -63,3 +63,20 @@ export async function getModel(modelId: string) {
     }
   }
 }
+
+/**
+ * Audio-input (voice) model. The default {@link getModel} uses the OpenAI
+ * Responses API, whose prompt converter rejects audio file parts (`file part
+ * media type audio/wav`). Chat Completions maps them to `input_audio` instead,
+ * so the voice expense path must go through `openai.chat`. Other providers
+ * share the text-path client.
+ */
+export async function getVoiceModel(modelId: string) {
+  if (env.AI_PROVIDER !== 'openai') {
+    return getModel(modelId)
+  }
+  const headers = getOpenCodeGoHeaders()
+  const { createOpenAI } = await import('@ai-sdk/openai')
+  openai ??= createOpenAI({ ...options, headers })
+  return openai.chat(modelId)
+}

@@ -19,5 +19,6 @@ All your member groups remain available for read-only offline use: complete expe
 
 - Offline reads recover after connection failures, continue local pagination after disconnecting, and fence cached data against stale sign-in checks (`TBD` by @TBD)
 - Account settings toggles that need a connection are now consistently disabled offline (`TBD` by @TBD)
+- Create expenses by voice again: recordings no longer fail with a processing error (`TBD` by @TBD)
 
 **Full Changelog**: TBD

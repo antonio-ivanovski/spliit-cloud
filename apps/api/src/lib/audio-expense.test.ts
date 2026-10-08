@@ -4,7 +4,9 @@ vi.mock('ai', () => ({
   Output: { json: vi.fn(() => ({ type: 'json' })) },
   generateText: vi.fn(),
 }))
-vi.mock('./ai', () => ({ getModel: vi.fn(async () => ({ modelId: 'test' })) }))
+vi.mock('./ai', () => ({
+  getVoiceModel: vi.fn(async () => ({ modelId: 'test' })),
+}))
 vi.stubEnv('AI_VOICE_MODEL', 'test-voice-model')
 
 const { generateText } = await import('ai')
@@ -110,6 +112,19 @@ describe('audio expense extraction', () => {
 
     expect(result.currencyCode).toBe('XYZ')
     expect(result.issues).toEqual(['unsupportedCurrency'])
+  })
+
+  it('routes voice extraction through the audio-capable chat model client', async () => {
+    const { getVoiceModel } = await import('./ai')
+    generateTextMock.mockResolvedValue({ output: {} } as never)
+
+    await extractExpenseInformationFromAudio({
+      audioDataUrl: 'data:audio/wav;base64,AAAA',
+      group,
+      participants: [],
+    })
+
+    expect(vi.mocked(getVoiceModel)).toHaveBeenCalledWith('test-voice-model')
   })
 
   it('bounds the provider call with the configured timeout and no retries', async () => {
