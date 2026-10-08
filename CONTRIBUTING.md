@@ -12,7 +12,9 @@ For project rules, see [AGENTS.md](./AGENTS.md). For behavior, see [CODE_OF_COND
 
 ## Development setup
 
-Bun monorepo. All commands through Bun.
+Bun monorepo. All commands through Bun. Local dev is served over portless
+HTTPS names (prerequisite: Node 24+, `npm install -g portless`, one-time
+`portless trust`).
 
 Local dev runs in three explicit steps:
 
@@ -21,14 +23,22 @@ bun install
 cp .env.example .env
 bun dev:up                       # starts postgres, maxio, maildev (compose.dev.yaml)
 bun prisma-migrate
-bun dev                          # web :3000, api :3001, worker admin :3003
+sudo portless proxy start -p 443 --https  # once per boot
+bun dev                          # web https://spliit.localhost, api https://api.spliit.localhost, worker admin https://jobs.spliit.localhost
 ```
+
+Pre-starting the proxy matters: otherwise each service auto-starts the
+default plain-HTTP proxy and the https origins won't resolve. Verify with
+`portless list`. Infra (postgres :5432, maxio :9000, maildev :1080/:1025)
+stays on localhost ports. `PORTLESS=0` bypass uses plain ports
+(:3000/:3001/:3003) with the https URL envs overridden back to localhost and
+the proxy stopped.
 
 Opt-in only (not started by `bun dev` — run manually when needed):
 
 ```bash
-bun --filter @spliit/mcp dev:mcp                # MCP on :3002
-bun --filter @spliit/webhook-relay dev:relay    # Cloudflare relay on :8787
+bun --filter @spliit/mcp dev:mcp                # MCP on https://mcp.spliit.localhost
+bun --filter @spliit/webhook-relay dev:relay    # Cloudflare relay on https://relay.spliit.localhost
 ```
 
 Service state lives under `storage/` at the repository root. Stop local

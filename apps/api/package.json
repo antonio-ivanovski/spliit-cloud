@@ -35,7 +35,8 @@
     "bundle:runtime": "bun build src/server.ts --target=bun --production --keep-names --outfile=dist/server.js",
     "check-formatting": "oxfmt --check .",
     "check-types": "tsc --noEmit",
-    "dev": "bun --env-file=../../.env --watch src/server.ts",
+    "dev": "portless api.spliit bun --env-file=../../.env --watch src/server.ts",
+    "dev:app": "bun --env-file=../../.env --watch src/server.ts",
     "email": "email dev --dir src/lib/mail/templates --port 3002",
     "format": "oxfmt .",
     "generate-openapi": "bun run scripts/generate-openapi.ts",
@@ -94,5 +95,9 @@
     "typescript": "7.0.2",
     "vitest": "^5.0.1",
     "vitest-mock-extended": "^5.1.1"
+  },
+  "portless": {
+    "name": "api.spliit",
+    "script": "dev:app"
   }
 }

@@ -173,7 +173,12 @@ export default defineConfig({
     }),
   ],
   server: {
-    port: 3000,
+    // Portless assigns the app port via PORT; fall back to the PORTLESS=0
+    // bypass port when PORT is unset. strictPort keeps a collision loud
+    // instead of silently shifting to a port the proxy does not route to.
+    host: '127.0.0.1',
+    port: Number(process.env.PORT || 3000),
+    strictPort: true,
     allowedHosts: publicWebHosts,
   },
   preview: {

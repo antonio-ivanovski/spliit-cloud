@@ -27,8 +27,8 @@
     "check-formatting": "oxfmt --check .",
     "check-types": "tsc --noEmit",
     "deploy": "mcp-use deploy",
-    "dev:mcp": "bun --env-file=../../.env run dev:server",
-    "dev:server": "mcp-use dev --port 3002 --no-open",
+    "dev:mcp": "portless mcp.spliit bun --env-file=../../.env run dev:server",
+    "dev:server": "mcp-use dev --port ${PORT:-3002} --no-open",
     "format": "oxfmt .",
     "lint": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives .",
     "lint:fix": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives --fix .",
@@ -62,5 +62,9 @@
     "typescript": "7.0.2",
     "vite": "^8.3.0",
     "vitest": "^5.0.1"
+  },
+  "portless": {
+    "name": "mcp.spliit",
+    "script": "dev:server"
   }
 }

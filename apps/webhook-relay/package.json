@@ -7,7 +7,8 @@
     "check-formatting": "oxfmt --check .",
     "check-types": "tsc --noEmit",
     "deploy": "wrangler deploy",
-    "dev:relay": "wrangler dev",
+    "dev:relay": "portless relay.spliit wrangler dev --port ${PORT:-8787}",
+    "dev:relay:app": "wrangler dev --port ${PORT:-8787}",
     "format": "oxfmt .",
     "lint": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives .",
     "lint:fix": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives --fix .",
@@ -19,5 +20,9 @@
     "typescript": "7.0.2",
     "vitest": "^5.0.1",
     "wrangler": "^4.135.0"
+  },
+  "portless": {
+    "name": "relay.spliit",
+    "script": "dev:relay:app"
   }
 }

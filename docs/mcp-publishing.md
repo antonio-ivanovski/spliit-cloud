@@ -11,18 +11,21 @@ deployed to stable public HTTPS domains. Replace the example domains throughout:
 ChatGPT is the primary release target. Claude uses the same MCP endpoint and
 OAuth flow.
 
-For local Inspector-only testing, localhost values are sufficient. For
+For local Inspector-only testing, portless HTTPS names are sufficient. For
 ChatGPT or Claude, the MCP, API, and web services must each have public HTTPS
-origins. Start one tunnel per service:
+origins. Start one tunnel per service (portless serves local HTTPS, so pass
+`--no-tls-verify`):
 
 ```bash
-cloudflared tunnel --url http://localhost:3002  # MCP
-cloudflared tunnel --url http://localhost:3001  # API
-cloudflared tunnel --url http://localhost:3000  # Web
+cloudflared tunnel --url https://mcp.spliit.localhost --no-tls-verify  # MCP
+cloudflared tunnel --url https://api.spliit.localhost --no-tls-verify  # API
+cloudflared tunnel --url https://spliit.localhost --no-tls-verify      # Web
 ```
 
 For local development, run the MCP server manually (it is not part of
-`bun dev`): `bun --filter @spliit/mcp dev:mcp` (defaults to
+`bun dev`): `bun --filter @spliit/mcp dev:mcp` (served at
+`https://mcp.spliit.localhost`; plain-port bypass
+`PORTLESS=0 bun --filter @spliit/mcp dev:mcp` listens on
 `http://localhost:3002`).
 
 ## 1. Configure production

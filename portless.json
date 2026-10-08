@@ -1,0 +1,7 @@
+{
+  "apps": {
+    "apps/web": { "name": "spliit", "script": "dev:app" },
+    "apps/api": { "name": "api.spliit", "script": "dev:app" },
+    "apps/worker": { "name": "jobs.spliit", "script": "dev:app" }
+  }
+}

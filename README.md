@@ -154,6 +154,10 @@ features, OAuth providers, Web Push, and the MCP assistant are optional.
 
 ## Run locally
 
+Prerequisites: Bun, Docker, Node 24+, and portless
+(`npm install -g portless`, then `portless trust` once so browsers accept the
+local HTTPS certificate).
+
 1. Clone the repository (or your fork if you intend to contribute).
 2. Run `bun install` to install dependencies.
 3. Copy `.env.example` to `.env` (`cp .env.example .env`).
@@ -162,24 +166,45 @@ features, OAuth providers, Web Push, and the MCP assistant are optional.
    ```bash
    bun dev:up                       # postgres, maxio, maildev via compose.dev.yaml
    bun prisma-migrate
-    bun dev                          # web on :3000, api on :3001, worker admin on :3003
+   sudo portless proxy start -p 443 --https  # once per boot; serves the https names below
+   bun dev                          # web, api, worker admin via portless
    ```
+
+   Pre-starting the proxy matters: otherwise each service auto-starts the
+   default plain-HTTP proxy and the https origins won't resolve. Verify with
+   `portless list`. People without portless installed can run the underlying
+   commands directly (`dev:app` / `dev:server` / `dev:relay:app` scripts).
+
+   | Service      | URL (portless)                 | Bypass (`PORTLESS=0`)     |
+   | ------------ | ------------------------------ | ------------------------- |
+   | Web          | https://spliit.localhost       | http://localhost:3000     |
+   | API          | https://api.spliit.localhost   | http://localhost:3001     |
+   | Worker admin | https://jobs.spliit.localhost  | http://localhost:3003     |
+   | MCP          | https://mcp.spliit.localhost   | http://localhost:3002     |
+   | Relay        | https://relay.spliit.localhost | http://localhost:8787     |
+   | PostgreSQL   | localhost:5432                 | localhost:5432            |
+   | MaxIO        | http://localhost:9000/ui/      | http://localhost:9000/ui/ |
+   | MailDev      | http://localhost:1080          | http://localhost:1080     |
+
+   Infra (PostgreSQL, MaxIO, MailDev) stays on localhost ports in both modes.
+   The bypass also needs the https URL envs overridden back to plain ports
+   (`VITE_API_URL` + `BETTER_AUTH_URL` → `http://localhost:3001`,
+   `WEB_ORIGINS` → `http://localhost:3000`) with the proxy stopped.
+
+   Switching to the https names changes the OAuth callback origins to
+   `https://api.spliit.localhost/auth/callback/...` — re-register them in
+   your Google/GitHub provider consoles. Existing local sessions/cookies are
+   invalidated by the origin change; sign in again.
 
    Opt-in only (not started by `bun dev` — run manually when needed):
 
    ```bash
-   bun --filter @spliit/mcp dev:mcp                # MCP on :3002
-   bun --filter @spliit/webhook-relay dev:relay    # Cloudflare relay on :8787
+   bun --filter @spliit/mcp dev:mcp                # MCP on https://mcp.spliit.localhost
+   bun --filter @spliit/webhook-relay dev:relay    # Cloudflare relay on https://relay.spliit.localhost
    ```
 
    `bun dev:down` stops the local service containers. Remove `storage/` for a
    clean reset of all local service state.
-
-Local services exposed by `bun dev:up`:
-
-- PostgreSQL on `localhost:5432`
-- MaxIO object storage at http://localhost:9000/ui/
-- MailDev email inbox at http://localhost:1080
 
 State for the local services lives under `storage/` at the repo root. The
 MaxIO bucket CORS/public-read config lives at

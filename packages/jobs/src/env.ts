@@ -36,7 +36,13 @@ const envSchema = z.object({
     .int()
     .positive()
     .default(7 * 86_400),
-  JOBS_ADMIN_PORT: z.coerce.number().int().positive().default(3003),
+  // Portless assigns the app port via PORT; fall back to the PORTLESS=0
+  // bypass port (3003) when neither JOBS_ADMIN_PORT nor PORT is set. An
+  // explicit JOBS_ADMIN_PORT always wins (e.g. production containers).
+  JOBS_ADMIN_PORT: z.preprocess(
+    (value) => value ?? process.env.PORT ?? 3003,
+    z.coerce.number().int().positive().default(3003),
+  ),
   JOBS_ADMIN_HOST: z.string().min(1).default('0.0.0.0'),
   HEALTH_RUNNABLE_LAG_THRESHOLD_MS: z.coerce
     .number()
