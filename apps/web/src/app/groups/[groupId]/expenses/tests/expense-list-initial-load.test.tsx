@@ -4,6 +4,7 @@ import { render, screen } from '@/test/test-utils'
 
 const mocks = vi.hoisted(() => ({
   mockUseOfflineExpenses: vi.fn(),
+  mockUseInfiniteQuery: vi.fn(),
   mockUseCurrentGroup: vi.fn(),
   mockUseCurrentGroupOrNull: vi.fn(),
   mockUseCurrentAccount: vi.fn(() => ({ data: null })),
@@ -20,6 +21,9 @@ vi.mock('@/trpc/client', () => ({
   trpc: {
     groups: {
       expenses: {
+        list: {
+          useInfiniteQuery: mocks.mockUseInfiniteQuery,
+        },
         commonCurrencies: {
           useQuery: () => ({ data: { currencies: ['EUR'] }, isLoading: false }),
         },
@@ -139,6 +143,13 @@ describe('ExpenseList initial load', () => {
       meta: { availability: 'loading', source: 'download', refreshing: true },
       hasMore: false,
       isLoading: true,
+      fetchNextPage: vi.fn(),
+      refetch: vi.fn(),
+    })
+    mocks.mockUseInfiniteQuery.mockReturnValue({
+      data: undefined,
+      isLoading: true,
+      isPlaceholderData: false,
       fetchNextPage: vi.fn(),
       refetch: vi.fn(),
     })

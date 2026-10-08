@@ -558,7 +558,6 @@ export function ExpensePreviewModal({
                     </p>
                   </div>
                 )}
-
                 <ExpenseItemsSummary
                   items={expense.items}
                   currency={resolveExpenseItemsCurrency(
