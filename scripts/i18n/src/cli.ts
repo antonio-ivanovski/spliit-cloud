@@ -246,8 +246,14 @@ function help() {
     'Commands:',
     '  add <path> "<value>"            Add a key to en-US (creates intermediate objects).',
     '  add --stdin                     Read {"path": "value", ...} from stdin and add to en-US.',
+    '  add --file <path>               Read {"path": "value", ...} from a JSON file and add to en-US.',
+    '                                  Prefer --file over --stdin for agent workflows: write the JSON',
+    '                                  with the Write tool, then pass the file path (no shell quoting).',
     '  set <locale> <path> "<value>"   Set a translation in any single locale.',
     '  set <locale> --stdin            Batch-set from stdin JSON map {"path":"value",...}.',
+    '  set <locale> --file <path>      Batch-set from a JSON file map {"path":"value",...}.',
+    '                                  Prefer --file over --stdin for agent workflows: write the JSON',
+    '                                  with the Write tool, then pass the file path (no shell quoting).',
     '                                  Rejects English copies unless auto-allowed or --allow-english.',
     '                                  --dry-run validates without writing.',
     '  remove <path>                   Remove a key from every locale where it exists (cleanup).',
@@ -257,6 +263,8 @@ function help() {
     '  get <locale> <path>             Print the current value at a path.',
     '  get <key...> --locales a,b      Multi-key multi-locale read (--json recommended).',
     '  get --stdin --locales a,b       Read keys from stdin (JSON array or newline list).',
+    '  get --file <path> --locales a,b Read keys from a file (JSON array or newline list).',
+    '                                  Prefer --file over --stdin for agent workflows.',
     '  list [locale]                   Print flat dotted keys (defaults to en-US).',
     '  pack --locale <l> | --locales a,b [--keys k1,k2] [--refs a,b] [--usages]',
     '       [--changes-only] [--limit N] [--offset N] [--json]',
@@ -291,17 +299,25 @@ function help() {
     '  - `add` only touches en-US.json; `remove` cleans the key from every locale.',
     '  - Never paste English into another locale as a placeholder — `set` rejects it.',
     '  - After editing en-US: `bun i18n plan` → oneshot / one subagent / family parallel.',
-    '  - New/backfill locale: loop `bun i18n next --locale L` → set --stdin until done.',
-    '  - Translators: `pack`/`next` → translate → `set --stdin` → `check`.',
+    '  - New/backfill locale: loop `bun i18n next --locale L` → set --file until done.',
+    '  - Translators: `pack`/`next` → translate → `set --file` → `check`.',
+    '  - Agents: never pipe translations via echo/printf into --stdin and never',
+    '  - inspect messages with python/node one-liners — write JSON with the Write',
+    '  - tool and use --file; read via `get --locales ... --json` or `pack --json`.',
     '  - Use `init-locale --family … --guide path/to/guide.md` to register a brand-new language.',
   ].join('\n')
 }
 
-function parseStdinKeys(): string[] {
-  const raw = readFileSync(0, 'utf8').trim()
+function parseKeysRaw(rawInput: string): string[] {
+  const raw = rawInput.trim()
   if (!raw) return []
   if (raw.startsWith('[')) {
-    const arr = JSON.parse(raw) as unknown
+    let arr: unknown
+    try {
+      arr = JSON.parse(raw)
+    } catch (e) {
+      die(`invalid JSON key list: ${(e as Error).message}`, 2)
+    }
     if (!Array.isArray(arr) || arr.some((k) => typeof k !== 'string')) {
       die('stdin JSON must be an array of key strings', 2)
     }
@@ -311,6 +327,46 @@ function parseStdinKeys(): string[] {
     .split(/\r?\n/)
     .map((l) => l.trim())
     .filter(Boolean)
+}
+
+function getFileFlag(
+  flags: Set<string>,
+  kvFlags: Record<string, string>,
+): string | undefined {
+  if (flags.has('file')) {
+    die('usage: --file <path> requires a file path', 2)
+  }
+  const file = kvFlags.file
+  if (file !== undefined && file.trim() === '') {
+    die('usage: --file <path> requires a file path', 2)
+  }
+  return file
+}
+
+function readJsonMapInput(
+  source: string,
+  rawInput: string,
+): Record<string, unknown> {
+  let obj: Record<string, unknown>
+  try {
+    obj = JSON.parse(rawInput) as Record<string, unknown>
+  } catch (e) {
+    const where = source === 'stdin' ? 'stdin' : `file ${source}`
+    die(`invalid JSON in ${where}: ${(e as Error).message}`, 2)
+  }
+  if (obj === null || typeof obj !== 'object' || Array.isArray(obj)) {
+    const where = source === 'stdin' ? 'stdin' : `file ${source}`
+    die(`JSON in ${where} must be an object map {"path": "value", ...}`, 2)
+  }
+  return obj
+}
+
+function readInputFile(source: string): string {
+  try {
+    return readFileSync(source, 'utf8')
+  } catch (e) {
+    die(`cannot read --file ${source}: ${(e as Error).message ?? String(e)}`, 2)
+  }
 }
 
 function printSetResult(
@@ -337,9 +393,15 @@ async function main() {
 
   switch (cmd) {
     case 'add': {
-      if (flags.has('stdin')) {
-        const raw = readFileSync(0, 'utf8')
-        const obj = JSON.parse(raw) as Record<string, unknown>
+      const file = getFileFlag(flags, kvFlags)
+      if (flags.has('stdin') && file !== undefined) {
+        die('--stdin and --file are mutually exclusive', 2)
+      }
+      if (flags.has('stdin') || file !== undefined) {
+        const source = file !== undefined ? file : 'stdin'
+        const raw =
+          file !== undefined ? readInputFile(file) : readFileSync(0, 'utf8')
+        const obj = readJsonMapInput(source, raw)
         let count = 0
         for (const [path, value] of Object.entries(obj)) {
           if (typeof value !== 'string') {
@@ -354,7 +416,7 @@ async function main() {
       const path = positional[1]
       const value = positional[2]
       if (!path || value === undefined) {
-        die('usage: bun i18n add <path> "<value>"')
+        die('usage: bun i18n add <path> "<value>" | --stdin | --file <path>')
       }
       await addString(path, value)
       console.log(`Added ${path} to en-US.`)
@@ -364,14 +426,22 @@ async function main() {
     case 'set': {
       const locale = positional[1]
       if (!locale)
-        die('usage: bun i18n set <locale> <path> "<value>" | --stdin')
+        die(
+          'usage: bun i18n set <locale> <path> "<value>" | --stdin | --file <path>',
+        )
       if (!isLocale(locale)) die(`unknown locale: ${String(locale)}`, 2)
       const allowEnglish = flags.has('allow-english')
       const dryRun = flags.has('dry-run')
+      const file = getFileFlag(flags, kvFlags)
+      if (flags.has('stdin') && file !== undefined) {
+        die('--stdin and --file are mutually exclusive', 2)
+      }
 
-      if (flags.has('stdin')) {
-        const raw = readFileSync(0, 'utf8')
-        const obj = JSON.parse(raw) as Record<string, unknown>
+      if (flags.has('stdin') || file !== undefined) {
+        const source = file !== undefined ? file : 'stdin'
+        const raw =
+          file !== undefined ? readInputFile(file) : readFileSync(0, 'utf8')
+        const obj = readJsonMapInput(source, raw)
         const entries: Record<string, string> = {}
         for (const [path, value] of Object.entries(obj)) {
           if (typeof value !== 'string') {
@@ -462,17 +532,27 @@ async function main() {
     case 'get': {
       const json = flags.has('json')
       const localeList = parseLocaleList(kvFlags.locales)
+      const file = getFileFlag(flags, kvFlags)
+      if (flags.has('stdin') && file !== undefined) {
+        die('--stdin and --file are mutually exclusive', 2)
+      }
 
       if (
         flags.has('stdin') ||
+        file !== undefined ||
         localeList.length > 0 ||
         positional.length > 3
       ) {
-        const keys = flags.has('stdin')
-          ? parseStdinKeys()
-          : localeList.length > 0
-            ? positional.slice(1)
-            : positional.slice(2)
+        const keys =
+          flags.has('stdin') || file !== undefined
+            ? parseKeysRaw(
+                file !== undefined
+                  ? readInputFile(file)
+                  : readFileSync(0, 'utf8'),
+              )
+            : localeList.length > 0
+              ? positional.slice(1)
+              : positional.slice(2)
 
         if (localeList.length === 0) {
           // Legacy multi-key without --locales is ambiguous; require locales.
@@ -480,7 +560,10 @@ async function main() {
           if (positional.length === 3 && isLocale(positional[1])) {
             // fall through to legacy
           } else {
-            die('usage: bun i18n get <key...> --locales a,b[,c] [--json]', 2)
+            die(
+              'usage: bun i18n get <key...> --locales a,b[,c] [--json] | --stdin --locales a,b | --file <path> --locales a,b',
+              2,
+            )
           }
         }
 

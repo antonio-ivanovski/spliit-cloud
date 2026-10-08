@@ -332,7 +332,7 @@ export async function initLocale(
     : [
         `Read ${guideRel} together with ${GUIDES_DIR}/default.md before translating.`,
         `bun i18n next --locale ${opts.code} --size 40 --usages --json`,
-        `bun i18n set ${opts.code} --stdin   # fill applyTemplate / translate keys`,
+        `bun i18n set ${opts.code} --file <translations.json>   # write applyTemplate with Write tool, then apply`,
         `# repeat next → set until next.done === true`,
         `bun i18n check --locale ${opts.code}`,
       ]

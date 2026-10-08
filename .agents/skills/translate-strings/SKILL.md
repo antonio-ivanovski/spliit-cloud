@@ -11,6 +11,8 @@ license: MIT
 - **Do NOT** launch explore/subagents to discover how i18n works — this skill + `bun i18n help` are authoritative.
 - **Do NOT** web-search / Exa / GitHub-search this project for locale conventions.
 - **Do NOT** hand-read `apps/web/src/messages/*.json` to pick work — use `bun i18n next` / `pack`.
+- **Do NOT** hand-read messages with `python3 -c json.load` / `node -e` one-liners — use `bun i18n get <key> --locales a,b --json` or `pack --json`.
+- **Do NOT** pipe translations via `echo` / `printf` into `--stdin` — shell quoting breaks on apostrophes, quotes, `$`, backticks, and Unicode. Write JSON with the Write tool and use `--file`.
 - **Do NOT** invent `--offset`; `next` always returns the next unfinished batch after you `set`.
 
 ## Hard rules
@@ -57,8 +59,9 @@ Then **loop** (no explore, no offset math):
 
 ```bash
 bun i18n next --locale sv-SE --size 40 --usages --json
-# translate result.keys (fill applyTemplate or build {"key":"…"} map)
-bun i18n set sv-SE --stdin
+# translate result.keys (fill applyTemplate or build {"key":"…"} map),
+# write it with the Write tool to /tmp/sv-SE.json, then:
+bun i18n set sv-SE --file /tmp/sv-SE.json
 # repeat next → set until result.done === true
 bun i18n check --locale sv-SE   # full parity; must exit 0
 ```
@@ -98,9 +101,9 @@ Follow `mode`: `noop` | `oneshot` (you translate) | `single` (one Task) | `paral
 
 ## Translator subagent (plan batch or new-locale backfill)
 
-**Plan batch:** read the batch’s `guidePaths`, run its `packCommand`, translate using the baseline plus each owned locale guide, then `set` per locale and run `check --locale --changes-only`.
+**Plan batch:** read the batch’s `guidePaths`, run its `packCommand`, translate using the baseline plus each owned locale guide, then write per-locale JSON with the Write tool and `set --file` per locale, and run `check --locale --changes-only`.
 
-**Full locale backfill:** read `next.guidePaths`, then use only the `next` → `set` loop above until `done`, then full `check --locale`.
+**Full locale backfill:** read `next.guidePaths`, then use only the `next` → Write → `set --file` loop above until `done`, then full `check --locale`.
 
 ---
 
@@ -123,7 +126,8 @@ these files. For each owned locale, author `<locale>.md` next to `en-US.md`:
 bun i18n init-locale <code> --label "…" --flag "…" --family germanic|romance|… --guide path/to/<locale>-guide.md
 bun i18n init-locale en-AU --label "…" --flag "…" --family germanic --guide path/to/guide.md --sparse --fallback en-GB
 bun i18n next --locale L --size 40 --usages --json
-bun i18n set L --stdin
+bun i18n set L --file /tmp/L.json   # write {"key":"…"} with Write tool; --stdin also works but quoting is fragile
+bun i18n get Some.key --locales a,b --json   # never python json.load on messages/*.json
 bun i18n prune --locale L [--against P] [--write]   # sparse overlays only
 bun i18n plan --json
 bun i18n pack --locales a,b --keys k1,k2 --usages --json

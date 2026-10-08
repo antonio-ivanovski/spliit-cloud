@@ -30,7 +30,10 @@ export type NextBatchResult = {
   nextCommand: string
   setCommand: string
   keys: PackKey[]
-  /** Empty-string map for agents to fill and pipe to set --stdin. */
+  /**
+   * Empty-string map for agents to fill via Write tool and apply with set
+   * --file.
+   */
   applyTemplate: Record<string, string>
 }
 
@@ -120,7 +123,7 @@ export async function nextTranslationBatch(
 
   const refsArg = refs.length > 0 ? ` --refs ${refs.join(',')}` : ''
   const nextCommand = `bun i18n next --locale ${locale} --size ${size}${refsArg} --usages --json`
-  const setCommand = `bun i18n set ${locale} --stdin`
+  const setCommand = `bun i18n set ${locale} --file <translations.json>`
   const checkCommand = `bun i18n check --locale ${locale}`
 
   const applyTemplate: Record<string, string> = {}
@@ -165,7 +168,9 @@ export function formatNextHuman(result: NextBatchResult): string {
   lines.push(`  keys in this batch: ${result.keys.length}`)
   lines.push('')
   lines.push('  Translate the keys below, then:')
-  lines.push(`    ${result.setCommand}   # JSON map of key → translation`)
+  lines.push(
+    `    Write the JSON map to a file, then ${result.setCommand}   # JSON map of key → translation`,
+  )
   lines.push(`    ${result.nextCommand}`)
   lines.push('')
   for (const entry of result.keys) {

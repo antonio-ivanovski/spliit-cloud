@@ -72,7 +72,7 @@ describe('nextTranslationBatch', () => {
       locales: { 'fr-FR': 'scripts/i18n/guides/fr-FR.md' },
     })
     expect(first.applyTemplate).toEqual({ a: '', b: '' })
-    expect(first.setCommand).toContain('set fr-FR --stdin')
+    expect(first.setCommand).toContain('set fr-FR --file')
     expect(first.nextCommand).toContain('next --locale fr-FR')
 
     await setStrings('fr-FR', { a: 'α', b: 'β' })

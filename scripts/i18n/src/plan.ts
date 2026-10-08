@@ -158,7 +158,7 @@ function buildTranslatorPrompt(opts: {
     `1. ${opts.packCommand}`,
     `2. For each owned locale, translate every missing/stale key. Preserve {placeholders} and rich-text tags.`,
     `3. If a string is short, ambiguous, or meaning is unclear from English alone: run \`bun i18n usages <key> --json\` and read the surrounding UI before translating.`,
-    `4. Apply with \`bun i18n set <locale> --stdin\` (one locale at a time). Never paste English as a placeholder.`,
+    `4. Apply with \`bun i18n set <locale> --file <path>\` (one locale at a time): write the JSON map {"path":"value",...} with the Write tool, then pass the file. Never pipe via echo/printf into --stdin. Never paste English as a placeholder.`,
     `5. Finish with \`bun i18n check --locale <each-owned-locale> --changes-only\` exit 0 for every owned locale.`,
     ``,
     `Report: locales touched, keys per locale, check exit codes, any --allow-english keys.`,
@@ -185,7 +185,7 @@ function buildOneshotPrompt(opts: {
     ...guideLines(opts.guidePaths, opts.locales),
     `1. ${opts.packCommand}`,
     `2. For ambiguous strings, run \`bun i18n usages <key> --json\` before translating.`,
-    `3. \`bun i18n set <locale> --stdin\` per locale — never paste English placeholders.`,
+    `3. Write per-locale JSON with the Write tool, then \`bun i18n set <locale> --file <path>\` per locale — never pipe via echo/printf into --stdin, never paste English placeholders.`,
     `4. \`bun i18n check --changes-only\` exit 0.`,
   ].join('\n')
 }
@@ -379,7 +379,7 @@ function buildBatches(opts: {
             (k) => `- ${k.key} (${k.change}): ${JSON.stringify(k.en)}`,
           ),
           ``,
-          `For each family below, pack → translate → set --stdin → check --locale for each locale in that family.`,
+          `For each family below, pack → translate → set --file → check --locale for each locale in that family (write JSON with the Write tool, never echo/printf into --stdin).`,
           `If a string is ambiguous, run \`bun i18n usages <key> --json\` and read the UI context before translating.`,
           ...guideLines(opts.guidePaths, opts.allLocales),
           `Never paste English. Never edit en-US.`,
