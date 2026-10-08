@@ -15,9 +15,13 @@
 --   image, fanned out to every ACTIVE membership group), AccountGroupPreference
 --   (viewer revision, self-bump).
 --
+-- Coverage includes the v2 snapshot payloads: ExpenseComment (full history),
+-- GroupBudget plus GroupBudgetAlert (budgets with server-computed summaries),
+-- and Activity (recent feed window).
+--
 -- Deliberately NOT covered (never projected into offline payloads):
---   GroupBudget, BulkCategorizationRun/Rows, Activity tables, ExpenseComment,
---   AccountSavedView, AccountPreference, notification/webhook/auth tables.
+--   BulkCategorizationRun/Rows, AccountSavedView, AccountPreference,
+--   notification/webhook/auth tables.
 --
 -- Over-bump policy: dependent triggers fire on any INSERT/UPDATE/DELETE rather
 -- than an enumerated column list, so a future column that lands in the offline
@@ -91,6 +95,7 @@ CREATE OR REPLACE FUNCTION spliit_preference_revision_self()
 RETURNS trigger LANGUAGE plpgsql AS $$
 BEGIN
   IF TG_OP = 'INSERT' THEN
+    NEW."offlineViewerRevision" := COALESCE(NEW."offlineViewerRevision", 0) + 1;
     RETURN NEW;
   END IF;
   IF NEW."offlineViewerRevision" IS DISTINCT FROM OLD."offlineViewerRevision" THEN
@@ -103,7 +108,7 @@ $$;
 
 DROP TRIGGER IF EXISTS spliit_preference_revision_self_trigger ON "AccountGroupPreference";
 CREATE TRIGGER spliit_preference_revision_self_trigger
-BEFORE UPDATE ON "AccountGroupPreference"
+BEFORE INSERT OR UPDATE ON "AccountGroupPreference"
 FOR EACH ROW EXECUTE FUNCTION spliit_preference_revision_self();
 
 -- Tables carrying a direct groupId.
@@ -379,3 +384,55 @@ AFTER UPDATE ON "Account"
 FOR EACH ROW
 WHEN (OLD.name IS DISTINCT FROM NEW.name OR OLD.image IS DISTINCT FROM NEW.image)
 EXECUTE FUNCTION spliit_touch_groups_for_account();
+
+-- v2 additions: budgets, budget alerts, comments, feed activities.
+
+-- GroupBudget carries a direct groupId, like GroupMember/Subgroup/SplitPreset.
+DROP TRIGGER IF EXISTS spliit_offline_rev_budget ON "GroupBudget";
+CREATE TRIGGER spliit_offline_rev_budget
+AFTER INSERT OR UPDATE OR DELETE ON "GroupBudget"
+FOR EACH ROW EXECUTE FUNCTION spliit_touch_group_from_group_id();
+
+-- Alerts resolve through their budget. A cascade delete of a budget's alerts
+-- fires this once per alert row plus the budget trigger once for the budget
+-- row itself; clients refetch on any movement, so over-bumping stays safe.
+CREATE OR REPLACE FUNCTION spliit_touch_group_from_budget_id()
+RETURNS trigger LANGUAGE plpgsql AS $$
+DECLARE
+  v_group_id TEXT;
+BEGIN
+  IF TG_OP = 'DELETE' THEN
+    SELECT "groupId" INTO v_group_id FROM "GroupBudget" WHERE id = OLD."budgetId";
+  ELSE
+    SELECT "groupId" INTO v_group_id FROM "GroupBudget" WHERE id = NEW."budgetId";
+  END IF;
+  IF TG_OP = 'UPDATE' AND NEW."budgetId" IS DISTINCT FROM OLD."budgetId" THEN
+    SELECT "groupId" INTO v_group_id FROM "GroupBudget" WHERE id = OLD."budgetId";
+    IF v_group_id IS NOT NULL THEN
+      PERFORM spliit_touch_group_offline_revision(v_group_id);
+    END IF;
+    SELECT "groupId" INTO v_group_id FROM "GroupBudget" WHERE id = NEW."budgetId";
+  END IF;
+  IF v_group_id IS NOT NULL THEN
+    PERFORM spliit_touch_group_offline_revision(v_group_id);
+  END IF;
+  RETURN NULL;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS spliit_offline_rev_budget_alert ON "GroupBudgetAlert";
+CREATE TRIGGER spliit_offline_rev_budget_alert
+AFTER INSERT OR UPDATE OR DELETE ON "GroupBudgetAlert"
+FOR EACH ROW EXECUTE FUNCTION spliit_touch_group_from_budget_id();
+
+-- Expense-owned rows reuse the expense resolver.
+DROP TRIGGER IF EXISTS spliit_offline_rev_comment ON "ExpenseComment";
+CREATE TRIGGER spliit_offline_rev_comment
+AFTER INSERT OR UPDATE OR DELETE ON "ExpenseComment"
+FOR EACH ROW EXECUTE FUNCTION spliit_touch_group_from_expense_id();
+
+-- Feed activities resolve through their ledger.
+DROP TRIGGER IF EXISTS spliit_offline_rev_activity ON "Activity";
+CREATE TRIGGER spliit_offline_rev_activity
+AFTER INSERT OR UPDATE OR DELETE ON "Activity"
+FOR EACH ROW EXECUTE FUNCTION spliit_touch_group_from_ledger_id();
