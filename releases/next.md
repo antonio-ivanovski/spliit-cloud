@@ -1,4 +1,4 @@
-Welcome to `vNEXT`! Spliit now works offline: your groups stay readable without a connection, and new expenses queue to sync on reconnect.
+Welcome to `vNEXT`! This release brings read-offline to Spliit: your groups stay readable without a connection, and it sets the stage for full offline write — you can already add expenses while offline and they are recorded once you are back online.
 
 ## Highlights
 
@@ -6,7 +6,7 @@ Welcome to `vNEXT`! Spliit now works offline: your groups stay readable without 
 
 ### Spliit works offline
 
-All your member groups remain available for read-only offline use: complete expense history with comments, balances, the member roster, subgroup assignments, split presets, budgets, group settings, and recent activity. Downloaded history opens instantly and merges new changes in place, unchanged groups are not re-downloaded, and balances warn when stale. You can also install Spliit as an app and create expenses while offline — they queue locally and sync automatically on reconnect. Files, edits, and older activity beyond the downloaded window still need a connection.
+All your member groups remain available for read-only offline use: complete expense history with comments, balances, the member roster, subgroup assignments, split presets, budgets, group settings, and recent activity. This is the read-offline foundation for full offline write, which will follow: new expenses already queue locally while offline and are recorded automatically on reconnect. Downloaded history also opens instantly and merges new changes in place, so the app feels much faster on slow connections; unchanged groups are not re-downloaded, and balances warn when stale. You can also install Spliit as an app. Files, edits, and older activity beyond the downloaded window still need a connection.
 
 ## What's Changed
 
