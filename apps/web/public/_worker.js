@@ -260,6 +260,31 @@ function injectSeoMeta(html, seoPath, meta) {
       `<script type="application/ld+json">${jsonLd}</script>`,
     )
   }
+  // Non-JS crawlers never run the SPA bundle, so the shell body would
+  // otherwise expose only the offline bootstrap hint. Rewrite the static
+  // <noscript> fallback per route (title, description, Markdown link) while
+  // leaving the public-pages nav intact. Shells without the fallback get a
+  // minimal one before </body>.
+  const markdownLinkTag = `<a data-seo="markdown" href="${markdownHref}">Read this page in plain text (Markdown)</a>`
+  if (/<noscript[^>]*id="crawler-fallback"[^>]*>/s.test(next)) {
+    next = next.replace(
+      /(<h1\b[^>]*data-seo="title"[^>]*>).*?(<\/h1>)/s,
+      `$1${titleText}$2`,
+    )
+    next = next.replace(
+      /(<p\b[^>]*data-seo="description"[^>]*>).*?(<\/p>)/s,
+      `$1${escapeHtmlText(meta.description)}$2`,
+    )
+    next = next.replace(
+      /<a\b[^>]*data-seo="markdown"[^>]*>.*?<\/a>/s,
+      markdownLinkTag,
+    )
+  } else if (/<\/body>/s.test(next)) {
+    next = next.replace(
+      /<\/body>/s,
+      `<noscript id="crawler-fallback"><h1 data-seo="title">${titleText}</h1><p data-seo="description">${escapeHtmlText(meta.description)}</p><p>${markdownLinkTag}</p></noscript></body>`,
+    )
+  }
   return next
 }
 

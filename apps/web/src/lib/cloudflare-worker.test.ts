@@ -275,11 +275,11 @@ describe('Cloudflare Pages worker markdown negotiation', () => {
 })
 
 describe('Cloudflare Pages worker SEO head injection', () => {
-  const htmlShell = (title = 'Old title') =>
-    `<!doctype html><html lang="en"><head><title>${title}</title><meta name="description" content="Old description"><link rel="canonical" href="https://spliit.cloud/old"><meta property="og:title" content="Old"><meta property="og:description" content="Old"><meta property="og:url" content="https://spliit.cloud/old"><meta name="twitter:title" content="Old"><meta name="twitter:description" content="Old"><meta property="og:image" content="https://spliit.cloud/old.png"><meta name="twitter:image" content="https://spliit.cloud/old.png"><link rel="alternate" type="text/markdown" title="Old" href="/old.md"><script type="application/ld+json">{"old":true}</script></head><body><div id="root"></div></body></html>`
+  const htmlShell = (title = 'Old title', withNoscript = true) =>
+    `<!doctype html><html lang="en"><head><title>${title}</title><meta name="description" content="Old description"><link rel="canonical" href="https://spliit.cloud/old"><meta property="og:title" content="Old"><meta property="og:description" content="Old"><meta property="og:url" content="https://spliit.cloud/old"><meta name="twitter:title" content="Old"><meta name="twitter:description" content="Old"><meta property="og:image" content="https://spliit.cloud/old.png"><meta name="twitter:image" content="https://spliit.cloud/old.png"><link rel="alternate" type="text/markdown" title="Old" href="/old.md"><script type="application/ld+json">{"old":true}</script></head><body><div id="root"></div>${withNoscript ? '<noscript id="crawler-fallback"><h1 data-seo="title">Old title</h1><p data-seo="description">Old description</p><p><a data-seo="markdown" href="/old.md">Read this page in plain text (Markdown)</a></p><nav><a href="/terms">Terms</a></nav></noscript>' : ''}</body></html>`
 
-  const htmlResponse = (title = 'Old title') =>
-    new Response(htmlShell(title), {
+  const htmlResponse = (title = 'Old title', withNoscript = true) =>
+    new Response(htmlShell(title, withNoscript), {
       status: 200,
       headers: { 'Content-Type': 'text/html; charset=utf-8' },
     })
@@ -349,6 +349,30 @@ describe('Cloudflare Pages worker SEO head injection', () => {
     )
     expect(html).toContain('"@type":"WebPage"')
     expect(html).toContain('href="/features.md"')
+    expect(html).toContain('<h1 data-seo="title">Features — Spliit Cloud</h1>')
+    expect(html).toContain(
+      '<p data-seo="description">Every Spliit feature in one catalog',
+    )
+    expect(html).toContain('<a data-seo="markdown" href="/features.md">')
+    expect(html).not.toContain('href="/old.md"')
+    expect(html).toContain('<a href="/terms">Terms</a>')
+  })
+
+  it('inserts a minimal crawler fallback when the shell has none', async () => {
+    const fetchAsset = vi.fn(async (input: AssetInput) => {
+      if (pathnameFrom(input) === '/') return htmlResponse('Old title', false)
+      return new Response('Not found', { status: 404 })
+    })
+
+    const response = await worker.fetch(requestFor('/support'), {
+      ASSETS: { fetch: fetchAsset },
+    })
+
+    const html = await response.text()
+    expect(html).toContain('<title>Support — Spliit Cloud</title>')
+    expect(html).toContain('<noscript id="crawler-fallback">')
+    expect(html).toContain('<h1 data-seo="title">Support — Spliit Cloud</h1>')
+    expect(html).toContain('<a data-seo="markdown" href="/support.md">')
   })
 
   it('normalizes trailing slashes to the canonical path', async () => {
