@@ -54,7 +54,6 @@ Other useful commands:
 bun run check            # Oxfmt, Oxlint, and TypeScript
 bun run format:affected  # Format only affected Turbo tasks
 bun run lint:fix         # Apply Oxlint's behavior-preserving fixes
-bun run setup-hooks      # Install fast pre-commit hook (format staged files, lint changed packages)
 bun run test             # Vitest unit tests
 bun test:integration     # Real-DB integration tests
 ```
@@ -79,7 +78,7 @@ bun --filter @spliit/web test:e2e
 
 1. Branch off `main` (`fix/...`, `feat/...`, `docs/...`)
 2. One logical change per PR. Add or update tests.
-3. Run `bun run check` and `bun run test` before pushing.
+3. Run `bun run check` and `bun run test` before pushing. Git hooks install automatically via `postinstall`: pre-commit formats staged files and lints changed packages, pre-push runs `bun run check`.
 4. Schema changes: commit schema, migration, and generated Prisma client together.
    Create SQL migrations with `bun --filter @spliit/db prisma-create-migration`
    so Prisma stamps the current UTC `YYYYMMDDHHmmss`. Do not invent, backdate,

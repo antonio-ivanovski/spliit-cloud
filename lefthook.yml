@@ -1,0 +1,19 @@
+# Fast local gates. Type checks stay in CI (`bun run check`): `tsc --noEmit`
+# is too slow for every commit. Bypass a hook once with --no-verify.
+pre-commit:
+  parallel: true
+  jobs:
+    - run: bun x oxfmt -- {staged_files}
+      glob:
+        - '*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,json,jsonc,json5,yaml,yml,toml,html,css,scss,less,md,mdx,graphql,gql}'
+      exclude:
+        - '**/routeTree.gen.ts'
+        - '**/announcement-content.generated.ts'
+        - '**/components/ui/**'
+        - '**/generated/**'
+      stage_fixed: true
+    - run: bun run check:hook
+
+pre-push:
+  jobs:
+    - run: bun run check
