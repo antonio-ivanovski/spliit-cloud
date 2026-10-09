@@ -46,12 +46,20 @@
       "passThroughEnv": ["DATABASE_URL"]
     },
     "lint": {
-      "dependsOn": ["^build", "@spliit/db#prisma-generate"],
-      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.oxlintrc.json"]
+      "dependsOn": ["@spliit/db#prisma-generate"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/.oxlintrc.json",
+        "$TURBO_ROOT$/packages/config/tsconfig.base.json"
+      ]
     },
     "lint:fix": {
-      "dependsOn": ["^build", "@spliit/db#prisma-generate"],
-      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.oxlintrc.json"],
+      "dependsOn": ["@spliit/db#prisma-generate"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/.oxlintrc.json",
+        "$TURBO_ROOT$/packages/config/tsconfig.base.json"
+      ],
       "cache": false
     },
     "check-formatting": {
@@ -86,6 +94,7 @@
         ".github/**",
         "docs/**",
         "handoff/**",
+        "scripts/git-hooks/**",
         "compose*.yaml",
         "doctor.config.json"
       ]
@@ -102,12 +111,17 @@
         ".github/**",
         "docs/**",
         "handoff/**",
+        "scripts/git-hooks/**",
         "compose*.yaml",
         "doctor.config.json"
       ]
     },
     "check-types": {
-      "dependsOn": ["^build", "@spliit/db#prisma-generate"]
+      "dependsOn": ["@spliit/db#prisma-generate"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/packages/config/tsconfig.base.json"
+      ]
     },
     "i18n": {},
     "generate-openapi": {

@@ -54,6 +54,7 @@ Other useful commands:
 bun run check            # Oxfmt, Oxlint, and TypeScript
 bun run format:affected  # Format only affected Turbo tasks
 bun run lint:fix         # Apply Oxlint's behavior-preserving fixes
+bun run setup-hooks      # Install fast pre-commit hook (format staged files, lint changed packages)
 bun run test             # Vitest unit tests
 bun test:integration     # Real-DB integration tests
 ```
