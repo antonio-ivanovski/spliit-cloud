@@ -91,7 +91,7 @@ describe('OAuthLoginPage', () => {
     render(<OAuthLoginPage />)
 
     expect(
-      screen.getByText('Checking your Spliit session…'),
+      screen.getByText('Checking your Spliit Cloud session…'),
     ).toBeInTheDocument()
     expect(screen.queryByTestId('regular-auth-panel')).not.toBeInTheDocument()
   })

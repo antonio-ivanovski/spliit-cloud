@@ -320,7 +320,7 @@ describe('ManagePendingInvitationDialog', () => {
     )
     expect(screen.getAllByText('Bob Profile').length).toBeGreaterThan(0)
     expect(
-      screen.getByText(/Uses their Spliit profile name/i),
+      screen.getByText(/Uses their Spliit Cloud profile name/i),
     ).toBeInTheDocument()
     expect(
       screen.queryByRole('textbox', { name: 'Display name' }),

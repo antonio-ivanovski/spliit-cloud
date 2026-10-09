@@ -79,7 +79,7 @@ describe('PwaUpdatePill', () => {
     act(() => stub.setSnapshot({ status: 'failed', dismissed: false }))
 
     expect(screen.getByRole('status')).toHaveTextContent(
-      "Spliit couldn't apply the update.",
+      "Spliit Cloud couldn't apply the update.",
     )
     await user.click(screen.getByRole('button', { name: 'Retry' }))
     await user.click(screen.getByRole('button', { name: 'Dismiss' }))
