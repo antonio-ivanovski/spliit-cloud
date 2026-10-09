@@ -5,6 +5,7 @@ import type { Currency, ExpenseFormItemValues } from '@spliit/domain'
 import {
   applySplitToAll,
   getCommonItemSplit,
+  getExpenseSeedForItemized,
   scaleRowsToAmount,
 } from './default-item-split'
 import type { ParticipantRow } from './split-mode-conversions'
@@ -298,5 +299,29 @@ describe('applySplitToAll', () => {
     expect(result.items.map((i) => i.id)).toEqual(['i1', 'i2'])
     expect(result.items[0]!.unitPrice).toBe(10)
     expect(result.items[0]!.quantity).toBe(2)
+  })
+})
+
+// ── getExpenseSeedForItemized ──────────────────────────────────────────
+
+describe('getExpenseSeedForItemized', () => {
+  it('preserves a 2-person expense split instead of all group members', () => {
+    const seed = getExpenseSeedForItemized('EVENLY', [row('a', 1), row('b', 1)])
+    expect(seed).toEqual({
+      splitMode: 'EVENLY',
+      paidFor: [row('a', 1), row('b', 1)],
+    })
+  })
+
+  it('returns a clone (mutating the result does not affect inputs)', () => {
+    const paidFor = [row('a', 1)]
+    const seed = getExpenseSeedForItemized('BY_SHARES', paidFor)!
+    seed.paidFor[0]!.shares = 999
+    expect(paidFor[0]!.shares).toBe(1)
+  })
+
+  it('returns null when already itemized or without participants', () => {
+    expect(getExpenseSeedForItemized('ITEMIZED', [row('a', 1)])).toBeNull()
+    expect(getExpenseSeedForItemized('EVENLY', [])).toBeNull()
   })
 })

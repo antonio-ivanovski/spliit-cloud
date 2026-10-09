@@ -64,6 +64,7 @@ export function ExpenseItemRow({
   groupCurrency,
   onEdit,
   onDelete,
+  hideAssignees,
 }: {
   form: UseFormReturn<ExpenseFormInputValues>
   itemIndex: number
@@ -74,6 +75,12 @@ export function ExpenseItemRow({
   groupCurrency: Currency
   onEdit: () => void
   onDelete: () => void
+  /**
+   * Hide per-item participant attribution. Items on non-ITEMIZED expenses are
+   * documentation only — their stored splits are stale defaults. Titles,
+   * prices, quantities, and edit affordances stay visible.
+   */
+  hideAssignees?: boolean
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const locale = useLocale()
@@ -333,27 +340,31 @@ export function ExpenseItemRow({
           name={itemPath(itemIndex, 'paidFor')}
           render={() => (
             <FormItem className="mt-2 min-w-0 space-y-1 text-xs leading-5 md:pe-16">
-              <ItemAssignees
-                namesText={participantsLabel}
-                rows={breakdownRows}
-                currency={groupCurrency}
-                locale={locale}
-                emptyText={participantsLabel}
-              />
+              {!hideAssignees && (
+                <ItemAssignees
+                  namesText={participantsLabel}
+                  rows={breakdownRows}
+                  currency={groupCurrency}
+                  locale={locale}
+                  emptyText={participantsLabel}
+                />
+              )}
               <FormMessage />
             </FormItem>
           )}
         />
       ) : (
-        <div className="mt-2 min-w-0 text-xs leading-5 text-muted-foreground md:pe-16">
-          <ItemAssignees
-            namesText={participantsLabel}
-            rows={breakdownRows}
-            currency={groupCurrency}
-            locale={locale}
-            emptyText={participantsLabel}
-          />
-        </div>
+        !hideAssignees && (
+          <div className="mt-2 min-w-0 text-xs leading-5 text-muted-foreground md:pe-16">
+            <ItemAssignees
+              namesText={participantsLabel}
+              rows={breakdownRows}
+              currency={groupCurrency}
+              locale={locale}
+              emptyText={participantsLabel}
+            />
+          </div>
+        )
       )}
     </div>
   )

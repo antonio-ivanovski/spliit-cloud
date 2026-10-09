@@ -587,6 +587,7 @@ export function ExpensePreviewModal({
                   proportionalText={tForm(
                     'items.remainderAllocationProportional',
                   )}
+                  expenseSplitMode={expense.splitMode}
                 />
 
                 {useOfflineSource ? (

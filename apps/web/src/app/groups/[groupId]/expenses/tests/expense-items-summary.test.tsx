@@ -184,6 +184,68 @@ describe('ExpenseItemsSummary', () => {
 
     expect(screen.getByText('Proportional to items')).toBeInTheDocument()
   })
+
+  it('hides assignee names for non-itemized expenses (items are documentation)', () => {
+    render(
+      <ExpenseItemsSummary
+        items={[
+          {
+            id: 'item-1',
+            title: 'Pizza',
+            amount: 1000,
+            splitMode: 'EVENLY',
+            paidFor: [
+              { ledgerParticipantId: 'a', shares: 1 },
+              { ledgerParticipantId: 'b', shares: 1 },
+              { ledgerParticipantId: 'c', shares: 1 },
+              { ledgerParticipantId: 'd', shares: 1 },
+            ],
+          },
+        ]}
+        currency={EUR}
+        locale="en-US"
+        participants={[
+          { id: 'a', name: 'Alice' },
+          { id: 'b', name: 'Bob' },
+          { id: 'c', name: 'Carol' },
+          { id: 'd', name: 'Dave' },
+        ]}
+        expenseSplitMode="EVENLY"
+      />,
+    )
+
+    expect(screen.getByText('Pizza')).toBeInTheDocument()
+    expect(screen.queryByText(/Alice/)).not.toBeInTheDocument()
+    expect(screen.queryByRole('button')).not.toBeInTheDocument()
+  })
+
+  it('shows assignee names for itemized expenses', () => {
+    render(
+      <ExpenseItemsSummary
+        items={[
+          {
+            id: 'item-1',
+            title: 'Pizza',
+            amount: 1000,
+            splitMode: 'EVENLY',
+            paidFor: [
+              { ledgerParticipantId: 'a', shares: 1 },
+              { ledgerParticipantId: 'b', shares: 1 },
+            ],
+          },
+        ]}
+        currency={EUR}
+        locale="en-US"
+        participants={[
+          { id: 'a', name: 'Alice' },
+          { id: 'b', name: 'Bob' },
+        ]}
+        expenseSplitMode="ITEMIZED"
+      />,
+    )
+
+    expect(screen.getByText('Alice, Bob')).toBeInTheDocument()
+  })
 })
 
 describe('resolveExpenseItemsCurrency', () => {

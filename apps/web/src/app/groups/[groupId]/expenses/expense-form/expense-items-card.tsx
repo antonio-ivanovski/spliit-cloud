@@ -58,7 +58,11 @@ import {
   ItemAssignees,
 } from '../expense-item-breakdown'
 import { safeSharesToFixedUnits } from './currency-utils'
-import { applySplitToAll, getCommonItemSplit } from './default-item-split'
+import {
+  applySplitToAll,
+  getCommonItemSplit,
+  getExpenseSeedForItemized,
+} from './default-item-split'
 import { getNeutralDefaultSplit } from './default-values'
 import { ExpenseItemRow, expenseItemGridClass } from './expense-item-row'
 import type { SplitPreset } from './split-presets'
@@ -188,11 +192,15 @@ export function ExpenseItemsCard({
   const fillerItem = itemsWithFiller.find(isFillerItem)
 
   const commonSplit = getCommonItemSplit(items)
+  const isItemized = splitMode === 'ITEMIZED'
   const displayedDefaultSplit =
     commonSplit ?? (items.length === 0 ? resolveSeedSplit(group) : null)
 
-  const seedItemsAndRemainder = () => {
-    const seed = resolveSeedSplit(group)
+  const seedItemsAndRemainder = (seedOverride?: {
+    splitMode: ItemSplitMode
+    paidFor: ExpenseFormItemValues['paidFor']
+  }) => {
+    const seed = seedOverride ?? resolveSeedSplit(group)
     const result = applySplitToAll({
       items: form.getValues('items') ?? [],
       split: seed,
@@ -281,12 +289,22 @@ export function ExpenseItemsCard({
 
   const confirmItemizedEdit = () => {
     if (!pendingItemizedEdit) return
+    // Seed the item splits from the current expense-level split so converting
+    // a non-itemized expense preserves its participants (e.g. 2 people) instead
+    // of resetting to all group members. Falls back to the neutral default when
+    // the expense has no usable split.
+    const currentSplitMode = form.getValues('splitMode')
+    const currentPaidFor = form.getValues('paidFor') ?? []
+    const expenseSeed = getExpenseSeedForItemized(
+      currentSplitMode,
+      currentPaidFor,
+    )
     form.setValue('splitMode', 'ITEMIZED', {
       shouldDirty: true,
       shouldTouch: true,
       shouldValidate: true,
     })
-    seedItemsAndRemainder()
+    seedItemsAndRemainder(expenseSeed ?? undefined)
     setEditingTarget(pendingItemizedEdit)
     setPendingItemizedEdit(null)
   }
@@ -461,26 +479,28 @@ export function ExpenseItemsCard({
                     data-expense-error-anchor="items"
                     className="space-y-0"
                   >
-                    <DefaultSplitAction
-                      splitMode={displayedDefaultSplit?.splitMode ?? 'EVENLY'}
-                      label={t('items.allItemsSplitLabel')}
-                      summary={
-                        displayedDefaultSplit ? (
-                          <SummarizeParticipants
-                            item={{
-                              splitMode: displayedDefaultSplit.splitMode,
-                              paidFor: displayedDefaultSplit.paidFor,
-                            }}
-                            group={group}
-                          />
-                        ) : (
-                          t('items.allItemsSplitMixed')
-                        )
-                      }
-                      editLabel={t('items.allItemsSplitEdit')}
-                      readOnly={readOnly}
-                      onClick={() => openEditDialog({ kind: 'default' })}
-                    />
+                    {isItemized && (
+                      <DefaultSplitAction
+                        splitMode={displayedDefaultSplit?.splitMode ?? 'EVENLY'}
+                        label={t('items.allItemsSplitLabel')}
+                        summary={
+                          displayedDefaultSplit ? (
+                            <SummarizeParticipants
+                              item={{
+                                splitMode: displayedDefaultSplit.splitMode,
+                                paidFor: displayedDefaultSplit.paidFor,
+                              }}
+                              group={group}
+                            />
+                          ) : (
+                            t('items.allItemsSplitMixed')
+                          )
+                        }
+                        editLabel={t('items.allItemsSplitEdit')}
+                        readOnly={readOnly}
+                        onClick={() => openEditDialog({ kind: 'default' })}
+                      />
+                    )}
 
                     {items.length === 0 ? (
                       <p className="py-4 text-center text-sm text-muted-foreground">
@@ -516,6 +536,7 @@ export function ExpenseItemsCard({
                               readOnly={readOnly}
                               group={group}
                               groupCurrency={groupCurrency}
+                              hideAssignees={!isItemized}
                               onEdit={() => {
                                 openEditDialog({
                                   kind: 'item',
@@ -563,18 +584,20 @@ export function ExpenseItemsCard({
                               )}
                             </span>
                           </div>
-                          <div className="mt-0.5 min-w-0 text-xs text-muted-foreground">
-                            {isProportionalRemainder ? (
-                              t('items.remainderAllocationProportional')
-                            ) : (
-                              <FillerAssignees
-                                fillerItem={fillerItem}
-                                group={group}
-                                groupCurrency={groupCurrency}
-                                locale={locale}
-                              />
-                            )}
-                          </div>
+                          {isItemized && (
+                            <div className="mt-0.5 min-w-0 text-xs text-muted-foreground">
+                              {isProportionalRemainder ? (
+                                t('items.remainderAllocationProportional')
+                              ) : (
+                                <FillerAssignees
+                                  fillerItem={fillerItem}
+                                  group={group}
+                                  groupCurrency={groupCurrency}
+                                  locale={locale}
+                                />
+                              )}
+                            </div>
+                          )}
                         </div>
                         {!readOnly && (
                           <Button

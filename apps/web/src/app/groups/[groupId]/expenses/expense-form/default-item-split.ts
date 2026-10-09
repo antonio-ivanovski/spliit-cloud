@@ -5,6 +5,26 @@ import { roundTo, type ParticipantRow } from './split-mode-conversions'
 type ItemSplitMode = ExpenseFormItemValues['splitMode']
 
 /**
+ * Build the seed split for converting a non-itemized expense to ITEMIZED.
+ * Returns the expense-level split (participants + mode) so the converted items
+ * preserve who the expense was split between, instead of resetting to all group
+ * members. Returns `null` when there is no usable expense split (already
+ * itemized or no participants) — callers fall back to the neutral
+ * all-participants default.
+ */
+export function getExpenseSeedForItemized(
+  expenseSplitMode: string,
+  expensePaidFor: ParticipantRow[],
+): { splitMode: ItemSplitMode; paidFor: ParticipantRow[] } | null {
+  if (expenseSplitMode === 'ITEMIZED') return null
+  if (expensePaidFor.length === 0) return null
+  return {
+    splitMode: expenseSplitMode as ItemSplitMode,
+    paidFor: expensePaidFor.map((row) => ({ ...row })),
+  }
+}
+
+/**
  * Derive the split that all items currently share, or `null` when items are
  * empty or disagree on either mode or paidFor. Compares paidFor as a
  * participant → shares map (order-independent, because the per-item modal

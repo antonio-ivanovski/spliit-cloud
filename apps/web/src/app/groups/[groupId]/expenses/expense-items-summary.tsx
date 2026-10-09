@@ -84,6 +84,7 @@ export function ExpenseItemsSummary({
   expenseAmount,
   otherLabel,
   proportionalText,
+  expenseSplitMode,
 }: {
   items: Item[]
   currency: Currency
@@ -102,10 +103,21 @@ export function ExpenseItemsSummary({
   otherLabel?: string
   /** Text shown when the remainder is allocated proportionally. */
   proportionalText?: string
+  /**
+   * Expense-level split mode. Item-level participant attribution is only
+   * meaningful for `ITEMIZED` expenses — items on other split modes are stored
+   * as documentation with stale default splits. When provided and not
+   * `ITEMIZED`, per-item names/amounts are hidden (titles + amounts still
+   * render). Omitted for legacy callers (assignees shown as before).
+   */
+  expenseSplitMode?: string
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseCard' })
   const [expanded, setExpanded] = useState(false)
   if (items.length === 0) return null
+
+  const showAssignees =
+    expenseSplitMode == null || expenseSplitMode === 'ITEMIZED'
 
   const participantMap = new Map(participants.map((p) => [p.id, p.name]))
   const itemsTotal = items.reduce((sum, item) => sum + item.amount, 0)
@@ -127,7 +139,7 @@ export function ExpenseItemsSummary({
       </h3>
       <div className="space-y-1 text-sm">
         {visibleItems.map((item) => {
-          const paidFor = item.paidFor
+          const paidFor = showAssignees ? item.paidFor : undefined
           const names =
             paidFor && item.splitMode
               ? getBreakdownNames(
@@ -182,44 +194,45 @@ export function ExpenseItemsSummary({
                 {formatCurrency(currency, fillerAmount, locale)}
               </span>
             </div>
-            {isProportionalRemainder ? (
-              proportionalText ? (
-                <div className="min-w-0 truncate text-xs leading-5 text-muted-foreground">
-                  {proportionalText}
-                </div>
-              ) : null
-            ) : (
-              (() => {
-                const remainderPaidFor = itemizedRemainder!.paidFor
-                const names = getBreakdownNames(
-                  remainderPaidFor.map((row) => ({
-                    participant: row.ledgerParticipantId,
-                    shares: row.shares,
-                  })),
-                  participantMap,
-                )
-                if (names.length === 0) return null
-                return (
-                  <ItemAssignees
-                    namesText={names.join(', ')}
-                    rows={toBreakdownRows(
-                      remainderPaidFor,
-                      getStoredItemBreakdown({
-                        amount: fillerAmount,
-                        splitMode: itemizedRemainder!.splitMode as SplitMode,
-                        paidFor: remainderPaidFor.map((row) => ({
-                          participant: row.ledgerParticipantId,
-                          shares: row.shares,
-                        })),
-                      }),
-                      participantMap,
-                    )}
-                    currency={currency}
-                    locale={locale}
-                  />
-                )
-              })()
-            )}
+            {showAssignees &&
+              (isProportionalRemainder ? (
+                proportionalText ? (
+                  <div className="min-w-0 truncate text-xs leading-5 text-muted-foreground">
+                    {proportionalText}
+                  </div>
+                ) : null
+              ) : (
+                (() => {
+                  const remainderPaidFor = itemizedRemainder!.paidFor
+                  const names = getBreakdownNames(
+                    remainderPaidFor.map((row) => ({
+                      participant: row.ledgerParticipantId,
+                      shares: row.shares,
+                    })),
+                    participantMap,
+                  )
+                  if (names.length === 0) return null
+                  return (
+                    <ItemAssignees
+                      namesText={names.join(', ')}
+                      rows={toBreakdownRows(
+                        remainderPaidFor,
+                        getStoredItemBreakdown({
+                          amount: fillerAmount,
+                          splitMode: itemizedRemainder!.splitMode as SplitMode,
+                          paidFor: remainderPaidFor.map((row) => ({
+                            participant: row.ledgerParticipantId,
+                            shares: row.shares,
+                          })),
+                        }),
+                        participantMap,
+                      )}
+                      currency={currency}
+                      locale={locale}
+                    />
+                  )
+                })()
+              ))}
           </div>
         )}
         {remaining > 0 && (
