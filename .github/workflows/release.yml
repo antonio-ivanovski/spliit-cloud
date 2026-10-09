@@ -128,41 +128,21 @@ jobs:
           echo "::error::Timed out after 45m waiting for CI on ${SHA}. Push the release commit to main first, then re-run."
           exit 1
 
-  build-and-push:
-    name: Build ${{ matrix.app }} (${{ matrix.arch }})
+  # Backend images share the `pruner → installer → prisma` stages in
+  # Dockerfile. Building api/migrate/worker/mcp sequentially on one runner
+  # per arch keeps those stages (plus the Bun install cache mount) warm in
+  # the local BuildKit cache instead of rebuilding them in isolated jobs.
+  # The shared `backend-<arch>` GHA scope preserves that sharing across
+  # runs; per-image registry caches plus the previous per-app GHA scopes
+  # warm the first runs after this restructure.
+  build-backend:
+    name: Build backend (${{ matrix.arch }})
     needs: [validate-notes, await-ci]
     runs-on: ${{ matrix.arch == 'amd64' && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
     strategy:
       fail-fast: false
       matrix:
-        app: [api, migrate, worker, mcp, web]
         arch: [amd64, arm64]
-        include:
-          - app: api
-            scope: '@spliit/api'
-            file: Dockerfile
-            target: api
-            image: spliit-cloud-api
-          - app: migrate
-            scope: '@spliit/db'
-            file: Dockerfile
-            target: migrate
-            image: spliit-cloud-migrate
-          - app: worker
-            scope: '@spliit/worker'
-            file: Dockerfile
-            target: worker
-            image: spliit-cloud-worker
-          - app: mcp
-            scope: '@spliit/mcp'
-            file: Dockerfile
-            target: mcp
-            image: spliit-cloud-mcp
-          - app: web
-            scope: '@spliit/web'
-            file: Dockerfile.web
-            target: web
-            image: spliit-cloud-web
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -179,10 +159,165 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Resolve repository prefix
+        id: repo
+        run: |
+          prefix="$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')"
+          echo "prefix=${prefix}" >> "$GITHUB_OUTPUT"
+
+      - name: Extract api metadata
+        id: meta-api
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.REGISTRY }}/${{ steps.repo.outputs.prefix }}/spliit-cloud-api
+          tags: |
+            type=raw,value=${{ needs.validate-notes.outputs.tag }},suffix=-${{ matrix.arch }}
+
+      - name: Build and push api
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: Dockerfile
+          target: api
+          platforms: linux/${{ matrix.arch }}
+          build-args: |
+            APP_SCOPE=@spliit/api
+          push: true
+          tags: ${{ steps.meta-api.outputs.tags }}
+          labels: ${{ steps.meta-api.outputs.labels }}
+          provenance: false
+          sbom: false
+          cache-from: |
+            type=gha,scope=backend-${{ matrix.arch }}
+            type=gha,scope=api-${{ matrix.arch }}
+            type=registry,ref=${{ env.REGISTRY }}/${{ steps.repo.outputs.prefix }}/spliit-cloud-api:buildcache-${{ matrix.arch }}
+          cache-to: |
+            type=gha,mode=max,scope=backend-${{ matrix.arch }}
+            type=registry,ref=${{ env.REGISTRY }}/${{ steps.repo.outputs.prefix }}/spliit-cloud-api:buildcache-${{ matrix.arch }},mode=max
+
+      - name: Extract migrate metadata
+        id: meta-migrate
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.REGISTRY }}/${{ steps.repo.outputs.prefix }}/spliit-cloud-migrate
+          tags: |
+            type=raw,value=${{ needs.validate-notes.outputs.tag }},suffix=-${{ matrix.arch }}
+
+      - name: Build and push migrate
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: Dockerfile
+          target: migrate
+          platforms: linux/${{ matrix.arch }}
+          build-args: |
+            APP_SCOPE=@spliit/db
+          push: true
+          tags: ${{ steps.meta-migrate.outputs.tags }}
+          labels: ${{ steps.meta-migrate.outputs.labels }}
+          provenance: false
+          sbom: false
+          cache-from: |
+            type=gha,scope=backend-${{ matrix.arch }}
+            type=gha,scope=migrate-${{ matrix.arch }}
+            type=registry,ref=${{ env.REGISTRY }}/${{ steps.repo.outputs.prefix }}/spliit-cloud-migrate:buildcache-${{ matrix.arch }}
+          cache-to: |
+            type=gha,mode=max,scope=backend-${{ matrix.arch }}
+            type=registry,ref=${{ env.REGISTRY }}/${{ steps.repo.outputs.prefix }}/spliit-cloud-migrate:buildcache-${{ matrix.arch }},mode=max
+
+      - name: Extract worker metadata
+        id: meta-worker
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.REGISTRY }}/${{ steps.repo.outputs.prefix }}/spliit-cloud-worker
+          tags: |
+            type=raw,value=${{ needs.validate-notes.outputs.tag }},suffix=-${{ matrix.arch }}
+
+      - name: Build and push worker
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: Dockerfile
+          target: worker
+          platforms: linux/${{ matrix.arch }}
+          build-args: |
+            APP_SCOPE=@spliit/worker
+          push: true
+          tags: ${{ steps.meta-worker.outputs.tags }}
+          labels: ${{ steps.meta-worker.outputs.labels }}
+          provenance: false
+          sbom: false
+          cache-from: |
+            type=gha,scope=backend-${{ matrix.arch }}
+            type=gha,scope=worker-${{ matrix.arch }}
+            type=registry,ref=${{ env.REGISTRY }}/${{ steps.repo.outputs.prefix }}/spliit-cloud-worker:buildcache-${{ matrix.arch }}
+          cache-to: |
+            type=gha,mode=max,scope=backend-${{ matrix.arch }}
+            type=registry,ref=${{ env.REGISTRY }}/${{ steps.repo.outputs.prefix }}/spliit-cloud-worker:buildcache-${{ matrix.arch }},mode=max
+
+      - name: Extract mcp metadata
+        id: meta-mcp
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.REGISTRY }}/${{ steps.repo.outputs.prefix }}/spliit-cloud-mcp
+          tags: |
+            type=raw,value=${{ needs.validate-notes.outputs.tag }},suffix=-${{ matrix.arch }}
+
+      - name: Build and push mcp
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: Dockerfile
+          target: mcp
+          platforms: linux/${{ matrix.arch }}
+          build-args: |
+            APP_SCOPE=@spliit/mcp
+          push: true
+          tags: ${{ steps.meta-mcp.outputs.tags }}
+          labels: ${{ steps.meta-mcp.outputs.labels }}
+          provenance: false
+          sbom: false
+          cache-from: |
+            type=gha,scope=backend-${{ matrix.arch }}
+            type=gha,scope=mcp-${{ matrix.arch }}
+            type=registry,ref=${{ env.REGISTRY }}/${{ steps.repo.outputs.prefix }}/spliit-cloud-mcp:buildcache-${{ matrix.arch }}
+          cache-to: |
+            type=gha,mode=max,scope=backend-${{ matrix.arch }}
+            type=registry,ref=${{ env.REGISTRY }}/${{ steps.repo.outputs.prefix }}/spliit-cloud-mcp:buildcache-${{ matrix.arch }},mode=max
+
+  # The web `dist/` output is architecture-independent (Dockerfile.web
+  # compiles on $BUILDPLATFORM), so a single multi-platform build replaces
+  # the previous two per-arch Vite builds. QEMU only packages the static
+  # files into each arch's nginx base — no compilation under emulation.
+  # This job pushes the `:TAG` / `:latest` multi-arch manifest directly, so
+  # it is not part of merge-backend below.
+  build-web:
+    name: Build web (multi-arch)
+    needs: [validate-notes, await-ci]
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.validate-notes.outputs.tag }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Resolve image name
         id: image
         run: |
-          image_name="${{ github.repository_owner }}/${{ matrix.image }}"
+          image_name="${{ github.repository_owner }}/spliit-cloud-web"
           echo "name=${image_name,,}" >> "$GITHUB_OUTPUT"
 
       - name: Extract Docker metadata
@@ -191,33 +326,34 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ steps.image.outputs.name }}
           tags: |
-            type=raw,value=${{ needs.validate-notes.outputs.tag }},suffix=-${{ matrix.arch }}
+            type=raw,value=${{ needs.validate-notes.outputs.tag }}
+            type=raw,value=latest
 
       - name: Build and push
         uses: docker/build-push-action@v7
         with:
           context: .
-          file: ${{ matrix.file }}
-          target: ${{ matrix.target }}
-          platforms: linux/${{ matrix.arch }}
-          build-args: |
-            APP_SCOPE=${{ matrix.scope }}
-            VITE_BUILD_SHA=${{ needs.validate-notes.outputs.sha }}
+          file: Dockerfile.web
+          target: web
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           provenance: false
           sbom: false
           cache-from: |
-            type=gha,scope=${{ matrix.app }}-${{ matrix.arch }}
-            type=registry,ref=${{ env.REGISTRY }}/${{ steps.image.outputs.name }}:buildcache-${{ matrix.arch }}
+            type=gha,scope=web
+            type=gha,scope=web-arm64
+            type=registry,ref=${{ env.REGISTRY }}/${{ steps.image.outputs.name }}:buildcache
+            type=registry,ref=${{ env.REGISTRY }}/${{ steps.image.outputs.name }}:buildcache-arm64
+            type=registry,ref=${{ env.REGISTRY }}/${{ steps.image.outputs.name }}:buildcache-amd64
           cache-to: |
-            type=gha,mode=max,scope=${{ matrix.app }}-${{ matrix.arch }}
-            type=registry,ref=${{ env.REGISTRY }}/${{ steps.image.outputs.name }}:buildcache-${{ matrix.arch }},mode=max
+            type=gha,mode=max,scope=web
+            type=registry,ref=${{ env.REGISTRY }}/${{ steps.image.outputs.name }}:buildcache,mode=max
 
-  merge-images:
+  merge-backend:
     name: Publish ${{ matrix.app }} multi-arch manifest
-    needs: [validate-notes, build-and-push]
+    needs: [validate-notes, build-backend]
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
@@ -231,8 +367,6 @@ jobs:
             image: spliit-cloud-worker
           - app: mcp
             image: spliit-cloud-mcp
-          - app: web
-            image: spliit-cloud-web
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -300,7 +434,7 @@ jobs:
 
   create-release:
     name: Create GitHub Release
-    needs: [validate-notes, merge-images]
+    needs: [validate-notes, merge-backend, build-web]
     runs-on: ubuntu-24.04-arm
     permissions:
       contents: write
@@ -369,7 +503,7 @@ jobs:
 
   deploy-dokploy:
     name: Trigger Dokploy deploy
-    needs: [merge-images, create-release, deploy-relay-worker]
+    needs: [merge-backend, create-release, deploy-relay-worker]
     runs-on: ubuntu-24.04-arm
     steps:
       - name: Trigger Dokploy compose deploy
@@ -405,7 +539,7 @@ jobs:
 
   deploy-pages:
     name: Trigger Cloudflare Pages deploy
-    needs: [merge-images, create-release]
+    needs: [create-release]
     runs-on: ubuntu-24.04-arm
     steps:
       - name: Trigger CF Pages deploy

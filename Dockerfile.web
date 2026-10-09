@@ -1,19 +1,23 @@
 # syntax=docker/dockerfile:1
 
-FROM oven/bun:1.4.0-slim AS base
+# The frontend `dist/` output is architecture-independent, so every
+# compilation stage runs on the build platform (`$BUILDPLATFORM`). Only the
+# final nginx stage varies per target platform. This lets a single
+# multi-platform build run Vite once instead of once per architecture.
+FROM --platform=$BUILDPLATFORM oven/bun:1.4.0-slim AS base
 WORKDIR /app
 
-FROM base AS pruner
+FROM --platform=$BUILDPLATFORM base AS pruner
 ARG APP_SCOPE=@spliit/web
 COPY . .
 RUN --mount=type=cache,target=/root/.bun/install/cache bunx turbo@2.10.7 prune "$APP_SCOPE" --docker
 
-FROM base AS installer
+FROM --platform=$BUILDPLATFORM base AS installer
 COPY --from=pruner /app/out/json/ ./
 COPY --from=pruner /app/out/bun.lock ./bun.lock
 RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lockfile
 
-FROM base AS builder
+FROM --platform=$BUILDPLATFORM base AS builder
 ARG VITE_API_URL
 ARG VITE_DEFAULT_CURRENCY_CODE=USD
 ARG VITE_STATUS_PAGE_URL
