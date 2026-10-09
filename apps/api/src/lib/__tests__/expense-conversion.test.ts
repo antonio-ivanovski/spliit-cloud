@@ -1,7 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { CurrencyRate } from '../currency-rates'
-import { ConversionError, resolveConversion } from '../expense-conversion'
+import {
+  ConversionError,
+  exchangeLookupDateForExpenseDate,
+  preservedExchangeFromStored,
+  resolveConversion,
+} from '../expense-conversion'
 
 function futureDateIso(daysAhead: number): string {
   const d = new Date()
@@ -300,6 +305,175 @@ describe('resolveConversion', () => {
     )
     expect(result.ledgerAmountMinor).toBe(0)
     expect(result.conversionSource).toBeNull()
+  })
+})
+
+describe('resolveConversion — EXCHANGE preservation (issue #155)', () => {
+  it('reuses the stored rate when currency + lookup date are unchanged', async () => {
+    const date = pastDateIso(5)
+    const fetchImpl = vi.fn()
+    const preserve = preservedExchangeFromStored(
+      {
+        originalCurrency: 'EUR',
+        conversionRate: 1.1,
+        expenseDate: isoDate(date),
+      },
+      'USD',
+    )
+    expect(preserve).toBeDefined()
+    const result = await resolveConversion(
+      { amount: 10000, conversion: { type: 'exchange', currency: 'EUR' } },
+      { ledgerCurrency: 'USD', expenseDate: isoDate(date) },
+      { fetchImpl, preserveExchange: preserve },
+    )
+    expect(fetchImpl).not.toHaveBeenCalled()
+    expect(result).toMatchObject({
+      conversionSource: 'EXCHANGE',
+      conversionRate: 1.1,
+      originalAmount: 10000,
+      originalCurrency: 'EUR',
+      ledgerAmountMinor: 11000,
+    })
+  })
+
+  it('rescales the ledger total with the stored rate when only the amount changes', async () => {
+    const date = pastDateIso(5)
+    const fetchImpl = vi.fn()
+    const preserve = preservedExchangeFromStored(
+      {
+        originalCurrency: 'EUR',
+        conversionRate: 1.1,
+        expenseDate: isoDate(date),
+      },
+      'USD',
+    )
+    const result = await resolveConversion(
+      { amount: 20000, conversion: { type: 'exchange', currency: 'EUR' } },
+      { ledgerCurrency: 'USD', expenseDate: isoDate(date) },
+      { fetchImpl, preserveExchange: preserve },
+    )
+    expect(fetchImpl).not.toHaveBeenCalled()
+    expect(result.conversionRate).toBe(1.1)
+    expect(result.ledgerAmountMinor).toBe(22000)
+  })
+
+  it('re-fetches when the expense date changes the lookup date', async () => {
+    const oldDate = pastDateIso(5)
+    const newDate = pastDateIso(2)
+    const fetchImpl = makeFetch(({ date: d }) => ({
+      rate: 1.25,
+      requestedDate: d,
+      asOfDate: d,
+      base: 'EUR',
+      target: 'USD',
+    }))
+    const spy = vi.fn(fetchImpl)
+    const preserve = preservedExchangeFromStored(
+      {
+        originalCurrency: 'EUR',
+        conversionRate: 1.1,
+        expenseDate: isoDate(oldDate),
+      },
+      'USD',
+    )
+    const result = await resolveConversion(
+      { amount: 10000, conversion: { type: 'exchange', currency: 'EUR' } },
+      { ledgerCurrency: 'USD', expenseDate: isoDate(newDate) },
+      { fetchImpl: spy, preserveExchange: preserve },
+    )
+    expect(spy).toHaveBeenCalledTimes(1)
+    expect(result.conversionRate).toBe(1.25)
+    expect(result.ledgerAmountMinor).toBe(12500)
+  })
+
+  it('re-fetches when the currency changes', async () => {
+    const date = pastDateIso(5)
+    const fetchImpl = makeFetch(({ date: d }) => ({
+      rate: 0.9,
+      requestedDate: d,
+      asOfDate: d,
+      base: 'GBP',
+      target: 'USD',
+    }))
+    const spy = vi.fn(fetchImpl)
+    const preserve = preservedExchangeFromStored(
+      {
+        originalCurrency: 'EUR',
+        conversionRate: 1.1,
+        expenseDate: isoDate(date),
+      },
+      'USD',
+    )
+    const result = await resolveConversion(
+      { amount: 10000, conversion: { type: 'exchange', currency: 'GBP' } },
+      { ledgerCurrency: 'USD', expenseDate: isoDate(date) },
+      { fetchImpl: spy, preserveExchange: preserve },
+    )
+    expect(spy).toHaveBeenCalledTimes(1)
+    expect(result.originalCurrency).toBe('GBP')
+    expect(result.conversionRate).toBe(0.9)
+  })
+
+  it('re-fetches when the ledger currency changes', async () => {
+    const date = pastDateIso(5)
+    const fetchImpl = makeFetch(({ date: d }) => ({
+      rate: 160,
+      requestedDate: d,
+      asOfDate: d,
+      base: 'EUR',
+      target: 'JPY',
+    }))
+    const spy = vi.fn(fetchImpl)
+    const preserve = preservedExchangeFromStored(
+      {
+        originalCurrency: 'EUR',
+        conversionRate: 1.1,
+        expenseDate: isoDate(date),
+      },
+      'USD',
+    )
+    const result = await resolveConversion(
+      { amount: 10000, conversion: { type: 'exchange', currency: 'EUR' } },
+      { ledgerCurrency: 'JPY', expenseDate: isoDate(date) },
+      { fetchImpl: spy, preserveExchange: preserve },
+    )
+    expect(spy).toHaveBeenCalledTimes(1)
+    expect(result.conversionRate).toBe(160)
+  })
+
+  it('falls back to fetch when the stored rate is missing or invalid', async () => {
+    const date = pastDateIso(5)
+    const fetchImpl = makeFetch(({ date: d }) => ({
+      rate: 1.3,
+      requestedDate: d,
+      asOfDate: d,
+      base: 'EUR',
+      target: 'USD',
+    }))
+    const spy = vi.fn(fetchImpl)
+    const preserve = preservedExchangeFromStored(
+      {
+        originalCurrency: 'EUR',
+        conversionRate: null,
+        expenseDate: isoDate(date),
+      },
+      'USD',
+    )
+    expect(preserve).toBeUndefined()
+    const result = await resolveConversion(
+      { amount: 10000, conversion: { type: 'exchange', currency: 'EUR' } },
+      { ledgerCurrency: 'USD', expenseDate: isoDate(date) },
+      { fetchImpl: spy, preserveExchange: preserve },
+    )
+    expect(spy).toHaveBeenCalledTimes(1)
+    expect(result.conversionRate).toBe(1.3)
+  })
+
+  it('exchangeLookupDateForExpenseDate clamps future dates to today', () => {
+    const today = new Date().toISOString().slice(0, 10)
+    expect(exchangeLookupDateForExpenseDate(isoDate(futureDateIso(10)))).toBe(
+      today,
+    )
   })
 })
 

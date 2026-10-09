@@ -24,5 +24,6 @@ who is affected, and the exact migration steps.
 ### 🐛 Bug fixes
 
 - Fixed the offline dashboard so starred groups stay on top and groups, friends, balances, and actions appear in the same order as online, with create, import, scan, and all-expenses actions shown disabled (`TBD` by @TBD)
+- Fixed editing a foreign-currency expense overwriting its conversion rate: the stored exchange rate is now kept when the currency and date are unchanged, and only re-fetched when they change. Thanks @KihtrakRaknas for opening [#155](https://github.com/antonio-ivanovski/spliit-cloud/issues/155) (`TBD` by @TBD)
 
 **Full Changelog**: TBD

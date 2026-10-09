@@ -4,6 +4,7 @@ import {
   convertMinorUnitsByRate,
   conversionMinorScale,
   exchangeRateLookupDate,
+  utcTodayIso,
   type ConversionSource,
   type Expense,
   type ExpenseConversionInput,
@@ -32,18 +33,6 @@ export class ConversionError extends Error {
 
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 
-function toIsoDate(value: Date | string): string {
-  if (typeof value === 'string') {
-    const slice = value.slice(0, 10)
-    if (ISO_DATE_RE.test(slice)) return slice
-  }
-  const d = value instanceof Date ? value : new Date(value)
-  if (Number.isNaN(d.getTime())) {
-    throw new ConversionError(`Invalid expense date`, 'INVALID_DATE')
-  }
-  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`
-}
-
 function isSupportedIso(code: string | null | undefined): boolean {
   if (!code) return false
   return (supportedCurrencyCodes as readonly string[]).includes(code)
@@ -61,6 +50,70 @@ export type ConversionResolution = StoredConversionFields & {
 
 export type ConversionResolverOptions = {
   fetchImpl?: typeof getCurrencyRate
+  /**
+   * Preserve a stored EXCHANGE rate across edits (issue #155). When the
+   * incoming `exchange` currency and lookup date match the stored expense, the
+   * stored rate is reused instead of re-fetching the provider, so unrelated
+   * edits don't silently move the ledger total. Amount changes keep the rate
+   * and rescale the total; currency/date changes re-fetch.
+   */
+  preserveExchange?: PreservedExchangeRate
+}
+
+/** Stored EXCHANGE identity used to decide whether an edit may reuse its rate. */
+export type PreservedExchangeRate = {
+  originalCurrency: string | null
+  conversionRate: number | null
+  /** Clamped provider lookup date (`exchangeRateLookupDate`) of the stored row. */
+  lookupDateIso: string
+  ledgerCurrency: string | null
+}
+
+export function toIsoDate(value: Date | string): string {
+  if (typeof value === 'string') {
+    const slice = value.slice(0, 10)
+    if (ISO_DATE_RE.test(slice)) return slice
+  }
+  const d = value instanceof Date ? value : new Date(value)
+  if (Number.isNaN(d.getTime())) {
+    throw new ConversionError(`Invalid expense date`, 'INVALID_DATE')
+  }
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`
+}
+
+/** Provider lookup date for an expense instant (UTC convention + future clamp). */
+export function exchangeLookupDateForExpenseDate(
+  expenseDate: Date | string,
+  todayIso?: string,
+): string {
+  return exchangeRateLookupDate(
+    toIsoDate(expenseDate),
+    todayIso ?? utcTodayIso(),
+  )
+}
+
+/**
+ * Build a `preserveExchange` snapshot from a stored row. Returns undefined when
+ * the row has no reusable EXCHANGE rate.
+ */
+export function preservedExchangeFromStored(
+  row: {
+    originalCurrency: string | null | undefined
+    conversionRate: number | null | undefined
+    expenseDate: Date | string
+  },
+  ledgerCurrency: string | null,
+  todayIso?: string,
+): PreservedExchangeRate | undefined {
+  if (!row.originalCurrency) return undefined
+  const rate = row.conversionRate == null ? NaN : Number(row.conversionRate)
+  if (!Number.isFinite(rate) || rate <= 0) return undefined
+  return {
+    originalCurrency: row.originalCurrency,
+    conversionRate: rate,
+    lookupDateIso: exchangeLookupDateForExpenseDate(row.expenseDate, todayIso),
+    ledgerCurrency,
+  }
 }
 
 /**
@@ -115,6 +168,14 @@ export async function resolveConversion(
         'INVALID_SOURCE_FOR_CURRENCY',
       )
     }
+    const preserved = tryPreservedExchange({
+      expenseIso: expenseIso!,
+      ledgerIso: ledgerIso!,
+      requestedDateIso: expenseDateIso,
+      amountMinor,
+      preserve: opts.preserveExchange,
+    })
+    if (preserved) return preserved
     return resolveExchange({
       expenseCurrency: expenseIso!,
       ledgerCurrency: ledgerIso!,
@@ -181,6 +242,40 @@ function sameCurrencyResolution(amountMinor: number): ConversionResolution {
     originalCurrency: null,
     ledgerAmountMinor: amountMinor,
     inputAmountMinor: amountMinor,
+  }
+}
+
+function tryPreservedExchange(args: {
+  expenseIso: string
+  ledgerIso: string
+  requestedDateIso: string
+  amountMinor: number
+  preserve: PreservedExchangeRate | undefined
+}): ConversionResolution | undefined {
+  const preserve = args.preserve
+  if (!preserve) return undefined
+  const rate =
+    preserve.conversionRate == null ? NaN : Number(preserve.conversionRate)
+  if (!Number.isFinite(rate) || rate <= 0) return undefined
+  if (preserve.originalCurrency !== args.expenseIso) return undefined
+  if (preserve.ledgerCurrency !== args.ledgerIso) return undefined
+  if (
+    preserve.lookupDateIso !== exchangeRateLookupDate(args.requestedDateIso)
+  ) {
+    return undefined
+  }
+  return {
+    conversionSource: 'EXCHANGE' satisfies ConversionSource,
+    conversionRate: rate,
+    originalAmount: args.amountMinor,
+    originalCurrency: args.expenseIso,
+    ledgerAmountMinor: convertMinorUnitsByRate(
+      args.amountMinor,
+      rate,
+      args.expenseIso,
+      args.ledgerIso,
+    ),
+    inputAmountMinor: args.amountMinor,
   }
 }
 

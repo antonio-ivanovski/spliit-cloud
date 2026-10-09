@@ -71,6 +71,14 @@ export function useExpenseCurrencyConversion(args: {
     control: args.form.control,
     name: 'exactAmount',
   })
+  const watchedExpenseTime = useWatch({
+    control: args.form.control,
+    name: 'expenseTime',
+  })
+  const watchedExpenseTimeZone = useWatch({
+    control: args.form.control,
+    name: 'expenseTimeZone',
+  })
 
   const originalCurrencyCode = args.form.getValues('originalCurrency')
   const originalCurrency = originalCurrencyCode
@@ -107,7 +115,27 @@ export function useExpenseCurrencyConversion(args: {
 
   // Prefer conversionType over a bare rate: every persisted conversion source
   // stores a rate, so `!!conversionRate` alone always opens the custom UI.
-  const initialType = args.form.formState.defaultValues?.conversionType ?? null
+  const defaultValues = args.form.formState.defaultValues
+  const initialType = defaultValues?.conversionType ?? null
+  // Issue #155: an EXCHANGE edit keeps its stored rate while the currency +
+  // date/time key is unchanged, matching the server preservation rule. The
+  // live fetch only takes over once the user changes the conversion key.
+  const storedExchangeRate = (() => {
+    const raw = Number(defaultValues?.conversionRate)
+    return Number.isFinite(raw) && raw > 0 ? raw : undefined
+  })()
+  const exchangeKeyUnchanged =
+    initialType === 'EXCHANGE' &&
+    storedExchangeRate != null &&
+    (watchedOriginalCurrency ?? '') ===
+      (defaultValues?.originalCurrency ?? '') &&
+    watchedExpenseDay === (defaultValues?.expenseDay ?? '') &&
+    watchedExpenseTime === (defaultValues?.expenseTime ?? '') &&
+    watchedExpenseTimeZone === (defaultValues?.expenseTimeZone ?? '')
+  const preserveStoredRate = exchangeKeyUnchanged
+  const effectiveExchangeRate = preserveStoredRate
+    ? storedExchangeRate
+    : exchangeRate.data
   const [usingCustomConversionRate, setUsingCustomConversionRate] = useState(
     () => {
       if (initialType === 'EXCHANGE') return false
@@ -137,12 +165,26 @@ export function useExpenseCurrencyConversion(args: {
     // Keep EXCHANGE intent while the preview rate is loading so a save
     // before the fetch completes still persists the exchange source.
     args.form.setValue('conversionType', 'EXCHANGE')
+    // Issue #155: don't clobber the stored EXCHANGE rate with a fresh fetch
+    // while the conversion key is unchanged. A fresh rate only applies after
+    // the user changes currency or date/time (server re-fetches then too).
+    if (preserveStoredRate) {
+      if (
+        storedExchangeRate != null &&
+        Number(args.form.getValues('conversionRate')) !== storedExchangeRate
+      ) {
+        args.form.setValue('conversionRate', storedExchangeRate)
+      }
+      return
+    }
     if (exchangeRate.data) {
       args.form.setValue('conversionRate', exchangeRate.data)
     }
   }, [
     conversionRequired,
     exchangeRate.data,
+    preserveStoredRate,
+    storedExchangeRate,
     usingCustomConversionRate,
     usingExactAmount,
     args.form,
@@ -156,6 +198,8 @@ export function useExpenseCurrencyConversion(args: {
   // Derive the converted Ledger amount as a non-stored preview. Form
   // state stays untouched so the schema's `amount` invariant (which is
   // the user input) remains the single source of truth.
+  // Issue #155: while the conversion key is unchanged, preview with the
+  // stored rate so the preview matches what the server will persist.
   const convertedAmountPreview = (() => {
     if (!conversionRequired) return undefined
     if (usingExactAmount) {
@@ -166,7 +210,7 @@ export function useExpenseCurrencyConversion(args: {
     const rateSource =
       usingCustomConversionRate && watchedConversionRate
         ? Number(watchedConversionRate)
-        : exchangeRate.data
+        : effectiveExchangeRate
     if (!rateSource || Number.isNaN(rateSource) || rateSource <= 0) {
       return undefined
     }
@@ -188,7 +232,25 @@ export function useExpenseCurrencyConversion(args: {
     watchedExpenseDay.length > 0 && watchedExpenseDay > utcTodayIso()
 
   let conversionRateMessage: string
-  if (exchangeRate.isLoading) {
+  if (preserveStoredRate) {
+    // Issue #155: the stored rate is authoritative while the key is
+    // unchanged. Show it directly so the message matches the preview and
+    // the persisted total, regardless of the background live fetch.
+    const ratesDisplay =
+      storedExchangeRate != null
+        ? `${args.form.getValues('originalCurrency')}\xa01\xa0=\x20${args.group.currencyCode}\xa0${storedExchangeRate}`
+        : ''
+    const parts: string[] = []
+    if (isFutureExpenseDate) {
+      parts.push(t('conversionRateField.futureDateUsesToday'))
+    }
+    if (ratesDisplay.length) {
+      parts.push(`${t('conversionRateState.success')} ${ratesDisplay}`)
+    } else if (!isFutureExpenseDate) {
+      parts.push(t('conversionRateState.currencyNotFound'))
+    }
+    conversionRateMessage = parts.join(' ')
+  } else if (exchangeRate.isLoading) {
     conversionRateMessage = t('conversionRateState.loading')
   } else {
     let ratesDisplay = ''

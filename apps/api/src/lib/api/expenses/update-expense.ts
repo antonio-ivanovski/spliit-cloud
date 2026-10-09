@@ -13,7 +13,10 @@ import {
 import { env as jobsEnv } from '@spliit/jobs'
 
 import { deleteS3Object } from '../../../routes/upload'
-import { resolveConversion } from '../../expense-conversion'
+import {
+  preservedExchangeFromStored,
+  resolveConversion,
+} from '../../expense-conversion'
 import { resolveParticipantDisplayName } from '../../invitations'
 import {
   hasEligibleWebhookEndpoints,
@@ -115,10 +118,33 @@ export async function updateExpense(
   // UTC convention: pass the instant Date so `toIsoDate` derives the UTC
   // date, matching create/CSV/group-import/web-preview. `resolvedWallIso`
   // stays wall-based for calendar dates below.
-  const conversion = await resolveConversion(expense, {
-    ledgerCurrency: group.ledger.currencyCode ?? null,
-    expenseDate: resolvedExpenseDate,
-  })
+  // Issue #155: an EXCHANGE edit that keeps the same currency + lookup date
+  // reuses the stored rate instead of re-fetching, so unrelated edits don't
+  // move the ledger total. Amount changes keep the rate and rescale.
+  const ledgerCurrency = group.ledger.currencyCode ?? null
+  const conversion = await resolveConversion(
+    expense,
+    {
+      ledgerCurrency,
+      expenseDate: resolvedExpenseDate,
+    },
+    {
+      preserveExchange:
+        existingExpense.conversionSource === 'EXCHANGE'
+          ? preservedExchangeFromStored(
+              {
+                originalCurrency: existingExpense.originalCurrency,
+                conversionRate:
+                  existingExpense.conversionRate != null
+                    ? Number(existingExpense.conversionRate)
+                    : null,
+                expenseDate: existingExpense.expenseDate,
+              },
+              ledgerCurrency,
+            )
+          : undefined,
+    },
+  )
 
   const expenseAmount = conversion.ledgerAmountMinor
 
@@ -474,8 +500,27 @@ export async function updateExpense(
         await resolveConversion(
           { amount: recurrenceTemplate.amount, conversion: conversionInput },
           {
-            ledgerCurrency: group.ledger.currencyCode ?? null,
+            ledgerCurrency,
             expenseDate: expenseDateForRate,
+          },
+          {
+            // Issue #155: template-only edits keep each row's stored EXCHANGE
+            // rate; redated / currency-changed rows re-fetch for their date.
+            preserveExchange:
+              conversionInput?.type === 'exchange' &&
+              row.conversionSource === 'EXCHANGE'
+                ? preservedExchangeFromStored(
+                    {
+                      originalCurrency: row.originalCurrency,
+                      conversionRate:
+                        row.conversionRate != null
+                          ? Number(row.conversionRate)
+                          : null,
+                      expenseDate: row.expenseDate,
+                    },
+                    ledgerCurrency,
+                  )
+                : undefined,
           },
         ),
       )
