@@ -26,6 +26,8 @@ export function CreateCard({
   description,
   secondaryAction,
   className,
+  disabled,
+  disabledReason,
   'data-testid': dataTestId,
 }: {
   to: LinkProps['to']
@@ -34,10 +36,64 @@ export function CreateCard({
   description: string
   secondaryAction?: SecondaryAction
   className?: string
+  disabled?: boolean
+  disabledReason?: string
   'data-testid'?: string
 }) {
   const iconClassName =
     'inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/12 text-primary ring-1 ring-primary/15'
+
+  if (disabled) {
+    return (
+      <li className="min-w-0">
+        <div
+          aria-disabled="true"
+          data-testid={dataTestId}
+          title={disabledReason}
+          className={cn(
+            'relative h-full min-h-[5.5rem] w-full cursor-not-allowed overflow-hidden rounded-lg border border-primary/25 bg-linear-to-br from-primary/8 via-background to-background text-base opacity-60 shadow-[0_1px_0_0_hsl(var(--primary)/0.08)]',
+            className,
+          )}
+        >
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -end-10 -top-12 h-28 w-28 rounded-full bg-primary/10 blur-2xl"
+          />
+          <div
+            className={cn(
+              'relative grid h-full min-h-[5.5rem]',
+              secondaryAction && 'grid-cols-[minmax(0,1fr)_7rem]',
+            )}
+          >
+            <div className="flex min-w-0 items-center gap-3 px-3 py-3 text-foreground">
+              <span aria-hidden className={iconClassName}>
+                {icon ?? <Plus className="h-4 w-4" />}
+              </span>
+              <span className="flex min-w-0 flex-1 flex-col">
+                <span className="truncate font-medium">{title}</span>
+                <span className="truncate text-xs font-normal text-muted-foreground">
+                  {description}
+                </span>
+              </span>
+            </div>
+            {secondaryAction ? (
+              <div
+                data-testid={secondaryAction['data-testid']}
+                className="flex min-w-0 flex-col items-center justify-center gap-1 border-s border-primary/15 px-2 py-2 text-center text-xs leading-tight font-medium text-primary"
+              >
+                <span aria-hidden className="text-primary">
+                  {secondaryAction.icon}
+                </span>
+                <span className="max-w-full truncate">
+                  {secondaryAction.label}
+                </span>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      </li>
+    )
+  }
 
   return (
     <li className="min-w-0">

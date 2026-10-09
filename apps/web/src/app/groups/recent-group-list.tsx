@@ -253,6 +253,7 @@ export function RecentGroupList() {
       hidden,
     } = partitionGroups(offlineGroups)
     const offlineStats = offlineOverview.data.stats as unknown as OverviewStats
+    const offlineDisabledReason = tOffline('OfflineReadOnly.reconnectToEdit')
     body = (
       <div className="flex flex-col gap-5">
         {!offlineOverview.data.totalsAvailable && (
@@ -271,22 +272,6 @@ export function RecentGroupList() {
               {tOffline('OfflineDownloads.totalsIncomplete')}
             </output>
           )}
-        <CollapsibleSection
-          storageKey={STORAGE_KEYS.groups}
-          defaultOpen
-          title={t('groups')}
-          insetHeader
-        >
-          <ul className="motion-stagger grid items-stretch gap-3 sm:grid-cols-2">
-            {renderGroupItems(sectionGroups, 'groups')}
-          </ul>
-        </CollapsibleSection>
-        {offlineOverview.data.totalsAvailable && (
-          <AcrossGroupsBalanceCard
-            stats={offlineStats}
-            groups={offlineGroups}
-          />
-        )}
         {starred.length > 0 && (
           <CollapsibleSection
             storageKey={STORAGE_KEYS.starred}
@@ -299,17 +284,70 @@ export function RecentGroupList() {
             </ul>
           </CollapsibleSection>
         )}
-        {friends.length > 0 && (
-          <CollapsibleSection
-            storageKey={STORAGE_KEYS.friends}
-            defaultOpen
-            title={t('friends')}
-            insetHeader
-          >
-            <ul className="motion-stagger grid items-stretch gap-3 sm:grid-cols-2">
-              {renderGroupItems(friends, 'friends')}
-            </ul>
-          </CollapsibleSection>
+        <CollapsibleSection
+          storageKey={STORAGE_KEYS.groups}
+          defaultOpen
+          title={t('groups')}
+          insetHeader
+          headerAction={
+            /* Phones have the camera: desktops get no scanner button. */
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-7 gap-1.5 px-2 text-xs text-muted-foreground sm:hidden"
+              disabled
+              title={offlineDisabledReason}
+              data-testid="scan-to-join-button"
+            >
+              <ScanLine className="h-3.5 w-3.5" />
+              {tHomepage('scanToJoin')}
+            </Button>
+          }
+        >
+          <ul className="motion-stagger grid items-stretch gap-3 sm:grid-cols-2">
+            <CreateCard
+              to="/groups/create"
+              icon={<Plus className="h-4 w-4" />}
+              title={t('createGroupCard.title')}
+              description={t('createGroupCard.description')}
+              data-testid="create-group-card"
+              disabled
+              disabledReason={offlineDisabledReason}
+              secondaryAction={{
+                to: '/groups/import',
+                icon: <Cloud className="h-4 w-4" />,
+                label: t('importGroup'),
+                'data-testid': 'import-group-action',
+              }}
+            />
+            {renderGroupItems(sectionGroups, 'groups')}
+          </ul>
+        </CollapsibleSection>
+        <CollapsibleSection
+          storageKey={STORAGE_KEYS.friends}
+          defaultOpen
+          title={t('friends')}
+          insetHeader
+        >
+          <ul className="motion-stagger grid items-stretch gap-3 sm:grid-cols-2">
+            <CreateCard
+              to="/friends/create"
+              icon={<Users className="h-4 w-4" />}
+              title={t('createFriendLedgerCard.title')}
+              description={t('createFriendLedgerCard.description')}
+              data-testid="create-friend-ledger-card"
+              disabled
+              disabledReason={offlineDisabledReason}
+            />
+            {renderGroupItems(friends, 'friends')}
+          </ul>
+        </CollapsibleSection>
+        {offlineOverview.data.totalsAvailable && (
+          <AcrossGroupsBalanceCard
+            stats={offlineStats}
+            groups={offlineGroups}
+          />
         )}
         {archived.length > 0 && (
           <CollapsibleSection
@@ -335,6 +373,18 @@ export function RecentGroupList() {
             </ul>
           </CollapsibleSection>
         )}
+        <div
+          data-testid="all-expenses-link"
+          aria-disabled="true"
+          title={offlineDisabledReason}
+          className="flex cursor-not-allowed items-center justify-between rounded-lg border bg-card px-4 py-3 text-sm opacity-60"
+        >
+          <span className="flex items-center gap-2 font-medium">
+            <ReceiptText className="h-4 w-4 text-muted-foreground" />
+            {t('allExpenses')}
+          </span>
+          <ArrowRight className="h-4 w-4 text-muted-foreground rtl:rotate-180" />
+        </div>
       </div>
     )
   } else if (showServerEmpty) {

@@ -230,4 +230,92 @@ describe('RecentGroupList offline fallback', () => {
       screen.queryByTestId('group-card-stale-group-offline-2'),
     ).not.toBeInTheDocument()
   })
+
+  it('orders starred above groups offline, matching online', () => {
+    mocks.mockUseOverviewQuery.mockReturnValue({
+      data: undefined,
+      error: new Error('Failed to fetch'),
+      isLoading: false,
+      refetch: vi.fn(),
+    })
+    mocks.mockUseOfflineOverview.mockReturnValue({
+      data: {
+        groups: [
+          makeGroup({
+            id: 'group-offline-regular',
+            name: 'Regular Trip',
+            preference: { starred: false, hidden: false },
+          }),
+          makeGroup({
+            id: 'group-offline-starred',
+            name: 'Starred Trip',
+            preference: { starred: true, hidden: false },
+          }),
+        ],
+        stats: { balanceSummaries: [], peopleBalances: [] },
+        totalsAvailable: false,
+        oldestCapturedAt: new Date(),
+        dirtyGroupCount: 0,
+      },
+      meta: {
+        source: 'download',
+        availability: 'ready',
+        refreshing: false,
+        incompleteGroupCount: 0,
+      },
+    })
+
+    render(<RecentGroupList />)
+
+    const starredCard = screen.getByText('Starred Trip')
+    const regularCard = screen.getByText('Regular Trip')
+    expect(starredCard).toBeInTheDocument()
+    expect(regularCard).toBeInTheDocument()
+    // Starred section renders first, so its card precedes the groups card.
+    expect(
+      starredCard.compareDocumentPosition(regularCard) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+  })
+
+  it('renders create actions disabled offline with full section parity', () => {
+    mocks.mockUseOverviewQuery.mockReturnValue({
+      data: undefined,
+      error: new Error('Failed to fetch'),
+      isLoading: false,
+      refetch: vi.fn(),
+    })
+    mocks.mockUseOfflineOverview.mockReturnValue({
+      data: {
+        groups: [makeGroup({ name: 'Cached Trip' })],
+        stats: { balanceSummaries: [], peopleBalances: [] },
+        totalsAvailable: false,
+        oldestCapturedAt: new Date(),
+        dirtyGroupCount: 0,
+      },
+      meta: {
+        source: 'download',
+        availability: 'ready',
+        refreshing: false,
+        incompleteGroupCount: 0,
+      },
+    })
+
+    render(<RecentGroupList />)
+
+    expect(screen.getByTestId('create-group-card')).toHaveAttribute(
+      'aria-disabled',
+      'true',
+    )
+    expect(screen.getByTestId('create-friend-ledger-card')).toHaveAttribute(
+      'aria-disabled',
+      'true',
+    )
+    expect(screen.getByTestId('import-group-action')).toBeInTheDocument()
+    expect(screen.getByTestId('scan-to-join-button')).toBeDisabled()
+    expect(screen.getByTestId('all-expenses-link')).toHaveAttribute(
+      'aria-disabled',
+      'true',
+    )
+  })
 })

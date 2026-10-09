@@ -23,6 +23,6 @@ who is affected, and the exact migration steps.
 
 ### 🐛 Bug fixes
 
-- Short entry per fix (`TBD` by @TBD)
+- Fixed the offline dashboard so starred groups stay on top and groups, friends, balances, and actions appear in the same order as online, with create, import, scan, and all-expenses actions shown disabled (`TBD` by @TBD)
 
 **Full Changelog**: TBD
