@@ -83,7 +83,7 @@ export const OFFLINE_SUPPORTED_GROUP_META_VERSIONS: ReadonlySet<number> =
 /** After this long, `opening` stops blocking and offers a retry hook. */
 export const OFFLINE_OPEN_TIMEOUT_MS = 3000
 export const OFFLINE_STORAGE_BLOCKED_MESSAGE =
-  'Close other Spliit tabs to finish updating offline storage.'
+  'Close other Spliit Cloud tabs to finish updating offline storage.'
 
 const nonNegativeInt = z.number().int().nonnegative()
 

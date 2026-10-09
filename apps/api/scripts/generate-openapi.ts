@@ -1,7 +1,7 @@
 /**
  * Build-time OpenAPI spec generator.
  *
- * Generates an OpenAPI 3.1 document for the Spliit API by combining:
+ * Generates an OpenAPI 3.1 document for the Spliit Cloud API by combining:
  *
  * 1. Auto-generated spec from the tRPC router via `@trpc/openapi`. Zero
  *    per-procedure annotations are required — the generator introspects the
@@ -181,7 +181,7 @@ const SESSION_COOKIE_NAME_SECURE = '__Secure-better-auth.session_token'
 async function main() {
   const doc = await generateOpenAPIDocument(routerPath, {
     exportName: 'appRouter',
-    title: 'Spliit API',
+    title: 'Spliit Cloud API',
     version: '0.1.0',
     servers: [{ url: '/trpc', description: 'tRPC mount point' }],
   })
@@ -234,7 +234,7 @@ export async function postProcessOpenApiDocument(
   // tRPC-shaped (dotted paths, envelope responses, `?input=<json>` GET).
   result.info = {
     ...result.info,
-    title: result.info?.title ?? 'Spliit API',
+    title: result.info?.title ?? 'Spliit Cloud API',
     version: result.info?.version ?? '0.1.0',
     description: ROOT_DESCRIPTION,
   }
@@ -460,8 +460,8 @@ const ROOT_SERVER: OpenAPIV3_1.ServerObject[] = [
  *   Anonymous endpoints (sign-in, sign-up, magic-link request, OAuth callbacks,
  *   token-based flows) get `security: []`; UserInfo uses the OAuth scheme.
  * - **Tag normalisation**: rename the plugin's `Default` tag (core endpoints) to
- *   `auth` for consistency with the rest of the Spliit API tags; lowercase
- *   `Magic-link` → `magic-link`.
+ *   `auth` for consistency with the rest of the Spliit Cloud API tags;
+ *   lowercase `Magic-link` → `magic-link`.
  */
 async function buildAuthPaths(): Promise<{
   paths: Record<string, OpenAPIV3_1.PathItemObject>
@@ -736,7 +736,7 @@ function buildTags(): OpenAPIV3_1.TagObject[] {
 }
 
 const ROOT_DESCRIPTION = `
-The Spliit API is a [tRPC](https://trpc.io) server mounted at \`/trpc\` with
+The Spliit Cloud API is a [tRPC](https://trpc.io) server mounted at \`/trpc\` with
 the [superjson](https://github.com/flightcontrolhq/superjson) transformer.
 Every operation in this spec is a tRPC procedure that follows the
 tRPC-over-HTTP wire convention:

@@ -11,9 +11,9 @@ import { getApiBaseUrl } from './api-url'
 import { trackedFetch } from './connectivity'
 
 /**
- * Spliit web auth client. Talks to the better-auth handler mounted at `/auth/*`
- * on the API server. Cookies are sent with credentials so the SPA does not need
- * to store bearer tokens in localStorage.
+ * Spliit Cloud web auth client. Talks to the better-auth handler mounted at
+ * `/auth/*` on the API server. Cookies are sent with credentials so the SPA
+ * does not need to store bearer tokens in localStorage.
  *
  * The API uses `betterAuth` with official `User`/`Session`/`Account` model
  * names; the client only needs to know the base URL and that sessions are

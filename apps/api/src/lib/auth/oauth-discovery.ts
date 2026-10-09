@@ -4,7 +4,7 @@ import { getApiBaseUrl } from './urls'
 export const OAUTH_PROTECTED_RESOURCE_PATH =
   '/.well-known/oauth-protected-resource'
 
-/** RFC 9728 metadata that lets an unknown OAuth client discover Spliit. */
+/** RFC 9728 metadata that lets an unknown OAuth client discover Spliit Cloud. */
 export function getOAuthProtectedResourceMetadata() {
   const resource = getApiBaseUrl()
   return {
@@ -16,7 +16,7 @@ export function getOAuthProtectedResourceMetadata() {
     // `API_RESOURCE_DISCOVERY_SCOPES`.
     scopes_supported: [...API_RESOURCE_DISCOVERY_SCOPES],
     bearer_methods_supported: ['header'],
-    resource_name: 'Spliit API',
+    resource_name: 'Spliit Cloud API',
     resource_documentation: new URL('/docs', resource).toString(),
   }
 }

@@ -85,7 +85,7 @@ https://api.spliit.cloud/.well-known/oauth-protected-resource
 That document identifies the API resource, its basic scope set — the two read
 scopes only — and the OAuth authorization server. The agent can then follow
 RFC 8414 discovery to learn the dynamic-registration, authorization and token
-endpoints. No Spliit-specific skill or hard-coded OAuth route list is required.
+endpoints. No Spliit Cloud-specific skill or hard-coded OAuth route list is required.
 Write and delete scopes are deliberately not advertised there: each challenge
 and the OpenAPI document name the scope an operation actually needs, so an
 agent that falls back to requesting everything in `scopes_supported` ends up
@@ -156,7 +156,7 @@ curl -X POST https://api.spliit.cloud/auth/oauth2/token \
   --data-urlencode 'code_verifier=<pkce_code_verifier>'
 ```
 
-When `resource` is omitted, Spliit binds the authorization to
+When `resource` is omitted, Spliit Cloud binds the authorization to
 `https://api.spliit.cloud` by default and issues an API JWT. A client may pass
 `resource=https://api.spliit.cloud` explicitly on the authorization request;
 the token exchange and later refreshes inherit that resource.
@@ -174,7 +174,7 @@ default when omitted); later refreshes can only retain or narrow that binding.
 Existing MCP clients therefore keep working without reauthorizing.
 
 Call the API with `Authorization: Bearer <access_token>`. Browser apps on any
-origin may call the API this way; cookie sessions stay limited to the Spliit
+origin may call the API this way; cookie sessions stay limited to the Spliit Cloud
 web origins.
 
 Access tokens last at most one hour and stop working on the API and the

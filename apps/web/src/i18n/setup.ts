@@ -75,7 +75,7 @@ export async function loadLocale(
 }
 
 /**
- * Match a browser locale tag to the closest locale supported by Spliit.
+ * Match a browser locale tag to the closest locale supported by Spliit Cloud.
  *
  * Browser preferences commonly include a region that differs from the
  * translation bundle (for example fr-CA), so exact matching alone is not

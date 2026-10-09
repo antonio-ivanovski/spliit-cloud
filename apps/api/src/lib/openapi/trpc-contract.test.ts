@@ -18,7 +18,7 @@ const ROUTER_PATH = resolve(__dirname, '..', '..', 'trpc', 'routers', '_app.ts')
 async function generateTestDocument(): Promise<OpenAPIV3_1.Document> {
   const doc = await generateOpenAPIDocument(ROUTER_PATH, {
     exportName: 'appRouter',
-    title: 'Spliit API',
+    title: 'Spliit Cloud API',
     version: '0.1.0',
     servers: [{ url: '/trpc', description: 'tRPC mount point' }],
   })

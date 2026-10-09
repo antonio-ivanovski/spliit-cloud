@@ -22,11 +22,11 @@ We use this data to provide accounts, shared expense tracking, invitations, expo
 
 ## Recipients and service providers
 
-The service runs on hosting, database, backup, object-storage, and email infrastructure (currently Cloudflare Pages, a Hetzner-hosted API and PostgreSQL database, Cloudflare R2 backups and uploads, and a configured SMTP provider). These providers process data only to operate the service. If you choose receipt extraction or expense categorisation, relevant receipt images, voice recordings, transcripts, expense text, currency context, and recent expense context may be sent to the configured AI provider. Voice recordings are processed transiently and are not stored by Spliit. Do not use those features for material you are not comfortable sharing with that provider.
+The service runs on hosting, database, backup, object-storage, and email infrastructure (currently Cloudflare Pages, a Hetzner-hosted API and PostgreSQL database, Cloudflare R2 backups and uploads, and a configured SMTP provider). These providers process data only to operate the service. If you choose receipt extraction or expense categorisation, relevant receipt images, voice recordings, transcripts, expense text, currency context, and recent expense context may be sent to the configured AI provider. Voice recordings are processed transiently and are not stored by Spliit Cloud. Do not use those features for material you are not comfortable sharing with that provider.
 
 ## Connected applications
 
-If you connect ChatGPT, Claude, or another OAuth application to your Spliit account, that application can access the groups, expenses, and balances your account can see, within the permissions you approved. Data sent through a connected application is also governed by that application's terms and privacy policy. You can review and disconnect connected applications at any time from your account settings; disconnecting stops future access but does not delete data the application already received.
+If you connect ChatGPT, Claude, or another OAuth application to your Spliit Cloud account, that application can access the groups, expenses, and balances your account can see, within the permissions you approved. Data sent through a connected application is also governed by that application's terms and privacy policy. You can review and disconnect connected applications at any time from your account settings; disconnecting stops future access but does not delete data the application already received.
 
 ## Cookies and local storage
 

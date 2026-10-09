@@ -59,8 +59,8 @@
       "scanning": "QR kode baten bila…",
       "noCamera": "Ez da kamerarik aurkitu gailu honetan. Eskaneatu kodea zure telefonoaren kamera-aplikazioarekin.",
       "permissionDenied": "Kamerarako sarbidea ukatu da. Baimendu kamerarako sarbidea nabigatzailearen ezarpenetan, edo eskaneatu kodea zure telefonoaren kamera-aplikazioarekin.",
-      "invalidCode": "Kode hori ez da Spliit talde-gonbidapen bat. Saiatu berriro antolatzailearen QR kodea eskaneatzen.",
-      "foreignTitle": "Kode honek beste Spliit batera darama",
+      "invalidCode": "Kode hori ez da Spliit Cloud talde-gonbidapen bat. Saiatu berriro antolatzailearen QR kodea eskaneatzen.",
+      "foreignTitle": "Kode honek beste Spliit Cloud batera darama",
       "foreignDescription": "{origin} irekiko da arakatzaile honetan. Jarraitu soilik erakutsi dizun antolatzaileaz fidatzen bazara.",
       "foreignConfirm": "Ireki esteka",
       "foreignCancel": "Atzera"
@@ -203,7 +203,7 @@
     "exportPdfError": "Ezin izan da PDFa sortu. Saiatu berriro.",
     "exportPdfSuccess": "PDF txostena deskargatu da.",
     "exportPdfRetryBounds": "Saiatu berriro",
-    "exportBundleTitle": "Spliit babes-paketea",
+    "exportBundleTitle": "Spliit Cloud babes-paketea",
     "exportBundlePurpose": "Taldearen datu eramangarriak gastu, ezarpen eta erantsitako dokumentuekin.",
     "exportBundleAction": "Sorta deskargatu",
     "globalArchived": "artxibatua",
@@ -318,7 +318,7 @@
       "unknownGroup": "Talde ezezaguna",
       "sentOn": "{date} bidalia"
     },
-    "linkInvitationBannerDescription": "{inviter}-k {groupName} taldera batzeko gonbidatu zaitu Spliiten.",
+    "linkInvitationBannerDescription": "{inviter}-k {groupName} taldera batzeko gonbidatu zaitu Spliit Cloud-en.",
     "linkInvitationSingleUse": "Esteka hau behin bakarrik erabili daiteke. Onartu ondoren, ez du funtzionatuko.",
     "linkInvitationTemporaryName": "{name} gisa batuko zara.",
     "linkInvitationAlreadyMemberTitle": "Dagoeneko {groupName} taldean zaude",
@@ -397,7 +397,7 @@
         "shareAriaLabel": "Partekatu gonbidapen esteka",
         "emailInvitesTitle": "Posta gonbidapenak bidalita",
         "emailInvitesDescription": "Zerbitzariak posta elektronikoa bidali die hurrengo pertsonei. Onartu/Ezeztatu pankarta ikusiko dute taldearen orrian saioa hasten dutenean.",
-        "shareTitle": "Batu nire Spliit taldera",
+        "shareTitle": "Batu nire Spliit Cloud taldera",
         "shareText": "Batu gure gastu taldera Spliit Cloud-en — {name}. Ireki esteka hau onartzeko: {url}",
         "copyLink": "Kopiatu gonbidapen-esteka",
         "copied": "Kopiatuta"
@@ -463,7 +463,7 @@
         "settleUpComingTitle": "Settle Up inportazioa bidean da",
         "settleUpComingDescription": "Settle Up CSV esportazioaren euskarria gure errepideko planoan dago.",
         "dropFile": "Jaregin JSON edo CSV fitxategi bat, edo egin klik hautatzeko",
-        "dropFileDescription": "JSON-ek kantitate eta ordaintzaile bakoitza zehatz gordetzen du. CSV bigarren aukera bat da — Spliit-ek parte-hartzaile bakoitzeko kantitatea 2 hamartarrera biribiltzen du.",
+        "dropFileDescription": "JSON-ek kantitate eta ordaintzaile bakoitza zehatz gordetzen du. CSV bigarren aukera bat da — Spliit Cloud-ek parte-hartzaile bakoitzeko kantitatea 2 hamartarrera biribiltzen du.",
         "or": "edo",
         "pasteUrl": "Itsatsi spliit.app URL bat",
         "urlDescription": "Gure zerbitzariak spliit.app-eko esportazio publikorako endpoint-aren bidez eskuratzen du taldea zure izenean.",
@@ -473,7 +473,7 @@
         "receiptWarningTitle": "Ordainagirien irudiak ez dira inportatzen.",
         "receiptWarningDescription": "Spliit.app-eko esportazioak ez ditu ordainagirien irudiak barne hartzen. Berriro igo itzazu helburuko taldean behar badituzu.",
         "invalidUrl": "Itsatsi baliozko spliit.app taldeko URL bat",
-        "notFoundUrl": "Spliit-ek ez du talde hau aurkitu",
+        "notFoundUrl": "Spliit Cloud-ek ez du talde hau aurkitu",
         "fetchUrlError": "Ezin izan da iturburua eskuratu",
         "fileReadError": "Ezin izan da fitxategia irakurri",
         "appToCloudDescription": "Ordeztu .app .cloud-ekin edozein spliit.app taldeko URL-an, Spliit Cloud-era inportatzeko.",
@@ -1988,7 +1988,7 @@
       "friendAlreadyMember": "Dagoeneko kidea da",
       "noFriends": "Ez dago oraindik lagunik. Gonbidatu Posta elektronikoko fitxatik.",
       "friendAlreadyInvited": "Dagoeneko gonbidatua",
-      "noAccountDescription": "Gehitu norbait gastuetara Spliit-era gonbidatu gabe. Geroago kontu batera lotu ahal izango duzu.",
+      "noAccountDescription": "Gehitu norbait gastuetara Spliit Cloud-era gonbidatu gabe. Geroago kontu batera lotu ahal izango duzu.",
       "temporaryNameRequired": "Aldi baterako izena",
       "noAccountNameDescription": "Parte-hartzaile hau kontu batera lotu arte, gastuetan eta saldoetan agertuko da.",
       "addParticipant": "Gehitu parte-hartzailea",
@@ -2086,7 +2086,7 @@
         },
         "unsettled": {
           "title": "Kitatu gabeko saldoak dituzu",
-          "description": "Spliit-ek zure saldoetarako zor-kitapenaren ordainketak sortuko ditu irten aurretik. Beste parte-hartzaileen saldoak ez dira aldatuko."
+          "description": "Spliit Cloud-ek zure saldoetarako zor-kitapenaren ordainketak sortuko ditu irten aurretik. Beste parte-hartzaileen saldoak ez dira aldatuko."
         }
       },
       "toast": {
@@ -2171,7 +2171,7 @@
       "emailPlaceholder": "account@example.com",
       "emailChangeWarning": "Uneko hartzaileak ezingo du gonbidapen hau aurrerantzean onartu.",
       "nameLabel": "Bistaratzeko izena",
-      "profileNameNote": "Bere Spliit profileko izena erabiltzen du",
+      "profileNameNote": "Bere Spliit Cloud profileko izena erabiltzen du",
       "saveChanges": "Gorde aldaketak",
       "updateSend": "Eguneratu eta bidali",
       "switchToEmailSend": "Aldatu eta bidali gonbidapena",
@@ -2308,7 +2308,7 @@
     },
     "notifications": {
       "title": "Jakinarazpenak",
-      "description": "Aukeratu Spliit-ek jardueraren jakinarazpenak nora bidaliko dituen.",
+      "description": "Aukeratu Spliit Cloud-ek jardueraren jakinarazpenak nora bidaliko dituen.",
       "enable": "Gaitu push jakinarazpenak",
       "disable": "Desgaitu push jakinarazpenak",
       "enabled": "Push jakinarazpenak gaituta daude gailu honetan.",
@@ -2316,7 +2316,7 @@
       "unsupported": "Nabigatzaile edo testuinguru honek ez ditu push jakinarazpenak onartzen.",
       "notConfigured": "Push jakinarazpenak ez daude erabilgarri inplementazio honetan.",
       "permissionDenied": "Jakinarazpenak blokeatuta daude. Baimendu nabigatzailearen edo gailuaren ezarpenetan, eta saiatu berriro.",
-      "iosInstall": "iPhone edo iPad batean, gehitu Spliit hasierako pantailara push jakinarazpenak gaitu aurretik.",
+      "iosInstall": "iPhone edo iPad batean, gehitu Spliit Cloud hasierako pantailara push jakinarazpenak gaitu aurretik.",
       "error": "Ezin izan dira push jakinarazpenen ezarpenak eguneratu. Saiatu berriro.",
       "preferencesTitle": "Jakinarazpenen hobespenak",
       "preferencesDescription": "Aukera hauek etorkizuneko talde eta gastuen jarduerari aplikatzen zaizkio.",
@@ -2856,7 +2856,7 @@
   },
   "OfflineBanner": {
     "message": "Lineaz kanpo zaude. Nabiga dezakezu, baina aldaketak egiteko konexioa behar da.",
-    "serverUnavailable": "Ezin da Spliit-ekin konektatu une honetan. Deskargatutako datuak erakusten.",
+    "serverUnavailable": "Ezin da Spliit Cloud-ekin konektatu une honetan. Deskargatutako datuak erakusten.",
     "reconnecting": "Berriro konektatzen… Deskargatutako datuak irakurtzen jarrai dezakezu."
   },
   "InstallPromotion": {
@@ -3197,8 +3197,8 @@
   },
   "PushOnboarding": {
     "title": "Aukeratu nola egon eguneratuta",
-    "description": "Spliit-ek taldeen eta gastuen jardueraren berri eman diezazuke gertatu ahala.",
-    "pushBenefit": "Push jakinarazpenak gailu honetara iristen dira Spliit irekita ez dagoenean ere.",
+    "description": "Spliit Cloud-ek taldeen eta gastuen jardueraren berri eman diezazuke gertatu ahala.",
+    "pushBenefit": "Push jakinarazpenak gailu honetara iristen dira Spliit Cloud irekita ez dagoenean ere.",
     "emailFallback": "Posta elektronikoa erabilgarri dago bertan jasotzea aukeratzen dituzun jakinarazpenetarako; push hutseko aukerak ez dira birbideratuko.",
     "settingsHint": "Aukera hauek edozein unetan alda ditzakezu Ezarpenetan. Push jakinarazpenak gailu bakoitzean bereiz aktibatzen dira.",
     "enable": "Push jakinarazpenak aktibatu",
@@ -3314,25 +3314,25 @@
   },
   "OAuth": {
     "shell": {
-      "label": "Spliit-en baimena",
+      "label": "Spliit Cloud-en baimena",
       "mobileDescription": "Berrikusi eskatutako kontu-sarbidea",
-      "title": "Konektatu aplikazio bat zure Spliit kontuarekin.",
+      "title": "Konektatu aplikazio bat zure Spliit Cloud kontuarekin.",
       "previewBullet": "Kontuaren ezarpenetan deskonekta dezakezu",
       "authorityBullet": "Zuk erabakitzen duzu aplikazio hau zertara sar daitekeen",
       "validationBullet": "Dauden baliozkotze, saldo eta jakinarazpenek bere horretan jarraitzen dute"
     },
     "consent": {
-      "title": "Spliit {client}-(e)kin konektatu?",
+      "title": "Spliit Cloud {client}-(e)kin konektatu?",
       "description": "Berrikusi aplikazio honek zein kontu eta baimen eskatzen dituen.",
       "connectionDetails": "Konexioaren xehetasunak",
-      "spliitAccount": "Spliit kontua",
+      "spliitAccount": "Spliit Cloud kontua",
       "connectingTo": "Hona konektatzen",
       "assistantVia": "OAuth aplikazioa",
       "defaultClient": "aplikazio hau",
-      "defaultUser": "Spliit erabiltzailea",
+      "defaultUser": "Spliit Cloud erabiltzailea",
       "sessionUnavailable": "Saioa ez dago erabilgarri. Itzuli eta hasi saioa berriro.",
       "sharedData": "Zer partekatuko da",
-      "identityTitle": "Zure Spliit identitatea",
+      "identityTitle": "Zure Spliit Cloud identitatea",
       "identityDescription": "Zure izenak eta posta elektronikoak konektatzen ari den kontua identifikatzen dute. Pasahitza eta saioa hasteko metodoa ez dira inoiz partekatzen.",
       "groupsTitle": "Taldeen eta gastuen testuingurua",
       "groupsDescription": "Taldeen xehetasunak, parte-hartzaileak, gordetako banaketak, saldoak, estatistikak eta jarduera.",
@@ -3340,7 +3340,7 @@
       "expensesDescription": "Aplikazio honek aurrebistan erakutsitako gastu zehatza bakarrik sor dezake Gastua sortu sakatu ondoren.",
       "privacyTitle": "Pribatutasunari buruzko ohar azkarra",
       "privacyDescription": "Talde baten finantza-xehetasunak sentikorrak izan daitezke. {client}(r)en eskura egongo dira konexioak dirauen bitartean. Noiznahi deskonekta dezakezu kontuaren ezarpenetatik.",
-      "authorityNote": "Spliit da egia-iturria. Dauden baliozkotze, saldo, jarduera-historia eta jakinarazpenek aplikatzen jarraitzen dute.",
+      "authorityNote": "Spliit Cloud da egia-iturria. Dauden baliozkotze, saldo, jarduera-historia eta jakinarazpenek aplikatzen jarraitzen dute.",
       "allow": "Baimendu eta konektatu",
       "cancel": "Utzi",
       "missingRequest": "Baimen-eskaera falta da. Itzuli aplikaziora eta hasi konexioa berriro.",
@@ -3355,7 +3355,7 @@
       "expensesDeleteTitle": "Ezabatu gastuak",
       "expensesDeleteDescription": "Ezabatu gastuak behin betiko eta egin datuak ezabatzen dituzten aldaketak, adibidez serie errepikari bat laburtzea. Ezin da desegin.",
       "unknownScopes": "Aplikazio honek Spliit Cloud-ek ezagutzen ez duen baimen bat eskatzen du ({scopes}); beraz, ezin da hemen onartu. Eskatu egileari eskatutako baimenak berrikusteko.",
-      "clientUnavailable": "Spliit-ek ezin izan du aplikazio hau egiaztatu. Itzuli aplikaziora eta hasi konexioa berriro.",
+      "clientUnavailable": "Spliit Cloud-ek ezin izan du aplikazio hau egiaztatu. Itzuli aplikaziora eta hasi konexioa berriro.",
       "clientWebsite": "Aplikazioaren webgunea",
       "privacyPolicy": "Pribatutasun-politika",
       "redirectsTo": "Hona birbideratzen da",
@@ -3365,10 +3365,10 @@
     "login": {
       "missingTitle": "Baimen-eskaera falta da",
       "missingDescription": "Itzuli aplikaziora eta hasi konexioa berriro.",
-      "missingError": "Spliitek ez ditu OAuth baimenaren xehetasunak jaso.",
+      "missingError": "Spliit Cloud-ek ez ditu OAuth baimenaren xehetasunak jaso.",
       "connectingTitle": "Zure kontua konektatzen",
       "connectingDescription": "Zure Spliit Cloud-eko saio aktiboa aurkitu da. Ez da saioa berriro hasi behar.",
-      "checkingSession": "Zure Spliit saioa egiaztatzen…",
+      "checkingSession": "Zure Spliit Cloud saioa egiaztatzen…",
       "continuing": "Modu seguruan jarraitzen…",
       "signInTitle": "Hasi saioa konektatzeko",
       "signInDescription": "Erabili Spliit Cloud-en saioa hasteko ohiko metodoa. Aplikazioak ez du inoiz zure pasahitzik edo saioa hasteko kredentzialik jasotzen."
@@ -3383,7 +3383,7 @@
       "copied": "Arbelera kopiatuta",
       "codeLabel": "Baimen-kodea",
       "stateLabel": "Egoera",
-      "warning": "Itsatsi soilik konfiantzazko agente edo aplikazioan. Hori duen edonork konekta dezake zure Spliit kontura iraungi arte.",
+      "warning": "Itsatsi soilik konfiantzazko agente edo aplikazioan. Hori duen edonork konekta dezake zure Spliit Cloud kontura iraungi arte.",
       "expiryNote": "Kode honek jaulki eta 10 minutura iraungitzen du.",
       "errorTitle": "Konexioa ez da osatu",
       "errorDescription": "Baimen-zerbitzariak errore bat itzuli du kode baten ordez.",
@@ -3534,7 +3534,7 @@
   },
   "AIExpense": {
     "title": "Berrikusi IAren gastua",
-    "description": "Egiaztatu Spliitek zer ulertu duen gastu hau gehitu aurretik.",
+    "description": "Egiaztatu Spliit Cloud-ek zer ulertu duen gastu hau gehitu aurretik.",
     "created": "Gastua sortu da.",
     "createError": "Ezin izan da gastua sortu.",
     "missing": "Ez da detektatu",
@@ -3590,7 +3590,7 @@
       },
       "idea": {
         "title": "Proposatu ideia bat",
-        "description": "Deskribatu konpontzea merezi duen arazo bat edo Spliit erabilgarriago egingo lukeen hobekuntza bat.",
+        "description": "Deskribatu konpontzea merezi duen arazo bat edo Spliit Cloud erabilgarriago egingo lukeen hobekuntza bat.",
         "action": "Ireki ideien inprimakia"
       },
       "feedback": {
@@ -3682,7 +3682,7 @@
     "hintTapToCreateGroup": "{name} naiz — sakatu niri talde bat sortzeko.",
     "billName": "Bill",
     "offlineMessage": "Ezin dut ezer sortu lineaz kanpo zauden bitartean.",
-    "serverUnreachableMessage": "Ezin dut Spliit zerbitzariarekin konektatu une honetan — zure konexioa ondo dagoela dirudi, beraz arazoa gurea da."
+    "serverUnreachableMessage": "Ezin dut Spliit Cloud zerbitzariarekin konektatu une honetan — zure konexioa ondo dagoela dirudi, beraz arazoa gurea da."
   },
   "CreateSettlement": {
     "description": "Berrikusi ordainketa erregistratu aurretik.",
@@ -3710,7 +3710,7 @@
     "signup": {
       "title": "Kontu anonimoa",
       "description": "Sortu kontu anonimo bat helbide elektronikorik, pasahitzik edo sare sozialetan saioa hasi gabe.",
-      "warning": "Zure datuak Split Cloud-en gordetzen dira, baina kontu honek ez du posta elektronikorik edo beste berreskuratzeko metodorik. Ondoren agertzen den saioa hasteko esteka gorde behar duzu.",
+      "warning": "Erabili Spliit Cloud posta elektronikorik, pasahitzik edo saio-hasiera sozialik gabe. Hasi aurretik, saioa hasteko esteka iraunkor bat gorde beharko duzu.",
       "cancel": "Utzi",
       "recoverDescription": "Itsatsi gordetako saioa hasteko esteka lehendik dagoen kontu anonimo batera itzultzeko.",
       "recoveryOnlyHelp": "Hemen ez daude kontu anonimo berriak erabilgarri. Jarraitzeko, itsatsi gordetako saioa hasteko esteka osoa.",
@@ -3753,7 +3753,7 @@
       "unavailableDescription": "Sortu ordezko esteka bat esplizituki, gero gorde jarraitu aurretik.",
       "generateReplacement": "Sortu ordezko esteka",
       "error": "Zerbait gaizki joan da. Mesedez, saiatu berriro.",
-      "start": "Hasi Split erabiltzen"
+      "start": "Hasi Spliit Cloud erabiltzen"
     },
     "recovery": {
       "warningTitle": "Gorde hau leku seguru batean",
@@ -3858,7 +3858,7 @@
     "scopeExpensesWrite": "Gehitu gastuak aurrebistarekin"
   },
   "PwaUpdate": {
-    "waitingFailed": "Spliit-ek ezin izan du eguneratzea aplikatu.",
+    "waitingFailed": "Spliit Cloud-ek ezin izan du eguneratzea aplikatu.",
     "retry": "Saiatu berriro",
     "dismiss": "Baztertu"
   },
@@ -4240,7 +4240,7 @@
       "fallbackTo": "ordezkoa {label} eremura",
       "fields": {
         "categorySource": {
-          "description": "Irakurri banku kategoria balio bakar bakoitza Spliit kategoria batera mapatu ahal izateko.",
+          "description": "Irakurri banku kategoria balio bakar bakoitza Spliit Cloud kategoria batera mapatu ahal izateko.",
           "title": "Kategoria iturburua"
         },
         "dateTime": {
@@ -4513,7 +4513,7 @@
     "add": "Gehitu webhook-a",
     "url": "Amaiera-puntuaren URLa",
     "loading": "Webhook-ak kargatzen…",
-    "empty": "Oraindik ez dago webhook-ik. Gehitu bat Spliit beste zerbitzu batekin integratzen hasteko.",
+    "empty": "Oraindik ez dago webhook-ik. Gehitu bat Spliit Cloud beste zerbitzu batekin integratzen hasteko.",
     "secretTitle": "Gorde zure sinadura-sekretua",
     "secretDescription": "Sekretu hau behin bakarrik bistaratzen da. Gorde modu seguruan elkarrizketa-koadroa itxi aurretik.",
     "copy": "Kopiatu sekretua",
@@ -4595,7 +4595,7 @@
     "offlineSearchHint": "Offline bilaketak testu zehatza erabiltzen du; akatsen tolerantziak konexioa behar du.",
     "groupsNotDownloaded": "{count} talde deskargatu gabe",
     "groupsNeedUpdating": "{count} eguneratu behar",
-    "storageBlocked": "Itxi Spliit-en beste fitxak offline biltegia eguneratzen amaitzeko.",
+    "storageBlocked": "Itxi Spliit Cloud-en beste fitxak offline biltegia eguneratzen amaitzeko.",
     "storageQuota": "Offline biltegia beteta dago. Saiatu berriro edo ezabatu deskargak lekua askatzeko.",
     "statusBlocked": "Offline biltegia blokeatuta",
     "statusQuotaError": "Offline biltegia beteta",
@@ -4614,12 +4614,12 @@
     "dataStale": "Baliteke datu batzuk eguneratuta ez egotea."
   },
   "ApiErrorEmptyState": {
-    "title": "Spliit ez dago erabilgarri",
-    "description": "Ezin dugu Spliit zerbitzariarekin konektatu une honetan. Zure konexioa ondo dagoela dirudi — saiatu berriro pixka bat barru.",
+    "title": "Spliit Cloud ez dago erabilgarri",
+    "description": "Ezin dugu Spliit Cloud zerbitzariarekin konektatu une honetan. Zure konexioa ondo dagoela dirudi — saiatu berriro pixka bat barru.",
     "retry": "Saiatu berriro"
   },
   "ApiStatusBanner": {
-    "message": "Ezin da Spliitekin konektatu une honetan. Zure konexioa ondo dagoela dirudi — arazoa gurea da.",
+    "message": "Ezin da Spliit Cloud-ekin konektatu une honetan. Zure konexioa ondo dagoela dirudi — arazoa gurea da.",
     "statusLink": "Egiaztatu egoera"
   },
   "AccountDeletionBanner": {
@@ -4669,7 +4669,7 @@
       },
       "data-portability": {
         "title": "Inportatu eta esportatu",
-        "description": "Ekari historia Splitwise CSVtik, banku-laburpenen CSVetatik mapatze-laguntzailearekin eta bikoiztuen detekzioarekin, Cospendetik edo Spliit paketeetatik. Tricount eta Settle Up euskarria bide-orrian dago. Atera dena berriro CSV gisa, inprimatzeko PDF txosten gisa edo dokumentuak barne dituzten ZIP artxibo oso gisa."
+        "description": "Ekari historia Splitwise CSVtik, banku-laburpenen CSVetatik mapatze-laguntzailearekin eta bikoiztuen detekzioarekin, Cospendetik edo Spliit Cloud paketeetatik. Tricount eta Settle Up euskarria bide-orrian dago. Atera dena berriro CSV gisa, inprimatzeko PDF txosten gisa edo dokumentuak barne dituzten ZIP artxibo oso gisa."
       },
       "expenses-splits": {
         "title": "Gastuak eta banaketa adimendunak",
@@ -4685,7 +4685,7 @@
       },
       "offline-app": {
         "title": "Aplikazio instalagarria",
-        "description": "Instalatu Spliit aplikazio gisa edozein gailutan berehala kargatzeko eta pantaila osoko esperientziaz gozatzeko. Zure taldeak irakurgarri mantentzen dira konexiorik gabe, eta gastu berriak lokalean ilaran gordetzen dira, berriro konektatzean sinkronizatuz — konexiorik gabeko edizio zabalagoa bide-orrian dago."
+        "description": "Instalatu Spliit Cloud aplikazio gisa edozein gailutan berehala kargatzeko eta pantaila osoko esperientziaz gozatzeko. Zure taldeak irakurgarri mantentzen dira konexiorik gabe, eta gastu berriak lokalean ilaran gordetzen dira, berriro konektatzean sinkronizatuz — konexiorik gabeko edizio zabalagoa bide-orrian dago."
       },
       "share-identity": {
         "title": "Gonbidapenak eta talde-identitatea",

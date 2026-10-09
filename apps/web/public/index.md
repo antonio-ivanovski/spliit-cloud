@@ -20,7 +20,7 @@ Spliit Cloud is a free, open-source, community-maintained app for tracking share
 
 - **Spliit Cloud requires an account.** Unlike the original anonymous `spliit.app` flow where anyone with a link could edit a group, Cloud groups are synced and secured by your account. Use Cloud when you want history, sync, and access control.
 - **Self-hosting still exists.** The project stays open source: you can run your own instance with Docker instead of using the hosted Cloud. Import an existing `spliit.app` group into Cloud when you are ready to move.
-- **Not Spliiit.** Spliit (expense splitting) is unrelated to Spliiit, the co-subscription marketplace for sharing streaming bills.
+- **Not Spliiit.** Spliit Cloud (expense splitting) is unrelated to Spliiit, the co-subscription marketplace for sharing streaming bills.
 - **Splitwise alternative.** Spliit Cloud is a privacy-focused, ad-free, community-maintained alternative to Splitwise for friends, roommates, and travelers. No advertising trackers in the app; see the privacy notice for details.
 
 ## Get started

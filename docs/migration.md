@@ -23,12 +23,12 @@ The import wizard dispatches the parser from the active tab — the Spliit tab u
 2. Use the group's export option to download a CSV file.
 3. The file contains one row per expense plus a `Total balance` summary row at the end.
 
-### Importing into Spliit
+### Importing into Spliit Cloud
 
 1. Sign in to Spliit Cloud and open the import page.
 2. On the source step, switch to the **Splitwise** tab.
 3. Drop the CSV file (or click to select it).
-4. Map the source participants to Spliit participants in the mapping step, choose the destination group's currency, and confirm.
+4. Map the source participants to Spliit Cloud participants in the mapping step, choose the destination group's currency, and confirm.
 
 ### Multi-currency
 
@@ -69,7 +69,7 @@ For group exports, type the group name in the destination step before confirming
 
 ### Limitation
 
-One CSV file produces one Spliit group. There is no auto-grouping of multiple Splitwise groups from a single export. If you have several Splitwise groups, export each one separately and import them one at a time.
+One CSV file produces one Spliit Cloud group. There is no auto-grouping of multiple Splitwise groups from a single export. If you have several Splitwise groups, export each one separately and import them one at a time.
 
 ## What gets imported
 

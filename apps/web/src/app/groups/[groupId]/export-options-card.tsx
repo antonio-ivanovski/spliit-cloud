@@ -98,7 +98,7 @@ function ExportOption({
 
 /**
  * Settings export card content: three equal-format actions (PDF report, CSV
- * spreadsheet, native Spliit bundle) with explicit buttons instead of the
+ * spreadsheet, native Spliit Cloud bundle) with explicit buttons instead of the
  * legacy dropdown. CSV and bundle keep their direct download URLs; the print
  * report opens the date dialog.
  */

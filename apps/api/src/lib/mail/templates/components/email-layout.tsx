@@ -24,8 +24,8 @@ type EmailLayoutProps = {
  * Branded wrapper for every email in this package.
  *
  * Mirrors the web app shell: light gray page background, white card with a thin
- * border and rounded corners, Spliit logo + wordmark header, and a small text
- * footer at the bottom. Internal callers (auth/invitation/friend/expense
+ * border and rounded corners, Spliit Cloud logo + wordmark header, and a small
+ * text footer at the bottom. Internal callers (auth/invitation/friend/expense
  * templates) drop their content into `children`.
  */
 export function EmailLayout({

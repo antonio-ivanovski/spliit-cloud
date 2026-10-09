@@ -59,8 +59,8 @@
       "scanning": "QR kod aranıyor…",
       "noCamera": "Bu cihazda kamera bulunamadı. Bunun yerine kodu telefonunuzun kamera uygulamasıyla tarayın.",
       "permissionDenied": "Kamera erişimi reddedildi. Tarayıcı ayarlarından kamera erişimine izin verin veya kodu telefonunuzun kamera uygulamasıyla tarayın.",
-      "invalidCode": "Bu kod bir Spliit grup daveti değil. Ev sahibinin QR kodunu yeniden taramayı deneyin.",
-      "foreignTitle": "Bu kod başka bir Spliit'e işaret ediyor",
+      "invalidCode": "Bu kod bir Spliit Cloud grup daveti değil. Ev sahibinin QR kodunu yeniden taramayı deneyin.",
+      "foreignTitle": "Bu kod başka bir Spliit Cloud'a işaret ediyor",
       "foreignDescription": "{origin} bu tarayıcıda açılacak. Yalnızca bunu gösteren ev sahibine güveniyorsanız devam edin.",
       "foreignConfirm": "Bağlantıyı aç",
       "foreignCancel": "Geri dön"
@@ -202,7 +202,7 @@
     "exportPdfError": "PDF oluşturulamadı. Lütfen tekrar deneyin.",
     "exportPdfSuccess": "PDF raporu indirildi.",
     "exportPdfRetryBounds": "Yeniden dene",
-    "exportBundleTitle": "Spliit yedekleme paketi",
+    "exportBundleTitle": "Spliit Cloud yedekleme paketi",
     "exportBundlePurpose": "Harcamaları, ayarları ve ekli belgeleri içeren taşınabilir grup verileri.",
     "exportBundleAction": "Paketi indir",
     "globalArchived": "arşivlendi",
@@ -316,7 +316,7 @@
       "unknownGroup": "Bilinmeyen grup",
       "sentOn": "{date} gönderildi"
     },
-    "linkInvitationBannerDescription": "{inviter} sizi Spliit'teki {groupName} grubuna katılmaya davet etti.",
+    "linkInvitationBannerDescription": "{inviter} sizi Spliit Cloud'daki {groupName} grubuna katılmaya davet etti.",
     "linkInvitationSingleUse": "Bu bağlantı yalnızca bir kez kullanılabilir. Kabul ettikten sonra çalışmayı durduracaktır.",
     "linkInvitationTemporaryName": "{name} olarak katılacaksınız.",
     "linkInvitationAlreadyMemberTitle": "Zaten {groupName} grubundasınız",
@@ -393,7 +393,7 @@
         "shareAriaLabel": "Davet bağlantısını paylaş",
         "emailInvitesTitle": "E-posta davetleri gönderildi",
         "emailInvitesDescription": "Sunucu aşağıdaki kişilere e-posta gönderdi. Oturum açtıklarında grup sayfasında bir Kabul Et/Reddet bildirimi görecekler.",
-        "shareTitle": "Spliit grubuma katıl",
+        "shareTitle": "Spliit Cloud'daki grubuma katıl",
         "shareText": "Spliit Cloud'daki harcama grubumuza katılın — {name}. Kabul etmek için bu bağlantıyı açın: {url}",
         "copyLink": "Davet bağlantısını kopyala",
         "copied": "Kopyalandı"
@@ -459,7 +459,7 @@
         "settleUpComingTitle": "Settle Up içe aktarma yolda",
         "settleUpComingDescription": "Settle Up CSV dışa aktarım desteği yol haritamızda yer alıyor.",
         "dropFile": "Bir JSON veya CSV dosyası bırakın veya seçmek için tıklayın",
-        "dropFileDescription": "JSON her tutarı ve ödeyeni tam olarak korur. CSV bir yedek seçenektir — Spliit, katılımcı başına her tutarı 2 ondalık basamağa yuvarlar.",
+        "dropFileDescription": "JSON her tutarı ve ödeyeni tam olarak korur. CSV bir yedek seçenektir — Spliit Cloud, katılımcı başına her tutarı 2 ondalık basamağa yuvarlar.",
         "or": "veya",
         "pasteUrl": "Bir spliit.app URL'si yapıştırın",
         "urlDescription": "Sunucumuz, spliit.app genel dışa aktarım uç noktası aracılığıyla grubu sizin adınıza getirir.",
@@ -469,7 +469,7 @@
         "receiptWarningTitle": "Makbuz görüntüleri içe aktarılmaz.",
         "receiptWarningDescription": "Spliit.app dışa aktarımı makbuz görüntülerini içermez. İhtiyacınız varsa, hedef grupta bunları yeniden yükleyin.",
         "invalidUrl": "Lütfen geçerli bir spliit.app grup URL'si yapıştırın",
-        "notFoundUrl": "Spliit bu grubu bulamadı",
+        "notFoundUrl": "Spliit Cloud bu grubu bulamadı",
         "fetchUrlError": "Kaynak getirilemedi",
         "fileReadError": "Dosya okunamadı",
         "appToCloudDescription": "Herhangi bir spliit.app grup URL'sindeki .app'i .cloud olarak değiştirerek Spliit Cloud'a aktarın.",
@@ -1981,7 +1981,7 @@
       "friendAlreadyMember": "Zaten üye",
       "noFriends": "Henüz arkadaş yok. E-posta sekmesinden davet edin.",
       "friendAlreadyInvited": "Zaten davet edildi",
-      "noAccountDescription": "Birini Spliit uygulamasına davet etmeden masraflara ekle. Daha sonra bir hesaba bağlayabilirsin.",
+      "noAccountDescription": "Birini Spliit Cloud'a davet etmeden masraflara ekle. Daha sonra bir hesaba bağlayabilirsin.",
       "temporaryNameRequired": "Geçici ad",
       "noAccountNameDescription": "Bu katılımcı bir hesaba bağlanana kadar masraflarda ve bakiyelerde gösterilir.",
       "addParticipant": "Katılımcı ekle",
@@ -2075,7 +2075,7 @@
         },
         "unsettled": {
           "title": "Kapatılmamış bakiyeleriniz var",
-          "description": "Ayrılmadan önce sizinle ilgili bakiyeler için borç kapatma ödemeleri oluşturulur. Diğer katılımcıların bakiyeleri değişmez."
+          "description": "Ayrılmadan önce Spliit Cloud, sizinle ilgili bakiyeler için borç kapatma ödemeleri oluşturur. Diğer katılımcıların bakiyeleri değişmez."
         }
       },
       "cancel": "İptal",
@@ -2163,7 +2163,7 @@
       "emailPlaceholder": "hesap@ornek.com",
       "emailChangeWarning": "Mevcut alıcı bu daveti artık kabul edemeyecek.",
       "nameLabel": "Görünen ad",
-      "profileNameNote": "Spliit profil adlarını kullanır",
+      "profileNameNote": "Spliit Cloud profil adını kullanır",
       "saveChanges": "Değişiklikleri kaydet",
       "updateSend": "Güncelle ve gönder",
       "switchToEmailSend": "E-postaya geç ve davet gönder",
@@ -2300,7 +2300,7 @@
     },
     "notifications": {
       "title": "Bildirimler",
-      "description": "Spliit'in etkinlik bildirimlerini nereye göndereceğini seçin.",
+      "description": "Spliit Cloud'un etkinlik bildirimlerini nereye göndereceğini seçin.",
       "enable": "Anlık bildirimleri etkinleştir",
       "disable": "Anlık bildirimleri devre dışı bırak",
       "enabled": "Anlık bildirimler bu cihazda etkin.",
@@ -2308,7 +2308,7 @@
       "unsupported": "Anlık bildirimler bu tarayıcı veya bağlam tarafından desteklenmiyor.",
       "notConfigured": "Anlık bildirimler bu ortamda kullanılamıyor.",
       "permissionDenied": "Bildirimler engellendi. Tarayıcı veya cihaz ayarlarından izin verip tekrar deneyin.",
-      "iosInstall": "iPhone veya iPad'de anlık bildirimleri etkinleştirmeden önce Spliit'i Ana Ekran'a ekleyin.",
+      "iosInstall": "iPhone veya iPad'de anlık bildirimleri etkinleştirmeden önce Spliit Cloud'u Ana Ekran'a ekleyin.",
       "error": "Anlık bildirim ayarları güncellenemedi. Lütfen tekrar deneyin.",
       "preferencesTitle": "Bildirim tercihleri",
       "preferencesDescription": "Bu seçimler gelecekteki grup ve harcama etkinlikleri için geçerlidir.",
@@ -2849,7 +2849,7 @@
   },
   "OfflineBanner": {
     "message": "Çevrimdışısın. Verilere göz atabilirsin, ancak değişiklikler için bağlantı gerekir.",
-    "serverUnavailable": "Şu an Spliit'e ulaşılamıyor. İndirilen veriler gösteriliyor.",
+    "serverUnavailable": "Şu an Spliit Cloud'a ulaşılamıyor. İndirilen veriler gösteriliyor.",
     "reconnecting": "Yeniden bağlanıyor… İndirilen verileri okumaya devam edebilirsin."
   },
   "InstallPromotion": {
@@ -3182,8 +3182,8 @@
   },
   "PushOnboarding": {
     "title": "Güncel kalma yöntemini seçin",
-    "description": "Spliit, grup ve masraf etkinlikleri gerçekleştiğinde sizi haberdar edebilir.",
-    "pushBenefit": "Spliit açık olmasa bile anlık bildirimler bu cihaza ulaşır.",
+    "description": "Spliit Cloud, grup ve masraf etkinlikleri gerçekleştiğinde sizi haberdar edebilir.",
+    "pushBenefit": "Spliit Cloud açık olmasa bile anlık bildirimler bu cihaza ulaşır.",
     "emailFallback": "Seçtiğiniz e-posta bildirimleri e-posta üzerinden alınabilir; yalnızca anlık bildirim seçenekleri başka kanala yönlendirilmez.",
     "settingsHint": "Bu seçimleri Ayarlar'dan istediğiniz zaman değiştirebilirsiniz. Anlık bildirimler her cihaz için ayrı ayrı etkinleştirilir.",
     "enable": "Anlık bildirimleri etkinleştir",
@@ -3299,25 +3299,25 @@
   },
   "OAuth": {
     "shell": {
-      "label": "Spliit yetkilendirmesi",
+      "label": "Spliit Cloud yetkilendirmesi",
       "mobileDescription": "İstenen hesap erişimini gözden geçirin",
-      "title": "Spliit hesabınıza bir uygulama bağlayın.",
+      "title": "Spliit Cloud hesabınıza bir uygulama bağlayın.",
       "previewBullet": "Hesap ayarlarından bağlantısını kesebilirsiniz",
       "authorityBullet": "Bu uygulamanın nelere erişebileceğini siz belirlersiniz",
       "validationBullet": "Mevcut doğrulama, bakiyeler ve bildirimler aynen geçerlidir"
     },
     "consent": {
-      "title": "Spliit, {client} ile bağlansın mı?",
+      "title": "Spliit Cloud, {client} ile bağlansın mı?",
       "description": "Bu uygulamanın erişmek istediği hesabı ve talep ettiği izinleri gözden geçirin.",
       "connectionDetails": "Bağlantı ayrıntıları",
-      "spliitAccount": "Spliit hesabı",
+      "spliitAccount": "Spliit Cloud hesabı",
       "connectingTo": "Bağlanıyor:",
       "assistantVia": "OAuth uygulaması",
       "defaultClient": "bu uygulama",
-      "defaultUser": "Spliit kullanıcısı",
+      "defaultUser": "Spliit Cloud kullanıcısı",
       "sessionUnavailable": "Oturum kullanılamıyor. Geri dönüp tekrar giriş yapın.",
       "sharedData": "Paylaşılacak bilgiler",
-      "identityTitle": "Spliit kimliğiniz",
+      "identityTitle": "Spliit Cloud kimliğiniz",
       "identityDescription": "Adınız ve e-posta adresiniz bağlanan hesabı tanımlar. Şifreniz ve giriş yönteminiz hiçbir zaman paylaşılmaz.",
       "groupsTitle": "Grup ve harcama bağlamı",
       "groupsDescription": "Grup ayrıntıları, katılımcılar, kayıtlı bölüşümler, bakiyeler, istatistikler ve etkinlikler.",
@@ -3325,7 +3325,7 @@
       "expensesDescription": "Bu uygulama, Gider oluştur düğmesine bastığınızda yalnızca önizlemede gösterilen giderin aynısını oluşturabilir.",
       "privacyTitle": "Kısa bir gizlilik notu",
       "privacyDescription": "Grubun finansal ayrıntıları hassas olabilir. Bağlantı sürdüğü sürece {client} tarafından erişilebilir. Hesap ayarlarından istediğiniz zaman bağlantıyı kesebilirsiniz.",
-      "authorityNote": "Doğru bilgilerin kaynağı Spliit olmaya devam eder. Mevcut doğrulama, bakiyeler, etkinlik geçmişi ve bildirimler uygulanır.",
+      "authorityNote": "Doğru bilgilerin kaynağı Spliit Cloud olmaya devam eder. Mevcut doğrulama, bakiyeler, etkinlik geçmişi ve bildirimler uygulanır.",
       "allow": "İzin ver ve bağlan",
       "cancel": "İptal",
       "missingRequest": "Yetkilendirme isteği eksik. Uygulamaya dönüp bağlantıyı yeniden başlatın.",
@@ -3340,7 +3340,7 @@
       "expensesDeleteTitle": "Harcamaları silme",
       "expensesDeleteDescription": "Harcamaları kalıcı olarak silmek ve yinelenen bir seriyi kısaltmak gibi veri silen değişiklikler yapmak. Geri alınamaz.",
       "unknownScopes": "Bu uygulama Spliit Cloud'un tanımadığı bir izin istiyor ({scopes}), bu yüzden burada onaylanamaz. Uygulamanın geliştiricisinden istenen izinleri gözden geçirmesini isteyin.",
-      "clientUnavailable": "Spliit bu uygulamayı doğrulayamadı. Uygulamaya dönüp bağlantıyı yeniden başlatın.",
+      "clientUnavailable": "Spliit Cloud bu uygulamayı doğrulayamadı. Uygulamaya dönüp bağlantıyı yeniden başlatın.",
       "clientWebsite": "Uygulamanın web sitesi",
       "privacyPolicy": "Gizlilik politikası",
       "redirectsTo": "Şuraya yönlendirilir:",
@@ -3350,10 +3350,10 @@
     "login": {
       "missingTitle": "Yetkilendirme isteği eksik",
       "missingDescription": "Uygulamaya dönüp bağlantıyı yeniden başlatın.",
-      "missingError": "Spliit OAuth yetkilendirme ayrıntılarını alamadı.",
+      "missingError": "Spliit Cloud, OAuth yetkilendirme ayrıntılarını alamadı.",
       "connectingTitle": "Hesabınız bağlanıyor",
       "connectingDescription": "Mevcut Spliit Cloud oturumunuz bulundu. Ek giriş yapmanız gerekmez.",
-      "checkingSession": "Spliit oturumunuz kontrol ediliyor…",
+      "checkingSession": "Spliit Cloud oturumunuz kontrol ediliyor…",
       "continuing": "Güvenli şekilde devam ediliyor…",
       "signInTitle": "Bağlanmak için giriş yapın",
       "signInDescription": "Her zamanki Spliit Cloud oturum açma yönteminizi kullanın. Parolanız veya oturum açma bilgileriniz uygulamayla hiçbir zaman paylaşılmaz."
@@ -3368,7 +3368,7 @@
       "copied": "Panoya kopyalandı",
       "codeLabel": "Yetkilendirme kodu",
       "stateLabel": "Durum",
-      "warning": "Bunu yalnızca güvendiğiniz araca veya uygulamaya yapıştırın. Süresi dolana kadar bunu elinde bulunduran herkes Spliit hesabınıza bağlanabilir.",
+      "warning": "Bunu yalnızca güvendiğiniz araca veya uygulamaya yapıştırın. Süresi dolana kadar bunu elinde bulunduran herkes Spliit Cloud hesabınıza bağlanabilir.",
       "expiryNote": "Bu kod, verildikten 10 dakika sonra sona erer.",
       "errorTitle": "Bağlantı tamamlanamadı",
       "errorDescription": "Yetkilendirme sunucusu kod yerine bir hata döndürdü.",
@@ -3519,7 +3519,7 @@
   },
   "AIExpense": {
     "title": "Yapay zekâ giderini incele",
-    "description": "Bu gideri eklemeden önce Spliit'in ne anladığını kontrol edin.",
+    "description": "Bu gideri eklemeden önce Spliit Cloud'un ne anladığını kontrol edin.",
     "created": "Gider oluşturuldu.",
     "createError": "Gider oluşturulamadı.",
     "missing": "Algılanmadı",
@@ -3575,7 +3575,7 @@
       },
       "idea": {
         "title": "Fikir öner",
-        "description": "Çözülmeye değer bir sorunu veya Spliit'i daha kullanışlı hâle getirecek bir iyileştirmeyi açıklayın.",
+        "description": "Çözülmeye değer bir sorunu veya Spliit Cloud'u daha kullanışlı hâle getirecek bir iyileştirmeyi açıklayın.",
         "action": "Fikir formunu aç"
       },
       "feedback": {
@@ -3667,7 +3667,7 @@
     "hintTapToCreateGroup": "Ben {name} — grup oluşturmak için bana dokun.",
     "billName": "Bill",
     "offlineMessage": "Çevrimdışıyken hiçbir şey oluşturamam.",
-    "serverUnreachableMessage": "Şu anda Spliit sunucusuna ulaşamıyorum — bağlantın normal görünüyor, yani sorun bizde."
+    "serverUnreachableMessage": "Şu anda Spliit Cloud sunucusuna ulaşamıyorum — bağlantın normal görünüyor, yani sorun bizde."
   },
   "CreateSettlement": {
     "description": "Ödemeyi kaydetmeden önce gözden geçirin.",
@@ -3695,7 +3695,7 @@
     "signup": {
       "title": "Anonim hesap",
       "description": "E-posta adresi, şifre veya sosyal oturum açma olmadan anonim bir hesap oluşturun.",
-      "warning": "Verileriniz Split Cloud'da saklanıyor ancak bu hesabın e-posta veya başka bir kurtarma yöntemi yok. Daha sonra gösterilen oturum açma bağlantısını kaydetmelisiniz.",
+      "warning": "Spliit Cloud'u e-posta, şifre veya sosyal oturum açma olmadan kullanın. Başlamadan önce kalıcı bir oturum açma bağlantısını kaydetmeniz gerekecek.",
       "cancel": "İptal",
       "recoverDescription": "Mevcut bir anonim hesaba geri dönmek için kayıtlı kurtarma bağlantınızı yapıştırın.",
       "recoveryOnlyHelp": "Yeni anonim hesaplar burada mevcut değil. Devam etmek için kayıtlı kurtarma bağlantınızın tamamını yapıştırın.",
@@ -3738,7 +3738,7 @@
       "unavailableDescription": "Açıkça bir yedek bağlantı oluşturun ve devam etmeden önce bunu kaydedin.",
       "generateReplacement": "Yedek bağlantı oluştur",
       "error": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
-      "start": "Split'i kullanmaya başlayın"
+      "start": "Spliit Cloud'u kullanmaya başlayın"
     },
     "recovery": {
       "warningTitle": "Bunu güvenli bir yere kaydedin",
@@ -3843,7 +3843,7 @@
     "scopeExpensesWrite": "Önizlemeyle harcama ekleme"
   },
   "PwaUpdate": {
-    "waitingFailed": "Spliit güncellemeyi uygulayamadı.",
+    "waitingFailed": "Spliit Cloud güncellemeyi uygulayamadı.",
     "retry": "Tekrar dene",
     "dismiss": "Kapat"
   },
@@ -4224,7 +4224,7 @@
       "fallbackTo": "{label} yedeğine dön",
       "fields": {
         "categorySource": {
-          "description": "Banka kategorisini oku; her benzersiz değer bir Spliit kategorisine eşlenebilir.",
+          "description": "Banka kategorisini oku; her benzersiz değer bir Spliit Cloud kategorisine eşlenebilir.",
           "title": "Kategori kaynağı"
         },
         "dateTime": {
@@ -4493,7 +4493,7 @@
     "add": "Webhook ekle",
     "url": "Uç nokta URL'si",
     "loading": "Webhook'lar yükleniyor…",
-    "empty": "Henüz webhook yok. Spliit'i başka bir hizmetle entegre etmeye başlamak için bir tane ekleyin.",
+    "empty": "Henüz webhook yok. Spliit Cloud'u başka bir hizmetle entegre etmeye başlamak için bir tane ekleyin.",
     "secretTitle": "İmzalama gizli anahtarınızı kaydedin",
     "secretDescription": "Bu gizli anahtar yalnızca bir kez gösterilir. Bu iletişim kutusunu kapatmadan önce güvenli bir yerde saklayın.",
     "copy": "Gizli anahtarı kopyala",
@@ -4575,7 +4575,7 @@
     "offlineSearchHint": "Çevrimdışı arama tam metin kullanır; yazım hatası toleransı için bağlantı gerekir.",
     "groupsNotDownloaded": "İndirilmeyen {count} grup",
     "groupsNeedUpdating": "Güncellenmesi gereken {count} grup",
-    "storageBlocked": "Çevrimdışı depolamanın güncellenmesini bitirmek için diğer Spliit sekmelerini kapat.",
+    "storageBlocked": "Çevrimdışı depolamanın güncellenmesini bitirmek için diğer Spliit Cloud sekmelerini kapat.",
     "storageQuota": "Çevrimdışı depolama dolu. Tekrar dene ya da yer açmak için indirmeleri temizle.",
     "statusBlocked": "Çevrimdışı depolama engellendi",
     "statusQuotaError": "Çevrimdışı depolama dolu",
@@ -4594,12 +4594,12 @@
     "dataStale": "Bazı veriler güncel olmayabilir."
   },
   "ApiErrorEmptyState": {
-    "title": "Spliit kullanılamıyor",
-    "description": "Şu anda Spliit sunucusuna ulaşamıyoruz. Bağlantın normal görünüyor — lütfen birazdan tekrar dene.",
+    "title": "Spliit Cloud kullanılamıyor",
+    "description": "Şu anda Spliit Cloud sunucusuna ulaşamıyoruz. Bağlantın normal görünüyor — lütfen birazdan tekrar dene.",
     "retry": "Tekrar dene"
   },
   "ApiStatusBanner": {
-    "message": "Şu anda Spliit'e ulaşılamıyor. Bağlantın normal görünüyor — sorun bizden kaynaklanıyor.",
+    "message": "Şu anda Spliit Cloud'a ulaşılamıyor. Bağlantın normal görünüyor — sorun bizden kaynaklanıyor.",
     "statusLink": "Durumu kontrol et"
   },
   "AccountDeletionBanner": {
@@ -4649,7 +4649,7 @@
       },
       "data-portability": {
         "title": "İçe ve dışa aktarma",
-        "description": "Geçmişi Splitwise CSV dosyasından, eşleme sihirbazı ve yinelenen algılamayla banka ekstresi CSV dosyalarından, Cospend'den veya Spliit paketlerinden taşı. Tricount ve Settle Up desteği yol haritasında. Her şeyi CSV, yazdırılabilir PDF raporları veya belgeler dahil tam ZIP arşivleri olarak geri al."
+        "description": "Geçmişi Splitwise CSV dosyasından, eşleme sihirbazı ve yinelenen algılamayla banka ekstresi CSV dosyalarından, Cospend'den veya Spliit Cloud paketlerinden taşı. Tricount ve Settle Up desteği yol haritasında. Her şeyi CSV, yazdırılabilir PDF raporları veya belgeler dahil tam ZIP arşivleri olarak geri al."
       },
       "expenses-splits": {
         "title": "Giderler ve akıllı bölüşüm",
@@ -4665,7 +4665,7 @@
       },
       "offline-app": {
         "title": "Kurulabilir uygulama",
-        "description": "Spliit'i anında yükleme ve tam ekran deneyim için her cihaza uygulama olarak kur. Gruplar çevrimdışıyken de okunabilir kalır, yeni giderler yerel olarak sıraya alınır ve bağlantı dönünce eşitlenir — daha kapsamlı çevrimdışı düzenleme yol haritasında."
+        "description": "Spliit Cloud'u anında yükleme ve tam ekran deneyim için her cihaza uygulama olarak kur. Gruplar çevrimdışıyken de okunabilir kalır, yeni giderler yerel olarak sıraya alınır ve bağlantı dönünce eşitlenir — daha kapsamlı çevrimdışı düzenleme yol haritasında."
       },
       "share-identity": {
         "title": "Davetler ve grup kimliği",

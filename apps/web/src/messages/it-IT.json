@@ -59,8 +59,8 @@
       "scanning": "Ricerca di un codice QR in corso…",
       "noCamera": "Nessuna fotocamera trovata su questo dispositivo. Scansiona il codice con l'app fotocamera del tuo telefono.",
       "permissionDenied": "L'accesso alla fotocamera è stato negato. Consenti l'accesso alla fotocamera nelle impostazioni del browser, oppure scansiona il codice con l'app fotocamera del tuo telefono.",
-      "invalidCode": "Questo codice non è un invito a un gruppo Spliit. Prova a scansionare di nuovo il codice QR dell'host.",
-      "foreignTitle": "Questo codice rimanda a un altro Spliit",
+      "invalidCode": "Questo codice non è un invito a un gruppo Spliit Cloud. Prova a scansionare di nuovo il codice QR dell'host.",
+      "foreignTitle": "Questo codice rimanda a un altro Spliit Cloud",
       "foreignDescription": "Verrà aperto {origin} in questo browser. Continua solo se ti fidi dell'host che te l'ha mostrato.",
       "foreignConfirm": "Apri link",
       "foreignCancel": "Indietro"
@@ -203,7 +203,7 @@
     "exportPdfError": "Impossibile generare il PDF. Riprova.",
     "exportPdfSuccess": "Report PDF scaricato.",
     "exportPdfRetryBounds": "Riprova",
-    "exportBundleTitle": "Pacchetto di backup Spliit",
+    "exportBundleTitle": "Pacchetto di backup Spliit Cloud",
     "exportBundlePurpose": "Dati portabili del gruppo con spese, impostazioni e documenti allegati.",
     "exportBundleAction": "Scarica il pacchetto",
     "globalArchived": "archiviato",
@@ -319,7 +319,7 @@
       "unknownGroup": "Gruppo sconosciuto",
       "sentOn": "Inviato il {date}"
     },
-    "linkInvitationBannerDescription": "{inviter} ti ha invitato a unirti a {groupName} su Spliit.",
+    "linkInvitationBannerDescription": "{inviter} ti ha invitato a unirti a {groupName} su Spliit Cloud.",
     "linkInvitationSingleUse": "Questo link può essere usato una sola volta. Dopo che lo accetti, smetterà di funzionare.",
     "linkInvitationTemporaryName": "Entrerai nel gruppo con il nome {name}.",
     "linkInvitationAlreadyMemberTitle": "Sei già in {groupName}",
@@ -398,7 +398,7 @@
         "shareAriaLabel": "Condividi link di invito",
         "emailInvitesTitle": "Inviti email inviati",
         "emailInvitesDescription": "Il server ha inviato un'email alle seguenti persone. Vedranno un banner Accetta/Rifiuta nella pagina del gruppo quando accedono.",
-        "shareTitle": "Unisciti al mio gruppo Spliit",
+        "shareTitle": "Unisciti al mio gruppo Spliit Cloud",
         "shareText": "Unisciti al nostro gruppo di spese su Spliit Cloud — {name}. Apri questo link per accettare: {url}",
         "copyLink": "Copia link di invito",
         "copied": "Copiato"
@@ -464,7 +464,7 @@
         "settleUpComingTitle": "L'importazione da Settle Up è in arrivo",
         "settleUpComingDescription": "Il supporto per l'esportazione CSV di Settle Up è nella nostra tabella di marcia.",
         "dropFile": "Trascina un file JSON o CSV, o clicca per selezionare",
-        "dropFileDescription": "JSON preserva esattamente ogni importo e pagatore. CSV è un'alternativa — Spliit arrotonda ogni importo per partecipante a 2 decimali.",
+        "dropFileDescription": "JSON preserva esattamente ogni importo e pagatore. CSV è un'alternativa — Spliit Cloud arrotonda ogni importo per partecipante a 2 decimali.",
         "or": "oppure",
         "pasteUrl": "Incolla un URL di spliit.app",
         "urlDescription": "Il nostro server recupera il gruppo tramite l'endpoint di esportazione pubblica di spliit.app per tuo conto.",
@@ -474,7 +474,7 @@
         "receiptWarningTitle": "Le immagini delle ricevute non vengono importate.",
         "receiptWarningDescription": "L'esportazione di spliit.app non include le immagini delle ricevute. Ricaricale nel gruppo di destinazione se ti servono.",
         "invalidUrl": "Incolla un URL valido di un gruppo spliit.app",
-        "notFoundUrl": "Spliit non ha trovato questo gruppo",
+        "notFoundUrl": "Spliit Cloud non ha trovato questo gruppo",
         "fetchUrlError": "Impossibile recuperare l'origine",
         "fileReadError": "Impossibile leggere il file",
         "appToCloudDescription": "Sostituisci .app con .cloud in qualsiasi URL di gruppo spliit.app per importarlo in Spliit Cloud.",
@@ -1989,7 +1989,7 @@
       "friendAlreadyMember": "Già membro",
       "noFriends": "Nessun amico per ora. Invita dalla scheda Email.",
       "friendAlreadyInvited": "Già invitato",
-      "noAccountDescription": "Aggiungi qualcuno alle spese senza invitarlo su Spliit. Potrai collegarlo a un account in seguito.",
+      "noAccountDescription": "Aggiungi qualcuno alle spese senza invitarlo su Spliit Cloud. Potrai collegarlo a un account in seguito.",
       "temporaryNameRequired": "Nome temporaneo",
       "noAccountNameDescription": "Verrà mostrato nelle spese e nei saldi finché questo partecipante non sarà collegato a un account.",
       "addParticipant": "Aggiungi partecipante",
@@ -2088,7 +2088,7 @@
         },
         "unsettled": {
           "title": "Hai saldi in sospeso",
-          "description": "Prima che tu lasci il gruppo, Spliit creerà pagamenti di liquidazione per i debiti che ti riguardano. I saldi degli altri partecipanti non cambieranno."
+          "description": "Prima che tu lasci il gruppo, Spliit Cloud creerà pagamenti di liquidazione per i debiti che ti riguardano. I saldi degli altri partecipanti non cambieranno."
         }
       },
       "toast": {
@@ -2173,7 +2173,7 @@
       "emailPlaceholder": "account@example.com",
       "emailChangeWarning": "Il destinatario attuale non potrà più accettare questo invito.",
       "nameLabel": "Nome visualizzato",
-      "profileNameNote": "Usa il nome del suo profilo Spliit",
+      "profileNameNote": "Usa il nome del suo profilo Spliit Cloud",
       "saveChanges": "Salva modifiche",
       "updateSend": "Aggiorna e invia",
       "switchToEmailSend": "Cambia e invia l'invito",
@@ -2310,7 +2310,7 @@
     },
     "notifications": {
       "title": "Notifiche",
-      "description": "Scegli dove Spliit invia le notifiche sulle attività.",
+      "description": "Scegli dove Spliit Cloud invia le notifiche sulle attività.",
       "enable": "Abilita le notifiche push",
       "disable": "Disabilita le notifiche push",
       "enabled": "Le notifiche push sono abilitate su questo dispositivo.",
@@ -2318,7 +2318,7 @@
       "unsupported": "Le notifiche push non sono supportate da questo browser o contesto.",
       "notConfigured": "Le notifiche push non sono disponibili in questa distribuzione.",
       "permissionDenied": "Le notifiche sono bloccate. Consentile nel browser o nelle impostazioni del dispositivo, quindi riprova.",
-      "iosInstall": "Su iPhone o iPad, aggiungi Spliit alla schermata Home prima di abilitare le notifiche push.",
+      "iosInstall": "Su iPhone o iPad, aggiungi Spliit Cloud alla schermata Home prima di abilitare le notifiche push.",
       "error": "Impossibile aggiornare le impostazioni delle notifiche push. Riprova.",
       "preferencesTitle": "Preferenze di notifica",
       "preferencesDescription": "Queste scelte si applicano alle future attività di gruppo e delle spese.",
@@ -2858,7 +2858,7 @@
   },
   "OfflineBanner": {
     "message": "Sei offline. Puoi consultare i dati, ma serve una connessione per fare modifiche.",
-    "serverUnavailable": "Spliit non è raggiungibile al momento. Mostro i dati scaricati.",
+    "serverUnavailable": "Spliit Cloud non è raggiungibile al momento. Mostro i dati scaricati.",
     "reconnecting": "Riconnessione… Puoi continuare a leggere i dati scaricati."
   },
   "InstallPromotion": {
@@ -3199,8 +3199,8 @@
   },
   "PushOnboarding": {
     "title": "Scegli come restare aggiornato",
-    "description": "Spliit può avvisarti dell’attività dei gruppi e delle spese man mano che si verifica.",
-    "pushBenefit": "Le notifiche push arrivano su questo dispositivo anche quando Spliit non è aperto.",
+    "description": "Spliit Cloud può avvisarti dell’attività dei gruppi e delle spese man mano che si verifica.",
+    "pushBenefit": "Le notifiche push arrivano su questo dispositivo anche quando Spliit Cloud non è aperto.",
     "emailFallback": "L’e-mail è disponibile per le notifiche che scegli di ricevere lì; le opzioni solo push non verranno reindirizzate.",
     "settingsHint": "Puoi modificare queste scelte in qualsiasi momento nelle Impostazioni. Le notifiche push si abilitano separatamente per ogni dispositivo.",
     "enable": "Abilita notifiche push",
@@ -3316,25 +3316,25 @@
   },
   "OAuth": {
     "shell": {
-      "label": "Autorizzazione Spliit",
+      "label": "Autorizzazione Spliit Cloud",
       "mobileDescription": "Controlla l'accesso all'account richiesto",
-      "title": "Collega un'app al tuo account Spliit.",
+      "title": "Collega un'app al tuo account Spliit Cloud.",
       "previewBullet": "Puoi disconnetterla dalle impostazioni dell'account",
       "authorityBullet": "Scegli tu a cosa può accedere questa app",
       "validationBullet": "La convalida, i saldi e le notifiche esistenti restano invariati"
     },
     "consent": {
-      "title": "Collegare Spliit a {client}?",
+      "title": "Collegare Spliit Cloud a {client}?",
       "description": "Controlla l'account e le autorizzazioni richiesti da questa app.",
       "connectionDetails": "Dettagli della connessione",
-      "spliitAccount": "Account Spliit",
+      "spliitAccount": "Account Spliit Cloud",
       "connectingTo": "Connessione a",
       "assistantVia": "App OAuth",
       "defaultClient": "questa app",
-      "defaultUser": "Utente Spliit",
+      "defaultUser": "Utente Spliit Cloud",
       "sessionUnavailable": "Sessione non disponibile. Torna indietro e accedi di nuovo.",
       "sharedData": "Cosa verrà condiviso",
-      "identityTitle": "La tua identità Spliit",
+      "identityTitle": "La tua identità Spliit Cloud",
       "identityDescription": "Il tuo nome e la tua email identificano l'account collegato. La password e il metodo di accesso non vengono mai condivisi.",
       "groupsTitle": "Contesto di gruppi e spese",
       "groupsDescription": "Dettagli dei gruppi, partecipanti, suddivisioni salvate, saldi, statistiche e attività.",
@@ -3342,7 +3342,7 @@
       "expensesDescription": "Questa app può creare solo la spesa esatta mostrata nell'anteprima dopo che hai premuto Crea spesa.",
       "privacyTitle": "Una breve nota sulla privacy",
       "privacyDescription": "I dettagli finanziari di un gruppo possono essere delicati. Restano disponibili per {client} finché la connessione è attiva. Puoi disconnetterla quando vuoi dalle impostazioni dell'account.",
-      "authorityNote": "Spliit rimane la fonte di verità. Si applicano ancora la convalida, i saldi, la cronologia delle attività e le notifiche esistenti.",
+      "authorityNote": "Spliit Cloud rimane la fonte di verità. Si applicano ancora la convalida, i saldi, la cronologia delle attività e le notifiche esistenti.",
       "allow": "Consenti e collega",
       "cancel": "Annulla",
       "missingRequest": "Manca la richiesta di autorizzazione. Torna all'app e avvia di nuovo la connessione.",
@@ -3357,7 +3357,7 @@
       "expensesDeleteTitle": "Eliminare spese",
       "expensesDeleteDescription": "Eliminare definitivamente le spese e apportare modifiche che cancellano dati, come accorciare una serie ricorrente. L'operazione è irreversibile.",
       "unknownScopes": "Questa app chiede un permesso che Spliit Cloud non riconosce ({scopes}), quindi non può essere approvata qui. Chiedi all'autore di verificare i permessi richiesti.",
-      "clientUnavailable": "Spliit non ha potuto verificare questa app. Torna all'app e avvia di nuovo la connessione.",
+      "clientUnavailable": "Spliit Cloud non ha potuto verificare questa app. Torna all'app e avvia di nuovo la connessione.",
       "clientWebsite": "Sito web dell'app",
       "privacyPolicy": "Informativa sulla privacy",
       "redirectsTo": "Reindirizza a",
@@ -3367,10 +3367,10 @@
     "login": {
       "missingTitle": "Richiesta di autorizzazione mancante",
       "missingDescription": "Torna all'app e avvia di nuovo la connessione.",
-      "missingError": "Spliit non ha ricevuto i dettagli di autorizzazione OAuth.",
+      "missingError": "Spliit Cloud non ha ricevuto i dettagli di autorizzazione OAuth.",
       "connectingTitle": "Connessione al tuo account",
       "connectingDescription": "È stata trovata la tua sessione Spliit Cloud esistente. Non è necessario effettuare un altro accesso.",
-      "checkingSession": "Controllo della sessione Spliit…",
+      "checkingSession": "Controllo della sessione Spliit Cloud…",
       "continuing": "Continuazione sicura…",
       "signInTitle": "Accedi per collegare",
       "signInDescription": "Usa il tuo metodo abituale di accesso a Spliit Cloud. L'app non riceve mai la tua password né le tue credenziali di accesso."
@@ -3385,7 +3385,7 @@
       "copied": "Copiato negli appunti",
       "codeLabel": "Codice di autorizzazione",
       "stateLabel": "Stato",
-      "warning": "Incollalo solo nell'agente o app di cui ti fidi. Chiunque lo possieda può connettersi al tuo account Spliit fino alla scadenza.",
+      "warning": "Incollalo solo nell'agente o app di cui ti fidi. Chiunque lo possieda può connettersi al tuo account Spliit Cloud fino alla scadenza.",
       "expiryNote": "Questo codice scade 10 minuti dopo l'emissione.",
       "errorTitle": "La connessione non è stata completata",
       "errorDescription": "Il server di autorizzazione ha restituito un errore invece di un codice.",
@@ -3536,7 +3536,7 @@
   },
   "AIExpense": {
     "title": "Controlla la spesa IA",
-    "description": "Controlla ciò che Spliit ha capito prima di aggiungere questa spesa.",
+    "description": "Controlla ciò che Spliit Cloud ha capito prima di aggiungere questa spesa.",
     "created": "Spesa creata.",
     "createError": "Non è stato possibile creare la spesa.",
     "missing": "Non rilevato",
@@ -3592,7 +3592,7 @@
       },
       "idea": {
         "title": "Suggerisci un’idea",
-        "description": "Descrivi un problema che vale la pena risolvere o un miglioramento che renderebbe Spliit più utile.",
+        "description": "Descrivi un problema che vale la pena risolvere o un miglioramento che renderebbe Spliit Cloud più utile.",
         "action": "Apri modulo idea"
       },
       "feedback": {
@@ -3684,7 +3684,7 @@
     "hintTapToCreateGroup": "Sono {name} — toccami per creare un gruppo.",
     "billName": "Bill",
     "offlineMessage": "Non posso creare nulla mentre sei offline.",
-    "serverUnreachableMessage": "Non riesco a raggiungere il server di Spliit al momento — la tua connessione sembra a posto, quindi la colpa è nostra."
+    "serverUnreachableMessage": "Non riesco a raggiungere il server di Spliit Cloud al momento — la tua connessione sembra a posto, quindi la colpa è nostra."
   },
   "CreateSettlement": {
     "description": "Rivedi il pagamento prima di registrarlo.",
@@ -3712,7 +3712,7 @@
     "signup": {
       "title": "Account anonimo",
       "description": "Crea un account anonimo senza indirizzo email, password o accesso social.",
-      "warning": "I tuoi dati sono archiviati in Spliit Cloud, ma questo account non dispone di e-mail o altro metodo di recupero. È necessario salvare il link di accesso mostrato di seguito.",
+      "warning": "Usa Spliit Cloud senza email, password o accesso social. Prima di iniziare, dovrai salvare un link permanente per accedere.",
       "cancel": "Annulla",
       "recoverDescription": "Incolla il link di accesso salvato per tornare a un account anonimo esistente.",
       "recoveryOnlyHelp": "Nuovi account anonimi non sono disponibili qui. Incolla il link di ripristino salvato completo per continuare.",
@@ -3755,7 +3755,7 @@
       "unavailableDescription": "Genera esplicitamente un collegamento sostitutivo, quindi salvalo prima di continuare.",
       "generateReplacement": "Genera collegamento sostitutivo",
       "error": "Qualcosa è andato storto. Riprova.",
-      "start": "Inizia a utilizzare Split"
+      "start": "Inizia a utilizzare Spliit Cloud"
     },
     "recovery": {
       "warningTitle": "Conservalo in un posto sicuro",
@@ -3860,7 +3860,7 @@
     "scopeExpensesWrite": "Aggiungere spese con anteprima"
   },
   "PwaUpdate": {
-    "waitingFailed": "Spliit non è riuscito ad applicare l'aggiornamento.",
+    "waitingFailed": "Spliit Cloud non è riuscito ad applicare l'aggiornamento.",
     "retry": "Riprova",
     "dismiss": "Chiudi"
   },
@@ -4189,7 +4189,7 @@
       "fallbackTo": "alternativa a {label}",
       "fields": {
         "categorySource": {
-          "description": "Leggi la categoria bancaria così ogni valore unico può essere mappato a una categoria Spliit.",
+          "description": "Leggi la categoria bancaria così ogni valore unico può essere mappato a una categoria Spliit Cloud.",
           "title": "Origine categoria"
         },
         "dateTime": {
@@ -4515,7 +4515,7 @@
     "add": "Aggiungi webhook",
     "url": "URL dell'endpoint",
     "loading": "Caricamento dei webhook…",
-    "empty": "Non ci sono ancora webhook. Aggiungine uno per iniziare a integrare Spliit con un altro servizio.",
+    "empty": "Non ci sono ancora webhook. Aggiungine uno per iniziare a integrare Spliit Cloud con un altro servizio.",
     "secretTitle": "Salva il tuo segreto di firma",
     "secretDescription": "Questo segreto viene mostrato una sola volta. Conservalo in modo sicuro prima di chiudere questa finestra di dialogo.",
     "copy": "Copia il segreto",
@@ -4597,7 +4597,7 @@
     "offlineSearchHint": "La ricerca offline usa il testo esatto; per la tolleranza agli errori serve una connessione.",
     "groupsNotDownloaded": "{count} gruppo(i) non scaricato(i)",
     "groupsNeedUpdating": "{count} da aggiornare",
-    "storageBlocked": "Chiudi le altre schede di Spliit per completare l'aggiornamento dell'archiviazione offline.",
+    "storageBlocked": "Chiudi le altre schede di Spliit Cloud per completare l'aggiornamento dell'archiviazione offline.",
     "storageQuota": "L'archiviazione offline è piena. Riprova o elimina dei download per liberare spazio.",
     "statusBlocked": "Archiviazione offline bloccata",
     "statusQuotaError": "Archiviazione offline piena",
@@ -4616,12 +4616,12 @@
     "dataStale": "Alcuni dati potrebbero non essere aggiornati."
   },
   "ApiErrorEmptyState": {
-    "title": "Spliit non è disponibile",
-    "description": "Impossibile raggiungere il server di Spliit al momento. La tua connessione sembra a posto — riprova tra un momento.",
+    "title": "Spliit Cloud non è disponibile",
+    "description": "Impossibile raggiungere il server di Spliit Cloud al momento. La tua connessione sembra a posto — riprova tra un momento.",
     "retry": "Riprova"
   },
   "ApiStatusBanner": {
-    "message": "Impossibile raggiungere Spliit al momento. La tua connessione sembra a posto — il problema è nostro.",
+    "message": "Impossibile raggiungere Spliit Cloud al momento. La tua connessione sembra a posto — il problema è nostro.",
     "statusLink": "Controlla lo stato"
   },
   "AccountDeletionBanner": {
@@ -4671,7 +4671,7 @@
       },
       "data-portability": {
         "title": "Importazione ed esportazione",
-        "description": "Porta la cronologia da CSV di Splitwise, CSV di estratti conto con procedura guidata di mappatura e rilevamento dei duplicati, Cospend o pacchetti Spliit. Il supporto per Tricount e Settle Up è sulla roadmap. Esporta tutto come CSV, report PDF stampabili o archivi ZIP completi con documenti."
+        "description": "Porta la cronologia da CSV di Splitwise, CSV di estratti conto con procedura guidata di mappatura e rilevamento dei duplicati, Cospend o pacchetti Spliit Cloud. Il supporto per Tricount e Settle Up è sulla roadmap. Esporta tutto come CSV, report PDF stampabili o archivi ZIP completi con documenti."
       },
       "expenses-splits": {
         "title": "Spese e divisioni intelligenti",
@@ -4687,7 +4687,7 @@
       },
       "offline-app": {
         "title": "App installabile",
-        "description": "Installa Spliit come app su qualsiasi dispositivo per un caricamento istantaneo e un'esperienza a schermo intero. I tuoi gruppi restano leggibili offline e le nuove spese si accodano in locale, sincronizzandosi alla riconnessione — la modifica offline estesa è sulla roadmap."
+        "description": "Installa Spliit Cloud come app su qualsiasi dispositivo per un caricamento istantaneo e un'esperienza a schermo intero. I tuoi gruppi restano leggibili offline e le nuove spese si accodano in locale, sincronizzandosi alla riconnessione — la modifica offline estesa è sulla roadmap."
       },
       "share-identity": {
         "title": "Inviti e identità del gruppo",

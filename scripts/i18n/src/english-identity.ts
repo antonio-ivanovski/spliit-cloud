@@ -12,6 +12,7 @@ const BRAND_TOKENS = new Set([
   'Bill',
   'GitHub',
   'Spliit',
+  'Spliit Cloud',
   'Splitwise',
   'Cospend',
   'Maxio',

@@ -59,8 +59,8 @@
       "scanning": "Etsitään QR-koodia…",
       "noCamera": "Tästä laitteesta ei löytynyt kameraa. Skannaa koodi sen sijaan puhelimesi kamerasovelluksella.",
       "permissionDenied": "Kameran käyttö estettiin. Salli kameran käyttö selaimen asetuksissa tai skannaa koodi puhelimesi kamerasovelluksella.",
-      "invalidCode": "Tämä koodi ei ole Spliit-ryhmäkutsu. Skannaa kutsujan QR-koodi uudelleen.",
-      "foreignTitle": "Tämä koodi osoittaa toiseen Spliitiin",
+      "invalidCode": "Tämä koodi ei ole Spliit Cloud -ryhmäkutsu. Skannaa kutsujan QR-koodi uudelleen.",
+      "foreignTitle": "Tämä koodi osoittaa toiseen Spliit Cloudiin",
       "foreignDescription": "Se avaa {origin} tässä selaimessa. Jatka vain, jos luotat kutsujaan, joka sen näytti.",
       "foreignConfirm": "Avaa linkki",
       "foreignCancel": "Takaisin"
@@ -202,7 +202,7 @@
     "exportPdfError": "PDF:n luominen epäonnistui. Yritä uudelleen.",
     "exportPdfSuccess": "PDF-raportti ladattu.",
     "exportPdfRetryBounds": "Yritä uudelleen",
-    "exportBundleTitle": "Spliitin varmuuskopio",
+    "exportBundleTitle": "Spliit Cloud -varmuuskopio",
     "exportBundlePurpose": "Siirrettävät ryhmätiedot, kulut, asetukset ja liitetyt asiakirjat.",
     "exportBundleAction": "Lataa paketti",
     "globalArchived": "arkistoitu",
@@ -316,7 +316,7 @@
       "unknownGroup": "Tuntematon ryhmä",
       "sentOn": "Lähetetty {date}"
     },
-    "linkInvitationBannerDescription": "{inviter} kutsui sinut liittymään ryhmään {groupName} Spliitissä.",
+    "linkInvitationBannerDescription": "{inviter} kutsui sinut liittymään ryhmään {groupName} Spliit Cloudissa.",
     "linkInvitationSingleUse": "Tätä linkkiä voi käyttää vain kerran. Hyväksymisen jälkeen se lakkaa toimimasta.",
     "linkInvitationTemporaryName": "Liityt nimellä {name}.",
     "linkInvitationAlreadyMemberTitle": "Olet jo ryhmässä {groupName}",
@@ -393,7 +393,7 @@
         "shareAriaLabel": "Jaa kutsulinkki",
         "emailInvitesTitle": "Sähköpostikutsut lähetetty",
         "emailInvitesDescription": "Palvelin lähetti sähköpostia seuraaville henkilöille. He näkevät Hyväksy/Hylkää-palkin ryhmäsivulla kirjauduttuaan sisään.",
-        "shareTitle": "Liity Spliit-ryhmääni",
+        "shareTitle": "Liity ryhmääni Spliit Cloudissa",
         "shareText": "Liity kuluryhmäämme Spliit Cloudissa — {name}. Avaa tämä linkki hyväksyäksesi: {url}",
         "copyLink": "Kopioi kutsulinkki",
         "copied": "Kopioitu"
@@ -459,7 +459,7 @@
         "settleUpComingTitle": "Settle Up -tuonti on tulossa",
         "settleUpComingDescription": "Settle Upin CSV-vientituki on suunnitelmissamme.",
         "dropFile": "Pudota JSON- tai CSV-tiedosto tai napsauta valitaksesi",
-        "dropFileDescription": "JSON säilyttää jokaisen summan ja maksajan tarkasti. CSV on vararatkaisu — Spliit pyöristää jokaisen osallistujakohtaisen summan 2 desimaaliin.",
+        "dropFileDescription": "JSON säilyttää jokaisen summan ja maksajan tarkasti. CSV on vararatkaisu — Spliit Cloud pyöristää jokaisen osallistujakohtaisen summan 2 desimaaliin.",
         "or": "tai",
         "pasteUrl": "Liitä spliit.app-URL",
         "urlDescription": "Palvelin noutaa ryhmän spliit.appin julkisen vientipäätepisteen kautta puolestasi.",
@@ -469,7 +469,7 @@
         "receiptWarningTitle": "Kuittikuvia ei tuoda.",
         "receiptWarningDescription": "Spliit.app-vienti ei sisällä kuittikuvia. Lataa ne uudelleen kohderyhmään, jos tarvitset niitä.",
         "invalidUrl": "Liitä kelvollinen spliit.app-ryhmän URL-osoite",
-        "notFoundUrl": "Spliit ei löytänyt tätä ryhmää",
+        "notFoundUrl": "Spliit Cloud ei löytänyt tätä ryhmää",
         "fetchUrlError": "Lähteen noutaminen epäonnistui",
         "fileReadError": "Tiedoston lukeminen epäonnistui",
         "appToCloudDescription": "Vaihda .app .cloudiksi missä tahansa spliit.app-ryhmän URL-osoitteessa tuodaksesi ryhmän Spliit Cloudiin.",
@@ -1981,7 +1981,7 @@
       "friendAlreadyMember": "Jo jäsen",
       "noFriends": "Ei vielä kavereita. Kutsu Sähköposti-välilehdeltä.",
       "friendAlreadyInvited": "Jo kutsuttu",
-      "noAccountDescription": "Lisää henkilö kuluihin kutsumatta häntä Spliitiin. Voit yhdistää hänet tiliin myöhemmin.",
+      "noAccountDescription": "Lisää henkilö kuluihin kutsumatta häntä Spliit Cloudiin. Voit yhdistää hänet tiliin myöhemmin.",
       "temporaryNameRequired": "Väliaikainen nimi",
       "noAccountNameDescription": "Näkyy kuluissa ja saldoissa, kunnes tämä osallistuja yhdistetään tiliin.",
       "addParticipant": "Lisää osallistuja",
@@ -2073,7 +2073,7 @@
         "otherAdmins": "Nämä ylläpitäjät säilyttävät hallinnan, kun poistut: {names}.",
         "unsettled": {
           "title": "Sinulla on tasaamattomia saldoja",
-          "description": "Spliit luo saldoihisi liittyvät tasausmaksut ennen poistumistasi. Muiden osallistujien saldot eivät muutu."
+          "description": "Spliit Cloud luo saldoihisi liittyvät tasausmaksut ennen poistumistasi. Muiden osallistujien saldot eivät muutu."
         }
       },
       "toast": {
@@ -2163,7 +2163,7 @@
       "emailPlaceholder": "tili@esimerkki.fi",
       "emailChangeWarning": "Nykyinen vastaanottaja ei voi enää hyväksyä tätä kutsua.",
       "nameLabel": "Näyttönimi",
-      "profileNameNote": "Käyttää heidän Spliit-profiilinimeään",
+      "profileNameNote": "Käyttää heidän Spliit Cloud -profiilinimeään",
       "saveChanges": "Tallenna muutokset",
       "updateSend": "Päivitä ja lähetä",
       "switchToEmailSend": "Vaihda ja lähetä kutsu",
@@ -2300,7 +2300,7 @@
     },
     "notifications": {
       "title": "Ilmoitukset",
-      "description": "Valitse, mihin Spliit lähettää toimintaasi koskevat ilmoitukset.",
+      "description": "Valitse, mihin Spliit Cloud lähettää toimintaasi koskevat ilmoitukset.",
       "enable": "Ota push-ilmoitukset käyttöön",
       "disable": "Poista push-ilmoitukset käytöstä",
       "enabled": "Push-ilmoitukset ovat käytössä tällä laitteella.",
@@ -2308,7 +2308,7 @@
       "unsupported": "Tämä selain tai konteksti ei tue push-ilmoituksia.",
       "notConfigured": "Push-ilmoitukset eivät ole käytettävissä tässä ympäristössä.",
       "permissionDenied": "Ilmoitukset on estetty. Salli ne selaimen tai laitteen asetuksissa ja yritä uudelleen.",
-      "iosInstall": "Lisää Spliit iPhonen tai iPadin Koti-valikkoon ennen push-ilmoitusten käyttöönottoa.",
+      "iosInstall": "Lisää Spliit Cloud iPhonen tai iPadin Koti-valikkoon ennen push-ilmoitusten käyttöönottoa.",
       "error": "Push-ilmoitusasetusten päivittäminen epäonnistui. Yritä uudelleen.",
       "preferencesTitle": "Ilmoitusasetukset",
       "preferencesDescription": "Nämä valinnat koskevat tulevaa ryhmä- ja kulutapahtumatoimintaa.",
@@ -2841,7 +2841,7 @@
   },
   "OfflineBanner": {
     "message": "Olet offline. Voit selata tietoja, mutta muutokset vaativat yhteyden.",
-    "serverUnavailable": "Spliit ei ole juuri nyt tavoitettavissa. Näytetään ladatut tiedot.",
+    "serverUnavailable": "Spliit Cloud ei ole juuri nyt tavoitettavissa. Näytetään ladatut tiedot.",
     "reconnecting": "Yhdistetään uudelleen… Voit jatkaa ladattujen tietojen lukemista."
   },
   "InstallPromotion": {
@@ -3174,8 +3174,8 @@
   },
   "PushOnboarding": {
     "title": "Valitse, miten pysyt ajan tasalla",
-    "description": "Spliit voi ilmoittaa ryhmä- ja kulutapahtumista niiden tapahtuessa.",
-    "pushBenefit": "Push-ilmoitukset saapuvat tälle laitteelle, vaikka Spliit ei olisi avoinna.",
+    "description": "Spliit Cloud voi ilmoittaa ryhmä- ja kulutapahtumista niiden tapahtuessa.",
+    "pushBenefit": "Push-ilmoitukset saapuvat tälle laitteelle, vaikka Spliit Cloud ei olisi avoinna.",
     "emailFallback": "Sähköposti on käytettävissä ilmoituksille, jotka valitset vastaanotettaviksi siellä; vain pushille valittuja ei ohjata sähköpostiin.",
     "settingsHint": "Voit muuttaa näitä valintoja milloin tahansa asetuksissa. Push-ilmoitukset otetaan käyttöön erikseen kullakin laitteella.",
     "enable": "Ota push-ilmoitukset käyttöön",
@@ -3291,17 +3291,17 @@
   },
   "OAuth": {
     "consent": {
-      "title": "Yhdistetäänkö Spliit palveluun {client}?",
+      "title": "Yhdistetäänkö Spliit Cloud palveluun {client}?",
       "description": "Tarkista tili ja käyttöoikeudet, joita sovellus pyytää.",
       "connectionDetails": "Yhteyden tiedot",
-      "spliitAccount": "Spliit-tili",
+      "spliitAccount": "Spliit Cloud -tili",
       "connectingTo": "Yhdistetään palveluun",
       "assistantVia": "OAuth-sovellus",
       "defaultClient": "tämä sovellus",
-      "defaultUser": "Spliit-käyttäjä",
+      "defaultUser": "Spliit Cloud -käyttäjä",
       "sessionUnavailable": "Istunto ei ole käytettävissä. Palaa takaisin ja kirjaudu uudelleen.",
       "sharedData": "Mitä jaetaan",
-      "identityTitle": "Spliit-identiteettisi",
+      "identityTitle": "Spliit Cloud -identiteettisi",
       "identityDescription": "Nimesi ja sähköpostiosoitteesi tunnistavat yhdistettävän tilin. Salasanaasi ja kirjautumistapaasi ei koskaan jaeta.",
       "groupsTitle": "Ryhmän ja kulutuksen konteksti",
       "groupsDescription": "Ryhmän tiedot, osallistujat, tallennetut jaot, saldot, tilastot ja tapahtumat.",
@@ -3309,7 +3309,7 @@
       "expensesDescription": "Tämä sovellus voi luoda vain esikatselussa näkyvän täsmällisen kulun, kun painat Luo kulu.",
       "privacyTitle": "Lyhyt tietosuojahuomio",
       "privacyDescription": "Ryhmän taloustiedot voivat olla arkaluonteisia. Ne ovat {client}-sovelluksen käytettävissä niin kauan kuin yhteys on voimassa. Voit katkaista sen milloin tahansa tilin asetuksista.",
-      "authorityNote": "Spliit säilyy totuuden lähteenä. Nykyinen validointi, saldot, toimintohistoria ja ilmoitukset ovat edelleen voimassa.",
+      "authorityNote": "Spliit Cloud säilyy totuuden lähteenä. Nykyinen validointi, saldot, toimintohistoria ja ilmoitukset ovat edelleen voimassa.",
       "allow": "Salli ja yhdistä",
       "cancel": "Peruuta",
       "missingRequest": "Valtuutuspyyntö puuttuu. Palaa sovellukseen ja aloita yhteys uudelleen.",
@@ -3324,7 +3324,7 @@
       "expensesDeleteTitle": "Poistaa kuluja",
       "expensesDeleteDescription": "Poistaa kuluja pysyvästi ja tehdä muutoksia, jotka poistavat tietoja, kuten lyhentää toistuvaa sarjaa. Tätä ei voi perua.",
       "unknownScopes": "Tämä sovellus pyytää käyttöoikeutta, jota Spliit Cloud ei tunnista ({scopes}), joten sitä ei voi hyväksyä tässä. Pyydä sovelluksen tekijää tarkistamaan pyydetyt käyttöoikeudet.",
-      "clientUnavailable": "Spliit ei voinut vahvistaa tätä sovellusta. Palaa sovellukseen ja aloita yhteys uudelleen.",
+      "clientUnavailable": "Spliit Cloud ei voinut vahvistaa tätä sovellusta. Palaa sovellukseen ja aloita yhteys uudelleen.",
       "clientWebsite": "Sovelluksen verkkosivusto",
       "privacyPolicy": "Tietosuojakäytäntö",
       "redirectsTo": "Uudelleenohjaus osoitteeseen",
@@ -3334,18 +3334,18 @@
     "login": {
       "missingTitle": "Valtuutuspyyntö puuttuu",
       "missingDescription": "Palaa sovellukseen ja aloita yhteys uudelleen.",
-      "missingError": "Spliit ei saanut OAuth-valtuutustietoja.",
+      "missingError": "Spliit Cloud ei saanut OAuth-valtuutustietoja.",
       "connectingTitle": "Tiliäsi yhdistetään",
       "connectingDescription": "Olemassa oleva Spliit Cloud -istuntosi löytyi. Uutta kirjautumista ei tarvita.",
-      "checkingSession": "Tarkistetaan Spliit-istuntoasi…",
+      "checkingSession": "Tarkistetaan Spliit Cloud -istuntoasi…",
       "continuing": "Jatketaan suojatusti…",
       "signInTitle": "Kirjaudu sisään yhdistääksesi",
       "signInDescription": "Käytä tavallista Spliit Cloud -kirjautumistapaasi. Sovellus ei koskaan saa salasanaasi tai kirjautumistietojasi."
     },
     "shell": {
-      "label": "Spliit-valtuutus",
+      "label": "Spliit Cloud -valtuutus",
       "mobileDescription": "Tarkista tilillesi pyydetty käyttöoikeus",
-      "title": "Yhdistä sovellus Spliit-tiliisi.",
+      "title": "Yhdistä sovellus Spliit Cloud -tiliisi.",
       "previewBullet": "Yhteyden voi katkaista tilin asetuksista.",
       "authorityBullet": "Päätät, mihin tämä sovellus saa käyttöoikeuden.",
       "validationBullet": "Nykyinen validointi, saldot ja ilmoitukset säilyvät ennallaan"
@@ -3360,7 +3360,7 @@
       "copied": "Kopioitu leikepöydälle",
       "codeLabel": "Valtuutuskoodi",
       "stateLabel": "State-parametri",
-      "warning": "Liitä tämä vain agenttiin tai sovellukseen, johon luotat. Sen haltija voi yhdistää Spliit-tiliisi, kunnes se vanhenee.",
+      "warning": "Liitä tämä vain agenttiin tai sovellukseen, johon luotat. Sen haltija voi yhdistää Spliit Cloud -tiliisi, kunnes se vanhenee.",
       "expiryNote": "Tämä koodi vanhenee 10 minuuttia myöntämisestään.",
       "errorTitle": "Yhteyttä ei muodostettu",
       "errorDescription": "Valtuutuspalvelin palautti koodin sijaan virheen.",
@@ -3511,7 +3511,7 @@
   },
   "AIExpense": {
     "title": "Tarkista tekoälyn luoma kulu",
-    "description": "Tarkista, mitä Spliit ymmärsi, ennen kuin lisäät tämän kulun.",
+    "description": "Tarkista, mitä Spliit Cloud ymmärsi, ennen kuin lisäät tämän kulun.",
     "created": "Kulu luotu.",
     "createError": "Kulua ei voitu luoda.",
     "missing": "Ei tunnistettu",
@@ -3567,7 +3567,7 @@
       },
       "idea": {
         "title": "Ehdota ideaa",
-        "description": "Kuvaile ratkaisemisen arvoinen ongelma tai parannus, joka tekisi Spliitistä hyödyllisemmän.",
+        "description": "Kuvaile ratkaisemisen arvoinen ongelma tai parannus, joka tekisi Spliit Cloudista hyödyllisemmän.",
         "action": "Avaa idealomake"
       },
       "feedback": {
@@ -3659,7 +3659,7 @@
     "hintTapToCreateGroup": "Olen {name} — napauta minua luodaksesi ryhmän.",
     "billName": "Bill",
     "offlineMessage": "En voi luoda mitään, kun et ole yhteydessä.",
-    "serverUnreachableMessage": "En saa yhteyttä Spliit-palvelimeen juuri nyt — yhteytesi näyttää toimivan, joten vika on meidän."
+    "serverUnreachableMessage": "En saa yhteyttä Spliit Cloud -palvelimeen juuri nyt — yhteytesi näyttää toimivan, joten vika on meidän."
   },
   "CreateSettlement": {
     "description": "Tarkista maksu ennen sen tallentamista.",
@@ -3687,7 +3687,7 @@
     "signup": {
       "title": "Nimetön tili",
       "description": "Luo anonyymi tili ilman sähköpostiosoitetta, salasanaa tai sosiaalista sisäänkirjautumista.",
-      "warning": "Tietosi on tallennettu Spliit Cloudiin, mutta tällä tilillä ei ole sähköpostia tai muuta palautustapaa. Sinun on tallennettava seuraavaksi näkyvä kirjautumislinkki.",
+      "warning": "Käytä Spliit Cloudia ilman sähköpostiosoitetta, salasanaa tai sosiaalista sisäänkirjautumista. Ennen aloittamista sinun on tallennettava pysyvä kirjautumislinkki.",
       "cancel": "Peruuta",
       "recoverDescription": "Liitä tallennettu kirjautumislinkki palataksesi olemassa olevaan nimettömään tiliin.",
       "recoveryOnlyHelp": "Uusia anonyymejä tilejä ei ole saatavilla täällä. Liitä täydellinen tallennettu kirjautumislinkki jatkaaksesi.",
@@ -3730,7 +3730,7 @@
       "unavailableDescription": "Luo korvaava linkki erikseen ja tallenna se ennen jatkamista.",
       "generateReplacement": "Luo korvaava linkki",
       "error": "Jotain meni pieleen. Yritä uudelleen.",
-      "start": "Aloita Spliitin käyttö"
+      "start": "Aloita Spliit Cloudin käyttö"
     },
     "recovery": {
       "warningTitle": "Tallenna tämä jonnekin turvalliseen paikkaan",
@@ -3835,7 +3835,7 @@
     "scopeExpensesWrite": "Lisätä kuluja esikatselun kautta"
   },
   "PwaUpdate": {
-    "waitingFailed": "Spliit ei voinut ottaa päivitystä käyttöön.",
+    "waitingFailed": "Spliit Cloud ei voinut ottaa päivitystä käyttöön.",
     "retry": "Yritä uudelleen",
     "dismiss": "Sulje"
   },
@@ -4216,7 +4216,7 @@
       "fallbackTo": "vara kohteeseen {label}",
       "fields": {
         "categorySource": {
-          "description": "Lue pankin kategoria, jotta jokainen yksilöllinen arvo voidaan yhdistää Spliit-kategoriaan.",
+          "description": "Lue pankin kategoria, jotta jokainen yksilöllinen arvo voidaan yhdistää Spliit Cloud -kategoriaan.",
           "title": "Kategorian lähde"
         },
         "dateTime": {
@@ -4485,7 +4485,7 @@
     "add": "Lisää webhook",
     "url": "Päätepisteen URL-osoite",
     "loading": "Ladataan webhookeja…",
-    "empty": "Webhookeja ei vielä ole. Lisää webhook aloittaaksesi Spliitin integroinnin toiseen palveluun.",
+    "empty": "Webhookeja ei vielä ole. Lisää webhook aloittaaksesi Spliit Cloudin integroinnin toiseen palveluun.",
     "secretTitle": "Tallenna allekirjoitussalaisuutesi",
     "secretDescription": "Tämä salaisuus näytetään vain kerran. Tallenna se turvallisesti ennen kuin suljet tämän valintaikkunan.",
     "copy": "Kopioi salaisuus",
@@ -4567,7 +4567,7 @@
     "offlineSearchHint": "Offline-haku käyttää tarkkaa tekstiä; kirjoitusvirheiden sieto tarvitsee yhteyden.",
     "groupsNotDownloaded": "{count} ryhmää ei ladattu",
     "groupsNeedUpdating": "{count} pitää päivittää",
-    "storageBlocked": "Sulje muut Spliit-välilehdet offline-tallennuksen päivityksen viimeistelemiseksi.",
+    "storageBlocked": "Sulje muut Spliit Cloud -välilehdet offline-tallennuksen päivityksen viimeistelemiseksi.",
     "storageQuota": "Offline-tallennus on täynnä. Yritä uudelleen tai tyhjennä latauksia tilan vapauttamiseksi.",
     "statusBlocked": "Offline-tallennus estetty",
     "statusQuotaError": "Offline-tallennus täynnä",
@@ -4586,12 +4586,12 @@
     "dataStale": "Osa tiedoista voi olla vanhentuneita."
   },
   "ApiErrorEmptyState": {
-    "title": "Spliit ei ole käytettävissä",
-    "description": "Spliit-palvelimeen ei saada yhteyttä juuri nyt. Yhteytesi näyttää toimivan — yritä hetken kuluttua uudelleen.",
+    "title": "Spliit Cloud ei ole käytettävissä",
+    "description": "Spliit Cloud -palvelimeen ei saada yhteyttä juuri nyt. Yhteytesi näyttää toimivan — yritä hetken kuluttua uudelleen.",
     "retry": "Yritä uudelleen"
   },
   "ApiStatusBanner": {
-    "message": "Spliitiin ei saada yhteyttä juuri nyt. Yhteytesi näyttää toimivan — vika on meidän päässämme.",
+    "message": "Spliit Cloudiin ei saada yhteyttä juuri nyt. Yhteytesi näyttää toimivan — vika on meidän päässämme.",
     "statusLink": "Tarkista tila"
   },
   "AccountDeletionBanner": {
@@ -4641,7 +4641,7 @@
       },
       "data-portability": {
         "title": "Tuonti ja vienti",
-        "description": "Tuo historia Splitwise-CSV:stä, tiliote-CSV:istä yhdistämisvelholla ja kaksoiskappaleiden tunnistuksella, Cospendistä tai Spliit-paketeista. Tricount- ja Settle Up -tuki on tulossa. Vie kaikki takaisin CSV:nä, tulostettavina PDF-raportteina tai täysinä ZIP-arkistoina asiakirjoineen."
+        "description": "Tuo historia Splitwise-CSV:stä, tiliote-CSV:istä yhdistämisvelholla ja kaksoiskappaleiden tunnistuksella, Cospendistä tai Spliit Cloud -paketeista. Tricount- ja Settle Up -tuki on tulossa. Vie kaikki takaisin CSV:nä, tulostettavina PDF-raportteina tai täysinä ZIP-arkistoina asiakirjoineen."
       },
       "expenses-splits": {
         "title": "Kulut ja älykkäät jaot",
@@ -4657,7 +4657,7 @@
       },
       "offline-app": {
         "title": "Asennettava sovellus",
-        "description": "Asenna Spliit sovelluksena mille tahansa laitteelle välitöntä latausta ja koko näytön kokemusta varten. Ryhmäsi pysyvät luettavina ilman verkkoyhteyttä, ja uudet kulut jonoutuvat paikallisesti synkronoituen uudelleen yhdistettäessä — laajempi offline-muokkaus on tulossa."
+        "description": "Asenna Spliit Cloud sovelluksena mille tahansa laitteelle välitöntä latausta ja koko näytön kokemusta varten. Ryhmäsi pysyvät luettavina ilman verkkoyhteyttä, ja uudet kulut jonoutuvat paikallisesti synkronoituen uudelleen yhdistettäessä — laajempi offline-muokkaus on tulossa."
       },
       "share-identity": {
         "title": "Kutsut ja ryhmäidentiteetti",

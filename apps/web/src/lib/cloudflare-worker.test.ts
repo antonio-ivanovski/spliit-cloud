@@ -343,7 +343,7 @@ describe('Cloudflare Pages worker SEO head injection', () => {
 
     const html = await response.text()
     expect(html).toContain('<title>Features — Spliit Cloud</title>')
-    expect(html).toContain('Every Spliit feature in one catalog')
+    expect(html).toContain('Every Spliit Cloud feature in one catalog')
     expect(html).toContain(
       '<link rel="canonical" href="https://spliit.cloud/features">',
     )
@@ -351,7 +351,7 @@ describe('Cloudflare Pages worker SEO head injection', () => {
     expect(html).toContain('href="/features.md"')
     expect(html).toContain('<h1 data-seo="title">Features — Spliit Cloud</h1>')
     expect(html).toContain(
-      '<p data-seo="description">Every Spliit feature in one catalog',
+      '<p data-seo="description">Every Spliit Cloud feature in one catalog',
     )
     expect(html).toContain('<a data-seo="markdown" href="/features.md">')
     expect(html).not.toContain('href="/old.md"')

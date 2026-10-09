@@ -59,8 +59,8 @@
       "scanning": "QRコードを探しています…",
       "noCamera": "このデバイスにはカメラがありません。代わりにスマートフォンのカメラアプリでコードをスキャンしてください。",
       "permissionDenied": "カメラへのアクセスが拒否されました。ブラウザの設定でカメラへのアクセスを許可するか、スマートフォンのカメラアプリでコードをスキャンしてください。",
-      "invalidCode": "そのコードはSpliitのグループ招待ではありません。ホストのQRコードをもう一度スキャンしてください。",
-      "foreignTitle": "このコードは別のSpliitを指しています",
+      "invalidCode": "そのコードはSpliit Cloudのグループ招待ではありません。ホストのQRコードをもう一度スキャンしてください。",
+      "foreignTitle": "このコードは別のSpliit Cloudを指しています",
       "foreignDescription": "このブラウザで {origin} が開きます。このコードを表示したホストを信頼できる場合のみ続行してください。",
       "foreignConfirm": "リンクを開く",
       "foreignCancel": "戻る"
@@ -201,7 +201,7 @@
     "exportPdfError": "PDFを生成できませんでした。もう一度お試しください。",
     "exportPdfSuccess": "PDFレポートをダウンロードしました。",
     "exportPdfRetryBounds": "再試行",
-    "exportBundleTitle": "Spliitバックアップバンドル",
+    "exportBundleTitle": "Spliit Cloudバックアップバンドル",
     "exportBundlePurpose": "支出、設定、添付書類を含む移行可能なグループデータです。",
     "exportBundleAction": "バンドルをダウンロード",
     "globalArchived": "アーカイブ済み",
@@ -313,7 +313,7 @@
       "unknownGroup": "不明なグループ",
       "sentOn": "{date}に送信"
     },
-    "linkInvitationBannerDescription": "{inviter}さんから、Spliitの{groupName}に参加するよう招待されました。",
+    "linkInvitationBannerDescription": "{inviter}さんから、Spliit Cloudの{groupName}に参加するよう招待されました。",
     "linkInvitationSingleUse": "このリンクは一度しか使用できません。参加を承認すると、リンクは使えなくなります。",
     "linkInvitationTemporaryName": "{name}として参加します。",
     "linkInvitationAlreadyMemberTitle": "すでに{groupName}のメンバーです",
@@ -388,7 +388,7 @@
         "shareAriaLabel": "招待リンクを共有",
         "emailInvitesTitle": "メール招待を送信しました",
         "emailInvitesDescription": "サーバーが以下の人々にメールを送信しました。ログインすると、グループページに承認/拒否バナーが表示されます。",
-        "shareTitle": "私の Spliit グループに参加",
+        "shareTitle": "私の Spliit Cloud グループに参加",
         "shareText": "Spliit Cloud の支出グループに参加 — {name}。このリンクを開いて承認: {url}",
         "copyLink": "招待リンクをコピー",
         "copied": "コピーしました"
@@ -454,7 +454,7 @@
         "settleUpComingTitle": "Settle Up インポートの準備中",
         "settleUpComingDescription": "Settle Up の CSV エクスポート対応は開発ロードマップに含まれています。",
         "dropFile": "JSON または CSV ファイルをドロップするか、クリックして選択",
-        "dropFileDescription": "JSON はすべての金額と支払者を正確に保持します。CSV は代替手段です。Spliit は参加者ごとの金額を小数点第2位に丸めます。",
+        "dropFileDescription": "JSON はすべての金額と支払者を正確に保持します。CSV は代替手段です。Spliit Cloud は参加者ごとの金額を小数点第2位に丸めます。",
         "or": "または",
         "pasteUrl": "spliit.app の URL を貼り付け",
         "urlDescription": "サーバーが spliit.app の公開エクスポートエンドポイントを通じて、代わりにグループを取得します。",
@@ -464,7 +464,7 @@
         "receiptWarningTitle": "レシート画像はインポートされません。",
         "receiptWarningDescription": "spliit.app のエクスポートにはレシート画像は含まれません。必要な場合は、宛先グループに再アップロードしてください。",
         "invalidUrl": "有効な spliit.app グループ URL を貼り付けてください",
-        "notFoundUrl": "Spliit はこのグループを見つけられませんでした",
+        "notFoundUrl": "Spliit Cloud はこのグループを見つけられませんでした",
         "fetchUrlError": "ソースの取得に失敗しました",
         "fileReadError": "ファイルの読み取りに失敗しました",
         "appToCloudDescription": "spliit.app のグループ URL の .app を .cloud に変更して、Spliit Cloud にインポートしてください。",
@@ -1974,7 +1974,7 @@
       "friendAlreadyMember": "すでにメンバーです",
       "noFriends": "まだ友達がいません。メールタブから招待してください。",
       "friendAlreadyInvited": "すでに招待済み",
-      "noAccountDescription": "Spliitに招待せずに、支出に誰かを追加できます。後からアカウントにリンクできます。",
+      "noAccountDescription": "Spliit Cloudに招待せずに、支出に誰かを追加できます。後からアカウントにリンクできます。",
       "temporaryNameRequired": "仮の名前",
       "noAccountNameDescription": "この参加者をアカウントにリンクするまで、支出と残高に表示されます。",
       "addParticipant": "参加者を追加",
@@ -2071,7 +2071,7 @@
         },
         "unsettled": {
           "title": "未精算の残高があります",
-          "description": "退出前に、あなたに関係する残高の精算金が作成されます。他の参加者の残高は変わりません。"
+          "description": "退出前に、Spliit Cloud があなたに関係する残高の精算金を作成します。他の参加者の残高は変わりません。"
         }
       },
       "toast": {
@@ -2156,7 +2156,7 @@
       "emailPlaceholder": "account@example.com",
       "emailChangeWarning": "現在の招待先は、この招待を承認できなくなります。",
       "nameLabel": "表示名",
-      "profileNameNote": "Spliitのプロフィール名を使用",
+      "profileNameNote": "Spliit Cloudのプロフィール名を使用",
       "saveChanges": "変更を保存",
       "updateSend": "更新して送信",
       "switchToEmailSend": "切り替えて招待を送信",
@@ -2293,7 +2293,7 @@
     },
     "notifications": {
       "title": "通知",
-      "description": "Spliit がアクティビティ通知を送信する方法を選択します。",
+      "description": "Spliit Cloud がアクティビティ通知を送信する場所を選択します。",
       "enable": "プッシュ通知を有効にする",
       "disable": "プッシュ通知を無効にする",
       "enabled": "このデバイスではプッシュ通知が有効です。",
@@ -2301,7 +2301,7 @@
       "unsupported": "このブラウザまたはコンテキストではプッシュ通知はサポートされていません。",
       "notConfigured": "この環境ではプッシュ通知を利用できません。",
       "permissionDenied": "通知がブロックされています。ブラウザまたはデバイスの設定で許可してから、もう一度お試しください。",
-      "iosInstall": "iPhoneまたはiPadでは、プッシュ通知を有効にする前にSpliitをホーム画面に追加してください。",
+      "iosInstall": "iPhoneまたはiPadでは、プッシュ通知を有効にする前にSpliit Cloudをホーム画面に追加してください。",
       "error": "プッシュ通知の設定を更新できませんでした。もう一度お試しください。",
       "preferencesTitle": "通知設定",
       "preferencesDescription": "これらの選択は、今後のグループと支出アクティビティに適用されます。",
@@ -2836,7 +2836,7 @@
   },
   "OfflineBanner": {
     "message": "オフラインです。データを閲覧できますが、変更には接続が必要です。",
-    "serverUnavailable": "今Spliitに接続できません。ダウンロード済みデータを表示しています。",
+    "serverUnavailable": "今Spliit Cloudに接続できません。ダウンロード済みデータを表示しています。",
     "reconnecting": "再接続中…ダウンロード済みデータを引き続き読めます。"
   },
   "InstallPromotion": {
@@ -3161,8 +3161,8 @@
   },
   "PushOnboarding": {
     "title": "最新情報を受け取る方法を選択",
-    "description": "Spliitでは、グループや支出のアクティビティを発生時に通知できます。",
-    "pushBenefit": "Spliitを開いていないときでも、このデバイスにプッシュ通知が届きます。",
+    "description": "Spliit Cloudでは、グループや支出のアクティビティを発生時に通知できます。",
+    "pushBenefit": "Spliit Cloudを開いていないときでも、このデバイスにプッシュ通知が届きます。",
     "emailFallback": "受け取りたい通知にはメールを利用できます。プッシュのみの選択はメールに振り替えられません。",
     "settingsHint": "これらの選択は設定でいつでも変更できます。プッシュ通知はデバイスごとに個別に有効にします。",
     "enable": "プッシュ通知を有効にする",
@@ -3278,17 +3278,17 @@
   },
   "OAuth": {
     "consent": {
-      "title": "Spliitを{client}に接続しますか？",
+      "title": "Spliit Cloudを{client}に接続しますか？",
       "description": "このアプリケーションがアクセスを求めているアカウントと権限をご確認ください。",
       "connectionDetails": "接続の詳細",
-      "spliitAccount": "Spliitアカウント",
+      "spliitAccount": "Spliit Cloudアカウント",
       "connectingTo": "接続先",
       "assistantVia": "OAuthアプリケーション",
       "defaultClient": "このアプリケーション",
-      "defaultUser": "Spliitユーザー",
+      "defaultUser": "Spliit Cloudユーザー",
       "sessionUnavailable": "セッションを利用できません。戻ってもう一度ログインしてください。",
       "sharedData": "共有される情報",
-      "identityTitle": "Spliitの本人情報",
+      "identityTitle": "Spliit Cloudの本人情報",
       "identityDescription": "名前とメールアドレスは接続するアカウントの識別に使用されます。パスワードやログイン方法は共有されません。",
       "groupsTitle": "グループと支出のコンテキスト",
       "groupsDescription": "グループの詳細、参加者、保存済みの分割、残高、統計情報、アクティビティ。",
@@ -3296,7 +3296,7 @@
       "expensesDescription": "このアプリケーションが作成できるのは、「支出を作成」を押した後、プレビューに表示された内容と完全に同じ支出だけです。",
       "privacyTitle": "プライバシーに関する注意",
       "privacyDescription": "グループの金銭情報は慎重に扱うべき内容です。連携中は {client} から参照できます。アカウント設定からいつでも連携を解除できます。",
-      "authorityNote": "Spliitが正規の情報源です。既存の検証、残高、アクティビティ履歴、通知が引き続き適用されます。",
+      "authorityNote": "Spliit Cloudが正規の情報源です。既存の検証、残高、アクティビティ履歴、通知が引き続き適用されます。",
       "allow": "許可して接続",
       "cancel": "キャンセル",
       "missingRequest": "認可リクエストがありません。アプリケーションに戻り、接続をもう一度開始してください。",
@@ -3311,7 +3311,7 @@
       "expensesDeleteTitle": "支出の削除",
       "expensesDeleteDescription": "支出を完全に削除し、繰り返し支出の期間短縮などデータが失われる編集を行います。元に戻せません。",
       "unknownScopes": "このアプリは Spliit Cloud が認識できない権限（{scopes}）を要求しているため、ここでは承認できません。アプリの作者に要求している権限を確認するようご依頼ください。",
-      "clientUnavailable": "Spliitはこのアプリケーションを検証できませんでした。アプリケーションに戻り、接続をもう一度開始してください。",
+      "clientUnavailable": "Spliit Cloudはこのアプリケーションを検証できませんでした。アプリケーションに戻り、接続をもう一度開始してください。",
       "clientWebsite": "アプリケーションのウェブサイト",
       "privacyPolicy": "プライバシーポリシー",
       "redirectsTo": "リダイレクト先",
@@ -3321,18 +3321,18 @@
     "login": {
       "missingTitle": "認証リクエストがありません",
       "missingDescription": "アプリケーションに戻り、接続をもう一度開始してください。",
-      "missingError": "SpliitはOAuth認証情報を受け取れませんでした。",
+      "missingError": "Spliit CloudはOAuth認証情報を受け取れませんでした。",
       "connectingTitle": "アカウントを接続中",
       "connectingDescription": "既存のSpliit Cloudセッションが見つかりました。追加のログインは不要です。",
-      "checkingSession": "Spliitセッションを確認中…",
+      "checkingSession": "Spliit Cloudセッションを確認中…",
       "continuing": "安全に続行しています…",
       "signInTitle": "ログインして接続",
       "signInDescription": "普段お使いのSpliit Cloudのログイン方法でログインしてください。このアプリケーションがパスワードやログイン認証情報を受け取ることはありません。"
     },
     "shell": {
-      "label": "Spliitの認可",
+      "label": "Spliit Cloudの認可",
       "mobileDescription": "要求されたアカウントアクセスを確認",
-      "title": "アプリケーションをSpliitアカウントに接続します。",
+      "title": "アプリケーションをSpliit Cloudアカウントに接続します。",
       "previewBullet": "アカウント設定から接続を解除できます。",
       "authorityBullet": "このアプリケーションがアクセスできる内容を選択できます。",
       "validationBullet": "既存の検証、残高、通知はそのまま維持されます"
@@ -3347,7 +3347,7 @@
       "copied": "クリップボードにコピーしました",
       "codeLabel": "認可コード",
       "stateLabel": "ステート",
-      "warning": "信頼できるエージェントまたはアプリケーションにのみ貼り付けてください。これを持っている人は、有効期限が切れるまであなたの Spliit アカウントに接続できます。",
+      "warning": "信頼できるエージェントまたはアプリケーションにのみ貼り付けてください。これを持っている人は、有効期限が切れるまであなたの Spliit Cloud アカウントに接続できます。",
       "expiryNote": "このコードは発行から10分で有効期限が切れます。",
       "errorTitle": "接続を完了できませんでした",
       "errorDescription": "認可サーバーがコードの代わりにエラーを返しました。",
@@ -3497,7 +3497,7 @@
   },
   "AIExpense": {
     "title": "AI支出を確認",
-    "description": "支出を追加する前に、Spliitが認識した内容を確認してください。",
+    "description": "支出を追加する前に、Spliit Cloudが認識した内容を確認してください。",
     "created": "支出を作成しました。",
     "createError": "支出を作成できませんでした。",
     "missing": "検出されませんでした",
@@ -3553,7 +3553,7 @@
       },
       "idea": {
         "title": "アイデアを提案",
-        "description": "解決する価値のある問題や、Spliit をより便利にする改善案を説明してください。",
+        "description": "解決する価値のある問題や、Spliit Cloud をより便利にする改善案を説明してください。",
         "action": "アイデアフォームを開く"
       },
       "feedback": {
@@ -3645,7 +3645,7 @@
     "hintTapToCreateGroup": "私は{name}です。タップしてグループを作成できます。",
     "billName": "ビル",
     "offlineMessage": "オフライン中は何も作成できません。",
-    "serverUnreachableMessage": "今Spliitサーバーに接続できません — 接続に問題はないようなので、こちら側の問題です。"
+    "serverUnreachableMessage": "今Spliit Cloudサーバーに接続できません — 接続に問題はないようなので、こちら側の問題です。"
   },
   "CreateSettlement": {
     "description": "支払いを記録する前に確認してください。",
@@ -3716,7 +3716,7 @@
       "unavailableDescription": "置換リンクを明示的に生成し、続行する前にそれを保存します。",
       "generateReplacement": "置換リンクの生成",
       "error": "何か問題が発生しました。もう一度試してください。",
-      "start": "Split の使用を開始する"
+      "start": "Spliit Cloud の使用を開始する"
     },
     "recovery": {
       "warningTitle": "これを安全な場所に保存してください",
@@ -3821,7 +3821,7 @@
     "scopeExpensesWrite": "プレビュー付きで支出を追加"
   },
   "PwaUpdate": {
-    "waitingFailed": "Spliitは更新を適用できませんでした。",
+    "waitingFailed": "Spliit Cloudは更新を適用できませんでした。",
     "retry": "再試行",
     "dismiss": "閉じる"
   },
@@ -4201,7 +4201,7 @@
       "fallbackTo": "{label} にフォールバック",
       "fields": {
         "categorySource": {
-          "description": "銀行カテゴリを読み取り、一意の値ごとに Spliit カテゴリにマッピングできるようにします。",
+          "description": "銀行カテゴリを読み取り、一意の値ごとに Spliit Cloud カテゴリにマッピングできるようにします。",
           "title": "カテゴリソース"
         },
         "dateTime": {
@@ -4466,7 +4466,7 @@
     "add": "Webhookを追加",
     "url": "エンドポイントURL",
     "loading": "Webhookを読み込んでいます…",
-    "empty": "Webhookはまだありません。追加してSpliitと別のサービスとの連携を始めましょう。",
+    "empty": "Webhookはまだありません。追加してSpliit Cloudと別のサービスとの連携を始めましょう。",
     "secretTitle": "署名用シークレットを保存",
     "secretDescription": "このシークレットは一度しか表示されません。このダイアログを閉じる前に安全に保存してください。",
     "copy": "シークレットをコピー",
@@ -4548,7 +4548,7 @@
     "offlineSearchHint": "オフライン検索は完全一致のみです。あいまい検索には接続が必要です。",
     "groupsNotDownloaded": "{count}件のグループがダウンロードされていません",
     "groupsNeedUpdating": "{count}件の更新が必要です",
-    "storageBlocked": "他のSpliitタブを閉じてオフラインストレージの更新を完了してください。",
+    "storageBlocked": "他のSpliit Cloudタブを閉じてオフラインストレージの更新を完了してください。",
     "storageQuota": "オフラインストレージがいっぱいです。再試行するか、ダウンロードを削除して空きを作ってください。",
     "statusBlocked": "オフラインストレージがブロックされています",
     "statusQuotaError": "オフラインストレージがいっぱいです",
@@ -4567,12 +4567,12 @@
     "dataStale": "一部のデータが最新でない可能性があります。"
   },
   "ApiErrorEmptyState": {
-    "title": "Spliitはご利用いただけません",
-    "description": "現在Spliitサーバーに接続できません。接続に問題はないようですので、しばらくしてからもう一度お試しください。",
+    "title": "Spliit Cloudはご利用いただけません",
+    "description": "現在Spliit Cloudサーバーに接続できません。接続に問題はないようですので、しばらくしてからもう一度お試しください。",
     "retry": "再試行"
   },
   "ApiStatusBanner": {
-    "message": "現在Spliitに接続できません。接続に問題はないようです — こちら側の問題です。",
+    "message": "現在Spliit Cloudに接続できません。接続に問題はないようです — こちら側の問題です。",
     "statusLink": "ステータスを確認"
   },
   "AccountDeletionBanner": {
@@ -4622,7 +4622,7 @@
       },
       "data-portability": {
         "title": "インポートとエクスポート",
-        "description": "SplitwiseのCSV、マッピングウィザードと重複検出付きの銀行明細CSV、Cospend、Spliitバンドルから履歴を取り込めます。TricountとSettle Upへの対応はロードマップに含まれています。CSV、印刷用PDFレポート、書類を含む完全なZIPアーカイブとしてすべて書き出せます。"
+        "description": "SplitwiseのCSV、マッピングウィザードと重複検出付きの銀行明細CSV、Cospend、Spliit Cloudバンドルから履歴を取り込めます。TricountとSettle Upへの対応はロードマップに含まれています。CSV、印刷用PDFレポート、書類を含む完全なZIPアーカイブとしてすべて書き出せます。"
       },
       "expenses-splits": {
         "title": "支出とスマートな分割",
@@ -4638,7 +4638,7 @@
       },
       "offline-app": {
         "title": "インストールできるアプリ",
-        "description": "あらゆるデバイスにSpliitをアプリとしてインストールして、高速な起動と全画面表示で使えます。オフラインでもグループは閲覧でき、新しい支出はローカルにキュー保存され、再接続時に同期されます。本格的なオフライン編集はロードマップに含まれています。"
+        "description": "あらゆるデバイスにSpliit Cloudをアプリとしてインストールして、高速な起動と全画面表示で使えます。オフラインでもグループは閲覧でき、新しい支出はローカルにキュー保存され、再接続時に同期されます。本格的なオフライン編集はロードマップに含まれています。"
       },
       "share-identity": {
         "title": "招待とグループのアイデンティティ",

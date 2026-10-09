@@ -1,6 +1,6 @@
-# Publishing the Spliit MCP App
+# Publishing the Spliit Cloud MCP App
 
-This guide starts after the Spliit web app, API, and MCP service have been
+This guide starts after the Spliit Cloud web app, API, and MCP service have been
 deployed to stable public HTTPS domains. Replace the example domains throughout:
 
 - Web: `https://app.spliit.example`
@@ -76,7 +76,7 @@ In Dokploy:
 3. Enable HTTPS.
 4. Deploy the Compose application. The migration must complete, then the API
    must become healthy before the MCP service starts.
-5. Do not place an authentication proxy in front of the MCP domain. Spliit's
+5. Do not place an authentication proxy in front of the MCP domain. Spliit Cloud's
    OAuth bearer flow protects `/mcp`.
 
 ## 2. Run production preflight checks
@@ -104,7 +104,7 @@ It must advertise:
 
 - `resource`: `https://mcp.spliit.example/mcp`
 - `authorization_servers`: `https://api.spliit.example/auth`
-- both Spliit scopes
+- both Spliit Cloud scopes
 
 Check OAuth discovery and dynamic client registration:
 
@@ -150,7 +150,7 @@ exactly one expense.
 ## 3. Add and test in ChatGPT
 
 OpenAI currently requires a remote public HTTPS MCP endpoint. The complete
-Spliit flow, including the widget's write action, currently requires ChatGPT
+Spliit Cloud flow, including the widget's write action, currently requires ChatGPT
 Business, Enterprise, or Edu on the web. Pro developer mode supports
 read/fetch MCP access, so it cannot complete expense creation.
 
@@ -269,15 +269,15 @@ For an individual Pro or Max account:
    - Name: `Spliit`
    - URL: `https://mcp.spliit.example/mcp`
 5. Select **Add**, then **Connect**.
-6. Complete the Spliit OAuth login and consent flow.
+6. Complete the Spliit Cloud OAuth login and consent flow.
 7. In a new conversation, open **Search and tools**, enable Spliit, and run the
    same test prompts used for ChatGPT.
 
 For Team or Enterprise, an Owner/Primary Owner adds the connector under
 **Settings → Connectors → Organization connectors**. Each user then connects
-their own Spliit account.
+their own Spliit Cloud account.
 
-A prefilled installation link can be shared from Spliit documentation:
+A prefilled installation link can be shared from Spliit Cloud documentation:
 
 ```text
 https://claude.ai/customize/connectors?modal=add-custom-connector&connectorName=Spliit&connectorUrl=https%3A%2F%2Fmcp.spliit.example%2Fmcp
@@ -313,8 +313,8 @@ as the source of truth.
 Before announcing either integration:
 
 - OAuth discovery, DCR, PKCE, refresh tokens, and JWKS work from a clean browser.
-- Consent identifies both the Spliit account and assistant client.
-- Two different Spliit accounts cannot see each other's groups or participants.
+- Consent identifies both the Spliit Cloud account and assistant client.
+- Two different Spliit Cloud accounts cannot see each other's groups or participants.
 - Browser visits to the production MCP/inspector routes do not expose a
   dashboard.
 - A flat, FX, and itemized expense preview render in ChatGPT and Claude.

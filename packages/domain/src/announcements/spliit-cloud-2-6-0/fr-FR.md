@@ -1,18 +1,18 @@
 ---
 id: spliit-cloud-2-6-0
 date: 2026-10-08
-title: Spliit fonctionne désormais hors ligne — aidez-nous à le tester
+title: Spliit Cloud fonctionne désormais hors ligne — aidez-nous à le tester
 inApp: true
 email: true
 ---
 
-Spliit 2.6.0 apporte la lecture hors ligne à l'app : vos groupes restent lisibles sans connexion. C'est la base de la lecture hors ligne — l'écriture complète hors ligne, y compris la création de dépenses, suivra une fois cette étape stabilisée. Les détails sont dans les notes de la [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0).
+Spliit Cloud 2.6.0 apporte la lecture hors ligne à l'app : vos groupes restent lisibles sans connexion. C'est la base de la lecture hors ligne — l'écriture complète hors ligne, y compris la création de dépenses, suivra une fois cette étape stabilisée. Les détails sont dans les notes de la [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0).
 
 ## Ce que vous pouvez faire hors ligne
 
 - Ouvrez vos groupes et parcourez l'historique complet des dépenses avec les commentaires, les soldes, la liste des membres, les affectations de sous-groupes, les répartitions prédéfinies, les budgets, les paramètres du groupe et l'activité récente.
 - Les listes s'ouvrent instantanément depuis la copie sur l'appareil et intègrent les nouveautés dès la reconnexion, si bien que les connexions lentes semblent beaucoup plus rapides aussi.
-- Installez Spliit comme une app sur votre appareil grâce au nouveau guide étape par étape.
+- Installez Spliit Cloud comme une app sur votre appareil grâce au nouveau guide étape par étape.
 
 ## Ce qui nécessite encore une connexion
 

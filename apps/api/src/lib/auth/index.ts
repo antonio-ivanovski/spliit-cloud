@@ -438,13 +438,14 @@ async function fetchGitHubJson<T>(url: string, accessToken: string) {
 }
 
 /**
- * Resolve the Spliit user for a GitHub OAuth sign-in. Prefers a verified email
- * from GitHub's `/user/emails` endpoint; falls back to a synthetic placeholder
- * email (`<id>@github.placeholder.local`) when the user has no verified email
- * on file (private email, missing `user:email` scope). The synthetic path is
- * what enables "email-less accounts" — the user gets a complete account and can
- * use the app, but email-only features (magic-link sign-in, password reset,
- * notifications) skip them because the email is a placeholder.
+ * Resolve the Spliit Cloud user for a GitHub OAuth sign-in. Prefers a verified
+ * email from GitHub's `/user/emails` endpoint; falls back to a synthetic
+ * placeholder email (`<id>@github.placeholder.local`) when the user has no
+ * verified email on file (private email, missing `user:email` scope). The
+ * synthetic path is what enables "email-less accounts" — the user gets a
+ * complete account and can use the app, but email-only features (magic-link
+ * sign-in, password reset, notifications) skip them because the email is a
+ * placeholder.
  */
 export async function getVerifiedGitHubUserInfo(token: OAuthToken) {
   if (!token.accessToken) return null
@@ -531,7 +532,7 @@ async function fetchTwitterJson<T>(url: string, accessToken: string) {
 }
 
 /**
- * Resolve the Spliit user for an X (Twitter) OAuth sign-in. Prefers the
+ * Resolve the Spliit Cloud user for an X (Twitter) OAuth sign-in. Prefers the
  * confirmed email from X API v2 (`user.fields=confirmed_email`); falls back to
  * a synthetic placeholder (`<id>@twitter.placeholder.local`) when the user has
  * no confirmed email. Better Auth's default uses the X username as the email in
@@ -588,7 +589,7 @@ export async function getVerifiedTwitterUserInfo(token: OAuthToken) {
 }
 
 /**
- * Spliit authentication is built on better-auth using its official schema
+ * Spliit Cloud authentication is built on better-auth using its official schema
  * (User, Session, Account for provider identity records, Verification for
  * magic-link/email tokens). Physical table names are pinned with @@map
  * ("Account" for users, "AuthIdentity" for identities), so no data migration
@@ -610,7 +611,7 @@ export const auth = betterAuth({
   // token endpoint is redundant and must not be advertised or callable.
   // The provider's native delete-consent route only removes the consent row
   // and leaves refresh tokens alive. Account settings uses the transactional
-  // Spliit revocation path instead, so keep the unsafe shortcut unreachable.
+  // Spliit Cloud revocation path instead, so keep the unsafe shortcut unreachable.
   disabledPaths: ['/token', '/oauth2/delete-consent'],
   secret: env.BETTER_AUTH_SECRET ?? 'spliit-dev-secret-change-me',
   // CORS already allows every configured WEB_ORIGINS entry; pass the full

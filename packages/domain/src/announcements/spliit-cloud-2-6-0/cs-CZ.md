@@ -1,18 +1,18 @@
 ---
 id: spliit-cloud-2-6-0
 date: 2026-10-08
-title: Spliit už funguje offline — pomozte to otestovat
+title: Spliit Cloud už funguje offline — pomozte to otestovat
 inApp: true
 email: true
 ---
 
-Spliit 2.6.0 přináší do aplikace čtení offline: vaše skupiny zůstanou čitelné i bez připojení. Je to základ čtení offline — úplný offline zápis včetně vytváření výdajů bude následovat, jakmile bude tato fáze stabilní. Podrobnosti najdete v poznámkách k verzi [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0).
+Spliit Cloud 2.6.0 přináší do aplikace čtení offline: vaše skupiny zůstanou čitelné i bez připojení. Je to základ čtení offline — úplný offline zápis včetně vytváření výdajů bude následovat, jakmile bude tato fáze stabilní. Podrobnosti najdete v poznámkách k verzi [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0).
 
 ## Co můžete dělat offline
 
 - Otevírejte své skupiny a procházejte celou historii výdajů s komentáři, zůstatky, seznamem členů, přiřazením podskupin, předvolbami dělení, rozpočty, nastavením skupiny a nedávnou aktivitou.
 - Seznamy se otevírají okamžitě z kopie v zařízení a po opětovném připojení do nich zapadnou nové změny, takže i pomalé připojení působí mnohem rychleji.
-- Nainstalujte si Spliit jako aplikaci do zařízení s novým návodem krok za krokem.
+- Nainstalujte si Spliit Cloud jako aplikaci do zařízení s novým návodem krok za krokem.
 
 ## Co stále potřebuje připojení
 

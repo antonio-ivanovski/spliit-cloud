@@ -44,7 +44,7 @@ docker compose --env-file container.env up -d
 The web port binds to `127.0.0.1:3000`. Point Caddy, nginx, Traefik, HAProxy, or
 another TLS-terminating reverse proxy at that address. The proxy should preserve
 the public `Host` header and set `X-Forwarded-For`, `X-Real-IP`, and
-`X-Forwarded-Proto`. Spliit's web gateway preserves those values for the API.
+`X-Forwarded-Proto`. Spliit Cloud's web gateway preserves those values for the API.
 
 Useful checks:
 

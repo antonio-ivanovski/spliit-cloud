@@ -1,18 +1,18 @@
 ---
 id: spliit-cloud-2-6-0
 date: 2026-10-08
-title: Spliit artık çevrimdışı çalışıyor — test etmeye yardımcı ol
+title: Spliit Cloud artık çevrimdışı çalışıyor — test etmeye yardımcı ol
 inApp: true
 email: true
 ---
 
-Spliit 2.6.0 uygulamaya çevrimdışı okuma getiriyor: bağlantı olmadan da grupların okunabilir kalıyor. Bu, çevrimdışı okumanın temeli — bu aşama sağlamlaştıktan sonra gider oluşturma dahil tam çevrimdışı yazma gelecek. Ayrıntılar [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0) notlarında.
+Spliit Cloud 2.6.0 uygulamaya çevrimdışı okuma getiriyor: bağlantı olmadan da grupların okunabilir kalıyor. Bu, çevrimdışı okumanın temeli — bu aşama sağlamlaştıktan sonra gider oluşturma dahil tam çevrimdışı yazma gelecek. Ayrıntılar [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0) notlarında.
 
 ## Çevrimdışıyken neler yapabilirsin
 
 - Gruplarını aç ve yorumlar, bakiyeler, üye listesi, alt grup atamaları, bölüşüm ön ayarları, bütçeler, grup ayarları ve son etkinliklerle birlikte eksiksiz gider geçmişine göz at.
 - Listeler cihazdaki kopyadan anında açılıyor ve yeniden bağlandığında yeni değişiklikleri olduğu yerde birleştiriyor, bu yüzden yavaş bağlantılar da çok daha hızlı hissettiriyor.
-- Yeni adım adım yönlendirmeyle Spliit'i cihazına bir uygulama olarak kur.
+- Yeni adım adım yönlendirmeyle Spliit Cloud'i cihazına bir uygulama olarak kur.
 
 ## Hâlâ bağlantı gerektirenler
 

@@ -31,7 +31,7 @@ const authorizationParameters: OpenAPIV3_1.ParameterObject[] = [
     in: 'query',
     required: true,
     schema: { type: 'string', enum: ['code'] },
-    description: 'OAuth response type. Spliit supports the code flow.',
+    description: 'OAuth response type. Spliit Cloud supports the code flow.',
   },
   {
     name: 'client_id',
@@ -207,7 +207,10 @@ function replaceJsonBodyWithForm(operation: OpenAPIV3_1.OperationObject): void {
   }
 }
 
-/** Apply Spliit's real auth and media-type contract to a Better Auth operation. */
+/**
+ * Apply Spliit Cloud's real auth and media-type contract to a Better Auth
+ * operation.
+ */
 export function applyOAuthOperationContract(
   fullPath: string,
   method: OperationMethod,

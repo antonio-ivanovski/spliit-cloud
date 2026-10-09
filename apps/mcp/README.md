@@ -1,4 +1,4 @@
-# Spliit Assistant MCP App
+# Spliit Cloud Assistant MCP App
 
 Portable MCP Apps server for ChatGPT and Claude. It authenticates against
 Spliit Cloud's Better Auth OAuth 2.1 provider, forwards the user's access token
@@ -14,7 +14,7 @@ The post-implementation findings and follow-up recommendations are in
 The model-facing workflow is intentionally short:
 
 1. `get-expense-context` returns the complete authorized context needed to
-   prepare an expense: the connected Spliit account name, groups, eligible
+   prepare an expense: the connected Spliit Cloud account name, groups, eligible
    participants, caller participant IDs, currencies, disambiguation labels,
    and valid category catalog.
 2. Resolve group and participant names case-insensitively from that response.
@@ -28,9 +28,9 @@ The model-facing workflow is intentionally short:
 The assistant should call `get-expense-context` and `prepare-expense` in the
 same turn whenever the request is unambiguous. It selects the closest valid category when
 the description clearly indicates one and otherwise uses General. Omitted
-payer, split, date, category, and currency use Spliit defaults. A
+payer, split, date, category, and currency use Spliit Cloud defaults. A
 different supported ISO expense currency is converted to the group currency
-with Spliit's server-side rate for the expense date. The resolved rate is sealed
+with Spliit Cloud's server-side rate for the expense date. The resolved rate is sealed
 into the 15-minute confirmation so creation persists exactly what was previewed.
 A bare `$` means the group currency when it is a dollar currency; otherwise it
 means USD.
@@ -51,7 +51,7 @@ For example, “Alex had 2 beers and Alice had 3” maps naturally to shares 2 a
 The assistant must ask one focused question when the receipt total, currency,
 or line items are unreadable or contradictory; it must not invent values.
 Unassigned items use the saved group split when valid, otherwise an even split.
-Tax, tip, or another remainder can have an explicit split, or Spliit allocates
+Tax, tip, or another remainder can have an explicit split, or Spliit Cloud allocates
 it proportionally to exact item subtotals. The preview shows every item,
 allocation, remainder, and aggregate participant total before creation.
 
@@ -62,8 +62,8 @@ between ChatGPT and Claude.
 ## Configuration
 
 - `MCP_PUBLIC_URL`: public origin of this service, for example `https://mcp.example.com`
-- `MCP_API_URL`: public Spliit API origin used by the MCP server
-- `MCP_WEB_URL`: public Spliit web origin used by expense links
+- `MCP_API_URL`: public Spliit Cloud API origin used by the MCP server
+- `MCP_WEB_URL`: public Spliit Cloud web origin used by expense links
 - `OPENAI_APPS_CHALLENGE`: OpenAI plugin domain-verification token (optional).
   The Platform dashboard issues a fresh token per submission; set it before
   submitting and redeploy. When empty, the previous submission's token is
@@ -128,7 +128,7 @@ http://localhost:3002/inspector
 ```
 
 Connect to `http://localhost:3002/mcp`. The first initialization request returns
-401 by design; use the Inspector's authentication action to complete the Spliit
+401 by design; use the Inspector's authentication action to complete the Spliit Cloud
 login and consent flow. If OAuth metadata or URLs changed, restart the MCP
 server and clear the Inspector's saved connection before reconnecting.
 

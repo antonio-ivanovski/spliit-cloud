@@ -59,8 +59,8 @@
       "scanning": "Đang tìm mã QR…",
       "noCamera": "Không tìm thấy máy ảnh trên thiết bị này. Hãy quét mã bằng ứng dụng máy ảnh trên điện thoại.",
       "permissionDenied": "Quyền truy cập máy ảnh bị từ chối. Hãy cho phép truy cập máy ảnh trong cài đặt trình duyệt, hoặc quét mã bằng ứng dụng máy ảnh trên điện thoại.",
-      "invalidCode": "Mã đó không phải lời mời nhóm Spliit. Hãy thử quét lại mã QR của chủ nhóm.",
-      "foreignTitle": "Mã này trỏ tới một Spliit khác",
+      "invalidCode": "Mã đó không phải lời mời nhóm Spliit Cloud. Hãy thử quét lại mã QR của chủ nhóm.",
+      "foreignTitle": "Mã này trỏ tới một Spliit Cloud khác",
       "foreignDescription": "Liên kết sẽ mở {origin} trong trình duyệt này. Chỉ tiếp tục nếu bạn tin tưởng chủ nhóm đã hiển thị mã này.",
       "foreignConfirm": "Mở liên kết",
       "foreignCancel": "Quay lại"
@@ -234,7 +234,7 @@
     "exportPdfError": "Không thể tạo PDF. Vui lòng thử lại.",
     "exportPdfSuccess": "Đã tải báo cáo PDF.",
     "exportPdfRetryBounds": "Thử lại",
-    "exportBundleTitle": "Gói sao lưu Spliit",
+    "exportBundleTitle": "Gói sao lưu Spliit Cloud",
     "exportBundlePurpose": "Dữ liệu nhóm có thể chuyển đổi, gồm chi phí, cài đặt và tài liệu đính kèm.",
     "exportBundleAction": "Tải gói dữ liệu",
     "globalArchived": "đã lưu trữ",
@@ -436,7 +436,7 @@
       "unknownGroup": "Nhóm không xác định",
       "sentOn": "Gửi vào {date}"
     },
-    "linkInvitationBannerDescription": "Bạn đã được mời qua liên kết. {inviter} {groupName}",
+    "linkInvitationBannerDescription": "{inviter} đã mời bạn tham gia {groupName} trên Spliit Cloud.",
     "linkInvitationSingleUse": "Dùng một lần",
     "linkInvitationTemporaryName": "Nhập tên để tham gia. {name}",
     "linkInvitationAlreadyMemberTitle": "Đã là thành viên {groupName}",
@@ -471,7 +471,7 @@
         "cospend": "Cospend",
         "tricount": "Tricount",
         "settleUp": "Settle Up",
-        "spliitDescription": "Nhập từ URL Spliit.",
+        "spliitDescription": "Chuyển nhóm spliit.app hiện có sang Spliit Cloud. Chúng tôi đọc tên nhóm, người tham gia và mọi chi phí.",
         "splitwiseComingTitle": "Splitwise sắp ra mắt",
         "splitwiseComingDescription": "Nhập từ Splitwise sắp ra mắt.",
         "tricountComingTitle": "Tricount sắp ra mắt",
@@ -489,10 +489,10 @@
         "receiptWarningTitle": "Lưu ý biên lai",
         "receiptWarningDescription": "Biên lai sẽ không được nhập.",
         "invalidUrl": "URL không hợp lệ.",
-        "notFoundUrl": "Không tìm thấy.",
+        "notFoundUrl": "Spliit Cloud không tìm thấy nhóm này",
         "fetchUrlError": "Lỗi tải URL.",
         "fileReadError": "Lỗi đọc tệp.",
-        "appToCloudDescription": "Nhập từ URL Spliit.",
+        "appToCloudDescription": "Đổi .app thành .cloud trong URL nhóm spliit.app bất kỳ để nhập vào Spliit Cloud.",
         "appToCloudTitle": "Đổi .app thành .cloud",
         "splitwiseDescription": "Nhập từ CSV Splitwise.",
         "receiptWarningTitleSplitwise": "Lưu ý biên lai",
@@ -642,8 +642,8 @@
         "shareAriaLabel": "Chia sẻ",
         "emailInvitesTitle": "Mời qua email",
         "emailInvitesDescription": "Mời thành viên qua email.",
-        "shareTitle": "Chia sẻ",
-        "shareText": "Tham gia nhóm của tôi trên Spliit! {name} {url}",
+        "shareTitle": "Tham gia nhóm của tôi trên Spliit Cloud",
+        "shareText": "Tham gia nhóm chi tiêu chung của chúng tôi trên Spliit Cloud — {name}. Mở liên kết này để tham gia: {url}",
         "copyLink": "Sao chép liên kết mời",
         "copied": "Đã sao chép"
       },
@@ -868,7 +868,7 @@
     },
     "notifications": {
       "title": "Thông báo",
-      "description": "Chọn nơi Spliit gửi thông báo hoạt động.",
+      "description": "Chọn nơi Spliit Cloud gửi thông báo hoạt động.",
       "enable": "Bật thông báo đẩy",
       "disable": "Tắt thông báo đẩy",
       "enabled": "Thông báo đẩy đang bật.",
@@ -876,7 +876,7 @@
       "unsupported": "Trình duyệt này không hỗ trợ thông báo đẩy.",
       "notConfigured": "Thông báo đẩy không khả dụng.",
       "permissionDenied": "Thông báo bị chặn. Cho phép trong cài đặt trình duyệt.",
-      "iosInstall": "Trên iPhone/iPad, thêm Spliit vào Màn hình chính trước.",
+      "iosInstall": "Trên iPhone hoặc iPad, hãy thêm Spliit Cloud vào Màn hình chính trước khi bật thông báo đẩy.",
       "error": "Không thể cập nhật cài đặt thông báo đẩy.",
       "preferencesTitle": "Tùy chọn thông báo",
       "preferencesDescription": "Các lựa chọn này áp dụng cho hoạt động tương lai.",
@@ -941,7 +941,7 @@
           "description": "Tổng kết hoạt động hàng tuần."
         },
         "cloudNews": {
-          "title": "Tin tức Spliit",
+          "title": "Tin tức và cập nhật Spliit Cloud",
           "description": "Tin tức sản phẩm và cập nhật."
         },
         "budgetAlert": {
@@ -2593,7 +2593,7 @@
         "intro": "Chia sẻ liên kết để mời. {groupName}",
         "share": "Chia sẻ",
         "shareTitle": "Chia sẻ liên kết {groupName}",
-        "shareText": "Tham gia nhóm của tôi trên Spliit! {groupName} {inviteUrl}",
+        "shareText": "Tôi vừa tạo {groupName} cho các khoản chi chung của chúng ta trên Spliit Cloud. Đây là liên kết mời dùng một lần — hãy mở để tham gia:\n{inviteUrl}",
         "generateNew": "Tạo mới",
         "copyLink": "Sao chép liên kết"
       },
@@ -2606,7 +2606,7 @@
       "friendAlreadyMember": "Đã là thành viên.",
       "noFriends": "Không có bạn bè.",
       "friendAlreadyInvited": "Đã mời.",
-      "noAccountDescription": "Thêm một người vào các khoản chi mà không cần mời họ dùng Spliit. Có thể liên kết họ với một tài khoản sau.",
+      "noAccountDescription": "Thêm một người vào các khoản chi mà không cần mời họ dùng Spliit Cloud. Có thể liên kết họ với một tài khoản sau.",
       "temporaryNameRequired": "Tên tạm thời",
       "noAccountNameDescription": "Hiển thị trong các khoản chi và số dư cho đến khi người tham gia này được liên kết với một tài khoản.",
       "addParticipant": "Thêm người tham gia",
@@ -2672,7 +2672,7 @@
         },
         "unsettled": {
           "title": "Số dư chưa tất toán",
-          "description": "Spliit sẽ tạo các khoản thanh toán tất toán cho những số dư liên quan đến bạn trước khi rời nhóm. Số dư của những người khác sẽ không thay đổi."
+          "description": "Spliit Cloud sẽ tạo các khoản thanh toán tất toán cho những số dư liên quan đến bạn trước khi rời nhóm. Số dư của những người khác sẽ không thay đổi."
         }
       },
       "cancel": "Hủy",
@@ -2760,7 +2760,7 @@
       "emailPlaceholder": "taikhoan@example.com",
       "emailChangeWarning": "Người nhận hiện tại sẽ không thể chấp nhận lời mời này nữa.",
       "nameLabel": "Tên hiển thị",
-      "profileNameNote": "Sử dụng tên hồ sơ Spliit của họ",
+      "profileNameNote": "Sử dụng tên hồ sơ Spliit Cloud của họ",
       "saveChanges": "Lưu thay đổi",
       "updateSend": "Cập nhật & gửi",
       "switchToEmailSend": "Chuyển & gửi lời mời",
@@ -2958,7 +2958,7 @@
   },
   "OfflineBanner": {
     "message": "Bạn đang ngoại tuyến. Có thể xem dữ liệu, nhưng cần kết nối để thay đổi.",
-    "serverUnavailable": "Hiện không tới được Spliit. Đang hiện dữ liệu đã tải.",
+    "serverUnavailable": "Hiện không tới được Spliit Cloud. Đang hiện dữ liệu đã tải.",
     "reconnecting": "Đang kết nối lại… Bạn vẫn có thể đọc dữ liệu đã tải."
   },
   "InstallPromotion": {
@@ -2991,8 +2991,8 @@
   },
   "PushOnboarding": {
     "title": "Thông báo đẩy",
-    "description": "Nhận thông báo khi có hoạt động.",
-    "pushBenefit": "Nhận thông báo ngay.",
+    "description": "Spliit Cloud có thể thông báo cho bạn về hoạt động nhóm và chi phí ngay khi xảy ra.",
+    "pushBenefit": "Thông báo đẩy vẫn đến thiết bị này ngay cả khi Spliit Cloud không mở.",
     "emailFallback": "Hoặc dùng email.",
     "settingsHint": "Thay đổi trong cài đặt.",
     "enable": "Bật thông báo",
@@ -3359,25 +3359,25 @@
   },
   "OAuth": {
     "shell": {
-      "label": "Ủy quyền Spliit",
+      "label": "Ủy quyền Spliit Cloud",
       "mobileDescription": "Xem lại quyền truy cập tài khoản được yêu cầu",
-      "title": "Kết nối một ứng dụng với tài khoản Spliit của bạn.",
+      "title": "Kết nối một ứng dụng với tài khoản Spliit Cloud của bạn.",
       "previewBullet": "Có thể ngắt kết nối ứng dụng trong phần cài đặt tài khoản",
       "authorityBullet": "Bạn chọn những gì ứng dụng này có thể truy cập",
       "validationBullet": "Các quy trình xác thực, số dư và thông báo hiện có vẫn được áp dụng"
     },
     "consent": {
-      "title": "Kết nối Spliit với {client}?",
+      "title": "Kết nối Spliit Cloud với {client}?",
       "description": "Xem lại tài khoản và các quyền mà ứng dụng này đang yêu cầu.",
       "connectionDetails": "Chi tiết kết nối",
-      "spliitAccount": "Tài khoản Spliit",
+      "spliitAccount": "Tài khoản Spliit Cloud",
       "connectingTo": "Đang kết nối với",
       "assistantVia": "Ứng dụng OAuth",
       "defaultClient": "ứng dụng này",
-      "defaultUser": "người dùng Spliit",
+      "defaultUser": "người dùng Spliit Cloud",
       "sessionUnavailable": "Không có phiên. Hãy quay lại và đăng nhập lại.",
       "sharedData": "Dữ liệu sẽ được chia sẻ",
-      "identityTitle": "Danh tính Spliit của bạn",
+      "identityTitle": "Danh tính Spliit Cloud của bạn",
       "identityDescription": "Tên và email của bạn xác định tài khoản được kết nối. Mật khẩu và phương thức đăng nhập của bạn không bao giờ được chia sẻ.",
       "groupsTitle": "Thông tin nhóm và chi tiêu",
       "groupsDescription": "Thông tin nhóm, người tham gia, cách chia đã lưu, số dư, số liệu thống kê và hoạt động.",
@@ -3385,7 +3385,7 @@
       "expensesDescription": "Ứng dụng này chỉ có thể tạo đúng khoản chi hiển thị trong bản xem trước sau khi bạn nhấn Tạo chi phí.",
       "privacyTitle": "Lưu ý nhanh về quyền riêng tư",
       "privacyDescription": "Thông tin tài chính của nhóm có thể nhạy cảm. {client} vẫn xem được chừng nào kết nối còn hiệu lực. Bạn có thể ngắt kết nối bất cứ lúc nào trong cài đặt tài khoản.",
-      "authorityNote": "Spliit vẫn là nguồn dữ liệu chính xác. Các quy trình xác thực, số dư, lịch sử hoạt động và thông báo hiện có vẫn được áp dụng.",
+      "authorityNote": "Spliit Cloud vẫn là nguồn dữ liệu chính xác. Các quy trình xác thực, số dư, lịch sử hoạt động và thông báo hiện có vẫn được áp dụng.",
       "allow": "Cho phép và kết nối",
       "cancel": "Hủy",
       "missingRequest": "Thiếu yêu cầu ủy quyền. Hãy quay lại ứng dụng và bắt đầu kết nối lại.",
@@ -3400,7 +3400,7 @@
       "expensesDeleteTitle": "Xoá chi tiêu",
       "expensesDeleteDescription": "Xoá vĩnh viễn chi tiêu và thực hiện những thay đổi làm mất dữ liệu, chẳng hạn rút ngắn một chuỗi định kỳ. Không thể hoàn tác.",
       "unknownScopes": "Ứng dụng này yêu cầu một quyền mà Spliit Cloud không nhận ra ({scopes}), nên không thể phê duyệt tại đây. Hãy đề nghị tác giả ứng dụng kiểm tra lại các quyền được yêu cầu.",
-      "clientUnavailable": "Spliit không thể xác minh ứng dụng này. Hãy quay lại ứng dụng và bắt đầu kết nối lại.",
+      "clientUnavailable": "Spliit Cloud không thể xác minh ứng dụng này. Hãy quay lại ứng dụng và bắt đầu kết nối lại.",
       "clientWebsite": "Trang web của ứng dụng",
       "privacyPolicy": "Chính sách quyền riêng tư",
       "redirectsTo": "Chuyển hướng đến",
@@ -3410,10 +3410,10 @@
     "login": {
       "missingTitle": "Thiếu yêu cầu cấp quyền",
       "missingDescription": "Hãy quay lại ứng dụng và bắt đầu kết nối lại.",
-      "missingError": "Spliit không nhận được thông tin cấp quyền OAuth.",
+      "missingError": "Spliit Cloud không nhận được thông tin cấp quyền OAuth.",
       "connectingTitle": "Đang kết nối tài khoản",
       "connectingDescription": "Đã tìm thấy phiên Spliit Cloud hiện tại của bạn. Không cần đăng nhập thêm.",
-      "checkingSession": "Đang kiểm tra phiên Spliit…",
+      "checkingSession": "Đang kiểm tra phiên Spliit Cloud…",
       "continuing": "Đang tiếp tục an toàn…",
       "signInTitle": "Đăng nhập để kết nối",
       "signInDescription": "Dùng phương thức đăng nhập Spliit Cloud thường dùng. Ứng dụng không bao giờ nhận được mật khẩu hoặc thông tin đăng nhập."
@@ -3428,7 +3428,7 @@
       "copied": "Đã sao chép vào bảng tạm",
       "codeLabel": "Mã ủy quyền",
       "stateLabel": "Tham số state",
-      "warning": "Chỉ dán thông tin này vào tác nhân hoặc ứng dụng mà bạn tin tưởng. Bất cứ ai có nó đều có thể kết nối với tài khoản Spliit của bạn cho đến khi nó hết hạn.",
+      "warning": "Chỉ dán thông tin này vào tác nhân hoặc ứng dụng mà bạn tin tưởng. Bất cứ ai có nó đều có thể kết nối với tài khoản Spliit Cloud của bạn cho đến khi nó hết hạn.",
       "expiryNote": "Mã này hết hạn 10 phút sau khi được cấp.",
       "errorTitle": "Kết nối chưa hoàn tất",
       "errorDescription": "Máy chủ ủy quyền đã trả về lỗi thay vì mã.",
@@ -3579,7 +3579,7 @@
   },
   "AIExpense": {
     "title": "Xem lại khoản chi từ AI",
-    "description": "Kiểm tra những gì Spliit đã hiểu trước khi thêm khoản chi này.",
+    "description": "Kiểm tra những gì Spliit Cloud đã hiểu trước khi thêm khoản chi này.",
     "created": "Đã tạo khoản chi.",
     "createError": "Không thể tạo khoản chi.",
     "missing": "Không phát hiện",
@@ -3635,7 +3635,7 @@
       },
       "idea": {
         "title": "Đề xuất ý tưởng",
-        "description": "Mô tả một vấn đề đáng giải quyết hoặc cải tiến giúp Spliit hữu ích hơn.",
+        "description": "Mô tả một vấn đề đáng giải quyết hoặc cải tiến giúp Spliit Cloud hữu ích hơn.",
         "action": "Mở biểu mẫu ý tưởng"
       },
       "feedback": {
@@ -3727,7 +3727,7 @@
     "hintTapToCreateGroup": "Tôi là {name} — chạm vào tôi để tạo nhóm.",
     "billName": "Bill",
     "offlineMessage": "Tôi không thể tạo gì khi bạn đang ngoại tuyến.",
-    "serverUnreachableMessage": "Hiện không thể kết nối đến máy chủ Spliit — kết nối mạng vẫn ổn, nên đây là lỗi từ phía chúng tôi."
+    "serverUnreachableMessage": "Hiện không thể kết nối đến máy chủ Spliit Cloud — kết nối mạng vẫn ổn, nên đây là lỗi từ phía chúng tôi."
   },
   "CreateSettlement": {
     "description": "Xem lại khoản thanh toán tất toán trước khi ghi nhận.",
@@ -3755,7 +3755,7 @@
     "signup": {
       "title": "Tài khoản ẩn danh",
       "description": "Tạo tài khoản ẩn danh mà không cần địa chỉ email, mật khẩu hoặc đăng nhập mạng xã hội.",
-      "warning": "Dữ liệu của bạn được lưu trữ trong Split Cloud nhưng tài khoản này không có email hoặc phương thức khôi phục khác. Bạn phải lưu liên kết đăng nhập hiển thị tiếp theo.",
+      "warning": "Sử dụng Spliit Cloud mà không cần email, mật khẩu hoặc đăng nhập mạng xã hội. Trước khi bắt đầu, bạn cần lưu một liên kết đăng nhập vĩnh viễn.",
       "cancel": "Hủy bỏ",
       "recoverDescription": "Dán liên kết đăng nhập đã lưu của bạn để quay lại tài khoản ẩn danh hiện có.",
       "recoveryOnlyHelp": "Tài khoản ẩn danh mới không có ở đây. Dán liên kết đăng nhập đã lưu hoàn chỉnh của bạn để tiếp tục.",
@@ -3798,7 +3798,7 @@
       "unavailableDescription": "Tạo liên kết thay thế một cách rõ ràng, sau đó lưu liên kết đó trước khi tiếp tục.",
       "generateReplacement": "Tạo liên kết thay thế",
       "error": "Đã xảy ra lỗi. Vui lòng thử lại.",
-      "start": "Bắt đầu sử dụng Split"
+      "start": "Bắt đầu sử dụng Spliit Cloud"
     },
     "recovery": {
       "warningTitle": "Hãy lưu cái này ở nơi nào đó an toàn",
@@ -3903,7 +3903,7 @@
     "scopeExpensesWrite": "Thêm chi tiêu kèm xem trước"
   },
   "PwaUpdate": {
-    "waitingFailed": "Spliit không thể áp dụng bản cập nhật.",
+    "waitingFailed": "Spliit Cloud không thể áp dụng bản cập nhật.",
     "retry": "Thử lại",
     "dismiss": "Bỏ qua"
   },
@@ -4283,7 +4283,7 @@
       "fallbackTo": "dự phòng sang {label}",
       "fields": {
         "categorySource": {
-          "description": "Đọc danh mục ngân hàng để mỗi giá trị riêng có thể ánh xạ tới danh mục Spliit.",
+          "description": "Đọc danh mục ngân hàng để mỗi giá trị riêng có thể ánh xạ tới danh mục Spliit Cloud.",
           "title": "Nguồn danh mục"
         },
         "dateTime": {
@@ -4548,7 +4548,7 @@
     "add": "Thêm webhook",
     "url": "URL điểm cuối",
     "loading": "Đang tải webhook…",
-    "empty": "Chưa có webhook nào. Hãy thêm một webhook để bắt đầu tích hợp Spliit với dịch vụ khác.",
+    "empty": "Chưa có webhook nào. Hãy thêm một webhook để bắt đầu tích hợp Spliit Cloud với dịch vụ khác.",
     "secretTitle": "Lưu mã bí mật ký của bạn",
     "secretDescription": "Mã bí mật này chỉ được hiển thị một lần. Hãy lưu trữ an toàn trước khi đóng hộp thoại này.",
     "copy": "Sao chép mã bí mật",
@@ -4630,7 +4630,7 @@
     "offlineSearchHint": "Tìm kiếm ngoại tuyến dùng văn bản chính xác; chịu lỗi gõ cần có mạng.",
     "groupsNotDownloaded": "{count} nhóm chưa được tải",
     "groupsNeedUpdating": "{count} cần cập nhật",
-    "storageBlocked": "Đóng các tab Spliit khác để hoàn tất cập nhật bộ nhớ ngoại tuyến.",
+    "storageBlocked": "Đóng các tab Spliit Cloud khác để hoàn tất cập nhật bộ nhớ ngoại tuyến.",
     "storageQuota": "Bộ nhớ ngoại tuyến đã đầy. Thử lại hoặc xóa lượt tải để giải phóng dung lượng.",
     "statusBlocked": "Bộ nhớ ngoại tuyến bị chặn",
     "statusQuotaError": "Bộ nhớ ngoại tuyến đã đầy",
@@ -4649,12 +4649,12 @@
     "dataStale": "Một số dữ liệu có thể đã lỗi thời."
   },
   "ApiErrorEmptyState": {
-    "title": "Spliit hiện không khả dụng",
-    "description": "Hiện không thể kết nối đến máy chủ Spliit. Kết nối mạng vẫn ổn — vui lòng thử lại sau giây lát.",
+    "title": "Spliit Cloud hiện không khả dụng",
+    "description": "Hiện không thể kết nối đến máy chủ Spliit Cloud. Kết nối mạng vẫn ổn — vui lòng thử lại sau giây lát.",
     "retry": "Thử lại"
   },
   "ApiStatusBanner": {
-    "message": "Hiện không thể kết nối đến Spliit. Kết nối mạng vẫn ổn — sự cố nằm ở phía chúng tôi.",
+    "message": "Hiện không thể kết nối đến Spliit Cloud. Kết nối mạng vẫn ổn — sự cố nằm ở phía chúng tôi.",
     "statusLink": "Xem trạng thái"
   },
   "AccountDeletionBanner": {
@@ -4704,7 +4704,7 @@
       },
       "data-portability": {
         "title": "Nhập & xuất",
-        "description": "Mang lịch sử từ CSV Splitwise, CSV sao kê ngân hàng với trình hướng dẫn ánh xạ và phát hiện trùng lặp, Cospend hoặc gói Spliit. Hỗ trợ Tricount và Settle Up đang nằm trong lộ trình. Xuất mọi thứ trở lại dưới dạng CSV, báo cáo PDF để in, hoặc kho lưu trữ ZIP đầy đủ kèm tài liệu."
+        "description": "Mang lịch sử từ CSV Splitwise, CSV sao kê ngân hàng với trình hướng dẫn ánh xạ và phát hiện trùng lặp, Cospend hoặc gói Spliit Cloud. Hỗ trợ Tricount và Settle Up đang nằm trong lộ trình. Xuất mọi thứ trở lại dưới dạng CSV, báo cáo PDF để in, hoặc kho lưu trữ ZIP đầy đủ kèm tài liệu."
       },
       "expenses-splits": {
         "title": "Chi phí & chia thông minh",
@@ -4720,7 +4720,7 @@
       },
       "offline-app": {
         "title": "Ứng dụng có thể cài đặt",
-        "description": "Cài đặt Spliit như một ứng dụng trên mọi thiết bị để tải tức thì và trải nghiệm toàn màn hình. Nhóm của bạn vẫn đọc được khi ngoại tuyến, còn chi phí mới sẽ xếp hàng cục bộ và đồng bộ khi có mạng trở lại — chỉnh sửa ngoại tuyến mở rộng hơn đang nằm trong lộ trình."
+        "description": "Cài đặt Spliit Cloud như một ứng dụng trên mọi thiết bị để tải tức thì và trải nghiệm toàn màn hình. Nhóm của bạn vẫn đọc được khi ngoại tuyến, còn chi phí mới sẽ xếp hàng cục bộ và đồng bộ khi có mạng trở lại — chỉnh sửa ngoại tuyến mở rộng hơn đang nằm trong lộ trình."
       },
       "share-identity": {
         "title": "Lời mời & nhận diện nhóm",

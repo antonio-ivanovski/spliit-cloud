@@ -59,8 +59,8 @@
       "scanning": "正在寻找二维码…",
       "noCamera": "在此设备上未找到摄像头。请改用手机自带的相机应用扫描该二维码。",
       "permissionDenied": "摄像头访问被拒绝。请在浏览器设置中允许摄像头访问，或改用手机自带的相机应用扫描该二维码。",
-      "invalidCode": "该二维码不是 Spliit 群组邀请。请重新扫描组织者的二维码。",
-      "foreignTitle": "此二维码指向另一个 Spliit",
+      "invalidCode": "该二维码不是 Spliit Cloud 群组邀请。请重新扫描组织者的二维码。",
+      "foreignTitle": "此二维码指向另一个 Spliit Cloud",
       "foreignDescription": "将在此浏览器中打开 {origin}。只有在信任出示该二维码的组织者时才能继续。",
       "foreignConfirm": "打开链接",
       "foreignCancel": "返回"
@@ -201,7 +201,7 @@
     "exportPdfError": "无法生成 PDF。请重试。",
     "exportPdfSuccess": "PDF 报告已下载。",
     "exportPdfRetryBounds": "重试",
-    "exportBundleTitle": "Spliit 备份包",
+    "exportBundleTitle": "Spliit Cloud 备份包",
     "exportBundlePurpose": "包含支出、设置和附件的可移植群组数据。",
     "exportBundleAction": "下载数据包",
     "globalArchived": "已归档",
@@ -313,7 +313,7 @@
       "unknownGroup": "未知群组",
       "sentOn": "发送于 {date}"
     },
-    "linkInvitationBannerDescription": "{inviter} 邀请您加入 Spliit 上的 {groupName}。",
+    "linkInvitationBannerDescription": "{inviter} 邀请您加入 Spliit Cloud 上的 {groupName}。",
     "linkInvitationSingleUse": "此链接只能使用一次。您接受后，链接将失效。",
     "linkInvitationTemporaryName": "您将以 {name} 的身份加入。",
     "linkInvitationAlreadyMemberTitle": "您已在 {groupName} 中",
@@ -388,7 +388,7 @@
         "shareAriaLabel": "分享邀请链接",
         "emailInvitesTitle": "电子邮件邀请已发送",
         "emailInvitesDescription": "服务器已向以下人员发送电子邮件。他们登录后将在群组页面上看到接受/拒绝横幅。",
-        "shareTitle": "加入我的 Spliit 群组",
+        "shareTitle": "加入我的 Spliit Cloud 群组",
         "shareText": "加入我们在 Spliit Cloud 上的支出群组——{name}。打开此链接以接受：{url}",
         "copyLink": "复制邀请链接",
         "copied": "已复制"
@@ -454,7 +454,7 @@
         "settleUpComingTitle": "Settle Up 导入功能即将推出",
         "settleUpComingDescription": "Settle Up CSV 导出支持已在我们的路线图中。",
         "dropFile": "拖放 JSON 或 CSV 文件，或点击选择",
-        "dropFileDescription": "JSON 精确保留每笔金额和付款人。CSV 是备用方案——Spliit 将每位参与者的金额四舍五入到小数点后 2 位。",
+        "dropFileDescription": "JSON 确保保留每笔金额和付款人。CSV 是备用方案——Spliit Cloud 将每位参与者的金额四舍五入到小数点后 2 位。",
         "or": "或",
         "pasteUrl": "粘贴 spliit.app URL",
         "urlDescription": "我们的服务器通过 spliit.app 的公共导出端点代您获取群组。",
@@ -464,7 +464,7 @@
         "receiptWarningTitle": "收据图片不会被导入。",
         "receiptWarningDescription": "spliit.app 的导出不包含收据图片。如果需要，请在目标群组中重新上传。",
         "invalidUrl": "请粘贴有效的 spliit.app 群组 URL",
-        "notFoundUrl": "Spliit 未找到此群组",
+        "notFoundUrl": "Spliit Cloud 未找到此群组",
         "fetchUrlError": "获取来源失败",
         "fileReadError": "读取文件失败",
         "appToCloudDescription": "将任何 spliit.app 群组 URL 中的 .app 改为 .cloud，即可导入到 Spliit Cloud。",
@@ -1974,7 +1974,7 @@
       "friendAlreadyMember": "已是成员",
       "noFriends": "还没有朋友。请从「电子邮件」标签页邀请。",
       "friendAlreadyInvited": "已邀请",
-      "noAccountDescription": "无需邀请对方加入 Spliit，即可将其添加到支出中。之后可以将其关联到账号。",
+      "noAccountDescription": "无需邀请对方加入 Spliit Cloud，即可将其添加到支出中。之后可以将其关联到账号。",
       "temporaryNameRequired": "临时姓名",
       "noAccountNameDescription": "在将该参与者关联到账号之前，其姓名会显示在支出和余额中。",
       "addParticipant": "添加参与者",
@@ -2070,7 +2070,7 @@
         },
         "unsettled": {
           "title": "你有未结算的余额",
-          "description": "你离开前，Spliit 会为与你相关的余额创建结算付款。其他参与者的余额不会改变。"
+          "description": "你离开前，Spliit Cloud 会为与你相关的余额创建结算付款。其他参与者的余额不会改变。"
         }
       },
       "confirmWithForce": "结算并离开",
@@ -2156,7 +2156,7 @@
       "emailPlaceholder": "account@example.com",
       "emailChangeWarning": "当前收件人将无法再接受此邀请。",
       "nameLabel": "显示名称",
-      "profileNameNote": "使用对方的 Spliit 个人资料名称",
+      "profileNameNote": "使用对方的 Spliit Cloud 个人资料名称",
       "saveChanges": "保存更改",
       "updateSend": "更新并发送",
       "switchToEmailSend": "切换并发送邀请",
@@ -2293,7 +2293,7 @@
     },
     "notifications": {
       "title": "通知",
-      "description": "选择 Spliit 发送活动通知的渠道。",
+      "description": "选择 Spliit Cloud 发送活动通知的渠道。",
       "enable": "启用推送通知",
       "disable": "停用推送通知",
       "enabled": "此设备上的推送通知已启用。",
@@ -2301,7 +2301,7 @@
       "unsupported": "此浏览器或环境不支持推送通知。",
       "notConfigured": "此环境不提供推送通知。",
       "permissionDenied": "通知已被阻止。请在浏览器或设备设置中允许通知，然后重试。",
-      "iosInstall": "在 iPhone 或 iPad 上，请先将 Spliit 添加到主屏幕，然后再启用推送通知。",
+      "iosInstall": "在 iPhone 或 iPad 上，请先将 Spliit Cloud 添加到主屏幕，然后再启用推送通知。",
       "error": "无法更新推送通知设置。请重试。",
       "preferencesTitle": "通知偏好设置",
       "preferencesDescription": "这些选项适用于今后的群组和消费活动。",
@@ -2836,7 +2836,7 @@
   },
   "OfflineBanner": {
     "message": "你已离线。可以浏览数据，但更改需要联网。",
-    "serverUnavailable": "现在无法连接到 Spliit。正在显示已下载的数据。",
+    "serverUnavailable": "现在无法连接到 Spliit Cloud。正在显示已下载的数据。",
     "reconnecting": "正在重连…你可以继续阅读已下载的数据。"
   },
   "InstallPromotion": {
@@ -3161,8 +3161,8 @@
   },
   "PushOnboarding": {
     "title": "选择接收更新的方式",
-    "description": "Spliit 可在群组和支出活动发生时提醒你。",
-    "pushBenefit": "即使 Spliit 未打开，推送通知也会发送到此设备。",
+    "description": "Spliit Cloud 可在群组和支出活动发生时提醒你。",
+    "pushBenefit": "即使 Spliit Cloud 未打开，推送通知也会发送到此设备。",
     "emailFallback": "你可以为希望接收的通知使用电子邮件；仅选择推送的通知不会改用电子邮件发送。",
     "settingsHint": "你可以随时在设置中更改这些选择。推送通知需要在每台设备上单独启用。",
     "enable": "启用推送通知",
@@ -3278,25 +3278,25 @@
   },
   "OAuth": {
     "shell": {
-      "label": "Spliit 授权",
+      "label": "Spliit Cloud 授权",
       "mobileDescription": "核对所请求的账号访问权限",
-      "title": "将应用连接到你的 Spliit 账号。",
+      "title": "将应用连接到你的 Spliit Cloud 账号。",
       "previewBullet": "你可以在账号设置中将其断开连接。",
       "authorityBullet": "此应用可访问哪些内容由你决定。",
       "validationBullet": "现有验证、余额和通知均保持不变"
     },
     "consent": {
-      "title": "连接 Spliit 与 {client}？",
+      "title": "连接 Spliit Cloud 与 {client}？",
       "description": "请核对此应用请求访问的账号和权限。",
       "connectionDetails": "连接详情",
-      "spliitAccount": "Spliit 账户",
+      "spliitAccount": "Spliit Cloud 账户",
       "connectingTo": "连接至",
       "assistantVia": "OAuth 应用",
       "defaultClient": "此应用",
-      "defaultUser": "Spliit 用户",
+      "defaultUser": "Spliit Cloud 用户",
       "sessionUnavailable": "会话不可用。请返回并重新登录。",
       "sharedData": "将共享的内容",
-      "identityTitle": "你的 Spliit 身份",
+      "identityTitle": "你的 Spliit Cloud 身份",
       "identityDescription": "你的姓名和电子邮件用于识别要连接的账户。你的密码和登录方式绝不会被共享。",
       "groupsTitle": "群组和支出背景",
       "groupsDescription": "群组详情、参与者、已保存的分摊、余额、统计信息和活动记录。",
@@ -3304,7 +3304,7 @@
       "expensesDescription": "点击“创建支出”后，此应用只能创建与预览中显示内容完全一致的支出。",
       "privacyTitle": "简短的隐私提示",
       "privacyDescription": "群组的财务信息可能较为敏感。在连接期间 {client} 都可以查看。你随时可以在账号设置中断开连接。",
-      "authorityNote": "Spliit 仍是唯一可信来源。现有验证、余额、活动记录和通知仍然适用。",
+      "authorityNote": "Spliit Cloud 仍是唯一可信来源。现有验证、余额、活动记录和通知仍然适用。",
       "allow": "允许并连接",
       "cancel": "取消",
       "missingRequest": "缺少授权请求。请返回应用并重新开始连接。",
@@ -3319,7 +3319,7 @@
       "expensesDeleteTitle": "删除支出",
       "expensesDeleteDescription": "永久删除支出，以及执行会丢失数据的修改，例如缩短周期性支出。此操作无法撤销。",
       "unknownScopes": "该应用请求了 Spliit Cloud 无法识别的权限（{scopes}），因此无法在此批准。请让应用作者检查所请求的权限。",
-      "clientUnavailable": "Spliit 无法验证此应用。请返回应用并重新开始连接。",
+      "clientUnavailable": "Spliit Cloud 无法验证此应用。请返回应用并重新开始连接。",
       "clientWebsite": "应用网站",
       "privacyPolicy": "隐私政策",
       "redirectsTo": "重定向至",
@@ -3329,10 +3329,10 @@
     "login": {
       "missingTitle": "授权请求缺失",
       "missingDescription": "请返回应用并重新开始连接。",
-      "missingError": "Spliit 未收到 OAuth 授权详情。",
+      "missingError": "Spliit Cloud 未收到 OAuth 授权详情。",
       "connectingTitle": "正在连接你的账户",
       "connectingDescription": "已找到你现有的 Spliit Cloud 会话。无需再次登录。",
-      "checkingSession": "正在检查你的 Spliit 会话…",
+      "checkingSession": "正在检查你的 Spliit Cloud 会话…",
       "continuing": "正在安全地继续…",
       "signInTitle": "登录以连接",
       "signInDescription": "使用你常用的 Spliit Cloud 登录方式。此应用绝不会收到你的密码或登录凭据。"
@@ -3347,7 +3347,7 @@
       "copied": "已复制到剪贴板",
       "codeLabel": "授权码",
       "stateLabel": "状态",
-      "warning": "仅将其粘贴到你信任的智能体或应用中。在过期之前，任何持有它的人都可以连接到你的 Spliit 账号。",
+      "warning": "仅将其粘贴到你信任的智能体或应用中。在过期之前，任何持有它的人都可以连接到你的 Spliit Cloud 账号。",
       "expiryNote": "此代码自签发之时起 10 分钟后过期。",
       "errorTitle": "连接未完成",
       "errorDescription": "授权服务器返回了错误，而非授权码。",
@@ -3497,7 +3497,7 @@
   },
   "AIExpense": {
     "title": "检查 AI 支出",
-    "description": "添加支出前，请检查 Spliit 识别的内容。",
+    "description": "添加支出前，请检查 Spliit Cloud 识别的内容。",
     "created": "支出已创建。",
     "createError": "无法创建支出。",
     "missing": "未检测到",
@@ -3553,7 +3553,7 @@
       },
       "idea": {
         "title": "提出想法",
-        "description": "请描述一个值得解决的问题，或一项能让 Spliit 更实用的改进。",
+        "description": "请描述一个值得解决的问题，或一项能让 Spliit Cloud 更实用的改进。",
         "action": "打开想法表单"
       },
       "feedback": {
@@ -3645,7 +3645,7 @@
     "hintTapToCreateGroup": "我是 {name}，点我即可创建群组。",
     "billName": "Bill",
     "offlineMessage": "处于离线状态时，我无法创建任何内容。",
-    "serverUnreachableMessage": "我目前无法连接到 Spliit 服务器 — 您的网络连接正常，问题出在我们这边。"
+    "serverUnreachableMessage": "我目前无法连接到 Spliit Cloud 服务器 — 您的网络连接正常，问题出在我们这边。"
   },
   "CreateSettlement": {
     "description": "请核对付款信息后再记录。",
@@ -3673,7 +3673,7 @@
     "signup": {
       "title": "匿名帐户",
       "description": "创建一个没有电子邮件地址、密码或社交登录的匿名帐户。",
-      "warning": "您的数据存储在Spliit Cloud中，但该帐户没有电子邮件或其他恢复方法。您必须保存接下来显示的登录链接。",
+      "warning": "您的数据存储在 Spliit Cloud 中，但该帐户没有电子邮件或其他恢复方法。您必须保存接下来显示的登录链接。",
       "cancel": "取消",
       "recoverDescription": "粘贴您保存的登录链接以返回到现有的匿名帐户。",
       "recoveryOnlyHelp": "此处不提供新的匿名帐户。粘贴您完整保存的登录链接以继续。",
@@ -3716,7 +3716,7 @@
       "unavailableDescription": "显式生成替换链接，然后在继续之前保存它。",
       "generateReplacement": "生成替换链接",
       "error": "出了点问题。请再试一次。",
-      "start": "开始使用拆分"
+      "start": "开始使用 Spliit Cloud"
     },
     "recovery": {
       "warningTitle": "将其保存在安全的地方",
@@ -3821,7 +3821,7 @@
     "scopeExpensesWrite": "通过预览添加支出"
   },
   "PwaUpdate": {
-    "waitingFailed": "Spliit 无法应用更新。",
+    "waitingFailed": "Spliit Cloud 无法应用更新。",
     "retry": "重试",
     "dismiss": "关闭"
   },
@@ -4201,7 +4201,7 @@
       "fallbackTo": "备用为 {label}",
       "fields": {
         "categorySource": {
-          "description": "读取银行类别，以便将每个唯一值映射到 Spliit 类别。",
+          "description": "读取银行类别，以便将每个唯一值映射到 Spliit Cloud 类别。",
           "title": "类别来源"
         },
         "dateTime": {
@@ -4466,7 +4466,7 @@
     "add": "添加 Webhook",
     "url": "端点 URL",
     "loading": "正在加载 Webhook…",
-    "empty": "还没有 Webhook。添加一个，开始将 Spliit 与其他服务集成。",
+    "empty": "还没有 Webhook。添加一个，开始将 Spliit Cloud 与其他服务集成。",
     "secretTitle": "保存您的签名密钥",
     "secretDescription": "此密钥只会显示一次。关闭此对话框前，请将其安全保存。",
     "copy": "复制密钥",
@@ -4548,7 +4548,7 @@
     "offlineSearchHint": "离线搜索仅精确匹配，容错搜索需要连接。",
     "groupsNotDownloaded": "{count} 个群组尚未下载",
     "groupsNeedUpdating": "{count} 个需要更新",
-    "storageBlocked": "请关闭其他 Spliit 标签页，以完成离线存储更新。",
+    "storageBlocked": "请关闭其他 Spliit Cloud 标签页，以完成离线存储更新。",
     "storageQuota": "离线存储已满。请重试，或清除下载以释放空间。",
     "statusBlocked": "离线存储被阻止",
     "statusQuotaError": "离线存储已满",
@@ -4567,12 +4567,12 @@
     "dataStale": "部分数据可能已过时。"
   },
   "ApiErrorEmptyState": {
-    "title": "Spliit 暂时不可用",
-    "description": "目前无法连接到 Spliit 服务器。您的网络连接正常 — 请稍后再试。",
+    "title": "Spliit Cloud 暂时不可用",
+    "description": "目前无法连接到 Spliit Cloud 服务器。您的网络连接正常 — 请稍后再试。",
     "retry": "重试"
   },
   "ApiStatusBanner": {
-    "message": "目前无法连接到 Spliit。您的网络连接正常 — 问题出在我们这边。",
+    "message": "目前无法连接到 Spliit Cloud。您的网络连接正常 — 问题出在我们这边。",
     "statusLink": "查看状态"
   },
   "AccountDeletionBanner": {
@@ -4622,7 +4622,7 @@
       },
       "data-portability": {
         "title": "导入与导出",
-        "description": "可从 Splitwise CSV、附带映射向导和重复检测的银行对账单 CSV、Cospend 或 Spliit 数据包导入历史记录。对 Tricount 和 Settle Up 的支持已列入路线图。也可全部导出为 CSV、可打印的 PDF 报告，或包含文档的完整 ZIP 归档。"
+        "description": "可从 Splitwise CSV、附带映射向导和重复检测的银行对账单 CSV、Cospend 或 Spliit Cloud 数据包导入历史记录。对 Tricount 和 Settle Up 的支持已列入路线图。也可全部导出为 CSV、可打印的 PDF 报告，或包含文档的完整 ZIP 归档。"
       },
       "expenses-splits": {
         "title": "支出与智能分摊",
@@ -4638,7 +4638,7 @@
       },
       "offline-app": {
         "title": "可安装应用",
-        "description": "在任何设备上将 Spliit 安装为应用，即时加载、全屏体验。无网络时仍可查看群组，新支出会在本地排队，恢复连接后自动同步；更全面的离线编辑已列入路线图。"
+        "description": "在任何设备上将 Spliit Cloud 安装为应用，即时加载、全屏体验。无网络时仍可查看群组，新支出会在本地排队，恢复连接后自动同步；更全面的离线编辑已列入路线图。"
       },
       "share-identity": {
         "title": "邀请与群组形象",

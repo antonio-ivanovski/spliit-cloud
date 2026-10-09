@@ -254,7 +254,7 @@ export function standardWebhookHeaders(args: {
   }
 }
 
-// Optional Cloudflare Worker relay (see `WEBHOOK_RELAY_URL`). Spliit POSTs
+// Optional Cloudflare Worker relay (see `WEBHOOK_RELAY_URL`). Spliit Cloud POSTs
 // the original webhook body unchanged to the relay; the relay verifies the
 // envelope below and performs the final request, so destinations only ever
 // see the Cloudflare source IP. The relay owns no retries, history, or

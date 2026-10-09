@@ -1,7 +1,7 @@
-# Spliit auth.md — agent registration and authentication
+# Spliit Cloud auth.md — agent registration and authentication
 
 This document is for AI agents and programmatic clients (scripts, CLIs,
-external apps) that need to act on a Spliit account. Humans sign in with
+external apps) that need to act on a Spliit Cloud account. Humans sign in with
 email/password, magic link, passkey, or Google/GitHub/X in the browser; agents use
 OAuth 2.1 against the API's own authorization server instead of a browser
 session.

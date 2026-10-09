@@ -1,18 +1,18 @@
 ---
 id: spliit-cloud-2-6-0
 date: 2026-10-08
-title: Spliit now works offline — help test it
+title: Spliit Cloud now works offline — help test it
 inApp: true
 email: true
 ---
 
-Spliit 2.6.0 brings read-offline to the app: your groups stay readable without a connection. This is the read-offline foundation — full offline write, including creating expenses, will follow once this stage is solid. Details are in the [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0) notes.
+Spliit Cloud 2.6.0 brings read-offline to the app: your groups stay readable without a connection. This is the read-offline foundation — full offline write, including creating expenses, will follow once this stage is solid. Details are in the [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0) notes.
 
 ## What you can do offline
 
 - Open your groups and browse complete expense history with comments, balances, the member roster, subgroup assignments, split presets, budgets, group settings, and recent activity.
 - Lists open instantly from the on-device copy and merge new changes in place when you reconnect, so slow connections feel much faster too.
-- Install Spliit as an app on your device with the new step-by-step guidance.
+- Install Spliit Cloud as an app on your device with the new step-by-step guidance.
 
 ## What still needs a connection
 

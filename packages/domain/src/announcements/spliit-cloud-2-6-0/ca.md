@@ -1,18 +1,18 @@
 ---
 id: spliit-cloud-2-6-0
 date: 2026-10-08
-title: Spliit ja funciona sense connexió — ajuda'ns a provar-ho
+title: Spliit Cloud ja funciona sense connexió — ajuda'ns a provar-ho
 inApp: true
 email: true
 ---
 
-Spliit 2.6.0 porta la lectura sense connexió a l'app: els teus grups es poden llegir sense connexió. És la base de la lectura sense connexió — l'escriptura completa sense connexió, inclosa la creació de despeses, arribarà quan aquesta fase sigui sòlida. Trobaràs més detalls a les notes de la [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0).
+Spliit Cloud 2.6.0 porta la lectura sense connexió a l'app: els teus grups es poden llegir sense connexió. És la base de la lectura sense connexió — l'escriptura completa sense connexió, inclosa la creació de despeses, arribarà quan aquesta fase sigui sòlida. Trobaràs més detalls a les notes de la [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0).
 
 ## El que pots fer sense connexió
 
 - Obre els teus grups i consulta l'historial complet de despeses amb comentaris, saldos, la llista de participants, assignacions de subgrups, repartiments predefinits, pressupostos, la configuració del grup i l'activitat recent.
 - Les llistes s'obren a l'instant des de la còpia del dispositiu i incorporen els canvis nous al moment en tornar a connectar-te, així que les connexions lentes també se senten molt més ràpides.
-- Instal·la Spliit com una app al teu dispositiu amb la nova guia pas a pas.
+- Instal·la Spliit Cloud com una app al teu dispositiu amb la nova guia pas a pas.
 
 ## El que encara necessita connexió
 

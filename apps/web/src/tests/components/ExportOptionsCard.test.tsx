@@ -35,7 +35,7 @@ describe('ExportOptionsCard', () => {
       screen.getByRole('heading', { name: 'Print / save PDF' }),
     ).toBeInTheDocument()
     expect(screen.getByText('CSV spreadsheet')).toBeInTheDocument()
-    expect(screen.getByText('Spliit backup bundle')).toBeInTheDocument()
+    expect(screen.getByText('Spliit Cloud backup bundle')).toBeInTheDocument()
 
     expect(
       screen.getByRole('button', { name: 'Print / save PDF' }),

@@ -6,7 +6,7 @@ import { getApiBaseUrl, getWebBaseUrl } from './urls'
  * Machine-readable half of `/auth.md`: the `agent_auth` block for RFC 8414
  * authorization-server metadata.
  *
- * Spliit's registration method is standard OAuth 2.1 — dynamic client
+ * Spliit Cloud's registration method is standard OAuth 2.1 — dynamic client
  * registration (RFC 7591) followed by the account holder signing in and
  * approving scopes in the browser. That is the user-claimed `service_auth`
  * shape; there is no ID-JAG (`identity_assertion`) trust path and no anonymous

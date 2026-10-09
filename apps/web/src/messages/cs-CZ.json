@@ -59,8 +59,8 @@
       "scanning": "Hledám QR kód…",
       "noCamera": "Na tomto zařízení nebyl nalezen fotoaparát. Místo toho naskenujte kód aplikací fotoaparátu ve svém telefonu.",
       "permissionDenied": "Přístup k fotoaparátu byl odepřen. Povolte přístup k fotoaparátu v nastavení prohlížeče, nebo naskenujte kód aplikací fotoaparátu ve svém telefonu.",
-      "invalidCode": "Tento kód není pozvánkou do skupiny ve Spliitu. Zkuste znovu naskenovat QR kód hostitele.",
-      "foreignTitle": "Tento kód odkazuje na jiný Spliit",
+      "invalidCode": "Tento kód není pozvánkou do skupiny ve Spliit Cloud. Zkuste znovu naskenovat QR kód hostitele.",
+      "foreignTitle": "Tento kód odkazuje na jiný Spliit Cloud",
       "foreignDescription": "V tomto prohlížeči se otevře {origin}. Pokračujte, pouze pokud důvěřujete hostiteli, který vám kód ukázal.",
       "foreignConfirm": "Otevřít odkaz",
       "foreignCancel": "Zpět"
@@ -204,7 +204,7 @@
     "exportPdfError": "PDF se nepodařilo vygenerovat. Zkuste to prosím znovu.",
     "exportPdfSuccess": "Přehled v PDF byl stažen.",
     "exportPdfRetryBounds": "Zkusit znovu",
-    "exportBundleTitle": "Záložní balíček Spliit",
+    "exportBundleTitle": "Záložní balíček Spliit Cloud",
     "exportBundlePurpose": "Přenositelná data skupiny s výdaji, nastavením a přiloženými dokumenty.",
     "exportBundleAction": "Stáhnout balíček",
     "globalArchived": "archivováno",
@@ -322,7 +322,7 @@
       "unknownGroup": "Neznámá skupina",
       "sentOn": "Odesláno {date}"
     },
-    "linkInvitationBannerDescription": "{inviter} vás pozval(a) připojit se ke skupině {groupName} na Spliitu.",
+    "linkInvitationBannerDescription": "{inviter} vás pozval(a) připojit se ke skupině {groupName} na Spliit Cloud.",
     "linkInvitationSingleUse": "Tento odkaz lze použít pouze jednou. Jakmile ho přijmete, přestane fungovat.",
     "linkInvitationTemporaryName": "Připojíte se jako {name}.",
     "linkInvitationAlreadyMemberTitle": "Již jste ve skupině {groupName}",
@@ -403,7 +403,7 @@
         "shareAriaLabel": "Sdílet odkaz na pozvánku",
         "emailInvitesTitle": "E-mailové pozvánky odeslány",
         "emailInvitesDescription": "Server odeslal e-mail následujícím osobám. Po přihlášení uvidí na stránce skupiny banner Přijmout/Odmítnout.",
-        "shareTitle": "Připojte se k mé Spliit skupině",
+        "shareTitle": "Připojte se k mé skupině na Spliit Cloud",
         "shareText": "Připojte se k naší skupině výdajů na Spliit Cloud — {name}. Otevřete tento odkaz pro přijetí: {url}",
         "copyLink": "Kopírovat odkaz pozvánky",
         "copied": "Zkopírováno"
@@ -469,7 +469,7 @@
         "settleUpComingTitle": "Import ze Settle Up je na cestě",
         "settleUpComingDescription": "Podpora CSV exportu ze Settle Up je na našem plánu.",
         "dropFile": "Přetáhněte JSON nebo CSV soubor, nebo kliknutím vyberte",
-        "dropFileDescription": "JSON zachovává přesnou částku a plátce. CSV je záložní — Spliit zaokrouhluje každou částku na účastníka na 2 desetinná místa.",
+        "dropFileDescription": "JSON zachovává přesnou částku a plátce. CSV je záložní — Spliit Cloud zaokrouhluje každou částku na účastníka na 2 desetinná místa.",
         "or": "nebo",
         "pasteUrl": "Vložte URL spliit.app",
         "urlDescription": "Náš server načte skupinu prostřednictvím veřejného exportního endpointu spliit.app vaším jménem.",
@@ -479,7 +479,7 @@
         "receiptWarningTitle": "Obrázky účtenek se neimportují.",
         "receiptWarningDescription": "Export spliit.app neobsahuje obrázky účtenek. V případě potřeby je nahrajte znovu do cílové skupiny.",
         "invalidUrl": "Vložte prosím platné URL skupiny spliit.app",
-        "notFoundUrl": "Spliit tuto skupinu nenašel",
+        "notFoundUrl": "Spliit Cloud tuto skupinu nenašel",
         "fetchUrlError": "Nepodařilo se načíst zdroj",
         "fileReadError": "Nepodařilo se přečíst soubor",
         "appToCloudDescription": "Nahraďte .app za .cloud v libovolné URL skupiny spliit.app a importujte ji do Spliit Cloud.",
@@ -1997,7 +1997,7 @@
       "friendAlreadyMember": "Již je členem",
       "noFriends": "Zatím žádní přátelé. Pozvěte je na kartě E-mail.",
       "friendAlreadyInvited": "Již pozván",
-      "noAccountDescription": "Přidejte někoho k výdajům, aniž byste ho pozvali do Spliitu. Později ho můžete propojit s účtem.",
+      "noAccountDescription": "Přidejte někoho k výdajům, aniž byste ho pozvali do Spliit Cloud. Později ho můžete propojit s účtem.",
       "temporaryNameRequired": "Dočasné jméno",
       "noAccountNameDescription": "Zobrazuje se ve výdajích a zůstatcích, dokud tohoto účastníka nepropojíte s účtem.",
       "addParticipant": "Přidat účastníka",
@@ -2092,7 +2092,7 @@
         "otherAdmins": "Tito správci si po vašem odchodu udrží kontrolu: {names}.",
         "unsettled": {
           "title": "Máte nevyrovnané zůstatky",
-          "description": "Spliit před vaším odchodem vytvoří vyrovnávací platby pro zůstatky, kterých se účastníte. Zůstatky ostatních účastníků se nezmění."
+          "description": "Spliit Cloud před vaším odchodem vytvoří vyrovnávací platby pro zůstatky, kterých se účastníte. Zůstatky ostatních účastníků se nezmění."
         },
         "lastAdmin": {
           "title": "Vybrat nového správce",
@@ -2183,7 +2183,7 @@
       "emailPlaceholder": "ucet@example.com",
       "emailChangeWarning": "Současný příjemce již nebude moci tuto pozvánku přijmout.",
       "nameLabel": "Zobrazované jméno",
-      "profileNameNote": "Použije se jejich profilový název na Spliitu",
+      "profileNameNote": "Použije se jejich profilový název ve Spliit Cloud",
       "saveChanges": "Uložit změny",
       "updateSend": "Aktualizovat a odeslat",
       "switchToEmailSend": "Přepnout a odeslat pozvánku",
@@ -2320,7 +2320,7 @@
     },
     "notifications": {
       "title": "Oznámení",
-      "description": "Vyberte, kam Spliit posílá oznámení o aktivitě.",
+      "description": "Vyberte, kam Spliit Cloud posílá oznámení o aktivitě.",
       "enable": "Povolit push notifikace",
       "disable": "Zakázat push notifikace",
       "enabled": "Push notifikace jsou na tomto zařízení povolené.",
@@ -2328,7 +2328,7 @@
       "unsupported": "Tento prohlížeč nebo kontext nepodporuje push notifikace.",
       "notConfigured": "Push notifikace nejsou v tomto nasazení k dispozici.",
       "permissionDenied": "Oznámení jsou blokována. Povolte je v nastavení prohlížeče nebo zařízení a zkuste to znovu.",
-      "iosInstall": "Na iPhonu nebo iPadu přidejte Spliit na plochu před povolením push notifikací.",
+      "iosInstall": "Na iPhonu nebo iPadu přidejte Spliit Cloud na plochu před povolením push notifikací.",
       "error": "Nastavení push notifikací se nepodařilo aktualizovat. Zkuste to znovu.",
       "preferencesTitle": "Předvolby oznámení",
       "preferencesDescription": "Tato nastavení se použijí na budoucí aktivitu ve skupinách a výdajích.",
@@ -2871,7 +2871,7 @@
   },
   "OfflineBanner": {
     "message": "Jsi offline. Můžeš procházet data, ale změny vyžadují připojení.",
-    "serverUnavailable": "Spliit je momentálně nedostupný. Zobrazuji stažená data.",
+    "serverUnavailable": "Spliit Cloud je momentálně nedostupný. Zobrazuji stažená data.",
     "reconnecting": "Připojuji znovu… Stažená data můžeš dál číst."
   },
   "InstallPromotion": {
@@ -3220,8 +3220,8 @@
   },
   "PushOnboarding": {
     "title": "Zvolte, jak chcete zůstat v obraze",
-    "description": "Spliit vás může upozorňovat na aktivitu ve skupinách a výdajích, jakmile k ní dojde.",
-    "pushBenefit": "Push oznámení přicházejí na toto zařízení, i když Spliit není otevřený.",
+    "description": "Spliit Cloud vás může upozorňovat na aktivitu ve skupinách a výdajích, jakmile k ní dojde.",
+    "pushBenefit": "Push oznámení přicházejí na toto zařízení, i když Spliit Cloud není otevřený.",
     "emailFallback": "E-mail je k dispozici pro oznámení, která si zvolíte dostávat tímto způsobem; volby pouze pro Push se nepřesměrují.",
     "settingsHint": "Tato nastavení můžete kdykoli změnit v Nastavení. Push oznámení se povolují samostatně pro každé zařízení.",
     "enable": "Povolit push oznámení",
@@ -3337,17 +3337,17 @@
   },
   "OAuth": {
     "consent": {
-      "title": "Připojit Spliit k {client}?",
+      "title": "Připojit Spliit Cloud k {client}?",
       "description": "Zkontroluj účet a oprávnění, o která tato aplikace žádá.",
       "connectionDetails": "Podrobnosti připojení",
-      "spliitAccount": "Účet Spliit",
+      "spliitAccount": "Účet Spliit Cloud",
       "connectingTo": "Připojení k",
       "assistantVia": "Aplikace OAuth",
       "defaultClient": "tato aplikace",
-      "defaultUser": "Uživatel Spliit",
+      "defaultUser": "Uživatel Spliit Cloud",
       "sessionUnavailable": "Relace není k dispozici. Vraťte se a znovu se přihlaste.",
       "sharedData": "Co bude sdíleno",
-      "identityTitle": "Vaše identita Spliit",
+      "identityTitle": "Vaše identita Spliit Cloud",
       "identityDescription": "Vaše jméno a e-mail identifikují připojovaný účet. Vaše heslo ani způsob přihlášení se nikdy nesdílejí.",
       "groupsTitle": "Kontext skupin a výdajů",
       "groupsDescription": "Podrobnosti o skupině, účastníci, uložená rozdělení, zůstatky, statistiky a aktivita.",
@@ -3355,7 +3355,7 @@
       "expensesDescription": "Tato aplikace může po stisknutí tlačítka „Vytvořit výdaj“ vytvořit pouze výdaj přesně podle zobrazeného náhledu.",
       "privacyTitle": "Krátká poznámka k soukromí",
       "privacyDescription": "Finanční údaje skupiny mohou být citlivé. Aplikace {client} k nim má přístup po celou dobu připojení. Kdykoli ji můžeš odpojit v nastavení účtu.",
-      "authorityNote": "Spliit zůstává zdrojem pravdy. Nadále platí stávající ověřování, zůstatky, historie aktivit a oznámení.",
+      "authorityNote": "Spliit Cloud zůstává zdrojem pravdy. Nadále platí stávající ověřování, zůstatky, historie aktivit a oznámení.",
       "allow": "Povolit a připojit",
       "cancel": "Zrušit",
       "missingRequest": "Chybí žádost o autorizaci. Vraťte se do aplikace a zahajte připojení znovu.",
@@ -3370,7 +3370,7 @@
       "expensesDeleteTitle": "Mazat výdaje",
       "expensesDeleteDescription": "Trvale mazat výdaje a provádět úpravy, které odstraní data, například zkrácení opakující se série. Nelze vzít zpět.",
       "unknownScopes": "Tato aplikace žádá o oprávnění, které Spliit Cloud nezná ({scopes}), takže ji tu nelze schválit. Požádej autora, ať zkontroluje požadovaná oprávnění.",
-      "clientUnavailable": "Spliit tuto aplikaci nemohl ověřit. Vraťte se do aplikace a zahajte připojení znovu.",
+      "clientUnavailable": "Spliit Cloud tuto aplikaci nemohl ověřit. Vraťte se do aplikace a zahajte připojení znovu.",
       "clientWebsite": "Web aplikace",
       "privacyPolicy": "Zásady ochrany osobních údajů",
       "redirectsTo": "Přesměrování na",
@@ -3380,18 +3380,18 @@
     "login": {
       "missingTitle": "Autorizační požadavek chybí",
       "missingDescription": "Vraťte se do aplikace a zahajte připojení znovu.",
-      "missingError": "Spliit neobdržel podrobnosti autorizace OAuth.",
+      "missingError": "Spliit Cloud neobdržel podrobnosti autorizace OAuth.",
       "connectingTitle": "Připojování účtu",
       "connectingDescription": "Byla nalezena vaše stávající relace Spliit Cloud. Další přihlášení není potřeba.",
-      "checkingSession": "Kontroluji vaši relaci Spliit…",
+      "checkingSession": "Kontroluji vaši relaci Spliit Cloud…",
       "continuing": "Bezpečně pokračuji…",
       "signInTitle": "Přihlaste se pro připojení",
       "signInDescription": "Použijte obvyklý způsob přihlášení do Spliit Cloud. Aplikace nikdy nezíská vaše heslo ani přihlašovací údaje."
     },
     "shell": {
-      "label": "Autorizace Spliit",
+      "label": "Autorizace Spliit Cloud",
       "mobileDescription": "Zkontroluj požadovaný přístup k účtu",
-      "title": "Připoj aplikaci ke svému účtu Spliit.",
+      "title": "Připoj aplikaci ke svému účtu Spliit Cloud.",
       "previewBullet": "Můžeš ji odpojit v nastavení účtu",
       "authorityBullet": "Určuješ, k čemu má tato aplikace přístup",
       "validationBullet": "Stávající ověřování, zůstatky a oznámení zůstávají zachována"
@@ -3406,7 +3406,7 @@
       "copied": "Zkopírováno do schránky",
       "codeLabel": "Autorizační kód",
       "stateLabel": "Stav",
-      "warning": "Vkládej tyto údaje pouze do agenta nebo aplikace, kterým důvěřuješ. Kdokoliv je získá, může se k tvému účtu Spliit připojit, dokud nevyprší jejich platnost.",
+      "warning": "Vkládej tyto údaje pouze do agenta nebo aplikace, kterým důvěřuješ. Kdokoliv je získá, může se k tvému účtu Spliit Cloud připojit, dokud nevyprší jejich platnost.",
       "expiryNote": "Platnost tohoto kódu vyprší 10 minut po vydání.",
       "errorTitle": "Připojení se nedokončilo",
       "errorDescription": "Autorizační server místo kódu vrátil chybu.",
@@ -3555,7 +3555,7 @@
   },
   "AIExpense": {
     "title": "Kontrola výdaje z AI",
-    "description": "Před přidáním výdaje zkontrolujte, co Spliit rozpoznal.",
+    "description": "Před přidáním výdaje zkontrolujte, co Spliit Cloud rozpoznal.",
     "created": "Výdaj byl vytvořen.",
     "createError": "Výdaj se nepodařilo vytvořit.",
     "missing": "Nerozpoznáno",
@@ -3611,7 +3611,7 @@
       },
       "idea": {
         "title": "Navrhnout nápad",
-        "description": "Popište problém, který stojí za vyřešení, nebo zlepšení, díky němuž by byl Spliit užitečnější.",
+        "description": "Popište problém, který stojí za vyřešení, nebo zlepšení, díky němuž by byl Spliit Cloud užitečnější.",
         "action": "Otevřít formulář nápadu"
       },
       "feedback": {
@@ -3703,7 +3703,7 @@
     "hintTapToCreateGroup": "Jsem {name} — klepni na mě a vytvoř skupinu.",
     "billName": "Bill",
     "offlineMessage": "Nemůžu nic vytvořit, když jsi offline.",
-    "serverUnreachableMessage": "Se serverem Spliit se právě teď nemohu spojit — vaše připojení vypadá v pořádku, takže chyba je na naší straně."
+    "serverUnreachableMessage": "Se serverem Spliit Cloud se právě teď nemohu spojit — vaše připojení vypadá v pořádku, takže chyba je na naší straně."
   },
   "CreateSettlement": {
     "description": "Zkontrolujte platbu před jejím zaznamenáním.",
@@ -3731,7 +3731,7 @@
     "signup": {
       "title": "Anonymní účet",
       "description": "Vytvořte si anonymní účet bez e-mailové adresy, hesla nebo sociálního přihlášení.",
-      "warning": "Vaše data jsou uložena ve službě Spliit Cloud, ale tento účet nemá žádný e-mail ani jinou metodu obnovení. Musíte uložit přihlašovací odkaz zobrazený dále.",
+      "warning": "Spliit Cloud můžete používat bez e-mailu, hesla nebo přihlášení přes sociální sítě. Než začnete, budete si muset uložit trvalý přihlašovací odkaz.",
       "cancel": "Zrušit",
       "recoverDescription": "Vložte svůj uložený přihlašovací odkaz a vraťte se ke stávajícímu anonymnímu účtu.",
       "recoveryOnlyHelp": "Nové anonymní účty zde nejsou dostupné. Chcete-li pokračovat, vložte celý uložený přihlašovací odkaz.",
@@ -3774,7 +3774,7 @@
       "unavailableDescription": "Explicitně vygenerujte náhradní odkaz a před pokračováním jej uložte.",
       "generateReplacement": "Vygenerovat náhradní odkaz",
       "error": "Něco se pokazilo. Zkuste to prosím znovu.",
-      "start": "Začněte používat Split"
+      "start": "Začněte používat Spliit Cloud"
     },
     "recovery": {
       "warningTitle": "Uložte si to někde v bezpečí",
@@ -3879,7 +3879,7 @@
     "scopeExpensesWrite": "Přidávat výdaje s náhledem"
   },
   "PwaUpdate": {
-    "waitingFailed": "Spliitu se nepodařilo použít aktualizaci.",
+    "waitingFailed": "Spliit Cloud nemohl použít aktualizaci.",
     "retry": "Zkusit znovu",
     "dismiss": "Zavřít"
   },
@@ -4261,7 +4261,7 @@
       "fallbackTo": "záložně na {label}",
       "fields": {
         "categorySource": {
-          "description": "Přečtěte kategorii banky, aby bylo možné každou jedinečnou hodnotu namapovat na kategorii Spliit.",
+          "description": "Přečtěte kategorii banky, aby bylo možné každou jedinečnou hodnotu namapovat na kategorii Spliit Cloud.",
           "title": "Zdroj kategorie"
         },
         "dateTime": {
@@ -4539,7 +4539,7 @@
     "add": "Přidat webhook",
     "url": "URL koncového bodu",
     "loading": "Načítání webhooků…",
-    "empty": "Zatím nemáte žádné webhooky. Přidejte jeden a začněte propojovat Spliit s další službou.",
+    "empty": "Zatím nemáte žádné webhooky. Přidejte jeden a začněte propojovat Spliit Cloud s další službou.",
     "secretTitle": "Uložte si tajný klíč pro podepisování",
     "secretDescription": "Tento tajný klíč se zobrazí pouze jednou. Před zavřením tohoto dialogu ho bezpečně uložte.",
     "copy": "Kopírovat tajný klíč",
@@ -4621,7 +4621,7 @@
     "offlineSearchHint": "Offline vyhledávání používá přesný text; tolerance překlepů potřebuje připojení.",
     "groupsNotDownloaded": "{count} skupina(y) nestaženo",
     "groupsNeedUpdating": "{count} je třeba aktualizovat",
-    "storageBlocked": "Zavři ostatní karty Spliit a dokonči aktualizaci offline úložiště.",
+    "storageBlocked": "Zavři ostatní karty Spliit Cloud a dokonči aktualizaci offline úložiště.",
     "storageQuota": "Offline úložiště je plné. Zkus to znovu, nebo smaž stažené a uvolni místo.",
     "statusBlocked": "Offline úložiště zablokováno",
     "statusQuotaError": "Offline úložiště je plné",
@@ -4640,12 +4640,12 @@
     "dataStale": "Některá data mohou být zastaralá."
   },
   "ApiErrorEmptyState": {
-    "title": "Spliit je nedostupný",
-    "description": "Se serverem Spliit se právě teď nelze spojit. Vaše připojení vypadá v pořádku — zkuste to prosím za chvíli znovu.",
+    "title": "Spliit Cloud je nedostupný",
+    "description": "Se serverem Spliit Cloud se právě teď nelze spojit. Vaše připojení vypadá v pořádku — zkuste to prosím za chvíli znovu.",
     "retry": "Zkusit znovu"
   },
   "ApiStatusBanner": {
-    "message": "Spliit je právě teď nedostupný. Vaše připojení vypadá v pořádku — problém je na naší straně.",
+    "message": "Spliit Cloud je právě teď nedostupný. Vaše připojení vypadá v pořádku — problém je na naší straně.",
     "statusLink": "Zkontrolovat stav"
   },
   "AccountDeletionBanner": {
@@ -4695,7 +4695,7 @@
       },
       "data-portability": {
         "title": "Import a export",
-        "description": "Přeneste si historii z CSV ze Splitwise, z bankovních výpisů CSV s průvodcem mapováním a detekcí duplicit, z Cospendu nebo z balíčků Spliit. Podpora Tricount a Settle Up je v plánu. Vše si zase vyvezete jako CSV, tisknutelné PDF reporty nebo úplné ZIP archivy včetně dokumentů."
+        "description": "Přeneste si historii z CSV ze Splitwise, z bankovních výpisů CSV s průvodcem mapováním a detekcí duplicit, z Cospendu nebo z balíčků Spliit Cloud. Podpora Tricount a Settle Up je v plánu. Vše si zase vyvezete jako CSV, tisknutelné PDF reporty nebo úplné ZIP archivy včetně dokumentů."
       },
       "expenses-splits": {
         "title": "Výdaje a chytré dělení",
@@ -4711,7 +4711,7 @@
       },
       "offline-app": {
         "title": "Instalovatelná aplikace",
-        "description": "Nainstalujte si Spliit jako aplikaci na jakékoli zařízení pro okamžité načítání a celoobrazovkový zážitek. Vaše skupiny zůstanou čitelné i bez připojení a nové výdaje se zařadí do fronty lokálně a po návratu se automaticky synchronizují. Širší offline úpravy jsou v plánu."
+        "description": "Nainstalujte si Spliit Cloud jako aplikaci na jakékoli zařízení pro okamžité načítání a celoobrazovkový zážitek. Vaše skupiny zůstanou čitelné i bez připojení a nové výdaje se zařadí do fronty lokálně a po návratu se automaticky synchronizují. Širší offline úpravy jsou v plánu."
       },
       "share-identity": {
         "title": "Pozvánky a identita skupiny",

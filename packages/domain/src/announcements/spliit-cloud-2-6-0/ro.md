@@ -1,18 +1,18 @@
 ---
 id: spliit-cloud-2-6-0
 date: 2026-10-08
-title: Spliit funcționează acum offline — ajută-ne să-l testăm
+title: Spliit Cloud funcționează acum offline — ajută-ne să-l testăm
 inApp: true
 email: true
 ---
 
-Spliit 2.6.0 aduce citirea offline în aplicație: grupurile tale rămân lizibile fără conexiune. Este baza citirii offline — scrierea offline completă, inclusiv crearea cheltuielilor, va urma după ce această etapă este solidă. Detaliile sunt în notele [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0).
+Spliit Cloud 2.6.0 aduce citirea offline în aplicație: grupurile tale rămân lizibile fără conexiune. Este baza citirii offline — scrierea offline completă, inclusiv crearea cheltuielilor, va urma după ce această etapă este solidă. Detaliile sunt în notele [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0).
 
 ## Ce poți face offline
 
 - Deschide-ți grupurile și răsfoiește istoricul complet al cheltuielilor cu comentarii, solduri, lista de membri, alocările de subgrupuri, împărțirile prestabilite, bugetele, setările grupului și activitatea recentă.
 - Listele se deschid instant din copia de pe dispozitiv și integrează noutățile pe loc la reconectare, așa că și conexiunile lente par mult mai rapide.
-- Instalează Spliit ca aplicație pe dispozitivul tău cu noul ghid pas cu pas.
+- Instalează Spliit Cloud ca aplicație pe dispozitivul tău cu noul ghid pas cu pas.
 
 ## Ce mai are nevoie de conexiune
 

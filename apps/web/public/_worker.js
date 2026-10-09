@@ -60,7 +60,7 @@ const SEO_META = new Map([
     {
       title: 'Features — Spliit Cloud',
       description:
-        'Every Spliit feature in one catalog: sign-in, smart splits, the installable app, imports, and an open developer platform.',
+        'Every Spliit Cloud feature in one catalog: sign-in, smart splits, the installable app, imports, and an open developer platform.',
     },
   ],
 ])

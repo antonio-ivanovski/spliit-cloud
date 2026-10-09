@@ -59,8 +59,8 @@
       "scanning": "Mencari kode QR…",
       "noCamera": "Tidak ada kamera yang ditemukan di perangkat ini. Pindai kode QR dengan aplikasi kamera di ponsel Anda sebagai gantinya.",
       "permissionDenied": "Akses kamera ditolak. Izinkan akses kamera di pengaturan browser, atau pindai dengan aplikasi kamera di ponsel Anda.",
-      "invalidCode": "Kode itu bukan undangan grup Spliit. Coba pindai lagi kode QR penyelenggara.",
-      "foreignTitle": "Kode ini mengarah ke Spliit lain",
+      "invalidCode": "Kode itu bukan undangan grup Spliit Cloud. Coba pindai lagi kode QR penyelenggara.",
+      "foreignTitle": "Kode ini mengarah ke Spliit Cloud lain",
       "foreignDescription": "Ini akan membuka {origin} di browser ini. Lanjutkan hanya jika Anda memercayai penyelenggara yang menunjukkannya.",
       "foreignConfirm": "Buka tautan",
       "foreignCancel": "Kembali"
@@ -201,7 +201,7 @@
     "exportPdfError": "Tidak dapat membuat PDF. Silakan coba lagi.",
     "exportPdfSuccess": "Laporan PDF diunduh.",
     "exportPdfRetryBounds": "Coba lagi",
-    "exportBundleTitle": "Bundel cadangan Spliit",
+    "exportBundleTitle": "Bundel cadangan Spliit Cloud",
     "exportBundlePurpose": "Data grup portabel dengan pengeluaran, pengaturan, dan dokumen terlampir.",
     "exportBundleAction": "Unduh bundel",
     "globalArchived": "diarsipkan",
@@ -313,7 +313,7 @@
       "unknownGroup": "Grup tidak dikenal",
       "sentOn": "Dikirim {date}"
     },
-    "linkInvitationBannerDescription": "{inviter} mengundang Anda untuk bergabung ke {groupName} di Spliit.",
+    "linkInvitationBannerDescription": "{inviter} mengundang Anda untuk bergabung ke {groupName} di Spliit Cloud.",
     "linkInvitationSingleUse": "Tautan ini hanya dapat digunakan satu kali. Setelah Anda menerimanya, tautan tidak akan dapat digunakan lagi.",
     "linkInvitationTemporaryName": "Anda akan bergabung sebagai {name}.",
     "linkInvitationAlreadyMemberTitle": "Anda sudah menjadi anggota {groupName}",
@@ -388,7 +388,7 @@
         "shareAriaLabel": "Bagikan tautan undangan",
         "emailInvitesTitle": "Undangan email terkirim",
         "emailInvitesDescription": "Server mengirim email kepada orang-orang berikut. Mereka akan melihat spanduk Terima/Tolak di halaman grup saat mereka masuk.",
-        "shareTitle": "Bergabung dengan grup Spliit saya",
+        "shareTitle": "Bergabung dengan grup saya di Spliit Cloud",
         "shareText": "Bergabunglah dengan grup pengeluaran kami di Spliit Cloud — {name}. Buka tautan ini untuk menerima: {url}",
         "copyLink": "Salin tautan undangan",
         "copied": "Disalin"
@@ -454,7 +454,7 @@
         "settleUpComingTitle": "Impor Settle Up sedang dalam perjalanan",
         "settleUpComingDescription": "Dukungan ekspor CSV Settle Up ada dalam peta jalan kami.",
         "dropFile": "Jatuhkan file JSON atau CSV, atau klik untuk memilih",
-        "dropFileDescription": "JSON mempertahankan setiap jumlah dan pembayar dengan tepat. CSV adalah cadangan — Spliit membulatkan setiap jumlah per peserta menjadi 2 desimal.",
+        "dropFileDescription": "JSON mempertahankan setiap jumlah dan pembayar dengan tepat. CSV adalah cadangan — Spliit Cloud membulatkan setiap jumlah per peserta menjadi 2 desimal.",
         "or": "atau",
         "pasteUrl": "Tempelkan URL spliit.app",
         "urlDescription": "Server kami mengambil grup melalui titik akhir ekspor publik spliit.app atas nama Anda.",
@@ -464,7 +464,7 @@
         "receiptWarningTitle": "Gambar tanda terima tidak diimpor.",
         "receiptWarningDescription": "Ekspor spliit.app tidak menyertakan gambar tanda terima. Unggah ulang di grup tujuan jika Anda membutuhkannya.",
         "invalidUrl": "Harap tempelkan URL grup spliit.app yang valid",
-        "notFoundUrl": "Spliit tidak menemukan grup ini",
+        "notFoundUrl": "Spliit Cloud tidak menemukan grup ini",
         "fetchUrlError": "Gagal mengambil sumber",
         "fileReadError": "Gagal membaca file",
         "appToCloudDescription": "Ubah .app menjadi .cloud di URL grup spliit.app mana pun untuk mengimpornya ke Spliit Cloud.",
@@ -1974,7 +1974,7 @@
       "friendAlreadyMember": "Sudah menjadi anggota",
       "noFriends": "Belum ada teman. Undang dari tab Email.",
       "friendAlreadyInvited": "Sudah diundang",
-      "noAccountDescription": "Tambahkan seseorang ke pengeluaran tanpa mengundangnya ke Spliit. Anda dapat menautkannya ke akun nanti.",
+      "noAccountDescription": "Tambahkan seseorang ke pengeluaran tanpa mengundangnya ke Spliit Cloud. Anda dapat menautkannya ke akun nanti.",
       "temporaryNameRequired": "Nama sementara",
       "noAccountNameDescription": "Akan ditampilkan dalam pengeluaran dan saldo sampai peserta ini ditautkan ke akun.",
       "addParticipant": "Tambah peserta",
@@ -2063,7 +2063,7 @@
         "otherAdmins": "Para admin ini akan tetap memegang kendali setelah Anda pergi: {names}.",
         "unsettled": {
           "title": "Anda memiliki saldo yang belum dilunasi",
-          "description": "Spliit akan membuat pembayaran pelunasan untuk saldo yang melibatkan Anda sebelum Anda keluar. Saldo peserta lain tidak akan berubah."
+          "description": "Spliit Cloud akan membuat pembayaran pelunasan untuk saldo yang melibatkan Anda sebelum Anda keluar. Saldo peserta lain tidak akan berubah."
         },
         "lastAdmin": {
           "title": "Pilih admin baru",
@@ -2154,7 +2154,7 @@
       "emailPlaceholder": "akun@example.com",
       "emailChangeWarning": "Penerima saat ini tidak akan dapat menerima undangan ini lagi.",
       "nameLabel": "Nama tampilan",
-      "profileNameNote": "Menggunakan nama profil Spliit mereka",
+      "profileNameNote": "Menggunakan nama profil Spliit Cloud mereka",
       "saveChanges": "Simpan perubahan",
       "updateSend": "Perbarui & kirim",
       "switchToEmailSend": "Alihkan & kirim undangan",
@@ -2291,7 +2291,7 @@
     },
     "notifications": {
       "title": "Notifikasi",
-      "description": "Pilih di mana Spliit mengirimkan notifikasi aktivitas.",
+      "description": "Pilih di mana Spliit Cloud mengirimkan notifikasi aktivitas.",
       "enable": "Aktifkan notifikasi push",
       "disable": "Nonaktifkan notifikasi push",
       "enabled": "Notifikasi push diaktifkan di perangkat ini.",
@@ -2299,7 +2299,7 @@
       "unsupported": "Notifikasi push tidak didukung oleh browser atau konteks ini.",
       "notConfigured": "Notifikasi push tidak tersedia di lingkungan ini.",
       "permissionDenied": "Notifikasi diblokir. Izinkan notifikasi di pengaturan browser atau perangkat, lalu coba lagi.",
-      "iosInstall": "Di iPhone atau iPad, tambahkan Spliit ke Layar Utama sebelum mengaktifkan notifikasi push.",
+      "iosInstall": "Di iPhone atau iPad, tambahkan Spliit Cloud ke Layar Utama sebelum mengaktifkan notifikasi push.",
       "error": "Tidak dapat memperbarui pengaturan notifikasi push. Silakan coba lagi.",
       "preferencesTitle": "Preferensi notifikasi",
       "preferencesDescription": "Pilihan ini berlaku untuk aktivitas grup dan pengeluaran di masa mendatang.",
@@ -2834,7 +2834,7 @@
   },
   "OfflineBanner": {
     "message": "Anda sedang offline. Data bisa dilihat, tetapi perubahan memerlukan koneksi.",
-    "serverUnavailable": "Tak bisa menjangkau Spliit sekarang. Menampilkan data yang diunduh.",
+    "serverUnavailable": "Tak bisa menjangkau Spliit Cloud sekarang. Menampilkan data yang diunduh.",
     "reconnecting": "Menyambung lagi… Kamu bisa terus membaca data yang diunduh."
   },
   "InstallPromotion": {
@@ -3159,8 +3159,8 @@
   },
   "PushOnboarding": {
     "title": "Pilih cara untuk tetap mendapatkan info terbaru",
-    "description": "Spliit dapat memberi tahu Anda tentang aktivitas grup dan pengeluaran saat terjadi.",
-    "pushBenefit": "Notifikasi push diterima di perangkat ini meskipun Spliit tidak sedang dibuka.",
+    "description": "Spliit Cloud dapat memberi tahu Anda tentang aktivitas grup dan pengeluaran saat terjadi.",
+    "pushBenefit": "Notifikasi push diterima di perangkat ini meskipun Spliit Cloud tidak sedang dibuka.",
     "emailFallback": "Email tersedia untuk notifikasi yang Anda pilih untuk diterima melalui Email; pilihan Push saja tidak dialihkan.",
     "settingsHint": "Anda dapat mengubah pilihan ini kapan saja di Pengaturan. Notifikasi push diaktifkan secara terpisah untuk setiap perangkat.",
     "enable": "Aktifkan notifikasi push",
@@ -3276,25 +3276,25 @@
   },
   "OAuth": {
     "shell": {
-      "label": "Otorisasi Spliit",
+      "label": "Otorisasi Spliit Cloud",
       "mobileDescription": "Tinjau akses akun yang diminta",
-      "title": "Hubungkan aplikasi ke akun Spliit Anda.",
+      "title": "Hubungkan aplikasi ke akun Spliit Cloud Anda.",
       "previewBullet": "Anda dapat memutuskan sambungannya dari pengaturan akun",
       "authorityBullet": "Anda memilih apa saja yang dapat diakses aplikasi ini",
       "validationBullet": "Validasi, saldo, dan notifikasi yang ada tetap berlaku"
     },
     "consent": {
-      "title": "Hubungkan Spliit ke {client}?",
+      "title": "Hubungkan Spliit Cloud ke {client}?",
       "description": "Tinjau akun dan izin yang diminta oleh aplikasi ini.",
       "connectionDetails": "Detail koneksi",
-      "spliitAccount": "Akun Spliit",
+      "spliitAccount": "Akun Spliit Cloud",
       "connectingTo": "Menghubungkan ke",
       "assistantVia": "Aplikasi OAuth",
       "defaultClient": "aplikasi ini",
-      "defaultUser": "pengguna Spliit",
+      "defaultUser": "pengguna Spliit Cloud",
       "sessionUnavailable": "Sesi tidak tersedia. Kembali dan masuk lagi.",
       "sharedData": "Yang akan dibagikan",
-      "identityTitle": "Identitas Spliit Anda",
+      "identityTitle": "Identitas Spliit Cloud Anda",
       "identityDescription": "Nama dan email Anda mengidentifikasi akun yang terhubung. Kata sandi dan metode masuk Anda tidak pernah dibagikan.",
       "groupsTitle": "Konteks grup dan pengeluaran",
       "groupsDescription": "Detail grup, peserta, pembagian tersimpan, saldo, statistik, dan aktivitas.",
@@ -3302,7 +3302,7 @@
       "expensesDescription": "Aplikasi ini hanya dapat membuat pengeluaran yang sama persis dengan yang ditampilkan dalam pratinjau setelah Anda menekan Buat pengeluaran.",
       "privacyTitle": "Catatan privasi singkat",
       "privacyDescription": "Detail keuangan grup bisa bersifat sensitif. Detail itu tersedia bagi {client} selama koneksi masih ada. Anda dapat memutusnya kapan saja dari pengaturan akun.",
-      "authorityNote": "Spliit tetap menjadi sumber kebenaran. Validasi, saldo, riwayat aktivitas, dan notifikasi yang ada tetap berlaku.",
+      "authorityNote": "Spliit Cloud tetap menjadi sumber kebenaran. Validasi, saldo, riwayat aktivitas, dan notifikasi yang ada tetap berlaku.",
       "allow": "Izinkan dan hubungkan",
       "cancel": "Batal",
       "missingRequest": "Permintaan otorisasi tidak ditemukan. Kembali ke aplikasi tersebut dan mulai lagi proses penyambungan.",
@@ -3317,7 +3317,7 @@
       "expensesDeleteTitle": "Menghapus pengeluaran",
       "expensesDeleteDescription": "Menghapus pengeluaran secara permanen, dan melakukan perubahan yang menghilangkan data seperti memperpendek rangkaian berulang. Tidak dapat dibatalkan.",
       "unknownScopes": "Aplikasi ini meminta izin yang tidak dikenali Spliit Cloud ({scopes}), jadi tidak dapat disetujui di sini. Minta pembuat aplikasi memeriksa izin yang diminta.",
-      "clientUnavailable": "Spliit tidak dapat memverifikasi aplikasi ini. Kembali ke aplikasi tersebut dan mulai lagi proses penyambungan.",
+      "clientUnavailable": "Spliit Cloud tidak dapat memverifikasi aplikasi ini. Kembali ke aplikasi tersebut dan mulai lagi proses penyambungan.",
       "clientWebsite": "Situs web aplikasi",
       "privacyPolicy": "Kebijakan privasi",
       "redirectsTo": "Dialihkan ke",
@@ -3327,10 +3327,10 @@
     "login": {
       "missingTitle": "Permintaan otorisasi tidak ditemukan",
       "missingDescription": "Kembali ke aplikasi tersebut dan mulai lagi proses penyambungan.",
-      "missingError": "Spliit tidak menerima detail otorisasi OAuth.",
+      "missingError": "Spliit Cloud tidak menerima detail otorisasi OAuth.",
       "connectingTitle": "Menghubungkan akun Anda",
       "connectingDescription": "Sesi Spliit Cloud Anda yang sudah ada ditemukan. Tidak diperlukan login tambahan.",
-      "checkingSession": "Memeriksa sesi Spliit Anda…",
+      "checkingSession": "Memeriksa sesi Spliit Cloud Anda…",
       "continuing": "Melanjutkan dengan aman…",
       "signInTitle": "Masuk untuk menghubungkan",
       "signInDescription": "Gunakan metode masuk Spliit Cloud seperti biasa. Aplikasi tidak pernah menerima kata sandi atau kredensial masuk Anda."
@@ -3345,7 +3345,7 @@
       "copied": "Disalin ke papan klip",
       "codeLabel": "Kode otorisasi",
       "stateLabel": "Parameter state",
-      "warning": "Tempel ini hanya ke agen atau aplikasi yang Anda percayai. Siapa pun yang memilikinya dapat terhubung ke akun Spliit Anda sampai kode ini kedaluwarsa.",
+      "warning": "Tempel ini hanya ke agen atau aplikasi yang Anda percayai. Siapa pun yang memilikinya dapat terhubung ke akun Spliit Cloud Anda sampai kode ini kedaluwarsa.",
       "expiryNote": "Kode ini kedaluwarsa 10 menit setelah diterbitkan.",
       "errorTitle": "Koneksi tidak selesai",
       "errorDescription": "Server otorisasi mengembalikan kesalahan, bukan kode.",
@@ -3496,7 +3496,7 @@
   },
   "AIExpense": {
     "title": "Tinjau pengeluaran AI",
-    "description": "Periksa pemahaman Spliit sebelum menambahkan pengeluaran ini.",
+    "description": "Periksa apa yang dipahami Spliit Cloud sebelum menambahkan pengeluaran ini.",
     "created": "Pengeluaran dibuat.",
     "createError": "Tidak dapat membuat pengeluaran.",
     "missing": "Tidak terdeteksi",
@@ -3552,7 +3552,7 @@
       },
       "idea": {
         "title": "Sarankan ide",
-        "description": "Jelaskan masalah yang layak diselesaikan atau perbaikan yang akan membuat Spliit lebih berguna.",
+        "description": "Jelaskan masalah yang layak diselesaikan atau perbaikan yang akan membuat Spliit Cloud lebih berguna.",
         "action": "Buka formulir ide"
       },
       "feedback": {
@@ -3644,7 +3644,7 @@
     "hintTapToCreateGroup": "Saya {name} — ketuk saya untuk membuat grup.",
     "billName": "Bill",
     "offlineMessage": "Saya tidak bisa membuat apa pun selama Anda offline.",
-    "serverUnreachableMessage": "Saya tidak dapat menjangkau server Spliit saat ini — koneksi Anda tampaknya baik-baik saja, jadi ini kesalahan kami."
+    "serverUnreachableMessage": "Saya tidak dapat menjangkau server Spliit Cloud saat ini — koneksi Anda tampaknya baik-baik saja, jadi ini kesalahan kami."
   },
   "CreateSettlement": {
     "description": "Tinjau pembayaran sebelum mencatatnya.",
@@ -3672,7 +3672,7 @@
     "signup": {
       "title": "Akun anonim",
       "description": "Buat akun anonim tanpa alamat email, kata sandi, atau login sosial.",
-      "warning": "Data Anda disimpan di Split Cloud, tetapi akun ini tidak memiliki email atau metode pemulihan lainnya. Anda harus menyimpan tautan masuk yang ditunjukkan berikutnya.",
+      "warning": "Gunakan Spliit Cloud tanpa email, kata sandi, atau login sosial. Sebelum memulai, Anda harus menyimpan tautan masuk permanen.",
       "cancel": "Batalkan",
       "recoverDescription": "Tempel tautan masuk tersimpan Anda untuk kembali ke akun anonim yang ada.",
       "recoveryOnlyHelp": "Akun anonim baru tidak tersedia di sini. Tempelkan tautan masuk lengkap yang Anda simpan untuk melanjutkan.",
@@ -3715,7 +3715,7 @@
       "unavailableDescription": "Buat tautan pengganti secara eksplisit, lalu simpan sebelum melanjutkan.",
       "generateReplacement": "Buat tautan pengganti",
       "error": "Ada yang tidak beres. Silakan coba lagi.",
-      "start": "Mulai gunakan Split"
+      "start": "Mulai gunakan Spliit Cloud"
     },
     "recovery": {
       "warningTitle": "Simpan ini di tempat yang aman",
@@ -3820,7 +3820,7 @@
     "scopeExpensesWrite": "Menambah pengeluaran dengan pratinjau"
   },
   "PwaUpdate": {
-    "waitingFailed": "Spliit tidak dapat menerapkan pembaruan.",
+    "waitingFailed": "Spliit Cloud tidak dapat menerapkan pembaruan.",
     "retry": "Coba lagi",
     "dismiss": "Tutup"
   },
@@ -4200,7 +4200,7 @@
       "fallbackTo": "cadangan ke {label}",
       "fields": {
         "categorySource": {
-          "description": "Baca kategori bank agar setiap nilai unik dapat dipetakan ke kategori Spliit.",
+          "description": "Baca kategori bank agar setiap nilai unik dapat dipetakan ke kategori Spliit Cloud.",
           "title": "Sumber kategori"
         },
         "dateTime": {
@@ -4465,7 +4465,7 @@
     "add": "Tambah webhook",
     "url": "URL endpoint",
     "loading": "Memuat webhook…",
-    "empty": "Belum ada webhook. Tambahkan satu untuk mulai mengintegrasikan Spliit dengan layanan lain.",
+    "empty": "Belum ada webhook. Tambahkan satu untuk mulai mengintegrasikan Spliit Cloud dengan layanan lain.",
     "secretTitle": "Simpan rahasia penandatanganan Anda",
     "secretDescription": "Rahasia ini hanya ditampilkan sekali. Simpan dengan aman sebelum menutup dialog ini.",
     "copy": "Salin rahasia",
@@ -4547,7 +4547,7 @@
     "offlineSearchHint": "Pencarian offline memakai teks persis; toleransi salah ketik butuh koneksi.",
     "groupsNotDownloaded": "{count} grup belum diunduh",
     "groupsNeedUpdating": "{count} perlu diperbarui",
-    "storageBlocked": "Tutup tab Spliit lain untuk menyelesaikan pembaruan penyimpanan offline.",
+    "storageBlocked": "Tutup tab Spliit Cloud lain untuk menyelesaikan pembaruan penyimpanan offline.",
     "storageQuota": "Penyimpanan offline penuh. Coba lagi atau hapus unduhan untuk mengosongkan ruang.",
     "statusBlocked": "Penyimpanan offline diblokir",
     "statusQuotaError": "Penyimpanan offline penuh",
@@ -4566,12 +4566,12 @@
     "dataStale": "Sebagian data mungkin sudah tidak terbaru."
   },
   "ApiErrorEmptyState": {
-    "title": "Spliit tidak tersedia",
-    "description": "Kami tidak dapat menjangkau server Spliit saat ini. Koneksi Anda tampaknya baik-baik saja — silakan coba lagi sebentar lagi.",
+    "title": "Spliit Cloud tidak tersedia",
+    "description": "Kami tidak dapat menjangkau server Spliit Cloud saat ini. Koneksi Anda tampaknya baik-baik saja — silakan coba lagi sebentar lagi.",
     "retry": "Coba lagi"
   },
   "ApiStatusBanner": {
-    "message": "Spliit tidak dapat dijangkau saat ini. Koneksi Anda tampaknya baik-baik saja — masalahnya ada di pihak kami.",
+    "message": "Spliit Cloud tidak dapat dijangkau saat ini. Koneksi Anda tampaknya baik-baik saja — masalahnya ada di pihak kami.",
     "statusLink": "Periksa status"
   },
   "AccountDeletionBanner": {
@@ -4621,7 +4621,7 @@
       },
       "data-portability": {
         "title": "Impor & ekspor",
-        "description": "Bawa riwayat dari CSV Splitwise, CSV rekening bank dengan panduan pemetaan dan deteksi duplikat, Cospend, atau bundel Spliit. Dukungan Tricount dan Settle Up sudah ada di roadmap. Ekspor semuanya kembali sebagai CSV, laporan PDF yang dapat dicetak, atau arsip ZIP lengkap termasuk dokumen."
+        "description": "Bawa riwayat dari CSV Splitwise, CSV rekening bank dengan panduan pemetaan dan deteksi duplikat, Cospend, atau bundel Spliit Cloud. Dukungan Tricount dan Settle Up sudah ada di roadmap. Ekspor semuanya kembali sebagai CSV, laporan PDF yang dapat dicetak, atau arsip ZIP lengkap termasuk dokumen."
       },
       "expenses-splits": {
         "title": "Pengeluaran & pembagian cerdas",
@@ -4637,7 +4637,7 @@
       },
       "offline-app": {
         "title": "Aplikasi yang bisa dipasang",
-        "description": "Pasang Spliit sebagai aplikasi di perangkat apa pun untuk pemuatan instan dan pengalaman layar penuh. Grupmu tetap terbaca saat offline, dan pengeluaran baru antre secara lokal lalu tersinkron saat tersambung kembali — pengeditan offline yang lebih luas sudah ada di roadmap."
+        "description": "Pasang Spliit Cloud sebagai aplikasi di perangkat apa pun untuk pemuatan instan dan pengalaman layar penuh. Grupmu tetap terbaca saat offline, dan pengeluaran baru antre secara lokal lalu tersinkron saat tersambung kembali — pengeditan offline yang lebih luas sudah ada di roadmap."
       },
       "share-identity": {
         "title": "Undangan & identitas grup",

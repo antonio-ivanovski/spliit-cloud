@@ -72,7 +72,7 @@ export function MobileAppBar() {
       ),
     [pathname, returnTo, t],
   )
-  useDocumentTitle(meta ? `Spliit · ${meta.title}` : null)
+  useDocumentTitle(meta ? `Spliit Cloud · ${meta.title}` : null)
 
   if (!meta) return null
 
@@ -114,7 +114,7 @@ export function GroupMobileAppBar() {
 
   if (!isMobileGroupTabPath(pathname)) return null
 
-  const title = displayName || group?.name || 'Spliit'
+  const title = displayName || group?.name || 'Spliit Cloud'
   const isPublicView = viewer?.source === 'PUBLIC_LINK'
 
   return (

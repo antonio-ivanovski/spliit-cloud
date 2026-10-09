@@ -91,7 +91,7 @@ const defaultCors = cors({
     // are unknown at deployment time. These protocol endpoints are
     // independently protected by PKCE, client validation and bearer
     // credentials; reflecting the requesting origin only enables the
-    // browser transport. Normal Spliit APIs remain restricted below.
+    // browser transport. Normal Spliit Cloud APIs remain restricted below.
     if (isPublicOAuthProtocolPath(c.req.path)) return origin
     return webOrigins.includes(origin) ? origin : ''
   },

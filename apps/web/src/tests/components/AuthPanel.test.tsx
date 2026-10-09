@@ -1090,13 +1090,15 @@ describe('AuthPanel', () => {
     // The dialog header owns the title, so the onboarding hides its
     // duplicate heading and shows the key panel.
     expect(
-      await screen.findByRole('button', { name: 'Start using Spliit' }),
+      await screen.findByRole('button', { name: 'Start using Spliit Cloud' }),
     ).toBeInTheDocument()
     expect(screen.queryByText('Save your sign in link')).not.toBeInTheDocument()
     expect(mockSetupRecovery).toHaveBeenCalled()
 
     await user.click(screen.getByRole('checkbox'))
-    await user.click(screen.getByRole('button', { name: 'Start using Spliit' }))
+    await user.click(
+      screen.getByRole('button', { name: 'Start using Spliit Cloud' }),
+    )
 
     expect(mockAcknowledgeRecovery).toHaveBeenCalled()
     expect(mockAddPasskey).not.toHaveBeenCalled()
@@ -1116,7 +1118,7 @@ describe('AuthPanel', () => {
     await createAnonymousAccount(user)
     await saveDialogDisplayName(user)
     expect(
-      await screen.findByRole('button', { name: 'Start using Spliit' }),
+      await screen.findByRole('button', { name: 'Start using Spliit Cloud' }),
     ).toBeInTheDocument()
     expect(
       screen.queryByRole('button', { name: 'Add a passkey' }),
@@ -1126,7 +1128,7 @@ describe('AuthPanel', () => {
     expect(
       screen.getByRole('radiogroup', { name: 'Choose your backup sign-in' })
         .nextElementSibling,
-    ).toHaveTextContent('Start using Spliit')
+    ).toHaveTextContent('Start using Spliit Cloud')
 
     await user.click(
       screen.getByRole('radio', { name: /Use a passkey instead/ }),
@@ -1136,7 +1138,7 @@ describe('AuthPanel', () => {
       await screen.findByRole('button', { name: 'Add a passkey' }),
     ).toBeInTheDocument()
     expect(
-      screen.queryByRole('button', { name: 'Start using Spliit' }),
+      screen.queryByRole('button', { name: 'Start using Spliit Cloud' }),
     ).not.toBeInTheDocument()
     expect(
       screen.getByRole('radiogroup', { name: 'Choose your backup sign-in' })
@@ -1148,7 +1150,7 @@ describe('AuthPanel', () => {
     )
 
     expect(
-      await screen.findByRole('button', { name: 'Start using Spliit' }),
+      await screen.findByRole('button', { name: 'Start using Spliit Cloud' }),
     ).toBeInTheDocument()
     expect(mockReplaceBrowserLocation).not.toHaveBeenCalled()
   })

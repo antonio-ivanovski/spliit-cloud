@@ -19,7 +19,8 @@ type ScanStatus = 'starting' | 'scanning' | 'denied' | 'no-camera'
 /**
  * Scan-to-join dialog: live camera QR scan. The scanner library is lazily
  * imported so only this dialog pays for it. Scanned text is only ever navigated
- * to when it parses as a Spliit group invite (same-app path with `?invite=`).
+ * to when it parses as a Spliit Cloud group invite (same-app path with
+ * `?invite=`).
  */
 export function ScanToJoinDialog({
   open,
@@ -59,7 +60,7 @@ function ScanContent({ onDone }: { onDone: () => void }) {
   const pausedRef = useRef(false)
   const [status, setStatus] = useState<ScanStatus>('starting')
   const [notice, setNotice] = useState<string | null>(null)
-  // A code pointing at another Spliit instance never navigates blindly: the
+  // A code pointing at another Spliit Cloud instance never navigates blindly: the
   // guest confirms the foreign origin first (QR phishing protection).
   const [foreignInvite, setForeignInvite] = useState<{
     url: string

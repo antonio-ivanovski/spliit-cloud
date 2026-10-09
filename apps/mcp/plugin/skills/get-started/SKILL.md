@@ -1,6 +1,6 @@
 ---
 name: get-started
-description: Create a Spliit shared expense from conversation with a safe confirmation preview.
+description: Create a Spliit Cloud shared expense from conversation with a safe confirmation preview.
 ---
 
 # Getting started with Spliit Cloud
@@ -11,7 +11,7 @@ to record, split, or review a shared expense.
 ## Workflow
 
 1. Call `get-expense-context` first when the group ID is not already known.
-   Results are already restricted to the OAuth-connected Spliit account.
+   Results are already restricted to the OAuth-connected Spliit Cloud account.
 2. Resolve group and participant names case-insensitively from that response.
    Ask one short clarification only when multiple distinct IDs remain
    plausible.
@@ -25,7 +25,7 @@ to record, split, or review a shared expense.
 ## Rules
 
 - Pass monetary values as decimal strings in major currency units.
-- Omit payer, split, date, category, and currency only when Spliit defaults
+- Omit payer, split, date, category, and currency only when Spliit Cloud defaults
   should apply.
 - Use `get-group-summary` for balances and recent expenses, not for
   participant mapping.

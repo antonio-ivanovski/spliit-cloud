@@ -5,9 +5,9 @@ type EmailFooterProps = {
 }
 
 /**
- * Subtle footer at the bottom of every email. Spliit wordmark + the default
- * "you received this email because…" copy. Most transactional emails include
- * something here for inbox-trust reasons.
+ * Subtle footer at the bottom of every email. Spliit Cloud wordmark + the
+ * default "you received this email because…" copy. Most transactional emails
+ * include something here for inbox-trust reasons.
  */
 export function EmailFooter({ unsubscribeUrl }: EmailFooterProps) {
   return (

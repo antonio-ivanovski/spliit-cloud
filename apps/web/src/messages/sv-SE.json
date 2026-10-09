@@ -23,7 +23,7 @@
     },
     "notifications": {
       "title": "Aviseringar",
-      "description": "Välj var Spliit ska skicka aktivitetsaviseringar.",
+      "description": "Välj var Spliit Cloud ska skicka aktivitetsaviseringar.",
       "enable": "Aktivera push-aviseringar",
       "disable": "Inaktivera push-aviseringar",
       "enabled": "Push-aviseringar är aktiverade på den här enheten.",
@@ -31,7 +31,7 @@
       "unsupported": "Push-notiser stöds inte av den här webbläsaren eller kontexten.",
       "notConfigured": "Inte konfigurerat",
       "permissionDenied": "Notisbehörighet nekad. Tillåt dem i webbläsarens inställningar.",
-      "iosInstall": "Installera Spliit som app för att aktivera push-notiser.",
+      "iosInstall": "Lägg till Spliit Cloud på hemskärmen på iPhone eller iPad innan du aktiverar push-notiser.",
       "error": "Kunde inte uppdatera push-notisinställningarna. Försök igen.",
       "preferencesTitle": "Aviseringsinställningar",
       "preferencesDescription": "Välj hur du vill bli notifierad för varje händelse. Rekommenderade val kan åsidosättas per grupp.",
@@ -2043,7 +2043,7 @@
     "exportPdfError": "PDF:en kunde inte skapas. Försök igen.",
     "exportPdfSuccess": "PDF-rapport nedladdad.",
     "exportPdfRetryBounds": "Försök igen",
-    "exportBundleTitle": "Spliit-säkerhetspaket",
+    "exportBundleTitle": "Spliit Cloud-säkerhetspaket",
     "exportBundlePurpose": "Flyttbara gruppdata med utgifter, inställningar och bifogade dokument.",
     "exportBundleAction": "Ladda ner paketet",
     "globalArchived": "arkiverad",
@@ -2710,8 +2710,8 @@
       "scanning": "Letar efter en QR-kod…",
       "noCamera": "Ingen kamera hittades på den här enheten. Skanna koden med telefonens kameraapp i stället.",
       "permissionDenied": "Kameraåtkomst nekades. Tillåt kameraåtkomst i webbläsarens inställningar eller skanna koden med telefonens kameraapp i stället.",
-      "invalidCode": "Den koden är ingen Spliit-gruppinbjudan. Skanna värdens QR-kod igen.",
-      "foreignTitle": "Den här koden pekar på en annan Spliit",
+      "invalidCode": "Den koden är ingen Spliit Cloud-gruppinbjudan. Skanna värdens QR-kod igen.",
+      "foreignTitle": "Den här koden pekar på en annan Spliit Cloud",
       "foreignDescription": "Den öppnar {origin} i den här webbläsaren. Fortsätt bara om du litar på värden som visade den.",
       "foreignConfirm": "Öppna länk",
       "foreignCancel": "Gå tillbaka"
@@ -2831,7 +2831,7 @@
         "qr": "QR-kod",
         "unlinked": "Inget konto"
       },
-      "noAccountDescription": "Lägg till någon i utgifterna utan att bjuda in personen till Spliit. Du kan länka personen till ett konto senare.",
+      "noAccountDescription": "Lägg till någon i utgifterna utan att bjuda in personen till Spliit Cloud. Du kan länka personen till ett konto senare.",
       "temporaryNameRequired": "Tillfälligt namn",
       "noAccountNameDescription": "Visas i utgifter och saldon tills deltagaren länkas till ett konto.",
       "addParticipant": "Lägg till deltagare",
@@ -2871,7 +2871,7 @@
         },
         "unsettled": {
           "title": "Du har oreglerade balanser",
-          "description": "Spliit skapar regleringsbetalningar för balanser som involverar dig innan du lämnar. Andra deltagares balanser ändras inte."
+          "description": "Spliit Cloud skapar regleringsbetalningar för balanser som involverar dig innan du lämnar. Andra deltagares balanser ändras inte."
         }
       },
       "cancel": "Avbryt",
@@ -2984,7 +2984,7 @@
       "emailPlaceholder": "konto@exempel.se",
       "emailChangeWarning": "Den nuvarande mottagaren kan inte längre acceptera denna inbjudan.",
       "nameLabel": "Visningsnamn",
-      "profileNameNote": "Använder deras Spliit-profilnamn",
+      "profileNameNote": "Använder deras Spliit Cloud-profilnamn",
       "saveChanges": "Spara ändringar",
       "updateSend": "Uppdatera & skicka",
       "switchToEmailSend": "Byt & skicka inbjudan",
@@ -3094,7 +3094,7 @@
   },
   "OfflineBanner": {
     "message": "Du är offline. Du kan bläddra, men ändringar kräver en anslutning.",
-    "serverUnavailable": "Spliit är inte nåbart just nu. Visar nedladdad data.",
+    "serverUnavailable": "Spliit Cloud är inte nåbart just nu. Visar nedladdad data.",
     "reconnecting": "Återansluter… Du kan fortsätta läsa nedladdad data."
   },
   "Participants": {
@@ -3103,8 +3103,8 @@
   },
   "PushOnboarding": {
     "title": "Välj hur du vill hålla dig uppdaterad",
-    "description": "Spliit kan avisera dig om grupp- och utgiftsaktivitet när det händer.",
-    "pushBenefit": "Push-notiser levereras till denna enhet även när Spliit inte är öppet.",
+    "description": "Spliit Cloud kan avisera dig om grupp- och utgiftsaktivitet när det händer.",
+    "pushBenefit": "Push-notiser levereras till denna enhet även när Spliit Cloud inte är öppet.",
     "emailFallback": "E-post är tillgängligt för notiser du vill få dit; val med endast push omdirigeras inte.",
     "settingsHint": "Du kan ändra dessa val när som helst i Inställningar. Push-notiser aktiveras separat för varje enhet.",
     "enable": "Aktivera push-notiser",
@@ -3287,17 +3287,17 @@
   },
   "OAuth": {
     "consent": {
-      "title": "Anslut Spliit till {client}?",
+      "title": "Anslut Spliit Cloud till {client}?",
       "description": "Granska kontot och behörigheterna som den här appen begär.",
       "connectionDetails": "Anslutningsdetaljer",
-      "spliitAccount": "Spliit-konto",
+      "spliitAccount": "Spliit Cloud-konto",
       "connectingTo": "Ansluter till",
       "assistantVia": "OAuth-app",
       "defaultClient": "den här appen",
-      "defaultUser": "Spliit-användare",
+      "defaultUser": "Spliit Cloud-användare",
       "sessionUnavailable": "Sessionen är inte tillgänglig. Gå tillbaka och logga in igen.",
       "sharedData": "Vad som delas",
-      "identityTitle": "Din Spliit-identitet",
+      "identityTitle": "Din Spliit Cloud-identitet",
       "identityDescription": "Ditt namn och din e-postadress identifierar kontot som ansluts. Ditt lösenord och din inloggningsmetod delas aldrig.",
       "groupsTitle": "Grupp- och utgiftskontext",
       "groupsDescription": "Gruppinformation, deltagare, sparade fördelningar, saldon, statistik och aktivitet.",
@@ -3305,7 +3305,7 @@
       "expensesDescription": "Den här appen får bara skapa exakt den utgift som visas i förhandsgranskningen när du trycker på Skapa utgift.",
       "privacyTitle": "En kort integritetsnotis",
       "privacyDescription": "Finansiella gruppuppgifter kan vara känsliga. De är tillgängliga för {client} så länge anslutningen finns kvar. Du kan koppla från den när som helst i kontoinställningarna.",
-      "authorityNote": "Spliit förblir den auktoritativa källan. Befintlig validering, saldon, aktivitetshistorik och aviseringar gäller fortfarande.",
+      "authorityNote": "Spliit Cloud förblir den auktoritativa källan. Befintlig validering, saldon, aktivitetshistorik och aviseringar gäller fortfarande.",
       "allow": "Tillåt och anslut",
       "cancel": "Avbryt",
       "missingRequest": "Auktoriseringsbegäran saknas. Gå tillbaka till appen och starta anslutningen igen.",
@@ -3320,7 +3320,7 @@
       "expensesDeleteTitle": "Ta bort utgifter",
       "expensesDeleteDescription": "Ta bort utgifter permanent och göra ändringar som raderar data, till exempel korta ned en återkommande serie. Det går inte att ångra.",
       "unknownScopes": "Den här appen begär en behörighet som Spliit Cloud inte känner igen ({scopes}), så den kan inte godkännas här. Be utvecklaren se över vilka behörigheter appen begär.",
-      "clientUnavailable": "Spliit kunde inte verifiera den här appen. Gå tillbaka till appen och starta anslutningen igen.",
+      "clientUnavailable": "Spliit Cloud kunde inte verifiera den här appen. Gå tillbaka till appen och starta anslutningen igen.",
       "clientWebsite": "Appens webbplats",
       "privacyPolicy": "Integritetspolicy",
       "redirectsTo": "Omdirigerar till",
@@ -3330,18 +3330,18 @@
     "login": {
       "missingTitle": "Auktoriseringsbegäran saknas",
       "missingDescription": "Gå tillbaka till appen och starta anslutningen igen.",
-      "missingError": "Spliit tog inte emot OAuth-auktoriseringsuppgifterna.",
+      "missingError": "Spliit Cloud tog inte emot OAuth-auktoriseringsuppgifterna.",
       "connectingTitle": "Ansluter ditt konto",
       "connectingDescription": "Din befintliga Spliit Cloud-session hittades. Ingen ytterligare inloggning krävs.",
-      "checkingSession": "Kontrollerar din Spliit-session…",
+      "checkingSession": "Kontrollerar din Spliit Cloud-session…",
       "continuing": "Fortsätter säkert…",
       "signInTitle": "Logga in för att ansluta",
       "signInDescription": "Använd din vanliga inloggningsmetod för Spliit Cloud. Appen får aldrig tillgång till ditt lösenord eller dina inloggningsuppgifter."
     },
     "shell": {
-      "label": "Spliit-auktorisering",
+      "label": "Spliit Cloud-auktorisering",
       "mobileDescription": "Granska den begärda åtkomsten till kontot",
-      "title": "Anslut en app till ditt Spliit-konto.",
+      "title": "Anslut en app till ditt Spliit Cloud-konto.",
       "previewBullet": "Du kan koppla från appen i kontoinställningarna.",
       "authorityBullet": "Du bestämmer vad den här appen får komma åt.",
       "validationBullet": "Befintlig validering, saldon och aviseringar förblir intakta"
@@ -3356,7 +3356,7 @@
       "copied": "Kopierat till urklipp",
       "codeLabel": "Auktoriseringskod",
       "stateLabel": "Stateparameter",
-      "warning": "Klistra endast in detta i den agent eller app som du litar på. Den som har det kan ansluta till ditt Spliit-konto tills det upphör att gälla.",
+      "warning": "Klistra endast in detta i den agent eller app som du litar på. Den som har det kan ansluta till ditt Spliit Cloud-konto tills det upphör att gälla.",
       "expiryNote": "Den här koden upphör att gälla 10 minuter efter att den utfärdades.",
       "errorTitle": "Anslutningen slutfördes inte",
       "errorDescription": "Auktoriseringsservern returnerade ett fel i stället för en kod.",
@@ -3507,7 +3507,7 @@
   },
   "AIExpense": {
     "title": "Granska AI-utgift",
-    "description": "Kontrollera vad Spliit har förstått innan du lägger till utgiften.",
+    "description": "Kontrollera vad Spliit Cloud har förstått innan du lägger till utgiften.",
     "created": "Utgiften skapades.",
     "createError": "Det gick inte att skapa utgiften.",
     "missing": "Kunde inte identifieras",
@@ -3563,7 +3563,7 @@
       },
       "idea": {
         "title": "Föreslå en idé",
-        "description": "Beskriv ett problem som är värt att lösa eller en förbättring som skulle göra Spliit mer användbart.",
+        "description": "Beskriv ett problem som är värt att lösa eller en förbättring som skulle göra Spliit Cloud mer användbart.",
         "action": "Öppna idéformulär"
       },
       "feedback": {
@@ -3655,7 +3655,7 @@
     "hintTapToCreateGroup": "Jag är {name} — tryck på mig för att skapa en grupp.",
     "billName": "Bill",
     "offlineMessage": "Jag kan inte skapa något medan du är offline.",
-    "serverUnreachableMessage": "Jag kan inte nå Spliit-servern just nu — din anslutning ser bra ut, så det här felet ligger hos oss."
+    "serverUnreachableMessage": "Jag kan inte nå Spliit Cloud-servern just nu — din anslutning ser bra ut, så det här felet ligger hos oss."
   },
   "CreateSettlement": {
     "description": "Granska betalningen innan du registrerar den.",
@@ -3683,7 +3683,7 @@
     "signup": {
       "title": "Anonymt konto",
       "description": "Skapa ett anonymt konto utan e-postadress, lösenord eller social inloggning.",
-      "warning": "Din data lagras i Spliit Cloud, men det här kontot har ingen e-post eller annan återställningsmetod. Du måste spara inloggningslänken som visas härnäst.",
+      "warning": "Använd Spliit Cloud utan e-postadress, lösenord eller social inloggning. Innan du börjar måste du spara en permanent inloggningslänk.",
       "cancel": "Avbryt",
       "recoverDescription": "Klistra in din sparade inloggningslänk för att återgå till ett befintligt anonymt konto.",
       "recoveryOnlyHelp": "Nya anonyma konton är inte tillgängliga här. Klistra in din fullständiga sparade inloggningslänk för att fortsätta.",
@@ -3726,7 +3726,7 @@
       "unavailableDescription": "Skapa en ersättningslänk uttryckligen och spara den sedan innan du fortsätter.",
       "generateReplacement": "Generera ersättningslänk",
       "error": "Något gick fel. Försök igen.",
-      "start": "Börja använda Spliit"
+      "start": "Börja använda Spliit Cloud"
     },
     "recovery": {
       "warningTitle": "Spara detta på ett säkert ställe",
@@ -3831,7 +3831,7 @@
     "scopeExpensesWrite": "Lägga till utgifter med förhandsvisning"
   },
   "PwaUpdate": {
-    "waitingFailed": "Spliit kunde inte tillämpa uppdateringen.",
+    "waitingFailed": "Spliit Cloud kunde inte tillämpa uppdateringen.",
     "retry": "Försök igen",
     "dismiss": "Stäng"
   },
@@ -4212,7 +4212,7 @@
       "fallbackTo": "fallback till {label}",
       "fields": {
         "categorySource": {
-          "description": "Läs bankkategorin så att varje unikt värde kan mappas till en Spliit-kategori.",
+          "description": "Läs bankkategorin så att varje unikt värde kan mappas till en Spliit Cloud-kategori.",
           "title": "Kategorikälla"
         },
         "dateTime": {
@@ -4481,7 +4481,7 @@
     "add": "Lägg till webhook",
     "url": "Slutpunkts-URL",
     "loading": "Läser in webhooks…",
-    "empty": "Inga webhooks ännu. Lägg till en för att börja integrera Spliit med en annan tjänst.",
+    "empty": "Inga webhooks ännu. Lägg till en för att börja integrera Spliit Cloud med en annan tjänst.",
     "secretTitle": "Spara din signeringshemlighet",
     "secretDescription": "Den här hemligheten visas bara en gång. Spara den säkert innan du stänger dialogrutan.",
     "copy": "Kopiera hemlighet",
@@ -4563,7 +4563,7 @@
     "offlineSearchHint": "Offline-sökning använder exakt text; stavfelstolerans kräver anslutning.",
     "groupsNotDownloaded": "{count} grupp(er) inte nedladdade",
     "groupsNeedUpdating": "{count} behöver uppdateras",
-    "storageBlocked": "Stäng andra Spliit-flikar för att slutföra uppdateringen av offline-lagringen.",
+    "storageBlocked": "Stäng andra Spliit Cloud-flikar för att slutföra uppdateringen av offline-lagringen.",
     "storageQuota": "Offline-lagringen är full. Försök igen eller rensa nedladdningar för att frigöra utrymme.",
     "statusBlocked": "Offline-lagring blockerad",
     "statusQuotaError": "Offline-lagring full",
@@ -4582,12 +4582,12 @@
     "dataStale": "Vissa uppgifter kan vara inaktuella."
   },
   "ApiErrorEmptyState": {
-    "title": "Spliit är inte tillgängligt",
-    "description": "Vi kan inte nå Spliit-servern just nu. Din anslutning ser bra ut — försök igen om en stund.",
+    "title": "Spliit Cloud är inte tillgängligt",
+    "description": "Vi kan inte nå Spliit Cloud-servern just nu. Din anslutning ser bra ut — försök igen om en stund.",
     "retry": "Försök igen"
   },
   "ApiStatusBanner": {
-    "message": "Det går inte att nå Spliit just nu. Din anslutning ser bra ut — problemet ligger hos oss.",
+    "message": "Det går inte att nå Spliit Cloud just nu. Din anslutning ser bra ut — problemet ligger hos oss.",
     "statusLink": "Kontrollera status"
   },
   "AccountDeletionBanner": {
@@ -4629,7 +4629,7 @@
       },
       "data-portability": {
         "title": "Import och export",
-        "description": "Ta med historik från Splitwise-CSV, kontoutdrags-CSV:er med mappningsguide och dubblettidentifiering, Cospend eller Spliit-paket. Stöd för Tricount och Settle Up finns på färdplanen. Ta ut allt igen som CSV, utskrivbara PDF-rapporter eller fullständiga ZIP-arkiv inklusive dokument."
+        "description": "Ta med historik från Splitwise-CSV, kontoutdrags-CSV:er med mappningsguide och dubblettidentifiering, Cospend eller Spliit Cloud-paket. Stöd för Tricount och Settle Up finns på färdplanen. Ta ut allt igen som CSV, utskrivbara PDF-rapporter eller fullständiga ZIP-arkiv inklusive dokument."
       },
       "accounts-signin": {
         "title": "Logga in på ditt sätt",
@@ -4653,7 +4653,7 @@
       },
       "offline-app": {
         "title": "Installerbar app",
-        "description": "Installera Spliit som en app på valfri enhet för omedelbar laddning och fullskärmsupplevelse. Dina grupper förblir läsbara offline, och nya utgifter köas lokalt och synkas vid återanslutning — bredare offlineredigering finns på färdplanen."
+        "description": "Installera Spliit Cloud som en app på valfri enhet för omedelbar laddning och fullskärmsupplevelse. Dina grupper förblir läsbara offline, och nya utgifter köas lokalt och synkas vid återanslutning — bredare offlineredigering finns på färdplanen."
       },
       "share-identity": {
         "title": "Inbjudningar & gruppidentitet",

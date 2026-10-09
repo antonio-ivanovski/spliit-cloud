@@ -1,6 +1,6 @@
 ---
 title: Features — Spliit Cloud
-description: Every Spliit feature in one catalog: sign-in, smart splits, the installable app, imports, and an open developer platform.
+description: Every Spliit Cloud feature in one catalog: sign-in, smart splits, the installable app, imports, and an open developer platform.
 ---
 
 # Features
@@ -21,7 +21,7 @@ Real membership follows you across devices, with every edit attributed to its au
 
 ### Installable app
 
-Install Spliit as an app on any device for instant loading and a full-screen experience. Your groups stay readable offline, and new expenses queue locally, syncing on reconnect — broader offline editing is on the roadmap.
+Install Spliit Cloud as an app on any device for instant loading and a full-screen experience. Your groups stay readable offline, and new expenses queue locally, syncing on reconnect — broader offline editing is on the roadmap.
 
 ### Backups & recovery
 
@@ -53,7 +53,7 @@ Real series with intervals, endings, catch-up, retries, and previews of what's c
 
 ### Import & export
 
-Bring history from Splitwise CSV, bank-statement CSVs with a mapping wizard and duplicate detection, Cospend, or Spliit bundles. Tricount and Settle Up support is on the roadmap. Take everything back out as CSV, printable PDF reports, or full ZIP archives including documents.
+Bring history from Splitwise CSV, bank-statement CSVs with a mapping wizard and duplicate detection, Cospend, or Spliit Cloud bundles. Tricount and Settle Up support is on the roadmap. Take everything back out as CSV, printable PDF reports, or full ZIP archives including documents.
 
 ### Bulk categorization
 

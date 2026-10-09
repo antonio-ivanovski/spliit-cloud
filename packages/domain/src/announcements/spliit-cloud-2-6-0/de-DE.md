@@ -1,18 +1,18 @@
 ---
 id: spliit-cloud-2-6-0
 date: 2026-10-08
-title: Spliit funktioniert jetzt offline — hilf beim Testen
+title: Spliit Cloud funktioniert jetzt offline — hilf beim Testen
 inApp: true
 email: true
 ---
 
-Spliit 2.6.0 bringt Offline-Lesen in die App: Deine Gruppen bleiben ohne Verbindung lesbar. Das ist das Fundament für Offline-Lesen — vollständiges Offline-Schreiben, einschließlich des Erstellens von Ausgaben, folgt, sobald diese Stufe stabil ist. Details stehen in den [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0) Hinweisen.
+Spliit Cloud 2.6.0 bringt Offline-Lesen in die App: Deine Gruppen bleiben ohne Verbindung lesbar. Das ist das Fundament für Offline-Lesen — vollständiges Offline-Schreiben, einschließlich des Erstellens von Ausgaben, folgt, sobald diese Stufe stabil ist. Details stehen in den [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0) Hinweisen.
 
 ## Was du offline tun kannst
 
 - Öffne deine Gruppen und stöbere in der kompletten Ausgabenhistorie mit Kommentaren, Salden, Mitgliederliste, Untergruppen-Zuordnungen, Aufteilungs-Presets, Budgets, Gruppeneinstellungen und letzten Aktivitäten.
 - Listen öffnen sich sofort aus der Kopie auf dem Gerät und übernehmen neue Änderungen beim erneuten Verbinden direkt an Ort und Stelle, sodass sich auch langsame Verbindungen viel schneller anfühlen.
-- Installiere Spliit mit der neuen Schritt-für-Schritt-Anleitung als App auf deinem Gerät.
+- Installiere Spliit Cloud mit der neuen Schritt-für-Schritt-Anleitung als App auf deinem Gerät.
 
 ## Was weiterhin eine Verbindung braucht
 

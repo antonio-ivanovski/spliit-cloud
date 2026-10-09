@@ -98,7 +98,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function storedToken(rawToken: string): string {
-  // Spliit uses Better Auth's default hashed token storage and does not add a
+  // Spliit Cloud uses Better Auth's default hashed token storage and does not add a
   // token prefix. Authorization codes and refresh tokens therefore use the
   // same unpadded base64url SHA-256 representation in the database.
   return createHash('sha256').update(rawToken).digest('base64url')

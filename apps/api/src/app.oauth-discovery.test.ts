@@ -29,7 +29,7 @@ describe('OAuth protected resource discovery', () => {
       authorization_servers: [new URL('/auth', getApiBaseUrl()).toString()],
       scopes_supported: [...API_RESOURCE_DISCOVERY_SCOPES],
       bearer_methods_supported: ['header'],
-      resource_name: 'Spliit API',
+      resource_name: 'Spliit Cloud API',
       resource_documentation: new URL('/docs', getApiBaseUrl()).toString(),
     })
   })

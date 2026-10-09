@@ -98,13 +98,16 @@ function Content() {
                   className="flex items-center gap-2 transition-transform hover:scale-105"
                   to="/"
                 >
-                  <div className="flex items-center gap-2" aria-label="Spliit">
+                  <div
+                    className="flex items-center gap-2"
+                    aria-label="Spliit Cloud"
+                  >
                     <Image
                       src="/logo-with-text.svg"
                       className="m-1 h-[45px] w-auto"
                       width={(45 * 522) / 180}
                       height={45}
-                      alt="Spliit"
+                      alt="Spliit Cloud"
                     />
                   </div>
                 </Link>
@@ -137,7 +140,7 @@ function Content() {
                 >
                   <Link
                     to="/"
-                    aria-label="Spliit"
+                    aria-label="Spliit Cloud"
                     className="flex items-center"
                   >
                     <Image
@@ -145,7 +148,7 @@ function Content() {
                       className="h-9 w-auto"
                       width={(36 * 522) / 180}
                       height={36}
-                      alt="Spliit"
+                      alt="Spliit Cloud"
                     />
                   </Link>
                   <MobileAppHeaderActions />

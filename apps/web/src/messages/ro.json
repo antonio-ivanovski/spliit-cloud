@@ -59,8 +59,8 @@
       "scanning": "Se caută un cod QR…",
       "noCamera": "Nu a fost găsită nicio cameră pe acest dispozitiv. Scanează codul cu aplicația de cameră a telefonului tău.",
       "permissionDenied": "Accesul la cameră a fost refuzat. Permite accesul la cameră din setările browserului sau scanează codul cu aplicația de cameră a telefonului tău.",
-      "invalidCode": "Codul acela nu este o invitație de grup Spliit. Încearcă să scanezi din nou codul QR al gazdei.",
-      "foreignTitle": "Acest cod duce la un alt Spliit",
+      "invalidCode": "Codul acela nu este o invitație de grup Spliit Cloud. Încearcă să scanezi din nou codul QR al gazdei.",
+      "foreignTitle": "Acest cod duce la un alt Spliit Cloud",
       "foreignDescription": "Va deschide {origin} în acest browser. Continuă doar dacă ai încredere în gazda care ți l-a arătat.",
       "foreignConfirm": "Deschide linkul",
       "foreignCancel": "Înapoi"
@@ -203,7 +203,7 @@
     "exportPdfError": "Raportul PDF nu a putut fi generat. Încearcă din nou.",
     "exportPdfSuccess": "Raportul PDF a fost descărcat.",
     "exportPdfRetryBounds": "Reîncearcă",
-    "exportBundleTitle": "Pachet de backup Spliit",
+    "exportBundleTitle": "Pachet de backup Spliit Cloud",
     "exportBundlePurpose": "Date portabile ale grupului cu cheltuieli, setări și documente atașate.",
     "exportBundleAction": "Descarcă pachetul",
     "globalArchived": "arhivat",
@@ -319,7 +319,7 @@
       "unknownGroup": "Grup necunoscut",
       "sentOn": "Trimisă pe {date}"
     },
-    "linkInvitationBannerDescription": "{inviter} te-a invitat să te alături grupului {groupName} pe Spliit.",
+    "linkInvitationBannerDescription": "{inviter} te-a invitat să te alături grupului {groupName} pe Spliit Cloud.",
     "linkInvitationSingleUse": "Acest link poate fi utilizat o singură dată. După ce îl accepți, nu va mai funcționa.",
     "linkInvitationTemporaryName": "Te vei alătura ca {name}.",
     "linkInvitationAlreadyMemberTitle": "Ești deja în {groupName}",
@@ -398,7 +398,7 @@
         "shareAriaLabel": "Partajați linkul de invitație",
         "emailInvitesTitle": "Invitațiile prin e-mail au fost trimise",
         "emailInvitesDescription": "Serverul a trimis e-mail următoarelor persoane. Acestea vor vedea un banner Acceptați/Refuzați în pagina grupului când se conectează.",
-        "shareTitle": "Alăturați-vă grupului meu Spliit",
+        "shareTitle": "Alăturați-vă grupului meu Spliit Cloud",
         "shareText": "Alăturați-vă grupului nostru de cheltuieli pe Spliit Cloud — {name}. Deschideți acest link pentru a accepta: {url}",
         "copyLink": "Copiază linkul de invitație",
         "copied": "Copiat"
@@ -464,7 +464,7 @@
         "settleUpComingTitle": "Importul din Settle Up este pe drum",
         "settleUpComingDescription": "Suportul pentru export CSV din Settle Up se află pe lista noastră de priorități.",
         "dropFile": "Lăsați un fișier JSON sau CSV, sau faceți clic pentru a selecta",
-        "dropFileDescription": "JSON păstrează fiecare sumă și plătitor exact. CSV este o soluție de rezervă — Spliit rotunjește fiecare sumă per participant la 2 zecimale.",
+        "dropFileDescription": "JSON păstrează fiecare sumă și plătitor exact. CSV este o soluție de rezervă — Spliit Cloud rotunjește fiecare sumă per participant la 2 zecimale.",
         "or": "sau",
         "pasteUrl": "Lipiți un URL spliit.app",
         "urlDescription": "Serverul nostru preia grupul prin intermediul endpoint-ului public de export al spliit.app în numele dumneavoastră.",
@@ -474,7 +474,7 @@
         "receiptWarningTitle": "Imaginile chitanțelor nu sunt importate.",
         "receiptWarningDescription": "Exportul spliit.app nu include imaginile chitanțelor. Reîncărcați-le în grupul de destinație dacă aveți nevoie de ele.",
         "invalidUrl": "Lipiți un URL valid de grup spliit.app",
-        "notFoundUrl": "Spliit nu a găsit acest grup",
+        "notFoundUrl": "Spliit Cloud nu a găsit acest grup",
         "fetchUrlError": "Nu s-a putut prelua sursa",
         "fileReadError": "Nu s-a putut citi fișierul",
         "appToCloudDescription": "Înlocuiți .app cu .cloud în orice URL de grup spliit.app pentru a-l importa în Spliit Cloud.",
@@ -1989,7 +1989,7 @@
       "friendAlreadyMember": "Deja membru",
       "noFriends": "Nu ai încă prieteni. Invită din fila E-mail.",
       "friendAlreadyInvited": "Deja invitat",
-      "noAccountDescription": "Adaugă o persoană la cheltuieli fără să o inviți în Spliit. O poți asocia ulterior unui cont.",
+      "noAccountDescription": "Adaugă o persoană la cheltuieli fără să o inviți în Spliit Cloud. O poți asocia ulterior unui cont.",
       "temporaryNameRequired": "Nume temporar",
       "noAccountNameDescription": "Va apărea în cheltuieli și solduri până când acest participant este asociat unui cont.",
       "addParticipant": "Adaugă participant",
@@ -2087,7 +2087,7 @@
         },
         "unsettled": {
           "title": "Ai solduri nedecontate",
-          "description": "Spliit va crea plăți de decontare pentru soldurile care te implică înainte să pleci. Soldurile celorlalți participanți nu se vor schimba."
+          "description": "Spliit Cloud va crea plăți de decontare pentru soldurile care te implică înainte să pleci. Soldurile celorlalți participanți nu se vor schimba."
         }
       },
       "confirmWithForce": "Decontează și pleacă",
@@ -2173,7 +2173,7 @@
       "emailPlaceholder": "account@example.com",
       "emailChangeWarning": "Destinatarul actual nu va mai putea accepta această invitație.",
       "nameLabel": "Nume afișat",
-      "profileNameNote": "Folosește numele din profilul Spliit",
+      "profileNameNote": "Folosește numele din profilul Spliit Cloud",
       "saveChanges": "Salvează modificările",
       "updateSend": "Actualizează și trimite",
       "switchToEmailSend": "Schimbă și trimite invitația",
@@ -2310,7 +2310,7 @@
     },
     "notifications": {
       "title": "Notificări",
-      "description": "Alegeți unde trimite Spliit notificările despre activitate.",
+      "description": "Alegeți unde trimite Spliit Cloud notificările despre activitate.",
       "enable": "Activează notificările push",
       "disable": "Dezactivează notificările push",
       "enabled": "Notificările push sunt activate pe acest dispozitiv.",
@@ -2318,7 +2318,7 @@
       "unsupported": "Notificările push nu sunt acceptate de acest browser sau context.",
       "notConfigured": "Notificările push nu sunt disponibile în această implementare.",
       "permissionDenied": "Notificările sunt blocate. Permite-le în browser sau în setările dispozitivului, apoi încearcă din nou.",
-      "iosInstall": "Pe iPhone sau iPad, adaugă Spliit pe ecranul principal înainte de a activa notificările push.",
+      "iosInstall": "Pe iPhone sau iPad, adaugă Spliit Cloud pe ecranul principal înainte de a activa notificările push.",
       "error": "Nu s-au putut actualiza setările notificărilor push. Încearcă din nou.",
       "preferencesTitle": "Preferințe de notificare",
       "preferencesDescription": "Aceste opțiuni se aplică activităților viitoare ale grupurilor și cheltuielilor.",
@@ -2858,7 +2858,7 @@
   },
   "OfflineBanner": {
     "message": "Ești offline. Poți naviga, dar ai nevoie de conexiune pentru a face modificări.",
-    "serverUnavailable": "Spliit nu poate fi contactat acum. Se afișează datele descărcate.",
+    "serverUnavailable": "Spliit Cloud nu poate fi contactat acum. Se afișează datele descărcate.",
     "reconnecting": "Reconectare… Poți continua să citești datele descărcate."
   },
   "InstallPromotion": {
@@ -3199,8 +3199,8 @@
   },
   "PushOnboarding": {
     "title": "Alege cum să fii la curent",
-    "description": "Spliit te poate alerta cu privire la activitatea grupurilor și cheltuielilor pe măsură ce are loc.",
-    "pushBenefit": "Notificările push ajung pe acest dispozitiv chiar și când Spliit nu este deschis.",
+    "description": "Spliit Cloud te poate alerta cu privire la activitatea grupurilor și cheltuielilor pe măsură ce are loc.",
+    "pushBenefit": "Notificările push ajung pe acest dispozitiv chiar și când Spliit Cloud nu este deschis.",
     "emailFallback": "E-mailul este disponibil pentru notificările pe care alegi să le primești acolo; opțiunile doar push nu sunt redirecționate.",
     "settingsHint": "Poți schimba aceste opțiuni oricând din Setări. Notificările push sunt activate separat pentru fiecare dispozitiv.",
     "enable": "Activează notificările push",
@@ -3316,25 +3316,25 @@
   },
   "OAuth": {
     "shell": {
-      "label": "Autorizare Spliit",
+      "label": "Autorizare Spliit Cloud",
       "mobileDescription": "Examinează accesul solicitat la cont",
-      "title": "Conectează o aplicație la contul tău Spliit.",
+      "title": "Conectează o aplicație la contul tău Spliit Cloud.",
       "previewBullet": "O poți deconecta din setările contului",
       "authorityBullet": "Tu alegi ce poate accesa această aplicație",
       "validationBullet": "Validarea, soldurile și notificările existente rămân intacte"
     },
     "consent": {
-      "title": "Conectezi Spliit la {client}?",
+      "title": "Conectezi Spliit Cloud la {client}?",
       "description": "Examinează contul și permisiunile solicitate de această aplicație.",
       "connectionDetails": "Detalii conexiune",
-      "spliitAccount": "Cont Spliit",
+      "spliitAccount": "Cont Spliit Cloud",
       "connectingTo": "Se conectează la",
       "assistantVia": "Aplicație OAuth",
       "defaultClient": "această aplicație",
-      "defaultUser": "utilizator Spliit",
+      "defaultUser": "utilizator Spliit Cloud",
       "sessionUnavailable": "Sesiune indisponibilă. Revino și autentifică-te din nou.",
       "sharedData": "Ce se va partaja",
-      "identityTitle": "Identitatea ta Spliit",
+      "identityTitle": "Identitatea ta Spliit Cloud",
       "identityDescription": "Numele și adresa ta de e-mail identifică contul conectat. Parola și metoda de autentificare nu sunt partajate niciodată.",
       "groupsTitle": "Contextul grupurilor și al cheltuielilor",
       "groupsDescription": "Detalii despre grupuri, participanți, împărțiri salvate, solduri, statistici și activitate.",
@@ -3342,7 +3342,7 @@
       "expensesDescription": "Această aplicație poate crea doar cheltuiala exactă afișată în previzualizare după ce apeși Creează cheltuiala.",
       "privacyTitle": "O notă rapidă despre confidențialitate",
       "privacyDescription": "Detaliile financiare ale unui grup pot fi sensibile. Rămân disponibile pentru {client} cât timp conexiunea este activă. O poți deconecta oricând din setările contului.",
-      "authorityNote": "Spliit rămâne sursa de adevăr. Validarea, soldurile, istoricul activității și notificările existente se aplică în continuare.",
+      "authorityNote": "Spliit Cloud rămâne sursa de adevăr. Validarea, soldurile, istoricul activității și notificările existente se aplică în continuare.",
       "allow": "Permite și conectează",
       "cancel": "Anulează",
       "missingRequest": "Cererea de autorizare lipsește. Revino la aplicație și începe din nou conectarea.",
@@ -3357,7 +3357,7 @@
       "expensesDeleteTitle": "Șterge cheltuieli",
       "expensesDeleteDescription": "Șterge definitiv cheltuieli și fă modificări care elimină date, cum ar fi scurtarea unei serii recurente. Nu se poate anula.",
       "unknownScopes": "Această aplicație cere o permisiune pe care Spliit Cloud nu o recunoaște ({scopes}), așa că nu poate fi aprobată aici. Roagă autorul aplicației să verifice permisiunile cerute.",
-      "clientUnavailable": "Spliit nu a putut verifica această aplicație. Revino la aplicație și începe din nou conectarea.",
+      "clientUnavailable": "Spliit Cloud nu a putut verifica această aplicație. Revino la aplicație și începe din nou conectarea.",
       "clientWebsite": "Site-ul aplicației",
       "privacyPolicy": "Politica de confidențialitate",
       "redirectsTo": "Redirecționează către",
@@ -3367,10 +3367,10 @@
     "login": {
       "missingTitle": "Cerere de autorizare lipsă",
       "missingDescription": "Revino la aplicație și începe din nou conectarea.",
-      "missingError": "Spliit nu a primit detaliile de autorizare OAuth.",
+      "missingError": "Spliit Cloud nu a primit detaliile de autorizare OAuth.",
       "connectingTitle": "Se conectează contul tău",
       "connectingDescription": "A fost găsită sesiunea existentă Spliit Cloud. Nu este necesară o autentificare suplimentară.",
-      "checkingSession": "Se verifică sesiunea Spliit…",
+      "checkingSession": "Se verifică sesiunea Spliit Cloud…",
       "continuing": "Se continuă în siguranță…",
       "signInTitle": "Autentifică-te pentru conectare",
       "signInDescription": "Folosește metoda obișnuită de autentificare în Spliit Cloud. Aplicația nu primește niciodată parola sau datele tale de autentificare."
@@ -3385,7 +3385,7 @@
       "copied": "Copiat în clipboard",
       "codeLabel": "Cod de autorizare",
       "stateLabel": "Stare",
-      "warning": "Lipește-l doar în agentul sau aplicația în care ai încredere. Oricine îl deține se poate conecta la contul tău Spliit până expiră.",
+      "warning": "Lipește-l doar în agentul sau aplicația în care ai încredere. Oricine îl deține se poate conecta la contul tău Spliit Cloud până expiră.",
       "expiryNote": "Acest cod expiră la 10 minute după emitere.",
       "errorTitle": "Conectarea nu s-a finalizat",
       "errorDescription": "Serverul de autorizare a returnat o eroare în loc de un cod.",
@@ -3536,7 +3536,7 @@
   },
   "AIExpense": {
     "title": "Verifică cheltuiala AI",
-    "description": "Verifică ce a înțeles Spliit înainte de a adăuga această cheltuială.",
+    "description": "Verifică ce a înțeles Spliit Cloud înainte de a adăuga această cheltuială.",
     "created": "Cheltuială creată.",
     "createError": "Cheltuiala nu a putut fi creată.",
     "missing": "Nedetectat",
@@ -3592,7 +3592,7 @@
       },
       "idea": {
         "title": "Sugerează o idee",
-        "description": "Descrie o problemă care merită rezolvată sau o îmbunătățire care ar face Spliit mai util.",
+        "description": "Descrie o problemă care merită rezolvată sau o îmbunătățire care ar face Spliit Cloud mai util.",
         "action": "Deschide formularul de idei"
       },
       "feedback": {
@@ -3684,7 +3684,7 @@
     "hintTapToCreateGroup": "Sunt {name} — atinge-mă ca să creezi un grup.",
     "billName": "Bill",
     "offlineMessage": "Nu pot crea nimic cât timp ești offline.",
-    "serverUnreachableMessage": "Nu pot contacta serverul Spliit chiar acum — conexiunea ta pare în regulă, deci vina este a noastră."
+    "serverUnreachableMessage": "Nu pot contacta serverul Spliit Cloud chiar acum — conexiunea ta pare în regulă, deci vina este a noastră."
   },
   "CreateSettlement": {
     "description": "Revizuiește plata înainte de a o înregistra.",
@@ -3712,7 +3712,7 @@
     "signup": {
       "title": "Cont anonim",
       "description": "Creați un cont anonim fără adresă de e-mail, parolă sau conectare la rețele sociale.",
-      "warning": "Folosește Spliit fără e-mail, parolă sau autentificare socială. Înainte să începi, va trebui să salvezi un link permanent de conectare.",
+      "warning": "Folosește Spliit Cloud fără e-mail, parolă sau autentificare socială. Înainte să începi, va trebui să salvezi un link permanent de conectare.",
       "cancel": "Anulează",
       "recoverDescription": "Inserați linkul de recuperare salvat pentru a reveni la un cont anonim existent.",
       "recoveryOnlyHelp": "Noile conturi anonime nu sunt disponibile aici. Lipiți linkul complet de recuperare salvat pentru a continua.",
@@ -3755,7 +3755,7 @@
       "unavailableDescription": "Generați un link de înlocuire în mod explicit, apoi salvați-l înainte de a continua.",
       "generateReplacement": "Generați linkul de înlocuire",
       "error": "Ceva a mers prost. Vă rugăm să încercați din nou.",
-      "start": "Începeți să utilizați Split"
+      "start": "Începeți să utilizați Spliit Cloud"
     },
     "recovery": {
       "warningTitle": "Păstrează asta undeva în siguranță",
@@ -3860,7 +3860,7 @@
     "scopeExpensesWrite": "Adaugă cheltuieli cu previzualizare"
   },
   "PwaUpdate": {
-    "waitingFailed": "Spliit nu a putut aplica actualizarea.",
+    "waitingFailed": "Spliit Cloud nu a putut aplica actualizarea.",
     "retry": "Reîncearcă",
     "dismiss": "Închide"
   },
@@ -4242,7 +4242,7 @@
       "fallbackTo": "alternativă la {label}",
       "fields": {
         "categorySource": {
-          "description": "Citește categoria băncii astfel încât fiecare valoare unică să poată fi mapată la o categorie Spliit.",
+          "description": "Citește categoria băncii astfel încât fiecare valoare unică să poată fi mapată la o categorie Spliit Cloud.",
           "title": "Sursă de categorie"
         },
         "dateTime": {
@@ -4520,7 +4520,7 @@
     "add": "Adaugă webhook",
     "url": "URL-ul endpointului",
     "loading": "Se încarcă webhookurile…",
-    "empty": "Încă nu există webhookuri. Adaugă unul pentru a începe integrarea Spliit cu un alt serviciu.",
+    "empty": "Încă nu există webhookuri. Adaugă unul pentru a începe integrarea Spliit Cloud cu un alt serviciu.",
     "secretTitle": "Salvează-ți secretul de semnare",
     "secretDescription": "Acest secret este afișat o singură dată. Păstrează-l în siguranță înainte de a închide această casetă de dialog.",
     "copy": "Copiază secretul",
@@ -4602,7 +4602,7 @@
     "offlineSearchHint": "Căutarea offline folosește text exact; toleranța la greșeli are nevoie de conexiune.",
     "groupsNotDownloaded": "{count} grup(uri) nedescărcat(e)",
     "groupsNeedUpdating": "{count} trebuie actualizate",
-    "storageBlocked": "Închide celelalte file Spliit pentru a termina actualizarea stocării offline.",
+    "storageBlocked": "Închide celelalte file Spliit Cloud pentru a termina actualizarea stocării offline.",
     "storageQuota": "Stocarea offline este plină. Reîncearcă sau șterge descărcări pentru a elibera spațiu.",
     "statusBlocked": "Stocare offline blocată",
     "statusQuotaError": "Stocare offline plină",
@@ -4621,12 +4621,12 @@
     "dataStale": "Unele date pot fi neactualizate."
   },
   "ApiErrorEmptyState": {
-    "title": "Spliit este indisponibil",
-    "description": "Nu putem contacta serverul Spliit chiar acum. Conexiunea ta pare în regulă — încearcă din nou peste puțin timp.",
+    "title": "Spliit Cloud este indisponibil",
+    "description": "Nu putem contacta serverul Spliit Cloud chiar acum. Conexiunea ta pare în regulă — încearcă din nou peste puțin timp.",
     "retry": "Încearcă din nou"
   },
   "ApiStatusBanner": {
-    "message": "Spliit nu poate fi contactat chiar acum. Conexiunea ta pare în regulă — problema este la noi.",
+    "message": "Spliit Cloud nu poate fi contactat chiar acum. Conexiunea ta pare în regulă — problema este la noi.",
     "statusLink": "Vezi starea"
   },
   "AccountDeletionBanner": {
@@ -4676,7 +4676,7 @@
       },
       "data-portability": {
         "title": "Import și export",
-        "description": "Adu istoricul din CSV Splitwise, CSV-uri de extrase bancare cu asistent de mapare și detectare a duplicatelor, Cospend sau pachete Spliit. Suportul pentru Tricount și Settle Up este pe foaia de parcurs. Scoate totul înapoi ca CSV, rapoarte PDF de tipărit sau arhive ZIP complete cu documente."
+        "description": "Adu istoricul din CSV Splitwise, CSV-uri de extrase bancare cu asistent de mapare și detectare a duplicatelor, Cospend sau pachete Spliit Cloud. Suportul pentru Tricount și Settle Up este pe foaia de parcurs. Scoate totul înapoi ca CSV, rapoarte PDF de tipărit sau arhive ZIP complete cu documente."
       },
       "expenses-splits": {
         "title": "Cheltuieli și împărțiri inteligente",
@@ -4692,7 +4692,7 @@
       },
       "offline-app": {
         "title": "Aplicație instalabilă",
-        "description": "Instalează Spliit ca aplicație pe orice dispozitiv pentru încărcare instantanee și o experiență pe tot ecranul. Grupurile tale rămân lizibile fără conexiune, iar cheltuielile noi stau local în coadă și se sincronizează la reconectare — editarea extinsă offline este pe foaia de parcurs."
+        "description": "Instalează Spliit Cloud ca aplicație pe orice dispozitiv pentru încărcare instantanee și o experiență pe tot ecranul. Grupurile tale rămân lizibile fără conexiune, iar cheltuielile noi stau local în coadă și se sincronizează la reconectare — editarea extinsă offline este pe foaia de parcurs."
       },
       "share-identity": {
         "title": "Invitații și identitatea grupului",

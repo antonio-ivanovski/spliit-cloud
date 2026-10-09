@@ -59,8 +59,8 @@
       "scanning": "מחפש קוד QR…",
       "noCamera": "לא נמצאה מצלמה במכשיר הזה. סרוק את הקוד עם אפליקציית המצלמה בטלפון שלך במקום זאת.",
       "permissionDenied": "הגישה למצלמה נדחתה. אפשר גישה למצלמה בהגדרות הדפדפן, או סרוק עם אפליקציית המצלמה בטלפון שלך במקום זאת.",
-      "invalidCode": "הקוד הזה אינו הזמנה לקבוצה ב-Spliit. נסה לסרוק שוב את קוד ה-QR של המארח.",
-      "foreignTitle": "הקוד הזה מפנה ל-Spliit אחר",
+      "invalidCode": "הקוד הזה אינו הזמנה לקבוצה ב-Spliit Cloud. נסה לסרוק שוב את קוד ה-QR של המארח.",
+      "foreignTitle": "הקוד הזה מפנה ל-Spliit Cloud אחר",
       "foreignDescription": "זה יפתח את {origin} בדפדפן הזה. המשך רק אם אתה סומך על המארח שהציג אותו.",
       "foreignConfirm": "פתח קישור",
       "foreignCancel": "חזרה"
@@ -203,7 +203,7 @@
     "exportPdfError": "יצירת ה-PDF נכשלה. אנא נסה שוב.",
     "exportPdfSuccess": "דוח ה-PDF הורד.",
     "exportPdfRetryBounds": "נסה שוב",
-    "exportBundleTitle": "חבילת גיבוי של Spliit",
+    "exportBundleTitle": "חבילת גיבוי של Spliit Cloud",
     "exportBundlePurpose": "נתוני קבוצה ניידים עם הוצאות, הגדרות ומסמכים מצורפים.",
     "exportBundleAction": "הורדת חבילה",
     "globalArchived": "בארכיון",
@@ -319,7 +319,7 @@
       "unknownGroup": "קבוצה לא ידועה",
       "sentOn": "נשלח {date}"
     },
-    "linkInvitationBannerDescription": "{inviter} הזמין אותך להצטרף ל-{groupName} ב-Spliit.",
+    "linkInvitationBannerDescription": "{inviter} הזמין אותך להצטרף ל-{groupName} ב-Spliit Cloud.",
     "linkInvitationSingleUse": "ניתן להשתמש בקישור זה פעם אחת בלבד. לאחר שתאשרו, הוא יפסיק לעבוד.",
     "linkInvitationTemporaryName": "תצטרפו בשם {name}.",
     "linkInvitationAlreadyMemberTitle": "אתם כבר ב-{groupName}",
@@ -398,7 +398,7 @@
         "shareAriaLabel": "שתף קישור הזמנה",
         "emailInvitesTitle": "הזמנות בדואר נשלחו",
         "emailInvitesDescription": "השרת שלח דואר לאנשים הבאים. הם יראו באנר קבלה/דחייה בדף הקבוצה כאשר יתחברו.",
-        "shareTitle": "הצטרף לקבוצת Spliit שלי",
+        "shareTitle": "הצטרף לקבוצת Spliit Cloud שלי",
         "shareText": "הצטרף לקבוצת ההוצאות שלנו ב-Spliit Cloud — {name}. פתח קישור זה לאישור: {url}",
         "copyLink": "העתקת קישור ההזמנה",
         "copied": "הועתק"
@@ -464,7 +464,7 @@
         "settleUpComingTitle": "ייבוא מ-Settle Up בדרך",
         "settleUpComingDescription": "תמיכה בייצוא CSV מ-Settle Up נמצאת במפת הדרכים.",
         "dropFile": "גרור קובץ JSON או CSV, או לחץ לבחירה",
-        "dropFileDescription": "JSON שומר כל סכום ומשלם בדיוק. CSV הוא גיבוי — Spliit מעגל כל סכום למשתתף ל-2 מקומות עשרוניים.",
+        "dropFileDescription": "JSON שומר כל סכום ומשלם בדיוק. CSV הוא גיבוי — Spliit Cloud מעגל כל סכום למשתתף ל-2 מקומות עשרוניים.",
         "or": "או",
         "pasteUrl": "הדבק כתובת URL של spliit.app",
         "urlDescription": "השרת שלנו מביא את הקבוצה דרך נקודת הקצה הציבורית של spliit.app בשמך.",
@@ -474,7 +474,7 @@
         "receiptWarningTitle": "תמונות קבלות לא מיובאות.",
         "receiptWarningDescription": "הייצוא של spliit.app אינו כולל תמונות קבלות. העלה אותן מחדש בקבוצת היעד אם אתה צריך אותן.",
         "invalidUrl": "אנא הדבק כתובת URL תקינה של קבוצת spliit.app",
-        "notFoundUrl": "Spliit לא מצא קבוצה זו",
+        "notFoundUrl": "Spliit Cloud לא מצא קבוצה זו",
         "fetchUrlError": "נכשלה הבאת המקור",
         "fileReadError": "נכשלה קריאת הקובץ",
         "appToCloudDescription": "שנה .app ל-.cloud בכל כתובת URL של קבוצת spliit.app כדי לייבא אותה ל-Spliit Cloud.",
@@ -1989,7 +1989,7 @@
       "friendAlreadyMember": "כבר חבר",
       "noFriends": "אין עדיין חברים. הזמינו מהכרטיסייה 'דוא״ל'.",
       "friendAlreadyInvited": "כבר הוזמן",
-      "noAccountDescription": "הוסף אדם להוצאות בלי להזמין אותו ל-Spliit. ניתן לקשר אותו לחשבון בהמשך.",
+      "noAccountDescription": "הוסף אדם להוצאות בלי להזמין אותו ל-Spliit Cloud. ניתן לקשר אותו לחשבון בהמשך.",
       "temporaryNameRequired": "שם זמני",
       "noAccountNameDescription": "יוצג בהוצאות וביתרות עד לקישור המשתתף לחשבון.",
       "addParticipant": "הוסף משתתף",
@@ -2088,7 +2088,7 @@
         },
         "unsettled": {
           "title": "יש לך יתרות לא מסודרות",
-          "description": "לפני העזיבה ייווצרו תשלומים להסדרת היתרות הקשורות אליך. היתרות של משתתפים אחרים לא ישתנו."
+          "description": "Spliit Cloud תיצור תשלומים להסדרת היתרות הקשורות אליך לפני העזיבה. היתרות של משתתפים אחרים לא ישתנו."
         }
       },
       "toast": {
@@ -2173,7 +2173,7 @@
       "emailPlaceholder": "account@example.com",
       "emailChangeWarning": "הנמען הנוכחי לא יוכל עוד לאשר הזמנה זו.",
       "nameLabel": "שם תצוגה",
-      "profileNameNote": "משתמש בשם הפרופיל שלהם ב-Spliit",
+      "profileNameNote": "משתמש בשם הפרופיל שלהם ב-Spliit Cloud",
       "saveChanges": "שמור שינויים",
       "updateSend": "עדכון ושליחה",
       "switchToEmailSend": "החלפה ושליחת ההזמנה",
@@ -2310,7 +2310,7 @@
     },
     "notifications": {
       "title": "התראות",
-      "description": "בחר היכן Spliit שולחת התראות על פעילות.",
+      "description": "בחר היכן Spliit Cloud שולחת התראות על פעילות.",
       "enable": "הפעל התראות דחיפה",
       "disable": "השבת התראות דחיפה",
       "enabled": "התראות הדחיפה מופעלות במכשיר זה.",
@@ -2318,7 +2318,7 @@
       "unsupported": "התראות דחיפה אינן נתמכות בדפדפן או בהקשר זה.",
       "notConfigured": "התראות דחיפה אינן זמינות בסביבה זו.",
       "permissionDenied": "ההתראות חסומות. אפשר אותן בהגדרות הדפדפן או המכשיר, ואז נסה שוב.",
-      "iosInstall": "ב-iPhone או ב-iPad, הוסף את Spliit למסך הבית לפני הפעלת התראות דחיפה.",
+      "iosInstall": "ב-iPhone או ב-iPad, הוסף את Spliit Cloud למסך הבית לפני הפעלת התראות דחיפה.",
       "error": "לא ניתן לעדכן את הגדרות התראות הדחיפה. נסה שוב.",
       "preferencesTitle": "העדפות התראות",
       "preferencesDescription": "בחירות אלה יחולו על פעילות עתידית בקבוצות ובהוצאות.",
@@ -2860,7 +2860,7 @@
   },
   "OfflineBanner": {
     "message": "אין חיבור לרשת. אפשר לעיין בנתונים, אך שינויים דורשים חיבור.",
-    "serverUnavailable": "לא ניתן להגיע ל־Spliit כרגע. מוצגים הנתונים שהורדו.",
+    "serverUnavailable": "לא ניתן להגיע ל־Spliit Cloud כרגע. מוצגים הנתונים שהורדו.",
     "reconnecting": "מתחבר מחדש… אפשר להמשיך לקרוא את הנתונים שהורדו."
   },
   "InstallPromotion": {
@@ -3201,8 +3201,8 @@
   },
   "PushOnboarding": {
     "title": "בחירת אופן קבלת העדכונים",
-    "description": "Spliit יכולה להתריע על פעילות בקבוצות ובהוצאות בזמן אמת.",
-    "pushBenefit": "התראות דחיפה יגיעו למכשיר זה גם כש-Spliit אינה פתוחה.",
+    "description": "Spliit Cloud יכולה להתריע על פעילות בקבוצות ובהוצאות בזמן אמת.",
+    "pushBenefit": "התראות דחיפה יגיעו למכשיר זה גם כש-Spliit Cloud אינה פתוחה.",
     "emailFallback": "דוא״ל זמין עבור ההתראות שבחרת לקבל שם; בחירות של דחיפה בלבד לא ינותבו מחדש.",
     "settingsHint": "אפשר לשנות את הבחירות האלה בכל עת בהגדרות. התראות דחיפה מופעלות בנפרד לכל מכשיר.",
     "enable": "הפעלת התראות דחיפה",
@@ -3318,25 +3318,25 @@
   },
   "OAuth": {
     "shell": {
-      "label": "הרשאת Spliit",
+      "label": "הרשאת Spliit Cloud",
       "mobileDescription": "בדיקת הגישה המבוקשת לחשבון",
-      "title": "חיבור אפליקציה לחשבון Spliit.",
+      "title": "חיבור אפליקציה לחשבון Spliit Cloud שלכם.",
       "previewBullet": "אפשר לנתק את האפליקציה דרך הגדרות החשבון",
       "authorityBullet": "אפשר לבחור לאילו נתונים האפליקציה תוכל לגשת",
       "validationBullet": "האימות, היתרות וההתראות הקיימים ממשיכים לחול"
     },
     "consent": {
-      "title": "לחבר את Spliit אל {client}?",
+      "title": "לחבר את Spliit Cloud אל {client}?",
       "description": "יש לעבור על החשבון וההרשאות שהאפליקציה מבקשת.",
       "connectionDetails": "פרטי החיבור",
-      "spliitAccount": "חשבון Spliit",
+      "spliitAccount": "חשבון Spliit Cloud",
       "connectingTo": "מתחבר אל",
       "assistantVia": "אפליקציית OAuth",
       "defaultClient": "האפליקציה הזו",
-      "defaultUser": "משתמש Spliit",
+      "defaultUser": "משתמש Spliit Cloud",
       "sessionUnavailable": "הסשן אינו זמין. חזרו והתחברו מחדש.",
       "sharedData": "מה ישותף",
-      "identityTitle": "זהות ה-Spliit שלכם",
+      "identityTitle": "זהות ה-Spliit Cloud שלכם",
       "identityDescription": "השם וכתובת האימייל שלכם מזהים את החשבון שמחובר. הסיסמה ושיטת ההתחברות שלכם לעולם אינן משותפות.",
       "groupsTitle": "הקשר של קבוצות והוצאות",
       "groupsDescription": "פרטי קבוצות, משתתפים, חלוקות שמורות, יתרות, נתונים סטטיסטיים ופעילות.",
@@ -3344,7 +3344,7 @@
       "expensesDescription": "האפליקציה תוכל ליצור רק את ההוצאה המדויקת שמוצגת בתצוגה המקדימה, ורק לאחר לחיצה על „יצירת הוצאה”.",
       "privacyTitle": "הערת פרטיות קצרה",
       "privacyDescription": "פרטים כספיים של קבוצה עשויים להיות רגישים. הם זמינים ל-{client} כל עוד החיבור קיים. אפשר לנתק אותו בכל רגע מהגדרות החשבון.",
-      "authorityNote": "Spliit נשאר מקור האמת. האימות, היתרות, היסטוריית הפעילות וההתראות הקיימים עדיין חלים.",
+      "authorityNote": "Spliit Cloud נשאר מקור האמת. האימות, היתרות, היסטוריית הפעילות וההתראות הקיימים עדיין חלים.",
       "allow": "אישור וחיבור",
       "cancel": "ביטול",
       "missingRequest": "בקשת ההרשאה חסרה. יש לחזור לאפליקציה ולהתחיל את החיבור מחדש.",
@@ -3359,7 +3359,7 @@
       "expensesDeleteTitle": "מחיקת הוצאות",
       "expensesDeleteDescription": "למחוק הוצאות לצמיתות ולבצע שינויים שמוחקים נתונים, כמו קיצור סדרה חוזרת. לא ניתן לבטל.",
       "unknownScopes": "האפליקציה מבקשת הרשאה ש-Spliit Cloud לא מזהה ({scopes}), ולכן אי אפשר לאשר אותה כאן. בקש מיוצר האפליקציה לבדוק את ההרשאות שהיא מבקשת.",
-      "clientUnavailable": "לא ניתן היה לאמת את האפליקציה ב-Spliit. יש לחזור לאפליקציה ולהתחיל את החיבור מחדש.",
+      "clientUnavailable": "לא ניתן היה לאמת את האפליקציה ב-Spliit Cloud. יש לחזור לאפליקציה ולהתחיל את החיבור מחדש.",
       "clientWebsite": "אתר האפליקציה",
       "privacyPolicy": "מדיניות פרטיות",
       "redirectsTo": "מפנה אל",
@@ -3369,10 +3369,10 @@
     "login": {
       "missingTitle": "בקשת הרשאה חסרה",
       "missingDescription": "יש לחזור לאפליקציה ולהתחיל את החיבור מחדש.",
-      "missingError": "Spliit לא קיבל את פרטי הרשאת OAuth.",
+      "missingError": "Spliit Cloud לא קיבל את פרטי הרשאת OAuth.",
       "connectingTitle": "החשבון שלכם מתחבר",
       "connectingDescription": "נמצא סשן Spliit Cloud הקיים שלכם. אין צורך להתחבר שוב.",
-      "checkingSession": "בודק את סשן Spliit שלכם…",
+      "checkingSession": "בודק את סשן Spliit Cloud שלכם…",
       "continuing": "ממשיך באופן מאובטח…",
       "signInTitle": "התחברו כדי להתחבר",
       "signInDescription": "יש להשתמש בדרך הרגילה להתחברות ל-Spliit Cloud. האפליקציה לעולם לא תקבל את הסיסמה או את פרטי ההתחברות."
@@ -3387,7 +3387,7 @@
       "copied": "הועתק ללוח",
       "codeLabel": "קוד הרשאה",
       "stateLabel": "מצב",
-      "warning": "הדביקו זאת רק בסוכן או באפליקציה שאתם סומכים עליהם. כל מי שמחזיק בזה יכול להתחבר לחשבון Spliit שלכם עד לפקיעת התוקף.",
+      "warning": "הדביקו זאת רק בסוכן או באפליקציה שאתם סומכים עליהם. כל מי שמחזיק בזה יכול להתחבר לחשבון Spliit Cloud שלכם עד לפקיעת התוקף.",
       "expiryNote": "תוקף הקוד יפוג 10 דקות לאחר שהונפק.",
       "errorTitle": "החיבור לא הושלם",
       "errorDescription": "שרת ההרשאה החזיר שגיאה במקום קוד.",
@@ -3538,7 +3538,7 @@
   },
   "AIExpense": {
     "title": "סקירת הוצאה בעזרת AI",
-    "description": "בדקו מה Spliit הבין לפני הוספת ההוצאה הזו.",
+    "description": "בדקו מה Spliit Cloud הבין לפני הוספת ההוצאה הזו.",
     "created": "ההוצאה נוצרה.",
     "createError": "לא ניתן ליצור את ההוצאה.",
     "missing": "לא זוהה",
@@ -3594,7 +3594,7 @@
       },
       "idea": {
         "title": "הצעת רעיון",
-        "description": "תארו בעיה שכדאי לפתור או שיפור שיהפוך את Spliit לשימושי יותר.",
+        "description": "תארו בעיה שכדאי לפתור או שיפור שיהפוך את Spliit Cloud לשימושי יותר.",
         "action": "פתיחת טופס רעיון"
       },
       "feedback": {
@@ -3686,7 +3686,7 @@
     "hintTapToCreateGroup": "אני {name} — גע בי כדי ליצור קבוצה.",
     "billName": "ביל",
     "offlineMessage": "אני לא יכול ליצור כלום כשאין חיבור לרשת.",
-    "serverUnreachableMessage": "אני לא מצליח להתחבר לשרת Spliit כרגע — החיבור שלך נראה תקין, אז הבעיה אצלנו."
+    "serverUnreachableMessage": "אני לא מצליח להתחבר לשרת Spliit Cloud כרגע — החיבור שלך נראה תקין, אז הבעיה אצלנו."
   },
   "CreateSettlement": {
     "description": "סקור את התשלום לפני רישומו.",
@@ -3714,7 +3714,7 @@
     "signup": {
       "title": "חשבון אנונימי",
       "description": "צור חשבון אנונימי ללא כתובת דוא\"ל, סיסמה או כניסה חברתית.",
-      "warning": "הנתונים שלך מאוחסנים ב-Spliit Cloud, אך לחשבון זה אין אימייל או שיטת שחזור אחרת. עליך לשמור את קישור הכניסה המוצג הבא.",
+      "warning": "השתמשו ב-Spliit Cloud ללא כתובת דוא\"ל, סיסמה או כניסה חברתית. לפני שמתחילים, תצטרכו לשמור קישור כניסה קבוע.",
       "cancel": "בטל",
       "recoverDescription": "הדבק את קישור הכניסה השמור שלך כדי לחזור לחשבון אנונימי קיים.",
       "recoveryOnlyHelp": "חשבונות אנונימיים חדשים אינם זמינים כאן. הדבק את קישור הכניסה השמור המלא שלך כדי להמשיך.",
@@ -3757,7 +3757,7 @@
       "unavailableDescription": "צור קישור חלופי במפורש, ולאחר מכן שמור אותו לפני שתמשיך.",
       "generateReplacement": "צור קישור חלופי",
       "error": "משהו השתבש. אנא נסה שוב.",
-      "start": "התחל להשתמש ב-Spliit"
+      "start": "התחל להשתמש ב-Spliit Cloud"
     },
     "recovery": {
       "warningTitle": "שמור את זה במקום בטוח",
@@ -3862,7 +3862,7 @@
     "scopeExpensesWrite": "הוספת הוצאות עם תצוגה מקדימה"
   },
   "PwaUpdate": {
-    "waitingFailed": "לא ניתן להחיל את העדכון ב-Spliit.",
+    "waitingFailed": "לא ניתן להחיל את העדכון ב-Spliit Cloud.",
     "retry": "נסה שוב",
     "dismiss": "סגירה"
   },
@@ -4244,7 +4244,7 @@
       "fallbackTo": "גיבוי ל־{label}",
       "fields": {
         "categorySource": {
-          "description": "קריאת קטגוריית הבנק כדי שניתן יהיה למפות כל ערך ייחודי לקטגוריית Spliit.",
+          "description": "קריאת קטגוריית הבנק כדי שניתן יהיה למפות כל ערך ייחודי לקטגוריית Spliit Cloud.",
           "title": "מקור הקטגוריה"
         },
         "dateTime": {
@@ -4522,7 +4522,7 @@
     "add": "הוספת וובהוק",
     "url": "כתובת URL של נקודת הקצה",
     "loading": "טוען וובהוקים…",
-    "empty": "עדיין אין וובהוקים. הוסיפו אחד כדי להתחיל לשלב את Spliit עם שירות אחר.",
+    "empty": "עדיין אין וובהוקים. הוסיפו אחד כדי להתחיל לשלב את Spliit Cloud עם שירות אחר.",
     "secretTitle": "שמירת סוד החתימה שלכם",
     "secretDescription": "הסוד הזה מוצג פעם אחת בלבד. שמרו אותו באופן מאובטח לפני סגירת תיבת הדו-שיח.",
     "copy": "העתקת הסוד",
@@ -4604,7 +4604,7 @@
     "offlineSearchHint": "חיפוש לא מקוון משתמש בטקסט מדויק; סובלנות לשגיאות הקלדה צריכה חיבור.",
     "groupsNotDownloaded": "{count} קבוצות לא הורדו",
     "groupsNeedUpdating": "{count} צריכות עדכון",
-    "storageBlocked": "סגור לשוניות Spliit אחרות כדי לסיים את עדכון האחסון הלא מקוון.",
+    "storageBlocked": "סגור לשוניות Spliit Cloud אחרות כדי לסיים את עדכון האחסון הלא מקוון.",
     "storageQuota": "האחסון הלא מקוון מלא. נסה שוב או נקה הורדות כדי לפנות מקום.",
     "statusBlocked": "אחסון לא מקוון חסום",
     "statusQuotaError": "אחסון לא מקוון מלא",
@@ -4623,12 +4623,12 @@
     "dataStale": "ייתכן שחלק מהנתונים אינם מעודכנים."
   },
   "ApiErrorEmptyState": {
-    "title": "Spliit אינו זמין כרגע",
-    "description": "לא ניתן להתחבר לשרת Spliit כרגע. החיבור שלך נראה תקין — יש לנסות שוב בעוד רגע.",
+    "title": "Spliit Cloud אינו זמין כרגע",
+    "description": "לא ניתן להתחבר לשרת Spliit Cloud כרגע. החיבור שלך נראה תקין — יש לנסות שוב בעוד רגע.",
     "retry": "נסו שוב"
   },
   "ApiStatusBanner": {
-    "message": "לא ניתן להתחבר ל־Spliit כרגע. החיבור שלך נראה תקין — הבעיה בצד שלנו.",
+    "message": "לא ניתן להתחבר ל־Spliit Cloud כרגע. החיבור שלך נראה תקין — הבעיה בצד שלנו.",
     "statusLink": "בדיקת סטטוס"
   },
   "AccountDeletionBanner": {
@@ -4678,7 +4678,7 @@
       },
       "data-portability": {
         "title": "ייבוא וייצוא",
-        "description": "הביאו היסטוריה מקובצי Splitwise בפורמט CSV, מדפי חשבון בנק ב־CSV עם אשף מיפוי וזיהוי כפילויות, מ־Cospend או מחבילות Spliit. התמיכה ב־Tricount וב־Settle Up נמצאת במפת הדרכים. הוציאו הכול בחזרה כ־CSV, כדוחות PDF להדפסה, או כארכיוני ZIP מלאים כולל מסמכים."
+        "description": "הביאו היסטוריה מקובצי Splitwise בפורמט CSV, מדפי חשבון בנק ב־CSV עם אשף מיפוי וזיהוי כפילויות, מ־Cospend או מחבילות Spliit Cloud. התמיכה ב־Tricount וב־Settle Up נמצאת במפת הדרכים. הוציאו הכול בחזרה כ־CSV, כדוחות PDF להדפסה, או כארכיוני ZIP מלאים כולל מסמכים."
       },
       "expenses-splits": {
         "title": "הוצאות וחלוקות חכמות",
@@ -4694,7 +4694,7 @@
       },
       "offline-app": {
         "title": "אפליקציה ניתנת להתקנה",
-        "description": "התקינו את Spliit כאפליקציה על כל מכשיר לטעינה מיידית ולחוויית מסך מלא. הקבוצות שלכם נשארות קריאות בלי חיבור, והוצאות חדשות ממתינות בתור מקומי ומסתונכרנות אוטומטית כשתחזרו — הרחבת העריכה בלי חיבור נמצאת במפת הדרכים."
+        "description": "התקינו את Spliit Cloud כאפליקציה על כל מכשיר לטעינה מיידית ולחוויית מסך מלא. הקבוצות שלכם נשארות קריאות בלי חיבור, והוצאות חדשות ממתינות בתור מקומי ומסתונכרנות אוטומטית כשתחזרו — הרחבת העריכה בלי חיבור נמצאת במפת הדרכים."
       },
       "share-identity": {
         "title": "הזמנות וזהות הקבוצה",

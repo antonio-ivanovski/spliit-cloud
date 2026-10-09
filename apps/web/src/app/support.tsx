@@ -59,7 +59,7 @@ export default function SupportPage() {
         <h3>Connected applications</h3>
         <p>
           If you connected ChatGPT, Claude, or another OAuth application to your
-          Spliit account, review its access under account settings and
+          Spliit Cloud account, review its access under account settings and
           disconnect it there if you no longer use it. Mention the application
           name and when you connected it when asking for help with a connection.
         </p>

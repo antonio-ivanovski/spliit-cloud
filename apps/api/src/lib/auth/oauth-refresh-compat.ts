@@ -25,7 +25,7 @@ function requestedResources(resource: unknown): string[] | null {
 
 function storedRefreshToken(rawToken: string): string {
   // Better Auth's default `storeTokens: "hashed"` representation is an
-  // unpadded base64url SHA-256 digest. Spliit does not override token storage
+  // unpadded base64url SHA-256 digest. Spliit Cloud does not override token storage
   // or add a refresh-token prefix, so this resolves both 1.6 and 1.7 tokens.
   return createHash('sha256').update(rawToken).digest('base64url')
 }

@@ -59,8 +59,8 @@
       "scanning": "Zoeken naar een QR-code…",
       "noCamera": "Er is geen camera gevonden op dit apparaat. Scan de code in plaats daarvan met de camera-app van je telefoon.",
       "permissionDenied": "Cameratoegang is geweigerd. Sta cameratoegang toe in je browserinstellingen of scan de code met de camera-app van je telefoon.",
-      "invalidCode": "Deze code is geen Spliit-groepsuitnodiging. Scan de QR-code van de uitnodiger opnieuw.",
-      "foreignTitle": "Deze code verwijst naar een andere Spliit",
+      "invalidCode": "Deze code is geen Spliit Cloud-groepsuitnodiging. Scan de QR-code van de uitnodiger opnieuw.",
+      "foreignTitle": "Deze code verwijst naar een andere Spliit Cloud",
       "foreignDescription": "Hiermee wordt {origin} in deze browser geopend. Ga alleen verder als je de uitnodiger vertrouwt die hem heeft laten zien.",
       "foreignConfirm": "Link openen",
       "foreignCancel": "Ga terug"
@@ -206,7 +206,7 @@
     "exportPdfError": "PDF kon niet worden gegenereerd. Probeer het opnieuw.",
     "exportPdfSuccess": "PDF-rapport gedownload.",
     "exportPdfRetryBounds": "Opnieuw proberen",
-    "exportBundleTitle": "Spliit-back-uppakket",
+    "exportBundleTitle": "Spliit Cloud-back-uppakket",
     "exportBundlePurpose": "Draagbare groepsgegevens met uitgaven, instellingen en bijgevoegde documenten.",
     "exportBundleAction": "Pakket downloaden",
     "globalArchived": "gearchiveerd",
@@ -324,7 +324,7 @@
       "unknownGroup": "Onbekende groep",
       "sentOn": "Verzonden {date}"
     },
-    "linkInvitationBannerDescription": "{inviter} heeft je uitgenodigd om lid te worden van {groupName} op Spliit.",
+    "linkInvitationBannerDescription": "{inviter} heeft je uitgenodigd om lid te worden van {groupName} op Spliit Cloud.",
     "linkInvitationSingleUse": "Deze link kan maar één keer gebruikt worden. Zodra je hem accepteert, werkt hij niet meer.",
     "linkInvitationTemporaryName": "Je wordt lid als {name}.",
     "linkInvitationAlreadyMemberTitle": "Je zit al in {groupName}",
@@ -409,7 +409,7 @@
         "shareAriaLabel": "Deel uitnodigingslink",
         "emailInvitesTitle": "E-mailuitnodigingen verzonden",
         "emailInvitesDescription": "De server heeft een e-mail gestuurd naar de volgende personen. Ze zien een Accepteren/Afwijzen-banner op de groepspagina wanneer ze inloggen.",
-        "shareTitle": "Word lid van mijn Spliit-groep",
+        "shareTitle": "Word lid van mijn Spliit Cloud-groep",
         "shareText": "Word lid van onze uitgavengroep op Spliit Cloud — {name}. Open deze link om te accepteren: {url}",
         "copyLink": "Uitnodigingslink kopiëren",
         "copied": "Gekopieerd"
@@ -475,7 +475,7 @@
         "settleUpComingTitle": "Settle Up-import is onderweg",
         "settleUpComingDescription": "Ondersteuning voor Settle Up CSV-export staat op de routekaart.",
         "dropFile": "Sleep een JSON- of CSV-bestand, of klik om te selecteren",
-        "dropFileDescription": "JSON behoudt elk bedrag en elke betaler exact. CSV is een reserve — Spliit rondt elk bedrag per deelnemer af op 2 decimalen.",
+        "dropFileDescription": "JSON behoudt elk bedrag en elke betaler exact. CSV is een reserve — Spliit Cloud rondt elk bedrag per deelnemer af op 2 decimalen.",
         "or": "of",
         "pasteUrl": "Plak een spliit.app-URL",
         "urlDescription": "Onze server haalt de groep op via het openbare exporteindpunt van spliit.app namens jou.",
@@ -485,7 +485,7 @@
         "receiptWarningTitle": "Bonafbeeldingen worden niet geïmporteerd.",
         "receiptWarningDescription": "De spliit.app-export bevat geen bonafbeeldingen. Upload ze opnieuw in de doelgroep als je ze nodig hebt.",
         "invalidUrl": "Plak een geldige spliit.app-groeps-URL",
-        "notFoundUrl": "Spliit heeft deze groep niet gevonden",
+        "notFoundUrl": "Spliit Cloud heeft deze groep niet gevonden",
         "fetchUrlError": "Bron ophalen mislukt",
         "fileReadError": "Bestand lezen mislukt",
         "appToCloudDescription": "Vervang .app door .cloud in elke spliit.app-groeps-URL om deze te importeren in Spliit Cloud.",
@@ -2009,7 +2009,7 @@
       "friendAlreadyMember": "Al lid",
       "noFriends": "Nog geen vrienden. Nodig iemand uit via het tabblad E-mail.",
       "friendAlreadyInvited": "Al uitgenodigd",
-      "noAccountDescription": "Voeg iemand aan de uitgaven toe zonder die persoon voor Spliit uit te nodigen. Je kunt die persoon later aan een account koppelen.",
+      "noAccountDescription": "Voeg iemand aan de uitgaven toe zonder die persoon voor Spliit Cloud uit te nodigen. Je kunt die persoon later aan een account koppelen.",
       "temporaryNameRequired": "Tijdelijke naam",
       "noAccountNameDescription": "Wordt in uitgaven en saldi weergegeven totdat deze deelnemer aan een account is gekoppeld.",
       "addParticipant": "Deelnemer toevoegen",
@@ -2109,7 +2109,7 @@
         },
         "unsettled": {
           "title": "Je hebt niet-verrekende saldi",
-          "description": "Spliit maakt verrekeningsbetalingen aan voor jouw saldi voordat je vertrekt. De saldi van andere deelnemers veranderen niet."
+          "description": "Spliit Cloud maakt verrekeningsbetalingen aan voor jouw saldi voordat je vertrekt. De saldi van andere deelnemers veranderen niet."
         }
       },
       "error": {
@@ -2195,7 +2195,7 @@
       "emailPlaceholder": "account@voorbeeld.nl",
       "emailChangeWarning": "De huidige ontvanger kan deze uitnodiging niet meer accepteren.",
       "nameLabel": "Weergavenaam",
-      "profileNameNote": "Gebruikt hun Spliit-profielnaam",
+      "profileNameNote": "Gebruikt hun Spliit Cloud-profielnaam",
       "saveChanges": "Wijzigingen opslaan",
       "updateSend": "Bijwerken & versturen",
       "switchToEmailSend": "Wisselen & uitnodiging sturen",
@@ -2332,7 +2332,7 @@
     },
     "notifications": {
       "title": "Meldingen",
-      "description": "Kies waar Spliit meldingen over activiteiten naartoe stuurt.",
+      "description": "Kies waar Spliit Cloud meldingen over activiteiten naartoe stuurt.",
       "enable": "Pushmeldingen inschakelen",
       "disable": "Pushmeldingen uitschakelen",
       "enabled": "Pushmeldingen zijn ingeschakeld op dit apparaat.",
@@ -2340,7 +2340,7 @@
       "unsupported": "Pushmeldingen worden niet ondersteund door deze browser of context.",
       "notConfigured": "Pushmeldingen zijn niet beschikbaar in deze omgeving.",
       "permissionDenied": "Meldingen zijn geblokkeerd. Sta ze toe in je browser- of apparaatinstellingen en probeer het opnieuw.",
-      "iosInstall": "Voeg Spliit op een iPhone of iPad eerst toe aan je beginscherm voordat je pushmeldingen inschakelt.",
+      "iosInstall": "Voeg Spliit Cloud op een iPhone of iPad eerst toe aan je beginscherm voordat je pushmeldingen inschakelt.",
       "error": "Pushmeldinginstellingen konden niet worden bijgewerkt. Probeer het opnieuw.",
       "preferencesTitle": "Meldingsvoorkeuren",
       "preferencesDescription": "Deze keuzes gelden voor toekomstige groeps- en uitgavenactiviteit.",
@@ -2881,7 +2881,7 @@
   },
   "OfflineBanner": {
     "message": "Je bent offline. Je kunt gegevens bekijken, maar voor wijzigingen heb je een verbinding nodig.",
-    "serverUnavailable": "Spliit is nu niet bereikbaar. Gedownloade gegevens worden getoond.",
+    "serverUnavailable": "Spliit Cloud is nu niet bereikbaar. Gedownloade gegevens worden getoond.",
     "reconnecting": "Opnieuw verbinden… Je kunt gedownloade gegevens blijven lezen."
   },
   "InstallPromotion": {
@@ -3246,8 +3246,8 @@
   },
   "PushOnboarding": {
     "title": "Kies hoe je op de hoogte wilt blijven",
-    "description": "Spliit kan je direct op de hoogte brengen van groeps- en uitgavenactiviteit.",
-    "pushBenefit": "Pushmeldingen komen op dit apparaat aan, ook als Spliit niet geopend is.",
+    "description": "Spliit Cloud kan je direct op de hoogte brengen van groeps- en uitgavenactiviteit.",
+    "pushBenefit": "Pushmeldingen komen op dit apparaat aan, ook als Spliit Cloud niet geopend is.",
     "emailFallback": "E-mail is beschikbaar voor meldingen die je daar wilt ontvangen; keuzes met alleen push worden niet omgeleid.",
     "settingsHint": "Je kunt deze keuzes altijd wijzigen in Instellingen. Pushmeldingen worden per apparaat afzonderlijk ingeschakeld.",
     "enable": "Pushmeldingen inschakelen",
@@ -3363,17 +3363,17 @@
   },
   "OAuth": {
     "consent": {
-      "title": "Spliit verbinden met {client}?",
+      "title": "Spliit Cloud verbinden met {client}?",
       "description": "Controleer het account en de rechten die deze app aanvraagt.",
       "connectionDetails": "Verbindingsdetails",
-      "spliitAccount": "Spliit-account",
+      "spliitAccount": "Spliit Cloud-account",
       "connectingTo": "Verbinden met",
       "assistantVia": "OAuth-app",
       "defaultClient": "deze app",
-      "defaultUser": "Spliit-gebruiker",
+      "defaultUser": "Spliit Cloud-gebruiker",
       "sessionUnavailable": "Sessie niet beschikbaar. Ga terug en meld je opnieuw aan.",
       "sharedData": "Wat wordt gedeeld",
-      "identityTitle": "Je Spliit-identiteit",
+      "identityTitle": "Je Spliit Cloud-identiteit",
       "identityDescription": "Je naam en e-mailadres identificeren het account dat wordt verbonden. Je wachtwoord en aanmeldmethode worden nooit gedeeld.",
       "groupsTitle": "Context van groep en uitgaven",
       "groupsDescription": "Groepsgegevens, deelnemers, opgeslagen verdelingen, saldi, statistieken en activiteit.",
@@ -3381,7 +3381,7 @@
       "expensesDescription": "Deze app mag alleen de exacte uitgave aanmaken die in het voorbeeld wordt getoond, nadat je op Uitgave aanmaken hebt gedrukt.",
       "privacyTitle": "Een korte privacyopmerking",
       "privacyDescription": "Financiële groepsgegevens kunnen gevoelig zijn. Ze blijven beschikbaar voor {client} zolang de verbinding bestaat. Je kunt die op elk moment verbreken via je accountinstellingen.",
-      "authorityNote": "Spliit blijft de bron van waarheid. Bestaande validatie, saldi, activiteitengeschiedenis en meldingen blijven van toepassing.",
+      "authorityNote": "Spliit Cloud blijft de bron van waarheid. Bestaande validatie, saldi, activiteitengeschiedenis en meldingen blijven van toepassing.",
       "allow": "Toestaan en verbinden",
       "cancel": "Annuleren",
       "missingRequest": "Het autorisatieverzoek ontbreekt. Ga terug naar de app en start de verbinding opnieuw.",
@@ -3396,7 +3396,7 @@
       "expensesDeleteTitle": "Uitgaven verwijderen",
       "expensesDeleteDescription": "Uitgaven definitief verwijderen en wijzigingen doorvoeren die gegevens wissen, zoals het inkorten van een terugkerende reeks. Dit kan niet ongedaan worden gemaakt.",
       "unknownScopes": "Deze app vraagt een toestemming die Spliit Cloud niet kent ({scopes}), dus hij kan hier niet worden goedgekeurd. Vraag de maker om de gevraagde toestemmingen na te kijken.",
-      "clientUnavailable": "Spliit kon deze app niet verifiëren. Ga terug naar de app en start de verbinding opnieuw.",
+      "clientUnavailable": "Spliit Cloud kon deze app niet verifiëren. Ga terug naar de app en start de verbinding opnieuw.",
       "clientWebsite": "Website van de app",
       "privacyPolicy": "Privacybeleid",
       "redirectsTo": "Stuurt door naar",
@@ -3406,18 +3406,18 @@
     "login": {
       "missingTitle": "Autorisatieverzoek ontbreekt",
       "missingDescription": "Ga terug naar de app en start de verbinding opnieuw.",
-      "missingError": "Spliit heeft de OAuth-autorisatiegegevens niet ontvangen.",
+      "missingError": "Spliit Cloud heeft de OAuth-autorisatiegegevens niet ontvangen.",
       "connectingTitle": "Je account verbinden",
       "connectingDescription": "Je bestaande Spliit Cloud-sessie is gevonden. Je hoeft je niet opnieuw aan te melden.",
-      "checkingSession": "Je Spliit-sessie controleren…",
+      "checkingSession": "Je Spliit Cloud-sessie controleren…",
       "continuing": "Veilig doorgaan…",
       "signInTitle": "Aanmelden om te verbinden",
       "signInDescription": "Gebruik je gebruikelijke aanmeldmethode voor Spliit Cloud. De app ontvangt nooit je wachtwoord of inloggegevens."
     },
     "shell": {
-      "label": "Spliit-autorisatie",
+      "label": "Spliit Cloud-autorisatie",
       "mobileDescription": "Controleer de gevraagde toegang tot het account",
-      "title": "Koppel een app aan je Spliit-account.",
+      "title": "Koppel een app aan je Spliit Cloud-account.",
       "previewBullet": "Je kunt de app loskoppelen via de accountinstellingen.",
       "authorityBullet": "Je bepaalt waar deze app toegang toe krijgt.",
       "validationBullet": "Bestaande validatie, saldi en meldingen blijven intact"
@@ -3432,7 +3432,7 @@
       "copied": "Gekopieerd naar klembord",
       "codeLabel": "Autorisatiecode",
       "stateLabel": "Stateparameter",
-      "warning": "Plak dit alleen in de agent of app die je vertrouwt. Iedereen die dit in handen heeft, kan verbinding maken met je Spliit-account totdat het verloopt.",
+      "warning": "Plak dit alleen in de agent of app die je vertrouwt. Iedereen die dit in handen heeft, kan verbinding maken met je Spliit Cloud-account totdat het verloopt.",
       "expiryNote": "Deze code verloopt 10 minuten nadat deze is uitgegeven.",
       "errorTitle": "Verbinding is niet voltooid",
       "errorDescription": "De autorisatieserver heeft een fout geretourneerd in plaats van een code.",
@@ -3583,7 +3583,7 @@
   },
   "AIExpense": {
     "title": "AI-uitgave controleren",
-    "description": "Controleer wat Spliit heeft begrepen voordat je deze uitgave toevoegt.",
+    "description": "Controleer wat Spliit Cloud heeft begrepen voordat je deze uitgave toevoegt.",
     "created": "Uitgave gemaakt.",
     "createError": "De uitgave kon niet worden gemaakt.",
     "missing": "Niet herkend",
@@ -3639,7 +3639,7 @@
       },
       "idea": {
         "title": "Een idee voorstellen",
-        "description": "Beschrijf een probleem dat het oplossen waard is of een verbetering die Spliit nuttiger zou maken.",
+        "description": "Beschrijf een probleem dat het oplossen waard is of een verbetering die Spliit Cloud nuttiger zou maken.",
         "action": "Ideeformulier openen"
       },
       "feedback": {
@@ -3731,7 +3731,7 @@
     "hintTapToCreateGroup": "Ik ben {name} — tik op me om een groep aan te maken.",
     "billName": "Bill",
     "offlineMessage": "Ik kan niets aanmaken zolang je offline bent.",
-    "serverUnreachableMessage": "Ik kan de Spliit-server op dit moment niet bereiken — je verbinding lijkt in orde, dus het ligt aan ons."
+    "serverUnreachableMessage": "Ik kan de Spliit Cloud-server op dit moment niet bereiken — je verbinding lijkt in orde, dus het ligt aan ons."
   },
   "CreateSettlement": {
     "description": "Controleer de betaling voordat je deze vastlegt.",
@@ -3759,7 +3759,7 @@
     "signup": {
       "title": "Anoniem account",
       "description": "Maak een anoniem account zonder e-mailadres, wachtwoord of sociale login.",
-      "warning": "Uw gegevens worden opgeslagen in Spliit Cloud, maar dit account heeft geen e-mail of andere herstelmethode. U moet de hieronder weergegeven inloglink opslaan.",
+      "warning": "Gebruik Spliit Cloud zonder e-mailadres, wachtwoord of sociale login. Voordat u begint, moet u een permanente inloglink opslaan.",
       "cancel": "Annuleer",
       "recoverDescription": "Plak uw opgeslagen inloglink om terug te keren naar een bestaand anoniem account.",
       "recoveryOnlyHelp": "Nieuwe anonieme accounts zijn hier niet beschikbaar. Plak uw volledige opgeslagen inloglink om door te gaan.",
@@ -3802,7 +3802,7 @@
       "unavailableDescription": "Genereer expliciet een vervangende link en sla deze op voordat u doorgaat.",
       "generateReplacement": "Genereer een vervangende link",
       "error": "Er is iets misgegaan. Probeer het opnieuw.",
-      "start": "Begin met het gebruik van Split"
+      "start": "Begin met het gebruik van Spliit Cloud"
     },
     "recovery": {
       "warningTitle": "Bewaar dit ergens veilig",
@@ -3907,7 +3907,7 @@
     "scopeExpensesWrite": "Uitgaven toevoegen met voorbeeld"
   },
   "PwaUpdate": {
-    "waitingFailed": "Spliit kon de update niet toepassen.",
+    "waitingFailed": "Spliit Cloud kon de update niet toepassen.",
     "retry": "Opnieuw proberen",
     "dismiss": "Sluiten"
   },
@@ -4288,7 +4288,7 @@
       "fallbackTo": "fallback naar {label}",
       "fields": {
         "categorySource": {
-          "description": "Lees de bankcategorie zodat elke unieke waarde aan een Spliit-categorie kan worden gekoppeld.",
+          "description": "Lees de bankcategorie zodat elke unieke waarde aan een Spliit Cloud-categorie kan worden gekoppeld.",
           "title": "Categoriebron"
         },
         "dateTime": {
@@ -4557,7 +4557,7 @@
     "add": "Webhook toevoegen",
     "url": "Eindpunt-URL",
     "loading": "Webhooks laden…",
-    "empty": "Nog geen webhooks. Voeg er een toe om Spliit met een andere dienst te integreren.",
+    "empty": "Nog geen webhooks. Voeg er een toe om Spliit Cloud met een andere dienst te integreren.",
     "secretTitle": "Bewaar je ondertekeningsgeheim",
     "secretDescription": "Dit geheim wordt maar één keer getoond. Bewaar het veilig voordat je dit dialoogvenster sluit.",
     "copy": "Geheim kopiëren",
@@ -4639,7 +4639,7 @@
     "offlineSearchHint": "Offline zoeken gebruikt exacte tekst; tolerantie voor typefouten heeft een verbinding nodig.",
     "groupsNotDownloaded": "{count} groep(en) niet gedownload",
     "groupsNeedUpdating": "{count} moeten worden bijgewerkt",
-    "storageBlocked": "Sluit andere Spliit-tabbladen om het bijwerken van de offline-opslag te voltooien.",
+    "storageBlocked": "Sluit andere Spliit Cloud-tabbladen om het bijwerken van de offline-opslag te voltooien.",
     "storageQuota": "Offline-opslag is vol. Probeer opnieuw of verwijder downloads om ruimte vrij te maken.",
     "statusBlocked": "Offline-opslag geblokkeerd",
     "statusQuotaError": "Offline-opslag vol",
@@ -4658,12 +4658,12 @@
     "dataStale": "Sommige gegevens zijn mogelijk verouderd."
   },
   "ApiErrorEmptyState": {
-    "title": "Spliit is niet beschikbaar",
-    "description": "We kunnen de Spliit-server op dit moment niet bereiken. Je verbinding lijkt in orde — probeer het over een moment opnieuw.",
+    "title": "Spliit Cloud is niet beschikbaar",
+    "description": "We kunnen de Spliit Cloud-server op dit moment niet bereiken. Je verbinding lijkt in orde — probeer het over een moment opnieuw.",
     "retry": "Probeer opnieuw"
   },
   "ApiStatusBanner": {
-    "message": "Spliit is op dit moment niet bereikbaar. Je verbinding lijkt in orde — het probleem ligt bij ons.",
+    "message": "Spliit Cloud is op dit moment niet bereikbaar. Je verbinding lijkt in orde — het probleem ligt bij ons.",
     "statusLink": "Status bekijken"
   },
   "AccountDeletionBanner": {
@@ -4713,7 +4713,7 @@
       },
       "data-portability": {
         "title": "Importeren & exporteren",
-        "description": "Neem je geschiedenis mee uit Splitwise-CSV, bankafschrift-CSVs met een koppelwizard en dubbeledetectie, Cospend of Spliit-bundels. Tricount- en Settle Up-ondersteuning staat op de roadmap. Exporteer alles weer als CSV, afdrukbare pdf-rapporten of volledige ZIP-archieven inclusief documenten."
+        "description": "Neem je geschiedenis mee uit Splitwise-CSV, bankafschrift-CSVs met een koppelwizard en dubbeledetectie, Cospend of Spliit Cloud-bundels. Tricount- en Settle Up-ondersteuning staat op de roadmap. Exporteer alles weer als CSV, afdrukbare pdf-rapporten of volledige ZIP-archieven inclusief documenten."
       },
       "expenses-splits": {
         "title": "Uitgaven & slimme verdelingen",
@@ -4729,7 +4729,7 @@
       },
       "offline-app": {
         "title": "Installeerbare app",
-        "description": "Installeer Spliit als app op elk apparaat voor direct laden en een volledige-schermervaring. Je groepen blijven offline leesbaar en nieuwe uitgaven worden lokaal in de wachtrij geplaatst en gesynchroniseerd bij het opnieuw verbinden — bredere offline-bewerking staat op de roadmap."
+        "description": "Installeer Spliit Cloud als app op elk apparaat voor direct laden en een volledige-schermervaring. Je groepen blijven offline leesbaar en nieuwe uitgaven worden lokaal in de wachtrij geplaatst en gesynchroniseerd bij het opnieuw verbinden — bredere offline-bewerking staat op de roadmap."
       },
       "share-identity": {
         "title": "Uitnodigingen & groepsidentiteit",

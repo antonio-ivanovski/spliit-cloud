@@ -1,8 +1,8 @@
 /**
  * Integration test client.
  *
- * Provides helpers to connect to an existing Spliit API server (expected on
- * http://localhost:3101 by default) for integration tests.
+ * Provides helpers to connect to an existing Spliit Cloud API server (expected
+ * on http://localhost:3101 by default) for integration tests.
  *
  * Prerequisites: - API server must be running on the expected port. -
  * PostgreSQL test database must be running and migrated.

@@ -1,10 +1,10 @@
-# Spliit localization guide
+# Spliit Cloud localization guide
 
 English (`apps/web/src/messages/en-US.json`) defines product meaning; it is not a sentence template to translate word for word. Review the component using a key before translating it, preserve placeholders and rich-text tags exactly, and prefer language people use in expense-sharing and banking apps.
 
 ## Product terms
 
-| English concept    | Meaning in Spliit                                                           | Translation rule                                                                                                         |
+| English concept    | Meaning in Spliit Cloud                                                     | Translation rule                                                                                                         |
 | ------------------ | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | participant        | A person represented in an expense, with or without app access              | Do not translate as “member” merely because the person belongs to a group.                                               |
 | member             | A person with access to a group                                             | Reserve the local membership term for access, roles, invitations, and administration.                                    |
@@ -14,7 +14,7 @@ English (`apps/web/src/messages/en-US.json`) defines product meaning; it is not 
 | settlement payment | The default title of a recorded settlement expense                          | Same exclusive settlement term as above; do not introduce a second synonym.                                              |
 | friend expenses    | A one-to-one shared-expense space                                           | Translate contextually (“expenses with a friend”), never as an accounting book unless that is natural product language.  |
 
-Keep Spliit Cloud, Spliit, GitHub, Splitwise, Settle Up, and Frankfurter as product names. Money amounts, email addresses, URLs, and formulas are not translated. Domain identifiers such as `paidFor` may remain in code. `isReimbursement` appears only as a legacy import alias.
+Keep Spliit Cloud, GitHub, Splitwise, Settle Up, and Frankfurter as product names. Bare Spliit refers only to the original upstream project (`spliit.app`) and its import source, never to this app. Money amounts, email addresses, URLs, and formulas are not translated. Domain identifiers such as `paidFor` may remain in code. `isReimbursement` appears only as a legacy import alias.
 
 ## Voice and mechanics
 

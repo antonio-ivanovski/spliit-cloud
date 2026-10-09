@@ -1,18 +1,18 @@
 ---
 id: spliit-cloud-2-6-0
 date: 2026-10-08
-title: Spliit toimii nyt offline — auta testaamaan
+title: Spliit Cloud toimii nyt offline — auta testaamaan
 inApp: true
 email: true
 ---
 
-Spliit 2.6.0 tuo sovellukseen offline-luvun: ryhmäsi pysyvät luettavina ilman yhteyttä. Tämä on offline-luvun perusta — täysi offline-kirjoitus, mukaan lukien kulujen luominen, seuraa kun tämä vaihe on vakaa. Lisätiedot [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0) -julkaisutiedoissa.
+Spliit Cloud 2.6.0 tuo sovellukseen offline-luvun: ryhmäsi pysyvät luettavina ilman yhteyttä. Tämä on offline-luvun perusta — täysi offline-kirjoitus, mukaan lukien kulujen luominen, seuraa kun tämä vaihe on vakaa. Lisätiedot [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0) -julkaisutiedoissa.
 
 ## Mitä voit tehdä offline
 
 - Avaa ryhmäsi ja selaa täyttä kuluhistoriaa kommenteilla, saldoilla, jäsenluettelolla, alaryhmäjaoilla, jakoesiasetuksilla, budjeteilla, ryhmäasetuksilla ja viimeaikaisella toiminnalla.
 - Listat avautuvat välittömästi laitteen kopiosta ja yhdistävät uudet muutokset paikoilleen kun yhdistät uudelleen, joten hitaatkin yhteydet tuntuvat paljon nopeammilta.
-- Asenna Spliit sovelluksena laitteellesi uusien vaiheittaisten ohjeiden avulla.
+- Asenna Spliit Cloud sovelluksena laitteellesi uusien vaiheittaisten ohjeiden avulla.
 
 ## Mikä tarvitsee edelleen yhteyden
 

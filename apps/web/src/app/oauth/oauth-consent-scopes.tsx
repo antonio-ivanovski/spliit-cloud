@@ -60,7 +60,7 @@ export const KNOWN_SCOPES: ReadonlySet<string> = new Set(
   SCOPE_GRANTS.map((grant) => grant.scope),
 )
 
-/** Carry no Spliit permission of their own; identity is always shown. */
+/** Carry no Spliit Cloud permission of their own; identity is always shown. */
 export const OIDC_SCOPES: ReadonlySet<string> = new Set([
   'openid',
   'profile',

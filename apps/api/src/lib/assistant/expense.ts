@@ -631,7 +631,7 @@ export async function prepareAssistantExpense(
     addDefault(
       'exchange-rate',
       'Exchange rate',
-      'Spliit rate for the expense date',
+      'Spliit Cloud rate for the expense date',
     )
   }
 
