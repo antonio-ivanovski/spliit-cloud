@@ -7,6 +7,7 @@ Spliit is a Bun monorepo (web, api, domain, db). Explore `package.json`, workspa
 - Use Bun, not npm/yarn.
 - Do not start `bun dev`, compose (`bun dev:up`), or other long-lived services unless the user explicitly asks.
 - Integration tests: never start the API yourself. Web integration needs an existing API on `:3001` — ask the user if it is not running. API `createCaller` tests need the DB only.
+- E2E (`bun --filter @spliit/web test:e2e`): same — needs API + DB running separately. Boot the API with `bun --filter @spliit/api start:e2e` (fixed :3101, e2e origin allowed; see `apps/web/playwright.config.ts`). Ask the user if the API is not running.
 - Money is integer cents. `BY_PERCENTAGE` shares are basis points (`2500` = 25%).
 - Never hand-edit `apps/web/src/messages/*`. Use `bun i18n` and [`.agents/skills/translate-strings/SKILL.md`](.agents/skills/translate-strings/SKILL.md).
 - Prisma migrations: create with `bun --filter @spliit/db prisma-create-migration`. Never invent, backdate, or reuse a `YYYYMMDDHHmmss` folder prefix; the new directory must sort after every existing `packages/db/prisma/migrations/*` folder. See [CONTRIBUTING.md](./CONTRIBUTING.md).

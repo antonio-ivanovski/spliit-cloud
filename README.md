@@ -173,7 +173,7 @@ local HTTPS certificate).
    Pre-starting the proxy matters: otherwise each service auto-starts the
    default plain-HTTP proxy and the https origins won't resolve. Verify with
    `portless list`. People without portless installed can run the underlying
-   commands directly (`dev:app` / `preview:app` / `dev:server` / `dev:relay:app` scripts).
+   commands directly (`dev:app` / `preview:app` / `dev:relay:app` scripts).
 
    | Service      | URL (portless)                   | Bypass (`PORTLESS=0`)     |
    | ------------ | -------------------------------- | ------------------------- |

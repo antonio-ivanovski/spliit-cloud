@@ -297,6 +297,15 @@ const envSchema = z
       interpretEnvVarAsBool,
       z.boolean().default(false),
     ),
+    // Anonymous guest signup abuse brake (per IP, per hour). Defaults to 10
+    // to match historical behavior. Raise for local iteration or e2e
+    // (`.env.e2e` sets 1000 — the suite burns several signups per run and
+    // every retry during development costs budget); 0 disables the check.
+    // Production keeps the default.
+    ANONYMOUS_SIGNUP_RATE_LIMIT_PER_HOUR: z.preprocess(
+      emptyStringAsUndefined,
+      z.coerce.number().int().min(0).max(100_000).default(10),
+    ),
 
     // Email delivery (magic link + verification)
     SMTP_HOST: optionalString,

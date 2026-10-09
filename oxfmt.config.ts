@@ -22,6 +22,11 @@ export default defineConfig({
     '**/.turbo/**',
     '**/coverage/**',
     '**/.vitest/**',
+    // Playwright exhaust: per-run storage state and failure evidence are
+    // gitignored runtime artifacts, never source.
+    '**/.auth/**',
+    '**/test-results/**',
+    '**/playwright-report/**',
     'apps/web/src/components/ui/**',
     'apps/web/src/routeTree.gen.ts',
     'packages/db/src/generated/**',

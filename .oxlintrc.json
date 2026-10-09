@@ -9,6 +9,7 @@
     "import",
     "jsx-a11y"
   ],
+  "jsPlugins": ["./apps/web/tools/oxlint-e2e-conventions.mjs"],
   "options": {
     "typeAware": true,
     "typeCheck": false,
@@ -56,6 +57,14 @@
       ],
       "rules": {
         "typescript/unbound-method": "off"
+      }
+    },
+    {
+      "files": ["apps/web/e2e/**/*.ts"],
+      "rules": {
+        "spliit-e2e/no-custom-timeout": "error",
+        "spliit-e2e/no-wait-for-timeout": "error",
+        "spliit-e2e/no-focused-test": "error"
       }
     },
     {

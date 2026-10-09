@@ -104,8 +104,10 @@ export function throwEmailAuthDisabled(): never {
   })
 }
 
+const anonymousSignupLimitPerHour =
+  env.ANONYMOUS_SIGNUP_RATE_LIMIT_PER_HOUR ?? 10
 const anonymousSignupLimiter = new FixedWindowLimiter({
-  limit: 10,
+  limit: Math.max(anonymousSignupLimitPerHour, 1),
   windowMs: 60 * 60 * 1000,
 })
 
@@ -198,22 +200,26 @@ const beforeAuthMiddleware = createAuthMiddleware(async (ctx) => {
     const ip = resolveClientIp(ctx.headers ?? new Headers(), {
       trustProxy: env.TRUST_PROXY,
     })
-    const decision = anonymousSignupLimiter.hit(ip)
-    if (!decision.allowed) {
-      logRateLimitExceeded({
-        policy: 'anonymous-signup',
-        identity: ip,
-        retryAfterSeconds: decision.retryAfterSeconds,
-        path: ctx.path,
-      })
-      throw new APIError(
-        'TOO_MANY_REQUESTS',
-        {
-          message: 'Too many anonymous accounts. Please try again later.',
-          code: 'ANONYMOUS_SIGNUP_RATE_LIMITED',
-        },
-        { 'Retry-After': String(decision.retryAfterSeconds) },
-      )
+    // 0 disables the brake (local iteration / e2e); otherwise enforce the
+    // configured per-IP hourly budget.
+    if (anonymousSignupLimitPerHour > 0) {
+      const decision = anonymousSignupLimiter.hit(ip)
+      if (!decision.allowed) {
+        logRateLimitExceeded({
+          policy: 'anonymous-signup',
+          identity: ip,
+          retryAfterSeconds: decision.retryAfterSeconds,
+          path: ctx.path,
+        })
+        throw new APIError(
+          'TOO_MANY_REQUESTS',
+          {
+            message: 'Too many anonymous accounts. Please try again later.',
+            code: 'ANONYMOUS_SIGNUP_RATE_LIMITED',
+          },
+          { 'Retry-After': String(decision.retryAfterSeconds) },
+        )
+      }
     }
   }
 

@@ -20,6 +20,7 @@ who is affected, and the exact migration steps.
 ### 🚀 Features
 
 - Streamlined the app UI with a sharper, more consistent look: unified card and button radii, consistent footer pills, small type-scale cleanups, and better dark-mode contrast (`TBD` by @TBD)
+- Added a Chromium Playwright end-to-end suite covering anonymous, password, and magic-link auth plus the core group, expense, and balance flows, so regressions in these journeys are caught automatically (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
 

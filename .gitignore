@@ -11,6 +11,12 @@ node_modules/
 /coverage
 .vitest/
 
+# playwright e2e (ephemeral failure evidence: screenshots, videos, traces)
+test-results/
+playwright-report/
+# playwright auth-once state (fresh guest per run, gitignored like evidence)
+apps/web/e2e/.auth/
+
 # next.js
 /.next/
 /out/

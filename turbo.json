@@ -122,6 +122,11 @@
       "dependsOn": ["^build", "@spliit/db#prisma-generate"],
       "cache": false,
       "passThroughEnv": ["DATABASE_URL"]
+    },
+    "test:e2e": {
+      "dependsOn": ["^build", "@spliit/db#prisma-generate"],
+      "cache": false,
+      "passThroughEnv": ["E2E_API_URL", "E2E_BASE_URL", "E2E_WEB_PORT", "CI"]
     }
   }
 }

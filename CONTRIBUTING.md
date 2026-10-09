@@ -66,6 +66,14 @@ bun --filter @spliit/api start:integration # API on :3101
 bun test:integration
 ```
 
+E2E (Playwright, real Chromium) uses its own API profile with the e2e web
+origin allowed. Start it in another terminal before running the suite:
+
+```bash
+bun --filter @spliit/api start:e2e # API on :3101, allows the e2e origin
+bun --filter @spliit/web test:e2e
+```
+
 ## Pull request workflow
 
 1. Branch off `main` (`fix/...`, `feat/...`, `docs/...`)

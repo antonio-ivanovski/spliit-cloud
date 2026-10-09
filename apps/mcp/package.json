@@ -21,14 +21,14 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "if [ -f ../../.env ]; then bun --env-file=../../.env run build:server; else bun run build:server; fi",
-    "build:server": "mcp-use build",
+    "build": "if [ -f ../../.env ]; then bun --env-file=../../.env run build:app; else bun run build:app; fi",
+    "build:app": "mcp-use build",
     "bundle:runtime": "bun build dist/index.js --target=node --format=esm --production --keep-names --external @mcp-use/inspector --outfile=dist/runtime.mjs",
     "check-formatting": "oxfmt --check .",
     "check-types": "tsc --noEmit",
     "deploy": "mcp-use deploy",
-    "dev:mcp": "portless mcp.spliit bun --env-file=../../.env run dev:server",
-    "dev:server": "mcp-use dev --port ${PORT:-3002} --no-open",
+    "dev:app": "mcp-use dev --port ${PORT:-3002} --no-open",
+    "dev:mcp": "portless mcp.spliit bun --env-file=../../.env run dev:app",
     "format": "oxfmt .",
     "lint": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives .",
     "lint:fix": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives --fix .",
@@ -65,6 +65,6 @@
   },
   "portless": {
     "name": "mcp.spliit",
-    "script": "dev:server"
+    "script": "dev:app"
   }
 }
