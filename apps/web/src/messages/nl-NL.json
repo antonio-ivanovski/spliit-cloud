@@ -1212,7 +1212,6 @@
       "title": "Maak uitgave van foto",
       "description": "Uitgave-informatie van een foto van een bon of een document lezen.",
       "body": "Upload de foto van een bon of een document (PDF, TXT, CSV, DOCX, ODT), en we lezen de uitgave-informatie eruit als dat lukt.",
-      "selectImage": "Selecteer foto…",
       "titleLabel": "Titel:",
       "categoryLabel": "Categorie:",
       "amountLabel": "Bedrag:",

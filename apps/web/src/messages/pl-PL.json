@@ -1202,7 +1202,6 @@
       "title": "Utwórz z paragonu",
       "description": "Wyodrębnij informacje o wydatku ze zdjęcia paragonu lub dokumentu.",
       "body": "Prześlij zdjęcie paragonu lub dokument (PDF, TXT, CSV, DOCX, ODT), a my zeskanujemy je, aby wyodrębnić informacje o wydatku, jeśli to możliwe.",
-      "selectImage": "Wybierz obraz…",
       "titleLabel": "Tytuł:",
       "categoryLabel": "Kategoria:",
       "amountLabel": "Suma:",

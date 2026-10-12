@@ -1490,7 +1490,6 @@
     "Dialog": {
       "description": "영수증 사진이나 문서에서 지출 정보를 추출해요.",
       "body": "영수증 사진이나 문서(PDF, TXT, CSV, DOCX, ODT)를 업로드하면, 가능하면 지출 정보를 스캔해서 추출해 드려요.",
-      "selectImage": "사진 선택하기…",
       "titleLabel": "제목:",
       "categoryLabel": "카테고리:",
       "amountLabel": "금액:",

@@ -1213,7 +1213,6 @@
       "title": "Crear desde ticket",
       "description": "Extrae la información del gasto de la foto de un recibo o de un documento.",
       "body": "Sube la foto de un recibo o un documento (PDF, TXT, CSV, DOCX, ODT) y lo escanearemos para extraer la información del gasto si podemos.",
-      "selectImage": "Seleccionar imagen…",
       "titleLabel": "Título:",
       "categoryLabel": "Categoría:",
       "amountLabel": "Cantidad:",

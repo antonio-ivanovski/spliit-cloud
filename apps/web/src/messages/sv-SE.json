@@ -1051,7 +1051,6 @@
       "title": "Skapa från kvitto",
       "description": "Hämta utgiftsinformation från ett kvittofoto eller ett dokument.",
       "body": "Ladda upp ett foto på ett kvitto eller ett dokument (PDF, TXT, CSV, DOCX, ODT) så försöker vi skanna det för att hämta utgiftsinformationen.",
-      "selectImage": "Välj bild…",
       "titleLabel": "Titel:",
       "categoryLabel": "Kategori:",
       "amountLabel": "Belopp:",

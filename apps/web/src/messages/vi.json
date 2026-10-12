@@ -1893,7 +1893,6 @@
       "title": "Tạo từ biên lai",
       "description": "Trích xuất thông tin chi phí từ ảnh biên lai hoặc tài liệu.",
       "body": "Tải lên ảnh biên lai hoặc tài liệu (PDF, TXT, CSV, DOCX, ODT), chúng tôi sẽ quét để trích xuất thông tin chi phí nếu có thể.",
-      "selectImage": "Chọn ảnh",
       "titleLabel": "Tiêu đề",
       "categoryLabel": "Danh mục",
       "amountLabel": "Số tiền",

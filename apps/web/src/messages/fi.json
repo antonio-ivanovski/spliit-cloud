@@ -1188,7 +1188,6 @@
       "title": "Luo kuitista",
       "description": "Lue kulun tiedot kuitin valokuvasta tai asiakirjasta.",
       "body": "Lataa kuitista valokuva tai asiakirja (PDF, TXT, CSV, DOCX, ODT), niin skannaamme siitä kulun tiedot, jos mahdollista.",
-      "selectImage": "Valitse kuva…",
       "titleLabel": "Otsikko:",
       "categoryLabel": "Kategoria:",
       "amountLabel": "Summa:",

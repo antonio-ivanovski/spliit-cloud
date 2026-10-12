@@ -1195,7 +1195,6 @@
       "title": "Adaugă din bon",
       "description": "Extrage informații despre cheltuială dintr-o poză cu bonul sau dintr-un document.",
       "body": "Adaugă o poză cu bonul sau un document (PDF, TXT, CSV, DOCX, ODT) și vom încerca să-l scanăm pentru a extrage informații despre cheltuială.",
-      "selectImage": "Selectează o imagine…",
       "titleLabel": "Titlu:",
       "categoryLabel": "Categorie:",
       "amountLabel": "Sumă:",

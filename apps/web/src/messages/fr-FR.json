@@ -1195,7 +1195,6 @@
       "title": "Créer à partir du reçu",
       "description": "Extraire les informations de la dépense à partir d'une photo de reçu ou d'un document.",
       "body": "Téléchargez la photo d'un reçu ou un document (PDF, TXT, CSV, DOCX, ODT), et nous l'analyserons pour extraire les informations de la dépense si possible.",
-      "selectImage": "Sélectionner une image…",
       "titleLabel": "Titre :",
       "categoryLabel": "Catégorie :",
       "amountLabel": "Montant :",

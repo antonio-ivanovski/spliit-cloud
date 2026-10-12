@@ -1195,7 +1195,6 @@
       "title": "Crea dalla ricevuta",
       "description": "Estrai le informazioni sulla spesa dalla foto di una ricevuta o da un documento.",
       "body": "Carica la foto di una ricevuta o un documento (PDF, TXT, CSV, DOCX, ODT) e, se possibile, lo scannerizzeremo per estrarre le informazioni sulla spesa.",
-      "selectImage": "Seleziona immagine…",
       "titleLabel": "Titolo:",
       "categoryLabel": "Categoria:",
       "amountLabel": "Importo:",

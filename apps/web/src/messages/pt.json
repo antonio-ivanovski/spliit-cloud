@@ -1309,7 +1309,6 @@
       "title": "Criar a partir de recibo",
       "description": "Extrair as informações da despesa a partir da foto de um recibo ou de um documento.",
       "body": "Envia a foto de um recibo ou um documento (PDF, TXT, CSV, DOCX, ODT), e vamos digitalizá-lo para extrair as informações da despesa se for possível.",
-      "selectImage": "Selecionar imagem…",
       "titleLabel": "Título:",
       "categoryLabel": "Categoria:",
       "amountLabel": "Montante:",

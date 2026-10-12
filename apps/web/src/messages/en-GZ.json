@@ -1230,7 +1230,6 @@
       "title": "create from receipt",
       "description": "pull expense deets from a receipt pic or doc.",
       "body": "upload a receipt pic or doc (PDF, TXT, CSV, DOCX, ODT) and we'll scan it for the expense deets if we can.",
-      "selectImage": "select image…",
       "titleLabel": "title:",
       "categoryLabel": "category:",
       "amountLabel": "amount:",

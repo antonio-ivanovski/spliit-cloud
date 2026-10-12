@@ -1212,7 +1212,6 @@
       "title": "Von Rechnungsbeleg erstellen",
       "description": "Ausgabeninformationen aus dem Foto einer Rechnung oder einem Dokument lesen.",
       "body": "Lade ein Foto einer Rechnung oder ein Dokument (PDF, TXT, CSV, DOCX, ODT) hoch, und wir versuchen, die Ausgabeninformationen daraus zu extrahieren.",
-      "selectImage": "Bild wählen…",
       "titleLabel": "Titel:",
       "categoryLabel": "Kategorie:",
       "amountLabel": "Betrag:",

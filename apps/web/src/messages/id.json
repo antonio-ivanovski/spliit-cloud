@@ -1490,7 +1490,6 @@
       "title": "Buat dari tanda terima",
       "description": "Ekstrak informasi pengeluaran dari foto struk atau dokumen.",
       "body": "Unggah foto struk atau dokumen (PDF, TXT, CSV, DOCX, ODT), dan kami akan memindainya untuk mengekstrak informasi pengeluaran jika memungkinkan.",
-      "selectImage": "Pilih gambar…",
       "titleLabel": "Judul:",
       "categoryLabel": "Kategori:",
       "amountLabel": "Jumlah:",

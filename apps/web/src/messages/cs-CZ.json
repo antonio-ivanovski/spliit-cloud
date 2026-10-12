@@ -1202,7 +1202,6 @@
       "title": "Vytvořit z účtenky",
       "description": "Získat informace o výdaji z fotografie účtenky nebo z dokumentu.",
       "body": "Nahrajte fotografii účtenky nebo dokument (PDF, TXT, CSV, DOCX, ODT) a my se pokusíme z nich získat informace o výdaji.",
-      "selectImage": "Vybrat obrázek…",
       "titleLabel": "Název:",
       "categoryLabel": "Kategorie:",
       "amountLabel": "Částka:",

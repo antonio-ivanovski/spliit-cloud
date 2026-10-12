@@ -1195,7 +1195,6 @@
       "title": "Crear des del tiquet",
       "description": "Extreu la informació de la despesa de la foto d'un tiquet o d'un document.",
       "body": "Puja la foto d'un tiquet o un document (PDF, TXT, CSV, DOCX, ODT) i l'escanejarem per extreure'n, si podem, la informació de la despesa.",
-      "selectImage": "Seleccionar la imatge…",
       "titleLabel": "Títol:",
       "categoryLabel": "Categoria:",
       "amountLabel": "Quantitat:",

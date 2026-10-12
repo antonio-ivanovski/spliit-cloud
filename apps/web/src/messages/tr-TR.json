@@ -1188,7 +1188,6 @@
       "title": "Makbuzdan oluştur",
       "description": "Bir makbuz fotoğrafından veya belgeden masraf bilgilerini çıkarın.",
       "body": "Bir makbuz fotoğrafı veya belge (PDF, TXT, CSV, DOCX, ODT) yükleyin, mümkünse masraf bilgilerini çıkarmak için tarayacağız.",
-      "selectImage": "Resim seç…",
       "titleLabel": "Başlık:",
       "categoryLabel": "Kategori:",
       "amountLabel": "Tutar:",

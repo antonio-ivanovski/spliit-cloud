@@ -1194,7 +1194,6 @@
       "title": "Sortu ordainagiritik",
       "description": "Erauzi gastuaren informazioa ordainagiri baten argazkitik edo dokumentu batetik.",
       "body": "Igo ordainagiri baten argazkia edo dokumentu bat (PDF, TXT, CSV, DOCX, ODT), eta eskaneatuko dugu gastuaren informazioa erauzteko, ahal badugu.",
-      "selectImage": "Hautatu irudia…",
       "titleLabel": "Titulua:",
       "categoryLabel": "Kategoria:",
       "amountLabel": "Zenbatekoa:",

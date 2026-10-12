@@ -1181,7 +1181,6 @@
       "title": "從收據中新增消費紀錄",
       "description": "從收據照片或文件中擷取支出資訊。",
       "body": "上傳收據照片或文件（PDF、TXT、CSV、DOCX、ODT），我們會盡可能從中掃描並擷取支出資訊。",
-      "selectImage": "選擇圖片……",
       "titleLabel": "標題：",
       "categoryLabel": "類別：",
       "amountLabel": "金額：",

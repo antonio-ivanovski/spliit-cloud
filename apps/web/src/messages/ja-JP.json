@@ -1181,7 +1181,6 @@
       "title": "領収書から作成",
       "description": "領収書の写真またはドキュメントから支出情報を抽出します。",
       "body": "領収書の写真またはドキュメント（PDF、TXT、CSV、DOCX、ODT）をアップロードすると、可能であれば支出情報を抽出してスキャンします。",
-      "selectImage": "画像を選択…",
       "titleLabel": "タイトル:",
       "categoryLabel": "カテゴリー:",
       "amountLabel": "金額:",

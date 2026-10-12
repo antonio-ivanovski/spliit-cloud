@@ -1181,7 +1181,6 @@
       "title": "从收据中创建",
       "description": "从收据照片或文档中提取消费信息。",
       "body": "上传收据照片或文档（PDF、TXT、CSV、DOCX、ODT），我们会尽可能从中扫描提取消费信息。",
-      "selectImage": "选择图片……",
       "titleLabel": "标题：",
       "categoryLabel": "类别：",
       "amountLabel": "金额：",
