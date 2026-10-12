@@ -98,23 +98,27 @@ function itemsRadio() {
 }
 
 describe('AiExpensePreview rounding-size gap', () => {
-  it('preselects the receipt total', () => {
+  it('auto-resolves to the receipt total with a muted note and no warning', () => {
     // 2 × $2.50 = $5.00 scanned against a $5.05 total: a +$0.05 gap within
-    // the dollar's rounding tolerance. The choice is immediate,
-    // defaulting to the receipt total with a rounding row.
+    // the dollar's rounding tolerance. No mismatch warning and no choice:
+    // the receipt total wins with a Rounding row plus a muted note.
     renderPreview(
       receiptDraft([{ title: 'Apples', unitPrice: 2.5, quantity: 2 }], 505),
     )
 
-    expect(screen.getByText(/difference/i)).toBeInTheDocument()
+    expect(screen.queryByText(/difference/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/more than rounding/i)).not.toBeInTheDocument()
+    expect(
+      screen.queryByText(/which total is correct/i),
+    ).not.toBeInTheDocument()
+    expect(screen.queryByRole('radio')).not.toBeInTheDocument()
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
-    expect(totalRadio()).toBeChecked()
-    expect(itemsRadio()).not.toBeChecked()
+    // Muted rounding note, not the amber warning.
+    expect(screen.getByText(/add \$0\.05 rounding/i)).toBeInTheDocument()
     // The rounding row flows into the handoff but never renders as a list
-    // row: the choice is its only UI.
+    // row.
     expect(screen.queryByText('Rounding')).not.toBeInTheDocument()
     expect(screen.getByText('Apples')).toBeInTheDocument()
-    // Either choice balances, so one-click create is available.
     expect(
       screen.getByRole('button', { name: /create expense/i }),
     ).toBeInTheDocument()
@@ -134,9 +138,10 @@ describe('AiExpensePreview rounding-size gap', () => {
     const { rerender } = renderPreview(
       receiptDraft([{ title: 'Apples', unitPrice: 2.5, quantity: 2 }], 551),
     )
-    // $0.51 gap: rounding wording, preselected receipt total.
-    expect(totalRadio()).toBeChecked()
-    expect(totalRadio()).toHaveAccessibleName(/rounding/i)
+    // $0.51 gap: muted rounding note, no warning, no choice.
+    expect(screen.queryByRole('radio')).not.toBeInTheDocument()
+    expect(screen.queryByText(/difference/i)).not.toBeInTheDocument()
+    expect(screen.getByText(/add \$0\.51 rounding/i)).toBeInTheDocument()
 
     rerender(
       <AiExpensePreview
@@ -160,25 +165,6 @@ describe('AiExpensePreview rounding-size gap', () => {
     ).toBeInTheDocument()
   })
 
-  it('rewrites the amount to the items total when items win', async () => {
-    const { user } = renderPreview(
-      receiptDraft([{ title: 'Apples', unitPrice: 2.5, quantity: 2 }], 505),
-    )
-
-    await user.click(itemsRadio())
-    expect(itemsRadio()).toBeChecked()
-    expect(totalRadio()).not.toBeChecked()
-
-    // No adjustment row: the expense amount becomes the items sum.
-    const handedOff = lastHandoffItems()
-    expect(handedOff).toHaveLength(1)
-    expect(lastHandoffAmountMinor()).toBe(500)
-    expect(getItemizedFormMinorTotals(handedOff, 5, USD).gapMinor).toBe(0)
-    expect(
-      screen.getByRole('button', { name: /create expense/i }),
-    ).toBeInTheDocument()
-  })
-
   it('hides the notice when scanned items already cover the total', () => {
     renderPreview(
       receiptDraft(
@@ -194,8 +180,8 @@ describe('AiExpensePreview rounding-size gap', () => {
     expect(screen.queryByRole('radio')).not.toBeInTheDocument()
   })
 
-  it('offers a signed rounding option when items exceed the total by cents', async () => {
-    const { user } = renderPreview(
+  it('auto-resolves a signed rounding gap when items exceed the total', () => {
+    renderPreview(
       receiptDraft(
         [
           { title: 'Apples', unitPrice: 2.5, quantity: 2 },
@@ -205,10 +191,12 @@ describe('AiExpensePreview rounding-size gap', () => {
       ),
     )
 
-    // $8.50 of items against an $8.00 total: a −$0.50 gap, preselected on
-    // the receipt total. The option reads "Subtract …", never "Add -$0.50 …".
-    expect(totalRadio()).toBeChecked()
-    expect(totalRadio()).toHaveAccessibleName(/subtract \$0\.50 rounding/i)
+    // $8.50 of items against an $8.00 total: a −$0.50 gap within tolerance.
+    // No warning, no choice — muted note only. The option reads
+    // "Subtract …", never "Add -$0.50 …".
+    expect(screen.queryByRole('radio')).not.toBeInTheDocument()
+    expect(screen.queryByText(/difference/i)).not.toBeInTheDocument()
+    expect(screen.getByText(/subtract \$0\.50 rounding/i)).toBeInTheDocument()
     expect(screen.queryByText('Rounding')).not.toBeInTheDocument()
 
     const handedOff = lastHandoffItems()
@@ -219,11 +207,6 @@ describe('AiExpensePreview rounding-size gap', () => {
       quantity: 1,
     })
     expect(getItemizedFormMinorTotals(handedOff, 8, USD).gapMinor).toBe(0)
-
-    // Items win raises the amount to the items sum instead.
-    await user.click(itemsRadio())
-    expect(lastHandoffItems()).toHaveLength(2)
-    expect(lastHandoffAmountMinor()).toBe(850)
   })
 
   it('shows no notice without scanned items', () => {
@@ -231,32 +214,6 @@ describe('AiExpensePreview rounding-size gap', () => {
 
     expect(screen.queryByText(/difference/i)).not.toBeInTheDocument()
     expect(screen.queryByRole('radio')).not.toBeInTheDocument()
-  })
-
-  it('resets to the receipt total when a new scan result arrives', async () => {
-    const view = renderPreview(
-      receiptDraft([{ title: 'Apples', unitPrice: 2.5, quantity: 2 }], 505),
-    )
-    await view.user.click(itemsRadio())
-    expect(itemsRadio()).toBeChecked()
-
-    // A fresh draft must never inherit the previous pick.
-    await act(async () => {
-      view.rerender(
-        <AiExpensePreview
-          open
-          onOpenChange={() => undefined}
-          group={group}
-          currentLedgerParticipantId={null}
-          draft={receiptDraft(
-            [{ title: 'Apples', unitPrice: 2.5, quantity: 2 }],
-            505,
-          )}
-        />,
-      )
-    })
-    expect(totalRadio()).toBeChecked()
-    expect(itemsRadio()).not.toBeChecked()
   })
 })
 

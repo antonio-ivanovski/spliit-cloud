@@ -23,6 +23,6 @@ who is affected, and the exact migration steps.
 
 ### 🐛 Bug fixes
 
-- Short entry per fix (`TBD` by @TBD)
+- Receipt scan preview no longer warns when items differ from the total by rounding: gaps within the currency's rounding tolerance resolve to the receipt total with a muted rounding note instead of the mismatch warning (`TBD` by @TBD)
 
 **Full Changelog**: TBD

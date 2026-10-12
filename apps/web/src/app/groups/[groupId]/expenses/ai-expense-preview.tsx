@@ -151,19 +151,20 @@ export function AiExpensePreview({
   // Scanned line items rarely cover the receipt total exactly: the scan
   // prompt excludes taxes and service charges by design, and each line is
   // rounded to minor units independently at save time. Surface that minor-unit
-  // gap (same helper as save serialization) and let the user pick which
-  // total is the source of truth. Either choice balances, so quick-create
-  // stays available; the edit form remains for manual fixes.
+  // gap (same helper as save serialization).
   //
   // Gaps within the receipt currency's researched rounding tolerance
   // (`rounding_gap_minor`: 51 minor for USD, 1 for JPY, 3 for CHF/BHD) are
-  // plausibly rounding and use the "Rounding" wording. Larger gaps are a real
-  // says so, and the adjustment item follows the "Other" convention
-  // instead — an "Other" row when items fall short, an "Other (excess)"
-  // row when they overshoot. Both adjustment rows are real items with
-  // non-empty titles (the schemas reject untitled rows); the in-form
-  // untitled filler is display-only and never submitted, so it can't be
-  // reused here.
+  // plausibly rounding: they auto-resolve to the receipt total with a
+  // "Rounding" line and only a muted note — never the amber mismatch
+  // warning. Larger gaps are a real mismatch: the box says so and lets the
+  // user pick which total is the source of truth, and the adjustment item
+  // follows the "Other" convention instead — an "Other" row when items fall
+  // short, an "Other (excess)" row when they overshoot. Both adjustment rows
+  // are real items with non-empty titles (the schemas reject untitled rows);
+  // the in-form untitled filler is display-only and never submitted, so it
+  // can't be reused here. Either choice balances, so quick-create stays
+  // available; the edit form remains for manual fixes.
   const baseItems = useMemo(() => draft.items ?? [], [draft.items])
   const baseTotals = useMemo(
     () =>
@@ -176,6 +177,11 @@ export function AiExpensePreview({
   const hasItemsGap = baseTotals != null && gapMinor !== 0
   const isRoundingSize =
     hasItemsGap && isRoundingSizeGap(gapMinor, inputCurrency)
+  // Rounding-size gaps never warn and never offer a choice: the receipt
+  // total wins silently (plus a muted note below). Only larger gaps need
+  // explicit resolution.
+  const hasRoundingGap = hasItemsGap && isRoundingSize
+  const hasRealMismatch = hasItemsGap && !isRoundingSize
   const adjustmentItemMajor =
     hasItemsGap && baseTotals != null
       ? gapMinorAsMajor(gapMinor, inputCurrency)
@@ -187,7 +193,8 @@ export function AiExpensePreview({
       : gapMinor < 0
         ? t('otherExcessItemTitle')
         : tForm('items.other')
-  // The receipt total is the preselected source of truth.
+  // The receipt total is the preselected source of truth (real mismatches
+  // only; rounding gaps are auto-resolved and ignore this choice).
   const [truthSource, setTruthSource] = useState<'total' | 'items'>('total')
   const [gapDraft, setGapDraft] = useState(draft)
   if (gapDraft !== draft) {
@@ -198,7 +205,7 @@ export function AiExpensePreview({
     setGapDraft(draft)
     setTruthSource('total')
   }
-  const useItemsTotal = hasItemsGap && truthSource === 'items'
+  const useItemsTotal = hasRealMismatch && truthSource === 'items'
   const effectiveAmountMinor =
     useItemsTotal && baseTotals != null ? baseTotals.itemsMinor : amountMinor
   const effectiveAmountMajor =
@@ -208,7 +215,7 @@ export function AiExpensePreview({
   const effectiveItems = useMemo(
     () =>
       hasItemsGap &&
-      truthSource === 'total' &&
+      (hasRoundingGap || truthSource === 'total') &&
       adjustmentItemMajor != null &&
       adjustmentItemTitle != null
         ? [
@@ -225,6 +232,7 @@ export function AiExpensePreview({
       adjustmentItemTitle,
       baseItems,
       hasItemsGap,
+      hasRoundingGap,
       adjustmentItemMajor,
     ],
   )
@@ -450,7 +458,25 @@ export function AiExpensePreview({
                   locale={locale}
                   heading={t('items')}
                 />
-                {hasItemsGap &&
+                {hasRoundingGap &&
+                baseTotals != null &&
+                adjustmentItemMajor != null ? (
+                  <div className="mt-2 rounded-lg border bg-muted/50 p-3 text-sm text-muted-foreground">
+                    {t(
+                      gapMinor < 0
+                        ? 'subtractRoundingAsItem'
+                        : 'addRoundingAsItem',
+                      {
+                        amount: formatCurrency(
+                          displayCurrency,
+                          Math.abs(gapMinor),
+                          locale,
+                        ),
+                      },
+                    )}
+                  </div>
+                ) : null}
+                {hasRealMismatch &&
                 baseTotals != null &&
                 adjustmentItemMajor != null ? (
                   <div className="mt-2 rounded-lg border border-amber-300/60 bg-amber-50/70 p-3 dark:border-amber-500/30 dark:bg-amber-950/20">
@@ -469,11 +495,9 @@ export function AiExpensePreview({
                         gap: formatCurrency(displayCurrency, gapMinor, locale),
                       })}
                     </p>
-                    {!isRoundingSize ? (
-                      <p className="mt-1 text-sm text-amber-900 dark:text-amber-200">
-                        {t('largeGapNote')}
-                      </p>
-                    ) : null}
+                    <p className="mt-1 text-sm text-amber-900 dark:text-amber-200">
+                      {t('largeGapNote')}
+                    </p>
                     <p className="mt-2 text-sm font-medium text-amber-900 dark:text-amber-200">
                       {t('sourceOfTruth')}
                     </p>
@@ -509,13 +533,9 @@ export function AiExpensePreview({
                             </span>
                             <span className="text-xs text-amber-900/80 dark:text-amber-200/80">
                               {t(
-                                isRoundingSize
-                                  ? gapMinor < 0
-                                    ? 'subtractRoundingAsItem'
-                                    : 'addRoundingAsItem'
-                                  : gapMinor < 0
-                                    ? 'subtractOtherExcessAsItem'
-                                    : 'addOtherAsItem',
+                                gapMinor < 0
+                                  ? 'subtractOtherExcessAsItem'
+                                  : 'addOtherAsItem',
                                 {
                                   // The credit case (items exceed the
                                   // total) reads as "Subtract $0.50 …",
