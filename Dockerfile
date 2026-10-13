@@ -44,10 +44,12 @@ FROM base AS api
 ENV NODE_ENV=production
 RUN mkdir -p /data
 # Copy the whole dist directory: the bundle emits native assets (resvg) next
-# to server.js, and the OG card fonts live beside dist (see fonts.ts).
+# to server.js, and the OG card fonts + logo live beside dist (see fonts.ts
+# and logo.ts).
 COPY --from=api-builder /app/apps/api/dist/ ./apps/api/dist/
 COPY --from=api-builder /app/apps/api/openapi.json ./apps/api/openapi.json
 COPY --from=api-builder /app/apps/api/src/lib/og/fonts/ ./apps/api/fonts/
+COPY --from=api-builder /app/apps/api/src/lib/og/assets/ ./apps/api/assets/
 EXPOSE 3001
 CMD ["bun", "run", "apps/api/dist/server.js"]
 

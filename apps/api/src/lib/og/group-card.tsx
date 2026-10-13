@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { resolveGroupColorHex } from '@spliit/domain'
 
 import { loadOgFonts } from './fonts'
+import { loadOgLogo, OG_LOGO_HEIGHT, OG_LOGO_WIDTH } from './logo'
 import {
   fetchEmojiImage,
   fetchImageAsDataUri,
@@ -165,7 +166,18 @@ function Pill({ children }: { children: ReactNode }) {
   )
 }
 
-function BrandFooter() {
+function BrandFooter({ logoDataUri }: { logoDataUri: string | null }) {
+  if (logoDataUri) {
+    return (
+      <img
+        src={logoDataUri}
+        alt="Spliit Cloud"
+        width={OG_LOGO_WIDTH}
+        height={OG_LOGO_HEIGHT}
+        style={{ width: OG_LOGO_WIDTH, height: OG_LOGO_HEIGHT }}
+      />
+    )
+  }
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
       <div
@@ -245,7 +257,13 @@ function GroupTile({
   )
 }
 
-function CardElement({ card }: { card: ResolvedCard }) {
+function CardElement({
+  card,
+  logoDataUri,
+}: {
+  card: ResolvedCard
+  logoDataUri: string | null
+}) {
   if (card.kind === 'fallback') {
     return (
       <div
@@ -269,7 +287,7 @@ function CardElement({ card }: { card: ResolvedCard }) {
             padding: 64,
           }}
         >
-          <BrandFooter />
+          <BrandFooter logoDataUri={logoDataUri} />
           <div style={{ fontSize: 52, fontWeight: 700, color: INK }}>
             Share expenses with friends &amp; family
           </div>
@@ -404,7 +422,7 @@ function CardElement({ card }: { card: ResolvedCard }) {
         </div>
       </div>
       <div style={{ display: 'flex', padding: '0 64px 48px' }}>
-        <BrandFooter />
+        <BrandFooter logoDataUri={logoDataUri} />
       </div>
     </div>
   )
@@ -419,11 +437,13 @@ export async function renderGroupCardPng(
   input: GroupCardInput,
   fetchImpl: typeof fetch = fetch,
 ): Promise<Uint8Array> {
-  const [{ default: satori }, { Resvg }, fonts] = await Promise.all([
-    import('satori'),
-    import('@resvg/resvg-js'),
-    loadOgFonts(),
-  ])
+  const [{ default: satori }, { Resvg }, fonts, logoDataUri] =
+    await Promise.all([
+      import('satori'),
+      import('@resvg/resvg-js'),
+      loadOgFonts(),
+      loadOgLogo(),
+    ])
 
   const resolveAvatars = async (
     avatars: GroupCardAvatar[],
@@ -510,11 +530,14 @@ export async function renderGroupCardPng(
     }
   }
 
-  const svg = await satori(<CardElement card={card} />, {
-    width: OG_CARD_WIDTH,
-    height: OG_CARD_HEIGHT,
-    fonts,
-  })
+  const svg = await satori(
+    <CardElement card={card} logoDataUri={logoDataUri} />,
+    {
+      width: OG_CARD_WIDTH,
+      height: OG_CARD_HEIGHT,
+      fonts,
+    },
+  )
   return new Resvg(svg, {
     fitTo: { mode: 'width', value: OG_CARD_WIDTH },
   })
