@@ -2,7 +2,7 @@ import { MoreHorizontal } from 'lucide-react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { resolveFormattingLocale, type CategoryId } from '@spliit/domain'
+import { type CategoryId } from '@spliit/domain'
 // react-doctor-disable-next-line react-doctor/prefer-dynamic-import -- file is lazy-loaded via React.lazy() from spending-chart.tsx
 import {
   Bar,
@@ -19,7 +19,7 @@ import {
 
 import { useLocale } from '@/i18n/react'
 import type { Currency } from '@/lib/currency'
-import { amountAsDecimal, formatCurrency, formatDateOnly } from '@/lib/utils'
+import { formatCurrency, formatDateOnly } from '@/lib/utils'
 
 import { CategoryIcon } from '../expenses/category-icon'
 import {
@@ -28,6 +28,7 @@ import {
   getCategoryColor,
   otherCategoryColor,
 } from './category-utils'
+import { formatCompactCurrency } from './chart-format'
 import type { StatsDashboardData } from './dashboard-types'
 
 type Props = {
@@ -61,49 +62,6 @@ function formatBucket(
       : { day: 'numeric', month: 'short' }),
     ...(includeYear ? { year: '2-digit' } : {}),
   })
-}
-
-const compactNumberFormatCache = new Map<string, Intl.NumberFormat>()
-const currencyNumberFormatCache = new Map<string, Intl.NumberFormat>()
-
-function getCompactNumberFormat(locale: string) {
-  let fmt = compactNumberFormatCache.get(locale)
-  if (!fmt) {
-    fmt = new Intl.NumberFormat(resolveFormattingLocale(locale), {
-      notation: 'compact',
-      maximumFractionDigits: 1,
-    })
-    compactNumberFormatCache.set(locale, fmt)
-  }
-  return fmt
-}
-
-function getCurrencyNumberFormat(locale: string, currencyCode: string) {
-  const key = `${locale}:${currencyCode}`
-  let fmt = currencyNumberFormatCache.get(key)
-  if (!fmt) {
-    fmt = new Intl.NumberFormat(resolveFormattingLocale(locale), {
-      style: 'currency',
-      currency: currencyCode,
-      notation: 'compact',
-      maximumFractionDigits: 1,
-    })
-    currencyNumberFormatCache.set(key, fmt)
-  }
-  return fmt
-}
-
-function formatCompactCurrency(
-  currency: Currency,
-  amount: number,
-  locale: string,
-) {
-  const value = amountAsDecimal(amount, currency)
-  const numberFormat = getCompactNumberFormat(locale)
-
-  if (!currency.code) return `${numberFormat.format(value)} ${currency.symbol}`
-
-  return getCurrencyNumberFormat(locale, currency.code).format(value)
 }
 
 function CategoryBarShape({

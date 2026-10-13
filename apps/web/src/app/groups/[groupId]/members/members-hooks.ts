@@ -289,6 +289,7 @@ export function useMembersDialogs() {
 
   const invalidateAll = async () => {
     await Promise.all([
+      invalidateAccountGroupLists(utils),
       utils.account.members.invalidate({ groupId }),
       utils.groups.get.invalidate({ groupId }),
       utils.groups.getDetails.invalidate({ groupId }),
@@ -301,6 +302,7 @@ export function useMembersDialogs() {
 
   const invalidateInvitationState = async () => {
     await Promise.all([
+      invalidateAccountGroupLists(utils),
       utils.invitations.list.invalidate({ groupId }),
       utils.invitations.listForAccount.invalidate(),
       utils.account.members.invalidate({ groupId }),

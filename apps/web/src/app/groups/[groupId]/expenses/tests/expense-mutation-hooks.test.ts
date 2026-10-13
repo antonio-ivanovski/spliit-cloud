@@ -10,6 +10,7 @@ const invalidations = {
   activities: vi.fn(async () => undefined),
   balances: vi.fn(async () => undefined),
   overview: vi.fn(async () => undefined),
+  stats: vi.fn(async () => undefined),
   accountGroups: vi.fn(async () => undefined),
 }
 
@@ -24,7 +25,10 @@ const utils = {
     activities: { list: { invalidate: invalidations.activities } },
     balances: { list: { invalidate: invalidations.balances } },
   },
-  overview: { get: { invalidate: invalidations.overview } },
+  overview: {
+    get: { invalidate: invalidations.overview },
+    stats: { get: { invalidate: invalidations.stats } },
+  },
   account: { groups: { invalidate: invalidations.accountGroups } },
 } as never
 
@@ -48,6 +52,7 @@ describe('invalidateExpenseDependencies', () => {
     })
     expect(invalidations.balances).toHaveBeenCalledWith({ groupId: 'group-1' })
     expect(invalidations.overview).toHaveBeenCalledTimes(1)
+    expect(invalidations.stats).toHaveBeenCalledTimes(1)
     // Currency converter ranks against account.groups with a 60s staleTime;
     // financial mutations must bust it so the converter sees the new total.
     expect(invalidations.accountGroups).toHaveBeenCalledTimes(1)

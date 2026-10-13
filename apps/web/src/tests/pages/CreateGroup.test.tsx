@@ -22,6 +22,7 @@ vi.mock('@/trpc/client', () => ({
         groups: { invalidate: vi.fn() },
       },
       overview: {
+        stats: { get: { invalidate: vi.fn(async () => undefined) } },
         get: { invalidate: vi.fn() },
       },
       invitations: {

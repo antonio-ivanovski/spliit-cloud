@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   test: {
     globals: true,
-    exclude: ['dist/**', 'node_modules/**'],
+    exclude: ['dist/**', 'node_modules/**', '**/*.integration.test.ts'],
     // Several package test tasks run concurrently under turbo; uncapped forks
     // oversubscribe the CPU and starve every suite (timeouts under load).
     maxWorkers: 2,

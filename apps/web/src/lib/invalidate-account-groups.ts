@@ -6,5 +6,6 @@ export function invalidateAccountGroupLists(
   return Promise.all([
     utils.account.groups.invalidate(),
     utils.overview.get.invalidate(),
+    utils.overview.stats.get.invalidate(),
   ])
 }

@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 import { accountGroupSchema } from './account'
 import { accountSummarySchema } from './common'
+import { overviewStatsOutputSchema } from './overview-stats'
 
 export const overviewFinancialStateSchema = z.enum([
   'NO_EXPENSES',
@@ -27,6 +28,7 @@ export const overviewGroupSchema = accountGroupSchema.extend({
 })
 
 export const overviewOutputSchema = z.object({
+  activity: overviewStatsOutputSchema.optional(),
   stats: z.object({
     balanceSummaries: z.array(
       z.object({

@@ -14,6 +14,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
 import { isPlaceholderEmail } from '@/lib/account'
+import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { trpc } from '@/trpc/client'
 
 /**
@@ -49,6 +50,7 @@ export function LinkUnlinkedParticipantDialog({
   const linkMutation = trpc.groups.importLinks.link.useMutation({
     onSuccess: async () => {
       await Promise.all([
+        invalidateAccountGroupLists(utils),
         utils.groups.importLinks.listUnlinked.invalidate({ groupId }),
         utils.account.members.invalidate(),
         utils.groups.get.invalidate({ groupId }),

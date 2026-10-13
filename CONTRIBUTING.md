@@ -58,6 +58,24 @@ bun run test             # Vitest unit tests
 bun test:integration     # Real-DB integration tests
 ```
 
+### Optional development demo data
+
+After migrating your local database, sign in to the local app once and seed
+fixtures into that account:
+
+```bash
+NODE_ENV=development bun seed:dev --account=you@example.test --dry-run
+NODE_ENV=development bun seed:dev --account=you@example.test
+```
+
+You can supply an account ID instead of an email (including anonymous accounts).
+Seeding is never part of startup, installation, or migrations. The command
+requires development mode and a loopback PostgreSQL `DATABASE_URL`. Run it on
+the host when using the development Compose database.
+
+See [the fixture guide](./docs/development-fixtures.md) for scenarios, manual
+checks, reset/cleanup commands, and service requirements.
+
 Web integration tests expect an API using the integration profile. Start it in
 another terminal before running the suite:
 

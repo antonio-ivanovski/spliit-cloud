@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/responsive-dialog'
 import { WizardStepHeader } from '@/components/wizard'
 import { useLocale } from '@/i18n/react'
+import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import { DEFAULT_CATEGORY_ID, type CategoryId } from '@spliit/domain'
@@ -62,6 +63,7 @@ export function BulkCategorizePage({
   const reviewRevisionRef = useRef<{ runId: string; revision: number } | null>(
     null,
   )
+  const invalidatedRunRef = useRef<string | null>(null)
   const localRevisionRef = useRef<number | null>(null)
   const [saveConflicts, setSaveConflicts] = useState<
     Array<{ expenseId: string; title: string }> | undefined
@@ -139,8 +141,12 @@ export function BulkCategorizePage({
     rerun.isPending
 
   useEffect(() => {
-    if (run?.status === 'DONE') void refetchCount()
-  }, [run?.status, refetchCount])
+    if (run?.status === 'DONE' && invalidatedRunRef.current !== run.id) {
+      invalidatedRunRef.current = run.id
+      void refetchCount()
+      void invalidateAccountGroupLists(utils)
+    }
+  }, [run?.status, run?.id, refetchCount, utils])
 
   useEffect(() => {
     if (!run) {

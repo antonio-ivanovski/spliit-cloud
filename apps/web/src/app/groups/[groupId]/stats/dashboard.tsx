@@ -1,10 +1,5 @@
 import { keepPreviousData } from '@tanstack/react-query'
-import {
-  CalendarDays,
-  ChartNoAxesCombined,
-  LoaderCircle,
-  ReceiptText,
-} from 'lucide-react'
+import { CalendarDays, ChartNoAxesCombined, ReceiptText } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -18,63 +13,21 @@ import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useLocale } from '@/i18n/react'
-import { getCurrencyFromGroup, type Currency } from '@/lib/currency'
+import { getCurrencyFromGroup } from '@/lib/currency'
 import {
   useOfflineWithoutData,
   useServerUnreachableWithoutData,
 } from '@/lib/use-online-status'
-import { formatCurrency } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import { resolveFormattingLocale } from '@spliit/domain'
 
 import { useCurrentGroup } from '../current-group-context'
 import { useGroupAccessSearch } from '../use-group-access-search'
 import type { StatsCustomRange, StatsPeriod } from './dashboard-types'
+import { StatsSummaryCard } from './summary-card'
 
 function formatDateInput(date: Date): string {
   return date.toISOString().slice(0, 10)
-}
-
-function SummaryCard({
-  title,
-  amount,
-  detail,
-  currency,
-  icon: Icon,
-  isPending = false,
-}: {
-  title: string
-  amount: number
-  detail: string
-  currency: Currency
-  icon: typeof ChartNoAxesCombined
-  isPending?: boolean
-}) {
-  const locale = useLocale()
-  return (
-    <Card
-      data-stats-surface="summary"
-      className="relative overflow-hidden border-primary/10 bg-linear-to-br from-primary/7 via-card to-card shadow-none"
-    >
-      <CardContent spacing="standalone">
-        <Icon
-          className="absolute end-4 top-4 size-8 text-primary/15"
-          aria-hidden
-        />
-        {isPending && (
-          <LoaderCircle
-            className="absolute end-4 bottom-4 size-4 animate-spin text-primary/60"
-            aria-hidden
-          />
-        )}
-        <p className="text-sm text-muted-foreground">{title}</p>
-        <p className="mt-2 text-2xl font-semibold tracking-tight tabular-nums">
-          {formatCurrency(currency, amount, locale)}
-        </p>
-        <p className="mt-1 text-xs text-muted-foreground">{detail}</p>
-      </CardContent>
-    </Card>
-  )
 }
 
 function DashboardLoading() {
@@ -230,14 +183,14 @@ export function StatsDashboard() {
       </Card>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <SummaryCard
+        <StatsSummaryCard
           title={t('lifetime')}
           amount={dashboard.lifetimeTotal}
           detail={t('lifetimeDescription')}
           currency={currency}
           icon={ChartNoAxesCombined}
         />
-        <SummaryCard
+        <StatsSummaryCard
           title={t('selectedPeriod')}
           amount={dashboard.period.total}
           detail={t('expenseCount', { count: dashboard.period.expenseCount })}

@@ -1,18 +1,24 @@
+import { z } from 'zod'
+
 import {
   GroupInvitationStatus,
   GroupMemberStatus,
   GroupType,
   prisma,
-  type Prisma,
 } from '@spliit/db'
 import {
   getBalances,
   getSuggestedSettlements,
-  type BalanceExpense,
   type Balances,
+  timeZoneSchema,
 } from '@spliit/domain'
 
 import { accountSummarySelect } from '../../../lib/api/selects/account-summary'
+import {
+  balanceExpenseSelect,
+  toBalanceExpense,
+  type BalanceExpenseRow,
+} from '../../../lib/api/selects/balance-expense'
 import { participantDisplayNameSelect } from '../../../lib/api/selects/participant-display-name'
 import {
   getInvitationDisplayName,
@@ -22,86 +28,13 @@ import {
 import { createTRPCRouter, protectedProcedure } from '../../init'
 import type { OverviewFinancialState } from '../../outputs/overview'
 import { overviewOutputSchema } from '../../outputs/overview'
+import { overviewStatsInputSchema } from '../../outputs/overview-stats'
+import { aggregateOverviewStats } from './stats/aggregate'
+import { getOverviewStatsProcedure } from './stats/get.procedure'
 
-const overviewExpenseSelect = {
-  ledgerId: true,
-  amount: true,
-  createdAt: true,
-  splitMode: true,
-  paidBySplitMode: true,
-  originalAmount: true,
-  originalCurrency: true,
-  conversionRate: true,
-  conversionSource: true,
-  paidByList: {
-    select: { ledgerParticipantId: true, shares: true },
-  },
-  paidFor: {
-    select: { ledgerParticipantId: true, shares: true },
-  },
-  items: {
-    select: {
-      amount: true,
-      splitMode: true,
-      paidFor: {
-        select: { ledgerParticipantId: true, shares: true },
-      },
-    },
-  },
-  itemizedRemainder: {
-    select: {
-      splitMode: true,
-      allocationMode: true,
-      paidFor: {
-        select: { ledgerParticipantId: true, shares: true },
-      },
-    },
-  },
-} satisfies Prisma.ExpenseSelect
-
-type OverviewExpense = Prisma.ExpenseGetPayload<{
-  select: typeof overviewExpenseSelect
-}>
+type OverviewExpense = BalanceExpenseRow
 
 type FinancialState = OverviewFinancialState
-
-function toBalanceExpense(row: OverviewExpense): BalanceExpense {
-  return {
-    amount: row.amount,
-    splitMode: row.splitMode,
-    paidBySplitMode: row.paidBySplitMode,
-    originalAmount: row.originalAmount,
-    originalCurrency: row.originalCurrency,
-    conversionRate: row.conversionRate,
-    conversionSource: row.conversionSource,
-    paidByList: row.paidByList.map((share) => ({
-      shares: share.shares,
-      participant: { id: share.ledgerParticipantId },
-    })),
-    paidFor: row.paidFor.map((share) => ({
-      shares: share.shares,
-      participant: { id: share.ledgerParticipantId },
-    })),
-    items: row.items.map((item) => ({
-      amount: item.amount,
-      splitMode: item.splitMode,
-      paidFor: item.paidFor.map((share) => ({
-        participant: share.ledgerParticipantId,
-        shares: share.shares,
-      })),
-    })),
-    itemizedRemainder: row.itemizedRemainder
-      ? {
-          splitMode: row.itemizedRemainder.splitMode,
-          allocationMode: row.itemizedRemainder.allocationMode,
-          paidFor: row.itemizedRemainder.paidFor.map((share) => ({
-            participant: share.ledgerParticipantId,
-            shares: share.shares,
-          })),
-        }
-      : null,
-  }
-}
 
 export function getFinancialSummary(
   rows: OverviewExpense[],
@@ -385,10 +318,13 @@ function recencyTimestamp(group: {
 }
 
 export const overviewRouter = createTRPCRouter({
+  stats: createTRPCRouter({ get: getOverviewStatsProcedure }),
   get: protectedProcedure
+    .input(z.object({ timeZone: timeZoneSchema.default('UTC') }).optional())
     .output(overviewOutputSchema)
-    .query(async ({ ctx }) => {
+    .query(async ({ ctx, input }) => {
       const accountId = ctx.auth.user.id
+      const now = new Date()
       const memberships = await prisma.groupMember.findMany({
         where: {
           accountId,
@@ -480,7 +416,7 @@ export const overviewRouter = createTRPCRouter({
                   },
                 },
               },
-              select: overviewExpenseSelect,
+              select: balanceExpenseSelect,
             })
       const expensesByLedgerId = new Map<string, OverviewExpense[]>()
       for (const expense of expenses) {
@@ -622,25 +558,11 @@ export const overviewRouter = createTRPCRouter({
         lastOpenedAt: row.lastOpenedAt.toISOString(),
       }))
 
-      const participantIds = Array.from(
-        new Set(
-          expenses.flatMap((expense) => [
-            ...expense.paidByList.map((share) => share.ledgerParticipantId),
-            ...expense.paidFor.map((share) => share.ledgerParticipantId),
-            ...expense.items.flatMap((item) =>
-              item.paidFor.map((share) => share.ledgerParticipantId),
-            ),
-            ...(expense.itemizedRemainder?.paidFor.map(
-              (share) => share.ledgerParticipantId,
-            ) ?? []),
-          ]),
-        ),
-      )
       const participantRows =
-        participantIds.length === 0
+        ledgerIds.length === 0
           ? []
           : await prisma.ledgerParticipant.findMany({
-              where: { id: { in: participantIds } },
+              where: { ledgerId: { in: ledgerIds } },
               select: participantDisplayNameSelect(),
             })
       const peopleParticipants = participantRows.map((participant) => ({
@@ -648,7 +570,7 @@ export const overviewRouter = createTRPCRouter({
         name: resolveParticipantDisplayName(participant),
         account: participant.groupMember?.account ?? null,
         inviteEmail: normalizeOverviewInviteEmail(
-          participant.invitations[0]?.email,
+          participant.invitations?.[0]?.email,
         ),
       }))
       const pendingEmails = Array.from(
@@ -699,7 +621,51 @@ export const overviewRouter = createTRPCRouter({
         emailToAccount,
       )
 
+      const initialStats = input
+        ? {
+            ...aggregateOverviewStats(
+              memberships.map((membership) => ({
+                id: membership.group.ledger.id,
+                groupId: membership.group.id,
+                name:
+                  groups.find((group) => group.id === membership.group.id)
+                    ?.displayName ?? membership.group.name,
+                currency: membership.group.ledger.currency,
+                currencyCode: membership.group.ledger.currencyCode,
+                participantId: membership.ledgerParticipant?.id ?? null,
+              })),
+              expenses,
+              overviewStatsInputSchema.parse({ timeZone: input.timeZone }),
+              now,
+            ),
+            people: [
+              ...new Map(
+                participantRows.flatMap((participant) => {
+                  const account = participant.groupMember?.account
+                  return account
+                    ? ([
+                        [
+                          account.id,
+                          { accountId: account.id, name: account.name },
+                        ],
+                      ] as const)
+                    : []
+                }),
+              ).values(),
+            ].sort(
+              (a, b) =>
+                a.name.localeCompare(b.name) ||
+                a.accountId.localeCompare(b.accountId),
+            ),
+            groups: groups.map((group) => ({
+              groupId: group.id,
+              name: group.displayName,
+              groupType: group.groupType,
+            })),
+          }
+        : undefined
       return {
+        activity: initialStats,
         stats: {
           balanceSummaries: summarizeBalances(groups),
           peopleBalances,

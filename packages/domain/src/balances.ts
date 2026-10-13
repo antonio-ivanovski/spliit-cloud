@@ -98,7 +98,8 @@ function applyLiteralResidual(
   return next
 }
 
-export function getBalances(expenses: BalanceExpense[]): Balances {
+/** Accumulate ledger shares without distributing residual cents. */
+export function getExactBalances(expenses: BalanceExpense[]) {
   const globalPaid: Record<string, ExactAmount> = {}
   const globalPaidFor: Record<string, ExactAmount> = {}
   let totalAmount = 0
@@ -237,6 +238,15 @@ export function getBalances(expenses: BalanceExpense[]): Balances {
     addExact(globalPaidFor, exactPaidFor)
   }
 
+  return { paid: globalPaid, paidFor: globalPaidFor, totalAmount }
+}
+
+export function getBalances(expenses: BalanceExpense[]): Balances {
+  const {
+    paid: globalPaid,
+    paidFor: globalPaidFor,
+    totalAmount,
+  } = getExactBalances(expenses)
   const paid = distributeRemainder(globalPaid, totalAmount, { seed: 0 })
   const paidFor = distributeRemainder(globalPaidFor, totalAmount, { seed: 0 })
 

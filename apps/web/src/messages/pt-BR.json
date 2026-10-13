@@ -46,6 +46,19 @@
       "invalidCode": "Esse código não é um convite de grupo do Spliit Cloud. Tente escanear o código QR do anfitrião novamente.",
       "foreignDescription": "Vai abrir {origin} neste navegador. Continue apenas se você confiar no anfitrião que mostrou o código.",
       "foreignConfirm": "Abrir link"
+    },
+    "Activity": {
+      "title": "Despesas e receitas",
+      "shared": "Totais compartilhados",
+      "income": "Receitas",
+      "shareHint": "Partes atribuídas nas contas a que você tem acesso. Os acertos estão excluídos.",
+      "personHint": "{name}: apenas atividade nas contas que vocês compartilham.",
+      "inclusionHint": "As contas arquivadas e ocultas estão incluídas, a menos que você as exclua em Mais filtros.",
+      "partial": "Algumas contas não têm um participante associado a você. Seus totais podem estar incompletos.",
+      "empty": "Não há atividade registrada para estes filtros.",
+      "updating": "Atualizando estatísticas…",
+      "stale": "Exibindo estatísticas em cache. Conecte-se para atualizar.",
+      "trend": "Despesas e receitas ao longo do tempo"
     }
   },
   "Header": {

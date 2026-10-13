@@ -27,6 +27,7 @@ vi.mock('@/trpc/client', () => ({
         },
       },
       overview: {
+        stats: { get: { invalidate: vi.fn(async () => undefined) } },
         get: {
           invalidate: mockInvalidateOverview,
         },

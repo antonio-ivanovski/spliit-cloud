@@ -16,7 +16,8 @@
     "prisma-create-migration": "prisma migrate dev",
     "prisma-generate": "prisma generate --schema prisma/schema.prisma",
     "prisma-migrate": "prisma migrate deploy --schema prisma/schema.prisma",
-    "test": "vitest run src"
+    "test": "vitest run src",
+    "test:integration": "vitest run --config vitest.integration.config.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

@@ -16,6 +16,7 @@ import {
 import { useState, Suspense, lazy } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { PageInset } from '@/components/layout/page-shell'
 import { useMascotController } from '@/components/mascot/mascot-context'
@@ -38,6 +39,7 @@ import {
 } from '@/components/ui/popover'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useToast } from '@/components/ui/use-toast'
+import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import { getCurrencyFromGroup } from '@/lib/currency'
 import { useMediaQuery } from '@/lib/hooks'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
@@ -55,6 +57,7 @@ import { ForceArchiveDialogSection } from './force-archive-dialog-section'
 import type { AccountGroup } from './group-buckets'
 import { isViewOnlyGroup, partitionGroups } from './group-buckets'
 import { GroupCard } from './group-card'
+import { HomeStats } from './home-stats'
 import { PendingInvitations } from './pending-invitations'
 
 // The scan dialog (and through it, the camera stack) stays out of the
@@ -68,6 +71,7 @@ const ScanToJoinDialog = lazy(() =>
 
 const STORAGE_KEYS = {
   starred: 'spliit:home:section:starred',
+  stats: 'spliit:home:section:stats',
   groups: 'spliit:home:section:groups',
   friends: 'spliit:home:section:friends',
   archived: 'spliit:home:section:archived',
@@ -108,9 +112,12 @@ export function RecentGroupList() {
   const { t: tStats } = useTranslation(undefined, { keyPrefix: 'Stats' })
   const { t: tOffline } = useTranslation()
   const { data: account } = useCurrentAccount()
+  const preferences = useSyncedAccountPreferences()
+  const timeZone = preferences?.timeZone ?? detectDeviceTimeZone()
   const utils = trpc.useUtils()
-  const { data, error, isLoading, refetch } =
-    trpc.overview.get.useQuery(undefined)
+  const { data, error, isLoading, refetch } = trpc.overview.get.useQuery({
+    timeZone,
+  })
   const showOfflineEmpty = useOfflineWithoutData(!!data)
   // Offline adapter: catalog cards + stored overviews when the network has no
   // complete result. Totals render only when every catalog group is ready and
@@ -441,6 +448,20 @@ export function RecentGroupList() {
             <ul className="motion-stagger grid items-stretch gap-3 sm:grid-cols-2">
               {renderGroupItems(starred, 'starred')}
             </ul>
+          </CollapsibleSection>
+        )}
+
+        {data?.activity && (
+          <CollapsibleSection
+            storageKey={STORAGE_KEYS.stats}
+            defaultOpen
+            title={tStats('title')}
+            insetHeader
+          >
+            <HomeStats
+              key={`${account?.id ?? ''}:${timeZone}`}
+              initial={data.activity}
+            />
           </CollapsibleSection>
         )}
 

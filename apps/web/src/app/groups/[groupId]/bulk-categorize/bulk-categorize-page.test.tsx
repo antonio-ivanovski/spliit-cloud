@@ -26,6 +26,11 @@ vi.mock('@tanstack/react-router', () => ({
 vi.mock('@/trpc/client', () => ({
   trpc: {
     useUtils: () => ({
+      account: { groups: { invalidate: vi.fn(async () => undefined) } },
+      overview: {
+        get: { invalidate: vi.fn(async () => undefined) },
+        stats: { get: { invalidate: vi.fn(async () => undefined) } },
+      },
       ai: {
         bulkCategorize: {
           saveConflicts: { fetch: mocks.saveConflictsFetch },

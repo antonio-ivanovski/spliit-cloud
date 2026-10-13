@@ -15,8 +15,9 @@ import {
 import type { StatsDashboardData } from './dashboard-types'
 
 type Props = {
-  data: StatsDashboardData
+  data: Pick<StatsDashboardData, 'categories'>
   currency: Currency
+  limit?: number
 }
 
 function usePercentFormatter(locale: string) {
@@ -30,7 +31,7 @@ function usePercentFormatter(locale: string) {
   )
 }
 
-export function CategoryBreakdown({ data, currency }: Props) {
+export function CategoryBreakdown({ data, currency, limit = 6 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Stats.Dashboard' })
   const locale = useLocale()
   const percentFormatter = usePercentFormatter(locale)
@@ -47,11 +48,11 @@ export function CategoryBreakdown({ data, currency }: Props) {
         {t('categoriesDescription')}
       </p>
       <div className="mt-5 space-y-4">
-        {data.categories.slice(0, 6).map((category, index) => (
+        {data.categories.slice(0, limit).map((category, index) => (
           <div key={category.categoryId}>
             <div className="mb-1.5 flex items-center gap-2 text-sm">
               <span
-                className="grid size-7 place-items-center rounded-md"
+                className="grid size-7 shrink-0 place-items-center rounded-md"
                 style={{
                   backgroundColor: `${getCategoryColor(index)}1a`,
                   color: getCategoryColor(index),
@@ -65,7 +66,7 @@ export function CategoryBreakdown({ data, currency }: Props) {
               <span className="min-w-0 flex-1 truncate">
                 {categoryLabel(t, category.categoryId)}
               </span>
-              <span className="font-medium tabular-nums">
+              <span className="shrink-0 font-medium tabular-nums">
                 {formatCurrency(currency, category.amount, locale)}
               </span>
             </div>
