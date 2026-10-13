@@ -359,4 +359,71 @@ describe('deliverySnapshotV1Schema', () => {
       expect(parsed.push.url).toBe(baseLink)
     }
   })
+
+  it('parses enriched group, actor, and expense details on expense_created', () => {
+    const snapshot = {
+      ...emailSnapshotForKind('expense_created'),
+      actor: { id: 'acct-alice', name: 'Alice', type: 'ACCOUNT' },
+      group: {
+        ...baseGroup,
+        displayName: 'your friend ledger with Alice',
+        memberCount: 2,
+      },
+      expense: {
+        ...baseExpense,
+        categoryName: 'Dining',
+        isSettlement: false,
+        paidBy: [{ name: 'Alice', amount: 4500 }],
+        paidByOverflowCount: 0,
+      },
+    }
+    const parsed = deliverySnapshotV1Schema.parse(snapshot)
+    if (parsed.kind === 'expense_created') {
+      expect(parsed.actor).toEqual({
+        id: 'acct-alice',
+        name: 'Alice',
+        type: 'ACCOUNT',
+      })
+      expect(parsed.group.displayName).toBe('your friend ledger with Alice')
+      expect(parsed.group.memberCount).toBe(2)
+      expect(parsed.expense.categoryName).toBe('Dining')
+      expect(parsed.expense.isSettlement).toBe(false)
+      expect(parsed.expense.paidBy).toEqual([{ name: 'Alice', amount: 4500 }])
+      expect(parsed.expense.paidByOverflowCount).toBe(0)
+    } else {
+      throw new Error(`unexpected kind: ${parsed.kind}`)
+    }
+  })
+
+  it('keeps pre-enrichment snapshots parsing without the new fields', () => {
+    // No displayName/memberCount/type/categoryName/paidBy anywhere.
+    const parsed = deliverySnapshotV1Schema.parse(
+      emailSnapshotForKind('expense_created'),
+    )
+    if (parsed.kind === 'expense_created') {
+      expect(parsed.actor).toEqual(baseActor)
+      expect(parsed.group.displayName).toBeUndefined()
+      expect(parsed.group.memberCount).toBeUndefined()
+      expect(parsed.expense.categoryName).toBeUndefined()
+      expect(parsed.expense.paidBy).toBeUndefined()
+    } else {
+      throw new Error(`unexpected kind: ${parsed.kind}`)
+    }
+  })
+
+  it('rejects more than three snapshot payers', () => {
+    const snapshot = {
+      ...emailSnapshotForKind('expense_created'),
+      expense: {
+        ...baseExpense,
+        paidBy: [
+          { name: 'A', amount: 100 },
+          { name: 'B', amount: 100 },
+          { name: 'C', amount: 100 },
+          { name: 'D', amount: 100 },
+        ],
+      },
+    }
+    expect(() => deliverySnapshotV1Schema.parse(snapshot)).toThrow()
+  })
 })

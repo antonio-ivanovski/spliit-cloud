@@ -292,6 +292,94 @@ describe('EmailDeliverySenderImpl', () => {
     expect(message.subject).toContain('You added "Dinner"')
   })
 
+  it('renders category, payers, and member count for enriched expense_created snapshots', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({
+      email: 'bob@example.com',
+      emailVerified: true,
+    } as never)
+    const snapshot = deliverySnapshotV1Schema.parse({
+      ...buildExpenseCreatedSnapshot(),
+      group: {
+        id: 'grp-1',
+        name: 'Trip',
+        type: 'GROUP',
+        displayName: 'Trip',
+        memberCount: 4,
+      },
+      expense: {
+        id: 'exp-1',
+        description: 'Dinner',
+        amount: 4500,
+        currencyCode: 'EUR',
+        categoryName: 'Dining',
+        isSettlement: false,
+        paidBy: [{ name: 'Alice', amount: 4500 }],
+        paidByOverflowCount: 0,
+      },
+    })
+
+    await emailSender.send({
+      deliveryId: 'delivery-enriched',
+      snapshot,
+      recipientAccountId: 'acct-bob',
+    })
+
+    const message = sendEmailMock.mock.calls[0][0]
+    expect(message.text).toContain('Category: Dining')
+    expect(message.text).toContain('Paid by: Alice')
+    expect(message.text).toContain('4 members')
+    expect(message.html).toContain('Category:')
+    expect(message.html).toContain('Dining')
+    expect(message.html).toContain('Paid by:')
+    expect(message.html).toContain('Alice')
+  })
+
+  it('prefers the peer-aware display name over the raw group name', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({
+      email: 'bob@example.com',
+      emailVerified: true,
+    } as never)
+    const snapshot = deliverySnapshotV1Schema.parse({
+      ...buildExpenseCreatedSnapshot(),
+      group: {
+        id: 'grp-1',
+        name: 'abc123',
+        type: 'FRIEND',
+        displayName: 'your friend ledger with Alice',
+        memberCount: 2,
+      },
+    })
+
+    await emailSender.send({
+      deliveryId: 'delivery-friend-display',
+      snapshot,
+      recipientAccountId: 'acct-bob',
+    })
+
+    const message = sendEmailMock.mock.calls[0][0]
+    expect(message.subject).toContain('your friend ledger with Alice')
+    expect(message.subject).not.toContain('abc123')
+  })
+
+  it('omits the category and payer rows when the snapshot carries none', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({
+      email: 'bob@example.com',
+      emailVerified: true,
+    } as never)
+
+    await emailSender.send({
+      deliveryId: 'delivery-plain',
+      snapshot: buildExpenseCreatedSnapshot(),
+      recipientAccountId: 'acct-bob',
+    })
+
+    const message = sendEmailMock.mock.calls[0][0]
+    expect(message.text).not.toContain('Category:')
+    expect(message.text).not.toContain('Paid by:')
+    expect(message.html).not.toContain('Category:')
+    expect(message.html).not.toContain('Paid by:')
+  })
+
   it('throws PermanentDeliveryError when the account is missing', async () => {
     prismaMock.user.findUnique.mockResolvedValue(null as never)
     const snapshot = buildExpenseCreatedSnapshot()

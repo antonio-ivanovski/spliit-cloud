@@ -59,6 +59,58 @@ function expensePersonalLine(
   )
 }
 
+/**
+ * Per-recipient group label. Friend-ledger snapshots carry a peer-aware
+ * `displayName`; every other snapshot (and all pre-enrichment rows) falls back
+ * to the raw group name.
+ */
+function groupDisplayNameOf(snapshot: DeliverySnapshotV1): string {
+  const group = snapshot.group as { name: string; displayName?: unknown }
+  return typeof group.displayName === 'string' && group.displayName.length > 0
+    ? group.displayName
+    : group.name
+}
+
+function groupMemberCountOf(snapshot: DeliverySnapshotV1): number | null {
+  const group = snapshot.group as { memberCount?: unknown }
+  return typeof group.memberCount === 'number' &&
+    Number.isInteger(group.memberCount) &&
+    group.memberCount >= 0
+    ? group.memberCount
+    : null
+}
+
+/** " · 5 members" suffix for the email group header, or empty. */
+function memberCountSuffix(memberCount: number | null): string {
+  return memberCount != null ? ` · ${memberCount} members` : ''
+}
+
+/**
+ * Pre-formatted payer line for created-expense emails, e.g. "Alice (€30.00),
+ * Bob (€12.00) +1 more". Null when the snapshot carries no payers so callers
+ * keep the generic copy.
+ */
+function expensePaidByLine(
+  expense: {
+    paidBy?: Array<{ name: string; amount: number }>
+    paidByOverflowCount?: number
+    currencyCode: string | null
+  },
+  locale: string,
+): string | null {
+  const payers = expense.paidBy ?? []
+  if (payers.length === 0) return null
+  const parts = payers.map((payer) => {
+    const amount =
+      formatNotificationAmount(payer.amount, expense.currencyCode, locale) ??
+      String(payer.amount)
+    return `${payer.name} (${amount})`
+  })
+  const overflow = expense.paidByOverflowCount ?? 0
+  if (overflow > 0) parts.push(`+${overflow} more`)
+  return parts.join(', ')
+}
+
 function isTransientCode(code: string | undefined): boolean {
   if (!code) return false
   return (
@@ -153,10 +205,12 @@ function renderSnapshotEmail(args: {
   brandBaseUrl: string
 }): Promise<{ subject: string; text: string; html: string }> {
   const { snapshot, unsubscribeUrl, brandBaseUrl } = args
-  // Group-scoped phrasing ("in Trip") uses the real group name, never the
-  // recipient's display name. The recipient display name (exosed on the
+  // Group-scoped phrasing ("in Trip") uses the per-recipient display name
+  // (peer-aware for friend ledgers), falling back to the real group name for
+  // pre-enrichment snapshots. The recipient display name (exposed on the
   // snapshot) is reserved for greetings addressed to the recipient.
-  const groupDisplayName = snapshot.group.name
+  const groupDisplayName = groupDisplayNameOf(snapshot)
+  const groupMemberCount = groupMemberCountOf(snapshot)
   const actor = actorName(snapshot)
   const link = snapshot.link
   const locale = snapshot.recipient.locale ?? 'en-US'
@@ -209,10 +263,17 @@ function renderSnapshotEmail(args: {
     case 'expense_created': {
       const displayActor = displayActorName(snapshot)
       const personalLine = expensePersonalLine(snapshot, locale)
+      const paidByLine = expensePaidByLine(snapshot.expense, locale)
+      const categoryName = snapshot.expense.categoryName ?? null
+      const detailLines = [
+        personalLine ? `\n\n${personalLine}` : '',
+        categoryName ? `\nCategory: ${categoryName}` : '',
+        paidByLine ? `\nPaid by: ${paidByLine}` : '',
+      ].join('')
       return renderExpenseActivityEmail({
         kind: 'expense',
         subject: `[Spliit Cloud] ${displayActor} added "${snapshot.expense.description}" to ${groupDisplayName}`,
-        text: `${displayActor} added "${snapshot.expense.description}" in ${groupDisplayName}.${personalLine ? `\n\n${personalLine}` : ''}\n\nView it here:\n${link}`,
+        text: `${displayActor} added "${snapshot.expense.description}" in ${groupDisplayName}${memberCountSuffix(groupMemberCount)}.${detailLines}\n\nView it here:\n${link}`,
         brandBaseUrl,
         groupDisplayName: groupDisplayName,
         actorName: displayActor,
@@ -226,6 +287,9 @@ function renderSnapshotEmail(args: {
         expenseUrl: link,
         unsubscribeUrl,
         personalLine,
+        categoryName,
+        paidByLine,
+        groupMemberCount,
         eventType: 'EXPENSE_CREATED',
       })
     }
@@ -235,7 +299,7 @@ function renderSnapshotEmail(args: {
       return renderExpenseActivityEmail({
         kind: 'expense',
         subject: `[Spliit Cloud] ${displayActor} updated "${snapshot.expense.description}" in ${groupDisplayName}`,
-        text: `${displayActor} updated "${snapshot.expense.description}" in ${groupDisplayName}.\n\nChanged: ${snapshot.changedFields.join(', ')}${personalLine ? `\n\n${personalLine}` : ''}\n\nView it here:\n${link}`,
+        text: `${displayActor} updated "${snapshot.expense.description}" in ${groupDisplayName}${memberCountSuffix(groupMemberCount)}.\n\nChanged: ${snapshot.changedFields.join(', ')}${personalLine ? `\n\n${personalLine}` : ''}\n\nView it here:\n${link}`,
         brandBaseUrl,
         groupDisplayName: groupDisplayName,
         actorName: displayActor,
@@ -250,6 +314,7 @@ function renderSnapshotEmail(args: {
         expenseUrl: link,
         unsubscribeUrl,
         personalLine,
+        groupMemberCount,
         eventType: 'EXPENSE_UPDATED',
       })
     }
@@ -290,11 +355,12 @@ function renderSnapshotEmail(args: {
         unsubscribeUrl,
       })
     }
-    case 'recurring_created':
+    case 'recurring_created': {
+      const paidByLine = expensePaidByLine(snapshot.expense, locale)
       return renderExpenseActivityEmail({
         kind: 'expense',
         subject: `[Spliit Cloud] ${actor} created recurring "${snapshot.expense.description}" in ${groupDisplayName}`,
-        text: `${actor} created recurring "${snapshot.expense.description}" in ${groupDisplayName} (${snapshot.recurrence.rule}).\n\nView it here:\n${link}`,
+        text: `${actor} created recurring "${snapshot.expense.description}" in ${groupDisplayName}${memberCountSuffix(groupMemberCount)} (${snapshot.recurrence.rule}).${snapshot.expense.categoryName ? `\nCategory: ${snapshot.expense.categoryName}` : ''}${paidByLine ? `\nPaid by: ${paidByLine}` : ''}\n\nView it here:\n${link}`,
         brandBaseUrl,
         groupDisplayName: groupDisplayName,
         actorName: actor,
@@ -308,13 +374,18 @@ function renderSnapshotEmail(args: {
         recurrence: snapshot.recurrence.rule,
         expenseUrl: link,
         unsubscribeUrl,
+        categoryName: snapshot.expense.categoryName ?? null,
+        paidByLine,
+        groupMemberCount,
         eventType: 'RECURRING_EXPENSE_CREATED',
       })
-    case 'recurring_occurrence':
+    }
+    case 'recurring_occurrence': {
+      const paidByLine = expensePaidByLine(snapshot.expense, locale)
       return renderExpenseActivityEmail({
         kind: 'expense',
         subject: `[Spliit Cloud] ${actor} added "${snapshot.expense.description}" to ${groupDisplayName}`,
-        text: `${actor} added "${snapshot.expense.description}" in ${groupDisplayName} (${snapshot.recurrence.rule}).\n\nView it here:\n${link}`,
+        text: `${actor} added "${snapshot.expense.description}" in ${groupDisplayName}${memberCountSuffix(groupMemberCount)} (${snapshot.recurrence.rule}).${snapshot.expense.categoryName ? `\nCategory: ${snapshot.expense.categoryName}` : ''}${paidByLine ? `\nPaid by: ${paidByLine}` : ''}\n\nView it here:\n${link}`,
         brandBaseUrl,
         groupDisplayName: groupDisplayName,
         actorName: actor,
@@ -328,8 +399,12 @@ function renderSnapshotEmail(args: {
         recurrence: snapshot.recurrence.rule,
         expenseUrl: link,
         unsubscribeUrl,
+        categoryName: snapshot.expense.categoryName ?? null,
+        paidByLine,
+        groupMemberCount,
         eventType: 'EXPENSE_CREATED',
       })
+    }
     case 'recurring_summary': {
       const noun = snapshot.occurrenceCount === 1 ? 'expense' : 'expenses'
       const countLabel = formatNotificationNumber(
@@ -450,11 +525,12 @@ function renderSnapshotEmail(args: {
         groupUrl: link,
         unsubscribeUrl,
       })
-    case 'settlement':
+    case 'settlement': {
+      const paidByLine = expensePaidByLine(snapshot.expense, locale)
       return renderExpenseActivityEmail({
         kind: 'expense',
         subject: `[Spliit Cloud] ${actor} settled "${snapshot.expense.description}" in ${groupDisplayName}`,
-        text: `${actor} settled "${snapshot.expense.description}" in ${groupDisplayName}.\n\nView it here:\n${link}`,
+        text: `${actor} settled "${snapshot.expense.description}" in ${groupDisplayName}${memberCountSuffix(groupMemberCount)}.${paidByLine ? `\nPaid by: ${paidByLine}` : ''}\n\nView it here:\n${link}`,
         brandBaseUrl,
         groupDisplayName: groupDisplayName,
         actorName: actor,
@@ -467,8 +543,11 @@ function renderSnapshotEmail(args: {
         date: null,
         expenseUrl: link,
         unsubscribeUrl,
+        paidByLine,
+        groupMemberCount,
         eventType: 'EXPENSE_CREATED',
       })
+    }
     case 'invitation':
       return renderGroupActivityEmail({
         subject: `[Spliit Cloud] ${snapshot.inviterName} invited you to ${snapshot.group.name}`,

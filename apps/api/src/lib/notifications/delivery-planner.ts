@@ -1,6 +1,7 @@
 import { type Prisma } from '@spliit/db'
 import {
   getBalances,
+  getCategoryById,
   isSettlementCategory,
   type Balances,
   type RemainderAllocationMode,
@@ -31,6 +32,10 @@ import {
   type DeliverySnapshotKind,
   type DeliverySnapshotV1,
 } from './delivery-snapshot'
+import {
+  resolveGroupDisplayName,
+  type ExpenseNotificationMember,
+} from './expense-notification-shared'
 import { formatNotificationAmount } from './format'
 import { defaultActivityHandlers } from './handlers'
 import {
@@ -65,12 +70,23 @@ type PreloadedSnapshotContext = {
       timeZone: string | null
     }
   >
-  group: { id: string; name: string; groupType: string } | null
+  group: {
+    id: string
+    name: string
+    groupType: string
+    memberCount: number | null
+    members: ExpenseNotificationMember[]
+    pendingTemporaryName: string | undefined
+  } | null
   expense: {
     id: string
     description: string
     amount: number
     currencyCode: string | null
+    categoryName: string | null
+    isSettlement: boolean
+    paidBy: Array<{ name: string; amount: number }>
+    paidByOverflowCount: number
   } | null
   /**
    * Single-expense balances for the personal share line on
@@ -275,8 +291,34 @@ async function preloadSnapshotContext(args: {
         }>)
   const groupRow = await tx.group.findUnique({
     where: { id: event.groupId },
-    select: { id: true, name: true, groupType: true },
+    select: {
+      id: true,
+      name: true,
+      groupType: true,
+      members: {
+        where: { status: 'ACTIVE' },
+        select: { account: { select: { id: true, name: true } } },
+        take: 2,
+      },
+      invitations: {
+        where: { status: 'PENDING' },
+        select: { temporaryName: true },
+        take: 1,
+        orderBy: { createdAt: 'desc' },
+      },
+    },
   })
+  // Separate count query (sequential: the planner transaction holds a single
+  // pg connection). Tolerates mocks/legacy rows that resolve without it.
+  let memberCount: number | null = null
+  try {
+    const count = await tx.groupMember.count({
+      where: { groupId: event.groupId, status: 'ACTIVE' },
+    })
+    if (typeof count === 'number') memberCount = count
+  } catch {
+    memberCount = null
+  }
 
   const accountsById = new Map<
     string,
@@ -300,6 +342,14 @@ async function preloadSnapshotContext(args: {
         id: groupRow.id,
         name: groupRow.name,
         groupType: String(groupRow.groupType),
+        memberCount,
+        members: ((groupRow as { members?: ExpenseNotificationMember[] })
+          .members ?? []) as ExpenseNotificationMember[],
+        pendingTemporaryName: (
+          groupRow as {
+            invitations?: Array<{ temporaryName: string | null }>
+          }
+        ).invitations?.[0]?.temporaryName as string | undefined,
       }
     : null
 
@@ -310,6 +360,15 @@ async function preloadSnapshotContext(args: {
   // row left to compute from, and summaries stay generic by design.
   const needsShares =
     snapshotKind === 'expense_created' || snapshotKind === 'expense_updated'
+  // Payer/category enrichment needs the same balances + participant mapping
+  // for every single-expense view (created, recurring instances, settlement).
+  // UPDATED intentionally keeps changed-field names only, so its snapshot
+  // never carries the enrichment below.
+  const needsEnrichment =
+    needsShares ||
+    snapshotKind === 'recurring_created' ||
+    snapshotKind === 'recurring_occurrence' ||
+    snapshotKind === 'settlement'
   let expenseShares: PreloadedSnapshotContext['expenseShares'] = null
   if (
     event.subject?.id &&
@@ -362,10 +421,26 @@ async function preloadSnapshotContext(args: {
           description: row.title,
           amount: row.amount,
           currencyCode: row.ledger.currencyCode,
+          categoryName: categoryDisplayName(
+            (row as { categoryId?: unknown }).categoryId,
+          ),
+          isSettlement: isSettlementCategory(
+            typeof (row as { categoryId?: unknown }).categoryId === 'string'
+              ? ((row as { categoryId?: string }).categoryId as string)
+              : undefined,
+          ),
+          paidBy: [],
+          paidByOverflowCount: 0,
         }
       : null
-    if (expense && needsShares && row) {
+    if (expense && needsEnrichment && row) {
       expenseShares = await loadExpenseShares(tx, row)
+      if (expenseShares) {
+        await topUpPayerAccountNames(tx, expenseShares, accountsById)
+        const payers = resolveExpensePayers(expenseShares, accountsById)
+        expense.paidBy = payers.paidBy
+        expense.paidByOverflowCount = payers.overflowCount
+      }
     }
   }
 
@@ -499,6 +574,80 @@ function resolvePersonalShare(
   })
 }
 
+/**
+ * In-code category display name for an `Expense.categoryId` slug. Returns null
+ * for unknown/missing ids so callers omit the Category line instead of
+ * rendering a raw slug.
+ */
+function categoryDisplayName(categoryId: unknown): string | null {
+  if (typeof categoryId !== 'string' || categoryId.length === 0) return null
+  return getCategoryById(categoryId)?.name ?? null
+}
+
+/**
+ * Fetch display names for payer accounts missing from `accountsById`
+ * (recipients + actor are already loaded). Best-effort: failures leave the map
+ * untouched and payers fall back to omission, never failing the plan.
+ */
+async function topUpPayerAccountNames(
+  tx: PlannerClient,
+  shares: NonNullable<PreloadedSnapshotContext['expenseShares']>,
+  accountsById: PreloadedSnapshotContext['accountsById'],
+): Promise<void> {
+  const missing = [...shares.participantIdByAccountId.keys()].filter(
+    (accountId) => !accountsById.has(accountId),
+  )
+  if (missing.length === 0) return
+  try {
+    const rows = await tx.user.findMany({
+      where: { id: { in: missing } },
+      select: { id: true, name: true },
+    })
+    for (const row of rows as Array<{ id: string; name: string }>) {
+      accountsById.set(row.id, {
+        id: row.id,
+        name: row.name,
+        locale: null,
+        timeZone: null,
+      })
+    }
+  } catch {
+    // Omit payer names; the notification still delivers.
+  }
+}
+
+const MAX_SNAPSHOT_PAYERS = 3
+
+/**
+ * Top payers by paid amount (descending) from preloaded single-expense
+ * balances. Participants without a paid share or without a resolvable account
+ * name are skipped; surplus payers collapse into `overflowCount`.
+ */
+function resolveExpensePayers(
+  shares: NonNullable<PreloadedSnapshotContext['expenseShares']>,
+  accountsById: PreloadedSnapshotContext['accountsById'],
+): { paidBy: Array<{ name: string; amount: number }>; overflowCount: number } {
+  const accountIdByParticipantId = new Map<string, string>()
+  for (const [accountId, participantId] of shares.participantIdByAccountId) {
+    accountIdByParticipantId.set(participantId, accountId)
+  }
+  const ranked: Array<{ name: string; amount: number }> = []
+  for (const [participantId, entry] of Object.entries(shares.balances)) {
+    const paid = (entry as { paid?: unknown }).paid
+    if (typeof paid !== 'number' || !Number.isInteger(paid) || paid <= 0)
+      continue
+    const accountId = accountIdByParticipantId.get(participantId)
+    const name = accountId ? accountsById.get(accountId)?.name : undefined
+    if (!accountId || !name) continue
+    ranked.push({ name, amount: paid })
+  }
+  ranked.sort((a, b) => b.amount - a.amount)
+  return {
+    paidBy: ranked.slice(0, MAX_SNAPSHOT_PAYERS),
+    overflowCount: Math.max(0, ranked.length - MAX_SNAPSHOT_PAYERS),
+  }
+}
+
 function buildSnapshot(args: {
   event: ActivityNotificationEvent
   eventKey: string
@@ -536,12 +685,29 @@ function buildSnapshot(args: {
       : {}),
   }
   const actorSnapshot = actor
-    ? { id: actor.id, name: actor.name }
+    ? { id: actor.id, name: actor.name, type: 'ACCOUNT' as const }
     : event.actor?.type === 'ACCOUNT'
-      ? { id: event.actor.id, name: '' }
+      ? { id: event.actor.id, name: '', type: 'ACCOUNT' as const }
       : null
+  const groupDisplayName = group
+    ? resolveGroupDisplayName(
+        group.groupType,
+        group.name,
+        group.members,
+        recipientAccountId,
+        group.pendingTemporaryName,
+      )
+    : ''
   const baseGroup = group
-    ? { id: group.id, name: group.name, type: group.groupType }
+    ? {
+        id: group.id,
+        name: group.name,
+        type: group.groupType,
+        displayName: groupDisplayName,
+        ...(group.memberCount != null
+          ? { memberCount: group.memberCount }
+          : {}),
+      }
     : { id: event.groupId, name: '', type: 'GROUP' }
   const baseLink = `${getWebBaseUrl()}/groups/${event.groupId}`
   const kind = pickSnapshotKind(event)
@@ -570,14 +736,22 @@ function buildSnapshot(args: {
         formatNotificationAmount(cents, personal.currencyCode, recipientLocale),
       )
     : null
+  const actorLabel = actor?.name || 'Someone'
   const pushFields =
     channel === NotificationChannel.PUSH && pushSubscriptionId
       ? {
           subscriptionId: pushSubscriptionId,
           title: pushTitle(event),
-          body: personalSuffix
-            ? `${pushBody(event)} · ${personalSuffix}`
-            : pushBody(event),
+          body: pushBodyForSnapshot({
+            kind,
+            event,
+            parsed,
+            expense,
+            recipientLocale,
+            actorLabel,
+            groupDisplayName,
+            personalSuffix,
+          }),
           url: link,
           tag: eventKey,
         }
@@ -603,6 +777,14 @@ function buildSnapshot(args: {
   } else {
     draft.group = { id: baseGroup.id, name: baseGroup.name }
   }
+  // Standard created-expense enrichment (category, settlement flag, top
+  // payers). UPDATED intentionally stays changed-field names only; DELETED
+  // reuses the captured activity data without enrichment.
+  const enrichExpense =
+    kind === 'expense_created' ||
+    kind === 'recurring_created' ||
+    kind === 'recurring_occurrence' ||
+    kind === 'settlement'
   if (
     kind === 'expense_created' ||
     kind === 'expense_updated' ||
@@ -613,7 +795,19 @@ function buildSnapshot(args: {
   ) {
     if (event.subject?.id) {
       if (expense) {
-        draft.expense = expense
+        const { paidBy, paidByOverflowCount, ...rest } = expense
+        draft.expense = enrichExpense
+          ? {
+              ...rest,
+              ...(paidBy.length > 0 ? { paidBy } : {}),
+              ...(paidByOverflowCount > 0 ? { paidByOverflowCount } : {}),
+            }
+          : {
+              id: expense.id,
+              description: expense.description,
+              amount: expense.amount,
+              currencyCode: expense.currencyCode,
+            }
       } else if (parsed && parsed.kind === 'expense') {
         // The source row was already deleted (for example an EXPENSE_DELETED
         // event). Reconstruct the snapshot from the captured activity data so
@@ -671,6 +865,12 @@ function buildSnapshot(args: {
     kind === 'recurring_stopped'
   ) {
     draft.recurrence = recurrenceFromParsed(parsed, event)
+  }
+  if (kind === 'expense_created') {
+    draft.date =
+      parsed && parsed.kind === 'expense'
+        ? (parsed.date ?? undefined)
+        : undefined
   }
   if (kind === 'recurring_created') {
     draft.date =
@@ -882,4 +1082,88 @@ function pushTitle(event: ActivityNotificationEvent): string {
 function pushBody(event: ActivityNotificationEvent): string {
   const summary = summaryFromParsed(parseActivityData(event.data))
   return summary ?? event.type.toLowerCase().replaceAll('_', ' ')
+}
+
+const MAX_PUSH_BODY_LENGTH = 180
+
+function truncatePushBody(body: string): string {
+  if (body.length <= MAX_PUSH_BODY_LENGTH) return body
+  return `${body.slice(0, MAX_PUSH_BODY_LENGTH - 1).trimEnd()}…`
+}
+
+/**
+ * Enriched push body for single-expense snapshots. Created/recurring/
+ * settlement bodies carry amount, group display name, and top payers; updated
+ * bodies carry the group display name only (changed-field names stay the source
+ * of what changed). Every other kind keeps the legacy generic body. The
+ * personal share suffix appends wherever one was resolved.
+ */
+function pushBodyForSnapshot(args: {
+  kind: DeliverySnapshotKind
+  event: ActivityNotificationEvent
+  parsed: ReturnType<typeof parseActivityData>
+  expense: PreloadedSnapshotContext['expense']
+  recipientLocale: string
+  actorLabel: string
+  groupDisplayName: string
+  personalSuffix: string | null
+}): string {
+  const {
+    kind,
+    event,
+    parsed,
+    expense,
+    recipientLocale,
+    actorLabel,
+    groupDisplayName,
+    personalSuffix,
+  } = args
+  const withPersonal = (body: string) =>
+    truncatePushBody(personalSuffix ? `${body} · ${personalSuffix}` : body)
+  if (
+    kind === 'expense_created' ||
+    kind === 'recurring_created' ||
+    kind === 'settlement' ||
+    kind === 'expense_updated'
+  ) {
+    const parsedTitle =
+      parsed && parsed.kind === 'expense' ? parsed.title : undefined
+    const description = expense?.description || parsedTitle || 'expense'
+    const amount =
+      expense?.amount ??
+      (parsed && parsed.kind === 'expense' ? parsed.amount : undefined)
+    const currency =
+      expense?.currencyCode ??
+      (parsed && parsed.kind === 'expense' ? parsed.currencyCode : undefined)
+    const amountStr =
+      amount != null
+        ? formatNotificationAmount(amount, currency ?? null, recipientLocale)
+        : null
+    const quoted = `"${description}"`
+    const amountPart = amountStr ? ` (${amountStr})` : ''
+    const groupPart = groupDisplayName ? ` in ${groupDisplayName}` : ''
+    if (kind === 'expense_updated') {
+      return withPersonal(`${actorLabel} updated ${quoted}${groupPart}`)
+    }
+    const verb =
+      kind === 'settlement'
+        ? 'settled'
+        : kind === 'recurring_created'
+          ? 'created recurring'
+          : 'added'
+    let payerPart = ''
+    const payers = expense?.paidBy ?? []
+    if (payers.length > 0) {
+      const names = payers.map((payer) => payer.name).join(', ')
+      const overflow =
+        (expense?.paidByOverflowCount ?? 0) > 0
+          ? ` +${expense?.paidByOverflowCount}`
+          : ''
+      payerPart = ` · Paid by ${names}${overflow}`
+    }
+    return withPersonal(
+      `${actorLabel} ${verb} ${quoted}${amountPart}${groupPart}${payerPart}`,
+    )
+  }
+  return withPersonal(pushBody(event))
 }

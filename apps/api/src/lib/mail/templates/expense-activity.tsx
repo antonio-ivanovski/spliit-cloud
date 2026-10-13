@@ -28,6 +28,12 @@ export type ExpenseActivityInput = {
   unsubscribeUrl?: string
   /** Per-recipient share line, e.g. "You owe EUR 15.00". */
   personalLine?: string | null
+  /** Expense category display name, e.g. "Dining". */
+  categoryName?: string | null
+  /** Pre-formatted payer line, e.g. "Alice (€30.00), Bob (€12.00)". */
+  paidByLine?: string | null
+  /** Active group member count for the "in {group}" header. */
+  groupMemberCount?: number | null
   /** Human-readable recurrence description, e.g. "Monthly, 12 total". */
   recurrence?: string
   /** When true the recurrence was cancelled as part of this action. */
@@ -133,6 +139,9 @@ export function ExpenseActivityEmail(
       </Heading>
       <Text className="m-0 mb-4 text-[15px] leading-[22px] text-[#0f172a]">
         in <strong>{props.groupDisplayName}</strong>
+        {props.groupMemberCount != null ? (
+          <> · {props.groupMemberCount} members</>
+        ) : null}
         {props.amountStr ? <> · {props.amountStr}</> : null}
         {props.date ? <> · {props.date}</> : null}.
       </Text>
@@ -153,6 +162,16 @@ export function ExpenseActivityEmail(
         {props.date ? (
           <Text className="m-0 mt-2 text-[14px] leading-[22px] text-[#0f172a]">
             <strong>Date:</strong> {props.date}
+          </Text>
+        ) : null}
+        {props.categoryName ? (
+          <Text className="m-0 mt-2 text-[14px] leading-[22px] text-[#0f172a]">
+            <strong>Category:</strong> {props.categoryName}
+          </Text>
+        ) : null}
+        {props.paidByLine ? (
+          <Text className="m-0 mt-2 text-[14px] leading-[22px] text-[#0f172a]">
+            <strong>Paid by:</strong> {props.paidByLine}
           </Text>
         ) : null}
         {props.recurrence ? (

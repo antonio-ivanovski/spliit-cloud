@@ -9,6 +9,9 @@ const snapshotVersionSchema = z.literal(NotificationSnapshotVersion.V1)
 const snapshotActorSchema = z.object({
   id: z.string(),
   name: z.string(),
+  // Provenance for renderers ("You" vs "Someone" vs future system labels).
+  // Optional so snapshots persisted before actor enrichment keep parsing.
+  type: z.enum(['ACCOUNT', 'LEDGER_PARTICIPANT', 'SYSTEM']).optional(),
 })
 
 const snapshotRecipientSchema = z.object({
@@ -29,17 +32,37 @@ const snapshotPushFieldsSchema = z.object({
   icon: z.string().optional(),
 })
 
+const snapshotPaidBySchema = z.object({
+  name: z.string(),
+  amount: z.number().int(),
+})
+
 const snapshotExpenseSchema = z.object({
   id: z.string(),
   description: z.string(),
   amount: z.number().int(),
   currencyCode: z.string().nullable(),
+  // Standard created-expense enrichment (category, settlement flag, payers).
+  // All optional so pre-enrichment snapshots keep parsing; updated/deleted
+  // snapshots never set these (updated stays changed-field names only).
+  categoryName: z.string().nullable().optional(),
+  isSettlement: z.boolean().optional(),
+  // Top payers by paid amount, capped at 3; overflow goes in
+  // `paidByOverflowCount`.
+  paidBy: z.array(snapshotPaidBySchema).max(3).optional(),
+  paidByOverflowCount: z.number().int().nonnegative().optional(),
 })
 
 const snapshotGroupSchema = z.object({
   id: z.string(),
   name: z.string(),
   type: z.string(),
+  // Per-recipient peer-aware label ("your friend ledger with X" for FRIEND
+  // groups). Falls back to `name` when absent (pre-enrichment snapshots).
+  displayName: z.string().optional(),
+  // Active member count for the email group header. Absent when the group
+  // row could not be loaded.
+  memberCount: z.number().int().nonnegative().optional(),
 })
 
 const snapshotRecurrenceSchema = z.object({
