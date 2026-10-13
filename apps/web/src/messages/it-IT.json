@@ -730,7 +730,12 @@
       "createDescription": "Saldi, totali e chi deve a chi sono calcolati in questa valuta. Scegli la valuta addebitata realmente dalle carte, di solito la tua valuta abituale.",
       "editDescription": "Saldi, totali e chi deve a chi sono calcolati in questa valuta. La modifica NON convertirà le spese già inserite, eccetto quando la valuta ha \"unità minori\" diverse da quella corrente (es. passaggio da Dollaro USA a Yen Giapponese)",
       "customOption": "Personalizzata",
-      "lockedAfterExpenses": "La valuta è bloccata perché questo gruppo ha già delle spese."
+      "lockedAfterExpenses": "La valuta è bloccata perché questo gruppo ha già delle spese.",
+      "lockedRedirectDescription": "Questo gruppo ha già delle spese, quindi la valuta di liquidazione non può essere cambiata direttamente. Scegli una valuta per aprire lo strumento di scambio — ogni spesa viene convertita con un'anteprima per spesa.",
+      "swapConfirmTitle": "Abbandonare le modifiche non salvate?",
+      "swapConfirmDescription": "Hai modifiche non salvate in queste impostazioni. Se continui allo strumento di scambio, verranno abbandonate e {code} sarà preselezionato come nuova valuta.",
+      "swapConfirmContinue": "Continua allo scambio",
+      "swapConfirmCancel": "Continua a modificare"
     },
     "bulkCategorizeSectionTitle": "Strumenti IA in blocco",
     "bulkCategorizeSectionDescription": "Esegui il categorizzatore IA su più spese contemporaneamente. Utile dopo aver importato spese o quando molti titoli non sono ancora categorizzati.",
@@ -3933,6 +3938,29 @@
           "detail": "Le spese cambiano solo quando confermi la revisione finale."
         }
       }
+    },
+    "swap": {
+      "title": "Scambia la valuta del gruppo",
+      "description": "Cambia la valuta di liquidazione quando esistono già spese. Ogni spesa viene convertita e mostrata per riga prima che cambi qualsiasi cosa.",
+      "start": "Scambia valuta",
+      "steps": {
+        "confirm": {
+          "title": "Conferma",
+          "detail": "Controlla il riepilogo ed esegui lo scambio."
+        },
+        "rates": {
+          "title": "Tassi",
+          "detail": "Tassi storici per spesa o un unico tasso personalizzato."
+        },
+        "review": {
+          "title": "Revisione",
+          "detail": "Controlla i vecchi e i nuovi importi prima di confermare."
+        },
+        "target": {
+          "title": "Destinazione",
+          "detail": "Scegli la nuova valuta di liquidazione."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4796,5 +4824,115 @@
     "description": "Questa versione dell'app non è aggiornata. Aggiorna per ottenere l'ultima versione e riprova.",
     "refresh": "Aggiorna",
     "title": "Aggiornamento dell'app disponibile"
+  },
+  "Swap": {
+    "title": "Scambia la valuta del gruppo",
+    "description": "Converti ogni spesa in una nuova valuta di liquidazione, poi passa il registro del gruppo. Non cambia nulla finché non confermi l'anteprima.",
+    "groupUnavailable": "Non è stato possibile caricare il gruppo.",
+    "backToTools": "Torna agli Strumenti",
+    "backToGroup": "Torna al gruppo",
+    "continue": "Continua",
+    "retry": "Riprova",
+    "offlineNotice": "Riconnettiti per scambiare la valuta del gruppo.",
+    "confirmCta": "Continua per confermare",
+    "confirm": {
+      "title": "Conferma lo scambio di valuta",
+      "description": "Controlla il riepilogo, poi esegui lo scambio.",
+      "run": "Scambia {count} spese",
+      "running": "Scambio in corso…",
+      "irreversible": "Non si può tornare agli importi originali. Potrai scambiare di nuovo in seguito, ma gli importi potrebbero differire di qualche centesimo per arrotondamenti e variazioni dei tassi.",
+      "summary": "Questo riscrive {count} spese da {from} a {to}."
+    },
+    "done": {
+      "message": "{count} spese scambiate in {code}. Saldi, totali ed esportazioni ora usano la nuova valuta.",
+      "backToGroup": "Torna al gruppo",
+      "backToTools": "Torna agli Strumenti",
+      "title": "Scambio completato"
+    },
+    "filters": {
+      "all": "Tutte",
+      "attention": "Richiede attenzione",
+      "converted": "Convertita",
+      "cleared": "Già in {to}",
+      "bridged": "Tasso manuale"
+    },
+    "kind": {
+      "cleared": "Già in {to}",
+      "bridged": "Tasso manuale"
+    },
+    "previewCta": "Anteprima della conversione",
+    "preview": {
+      "title": "Anteprima per spesa",
+      "description": "{count} spese · {from} → {to}",
+      "loading": "Caricamento anteprima…",
+      "missingRates": "{count} spesa/e senza tasso bloccano lo scambio.",
+      "ratesOk": "Tutti i tassi risolti.",
+      "rateUnit": "1 {from} = {rate} {to}",
+      "searchPlaceholder": "Cerca per titolo della spesa…",
+      "clearSearch": "Cancella ricerca",
+      "filterLabel": "Filtra l'anteprima per esito",
+      "showingXofY": "Mostrate {filtered} di {count}",
+      "noRows": "Nessuna spesa corrisponde ai filtri attuali.",
+      "truncated": "Gruppo grande: l'anteprima mostra le prime {shown} spese su {count}. È possibile scambiare solo i gruppi con un massimo di 5000 spese.",
+      "loadingWithCount": "Recupero dei tassi e pianificazione di {count} spese…",
+      "loadingMore": "Caricamento di altre spese… {loaded} di {count}",
+      "becomesLabel": "Diventa",
+      "totalAriaLabel": "Importo totale convertito, da {from} a {to}",
+      "wasLabel": "Era",
+      "pairChecking": "Controllo del tasso…",
+      "pairFailedHint": "I tassi automatici non sono riusciti per questa coppia. Riprova il tasso oppure seleziona “Scegli invece un tasso” per impostare un tasso fisso.",
+      "pairFailedTitle": "{base} → {to}: {count} spesa/e senza tasso",
+      "pairHidePicker": "Nascondi il selettore del tasso",
+      "pairPickRate": "Scegli invece un tasso",
+      "pairReloadHint": "Una coppia è risolta — ricarica l’anteprima completa per continuare.",
+      "pairResolved": "Tasso risolto.",
+      "pairRetry": "Riprova il tasso",
+      "pairSectionTitle": "Alcuni tassi non sono riusciti",
+      "reloadPreview": "Ricarica l’anteprima completa",
+      "close": "Chiudi",
+      "fullListDescription": "{count} spese · {from} → {to}",
+      "fullListTitle": "Tutte le spese",
+      "noAttention": "Nessuna spesa richiede attenzione.",
+      "viewFullList": "Visualizza tutte le {count} spese",
+      "totalBreakdown": "{converted} convertite · {cleared} già in {to} · {bridged} a un tasso manuale",
+      "totalTitle": "Totale per {count} spese"
+    },
+    "rowWarnings": {
+      "missing-rate": "Nessun tasso disponibile per questa spesa.",
+      "exact-to-custom": "Questa spesa usava un importo esatto, quindi viene convertita a un tasso personalizzato."
+    },
+    "archivedNotice": "Questo gruppo è archiviato. Ripristinalo per scambiare la valuta.",
+    "customLedgerNotice": "Questo gruppo usa un codice valuta personalizzato, quindi i tassi automatici non sono disponibili.",
+    "target": {
+      "title": "Nuova valuta",
+      "description": "Scegli la valuta in cui il gruppo liquiderà da ora in poi.",
+      "label": "Nuova valuta di liquidazione",
+      "sameAsCurrent": "Scegli una valuta diversa da quella attuale.",
+      "intro": "Lo scambio converte ogni spesa nella nuova valuta e poi passa il registro del gruppo. Saldi, totali e chi deve a chi sono calcolati nella nuova valuta da quel momento in poi. Questa operazione non si può annullare.",
+      "currentLabel": "Valuta attuale del gruppo",
+      "currentHint": "Saldi, totali e chi deve a chi sono calcolati oggi in {current}.",
+      "targetHint": "Ogni importo in {from} diventerà {name} ({to}) con i tassi che scegli nel passaggio successivo. Le nuove spese saranno in {to} per impostazione predefinita.",
+      "placeholder": "Seleziona una valuta"
+    },
+    "warnings": {
+      "minor-units": "La nuova valuta usa unità minori diverse (es. centesimi vs yen) — sono previste piccole differenze di arrotondamento.",
+      "budgets-stale": "I budget restano con gli importi nella vecchia valuta e vanno rivisti dopo lo scambio.",
+      "recurring-stale": "I modelli ricorrenti attivi mantengono i vecchi importi — controllali dopo lo scambio.",
+      "exact-to-custom": "Alcune spese usavano importi esatti, quindi vengono convertite a tassi personalizzati."
+    },
+    "back": "Indietro",
+    "pairs": {
+      "title": "Tassi di conversione",
+      "description": "Scegli come ogni valuta viene convertita in {code}. I tassi alla data della spesa usano la data di ogni spesa; un tasso fisso applica il tasso di un'unica data a ogni spesa della coppia.",
+      "loading": "Caricamento coppie di conversione…",
+      "empty": "Nessuna spesa ha bisogno di conversione — è già tutto in {code}. Puoi comunque continuare per passare la valuta del registro.",
+      "expenseCount": "{count} spesa/e in questa coppia"
+    },
+    "progressAriaLabel": "Avanzamento dello scambio",
+    "entryNotice": {
+      "title": "Continuazione dalle impostazioni del gruppo",
+      "body": "Hai scelto {to} ({name}) come nuova valuta di liquidazione. Non è possibile un cambio diretto perché questo gruppo ha già delle spese — segui i passaggi qui sotto e ogni spesa verrà convertita con un'anteprima per spesa prima che venga salvato qualcosa."
+    },
+    "adminOnlyNotice": "Solo gli amministratori possono scambiare la valuta del gruppo — chiedi a un amministratore di farlo da Strumenti."
   }
 }

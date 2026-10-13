@@ -56,6 +56,7 @@ import { Route as GroupsGroupIdExpensesImportRouteImport } from './routes/groups
 import { Route as GroupsGroupIdExpensesPrintRouteImport } from './routes/groups/$groupId/expenses/print'
 import { Route as GroupsGroupIdToolsIndexRouteImport } from './routes/groups/$groupId/tools/index'
 import { Route as GroupsGroupIdToolsImportRouteImport } from './routes/groups/$groupId/tools/import'
+import { Route as GroupsGroupIdToolsSwapRouteImport } from './routes/groups/$groupId/tools/swap'
 import { Route as GroupsGroupIdExpensesExpenseIdIndexRouteImport } from './routes/groups/$groupId/expenses/$expenseId/index'
 import { Route as GroupsGroupIdExpensesExpenseIdEditRouteImport } from './routes/groups/$groupId/expenses/$expenseId/edit'
 
@@ -366,6 +367,13 @@ const GroupsGroupIdToolsImportRoute =
   } as any).lazy(() =>
     import('./routes/groups/$groupId/tools/import.lazy').then((d) => d.Route),
   )
+const GroupsGroupIdToolsSwapRoute = GroupsGroupIdToolsSwapRouteImport.update({
+  id: '/swap',
+  path: '/swap',
+  getParentRoute: () => GroupsGroupIdToolsRoute,
+} as any).lazy(() =>
+  import('./routes/groups/$groupId/tools/swap.lazy').then((d) => d.Route),
+)
 const GroupsGroupIdBudgetsBudgetIdIndexLazyRoute =
   GroupsGroupIdBudgetsBudgetIdIndexLazyRouteImport.update({
     id: '/$budgetId/',
@@ -450,6 +458,7 @@ export interface FileRoutesByFullPath {
   '/groups/$groupId/expenses/import': typeof GroupsGroupIdExpensesImportRoute
   '/groups/$groupId/expenses/print': typeof GroupsGroupIdExpensesPrintRoute
   '/groups/$groupId/tools/import': typeof GroupsGroupIdToolsImportRoute
+  '/groups/$groupId/tools/swap': typeof GroupsGroupIdToolsSwapRoute
   '/groups/$groupId/budgets/create': typeof GroupsGroupIdBudgetsCreateLazyRoute
   '/groups/$groupId/budgets/': typeof GroupsGroupIdBudgetsIndexRoute
   '/groups/$groupId/expenses/': typeof GroupsGroupIdExpensesIndexRoute
@@ -497,6 +506,7 @@ export interface FileRoutesByTo {
   '/groups/$groupId/expenses/import': typeof GroupsGroupIdExpensesImportRoute
   '/groups/$groupId/expenses/print': typeof GroupsGroupIdExpensesPrintRoute
   '/groups/$groupId/tools/import': typeof GroupsGroupIdToolsImportRoute
+  '/groups/$groupId/tools/swap': typeof GroupsGroupIdToolsSwapRoute
   '/groups/$groupId/budgets/create': typeof GroupsGroupIdBudgetsCreateLazyRoute
   '/groups/$groupId/budgets': typeof GroupsGroupIdBudgetsIndexRoute
   '/groups/$groupId/expenses': typeof GroupsGroupIdExpensesIndexRoute
@@ -550,6 +560,7 @@ export interface FileRoutesById {
   '/groups/$groupId/expenses/import': typeof GroupsGroupIdExpensesImportRoute
   '/groups/$groupId/expenses/print': typeof GroupsGroupIdExpensesPrintRoute
   '/groups/$groupId/tools/import': typeof GroupsGroupIdToolsImportRoute
+  '/groups/$groupId/tools/swap': typeof GroupsGroupIdToolsSwapRoute
   '/groups/$groupId/budgets/create': typeof GroupsGroupIdBudgetsCreateLazyRoute
   '/groups/$groupId/budgets/': typeof GroupsGroupIdBudgetsIndexRoute
   '/groups/$groupId/expenses/': typeof GroupsGroupIdExpensesIndexRoute
@@ -604,6 +615,7 @@ export interface FileRouteTypes {
     | '/groups/$groupId/expenses/import'
     | '/groups/$groupId/expenses/print'
     | '/groups/$groupId/tools/import'
+    | '/groups/$groupId/tools/swap'
     | '/groups/$groupId/budgets/create'
     | '/groups/$groupId/budgets/'
     | '/groups/$groupId/expenses/'
@@ -651,6 +663,7 @@ export interface FileRouteTypes {
     | '/groups/$groupId/expenses/import'
     | '/groups/$groupId/expenses/print'
     | '/groups/$groupId/tools/import'
+    | '/groups/$groupId/tools/swap'
     | '/groups/$groupId/budgets/create'
     | '/groups/$groupId/budgets'
     | '/groups/$groupId/expenses'
@@ -703,6 +716,7 @@ export interface FileRouteTypes {
     | '/groups/$groupId/expenses/import'
     | '/groups/$groupId/expenses/print'
     | '/groups/$groupId/tools/import'
+    | '/groups/$groupId/tools/swap'
     | '/groups/$groupId/budgets/create'
     | '/groups/$groupId/budgets/'
     | '/groups/$groupId/expenses/'
@@ -1062,6 +1076,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GroupsGroupIdToolsImportRouteImport
       parentRoute: typeof GroupsGroupIdToolsRoute
     }
+    '/groups/$groupId/tools/swap': {
+      id: '/groups/$groupId/tools/swap'
+      path: '/swap'
+      fullPath: '/groups/$groupId/tools/swap'
+      preLoaderRoute: typeof GroupsGroupIdToolsSwapRouteImport
+      parentRoute: typeof GroupsGroupIdToolsRoute
+    }
     '/groups/$groupId/budgets/$budgetId/': {
       id: '/groups/$groupId/budgets/$budgetId/'
       path: '/$budgetId'
@@ -1139,11 +1160,13 @@ const GroupsGroupIdExpensesRouteWithChildren =
 
 interface GroupsGroupIdToolsRouteChildren {
   GroupsGroupIdToolsImportRoute: typeof GroupsGroupIdToolsImportRoute
+  GroupsGroupIdToolsSwapRoute: typeof GroupsGroupIdToolsSwapRoute
   GroupsGroupIdToolsIndexRoute: typeof GroupsGroupIdToolsIndexRoute
 }
 
 const GroupsGroupIdToolsRouteChildren: GroupsGroupIdToolsRouteChildren = {
   GroupsGroupIdToolsImportRoute: GroupsGroupIdToolsImportRoute,
+  GroupsGroupIdToolsSwapRoute: GroupsGroupIdToolsSwapRoute,
   GroupsGroupIdToolsIndexRoute: GroupsGroupIdToolsIndexRoute,
 }
 

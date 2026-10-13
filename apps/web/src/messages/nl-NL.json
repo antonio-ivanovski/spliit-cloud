@@ -718,7 +718,12 @@
       "createDescription": "Saldi, totalen en onderlinge schulden worden in deze valuta berekend. Kies waarmee kaarten echt afschrijven, meestal je eigen valuta.",
       "editDescription": "Saldi, totalen en onderlinge schulden worden in deze valuta berekend. Als je dit wijzigt, worden reeds ingevoerde uitgaven NIET omgerekend, behalve wanneer de valuta andere \"kleinste eenheden\" heeft dan de huidige (bijvoorbeeld bij een wijziging van Amerikaanse dollar naar Japanse yen)",
       "customOption": "Aangepast",
-      "lockedAfterExpenses": "De valuta is vergrendeld omdat deze groep al uitgaven heeft."
+      "lockedAfterExpenses": "De valuta is vergrendeld omdat deze groep al uitgaven heeft.",
+      "lockedRedirectDescription": "Deze groep heeft al uitgaven, dus de verrekenvaluta kan niet direct worden gewijzigd. Kies een valuta om de wisseltool te openen — elke uitgave wordt omgerekend met een voorbeeld per rij.",
+      "swapConfirmTitle": "Niet-opgeslagen wijzigingen weggooien?",
+      "swapConfirmDescription": "Je hebt niet-opgeslagen wijzigingen in deze instellingen. Als je doorgaat naar de wisseltool, worden ze weggegooid en wordt {code} vooraf geselecteerd als de nieuwe valuta.",
+      "swapConfirmContinue": "Doorgaan naar wisselen",
+      "swapConfirmCancel": "Blijf bewerken"
     },
     "Participants": {
       "title": "Deelnemers",
@@ -3980,6 +3985,29 @@
           "detail": "Uitgaven wijzigen pas zodra je de laatste controle bevestigt."
         }
       }
+    },
+    "swap": {
+      "title": "Groepsvaluta wisselen",
+      "description": "Wijzig de verrekenvaluta nadat er al uitgaven zijn. Elke uitgave wordt omgerekend en per rij getoond voordat er iets verandert.",
+      "start": "Valuta wisselen",
+      "steps": {
+        "confirm": {
+          "title": "Bevestigen",
+          "detail": "Controleer de samenvatting en voer de wissel uit."
+        },
+        "rates": {
+          "title": "Koersen",
+          "detail": "Historische koersen per uitgave of één eigen koers."
+        },
+        "review": {
+          "title": "Controle",
+          "detail": "Controleer oude en nieuwe bedragen vóór het bevestigen."
+        },
+        "target": {
+          "title": "Doel",
+          "detail": "Kies de nieuwe verrekenvaluta."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4838,5 +4866,115 @@
     "description": "Deze versie van de app is verouderd. Laad de nieuwste versie en probeer het opnieuw.",
     "refresh": "Opnieuw laden",
     "title": "App-update beschikbaar"
+  },
+  "Swap": {
+    "title": "Groepsvaluta wisselen",
+    "description": "Reken elke uitgave om naar een nieuwe verrekenvaluta en zet daarna het groepsgrootboek om. Er verandert niets tot je het voorbeeld bevestigt.",
+    "groupUnavailable": "De groep kon niet worden geladen.",
+    "backToTools": "Terug naar Hulpmiddelen",
+    "backToGroup": "Terug naar groep",
+    "continue": "Doorgaan",
+    "retry": "Opnieuw proberen",
+    "offlineNotice": "Maak opnieuw verbinding om de groepsvaluta te wisselen.",
+    "confirmCta": "Doorgaan naar bevestiging",
+    "confirm": {
+      "title": "Valutawissel bevestigen",
+      "description": "Bekijk de samenvatting en voer daarna de wissel uit.",
+      "run": "{count} uitgaven wisselen",
+      "running": "Bezig met wisselen …",
+      "irreversible": "Dit kan niet ongedaan worden gemaakt naar de oorspronkelijke bedragen. Je kunt daarna opnieuw wisselen, maar bedragen kunnen enkele centen afwijken door afronding en koerswijzigingen.",
+      "summary": "Dit herschrijft {count} uitgaven van {from} naar {to}."
+    },
+    "done": {
+      "message": "{count} uitgaven gewisseld naar {code}. Saldi, totalen en exports gebruiken nu de nieuwe valuta.",
+      "backToGroup": "Terug naar de groep",
+      "backToTools": "Terug naar Hulpmiddelen",
+      "title": "Wissel voltooid"
+    },
+    "filters": {
+      "all": "Alle",
+      "attention": "Heeft aandacht nodig",
+      "converted": "Omgerekend",
+      "cleared": "Al in {to}",
+      "bridged": "Handmatige koers"
+    },
+    "kind": {
+      "cleared": "Al in {to}",
+      "bridged": "Handmatige koers"
+    },
+    "previewCta": "Omrekening bekijken",
+    "preview": {
+      "title": "Voorbeeld per uitgave",
+      "description": "{count} uitgaven · {from} → {to}",
+      "loading": "Voorbeeld wordt geladen …",
+      "missingRates": "Voor {count} uitgaven ontbreekt een koers — de wissel is geblokkeerd.",
+      "ratesOk": "Alle koersen bepaald.",
+      "rateUnit": "1 {from} = {rate} {to}",
+      "searchPlaceholder": "Zoeken op uitgavetitel …",
+      "clearSearch": "Zoekopdracht wissen",
+      "filterLabel": "Voorbeeld filteren op resultaat",
+      "showingXofY": "{filtered} van {count} weergegeven",
+      "noRows": "Geen uitgaven komen overeen met de huidige filters.",
+      "truncated": "Grote groep: het voorbeeld toont de eerste {shown} van {count} uitgaven. Alleen groepen met maximaal 5000 uitgaven kunnen worden gewisseld.",
+      "loadingWithCount": "Koersen ophalen en {count} uitgaven plannen …",
+      "loadingMore": "Meer uitgaven laden … {loaded} van {count}",
+      "becomesLabel": "Wordt",
+      "totalAriaLabel": "Totaal omgerekend bedrag, van {from} naar {to}",
+      "wasLabel": "Was",
+      "pairChecking": "Koers controleren …",
+      "pairFailedHint": "Automatische koersen zijn mislukt voor dit paar. Probeer de koers opnieuw of kies “Kies in plaats daarvan een koers” om een vaste koers in te stellen.",
+      "pairFailedTitle": "{base} → {to}: {count} uitgaven zonder koers",
+      "pairHidePicker": "Koerskiezer verbergen",
+      "pairPickRate": "Kies in plaats daarvan een koers",
+      "pairReloadHint": "Een paar is opgelost — laad het volledige voorbeeld opnieuw om door te gaan.",
+      "pairResolved": "Koers bepaald.",
+      "pairRetry": "Koers opnieuw proberen",
+      "pairSectionTitle": "Sommige koersen zijn mislukt",
+      "reloadPreview": "Volledig voorbeeld opnieuw laden",
+      "close": "Sluiten",
+      "fullListDescription": "{count} uitgaven · {from} → {to}",
+      "fullListTitle": "Alle uitgaven",
+      "noAttention": "Geen uitgaven hebben aandacht nodig.",
+      "viewFullList": "Alle {count} uitgaven bekijken",
+      "totalBreakdown": "{converted} omgerekend · {cleared} al in {to} · {bridged} tegen een handmatige koers",
+      "totalTitle": "Totaal voor {count} uitgaven"
+    },
+    "rowWarnings": {
+      "missing-rate": "Geen koers beschikbaar voor deze uitgave.",
+      "exact-to-custom": "Deze uitgave gebruikte een exact bedrag en wordt daarom omgerekend tegen een eigen koers."
+    },
+    "archivedNotice": "Deze groep is gearchiveerd. Haal de groep uit het archief om de valuta te wisselen.",
+    "customLedgerNotice": "Deze groep gebruikt een aangepaste valutacode, dus automatische koersen zijn niet beschikbaar.",
+    "target": {
+      "title": "Nieuwe valuta",
+      "description": "Kies de valuta waarin de groep vanaf nu verrekent.",
+      "label": "Nieuwe verrekenvaluta",
+      "sameAsCurrent": "Kies een andere valuta dan de huidige.",
+      "intro": "Wisselen rekent elke uitgave om naar de nieuwe valuta en zet daarna het groepsgrootboek om. Saldi, totalen en wie-aan-wie-schuldig-is worden vanaf dat moment in de nieuwe valuta berekend. Dit kan niet ongedaan worden gemaakt.",
+      "currentLabel": "Huidige groepsvaluta",
+      "currentHint": "Saldi, totalen en wie-aan-wie-schuldig-is worden vandaag berekend in {current}.",
+      "targetHint": "Elk {from}-bedrag wordt {name} ({to}) tegen de koersen die je in de volgende stap kiest. Nieuwe uitgaven krijgen standaard {to}.",
+      "placeholder": "Selecteer een valuta"
+    },
+    "warnings": {
+      "minor-units": "De nieuwe valuta gebruikt andere kleinste eenheden (bijv. centen vs. yen) — kleine afrondingsverschillen zijn te verwachten.",
+      "budgets-stale": "Budgetten blijven in de oude valutabedragen staan en moeten na de wissel worden gecontroleerd.",
+      "recurring-stale": "Actieve terugkerende sjablonen behouden oude bedragen — controleer ze na de wissel.",
+      "exact-to-custom": "Sommige uitgaven gebruikten exacte bedragen en worden daarom omgerekend tegen eigen koersen."
+    },
+    "back": "Terug",
+    "pairs": {
+      "title": "Omrekenkoersen",
+      "description": "Kies hoe elke valuta wordt omgerekend naar {code}. Koersen per uitgavedatum gebruiken de eigen datum van elke uitgave; een vaste koers past de koers van één datum toe op elke uitgave in het paar.",
+      "loading": "Valutaparen worden geladen …",
+      "empty": "Geen enkele uitgave hoeft te worden omgerekend — alles staat al in {code}. Je kunt toch doorgaan om de grootboekvaluta om te zetten.",
+      "expenseCount": "{count} uitgaven in dit paar"
+    },
+    "progressAriaLabel": "Wisselvoortgang",
+    "entryNotice": {
+      "title": "Verder vanaf groepsinstellingen",
+      "body": "Je hebt {to} ({name}) gekozen als de nieuwe verrekenvaluta. Direct wijzigen is niet mogelijk omdat deze groep al uitgaven heeft — doorloop de stappen hieronder en elke uitgave wordt omgerekend met een voorbeeld per rij voordat er iets wordt opgeslagen."
+    },
+    "adminOnlyNotice": "Alleen beheerders kunnen de groepsvaluta wisselen — vraag een beheerder om dit via Hulpmiddelen te doen."
   }
 }

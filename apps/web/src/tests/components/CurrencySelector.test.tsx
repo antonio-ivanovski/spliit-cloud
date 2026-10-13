@@ -186,6 +186,34 @@ describe('CurrencySelector', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
+  it('shows the placeholder instead of the first currency when unmatched', () => {
+    const onValueChange = vi.fn()
+    render(
+      <CurrencySelector
+        currencies={currencies}
+        // "XXX" matches nothing (the Custom entry owns the empty code, and
+        // the swap target list excludes it) — the swap's pre-pick state.
+        defaultValue="XXX"
+        isLoading={false}
+        onValueChange={onValueChange}
+        placeholder="Select a currency"
+      />,
+    )
+
+    // Trigger shows the empty-state placeholder, not AUD (first in catalog).
+    expect(screen.getByRole('combobox')).toHaveTextContent('Select a currency')
+    expect(screen.getByRole('combobox')).not.toHaveTextContent(
+      'Australian Dollar',
+    )
+
+    // Opening the list pins nothing as the selection: the priority block
+    // leads with the common USD, not the catalog-first AUD. (cmdk still
+    // marks the keyboard-active row with data-selected — standard listbox
+    // behavior shared by every selector, not a selection.)
+    fireEvent.click(screen.getByRole('combobox'))
+    expect(itemCodesInOrder()[0]).toBe('USD')
+  })
+
   it('pins the group currency first in the priority block', () => {
     openSelectorWith({
       pinnedCurrencyCode: 'EUR',

@@ -594,7 +594,12 @@
       "createDescription": "잔액, 합계, 누가 누구에게 갚아야 하는지는 이 통화로 계산돼요. 카드에서 실제로 결제되는 통화를 고르세요. 보통은 자국 통화예요.",
       "editDescription": "잔액, 합계, 누가 누구에게 갚아야 하는지는 이 통화로 계산돼요. 통화를 바꿔도 이미 입력한 지출은 바뀌지 않아요. 단, 현재 통화와 소수점 단위가 다른 통화(예: 미국 달러에서 일본 엔으로 변경)로 바꿀 때는 예외예요.",
       "customOption": "사용자 지정",
-      "lockedAfterExpenses": "이 그룹에 이미 지출이 있으므로 통화가 잠겨 있습니다."
+      "lockedAfterExpenses": "이 그룹에 이미 지출이 있으므로 통화가 잠겨 있습니다.",
+      "lockedRedirectDescription": "이 그룹에 이미 지출이 있어서 정산 통화를 직접 바꿀 수 없어요. 통화를 고르면 스왑 도구가 열려요. 모든 지출은 지출별 미리보기로 변환돼요.",
+      "swapConfirmTitle": "저장하지 않은 변경사항을 버릴까요?",
+      "swapConfirmDescription": "이 설정에 저장하지 않은 변경사항이 있어요. 스왑 도구로 계속하면 변경사항이 버려지고 {code}이(가) 새 통화로 미리 선택돼요.",
+      "swapConfirmContinue": "스왑으로 계속하기",
+      "swapConfirmCancel": "계속 편집하기"
     },
     "Participants": {
       "title": "참여자",
@@ -3978,6 +3983,29 @@
           "detail": "최종 검토를 확정해야만 지출이 변경됩니다."
         }
       }
+    },
+    "swap": {
+      "title": "그룹 통화 스왑",
+      "description": "지출을 입력한 뒤에 정산 통화를 바꿔요. 바뀌기 전에 모든 지출이 행별로 변환·미리보기돼요.",
+      "start": "통화 스왑",
+      "steps": {
+        "confirm": {
+          "title": "확인",
+          "detail": "요약을 확인하고 스왑을 실행하세요."
+        },
+        "rates": {
+          "title": "환율",
+          "detail": "지출별 히스토리 환율 또는 하나의 커스텀 환율."
+        },
+        "review": {
+          "title": "검토",
+          "detail": "확인하기 전에 이전 금액과 새 금액을 확인하세요."
+        },
+        "target": {
+          "title": "대상",
+          "detail": "새 정산 통화를 고르세요."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4831,5 +4859,115 @@
     "description": "현재 앱 버전이 오래되었습니다. 새로 고침하여 최신 버전을 받은 후 다시 시도해 주세요.",
     "refresh": "새로 고침",
     "title": "앱 업데이트가 있습니다"
+  },
+  "Swap": {
+    "title": "그룹 통화 스왑",
+    "description": "모든 지출을 새 정산 통화로 변환한 뒤 그룹 장부를 바꿔요. 미리보기를 확인하기 전에는 아무것도 바뀌지 않아요.",
+    "groupUnavailable": "그룹을 불러오지 못했어요.",
+    "backToTools": "도구로 돌아가기",
+    "backToGroup": "그룹으로 돌아가기",
+    "continue": "계속",
+    "retry": "다시 시도",
+    "offlineNotice": "그룹 통화를 스왑하려면 다시 연결하세요.",
+    "archivedNotice": "이 그룹은 보관되었어요. 통화를 스왑하려면 그룹 보관을 해제하세요.",
+    "confirmCta": "확인 계속하기",
+    "confirm": {
+      "title": "통화 스왑 확인",
+      "description": "요약을 확인한 뒤 스왑을 실행하세요.",
+      "run": "지출 {count}건 스왑",
+      "running": "스왑하는 중…",
+      "irreversible": "원래 금액으로는 되돌릴 수 없어요. 이후에 다시 스왑할 수 있지만, 반올림과 환율 변동으로 몇 센트 정도 차이가 날 수 있어요.",
+      "summary": "{count}건의 지출을 {from}에서 {to}(으)로 다시 써요."
+    },
+    "done": {
+      "message": "지출 {count}건을 {code}(으)로 스왑했어요. 잔액, 합계, 내보내기는 이제 새 통화로 계산돼요.",
+      "backToGroup": "그룹으로 돌아가기",
+      "backToTools": "도구로 돌아가기",
+      "title": "스왑 완료"
+    },
+    "filters": {
+      "all": "전체",
+      "attention": "확인 필요",
+      "converted": "변환됨",
+      "cleared": "이미 {to}",
+      "bridged": "수동 환율"
+    },
+    "kind": {
+      "cleared": "이미 {to}라 변환 불필요",
+      "bridged": "수동 환율"
+    },
+    "previewCta": "변환 미리보기",
+    "preview": {
+      "title": "지출별 미리보기",
+      "description": "지출 {count}건 · {from} → {to}",
+      "loading": "미리보기를 불러오는 중…",
+      "missingRates": "환율이 없어 스왑을 막는 지출이 {count}건 있어요.",
+      "ratesOk": "모든 환율을 확인했어요.",
+      "rateUnit": "1 {from} = {rate} {to}",
+      "searchPlaceholder": "지출 제목으로 검색…",
+      "clearSearch": "검색 지우기",
+      "filterLabel": "결과별로 미리보기 필터링",
+      "showingXofY": "{count}건 중 {filtered}건 표시 중",
+      "noRows": "현재 필터에 맞는 지출이 없어요.",
+      "truncated": "큰 그룹: 미리보기는 {count}건의 지출 중 처음 {shown}건만 보여줘요. 지출이 5000건 이하인 그룹만 스왑할 수 있어요.",
+      "loadingWithCount": "환율을 가져오고 지출 {count}건을 준비하는 중…",
+      "loadingMore": "지출을 더 불러오는 중… {count}건 중 {loaded}건",
+      "becomesLabel": "변환 후",
+      "totalAriaLabel": "{from}에서 {to}(으)로 변환된 총액",
+      "wasLabel": "변환 전",
+      "pairChecking": "환율을 확인하는 중…",
+      "pairFailedHint": "이 통화 쌍의 자동 환율을 가져오지 못했어요. 환율을 다시 시도하거나, “대신 환율 선택하기”를 선택해 고정 환율을 설정하세요.",
+      "pairFailedTitle": "{base} → {to}: 환율이 없는 지출 {count}건",
+      "pairHidePicker": "환율 선택 닫기",
+      "pairPickRate": "대신 환율 선택하기",
+      "pairReloadHint": "통화 쌍 하나가 해결됐어요. 전체 미리보기를 다시 불러와서 계속하세요.",
+      "pairResolved": "환율을 확인했어요.",
+      "pairRetry": "환율 다시 시도",
+      "pairSectionTitle": "일부 환율 가져오기 실패",
+      "reloadPreview": "전체 미리보기 다시 불러오기",
+      "close": "닫기",
+      "fullListDescription": "지출 {count}건 · {from} → {to}",
+      "fullListTitle": "모든 지출",
+      "noAttention": "확인해야 할 지출이 없어요.",
+      "viewFullList": "지출 {count}건 모두 보기",
+      "totalBreakdown": "{converted} 변환됨 · {cleared} 이미 {to} · {bridged} 수동 환율 적용",
+      "totalTitle": "지출 {count}건 합계"
+    },
+    "rowWarnings": {
+      "missing-rate": "이 지출에 사용할 수 있는 환율이 없어요.",
+      "exact-to-custom": "이 지출은 총 청구 금액을 사용해서 커스텀 환율로 변환돼요."
+    },
+    "customLedgerNotice": "이 그룹은 사용자 지정 통화 코드를 사용해서 자동 환율을 쓸 수 없어요.",
+    "target": {
+      "title": "새 통화",
+      "description": "앞으로 그룹에서 정산에 사용할 통화를 선택하세요.",
+      "label": "새 정산 통화",
+      "sameAsCurrent": "현재 통화와 다른 통화를 고르세요.",
+      "intro": "스왑은 모든 지출을 새 통화로 변환한 뒤 그룹 장부를 바꿔요. 그때부터 잔액, 합계, 누가 누구에게 갚아야 하는지는 새 통화로 계산돼요. 이 작업은 되돌릴 수 없어요.",
+      "currentLabel": "현재 그룹 통화",
+      "currentHint": "현재 잔액, 합계, 누가 누구에게 갚아야 하는지는 {current}(으)로 계산돼요.",
+      "targetHint": "{from} 금액은 다음 단계에서 고른 환율로 {name} ({to})(으)로 바뀌어요. 새 지출은 기본적으로 {to}(으)로 입력돼요.",
+      "placeholder": "통화 선택"
+    },
+    "warnings": {
+      "minor-units": "새 통화는 소수점 단위(예: 센트와 엔)가 달라서 소액 반올림 차이가 생길 수 있어요.",
+      "budgets-stale": "예산은 이전 통화 금액 그대로 남으니 스왑 후에 다시 확인하세요.",
+      "recurring-stale": "활성 반복 지출 템플릿은 이전 금액 그대로 남으니 스왑 후에 확인하세요.",
+      "exact-to-custom": "일부 지출은 총 청구 금액을 사용해서 커스텀 환율로 변환돼요."
+    },
+    "back": "뒤로",
+    "pairs": {
+      "title": "변환 환율",
+      "description": "각 통화를 {code}(으)로 변환할 방법을 선택하세요. 지출일별 환율은 각 지출의 날짜를 사용하고, 고정 환율은 하나의 날짜 환율을 해당 쌍의 모든 지출에 적용해요.",
+      "loading": "통화 쌍을 불러오는 중…",
+      "empty": "변환이 필요한 지출이 없어요. 모두 이미 {code}예요. 장부 통화를 바꾸기 위해 계속할 수 있어요.",
+      "expenseCount": "이 통화 쌍의 지출 {count}건"
+    },
+    "progressAriaLabel": "스왑 진행률",
+    "entryNotice": {
+      "title": "그룹 설정에서 계속하기",
+      "body": "새 정산 통화로 {to} ({name})을(를) 골랐어요. 이 그룹에 이미 지출이 있어서 직접 바꿀 수는 없어요. 아래 단계를 따라가면 저장하기 전에 모든 지출이 지출별 미리보기로 변환돼요."
+    },
+    "adminOnlyNotice": "그룹 통화 스왑은 관리자만 할 수 있어요. 관리자에게 도구에서 실행해 달라고 요청하세요."
   }
 }

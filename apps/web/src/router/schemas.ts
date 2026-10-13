@@ -208,6 +208,15 @@ export const expenseImportSearchSchema = groupAccessSearchSchema.extend({
   editRow: optionalString,
 })
 
+export const swapSearchSchema = groupAccessSearchSchema.extend({
+  /**
+   * Preselected swap target when arriving from group settings: the user picked
+   * this code in the (expense-locked) settlement picker and was redirected
+   * here. The swap page validates it against the ledger before preselecting.
+   */
+  target: optionalString,
+})
+
 export const forgotPasswordSearchSchema = z.object({
   email: optionalString,
 })

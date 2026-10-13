@@ -724,7 +724,12 @@
       "createDescription": "Bakiyeler, toplamlar ve kimin kime borçlu olduğu bu para biriminde hesaplanır. Kartların gerçekten tahsil ettiği, genellikle kendi ülkenin para birimini seç.",
       "editDescription": "Bakiyeler, toplamlar ve kimin kime borçlu olduğu bu para biriminde hesaplanır. Bunu değiştirmek, önceden girilen giderleri DÖNÜŞTÜRMEZ, ancak para biriminin mevcut olandan farklı \"alt birimleri\" varsa dönüştürür (ör. ABD Doları'ndan Japon Yeni'ne değiştirme).",
       "customOption": "Özel",
-      "lockedAfterExpenses": "Para birimi kilitli çünkü bu grupta zaten harcamalar var."
+      "lockedAfterExpenses": "Para birimi kilitli çünkü bu grupta zaten harcamalar var.",
+      "lockedRedirectDescription": "Bu grupta zaten giderler olduğu için borç kapatma para birimi doğrudan değiştirilemez. Değişim aracını açmak için bir para birimi seç — her gider satır satır önizlemeyle dönüştürülür.",
+      "swapConfirmTitle": "Kaydedilmemiş değişiklikler atılsın mı?",
+      "swapConfirmDescription": "Bu ayarlarda kaydedilmemiş değişiklikler var. Değişim aracına devam edilirse bunlar atılır ve {code} yeni para birimi olarak önceden seçilir.",
+      "swapConfirmContinue": "Değişime devam et",
+      "swapConfirmCancel": "Düzenlemeye devam et"
     },
     "bulkCategorizeSectionTitle": "Toplu yapay zeka araçları",
     "bulkCategorizeSectionDescription": "Yapay zeka kategorileyicisini çok sayıda harcamaya aynı anda uygulayın. Harcamaları içe aktardıktan sonra veya birçok başlık hâlâ kategorilenmemişken kullanışlıdır.",
@@ -3916,6 +3921,29 @@
           "detail": "Masraflar yalnızca son incelemeyi onayladığınızda değişir."
         }
       }
+    },
+    "swap": {
+      "title": "Grup para birimini değiştir",
+      "description": "Giderler oluştuktan sonra borç kapatma para birimini değiştir. Hiçbir şey değişmeden önce her gider dönüştürülür ve satır satır önizlenir.",
+      "start": "Para birimini değiştir",
+      "steps": {
+        "confirm": {
+          "title": "Onay",
+          "detail": "Özeti kontrol edip değişimi çalıştır."
+        },
+        "rates": {
+          "title": "Kurlar",
+          "detail": "Gider başına tarihsel kurlar veya tek bir özel kur."
+        },
+        "review": {
+          "title": "İnceleme",
+          "detail": "Onaylamadan önce eski ve yeni tutarları kontrol et."
+        },
+        "target": {
+          "title": "Hedef",
+          "detail": "Yeni borç kapatma para birimini seç."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4774,5 +4802,115 @@
     "description": "Uygulamanın bu sürümü güncel değil. En güncel sürümü almak için yenileyin ve tekrar deneyin.",
     "refresh": "Yenile",
     "title": "Uygulama güncellemesi mevcut"
+  },
+  "Swap": {
+    "title": "Grup para birimini değiştir",
+    "description": "Her gideri yeni bir borç kapatma para birimine dönüştür, ardından grup defterini yeni para birimine geçir. Önizlemeyi onaylayana kadar hiçbir şey değişmez.",
+    "groupUnavailable": "Grup yüklenemedi.",
+    "backToTools": "Araçlar'a dön",
+    "backToGroup": "Gruba dön",
+    "continue": "Devam et",
+    "retry": "Yeniden dene",
+    "offlineNotice": "Grup para birimini değiştirmek için yeniden bağlan.",
+    "confirmCta": "Onaylamak için devam et",
+    "confirm": {
+      "title": "Para birimi değişimini onayla",
+      "description": "Özeti gözden geçir, sonra değişimi başlat.",
+      "run": "{count} gideri değiştir",
+      "running": "Değiştiriliyor…",
+      "irreversible": "Orijinal tutarlara geri alınamaz. Sonrasında yeniden değişim yapılabilir, ancak yuvarlama ve kur değişiklikleri nedeniyle tutarlar birkaç sent farklı olabilir.",
+      "summary": "Bu işlem {count} gideri {from} para biriminden {to} para birimine çevirir."
+    },
+    "done": {
+      "message": "{count} gider {code} para birimine dönüştürüldü. Bakiyeler, toplamlar ve dışa aktarımlar artık yeni para birimini kullanıyor.",
+      "backToGroup": "Gruba dön",
+      "backToTools": "Araçlar'a dön",
+      "title": "Değişim tamamlandı"
+    },
+    "filters": {
+      "all": "Tümü",
+      "attention": "Dikkat gerektirenler",
+      "converted": "Dönüştürülen",
+      "cleared": "Zaten {to}",
+      "bridged": "Manuel kur"
+    },
+    "kind": {
+      "cleared": "Zaten {to}",
+      "bridged": "Manuel kur korundu"
+    },
+    "previewCta": "Dönüşümü önizle",
+    "preview": {
+      "title": "Gider bazında önizleme",
+      "description": "{count} gider · {from} → {to}",
+      "loading": "Önizleme yükleniyor…",
+      "missingRates": "Kur bilgisi eksik {count} gider değişimi engelliyor.",
+      "ratesOk": "Tüm kurlar bulundu.",
+      "rateUnit": "1 {from} = {rate} {to}",
+      "searchPlaceholder": "Gider başlığı ara…",
+      "clearSearch": "Aramayı temizle",
+      "filterLabel": "Önizlemeyi sonuca göre filtrele",
+      "showingXofY": "{count} giderden {filtered} tanesi gösteriliyor",
+      "noRows": "Mevcut filtrelerle eşleşen gider yok.",
+      "truncated": "Büyük grup: önizleme {count} giderden ilk {shown} tanesini gösteriyor. Yalnızca en fazla 5000 gider içeren grupların para birimi değiştirilebilir.",
+      "loadingWithCount": "Kurlar alınıyor ve {count} gider planlanıyor…",
+      "loadingMore": "Daha fazla gider yükleniyor… {count} giderden {loaded} tanesi",
+      "becomesLabel": "Yeni",
+      "totalAriaLabel": "Toplam dönüştürülen tutar, {from} → {to}",
+      "wasLabel": "Eski",
+      "pairChecking": "Kur kontrol ediliyor…",
+      "pairFailedHint": "Bu çift için otomatik kurlar alınamadı. Kuru yeniden dene veya sabit bir kur belirlemek için “Bunun yerine bir kur seç”i kullan.",
+      "pairFailedTitle": "{base} → {to}: kuru eksik {count} gider",
+      "pairHidePicker": "Kur seçiciyi gizle",
+      "pairPickRate": "Bunun yerine bir kur seç",
+      "pairReloadHint": "Bir çift çözüldü — devam etmek için tam önizlemeyi yeniden yükle.",
+      "pairResolved": "Kur bulundu.",
+      "pairRetry": "Kuru yeniden dene",
+      "pairSectionTitle": "Bazı kurlar alınamadı",
+      "reloadPreview": "Tam önizlemeyi yeniden yükle",
+      "close": "Kapat",
+      "fullListDescription": "{count} gider · {from} → {to}",
+      "fullListTitle": "Tüm giderler",
+      "noAttention": "Dikkat gerektiren gider yok.",
+      "viewFullList": "Tüm {count} gideri görüntüle",
+      "totalBreakdown": "{converted} dönüştürülen · {cleared} zaten {to} · {bridged} manuel kurla",
+      "totalTitle": "{count} gider için toplam"
+    },
+    "rowWarnings": {
+      "missing-rate": "Bu gider için kullanılabilir kur yok.",
+      "exact-to-custom": "Bu giderde kesin tutar kullanıldı, bu yüzden özel kurla dönüştürülür."
+    },
+    "archivedNotice": "Bu grup arşivlendi. Para birimlerini değiştirmek için grubu arşivden çıkar.",
+    "customLedgerNotice": "Bu grup özel bir para birimi kodu kullanıyor, bu yüzden otomatik kurlar kullanılamıyor.",
+    "target": {
+      "title": "Yeni para birimi",
+      "description": "Grubun bundan sonra borç kapatacağı para birimini seç.",
+      "label": "Yeni borç kapatma para birimi",
+      "sameAsCurrent": "Mevcut olandan farklı bir para birimi seç.",
+      "intro": "Değiştirme, her gideri yeni para birimine dönüştürür ve ardından grup defterini yeni para birimine geçirir. O noktadan sonra bakiyeler, toplamlar ve kimin kime borçlu olduğu yeni para birimiyle hesaplanır. Bu işlem geri alınamaz.",
+      "currentLabel": "Mevcut grup para birimi",
+      "currentHint": "Bakiyeler, toplamlar ve kimin kime borçlu olduğu bugün {current} ile hesaplanıyor.",
+      "targetHint": "Her {from} tutarı, sonraki adımda seçilen kurlarla {name} ({to}) olur. Yeni giderler varsayılan olarak {to} kullanır.",
+      "placeholder": "Bir para birimi seçin"
+    },
+    "warnings": {
+      "minor-units": "Yeni para birimi farklı alt birimler kullanıyor (ör. sent ve yen) — küçük yuvarlama farkları normaldir.",
+      "budgets-stale": "Bütçeler eski para birimi tutarlarıyla kalır, değişimden sonra gözden geçirilmelidir.",
+      "recurring-stale": "Etkin yinelenen gider şablonları eski tutarları korur — değişimden sonra bunları gözden geçir.",
+      "exact-to-custom": "Bazı giderlerde kesin tutar kullanıldı, bu yüzden bunlar özel kurlarla dönüştürülür."
+    },
+    "back": "Geri",
+    "pairs": {
+      "title": "Dönüştürme kurları",
+      "description": "Her para biriminin {code} birimine nasıl dönüştürüleceğini seç. Gider tarihi bazlı kurlar her giderin kendi tarihini kullanır; sabit kur, çiftteki tüm giderlere tek bir tarihin kurunu uygular.",
+      "loading": "Dönüştürme çiftleri yükleniyor…",
+      "empty": "Dönüştürme gereken gider yok — her şey zaten {code} cinsinden. Defter para birimini değiştirmek için yine de devam edilebilir.",
+      "expenseCount": "Bu çiftte {count} gider"
+    },
+    "progressAriaLabel": "Değiştirme ilerlemesi",
+    "entryNotice": {
+      "title": "Grup ayarlarından devam ediliyor",
+      "body": "Yeni borç kapatma para birimi olarak {to} ({name}) seçildi. Bu grupta zaten giderler olduğu için doğrudan değişiklik yapılamaz — aşağıdaki adımları izle; hiçbir şey kaydedilmeden önce her gider satır satır önizlemeyle dönüştürülür."
+    },
+    "adminOnlyNotice": "Grup para birimini yalnızca yöneticiler değiştirebilir — bir yöneticiden bunu Araçlar'dan yapmasını iste."
   }
 }

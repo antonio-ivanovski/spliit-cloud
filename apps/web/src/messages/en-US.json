@@ -1427,7 +1427,12 @@
       "createDescription": "Balances, totals and who-owes-whom are calculated in this currency. Pick what cards actually charge, usually your home currency.",
       "editDescription": "Balances, totals and who-owes-whom are calculated in this currency. Changing this will NOT convert expenses already entered, except when the currency has different \"minor units\" than the current one (e.g. changing from US Dollar to Japanese Yen)",
       "customOption": "Custom",
-      "lockedAfterExpenses": "The currency is locked because this group already has expenses."
+      "lockedAfterExpenses": "The currency is locked because this group already has expenses.",
+      "lockedRedirectDescription": "This group already has expenses, so the settlement currency can't be changed directly. Pick a currency to open the swap tool — every expense is converted with a per-row preview.",
+      "swapConfirmTitle": "Discard unsaved changes?",
+      "swapConfirmDescription": "You have unsaved changes to these settings. Continuing to the swap tool will discard them and preselect {code} as the new currency.",
+      "swapConfirmContinue": "Continue to swap",
+      "swapConfirmCancel": "Keep editing"
     },
     "Participants": {
       "title": "Participants",
@@ -3991,6 +3996,29 @@
           "detail": "Expenses change only when you confirm the final review."
         }
       }
+    },
+    "swap": {
+      "title": "Swap group currency",
+      "description": "Change the settlement currency after expenses exist. Every expense is converted and previewed per row before anything changes.",
+      "start": "Swap currency",
+      "steps": {
+        "rates": {
+          "title": "Rates",
+          "detail": "Historic per-expense rates or one custom rate."
+        },
+        "review": {
+          "title": "Review",
+          "detail": "Check old and new amounts before confirming."
+        },
+        "target": {
+          "title": "Target",
+          "detail": "Pick the new settlement currency."
+        },
+        "confirm": {
+          "title": "Confirm",
+          "detail": "Check the summary and run the swap."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4869,5 +4897,115 @@
     "description": "This version of the app is out of date. Refresh to get the latest version and try again.",
     "refresh": "Refresh",
     "title": "App update available"
+  },
+  "Swap": {
+    "title": "Swap group currency",
+    "description": "Convert every expense into a new settlement currency, then flip the group ledger. Nothing changes until you confirm the preview.",
+    "groupUnavailable": "The group could not be loaded.",
+    "backToTools": "Back to Tools",
+    "backToGroup": "Back to group",
+    "continue": "Continue",
+    "retry": "Retry",
+    "offlineNotice": "Reconnect to swap the group currency.",
+    "archivedNotice": "This group is archived. Unarchive it to swap currencies.",
+    "customLedgerNotice": "This group uses a custom currency code, so automatic rates aren't available.",
+    "target": {
+      "title": "New currency",
+      "description": "Choose the currency the group will settle in from now on.",
+      "label": "New settlement currency",
+      "sameAsCurrent": "Pick a currency different from the current one.",
+      "intro": "Swap converts every expense into the new currency and then flips the group ledger. Balances, totals and who-owes-whom are calculated in the new currency from that point on. This cannot be undone.",
+      "currentLabel": "Current group currency",
+      "currentHint": "Balances, totals and who-owes-whom are calculated in {current} today.",
+      "targetHint": "Every {from} amount becomes {name} ({to}) at the rates you choose on the next step. New expenses will default to {to}.",
+      "placeholder": "Select a currency"
+    },
+    "previewCta": "Preview conversion",
+    "preview": {
+      "title": "Per-expense preview",
+      "description": "{count} expenses · {from} → {to}",
+      "loading": "Loading preview…",
+      "missingRates": "{count} expense(s) are missing a rate and block the swap.",
+      "ratesOk": "All rates resolved.",
+      "rateUnit": "1 {from} = {rate} {to}",
+      "searchPlaceholder": "Search by expense title…",
+      "clearSearch": "Clear search",
+      "filterLabel": "Filter preview by outcome",
+      "showingXofY": "Showing {filtered} of {count}",
+      "noRows": "No expenses match the current filters.",
+      "truncated": "Large group: preview shows the first {shown} of {count} expenses. Only groups with up to 5000 expenses can be swapped.",
+      "loadingWithCount": "Fetching rates and planning {count} expenses…",
+      "loadingMore": "Loading more expenses… {loaded} of {count}",
+      "becomesLabel": "Becomes",
+      "totalAriaLabel": "Total converted amount, from {from} to {to}",
+      "wasLabel": "Was",
+      "pairChecking": "Checking rate…",
+      "pairFailedHint": "Automatic rates failed for this pair. Retry the rate, or select “Choose a rate instead” to set a fixed rate.",
+      "pairFailedTitle": "{base} → {to}: {count} expense(s) missing a rate",
+      "pairHidePicker": "Hide rate picker",
+      "pairPickRate": "Choose a rate instead",
+      "pairReloadHint": "A pair resolved — reload the full preview to continue.",
+      "pairResolved": "Rate resolved.",
+      "pairRetry": "Retry rate",
+      "pairSectionTitle": "Some rates failed",
+      "reloadPreview": "Reload full preview",
+      "close": "Close",
+      "fullListDescription": "{count} expenses · {from} → {to}",
+      "fullListTitle": "All expenses",
+      "noAttention": "No expenses need attention.",
+      "viewFullList": "View all {count} expenses",
+      "totalBreakdown": "{converted} converted · {cleared} already {to} · {bridged} at a manual rate",
+      "totalTitle": "Total for {count} expenses"
+    },
+    "confirmCta": "Continue to confirm",
+    "confirm": {
+      "title": "Confirm currency swap",
+      "description": "Review the summary, then run the swap.",
+      "run": "Swap {count} expenses",
+      "running": "Swapping…",
+      "irreversible": "This can't be undone to the original amounts. You can swap again afterwards, but amounts may differ by a few cents due to rounding and rate changes.",
+      "summary": "This rewrites {count} expenses from {from} into {to}."
+    },
+    "done": {
+      "message": "Swapped {count} expenses to {code}. Balances, totals and exports now use the new currency.",
+      "backToGroup": "Back to the group",
+      "backToTools": "Back to Tools",
+      "title": "Swap complete"
+    },
+    "kind": {
+      "cleared": "Already {to}",
+      "bridged": "Manual rate"
+    },
+    "filters": {
+      "all": "All",
+      "attention": "Needs attention",
+      "converted": "Converted",
+      "cleared": "Already {to}",
+      "bridged": "Manual rate"
+    },
+    "rowWarnings": {
+      "missing-rate": "No rate available for this expense.",
+      "exact-to-custom": "This expense used an exact amount, so it converts at a custom rate."
+    },
+    "warnings": {
+      "minor-units": "The new currency uses different minor units (e.g. cents vs yen) — small rounding differences are expected.",
+      "budgets-stale": "Budgets stay in the old currency amounts and should be reviewed after the swap.",
+      "recurring-stale": "Active recurring templates keep old amounts — review them after the swap.",
+      "exact-to-custom": "Some expenses used exact amounts, so they convert at custom rates."
+    },
+    "back": "Back",
+    "pairs": {
+      "title": "Conversion rates",
+      "description": "Choose how each currency converts into {code}. Per-expense-date rates use each expense's own date; a fixed rate applies one date's rate to every expense in the pair.",
+      "loading": "Loading conversion pairs…",
+      "empty": "No expenses need conversion — everything is already in {code}. You can still continue to flip the ledger currency.",
+      "expenseCount": "{count} expense(s) in this pair"
+    },
+    "progressAriaLabel": "Swap progress",
+    "entryNotice": {
+      "title": "Continuing from group settings",
+      "body": "You picked {to} ({name}) as the new settlement currency. A direct change isn't possible because this group already has expenses — work through the steps below and every expense will be converted with a per-row preview before anything is saved."
+    },
+    "adminOnlyNotice": "Only admins can swap the group currency — ask an admin to run it from Tools."
   }
 }

@@ -8,6 +8,8 @@ import { render, screen, waitFor, within } from '@/test/test-utils'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
+const routerMocks = vi.hoisted(() => ({ navigate: vi.fn() }))
+
 vi.mock('@tanstack/react-router', () => ({
   Link: ({
     to,
@@ -22,6 +24,7 @@ vi.mock('@tanstack/react-router', () => ({
       {children}
     </a>
   ),
+  useNavigate: () => routerMocks.navigate,
 }))
 
 vi.mock('@/lib/currency', () => ({
@@ -89,6 +92,7 @@ const mockGroup = {
 // ── Setup ───────────────────────────────────────────────────────────────
 
 beforeEach(() => {
+  routerMocks.navigate.mockClear()
   vi.mocked(useCurrencies).mockReturnValue(defaultCurrencies)
   vi.mocked(getCurrency).mockImplementation(
     (code: string) =>
@@ -259,6 +263,146 @@ describe('GroupForm', () => {
     expect(
       screen.queryByRole('button', { name: /save|create/i }),
     ).not.toBeInTheDocument()
+  })
+
+  it('redirects admins to the swap tool when the locked currency is changed', async () => {
+    const onSubmit = vi.fn()
+    const { user } = render(
+      <GroupForm
+        group={mockGroup as Props['group']}
+        currentMemberRole="ADMIN"
+        currencyLocked
+        onSubmit={onSubmit}
+      />,
+    )
+
+    // Locked but enabled: the picker hands off instead of editing in place.
+    const combobox = screen.getByRole('combobox', {
+      name: 'Settlement currency',
+    })
+    expect(combobox).toBeEnabled()
+    await user.click(combobox)
+    await user.click(await screen.findByRole('option', { name: /Euro/ }))
+
+    // Pristine form navigates straight away; nothing is submitted and the
+    // form keeps the old code so cancelling the swap is a no-op.
+    expect(routerMocks.navigate).toHaveBeenCalledTimes(1)
+    expect(routerMocks.navigate).toHaveBeenCalledWith({
+      to: '/groups/$groupId/tools/swap',
+      params: { groupId: 'group-1' },
+      search: { target: 'EUR' },
+    })
+    expect(onSubmit).not.toHaveBeenCalled()
+  })
+
+  it('confirms before redirecting when other settings edits are unsaved', async () => {
+    const onSubmit = vi.fn()
+    const { user } = render(
+      <GroupForm
+        group={mockGroup as Props['group']}
+        currentMemberRole="ADMIN"
+        currencyLocked
+        onSubmit={onSubmit}
+      />,
+    )
+
+    await user.type(screen.getByRole('textbox', { name: /name/i }), ' v2')
+
+    const combobox = screen.getByRole('combobox', {
+      name: 'Settlement currency',
+    })
+    await user.click(combobox)
+    await user.click(await screen.findByRole('option', { name: /Euro/ }))
+
+    // Dirty form holds the navigation behind a confirmation…
+    expect(routerMocks.navigate).not.toHaveBeenCalled()
+    expect(
+      screen.getByRole('heading', { name: /discard unsaved changes/i }),
+    ).toBeInTheDocument()
+
+    // …continuing navigates with the picked target…
+    await user.click(screen.getByRole('button', { name: /continue to swap/i }))
+    expect(routerMocks.navigate).toHaveBeenCalledTimes(1)
+    expect(routerMocks.navigate).toHaveBeenCalledWith({
+      to: '/groups/$groupId/tools/swap',
+      params: { groupId: 'group-1' },
+      search: { target: 'EUR' },
+    })
+    expect(onSubmit).not.toHaveBeenCalled()
+  })
+
+  it('stays on settings when the redirect confirmation is dismissed', async () => {
+    const onSubmit = vi.fn()
+    const { user } = render(
+      <GroupForm
+        group={mockGroup as Props['group']}
+        currentMemberRole="ADMIN"
+        currencyLocked
+        onSubmit={onSubmit}
+      />,
+    )
+
+    await user.type(screen.getByRole('textbox', { name: /name/i }), ' v2')
+
+    const combobox = screen.getByRole('combobox', {
+      name: 'Settlement currency',
+    })
+    await user.click(combobox)
+    await user.click(await screen.findByRole('option', { name: /Euro/ }))
+
+    await user.click(screen.getByRole('button', { name: /keep editing/i }))
+    expect(routerMocks.navigate).not.toHaveBeenCalled()
+    expect(
+      screen.queryByRole('heading', { name: /discard unsaved changes/i }),
+    ).not.toBeInTheDocument()
+    expect(onSubmit).not.toHaveBeenCalled()
+  })
+
+  it('ignores picking the already-active currency on expense-locked groups', async () => {
+    const onSubmit = vi.fn()
+    const { user } = render(
+      <GroupForm
+        group={mockGroup as Props['group']}
+        currentMemberRole="ADMIN"
+        currencyLocked
+        onSubmit={onSubmit}
+      />,
+    )
+
+    const combobox = screen.getByRole('combobox', {
+      name: 'Settlement currency',
+    })
+    await user.click(combobox)
+    await user.click(await screen.findByRole('option', { name: /US Dollar/ }))
+
+    expect(routerMocks.navigate).not.toHaveBeenCalled()
+    expect(onSubmit).not.toHaveBeenCalled()
+  })
+
+  it('keeps the picker disabled for members on expense-locked groups', () => {
+    const onSubmit = vi.fn()
+    render(
+      <GroupForm
+        group={mockGroup as Props['group']}
+        currentMemberRole="MEMBER"
+        currencyLocked
+        onSubmit={onSubmit}
+      />,
+    )
+
+    expect(
+      screen.getByRole('combobox', { name: 'Settlement currency' }),
+    ).toBeDisabled()
+  })
+
+  it('keeps the picker disabled when locked without a group (cloud-restore import)', () => {
+    const onSubmit = vi.fn()
+    render(<GroupForm currencyLocked onSubmit={onSubmit} />)
+
+    expect(
+      screen.getByRole('combobox', { name: 'Settlement currency' }),
+    ).toBeDisabled()
+    expect(routerMocks.navigate).not.toHaveBeenCalled()
   })
 
   it('submit calls onSubmit with parsed form values', async () => {

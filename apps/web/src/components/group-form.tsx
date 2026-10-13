@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { ChevronDown, ChevronUp, Save, UserPlus } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useForm, useFormState } from 'react-hook-form'
@@ -32,6 +32,14 @@ import { groupFormSchema } from '@/lib/schemas'
 import { extractSingleTitleEmoji, isEmojiUndecided } from '@spliit/domain'
 
 import { CurrencySelector } from './currency-selector'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from './ui/responsive-dialog'
 import { Textarea } from './ui/textarea'
 
 export type Props = {
@@ -86,9 +94,10 @@ export type Props = {
    */
   nameReadOnly?: boolean
   /**
-   * When `true`, the group already contains expenses and the currency selector
-   * is disabled with a small note. The backend rejects any currency change
-   * after expenses exist; this surfaces that on the UI.
+   * When `true`, the group already contains expenses and the settlement
+   * currency can't be changed directly (the backend rejects it). Eligible
+   * admins get an enabled picker that redirects into the currency-swap tool
+   * with the picked code preselected; everyone else keeps a disabled picker.
    */
   currencyLocked?: boolean
   /**
@@ -409,6 +418,33 @@ export function GroupForm({
     form.watch('currency') || undefined,
   )
 
+  // Swap redirect: for admins on an existing expense-bearing group the
+  // locked picker stays enabled and hands off to the ADMIN-only swap tool
+  // with the picked code preselected. Hidden on create, when the currency
+  // can still be picked directly, and for viewers who can't reach the tool
+  // (members, read-only, archived).
+  const canRedirectToSwap =
+    currencyLocked &&
+    !!group?.id &&
+    !readOnly &&
+    !isArchived &&
+    currentMemberRole === 'ADMIN'
+  const navigate = useNavigate()
+  // Pending swap target awaiting the unsaved-changes confirmation. The pick
+  // itself is never written into the form, so cancelling leaves settings
+  // untouched.
+  const [pendingSwapTarget, setPendingSwapTarget] = useState<string | null>(
+    null,
+  )
+
+  function goToSwap(groupId: string, targetCode: string) {
+    void navigate({
+      to: '/groups/$groupId/tools/swap',
+      params: { groupId },
+      search: { target: targetCode },
+    })
+  }
+
   return (
     <Form {...form}>
       <form
@@ -524,7 +560,11 @@ export function GroupForm({
                   <FormLabel>{t('CurrencyCodeField.label')}</FormLabel>
                   <FormDescription>
                     {currencyLocked
-                      ? t('CurrencyCodeField.lockedAfterExpenses')
+                      ? t(
+                          canRedirectToSwap
+                            ? 'CurrencyCodeField.lockedRedirectDescription'
+                            : 'CurrencyCodeField.lockedAfterExpenses',
+                        )
                       : t(
                           group
                             ? 'CurrencyCodeField.editDescription'
@@ -536,8 +576,37 @@ export function GroupForm({
                     currencies={currencies}
                     defaultValue={form.watch(field.name) ?? ''}
                     pinnedCurrencyCode={form.watch(field.name) ?? undefined}
-                    disabled={readOnly || isArchived || currencyLocked}
+                    disabled={
+                      readOnly ||
+                      isArchived ||
+                      (currencyLocked && !canRedirectToSwap)
+                    }
                     onValueChange={(newCurrency) => {
+                      const redirectGroupId = canRedirectToSwap
+                        ? group?.id
+                        : undefined
+                      const currentCode = form.getValues('currencyCode') ?? ''
+                      if (
+                        redirectGroupId &&
+                        newCurrency.length > 0 &&
+                        newCurrency !== currentCode
+                      ) {
+                        // Expense-locked: hand off to the swap tool instead of
+                        // writing the pick into the form. A dirty form
+                        // confirms first so unrelated edits aren't silently
+                        // discarded.
+                        if (isGroupFormDirty) {
+                          setPendingSwapTarget(newCurrency)
+                        } else {
+                          goToSwap(redirectGroupId, newCurrency)
+                        }
+                        return
+                      }
+                      // Locked without a swap handoff (e.g. cloud-restore
+                      // import with no group yet): keep the picker value
+                      // fixed. The picker is disabled, this is defense in
+                      // depth against programmatic changes.
+                      if (currencyLocked) return
                       field.onChange(newCurrency)
                       const currency =
                         getCurrency(newCurrency) ??
@@ -800,6 +869,45 @@ export function GroupForm({
           </p>
         )}
       </form>
+      <ResponsiveDialog
+        open={pendingSwapTarget !== null}
+        onOpenChange={(next) => {
+          if (!next) setPendingSwapTarget(null)
+        }}
+      >
+        <ResponsiveDialogContent className="max-w-md">
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle>
+              {t('CurrencyCodeField.swapConfirmTitle')}
+            </ResponsiveDialogTitle>
+            <ResponsiveDialogDescription>
+              {t('CurrencyCodeField.swapConfirmDescription', {
+                code: pendingSwapTarget ?? '',
+              })}
+            </ResponsiveDialogDescription>
+          </ResponsiveDialogHeader>
+          <ResponsiveDialogFooter className="flex-col-reverse gap-2 sm:flex-row sm:gap-2">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setPendingSwapTarget(null)}
+            >
+              {t('CurrencyCodeField.swapConfirmCancel')}
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                const code = pendingSwapTarget
+                const redirectGroupId = group?.id
+                setPendingSwapTarget(null)
+                if (code && redirectGroupId) goToSwap(redirectGroupId, code)
+              }}
+            >
+              {t('CurrencyCodeField.swapConfirmContinue')}
+            </Button>
+          </ResponsiveDialogFooter>
+        </ResponsiveDialogContent>
+      </ResponsiveDialog>
     </Form>
   )
 }

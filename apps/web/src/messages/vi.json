@@ -1399,7 +1399,12 @@
       "createDescription": "Số dư, tổng cộng và ai nợ ai bao nhiêu được tính bằng loại tiền này. Hãy chọn loại tiền mà thẻ thực sự tính phí, thường là tiền nước bạn.",
       "editDescription": "Số dư, tổng cộng và ai nợ ai bao nhiêu được tính bằng loại tiền này. Việc đổi loại tiền KHÔNG chuyển đổi các chi phí đã nhập, trừ khi loại tiền mới có 'đơn vị nhỏ' khác loại tiền hiện tại (ví dụ đổi từ Đô la Mỹ sang Yên Nhật).",
       "customOption": "Tùy chỉnh",
-      "lockedAfterExpenses": "Không thể thay đổi sau khi có chi phí."
+      "lockedAfterExpenses": "Không thể thay đổi sau khi có chi phí.",
+      "lockedRedirectDescription": "Nhóm này đã có chi phí nên không thể đổi trực tiếp loại tiền tất toán. Hãy chọn một loại tiền để mở công cụ đổi — mọi chi phí sẽ được chuyển đổi và xem trước từng dòng.",
+      "swapConfirmTitle": "Hủy các thay đổi chưa lưu?",
+      "swapConfirmDescription": "Bạn có thay đổi chưa lưu trong cài đặt này. Tiếp tục đến công cụ đổi sẽ hủy các thay đổi đó và chọn sẵn {code} làm loại tiền mới.",
+      "swapConfirmContinue": "Tiếp tục đến công cụ đổi",
+      "swapConfirmCancel": "Tiếp tục chỉnh sửa"
     },
     "Participants": {
       "title": "Thành viên",
@@ -3976,6 +3981,29 @@
           "detail": "Các khoản chi chỉ thay đổi khi xác nhận lần xem lại cuối."
         }
       }
+    },
+    "swap": {
+      "title": "Đổi tiền tệ nhóm",
+      "description": "Đổi loại tiền tất toán sau khi đã có chi phí. Mọi chi phí được chuyển đổi và xem trước từng dòng trước khi có gì thay đổi.",
+      "start": "Đổi tiền tệ",
+      "steps": {
+        "confirm": {
+          "title": "Xác nhận",
+          "detail": "Kiểm tra tóm tắt rồi chạy lệnh đổi."
+        },
+        "rates": {
+          "title": "Tỷ giá",
+          "detail": "Tỷ giá lịch sử từng chi phí hoặc một tỷ giá tùy chỉnh."
+        },
+        "review": {
+          "title": "Xem lại",
+          "detail": "Kiểm tra số tiền cũ và mới trước khi xác nhận."
+        },
+        "target": {
+          "title": "Mục tiêu",
+          "detail": "Chọn loại tiền tất toán mới."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4829,5 +4857,115 @@
     "description": "Phiên bản ứng dụng này đã lỗi thời. Làm mới để nhận phiên bản mới nhất và thử lại.",
     "refresh": "Làm mới",
     "title": "Có bản cập nhật ứng dụng"
+  },
+  "Swap": {
+    "title": "Đổi tiền tệ nhóm",
+    "description": "Chuyển mọi chi phí sang loại tiền tất toán mới, rồi lật sổ cái của nhóm. Chưa có gì thay đổi cho đến khi bạn xác nhận bản xem trước.",
+    "groupUnavailable": "Không tải được nhóm.",
+    "backToTools": "Quay lại Công cụ",
+    "backToGroup": "Quay lại nhóm",
+    "continue": "Tiếp tục",
+    "retry": "Thử lại",
+    "offlineNotice": "Hãy kết nối lại để đổi tiền tệ của nhóm.",
+    "archivedNotice": "Nhóm này đã được lưu trữ. Bỏ lưu trữ để đổi tiền tệ.",
+    "confirmCta": "Tiếp tục để xác nhận",
+    "confirm": {
+      "title": "Xác nhận đổi tiền tệ",
+      "description": "Xem lại tóm tắt, rồi thực hiện đổi tiền.",
+      "run": "Đổi {count} chi phí",
+      "running": "Đang đổi…",
+      "irreversible": "Không thể hoàn tác về số tiền gốc. Bạn có thể đổi lại sau, nhưng số tiền có thể lệch vài xu do làm tròn và thay đổi tỷ giá.",
+      "summary": "Thao tác này viết lại {count} chi phí từ {from} sang {to}."
+    },
+    "done": {
+      "message": "Đã đổi {count} chi phí sang {code}. Số dư, tổng cộng và bản xuất giờ dùng loại tiền mới.",
+      "backToGroup": "Quay lại nhóm",
+      "backToTools": "Quay lại Công cụ",
+      "title": "Hoàn tất đổi tiền tệ"
+    },
+    "filters": {
+      "all": "Tất cả",
+      "attention": "Cần chú ý",
+      "converted": "Đã chuyển đổi",
+      "cleared": "Đã là {to}",
+      "bridged": "Tỷ giá thủ công"
+    },
+    "kind": {
+      "cleared": "Đã là {to}",
+      "bridged": "Tỷ giá thủ công"
+    },
+    "previewCta": "Xem trước chuyển đổi",
+    "preview": {
+      "title": "Xem trước từng chi phí",
+      "description": "{count} chi phí · {from} → {to}",
+      "loading": "Đang tải bản xem trước…",
+      "missingRates": "{count} chi phí còn thiếu tỷ giá và đang chặn đổi tiền.",
+      "ratesOk": "Mọi tỷ giá đã đầy đủ.",
+      "rateUnit": "1 {from} = {rate} {to}",
+      "searchPlaceholder": "Tìm theo tiêu đề chi phí…",
+      "clearSearch": "Xóa tìm kiếm",
+      "filterLabel": "Lọc bản xem trước theo kết quả",
+      "showingXofY": "Hiển thị {filtered} trong số {count}",
+      "noRows": "Không có chi phí nào khớp với bộ lọc hiện tại.",
+      "truncated": "Nhóm lớn: bản xem trước hiển thị {shown} trong số {count} chi phí đầu tiên. Chỉ những nhóm có tối đa 5000 chi phí mới có thể đổi.",
+      "loadingWithCount": "Đang lấy tỷ giá và lên kế hoạch cho {count} chi phí…",
+      "loadingMore": "Đang tải thêm chi phí… {loaded} trong số {count}",
+      "becomesLabel": "Thành",
+      "totalAriaLabel": "Tổng số tiền đã chuyển đổi, từ {from} sang {to}",
+      "wasLabel": "Trước đây",
+      "pairChecking": "Đang kiểm tra tỷ giá…",
+      "pairFailedHint": "Tỷ giá tự động thất bại cho cặp này. Hãy thử lại tỷ giá, hoặc chọn “Chọn tỷ giá khác” để đặt tỷ giá cố định.",
+      "pairFailedTitle": "{base} → {to}: {count} chi phí còn thiếu tỷ giá",
+      "pairHidePicker": "Ẩn bộ chọn tỷ giá",
+      "pairPickRate": "Chọn tỷ giá khác",
+      "pairReloadHint": "Một cặp đã xong — tải lại toàn bộ bản xem trước để tiếp tục.",
+      "pairResolved": "Đã có tỷ giá.",
+      "pairRetry": "Thử lại tỷ giá",
+      "pairSectionTitle": "Một số tỷ giá thất bại",
+      "reloadPreview": "Tải lại toàn bộ bản xem trước",
+      "close": "Đóng",
+      "fullListDescription": "{count} chi phí · {from} → {to}",
+      "fullListTitle": "Tất cả chi phí",
+      "noAttention": "Không có chi phí nào cần chú ý.",
+      "viewFullList": "Xem tất cả {count} chi phí",
+      "totalBreakdown": "{converted} đã chuyển đổi · {cleared} đã là {to} · {bridged} theo tỷ giá thủ công",
+      "totalTitle": "Tổng cho {count} chi phí"
+    },
+    "rowWarnings": {
+      "missing-rate": "Không có tỷ giá cho chi phí này.",
+      "exact-to-custom": "Chi phí này đã dùng số tiền chính xác nên được chuyển đổi theo tỷ giá tùy chỉnh."
+    },
+    "customLedgerNotice": "Nhóm này dùng mã tiền tệ tùy chỉnh nên không có tỷ giá tự động.",
+    "target": {
+      "title": "Loại tiền mới",
+      "description": "Chọn loại tiền nhóm sẽ dùng để tất toán từ nay về sau.",
+      "label": "Loại tiền tất toán mới",
+      "sameAsCurrent": "Hãy chọn loại tiền khác với hiện tại.",
+      "intro": "Việc đổi sẽ chuyển mọi chi phí sang loại tiền mới rồi lật sổ cái của nhóm. Số dư, tổng cộng và ai nợ ai được tính bằng loại tiền mới từ thời điểm đó trở đi. Thao tác này không thể hoàn tác.",
+      "currentLabel": "Loại tiền hiện tại của nhóm",
+      "currentHint": "Số dư, tổng cộng và ai nợ ai hiện đang tính bằng {current}.",
+      "targetHint": "Mọi số tiền {from} sẽ thành {name} ({to}) theo tỷ giá bạn chọn ở bước tiếp theo. Chi phí mới sẽ mặc định dùng {to}.",
+      "placeholder": "Chọn loại tiền…"
+    },
+    "warnings": {
+      "minor-units": "Loại tiền mới dùng đơn vị nhỏ khác (ví dụ cent với yên) — chênh lệch làm tròn nhỏ là bình thường.",
+      "budgets-stale": "Ngân sách giữ nguyên số tiền theo loại tiền cũ và nên được xem lại sau khi đổi.",
+      "recurring-stale": "Các mẫu lặp lại đang hoạt động giữ nguyên số tiền cũ — hãy xem lại sau khi đổi.",
+      "exact-to-custom": "Một số chi phí đã dùng số tiền chính xác nên được chuyển đổi theo tỷ giá tùy chỉnh."
+    },
+    "back": "Quay lại",
+    "pairs": {
+      "title": "Tỷ giá chuyển đổi",
+      "description": "Chọn cách mỗi loại tiền chuyển sang {code}. Tỷ giá theo ngày chi phí dùng ngày của từng chi phí; tỷ giá cố định áp một ngày duy nhất cho mọi chi phí trong cặp.",
+      "loading": "Đang tải các cặp chuyển đổi…",
+      "empty": "Không có chi phí nào cần chuyển đổi — mọi thứ đã ở {code}. Bạn vẫn có thể tiếp tục để đổi tiền tệ sổ cái.",
+      "expenseCount": "{count} chi phí trong cặp này"
+    },
+    "progressAriaLabel": "Tiến trình đổi",
+    "entryNotice": {
+      "title": "Tiếp tục từ cài đặt nhóm",
+      "body": "Bạn đã chọn {to} ({name}) làm loại tiền tất toán mới. Không thể đổi trực tiếp vì nhóm này đã có chi phí — hãy làm theo các bước bên dưới, mọi chi phí sẽ được chuyển đổi và xem trước từng dòng trước khi có gì được lưu."
+    },
+    "adminOnlyNotice": "Chỉ quản trị viên mới có thể đổi tiền tệ nhóm — hãy nhờ quản trị viên thực hiện từ Công cụ."
   }
 }

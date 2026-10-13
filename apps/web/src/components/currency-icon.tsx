@@ -4,6 +4,7 @@ import eth from '@/assets/cryptocurrencies/eth.svg'
 import ltc from '@/assets/cryptocurrencies/ltc.svg'
 import sol from '@/assets/cryptocurrencies/sol.svg'
 import xrp from '@/assets/cryptocurrencies/xrp.svg'
+import { cn } from '@/lib/utils'
 
 /** Bundled SVG icon per crypto code; sats reuse the Bitcoin icon. */
 const CRYPTO_ICONS: Record<string, string> = {
@@ -27,6 +28,10 @@ export function currencyIconSrc(code: string): string | null {
  * bundled SVG icons (country flags would be wrong — BTC would render Bhutan's
  * flag). Returns null for unknown/custom codes so callers can render their own
  * fallback.
+ *
+ * The icon owns its aspect ratio: flags render at their native 4:3 ratio
+ * (forcing a square via `size-*` squishes them), crypto marks stay square.
+ * Callers should not pass sizing classes that pin both axes.
  */
 export function CurrencyIcon({
   code,
@@ -37,9 +42,28 @@ export function CurrencyIcon({
 }) {
   const iconSrc = currencyIconSrc(code)
   if (iconSrc) {
-    return <img src={iconSrc} className={className} alt="" aria-hidden="true" />
+    return (
+      <img
+        src={iconSrc}
+        className={cn('size-4 shrink-0 object-contain', className)}
+        alt=""
+        aria-hidden="true"
+        draggable={false}
+      />
+    )
   }
   if (!code) return null
   const flagUrl = `https://flagcdn.com/h24/${code.slice(0, 2).toLowerCase()}.png`
-  return <img src={flagUrl} className={className} alt="" aria-hidden="true" />
+  return (
+    <img
+      src={flagUrl}
+      className={cn(
+        'aspect-[4/3] w-[22px] shrink-0 rounded-[3px] object-cover',
+        className,
+      )}
+      alt=""
+      aria-hidden="true"
+      draggable={false}
+    />
+  )
 }

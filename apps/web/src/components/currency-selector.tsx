@@ -72,6 +72,11 @@ type Props = {
   onValueToggle?: (currencyCode: string) => void
   /** Trigger text when nothing selected in multi mode. */
   multiPlaceholder?: string
+  /**
+   * Trigger text when `defaultValue` matches no currency (single mode).
+   * Defaults to `Select`.
+   */
+  placeholder?: string
   /** Title and action label shown by the mobile multi-select drawer. */
   mobileTitle?: string
   mobileDoneLabel?: string
@@ -93,6 +98,7 @@ export function CurrencySelector({
   selectedValues = [],
   onValueToggle,
   multiPlaceholder,
+  placeholder,
   mobileTitle,
   mobileDoneLabel,
   id,
@@ -101,9 +107,11 @@ export function CurrencySelector({
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
   const { t } = useTranslation()
-  const selectedCurrency =
-    currencies.find((currency) => (currency.code ?? '') === defaultValue) ??
-    currencies[0]
+  // No match (e.g. an empty value before the user picks) renders the
+  // placeholder — never the first catalog entry (AED) as a fake selection.
+  const selectedCurrency = currencies.find(
+    (currency) => (currency.code ?? '') === defaultValue,
+  )
 
   const command = (
     <CurrencyCommand
@@ -217,6 +225,7 @@ export function CurrencySelector({
           render={
             <CurrencyButton
               currency={selectedCurrency}
+              placeholder={placeholder}
               open={open}
               isLoading={isLoading}
               disabled={disabled}
@@ -239,6 +248,7 @@ export function CurrencySelector({
         render={
           <CurrencyButton
             currency={selectedCurrency}
+            placeholder={placeholder}
             open={open}
             isLoading={isLoading}
             disabled={disabled}
@@ -383,7 +393,8 @@ function CurrencyCommand({
 }
 
 type CurrencyButtonProps = {
-  currency: DisplayCurrency
+  currency: DisplayCurrency | undefined
+  placeholder?: string
   open: boolean
   isLoading: boolean
   disabled?: boolean
@@ -395,6 +406,7 @@ const CurrencyButton = forwardRef<HTMLButtonElement, CurrencyButtonProps>(
   (
     {
       currency,
+      placeholder,
       open,
       isLoading,
       compact = false,
@@ -411,7 +423,7 @@ const CurrencyButton = forwardRef<HTMLButtonElement, CurrencyButtonProps>(
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={
-          compact
+          compact && currency
             ? `${currency.name}${currency.code ? ` (${currency.code})` : ''}`
             : undefined
         }
@@ -429,7 +441,13 @@ const CurrencyButton = forwardRef<HTMLButtonElement, CurrencyButtonProps>(
             compact ? 'text-start' : 'min-w-0 flex-1 overflow-hidden text-start'
           }
         >
-          <CurrencyLabel currency={currency} compact={compact} />
+          {currency ? (
+            <CurrencyLabel currency={currency} compact={compact} />
+          ) : (
+            <span className="text-muted-foreground">
+              {placeholder ?? 'Select'}
+            </span>
+          )}
         </span>
         {isLoading ? (
           <Loader2 className={`animate-spin ${iconClassName}`} />

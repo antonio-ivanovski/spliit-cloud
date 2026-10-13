@@ -726,7 +726,12 @@
       "createDescription": "Les soldes, les totaux et qui doit à qui sont calculés dans cette devise. Choisissez la devise réellement débitée par les cartes, généralement votre devise habituelle.",
       "editDescription": "Les soldes, les totaux et qui doit à qui sont calculés dans cette devise. La modification de cette option n’entraînera PAS la conversion des dépenses déjà saisies, sauf si la devise a des « unités mineures » différentes de celles de la devise actuelle (par exemple, passage du dollar américain au yen japonais)",
       "customOption": "Personnalisée",
-      "lockedAfterExpenses": "La devise est verrouillée car ce groupe a déjà des dépenses."
+      "lockedAfterExpenses": "La devise est verrouillée car ce groupe a déjà des dépenses.",
+      "lockedRedirectDescription": "Ce groupe a déjà des dépenses, la devise de règlement ne peut donc pas être modifiée directement. Choisissez une devise pour ouvrir l'outil d'échange — chaque dépense est convertie avec un aperçu par dépense.",
+      "swapConfirmTitle": "Abandonner les modifications non enregistrées ?",
+      "swapConfirmDescription": "Vous avez des modifications non enregistrées dans ces paramètres. Si vous continuez vers l'outil d'échange, elles seront abandonnées et {code} sera présélectionné comme nouvelle devise.",
+      "swapConfirmContinue": "Continuer vers l'échange",
+      "swapConfirmCancel": "Continuer la modification"
     },
     "readOnlyNote": "Seuls les propriétaires et les administrateurs peuvent modifier les paramètres du groupe.",
     "readOnlyTitle": "Paramètres du groupe",
@@ -3933,6 +3938,29 @@
           "detail": "Les dépenses ne changent que lorsque vous confirmez la révision finale."
         }
       }
+    },
+    "swap": {
+      "title": "Échanger la devise du groupe",
+      "description": "Changez la devise de règlement alors que des dépenses existent. Chaque dépense est convertie et affichée par ligne avant tout changement.",
+      "start": "Échanger la devise",
+      "steps": {
+        "confirm": {
+          "title": "Confirmation",
+          "detail": "Vérifiez le résumé puis lancez l’échange."
+        },
+        "rates": {
+          "title": "Taux",
+          "detail": "Taux historiques par dépense ou un taux personnalisé unique."
+        },
+        "review": {
+          "title": "Vérification",
+          "detail": "Vérifiez les anciens et nouveaux montants avant de confirmer."
+        },
+        "target": {
+          "title": "Cible",
+          "detail": "Choisissez la nouvelle devise de règlement."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4796,5 +4824,115 @@
     "description": "Cette version de l'application n'est plus à jour. Actualisez pour obtenir la dernière version et réessayez.",
     "refresh": "Actualiser",
     "title": "Mise à jour de l'application disponible"
+  },
+  "Swap": {
+    "title": "Échanger la devise du groupe",
+    "description": "Convertissez chaque dépense dans une nouvelle devise de règlement, puis basculez les comptes du groupe. Rien ne change tant que vous n’avez pas confirmé l’aperçu.",
+    "groupUnavailable": "Le groupe n’a pas pu être chargé.",
+    "backToTools": "Retour aux Outils",
+    "backToGroup": "Retour au groupe",
+    "continue": "Continuer",
+    "retry": "Réessayer",
+    "offlineNotice": "Reconnectez-vous pour échanger la devise du groupe.",
+    "confirmCta": "Continuer pour confirmer",
+    "confirm": {
+      "title": "Confirmer l’échange de devise",
+      "description": "Vérifiez le résumé, puis lancez l’échange.",
+      "run": "Échanger {count} dépenses",
+      "running": "Échange en cours…",
+      "irreversible": "Impossible de revenir aux montants d’origine. Vous pourrez refaire un échange ensuite, mais les montants peuvent varier de quelques centimes à cause des arrondis et des variations de taux.",
+      "summary": "Ceci réécrit {count} dépenses de {from} vers {to}."
+    },
+    "done": {
+      "message": "{count} dépenses échangées vers {code}. Les soldes, les totaux et les exports utilisent désormais la nouvelle devise.",
+      "backToGroup": "Retour au groupe",
+      "backToTools": "Retour aux Outils",
+      "title": "Échange terminé"
+    },
+    "filters": {
+      "all": "Toutes",
+      "attention": "Nécessite attention",
+      "converted": "Convertie",
+      "cleared": "Déjà en {to}",
+      "bridged": "Taux manuel"
+    },
+    "kind": {
+      "cleared": "Déjà en {to}",
+      "bridged": "Taux manuel"
+    },
+    "previewCta": "Aperçu de la conversion",
+    "preview": {
+      "title": "Aperçu par dépense",
+      "description": "{count} dépenses · {from} → {to}",
+      "loading": "Chargement de l’aperçu…",
+      "missingRates": "{count} dépense(s) sans taux bloquent l’échange.",
+      "ratesOk": "Tous les taux sont résolus.",
+      "rateUnit": "1 {from} = {rate} {to}",
+      "searchPlaceholder": "Rechercher par titre de dépense…",
+      "clearSearch": "Effacer la recherche",
+      "filterLabel": "Filtrer l’aperçu par résultat",
+      "showingXofY": "Affichage de {filtered} sur {count}",
+      "noRows": "Aucune dépense ne correspond aux filtres actuels.",
+      "truncated": "Groupe important : l’aperçu montre les {shown} premières dépenses sur {count}. Seuls les groupes de 5000 dépenses maximum peuvent être échangés.",
+      "loadingWithCount": "Récupération des taux et planification de {count} dépenses…",
+      "loadingMore": "Chargement d’autres dépenses… {loaded} sur {count}",
+      "becomesLabel": "Devient",
+      "totalAriaLabel": "Montant total converti, de {from} à {to}",
+      "wasLabel": "Était",
+      "pairChecking": "Vérification du taux…",
+      "pairFailedHint": "Les taux automatiques ont échoué pour cette paire. Réessayez le taux, ou sélectionnez « Choisir un taux à la place » pour définir un taux fixe.",
+      "pairFailedTitle": "{base} → {to} : {count} dépense(s) sans taux",
+      "pairHidePicker": "Masquer le sélecteur de taux",
+      "pairPickRate": "Choisir un taux à la place",
+      "pairReloadHint": "Une paire est résolue — rechargez l’aperçu complet pour continuer.",
+      "pairResolved": "Taux résolu.",
+      "pairRetry": "Réessayer le taux",
+      "pairSectionTitle": "Certains taux ont échoué",
+      "reloadPreview": "Recharger l’aperçu complet",
+      "close": "Fermer",
+      "fullListDescription": "{count} dépenses · {from} → {to}",
+      "fullListTitle": "Toutes les dépenses",
+      "noAttention": "Aucune dépense ne nécessite d'attention.",
+      "viewFullList": "Voir toutes les {count} dépenses",
+      "totalBreakdown": "{converted} converties · {cleared} déjà en {to} · {bridged} à un taux manuel",
+      "totalTitle": "Total pour {count} dépenses"
+    },
+    "rowWarnings": {
+      "missing-rate": "Aucun taux disponible pour cette dépense.",
+      "exact-to-custom": "Cette dépense utilisait un montant exact, elle est donc convertie à un taux personnalisé."
+    },
+    "archivedNotice": "Ce groupe est archivé. Désarchivez le groupe pour échanger la devise.",
+    "customLedgerNotice": "Ce groupe utilise un code de devise personnalisé, les taux automatiques ne sont donc pas disponibles.",
+    "target": {
+      "title": "Nouvelle devise",
+      "description": "Choisissez la devise dans laquelle le groupe réglera ses comptes à partir de maintenant.",
+      "label": "Nouvelle devise de règlement",
+      "sameAsCurrent": "Choisissez une devise différente de la devise actuelle.",
+      "intro": "L’échange convertit chaque dépense dans la nouvelle devise puis bascule les comptes du groupe. Les soldes, les totaux et qui doit à qui sont calculés dans la nouvelle devise à partir de ce moment. Cette action est irréversible.",
+      "currentLabel": "Devise actuelle du groupe",
+      "currentHint": "Les soldes, les totaux et qui doit à qui sont calculés aujourd’hui en {current}.",
+      "targetHint": "Chaque montant en {from} deviendra {name} ({to}) avec les taux que vous choisirez à l’étape suivante. Les nouvelles dépenses seront en {to} par défaut.",
+      "placeholder": "Sélectionnez une devise"
+    },
+    "warnings": {
+      "minor-units": "La nouvelle devise utilise des unités mineures différentes (par ex. centimes contre yens) — de petits écarts d’arrondi sont à prévoir.",
+      "budgets-stale": "Les budgets conservent les montants dans l’ancienne devise et devront être vérifiés après l’échange.",
+      "recurring-stale": "Les modèles récurrents actifs conservent les anciens montants — vérifiez-les après l’échange.",
+      "exact-to-custom": "Certaines dépenses utilisaient des montants exacts, elles sont donc converties à des taux personnalisés."
+    },
+    "back": "Retour",
+    "pairs": {
+      "title": "Taux de conversion",
+      "description": "Choisissez comment chaque devise est convertie en {code}. Les taux à la date de dépense utilisent la date de chaque dépense ; un taux fixe applique le taux d’une seule date à chaque dépense de la paire.",
+      "loading": "Chargement des paires de conversion…",
+      "empty": "Aucune dépense n'a besoin d'être convertie — tout est déjà en {code}. Vous pouvez quand même continuer pour basculer la devise des comptes.",
+      "expenseCount": "{count} dépense(s) dans cette paire"
+    },
+    "progressAriaLabel": "Progression de l’échange",
+    "entryNotice": {
+      "title": "Suite des paramètres du groupe",
+      "body": "Vous avez choisi {to} ({name}) comme nouvelle devise de règlement. Une modification directe n'est pas possible car ce groupe a déjà des dépenses — suivez les étapes ci-dessous et chaque dépense sera convertie avec un aperçu par dépense avant tout enregistrement."
+    },
+    "adminOnlyNotice": "Seuls les administrateurs peuvent échanger la devise du groupe — demandez à un administrateur de le faire depuis Outils."
   }
 }

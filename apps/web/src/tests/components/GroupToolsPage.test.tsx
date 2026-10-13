@@ -31,6 +31,7 @@ vi.mock('@tanstack/react-router', () => ({
       {children}
     </a>
   ),
+  useLocation: () => ({ hash: '' }),
 }))
 
 describe('GroupToolsPage', () => {

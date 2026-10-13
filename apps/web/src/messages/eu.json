@@ -699,7 +699,12 @@
       "createDescription": "Saldoak, totalak eta nork nori zor dion moneta honetan kalkulatzen dira. Aukeratu txartelek benetan kobratzen duten moneta, normalean zure ohiko moneta.",
       "editDescription": "Saldoak, totalak eta nork nori zor dion moneta honetan kalkulatzen dira. Hori aldatuz gero, EZ dira bihurtuko lehendik sartutako gastuak, dibisak egungoaren \"unitate txiki\" desberdinak dituenean izan ezik (adib. AEBko dolarretik Japoniako yenera aldatuz)",
       "customOption": "Pertsonalizatua",
-      "lockedAfterExpenses": "Moneta blokeatuta dago talde honek jada gastuak dituelako."
+      "lockedAfterExpenses": "Moneta blokeatuta dago talde honek jada gastuak dituelako.",
+      "lockedRedirectDescription": "Talde honek jada gastuak ditu, beraz zor-kitapenaren moneta ezin da zuzenean aldatu. Aukeratu moneta bat trukatzeko tresna irekitzeko — gastu bakoitza gastuz gastuko aurrebista batekin bihurtuko da.",
+      "swapConfirmTitle": "Baztertu gorde gabeko aldaketak?",
+      "swapConfirmDescription": "Ezarpen hauetan gorde gabeko aldaketak dituzu. Trukatzeko tresnara jarraitzen baduzu, baztertu egingo dira eta {code} aldez aurretik hautatuko da moneta berri gisa.",
+      "swapConfirmContinue": "Jarraitu truketzera",
+      "swapConfirmCancel": "Jarraitu editatzen"
     },
     "Participants": {
       "title": "Kideak",
@@ -3931,6 +3936,29 @@
           "detail": "Gastuak azken berrikuspena berresten duzunean bakarrik aldatzen dira."
         }
       }
+    },
+    "swap": {
+      "title": "Trukatu taldearen moneta",
+      "description": "Aldatu zor-kitapenaren moneta gastuak daudenean. Gastu bakoitza bihurtzen da eta errenkadaz errenkada aurreikusten da ezer aldatu aurretik.",
+      "start": "Trukatu moneta",
+      "steps": {
+        "confirm": {
+          "title": "Berrespena",
+          "detail": "Egiaztatu laburpena eta egin trukea."
+        },
+        "rates": {
+          "title": "Tasak",
+          "detail": "Gastu bakoitzeko tasa historikoak edo tasa pertsonalizatu bat."
+        },
+        "review": {
+          "title": "Berrikuspena",
+          "detail": "Egiaztatu zenbateko zaharrak eta berriak berretsi aurretik."
+        },
+        "target": {
+          "title": "Helburua",
+          "detail": "Aukeratu zor-kitapeneko moneta berria."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4794,5 +4822,115 @@
     "description": "Aplikazioaren bertsio hau zaharkituta dago. Freskatu azken bertsioa eskuratzeko eta saiatu berriro.",
     "refresh": "Freskatu",
     "title": "Aplikazioaren eguneraketa eskuragarri"
+  },
+  "Swap": {
+    "title": "Trukatu taldearen moneta",
+    "description": "Bihurtu gastu bakoitza zor-kitapeneko moneta berri batera, eta gero aldatu talde-liburua. Ez da ezer aldatzen aurrebista berresten duzun arte.",
+    "groupUnavailable": "Ezin izan da taldea kargatu.",
+    "backToTools": "Itzuli Tresnetara",
+    "backToGroup": "Itzuli taldera",
+    "continue": "Jarraitu",
+    "retry": "Saiatu berriro",
+    "offlineNotice": "Konektatu berriro taldearen moneta trukatzeko.",
+    "confirmCta": "Jarraitu berrestera",
+    "confirm": {
+      "title": "Berretsi moneta-trukea",
+      "description": "Berrikusi laburpena, gero egin trukea.",
+      "run": "Trukatu {count} gastu",
+      "running": "Trukatzen…",
+      "irreversible": "Ezin da desegin jatorrizko zenbatekoetara itzultzeko. Gero berriro trukatu dezakezu, baina zenbatekoak zentimo batzuk alda daitezke biribiltzeagatik eta tasa-aldaketengatik.",
+      "summary": "Honek {count} gastu {from}-tik {to}-ra berridazten ditu."
+    },
+    "done": {
+      "message": "{count} gastu {code}-ra trukatu dira. Saldoek, totalek eta esportazioek moneta berria erabiltzen dute orain.",
+      "backToGroup": "Itzuli taldera",
+      "backToTools": "Itzuli Tresnetara",
+      "title": "Trukea osatuta"
+    },
+    "filters": {
+      "all": "Guztiak",
+      "attention": "Arreta behar du",
+      "converted": "Bihurtuta",
+      "cleared": "Jada {to}",
+      "bridged": "Eskuzko tasa"
+    },
+    "kind": {
+      "cleared": "Jada {to}",
+      "bridged": "Eskuzko tasa"
+    },
+    "previewCta": "Bihurketaren aurrebista",
+    "preview": {
+      "title": "Gastuz gastuko aurrebista",
+      "description": "{count} gastu · {from} → {to}",
+      "loading": "Aurrebista kargatzen…",
+      "missingRates": "{count} gasturi tasa falta zaie eta trukeak blokeatzen dituzte.",
+      "ratesOk": "Tasa guztiak ebatzita.",
+      "rateUnit": "1 {from} = {rate} {to}",
+      "searchPlaceholder": "Bilatu gastuaren izenburuaren arabera…",
+      "clearSearch": "Bilaketa garbitu",
+      "filterLabel": "Iragazi aurrebista emaitzaren arabera",
+      "showingXofY": "{count} gastutatik {filtered} erakusten",
+      "noRows": "Ez dago uneko iragazkiekin bat datorren gasturik.",
+      "truncated": "Talde handia: aurrebistak {count} gastutatik {shown} lehenak erakusten ditu. Gehienez 5000 gastu dituzten taldeak bakarrik truka daitezke.",
+      "loadingWithCount": "Tasak eskuratzen eta {count} gastu planifikatzen…",
+      "loadingMore": "Gastu gehiago kargatzen… {count} gastutatik {loaded}",
+      "becomesLabel": "Izango da",
+      "totalAriaLabel": "Bihurtutako zenbateko osoa, {from}-tik {to}-ra",
+      "wasLabel": "Zegoen",
+      "pairChecking": "Tasa egiaztatzen…",
+      "pairFailedHint": "Tasa automatikoek huts egin dute pare honetarako. Saiatu berriro tasa lortzen edo hautatu “Aukeratu tasa bat ordez” tasa finko bat ezartzeko.",
+      "pairFailedTitle": "{base} → {to}: {count} gastuk tasa gabe",
+      "pairHidePicker": "Ezkutatu tasa-hautatzailea",
+      "pairPickRate": "Aukeratu tasa bat ordez",
+      "pairReloadHint": "Pare bat ebatzi da — kargatu berriro aurrebista osoa jarraitzeko.",
+      "pairResolved": "Tasa ebatzita.",
+      "pairRetry": "Saiatu berriro tasa",
+      "pairSectionTitle": "Tasa batzuek huts egin dute",
+      "reloadPreview": "Kargatu berriro aurrebista osoa",
+      "close": "Itxi",
+      "fullListDescription": "{count} gastu · {from} → {to}",
+      "fullListTitle": "Gastu guztiak",
+      "noAttention": "Ez dago arreta behar duen gasturik.",
+      "viewFullList": "Ikusi {count} gastu guztiak",
+      "totalBreakdown": "{converted} bihurtuta · {cleared} jada {to} · {bridged} eskuzko tasarekin",
+      "totalTitle": "{count} gasturen guztizkoa"
+    },
+    "rowWarnings": {
+      "missing-rate": "Ez dago tasa erabilgarririk gastu honetarako.",
+      "exact-to-custom": "Gastu honek zenbateko zehatza erabili zuen, beraz tasa pertsonalizatuarekin bihurtzen da."
+    },
+    "archivedNotice": "Talde hau gordeta dago. Desartxibatu taldea moneta trukatzeko.",
+    "customLedgerNotice": "Talde honek moneta-kode pertsonalizatua erabiltzen du, beraz ez dago tasa automatikorik eskuragarri.",
+    "target": {
+      "title": "Moneta berria",
+      "description": "Aukeratu taldeak aurrerantzean kitatuko duen moneta.",
+      "label": "Zor-kitapeneko moneta berria",
+      "sameAsCurrent": "Aukeratu egungoaren desberdina den moneta bat.",
+      "intro": "Trukeak gastu bakoitza moneta berrira bihurtzen du eta gero talde-liburua aldatzen du. Une horretatik aurrera saldoak, totalak eta nork nori zor dion moneta berrian kalkulatzen dira. Honek ez du atzera bueltarik.",
+      "currentLabel": "Taldearen egungo moneta",
+      "currentHint": "Gaur egun saldoak, totalak eta nork nori zor dion {current} moneta erabilita kalkulatzen dira.",
+      "targetHint": "{from}ko zenbateko bakoitza {name} ({to}) bihurtuko da hurrengo urratsean aukeratzen dituzun tasen arabera. Gastu berriak {to} monetan sortuko dira lehenetsita.",
+      "placeholder": "Hautatu moneta bat"
+    },
+    "warnings": {
+      "minor-units": "Moneta berriak unitate txiki desberdinak erabiltzen ditu (adib. zentimoak vs yenak) — biribiltze-desberdintasun txikiak espero dira.",
+      "budgets-stale": "Aurrekontuek moneta zaharreko zenbatekoak gordetzen dituzte eta trukearen ondoren berrikusi beharko lirateke.",
+      "recurring-stale": "Errepikapen-txantiloi aktiboek zenbateko zaharrak gordetzen dituzte — berrikusi itzazu trukearen ondoren.",
+      "exact-to-custom": "Gastu batzuek zenbateko zehatzak erabili zituzten, beraz tasa pertsonalizatuekin bihurtzen dira."
+    },
+    "back": "Atzera",
+    "pairs": {
+      "title": "Bihurketa-tasak",
+      "description": "Aukeratu moneta bakoitza nola bihurtzen den {code}-ra. Gastuaren datako tasek gastu bakoitzaren data erabiltzen dute; tasa finko batek data bakar baten tasa aplikatzen die pareko gastu guztiei.",
+      "loading": "Bihurketa-pareak kargatzen…",
+      "empty": "Ez du gastu inork bihurketarik behar — dena dagoeneko {code} monetan dago. Oraindik jarraitu dezakezu liburuaren moneta aldatzeko.",
+      "expenseCount": "{count} gastu pare honetan"
+    },
+    "progressAriaLabel": "Trukearen aurrerapena",
+    "entryNotice": {
+      "title": "Taldearen ezarpenetatik jarraitzen",
+      "body": "{to} ({name}) aukeratu duzu zor-kitapeneko moneta berri gisa. Ezin da zuzeneko aldaketarik egin talde honek jada gastuak dituelako — jarraitu beheko urratsei eta gastu bakoitza gastuz gastuko aurrebista batekin bihurtuko da ezer gorde aurretik."
+    },
+    "adminOnlyNotice": "Taldeko administratzaileek bakarrik truka dezakete taldearen moneta — eskatu administratzaile bati Tresnetatik egiteko."
   }
 }

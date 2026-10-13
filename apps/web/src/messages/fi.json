@@ -698,7 +698,12 @@
       "createDescription": "Saldot, summat ja velat lasketaan tässä valuutassa. Valitse se valuutta, jota kortit oikeasti veloittavat, yleensä kotivaluuttasi.",
       "editDescription": "Saldot, summat ja velat lasketaan tässä valuutassa. Tämän muuttaminen EI muunna jo syötettyjä kuluja, paitsi jos valuutalla on eri \"pienemmät yksiköt\" kuin nykyisellä (esim. vaihdettaessa Yhdysvaltain dollarista Japanin jeniin)",
       "customOption": "Mukautettu",
-      "lockedAfterExpenses": "Valuutta on lukittu, koska tällä ryhmällä on jo kuluja."
+      "lockedAfterExpenses": "Valuutta on lukittu, koska tällä ryhmällä on jo kuluja.",
+      "lockedRedirectDescription": "Tässä ryhmässä on jo kuluja, joten tasausvaluuttaa ei voi vaihtaa suoraan. Valitse valuutta avataksesi vaihtotyökalun — jokainen kulu muunnetaan rivikohtaisella esikatselulla.",
+      "swapConfirmTitle": "Hylätäänkö tallentamattomat muutokset?",
+      "swapConfirmDescription": "Sinulla on tallentamattomia muutoksia näissä asetuksissa. Jos jatkat vaihtotyökaluun, ne hylätään ja {code} esivalitaan uudeksi valuutaksi.",
+      "swapConfirmContinue": "Jatka vaihtoon",
+      "swapConfirmCancel": "Jatka muokkaamista"
     },
     "Participants": {
       "title": "Osallistujat",
@@ -3908,6 +3913,29 @@
           "detail": "Kulut muuttuvat vasta, kun vahvistat lopullisen tarkistuksen."
         }
       }
+    },
+    "swap": {
+      "title": "Vaihda ryhmän valuutta",
+      "description": "Vaihda tasausvaluutta kulujen kirjaamisen jälkeen. Jokainen kulu muunnetaan ja esikatsellaan riveittäin ennen kuin mikään muuttuu.",
+      "start": "Vaihda valuutta",
+      "steps": {
+        "confirm": {
+          "title": "Vahvista",
+          "detail": "Tarkista yhteenveto ja suorita vaihto."
+        },
+        "rates": {
+          "title": "Kurssit",
+          "detail": "Historialliset kulukohtaiset kurssit tai yksi mukautettu kurssi."
+        },
+        "review": {
+          "title": "Tarkistus",
+          "detail": "Tarkista vanhat ja uudet summat ennen vahvistamista."
+        },
+        "target": {
+          "title": "Kohde",
+          "detail": "Valitse uusi tasausvaluutta."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4766,5 +4794,115 @@
     "description": "Tämä sovellusversio on vanhentunut. Lataa uusin versio ja yritä uudelleen.",
     "refresh": "Lataa uudelleen",
     "title": "Sovelluspäivitys saatavilla"
+  },
+  "Swap": {
+    "title": "Vaihda ryhmän valuutta",
+    "description": "Muunna jokainen kulu uuteen tasausvaluuttaan ja käännä sitten ryhmän tilikirja. Mikään ei muutu ennen kuin vahvistat esikatselun.",
+    "groupUnavailable": "Ryhmää ei voitu ladata.",
+    "backToTools": "Takaisin Työkaluihin",
+    "backToGroup": "Takaisin ryhmään",
+    "continue": "Jatka",
+    "retry": "Yritä uudelleen",
+    "offlineNotice": "Yhdistä uudelleen vaihtaaksesi ryhmän valuutan.",
+    "confirmCta": "Jatka vahvistukseen",
+    "confirm": {
+      "title": "Vahvista valuutanvaihto",
+      "description": "Tarkista yhteenveto ja suorita vaihto.",
+      "run": "Vaihda {count} kulua",
+      "running": "Vaihdetaan …",
+      "irreversible": "Tätä ei voi perua takaisin alkuperäisiin summiin. Voit vaihtaa uudelleen myöhemmin, mutta summat voivat poiketa muutamalla sentillä pyöristyksen ja kurssimuutosten vuoksi.",
+      "summary": "Tämä kirjoittaa {count} kulua valuutasta {from} valuuttaan {to}."
+    },
+    "done": {
+      "message": "Vaihdettu {count} kulua valuuttaan {code}. Saldot, summat ja viennit käyttävät nyt uutta valuuttaa.",
+      "backToGroup": "Takaisin ryhmään",
+      "backToTools": "Takaisin Työkaluihin",
+      "title": "Vaihto valmis"
+    },
+    "filters": {
+      "all": "Kaikki",
+      "attention": "Vaatii huomiota",
+      "converted": "Muunnettu",
+      "cleared": "Jo {to}",
+      "bridged": "Manuaalinen kurssi"
+    },
+    "kind": {
+      "cleared": "Jo {to}",
+      "bridged": "Manuaalinen kurssi"
+    },
+    "previewCta": "Esikatsele muunnos",
+    "preview": {
+      "title": "Kulukohtainen esikatselu",
+      "description": "{count} kulua · {from} → {to}",
+      "loading": "Ladataan esikatselua …",
+      "missingRates": "{count} kululta puuttuu kurssi, mikä estää vaihdon.",
+      "ratesOk": "Kaikki kurssit selvillä.",
+      "rateUnit": "1 {from} = {rate} {to}",
+      "searchPlaceholder": "Hae kulun otsikolla …",
+      "clearSearch": "Tyhjennä haku",
+      "filterLabel": "Suodata esikatselua tuloksen mukaan",
+      "showingXofY": "Näytetään {filtered} / {count}",
+      "noRows": "Yksikään kulu ei vastaa nykyisiä suodattimia.",
+      "truncated": "Suuri ryhmä: esikatselu näyttää ensimmäiset {shown} {count} kulusta. Vain ryhmät, joissa on enintään 5000 kulua, voidaan vaihtaa.",
+      "loadingWithCount": "Haetaan kursseja ja valmistellaan {count} kulua …",
+      "loadingMore": "Ladataan lisää kuluja … {loaded} / {count}",
+      "becomesLabel": "Muuttuu",
+      "totalAriaLabel": "Muunnettu kokonaissumma, valuutasta {from} valuuttaan {to}",
+      "wasLabel": "Oli",
+      "pairChecking": "Tarkistetaan kurssia …",
+      "pairFailedHint": "Automaattiset kurssit epäonnistuivat tälle parille. Yritä kurssia uudelleen tai valitse ”Valitse kurssi sen sijaan” asettaaksesi kiinteän kurssin.",
+      "pairFailedTitle": "{base} → {to}: {count} kululta puuttuu kurssi",
+      "pairHidePicker": "Piilota kurssivalitsin",
+      "pairPickRate": "Valitse kurssi sen sijaan",
+      "pairReloadHint": "Yksi pari selvisi — lataa koko esikatselu uudelleen jatkaaksesi.",
+      "pairResolved": "Kurssi selvillä.",
+      "pairRetry": "Yritä kurssia uudelleen",
+      "pairSectionTitle": "Jotkin kurssit epäonnistuivat",
+      "reloadPreview": "Lataa koko esikatselu uudelleen",
+      "close": "Sulje",
+      "fullListDescription": "{count} kulua · {from} → {to}",
+      "fullListTitle": "Kaikki kulut",
+      "noAttention": "Yksikään kulu ei vaadi huomiota.",
+      "viewFullList": "Näytä kaikki {count} kulua",
+      "totalBreakdown": "{converted} muunnettu · {cleared} jo {to} · {bridged} manuaalisella kurssilla",
+      "totalTitle": "Yhteensä {count} kulua"
+    },
+    "rowWarnings": {
+      "missing-rate": "Tälle kululle ei ole kurssia saatavilla.",
+      "exact-to-custom": "Tämä kulu käytti tarkkaa summaa, joten se muunnetaan mukautetulla kurssilla."
+    },
+    "archivedNotice": "Tämä ryhmä on arkistoitu. Palauta se arkistosta vaihtaaksesi valuuttaa.",
+    "customLedgerNotice": "Tämä ryhmä käyttää mukautettua valuuttakoodia, joten automaattiset kurssit eivät ole käytettävissä.",
+    "target": {
+      "title": "Uusi valuutta",
+      "description": "Valitse valuutta, jossa ryhmä jatkossa tasataan.",
+      "label": "Uusi tasausvaluutta",
+      "sameAsCurrent": "Valitse valuutta, joka eroaa nykyisestä.",
+      "intro": "Vaihto muuntaa jokaisen kulun uuteen valuuttaan ja kääntää sitten ryhmän tilikirjan. Saldot, summat ja velat lasketaan siitä lähtien uudessa valuutassa. Tätä ei voi peruuttaa.",
+      "currentLabel": "Nykyinen ryhmän valuutta",
+      "currentHint": "Saldot, summat ja velat lasketaan tänään valuutassa {current}.",
+      "targetHint": "Jokainen {from}-summa muuttuu muotoon {name} ({to}) seuraavassa vaiheessa valitsemillasi kursseilla. Uudet kulut käyttävät oletuksena valuuttaa {to}.",
+      "placeholder": "Valitse valuutta"
+    },
+    "warnings": {
+      "minor-units": "Uusi valuutta käyttää eri pieniä yksiköitä (esim. sentit vs. jenit) — pieniä pyöristyseroja on odotettavissa.",
+      "budgets-stale": "Budjetit pysyvät vanhan valuutan summissa, tarkista ne vaihdon jälkeen.",
+      "recurring-stale": "Aktiiviset toistuvat mallit säilyttävät vanhat summat — tarkista ne vaihdon jälkeen.",
+      "exact-to-custom": "Jotkin kulut käyttivät tarkkoja summia, joten ne muunnetaan mukautetuilla kursseilla."
+    },
+    "back": "Takaisin",
+    "pairs": {
+      "title": "Muuntokurssit",
+      "description": "Valitse, miten kukin valuutta muunnetaan valuuttaan {code}. Kulukohtaiset kurssit käyttävät kunkin kulun omaa päivämäärää; kiinteä kurssi soveltaa yhden päivämäärän kurssia parin jokaiseen kuluun.",
+      "loading": "Ladataan muuntopareja …",
+      "empty": "Yksikään kulu ei tarvitse muuntoa — kaikki on jo valuutassa {code}. Voit silti jatkaa vaihtaaksesi tilikirjan valuutan.",
+      "expenseCount": "{count} kulua tässä parissa"
+    },
+    "progressAriaLabel": "Vaihdon edistyminen",
+    "entryNotice": {
+      "title": "Jatkoa ryhmän asetuksista",
+      "body": "Valitsit uudeksi tasausvaluutaksi valuutan {to} ({name}). Suora vaihto ei ole mahdollinen, koska tässä ryhmässä on jo kuluja — etene alla olevien vaiheiden läpi, niin jokainen kulu muunnetaan rivikohtaisella esikatselulla ennen kuin mitään tallennetaan."
+    },
+    "adminOnlyNotice": "Vain ylläpitäjät voivat vaihtaa ryhmän valuuttaa — pyydä ylläpitäjää tekemään se Työkaluissa."
   }
 }

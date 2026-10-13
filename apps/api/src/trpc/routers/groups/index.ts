@@ -30,6 +30,9 @@ import { groupSavedViewsRouter } from './saved-views'
 import { groupSplitPresetsRouter } from './split-presets'
 import { groupStatsRouter } from './stats'
 import { groupSubgroupsRouter } from './subgroups'
+import { swapExecuteProcedure } from './swapExecute.procedure'
+import { swapPairsProcedure } from './swapPairs.procedure'
+import { swapPreviewProcedure } from './swapPreview.procedure'
 import { updateGroupProcedure } from './update.procedure'
 import { groupViewRouter } from './view'
 
@@ -85,6 +88,24 @@ export const groupsRouter = createTRPCRouter({
 
   /** Update a group's name, currency, information, or participants. */
   update: updateGroupProcedure,
+
+  /**
+   * Distinct conversion pairs for a swap (ADMIN-only, DB-only, no provider
+   * calls). Drives the per-pair rate cards in the swap wizard.
+   */
+  swapPairs: swapPairsProcedure,
+
+  /**
+   * Per-expense preview of a group currency swap (ADMIN-only). Returns the
+   * planned new amounts for every expense without persisting anything.
+   */
+  swapPreview: swapPreviewProcedure,
+
+  /**
+   * Execute a group currency swap (ADMIN-only). Re-plans server-side and
+   * rewrites every expense, then flips the ledger currency. Irreversible.
+   */
+  swapExecute: swapExecuteProcedure,
 
   /**
    * Dismiss the group emoji intro for this group (ADMIN-only, group-wide).

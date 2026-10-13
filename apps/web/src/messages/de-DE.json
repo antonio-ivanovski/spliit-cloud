@@ -718,7 +718,12 @@
       "createDescription": "Salden, Gesamtbeträge und wer wem was schuldet werden in dieser Währung berechnet. Wähle die Währung, mit der Karten tatsächlich abrechnen, meist deine Heimatwährung.",
       "editDescription": "Salden, Gesamtbeträge und wer wem was schuldet werden in dieser Währung berechnet. Wenn du sie änderst, werden bereits eingegebene Ausgaben NICHT umgerechnet, es sei denn, die Währung hat andere \"kleinere Einheiten\" als die aktuelle (z. B. Wechsel von US-Dollar zu Japanischem Yen)",
       "customOption": "Benutzerdefiniert",
-      "lockedAfterExpenses": "Die Währung ist gesperrt, da diese Gruppe bereits Ausgaben hat."
+      "lockedAfterExpenses": "Die Währung ist gesperrt, da diese Gruppe bereits Ausgaben hat.",
+      "lockedRedirectDescription": "Diese Gruppe enthält bereits Ausgaben, daher kann die Ausgleichswährung nicht direkt geändert werden. Wähle eine Währung, um das Tausch-Tool zu öffnen — jede Ausgabe wird mit einer Vorschau pro Zeile umgerechnet.",
+      "swapConfirmTitle": "Ungespeicherte Änderungen verwerfen?",
+      "swapConfirmDescription": "Du hast ungespeicherte Änderungen an diesen Einstellungen. Wenn du zum Tausch-Tool fortfährst, werden sie verworfen und {code} als neue Währung vorausgewählt.",
+      "swapConfirmContinue": "Weiter zum Tausch",
+      "swapConfirmCancel": "Weiter bearbeiten"
     },
     "Participants": {
       "title": "Mitglieder",
@@ -3980,6 +3985,29 @@
           "detail": "Ausgaben ändern sich erst, wenn du die abschließende Überprüfung bestätigst."
         }
       }
+    },
+    "swap": {
+      "title": "Gruppenwährung tauschen",
+      "description": "Ändere die Ausgleichswährung, auch wenn schon Ausgaben existieren. Jede Ausgabe wird umgerechnet und vorab pro Zeile gezeigt, bevor sich etwas ändert.",
+      "start": "Währung tauschen",
+      "steps": {
+        "confirm": {
+          "title": "Bestätigen",
+          "detail": "Prüfe die Zusammenfassung und starte den Tausch."
+        },
+        "rates": {
+          "title": "Kurse",
+          "detail": "Historische Kurse pro Ausgabe oder ein eigener Kurs."
+        },
+        "review": {
+          "title": "Prüfung",
+          "detail": "Prüfe alte und neue Beträge vor der Bestätigung."
+        },
+        "target": {
+          "title": "Ziel",
+          "detail": "Wähle die neue Ausgleichswährung."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4838,5 +4866,115 @@
     "description": "Diese Version der App ist veraltet. Lade die neueste Version und versuche es erneut.",
     "refresh": "Neu laden",
     "title": "App-Update verfügbar"
+  },
+  "Swap": {
+    "title": "Gruppenwährung tauschen",
+    "description": "Rechne jede Ausgabe in eine neue Ausgleichswährung um und stelle dann das Gruppenkonto um. Bis du die Vorschau bestätigst, ändert sich nichts.",
+    "groupUnavailable": "Die Gruppe konnte nicht geladen werden.",
+    "backToTools": "Zurück zu den Werkzeugen",
+    "backToGroup": "Zurück zur Gruppe",
+    "continue": "Weiter",
+    "retry": "Wiederholen",
+    "offlineNotice": "Verbinde dich erneut, um die Gruppenwährung zu tauschen.",
+    "confirmCta": "Weiter zur Bestätigung",
+    "confirm": {
+      "title": "Währungstausch bestätigen",
+      "description": "Überprüfe die Zusammenfassung und führe dann den Tausch durch.",
+      "run": "{count} Ausgaben tauschen",
+      "running": "Wird getauscht …",
+      "irreversible": "Das kann nicht auf die ursprünglichen Beträge rückgängig gemacht werden. Du kannst danach erneut tauschen, aber Beträge können durch Rundung und Kursänderungen um wenige Cent abweichen.",
+      "summary": "Dies schreibt {count} Ausgaben von {from} in {to} um."
+    },
+    "done": {
+      "message": "{count} Ausgaben zu {code} getauscht. Salden, Summen und Exporte nutzen jetzt die neue Währung.",
+      "backToGroup": "Zurück zur Gruppe",
+      "backToTools": "Zurück zu den Werkzeugen",
+      "title": "Tausch abgeschlossen"
+    },
+    "filters": {
+      "all": "Alle",
+      "attention": "Prüfung nötig",
+      "converted": "Umgerechnet",
+      "cleared": "Bereits {to}",
+      "bridged": "Manueller Kurs"
+    },
+    "kind": {
+      "cleared": "Bereits {to}",
+      "bridged": "Manueller Kurs"
+    },
+    "previewCta": "Umrechnung prüfen",
+    "preview": {
+      "title": "Vorschau pro Ausgabe",
+      "description": "{count} Ausgaben · {from} → {to}",
+      "loading": "Vorschau wird geladen …",
+      "missingRates": "Ohne Kurs für {count} Ausgaben ist der Tausch blockiert.",
+      "ratesOk": "Alle Kurse stehen.",
+      "rateUnit": "1 {from} = {rate} {to}",
+      "searchPlaceholder": "Nach Ausgabetitel suchen …",
+      "clearSearch": "Suche löschen",
+      "filterLabel": "Vorschau nach Ergebnis filtern",
+      "showingXofY": "Zeige {filtered} von {count}",
+      "noRows": "Keine Ausgaben entsprechen den aktuellen Filtern.",
+      "truncated": "Große Gruppe: Die Vorschau zeigt die ersten {shown} von {count} Ausgaben. Nur Gruppen mit bis zu 5000 Ausgaben können getauscht werden.",
+      "loadingWithCount": "Kurse werden abgerufen und {count} Ausgaben geplant …",
+      "loadingMore": "Weitere Ausgaben werden geladen … {loaded} von {count}",
+      "becomesLabel": "Wird",
+      "totalAriaLabel": "Umgerechneter Gesamtbetrag, von {from} in {to}",
+      "wasLabel": "War",
+      "pairChecking": "Kurs wird geprüft …",
+      "pairFailedHint": "Die automatischen Kurse sind für dieses Paar fehlgeschlagen. Versuche den Kurs erneut oder wähle „Stattdessen einen Kurs wählen“, um einen festen Kurs festzulegen.",
+      "pairFailedTitle": "{base} → {to}: {count} Ausgaben ohne Kurs",
+      "pairHidePicker": "Kursauswahl ausblenden",
+      "pairPickRate": "Stattdessen einen Kurs wählen",
+      "pairReloadHint": "Ein Paar steht — lade die gesamte Vorschau neu, um fortzufahren.",
+      "pairResolved": "Kurs steht.",
+      "pairRetry": "Kurs wiederholen",
+      "pairSectionTitle": "Einige Kurse sind fehlgeschlagen",
+      "reloadPreview": "Gesamte Vorschau neu laden",
+      "close": "Schließen",
+      "fullListDescription": "{count} Ausgaben · {from} → {to}",
+      "fullListTitle": "Alle Ausgaben",
+      "noAttention": "Keine Ausgaben benötigen Prüfung.",
+      "viewFullList": "Alle {count} Ausgaben anzeigen",
+      "totalBreakdown": "{converted} umgerechnet · {cleared} bereits {to} · {bridged} mit manuellem Kurs",
+      "totalTitle": "Summe für {count} Ausgaben"
+    },
+    "rowWarnings": {
+      "missing-rate": "Für diese Ausgabe ist kein Kurs verfügbar.",
+      "exact-to-custom": "Diese Ausgabe nutzte einen exakten Betrag und wird daher zu einem eigenen Kurs umgerechnet."
+    },
+    "archivedNotice": "Diese Gruppe ist archiviert. Stelle sie wieder her, um die Währung zu tauschen.",
+    "customLedgerNotice": "Diese Gruppe nutzt einen eigenen Währungscode, daher sind keine automatischen Kurse verfügbar.",
+    "target": {
+      "title": "Neue Währung",
+      "description": "Wähle die Währung, in der die Gruppe von nun an ausgleicht.",
+      "label": "Neue Ausgleichswährung",
+      "sameAsCurrent": "Wähle eine andere Währung als die aktuelle.",
+      "intro": "Der Tausch rechnet jede Ausgabe in die neue Währung um und stellt dann das Gruppenkonto um. Salden, Summen und Wer-wem-was-schuldet werden ab dann in der neuen Währung berechnet. Das kann nicht rückgängig gemacht werden.",
+      "currentLabel": "Aktuelle Gruppenwährung",
+      "currentHint": "Salden, Summen und Wer-wem-was-schuldet werden heute in {current} berechnet.",
+      "targetHint": "Jeder {from}-Betrag wird zu {name} ({to}) – mit den Kursen, die du im nächsten Schritt wählst. Neue Ausgaben nutzen standardmäßig {to}.",
+      "placeholder": "Wähle eine Währung"
+    },
+    "warnings": {
+      "minor-units": "Die neue Währung nutzt andere kleinere Einheiten (z. B. Cent vs. Yen) — kleine Rundungsunterschiede sind normal.",
+      "budgets-stale": "Haushaltsbudgets bleiben in den alten Währungsbeträgen und sollten nach dem Tausch geprüft werden.",
+      "recurring-stale": "Aktive wiederkehrende Vorlagen behalten alte Beträge — prüfe sie nach dem Tausch.",
+      "exact-to-custom": "Manche Ausgaben nutzten exakte Beträge und werden daher zu eigenen Kursen umgerechnet."
+    },
+    "back": "Zurück",
+    "pairs": {
+      "title": "Umrechnungskurse",
+      "description": "Wähle, wie jede Währung in {code} umgerechnet wird. Kurse zum Ausgabedatum nutzen jeweils das Datum der Ausgabe; ein fester Kurs wendet den Kurs eines Datums auf jede Ausgabe des Paares an.",
+      "loading": "Umrechnungspaare werden geladen …",
+      "empty": "Keine Ausgabe muss umgerechnet werden — alles ist bereits in {code}. Du kannst trotzdem fortfahren, um das Gruppenkonto umzustellen.",
+      "expenseCount": "{count} Ausgaben in diesem Paar"
+    },
+    "progressAriaLabel": "Tauschfortschritt",
+    "entryNotice": {
+      "title": "Fortsetzung aus den Gruppeneinstellungen",
+      "body": "Du hast {to} ({name}) als neue Ausgleichswährung gewählt. Ein direkter Wechsel ist nicht möglich, weil diese Gruppe bereits Ausgaben enthält — arbeite die Schritte unten durch, dann wird jede Ausgabe mit einer Vorschau pro Zeile umgerechnet, bevor etwas gespeichert wird."
+    },
+    "adminOnlyNotice": "Nur Administratoren können die Gruppenwährung tauschen — bitte einen Administrator, dies über Werkzeuge zu tun."
   }
 }

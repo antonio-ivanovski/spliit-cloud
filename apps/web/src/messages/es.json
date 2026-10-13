@@ -741,7 +741,12 @@
       "createDescription": "Los saldos, los totales y quién debe a quién se calculan en esta moneda. Elige la moneda que realmente cobran las tarjetas, normalmente tu moneda habitual.",
       "editDescription": "Los saldos, los totales y quién debe a quién se calculan en esta moneda. Al cambiarla, NO se convertirán los gastos ya ingresados, excepto cuando la moneda tenga «unidades menores» diferentes a las actuales (por ejemplo, al cambiar de dólares estadounidenses a yenes japoneses)",
       "customOption": "Personalizado",
-      "lockedAfterExpenses": "La moneda está bloqueada porque este grupo ya tiene gastos."
+      "lockedAfterExpenses": "La moneda está bloqueada porque este grupo ya tiene gastos.",
+      "lockedRedirectDescription": "Este grupo ya tiene gastos, así que la moneda de liquidación no se puede cambiar directamente. Elige una moneda para abrir la herramienta de intercambio — cada gasto se convierte con una vista previa por gasto.",
+      "swapConfirmTitle": "¿Descartar los cambios sin guardar?",
+      "swapConfirmDescription": "Tienes cambios sin guardar en estos ajustes. Si continúas a la herramienta de intercambio, se descartarán y {code} quedará preseleccionado como moneda nueva.",
+      "swapConfirmContinue": "Continuar al intercambio",
+      "swapConfirmCancel": "Seguir editando"
     },
     "readOnlyNote": "Solo los propietarios y administradores pueden cambiar la configuración del grupo.",
     "readOnlyTitle": "Configuración del grupo",
@@ -3984,6 +3989,29 @@
           "detail": "Los gastos solo cambian cuando confirmas la revisión final."
         }
       }
+    },
+    "swap": {
+      "title": "Intercambiar la moneda del grupo",
+      "description": "Cambia la moneda de liquidación cuando ya existen gastos. Cada gasto se convierte y se muestra por fila antes de que cambie nada.",
+      "start": "Intercambiar moneda",
+      "steps": {
+        "confirm": {
+          "title": "Confirmación",
+          "detail": "Comprueba el resumen y ejecuta el intercambio."
+        },
+        "rates": {
+          "title": "Tasas",
+          "detail": "Tasas históricas por gasto o una sola tasa personalizada."
+        },
+        "review": {
+          "title": "Revisión",
+          "detail": "Comprueba los importes antiguos y nuevos antes de confirmar."
+        },
+        "target": {
+          "title": "Destino",
+          "detail": "Elige la nueva moneda de liquidación."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4847,5 +4875,115 @@
     "description": "Esta versión de la app está desactualizada. Actualiza para obtener la última versión e inténtalo de nuevo.",
     "refresh": "Actualizar",
     "title": "Actualización de la app disponible"
+  },
+  "Swap": {
+    "title": "Intercambiar la moneda del grupo",
+    "description": "Convierte cada gasto a una nueva moneda de liquidación y después cambia el registro del grupo. Nada cambia hasta que confirmes la vista previa.",
+    "groupUnavailable": "No se pudo cargar el grupo.",
+    "backToTools": "Volver a Herramientas",
+    "backToGroup": "Volver al grupo",
+    "continue": "Continuar",
+    "retry": "Reintentar",
+    "offlineNotice": "Reconecta para intercambiar la moneda del grupo.",
+    "confirmCta": "Continuar para confirmar",
+    "confirm": {
+      "title": "Confirmar el intercambio de moneda",
+      "description": "Revisa el resumen y ejecuta el intercambio.",
+      "run": "Intercambiar {count} gastos",
+      "running": "Intercambiando…",
+      "irreversible": "No se puede deshacer para recuperar los importes originales. Puedes volver a intercambiar después, pero los importes pueden variar unos céntimos por el redondeo y los cambios de tasas.",
+      "summary": "Esto reescribe {count} gastos de {from} a {to}."
+    },
+    "done": {
+      "message": "Se intercambiaron {count} gastos a {code}. Los saldos, totales y exportaciones ya usan la moneda nueva.",
+      "backToGroup": "Volver al grupo",
+      "backToTools": "Volver a Herramientas",
+      "title": "Intercambio completado"
+    },
+    "filters": {
+      "all": "Todos",
+      "attention": "Requiere atención",
+      "converted": "Convertido",
+      "cleared": "Ya en {to}",
+      "bridged": "Tasa manual"
+    },
+    "kind": {
+      "cleared": "Ya en {to}",
+      "bridged": "Tasa manual"
+    },
+    "previewCta": "Vista previa de la conversión",
+    "preview": {
+      "title": "Vista previa por gasto",
+      "description": "{count} gastos · {from} → {to}",
+      "loading": "Cargando vista previa…",
+      "missingRates": "Hay {count} gasto(s) sin tasa que bloquean el intercambio.",
+      "ratesOk": "Todas las tasas resueltas.",
+      "rateUnit": "1 {from} = {rate} {to}",
+      "searchPlaceholder": "Buscar por título del gasto…",
+      "clearSearch": "Borrar búsqueda",
+      "filterLabel": "Filtrar la vista previa por resultado",
+      "showingXofY": "Mostrando {filtered} de {count}",
+      "noRows": "Ningún gasto coincide con los filtros actuales.",
+      "truncated": "Grupo grande: la vista previa muestra los primeros {shown} de {count} gastos. Solo se pueden intercambiar los grupos con un máximo de 5000 gastos.",
+      "loadingWithCount": "Obteniendo tasas y planificando {count} gastos…",
+      "loadingMore": "Cargando más gastos… {loaded} de {count}",
+      "becomesLabel": "Queda",
+      "totalAriaLabel": "Importe total convertido, de {from} a {to}",
+      "wasLabel": "Era",
+      "pairChecking": "Comprobando la tasa…",
+      "pairFailedHint": "Las tasas automáticas fallaron para este par. Reintenta la tasa o selecciona “Elige una tasa en su lugar” para definir una tasa fija.",
+      "pairFailedTitle": "{base} → {to}: {count} gasto(s) sin tasa",
+      "pairHidePicker": "Ocultar el selector de tasa",
+      "pairPickRate": "Elige una tasa en su lugar",
+      "pairReloadHint": "Un par se resolvió: vuelve a cargar la vista previa completa para continuar.",
+      "pairResolved": "Tasa resuelta.",
+      "pairRetry": "Reintentar la tasa",
+      "pairSectionTitle": "Algunas tasas fallaron",
+      "reloadPreview": "Volver a cargar la vista previa completa",
+      "close": "Cerrar",
+      "fullListDescription": "{count} gastos · {from} → {to}",
+      "fullListTitle": "Todos los gastos",
+      "noAttention": "Ningún gasto requiere atención.",
+      "viewFullList": "Ver todos los {count} gastos",
+      "totalBreakdown": "{converted} convertidos · {cleared} ya en {to} · {bridged} a una tasa manual",
+      "totalTitle": "Total de {count} gastos"
+    },
+    "rowWarnings": {
+      "missing-rate": "No hay ninguna tasa disponible para este gasto.",
+      "exact-to-custom": "Este gasto usó un importe exacto, así que se convierte con una tasa personalizada."
+    },
+    "archivedNotice": "Este grupo está archivado. Desarchívalo para intercambiar la moneda.",
+    "customLedgerNotice": "Este grupo usa un código de moneda personalizado, así que las tasas automáticas no están disponibles.",
+    "target": {
+      "title": "Moneda nueva",
+      "description": "Elige la moneda en la que el grupo liquidará a partir de ahora.",
+      "label": "Nueva moneda de liquidación",
+      "sameAsCurrent": "Elige una moneda diferente de la actual.",
+      "intro": "El intercambio convierte cada gasto a la moneda nueva y después cambia el registro del grupo. Los saldos, los totales y quién debe a quién se calculan en la moneda nueva a partir de ese momento. Esto no se puede deshacer.",
+      "currentLabel": "Moneda actual del grupo",
+      "currentHint": "Los saldos, los totales y quién debe a quién se calculan en {current} hoy.",
+      "targetHint": "Cada importe en {from} se convertirá en {name} ({to}) con los tipos que elijas en el siguiente paso. Los gastos nuevos serán en {to} por defecto.",
+      "placeholder": "Selecciona una moneda"
+    },
+    "warnings": {
+      "minor-units": "La moneda nueva usa «unidades menores» diferentes (p. ej., céntimos frente a yenes) — son esperables pequeñas diferencias de redondeo.",
+      "budgets-stale": "Los presupuestos conservan los importes en la moneda antigua y deberían revisarse después del intercambio.",
+      "recurring-stale": "Las plantillas recurrentes activas conservan los importes antiguos — revísalas después del intercambio.",
+      "exact-to-custom": "Algunos gastos usaron importes exactos, así que se convierten con tasas personalizadas."
+    },
+    "back": "Atrás",
+    "pairs": {
+      "title": "Tasas de conversión",
+      "description": "Elige cómo se convierte cada moneda a {code}. Las tasas a fecha de gasto usan la fecha de cada gasto; una tasa fija aplica la tasa de una sola fecha a cada gasto del par.",
+      "loading": "Cargando pares de conversión…",
+      "empty": "Ningún gasto necesita conversión — todo ya está en {code}. Aun así puedes continuar para cambiar la moneda del registro.",
+      "expenseCount": "{count} gasto(s) en este par"
+    },
+    "progressAriaLabel": "Progreso del intercambio",
+    "entryNotice": {
+      "title": "Continuación desde los ajustes del grupo",
+      "body": "Elegiste {to} ({name}) como nueva moneda de liquidación. No es posible un cambio directo porque este grupo ya tiene gastos — sigue los pasos siguientes y cada gasto se convertirá con una vista previa por gasto antes de guardar nada."
+    },
+    "adminOnlyNotice": "Solo los administradores pueden intercambiar la moneda del grupo — pide a un administrador que lo haga desde Herramientas."
   }
 }

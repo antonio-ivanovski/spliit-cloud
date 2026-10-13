@@ -700,7 +700,12 @@
       "createDescription": "Os saldos, os totais e quem deve a quem são calculados nesta moeda. Escolhe a moeda que os cartões realmente cobram, normalmente a tua moeda habitual.",
       "editDescription": "Os saldos, os totais e quem deve a quem são calculados nesta moeda. Ao alterares isto NÃO vão ser convertidas despesas já inseridas, excepto quando a moeda tem \"unidades monetárias menores\" diferentes da atual (ex. alterar de Dólar Americano para Yen Japonês)",
       "customOption": "Customizado",
-      "lockedAfterExpenses": "A moeda está bloqueada porque este grupo já tem despesas."
+      "lockedAfterExpenses": "A moeda está bloqueada porque este grupo já tem despesas.",
+      "lockedRedirectDescription": "Este grupo já tem despesas, por isso a moeda de liquidação não pode ser alterada diretamente. Escolhe uma moeda para abrir a ferramenta de troca — cada despesa é convertida com uma pré-visualização por despesa.",
+      "swapConfirmTitle": "Descartar alterações não guardadas?",
+      "swapConfirmDescription": "Tens alterações não guardadas nestas definições. Se continuares para a ferramenta de troca, serão descartadas e {code} ficará pré-selecionado como nova moeda.",
+      "swapConfirmContinue": "Continuar para a troca",
+      "swapConfirmCancel": "Continuar a editar"
     },
     "Participants": {
       "title": "Participantes",
@@ -3933,6 +3938,29 @@
           "detail": "As despesas só mudam quando confirmares a revisão final."
         }
       }
+    },
+    "swap": {
+      "title": "Trocar a moeda do grupo",
+      "description": "Muda a moeda de liquidação quando já existem despesas. Cada despesa é convertida e pré-visualizada por linha antes de mudar qualquer coisa.",
+      "start": "Trocar moeda",
+      "steps": {
+        "confirm": {
+          "title": "Confirmação",
+          "detail": "Verifica o resumo e executa a troca."
+        },
+        "rates": {
+          "title": "Taxas",
+          "detail": "Taxas históricas por despesa ou uma única taxa personalizada."
+        },
+        "review": {
+          "title": "Revisão",
+          "detail": "Verifica os montantes antigos e novos antes de confirmar."
+        },
+        "target": {
+          "title": "Destino",
+          "detail": "Escolhe a nova moeda de liquidação."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4796,5 +4824,115 @@
     "description": "Esta versão da app está desatualizada. Atualiza para obter a versão mais recente e tenta novamente.",
     "refresh": "Atualizar",
     "title": "Atualização da app disponível"
+  },
+  "Swap": {
+    "title": "Trocar a moeda do grupo",
+    "description": "Converte cada despesa para uma nova moeda de liquidação e depois muda o registo do grupo. Nada muda até confirmares a pré-visualização.",
+    "groupUnavailable": "Não foi possível carregar o grupo.",
+    "backToTools": "Voltar a Ferramentas",
+    "backToGroup": "Voltar ao grupo",
+    "continue": "Continuar",
+    "retry": "Tentar novamente",
+    "offlineNotice": "Religa-te para trocar a moeda do grupo.",
+    "confirmCta": "Continuar para confirmar",
+    "confirm": {
+      "title": "Confirmar a troca de moeda",
+      "description": "Revê o resumo e executa a troca.",
+      "run": "Trocar {count} despesas",
+      "running": "A trocar…",
+      "irreversible": "Não pode ser anulado para recuperar os montantes originais. Podes trocar de novo a seguir, mas os montantes podem diferir alguns cêntimos devido a arredondamentos e alterações das taxas.",
+      "summary": "Isto reescreve {count} despesas de {from} para {to}."
+    },
+    "done": {
+      "message": "{count} despesas trocadas para {code}. Saldos, totais e exportações usam agora a nova moeda.",
+      "backToGroup": "Voltar ao grupo",
+      "backToTools": "Voltar a Ferramentas",
+      "title": "Troca concluída"
+    },
+    "filters": {
+      "all": "Todas",
+      "attention": "Precisa de atenção",
+      "converted": "Convertida",
+      "cleared": "Já em {to}",
+      "bridged": "Taxa manual"
+    },
+    "kind": {
+      "cleared": "Já em {to}",
+      "bridged": "Taxa manual"
+    },
+    "previewCta": "Pré-visualizar conversão",
+    "preview": {
+      "title": "Pré-visualização por despesa",
+      "description": "{count} despesas · {from} → {to}",
+      "loading": "A carregar pré-visualização…",
+      "missingRates": "Há {count} despesa(s) sem taxa que bloqueiam a troca.",
+      "ratesOk": "Todas as taxas resolvidas.",
+      "rateUnit": "1 {from} = {rate} {to}",
+      "searchPlaceholder": "Pesquisar por título da despesa…",
+      "clearSearch": "Limpar pesquisa",
+      "filterLabel": "Filtrar a pré-visualização por resultado",
+      "showingXofY": "A mostrar {filtered} de {count}",
+      "noRows": "Nenhuma despesa corresponde aos filtros atuais.",
+      "truncated": "Grupo grande: a pré-visualização mostra as primeiras {shown} de {count} despesas. Só é possível trocar grupos com um máximo de 5000 despesas.",
+      "loadingWithCount": "A obter taxas e a planear {count} despesas…",
+      "loadingMore": "A carregar mais despesas… {loaded} de {count}",
+      "becomesLabel": "Fica",
+      "totalAriaLabel": "Montante total convertido, de {from} para {to}",
+      "wasLabel": "Era",
+      "pairChecking": "A verificar a taxa…",
+      "pairFailedHint": "As taxas automáticas falharam para este par. Tenta novamente a taxa ou seleciona “Escolhe uma taxa em alternativa” para definir uma taxa fixa.",
+      "pairFailedTitle": "{base} → {to}: {count} despesa(s) sem taxa",
+      "pairHidePicker": "Ocultar o seletor de taxa",
+      "pairPickRate": "Escolhe uma taxa em alternativa",
+      "pairReloadHint": "Um par foi resolvido — volta a carregar a pré-visualização completa para continuar.",
+      "pairResolved": "Taxa resolvida.",
+      "pairRetry": "Tentar novamente a taxa",
+      "pairSectionTitle": "Algumas taxas falharam",
+      "reloadPreview": "Recarregar a pré-visualização completa",
+      "close": "Fechar",
+      "fullListDescription": "{count} despesas · {from} → {to}",
+      "fullListTitle": "Todas as despesas",
+      "noAttention": "Nenhuma despesa precisa de atenção.",
+      "viewFullList": "Ver todas as {count} despesas",
+      "totalBreakdown": "{converted} convertidas · {cleared} já em {to} · {bridged} a uma taxa manual",
+      "totalTitle": "Total de {count} despesas"
+    },
+    "rowWarnings": {
+      "missing-rate": "Não há taxa disponível para esta despesa.",
+      "exact-to-custom": "Esta despesa usou um montante exato, por isso é convertida a uma taxa personalizada."
+    },
+    "archivedNotice": "Este grupo está arquivado. Desarquiva o grupo para trocar a moeda.",
+    "customLedgerNotice": "Este grupo usa um código de moeda personalizado, por isso as taxas automáticas não estão disponíveis.",
+    "target": {
+      "title": "Nova moeda",
+      "description": "Escolhe a moeda em que o grupo vai liquidar a partir de agora.",
+      "label": "Nova moeda de liquidação",
+      "sameAsCurrent": "Escolhe uma moeda diferente da atual.",
+      "intro": "A troca converte cada despesa para a nova moeda e depois muda o registo do grupo. Os saldos, os totais e quem deve a quem passam a ser calculados na nova moeda a partir desse momento. Isto não pode ser anulado.",
+      "currentLabel": "Moeda atual do grupo",
+      "currentHint": "Os saldos, os totais e quem deve a quem são calculados hoje em {current}.",
+      "targetHint": "Cada montante em {from} passa a {name} ({to}) com as taxas que escolheres no passo seguinte. As novas despesas serão em {to} por predefinição.",
+      "placeholder": "Seleciona uma moeda"
+    },
+    "warnings": {
+      "minor-units": "A nova moeda usa unidades menores diferentes (ex. cêntimos vs ienes) — são esperadas pequenas diferenças de arredondamento.",
+      "budgets-stale": "Os orçamentos mantêm os montantes na moeda antiga e devem ser revistos após a troca.",
+      "recurring-stale": "Os modelos recorrentes ativos mantêm os montantes antigos — revê-os após a troca.",
+      "exact-to-custom": "Algumas despesas usaram montantes exatos, por isso são convertidas a taxas personalizadas."
+    },
+    "back": "Voltar",
+    "pairs": {
+      "title": "Taxas de conversão",
+      "description": "Escolhe como cada moeda é convertida para {code}. As taxas à data da despesa usam a data de cada despesa; uma taxa fixa aplica a taxa de uma única data a cada despesa do par.",
+      "loading": "A carregar pares de conversão…",
+      "empty": "Nenhuma despesa precisa de conversão — está tudo já em {code}. Mesmo assim podes continuar para mudar a moeda do registo.",
+      "expenseCount": "{count} despesa(s) neste par"
+    },
+    "progressAriaLabel": "Progresso da troca",
+    "entryNotice": {
+      "title": "Continuação a partir das definições do grupo",
+      "body": "Escolheste {to} ({name}) como nova moeda de liquidação. Não é possível uma alteração direta porque este grupo já tem despesas — segue os passos abaixo e cada despesa será convertida com uma pré-visualização por despesa antes de se guardar qualquer coisa."
+    },
+    "adminOnlyNotice": "Apenas os administradores podem trocar a moeda do grupo — pede a um administrador para o fazer a partir de Ferramentas."
   }
 }

@@ -718,7 +718,12 @@
       "createDescription": "餘額、總額以及誰欠誰均以此貨幣計算。請選擇銀行卡實際扣款的貨幣，通常是本國貨幣。",
       "editDescription": "餘額、總額以及誰欠誰均以此貨幣計算。更改此項不會轉換已輸入的支出，除非新貨幣與目前貨幣的「輔幣單位」不同（例如從美元變更為日圓）",
       "customOption": "自訂",
-      "lockedAfterExpenses": "此群組已有支出，因此貨幣已鎖定。"
+      "lockedAfterExpenses": "此群組已有支出，因此貨幣已鎖定。",
+      "lockedRedirectDescription": "此群組已有支出，因此無法直接變更結算貨幣。選擇一種貨幣即可開啟更換工具——每筆支出都會透過逐筆支出預覽進行換算。",
+      "swapConfirmTitle": "放棄未儲存的變更？",
+      "swapConfirmDescription": "這些設定有未儲存的變更。前往更換工具將放棄這些變更，並將 {code} 預選為新貨幣。",
+      "swapConfirmContinue": "繼續更換",
+      "swapConfirmCancel": "繼續編輯"
     },
     "bulkCategorizeSectionTitle": "批次AI工具",
     "bulkCategorizeSectionDescription": "對多項支出一次性執行AI分類。在匯入支出後或許多標題仍未分類時非常有用。",
@@ -3894,6 +3899,29 @@
           "detail": "只有確認最終檢查後，支出才會變更。"
         }
       }
+    },
+    "swap": {
+      "title": "更換群組貨幣",
+      "description": "在支出已存在後變更結算貨幣。所有支出都會換算，並在變更前逐列預覽。",
+      "start": "更換貨幣",
+      "steps": {
+        "confirm": {
+          "title": "確認",
+          "detail": "檢查摘要並執行更換。"
+        },
+        "rates": {
+          "title": "匯率",
+          "detail": "按每筆支出的歷史匯率，或使用一個自訂匯率。"
+        },
+        "review": {
+          "title": "檢查",
+          "detail": "在確認前檢查舊金額和新金額。"
+        },
+        "target": {
+          "title": "目標",
+          "detail": "選擇新的結算貨幣。"
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4747,5 +4775,115 @@
     "description": "目前應用程式版本已過期。請重新整理以取得最新版本後再試一次。",
     "refresh": "重新整理",
     "title": "應用程式更新可用"
+  },
+  "Swap": {
+    "title": "更換群組貨幣",
+    "description": "將所有支出轉換為新的結算貨幣，然後切換群組帳本。在確認預覽之前不會發生任何變更。",
+    "groupUnavailable": "無法載入此群組。",
+    "backToTools": "返回工具",
+    "backToGroup": "返回群組",
+    "continue": "繼續",
+    "retry": "重試",
+    "offlineNotice": "重新連線後即可更換群組貨幣。",
+    "archivedNotice": "此群組已封存。請取消封存後再更換貨幣。",
+    "confirmCta": "繼續確認",
+    "confirm": {
+      "title": "確認更換貨幣",
+      "description": "請核對摘要，然後執行更換。",
+      "run": "更換 {count} 筆支出",
+      "running": "更換中…",
+      "irreversible": "無法恢復為原始金額。之後可以再次更換，但由於捨入和匯率變動，金額可能會相差幾分。",
+      "summary": "這會將 {count} 筆支出從 {from} 重寫為 {to}。"
+    },
+    "done": {
+      "message": "已將 {count} 筆支出更換為 {code}。餘額、總額和匯出均使用新貨幣。",
+      "backToGroup": "返回群組",
+      "backToTools": "返回工具",
+      "title": "更換完成"
+    },
+    "filters": {
+      "all": "全部",
+      "attention": "需注意",
+      "converted": "已轉換",
+      "cleared": "已是 {to}",
+      "bridged": "手動匯率"
+    },
+    "kind": {
+      "cleared": "已是 {to}，無需換算",
+      "bridged": "手動匯率"
+    },
+    "previewCta": "預覽換算結果",
+    "preview": {
+      "title": "逐筆支出預覽",
+      "description": "{count} 筆支出 · {from} → {to}",
+      "loading": "正在載入預覽…",
+      "missingRates": "有 {count} 筆支出缺少匯率，無法繼續更換。",
+      "ratesOk": "所有匯率均已確定。",
+      "rateUnit": "1 {from} = {rate} {to}",
+      "searchPlaceholder": "以支出標題搜尋…",
+      "clearSearch": "清除搜尋",
+      "filterLabel": "依結果篩選預覽",
+      "showingXofY": "顯示 {count} 筆中的 {filtered} 筆",
+      "noRows": "沒有符合目前篩選條件的支出。",
+      "truncated": "群組較大：預覽僅顯示 {count} 筆支出中的前 {shown} 筆，僅支出不超過 5000 筆的群組可以更換。",
+      "loadingWithCount": "正在取得匯率並規劃 {count} 筆支出…",
+      "loadingMore": "正在載入更多支出…{loaded}/{count}",
+      "becomesLabel": "轉換後",
+      "totalAriaLabel": "轉換後的總金額，從 {from} 到 {to}",
+      "wasLabel": "轉換前",
+      "pairChecking": "正在查詢匯率…",
+      "pairFailedHint": "此貨幣組合的自動匯率取得失敗。請重試匯率，或選擇“改選匯率”以設定固定匯率。",
+      "pairFailedTitle": "{base} → {to}：有 {count} 筆支出缺少匯率",
+      "pairHidePicker": "隱藏匯率選擇器",
+      "pairPickRate": "改選匯率",
+      "pairReloadHint": "已解決一個貨幣組合，請重新載入完整預覽以繼續。",
+      "pairResolved": "匯率已確定。",
+      "pairRetry": "重試匯率",
+      "pairSectionTitle": "部分匯率取得失敗",
+      "reloadPreview": "重新載入完整預覽",
+      "close": "關閉",
+      "fullListDescription": "{count} 筆支出 · {from} → {to}",
+      "fullListTitle": "所有支出",
+      "noAttention": "沒有需要注意的支出。",
+      "viewFullList": "查看全部 {count} 筆支出",
+      "totalBreakdown": "{converted} 已轉換 · {cleared} 已是 {to} · {bridged} 按手動匯率換算",
+      "totalTitle": "{count} 筆支出的合計"
+    },
+    "rowWarnings": {
+      "missing-rate": "此筆支出沒有可用匯率。",
+      "exact-to-custom": "此筆支出使用了精確金額，因此按自訂匯率換算。"
+    },
+    "customLedgerNotice": "此群組使用自訂貨幣代碼，因此無法使用自動匯率。",
+    "target": {
+      "title": "新貨幣",
+      "description": "選擇今後群組將用於結算的貨幣。",
+      "label": "新的結算貨幣",
+      "sameAsCurrent": "請選擇與目前貨幣不同的貨幣。",
+      "intro": "更換會將所有支出轉換為新貨幣，然後切換群組帳本。從那時起，餘額、總額以及誰欠誰均以新貨幣計算。此動作無法復原。",
+      "currentLabel": "目前群組貨幣",
+      "currentHint": "目前餘額、總額以及誰欠誰均以 {current} 計算。",
+      "targetHint": "{from} 金額將按下一步所選匯率變為 {name} ({to})。新支出將預設使用 {to}。",
+      "placeholder": "選擇貨幣"
+    },
+    "warnings": {
+      "minor-units": "新貨幣的輔幣單位不同（例如分與日圓）——可能會有小額捨入差異。",
+      "budgets-stale": "預算仍為舊貨幣金額，更換後請檢查。",
+      "recurring-stale": "使用中的重複支出範本仍為舊金額——更換後請檢查。",
+      "exact-to-custom": "部分支出使用了精確金額，因此按自訂匯率換算。"
+    },
+    "back": "返回",
+    "pairs": {
+      "title": "換算匯率",
+      "description": "選擇每種貨幣轉換為 {code} 的方式。按支出日期的匯率使用每筆支出各自的日期；固定匯率則將一個日期的匯率套用至該貨幣組合的所有支出。",
+      "loading": "正在載入換算貨幣組合…",
+      "empty": "沒有需要換算的支出，所有支出已是 {code}。仍可繼續，以切換帳本貨幣。",
+      "expenseCount": "此貨幣組合中有 {count} 筆支出"
+    },
+    "progressAriaLabel": "更換進度",
+    "entryNotice": {
+      "title": "從群組設定繼續",
+      "body": "您已選擇 {to}（{name}）作為新的結算貨幣。由於此群組已有支出，無法直接變更——請依以下步驟操作，每筆支出都會透過逐筆支出預覽換算，確認後才會儲存。"
+    },
+    "adminOnlyNotice": "只有管理員才能更換群組貨幣，請讓管理員從工具中執行。"
   }
 }

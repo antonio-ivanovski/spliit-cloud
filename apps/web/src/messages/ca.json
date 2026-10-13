@@ -726,7 +726,12 @@
       "createDescription": "Els saldos, els totals i qui deu a qui es calculen en aquesta moneda. Tria la moneda que carreguen realment les targetes, normalment la teva moneda habitual.",
       "editDescription": "Els saldos, els totals i qui deu a qui es calculen en aquesta moneda. En canviar-la, NO es convertiran les despeses ja introduïdes, excepte quan la moneda tingui unitats menors diferents de l'actual (per exemple, en canviar de dòlars nord-americans a iens japonesos)",
       "customOption": "Personalitzat",
-      "lockedAfterExpenses": "La moneda està bloquejada perquè aquest grup ja té despeses."
+      "lockedAfterExpenses": "La moneda està bloquejada perquè aquest grup ja té despeses.",
+      "lockedRedirectDescription": "Aquest grup ja té despeses, així que la moneda de liquidació no es pot canviar directament. Tria una moneda per obrir l'eina d'intercanvi — cada despesa es converteix amb una vista prèvia per despesa.",
+      "swapConfirmTitle": "Descartar els canvis sense desar?",
+      "swapConfirmDescription": "Tens canvis sense desar en aquesta configuració. Si continues a l'eina d'intercanvi, es descartaran i {code} quedarà preseleccionat com a moneda nova.",
+      "swapConfirmContinue": "Continua a l'intercanvi",
+      "swapConfirmCancel": "Continua editant"
     },
     "readOnlyNote": "Només els propietaris i administradors poden canviar la configuració del grup.",
     "readOnlyTitle": "Configuració del grup",
@@ -3933,6 +3938,29 @@
           "detail": "Les despeses només canvien quan confirmes la revisió final."
         }
       }
+    },
+    "swap": {
+      "title": "Intercanvia la moneda del grup",
+      "description": "Canvia la moneda de liquidació quan ja hi ha despeses. Cada despesa es converteix i es mostra per fila abans que canviï res.",
+      "start": "Intercanvia la moneda",
+      "steps": {
+        "confirm": {
+          "title": "Confirmació",
+          "detail": "Comprova el resum i executa l'intercanvi."
+        },
+        "rates": {
+          "title": "Tipus",
+          "detail": "Tipus històrics per despesa o un sol tipus personalitzat."
+        },
+        "review": {
+          "title": "Revisió",
+          "detail": "Comprova els imports antics i nous abans de confirmar."
+        },
+        "target": {
+          "title": "Destí",
+          "detail": "Tria la moneda de liquidació nova."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4796,5 +4824,115 @@
     "description": "Aquesta versió de l'app està desactualitzada. Actualitza per obtenir l'última versió i torna-ho a provar.",
     "refresh": "Actualitza",
     "title": "Actualització de l'app disponible"
+  },
+  "Swap": {
+    "title": "Intercanvia la moneda del grup",
+    "description": "Converteix cada despesa a una moneda de liquidació nova i després canvia el registre del grup. No canvia res fins que confirmis la vista prèvia.",
+    "groupUnavailable": "No s'ha pogut carregar el grup.",
+    "backToTools": "Torna a Eines",
+    "backToGroup": "Tornar al grup",
+    "continue": "Continua",
+    "retry": "Torna-ho a intentar",
+    "offlineNotice": "Reconnecta per intercanviar la moneda del grup.",
+    "confirmCta": "Continua per confirmar",
+    "confirm": {
+      "title": "Confirma l'intercanvi de moneda",
+      "description": "Revisa el resum i executa l'intercanvi.",
+      "run": "Intercanvia {count} despeses",
+      "running": "Intercanviant…",
+      "irreversible": "No es pot desfer per recuperar els imports originals. Pots tornar a intercanviar després, però els imports poden variar uns cèntims per l'arrodoniment i els canvis de tipus.",
+      "summary": "Això reescriu {count} despeses de {from} a {to}."
+    },
+    "done": {
+      "message": "S'han intercanviat {count} despeses a {code}. Els saldos, els totals i les exportacions ja utilitzen la moneda nova.",
+      "backToGroup": "Torna al grup",
+      "backToTools": "Torna a Eines",
+      "title": "Intercanvi complet"
+    },
+    "filters": {
+      "all": "Totes",
+      "attention": "Necessita atenció",
+      "converted": "Convertida",
+      "cleared": "Ja en {to}",
+      "bridged": "Tipus manual"
+    },
+    "kind": {
+      "cleared": "Ja en {to}",
+      "bridged": "Tipus manual"
+    },
+    "previewCta": "Previsualitza la conversió",
+    "preview": {
+      "title": "Vista prèvia per despesa",
+      "description": "{count} despeses · {from} → {to}",
+      "loading": "Carregant vista prèvia…",
+      "missingRates": "Hi ha {count} despesa/e sense tipus que bloquegen l'intercanvi.",
+      "ratesOk": "Tots els tipus resolts.",
+      "rateUnit": "1 {from} = {rate} {to}",
+      "searchPlaceholder": "Cerca pel títol de la despesa…",
+      "clearSearch": "Esborra la cerca",
+      "filterLabel": "Filtra la vista prèvia per resultat",
+      "showingXofY": "Mostrant {filtered} de {count}",
+      "noRows": "Cap despesa coincideix amb els filtres actuals.",
+      "truncated": "Grup gran: la vista prèvia mostra les primeres {shown} de {count} despeses. Només es poden intercanviar els grups amb un màxim de 5000 despeses.",
+      "loadingWithCount": "Obtenint tipus i planificant {count} despeses…",
+      "loadingMore": "Carregant més despeses… {loaded} de {count}",
+      "becomesLabel": "Queda",
+      "totalAriaLabel": "Import total convertit, de {from} a {to}",
+      "wasLabel": "Era",
+      "pairChecking": "Comprovant el tipus…",
+      "pairFailedHint": "Els tipus automàtics han fallat per a aquest parell. Torna a intentar el tipus o selecciona “Tria un tipus en canvi” per definir un tipus fix.",
+      "pairFailedTitle": "{base} → {to}: {count} despesa/e sense tipus",
+      "pairHidePicker": "Amaga el selector de tipus",
+      "pairPickRate": "Tria un tipus en canvi",
+      "pairReloadHint": "Un parell s'ha resolt: torna a carregar la vista prèvia completa per continuar.",
+      "pairResolved": "Tipus resolt.",
+      "pairRetry": "Torna a intentar el tipus",
+      "pairSectionTitle": "Han fallat alguns tipus",
+      "reloadPreview": "Torna a carregar la vista prèvia completa",
+      "close": "Tanca",
+      "fullListDescription": "{count} despeses · {from} → {to}",
+      "fullListTitle": "Totes les despeses",
+      "noAttention": "Cap despesa necessita atenció.",
+      "viewFullList": "Veure totes les {count} despeses",
+      "totalBreakdown": "{converted} convertides · {cleared} ja en {to} · {bridged} a un tipus manual",
+      "totalTitle": "Total de {count} despeses"
+    },
+    "rowWarnings": {
+      "missing-rate": "No hi ha cap tipus disponible per a aquesta despesa.",
+      "exact-to-custom": "Aquesta despesa fa servir un import exacte, així que es converteix amb un tipus personalitzat."
+    },
+    "archivedNotice": "Aquest grup està arxivat. Desarxivar el grup per intercanviar la moneda.",
+    "customLedgerNotice": "Aquest grup fa servir un codi de moneda personalitzat, així que els tipus automàtics no estan disponibles.",
+    "target": {
+      "title": "Moneda nova",
+      "description": "Tria la moneda en què el grup liquidarà a partir d'ara.",
+      "label": "Moneda de liquidació nova",
+      "sameAsCurrent": "Tria una moneda diferent de l'actual.",
+      "intro": "L'intercanvi converteix cada despesa a la moneda nova i després canvia el registre del grup. Els saldos, els totals i qui deu a qui es calculen en la moneda nova a partir d'aquest moment. Això no es pot desfer.",
+      "currentLabel": "Moneda actual del grup",
+      "currentHint": "Els saldos, els totals i qui deu a qui es calculen en {current} avui.",
+      "targetHint": "Cada import en {from} es converteix en {name} ({to}) amb els tipus que triïs al pas següent. Les despeses noves seran en {to} per defecte.",
+      "placeholder": "Selecciona una moneda"
+    },
+    "warnings": {
+      "minor-units": "La moneda nova utilitza unitats menors diferents (p. ex., cèntims vs. iens) — són esperables petites diferències d'arrodoniment.",
+      "budgets-stale": "Els pressupostos conserven els imports en la moneda antiga i s'haurien de revisar després de l'intercanvi.",
+      "recurring-stale": "Les plantilles recurrents actives conserven els imports antics — revisa-les després de l'intercanvi.",
+      "exact-to-custom": "Algunes despeses fan servir imports exactes, així que es converteixen amb tipus personalitzats."
+    },
+    "back": "Enrere",
+    "pairs": {
+      "title": "Tipus de conversió",
+      "description": "Tria com es converteix cada moneda a {code}. Els tipus a data de despesa fan servir la data de cada despesa; un tipus fix aplica el tipus d'una sola data a cada despesa del parell.",
+      "loading": "Carregant parells de conversió…",
+      "empty": "Cap despesa necessita conversió — tot ja és en {code}. Encara pots continuar per canviar la moneda del registre.",
+      "expenseCount": "{count} despesa/es en aquest parell"
+    },
+    "progressAriaLabel": "Progrés de l'intercanvi",
+    "entryNotice": {
+      "title": "Continuació des de la configuració del grup",
+      "body": "Has triat {to} ({name}) com a moneda de liquidació nova. No es pot fer un canvi directe perquè aquest grup ja té despeses — segueix els passos de sota i cada despesa es convertirà amb una vista prèvia per despesa abans de desar res."
+    },
+    "adminOnlyNotice": "Només els administradors poden intercanviar la moneda del grup — demana a un administrador que ho faci des d'Eines."
   }
 }

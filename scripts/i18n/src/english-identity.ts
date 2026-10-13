@@ -117,6 +117,31 @@ const LOCALE_COGNATES = new Set([
   // "Open source" is used as a loanword title label in French and Italian.
   'fr-FR:Open source',
   'it-IT:Open source',
+  // "Simple"/"simple" is the correct native spelling of the swap-kind label
+  // in Catalan, Spanish, and French.
+  'ca:Simple',
+  'ca:simple',
+  'es:Simple',
+  'es:simple',
+  'fr-FR:Simple',
+  'fr-FR:simple',
+  // "Total {old} {from} → {new} {to}" keeps the native word for total, which
+  // is spelled identically in Catalan, Spanish, French, and Portuguese.
+  'ca:Total {old} {from} → {new} {to}',
+  'es:Total {old} {from} → {new} {to}',
+  'fr-FR:Total {old} {from} → {new} {to}',
+  'pt:Total {old} {from} → {new} {to}',
+  // en-GZ keeps the plain-English swap-kind badges and the placeholder-only
+  // preview template verbatim — forcing slang into money badges would look
+  // careless (per the en-GZ guide: don't force slang).
+  'en-GZ:bridged',
+  'en-GZ:cleared',
+  'en-GZ:fresh',
+  'en-GZ:simple',
+  'en-GZ:{count} expenses · {from} → {to}',
+  // "Was" is the correct Dutch past tense of zijn (to be), spelled identically
+  // to the English swap-preview label — a genuine shared cognate.
+  'nl-NL:Was',
 ])
 
 export function isAllowedLocaleCognate(

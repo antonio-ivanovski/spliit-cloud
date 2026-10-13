@@ -730,7 +730,12 @@
       "createDescription": "Soldurile, totalurile și cine cui datorează sunt calculate în această monedă. Alege moneda pe care o taxează efectiv cardurile, de obicei moneda ta obișnuită.",
       "editDescription": "Soldurile, totalurile și cine cui datorează sunt calculate în această monedă. Modificarea aceasta NU va converti cheltuielile deja introduse, cu excepția cazului în care moneda are \"unități minore\" diferite de cea curentă (de exemplu, schimbarea din Dolar American în Yen Japonez)",
       "customOption": "Personalizat",
-      "lockedAfterExpenses": "Moneda este blocată deoarece acest grup are deja cheltuieli."
+      "lockedAfterExpenses": "Moneda este blocată deoarece acest grup are deja cheltuieli.",
+      "lockedRedirectDescription": "Acest grup are deja cheltuieli, așa că moneda de decontare nu poate fi schimbată direct. Alege o monedă pentru a deschide instrumentul de schimbare — fiecare cheltuială este convertită cu o previzualizare pe cheltuială.",
+      "swapConfirmTitle": "Renunți la modificările nesalvate?",
+      "swapConfirmDescription": "Ai modificări nesalvate în aceste setări. Dacă treci la instrumentul de schimbare, le vei pierde, iar {code} va fi preselectat ca monedă nouă.",
+      "swapConfirmContinue": "Continuă la schimbare",
+      "swapConfirmCancel": "Continuă editarea"
     },
     "bulkCategorizeSectionTitle": "Instrumente AI în lot",
     "bulkCategorizeSectionDescription": "Rulează categorizatorul AI pe mai multe cheltuieli deodată. Util după importarea cheltuielilor sau când multe titluri nu sunt încă categorizate.",
@@ -3933,6 +3938,29 @@
           "detail": "Cheltuielile se modifică doar când confirmi verificarea finală."
         }
       }
+    },
+    "swap": {
+      "title": "Schimbă moneda grupului",
+      "description": "Schimbă moneda de decontare după ce există cheltuieli. Fiecare cheltuială este convertită și previzualizată pe rând înainte să se schimbe ceva.",
+      "start": "Schimbă moneda",
+      "steps": {
+        "confirm": {
+          "title": "Confirmare",
+          "detail": "Verifică rezumatul și execută schimbarea."
+        },
+        "rates": {
+          "title": "Cursuri",
+          "detail": "Cursuri istorice pe cheltuială sau un singur curs personalizat."
+        },
+        "review": {
+          "title": "Verificare",
+          "detail": "Verifică sumele vechi și noi înainte de a confirma."
+        },
+        "target": {
+          "title": "Destinație",
+          "detail": "Alege noua monedă de decontare."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4801,5 +4829,115 @@
     "description": "Această versiune a aplicației este învechită. Reîmprospătează pentru a obține cea mai recentă versiune și încearcă din nou.",
     "refresh": "Reîmprospătează",
     "title": "Actualizare disponibilă a aplicației"
+  },
+  "Swap": {
+    "title": "Schimbă moneda grupului",
+    "description": "Convertește fiecare cheltuială într-o monedă nouă de decontare, apoi comută registrul grupului. Nimic nu se schimbă până nu confirmi previzualizarea.",
+    "groupUnavailable": "Grupul nu a putut fi încărcat.",
+    "backToTools": "Înapoi la Instrumente",
+    "backToGroup": "Înapoi la grup",
+    "continue": "Continuă",
+    "retry": "Reîncearcă",
+    "offlineNotice": "Reconectează-te pentru a schimba moneda grupului.",
+    "confirmCta": "Continuă pentru confirmare",
+    "confirm": {
+      "title": "Confirmă schimbarea monedei",
+      "description": "Verifică rezumatul, apoi execută schimbul.",
+      "run": "Schimbă {count} cheltuieli",
+      "running": "Se schimbă…",
+      "irreversible": "Nu se poate reveni la sumele originale. Poți schimba din nou după aceea, dar sumele pot diferi cu câțiva bani din cauza rotunjirilor și a modificărilor de curs.",
+      "summary": "Aceasta rescrie {count} cheltuieli din {from} în {to}."
+    },
+    "done": {
+      "message": "Am schimbat {count} cheltuieli în {code}. Soldurile, totalurile și exporturile folosesc acum moneda nouă.",
+      "backToGroup": "Înapoi la grup",
+      "backToTools": "Înapoi la Instrumente",
+      "title": "Schimbare finalizată"
+    },
+    "filters": {
+      "all": "Toate",
+      "attention": "Necesită atenție",
+      "converted": "Convertită",
+      "cleared": "Deja în {to}",
+      "bridged": "Curs manual"
+    },
+    "kind": {
+      "cleared": "Deja în {to}",
+      "bridged": "Curs manual"
+    },
+    "previewCta": "Previzualizează conversia",
+    "preview": {
+      "title": "Previzualizare pe cheltuială",
+      "description": "{count} cheltuieli · {from} → {to}",
+      "loading": "Se încarcă previzualizarea…",
+      "missingRates": "{count} cheltuieli fără curs blochează schimbarea.",
+      "ratesOk": "Toate cursurile sunt rezolvate.",
+      "rateUnit": "1 {from} = {rate} {to}",
+      "searchPlaceholder": "Caută după titlul cheltuielii…",
+      "clearSearch": "Șterge căutarea",
+      "filterLabel": "Filtrează previzualizarea după rezultat",
+      "showingXofY": "Se arată {filtered} din {count}",
+      "noRows": "Nicio cheltuială nu corespunde filtrelor actuale.",
+      "truncated": "Grup mare: previzualizarea arată primele {shown} din {count} cheltuieli. Pot fi schimbate doar grupurile cu maximum 5000 de cheltuieli.",
+      "loadingWithCount": "Se preiau cursurile și se planifică {count} cheltuieli…",
+      "loadingMore": "Se încarcă mai multe cheltuieli… {loaded} din {count}",
+      "becomesLabel": "Devine",
+      "totalAriaLabel": "Suma totală convertită, din {from} în {to}",
+      "wasLabel": "Era",
+      "pairChecking": "Se verifică cursul…",
+      "pairFailedHint": "Cursurile automate au eșuat pentru această pereche. Reîncearcă cursul sau selectează “Alege un curs în schimb” pentru a defini un curs fix.",
+      "pairFailedTitle": "{base} → {to}: {count} cheltuieli fără curs",
+      "pairHidePicker": "Ascunde selectorul de curs",
+      "pairPickRate": "Alege un curs în schimb",
+      "pairReloadHint": "O pereche s-a rezolvat — reîncarcă previzualizarea completă pentru a continua.",
+      "pairResolved": "Curs rezolvat.",
+      "pairRetry": "Reîncearcă cursul",
+      "pairSectionTitle": "Unele cursuri au eșuat",
+      "reloadPreview": "Reîncarcă previzualizarea completă",
+      "close": "Închide",
+      "fullListDescription": "{count} cheltuieli · {from} → {to}",
+      "fullListTitle": "Toate cheltuielile",
+      "noAttention": "Nicio cheltuială nu necesită atenție.",
+      "viewFullList": "Vezi toate cele {count} cheltuieli",
+      "totalBreakdown": "{converted} convertite · {cleared} deja în {to} · {bridged} la un curs manual",
+      "totalTitle": "Total pentru {count} cheltuieli"
+    },
+    "rowWarnings": {
+      "missing-rate": "Niciun curs disponibil pentru această cheltuială.",
+      "exact-to-custom": "Această cheltuială a folosit o sumă exactă, așa că se convertește la un curs personalizat."
+    },
+    "archivedNotice": "Acest grup este arhivat. Dezarhivează grupul pentru a schimba moneda.",
+    "customLedgerNotice": "Acest grup folosește un cod de monedă personalizat, așa că cursurile automate nu sunt disponibile.",
+    "target": {
+      "title": "Monedă nouă",
+      "description": "Alege moneda în care grupul va deconta de acum înainte.",
+      "label": "Monedă nouă de decontare",
+      "sameAsCurrent": "Alege o altă monedă decât cea actuală.",
+      "intro": "Schimbul convertește fiecare cheltuială în moneda nouă și apoi comută registrul grupului. Soldurile, totalurile și cine cui datorează sunt calculate în moneda nouă din acel moment. Această acțiune nu poate fi anulată.",
+      "currentLabel": "Moneda actuală a grupului",
+      "currentHint": "Soldurile, totalurile și cine cui datorează sunt calculate astăzi în {current}.",
+      "targetHint": "Fiecare sumă în {from} devine {name} ({to}) la cursurile pe care le alegi în pasul următor. Cheltuielile noi vor fi implicit în {to}.",
+      "placeholder": "Selectează o monedă"
+    },
+    "warnings": {
+      "minor-units": "Moneda nouă folosește unități minore diferite (de ex. cenți vs yeni) — sunt așteptate mici diferențe de rotunjire.",
+      "budgets-stale": "Bugetele păstrează sumele în moneda veche și trebuie revizuite după schimbare.",
+      "recurring-stale": "Șabloanele recurente active păstrează sumele vechi — revizuiește-le după schimbare.",
+      "exact-to-custom": "Unele cheltuieli au folosit sume exacte, așa că se convertesc la cursuri personalizate."
+    },
+    "back": "Înapoi",
+    "pairs": {
+      "title": "Cursuri de conversie",
+      "description": "Alege cum se convertește fiecare monedă în {code}. Cursurile de la data cheltuielii folosesc data fiecărei cheltuieli; un curs fix aplică cursul unei singure date fiecărei cheltuieli din pereche.",
+      "loading": "Se încarcă perechile de conversie…",
+      "empty": "Nicio cheltuială nu are nevoie de conversie — totul este deja în {code}. Poți continua totuși pentru a comuta moneda registrului.",
+      "expenseCount": "{count} cheltuieli în această pereche"
+    },
+    "progressAriaLabel": "Progresul schimbului",
+    "entryNotice": {
+      "title": "Continuare din setările grupului",
+      "body": "Ai ales {to} ({name}) ca monedă nouă de decontare. Schimbarea directă nu este posibilă deoarece acest grup are deja cheltuieli — parcurge pașii de mai jos, iar fiecare cheltuială va fi convertită cu o previzualizare pe cheltuială înainte de a se salva ceva."
+    },
+    "adminOnlyNotice": "Doar administratorii pot schimba moneda grupului — roagă un administrator să o facă din Instrumente."
   }
 }

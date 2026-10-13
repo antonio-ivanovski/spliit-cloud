@@ -22,6 +22,7 @@ export function WizardProgress<TStep extends string>(props: {
       className={cn(
         'grid min-w-0 gap-2 text-sm',
         props.steps.length === 3 && 'grid-cols-3',
+        props.steps.length === 4 && 'grid-cols-2 sm:grid-cols-4',
         props.className,
       )}
     >
@@ -75,7 +76,7 @@ export function WizardStepHeader(props: {
     if (!heading) return
     heading.scrollIntoView?.({ block: 'start' })
     heading.focus({ preventScroll: true })
-  }, [props.focusOnChange, props.title])
+  }, [props.focusOnChange, props.title, props.description])
 
   return (
     <div className="flex flex-col gap-1">
@@ -105,13 +106,17 @@ export function WizardNav(props: {
     disabled?: boolean
     describedBy?: string
   }
+  className?: string
 }) {
   if (!props.back && !props.continue) return null
 
   return (
     <div
       data-wizard-nav
-      className="sticky bottom-[var(--mobile-nav-height)] z-30 -mx-1 border-t border-border/70 bg-background pt-3 pb-[calc(0.75rem+var(--safe-area-bottom))] sm:bottom-0 sm:-mx-2 sm:pt-4 sm:pb-[calc(1rem+var(--safe-area-bottom))]"
+      className={cn(
+        'sticky bottom-[var(--mobile-nav-height)] z-30 -mx-1 border-t border-border/70 bg-background pt-3 pb-[calc(0.75rem+var(--safe-area-bottom))] sm:bottom-0 sm:-mx-2 sm:pt-4 sm:pb-[calc(1rem+var(--safe-area-bottom))]',
+        props.className,
+      )}
     >
       <div className="flex flex-wrap items-center justify-between gap-3 px-1 sm:px-2">
         {props.back ? (

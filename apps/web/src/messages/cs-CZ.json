@@ -710,7 +710,12 @@
       "createDescription": "Zůstatky, součty a to, kdo komu dluží, se počítají v této měně. Zvolte to, co karty skutečně strhávají, obvykle vaši domácí měnu.",
       "editDescription": "Zůstatky, součty a to, kdo komu dluží, se počítají v této měně. Změna NEPŘEPOČÍTÁ již zadané výdaje, s výjimkou případů, kdy má měna jiné „dílčí jednotky“ než stávající (např. změna z amerického dolaru na japonský jen).",
       "customOption": "Vlastní",
-      "lockedAfterExpenses": "Měna je uzamčena, protože tato skupina již má výdaje."
+      "lockedAfterExpenses": "Měna je uzamčena, protože tato skupina již má výdaje.",
+      "lockedRedirectDescription": "Tato skupina už má výdaje, takže měnu vyrovnání nelze změnit přímo. Vyberte měnu pro otevření nástroje pro výměnu — každý výdaj se převede s náhledem po jednotlivých řádcích.",
+      "swapConfirmTitle": "Zahodit neuložené změny?",
+      "swapConfirmDescription": "V tomto nastavení máte neuložené změny. Pokračováním k nástroji pro výměnu se zahodí a jako nová měna se předvybere {code}.",
+      "swapConfirmContinue": "Pokračovat k výměně",
+      "swapConfirmCancel": "Pokračovat v úpravách"
     },
     "Participants": {
       "title": "Účastníci",
@@ -3952,6 +3957,29 @@
           "detail": "Výdaje se změní, až potvrdíte závěrečnou kontrolu."
         }
       }
+    },
+    "swap": {
+      "title": "Vyměnit měnu skupiny",
+      "description": "Změňte měnu vyrovnání i po zadání výdajů. Každý výdaj se převede a před jakoukoli změnou se zobrazí náhled po řádcích.",
+      "start": "Vyměnit měnu",
+      "steps": {
+        "confirm": {
+          "title": "Potvrdit",
+          "detail": "Zkontrolujte shrnutí a spusťte výměnu."
+        },
+        "rates": {
+          "title": "Kurzy",
+          "detail": "Historické kurzy po výdajích nebo jeden vlastní kurz."
+        },
+        "review": {
+          "title": "Kontrola",
+          "detail": "Před potvrzením zkontrolujte staré a nové částky."
+        },
+        "target": {
+          "title": "Cíl",
+          "detail": "Vyberte novou měnu vyrovnání."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4820,5 +4848,115 @@
     "description": "Tato verze aplikace je zastaralá. Obnovte stránku, abyste získali nejnovější verzi, a zkuste to znovu.",
     "refresh": "Obnovit",
     "title": "Je dostupná aktualizace aplikace"
+  },
+  "Swap": {
+    "title": "Vyměnit měnu skupiny",
+    "description": "Převeďte každý výdaj do nové měny vyrovnání a přepněte účetní knihu skupiny. Dokud nepotvrdíte náhled, nic se nezmění.",
+    "groupUnavailable": "Skupinu se nepodařilo načíst.",
+    "backToTools": "Zpět do Nástrojů",
+    "backToGroup": "Zpět do skupiny",
+    "continue": "Pokračovat",
+    "retry": "Zkusit znovu",
+    "offlineNotice": "Znovu se připojte, abyste mohli vyměnit měnu skupiny.",
+    "archivedNotice": "Tato skupina je archivovaná. Obnovte ji, abyste mohli vyměnit měny.",
+    "confirmCta": "Pokračovat k potvrzení",
+    "confirm": {
+      "title": "Potvrdit výměnu měny",
+      "description": "Zkontrolujte shrnutí a výměnu spusťte.",
+      "run": "Vyměnit {count} výdajů",
+      "running": "Vyměňování…",
+      "irreversible": "Na původní částky už to vrátit nelze. Výměnu můžete provést znovu, ale částky se mohou lišit o pár haléřů kvůli zaokrouhlení a změnám kurzů.",
+      "summary": "Tím se přepíše {count} výdajů z {from} na {to}."
+    },
+    "done": {
+      "message": "Vyměněno {count} výdajů do {code}. Zůstatky, součty a exporty nyní používají novou měnu.",
+      "backToGroup": "Zpět do skupiny",
+      "backToTools": "Zpět do Nástrojů",
+      "title": "Výměna dokončena"
+    },
+    "filters": {
+      "all": "Vše",
+      "attention": "Vyžaduje pozornost",
+      "converted": "Převedené",
+      "cleared": "Už {to}",
+      "bridged": "Ruční kurz"
+    },
+    "kind": {
+      "cleared": "Už {to}",
+      "bridged": "Ruční kurz zachován"
+    },
+    "previewCta": "Náhled převodu",
+    "preview": {
+      "title": "Náhled po výdajích",
+      "description": "{count} výdajů · {from} → {to}",
+      "loading": "Načítání náhledu…",
+      "missingRates": "{count} výdajů nemá kurz a blokuje výměnu.",
+      "ratesOk": "Všechny kurzy jsou vyřešené.",
+      "rateUnit": "1 {from} = {rate} {to}",
+      "searchPlaceholder": "Hledat podle názvu výdaje…",
+      "clearSearch": "Vymazat hledání",
+      "filterLabel": "Filtrovat náhled podle výsledku",
+      "showingXofY": "Zobrazeno {filtered} z {count}",
+      "noRows": "Žádné výdaje neodpovídají aktuálním filtrům.",
+      "truncated": "Velká skupina: náhled zobrazuje prvních {shown} z {count} výdajů. Vyměnit lze pouze skupiny s nejvýše 5000 výdaji.",
+      "loadingWithCount": "Načítání kurzů a příprava {count} výdajů…",
+      "loadingMore": "Načítání dalších výdajů… {loaded} z {count}",
+      "becomesLabel": "Bude",
+      "totalAriaLabel": "Celková převedená částka, z {from} do {to}",
+      "wasLabel": "Bylo",
+      "pairChecking": "Ověřování kurzu…",
+      "pairFailedHint": "Automatické kurzy pro tento pár selhaly. Zkuste kurz znovu, nebo vyberte „Zvolit kurz ručně“ a nastavte pevný kurz.",
+      "pairFailedTitle": "{base} → {to}: {count} výdajů bez kurzu",
+      "pairHidePicker": "Skrýt výběr kurzu",
+      "pairPickRate": "Zvolit kurz ručně",
+      "pairReloadHint": "Jeden pár je vyřešený — znovu načtěte celý náhled a pokračujte.",
+      "pairResolved": "Kurz je vyřešený.",
+      "pairRetry": "Zkusit kurz znovu",
+      "pairSectionTitle": "Některé kurzy selhaly",
+      "reloadPreview": "Znovu načíst celý náhled",
+      "close": "Zavřít",
+      "fullListDescription": "{count} výdajů · {from} → {to}",
+      "fullListTitle": "Všechny výdaje",
+      "noAttention": "Žádné výdaje nevyžadují pozornost.",
+      "viewFullList": "Zobrazit všech {count} výdajů",
+      "totalBreakdown": "{converted} převedeno · {cleared} už {to} · {bridged} s ručním kurzem",
+      "totalTitle": "Celkem za {count} výdajů"
+    },
+    "rowWarnings": {
+      "missing-rate": "Pro tento výdaj není k dispozici žádný kurz.",
+      "exact-to-custom": "Tento výdaj používal přesnou částku, takže se převede vlastním kurzem."
+    },
+    "customLedgerNotice": "Tato skupina používá vlastní kód měny, takže automatické kurzy nejsou k dispozici.",
+    "target": {
+      "title": "Nová měna",
+      "description": "Vyberte měnu, ve které se bude skupina odteď vyrovnávat.",
+      "label": "Nová měna vyrovnání",
+      "sameAsCurrent": "Vyberte jinou měnu, než je ta aktuální.",
+      "intro": "Výměna převede každý výdaj do nové měny a pak přepne účetní knihu skupiny. Zůstatky, součty a to, kdo komu dluží, se od té chvíle počítají v nové měně. Tuto akci nelze vrátit zpět.",
+      "currentLabel": "Aktuální měna skupiny",
+      "currentHint": "Zůstatky, součty a to, kdo komu dluží, se dnes počítají v {current}.",
+      "targetHint": "Každá částka v {from} se kurzy, které zvolíte v dalším kroku, převede na {name} ({to}). Nové výdaje budou mít výchozí měnu {to}.",
+      "placeholder": "Vyberte měnu"
+    },
+    "warnings": {
+      "minor-units": "Nová měna používá jiné dílčí jednotky (např. centy vs. jeny) — očekávejte drobné rozdíly ze zaokrouhlení.",
+      "budgets-stale": "Rozpočty zůstanou v částkách staré měny a po výměně by se měly zkontrolovat.",
+      "recurring-stale": "Aktivní opakující se šablony si ponechají staré částky — po výměně je zkontrolujte.",
+      "exact-to-custom": "Některé výdaje používaly přesné částky, takže se převedou vlastními kurzy."
+    },
+    "back": "Zpět",
+    "pairs": {
+      "title": "Kurzy převodu",
+      "description": "Zvolte, jak se každá měna převede do {code}. Kurzy k datu výdaje používají datum každého výdaje; pevný kurz použije kurz jednoho data pro všechny výdaje v páru.",
+      "loading": "Načítání měnových párů…",
+      "empty": "Žádný výdaj nepotřebuje převod — vše je už v {code}. Můžete pokračovat a přepnout měnu účetní knihy.",
+      "expenseCount": "{count} výdajů v tomto páru"
+    },
+    "progressAriaLabel": "Průběh výměny",
+    "entryNotice": {
+      "title": "Pokračování z nastavení skupiny",
+      "body": "Jako novou měnu vyrovnání jste vybrali {to} ({name}). Přímá změna není možná, protože tato skupina už má výdaje — projděte níže uvedené kroky a každý výdaj se převede s náhledem po jednotlivých řádcích, než se cokoli uloží."
+    },
+    "adminOnlyNotice": "Měnu skupiny mohou vyměnit pouze správci — požádejte správce, aby výměnu spustil z Nástrojů."
   }
 }

@@ -385,7 +385,11 @@
     "CurrencyCodeField": {
       "label": "Moeda de acerto",
       "createDescription": "Os saldos, os totais e quem deve a quem são calculados nesta moeda. Escolha a moeda que os cartões realmente cobram, normalmente a sua moeda habitual.",
-      "editDescription": "Os saldos, os totais e quem deve a quem são calculados nesta moeda. A sua alteração NÃO irá converter despesas já registradas, exceto quando a moeda possuir \"unidades menores\" diferentes das atuais (ex. alterar de Dólar Americano para Yen Japonês)"
+      "editDescription": "Os saldos, os totais e quem deve a quem são calculados nesta moeda. A sua alteração NÃO irá converter despesas já registradas, exceto quando a moeda possuir \"unidades menores\" diferentes das atuais (ex. alterar de Dólar Americano para Yen Japonês)",
+      "lockedRedirectDescription": "Este grupo já tem despesas, por isso a moeda de acerto não pode ser alterada diretamente. Escolha uma moeda para abrir a ferramenta de troca — cada despesa é convertida com uma pré-visualização por despesa.",
+      "swapConfirmTitle": "Descartar alterações não salvas?",
+      "swapConfirmDescription": "Você tem alterações não salvas nestas configurações. Se continuar para a ferramenta de troca, elas serão descartadas e {code} será pré-selecionado como nova moeda.",
+      "swapConfirmCancel": "Continuar editando"
     },
     "readOnlyNote": "Apenas proprietários e administradores podem alterar as configurações do grupo.",
     "readOnlyTitle": "Configurações do grupo",
@@ -2106,6 +2110,25 @@
           "detail": "As despesas só mudam quando você confirmar a revisão final."
         }
       }
+    },
+    "swap": {
+      "description": "Troque a moeda de acerto depois que já existirem despesas. Cada despesa é convertida e mostrada por linha antes que qualquer coisa mude.",
+      "steps": {
+        "confirm": {
+          "detail": "Verifique o resumo e execute a troca."
+        },
+        "rates": {
+          "title": "Escolha as taxas"
+        },
+        "review": {
+          "title": "Revise cada despesa",
+          "detail": "Verifique os valores antigos e novos antes de confirmar."
+        },
+        "target": {
+          "title": "Escolha um destino",
+          "detail": "Escolha a nova moeda de acerto."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -2538,5 +2561,60 @@
   "ClientUpgrade": {
     "description": "Esta versão do app está desatualizada. Atualize para obter a versão mais recente e tente novamente.",
     "title": "Atualização do app disponível"
+  },
+  "Swap": {
+    "description": "Converta cada despesa para uma nova moeda de acerto e depois mude o livro do grupo. Nada muda até você confirmar a pré-visualização.",
+    "backToTools": "Voltar às Ferramentas",
+    "confirm": {
+      "description": "Revise o resumo e execute a troca.",
+      "running": "Trocando…",
+      "irreversible": "Não pode ser desfeito para recuperar os valores originais. Você pode trocar de novo depois, mas os valores podem variar alguns centavos por causa de arredondamentos e mudanças nas taxas.",
+      "summary": "Isso reescreve {count} despesas de {from} para {to}."
+    },
+    "done": {
+      "message": "{count} despesas trocadas para {code}. Saldos, totais e exportações agora usam a nova moeda.",
+      "backToTools": "Voltar às Ferramentas"
+    },
+    "offlineNotice": "Reconecte-se para trocar a moeda do grupo.",
+    "preview": {
+      "loading": "Carregando a pré-visualização…",
+      "missingRates": "{count} despesas estão sem taxa e bloqueiam a troca.",
+      "showingXofY": "Mostrando {filtered} de {count}",
+      "truncated": "Grupo grande: a pré-visualização mostra as primeiras {shown} de {count} despesas. Só é possível trocar grupos com no máximo 5000 despesas.",
+      "loadingWithCount": "Obtendo as taxas e planejando {count} despesas…",
+      "loadingMore": "Carregando mais despesas… {loaded} de {count}",
+      "totalAriaLabel": "Valor total convertido, de {from} para {to}",
+      "pairChecking": "Verificando a taxa…",
+      "pairFailedHint": "As taxas automáticas falharam para este par. Tente a taxa novamente ou selecione “Escolha uma taxa alternativa” para definir uma taxa fixa.",
+      "pairFailedTitle": "{base} → {to}: {count} despesas sem taxa",
+      "pairPickRate": "Escolha uma taxa alternativa",
+      "pairReloadHint": "Um par foi resolvido — recarregue a pré-visualização completa para continuar."
+    },
+    "archivedNotice": "Este grupo está arquivado. Desarquive o grupo para trocar a moeda.",
+    "target": {
+      "description": "Escolha a moeda em que o grupo vai acertar a partir de agora.",
+      "label": "Nova moeda de acerto",
+      "sameAsCurrent": "Escolha uma moeda diferente da atual.",
+      "intro": "A troca converte cada despesa para a nova moeda e depois muda o livro do grupo. Os saldos, os totais e quem deve a quem passam a ser calculados na nova moeda desse momento em diante. Isso não pode ser desfeito.",
+      "targetHint": "Cada valor em {from} vira {name} ({to}) com as taxas que você escolher na próxima etapa. As novas despesas serão em {to} por padrão."
+    },
+    "warnings": {
+      "minor-units": "A nova moeda usa unidades menores diferentes (ex. centavos vs. ienes): pequenas diferenças de arredondamento são esperadas.",
+      "recurring-stale": "Os modelos recorrentes ativos mantêm os valores antigos: revise-os após a troca.",
+      "exact-to-custom": "Algumas despesas usaram valores exatos, por isso são convertidas a taxas personalizadas."
+    },
+    "pairs": {
+      "description": "Escolha como cada moeda é convertida para {code}. As taxas na data da despesa usam a data de cada despesa; uma taxa fixa aplica a taxa de uma única data a cada despesa do par.",
+      "loading": "Carregando pares de conversão…",
+      "empty": "Nenhuma despesa precisa de conversão — está tudo em {code}. Mesmo assim você pode continuar para mudar a moeda do livro."
+    },
+    "entryNotice": {
+      "title": "Continuação a partir das configurações do grupo",
+      "body": "Você escolheu {to} ({name}) como nova moeda de acerto. Não é possível uma alteração direta porque este grupo já tem despesas — siga as etapas abaixo e cada despesa será convertida com uma pré-visualização por despesa antes que qualquer coisa seja salva."
+    },
+    "adminOnlyNotice": "Somente os administradores podem trocar a moeda do grupo — peça a um administrador para fazer isso em Ferramentas.",
+    "rowWarnings": {
+      "exact-to-custom": "Esta despesa usou um valor exato, por isso é convertida a uma taxa personalizada."
+    }
   }
 }

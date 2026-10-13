@@ -710,7 +710,12 @@
       "createDescription": "Salda, sumy i to, kto komu wisi, są liczone w tej walucie. Wybierz walutę, którą karty rzeczywiście obciążają, zazwyczaj twoją walutę domową.",
       "editDescription": "Salda, sumy i to, kto komu wisi, są liczone w tej walucie. Zmiana NIE przeliczy już wprowadzonych wydatków, z wyjątkiem sytuacji, gdy waluta ma inne „jednostki pomocnicze” niż obecna (np. zmiana z dolara amerykańskiego na jena japońskiego).",
       "customOption": "Niestandardowa",
-      "lockedAfterExpenses": "Waluta jest zablokowana, ponieważ ta grupa ma już wydatki."
+      "lockedAfterExpenses": "Waluta jest zablokowana, ponieważ ta grupa ma już wydatki.",
+      "lockedRedirectDescription": "Ta grupa ma już wydatki, więc waluty rozliczenia nie można zmienić bezpośrednio. Wybierz walutę, aby otworzyć narzędzie zamiany — każdy wydatek zostanie przeliczony z podglądem w poszczególnych wierszach.",
+      "swapConfirmTitle": "Odrzucić niezapisane zmiany?",
+      "swapConfirmDescription": "Masz niezapisane zmiany w tych ustawieniach. Przejście do narzędzia zamiany spowoduje ich odrzucenie, a {code} zostanie wstępnie wybrane jako nowa waluta.",
+      "swapConfirmContinue": "Przejdź do zamiany",
+      "swapConfirmCancel": "Kontynuuj edycję"
     },
     "Participants": {
       "title": "Członkowie",
@@ -3952,6 +3957,29 @@
           "detail": "Wydatki zmienią się dopiero po potwierdzeniu końcowego przeglądu."
         }
       }
+    },
+    "swap": {
+      "title": "Zamień walutę grupy",
+      "description": "Zmień walutę rozliczenia po dodaniu wydatków. Każdy wydatek jest przeliczany i pokazywany wiersz po wierszu, zanim cokolwiek się zmieni.",
+      "start": "Zamień walutę",
+      "steps": {
+        "confirm": {
+          "title": "Potwierdź",
+          "detail": "Sprawdź podsumowanie i wykonaj zamianę."
+        },
+        "rates": {
+          "title": "Kursy",
+          "detail": "Historyczne kursy dla wydatków lub jeden kurs własny."
+        },
+        "review": {
+          "title": "Przegląd",
+          "detail": "Sprawdź stare i nowe kwoty przed potwierdzeniem."
+        },
+        "target": {
+          "title": "Cel",
+          "detail": "Wybierz nową walutę rozliczenia."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4820,5 +4848,115 @@
     "description": "Ta wersja aplikacji jest nieaktualna. Odśwież, aby pobrać najnowszą wersję, i spróbuj ponownie.",
     "refresh": "Odśwież",
     "title": "Dostępna jest aktualizacja aplikacji"
+  },
+  "Swap": {
+    "title": "Zamień walutę grupy",
+    "description": "Przelicz każdy wydatek na nową walutę rozliczenia, a następnie przełącz księgę grupy. Nic się nie zmieni, dopóki nie potwierdzisz podglądu.",
+    "groupUnavailable": "Nie udało się wczytać grupy.",
+    "backToTools": "Wróć do Narzędzi",
+    "backToGroup": "Wróć do grupy",
+    "continue": "Kontynuuj",
+    "retry": "Spróbuj ponownie",
+    "offlineNotice": "Połącz się ponownie, aby zamienić walutę grupy.",
+    "archivedNotice": "Ta grupa jest zarchiwizowana. Przywróć ją, aby zamienić waluty.",
+    "confirmCta": "Przejdź do potwierdzenia",
+    "confirm": {
+      "title": "Potwierdź zamianę waluty",
+      "description": "Sprawdź podsumowanie, a następnie wykonaj zamianę.",
+      "run": "Zamień {count} wydatków",
+      "running": "Zamienianie…",
+      "irreversible": "Nie można wrócić do pierwotnych kwot. Możesz później ponownie zamienić walutę, ale kwoty mogą różnić się o kilka groszy z powodu zaokrągleń i zmian kursów.",
+      "summary": "To przepisuje {count} wydatków z {from} na {to}."
+    },
+    "done": {
+      "message": "Zamieniono {count} wydatków na {code}. Salda, sumy i eksporty używają teraz nowej waluty.",
+      "backToGroup": "Wróć do grupy",
+      "backToTools": "Wróć do Narzędzi",
+      "title": "Zamiana ukończona"
+    },
+    "filters": {
+      "all": "Wszystkie",
+      "attention": "Wymagają uwagi",
+      "converted": "Przeliczone",
+      "cleared": "Już {to}",
+      "bridged": "Kurs ręczny"
+    },
+    "kind": {
+      "cleared": "Już {to}",
+      "bridged": "Zachowano kurs ręczny"
+    },
+    "previewCta": "Podgląd przeliczenia",
+    "preview": {
+      "title": "Podgląd wydatków",
+      "description": "{count} wydatków · {from} → {to}",
+      "loading": "Wczytywanie podglądu…",
+      "missingRates": "{count} wydatków nie ma kursu i blokuje zamianę.",
+      "ratesOk": "Wszystkie kursy ustalone.",
+      "rateUnit": "1 {from} = {rate} {to}",
+      "searchPlaceholder": "Szukaj po tytule wydatku…",
+      "clearSearch": "Wyczyść wyszukiwanie",
+      "filterLabel": "Filtruj podgląd według wyniku",
+      "showingXofY": "Wyświetlono {filtered} z {count}",
+      "noRows": "Żadne wydatki nie pasują do bieżących filtrów.",
+      "truncated": "Duża grupa: podgląd pokazuje pierwsze {shown} z {count} wydatków. Można zamienić tylko grupy liczące do 5000 wydatków.",
+      "loadingWithCount": "Pobieranie kursów i planowanie {count} wydatków…",
+      "loadingMore": "Wczytywanie kolejnych wydatków… {loaded} z {count}",
+      "becomesLabel": "Będzie",
+      "totalAriaLabel": "Łączna przeliczona kwota, z {from} do {to}",
+      "wasLabel": "Było",
+      "pairChecking": "Sprawdzanie kursu…",
+      "pairFailedHint": "Automatyczne kursy nie powiodły się dla tej pary. Ponów pobieranie kursu lub wybierz „Wybierz kurs ręcznie“, aby ustawić stały kurs.",
+      "pairFailedTitle": "{base} → {to}: {count} wydatków bez kursu",
+      "pairHidePicker": "Ukryj wybór kursu",
+      "pairPickRate": "Wybierz kurs ręcznie",
+      "pairReloadHint": "Jedna para ustalona — odśwież pełny podgląd, aby kontynuować.",
+      "pairResolved": "Kurs ustalony.",
+      "pairRetry": "Ponów kurs",
+      "pairSectionTitle": "Niektóre kursy się nie powiodły",
+      "reloadPreview": "Odśwież pełny podgląd",
+      "close": "Zamknij",
+      "fullListDescription": "{count} wydatków · {from} → {to}",
+      "fullListTitle": "Wszystkie wydatki",
+      "noAttention": "Żaden wydatek nie wymaga uwagi.",
+      "viewFullList": "Wyświetl wszystkie {count} wydatków",
+      "totalBreakdown": "{converted} przeliczono · {cleared} już {to} · {bridged} z kursem ręcznym",
+      "totalTitle": "Suma dla {count} wydatków"
+    },
+    "rowWarnings": {
+      "missing-rate": "Brak dostępnego kursu dla tego wydatku.",
+      "exact-to-custom": "Ten wydatek używał dokładnej kwoty, więc przelicza się z kursem własnym."
+    },
+    "customLedgerNotice": "Ta grupa używa niestandardowego kodu waluty, więc automatyczne kursy są niedostępne.",
+    "target": {
+      "title": "Nowa waluta",
+      "description": "Wybierz walutę, w której grupa będzie się rozliczać od teraz.",
+      "label": "Nowa waluta rozliczenia",
+      "sameAsCurrent": "Wybierz walutę inną niż bieżąca.",
+      "intro": "Zamiana przelicza każdy wydatek na nową walutę, a następnie przełącza księgę grupy. Salda, sumy i to, kto komu wisi, są od tej pory liczone w nowej walucie. Tej operacji nie można cofnąć.",
+      "currentLabel": "Bieżąca waluta grupy",
+      "currentHint": "Salda, sumy i to, kto komu wisi, są dziś liczone w {current}.",
+      "targetHint": "Każda kwota w {from} stanie się {name} ({to}) po kursach wybranych w następnym kroku. Nowe wydatki będą domyślnie w {to}.",
+      "placeholder": "Wybierz walutę"
+    },
+    "warnings": {
+      "minor-units": "Nowa waluta używa innych jednostek podrzędnych (np. centy a jeny) — spodziewane są drobne różnice z zaokrągleń.",
+      "budgets-stale": "Budżety zostają w kwotach starej waluty i warto je przejrzeć po zamianie.",
+      "recurring-stale": "Aktywne szablony cykliczne zachowują stare kwoty — przejrzyj je po zamianie.",
+      "exact-to-custom": "Część wydatków używała dokładnych kwot, więc przelicza się z kursami własnymi."
+    },
+    "back": "Wróć",
+    "pairs": {
+      "title": "Kursy przeliczenia",
+      "description": "Wybierz, jak każda waluta przelicza się na {code}. Kursy z dnia wydatku używają daty każdego wydatku; stały kurs stosuje kurs z jednej daty do każdego wydatku w parze.",
+      "loading": "Wczytywanie par przeliczeniowych…",
+      "empty": "Żaden wydatek nie wymaga przeliczenia — wszystko jest już w {code}. Możesz mimo to kontynuować, aby przełączyć walutę księgi.",
+      "expenseCount": "{count} wydatków w tej parze"
+    },
+    "progressAriaLabel": "Postęp wymiany",
+    "entryNotice": {
+      "title": "Kontynuacja z ustawień grupy",
+      "body": "Wybrano {to} ({name}) jako nową walutę rozliczenia. Bezpośrednia zmiana nie jest możliwa, ponieważ ta grupa ma już wydatki — przejdź przez poniższe kroki, a każdy wydatek zostanie przeliczony z podglądem w poszczególnych wierszach, zanim cokolwiek zostanie zapisane."
+    },
+    "adminOnlyNotice": "Tylko administratorzy mogą zamienić walutę grupy — poproś administratora, aby zrobił to z Narzędzi."
   }
 }

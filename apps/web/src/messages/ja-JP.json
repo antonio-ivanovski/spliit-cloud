@@ -714,7 +714,12 @@
       "createDescription": "残高、合計、誰が誰にいくら支払う必要があるかはこの通貨で計算されます。カードで実際に請求される通貨を選びましょう。通常は自国の通貨です。",
       "editDescription": "残高、合計、誰が誰にいくら支払う必要があるかはこの通貨で計算されます。これを変更しても、既に入力された支出は換算されません。ただし、現在の通貨と変更先の通貨で小数単位（例：米ドルから日本円へ）の扱いが異なる場合は例外です",
       "customOption": "カスタム",
-      "lockedAfterExpenses": "このグループには既に支出があるため、通貨はロックされています。"
+      "lockedAfterExpenses": "このグループには既に支出があるため、通貨はロックされています。",
+      "lockedRedirectDescription": "このグループには既に支出があるため、精算通貨を直接変更できません。通貨を選ぶとスワップツールが開きます。すべての支出は支出ごとのプレビューで換算されます。",
+      "swapConfirmTitle": "保存されていない変更を破棄しますか？",
+      "swapConfirmDescription": "この設定には保存されていない変更があります。スワップツールに進むと変更は破棄され、{code}が新しい通貨として事前に選択されます。",
+      "swapConfirmContinue": "スワップに進む",
+      "swapConfirmCancel": "編集を続ける"
     },
     "readOnlyNote": "オーナーと管理者のみがグループ設定を変更できます。",
     "readOnlyTitle": "グループ設定",
@@ -3894,6 +3899,29 @@
           "detail": "最終確認で確定したときにのみ支出が変更されます。"
         }
       }
+    },
+    "swap": {
+      "title": "グループ通貨のスワップ",
+      "description": "支出の入力後に精算通貨を変更します。変更前に、すべての支出が明細ごとに換算・プレビューされます。",
+      "start": "通貨をスワップ",
+      "steps": {
+        "confirm": {
+          "title": "確認",
+          "detail": "概要を確認してスワップを実行します。"
+        },
+        "rates": {
+          "title": "レート",
+          "detail": "支出ごとの履歴レートまたは1つのカスタムレート。"
+        },
+        "review": {
+          "title": "レビュー",
+          "detail": "確認前に古い金額と新しい金額を確認します。"
+        },
+        "target": {
+          "title": "ターゲット",
+          "detail": "新しい精算通貨を選びます。"
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4747,5 +4775,115 @@
     "description": "このアプリのバージョンは古くなっています。更新して最新バージョンを取得し、もう一度お試しください。",
     "refresh": "更新",
     "title": "アプリの更新があります"
+  },
+  "Swap": {
+    "title": "グループ通貨のスワップ",
+    "description": "すべての支出を新しい精算通貨に換算し、グループの台帳を切り替えます。プレビューで確認するまでは何も変更されません。",
+    "groupUnavailable": "グループを読み込めませんでした。",
+    "backToTools": "ツールに戻る",
+    "backToGroup": "グループに戻る",
+    "continue": "続行",
+    "retry": "再試行",
+    "offlineNotice": "グループ通貨をスワップするには再接続してください。",
+    "archivedNotice": "このグループはアーカイブ済みです。通貨をスワップするにはアーカイブを解除してください。",
+    "confirmCta": "確認に進む",
+    "confirm": {
+      "title": "通貨スワップの確認",
+      "description": "内容を確認して、スワップを実行してください。",
+      "run": "{count}件の支出をスワップ",
+      "running": "スワップ中…",
+      "irreversible": "元の金額には戻せません。後から再度スワップできますが、丸めやレート変動により数セント程度の差が生じる場合があります。",
+      "summary": "{count}件の支出を{from}から{to}に書き換えます。"
+    },
+    "done": {
+      "message": "{count}件の支出を{code}にスワップしました。残高、合計、エクスポートは新しい通貨で計算されます。",
+      "backToGroup": "グループに戻る",
+      "backToTools": "ツールに戻る",
+      "title": "スワップ完了"
+    },
+    "filters": {
+      "all": "すべて",
+      "attention": "要確認",
+      "converted": "換算済み",
+      "cleared": "すでに{to}",
+      "bridged": "手動レート"
+    },
+    "kind": {
+      "cleared": "すでに{to}のため換算不要",
+      "bridged": "手動レート"
+    },
+    "previewCta": "換算をプレビュー",
+    "preview": {
+      "title": "支出ごとのプレビュー",
+      "description": "{count}件の支出 · {from} → {to}",
+      "loading": "プレビューを読み込んでいます…",
+      "missingRates": "レートが不足している支出が{count}件あり、スワップをブロックしています。",
+      "ratesOk": "すべてのレートが解決されました。",
+      "rateUnit": "1 {from} = {rate} {to}",
+      "searchPlaceholder": "支出名で検索…",
+      "clearSearch": "検索をクリア",
+      "filterLabel": "結果でプレビューを絞り込む",
+      "showingXofY": "{count}件中{filtered}件を表示",
+      "noRows": "現在のフィルターに一致する支出はありません。",
+      "truncated": "大規模なグループ：プレビューでは{count}件中最初の{shown}件の支出を表示します。支出が5000件までのグループのみスワップできます。",
+      "loadingWithCount": "レートを取得して{count}件の支出を準備しています…",
+      "loadingMore": "さらに支出を読み込んでいます…{count}件中{loaded}件",
+      "becomesLabel": "変換後",
+      "totalAriaLabel": "換算後の合計金額（{from}から{to}へ）",
+      "wasLabel": "変換前",
+      "pairChecking": "レートを確認しています…",
+      "pairFailedHint": "このペアでは自動レートの取得に失敗しました。レートを再試行するか、「代わりにレートを選ぶ」を選んで固定レートを設定してください。",
+      "pairFailedTitle": "{base} → {to}：レートが不足している支出が{count}件",
+      "pairHidePicker": "レート選択を非表示にする",
+      "pairPickRate": "代わりにレートを選ぶ",
+      "pairReloadHint": "通貨ペアが解決されました。完全なプレビューを再読み込みして続行してください。",
+      "pairResolved": "レートが解決されました。",
+      "pairRetry": "レートを再試行",
+      "pairSectionTitle": "一部のレート取得に失敗",
+      "reloadPreview": "プレビュー全体を再読み込み",
+      "close": "閉じる",
+      "fullListDescription": "{count}件の支出 · {from} → {to}",
+      "fullListTitle": "すべての支出",
+      "noAttention": "確認が必要な支出はありません。",
+      "viewFullList": "{count}件の支出をすべて表示",
+      "totalBreakdown": "{converted} 換算済み · {cleared} すでに{to} · {bridged} 手動レート適用",
+      "totalTitle": "{count}件の支出の合計"
+    },
+    "rowWarnings": {
+      "missing-rate": "この支出に利用できるレートがありません。",
+      "exact-to-custom": "この支出では請求総額が指定されているため、カスタムレートで換算されます。"
+    },
+    "customLedgerNotice": "このグループはカスタム通貨コードを使用しているため、自動レートは利用できません。",
+    "target": {
+      "title": "新しい通貨",
+      "description": "これからグループで精算に使う通貨を選んでください。",
+      "label": "新しい精算通貨",
+      "sameAsCurrent": "現在の通貨とは異なる通貨を選んでください。",
+      "intro": "スワップでは、すべての支出を新しい通貨に換算してから、グループの台帳を切り替えます。それ以降、残高、合計、誰が誰にいくら支払う必要があるかは新しい通貨で計算されます。この操作は取り消せません。",
+      "currentLabel": "現在のグループ通貨",
+      "currentHint": "現在、残高、合計、誰が誰にいくら支払う必要があるかは{current}で計算されています。",
+      "targetHint": "{from}の金額は、次のステップで選ぶレートで{name}（{to}）になります。新しい支出はデフォルトで{to}になります。",
+      "placeholder": "通貨を選択"
+    },
+    "warnings": {
+      "minor-units": "新しい通貨では小数単位（セントと円など）の扱いが異なるため、少額の丸め差が生じることがあります。",
+      "budgets-stale": "予算は古い通貨の金額のまま残るため、スワップ後に見直してください。",
+      "recurring-stale": "有効な定期支出テンプレートは古い金額のまま残るため、スワップ後に見直してください。",
+      "exact-to-custom": "一部の支出では請求総額が指定されているため、カスタムレートで換算されます。"
+    },
+    "back": "戻る",
+    "pairs": {
+      "title": "換算レート",
+      "description": "各通貨を{code}に換算する方法を選んでください。支出日ごとのレートは各支出の日付を使用し、固定レートは1つの日付のレートをペア内のすべての支出に適用します。",
+      "loading": "通貨ペアを読み込んでいます…",
+      "empty": "換算が必要な支出はありません。すべてすでに{code}です。台帳の通貨を切り替えるために、そのまま続行できます。",
+      "expenseCount": "このペアに{count}件の支出"
+    },
+    "progressAriaLabel": "スワップの進行状況",
+    "entryNotice": {
+      "title": "グループ設定から続行",
+      "body": "新しい精算通貨として{to}（{name}）を選びました。このグループには既に支出があるため、直接変更できません。以下の手順に沿って進めると、保存前にすべての支出が支出ごとのプレビューで換算されます。"
+    },
+    "adminOnlyNotice": "グループ通貨をスワップできるのは管理者のみです。ツールから管理者に実行を依頼してください。"
   }
 }

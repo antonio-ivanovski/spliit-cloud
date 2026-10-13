@@ -688,7 +688,12 @@
       "createDescription": "Saldo, total, dan siapa berutang kepada siapa dihitung dalam mata uang ini. Pilih yang benar-benar ditagihkan kartu, biasanya mata uang negara asal.",
       "editDescription": "Saldo, total, dan siapa berutang kepada siapa dihitung dalam mata uang ini. Mengubah mata uang ini TIDAK akan mengonversi pengeluaran yang sudah dimasukkan, kecuali jika mata uang tersebut memiliki \"unit minor\" yang berbeda dari mata uang saat ini (misalnya, berubah dari Dolar AS ke Yen Jepang)",
       "customOption": "Kustom",
-      "lockedAfterExpenses": "Mata uang terkunci karena grup ini sudah memiliki pengeluaran."
+      "lockedAfterExpenses": "Mata uang terkunci karena grup ini sudah memiliki pengeluaran.",
+      "lockedRedirectDescription": "Grup ini sudah memiliki pengeluaran, jadi mata uang pelunasan tidak dapat diubah langsung. Pilih mata uang untuk membuka alat tukar — setiap pengeluaran dikonversi dengan pratinjau per baris.",
+      "swapConfirmTitle": "Buang perubahan yang belum disimpan?",
+      "swapConfirmDescription": "Anda memiliki perubahan yang belum disimpan pada pengaturan ini. Melanjutkan ke alat tukar akan membuang perubahan tersebut dan memilih {code} lebih dulu sebagai mata uang baru.",
+      "swapConfirmContinue": "Lanjut ke penukaran",
+      "swapConfirmCancel": "Tetap mengedit"
     },
     "Participants": {
       "title": "Peserta",
@@ -3893,6 +3898,29 @@
           "detail": "Pengeluaran hanya berubah saat Anda mengonfirmasi tinjauan akhir."
         }
       }
+    },
+    "swap": {
+      "title": "Tukar mata uang grup",
+      "description": "Ubah mata uang pelunasan setelah pengeluaran ada. Setiap pengeluaran dikonversi dan dipratinjau per baris sebelum ada yang berubah.",
+      "start": "Tukar mata uang",
+      "steps": {
+        "confirm": {
+          "title": "Konfirmasi",
+          "detail": "Periksa ringkasan lalu jalankan penukaran."
+        },
+        "rates": {
+          "title": "Kurs",
+          "detail": "Kurs historis per pengeluaran atau satu kurs kustom."
+        },
+        "review": {
+          "title": "Tinjau",
+          "detail": "Periksa nominal lama dan baru sebelum mengonfirmasi."
+        },
+        "target": {
+          "title": "Tujuan",
+          "detail": "Pilih mata uang pelunasan baru."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4746,5 +4774,115 @@
     "description": "Versi aplikasi ini sudah kedaluwarsa. Segarkan untuk mendapatkan versi terbaru dan coba lagi.",
     "refresh": "Segarkan",
     "title": "Pembaruan aplikasi tersedia"
+  },
+  "Swap": {
+    "title": "Tukar mata uang grup",
+    "description": "Konversi setiap pengeluaran ke mata uang pelunasan baru, lalu balikkan pembukuan grup. Tidak ada yang berubah hingga Anda mengonfirmasi pratinjau.",
+    "groupUnavailable": "Grup tidak dapat dimuat.",
+    "backToTools": "Kembali ke Alat",
+    "backToGroup": "Kembali ke grup",
+    "continue": "Lanjutkan",
+    "retry": "Coba lagi",
+    "offlineNotice": "Sambung kembali untuk menukar mata uang grup.",
+    "archivedNotice": "Grup ini diarsipkan. Batalkan pengarsipan untuk menukar mata uang.",
+    "confirmCta": "Lanjutkan untuk mengonfirmasi",
+    "confirm": {
+      "title": "Konfirmasi tukar mata uang",
+      "description": "Tinjau ringkasan, lalu jalankan penukaran.",
+      "run": "Tukar {count} pengeluaran",
+      "running": "Menukar…",
+      "irreversible": "Ini tidak dapat dikembalikan ke nominal semula. Anda dapat menukar lagi setelahnya, tetapi nominalnya bisa berbeda beberapa sen karena pembulatan dan perubahan kurs.",
+      "summary": "Ini menulis ulang {count} pengeluaran dari {from} menjadi {to}."
+    },
+    "done": {
+      "message": "{count} pengeluaran telah ditukar ke {code}. Saldo, total, dan ekspor kini menggunakan mata uang baru.",
+      "backToGroup": "Kembali ke grup",
+      "backToTools": "Kembali ke Alat",
+      "title": "Penukaran selesai"
+    },
+    "filters": {
+      "all": "Semua",
+      "attention": "Perlu perhatian",
+      "converted": "Dikonversi",
+      "cleared": "Sudah {to}",
+      "bridged": "Kurs manual"
+    },
+    "kind": {
+      "cleared": "Sudah {to}",
+      "bridged": "Kurs manual"
+    },
+    "previewCta": "Pratinjau konversi",
+    "preview": {
+      "title": "Pratinjau per pengeluaran",
+      "description": "{count} pengeluaran · {from} → {to}",
+      "loading": "Memuat pratinjau…",
+      "missingRates": "{count} pengeluaran tidak punya kurs dan menghalangi penukaran.",
+      "ratesOk": "Semua kurs beres.",
+      "rateUnit": "1 {from} = {rate} {to}",
+      "searchPlaceholder": "Cari berdasarkan judul pengeluaran…",
+      "clearSearch": "Hapus pencarian",
+      "filterLabel": "Filter pratinjau berdasarkan hasil",
+      "showingXofY": "Menampilkan {filtered} dari {count}",
+      "noRows": "Tidak ada pengeluaran yang cocok dengan filter saat ini.",
+      "truncated": "Grup besar: pratinjau menampilkan {shown} dari {count} pengeluaran pertama. Hanya grup dengan maksimal 5000 pengeluaran yang dapat ditukar.",
+      "loadingWithCount": "Mengambil kurs dan merencanakan {count} pengeluaran…",
+      "loadingMore": "Memuat pengeluaran lainnya… {loaded} dari {count}",
+      "becomesLabel": "Menjadi",
+      "totalAriaLabel": "Total jumlah terkonversi, dari {from} ke {to}",
+      "wasLabel": "Semula",
+      "pairChecking": "Memeriksa kurs…",
+      "pairFailedHint": "Kurs otomatis gagal untuk pasangan ini. Coba lagi kursnya, atau pilih “Pilih kurs saja” untuk menetapkan kurs tetap.",
+      "pairFailedTitle": "{base} → {to}: {count} pengeluaran tidak punya kurs",
+      "pairHidePicker": "Sembunyikan pemilih kurs",
+      "pairPickRate": "Pilih kurs saja",
+      "pairReloadHint": "Satu pasangan beres — muat ulang pratinjau lengkap untuk melanjutkan.",
+      "pairResolved": "Kurs beres.",
+      "pairRetry": "Coba kurs lagi",
+      "pairSectionTitle": "Sebagian kurs gagal",
+      "reloadPreview": "Muat ulang pratinjau lengkap",
+      "close": "Tutup",
+      "fullListDescription": "{count} pengeluaran · {from} → {to}",
+      "fullListTitle": "Semua pengeluaran",
+      "noAttention": "Tidak ada pengeluaran yang perlu diperhatikan.",
+      "viewFullList": "Lihat semua {count} pengeluaran",
+      "totalBreakdown": "{converted} dikonversi · {cleared} sudah {to} · {bridged} dengan kurs manual",
+      "totalTitle": "Total untuk {count} pengeluaran"
+    },
+    "rowWarnings": {
+      "missing-rate": "Tidak ada kurs yang tersedia untuk pengeluaran ini.",
+      "exact-to-custom": "Pengeluaran ini memakai jumlah pasti sehingga dikonversi dengan kurs kustom."
+    },
+    "customLedgerNotice": "Grup ini memakai kode mata uang kustom sehingga kurs otomatis tidak tersedia.",
+    "target": {
+      "title": "Mata uang baru",
+      "description": "Pilih mata uang yang akan digunakan grup mulai sekarang.",
+      "label": "Mata uang pelunasan baru",
+      "sameAsCurrent": "Pilih mata uang yang berbeda dari yang sekarang.",
+      "intro": "Tukar mengonversi setiap pengeluaran ke mata uang baru, lalu membalikkan pembukuan grup. Saldo, total, dan siapa berutang kepada siapa dihitung dalam mata uang baru mulai saat itu. Tindakan ini tidak dapat dibatalkan.",
+      "currentLabel": "Mata uang grup saat ini",
+      "currentHint": "Saldo, total, dan siapa berutang kepada siapa saat ini dihitung dalam {current}.",
+      "targetHint": "Setiap nominal {from} menjadi {name} ({to}) dengan kurs yang Anda pilih pada langkah berikutnya. Pengeluaran baru akan memakai {to} secara default.",
+      "placeholder": "Pilih mata uang…"
+    },
+    "warnings": {
+      "minor-units": "Mata uang baru memakai unit minor yang berbeda (mis. sen vs yen) — selisih pembulatan kecil wajar terjadi.",
+      "budgets-stale": "Anggaran tetap dalam nominal mata uang lama dan harus ditinjau setelah penukaran.",
+      "recurring-stale": "Templat berulang yang aktif tetap memakai nominal lama — tinjau setelah penukaran.",
+      "exact-to-custom": "Beberapa pengeluaran memakai jumlah pasti sehingga dikonversi dengan kurs kustom."
+    },
+    "back": "Kembali",
+    "pairs": {
+      "title": "Kurs konversi",
+      "description": "Pilih cara setiap mata uang dikonversi ke {code}. Kurs per tanggal pengeluaran memakai tanggal tiap pengeluaran; kurs tetap memakai kurs satu tanggal untuk semua pengeluaran dalam pasangan tersebut.",
+      "loading": "Memuat pasangan konversi…",
+      "empty": "Tidak ada pengeluaran yang perlu dikonversi — semuanya sudah dalam {code}. Anda tetap bisa lanjut untuk menukar mata uang pembukuan.",
+      "expenseCount": "{count} pengeluaran dalam pasangan ini"
+    },
+    "progressAriaLabel": "Kemajuan tukar",
+    "entryNotice": {
+      "title": "Melanjutkan dari pengaturan grup",
+      "body": "Anda memilih {to} ({name}) sebagai mata uang pelunasan baru. Perubahan langsung tidak dimungkinkan karena grup ini sudah memiliki pengeluaran — ikuti langkah-langkah di bawah dan setiap pengeluaran akan dikonversi dengan pratinjau per baris sebelum ada yang disimpan."
+    },
+    "adminOnlyNotice": "Hanya admin yang dapat menukar mata uang grup — minta admin menjalankannya dari Alat."
   }
 }

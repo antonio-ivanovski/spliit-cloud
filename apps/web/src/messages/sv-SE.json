@@ -2111,7 +2111,12 @@
       "createDescription": "Balanser, summor och vem som är skyldig vem vad beräknas i denna valuta. Välj det som korten faktiskt debiterar, vanligtvis din hemvaluta.",
       "editDescription": "Balanser, summor och vem som är skyldig vem vad beräknas i denna valuta. Att ändra detta konverterar INTE redan angivna utgifter, förutom när valutan har andra ”minsta enheter” än den nuvarande (t.ex. byte från US-dollar till japanska yen)",
       "customOption": "Anpassad",
-      "lockedAfterExpenses": "Valutan är låst eftersom gruppen redan har utgifter."
+      "lockedAfterExpenses": "Valutan är låst eftersom gruppen redan har utgifter.",
+      "lockedRedirectDescription": "Den här gruppen har redan utgifter, så regleringsvalutan kan inte ändras direkt. Välj en valuta för att öppna bytesverktyget — varje utgift konverteras med en förhandsvisning per rad.",
+      "swapConfirmTitle": "Kassera osparade ändringar?",
+      "swapConfirmDescription": "Du har osparade ändringar i de här inställningarna. Om du fortsätter till bytesverktyget kasseras de och {code} förväljs som ny valuta.",
+      "swapConfirmContinue": "Fortsätt till bytet",
+      "swapConfirmCancel": "Fortsätt redigera"
     },
     "CurrencyField": {
       "label": "Valutasymbol",
@@ -3904,6 +3909,29 @@
           "detail": "Utgifter ändras först när du bekräftar den slutliga granskningen."
         }
       }
+    },
+    "swap": {
+      "title": "Byt gruppvaluta",
+      "description": "Ändra regleringsvalutan efter att utgifter finns. Varje utgift konverteras och förhandsvisas per rad innan något ändras.",
+      "start": "Byt valuta",
+      "steps": {
+        "confirm": {
+          "title": "Bekräfta",
+          "detail": "Kontrollera sammanfattningen och genomför bytet."
+        },
+        "rates": {
+          "title": "Kurser",
+          "detail": "Historiska kurser per utgift eller en anpassad kurs."
+        },
+        "review": {
+          "title": "Granskning",
+          "detail": "Kontrollera gamla och nya belopp innan du bekräftar."
+        },
+        "target": {
+          "title": "Mål",
+          "detail": "Välj den nya regleringsvalutan."
+        }
+      }
     }
   },
   "ExpenseImport": {
@@ -4762,5 +4790,115 @@
     "description": "Den här versionen av appen är föråldrad. Läs in den senaste versionen och försök igen.",
     "refresh": "Ladda om",
     "title": "Appuppdatering tillgänglig"
+  },
+  "Swap": {
+    "title": "Byt gruppvaluta",
+    "description": "Konvertera varje utgift till en ny regleringsvaluta och vänd sedan gruppens reskontra. Ingenting ändras förrän du bekräftar förhandsvisningen.",
+    "groupUnavailable": "Det gick inte att läsa in gruppen.",
+    "backToTools": "Tillbaka till Verktyg",
+    "backToGroup": "Tillbaka till gruppen",
+    "continue": "Fortsätt",
+    "retry": "Försök igen",
+    "offlineNotice": "Anslut igen för att byta gruppens valuta.",
+    "confirmCta": "Fortsätt till bekräftelse",
+    "confirm": {
+      "title": "Bekräfta valutabyte",
+      "description": "Granska sammanfattningen och genomför sedan bytet.",
+      "run": "Byt {count} utgifter",
+      "running": "Byter …",
+      "irreversible": "Det går inte att ångra tillbaka till de ursprungliga beloppen. Du kan byta igen efteråt, men beloppen kan skilja med några ören på grund av avrundning och kursändringar.",
+      "summary": "Detta skriver om {count} utgifter från {from} till {to}."
+    },
+    "done": {
+      "message": "Bytte {count} utgifter till {code}. Balanser, summor och exporter använder nu den nya valutan.",
+      "backToGroup": "Tillbaka till gruppen",
+      "backToTools": "Tillbaka till Verktyg",
+      "title": "Byte klart"
+    },
+    "filters": {
+      "all": "Alla",
+      "attention": "Behöver uppmärksamhet",
+      "converted": "Konverterad",
+      "cleared": "Redan {to}",
+      "bridged": "Manuell kurs"
+    },
+    "kind": {
+      "cleared": "Redan {to}",
+      "bridged": "Manuell kurs"
+    },
+    "previewCta": "Förhandsvisa konvertering",
+    "preview": {
+      "title": "Förhandsvisning per utgift",
+      "description": "{count} utgifter · {from} → {to}",
+      "loading": "Läser in förhandsvisning …",
+      "missingRates": "{count} utgifter saknar kurs och blockerar bytet.",
+      "ratesOk": "Alla kurser är klara.",
+      "rateUnit": "1 {from} = {rate} {to}",
+      "searchPlaceholder": "Sök efter utgiftstitel …",
+      "clearSearch": "Rensa sökning",
+      "filterLabel": "Filtrera förhandsvisning efter utfall",
+      "showingXofY": "Visar {filtered} av {count}",
+      "noRows": "Inga utgifter matchar de aktuella filtren.",
+      "truncated": "Stor grupp: förhandsvisningen visar de första {shown} av {count} utgifter. Endast grupper med upp till 5000 utgifter kan bytas.",
+      "loadingWithCount": "Hämtar kurser och planerar {count} utgifter …",
+      "loadingMore": "Läser in fler utgifter … {loaded} av {count}",
+      "becomesLabel": "Blir",
+      "totalAriaLabel": "Totalt konverterat belopp, från {from} till {to}",
+      "wasLabel": "Var",
+      "pairChecking": "Kontrollerar kurs …",
+      "pairFailedHint": "Automatiska kurser misslyckades för det här paret. Försök med kursen igen eller välj ”Välj en kurs i stället” för att ange en fast kurs.",
+      "pairFailedTitle": "{base} → {to}: {count} utgifter saknar kurs",
+      "pairHidePicker": "Dölj kursväljaren",
+      "pairPickRate": "Välj en kurs i stället",
+      "pairReloadHint": "Ett par är klart — läs in hela förhandsvisningen igen för att fortsätta.",
+      "pairResolved": "Kurs klar.",
+      "pairRetry": "Försök med kursen igen",
+      "pairSectionTitle": "Vissa kurser misslyckades",
+      "reloadPreview": "Läs in hela förhandsvisningen igen",
+      "close": "Stäng",
+      "fullListDescription": "{count} utgifter · {from} → {to}",
+      "fullListTitle": "Alla utgifter",
+      "noAttention": "Inga utgifter behöver uppmärksamhet.",
+      "viewFullList": "Visa alla {count} utgifter",
+      "totalBreakdown": "{converted} konverterad · {cleared} redan {to} · {bridged} till manuell kurs",
+      "totalTitle": "Totalt för {count} utgifter"
+    },
+    "rowWarnings": {
+      "missing-rate": "Ingen kurs tillgänglig för denna utgift.",
+      "exact-to-custom": "Den här utgiften använde ett exakt belopp och konverteras därför till en anpassad kurs."
+    },
+    "archivedNotice": "Denna grupp är arkiverad. Återställ den från arkivet för att byta valuta.",
+    "customLedgerNotice": "Denna grupp använder en egen valutakod, så automatiska kurser är inte tillgängliga.",
+    "target": {
+      "title": "Ny valuta",
+      "description": "Välj den valuta som gruppen ska reglera i från och med nu.",
+      "label": "Ny regleringsvaluta",
+      "sameAsCurrent": "Välj en annan valuta än den nuvarande.",
+      "intro": "Bytet konverterar varje utgift till den nya valutan och vänder sedan gruppens reskontra. Balanser, summor och vem som är skyldig vem beräknas från och med då i den nya valutan. Detta går inte att ångra.",
+      "currentLabel": "Nuvarande gruppvaluta",
+      "currentHint": "Balanser, summor och vem som är skyldig vem beräknas i dag i {current}.",
+      "targetHint": "Varje {from}-belopp blir {name} ({to}) med de kurser du väljer i nästa steg. Nya utgifter får {to} som standard.",
+      "placeholder": "Välj en valuta"
+    },
+    "warnings": {
+      "minor-units": "Den nya valutan använder andra minsta enheter (t.ex. cent vs yen) — små avrundningsskillnader är väntade.",
+      "budgets-stale": "Budgetar ligger kvar i den gamla valutans belopp och bör granskas efter bytet.",
+      "recurring-stale": "Aktiva återkommande mallar behåller gamla belopp — granska dem efter bytet.",
+      "exact-to-custom": "Vissa utgifter använde exakta belopp och konverteras därför till anpassade kurser."
+    },
+    "back": "Tillbaka",
+    "pairs": {
+      "title": "Konverteringskurser",
+      "description": "Välj hur varje valuta konverteras till {code}. Kurser per utgiftsdatum använder varje utgifts eget datum; en fast kurs tillämpar ett datums kurs på varje utgift i paret.",
+      "loading": "Läser in konverteringspar …",
+      "empty": "Inga utgifter behöver konverteras — allt är redan i {code}. Du kan ändå fortsätta för att byta reskontravalutan.",
+      "expenseCount": "{count} utgifter i detta par"
+    },
+    "progressAriaLabel": "Bytets förlopp",
+    "entryNotice": {
+      "title": "Fortsätter från gruppinställningarna",
+      "body": "Du valde {to} ({name}) som ny regleringsvaluta. En direkt ändring är inte möjlig eftersom den här gruppen redan har utgifter — gå igenom stegen nedan så konverteras varje utgift med en förhandsvisning per rad innan något sparas."
+    },
+    "adminOnlyNotice": "Endast administratörer kan byta gruppvaluta — be en administratör att göra det från Verktyg."
   }
 }

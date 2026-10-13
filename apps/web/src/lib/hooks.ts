@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { Array as EffectArray, Effect } from 'effect'
 import { useEffect, useMemo, useState } from 'react'
 
 import { useCurrentGroupOrNull } from '@/app/groups/[groupId]/current-group-context'
@@ -178,10 +179,23 @@ export type CurrencyRatesResponse = Array<
 >
 
 /**
- * Bulk FX lookup routed via the tRPC `currency.rates` mutation so a 500-item
- * batch fits in the request body without blowing the URL length limit (HTTP
- * 431). React Query gives us caching, refetch control, and loading/error state
- * around the mutation.
+ * Server cap on `currency.rates` items per call. Batches larger than this are
+ * split client-side and merged back in input order.
+ */
+export const CURRENCY_RATES_BATCH_LIMIT = 500
+
+export function chunkCurrencyRateItems<T>(items: T[]): T[][] {
+  return EffectArray.chunksOf(items, CURRENCY_RATES_BATCH_LIMIT)
+}
+
+/**
+ * Bulk FX lookup routed via the tRPC `currency.rates` mutation so a large batch
+ * fits in the request body without blowing the URL length limit (HTTP 431).
+ * Requests larger than the server item cap are split into bounded-concurrency
+ * chunk mutations (concurrency 2) and merged back in input order. A single
+ * chunk failure degrades to per-item PROVIDER_ERROR entries so display-only
+ * prefetch never fails the whole batch. React Query gives us caching, refetch
+ * control, and loading/error state around the mutation.
  */
 export function useCurrencyRates(
   items: CurrencyRatesItem[],
@@ -204,11 +218,41 @@ export function useCurrencyRates(
         ...item,
         date: exchangeRateLookupDate(item.date, today),
       }))
-      const result = await utils.client.currency.rates.mutate(
-        { items: lookupItems },
-        { signal },
+      const chunks = chunkCurrencyRateItems(lookupItems)
+      const pages: CurrencyRatesResponse[] = await Effect.runPromise(
+        Effect.forEach(
+          chunks,
+          (chunk) =>
+            Effect.tryPromise({
+              try: () =>
+                utils.client.currency.rates.mutate(
+                  { items: chunk },
+                  { signal },
+                ),
+              catch: () => new Error('currency-rates chunk failed'),
+            }).pipe(
+              Effect.map((page) => page.results),
+              Effect.catch((cause) =>
+                signal?.aborted
+                  ? Effect.fail(cause)
+                  : Effect.succeed(
+                      chunk.map(
+                        () =>
+                          ({
+                            ok: false as const,
+                            error: {
+                              code: 'PROVIDER_ERROR' as const,
+                              message: 'currency-rates chunk failed',
+                            },
+                          }) as CurrencyRatesResponse[number],
+                      ),
+                    ),
+              ),
+            ),
+          { concurrency: 2 },
+        ),
       )
-      return result.results
+      return pages.flat()
     },
   })
 }
