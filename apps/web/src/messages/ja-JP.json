@@ -527,7 +527,9 @@
         "perDateTitle": "日付別換算",
         "rateDateLabel": "レート日付",
         "ratesError": "為替レートを取得できませんでした。接続を確認して再試行してください。",
-        "refresh": "再読み込み"
+        "refresh": "再読み込み",
+        "perDateFallbackLabel": "市場レートがない場合は固定換算を使用します",
+        "perDateFallbackSummary": "{total}件の日付のうち{fallback}件で固定換算を使用しています"
       },
       "Documents": {
         "title": "レシートを持っていきましょう",
@@ -3642,10 +3644,18 @@
     "bridged": "{currencies} 経由（<providers></providers>）",
     "direct": {
       "frankfurter": "<provider></provider> のレート",
-      "coinbase": "<provider></provider> のレート"
+      "coinbase": "<provider></provider> のレート",
+      "fixed": "<provider></provider> による固定レート"
     },
     "fallbackPrefix": "レート提供元：",
-    "fallbackSeparator": "、"
+    "fallbackSeparator": "、",
+    "fixed": "固定換算",
+    "fixedReason": {
+      "euro-adoption": "{code} は {date} に {anchor} に置き換えられ、1 {anchor} = {rate} {code} の固定レートで換算されます。",
+      "redenomination": "{code} は {date} に {anchor} へデノミネーションされ、1 {anchor} = {rate} {code} の固定レートで換算されます。",
+      "replacement": "{code} は {date} に {anchor} に置き換えられ、1 {anchor} = {rate} {code} の固定レートで換算されます。",
+      "withdrawn": "{code} は {date} に廃止され、1 {anchor} = {rate} {code} の固定レートで換算されます。"
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4851,7 +4861,8 @@
     },
     "rowWarnings": {
       "missing-rate": "この支出に利用できるレートがありません。",
-      "exact-to-custom": "この支出では請求総額が指定されているため、カスタムレートで換算されます。"
+      "exact-to-custom": "この支出では請求総額が指定されているため、カスタムレートで換算されます。",
+      "fixed-fallback": "固定換算で換算されました。市場レートがありませんでした。"
     },
     "customLedgerNotice": "このグループはカスタム通貨コードを使用しているため、自動レートは利用できません。",
     "target": {
@@ -4869,7 +4880,8 @@
       "minor-units": "新しい通貨では小数単位（セントと円など）の扱いが異なるため、少額の丸め差が生じることがあります。",
       "budgets-stale": "予算は古い通貨の金額のまま残るため、スワップ後に見直してください。",
       "recurring-stale": "有効な定期支出テンプレートは古い金額のまま残るため、スワップ後に見直してください。",
-      "exact-to-custom": "一部の支出では請求総額が指定されているため、カスタムレートで換算されます。"
+      "exact-to-custom": "一部の支出では請求総額が指定されているため、カスタムレートで換算されます。",
+      "fixed-fallback": "一部の支出は、廃止通貨のため固定換算を使用しています。"
     },
     "back": "戻る",
     "pairs": {
@@ -4914,5 +4926,12 @@
     "uploadingFile": "選択したファイルをアップロード中…",
     "unsupportedFile": "サポートされていないファイルがあり、スキップされました。",
     "useTextAsFile": "テキストを.txt添付ファイルとして使用"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "廃止された通貨のため、{date} 時点の最終レートを表示しています",
+    "statutoryHeadline": "固定換算レート（市場レートではありません）",
+    "triangulatedHeadline": "一部固定レート（固定換算と市場レートの組み合わせ）",
+    "withdrawnPairHeadline": "{codes} に廃止通貨が含まれています",
+    "reference": "出典"
   }
 }

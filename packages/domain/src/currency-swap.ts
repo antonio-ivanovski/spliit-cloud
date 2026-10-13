@@ -6,7 +6,15 @@ export type SwapRateMode =
   | { type: 'custom'; rate: number }
 
 export type SwapPairMode =
-  | { mode: 'perDate' }
+  | {
+      mode: 'perDate'
+      /**
+       * When false, post-withdrawal dates resolve as missing instead of falling
+       * back to the statutory fixed conversion. Absent = allow (the historical
+       * always-fallback behavior).
+       */
+      allowFixedFallback?: boolean
+    }
   | { mode: 'fixed'; date: string; override?: number }
 
 /** Keyed by `BASE|TARGET` (upper-cased). Absent pair = perDate default. */
@@ -28,6 +36,11 @@ export type SwapRateKeyItem = {
   date: string
   base: string
   target: string
+  /**
+   * Mirrors `SwapPairMode` perDate `allowFixedFallback`. Absent = allow, so
+   * callers that don't know about strict mode keep the historical behavior.
+   */
+  allowFixedFallback?: boolean
 }
 
 export function makeSwapRateKey(date: string, base: string, target: string) {
@@ -206,7 +219,8 @@ function resolvePairRate(
 /**
  * Compute the unique provider lookups needed for a swap O -> N.
  *
- * - PerDate pairs: one key per expense date
+ * - PerDate pairs: one key per expense date (carrying `allowFixedFallback` only
+ *   when strict, so historical keys are unchanged)
  * - Fixed pairs with an override: none (user-typed rate)
  * - Fixed pairs without an override: the single chosen-date key
  */
@@ -221,11 +235,21 @@ export function computeSwapRateKeys(
   if (!O || !N || O === N) return []
   const seen = new Set<string>()
   const items: SwapRateKeyItem[] = []
-  const push = (date: string, base: string, target: string) => {
+  const push = (
+    date: string,
+    base: string,
+    target: string,
+    strict?: boolean,
+  ) => {
     const key = makeSwapRateKey(date, base, target)
     if (seen.has(key)) return
     seen.add(key)
-    items.push({ date, base: base.toUpperCase(), target: target.toUpperCase() })
+    items.push({
+      date,
+      base: base.toUpperCase(),
+      target: target.toUpperCase(),
+      ...(strict ? { allowFixedFallback: false as const } : {}),
+    })
   }
   const pushPair = (base: string, expenseDate: string) => {
     const pairMode = pairModeFor(modes, base, N)
@@ -234,7 +258,7 @@ export function computeSwapRateKeys(
       push(pairMode.date, base, N)
       return
     }
-    push(expenseDate, base, N)
+    push(expenseDate, base, N, pairMode.allowFixedFallback === false)
   }
   for (const e of expenses) {
     const date = isoDateOf(e.expenseDate)
@@ -251,9 +275,28 @@ export function planSwapRows(
   newCode: string,
   modes: SwapRateModes | undefined,
   ratesByKey: Record<string, number>,
+  /**
+   * Resolved rate keys (`date|BASE|TARGET`) whose rate came from a
+   * withdrawn-currency fallback (statutory table or frozen last quote) rather
+   * than a market quote. Matching rows resolve with `warning: 'fixed-fallback'`
+   * (warn-only: never blocks execute). Absent = no row carried a fallback
+   * rate.
+   */
+  fallbackKeys?: ReadonlySet<string>,
 ): PlannedSwapRow[] {
   const O = oldCode.toUpperCase()
   const N = newCode.toUpperCase()
+  // A resolved rate counts as fallback-converted when its lookup key is in
+  // the fallback set. Missing rates (`missing-rate`) take precedence since
+  // there is no conversion to flag.
+  const fallbackWarningFor = (
+    rateDate: string,
+    base: string,
+    target: string,
+  ): 'fixed-fallback' | undefined =>
+    fallbackKeys?.has(makeSwapRateKey(rateDate, base, target))
+      ? 'fixed-fallback'
+      : undefined
   return expenses.map((e) => {
     const date = isoDateOf(e.expenseDate)
     const C = e.originalCurrency?.toUpperCase() ?? null
@@ -296,6 +339,7 @@ export function planSwapRows(
         newConversionSource: null,
         rateUsed: rate,
         rateDate: resolved.rateDate,
+        warning: fallbackWarningFor(resolved.rateDate, O, N),
       }
     }
 
@@ -355,6 +399,7 @@ export function planSwapRows(
         newConversionSource: 'EXCHANGE' as const,
         rateUsed: rate,
         rateDate: resolved.rateDate,
+        warning: fallbackWarningFor(resolved.rateDate, base, N),
       }
     }
 
@@ -386,6 +431,10 @@ export function planSwapRows(
         ? rOld * bridgeRate
         : bridgeRate
     const newSource: ConversionSource | null = bridgedSource(source)
+    // Fallback provenance wins over exact-to-custom: the row still lands in
+    // "Needs attention" either way, and the fixed-conversion note is the
+    // actionable one.
+    const fallbackWarning = fallbackWarningFor(resolved.rateDate, O, N)
     return {
       id: e.id,
       kind: 'bridged' as const,
@@ -402,7 +451,8 @@ export function planSwapRows(
       newConversionSource: newSource,
       rateUsed: bridgeRate,
       rateDate: resolved.rateDate,
-      warning: source === 'EXACT' ? 'exact-to-custom' : undefined,
+      warning:
+        fallbackWarning ?? (source === 'EXACT' ? 'exact-to-custom' : undefined),
     }
   })
 }

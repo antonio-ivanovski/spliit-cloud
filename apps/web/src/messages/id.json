@@ -527,7 +527,9 @@
         "perDateTitle": "Konversi per tanggal",
         "rateDateLabel": "Tanggal kurs",
         "ratesError": "Tidak dapat mengambil kurs pertukaran. Periksa koneksi Anda dan coba lagi.",
-        "refresh": "Segarkan"
+        "refresh": "Segarkan",
+        "perDateFallbackLabel": "Gunakan konversi tetap jika kurs pasar tidak tersedia",
+        "perDateFallbackSummary": "{fallback} dari {total} tanggal menggunakan konversi tetap"
       },
       "Documents": {
         "title": "Bawa serta struk Anda",
@@ -3641,10 +3643,18 @@
     "bridged": "melalui {currencies} (<providers></providers>)",
     "direct": {
       "frankfurter": "Kurs dari <provider></provider>",
-      "coinbase": "Kurs dari <provider></provider>"
+      "coinbase": "Kurs dari <provider></provider>",
+      "fixed": "Kurs tetap dari <provider></provider>"
     },
     "fallbackPrefix": "Kurs dari",
-    "fallbackSeparator": " dan "
+    "fallbackSeparator": " dan ",
+    "fixed": "Konversi tetap",
+    "fixedReason": {
+      "euro-adoption": "{code} digantikan oleh {anchor} pada {date} dengan kurs tetap 1 {anchor} = {rate} {code}.",
+      "redenomination": "{code} diredenominasi menjadi {anchor} pada {date} dengan kurs tetap 1 {anchor} = {rate} {code}.",
+      "replacement": "{code} digantikan oleh {anchor} pada {date} dengan kurs tetap 1 {anchor} = {rate} {code}.",
+      "withdrawn": "{code} ditarik dari peredaran pada {date}; konversi menggunakan kurs tetap 1 {anchor} = {rate} {code}."
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4850,7 +4860,8 @@
     },
     "rowWarnings": {
       "missing-rate": "Tidak ada kurs yang tersedia untuk pengeluaran ini.",
-      "exact-to-custom": "Pengeluaran ini memakai jumlah pasti sehingga dikonversi dengan kurs kustom."
+      "exact-to-custom": "Pengeluaran ini memakai jumlah pasti sehingga dikonversi dengan kurs kustom.",
+      "fixed-fallback": "Dikonversi dengan konversi tetap — tidak ada kurs pasar yang tersedia."
     },
     "customLedgerNotice": "Grup ini memakai kode mata uang kustom sehingga kurs otomatis tidak tersedia.",
     "target": {
@@ -4868,7 +4879,8 @@
       "minor-units": "Mata uang baru memakai unit minor yang berbeda (mis. sen vs yen) — selisih pembulatan kecil wajar terjadi.",
       "budgets-stale": "Anggaran tetap dalam nominal mata uang lama dan harus ditinjau setelah penukaran.",
       "recurring-stale": "Templat berulang yang aktif tetap memakai nominal lama — tinjau setelah penukaran.",
-      "exact-to-custom": "Beberapa pengeluaran memakai jumlah pasti sehingga dikonversi dengan kurs kustom."
+      "exact-to-custom": "Beberapa pengeluaran memakai jumlah pasti sehingga dikonversi dengan kurs kustom.",
+      "fixed-fallback": "Beberapa pengeluaran memakai konversi tetap untuk mata uang yang ditarik."
     },
     "back": "Kembali",
     "pairs": {
@@ -4913,5 +4925,12 @@
     "uploadingFile": "Mengunggah file yang dipilih…",
     "unsupportedFile": "Beberapa file tidak didukung dan dilewati.",
     "useTextAsFile": "Gunakan teks sebagai lampiran .txt"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "Mata uang yang ditarik — menampilkan kurs terakhir yang tersedia dari {date}",
+    "statutoryHeadline": "Kurs konversi tetap — bukan kurs pasar",
+    "triangulatedHeadline": "Kurs sebagian tetap — konversi tetap ditambah kurs pasar terkini",
+    "withdrawnPairHeadline": "{codes} mencakup mata uang yang ditarik",
+    "reference": "Referensi"
   }
 }

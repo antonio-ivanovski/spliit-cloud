@@ -11,13 +11,22 @@ import { useTranslation } from 'react-i18next'
 
 import { CurrencyIcon } from '@/components/currency-icon'
 import { CurrencyRateProviderAttribution } from '@/components/currency-rate-provider-attribution'
+import {
+  CurrencyRateWarning,
+  CurrencyWithdrawnNotice,
+} from '@/components/currency-rate-warning'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DateInput } from '@/components/ui/date-input'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useCurrencyRates } from '@/lib/hooks'
+import { useCurrencyRates, type CurrencyRatesResponse } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
+import {
+  fixedConversionFor,
+  getCurrencyRateWarning,
+  withdrawnDetailsFor,
+} from '@spliit/domain/currency'
 
 export type PairConversionMode = 'perDate' | 'fixed'
 
@@ -37,6 +46,96 @@ export function rateItemKey(item: {
 
 export function pairKey(pair: Pick<CurrencyPair, 'base' | 'target'>) {
   return `${pair.base}|${pair.target}`
+}
+
+/** Per-pair outcome counts for the per-date prefetch, derived from sources. */
+export type PairRateSummary = {
+  market: number
+  fallback: number
+  failed: number
+  total: number
+}
+
+type OkRateResult = Extract<CurrencyRatesResponse[number], { ok: true }>
+
+/**
+ * True when a resolved rate came from a withdrawn-currency fallback (any
+ * `fixed` leg, or a quote frozen at the last pre-withdrawal date for a
+ * post-withdrawal request) rather than a genuine market quote. Mirrors the API
+ * engine's `isFallbackComposed` so strict pairs can filter fallback-composed
+ * entries out of shared/cached batch data client-side.
+ */
+export function rateResultUsesFallback(
+  result: CurrencyRatesResponse[number] | undefined,
+): result is OkRateResult {
+  if (!result || !result.ok) return false
+  const { rate } = result
+  if (rate.sources.some((source) => source.provider === 'fixed')) return true
+  for (const code of [rate.base, rate.target]) {
+    const from = fixedConversionFor(code)?.effectiveFrom
+    if (from && rate.requestedDate >= from && rate.asOfDate < from) return true
+  }
+  return false
+}
+
+function isOkRateResult(
+  result: CurrencyRatesResponse[number] | undefined,
+): result is OkRateResult {
+  return !!result && result.ok
+}
+
+/**
+ * Classify one pair's slice of a batch prefetch: per-date values (excluding
+ * fallback-composed entries when the pair is strict), failed keys, and the
+ * market/fallback/failed summary the card renders. Returns a null summary while
+ * the batch is still loading or stale.
+ */
+export function classifyPairResults(
+  pair: Pick<CurrencyPair, 'base' | 'target'>,
+  items: Array<{ date: string; base: string; target: string }>,
+  results: CurrencyRatesResponse | undefined,
+  fallbackEnabled: boolean,
+): {
+  values: Record<string, number>
+  failedKeys: Set<string>
+  summary: PairRateSummary | null
+} {
+  const values: Record<string, number> = {}
+  const failedKeys = new Set<string>()
+  if (!results || results.length !== items.length) {
+    return { values, failedKeys, summary: null }
+  }
+  let market = 0
+  let fallback = 0
+  let failed = 0
+  let total = 0
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i]!
+    if (item.base !== pair.base || item.target !== pair.target) continue
+    total++
+    const key = rateItemKey(item)
+    const result = results[i]
+    if (!isOkRateResult(result)) {
+      failed++
+      failedKeys.add(key)
+      continue
+    }
+    if (rateResultUsesFallback(result)) {
+      // Strict pairs treat fallback-composed entries as missing (the server
+      // already resolves strict items as RATE_NOT_FOUND; this covers shared
+      // or cached fallback entries).
+      if (!fallbackEnabled) {
+        failed++
+        failedKeys.add(key)
+        continue
+      }
+      fallback++
+    } else {
+      market++
+    }
+    values[key] = result.rate.rate
+  }
+  return { values, failedKeys, summary: { market, fallback, failed, total } }
 }
 
 export function uniquePairs(
@@ -165,6 +264,45 @@ export function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 /**
+ * Withdrawn-pair notice inside the per-date option. Strict pairs always get the
+ * full warning; fallback-allowed pairs collapse to a compact "{n} of {total}
+ * dates use the fixed conversion" line plus the statutory detail once counts
+ * are known (all-market pairs stay quiet — the selected hint above already
+ * covers them).
+ */
+function WithdrawnPerDateNotice({
+  details,
+  fallbackEnabled,
+  summary,
+  hasError,
+}: {
+  details: Parameters<typeof CurrencyWithdrawnNotice>[0]['details']
+  fallbackEnabled: boolean
+  summary: PairRateSummary | null | undefined
+  hasError: boolean
+}) {
+  const { t } = useTranslation()
+  const compact =
+    fallbackEnabled && !!summary && summary.fallback > 0 && !hasError
+  const show = !fallbackEnabled || !summary || summary.fallback > 0 || hasError
+  if (!show) return null
+  return (
+    <CurrencyWithdrawnNotice
+      details={details}
+      hideHeadline={compact}
+      summary={
+        compact && summary
+          ? t('Groups.Import.CurrencyConversion.perDateFallbackSummary', {
+              fallback: summary.fallback,
+              total: summary.total,
+            })
+          : undefined
+      }
+    />
+  )
+}
+
+/**
  * Per-pair rate card shared by the group importer and the currency swap.
  * `perDate` uses pre-fetched per-expense-date rates; `fixed` resolves one
  * date's rate (preloaded with today) with an optional typed override.
@@ -184,6 +322,9 @@ export function PairConversionCard({
   onModeChange,
   onDateChange,
   onOverrideChange,
+  fallbackEnabled = true,
+  onFallbackChange,
+  perDateSummary = null,
 }: {
   pair: CurrencyPair
   pairKey: string
@@ -199,6 +340,15 @@ export function PairConversionCard({
   onModeChange: (m: PairConversionMode) => void
   onDateChange: (d: string) => void
   onOverrideChange: (v: number | null | undefined) => void
+  /**
+   * Per-date fixed-fallback opt-in, shown only for withdrawn pairs. Defaults to
+   * true (historical always-fallback behavior); false resolves post-withdrawal
+   * dates as missing instead.
+   */
+  fallbackEnabled?: boolean
+  onFallbackChange?: (enabled: boolean) => void
+  /** Market/fallback/failed counts for this pair's per-date prefetch. */
+  perDateSummary?: PairRateSummary | null
 }) {
   const { t } = useTranslation()
 
@@ -210,6 +360,25 @@ export function PairConversionCard({
     enabled: mode === 'fixed',
   })
   const apiRate = fixedQuery.data?.[0]?.ok ? fixedQuery.data[0].rate.rate : null
+  const fixedRateResult = fixedQuery.data?.[0]?.ok
+    ? fixedQuery.data[0].rate
+    : null
+  const fixedWarning =
+    mode === 'fixed' && fixedRateResult
+      ? getCurrencyRateWarning({
+          base: pair.base,
+          target: pair.target,
+          requestedDate: fixedRateResult.requestedDate,
+          asOfDate: fixedRateResult.asOfDate,
+          sources: fixedRateResult.sources,
+        })
+      : null
+  // Pair-level notice for per-date mode: no single resolved rate exists, but
+  // the catalog alone tells us a withdrawn code is involved.
+  const withdrawnDetails = useMemo(
+    () => withdrawnDetailsFor([pair.base, pair.target]),
+    [pair.base, pair.target],
+  )
   const fixedResultError = fixedQuery.data?.[0]?.ok === false
   const prevApiRate = useRef(apiRate)
   useEffect(() => {
@@ -246,37 +415,64 @@ export function PairConversionCard({
           selected={mode === 'perDate'}
           onClick={() => onModeChange('perDate')}
         >
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            {perDateFetching ? (
-              <>
-                <Loader2 className="h-3 w-3 animate-spin" />
-                <span>
-                  {t('Groups.Import.CurrencyConversion.fetchingRates')}
-                </span>
-              </>
-            ) : perDateError ? (
-              <>
-                <AlertTriangle className="h-3 w-3 text-destructive" />
-                <span className="text-destructive">
-                  {t('Groups.Import.CurrencyConversion.ratesError')}
-                </span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={onRefreshPerDate}
-                  className="ms-auto h-8 px-1.5 text-xs"
-                >
-                  <RefreshCw className="h-3 w-3" />
-                  <span className="ms-1">
-                    {t('Groups.Import.CurrencyConversion.refresh')}
+          <div className="flex flex-col gap-2.5">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              {perDateFetching ? (
+                <>
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                  <span>
+                    {t('Groups.Import.CurrencyConversion.fetchingRates')}
                   </span>
-                </Button>
-              </>
-            ) : (
-              <span>
-                {t('Groups.Import.CurrencyConversion.perDateSelectedHint')}
-              </span>
-            )}
+                </>
+              ) : perDateError ? (
+                <>
+                  <AlertTriangle className="h-3 w-3 text-destructive" />
+                  <span className="text-destructive">
+                    {t('Groups.Import.CurrencyConversion.ratesError')}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={onRefreshPerDate}
+                    className="ms-auto h-8 px-1.5 text-xs"
+                  >
+                    <RefreshCw className="h-3 w-3" />
+                    <span className="ms-1">
+                      {t('Groups.Import.CurrencyConversion.refresh')}
+                    </span>
+                  </Button>
+                </>
+              ) : (
+                <span>
+                  {t('Groups.Import.CurrencyConversion.perDateSelectedHint')}
+                </span>
+              )}
+            </div>
+            {withdrawnDetails.length > 0 ? (
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-3">
+                  <Checkbox
+                    id={`fallback-${pairKey}`}
+                    checked={fallbackEnabled}
+                    onCheckedChange={(checked) => {
+                      onFallbackChange?.(checked === true)
+                    }}
+                  />
+                  <Label
+                    htmlFor={`fallback-${pairKey}`}
+                    className="cursor-pointer text-xs font-normal"
+                  >
+                    {t('Groups.Import.CurrencyConversion.perDateFallbackLabel')}
+                  </Label>
+                </div>
+                <WithdrawnPerDateNotice
+                  details={withdrawnDetails}
+                  fallbackEnabled={fallbackEnabled}
+                  summary={perDateSummary}
+                  hasError={perDateError}
+                />
+              </div>
+            ) : null}
           </div>
         </OptionCard>
 
@@ -343,6 +539,8 @@ export function PairConversionCard({
                     </span>
                   </div>
                 )}
+
+                <CurrencyRateWarning warning={fixedWarning} />
 
                 {fixedError && !fixedFetching && (
                   <div className="flex items-center gap-2 text-xs text-destructive">

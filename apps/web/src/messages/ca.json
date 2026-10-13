@@ -537,7 +537,9 @@
         "perDateTitle": "Conversió per data",
         "rateDateLabel": "Data del tipus",
         "ratesError": "No s'han pogut obtenir els tipus de canvi. Comprova la connexió i torna-ho a provar.",
-        "refresh": "Actualitza"
+        "refresh": "Actualitza",
+        "perDateFallbackLabel": "Utilitza la conversió fixa quan falti el tipus de mercat",
+        "perDateFallbackSummary": "{fallback} de {total} dates utilitzen la conversió fixa"
       },
       "Documents": {
         "title": "Porta els teus rebuts amb tu",
@@ -3680,11 +3682,19 @@
     "coinbase": "Coinbase",
     "direct": {
       "frankfurter": "Tipus de canvi de <provider></provider>",
-      "coinbase": "Tipus de canvi de <provider></provider>"
+      "coinbase": "Tipus de canvi de <provider></provider>",
+      "fixed": "Tipus de canvi fix de <provider></provider>"
     },
     "bridged": "a través de {currencies} (<providers></providers>)",
     "fallbackPrefix": "Tipus de canvi de",
-    "fallbackSeparator": " i "
+    "fallbackSeparator": " i ",
+    "fixed": "Conversió fixa",
+    "fixedReason": {
+      "euro-adoption": "{code} es va substituir per {anchor} el {date} amb un tipus de canvi fix d'1 {anchor} = {rate} {code}.",
+      "redenomination": "{code} es va redenominar en {anchor} el {date} amb un tipus de canvi fix d'1 {anchor} = {rate} {code}.",
+      "replacement": "{code} es va substituir per {anchor} el {date} amb un tipus de canvi fix d'1 {anchor} = {rate} {code}.",
+      "withdrawn": "{code} es va retirar el {date}; la conversió utilitza el tipus de canvi fix d'1 {anchor} = {rate} {code}."
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4899,7 +4909,8 @@
     },
     "rowWarnings": {
       "missing-rate": "No hi ha cap tipus disponible per a aquesta despesa.",
-      "exact-to-custom": "Aquesta despesa fa servir un import exacte, així que es converteix amb un tipus personalitzat."
+      "exact-to-custom": "Aquesta despesa fa servir un import exacte, així que es converteix amb un tipus personalitzat.",
+      "fixed-fallback": "Convertit amb la conversió fixa — no hi havia cap tipus de mercat disponible."
     },
     "archivedNotice": "Aquest grup està arxivat. Desarxivar el grup per intercanviar la moneda.",
     "customLedgerNotice": "Aquest grup fa servir un codi de moneda personalitzat, així que els tipus automàtics no estan disponibles.",
@@ -4918,7 +4929,8 @@
       "minor-units": "La moneda nova utilitza unitats menors diferents (p. ex., cèntims vs. iens) — són esperables petites diferències d'arrodoniment.",
       "budgets-stale": "Els pressupostos conserven els imports en la moneda antiga i s'haurien de revisar després de l'intercanvi.",
       "recurring-stale": "Les plantilles recurrents actives conserven els imports antics — revisa-les després de l'intercanvi.",
-      "exact-to-custom": "Algunes despeses fan servir imports exactes, així que es converteixen amb tipus personalitzats."
+      "exact-to-custom": "Algunes despeses fan servir imports exactes, així que es converteixen amb tipus personalitzats.",
+      "fixed-fallback": "Algunes despeses utilitzen la conversió fixa per a una moneda retirada."
     },
     "back": "Enrere",
     "pairs": {
@@ -4963,5 +4975,12 @@
     "uploadingFile": "S'està pujant l'arxiu seleccionat…",
     "unsupportedFile": "Alguns arxius no són compatibles i s'han omès.",
     "useTextAsFile": "Utilitza el text com a fitxer .txt adjunt"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "Moneda retirada — es mostra l'últim tipus disponible del {date}",
+    "statutoryHeadline": "Tipus de conversió fix — no és una cotització de mercat",
+    "triangulatedHeadline": "Tipus parcialment fix — conversió fixa més un tipus de mercat en directe",
+    "withdrawnPairHeadline": "{codes} inclou una moneda retirada",
+    "reference": "Referència"
   }
 }

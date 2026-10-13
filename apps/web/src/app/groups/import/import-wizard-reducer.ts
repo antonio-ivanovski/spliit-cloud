@@ -39,6 +39,8 @@ export type WizardState = {
   destIds: Record<string, string>
   resolvedExpenses: NormalizedSourceExpense[]
   rates: Record<string, number> | null | undefined
+  /** Rate keys (`date|BASE|TARGET`) resolved via fixed fallback, if any. */
+  fallbackKeys: string[]
   conversionModes: Record<string, ConversionMode>
   fixedRateDates: Record<string, string>
   fixedRateOverrides: Record<string, number>
@@ -88,6 +90,7 @@ export type WizardAction =
       fixedRateDates: Record<string, string>
       fixedRateOverrides: Record<string, number>
       rates: Record<string, number>
+      fallbackKeys: string[]
     }
   | {
       type: 'DOCUMENTS_CONFIRMED'
@@ -125,6 +128,7 @@ export function initialWizardState(
     destIds: {},
     resolvedExpenses: [],
     rates: undefined,
+    fallbackKeys: [],
     conversionModes: {},
     fixedRateDates: {},
     fixedRateOverrides: {},
@@ -212,6 +216,7 @@ export function importWizardReducer(
         destIds: action.destIds,
         resolvedExpenses: action.resolvedExpenses,
         rates: undefined,
+        fallbackKeys: [],
         step: 'currencyConversion',
       }
 
@@ -222,6 +227,7 @@ export function importWizardReducer(
         fixedRateDates: action.fixedRateDates,
         fixedRateOverrides: action.fixedRateOverrides,
         rates: action.rates,
+        fallbackKeys: action.fallbackKeys,
         step:
           state.source?.provider === 'SPLIIT' &&
           state.source.sourceGroupId !== 'csv-import'

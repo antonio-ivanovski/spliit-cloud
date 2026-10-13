@@ -120,6 +120,42 @@ describe('computeSwapRateKeys', () => {
       ),
     ).toEqual([{ date: '2024-06-01', base: 'EUR', target: 'GBP' }])
   })
+
+  it('strict perDate pairs flag keys without changing market keys', () => {
+    const keys = computeSwapRateKeys(
+      [
+        { id: 'a', expenseDate: '2026-06-01', amount: 100 },
+        { id: 'b', expenseDate: '2026-06-02', amount: 200 },
+      ],
+      'BGN',
+      'EUR',
+      { 'BGN|EUR': { mode: 'perDate', allowFixedFallback: false } },
+    )
+    expect(keys).toEqual([
+      {
+        date: '2026-06-01',
+        base: 'BGN',
+        target: 'EUR',
+        allowFixedFallback: false,
+      },
+      {
+        date: '2026-06-02',
+        base: 'BGN',
+        target: 'EUR',
+        allowFixedFallback: false,
+      },
+    ])
+  })
+
+  it('perDate pairs without the flag keep the historical key shape', () => {
+    const keys = computeSwapRateKeys(
+      [{ id: 'a', expenseDate: '2026-06-01', amount: 100 }],
+      'BGN',
+      'EUR',
+      { 'BGN|EUR': { mode: 'perDate' } },
+    )
+    expect(keys).toEqual([{ date: '2026-06-01', base: 'BGN', target: 'EUR' }])
+  })
 })
 
 describe('planSwapRows', () => {
@@ -208,6 +244,69 @@ describe('planSwapRows', () => {
       {},
     )
     expect(row.warning).toBe('missing-rate')
+  })
+
+  it('flags fallback-converted per-date rows without blocking data', () => {
+    const expenses = [
+      { id: 'a', expenseDate: '2026-06-01', amount: 10000 },
+      { id: 'b', expenseDate: '2026-06-02', amount: 10000 },
+    ]
+    const rates = {
+      '2026-06-01|BGN|EUR': 1 / 1.95583,
+      '2026-06-02|BGN|EUR': 1 / 1.95583,
+    }
+    const rows = planSwapRows(expenses, 'BGN', 'EUR', {}, rates, new Set())
+    expect(rows.map((r) => r.warning)).toEqual([undefined, undefined])
+
+    const flagged = planSwapRows(
+      expenses,
+      'BGN',
+      'EUR',
+      {},
+      rates,
+      new Set(['2026-06-01|BGN|EUR']),
+    )
+    expect(flagged.map((r) => r.warning)).toEqual(['fixed-fallback', undefined])
+    // The conversion itself is unaffected — only the warning is added.
+    expect(flagged[0].newAmount).toBe(rows[0].newAmount)
+    expect(flagged[0].rateUsed).toBe(rows[0].rateUsed)
+  })
+
+  it('flags fallback-converted fresh and bridged rows at their own pair keys', () => {
+    const rows = planSwapRows(
+      [
+        {
+          id: 'a',
+          expenseDate: '2026-06-01',
+          amount: 10000,
+          originalAmount: 20000,
+          originalCurrency: 'BGN',
+          conversionRate: 0.5,
+          conversionSource: 'EXCHANGE',
+        },
+        {
+          id: 'b',
+          expenseDate: '2026-06-01',
+          amount: 10000,
+          originalAmount: 20000,
+          originalCurrency: 'USD',
+          conversionRate: 0.9,
+          conversionSource: 'CUSTOM',
+        },
+      ],
+      'MKD',
+      'EUR',
+      {},
+      {
+        '2026-06-01|BGN|EUR': 1 / 1.95583,
+        '2026-06-01|MKD|EUR': 0.016,
+      },
+      new Set(['2026-06-01|BGN|EUR', '2026-06-01|MKD|EUR']),
+    )
+    expect(rows.map((r) => [r.kind, r.warning])).toEqual([
+      ['fresh', 'fixed-fallback'],
+      ['bridged', 'fixed-fallback'],
+    ])
   })
 
   it('legacy custom mode maps to fixed overrides per pair', () => {

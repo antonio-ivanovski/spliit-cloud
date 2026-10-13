@@ -532,7 +532,9 @@
         "perDateTitle": "Tarihe göre dönüşüm",
         "rateDateLabel": "Kur tarihi",
         "ratesError": "Döviz kurları alınamadı. Bağlantınızı kontrol edip tekrar deneyin.",
-        "refresh": "Yenile"
+        "refresh": "Yenile",
+        "perDateFallbackLabel": "Piyasa kuru bulunamadığında sabit dönüşümü kullanın",
+        "perDateFallbackSummary": "{total} tarihten {fallback} tanesi sabit dönüşümü kullanıyor"
       },
       "Documents": {
         "title": "Makbuzlarınızı yanınızda getirin",
@@ -3664,10 +3666,18 @@
     "bridged": "{currencies} üzerinden (<providers></providers>)",
     "direct": {
       "frankfurter": "<provider></provider> üzerinden kur",
-      "coinbase": "<provider></provider> üzerinden kur"
+      "coinbase": "<provider></provider> üzerinden kur",
+      "fixed": "<provider></provider> üzerinden sabit kur"
     },
     "fallbackPrefix": "Kurlar:",
-    "fallbackSeparator": " ve "
+    "fallbackSeparator": " ve ",
+    "fixed": "Sabit dönüşüm",
+    "fixedReason": {
+      "euro-adoption": "{code}, {date} tarihinde {anchor} ile değiştirildi; sabit kur 1 {anchor} = {rate} {code}.",
+      "redenomination": "{code}, {date} tarihinde {anchor} olarak yeniden tanımlandı; sabit kur 1 {anchor} = {rate} {code}.",
+      "replacement": "{code}, {date} tarihinde {anchor} ile değiştirildi; sabit kur 1 {anchor} = {rate} {code}.",
+      "withdrawn": "{code}, {date} tarihinde tedavülden kaldırıldı; dönüşümde 1 {anchor} = {rate} {code} sabit kuru kullanılır."
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4877,7 +4887,8 @@
     },
     "rowWarnings": {
       "missing-rate": "Bu gider için kullanılabilir kur yok.",
-      "exact-to-custom": "Bu giderde kesin tutar kullanıldı, bu yüzden özel kurla dönüştürülür."
+      "exact-to-custom": "Bu giderde kesin tutar kullanıldı, bu yüzden özel kurla dönüştürülür.",
+      "fixed-fallback": "Sabit dönüşümle dönüştürüldü — piyasa kuru mevcut değildi."
     },
     "archivedNotice": "Bu grup arşivlendi. Para birimlerini değiştirmek için grubu arşivden çıkar.",
     "customLedgerNotice": "Bu grup özel bir para birimi kodu kullanıyor, bu yüzden otomatik kurlar kullanılamıyor.",
@@ -4896,7 +4907,8 @@
       "minor-units": "Yeni para birimi farklı alt birimler kullanıyor (ör. sent ve yen) — küçük yuvarlama farkları normaldir.",
       "budgets-stale": "Bütçeler eski para birimi tutarlarıyla kalır, değişimden sonra gözden geçirilmelidir.",
       "recurring-stale": "Etkin yinelenen gider şablonları eski tutarları korur — değişimden sonra bunları gözden geçir.",
-      "exact-to-custom": "Bazı giderlerde kesin tutar kullanıldı, bu yüzden bunlar özel kurlarla dönüştürülür."
+      "exact-to-custom": "Bazı giderlerde kesin tutar kullanıldı, bu yüzden bunlar özel kurlarla dönüştürülür.",
+      "fixed-fallback": "Bazı giderler tedavülden kaldırılan para birimi için sabit dönüşümü kullanıyor."
     },
     "back": "Geri",
     "pairs": {
@@ -4941,5 +4953,12 @@
     "uploadingFile": "Seçili dosya yükleniyor…",
     "unsupportedFile": "Bazı dosyalar desteklenmiyor ve atlandı.",
     "useTextAsFile": "Metni .txt eki olarak kullan"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "Tedavülden kaldırılan para birimi — {date} tarihli son mevcut kur gösteriliyor",
+    "statutoryHeadline": "Sabit dönüşüm kuru — piyasa kuru değil",
+    "triangulatedHeadline": "Kısmen sabit kur — sabit dönüşüm ve güncel piyasa kuru",
+    "withdrawnPairHeadline": "{codes} tedavülden kaldırılan bir para birimi içeriyor",
+    "reference": "Referans"
   }
 }

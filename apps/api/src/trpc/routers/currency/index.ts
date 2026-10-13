@@ -22,12 +22,18 @@ const singleRateInput = z.object({
   date: dateSchema,
   base: currencyCodeSchema,
   target: currencyCodeSchema,
+  allowFixedFallback: z.boolean().optional(),
 })
 
 const batchRateItemInput = z.object({
   date: dateSchema,
   base: currencyCodeSchema,
   target: currencyCodeSchema,
+  /**
+   * When false, withdrawn-currency fallbacks are skipped for this item
+   * (post-withdrawal dates resolve as RATE_NOT_FOUND). Absent = allow.
+   */
+  allowFixedFallback: z.boolean().optional(),
 })
 
 const batchRateInput = z.object({
@@ -77,6 +83,9 @@ export const currencyRouter = createTRPCRouter({
           date: input.date,
           base: input.base.toUpperCase(),
           target: input.target.toUpperCase(),
+          ...(input.allowFixedFallback === false
+            ? { allowFixedFallback: false as const }
+            : {}),
         },
       ])
       // Result is always present (one input → one result). Treat both
@@ -97,6 +106,9 @@ export const currencyRouter = createTRPCRouter({
         date: item.date,
         base: item.base.toUpperCase(),
         target: item.target.toUpperCase(),
+        ...(item.allowFixedFallback === false
+          ? { allowFixedFallback: false as const }
+          : {}),
       }))
       const results = await getCurrencyRates(items)
       return { results }

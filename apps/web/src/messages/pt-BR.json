@@ -2601,7 +2601,8 @@
     "warnings": {
       "minor-units": "A nova moeda usa unidades menores diferentes (ex. centavos vs. ienes): pequenas diferenças de arredondamento são esperadas.",
       "recurring-stale": "Os modelos recorrentes ativos mantêm os valores antigos: revise-os após a troca.",
-      "exact-to-custom": "Algumas despesas usaram valores exatos, por isso são convertidas a taxas personalizadas."
+      "exact-to-custom": "Algumas despesas usaram valores exatos, por isso são convertidas a taxas personalizadas.",
+      "fixed-fallback": "Algumas despesas usam a conversão fixa para uma moeda retirada."
     },
     "pairs": {
       "description": "Escolha como cada moeda é convertida para {code}. As taxas na data da despesa usam a data de cada despesa; uma taxa fixa aplica a taxa de uma única data a cada despesa do par.",
@@ -2614,7 +2615,8 @@
     },
     "adminOnlyNotice": "Somente os administradores podem trocar a moeda do grupo — peça a um administrador para fazer isso em Ferramentas.",
     "rowWarnings": {
-      "exact-to-custom": "Esta despesa usou um valor exato, por isso é convertida a uma taxa personalizada."
+      "exact-to-custom": "Esta despesa usou um valor exato, por isso é convertida a uma taxa personalizada.",
+      "fixed-fallback": "Convertido com a conversão fixa — nenhuma taxa de mercado estava disponível."
     }
   },
   "ShareTarget": {
@@ -2641,5 +2643,9 @@
     "uploadErrorGeneric": "O envio falhou. Verifique sua conexão e tente novamente.",
     "uploadingFile": "Enviando arquivo selecionado…",
     "unsupportedFile": "Alguns arquivos não são aceitos e foram ignorados."
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "Moeda retirada — mostrando a última taxa disponível de {date}",
+    "triangulatedHeadline": "Taxa parcialmente fixa — conversão fixa mais uma taxa de mercado ao vivo"
   }
 }

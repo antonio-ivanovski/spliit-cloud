@@ -2514,7 +2514,9 @@
         "perDateTitle": "per-date conversion",
         "rateDateLabel": "Frankfurter rate date, fr",
         "ratesError": "unable to fetch exchange rates. check connection and try again.",
-        "refresh": "refresh the rates"
+        "refresh": "refresh the rates",
+        "perDateFallbackLabel": "use the locked-in conversion when a market rate is missing",
+        "perDateFallbackSummary": "{fallback} of {total} dates use the locked-in conversion"
       },
       "Destination": {
         "heading": "where should we import <strong>{name}</strong>? ({participantCount} besties · {expenseCount} expenses)",
@@ -3647,11 +3649,19 @@
     "coinbase": "Coinbase",
     "direct": {
       "frankfurter": "rate from <provider></provider>",
-      "coinbase": "rate from <provider></provider>"
+      "coinbase": "rate from <provider></provider>",
+      "fixed": "locked-in rate from <provider></provider>"
     },
     "bridged": "by way of {currencies} (<providers></providers>)",
     "fallbackPrefix": "rates from",
-    "fallbackSeparator": " &"
+    "fallbackSeparator": " &",
+    "fixed": "locked-in conversion",
+    "fixedReason": {
+      "euro-adoption": "{code} got replaced by {anchor} on {date} at a locked-in rate of 1 {anchor} = {rate} {code}.",
+      "redenomination": "{code} got redenominated into {anchor} on {date} at a locked-in rate of 1 {anchor} = {rate} {code}.",
+      "replacement": "{code} got replaced by {anchor} on {date} at a locked-in rate of 1 {anchor} = {rate} {code}.",
+      "withdrawn": "{code} was retired on {date}; conversion uses the locked-in rate of 1 {anchor} = {rate} {code}."
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4861,7 +4871,8 @@
     },
     "rowWarnings": {
       "missing-rate": "no rate available for this expense.",
-      "exact-to-custom": "this expense used an exact amount, so it converts at a custom rate."
+      "exact-to-custom": "this expense used an exact amount, so it converts at a custom rate.",
+      "fixed-fallback": "converted with the locked-in conversion — no market rate was available."
     },
     "archivedNotice": "this group is archived. unarchive it to swap currencies.",
     "customLedgerNotice": "this group uses a custom currency code, so auto rates aren't available.",
@@ -4880,7 +4891,8 @@
       "minor-units": "the new currency uses different minor units (e.g. cents vs yen) — small rounding differences expected.",
       "budgets-stale": "budgets stay in the old currency amounts and should be reviewed after the swap.",
       "recurring-stale": "active recurring templates keep old amounts — review them after the swap.",
-      "exact-to-custom": "some expenses used exact amounts, so they convert at custom rates."
+      "exact-to-custom": "some expenses used exact amounts, so they convert at custom rates.",
+      "fixed-fallback": "some expenses use the locked-in conversion for a retired currency."
     },
     "back": "back",
     "pairs": {
@@ -4925,5 +4937,12 @@
     "uploadingFile": "uploading your file…",
     "unsupportedFile": "some files aren't supported, so they got skipped",
     "useTextAsFile": "save text as a .txt attachment"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "retired currency — showing the last rate we've got, from {date}",
+    "statutoryHeadline": "locked-in conversion rate — not a live market quote",
+    "triangulatedHeadline": "kinda locked-in rate — fixed conversion plus a live market rate",
+    "withdrawnPairHeadline": "{codes} includes a retired currency",
+    "reference": "source"
   }
 }

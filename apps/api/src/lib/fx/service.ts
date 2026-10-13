@@ -2,6 +2,7 @@ import { Context, Effect, Layer } from 'effect'
 
 import {
   getCurrencyRates,
+  isFallbackComposed,
   type BatchRateRequest,
   type BatchRateResult,
 } from '../currency-rates'
@@ -17,6 +18,12 @@ export type FxRatesResult = {
   rates: Record<string, number>
   /** Keys with no rate (per-key failure, never throws the batch). */
   missing: string[]
+  /**
+   * Resolved keys whose rate came from a withdrawn-currency fallback (statutory
+   * table or frozen last quote) rather than a market quote. Callers surface
+   * these as warn-only attention rows.
+   */
+  fallbackKeys: string[]
 }
 
 const keyOf = (request: BatchRateRequest) =>
@@ -33,16 +40,18 @@ export function partitionBatch(
 ): FxRatesResult {
   const rates: Record<string, number> = {}
   const missing: string[] = []
+  const fallbackKeys: string[] = []
   for (let i = 0; i < requests.length; i++) {
     const key = keyOf(requests[i]!)
     const result = results[i]
     if (result?.ok) {
       rates[key] = result.rate.rate
+      if (isFallbackComposed(result.rate)) fallbackKeys.push(key)
     } else {
       missing.push(key)
     }
   }
-  return { rates, missing }
+  return { rates, missing, fallbackKeys }
 }
 
 export type FxFetchImpl = (
@@ -62,7 +71,7 @@ function makeService(fetchImpl: FxFetchImpl) {
   return FxRateService.of({
     getRates: (requests) => {
       if (requests.length === 0) {
-        return Effect.succeed({ rates: {}, missing: [] })
+        return Effect.succeed({ rates: {}, missing: [], fallbackKeys: [] })
       }
       return Effect.tryPromise({
         try: () => fetchImpl(requests),
@@ -93,7 +102,10 @@ export function makeFxLayer(
 }
 
 /** Test layer: scripted rates, no provider calls. */
-export const FxTestRates = (rates: Record<string, number>) =>
+export const FxTestRates = (
+  rates: Record<string, number>,
+  fallbackKeys: string[] = [],
+) =>
   Layer.succeed(
     FxRateService,
     FxRateService.of({
@@ -107,6 +119,7 @@ export const FxTestRates = (rates: Record<string, number>) =>
           missing: requests
             .map(keyOf)
             .filter((key) => rates[key] === undefined),
+          fallbackKeys: fallbackKeys.filter((key) => rates[key] !== undefined),
         }),
     }),
   )

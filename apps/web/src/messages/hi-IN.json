@@ -2284,7 +2284,9 @@
         "perDateTitle": "प्रति-तारीख रूपांतरण",
         "rateDateLabel": "Frankfurter दर तारीख",
         "ratesError": "विनिमय दरें प्राप्त करने में असमर्थ। अपना कनेक्शन जांचें और पुनः प्रयास करें।",
-        "refresh": "रीफ़्रेश करें"
+        "refresh": "रीफ़्रेश करें",
+        "perDateFallbackLabel": "बाज़ार दर उपलब्ध न होने पर निश्चित रूपांतरण का उपयोग करें",
+        "perDateFallbackSummary": "{total} तारीखों में से {fallback} में निश्चित रूपांतरण का उपयोग हुआ है"
       },
       "Destination": {
         "heading": "आप <strong>{name}</strong> को कहां आयात करना चाहेंगे? ({participantCount} सदस्य · {expenseCount} खर्च)",
@@ -3656,10 +3658,18 @@
     "bridged": "{currencies} के माध्यम से (<providers></providers>)",
     "direct": {
       "frankfurter": "<provider></provider> से दर",
-      "coinbase": "<provider></provider> से दर"
+      "coinbase": "<provider></provider> से दर",
+      "fixed": "<provider></provider> से निश्चित दर"
     },
     "fallbackPrefix": "दर का स्रोत",
-    "fallbackSeparator": " और "
+    "fallbackSeparator": " और ",
+    "fixed": "निश्चित रूपांतरण",
+    "fixedReason": {
+      "euro-adoption": "{code} को {date} को {anchor} से बदल दिया गया, निश्चित दर 1 {anchor} = {rate} {code}।",
+      "redenomination": "{code} का {date} को {anchor} में पुनर्मूल्यांकन किया गया, निश्चित दर 1 {anchor} = {rate} {code}।",
+      "replacement": "{code} को {date} को {anchor} से बदल दिया गया, निश्चित दर 1 {anchor} = {rate} {code}।",
+      "withdrawn": "{code} को {date} को प्रचलन से वापस ले लिया गया; रूपांतरण में निश्चित दर 1 {anchor} = {rate} {code} लागू होती है।"
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4874,7 +4884,8 @@
     },
     "rowWarnings": {
       "missing-rate": "इस खर्च के लिए कोई दर उपलब्ध नहीं है।",
-      "exact-to-custom": "इस खर्च में सटीक राशि इस्तेमाल की गई थी, इसलिए यह कस्टम दर पर परिवर्तित होता है।"
+      "exact-to-custom": "इस खर्च में सटीक राशि इस्तेमाल की गई थी, इसलिए यह कस्टम दर पर परिवर्तित होता है।",
+      "fixed-fallback": "निश्चित रूपांतरण से परिवर्तित किया गया — कोई बाज़ार दर उपलब्ध नहीं थी।"
     },
     "archivedNotice": "यह समूह संग्रहीत है। मुद्रा स्वैप करने के लिए इसे असंग्रहीत करें।",
     "customLedgerNotice": "यह समूह कस्टम मुद्रा कोड इस्तेमाल करता है, इसलिए स्वचालित दरें उपलब्ध नहीं हैं।",
@@ -4893,7 +4904,8 @@
       "minor-units": "नई मुद्रा भिन्न लघु इकाइयों का उपयोग करती है (जैसे सेंट बनाम येन) — मामूली पूर्णांकन अंतर अपेक्षित हैं।",
       "budgets-stale": "बजट पुरानी मुद्रा की राशियों में ही रहते हैं, स्वैप के बाद उनकी समीक्षा की जानी चाहिए।",
       "recurring-stale": "सक्रिय आवर्ती टेम्पलेट पुरानी राशियां बनाए रखते हैं — स्वैप के बाद उनकी समीक्षा करें।",
-      "exact-to-custom": "कुछ खर्चों में सटीक राशियाँ इस्तेमाल की गई थीं, इसलिए वे कस्टम दरों पर परिवर्तित होते हैं।"
+      "exact-to-custom": "कुछ खर्चों में सटीक राशियाँ इस्तेमाल की गई थीं, इसलिए वे कस्टम दरों पर परिवर्तित होते हैं।",
+      "fixed-fallback": "कुछ खर्चों में वापस ली गई मुद्रा के लिए निश्चित रूपांतरण का उपयोग किया गया है।"
     },
     "back": "वापस",
     "pairs": {
@@ -4938,5 +4950,12 @@
     "uploadingFile": "चुनी हुई फ़ाइल अपलोड हो रही है…",
     "unsupportedFile": "कुछ फ़ाइलें समर्थित नहीं हैं और उन्हें छोड़ दिया गया।",
     "useTextAsFile": "टेक्स्ट को .txt अटैचमेंट के रूप में इस्तेमाल करें"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "वापस ली गई मुद्रा — {date} की अंतिम उपलब्ध दर दिखाई जा रही है",
+    "statutoryHeadline": "निश्चित रूपांतरण दर — बाज़ार भाव नहीं",
+    "triangulatedHeadline": "आंशिक निश्चित दर — निश्चित रूपांतरण और लाइव बाज़ार दर",
+    "withdrawnPairHeadline": "{codes} में वापस ली गई मुद्रा शामिल है",
+    "reference": "संदर्भ"
   }
 }

@@ -428,7 +428,9 @@
         "perDateTitle": "날짜별 변환",
         "rateDateLabel": "환율 날짜",
         "ratesError": "환율을 가져올 수 없습니다. 연결을 확인하고 다시 시도하세요.",
-        "refresh": "새로 고침"
+        "refresh": "새로 고침",
+        "perDateFallbackLabel": "시장 환율이 없을 경우 고정 환산을 사용해요",
+        "perDateFallbackSummary": "{total}개 날짜 중 {fallback}개는 고정 환산을 사용해요"
       },
       "Documents": {
         "title": "영수증도 가져오기",
@@ -3726,10 +3728,18 @@
     "bridged": "{currencies} 경유 (<providers></providers>)",
     "direct": {
       "frankfurter": "<provider></provider> 환율",
-      "coinbase": "<provider></provider> 환율"
+      "coinbase": "<provider></provider> 환율",
+      "fixed": "<provider></provider>의 고정 환율"
     },
     "fallbackPrefix": "환율 출처:",
-    "fallbackSeparator": " 및 "
+    "fallbackSeparator": " 및 ",
+    "fixed": "고정 환산",
+    "fixedReason": {
+      "euro-adoption": "{code}는 {date}에 {anchor}로 대체되었으며, 1 {anchor} = {rate} {code}의 고정 환율로 환산됩니다.",
+      "redenomination": "{code}는 {date}에 {anchor}로 단위 변경되었으며, 1 {anchor} = {rate} {code}의 고정 환율로 환산됩니다.",
+      "replacement": "{code}는 {date}에 {anchor}로 대체되었으며, 1 {anchor} = {rate} {code}의 고정 환율로 환산됩니다.",
+      "withdrawn": "{code}는 {date}에 폐지되었으며, 1 {anchor} = {rate} {code}의 고정 환율로 환산됩니다."
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4935,7 +4945,8 @@
     },
     "rowWarnings": {
       "missing-rate": "이 지출에 사용할 수 있는 환율이 없어요.",
-      "exact-to-custom": "이 지출은 총 청구 금액을 사용해서 커스텀 환율로 변환돼요."
+      "exact-to-custom": "이 지출은 총 청구 금액을 사용해서 커스텀 환율로 변환돼요.",
+      "fixed-fallback": "고정 환산으로 변환했어요. 시장 환율이 없었어요."
     },
     "customLedgerNotice": "이 그룹은 사용자 지정 통화 코드를 사용해서 자동 환율을 쓸 수 없어요.",
     "target": {
@@ -4953,7 +4964,8 @@
       "minor-units": "새 통화는 소수점 단위(예: 센트와 엔)가 달라서 소액 반올림 차이가 생길 수 있어요.",
       "budgets-stale": "예산은 이전 통화 금액 그대로 남으니 스왑 후에 다시 확인하세요.",
       "recurring-stale": "활성 반복 지출 템플릿은 이전 금액 그대로 남으니 스왑 후에 확인하세요.",
-      "exact-to-custom": "일부 지출은 총 청구 금액을 사용해서 커스텀 환율로 변환돼요."
+      "exact-to-custom": "일부 지출은 총 청구 금액을 사용해서 커스텀 환율로 변환돼요.",
+      "fixed-fallback": "일부 지출은 폐지된 통화에 고정 환산을 사용해요."
     },
     "back": "뒤로",
     "pairs": {
@@ -4998,5 +5010,12 @@
     "uploadingFile": "선택한 파일 업로드 중…",
     "unsupportedFile": "지원되지 않는 파일이 있어 건너뛰었어요.",
     "useTextAsFile": "텍스트를 .txt 첨부파일로 사용"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "폐지된 통화로 {date} 기준 마지막 환율을 표시합니다",
+    "statutoryHeadline": "고정 환산율 (시장 시세가 아님)",
+    "triangulatedHeadline": "부분 고정 환율 (고정 환산과 실시간 시장 환율 조합)",
+    "withdrawnPairHeadline": "{codes}에 폐지된 통화가 포함되어 있습니다",
+    "reference": "출처"
   }
 }

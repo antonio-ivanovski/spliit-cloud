@@ -22,8 +22,10 @@ import {
 import { CurrencyIcon } from '@/components/currency-icon'
 import {
   PairConversionCard,
+  classifyPairResults,
   pairKey,
   rateItemKey,
+  type PairRateSummary,
 } from '@/components/currency-pair-conversion-card'
 import { CurrencySelector } from '@/components/currency-selector'
 import { Button } from '@/components/ui/button'
@@ -62,7 +64,8 @@ const PREVIEW_PAGE_SIZE = 500
 
 type ModesPayload = Record<
   string,
-  { mode: 'perDate' } | { mode: 'fixed'; date: string; override?: number }
+  | { mode: 'perDate'; allowFixedFallback?: boolean }
+  | { mode: 'fixed'; date: string; override?: number }
 >
 
 const swapRouteApi = getRouteApi('/groups/$groupId/tools/swap')
@@ -98,6 +101,9 @@ export function CurrencySwapPage() {
   const [dates, setDates] = useState<Record<string, string>>({})
   const [overrides, setOverrides] = useState<Record<string, number | null>>({})
   const [fixedRates, setFixedRates] = useState<Record<string, number>>({})
+  // Per-date fixed fallback per pair (withdrawn pairs only in the UI).
+  // Absent = allow (the historical always-fallback behavior).
+  const [fallbacks, setFallbacks] = useState<Record<string, boolean>>({})
   const [fullListOpen, setFullListOpen] = useState(false)
   const [done, setDone] = useState<{ updated: number; newCode: string } | null>(
     null,
@@ -183,46 +189,59 @@ export function CurrencySwapPage() {
   }
 
   // Prefetch per-date rates for perDate pairs (same hook as the importer).
+  // Strict pairs (fallback off) ask the server for market-only rates.
   const rateKeyItems = useMemo(() => {
-    const items: Array<{ date: string; base: string; target: string }> = []
+    const items: Array<{
+      date: string
+      base: string
+      target: string
+      allowFixedFallback?: boolean
+    }> = []
     for (const pair of pairs) {
-      if ((modes[pairKey(pair)] ?? 'perDate') !== 'perDate') continue
+      const key = pairKey(pair)
+      if ((modes[key] ?? 'perDate') !== 'perDate') continue
+      const strict = fallbacks[key] === false
       for (const date of pair.dates) {
-        items.push({ date, base: pair.base, target: pair.target })
+        items.push({
+          date,
+          base: pair.base,
+          target: pair.target,
+          ...(strict ? { allowFixedFallback: false as const } : {}),
+        })
       }
     }
     return items
-  }, [pairs, modes])
+  }, [pairs, modes, fallbacks])
   const perDateQuery = useCurrencyRates(rateKeyItems, {
     enabled: rateKeyItems.length > 0,
   })
-  const perDateValues = useMemo(() => {
+  // Strict-aware classification per pair: fallback-composed entries count as
+  // missing for strict pairs (the server already resolves them as
+  // RATE_NOT_FOUND; the client filter covers shared/cached fallback data).
+  const perDateClassification = useMemo(() => {
     const data = perDateQuery.data
-    if (!data) return null
-    // Stale data from a previous key set must never misattribute rates:
-    // lengths diverge during refetch, so treat it as loading.
-    if (data.length !== rateKeyItems.length) return null
-    const out: Record<string, number> = {}
-    for (let i = 0; i < rateKeyItems.length; i++) {
-      const item = rateKeyItems[i]
-      const result = data[i]
-      if (!item) continue
-      if (result?.ok) out[rateItemKey(item)] = result.rate.rate
-    }
-    return out
-  }, [perDateQuery.data, rateKeyItems])
-  const perDateFailedKeys = useMemo(() => {
-    const data = perDateQuery.data
-    if (!data) return new Set<string>()
-    if (data.length !== rateKeyItems.length) return new Set<string>()
+    if (!data || data.length !== rateKeyItems.length) return null
+    const values: Record<string, number> = {}
     const failed = new Set<string>()
-    for (let i = 0; i < rateKeyItems.length; i++) {
-      const item = rateKeyItems[i]
-      if (!item) continue
-      if (data[i]?.ok === false) failed.add(rateItemKey(item))
+    const summaries = new Map<string, PairRateSummary>()
+    for (const pair of pairs) {
+      const key = pairKey(pair)
+      if ((modes[key] ?? 'perDate') !== 'perDate') continue
+      const classified = classifyPairResults(
+        pair,
+        rateKeyItems,
+        data,
+        fallbacks[key] ?? true,
+      )
+      Object.assign(values, classified.values)
+      for (const failedKey of classified.failedKeys) failed.add(failedKey)
+      if (classified.summary) summaries.set(key, classified.summary)
     }
-    return failed
-  }, [perDateQuery.data, rateKeyItems])
+    return { values, failed, summaries }
+  }, [pairs, modes, rateKeyItems, perDateQuery.data, fallbacks])
+  const perDateValues = perDateClassification?.values ?? null
+  const perDateFailedKeys: Set<string> =
+    perDateClassification?.failed ?? new Set<string>()
 
   // The per-date prefetch above is display-only (the review preview
   // re-resolves every rate server-side), so it never blocks navigation.
@@ -247,7 +266,11 @@ export function CurrencySwapPage() {
     for (const pair of pairs) {
       const key = pairKey(pair)
       if ((modes[key] ?? 'perDate') === 'perDate') {
-        out[key] = { mode: 'perDate' }
+        // Strict pairs resolve post-withdrawal dates as missing server-side.
+        out[key] =
+          fallbacks[key] === false
+            ? { mode: 'perDate', allowFixedFallback: false }
+            : { mode: 'perDate' }
       } else {
         // Custom mode arms only with a real positive rate (`null` is
         // checked-empty and falls back to date mode until typed).
@@ -261,7 +284,7 @@ export function CurrencySwapPage() {
       }
     }
     return out
-  }, [pairs, modes, dates, overrides])
+  }, [pairs, modes, dates, overrides, fallbacks])
 
   // Paginated preview: the server caps pages at 500 rows but plans totals
   // globally, so every page is fetched and concatenated — the review shows
@@ -661,6 +684,13 @@ export function CurrencySwapPage() {
                       onModeChange={(m) =>
                         setModes((p) => ({ ...p, [key]: m }))
                       }
+                      fallbackEnabled={fallbacks[key] ?? true}
+                      onFallbackChange={(v) =>
+                        setFallbacks((p) => ({ ...p, [key]: v }))
+                      }
+                      perDateSummary={
+                        perDateClassification?.summaries.get(key) ?? null
+                      }
                       onDateChange={(d) => {
                         setDates((p) => ({ ...p, [key]: d }))
                         setFixedRates((p) => {
@@ -819,7 +849,8 @@ export function CurrencySwapPage() {
                             | 'warnings.minor-units'
                             | 'warnings.budgets-stale'
                             | 'warnings.recurring-stale'
-                            | 'warnings.exact-to-custom',
+                            | 'warnings.exact-to-custom'
+                            | 'warnings.fixed-fallback',
                           {
                             budgetCount: previewMeta!.budgetCount,
                             recurringCount: previewMeta!.activeRecurringCount,
@@ -864,6 +895,13 @@ export function CurrencySwapPage() {
                             false)
                         }
                         canRetry={canMutate && targetValid && !!resolvedGroupId}
+                        fallbackEnabled={fallbacks[key] ?? true}
+                        perDateSummary={
+                          perDateClassification?.summaries.get(key) ?? null
+                        }
+                        onFallbackChange={(v) =>
+                          setFallbacks((prev) => ({ ...prev, [key]: v }))
+                        }
                         onFixedRate={(rate) =>
                           setFixedRates((prev) => ({ ...prev, [key]: rate }))
                         }
@@ -1193,12 +1231,15 @@ function FailedPairCard(props: {
   fixedRate: number | undefined
   perDateFetching: boolean
   perDateError: boolean
+  perDateSummary: PairRateSummary | null
+  fallbackEnabled: boolean
   canRetry: boolean
   onFixedRate: (rate: number) => void
   onRefreshPerDate: () => void
   onModeChange: (mode: 'perDate' | 'fixed') => void
   onDateChange: (date: string) => void
   onOverrideChange: (value: number | null | undefined) => void
+  onFallbackChange: (enabled: boolean) => void
   onStatus: (base: string, missing: number | null) => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Swap' })
@@ -1283,6 +1324,9 @@ function FailedPairCard(props: {
           perDateValues={null}
           perDateFetching={props.perDateFetching}
           perDateError={props.perDateError}
+          perDateSummary={props.perDateSummary}
+          fallbackEnabled={props.fallbackEnabled}
+          onFallbackChange={props.onFallbackChange}
           onRefreshPerDate={props.onRefreshPerDate}
           onModeChange={props.onModeChange}
           onDateChange={props.onDateChange}

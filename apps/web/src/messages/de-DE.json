@@ -547,7 +547,9 @@
         "perDateTitle": "Umrechnung nach Datum",
         "rateDateLabel": "Kursdatum",
         "ratesError": "Wechselkurse konnten nicht abgerufen werden. Überprüfe deine Verbindung und versuche es erneut.",
-        "refresh": "Aktualisieren"
+        "refresh": "Aktualisieren",
+        "perDateFallbackLabel": "Die feste Umrechnung verwenden, wenn ein Marktkurs fehlt",
+        "perDateFallbackSummary": "{fallback} von {total} Daten verwenden die feste Umrechnung"
       },
       "Documents": {
         "title": "Belege mitnehmen",
@@ -3728,10 +3730,18 @@
     "bridged": "über {currencies} (<providers></providers>)",
     "direct": {
       "frankfurter": "Kurs von <provider></provider>",
-      "coinbase": "Kurs von <provider></provider>"
+      "coinbase": "Kurs von <provider></provider>",
+      "fixed": "Fester Kurs von <provider></provider>"
     },
     "fallbackPrefix": "Kurse von",
-    "fallbackSeparator": " und "
+    "fallbackSeparator": " und ",
+    "fixed": "Feste Umrechnung",
+    "fixedReason": {
+      "euro-adoption": "{code} wurde am {date} durch {anchor} zu einem festen Kurs von 1 {anchor} = {rate} {code} ersetzt.",
+      "redenomination": "{code} wurde am {date} zu einem festen Kurs von 1 {anchor} = {rate} {code} in {anchor} umgestellt.",
+      "replacement": "{code} wurde am {date} durch {anchor} zu einem festen Kurs von 1 {anchor} = {rate} {code} ersetzt.",
+      "withdrawn": "{code} wurde am {date} zurückgezogen; die Umrechnung erfolgt zum festen Kurs von 1 {anchor} = {rate} {code}."
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4941,7 +4951,8 @@
     },
     "rowWarnings": {
       "missing-rate": "Für diese Ausgabe ist kein Kurs verfügbar.",
-      "exact-to-custom": "Diese Ausgabe nutzte einen exakten Betrag und wird daher zu einem eigenen Kurs umgerechnet."
+      "exact-to-custom": "Diese Ausgabe nutzte einen exakten Betrag und wird daher zu einem eigenen Kurs umgerechnet.",
+      "fixed-fallback": "Mit der festen Umrechnung umgerechnet – es war kein Marktkurs verfügbar."
     },
     "archivedNotice": "Diese Gruppe ist archiviert. Stelle sie wieder her, um die Währung zu tauschen.",
     "customLedgerNotice": "Diese Gruppe nutzt einen eigenen Währungscode, daher sind keine automatischen Kurse verfügbar.",
@@ -4960,7 +4971,8 @@
       "minor-units": "Die neue Währung nutzt andere kleinere Einheiten (z. B. Cent vs. Yen) — kleine Rundungsunterschiede sind normal.",
       "budgets-stale": "Haushaltsbudgets bleiben in den alten Währungsbeträgen und sollten nach dem Tausch geprüft werden.",
       "recurring-stale": "Aktive wiederkehrende Vorlagen behalten alte Beträge — prüfe sie nach dem Tausch.",
-      "exact-to-custom": "Manche Ausgaben nutzten exakte Beträge und werden daher zu eigenen Kursen umgerechnet."
+      "exact-to-custom": "Manche Ausgaben nutzten exakte Beträge und werden daher zu eigenen Kursen umgerechnet.",
+      "fixed-fallback": "Einige Ausgaben verwenden die feste Umrechnung für eine zurückgezogene Währung."
     },
     "back": "Zurück",
     "pairs": {
@@ -5005,5 +5017,12 @@
     "uploadingFile": "Ausgewählte Datei wird hochgeladen…",
     "unsupportedFile": "Einige Dateien werden nicht unterstützt und wurden übersprungen.",
     "useTextAsFile": "Text als .txt-Anhang verwenden"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "Zurückgezogene Währung – letzter verfügbarer Kurs vom {date}",
+    "statutoryHeadline": "Fester Umrechnungskurs – kein Marktkurs",
+    "triangulatedHeadline": "Teilweise fester Kurs – feste Umrechnung plus aktueller Marktkurs",
+    "withdrawnPairHeadline": "{codes} enthält eine zurückgezogene Währung",
+    "reference": "Referenz"
   }
 }

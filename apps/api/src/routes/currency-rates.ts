@@ -13,6 +13,7 @@ const batchRateItem = z.object({
   date: dateSchema,
   base: currencyCodeSchema,
   target: currencyCodeSchema,
+  allowFixedFallback: z.boolean().optional(),
 })
 
 // POST keeps the payload out of the URL: a 500-item batch with the tRPC
@@ -37,7 +38,7 @@ export type CurrencyRatesResponse = Array<
         base: string
         target: string
         sources: Array<{
-          provider: 'frankfurter' | 'coinbase'
+          provider: 'frankfurter' | 'coinbase' | 'fixed'
           base: string
           target: string
           inverted?: boolean
@@ -105,6 +106,9 @@ export async function postCurrencyRates(
       date: item.date,
       base: item.base.toUpperCase(),
       target: item.target.toUpperCase(),
+      ...(item.allowFixedFallback === false
+        ? { allowFixedFallback: false as const }
+        : {}),
     })),
     options.fetchImpl || options.cryptoFetchImpl
       ? {

@@ -537,7 +537,9 @@
         "perDateTitle": "Conversão por data",
         "rateDateLabel": "Data da taxa",
         "ratesError": "Não foi possível obter as taxas de câmbio. Verifica a ligação e tenta novamente.",
-        "refresh": "Atualizar"
+        "refresh": "Atualizar",
+        "perDateFallbackLabel": "Utiliza a conversão fixa quando faltar a taxa de mercado",
+        "perDateFallbackSummary": "{fallback} de {total} datas utilizam a conversão fixa"
       },
       "Documents": {
         "title": "Traga os seus recibos consigo",
@@ -3680,11 +3682,19 @@
     "coinbase": "Coinbase",
     "direct": {
       "frankfurter": "Taxa de câmbio de <provider></provider>",
-      "coinbase": "Taxa de câmbio de <provider></provider>"
+      "coinbase": "Taxa de câmbio de <provider></provider>",
+      "fixed": "Taxa de câmbio fixa de <provider></provider>"
     },
     "bridged": "através de {currencies} (<providers></providers>)",
     "fallbackPrefix": "Taxas de câmbio de",
-    "fallbackSeparator": " e "
+    "fallbackSeparator": " e ",
+    "fixed": "Conversão fixa",
+    "fixedReason": {
+      "euro-adoption": "{code} foi substituído por {anchor} em {date} a uma taxa de câmbio fixa de 1 {anchor} = {rate} {code}.",
+      "redenomination": "{code} foi redenominado para {anchor} em {date} a uma taxa de câmbio fixa de 1 {anchor} = {rate} {code}.",
+      "replacement": "{code} foi substituído por {anchor} em {date} a uma taxa de câmbio fixa de 1 {anchor} = {rate} {code}.",
+      "withdrawn": "{code} saiu de circulação em {date}; a conversão utiliza a taxa de câmbio fixa de 1 {anchor} = {rate} {code}."
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4899,7 +4909,8 @@
     },
     "rowWarnings": {
       "missing-rate": "Não há taxa disponível para esta despesa.",
-      "exact-to-custom": "Esta despesa usou um montante exato, por isso é convertida a uma taxa personalizada."
+      "exact-to-custom": "Esta despesa usou um montante exato, por isso é convertida a uma taxa personalizada.",
+      "fixed-fallback": "Convertido com a conversão fixa — não havia nenhuma taxa de mercado disponível."
     },
     "archivedNotice": "Este grupo está arquivado. Desarquiva o grupo para trocar a moeda.",
     "customLedgerNotice": "Este grupo usa um código de moeda personalizado, por isso as taxas automáticas não estão disponíveis.",
@@ -4918,7 +4929,8 @@
       "minor-units": "A nova moeda usa unidades menores diferentes (ex. cêntimos vs ienes) — são esperadas pequenas diferenças de arredondamento.",
       "budgets-stale": "Os orçamentos mantêm os montantes na moeda antiga e devem ser revistos após a troca.",
       "recurring-stale": "Os modelos recorrentes ativos mantêm os montantes antigos — revê-os após a troca.",
-      "exact-to-custom": "Algumas despesas usaram montantes exatos, por isso são convertidas a taxas personalizadas."
+      "exact-to-custom": "Algumas despesas usaram montantes exatos, por isso são convertidas a taxas personalizadas.",
+      "fixed-fallback": "Algumas despesas utilizam a conversão fixa para uma moeda retirada."
     },
     "back": "Voltar",
     "pairs": {
@@ -4963,5 +4975,12 @@
     "uploadingFile": "A carregar o ficheiro selecionado…",
     "unsupportedFile": "Alguns ficheiros não são suportados e foram ignorados.",
     "useTextAsFile": "Usar o texto como anexo .txt"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "Moeda retirada — a mostrar a última taxa disponível de {date}",
+    "statutoryHeadline": "Taxa de conversão fixa — não é uma cotação de mercado",
+    "triangulatedHeadline": "Taxa parcialmente fixa — conversão fixa mais uma taxa de mercado em direto",
+    "withdrawnPairHeadline": "{codes} inclui uma moeda retirada",
+    "reference": "Referência"
   }
 }

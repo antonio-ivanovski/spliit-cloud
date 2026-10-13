@@ -542,7 +542,9 @@
         "perDateTitle": "Konwersja wg daty",
         "rateDateLabel": "Data kursu",
         "ratesError": "Nie udało się pobrać kursów wymiany. Sprawdź połączenie i spróbuj ponownie.",
-        "refresh": "Odśwież"
+        "refresh": "Odśwież",
+        "perDateFallbackLabel": "Użyj stałej konwersji, gdy brakuje kursu rynkowego",
+        "perDateFallbackSummary": "{fallback} z {total} dat używa stałej konwersji"
       },
       "Documents": {
         "title": "Zabierz paragony ze sobą",
@@ -3700,10 +3702,18 @@
     "bridged": "przez {currencies} (<providers></providers>)",
     "direct": {
       "frankfurter": "Kurs z <provider></provider>",
-      "coinbase": "Kurs z <provider></provider>"
+      "coinbase": "Kurs z <provider></provider>",
+      "fixed": "Stały kurs z <provider></provider>"
     },
     "fallbackPrefix": "Kursy z",
-    "fallbackSeparator": " i "
+    "fallbackSeparator": " i ",
+    "fixed": "Stała konwersja",
+    "fixedReason": {
+      "euro-adoption": "{code} została zastąpiona przez {anchor} w dniu {date} po stałym kursie 1 {anchor} = {rate} {code}.",
+      "redenomination": "{code} została redenominowana na {anchor} w dniu {date} po stałym kursie 1 {anchor} = {rate} {code}.",
+      "replacement": "{code} została zastąpiona przez {anchor} w dniu {date} po stałym kursie 1 {anchor} = {rate} {code}.",
+      "withdrawn": "{code} została wycofana w dniu {date}; konwersja odbywa się po stałym kursie 1 {anchor} = {rate} {code}."
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4924,7 +4934,8 @@
     },
     "rowWarnings": {
       "missing-rate": "Brak dostępnego kursu dla tego wydatku.",
-      "exact-to-custom": "Ten wydatek używał dokładnej kwoty, więc przelicza się z kursem własnym."
+      "exact-to-custom": "Ten wydatek używał dokładnej kwoty, więc przelicza się z kursem własnym.",
+      "fixed-fallback": "Przeliczono ze stałą konwersją — brak dostępnego kursu rynkowego."
     },
     "customLedgerNotice": "Ta grupa używa niestandardowego kodu waluty, więc automatyczne kursy są niedostępne.",
     "target": {
@@ -4942,7 +4953,8 @@
       "minor-units": "Nowa waluta używa innych jednostek podrzędnych (np. centy a jeny) — spodziewane są drobne różnice z zaokrągleń.",
       "budgets-stale": "Budżety zostają w kwotach starej waluty i warto je przejrzeć po zamianie.",
       "recurring-stale": "Aktywne szablony cykliczne zachowują stare kwoty — przejrzyj je po zamianie.",
-      "exact-to-custom": "Część wydatków używała dokładnych kwot, więc przelicza się z kursami własnymi."
+      "exact-to-custom": "Część wydatków używała dokładnych kwot, więc przelicza się z kursami własnymi.",
+      "fixed-fallback": "Część wydatków używa stałej konwersji dla wycofanej waluty."
     },
     "back": "Wróć",
     "pairs": {
@@ -4987,5 +4999,12 @@
     "uploadingFile": "Przesyłanie wybranego pliku…",
     "unsupportedFile": "Niektóre pliki nie są obsługiwane i zostały pominięte.",
     "useTextAsFile": "Użyj tekstu jako załącznika .txt"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "Wycofana waluta — wyświetlany jest ostatni dostępny kurs z {date}",
+    "statutoryHeadline": "Stały kurs konwersji — nie jest to kurs rynkowy",
+    "triangulatedHeadline": "Częściowo stały kurs — stała konwersja plus bieżący kurs rynkowy",
+    "withdrawnPairHeadline": "{codes} obejmuje wycofaną walutę",
+    "reference": "Źródło"
   }
 }

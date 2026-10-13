@@ -23,23 +23,10 @@ import { cn, formatCurrency } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import { getCurrency } from '@spliit/domain'
 
+import { KIND_FILTERS, type KindFilter } from './swap-filters'
+
 export type SwapPreviewRow =
   AppRouterOutput['groups']['swapPreview']['rows'][number]
-
-export type KindFilter =
-  | 'all'
-  | 'attention'
-  | 'converted'
-  | 'cleared'
-  | 'bridged'
-
-export const KIND_FILTERS: KindFilter[] = [
-  'all',
-  'attention',
-  'converted',
-  'cleared',
-  'bridged',
-]
 
 // Only notable outcomes badge: plain conversions (simple + fresh) are the
 // expected path and render no badge — the Was/Becomes grid already shows the
@@ -76,8 +63,8 @@ export function SwapReviewRow(props: {
   const appliedRate = row.newConversionRate ?? row.rateUsed
 
   return (
-    <div className="flex flex-col gap-1.5 text-sm">
-      <span className="flex items-center justify-center gap-2 text-center sm:justify-between sm:text-left">
+    <div className="flex w-full min-w-0 flex-col gap-1.5 text-sm">
+      <span className="flex w-full items-center justify-center gap-2 text-center sm:justify-between sm:text-left">
         <span className="min-w-0 truncate text-center font-medium sm:text-left">
           {row.title}
         </span>
@@ -92,10 +79,10 @@ export function SwapReviewRow(props: {
           </span>
         ) : null}
       </span>
-      <span className="block text-center font-mono text-xs text-muted-foreground tabular-nums sm:text-left">
+      <span className="block w-full text-center font-mono text-xs text-muted-foreground tabular-nums sm:text-left">
         {row.expenseDate}
       </span>
-      <span className="flex flex-col gap-2 rounded-md bg-muted/40 px-3 py-2.5 sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,auto)_auto_minmax(0,1fr)] sm:items-center sm:gap-2">
+      <span className="flex w-full max-w-full min-w-0 flex-col gap-2 rounded-md bg-muted/40 px-3 py-2.5 sm:grid sm:w-full sm:grid-cols-[minmax(0,1fr)_minmax(0,auto)_auto_minmax(0,1fr)] sm:items-center sm:gap-2">
         <span className="flex min-w-0 flex-col items-center gap-0.5 text-center sm:items-start sm:text-left">
           <span className="text-[10px] font-medium tracking-wide text-muted-foreground uppercase">
             {t('preview.wasLabel')}
@@ -179,12 +166,20 @@ export function SwapReviewRow(props: {
         </span>
       </span>
       {row.warning ? (
-        <span className="flex items-center justify-center gap-1 text-xs text-destructive sm:justify-start">
+        <span
+          className={cn(
+            'flex w-full items-center justify-center gap-1 text-xs sm:justify-start',
+            row.warning === 'fixed-fallback'
+              ? 'text-amber-800 dark:text-amber-200'
+              : 'text-destructive',
+          )}
+        >
           <AlertTriangle className="size-3 shrink-0" aria-hidden="true" />
           {t(
             `rowWarnings.${row.warning}` as
               | 'rowWarnings.missing-rate'
-              | 'rowWarnings.exact-to-custom',
+              | 'rowWarnings.exact-to-custom'
+              | 'rowWarnings.fixed-fallback',
           )}
         </span>
       ) : null}
@@ -211,8 +206,9 @@ export function SwapFullListDialog(props: {
   const [kindFilter, setKindFilter] = useState<KindFilter>('all')
   const { rows, totalCount, oldCode, newCode, open, onOpenChange } = props
   // Mobile rows stack Was/rate/Becomes vertically (~270px); desktop rows use
-  // the compact 5-column grid (~190px). The estimate must follow the
-  // breakpoint or the virtualizer clips rows after a mobile<->desktop switch.
+  // the compact 5-column grid (~195px, more with a warning line). The estimate
+  // must follow the breakpoint or the virtualizer clips rows after a
+  // mobile<->desktop switch.
   const isMobile = useMediaQuery('(max-width: 639px)')
 
   const filteredRows = useMemo(() => {
@@ -239,7 +235,7 @@ export function SwapFullListDialog(props: {
 
   const virtualRows = useVirtualizedRows({
     count: filteredRows.length,
-    estimateSize: () => (isMobile ? 255 : 175),
+    estimateSize: () => (isMobile ? 255 : 195),
     enabled: open,
     getItemKey: (index) => filteredRows[index]!.id,
     scrollResetKey: `${kindFilter}:${search}`,
@@ -249,7 +245,7 @@ export function SwapFullListDialog(props: {
 
   return (
     <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
-      <ResponsiveDialogContent className="max-h-[calc(100dvh-2rem)] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden sm:max-w-3xl">
+      <ResponsiveDialogContent className="grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden overflow-x-hidden sm:max-h-[calc(100dvh-2rem)] sm:w-[calc(100%-2rem)] sm:max-w-3xl">
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>
             {t('preview.fullListTitle')}
@@ -262,7 +258,7 @@ export function SwapFullListDialog(props: {
             })}
           </ResponsiveDialogDescription>
         </ResponsiveDialogHeader>
-        <ResponsiveDialogBody className="min-h-0 space-y-3 overflow-hidden">
+        <ResponsiveDialogBody className="min-h-0 w-full max-w-full space-y-3 overflow-hidden">
           <div className="relative w-full">
             <Search
               className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground"

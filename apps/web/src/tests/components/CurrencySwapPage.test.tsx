@@ -304,4 +304,41 @@ describe('CurrencySwapPage review', () => {
     searchState.target = undefined
     previewState.pages = null
   })
+
+  it('lists fixed-fallback rows under attention without blocking', async () => {
+    searchState.target = 'EUR'
+    setupGroup()
+    previewState.pages = [
+      {
+        ...previewPage,
+        rows: [
+          previewPage.rows[0],
+          {
+            ...previewPage.rows[0],
+            id: 'row-3',
+            expenseId: 'e3',
+            title: 'Sofia dinner',
+            warning: 'fixed-fallback',
+          },
+        ],
+        warnings: ['fixed-fallback'],
+      },
+    ]
+    const { user } = render(<CurrencySwapPage />)
+
+    await user.click(screen.getByRole('button', { name: 'Continue' }))
+    await user.click(screen.getByRole('button', { name: 'Preview conversion' }))
+
+    // Warn-only: the fallback row needs attention but blocks nothing.
+    expect(await screen.findByText('Needs attention')).toBeInTheDocument()
+    expect(screen.getByText('Sofia dinner')).toBeInTheDocument()
+    expect(screen.queryByText('Clean expense')).not.toBeInTheDocument()
+    expect(
+      screen.getAllByText(/fixed conversion/).length,
+    ).toBeGreaterThanOrEqual(2)
+    expect(screen.queryByText(/block the swap/)).not.toBeInTheDocument()
+
+    searchState.target = undefined
+    previewState.pages = null
+  })
 })

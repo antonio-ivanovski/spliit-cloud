@@ -2284,7 +2284,9 @@
         "perDateTitle": "فی تاریخ تبدیلی",
         "rateDateLabel": "Frankfurter شرح کی تاریخ",
         "ratesError": "شرح مبادلہ حاصل کرنے سے قاصر۔ اپنا کنکشن چیک کریں اور دوبارہ کوشش کریں۔",
-        "refresh": "ریفریش"
+        "refresh": "ریفریش",
+        "perDateFallbackLabel": "مارکیٹ شرح دستیاب نہ ہو تو مقررہ تبدیلی استعمال کریں",
+        "perDateFallbackSummary": "{total} تاریخوں میں سے {fallback} میں مقررہ تبدیلی استعمال ہوئی ہے"
       },
       "Destination": {
         "heading": "آپ <strong>{name}</strong> کو کہاں درآمد کرنا چاہیں گے؟ ({participantCount} شرکاء · {expenseCount} اخراجات)",
@@ -3657,10 +3659,18 @@
     "bridged": "{currencies} کے ذریعے (<providers></providers>)",
     "direct": {
       "frankfurter": "<provider></provider> سے شرح",
-      "coinbase": "<provider></provider> سے شرح"
+      "coinbase": "<provider></provider> سے شرح",
+      "fixed": "<provider></provider> سے مقررہ شرح"
     },
     "fallbackPrefix": "شرح کا ذریعہ",
-    "fallbackSeparator": " اور "
+    "fallbackSeparator": " اور ",
+    "fixed": "مقررہ تبدیلی",
+    "fixedReason": {
+      "euro-adoption": "{code} کو {date} کو {anchor} سے بدل دیا گیا، مقررہ شرح 1 {anchor} = {rate} {code}۔",
+      "redenomination": "{code} کی {date} کو {anchor} میں قدر نو مقرر کی گئی، مقررہ شرح 1 {anchor} = {rate} {code}۔",
+      "replacement": "{code} کو {date} کو {anchor} سے بدل دیا گیا، مقررہ شرح 1 {anchor} = {rate} {code}۔",
+      "withdrawn": "{code} کو {date} کو واپس لے لیا گیا؛ تبدیلی میں مقررہ شرح 1 {anchor} = {rate} {code} استعمال ہوتی ہے۔"
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4875,7 +4885,8 @@
     },
     "rowWarnings": {
       "missing-rate": "اس خرچے کے لیے کوئی شرح دستیاب نہیں ہے۔",
-      "exact-to-custom": "اس خرچے میں بالکل درست رقم استعمال کی گئی تھی، اس لیے یہ اپنی مرضی کی شرح پر تبدیل ہوتا ہے۔"
+      "exact-to-custom": "اس خرچے میں بالکل درست رقم استعمال کی گئی تھی، اس لیے یہ اپنی مرضی کی شرح پر تبدیل ہوتا ہے۔",
+      "fixed-fallback": "مقررہ تبدیلی سے تبدیل کیا گیا — کوئی مارکیٹ شرح دستیاب نہیں تھی۔"
     },
     "archivedNotice": "یہ گروپ آرکائیو شدہ ہے۔ کرنسی تبدیل کرنے کے لیے اسے غیر آرکائیو کریں۔",
     "customLedgerNotice": "یہ گروپ اپنی مرضی کا کرنسی کوڈ استعمال کرتا ہے، اس لیے خودکار شرحیں دستیاب نہیں ہیں۔",
@@ -4894,7 +4905,8 @@
       "minor-units": "نئی کرنسی مختلف معمولی اکائیاں استعمال کرتی ہے (جیسے سینٹ بمقابلہ ین) — معمولی گول بندی کے فرق متوقع ہیں۔",
       "budgets-stale": "بجٹ پرانی کرنسی کی رقم میں ہی رہتے ہیں، تبدیلی کے بعد ان کا جائزہ لینا چاہیے۔",
       "recurring-stale": "فعال متواتر سانچے پرانی رقم برقرار رکھتے ہیں — تبدیلی کے بعد ان کا جائزہ لیں۔",
-      "exact-to-custom": "کچھ اخراجات میں بالکل درست رقمیں استعمال کی گئی تھیں، اس لیے وہ اپنی مرضی کی شرحوں پر تبدیل ہوتے ہیں۔"
+      "exact-to-custom": "کچھ اخراجات میں بالکل درست رقمیں استعمال کی گئی تھیں، اس لیے وہ اپنی مرضی کی شرحوں پر تبدیل ہوتے ہیں۔",
+      "fixed-fallback": "کچھ خرچوں میں واپس لی گئی کرنسی کے لیے مقررہ تبدیلی استعمال کی گئی ہے۔"
     },
     "back": "واپس",
     "pairs": {
@@ -4939,5 +4951,12 @@
     "uploadingFile": "منتخب فائل اپ لوڈ ہو رہی ہے…",
     "unsupportedFile": "کچھ فائلیں معاون نہیں ہیں اس لیے انہیں چھوڑ دیا گیا۔",
     "useTextAsFile": "متن کو .txt اٹیچمنٹ کے طور پر استعمال کریں"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "واپس لی گئی کرنسی — {date} کی آخری دستیاب شرح دکھائی جا رہی ہے",
+    "statutoryHeadline": "مقررہ تبادلہ شرح — مارکیٹ کا بھاؤ نہیں",
+    "triangulatedHeadline": "جزوی مقررہ شرح — مقررہ تبدیلی اور لائیو مارکیٹ شرح",
+    "withdrawnPairHeadline": "{codes} میں واپس لی گئی کرنسی شامل ہے",
+    "reference": "حوالہ"
   }
 }

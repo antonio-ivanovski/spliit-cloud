@@ -117,6 +117,9 @@ export const swapPreviewProcedure = apiProcedure('spliit:groups:read')
     if (preview.rows.some((r) => r.warning === 'exact-to-custom')) {
       warnings.push('exact-to-custom')
     }
+    if (preview.rows.some((r) => r.warning === 'fixed-fallback')) {
+      warnings.push('fixed-fallback')
+    }
     return {
       oldCode: preview.oldCode,
       newCode: preview.newCode,

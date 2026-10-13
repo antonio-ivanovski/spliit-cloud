@@ -1,6 +1,10 @@
 import { z } from 'zod'
 
-export const currencyRateProviderSchema = z.enum(['frankfurter', 'coinbase'])
+export const currencyRateProviderSchema = z.enum([
+  'frankfurter',
+  'coinbase',
+  'fixed',
+])
 
 export const currencyRateSourceSchema = z.object({
   provider: currencyRateProviderSchema,

@@ -85,6 +85,72 @@ describe('planSwapPreviewEffect', () => {
     expect(preview.missingRateCount).toBe(1)
     expect(preview.rows[0]!.warning).toBe('missing-rate')
   })
+
+  it('strict perDate pairs resolve post-withdrawal dates as missing', async () => {
+    const expenses = [
+      { id: 'a', expenseDate: '2026-06-01', amount: 10000 },
+      { id: 'b', expenseDate: '2026-06-02', amount: 10000 },
+    ]
+    // Empty provider: every post-withdrawal date needs the statutory table.
+    const emptyFiat = async () => ({
+      base: 'BGN',
+      date: '2026-06-01',
+      rates: {},
+    })
+    const { getCurrencyRates } = await import('../currency-rates')
+    const layer = makeFxLayer((requests) =>
+      getCurrencyRates(requests, { fetchImpl: emptyFiat as never }),
+    )
+
+    const strict = await run(
+      planSwapPreviewEffect(expenses, {
+        oldCode: 'BGN',
+        newCode: 'EUR',
+        modes: { 'BGN|EUR': { mode: 'perDate', allowFixedFallback: false } },
+      }),
+      layer,
+    )
+    expect(strict.missingRateCount).toBe(2)
+    expect(strict.rows.map((row) => row.warning)).toEqual([
+      'missing-rate',
+      'missing-rate',
+    ])
+
+    const allowed = await run(
+      planSwapPreviewEffect(expenses, {
+        oldCode: 'BGN',
+        newCode: 'EUR',
+        modes: { 'BGN|EUR': { mode: 'perDate' } },
+      }),
+      layer,
+    )
+    expect(allowed.missingRateCount).toBe(0)
+  })
+
+  it('flags fallback-converted rows warn-only (no missing-rate block)', async () => {
+    const expenses = [
+      { id: 'a', expenseDate: '2026-06-01', amount: 10000 },
+      { id: 'b', expenseDate: '2026-06-02', amount: 10000 },
+    ]
+    const preview = await run(
+      planSwapPreviewEffect(expenses, {
+        oldCode: 'BGN',
+        newCode: 'EUR',
+      }),
+      FxTestRates(
+        {
+          '2026-06-01|BGN|EUR': 1 / 1.95583,
+          '2026-06-02|BGN|EUR': 1 / 1.95583,
+        },
+        ['2026-06-01|BGN|EUR'],
+      ),
+    )
+    expect(preview.missingRateCount).toBe(0)
+    expect(preview.rows.map((row) => row.warning)).toEqual([
+      'fixed-fallback',
+      undefined,
+    ])
+  })
 })
 
 describe('FxRateService retry (production policy, TestClock)', () => {

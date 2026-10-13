@@ -1041,7 +1041,9 @@
         "rateDateLabel": "التاريخ سعر صرف",
         "noConversionNeeded": "جميع المصروفات بعملة المجموعة الافتراضية. لا حاجة لتحويل العملات.",
         "fixedRateRow": "1 {source} = {rate} {target}",
-        "ratesError": "لا يمكن جلب أسعار الصرف. تحقق من اتصالك وحاول مرة أخرى."
+        "ratesError": "لا يمكن جلب أسعار الصرف. تحقق من اتصالك وحاول مرة أخرى.",
+        "perDateFallbackLabel": "استخدم التحويل الثابت عند عدم توفر سعر السوق",
+        "perDateFallbackSummary": "{fallback} من أصل {total} تواريخ تستخدم التحويل الثابت"
       },
       "Done": {
         "shareTitle": "انضم إلى مجموعة Spliit Cloud الخاصة بي",
@@ -3739,10 +3741,18 @@
     "bridged": "عبر {currencies} (<providers></providers>)",
     "direct": {
       "frankfurter": "سعر الصرف من <provider></provider>",
-      "coinbase": "سعر الصرف من <provider></provider>"
+      "coinbase": "سعر الصرف من <provider></provider>",
+      "fixed": "سعر ثابت من <provider></provider>"
     },
     "fallbackPrefix": "أسعار من",
-    "fallbackSeparator": " و "
+    "fallbackSeparator": " و ",
+    "fixed": "تحويل ثابت",
+    "fixedReason": {
+      "euro-adoption": "تم استبدال {code} بـ{anchor} بتاريخ {date} بسعر ثابت قدره 1 {anchor} = {rate} {code}.",
+      "redenomination": "أُعيدت تسمية {code} إلى {anchor} بتاريخ {date} بسعر ثابت قدره 1 {anchor} = {rate} {code}.",
+      "replacement": "تم استبدال {code} بـ{anchor} بتاريخ {date} بسعر ثابت قدره 1 {anchor} = {rate} {code}.",
+      "withdrawn": "تم سحب {code} من التداول بتاريخ {date}؛ ويستخدم التحويل السعر الثابت 1 {anchor} = {rate} {code}."
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4973,7 +4983,8 @@
     },
     "rowWarnings": {
       "missing-rate": "لا يتوفر سعر لهذا المصروف.",
-      "exact-to-custom": "استخدم هذا المصروف مبلغًا دقيقًا، لذا يُحوَّل بسعر مخصص."
+      "exact-to-custom": "استخدم هذا المصروف مبلغًا دقيقًا، لذا يُحوَّل بسعر مخصص.",
+      "fixed-fallback": "تم التحويل باستخدام التحويل الثابت — لم يتوفر سعر سوق."
     },
     "customLedgerNotice": "تستخدم هذه المجموعة رمز عملة مخصصًا، لذا لا تتوفر الأسعار التلقائية.",
     "target": {
@@ -4991,7 +5002,8 @@
       "minor-units": "تستخدم العملة الجديدة وحدات فرعية مختلفة (مثل السنت مقابل الين) — فروق تقريب بسيطة متوقعة.",
       "budgets-stale": "تبقى الميزانيات بمبالغ العملة القديمة ويجب مراجعتها بعد التبديل.",
       "recurring-stale": "تحتفظ القوالب المتكررة النشطة بالمبالغ القديمة — راجعها بعد التبديل.",
-      "exact-to-custom": "استخدمت بعض المصروفات مبالغ دقيقة، لذا تُحوَّل بأسعار مخصصة."
+      "exact-to-custom": "استخدمت بعض المصروفات مبالغ دقيقة، لذا تُحوَّل بأسعار مخصصة.",
+      "fixed-fallback": "بعض المصروفات تستخدم التحويل الثابت لعملة مسحوبة من التداول."
     },
     "back": "رجوع",
     "pairs": {
@@ -5036,5 +5048,12 @@
     "uploadingFile": "جارٍ رفع الملف المحدد…",
     "unsupportedFile": "بعض الملفات غير مدعومة وتم تخطيها.",
     "useTextAsFile": "استخدام النص كمرفق ‎.txt"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "عملة مسحوبة من التداول — عرض آخر سعر متاح بتاريخ {date}",
+    "statutoryHeadline": "سعر التحويل الثابت — وليس سعر السوق",
+    "triangulatedHeadline": "سعر ثابت جزئيًا — تحويل ثابت بالإضافة إلى سعر سوق مباشر",
+    "withdrawnPairHeadline": "{codes} تتضمن عملة مسحوبة من التداول",
+    "reference": "مرجع"
   }
 }

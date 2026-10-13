@@ -292,6 +292,7 @@ describe('importWizardReducer', () => {
       fixedRateDates: {},
       fixedRateOverrides: {},
       rates: {},
+      fallbackKeys: [],
     })
     expect(converted.step).toBe('documents')
     expect(importWizardReducer(converted, { type: 'BACK' }).step).toBe(
@@ -358,10 +359,12 @@ describe('importWizardReducer', () => {
       fixedRateDates: {},
       fixedRateOverrides: {},
       rates: { '2024-01-01|EUR|USD': 1.1 },
+      fallbackKeys: [],
     })
     expect(next.step).toBe('documents')
     expect(next.conversionModes).toEqual({ 'EUR|USD': 'perDate' })
     expect(next.rates).toEqual({ '2024-01-01|EUR|USD': 1.1 })
+    expect(next.fallbackKeys).toEqual([])
   })
 
   it('handles DOCUMENTS_CONFIRMED: stores staged results and advances to confirm', () => {
@@ -399,6 +402,7 @@ describe('importWizardReducer', () => {
       fixedRateDates: {},
       fixedRateOverrides: {},
       rates: {},
+      fallbackKeys: [],
     })
 
     expect(next.step).toBe('confirm')

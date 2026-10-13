@@ -532,7 +532,9 @@
         "perDateTitle": "Muunto päivämäärän mukaan",
         "rateDateLabel": "Kurssipäivä",
         "ratesError": "Valuuttakurssien hakeminen epäonnistui. Tarkista yhteytesi ja yritä uudelleen.",
-        "refresh": "Päivitä"
+        "refresh": "Päivitä",
+        "perDateFallbackLabel": "Käytä kiinteää muuntoa, kun markkinakurssi puuttuu",
+        "perDateFallbackSummary": "{fallback}/{total} päivämäärää käyttää kiinteää muuntoa"
       },
       "Documents": {
         "title": "Ota kuitit mukaasi",
@@ -3656,10 +3658,18 @@
     "bridged": "{currencies} kautta (<providers></providers>)",
     "direct": {
       "frankfurter": "Kurssi lähteestä <provider></provider>",
-      "coinbase": "Kurssi lähteestä <provider></provider>"
+      "coinbase": "Kurssi lähteestä <provider></provider>",
+      "fixed": "Kiinteä kurssi lähteestä <provider></provider>"
     },
     "fallbackPrefix": "Kurssit lähteestä",
-    "fallbackSeparator": " ja "
+    "fallbackSeparator": " ja ",
+    "fixed": "Kiinteä muunto",
+    "fixedReason": {
+      "euro-adoption": "{code} korvattiin valuutalla {anchor} {date} kiinteällä kurssilla 1 {anchor} = {rate} {code}.",
+      "redenomination": "{code} redenominoitiin valuutaksi {anchor} {date} kiinteällä kurssilla 1 {anchor} = {rate} {code}.",
+      "replacement": "{code} korvattiin valuutalla {anchor} {date} kiinteällä kurssilla 1 {anchor} = {rate} {code}.",
+      "withdrawn": "{code} poistettiin käytöstä {date}; muunto käyttää kiinteää kurssia 1 {anchor} = {rate} {code}."
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4869,7 +4879,8 @@
     },
     "rowWarnings": {
       "missing-rate": "Tälle kululle ei ole kurssia saatavilla.",
-      "exact-to-custom": "Tämä kulu käytti tarkkaa summaa, joten se muunnetaan mukautetulla kurssilla."
+      "exact-to-custom": "Tämä kulu käytti tarkkaa summaa, joten se muunnetaan mukautetulla kurssilla.",
+      "fixed-fallback": "Muunnettu kiinteällä muunnolla – markkinakurssia ei ollut saatavilla."
     },
     "archivedNotice": "Tämä ryhmä on arkistoitu. Palauta se arkistosta vaihtaaksesi valuuttaa.",
     "customLedgerNotice": "Tämä ryhmä käyttää mukautettua valuuttakoodia, joten automaattiset kurssit eivät ole käytettävissä.",
@@ -4888,7 +4899,8 @@
       "minor-units": "Uusi valuutta käyttää eri pieniä yksiköitä (esim. sentit vs. jenit) — pieniä pyöristyseroja on odotettavissa.",
       "budgets-stale": "Budjetit pysyvät vanhan valuutan summissa, tarkista ne vaihdon jälkeen.",
       "recurring-stale": "Aktiiviset toistuvat mallit säilyttävät vanhat summat — tarkista ne vaihdon jälkeen.",
-      "exact-to-custom": "Jotkin kulut käyttivät tarkkoja summia, joten ne muunnetaan mukautetuilla kursseilla."
+      "exact-to-custom": "Jotkin kulut käyttivät tarkkoja summia, joten ne muunnetaan mukautetuilla kursseilla.",
+      "fixed-fallback": "Osa kuluista käyttää kiinteää muuntoa käytöstä poistetulle valuutalle."
     },
     "back": "Takaisin",
     "pairs": {
@@ -4933,5 +4945,12 @@
     "uploadingFile": "Ladataan valittua tiedostoa…",
     "unsupportedFile": "Joitakin tiedostoja ei tueta, ja ne ohitettiin.",
     "useTextAsFile": "Käytä tekstiä .txt-liitteenä"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "Käytöstä poistettu valuutta – näytetään viimeisin saatavilla oleva kurssi ajankohdasta {date}",
+    "statutoryHeadline": "Kiinteä muuntokurssi – ei markkinakurssi",
+    "triangulatedHeadline": "Osittain kiinteä kurssi – kiinteä muunto plus reaaliaikainen markkinakurssi",
+    "withdrawnPairHeadline": "{codes} sisältää käytöstä poistetun valuutan",
+    "reference": "Viite"
   }
 }

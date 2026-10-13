@@ -36,6 +36,13 @@
     "rounding": 0,
     "rounding_gap_minor": 51,
     "decimal_digits": 2,
+    "fixedConversion": {
+      "anchor": "EUR",
+      "unitsPerAnchor": 1.95583,
+      "effectiveFrom": "2026-01-01",
+      "reason": "euro-adoption",
+      "referenceUrl": "https://www.ecb.europa.eu/euro/changeover/html/index.en.html"
+    },
     "aliases": ["лв", "лв."]
   },
   {
@@ -247,6 +254,13 @@
     "rounding": 0,
     "rounding_gap_minor": 51,
     "decimal_digits": 2,
+    "fixedConversion": {
+      "anchor": "EUR",
+      "unitsPerAnchor": 7.5345,
+      "effectiveFrom": "2023-01-01",
+      "reason": "euro-adoption",
+      "referenceUrl": "https://www.ecb.europa.eu/euro/changeover/html/index.en.html"
+    },
     "aliases": ["kn.", "kuna"]
   },
   {

@@ -219,6 +219,25 @@ describe('ConfirmStep', () => {
     ).not.toBeInTheDocument()
   })
 
+  it('flags fixed-fallback dates per pair in the conversion summary', () => {
+    render(
+      <ConfirmStep
+        {...REQUIRED_PROPS}
+        isSubmitting={false}
+        conversionModes={{ 'BGN|EUR': 'perDate' }}
+        rates={{
+          '2026-06-01|BGN|EUR': 1 / 1.95583,
+          '2026-06-02|BGN|EUR': 1 / 1.95583,
+        }}
+        fallbackKeys={['2026-06-01|BGN|EUR']}
+      />,
+    )
+
+    expect(
+      screen.getByText('1 of 2 dates use the fixed conversion'),
+    ).toBeInTheDocument()
+  })
+
   it('does not crash when re-rendered with new props (no infinite loop)', () => {
     const onSubmit = vi.fn()
     const onBack = vi.fn()

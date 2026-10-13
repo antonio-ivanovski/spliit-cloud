@@ -64,11 +64,15 @@ type UseCurrencyRateResult = {
   via: string[] | undefined
   /** Quote legs that compose the rate, including provider per leg. */
   sources: Array<{
-    provider: 'frankfurter' | 'coinbase'
+    provider: 'frankfurter' | 'coinbase' | 'fixed'
     base: string
     target: string
     inverted?: boolean
   }>
+  /** Provider quote date; differs from `requestedDate` on fallbacks. */
+  asOfDate: string | undefined
+  /** Lookup date the rate was requested for (future dates clamped to today). */
+  requestedDate: string | undefined
   error: Error | null
   isLoading: boolean
   refresh: () => Promise<unknown>
@@ -118,6 +122,8 @@ export function useCurrencyRate(
       data: undefined,
       via: undefined,
       sources: [],
+      asOfDate: undefined,
+      requestedDate: lookupDate || undefined,
       error: error ? new Error(error.message) : null,
       isLoading,
       refresh: () => refetch(),
@@ -134,6 +140,8 @@ export function useCurrencyRate(
     data: data.rate,
     via: data.via,
     sources: data.sources ?? [],
+    asOfDate: data.asOfDate,
+    requestedDate: data.requestedDate ?? lookupDate,
     error: sentError,
     isLoading,
     refresh: () => refetch(),
@@ -144,6 +152,11 @@ export type CurrencyRatesItem = {
   date: string
   base: string
   target: string
+  /**
+   * When false, withdrawn-currency fallbacks are skipped for this item. Absent
+   * = allow. Part of the React Query key so toggling refetches.
+   */
+  allowFixedFallback?: boolean
 }
 
 /**
@@ -160,7 +173,7 @@ export type CurrencyRatesResponse = Array<
         base: string
         target: string
         sources: Array<{
-          provider: 'frankfurter' | 'coinbase'
+          provider: 'frankfurter' | 'coinbase' | 'fixed'
           base: string
           target: string
           inverted?: boolean
@@ -203,7 +216,13 @@ export function useCurrencyRates(
 ) {
   const utils = trpc.useUtils()
   const itemsKey = useMemo(
-    () => items.map((i) => `${i.date}|${i.base}|${i.target}`).join(','),
+    () =>
+      items
+        .map(
+          (i) =>
+            `${i.date}|${i.base}|${i.target}${i.allowFixedFallback === false ? '|strict' : ''}`,
+        )
+        .join(','),
     [items],
   )
   return useQuery<CurrencyRatesResponse>({

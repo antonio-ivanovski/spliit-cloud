@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { CurrencyRateProviderAttribution } from '@/components/currency-rate-provider-attribution'
+import { CurrencyRateWarning } from '@/components/currency-rate-warning'
 import { CurrencySelector } from '@/components/currency-selector'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { Button } from '@/components/ui/button'
@@ -31,6 +32,7 @@ import { trpc } from '@/trpc/client'
 import {
   amountAsMinorUnits,
   getCurrency,
+  getCurrencyRateWarning,
   resolveFormattingLocale,
   utcTodayIso,
 } from '@spliit/domain'
@@ -261,12 +263,27 @@ export function ConverterContent() {
     data: rate,
     via,
     sources,
+    asOfDate,
+    requestedDate,
     isLoading: rateLoading,
     error: rateError,
   } = useCurrencyRate(today, fromCode, toCode, { enabled: isOnline })
 
   const isStaleRate = rateError instanceof RangeError
   const rateFailed = rateError != null && !isStaleRate
+
+  // Withdrawn-currency escalation: frozen last quote, statutory table rate,
+  // or fixed-plus-live triangulation. Null for live pairs.
+  const rateWarning =
+    !sameCurrency && rate != null && asOfDate && requestedDate
+      ? getCurrencyRateWarning({
+          base: fromCode,
+          target: toCode,
+          requestedDate,
+          asOfDate,
+          sources,
+        })
+      : null
 
   const fromCurrency = currencies.find((c) => c.code === fromCode)
   const fromDigits = fromCurrency?.decimal_digits ?? 2
@@ -416,11 +433,15 @@ export function ConverterContent() {
           {rateFailed && amountValid ? (
             <p className="text-sm text-destructive">{t('rateError')}</p>
           ) : isStaleRate && rate != null ? (
-            <p className="text-xs text-muted-foreground">
-              {t('staleRate')} {rateError?.message}
-            </p>
+            <div className="space-y-1">
+              <CurrencyRateWarning warning={rateWarning} />
+              <p className="text-xs text-muted-foreground">
+                {t('staleRate')} {rateError?.message}
+              </p>
+            </div>
           ) : rate != null && previewReady ? (
-            <div className="space-y-0.5 text-xs text-muted-foreground">
+            <div className="space-y-1 text-xs text-muted-foreground">
+              <CurrencyRateWarning warning={rateWarning} />
               <p>
                 {t('rateInfo', {
                   rate: rate.toFixed(4),

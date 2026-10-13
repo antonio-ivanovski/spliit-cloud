@@ -1,12 +1,15 @@
+import { Effect, Layer } from 'effect'
+
 import { exchangeRateLookupDate, utcTodayIso } from '@spliit/domain'
 import {
+  dayBeforeIso,
+  fixedConversionFor,
   getCurrency,
   intermediaryCurrenciesFor,
   isCryptoCurrency,
   supportedCurrencyCodes,
 } from '@spliit/domain/currency'
 
-import { mapWithConcurrency } from './concurrency'
 import { fetchCoinbaseSpot, type CryptoFetchImpl } from './crypto-rates'
 import {
   CurrencyRateNotFoundError,
@@ -14,12 +17,19 @@ import {
   UnsupportedCurrencyError,
 } from './currency-errors'
 import { fetchFrankfurterRates, type FiatFetchImpl } from './fiat-rates'
+import { RateCache } from './fx/cache'
+import {
+  FxInvalidDate,
+  FxRateNotFound,
+  FxUnsupportedCurrency,
+  type FxError,
+} from './fx/errors'
+import { CryptoRates, FiatRates } from './fx/providers'
 import {
   clearRateCache,
   rateCacheKey,
   rateCacheSize,
   readRateCache,
-  writeRateCache,
 } from './rate-cache'
 
 // Frankfurter historical rates are immutable for past dates, and the
@@ -30,8 +40,12 @@ const DEFAULT_TTL_MS = 24 * 60 * 60 * 1000
 // rate fresh while past dates keep the standard 24h TTL.
 const CRYPTO_TODAY_TTL_MS = 15 * 60 * 1000
 
-/** Upstream FX provider that supplied a quote leg. */
-export type CurrencyRateProviderId = 'frankfurter' | 'coinbase'
+/**
+ * Upstream FX provider that supplied a quote leg. `fixed` is a statutory rate
+ * from the currency catalog (withdrawn currencies, e.g. BGN → EUR) — not a
+ * market quote.
+ */
+export type CurrencyRateProviderId = 'frankfurter' | 'coinbase' | 'fixed'
 
 /** One provider quote that contributed to the resolved rate. */
 export type CurrencyRateSource = {
@@ -73,78 +87,59 @@ export type CurrencyRate = {
   via?: string[]
 }
 
-const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/
-
 /**
- * Batch FX robustness: only transient failures are retried with exponential
- * backoff + jitter — transport failures without an HTTP status
- * (timeout/abort/network, wrapped as PROVIDER_ERROR with no `status`), HTTP
- * 429, and HTTP 5xx. Permanent HTTP 4xx (other than 429), validation failures
- * (unsupported currency, invalid date), and RATE_NOT_FOUND (valid response,
- * missing quote) are never retried.
+ * Services the FX engine resolves through. Layers are built per call from the
+ * injected fetch impls so tests keep scripting provider responses.
  */
-const FX_MAX_ATTEMPTS = 3
-const FX_RETRY_BASE_MS = 250
-const FX_RETRY_CAP_MS = 3000
-const FX_FIAT_CONCURRENCY = 8
-const FX_CRYPTO_CONCURRENCY = 8
+type FxEnv = FiatRates | CryptoRates | RateCache
 
-function isNetworkLikeError(err: unknown): boolean {
-  if (!(err instanceof Error)) return false
-  if (err.name === 'AbortError' || err.name === 'TimeoutError') return true
-  if (err instanceof TypeError) return true
-  return /timeout|abort|network|fetch failed|ECONN|ENOTFOUND|EAI_AGAIN|EPIPE|ETIMEDOUT/i.test(
-    err.message,
+function fxEnv(fetchImpl: FiatFetchImpl, cryptoFetchImpl: CryptoFetchImpl) {
+  return Layer.mergeAll(
+    FiatRates.Live(fetchImpl),
+    CryptoRates.Live(cryptoFetchImpl),
+    RateCache.Live,
   )
 }
 
-function isRetryableFxError(err: unknown): boolean {
-  if (err instanceof UnsupportedCurrencyError) return false
-  if (err instanceof CurrencyRateNotFoundError) return false
-  if (err instanceof Error && /Invalid date/.test(err.message)) return false
-  if (err instanceof CurrencyRateProviderError) {
-    // Transport failures carry no HTTP status (fetch throw wrapped at the
-    // construction site); HTTP failures carry `status` (see fiat/crypto
-    // rates). Only 429 and 5xx are transient.
-    if (err.status === undefined) return true
-    return err.status === 429 || (err.status >= 500 && err.status <= 599)
-  }
-  return isNetworkLikeError(err)
-}
+const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 
-function fxRetryDelayMs(attempt: number): number {
-  const exponential = FX_RETRY_BASE_MS * 2 ** attempt
-  const jitter = Math.floor(Math.random() * 100)
-  return Math.min(exponential + jitter, FX_RETRY_CAP_MS)
-}
-
-function sleepMs(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms))
-}
-
-async function withFxRetry<T>(fn: () => Promise<T>): Promise<T> {
-  let lastError: unknown
-  for (let attempt = 0; attempt < FX_MAX_ATTEMPTS; attempt++) {
-    try {
-      return await fn()
-    } catch (err) {
-      lastError = err
-      if (!isRetryableFxError(err) || attempt + 1 >= FX_MAX_ATTEMPTS) throw err
-      await sleepMs(fxRetryDelayMs(attempt))
-    }
-  }
-  throw lastError
-}
+const FX_FIAT_CONCURRENCY = 8
+const FX_CRYPTO_CONCURRENCY = 8
 
 // Re-exported for the file importer, which bounds its own document-promotion
 // fan-out with the same semaphore. New code should import from
 // `./concurrency` directly.
 export { mapWithConcurrency } from './concurrency'
 
+/**
+ * Map an engine `FxError` back to the legacy thrown class the single-rate
+ * boundary has always raised, so `getCurrencyRate` callers (and their
+ * `instanceof` checks) see no change.
+ */
+function toLegacyError(err: FxError): Error {
+  switch (err._tag) {
+    case 'FxUnsupportedCurrency':
+      return new UnsupportedCurrencyError(err.currency)
+    case 'FxRateNotFound':
+      return new CurrencyRateNotFoundError(err.target)
+    case 'FxInvalidDate':
+      return new CurrencyRateProviderError(`Invalid date: ${err.date}`)
+    case 'FxProviderError':
+      return new CurrencyRateProviderError(err.message)
+  }
+}
+
 function assertSupported(code: string) {
   if (!(supportedCurrencyCodes as readonly string[]).includes(code)) {
     throw new UnsupportedCurrencyError(code)
   }
+}
+
+function assertSupportedFx(code: string): Effect.Effect<void, FxError> {
+  if ((supportedCurrencyCodes as readonly string[]).includes(code)) {
+    return Effect.void
+  }
+  return Effect.fail(new FxUnsupportedCurrency({ currency: code }))
 }
 
 function ttlForPair(date: string, involvesCrypto: boolean) {
@@ -172,12 +167,52 @@ function expandAlias(code: string): { code: string; scale: number } {
   return { code, scale: 1 }
 }
 
+/** True when `date` is on/after the code's withdrawal date. */
+function isPostEol(date: string, code: string): boolean {
+  const from = fixedConversionFor(code)?.effectiveFrom
+  return !!from && date >= from
+}
+
+/**
+ * Latest date with joint market quotes for a fixed-involving pair: the day
+ * before the earliest withdrawal among the involved codes (e.g. BGN↔HRK →
+ * 2022-12-31, since HRK withdrew first). Null when neither side is withdrawn.
+ */
+function eolAttemptDate(base: string, target: string): string | null {
+  const froms = [base, target]
+    .map((code) => fixedConversionFor(code)?.effectiveFrom)
+    .filter((from): from is string => !!from)
+    .sort()
+  if (froms.length === 0) return null
+  return dayBeforeIso(froms[0]!)
+}
+
 type ResolveDeps = {
   date: string
-  fiatFetch: FiatFetchImpl
-  cryptoFetch: CryptoFetchImpl
-  /** In-flight dedupe across a batch, keyed by `rateCacheKey`. */
-  memo: Map<string, Promise<CurrencyRate | null>>
+  /** In-flight dedupe across a batch: race-safe memoized leg effects. */
+  memo: Map<string, Effect.Effect<CurrencyRate | null, FxError, FxEnv>>
+  /**
+   * When false, withdrawn-currency fallbacks (frozen last quote, statutory
+   * table) are skipped: post-withdrawal dates resolve as not-found instead.
+   * Absent = allow (the historical always-fallback behavior).
+   */
+  allowFixedFallback?: boolean
+}
+
+/**
+ * True when a resolved rate came from a withdrawn-currency fallback rather than
+ * a genuine market quote: any `fixed` leg, or a quote frozen at the last
+ * pre-withdrawal date for a post-withdrawal request. Strict lookups use this to
+ * reject legacy-cached fallback entries (shared cache key) without a key format
+ * change; pre-withdrawal weekend fallbacks still count as market.
+ */
+export function isFallbackComposed(rate: CurrencyRate): boolean {
+  if (rate.sources.some((source) => source.provider === 'fixed')) return true
+  for (const code of [rate.base, rate.target]) {
+    const from = fixedConversionFor(code)?.effectiveFrom
+    if (from && rate.requestedDate >= from && rate.asOfDate < from) return true
+  }
+  return false
 }
 
 function makeRate(
@@ -203,61 +238,66 @@ function makeRate(
 }
 
 /** Fiat↔fiat via Frankfurter only. Crypto codes are never passed here. */
-async function fetchFiatPair(
+const fetchFiatPair = Effect.fnUntraced(function* (
   ctx: ResolveDeps,
   base: string,
   target: string,
-): Promise<CurrencyRate | null> {
+): Effect.fn.Return<CurrencyRate | null, FxError, FxEnv> {
+  const cache = yield* RateCache
+  const fiat = yield* FiatRates
   const key = rateCacheKey(base, target, ctx.date)
-  const cached = readRateCache<CurrencyRate>(key)
-  if (cached) return cached
+  const cached = yield* cache.get(key)
+  // Composed fallback results share the leg key namespace; strict lookups
+  // must not mistake them for provider quotes.
+  if (
+    cached &&
+    !(ctx.allowFixedFallback === false && isFallbackComposed(cached))
+  )
+    return cached
 
-  try {
-    const payload = await withFxRetry(() =>
-      ctx.fiatFetch(ctx.date, base, [target]),
-    )
-    const rate = payload.rates[target]
-    if (typeof rate !== 'number') return null
-    const result = makeRate(ctx.date, base, target, rate, payload.date, {
-      sources: [{ provider: 'frankfurter', base, target }],
-    })
-    writeRateCache(key, result, DEFAULT_TTL_MS)
-    return result
-  } catch (err) {
-    if (err instanceof CurrencyRateNotFoundError) return null
-    throw err
-  }
-}
+  const payload = yield* fiat.fetch(ctx.date, base, [target])
+  const rate = payload.rates[target]
+  if (typeof rate !== 'number') return null
+  const result = makeRate(ctx.date, base, target, rate, payload.date, {
+    sources: [{ provider: 'frankfurter', base, target }],
+  })
+  yield* cache.set(key, result, DEFAULT_TTL_MS)
+  return result
+})
 
 /**
  * Crypto-involving spot via Coinbase: try direct orientation, then reverse.
  * Returns null when Coinbase has no quote for the pair (caller may bridge).
  */
-async function fetchCryptoPair(
+const fetchCryptoPair = Effect.fnUntraced(function* (
   ctx: ResolveDeps,
   base: string,
   target: string,
-): Promise<CurrencyRate | null> {
+): Effect.fn.Return<CurrencyRate | null, FxError, FxEnv> {
   if (base === target) return sameCurrencyRate(ctx.date, base, target)
 
   const key = rateCacheKey(base, target, ctx.date)
-  const cached = readRateCache<CurrencyRate>(key)
-  if (cached) return cached
   const inFlight = ctx.memo.get(key)
-  if (inFlight) return inFlight
+  if (inFlight) return yield* inFlight
 
-  const pending = (async (): Promise<CurrencyRate | null> => {
-    const direct = await withFxRetry(() =>
-      ctx.cryptoFetch(ctx.date, base, target),
+  const computation = Effect.gen(function* () {
+    const cache = yield* RateCache
+    const crypto = yield* CryptoRates
+    const cached = yield* cache.get(key)
+    // Composed fallback results share the leg key namespace; strict lookups
+    // must not mistake them for provider quotes.
+    if (
+      cached &&
+      !(ctx.allowFixedFallback === false && isFallbackComposed(cached))
     )
+      return cached
+    const direct = yield* crypto.fetchSpot(ctx.date, base, target)
     if (direct !== null) {
       return makeRate(ctx.date, base, target, direct, ctx.date, {
         sources: [{ provider: 'coinbase', base, target }],
       })
     }
-    const inverted = await withFxRetry(() =>
-      ctx.cryptoFetch(ctx.date, target, base),
-    )
+    const inverted = yield* crypto.fetchSpot(ctx.date, target, base)
     if (inverted !== null) {
       return makeRate(ctx.date, base, target, 1 / inverted, ctx.date, {
         // Requested orientation is preserved so callers can match sources
@@ -267,44 +307,52 @@ async function fetchCryptoPair(
       })
     }
     return null
-  })()
-
-  ctx.memo.set(key, pending)
-  const result = await pending
+  })
+  // Race-safe: concurrent joiners share the single computation instead of
+  // issuing duplicate provider calls for a repeated intermediary leg.
+  const memoized = yield* Effect.cached(computation)
+  ctx.memo.set(key, memoized)
+  const result = yield* memoized
   if (result) {
-    writeRateCache(key, result, ttlForPair(ctx.date, true))
+    const cache = yield* RateCache
+    yield* cache.set(key, result, ttlForPair(ctx.date, true))
   }
   return result
-}
+})
 
 /**
  * One resolved leg after universe classification. Never calls the wrong
  * provider: fiat↔fiat → Frankfurter; any crypto side → Coinbase.
  */
-async function fetchClassifiedPair(
+const fetchClassifiedPair = Effect.fnUntraced(function* (
   ctx: ResolveDeps,
   a: string,
   b: string,
-): Promise<CurrencyRate | null> {
+): Effect.fn.Return<CurrencyRate | null, FxError, FxEnv> {
   if (a === b) return sameCurrencyRate(ctx.date, a, b)
   const aCrypto = isCryptoCurrency(a)
   const bCrypto = isCryptoCurrency(b)
-  if (!aCrypto && !bCrypto) return fetchFiatPair(ctx, a, b)
-  return fetchCryptoPair(ctx, a, b)
-}
+  if (!aCrypto && !bCrypto) return yield* fetchFiatPair(ctx, a, b)
+  return yield* fetchCryptoPair(ctx, a, b)
+})
 
-async function bridgeViaIntermediaries(
+const bridgeViaIntermediaries = Effect.fnUntraced(function* (
   ctx: ResolveDeps,
   base: string,
   target: string,
   list: readonly string[],
-): Promise<CurrencyRate | null> {
+): Effect.fn.Return<CurrencyRate | null, FxError, FxEnv> {
   for (const intermediary of list) {
     if (intermediary === base || intermediary === target) continue
-    const leg1 = await fetchClassifiedPair(ctx, base, intermediary)
-    if (!leg1) continue
-    const leg2 = await fetchClassifiedPair(ctx, intermediary, target)
-    if (!leg2) continue
+    // The two legs are independent provider calls — fetch them together.
+    const [leg1, leg2] = yield* Effect.all(
+      [
+        fetchClassifiedPair(ctx, base, intermediary),
+        fetchClassifiedPair(ctx, intermediary, target),
+      ],
+      { concurrency: 2 },
+    )
+    if (!leg1 || !leg2) continue
     // The composite rate is only as fresh as its oldest leg: propagate the
     // earliest asOfDate (e.g. a fiat leg that fell back to Friday for a
     // weekend request) so clients can still surface the stale-rate warning.
@@ -317,7 +365,143 @@ async function bridgeViaIntermediaries(
     })
   }
   return null
+})
+
+/**
+ * Latest provider quote for a withdrawn pair, frozen at the last date with
+ * joint market data. `requestedDate` echoes the caller's lookup date while
+ * `asOfDate` records the frozen quote's date, so clients surface the same
+ * stale-rate signal as weekend fallbacks. Returns null when the provider has no
+ * quote even there (caller falls back to the statutory table).
+ */
+const fetchEolFrozenPair = Effect.fnUntraced(function* (
+  ctx: ResolveDeps,
+  base: string,
+  target: string,
+): Effect.fn.Return<CurrencyRate | null, FxError, FxEnv> {
+  const eolDate = eolAttemptDate(base, target)
+  if (!eolDate) return null
+  const frozen = yield* fetchClassifiedPair(
+    { ...ctx, date: eolDate },
+    base,
+    target,
+  )
+  if (!frozen) return null
+  return makeRate(ctx.date, base, target, frozen.rate, frozen.asOfDate, {
+    sources: frozen.sources,
+    via: frozen.via,
+  })
+})
+
+/** Live anchor quote consumed by the statutory composer below. */
+type AnchorLeg = {
+  rate: number
+  asOfDate: string
+  sources: CurrencyRateSource[]
+  via?: string[]
 }
+
+/**
+ * Statutory composer for pairs involving withdrawn currencies, built through
+ * each side's anchor: 1 unit of a fixed code equals `1 / unitsPerAnchor` anchor
+ * units. Pure anchor pairs need no provider call; cross pairs triangulate with
+ * a live anchor quote supplied by `getLeg` (requested date — the anchor is a
+ * live currency, so its leg tracks the market). Fixed legs are marked `fixed`,
+ * never attributed to a market provider. Returns null when no static
+ * composition exists (live anchor leg missing).
+ */
+const composeFixedRate = Effect.fnUntraced(function* (
+  date: string,
+  base: string,
+  target: string,
+  getLeg: (
+    base: string,
+    target: string,
+  ) => Effect.Effect<AnchorLeg | null, FxError, FxEnv>,
+): Effect.fn.Return<CurrencyRate | null, FxError, FxEnv> {
+  const baseFc = fixedConversionFor(base)
+  const targetFc = fixedConversionFor(target)
+  if (!baseFc && !targetFc) return null
+
+  const fixedLeg = (code: string, anchor: string): CurrencyRateSource => ({
+    provider: 'fixed',
+    base: code,
+    target: anchor,
+  })
+
+  // base→anchor / anchor→target orientation follows the requested pair.
+  if (baseFc && target === baseFc.anchor) {
+    return makeRate(date, base, target, 1 / baseFc.unitsPerAnchor, date, {
+      sources: [fixedLeg(base, target)],
+    })
+  }
+  if (targetFc && base === targetFc.anchor) {
+    return makeRate(date, base, target, targetFc.unitsPerAnchor, date, {
+      sources: [fixedLeg(base, target)],
+    })
+  }
+  if (baseFc && targetFc && baseFc.anchor === targetFc.anchor) {
+    const anchor = baseFc.anchor
+    return makeRate(
+      date,
+      base,
+      target,
+      targetFc.unitsPerAnchor / baseFc.unitsPerAnchor,
+      date,
+      {
+        via: [anchor],
+        sources: [fixedLeg(base, anchor), fixedLeg(anchor, target)],
+      },
+    )
+  }
+
+  // One side fixed, or two fixed codes with different anchors: bridge through
+  // the live anchor leg(s) at the requested date.
+  const liveBase = baseFc ? baseFc.anchor : base
+  const liveTarget = targetFc ? targetFc.anchor : target
+  const live = yield* getLeg(liveBase, liveTarget)
+  if (!live) return null
+  const rate =
+    live.rate *
+    (baseFc ? 1 / baseFc.unitsPerAnchor : 1) *
+    (targetFc ? targetFc.unitsPerAnchor : 1)
+  const via = [
+    ...(baseFc ? [baseFc.anchor] : []),
+    ...(live.via ?? []),
+    ...(targetFc ? [targetFc.anchor] : []),
+  ]
+  return makeRate(date, base, target, rate, live.asOfDate, {
+    via: via.length > 0 ? via : undefined,
+    sources: [
+      ...(baseFc ? [fixedLeg(base, baseFc.anchor)] : []),
+      ...live.sources,
+      ...(targetFc ? [fixedLeg(targetFc.anchor, target)] : []),
+    ],
+  })
+})
+
+/**
+ * Single-pair statutory fallback: the anchor leg resolves through the normal
+ * classified providers with shared in-flight dedupe.
+ */
+const resolveFixedFallback = Effect.fnUntraced(function* (
+  ctx: ResolveDeps,
+  base: string,
+  target: string,
+): Effect.fn.Return<CurrencyRate | null, FxError, FxEnv> {
+  return yield* composeFixedRate(ctx.date, base, target, (legBase, legTarget) =>
+    Effect.map(fetchClassifiedPair(ctx, legBase, legTarget), (leg) =>
+      leg
+        ? {
+            rate: leg.rate,
+            asOfDate: leg.asOfDate,
+            sources: leg.sources,
+            via: leg.via,
+          }
+        : null,
+    ),
+  )
+})
 
 /**
  * Resolve 1 `base` in `target` on `date`.
@@ -327,14 +511,21 @@ async function bridgeViaIntermediaries(
  * miss → bridge via EUR then USD (crypto leg Coinbase, fiat leg Frankfurter)
  * Aliases expand before any provider call.
  */
-async function resolveRate(
+const resolveRate = Effect.fnUntraced(function* (
   ctx: ResolveDeps,
   base: string,
   target: string,
-): Promise<CurrencyRate> {
+): Effect.fn.Return<CurrencyRate, FxError, FxEnv> {
+  const cache = yield* RateCache
   const key = rateCacheKey(base, target, ctx.date)
-  const cached = readRateCache<CurrencyRate>(key)
-  if (cached) return cached
+  const cached = yield* cache.get(key)
+  // Strict lookups must never serve a fallback-composed entry cached under
+  // the shared key by an earlier fallback-allowed resolution.
+  if (
+    cached &&
+    !(ctx.allowFixedFallback === false && isFallbackComposed(cached))
+  )
+    return cached
 
   if (base === target) return sameCurrencyRate(ctx.date, base, target)
 
@@ -351,8 +542,45 @@ async function resolveRate(
 
   const involvesCrypto =
     isCryptoCurrency(scaledBase) || isCryptoCurrency(scaledTarget)
+  const involvesFixed =
+    !!fixedConversionFor(scaledBase) || !!fixedConversionFor(scaledTarget)
 
-  const direct = await fetchClassifiedPair(ctx, scaledBase, scaledTarget)
+  const wrapScaled = Effect.fnUntraced(function* (
+    rate: CurrencyRate,
+  ): Effect.fn.Return<CurrencyRate, FxError, FxEnv> {
+    const result = makeRate(
+      ctx.date,
+      base,
+      target,
+      rate.rate * aliasScale,
+      rate.asOfDate,
+      {
+        sources: rate.sources,
+        via: rate.via,
+      },
+    )
+    const innerCache = yield* RateCache
+    yield* innerCache.set(key, result, ttlForPair(ctx.date, involvesCrypto))
+    return result
+  })
+
+  // Withdrawn currencies have no quotes on/after withdrawal: retry the last
+  // quoted date first, then the statutory table — never the live pair.
+  // Strict lookups skip both fallbacks and run the normal market path below,
+  // so post-withdrawal dates resolve as not-found instead.
+  if (
+    ctx.allowFixedFallback !== false &&
+    involvesFixed &&
+    (isPostEol(ctx.date, scaledBase) || isPostEol(ctx.date, scaledTarget))
+  ) {
+    const frozen = yield* fetchEolFrozenPair(ctx, scaledBase, scaledTarget)
+    if (frozen) return yield* wrapScaled(frozen)
+    const fallback = yield* resolveFixedFallback(ctx, scaledBase, scaledTarget)
+    if (fallback) return yield* wrapScaled(fallback)
+    return yield* new FxRateNotFound({ target })
+  }
+
+  const direct = yield* fetchClassifiedPair(ctx, scaledBase, scaledTarget)
   if (direct) {
     const result = makeRate(
       ctx.date,
@@ -362,7 +590,7 @@ async function resolveRate(
       direct.asOfDate,
       { sources: direct.sources, via: direct.via },
     )
-    writeRateCache(key, result, ttlForPair(ctx.date, involvesCrypto))
+    yield* cache.set(key, result, ttlForPair(ctx.date, involvesCrypto))
     return result
   }
 
@@ -376,7 +604,7 @@ async function resolveRate(
       ? intermediaryCurrenciesFor(scaledBase)
       : intermediaryCurrenciesFor(baseIsCrypto ? scaledTarget : scaledBase)
 
-  const bridged = await bridgeViaIntermediaries(
+  const bridged = yield* bridgeViaIntermediaries(
     ctx,
     scaledBase,
     scaledTarget,
@@ -391,12 +619,20 @@ async function resolveRate(
       bridged.asOfDate,
       { sources: bridged.sources, via: bridged.via },
     )
-    writeRateCache(key, result, ttlForPair(ctx.date, involvesCrypto))
+    yield* cache.set(key, result, ttlForPair(ctx.date, involvesCrypto))
     return result
   }
 
-  throw new CurrencyRateNotFoundError(target)
-}
+  // Pre-withdrawal dates use market quotes when present; the statutory table
+  // covers provider gaps for pegged codes (BGN tracked its euro peg).
+  // Strict lookups skip this: a provider gap stays not-found.
+  if (involvesFixed && ctx.allowFixedFallback !== false) {
+    const fallback = yield* resolveFixedFallback(ctx, scaledBase, scaledTarget)
+    if (fallback) return yield* wrapScaled(fallback)
+  }
+
+  return yield* new FxRateNotFound({ target })
+})
 
 /**
  * Resolve the rate of 1 unit of `base` in `target` on `date`. Cached in-process
@@ -412,6 +648,7 @@ export async function getCurrencyRate({
   ttlMs = DEFAULT_TTL_MS,
   fetchImpl = fetchFrankfurterRates,
   cryptoFetchImpl = fetchCoinbaseSpot,
+  allowFixedFallback = true,
 }: {
   date: string
   base: string
@@ -419,6 +656,11 @@ export async function getCurrencyRate({
   ttlMs?: number
   fetchImpl?: FiatFetchImpl
   cryptoFetchImpl?: CryptoFetchImpl
+  /**
+   * When false, withdrawn-currency fallbacks are skipped (post-withdrawal dates
+   * throw instead of resolving through the statutory table).
+   */
+  allowFixedFallback?: boolean
 }): Promise<CurrencyRate> {
   if (!ISO_DATE_RE.test(date)) {
     throw new CurrencyRateProviderError(`Invalid date: ${date}`)
@@ -432,32 +674,49 @@ export async function getCurrencyRate({
 
   const key = rateCacheKey(base, target, lookupDate)
   const cached = readRateCache<CurrencyRate>(key)
-  if (cached) return cached
+  if (cached && !(allowFixedFallback === false && isFallbackComposed(cached)))
+    return cached
 
-  if (isCryptoCurrency(base) || isCryptoCurrency(target)) {
-    return resolveRate(
-      {
-        date: lookupDate,
-        fiatFetch: fetchImpl,
-        cryptoFetch: cryptoFetchImpl,
-        memo: new Map(),
-      },
+  const env = fxEnv(fetchImpl, cryptoFetchImpl)
+
+  if (
+    isCryptoCurrency(base) ||
+    isCryptoCurrency(target) ||
+    fixedConversionFor(base) ||
+    fixedConversionFor(target)
+  ) {
+    const program = resolveRate(
+      { date: lookupDate, memo: new Map(), allowFixedFallback },
       base,
       target,
     )
+    try {
+      return await Effect.runPromise(Effect.provide(program, env))
+    } catch (err) {
+      throw toLegacyError(err as FxError)
+    }
   }
 
   // Pure fiat: single Frankfurter call (preserves prior asOfDate / ttlMs behaviour).
-  const payload = await withFxRetry(() => fetchImpl(lookupDate, base, [target]))
-  const rate = payload.rates[target]
-  if (typeof rate !== 'number') {
-    throw new CurrencyRateNotFoundError(target)
-  }
-  const result = makeRate(lookupDate, base, target, rate, payload.date, {
-    sources: [{ provider: 'frankfurter', base, target }],
+  const program = Effect.gen(function* () {
+    const fiat = yield* FiatRates
+    const cache = yield* RateCache
+    const payload = yield* fiat.fetch(lookupDate, base, [target])
+    const rate = payload.rates[target]
+    if (typeof rate !== 'number') {
+      return yield* new FxRateNotFound({ target })
+    }
+    const result = makeRate(lookupDate, base, target, rate, payload.date, {
+      sources: [{ provider: 'frankfurter', base, target }],
+    })
+    yield* cache.set(key, result, ttlMs)
+    return result
   })
-  writeRateCache(key, result, ttlMs)
-  return result
+  try {
+    return await Effect.runPromise(Effect.provide(program, env))
+  } catch (err) {
+    throw toLegacyError(err as FxError)
+  }
 }
 
 /** Test/utility export. Drops all cached entries. */
@@ -474,6 +733,12 @@ export type BatchRateRequest = {
   date: string
   base: string
   target: string
+  /**
+   * When false, this item skips withdrawn-currency fallbacks (frozen last
+   * quote, statutory table) and resolves as RATE_NOT_FOUND instead. Absent =
+   * allow (the historical always-fallback behavior).
+   */
+  allowFixedFallback?: boolean
 }
 
 /**
@@ -491,6 +756,21 @@ export type BatchRateResult =
         | { code: 'INVALID_DATE'; date: string }
         | { code: 'PROVIDER_ERROR'; message: string }
     }
+
+function fxErrorToBatchError(
+  err: FxError,
+): Extract<BatchRateResult, { ok: false }>['error'] {
+  switch (err._tag) {
+    case 'FxUnsupportedCurrency':
+      return { code: 'UNSUPPORTED_CURRENCY', currency: err.currency }
+    case 'FxRateNotFound':
+      return { code: 'RATE_NOT_FOUND', target: err.target }
+    case 'FxInvalidDate':
+      return { code: 'INVALID_DATE', date: err.date }
+    case 'FxProviderError':
+      return { code: 'PROVIDER_ERROR', message: err.message }
+  }
+}
 
 /**
  * Resolve multiple rates in parallel. Fiat-only requests are grouped by (date,
@@ -511,8 +791,11 @@ export async function getCurrencyRates(
 
   const output: BatchRateResult[] = Array.from({ length: requests.length })
   type Key = string
-  const groupKey = (date: string, base: string): Key =>
-    `${date}|${base.toUpperCase()}`
+  // Strict and fallback-allowed items resolve in separate groups: the same
+  // triple can legitimately be requested both ways in one batch, and the
+  // fallback pass below must not heal strict targets.
+  const groupKey = (date: string, base: string, strict: boolean): Key =>
+    `${date}|${base.toUpperCase()}|${strict ? 'strict' : 'allow'}`
   const groups = new Map<
     Key,
     {
@@ -520,16 +803,24 @@ export async function getCurrencyRates(
       base: string
       targets: string[]
       indicesByTarget: Map<string, number[]>
+      strict: boolean
     }
   >()
   const cryptoGroups = new Map<
     Key,
-    { date: string; base: string; target: string; indices: number[] }
+    {
+      date: string
+      base: string
+      target: string
+      indices: number[]
+      allowFixedFallback: boolean
+    }
   >()
   let allCached = true
   requests.forEach((req, idx) => {
     const base = req.base.toUpperCase()
     const target = req.target.toUpperCase()
+    const strict = req.allowFixedFallback === false
     // Shared domain rule: future dates resolve at today's rate. Clamp here so
     // raw batch callers stay consistent with the preview hooks and expense
     // persistence (both also clamp; double-clamping is idempotent). Invalid
@@ -541,13 +832,15 @@ export async function getCurrencyRates(
     const cached = readRateCache<CurrencyRate>(
       rateCacheKey(base, target, lookupDate),
     )
-    if (cached) {
+    if (cached && !(strict && isFallbackComposed(cached))) {
       output[idx] = { ok: true, rate: cached }
       return
     }
     allCached = false
     if (isCryptoCurrency(base) || isCryptoCurrency(target)) {
-      const key = rateCacheKey(base, target, lookupDate)
+      // Strict and fallback-allowed resolutions must not share one effect:
+      // the same triple can legitimately be requested both ways in a batch.
+      const key = `${rateCacheKey(base, target, lookupDate)}|${strict ? 'strict' : 'allow'}`
       const existing = cryptoGroups.get(key)
       if (existing) {
         existing.indices.push(idx)
@@ -557,11 +850,12 @@ export async function getCurrencyRates(
           base,
           target,
           indices: [idx],
+          allowFixedFallback: !strict,
         })
       }
       return
     }
-    const key = groupKey(lookupDate, base)
+    const key = groupKey(lookupDate, base, strict)
     const existing = groups.get(key)
     if (existing) {
       if (!existing.indicesByTarget.has(target)) {
@@ -577,6 +871,7 @@ export async function getCurrencyRates(
         base,
         targets: [target],
         indicesByTarget,
+        strict,
       })
     }
   })
@@ -592,101 +887,118 @@ export async function getCurrencyRates(
   // many distinct (date, base) pairs cannot open hundreds of simultaneous
   // upstream connections. Cache hits were already partitioned out above and
   // stay unthrottled.
-  const fiatGroupsPromise = mapWithConcurrency(
-    Array.from(groups.entries()),
-    FX_FIAT_CONCURRENCY,
-    async ([key, group]) => {
+  const fiatEffects = Array.from(groups.entries()).map(([key, group]) =>
+    Effect.gen(function* () {
+      const fiat = yield* FiatRates
+      const cache = yield* RateCache
       const byTarget = new Map<string, BatchRateResult>()
-      try {
-        assertSupported(group.base)
-        if (!ISO_DATE_RE.test(group.date)) {
-          throw new CurrencyRateProviderError(`Invalid date: ${group.date}`)
+      yield* assertSupportedFx(group.base)
+      if (!ISO_DATE_RE.test(group.date)) {
+        return yield* new FxInvalidDate({ date: group.date })
+      }
+      const payload = yield* fiat.fetch(group.date, group.base, group.targets)
+      for (const target of group.targets) {
+        const rate = payload.rates[target]
+        if (typeof rate !== 'number') {
+          byTarget.set(target, {
+            ok: false,
+            error: { code: 'RATE_NOT_FOUND', target },
+          })
+          continue
         }
-
-        const payload = await withFxRetry(() =>
-          fetchImpl(group.date, group.base, group.targets),
+        const result = makeRate(
+          group.date,
+          group.base,
+          target,
+          rate,
+          payload.date,
+          {
+            sources: [
+              {
+                provider: 'frankfurter',
+                base: group.base,
+                target,
+              },
+            ],
+          },
         )
-        for (const target of group.targets) {
-          const rate = payload.rates[target]
-          if (typeof rate !== 'number') {
-            byTarget.set(target, {
-              ok: false,
-              error: { code: 'RATE_NOT_FOUND', target },
-            })
-            continue
-          }
-          const result = makeRate(
-            group.date,
-            group.base,
-            target,
-            rate,
-            payload.date,
-            {
-              sources: [
-                {
-                  provider: 'frankfurter',
-                  base: group.base,
-                  target,
-                },
-              ],
-            },
-          )
-          writeRateCache(
-            rateCacheKey(group.base, target, group.date),
-            result,
-            DEFAULT_TTL_MS,
-          )
-          byTarget.set(target, { ok: true, rate: result })
-        }
-      } catch (err) {
+        yield* cache.set(
+          rateCacheKey(group.base, target, group.date),
+          result,
+          DEFAULT_TTL_MS,
+        )
+        byTarget.set(target, { ok: true, rate: result })
+      }
+      return { key, byTarget }
+    }).pipe(
+      Effect.catch((err: FxError) => {
+        const byTarget = new Map<string, BatchRateResult>()
         for (const target of group.targets) {
           byTarget.set(target, {
             ok: false,
-            error: classifyBatchError(err, group.date, target),
+            error: fxErrorToBatchError(err),
           })
         }
-      }
-      resolvedByKey.set(key, { byTarget })
-    },
+        return Effect.succeed({ key, byTarget })
+      }),
+    ),
   )
 
-  const cryptoCtx: ResolveDeps = {
-    date: '',
-    fiatFetch: fetchImpl,
-    cryptoFetch: cryptoFetchImpl,
-    memo: new Map(),
-  }
+  const memo = new Map<
+    string,
+    Effect.Effect<CurrencyRate | null, FxError, FxEnv>
+  >()
   // Crypto groups fan out over distinct pairs just like fiat groups; bound
   // them with the same limiter so a many-pair batch cannot open unbounded
   // simultaneous upstream connections.
-  const cryptoResultsPromise = mapWithConcurrency(
-    Array.from(cryptoGroups.values()),
-    FX_CRYPTO_CONCURRENCY,
-    async ({ date, base, target, indices }) => {
-      try {
-        assertSupported(base)
-        assertSupported(target)
+  const cryptoEffects = Array.from(cryptoGroups.values()).map(
+    ({ date, base, target, indices, allowFixedFallback }) =>
+      Effect.gen(function* () {
+        yield* assertSupportedFx(base)
+        yield* assertSupportedFx(target)
         if (!ISO_DATE_RE.test(date)) {
-          throw new CurrencyRateProviderError(`Invalid date: ${date}`)
+          return yield* new FxInvalidDate({ date })
         }
-        const ctx: ResolveDeps = { ...cryptoCtx, date }
+        const rate = yield* resolveRate(
+          { date, memo, allowFixedFallback },
+          base,
+          target,
+        )
         return {
           ok: true as const,
           indices,
-          rate: await resolveRate(ctx, base, target),
+          rate,
         }
-      } catch (err) {
-        return {
-          ok: false as const,
-          indices,
-          error: classifyBatchError(err, date, target),
-        }
-      }
-    },
+      }).pipe(
+        Effect.catch((err: FxError) =>
+          Effect.succeed({
+            ok: false as const,
+            indices,
+            error: fxErrorToBatchError(err),
+          }),
+        ),
+      ),
   )
 
-  await Promise.all([fiatGroupsPromise, cryptoResultsPromise])
-  const cryptoResults = await cryptoResultsPromise
+  const program = Effect.gen(function* () {
+    // Fiat and crypto fan out together, each under its own concurrency cap.
+    const [fiatSettled, cryptoSettled] = yield* Effect.all(
+      [
+        Effect.all(fiatEffects, { concurrency: FX_FIAT_CONCURRENCY }),
+        Effect.all(cryptoEffects, { concurrency: FX_CRYPTO_CONCURRENCY }),
+      ],
+      { concurrency: 2 },
+    )
+    for (const { key, byTarget } of fiatSettled) {
+      resolvedByKey.set(key, { byTarget })
+    }
+    yield* resolveFixedBatchFallbacks({ groups, resolvedByKey })
+    return cryptoSettled
+  })
+
+  const cryptoResults = await Effect.runPromise(
+    Effect.provide(program, fxEnv(fetchImpl, cryptoFetchImpl)),
+  )
   for (const result of cryptoResults) {
     const entry: BatchRateResult = result.ok
       ? { ok: true, rate: result.rate }
@@ -708,28 +1020,250 @@ export async function getCurrencyRates(
   return output
 }
 
-function classifyBatchError(
-  err: unknown,
-  date: string,
-  _target: string,
-): Extract<BatchRateResult, { ok: false }>['error'] {
-  if (err instanceof UnsupportedCurrencyError) {
-    return { code: 'UNSUPPORTED_CURRENCY', currency: err.code }
-  }
-  if (err instanceof CurrencyRateNotFoundError) {
-    return { code: 'RATE_NOT_FOUND', target: err.target }
-  }
-  // Validation failures must stay BAD_REQUEST downstream: an "Invalid date"
-  // provider error is a caller bug, not an upstream outage, so it classifies
-  // as INVALID_DATE even though it arrives as CurrencyRateProviderError.
-  if (err instanceof Error && /Invalid date/.test(err.message)) {
-    return { code: 'INVALID_DATE', date }
-  }
-  if (err instanceof CurrencyRateProviderError) {
-    return { code: 'PROVIDER_ERROR', message: err.message }
-  }
-  return {
-    code: 'PROVIDER_ERROR',
-    message: err instanceof Error ? err.message : String(err),
-  }
+type FiatBatchGroup = {
+  date: string
+  base: string
+  targets: string[]
+  indicesByTarget: Map<string, number[]>
+  /** When true, this group's misses keep RATE_NOT_FOUND (no fixed fallback). */
+  strict: boolean
 }
+
+/**
+ * Second-chance pass for fixed-involving fiat pairs whose grouped provider
+ * fetch missed. Post-withdrawal items retry once at the last quoted date —
+ * collapsed by (eolDate, base) so a bulk import costs one extra call per base,
+ * not per date — then everything still missing resolves through the statutory
+ * composer with live anchor legs grouped by (date, anchor). Successes replace
+ * the group's per-target result in place; misses keep their original error.
+ */
+const resolveFixedBatchFallbacks = Effect.fnUntraced(function* (args: {
+  groups: Map<string, FiatBatchGroup>
+  resolvedByKey: Map<string, { byTarget: Map<string, BatchRateResult> }>
+}): Effect.fn.Return<void, FxError, FxEnv> {
+  const fiat = yield* FiatRates
+  const cache = yield* RateCache
+  type StaticItem = { date: string; base: string; target: string }
+  const staticItems: StaticItem[] = []
+  const eolRetries = new Map<
+    string,
+    {
+      date: string
+      base: string
+      items: Array<{ lookupDate: string; target: string }>
+    }
+  >()
+
+  for (const group of args.groups.values()) {
+    // Strict groups opted out of withdrawn-currency fallbacks: their
+    // RATE_NOT_FOUND stands so the caller can surface a missing rate.
+    if (group.strict) continue
+    const groupKey = `${group.date}|${group.base}|allow`
+    const { byTarget } = args.resolvedByKey.get(groupKey)!
+    for (const target of group.targets) {
+      if (byTarget.get(target)?.ok !== false) continue
+      if (!fixedConversionFor(group.base) && !fixedConversionFor(target)) {
+        continue
+      }
+      if (isPostEol(group.date, group.base) || isPostEol(group.date, target)) {
+        const eolDate = eolAttemptDate(group.base, target)!
+        const key = `${eolDate}|${group.base}`
+        const item = { lookupDate: group.date, target }
+        const existing = eolRetries.get(key)
+        if (existing) existing.items.push(item)
+        else
+          eolRetries.set(key, {
+            date: eolDate,
+            base: group.base,
+            items: [item],
+          })
+      } else {
+        staticItems.push({ date: group.date, base: group.base, target })
+      }
+    }
+  }
+
+  if (eolRetries.size > 0) {
+    // Each retry effect reports its own outcome; merging stays sequential
+    // below so no shared array is mutated from concurrent fibers.
+    const retryOutcomes = yield* Effect.all(
+      Array.from(eolRetries.values()).map((retry) =>
+        Effect.gen(function* () {
+          const successes: Array<{
+            lookupDate: string
+            base: string
+            target: string
+            rate: CurrencyRate
+          }> = []
+          const missed: StaticItem[] = []
+          const targets = [...new Set(retry.items.map((item) => item.target))]
+          const payload = yield* fiat
+            .fetch(retry.date, retry.base, targets)
+            .pipe(
+              Effect.catch((err: FxError) =>
+                err._tag === 'FxProviderError'
+                  ? Effect.succeed(null)
+                  : Effect.fail(err),
+              ),
+            )
+          if (payload === null) {
+            for (const item of retry.items) {
+              missed.push({
+                date: item.lookupDate,
+                base: retry.base,
+                target: item.target,
+              })
+            }
+            return { successes, missed }
+          }
+          for (const item of retry.items) {
+            const rate = payload.rates[item.target]
+            if (typeof rate !== 'number') {
+              missed.push({
+                date: item.lookupDate,
+                base: retry.base,
+                target: item.target,
+              })
+              continue
+            }
+            successes.push({
+              lookupDate: item.lookupDate,
+              base: retry.base,
+              target: item.target,
+              rate: makeRate(
+                item.lookupDate,
+                retry.base,
+                item.target,
+                rate,
+                payload.date,
+                {
+                  sources: [
+                    {
+                      provider: 'frankfurter',
+                      base: retry.base,
+                      target: item.target,
+                    },
+                  ],
+                },
+              ),
+            })
+          }
+          return { successes, missed }
+        }),
+      ),
+      { concurrency: FX_FIAT_CONCURRENCY },
+    )
+    for (const outcome of retryOutcomes) {
+      for (const missed of outcome.missed) {
+        staticItems.push(missed)
+      }
+      for (const success of outcome.successes) {
+        yield* cache.set(
+          rateCacheKey(success.base, success.target, success.lookupDate),
+          success.rate,
+          DEFAULT_TTL_MS,
+        )
+        args.resolvedByKey
+          .get(`${success.lookupDate}|${success.base}|allow`)!
+          .byTarget.set(success.target, { ok: true, rate: success.rate })
+      }
+    }
+  }
+
+  if (staticItems.length === 0) return
+
+  // Live anchor legs grouped by (date, base): one provider call each.
+  const anchorLegOf = (
+    item: StaticItem,
+  ): { date: string; base: string; target: string } | null => {
+    const baseFc = fixedConversionFor(item.base)
+    const targetFc = fixedConversionFor(item.target)
+    if (baseFc && item.target === baseFc.anchor) return null
+    if (targetFc && item.base === targetFc.anchor) return null
+    if (baseFc && targetFc && baseFc.anchor === targetFc.anchor) return null
+    return {
+      date: item.date,
+      base: baseFc ? baseFc.anchor : item.base,
+      target: targetFc ? targetFc.anchor : item.target,
+    }
+  }
+  const anchorGroups = new Map<
+    string,
+    { date: string; base: string; targets: string[] }
+  >()
+  for (const item of staticItems) {
+    const leg = anchorLegOf(item)
+    if (!leg) continue
+    const key = `${leg.date}|${leg.base}`
+    const existing = anchorGroups.get(key)
+    if (existing) {
+      if (!existing.targets.includes(leg.target)) {
+        existing.targets.push(leg.target)
+      }
+    } else {
+      anchorGroups.set(key, {
+        date: leg.date,
+        base: leg.base,
+        targets: [leg.target],
+      })
+    }
+  }
+  const anchorLegs = new Map<string, AnchorLeg>()
+  const anchorOutcomes = yield* Effect.all(
+    Array.from(anchorGroups.values()).map((anchor) =>
+      Effect.gen(function* () {
+        const entries: Array<{ key: string; leg: AnchorLeg }> = []
+        const payload = yield* fiat
+          .fetch(anchor.date, anchor.base, anchor.targets)
+          .pipe(
+            Effect.catch((err: FxError) =>
+              err._tag === 'FxProviderError'
+                ? Effect.succeed(null)
+                : Effect.fail(err),
+            ),
+          )
+        if (payload === null) return entries
+        for (const target of anchor.targets) {
+          const rate = payload.rates[target]
+          if (typeof rate !== 'number') continue
+          entries.push({
+            key: rateCacheKey(anchor.base, target, anchor.date),
+            leg: {
+              rate,
+              asOfDate: payload.date,
+              sources: [{ provider: 'frankfurter', base: anchor.base, target }],
+            },
+          })
+        }
+        return entries
+      }),
+    ),
+    { concurrency: FX_FIAT_CONCURRENCY },
+  )
+  for (const entries of anchorOutcomes) {
+    for (const { key, leg } of entries) {
+      anchorLegs.set(key, leg)
+    }
+  }
+
+  for (const item of staticItems) {
+    const composed = yield* composeFixedRate(
+      item.date,
+      item.base,
+      item.target,
+      (legBase, legTarget) =>
+        Effect.succeed(
+          anchorLegs.get(rateCacheKey(legBase, legTarget, item.date)) ?? null,
+        ),
+    )
+    if (!composed) continue
+    yield* cache.set(
+      rateCacheKey(item.base, item.target, item.date),
+      composed,
+      DEFAULT_TTL_MS,
+    )
+    args.resolvedByKey
+      .get(`${item.date}|${item.base}|allow`)!
+      .byTarget.set(item.target, { ok: true, rate: composed })
+  }
+})

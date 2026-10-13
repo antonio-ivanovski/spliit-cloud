@@ -660,7 +660,9 @@
         "perDateTitle": "Theo ngày",
         "rateDateLabel": "Ngày",
         "ratesError": "Lỗi tỷ giá.",
-        "refresh": "Làm mới"
+        "refresh": "Làm mới",
+        "perDateFallbackLabel": "Dùng quy đổi cố định khi thiếu tỷ giá thị trường",
+        "perDateFallbackSummary": "{fallback} trong số {total} ngày dùng quy đổi cố định"
       },
       "Documents": {
         "title": "Mang theo biên lai của bạn",
@@ -3724,10 +3726,18 @@
     "bridged": "qua {currencies} (<providers></providers>)",
     "direct": {
       "frankfurter": "Tỷ giá từ <provider></provider>",
-      "coinbase": "Tỷ giá từ <provider></provider>"
+      "coinbase": "Tỷ giá từ <provider></provider>",
+      "fixed": "Tỷ giá cố định từ <provider></provider>"
     },
     "fallbackPrefix": "Tỷ giá từ",
-    "fallbackSeparator": " và "
+    "fallbackSeparator": " và ",
+    "fixed": "Quy đổi cố định",
+    "fixedReason": {
+      "euro-adoption": "{code} đã được thay thế bằng {anchor} vào {date} theo tỷ giá cố định 1 {anchor} = {rate} {code}.",
+      "redenomination": "{code} đã được đổi mệnh giá thành {anchor} vào {date} theo tỷ giá cố định 1 {anchor} = {rate} {code}.",
+      "replacement": "{code} đã được thay thế bằng {anchor} vào {date} theo tỷ giá cố định 1 {anchor} = {rate} {code}.",
+      "withdrawn": "{code} đã bị rút khỏi lưu thông vào {date}; việc quy đổi áp dụng tỷ giá cố định 1 {anchor} = {rate} {code}."
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4933,7 +4943,8 @@
     },
     "rowWarnings": {
       "missing-rate": "Không có tỷ giá cho chi phí này.",
-      "exact-to-custom": "Chi phí này đã dùng số tiền chính xác nên được chuyển đổi theo tỷ giá tùy chỉnh."
+      "exact-to-custom": "Chi phí này đã dùng số tiền chính xác nên được chuyển đổi theo tỷ giá tùy chỉnh.",
+      "fixed-fallback": "Được chuyển đổi theo quy đổi cố định — không có tỷ giá thị trường."
     },
     "customLedgerNotice": "Nhóm này dùng mã tiền tệ tùy chỉnh nên không có tỷ giá tự động.",
     "target": {
@@ -4951,7 +4962,8 @@
       "minor-units": "Loại tiền mới dùng đơn vị nhỏ khác (ví dụ cent với yên) — chênh lệch làm tròn nhỏ là bình thường.",
       "budgets-stale": "Ngân sách giữ nguyên số tiền theo loại tiền cũ và nên được xem lại sau khi đổi.",
       "recurring-stale": "Các mẫu lặp lại đang hoạt động giữ nguyên số tiền cũ — hãy xem lại sau khi đổi.",
-      "exact-to-custom": "Một số chi phí đã dùng số tiền chính xác nên được chuyển đổi theo tỷ giá tùy chỉnh."
+      "exact-to-custom": "Một số chi phí đã dùng số tiền chính xác nên được chuyển đổi theo tỷ giá tùy chỉnh.",
+      "fixed-fallback": "Một số chi phí dùng quy đổi cố định cho tiền tệ đã bị rút khỏi lưu thông."
     },
     "back": "Quay lại",
     "pairs": {
@@ -4996,5 +5008,12 @@
     "uploadingFile": "Đang tải lên tệp đã chọn…",
     "unsupportedFile": "Một số tệp không được hỗ trợ và đã bị bỏ qua.",
     "useTextAsFile": "Dùng văn bản làm tệp đính kèm .txt"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "Tiền tệ đã bị rút khỏi lưu thông — đang hiển thị tỷ giá khả dụng gần nhất từ {date}",
+    "statutoryHeadline": "Tỷ giá quy đổi cố định — không phải giá thị trường",
+    "triangulatedHeadline": "Tỷ giá cố định một phần — quy đổi cố định cộng với tỷ giá thị trường trực tiếp",
+    "withdrawnPairHeadline": "{codes} bao gồm tiền tệ đã bị rút khỏi lưu thông",
+    "reference": "Tham khảo"
   }
 }

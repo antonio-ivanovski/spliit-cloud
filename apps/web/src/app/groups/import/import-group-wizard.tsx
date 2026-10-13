@@ -1137,6 +1137,7 @@ export function ImportGroupWizard() {
           invites={activeImportInvites}
           isSubmitting={activeImportPending}
           conversionModes={state.conversionModes}
+          fallbackKeys={state.fallbackKeys}
           recoveredDocumentCount={state.recoveredDocumentCount}
           skippedDocumentCount={state.skippedDocumentCount}
           documentRecoverySkipped={state.documentRecoverySkipped}

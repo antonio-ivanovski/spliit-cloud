@@ -11,6 +11,7 @@ import {
 } from '@/app/groups/[groupId]/stats/category-utils'
 import { CategorySelector } from '@/components/category-selector'
 import { CurrencyRateProviderAttribution } from '@/components/currency-rate-provider-attribution'
+import { CurrencyRateWarning } from '@/components/currency-rate-warning'
 import { CurrencySelector } from '@/components/currency-selector'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -55,6 +56,7 @@ import {
   formatCalculatorAmount,
   type CalculatorItem,
 } from '@spliit/domain/calculator'
+import { getCurrencyRateWarning } from '@spliit/domain/currency'
 
 import type {
   ReceiptDocument,
@@ -76,6 +78,44 @@ import { RecurrenceSection } from './recurrence-section'
 import { useSuggestCategoryFromTitle } from './use-suggest-category-from-title'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
+
+/**
+ * Escalation banner for frozen/statutory rates, derived from the same
+ * exchange-rate payload as the muted attribution below it. Renders nothing when
+ * the rate needs no escalation (live pair, custom rate, exact amount).
+ */
+function RateWarningBanner({
+  base,
+  target,
+  exchangeRate,
+}: {
+  base: string | undefined
+  target: string | undefined
+  exchangeRate: {
+    data: number | undefined
+    sources: Array<{ provider: string; base: string; target: string }>
+    asOfDate: string | undefined
+    requestedDate: string | undefined
+  }
+}) {
+  if (
+    !base ||
+    !target ||
+    exchangeRate.data == null ||
+    !exchangeRate.asOfDate ||
+    !exchangeRate.requestedDate
+  ) {
+    return null
+  }
+  const warning = getCurrencyRateWarning({
+    base,
+    target,
+    requestedDate: exchangeRate.requestedDate,
+    asOfDate: exchangeRate.asOfDate,
+    sources: exchangeRate.sources,
+  })
+  return <CurrencyRateWarning warning={warning} />
+}
 
 // react-doctor-disable-next-line react-doctor/no-giant-component -- cohesive expense form section, shared form state
 export function BasicDetailsCard(props: {
@@ -103,10 +143,12 @@ export function BasicDetailsCard(props: {
     data: number | undefined
     via: string[] | undefined
     sources: Array<{
-      provider: 'frankfurter' | 'coinbase'
+      provider: 'frankfurter' | 'coinbase' | 'fixed'
       base: string
       target: string
     }>
+    asOfDate: string | undefined
+    requestedDate: string | undefined
     error: Error | null
     isLoading: boolean
     refresh: () => void
@@ -603,10 +645,20 @@ export function BasicDetailsCard(props: {
                   )}
                   {!props.usingCustomConversionRate &&
                     !props.usingExactAmount && (
-                      <CurrencyRateProviderAttribution
-                        sources={props.exchangeRate.sources}
-                        via={props.exchangeRate.via}
-                      />
+                      <>
+                        <RateWarningBanner
+                          base={inputCurrency.code}
+                          target={
+                            groupCurrency.code ||
+                            (group.currencyCode ?? undefined)
+                          }
+                          exchangeRate={props.exchangeRate}
+                        />
+                        <CurrencyRateProviderAttribution
+                          sources={props.exchangeRate.sources}
+                          via={props.exchangeRate.via}
+                        />
+                      </>
                     )}
                   <div className="flex flex-wrap gap-x-3">
                     {(props.usingCustomConversionRate ||

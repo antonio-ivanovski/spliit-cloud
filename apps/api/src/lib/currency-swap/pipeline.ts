@@ -63,10 +63,14 @@ const validatePlanOptionsEffect = (
  */
 export const fetchSwapRatesEffect = Effect.fnUntraced(function* (
   keys: Array<{ date: string; base: string; target: string }>,
-): Effect.fn.Return<Record<string, number>, SwapRateError, FxRateService> {
-  if (keys.length === 0) return {}
+): Effect.fn.Return<
+  { rates: Record<string, number>; fallbackKeys: string[] },
+  SwapRateError,
+  FxRateService
+> {
+  if (keys.length === 0) return { rates: {}, fallbackKeys: [] }
   const fx = yield* FxRateService
-  const { rates } = yield* fx.getRates(keys).pipe(
+  const { rates, fallbackKeys } = yield* fx.getRates(keys).pipe(
     Effect.mapError(
       (cause) =>
         new SwapRateError({
@@ -75,7 +79,7 @@ export const fetchSwapRatesEffect = Effect.fnUntraced(function* (
         }),
     ),
   )
-  return rates
+  return { rates, fallbackKeys }
 })
 
 export type SwapPreview = {
@@ -106,13 +110,14 @@ export const planSwapPreviewEffect = Effect.fnUntraced(function* (
   const newCode = options.newCode.toUpperCase()
 
   const keys = computeSwapRateKeys(expenses, oldCode, newCode, options.modes)
-  const ratesByKey = yield* fetchSwapRatesEffect(keys)
+  const { rates: ratesByKey, fallbackKeys } = yield* fetchSwapRatesEffect(keys)
   const rows = planSwapRows(
     expenses,
     oldCode,
     newCode,
     options.modes,
     ratesByKey,
+    new Set(fallbackKeys),
   )
   const { sumOld, sumNew, missingRateCount } = rows.reduce(
     (acc, row) => ({

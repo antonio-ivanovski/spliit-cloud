@@ -542,7 +542,9 @@
         "perDateTitle": "Konverze podle data",
         "rateDateLabel": "Datum kurzu",
         "ratesError": "Směnné kurzy se nepodařilo načíst. Zkontrolujte připojení a zkuste to znovu.",
-        "refresh": "Obnovit"
+        "refresh": "Obnovit",
+        "perDateFallbackLabel": "Použít pevnou konverzi, pokud chybí tržní kurz",
+        "perDateFallbackSummary": "{fallback} z {total} dat používá pevnou konverzi"
       },
       "Documents": {
         "title": "Vezměte účtenky s sebou",
@@ -3700,10 +3702,18 @@
     "bridged": "přes {currencies} (<providers></providers>)",
     "direct": {
       "frankfurter": "Kurz z <provider></provider>",
-      "coinbase": "Kurz z <provider></provider>"
+      "coinbase": "Kurz z <provider></provider>",
+      "fixed": "Pevný kurz z <provider></provider>"
     },
     "fallbackPrefix": "Kurzy z",
-    "fallbackSeparator": " a "
+    "fallbackSeparator": " a ",
+    "fixed": "Pevná konverze",
+    "fixedReason": {
+      "euro-adoption": "Měna {code} byla dne {date} nahrazena měnou {anchor} pevným kurzem 1 {anchor} = {rate} {code}.",
+      "redenomination": "Měna {code} byla dne {date} redenominována na {anchor} pevným kurzem 1 {anchor} = {rate} {code}.",
+      "replacement": "Měna {code} byla dne {date} nahrazena měnou {anchor} pevným kurzem 1 {anchor} = {rate} {code}.",
+      "withdrawn": "Měna {code} byla dne {date} stažena z oběhu; pro přepočet se používá pevný kurz 1 {anchor} = {rate} {code}."
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4924,7 +4934,8 @@
     },
     "rowWarnings": {
       "missing-rate": "Pro tento výdaj není k dispozici žádný kurz.",
-      "exact-to-custom": "Tento výdaj používal přesnou částku, takže se převede vlastním kurzem."
+      "exact-to-custom": "Tento výdaj používal přesnou částku, takže se převede vlastním kurzem.",
+      "fixed-fallback": "Převedeno pevnou konverzí — tržní kurz nebyl k dispozici."
     },
     "customLedgerNotice": "Tato skupina používá vlastní kód měny, takže automatické kurzy nejsou k dispozici.",
     "target": {
@@ -4942,7 +4953,8 @@
       "minor-units": "Nová měna používá jiné dílčí jednotky (např. centy vs. jeny) — očekávejte drobné rozdíly ze zaokrouhlení.",
       "budgets-stale": "Rozpočty zůstanou v částkách staré měny a po výměně by se měly zkontrolovat.",
       "recurring-stale": "Aktivní opakující se šablony si ponechají staré částky — po výměně je zkontrolujte.",
-      "exact-to-custom": "Některé výdaje používaly přesné částky, takže se převedou vlastními kurzy."
+      "exact-to-custom": "Některé výdaje používaly přesné částky, takže se převedou vlastními kurzy.",
+      "fixed-fallback": "Některé výdaje používají pevnou konverzi pro měnu staženou z oběhu."
     },
     "back": "Zpět",
     "pairs": {
@@ -4987,5 +4999,12 @@
     "uploadingFile": "Nahrávání vybraného souboru…",
     "unsupportedFile": "Některé soubory nejsou podporovány a byly přeskočeny.",
     "useTextAsFile": "Použít text jako přílohu .txt"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "Měna stažená z oběhu — zobrazuje se poslední dostupný kurz z {date}",
+    "statutoryHeadline": "Pevný přepočítací kurz — nejedná se o tržní kurz",
+    "triangulatedHeadline": "Částečně pevný kurz — pevný přepočet plus aktuální tržní kurz",
+    "withdrawnPairHeadline": "{codes} zahrnuje měnu staženou z oběhu",
+    "reference": "Zdroj"
   }
 }

@@ -537,7 +537,9 @@
         "perDateTitle": "Conversie per dată",
         "rateDateLabel": "Data cursului",
         "ratesError": "Nu s-au putut prelua cursurile de schimb. Verifică conexiunea și încearcă din nou.",
-        "refresh": "Reîmprospătează"
+        "refresh": "Reîmprospătează",
+        "perDateFallbackLabel": "Folosește conversia fixă atunci când lipsește cursul de piață",
+        "perDateFallbackSummary": "{fallback} din {total} date utilizează conversia fixă"
       },
       "Documents": {
         "title": "Adu-ți chitanțele cu tine",
@@ -3681,10 +3683,18 @@
     "bridged": "prin {currencies} (<providers></providers>)",
     "direct": {
       "frankfurter": "Curs de la <provider></provider>",
-      "coinbase": "Curs de la <provider></provider>"
+      "coinbase": "Curs de la <provider></provider>",
+      "fixed": "Curs fix de la <provider></provider>"
     },
     "fallbackPrefix": "Cursuri de la",
-    "fallbackSeparator": " și "
+    "fallbackSeparator": " și ",
+    "fixed": "Conversie fixă",
+    "fixedReason": {
+      "euro-adoption": "{code} a fost înlocuit de {anchor} la {date} la un curs fix de 1 {anchor} = {rate} {code}.",
+      "redenomination": "{code} a fost redenominat în {anchor} la {date} la un curs fix de 1 {anchor} = {rate} {code}.",
+      "replacement": "{code} a fost înlocuit de {anchor} la {date} la un curs fix de 1 {anchor} = {rate} {code}.",
+      "withdrawn": "{code} a fost retras la {date}; conversia utilizează cursul fix de 1 {anchor} = {rate} {code}."
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4904,7 +4914,8 @@
     },
     "rowWarnings": {
       "missing-rate": "Niciun curs disponibil pentru această cheltuială.",
-      "exact-to-custom": "Această cheltuială a folosit o sumă exactă, așa că se convertește la un curs personalizat."
+      "exact-to-custom": "Această cheltuială a folosit o sumă exactă, așa că se convertește la un curs personalizat.",
+      "fixed-fallback": "Convertit cu conversia fixă — nu a fost disponibil niciun curs de piață."
     },
     "archivedNotice": "Acest grup este arhivat. Dezarhivează grupul pentru a schimba moneda.",
     "customLedgerNotice": "Acest grup folosește un cod de monedă personalizat, așa că cursurile automate nu sunt disponibile.",
@@ -4923,7 +4934,8 @@
       "minor-units": "Moneda nouă folosește unități minore diferite (de ex. cenți vs yeni) — sunt așteptate mici diferențe de rotunjire.",
       "budgets-stale": "Bugetele păstrează sumele în moneda veche și trebuie revizuite după schimbare.",
       "recurring-stale": "Șabloanele recurente active păstrează sumele vechi — revizuiește-le după schimbare.",
-      "exact-to-custom": "Unele cheltuieli au folosit sume exacte, așa că se convertesc la cursuri personalizate."
+      "exact-to-custom": "Unele cheltuieli au folosit sume exacte, așa că se convertesc la cursuri personalizate.",
+      "fixed-fallback": "Unele cheltuieli utilizează conversia fixă pentru o monedă retrasă."
     },
     "back": "Înapoi",
     "pairs": {
@@ -4968,5 +4980,12 @@
     "uploadingFile": "Se încarcă fișierul selectat…",
     "unsupportedFile": "Unele fișiere nu sunt acceptate și au fost omise.",
     "useTextAsFile": "Folosește textul ca atașament .txt"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "Monedă retrasă — se afișează ultimul curs disponibil din {date}",
+    "statutoryHeadline": "Curs de conversie fix — nu este o cotație de piață",
+    "triangulatedHeadline": "Curs parțial fix — conversie fixă plus un curs de piață în timp real",
+    "withdrawnPairHeadline": "{codes} include o monedă retrasă",
+    "reference": "Referință"
   }
 }

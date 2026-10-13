@@ -12,7 +12,14 @@ export const swapRateModeSchema = z.discriminatedUnion('type', [
  * to perDate.
  */
 export const swapPairModeSchema = z.union([
-  z.object({ mode: z.literal('perDate') }),
+  z.object({
+    mode: z.literal('perDate'),
+    /**
+     * When false, post-withdrawal dates resolve as missing instead of falling
+     * back to the statutory fixed conversion. Absent = allow.
+     */
+    allowFixedFallback: z.boolean().optional(),
+  }),
   z.object({
     mode: z.literal('fixed'),
     date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),

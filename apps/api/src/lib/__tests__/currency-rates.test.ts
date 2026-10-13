@@ -987,3 +987,414 @@ describe('crypto rate resolution', () => {
     expect(maxInFlight).toBeLessThanOrEqual(8)
   })
 })
+
+describe('fixed conversion rates', () => {
+  beforeEach(() => {
+    clearCurrencyRateCache()
+  })
+
+  afterEach(() => {
+    clearCurrencyRateCache()
+  })
+
+  it('resolves BGN→EUR at the statutory rate without calling the provider', async () => {
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue({
+      base: 'BGN',
+      date: '2025-12-31',
+      rates: {},
+    })
+    const cryptoFetchImpl = vi.fn<CryptoFetchFn>()
+
+    const result = await getCurrencyRate({
+      date: '2026-06-15',
+      base: 'BGN',
+      target: 'EUR',
+      fetchImpl,
+      cryptoFetchImpl,
+    })
+
+    expect(result.rate).toBeCloseTo(1 / 1.95583, 12)
+    expect(result.requestedDate).toBe('2026-06-15')
+    expect(result.asOfDate).toBe('2026-06-15')
+    expect(result.sources).toEqual([
+      { provider: 'fixed', base: 'BGN', target: 'EUR' },
+    ])
+    // Uniform EOL-date attempt first (miss), then the statutory table.
+    expect(fetchImpl).toHaveBeenCalledTimes(1)
+    expect(fetchImpl).toHaveBeenCalledWith('2025-12-31', 'BGN', ['EUR'])
+    expect(cryptoFetchImpl).not.toHaveBeenCalled()
+  })
+
+  it('resolves EUR→BGN at the statutory rate', async () => {
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue({
+      base: 'EUR',
+      date: '2025-12-31',
+      rates: {},
+    })
+
+    const result = await getCurrencyRate({
+      date: '2026-03-01',
+      base: 'EUR',
+      target: 'BGN',
+      fetchImpl,
+    })
+
+    expect(result.rate).toBe(1.95583)
+    expect(result.sources).toEqual([
+      { provider: 'fixed', base: 'EUR', target: 'BGN' },
+    ])
+    expect(fetchImpl).toHaveBeenCalledWith('2025-12-31', 'EUR', ['BGN'])
+  })
+
+  it('resolves HRK→EUR after the 2023 withdrawal', async () => {
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue({
+      base: 'HRK',
+      date: '2022-12-31',
+      rates: {},
+    })
+
+    const result = await getCurrencyRate({
+      date: '2024-05-01',
+      base: 'HRK',
+      target: 'EUR',
+      fetchImpl,
+    })
+
+    expect(result.rate).toBeCloseTo(1 / 7.5345, 12)
+    expect(fetchImpl).toHaveBeenCalledWith('2022-12-31', 'HRK', ['EUR'])
+  })
+
+  it('resolves BGN↔HRK purely statically via EUR', async () => {
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue({
+      base: 'BGN',
+      date: '2022-12-31',
+      rates: {},
+    })
+
+    const result = await getCurrencyRate({
+      date: '2026-06-15',
+      base: 'BGN',
+      target: 'HRK',
+      fetchImpl,
+    })
+
+    expect(result.rate).toBeCloseTo(7.5345 / 1.95583, 10)
+    expect(result.via).toEqual(['EUR'])
+    expect(result.sources).toEqual([
+      { provider: 'fixed', base: 'BGN', target: 'EUR' },
+      { provider: 'fixed', base: 'EUR', target: 'HRK' },
+    ])
+    // EOL attempt uses the earlier withdrawal (HRK 2023) for joint history.
+    expect(fetchImpl).toHaveBeenCalledWith('2022-12-31', 'BGN', ['HRK'])
+  })
+
+  it('freezes the last quoted rate when the provider still has EOL-date data', async () => {
+    const fetchImpl = mockFn<FetchRatesFn>().mockImplementation(
+      async (date: string, base: string) => {
+        if (date === '2025-12-31' && base === 'BGN') {
+          return { base, date, rates: { USD: 0.6 } }
+        }
+        return { base, date, rates: {} }
+      },
+    )
+
+    const result = await getCurrencyRate({
+      date: '2026-06-15',
+      base: 'BGN',
+      target: 'USD',
+      fetchImpl,
+    })
+
+    expect(result.rate).toBe(0.6)
+    expect(result.requestedDate).toBe('2026-06-15')
+    expect(result.asOfDate).toBe('2025-12-31')
+    expect(result.sources).toEqual([
+      { provider: 'frankfurter', base: 'BGN', target: 'USD' },
+    ])
+    expect(fetchImpl).toHaveBeenCalledWith('2025-12-31', 'BGN', ['USD'])
+  })
+
+  it('triangulates through the live anchor leg when EOL-date data is gone', async () => {
+    const fetchImpl = mockFn<FetchRatesFn>().mockImplementation(
+      async (date: string, base: string) => {
+        if (date === '2026-06-15' && base === 'EUR') {
+          return { base, date, rates: { USD: 1.1 } }
+        }
+        return { base, date, rates: {} }
+      },
+    )
+
+    const result = await getCurrencyRate({
+      date: '2026-06-15',
+      base: 'BGN',
+      target: 'USD',
+      fetchImpl,
+    })
+
+    expect(result.rate).toBeCloseTo(1.1 / 1.95583, 10)
+    expect(result.requestedDate).toBe('2026-06-15')
+    expect(result.asOfDate).toBe('2026-06-15')
+    expect(result.via).toEqual(['EUR'])
+    expect(result.sources).toEqual([
+      { provider: 'fixed', base: 'BGN', target: 'EUR' },
+      { provider: 'frankfurter', base: 'EUR', target: 'USD' },
+    ])
+    expect(fetchImpl).toHaveBeenCalledWith('2025-12-31', 'BGN', ['USD'])
+    expect(fetchImpl).toHaveBeenCalledWith('2026-06-15', 'EUR', ['USD'])
+  })
+
+  it('uses market quotes before withdrawal and falls back to fixed on gaps', async () => {
+    const market = mockFn<FetchRatesFn>().mockResolvedValue(
+      makePayload({ base: 'BGN', date: '2025-06-15', rates: { EUR: 0.51 } }),
+    )
+
+    const quoted = await getCurrencyRate({
+      date: '2025-06-15',
+      base: 'BGN',
+      target: 'EUR',
+      fetchImpl: market,
+    })
+    expect(quoted.rate).toBe(0.51)
+    expect(quoted.asOfDate).toBe('2025-06-15')
+    clearCurrencyRateCache()
+
+    const gap = mockFn<FetchRatesFn>().mockResolvedValue(
+      makePayload({ base: 'BGN', date: '2025-06-15', rates: {} }),
+    )
+    const fallback = await getCurrencyRate({
+      date: '2025-06-15',
+      base: 'BGN',
+      target: 'EUR',
+      fetchImpl: gap,
+    })
+    expect(fallback.rate).toBeCloseTo(1 / 1.95583, 12)
+    expect(fallback.sources).toEqual([
+      { provider: 'fixed', base: 'BGN', target: 'EUR' },
+    ])
+  })
+
+  it('strict mode resolves post-withdrawal dates as not-found, skipping the EOL retry', async () => {
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue(
+      makePayload({ rates: {} }),
+    )
+
+    await expect(
+      getCurrencyRate({
+        date: '2026-06-15',
+        base: 'BGN',
+        target: 'EUR',
+        fetchImpl,
+        allowFixedFallback: false,
+      }),
+    ).rejects.toBeInstanceOf(CurrencyRateNotFoundError)
+    // The frozen last-quote retry at the EOL date never runs for strict
+    // lookups; every provider call keeps the requested date.
+    for (const call of fetchImpl.mock.calls) {
+      expect(call[0]).not.toBe('2025-12-31')
+    }
+  })
+
+  it('strict mode keeps pre-withdrawal market quotes', async () => {
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue(
+      makePayload({ base: 'BGN', date: '2025-06-15', rates: { EUR: 0.51 } }),
+    )
+
+    const result = await getCurrencyRate({
+      date: '2025-06-15',
+      base: 'BGN',
+      target: 'EUR',
+      fetchImpl,
+      allowFixedFallback: false,
+    })
+
+    expect(result.rate).toBe(0.51)
+    expect(result.asOfDate).toBe('2025-06-15')
+  })
+
+  it('strict mode skips the statutory table on pre-withdrawal provider gaps', async () => {
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue(
+      makePayload({ base: 'BGN', date: '2025-06-15', rates: {} }),
+    )
+
+    await expect(
+      getCurrencyRate({
+        date: '2025-06-15',
+        base: 'BGN',
+        target: 'EUR',
+        fetchImpl,
+        allowFixedFallback: false,
+      }),
+    ).rejects.toBeInstanceOf(CurrencyRateNotFoundError)
+  })
+
+  it('strict mode does not serve fallback-composed cache entries', async () => {
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue(
+      makePayload({ rates: {} }),
+    )
+
+    const fallback = await getCurrencyRate({
+      date: '2026-06-15',
+      base: 'BGN',
+      target: 'EUR',
+      fetchImpl,
+    })
+    expect(fallback.sources).toEqual([
+      { provider: 'fixed', base: 'BGN', target: 'EUR' },
+    ])
+    const callsAfterFallback = fetchImpl.mock.calls.length
+
+    await expect(
+      getCurrencyRate({
+        date: '2026-06-15',
+        base: 'BGN',
+        target: 'EUR',
+        fetchImpl,
+        allowFixedFallback: false,
+      }),
+    ).rejects.toBeInstanceOf(CurrencyRateNotFoundError)
+    // The cached statutory entry is rejected, so the provider is hit again.
+    expect(fetchImpl.mock.calls.length).toBeGreaterThan(callsAfterFallback)
+  })
+
+  it('keeps RATE_NOT_FOUND for pairs without any fixed side', async () => {
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue(
+      makePayload({ rates: { GBP: 0.85 } }),
+    )
+
+    const results = await getCurrencyRates(
+      [{ date: '2026-06-15', base: 'EUR', target: 'USD' }],
+      { fetchImpl },
+    )
+
+    expect(results[0]).toMatchObject({
+      ok: false,
+      error: { code: 'RATE_NOT_FOUND', target: 'USD' },
+    })
+  })
+
+  it('resolves batched fixed pairs, collapsing EOL retries by base', async () => {
+    const fetchImpl = mockFn<FetchRatesFn>().mockImplementation(
+      async (date: string, base: string, quotes?: string[]) => ({
+        base,
+        date,
+        rates: Object.fromEntries(
+          (quotes ?? [])
+            .filter((q) => base === 'EUR' && q === 'USD')
+            .map((q) => [q, 1.1]),
+        ),
+      }),
+    )
+
+    const results = await getCurrencyRates(
+      [
+        { date: '2026-06-01', base: 'BGN', target: 'EUR' },
+        { date: '2026-06-02', base: 'BGN', target: 'EUR' },
+        { date: '2026-06-01', base: 'EUR', target: 'USD' },
+      ],
+      { fetchImpl },
+    )
+
+    expect(results[0]).toMatchObject({
+      ok: true,
+      rate: { requestedDate: '2026-06-01' },
+    })
+    expect(results[1]).toMatchObject({
+      ok: true,
+      rate: { requestedDate: '2026-06-02' },
+    })
+    for (const index of [0, 1]) {
+      const entry = results[index]
+      if (!entry?.ok) throw new Error(`expected ok result at ${index}`)
+      expect(entry.rate.rate).toBeCloseTo(1 / 1.95583, 12)
+      expect(entry.rate.sources).toEqual([
+        { provider: 'fixed', base: 'BGN', target: 'EUR' },
+      ])
+    }
+    expect(results[2]).toMatchObject({
+      ok: true,
+      rate: { rate: 1.1, target: 'USD' },
+    })
+    // Classic groups (one per date+base) plus a single collapsed EOL retry
+    // for BGN — no per-date EOL fan-out, no anchor legs for pure-fixed pairs.
+    expect(fetchImpl).toHaveBeenCalledTimes(4)
+    expect(fetchImpl).toHaveBeenCalledWith('2025-12-31', 'BGN', ['EUR'])
+  })
+
+  it('batch honors per-item strict flags next to fallback-allowed twins', async () => {
+    const fetchImpl = mockFn<FetchRatesFn>().mockImplementation(
+      async (date: string, base: string, quotes?: string[]) => ({
+        base,
+        date,
+        rates: Object.fromEntries(
+          (quotes ?? [])
+            .filter((q) => base === 'EUR' && q === 'USD')
+            .map((q) => [q, 1.1]),
+        ),
+      }),
+    )
+
+    const results = await getCurrencyRates(
+      [
+        {
+          date: '2026-06-01',
+          base: 'BGN',
+          target: 'EUR',
+          allowFixedFallback: false,
+        },
+        { date: '2026-06-01', base: 'BGN', target: 'EUR' },
+      ],
+      { fetchImpl },
+    )
+
+    expect(results[0]).toMatchObject({
+      ok: false,
+      error: { code: 'RATE_NOT_FOUND', target: 'EUR' },
+    })
+    const allowed = results[1]
+    if (!allowed?.ok) throw new Error('expected ok result')
+    expect(allowed.rate.rate).toBeCloseTo(1 / 1.95583, 12)
+    expect(allowed.rate.sources).toEqual([
+      { provider: 'fixed', base: 'BGN', target: 'EUR' },
+    ])
+    // No EOL retry for the strict target — only the allowed twin retries.
+    const eolCalls = fetchImpl.mock.calls.filter(
+      ([date]) => date === '2025-12-31',
+    )
+    expect(eolCalls).toHaveLength(1)
+  })
+
+  it('triangulates batched cross pairs with one grouped anchor fetch', async () => {
+    const fetchImpl = mockFn<FetchRatesFn>().mockImplementation(
+      async (date: string, base: string) => {
+        if (base === 'EUR' && date === '2026-06-01') {
+          return { base, date, rates: { USD: 1.1 } }
+        }
+        return { base, date, rates: {} }
+      },
+    )
+
+    const results = await getCurrencyRates(
+      [
+        { date: '2026-06-01', base: 'BGN', target: 'USD' },
+        { date: '2026-06-01', base: 'HRK', target: 'USD' },
+      ],
+      { fetchImpl },
+    )
+
+    const [bgnUsd, hrkUsd] = results
+    if (!bgnUsd?.ok || !hrkUsd?.ok) throw new Error('expected ok results')
+    expect(bgnUsd.rate.rate).toBeCloseTo(1.1 / 1.95583, 10)
+    expect(bgnUsd.rate.via).toEqual(['EUR'])
+    expect(bgnUsd.rate.sources).toEqual([
+      { provider: 'fixed', base: 'BGN', target: 'EUR' },
+      { provider: 'frankfurter', base: 'EUR', target: 'USD' },
+    ])
+    expect(hrkUsd.rate.rate).toBeCloseTo(1.1 / 7.5345, 10)
+    expect(hrkUsd.rate.via).toEqual(['EUR'])
+    const anchorCalls = fetchImpl.mock.calls.filter(
+      ([date, base]) => date === '2026-06-01' && base === 'EUR',
+    )
+    expect(anchorCalls).toHaveLength(1)
+    expect(anchorCalls[0]![2]).toEqual(['USD'])
+  })
+})

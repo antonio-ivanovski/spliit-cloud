@@ -527,7 +527,9 @@
         "perDateTitle": "按日期换算",
         "rateDateLabel": "汇率日期",
         "ratesError": "无法获取汇率。请检查网络连接后重试。",
-        "refresh": "刷新"
+        "refresh": "刷新",
+        "perDateFallbackLabel": "缺少市场汇率时使用固定换算",
+        "perDateFallbackSummary": "{total} 个日期中有 {fallback} 个使用固定换算"
       },
       "Documents": {
         "title": "带上你的收据",
@@ -3642,10 +3644,18 @@
     "bridged": "通过 {currencies}（<providers></providers>）",
     "direct": {
       "frankfurter": "<provider></provider> 汇率",
-      "coinbase": "<provider></provider> 汇率"
+      "coinbase": "<provider></provider> 汇率",
+      "fixed": "来自 <provider></provider> 的固定汇率"
     },
     "fallbackPrefix": "汇率来源：",
-    "fallbackSeparator": " 和 "
+    "fallbackSeparator": " 和 ",
+    "fixed": "固定换算",
+    "fixedReason": {
+      "euro-adoption": "{code} 已于 {date} 被 {anchor} 取代，固定汇率为 1 {anchor} = {rate} {code}。",
+      "redenomination": "{code} 已于 {date} 重定面值并转换为 {anchor}，固定汇率为 1 {anchor} = {rate} {code}。",
+      "replacement": "{code} 已于 {date} 被 {anchor} 取代，固定汇率为 1 {anchor} = {rate} {code}。",
+      "withdrawn": "{code} 已于 {date} 退出流通，换算采用固定汇率 1 {anchor} = {rate} {code}。"
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4851,7 +4861,8 @@
     },
     "rowWarnings": {
       "missing-rate": "此笔支出没有可用汇率。",
-      "exact-to-custom": "此笔支出使用了精确金额，因此按自定义汇率换算。"
+      "exact-to-custom": "此笔支出使用了精确金额，因此按自定义汇率换算。",
+      "fixed-fallback": "使用固定换算转换，没有可用的市场汇率。"
     },
     "customLedgerNotice": "此群组使用自定义货币代码，因此无法使用自动汇率。",
     "target": {
@@ -4869,7 +4880,8 @@
       "minor-units": "新货币的辅币单位不同（例如分与日元）——可能会有小额舍入差异。",
       "budgets-stale": "预算仍为旧货币金额，更换后请检查。",
       "recurring-stale": "处于启用状态的重复支出模板仍为旧金额——更换后请检查。",
-      "exact-to-custom": "部分支出使用了精确金额，因此按自定义汇率换算。"
+      "exact-to-custom": "部分支出使用了精确金额，因此按自定义汇率换算。",
+      "fixed-fallback": "部分支出对已退出流通的货币使用了固定换算。"
     },
     "back": "返回",
     "pairs": {
@@ -4914,5 +4926,12 @@
     "uploadingFile": "正在上传所选文件……",
     "unsupportedFile": "部分文件不受支持，已跳过。",
     "useTextAsFile": "将文本用作 .txt 附件"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "已退出流通的货币，显示 {date} 的最后可用汇率",
+    "statutoryHeadline": "固定换算汇率（非市场报价）",
+    "triangulatedHeadline": "部分固定汇率（固定换算加实时市场汇率）",
+    "withdrawnPairHeadline": "{codes} 包含已退出流通的货币",
+    "reference": "参考资料"
   }
 }

@@ -536,7 +536,9 @@
         "perDateTitle": "Dataren araberako bihurketa",
         "rateDateLabel": "Tasaren data",
         "ratesError": "Ezin izan dira truke-tasak eskuratu. Egiaztatu zure konexioa eta saiatu berriro.",
-        "refresh": "Freskatu"
+        "refresh": "Freskatu",
+        "perDateFallbackLabel": "Erabili bihurketa finkoa merkatuko tasa falta denean",
+        "perDateFallbackSummary": "{total} datetatik {fallback}ek bihurketa finkoa erabiltzen dute"
       },
       "Documents": {
         "title": "Ekarri zure ordainagiriak",
@@ -3679,10 +3681,18 @@
     "bridged": "{currencies} bidez (<providers></providers>)",
     "direct": {
       "frankfurter": "<provider></provider> erako truke-tasa",
-      "coinbase": "<provider></provider> erako truke-tasa"
+      "coinbase": "<provider></provider> erako truke-tasa",
+      "fixed": "<provider></provider> erako truke-tasa finkoa"
     },
     "fallbackPrefix": "Truke-tasak hemendik:",
-    "fallbackSeparator": " eta "
+    "fallbackSeparator": " eta ",
+    "fixed": "Bihurketa finkoa",
+    "fixedReason": {
+      "euro-adoption": "{code} {anchor}-(e)k ordezkatu zuen {date}-(e)an, 1 {anchor} = {rate} {code} tasa finkoan.",
+      "redenomination": "{code} {anchor}-(e)ra berrizendatu zuten {date}-(e)an, 1 {anchor} = {rate} {code} tasa finkoan.",
+      "replacement": "{code} {anchor}-(e)k ordezkatu zuen {date}-(e)an, 1 {anchor} = {rate} {code} tasa finkoan.",
+      "withdrawn": "{code} {date}-(e)an erretiratu zuten; bihurketak 1 {anchor} = {rate} {code} tasa finkoa erabiltzen du."
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4897,7 +4907,8 @@
     },
     "rowWarnings": {
       "missing-rate": "Ez dago tasa erabilgarririk gastu honetarako.",
-      "exact-to-custom": "Gastu honek zenbateko zehatza erabili zuen, beraz tasa pertsonalizatuarekin bihurtzen da."
+      "exact-to-custom": "Gastu honek zenbateko zehatza erabili zuen, beraz tasa pertsonalizatuarekin bihurtzen da.",
+      "fixed-fallback": "Bihurketa finkoarekin bihurtuta — ez zegoen merkatuko tasa erabilgarririk."
     },
     "archivedNotice": "Talde hau gordeta dago. Desartxibatu taldea moneta trukatzeko.",
     "customLedgerNotice": "Talde honek moneta-kode pertsonalizatua erabiltzen du, beraz ez dago tasa automatikorik eskuragarri.",
@@ -4916,7 +4927,8 @@
       "minor-units": "Moneta berriak unitate txiki desberdinak erabiltzen ditu (adib. zentimoak vs yenak) — biribiltze-desberdintasun txikiak espero dira.",
       "budgets-stale": "Aurrekontuek moneta zaharreko zenbatekoak gordetzen dituzte eta trukearen ondoren berrikusi beharko lirateke.",
       "recurring-stale": "Errepikapen-txantiloi aktiboek zenbateko zaharrak gordetzen dituzte — berrikusi itzazu trukearen ondoren.",
-      "exact-to-custom": "Gastu batzuek zenbateko zehatzak erabili zituzten, beraz tasa pertsonalizatuekin bihurtzen dira."
+      "exact-to-custom": "Gastu batzuek zenbateko zehatzak erabili zituzten, beraz tasa pertsonalizatuekin bihurtzen dira.",
+      "fixed-fallback": "Gastu batzuek bihurketa finkoa erabiltzen dute moneta erretiratu baterako."
     },
     "back": "Atzera",
     "pairs": {
@@ -4961,5 +4973,12 @@
     "uploadingFile": "Hautatutako fitxategia kargatzen…",
     "unsupportedFile": "Fitxategi batzuk ez dira onartzen eta baztertu egin dira.",
     "useTextAsFile": "Erabili testua .txt eranskin gisa"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "Moneta erretiratua — {date}-(e)ko azken truke-tasa erabilgarria erakusten da",
+    "statutoryHeadline": "Bihurketa-tasa finkoa — ez da merkatuko kotizazioa",
+    "triangulatedHeadline": "Tasa partzialki finkoa — bihurketa finkoa eta merkatuko zuzeneko tasa",
+    "withdrawnPairHeadline": "{codes} barne moneta erretiratu bat dago",
+    "reference": "Erreferentzia"
   }
 }

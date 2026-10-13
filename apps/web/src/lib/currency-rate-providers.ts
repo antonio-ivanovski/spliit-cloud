@@ -1,6 +1,10 @@
 /**
  * Display metadata for FX providers returned by the currency rates API. URLs
  * point at each provider's public API / docs so users can verify sources.
+ * `fixed` intentionally has no URL: it is a generic statutory-conversion leg
+ * (any withdrawal cause — euro adoption, redenomination, replacement), and no
+ * single link can describe every currency. Per-currency references live in the
+ * catalog (`fixedConversion.referenceUrl`) and are linked from the warning.
  */
 export const CURRENCY_RATE_PROVIDERS = {
   frankfurter: {
@@ -12,6 +16,9 @@ export const CURRENCY_RATE_PROVIDERS = {
     id: 'coinbase',
     /** Coinbase App API — spot price endpoint used for crypto quotes. */
     url: 'https://docs.cdp.coinbase.com/coinbase-app/track-apis/prices#get-spot-price',
+  },
+  fixed: {
+    id: 'fixed',
   },
 } as const
 

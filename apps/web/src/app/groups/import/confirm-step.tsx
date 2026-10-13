@@ -1,4 +1,5 @@
 import { Calendar, Globe } from 'lucide-react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { GroupEmojiBadge } from '@/components/group-emoji-badge'
@@ -38,6 +39,8 @@ type Props = {
   documentRecoverySkipped?: boolean
   showDocumentSummary?: boolean
   rates: Record<string, number> | null | undefined
+  /** Rate keys (`date|BASE|TARGET`) resolved via fixed fallback, if any. */
+  fallbackKeys?: string[]
   onBack: () => void
   onSubmit: () => void
   importError?: string | null
@@ -66,6 +69,7 @@ export function ConfirmStep({
   documentRecoverySkipped = false,
   showDocumentSummary = false,
   rates,
+  fallbackKeys,
   onBack,
   onSubmit,
   cloudSummary,
@@ -106,6 +110,10 @@ export function ConfirmStep({
     ratesByPair[key].sort((a, b) => a.date.localeCompare(b.date))
   }
   const conversionPairs = cloudSummary ? [] : Object.keys(conversionModes)
+  const fallbackKeySet = useMemo(
+    () => new Set(fallbackKeys ?? []),
+    [fallbackKeys],
+  )
   // Cloud restore is lossless and uses the inspected manifest at submit
   // time. Its display source intentionally omits recurrence/itemization
   // details, so only render recurrence information from the raw Cloud
@@ -277,6 +285,9 @@ export function ConfirmStep({
                 const pairMode = conversionModes[pairKey]
                 const isPerDate = pairMode === 'perDate'
                 const rows = ratesByPair[pairKey] ?? []
+                const fallbackCount = rows.filter((row) =>
+                  fallbackKeySet.has(`${row.date}|${base}|${target}`),
+                ).length
                 return (
                   <li key={pairKey} className="flex flex-col gap-1.5">
                     <div className="flex items-center gap-2 text-foreground">
@@ -297,6 +308,17 @@ export function ConfirmStep({
                           : t('Groups.Import.Confirm.conversionFixed')}
                       </span>
                     </div>
+                    {fallbackCount > 0 ? (
+                      <p className="ms-6 text-xs font-medium text-amber-800 dark:text-amber-200">
+                        {t(
+                          'Groups.Import.CurrencyConversion.perDateFallbackSummary',
+                          {
+                            fallback: fallbackCount,
+                            total: rows.length,
+                          },
+                        )}
+                      </p>
+                    ) : null}
                     {isPerDate ? (
                       rows.length > 0 ? (
                         <ul className="ms-6 flex flex-col gap-1 text-xs">

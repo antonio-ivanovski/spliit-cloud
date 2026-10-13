@@ -549,7 +549,9 @@
         "perDateTitle": "Conversión por fecha",
         "rateDateLabel": "Fecha de la tasa",
         "ratesError": "No se pudieron obtener las tasas de cambio. Comprueba tu conexión e inténtalo de nuevo.",
-        "refresh": "Actualizar"
+        "refresh": "Actualizar",
+        "perDateFallbackLabel": "Utiliza la conversión fija cuando falte el tipo de mercado",
+        "perDateFallbackSummary": "{fallback} de {total} fechas utilizan la conversión fija"
       },
       "Documents": {
         "title": "Trae tus recibos contigo",
@@ -3732,10 +3734,18 @@
     "bridged": "vía {currencies} (<providers></providers>)",
     "direct": {
       "frankfurter": "Tipo de cambio de <provider></provider>",
-      "coinbase": "Tipo de cambio de <provider></provider>"
+      "coinbase": "Tipo de cambio de <provider></provider>",
+      "fixed": "Tipo de cambio fijo de <provider></provider>"
     },
     "fallbackPrefix": "Tipos de cambio de",
-    "fallbackSeparator": " y "
+    "fallbackSeparator": " y ",
+    "fixed": "Conversión fija",
+    "fixedReason": {
+      "euro-adoption": "{code} se sustituyó por {anchor} el {date} con un tipo de cambio fijo de 1 {anchor} = {rate} {code}.",
+      "redenomination": "{code} se redenominó a {anchor} el {date} con un tipo de cambio fijo de 1 {anchor} = {rate} {code}.",
+      "replacement": "{code} se sustituyó por {anchor} el {date} con un tipo de cambio fijo de 1 {anchor} = {rate} {code}.",
+      "withdrawn": "{code} se retiró el {date}; la conversión utiliza el tipo de cambio fijo de 1 {anchor} = {rate} {code}."
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4950,7 +4960,8 @@
     },
     "rowWarnings": {
       "missing-rate": "No hay ninguna tasa disponible para este gasto.",
-      "exact-to-custom": "Este gasto usó un importe exacto, así que se convierte con una tasa personalizada."
+      "exact-to-custom": "Este gasto usó un importe exacto, así que se convierte con una tasa personalizada.",
+      "fixed-fallback": "Convertido con la conversión fija — no había ningún tipo de mercado disponible."
     },
     "archivedNotice": "Este grupo está archivado. Desarchívalo para intercambiar la moneda.",
     "customLedgerNotice": "Este grupo usa un código de moneda personalizado, así que las tasas automáticas no están disponibles.",
@@ -4969,7 +4980,8 @@
       "minor-units": "La moneda nueva usa «unidades menores» diferentes (p. ej., céntimos frente a yenes) — son esperables pequeñas diferencias de redondeo.",
       "budgets-stale": "Los presupuestos conservan los importes en la moneda antigua y deberían revisarse después del intercambio.",
       "recurring-stale": "Las plantillas recurrentes activas conservan los importes antiguos — revísalas después del intercambio.",
-      "exact-to-custom": "Algunos gastos usaron importes exactos, así que se convierten con tasas personalizadas."
+      "exact-to-custom": "Algunos gastos usaron importes exactos, así que se convierten con tasas personalizadas.",
+      "fixed-fallback": "Algunos gastos utilizan la conversión fija para una moneda retirada."
     },
     "back": "Atrás",
     "pairs": {
@@ -5014,5 +5026,12 @@
     "uploadingFile": "Subiendo el archivo seleccionado…",
     "unsupportedFile": "Algunos archivos no son compatibles y se omitieron.",
     "useTextAsFile": "Usar el texto como archivo .txt adjunto"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "Moneda retirada — se muestra el último tipo disponible del {date}",
+    "statutoryHeadline": "Tipo de conversión fijo — no es una cotización de mercado",
+    "triangulatedHeadline": "Tipo parcialmente fijo — conversión fija más un tipo de mercado en directo",
+    "withdrawnPairHeadline": "{codes} incluye una moneda retirada",
+    "reference": "Referencia"
   }
 }

@@ -665,7 +665,9 @@
         "perDateTitle": "Per-date conversion",
         "rateDateLabel": "Frankfurter rate date",
         "ratesError": "Unable to fetch exchange rates. Check your connection and try again.",
-        "refresh": "Refresh"
+        "refresh": "Refresh",
+        "perDateFallbackLabel": "Use the fixed conversion when a market rate is missing",
+        "perDateFallbackSummary": "{fallback} of {total} dates use the fixed conversion"
       },
       "Documents": {
         "title": "Bring your receipts with you",
@@ -3761,11 +3763,19 @@
     "coinbase": "Coinbase",
     "direct": {
       "frankfurter": "Rate from <provider></provider>",
-      "coinbase": "Rate from <provider></provider>"
+      "coinbase": "Rate from <provider></provider>",
+      "fixed": "Fixed rate from <provider></provider>"
     },
     "bridged": "via {currencies} (<providers></providers>)",
     "fallbackPrefix": "Rates from",
-    "fallbackSeparator": " and "
+    "fallbackSeparator": " and ",
+    "fixed": "Fixed conversion",
+    "fixedReason": {
+      "euro-adoption": "{code} was replaced by {anchor} on {date} at a fixed rate of 1 {anchor} = {rate} {code}.",
+      "redenomination": "{code} was redenominated into {anchor} on {date} at a fixed rate of 1 {anchor} = {rate} {code}.",
+      "replacement": "{code} was replaced by {anchor} on {date} at a fixed rate of 1 {anchor} = {rate} {code}.",
+      "withdrawn": "{code} was withdrawn on {date}; conversion uses the fixed rate of 1 {anchor} = {rate} {code}."
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4985,13 +4995,15 @@
     },
     "rowWarnings": {
       "missing-rate": "No rate available for this expense.",
-      "exact-to-custom": "This expense used an exact amount, so it converts at a custom rate."
+      "exact-to-custom": "This expense used an exact amount, so it converts at a custom rate.",
+      "fixed-fallback": "Converted with the fixed conversion — no market rate was available."
     },
     "warnings": {
       "minor-units": "The new currency uses different minor units (e.g. cents vs yen) — small rounding differences are expected.",
       "budgets-stale": "Budgets stay in the old currency amounts and should be reviewed after the swap.",
       "recurring-stale": "Active recurring templates keep old amounts — review them after the swap.",
-      "exact-to-custom": "Some expenses used exact amounts, so they convert at custom rates."
+      "exact-to-custom": "Some expenses used exact amounts, so they convert at custom rates.",
+      "fixed-fallback": "Some expenses use the fixed conversion for a withdrawn currency."
     },
     "back": "Back",
     "pairs": {
@@ -5036,5 +5048,12 @@
     "uploadingFile": "Uploading selected file…",
     "unsupportedFile": "Some files are not supported and were skipped.",
     "useTextAsFile": "Use text as .txt attachment"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "Withdrawn currency — showing the last available rate from {date}",
+    "statutoryHeadline": "Fixed conversion rate — not a market quote",
+    "triangulatedHeadline": "Partially fixed rate — fixed conversion plus a live market rate",
+    "withdrawnPairHeadline": "{codes} includes a withdrawn currency",
+    "reference": "Reference"
   }
 }

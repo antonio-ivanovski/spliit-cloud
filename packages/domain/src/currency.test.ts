@@ -1,14 +1,23 @@
+import { Schema } from 'effect'
+
 import {
   type Currency,
+  type FixedConversionReason,
   currencyList,
+  dayBeforeIso,
+  fixedConversionFor,
   getCurrency,
   getCurrencyFromGroup,
+  getCurrencyRateWarning,
   intermediaryCurrenciesFor,
   isCryptoCurrency,
+  lastAvailableDateBeforeFixed,
   resolveCurrencyCode,
   roundingGapMinor,
   supportedCurrencyCodes,
+  withdrawnDetailsFor,
 } from './currency'
+import { CurrencyListSchema } from './currency'
 import {
   amountAsDecimal,
   amountAsMinorUnits,
@@ -221,6 +230,179 @@ describe('roundingGapMinor', () => {
         decimal_digits: 3,
       }),
     ).toBe(3)
+  })
+})
+
+describe('fixed conversions', () => {
+  it('records the euro-adoption rates for BGN and HRK', () => {
+    expect(fixedConversionFor('BGN')).toEqual({
+      anchor: 'EUR',
+      unitsPerAnchor: 1.95583,
+      effectiveFrom: '2026-01-01',
+      reason: 'euro-adoption',
+      referenceUrl:
+        'https://www.ecb.europa.eu/euro/changeover/html/index.en.html',
+    })
+    expect(fixedConversionFor('HRK')).toEqual({
+      anchor: 'EUR',
+      unitsPerAnchor: 7.5345,
+      effectiveFrom: '2023-01-01',
+      reason: 'euro-adoption',
+      referenceUrl:
+        'https://www.ecb.europa.eu/euro/changeover/html/index.en.html',
+    })
+  })
+
+  it('returns undefined for live and unknown codes', () => {
+    expect(fixedConversionFor('EUR')).toBeUndefined()
+    expect(fixedConversionFor('USD')).toBeUndefined()
+    expect(fixedConversionFor('XXX')).toBeUndefined()
+  })
+
+  it('resolves the last quoted date before withdrawal', () => {
+    expect(lastAvailableDateBeforeFixed('BGN')).toBe('2025-12-31')
+    expect(lastAvailableDateBeforeFixed('HRK')).toBe('2022-12-31')
+    expect(lastAvailableDateBeforeFixed('EUR')).toBeNull()
+    expect(lastAvailableDateBeforeFixed('XXX')).toBeNull()
+  })
+
+  it('steps one calendar day back across month and year boundaries', () => {
+    expect(dayBeforeIso('2026-01-01')).toBe('2025-12-31')
+    expect(dayBeforeIso('2026-03-01')).toBe('2026-02-28')
+    expect(dayBeforeIso('2024-03-01')).toBe('2024-02-29')
+    expect(() => dayBeforeIso('not-a-date')).toThrow()
+  })
+
+  it('keeps every fixed conversion internally consistent', () => {
+    const reasons: FixedConversionReason[] = [
+      'euro-adoption',
+      'redenomination',
+      'replacement',
+      'withdrawn',
+    ]
+    for (const currency of currencyList) {
+      const fixed = currency.fixedConversion
+      if (!fixed) continue
+      expect(fixed.anchor).not.toBe(currency.code)
+      expect(getCurrency(fixed.anchor)).toBeDefined()
+      expect(fixedConversionFor(fixed.anchor)).toBeUndefined()
+      expect(fixed.unitsPerAnchor).toBeGreaterThan(0)
+      expect(fixed.effectiveFrom).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+      expect(reasons).toContain(fixed.reason)
+      if (fixed.referenceUrl !== undefined) {
+        expect(() => new URL(fixed.referenceUrl!)).not.toThrow()
+      }
+    }
+  })
+
+  it('validates the catalog through the Effect Schema', () => {
+    const decoded = Schema.decodeUnknownSync(CurrencyListSchema)(currencyList)
+    expect(decoded.length).toBe(currencyList.length)
+    expect(() =>
+      Schema.decodeUnknownSync(CurrencyListSchema)([
+        {
+          code: 'XXX',
+          symbol: 'X',
+          rounding: 0,
+          decimal_digits: 2,
+          fixedConversion: {
+            anchor: 'EUR',
+            unitsPerAnchor: -1,
+            effectiveFrom: 'not-a-date',
+            reason: 'annexation',
+          },
+        },
+      ]),
+    ).toThrow()
+  })
+})
+
+describe('currency rate warnings', () => {
+  it('flags a frozen end-of-life quote with no fixed legs', () => {
+    expect(
+      getCurrencyRateWarning({
+        base: 'BGN',
+        target: 'JPY',
+        requestedDate: '2026-06-15',
+        asOfDate: '2025-12-31',
+        sources: [{ provider: 'frankfurter', base: 'BGN', target: 'JPY' }],
+      }),
+    ).toEqual({
+      kind: 'frozen-eol',
+      codes: ['BGN'],
+      details: [
+        {
+          code: 'BGN',
+          anchor: 'EUR',
+          unitsPerAnchor: 1.95583,
+          effectiveFrom: '2026-01-01',
+          reason: 'euro-adoption',
+          referenceUrl:
+            'https://www.ecb.europa.eu/euro/changeover/html/index.en.html',
+        },
+      ],
+      frozenDate: '2025-12-31',
+    })
+  })
+
+  it('flags a purely statutory rate', () => {
+    expect(
+      getCurrencyRateWarning({
+        base: 'BGN',
+        target: 'EUR',
+        requestedDate: '2026-06-15',
+        asOfDate: '2026-06-15',
+        sources: [{ provider: 'fixed', base: 'BGN', target: 'EUR' }],
+      })?.kind,
+    ).toBe('statutory-fixed')
+  })
+
+  it('flags a triangulated fixed-plus-live rate', () => {
+    const warning = getCurrencyRateWarning({
+      base: 'BGN',
+      target: 'USD',
+      requestedDate: '2026-06-15',
+      asOfDate: '2026-06-15',
+      sources: [
+        { provider: 'fixed', base: 'BGN', target: 'EUR' },
+        { provider: 'frankfurter', base: 'EUR', target: 'USD' },
+      ],
+    })
+    expect(warning?.kind).toBe('triangulated-fixed')
+    expect(warning?.codes).toEqual(['BGN'])
+  })
+
+  it('stays silent for live pairs and empty sources', () => {
+    expect(
+      getCurrencyRateWarning({
+        base: 'EUR',
+        target: 'USD',
+        requestedDate: '2026-06-15',
+        asOfDate: '2026-06-15',
+        sources: [{ provider: 'frankfurter', base: 'EUR', target: 'USD' }],
+      }),
+    ).toBeNull()
+    expect(
+      getCurrencyRateWarning({
+        base: 'BGN',
+        target: 'EUR',
+        requestedDate: '2026-06-15',
+        asOfDate: '2026-06-15',
+        sources: [],
+      }),
+    ).toBeNull()
+  })
+
+  it('lists withdrawal details for withdrawn codes in a pair', () => {
+    expect(withdrawnDetailsFor(['EUR', 'USD'])).toEqual([])
+    const details = withdrawnDetailsFor(['BGN', 'JPY'])
+    expect(details.map((detail) => detail.code)).toEqual(['BGN'])
+    expect(details[0]).toMatchObject({
+      anchor: 'EUR',
+      unitsPerAnchor: 1.95583,
+      effectiveFrom: '2026-01-01',
+      reason: 'euro-adoption',
+    })
   })
 })
 

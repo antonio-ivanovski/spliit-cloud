@@ -469,6 +469,8 @@ beforeEach(() => {
     isLoading: false,
     via: undefined,
     sources: [],
+    asOfDate: '2026-01-01',
+    requestedDate: '2026-01-01',
     refresh: vi.fn(),
   })
   vi.mocked(useMediaQuery).mockReturnValue(true)
@@ -1511,6 +1513,8 @@ describe('ExpenseForm', () => {
       isLoading: false,
       via: undefined,
       sources: [],
+      asOfDate: '2026-01-01',
+      requestedDate: '2026-01-01',
       refresh: vi.fn(),
     })
     const { user } = render(
@@ -1542,6 +1546,8 @@ describe('ExpenseForm', () => {
       isLoading: false,
       via: undefined,
       sources: [],
+      asOfDate: '2026-01-01',
+      requestedDate: '2026-01-01',
       refresh: vi.fn(),
     })
     const { user } = render(
@@ -1580,6 +1586,8 @@ describe('ExpenseForm', () => {
       isLoading: false,
       via: undefined,
       sources: [],
+      asOfDate: '2026-01-01',
+      requestedDate: '2026-01-01',
       refresh: vi.fn(),
     })
     const { user } = render(
@@ -1628,6 +1636,8 @@ describe('ExpenseForm', () => {
       isLoading: false,
       via: undefined,
       sources: [],
+      asOfDate: '2026-01-01',
+      requestedDate: '2026-01-01',
       refresh: vi.fn(),
     })
     const { user } = render(
@@ -1674,6 +1684,8 @@ describe('ExpenseForm', () => {
       isLoading: false,
       via: undefined,
       sources: [],
+      asOfDate: '2026-01-01',
+      requestedDate: '2026-01-01',
       refresh: vi.fn(),
     })
     const { user } = render(
@@ -1702,6 +1714,8 @@ describe('ExpenseForm', () => {
       isLoading: false,
       via: undefined,
       sources: [],
+      asOfDate: '2026-01-01',
+      requestedDate: '2026-01-01',
       refresh: vi.fn(),
     })
     const form = (
@@ -1731,6 +1745,8 @@ describe('ExpenseForm', () => {
       isLoading: false,
       via: undefined,
       sources: [],
+      asOfDate: '2026-01-01',
+      requestedDate: '2026-01-01',
       refresh: vi.fn(),
     })
     rerender(form)
@@ -1747,6 +1763,8 @@ describe('ExpenseForm', () => {
       isLoading: false,
       via: undefined,
       sources: [],
+      asOfDate: '2026-01-01',
+      requestedDate: '2026-01-01',
       refresh: vi.fn(),
     })
     const { user } = render(
@@ -1810,6 +1828,8 @@ describe('ExpenseForm', () => {
       isLoading: false,
       via: undefined,
       sources: [],
+      asOfDate: '2026-01-01',
+      requestedDate: '2026-01-01',
       refresh: vi.fn(),
     })
     const { user } = render(
@@ -1840,6 +1860,8 @@ describe('ExpenseForm', () => {
       isLoading: false,
       via: undefined,
       sources: [],
+      asOfDate: '2026-01-01',
+      requestedDate: '2026-01-01',
       refresh,
     })
     const onSubmit = vi.fn().mockResolvedValue('saved' as const)
@@ -1871,6 +1893,8 @@ describe('ExpenseForm', () => {
       isLoading: false,
       via: undefined,
       sources: [],
+      asOfDate: '2026-01-01',
+      requestedDate: '2026-01-01',
       refresh: vi.fn(),
     })
     const onSubmit = vi.fn().mockResolvedValue('saved' as const)
@@ -2360,6 +2384,8 @@ describe('ExpenseForm', () => {
       isLoading: false,
       via: undefined,
       sources: [],
+      asOfDate: '2026-01-01',
+      requestedDate: '2026-01-01',
       refresh: vi.fn(),
     })
     const onSubmit = vi.fn().mockResolvedValue('saved' as const)

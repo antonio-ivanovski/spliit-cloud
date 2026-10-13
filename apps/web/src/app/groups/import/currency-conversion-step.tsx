@@ -4,9 +4,12 @@ import { useTranslation } from 'react-i18next'
 
 import {
   PairConversionCard,
+  classifyPairResults,
   pairKey,
   rateItemKey,
+  rateResultUsesFallback,
   uniquePairs,
+  type PairRateSummary,
 } from '@/components/currency-pair-conversion-card'
 import { Card, CardContent } from '@/components/ui/card'
 import { useCurrencyRates } from '@/lib/hooks'
@@ -29,6 +32,8 @@ export type ConversionResult = {
   fixedRateDates: Record<string, string>
   fixedRateOverrides: Record<string, number>
   rates: Record<string, number>
+  /** Rate keys (`date|BASE|TARGET`) resolved via fixed fallback, if any. */
+  fallbackKeys: string[]
 }
 
 type Props = {
@@ -67,6 +72,11 @@ export function CurrencyConversionStep({
 }: Props) {
   const { t } = useTranslation()
 
+  // Per-date fixed fallback per pair (withdrawn pairs only in the UI).
+  // Absent = allow (the historical always-fallback behavior). Declared before
+  // `rateKeyItems` because the prefetch flags strict pairs server-side.
+  const [fallbacks, setFallbacks] = useState<Record<string, boolean>>({})
+
   const rateKeyItems = useMemo(
     () =>
       currencyLocked
@@ -75,12 +85,17 @@ export function CurrencyConversionStep({
             resolvedExpenses,
             sourceCurrencyCode,
             destinationCurrencyCode,
+          ).map((item) =>
+            fallbacks[`${item.base}|${item.target}`] === false
+              ? { ...item, allowFixedFallback: false as const }
+              : item,
           ),
     [
       currencyLocked,
       resolvedExpenses,
       sourceCurrencyCode,
       destinationCurrencyCode,
+      fallbacks,
     ],
   )
 
@@ -152,22 +167,38 @@ export function CurrencyConversionStep({
     }
   }
 
-  // Pre-fetch per-date rates for the rate computation.
+  // Pre-fetch per-date rates for the rate computation. Strict pairs
+  // (fallback off) ask the server for market-only rates; the client filter
+  // below additionally drops fallback-composed entries from shared data.
   const perDateQuery = useCurrencyRates(rateKeyItems, {
     enabled: rateKeyItems.length > 0,
   })
-  const perDateValues = useMemo(() => {
-    if (!perDateQuery.data) return null
-    const out: Record<string, number> = {}
-    for (let i = 0; i < rateKeyItems.length; i++) {
-      const item = rateKeyItems[i]
-      const result = perDateQuery.data[i]
-      if (result?.ok) out[rateItemKey(item)] = result.rate.rate
+  const perDateClassification = useMemo(() => {
+    const data = perDateQuery.data
+    if (!data || data.length !== rateKeyItems.length) return null
+    const values: Record<string, number> = {}
+    const failed = new Set<string>()
+    const summaries = new Map<string, PairRateSummary>()
+    for (const pair of pairs) {
+      const key = `${pair.base}|${pair.target}`
+      const classified = classifyPairResults(
+        pair,
+        rateKeyItems,
+        data,
+        fallbacks[key] ?? true,
+      )
+      Object.assign(values, classified.values)
+      for (const failedKey of classified.failedKeys) failed.add(failedKey)
+      if (classified.summary) summaries.set(key, classified.summary)
     }
-    return out
-  }, [perDateQuery.data, rateKeyItems])
+    return { values, failed, summaries }
+  }, [pairs, rateKeyItems, perDateQuery.data, fallbacks])
+  const perDateValues = perDateClassification?.values ?? null
 
-  const perDateFailedKeys = useMemo(() => {
+  const perDateFailedKeys: Set<string> = useMemo(() => {
+    if (perDateClassification) return perDateClassification.failed
+    // While loading, fall back to raw failures so the card can show errors
+    // without waiting for classification.
     if (!perDateQuery.data) return new Set<string>()
     const failed = new Set<string>()
     for (let i = 0; i < rateKeyItems.length; i++) {
@@ -176,7 +207,7 @@ export function CurrencyConversionStep({
       if (result?.ok === false) failed.add(rateItemKey(item))
     }
     return failed
-  }, [perDateQuery.data, rateKeyItems])
+  }, [perDateClassification, perDateQuery.data, rateKeyItems])
 
   // Track whether every needed rate is ready, so we can disable Continue.
   const perDateReady = useMemo(() => {
@@ -226,11 +257,28 @@ export function CurrencyConversionStep({
         fixedRateDates: {},
         fixedRateOverrides: {},
         rates: {},
+        fallbackKeys: [],
       })
       return
     }
 
     const rates: Record<string, number> = {}
+    // Rate keys resolved through the withdrawn-currency fallback (per-date
+    // pairs only — fixed-mode provenance stays inside the pair card).
+    // Derived from the same prefetch the summary counts use, so the confirm
+    // step can flag them without re-resolving anything.
+    const fallbackKeys: string[] = []
+    const batchData = perDateQuery.data
+    if (batchData && batchData.length === rateKeyItems.length) {
+      for (let i = 0; i < rateKeyItems.length; i++) {
+        const item = rateKeyItems[i]!
+        if ((modes[`${item.base}|${item.target}`] ?? 'perDate') !== 'perDate')
+          continue
+        if (rateResultUsesFallback(batchData[i])) {
+          fallbackKeys.push(`${item.date}|${item.base}|${item.target}`)
+        }
+      }
+    }
     for (const pair of pairs) {
       const pairKey = `${pair.base}|${pair.target}`
       const pairMode = modes[pairKey] || 'perDate'
@@ -265,6 +313,7 @@ export function CurrencyConversionStep({
       fixedRateDates: dates,
       fixedRateOverrides: cleanOverrides,
       rates,
+      fallbackKeys,
     })
   }, [
     canContinue,
@@ -276,6 +325,7 @@ export function CurrencyConversionStep({
     overrides,
     pairs,
     perDateValues,
+    perDateQuery.data,
     rateKeyItems,
   ])
 
@@ -314,6 +364,13 @@ export function CurrencyConversionStep({
                     perDateQuery.isLoading || perDateQuery.isFetching
                   }
                   perDateError={!!perDateQuery.error || hasPerDateResultError}
+                  perDateSummary={
+                    perDateClassification?.summaries.get(pairKey) ?? null
+                  }
+                  fallbackEnabled={fallbacks[pairKey] ?? true}
+                  onFallbackChange={(v) =>
+                    setFallbacks((p) => ({ ...p, [pairKey]: v }))
+                  }
                   onRefreshPerDate={() => perDateQuery.refetch()}
                   onModeChange={(m) => {
                     ensureMode(pairKey)

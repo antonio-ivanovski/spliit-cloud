@@ -548,7 +548,9 @@
         "perDateTitle": "Conversie per datum",
         "rateDateLabel": "Koersdatum",
         "ratesError": "Kan wisselkoersen niet ophalen. Controleer je verbinding en probeer het opnieuw.",
-        "refresh": "Vernieuwen"
+        "refresh": "Vernieuwen",
+        "perDateFallbackLabel": "De vaste omrekening gebruiken als een marktkoers ontbreekt",
+        "perDateFallbackSummary": "{fallback} van {total} datums gebruiken de vaste omrekening"
       },
       "Documents": {
         "title": "Neem je bonnetjes mee",
@@ -3728,10 +3730,18 @@
     "bridged": "door {currencies} (<providers></providers>)",
     "direct": {
       "frankfurter": "Koers van <provider></provider>",
-      "coinbase": "Koers van <provider></provider>"
+      "coinbase": "Koers van <provider></provider>",
+      "fixed": "Vaste koers van <provider></provider>"
     },
     "fallbackPrefix": "Koersen van",
-    "fallbackSeparator": " en "
+    "fallbackSeparator": " en ",
+    "fixed": "Vaste omrekening",
+    "fixedReason": {
+      "euro-adoption": "{code} is op {date} vervangen door {anchor} tegen een vaste koers van 1 {anchor} = {rate} {code}.",
+      "redenomination": "{code} is op {date} tegen een vaste koers van 1 {anchor} = {rate} {code} omgezet in {anchor}.",
+      "replacement": "{code} is op {date} vervangen door {anchor} tegen een vaste koers van 1 {anchor} = {rate} {code}.",
+      "withdrawn": "{code} is op {date} ingetrokken; de omrekening gebruikt de vaste koers van 1 {anchor} = {rate} {code}."
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4941,7 +4951,8 @@
     },
     "rowWarnings": {
       "missing-rate": "Geen koers beschikbaar voor deze uitgave.",
-      "exact-to-custom": "Deze uitgave gebruikte een exact bedrag en wordt daarom omgerekend tegen een eigen koers."
+      "exact-to-custom": "Deze uitgave gebruikte een exact bedrag en wordt daarom omgerekend tegen een eigen koers.",
+      "fixed-fallback": "Omgezet met de vaste omrekening – er was geen marktkoers beschikbaar."
     },
     "archivedNotice": "Deze groep is gearchiveerd. Haal de groep uit het archief om de valuta te wisselen.",
     "customLedgerNotice": "Deze groep gebruikt een aangepaste valutacode, dus automatische koersen zijn niet beschikbaar.",
@@ -4960,7 +4971,8 @@
       "minor-units": "De nieuwe valuta gebruikt andere kleinste eenheden (bijv. centen vs. yen) — kleine afrondingsverschillen zijn te verwachten.",
       "budgets-stale": "Budgetten blijven in de oude valutabedragen staan en moeten na de wissel worden gecontroleerd.",
       "recurring-stale": "Actieve terugkerende sjablonen behouden oude bedragen — controleer ze na de wissel.",
-      "exact-to-custom": "Sommige uitgaven gebruikten exacte bedragen en worden daarom omgerekend tegen eigen koersen."
+      "exact-to-custom": "Sommige uitgaven gebruikten exacte bedragen en worden daarom omgerekend tegen eigen koersen.",
+      "fixed-fallback": "Sommige uitgaven gebruiken de vaste omrekening voor een ingetrokken valuta."
     },
     "back": "Terug",
     "pairs": {
@@ -5005,5 +5017,12 @@
     "uploadingFile": "Geselecteerd bestand uploaden…",
     "unsupportedFile": "Sommige bestanden worden niet ondersteund en zijn overgeslagen.",
     "useTextAsFile": "Tekst als .txt-bijlage gebruiken"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "Ingetrokken valuta – laatste beschikbare koers van {date} wordt getoond",
+    "statutoryHeadline": "Vaste omrekenkoers – geen marktkoers",
+    "triangulatedHeadline": "Gedeeltelijk vaste koers – vaste omrekening plus een actuele marktkoers",
+    "withdrawnPairHeadline": "{codes} bevat een ingetrokken valuta",
+    "reference": "Referentie"
   }
 }

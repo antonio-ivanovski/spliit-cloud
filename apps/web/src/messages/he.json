@@ -537,7 +537,9 @@
         "perDateTitle": "המרה לפי תאריך",
         "rateDateLabel": "תאריך השער",
         "ratesError": "לא ניתן לשלוף שערי חליפין. בדוק את החיבור שלך ונסה שוב.",
-        "refresh": "רענן"
+        "refresh": "רענן",
+        "perDateFallbackLabel": "השתמש בהמרה הקבועה כאשר שער השוק חסר",
+        "perDateFallbackSummary": "{fallback} מתוך {total} תאריכים משתמשים בהמרה הקבועה"
       },
       "Documents": {
         "title": "הביאו את הקבלות שלכם",
@@ -3683,10 +3685,18 @@
     "bridged": "דרך {currencies} (<providers></providers>)",
     "direct": {
       "frankfurter": "שער מ-<provider></provider>",
-      "coinbase": "שער מ-<provider></provider>"
+      "coinbase": "שער מ-<provider></provider>",
+      "fixed": "שער קבוע מאת <provider></provider>"
     },
     "fallbackPrefix": "שערים מ",
-    "fallbackSeparator": " ו"
+    "fallbackSeparator": " ו",
+    "fixed": "המרה קבועה",
+    "fixedReason": {
+      "euro-adoption": "{code} הוחלף ב־{anchor} ב־{date} לפי שער קבוע של 1 {anchor} = {rate} {code}.",
+      "redenomination": "בוצעה דנומינציה של {code} ל־{anchor} ב־{date} לפי שער קבוע של 1 {anchor} = {rate} {code}.",
+      "replacement": "{code} הוחלף ב־{anchor} ב־{date} לפי שער קבוע של 1 {anchor} = {rate} {code}.",
+      "withdrawn": "{code} הוצא מהמחזור ב־{date}; ההמרה מתבצעת לפי השער הקבוע של 1 {anchor} = {rate} {code}."
+    }
   },
   "DatePicker": {
     "presets": {
@@ -4907,7 +4917,8 @@
     },
     "rowWarnings": {
       "missing-rate": "אין שער זמין להוצאה זו.",
-      "exact-to-custom": "הוצאה זו השתמשה בסכום מדויק, ולכן היא מומרת בשער מותאם אישית."
+      "exact-to-custom": "הוצאה זו השתמשה בסכום מדויק, ולכן היא מומרת בשער מותאם אישית.",
+      "fixed-fallback": "הומר באמצעות ההמרה הקבועה — לא היה זמין שער שוק."
     },
     "customLedgerNotice": "הקבוצה הזו משתמשת בקוד מטבע מותאם אישית, ולכן שערים אוטומטיים אינם זמינים.",
     "target": {
@@ -4925,7 +4936,8 @@
       "minor-units": "המטבע החדש משתמש ביחידות משנה שונות (למשל סנט מול ין) — צפו הבדלי עיגול קטנים.",
       "budgets-stale": "תקציבים נשארים בסכומי המטבע הישן ויש לבדוק אותם לאחר ההחלפה.",
       "recurring-stale": "תבניות חוזרות פעילות שומרות את הסכומים הישנים — בדקו אותן לאחר ההחלפה.",
-      "exact-to-custom": "חלק מההוצאות השתמשו בסכומים מדויקים, ולכן הן מומרות בשערים מותאמים אישית."
+      "exact-to-custom": "חלק מההוצאות השתמשו בסכומים מדויקים, ולכן הן מומרות בשערים מותאמים אישית.",
+      "fixed-fallback": "חלק מההוצאות משתמשות בהמרה הקבועה עבור מטבע שהוצא מהמחזור."
     },
     "back": "חזרה",
     "pairs": {
@@ -4970,5 +4982,12 @@
     "uploadingFile": "מעלה את הקובץ הנבחר…",
     "unsupportedFile": "חלק מהקבצים אינם נתמכים ודולגו.",
     "useTextAsFile": "השתמש בטקסט כקובץ ‎.txt מצורף"
+  },
+  "CurrencyRateWarning": {
+    "frozenHeadline": "מטבע שהוצא מהמחזור — מוצג השער האחרון הזמין מ־{date}",
+    "statutoryHeadline": "שער המרה קבוע — לא שער שוק",
+    "triangulatedHeadline": "שער קבוע חלקית — המרה קבועה בתוספת שער שוק חי",
+    "withdrawnPairHeadline": "{codes} כוללים מטבע שהוצא מהמחזור",
+    "reference": "אסמכתא"
   }
 }
