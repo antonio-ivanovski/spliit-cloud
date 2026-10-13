@@ -43,6 +43,8 @@ export function SplitDistributionEditor(props: {
   renderRow: (participant: DistributionParticipant) => ReactNode
   afterRows?: ReactNode
   dataTestId?: string
+  onSetExpenseAmount?: () => void
+  setExpenseAmountLabel?: string
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const { t: tMembers } = useTranslation(undefined, {
@@ -91,6 +93,9 @@ export function SplitDistributionEditor(props: {
         currency={props.currency}
         paidByCount={props.selectedCount}
         dataTestId={props.dataTestId}
+        onSetExpenseAmount={props.onSetExpenseAmount}
+        setExpenseAmountLabel={props.setExpenseAmountLabel}
+        readOnly={props.readOnly}
       />
     </>
   )

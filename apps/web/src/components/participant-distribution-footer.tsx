@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
+import { Button } from '@/components/ui/button'
 import { useLocale } from '@/i18n/react'
 import { cn, formatCurrency, formatNumber } from '@/lib/utils'
 import type { Currency, SplitMode } from '@spliit/domain'
@@ -14,6 +15,11 @@ import { formatDisplayShares } from '@spliit/domain'
  * Call sites are responsible for normalising shares to the unit the component
  * expects per mode: minor units for BY_AMOUNT, percent for BY_PERCENTAGE,
  * display shares for BY_SHARES (1 = 1 share), irrelevant for EVENLY.
+ *
+ * For `BY_AMOUNT` mismatches, callers may pass `onSetExpenseAmount` to offer
+ * the bottom-up fix (set the expense total from the entered shares) instead of
+ * forcing the user to retype the total — which previously wiped custom splits
+ * via the balancing effect.
  */
 export function ParticipantDistributionFooter({
   splitMode,
@@ -22,6 +28,9 @@ export function ParticipantDistributionFooter({
   currency,
   paidByCount,
   dataTestId,
+  onSetExpenseAmount,
+  setExpenseAmountLabel,
+  readOnly,
 }: {
   splitMode: SplitMode
   targetAmount?: number
@@ -29,6 +38,9 @@ export function ParticipantDistributionFooter({
   currency: Currency
   paidByCount: number
   dataTestId?: string
+  onSetExpenseAmount?: () => void
+  setExpenseAmountLabel?: string
+  readOnly?: boolean
 }) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'ExpenseForm.ParticipantDistribution',
@@ -107,17 +119,36 @@ export function ParticipantDistributionFooter({
 
   if (!message) return null
 
+  const showSetExpenseAmount =
+    splitMode === 'BY_AMOUNT' &&
+    onSetExpenseAmount &&
+    setExpenseAmountLabel &&
+    !readOnly &&
+    shares.length > 0 &&
+    Math.abs((targetAmount ?? 0) - shares.reduce((s, x) => s + x, 0)) >= 0.5
+
   return (
     <output
       data-testid={dataTestId}
       aria-live="polite"
       aria-atomic="true"
       className={cn(
-        'mt-3 flex items-baseline justify-between gap-2 rounded-md bg-muted/50 px-3 py-2 text-sm font-medium',
+        'mt-3 flex items-center justify-between gap-2 rounded-md bg-muted/50 px-3 py-2 text-sm font-medium',
         colorClass,
       )}
     >
-      <span>{message}</span>
+      <span className="min-w-0 flex-1">{message}</span>
+      {showSetExpenseAmount ? (
+        <Button
+          variant="link"
+          size="sm"
+          type="button"
+          className="h-auto shrink-0 px-1 py-0"
+          onClick={onSetExpenseAmount}
+        >
+          {setExpenseAmountLabel}
+        </Button>
+      ) : null}
     </output>
   )
 }

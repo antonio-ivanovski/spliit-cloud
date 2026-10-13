@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { FormField, FormItem, FormMessage } from '@/components/ui/form'
-import { amountAsMinorUnits } from '@/lib/utils'
+import { amountAsDecimal, amountAsMinorUnits } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 import { type SplitMode } from '@spliit/domain'
@@ -309,6 +309,32 @@ export function PaidByCard(props: {
         ? 100
         : amountAsMinorUnits(Number(amount) || 0, payerCurrency)
 
+    // Bottom-up fix for BY_AMOUNT mismatches: derive the total from the
+    // entered shares. Mark every row manual so balancing keeps the split.
+    // Focus returns to the Amount input since the footer button unmounts on
+    // success.
+    const handleSetExpenseAmountFromShares =
+      option.splitMode === 'BY_AMOUNT'
+        ? () => {
+            if (paidByList.length === 0) return
+            const sumMinor = paidByList.reduce(
+              (sum, row) =>
+                sum +
+                amountAsMinorUnits(Number(row.shares) || 0, payerCurrency),
+              0,
+            )
+            form.setValue('amount', amountAsDecimal(sumMinor, payerCurrency), {
+              shouldDirty: true,
+              shouldTouch: true,
+              shouldValidate: true,
+            })
+            props.setManuallyEditedPayers(
+              new Set(paidByList.map((row) => row.participant)),
+            )
+            form.setFocus('amount')
+          }
+        : undefined
+
     return (
       <FormField
         control={form.control}
@@ -339,6 +365,8 @@ export function PaidByCard(props: {
               }
               onReset={handleResetPaidByDistribution}
               onToggleAll={handleSelectPaidByParticipants}
+              onSetExpenseAmount={handleSetExpenseAmountFromShares}
+              setExpenseAmountLabel={t('items.setExpenseAmount')}
               renderRow={(participant) => (
                 <PaidByRow
                   key={participant.id}

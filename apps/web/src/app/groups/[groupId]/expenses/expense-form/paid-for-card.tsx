@@ -655,6 +655,34 @@ export function PaidForCard(props: {
           )
         : paidFor.map((row) => row.shares || 0)
 
+    // Bottom-up fix for BY_AMOUNT mismatches (mirrors the Items card's
+    // "Set expense amount"): derive the total from the entered shares so the
+    // user never has to retype the total and risk the balancing effect.
+    // Mark every row manual so the balancing effect keeps the custom split.
+    // Focus returns to the Amount input since the footer button unmounts on
+    // success.
+    const handleSetExpenseAmountFromShares =
+      mode === 'BY_AMOUNT'
+        ? () => {
+            if (paidFor.length === 0) return
+            const sumMinor = paidFor.reduce(
+              (sum, row) =>
+                sum +
+                amountAsMinorUnits(Number(row.shares) || 0, inputCurrency),
+              0,
+            )
+            form.setValue('amount', amountAsDecimal(sumMinor, inputCurrency), {
+              shouldDirty: true,
+              shouldTouch: true,
+              shouldValidate: true,
+            })
+            props.setManuallyEditedParticipants(
+              new Set(paidFor.map((row) => row.participant)),
+            )
+            form.setFocus('amount')
+          }
+        : undefined
+
     return (
       <FormField
         control={form.control}
@@ -683,6 +711,8 @@ export function PaidForCard(props: {
               }
               onReset={handleResetPaidForDistribution}
               onToggleAll={handleSelectPaidForParticipants}
+              onSetExpenseAmount={handleSetExpenseAmountFromShares}
+              setExpenseAmountLabel={t('items.setExpenseAmount')}
               renderRow={(participant) => (
                 <PaidForRow
                   key={participant.id}

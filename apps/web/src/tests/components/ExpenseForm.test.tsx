@@ -2721,6 +2721,186 @@ describe('ExpenseForm Total/Missing footer (paid for)', () => {
   })
 })
 
+describe('ExpenseForm BY_AMOUNT bottom-up total', () => {
+  it('paid-for mismatch offers Set expense amount and preserves custom splits', async () => {
+    const expense = {
+      ...mockExpense,
+      originalCurrency: '',
+      amount: 10000, // $100.00
+      splitMode: 'BY_AMOUNT' as const,
+      paidFor: [
+        { ledgerParticipantId: 'lp-1', shares: 4000 }, // $40.00
+        { ledgerParticipantId: 'lp-2', shares: 5000 }, // $50.00 → total $90
+      ],
+    }
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={expense as unknown as LoadedExpense}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const footer = await screen.findByTestId('paid-for-distribution-footer')
+    expect(footer).toHaveTextContent('Missing $10.00 of $100.00')
+    const setAmount = within(footer as HTMLElement).getByRole('button', {
+      name: /set expense amount/i,
+    })
+    await user.click(setAmount)
+
+    expect(screen.getByRole('textbox', { name: 'Amount' })).toHaveValue('90')
+    expect(
+      screen.getByRole('textbox', { name: 'Amount for Alice' }),
+    ).toHaveValue('40')
+    expect(screen.getByRole('textbox', { name: 'Amount for Bob' })).toHaveValue(
+      '50',
+    )
+    expect(
+      screen.getByTestId('paid-for-distribution-footer'),
+    ).toHaveTextContent('✓ Matches $90.00')
+  })
+
+  it('paid-for amount edit preserves a loaded custom BY_AMOUNT split', async () => {
+    const expense = {
+      ...mockExpense,
+      originalCurrency: '',
+      amount: 10000, // $100.00
+      splitMode: 'BY_AMOUNT' as const,
+      paidFor: [
+        { ledgerParticipantId: 'lp-1', shares: 4000 }, // $40.00
+        { ledgerParticipantId: 'lp-2', shares: 6000 }, // $60.00
+      ],
+    }
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={expense as unknown as LoadedExpense}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    await screen.findByTestId('paid-for-distribution-footer')
+    const amountInput = screen.getByRole('textbox', { name: 'Amount' })
+    await user.clear(amountInput)
+    await user.type(amountInput, '90')
+
+    // Previously this rebuilt both rows equal (45/45); now the custom
+    // 40/60 split survives and surfaces as a footer surplus.
+    expect(
+      screen.getByRole('textbox', { name: 'Amount for Alice' }),
+    ).toHaveValue('40')
+    expect(screen.getByRole('textbox', { name: 'Amount for Bob' })).toHaveValue(
+      '60',
+    )
+    expect(
+      screen.getByTestId('paid-for-distribution-footer'),
+    ).toHaveTextContent('Surplus $10.00 of $90.00')
+  })
+
+  it('paid-by mismatch offers Set expense amount and preserves custom shares', async () => {
+    const expense = {
+      ...mockExpense,
+      originalCurrency: '',
+      amount: 10000, // $100.00
+      paidBySplitMode: 'BY_AMOUNT' as const,
+      paidByList: [
+        { ledgerParticipantId: 'lp-1', shares: 4000 }, // $40.00
+        { ledgerParticipantId: 'lp-2', shares: 5000 }, // $50.00 → total $90
+      ],
+    }
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={expense as unknown as LoadedExpense}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const footer = await screen.findByTestId('paid-by-distribution-footer')
+    expect(footer).toHaveTextContent('Missing $10.00 of $100.00')
+    const setAmount = within(footer as HTMLElement).getByRole('button', {
+      name: /set expense amount/i,
+    })
+    await user.click(setAmount)
+
+    expect(screen.getByRole('textbox', { name: 'Amount' })).toHaveValue('90')
+    expect(screen.getByRole('textbox', { name: 'Amount' })).toHaveFocus()
+    expect(
+      screen.getByRole('textbox', { name: 'Amount for Alice' }),
+    ).toHaveValue('40')
+    expect(screen.getByRole('textbox', { name: 'Amount for Bob' })).toHaveValue(
+      '50',
+    )
+    expect(screen.getByTestId('paid-by-distribution-footer')).toHaveTextContent(
+      '✓ Matches $90.00',
+    )
+  })
+
+  it('paid-by amount edit preserves a loaded custom BY_AMOUNT split', async () => {
+    const expense = {
+      ...mockExpense,
+      originalCurrency: '',
+      amount: 10000, // $100.00
+      paidBySplitMode: 'BY_AMOUNT' as const,
+      paidByList: [
+        { ledgerParticipantId: 'lp-1', shares: 4000 }, // $40.00
+        { ledgerParticipantId: 'lp-2', shares: 6000 }, // $60.00
+      ],
+    }
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={expense as unknown as LoadedExpense}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    await screen.findByTestId('paid-by-distribution-footer')
+    const amountInput = screen.getByRole('textbox', { name: 'Amount' })
+    await user.clear(amountInput)
+    await user.type(amountInput, '90')
+
+    expect(
+      screen.getByRole('textbox', { name: 'Amount for Alice' }),
+    ).toHaveValue('40')
+    expect(screen.getByRole('textbox', { name: 'Amount for Bob' })).toHaveValue(
+      '60',
+    )
+    expect(screen.getByTestId('paid-by-distribution-footer')).toHaveTextContent(
+      'Surplus $10.00 of $90.00',
+    )
+  })
+
+  it('hides Set expense amount when no BY_AMOUNT rows are selected', async () => {
+    const expense = {
+      ...mockExpense,
+      originalCurrency: '',
+      amount: 10000, // $100.00
+      splitMode: 'BY_AMOUNT' as const,
+      paidFor: [],
+    }
+    render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={expense as unknown as LoadedExpense}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const footer = await screen.findByTestId('paid-for-distribution-footer')
+    expect(
+      within(footer as HTMLElement).queryByRole('button', {
+        name: /set expense amount/i,
+      }),
+    ).not.toBeInTheDocument()
+  })
+})
+
 // ── Component-only test ────────────────────────────────────────────────
 //
 // Render the footer in isolation so the message/colour logic is exercised

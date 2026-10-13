@@ -100,6 +100,20 @@ export function useExpenseFormBalancing(args: {
       const totalAmount = Number(args.form.getValues().amount) || 0
       const paidFor = args.form.getValues().paidFor
       const editedParticipants = manuallyEditedParticipants
+
+      // Loaded or converted custom splits have no manual marks yet. Without
+      // this guard any amount edit would treat every row as automatic and
+      // rebuild them equal, wiping the custom distribution. Only automatic
+      // (near-equal) distributions may rebalance; custom ones just show the
+      // footer mismatch with the "Set expense amount" action.
+      if (editedParticipants.size === 0 && paidFor.length > 1) {
+        const values = paidFor.map(
+          (participant) => Number(participant.shares) || 0,
+        )
+        const tolerance = 10 ** -args.payerCurrency.decimal_digits + 1e-9
+        if (Math.max(...values) - Math.min(...values) > tolerance) return
+      }
+
       let remainingAmount = totalAmount
       const automaticIds: string[] = []
       for (const participant of paidFor) {
@@ -167,6 +181,15 @@ export function useExpenseFormBalancing(args: {
     ) {
       const totalAmount = Number(args.form.getValues().amount) || 0
       const paidByList = args.form.getValues().paidByList
+
+      // Same custom-distribution guard as the paid-for effect: a loaded or
+      // converted non-equal split with no manual marks must survive amount
+      // edits and surface as a footer mismatch instead of resetting equal.
+      if (manuallyEditedPayers.size === 0 && paidByList.length > 1) {
+        const values = paidByList.map((payer) => Number(payer.shares) || 0)
+        const tolerance = 10 ** -args.payerCurrency.decimal_digits + 1e-9
+        if (Math.max(...values) - Math.min(...values) > tolerance) return
+      }
 
       const editedPayers = manuallyEditedPayers
       let remainingAmount = totalAmount
