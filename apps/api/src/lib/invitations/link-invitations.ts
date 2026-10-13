@@ -230,9 +230,21 @@ export async function createLinkInvitation(
   }
 }
 
+export type ShareMemberSample = {
+  name: string | null
+  image: string | null
+}
+
 export type LinkInvitationPreview = {
-  group: { id: string; name: string }
-  inviter: { name: string }
+  group: {
+    id: string
+    name: string
+    groupType: GroupType
+    emoji: string | null
+    color: string | null
+    currencyCode: string | null
+  }
+  inviter: { name: string; image: string | null }
   temporaryName: string | null
   role: GroupRole
   usable: boolean
@@ -240,18 +252,23 @@ export type LinkInvitationPreview = {
   expiresAt: Date | null
   isMultiUse: boolean
   useCount: number
+  memberCount: number
+  /** Earliest-joined active members (max 3), for social preview avatars. */
+  memberSample: ShareMemberSample[]
 }
 
 /** Public-safe preview of a link invitation, looked up by the raw token. */
 export async function getLinkInvitationPreview(
   token: string,
+  opts: { includeSharing?: boolean } = {},
 ): Promise<LinkInvitationPreview | null> {
   const tokenHash = await hashLinkToken(token)
-  return getLinkInvitationPreviewByHash(tokenHash)
+  return getLinkInvitationPreviewByHash(tokenHash, opts)
 }
 
 async function getLinkInvitationPreviewByHash(
   tokenHash: string,
+  opts: { includeSharing?: boolean } = {},
 ): Promise<LinkInvitationPreview | null> {
   const invitation = await prisma.groupInvitation.findFirst({
     where: { tokenHash },
@@ -262,8 +279,17 @@ async function getLinkInvitationPreviewByHash(
       role: true,
       isMultiUse: true,
       useCount: true,
-      group: { select: { id: true, name: true, groupType: true } },
-      invitedBy: { select: { name: true } },
+      group: {
+        select: {
+          id: true,
+          name: true,
+          groupType: true,
+          emoji: true,
+          color: true,
+          ledger: { select: { currencyCode: true } },
+        },
+      },
+      invitedBy: { select: { name: true, image: true } },
     },
   })
   if (!invitation) return null
@@ -288,9 +314,58 @@ async function getLinkInvitationPreviewByHash(
       ? `Friend ledger with ${inviterName || 'someone'}`
       : invitation.group.name
 
+  // Sharing extras (member count + avatar sample) are only needed for social
+  // previews of *usable* invitations, and only when the caller opts in. The
+  // accept path and the public tRPC preview stay on the single invitation
+  // read above so joins never pay for the two extra member queries — and dead
+  // links (revoked/expired/used) expose no member data at all.
+  let memberCount = 0
+  let memberSample: ShareMemberSample[] = []
+  if (opts.includeSharing && usable) {
+    const [count, sample] = await Promise.all([
+      Promise.resolve(
+        prisma.groupMember.count({
+          where: {
+            groupId: invitation.group.id,
+            status: GroupMemberStatus.ACTIVE,
+          },
+        }),
+      ).catch(() => 0),
+      Promise.resolve(
+        prisma.groupMember.findMany({
+          where: {
+            groupId: invitation.group.id,
+            status: GroupMemberStatus.ACTIVE,
+          },
+          select: { account: { select: { name: true, image: true } } },
+          orderBy: { joinedAt: 'asc' },
+          take: 3,
+        }),
+      ).catch(() => [] as []),
+    ])
+    memberCount = count ?? 0
+    memberSample = (sample ?? []).map((member) => ({
+      name: member.account?.name ?? null,
+      image: member.account?.image ?? null,
+    }))
+  }
+
   return {
-    group: { id: invitation.group.id, name: groupName },
-    inviter: { name: inviterName },
+    group: {
+      id: invitation.group.id,
+      name: groupName,
+      groupType: invitation.group.groupType,
+      emoji: invitation.group.emoji ?? null,
+      color: invitation.group.color ?? null,
+      currencyCode: invitation.group.ledger?.currencyCode ?? null,
+    },
+    inviter: {
+      name: inviterName,
+      // The inviter's avatar is only needed for the social card of a live
+      // invitation; dead links expose no personal data beyond the pre-existing
+      // group/inviter names.
+      image: usable ? (invitation.invitedBy?.image ?? null) : null,
+    },
     temporaryName: invitation.temporaryName,
     role: invitation.role,
     usable,
@@ -298,6 +373,8 @@ async function getLinkInvitationPreviewByHash(
     expiresAt: invitation.expiresAt ?? null,
     isMultiUse: invitation.isMultiUse,
     useCount: invitation.useCount,
+    memberCount,
+    memberSample,
   }
 }
 

@@ -32,7 +32,7 @@
     "./offline-contract": "./src/trpc/outputs/offline.ts"
   },
   "scripts": {
-    "bundle:runtime": "bun build src/server.ts --target=bun --production --keep-names --outfile=dist/server.js",
+    "bundle:runtime": "bun build src/server.ts --target=bun --production --keep-names --outdir=dist",
     "check-formatting": "oxfmt --check .",
     "check-types": "tsc --noEmit",
     "dev": "portless api.spliit bun --env-file=../../.env --watch src/server.ts",
@@ -60,6 +60,7 @@
     "@better-auth/passkey": "~1.7.5",
     "@json2csv/plainjs": "^7.0.8",
     "@react-email/components": "^1.0.12",
+    "@resvg/resvg-js": "^2.6.2",
     "@scalar/hono-api-reference": "^0.12.2",
     "@spliit/db": "workspace:*",
     "@spliit/domain": "workspace:*",
@@ -79,6 +80,7 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "reflect-metadata": "^0.2.2",
+    "satori": "^0.56.1",
     "superjson": "^2.2.6",
     "unpdf": "^1.8.1",
     "web-push": "^3.6.7",

@@ -4,6 +4,7 @@ import {
   groupInvitationStatusSchema,
   groupInvitationTypeSchema,
   groupRoleSchema,
+  groupTypeSchema,
 } from './common'
 
 export const recipientProfileSchema = z.object({
@@ -67,13 +68,23 @@ export const accountInvitationsListOutputSchema = z.object({
   invitations: z.array(accountInvitationSchema),
 })
 
+export const shareMemberSampleSchema = z.object({
+  name: z.string().nullable(),
+  image: z.string().nullable(),
+})
+
 export const linkInvitationPreviewSchema = z.object({
   group: z.object({
     id: z.string(),
     name: z.string(),
+    groupType: groupTypeSchema.default('GROUP'),
+    emoji: z.string().nullable().default(null),
+    color: z.string().nullable().default(null),
+    currencyCode: z.string().nullable().default(null),
   }),
   inviter: z.object({
     name: z.string(),
+    image: z.string().nullable().default(null),
   }),
   temporaryName: z.string().nullable(),
   role: groupRoleSchema,
@@ -84,6 +95,21 @@ export const linkInvitationPreviewSchema = z.object({
   expiresAt: z.date().nullable(),
   isMultiUse: z.boolean().default(false),
   useCount: z.number().default(0),
+  memberCount: z.number().int().nonnegative().default(0),
+  memberSample: z.array(shareMemberSampleSchema).default([]),
+})
+
+export const viewSharePreviewSchema = z.object({
+  group: z.object({
+    id: z.string(),
+    name: z.string(),
+    emoji: z.string().nullable().default(null),
+    color: z.string().nullable().default(null),
+    currencyCode: z.string().nullable().default(null),
+  }),
+  memberCount: z.number().int().nonnegative().default(0),
+  memberSample: z.array(shareMemberSampleSchema).default([]),
+  usable: z.boolean(),
 })
 
 export const revokeInvitationPreviewSchema = z.object({

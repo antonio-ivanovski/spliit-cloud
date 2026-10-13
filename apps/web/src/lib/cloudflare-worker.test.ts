@@ -2,7 +2,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 // The Pages worker is intentionally kept as a plain JavaScript asset because
 // Cloudflare loads public/_worker.js directly at deploy time.
@@ -424,5 +424,168 @@ describe('Cloudflare Pages worker SEO head injection', () => {
 
     expect(response.headers.get('Content-Type')).toBe('application/json')
     expect(await response.text()).toBe('{"ok":true}')
+  })
+})
+
+describe('Cloudflare Pages worker group share unfurls', () => {
+  const groupShell = () =>
+    `<!doctype html><html lang="en"><head><title>Spliit Cloud — Share expenses with friends &amp; family</title><meta property="og:title" content="Spliit Cloud"><meta property="og:description" content="Spliit Cloud"><meta property="og:url" content="https://spliit.cloud/"><meta name="twitter:title" content="Spliit Cloud"><meta name="twitter:description" content="Spliit Cloud"><meta property="og:image" content="https://spliit.cloud/screenshots/desktop-overview-1280x720.png"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta property="og:image:alt" content="Spliit Cloud group overview"><meta name="twitter:image" content="https://spliit.cloud/screenshots/desktop-overview-1280x720.png"><link rel="canonical" href="https://spliit.cloud/"></head><body><div id="root"></div></body></html>`
+
+  function crawlerRequestFor(pathname: string) {
+    return new Request(`https://spliit.cloud${pathname}`, {
+      headers: {
+        Accept: 'text/html',
+        'Sec-Fetch-Mode': 'navigate',
+        'User-Agent':
+          'Slackbot-LinkExpanding 1.0 (+https://api.slack.com/robots)',
+      },
+    })
+  }
+
+  function assetFetchForShell() {
+    return vi.fn(async (input: AssetInput) => {
+      if (pathnameFrom(input) === '/') {
+        return new Response(groupShell(), {
+          status: 200,
+          headers: { 'Content-Type': 'text/html; charset=utf-8' },
+        })
+      }
+      return new Response('Not found', { status: 404 })
+    })
+  }
+
+  function stubPreviewApi(preview: unknown) {
+    const apiFetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify(preview), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }),
+    )
+    vi.stubGlobal('fetch', apiFetch)
+    return apiFetch
+  }
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('injects group invite tags for crawlers', async () => {
+    const apiFetch = stubPreviewApi({
+      kind: 'invite',
+      preview: {
+        group: { id: 'grp-1', name: 'Summer Trip', groupType: 'GROUP' },
+        inviter: { name: 'Alice' },
+        temporaryName: 'Bob',
+        usable: true,
+        memberCount: 3,
+      },
+    })
+
+    const response = await worker.fetch(
+      crawlerRequestFor('/groups/grp-1?invite=secret-token'),
+      { ASSETS: { fetch: assetFetchForShell() } },
+    )
+
+    const html = await response.text()
+    expect(html).toContain('<title>Join Summer Trip on Spliit Cloud</title>')
+    expect(html).toContain('Alice invited you to join Summer Trip')
+    expect(html).toContain(`You'll join as Bob`)
+    expect(html).toContain(
+      'https://api.spliit.cloud/api/og/group-card.png?invite=secret-token',
+    )
+    expect(html).toContain('<meta property="og:image:width" content="1200">')
+    expect(html).toContain('<meta property="og:image:height" content="630">')
+    // Share secrets stay out of indexing signals.
+    expect(html).toContain(
+      '<link rel="canonical" href="https://spliit.cloud/">',
+    )
+    // The response varies by crawler UA, so shared caches must key on it.
+    expect(response.headers.get('Vary')).toMatch(/user-agent/i)
+    expect(apiFetch).toHaveBeenCalledTimes(1)
+  })
+
+  it('injects read-only view tags for crawlers', async () => {
+    stubPreviewApi({
+      kind: 'view',
+      preview: {
+        group: { id: 'grp-1', name: 'Apartment' },
+        memberCount: 2,
+        usable: true,
+      },
+    })
+
+    const response = await worker.fetch(
+      crawlerRequestFor('/groups/grp-1?viewKey=view-secret'),
+      { ASSETS: { fetch: assetFetchForShell() } },
+    )
+
+    const html = await response.text()
+    expect(html).toContain('<title>Apartment on Spliit Cloud</title>')
+    expect(html).toContain('2 members · shared read-only view')
+    expect(html).toContain('groupId=grp-1&amp;viewKey=view-secret')
+  })
+
+  it('hides group details for used-up invite links', async () => {
+    stubPreviewApi({
+      kind: 'invite',
+      preview: {
+        group: { id: 'grp-1', name: 'Summer Trip', groupType: 'GROUP' },
+        inviter: { name: 'Alice' },
+        usable: false,
+        reason: 'accepted',
+      },
+    })
+
+    const response = await worker.fetch(
+      crawlerRequestFor('/groups/grp-1?invite=used-token'),
+      { ASSETS: { fetch: assetFetchForShell() } },
+    )
+
+    const html = await response.text()
+    expect(html).toContain(
+      '<title>Spliit Cloud — Share expenses with friends &amp; family</title>',
+    )
+    expect(html).toContain('This invite link is no longer valid.')
+    expect(html).not.toContain('Join Summer Trip')
+  })
+
+  it('leaves browsers on the instant static shell without a preview fetch', async () => {
+    const apiFetch = vi.fn(async () => new Response('{}'))
+    vi.stubGlobal('fetch', apiFetch)
+
+    const response = await worker.fetch(
+      requestFor('/groups/grp-1?invite=secret-token'),
+      { ASSETS: { fetch: assetFetchForShell() } },
+    )
+
+    const html = await response.text()
+    expect(html).toContain(
+      '<title>Spliit Cloud — Share expenses with friends &amp; family</title>',
+    )
+    expect(html).not.toContain('/api/og/group-card.png')
+    expect(apiFetch).not.toHaveBeenCalled()
+  })
+
+  it('falls back to the generic card when the preview API fails', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        throw new Error('upstream down')
+      }),
+    )
+
+    const response = await worker.fetch(
+      crawlerRequestFor('/groups/grp-1?invite=secret-token'),
+      { ASSETS: { fetch: assetFetchForShell() } },
+    )
+
+    const html = await response.text()
+    expect(html).toContain(
+      '<title>Spliit Cloud — Share expenses with friends &amp; family</title>',
+    )
+    expect(html).toContain(
+      'https://spliit.cloud/screenshots/desktop-overview-1280x720.png',
+    )
   })
 })

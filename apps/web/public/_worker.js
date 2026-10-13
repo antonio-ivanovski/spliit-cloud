@@ -302,6 +302,199 @@ async function withSeoMeta(response, seoPath, meta) {
   })
 }
 
+// Social unfurls for group shares. Only social/image crawlers get dynamic
+// tags — real browsers keep the instant static shell (no extra fetch on the
+// critical path). The preview endpoint returns branding + headcount only,
+// never expenses or contact details; unknown credentials fall back to the
+// generic card.
+const SOCIAL_CRAWLER_UA =
+  /facebookexternalhit|twitterbot|slackbot|discordbot|whatsapp|telegrambot|linkedinbot|pinterestbot|mastodon|bluesky|threads|embedly|quora|redditbot|googlebot|bingbot|bot|crawler|spider|preview|unfurl/i
+
+function isSocialCrawler(userAgent) {
+  return !!userAgent && SOCIAL_CRAWLER_UA.test(userAgent)
+}
+
+function groupShareFromUrl(url) {
+  const match = /^\/groups\/([^/]+)$/.exec(url.pathname)
+  if (!match) return null
+  const invite = url.searchParams.get('invite')?.trim()
+  if (invite) return { groupId: match[1], invite }
+  const viewKey = url.searchParams.get('viewKey')?.trim()
+  if (viewKey) return { groupId: match[1], viewKey }
+  return null
+}
+
+async function fetchSharePreview(share) {
+  const params = share.invite
+    ? `invite=${encodeURIComponent(share.invite)}`
+    : `groupId=${encodeURIComponent(share.groupId)}&viewKey=${encodeURIComponent(share.viewKey)}`
+  const previewResponse = await globalThis.fetch(
+    `${API_ORIGIN}/api/og/preview?${params}`,
+    {
+      headers: { Accept: 'application/json' },
+      signal: AbortSignal.timeout(1500),
+    },
+  )
+  if (!previewResponse.ok) return null
+  const body = await previewResponse.json()
+  return body && typeof body === 'object' ? (body.preview ?? null) : null
+}
+
+function shareCardImageUrl(share) {
+  const params = share.invite
+    ? `invite=${encodeURIComponent(share.invite)}`
+    : `groupId=${encodeURIComponent(share.groupId)}&viewKey=${encodeURIComponent(share.viewKey)}`
+  return `${API_ORIGIN}/api/og/group-card.png?${params}`
+}
+
+function truncateShareText(value, maxLength) {
+  const text = String(value ?? '')
+    .trim()
+    .replace(/\s+/g, ' ')
+  if (text.length <= maxLength) return text
+  return `${text.slice(0, maxLength - 1).trimEnd()}…`
+}
+
+function shareOgTags(share, preview, pageUrl) {
+  const groupName = truncateShareText(preview.group?.name, 80)
+  const imageUrl = shareCardImageUrl(share)
+  if (preview.usable === false) {
+    return {
+      title: 'Spliit Cloud — Share expenses with friends & family',
+      description: 'This invite link is no longer valid.',
+      imageAlt: 'Spliit Cloud group invitation',
+      url: pageUrl,
+      imageUrl,
+    }
+  }
+  const inviter = truncateShareText(preview.inviter?.name, 40)
+  const memberCount =
+    typeof preview.memberCount === 'number' ? preview.memberCount : null
+  if (share.invite) {
+    const isFriend = preview.group?.groupType === 'FRIEND'
+    const temporaryName = truncateShareText(preview.temporaryName, 40)
+    return {
+      title: isFriend
+        ? `${groupName} on Spliit Cloud`
+        : `Join ${groupName} on Spliit Cloud`,
+      description:
+        (inviter ? `${inviter} invited you to join ${groupName}. ` : '') +
+        (temporaryName ? `You'll join as ${temporaryName}. ` : '') +
+        'Open the link to accept on Spliit Cloud.',
+      imageAlt: `Invitation to join ${groupName} on Spliit Cloud`,
+      url: pageUrl,
+      imageUrl,
+    }
+  }
+  return {
+    title: `${groupName} on Spliit Cloud`,
+    description:
+      memberCount === null
+        ? `A shared read-only expense group on Spliit Cloud.`
+        : `${groupName}: ${memberCount} ${memberCount === 1 ? 'member' : 'members'} · shared read-only view on Spliit Cloud.`,
+    imageAlt: `Shared view of ${groupName} on Spliit Cloud`,
+    url: pageUrl,
+    imageUrl,
+  }
+}
+
+async function withShareOgMeta(response, share, pageUrl) {
+  const contentType = response.headers.get('Content-Type') ?? ''
+  if (!contentType.includes('text/html')) return response
+  let preview = null
+  try {
+    preview = await fetchSharePreview(share)
+  } catch {
+    return response
+  }
+  if (!preview) return response
+  const html = await response.text()
+  if (!html.includes('<title>')) return response
+  const tags = shareOgTags(share, preview, pageUrl)
+  const titleText = escapeHtmlText(tags.title)
+  const titleAttr = escapeHtmlAttr(tags.title)
+  const descriptionAttr = escapeHtmlAttr(
+    truncateShareText(tags.description, 200),
+  )
+  const imageAltAttr = escapeHtmlAttr(truncateShareText(tags.imageAlt, 120))
+  let next = html.replace(/<title>.*?<\/title>/s, `<title>${titleText}</title>`)
+  next = replaceOrInsertMeta(
+    next,
+    /<meta\s+property="og:title"\s+content="[^"]*"\s*\/?>/s,
+    `<meta property="og:title" content="${titleAttr}">`,
+  )
+  next = replaceOrInsertMeta(
+    next,
+    /<meta\s+property="og:description"\s+content="[^"]*"\s*\/?>/s,
+    `<meta property="og:description" content="${descriptionAttr}">`,
+  )
+  next = replaceOrInsertMeta(
+    next,
+    /<meta\s+property="og:url"\s+content="[^"]*"\s*\/?>/s,
+    `<meta property="og:url" content="${escapeHtmlAttr(tags.url)}">`,
+  )
+  next = replaceOrInsertMeta(
+    next,
+    /<meta\s+name="twitter:title"\s+content="[^"]*"\s*\/?>/s,
+    `<meta name="twitter:title" content="${titleAttr}">`,
+  )
+  next = replaceOrInsertMeta(
+    next,
+    /<meta\s+name="twitter:description"\s+content="[^"]*"\s*\/?>/s,
+    `<meta name="twitter:description" content="${descriptionAttr}">`,
+  )
+  next = replaceOrInsertMeta(
+    next,
+    /<meta\s+property="og:image"\s+content="[^"]*"\s*\/?>/s,
+    `<meta property="og:image" content="${escapeHtmlAttr(tags.imageUrl)}">`,
+  )
+  next = replaceOrInsertMeta(
+    next,
+    /<meta\s+name="twitter:image"\s+content="[^"]*"\s*\/?>/s,
+    `<meta name="twitter:image" content="${escapeHtmlAttr(tags.imageUrl)}">`,
+  )
+  next = replaceOrInsertMeta(
+    next,
+    /<meta\s+property="og:image:width"\s+content="[^"]*"\s*\/?>/s,
+    `<meta property="og:image:width" content="1200">`,
+  )
+  next = replaceOrInsertMeta(
+    next,
+    /<meta\s+property="og:image:height"\s+content="[^"]*"\s*\/?>/s,
+    `<meta property="og:image:height" content="630">`,
+  )
+  next = replaceOrInsertMeta(
+    next,
+    /<meta\s+property="og:image:alt"\s+content="[^"]*"\s*\/?>/s,
+    `<meta property="og:image:alt" content="${imageAltAttr}">`,
+  )
+  // The share secret stays out of indexing signals: canonical/JSON-LD are
+  // untouched, so only the unfurl-specific tags above vary per share URL.
+  // The response varies by User-Agent (crawler vs browser), so merge that
+  // into Vary to keep shared caches from serving the wrong variant.
+  const headers = new globalThis.Headers(response.headers)
+  headers.delete('Content-Length')
+  const existingVary = headers.get('Vary')
+  const varyValues = new Set(
+    (existingVary ?? '')
+      .split(',')
+      .map((value) => value.trim().toLowerCase())
+      .filter(Boolean),
+  )
+  varyValues.add('user-agent')
+  headers.set(
+    'Vary',
+    [...varyValues]
+      .map((value) => (value === 'user-agent' ? 'User-Agent' : value))
+      .join(', '),
+  )
+  return new globalThis.Response(next, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  })
+}
+
 function isSpaNavigation(request) {
   if (request.method !== 'GET') return false
 
@@ -360,7 +553,8 @@ async function proxyWellKnownToApi(request, pathname) {
 
 export default {
   async fetch(request, env) {
-    const { pathname } = new globalThis.URL(request.url)
+    const requestUrl = new globalThis.URL(request.url)
+    const { pathname } = requestUrl
 
     // Path-first on purpose: this must answer for plain machine GETs (curl,
     // scanners, crawlers) regardless of Accept or Sec-Fetch-Mode headers.
@@ -419,13 +613,25 @@ export default {
     const response = await env.ASSETS.fetch(request)
     const seoPath = normalizeSeoPathname(pathname)
     const seoMeta = request.method === 'GET' ? SEO_META.get(seoPath) : undefined
+    // Group share unfurls (crawlers only — browsers skip the preview fetch
+    // so regular group loading is never slowed down).
+    const shareOg =
+      request.method === 'GET' &&
+      markdownPath === undefined &&
+      isSocialCrawler(request.headers.get('User-Agent'))
+        ? groupShareFromUrl(requestUrl)
+        : null
+    const maybeWithShareOg = (resp) =>
+      shareOg === null
+        ? resp
+        : withShareOgMeta(resp, shareOg, requestUrl.toString())
     if (response.status !== 404 || !isSpaNavigation(request)) {
       const withSeo =
         seoMeta === undefined
           ? response
           : await withSeoMeta(response, seoPath, seoMeta)
       return markdownPath === undefined
-        ? withSeo
+        ? await maybeWithShareOg(withSeo)
         : withMarkdownAlternate(withSeo, markdownPath)
     }
 
@@ -437,7 +643,7 @@ export default {
         ? spaResponse
         : await withSeoMeta(spaResponse, seoPath, seoMeta)
     return markdownPath === undefined
-      ? spaWithSeo
+      ? await maybeWithShareOg(spaWithSeo)
       : withMarkdownAlternate(spaWithSeo, markdownPath)
   },
 }
