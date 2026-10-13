@@ -101,7 +101,6 @@ function hasUnsettledBalance(
 export default function BalancesAndSettlements() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
   const { t: tOffline } = useTranslation()
-  const utils = trpc.useUtils()
   const { groupId, group } = useCurrentGroup()
   const { linkInviteToken, viewKey } = useGroupAccessSearch()
   const {
@@ -123,7 +122,10 @@ export default function BalancesAndSettlements() {
   // complete result. Subgroup definitions stay online-only; the stored
   // subgroup settlement plan still renders from the snapshot.
   const offlineEnabled = !linkInviteToken && !viewKey
-  const offline = useOfflineBalances(groupId)
+  const offline = useOfflineBalances(groupId, {
+    linkInviteToken,
+    viewKey,
+  })
   const useOfflineSource =
     offlineEnabled && !balancesData && offline.meta.availability === 'ready'
   const effectiveBalances = (
@@ -139,11 +141,10 @@ export default function BalancesAndSettlements() {
     !(offlineEnabled && offline.meta.availability === 'ready')
   const showServerEmpty = useServerUnreachableWithoutData(!!balancesData)
 
-  useEffect(() => {
-    // Until we use tRPC more widely and can invalidate the cache on expense
-    // update, it's easier and safer to invalidate the cache on page load.
-    void utils.groups.balances.invalidate()
-  }, [utils])
+  // Expense mutations already invalidate `groups.balances.list`
+  // (see invalidateExpenseDependencies) and settlements invalidate on close,
+  // so the 30s query staleTime plus focus/reconnect refetch keeps this page
+  // fresh without forcing a refetch on every mount.
 
   useEffect(() => {
     try {

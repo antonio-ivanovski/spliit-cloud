@@ -63,6 +63,7 @@ describe('useDeploymentConfig', () => {
       enablePasskeyAuth: true,
       passkeyFreshAgeSeconds: 30 * 24 * 60 * 60,
       emailDeliveryEnabled: false,
+      cloudNewsEnabled: false,
     })
 
     const { result } = renderHook(() => useDeploymentConfig(), {
@@ -83,6 +84,7 @@ describe('useDeploymentConfig', () => {
         enablePasskeyAuth: true,
         passkeyFreshAgeSeconds: 30 * 24 * 60 * 60,
         emailDeliveryEnabled: false,
+        cloudNewsEnabled: false,
         maxExpenseDocumentSize: 10 * 1024 * 1024,
       })
     })

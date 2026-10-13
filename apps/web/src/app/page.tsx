@@ -19,8 +19,14 @@ import { LandingUpdatesTeaser } from './landing-updates'
 const homeRouteApi = getRouteApi('/')
 
 export default function HomePage() {
-  const { data: account } = useCurrentAccount()
+  const { data: account, isPending } = useCurrentAccount()
   const { redirect } = homeRouteApi.useSearch()
+
+  if (isPending && !account) {
+    return (
+      <PageShell width="lg" className="flex-col gap-6 py-6" aria-busy="true" />
+    )
+  }
 
   if (!account) {
     return (

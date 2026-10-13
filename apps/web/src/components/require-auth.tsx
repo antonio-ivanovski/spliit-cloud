@@ -1,6 +1,6 @@
 import { Navigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
-import type { PropsWithChildren } from 'react'
+import { useContext, type PropsWithChildren } from 'react'
 
 import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
@@ -10,9 +10,24 @@ import {
   useServerUnreachableWithoutData,
 } from '@/lib/use-online-status'
 
-function currentPathWithSearch(): string {
+import { ProfileGateContext } from './profile-gate'
+
+function currentPathWithoutNestedRedirect(): string {
   if (typeof window === 'undefined') return '/'
-  return `${window.location.pathname}${window.location.search}${window.location.hash}`
+  let search = window.location.search
+  try {
+    const params = new URLSearchParams(
+      search.startsWith('?') ? search.slice(1) : search,
+    )
+    // A re-gated bounce already carries `redirect`: strip it so the new
+    // target cannot nest (`?redirect=/auth/complete-profile?redirect=…`).
+    params.delete('redirect')
+    const rest = params.toString()
+    search = rest ? `?${rest}` : ''
+  } catch {
+    // Keep the raw search on parse failure.
+  }
+  return `${window.location.pathname}${search}${window.location.hash}`
 }
 
 function hasGroupViewerCredential(): boolean {
@@ -38,7 +53,9 @@ function hasGroupViewerCredential(): boolean {
  * dead-end unauthorized page.
  */
 export function RequireAuth({ children }: PropsWithChildren) {
-  const { account, isPending, refetch, needsOnboarding } = useOnboardingStatus()
+  const { account, isPending, refetch, needsOnboarding, statusPending } =
+    useOnboardingStatus()
+  const insideProfileGate = useContext(ProfileGateContext)
   const showOfflineEmpty = useOfflineWithoutData(!!account)
   const showServerEmpty = useServerUnreachableWithoutData(!!account)
   const permitsGroupViewer =
@@ -75,15 +92,32 @@ export function RequireAuth({ children }: PropsWithChildren) {
       )
     }
     return (
-      <Navigate to="/" search={{ redirect: currentPathWithSearch() }} replace />
+      <Navigate
+        to="/"
+        search={{ redirect: currentPathWithoutNestedRedirect() }}
+        replace
+      />
+    )
+  }
+
+  // Fail closed while the authoritative safeguard flag resolves: a named
+  // session alone cannot prove completion, so hold the loader instead of
+  // flashing protected content or redirecting on the fallback.
+  if (statusPending && account.isAnonymous === true) {
+    return (
+      <div className="flex flex-1 items-center justify-center py-10">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
     )
   }
 
   // The session user cannot see the server's safeguard flag: route through
   // the authoritative onboarding status so named-but-unsafeguarded guests
-  // finish setup instead of landing on 412s.
+  // finish setup instead of landing on 412s. Inside ProfileGate the outer
+  // gate owns this redirect, so defer to it and avoid a double bounce.
   if (needsOnboarding) {
-    const target = currentPathWithSearch()
+    if (insideProfileGate) return <>{children}</>
+    const target = currentPathWithoutNestedRedirect()
     return (
       <Navigate
         to="/auth/complete-profile"

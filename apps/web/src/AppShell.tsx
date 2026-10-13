@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from '@tanstack/react-router'
-import { Suspense, type ReactNode, useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AccountDeletionBanner } from '@/components/account-deletion-banner'
@@ -43,20 +43,6 @@ import { TRPCProvider } from '@/trpc/client'
 import { MergeDeviceSavedViews } from './app/groups/merge-device-saved-views'
 import { ArtFooter } from './components/footer/ArtFooter'
 
-function AccountPreferencesBoundary({
-  children,
-  isAuthRoute,
-}: {
-  children: ReactNode
-  isAuthRoute: boolean
-}) {
-  return isAuthRoute ? (
-    <>{children}</>
-  ) : (
-    <AccountPreferencesSync>{children}</AccountPreferencesSync>
-  )
-}
-
 function Content() {
   const { t } = useTranslation()
   const pathname = useLocation({ select: (location) => location.pathname })
@@ -86,10 +72,10 @@ function Content() {
         <PwaUpdateMutationGuard />
         <PwaUpdateCompositionGuard />
         <PwaUpdateNavigationGuard />
-        <AccountPreferencesBoundary isAuthRoute={isAuthRoute}>
+        <AccountPreferencesSync>
           <MascotProvider>
             <div className="app-shell relative isolate flex flex-col overflow-x-clip">
-              {showAmbientBackdrop && <AmbientBackdrop />}
+              <AmbientBackdrop active={showAmbientBackdrop} />
               <header
                 data-app-header
                 className="fixed inset-x-0 top-0 z-50 hidden h-16 justify-between border-b bg-background/80 p-2 backdrop-blur-md supports-backdrop-filter:bg-background/80 sm:flex"
@@ -156,9 +142,9 @@ function Content() {
               )}
 
               <PwaUpdatePill />
-              {isAuthRoute ? null : <PushNotificationOnboarding />}
-              {isAuthRoute ? null : <InstallPromotionDialog />}
-              {isAuthRoute ? null : <UpdatesModal />}
+              <PushNotificationOnboarding />
+              <InstallPromotionDialog />
+              <UpdatesModal />
 
               <div className="relative z-20 flex flex-1 flex-col pt-(--app-header-height)">
                 <div className="sticky top-(--app-header-height) z-40 shrink-0">
@@ -176,7 +162,7 @@ function Content() {
             <MascotHost />
             <Toaster />
           </MascotProvider>
-        </AccountPreferencesBoundary>
+        </AccountPreferencesSync>
       </OfflineProvider>
     </TRPCProvider>
   )

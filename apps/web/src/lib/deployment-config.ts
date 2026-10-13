@@ -61,6 +61,9 @@ function getBuildTimeFallback(): DeploymentConfig {
 
 export function useDeploymentConfig(): DeploymentConfig {
   const isOnline = useOnlineStatus()
+  // Provider-free fetch (no TRPC provider needed, safe in unit tests without
+  // one). `enabled` keeps tests/offline on the build-time fallback without
+  // firing the network.
   const query = useQuery({
     queryKey: ['deployment-config'],
     queryFn: () => getTrpcClient().features.get.query(),

@@ -134,6 +134,12 @@ export const groupSearchSchema = groupAccessSearchSchema.extend({
     .optional()
     .catch(undefined),
   expSortDir: z.enum(['asc', 'desc']).optional().catch(undefined),
+  statsPeriod: z
+    .enum(['LATEST_ACTIVITY', 'WEEK', 'MONTH', 'QUARTER', 'YEAR', 'CUSTOM'])
+    .optional()
+    .catch(undefined),
+  statsFrom: dateString,
+  statsTo: dateString,
 })
 
 export const groupParamsSchema = z.object({

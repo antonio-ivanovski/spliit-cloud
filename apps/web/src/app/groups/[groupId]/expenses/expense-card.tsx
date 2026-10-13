@@ -77,6 +77,12 @@ function Participants({
   participantCount: number
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseCard' })
+  const { t: tHomepage } = useTranslation(undefined, {
+    keyPrefix: 'Homepage',
+  })
+  const unknownParticipant = tHomepage('overview.unknownPerson')
+  const resolveName = (name: string | null | undefined) =>
+    name?.trim() ? name : unknownParticipant
   const locale = useLocale()
   const paidFor =
     expense.paidFor.length === participantCount && participantCount >= 4
@@ -84,7 +90,7 @@ function Participants({
       : expense.paidFor.map((paidFor, index) => (
           <span key={index}>
             {index !== 0 && <>, </>}
-            <strong>{paidFor.ledgerParticipant.name}</strong>
+            <strong>{resolveName(paidFor.ledgerParticipant.name)}</strong>
           </span>
         ))
 
@@ -105,14 +111,18 @@ function Participants({
   if (isMultiPayer) {
     // Decision #13: sort payers alphabetically by resolved display name.
     const sortedPaidByList = expense.paidByList.toSorted((a, b) =>
-      a.ledgerParticipant.name.localeCompare(b.ledgerParticipant.name, locale, {
-        sensitivity: 'base',
-      }),
+      resolveName(a.ledgerParticipant.name).localeCompare(
+        resolveName(b.ledgerParticipant.name),
+        locale,
+        {
+          sensitivity: 'base',
+        },
+      ),
     )
     const paidByNames = sortedPaidByList.map((pb, index) => (
       <span key={pb.ledgerParticipant.id}>
         {index !== 0 && <>, </>}
-        <strong>{pb.ledgerParticipant.name}</strong>
+        <strong>{resolveName(pb.ledgerParticipant.name)}</strong>
       </span>
     ))
     return (
@@ -131,7 +141,7 @@ function Participants({
     <Trans
       i18nKey={i18nKey}
       values={{
-        paidBy: expense.paidByList[0].ledgerParticipant.name,
+        paidBy: resolveName(expense.paidByList[0]?.ledgerParticipant.name),
         forCount: expense.paidFor.length,
       }}
       components={{

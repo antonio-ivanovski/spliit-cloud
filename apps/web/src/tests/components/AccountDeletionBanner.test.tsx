@@ -251,7 +251,9 @@ describe('account deletion notice', () => {
     await act(async () => {
       await vi.advanceTimersByTimeAsync(0)
     })
-    expect(mocks.load).toHaveBeenCalledTimes(4)
+    // Reconnect within the 30s stale window reuses the cache instead of
+    // refetching: the banner only refetches on reconnect when stale.
+    expect(mocks.load).toHaveBeenCalledTimes(3)
   })
 
   it('keeps the confirmed deletion and offline notices visible together without fetching offline', async () => {

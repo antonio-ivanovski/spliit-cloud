@@ -21,7 +21,7 @@ import { isPlaceholderEmail } from '@/lib/account'
 import { useDeploymentConfig } from '@/lib/deployment-config'
 import { markInstallEligible } from '@/lib/install-eligibility'
 import { isPasskeySupported } from '@/lib/passkey'
-import { safeLocalReturnPath } from '@/lib/signup-invite'
+import { resolveAuthReturnContext } from '@/lib/signup-invite'
 import { useOnboardingStatus } from '@/lib/use-onboarding-status'
 import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
@@ -47,7 +47,10 @@ export function CompleteProfilePage() {
     keyPrefix: 'AnonymousAccount.signup',
   })
   const { redirect } = completeProfileRouteApi.useSearch()
-  const redirectTo = safeLocalReturnPath(redirect)
+  // Collapse a nested bounce to its destination in one hop (bounded, deduped
+  // chain) so a re-gated `redirect=/auth/complete-profile?redirect=…` cannot
+  // bounce through this route twice.
+  const { destination: redirectTo } = resolveAuthReturnContext({ redirect })
   const {
     account,
     isPending,

@@ -82,3 +82,6 @@ calibration-out/
 *.sql.gz
 /*.sql
 /*.dump
+
+# Promo exports and visual QA (campaign source remains tracked)
+apps/promo/output/

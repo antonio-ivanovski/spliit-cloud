@@ -8,8 +8,9 @@ import { trpc } from '@/trpc/client'
 import { useCurrentGroup } from './current-group-context'
 
 /**
- * Membership visits refresh the account group list and drop a leftover
- * view-only bookmark for the same group. Public-view persistence is owned by
+ * Membership visits drop a leftover view-only bookmark for the same group. The
+ * account group list refreshes via the remove's onSuccess invalidation, not
+ * unconditionally on every visit. Public-view persistence is owned by
  * `useSavedViewBookmark`.
  */
 export function SaveGroupLocally() {
@@ -35,7 +36,6 @@ export function SaveGroupLocally() {
     const visitKey = `${account?.id ?? ''}:${groupId}`
     if (lastVisit.current === visitKey) return
     lastVisit.current = visitKey
-    void invalidateAccountGroupLists(utils)
     if (persistToAccount) {
       removeMutate({ groupId })
     }
@@ -45,7 +45,6 @@ export function SaveGroupLocally() {
     isOnline,
     persistToAccount,
     removeMutate,
-    utils,
     viewer?.source,
   ])
 

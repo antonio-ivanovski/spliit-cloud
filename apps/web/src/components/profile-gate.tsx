@@ -1,17 +1,43 @@
 import { Navigate, useRouterState } from '@tanstack/react-router'
-import type { PropsWithChildren } from 'react'
+import { createContext, type PropsWithChildren } from 'react'
 
 import { useOnboardingStatus } from '@/lib/use-onboarding-status'
+
+/**
+ * Marks routes rendered inside {@link ProfileGate} so the inner
+ * {@link RequireAuth} can defer its own complete-profile redirect to this outer
+ * gate (single redirect owner when nested; standalone renders still redirect on
+ * their own).
+ */
+export const ProfileGateContext = createContext(false)
 
 const ungatedPaths = new Set([
   '/auth/complete-profile',
   '/auth/recover',
+  '/auth/forgot-password',
+  '/auth/reset-password',
+  '/oauth/login',
+  '/oauth/consent',
+  '/oauth/manual-callback',
   '/privacy',
   '/terms',
   '/imprint',
   '/support',
   '/unsubscribe',
 ])
+
+function stripRedirectParam(search: string): string {
+  try {
+    const params = new URLSearchParams(
+      search.startsWith('?') ? search.slice(1) : search,
+    )
+    params.delete('redirect')
+    const rest = params.toString()
+    return rest ? `?${rest}` : ''
+  } catch {
+    return search
+  }
+}
 
 /**
  * Global guard that ensures authenticated users finish first-run setup (display
@@ -30,7 +56,8 @@ const ungatedPaths = new Set([
  * unresolved the session predicate decides (fail open, self-heals).
  */
 export function ProfileGate({ children }: PropsWithChildren) {
-  const { account, needsOnboarding } = useOnboardingStatus()
+  const { account, isPending, statusPending, needsProfile, needsOnboarding } =
+    useOnboardingStatus()
   const routerState = useRouterState()
   const currentPath = routerState.location.pathname
 
@@ -38,19 +65,48 @@ export function ProfileGate({ children }: PropsWithChildren) {
   // `data` while get-session is pending, so a spinner here would hide the
   // signed-in shell. Signed-out cold starts may flash AuthPanel.
   if (!account) {
-    return <>{children}</>
+    return (
+      <ProfileGateContext.Provider value={true}>
+        <>{children}</>
+      </ProfileGateContext.Provider>
+    )
   }
 
   if (ungatedPaths.has(currentPath)) {
-    return <>{children}</>
+    return (
+      <ProfileGateContext.Provider value={true}>
+        <>{children}</>
+      </ProfileGateContext.Provider>
+    )
+  }
+
+  // Fail closed while the onboarding verdict is unresolved: a named session
+  // alone cannot prove the anonymous safeguard finished, so neither render
+  // children (fail-open flash) nor Navigate (redirect on stale data) here.
+  // Nameless accounts already prove they need setup from the cached row, so
+  // they still redirect below instead of holding.
+  const anonymousStatusPending = statusPending && account.isAnonymous === true
+  const namedSessionPending =
+    isPending && !needsProfile && account.isAnonymous === true
+  if (anonymousStatusPending || namedSessionPending) {
+    return null
   }
 
   // Signed in but missing display name or anonymous recovery setup
   if (needsOnboarding) {
-    const target =
-      typeof window !== 'undefined'
-        ? `${currentPath}${window.location.search}${window.location.hash}`
-        : currentPath
+    const location = routerState.location as {
+      searchStr?: string
+      hash?: string
+    }
+    const searchStr =
+      location.searchStr ??
+      (typeof window !== 'undefined' ? window.location.search : '')
+    const hash =
+      location.hash ??
+      (typeof window !== 'undefined' ? window.location.hash : '')
+    // Strip any existing `redirect` param so a re-gated complete-profile
+    // bounce cannot nest (`?redirect=/auth/complete-profile?redirect=…`).
+    const target = `${currentPath}${stripRedirectParam(searchStr)}${hash}`
     return (
       <Navigate
         to="/auth/complete-profile"
@@ -60,5 +116,9 @@ export function ProfileGate({ children }: PropsWithChildren) {
     )
   }
 
-  return <>{children}</>
+  return (
+    <ProfileGateContext.Provider value={true}>
+      <>{children}</>
+    </ProfileGateContext.Provider>
+  )
 }

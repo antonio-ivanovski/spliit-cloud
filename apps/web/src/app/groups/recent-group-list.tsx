@@ -176,7 +176,6 @@ export function RecentGroupList() {
   }
 
   const isGroupsLoading = isLoading
-  const allGroups = data?.groups ?? []
 
   function renderGroupItems(
     list: AccountGroup[],
@@ -238,25 +237,36 @@ export function RecentGroupList() {
     offlineOverview.meta.availability === 'ready' && offlineOverview.data
   // Offline wins when the network has no complete result, even online on
   // failure (mirrors expense-list/balances/page gating on !data, not !online).
-  const useOfflineSource = !data && offlineReady && offlineOverview.data
-  if (useOfflineSource && offlineOverview.data) {
-    // Offline download wins when the network has no complete result.
-    // Undownloaded groups keep names/metadata with UNAVAILABLE summaries;
-    // totals show only when every catalog group is ready and none is dirty.
-    const offlineGroups = offlineOverview.data
-      .groups as unknown as AccountGroup[]
-    const {
-      groups: sectionGroups,
-      friends,
-      starred,
-      archived,
-      hidden,
-    } = partitionGroups(offlineGroups)
-    const offlineStats = offlineOverview.data.stats as unknown as OverviewStats
-    const offlineDisabledReason = tOffline('OfflineReadOnly.reconnectToEdit')
+  const useOfflineSource = !data && offlineReady
+  const offlineData = useOfflineSource ? offlineOverview.data : undefined
+  const isOfflineMode = Boolean(useOfflineSource)
+  // Undownloaded groups keep names/metadata with UNAVAILABLE summaries;
+  // totals show only when every catalog group is ready and none is dirty.
+  const offlineGroups =
+    (offlineData?.groups as unknown as AccountGroup[] | undefined) ?? []
+  const offlineStats = offlineData?.stats as unknown as
+    | OverviewStats
+    | undefined
+  const effectiveGroups = data?.groups ?? offlineGroups
+  // Totals render only when available offline (never invented zeros); online
+  // stats pass straight through.
+  const effectiveStats =
+    data?.stats ?? (offlineData?.totalsAvailable ? offlineStats : undefined)
+  const {
+    groups: sectionGroups,
+    friends,
+    starred,
+    archived,
+    hidden,
+  } = partitionGroups(effectiveGroups)
+  const offlineDisabledReason = tOffline('OfflineReadOnly.reconnectToEdit')
+  // Single section structure for offline and online: the same tree renders in
+  // both modes with `disabled` props flipped, so resolving the network never
+  // swaps element types (no control remount / layout shift).
+  if (useOfflineSource || data) {
     body = (
       <div className="flex flex-col gap-5">
-        {!offlineOverview.data.totalsAvailable && (
+        {isOfflineMode && offlineData && !offlineData.totalsAvailable && (
           <output className="rounded-lg border bg-muted/40 px-4 py-2 text-sm text-muted-foreground">
             {tOffline(
               offlineOverview.meta.incompleteGroupCount > 0
@@ -265,9 +275,10 @@ export function RecentGroupList() {
             )}
           </output>
         )}
-        {offlineOverview.data.totalsAvailable &&
-          (offlineOverview.data.totalsFreshness === 'stale' ||
-            offlineOverview.data.totalsFreshness === 'dirty') && (
+        {isOfflineMode &&
+          offlineData?.totalsAvailable &&
+          (offlineData.totalsFreshness === 'stale' ||
+            offlineData.totalsFreshness === 'dirty') && (
             <output className="rounded-lg border bg-muted/40 px-4 py-2 text-sm text-muted-foreground">
               {tOffline('OfflineDownloads.totalsIncomplete')}
             </output>
@@ -296,8 +307,9 @@ export function RecentGroupList() {
               variant="ghost"
               size="sm"
               className="h-7 gap-1.5 px-2 text-xs text-muted-foreground sm:hidden"
-              disabled
-              title={offlineDisabledReason}
+              onClick={() => setScanOpen(true)}
+              disabled={isOfflineMode}
+              title={isOfflineMode ? offlineDisabledReason : undefined}
               data-testid="scan-to-join-button"
             >
               <ScanLine className="h-3.5 w-3.5" />
@@ -312,8 +324,8 @@ export function RecentGroupList() {
               title={t('createGroupCard.title')}
               description={t('createGroupCard.description')}
               data-testid="create-group-card"
-              disabled
-              disabledReason={offlineDisabledReason}
+              disabled={isOfflineMode}
+              disabledReason={isOfflineMode ? offlineDisabledReason : undefined}
               secondaryAction={{
                 to: '/groups/import',
                 icon: <Cloud className="h-4 w-4" />,
@@ -337,18 +349,16 @@ export function RecentGroupList() {
               title={t('createFriendLedgerCard.title')}
               description={t('createFriendLedgerCard.description')}
               data-testid="create-friend-ledger-card"
-              disabled
-              disabledReason={offlineDisabledReason}
+              disabled={isOfflineMode}
+              disabledReason={isOfflineMode ? offlineDisabledReason : undefined}
             />
             {renderGroupItems(friends, 'friends')}
           </ul>
         </CollapsibleSection>
-        {offlineOverview.data.totalsAvailable && (
-          <AcrossGroupsBalanceCard
-            stats={offlineStats}
-            groups={offlineGroups}
-          />
-        )}
+        <AcrossGroupsBalanceCard
+          stats={effectiveStats}
+          groups={effectiveGroups}
+        />
         {archived.length > 0 && (
           <CollapsibleSection
             storageKey={STORAGE_KEYS.archived}
@@ -373,18 +383,32 @@ export function RecentGroupList() {
             </ul>
           </CollapsibleSection>
         )}
-        <div
-          data-testid="all-expenses-link"
-          aria-disabled="true"
-          title={offlineDisabledReason}
-          className="flex cursor-not-allowed items-center justify-between rounded-lg border bg-card px-4 py-3 text-sm opacity-60"
-        >
-          <span className="flex items-center gap-2 font-medium">
-            <ReceiptText className="h-4 w-4 text-muted-foreground" />
-            {t('allExpenses')}
-          </span>
-          <ArrowRight className="h-4 w-4 text-muted-foreground rtl:rotate-180" />
-        </div>
+        {isOfflineMode ? (
+          <div
+            data-testid="all-expenses-link"
+            aria-disabled="true"
+            title={offlineDisabledReason}
+            className="flex cursor-not-allowed items-center justify-between rounded-lg border bg-card px-4 py-3 text-sm opacity-60"
+          >
+            <span className="flex items-center gap-2 font-medium">
+              <ReceiptText className="h-4 w-4 text-muted-foreground" />
+              {t('allExpenses')}
+            </span>
+            <ArrowRight className="h-4 w-4 text-muted-foreground rtl:rotate-180" />
+          </div>
+        ) : (
+          <Link
+            to="/expenses"
+            data-testid="all-expenses-link"
+            className="flex items-center justify-between rounded-lg border bg-card px-4 py-3 text-sm transition-colors hover:bg-accent"
+          >
+            <span className="flex items-center gap-2 font-medium">
+              <ReceiptText className="h-4 w-4 text-muted-foreground" />
+              {t('allExpenses')}
+            </span>
+            <ArrowRight className="h-4 w-4 text-muted-foreground rtl:rotate-180" />
+          </Link>
+        )}
       </div>
     )
   } else if (showServerEmpty) {
@@ -418,127 +442,6 @@ export function RecentGroupList() {
         >
           {tStats('Dashboard.retry')}
         </button>
-      </div>
-    )
-  } else {
-    const {
-      groups: sectionGroups,
-      friends,
-      starred,
-      archived,
-      hidden,
-    } = partitionGroups(allGroups)
-
-    body = (
-      <div className="flex flex-col gap-5">
-        {starred.length > 0 && (
-          <CollapsibleSection
-            storageKey={STORAGE_KEYS.starred}
-            defaultOpen
-            title={t('starred')}
-            insetHeader
-          >
-            <ul className="motion-stagger grid items-stretch gap-3 sm:grid-cols-2">
-              {renderGroupItems(starred, 'starred')}
-            </ul>
-          </CollapsibleSection>
-        )}
-
-        <CollapsibleSection
-          storageKey={STORAGE_KEYS.groups}
-          defaultOpen
-          title={t('groups')}
-          insetHeader
-          headerAction={
-            /* Phones have the camera: desktops get no scanner button. */
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="h-7 gap-1.5 px-2 text-xs text-muted-foreground sm:hidden"
-              onClick={() => setScanOpen(true)}
-              data-testid="scan-to-join-button"
-            >
-              <ScanLine className="h-3.5 w-3.5" />
-              {tHomepage('scanToJoin')}
-            </Button>
-          }
-        >
-          <ul className="motion-stagger grid items-stretch gap-3 sm:grid-cols-2">
-            <CreateCard
-              to="/groups/create"
-              icon={<Plus className="h-4 w-4" />}
-              title={t('createGroupCard.title')}
-              description={t('createGroupCard.description')}
-              data-testid="create-group-card"
-              secondaryAction={{
-                to: '/groups/import',
-                icon: <Cloud className="h-4 w-4" />,
-                label: t('importGroup'),
-                'data-testid': 'import-group-action',
-              }}
-            />
-            {renderGroupItems(sectionGroups, 'groups')}
-          </ul>
-        </CollapsibleSection>
-
-        <CollapsibleSection
-          storageKey={STORAGE_KEYS.friends}
-          defaultOpen
-          title={t('friends')}
-          insetHeader
-        >
-          <ul className="motion-stagger grid items-stretch gap-3 sm:grid-cols-2">
-            <CreateCard
-              to="/friends/create"
-              icon={<Users className="h-4 w-4" />}
-              title={t('createFriendLedgerCard.title')}
-              description={t('createFriendLedgerCard.description')}
-              data-testid="create-friend-ledger-card"
-            />
-            {renderGroupItems(friends, 'friends')}
-          </ul>
-        </CollapsibleSection>
-
-        <AcrossGroupsBalanceCard stats={data?.stats} groups={allGroups} />
-
-        {archived.length > 0 && (
-          <CollapsibleSection
-            storageKey={STORAGE_KEYS.archived}
-            defaultOpen={false}
-            title={t('archived')}
-            insetHeader
-          >
-            <ul className="motion-stagger grid items-stretch gap-3 opacity-60 sm:grid-cols-2">
-              {renderGroupItems(archived, 'archived')}
-            </ul>
-          </CollapsibleSection>
-        )}
-
-        {hidden.length > 0 && (
-          <CollapsibleSection
-            storageKey={STORAGE_KEYS.hidden}
-            defaultOpen={false}
-            title={t('hidden')}
-            insetHeader
-          >
-            <ul className="motion-stagger grid items-stretch gap-3 opacity-60 sm:grid-cols-2">
-              {renderGroupItems(hidden, 'hidden')}
-            </ul>
-          </CollapsibleSection>
-        )}
-
-        <Link
-          to="/expenses"
-          data-testid="all-expenses-link"
-          className="flex items-center justify-between rounded-lg border bg-card px-4 py-3 text-sm transition-colors hover:bg-accent"
-        >
-          <span className="flex items-center gap-2 font-medium">
-            <ReceiptText className="h-4 w-4 text-muted-foreground" />
-            {t('allExpenses')}
-          </span>
-          <ArrowRight className="h-4 w-4 text-muted-foreground rtl:rotate-180" />
-        </Link>
       </div>
     )
   }
@@ -600,73 +503,71 @@ function AcrossGroupsBalanceCard({
     (summary) => summary.owedToYou > 0 || summary.youOwe > 0,
   )
 
+  // Always mounted by the parent (offline and online share one tree); render
+  // nothing until totals are actually available.
+  if (!stats || !hasGroupSummary) return null
+
   function groupLabel(count: number) {
     return tLabels(count === 1 ? 'group' : 'groupPlural')
   }
 
   return (
     <section aria-label={tBalances('title')}>
-      {stats && hasGroupSummary ? (
-        <div className="rounded-lg border bg-card px-4 py-3 shadow-xs sm:px-5">
-          <Tabs defaultValue="groups">
-            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b pb-3">
-              <p className="text-sm font-medium">
-                {t('overview.acrossGroups')}
-              </p>
-              <div className="flex flex-wrap items-center justify-end gap-2">
-                <TabsList className="h-8">
-                  <TabsTrigger value="groups" className="h-6 px-2.5 text-xs">
-                    {t('overview.groupsTab')}
-                  </TabsTrigger>
-                  <TabsTrigger value="people" className="h-6 px-2.5 text-xs">
-                    {t('overview.peopleTab')}
-                  </TabsTrigger>
-                </TabsList>
-              </div>
+      <div className="rounded-lg border bg-card px-4 py-3 shadow-xs sm:px-5">
+        <Tabs defaultValue="groups">
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b pb-3">
+            <p className="text-sm font-medium">{t('overview.acrossGroups')}</p>
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              <TabsList className="h-8">
+                <TabsTrigger value="groups" className="h-6 px-2.5 text-xs">
+                  {t('overview.groupsTab')}
+                </TabsTrigger>
+                <TabsTrigger value="people" className="h-6 px-2.5 text-xs">
+                  {t('overview.peopleTab')}
+                </TabsTrigger>
+              </TabsList>
             </div>
-            <TabsContent value="groups" className="mt-0">
-              <div className="grid gap-3 pt-3 sm:grid-cols-2">
-                <BalanceDirection
-                  direction="owed"
-                  summaries={balanceSummaries}
-                  groups={groups}
-                  groupLabel={groupLabel}
-                  label={t('overview.youAreOwed')}
-                />
-                <BalanceDirection
-                  direction="owe"
-                  summaries={balanceSummaries}
-                  groups={groups}
-                  groupLabel={groupLabel}
-                  label={t('overview.youOwe')}
-                />
-              </div>
-              {!hasAnyBalance && (
-                <SettledSummary label={tBalances('direction.settledUp')} />
-              )}
-            </TabsContent>
-            <TabsContent value="people" className="mt-0">
-              <div className="grid gap-3 pt-3 sm:grid-cols-2">
-                <PeopleBalanceDirection
-                  direction="owed"
-                  people={peopleBalances}
-                  label={t('overview.youAreOwed')}
-                />
-                <PeopleBalanceDirection
-                  direction="owe"
-                  people={peopleBalances}
-                  label={t('overview.youOwe')}
-                />
-              </div>
-              {!peopleBalances.some((person) =>
-                person.currencies.some(
-                  (currency) => currency.groups.length > 0,
-                ),
-              ) && <SettledSummary label={tBalances('direction.settledUp')} />}
-            </TabsContent>
-          </Tabs>
-        </div>
-      ) : null}
+          </div>
+          <TabsContent value="groups" className="mt-0">
+            <div className="grid gap-3 pt-3 sm:grid-cols-2">
+              <BalanceDirection
+                direction="owed"
+                summaries={balanceSummaries}
+                groups={groups}
+                groupLabel={groupLabel}
+                label={t('overview.youAreOwed')}
+              />
+              <BalanceDirection
+                direction="owe"
+                summaries={balanceSummaries}
+                groups={groups}
+                groupLabel={groupLabel}
+                label={t('overview.youOwe')}
+              />
+            </div>
+            {!hasAnyBalance && (
+              <SettledSummary label={tBalances('direction.settledUp')} />
+            )}
+          </TabsContent>
+          <TabsContent value="people" className="mt-0">
+            <div className="grid gap-3 pt-3 sm:grid-cols-2">
+              <PeopleBalanceDirection
+                direction="owed"
+                people={peopleBalances}
+                label={t('overview.youAreOwed')}
+              />
+              <PeopleBalanceDirection
+                direction="owe"
+                people={peopleBalances}
+                label={t('overview.youOwe')}
+              />
+            </div>
+            {!peopleBalances.some((person) =>
+              person.currencies.some((currency) => currency.groups.length > 0),
+            ) && <SettledSummary label={tBalances('direction.settledUp')} />}
+          </TabsContent>
+        </Tabs>
+      </div>
     </section>
   )
 }

@@ -95,6 +95,12 @@ export function InstallPromotionDialog(props?: {
         timer = window.setTimeout(attempt, 500)
         return
       }
+      // Never open over another dialog (release notes, timezone check, …):
+      // retry until the screen is clear, mirroring UpdatesModal's deferral.
+      if (document.querySelector('[role="dialog"]')) {
+        timer = window.setTimeout(attempt, 500)
+        return
+      }
       if (document.hidden) return
       if (isPromotionBlockedByWork()) {
         timer = window.setTimeout(attempt, 5000)

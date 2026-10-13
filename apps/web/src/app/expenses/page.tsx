@@ -1,10 +1,11 @@
+import { keepPreviousData } from '@tanstack/react-query'
 import {
   getRouteApi,
   type LinkProps,
   useNavigate,
 } from '@tanstack/react-router'
 import { ArrowDownWideNarrow, Filter, Search, X } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useInView } from 'react-intersection-observer'
 import { useDebounce } from 'use-debounce'
@@ -51,6 +52,7 @@ import {
 } from '@/lib/offline/read-hooks'
 import {
   useOfflineWithoutData,
+  useOnlineStatus,
   useServerUnreachableWithoutData,
 } from '@/lib/use-online-status'
 import { cn } from '@/lib/utils'
@@ -694,9 +696,12 @@ export function GlobalExpensesContent() {
     () => readFilters(search as Record<string, unknown>),
     [search],
   )
-  const [debouncedSearch] = useDebounce(filters.q, 300)
+  const [localQ, setLocalQ] = useState(filters.q)
+  const [debouncedLocalQ] = useDebounce(localQ, 300)
+  const searchInputRef = useRef<HTMLInputElement>(null)
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [draftFilters, setDraftFilters] = useState(filters)
+  const prevFiltersOpenRef = useRef(filtersOpen)
   const { ref: loadingRef, inView } = useInView()
   const accountPreferences = useSyncedAccountPreferences()
   const accountTimeZone =
@@ -705,20 +710,16 @@ export function GlobalExpensesContent() {
     optionsQuery.data ??
     (offlineFilterOptions.data as unknown as FilterOptions | undefined)
 
-  useEffect(() => {
-    if (filtersOpen) {
-      // oxlint-disable-next-line react/set-state-in-effect -- seed the draft when the panel opens.
-      setDraftFilters(filters)
-    }
-  }, [filters, filtersOpen])
-
-  const commit = (next: Filters) => {
-    void navigate({
-      to: '/expenses',
-      search: filtersToSearch(next) as never,
-      replace: true,
-    })
-  }
+  const commit = useCallback(
+    (next: Filters) => {
+      void navigate({
+        to: '/expenses',
+        search: filtersToSearch(next) as never,
+        replace: true,
+      })
+    },
+    [navigate],
+  )
 
   const closeExpense = () => {
     void navigate({
@@ -729,11 +730,38 @@ export function GlobalExpensesContent() {
     })
   }
 
+  useEffect(() => {
+    // Seed the draft only on the closed -> open transition; resyncing on
+    // every filters change would discard in-progress edits.
+    const wasOpen = prevFiltersOpenRef.current
+    prevFiltersOpenRef.current = filtersOpen
+    if (!wasOpen && filtersOpen) {
+      setDraftFilters(filters)
+    }
+  }, [filters, filtersOpen])
+
+  useEffect(() => {
+    // Sync the typed query from the URL (back/forward, clear, filter reset)
+    // without clobbering in-progress typing.
+    if (
+      document.activeElement !== searchInputRef.current &&
+      filters.q !== localQ
+    ) {
+      setLocalQ(filters.q)
+    }
+  }, [filters.q, localQ])
+
+  useEffect(() => {
+    if (debouncedLocalQ === localQ && debouncedLocalQ !== filters.q) {
+      commit({ ...filters, q: debouncedLocalQ })
+    }
+  }, [commit, debouncedLocalQ, localQ, filters])
+
   const input = useMemo(() => {
     const currency = filters.currencies[0]
     return {
       limit: 20,
-      query: debouncedSearch || undefined,
+      query: debouncedLocalQ || undefined,
       locale,
       groupIds: filters.groups.length ? filters.groups : undefined,
       includeArchived: filters.includeArchived,
@@ -755,16 +783,27 @@ export function GlobalExpensesContent() {
       sortBy: filters.sortBy,
       sortDir: filters.sortDir,
     }
-  }, [debouncedSearch, filters, locale])
+  }, [debouncedLocalQ, filters, locale])
   const expensesQuery = trpc.expenses.list.useInfiniteQuery(input, {
     enabled: options !== undefined,
     getNextPageParam: (page) => page.nextCursor ?? undefined,
+    placeholderData: keepPreviousData,
   })
-  const offlineGlobal = useOfflineGlobalExpenses({
-    ...(input as unknown as Record<string, never>),
-    search: debouncedSearch || undefined,
-  } as unknown as Parameters<typeof useOfflineGlobalExpenses>[0])
+  const offlineGlobal = useOfflineGlobalExpenses(
+    {
+      ...(input as unknown as Record<string, never>),
+      search: debouncedLocalQ || undefined,
+    } as unknown as Parameters<typeof useOfflineGlobalExpenses>[0],
+    { networkEnabled: false },
+  )
+  const isOnline = useOnlineStatus()
   const useOfflineSource =
+    (!expensesQuery.data ||
+      !!expensesQuery.error ||
+      // Placeholder means a filter change is fetching while stale rows stay
+      // mounted. Only swap to the local snapshot when offline — online keeps
+      // stale network rows to avoid an offline-list flash per keystroke.
+      (expensesQuery.isPlaceholderData && !isOnline)) &&
     offlineGlobal.meta.source === 'download' &&
     offlineGlobal.meta.availability === 'ready' &&
     !!offlineGlobal.data
@@ -786,12 +825,24 @@ export function GlobalExpensesContent() {
   )
 
   useEffect(() => {
-    if (inView && hasMore && !expensesQuery.isFetching) {
-      if (useOfflineSource) void offlineGlobal.fetchNextPage()
-      else void expensesQuery.fetchNextPage()
+    if (!inView || !hasMore) return
+    if (useOfflineSource) {
+      if (!offlineGlobal.isLoading) void offlineGlobal.fetchNextPage()
+    } else if (!expensesQuery.isFetching) {
+      void expensesQuery.fetchNextPage()
     }
-  }, [expensesQuery, hasMore, inView, useOfflineSource, offlineGlobal])
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- depend on stable primitives only; the whole query object churns every fetch and retriggers pagination.
+  }, [
+    inView,
+    hasMore,
+    useOfflineSource,
+    expensesQuery.isFetching,
+    expensesQuery.fetchNextPage,
+    offlineGlobal.fetchNextPage,
+    offlineGlobal.isLoading,
+  ])
 
+  const baseSearch = useMemo(() => filtersToSearch(filters), [filters])
   const returnTo = buildGlobalExpensesReturnTo(filters)
   const activeFilterCount = [
     filters.groups.length,
@@ -818,15 +869,29 @@ export function GlobalExpensesContent() {
               <div className="relative flex-1">
                 <Search className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
+                  ref={searchInputRef}
                   className="h-11 border-none bg-muted ps-10 text-sm text-muted-foreground sm:h-9"
-                  value={filters.q}
-                  onChange={(e) => commit({ ...filters, q: e.target.value })}
+                  value={localQ}
+                  onChange={(e) => setLocalQ(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && localQ !== filters.q) {
+                      commit({ ...filters, q: localQ })
+                    }
+                  }}
+                  onBlur={() => {
+                    if (localQ !== filters.q) {
+                      commit({ ...filters, q: localQ })
+                    }
+                  }}
                   placeholder={t('Expenses.searchPlaceholder')}
                 />
-                {filters.q && (
+                {localQ && (
                   <button
                     type="button"
-                    onClick={() => commit({ ...filters, q: '' })}
+                    onClick={() => {
+                      setLocalQ('')
+                      commit({ ...filters, q: '' })
+                    }}
                     className="absolute end-0 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center text-muted-foreground sm:size-9"
                     aria-label={t('Expenses.clearSearch')}
                   >
@@ -954,8 +1019,8 @@ export function GlobalExpensesContent() {
                   {(optionsQuery.error ?? expensesQuery.error)?.message}
                 </div>
               ) : !useOfflineSource &&
-                (expensesQuery.isLoading ||
-                  optionsQuery.isLoading ||
+                ((expensesQuery.isLoading && !expensesQuery.data) ||
+                  (optionsQuery.isLoading && !optionsQuery.data) ||
                   !options) ? (
                 <ExpensesLoading />
               ) : expenses.length === 0 ? (
@@ -975,7 +1040,7 @@ export function GlobalExpensesContent() {
                       expense={expense}
                       expensesSearch={
                         {
-                          ...filtersToSearch(filters),
+                          ...baseSearch,
                           expenseId: expense.id,
                           expenseGroupId: expense.group.id,
                         } as LinkProps['search']

@@ -97,7 +97,10 @@ export function GroupLayoutClient({
   // Offline adapter: a complete local snapshot renders immediately when the
   // network has no matching complete result (cold direct routes included).
   // Link-invite / view-key paths stay online-only and never read snapshots.
-  const offlineGroup = useOfflineGroup(groupId)
+  const offlineGroup = useOfflineGroup(groupId, {
+    linkInviteToken,
+    viewKey,
+  })
   const offlineView =
     !linkInviteToken && !viewKey && offlineGroup.meta.availability === 'ready'
       ? (offlineGroup.data?.view ?? null)

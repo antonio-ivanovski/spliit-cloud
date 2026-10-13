@@ -81,6 +81,60 @@ export function toOfflineListRows(rows: unknown[]): unknown[] {
   return rows.map(toOfflineListRow)
 }
 
+function stableJsonEqual(a: unknown, b: unknown): boolean {
+  try {
+    return JSON.stringify(a) === JSON.stringify(b)
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Return the previous reference when the new value is deep-equal (JSON). Used
+ * to keep network-mapped views stable across renders so memoized consumers bail
+ * out instead of re-rendering on every query-client update. Falls back to the
+ * new reference on mismatch (never stale, only extra render).
+ */
+function useStableValue<T>(value: T): T {
+  const ref = useRef<T>(value)
+  // oxlint-disable-next-line react/refs -- intentional render-phase ref read for stability: returns the previous deep-equal reference so memoized consumers bail out. Write is idempotent and never triggers effects.
+  if (value !== ref.current) {
+    // oxlint-disable-next-line react/refs -- same stability read as above.
+    if (stableJsonEqual(value, ref.current)) return ref.current
+    // oxlint-disable-next-line react/refs -- idempotent stability write; no effect or layout impact.
+    ref.current = value
+  }
+  // oxlint-disable-next-line react/refs -- return the stabilized reference.
+  return ref.current
+}
+
+/**
+ * Slice a flat merged list back into the page boundaries of a reference paging
+ * (network or local). Preserves N pages instead of collapsing to 1 so
+ * infinite-scroll sentinels and timeline grouping memos keep working. Reference
+ * page lengths drive the split; overflow goes to trailing pages of `pageSize`.
+ */
+function sliceIntoPageBoundaries<T>(
+  merged: T[],
+  referenceLengths: number[],
+  pageSize: number,
+): T[][] {
+  if (referenceLengths.length === 0) return merged.length > 0 ? [merged] : []
+  const out: T[][] = []
+  let offset = 0
+  for (const length of referenceLengths) {
+    if (offset >= merged.length) break
+    out.push(merged.slice(offset, offset + Math.max(0, length)))
+    offset += Math.max(0, length)
+  }
+  while (offset < merged.length) {
+    out.push(merged.slice(offset, offset + pageSize))
+    offset += pageSize
+  }
+  if (out.length === 0 && merged.length === 0) return []
+  return out
+}
+
 function metaFor(args: {
   networkData: boolean
   networkError: boolean
@@ -183,7 +237,7 @@ function useOfflineRepository(): OfflineRepository | null {
   }
 }
 
-function useOfflineCatalog(): {
+function useOfflineCatalog(opts?: { networkReady?: boolean }): {
   catalog: CatalogRecord | null
   catalogStatus:
     | 'loading'
@@ -202,11 +256,11 @@ function useOfflineCatalog(): {
       if (!repository || !namespace) return { status: 'missing' as const }
       return repository.readCatalog(namespace)
     },
-    enabled: !!repository && !!namespace,
+    enabled: !!repository && !!namespace && !(opts?.networkReady ?? false),
     // Effect-owned local bridge: TanStack retry stays OFF so service retries
     // never double with query retries (EFFECT_BRIDGE_QUERY_DEFAULTS).
     ...EFFECT_BRIDGE_QUERY_DEFAULTS,
-    staleTime: 5_000,
+    staleTime: 30_000,
   })
   const result = query.data
   if (!namespace || !repository) {
@@ -236,13 +290,12 @@ function useOfflineGroupRecord(groupId: string): {
 } {
   const { namespace, generation, account } = useOfflineSession()
   const repository = useOfflineRepository()
-  const groupQueryKey = offlineQueryKey(
-    namespace ?? '',
-    generation,
-    'group',
-    groupId,
+  const groupQueryKey = useMemo(
+    () => offlineQueryKey(namespace ?? '', generation, 'group', groupId),
+    [namespace, generation, groupId],
   )
-  useInvalidateOnCommit([groupQueryKey])
+  const groupInvalidateKeys = useMemo(() => [groupQueryKey], [groupQueryKey])
+  useInvalidateOnCommit(groupInvalidateKeys)
   const query = useQuery({
     queryKey: groupQueryKey,
     queryFn: async () => {
@@ -273,7 +326,7 @@ function useOfflineGroupRecord(groupId: string): {
     // Effect-owned local bridge: TanStack retry stays OFF so service retries
     // never double with query retries (EFFECT_BRIDGE_QUERY_DEFAULTS).
     ...EFFECT_BRIDGE_QUERY_DEFAULTS,
-    staleTime: 5_000,
+    staleTime: 30_000,
   })
   if (query.isLoading || !query.data) {
     return {
@@ -356,14 +409,23 @@ export function useOfflineOverview(): OfflineHookResult<{
   oldestCapturedAt: Date | null
   dirtyGroupCount: number
 }> {
-  const network = trpc.overview.get.useQuery(undefined, { retry: false })
+  const network = trpc.overview.get.useQuery(undefined, {
+    retry: false,
+    placeholderData: keepPreviousData,
+  })
   const { namespace, generation } = useOfflineSession()
   const repository = useOfflineRepository()
-  const { catalog } = useOfflineCatalog()
-  const overviewQueryKey = offlineQueryKey(
-    namespace ?? '',
-    generation,
-    'overview',
+  const networkReady = !!network.data && !network.error
+  // Warm back-nav: when the network is fresh, skip the catalog + worker reads
+  // entirely (mirrors useOfflineExpense `!networkReady`).
+  const { catalog } = useOfflineCatalog({ networkReady })
+  const overviewQueryKey = useMemo(
+    () => offlineQueryKey(namespace ?? '', generation, 'overview'),
+    [namespace, generation],
+  )
+  const overviewInvalidateKeys = useMemo(
+    () => [overviewQueryKey],
+    [overviewQueryKey],
   )
   const local = useQuery({
     queryKey: overviewQueryKey,
@@ -382,29 +444,37 @@ export function useOfflineOverview(): OfflineHookResult<{
       }
       return result
     },
-    enabled: !!repository && !!namespace && !!catalog,
+    enabled: !!repository && !!namespace && !!catalog && !networkReady,
     // Effect-owned local bridge: TanStack retry stays OFF so service retries
     // never double with query retries (EFFECT_BRIDGE_QUERY_DEFAULTS).
     ...EFFECT_BRIDGE_QUERY_DEFAULTS,
-    staleTime: 5_000,
+    staleTime: 30_000,
   })
-  useInvalidateOnCommit([overviewQueryKey])
+  useInvalidateOnCommit(overviewInvalidateKeys)
 
   const localOverview = local.data ?? null
-  const networkReady = !!network.data && !network.error
+  // Stable network-wins mapping: reuse the previous groups array when content
+  // is equal so memoized cards bail out instead of re-rendering on every
+  // query-client update. `placeholderData: keepPreviousData` above keeps stale
+  // rows mounted across refetches.
+  const networkMappedGroups = useMemo(() => {
+    if (!network.data) return null
+    return (
+      network.data.groups as unknown as ReturnType<
+        typeof buildOfflineOverview
+      >['groups']
+    ).map((group) => ({
+      ...group,
+      availability: 'ready' as const,
+      capturedAt: null,
+      dirtySince: null,
+    }))
+  }, [network.data])
+  const stableNetworkGroups = useStableValue(networkMappedGroups)
   if (networkReady) {
     return {
       data: {
-        groups: (
-          network.data.groups as unknown as ReturnType<
-            typeof buildOfflineOverview
-          >['groups']
-        ).map((group) => ({
-          ...group,
-          availability: 'ready' as const,
-          capturedAt: null,
-          dirtySince: null,
-        })),
+        groups: stableNetworkGroups as NonNullable<typeof stableNetworkGroups>,
         stats: network.data.stats as unknown as {
           balanceSummaries: unknown
           peopleBalances: unknown
@@ -460,17 +530,36 @@ export function useOfflineOverview(): OfflineHookResult<{
 
 // --- Group ------------------------------------------------------------------
 
-export function useOfflineGroup(groupId: string): OfflineHookResult<{
+export type OfflineGroupOptions = {
+  linkInviteToken?: string
+  viewKey?: string
+}
+
+export function useOfflineGroup(
+  groupId: string,
+  opts?: OfflineGroupOptions,
+): OfflineHookResult<{
   group: unknown
   displayName: string
   view: ReturnType<typeof toOfflineGroupView> | null
 }> {
+  const linkInviteToken = opts?.linkInviteToken
+  const viewKey = opts?.viewKey
+  // Snapshots are membership-only; link/view-key contexts never read them.
+  const offlineEnabled = !linkInviteToken && !viewKey
   const network = trpc.groups.get.useQuery(
-    { groupId },
-    { retry: false, enabled: !!groupId },
+    { groupId, linkInviteToken, viewKey },
+    {
+      retry: false,
+      enabled: !!groupId,
+      placeholderData: keepPreviousData,
+    },
   )
   const { record, status } = useOfflineGroupRecord(groupId)
-  const view = record ? toOfflineGroupView(record) : null
+  const rawView = record ? toOfflineGroupView(record) : null
+  // Stable mapper: reuse the previous view reference when content is equal so
+  // a network-wins swap does not churn memoized consumers.
+  const view = useStableValue(rawView)
   const networkReady = !!network.data?.group && !network.error
   if (networkReady && network.data) {
     return {
@@ -490,7 +579,7 @@ export function useOfflineGroup(groupId: string): OfflineHookResult<{
       },
     }
   }
-  if (view) {
+  if (offlineEnabled && view) {
     return {
       data: { group: view.group, displayName: view.overview.displayName, view },
       meta: {
@@ -678,26 +767,30 @@ export function useOfflineExpenses(
   // computed from. A move restarts pagination instead of mixing pages across
   // publications.
   const revisionRef = useRef<string | null>(null)
-  // Tracks whether the current filter window already has local rows. A
-  // connectivity flip must not truncate a populated window back to the first
-  // page: the loader below backfills only empty windows, so paginated history
-  // survives offline<->online transitions without a skeleton flash.
+  // Generation pin: identifies the filter/version window the loaded rows belong
+  // to. A connectivity flip must not truncate a populated window back to the
+  // first page, but a genuine filter/version change must reload even though old
+  // rows are still mounted. The loader below backfills empty windows and
+  // reloads on generation moves; populated windows for the same generation
+  // survive offline<->online transitions without a skeleton flash.
   const localPagesRef = useRef<unknown[][]>([])
   useEffect(() => {
     localPagesRef.current = localPages
   }, [localPages])
+  const activeGenerationKey = useMemo(
+    () => `${namespace ?? ''}:${generation}:${filterKey}`,
+    [namespace, generation, filterKey],
+  )
+  const loadedGenerationKeyRef = useRef<string | null>(null)
 
-  // Reset pagination when query/filter/sort/source version changes. Network
-  // arrival alone never resets: cached rows stay mounted and merge in place
-  // (see `merged` below). Resetting on `network.data.pages.length` would wipe
-  // the cache on the slow-network path we optimize for. Connectivity flips
-  // (`isOnline`) and transient `network.error` also never reset: clearing here
-  // would flash a skeleton over a readable list on every reconnect. The loader
-  // below backfills an empty window instead of truncating a populated one.
+  // Bump the generation so in-flight loads for the previous filter/version are
+  // discarded. Never clear `localPages` synchronously here: the old window stays
+  // mounted until the first page of the new generation resolves (mirrors
+  // useOfflineGlobalExpenses which never clears). Clearing here deadlocks with
+  // the `localPagesRef` guard below: the loader sees the stale non-empty ref
+  // and skips, then the cleared state never backfills (stuck empty).
   useEffect(() => {
     requestIdRef.current += 1
-    setLocalPages([])
-    setLocalMeta({ nextOffset: null, hasMore: false })
     setLocalError(false)
   }, [filterKey, version, namespace, generation])
 
@@ -706,23 +799,34 @@ export function useOfflineExpenses(
     const requestId = (requestIdRef.current += 1)
     const activeNamespace = namespace
     const activeRecord = record
+    const activeGeneration = activeGenerationKey
     if (!activeRecord || !activeNamespace) return
     let cancelled = false
     const loadFirstPage = async () => {
       // While the network has a complete first page, it wins; otherwise use
       // the local snapshot immediately (cold direct routes included).
       if (isOnline && !network.error && network.data?.pages?.length) return
-      // Never truncate a populated window (e.g. on a connectivity flip that
-      // re-runs this effect): the reset above already cleared genuine
-      // filter/version changes, so non-empty here means this window is
-      // loaded. An empty window (online->offline with no local yet) still
-      // backfills below.
-      if (localPagesRef.current.length > 0) return
+      // Same-generation populated windows stay mounted (e.g. connectivity flip
+      // re-running this effect). A new generation (filter/version change) always
+      // reloads even though old rows are still on screen; the old rows stay
+      // until this load resolves.
+      if (
+        localPagesRef.current.length > 0 &&
+        loadedGenerationKeyRef.current === activeGeneration
+      )
+        return
       setLocalLoading(true)
       setLocalError(false)
       try {
         const client = getDefaultOfflineQueryClient()
-        const result = (await client.query({
+        // Forward the already-loaded publication header so the worker can skip
+        // its own groupMeta read when the record is present (avoids the double
+        // Dexie meta read on the expenses path). The worker echoes
+        // `serverRevision` for pagination pinning; extra fields are ignored by
+        // older workers.
+        const recordRevision =
+          (activeRecord.payload as { revision?: string }).revision ?? null
+        const workerRequest = {
           generation,
           namespace: activeNamespace,
           kind: 'group-expenses',
@@ -735,14 +839,34 @@ export function useOfflineExpenses(
           collapseInvolving,
           participantId,
           accountId,
-        })) as {
+          serverRevisionHint: recordRevision,
+          capturedAtHint:
+            activeRecord.capturedAt instanceof Date
+              ? activeRecord.capturedAt.toISOString()
+              : activeRecord.capturedAt,
+        } as unknown as {
+          generation: number
+          namespace: string
+          kind: 'group-expenses'
+          groupId: string
+          filter?: GroupExpenseFilter
+          sortBy?: GroupExpenseSortBy
+          sortDir?: GroupExpenseSortDir
+          offset: number
+          limit: number
+          collapseInvolving?: boolean
+          participantId?: string | null
+          accountId?: string | null
+        }
+        const result = (await client.query(workerRequest)) as {
           rows: unknown[]
           nextOffset: number | null
           hasMore: boolean
           serverRevision: string | null
         }
         if (cancelled || requestId !== requestIdRef.current) return
-        revisionRef.current = result.serverRevision
+        revisionRef.current = result.serverRevision ?? recordRevision
+        loadedGenerationKeyRef.current = activeGeneration
         setLocalPages([toOfflineListRows(result.rows)])
         setLocalMeta({ nextOffset: result.nextOffset, hasMore: result.hasMore })
         setLocalError(false)
@@ -770,6 +894,7 @@ export function useOfflineExpenses(
     namespace,
     generation,
     filterKey,
+    activeGenerationKey,
     groupId,
     network.data?.pages?.length,
     isOnline,
@@ -787,7 +912,9 @@ export function useOfflineExpenses(
     const requestId = requestIdRef.current
     try {
       const client = getDefaultOfflineQueryClient()
-      const result = (await client.query({
+      const recordRevision =
+        (record.payload as { revision?: string }).revision ?? null
+      const workerRequest = {
         generation,
         namespace,
         kind: 'group-expenses',
@@ -800,7 +927,26 @@ export function useOfflineExpenses(
         collapseInvolving,
         participantId,
         accountId,
-      })) as {
+        serverRevisionHint: recordRevision,
+        capturedAtHint:
+          record.capturedAt instanceof Date
+            ? record.capturedAt.toISOString()
+            : record.capturedAt,
+      } as unknown as {
+        generation: number
+        namespace: string
+        kind: 'group-expenses'
+        groupId: string
+        filter?: GroupExpenseFilter
+        sortBy?: GroupExpenseSortBy
+        sortDir?: GroupExpenseSortDir
+        offset: number
+        limit: number
+        collapseInvolving?: boolean
+        participantId?: string | null
+        accountId?: string | null
+      }
+      const result = (await client.query(workerRequest)) as {
         rows: unknown[]
         nextOffset: number | null
         hasMore: boolean
@@ -882,30 +1028,62 @@ export function useOfflineExpenses(
       | undefined
     return lastPage?.hasMore ?? false
   }, [network.data])
+  const pageSize = limit ?? OFFLINE_LOCAL_PAGE_SIZE
   const mergedViewPages = useMemo(() => {
     if (!merged) return null
     // Network-driven termination: once the network window is authoritative,
     // a stale local `hasMore` must not keep the infinite-scroll sentinel
     // alive after the network paginates to exhaustion (its own pages drain
     // via `fetchNextPage`, which prefers network whenever it has data).
-    return [
-      {
-        expenses: merged.expenses as unknown[],
-        hasMore: networkHasMore,
-        nextOffset: null,
-      },
-    ]
-  }, [merged, networkHasMore])
+    // Preserve page boundaries: slice the flat merged list back into the
+    // network page lengths instead of collapsing N pages to 1. Overflow
+    // (retained local-only rows while the network window is partial) goes to
+    // trailing pages of `pageSize`.
+    if (!network.data?.pages?.length) {
+      return [
+        {
+          expenses: merged.expenses as unknown[],
+          hasMore: networkHasMore,
+          nextOffset: null,
+        },
+      ]
+    }
+    const referenceLengths = network.data.pages.map(
+      (page) => (page as unknown as { expenses: unknown[] }).expenses.length,
+    )
+    const chunks = sliceIntoPageBoundaries(
+      merged.expenses,
+      referenceLengths,
+      pageSize,
+    )
+    return chunks.map((expenses, index) => ({
+      expenses: expenses as unknown[],
+      // Intermediate pages always have a successor; the last page follows the
+      // network source so the sentinel terminates with the network.
+      hasMore: index === chunks.length - 1 ? networkHasMore : true,
+      nextOffset: null,
+    }))
+  }, [merged, networkHasMore, network.data, pageSize])
+  const stableMergedViewPages = useStableValue(mergedViewPages)
   const localViewPages = useMemo(() => {
     if (!merged) return null
-    return [
-      {
-        expenses: merged.expenses as unknown[],
-        hasMore: localMeta.hasMore,
-        nextOffset: localMeta.nextOffset,
-      },
-    ]
-  }, [merged, localMeta])
+    if (localPages.length === 0) return null
+    // Preserve local page boundaries (N pages stay N pages). The merged list
+    // already includes pending sorted in; slicing by the loaded page lengths
+    // keeps scroll position and grouping memos stable.
+    const referenceLengths = localPages.map((page) => page.length)
+    const chunks = sliceIntoPageBoundaries(
+      merged.expenses,
+      referenceLengths,
+      pageSize,
+    )
+    return chunks.map((expenses, index) => ({
+      expenses: expenses as unknown[],
+      hasMore: index === chunks.length - 1 ? localMeta.hasMore : true,
+      nextOffset: index === chunks.length - 1 ? localMeta.nextOffset : null,
+    }))
+  }, [merged, localMeta, localPages, pageSize])
+  const stableLocalViewPages = useStableValue(localViewPages)
 
   // Network-only fallback containers (no local snapshot): memoized for the
   // same reason — fresh wrappers per render would churn the consumer memo.
@@ -920,42 +1098,47 @@ export function useOfflineExpenses(
   const networkOnlyResolvedPages = useMemo(() => {
     if (!networkOnlyPages) return null
     if (pending.length === 0) return networkOnlyPages
-    return [
-      {
-        expenses: [
-          ...(pending as unknown[]),
-          ...networkOnlyPages.flatMap((page) => page.expenses),
-        ],
-        hasMore: networkOnlyPages.at(-1)?.hasMore ?? false,
-        nextOffset: null,
-      },
-    ]
+    // Preserve page boundaries with pending overlaid on the first page instead
+    // of collapsing N pages to 1.
+    return networkOnlyPages.map((page, index) => ({
+      expenses:
+        index === 0
+          ? [...(pending as unknown[]), ...page.expenses]
+          : page.expenses,
+      hasMore: page.hasMore,
+      nextOffset: null,
+    }))
   }, [networkOnlyPages, pending])
+  const stableNetworkOnlyResolvedPages = useStableValue(
+    networkOnlyResolvedPages,
+  )
 
-  if (
-    networkReady &&
-    network.data &&
-    merged &&
-    mergedViewPages &&
-    networkOnlyPages &&
-    networkOnlyResolvedPages
-  ) {
+  // Keep network pages mounted while the merged view stabilizes: if the network
+  // is ready but the merged containers are not yet computed, fall back to the
+  // network-only pages instead of flashing a skeleton.
+  if (networkReady && network.data && stableNetworkOnlyResolvedPages) {
+    const useMergedView =
+      localFlat.length > 0 && !!merged && !!stableMergedViewPages
+    const resolvedPages = !useMergedView
+      ? stableNetworkOnlyResolvedPages
+      : (stableMergedViewPages as NonNullable<typeof stableMergedViewPages>)
     // When both sources are loaded the merged list wins: added rows insert,
     // unchanged rows reuse the on-screen (local) reference so memoized cards
     // bail out instead of re-rendering the whole timeline.
-    const useMergedView = localFlat.length > 0
     // Pending overlay when only network is loaded (no local snapshot):
     // merge already includes pending in the merged branch; for the
     // network-only branch overlay pending explicitly.
-    const resolvedPages = !useMergedView
-      ? networkOnlyResolvedPages
-      : mergedViewPages
+    const resolvedAddedIds = useMergedView ? merged.addedIds : []
+    const resolvedUpdatedIds = useMergedView ? merged.updatedIds : []
+    const resolvedPendingIds = useMergedView
+      ? merged.pendingIds
+      : pending.map((row) => row.id)
     return {
       data: {
         pages: resolvedPages,
-        addedIds: merged.addedIds,
-        updatedIds: merged.updatedIds,
-        pendingIds: merged.pendingIds,
+        addedIds: resolvedAddedIds,
+        updatedIds: resolvedUpdatedIds,
+        pendingIds: resolvedPendingIds,
       },
       meta: {
         source: 'network',
@@ -992,10 +1175,12 @@ export function useOfflineExpenses(
       },
     }
   }
-  if (record && localPages.length > 0 && localViewPages) {
+  if (record && localPages.length > 0 && stableLocalViewPages) {
     // Local-first with pending overlay. `merged` already includes pending and
-    // reuses on-screen references.
-    const pages = localViewPages
+    // reuses on-screen references. Page boundaries are preserved (N pages stay
+    // N pages); `hasMore` follows the local pagination source so the sentinel
+    // does not switch sources mid-pagination.
+    const pages = stableLocalViewPages
     return {
       data: {
         pages,
@@ -1094,20 +1279,25 @@ export function useOfflineExpense(
 }> {
   const network = trpc.groups.expenses.get.useQuery(
     { groupId, expenseId },
-    { retry: false },
+    { retry: false, placeholderData: keepPreviousData },
   )
   const { record, status: expenseGroupStatus } = useOfflineGroupRecord(groupId)
   const networkReady = !!network.data?.expense && !network.error
   const { namespace, generation } = useOfflineSession()
   const repository = useOfflineRepository()
-  const lookupQueryKey = offlineQueryKey(
-    namespace ?? '',
-    generation,
-    'expense',
-    groupId,
-    expenseId,
+  const lookupQueryKey = useMemo(
+    () =>
+      offlineQueryKey(
+        namespace ?? '',
+        generation,
+        'expense',
+        groupId,
+        expenseId,
+      ),
+    [namespace, generation, groupId, expenseId],
   )
-  useInvalidateOnCommit([lookupQueryKey])
+  const lookupInvalidateKeys = useMemo(() => [lookupQueryKey], [lookupQueryKey])
+  useInvalidateOnCommit(lookupInvalidateKeys)
   const local = useQuery({
     queryKey: lookupQueryKey,
     queryFn: async () => {
@@ -1128,7 +1318,7 @@ export function useOfflineExpense(
     // Effect-owned local bridge: TanStack retry stays OFF so service retries
     // never double with query retries (EFFECT_BRIDGE_QUERY_DEFAULTS).
     ...EFFECT_BRIDGE_QUERY_DEFAULTS,
-    staleTime: 5_000,
+    staleTime: 30_000,
   })
   if (networkReady && network.data) {
     return {
@@ -1205,14 +1395,26 @@ export function useOfflineExpense(
 
 // --- Balances ----------------------------------------------------------------
 
-export function useOfflineBalances(groupId: string): OfflineHookResult<{
+export type OfflineBalancesOptions = {
+  linkInviteToken?: string
+  viewKey?: string
+}
+
+export function useOfflineBalances(
+  groupId: string,
+  opts?: OfflineBalancesOptions,
+): OfflineHookResult<{
   balances: unknown
   participants?: unknown
   dirtySince: Date | null
 }> {
+  const linkInviteToken = opts?.linkInviteToken
+  const viewKey = opts?.viewKey
+  // Snapshots are membership-only; link/view-key contexts never read them.
+  const offlineEnabled = !linkInviteToken && !viewKey
   const network = trpc.groups.balances.list.useQuery(
-    { groupId },
-    { retry: false },
+    { groupId, linkInviteToken, viewKey },
+    { retry: false, placeholderData: keepPreviousData },
   )
   const {
     record,
@@ -1220,9 +1422,15 @@ export function useOfflineBalances(groupId: string): OfflineHookResult<{
     lastConfirmedAt: balancesConfirmedAt,
   } = useOfflineGroupRecord(groupId)
   const networkReady = !!network.data && !network.error
+  const stableNetworkBalances = useStableValue(network.data ?? null)
+  const rawBalancesView = record ? getOfflineBalances(record) : null
+  const stableBalancesView = useStableValue(rawBalancesView)
   if (networkReady) {
     return {
-      data: { balances: network.data, dirtySince: record?.dirtySince ?? null },
+      data: {
+        balances: stableNetworkBalances,
+        dirtySince: record?.dirtySince ?? null,
+      },
       meta: {
         source: 'network',
         capturedAt: record?.capturedAt ?? null,
@@ -1244,11 +1452,12 @@ export function useOfflineBalances(groupId: string): OfflineHookResult<{
       },
     }
   }
-  if (record) {
+  if (offlineEnabled && record && stableBalancesView) {
     // Stored server response (full-ledger correct, not capped). Totals are
     // never inferred from filtered/list pages. Dirty or aged confirmations
     // warn through `freshness` instead of passing as current.
-    const view = getOfflineBalances(record)
+    // Stable mapper above reuses the previous view when content is equal.
+    const view = stableBalancesView
     return {
       data: { balances: view.balances, dirtySince: view.dirtySince },
       meta: {
@@ -1811,8 +2020,13 @@ export type OfflineGlobalOptions = GlobalQueryInput & {
   locale?: string
 }
 
+export type OfflineGlobalHookOptions = {
+  networkEnabled?: boolean
+}
+
 export function useOfflineGlobalExpenses(
   input: OfflineGlobalOptions,
+  opts?: OfflineGlobalHookOptions,
 ): OfflineHookResult<{
   pages: Array<{ expenses: unknown[]; hasMore: boolean }>
   currencyError: 'currency-required' | null
@@ -1822,6 +2036,7 @@ export function useOfflineGlobalExpenses(
   hasMore: boolean
   isLoading: boolean
 } {
+  const networkEnabled = opts?.networkEnabled ?? true
   const isOnline = useOnlineStatus()
   const { namespace, generation } = useOfflineSession()
   const repository = useOfflineRepository()
@@ -1853,6 +2068,8 @@ export function useOfflineGlobalExpenses(
       getNextPageParam: (page) =>
         (page as { nextCursor?: string | null }).nextCursor ?? undefined,
       retry: false,
+      enabled: networkEnabled,
+      placeholderData: keepPreviousData,
     },
   )
   const inputRef = useRef(input)
@@ -1920,7 +2137,13 @@ export function useOfflineGlobalExpenses(
     const requestId = (requestIdRef.current += 1)
     if (!repository || !namespace || !catalog) return
     let cancelled = false
-    if (isOnline && !network.error && network.data?.pages?.length) return
+    if (
+      networkEnabled &&
+      isOnline &&
+      !network.error &&
+      network.data?.pages?.length
+    )
+      return
     const run = async () => {
       setLocalLoading(true)
       setLocalError(false)
@@ -1981,10 +2204,16 @@ export function useOfflineGlobalExpenses(
     network.data?.pages?.length,
     isOnline,
     network.error,
+    networkEnabled,
   ])
 
   const fetchNextPage = async (): Promise<void> => {
-    if (isOnline && !network.error && network.data?.pages?.length) {
+    if (
+      networkEnabled &&
+      isOnline &&
+      !network.error &&
+      network.data?.pages?.length
+    ) {
       await network.fetchNextPage()
       return
     }
@@ -2038,7 +2267,10 @@ export function useOfflineGlobalExpenses(
   }
 
   const networkReady =
-    isOnline && !!network.data?.pages?.length && !network.error
+    networkEnabled &&
+    isOnline &&
+    !!network.data?.pages?.length &&
+    !network.error
   if (networkReady && network.data) {
     return {
       data: {
@@ -2120,14 +2352,21 @@ export function useOfflineFilterOptions(): OfflineHookResult<
 > {
   const network = trpc.expenses.filterOptions.useQuery(undefined, {
     retry: false,
+    placeholderData: keepPreviousData,
   })
   const { namespace, generation } = useOfflineSession()
   const repository = useOfflineRepository()
-  const { catalog } = useOfflineCatalog()
-  const filterOptionsQueryKey = offlineQueryKey(
-    namespace ?? '',
-    generation,
-    'filter-options',
+  const networkReadyForCatalog = !!network.data && !network.error
+  const { catalog } = useOfflineCatalog({
+    networkReady: networkReadyForCatalog,
+  })
+  const filterOptionsQueryKey = useMemo(
+    () => offlineQueryKey(namespace ?? '', generation, 'filter-options'),
+    [namespace, generation],
+  )
+  const filterOptionsInvalidateKeys = useMemo(
+    () => [filterOptionsQueryKey],
+    [filterOptionsQueryKey],
   )
   const local = useQuery({
     queryKey: filterOptionsQueryKey,
@@ -2149,9 +2388,9 @@ export function useOfflineFilterOptions(): OfflineHookResult<
     // Effect-owned local bridge: TanStack retry stays OFF so service retries
     // never double with query retries (EFFECT_BRIDGE_QUERY_DEFAULTS).
     ...EFFECT_BRIDGE_QUERY_DEFAULTS,
-    staleTime: 5_000,
+    staleTime: 30_000,
   })
-  useInvalidateOnCommit([filterOptionsQueryKey])
+  useInvalidateOnCommit(filterOptionsInvalidateKeys)
   const networkReady = !!network.data && !network.error
   if (networkReady) {
     return {

@@ -64,18 +64,29 @@ export function useSetAmbientAccent(): (hex: string | null) => void {
  * `--group-accent` and flags `data-group-tinted` so globals.css can re-hue the
  * orbs at their usual subtle alphas.
  */
-export function AmbientBackdrop() {
+export function AmbientBackdrop({ active = true }: { active?: boolean }) {
   const accent = useAmbientAccent()
+  const style: CSSProperties = {
+    ...(accent ? ({ '--group-accent': accent } as CSSProperties) : null),
+    // Inline hide wins over the `.ambient-backdrop` opacity rule so the
+    // always-mounted backdrop fades instead of unmounting on route changes.
+    // `allow-discrete` lets visibility flip after the opacity fade when
+    // hiding (and before it when showing) instead of snapping.
+    ...(active
+      ? { transitionBehavior: 'allow-discrete' as const }
+      : {
+          opacity: 0,
+          visibility: 'hidden' as const,
+          transitionBehavior: 'allow-discrete' as const,
+        }),
+  }
   return (
     <div
-      className="ambient-backdrop"
+      className="ambient-backdrop transition-[opacity,visibility] duration-300"
       aria-hidden="true"
-      {...(accent
-        ? {
-            'data-group-tinted': 'true',
-            style: { '--group-accent': accent } as CSSProperties,
-          }
-        : {})}
+      data-active={active ? 'true' : 'false'}
+      {...(accent ? { 'data-group-tinted': 'true' } : {})}
+      style={style}
     >
       <span className="ambient-backdrop__orb ambient-backdrop__orb--emerald" />
       <span className="ambient-backdrop__orb ambient-backdrop__orb--coral" />

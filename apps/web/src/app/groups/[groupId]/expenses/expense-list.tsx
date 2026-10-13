@@ -212,11 +212,6 @@ const ExpenseListForSearch = ({
     groupId,
   )
 
-  useRestoreExpenseEditScroll(
-    !isLoading && !showServerEmpty && !showOfflineEmpty,
-    groupId,
-  )
-
   useEffect(() => {
     // Serialize infinite-scroll prefetches: without the `refreshing` gate a
     // short list keeps the sentinel in view and fires concurrent
@@ -225,14 +220,6 @@ const ExpenseListForSearch = ({
     if (inView && hasMore && !isLoading && !mergedMeta.refreshing)
       void fetchNextPageUnified()
   }, [fetchNextPageUnified, hasMore, inView, isLoading, mergedMeta.refreshing])
-
-  if (showServerEmpty) {
-    return (
-      <div className="px-4 sm:px-6">
-        <ApiErrorEmptyState variant="plain" onRetry={() => void refetch()} />
-      </div>
-    )
-  }
 
   if (showServerEmpty) {
     return (

@@ -24,10 +24,26 @@ export function safeLocalReturnPath(
     if (url.origin !== LOCAL_URL_BASE || url.pathname.startsWith('//')) {
       return fallback
     }
+    stripStrayNestedRedirectParam(url)
     return `${url.pathname}${url.search}${url.hash}`
   } catch {
     return fallback
   }
+}
+
+/**
+ * Strip a stray nested `redirect` bounce from a destination URL so a re-gated
+ * target cannot nest (`/groups/abc?redirect=/foo` → `/groups/abc`). Wrapper
+ * paths (`/` and `/auth/complete-profile`) keep their `redirect` param: the
+ * bounded, deduped {@link authReturnChain} resolves those to a destination
+ * without rewriting the preserved `redirectTo`.
+ */
+function stripStrayNestedRedirectParam(url: URL): void {
+  if (url.pathname === '/' || url.pathname === '/auth/complete-profile') {
+    return
+  }
+  url.searchParams.delete('redirect')
+  url.searchParams.delete('redirectTo')
 }
 
 function authReturnChain(value: string | undefined): string[] {
@@ -40,7 +56,10 @@ function authReturnChain(value: string | undefined): string[] {
     seen.add(current)
     const url = new URL(current, LOCAL_URL_BASE)
     if (url.pathname !== '/' && url.pathname !== '/auth/complete-profile') break
-    const nested = url.searchParams.get('redirect') ?? undefined
+    const nested =
+      url.searchParams.get('redirect') ??
+      url.searchParams.get('redirectTo') ??
+      undefined
     const next = safeLocalReturnPath(nested)
     if (!nested || next === '/' || seen.has(next)) break
     current = next

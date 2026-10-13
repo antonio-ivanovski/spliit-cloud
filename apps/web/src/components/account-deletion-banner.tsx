@@ -57,9 +57,9 @@ function AccountDeletionNotice({
 
   const status = trpc.account.deletionStatus.useQuery(undefined, {
     enabled: Boolean(accountId) && ready && !hidden && sessionReady && online,
-    staleTime: 0,
-    refetchOnMount: 'always',
-    refetchOnWindowFocus: 'always',
+    staleTime: 30_000,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
     refetchOnReconnect: 'always',
     refetchInterval: (query) =>
       online ? (query.state.data?.request ? 5000 : 30_000) : false,

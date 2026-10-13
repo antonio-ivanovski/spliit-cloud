@@ -111,7 +111,9 @@ function AccountPreferenceSession({
   const isOnline = useOnlineStatus()
   const canPushPreferences = isOnline
   const preferencesQuery = trpc.account.getPreferences.useQuery(undefined, {
-    staleTime: 0,
+    enabled: Boolean(accountId),
+    staleTime: 30_000,
+    placeholderData: cached ? { preferences: cached } : undefined,
   })
   const preferencesData = preferencesQuery.data
   const initialize = trpc.account.initializePreferences.useMutation()

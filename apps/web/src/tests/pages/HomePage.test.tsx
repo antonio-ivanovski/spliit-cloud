@@ -175,7 +175,7 @@ describe('HomePage (signed-out)', () => {
     expect(screen.queryByTestId('offline-empty-state')).not.toBeInTheDocument()
   })
 
-  it('shows the landing while a signed-out session is still resolving', () => {
+  it('shows a pending shell while a signed-out session is still resolving', () => {
     vi.mocked(useCurrentAccount).mockReturnValue({
       data: null,
       isPending: true,
@@ -186,8 +186,8 @@ describe('HomePage (signed-out)', () => {
 
     render(<HomePage />)
 
-    expect(screen.getByTestId('auth-panel')).toBeInTheDocument()
-    expect(screen.getByTestId('landing-bill')).toBeInTheDocument()
+    expect(screen.queryByTestId('auth-panel')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('landing-bill')).not.toBeInTheDocument()
     expect(screen.queryByTestId('recent-group-list')).not.toBeInTheDocument()
     expect(screen.queryByTestId('offline-empty-state')).not.toBeInTheDocument()
   })

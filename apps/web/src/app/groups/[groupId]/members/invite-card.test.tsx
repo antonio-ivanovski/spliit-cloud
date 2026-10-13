@@ -13,6 +13,12 @@ const mocks = vi.hoisted(() => ({
   invitationsListQuery: vi.fn(),
 }))
 
+vi.mock('@/lib/deployment-config', () => ({
+  useDeploymentConfig: () => ({
+    emailDeliveryEnabled: true,
+  }),
+}))
+
 vi.mock('@/trpc/client', () => ({
   trpc: {
     account: {

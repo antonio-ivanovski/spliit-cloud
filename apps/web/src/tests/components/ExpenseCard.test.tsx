@@ -504,6 +504,36 @@ describe('ExpenseCard', () => {
     expect(container.textContent).not.toContain('split between')
   })
 
+  it('falls back to Unknown participant for blank payer and beneficiary names', () => {
+    vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
+    vi.mocked(useActiveUser).mockReturnValue(null)
+
+    const { container } = render(
+      <ExpenseCard
+        expense={makeExpense({
+          paidByList: [
+            {
+              ledgerParticipant: { id: 'user-empty', name: '' },
+              shares: 3000,
+            },
+          ],
+          paidFor: [
+            {
+              ledgerParticipant: { id: 'user-blank', name: '   ' },
+              shares: 1,
+            },
+          ],
+        })}
+        currency={EUR}
+        groupId="group-1"
+        participantCount={2}
+      />,
+    )
+
+    expect(container.textContent).toContain('Unknown participant')
+    expect(container.textContent).not.toMatch(/Paid by\s+·/)
+  })
+
   it('says paid for for multiple payers and a single beneficiary', () => {
     vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue(null)

@@ -1,11 +1,12 @@
 import { keepPreviousData } from '@tanstack/react-query'
+import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import {
   CalendarDays,
   ChartNoAxesCombined,
   LoaderCircle,
   ReceiptText,
 } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { CategoryBreakdown } from '@/app/groups/[groupId]/stats/category-breakdown'
@@ -33,6 +34,28 @@ import type { StatsCustomRange, StatsPeriod } from './dashboard-types'
 
 function formatDateInput(date: Date): string {
   return date.toISOString().slice(0, 10)
+}
+
+const statsRouteApi = getRouteApi('/groups/$groupId/stats')
+
+const STATS_PERIOD_VALUES = [
+  'LATEST_ACTIVITY',
+  'WEEK',
+  'MONTH',
+  'QUARTER',
+  'YEAR',
+  'CUSTOM',
+] as const
+
+function parseStatsPeriod(value: unknown): StatsPeriod {
+  return (STATS_PERIOD_VALUES as readonly string[]).includes(value as string)
+    ? (value as StatsPeriod)
+    : 'LATEST_ACTIVITY'
+}
+
+function parseStatsDateParam(value: unknown): string | null {
+  if (typeof value !== 'string') return null
+  return /^\d{4}-\d{2}-\d{2}/.test(value) ? value.slice(0, 10) : null
 }
 
 function SummaryCard({
@@ -121,8 +144,52 @@ export function StatsDashboard() {
       }),
     [locale],
   )
-  const [period, setPeriod] = useState<StatsPeriod>('LATEST_ACTIVITY')
-  const [customRange, setCustomRange] = useState<StatsCustomRange | null>(null)
+  const navigate = useNavigate({ from: '/groups/$groupId/stats' })
+  // Period selection lives in the URL (`statsPeriod`, `statsFrom`, `statsTo`)
+  // so back/return navigation keeps it and each selection is shareable. These
+  // params are declared on `groupSearchSchema`, so the parent route's
+  // `validateSearch` keeps them (otherwise Zod would strip them). Router-less
+  // unit renders (no provider) fall back to defaults.
+  let routeSearch: Record<string, unknown> | undefined
+  try {
+    routeSearch = statsRouteApi.useSearch({
+      shouldThrow: false,
+    }) as unknown as Record<string, unknown> | undefined
+  } catch {
+    routeSearch = undefined
+  }
+  const period = parseStatsPeriod(routeSearch?.statsPeriod)
+  const customRange: StatsCustomRange | null = (() => {
+    if (period !== 'CUSTOM') return null
+    const from = parseStatsDateParam(routeSearch?.statsFrom)
+    const to = parseStatsDateParam(routeSearch?.statsTo)
+    return from && to ? { from, to } : null
+  })()
+  const writeStatsSearch = (
+    nextPeriod: StatsPeriod,
+    nextRange: StatsCustomRange | null,
+  ) => {
+    try {
+      void navigate({
+        search: (prev: Record<string, unknown>) => {
+          const next = { ...prev }
+          if (nextPeriod === 'LATEST_ACTIVITY') delete next.statsPeriod
+          else next.statsPeriod = nextPeriod
+          if (nextPeriod === 'CUSTOM' && nextRange) {
+            next.statsFrom = nextRange.from
+            next.statsTo = nextRange.to
+          } else {
+            delete next.statsFrom
+            delete next.statsTo
+          }
+          return next
+        },
+        replace: true,
+      } as never)
+    } catch {
+      // No router (unit test): URL persistence unavailable.
+    }
+  }
   const { data, error, refetch, isFetching } = trpc.groups.stats.get.useQuery(
     {
       groupId,
@@ -195,12 +262,13 @@ export function StatsDashboard() {
 
   const handlePeriodChange = (nextPeriod: StatsPeriod) => {
     if (nextPeriod === 'CUSTOM' && !customRange) {
-      setCustomRange({
+      writeStatsSearch(nextPeriod, {
         from: formatDateInput(activePeriod.from),
         to: formatDateInput(activePeriod.to),
       })
+      return
     }
-    setPeriod(nextPeriod)
+    writeStatsSearch(nextPeriod, nextPeriod === 'CUSTOM' ? customRange : null)
   }
 
   return (
@@ -224,7 +292,7 @@ export function StatsDashboard() {
             value={period}
             customRange={customRange}
             onValueChange={handlePeriodChange}
-            onCustomRangeChange={setCustomRange}
+            onCustomRangeChange={(range) => writeStatsSearch('CUSTOM', range)}
           />
         </CardContent>
       </Card>

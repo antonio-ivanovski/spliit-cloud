@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 import {
@@ -138,6 +139,7 @@ export function InviteQrTab({
   const [rendererKey, setRendererKey] = useState(0)
   const createAttempt = useIdempotentCreate()
   const utils = trpc.useUtils()
+  const isOnline = useOnlineStatus()
 
   const createQrLinkMutation = trpc.invitations.createQrLink.useMutation({
     onSuccess: async () => {
@@ -178,10 +180,21 @@ export function InviteQrTab({
     },
   })
 
-  // Live session state + joiners while this tab is mounted.
+  // Live session state + joiners while this tab is mounted. No dedicated
+  // lightweight QR-status procedure exists (only `invitations.list`), so the
+  // tab reuses the shared list key. The tab mounts only when the QR panel is
+  // active (inactive TabsContent unmounts), so mount == visible: the 5s poll
+  // is gated on connectivity and the query stays disabled offline, with a
+  // staleTime so shared-key invalidations from the members page don't churn
+  // into a refetch loop.
   const invitationsQuery = trpc.invitations.list.useQuery(
     { groupId },
-    { refetchInterval: 5000, refetchOnWindowFocus: true },
+    {
+      enabled: isOnline,
+      staleTime: 5000,
+      refetchInterval: isOnline ? 5000 : false,
+      refetchOnWindowFocus: true,
+    },
   )
   const activeSession =
     invitationsQuery.data?.invitations.find(
