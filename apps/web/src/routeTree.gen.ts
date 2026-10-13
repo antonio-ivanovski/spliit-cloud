@@ -18,6 +18,7 @@ import { Route as FeedbackRouteImport } from './routes/feedback'
 import { Route as GroupsRouteRouteImport } from './routes/groups/route'
 import { Route as ImprintRouteImport } from './routes/imprint'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ShareTargetRouteImport } from './routes/share-target'
 import { Route as SponsorRouteImport } from './routes/sponsor'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as TermsRouteImport } from './routes/terms'
@@ -105,6 +106,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/privacy.lazy').then((d) => d.Route))
+const ShareTargetRoute = ShareTargetRouteImport.update({
+  id: '/share-target',
+  path: '/share-target',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/share-target.lazy').then((d) => d.Route))
 const SponsorRoute = SponsorRouteImport.update({
   id: '/sponsor',
   path: '/sponsor',
@@ -424,6 +430,7 @@ export interface FileRoutesByFullPath {
   '/feedback': typeof FeedbackRoute
   '/imprint': typeof ImprintRoute
   '/privacy': typeof PrivacyRoute
+  '/share-target': typeof ShareTargetRoute
   '/sponsor': typeof SponsorRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
@@ -476,6 +483,7 @@ export interface FileRoutesByTo {
   '/feedback': typeof FeedbackRoute
   '/imprint': typeof ImprintRoute
   '/privacy': typeof PrivacyRoute
+  '/share-target': typeof ShareTargetRoute
   '/sponsor': typeof SponsorRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
@@ -526,6 +534,7 @@ export interface FileRoutesById {
   '/feedback': typeof FeedbackRoute
   '/imprint': typeof ImprintRoute
   '/privacy': typeof PrivacyRoute
+  '/share-target': typeof ShareTargetRoute
   '/sponsor': typeof SponsorRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
@@ -581,6 +590,7 @@ export interface FileRouteTypes {
     | '/feedback'
     | '/imprint'
     | '/privacy'
+    | '/share-target'
     | '/sponsor'
     | '/support'
     | '/terms'
@@ -633,6 +643,7 @@ export interface FileRouteTypes {
     | '/feedback'
     | '/imprint'
     | '/privacy'
+    | '/share-target'
     | '/sponsor'
     | '/support'
     | '/terms'
@@ -682,6 +693,7 @@ export interface FileRouteTypes {
     | '/feedback'
     | '/imprint'
     | '/privacy'
+    | '/share-target'
     | '/sponsor'
     | '/support'
     | '/terms'
@@ -736,6 +748,7 @@ export interface RootRouteChildren {
   FeedbackRoute: typeof FeedbackRoute
   ImprintRoute: typeof ImprintRoute
   PrivacyRoute: typeof PrivacyRoute
+  ShareTargetRoute: typeof ShareTargetRoute
   SponsorRoute: typeof SponsorRoute
   SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
@@ -801,6 +814,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/share-target': {
+      id: '/share-target'
+      path: '/share-target'
+      fullPath: '/share-target'
+      preLoaderRoute: typeof ShareTargetRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sponsor': {
@@ -1243,6 +1263,7 @@ const rootRouteChildren: RootRouteChildren = {
   FeedbackRoute: FeedbackRoute,
   ImprintRoute: ImprintRoute,
   PrivacyRoute: PrivacyRoute,
+  ShareTargetRoute: ShareTargetRoute,
   SponsorRoute: SponsorRoute,
   SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,

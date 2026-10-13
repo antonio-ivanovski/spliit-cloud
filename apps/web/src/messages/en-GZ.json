@@ -4896,5 +4896,34 @@
       "body": "you picked {to} ({name}) as the new settlement currency. a direct change isn't possible since this group already has expenses — work through the steps below and every expense gets converted with a per-row preview before anything is saved."
     },
     "adminOnlyNotice": "only admins can swap the group currency — ask an admin to run it from tools."
+  },
+  "ShareTarget": {
+    "actionsDescription": "pick how this file becomes an expense",
+    "addTextAction": "save text as a file",
+    "attachAction": "create expense with attachment",
+    "chooseFile": "pick a file",
+    "description": "a shared receipt or note just landed here. pick a group, then scan it with AI magic or attach it to an expense you make yourself",
+    "discardAction": "remove this file",
+    "doneDescription": "all sorted, your shared stuff made it through. find the new expense in the group",
+    "doneTitle": "share sorted",
+    "filesLabel": "your shared files",
+    "loadFailed": "couldn't load the shared stuff. it might've expired, so pick a file below instead",
+    "manualDescription": "stuff shared from another app shows up here. you can also pick a file or paste text yourself",
+    "noGroups": "no groups yet. make one first so your expenses have a home",
+    "notScannableHint": "AI magic can't scan this file type, but you can still attach it to an expense",
+    "openGroupAction": "open the group",
+    "pickGroupLabel": "choose a group",
+    "scanAction": "scan with AI magic",
+    "searchPlaceholder": "search your groups and friends",
+    "sharedTextLabel": "text that was shared",
+    "signInAction": "sign in",
+    "signInDescription": "sign in to drop the shared stuff into one of your groups. it's saved on this device and picks right back up after you sign in",
+    "textPlaceholder": "paste the shared text here to attach it as a note",
+    "title": "add what was shared",
+    "uploadError": "this file is too big ({size}, max {maxSize})",
+    "uploadErrorGeneric": "that upload didn't go through. check your connection and try again",
+    "uploadingFile": "uploading your file…",
+    "unsupportedFile": "some files aren't supported, so they got skipped",
+    "useTextAsFile": "save text as a .txt attachment"
   }
 }

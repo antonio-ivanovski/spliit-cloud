@@ -4932,5 +4932,34 @@
       "body": "{to} ({name}) aukeratu duzu zor-kitapeneko moneta berri gisa. Ezin da zuzeneko aldaketarik egin talde honek jada gastuak dituelako — jarraitu beheko urratsei eta gastu bakoitza gastuz gastuko aurrebista batekin bihurtuko da ezer gorde aurretik."
     },
     "adminOnlyNotice": "Taldeko administratzaileek bakarrik truka dezakete taldearen moneta — eskatu administratzaile bati Tresnetatik egiteko."
+  },
+  "ShareTarget": {
+    "actionsDescription": "Aukeratu hautatutako fitxategia gastu bihurtzeko modua.",
+    "addTextAction": "Gehitu testua fitxategi gisa",
+    "attachAction": "Sortu gastua eranskinarekin",
+    "chooseFile": "Aukeratu fitxategia",
+    "description": "Partekatu den ordainagiri edo ohar bat iritsi da hona. Aukeratu talde bat eta, ondoren, eskaneatu IArekin edo erantsi eskuz sortutako gastu bati.",
+    "discardAction": "Kendu fitxategia",
+    "doneDescription": "Partekatu den edukia jaso da. Gastu berria taldean aurkituko duzu.",
+    "doneTitle": "Partekapena kudeatuta",
+    "filesLabel": "Partekatutako fitxategiak",
+    "loadFailed": "Ezin izan da partekatutako edukia kargatu. Baliteke iraungi izana. Aukeratu fitxategi bat behean.",
+    "manualDescription": "Beste aplikazio batetik partekatutako fitxategiak hemen agertzen dira. Fitxategi bat aukeratu edo testua eskuz itsatsi dezakezu.",
+    "noGroups": "Ez dago talderik eskuragarri. Sortu talde bat lehenik gastuak gehitzeko.",
+    "notScannableHint": "Fitxategi mota hau ezin da IArekin eskaneatu, baina gastu bati erantsi dakioke.",
+    "openGroupAction": "Ireki taldea",
+    "pickGroupLabel": "Aukeratu talde bat",
+    "scanAction": "Eskaneatu IArekin",
+    "searchPlaceholder": "Bilatu taldeak eta lagunak",
+    "sharedTextLabel": "Partekatutako testua",
+    "signInAction": "Hasi saioa",
+    "signInDescription": "Hasi saioa partekatutako edukia zure taldeetako batean gehitzeko. Partekapena gailu honetan gordetzen da eta saioa hastean jarraitzen du.",
+    "textPlaceholder": "Itsatsi partekatutako testua hemen ohar gisa eransteko",
+    "title": "Gehitu partekatutako edukia",
+    "uploadError": "Fitxategia handiegia da ({size}, gehienez {maxSize}).",
+    "uploadErrorGeneric": "Kargak huts egin du. Egiaztatu konexioa eta saiatu berriro.",
+    "uploadingFile": "Hautatutako fitxategia kargatzen…",
+    "unsupportedFile": "Fitxategi batzuk ez dira onartzen eta baztertu egin dira.",
+    "useTextAsFile": "Erabili testua .txt eranskin gisa"
   }
 }

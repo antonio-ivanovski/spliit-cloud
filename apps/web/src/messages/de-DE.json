@@ -4976,5 +4976,34 @@
       "body": "Du hast {to} ({name}) als neue Ausgleichswährung gewählt. Ein direkter Wechsel ist nicht möglich, weil diese Gruppe bereits Ausgaben enthält — arbeite die Schritte unten durch, dann wird jede Ausgabe mit einer Vorschau pro Zeile umgerechnet, bevor etwas gespeichert wird."
     },
     "adminOnlyNotice": "Nur Administratoren können die Gruppenwährung tauschen — bitte einen Administrator, dies über Werkzeuge zu tun."
+  },
+  "ShareTarget": {
+    "actionsDescription": "Wähle, wie die ausgewählte Datei in eine Ausgabe umgewandelt werden soll.",
+    "addTextAction": "Text als Datei hinzufügen",
+    "attachAction": "Ausgabe mit Anhang erstellen",
+    "chooseFile": "Datei wählen",
+    "description": "Ein geteilter Beleg oder eine Notiz ist hier gelandet. Wähle eine Gruppe und scanne den Inhalt dann mit KI oder hänge ihn an eine manuell erstellte Ausgabe an.",
+    "discardAction": "Datei entfernen",
+    "doneDescription": "Die geteilten Inhalte wurden übergeben. Du findest die neue Ausgabe in der Gruppe.",
+    "doneTitle": "Teilen erledigt",
+    "filesLabel": "Geteilte Dateien",
+    "loadFailed": "Die geteilten Inhalte konnten nicht geladen werden. Möglicherweise sind sie abgelaufen. Wähle stattdessen unten eine Datei.",
+    "manualDescription": "Aus einer anderen App geteilte Dateien erscheinen hier. Du kannst auch manuell eine Datei wählen oder Text einfügen.",
+    "noGroups": "Keine Gruppen verfügbar. Erstelle zuerst eine Gruppe, um Ausgaben hinzuzufügen.",
+    "notScannableHint": "Dieser Dateityp kann nicht mit KI gescannt werden, aber er kann trotzdem an eine Ausgabe angehängt werden.",
+    "openGroupAction": "Gruppe öffnen",
+    "pickGroupLabel": "Wähle eine Gruppe",
+    "scanAction": "Mit KI scannen",
+    "searchPlaceholder": "Gruppen und Freunde suchen",
+    "sharedTextLabel": "Geteilter Text",
+    "signInAction": "Anmelden",
+    "signInDescription": "Melde dich an, um die geteilten Inhalte zu einer deiner Gruppen hinzuzufügen. Die Freigabe bleibt auf diesem Gerät gespeichert und wird nach der Anmeldung fortgesetzt.",
+    "textPlaceholder": "Geteilten Text hier einfügen, um ihn als Notiz anzuhängen",
+    "title": "Geteilte Inhalte hinzufügen",
+    "uploadError": "Die Datei ist zu groß ({size}, maximal {maxSize}).",
+    "uploadErrorGeneric": "Der Upload ist fehlgeschlagen. Überprüfe deine Verbindung und versuche es erneut.",
+    "uploadingFile": "Ausgewählte Datei wird hochgeladen…",
+    "unsupportedFile": "Einige Dateien werden nicht unterstützt und wurden übersprungen.",
+    "useTextAsFile": "Text als .txt-Anhang verwenden"
   }
 }

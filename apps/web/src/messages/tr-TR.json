@@ -4912,5 +4912,34 @@
       "body": "Yeni borç kapatma para birimi olarak {to} ({name}) seçildi. Bu grupta zaten giderler olduğu için doğrudan değişiklik yapılamaz — aşağıdaki adımları izle; hiçbir şey kaydedilmeden önce her gider satır satır önizlemeyle dönüştürülür."
     },
     "adminOnlyNotice": "Grup para birimini yalnızca yöneticiler değiştirebilir — bir yöneticiden bunu Araçlar'dan yapmasını iste."
+  },
+  "ShareTarget": {
+    "actionsDescription": "Seçili dosyayı masrafa dönüştürme yöntemini seçin.",
+    "addTextAction": "Metni dosya olarak ekle",
+    "attachAction": "Ekli masraf oluştur",
+    "chooseFile": "Dosya seç",
+    "description": "Paylaşılan bir fiş veya not buraya geldi. Bir grup seçin, ardından yapay zekâ ile tarayın veya elle oluşturduğunuz bir masrafa ekleyin.",
+    "discardAction": "Dosyayı kaldır",
+    "doneDescription": "Paylaşılan içerik aktarıldı. Yeni masrafı grupta bulabilirsiniz.",
+    "doneTitle": "Paylaşım işlendi",
+    "filesLabel": "Paylaşılan dosyalar",
+    "loadFailed": "Paylaşılan içerik yüklenemedi. Süresi dolmuş olabilir. Dilerseniz aşağıdan bir dosya seçin.",
+    "manualDescription": "Başka bir uygulamadan paylaşılan dosyalar burada görünür. Dilerseniz elle bir dosya seçebilir veya metin yapıştırabilirsiniz.",
+    "noGroups": "Kullanılabilir grup yok. Masraf eklemek için önce bir grup oluşturun.",
+    "notScannableHint": "Bu dosya türü yapay zekâ ile taranamaz, ancak yine de bir masrafa eklenebilir.",
+    "openGroupAction": "Grubu aç",
+    "pickGroupLabel": "Bir grup seçin",
+    "scanAction": "Yapay zekâ ile tara",
+    "searchPlaceholder": "Grup ve arkadaş ara",
+    "sharedTextLabel": "Paylaşılan metin",
+    "signInAction": "Oturum aç",
+    "signInDescription": "Paylaşılan içeriği gruplarınızdan birine eklemek için oturum açın. Paylaşım bu cihazda saklanır ve oturum açtıktan sonra devam eder.",
+    "textPlaceholder": "Not olarak eklemek için paylaşılan metni buraya yapıştırın",
+    "title": "Paylaşılan içeriği ekle",
+    "uploadError": "Dosya çok büyük ({size}, en fazla {maxSize}).",
+    "uploadErrorGeneric": "Yükleme başarısız oldu. Bağlantınızı kontrol edip tekrar deneyin.",
+    "uploadingFile": "Seçili dosya yükleniyor…",
+    "unsupportedFile": "Bazı dosyalar desteklenmiyor ve atlandı.",
+    "useTextAsFile": "Metni .txt eki olarak kullan"
   }
 }

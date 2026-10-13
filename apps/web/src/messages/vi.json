@@ -4967,5 +4967,34 @@
       "body": "Bạn đã chọn {to} ({name}) làm loại tiền tất toán mới. Không thể đổi trực tiếp vì nhóm này đã có chi phí — hãy làm theo các bước bên dưới, mọi chi phí sẽ được chuyển đổi và xem trước từng dòng trước khi có gì được lưu."
     },
     "adminOnlyNotice": "Chỉ quản trị viên mới có thể đổi tiền tệ nhóm — hãy nhờ quản trị viên thực hiện từ Công cụ."
+  },
+  "ShareTarget": {
+    "actionsDescription": "Chọn cách biến tệp đã chọn thành một khoản chi.",
+    "addTextAction": "Thêm văn bản dưới dạng tệp",
+    "attachAction": "Tạo khoản chi kèm tệp đính kèm",
+    "chooseFile": "Chọn tệp",
+    "description": "Biên lai hoặc ghi chú được chia sẻ đã đến đây. Hãy chọn một nhóm, rồi quét bằng AI hoặc đính kèm vào một khoản chi tạo thủ công.",
+    "discardAction": "Xóa tệp",
+    "doneDescription": "Nội dung được chia sẻ đã được chuyển đi. Bạn có thể tìm khoản chi mới trong nhóm.",
+    "doneTitle": "Đã xử lý nội dung chia sẻ",
+    "filesLabel": "Các tệp được chia sẻ",
+    "loadFailed": "Không thể tải nội dung được chia sẻ. Có thể nội dung đã hết hạn. Bạn có thể chọn một tệp ở bên dưới.",
+    "manualDescription": "Các tệp được chia sẻ từ ứng dụng khác sẽ hiện ở đây. Bạn cũng có thể chọn một tệp hoặc dán văn bản thủ công.",
+    "noGroups": "Chưa có nhóm nào. Hãy tạo nhóm trước để thêm các khoản chi.",
+    "notScannableHint": "Loại tệp này không thể quét bằng AI, nhưng vẫn có thể đính kèm vào một khoản chi.",
+    "openGroupAction": "Mở nhóm",
+    "pickGroupLabel": "Chọn một nhóm",
+    "scanAction": "Quét bằng AI",
+    "searchPlaceholder": "Tìm kiếm nhóm và bạn bè",
+    "sharedTextLabel": "Văn bản được chia sẻ",
+    "signInAction": "Đăng nhập",
+    "signInDescription": "Đăng nhập để thêm nội dung được chia sẻ vào một trong các nhóm của bạn. Nội dung chia sẻ được giữ trên thiết bị này và sẽ tiếp tục sau khi đăng nhập.",
+    "textPlaceholder": "Dán văn bản được chia sẻ vào đây để đính kèm dưới dạng ghi chú",
+    "title": "Thêm nội dung được chia sẻ",
+    "uploadError": "Tệp quá lớn ({size}, tối đa {maxSize}).",
+    "uploadErrorGeneric": "Tải lên thất bại. Hãy kiểm tra kết nối và thử lại.",
+    "uploadingFile": "Đang tải lên tệp đã chọn…",
+    "unsupportedFile": "Một số tệp không được hỗ trợ và đã bị bỏ qua.",
+    "useTextAsFile": "Dùng văn bản làm tệp đính kèm .txt"
   }
 }

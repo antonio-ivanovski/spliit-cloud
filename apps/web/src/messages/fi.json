@@ -4904,5 +4904,34 @@
       "body": "Valitsit uudeksi tasausvaluutaksi valuutan {to} ({name}). Suora vaihto ei ole mahdollinen, koska tässä ryhmässä on jo kuluja — etene alla olevien vaiheiden läpi, niin jokainen kulu muunnetaan rivikohtaisella esikatselulla ennen kuin mitään tallennetaan."
     },
     "adminOnlyNotice": "Vain ylläpitäjät voivat vaihtaa ryhmän valuuttaa — pyydä ylläpitäjää tekemään se Työkaluissa."
+  },
+  "ShareTarget": {
+    "actionsDescription": "Valitse, miten valittu tiedosto muutetaan kuluksi.",
+    "addTextAction": "Lisää teksti tiedostona",
+    "attachAction": "Luo kulu liitteellä",
+    "chooseFile": "Valitse tiedosto",
+    "description": "Jaettu kuitti tai muistiinpano saapui tänne. Valitse ryhmä ja skannaa se sitten tekoälyllä tai liitä se manuaalisesti luotuun kuluun.",
+    "discardAction": "Poista tiedosto",
+    "doneDescription": "Jaettu sisältö on viety perille. Löydät uuden kulun ryhmästä.",
+    "doneTitle": "Jako hoidettu",
+    "filesLabel": "Jaetut tiedostot",
+    "loadFailed": "Jaettua sisältöä ei voitu ladata. Se on saattanut vanhentua. Voit valita tiedoston alta.",
+    "manualDescription": "Toisesta sovelluksesta jaetut tiedostot näkyvät tässä. Voit myös valita tiedoston tai liittää tekstiä manuaalisesti.",
+    "noGroups": "Ryhmiä ei ole saatavilla. Luo ensin ryhmä lisätäksesi kuluja.",
+    "notScannableHint": "Tätä tiedostotyyppiä ei voi skannata tekoälyllä, mutta sen voi silti liittää kuluun.",
+    "openGroupAction": "Avaa ryhmä",
+    "pickGroupLabel": "Valitse ryhmä",
+    "scanAction": "Skannaa tekoälyllä",
+    "searchPlaceholder": "Hae ryhmiä ja ystäviä",
+    "sharedTextLabel": "Jaettu teksti",
+    "signInAction": "Kirjaudu sisään",
+    "signInDescription": "Kirjaudu sisään lisätäksesi jaetun sisällön johonkin ryhmistäsi. Jako säilyy tällä laitteella ja jatkuu kirjautumisen jälkeen.",
+    "textPlaceholder": "Liitä jaettu teksti tähän liittääksesi sen muistiinpanona",
+    "title": "Lisää jaettu sisältö",
+    "uploadError": "Tiedosto on liian suuri ({size}, enintään {maxSize}).",
+    "uploadErrorGeneric": "Lataus epäonnistui. Tarkista yhteytesi ja yritä uudelleen.",
+    "uploadingFile": "Ladataan valittua tiedostoa…",
+    "unsupportedFile": "Joitakin tiedostoja ei tueta, ja ne ohitettiin.",
+    "useTextAsFile": "Käytä tekstiä .txt-liitteenä"
   }
 }

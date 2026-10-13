@@ -85,6 +85,10 @@ type AiExpensePreviewProps = {
   group: GroupShape
   currentLedgerParticipantId: string | null | undefined
   draft: AiExpenseDraft
+  /** Fires after the quick-create mutation succeeds (not on dismiss/edit). */
+  onCreated?: () => void
+  /** Fires when the user continues editing in the full expense form. */
+  onContinueInForm?: () => void
 }
 
 function parseDate(value: string | null) {
@@ -111,6 +115,8 @@ export function AiExpensePreview({
   group,
   currentLedgerParticipantId,
   draft,
+  onCreated,
+  onContinueInForm,
 }: AiExpensePreviewProps) {
   const { t } = useTranslation(undefined, { keyPrefix: 'AIExpense' })
   const { t: tForm } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
@@ -320,6 +326,7 @@ export function AiExpensePreview({
   )
 
   const navigateToForm = () => {
+    onContinueInForm?.()
     onOpenChange(false)
   }
 
@@ -338,6 +345,7 @@ export function AiExpensePreview({
       )
       if (created === null) return
       toast({ description: t('created'), variant: 'success' })
+      onCreated?.()
       onOpenChange(false)
     } catch (error) {
       toast({

@@ -4976,5 +4976,34 @@
       "body": "Je hebt {to} ({name}) gekozen als de nieuwe verrekenvaluta. Direct wijzigen is niet mogelijk omdat deze groep al uitgaven heeft — doorloop de stappen hieronder en elke uitgave wordt omgerekend met een voorbeeld per rij voordat er iets wordt opgeslagen."
     },
     "adminOnlyNotice": "Alleen beheerders kunnen de groepsvaluta wisselen — vraag een beheerder om dit via Hulpmiddelen te doen."
+  },
+  "ShareTarget": {
+    "actionsDescription": "Kies hoe je van het geselecteerde bestand een uitgave maakt.",
+    "addTextAction": "Tekst als bestand toevoegen",
+    "attachAction": "Uitgave met bijlage maken",
+    "chooseFile": "Bestand kiezen",
+    "description": "Een gedeelde bon of notitie is hier terechtgekomen. Kies een groep en scan deze met AI of voeg deze toe aan een handmatig gemaakte uitgave.",
+    "discardAction": "Bestand verwijderen",
+    "doneDescription": "De gedeelde inhoud is overgedragen. Je vindt de nieuwe uitgave in de groep.",
+    "doneTitle": "Delen afgehandeld",
+    "filesLabel": "Gedeelde bestanden",
+    "loadFailed": "De gedeelde inhoud kon niet worden geladen. Mogelijk is deze verlopen. Kies hieronder een bestand.",
+    "manualDescription": "Bestanden die vanuit een andere app zijn gedeeld, verschijnen hier. Je kunt ook een bestand kiezen of handmatig tekst plakken.",
+    "noGroups": "Geen groepen beschikbaar. Maak eerst een groep aan om uitgaven toe te voegen.",
+    "notScannableHint": "Dit bestandstype kan niet met AI worden gescand, maar kan wel aan een uitgave worden toegevoegd.",
+    "openGroupAction": "Groep openen",
+    "pickGroupLabel": "Kies een groep",
+    "scanAction": "Scannen met AI",
+    "searchPlaceholder": "Zoek groepen en vrienden",
+    "sharedTextLabel": "Gedeelde tekst",
+    "signInAction": "Inloggen",
+    "signInDescription": "Log in om de gedeelde inhoud aan een van je groepen toe te voegen. De gedeelde inhoud blijft op dit apparaat bewaard en gaat verder na het inloggen.",
+    "textPlaceholder": "Plak gedeelde tekst hier om deze als notitie toe te voegen",
+    "title": "Gedeelde inhoud toevoegen",
+    "uploadError": "Het bestand is te groot ({size}, maximaal {maxSize}).",
+    "uploadErrorGeneric": "Het uploaden is mislukt. Controleer je verbinding en probeer het opnieuw.",
+    "uploadingFile": "Geselecteerd bestand uploaden…",
+    "unsupportedFile": "Sommige bestanden worden niet ondersteund en zijn overgeslagen.",
+    "useTextAsFile": "Tekst als .txt-bijlage gebruiken"
   }
 }

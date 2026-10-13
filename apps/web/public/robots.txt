@@ -13,6 +13,7 @@ Disallow: /auth
 Disallow: /oauth
 Disallow: /feedback
 Disallow: /unsubscribe
+Disallow: /share-target
 Disallow: /email
 Disallow: /api
 Disallow: /trpc
@@ -38,6 +39,7 @@ Disallow: /auth
 Disallow: /oauth
 Disallow: /feedback
 Disallow: /unsubscribe
+Disallow: /share-target
 Disallow: /email
 Disallow: /api
 Disallow: /trpc

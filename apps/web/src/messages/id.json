@@ -4884,5 +4884,34 @@
       "body": "Anda memilih {to} ({name}) sebagai mata uang pelunasan baru. Perubahan langsung tidak dimungkinkan karena grup ini sudah memiliki pengeluaran — ikuti langkah-langkah di bawah dan setiap pengeluaran akan dikonversi dengan pratinjau per baris sebelum ada yang disimpan."
     },
     "adminOnlyNotice": "Hanya admin yang dapat menukar mata uang grup — minta admin menjalankannya dari Alat."
+  },
+  "ShareTarget": {
+    "actionsDescription": "Pilih cara mengubah file yang dipilih menjadi pengeluaran.",
+    "addTextAction": "Tambahkan teks sebagai file",
+    "attachAction": "Buat pengeluaran dengan lampiran",
+    "chooseFile": "Pilih file",
+    "description": "Struk atau catatan yang dibagikan mendarat di sini. Pilih grup, lalu pindai dengan AI atau lampirkan ke pengeluaran yang dibuat manual.",
+    "discardAction": "Hapus file",
+    "doneDescription": "Konten yang dibagikan sudah diteruskan. Anda dapat menemukan pengeluaran baru di grup.",
+    "doneTitle": "Berbagi selesai",
+    "filesLabel": "File yang dibagikan",
+    "loadFailed": "Konten yang dibagikan tidak dapat dimuat. Mungkin sudah kedaluwarsa. Anda dapat memilih file di bawah sebagai gantinya.",
+    "manualDescription": "File yang dibagikan dari aplikasi lain muncul di sini. Anda juga dapat memilih file atau menempelkan teks secara manual.",
+    "noGroups": "Tidak ada grup tersedia. Buat grup terlebih dahulu untuk menambahkan pengeluaran.",
+    "notScannableHint": "Jenis file ini tidak dapat dipindai dengan AI, tetapi masih dapat dilampirkan ke pengeluaran.",
+    "openGroupAction": "Buka grup",
+    "pickGroupLabel": "Pilih grup",
+    "scanAction": "Pindai dengan AI",
+    "searchPlaceholder": "Cari grup dan teman",
+    "sharedTextLabel": "Teks yang dibagikan",
+    "signInAction": "Masuk",
+    "signInDescription": "Masuk untuk menambahkan konten yang dibagikan ke salah satu grup Anda. Bagikan tetap tersimpan di perangkat ini dan dilanjutkan setelah masuk.",
+    "textPlaceholder": "Tempelkan teks yang dibagikan di sini untuk melampirkannya sebagai catatan",
+    "title": "Tambahkan konten yang dibagikan",
+    "uploadError": "File terlalu besar ({size}, maksimum {maxSize}).",
+    "uploadErrorGeneric": "Pengunggahan gagal. Periksa koneksi Anda dan coba lagi.",
+    "uploadingFile": "Mengunggah file yang dipilih…",
+    "unsupportedFile": "Beberapa file tidak didukung dan dilewati.",
+    "useTextAsFile": "Gunakan teks sebagai lampiran .txt"
   }
 }

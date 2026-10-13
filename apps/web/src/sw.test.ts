@@ -1,3 +1,4 @@
+import 'fake-indexeddb/auto'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Exercise the worker's real Workbox routes. A navigation to `/` can also
@@ -243,5 +244,161 @@ describe('service worker locale chunk runtime cache', () => {
     if (result[0]?.status === 'rejected') throw result[0].reason
     expect(await (await response)?.text()).toBe('new-bundle')
     expect(runtimeEntries.size).toBeLessThanOrEqual(48)
+  })
+})
+
+describe('service worker share-target staging', () => {
+  let fetchListeners: ((event: FetchEvent) => void)[]
+
+  function dispatchShare(formData: FormData) {
+    const request = new WorkerRequest(`${origin}/share-target/`, {
+      method: 'POST',
+      body: formData,
+    })
+    const lifetime: Promise<unknown>[] = []
+    let response: Promise<Response> | undefined
+    const event = Object.assign(new Event('fetch'), {
+      request,
+      waitUntil: (promise: Promise<unknown>) => lifetime.push(promise),
+      respondWith: (promise: Promise<Response>) => {
+        response = promise
+      },
+    }) as unknown as FetchEvent
+    for (const listener of fetchListeners) listener(event)
+    return { response: response as Promise<Response>, lifetime }
+  }
+
+  function shareIdFrom(response: Response): string {
+    expect(response.status).toBe(303)
+    const location = response.headers.get('location')
+    expect(location).toMatch(/^https:\/\/spliit\.cloud\/share-target\/\?share=/)
+    return new URL(location!).searchParams.get('share')!
+  }
+
+  beforeEach(async () => {
+    vi.resetModules()
+    fetchListeners = []
+    const location = new URL(`${origin}/sw.js`)
+    vi.stubGlobal('location', location)
+    vi.stubGlobal('FetchEvent', Event)
+    vi.stubGlobal('ExtendableEvent', Event)
+    vi.stubGlobal('__WB_DISABLE_DEV_LOGS', true)
+    vi.stubGlobal('registration', { scope: `${origin}/` })
+    vi.stubGlobal('Request', WorkerRequest)
+    vi.stubGlobal('self', {
+      location,
+      __WB_DISABLE_DEV_LOGS: true,
+      __WB_MANIFEST: [{ url: 'index.html', revision: 'shell-v1' }],
+      addEventListener: (
+        type: string,
+        listener: (event: FetchEvent) => void,
+      ) => {
+        if (type === 'fetch') fetchListeners.push(listener)
+      },
+    })
+    vi.stubGlobal('caches', {
+      match: async () => undefined,
+      open: async () => ({
+        match: async () => undefined,
+        put: async () => undefined,
+        keys: async () => [],
+        delete: async () => false,
+      }),
+    })
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(new Response('<html>Spliit shell</html>')),
+    )
+    // Fresh staging database per test so staged shares never leak across cases.
+    await new Promise<void>((resolve, reject) => {
+      const request = indexedDB.deleteDatabase('spliit-share-target')
+      request.onsuccess = () => resolve()
+      request.onerror = () => reject(request.error)
+      request.onblocked = () => reject(new Error('delete blocked'))
+    })
+
+    await import('./sw')
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('stages a shared receipt file and redirects to the share page', async () => {
+    const formData = new FormData()
+    formData.append(
+      'receipts',
+      new File(['receipt-bytes'], 'receipt.jpg', { type: 'image/jpeg' }),
+    )
+
+    const { response, lifetime } = dispatchShare(formData)
+    const result = await Promise.allSettled([response, ...lifetime])
+    if (result[0]?.status === 'rejected') throw result[0].reason
+    const staged = await response
+    const id = shareIdFrom(staged)
+
+    const { getPendingShare } = await import('./lib/share-target-store')
+    const entry = await getPendingShare(id)
+    expect(entry?.files).toHaveLength(1)
+    expect(entry?.files[0]?.name).toBe('receipt.jpg')
+    expect(await entry?.files[0]?.blob.text()).toBe('receipt-bytes')
+  })
+
+  it('stages a text-only share without files', async () => {
+    const formData = new FormData()
+    formData.set('title', 'Lidl')
+    formData.set('text', 'weekly shop')
+
+    const { response, lifetime } = dispatchShare(formData)
+    const result = await Promise.allSettled([response, ...lifetime])
+    if (result[0]?.status === 'rejected') throw result[0].reason
+    const staged = await response
+    const id = shareIdFrom(staged)
+
+    const { getPendingShare } = await import('./lib/share-target-store')
+    const entry = await getPendingShare(id)
+    expect(entry?.title).toBe('Lidl')
+    expect(entry?.text).toBe('weekly shop')
+    expect(entry?.files).toHaveLength(0)
+  })
+
+  it('redirects contentless shares to the error state without staging', async () => {
+    const { response, lifetime } = dispatchShare(new FormData())
+    const result = await Promise.allSettled([response, ...lifetime])
+    if (result[0]?.status === 'rejected') throw result[0].reason
+    const redirected = await response
+    expect(redirected.status).toBe(303)
+    expect(redirected.headers.get('location')).toBe(
+      `${origin}/share-target/?error=empty`,
+    )
+  })
+
+  it('leaves GET navigations to the share page to the app shell', async () => {
+    const request = new WorkerRequest(`${origin}/share-target/?share=abc`, {
+      headers: { Accept: 'text/html,application/xhtml+xml' },
+    })
+    Object.defineProperty(request, 'mode', { value: 'navigate' })
+    const lifetime: Promise<unknown>[] = []
+    let response: Promise<Response> | undefined
+    const event = Object.assign(new Event('fetch'), {
+      request,
+      waitUntil: (promise: Promise<unknown>) => lifetime.push(promise),
+      respondWith: (promise: Promise<Response>) => {
+        response = promise
+      },
+    }) as unknown as FetchEvent
+    for (const listener of fetchListeners) listener(event)
+
+    // The POST share route must never claim GET requests: the navigation
+    // either serves the app shell or falls through to the network (which
+    // rejects while offline in this harness) — it must never 303-redirect
+    // like a staged share.
+    const result = await Promise.allSettled([response, ...lifetime])
+    const first = result[0]
+    if (first?.status === 'fulfilled' && first.value) {
+      expect(first.value.status).not.toBe(303)
+    } else if (response !== undefined) {
+      throw first?.status === 'rejected' ? first.reason : result[0]
+    }
   })
 })

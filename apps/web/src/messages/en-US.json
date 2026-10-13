@@ -5007,5 +5007,34 @@
       "body": "You picked {to} ({name}) as the new settlement currency. A direct change isn't possible because this group already has expenses — work through the steps below and every expense will be converted with a per-row preview before anything is saved."
     },
     "adminOnlyNotice": "Only admins can swap the group currency — ask an admin to run it from Tools."
+  },
+  "ShareTarget": {
+    "actionsDescription": "Pick how to turn the selected file into an expense.",
+    "addTextAction": "Add text as a file",
+    "attachAction": "Create expense with attachment",
+    "chooseFile": "Choose file",
+    "description": "A shared receipt or note landed here. Pick a group, then scan it with AI or attach it to a manually created expense.",
+    "discardAction": "Remove file",
+    "doneDescription": "The shared content was handed off. You can find the new expense in the group.",
+    "doneTitle": "Share handled",
+    "filesLabel": "Shared files",
+    "loadFailed": "The shared content could not be loaded. It may have expired. You can pick a file below instead.",
+    "manualDescription": "Files shared from another app appear here. You can also pick a file or paste text manually.",
+    "noGroups": "No groups available. Create a group first to add expenses.",
+    "notScannableHint": "This file type cannot be scanned with AI, but it can still be attached to an expense.",
+    "openGroupAction": "Open group",
+    "pickGroupLabel": "Pick a group",
+    "scanAction": "Scan with AI",
+    "searchPlaceholder": "Search groups and friends",
+    "sharedTextLabel": "Shared text",
+    "signInAction": "Sign in",
+    "signInDescription": "Sign in to add the shared content to one of your groups. The share is kept on this device and resumes after sign-in.",
+    "textPlaceholder": "Paste shared text here to attach it as a note",
+    "title": "Add shared content",
+    "uploadError": "The file is too big ({size}, maximum {maxSize}).",
+    "uploadErrorGeneric": "The upload failed. Check your connection and try again.",
+    "uploadingFile": "Uploading selected file…",
+    "unsupportedFile": "Some files are not supported and were skipped.",
+    "useTextAsFile": "Use text as .txt attachment"
   }
 }

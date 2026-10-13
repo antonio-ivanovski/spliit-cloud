@@ -4939,5 +4939,34 @@
       "body": "Ai ales {to} ({name}) ca monedă nouă de decontare. Schimbarea directă nu este posibilă deoarece acest grup are deja cheltuieli — parcurge pașii de mai jos, iar fiecare cheltuială va fi convertită cu o previzualizare pe cheltuială înainte de a se salva ceva."
     },
     "adminOnlyNotice": "Doar administratorii pot schimba moneda grupului — roagă un administrator să o facă din Instrumente."
+  },
+  "ShareTarget": {
+    "actionsDescription": "Alege cum transformi fișierul selectat într-o cheltuială.",
+    "addTextAction": "Adaugă textul ca fișier",
+    "attachAction": "Creează o cheltuială cu atașament",
+    "chooseFile": "Alege un fișier",
+    "description": "O chitanță sau o notă partajată a ajuns aici. Alege un grup, apoi scaneaz-o cu IA sau atașeaz-o la o cheltuială creată manual.",
+    "discardAction": "Elimină fișierul",
+    "doneDescription": "Conținutul partajat a fost preluat. Noua cheltuială se află în grup.",
+    "doneTitle": "Partajare preluată",
+    "filesLabel": "Fișiere partajate",
+    "loadFailed": "Conținutul partajat nu a putut fi încărcat. Este posibil să fi expirat. Poți alege un fișier mai jos.",
+    "manualDescription": "Fișierele partajate din altă aplicație apar aici. De asemenea, poți alege un fișier sau poți lipi text manual.",
+    "noGroups": "Nu există grupuri disponibile. Creează mai întâi un grup pentru a adăuga cheltuieli.",
+    "notScannableHint": "Acest tip de fișier nu poate fi scanat cu IA, dar poate fi atașat la o cheltuială.",
+    "openGroupAction": "Deschide grupul",
+    "pickGroupLabel": "Alege un grup",
+    "scanAction": "Scanează cu IA",
+    "searchPlaceholder": "Caută grupuri și prieteni",
+    "sharedTextLabel": "Text partajat",
+    "signInAction": "Autentifică-te",
+    "signInDescription": "Autentifică-te pentru a adăuga conținutul partajat la unul dintre grupurile tale. Partajarea este păstrată pe acest dispozitiv și continuă după autentificare.",
+    "textPlaceholder": "Lipește aici textul partajat pentru a-l atașa ca notă",
+    "title": "Adaugă conținut partajat",
+    "uploadError": "Fișierul este prea mare ({size}, maximum {maxSize}).",
+    "uploadErrorGeneric": "Încărcarea a eșuat. Verifică conexiunea și încearcă din nou.",
+    "uploadingFile": "Se încarcă fișierul selectat…",
+    "unsupportedFile": "Unele fișiere nu sunt acceptate și au fost omise.",
+    "useTextAsFile": "Folosește textul ca atașament .txt"
   }
 }

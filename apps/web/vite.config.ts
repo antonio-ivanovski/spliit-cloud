@@ -69,6 +69,39 @@ export default defineConfig({
         launch_handler: {
           client_mode: 'navigate-existing',
         },
+        // Web Share Target (issue #159): lets Android share sheets offer
+        // Spliit for receipt files and shared text. Files arrive as a
+        // multipart POST staged by the service worker (see sw.ts), which
+        // 303-redirects to the hidden /share-target/ page; text shares
+        // travel the same path. The accept list mirrors
+        // RECEIPT_SCAN_MIME_TYPES in packages/domain/src/expense-documents.ts
+        // (text/plain doubles as the shared-text transport).
+        share_target: {
+          action: '/share-target/',
+          method: 'POST',
+          enctype: 'multipart/form-data',
+          params: {
+            title: 'title',
+            text: 'text',
+            files: [
+              {
+                name: 'receipts',
+                accept: [
+                  'image/jpeg',
+                  'image/png',
+                  'image/webp',
+                  'image/heic',
+                  'image/heif',
+                  'application/pdf',
+                  'text/plain',
+                  'text/csv',
+                  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                  'application/vnd.oasis.opendocument.text',
+                ],
+              },
+            ],
+          },
+        },
         background_color: '#ffffff',
         theme_color: '#047857',
         lang: 'en',

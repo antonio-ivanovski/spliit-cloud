@@ -4934,5 +4934,34 @@
       "body": "Escolheste {to} ({name}) como nova moeda de liquidação. Não é possível uma alteração direta porque este grupo já tem despesas — segue os passos abaixo e cada despesa será convertida com uma pré-visualização por despesa antes de se guardar qualquer coisa."
     },
     "adminOnlyNotice": "Apenas os administradores podem trocar a moeda do grupo — pede a um administrador para o fazer a partir de Ferramentas."
+  },
+  "ShareTarget": {
+    "actionsDescription": "Escolhe como transformar o ficheiro selecionado numa despesa.",
+    "addTextAction": "Adicionar texto como ficheiro",
+    "attachAction": "Criar despesa com anexo",
+    "chooseFile": "Escolher ficheiro",
+    "description": "Um recibo ou uma nota partilhados chegaram aqui. Escolhe um grupo e depois digitaliza-os com IA ou anexa-os a uma despesa criada manualmente.",
+    "discardAction": "Remover ficheiro",
+    "doneDescription": "O conteúdo partilhado foi tratado. Podes encontrar a nova despesa no grupo.",
+    "doneTitle": "Partilha tratada",
+    "filesLabel": "Ficheiros partilhados",
+    "loadFailed": "Não foi possível carregar o conteúdo partilhado. Pode ter expirado. Podes escolher um ficheiro abaixo.",
+    "manualDescription": "Os ficheiros partilhados de outra aplicação aparecem aqui. Também podes escolher um ficheiro ou colar texto manualmente.",
+    "noGroups": "Não há grupos disponíveis. Cria primeiro um grupo para adicionar despesas.",
+    "notScannableHint": "Este tipo de ficheiro não pode ser digitalizado com IA, mas pode ser anexado a uma despesa.",
+    "openGroupAction": "Abrir grupo",
+    "pickGroupLabel": "Escolhe um grupo",
+    "scanAction": "Digitalizar com IA",
+    "searchPlaceholder": "Pesquisar grupos e amigos",
+    "sharedTextLabel": "Texto partilhado",
+    "signInAction": "Iniciar sessão",
+    "signInDescription": "Inicia sessão para adicionar o conteúdo partilhado a um dos teus grupos. A partilha é guardada neste dispositivo e continua após o início de sessão.",
+    "textPlaceholder": "Cola aqui o texto partilhado para o anexar como nota",
+    "title": "Adicionar conteúdo partilhado",
+    "uploadError": "O ficheiro é demasiado grande ({size}, máximo {maxSize}).",
+    "uploadErrorGeneric": "O envio falhou. Verifica a tua ligação e tenta novamente.",
+    "uploadingFile": "A carregar o ficheiro selecionado…",
+    "unsupportedFile": "Alguns ficheiros não são suportados e foram ignorados.",
+    "useTextAsFile": "Usar o texto como anexo .txt"
   }
 }

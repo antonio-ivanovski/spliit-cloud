@@ -4985,5 +4985,34 @@
       "body": "Elegiste {to} ({name}) como nueva moneda de liquidación. No es posible un cambio directo porque este grupo ya tiene gastos — sigue los pasos siguientes y cada gasto se convertirá con una vista previa por gasto antes de guardar nada."
     },
     "adminOnlyNotice": "Solo los administradores pueden intercambiar la moneda del grupo — pide a un administrador que lo haga desde Herramientas."
+  },
+  "ShareTarget": {
+    "actionsDescription": "Elige cómo convertir el archivo seleccionado en un gasto.",
+    "addTextAction": "Añadir texto como archivo",
+    "attachAction": "Crear gasto con archivo adjunto",
+    "chooseFile": "Elegir archivo",
+    "description": "Un recibo o una nota compartidos llegaron aquí. Elige un grupo y luego escanéalos con IA o adjúntalos a un gasto creado manualmente.",
+    "discardAction": "Eliminar archivo",
+    "doneDescription": "El contenido compartido se ha procesado. Puedes encontrar el nuevo gasto en el grupo.",
+    "doneTitle": "Contenido compartido procesado",
+    "filesLabel": "Archivos compartidos",
+    "loadFailed": "No se pudo cargar el contenido compartido. Es posible que haya caducado. Puedes elegir un archivo abajo.",
+    "manualDescription": "Los archivos compartidos desde otra aplicación aparecen aquí. También puedes elegir un archivo o pegar texto manualmente.",
+    "noGroups": "No hay grupos disponibles. Crea primero un grupo para añadir gastos.",
+    "notScannableHint": "Este tipo de archivo no se puede escanear con IA, pero sí se puede adjuntar a un gasto.",
+    "openGroupAction": "Abrir grupo",
+    "pickGroupLabel": "Elige un grupo",
+    "scanAction": "Escanear con IA",
+    "searchPlaceholder": "Buscar grupos y amigos",
+    "sharedTextLabel": "Texto compartido",
+    "signInAction": "Iniciar sesión",
+    "signInDescription": "Inicia sesión para añadir el contenido compartido a uno de tus grupos. El contenido se guarda en este dispositivo y continúa después de iniciar sesión.",
+    "textPlaceholder": "Pega aquí el texto compartido para adjuntarlo como nota",
+    "title": "Añadir contenido compartido",
+    "uploadError": "El archivo es demasiado grande ({size}, máximo {maxSize}).",
+    "uploadErrorGeneric": "La carga falló. Comprueba tu conexión e inténtalo de nuevo.",
+    "uploadingFile": "Subiendo el archivo seleccionado…",
+    "unsupportedFile": "Algunos archivos no son compatibles y se omitieron.",
+    "useTextAsFile": "Usar el texto como archivo .txt adjunto"
   }
 }

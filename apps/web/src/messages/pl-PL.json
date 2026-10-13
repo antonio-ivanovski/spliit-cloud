@@ -4958,5 +4958,34 @@
       "body": "Wybrano {to} ({name}) jako nową walutę rozliczenia. Bezpośrednia zmiana nie jest możliwa, ponieważ ta grupa ma już wydatki — przejdź przez poniższe kroki, a każdy wydatek zostanie przeliczony z podglądem w poszczególnych wierszach, zanim cokolwiek zostanie zapisane."
     },
     "adminOnlyNotice": "Tylko administratorzy mogą zamienić walutę grupy — poproś administratora, aby zrobił to z Narzędzi."
+  },
+  "ShareTarget": {
+    "actionsDescription": "Wybierz, jak zamienić wybrany plik w wydatek.",
+    "addTextAction": "Dodaj tekst jako plik",
+    "attachAction": "Utwórz wydatek z załącznikiem",
+    "chooseFile": "Wybierz plik",
+    "description": "Udostępniony paragon lub notatka trafiły tutaj. Wybierz grupę, a następnie zeskanuj je za pomocą AI albo dołącz do ręcznie utworzonego wydatku.",
+    "discardAction": "Usuń plik",
+    "doneDescription": "Udostępniona treść została przekazana. Nowy wydatek znajdziesz w grupie.",
+    "doneTitle": "Udostępnienie zakończone",
+    "filesLabel": "Udostępnione pliki",
+    "loadFailed": "Nie udało się wczytać udostępnionej treści. Mogła wygasnąć. Zamiast tego możesz wybrać plik poniżej.",
+    "manualDescription": "Pliki udostępnione z innej aplikacji pojawiają się tutaj. Możesz też wybrać plik lub ręcznie wkleić tekst.",
+    "noGroups": "Brak dostępnych grup. Najpierw utwórz grupę, aby dodawać wydatki.",
+    "notScannableHint": "Tego typu pliku nie można zeskanować za pomocą AI, ale nadal można go dołączyć do wydatku.",
+    "openGroupAction": "Otwórz grupę",
+    "pickGroupLabel": "Wybierz grupę",
+    "scanAction": "Skanuj za pomocą AI",
+    "searchPlaceholder": "Szukaj grup i znajomych",
+    "sharedTextLabel": "Udostępniony tekst",
+    "signInAction": "Zaloguj się",
+    "signInDescription": "Zaloguj się, aby dodać udostępnioną treść do jednej ze swoich grup. Udostępnienie jest zachowane na tym urządzeniu i zostanie wznowione po zalogowaniu.",
+    "textPlaceholder": "Wklej tutaj udostępniony tekst, aby dołączyć go jako notatkę",
+    "title": "Dodaj udostępnioną treść",
+    "uploadError": "Plik jest za duży ({size}, maksymalnie {maxSize}).",
+    "uploadErrorGeneric": "Przesyłanie nie powiodło się. Sprawdź połączenie i spróbuj ponownie.",
+    "uploadingFile": "Przesyłanie wybranego pliku…",
+    "unsupportedFile": "Niektóre pliki nie są obsługiwane i zostały pominięte.",
+    "useTextAsFile": "Użyj tekstu jako załącznika .txt"
   }
 }

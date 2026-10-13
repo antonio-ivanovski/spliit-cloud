@@ -4934,5 +4934,34 @@
       "body": "Has triat {to} ({name}) com a moneda de liquidació nova. No es pot fer un canvi directe perquè aquest grup ja té despeses — segueix els passos de sota i cada despesa es convertirà amb una vista prèvia per despesa abans de desar res."
     },
     "adminOnlyNotice": "Només els administradors poden intercanviar la moneda del grup — demana a un administrador que ho faci des d'Eines."
+  },
+  "ShareTarget": {
+    "actionsDescription": "Tria com vols convertir l'arxiu seleccionat en una despesa.",
+    "addTextAction": "Afegeix el text com a arxiu",
+    "attachAction": "Crea una despesa amb fitxer adjunt",
+    "chooseFile": "Tria un fitxer",
+    "description": "Un tiquet o una nota compartits han arribat aquí. Tria un grup i després escaneja'ls amb IA o adjunta'ls a una despesa creada manualment.",
+    "discardAction": "Suprimeix l'arxiu",
+    "doneDescription": "El contingut compartit ja s'ha processat. Trobaràs la nova despesa al grup.",
+    "doneTitle": "Contingut compartit processat",
+    "filesLabel": "Arxius compartits",
+    "loadFailed": "No s'ha pogut carregar el contingut compartit. És possible que hagi caducat. Pots triar un arxiu a continuació.",
+    "manualDescription": "Els arxius compartits des d'una altra aplicació apareixen aquí. També pots triar un arxiu o enganxar text manualment.",
+    "noGroups": "No hi ha grups disponibles. Crea primer un grup per afegir despeses.",
+    "notScannableHint": "Aquest tipus d'arxiu no es pot escanejar amb IA, però es pot adjuntar a una despesa.",
+    "openGroupAction": "Obre el grup",
+    "pickGroupLabel": "Tria un grup",
+    "scanAction": "Escaneja amb IA",
+    "searchPlaceholder": "Cerca grups i amistats",
+    "sharedTextLabel": "Text compartit",
+    "signInAction": "Inicia sessió",
+    "signInDescription": "Inicia sessió per afegir el contingut compartit a un dels teus grups. El contingut es conserva en aquest dispositiu i continua després d'iniciar sessió.",
+    "textPlaceholder": "Enganxa aquí el text compartit per adjuntar-lo com a nota",
+    "title": "Afegeix contingut compartit",
+    "uploadError": "L'arxiu és massa gran ({size}, màxim {maxSize}).",
+    "uploadErrorGeneric": "La càrrega ha fallat. Comprova la connexió i torna-ho a intentar.",
+    "uploadingFile": "S'està pujant l'arxiu seleccionat…",
+    "unsupportedFile": "Alguns arxius no són compatibles i s'han omès.",
+    "useTextAsFile": "Utilitza el text com a fitxer .txt adjunt"
   }
 }

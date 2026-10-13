@@ -2616,5 +2616,30 @@
     "rowWarnings": {
       "exact-to-custom": "Esta despesa usou um valor exato, por isso é convertida a uma taxa personalizada."
     }
+  },
+  "ShareTarget": {
+    "actionsDescription": "Escolha como transformar o arquivo selecionado em uma despesa.",
+    "addTextAction": "Adicionar texto como arquivo",
+    "chooseFile": "Escolher arquivo",
+    "description": "Um recibo ou uma nota compartilhada chegou aqui. Escolha um grupo e depois escaneie com IA ou anexe a uma despesa criada manualmente.",
+    "discardAction": "Remover arquivo",
+    "doneDescription": "O conteúdo compartilhado foi encaminhado. Você encontra a nova despesa no grupo.",
+    "doneTitle": "Compartilhamento tratado",
+    "filesLabel": "Arquivos compartilhados",
+    "loadFailed": "Não foi possível carregar o conteúdo compartilhado. Pode ter expirado. Escolha um arquivo abaixo.",
+    "manualDescription": "Os arquivos compartilhados de outro aplicativo aparecem aqui. Você também pode escolher um arquivo ou colar um texto manualmente.",
+    "noGroups": "Nenhum grupo disponível. Crie um grupo primeiro para adicionar despesas.",
+    "notScannableHint": "Este tipo de arquivo não pode ser escaneado com IA, mas ainda pode ser anexado a uma despesa.",
+    "pickGroupLabel": "Escolha um grupo",
+    "scanAction": "Escaneie com IA",
+    "searchPlaceholder": "Buscar grupos e amigos",
+    "sharedTextLabel": "Texto compartilhado",
+    "signInAction": "Entrar",
+    "signInDescription": "Entre para adicionar o conteúdo compartilhado a um dos seus grupos. O compartilhamento fica guardado neste dispositivo e continua depois do login.",
+    "textPlaceholder": "Cole aqui o texto compartilhado para anexá-lo como nota",
+    "uploadError": "O arquivo é muito grande ({size}, máximo de {maxSize}).",
+    "uploadErrorGeneric": "O envio falhou. Verifique sua conexão e tente novamente.",
+    "uploadingFile": "Enviando arquivo selecionado…",
+    "unsupportedFile": "Alguns arquivos não são aceitos e foram ignorados."
   }
 }

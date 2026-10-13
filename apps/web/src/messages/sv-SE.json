@@ -4900,5 +4900,34 @@
       "body": "Du valde {to} ({name}) som ny regleringsvaluta. En direkt ändring är inte möjlig eftersom den här gruppen redan har utgifter — gå igenom stegen nedan så konverteras varje utgift med en förhandsvisning per rad innan något sparas."
     },
     "adminOnlyNotice": "Endast administratörer kan byta gruppvaluta — be en administratör att göra det från Verktyg."
+  },
+  "ShareTarget": {
+    "actionsDescription": "Välj hur den valda filen ska bli till en utgift.",
+    "addTextAction": "Lägg till text som fil",
+    "attachAction": "Skapa utgift med bilaga",
+    "chooseFile": "Välj fil",
+    "description": "Ett delat kvitto eller en anteckning har hamnat här. Välj en grupp och skanna sedan innehållet med AI eller bifoga det till en manuellt skapad utgift.",
+    "discardAction": "Ta bort fil",
+    "doneDescription": "Det delade innehållet har lämnats över. Du hittar den nya utgiften i gruppen.",
+    "doneTitle": "Delning hanterad",
+    "filesLabel": "Delade filer",
+    "loadFailed": "Det delade innehållet kunde inte laddas. Det kan ha gått ut. Du kan välja en fil nedan istället.",
+    "manualDescription": "Filer som delats från en annan app visas här. Du kan också välja en fil eller klistra in text manuellt.",
+    "noGroups": "Inga grupper tillgängliga. Skapa en grupp först för att lägga till utgifter.",
+    "notScannableHint": "Den här filtypen kan inte skannas med AI, men den kan ändå bifogas till en utgift.",
+    "openGroupAction": "Öppna grupp",
+    "pickGroupLabel": "Välj en grupp",
+    "scanAction": "Skanna med AI",
+    "searchPlaceholder": "Sök grupper och vänner",
+    "sharedTextLabel": "Delad text",
+    "signInAction": "Logga in",
+    "signInDescription": "Logga in för att lägga till det delade innehållet i en av dina grupper. Delningen sparas på den här enheten och fortsätter efter inloggningen.",
+    "textPlaceholder": "Klistra in delad text här för att bifoga den som en anteckning",
+    "title": "Lägg till delat innehåll",
+    "uploadError": "Filen är för stor ({size}, max {maxSize}).",
+    "uploadErrorGeneric": "Uppladdningen misslyckades. Kontrollera din anslutning och försök igen.",
+    "uploadingFile": "Laddar upp vald fil…",
+    "unsupportedFile": "Vissa filer stöds inte och hoppades över.",
+    "useTextAsFile": "Använd text som .txt-bilaga"
   }
 }

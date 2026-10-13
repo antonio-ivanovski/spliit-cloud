@@ -4958,5 +4958,34 @@
       "body": "Jako novou měnu vyrovnání jste vybrali {to} ({name}). Přímá změna není možná, protože tato skupina už má výdaje — projděte níže uvedené kroky a každý výdaj se převede s náhledem po jednotlivých řádcích, než se cokoli uloží."
     },
     "adminOnlyNotice": "Měnu skupiny mohou vyměnit pouze správci — požádejte správce, aby výměnu spustil z Nástrojů."
+  },
+  "ShareTarget": {
+    "actionsDescription": "Vyberte, jak z vybraného souboru vytvořit výdaj.",
+    "addTextAction": "Přidat text jako soubor",
+    "attachAction": "Vytvořit výdaj s přílohou",
+    "chooseFile": "Vybrat soubor",
+    "description": "Sdílená účtenka nebo poznámka se objevila zde. Vyberte skupinu a pak ji naskenujte pomocí AI, nebo ji přiložte k ručně vytvořenému výdaji.",
+    "discardAction": "Odebrat soubor",
+    "doneDescription": "Sdílený obsah byl předán. Nový výdaj najdete ve skupině.",
+    "doneTitle": "Sdílení vyřízeno",
+    "filesLabel": "Sdílené soubory",
+    "loadFailed": "Sdílený obsah se nepodařilo načíst. Možná vypršela jeho platnost. Místo toho můžete níže vybrat soubor.",
+    "manualDescription": "Soubory sdílené z jiné aplikace se objeví zde. Můžete také vybrat soubor nebo ručně vložit text.",
+    "noGroups": "Nejsou k dispozici žádné skupiny. Nejprve vytvořte skupinu, abyste mohli přidávat výdaje.",
+    "notScannableHint": "Tento typ souboru nelze naskenovat pomocí AI, ale lze jej přiložit k výdaji.",
+    "openGroupAction": "Otevřít skupinu",
+    "pickGroupLabel": "Vyberte skupinu",
+    "scanAction": "Naskenovat pomocí AI",
+    "searchPlaceholder": "Hledat skupiny a přátele",
+    "sharedTextLabel": "Sdílený text",
+    "signInAction": "Přihlásit se",
+    "signInDescription": "Přihlaste se, abyste mohli přidat sdílený obsah do některé ze svých skupin. Sdílení zůstane v tomto zařízení a po přihlášení bude pokračovat.",
+    "textPlaceholder": "Sdílený text vložte sem, aby se přiložil jako poznámka",
+    "title": "Přidat sdílený obsah",
+    "uploadError": "Soubor je příliš velký ({size}, maximum je {maxSize}).",
+    "uploadErrorGeneric": "Nahrávání se nezdařilo. Zkontrolujte připojení a zkuste to znovu.",
+    "uploadingFile": "Nahrávání vybraného souboru…",
+    "unsupportedFile": "Některé soubory nejsou podporovány a byly přeskočeny.",
+    "useTextAsFile": "Použít text jako přílohu .txt"
   }
 }

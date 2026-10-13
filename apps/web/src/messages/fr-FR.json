@@ -4934,5 +4934,34 @@
       "body": "Vous avez choisi {to} ({name}) comme nouvelle devise de règlement. Une modification directe n'est pas possible car ce groupe a déjà des dépenses — suivez les étapes ci-dessous et chaque dépense sera convertie avec un aperçu par dépense avant tout enregistrement."
     },
     "adminOnlyNotice": "Seuls les administrateurs peuvent échanger la devise du groupe — demandez à un administrateur de le faire depuis Outils."
+  },
+  "ShareTarget": {
+    "actionsDescription": "Choisissez comment transformer le fichier sélectionné en dépense.",
+    "addTextAction": "Ajouter du texte comme fichier",
+    "attachAction": "Créer une dépense avec pièce jointe",
+    "chooseFile": "Choisir un fichier",
+    "description": "Un reçu ou une note partagés sont arrivés ici. Choisissez un groupe, puis analysez-les avec l’IA ou joignez-les à une dépense créée manuellement.",
+    "discardAction": "Supprimer le fichier",
+    "doneDescription": "Le contenu partagé a été pris en compte. Vous trouverez la nouvelle dépense dans le groupe.",
+    "doneTitle": "Partage traité",
+    "filesLabel": "Fichiers partagés",
+    "loadFailed": "Le contenu partagé n’a pas pu être chargé. Il a peut-être expiré. Vous pouvez choisir un fichier ci-dessous.",
+    "manualDescription": "Les fichiers partagés depuis une autre application apparaissent ici. Vous pouvez aussi choisir un fichier ou coller du texte manuellement.",
+    "noGroups": "Aucun groupe disponible. Créez d’abord un groupe pour ajouter des dépenses.",
+    "notScannableHint": "Ce type de fichier ne peut pas être analysé avec l’IA, mais il peut tout de même être joint à une dépense.",
+    "openGroupAction": "Ouvrir le groupe",
+    "pickGroupLabel": "Choisir un groupe",
+    "scanAction": "Analyser avec l’IA",
+    "searchPlaceholder": "Rechercher des groupes et des amis",
+    "sharedTextLabel": "Texte partagé",
+    "signInAction": "Se connecter",
+    "signInDescription": "Connectez-vous pour ajouter le contenu partagé à l’un de vos groupes. Le partage est conservé sur cet appareil et reprend après la connexion.",
+    "textPlaceholder": "Collez le texte partagé ici pour le joindre comme note",
+    "title": "Ajouter du contenu partagé",
+    "uploadError": "Le fichier est trop volumineux ({size}, maximum {maxSize}).",
+    "uploadErrorGeneric": "Le téléchargement a échoué. Vérifiez votre connexion et réessayez.",
+    "uploadingFile": "Téléchargement du fichier sélectionné…",
+    "unsupportedFile": "Certains fichiers ne sont pas pris en charge et ont été ignorés.",
+    "useTextAsFile": "Utiliser le texte comme pièce jointe .txt"
   }
 }

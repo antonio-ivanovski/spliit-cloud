@@ -4885,5 +4885,34 @@
       "body": "您已选择 {to}（{name}）作为新的结算货币。由于该群组已有支出，无法直接更改——请按以下步骤操作，每笔支出都会通过逐笔支出预览换算，确认后才会保存。"
     },
     "adminOnlyNotice": "只有管理员才能更换群组货币，请让管理员从工具中执行。"
+  },
+  "ShareTarget": {
+    "actionsDescription": "选择如何将所选文件转为一笔消费。",
+    "addTextAction": "将文本添加为文件",
+    "attachAction": "创建带附件的消费",
+    "chooseFile": "选择文件",
+    "description": "共享的收据或备注已送达此处。请选择一个群组，然后使用 AI 扫描，或将其附加到手动创建的消费中。",
+    "discardAction": "移除文件",
+    "doneDescription": "共享内容已移交。您可以在群组中找到这笔新的消费。",
+    "doneTitle": "共享已处理",
+    "filesLabel": "共享文件",
+    "loadFailed": "无法加载共享内容，可能已过期。您可以改从下方选择文件。",
+    "manualDescription": "从其他应用共享的文件会显示在这里。您也可以手动选择文件或粘贴文本。",
+    "noGroups": "暂无可用群组。请先创建一个群组再添加消费。",
+    "notScannableHint": "此文件类型无法使用 AI 扫描，但仍可将其附加到消费中。",
+    "openGroupAction": "打开群组",
+    "pickGroupLabel": "选择群组",
+    "scanAction": "使用 AI 扫描",
+    "searchPlaceholder": "搜索群组和好友",
+    "sharedTextLabel": "共享文本",
+    "signInAction": "登录",
+    "signInDescription": "登录后可将共享内容添加到您的某个群组中。共享内容保存在此设备上，登录后可继续操作。",
+    "textPlaceholder": "在此处粘贴共享文本以添加为备注",
+    "title": "添加共享内容",
+    "uploadError": "文件过大（{size}，上限为 {maxSize}）。",
+    "uploadErrorGeneric": "上传失败。请检查网络连接后重试。",
+    "uploadingFile": "正在上传所选文件……",
+    "unsupportedFile": "部分文件不受支持，已跳过。",
+    "useTextAsFile": "将文本用作 .txt 附件"
   }
 }

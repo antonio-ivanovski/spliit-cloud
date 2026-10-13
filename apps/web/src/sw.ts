@@ -31,6 +31,11 @@ import {
   PWA_UPDATE_PROTOCOL_VERSION,
   REQUEST_COORDINATED_ACTIVATION,
 } from '@/lib/pwa-update-protocol'
+import {
+  extractPendingShareInput,
+  hasPendingShareContent,
+  putPendingShare,
+} from '@/lib/share-target-store'
 import { locales } from '@spliit/domain/i18n'
 
 declare const self: ServiceWorkerGlobalScope
@@ -82,6 +87,32 @@ registerRoute(
   }),
 )
 addRoute()
+
+// Web Share Target (issue #159): a shared file arrives as a multipart POST
+// that a page cannot receive directly. Stage the payload in the pending-share
+// store and 303-redirect to the share page, which picks it up by id. Text-only
+// shares (title/text/url, no files) travel the same path. This route only
+// matches POSTs, so it never competes with the GET navigation routes below.
+registerRoute(
+  ({ url, request }) =>
+    request.method === 'POST' && new URL(url).pathname === '/share-target/',
+  async ({ request }) => {
+    const redirectTo = (search: string) =>
+      Response.redirect(
+        new URL(`/share-target/${search}`, self.location.origin).href,
+        303,
+      )
+    try {
+      const input = extractPendingShareInput(await request.formData())
+      if (!hasPendingShareContent(input)) return redirectTo('?error=empty')
+      const id = await putPendingShare(input)
+      return redirectTo(`?share=${encodeURIComponent(id)}`)
+    } catch {
+      return redirectTo('?error=unavailable')
+    }
+  },
+  'POST',
+)
 
 registerRoute(
   new NavigationRoute(appShellHandler, {

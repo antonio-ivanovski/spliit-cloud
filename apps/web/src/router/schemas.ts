@@ -279,6 +279,18 @@ export const balancesSearchSchema = groupAccessSearchSchema.extend({
     .catch(undefined),
 })
 
+/**
+ * Search-param schema for the hidden `/share-target` page (PWA Web Share Target
+ * entry, issue #159). The service worker stages an incoming share and redirects
+ * here with `?share=<id>`; `error` reports staging failures. The page has no
+ * navigation entry and is only reachable via system share (or a direct URL,
+ * which renders the manual picker empty state).
+ */
+export const shareTargetSearchSchema = z.object({
+  share: optionalString,
+  error: optionalString,
+})
+
 export type CreateExpenseSearch = z.infer<typeof createExpenseSearchSchema>
 export type CompleteProfileSearch = z.infer<typeof completeProfileSearchSchema>
 export type ResetPasswordSearch = z.infer<typeof resetPasswordSearchSchema>

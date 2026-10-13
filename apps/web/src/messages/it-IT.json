@@ -4934,5 +4934,34 @@
       "body": "Hai scelto {to} ({name}) come nuova valuta di liquidazione. Non è possibile un cambio diretto perché questo gruppo ha già delle spese — segui i passaggi qui sotto e ogni spesa verrà convertita con un'anteprima per spesa prima che venga salvato qualcosa."
     },
     "adminOnlyNotice": "Solo gli amministratori possono scambiare la valuta del gruppo — chiedi a un amministratore di farlo da Strumenti."
+  },
+  "ShareTarget": {
+    "actionsDescription": "Scegli come trasformare il file selezionato in una spesa.",
+    "addTextAction": "Aggiungi testo come file",
+    "attachAction": "Crea una spesa con allegato",
+    "chooseFile": "Scegli file",
+    "description": "Una ricevuta o una nota condivisa è arrivata qui. Scegli un gruppo, poi scansionale con l’IA o allegale a una spesa creata manualmente.",
+    "discardAction": "Rimuovi file",
+    "doneDescription": "Il contenuto condiviso è stato gestito. Trovi la nuova spesa nel gruppo.",
+    "doneTitle": "Condivisione gestita",
+    "filesLabel": "File condivisi",
+    "loadFailed": "Non è stato possibile caricare il contenuto condiviso. Potrebbe essere scaduto. Puoi scegliere un file qui sotto.",
+    "manualDescription": "I file condivisi da un’altra app vengono mostrati qui. Puoi anche scegliere un file o incollare un testo manualmente.",
+    "noGroups": "Nessun gruppo disponibile. Crea prima un gruppo per aggiungere spese.",
+    "notScannableHint": "Questo tipo di file non può essere scansionato con l’IA, ma può comunque essere allegato a una spesa.",
+    "openGroupAction": "Apri gruppo",
+    "pickGroupLabel": "Scegli un gruppo",
+    "scanAction": "Scansiona con l’IA",
+    "searchPlaceholder": "Cerca gruppi e amici",
+    "sharedTextLabel": "Testo condiviso",
+    "signInAction": "Accedi",
+    "signInDescription": "Accedi per aggiungere il contenuto condiviso a uno dei tuoi gruppi. La condivisione viene conservata su questo dispositivo e riprende dopo l’accesso.",
+    "textPlaceholder": "Incolla qui il testo condiviso per allegarlo come nota",
+    "title": "Aggiungi contenuto condiviso",
+    "uploadError": "Il file è troppo grande ({size}, massimo {maxSize}).",
+    "uploadErrorGeneric": "Caricamento non riuscito. Controlla la connessione e riprova.",
+    "uploadingFile": "Caricamento del file selezionato…",
+    "unsupportedFile": "Alcuni file non sono supportati e sono stati ignorati.",
+    "useTextAsFile": "Usa il testo come allegato .txt"
   }
 }

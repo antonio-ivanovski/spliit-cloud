@@ -4969,5 +4969,34 @@
       "body": "새 정산 통화로 {to} ({name})을(를) 골랐어요. 이 그룹에 이미 지출이 있어서 직접 바꿀 수는 없어요. 아래 단계를 따라가면 저장하기 전에 모든 지출이 지출별 미리보기로 변환돼요."
     },
     "adminOnlyNotice": "그룹 통화 스왑은 관리자만 할 수 있어요. 관리자에게 도구에서 실행해 달라고 요청하세요."
+  },
+  "ShareTarget": {
+    "actionsDescription": "선택한 파일을 지출로 만드는 방법을 선택하세요.",
+    "addTextAction": "텍스트를 파일로 추가",
+    "attachAction": "첨부파일과 함께 지출 만들기",
+    "chooseFile": "파일 선택",
+    "description": "공유된 영수증이나 메모가 여기에 도착했어요. 그룹을 선택한 뒤 AI로 스캔하거나 직접 만든 지출에 첨부하세요.",
+    "discardAction": "파일 삭제",
+    "doneDescription": "공유된 내용이 전달되었어요. 새 지출은 그룹에서 확인할 수 있어요.",
+    "doneTitle": "공유 처리 완료",
+    "filesLabel": "공유된 파일",
+    "loadFailed": "공유된 내용을 불러올 수 없어요. 만료되었을 수 있어요. 대신 아래에서 파일을 선택하세요.",
+    "manualDescription": "다른 앱에서 공유한 파일이 여기에 표시돼요. 파일을 직접 선택하거나 텍스트를 붙여넣을 수도 있어요.",
+    "noGroups": "사용 가능한 그룹이 없어요. 지출을 추가하려면 먼저 그룹을 만드세요.",
+    "notScannableHint": "이 파일 형식은 AI로 스캔할 수 없지만 지출에 첨부할 수는 있어요.",
+    "openGroupAction": "그룹 열기",
+    "pickGroupLabel": "그룹 선택",
+    "scanAction": "AI로 스캔",
+    "searchPlaceholder": "그룹 및 친구 검색",
+    "sharedTextLabel": "공유된 텍스트",
+    "signInAction": "로그인",
+    "signInDescription": "공유된 내용을 그룹 중 하나에 추가하려면 로그인하세요. 공유 내용은 이 기기에 보관되며 로그인 후 이어서 진행돼요.",
+    "textPlaceholder": "공유된 텍스트를 여기에 붙여넣어 메모로 첨부하세요",
+    "title": "공유된 내용 추가",
+    "uploadError": "파일이 너무 커요({size}, 최대 {maxSize}).",
+    "uploadErrorGeneric": "업로드에 실패했어요. 연결을 확인하고 다시 시도하세요.",
+    "uploadingFile": "선택한 파일 업로드 중…",
+    "unsupportedFile": "지원되지 않는 파일이 있어 건너뛰었어요.",
+    "useTextAsFile": "텍스트를 .txt 첨부파일로 사용"
   }
 }
