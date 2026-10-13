@@ -710,10 +710,10 @@
       "inviteAfterCreate": "群组创建后，打开 Members 选项卡，通过电子邮件或可分享链接邀请成员。"
     },
     "CurrencyCodeField": {
-      "label": "首选货币",
-      "createDescription": "所有的交易将使用此币种。",
+      "label": "结算货币",
+      "createDescription": "余额、总额以及谁欠谁均以此货币计算。请选择银行卡实际扣款的货币，通常是本国货币。",
+      "editDescription": "余额、总额以及谁欠谁均以此货币计算。更改此项不会转换已输入的支出，除非新货币与当前货币的“辅币单位”不同（例如从美元更改为日元）",
       "customOption": "自定义",
-      "editDescription": "所有金额和余额都将以此货币显示。更改此项不会转换已输入的支出，除非该货币与当前货币具有不同的\"辅币单位\"（例如从美元更改为日元）",
       "lockedAfterExpenses": "该组已有支出，因此货币已锁定。"
     },
     "readOnlyNote": "只有所有者和管理员可以更改群组设置。",
@@ -758,6 +758,12 @@
       "customColorTile": "自定义颜色…",
       "autoMovedHint": "已将 {emoji} 从名称中移到群组表情符号。",
       "undoMove": "撤销"
+    },
+    "EntryCurrencyCodeField": {
+      "description": "新支出以 {entry} 开始，但仍以 {settlement} 结算。",
+      "label": "默认录入货币",
+      "preview": "{entry} 的小票将按 {settlement} 结算。",
+      "showOption": "用其他货币录入支出？"
     }
   },
   "ExpenseForm": {
@@ -2798,7 +2804,8 @@
         "emoji": "表情符号",
         "color": "颜色",
         "subgroups": "子群组",
-        "splitPresets": "分摊预设"
+        "splitPresets": "分摊预设",
+        "defaultEntryCurrencyCode": "默认录入货币"
       }
     },
     "member": {

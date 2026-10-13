@@ -722,9 +722,9 @@
       "inviteAfterCreate": "Une fois le groupe créé, ouvrez l'onglet Members pour inviter des personnes par e-mail ou via un lien partageable."
     },
     "CurrencyCodeField": {
-      "label": "Devise principale",
-      "createDescription": "Tous les montants et soldes seront dans cette devise.",
-      "editDescription": "Tous les montants et soldes seront exprimés dans cette devise. La modification de cette option n'entraînera PAS la conversion des dépenses déjà saisies, sauf si la devise a des « unités mineures » différentes de celles de la devise actuelle (par exemple, passage du dollar américain au yen japonais)",
+      "label": "Devise de règlement",
+      "createDescription": "Les soldes, les totaux et qui doit à qui sont calculés dans cette devise. Choisissez la devise réellement débitée par les cartes, généralement votre devise habituelle.",
+      "editDescription": "Les soldes, les totaux et qui doit à qui sont calculés dans cette devise. La modification de cette option n’entraînera PAS la conversion des dépenses déjà saisies, sauf si la devise a des « unités mineures » différentes de celles de la devise actuelle (par exemple, passage du dollar américain au yen japonais)",
       "customOption": "Personnalisée",
       "lockedAfterExpenses": "La devise est verrouillée car ce groupe a déjà des dépenses."
     },
@@ -770,6 +770,12 @@
       "customColorTile": "Couleur personnalisée…",
       "autoMovedHint": "{emoji} a été déplacé du nom vers l'emoji du groupe.",
       "undoMove": "Annuler"
+    },
+    "EntryCurrencyCodeField": {
+      "description": "Les nouvelles dépenses commencent en {entry}, mais sont réglées en {settlement}.",
+      "label": "Devise de saisie par défaut",
+      "preview": "Les reçus en {entry} sont réglés en {settlement}.",
+      "showOption": "Vous saisissez des dépenses dans une autre devise ?"
     }
   },
   "ExpenseForm": {
@@ -2815,7 +2821,8 @@
         "emoji": "Emoji",
         "color": "Couleur",
         "subgroups": "Sous-groupes",
-        "splitPresets": "Préréglages de partage"
+        "splitPresets": "Préréglages de partage",
+        "defaultEntryCurrencyCode": "Devise de saisie par défaut"
       }
     },
     "member": {

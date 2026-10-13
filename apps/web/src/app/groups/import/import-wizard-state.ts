@@ -98,6 +98,9 @@ export type ImportGroupFormValues = {
   currencyCode: string
   emoji?: string
   color?: string | null
+  // Group-wide default entry currency, mirroring `groupFormSchema`:
+  // omitted/'' = same as settlement. Threaded untouched to the import APIs.
+  defaultEntryCurrencyCode?: string
 }
 
 export function supportsDocumentRecovery(source: NormalizedSource | null) {
@@ -177,6 +180,26 @@ export function prefillAppearanceFromManifest(manifestGroup: {
     return normalizeHexColor(value) ?? undefined
   })()
   return { emoji, color }
+}
+
+/**
+ * Prefill for the import entry-currency picker from a cloud export bundle.
+ * Mirrors the server-side restore (`import-cloud.ts`): absent/empty restores as
+ * same-as-settlement (no prefill), and values matching the bundle's own
+ * settlement currency or a custom (empty) settlement stay collapsed — the
+ * server normalizes those to null anyway.
+ */
+export function prefillEntryCurrencyFromManifest(manifestGroup: {
+  defaultEntryCurrencyCode?: string | null
+  ledger?: { currencyCode?: string | null } | null
+}): Pick<ImportGroupFormValues, 'defaultEntryCurrencyCode'> {
+  const entry = manifestGroup.defaultEntryCurrencyCode
+  const settlement = manifestGroup.ledger?.currencyCode ?? null
+  if (!settlement || typeof entry !== 'string' || entry.length === 0) {
+    return { defaultEntryCurrencyCode: undefined }
+  }
+  if (entry === settlement) return { defaultEntryCurrencyCode: undefined }
+  return { defaultEntryCurrencyCode: entry }
 }
 
 /** Map the batched expenses into the shape the import mutation expects. */

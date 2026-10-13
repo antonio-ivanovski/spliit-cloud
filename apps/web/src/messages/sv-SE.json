@@ -526,7 +526,8 @@
         "emoji": "Emoji",
         "color": "Färg",
         "subgroups": "Subgrupper",
-        "splitPresets": "Delningsmallar"
+        "splitPresets": "Delningsmallar",
+        "defaultEntryCurrencyCode": "Standardvaluta för inmatning"
       }
     },
     "import": {
@@ -2106,9 +2107,9 @@
   },
   "GroupForm": {
     "CurrencyCodeField": {
-      "label": "Huvudvaluta",
-      "createDescription": "Alla belopp och balanser kommer vara i denna valuta.",
-      "editDescription": "Alla belopp och balanser kommer att vara i denna valuta. Att ändra detta kommer INTE att konvertera redan angivna utgifter, förutom när valutan har andra ”minsta enheter” än den nuvarande (t.ex. byte från US-dollar till japanska yen)",
+      "label": "Regleringsvaluta",
+      "createDescription": "Balanser, summor och vem som är skyldig vem vad beräknas i denna valuta. Välj det som korten faktiskt debiterar, vanligtvis din hemvaluta.",
+      "editDescription": "Balanser, summor och vem som är skyldig vem vad beräknas i denna valuta. Att ändra detta konverterar INTE redan angivna utgifter, förutom när valutan har andra ”minsta enheter” än den nuvarande (t.ex. byte från US-dollar till japanska yen)",
       "customOption": "Anpassad",
       "lockedAfterExpenses": "Valutan är låst eftersom gruppen redan har utgifter."
     },
@@ -2195,6 +2196,12 @@
       "customColorTile": "Anpassad färg…",
       "autoMovedHint": "{emoji} flyttades från namnet till gruppemoji.",
       "undoMove": "Ångra"
+    },
+    "EntryCurrencyCodeField": {
+      "description": "Nya utgifter börjar i {entry}, men regleras i {settlement}.",
+      "label": "Standardvaluta för inmatning",
+      "preview": "Kvitton i {entry} regleras som {settlement}.",
+      "showOption": "Matar du in utgifter i en annan valuta?"
     }
   },
   "Groups": {

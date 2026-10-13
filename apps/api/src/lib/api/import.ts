@@ -549,6 +549,12 @@ export async function importGroup(
           color: input.groupFormValues.color ?? null,
           information: input.groupFormValues.information,
           ledgerId: ledger.id,
+          defaultEntryCurrencyCode: (() => {
+            const entry = input.groupFormValues.defaultEntryCurrencyCode || null
+            const settlement = input.groupFormValues.currencyCode || null
+            if (!settlement) return null
+            return entry && entry !== settlement ? entry : null
+          })(),
         },
       })
       const adminMember = await tx.groupMember.create({

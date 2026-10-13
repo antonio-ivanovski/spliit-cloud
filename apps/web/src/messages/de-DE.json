@@ -714,9 +714,9 @@
       "description": "Wir benutzen es, um Beträge anzuzeigen."
     },
     "CurrencyCodeField": {
-      "label": "Hauptwährung",
-      "createDescription": "Alle Beträge und Salden werden in dieser Währung angegeben.",
-      "editDescription": "Alle Beträge und Salden werden in dieser Währung angegeben. Bei Änderung dieser, werden bereits eingegebene Ausgaben NICHT umgerechnet, es sei denn, die Währung hat andere \"kleinere Einheiten\" als die aktuelle (z. B. Wechsel von US-Dollar zu Japanischem Yen)",
+      "label": "Ausgleichswährung",
+      "createDescription": "Salden, Gesamtbeträge und wer wem was schuldet werden in dieser Währung berechnet. Wähle die Währung, mit der Karten tatsächlich abrechnen, meist deine Heimatwährung.",
+      "editDescription": "Salden, Gesamtbeträge und wer wem was schuldet werden in dieser Währung berechnet. Wenn du sie änderst, werden bereits eingegebene Ausgaben NICHT umgerechnet, es sei denn, die Währung hat andere \"kleinere Einheiten\" als die aktuelle (z. B. Wechsel von US-Dollar zu Japanischem Yen)",
       "customOption": "Benutzerdefiniert",
       "lockedAfterExpenses": "Die Währung ist gesperrt, da diese Gruppe bereits Ausgaben hat."
     },
@@ -784,6 +784,12 @@
       "customColorTile": "Eigene Farbe…",
       "autoMovedHint": "{emoji} wurde aus dem Namen in das Gruppen-Emoji verschoben.",
       "undoMove": "Rückgängig machen"
+    },
+    "EntryCurrencyCodeField": {
+      "description": "Neue Ausgaben starten in {entry}, werden aber in {settlement} ausgeglichen.",
+      "label": "Standard-Eingabewährung",
+      "preview": "Belege in {entry} werden als {settlement} ausgeglichen.",
+      "showOption": "Ausgaben in einer anderen Währung eingeben?"
     }
   },
   "ExpenseForm": {
@@ -2833,7 +2839,8 @@
         "emoji": "Emoji",
         "color": "Farbe",
         "subgroups": "Untergruppen",
-        "splitPresets": "Teilungsvorlagen"
+        "splitPresets": "Teilungsvorlagen",
+        "defaultEntryCurrencyCode": "Standard-Eingabewährung"
       }
     },
     "member": {

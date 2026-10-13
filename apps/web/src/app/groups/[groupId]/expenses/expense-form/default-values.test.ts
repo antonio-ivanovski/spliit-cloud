@@ -244,3 +244,65 @@ describe('buildExpenseFormDefaults edit-mode item hydration', () => {
     expect(values.conversionType).toBe('EXACT')
   })
 })
+
+describe('buildExpenseFormDefaults default entry currency', () => {
+  const GBP = { code: 'GBP', symbol: '£', decimal_digits: 2, rounding: 0 }
+
+  const entryGroup = {
+    participants: [
+      { id: 'alice', name: 'Alice' },
+      { id: 'bob', name: 'Bob' },
+    ],
+    currencyCode: 'GBP',
+    defaultEntryCurrencyCode: 'EUR',
+  } as GroupShape
+
+  function buildEntry(search: Partial<CreateExpenseSearch> = {}) {
+    return buildExpenseFormDefaults({
+      isCreate: true,
+      searchParams: search as CreateExpenseSearch,
+      group: entryGroup,
+      groupCurrency: GBP,
+      currentLedgerParticipantId: 'alice',
+      settlementTitle: 'Settlement payment',
+    })
+  }
+
+  it('starts new expenses in the entry currency with EXCHANGE conversion', () => {
+    const values = buildEntry()
+
+    expect(values.originalCurrency).toBe('EUR')
+    expect(values.conversionType).toBe('EXCHANGE')
+  })
+
+  it('starts in the settlement currency when no entry default is set', () => {
+    const values = buildExpenseFormDefaults({
+      isCreate: true,
+      searchParams: {} as CreateExpenseSearch,
+      group: {
+        participants: [{ id: 'alice', name: 'Alice' }],
+        currencyCode: 'GBP',
+      } as GroupShape,
+      groupCurrency: GBP,
+      currentLedgerParticipantId: 'alice',
+      settlementTitle: 'Settlement payment',
+    })
+
+    expect(values.originalCurrency).toBe('GBP')
+    expect(values.conversionType).toBeUndefined()
+  })
+
+  it('lets a URL originalCurrency override the entry default', () => {
+    const values = buildEntry({ originalCurrency: 'USD' })
+
+    expect(values.originalCurrency).toBe('USD')
+    expect(values.conversionType).toBe('EXCHANGE')
+  })
+
+  it('keeps settlement creates in the settlement currency despite an entry default', () => {
+    const values = buildEntry({ settlement: 'yes', amount: '4000' })
+
+    expect(values.originalCurrency).toBe('GBP')
+    expect(values.conversionType).toBeUndefined()
+  })
+})

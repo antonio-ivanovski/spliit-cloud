@@ -684,9 +684,9 @@
       "description": "Kita akan menggunakannya untuk menampilkan jumlah."
     },
     "CurrencyCodeField": {
-      "label": "Mata uang utama",
-      "createDescription": "Semua jumlah dan saldo akan dalam mata uang ini.",
-      "editDescription": "Semua jumlah dan saldo akan menggunakan mata uang ini. Mengubah mata uang ini TIDAK akan mengonversi pengeluaran yang sudah dimasukkan, kecuali jika mata uang tersebut memiliki \"unit minor\" yang berbeda dari mata uang saat ini (misalnya, berubah dari Dolar AS ke Yen Jepang)",
+      "label": "Mata uang pelunasan",
+      "createDescription": "Saldo, total, dan siapa berutang kepada siapa dihitung dalam mata uang ini. Pilih yang benar-benar ditagihkan kartu, biasanya mata uang negara asal.",
+      "editDescription": "Saldo, total, dan siapa berutang kepada siapa dihitung dalam mata uang ini. Mengubah mata uang ini TIDAK akan mengonversi pengeluaran yang sudah dimasukkan, kecuali jika mata uang tersebut memiliki \"unit minor\" yang berbeda dari mata uang saat ini (misalnya, berubah dari Dolar AS ke Yen Jepang)",
       "customOption": "Kustom",
       "lockedAfterExpenses": "Mata uang terkunci karena grup ini sudah memiliki pengeluaran."
     },
@@ -758,6 +758,12 @@
       "customColorTile": "Warna kustom…",
       "autoMovedHint": "{emoji} dipindahkan dari nama menjadi emoji grup.",
       "undoMove": "Urungkan"
+    },
+    "EntryCurrencyCodeField": {
+      "description": "Pengeluaran baru dimulai dalam {entry}, tetapi dilunasi dalam {settlement}.",
+      "label": "Mata uang entri bawaan",
+      "preview": "Kuitansi dalam {entry} dilunasi sebagai {settlement}.",
+      "showOption": "Memasukkan pengeluaran dalam mata uang lain?"
     }
   },
   "ExpenseForm": {
@@ -2796,7 +2802,8 @@
         "emoji": "Emoji",
         "color": "Warna",
         "subgroups": "Subgrup",
-        "splitPresets": "Preset pembagian"
+        "splitPresets": "Preset pembagian",
+        "defaultEntryCurrencyCode": "Mata uang entri bawaan"
       }
     },
     "member": {

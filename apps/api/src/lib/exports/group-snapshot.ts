@@ -330,6 +330,7 @@ export function createGroupExportSnapshot(
       subgroupsEnabled: group.subgroupsEnabled,
       emoji: group.emoji,
       color: group.color,
+      defaultEntryCurrencyCode: group.defaultEntryCurrencyCode ?? null,
       createdAt: group.createdAt.toISOString(),
       ledger: {
         sourceId: group.ledger.id,

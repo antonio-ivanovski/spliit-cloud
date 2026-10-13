@@ -42,6 +42,14 @@ const groupFormFields = {
     .describe(
       'ISO-4217 3-letter code or 3–4 char crypto ticker, or empty for custom',
     ),
+  // Group-wide default currency new expenses are entered in. Null/omitted =
+  // same as the ledger settlement currency. Editable anytime — it only
+  // affects new expense defaults, never rewrites stored expenses.
+  defaultEntryCurrencyCode: z
+    .union([z.string().min(3).max(4).nullish(), z.literal('')])
+    .describe(
+      'ISO-4217 3-letter code for the default entry currency, or empty/null for same as settlement',
+    ),
   // Three states: omitted = leave undecided (title emoji is moved into the
   // field on create, otherwise the group stays blank; the intro may be
   // offered for existing groups), '' = explicitly none picked, any other

@@ -722,9 +722,9 @@
       "inviteAfterCreate": "Quan el grup estigui creat, obre la pestanya Membres per convidar gent per correu o amb un enllaç per compartir."
     },
     "CurrencyCodeField": {
-      "label": "Divisa principal",
-      "createDescription": "Totes les quantitats i els saldos es mostraran en aquesta moneda.",
-      "editDescription": "Totes les quantitats i els saldos es mostraran en aquesta moneda. En canviar-la, NO es convertiran les despeses ja introduïdes, excepte quan la moneda tingui unitats menors diferents de l'actual (per exemple, en canviar de dòlars nord-americans a iens japonesos)",
+      "label": "Moneda de liquidació",
+      "createDescription": "Els saldos, els totals i qui deu a qui es calculen en aquesta moneda. Tria la moneda que carreguen realment les targetes, normalment la teva moneda habitual.",
+      "editDescription": "Els saldos, els totals i qui deu a qui es calculen en aquesta moneda. En canviar-la, NO es convertiran les despeses ja introduïdes, excepte quan la moneda tingui unitats menors diferents de l'actual (per exemple, en canviar de dòlars nord-americans a iens japonesos)",
       "customOption": "Personalitzat",
       "lockedAfterExpenses": "La moneda està bloquejada perquè aquest grup ja té despeses."
     },
@@ -770,6 +770,12 @@
       "customColorTile": "Color personalitzat…",
       "autoMovedHint": "S'ha mogut {emoji} del nom a l'emoji del grup.",
       "undoMove": "Desfer"
+    },
+    "EntryCurrencyCodeField": {
+      "description": "Les despeses noves comencen en {entry}, però es liquiden en {settlement}.",
+      "label": "Moneda d'entrada per defecte",
+      "preview": "Els rebuts en {entry} es liquiden com a {settlement}.",
+      "showOption": "Introdueixes despeses en una altra moneda?"
     }
   },
   "ExpenseForm": {
@@ -2815,7 +2821,8 @@
         "emoji": "Emoji",
         "color": "Color",
         "subgroups": "Subgrups",
-        "splitPresets": "Predefinicions de divisió"
+        "splitPresets": "Predefinicions de divisió",
+        "defaultEntryCurrencyCode": "Moneda d'entrada per defecte"
       }
     },
     "member": {

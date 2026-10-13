@@ -103,6 +103,77 @@ describe('Group flow — real DB', () => {
   })
 
   // ------------------------------------------------------------------
+  // 2. Group-wide default entry currency
+  // ------------------------------------------------------------------
+  it('persists a default entry currency and normalizes same-as-settlement', async () => {
+    const caller = makeCaller()
+    const { groupId } = await caller.create({
+      requestId: crypto.randomUUID(),
+      groupFormValues: {
+        name: `Entry ${runId}`,
+        currency: '£',
+        currencyCode: 'GBP',
+        defaultEntryCurrencyCode: 'EUR',
+        participants: [{ name: 'Admin' }],
+      },
+    })
+
+    const created = await prisma.group.findUnique({
+      where: { id: groupId },
+      include: { ledger: true },
+    })
+    expect(created!.defaultEntryCurrencyCode).toBe('EUR')
+    trackLedger(created!.ledger.id)
+
+    // Same-as-settlement normalizes to null (collapsed by default).
+    await caller.update({
+      groupId,
+      groupFormValues: {
+        name: `Entry ${runId}`,
+        currency: '£',
+        currencyCode: 'GBP',
+        defaultEntryCurrencyCode: 'GBP',
+        participants: [{ name: 'Admin' }],
+      },
+    })
+    const normalized = await prisma.group.findUnique({
+      where: { id: groupId },
+    })
+    expect(normalized!.defaultEntryCurrencyCode).toBeNull()
+
+    // A different entry currency stays editable via update.
+    await caller.update({
+      groupId,
+      groupFormValues: {
+        name: `Entry ${runId}`,
+        currency: '£',
+        currencyCode: 'GBP',
+        defaultEntryCurrencyCode: 'USD',
+        participants: [{ name: 'Admin' }],
+      },
+    })
+    const edited = await prisma.group.findUnique({
+      where: { id: groupId },
+    })
+    expect(edited!.defaultEntryCurrencyCode).toBe('USD')
+
+    // An omitted key (stale/partial API caller) preserves the stored entry.
+    await caller.update({
+      groupId,
+      groupFormValues: {
+        name: `Entry ${runId} renamed`,
+        currency: '£',
+        currencyCode: 'GBP',
+        participants: [{ name: 'Admin' }],
+      },
+    })
+    const preserved = await prisma.group.findUnique({
+      where: { id: groupId },
+    })
+    expect(preserved!.defaultEntryCurrencyCode).toBe('USD')
+  })
+
+  // ------------------------------------------------------------------
   // 3. Balance calculation with 3 members and 2 expenses
   // ------------------------------------------------------------------
   it('computes correct balances for 3 members with 2 expenses', async () => {

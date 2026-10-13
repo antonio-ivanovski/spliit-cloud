@@ -383,8 +383,9 @@
       "inviteAfterCreate": "Depois que o grupo for criado, abra a aba Members para convidar pessoas por e-mail ou por um link compartilhável."
     },
     "CurrencyCodeField": {
-      "createDescription": "Todos os valores e saldos estarão nesta moeda.",
-      "editDescription": "Todos os valores e saldos estarão nesta moeda. A sua alteração NÃO irá converter despesas já registradas, exceto quando a moeda possuir \"unidades menores\" que a atual (ex. Alterar de Dólar Americano para Yen Japonês)"
+      "label": "Moeda de acerto",
+      "createDescription": "Os saldos, os totais e quem deve a quem são calculados nesta moeda. Escolha a moeda que os cartões realmente cobram, normalmente a sua moeda habitual.",
+      "editDescription": "Os saldos, os totais e quem deve a quem são calculados nesta moeda. A sua alteração NÃO irá converter despesas já registradas, exceto quando a moeda possuir \"unidades menores\" diferentes das atuais (ex. alterar de Dólar Americano para Yen Japonês)"
     },
     "readOnlyNote": "Apenas proprietários e administradores podem alterar as configurações do grupo.",
     "readOnlyTitle": "Configurações do grupo",
@@ -393,6 +394,12 @@
     "Appearance": {
       "customEmojiPlaceholder": "Cole qualquer emoji",
       "detectedEmojiHint": "Detectamos {emoji} no nome do grupo. Ao salvar, ele será usado como emoji do grupo e removido do nome."
+    },
+    "EntryCurrencyCodeField": {
+      "description": "Novas despesas começam em {entry}, mas são acertadas em {settlement}.",
+      "label": "Moeda de lançamento padrão",
+      "preview": "Recibos em {entry} são acertados como {settlement}.",
+      "showOption": "Lançando despesas em outra moeda?"
     }
   },
   "ExpenseForm": {
@@ -1451,7 +1458,8 @@
     "group": {
       "updated": "{participant} atualizou as configurações do grupo",
       "changedFields": {
-        "publicViewLink": "Link público somente para visualização"
+        "publicViewLink": "Link público somente para visualização",
+        "defaultEntryCurrencyCode": "Moeda de lançamento padrão"
       }
     },
     "invitation": {

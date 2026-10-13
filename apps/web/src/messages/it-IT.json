@@ -726,9 +726,9 @@
     "readOnlyBack": "Torna al gruppo",
     "archivedNotice": "Questo gruppo è archiviato. Le sue impostazioni sono congelate e non possono più essere modificate.",
     "CurrencyCodeField": {
-      "label": "Valuta principale",
-      "createDescription": "Tutti gli importi e i saldi saranno in questa valuta.",
-      "editDescription": "Tutti gli importi e i saldi saranno in questa valuta. La modifica NON convertirà le spese già inserite, eccetto quando la valuta ha \"unità minori\" diverse da quella corrente (es. passaggio da Dollaro USA a Yen Giapponese)",
+      "label": "Valuta di liquidazione",
+      "createDescription": "Saldi, totali e chi deve a chi sono calcolati in questa valuta. Scegli la valuta addebitata realmente dalle carte, di solito la tua valuta abituale.",
+      "editDescription": "Saldi, totali e chi deve a chi sono calcolati in questa valuta. La modifica NON convertirà le spese già inserite, eccetto quando la valuta ha \"unità minori\" diverse da quella corrente (es. passaggio da Dollaro USA a Yen Giapponese)",
       "customOption": "Personalizzata",
       "lockedAfterExpenses": "La valuta è bloccata perché questo gruppo ha già delle spese."
     },
@@ -770,6 +770,12 @@
       "customColorTile": "Colore personalizzato…",
       "autoMovedHint": "{emoji} è stato spostato dal nome all'emoji del gruppo.",
       "undoMove": "Annulla"
+    },
+    "EntryCurrencyCodeField": {
+      "description": "Le nuove spese iniziano in {entry}, ma vengono liquidate in {settlement}.",
+      "label": "Valuta di inserimento predefinita",
+      "preview": "Le ricevute in {entry} vengono liquidate come {settlement}.",
+      "showOption": "Inserisci spese in un'altra valuta?"
     }
   },
   "ExpenseForm": {
@@ -2815,7 +2821,8 @@
         "emoji": "Emoji",
         "color": "Colore",
         "subgroups": "Sottogruppi",
-        "splitPresets": "Preimpostazioni di divisione"
+        "splitPresets": "Preimpostazioni di divisione",
+        "defaultEntryCurrencyCode": "Valuta di inserimento predefinita"
       }
     },
     "member": {

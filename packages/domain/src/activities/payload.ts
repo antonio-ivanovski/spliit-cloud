@@ -95,6 +95,7 @@ export const groupChangedFields = [
   'information',
   'currency',
   'currencyCode',
+  'defaultEntryCurrencyCode',
   'emoji',
   'color',
   'linkedParticipant',

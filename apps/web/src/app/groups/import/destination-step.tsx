@@ -126,6 +126,8 @@ export function DestinationStep({
                   // otherwise blank unless the user picks.
                   emoji: initialGroupFormValues.emoji,
                   color: initialGroupFormValues.color,
+                  defaultEntryCurrencyCode:
+                    initialGroupFormValues.defaultEntryCurrencyCode,
                 }}
                 currencyLocked={currencyLocked}
                 hideNameField={hideNameField}
@@ -142,6 +144,8 @@ export function DestinationStep({
                       // same blank/pick/none tri-state as group creation.
                       emoji: values.emoji,
                       color: values.color,
+                      defaultEntryCurrencyCode:
+                        values.defaultEntryCurrencyCode ?? '',
                     },
                   })
                 }}

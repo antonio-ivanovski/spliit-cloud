@@ -80,6 +80,9 @@ export type CloudImportInput = {
     // ''/null = explicitly none, else the pick.
     emoji?: string
     color?: string | null
+    // Wizard entry-currency pick; omitted = untouched (restore the export),
+    // ''/null = same as settlement, else the ISO code.
+    defaultEntryCurrencyCode?: string | null
   }
   archived: boolean
   participants: CloudImportParticipantMapping[]
@@ -958,6 +961,23 @@ export async function importCloudGroup(
         if (isGroupColorId(value)) return value
         return normalizeHexColor(value) ?? undefined
       })()
+      // Restore the exported entry default when the bundle carries it (newer
+      // exports); absent values restore as same-as-settlement, matching
+      // pre-entry bundles. Explicit wizard picks override the export;
+      // omitted (untouched) keeps the restore. Same-as-settlement and custom
+      // settlements normalize to null.
+      const settlementCode = input.groupFormValues.currencyCode || null
+      const exportedEntry =
+        typeof manifest.group.defaultEntryCurrencyCode === 'string' &&
+        manifest.group.defaultEntryCurrencyCode.length > 0
+          ? manifest.group.defaultEntryCurrencyCode
+          : undefined
+      const overrideEntry =
+        input.groupFormValues.defaultEntryCurrencyCode !== undefined
+          ? input.groupFormValues.defaultEntryCurrencyCode || null
+          : undefined
+      const restoredEntry =
+        overrideEntry !== undefined ? overrideEntry : (exportedEntry ?? null)
       const createdGroup = await tx.group.create({
         data: {
           id: randomId(),
@@ -971,6 +991,10 @@ export async function importCloudGroup(
           color:
             (overrideColor !== undefined ? overrideColor : exportedColor) ??
             null,
+          defaultEntryCurrencyCode:
+            settlementCode && restoredEntry && restoredEntry !== settlementCode
+              ? restoredEntry
+              : null,
           information: input.groupFormValues.information ?? null,
           archived: false,
           groupType: 'GROUP',

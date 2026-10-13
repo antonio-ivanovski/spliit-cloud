@@ -1423,9 +1423,9 @@
       "description": "We’ll use it to display amounts."
     },
     "CurrencyCodeField": {
-      "label": "Main currency",
-      "createDescription": "All amounts and balances will be in this currency.",
-      "editDescription": "All amounts and balances will be in this currency. Changing this will NOT convert expenses already entered, except when the currency has different \"minor units\" than the current one (e.g. changing from US Dollar to Japanese Yen)",
+      "label": "Settlement currency",
+      "createDescription": "Balances, totals and who-owes-whom are calculated in this currency. Pick what cards actually charge, usually your home currency.",
+      "editDescription": "Balances, totals and who-owes-whom are calculated in this currency. Changing this will NOT convert expenses already entered, except when the currency has different \"minor units\" than the current one (e.g. changing from US Dollar to Japanese Yen)",
       "customOption": "Custom",
       "lockedAfterExpenses": "The currency is locked because this group already has expenses."
     },
@@ -1493,6 +1493,12 @@
       "customColorTile": "Custom color…",
       "autoMovedHint": "Moved {emoji} out of the name into the group emoji.",
       "undoMove": "Undo"
+    },
+    "EntryCurrencyCodeField": {
+      "description": "New expenses start in {entry} but settle in {settlement}.",
+      "label": "Default entry currency",
+      "preview": "Receipts in {entry} settle as {settlement}.",
+      "showOption": "Entering expenses in another currency?"
     }
   },
   "ExpenseForm": {
@@ -2948,7 +2954,8 @@
         "emoji": "Emoji",
         "color": "Color",
         "subgroups": "Subgroups",
-        "splitPresets": "Split presets"
+        "splitPresets": "Split presets",
+        "defaultEntryCurrencyCode": "Default entry currency"
       }
     },
     "member": {

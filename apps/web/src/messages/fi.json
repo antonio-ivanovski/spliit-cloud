@@ -694,9 +694,9 @@
       "description": "Näytetään rahasummien yhteydessä."
     },
     "CurrencyCodeField": {
-      "label": "Päävaluutta",
-      "createDescription": "Kaikki summat ja saldot näytetään tässä valuutassa.",
-      "editDescription": "Kaikki summat ja saldot näytetään tässä valuutassa. Tämän muuttaminen EI muunna jo syötettyjä kuluja, paitsi jos valuutalla on eri \"pienemmät yksiköt\" kuin nykyisellä (esim. vaihdettaessa Yhdysvaltain dollarista Japanin jeniin)",
+      "label": "Tasausvaluutta",
+      "createDescription": "Saldot, summat ja velat lasketaan tässä valuutassa. Valitse se valuutta, jota kortit oikeasti veloittavat, yleensä kotivaluuttasi.",
+      "editDescription": "Saldot, summat ja velat lasketaan tässä valuutassa. Tämän muuttaminen EI muunna jo syötettyjä kuluja, paitsi jos valuutalla on eri \"pienemmät yksiköt\" kuin nykyisellä (esim. vaihdettaessa Yhdysvaltain dollarista Japanin jeniin)",
       "customOption": "Mukautettu",
       "lockedAfterExpenses": "Valuutta on lukittu, koska tällä ryhmällä on jo kuluja."
     },
@@ -764,6 +764,12 @@
       "customColorTile": "Oma väri…",
       "autoMovedHint": "{emoji} siirrettiin nimestä ryhmän emojiksi.",
       "undoMove": "Peruuta"
+    },
+    "EntryCurrencyCodeField": {
+      "description": "Uudet kulut alkavat valuutassa {entry}, mutta tasataan valuutassa {settlement}.",
+      "label": "Oletuskirjausvaluutta",
+      "preview": "Kuitit valuutassa {entry} tasataan valuuttana {settlement}.",
+      "showOption": "Kirjaatko kuluja toisessa valuutassa?"
     }
   },
   "ExpenseForm": {
@@ -2801,7 +2807,8 @@
         "emoji": "Emoji",
         "color": "Väri",
         "subgroups": "Alaryhmät",
-        "splitPresets": "Jakomallit"
+        "splitPresets": "Jakomallit",
+        "defaultEntryCurrencyCode": "Oletuskirjausvaluutta"
       }
     },
     "member": {

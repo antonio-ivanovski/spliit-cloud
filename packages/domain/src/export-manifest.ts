@@ -258,6 +258,10 @@ export const spliitGroupExportSnapshotSchema = z.object({
     // values fall back to the deterministic auto appearance on restore.
     emoji: z.string().max(32).nullable().optional(),
     color: z.string().max(32).nullable().optional(),
+    // Default entry currency, added after the appearance fields. Optional so
+    // older bundles still validate; absent restores as same-as-settlement.
+    // ISO code, or null/empty for same as settlement.
+    defaultEntryCurrencyCode: z.string().max(4).nullable().optional(),
     createdAt: isoDateTime,
     ledger: z.object({
       sourceId,

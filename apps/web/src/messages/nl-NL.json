@@ -714,9 +714,9 @@
       "description": "Die gebruiken we om de bedragen in de groep aan te geven."
     },
     "CurrencyCodeField": {
-      "label": "Hoofdvaluta",
-      "createDescription": "Alle hoeveelheden en saldi worden in deze valuta weergegeven.",
-      "editDescription": "Alle bedragen en saldi worden in deze valuta weergegeven. Als je dit wijzigt, worden reeds ingevoerde uitgaven NIET omgerekend, behalve wanneer de valuta andere \"kleinste eenheden\" heeft dan de huidige (bijvoorbeeld bij een wijziging van Amerikaanse dollar naar Japanse yen)",
+      "label": "Verrekenvaluta",
+      "createDescription": "Saldi, totalen en onderlinge schulden worden in deze valuta berekend. Kies waarmee kaarten echt afschrijven, meestal je eigen valuta.",
+      "editDescription": "Saldi, totalen en onderlinge schulden worden in deze valuta berekend. Als je dit wijzigt, worden reeds ingevoerde uitgaven NIET omgerekend, behalve wanneer de valuta andere \"kleinste eenheden\" heeft dan de huidige (bijvoorbeeld bij een wijziging van Amerikaanse dollar naar Japanse yen)",
       "customOption": "Aangepast",
       "lockedAfterExpenses": "De valuta is vergrendeld omdat deze groep al uitgaven heeft."
     },
@@ -784,6 +784,12 @@
       "customColorTile": "Aangepaste kleur…",
       "autoMovedHint": "{emoji} is uit de naam naar de groepsemoji verplaatst.",
       "undoMove": "Ongedaan maken"
+    },
+    "EntryCurrencyCodeField": {
+      "description": "Nieuwe uitgaven beginnen in {entry}, maar worden verrekend in {settlement}.",
+      "label": "Standaardinvoervaluta",
+      "preview": "Bonnetjes in {entry} worden verrekend als {settlement}.",
+      "showOption": "Uitgaven in een andere valuta invoeren?"
     }
   },
   "ExpenseForm": {
@@ -2833,7 +2839,8 @@
         "emoji": "Emoji",
         "color": "Kleur",
         "subgroups": "Subgroepen",
-        "splitPresets": "Deelvoorinstellingen"
+        "splitPresets": "Deelvoorinstellingen",
+        "defaultEntryCurrencyCode": "Standaardinvoervaluta"
       }
     },
     "member": {

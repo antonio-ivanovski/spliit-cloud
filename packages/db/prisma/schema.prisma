@@ -675,6 +675,10 @@ model Group {
   defaultPaidByPresetId String?
   defaultPaidForPreset   SplitPreset? @relation("GroupDefaultPaidFor", fields: [defaultPaidForPresetId], references: [id], onDelete: SetNull)
   defaultPaidForPresetId String?
+  // Default currency new expenses are entered in (group-wide). Null means
+  // same as the ledger settlement currency. Editable anytime — it only
+  // affects new expense defaults, never rewrites stored expenses.
+  defaultEntryCurrencyCode String?
   budgets            GroupBudget[]
   subgroupsEnabled   Boolean                    @default(false)
   subgroups          Subgroup[]

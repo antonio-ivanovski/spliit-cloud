@@ -574,6 +574,96 @@ describe('prepareCloudImport', () => {
     })
   })
 
+  it('restores the exported entry default unless the wizard overrides it', async () => {
+    async function runEntryImport(
+      manifestGroup: { defaultEntryCurrencyCode?: string | null },
+      entryPick?: string | null,
+    ) {
+      const groupCreateData: Array<Record<string, unknown>> = []
+      const tx = {
+        ledger: {
+          create: vi.fn(async ({ data }: { data: { id: string } }) => ({
+            id: data.id,
+            currencyCode: 'USD',
+          })),
+        },
+        group: {
+          findFirst: vi.fn(async () => null),
+          create: vi.fn(async ({ data }: { data: { id: string } }) => {
+            groupCreateData.push(data)
+            return { id: data.id }
+          }),
+          update: vi.fn(async () => ({})),
+        },
+        groupInvitation: { findFirst: vi.fn(async () => null) },
+        groupMember: { create: vi.fn(async () => ({ id: 'member-1' })) },
+        ledgerParticipant: {
+          create: vi.fn(async ({ data }: { data: { id?: string } }) => ({
+            id: data.id ?? 'actor-participant',
+          })),
+          findMany: vi.fn(async () => []),
+        },
+        accountGroupPreference: {
+          upsert: vi.fn(async () => ({ id: 'group-pref-1' })),
+        },
+        splitPreset: {
+          create: vi.fn(async () => ({ id: 'preset-1' })),
+          createMany: vi.fn(async () => ({ count: 0 })),
+          findMany: vi.fn(async () => []),
+        },
+        splitPresetParticipant: {
+          createMany: vi.fn(async () => ({ count: 0 })),
+        },
+        activity: {
+          create: vi.fn(async () => ({ id: 'activity-1' })),
+        },
+      }
+
+      await importCloudGroup(
+        input({
+          manifest: {
+            ...manifest,
+            group: { ...manifest.group, ...manifestGroup },
+          },
+          groupFormValues: {
+            name: 'Trip copy',
+            information: null,
+            currency: '$',
+            currencyCode: 'USD',
+            ...(entryPick === undefined
+              ? {}
+              : { defaultEntryCurrencyCode: entryPick }),
+          },
+        }),
+        { accountId: 'account-1' },
+        {
+          tx: tx as never,
+          prepared: { documents: new Map(), promotedDocumentUrls: [] },
+        },
+      )
+      return groupCreateData[0] as {
+        defaultEntryCurrencyCode: string | null
+      }
+    }
+
+    // Untouched wizard restores the export.
+    expect(
+      (await runEntryImport({ defaultEntryCurrencyCode: 'EUR' }))
+        .defaultEntryCurrencyCode,
+    ).toBe('EUR')
+    // Explicit picks override the export — including clearing a stored
+    // entry back to same-as-settlement (USD === settlement here).
+    expect(
+      (await runEntryImport({ defaultEntryCurrencyCode: 'EUR' }, 'USD'))
+        .defaultEntryCurrencyCode,
+    ).toBeNull()
+    expect((await runEntryImport({}, 'EUR')).defaultEntryCurrencyCode).toBe(
+      'EUR',
+    )
+    // Pre-entry bundles restore as same-as-settlement.
+    expect((await runEntryImport({})).defaultEntryCurrencyCode).toBeNull()
+  })
+
   it('restores account group preferences with remapped participant ids', async () => {
     const participantIds: string[] = []
     const tx = {

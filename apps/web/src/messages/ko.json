@@ -590,9 +590,9 @@
       "description": "금액 표시할 때 이걸 사용할 거예요."
     },
     "CurrencyCodeField": {
-      "label": "기본 통화",
-      "createDescription": "금액, 잔액 전부 이 통화로 표시돼요.",
-      "editDescription": "모든 금액이랑 잔액은 이 통화로 보여요. 통화를 바꿔도 이미 입력한 지출은 바뀌지 않아요. 단, (예: 미국 달러에서 일본 엔으로 바꿀 때처럼) 통화의 소수점 단위가 다를 경우에는 예외가 있을 수 있어요.",
+      "label": "정산 통화",
+      "createDescription": "잔액, 합계, 누가 누구에게 갚아야 하는지는 이 통화로 계산돼요. 카드에서 실제로 결제되는 통화를 고르세요. 보통은 자국 통화예요.",
+      "editDescription": "잔액, 합계, 누가 누구에게 갚아야 하는지는 이 통화로 계산돼요. 통화를 바꿔도 이미 입력한 지출은 바뀌지 않아요. 단, 현재 통화와 소수점 단위가 다른 통화(예: 미국 달러에서 일본 엔으로 변경)로 바꿀 때는 예외예요.",
       "customOption": "사용자 지정",
       "lockedAfterExpenses": "이 그룹에 이미 지출이 있으므로 통화가 잠겨 있습니다."
     },
@@ -664,6 +664,12 @@
       "customColorTile": "사용자 지정 색상…",
       "autoMovedHint": "{emoji}를 이름에서 그룹 이모지로 이동했습니다.",
       "undoMove": "실행 취소"
+    },
+    "EntryCurrencyCodeField": {
+      "description": "새 지출은 {entry}로 시작하지만, 정산은 {settlement}로 해요.",
+      "label": "기본 입력 통화",
+      "preview": "{entry} 영수증은 {settlement}로 정산돼요.",
+      "showOption": "다른 통화로 지출을 입력하세요?"
     }
   },
   "ExpenseForm": {
@@ -2836,7 +2842,8 @@
         "emoji": "이모지",
         "color": "색상",
         "subgroups": "하위 그룹",
-        "splitPresets": "분할 프리셋"
+        "splitPresets": "분할 프리셋",
+        "defaultEntryCurrencyCode": "기본 입력 통화"
       }
     },
     "member": {

@@ -80,6 +80,8 @@ export const groupSchema = z.object({
   invitations: z.array(groupInvitationSchema),
   currency: z.string(),
   currencyCode: z.string().nullable(),
+  // Null = same as the settlement currency.
+  defaultEntryCurrencyCode: z.string().nullable().default(null),
   participants: z.array(groupParticipantSchema),
 })
 

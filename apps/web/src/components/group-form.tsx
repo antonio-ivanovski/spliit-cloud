@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from '@tanstack/react-router'
-import { Save, UserPlus } from 'lucide-react'
+import { ChevronDown, ChevronUp, Save, UserPlus } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useForm, useFormState } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -102,6 +102,9 @@ export type Props = {
     information?: string
     currency?: string
     currencyCode?: string
+    // Group-wide default entry currency prefill (e.g. restored from a cloud
+    // export bundle). Omitted/undefined stays collapsed (same as settlement).
+    defaultEntryCurrencyCode?: string
     // Appearance prefill (e.g. restored from a cloud export bundle).
     // Omitted/undefined stays undecided (blank unless a title emoji is
     // extracted live/at mount); null/'' means explicitly none.
@@ -181,6 +184,7 @@ export function GroupForm({
           information: group.information ?? '',
           currency: group.currency ?? '',
           currencyCode: group.currencyCode ?? '',
+          defaultEntryCurrencyCode: group.defaultEntryCurrencyCode ?? '',
           emoji: group.emoji ?? initialEmojiSuggestion?.emoji,
           color: resolveGroupColor(group.color),
           // The backend ignores `participants` on update; the form's
@@ -216,6 +220,8 @@ export function GroupForm({
               getCurrency(initialCurrencyCode || 'USD')?.symbol ??
               '',
             currencyCode: initialCurrencyCode,
+            defaultEntryCurrencyCode:
+              initialValues?.defaultEntryCurrencyCode ?? '',
             // Blank unless prefilled (e.g. cloud-export restore) or picked.
             // The form schema has no null emoji lane, so a null prefill
             // (undecided export) maps to undefined; explicit '' is kept.
@@ -528,7 +534,6 @@ export function GroupForm({
                   <CurrencySelector
                     aria-label={t('CurrencyCodeField.label')}
                     currencies={currencies}
-                    // oxlint-disable-next-line react/incompatible-library -- react-hook-form watch reads during render by design.
                     defaultValue={form.watch(field.name) ?? ''}
                     pinnedCurrencyCode={form.watch(field.name) ?? undefined}
                     disabled={readOnly || isArchived || currencyLocked}
@@ -551,10 +556,136 @@ export function GroupForm({
                           shouldTouch: true,
                           shouldDirty: true,
                         })
+                      // Keep the collapsed-while-matching invariant: if the
+                      // settlement is changed to the stored entry, the entry
+                      // is same-as-settlement — clear and collapse.
+                      if (
+                        newCurrency.length > 0 &&
+                        form.getValues('defaultEntryCurrencyCode') ===
+                          newCurrency
+                      )
+                        form.setValue('defaultEntryCurrencyCode', '', {
+                          shouldValidate: true,
+                          shouldTouch: true,
+                          shouldDirty: true,
+                        })
                     }}
                     isLoading={false}
                   />
                   <FormMessage />
+                  {/* Optional group-wide default entry currency, tucked
+                      directly under the settlement picker. Hidden entirely
+                      for custom settlements (no foreign entry to offer) and
+                      collapsed to a subtle disclosure while it matches the
+                      settlement. */}
+                  {!!form.watch('currencyCode')?.length &&
+                    (!form.watch('defaultEntryCurrencyCode')?.length ? (
+                      <button
+                        type="button"
+                        className="mt-1 flex items-center gap-1 py-0.5 text-left text-[13px] font-normal text-muted-foreground transition-colors hover:text-foreground"
+                        disabled={readOnly || isArchived}
+                        aria-expanded={false}
+                        onClick={() => {
+                          form.setValue(
+                            'defaultEntryCurrencyCode',
+                            form.getValues('currencyCode') ?? '',
+                            {
+                              shouldDirty: true,
+                              shouldTouch: true,
+                              shouldValidate: true,
+                            },
+                          )
+                        }}
+                      >
+                        {t('EntryCurrencyCodeField.showOption')}
+                        <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
+                      </button>
+                    ) : (
+                      <FormField
+                        control={form.control}
+                        name="defaultEntryCurrencyCode"
+                        render={({ field }) => {
+                          const settlementCode =
+                            // oxlint-disable-next-line react/incompatible-library -- react-hook-form watch reads during render by design.
+                            form.watch('currencyCode') ?? ''
+                          const entryCode = field.value ?? ''
+                          return (
+                            <FormItem className="mt-3 min-w-0">
+                              {/* Section header doubles as the collapse
+                                  toggle: the chevron stays in the header in
+                                  both states, accordion-style. Collapsing
+                                  clears back to same-as-settlement. */}
+                              <button
+                                type="button"
+                                className="flex items-center gap-1 py-0.5 text-left text-sm font-medium transition-colors hover:text-muted-foreground"
+                                disabled={readOnly || isArchived}
+                                aria-expanded={true}
+                                onClick={() => {
+                                  form.setValue(
+                                    'defaultEntryCurrencyCode',
+                                    '',
+                                    {
+                                      shouldDirty: true,
+                                      shouldTouch: true,
+                                      shouldValidate: true,
+                                    },
+                                  )
+                                }}
+                              >
+                                {t('EntryCurrencyCodeField.label')}
+                                <ChevronUp className="h-4 w-4 shrink-0 opacity-50" />
+                              </button>
+                              <FormDescription>
+                                {t('EntryCurrencyCodeField.description', {
+                                  entry: entryCode || settlementCode,
+                                  settlement: settlementCode,
+                                })}
+                              </FormDescription>
+                              <CurrencySelector
+                                aria-label={t('EntryCurrencyCodeField.label')}
+                                currencies={currencies}
+                                defaultValue={entryCode}
+                                pinnedCurrencyCode={entryCode || undefined}
+                                disabled={readOnly || isArchived}
+                                onValueChange={(newCurrency) => {
+                                  // Picking the settlement currency is the
+                                  // same as "same as settlement": clear and
+                                  // collapse back to the subtle trigger.
+                                  if (
+                                    newCurrency === settlementCode ||
+                                    newCurrency.length === 0
+                                  ) {
+                                    form.setValue(
+                                      'defaultEntryCurrencyCode',
+                                      '',
+                                      {
+                                        shouldDirty: true,
+                                        shouldTouch: true,
+                                        shouldValidate: true,
+                                      },
+                                    )
+                                  } else {
+                                    field.onChange(newCurrency)
+                                  }
+                                }}
+                                isLoading={false}
+                              />
+                              {entryCode.length > 0 &&
+                                settlementCode.length > 0 &&
+                                entryCode !== settlementCode && (
+                                  <p className="text-xs text-muted-foreground">
+                                    {t('EntryCurrencyCodeField.preview', {
+                                      entry: entryCode,
+                                      settlement: settlementCode,
+                                    })}
+                                  </p>
+                                )}
+                              <FormMessage />
+                            </FormItem>
+                          )
+                        }}
+                      />
+                    ))}
                 </FormItem>
               )}
             />

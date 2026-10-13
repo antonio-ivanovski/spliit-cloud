@@ -204,6 +204,7 @@ function makeSnapshot(
         invitations: [],
         currency: 'USD',
         currencyCode: 'USD',
+        defaultEntryCurrencyCode: null,
         participants: [],
       },
       displayName: `Group ${groupId}`,

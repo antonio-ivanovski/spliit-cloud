@@ -53,6 +53,7 @@ const mockGroup = {
   ledgerId: 'ledger-1',
   currency: '$',
   currencyCode: 'USD',
+  defaultEntryCurrencyCode: null,
   groupType: 'GROUP' as const,
   emoji: null,
   color: null,
@@ -168,7 +169,7 @@ describe('GroupForm', () => {
     )
 
     expect(
-      screen.getByRole('combobox', { name: 'Main currency' }),
+      screen.getByRole('combobox', { name: 'Settlement currency' }),
     ).toHaveTextContent('Euro')
   })
 
@@ -184,7 +185,7 @@ describe('GroupForm', () => {
 
     // Currency selector trigger (combobox) should be present
     expect(
-      screen.getByRole('combobox', { name: 'Main currency' }),
+      screen.getByRole('combobox', { name: 'Settlement currency' }),
     ).toBeInTheDocument()
 
     // Create button should be present in create mode
@@ -308,7 +309,7 @@ describe('GroupForm', () => {
     render(<GroupForm onSubmit={onSubmit} />)
 
     expect(
-      screen.getByRole('combobox', { name: 'Main currency' }),
+      screen.getByRole('combobox', { name: 'Settlement currency' }),
     ).toBeInTheDocument()
   })
 
@@ -367,7 +368,7 @@ describe('GroupForm', () => {
     )
 
     expect(
-      screen.getByRole('combobox', { name: 'Main currency' }),
+      screen.getByRole('combobox', { name: 'Settlement currency' }),
     ).not.toBeDisabled()
   })
 
@@ -397,7 +398,7 @@ describe('GroupForm', () => {
     )
 
     const combobox = screen.getByRole('combobox', {
-      name: 'Main currency',
+      name: 'Settlement currency',
     })
     await user.click(combobox)
 
@@ -418,6 +419,184 @@ describe('GroupForm', () => {
     expect(values).toHaveProperty('currencyCode', 'EUR')
     expect(values).toHaveProperty('information', 'Updated info text')
     expect(values).not.toHaveProperty('timeZone')
+  })
+
+  // ── Default entry currency (optional, collapsed by default) ──────
+
+  it('collapses the entry currency option when it matches settlement', () => {
+    const onSubmit = vi.fn()
+    render(<GroupForm onSubmit={onSubmit} />)
+
+    expect(
+      screen.getByRole('button', {
+        name: /entering expenses in another currency/i,
+      }),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByRole('combobox', { name: 'Default entry currency' }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('expands, picks, and submits a different entry currency', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(<GroupForm onSubmit={onSubmit} />)
+
+    await user.click(
+      screen.getByRole('button', {
+        name: /entering expenses in another currency/i,
+      }),
+    )
+
+    const entryCombobox = screen.getByRole('combobox', {
+      name: 'Default entry currency',
+    })
+    await user.click(entryCombobox)
+    await user.click(await screen.findByRole('option', { name: /Euro/ }))
+
+    await user.type(screen.getByRole('textbox', { name: /name/i }), 'Euro Trip')
+    await user.click(screen.getByRole('button', { name: /create/i }))
+
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1)
+    })
+    expect(onSubmit.mock.calls[0][0]).toHaveProperty(
+      'defaultEntryCurrencyCode',
+      'EUR',
+    )
+  })
+
+  it('collapses back to same-as-settlement via the section header', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(<GroupForm onSubmit={onSubmit} />)
+
+    await user.click(
+      screen.getByRole('button', {
+        name: /entering expenses in another currency/i,
+      }),
+    )
+    expect(
+      screen.getByRole('combobox', { name: 'Default entry currency' }),
+    ).toBeInTheDocument()
+
+    // The expanded section header doubles as the collapse toggle.
+    await user.click(
+      screen.getByRole('button', { name: 'Default entry currency' }),
+    )
+    expect(
+      screen.queryByRole('combobox', { name: 'Default entry currency' }),
+    ).not.toBeInTheDocument()
+
+    await user.type(screen.getByRole('textbox', { name: /name/i }), 'Home Trip')
+    await user.click(screen.getByRole('button', { name: /create/i }))
+
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1)
+    })
+    expect(onSubmit.mock.calls[0][0]).toHaveProperty(
+      'defaultEntryCurrencyCode',
+      '',
+    )
+  })
+
+  it('auto-collapses when the settlement currency is picked as entry', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(<GroupForm onSubmit={onSubmit} />)
+
+    await user.click(
+      screen.getByRole('button', {
+        name: /entering expenses in another currency/i,
+      }),
+    )
+    const entryCombobox = screen.getByRole('combobox', {
+      name: 'Default entry currency',
+    })
+    // Default settlement in create mode is USD: picking it back collapses.
+    await user.click(entryCombobox)
+    await user.click(await screen.findByRole('option', { name: /US Dollar/ }))
+
+    expect(
+      screen.queryByRole('combobox', { name: 'Default entry currency' }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.getByRole('button', {
+        name: /entering expenses in another currency/i,
+      }),
+    ).toBeInTheDocument()
+  })
+
+  it('collapses when the settlement is changed to match the entry', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(<GroupForm onSubmit={onSubmit} />)
+
+    await user.click(
+      screen.getByRole('button', {
+        name: /entering expenses in another currency/i,
+      }),
+    )
+    const entryCombobox = screen.getByRole('combobox', {
+      name: 'Default entry currency',
+    })
+    await user.click(entryCombobox)
+    await user.click(await screen.findByRole('option', { name: /Euro/ }))
+    expect(
+      screen.getByRole('combobox', { name: 'Default entry currency' }),
+    ).toBeInTheDocument()
+
+    // Changing the settlement to EUR makes the entry same-as-settlement.
+    await user.click(
+      screen.getByRole('combobox', { name: 'Settlement currency' }),
+    )
+    await user.click(await screen.findByRole('option', { name: /Euro/ }))
+
+    expect(
+      screen.queryByRole('combobox', { name: 'Default entry currency' }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.getByRole('button', {
+        name: /entering expenses in another currency/i,
+      }),
+    ).toBeInTheDocument()
+  })
+
+  it('edit mode expands a stored entry currency with a preview', () => {
+    const onSubmit = vi.fn()
+    render(
+      <GroupForm
+        group={
+          {
+            ...mockGroup,
+            currency: '£',
+            currencyCode: 'GBP',
+            defaultEntryCurrencyCode: 'EUR',
+          } as Props['group']
+        }
+        onSubmit={onSubmit}
+      />,
+    )
+
+    expect(
+      screen.getByRole('combobox', { name: 'Default entry currency' }),
+    ).toBeInTheDocument()
+    expect(screen.getByText(/settle as GBP/)).toBeInTheDocument()
+  })
+
+  it('submits an empty entry currency when collapsed', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(<GroupForm onSubmit={onSubmit} />)
+
+    await user.type(
+      screen.getByRole('textbox', { name: /name/i }),
+      'My Vacation',
+    )
+    await user.click(screen.getByRole('button', { name: /create/i }))
+
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1)
+    })
+    expect(onSubmit.mock.calls[0][0]).toHaveProperty(
+      'defaultEntryCurrencyCode',
+      '',
+    )
   })
 
   // ── Appearance (inline pickers) ────────────────────────────────────

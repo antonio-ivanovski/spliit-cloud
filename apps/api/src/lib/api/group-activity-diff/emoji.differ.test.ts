@@ -9,6 +9,7 @@ function makeGroup(overrides: Partial<DiffableGroup> = {}): DiffableGroup {
     information: null,
     currency: '$',
     currencyCode: 'USD',
+    defaultEntryCurrencyCode: null,
     emoji: null,
     color: null,
     ...overrides,

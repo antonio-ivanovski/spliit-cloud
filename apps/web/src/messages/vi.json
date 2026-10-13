@@ -1395,9 +1395,9 @@
       "description": "Chúng tôi sẽ dùng nó để hiển thị số tiền."
     },
     "CurrencyCodeField": {
-      "label": "Loại tiền",
-      "createDescription": "Mọi số tiền và số dư sẽ được tính bằng loại tiền này.",
-      "editDescription": "Mọi số tiền và số dư sẽ tính bằng loại tiền này. Việc đổi loại tiền KHÔNG chuyển đổi các chi phí đã nhập, trừ khi loại tiền mới có 'đơn vị nhỏ' khác loại tiền hiện tại (ví dụ đổi từ Đô la Mỹ sang Yên Nhật).",
+      "label": "Loại tiền tất toán",
+      "createDescription": "Số dư, tổng cộng và ai nợ ai bao nhiêu được tính bằng loại tiền này. Hãy chọn loại tiền mà thẻ thực sự tính phí, thường là tiền nước bạn.",
+      "editDescription": "Số dư, tổng cộng và ai nợ ai bao nhiêu được tính bằng loại tiền này. Việc đổi loại tiền KHÔNG chuyển đổi các chi phí đã nhập, trừ khi loại tiền mới có 'đơn vị nhỏ' khác loại tiền hiện tại (ví dụ đổi từ Đô la Mỹ sang Yên Nhật).",
       "customOption": "Tùy chỉnh",
       "lockedAfterExpenses": "Không thể thay đổi sau khi có chi phí."
     },
@@ -1465,6 +1465,12 @@
       "customColorTile": "Màu tùy chỉnh…",
       "autoMovedHint": "Đã chuyển {emoji} ra khỏi tên thành emoji nhóm.",
       "undoMove": "Hoàn tác"
+    },
+    "EntryCurrencyCodeField": {
+      "description": "Chi phí mới bắt đầu bằng {entry} nhưng vẫn tất toán bằng {settlement}.",
+      "label": "Loại tiền nhập mặc định",
+      "preview": "Hóa đơn bằng {entry} được tất toán thành {settlement}.",
+      "showOption": "Đang nhập chi phí bằng loại tiền khác?"
     }
   },
   "ExpenseForm": {
@@ -2915,7 +2921,8 @@
         "emoji": "Emoji",
         "color": "Màu",
         "subgroups": "Nhóm con",
-        "splitPresets": "Mẫu chia"
+        "splitPresets": "Mẫu chia",
+        "defaultEntryCurrencyCode": "Loại tiền nhập mặc định"
       }
     },
     "member": {

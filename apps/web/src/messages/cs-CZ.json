@@ -706,9 +706,9 @@
       "description": "Použijeme ho pro zobrazení částek."
     },
     "CurrencyCodeField": {
-      "label": "Hlavní měna",
-      "createDescription": "Všechny částky a zůstatky budou v této měně.",
-      "editDescription": "Všechny částky a zůstatky budou v této měně. Změna NEPŘEPOČÍTÁ již zadané výdaje, s výjimkou případů, kdy má měna jiné \"vedlejší jednotky\" než stávající (např. změna z amerického dolaru na japonský jen).",
+      "label": "Měna vyrovnání",
+      "createDescription": "Zůstatky, součty a to, kdo komu dluží, se počítají v této měně. Zvolte to, co karty skutečně strhávají, obvykle vaši domácí měnu.",
+      "editDescription": "Zůstatky, součty a to, kdo komu dluží, se počítají v této měně. Změna NEPŘEPOČÍTÁ již zadané výdaje, s výjimkou případů, kdy má měna jiné „dílčí jednotky“ než stávající (např. změna z amerického dolaru na japonský jen).",
       "customOption": "Vlastní",
       "lockedAfterExpenses": "Měna je uzamčena, protože tato skupina již má výdaje."
     },
@@ -776,6 +776,12 @@
       "customColorTile": "Vlastní barva…",
       "autoMovedHint": "{emoji} bylo přesunuto z názvu do emoji skupiny.",
       "undoMove": "Vrátit zpět"
+    },
+    "EntryCurrencyCodeField": {
+      "description": "Nové výdaje začínají v {entry}, ale vyrovnávají se v {settlement}.",
+      "label": "Výchozí měna zadávání",
+      "preview": "Účtenky v {entry} se vyrovnají jako {settlement}.",
+      "showOption": "Zadáváte výdaje v jiné měně?"
     }
   },
   "ExpenseForm": {
@@ -2825,7 +2831,8 @@
         "emoji": "Emoji",
         "color": "Barva",
         "subgroups": "Podskupiny",
-        "splitPresets": "Předvolby rozdělení"
+        "splitPresets": "Předvolby rozdělení",
+        "defaultEntryCurrencyCode": "Výchozí měna zadávání"
       }
     },
     "member": {

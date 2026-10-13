@@ -72,6 +72,12 @@ const cloudGroupFormValuesSchema = z.object({
   color: z
     .union([z.enum(GROUP_COLOR_IDS), z.string().regex(/^#[0-9a-fA-F]{6}$/)])
     .nullish(),
+  // Wizard entry-currency pick overrides the exported entry default on
+  // submit; omitted means untouched (the export is restored). Lane mirrors
+  // `groupFormSchema`: ''/null = same as settlement, else the pick.
+  defaultEntryCurrencyCode: z
+    .union([z.string().min(3).max(4).nullish(), z.literal('')])
+    .optional(),
 })
 
 const importedPresetSchema = z.object({

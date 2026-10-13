@@ -695,9 +695,9 @@
       "description": "Zenbatekoak erakusteko erabiliko dugu."
     },
     "CurrencyCodeField": {
-      "label": "Moneta nagusia",
-      "createDescription": "Zenbatekoak eta saldoak monetan honetan adieraziko dira.",
-      "editDescription": "Zenbateko eta saldo guztiak moneta honetan adieraziko dira. Hori aldatuz gero, EZ dira bihurtuko lehendik sartutako gastuak, dibisak egungoaren \"unitate txiki\" desberdinak dituenean izan ezik (adib. AEBko dolarretik Japoniako yenera aldatuz)",
+      "label": "Zor-kitapenaren moneta",
+      "createDescription": "Saldoak, totalak eta nork nori zor dion moneta honetan kalkulatzen dira. Aukeratu txartelek benetan kobratzen duten moneta, normalean zure ohiko moneta.",
+      "editDescription": "Saldoak, totalak eta nork nori zor dion moneta honetan kalkulatzen dira. Hori aldatuz gero, EZ dira bihurtuko lehendik sartutako gastuak, dibisak egungoaren \"unitate txiki\" desberdinak dituenean izan ezik (adib. AEBko dolarretik Japoniako yenera aldatuz)",
       "customOption": "Pertsonalizatua",
       "lockedAfterExpenses": "Moneta blokeatuta dago talde honek jada gastuak dituelako."
     },
@@ -769,6 +769,12 @@
       "customColorTile": "Kolore pertsonalizatua…",
       "autoMovedHint": "{emoji} izenetik taldearen emojira mugitu dugu.",
       "undoMove": "Desegin"
+    },
+    "EntryCurrencyCodeField": {
+      "description": "Gastu berriak {entry} monetan hasten dira, baina {settlement} monetan kitatzen dira.",
+      "label": "Sarrerako lehenetsitako moneta",
+      "preview": "Ordainagiriak {entry} monetan sartzen dira eta {settlement} monetan kitatzen dira.",
+      "showOption": "Gastuak beste moneta batean sartzen?"
     }
   },
   "ExpenseForm": {
@@ -2813,7 +2819,8 @@
         "emoji": "Emojia",
         "color": "Kolorea",
         "subgroups": "Azpitaldeak",
-        "splitPresets": "Banaketa-aurrezarpenak"
+        "splitPresets": "Banaketa-aurrezarpenak",
+        "defaultEntryCurrencyCode": "Sarrerako lehenetsitako moneta"
       }
     },
     "member": {

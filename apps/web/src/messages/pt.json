@@ -696,9 +696,9 @@
       "description": "Utilizá-lo-emos para mostrar montantes."
     },
     "CurrencyCodeField": {
-      "label": "Moeda principal",
-      "createDescription": "Todos os montantes e saldos vão estar nesta moeda.",
-      "editDescription": "Todos os montantes e saldos vão estar nesta moeda. Ao alterares isto NÃO vão ser convertidas despesas já inseridas, excepto quando a moeda tem \"unidades monetárias menores\" diferentes da atual (ex. alterar de Dólar Americano para Yen Japonês)",
+      "label": "Moeda de liquidação",
+      "createDescription": "Os saldos, os totais e quem deve a quem são calculados nesta moeda. Escolhe a moeda que os cartões realmente cobram, normalmente a tua moeda habitual.",
+      "editDescription": "Os saldos, os totais e quem deve a quem são calculados nesta moeda. Ao alterares isto NÃO vão ser convertidas despesas já inseridas, excepto quando a moeda tem \"unidades monetárias menores\" diferentes da atual (ex. alterar de Dólar Americano para Yen Japonês)",
       "customOption": "Customizado",
       "lockedAfterExpenses": "A moeda está bloqueada porque este grupo já tem despesas."
     },
@@ -770,6 +770,12 @@
       "customColorTile": "Cor personalizada…",
       "autoMovedHint": "{emoji} foi movido do nome para o emoji do grupo.",
       "undoMove": "Desfazer"
+    },
+    "EntryCurrencyCodeField": {
+      "description": "As novas despesas começam em {entry}, mas são liquidadas em {settlement}.",
+      "label": "Moeda de entrada predefinida",
+      "preview": "Os recibos em {entry} são liquidados como {settlement}.",
+      "showOption": "Introduzes despesas noutra moeda?"
     }
   },
   "Auth": {
@@ -2815,7 +2821,8 @@
         "emoji": "Emoji",
         "color": "Cor",
         "subgroups": "Subgrupos",
-        "splitPresets": "Predefinições de divisão"
+        "splitPresets": "Predefinições de divisão",
+        "defaultEntryCurrencyCode": "Moeda de entrada predefinida"
       }
     },
     "member": {

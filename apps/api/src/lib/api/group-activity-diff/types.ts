@@ -10,6 +10,7 @@ export type DiffableGroup = {
   information: string | null
   currency: string
   currencyCode: string | null
+  defaultEntryCurrencyCode: string | null
   emoji: string | null
   color: string | null
 }

@@ -720,9 +720,9 @@
     "readOnlyBack": "Gruba dön",
     "archivedNotice": "Bu grup arşivlendi. Ayarları donduruldu ve artık değiştirilemez.",
     "CurrencyCodeField": {
-      "label": "Ana para birimi",
-      "createDescription": "Tüm tutarlar ve bakiyeler bu para biriminde olacaktır.",
-      "editDescription": "Tüm tutarlar ve bakiyeler bu para biriminde olacaktır. Bunu değiştirmek, önceden girilen giderleri DÖNÜŞTÜRMEZ, ancak para biriminin mevcut olandan farklı \"alt birimleri\" varsa dönüştürür (ör. ABD Doları'ndan Japon Yeni'ne değiştirme).",
+      "label": "Borç kapatma para birimi",
+      "createDescription": "Bakiyeler, toplamlar ve kimin kime borçlu olduğu bu para biriminde hesaplanır. Kartların gerçekten tahsil ettiği, genellikle kendi ülkenin para birimini seç.",
+      "editDescription": "Bakiyeler, toplamlar ve kimin kime borçlu olduğu bu para biriminde hesaplanır. Bunu değiştirmek, önceden girilen giderleri DÖNÜŞTÜRMEZ, ancak para biriminin mevcut olandan farklı \"alt birimleri\" varsa dönüştürür (ör. ABD Doları'ndan Japon Yeni'ne değiştirme).",
       "customOption": "Özel",
       "lockedAfterExpenses": "Para birimi kilitli çünkü bu grupta zaten harcamalar var."
     },
@@ -764,6 +764,12 @@
       "customColorTile": "Özel renk…",
       "autoMovedHint": "{emoji}, addan çıkarılarak grup emojisine taşındı.",
       "undoMove": "Geri al"
+    },
+    "EntryCurrencyCodeField": {
+      "description": "Yeni giderler {entry} cinsinden başlar, ancak {settlement} olarak kapatılır.",
+      "label": "Varsayılan giriş para birimi",
+      "preview": "{entry} cinsinden fişler {settlement} olarak kapatılır.",
+      "showOption": "Giderleri başka para biriminde mi giriyorsun?"
     }
   },
   "ExpenseForm": {
@@ -2805,7 +2811,8 @@
         "emoji": "Emoji",
         "color": "Renk",
         "subgroups": "Alt gruplar",
-        "splitPresets": "Bölüşüm ön ayarları"
+        "splitPresets": "Bölüşüm ön ayarları",
+        "defaultEntryCurrencyCode": "Varsayılan giriş para birimi"
       }
     },
     "member": {

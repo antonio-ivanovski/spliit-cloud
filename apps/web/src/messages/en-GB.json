@@ -50,7 +50,7 @@
       "placeholder": "£, €, $…"
     },
     "CurrencyCodeField": {
-      "editDescription": "All amounts and balances will be in this currency. Changing this will NOT convert expenses already entered, except when the currency has different \"minor units\" than the current one (e.g. changing from British Pound to Japanese Yen)"
+      "editDescription": "Balances, totals and who-owes-whom are calculated in this currency. Changing this will NOT convert expenses already entered, except when the currency has different \"minor units\" than the current one (e.g. changing from British Pound to Japanese Yen)"
     },
     "Settings": {
       "description": "These settings are set per-device, and are used to customise your experience."

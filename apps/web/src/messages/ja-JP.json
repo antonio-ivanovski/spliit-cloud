@@ -710,9 +710,9 @@
       "inviteAfterCreate": "グループを作成したら、Membersタブを開いて、メールまたは共有リンクで人を招待してください。"
     },
     "CurrencyCodeField": {
-      "label": "主な通貨",
-      "createDescription": "すべての金額および残高はこの通貨で表示されます。",
-      "editDescription": "すべての金額および残高はこの通貨で表示されます。これを変更しても、既に入力された支出は変換されません。ただし、現在の通貨と変更先の通貨で小数単位（例：米ドルから日本円へ）の扱いが異なる場合は例外です",
+      "label": "精算通貨",
+      "createDescription": "残高、合計、誰が誰にいくら支払う必要があるかはこの通貨で計算されます。カードで実際に請求される通貨を選びましょう。通常は自国の通貨です。",
+      "editDescription": "残高、合計、誰が誰にいくら支払う必要があるかはこの通貨で計算されます。これを変更しても、既に入力された支出は換算されません。ただし、現在の通貨と変更先の通貨で小数単位（例：米ドルから日本円へ）の扱いが異なる場合は例外です",
       "customOption": "カスタム",
       "lockedAfterExpenses": "このグループには既に支出があるため、通貨はロックされています。"
     },
@@ -758,6 +758,12 @@
       "customColorTile": "カスタムカラー…",
       "autoMovedHint": "{emoji} を名前からグループ絵文字に移動しました。",
       "undoMove": "元に戻す"
+    },
+    "EntryCurrencyCodeField": {
+      "description": "新しい支出は {entry} で始まりますが、精算は {settlement} で行われます。",
+      "label": "デフォルトの入力通貨",
+      "preview": "{entry} のレシートは {settlement} として精算されます。",
+      "showOption": "他の通貨で支出を入力しますか？"
     }
   },
   "ExpenseForm": {
@@ -2798,7 +2804,8 @@
         "emoji": "絵文字",
         "color": "色",
         "subgroups": "サブグループ",
-        "splitPresets": "分割プリセット"
+        "splitPresets": "分割プリセット",
+        "defaultEntryCurrencyCode": "デフォルトの入力通貨"
       }
     },
     "member": {

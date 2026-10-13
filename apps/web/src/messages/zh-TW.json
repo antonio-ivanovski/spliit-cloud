@@ -714,9 +714,9 @@
     "readOnlyBack": "返回群組",
     "archivedNotice": "此群組已封存。設定已凍結，無法再更改。",
     "CurrencyCodeField": {
-      "label": "主要貨幣",
-      "createDescription": "所有金額和餘額將以此貨幣顯示。",
-      "editDescription": "所有金額和餘額將以此貨幣顯示。更改此項不會轉換已輸入的支出，除非該貨幣與目前貨幣具有不同的「輔幣單位」（例如從美元變更為日圓）",
+      "label": "結算貨幣",
+      "createDescription": "餘額、總額以及誰欠誰均以此貨幣計算。請選擇銀行卡實際扣款的貨幣，通常是本國貨幣。",
+      "editDescription": "餘額、總額以及誰欠誰均以此貨幣計算。更改此項不會轉換已輸入的支出，除非新貨幣與目前貨幣的「輔幣單位」不同（例如從美元變更為日圓）",
       "customOption": "自訂",
       "lockedAfterExpenses": "此群組已有支出，因此貨幣已鎖定。"
     },
@@ -758,6 +758,12 @@
       "customColorTile": "自訂顏色…",
       "autoMovedHint": "已將 {emoji} 從名稱移到群組表情符號。",
       "undoMove": "取消操作"
+    },
+    "EntryCurrencyCodeField": {
+      "description": "新增支出以 {entry} 開始，但仍以 {settlement} 結算。",
+      "label": "預設輸入貨幣",
+      "preview": "{entry} 的收據將按 {settlement} 結算。",
+      "showOption": "用其他貨幣輸入支出？"
     }
   },
   "ExpenseForm": {
@@ -2798,7 +2804,8 @@
         "emoji": "表情符號",
         "color": "顏色",
         "subgroups": "子群組",
-        "splitPresets": "分攤預設"
+        "splitPresets": "分攤預設",
+        "defaultEntryCurrencyCode": "預設輸入貨幣"
       }
     },
     "member": {

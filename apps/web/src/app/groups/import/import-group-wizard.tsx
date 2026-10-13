@@ -57,6 +57,7 @@ import {
   buildImportExpenses,
   isDocumentImportFailure,
   prefillAppearanceFromManifest,
+  prefillEntryCurrencyFromManifest,
   shouldDiscardStagedDocumentTokens,
   type ImportGroupFormValues,
   type ImportStep,
@@ -378,6 +379,11 @@ export function ImportGroupWizard() {
         // silently. Validation mirrors the server restore: undecided export
         // values stay undecided, invalid ones stay blank.
         ...prefillAppearanceFromManifest(pendingCloudInspection.manifest.group),
+        // Same for the entry-currency picker: prefill only when the export
+        // carries a foreign entry worth restoring.
+        ...prefillEntryCurrencyFromManifest(
+          pendingCloudInspection.manifest.group,
+        ),
       },
       archived: pendingCloudInspection.manifest.group.archived,
     })

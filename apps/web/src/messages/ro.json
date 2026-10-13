@@ -726,9 +726,9 @@
     "readOnlyBack": "Înapoi la grup",
     "archivedNotice": "Acest grup este arhivat. Setările sale sunt înghețate și nu mai pot fi modificate.",
     "CurrencyCodeField": {
-      "label": "Moneda principală",
-      "createDescription": "Toate sumele și soldurile vor fi în această monedă.",
-      "editDescription": "Toate sumele și soldurile vor fi în această monedă. Modificarea aceasta NU va converti cheltuielile deja introduse, cu excepția cazului în care moneda are \"unități minore\" diferite de cea curentă (de exemplu, schimbarea din Dolar American în Yen Japonez)",
+      "label": "Monedă de decontare",
+      "createDescription": "Soldurile, totalurile și cine cui datorează sunt calculate în această monedă. Alege moneda pe care o taxează efectiv cardurile, de obicei moneda ta obișnuită.",
+      "editDescription": "Soldurile, totalurile și cine cui datorează sunt calculate în această monedă. Modificarea aceasta NU va converti cheltuielile deja introduse, cu excepția cazului în care moneda are \"unități minore\" diferite de cea curentă (de exemplu, schimbarea din Dolar American în Yen Japonez)",
       "customOption": "Personalizat",
       "lockedAfterExpenses": "Moneda este blocată deoarece acest grup are deja cheltuieli."
     },
@@ -770,6 +770,12 @@
       "customColorTile": "Culoare personalizată…",
       "autoMovedHint": "{emoji} a fost mutat din nume în emoji-ul grupului.",
       "undoMove": "Anulează"
+    },
+    "EntryCurrencyCodeField": {
+      "description": "Cheltuielile noi încep în {entry}, dar se decontează în {settlement}.",
+      "label": "Monedă implicită de introducere",
+      "preview": "Chitanțele în {entry} se decontează ca {settlement}.",
+      "showOption": "Introduci cheltuieli în altă monedă?"
     }
   },
   "ExpenseForm": {
@@ -2815,7 +2821,8 @@
         "emoji": "Emoji",
         "color": "Culoare",
         "subgroups": "Subgrupuri",
-        "splitPresets": "Presetări de împărțire"
+        "splitPresets": "Presetări de împărțire",
+        "defaultEntryCurrencyCode": "Monedă implicită de introducere"
       }
     },
     "member": {

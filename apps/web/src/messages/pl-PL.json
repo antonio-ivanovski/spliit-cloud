@@ -706,9 +706,9 @@
       "description": "Użyjemy go do wyświetlania kwot."
     },
     "CurrencyCodeField": {
-      "label": "Główna waluta",
-      "createDescription": "Wszystkie kwoty i salda będą w tej walucie.",
-      "editDescription": "Wszystkie kwoty i salda będą w tej walucie. Zmiana NIE przeliczy już wprowadzonych wydatków, z wyjątkiem sytuacji, gdy waluta ma inne \"jednostki pomocnicze\" niż obecna (np. zmiana z dolara amerykańskiego na jena japońskiego).",
+      "label": "Waluta rozliczenia",
+      "createDescription": "Salda, sumy i to, kto komu wisi, są liczone w tej walucie. Wybierz walutę, którą karty rzeczywiście obciążają, zazwyczaj twoją walutę domową.",
+      "editDescription": "Salda, sumy i to, kto komu wisi, są liczone w tej walucie. Zmiana NIE przeliczy już wprowadzonych wydatków, z wyjątkiem sytuacji, gdy waluta ma inne „jednostki pomocnicze” niż obecna (np. zmiana z dolara amerykańskiego na jena japońskiego).",
       "customOption": "Niestandardowa",
       "lockedAfterExpenses": "Waluta jest zablokowana, ponieważ ta grupa ma już wydatki."
     },
@@ -776,6 +776,12 @@
       "customColorTile": "Własny kolor…",
       "autoMovedHint": "Przeniesiono {emoji} z nazwy do emoji grupy.",
       "undoMove": "Cofnij"
+    },
+    "EntryCurrencyCodeField": {
+      "description": "Nowe wydatki zaczynają się w {entry}, ale rozliczane są w {settlement}.",
+      "label": "Domyślna waluta wprowadzania",
+      "preview": "Paragony w {entry} rozliczane są jako {settlement}.",
+      "showOption": "Wprowadzasz wydatki w innej walucie?"
     }
   },
   "ExpenseForm": {
@@ -2825,7 +2831,8 @@
         "emoji": "Emoji",
         "color": "Kolor",
         "subgroups": "Podgrupy",
-        "splitPresets": "Zapisane podziały"
+        "splitPresets": "Zapisane podziały",
+        "defaultEntryCurrencyCode": "Domyślna waluta wprowadzania"
       }
     },
     "member": {

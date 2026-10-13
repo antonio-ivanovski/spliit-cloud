@@ -134,14 +134,14 @@ describe('CreateFriend', () => {
     )
 
     expect(
-      screen.getByRole('combobox', { name: 'Main currency' }),
+      screen.getByRole('combobox', { name: 'Settlement currency' }),
     ).toHaveTextContent('Euro')
   })
 
   it('renders the currency selector', () => {
     render(<CreateFriend />)
 
-    expect(screen.getByText('Main currency')).toBeInTheDocument()
+    expect(screen.getByText('Settlement currency')).toBeInTheDocument()
   })
 
   it('renders the info textarea', () => {

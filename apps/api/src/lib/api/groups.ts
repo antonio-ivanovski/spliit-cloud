@@ -43,6 +43,10 @@ export async function createGroup(
       },
     })
 
+    // Null = same as settlement. Normalizing here keeps the
+    // collapsed-by-default UI invariant (expanded only when different).
+    const entryCode = groupFormValues.defaultEntryCurrencyCode || null
+    const ledgerCode = groupFormValues.currencyCode || null
     const group = await tx.group.create({
       data: {
         id: randomId(),
@@ -53,6 +57,8 @@ export async function createGroup(
         color: groupFormValues.color ?? null,
         information: groupFormValues.information,
         ledgerId: ledger.id,
+        defaultEntryCurrencyCode:
+          entryCode && entryCode !== ledgerCode ? entryCode : null,
       },
     })
 
@@ -108,11 +114,26 @@ export async function updateGroup(
       isFriendLedger || groupFormValues.color === undefined
         ? (existingGroup.color ?? null)
         : (groupFormValues.color ?? null)
+    // Entry default is editable anytime: it only affects new expense
+    // defaults, never rewrites stored expenses, so the currency lock
+    // below does not apply. Null = same as settlement. `undefined` leaves
+    // the stored value untouched (partial API callers must not wipe it).
+    const newEntryCurrencyCode =
+      groupFormValues.defaultEntryCurrencyCode === undefined
+        ? (existingGroup.defaultEntryCurrencyCode ?? null)
+        : (() => {
+            const entry = groupFormValues.defaultEntryCurrencyCode || null
+            const settlement = groupFormValues.currencyCode || null
+            // Custom settlements have no foreign entry to offer.
+            if (!settlement) return null
+            return entry && entry !== settlement ? entry : null
+          })()
     const oldGroup: DiffableGroup = {
       name: existingGroup.name,
       information: existingGroup.information,
       currency: existingGroup.ledger.currency,
       currencyCode: existingGroup.ledger.currencyCode,
+      defaultEntryCurrencyCode: existingGroup.defaultEntryCurrencyCode ?? null,
       emoji: existingGroup.emoji ?? null,
       color: existingGroup.color ?? null,
     }
@@ -121,6 +142,7 @@ export async function updateGroup(
       information: groupFormValues.information ?? null,
       currency: groupFormValues.currency,
       currencyCode: groupFormValues.currencyCode || null,
+      defaultEntryCurrencyCode: newEntryCurrencyCode,
       emoji: effectiveEmoji,
       color: effectiveColor,
     }
@@ -160,6 +182,7 @@ export async function updateGroup(
       data: {
         name: groupFormValues.name,
         information: groupFormValues.information,
+        defaultEntryCurrencyCode: newEntryCurrencyCode,
         ...appearance,
       },
     })

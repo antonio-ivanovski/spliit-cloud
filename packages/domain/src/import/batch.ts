@@ -28,6 +28,9 @@ export type ImportBatchState = {
     // blank), ''/null = explicitly none, any other value = the pick.
     emoji?: string | null
     color?: string | null
+    // Group-wide default entry currency: omitted/'' = same as settlement.
+    // Threaded untouched to the import procedure (`groupFormSchema` lane).
+    defaultEntryCurrencyCode?: string
   }
   participants: ParticipantMappingState[]
   sourceIdToDestId: Record<string, string>
@@ -511,6 +514,8 @@ export function buildImportBatch(
             // identical to undefined.
             emoji: state.groupFormValues.emoji ?? undefined,
             color: state.groupFormValues.color,
+            defaultEntryCurrencyCode:
+              state.groupFormValues.defaultEntryCurrencyCode || '',
             participants: [{ name: 'Owner' }],
           },
           participants,

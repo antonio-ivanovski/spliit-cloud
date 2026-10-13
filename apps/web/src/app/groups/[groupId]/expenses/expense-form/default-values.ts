@@ -554,19 +554,24 @@ export function buildExpenseFormDefaults(args: {
   const hasPrefilledItemSplits = prefilledItems.some(
     (item) => item.paidFor.length > 0,
   )
-  const searchCurrency =
+  const defaultEntryCurrencyCode =
+    group.defaultEntryCurrencyCode || group.currencyCode || undefined
+  // Entry-aware defaults for the regular (non-settlement) create flow.
+  const entrySearchCurrency =
     searchParams.originalCurrency && searchParams.originalCurrency.length
       ? (getCurrency(searchParams.originalCurrency) ?? groupCurrency)
-      : groupCurrency
-  const searchOriginalCurrency =
-    searchParams.originalCurrency ?? group.currencyCode ?? undefined
+      : defaultEntryCurrencyCode
+        ? (getCurrency(defaultEntryCurrencyCode) ?? groupCurrency)
+        : groupCurrency
+  const entrySearchOriginalCurrency =
+    searchParams.originalCurrency ?? defaultEntryCurrencyCode
   const defaultPaidByList = currentLedgerParticipantId
     ? [
         {
           participant: currentLedgerParticipantId,
           shares: amountAsDecimal(
             Number(searchParams.amount) || 0,
-            searchCurrency,
+            entrySearchCurrency,
           ),
         },
       ]
@@ -590,6 +595,14 @@ export function buildExpenseFormDefaults(args: {
     searchParams.settlement === 'yes' ||
     searchParams.reimbursement === 'yes'
   ) {
+    // Settlements are ledger semantics (who-owes-whom): they always start
+    // in the settlement currency, never the entry default.
+    const searchCurrency =
+      searchParams.originalCurrency && searchParams.originalCurrency.length
+        ? (getCurrency(searchParams.originalCurrency) ?? groupCurrency)
+        : groupCurrency
+    const searchOriginalCurrency =
+      searchParams.originalCurrency ?? group.currencyCode ?? undefined
     const settlementNeedsConversion =
       searchOriginalCurrency != null &&
       searchOriginalCurrency !== group.currencyCode
@@ -717,7 +730,7 @@ export function buildExpenseFormDefaults(args: {
     expenseTimeZone: timeZone,
     amount:
       searchParams.amount != null
-        ? amountAsDecimal(Number(searchParams.amount) || 0, searchCurrency)
+        ? amountAsDecimal(Number(searchParams.amount) || 0, entrySearchCurrency)
         : prefilledItems.length
           ? amountAsDecimal(
               prefilledItems.reduce(
@@ -726,18 +739,22 @@ export function buildExpenseFormDefaults(args: {
                   lineAmountMinorFromMajor(
                     amountAsMinorUnits(
                       Number(item.unitPrice) || 0,
-                      searchCurrency,
+                      entrySearchCurrency,
                     ),
                     Number(item.quantity) || 0,
                   ),
                 0,
               ),
-              searchCurrency,
+              entrySearchCurrency,
             )
           : ('' as unknown as number),
-    originalCurrency: searchOriginalCurrency,
+    originalCurrency: entrySearchOriginalCurrency,
     conversionRate: undefined,
-    conversionType: undefined,
+    conversionType:
+      entrySearchOriginalCurrency != null &&
+      entrySearchOriginalCurrency !== group.currencyCode
+        ? 'EXCHANGE'
+        : undefined,
     category: parseCategoryIdFromUrl(searchParams.categoryId),
     paidBySplitMode: 'BY_AMOUNT' as const,
     paidByList:
@@ -747,7 +764,7 @@ export function buildExpenseFormDefaults(args: {
               participant: prefilledPayer,
               shares: amountAsDecimal(
                 Number(searchParams.amount) || 0,
-                searchCurrency,
+                entrySearchCurrency,
               ),
             },
           ]
