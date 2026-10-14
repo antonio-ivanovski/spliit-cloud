@@ -1,4 +1,5 @@
 import { getRouteApi, Link, useNavigate } from '@tanstack/react-router'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
@@ -54,6 +55,9 @@ export function CreateExpenseForm({
   const { mutateAsync: createExpenseMutateAsync } = useCreateExpenseMutation()
   const navigate = useNavigate()
   const createAttempt = useIdempotentCreate()
+  // Share-target handoff (`?fromShare=1`): the mutation result carries the
+  // new expense id so `onSaved` can land directly on its preview.
+  const createdExpenseIdRef = useRef<string | null>(null)
   // `ExpenseForm` is shared with the edit route, where calling
   // `useSearch` against the create route would throw.
   const searchParams = createExpenseRouteApi.useSearch()
@@ -206,9 +210,22 @@ export function CreateExpenseForm({
               createExpenseMutateAsync({ groupId, requestId, expense }),
             )
             if (!result) return 'deferred'
+            createdExpenseIdRef.current = result.expenseId
             return 'saved'
           }}
           onSaved={async () => {
+            if (searchParams.fromShare === '1' && createdExpenseIdRef.current) {
+              await navigate({
+                to: '/groups/$groupId/expenses/$expenseId',
+                params: {
+                  groupId: group.id,
+                  expenseId: createdExpenseIdRef.current,
+                },
+                replace: true,
+                resetScroll: false,
+              })
+              return
+            }
             if (isGlobalExpensesReturnTo(searchParams.returnTo)) {
               await navigate({
                 to: '/expenses',

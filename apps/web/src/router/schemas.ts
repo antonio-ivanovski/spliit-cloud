@@ -274,6 +274,12 @@ export const createExpenseSearchSchema = groupAccessSearchSchema.extend({
   // and overrides `expenseDate` to today (a.k.a. "Make a copy" flow).
   fromExpenseId: z.string().optional().catch(undefined),
   returnTo: expenseReturnTo,
+  /**
+   * Share-target origin (`?fromShare=1`, issue #159 polish). The create form
+   * lands on the expense preview after save so system back never returns to the
+   * hidden `/share-target/` page.
+   */
+  fromShare: optionalString,
 })
 
 export const balancesSearchSchema = groupAccessSearchSchema.extend({

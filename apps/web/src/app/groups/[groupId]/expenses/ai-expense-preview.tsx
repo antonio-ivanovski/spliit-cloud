@@ -87,9 +87,21 @@ type AiExpensePreviewProps = {
   currentLedgerParticipantId: string | null | undefined
   draft: AiExpenseDraft
   /** Fires after the quick-create mutation succeeds (not on dismiss/edit). */
-  onCreated?: () => void
+  onCreated?: (expenseId: string) => void
   /** Fires when the user continues editing in the full expense form. */
   onContinueInForm?: () => void
+  /**
+   * Share-target origin: the edit link carries `fromShare=1` so the create form
+   * lands on the expense preview instead of the list (back never returns to
+   * `/share-target/`).
+   */
+  shareOrigin?: boolean
+  /**
+   * Whether the share-origin edit link replaces history. Pass `false` while
+   * unhandled shared files remain so system back can return to the share-target
+   * page for the next file.
+   */
+  shareOriginReplace?: boolean
 }
 
 function parseDate(value: string | null) {
@@ -118,6 +130,8 @@ export function AiExpensePreview({
   draft,
   onCreated,
   onContinueInForm,
+  shareOrigin = false,
+  shareOriginReplace = true,
 }: AiExpensePreviewProps) {
   const { t } = useTranslation(undefined, { keyPrefix: 'AIExpense' })
   const { t: tForm } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
@@ -272,6 +286,7 @@ export function AiExpensePreview({
         params.contentType = draft.document.contentType
       }
     }
+    if (shareOrigin) params.fromShare = '1'
     return params
   }, [
     effectiveAmountMinor,
@@ -279,6 +294,7 @@ export function AiExpensePreview({
     effectiveItems,
     normalizedCurrencyCode,
     selectedParticipantIds,
+    shareOrigin,
   ])
 
   const formValues = useMemo<ExpenseFormInputValues>(() => {
@@ -346,7 +362,7 @@ export function AiExpensePreview({
       )
       if (created === null) return
       toast({ description: t('created'), variant: 'success' })
-      onCreated?.()
+      onCreated?.(created.expenseId)
       onOpenChange(false)
     } catch (error) {
       toast({
@@ -641,6 +657,7 @@ export function AiExpensePreview({
                 to="/groups/$groupId/expenses/create"
                 params={{ groupId: group.id }}
                 search={searchParams}
+                replace={shareOrigin ? shareOriginReplace : undefined}
               />
             }
             onClick={navigateToForm}

@@ -54,6 +54,7 @@ export function GroupCard({
   onToggleArchived,
   onRemoveSavedView,
   onSelect,
+  selectAriaLabel,
   hideFinancialSummary = false,
   stale = false,
 }: {
@@ -70,6 +71,13 @@ export function GroupCard({
    * irrelevant noise (the account-groups listing carries no summary).
    */
   onSelect?: (groupId: string) => void
+  /**
+   * Accessible name for the selection-mode button. Defaults to the group
+   * display name from the card content; pass an action-qualified label (e.g.
+   * "Change group") when activating the card does something other than a plain
+   * select, so screen-reader users hear the real action.
+   */
+  selectAriaLabel?: string
   hideFinancialSummary?: boolean
   /** Offline dirty flag: last-known balances may be out of date. */
   stale?: boolean
@@ -369,6 +377,7 @@ export function GroupCard({
         <button
           type="button"
           onClick={() => onSelect(group.id)}
+          aria-label={selectAriaLabel}
           style={accent ?? undefined}
           className={`${cardClassName} text-start`}
         >
