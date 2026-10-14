@@ -7,6 +7,7 @@ import type { OfflineSnapshotOutput } from '@spliit/api/offline-contract'
 
 import {
   OFFLINE_CONTRACT_VERSION,
+  OFFLINE_DB_VERSION,
   type CatalogRecord,
   type GroupRecord,
 } from './contract'
@@ -274,7 +275,7 @@ function buildLargeFixture() {
     byGroupId.set(groupId, {
       namespace: 'ns-large',
       groupId,
-      schemaVersion: 1,
+      schemaVersion: OFFLINE_DB_VERSION,
       capturedAt: new Date('2026-06-01T12:00:00.000Z'),
       storedAt: new Date('2026-06-01T12:00:01.000Z'),
       commitNonce: `nonce-${groupId}`,
@@ -363,7 +364,7 @@ async function seedInto(
     await db.groupMeta.put({
       namespace,
       groupId,
-      schemaVersion: 1,
+      schemaVersion: OFFLINE_DB_VERSION,
       serverRevision: 'o2.c0.v0',
       capturedAt: record.capturedAt,
       storedAt: record.storedAt,
