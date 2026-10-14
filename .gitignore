@@ -10,6 +10,7 @@ node_modules/
 # testing
 /coverage
 .vitest/
+.playwright-mcp
 
 # playwright e2e (ephemeral failure evidence: screenshots, videos, traces)
 test-results/
@@ -85,3 +86,8 @@ calibration-out/
 
 # Promo exports and visual QA (campaign source remains tracked)
 apps/promo/output/
+# Isolated local narration runtime
+apps/promo/scripts/tts/.venv/
+apps/promo/scripts/tts/__pycache__/
+apps/promo/scripts/sound/.venv/
+apps/promo/scripts/sound/__pycache__/

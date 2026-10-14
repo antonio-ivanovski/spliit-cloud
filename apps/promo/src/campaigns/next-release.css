@@ -1,0 +1,429 @@
+.next-promo {
+  padding: 42px 58px;
+}
+.next-promo .brand-header > img {
+  width: 246px;
+  height: 66px;
+}
+.next-story {
+  position: absolute;
+  left: 58px;
+  top: 160px;
+  width: 550px;
+}
+.next-story h1,
+.next-share-head h1,
+.next-hero-copy h1 {
+  font-family: var(--font-rounded);
+  font-size: 64px;
+  line-height: 1.05;
+  font-weight: 850;
+  letter-spacing: -2.4px;
+  margin: 0 0 18px;
+}
+.next-story h1 em,
+.next-share-head h1 em,
+.next-hero-copy h1 em {
+  font-style: normal;
+  color: hsl(var(--primary));
+}
+.next-support {
+  font-size: 24px;
+  line-height: 1.4;
+  font-weight: 600;
+  margin: 0;
+}
+.next-clarification {
+  color: hsl(var(--muted-foreground));
+  font-size: 19px;
+  line-height: 1.45;
+  margin: 16px 0 0;
+  max-width: 520px;
+}
+.next-wizard {
+  margin: 20px 0 0;
+}
+.next-wizard li {
+  padding: 6px 8px !important;
+  font-size: 13px !important;
+}
+.next-illustration {
+  position: absolute;
+  top: 80px;
+  right: 58px;
+  width: 810px;
+}
+.next-ledger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 8px 10px;
+}
+.next-ledger > span {
+  font-size: 20px;
+  color: hsl(var(--muted-foreground));
+}
+.next-ledger > strong {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  color: hsl(var(--primary));
+  font-size: 28px;
+}
+.next-ledger svg {
+  width: 26px;
+  height: 26px;
+}
+.next-swap-dialog,
+.next-pair-card {
+  padding: 18px 20px;
+  border-radius: 22px;
+}
+.next-location {
+  font-size: 17px;
+  line-height: 22px;
+  color: hsl(var(--muted-foreground));
+  margin: 10px 8px 0;
+}
+
+/* Withdrawn: illustration slightly narrower rows already handled by real UI */
+.next-withdrawn .next-illustration {
+  top: 72px;
+}
+.next-withdrawn .next-support {
+  margin-bottom: 18px;
+}
+
+/* Share: flow from imaginary app to Spliit Cloud phone */
+.next-share-head {
+  position: absolute;
+  left: 58px;
+  top: 150px;
+  width: 700px;
+}
+.next-share-head h1 {
+  font-size: 58px;
+}
+.next-share-head p {
+  font-size: 22px;
+  line-height: 1.45;
+  color: hsl(var(--muted-foreground));
+  margin: 0 0 14px;
+  max-width: 640px;
+}
+.next-share-head .next-clarification {
+  font-size: 18px;
+  margin-top: 12px;
+}
+.next-share-head .next-location {
+  margin: 14px 0 0;
+}
+.next-share-flow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 16px;
+}
+.next-flow-step {
+  width: 300px;
+}
+.next-flow-label {
+  font-size: 16px !important;
+  margin: 8px 4px 0 !important;
+  max-width: none !important;
+}
+.next-flow-label strong {
+  color: hsl(var(--foreground));
+}
+.next-flow-arrow {
+  width: 28px;
+  height: 28px;
+  margin-top: 96px;
+  flex-shrink: 0;
+  color: hsl(var(--muted-foreground));
+}
+.next-source-app {
+  border-radius: 18px;
+  border: 1px solid hsl(var(--border));
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 12px 28px hsl(var(--foreground) / 0.08);
+}
+.next-source-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid hsl(var(--border));
+}
+.next-source-appname {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-weight: 700;
+  font-size: 15px;
+}
+.next-source-appname svg {
+  width: 16px;
+  height: 16px;
+  color: hsl(var(--muted-foreground));
+}
+.next-source-date {
+  font-size: 12px;
+  color: hsl(var(--muted-foreground));
+}
+.next-source-photo {
+  padding: 12px;
+  background: hsl(var(--muted) / 0.4);
+}
+.next-source-receipt {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  border: 1px dashed hsl(var(--border));
+}
+.next-source-receipt p {
+  margin: 0;
+  color: hsl(var(--foreground)) !important;
+  max-width: none !important;
+}
+.next-source-receipt-title {
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  font-size: 13px;
+  margin: 0 0 6px !important;
+}
+.next-source-receipt-total {
+  font-weight: 700;
+  margin-top: 6px !important;
+}
+.next-source-filename {
+  color: hsl(var(--muted-foreground)) !important;
+  font-size: 12px;
+  margin-top: 6px !important;
+}
+.next-source-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+}
+.next-source-bar-label {
+  font-size: 13px;
+  color: hsl(var(--muted-foreground));
+}
+.next-source-share {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: hsl(var(--primary));
+}
+.next-source-share svg {
+  width: 16px;
+  height: 16px;
+}
+.next-sheet {
+  border-radius: 18px;
+  border: 1px solid hsl(var(--border));
+  background: #fff;
+  padding: 12px 12px 10px;
+  box-shadow: 0 12px 28px hsl(var(--foreground) / 0.08);
+}
+.next-sheet-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0 0 8px 4px !important;
+  color: hsl(var(--foreground)) !important;
+  max-width: none !important;
+}
+.next-sheet-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.next-sheet-rows li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.next-sheet-rows svg {
+  width: 18px;
+  height: 18px;
+  color: hsl(var(--muted-foreground));
+}
+.next-sheet-target {
+  background: hsl(var(--primary) / 0.08);
+  border: 1px solid hsl(var(--primary) / 0.4);
+}
+.next-sheet-target svg {
+  color: hsl(var(--primary));
+}
+.next-sheet-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #16a34a;
+  color: #fff;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.next-sheet-target-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  flex: 1;
+}
+.next-sheet-target-text strong {
+  font-size: 14px;
+}
+.next-sheet-target-text span {
+  font-size: 12px;
+  color: hsl(var(--muted-foreground));
+  font-weight: 500;
+}
+.next-phone-wrap {
+  position: absolute;
+  top: 100px;
+  right: 90px;
+  width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.next-phone-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 17px;
+  font-weight: 600;
+  color: hsl(var(--muted-foreground));
+  margin: 0 0 12px;
+}
+.next-phone-hint svg {
+  width: 18px;
+  height: 18px;
+}
+.next-phone {
+  position: relative;
+  width: 480px;
+  height: 660px;
+  border-radius: 52px;
+  border: 12px solid hsl(var(--foreground) / 0.85);
+  background: hsl(var(--background));
+  box-shadow:
+    0 30px 60px hsl(var(--foreground) / 0.18),
+    0 2px 8px hsl(var(--foreground) / 0.12);
+  overflow: hidden;
+}
+.next-phone-notch {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 24px;
+  border-radius: 999px;
+  background: hsl(var(--foreground) / 0.85);
+  z-index: 2;
+}
+.next-phone-screen {
+  height: 100%;
+  overflow: hidden;
+  padding: 44px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: hsl(var(--muted) / 0.3);
+}
+.next-phone-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0;
+}
+.next-phone-title svg {
+  width: 18px;
+  height: 18px;
+  color: hsl(var(--muted-foreground));
+}
+.next-phone-card {
+  border-radius: 16px;
+}
+.next-phone-card > div:first-child {
+  padding: 12px 14px 6px;
+}
+.next-phone-card > div:last-child {
+  padding: 6px 14px 12px;
+}
+.next-phone-card h3 {
+  font-size: 16px !important;
+}
+.next-phone-card p {
+  font-size: 12px !important;
+}
+
+/* Hero: generic v2.8.0 */
+.next-hero {
+  display: flex;
+  flex-direction: column;
+}
+.next-hero-copy {
+  margin-top: 88px;
+  text-align: center;
+  max-width: 1050px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.next-hero-copy h1 {
+  font-size: 92px;
+  text-align: center;
+}
+.next-hero-copy p {
+  font-size: 27px;
+  line-height: 1.45;
+  color: hsl(var(--muted-foreground));
+  margin: 0;
+}
+.next-hero-pills {
+  margin-top: 52px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.next-hero-pill {
+  font-size: 19px;
+  padding: 12px 20px;
+  border-radius: 999px;
+}
+.next-hero-pill svg {
+  width: 20px;
+  height: 20px;
+}
+.next-hero-foot {
+  margin-top: auto;
+  text-align: center;
+  color: hsl(var(--muted-foreground));
+  font-size: 17px;
+  padding-bottom: 6px;
+}
