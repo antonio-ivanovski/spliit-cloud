@@ -324,6 +324,7 @@ export function buildImportBatch(
           // No null emoji lane: the import procedure takes `groupFormSchema`.
           emoji?: string
           color?: string | null
+          defaultEntryCurrencyCode?: string
           participants: Array<{ name: string }>
         }
         participants: ImportBatchParticipant[]

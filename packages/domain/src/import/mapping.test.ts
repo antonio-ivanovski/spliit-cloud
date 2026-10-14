@@ -366,6 +366,9 @@ describe('buildImportBatch', () => {
       information: 'info',
       currency: '€',
       currencyCode: 'EUR',
+      emoji: undefined,
+      color: undefined,
+      defaultEntryCurrencyCode: '',
       participants: [{ name: 'Owner' }],
     })
     expect(batch.participants).toEqual([
