@@ -1,0 +1,123 @@
+/** Measured frame-aligned Kokoro segments; regenerate with avalanche audio. */
+export const featureTiming = [
+  {
+    text: 'Flexible expense splits',
+    rate: 1,
+    startFrame: 0,
+    endFrame: 43,
+  },
+  {
+    text: 'Balances and settlements',
+    rate: 1.32,
+    startFrame: 43,
+    endFrame: 74,
+  },
+  {
+    text: 'Currency conversion',
+    rate: 1.7424000000000002,
+    startFrame: 74,
+    endFrame: 95,
+  },
+  {
+    text: 'Offline access',
+    rate: 2.2999680000000002,
+    startFrame: 95,
+    endFrame: 109,
+  },
+  {
+    text: 'Recurring expenses',
+    rate: 3.0359577600000005,
+    startFrame: 109,
+    endFrame: 122,
+  },
+  {
+    text: 'Itemized splits',
+    rate: 4.007464243200001,
+    startFrame: 122,
+    endFrame: 131,
+  },
+  {
+    text: 'Multiple payers',
+    rate: 5.289852801024002,
+    startFrame: 131,
+    endFrame: 138,
+  },
+  {
+    text: 'Groups and friends',
+    rate: 6.982605697351682,
+    startFrame: 138,
+    endFrame: 143,
+  },
+  {
+    text: 'CSV import',
+    rate: 9.21703952050422,
+    startFrame: 143,
+    endFrame: 147,
+  },
+  {
+    text: 'Expense search',
+    rate: 12.166492167065572,
+    startFrame: 147,
+    endFrame: 150,
+  },
+  {
+    text: 'Budgets',
+    rate: 16.059769660526555,
+    startFrame: 150,
+    endFrame: 152,
+  },
+  {
+    text: 'Statistics',
+    rate: 21.198895951895054,
+    startFrame: 152,
+    endFrame: 154,
+  },
+  {
+    text: 'Receipt scanning',
+    rate: 27.982542656501472,
+    startFrame: 154,
+    endFrame: 155,
+  },
+  {
+    text: 'PDF reports',
+    rate: 36.93695630658195,
+    startFrame: 155,
+    endFrame: 156,
+  },
+  {
+    text: 'QR invites',
+    rate: 48.756782324688174,
+    startFrame: 156,
+    endFrame: 157,
+  },
+  {
+    text: 'Passkeys',
+    rate: 64.35895266858839,
+    startFrame: 157,
+    endFrame: 158,
+  },
+  {
+    text: 'Notifications',
+    rate: 84.95381752253668,
+    startFrame: 158,
+    endFrame: 159,
+  },
+  {
+    text: 'Activity history',
+    rate: 112.13903912974843,
+    startFrame: 159,
+    endFrame: 160,
+  },
+  {
+    text: 'Multiple languages',
+    rate: 148.02353165126792,
+    startFrame: 160,
+    endFrame: 161,
+  },
+  {
+    text: 'Self-hosting',
+    rate: 195.39106177967366,
+    startFrame: 161,
+    endFrame: 162,
+  },
+]

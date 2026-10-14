@@ -83,3 +83,11 @@ calibration-out/
 *.sql.gz
 /*.sql
 /*.dump
+
+# Promo exports and visual QA (campaign source remains tracked)
+apps/promo/output/
+# Isolated local narration runtime
+apps/promo/scripts/tts/.venv/
+apps/promo/scripts/tts/__pycache__/
+apps/promo/scripts/sound/.venv/
+apps/promo/scripts/sound/__pycache__/
