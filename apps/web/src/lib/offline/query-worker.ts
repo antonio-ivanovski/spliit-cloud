@@ -7,7 +7,7 @@ import type {
   GroupRecord,
   OfflineCatalogEntry,
 } from './contract'
-import { parseNamespace } from './contract'
+import { isRetiredGroupMetaVersion, parseNamespace } from './contract'
 import { openOfflineDatabase, type OfflineDexieDatabase } from './database'
 import {
   OFFLINE_FALLBACK_CHUNK_ROWS,
@@ -387,6 +387,13 @@ async function runGlobalExpenses(
       incompleteGroupCount += 1
       continue
     }
+    // Retired payload versions are unreadable by design (whole-unit
+    // quantities predate the milli-unit readers): count them incomplete so
+    // the UI says so, and let the sync pass re-download them as missing.
+    if (isRetiredGroupMetaVersion(meta.schemaVersion)) {
+      incompleteGroupCount += 1
+      continue
+    }
     if (meta.dirtySince !== null) dirtyGroupCount += 1
     selected.push({ groupId, global, revision: meta.serverRevision })
   }
@@ -533,7 +540,14 @@ async function runOverview(
   const dataByGroupId = new Map(datas.map((data) => [data.groupId, data]))
   const lite = new Map<string, GroupRecord>()
   const revisions: Array<{ groupId: string; revision: string }> = []
-  for (const meta of metas) {
+  // Retired payload versions never enter the lite map: milli-unit readers
+  // would misread their whole-unit quantities, and the repository reports
+  // them as missing so sync re-downloads them. Newer-than-client rows are
+  // left to the repository version gate (not silently reinterpreted here).
+  const usableMetas = metas.filter(
+    (meta) => !isRetiredGroupMetaVersion(meta.schemaVersion),
+  )
+  for (const meta of usableMetas) {
     const data = dataByGroupId.get(meta.groupId)
     if (!data) continue
     lite.set(meta.groupId, liteGroupRecord(meta, data, accountId))
@@ -542,7 +556,7 @@ async function runOverview(
   const overview = buildOfflineOverview(catalog, lite)
   const now = Date.now()
   const freshnessByGroupId = new Map(
-    metas.map((meta) => [
+    usableMetas.map((meta) => [
       meta.groupId,
       getOfflineFreshnessState({
         dirtySince: meta.dirtySince,
@@ -561,7 +575,7 @@ async function runOverview(
   }))
   // Aggregate freshness = oldest contributor over ready groups.
   let totalsFreshness: OfflineFreshness = 'fresh'
-  for (const meta of metas) {
+  for (const meta of usableMetas) {
     if (!dataByGroupId.has(meta.groupId)) continue
     const state = freshnessByGroupId.get(meta.groupId) ?? 'stale'
     if (state === 'dirty') {
@@ -604,7 +618,10 @@ async function runFilterOptions(
   const dataByGroupId = new Map(datas.map((data) => [data.groupId, data]))
   const lite = new Map<string, GroupRecord>()
   const revisions: Array<{ groupId: string; revision: string }> = []
+  // Retired payload versions never enter the lite map (see runOverview):
+  // their whole-unit quantities predate the milli-unit readers.
   for (const meta of metas) {
+    if (isRetiredGroupMetaVersion(meta.schemaVersion)) continue
     const data = dataByGroupId.get(meta.groupId)
     if (!data) continue
     const record = liteGroupRecord(meta, data, accountId)

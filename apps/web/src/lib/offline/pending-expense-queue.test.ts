@@ -317,11 +317,12 @@ describe('pending expense Dexie outbox', () => {
     }
 
     // The v2 snapshot carries whole-unit quantities, so it must report
-    // `unsupported` (refresh required) rather than read as milli-units.
+    // `missing` (never read as milli-units) so the next sync pass
+    // re-downloads it.
     const repository = await OfflineRepository.open()
     try {
       const meta = await repository.readGroupMeta(NAMESPACE_A, 'g1')
-      expect(meta.status).toBe('unsupported')
+      expect(meta.status).toBe('missing')
     } finally {
       repository.close()
     }

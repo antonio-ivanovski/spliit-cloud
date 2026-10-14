@@ -213,7 +213,7 @@ async function seedSnapshots(snaps: OfflineSnapshotOutput[]): Promise<void> {
       await db.groupMeta.put({
         namespace: 'ns',
         groupId,
-        schemaVersion: 1,
+        schemaVersion: 3,
         serverRevision: 'o2.c0.v0',
         capturedAt: snap.capturedAt,
         storedAt: new Date(),
@@ -529,6 +529,47 @@ describe('offline query worker', () => {
       expect(row.groupId).toBe(row.group.id)
       expect(row.groupId).not.toBe(row.list.id)
     }
+  })
+
+  it('excludes retired payload versions from reads and counts them incomplete', async () => {
+    // Pre-milli-units meta rows would misread whole-unit quantities 1000x too
+    // small: the global worker skips them (counting incomplete so the UI says
+    // so) while sync re-downloads them as missing via the repository gate.
+    await seedSnapshots([snapshot('g1', ['a', 'b']), snapshot('g2', ['c'])])
+    const db = new OfflineDexieDatabase()
+    await db.open()
+    try {
+      const meta = await db.groupMeta.get(['ns', 'g2'])
+      await db.groupMeta.put({ ...meta!, schemaVersion: 2 })
+    } finally {
+      db.close()
+    }
+    const global = (await runOfflineWorkerQuery({
+      requestId: 'req-global-retired',
+      generation: 1,
+      namespace: 'ns',
+      kind: 'global-expenses',
+      filter: {},
+    })) as {
+      totalFiltered: number
+      rows: unknown[]
+      incompleteGroupCount: number
+    }
+    expect(global.totalFiltered).toBe(2)
+    expect(global.rows).toHaveLength(2)
+    expect(global.incompleteGroupCount).toBe(1)
+    const overview = (await runOfflineWorkerQuery({
+      requestId: 'req-overview-retired',
+      generation: 1,
+      namespace: 'ns',
+      kind: 'overview',
+    })) as { groups: Array<{ id: string; availability: string }> }
+    expect(
+      overview.groups.find((group) => group.id === 'g1')?.availability,
+    ).toBe('ready')
+    expect(
+      overview.groups.find((group) => group.id === 'g2')?.availability,
+    ).toBe('missing')
   })
 
   it('times out stuck queries and aborts on signal', async () => {

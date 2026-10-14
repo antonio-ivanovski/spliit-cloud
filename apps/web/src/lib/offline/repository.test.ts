@@ -624,6 +624,41 @@ describe('offline repository', () => {
     ).rejects.toMatchObject({ code: 'schema-unsupported' })
   })
 
+  it('reports retired payload versions as missing so sync re-downloads them', async () => {
+    // Pre-milli-units (v1/v2) snapshots carry whole-unit quantities that
+    // current readers would show 1000x too small: never reinterpret them, but
+    // report missing (not unsupported) so the next sync pass downloads fresh
+    // rows instead of stranding every group offline until a manual wipe.
+    const repo = await openRepo()
+    const namespace = namespaceFor(ACCOUNT_A)
+    await repo.ensureControl(namespace)
+    await repo.replaceCatalog({
+      namespace,
+      generation: 0,
+      expectedDataRevision: 0,
+      catalog: makeCatalog(ACCOUNT_A, ['g1']),
+    })
+    await repo.commitGroup({
+      namespace,
+      generation: 0,
+      expectedDataRevision: 0,
+      snapshot: makeSnapshot(ACCOUNT_A, 'g1'),
+    })
+    for (const retired of [1, 2]) {
+      const existing = await repo.database.groupMeta.get([namespace, 'g1'])
+      await repo.database.groupMeta.put({
+        ...existing!,
+        schemaVersion: retired,
+      })
+      expect(await repo.readGroupMeta(namespace, 'g1')).toEqual({
+        status: 'missing',
+      })
+      expect(await repo.readGroup(namespace, 'g1')).toEqual({
+        status: 'missing',
+      })
+    }
+  })
+
   it('closes old connections on versionchange', async () => {
     const onVersionChange = vi.fn()
     const repo = await openRepo({ onVersionChange })

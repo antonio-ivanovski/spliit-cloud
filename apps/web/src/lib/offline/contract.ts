@@ -65,10 +65,9 @@ export type {
 export const OFFLINE_DB_NAME = 'spliit-offline-v2'
 /**
  * Storage structure version 3 scales the `pendingExpenses` outbox to milli-unit
- * quantities (see quantity.ts). The group snapshot payload format is unchanged,
- * so v1 snapshots stay readable and refresh in place — see
- * OFFLINE_SUPPORTED_GROUP_META_VERSIONS. The Dexie upgrade step retains every
- * existing table untouched.
+ * quantities (see quantity.ts). Retired group snapshot rows (see
+ * OFFLINE_SUPPORTED_GROUP_META_VERSIONS) report as missing so the next sync
+ * pass re-downloads them — never bricked, never reinterpreted.
  */
 export const OFFLINE_DB_VERSION = 3
 /**
@@ -79,10 +78,29 @@ export const OFFLINE_DB_VERSION = 3
  * existing offline cache bricks until manual storage clear.
  *
  * Version 3 retires v1/v2 meta rows: cached snapshots carry whole-unit
- * quantities that the milli-unit readers would show 1000× too small.
+ * quantities that the milli-unit readers would show 1000× too small. Retired
+ * rows report as missing (see `isRetiredGroupMetaVersion`) so sync re-downloads
+ * them; only newer-than-client versions report as unsupported.
  */
 export const OFFLINE_SUPPORTED_GROUP_META_VERSIONS: ReadonlySet<number> =
   new Set([OFFLINE_DB_VERSION])
+
+/**
+ * True for integer meta versions retired by a payload break (older than every
+ * supported version). Retired rows must report as missing — never
+ * reinterpreted, never stranded as unsupported: the sync pass re-downloads
+ * missing groups, while unsupported would exclude them from every download
+ * list. Newer-than-client versions are NOT retired; those stay unsupported so
+ * callers surface an app-update request instead of pointlessly re-downloading.
+ */
+export function isRetiredGroupMetaVersion(value: unknown): boolean {
+  return (
+    typeof value === 'number' &&
+    Number.isInteger(value) &&
+    !OFFLINE_SUPPORTED_GROUP_META_VERSIONS.has(value) &&
+    value < Math.min(...OFFLINE_SUPPORTED_GROUP_META_VERSIONS)
+  )
+}
 /** After this long, `opening` stops blocking and offers a retry hook. */
 export const OFFLINE_OPEN_TIMEOUT_MS = 3000
 export const OFFLINE_STORAGE_BLOCKED_MESSAGE =

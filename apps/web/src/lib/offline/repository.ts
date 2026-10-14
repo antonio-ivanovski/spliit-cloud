@@ -18,6 +18,7 @@ import {
   groupMetaRecordSchema,
   groupRecordSchema,
   groupStatusRecordSchema,
+  isRetiredGroupMetaVersion,
   isUnsupportedSchemaVersion,
   newCommitNonce,
   newControlRecord,
@@ -339,6 +340,12 @@ export class OfflineRepository {
           error instanceof OfflineStorageError &&
           error.code === 'schema-unsupported'
         ) {
+          // Retired payload versions report as missing so the next sync pass
+          // re-downloads them; only newer-than-client versions strand as
+          // unsupported (app-update request) instead of re-downloading.
+          if (isRetiredGroupMetaVersion(meta.schemaVersion)) {
+            return { status: 'missing' as const }
+          }
           return { status: 'unsupported', schemaVersion: meta.schemaVersion }
         }
         throw error
@@ -437,6 +444,12 @@ export class OfflineRepository {
           error instanceof OfflineStorageError &&
           error.code === 'schema-unsupported'
         ) {
+          // Retired payload versions report as missing so the next sync pass
+          // re-downloads them (see readGroup above); newer-than-client stays
+          // unsupported.
+          if (isRetiredGroupMetaVersion(parsed.data.schemaVersion)) {
+            return { status: 'missing' as const }
+          }
           return {
             status: 'unsupported',
             schemaVersion: parsed.data.schemaVersion,

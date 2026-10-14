@@ -449,7 +449,7 @@ async function seedEngine(
       await db.groupMeta.put({
         namespace: NAMESPACE,
         groupId,
-        schemaVersion: 1,
+        schemaVersion: 3,
         serverRevision: revision,
         capturedAt: record.capturedAt,
         storedAt: record.storedAt,

@@ -411,6 +411,41 @@ describe('offline sync leases and ordering', () => {
     }
   })
 
+  it('re-downloads retired payload versions instead of stranding them', async () => {
+    // A pre-milli-units (v2) meta row reports missing through the repository
+    // gate, so the pass treats it like any never-downloaded group and commits
+    // fresh v3 rows. Before the gate, retired rows stranded as unsupported and
+    // orderSyncGroups excluded them from every download list.
+    const repo = await openRepo()
+    const namespace = namespaceFor()
+    await repo.ensureControl(namespace)
+    const catalog = makeCatalog(ACCOUNT, ['g-retired'])
+    const fetched: string[] = []
+    const sync = trackSync(
+      createOfflineSync({
+        namespace,
+        repository: repo,
+        verifySession: async () => true,
+        fetchCatalog: async () => catalog,
+        fetchSnapshot: async (groupId: string) => {
+          fetched.push(groupId)
+          return makeSnapshot(ACCOUNT, groupId)
+        },
+      }),
+    )
+    await sync.handleLaunch()
+    expect(fetched).toEqual(['g-retired'])
+    const existing = await repo.database.groupMeta.get([namespace, 'g-retired'])
+    await repo.database.groupMeta.put({ ...existing!, schemaVersion: 2 })
+    expect(await repo.readGroup(namespace, 'g-retired')).toEqual({
+      status: 'missing',
+    })
+    fetched.length = 0
+    await sync.handleLaunch()
+    expect(fetched).toEqual(['g-retired'])
+    expect((await repo.readGroup(namespace, 'g-retired')).status).toBe('ready')
+  })
+
   it('restarts after a crashed owner once the lease expires', async () => {
     const repo = await openRepo()
     const namespace = namespaceFor()
