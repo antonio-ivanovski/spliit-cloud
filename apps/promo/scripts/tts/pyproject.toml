@@ -1,5 +1,0 @@
-[project]
-name = "spliit-promo-tts"
-version = "0.1.0"
-requires-python = ">=3.12,<3.13"
-dependencies = ["kokoro-onnx==0.6.1", "soundfile==0.14.0"]
