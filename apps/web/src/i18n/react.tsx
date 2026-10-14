@@ -1,15 +1,11 @@
 import { type ReactNode, useLayoutEffect } from 'react'
-import { I18nextProvider, useTranslation } from 'react-i18next'
+import { I18nextProvider } from 'react-i18next'
 
 import { defaultLocale, isRtlLocale } from '@spliit/domain/i18n'
 
 import { i18n } from './setup'
 
-// react-doctor-disable-next-line react-doctor/only-export-components -- hook export (use[A-Z]) allowed per rule docs
-export function useLocale() {
-  const { i18n: instance } = useTranslation()
-  return instance.language || defaultLocale
-}
+export { useLocale } from './use-locale'
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   useLayoutEffect(() => {

@@ -56,6 +56,7 @@ import {
   generatedSplitPresetName,
   uniqueGeneratedSplitPresetName,
 } from './split-preset-names'
+import { SplitPresetPanel } from './split-preset-panel'
 
 export type SplitPreset =
   AppRouterOutput['groups']['splitPresets']['list']['presets'][number]
@@ -362,11 +363,10 @@ export function SplitPresetPicker(props: {
 
   return (
     <>
-      <fieldset
-        aria-label={
+      <SplitPresetPanel
+        label={
           loadedPreset ? t('SplitPreset.loadedLabel') : t('SplitPreset.heading')
         }
-        className="mt-2 w-full min-w-0 rounded-lg border border-border/70 bg-muted/25 p-3 text-xs shadow-xs"
       >
         <div className="min-w-0">
           <div className="flex min-w-0 items-center gap-2">
@@ -514,7 +514,7 @@ export function SplitPresetPicker(props: {
             </div>
           )}
         </div>
-      </fieldset>
+      </SplitPresetPanel>
       <ResponsiveDialog
         open={open}
         onOpenChange={(next) => {

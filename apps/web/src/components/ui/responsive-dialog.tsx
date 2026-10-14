@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { useMediaQuery } from '@/lib/hooks'
+import { useMediaQuery } from '@/lib/use-media-query'
 import { cn } from '@/lib/utils'
 import {
   Dialog,

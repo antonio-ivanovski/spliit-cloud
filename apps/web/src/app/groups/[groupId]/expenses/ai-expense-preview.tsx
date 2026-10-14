@@ -52,6 +52,7 @@ import {
 } from './expense-form/default-values'
 import { buildSubmitValues } from './expense-form/submit-values'
 import { useCreateExpenseMutation } from './expense-mutation-hooks'
+import { AiExpenseFields } from './receipt-presentation'
 
 export type AiExpenseDraft = {
   source: 'voice' | 'receipt'
@@ -383,7 +384,7 @@ export function AiExpensePreview({
               “{draft.transcript}”
             </div>
           )}
-          <div className="grid grid-cols-2 gap-3 rounded-lg border p-4 text-sm">
+          <AiExpenseFields>
             <div className="col-span-2">
               <div className="text-xs font-medium text-muted-foreground">
                 {t('group')}
@@ -615,7 +616,7 @@ export function AiExpensePreview({
                 )}
               </div>
             )}
-          </div>
+          </AiExpenseFields>
           {draft.issues.length > 0 && (
             <div className="rounded-lg border border-amber-300/60 bg-amber-50/70 p-3 text-sm text-amber-900 dark:border-amber-500/30 dark:bg-amber-950/20 dark:text-amber-200">
               <div className="mb-2 flex items-center gap-2 font-medium">

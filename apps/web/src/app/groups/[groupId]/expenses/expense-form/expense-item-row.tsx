@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useLocale } from '@/i18n/react'
+import { useLocale } from '@/i18n/use-locale'
 import { localizeCurrencyInput } from '@/lib/currency-input'
 import { cn, formatCurrency, formatNumber } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
-import { useLocale } from '@/i18n/react'
+import { useLocale } from '@/i18n/use-locale'
 import { cn, formatCurrency, formatNumber } from '@/lib/utils'
 import type { Currency, SplitMode } from '@spliit/domain'
 import { formatDisplayShares } from '@spliit/domain'

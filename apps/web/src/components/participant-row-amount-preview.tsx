@@ -1,4 +1,4 @@
-import { useLocale } from '@/i18n/react'
+import { useLocale } from '@/i18n/use-locale'
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
 

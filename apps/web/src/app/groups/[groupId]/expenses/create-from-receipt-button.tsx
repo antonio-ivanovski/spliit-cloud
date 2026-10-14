@@ -1,5 +1,4 @@
 import {
-  Camera,
   Check,
   FileQuestion,
   FileText,
@@ -65,6 +64,10 @@ import {
 } from '../current-group-context'
 import { AiCaptureDialog } from './ai-capture-dialog'
 import type { GroupShape } from './expense-form/default-values'
+import {
+  ReceiptScanningOverlay,
+  ReceiptUploadAction,
+} from './receipt-presentation'
 
 const FALLBACK_MAX_FILE_SIZE = MAX_EXPENSE_DOCUMENT_SIZE
 const TRANSLATE_STORAGE_KEY = 'spliit-receipt-translate-to-locale'
@@ -773,28 +776,13 @@ function ReceiptDialogContent({
         </div>
       )}
       {!selectedDocument && (
-        <div className="not-prose inline-flex w-full overflow-hidden rounded-md border">
-          <Button
-            type="button"
-            variant="outline"
-            className="min-w-0 flex-1 rounded-none border-0"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={pending}
-          >
-            <ScanLine className="me-2 h-4 w-4" />
-            {t('Dialog.scanReceipt')}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className="rounded-none border-0 border-s sm:hidden"
-            onClick={() => cameraInputRef.current?.click()}
-            disabled={pending}
-            aria-label={t('Dialog.takePhoto')}
-          >
-            <Camera className="h-4 w-4" />
-          </Button>
-        </div>
+        <ReceiptUploadAction
+          label={t('Dialog.scanReceipt')}
+          cameraLabel={t('Dialog.takePhoto')}
+          onScan={() => fileInputRef.current?.click()}
+          onCamera={() => cameraInputRef.current?.click()}
+          disabled={pending}
+        />
       )}
       {selectedDocument && (
         <>
@@ -823,13 +811,7 @@ function ReceiptDialogContent({
                 </div>
               )}
               {pending && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-background/75 p-3 text-center text-xs font-medium text-foreground backdrop-blur-[1px]">
-                  <span className="relative inline-flex h-12 w-12 items-center justify-center rounded-full bg-pink-500/15 text-pink-600 shadow-[0_0_24px_rgba(236,72,153,0.55)]">
-                    <ScanLine className="h-7 w-7 animate-pulse" />
-                    <Sparkles className="absolute -end-1 -top-1 h-6 w-6 animate-[pulse_1.2s_ease-in-out_infinite] text-pink-600 drop-shadow-[0_0_9px_rgba(236,72,153,1)]" />
-                  </span>
-                  <span>{t('Dialog.scanningHint')}</span>
-                </div>
+                <ReceiptScanningOverlay hint={t('Dialog.scanningHint')} />
               )}
             </div>
             {receiptInfo ? (

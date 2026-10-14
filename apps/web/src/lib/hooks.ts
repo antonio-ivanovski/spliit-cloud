@@ -1,36 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 import { Array as EffectArray, Effect } from 'effect'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { useCurrentGroupOrNull } from '@/app/groups/[groupId]/current-group-context'
 import { trpc } from '@/trpc/client'
 import { exchangeRateLookupDate, utcTodayIso } from '@spliit/domain'
 
-export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState<boolean>(() => {
-    // Prevents SSR issues
-    if (typeof window !== 'undefined') {
-      return window.matchMedia(query).matches
-    }
-    return false
-  })
-
-  useEffect(() => {
-    const matchMedia = window.matchMedia(query)
-
-    const handleChange = () => {
-      setMatches(matchMedia.matches)
-    }
-
-    matchMedia.addEventListener('change', handleChange)
-
-    return () => {
-      matchMedia.removeEventListener('change', handleChange)
-    }
-  }, [query])
-
-  return matches
-}
+export { useMediaQuery } from './use-media-query'
 
 export function useBaseUrl() {
   const [baseUrl] = useState(() => window.location.origin)
