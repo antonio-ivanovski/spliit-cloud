@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: Скенирањето сметки е 5× побрзо — и сега чита PDF
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 го преработи скенирањето сметки од корен: скенирањата се околу 5× побрзи, категориите се попаметни, а сметките веќе не мора да бидат фотографии. Деталите се во белешките за [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0).

@@ -2,8 +2,7 @@
 id: spliit-cloud-2-6-0
 date: 2026-10-08
 title: Spliit Cloud يعمل الآن دون اتصال — ساعد في اختباره
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 يجلب Spliit Cloud 2.6.0 القراءة دون اتصال إلى التطبيق: تبقى مجموعاتك قابلة للقراءة دون اتصال بالإنترنت. هذه هي أساس القراءة دون اتصال — ستليها الكتابة الكاملة دون اتصال، بما في ذلك إنشاء المصروفات، متى أصبحت هذه المرحلة مستقرة. التفاصيل في ملاحظات [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0).

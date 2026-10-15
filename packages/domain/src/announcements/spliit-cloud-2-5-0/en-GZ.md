@@ -2,8 +2,7 @@
 id: spliit-cloud-2-5-0
 date: 2026-10-05
 title: Spliit Cloud 2.5.0 just dropped
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.5.0 is live. Here is what is new in this drop, plus a quick catch-up on recent features you might have missed. We will only hit you up this way for new features and big announcements — not the tiny patches and fixes shipping all the time.

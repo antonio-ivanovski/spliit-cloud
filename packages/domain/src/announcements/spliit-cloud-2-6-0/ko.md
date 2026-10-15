@@ -2,8 +2,7 @@
 id: spliit-cloud-2-6-0
 date: 2026-10-08
 title: Spliit Cloud이 오프라인에서 동작합니다 — 테스트에 참여해 주세요
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.6.0에서 읽기 전용 오프라인 기능을 지원합니다. 연결이 없어도 그룹을 계속 확인할 수 있습니다. 이는 읽기 오프라인을 위한 기반이며, 이 단계가 안정화되면 지출 만들기를 포함한 완전한 오프라인 쓰기 기능을 순차적으로 지원할 예정입니다. 자세한 내용은 [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0) 노트에서 확인하세요.

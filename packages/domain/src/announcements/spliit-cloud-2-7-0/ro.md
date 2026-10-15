@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: Scanarea bonurilor e de 5 ori mai rapidă — și citește acum PDF-uri
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 reface scanarea bonurilor din temelii: scanările sunt de circa 5 ori mai rapide, categoriile ies mai bine alese, iar bonurile nu mai trebuie să fie fotografii. Detaliile sunt în notele [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0).

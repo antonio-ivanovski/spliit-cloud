@@ -2,8 +2,7 @@
 id: spliit-cloud-2-6-0
 date: 2026-10-08
 title: Spliit Cloud toimii nyt offline — auta testaamaan
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.6.0 tuo sovellukseen offline-luvun: ryhmäsi pysyvät luettavina ilman yhteyttä. Tämä on offline-luvun perusta — täysi offline-kirjoitus, mukaan lukien kulujen luominen, seuraa kun tämä vaihe on vakaa. Lisätiedot [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0) -julkaisutiedoissa.

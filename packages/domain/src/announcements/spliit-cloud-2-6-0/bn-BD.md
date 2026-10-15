@@ -2,8 +2,7 @@
 id: spliit-cloud-2-6-0
 date: 2026-10-08
 title: Spliit Cloud এখন অফলাইনে কাজ করে — পরীক্ষা করতে সাহায্য করুন
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.6.0 অ্যাপে রিড-অফলাইন নিয়ে এসেছে: সংযোগ ছাড়াই আপনার গ্রুপগুলো পড়া যাবে। এটি রিড-অফলাইন ভিত্তি — এই ধাপটি স্থিতিশীল হলে খরচ তৈরি সহ সম্পূর্ণ অফলাইন রাইট আসবে। বিস্তারিত [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0) নোটে রয়েছে।

@@ -4,22 +4,31 @@ export const announcements = [
     "id": "spliit-cloud-2-5-0",
     "date": "2026-10-05",
     "title": "Spliit Cloud 2.5.0 is here",
-    "inApp": true,
-    "email": true
+    "channels": [
+      "updates",
+      "modal",
+      "email"
+    ]
   },
   {
     "id": "spliit-cloud-2-6-0",
     "date": "2026-10-08",
     "title": "Spliit Cloud now works offline — help test it",
-    "inApp": true,
-    "email": true
+    "channels": [
+      "updates",
+      "modal",
+      "email"
+    ]
   },
   {
     "id": "spliit-cloud-2-7-0",
     "date": "2026-10-12",
     "title": "Receipt scanning is 5× faster — and reads PDFs now",
-    "inApp": true,
-    "email": true
+    "channels": [
+      "updates",
+      "modal",
+      "email"
+    ]
   }
 ] as const
 export const announcementContents = {

@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: Skenování účtenek je 5× rychlejší — a nově čte i PDF
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 přepracovává skenování účtenek od základu: skeny běží asi 5× rychleji, kategorie vycházejí chytřeji a účtenky už nemusejí být fotky. Podrobnosti najdete v poznámkách k verzi [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0).

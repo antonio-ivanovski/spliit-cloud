@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: 收據掃描快了 5 倍 — 現在還支援 PDF
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 將收據掃描從頭到尾大幅改造：掃描速度提升約 5 倍，分類更聰明，而且不再侷限於照片。詳情請參閱 [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0) 版本說明。

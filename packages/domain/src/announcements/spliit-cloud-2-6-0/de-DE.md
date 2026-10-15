@@ -2,8 +2,7 @@
 id: spliit-cloud-2-6-0
 date: 2026-10-08
 title: Spliit Cloud funktioniert jetzt offline — hilf beim Testen
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.6.0 bringt Offline-Lesen in die App: Deine Gruppen bleiben ohne Verbindung lesbar. Das ist das Fundament für Offline-Lesen — vollständiges Offline-Schreiben, einschließlich des Erstellens von Ausgaben, folgt, sobald diese Stufe stabil ist. Details stehen in den [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0) Hinweisen.

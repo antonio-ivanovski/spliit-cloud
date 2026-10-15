@@ -1,9 +1,12 @@
+export const ANNOUNCEMENT_CHANNELS = ['updates', 'modal', 'email'] as const
+
+export type AnnouncementChannel = (typeof ANNOUNCEMENT_CHANNELS)[number]
+
 export type AnnouncementFrontmatter = {
   id: string
   date: string
   title: string
-  inApp: boolean
-  email: boolean
+  channels: readonly AnnouncementChannel[]
 }
 
 export type ParsedAnnouncementFile = {
@@ -11,7 +14,52 @@ export type ParsedAnnouncementFile = {
   body: string
 }
 
-const FRONTMATTER_KEYS = ['id', 'date', 'title', 'inApp', 'email'] as const
+const FRONTMATTER_KEYS = ['id', 'date', 'title', 'channels'] as const
+
+function isAnnouncementChannel(value: string): value is AnnouncementChannel {
+  return (ANNOUNCEMENT_CHANNELS as readonly string[]).includes(value)
+}
+
+function parseChannels(value: string): AnnouncementChannel[] {
+  // Flow-list only, in canonical order: `channels: [updates, modal, email]`.
+  // Anything else (space-separated, multiline) is a frontmatter error rather
+  // than a second syntax to validate, translate, and keep consistent across
+  // every locale file.
+  const match = value.trim().match(/^\[(.*)\]$/s)
+  if (!match) {
+    throw new Error(
+      'Frontmatter channels must use flow-list syntax: channels: [updates, modal, email]',
+    )
+  }
+  const entries = match[1]!
+    .split(',')
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+  const channels: AnnouncementChannel[] = []
+  for (const entry of entries) {
+    if (!isAnnouncementChannel(entry)) {
+      throw new Error(`Unknown announcement channel: ${entry}`)
+    }
+    if (!channels.includes(entry)) channels.push(entry)
+  }
+  if (channels.length === 0) {
+    throw new Error('Frontmatter channels must list at least one channel')
+  }
+  // Canonical order keeps diffs and cross-locale comparison trivial.
+  channels.sort(
+    (a, b) =>
+      ANNOUNCEMENT_CHANNELS.indexOf(a) - ANNOUNCEMENT_CHANNELS.indexOf(b),
+  )
+  if (
+    (channels.includes('modal') || channels.includes('email')) &&
+    !channels.includes('updates')
+  ) {
+    throw new Error(
+      'Announcement channels modal and email require the updates channel',
+    )
+  }
+  return channels
+}
 
 function parseScalar(value: string): string | boolean {
   const trimmed = value.trim()
@@ -32,6 +80,16 @@ export function parseAnnouncementFile(source: string): ParsedAnnouncementFile {
     throw new Error('Announcement file must start with YAML frontmatter')
   }
   const [, rawFrontmatter = '', body = ''] = match
+  // Reject the legacy flags with a migration hint instead of falling through
+  // to the generic "unknown key" path.
+  const rawLines = rawFrontmatter.split(/\r?\n/)
+  for (const flag of ['inApp', 'email']) {
+    if (rawLines.some((line) => line.trim().startsWith(`${flag}:`))) {
+      throw new Error(
+        `Frontmatter ${flag} was replaced by channels: use channels: [updates, modal, email]`,
+      )
+    }
+  }
   const data: Record<string, string | boolean> = {}
   for (const line of rawFrontmatter.split(/\r?\n/)) {
     if (!line.trim() || line.trim().startsWith('#')) continue
@@ -46,18 +104,18 @@ export function parseAnnouncementFile(source: string): ParsedAnnouncementFile {
     }
     data[key] = value
   }
-  const { id, date, title, inApp, email } = data
+  const { id, date, title, channels: rawChannels } = data
   if (
     typeof id !== 'string' ||
     typeof date !== 'string' ||
     typeof title !== 'string' ||
-    typeof inApp !== 'boolean' ||
-    typeof email !== 'boolean'
+    typeof rawChannels !== 'string'
   ) {
     throw new Error(
-      'Frontmatter must define id, date, title (strings) and inApp, email (booleans)',
+      'Frontmatter must define id, date, title, channels (channels: [updates, modal, email])',
     )
   }
+  const channels = parseChannels(rawChannels)
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || Number.isNaN(Date.parse(date))) {
     throw new Error(`Invalid frontmatter date: ${date}`)
   }
@@ -69,7 +127,7 @@ export function parseAnnouncementFile(source: string): ParsedAnnouncementFile {
     throw new Error('Announcement body must be non-empty')
   }
   return {
-    frontmatter: { id, date, title: title.trim(), inApp, email },
+    frontmatter: { id, date, title: title.trim(), channels },
     body: `${trimmedBody}\n`,
   }
 }

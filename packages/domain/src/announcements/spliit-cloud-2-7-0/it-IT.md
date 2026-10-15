@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: La scansione degli scontrini è 5 volte più veloce — e ora legge i PDF
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 rinnova la scansione degli scontrini da cima a fondo: le scansioni sono circa 5 volte più veloci, le categorie risultano più azzeccate e gli scontrini non devono più essere foto. I dettagli sono nelle note della [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0).

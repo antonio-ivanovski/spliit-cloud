@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: Receipt scanning is 5× faster — and reads PDFs now
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 overhauls receipt scanning from top to bottom: scans run about 5× faster, categories come out smarter, and receipts no longer have to be photos. Details are in the [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0) notes.

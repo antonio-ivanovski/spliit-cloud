@@ -2,8 +2,7 @@
 id: spliit-cloud-2-5-0
 date: 2026-10-05
 title: Spliit Cloud 2.5.0 ja és aquí
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.5.0 ja està disponible. Aquí tens les novetats d'aquesta versió, seguides d'un resum de funcions recents que potser t'has perdut. Només compartirem per aquest canal les funcions noves i els anuncis importants, no els petits pedaços i correccions que publiquem contínuament.

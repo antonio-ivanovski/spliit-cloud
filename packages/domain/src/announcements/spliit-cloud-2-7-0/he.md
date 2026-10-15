@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: סריקת קבלות מהירה פי 5 — ועכשיו קוראת גם PDF
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 משדרג את סריקת הקבלות מהיסוד: הסריקות מהירות בערך פי 5, הקטגוריות חכמות יותר, וקבלות כבר לא חייבות להיות תמונות. הפרטים בהערות [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0).

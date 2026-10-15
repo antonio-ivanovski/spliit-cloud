@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: Escanejar rebuts és 5 vegades més ràpid — i ja llegeix PDF
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 renova l'escaneig de rebuts de dalt a baix: els escanejos són unes 5 vegades més ràpids, les categories surten més encertades i els rebuts ja no han de ser fotos. Trobareu més detalls a les notes de la [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0).

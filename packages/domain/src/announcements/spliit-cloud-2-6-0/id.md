@@ -2,8 +2,7 @@
 id: spliit-cloud-2-6-0
 date: 2026-10-08
 title: Spliit Cloud kini berfungsi offline — bantu uji coba
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.6.0 menghadirkan mode baca offline ke aplikasi: grup Anda tetap bisa dibaca tanpa koneksi. Ini adalah fondasi baca offline — tulis offline penuh, termasuk membuat pengeluaran, akan menyusul setelah tahap ini stabil. Detailnya ada di catatan [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0).

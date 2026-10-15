@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: 영수증 스캔이 5배 빨라졌습니다 — PDF도 읽어요
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0에서 영수증 스캔을 처음부터 끝까지 개편했습니다. 스캔은 약 5배 빨라지고 카테고리 제안은 더 똑똑해졌으며, 이제 사진이 아닌 영수증도 읽을 수 있습니다. 자세한 내용은 [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0) 노트에서 확인하세요.

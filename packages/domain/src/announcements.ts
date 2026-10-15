@@ -3,6 +3,7 @@ import {
   announcements,
 } from './announcement-content.generated'
 import {
+  type AnnouncementChannel,
   extractAnnouncementSections,
   renderAnnouncementHtml,
   renderAnnouncementText,
@@ -17,8 +18,12 @@ export type AnnouncementDefinition = {
   date: string
   /** English title from frontmatter; localized titles come from content. */
   title: string
-  inApp: boolean
-  email: boolean
+  /**
+   * Delivery surfaces. `updates` is the base page entry (list, archive, detail,
+   * landing teaser); `modal` pops the in-app dialog; `email` sends the
+   * campaign. Quiet entries carry only `updates`.
+   */
+  channels: readonly AnnouncementChannel[]
 }
 
 export type Announcement = AnnouncementDefinition
@@ -98,8 +103,27 @@ export function getAnnouncement(id: string): Announcement | undefined {
   return announcements.find((announcement) => announcement.id === id)
 }
 
-export function latestInAppAnnouncement(): Announcement | undefined {
-  return [...announcements].reverse().find((announcement) => announcement.inApp)
+export function hasAnnouncementChannel(
+  announcement: Announcement,
+  channel: AnnouncementChannel,
+): boolean {
+  return (announcement.channels as readonly string[]).includes(channel)
+}
+
+export function latestUpdatesAnnouncement(): Announcement | undefined {
+  return [...announcements]
+    .reverse()
+    .find((announcement) => hasAnnouncementChannel(announcement, 'updates'))
+}
+
+/**
+ * Newest modal-channel entry. A quiet (`updates`-only) entry never pops the
+ * modal: the previous unviewed modal entry keeps popping until viewed.
+ */
+export function latestModalAnnouncement(): Announcement | undefined {
+  return [...announcements]
+    .reverse()
+    .find((announcement) => hasAnnouncementChannel(announcement, 'modal'))
 }
 
 export function getAnnouncementTextBody(id: string): {
@@ -115,3 +139,4 @@ export function getAnnouncementTextBody(id: string): {
 }
 
 export { announcements }
+export type { AnnouncementChannel }

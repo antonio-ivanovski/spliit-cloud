@@ -2,8 +2,7 @@
 id: spliit-cloud-2-6-0
 date: 2026-10-08
 title: Spliit Cloud 現在支援離線使用 — 邀請您協助測試
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.6.0 為應用程式帶來唯讀離線功能：沒有網路連線時，也能繼續查看您的群組。這是唯讀離線的基礎——待此階段穩定後，將陸續支援包含建立支出在內的完整離線寫入功能。詳情請參閱 [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0) 版本說明。

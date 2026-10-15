@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: Сканирование чеков стало в 5 раз быстрее — и теперь читает PDF
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 перестраивает сканирование чеков сверху донизу: сканы идут примерно в 5 раз быстрее, категории стали умнее, а чекам больше не обязательно быть фотографиями. Подробности — в заметках к [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0).

@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: مسح الإيصالات أسرع بخمس مرات — ويقرأ ملفات PDF الآن
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 يُجري Spliit Cloud 2.7.0 تجديدًا شاملًا لمسح الإيصالات من الألف إلى الياء: أصبح المسح أسرع بنحو خمس مرات، والتصنيفات أذكى، ولم تعد الإيصالات مقتصرة على الصور. التفاصيل في ملاحظات [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0).

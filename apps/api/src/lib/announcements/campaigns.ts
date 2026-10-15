@@ -1,5 +1,8 @@
 import { prisma } from '@spliit/db'
-import { announcements } from '@spliit/domain/announcements'
+import {
+  announcements,
+  hasAnnouncementChannel,
+} from '@spliit/domain/announcements'
 
 /** A reviewed campaign may specialize its lifecycle in code. */
 export type CampaignHooks = {
@@ -43,7 +46,7 @@ const campaignOverrides: Partial<Record<string, Partial<CampaignHooks>>> = {}
 
 export const campaignHooks: Record<string, CampaignHooks> = Object.fromEntries(
   announcements
-    .filter((announcement) => announcement.email)
+    .filter((announcement) => hasAnnouncementChannel(announcement, 'email'))
     .map((announcement) => [
       announcement.id,
       {

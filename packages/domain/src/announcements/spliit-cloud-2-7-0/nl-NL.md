@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: Bonnetjes scannen is 5× sneller — en leest nu ook pdf's
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 vernieuwt het scannen van bonnetjes van boven tot onder: scans zijn ongeveer 5× sneller, categorieën vallen slimmer uit, en bonnetjes hoeven geen foto's meer te zijn. Details staan in de [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0) notities.

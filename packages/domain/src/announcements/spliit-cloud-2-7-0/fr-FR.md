@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: La numérisation des reçus est 5 fois plus rapide — et lit désormais les PDF
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 repense la numérisation des reçus de fond en comble : les analyses sont environ 5 fois plus rapides, les catégories sont plus pertinentes, et les reçus ne doivent plus être des photos. Les détails sont dans les notes de la [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0).

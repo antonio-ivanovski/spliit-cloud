@@ -2,8 +2,7 @@
 id: spliit-cloud-2-6-0
 date: 2026-10-08
 title: Spliit Cloud ya funciona sin conexión — ayúdanos a probarlo
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.6.0 trae la lectura sin conexión a la app: tus grupos siguen siendo legibles sin conexión. Es la base de la lectura sin conexión — la escritura completa sin conexión, incluida la creación de gastos, llegará cuando esta fase sea sólida. Encontrarás más detalles en las notas de la [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0).

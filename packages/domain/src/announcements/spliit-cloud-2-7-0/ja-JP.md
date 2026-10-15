@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: レシートスキャンが約5倍高速に — PDFにも対応しました
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 ではレシートスキャンを全面的に刷新しました。スキャンは約5倍高速になり、カテゴリの判定も賢くなり、写真以外のレシートにも対応しました。詳細は [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0) のリリースノートをご覧ください。

@@ -2,8 +2,7 @@
 id: spliit-cloud-2-6-0
 date: 2026-10-08
 title: Spliit Cloud עובד עכשיו במצב לא מקוון — עזרו לבדוק אותו
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.6.0 מביא קריאה לא מקוונת לאפליקציה: הקבוצות שלכם נשארות קריאות גם בלי חיבור. זהו הבסיס לקריאה לא מקוונת — כתיבה מלאה לא מקוונת, כולל יצירת הוצאות, תגיע לאחר שהשלב הזה יתייצב. הפרטים בהערות [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0).

@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import {
   getAnnouncement,
   getAnnouncementContent,
+  hasAnnouncementChannel,
 } from '@spliit/domain/announcements'
 
 const updateDetailRouteApi = getRouteApi('/updates/$announcementId')
@@ -21,11 +22,11 @@ export default function UpdateDetailPage() {
   const { t, i18n } = useTranslation()
   const { announcementId } = updateDetailRouteApi.useParams()
   // Announcement content is static and bundled; resolve it synchronously so
-  // the page renders without a loading state. Only in-app announcements have
-  // a detail page.
+  // the page renders without a loading state. Only updates-channel
+  // announcements have a detail page.
   const definition = getAnnouncement(announcementId)
   const content =
-    definition?.inApp === true
+    definition && hasAnnouncementChannel(definition, 'updates')
       ? getAnnouncementContent(announcementId, i18n.language)
       : undefined
   // Section deep links (`#<id>--<section>`) point at headings inside the

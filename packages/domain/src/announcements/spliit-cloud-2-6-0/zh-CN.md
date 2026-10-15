@@ -2,8 +2,7 @@
 id: spliit-cloud-2-6-0
 date: 2026-10-08
 title: Spliit Cloud 现已支持离线使用 — 欢迎参与测试
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.6.0 为应用带来了只读离线功能：无需网络连接，也能查看您的群组。这是只读离线的基础——待该阶段稳定后，将陆续支持包括创建支出在内的完整离线写入功能。详情请参阅 [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0) 版本说明。

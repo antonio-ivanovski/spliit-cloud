@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: Kvittoskanning är 5× snabbare — och läser PDF:er nu
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 bygger om kvittoskanningen från grunden: skanningar går cirka 5× snabbare, kategorierna blir smartare, och kvitton måste inte längre vara foton. Detaljer finns i [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0) anteckningarna.

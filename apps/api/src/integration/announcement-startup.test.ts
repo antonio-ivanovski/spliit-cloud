@@ -8,14 +8,14 @@ const startup = vi.hoisted(() => ({
     id: string
     date: string
     title: string
-    inApp: boolean
-    email: boolean
+    channels: string[]
   }>,
 }))
 
-vi.mock('@spliit/domain/announcements', () => ({
-  announcements: startup.announcements,
-}))
+vi.mock('@spliit/domain/announcements', async (importOriginal) => {
+  const actual = await (importOriginal as () => Promise<object>)()
+  return { ...actual, announcements: startup.announcements }
+})
 vi.mock('../lib/env', () => ({
   env: {
     get CLOUD_NEWS_ENABLED() {
@@ -46,8 +46,7 @@ it('registers each new Cloud campaign once across API starts', async () => {
     id: ids[0]!,
     date: '2026-09-25',
     title: 'First',
-    inApp: true,
-    email: true,
+    channels: ['updates', 'modal', 'email'],
   })
   const { activateAnnouncementCampaigns } =
     await import('../lib/announcements/activate')
@@ -82,8 +81,7 @@ it('registers each new Cloud campaign once across API starts', async () => {
     id: ids[1]!,
     date: '2026-09-26',
     title: 'Second',
-    inApp: true,
-    email: true,
+    channels: ['updates', 'modal', 'email'],
   })
   vi.resetModules()
   const updated = await import('../lib/announcements/activate')
@@ -97,11 +95,31 @@ it('registers each new Cloud campaign once across API starts', async () => {
     id: ids[2]!,
     date: '2026-09-27',
     title: 'Disabled',
-    inApp: true,
-    email: true,
+    channels: ['updates', 'modal', 'email'],
   })
   await updated.activateAnnouncementCampaigns()
   expect(
     await prisma.announcementCampaign.count({ where: { id: ids[2] } }),
   ).toBe(0)
+})
+
+it('registers no campaign for a quiet updates-only entry', async () => {
+  const quietId = 'announcement-startup-test-quiet'
+  await prisma.announcementCampaign.deleteMany({ where: { id: quietId } })
+  startup.announcements.length = 0
+  startup.enabled = true
+  startup.announcements.push({
+    id: quietId,
+    date: '2026-09-28',
+    title: 'Quiet',
+    channels: ['updates'],
+  })
+  vi.resetModules()
+  const { activateAnnouncementCampaigns } =
+    await import('../lib/announcements/activate')
+  await activateAnnouncementCampaigns()
+  expect(
+    await prisma.announcementCampaign.count({ where: { id: quietId } }),
+  ).toBe(0)
+  await prisma.announcementCampaign.deleteMany({ where: { id: quietId } })
 })

@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: رسید اسکیننگ 5 گنا تیز — اور اب PDFs بھی پڑھتا ہے
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 میں رسید اسکیننگ کو شروع سے آخر تک نئے سرے سے تیار کیا گیا ہے: اسکین تقریباً 5 گنا تیز چلتے ہیں، زمرے زیادہ سمجھداری سے ملتے ہیں، اور رسیدوں کا فوٹو ہونا اب ضروری نہیں ہے۔ تفصیلات [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0) نوٹس میں دیکھیں۔

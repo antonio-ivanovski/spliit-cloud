@@ -1,5 +1,8 @@
 import { prisma } from '@spliit/db'
-import { getAnnouncement } from '@spliit/domain/announcements'
+import {
+  getAnnouncement,
+  hasAnnouncementChannel,
+} from '@spliit/domain/announcements'
 import {
   NotificationCategory,
   NotificationChannel,
@@ -78,7 +81,8 @@ async function sendOne(deliveryId: string) {
     !account?.emailVerified ||
     account.email.endsWith('.placeholder.local') ||
     optedOut ||
-    !announcement?.email ||
+    !announcement ||
+    !hasAnnouncementChannel(announcement, 'email') ||
     !env.CLOUD_NEWS_ENABLED
   ) {
     await prisma.announcementEmailDelivery.update({

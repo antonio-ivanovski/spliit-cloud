@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: Pemindaian struk 5× lebih cepat — dan kini bisa membaca PDF
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 merombak pemindaian struk dari hulu ke hilir: pemindaian berjalan sekitar 5× lebih cepat, kategori keluar lebih cerdas, dan struk tidak lagi harus berupa foto. Detailnya ada di catatan [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0).

@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: रसीद स्कैनिंग 5 गुना तेज़ — और अब PDF भी पढ़ता है
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 में रसीद स्कैनिंग को शुरू से आखिर तक नए सिरे से तैयार किया गया है: स्कैन लगभग 5 गुना तेज़ चलते हैं, श्रेणियाँ ज़्यादा समझदारी से मिलती हैं, और रसीदों का फ़ोटो होना अब ज़रूरी नहीं है। विवरण [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0) नोट्स में देखें।

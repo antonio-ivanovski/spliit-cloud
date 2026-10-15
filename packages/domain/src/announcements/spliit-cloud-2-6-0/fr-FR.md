@@ -2,8 +2,7 @@
 id: spliit-cloud-2-6-0
 date: 2026-10-08
 title: Spliit Cloud fonctionne désormais hors ligne — aidez-nous à le tester
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.6.0 apporte la lecture hors ligne à l'app : vos groupes restent lisibles sans connexion. C'est la base de la lecture hors ligne — l'écriture complète hors ligne, y compris la création de dépenses, suivra une fois cette étape stabilisée. Les détails sont dans les notes de la [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0).

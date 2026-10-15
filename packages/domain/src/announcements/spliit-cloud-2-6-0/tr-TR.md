@@ -2,8 +2,7 @@
 id: spliit-cloud-2-6-0
 date: 2026-10-08
 title: Spliit Cloud artık çevrimdışı çalışıyor — test etmeye yardımcı ol
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.6.0 uygulamaya çevrimdışı okuma getiriyor: bağlantı olmadan da grupların okunabilir kalıyor. Bu, çevrimdışı okumanın temeli — bu aşama sağlamlaştıktan sonra gider oluşturma dahil tam çevrimdışı yazma gelecek. Ayrıntılar [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0) notlarında.

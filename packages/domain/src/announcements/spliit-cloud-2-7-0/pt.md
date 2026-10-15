@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: Digitalizar recibos é 5 vezes mais rápido — e já lê PDF
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 O Spliit Cloud 2.7.0 renova a digitalização de recibos de cima a baixo: as digitalizações são cerca de 5 vezes mais rápidas, as categorias saem mais certeiras e os recibos já não têm de ser fotos. Os detalhes estão nas notas da [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0).

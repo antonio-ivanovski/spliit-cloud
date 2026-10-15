@@ -5,7 +5,8 @@ import { prisma } from '@spliit/db'
 import {
   announcements,
   getAnnouncement,
-  latestInAppAnnouncement,
+  hasAnnouncementChannel,
+  latestModalAnnouncement,
 } from '@spliit/domain/announcements'
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../init'
@@ -13,11 +14,14 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from '../init'
 export const announcementsRouter = createTRPCRouter({
   list: publicProcedure.query(() =>
     announcements
-      .filter((entry) => entry.inApp)
+      .filter((entry) => hasAnnouncementChannel(entry, 'updates'))
       .map((entry) => ({ id: entry.id, date: entry.date })),
   ),
   latestStatus: protectedProcedure.query(async ({ ctx }) => {
-    const latest = latestInAppAnnouncement()
+    // The modal follows the newest modal-channel entry only. A quiet
+    // (updates-only) entry never pops it: an unviewed earlier modal entry
+    // keeps popping until viewed.
+    const latest = latestModalAnnouncement()
     if (!latest) return { announcementId: null, viewed: true }
     const view = await prisma.announcementView.findUnique({
       where: {
@@ -34,7 +38,7 @@ export const announcementsRouter = createTRPCRouter({
     .input(z.object({ announcementId: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
       const announcement = getAnnouncement(input.announcementId)
-      if (!announcement?.inApp) {
+      if (!announcement || !hasAnnouncementChannel(announcement, 'updates')) {
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
       await prisma.announcementView.upsert({

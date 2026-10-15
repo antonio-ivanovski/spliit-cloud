@@ -2,8 +2,7 @@
 id: spliit-cloud-2-6-0
 date: 2026-10-08
 title: Spliit Cloud अब ऑफ़लाइन काम करता है — परखने में मदद करें
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.6.0 ऐप में रीड-ऑफ़लाइन लाया है: बिना कनेक्शन के भी आपके समूह पढ़ने योग्य रहेंगे। यह रीड-ऑफ़लाइन की बुनियाद है — यह चरण स्थिर हो जाने के बाद खर्च जोड़ने सहित पूर्ण ऑफ़लाइन राइट आएगा। विवरण [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0) नोट्स में देखें।

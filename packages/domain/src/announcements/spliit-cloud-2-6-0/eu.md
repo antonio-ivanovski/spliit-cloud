@@ -2,8 +2,7 @@
 id: spliit-cloud-2-6-0
 date: 2026-10-08
 title: Spliit Cloud-ek orain lineaz kanpo funtzionatzen du — lagundu probatzen
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.6.0-k irakurketa lineaz kanpo dakar aplikaziora: zure taldeak irakurgarri mantentzen dira konexiorik gabe. Irakurketa lineaz kanpoko oinarria da — idazketa osoa lineaz kanpo, gastuak sortzea barne, etapa hau sendo dagoenean iritsiko da. Xehetasunak [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0) oharretan daude.

@@ -12,8 +12,7 @@ const SOURCE = `---
 id: test-entry
 date: 2026-09-25
 title: Test title
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Intro paragraph.
@@ -29,10 +28,69 @@ describe('announcement markdown', () => {
       id: 'test-entry',
       date: '2026-09-25',
       title: 'Test title',
-      inApp: true,
-      email: true,
+      channels: ['updates', 'modal', 'email'],
     })
     expect(parsed.body).toContain('- [First]')
+  })
+
+  it('parses a quiet updates-only entry', () => {
+    const parsed = parseAnnouncementFile(
+      SOURCE.replace(
+        'channels: [updates, modal, email]',
+        'channels: [updates]',
+      ),
+    )
+    expect(parsed.frontmatter.channels).toEqual(['updates'])
+  })
+
+  it('normalizes channel order and rejects bad channel syntax', () => {
+    const parsed = parseAnnouncementFile(
+      SOURCE.replace(
+        'channels: [updates, modal, email]',
+        'channels: [email, updates, modal]',
+      ),
+    )
+    expect(parsed.frontmatter.channels).toEqual(['updates', 'modal', 'email'])
+    expect(() =>
+      parseAnnouncementFile(
+        SOURCE.replace(
+          'channels: [updates, modal, email]',
+          'channels: updates',
+        ),
+      ),
+    ).toThrow('flow-list syntax')
+    expect(() =>
+      parseAnnouncementFile(
+        SOURCE.replace(
+          'channels: [updates, modal, email]',
+          'channels: [updates, sms]',
+        ),
+      ),
+    ).toThrow('Unknown announcement channel: sms')
+    expect(() =>
+      parseAnnouncementFile(
+        SOURCE.replace(
+          'channels: [updates, modal, email]',
+          'channels: [modal]',
+        ),
+      ),
+    ).toThrow('require the updates channel')
+    expect(() =>
+      parseAnnouncementFile(
+        SOURCE.replace(
+          'channels: [updates, modal, email]',
+          'channels: [email]',
+        ),
+      ),
+    ).toThrow('require the updates channel')
+    expect(() =>
+      parseAnnouncementFile(
+        SOURCE.replace(
+          'channels: [updates, modal, email]',
+          'inApp: true\nemail: true',
+        ),
+      ),
+    ).toThrow('replaced by channels')
   })
 
   it('rejects images, html, and non-https links', () => {

@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: 小票扫描速度提升 5 倍 — 还支持 PDF 了
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 对小票扫描进行了彻底重构：扫描速度提升约 5 倍，分类更智能，而且不再局限于照片。详情请参阅 [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0) 版本说明。

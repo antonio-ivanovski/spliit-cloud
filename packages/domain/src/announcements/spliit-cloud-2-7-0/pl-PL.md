@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: Skanowanie paragonów jest 5× szybsze — i czyta już PDF-y
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 przebudowuje skanowanie paragonów od podstaw: skany działają około 5× szybciej, kategorie są sprytniejsze, a paragony nie muszą już być zdjęciami. Szczegóły znajdziesz w informacjach o wydaniu [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0).

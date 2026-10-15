@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: রসিদ স্ক্যানিং ৫ গুণ দ্রুত — এখন PDF-ও পড়ে
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 রসিদ স্ক্যানিং শুরু থেকে শেষ পর্যন্ত ঢেলে সাজিয়েছে: স্ক্যান প্রায় ৫ গুণ দ্রুত চলে, ক্যাটাগরি আরও বুদ্ধিমানের সঙ্গে আসে, আর রসিদের ছবি হওয়া এখন আর জরুরি নয়। বিস্তারিত [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0) নোটে রয়েছে।

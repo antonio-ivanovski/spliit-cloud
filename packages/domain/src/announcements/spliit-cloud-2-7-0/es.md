@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: Escanear recibos es 5 veces más rápido — y ya lee PDF
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 renueva el escaneo de recibos de arriba abajo: los escaneos son unas 5 veces más rápidos, las categorías salen más acertadas y los recibos ya no tienen que ser fotos. Encontrarás más detalles en las notas de la [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0).

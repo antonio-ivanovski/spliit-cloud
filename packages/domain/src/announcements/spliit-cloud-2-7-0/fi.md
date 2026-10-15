@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: Kuittiskannaus on 5× nopeampi — ja lukee nyt PDF:t
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 uudistaa kuittiskannauksen kokonaan: skannaukset ovat noin 5× nopeampia, kategoriat osuvat paremmin, eikä kuittien tarvitse enää olla valokuvia. Lisätiedot [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0) -julkaisutiedoissa.

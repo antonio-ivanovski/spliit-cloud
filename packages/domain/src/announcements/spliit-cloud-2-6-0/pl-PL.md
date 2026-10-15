@@ -2,8 +2,7 @@
 id: spliit-cloud-2-6-0
 date: 2026-10-08
 title: Spliit Cloud działa już offline — pomóż to przetestować
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.6.0 wprowadza do aplikacji odczyt offline: Twoje grupy pozostają czytelne bez połączenia. To fundament odczytu offline — pełny zapis offline, w tym tworzenie wydatków, pojawi się, gdy ten etap będzie solidny. Szczegóły znajdziesz w informacjach o wydaniu [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0).

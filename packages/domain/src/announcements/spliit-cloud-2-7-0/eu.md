@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: Ordainagirien eskaneatzea 5 aldiz azkarragoa da — eta PDFak irakurtzen ditu
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0-k ordainagirien eskaneatzea goitik behera berritu du: eskaneatzeak 5 aldiz azkarragoak dira, kategoriak zuzenago ateratzen dira, eta ordainagiriek ez dute argazki izan beharrik. Xehetasunak [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0) oharretan daude.

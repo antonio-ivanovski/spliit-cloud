@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: Quét hóa đơn nhanh hơn 5× — và nay đọc được cả PDF
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0 cải tổ toàn diện tính năng quét hóa đơn: quét nhanh hơn khoảng 5×, danh mục gợi ý thông minh hơn, và hóa đơn không còn bắt buộc phải là ảnh chụp. Chi tiết có trong ghi chú [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0).

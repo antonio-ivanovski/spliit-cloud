@@ -2,8 +2,7 @@
 id: spliit-cloud-2-6-0
 date: 2026-10-08
 title: Spliit Cloud nay hoạt động ngoại tuyến — hãy giúp thử nghiệm
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.6.0 mang chế độ đọc ngoại tuyến đến ứng dụng: các nhóm của bạn vẫn đọc được mà không cần kết nối. Đây là nền tảng đọc ngoại tuyến — ghi ngoại tuyến đầy đủ, bao gồm tạo chi phí, sẽ ra mắt khi giai đoạn này ổn định. Chi tiết có trong ghi chú [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0).

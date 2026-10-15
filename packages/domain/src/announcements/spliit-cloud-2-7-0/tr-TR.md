@@ -2,8 +2,7 @@
 id: spliit-cloud-2-7-0
 date: 2026-10-12
 title: Fiş tarama 5 kat daha hızlı — artık PDF de okuyor
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.7.0, fiş taramayı baştan aşağı yeniliyor: taramalar yaklaşık 5 kat daha hızlı çalışıyor, kategoriler daha isabetli çıkıyor ve fişlerin artık fotoğraf olması gerekmiyor. Ayrıntılar [v2.7.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.7.0) notlarında.

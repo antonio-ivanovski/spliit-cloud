@@ -2,8 +2,7 @@
 id: spliit-cloud-2-6-0
 date: 2026-10-08
 title: Spliit Cloud тепер працює офлайн — допоможи протестувати
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.6.0 приносить у застосунок офлайн-читання: твої групи залишаються читабельними без зʼєднання. Це фундамент офлайн-читання — повноцінний офлайн-запис, включно зі створенням витрат, зʼявиться, щойно цей етап стане надійним. Деталі — у примітках до [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0).

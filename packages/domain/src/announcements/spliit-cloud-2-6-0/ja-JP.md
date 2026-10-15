@@ -2,8 +2,7 @@
 id: spliit-cloud-2-6-0
 date: 2026-10-08
 title: Spliit Cloud がオフラインで使えるように — テストにご協力ください
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.6.0 では読み取り専用のオフライン対応が追加され、接続がなくてもグループを閲覧できるようになりました。これは読み取りオフラインの基盤であり、この段階が安定したら、支出の作成を含む完全なオフライン書き込みに順次対応します。詳細は [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0) のリリースノートをご覧ください。

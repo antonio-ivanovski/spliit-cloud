@@ -6,8 +6,12 @@ import { fileURLToPath } from 'node:url'
 import {
   parseAnnouncementFile,
   validateAnnouncementBody,
+  type AnnouncementChannel,
 } from '../packages/domain/src/announcements/markdown'
-import { isSparseLocale, locales as domainLocales } from '../packages/domain/src/i18n'
+import {
+  isSparseLocale,
+  locales as domainLocales,
+} from '../packages/domain/src/i18n'
 
 const root = fileURLToPath(new URL('../', import.meta.url))
 const announcementsDir = join(root, 'packages/domain/src/announcements')
@@ -20,8 +24,7 @@ type Entry = {
   id: string
   date: string
   title: string
-  inApp: boolean
-  email: boolean
+  channels: AnnouncementChannel[]
   locales: Record<string, { title: string; body: string }>
 }
 
@@ -75,18 +78,16 @@ function build(): { entries: Entry[]; source: string } {
           id,
           date: frontmatter.date,
           title: frontmatter.title,
-          inApp: frontmatter.inApp,
-          email: frontmatter.email,
+          channels: frontmatter.channels,
           locales: {},
         }
       } else {
         if (
           frontmatter.date !== reference.date ||
-          frontmatter.inApp !== reference.inApp ||
-          frontmatter.email !== reference.email
+          frontmatter.channels.join(',') !== reference.channels.join(',')
         ) {
           throw new Error(
-            `Frontmatter date/inApp/email must match en-US for ${id}:${locale}`,
+            `Frontmatter date/channels must match en-US for ${id}:${locale}`,
           )
         }
       }
@@ -99,8 +100,7 @@ function build(): { entries: Entry[]; source: string } {
       id: ref.id,
       date: ref.date,
       title: enTitle,
-      inApp: ref.inApp,
-      email: ref.email,
+      channels: ref.channels,
       locales,
     })
   }

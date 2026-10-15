@@ -2,8 +2,7 @@
 id: spliit-cloud-2-5-0
 date: 2026-10-05
 title: Spliit Cloud 2.5.0 sudah hadir
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.5.0 sudah rilis. Berikut yang baru di versi ini, dilanjutkan dengan rangkuman fitur terbaru yang mungkin Anda lewatkan. Kami hanya akan membagikan fitur baru dan pengumuman penting dengan cara ini — bukan patch kecil dan perbaikan yang dirilis setiap saat.

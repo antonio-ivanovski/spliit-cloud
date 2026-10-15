@@ -2,8 +2,7 @@
 id: spliit-cloud-2-6-0
 date: 2026-10-08
 title: Spliit Cloud funcționează acum offline — ajută-ne să-l testăm
-inApp: true
-email: true
+channels: [updates, modal, email]
 ---
 
 Spliit Cloud 2.6.0 aduce citirea offline în aplicație: grupurile tale rămân lizibile fără conexiune. Este baza citirii offline — scrierea offline completă, inclusiv crearea cheltuielilor, va urma după ce această etapă este solidă. Detaliile sunt în notele [v2.6.0](https://github.com/antonio-ivanovski/spliit-cloud/releases/tag/v2.6.0).
