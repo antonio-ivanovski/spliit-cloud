@@ -22,6 +22,9 @@ describe('shouldUseAppShellNavigation', () => {
     expect(shouldUseAppShellNavigation('/sw.js')).toBe(false)
     expect(shouldUseAppShellNavigation('/sw.js?v=1')).toBe(false)
     expect(shouldUseAppShellNavigation('/manifest.webmanifest')).toBe(false)
+    expect(shouldUseAppShellNavigation('/android/releases/stable.json')).toBe(
+      false,
+    )
     expect(shouldUseAppShellNavigation('/trpc/overview.get')).toBe(false)
     expect(shouldUseAppShellNavigation('/health')).toBe(false)
     expect(shouldUseAppShellNavigation('/email/unsubscribe')).toBe(false)

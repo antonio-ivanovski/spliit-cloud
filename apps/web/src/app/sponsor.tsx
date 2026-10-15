@@ -21,6 +21,9 @@ import {
   SupportPageShell,
   useCopyToClipboard,
 } from '@/components/support'
+import { isAndroidApp } from '@/lib/android-app'
+
+import FeedbackPage from './feedback'
 
 const GITHUB_SPONSORS_URL = 'https://github.com/sponsors/antonio-ivanovski'
 
@@ -114,6 +117,9 @@ const cryptoMethods = [
 
 export default function SponsorPage() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Sponsor' })
+
+  // Direct navigation and restored sessions follow the same Android policy.
+  if (isAndroidApp()) return <FeedbackPage />
 
   return (
     <SupportPageShell>

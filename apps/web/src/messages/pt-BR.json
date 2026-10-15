@@ -1501,7 +1501,8 @@
       "consequencesTiming": "Este resumo reflete o estado atual da sua conta. Os grupos, membros e despesas podem mudar antes de a exclusão começar. Suas opções serão aplicadas aos grupos de que você fizer parte e aos saldos deles naquele momento. Nada do que está indicado aqui acontece imediatamente.",
       "executingTitle": "A exclusão da conta começou",
       "executingDescription": "A exclusão da sua conta está em processamento. Algumas alterações podem já estar concluídas, e a exclusão não pode ser cancelada nem desfeita. Se o processamento for interrompido, ele retoma a partir das etapas concluídas."
-    }
+    },
+    "androidUpdates": "Atualizações do aplicativo Android"
   },
   "Activities": {
     "expense": {
@@ -2710,5 +2711,21 @@
   "CurrencyRateWarning": {
     "frozenHeadline": "Moeda retirada — mostrando a última taxa disponível de {date}",
     "triangulatedHeadline": "Taxa parcialmente fixa — conversão fixa mais uma taxa de mercado ao vivo"
+  },
+  "AndroidNative": {
+    "updates_title": "Atualizações do aplicativo Android",
+    "web_version_note": "Os recursos do site são atualizados separadamente. Suas despesas são armazenadas pelo Spliit Cloud e no armazenamento offline deste navegador.",
+    "check_updates": "Buscar atualizações",
+    "checking": "Buscando atualizações…",
+    "up_to_date": "Seu pacote Android está atualizado.",
+    "check_failed": "Não foi possível buscar atualizações. Tente novamente quando estiver conectado.",
+    "play_updates": "Esta instalação é gerenciada pelo Google Play. Busque as atualizações do pacote Android no Google Play.",
+    "obtainium_note": "Se você usa o Obtainium, ele também pode gerenciar atualizações das nossas versões no GitHub.",
+    "offline_title": "Conecte-se para abrir o Spliit Cloud",
+    "offline_message": "A primeira inicialização precisa de uma conexão com a internet para preparar o acesso offline. Os arquivos que você compartilhou foram preservados. Conecte-se e tente novamente.",
+    "browser_message": "Instale ou ative um navegador atualizado que ofereça suporte a guias personalizadas, como o Chrome, e tente novamente.",
+    "connection_settings": "Configurações de conexão",
+    "browser_settings": "Configurações do aplicativo",
+    "settings": "Configurações"
   }
 }

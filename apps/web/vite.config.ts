@@ -112,6 +112,11 @@ export default defineConfig({
         prefer_related_applications: false,
         related_applications: [
           {
+            platform: 'play',
+            id: 'cloud.spliit.twa',
+            url: 'https://play.google.com/store/apps/details?id=cloud.spliit.twa',
+          },
+          {
             platform: 'webapp',
             url: 'https://spliit.cloud/manifest.webmanifest',
           },
@@ -211,6 +216,8 @@ export default defineConfig({
           '404.html',
           // Store/install artwork only; not needed to launch the app offline.
           'screenshots/*',
+          // Native update discovery must not be frozen in an app-shell precache.
+          'android/releases/*',
           // ~3 MiB receipt-upload codec; not needed to launch the app offline.
           'assets/heic-to-*.js',
           // Locale bundles (~7 MB for all 32): only the default bundle and

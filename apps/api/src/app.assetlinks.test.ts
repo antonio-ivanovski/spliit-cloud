@@ -13,12 +13,13 @@ const UPLOAD_SHA_COLON =
 const UPLOAD_SHA_COMPACT =
   '625DFC7CF5CE4FD9CF479D2DAC9C061E734F4CC1DACD64D7DD4F5751833D18E4'
 const PLAY_SIGNING_SHA_COMPACT = `${'A1'.repeat(32)}`
+const PLAY_SIGNING_SHA_COLON = Array.from({ length: 32 }, () => 'A1').join(':')
 
 describe('assetlinks fingerprints', () => {
-  it('normalizes colon-separated keytool output to compact uppercase hex', () => {
-    expect(normalizeFingerprint(UPLOAD_SHA_COLON)).toBe(UPLOAD_SHA_COMPACT)
+  it('emits the colon-separated uppercase SHA-256 format required by Digital Asset Links', () => {
+    expect(normalizeFingerprint(UPLOAD_SHA_COLON)).toBe(UPLOAD_SHA_COLON)
     expect(normalizeFingerprint(UPLOAD_SHA_COMPACT.toLowerCase())).toBe(
-      UPLOAD_SHA_COMPACT,
+      UPLOAD_SHA_COLON,
     )
   })
 
@@ -35,7 +36,7 @@ describe('assetlinks fingerprints', () => {
       parseFingerprints(
         `${UPLOAD_SHA_COLON}, ${UPLOAD_SHA_COMPACT}, ${PLAY_SIGNING_SHA_COMPACT}`,
       ),
-    ).toEqual([UPLOAD_SHA_COMPACT, PLAY_SIGNING_SHA_COMPACT])
+    ).toEqual([UPLOAD_SHA_COLON, PLAY_SIGNING_SHA_COLON])
   })
 })
 
@@ -52,10 +53,7 @@ describe('assetlinks statements', () => {
         target: {
           namespace: 'android_app',
           package_name: 'cloud.spliit.twa',
-          sha256_cert_fingerprints: [
-            UPLOAD_SHA_COMPACT,
-            PLAY_SIGNING_SHA_COMPACT,
-          ],
+          sha256_cert_fingerprints: [UPLOAD_SHA_COLON, PLAY_SIGNING_SHA_COLON],
         },
       },
     ])

@@ -2858,7 +2858,8 @@
       "consequencesTiming": "Tento přehled odpovídá současnému stavu vašeho účtu. Skupiny, členové a výdaje se mohou před začátkem smazání změnit. Vaše volby se použijí na skupiny, kterých budete v té době členem, a na jejich tehdejší zůstatky. Nic z uvedeného se nestane okamžitě.",
       "executingTitle": "Smazání účtu začalo",
       "executingDescription": "Probíhá smazání vašeho účtu. Některé změny už mohou být dokončené a smazání nelze zrušit ani vrátit zpět. Pokud se zpracování přeruší, naváže na dokončené kroky."
-    }
+    },
+    "androidUpdates": "Aktualizace aplikace pro Android"
   },
   "Activities": {
     "expense": {
@@ -5079,5 +5080,35 @@
     "triangulatedHeadline": "Částečně pevný kurz — pevný přepočet plus aktuální tržní kurz",
     "withdrawnPairHeadline": "{codes} zahrnuje měnu staženou z oběhu",
     "reference": "Zdroj"
+  },
+  "AndroidNative": {
+    "updates_title": "Aktualizace aplikace pro Android",
+    "version": "Balíček pro Android {version} ({code})",
+    "web_version_note": "Funkce webu se aktualizují samostatně. Vaše výdaje jsou uloženy ve Spliit Cloud a v offline úložišti tohoto prohlížeče.",
+    "check_updates": "Vyhledat aktualizace",
+    "checking": "Vyhledávání aktualizací…",
+    "up_to_date": "Váš balíček pro Android je aktuální.",
+    "check_failed": "Aktualizace se nepodařilo ověřit. Zkuste to znovu po připojení.",
+    "update_available": "Je dostupný balíček pro Android {version}.",
+    "view_update": "Zobrazit aktualizaci",
+    "later": "Později",
+    "play_updates": "Tuto instalaci spravuje Google Play. Aktualizace balíčku pro Android vyhledejte v Google Play.",
+    "open_play": "Otevřít Google Play",
+    "update_source": "Zdroj aktualizací",
+    "automatic_source": "Automaticky (podle zdroje instalace)",
+    "github_source": "GitHub / Obtainium",
+    "play_source": "Google Play",
+    "obtainium_note": "Pokud používáte Obtainium, může také spravovat aktualizace z našich vydání na GitHubu.",
+    "offline_title": "Pro otevření Spliit Cloud se připojte",
+    "offline_message": "Při prvním spuštění je potřeba připojení k internetu pro přípravu přístupu offline. Vaše sdílené soubory nebyly zahozeny. Připojte se a zkuste to znovu.",
+    "browser_title": "Je potřeba prohlížeč",
+    "browser_message": "Nainstalujte nebo povolte aktuální prohlížeč s podporou Custom Tabs, například Chrome, a zkuste to znovu.",
+    "retry": "Zkusit znovu",
+    "connection_settings": "Nastavení připojení",
+    "browser_settings": "Nastavení aplikace",
+    "new_group": "Nová skupina",
+    "expenses": "Výdaje",
+    "settings": "Nastavení",
+    "continue_app": "Otevřít Spliit Cloud"
   }
 }

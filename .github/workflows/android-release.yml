@@ -1,0 +1,121 @@
+name: Android release
+
+on:
+  push:
+    tags: ['android/v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing android/vX.Y.Z tag to build
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: android-release
+    permissions:
+      contents: write
+    env:
+      RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+          persist-credentials: false
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+      - run: bun install --frozen-lockfile
+      - run: sdkmanager 'platforms;android-36' 'build-tools;36.1.0'
+      - name: Validate tag and signing configuration
+        env:
+          APP_KEYSTORE: ${{ secrets.ANDROID_APP_KEYSTORE_BASE64 }}
+          UPLOAD_KEYSTORE: ${{ secrets.ANDROID_UPLOAD_KEYSTORE_BASE64 }}
+          EXPECTED_CERT: ${{ vars.ANDROID_APP_SIGNING_SHA256 }}
+        run: |
+          python3 - <<'PY'
+          import base64, os, pathlib, re
+          version = pathlib.Path('apps/android/version.properties').read_text()
+          name = re.search(r'^versionName=(\d+\.\d+\.\d+)$', version, re.M).group(1)
+          if os.environ['RELEASE_TAG'] != 'android/v' + name:
+              raise SystemExit('Tag must match Android version.properties')
+          if not re.fullmatch(r'(?:[A-Fa-f0-9]{2}:?){32}', os.environ['EXPECTED_CERT']):
+              raise SystemExit('Configure ANDROID_APP_SIGNING_SHA256')
+          for source, filename in [('APP_KEYSTORE', 'spliit-app.jks'), ('UPLOAD_KEYSTORE', 'spliit-upload.jks')]:
+              if not os.environ[source]:
+                  raise SystemExit('Configure Android signing secrets before releasing')
+              path = pathlib.Path(os.environ['RUNNER_TEMP']) / filename
+              path.write_bytes(base64.b64decode(os.environ[source], validate=True))
+              path.chmod(0o600)
+          PY
+      - run: bun --filter @spliit/android test
+      - name: Check native translations
+        working-directory: apps/android
+        run: bun scripts/sync-strings.ts --check
+      - name: Build and test signed APK
+        working-directory: apps/android
+        env:
+          ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/spliit-app.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_APP_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_APP_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_APP_KEY_PASSWORD }}
+        run: ./gradlew --no-daemon :app:assembleRelease :app:testReleaseUnitTest :app:lintRelease
+      - name: Verify signed APK and prepare release metadata
+        env:
+          EXPECTED_CERT: ${{ vars.ANDROID_APP_SIGNING_SHA256 }}
+        run: |
+          mkdir -p apps/android/release
+          cp apps/android/app/build/outputs/apk/release/app-release.apk apps/android/release/spliit-cloud.apk
+          bun --filter @spliit/android verify:apk --apk release/spliit-cloud.apk --fingerprint "$EXPECTED_CERT"
+          "$ANDROID_HOME/build-tools/36.1.0/apksigner" verify --verbose --print-certs apps/android/release/spliit-cloud.apk > apps/android/release/signature.txt
+          python3 - <<'PY'
+          import os, pathlib, re
+          signature = pathlib.Path('apps/android/release/signature.txt').read_text()
+          actual = re.search(r'Signer #1 certificate SHA-256 digest: ([a-fA-F0-9]+)', signature).group(1)
+          if actual.lower() != os.environ['EXPECTED_CERT'].replace(':', '').lower():
+              raise SystemExit('APK signing certificate mismatch')
+          PY
+          bun --filter @spliit/android release:metadata --apk release/spliit-cloud.apk --tag "$RELEASE_TAG" --output release/android-update.json
+          (cd apps/android/release && sha256sum spliit-cloud.apk > SHA256SUMS)
+          git rev-parse HEAD > apps/android/release/source-commit.txt
+      - name: Build Play bundle using the separate upload key
+        working-directory: apps/android
+        env:
+          ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/spliit-upload.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_UPLOAD_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_UPLOAD_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_UPLOAD_KEY_PASSWORD }}
+        run: |
+          ./gradlew --no-daemon :app:bundleRelease
+          cp app/build/outputs/bundle/release/app-release.aab release/spliit-cloud.aab
+      - name: Verify deployed website trust
+        working-directory: apps/android
+        env:
+          EXPECTED_CERT: ${{ vars.ANDROID_APP_SIGNING_SHA256 }}
+        run: bun scripts/verify-trust.ts --fingerprint "$EXPECTED_CERT"
+      - uses: actions/upload-artifact@v5
+        with:
+          name: android-release
+          path: apps/android/release/
+      - name: Create draft GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$RELEASE_TAG" apps/android/release/spliit-cloud.apk apps/android/release/android-update.json apps/android/release/SHA256SUMS apps/android/release/signature.txt apps/android/release/source-commit.txt --verify-tag --draft --title "Spliit Cloud Android ${RELEASE_TAG#android/v}" --notes-file apps/android/store/release-notes.md
+      - name: Remove temporary signing keys
+        if: always()
+        run: rm -f "$RUNNER_TEMP/spliit-app.jks" "$RUNNER_TEMP/spliit-upload.jks"

@@ -2834,7 +2834,8 @@
       "consequencesTiming": "Tämä yhteenveto kuvaa tilisi nykyistä tilaa. Ryhmät, jäsenet ja kulut voivat muuttua ennen poistamisen alkamista. Valintasi koskevat ryhmiä, joihin silloin kuulut, ja niiden senhetkisiä saldoja. Mitään tässä lueteltua ei tapahdu heti.",
       "executingTitle": "Tilin poistaminen on alkanut",
       "executingDescription": "Tilisi poistamista käsitellään. Osa muutoksista voi olla jo valmis, eikä poistamista voi peruuttaa tai kumota. Jos käsittely keskeytyy, sitä jatketaan valmiiden vaiheiden jälkeen."
-    }
+    },
+    "androidUpdates": "Android-sovelluksen päivitykset"
   },
   "Activities": {
     "expense": {
@@ -5025,5 +5026,35 @@
     "triangulatedHeadline": "Osittain kiinteä kurssi – kiinteä muunto plus reaaliaikainen markkinakurssi",
     "withdrawnPairHeadline": "{codes} sisältää käytöstä poistetun valuutan",
     "reference": "Viite"
+  },
+  "AndroidNative": {
+    "updates_title": "Android-sovelluksen päivitykset",
+    "version": "Android-paketti {version} ({code})",
+    "web_version_note": "Verkkosivuston ominaisuudet päivittyvät erikseen. Kulusi tallennetaan Spliit Cloudiin ja tämän selaimen offline-tallennustilaan.",
+    "check_updates": "Tarkista päivitykset",
+    "checking": "Tarkistetaan päivityksiä…",
+    "up_to_date": "Android-pakettisi on ajan tasalla.",
+    "check_failed": "Päivityksiä ei voitu tarkistaa. Yritä uudelleen, kun verkkoyhteys on käytettävissä.",
+    "update_available": "Android-paketti {version} on saatavilla.",
+    "view_update": "Näytä päivitys",
+    "later": "Myöhemmin",
+    "play_updates": "Google Play hallitsee tätä asennusta. Tarkista Android-paketin päivitykset Google Playsta.",
+    "open_play": "Avaa Google Play",
+    "update_source": "Päivityslähde",
+    "automatic_source": "Automaattinen (asennuslähde)",
+    "github_source": "GitHub / Obtainium",
+    "play_source": "Google Play",
+    "obtainium_note": "Jos käytät Obtainiumia, se voi hallita myös GitHub-julkaisuistamme saatavia päivityksiä.",
+    "offline_title": "Yhdistä verkkoon avataksesi Spliit Cloudin",
+    "offline_message": "Ensimmäinen käynnistys tarvitsee internetyhteyden offline-käytön valmistelemiseksi. Jakamiasi tiedostoja ei ole poistettu. Yhdistä verkkoon ja yritä uudelleen.",
+    "browser_title": "Tarvitset selaimen",
+    "browser_message": "Asenna tai ota käyttöön ajan tasalla oleva selain, joka tukee Custom Tabs -toimintoa, esimerkiksi Chrome. Yritä sitten uudelleen.",
+    "retry": "Yritä uudelleen",
+    "connection_settings": "Yhteysasetukset",
+    "browser_settings": "Sovelluksen asetukset",
+    "new_group": "Uusi ryhmä",
+    "expenses": "Kulut",
+    "settings": "Asetukset",
+    "continue_app": "Avaa Spliit Cloud"
   }
 }

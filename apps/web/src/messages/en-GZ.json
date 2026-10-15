@@ -537,7 +537,8 @@
       "consequencesTiming": "This review shows your account as it is right now. Groups, members, and expenses may change before deletion begins. Your choices apply to the groups you belong to and their balances at that point. None of this happens right away.",
       "executingTitle": "Your account deletion has begun",
       "executingDescription": "Your account deletion is in progress. Some changes may already be done. Deletion cannot be cancelled or undone. If processing stops, it picks up after the completed steps."
-    }
+    },
+    "androidUpdates": "android app updates"
   },
   "Activities": {
     "expense": {
@@ -5017,5 +5018,35 @@
     "triangulatedHeadline": "kinda locked-in rate — fixed conversion plus a live market rate",
     "withdrawnPairHeadline": "{codes} includes a retired currency",
     "reference": "source"
+  },
+  "AndroidNative": {
+    "updates_title": "android app updates",
+    "version": "android package {version} ({code})",
+    "web_version_note": "Website features get their own updates. Your expenses live in Spliit Cloud and this browser's offline storage.",
+    "check_updates": "check for updates",
+    "checking": "checking for updates…",
+    "up_to_date": "your Android package is all up to date.",
+    "check_failed": "Couldn't check for updates. Try again once you're connected.",
+    "update_available": "Android package {version} is ready.",
+    "view_update": "see the update",
+    "later": "maybe later",
+    "play_updates": "Google Play handles this installation. Head there to check for Android package updates.",
+    "open_play": "open Google Play",
+    "update_source": "update source",
+    "automatic_source": "auto (where you installed it)",
+    "github_source": "GitHub / Obtainium",
+    "play_source": "Google Play",
+    "obtainium_note": "Using Obtainium? It can handle updates from our GitHub releases too.",
+    "offline_title": "connect to open Spliit Cloud",
+    "offline_message": "Your first launch needs internet to get offline access ready. Your shared files are still here. Connect and try again.",
+    "browser_title": "you need a browser",
+    "browser_message": "Install or enable an updated browser with Custom Tabs support, like Chrome, then try again.",
+    "retry": "try again",
+    "connection_settings": "connection settings",
+    "browser_settings": "app settings",
+    "new_group": "new group",
+    "expenses": "expenses",
+    "settings": "settings",
+    "continue_app": "open Spliit Cloud"
   }
 }

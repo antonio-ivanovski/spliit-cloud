@@ -2872,7 +2872,8 @@
       "consequencesTiming": "Este resumen refleja tu cuenta ahora. Los grupos, miembros y gastos pueden cambiar antes de que comience la eliminación. Tus opciones se aplicarán a los grupos a los que pertenezcas y a sus saldos en ese momento. Nada de lo indicado aquí ocurre inmediatamente.",
       "executingTitle": "La eliminación de la cuenta ha comenzado",
       "executingDescription": "La eliminación de tu cuenta se está procesando. Algunos cambios ya pueden haberse completado y la eliminación no se puede cancelar ni deshacer. Si el proceso se interrumpe, se reanudará a partir de los pasos completados."
-    }
+    },
+    "androidUpdates": "Actualizaciones de la aplicación Android"
   },
   "Activities": {
     "expense": {
@@ -5106,5 +5107,35 @@
     "triangulatedHeadline": "Tipo parcialmente fijo — conversión fija más un tipo de mercado en directo",
     "withdrawnPairHeadline": "{codes} incluye una moneda retirada",
     "reference": "Referencia"
+  },
+  "AndroidNative": {
+    "updates_title": "Actualizaciones de la aplicación Android",
+    "version": "Paquete Android {version} ({code})",
+    "web_version_note": "Las funciones del sitio web se actualizan por separado. Tus gastos se guardan en Spliit Cloud y en el almacenamiento sin conexión de este navegador.",
+    "check_updates": "Buscar actualizaciones",
+    "checking": "Buscando actualizaciones…",
+    "up_to_date": "Tu paquete Android está actualizado.",
+    "check_failed": "No se pudieron buscar actualizaciones. Vuelve a intentarlo cuando tengas conexión.",
+    "update_available": "El paquete Android {version} está disponible.",
+    "view_update": "Ver actualización",
+    "later": "Más tarde",
+    "play_updates": "Google Play gestiona esta instalación. Busca allí las actualizaciones del paquete Android.",
+    "open_play": "Abrir Google Play",
+    "update_source": "Origen de las actualizaciones",
+    "automatic_source": "Automático (origen de instalación)",
+    "github_source": "GitHub / Obtainium",
+    "play_source": "Google Play",
+    "obtainium_note": "Si usas Obtainium, también puede gestionar las actualizaciones de nuestras versiones de GitHub.",
+    "offline_title": "Conéctate para abrir Spliit Cloud",
+    "offline_message": "El primer inicio necesita conexión a internet para preparar el acceso sin conexión. Tus archivos compartidos no se han descartado. Conéctate y vuelve a intentarlo.",
+    "browser_title": "Se necesita un navegador",
+    "browser_message": "Instala o activa un navegador actualizado que admita pestañas personalizadas, como Chrome, y vuelve a intentarlo.",
+    "retry": "Reintentar",
+    "connection_settings": "Configuración de conexión",
+    "browser_settings": "Configuración de la aplicación",
+    "new_group": "Nuevo grupo",
+    "expenses": "Gastos",
+    "settings": "Configuración",
+    "continue_app": "Abrir Spliit Cloud"
   }
 }

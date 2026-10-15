@@ -1391,7 +1391,8 @@
       "consequencesTiming": "Nội dung xem xét này phản ánh trạng thái tài khoản hiện tại. Nhóm, thành viên và chi phí có thể thay đổi trước khi bắt đầu xóa. Lựa chọn của bạn sẽ áp dụng cho các nhóm bạn tham gia và số dư của chúng tại thời điểm đó. Không có thay đổi nào được liệt kê ở đây diễn ra ngay lập tức.",
       "executingTitle": "Đã bắt đầu xóa tài khoản",
       "executingDescription": "Việc xóa tài khoản đang được xử lý. Một số thay đổi có thể đã hoàn tất, và không thể hủy hay hoàn tác việc xóa. Nếu quá trình bị gián đoạn, hệ thống sẽ tiếp tục từ các bước đã hoàn tất."
-    }
+    },
+    "androidUpdates": "Cập nhật ứng dụng Android"
   },
   "CompleteProfile": {
     "title": "Thiết lập hồ sơ",
@@ -5088,5 +5089,35 @@
     "triangulatedHeadline": "Tỷ giá cố định một phần — quy đổi cố định cộng với tỷ giá thị trường trực tiếp",
     "withdrawnPairHeadline": "{codes} bao gồm tiền tệ đã bị rút khỏi lưu thông",
     "reference": "Tham khảo"
+  },
+  "AndroidNative": {
+    "updates_title": "Cập nhật ứng dụng Android",
+    "version": "Gói ứng dụng Android {version} ({code})",
+    "web_version_note": "Các tính năng của trang web được cập nhật riêng. Chi phí được lưu trên Spliit Cloud và trong bộ nhớ ngoại tuyến của trình duyệt này.",
+    "check_updates": "Kiểm tra bản cập nhật",
+    "checking": "Đang kiểm tra bản cập nhật…",
+    "up_to_date": "Gói ứng dụng Android đã được cập nhật lên phiên bản mới nhất.",
+    "check_failed": "Không thể kiểm tra bản cập nhật. Hãy thử lại khi có kết nối mạng.",
+    "update_available": "Đã có gói ứng dụng Android {version}.",
+    "view_update": "Xem bản cập nhật",
+    "later": "Để sau",
+    "play_updates": "Bản cài đặt này do Google Play quản lý. Hãy kiểm tra Google Play để cập nhật gói ứng dụng Android.",
+    "open_play": "Mở Google Play",
+    "update_source": "Nguồn cập nhật",
+    "automatic_source": "Tự động (nguồn cài đặt)",
+    "github_source": "GitHub / Obtainium",
+    "play_source": "Google Play",
+    "obtainium_note": "Nếu dùng Obtainium, ứng dụng này cũng có thể quản lý các bản cập nhật từ những bản phát hành của chúng tôi trên GitHub.",
+    "offline_title": "Kết nối mạng để mở Spliit Cloud",
+    "offline_message": "Lần mở đầu tiên cần kết nối internet để chuẩn bị khả năng truy cập ngoại tuyến. Các tệp đã chia sẻ vẫn được giữ lại. Hãy kết nối mạng rồi thử lại.",
+    "browser_title": "Cần có trình duyệt",
+    "browser_message": "Cài đặt hoặc bật trình duyệt đã được cập nhật có hỗ trợ Custom Tabs, chẳng hạn như Chrome, rồi thử lại.",
+    "retry": "Thử lại",
+    "connection_settings": "Cài đặt kết nối",
+    "browser_settings": "Cài đặt ứng dụng",
+    "new_group": "Nhóm mới",
+    "expenses": "Chi phí",
+    "settings": "Cài đặt",
+    "continue_app": "Mở Spliit Cloud"
   }
 }

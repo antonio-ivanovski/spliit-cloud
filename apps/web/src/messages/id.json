@@ -2829,7 +2829,8 @@
       "consequencesTiming": "Tinjauan ini mencerminkan kondisi akun Anda sekarang. Grup, anggota, dan pengeluaran dapat berubah sebelum penghapusan dimulai. Pilihan Anda berlaku untuk grup yang Anda ikuti dan saldonya pada saat itu. Tidak ada hal yang tercantum di sini yang langsung terjadi.",
       "executingTitle": "Penghapusan akun telah dimulai",
       "executingDescription": "Penghapusan akun Anda sedang diproses. Sebagian perubahan mungkin sudah selesai, dan penghapusan tidak dapat dibatalkan atau diurungkan. Jika proses terhenti, proses akan dilanjutkan dari langkah yang sudah selesai."
-    }
+    },
+    "androidUpdates": "Pembaruan aplikasi Android"
   },
   "Activities": {
     "expense": {
@@ -5005,5 +5006,35 @@
     "triangulatedHeadline": "Kurs sebagian tetap — konversi tetap ditambah kurs pasar terkini",
     "withdrawnPairHeadline": "{codes} mencakup mata uang yang ditarik",
     "reference": "Referensi"
+  },
+  "AndroidNative": {
+    "updates_title": "Pembaruan aplikasi Android",
+    "version": "Paket Android {version} ({code})",
+    "web_version_note": "Fitur situs web diperbarui secara terpisah. Pengeluaran Anda disimpan oleh Spliit Cloud dan di penyimpanan offline browser ini.",
+    "check_updates": "Periksa pembaruan",
+    "checking": "Memeriksa pembaruan…",
+    "up_to_date": "Paket Android Anda sudah yang terbaru.",
+    "check_failed": "Tidak dapat memeriksa pembaruan. Coba lagi saat terhubung ke internet.",
+    "update_available": "Paket Android {version} tersedia.",
+    "view_update": "Lihat pembaruan",
+    "later": "Nanti",
+    "play_updates": "Instalasi ini dikelola oleh Google Play. Periksa Google Play untuk pembaruan paket Android.",
+    "open_play": "Buka Google Play",
+    "update_source": "Sumber pembaruan",
+    "automatic_source": "Otomatis (sumber instalasi)",
+    "github_source": "GitHub / Obtainium",
+    "play_source": "Google Play",
+    "obtainium_note": "Jika menggunakan Obtainium, aplikasi tersebut juga dapat mengelola pembaruan dari rilis GitHub kami.",
+    "offline_title": "Hubungkan ke internet untuk membuka Spliit Cloud",
+    "offline_message": "Saat pertama kali dibuka, aplikasi memerlukan koneksi internet untuk menyiapkan akses offline. File yang Anda bagikan belum dibuang. Hubungkan ke internet dan coba lagi.",
+    "browser_title": "Browser diperlukan",
+    "browser_message": "Instal atau aktifkan browser terbaru yang mendukung Custom Tabs, seperti Chrome, lalu coba lagi.",
+    "retry": "Coba lagi",
+    "connection_settings": "Pengaturan koneksi",
+    "browser_settings": "Pengaturan aplikasi",
+    "new_group": "Grup baru",
+    "expenses": "Pengeluaran",
+    "settings": "Pengaturan",
+    "continue_app": "Buka Spliit Cloud"
   }
 }

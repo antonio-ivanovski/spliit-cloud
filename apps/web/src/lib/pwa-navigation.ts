@@ -12,6 +12,7 @@
 export const APP_SHELL_NAVIGATION_DENYLIST: readonly RegExp[] = [
   /^\/sw\.js(?:$|\?)/,
   /^\/manifest\.webmanifest(?:$|\?)/,
+  /^\/android\/releases(?:\/|$)/,
   /^\/trpc(?:\/|$|\?)/,
   /^\/health(?:\/|$|\?)/,
   /^\/email\/unsubscribe(?:$|\?)/,

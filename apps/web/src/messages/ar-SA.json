@@ -2419,7 +2419,8 @@
       "consequencesTiming": "تعكس هذه المراجعة حالة حسابك الآن. قد تتغير المجموعات والأعضاء والمصروفات قبل بدء الحذف. ستُطبَّق خياراتك على المجموعات التي تنتمي إليها وأرصدتها في ذلك الوقت. لا يحدث أي مما ورد هنا فورًا.",
       "executingTitle": "بدأ حذف الحساب",
       "executingDescription": "حذف حسابك قيد التنفيذ. قد تكون بعض التغييرات قد اكتملت بالفعل، ولا يمكن إلغاء الحذف أو التراجع عنه. إذا توقف التنفيذ، يُستأنف من حيث انتهت الخطوات المكتملة."
-    }
+    },
+    "androidUpdates": "تحديثات تطبيق Android"
   },
   "Header": {
     "account": "الحساب",
@@ -5128,5 +5129,35 @@
     "triangulatedHeadline": "سعر ثابت جزئيًا — تحويل ثابت بالإضافة إلى سعر سوق مباشر",
     "withdrawnPairHeadline": "{codes} تتضمن عملة مسحوبة من التداول",
     "reference": "مرجع"
+  },
+  "AndroidNative": {
+    "updates_title": "تحديثات تطبيق Android",
+    "version": "حزمة Android بالإصدار {version} ({code})",
+    "web_version_note": "تُحدَّث ميزات الموقع بشكل منفصل. تُحفَظ مصروفاتك في Spliit Cloud وفي مساحة التخزين دون اتصال في هذا المتصفح.",
+    "check_updates": "التحقق من التحديثات",
+    "checking": "جارٍ التحقق من التحديثات…",
+    "up_to_date": "حزمة Android لديك محدّثة.",
+    "check_failed": "تعذّر التحقق من التحديثات. أعد المحاولة عند الاتصال بالإنترنت.",
+    "update_available": "حزمة Android بالإصدار {version} متاحة.",
+    "view_update": "عرض التحديث",
+    "later": "لاحقًا",
+    "play_updates": "يدير Google Play هذا التثبيت. تحقّق من Google Play للحصول على تحديثات حزمة Android.",
+    "open_play": "فتح Google Play",
+    "update_source": "مصدر التحديث",
+    "automatic_source": "تلقائي (مصدر التثبيت)",
+    "github_source": "GitHub / Obtainium",
+    "play_source": "Google Play",
+    "obtainium_note": "إذا كنت تستخدم Obtainium، فيمكنه أيضًا إدارة التحديثات من إصداراتنا على GitHub.",
+    "offline_title": "اتصل بالإنترنت لفتح Spliit Cloud",
+    "offline_message": "يتطلب التشغيل الأول اتصالًا بالإنترنت لتهيئة الوصول دون اتصال. لم يتم تجاهل ملفاتك المشتركة. اتصل بالإنترنت وأعد المحاولة.",
+    "browser_title": "يلزم وجود متصفح",
+    "browser_message": "ثبّت متصفحًا محدّثًا يدعم Custom Tabs، مثل Chrome، أو فعّله، ثم أعد المحاولة.",
+    "retry": "إعادة المحاولة",
+    "connection_settings": "إعدادات الاتصال",
+    "browser_settings": "إعدادات التطبيق",
+    "new_group": "مجموعة جديدة",
+    "expenses": "المصروفات",
+    "settings": "الإعدادات",
+    "continue_app": "فتح Spliit Cloud"
   }
 }

@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
+import { isAndroidApp } from '@/lib/android-app'
 import { getStatusPageUrl } from '@/lib/status-page'
 
 import githubSvg from '../auth/github.svg'
@@ -87,12 +88,14 @@ export function ArtFooter({ hiddenOnMobile }: { hiddenOnMobile: boolean }) {
                 components={{ github: <GithubCreditLink /> }}
               />
             </span>
-            <Link
-              to="/sponsor"
-              className="art-footer__link art-footer__link--warm"
-            >
-              {t('Footer.sponsor')}
-            </Link>
+            {!isAndroidApp() && (
+              <Link
+                to="/sponsor"
+                className="art-footer__link art-footer__link--warm"
+              >
+                {t('Footer.sponsor')}
+              </Link>
+            )}
           </p>
         </div>
       </div>

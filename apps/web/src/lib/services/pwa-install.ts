@@ -5,6 +5,7 @@ import {
   markInstallEligible,
   subscribeInstallEligibility,
 } from '@/lib/install-eligibility'
+import { INSTALLED_DISPLAY_MODES, isLaunchedAsApp } from '@/lib/pwa-app-mode'
 import {
   detectBrowserSupport,
   INSTALL_PROMPT_TIMING,
@@ -222,33 +223,11 @@ export function makePwaInstallService(
   // Display modes proving the page runs inside its installed app window.
   // Checking only `standalone` misses minimal-ui / window-controls-overlay
   // launches (unified from the legacy hook, Task 8 — single owner).
-  const installedDisplayModes = [
-    'fullscreen',
-    'standalone',
-    'minimal-ui',
-    'window-controls-overlay',
-    'picture-in-picture',
-  ] as const
   const readInstalled =
     deps?.readInstalled ??
     (() => {
       try {
-        if (typeof window === 'undefined') return false
-        const launchedAsApp =
-          typeof window.matchMedia === 'function' &&
-          installedDisplayModes.some(
-            (mode) => window.matchMedia(`(display-mode: ${mode})`).matches,
-          )
-        // iOS Safari exposes its own private flag for added-to-home-screen.
-        const iosStandalone =
-          (navigator as Navigator & { standalone?: boolean }).standalone ===
-          true
-        // Android TWA / Play-wrapper launches carry an android-app:// referrer.
-        const twaReferrer =
-          typeof document !== 'undefined' &&
-          typeof document.referrer === 'string' &&
-          document.referrer.startsWith('android-app://')
-        return launchedAsApp || iosStandalone || twaReferrer
+        return isLaunchedAsApp()
       } catch {
         return false
       }
@@ -337,7 +316,7 @@ export function makePwaInstallService(
         typeof window !== 'undefined' &&
         typeof window.matchMedia === 'function'
       ) {
-        const queries = installedDisplayModes.map((mode) =>
+        const queries = INSTALLED_DISPLAY_MODES.map((mode) =>
           window.matchMedia(`(display-mode: ${mode})`),
         )
         const onChange = () => {

@@ -11,6 +11,8 @@ const BRAND_TOKENS = new Set([
   // Mascot character given name — same across locales.
   'Bill',
   'GitHub',
+  'GitHub / Obtainium',
+  'Google Play',
   'Spliit',
   'Spliit Cloud',
   'Splitwise',

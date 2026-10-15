@@ -1,0 +1,23 @@
+{
+  "name": "@spliit/android",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:debug": "./gradlew --no-daemon :app:assembleDebug",
+    "build:release": "./gradlew --no-daemon :app:assembleRelease :app:bundleRelease",
+    "check": "./gradlew --no-daemon :app:lint :app:testDebugUnitTest",
+    "check-formatting": "oxfmt --check package.json tsconfig.json scripts store THIRD_PARTY.md",
+    "check-types": "tsc --noEmit",
+    "format": "oxfmt package.json tsconfig.json scripts store THIRD_PARTY.md",
+    "lint": "oxlint -c ../../.oxlintrc.json scripts",
+    "release:metadata": "bun scripts/release-metadata.ts",
+    "sync:strings": "bun scripts/sync-strings.ts",
+    "test": "bun test scripts",
+    "verify:apk": "bun scripts/verify-apk.ts",
+    "verify:trust": "bun scripts/verify-trust.ts"
+  },
+  "devDependencies": {
+    "@spliit/config": "workspace:*",
+    "@types/bun": "^1.4.2"
+  }
+}

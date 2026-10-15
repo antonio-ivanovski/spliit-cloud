@@ -2866,7 +2866,8 @@
       "consequencesTiming": "Dit overzicht toont de huidige staat van je account. Groepen, leden en uitgaven kunnen veranderen voordat de verwijdering begint. Je keuzes gelden voor de groepen waarvan je dan lid bent en hun saldi op dat moment. Niets in dit overzicht gebeurt meteen.",
       "executingTitle": "De accountverwijdering is begonnen",
       "executingDescription": "Je account wordt verwijderd. Sommige wijzigingen kunnen al zijn voltooid en de verwijdering kan niet worden geannuleerd of ongedaan worden gemaakt. Als de verwerking wordt onderbroken, gaat deze verder na de voltooide stappen."
-    }
+    },
+    "androidUpdates": "Updates van de Android-app"
   },
   "Activities": {
     "expense": {
@@ -5097,5 +5098,35 @@
     "triangulatedHeadline": "Gedeeltelijk vaste koers – vaste omrekening plus een actuele marktkoers",
     "withdrawnPairHeadline": "{codes} bevat een ingetrokken valuta",
     "reference": "Referentie"
+  },
+  "AndroidNative": {
+    "updates_title": "Updates van de Android-app",
+    "version": "Android-pakket {version} ({code})",
+    "web_version_note": "Websitefuncties worden afzonderlijk bijgewerkt. Je uitgaven worden opgeslagen bij Spliit Cloud en in de offline opslag van deze browser.",
+    "check_updates": "Controleren op updates",
+    "checking": "Controleren op updates…",
+    "up_to_date": "Je Android-pakket is up-to-date.",
+    "check_failed": "Kan niet controleren op updates. Probeer het opnieuw zodra je verbinding hebt.",
+    "update_available": "Android-pakket {version} is beschikbaar.",
+    "view_update": "Update bekijken",
+    "later": "Niet nu",
+    "play_updates": "Deze installatie wordt beheerd door Google Play. Controleer Google Play op updates van het Android-pakket.",
+    "open_play": "Google Play openen",
+    "update_source": "Updatebron",
+    "automatic_source": "Automatisch (installatiebron)",
+    "github_source": "GitHub / Obtainium",
+    "play_source": "Google Play",
+    "obtainium_note": "Als je Obtainium gebruikt, kan het ook updates uit onze GitHub-releases beheren.",
+    "offline_title": "Maak verbinding om Spliit Cloud te openen",
+    "offline_message": "Bij de eerste start is een internetverbinding nodig om offline toegang voor te bereiden. Je gedeelde bestanden zijn niet verwijderd. Maak verbinding en probeer het opnieuw.",
+    "browser_title": "Een browser is vereist",
+    "browser_message": "Installeer of activeer een actuele browser die Custom Tabs ondersteunt, zoals Chrome, en probeer het opnieuw.",
+    "retry": "Opnieuw proberen",
+    "connection_settings": "Verbindingsinstellingen",
+    "browser_settings": "App-instellingen",
+    "new_group": "Nieuwe groep",
+    "expenses": "Uitgaven",
+    "settings": "Instellingen",
+    "continue_app": "Spliit Cloud openen"
   }
 }

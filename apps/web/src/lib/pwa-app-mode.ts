@@ -6,7 +6,9 @@
  * `navigator.standalone`, or an Android TWA referrer counts as PWA.
  */
 
-const INSTALLED_DISPLAY_MODES = [
+import { isAndroidApp } from '@/lib/android-app'
+
+export const INSTALLED_DISPLAY_MODES = [
   'fullscreen',
   'standalone',
   'minimal-ui',
@@ -23,11 +25,7 @@ export function isLaunchedAsApp(): boolean {
     )
   const iosStandalone =
     (navigator as Navigator & { standalone?: boolean }).standalone === true
-  const twaReferrer =
-    typeof document !== 'undefined' &&
-    typeof document.referrer === 'string' &&
-    document.referrer.startsWith('android-app://')
-  return launchedAsApp || iosStandalone || twaReferrer
+  return launchedAsApp || iosStandalone || isAndroidApp()
 }
 
 function applyAppMode() {

@@ -2831,7 +2831,8 @@
       "consequencesTiming": "この確認画面は現在のアカウントの状態を示しています。削除開始前にグループ、メンバー、費用が変わる場合があります。選択内容は、削除時に所属しているグループとその時点の残高に適用されます。ここに記載された変更がすぐに行われることはありません。",
       "executingTitle": "アカウント削除が始まりました",
       "executingDescription": "アカウントの削除を処理しています。一部の変更はすでに完了している場合があり、削除のキャンセルや取り消しはできません。処理が中断された場合は、完了済みの手順の続きから再開されます。"
-    }
+    },
+    "androidUpdates": "Androidアプリの更新"
   },
   "Activities": {
     "expense": {
@@ -5006,5 +5007,35 @@
     "triangulatedHeadline": "一部固定レート（固定換算と市場レートの組み合わせ）",
     "withdrawnPairHeadline": "{codes} に廃止通貨が含まれています",
     "reference": "出典"
+  },
+  "AndroidNative": {
+    "updates_title": "Androidアプリの更新",
+    "version": "Androidパッケージ {version}（{code}）",
+    "web_version_note": "ウェブサイトの機能は別途更新されます。支出はSpliit Cloudと、このブラウザのオフラインストレージに保存されます。",
+    "check_updates": "更新を確認",
+    "checking": "更新を確認中…",
+    "up_to_date": "Androidパッケージは最新です。",
+    "check_failed": "更新を確認できませんでした。インターネットに接続してから、もう一度お試しください。",
+    "update_available": "Androidパッケージ {version} が利用できます。",
+    "view_update": "更新を表示",
+    "later": "後で",
+    "play_updates": "このアプリはGoogle Playで管理されています。Androidパッケージの更新はGoogle Playで確認してください。",
+    "open_play": "Google Playを開く",
+    "update_source": "更新元",
+    "automatic_source": "自動（インストール元）",
+    "github_source": "GitHub / Obtainium",
+    "play_source": "Google Play",
+    "obtainium_note": "Obtainiumをお使いの場合は、GitHubリリースからの更新をObtainiumで管理することもできます。",
+    "offline_title": "接続してSpliit Cloudを開く",
+    "offline_message": "オフラインで利用できるように準備するため、初回起動時はインターネット接続が必要です。共有されたファイルは破棄されていません。接続してから、もう一度お試しください。",
+    "browser_title": "ブラウザが必要です",
+    "browser_message": "Chromeなど、カスタムタブに対応した最新のブラウザをインストールまたは有効にして、もう一度お試しください。",
+    "retry": "再試行",
+    "connection_settings": "接続設定",
+    "browser_settings": "アプリの設定",
+    "new_group": "新しいグループ",
+    "expenses": "支出",
+    "settings": "設定",
+    "continue_app": "Spliit Cloudを開く"
   }
 }

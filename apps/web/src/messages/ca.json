@@ -2848,7 +2848,8 @@
       "consequencesTiming": "Aquest resum reflecteix el teu compte ara. Els grups, els membres i les despeses poden canviar abans que comenci l’eliminació. Les teves opcions s’aplicaran als grups dels quals formis part i als seus saldos en aquell moment. Res del que s’indica aquí passa immediatament.",
       "executingTitle": "L’eliminació del compte ha començat",
       "executingDescription": "L’eliminació del teu compte s’està processant. Alguns canvis ja poden haver-se completat, i l’eliminació no es pot cancel·lar ni desfer. Si el procés s’interromp, es reprendrà a partir dels passos completats."
-    }
+    },
+    "androidUpdates": "Actualitzacions de l'aplicació Android"
   },
   "Activities": {
     "expense": {
@@ -5055,5 +5056,35 @@
     "triangulatedHeadline": "Tipus parcialment fix — conversió fixa més un tipus de mercat en directe",
     "withdrawnPairHeadline": "{codes} inclou una moneda retirada",
     "reference": "Referència"
+  },
+  "AndroidNative": {
+    "updates_title": "Actualitzacions de l'aplicació Android",
+    "version": "Paquet Android {version} ({code})",
+    "web_version_note": "Les funcions del lloc web s'actualitzen per separat. Les teves despeses es desen a Spliit Cloud i a l'emmagatzematge sense connexió d'aquest navegador.",
+    "check_updates": "Cerca actualitzacions",
+    "checking": "Cercant actualitzacions…",
+    "up_to_date": "El teu paquet Android està actualitzat.",
+    "check_failed": "No s'han pogut cercar actualitzacions. Torna-ho a provar quan tinguis connexió.",
+    "update_available": "El paquet Android {version} està disponible.",
+    "view_update": "Mostra l'actualització",
+    "later": "Més tard",
+    "play_updates": "Google Play gestiona aquesta instal·lació. Cerca-hi les actualitzacions del paquet Android.",
+    "open_play": "Obre Google Play",
+    "update_source": "Origen de les actualitzacions",
+    "automatic_source": "Automàtic (origen de la instal·lació)",
+    "github_source": "GitHub / Obtainium",
+    "play_source": "Google Play",
+    "obtainium_note": "Si fas servir Obtainium, també pot gestionar les actualitzacions de les nostres versions de GitHub.",
+    "offline_title": "Connecta't per obrir Spliit Cloud",
+    "offline_message": "La primera vegada que obris l'aplicació cal connexió a internet per preparar l'accés sense connexió. Els fitxers que has compartit no s'han descartat. Connecta't i torna-ho a provar.",
+    "browser_title": "Cal un navegador",
+    "browser_message": "Instal·la o activa un navegador actualitzat que admeti pestanyes personalitzades, com ara Chrome, i torna-ho a provar.",
+    "retry": "Torna-ho a provar",
+    "connection_settings": "Configuració de la connexió",
+    "browser_settings": "Configuració de l'aplicació",
+    "new_group": "Grup nou",
+    "expenses": "Despeses",
+    "settings": "Configuració",
+    "continue_app": "Obre Spliit Cloud"
   }
 }

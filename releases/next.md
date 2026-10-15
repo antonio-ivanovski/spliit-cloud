@@ -19,6 +19,7 @@ who is affected, and the exact migration steps.
 
 ### 🚀 Features
 
+- Prepare Spliit Cloud for its upcoming Android app with website verification, Android integration, and signed release tooling for private testing. The Android app release will follow soon; no public APK is included in this release (`TBD` by @TBD)
 - Import groups from Tricount via share link or GDPR CSV export, with a multi-group picker, settlement and multi-currency support (`TBD` by @TBD)
 - Import groups from a Settle Up CSV history export, with settlement, income, and multi-currency support (`TBD` by @TBD)
 - Every group importer now shows a step-by-step guide for getting the export out of the source app, anchored to the input it feeds — share-link and file paths get their own guides on the Spliit and Tricount tabs (`TBD` by @TBD)

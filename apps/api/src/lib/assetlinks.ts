@@ -10,14 +10,16 @@ export type AssetLinksSource = {
 
 /**
  * Normalize one SHA-256 certificate fingerprint to the Digital Asset Links wire
- * format: uppercase hex without colons (64 chars). Accepts the colon-separated
+ * format: 32 colon-separated uppercase hex bytes. Accepts the colon-separated
  * `keytool`/`apksigner` output form as well. Returns undefined for anything
  * that is not a plausible SHA-256 fingerprint so a typo can never silently ship
  * in `assetlinks.json`.
  */
 export function normalizeFingerprint(value: string): string | undefined {
   const compact = value.replace(/:/g, '').toUpperCase()
-  return /^[0-9A-F]{64}$/.test(compact) ? compact : undefined
+  return /^[0-9A-F]{64}$/.test(compact)
+    ? compact.match(/.{2}/g)?.join(':')
+    : undefined
 }
 
 export function parseFingerprints(value: string | undefined): string[] {

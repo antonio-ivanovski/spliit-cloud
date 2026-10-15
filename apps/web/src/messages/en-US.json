@@ -1396,7 +1396,8 @@
       "consequencesTiming": "This review reflects your account now. Groups, members, and expenses can change before deletion starts. Your choices will apply to the groups you belong to and their balances at that time. Nothing listed here happens immediately.",
       "executingTitle": "Account deletion has started",
       "executingDescription": "Your account deletion is processing. Some changes may already be complete, and deletion cannot be cancelled or undone. If processing is interrupted, it resumes from the completed steps."
-    }
+    },
+    "androidUpdates": "Android app updates"
   },
   "AccountAuthorizedClients": {
     "title": "Connected apps",
@@ -5128,5 +5129,35 @@
     "triangulatedHeadline": "Partially fixed rate — fixed conversion plus a live market rate",
     "withdrawnPairHeadline": "{codes} includes a withdrawn currency",
     "reference": "Reference"
+  },
+  "AndroidNative": {
+    "updates_title": "Android app updates",
+    "version": "Android package {version} ({code})",
+    "web_version_note": "Website features update separately. Your expenses are stored by Spliit Cloud and in this browser’s offline storage.",
+    "check_updates": "Check for updates",
+    "checking": "Checking for updates…",
+    "up_to_date": "Your Android package is up to date.",
+    "check_failed": "Could not check for updates. Try again when connected.",
+    "update_available": "Android package {version} is available.",
+    "view_update": "View update",
+    "later": "Later",
+    "play_updates": "This installation is managed by Google Play. Check Google Play for Android package updates.",
+    "open_play": "Open Google Play",
+    "update_source": "Update source",
+    "automatic_source": "Automatic (installation source)",
+    "github_source": "GitHub / Obtainium",
+    "play_source": "Google Play",
+    "obtainium_note": "If you use Obtainium, it can also manage updates from our GitHub releases.",
+    "offline_title": "Connect to open Spliit Cloud",
+    "offline_message": "The first launch needs an internet connection to prepare offline access. Your shared files have not been discarded. Connect and retry.",
+    "browser_title": "A browser is needed",
+    "browser_message": "Install or enable an up-to-date browser that supports Custom Tabs, such as Chrome, then retry.",
+    "retry": "Retry",
+    "connection_settings": "Connection settings",
+    "browser_settings": "App settings",
+    "new_group": "New group",
+    "expenses": "Expenses",
+    "settings": "Settings",
+    "continue_app": "Open Spliit Cloud"
   }
 }

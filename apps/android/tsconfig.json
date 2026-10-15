@@ -1,0 +1,5 @@
+{
+  "extends": "@spliit/config/tsconfig.base.json",
+  "compilerOptions": { "types": ["bun"], "noEmit": true },
+  "include": ["scripts/**/*.ts"]
+}

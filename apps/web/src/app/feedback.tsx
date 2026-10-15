@@ -19,6 +19,7 @@ import {
   SupportPageShell,
   useCopyToClipboard,
 } from '@/components/support'
+import { isAndroidApp } from '@/lib/android-app'
 import { getBrowserFeedbackDiagnostics } from '@/lib/feedback-diagnostics'
 
 const issueForms = [
@@ -62,19 +63,21 @@ export default function FeedbackPage() {
         title={t('title')}
         description={t('description')}
       >
-        <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
-          <Trans
-            i18nKey="Feedback.sponsorLink"
-            components={{
-              cta: (
-                <Link
-                  to="/sponsor"
-                  className="font-medium text-primary underline underline-offset-2"
-                />
-              ),
-            }}
-          />
-        </p>
+        {!isAndroidApp() && (
+          <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
+            <Trans
+              i18nKey="Feedback.sponsorLink"
+              components={{
+                cta: (
+                  <Link
+                    to="/sponsor"
+                    className="font-medium text-primary underline underline-offset-2"
+                  />
+                ),
+              }}
+            />
+          </p>
+        )}
       </SupportPageHeader>
 
       <section

@@ -112,6 +112,11 @@ export default function PrivacyPage() {
       <section>
         <h3>Your controls</h3>
         <ul>
+          <li>
+            Request account deletion through{' '}
+            <a href="/delete-account">our account deletion page</a>, including
+            without the Android app.
+          </li>
           <li>Export a group from the app at any time.</li>
           <li>
             Review and disconnect connected applications from your account

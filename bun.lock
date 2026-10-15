@@ -17,6 +17,13 @@
         "typescript-compiler-api": "npm:typescript@6.0.3",
       },
     },
+    "apps/android": {
+      "name": "@spliit/android",
+      "devDependencies": {
+        "@spliit/config": "workspace:*",
+        "@types/bun": "^1.4.2",
+      },
+    },
     "apps/api": {
       "name": "@spliit/api",
       "version": "0.1.0",
@@ -1374,6 +1381,8 @@
     "@socket.io/component-emitter": ["@socket.io/component-emitter@3.1.2", "", {}, "sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA=="],
 
     "@speed-highlight/core": ["@speed-highlight/core@1.2.24", "", {}, "sha512-qeW2e1l78afw8VhRPfPQ1Gjj+KU5XFQ/OFV5ti6eTa9bruO7mJyZtA4vw0ofqmA3tKCkROE9xLk3VZoeRc98nw=="],
+
+    "@spliit/android": ["@spliit/android@workspace:apps/android"],
 
     "@spliit/api": ["@spliit/api@workspace:apps/api"],
 

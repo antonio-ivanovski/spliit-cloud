@@ -12,6 +12,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DeleteAccountRouteImport } from './routes/delete-account'
 import { Route as ExpensesRouteImport } from './routes/expenses'
 import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as FeedbackRouteImport } from './routes/feedback'
@@ -76,6 +77,13 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+const DeleteAccountRoute = DeleteAccountRouteImport.update({
+  id: '/delete-account',
+  path: '/delete-account',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/delete-account.lazy').then((d) => d.Route),
+)
 const ExpensesRoute = ExpensesRouteImport.update({
   id: '/expenses',
   path: '/expenses',
@@ -425,6 +433,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/groups': typeof GroupsRouteRouteWithChildren
   '/updates': typeof UpdatesRouteRouteWithChildren
+  '/delete-account': typeof DeleteAccountRoute
   '/expenses': typeof ExpensesRoute
   '/features': typeof FeaturesRoute
   '/feedback': typeof FeedbackRoute
@@ -478,6 +487,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/groups': typeof GroupsRouteRouteWithChildren
+  '/delete-account': typeof DeleteAccountRoute
   '/expenses': typeof ExpensesRoute
   '/features': typeof FeaturesRoute
   '/feedback': typeof FeedbackRoute
@@ -529,6 +539,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/groups': typeof GroupsRouteRouteWithChildren
   '/updates': typeof UpdatesRouteRouteWithChildren
+  '/delete-account': typeof DeleteAccountRoute
   '/expenses': typeof ExpensesRoute
   '/features': typeof FeaturesRoute
   '/feedback': typeof FeedbackRoute
@@ -585,6 +596,7 @@ export interface FileRouteTypes {
     | '/'
     | '/groups'
     | '/updates'
+    | '/delete-account'
     | '/expenses'
     | '/features'
     | '/feedback'
@@ -638,6 +650,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/groups'
+    | '/delete-account'
     | '/expenses'
     | '/features'
     | '/feedback'
@@ -688,6 +701,7 @@ export interface FileRouteTypes {
     | '/'
     | '/groups'
     | '/updates'
+    | '/delete-account'
     | '/expenses'
     | '/features'
     | '/feedback'
@@ -743,6 +757,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GroupsRouteRoute: typeof GroupsRouteRouteWithChildren
   UpdatesRouteRoute: typeof UpdatesRouteRouteWithChildren
+  DeleteAccountRoute: typeof DeleteAccountRoute
   ExpensesRoute: typeof ExpensesRoute
   FeaturesRoute: typeof FeaturesRoute
   FeedbackRoute: typeof FeedbackRoute
@@ -772,6 +787,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/delete-account': {
+      id: '/delete-account'
+      path: '/delete-account'
+      fullPath: '/delete-account'
+      preLoaderRoute: typeof DeleteAccountRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/expenses': {
@@ -1258,6 +1280,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GroupsRouteRoute: GroupsRouteRouteWithChildren,
   UpdatesRouteRoute: UpdatesRouteRouteWithChildren,
+  DeleteAccountRoute: DeleteAccountRoute,
   ExpensesRoute: ExpensesRoute,
   FeaturesRoute: FeaturesRoute,
   FeedbackRoute: FeedbackRoute,

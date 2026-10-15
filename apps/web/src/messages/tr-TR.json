@@ -2838,7 +2838,8 @@
       "consequencesTiming": "Bu inceleme hesabınızın şu anki durumunu yansıtır. Silme başlamadan önce gruplar, üyeler ve harcamalar değişebilir. Seçimleriniz o sırada üyesi olduğunuz gruplara ve bu grupların bakiyelerine uygulanır. Burada listelenenlerin hiçbiri hemen gerçekleşmez.",
       "executingTitle": "Hesap silme başladı",
       "executingDescription": "Hesabınızın silinmesi devam ediyor. Bazı değişiklikler tamamlanmış olabilir; silme iptal edilemez veya geri alınamaz. İşlem kesintiye uğrarsa tamamlanan adımlardan sonra devam eder."
-    }
+    },
+    "androidUpdates": "Android uygulaması güncellemeleri"
   },
   "Activities": {
     "expense": {
@@ -5033,5 +5034,35 @@
     "triangulatedHeadline": "Kısmen sabit kur — sabit dönüşüm ve güncel piyasa kuru",
     "withdrawnPairHeadline": "{codes} tedavülden kaldırılan bir para birimi içeriyor",
     "reference": "Referans"
+  },
+  "AndroidNative": {
+    "updates_title": "Android uygulaması güncellemeleri",
+    "version": "Android paketi {version} ({code})",
+    "web_version_note": "Web sitesi özellikleri ayrı olarak güncellenir. Harcamalarınız Spliit Cloud'da ve bu tarayıcının çevrimdışı depolama alanında saklanır.",
+    "check_updates": "Güncellemeleri kontrol et",
+    "checking": "Güncellemeler kontrol ediliyor…",
+    "up_to_date": "Android paketiniz güncel.",
+    "check_failed": "Güncellemeler kontrol edilemedi. İnternete bağlandığınızda yeniden deneyin.",
+    "update_available": "Android paketi {version} kullanıma sunuldu.",
+    "view_update": "Güncellemeyi görüntüle",
+    "later": "Daha sonra",
+    "play_updates": "Bu yükleme Google Play tarafından yönetiliyor. Android paketi güncellemeleri için Google Play'i kontrol edin.",
+    "open_play": "Google Play'i aç",
+    "update_source": "Güncelleme kaynağı",
+    "automatic_source": "Otomatik (yükleme kaynağı)",
+    "github_source": "GitHub / Obtainium",
+    "play_source": "Google Play",
+    "obtainium_note": "Obtainium kullanıyorsanız GitHub sürümlerimizden gelen güncellemeleri de onunla yönetebilirsiniz.",
+    "offline_title": "Spliit Cloud'u açmak için internete bağlanın",
+    "offline_message": "Çevrimdışı erişimi hazırlamak için ilk açılışta internet bağlantısı gerekir. Paylaştığınız dosyalar silinmedi. İnternete bağlanıp yeniden deneyin.",
+    "browser_title": "Bir tarayıcı gerekiyor",
+    "browser_message": "Chrome gibi Custom Tabs destekleyen güncel bir tarayıcı yükleyin veya etkinleştirin, ardından yeniden deneyin.",
+    "retry": "Yeniden dene",
+    "connection_settings": "Bağlantı ayarları",
+    "browser_settings": "Uygulama ayarları",
+    "new_group": "Yeni grup",
+    "expenses": "Harcamalar",
+    "settings": "Ayarlar",
+    "continue_app": "Spliit Cloud'u aç"
   }
 }

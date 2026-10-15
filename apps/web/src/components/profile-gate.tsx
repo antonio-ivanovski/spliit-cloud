@@ -20,6 +20,7 @@ const ungatedPaths = new Set([
   '/oauth/consent',
   '/oauth/manual-callback',
   '/privacy',
+  '/delete-account',
   '/terms',
   '/imprint',
   '/support',

@@ -10,6 +10,8 @@ import { RequireAuth } from '@/components/require-auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
+import { APP_VERSION } from '@/generated/app-version'
+import { isAndroidApp } from '@/lib/android-app'
 import { useDeploymentConfig } from '@/lib/deployment-config'
 import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { prepareProfileImage, uploadToPresignedUrl } from '@/lib/upload'
@@ -352,6 +354,14 @@ function AccountSettingsContent() {
       ) : null}
       <AccountAiPreferences />
       <AccountDeletionSettings />
+      {isAndroidApp() && (
+        <a
+          href={`spliit-cloud://updates?web-version=${encodeURIComponent(APP_VERSION)}`}
+          className="rounded-lg border p-4 text-sm font-medium underline"
+        >
+          {t('androidUpdates')}
+        </a>
+      )}
     </PageShell>
   )
 }

@@ -2848,7 +2848,8 @@
       "consequencesTiming": "הסקירה הזו משקפת את מצב החשבון שלך עכשיו. קבוצות, חברים והוצאות עשויים להשתנות לפני תחילת המחיקה. הבחירות שלך יחולו על הקבוצות שבהן תהיה לך חברות ועל היתרות שלהן באותו זמן. שום דבר שמופיע כאן לא קורה מיד.",
       "executingTitle": "מחיקת החשבון התחילה",
       "executingDescription": "מחיקת החשבון שלך מתבצעת. ייתכן שחלק מהשינויים כבר הושלמו, ואי אפשר לבטל את המחיקה או את השינויים. אם התהליך ייפסק, הוא ימשיך מהשלבים שכבר הושלמו."
-    }
+    },
+    "androidUpdates": "עדכוני אפליקציית Android"
   },
   "Activities": {
     "expense": {
@@ -5062,5 +5063,35 @@
     "triangulatedHeadline": "שער קבוע חלקית — המרה קבועה בתוספת שער שוק חי",
     "withdrawnPairHeadline": "{codes} כוללים מטבע שהוצא מהמחזור",
     "reference": "אסמכתא"
+  },
+  "AndroidNative": {
+    "updates_title": "עדכוני אפליקציית Android",
+    "version": "חבילת Android בגרסה {version} ({code})",
+    "web_version_note": "תכונות האתר מתעדכנות בנפרד. ההוצאות שלך נשמרות ב-Spliit Cloud ובאחסון הלא מקוון של הדפדפן הזה.",
+    "check_updates": "בדיקת עדכונים",
+    "checking": "בודקים אם יש עדכונים…",
+    "up_to_date": "חבילת Android שלך מעודכנת.",
+    "check_failed": "לא ניתן לבדוק אם יש עדכונים. יש לנסות שוב לאחר התחברות לאינטרנט.",
+    "update_available": "חבילת Android בגרסה {version} זמינה.",
+    "view_update": "הצגת העדכון",
+    "later": "מאוחר יותר",
+    "play_updates": "ההתקנה הזו מנוהלת באמצעות Google Play. יש לבדוק ב-Google Play אם יש עדכונים לחבילת Android.",
+    "open_play": "פתיחת Google Play",
+    "update_source": "מקור העדכונים",
+    "automatic_source": "אוטומטי (מקור ההתקנה)",
+    "github_source": "GitHub / Obtainium",
+    "play_source": "Google Play",
+    "obtainium_note": "אם נעשה שימוש ב-Obtainium, ניתן לנהל באמצעותו גם עדכונים מהגרסאות שלנו ב-GitHub.",
+    "offline_title": "יש להתחבר כדי לפתוח את Spliit Cloud",
+    "offline_message": "ההפעלה הראשונה דורשת חיבור לאינטרנט כדי להכין גישה ללא חיבור. הקבצים ששותפו לא נמחקו. יש להתחבר ולנסות שוב.",
+    "browser_title": "נדרש דפדפן",
+    "browser_message": "יש להתקין או להפעיל דפדפן מעודכן שתומך ב-Custom Tabs, כמו Chrome, ואז לנסות שוב.",
+    "retry": "ניסיון חוזר",
+    "connection_settings": "הגדרות חיבור",
+    "browser_settings": "הגדרות האפליקציה",
+    "new_group": "קבוצה חדשה",
+    "expenses": "הוצאות",
+    "settings": "הגדרות",
+    "continue_app": "פתיחת Spliit Cloud"
   }
 }

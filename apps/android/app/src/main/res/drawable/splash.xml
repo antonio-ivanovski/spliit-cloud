@@ -1,0 +1,3 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:width="192dp" android:height="192dp" android:gravity="center" android:drawable="@drawable/spliit_logo" />
+</layer-list>

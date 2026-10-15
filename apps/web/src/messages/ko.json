@@ -2869,7 +2869,8 @@
       "consequencesTiming": "이 검토 내용은 현재 계정 상태를 보여 줍니다. 삭제가 시작되기 전에 그룹, 회원, 지출이 바뀔 수 있습니다. 선택한 옵션은 삭제 시점에 속한 그룹과 당시 잔액에 적용됩니다. 여기에 나열된 변경은 즉시 이루어지지 않습니다.",
       "executingTitle": "계정 삭제가 시작되었습니다",
       "executingDescription": "계정 삭제를 처리하고 있습니다. 일부 변경은 이미 완료되었을 수 있으며, 삭제를 취소하거나 되돌릴 수 없습니다. 처리가 중단되면 완료된 단계 다음부터 다시 시작됩니다."
-    }
+    },
+    "androidUpdates": "Android 앱 업데이트"
   },
   "Activities": {
     "expense": {
@@ -5090,5 +5091,35 @@
     "triangulatedHeadline": "부분 고정 환율 (고정 환산과 실시간 시장 환율 조합)",
     "withdrawnPairHeadline": "{codes}에 폐지된 통화가 포함되어 있습니다",
     "reference": "출처"
+  },
+  "AndroidNative": {
+    "updates_title": "Android 앱 업데이트",
+    "version": "Android 패키지 {version} ({code})",
+    "web_version_note": "웹사이트 기능은 별도로 업데이트돼요. 지출은 Spliit Cloud와 이 브라우저의 오프라인 저장소에 저장돼요.",
+    "check_updates": "업데이트 확인",
+    "checking": "업데이트 확인 중…",
+    "up_to_date": "Android 패키지가 최신 버전이에요.",
+    "check_failed": "업데이트를 확인하지 못했어요. 인터넷에 연결한 후 다시 시도해 주세요.",
+    "update_available": "Android 패키지 {version} 버전을 사용할 수 있어요.",
+    "view_update": "업데이트 보기",
+    "later": "나중에",
+    "play_updates": "이 앱은 Google Play에서 관리해요. Android 패키지 업데이트는 Google Play에서 확인해 주세요.",
+    "open_play": "Google Play 열기",
+    "update_source": "업데이트 출처",
+    "automatic_source": "자동(설치 출처)",
+    "github_source": "GitHub / Obtainium",
+    "play_source": "Google Play",
+    "obtainium_note": "Obtainium을 사용한다면 GitHub 릴리스의 업데이트를 Obtainium으로 관리할 수도 있어요.",
+    "offline_title": "연결하여 Spliit Cloud 열기",
+    "offline_message": "오프라인 사용을 준비하려면 처음 실행할 때 인터넷에 연결해야 해요. 공유한 파일은 삭제되지 않았어요. 연결한 후 다시 시도해 주세요.",
+    "browser_title": "브라우저가 필요해요",
+    "browser_message": "Chrome과 같이 맞춤 탭을 지원하는 최신 브라우저를 설치하거나 사용 설정한 후 다시 시도해 주세요.",
+    "retry": "다시 시도",
+    "connection_settings": "연결 설정",
+    "browser_settings": "앱 설정",
+    "new_group": "새 그룹",
+    "expenses": "지출",
+    "settings": "설정",
+    "continue_app": "Spliit Cloud 열기"
   }
 }

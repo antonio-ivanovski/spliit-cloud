@@ -1,0 +1,65 @@
+import groovy.json.JsonOutput
+
+plugins { id 'com.android.application' }
+
+def appVersion = new Properties()
+rootProject.file('version.properties').withInputStream { appVersion.load(it) }
+def signingPath = System.getenv('ANDROID_KEYSTORE_PATH')
+def receiptTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif',
+    'application/pdf', 'text/plain', 'text/csv',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.oasis.opendocument.text']
+
+android {
+    namespace 'cloud.spliit.twa'
+    compileSdk 36
+    buildToolsVersion '36.1.0'
+    defaultConfig {
+        applicationId 'cloud.spliit.twa'
+        minSdk 29
+        targetSdk 36
+        versionCode appVersion.versionCode.toInteger()
+        versionName appVersion.versionName
+        resValue 'string', 'package_name', applicationId
+        resValue 'string', 'share_target', JsonOutput.toJson([
+            action: 'https://spliit.cloud/share-target/', method: 'POST', enctype: 'multipart/form-data',
+            params: [title: 'title', text: 'text', files: [[name: 'receipts', accept: receiptTypes]]]
+        ])
+    }
+    signingConfigs {
+        if (signingPath) {
+            release {
+                storeFile file(signingPath)
+                storePassword System.getenv('ANDROID_KEYSTORE_PASSWORD')
+                keyAlias System.getenv('ANDROID_KEY_ALIAS')
+                keyPassword System.getenv('ANDROID_KEY_PASSWORD')
+            }
+        }
+    }
+    buildTypes {
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-debug'
+            resValue 'string', 'package_name', 'cloud.spliit.twa.debug'
+        }
+        release {
+            if (signingPath) { signingConfig signingConfigs.release }
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    buildFeatures { buildConfig true }
+    lint { abortOnError true; checkReleaseBuilds true }
+    testOptions { unitTests.returnDefaultValues = false }
+}
+
+dependencies {
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.7.4'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.json:json:20240303'
+}

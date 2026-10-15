@@ -1,0 +1,14 @@
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut android:shortcutId="new-group" android:shortcutShortLabel="@string/new_group" android:icon="@drawable/ic_notification">
+        <intent android:action="android.intent.action.VIEW" android:targetPackage="@string/package_name" android:targetClass="cloud.spliit.twa.LauncherActivity" android:data="https://spliit.cloud/groups/create" />
+    </shortcut>
+    <shortcut android:shortcutId="expenses" android:shortcutShortLabel="@string/expenses" android:icon="@drawable/ic_notification">
+        <intent android:action="android.intent.action.VIEW" android:targetPackage="@string/package_name" android:targetClass="cloud.spliit.twa.LauncherActivity" android:data="https://spliit.cloud/expenses" />
+    </shortcut>
+    <shortcut android:shortcutId="updates" android:shortcutShortLabel="@string/updates_title" android:icon="@drawable/ic_notification">
+        <intent android:action="android.intent.action.VIEW" android:targetPackage="@string/package_name" android:targetClass="cloud.spliit.twa.AppInfoActivity" android:data="spliit-cloud://updates" />
+    </shortcut>
+    <shortcut android:shortcutId="settings" android:shortcutShortLabel="@string/settings" android:icon="@drawable/ic_notification">
+        <intent android:action="android.intent.action.VIEW" android:targetPackage="@string/package_name" android:targetClass="cloud.spliit.twa.LauncherActivity" android:data="https://spliit.cloud/account/settings" />
+    </shortcut>
+</shortcuts>

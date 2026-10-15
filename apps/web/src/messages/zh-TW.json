@@ -2831,7 +2831,8 @@
       "consequencesTiming": "此檢視反映帳戶目前的狀態。刪除開始前，群組、成員和支出可能會發生變化。您的選擇將適用於刪除時您所屬的群組及其當時的餘額。此處列出的變化不會立即發生。",
       "executingTitle": "帳戶刪除已開始",
       "executingDescription": "正在處理帳戶刪除。部分變更可能已經完成，刪除無法取消或復原。如果處理中斷，將從已完成的步驟之後繼續。"
-    }
+    },
+    "androidUpdates": "Android 應用程式更新"
   },
   "Activities": {
     "expense": {
@@ -5006,5 +5007,35 @@
     "triangulatedHeadline": "部分固定匯率（固定換算加即時市場匯率）",
     "withdrawnPairHeadline": "{codes} 包含已退出流通的貨幣",
     "reference": "參考資料"
+  },
+  "AndroidNative": {
+    "updates_title": "Android 應用程式更新",
+    "version": "Android 安裝套件 {version}（{code}）",
+    "web_version_note": "網站功能會另外更新。您的支出儲存在 Spliit Cloud 和此瀏覽器的離線儲存空間中。",
+    "check_updates": "檢查更新",
+    "checking": "正在檢查更新……",
+    "up_to_date": "您的 Android 安裝套件已是最新版本。",
+    "check_failed": "無法檢查更新。請連線後再試一次。",
+    "update_available": "Android 安裝套件 {version} 已可使用。",
+    "view_update": "查看更新",
+    "later": "稍後",
+    "play_updates": "此應用程式由 Google Play 管理。請前往 Google Play 檢查 Android 安裝套件更新。",
+    "open_play": "開啟 Google Play",
+    "update_source": "更新來源",
+    "automatic_source": "自動（依安裝來源）",
+    "github_source": "GitHub / Obtainium",
+    "play_source": "Google Play",
+    "obtainium_note": "如果您使用 Obtainium，也可以透過它管理我們在 GitHub 上發布的更新。",
+    "offline_title": "連線以開啟 Spliit Cloud",
+    "offline_message": "首次啟動需要網際網路連線，以便準備離線存取。您分享的檔案尚未被捨棄。請連線後再試一次。",
+    "browser_title": "需要瀏覽器",
+    "browser_message": "請安裝或啟用支援自訂分頁的最新版瀏覽器（例如 Chrome），然後再試一次。",
+    "retry": "重試",
+    "connection_settings": "連線設定",
+    "browser_settings": "應用程式設定",
+    "new_group": "新增群組",
+    "expenses": "支出",
+    "settings": "設定",
+    "continue_app": "開啟 Spliit Cloud"
   }
 }

@@ -1,0 +1,72 @@
+name: Publish Android update metadata PR
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Published android/vX.Y.Z release to announce
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-update-metadata
+  cancel-in-progress: false
+
+jobs:
+  metadata:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.release.tag_name, 'android/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      RELEASE_TAG: ${{ inputs.tag || github.event.release.tag_name }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: Verify public release and download announcement
+        run: |
+          gh release view "$RELEASE_TAG" --json isDraft,isPrerelease,tagName > "$RUNNER_TEMP/release.json"
+          python3 - <<'PY'
+          import json, os, pathlib, re
+          release = json.loads((pathlib.Path(os.environ['RUNNER_TEMP']) / 'release.json').read_text())
+          if not re.fullmatch(r'android/v\d+\.\d+\.\d+', os.environ['RELEASE_TAG']) or release['isDraft'] or release['isPrerelease']:
+              raise SystemExit('Only a published stable Android release can be announced')
+          PY
+          gh release download "$RELEASE_TAG" --pattern android-update.json --pattern spliit-cloud.apk --dir "$RUNNER_TEMP/android-release"
+      - name: Validate metadata and prevent downgrades
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib
+          root = pathlib.Path(os.environ['RUNNER_TEMP']) / 'android-release'
+          metadata = json.loads((root / 'android-update.json').read_text())
+          latest = metadata['latest']
+          tag = os.environ['RELEASE_TAG']
+          expected = 'https://github.com/antonio-ivanovski/spliit-cloud/releases/'
+          assert metadata['schemaVersion'] == 1 and metadata['packageName'] == 'cloud.spliit.twa'
+          assert latest['releaseUrl'] == expected + 'tag/' + tag
+          assert latest['apkUrl'] == expected + 'download/' + tag + '/spliit-cloud.apk'
+          assert latest['versionName'] == tag.removeprefix('android/v')
+          assert latest['sha256'] == hashlib.sha256((root / 'spliit-cloud.apk').read_bytes()).hexdigest()
+          destination = pathlib.Path('apps/web/public/android/releases/stable.json')
+          current = json.loads(destination.read_text())['latest']
+          assert current is None or latest['versionCode'] > current['versionCode'], 'Refusing update metadata downgrade or duplicate'
+          destination.write_text(json.dumps(metadata, indent=2) + '\n')
+          PY
+      - name: Open reviewable update announcement
+        run: |
+          branch="codex/android-update-${RELEASE_TAG#android/v}"
+          git switch -c "$branch"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add apps/web/public/android/releases/stable.json
+          git commit -m "Announce Android ${RELEASE_TAG#android/v} update"
+          git push origin "$branch"
+          gh pr create --base main --head "$branch" --title "Announce Android ${RELEASE_TAG#android/v} update" --body 'Publishes update discovery metadata for an already published, checksum-verified Android APK. Merge and deploy the web application to notify independent Android installations.'

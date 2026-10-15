@@ -480,7 +480,8 @@
       "consequencesTiming": "Den här översikten visar ditt konto som det ser ut nu. Grupper, medlemmar och utgifter kan ändras innan borttagningen börjar. Dina val gäller de grupper du då tillhör och deras balanser vid den tidpunkten. Inget som visas här händer omedelbart.",
       "executingTitle": "Borttagningen av kontot har börjat",
       "executingDescription": "Ditt konto håller på att tas bort. Vissa ändringar kan redan vara klara, och borttagningen kan inte avbrytas eller ångras. Om behandlingen avbryts fortsätter den efter de slutförda stegen."
-    }
+    },
+    "androidUpdates": "Uppdateringar av Android-appen"
   },
   "Activities": {
     "expense": {
@@ -5021,5 +5022,35 @@
     "triangulatedHeadline": "Delvis fast kurs – fast omräkning plus en live marknadskurs",
     "withdrawnPairHeadline": "{codes} innehåller en indragen valuta",
     "reference": "Referens"
+  },
+  "AndroidNative": {
+    "updates_title": "Uppdateringar av Android-appen",
+    "version": "Android-paket {version} ({code})",
+    "web_version_note": "Webbplatsens funktioner uppdateras separat. Dina utgifter lagras av Spliit Cloud och i den här webbläsarens offlinelagring.",
+    "check_updates": "Sök efter uppdateringar",
+    "checking": "Söker efter uppdateringar…",
+    "up_to_date": "Ditt Android-paket är uppdaterat.",
+    "check_failed": "Det gick inte att söka efter uppdateringar. Försök igen när du är ansluten.",
+    "update_available": "Android-paket {version} är tillgängligt.",
+    "view_update": "Visa uppdatering",
+    "later": "Senare",
+    "play_updates": "Den här installationen hanteras av Google Play. Sök efter uppdateringar av Android-paketet på Google Play.",
+    "open_play": "Öppna Google Play",
+    "update_source": "Uppdateringskälla",
+    "automatic_source": "Automatiskt (installationskälla)",
+    "github_source": "GitHub / Obtainium",
+    "play_source": "Google Play",
+    "obtainium_note": "Om du använder Obtainium kan det även hantera uppdateringar från våra GitHub-utgåvor.",
+    "offline_title": "Anslut för att öppna Spliit Cloud",
+    "offline_message": "Första starten kräver en internetanslutning för att förbereda offlineåtkomst. Dina delade filer har inte tagits bort. Anslut och försök igen.",
+    "browser_title": "En webbläsare behövs",
+    "browser_message": "Installera eller aktivera en uppdaterad webbläsare som stöder Custom Tabs, till exempel Chrome, och försök sedan igen.",
+    "retry": "Försök igen",
+    "connection_settings": "Anslutningsinställningar",
+    "browser_settings": "Appinställningar",
+    "new_group": "Ny grupp",
+    "expenses": "Utgifter",
+    "settings": "Inställningar",
+    "continue_app": "Öppna Spliit Cloud"
   }
 }

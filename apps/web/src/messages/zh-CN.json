@@ -2831,7 +2831,8 @@
       "consequencesTiming": "此审核反映账户当前的状态。删除开始前，群组、成员和支出可能会发生变化。您的选择将适用于删除时您所属的群组及其当时的余额。此处列出的变化不会立即发生。",
       "executingTitle": "账户删除已开始",
       "executingDescription": "正在处理账户删除。部分变化可能已经完成，删除无法取消或撤销。如果处理中断，将从已完成的步骤之后继续。"
-    }
+    },
+    "androidUpdates": "Android 应用更新"
   },
   "Activities": {
     "expense": {
@@ -5006,5 +5007,35 @@
     "triangulatedHeadline": "部分固定汇率（固定换算加实时市场汇率）",
     "withdrawnPairHeadline": "{codes} 包含已退出流通的货币",
     "reference": "参考资料"
+  },
+  "AndroidNative": {
+    "updates_title": "Android 应用更新",
+    "version": "Android 安装包 {version}（{code}）",
+    "web_version_note": "网站功能会单独更新。您的支出保存在 Spliit Cloud 和此浏览器的离线存储中。",
+    "check_updates": "检查更新",
+    "checking": "正在检查更新…",
+    "up_to_date": "您的 Android 安装包已是最新版本。",
+    "check_failed": "无法检查更新。请连接网络后重试。",
+    "update_available": "Android 安装包 {version} 已可用。",
+    "view_update": "查看更新",
+    "later": "稍后",
+    "play_updates": "此应用由 Google Play 管理。请前往 Google Play 检查 Android 安装包更新。",
+    "open_play": "打开 Google Play",
+    "update_source": "更新来源",
+    "automatic_source": "自动（根据安装来源）",
+    "github_source": "GitHub / Obtainium",
+    "play_source": "Google Play",
+    "obtainium_note": "如果您使用 Obtainium，也可以通过它管理我们在 GitHub 上发布的更新。",
+    "offline_title": "连接网络以打开 Spliit Cloud",
+    "offline_message": "首次启动需要连接互联网，以便准备离线访问。您分享的文件尚未被丢弃。请连接网络后重试。",
+    "browser_title": "需要浏览器",
+    "browser_message": "请安装或启用支持自定义标签页的最新版浏览器（例如 Chrome），然后重试。",
+    "retry": "重试",
+    "connection_settings": "连接设置",
+    "browser_settings": "应用设置",
+    "new_group": "新建群组",
+    "expenses": "支出",
+    "settings": "设置",
+    "continue_app": "打开 Spliit Cloud"
   }
 }

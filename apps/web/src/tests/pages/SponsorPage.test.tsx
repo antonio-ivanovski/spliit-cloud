@@ -28,6 +28,20 @@ const LIGHTNING_ADDRESS = 'purplecoil09@walletofsatoshi.com'
 describe('SponsorPage', () => {
   afterEach(() => {
     vi.clearAllMocks()
+    window.sessionStorage.clear()
+    window.history.replaceState(null, '', '/')
+  })
+
+  it('offers non-payment support after an Android launch, including direct sponsor navigation', () => {
+    window.history.replaceState(null, '', '/sponsor?android-app=1')
+    render(<SponsorPage />)
+    expect(screen.getByRole('link', { name: 'Open bug report' })).toBeVisible()
+    expect(
+      screen.queryByRole('link', { name: 'Become a sponsor' }),
+    ).not.toBeInTheDocument()
+    expect(screen.queryByText(EVM_ADDRESS)).not.toBeInTheDocument()
+    expect(screen.queryByText(BTC_ADDRESS)).not.toBeInTheDocument()
+    expect(screen.queryByText(LIGHTNING_ADDRESS)).not.toBeInTheDocument()
   })
 
   it('renders the GitHub Sponsors option and all crypto addresses', () => {

@@ -2846,7 +2846,8 @@
       "consequencesTiming": "Laburpen honek zure kontuaren oraingo egoera erakusten du. Taldeak, kideak eta gastuak alda daitezke ezabaketa hasi aurretik. Zure aukerak une horretan kide zaren taldeei eta haien saldoei aplikatuko zaizkie. Hemen adierazitako ezer ez da berehala gertatuko.",
       "executingTitle": "Kontuaren ezabaketa hasi da",
       "executingDescription": "Zure kontuaren ezabaketa prozesatzen ari da. Baliteke aldaketa batzuk jada osatuta egotea, eta ezabaketa ezin da bertan behera utzi edo desegin. Prozesua eteten bada, osatutako urratsetatik jarraituko du."
-    }
+    },
+    "androidUpdates": "Android aplikazioaren eguneraketak"
   },
   "Activities": {
     "expense": {
@@ -5053,5 +5054,35 @@
     "triangulatedHeadline": "Tasa partzialki finkoa — bihurketa finkoa eta merkatuko zuzeneko tasa",
     "withdrawnPairHeadline": "{codes} barne moneta erretiratu bat dago",
     "reference": "Erreferentzia"
+  },
+  "AndroidNative": {
+    "updates_title": "Android aplikazioaren eguneraketak",
+    "version": "Android paketea: {version} ({code})",
+    "web_version_note": "Webgunearen eginbideak bereiz eguneratzen dira. Zure gastuak Spliit Cloud-en eta nabigatzaile honen lineaz kanpoko biltegian gordetzen dira.",
+    "check_updates": "Bilatu eguneraketak",
+    "checking": "Eguneraketak bilatzen…",
+    "up_to_date": "Zure Android paketea eguneratuta dago.",
+    "check_failed": "Ezin izan dira eguneraketak bilatu. Saiatu berriro konexioa duzunean.",
+    "update_available": "Android paketearen {version} bertsioa eskuragarri dago.",
+    "view_update": "Ikusi eguneraketa",
+    "later": "Geroago",
+    "play_updates": "Instalazio hau Google Play-k kudeatzen du. Bilatu Android paketearen eguneraketak Google Play-n.",
+    "open_play": "Ireki Google Play",
+    "update_source": "Eguneraketen jatorria",
+    "automatic_source": "Automatikoa (instalazioaren jatorria)",
+    "github_source": "GitHub / Obtainium",
+    "play_source": "Google Play",
+    "obtainium_note": "Obtainium erabiltzen baduzu, gure GitHub bertsioen eguneraketak ere kudea ditzake.",
+    "offline_title": "Konektatu Spliit Cloud irekitzeko",
+    "offline_message": "Lehen aldiz abiaraztean interneteko konexioa behar da lineaz kanpoko sarbidea prestatzeko. Partekatutako fitxategiak ez dira baztertu. Konektatu eta saiatu berriro.",
+    "browser_title": "Nabigatzaile bat behar da",
+    "browser_message": "Instalatu edo gaitu fitxa pertsonalizatuak onartzen dituen nabigatzaile eguneratu bat, Chrome adibidez, eta saiatu berriro.",
+    "retry": "Saiatu berriro",
+    "connection_settings": "Konexioaren ezarpenak",
+    "browser_settings": "Aplikazioaren ezarpenak",
+    "new_group": "Talde berria",
+    "expenses": "Gastuak",
+    "settings": "Ezarpenak",
+    "continue_app": "Ireki Spliit Cloud"
   }
 }

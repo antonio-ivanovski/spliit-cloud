@@ -1,0 +1,50 @@
+name: Android checks
+
+on:
+  pull_request:
+    paths:
+      - 'apps/android/**'
+      - 'apps/web/src/messages/**'
+      - '.github/workflows/android*.yml'
+      - 'bun.lock'
+  push:
+    branches: [main]
+    paths:
+      - 'apps/android/**'
+      - 'apps/web/src/messages/**'
+      - '.github/workflows/android*.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+      - run: bun install --frozen-lockfile
+      - run: sdkmanager 'platforms;android-36' 'build-tools;36.1.0'
+      - run: bun --filter @spliit/android test
+      - run: bun --filter @spliit/android check-types
+      - name: Check native translations
+        working-directory: apps/android
+        run: bun scripts/sync-strings.ts --check
+      - name: Compile, test and lint Android
+        working-directory: apps/android
+        run: ./gradlew --no-daemon :app:assembleDebug :app:testDebugUnitTest :app:lint
+      - uses: actions/upload-artifact@v5
+        with:
+          name: android-debug-and-reports
+          path: |
+            apps/android/app/build/outputs/apk/debug/*.apk
+            apps/android/app/build/reports/

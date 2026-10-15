@@ -484,7 +484,8 @@
       "consequencesTiming": "اس جائزے میں آپ کے اکاؤنٹ کی موجودہ حالت دکھائی گئی ہے۔ حذف کرنے کا عمل شروع ہونے سے پہلے گروپس، اراکین اور اخراجات بدل سکتے ہیں۔ آپ کے انتخاب ان گروپس اور ان کے اس وقت کے بیلنس پر لاگو ہوں گے جن کے آپ تب رکن ہوں گے۔ یہاں درج کوئی بھی کارروائی فوری طور پر نہیں ہوگی۔",
       "executingTitle": "اکاؤنٹ حذف کرنے کا عمل شروع ہو گیا ہے",
       "executingDescription": "آپ کا اکاؤنٹ حذف کرنے کا عمل جاری ہے۔ کچھ تبدیلیاں پہلے ہی مکمل ہو چکی ہو سکتی ہیں اور حذف کرنے کو منسوخ یا واپس نہیں کیا جا سکتا۔ عمل میں رکاوٹ آنے پر یہ مکمل شدہ مراحل کے بعد سے دوبارہ جاری ہوگا۔"
-    }
+    },
+    "androidUpdates": "Android ایپ کی اپ ڈیٹس"
   },
   "Activities": {
     "expense": {
@@ -5031,5 +5032,35 @@
     "triangulatedHeadline": "جزوی مقررہ شرح — مقررہ تبدیلی اور لائیو مارکیٹ شرح",
     "withdrawnPairHeadline": "{codes} میں واپس لی گئی کرنسی شامل ہے",
     "reference": "حوالہ"
+  },
+  "AndroidNative": {
+    "updates_title": "Android ایپ کی اپ ڈیٹس",
+    "version": "Android پیکیج {version} ({code})",
+    "web_version_note": "ویب سائٹ کی خصوصیات الگ سے اپ ڈیٹ ہوتی ہیں۔ آپ کے اخراجات Spliit Cloud اور اس براؤزر کی آف لائن اسٹوریج میں محفوظ کیے جاتے ہیں۔",
+    "check_updates": "اپ ڈیٹس کی جانچ کریں",
+    "checking": "اپ ڈیٹس کی جانچ ہو رہی ہے…",
+    "up_to_date": "آپ کا Android پیکیج تازہ ترین ہے۔",
+    "check_failed": "اپ ڈیٹس کی جانچ نہیں ہو سکی۔ انٹرنیٹ سے منسلک ہونے پر دوبارہ کوشش کریں۔",
+    "update_available": "Android پیکیج {version} دستیاب ہے۔",
+    "view_update": "اپ ڈیٹ دیکھیں",
+    "later": "بعد میں",
+    "play_updates": "اس تنصیب کا انتظام Google Play کرتا ہے۔ Android پیکیج کی اپ ڈیٹس کے لیے Google Play دیکھیں۔",
+    "open_play": "Google Play کھولیں",
+    "update_source": "اپ ڈیٹ کا ذریعہ",
+    "automatic_source": "خودکار (تنصیب کا ذریعہ)",
+    "github_source": "GitHub / Obtainium",
+    "play_source": "Google Play",
+    "obtainium_note": "اگر آپ Obtainium استعمال کرتے ہیں تو یہ ہماری GitHub ریلیزز سے اپ ڈیٹس کا انتظام بھی کر سکتا ہے۔",
+    "offline_title": "Spliit Cloud کھولنے کے لیے منسلک ہوں",
+    "offline_message": "آف لائن رسائی تیار کرنے کے لیے پہلی بار کھولتے وقت انٹرنیٹ کنکشن درکار ہے۔ آپ کی شیئر کردہ فائلیں ضائع نہیں کی گئی ہیں۔ منسلک ہوں اور دوبارہ کوشش کریں۔",
+    "browser_title": "براؤزر درکار ہے",
+    "browser_message": "Chrome جیسا تازہ ترین براؤزر انسٹال یا فعال کریں جو Custom Tabs کو سپورٹ کرتا ہو، پھر دوبارہ کوشش کریں۔",
+    "retry": "دوبارہ کوشش کریں",
+    "connection_settings": "کنکشن کی ترتیبات",
+    "browser_settings": "ایپ کی ترتیبات",
+    "new_group": "نیا گروپ",
+    "expenses": "اخراجات",
+    "settings": "ترتیبات",
+    "continue_app": "Spliit Cloud کھولیں"
   }
 }
