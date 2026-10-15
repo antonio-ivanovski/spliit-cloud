@@ -114,8 +114,7 @@ export function classifyHttpStatus(
 }
 
 export function makeFetchTransport(deps?: FetchTransportDeps): FetchTransport {
-  const fetchFn: typeof fetch =
-    deps?.fetchFn ?? ((input, init) => fetch(input, init))
+  const fetchFn: typeof fetch = deps?.fetchFn ?? fetch
   const defaultTimeoutMs = deps?.defaultTimeoutMs ?? FETCH_DEFAULT_TIMEOUT_MS
 
   const request: FetchTransport['request'] = (input, init, options) =>

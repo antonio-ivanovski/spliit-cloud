@@ -138,8 +138,7 @@ export interface EffectFetchDeps {
  * the underlying fetch; interruptions never publish offline state.
  */
 export function createEffectFetch(deps?: EffectFetchDeps): typeof fetch {
-  const fetchFn: typeof fetch =
-    deps?.fetchFn ?? ((input, init) => fetch(input, init))
+  const fetchFn: typeof fetch = deps?.fetchFn ?? fetch
   const timeoutMs = deps?.timeoutMs
   const report = deps?.report ?? reportFetchOutcomeToServices
 
