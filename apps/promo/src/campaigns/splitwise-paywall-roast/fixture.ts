@@ -1,5 +1,7 @@
+import { Cause, Effect, Exit, Option } from 'effect'
+
 import { getCurrency } from '@spliit/domain'
-import { tryParseSplitwiseCsv } from '@spliit/domain/import'
+import { parseSplitwiseCsv } from '@spliit/domain/import'
 
 // Synthetic shared scenario. Every visible amount and import count derives here.
 export const people = [
@@ -76,9 +78,20 @@ export const splitwiseCsv = [
     ].join(',')
   }),
 ].join('\n')
-const parsed = tryParseSplitwiseCsv(splitwiseCsv)
-if (!parsed.ok) throw new Error(`Promo import fixture: ${parsed.error}`)
-export const importSource = { ...parsed.source, name: 'Barcelona trip' }
+const exit = Effect.runSyncExit(parseSplitwiseCsv(splitwiseCsv))
+if (Exit.isFailure(exit)) {
+  const failure = Cause.findErrorOption(exit.cause)
+  const message =
+    Option.isSome(failure) &&
+    failure.value &&
+    typeof failure.value === 'object' &&
+    'message' in failure.value
+      ? String(failure.value.message)
+      : 'unknown import error'
+  throw new Error(`Promo import fixture: ${message}`)
+}
+const source = exit.value
+export const importSource = { ...source, name: 'Barcelona trip' }
 export const importParticipants = importSource.participants.map(
   (person, index) => ({
     key: person.sourceId,
