@@ -11,6 +11,7 @@ import {
 } from './receipt-storyboard'
 import { roastSoundDesign } from './splitwise-paywall-roast/sound-design'
 import { roastShortsSoundDesign } from './splitwise-paywall-roast/sound-design-shorts'
+import { newImportersSoundDesign } from './tricount-settleup-import/sound-design'
 
 /** Sound follows the existing visual actions; never retime a scene for music. */
 export const receiptSoundDesign = {
@@ -70,6 +71,7 @@ export const receiptAiSoundDesign = {
 export const soundDesignScripts = {
   'splitwise-paywall-roast': roastSoundDesign,
   'splitwise-paywall-roast-shorts': roastShortsSoundDesign,
+  'tricount-settleup-import': newImportersSoundDesign,
   'receipt-walkthrough': receiptSoundDesign,
   'receipt-walkthrough-ai': receiptAiSoundDesign,
 }

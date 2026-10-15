@@ -5,6 +5,10 @@ import {
 import { receiptDuration } from './campaigns/receipt-storyboard'
 import { roastDuration } from './campaigns/splitwise-paywall-roast/storyboard'
 import { roastShortsDuration } from './campaigns/splitwise-paywall-roast/storyboard-shorts'
+import {
+  newImportersDuration,
+  newImportersTimeline,
+} from './campaigns/tricount-settleup-import/storyboard'
 
 export type PromoSize = { width: number; height: number }
 export type StaticVariant = PromoSize & { kind: 'static' }
@@ -98,6 +102,24 @@ export const campaigns: Campaign[] = [
           90,
         narration: 'receipt-walkthrough-ai',
         soundDesign: 'receipt-walkthrough-ai',
+      },
+    },
+  },
+  {
+    id: 'tricount-settleup-import',
+    title: 'Time to move out',
+    variants: {
+      promo: { kind: 'static', width: 1600, height: 900 },
+      landscape: {
+        kind: 'video',
+        width: 1920,
+        height: 1080,
+        fps: 30,
+        durationInFrames: newImportersDuration,
+        compositionId: 'tricount-settleup-import',
+        posterFrame: newImportersTimeline[2]!.from + 230,
+        narration: 'tricount-settleup-import',
+        soundDesign: 'tricount-settleup-import',
       },
     },
   },
