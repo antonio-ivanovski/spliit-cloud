@@ -437,15 +437,20 @@ export function ExpensePreviewModal({
   return (
     <ResponsiveDialog open={open} onOpenChange={handleOpenChange}>
       <ResponsiveDialogContent className="max-w-lg">
-        <ResponsiveDialogHeader>
-          <ResponsiveDialogTitle className="flex items-center gap-2">
+        <ResponsiveDialogHeader className="min-w-0">
+          <ResponsiveDialogTitle className="flex min-w-0 items-center gap-2 pe-6">
             {expense ? (
               <CategoryIcon
                 category={expense.category}
                 className="h-5 w-5 shrink-0 text-muted-foreground"
               />
             ) : null}
-            <span className="truncate">{expense?.title ?? t('title')}</span>
+            <span
+              className="min-w-0 flex-1 truncate"
+              title={expense?.title ?? undefined}
+            >
+              {expense?.title ?? t('title')}
+            </span>
             {categorySideEffect ? (
               <CategorySideEffectBadge kind={categorySideEffect} />
             ) : null}
@@ -459,7 +464,7 @@ export function ExpensePreviewModal({
           )}
         </ResponsiveDialogHeader>
 
-        <ResponsiveDialogBody className="max-h-[70vh] space-y-5 overflow-y-auto">
+        <ResponsiveDialogBody className="max-h-[70vh] min-w-0 space-y-5 overflow-y-auto">
           {offlineMissing ? (
             <output className="block text-sm text-muted-foreground">
               {tOffline('OfflineReadOnly.expenseMissing')}
@@ -654,7 +659,7 @@ export function ExpensePreviewModal({
             />
           </ResponsiveDialogFooter>
         ) : (
-          <ResponsiveDialogFooter className="flex-row flex-wrap gap-2 sm:flex-nowrap sm:justify-end">
+          <ResponsiveDialogFooter className="min-w-0 flex-row flex-wrap gap-2 sm:flex-nowrap sm:justify-end">
             {!isOnline && expense && (
               <output className="block w-full text-sm text-muted-foreground">
                 {tOffline('OfflineReadOnly.reconnectToEdit')}

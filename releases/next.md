@@ -23,6 +23,6 @@ who is affected, and the exact migration steps.
 
 ### 🐛 Bug fixes
 
-- Short entry per fix (`TBD` by @TBD)
+- Long expense titles in the expense details dialog are now truncated with an ellipsis instead of overflowing the dialog (`TBD` by @TBD)
 
 **Full Changelog**: TBD
