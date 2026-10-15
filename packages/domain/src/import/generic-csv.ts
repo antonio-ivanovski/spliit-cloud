@@ -1,10 +1,10 @@
 import { Environment } from '@marcbachmann/cel-js'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+import { Effect, Predicate, Schema } from 'effect'
 import Papa from 'papaparse'
-import { z } from 'zod'
 
-import { categoryIdSchema, INCOME_CATEGORY_ID } from '../categories'
+import { CATEGORY_IDS, INCOME_CATEGORY_ID } from '../categories'
 import { getCurrency, resolveCurrencyCode } from '../currency'
 import { amountAsMinorUnitsByCode } from '../utils'
 import {
@@ -13,7 +13,17 @@ import {
   type ImportCategoryProvenance,
 } from './category-resolution'
 import { inspectDelimitedCurrency } from './money-detection'
+import { ImportError } from './types'
 import type { ImportMessageParams } from './types'
+
+/** Effect Schema mirror of the category id enum (see `../categories`). */
+const CategoryIdSchema = Schema.String.pipe(
+  Schema.refine(
+    (value): value is (typeof CATEGORY_IDS)[number] =>
+      (CATEGORY_IDS as ReadonlyArray<string>).includes(value),
+    { message: 'Invalid category id' },
+  ),
+)
 
 dayjs.extend(customParseFormat)
 
@@ -130,124 +140,145 @@ function hasDelimitedNestedQuantifier(pattern: string): boolean {
   return false
 }
 
-const visualTransformSchema = z.discriminatedUnion('kind', [
-  z.object({
-    kind: z.literal('JOIN'),
-    separator: z.string().max(50).default(' '),
+const visualTransformSchema = Schema.Union([
+  Schema.Struct({
+    kind: Schema.Literal('JOIN'),
+    separator: Schema.optional(
+      Schema.String.pipe(Schema.check(Schema.isMaxLength(50))),
+    ).pipe(Schema.withDecodingDefault(Effect.succeed(' '))),
   }),
-  z.object({ kind: z.literal('TRIM') }),
-  z.object({ kind: z.literal('UPPER') }),
-  z.object({ kind: z.literal('LOWER') }),
-  z.object({
-    kind: z.literal('REPLACE'),
-    search: z.string().max(200),
-    replacement: z.string().max(200),
+  Schema.Struct({ kind: Schema.Literal('TRIM') }),
+  Schema.Struct({ kind: Schema.Literal('UPPER') }),
+  Schema.Struct({ kind: Schema.Literal('LOWER') }),
+  Schema.Struct({
+    kind: Schema.Literal('REPLACE'),
+    search: Schema.String.pipe(Schema.check(Schema.isMaxLength(200))),
+    replacement: Schema.String.pipe(Schema.check(Schema.isMaxLength(200))),
   }),
-  z.object({
-    kind: z.literal('REGEX_EXTRACT'),
-    pattern: z
-      .string()
-      .max(500)
-      .refine((pattern) => !hasDelimitedNestedQuantifier(pattern), {
-        message: 'Nested quantifiers are not allowed in REGEX_EXTRACT',
-      }),
-    group: z.number().int().min(0).max(20).default(0),
+  Schema.Struct({
+    kind: Schema.Literal('REGEX_EXTRACT'),
+    pattern: Schema.String.pipe(
+      Schema.check(Schema.isMaxLength(500)),
+      Schema.refine(
+        (pattern): pattern is string => !hasDelimitedNestedQuantifier(pattern),
+        {
+          message: 'Nested quantifiers are not allowed in REGEX_EXTRACT',
+        },
+      ),
+    ),
+    group: Schema.optional(
+      Schema.Int.pipe(
+        Schema.check(Schema.isGreaterThanOrEqualTo(0)),
+        Schema.check(Schema.isLessThanOrEqualTo(20)),
+      ),
+    ).pipe(Schema.withDecodingDefault(Effect.succeed(0))),
   }),
-  z.object({
-    kind: z.literal('PARSE_DATE'),
-    format: z.string().trim().min(1).max(100),
+  Schema.Struct({
+    kind: Schema.Literal('PARSE_DATE'),
+    format: Schema.Trim.pipe(
+      Schema.check(Schema.isMinLength(1)),
+      Schema.check(Schema.isMaxLength(100)),
+    ),
   }),
-  z.object({
-    kind: z.literal('PARSE_NUMBER'),
-    format: z.enum(['AUTO', 'DOT', 'COMMA']),
+  Schema.Struct({
+    kind: Schema.Literal('PARSE_NUMBER'),
+    format: Schema.Literals(['AUTO', 'DOT', 'COMMA']),
   }),
-  z.object({ kind: z.literal('EXTRACT_CURRENCY') }),
-  z.object({
-    kind: z.literal('DEBIT_CREDIT'),
-    debitColumn: z.string().min(1),
-    creditColumn: z.string().min(1),
-    format: z.enum(['AUTO', 'DOT', 'COMMA']),
+  Schema.Struct({ kind: Schema.Literal('EXTRACT_CURRENCY') }),
+  Schema.Struct({
+    kind: Schema.Literal('DEBIT_CREDIT'),
+    debitColumn: Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+    creditColumn: Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+    format: Schema.Literals(['AUTO', 'DOT', 'COMMA']),
   }),
-  z.object({
-    kind: z.literal('SIGN_FROM_COLUMN'),
-    columnKey: z.string().min(1),
-    negativeValues: z.array(z.string()).max(50),
+  Schema.Struct({
+    kind: Schema.Literal('SIGN_FROM_COLUMN'),
+    columnKey: Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+    negativeValues: Schema.Array(Schema.String).pipe(
+      Schema.check(Schema.isMaxLength(50)),
+    ),
     // Known-positive values suppress the SIGN_COLUMN_IGNORED warning (their
     // absolute() outcome is intended). Optional so previously saved mappings
     // keep validating; absence preserves the legacy warn-on-any-unlisted
     // behavior.
-    positiveValues: z.array(z.string()).max(50).optional(),
+    positiveValues: Schema.optional(
+      Schema.Array(Schema.String).pipe(Schema.check(Schema.isMaxLength(50))),
+    ),
   }),
 ])
 
-const visualMappingSchema = z
-  .object({
-    mode: z.literal('VISUAL'),
-    sourceValues: z
-      .array(
-        z.object({
-          primary: z.string().min(1),
-          fallbacks: z.array(z.string().min(1)).max(11).default([]),
-        }),
-      )
-      .min(1)
-      .max(12),
-    transforms: z.array(visualTransformSchema).max(20).default([]),
-  })
-  .superRefine((mapping, context) => {
-    const joinIndices = mapping.transforms.flatMap((transform, index) =>
-      transform.kind === 'JOIN' ? [index] : [],
-    )
-    if (mapping.sourceValues.length > 1) {
-      if (joinIndices.length !== 1 || joinIndices[0] !== 0) {
-        context.addIssue({
-          code: 'custom',
-          path: ['transforms'],
-          message:
-            'A Join transformation must be first when combining source values',
-        })
-      }
-    } else if (joinIndices.length > 1) {
-      context.addIssue({
-        code: 'custom',
-        path: ['transforms'],
-        message: 'A visual mapping can contain only one Join transformation',
-      })
-    }
-  })
-
-const celMappingSchema = z.object({
-  mode: z.literal('CEL'),
-  expression: z.string().trim().min(1).max(10_000),
+const visualMappingSchema = Schema.Struct({
+  mode: Schema.Literal('VISUAL'),
+  sourceValues: Schema.Array(
+    Schema.Struct({
+      primary: Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+      fallbacks: Schema.optional(
+        Schema.Array(
+          Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+        ).pipe(Schema.check(Schema.isMaxLength(11))),
+      ).pipe(Schema.withDecodingDefault(Effect.succeed([] as string[]))),
+    }),
+  ).pipe(
+    Schema.check(Schema.isMinLength(1)),
+    Schema.check(Schema.isMaxLength(12)),
+  ),
+  transforms: Schema.optional(
+    Schema.Array(visualTransformSchema).pipe(
+      Schema.check(Schema.isMaxLength(20)),
+    ),
+  ).pipe(
+    Schema.withDecodingDefault(
+      Effect.succeed([] as Schema.Schema.Type<typeof visualTransformSchema>[]),
+    ),
+  ),
 })
 
-export const delimitedFieldMappingSchema = z.discriminatedUnion('mode', [
+const celMappingSchema = Schema.Struct({
+  mode: Schema.Literal('CEL'),
+  expression: Schema.Trim.pipe(
+    Schema.check(Schema.isMinLength(1)),
+    Schema.check(Schema.isMaxLength(10_000)),
+  ),
+})
+
+export const delimitedFieldMappingSchema = Schema.Union([
   visualMappingSchema,
   celMappingSchema,
 ])
 
-export type DelimitedVisualTransform = z.infer<typeof visualTransformSchema>
-export type DelimitedVisualMapping = z.infer<typeof visualMappingSchema>
-export type DelimitedCelMapping = z.infer<typeof celMappingSchema>
-export type DelimitedFieldMapping = z.infer<typeof delimitedFieldMappingSchema>
+export type DelimitedVisualTransform = Schema.Schema.Type<
+  typeof visualTransformSchema
+>
+export type DelimitedVisualMapping = Schema.Schema.Type<
+  typeof visualMappingSchema
+>
+export type DelimitedCelMapping = Schema.Schema.Type<typeof celMappingSchema>
+export type DelimitedFieldMapping = Schema.Schema.Type<
+  typeof delimitedFieldMappingSchema
+>
 
-const moneyVisualMappingSchema = z.object({
-  mode: z.literal('VISUAL'),
+const moneyVisualMappingSchema = Schema.Struct({
+  mode: Schema.Literal('VISUAL'),
   amount: visualMappingSchema,
-  currency: visualMappingSchema.optional(),
+  currency: Schema.optional(visualMappingSchema),
 })
 
-const moneyCelMappingSchema = z.object({
-  mode: z.literal('CEL'),
-  expression: z.string().trim().min(1).max(10_000),
+const moneyCelMappingSchema = Schema.Struct({
+  mode: Schema.Literal('CEL'),
+  expression: Schema.Trim.pipe(
+    Schema.check(Schema.isMinLength(1)),
+    Schema.check(Schema.isMaxLength(10_000)),
+  ),
 })
 
-export const delimitedMoneyMappingSchema = z.discriminatedUnion('mode', [
+export const delimitedMoneyMappingSchema = Schema.Union([
   moneyVisualMappingSchema,
   moneyCelMappingSchema,
 ])
 
-export type DelimitedMoneyMapping = z.infer<typeof delimitedMoneyMappingSchema>
+export type DelimitedMoneyMapping = Schema.Schema.Type<
+  typeof delimitedMoneyMappingSchema
+>
 
 export type DelimitedDateOrder = 'DMY' | 'MDY'
 export type DelimitedDateOrderAnalysis = {
@@ -258,64 +289,92 @@ export type DelimitedDateOrderAnalysis = {
   ambiguousRows: number[]
 }
 
-const parsingSchema = z.object({
-  delimiter: z.enum([',', ';', '\t', '|']),
-  headerRow: z.number().int().min(0).max(10_000).default(0),
-  encoding: z.enum(['UTF-8', 'WINDOWS-1252', 'UTF-16']),
-  columnSignature: z.array(z.string()).max(500),
+const parsingSchema = Schema.Struct({
+  delimiter: Schema.Literals([',', ';', '\t', '|']),
+  headerRow: Schema.optional(
+    Schema.Int.pipe(
+      Schema.check(Schema.isGreaterThanOrEqualTo(0)),
+      Schema.check(Schema.isLessThanOrEqualTo(10_000)),
+    ),
+  ).pipe(Schema.withDecodingDefault(Effect.succeed(0))),
+  encoding: Schema.Literals(['UTF-8', 'WINDOWS-1252', 'UTF-16']),
+  columnSignature: Schema.Array(Schema.String).pipe(
+    Schema.check(Schema.isMaxLength(500)),
+  ),
 })
 
-const groupBindingsSchema = z.object({
-  payerName: z.string().trim().min(1).max(200).optional(),
-  paidBy: z
-    .array(
-      z.object({
-        participantName: z.string().trim().min(1).max(200),
-        shares: z.number().int(),
+const groupBindingsSchema = Schema.Struct({
+  payerName: Schema.optional(
+    Schema.Trim.pipe(
+      Schema.check(Schema.isMinLength(1)),
+      Schema.check(Schema.isMaxLength(200)),
+    ),
+  ),
+  paidBy: Schema.optional(
+    Schema.Array(
+      Schema.Struct({
+        participantName: Schema.Trim.pipe(
+          Schema.check(Schema.isMinLength(1)),
+          Schema.check(Schema.isMaxLength(200)),
+        ),
+        shares: Schema.Int,
       }),
-    )
-    .max(100)
-    .optional(),
-  paidFor: z
-    .array(
-      z.object({
-        participantName: z.string().trim().min(1).max(200),
-        shares: z.number().int(),
+    ).pipe(Schema.check(Schema.isMaxLength(100))),
+  ),
+  paidFor: Schema.optional(
+    Schema.Array(
+      Schema.Struct({
+        participantName: Schema.Trim.pipe(
+          Schema.check(Schema.isMinLength(1)),
+          Schema.check(Schema.isMaxLength(200)),
+        ),
+        shares: Schema.Int,
       }),
-    )
-    .max(100)
-    .optional(),
-  paidBySplitMode: z
-    .enum(['EVENLY', 'BY_SHARES', 'BY_PERCENTAGE', 'BY_AMOUNT'])
-    .optional(),
-  splitMode: z
-    .enum(['EVENLY', 'BY_SHARES', 'BY_PERCENTAGE', 'BY_AMOUNT'])
-    .optional(),
+    ).pipe(Schema.check(Schema.isMaxLength(100))),
+  ),
+  paidBySplitMode: Schema.optional(
+    Schema.Literals(['EVENLY', 'BY_SHARES', 'BY_PERCENTAGE', 'BY_AMOUNT']),
+  ),
+  splitMode: Schema.optional(
+    Schema.Literals(['EVENLY', 'BY_SHARES', 'BY_PERCENTAGE', 'BY_AMOUNT']),
+  ),
 })
 
-export const delimitedExpenseMappingSchema = z.object({
-  kind: z.literal(DELIMITED_MAPPING_KIND),
-  version: z.literal(DELIMITED_MAPPING_VERSION),
-  name: z.string().trim().min(1).max(200),
+export const delimitedExpenseMappingSchema = Schema.Struct({
+  kind: Schema.Literal(DELIMITED_MAPPING_KIND),
+  version: Schema.Literal(DELIMITED_MAPPING_VERSION),
+  name: Schema.Trim.pipe(
+    Schema.check(Schema.isMinLength(1)),
+    Schema.check(Schema.isMaxLength(200)),
+  ),
   parsing: parsingSchema,
-  mappings: z.object({
+  mappings: Schema.Struct({
     dateTime: delimitedFieldMappingSchema,
     title: delimitedFieldMappingSchema,
     money: delimitedMoneyMappingSchema,
-    categorySource: delimitedFieldMappingSchema.optional(),
-    notes: delimitedFieldMappingSchema.optional(),
-    externalId: delimitedFieldMappingSchema.optional(),
-    sourceAccount: delimitedFieldMappingSchema.optional(),
+    categorySource: Schema.optional(delimitedFieldMappingSchema),
+    notes: Schema.optional(delimitedFieldMappingSchema),
+    externalId: Schema.optional(delimitedFieldMappingSchema),
+    sourceAccount: Schema.optional(delimitedFieldMappingSchema),
   }),
-  categoryBindings: z.record(z.string(), categoryIdSchema).default({}),
-  defaults: z.object({
-    currencyCode: z.string().trim().min(1).max(12),
-    categoryId: categoryIdSchema.default('general'),
+  categoryBindings: Schema.optional(
+    Schema.Record(Schema.String, CategoryIdSchema),
+  ).pipe(
+    Schema.withDecodingDefault(Effect.succeed({} as Record<string, string>)),
+  ),
+  defaults: Schema.Struct({
+    currencyCode: Schema.Trim.pipe(
+      Schema.check(Schema.isMinLength(1)),
+      Schema.check(Schema.isMaxLength(12)),
+    ),
+    categoryId: Schema.optional(CategoryIdSchema).pipe(
+      Schema.withDecodingDefault(Effect.succeed('general')),
+    ),
   }),
-  groupBindings: groupBindingsSchema.optional(),
+  groupBindings: Schema.optional(groupBindingsSchema),
 })
 
-export type DelimitedExpenseMappingV1 = z.infer<
+export type DelimitedExpenseMappingV1 = Schema.Schema.Type<
   typeof delimitedExpenseMappingSchema
 >
 
@@ -334,7 +393,7 @@ export type DelimitedMappedRow = {
   expenseTimeMinutes: number
   amount: number
   currency: string
-  category: z.infer<typeof categoryIdSchema>
+  category: Schema.Schema.Type<typeof CategoryIdSchema>
   categorySource: string | null
   notes: string | null
   externalId: string | null
@@ -537,14 +596,14 @@ export function decodeDelimitedBytes(
 }
 
 /** Parse a delimited statement without interpreting expense fields. */
-export function parseDelimitedText(
+export const parseDelimitedText = Effect.fnUntraced(function* (
   input: string,
   options: {
     headerRow?: number
     delimiter?: string
     encoding?: Exclude<DelimitedEncoding, 'AUTO'>
   } = {},
-): DelimitedParseResult {
+): Effect.fn.Return<DelimitedTable, ImportError> {
   const cleaned = input.charCodeAt(0) === 0xfeff ? input.slice(1) : input
   // `AUTO` is accepted only as an internal parse request. The returned table
   // always carries the concrete delimiter selected by detection.
@@ -571,20 +630,18 @@ export function parseDelimitedText(
       error.code !== 'UndetectableDelimiter',
   )
   if (fatalError) {
-    return {
-      ok: false,
-      error: `The file could not be parsed: ${fatalError.message}`,
+    return yield* new ImportError({
+      message: `The file could not be parsed: ${fatalError.message}`,
       code: 'DELIMITED_PARSE_FAILED',
       params: { detail: fatalError.message },
-    }
+    })
   }
   if (parsed.data.length < 2) {
-    return {
-      ok: false,
-      error: 'The file needs a header and at least one row',
+    return yield* new ImportError({
+      message: 'The file needs a header and at least one row',
       code: 'DELIMITED_NEEDS_HEADER_AND_ROWS',
       params: {},
-    }
+    })
   }
 
   const headerRow = Math.max(
@@ -593,12 +650,11 @@ export function parseDelimitedText(
   )
   const dataRowCount = parsed.data.length - headerRow - 1
   if (dataRowCount > MAX_DELIMITED_ROWS) {
-    return {
-      ok: false,
-      error: `The file cannot contain more than ${MAX_DELIMITED_ROWS.toLocaleString('en-US')} rows`,
+    return yield* new ImportError({
+      message: `The file cannot contain more than ${MAX_DELIMITED_ROWS.toLocaleString('en-US')} rows`,
       code: 'DELIMITED_TOO_MANY_ROWS',
       params: { max: MAX_DELIMITED_ROWS.toLocaleString('en-US') },
-    }
+    })
   }
   const header = parsed.data[headerRow] ?? []
   let width = header.length
@@ -606,28 +662,25 @@ export function parseDelimitedText(
     width = Math.max(width, parsed.data[index]?.length ?? 0)
   }
   if (width > MAX_DELIMITED_COLUMNS) {
-    return {
-      ok: false,
-      error: `The file cannot contain more than ${MAX_DELIMITED_COLUMNS.toLocaleString('en-US')} columns`,
+    return yield* new ImportError({
+      message: `The file cannot contain more than ${MAX_DELIMITED_COLUMNS.toLocaleString('en-US')} columns`,
       code: 'DELIMITED_TOO_MANY_COLUMNS',
       params: { max: MAX_DELIMITED_COLUMNS.toLocaleString('en-US') },
-    }
+    })
   }
   if (width * dataRowCount > MAX_DELIMITED_CELLS) {
-    return {
-      ok: false,
-      error: 'The file contains too many cells to preview safely',
+    return yield* new ImportError({
+      message: 'The file contains too many cells to preview safely',
       code: 'DELIMITED_TOO_MANY_CELLS',
       params: {},
-    }
+    })
   }
   if (width < 2 || header.filter((cell) => cell.trim()).length < 2) {
-    return {
-      ok: false,
-      error: 'The header needs at least two named columns',
+    return yield* new ImportError({
+      message: 'The header needs at least two named columns',
       code: 'DELIMITED_NEEDS_TWO_COLUMNS',
       params: {},
-    }
+    })
   }
 
   const usedLabels = new Map<string, number>()
@@ -656,34 +709,29 @@ export function parseDelimitedText(
     .filter((row) => row.cells.some((cell) => cell.trim()))
 
   if (rows.length === 0)
-    return {
-      ok: false,
-      error: 'The file has no data rows',
+    return yield* new ImportError({
+      message: 'The file has no data rows',
       code: 'DELIMITED_NO_DATA_ROWS',
       params: {},
-    }
+    })
   if (rows.length > MAX_DELIMITED_ROWS) {
-    return {
-      ok: false,
-      error: `The file cannot contain more than ${MAX_DELIMITED_ROWS.toLocaleString('en-US')} rows`,
+    return yield* new ImportError({
+      message: `The file cannot contain more than ${MAX_DELIMITED_ROWS.toLocaleString('en-US')} rows`,
       code: 'DELIMITED_TOO_MANY_ROWS',
       params: { max: MAX_DELIMITED_ROWS.toLocaleString('en-US') },
-    }
+    })
   }
 
   return {
-    ok: true,
-    table: {
-      columns,
-      rows,
-      // Papa reports the delimiter it actually used; prefer it over a
-      // hardcoded fallback so the table never claims `,` when unsure.
-      delimiter: detectedDelimiter ?? parsed.meta.delimiter ?? ',',
-      headerRow,
-      encoding: options.encoding ?? 'UTF-8',
-    },
+    columns,
+    rows,
+    // Papa reports the delimiter it actually used; prefer it over a
+    // hardcoded fallback so the table never claims `,` when unsure.
+    delimiter: detectedDelimiter ?? parsed.meta.delimiter ?? ',',
+    headerRow,
+    encoding: options.encoding ?? 'UTF-8',
   }
-}
+})
 
 export function delimitedColumnSignature(table: DelimitedTable): string[] {
   return table.columns.map((column) => column.key)
@@ -1103,15 +1151,23 @@ function quote(value: string): string {
   return JSON.stringify(value)
 }
 
-function sourceExpression(source: DelimitedSourceValue) {
-  const keys = [source.primary, ...source.fallbacks]
+function sourceExpression(source: {
+  primary: string
+  fallbacks?: ReadonlyArray<string>
+}) {
+  const keys = [source.primary, ...(source.fallbacks ?? [])]
   const values = keys.map((key) => `row[${quote(key)}]`)
   if (values.length === 1) return values[0]!
   return `firstNonEmpty([${values.join(', ')}])`
 }
 
 function visualSourceExpressions(mapping: DelimitedVisualMapping) {
-  return mapping.sourceValues.map(sourceExpression)
+  return mapping.sourceValues.map((source) =>
+    sourceExpression({
+      primary: source.primary,
+      fallbacks: source.fallbacks ?? [],
+    }),
+  )
 }
 
 /** Compile a visual mapping into the same CEL language used by Advanced mode. */
@@ -1119,20 +1175,22 @@ export function compileDelimitedMapping(
   mapping: DelimitedFieldMapping,
 ): string {
   if (mapping.mode === 'CEL') return mapping.expression
+  const transforms = mapping.transforms ?? []
   const sourceExpressions = visualSourceExpressions(mapping)
   let expression: string | undefined
   if (
     sourceExpressions.length === 1 &&
-    !mapping.transforms.some((transform) => transform.kind === 'JOIN')
+    !transforms.some((transform) => transform.kind === 'JOIN')
   ) {
     expression = sourceExpressions[0]
   }
-  for (const transform of mapping.transforms) {
+  for (const transform of transforms) {
     if (transform.kind === 'JOIN') {
+      const separator = transform.separator ?? ' '
       if (expression !== undefined) {
-        expression = `joinNonEmpty(${quote(transform.separator)}, [${expression}])`
+        expression = `joinNonEmpty(${quote(separator)}, [${expression}])`
       } else {
-        expression = `joinNonEmpty(${quote(transform.separator)}, [${sourceExpressions.join(', ')}])`
+        expression = `joinNonEmpty(${quote(separator)}, [${sourceExpressions.join(', ')}])`
       }
     } else if (expression === undefined) {
       throw new Error(
@@ -1144,7 +1202,7 @@ export function compileDelimitedMapping(
     else if (transform.kind === 'REPLACE') {
       expression = `replaceText(${expression}, ${quote(transform.search)}, ${quote(transform.replacement)})`
     } else if (transform.kind === 'REGEX_EXTRACT') {
-      expression = `regexExtract(${expression}, ${quote(transform.pattern)}, ${transform.group})`
+      expression = `regexExtract(${expression}, ${quote(transform.pattern)}, ${transform.group ?? 0})`
     } else if (transform.kind === 'PARSE_DATE') {
       expression = `parseDate(${expression}, ${quote(transform.format)})`
     } else if (transform.kind === 'PARSE_NUMBER') {
@@ -1219,18 +1277,36 @@ export function evaluateDelimitedMoneyMapping(
  * Validate the serialized mapping and its CEL compilation without evaluating a
  * row.
  */
-export function validateDelimitedMapping(
+export const validateDelimitedMapping = Effect.fnUntraced(function* (
   mapping: DelimitedFieldMapping,
-): DelimitedFieldMapping {
-  const parsed = delimitedFieldMappingSchema.parse(mapping)
-  if (parsed.mode === 'VISUAL') assertVisualTransformOrder(parsed)
-  mappingEnvironment.parse(compileDelimitedMapping(parsed))
+): Effect.fn.Return<DelimitedFieldMapping, ImportError> {
+  const parsed = yield* Schema.decodeUnknownEffect(delimitedFieldMappingSchema)(
+    mapping,
+  ).pipe(
+    Effect.catch((cause) =>
+      Effect.fail(
+        new ImportError({
+          message:
+            cause instanceof Error ? cause.message : 'The mapping is invalid',
+        }),
+      ),
+    ),
+  )
+  yield* assertVisualTransformOrderEffect(parsed)
+  yield* Effect.try({
+    try: () => mappingEnvironment.parse(compileDelimitedMapping(parsed)),
+    catch: (cause) =>
+      new ImportError({
+        message:
+          cause instanceof Error ? cause.message : 'The mapping is invalid',
+      }),
+  })
   return parsed
-}
+})
 
 /** Debit/credit replaces the source value; sign needs a parsed number first. */
 function assertVisualTransformOrder(mapping: DelimitedVisualMapping) {
-  const kinds = mapping.transforms.map((transform) => transform.kind)
+  const kinds = (mapping.transforms ?? []).map((transform) => transform.kind)
   if (kinds.includes('DEBIT_CREDIT')) {
     const allowed =
       kinds.length === 1 ||
@@ -1256,21 +1332,116 @@ function assertVisualTransformOrder(mapping: DelimitedVisualMapping) {
   }
 }
 
+const assertVisualTransformOrderEffect = Effect.fnUntraced(function* (
+  mapping: DelimitedFieldMapping | DelimitedVisualMapping,
+): Effect.fn.Return<void, ImportError> {
+  if (mapping.mode !== 'VISUAL') return
+  yield* Effect.try({
+    try: () => {
+      assertVisualTransformOrder(mapping)
+      assertJoinOrder(mapping)
+    },
+    catch: (cause) =>
+      new ImportError({
+        message:
+          cause instanceof Error ? cause.message : 'The mapping is invalid',
+      }),
+  })
+})
+
+/** JOIN must be first when combining source values; at most one otherwise. */
+function assertJoinOrder(mapping: DelimitedVisualMapping) {
+  const transforms = mapping.transforms ?? []
+  const joinIndices = transforms.flatMap((transform, index) =>
+    transform.kind === 'JOIN' ? [index] : [],
+  )
+  if ((mapping.sourceValues ?? []).length > 1) {
+    if (joinIndices.length !== 1 || joinIndices[0] !== 0) {
+      throw new Error(
+        'A Join transformation must be first when combining source values',
+      )
+    }
+  } else if (joinIndices.length > 1) {
+    throw new Error('A visual mapping can contain only one Join transformation')
+  }
+}
+
+const assertJoinOrderEffect = Effect.fnUntraced(function* (
+  mapping: DelimitedVisualMapping,
+): Effect.fn.Return<void, ImportError> {
+  yield* Effect.try({
+    try: () => assertJoinOrder(mapping),
+    catch: (cause) =>
+      new ImportError({
+        message:
+          cause instanceof Error ? cause.message : 'The mapping is invalid',
+      }),
+  })
+})
+
+const assertExpenseMappingJoinOrderEffect = Effect.fnUntraced(function* (
+  mapping: DelimitedExpenseMappingV1,
+): Effect.fn.Return<void, ImportError> {
+  const visuals: DelimitedVisualMapping[] = []
+  const fieldMappings: DelimitedFieldMapping[] = [
+    mapping.mappings.dateTime,
+    mapping.mappings.title,
+    ...(mapping.mappings.categorySource
+      ? [mapping.mappings.categorySource]
+      : []),
+    ...(mapping.mappings.notes ? [mapping.mappings.notes] : []),
+    ...(mapping.mappings.externalId ? [mapping.mappings.externalId] : []),
+    ...(mapping.mappings.sourceAccount ? [mapping.mappings.sourceAccount] : []),
+  ]
+  for (const field of fieldMappings) {
+    if (field.mode === 'VISUAL') visuals.push(field)
+  }
+  if (mapping.mappings.money.mode === 'VISUAL') {
+    visuals.push(mapping.mappings.money.amount)
+    if (mapping.mappings.money.currency) {
+      visuals.push(mapping.mappings.money.currency)
+    }
+  }
+  for (const visual of visuals) {
+    yield* assertJoinOrderEffect(visual)
+  }
+})
+
 /** Validate both coordinated CEL lanes of a Money mapping. */
-export function validateDelimitedMoneyMapping(
+export const validateDelimitedMoneyMapping = Effect.fnUntraced(function* (
   mapping: DelimitedMoneyMapping,
-): DelimitedMoneyMapping {
-  const parsed = delimitedMoneyMappingSchema.parse(mapping)
+): Effect.fn.Return<DelimitedMoneyMapping, ImportError> {
+  const parsed = yield* Schema.decodeUnknownEffect(delimitedMoneyMappingSchema)(
+    mapping,
+  ).pipe(
+    Effect.catch((cause) =>
+      Effect.fail(
+        new ImportError({
+          message:
+            cause instanceof Error ? cause.message : 'The mapping is invalid',
+        }),
+      ),
+    ),
+  )
   if (parsed.mode === 'VISUAL') {
-    assertVisualTransformOrder(parsed.amount)
+    yield* assertVisualTransformOrderEffect(parsed.amount)
     if (parsed.currency?.mode === 'VISUAL')
-      assertVisualTransformOrder(parsed.currency)
+      yield* assertVisualTransformOrderEffect(parsed.currency)
   }
   const compiled = compileDelimitedMoneyMapping(parsed)
-  mappingEnvironment.parse(compiled.amount)
-  mappingEnvironment.parse(compiled.currency)
+  yield* Effect.try({
+    try: () => {
+      mappingEnvironment.parse(compiled.amount)
+      mappingEnvironment.parse(compiled.currency)
+    },
+    catch: (cause) =>
+      new ImportError({
+        message:
+          cause instanceof Error ? cause.message : 'The mapping is invalid',
+      }),
+  })
   return parsed
-}
+})
 
 export const importCategorySourceKey = (value: string) =>
   value
@@ -1345,12 +1516,14 @@ function rawVisualValue(
   if (!mapping || mapping.mode !== 'VISUAL') return ''
   const values = mapping.sourceValues.map(
     (source) =>
-      [source.primary, ...source.fallbacks]
+      [source.primary, ...(source.fallbacks ?? [])]
         .map((key) => context[key] ?? '')
         .map(clean)
         .find(Boolean) ?? '',
   )
-  const join = mapping.transforms.find((transform) => transform.kind === 'JOIN')
+  const join = (mapping.transforms ?? []).find(
+    (transform) => transform.kind === 'JOIN',
+  )
   return values.filter(Boolean).join(join?.separator ?? ' ')
 }
 
@@ -1384,14 +1557,14 @@ export function analyzeDelimitedDateOrder(
     }
   }
   if (
-    mapping.transforms.some(
+    (mapping.transforms ?? []).some(
       (transform) =>
         transform.kind === 'PARSE_DATE' &&
         transform.format !== 'AUTO_MDY' &&
         transform.format !== 'AUTO_DMY',
     )
   ) {
-    const dateTransform = mapping.transforms.find(
+    const dateTransform = (mapping.transforms ?? []).find(
       (transform) => transform.kind === 'PARSE_DATE',
     )
     const format =
@@ -1441,7 +1614,7 @@ export function analyzeDelimitedDateOrder(
   // single-source date mapping reads one cell, so index it directly.
   const singleDateColumn =
     mapping.sourceValues.length === 1 &&
-    mapping.sourceValues[0]!.fallbacks.length === 0
+    (mapping.sourceValues[0]!.fallbacks ?? []).length === 0
       ? (table.columns.find(
           (column) => column.key === mapping.sourceValues[0]!.primary,
         ) ?? null)
@@ -1594,11 +1767,11 @@ function mappingFailedContext(
   if (fieldMapping.mode === 'VISUAL') {
     const keys = fieldMapping.sourceValues.flatMap((source) => [
       source.primary,
-      ...source.fallbacks,
+      ...(source.fallbacks ?? []),
     ])
     const extraKeys =
       'transforms' in fieldMapping
-        ? fieldMapping.transforms.flatMap((transform) =>
+        ? (fieldMapping.transforms ?? []).flatMap((transform) =>
             transform.kind === 'DEBIT_CREDIT'
               ? [transform.debitColumn, transform.creditColumn]
               : transform.kind === 'SIGN_FROM_COLUMN'
@@ -1753,7 +1926,7 @@ function evaluateDelimitedRow(
   if (mapping.mappings.money.mode === 'VISUAL') {
     const amountVisual = mapping.mappings.money.amount
     if (amountVisual.mode === 'VISUAL') {
-      const signTransforms = amountVisual.transforms.filter(
+      const signTransforms = (amountVisual.transforms ?? []).filter(
         (transform) => transform.kind === 'SIGN_FROM_COLUMN',
       )
       for (const sign of signTransforms) {
@@ -1776,7 +1949,7 @@ function evaluateDelimitedRow(
         try {
           const withoutSign: DelimitedVisualMapping = {
             ...amountVisual,
-            transforms: amountVisual.transforms.filter(
+            transforms: (amountVisual.transforms ?? []).filter(
               (transform) => transform.kind !== 'SIGN_FROM_COLUMN',
             ),
           }
@@ -1858,14 +2031,14 @@ function evaluateDelimitedRow(
       : amountAsMinorUnitsByCode(amountMajor, currency)
   const categoryKey = importCategorySourceKey(categorySource)
   const boundCategory = categoryKey
-    ? mapping.categoryBindings[categoryKey]
+    ? (mapping.categoryBindings ?? {})[categoryKey]
     : undefined
   const category =
     amount < 0
       ? INCOME_CATEGORY_ID
       : categoryKey
         ? (boundCategory ?? 'general')
-        : mapping.defaults.categoryId
+        : (mapping.defaults.categoryId ?? 'general')
   const hasIssue = (field: DelimitedRowIssue['field']) =>
     issues.some(({ field: issueField }) => issueField === field)
 
@@ -2077,7 +2250,7 @@ function assertColumnSignature(
   ) {
     // Cap the key lists: wide files would otherwise inline hundreds of
     // (already user-visible, but noisy) 128-char keys into a thrown error.
-    const describeKeys = (keys: string[]) =>
+    const describeKeys = (keys: ReadonlyArray<string>) =>
       keys.length > 5
         ? `[${keys.slice(0, 5).join(', ')}, …${keys.length - 5} more]`
         : `[${keys.join(', ')}]`
@@ -2086,6 +2259,20 @@ function assertColumnSignature(
     )
   }
 }
+
+const assertColumnSignatureEffect = Effect.fnUntraced(function* (
+  table: DelimitedTable,
+  mapping: DelimitedExpenseMappingV1,
+): Effect.fn.Return<void, ImportError> {
+  yield* Effect.try({
+    try: () => assertColumnSignature(table, mapping),
+    catch: (cause) =>
+      new ImportError({
+        message:
+          cause instanceof Error ? cause.message : 'The mapping is invalid',
+      }),
+  })
+})
 
 function assertPreviewVisualOrder(mapping: DelimitedExpenseMappingV1): void {
   for (const [field, fieldMapping] of Object.entries(mapping.mappings)) {
@@ -2104,8 +2291,41 @@ function assertPreviewVisualOrder(mapping: DelimitedExpenseMappingV1): void {
   }
 }
 
+const assertPreviewVisualOrderEffect = Effect.fnUntraced(function* (
+  mapping: DelimitedExpenseMappingV1,
+): Effect.fn.Return<void, ImportError> {
+  yield* Effect.try({
+    try: () => assertPreviewVisualOrder(mapping),
+    catch: (cause) =>
+      new ImportError({
+        message:
+          cause instanceof Error ? cause.message : 'The mapping is invalid',
+      }),
+  })
+})
+
+/** Decode and validate a delimited expense mapping into its canonical form. */
+const decodeDelimitedMapping = Effect.fnUntraced(function* (
+  mapping: DelimitedExpenseMappingV1,
+): Effect.fn.Return<DelimitedExpenseMappingV1, ImportError> {
+  const parsed = yield* Schema.decodeUnknownEffect(
+    delimitedExpenseMappingSchema,
+  )(mapping).pipe(
+    Effect.catch((cause) =>
+      Effect.fail(
+        new ImportError({
+          message:
+            cause instanceof Error ? cause.message : 'The mapping is invalid',
+        }),
+      ),
+    ),
+  )
+  yield* assertExpenseMappingJoinOrderEffect(parsed)
+  return parsed
+})
+
 /** Evaluate every row for the live mapping preview without hashing raw data. */
-export function previewDelimitedRows(
+export const previewDelimitedRows = Effect.fnUntraced(function* (
   table: DelimitedTable,
   mapping: DelimitedExpenseMappingV1,
   options: {
@@ -2113,10 +2333,10 @@ export function previewDelimitedRows(
     preferredDateOrder?: DelimitedDateOrder
     categories?: ImportCategoryContext
   } = {},
-): DelimitedPreviewRow[] {
-  const parsedMapping = delimitedExpenseMappingSchema.parse(mapping)
-  assertColumnSignature(table, parsedMapping)
-  assertPreviewVisualOrder(parsedMapping)
+): Effect.fn.Return<DelimitedPreviewRow[], ImportError> {
+  const parsedMapping = yield* decodeDelimitedMapping(mapping)
+  yield* assertColumnSignatureEffect(table, parsedMapping)
+  yield* assertPreviewVisualOrderEffect(parsedMapping)
   const dateOrder = analyzeDelimitedDateOrder(
     table,
     parsedMapping.mappings.dateTime,
@@ -2126,30 +2346,40 @@ export function previewDelimitedRows(
   // the caller's explicit preference disambiguates parsing. Only an explicit
   // option rewrites an AUTO mapping; an omitted option keeps today's
   // mapping-driven parsing byte-identical.
+  let effectiveMapping = parsedMapping
   if (
     options.preferredDateOrder !== undefined &&
     dateOrder.status === 'AMBIGUOUS' &&
     parsedMapping.mappings.dateTime.mode === 'VISUAL'
   ) {
     const dateVisual = parsedMapping.mappings.dateTime
-    const autoIndex = dateVisual.transforms.findIndex(
+    const transforms = dateVisual.transforms ?? []
+    const autoIndex = transforms.findIndex(
       (transform) =>
         transform.kind === 'PARSE_DATE' &&
         (transform.format === 'AUTO_MDY' || transform.format === 'AUTO_DMY'),
     )
     if (autoIndex >= 0) {
       const wanted = dateOrder.order === 'DMY' ? 'AUTO_DMY' : 'AUTO_MDY'
-      const current = dateVisual.transforms[autoIndex]
+      const current = transforms[autoIndex]
       if (current?.kind === 'PARSE_DATE' && current.format !== wanted) {
-        dateVisual.transforms[autoIndex] = {
+        const nextTransforms = [...transforms]
+        nextTransforms[autoIndex] = {
           kind: 'PARSE_DATE',
           format: wanted,
+        }
+        effectiveMapping = {
+          ...parsedMapping,
+          mappings: {
+            ...parsedMapping.mappings,
+            dateTime: { ...dateVisual, transforms: nextTransforms },
+          },
         }
       }
     }
   }
   const compiledMappings = Object.fromEntries(
-    Object.entries(parsedMapping.mappings).map(([field, mapping]) => {
+    Object.entries(effectiveMapping.mappings).map(([field, mapping]) => {
       if (!mapping) return [field, undefined]
       if (field === 'money') {
         try {
@@ -2204,7 +2434,7 @@ export function previewDelimitedRows(
     rowId: `preview-${row.rowNumber}`,
     ...evaluateDelimitedRow(
       table,
-      parsedMapping,
+      effectiveMapping,
       row,
       options,
       compiledMappings,
@@ -2212,20 +2442,20 @@ export function previewDelimitedRows(
     ),
   }))
   return options.categories
-    ? resolveImportCategories(rows, parsedMapping, options.categories)
+    ? resolveImportCategories(rows, effectiveMapping, options.categories)
     : rows
-}
+})
 
 /** Apply a confirmed mapping and produce hash-only source identities. */
-export async function mapDelimitedRows(
+export const mapDelimitedRows = Effect.fnUntraced(function* (
   table: DelimitedTable,
   mapping: DelimitedExpenseMappingV1,
   categories?: ImportCategoryContext,
   options: { preferredDateOrder?: DelimitedDateOrder } = {},
-): Promise<DelimitedMappedRow[]> {
-  const parsedMapping = delimitedExpenseMappingSchema.parse(mapping)
-  assertColumnSignature(table, parsedMapping)
-  const evaluated = previewDelimitedRows(table, parsedMapping, {
+): Effect.fn.Return<DelimitedMappedRow[], ImportError> {
+  const parsedMapping = yield* decodeDelimitedMapping(mapping)
+  yield* assertColumnSignatureEffect(table, parsedMapping)
+  const evaluated = yield* previewDelimitedRows(table, parsedMapping, {
     includeAmbiguousDateIssue: false,
     // Default MDY via preview when omitted (today's behavior, byte-identical);
     // an explicit option also disambiguates AUTO parsing for all-ambiguous files.
@@ -2238,8 +2468,8 @@ export async function mapDelimitedRows(
   const occurrences = new Map<string, number>()
   const rows: DelimitedMappedRow[] = []
 
-  const baseFingerprints = await Promise.all(
-    evaluated.map(async (mapped, index) => {
+  const baseFingerprints = yield* Effect.all(
+    evaluated.map((mapped, index) => {
       const row = table.rows[index]!
       const rawBaseMaterial = mapped.externalId
         ? [
@@ -2249,18 +2479,37 @@ export async function mapDelimitedRows(
             mapped.externalId,
           ]
         : ['raw-row', signature, ...row.cells.map(normalizedFingerprintCell)]
-      return sha256Hex(
-        ['expense-file-import', '2', ...rawBaseMaterial]
-          .map(encodePart)
-          .join('|'),
-      )
+      return Effect.tryPromise({
+        try: () =>
+          sha256Hex(
+            ['expense-file-import', '2', ...rawBaseMaterial]
+              .map(encodePart)
+              .join('|'),
+          ),
+        catch: (cause) =>
+          new ImportError({
+            message:
+              cause instanceof Error
+                ? cause.message
+                : 'Failed to hash import rows',
+          }),
+      })
     }),
   )
-  const resolvedOrigins = await Promise.all(
+  const resolvedOrigins = yield* Effect.all(
     baseFingerprints.map((baseFingerprint) => {
       const occurrence = (occurrences.get(baseFingerprint) ?? 0) + 1
       occurrences.set(baseFingerprint, occurrence)
-      return sha256Hex(`${baseFingerprint}|occurrence:${occurrence}`)
+      return Effect.tryPromise({
+        try: () => sha256Hex(`${baseFingerprint}|occurrence:${occurrence}`),
+        catch: (cause) =>
+          new ImportError({
+            message:
+              cause instanceof Error
+                ? cause.message
+                : 'Failed to hash import rows',
+          }),
+      })
     }),
   )
 
@@ -2275,50 +2524,86 @@ export async function mapDelimitedRows(
     })
   }
   return rows
-}
+})
 
-export function portableDelimitedMapping(
+export const portableDelimitedMapping = Effect.fnUntraced(function* (
   mapping: DelimitedExpenseMappingV1,
-): DelimitedExpenseMappingV1 {
-  const parsed = delimitedExpenseMappingSchema.parse(mapping)
+): Effect.fn.Return<DelimitedExpenseMappingV1, ImportError> {
+  const parsed = yield* decodeDelimitedMapping(mapping)
   const { groupBindings: _groupBindings, ...portable } = parsed
   return portable
-}
+})
 
-export function parseDelimitedMappingJson(
+export const parseDelimitedMappingJson = Effect.fnUntraced(function* (
   input: string,
-): DelimitedExpenseMappingV1 {
+): Effect.fn.Return<DelimitedExpenseMappingV1, ImportError> {
   let value: unknown
   try {
     value = JSON.parse(input)
   } catch {
-    throw new Error('The mapping file is not valid JSON')
+    return yield* new ImportError({
+      message: 'The mapping file is not valid JSON',
+    })
   }
   if (
-    value &&
-    typeof value === 'object' &&
+    Predicate.isObject(value) &&
     'kind' in value &&
-    value.kind !== DELIMITED_MAPPING_KIND
+    (value as { kind?: unknown }).kind !== DELIMITED_MAPPING_KIND
   ) {
-    throw new Error(`Mapping type ${String(value.kind)} is not supported`)
+    return yield* new ImportError({
+      message: `Mapping type ${String((value as { kind?: unknown }).kind)} is not supported`,
+    })
   }
   if (
-    value &&
-    typeof value === 'object' &&
+    Predicate.isObject(value) &&
     'version' in value &&
-    value.version !== DELIMITED_MAPPING_VERSION
+    (value as { version?: unknown }).version !== DELIMITED_MAPPING_VERSION
   ) {
-    throw new Error(`Mapping version ${String(value.version)} is not supported`)
+    return yield* new ImportError({
+      message: `Mapping version ${String((value as { version?: unknown }).version)} is not supported`,
+    })
   }
-  const parsed = delimitedExpenseMappingSchema.safeParse(value)
-  if (!parsed.success) throw new Error('The mapping file has an invalid shape')
-  return parsed.data
+  return yield* Schema.decodeUnknownEffect(delimitedExpenseMappingSchema)(
+    value,
+  ).pipe(
+    Effect.catch(() =>
+      Effect.fail(
+        new ImportError({
+          message: 'The mapping file has an invalid shape',
+        }),
+      ),
+    ),
+  )
+})
+
+/**
+ * Convert an Effect-channel {@link ImportError} to plain worker-safe delimited
+ * parse data. The `code` + `params` fields survive verbatim (UI translation
+ * keys depend on them).
+ */
+export function importErrorToDelimitedParseResult(
+  error: unknown,
+): DelimitedParseResult {
+  if (error instanceof ImportError) {
+    return {
+      ok: false,
+      error: error.message,
+      ...(error.code !== undefined ? { code: error.code } : {}),
+      ...(error.params !== undefined
+        ? { params: error.params as ImportMessageParams }
+        : {}),
+    }
+  }
+  return {
+    ok: false,
+    error: error instanceof Error ? error.message : 'Invalid delimited file',
+  }
 }
 
 /** Shared adapter contract for typed delimited-field mappings. */
 export type DelimitedMapperAdapter<TMapping, TValue> = {
   kind: 'TEXT' | 'DATE_TIME' | 'MONEY'
-  schema: z.ZodType<TMapping>
+  schema: Schema.Schema<TMapping>
   infer: (mapping: TMapping) => TMapping
   classify: (mapping: TMapping) => DelimitedMappingMode
   simplify: (mapping: TMapping) => TMapping
@@ -2380,11 +2665,13 @@ function isSimpleVisualMapping(
 ) {
   if (
     mapping.sourceValues.length !== 1 ||
-    mapping.sourceValues[0]?.fallbacks.length
+    (mapping.sourceValues[0]?.fallbacks ?? []).length
   )
     return false
   const allowed = simpleTransformKinds(kind)
-  return mapping.transforms.every((transform) => allowed.has(transform.kind))
+  return (mapping.transforms ?? []).every((transform) =>
+    allowed.has(transform.kind),
+  )
 }
 
 export function classifyDelimitedFieldMapping(
@@ -2410,7 +2697,7 @@ function simplifyVisualMapping(
   kind: SimpleFieldKind,
 ): DelimitedVisualMapping {
   const allowed = simpleTransformKinds(kind)
-  const transforms = mapping.transforms.filter((transform) =>
+  const transforms = (mapping.transforms ?? []).filter((transform) =>
     allowed.has(transform.kind),
   )
   const order: DelimitedVisualTransform['kind'][] =
@@ -2452,7 +2739,7 @@ export function simplifyDelimitedMoneyMapping(
   // transforms; dropping DEBIT_CREDIT would silently read the wrong column.
   if (
     mapping.amount.mode === 'VISUAL' &&
-    mapping.amount.transforms.some(
+    (mapping.amount.transforms ?? []).some(
       (transform) => transform.kind === 'DEBIT_CREDIT',
     )
   )

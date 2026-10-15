@@ -32,6 +32,8 @@ export type NormalizedSourceActivity = {
  */
 export type ImportMessageParams = Record<string, string | number>
 
+import { Schema } from 'effect'
+
 import type { RecurrenceFrequency } from '../enums'
 import type { RecurrenceConfig, RecurrenceEnd } from '../recurring-expenses'
 
@@ -66,7 +68,7 @@ export type NormalizedSourceExpense = {
 }
 
 export type NormalizedSource = {
-  provider: 'SPLIIT' | 'SPLITWISE' | 'COSPEND'
+  provider: 'SPLIIT' | 'SPLITWISE' | 'COSPEND' | 'TRICOUNT' | 'SETTLEUP'
   /** Null identifies the original unversioned spliit.app export. */
   exportVersion?: 3 | null
   sourceGroupId: string
@@ -96,3 +98,41 @@ export type ImportParseResult =
       code?: string
       params?: ImportMessageParams
     }
+
+/**
+ * Effect-channel failure for every import parser. `code` + `params` survive
+ * verbatim into {@link ImportParseResult} via {@link importErrorToParseResult}
+ * (UI translation keys depend on them). Absent `code` means a fully dynamic
+ * upstream passthrough with no static source text.
+ */
+export class ImportError extends Schema.TaggedError<ImportError>()(
+  'ImportError',
+  {
+    message: Schema.String,
+    code: Schema.optional(Schema.String),
+    params: Schema.optional(
+      Schema.Record(
+        Schema.String,
+        Schema.Union([Schema.String, Schema.Number]),
+      ),
+    ),
+  },
+) {}
+
+/** Convert an Effect-channel {@link ImportError} to plain worker-safe data. */
+export function importErrorToParseResult(error: unknown): ImportParseResult {
+  if (error instanceof ImportError) {
+    return {
+      ok: false,
+      error: error.message,
+      ...(error.code !== undefined ? { code: error.code } : {}),
+      ...(error.params !== undefined
+        ? { params: error.params as ImportMessageParams }
+        : {}),
+    }
+  }
+  return {
+    ok: false,
+    error: error instanceof Error ? error.message : 'Invalid import',
+  }
+}

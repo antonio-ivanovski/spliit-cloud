@@ -1,7 +1,8 @@
+import { describe, expect, it } from '@effect/vitest'
+import { Effect } from 'effect'
 import Papa from 'papaparse'
-import { describe, expect, it } from 'vitest'
 
-import { tryParseSpliitCsv } from './spliit-csv'
+import { parseSpliitCsv } from './spliit-csv'
 import { recoverSpliitOriginalAmount } from './spliit-original-amount'
 
 const sampleCsv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
@@ -32,246 +33,263 @@ describe('papaparse-backed CSV primitives', () => {
   })
 })
 
-describe('tryParseSpliitCsv', () => {
-  it('rejects Spliit Cloud recurrence columns', () => {
-    const csv =
-      '"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","Recurrence series ID","John ","Jane"\n' +
-      '"2026-01-12","Rent","Rent","EUR","100.00",,,,"No","Evenly","series-1",50,-50'
-    const result = tryParseSpliitCsv(csv)
-    expect(result.ok).toBe(false)
-    if (result.ok) return
-    expect(result.error).toMatch(/CSV header is not a Spliit export/i)
-  })
+describe('parseSpliitCsv', () => {
+  it.effect('rejects Spliit Cloud recurrence columns', () =>
+    Effect.gen(function* () {
+      const csv =
+        '"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","Recurrence series ID","John ","Jane"\n' +
+        '"2026-01-12","Rent","Rent","EUR","100.00",,,,"No","Evenly","series-1",50,-50'
+      const error = yield* Effect.flip(parseSpliitCsv(csv))
+      expect(error.message).toMatch(/CSV header is not a Spliit export/i)
+    }),
+  )
 
-  it('parses a representative CSV export', () => {
-    const result = tryParseSpliitCsv(sampleCsv)
-    expect(result.ok).toBe(true)
-    if (!result.ok) return
-    expect(result.source.participants).toHaveLength(2)
-    expect(result.source.participants[0].sourceName).toBe('John')
-    expect(result.source.participants[1].sourceName).toBe('Jane')
-    expect(result.source.sourceUrl).toBeNull()
-    expect(result.source.expenses).toHaveLength(4)
-    const first = result.source.expenses[0]
-    expect(first.title).toBe('Kafe plazha')
-    expect(first.amount).toBe(360)
-    // 216 / 144 → GCD 72 → BY_SHARES; shares normalised to fixed units.
-    expect(first.splitMode).toBe('BY_SHARES')
-    expect(first.paidBySourceId).toBe(result.source.participants[1].sourceId)
-    expect(first.paidFor).toEqual([
-      { sourceId: result.source.participants[0].sourceId, shares: 300 },
-      { sourceId: result.source.participants[1].sourceId, shares: 200 },
-    ])
-  })
+  it.effect('parses a representative CSV export', () =>
+    Effect.gen(function* () {
+      const source = yield* parseSpliitCsv(sampleCsv)
+      expect(source.participants).toHaveLength(2)
+      expect(source.participants[0].sourceName).toBe('John')
+      expect(source.participants[1].sourceName).toBe('Jane')
+      expect(source.sourceUrl).toBeNull()
+      expect(source.expenses).toHaveLength(4)
+      const first = source.expenses[0]
+      expect(first.title).toBe('Kafe plazha')
+      expect(first.amount).toBe(360)
+      // 216 / 144 → GCD 72 → BY_SHARES; shares normalised to fixed units.
+      expect(first.splitMode).toBe('BY_SHARES')
+      expect(first.paidBySourceId).toBe(source.participants[1].sourceId)
+      expect(first.paidFor).toEqual([
+        { sourceId: source.participants[0].sourceId, shares: 300 },
+        { sourceId: source.participants[1].sourceId, shares: 200 },
+      ])
+    }),
+  )
 
-  it('rejects an unknown CSV header', () => {
-    const result = tryParseSpliitCsv('a,b\nfoo,bar')
-    expect(result.ok).toBe(false)
-    if (result.ok) return
-    expect(result.error).toMatch(/CSV header is not a Spliit export/i)
-  })
+  it.effect('rejects an unknown CSV header', () =>
+    Effect.gen(function* () {
+      const error = yield* Effect.flip(parseSpliitCsv('a,b\nfoo,bar'))
+      expect(error.message).toMatch(/CSV header is not a Spliit export/i)
+    }),
+  )
 
-  it('parses exports that include Conversion source', () => {
-    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Conversion source","Is Reimbursement","Split mode","John ","Jane"
+  it.effect('parses exports that include Conversion source', () =>
+    Effect.gen(function* () {
+      const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Conversion source","Is Reimbursement","Split mode","John ","Jane"
 "2026-01-12","Dinner","Dining Out","EUR","10.00","9.00","USD","1.1","EXCHANGE","No","Evenly",5.00,-5.00`
-    const result = tryParseSpliitCsv(csv)
-    expect(result.ok).toBe(true)
-    if (!result.ok) return
-    expect(result.source.participants).toHaveLength(2)
-    expect(result.source.expenses).toHaveLength(1)
-    const expense = result.source.expenses[0]
-    // Cost is ledger EUR 10.00; recover original USD minor units via rate
-    expect(expense.amount).toBe(Math.round(1000 / 1.1))
-    expect(expense.originalCurrency).toBe('USD')
-    expect(expense.conversionRate).toBe(1.1)
-    expect(expense.category).not.toBe('settlement')
-  })
+      const source = yield* parseSpliitCsv(csv)
+      expect(source.participants).toHaveLength(2)
+      expect(source.expenses).toHaveLength(1)
+      const expense = source.expenses[0]
+      // Cost is ledger EUR 10.00; recover original USD minor units via rate
+      expect(expense.amount).toBe(Math.round(1000 / 1.1))
+      expect(expense.originalCurrency).toBe('USD')
+      expect(expense.conversionRate).toBe(1.1)
+      expect(expense.category).not.toBe('settlement')
+    }),
+  )
 
-  it('skips rows with unparseable amounts and returns no expenses', () => {
-    const result = tryParseSpliitCsv(
-      `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John "
+  it.effect('skips rows with unparseable amounts and returns no expenses', () =>
+    Effect.gen(function* () {
+      const error = yield* Effect.flip(
+        parseSpliitCsv(
+          `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John "
 "2025-01-01","Bad","General","EUR","abc",,,,"No","Evenly",1.00`,
-    )
-    expect(result.ok).toBe(false)
-    if (result.ok) return
-    expect(result.error).toMatch(/CSV had no parseable expenses/i)
-  })
+        ),
+      )
+      expect(error.message).toMatch(/CSV had no parseable expenses/i)
+    }),
+  )
 
-  it('maps Is Reimbursement Yes onto settlement (legacy alias)', () => {
-    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
+  it.effect('maps Is Reimbursement Yes onto settlement (legacy alias)', () =>
+    Effect.gen(function* () {
+      const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
 "2026-03-12","Reimbursement","Payment","EUR","51.92",,,,"Yes","Unevenly – By shares",0,-51.92`
-    const result = tryParseSpliitCsv(csv)
-    expect(result.ok).toBe(true)
-    if (!result.ok) return
-    expect(result.source.expenses[0].category).toBe('settlement')
-    expect(result.source.expenses[0].amount).toBe(5192)
-    expect(result.source.expenses[0].paidBySourceId).toBe(
-      result.source.participants[0].sourceId,
-    )
-    expect(result.source.expenses[0].paidFor).toEqual([
-      { sourceId: result.source.participants[1].sourceId, shares: 5192 },
-    ])
-  })
+      const source = yield* parseSpliitCsv(csv)
+      expect(source.expenses[0].category).toBe('settlement')
+      expect(source.expenses[0].amount).toBe(5192)
+      expect(source.expenses[0].paidBySourceId).toBe(
+        source.participants[0].sourceId,
+      )
+      expect(source.expenses[0].paidFor).toEqual([
+        { sourceId: source.participants[1].sourceId, shares: 5192 },
+      ])
+    }),
+  )
 
-  it('keeps Payment without Is Reimbursement Yes as ordinary spend', () => {
-    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
+  it.effect(
+    'keeps Payment without Is Reimbursement Yes as ordinary spend',
+    () =>
+      Effect.gen(function* () {
+        const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
 "2026-01-31","Bank transfer","Payment","EUR","17.40",,,,"No","Evenly",10.44,-6.96`
-    const result = tryParseSpliitCsv(csv)
-    expect(result.ok).toBe(true)
-    if (!result.ok) return
-    expect(result.source.expenses[0].category).toBe('payment')
-  })
+        const source = yield* parseSpliitCsv(csv)
+        expect(source.expenses[0].category).toBe('payment')
+      }),
+  )
 
-  it('accepts the current Is Settlement CSV header as a settlement flag', () => {
-    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Settlement","Split mode","John ","Jane"
+  it.effect(
+    'accepts the current Is Settlement CSV header as a settlement flag',
+    () =>
+      Effect.gen(function* () {
+        const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Settlement","Split mode","John ","Jane"
 "2026-01-31","Paid Jane","Settlement","EUR","17.40",,,,"Yes","Evenly",17.40,-17.40`
-    const result = tryParseSpliitCsv(csv)
-    expect(result.ok).toBe(true)
-    if (!result.ok) return
-    expect(result.source.expenses[0].category).toBe('settlement')
-  })
+        const source = yield* parseSpliitCsv(csv)
+        expect(source.expenses[0].category).toBe('settlement')
+      }),
+  )
 
-  it('recovers original amount from Cost ÷ rate (ignores Original cost; upstream #513)', () => {
-    // Ledger Cost 1.23 USD; broken Original cost 0.01 BGN; rate 1 → recover 123 minor units.
-    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
+  it.effect(
+    'recovers original amount from Cost ÷ rate (ignores Original cost; upstream #513)',
+    () =>
+      Effect.gen(function* () {
+        // Ledger Cost 1.23 USD; broken Original cost 0.01 BGN; rate 1 → recover 123 minor units.
+        const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
 "2026-07-09","asdasd","General","USD","1.23","0.01","BGN","1","No","Evenly",0.82,0.41`
-    const result = tryParseSpliitCsv(csv)
-    expect(result.ok).toBe(true)
-    if (!result.ok) return
-    const exp = result.source.expenses[0]
-    expect(exp.amount).toBe(123)
-    expect(exp.originalAmount).toBe(123)
-    expect(exp.amountCurrency).toBe('BGN')
-    expect(exp.originalCurrency).toBe('BGN')
-    expect(exp.conversionRate).toBe(1)
-    expect(exp.paidBy[0].shares).toBe(123)
-  })
+        const source = yield* parseSpliitCsv(csv)
+        const exp = source.expenses[0]
+        expect(exp.amount).toBe(123)
+        expect(exp.originalAmount).toBe(123)
+        expect(exp.amountCurrency).toBe('BGN')
+        expect(exp.originalCurrency).toBe('BGN')
+        expect(exp.conversionRate).toBe(1)
+        expect(exp.paidBy[0].shares).toBe(123)
+      }),
+  )
 
-  it('maps category names to in-code category ids', () => {
-    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John "
+  it.effect('maps category names to in-code category ids', () =>
+    Effect.gen(function* () {
+      const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John "
 "2025-12-23","Gas","Gas/Fuel","EUR","70.00",,,,"No","Evenly",46.67`
-    const result = tryParseSpliitCsv(csv)
-    expect(result.ok).toBe(true)
-    if (!result.ok) return
-    expect(result.source.expenses[0].category).toBe('gas-fuel')
-  })
+      const source = yield* parseSpliitCsv(csv)
+      expect(source.expenses[0].category).toBe('gas-fuel')
+    }),
+  )
 
-  it('strips a UTF-8 BOM if present', () => {
-    const withBom = '\ufeff' + sampleCsv
-    const result = tryParseSpliitCsv(withBom)
-    expect(result.ok).toBe(true)
-    if (!result.ok) return
-    expect(result.source.expenses).toHaveLength(4)
-  })
+  it.effect('strips a UTF-8 BOM if present', () =>
+    Effect.gen(function* () {
+      const withBom = '\ufeff' + sampleCsv
+      const source = yield* parseSpliitCsv(withBom)
+      expect(source.expenses).toHaveLength(4)
+    }),
+  )
 
-  it('handles a quoted Description field with an embedded comma', () => {
-    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
+  it.effect('handles a quoted Description field with an embedded comma', () =>
+    Effect.gen(function* () {
+      const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
 "2025-12-22","Leb, pekara","General","EUR","4.15",,,,"No","Evenly",-2.49,1.66`
-    const result = tryParseSpliitCsv(csv)
-    expect(result.ok).toBe(true)
-    if (!result.ok) return
-    expect(result.source.expenses[0].title).toBe('Leb, pekara')
-  })
+      const source = yield* parseSpliitCsv(csv)
+      expect(source.expenses[0].title).toBe('Leb, pekara')
+    }),
+  )
 
-  it('handles Cyrillic and accented characters in titles and categories', () => {
-    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
+  it.effect(
+    'handles Cyrillic and accented characters in titles and categories',
+    () =>
+      Effect.gen(function* () {
+        const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
 "2026-01-31","Патарина","Payment","EUR","17.40",,,,"No","Evenly",10.44,-6.96
 "2026-01-12","Café, plage","Dining Out","EUR","3.60",,,,"No","Evenly",-2.16,1.44`
-    const result = tryParseSpliitCsv(csv)
-    expect(result.ok).toBe(true)
-    if (!result.ok) return
-    expect(result.source.expenses).toHaveLength(2)
-    expect(result.source.expenses[0].title).toBe('Патарина')
-    expect(result.source.expenses[1].title).toBe('Café, plage')
-  })
+        const source = yield* parseSpliitCsv(csv)
+        expect(source.expenses).toHaveLength(2)
+        expect(source.expenses[0].title).toBe('Патарина')
+        expect(source.expenses[1].title).toBe('Café, plage')
+      }),
+  )
 
-  it('skips expense rows where no payer is identified (all negative values)', () => {
-    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
+  it.effect(
+    'skips expense rows where no payer is identified (all negative values)',
+    () =>
+      Effect.gen(function* () {
+        const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
 "2026-01-12","Dinner","Dining Out","EUR","30.00",,,,"No","Evenly",-15.00,-15.00`
-    const result = tryParseSpliitCsv(csv)
-    expect(result.ok).toBe(false)
-    if (result.ok) return
-    expect(result.error).toMatch(/CSV had no parseable expenses/i)
-  })
+        const error = yield* Effect.flip(parseSpliitCsv(csv))
+        expect(error.message).toMatch(/CSV had no parseable expenses/i)
+      }),
+  )
 
-  it('treats the first zero-value participant as payer when all participant values are zero', () => {
-    // Zero-amount expense with no participants can't be imported: the
-    // destination validator requires paidFor.shares > 0.
-    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
+  it.effect(
+    'treats the first zero-value participant as payer when all participant values are zero',
+    () =>
+      Effect.gen(function* () {
+        // Zero-amount expense with no participants can't be imported: the
+        // destination validator requires paidFor.shares > 0.
+        const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
 "2026-01-12","Zero Split","General","EUR","0.00",,,,"No","Evenly",0.00,0.00`
-    const result = tryParseSpliitCsv(csv)
-    expect(result.ok).toBe(false)
-  })
+        yield* Effect.flip(parseSpliitCsv(csv))
+      }),
+  )
 
-  it('reconstructs paidFor from export nets (not abs of nets as shares)', () => {
-    // Export nets: paidBy − paidFor. $100 paid by John, owes $30 / Jane owes $70
-    // → nets +70 / −70. Must NOT become 70/70 EVENLY.
-    // guessSplitMode reduces 3000:7000 → BY_SHARES 3:7, then scales the
-    // ratio to the internal fixed units (×100) so the resulting shares
-    // are 300 and 700 (= 3.00 / 7.00 displayed).
-    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
+  it.effect(
+    'reconstructs paidFor from export nets (not abs of nets as shares)',
+    () =>
+      Effect.gen(function* () {
+        // Export nets: paidBy − paidFor. $100 paid by John, owes $30 / Jane owes $70
+        // → nets +70 / −70. Must NOT become 70/70 EVENLY.
+        // guessSplitMode reduces 3000:7000 → BY_SHARES 3:7, then scales the
+        // ratio to the internal fixed units (×100) so the resulting shares
+        // are 300 and 700 (= 3.00 / 7.00 displayed).
+        const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
 "2025-12-25","Uneven dinner","General","EUR","100.00",,,,"No","Unevenly – By amount",70.00,-70.00`
-    const result = tryParseSpliitCsv(csv)
-    expect(result.ok).toBe(true)
-    if (!result.ok) return
-    const e = result.source.expenses[0]
-    const john = result.source.participants[0].sourceId
-    const jane = result.source.participants[1].sourceId
-    expect(e.amount).toBe(10000)
-    expect(e.paidBySourceId).toBe(john)
-    const byId = Object.fromEntries(
-      e.paidFor.map((p) => [p.sourceId, p.shares]),
-    )
-    expect(byId[john]).toBe(300)
-    expect(byId[jane]).toBe(700)
-    expect(e.splitMode).toBe('BY_SHARES')
-  })
+        const source = yield* parseSpliitCsv(csv)
+        const e = source.expenses[0]
+        const john = source.participants[0].sourceId
+        const jane = source.participants[1].sourceId
+        expect(e.amount).toBe(10000)
+        expect(e.paidBySourceId).toBe(john)
+        const byId = Object.fromEntries(
+          e.paidFor.map((p) => [p.sourceId, p.shares]),
+        )
+        expect(byId[john]).toBe(300)
+        expect(byId[jane]).toBe(700)
+        expect(e.splitMode).toBe('BY_SHARES')
+      }),
+  )
 
-  it('reconstructs even-split nets to equal paidFor shares', () => {
-    // John paid $10.76, split evenly → nets +5.38 / −5.38
-    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
+  it.effect('reconstructs even-split nets to equal paidFor shares', () =>
+    Effect.gen(function* () {
+      // John paid $10.76, split evenly → nets +5.38 / −5.38
+      const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
 "2025-12-25","Podaroci","General","EUR","10.76",,,,"No","Evenly",5.38,-5.38`
-    const result = tryParseSpliitCsv(csv)
-    expect(result.ok).toBe(true)
-    if (!result.ok) return
-    const e = result.source.expenses[0]
-    expect(e.amount).toBe(1076)
-    expect(e.splitMode).toBe('EVENLY')
-    expect(e.paidFor.map((p) => p.shares).sort((a, b) => a - b)).toEqual([
-      538, 538,
-    ])
-  })
+      const source = yield* parseSpliitCsv(csv)
+      const e = source.expenses[0]
+      expect(e.amount).toBe(1076)
+      expect(e.splitMode).toBe('EVENLY')
+      expect(e.paidFor.map((p) => p.shares).sort((a, b) => a - b)).toEqual([
+        538, 538,
+      ])
+    }),
+  )
 
-  it('reconstructs 3-participant single-payer nets', () => {
-    // Cost $100; John paid, owes $10; Jane $30; Bob $60 → nets +90,−30,−60
-    // 1000:3000:6000 → BY_SHARES 1:3:6, then ×100 to fixed units.
-    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane ","Bob"
+  it.effect('reconstructs 3-participant single-payer nets', () =>
+    Effect.gen(function* () {
+      // Cost $100; John paid, owes $10; Jane $30; Bob $60 → nets +90,−30,−60
+      // 1000:3000:6000 → BY_SHARES 1:3:6, then ×100 to fixed units.
+      const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane ","Bob"
 "2025-12-25","Trip","General","EUR","100.00",,,,"No","Unevenly – By amount",90.00,-30.00,-60.00`
-    const result = tryParseSpliitCsv(csv)
-    expect(result.ok).toBe(true)
-    if (!result.ok) return
-    const e = result.source.expenses[0]
-    const [john, jane, bob] = result.source.participants.map((p) => p.sourceId)
-    const byId = Object.fromEntries(
-      e.paidFor.map((p) => [p.sourceId, p.shares]),
-    )
-    expect(byId[john]).toBe(100)
-    expect(byId[jane]).toBe(300)
-    expect(byId[bob]).toBe(600)
-    expect(e.splitMode).toBe('BY_SHARES')
-  })
+      const source = yield* parseSpliitCsv(csv)
+      const e = source.expenses[0]
+      const [john, jane, bob] = source.participants.map((p) => p.sourceId)
+      const byId = Object.fromEntries(
+        e.paidFor.map((p) => [p.sourceId, p.shares]),
+      )
+      expect(byId[john]).toBe(100)
+      expect(byId[jane]).toBe(300)
+      expect(byId[bob]).toBe(600)
+      expect(e.splitMode).toBe('BY_SHARES')
+    }),
+  )
 
-  it('handles 0-decimal currency (JPY) without 100× inflation', () => {
-    // JPY has 0 decimal digits. 5000 ¥ should stay 5000 minor units.
-    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John "
+  it.effect('handles 0-decimal currency (JPY) without 100× inflation', () =>
+    Effect.gen(function* () {
+      // JPY has 0 decimal digits. 5000 ¥ should stay 5000 minor units.
+      const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John "
 "2026-03-15","Ramen","Dining Out","JPY","5000",,,,"No","Evenly",5000.00`
-    const result = tryParseSpliitCsv(csv)
-    expect(result.ok).toBe(true)
-    if (!result.ok) return
-    const e = result.source.expenses[0]
-    expect(e.amount).toBe(5000)
-    expect(e.paidFor[0].shares).toBe(5000)
-  })
+      const source = yield* parseSpliitCsv(csv)
+      const e = source.expenses[0]
+      expect(e.amount).toBe(5000)
+      expect(e.paidFor[0].shares).toBe(5000)
+    }),
+  )
 })
 
 describe('recoverSpliitOriginalAmount decimal-digits scaling (folded from spliit-original-amount.test.ts)', () => {

@@ -1,6 +1,8 @@
+import { Effect } from 'effect'
 import Papa from 'papaparse'
 
 import { isSplitwiseHeader } from './splitwise-headers'
+import { ImportError } from './types'
 
 const PARTICIPANT_START_INDEX = 5
 
@@ -20,10 +22,12 @@ export type AnonymizedSplitwiseCsv = {
  * currencies, per-participant amounts, categories — is left untouched because
  * it is what makes the file useful for diagnosing an import issue.
  *
- * Throws if the input does not look like a Splitwise export (same header shape
- * that `tryParseSplitwiseCsv` requires).
+ * Fails with {@link ImportError} if the input does not look like a Splitwise
+ * export (same header shape that `parseSplitwiseCsv` requires).
  */
-export function anonymizeSplitwiseCsv(input: string): AnonymizedSplitwiseCsv {
+export const anonymizeSplitwiseCsv = Effect.fnUntraced(function* (
+  input: string,
+): Effect.fn.Return<AnonymizedSplitwiseCsv, ImportError> {
   const cleaned = input.charCodeAt(0) === 0xfeff ? input.slice(1) : input
   const parsed = Papa.parse<string[]>(cleaned, {
     skipEmptyLines: 'greedy',
@@ -39,11 +43,15 @@ export function anonymizeSplitwiseCsv(input: string): AnonymizedSplitwiseCsv {
     }
   }
   if (headerRowIdx === -1) {
-    throw new Error('CSV header is not a Splitwise export')
+    return yield* new ImportError({
+      message: 'CSV header is not a Splitwise export',
+    })
   }
   const header = parsed.data[headerRowIdx]
   if (!header || header.length <= PARTICIPANT_START_INDEX) {
-    throw new Error('CSV is missing participant columns')
+    return yield* new ImportError({
+      message: 'CSV is missing participant columns',
+    })
   }
 
   const originalToAnonParticipant = new Map<string, string>()
@@ -89,4 +97,4 @@ export function anonymizeSplitwiseCsv(input: string): AnonymizedSplitwiseCsv {
     outputCsv: Papa.unparse(rows),
     outputName: 'splitwise-anonymized.csv',
   }
-}
+})

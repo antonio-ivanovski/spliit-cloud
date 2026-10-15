@@ -1,3 +1,4 @@
+import { Effect } from 'effect'
 import { AsyncUnzipInflate, Unzip, UnzipPassThrough } from 'fflate'
 
 import type {
@@ -511,10 +512,13 @@ export async function inspectSpliitCloudBundle(
   }
 
   if (rawScope === 'GROUP') {
-    return inspectGroupManifest(parseCloudGroupManifest(rawManifest), extracted)
+    return inspectGroupManifest(
+      Effect.runSync(parseCloudGroupManifest(rawManifest)),
+      extracted,
+    )
   }
 
-  const manifest = parseCloudAccountManifest(rawManifest)
+  const manifest = Effect.runSync(parseCloudAccountManifest(rawManifest))
   const groupIds = new Set<string>()
   const manifestPaths = new Set<string>()
   for (const group of manifest.groups) {
@@ -579,8 +583,8 @@ export async function inspectSpliitCloudBundle(
         `Spliit Cloud account backup is missing ${index.manifestPath}.`,
       )
     }
-    const groupManifest = parseCloudGroupManifest(
-      parseJson(groupBytes, index.manifestPath),
+    const groupManifest = Effect.runSync(
+      parseCloudGroupManifest(parseJson(groupBytes, index.manifestPath)),
     )
     if (groupManifest.scope.sourceId !== index.sourceId) {
       throw new Error(

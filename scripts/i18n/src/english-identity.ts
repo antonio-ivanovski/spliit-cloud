@@ -15,6 +15,8 @@ const BRAND_TOKENS = new Set([
   'Spliit Cloud',
   'Splitwise',
   'Cospend',
+  'Tricount',
+  'Settle Up',
   'Maxio',
   'Apple',
   'Google',
@@ -139,6 +141,10 @@ const LOCALE_COGNATES = new Set([
   'en-GZ:fresh',
   'en-GZ:simple',
   'en-GZ:{count} expenses · {from} → {to}',
+  // en-GZ keeps the GDPR acronym uppercase (as in every other Tricount
+  // string), and this title starts with the acronym, so the correct value
+  // coincides with en-US — lowercasing it would break the acronym.
+  'en-GZ:GDPR export — all groups',
   // "Was" is the correct Dutch past tense of zijn (to be), spelled identically
   // to the English swap-preview label — a genuine shared cognate.
   'nl-NL:Was',

@@ -14,6 +14,7 @@ import type { RenderedEmail } from './types'
 const PROVIDER_LABELS: Record<string, string> = {
   SPLIIT: 'a Spliit export',
   SPLITWISE: 'a Splitwise export',
+  SETTLEUP: 'a Settle Up export',
 }
 
 export type InvitationEmailInput = {

@@ -93,7 +93,7 @@ These are upstream issues that affect every user of Spliit Cloud too. Each one i
 
 - Server-authoritative currency conversion — addresses upstream [#513](https://github.com/spliit-app/spliit/issues/513) / [#425](https://github.com/spliit-app/spliit/pull/425) and [#514](https://github.com/spliit-app/spliit/issues/514) / [#515](https://github.com/spliit-app/spliit/pull/515)
 - **Migrations & imports** — every frustrated Splitwise / Tricount user is a potential customer
-  - [ ] Tricount import — PR [#526](https://github.com/spliit-app/spliit/pull/526)
+  - [x] Tricount import (GDPR CSV, multi-group) — upstream PR [#526](https://github.com/spliit-app/spliit/pull/526)
   - [x] Splitwise (CSV) import — upstream [#22](https://github.com/spliit-app/spliit/issues/22), PR [#483](https://github.com/spliit-app/spliit/pull/483)
   - [x] Spliit Cloud bundle import and export — group, account, and friend-ledger ZIP round-trip, including documents, plus CSV and printable PDF reports
 - **Self-hosting polish** — turn the README's "self-hosting is supported" into "self-hosting is easy"

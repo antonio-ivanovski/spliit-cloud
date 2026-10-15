@@ -63,7 +63,7 @@ export function remainingMoneyDetections(
     if (entry.field !== 'money') return true
     if (mapping.mode === 'CEL') return false
     if (entry.reason === 'NUMBER_FORMAT') {
-      return !mapping.amount.transforms.some(
+      return !(mapping.amount.transforms ?? []).some(
         (transform) =>
           (transform.kind === 'PARSE_NUMBER' ||
             transform.kind === 'DEBIT_CREDIT') &&
@@ -76,7 +76,7 @@ export function remainingMoneyDetections(
       if (!mapping.currency) return false
       const sources = mapping.currency.sourceValues.flatMap((source) => [
         source.primary,
-        ...source.fallbacks,
+        ...(source.fallbacks ?? []),
       ])
       return table.rows.some((row) =>
         sources.some((key) => {
@@ -90,7 +90,7 @@ export function remainingMoneyDetections(
     }
     return mapping.amount.sourceValues.some((source) => {
       const keys = [source.primary]
-      for (const transform of mapping.amount.transforms) {
+      for (const transform of mapping.amount.transforms ?? []) {
         // A renamed or deleted paired column must also keep the detection.
         if (transform.kind === 'DEBIT_CREDIT')
           keys.push(transform.debitColumn, transform.creditColumn)
@@ -356,20 +356,31 @@ export function inferDelimitedExpenseMapping(
       positiveValues,
     })
   }
-  const dateMapping = visual(date?.column.key ?? UNMAPPED_COLUMN_KEY, [
+  const dateMappingBase = visual(date?.column.key ?? UNMAPPED_COLUMN_KEY, [
     { kind: 'TRIM' },
     { kind: 'PARSE_DATE', format: 'AUTO_MDY' },
   ])
   const order = analyzeDelimitedDateOrder(
     table,
-    dateMapping,
+    dateMappingBase,
     preferredDateOrder,
   )
-  dateMapping.transforms[1] = {
-    kind: 'PARSE_DATE',
-    format: order.order === 'DMY' ? 'AUTO_DMY' : 'AUTO_MDY',
+  const dateMapping: DelimitedVisualMapping = {
+    ...dateMappingBase,
+    sourceValues: dateMappingBase.sourceValues.map((source) => ({
+      primary: source.primary,
+      fallbacks: [...(source.fallbacks ?? [])],
+    })),
+    transforms: [
+      { kind: 'TRIM' },
+      {
+        kind: 'PARSE_DATE',
+        format: order.order === 'DMY' ? 'AUTO_DMY' : 'AUTO_MDY',
+      },
+    ],
   }
-  const titleMapping = visual(title?.column.key ?? UNMAPPED_COLUMN_KEY)
+  const titlePrimaryKey = title?.column.key ?? UNMAPPED_COLUMN_KEY
+  const titleFallbackKeys: string[] = []
   if (title && title.coverage < 1) {
     const candidates = profiles
       .filter(
@@ -382,13 +393,17 @@ export function inferDelimitedExpenseMapping(
     const covered = title.values.map(Boolean)
     for (const candidate of candidates) {
       if (candidate.values.some((value, index) => value && !covered[index])) {
-        titleMapping.sourceValues[0]!.fallbacks.push(candidate.column.key)
+        titleFallbackKeys.push(candidate.column.key)
         candidate.values.forEach((value, index) => {
           if (value) covered[index] = true
         })
       }
-      if (titleMapping.sourceValues[0]!.fallbacks.length === 11) break
+      if (titleFallbackKeys.length === 11) break
     }
+  }
+  const titleMapping: DelimitedVisualMapping = {
+    ...visual(titlePrimaryKey),
+    sourceValues: [{ primary: titlePrimaryKey, fallbacks: titleFallbackKeys }],
   }
   const currency = profiles
     .filter(

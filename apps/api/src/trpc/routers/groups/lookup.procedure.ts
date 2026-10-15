@@ -15,11 +15,12 @@
  */
 
 import { TRPCError } from '@trpc/server'
+import { Effect, Exit } from 'effect'
 import { z } from 'zod'
 
 import {
   buildSpliitGroupFetchUrl,
-  tryParseSpliitExport,
+  parseSpliitExport,
 } from '@spliit/domain/import'
 
 import {
@@ -44,10 +45,10 @@ async function fetchSpliitSourceQuietly(sourceGroupId: string) {
       return { ok: false as const, kind: 'NOT_FOUND' }
     if (!response.ok) return { ok: false as const, kind: 'ERROR' }
     const body = await response.json().catch(() => null)
-    const parsed = tryParseSpliitExport(body)
-    if (!parsed.ok) return { ok: false as const, kind: 'ERROR' }
-    setCachedSource(sourceGroupId, parsed.source)
-    return { ok: true as const, source: parsed.source }
+    const exit = await Effect.runPromiseExit(parseSpliitExport(body))
+    if (Exit.isFailure(exit)) return { ok: false as const, kind: 'ERROR' }
+    setCachedSource(sourceGroupId, exit.value)
+    return { ok: true as const, source: exit.value }
   } catch {
     return { ok: false as const, kind: 'ERROR' }
   } finally {

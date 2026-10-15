@@ -1,3 +1,4 @@
+import { Effect } from 'effect'
 import Papa from 'papaparse'
 
 import { SETTLEMENT_CATEGORY_ID } from '../categories'
@@ -9,11 +10,8 @@ import { amountAsMinorUnitsByCode } from '../utils'
 import { cospendCategoryToId } from './cospend-categories'
 import { recurrenceToLegacyRule } from './recurrence'
 import { gcdOf } from './split-guess'
-import type {
-  ImportParseResult,
-  NormalizedSource,
-  RecurrenceConfig,
-} from './types'
+import { ImportError } from './types'
+import type { NormalizedSource, RecurrenceConfig } from './types'
 
 /**
  * Base currency assumed when the Cospend export carries no currencies section.
@@ -138,7 +136,9 @@ function effectiveWeight(weight: number | undefined): number {
  * lines. The project name is not in the file body — only the filename slug — so
  * the group name defaults here and is refined from the filename upstream.
  */
-export function tryParseCospendCsv(input: string): ImportParseResult {
+export const parseCospendCsv = Effect.fnUntraced(function* (
+  input: string,
+): Effect.fn.Return<NormalizedSource, ImportError> {
   const cleaned = input.charCodeAt(0) === 0xfeff ? input.slice(1) : input
   const parsed = Papa.parse<string[]>(cleaned, {
     skipEmptyLines: 'greedy',
@@ -146,10 +146,9 @@ export function tryParseCospendCsv(input: string): ImportParseResult {
   })
 
   if (parsed.errors.length > 0) {
-    return {
-      ok: false,
-      error: `CSV could not be parsed: ${parsed.errors[0]?.message ?? 'unknown error'}`,
-    }
+    return yield* new ImportError({
+      message: `CSV could not be parsed: ${parsed.errors[0]?.message ?? 'unknown error'}`,
+    })
   }
 
   const rows = parsed.data
@@ -170,11 +169,10 @@ export function tryParseCospendCsv(input: string): ImportParseResult {
   }
 
   if (membersStart === -1 || billsStart === -1) {
-    return {
-      ok: false,
-      error:
+    return yield* new ImportError({
+      message:
         'CSV is not a Cospend project export (missing members or bills section)',
-    }
+    })
   }
 
   // ── Members ───────────────────────────────────────────────────────────
@@ -201,7 +199,9 @@ export function tryParseCospendCsv(input: string): ImportParseResult {
     participants.push({ sourceId, sourceName: name })
   }
   if (participants.length === 0) {
-    return { ok: false, error: 'Cospend export has no members' }
+    return yield* new ImportError({
+      message: 'Cospend export has no members',
+    })
   }
 
   // ── Categories (name → id) ────────────────────────────────────────────
@@ -445,23 +445,22 @@ export function tryParseCospendCsv(input: string): ImportParseResult {
   }
 
   if (expenses.length === 0) {
-    return { ok: false, error: 'Cospend export had no parseable bills' }
+    return yield* new ImportError({
+      message: 'Cospend export had no parseable bills',
+    })
   }
 
   return {
-    ok: true,
-    source: {
-      provider: 'COSPEND',
-      exportVersion: null,
-      sourceGroupId: 'cospend-csv-import',
-      sourceUrl: null,
-      name: 'Imported from Cospend',
-      information: null,
-      currency: currency.code,
-      currencyCode: currency.code,
-      participants,
-      expenses,
-      documentSource: 'NONE',
-    },
+    provider: 'COSPEND',
+    exportVersion: null,
+    sourceGroupId: 'cospend-csv-import',
+    sourceUrl: null,
+    name: 'Imported from Cospend',
+    information: null,
+    currency: currency.code,
+    currencyCode: currency.code,
+    participants,
+    expenses,
+    documentSource: 'NONE',
   }
-}
+})

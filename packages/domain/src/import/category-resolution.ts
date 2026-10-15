@@ -106,8 +106,8 @@ export function resolveImportCategories<T extends DelimitedPreviewRow>(
   const sourceFor = (row: T) => {
     const key = importCategorySourceKey(row.categorySource ?? '')
     if (!key || ignored.has(key)) return undefined
-    if (Object.hasOwn(mapping.categoryBindings, key))
-      return mapping.categoryBindings[key]
+    const bindings = mapping.categoryBindings ?? {}
+    if (Object.hasOwn(bindings, key)) return bindings[key]
     if (!sourceCache.has(key)) {
       const hit = categorizeLocally({
         title: row.categorySource!,
@@ -143,7 +143,7 @@ export function resolveImportCategories<T extends DelimitedPreviewRow>(
   )
   const historyIndex = createImportTitleIndex(history, (row) => row.title)
   return rows.map((row, index) => {
-    let category = mapping.defaults.categoryId
+    let category = mapping.defaults.categoryId ?? 'general'
     let provenance: ImportCategoryProvenance = 'fallback'
     const explicit = context.explicitRows?.[row.rowNumber]
     // A manual override always wins, even for negative amounts (refunds kept

@@ -1,3 +1,5 @@
+import { Effect } from 'effect'
+
 import { loadLocaleDictionary } from '@spliit/domain'
 import type {
   DelimitedDateOrder,
@@ -12,6 +14,7 @@ import type {
 } from '@spliit/domain/import'
 import {
   decodeDelimitedBytes,
+  importErrorToDelimitedParseResult,
   inferDelimitedExpenseMapping,
   mapDelimitedRows,
   previewDelimitedRows,
@@ -87,11 +90,18 @@ async function runWorker<T>(
         request.bytes,
         request.options.encoding,
       )
-      return parseDelimitedText(decoded.text, {
-        headerRow: request.options.headerRow,
-        delimiter: request.options.delimiter,
-        encoding: decoded.encoding,
-      }) as T
+      try {
+        const table = Effect.runSync(
+          parseDelimitedText(decoded.text, {
+            headerRow: request.options.headerRow,
+            delimiter: request.options.delimiter,
+            encoding: decoded.encoding,
+          }),
+        )
+        return { ok: true, table } as T
+      } catch (error) {
+        return importErrorToDelimitedParseResult(error) as T
+      }
     }
     const categories =
       request.action === 'MAP'
@@ -99,21 +109,14 @@ async function runWorker<T>(
         : request.options?.categories
     if (categories) await loadLocaleDictionary(categories.locale ?? 'en-US')
     if (request.action === 'MAP') {
-      return (
-        mapDelimitedRows as (
-          table: DelimitedTable,
-          mapping: DelimitedExpenseMappingV1,
-          categories?: ImportCategoryContext,
-          options?: { preferredDateOrder?: DelimitedDateOrder },
-        ) => Promise<T>
-      )(request.table, request.mapping, request.categories, {
-        preferredDateOrder: request.options?.preferredDateOrder,
-      }) as Promise<T>
+      return Effect.runPromise(
+        mapDelimitedRows(request.table, request.mapping, request.categories, {
+          preferredDateOrder: request.options?.preferredDateOrder,
+        }),
+      ) as Promise<T>
     }
-    return previewDelimitedRows(
-      request.table,
-      request.mapping,
-      request.options,
+    return Effect.runSync(
+      previewDelimitedRows(request.table, request.mapping, request.options),
     ) as T
   }
 

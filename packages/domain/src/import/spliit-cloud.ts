@@ -1,3 +1,5 @@
+import { Effect, Exit, Predicate, Schema } from 'effect'
+
 import {
   spliitAccountExportManifestSchema,
   spliitGroupExportManifestSchema,
@@ -5,6 +7,7 @@ import {
   type SpliitGroupExportManifest,
 } from '../export-manifest'
 import { spliitExportSchema } from './spliit'
+import { ImportError } from './types'
 
 export type ImportFileKind =
   | 'SPLIIT_CLOUD_BUNDLE'
@@ -42,23 +45,28 @@ export function classifyImportBytes(
 export function classifyImportPayload(
   input: unknown,
 ): ImportFileClassification {
-  if (spliitExportSchema.safeParse(input).success) {
+  const decoded = Effect.runSyncExit(
+    Schema.decodeUnknownEffect(spliitExportSchema)(input),
+  )
+  if (Exit.isSuccess(decoded)) {
     return { kind: 'SPLIIT_APP_JSON' }
   }
 
-  if (typeof input === 'object' && input !== null && !Array.isArray(input)) {
+  if (
+    Predicate.isObject(input) &&
+    !Array.isArray(input) &&
+    (input as { format?: unknown }).format === 'spliit.cloud/export'
+  ) {
     const candidate = input as {
       format?: unknown
       scope?: { type?: unknown }
     }
-    if (candidate.format === 'spliit.cloud/export') {
-      return {
-        kind: 'SPLIIT_CLOUD_MANIFEST',
-        scope:
-          typeof candidate.scope?.type === 'string'
-            ? candidate.scope.type
-            : undefined,
-      }
+    return {
+      kind: 'SPLIIT_CLOUD_MANIFEST',
+      scope:
+        typeof candidate.scope?.type === 'string'
+          ? candidate.scope.type
+          : undefined,
     }
   }
 
@@ -73,7 +81,7 @@ export function classifyImportPayload(
 export function classifyImportText(
   fileName: string,
   text: string,
-  parseSpliitCsv: (value: string) => { ok: boolean },
+  parseSpliitCsv: (value: string) => Effect.Effect<unknown, unknown>,
 ): ImportFileClassification {
   const lower = fileName.toLowerCase()
   // Inspect the content as well as the extension. Files downloaded through
@@ -88,20 +96,36 @@ export function classifyImportText(
       // path rather than being mistaken for a different application export.
     }
   }
-  if (parseSpliitCsv(text).ok) {
+  if (Exit.isSuccess(Effect.runSyncExit(parseSpliitCsv(text)))) {
     return { kind: 'SPLIIT_APP_CSV' }
   }
   return { kind: 'UNKNOWN' }
 }
 
-export function parseCloudGroupManifest(
+export const parseCloudGroupManifest = Effect.fnUntraced(function* (
   input: unknown,
-): SpliitGroupExportManifest {
-  return spliitGroupExportManifestSchema.parse(input)
-}
+): Effect.fn.Return<SpliitGroupExportManifest, ImportError> {
+  const parsed = yield* Effect.try({
+    try: () => spliitGroupExportManifestSchema.parse(input),
+    catch: (cause) =>
+      new ImportError({
+        message:
+          cause instanceof Error ? cause.message : 'Invalid Cloud manifest',
+      }),
+  })
+  return parsed
+})
 
-export function parseCloudAccountManifest(
+export const parseCloudAccountManifest = Effect.fnUntraced(function* (
   input: unknown,
-): SpliitAccountExportManifest {
-  return spliitAccountExportManifestSchema.parse(input)
-}
+): Effect.fn.Return<SpliitAccountExportManifest, ImportError> {
+  const parsed = yield* Effect.try({
+    try: () => spliitAccountExportManifestSchema.parse(input),
+    catch: (cause) =>
+      new ImportError({
+        message:
+          cause instanceof Error ? cause.message : 'Invalid Cloud manifest',
+      }),
+  })
+  return parsed
+})

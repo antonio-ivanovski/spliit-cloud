@@ -1,10 +1,12 @@
 import { TRPCError } from '@trpc/server'
+import { Effect } from 'effect'
 import { z } from 'zod'
 
 import {
   buildSpliitGroupFetchUrl,
   extractSpliitGroupIdFromUrl,
-  tryParseSpliitExport,
+  importErrorToParseResult,
+  parseSpliitExport,
   type NormalizedSource,
 } from '@spliit/domain/import'
 
@@ -71,7 +73,12 @@ async function fetchSpliitSource(
     } catch {
       return { kind: 'ERROR', message: 'Spliit response is not JSON' }
     }
-    const result = tryParseSpliitExport(body)
+    const result = await Effect.runPromise(
+      Effect.match(parseSpliitExport(body), {
+        onFailure: (error) => importErrorToParseResult(error),
+        onSuccess: (source) => ({ ok: true as const, source }),
+      }),
+    )
     if (!result.ok) return { kind: 'ERROR', message: result.error }
     setCachedSource(sourceGroupId, result.source)
     return { kind: 'OK', source: result.source }

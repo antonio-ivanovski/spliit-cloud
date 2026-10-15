@@ -1,9 +1,14 @@
+import type { Effect } from 'effect'
+
 import {
-  tryParseCospendCsv,
-  tryParseSpliitCsv,
-  tryParseSpliitExport,
-  tryParseSplitwiseCsv,
-  type ImportParseResult,
+  parseCospendCsv,
+  parseSettleUpCsv,
+  parseSpliitCsv,
+  parseSpliitExport,
+  parseSplitwiseCsv,
+  parseTricountCsvSingle,
+  type ImportError,
+  type NormalizedSource,
 } from '@spliit/domain/import'
 
 export type SourceMode =
@@ -14,9 +19,9 @@ export type SourceMode =
   | 'tricount'
   | 'settleup'
 
-type FileParser =
-  | ((text: string) => ImportParseResult)
-  | ((input: unknown) => ImportParseResult)
+export type FileParser = (
+  input: never,
+) => Effect.Effect<NormalizedSource, ImportError>
 
 type ProviderConfig = {
   hasUrlPaste: boolean
@@ -33,7 +38,10 @@ export const PROVIDERS: Record<SourceMode, ProviderConfig> = {
   spliit: {
     hasUrlPaste: true,
     hasDomainSwap: true,
-    fileImport: { csv: tryParseSpliitCsv, json: tryParseSpliitExport },
+    fileImport: {
+      csv: parseSpliitCsv as FileParser,
+      json: parseSpliitExport as FileParser,
+    },
     accept: '.json,.csv,application/json,text/csv',
   },
   'spliit-cloud': {
@@ -45,26 +53,27 @@ export const PROVIDERS: Record<SourceMode, ProviderConfig> = {
   splitwise: {
     hasUrlPaste: false,
     hasDomainSwap: false,
-    fileImport: { csv: tryParseSplitwiseCsv },
+    fileImport: { csv: parseSplitwiseCsv as FileParser },
     accept: '.csv,text/csv',
   },
   cospend: {
     hasUrlPaste: false,
     hasDomainSwap: false,
-    fileImport: { csv: tryParseCospendCsv },
+    fileImport: { csv: parseCospendCsv as FileParser },
     accept: '.csv,text/csv',
   },
   tricount: {
+    // Share-link fetch (api.tricount.bunq.com) is phase 2; CSV only for now.
     hasUrlPaste: false,
     hasDomainSwap: false,
-    fileImport: null,
-    accept: '',
+    fileImport: { csv: parseTricountCsvSingle as FileParser },
+    accept: '.csv,text/csv',
   },
   settleup: {
     hasUrlPaste: false,
     hasDomainSwap: false,
-    fileImport: null,
-    accept: '',
+    fileImport: { csv: parseSettleUpCsv as FileParser },
+    accept: '.csv,text/csv',
   },
 }
 

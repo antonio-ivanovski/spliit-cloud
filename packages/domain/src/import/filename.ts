@@ -57,6 +57,21 @@ export function guessGroupNameFromFilename(
     if (slug && !/^\d+$/.test(slug)) return humanizeGroupPrefix(slug)
   }
 
+  // Tricount GDPR dumps already name the group in `tricount <name> -
+  // Exported on …` footers; the filename is only a last-resort fallback
+  // (e.g. `transactions-city-trip.csv` → "Transactions City Trip").
+  if (provider === 'TRICOUNT') {
+    const stem = base.replace(/^transactions-/, '').trim()
+    if (stem && !/^\d+$/.test(stem)) return humanizeGroupPrefix(stem)
+  }
+
+  // Settle Up CSV history exports carry no group name in the file body;
+  // the attachment name is the only hint (e.g. `my-trip.csv` → "My Trip").
+  if (provider === 'SETTLEUP') {
+    const stem = base.trim()
+    if (stem && !/^\d+$/.test(stem)) return humanizeGroupPrefix(stem)
+  }
+
   return null
 }
 

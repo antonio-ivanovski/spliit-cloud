@@ -175,7 +175,7 @@ export function mappingVisualization(
         label: labelFor(source?.primary ?? ''),
       }),
     ]
-    const essentials = mapping.transforms
+    const essentials = (mapping.transforms ?? [])
       .filter((transform) => transform.kind !== 'JOIN')
       .map((transform) => {
         if (transform.kind === 'TRIM') return ''
@@ -206,7 +206,7 @@ export function mappingVisualization(
   const sources = mapping.sourceValues
     .map((source, index) => {
       const primary = labelFor(source.primary)
-      const fallbacks = source.fallbacks.map((key) =>
+      const fallbacks = (source.fallbacks ?? []).map((key) =>
         t('ExpenseImport.viewers.fallbackTo', { label: labelFor(key) }),
       )
       return mapping.sourceValues.length > 1
@@ -217,7 +217,7 @@ export function mappingVisualization(
         : [primary, ...fallbacks].join(' → ')
     })
     .join(' + ')
-  const transforms = mapping.transforms.map((transform) => {
+  const transforms = (mapping.transforms ?? []).map((transform) => {
     if (transform.kind === 'JOIN')
       return t('ExpenseImport.viewers.joinWith', {
         separator: transform.separator,
@@ -489,7 +489,7 @@ export function previewSourceValues(
   if (!row) return []
   const multipleValues = mapping.sourceValues.length > 1
   return mapping.sourceValues.flatMap((source, sourceIndex) => {
-    const keys = [source.primary, ...source.fallbacks]
+    const keys = [source.primary, ...(source.fallbacks ?? [])]
     return keys.map((key, columnIndex) => {
       const column = table.columns.find((candidate) => candidate.key === key)
       const sourceKind =

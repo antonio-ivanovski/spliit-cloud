@@ -1,4 +1,5 @@
 import { Parser } from '@json2csv/plainjs'
+import { Effect } from 'effect'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { prisma } from '@spliit/db'
@@ -838,7 +839,7 @@ describe('Multi-payer expenses — real DB', () => {
       ],
     }
 
-    const parsed = parseSpliitExport(legacy)
+    const parsed = await Effect.runPromise(parseSpliitExport(legacy))
     expect(parsed.expenses).toHaveLength(1)
     const paidBySourceId = parsed.expenses[0].paidBySourceId
 

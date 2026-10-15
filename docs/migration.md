@@ -1,15 +1,15 @@
-# Migration from original Spliit
+# Migration to Spliit Cloud
 
-This guide covers importing a group from another expense-splitting app. The import system supports four sources: a `spliit.app` JSON export, a `spliit.app` CSV export, a `spliit.app` group URL that the server fetches on your behalf, and a Splitwise CSV export.
+This guide covers importing a group from another expense-splitting app. The import system supports six sources: a `spliit.app` group URL that the server fetches on your behalf, a `spliit.app` JSON or CSV export, a Splitwise CSV export, a Cospend project CSV export, a Tricount share link or GDPR CSV export, and a Settle Up CSV history export.
 
 > Always export and back up your data from the source app before starting a migration.
 
-## Import methods
+## From Spliit (link or file)
 
-- **JSON export**: In `spliit.app`, open the group and download the JSON export. Upload the file in the Spliit Cloud import wizard.
-- **CSV export**: Same flow, with a `.csv` file. The Spliit parser reads the header row (Date, Description, Category, Currency, Cost, Original cost, Original currency, Conversion rate, Is Reimbursement, Split mode) and reconstructs participants and expenses. The group's default currency is the most common value across the per-row `Currency` column.
-- **URL import**: Paste a `spliit.app` group URL. The API fetches and parses the export server-side, so the browser never contacts `spliit.app` directly.
-- **Splitwise CSV export**: Select the **Splitwise** tab in the source step and drop a Splitwise CSV file. See [From Splitwise (CSV)](#from-splitwise-csv) for the full flow.
+The **Spliit** tab offers two ways in — a group link (fastest) or a downloaded export file:
+
+- **Group link**: Open the group on `spliit.app`, copy the group URL, and paste it into the import wizard. Our server fetches the group through the `spliit.app` public export endpoint on your behalf, so the browser never contacts `spliit.app` directly. Change `.app` to `.cloud` in any `spliit.app` group URL to import it into Spliit Cloud.
+- **File export**: Open the group on `spliit.app`, open group settings, and download JSON (CSV works too). JSON preserves every amount and payer exactly and keeps recurring expenses; CSV is a fallback that rounds each per-participant amount to 2 decimals and drops recurrence.
 
 ## From Splitwise (CSV)
 
@@ -19,9 +19,9 @@ The import wizard dispatches the parser from the active tab — the Spliit tab u
 
 ### Exporting from Splitwise
 
-1. Open the Splitwise group in your browser.
-2. Use the group's export option to download a CSV file.
-3. The file contains one row per expense plus a `Total balance` summary row at the end.
+1. Open the Splitwise group on splitwise.com in a desktop browser. The mobile apps have no export.
+2. Click the gear icon at the top of the group page, then choose “Export as spreadsheet”.
+3. Download the CSV. The file contains one row per expense plus a `Total balance` summary row at the end (skipped on import).
 
 ### Importing into Spliit Cloud
 
@@ -70,6 +70,66 @@ For group exports, type the group name in the destination step before confirming
 ### Limitation
 
 One CSV file produces one Spliit Cloud group. There is no auto-grouping of multiple Splitwise groups from a single export. If you have several Splitwise groups, export each one separately and import them one at a time.
+
+## From Tricount (share link or GDPR CSV)
+
+In Spliit, select the **Tricount** tab in the source step. Two ways in:
+
+- **Share link (fastest)**: paste a Tricount share link (`https://tricount.com/t…`, from the sharing menu in the app, "Other" option). Spliit fetches the group server-side — no GDPR request needed.
+- **GDPR CSV**: request a data export under GDPR terms from Tricount support (profile tab → chat button in the Tricount app); the support team emails you a CSV dump of your groups. Drop the dump onto the upload area (or click to pick it from disk).
+
+### Multi-group dumps
+
+Unlike Splitwise, one Tricount dump can hold several groups: each group section ends with a `tricount <name> - Exported on …` footer row carrying the group name. When the parser finds more than one group, a picker lists each group with its participant and expense counts. Select the groups to import — each goes through destination, mapping, currency conversion, and confirm in turn, with participant mappings remembered by name between groups.
+
+### How the Tricount values are decoded
+
+The GDPR core columns are `Title, Amount, Currency, Exchange rate, Amount in default currency (<CODE>), Transaction type, Category, Paid by, Date & time`, plus one `Paid by <Name>` / `Impacted to <Name>` column pair per participant. The same file in Sesterce shape (`Date, Title, Paid by <Name>…, Paid for <Name>…, Currency, Category, Exchange rate`) is accepted too.
+
+- **Amounts**: expenses are signed negative, incomes positive (exporter convention). The parser normalizes to a positive cost in the row's `Currency`.
+- **Splits**: each member's `Impacted to` value is their owed share; shares are computed through the domain serializers so they sum exactly to the cost.
+- **Settlements**: rows with `Transaction type` `BALANCE` (or transfer-like titles such as repayment/reimbursement/`recouvrement de dette`) import as settlements (payer → single receiver).
+- **Categories**: Tricount built-in categories (EN/FR) map to Spliit categories; custom categories fall back to General, `UNCATEGORIZED` to General.
+- **Exchange rate**: the row's historical rate is preserved on the expense for auditing. Conversion to the destination currency happens at confirm time via the existing Frankfurter-backed conversion step — same contract as Splitwise imports.
+
+### Limitation
+
+Documents (receipts, attachments) are not part of the CSV dump and are not imported. Re-upload them in the destination group if needed.
+
+## From Cospend (CSV)
+
+Cospend exports one CSV per project. In Spliit, select the **Cospend** tab in the source step and drop the file onto the upload area (or click to pick it from disk).
+
+### Exporting from Cospend
+
+1. Open the project in Cospend, then open the project menu.
+2. Choose to export the project as CSV. Cospend exports one file per project.
+3. Download the CSV. Exports without a currency section default to EUR — check the currency in the destination step.
+
+## From Settle Up (CSV)
+
+Settle Up exports one group history as a CSV file. Open the group in Settle Up, open the group menu, choose Export, and email the CSV history to yourself. Save the attachment, then select the **Settle Up** tab in the source step and drop the file onto the upload area (or click to pick it from disk).
+
+The expected header is `"Who paid","Amount","Currency","For whom","Split amounts","Purpose","Category","Date & time","Timezone","Exchange rate","Converted amount","Type","Receipt"`. The `For whom` / `Split amounts` pair is what distinguishes this layout: each holds a `;`-separated list — member names and their aligned owed amounts. The file is UTF-16 with a BOM (uploads are decoded before parsing). Rows work empty `Purpose` cells: those import with a `Payer → receivers` fallback title.
+
+### How the Settle Up values are decoded
+
+- **Amounts**: `Amount` is denominated in `Currency`. The parser normalizes to a positive cost; negative rows import with the income category. Only rows in the export's dominant currency are imported, so one group lands in one currency.
+- **Settlements**: rows with a transfer `Type` (or transfer-like titles such as repayment/reimbursement) import as settlements (payer → single receiver).
+- **Categories**: Settle Up built-in category emoji map to Spliit categories; custom names match by keyword, unknown ones fall back to General.
+- **Exchange rate**: the row's historical rate is preserved on the expense for auditing. Conversion to the destination currency happens at confirm time via the existing Frankfurter-backed conversion step — same contract as Splitwise imports.
+
+### Group name
+
+Settle Up exports carry no group name in the file body, so the parser defaults to "Imported from Settle Up" and refines it from the attachment filename (e.g. `my-trip.csv` → "My Trip"). Override it in the destination step if needed.
+
+### Limitation
+
+One CSV file produces one Spliit Cloud group. Receipt images are not part of the CSV export and are not imported. Re-upload them in the destination group if needed.
+
+## From Spliit Cloud (account backup or group bundle)
+
+The **Spliit Cloud** tab imports a `.spliit.zip` bundle. Open Account settings → Backups & export (multiple groups) or a group's Export section (single group), choose the groups and content, then choose Download backup or Download bundle. Drop the `.spliit.zip` file onto the upload area — you'll pick which groups to import in the next step.
 
 ## What gets imported
 

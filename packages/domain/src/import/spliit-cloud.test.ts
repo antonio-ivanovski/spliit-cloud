@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it } from '@effect/vitest'
+import { Effect } from 'effect'
 
 import {
   classifyImportBytes,
@@ -57,7 +58,10 @@ describe('spliit cloud source classification', () => {
   })
 
   it('recognizes a legacy CSV only when the Spliit parser accepts it', () => {
-    const parse = (value: string) => ({ ok: value === 'spliit' })
+    const parse = (value: string) =>
+      value === 'spliit'
+        ? Effect.succeed(value)
+        : (Effect.fail(new Error('no')) as Effect.Effect<unknown, unknown>)
     expect(classifyImportText('export.csv', 'spliit', parse)).toEqual({
       kind: 'SPLIIT_APP_CSV',
     })
@@ -67,7 +71,10 @@ describe('spliit cloud source classification', () => {
   })
 
   it('uses payload content when an export has a misleading extension', () => {
-    const parse = (value: string) => ({ ok: value === 'spliit' })
+    const parse = (value: string) =>
+      value === 'spliit'
+        ? Effect.succeed(value)
+        : (Effect.fail(new Error('no')) as Effect.Effect<unknown, unknown>)
     expect(
       classifyImportText(
         'download.bin',

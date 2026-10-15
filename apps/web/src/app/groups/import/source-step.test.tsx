@@ -43,6 +43,23 @@ vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => routerMocks.navigate,
 }))
 
+// TricountSourceTab fetches via useTricountSource (tRPC); stub the client
+// so tab renders don't need a provider.
+vi.mock('@/trpc/client', () => ({
+  trpc: {
+    groups: {
+      tricountPreview: {
+        useQuery: () => ({
+          data: undefined,
+          isFetching: false,
+          isError: false,
+          error: null,
+        }),
+      },
+    },
+  },
+}))
+
 // SourceStep no longer owns its own useImportSource; the wizard passes
 // the shared state down. The tests pass it explicitly so the prefill-
 // error path is the only thing under test.
@@ -78,8 +95,8 @@ describe('SourceStep — initialError (prefill) handling', () => {
       'Spliit Cloud',
       'Splitwise',
       'Cospend',
-      'Tricount (coming soon)',
-      'Settle Up (coming soon)',
+      'Tricount',
+      'Settle Up',
     ])
   })
 
@@ -125,6 +142,63 @@ describe('SourceStep — initialError (prefill) handling', () => {
         /Spliit Cloud account backup containing multiple groups.*single group export/i,
       ),
     ).toHaveLength(2)
+  })
+
+  it('shows an export guide trigger inside the card on each single-path tab, with steps in a dialog', async () => {
+    const user = userEvent.setup()
+    const guides: Array<{
+      source: SourceMode
+      trigger: RegExp
+      step: RegExp
+    }> = [
+      {
+        source: 'spliit-cloud',
+        trigger: /Where do I find my Spliit Cloud bundle\?/i,
+        step: /Backups & export/i,
+      },
+      {
+        source: 'splitwise',
+        trigger: /Where do I export my Splitwise group\?/i,
+        step: /Export as spreadsheet/i,
+      },
+      {
+        source: 'cospend',
+        trigger: /Where do I export my Cospend project\?/i,
+        step: /one file per project/i,
+      },
+      {
+        source: 'settleup',
+        trigger: /Where do I get the Settle Up CSV\?/i,
+        step: /email the CSV history/i,
+      },
+    ]
+    for (const { source, trigger, step } of guides) {
+      routerMocks.source = source
+      const view = renderSourceStep()
+      // Trigger is visible inside the upload card; steps stay hidden until opened.
+      await user.click(screen.getByRole('button', { name: trigger }))
+      expect(await screen.findByText(step)).toBeInTheDocument()
+      await user.keyboard('{Escape}')
+      view.unmount()
+    }
+  })
+
+  it('anchors a guide trigger inside each Spliit card', () => {
+    routerMocks.source = 'spliit'
+    const view = renderSourceStep()
+
+    const linkTrigger = screen.getByRole('button', {
+      name: /Where do I find my Spliit group link\?/i,
+    })
+    const fileTrigger = screen.getByRole('button', {
+      name: /Where do I find the JSON or CSV export\?/i,
+    })
+    expect(
+      view.container.querySelector('[data-import-source-card="paste-url"]'),
+    ).toContainElement(linkTrigger)
+    expect(
+      view.container.querySelector('[data-import-source-card="file-upload"]'),
+    ).toContainElement(fileTrigger)
   })
 
   it('offers a retained Cloud bundle without requiring another file selection', async () => {
@@ -220,6 +294,54 @@ describe('SourceStep — initialError (prefill) handling', () => {
     ).not.toBeInTheDocument()
   })
 
+  it('decodes a UTF-16 Settle Up export dropped on the Settle Up tab', async () => {
+    routerMocks.source = 'settleup'
+    const onLoaded = vi.fn()
+    const view = renderSourceStep({ onLoaded })
+    const input = view.container.querySelector('input[type="file"]')
+    if (!(input instanceof HTMLInputElement))
+      throw new Error('file input missing')
+
+    // Real export shape: UTF-16LE with BOM; file.text() would mangle it,
+    // so the tab decodes from raw bytes.
+    const utf16 = (s: string): number[] => {
+      const out = [0xff, 0xfe]
+      for (const ch of s) {
+        const code = ch.charCodeAt(0)
+        out.push(code & 0xff, (code >> 8) & 0xff)
+      }
+      return out
+    }
+    const text = [
+      '"Who paid","Amount","Currency","For whom","Split amounts","Purpose","Category","Date & time","Timezone","Exchange rate","Converted amount","Type","Receipt"',
+      '"Alex","40.00","EUR","Alex;Sam","20.00;20.00","Dinner"," ","2024-01-15 12:00:00","+02:00","","40.00","expense",""',
+    ].join('\n')
+    fireEvent.change(input, {
+      target: {
+        files: [
+          new File([new Uint8Array(utf16(text))], 'settle-up.csv', {
+            type: 'text/csv',
+          }),
+        ],
+      },
+    })
+
+    await new Promise((resolve) => setTimeout(resolve, 0))
+    expect(onLoaded).toHaveBeenCalledOnce()
+    const source = onLoaded.mock.calls[0]![0] as {
+      provider: string
+      participants: Array<{ sourceName: string }>
+      expenses: Array<{ title: string; amount: number }>
+    }
+    expect(source.provider).toBe('SETTLEUP')
+    expect(source.participants.map((p) => p.sourceName)).toEqual([
+      'Alex',
+      'Sam',
+    ])
+    expect(source.expenses).toHaveLength(1)
+    expect(source.expenses[0]).toMatchObject({ title: 'Dinner', amount: 4000 })
+  })
+
   it('notes that CSV cannot import recurrence', () => {
     renderSourceStep()
     expect(
@@ -263,7 +385,12 @@ describe('pickParser', () => {
     {
       provider: 'tricount',
       fileName: 'anything.csv',
-      expected: null,
+      expected: 'csv',
+    },
+    {
+      provider: 'settleup',
+      fileName: 'history.csv',
+      expected: 'csv',
     },
     {
       provider: 'settleup',

@@ -79,6 +79,10 @@ export type WizardAction =
     }
   | { type: 'MAPPING_CHANGED'; participants: ParticipantMappingState[] }
   | {
+      type: 'MAPPING_HINTS_APPLIED'
+      participants: ParticipantMappingState[]
+    }
+  | {
       type: 'MAPPING_CONFIRMED'
       sourceIdToDestId: Record<string, string>
       destIds: Record<string, string>
@@ -207,6 +211,9 @@ export function importWizardReducer(
       }
 
     case 'MAPPING_CHANGED':
+      return { ...state, participants: action.participants }
+
+    case 'MAPPING_HINTS_APPLIED':
       return { ...state, participants: action.participants }
 
     case 'MAPPING_CONFIRMED':

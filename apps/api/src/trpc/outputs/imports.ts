@@ -40,7 +40,7 @@ const normalizedSourceExpenseSchema = z.object({
 })
 
 export const normalizedSourceSchema = z.object({
-  provider: z.enum(['SPLIIT', 'SPLITWISE', 'COSPEND']),
+  provider: z.enum(['SPLIIT', 'SPLITWISE', 'COSPEND', 'TRICOUNT', 'SETTLEUP']),
   exportVersion: z.literal(3).nullable().optional(),
   sourceGroupId: z.string(),
   sourceUrl: z.string().nullable(),

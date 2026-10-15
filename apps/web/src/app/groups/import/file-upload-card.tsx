@@ -17,6 +17,12 @@ type FileUploadCardProps = {
     dropFile: string
     dropFileDescription: string
   }
+  /**
+   * Contextual export help rendered below the dropzone at the point of need.
+   * Each import path passes its own ExportGuideTrigger so dual-path tabs stay
+   * unambiguous.
+   */
+  help?: React.ReactNode
 }
 
 export function FileUploadCard({
@@ -28,6 +34,7 @@ export function FileUploadCard({
   onFilesSelected,
   accept,
   labels,
+  help,
 }: FileUploadCardProps) {
   return (
     <Card data-import-source-card="file-upload">
@@ -54,6 +61,11 @@ export function FileUploadCard({
             onFilesSelected={onFilesSelected}
           />
         </label>
+        {help ? (
+          <div className="flex justify-center border-t border-border pt-1">
+            {help}
+          </div>
+        ) : null}
       </CardContent>
     </Card>
   )

@@ -19,6 +19,11 @@ type PasteUrlCardProps = {
     fetchGroupButton: string
     fetchingButton: string
   }
+  /**
+   * Contextual export help rendered below the description at the point of need.
+   * Each URL path passes its own ExportGuideTrigger.
+   */
+  help?: React.ReactNode
 }
 
 export function PasteUrlCard({
@@ -29,6 +34,7 @@ export function PasteUrlCard({
   onUrlChange,
   onSubmit,
   labels,
+  help,
 }: PasteUrlCardProps) {
   return (
     <Card data-import-source-card="paste-url">
@@ -38,6 +44,7 @@ export function PasteUrlCard({
           {labels.pasteUrl}
         </Label>
         <p className="text-xs text-muted-foreground">{labels.urlDescription}</p>
+        {help}
         <div className="flex flex-col gap-2 sm:flex-row">
           <Input
             id="spliit-url"

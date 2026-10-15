@@ -301,7 +301,7 @@ export function ImportCategoryMapping({
                   key={summary.key}
                   summary={summary}
                   categoryId={
-                    mapping.categoryBindings[summary.key] ??
+                    (mapping.categoryBindings ?? {})[summary.key] ??
                     summary.detectedCategory ??
                     mapping.defaults.categoryId
                   }
@@ -311,8 +311,8 @@ export function ImportCategoryMapping({
                     published !== null &&
                     (publishedIgnored.has(summary.key) !==
                       ignored.has(summary.key) ||
-                      published.bindings[summary.key] !==
-                        mapping.categoryBindings[summary.key])
+                      (published.bindings ?? {})[summary.key] !==
+                        (mapping.categoryBindings ?? {})[summary.key])
                   }
                   onChange={(assignment) =>
                     onAssignment(summary.key, assignment)
@@ -337,7 +337,7 @@ export function ImportCategoryMapping({
             >
               <CategorySelector
                 categories={DEFAULT_CATEGORIES}
-                defaultValue={mapping.defaults.categoryId}
+                defaultValue={mapping.defaults.categoryId ?? 'general'}
                 isLoading={updating}
                 onValueChange={onFallbackChange}
               />

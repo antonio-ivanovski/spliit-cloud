@@ -108,7 +108,8 @@ export function applyCategoryBindingAssignment(
   if (!mapping) return mapping
   if (assignment.mode !== 'source' || assignment.categoryId === undefined)
     return mapping
-  if (mapping.categoryBindings[key] === assignment.categoryId) return mapping
+  if ((mapping.categoryBindings ?? {})[key] === assignment.categoryId)
+    return mapping
   return {
     ...mapping,
     categoryBindings: {

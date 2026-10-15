@@ -2,11 +2,12 @@ import { readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it } from '@effect/vitest'
+import { Effect } from 'effect'
 
 import { DEFAULT_CATEGORIES } from '../categories'
-import { parseSpliitExport, tryParseSpliitExport } from './spliit'
-import { tryParseSpliitCsv } from './spliit-csv'
+import { parseSpliitExport } from './spliit'
+import { parseSpliitCsv } from './spliit-csv'
 import { appendImportedFromNote } from './utils'
 
 const here = dirname(fileURLToPath(import.meta.url))
@@ -46,276 +47,303 @@ function sourceIdForUpstream(upstreamId: string): string {
 }
 
 describe('JSON integration: Spliit export round-trips', () => {
-  it('parses the public Spliit Export sample into the expected shape', () => {
-    const result = tryParseSpliitExport(spliitExport)
-    expect(result.ok).toBe(true)
-    if (!result.ok) return
+  it.effect(
+    'parses the public Spliit Export sample into the expected shape',
+    () =>
+      Effect.gen(function* () {
+        const source = yield* parseSpliitExport(spliitExport)
 
-    expect(result.source.sourceGroupId).toBe(spliitExport.id)
-    expect(result.source.sourceUrl).toBe(
-      `https://spliit.app/groups/${spliitExport.id}`,
-    )
-    expect(result.source.name).toBe(spliitExport.name)
-    expect(result.source.currency).toBe(spliitExport.currency)
-    expect(result.source.currencyCode).toBe(spliitExport.currencyCode ?? null)
-    expect(result.source.participants).toHaveLength(
-      spliitExport.participants.length,
-    )
-    expect(result.source.expenses).toHaveLength(spliitExport.expenses.length)
-    expect(result.source.participants.map((p) => p.sourceId)).toEqual(
-      spliitExport.participants.map(
-        (_: unknown, i: number) => `spliit-participant-${i}`,
-      ),
-    )
-  })
-
-  it('matches every source expense to a parsed expense', () => {
-    const result = parseSpliitExport(spliitExport)
-    const parsedIndex = new Set<string>()
-    for (const e of result.expenses) {
-      parsedIndex.add(keyOf(e.title, e.expenseDate, e.amount))
-    }
-
-    let missingCount = 0
-    for (const src of spliitExport.expenses) {
-      const key = keyOf(
-        src.title,
-        src.expenseDate?.slice(0, 10) ?? '',
-        src.amount,
-      )
-      if (!parsedIndex.has(key)) missingCount++
-    }
-    expect(missingCount).toBe(0)
-  })
-
-  it('preserves amount, paidBy, paidFor, splitMode, and category per expense', () => {
-    const result = parseSpliitExport(spliitExport)
-    const parsedByKey = new Map<string, (typeof result.expenses)[number]>()
-    for (const e of result.expenses) {
-      parsedByKey.set(keyOf(e.title, e.expenseDate, e.amount), e)
-    }
-
-    for (const src of spliitExport.expenses) {
-      const key = keyOf(
-        src.title,
-        src.expenseDate?.slice(0, 10) ?? '',
-        src.amount,
-      )
-      const parsed = parsedByKey.get(key)
-      expect(
-        parsed,
-        `Missing parsed expense for "${src.title}" (${src.amount})`,
-      ).toBeDefined()
-      if (!parsed) continue
-
-      expect(parsed.amount).toBe(src.amount)
-      expect(parsed.recurrenceRule).toBe(src.recurrenceRule ?? 'NONE')
-      expect(parsed.splitMode).toBe(src.splitMode ?? 'EVENLY')
-
-      expect(parsed.paidBySourceId).toBe(sourceIdForUpstream(src.paidById))
-
-      const exp = expectedCategoryId(
-        src.category?.grouping ?? '',
-        src.category?.name ?? '',
-      )
-      const expectedId = src.isReimbursement ? 'settlement' : exp.id
-      expect({
-        id: parsed.category,
-        matched: exp.matched,
-      }).toEqual({ id: expectedId, matched: exp.matched })
-
-      expect(parsed.paidFor).toHaveLength(src.paidFor.length)
-      for (const srcRow of src.paidFor) {
-        const expectedSourceId = sourceIdForUpstream(srcRow.participantId)
-        const parsedRow = parsed.paidFor.find(
-          (p: { sourceId: string }) => p.sourceId === expectedSourceId,
+        expect(source.sourceGroupId).toBe(spliitExport.id)
+        expect(source.sourceUrl).toBe(
+          `https://spliit.app/groups/${spliitExport.id}`,
         )
-        expect(
-          parsedRow,
-          `Missing paidFor row for ${srcRow.participantId}`,
-        ).toBeDefined()
-        if (!parsedRow) continue
-        // BY_SHARES rows carry legacy whole-share counts from the
-        // spliit.app export; the internal contract stores fixed units
-        // (100 = 1 share), so multiply through. Other modes are the
-        // literal source values (cents / basis points / even marker).
-        const expectedShares =
-          parsed.splitMode === 'BY_SHARES' ? srcRow.shares * 100 : srcRow.shares
-        expect(parsedRow.shares).toBe(expectedShares)
-      }
-    }
-  })
+        expect(source.name).toBe(spliitExport.name)
+        expect(source.currency).toBe(spliitExport.currency)
+        expect(source.currencyCode).toBe(spliitExport.currencyCode ?? null)
+        expect(source.participants).toHaveLength(
+          spliitExport.participants.length,
+        )
+        expect(source.expenses).toHaveLength(spliitExport.expenses.length)
+        expect(source.participants.map((p) => p.sourceId)).toEqual(
+          spliitExport.participants.map(
+            (_: unknown, i: number) => `spliit-participant-${i}`,
+          ),
+        )
+      }),
+  )
 
-  it('category map has no unmapped categories', () => {
-    const result = parseSpliitExport(spliitExport)
-    const unmapped: string[] = []
-    for (const src of spliitExport.expenses) {
-      const exp = expectedCategoryId(
-        src.category?.grouping ?? '',
-        src.category?.name ?? '',
-      )
-      if (exp.matched === 'fallback') {
-        unmapped.push(`${src.category?.grouping}/${src.category?.name}`)
+  it.effect('matches every source expense to a parsed expense', () =>
+    Effect.gen(function* () {
+      const source = yield* parseSpliitExport(spliitExport)
+      const parsedIndex = new Set<string>()
+      for (const e of source.expenses) {
+        parsedIndex.add(keyOf(e.title, e.expenseDate, e.amount))
       }
-    }
-    expect(unmapped).toEqual([])
-    expect(result.expenses.length).toBe(spliitExport.expenses.length)
-  })
+
+      let missingCount = 0
+      for (const src of spliitExport.expenses) {
+        const key = keyOf(
+          src.title,
+          src.expenseDate?.slice(0, 10) ?? '',
+          src.amount,
+        )
+        if (!parsedIndex.has(key)) missingCount++
+      }
+      expect(missingCount).toBe(0)
+    }),
+  )
+
+  it.effect(
+    'preserves amount, paidBy, paidFor, splitMode, and category per expense',
+    () =>
+      Effect.gen(function* () {
+        const source = yield* parseSpliitExport(spliitExport)
+        const parsedByKey = new Map<string, (typeof source.expenses)[number]>()
+        for (const e of source.expenses) {
+          parsedByKey.set(keyOf(e.title, e.expenseDate, e.amount), e)
+        }
+
+        for (const src of spliitExport.expenses) {
+          const key = keyOf(
+            src.title,
+            src.expenseDate?.slice(0, 10) ?? '',
+            src.amount,
+          )
+          const parsed = parsedByKey.get(key)
+          expect(
+            parsed,
+            `Missing parsed expense for "${src.title}" (${src.amount})`,
+          ).toBeDefined()
+          if (!parsed) continue
+
+          expect(parsed.amount).toBe(src.amount)
+          expect(parsed.recurrenceRule).toBe(src.recurrenceRule ?? 'NONE')
+          expect(parsed.splitMode).toBe(src.splitMode ?? 'EVENLY')
+
+          expect(parsed.paidBySourceId).toBe(sourceIdForUpstream(src.paidById))
+
+          const exp = expectedCategoryId(
+            src.category?.grouping ?? '',
+            src.category?.name ?? '',
+          )
+          const expectedId = src.isReimbursement ? 'settlement' : exp.id
+          expect({
+            id: parsed.category,
+            matched: exp.matched,
+          }).toEqual({ id: expectedId, matched: exp.matched })
+
+          expect(parsed.paidFor).toHaveLength(src.paidFor.length)
+          for (const srcRow of src.paidFor) {
+            const expectedSourceId = sourceIdForUpstream(srcRow.participantId)
+            const parsedRow = parsed.paidFor.find(
+              (p: { sourceId: string }) => p.sourceId === expectedSourceId,
+            )
+            expect(
+              parsedRow,
+              `Missing paidFor row for ${srcRow.participantId}`,
+            ).toBeDefined()
+            if (!parsedRow) continue
+            // BY_SHARES rows carry legacy whole-share counts from the
+            // spliit.app export; the internal contract stores fixed units
+            // (100 = 1 share), so multiply through. Other modes are the
+            // literal source values (cents / basis points / even marker).
+            const expectedShares =
+              parsed.splitMode === 'BY_SHARES'
+                ? srcRow.shares * 100
+                : srcRow.shares
+            expect(parsedRow.shares).toBe(expectedShares)
+          }
+        }
+      }),
+  )
+
+  it.effect('category map has no unmapped categories', () =>
+    Effect.gen(function* () {
+      const source = yield* parseSpliitExport(spliitExport)
+      const unmapped: string[] = []
+      for (const src of spliitExport.expenses) {
+        const exp = expectedCategoryId(
+          src.category?.grouping ?? '',
+          src.category?.name ?? '',
+        )
+        if (exp.matched === 'fallback') {
+          unmapped.push(`${src.category?.grouping}/${src.category?.name}`)
+        }
+      }
+      expect(unmapped).toEqual([])
+      expect(source.expenses.length).toBe(spliitExport.expenses.length)
+    }),
+  )
 })
 
 describe('CSV integration: Spliit CSV round-trips', () => {
-  it('parses the public Spliit Export sample', () => {
-    const result = tryParseSpliitCsv(spliitCsv)
-    expect(result.ok).toBe(true)
-    if (!result.ok) return
-    expect(result.source.participants).toHaveLength(2)
-    expect(result.source.participants.map((p) => p.sourceName)).toEqual([
-      'John',
-      'Jane',
-    ])
-    expect(result.source.participants.map((p) => p.sourceId)).toEqual([
-      'csv-participant-0',
-      'csv-participant-1',
-    ])
-    expect(result.source.expenses).toHaveLength(spliitExport.expenses.length)
-  })
+  it.effect('parses the public Spliit Export sample', () =>
+    Effect.gen(function* () {
+      const source = yield* parseSpliitCsv(spliitCsv)
+      expect(source.participants).toHaveLength(2)
+      expect(source.participants.map((p) => p.sourceName)).toEqual([
+        'John',
+        'Jane',
+      ])
+      expect(source.participants.map((p) => p.sourceId)).toEqual([
+        'csv-participant-0',
+        'csv-participant-1',
+      ])
+      expect(source.expenses).toHaveLength(spliitExport.expenses.length)
+    }),
+  )
 
-  it('CSV amount equals JSON amount in cents for every expense', () => {
-    const result = tryParseSpliitCsv(spliitCsv)
-    expect(result.ok).toBe(true)
-    if (!result.ok) return
+  it.effect('CSV amount equals JSON amount in cents for every expense', () =>
+    Effect.gen(function* () {
+      const source = yield* parseSpliitCsv(spliitCsv)
 
-    const jsonByKey = new Map<string, number>()
-    for (const e of spliitExport.expenses) {
-      jsonByKey.set(
-        keyOf(e.title, e.expenseDate?.slice(0, 10) ?? '', e.amount),
-        e.amount,
-      )
-    }
-
-    const drift: string[] = []
-    for (const csvE of result.source.expenses) {
-      const k = keyOf(csvE.title, csvE.expenseDate, csvE.amount)
-      const jsonAmount = jsonByKey.get(k)
-      if (jsonAmount === undefined) {
-        expect(jsonAmount, `Missing JSON row for "${csvE.title}"`).toBeDefined()
-        continue
-      }
-      if (Math.abs(csvE.amount - jsonAmount) > 1) {
-        drift.push(
-          `${csvE.title} (${csvE.expenseDate}): CSV=${csvE.amount} JSON=${jsonAmount}`,
-        )
-      }
-    }
-    expect(drift).toEqual([])
-  })
-
-  it('CSV paidFor totals round-trip within ±1 cent rounding tolerance', () => {
-    const result = tryParseSpliitCsv(spliitCsv)
-    expect(result.ok).toBe(true)
-    if (!result.ok) return
-
-    const drift: string[] = []
-    for (const csvE of result.source.expenses) {
-      // BY_SHARES / BY_PERCENTAGE carry ratio weights or basis points,
-      // not cents, so their shares don't sum to the amount.
-      if (csvE.splitMode === 'BY_SHARES' || csvE.splitMode === 'BY_PERCENTAGE')
-        continue
-      const sum = csvE.paidFor.reduce((s, p) => s + p.shares, 0)
-      const diff = Math.abs(sum - csvE.amount)
-      if (diff > 1) {
-        drift.push(
-          `${csvE.title}: sum=${sum} amount=${csvE.amount} diff=${diff}`,
-        )
-      }
-    }
-    expect(drift).toEqual([])
-  })
-
-  it('CSV paidBy matches the JSON source for every expense', () => {
-    const result = tryParseSpliitCsv(spliitCsv)
-    expect(result.ok).toBe(true)
-    if (!result.ok) return
-
-    const jsonNamesById = new Map<string, string>()
-    for (const p of spliitExport.participants) {
-      jsonNamesById.set(p.id, p.name.trim())
-    }
-    const jsonPayerByKey = new Map<string, string>()
-    for (const e of spliitExport.expenses) {
-      const payerName = jsonNamesById.get(e.paidById) ?? null
-      if (payerName) {
-        jsonPayerByKey.set(
+      const jsonByKey = new Map<string, number>()
+      for (const e of spliitExport.expenses) {
+        jsonByKey.set(
           keyOf(e.title, e.expenseDate?.slice(0, 10) ?? '', e.amount),
-          payerName,
+          e.amount,
         )
       }
-    }
 
-    const mismatches: string[] = []
-    for (const csvE of result.source.expenses) {
-      const expectedPayer = jsonPayerByKey.get(
-        keyOf(csvE.title, csvE.expenseDate, csvE.amount),
-      )
-      if (!expectedPayer) continue
-      const actualPayer = result.source.participants.find(
-        (p) => p.sourceId === csvE.paidBySourceId,
-      )?.sourceName
-      if (actualPayer !== expectedPayer) {
-        mismatches.push(
-          `"${csvE.title}" (${csvE.expenseDate}): CSV=${actualPayer} JSON=${expectedPayer}`,
+      const drift: string[] = []
+      for (const csvE of source.expenses) {
+        const k = keyOf(csvE.title, csvE.expenseDate, csvE.amount)
+        const jsonAmount = jsonByKey.get(k)
+        if (jsonAmount === undefined) {
+          expect(
+            jsonAmount,
+            `Missing JSON row for "${csvE.title}"`,
+          ).toBeDefined()
+          continue
+        }
+        if (Math.abs(csvE.amount - jsonAmount) > 1) {
+          drift.push(
+            `${csvE.title} (${csvE.expenseDate}): CSV=${csvE.amount} JSON=${jsonAmount}`,
+          )
+        }
+      }
+      expect(drift).toEqual([])
+    }),
+  )
+
+  it.effect(
+    'CSV paidFor totals round-trip within ±1 cent rounding tolerance',
+    () =>
+      Effect.gen(function* () {
+        const source = yield* parseSpliitCsv(spliitCsv)
+
+        const drift: string[] = []
+        for (const csvE of source.expenses) {
+          // BY_SHARES / BY_PERCENTAGE carry ratio weights or basis points,
+          // not cents, so their shares don't sum to the amount.
+          if (
+            csvE.splitMode === 'BY_SHARES' ||
+            csvE.splitMode === 'BY_PERCENTAGE'
+          )
+            continue
+          const sum = csvE.paidFor.reduce((s, p) => s + p.shares, 0)
+          const diff = Math.abs(sum - csvE.amount)
+          if (diff > 1) {
+            drift.push(
+              `${csvE.title}: sum=${sum} amount=${csvE.amount} diff=${diff}`,
+            )
+          }
+        }
+        expect(drift).toEqual([])
+      }),
+  )
+
+  it.effect('CSV paidBy matches the JSON source for every expense', () =>
+    Effect.gen(function* () {
+      const source = yield* parseSpliitCsv(spliitCsv)
+
+      const jsonNamesById = new Map<string, string>()
+      for (const p of spliitExport.participants) {
+        jsonNamesById.set(p.id, p.name.trim())
+      }
+      const jsonPayerByKey = new Map<string, string>()
+      for (const e of spliitExport.expenses) {
+        const payerName = jsonNamesById.get(e.paidById) ?? null
+        if (payerName) {
+          jsonPayerByKey.set(
+            keyOf(e.title, e.expenseDate?.slice(0, 10) ?? '', e.amount),
+            payerName,
+          )
+        }
+      }
+
+      const mismatches: string[] = []
+      for (const csvE of source.expenses) {
+        const expectedPayer = jsonPayerByKey.get(
+          keyOf(csvE.title, csvE.expenseDate, csvE.amount),
         )
+        if (!expectedPayer) continue
+        const actualPayer = source.participants.find(
+          (p) => p.sourceId === csvE.paidBySourceId,
+        )?.sourceName
+        if (actualPayer !== expectedPayer) {
+          mismatches.push(
+            `"${csvE.title}" (${csvE.expenseDate}): CSV=${actualPayer} JSON=${expectedPayer}`,
+          )
+        }
       }
-    }
-    expect(mismatches).toEqual([])
-  })
+      expect(mismatches).toEqual([])
+    }),
+  )
 
-  it('CSV category names resolve to the same in-code ids as JSON where possible', () => {
-    const result = tryParseSpliitCsv(spliitCsv)
-    expect(result.ok).toBe(true)
-    if (!result.ok) return
+  it.effect(
+    'CSV category names resolve to the same in-code ids as JSON where possible',
+    () =>
+      Effect.gen(function* () {
+        const source = yield* parseSpliitCsv(spliitCsv)
 
-    const mismatches: string[] = []
-    for (const csvE of result.source.expenses) {
-      const jsonRow = spliitExport.expenses.find(
-        (e: (typeof spliitExport.expenses)[number]) =>
-          e.title === csvE.title &&
-          e.expenseDate?.slice(0, 10) === csvE.expenseDate,
-      )
-      if (!jsonRow) continue
-      const exp = expectedCategoryId(
-        jsonRow.category?.grouping ?? '',
-        jsonRow.category?.name ?? '',
-      )
-      if (exp.matched !== 'exact' && exp.matched !== 'name-only') continue
-      const expectedId = jsonRow.isReimbursement ? 'settlement' : exp.id
-      if (csvE.category !== expectedId) {
-        mismatches.push(
-          `"${csvE.title}" CSV=${csvE.category} JSON=${expectedId}`,
-        )
-      }
-    }
-    expect(mismatches).toEqual([])
-  })
+        const mismatches: string[] = []
+        for (const csvE of source.expenses) {
+          const jsonRow = spliitExport.expenses.find(
+            (e: (typeof spliitExport.expenses)[number]) =>
+              e.title === csvE.title &&
+              e.expenseDate?.slice(0, 10) === csvE.expenseDate,
+          )
+          if (!jsonRow) continue
+          const exp = expectedCategoryId(
+            jsonRow.category?.grouping ?? '',
+            jsonRow.category?.name ?? '',
+          )
+          if (exp.matched !== 'exact' && exp.matched !== 'name-only') continue
+          const expectedId = jsonRow.isReimbursement ? 'settlement' : exp.id
+          if (csvE.category !== expectedId) {
+            mismatches.push(
+              `"${csvE.title}" CSV=${csvE.category} JSON=${expectedId}`,
+            )
+          }
+        }
+        expect(mismatches).toEqual([])
+      }),
+  )
 
-  it('every CSV paidFor amount is positive and is a valid cents integer', () => {
-    const result = tryParseSpliitCsv(spliitCsv)
-    expect(result.ok).toBe(true)
-    if (!result.ok) return
-    for (const csvE of result.source.expenses) {
-      for (const p of csvE.paidFor) {
-        expect(p.shares, `${csvE.title}: share must be > 0`).toBeGreaterThan(0)
-        expect(
-          Number.isInteger(p.shares),
-          `${csvE.title}: share must be an integer`,
-        ).toBe(true)
-      }
-      expect(
-        csvE.paidBySourceId,
-        `${csvE.title}: must have a payer`,
-      ).toBeTruthy()
-    }
-  })
+  it.effect(
+    'every CSV paidFor amount is positive and is a valid cents integer',
+    () =>
+      Effect.gen(function* () {
+        const source = yield* parseSpliitCsv(spliitCsv)
+        for (const csvE of source.expenses) {
+          for (const p of csvE.paidFor) {
+            expect(
+              p.shares,
+              `${csvE.title}: share must be > 0`,
+            ).toBeGreaterThan(0)
+            expect(
+              Number.isInteger(p.shares),
+              `${csvE.title}: share must be an integer`,
+            ).toBe(true)
+          }
+          expect(
+            csvE.paidBySourceId,
+            `${csvE.title}: must have a payer`,
+          ).toBeTruthy()
+        }
+      }),
+  )
 })
 
 describe('appendImportedFromNote (folded from utils.test.ts)', () => {

@@ -1,3 +1,4 @@
+import { Effect } from 'effect'
 import Papa from 'papaparse'
 
 import { SETTLEMENT_CATEGORY_ID } from '../categories'
@@ -16,7 +17,8 @@ import {
   isSplitwiseHeader,
   isSplitwiseTotalBalanceLabel,
 } from './splitwise-headers'
-import type { ImportParseResult, NormalizedSource } from './types'
+import { ImportError } from './types'
+import type { NormalizedSource } from './types'
 
 const PARTICIPANT_START_INDEX = 5
 
@@ -35,7 +37,9 @@ function toNumberOrNull(value: string | undefined): number | null {
   return Number.isNaN(n) ? null : n
 }
 
-export function tryParseSplitwiseCsv(input: string): ImportParseResult {
+export const parseSplitwiseCsv = Effect.fnUntraced(function* (
+  input: string,
+): Effect.fn.Return<NormalizedSource, ImportError> {
   const cleaned = input.charCodeAt(0) === 0xfeff ? input.slice(1) : input
   const parsed = Papa.parse<string[]>(cleaned, {
     skipEmptyLines: 'greedy',
@@ -44,21 +48,19 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
 
   const rows = parsed.data
   if (rows.length < 2) {
-    return {
-      ok: false,
-      error: 'CSV has no data rows',
+    return yield* new ImportError({
+      message: 'CSV has no data rows',
       code: 'CSV_NO_DATA_ROWS',
       params: {},
-    }
+    })
   }
   if (parsed.errors.length > 0) {
     const detail = parsed.errors[0]?.message ?? 'unknown error'
-    return {
-      ok: false,
-      error: `CSV could not be parsed: ${detail}`,
+    return yield* new ImportError({
+      message: `CSV could not be parsed: ${detail}`,
       code: 'CSV_PARSE_FAILED',
       params: { detail },
-    }
+    })
   }
 
   let headerRowIdx = -1
@@ -70,12 +72,11 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
     }
   }
   if (headerRowIdx === -1) {
-    return {
-      ok: false,
-      error: 'CSV header is not a Splitwise export',
+    return yield* new ImportError({
+      message: 'CSV header is not a Splitwise export',
       code: 'CSV_NOT_SPLITWISE_EXPORT',
       params: {},
-    }
+    })
   }
   const header = rows[headerRowIdx]
 
@@ -94,12 +95,11 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
     })
   }
   if (participants.length === 0) {
-    return {
-      ok: false,
-      error: 'CSV is missing participant columns',
+    return yield* new ImportError({
+      message: 'CSV is missing participant columns',
       code: 'CSV_MISSING_PARTICIPANT_COLUMNS',
       params: {},
-    }
+    })
   }
 
   const expenses: NormalizedSource['expenses'] = []
@@ -137,7 +137,7 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
       if (raw === null) continue
       const idx = participantIndex.get(name.toLowerCase())
       if (idx === undefined) continue
-      const sourceId = participants[idx].sourceId
+      const sourceId = participants[idx]!.sourceId
       if (raw !== 0) {
         entries.push({ sourceId, raw })
       }
@@ -259,12 +259,11 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
   }
 
   if (expenses.length === 0) {
-    return {
-      ok: false,
-      error: 'CSV had no parseable expenses',
+    return yield* new ImportError({
+      message: 'CSV had no parseable expenses',
       code: 'CSV_NO_PARSEABLE_EXPENSES',
       params: {},
-    }
+    })
   }
 
   let mostCommonCurrency = ''
@@ -277,19 +276,16 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
   }
 
   return {
-    ok: true,
-    source: {
-      provider: 'SPLITWISE',
-      exportVersion: null,
-      sourceGroupId: 'splitwise-csv-import',
-      sourceUrl: null,
-      name: 'Imported from Splitwise',
-      information: null,
-      currency: mostCommonCurrency || '',
-      currencyCode: mostCommonCurrency || null,
-      participants,
-      expenses,
-      documentSource: 'NONE',
-    },
+    provider: 'SPLITWISE',
+    exportVersion: null,
+    sourceGroupId: 'splitwise-csv-import',
+    sourceUrl: null,
+    name: 'Imported from Splitwise',
+    information: null,
+    currency: mostCommonCurrency || '',
+    currencyCode: mostCommonCurrency || null,
+    participants,
+    expenses,
+    documentSource: 'NONE',
   }
-}
+})

@@ -1,4 +1,5 @@
 import type * as TanStackReactRouter from '@tanstack/react-router'
+import { Effect } from 'effect'
 import { useState } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -48,7 +49,8 @@ vi.mock('@tanstack/react-router', async (importOriginal) => {
   }
 })
 
-const parsed = parseDelimitedText(`Date,Note,Amount
+const table = Effect.runSync(
+  parseDelimitedText(`Date,Note,Amount
 3/2/2022 10:11,Brownie,50
 3/2/2022 10:12,Lunch,60
 3/2/2022 10:13,Metro,30
@@ -59,50 +61,49 @@ const parsed = parseDelimitedText(`Date,Note,Amount
 3/2/2022 10:18,Groceries,120
 3/2/2022 10:19,Bus,40
 3/2/2022 10:20,Tea,15
-3/2/2022 10:21,Books,75`)
-
-if (!parsed.ok) throw new Error(parsed.error)
-const table = parsed.table
-const previewRows = previewDelimitedRows(table, {
-  kind: DELIMITED_MAPPING_KIND,
-  version: DELIMITED_MAPPING_VERSION,
-  name: 'Test mapping',
-  parsing: {
-    delimiter: ',',
-    headerRow: 0,
-    encoding: 'UTF-8',
-    columnSignature: delimitedColumnSignature(table),
-  },
-  mappings: {
-    dateTime: {
-      mode: 'VISUAL',
-      sourceValues: [{ primary: 'date#1', fallbacks: [] }],
-      transforms: [{ kind: 'PARSE_DATE', format: 'AUTO_MDY' }],
+3/2/2022 10:21,Books,75`),
+)
+const previewRows = Effect.runSync(
+  previewDelimitedRows(table, {
+    kind: DELIMITED_MAPPING_KIND,
+    version: DELIMITED_MAPPING_VERSION,
+    name: 'Test mapping',
+    parsing: {
+      delimiter: ',',
+      headerRow: 0,
+      encoding: 'UTF-8',
+      columnSignature: delimitedColumnSignature(table),
     },
-    title: {
-      mode: 'VISUAL',
-      sourceValues: [{ primary: 'note#1', fallbacks: [] }],
-      transforms: [{ kind: 'TRIM' }],
-    },
-    money: {
-      mode: 'VISUAL',
-      amount: {
+    mappings: {
+      dateTime: {
         mode: 'VISUAL',
-        sourceValues: [{ primary: 'amount#1', fallbacks: [] }],
-        transforms: [{ kind: 'PARSE_NUMBER', format: 'AUTO' }],
+        sourceValues: [{ primary: 'date#1', fallbacks: [] }],
+        transforms: [{ kind: 'PARSE_DATE', format: 'AUTO_MDY' }],
+      },
+      title: {
+        mode: 'VISUAL',
+        sourceValues: [{ primary: 'note#1', fallbacks: [] }],
+        transforms: [{ kind: 'TRIM' }],
+      },
+      money: {
+        mode: 'VISUAL',
+        amount: {
+          mode: 'VISUAL',
+          sourceValues: [{ primary: 'amount#1', fallbacks: [] }],
+          transforms: [{ kind: 'PARSE_NUMBER', format: 'AUTO' }],
+        },
       },
     },
-  },
-  categoryBindings: {},
-  defaults: { currencyCode: 'USD', categoryId: 'general' },
-})
+    categoryBindings: {},
+    defaults: { currencyCode: 'USD', categoryId: 'general' },
+  }),
+)
 
-const moneyParsed = parseDelimitedText(`Date,Note,Amount,Currency,Income/Expense
+const moneyTable = Effect.runSync(
+  parseDelimitedText(`Date,Note,Amount,Currency,Income/Expense
 3/2/2022 10:11,Brownie,50,INR,Expense
-3/2/2022 10:12,Salary,5000,INR,Income`)
-
-if (!moneyParsed.ok) throw new Error(moneyParsed.error)
-const moneyTable = moneyParsed.table
+3/2/2022 10:12,Salary,5000,INR,Income`),
+)
 const amountMapping = {
   mode: 'VISUAL' as const,
   sourceValues: [{ primary: 'amount#1', fallbacks: [] }],
@@ -450,12 +451,12 @@ describe('expense file import UI', () => {
       },
     })
 
-    const combined = parseDelimitedText(`Date,Note,Amount
+    const combinedTable = Effect.runSync(
+      parseDelimitedText(`Date,Note,Amount
 3/2/2022 10:11,Brownie,50 INR
-3/2/2022 10:12,Lunch,12.50 EUR`)
-    expect(combined.ok).toBe(true)
-    if (!combined.ok) return
-    expect(inferMapping(combined.table, 'INR').mappings.money).toMatchObject({
+3/2/2022 10:12,Lunch,12.50 EUR`),
+    )
+    expect(inferMapping(combinedTable, 'INR').mappings.money).toMatchObject({
       mode: 'VISUAL',
       amount: {
         sourceValues: [{ primary: 'amount#1', fallbacks: [] }],
@@ -865,12 +866,11 @@ describe('expense file import UI', () => {
   })
 
   it('summarizes separate Debit and Credit columns with their number format', () => {
-    const debitCreditParsed = parseDelimitedText(`Date,Note,Debit,Credit
+    const debitCreditTable = Effect.runSync(
+      parseDelimitedText(`Date,Note,Debit,Credit
 3/2/2022 10:11,Brownie,50,
-3/2/2022 10:12,Salary,,5000`)
-    expect(debitCreditParsed.ok).toBe(true)
-    if (!debitCreditParsed.ok) return
-    const debitCreditTable = debitCreditParsed.table
+3/2/2022 10:12,Salary,,5000`),
+    )
     render(
       <MoneyMappingCard
         table={debitCreditTable}

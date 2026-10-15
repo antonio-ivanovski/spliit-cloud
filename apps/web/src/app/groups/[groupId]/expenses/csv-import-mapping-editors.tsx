@@ -1,3 +1,4 @@
+import { Effect } from 'effect'
 import type { TFunction } from 'i18next'
 import { AlertCircle, Loader2 } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
@@ -117,7 +118,7 @@ function moneySourceSummary(
 ) {
   return mapping.sourceValues
     .map((source) =>
-      [source.primary, ...source.fallbacks]
+      [source.primary, ...(source.fallbacks ?? [])]
         .map((key) => mappingColumnLabel(table, key))
         .join(' → '),
     )
@@ -133,8 +134,8 @@ function moneyCurrencySource(mapping: VisualMoneyMapping): MoneyCurrencySource {
     mapping.amount.sourceValues.length === 1 &&
     mapping.currency.sourceValues.length === 1 &&
     amountSource.primary === currencySource.primary &&
-    amountSource.fallbacks.length === 0 &&
-    currencySource.fallbacks.length === 0
+    (amountSource.fallbacks ?? []).length === 0 &&
+    (currencySource.fallbacks ?? []).length === 0
     ? 'AMOUNT_SOURCE'
     : 'SEPARATE_SOURCE'
 }
@@ -151,7 +152,7 @@ function moneySummaryLines(
   defaultCurrencyCode: string,
   t: TFunction,
 ) {
-  const numberTransform = mapping.amount.transforms.find(
+  const numberTransform = (mapping.amount.transforms ?? []).find(
     (
       transform,
     ): transform is Extract<
@@ -159,7 +160,7 @@ function moneySummaryLines(
       { kind: 'PARSE_NUMBER' }
     > => transform.kind === 'PARSE_NUMBER',
   )
-  const debitCreditTransform = mapping.amount.transforms.find(
+  const debitCreditTransform = (mapping.amount.transforms ?? []).find(
     (
       transform,
     ): transform is Extract<
@@ -167,7 +168,7 @@ function moneySummaryLines(
       { kind: 'DEBIT_CREDIT' }
     > => transform.kind === 'DEBIT_CREDIT',
   )
-  const signTransform = mapping.amount.transforms.find(
+  const signTransform = (mapping.amount.transforms ?? []).find(
     (
       transform,
     ): transform is Extract<
@@ -321,7 +322,7 @@ export function MappingCard({
   const suggestedDayFirst =
     field === 'dateTime' &&
     mapping?.mode === 'VISUAL' &&
-    mapping.transforms.some(
+    (mapping.transforms ?? []).some(
       (transform) =>
         transform.kind === 'PARSE_DATE' &&
         (transform.format === 'AUTO_DMY' || transform.format.startsWith('D/')),
@@ -884,10 +885,10 @@ function normalizeVisualSourceValues(
   mapping: DelimitedVisualMapping,
   sourceValues: DelimitedVisualMapping['sourceValues'],
 ): DelimitedVisualMapping {
-  const existingJoin = mapping.transforms.find(
+  const existingJoin = (mapping.transforms ?? []).find(
     (transform) => transform.kind === 'JOIN',
   )
-  const scalarTransforms = mapping.transforms.filter(
+  const scalarTransforms = (mapping.transforms ?? []).filter(
     (transform) => transform.kind !== 'JOIN',
   )
   const transforms =
@@ -1098,7 +1099,7 @@ function SourceColumnList({
   const { t } = useTranslation()
   const columns = simple
     ? [source.primary]
-    : [source.primary, ...source.fallbacks]
+    : [source.primary, ...(source.fallbacks ?? [])]
   const setColumn = (index: number, key: string) => {
     const next = [...columns]
     next[index] = key
@@ -1214,7 +1215,7 @@ function SourceColumnList({
           onClick={() =>
             onChange({
               ...source,
-              fallbacks: [...source.fallbacks, table.columns[0]!.key],
+              fallbacks: [...(source.fallbacks ?? []), table.columns[0]!.key],
             })
           }
         >
@@ -1247,14 +1248,14 @@ function TransformList({
   ) =>
     onChange({
       ...mapping,
-      transforms: mapping.transforms.map((item, itemIndex) =>
+      transforms: (mapping.transforms ?? []).map((item, itemIndex) =>
         itemIndex === index ? transform : item,
       ),
     })
   const moveTransform = (index: number, direction: -1 | 1) => {
     const target = index + direction
-    if (target < 0 || target >= mapping.transforms.length) return
-    const next = [...mapping.transforms]
+    if (target < 0 || target >= (mapping.transforms ?? []).length) return
+    const next = [...(mapping.transforms ?? [])]
     ;[next[index], next[target]] = [next[target]!, next[index]!]
     if (next.some((item) => item.kind === 'JOIN') && next[0]?.kind !== 'JOIN')
       return
@@ -1263,19 +1264,19 @@ function TransformList({
   const addTransform = (kind: DelimitedVisualTransform['kind']) => {
     if (
       kind === 'JOIN' &&
-      mapping.transforms.some(({ kind }) => kind === 'JOIN')
+      (mapping.transforms ?? []).some(({ kind }) => kind === 'JOIN')
     ) {
       return
     }
     const transform = newTransform(kind, table)
-    const transforms = [...mapping.transforms]
+    const transforms = [...(mapping.transforms ?? [])]
     if (kind === 'JOIN') transforms.unshift(transform)
     else transforms.push(transform)
     onChange({ ...mapping, transforms })
   }
   const transformKeys = useMemo(() => {
     const occurrences = new Map<string, number>()
-    return mapping.transforms.map((transform) => {
+    return (mapping.transforms ?? []).map((transform) => {
       const identity = JSON.stringify(transform)
       const occurrence = occurrences.get(identity) ?? 0
       occurrences.set(identity, occurrence + 1)
@@ -1309,7 +1310,7 @@ function TransformList({
           </SelectTrigger>
           <SelectContent>
             {mapping.sourceValues.length > 1 &&
-            !mapping.transforms.some(({ kind }) => kind === 'JOIN') ? (
+            !(mapping.transforms ?? []).some(({ kind }) => kind === 'JOIN') ? (
               <SelectItem value="JOIN">
                 {t('ExpenseImport.mapping.optionJoin')}
               </SelectItem>
@@ -1357,9 +1358,9 @@ function TransformList({
           </SelectContent>
         </Select>
       </div>
-      {mapping.transforms.length ? (
+      {(mapping.transforms ?? []).length ? (
         <div className="divide-y border-t">
-          {mapping.transforms.map((transform, index) => (
+          {(mapping.transforms ?? []).map((transform, index) => (
             <div
               key={transformKeys[index]}
               className="space-y-2 py-3 text-sm first:pt-4 last:pb-0"
@@ -1379,7 +1380,7 @@ function TransformList({
                     disabled={
                       index === 0 ||
                       (transform.kind !== 'JOIN' &&
-                        mapping.transforms[0]?.kind === 'JOIN' &&
+                        (mapping.transforms ?? [])[0]?.kind === 'JOIN' &&
                         index === 1)
                     }
                     onClick={() => moveTransform(index, -1)}
@@ -1394,7 +1395,7 @@ function TransformList({
                       index: index + 1,
                     })}
                     disabled={
-                      index === mapping.transforms.length - 1 ||
+                      index === (mapping.transforms ?? []).length - 1 ||
                       transform.kind === 'JOIN'
                     }
                     onClick={() => moveTransform(index, 1)}
@@ -1415,7 +1416,7 @@ function TransformList({
                     onClick={() =>
                       onChange({
                         ...mapping,
-                        transforms: mapping.transforms.filter(
+                        transforms: (mapping.transforms ?? []).filter(
                           (_, itemIndex) => itemIndex !== index,
                         ),
                       })
@@ -1703,19 +1704,19 @@ function SimpleFieldControls({
     kind: DelimitedVisualTransform['kind'],
     next: DelimitedVisualTransform | null,
   ) => {
-    const remaining = mapping.transforms.filter(
+    const remaining = (mapping.transforms ?? []).filter(
       (transform) => transform.kind !== kind,
     )
     if (next) remaining.push(next)
     onChange({ ...mapping, transforms: remaining })
   }
-  const dateTransform = mapping.transforms.find(
+  const dateTransform = (mapping.transforms ?? []).find(
     (
       transform,
     ): transform is Extract<DelimitedVisualTransform, { kind: 'PARSE_DATE' }> =>
       transform.kind === 'PARSE_DATE',
   )
-  const numberTransform = mapping.transforms.find(
+  const numberTransform = (mapping.transforms ?? []).find(
     (
       transform,
     ): transform is Extract<
@@ -1723,7 +1724,7 @@ function SimpleFieldControls({
       { kind: 'PARSE_NUMBER' }
     > => transform.kind === 'PARSE_NUMBER',
   )
-  const signTransform = mapping.transforms.find(
+  const signTransform = (mapping.transforms ?? []).find(
     (
       transform,
     ): transform is Extract<
@@ -1754,12 +1755,12 @@ function SimpleFieldControls({
               dateTransform?.kind === 'PARSE_DATE' ? dateTransform.format : ''
             }
             onChange={(event) => {
-              const next: DelimitedVisualTransform[] =
-                mapping.transforms.filter(
-                  (transform) =>
-                    transform.kind !== 'PARSE_DATE' &&
-                    transform.kind !== 'JOIN',
-                )
+              const next: DelimitedVisualTransform[] = (
+                mapping.transforms ?? []
+              ).filter(
+                (transform) =>
+                  transform.kind !== 'PARSE_DATE' && transform.kind !== 'JOIN',
+              )
               next.push({ kind: 'PARSE_DATE', format: event.target.value })
               onChange({ ...mapping, transforms: next })
             }}
@@ -2150,7 +2151,7 @@ export function MappingEditor({
 
   const mappingValidationError = useMemo(() => {
     try {
-      validateDelimitedMapping(draft)
+      Effect.runSync(validateDelimitedMapping(draft))
       return null
     } catch (error) {
       return error instanceof Error
@@ -2420,7 +2421,7 @@ function updateSimpleTransform(
   next: DelimitedVisualTransform | null,
   order: DelimitedVisualTransform['kind'][],
 ) {
-  const transforms = mapping.transforms.filter(
+  const transforms = (mapping.transforms ?? []).filter(
     (transform) => transform.kind !== kind,
   )
   if (next) transforms.push(next)
@@ -2499,7 +2500,7 @@ function SimpleMoneyMappingEditor({
   const currencies = useCurrencies('')
   const amountSourceKey = mapping.amount.sourceValues[0]?.primary ?? ''
   const currencyMode = moneyCurrencySource(mapping)
-  const numberTransform = mapping.amount.transforms.find(
+  const numberTransform = (mapping.amount.transforms ?? []).find(
     (
       transform,
     ): transform is Extract<
@@ -2507,7 +2508,7 @@ function SimpleMoneyMappingEditor({
       { kind: 'PARSE_NUMBER' }
     > => transform.kind === 'PARSE_NUMBER',
   )
-  const signTransform = mapping.amount.transforms.find(
+  const signTransform = (mapping.amount.transforms ?? []).find(
     (
       transform,
     ): transform is Extract<
@@ -3046,7 +3047,7 @@ export function MoneyMappingEditor({
 
   const mappingValidationError = useMemo(() => {
     try {
-      validateDelimitedMoneyMapping(draft)
+      Effect.runSync(validateDelimitedMoneyMapping(draft))
       return null
     } catch (error) {
       return error instanceof Error

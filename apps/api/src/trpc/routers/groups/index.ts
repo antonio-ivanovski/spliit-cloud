@@ -33,6 +33,7 @@ import { groupSubgroupsRouter } from './subgroups'
 import { swapExecuteProcedure } from './swapExecute.procedure'
 import { swapPairsProcedure } from './swapPairs.procedure'
 import { swapPreviewProcedure } from './swapPreview.procedure'
+import { tricountPreviewProcedure } from './tricountPreview.procedure'
 import { updateGroupProcedure } from './update.procedure'
 import { groupViewRouter } from './view'
 
@@ -155,6 +156,12 @@ export const groupsRouter = createTRPCRouter({
    * persisting anything.
    */
   importPreview: previewFromUrlProcedure,
+
+  /**
+   * Fetch and parse a Tricount group from a share link or token, returning a
+   * preview without persisting anything.
+   */
+  tricountPreview: tricountPreviewProcedure,
 
   /**
    * Check whether a group was imported from an external source and return the

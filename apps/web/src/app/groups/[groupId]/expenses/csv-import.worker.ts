@@ -1,15 +1,19 @@
 /// <reference lib="webworker" />
 
+import { Effect } from 'effect'
+
 import { loadLocaleDictionary } from '@spliit/domain'
 import type {
   DelimitedDateOrder,
   DelimitedEncoding,
   ImportCategoryContext,
   DelimitedExpenseMappingV1,
+  DelimitedParseResult,
   DelimitedTable,
 } from '@spliit/domain/import'
 import {
   decodeDelimitedBytes,
+  importErrorToDelimitedParseResult,
   inferDelimitedExpenseMapping,
   mapDelimitedRows,
   previewDelimitedRows,
@@ -75,11 +79,19 @@ worker.onmessage = ({ data }: MessageEvent<Request>) => {
       }
       if (data.action === 'PARSE') {
         const decoded = decodeDelimitedBytes(data.bytes, data.options.encoding)
-        const parsed = parseDelimitedText(decoded.text, {
-          headerRow: data.options.headerRow,
-          delimiter: data.options.delimiter,
-          encoding: decoded.encoding,
-        })
+        let parsed: DelimitedParseResult
+        try {
+          const table = Effect.runSync(
+            parseDelimitedText(decoded.text, {
+              headerRow: data.options.headerRow,
+              delimiter: data.options.delimiter,
+              encoding: decoded.encoding,
+            }),
+          )
+          parsed = { ok: true, table }
+        } catch (error) {
+          parsed = importErrorToDelimitedParseResult(error)
+        }
         worker.postMessage({ id: data.id, ok: true, value: parsed })
         return
       }
@@ -88,17 +100,14 @@ worker.onmessage = ({ data }: MessageEvent<Request>) => {
       if (categories) await loadLocaleDictionary(categories.locale ?? 'en-US')
       const rows =
         data.action === 'MAP'
-          ? await (
-              mapDelimitedRows as (
-                table: DelimitedTable,
-                mapping: DelimitedExpenseMappingV1,
-                categories?: ImportCategoryContext,
-                options?: { preferredDateOrder?: DelimitedDateOrder },
-              ) => Promise<unknown>
-            )(data.table, data.mapping, data.categories, {
-              preferredDateOrder: data.options?.preferredDateOrder,
-            })
-          : previewDelimitedRows(data.table, data.mapping, data.options)
+          ? await Effect.runPromise(
+              mapDelimitedRows(data.table, data.mapping, data.categories, {
+                preferredDateOrder: data.options?.preferredDateOrder,
+              }),
+            )
+          : Effect.runSync(
+              previewDelimitedRows(data.table, data.mapping, data.options),
+            )
       worker.postMessage({ id: data.id, ok: true, value: rows })
     } catch (error) {
       worker.postMessage({

@@ -251,6 +251,31 @@ describe('importWizardReducer', () => {
     expect(next.participants).toBe(newParticipants)
   })
 
+  it('handles MAPPING_HINTS_APPLIED: replaces participants without changing step', () => {
+    const start = initialWizardState(null)
+    const loaded = importWizardReducer(start, {
+      type: 'SOURCE_LOADED',
+      source: makeSource(['Alice', 'Bob']),
+      accountId: 'user-1',
+    })
+    const hinted = loaded.participants.map((participant) =>
+      participant.source.sourceName === 'Bob'
+        ? { ...participant, mode: 'UNLINKED_PARTICIPANT' as const }
+        : participant,
+    )
+    const next = importWizardReducer(loaded, {
+      type: 'MAPPING_HINTS_APPLIED',
+      participants: hinted,
+    })
+    expect(next.step).toBe('destination')
+    expect(
+      next.participants.find((p) => p.source.sourceName === 'Bob')?.mode,
+    ).toBe('UNLINKED_PARTICIPANT')
+    expect(
+      next.participants.find((p) => p.source.sourceName === 'Alice')?.mode,
+    ).toBe('LINK_ACCOUNT')
+  })
+
   it('handles MAPPING_CONFIRMED: stores resolved maps and advances to currencyConversion', () => {
     const start = { ...initialWizardState(null), step: 'mapping' as const }
     const next = importWizardReducer(start, {

@@ -1,21 +1,24 @@
 import { getRouteApi, Link, useNavigate } from '@tanstack/react-router'
-import { AlertTriangle, Clock, ExternalLink } from 'lucide-react'
+import { Effect } from 'effect'
+import { AlertTriangle, ExternalLink } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { PageInset } from '@/components/layout/page-shell'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useDeploymentConfig } from '@/lib/deployment-config'
 import {
   classifyImportPayload,
   classifyImportBytes,
   classifyImportText,
+  decodeSettleUpText,
   extractSpliitGroupIdFromUrl,
   guessGroupNameFromFilename,
-  tryParseSpliitCsv,
+  importErrorToParseResult,
+  parseSettleUpCsv,
+  parseSpliitCsv,
   type NormalizedSource,
 } from '@spliit/domain/import'
 
@@ -25,16 +28,20 @@ import {
   type CloudBundleInspection,
 } from './cloud-bundle'
 import { DomainSwapCard } from './domain-swap-card'
+import { ExportGuideTrigger } from './export-guide'
 import { FileUploadCard } from './file-upload-card'
 import { PasteUrlCard } from './paste-url-card'
 import { PROVIDERS, pickParser, type SourceMode } from './source-providers'
 import { SplitwiseAnonymizerCard } from './splitwise-anonymizer-card'
+import { TricountSourceTab } from './tricount-source-tab'
 import type { ImportSourceState } from './use-import-source'
 
 type Props = {
   /** Client-parsed file uploads hand the result directly up. */
   onLoaded: (source: NormalizedSource) => void
   onCloudLoaded?: (source: CloudBundleInspection) => void
+  /** Multi-group Tricount dumps hand the selected groups up for queueing. */
+  onTricountMultiLoaded?: (sources: NormalizedSource[]) => void
   onError: (message: string) => void
   /**
    * Shared import-source state owned by the wizard so manual paste and the
@@ -67,6 +74,7 @@ const importRoute = getRouteApi('/groups/import')
 export function SourceStep({
   onLoaded,
   onCloudLoaded,
+  onTricountMultiLoaded,
   onError,
   sourcePreview,
   isSourcePreviewLoading,
@@ -123,6 +131,34 @@ export function SourceStep({
           return text
         }
 
+        if (provider === 'settleup') {
+          // Real exports are UTF-16 with a BOM, which file.text() mangles
+          // (UTF-16 NULs become U+0000). Decode from raw bytes first.
+          const bytes = new Uint8Array(await file.arrayBuffer())
+          const decoded = decodeSettleUpText(bytes)
+          if (decoded === null) {
+            onError(t('Groups.Import.Source.fileReadError'))
+            return
+          }
+          try {
+            const source = Effect.runSync(parseSettleUpCsv(decoded))
+            const guessed = guessGroupNameFromFilename(
+              file.name,
+              source.provider,
+            )
+            if (guessed) source.name = guessed
+            onLoaded(source)
+          } catch (error) {
+            const result = importErrorToParseResult(error)
+            onError(
+              result.ok
+                ? t('Groups.Import.Source.fileReadError')
+                : result.error,
+            )
+          }
+          return
+        }
+
         if (provider === 'spliit' && isZip) {
           setWrongImporter({
             target: 'spliit-cloud',
@@ -138,7 +174,7 @@ export function SourceStep({
           const classification = classifyImportText(
             file.name,
             await readText(),
-            (value) => ({ ok: tryParseSpliitCsv(value).ok }),
+            (value) => parseSpliitCsv(value),
           )
           if (classification.kind === 'SPLIIT_CLOUD_MANIFEST') {
             setWrongImporter({
@@ -155,10 +191,7 @@ export function SourceStep({
             const classification = classifyImportText(
               file.name,
               await readText(),
-              (value) => {
-                const parsed = tryParseSpliitCsv(value)
-                return { ok: parsed.ok }
-              },
+              (value) => parseSpliitCsv(value),
             )
             if (
               classification.kind === 'SPLIIT_APP_JSON' ||
@@ -184,7 +217,7 @@ export function SourceStep({
           const classification = classifyImportText(
             file.name,
             await readText(),
-            (value) => ({ ok: tryParseSpliitCsv(value).ok }),
+            (value) => parseSpliitCsv(value),
           )
           if (classification.kind === 'SPLIIT_CLOUD_MANIFEST') {
             setWrongImporter({
@@ -206,8 +239,38 @@ export function SourceStep({
         const fileText = await readText()
         const parsed =
           picked.format === 'json'
-            ? picked.parser(JSON.parse(fileText))
-            : picked.parser(fileText)
+            ? (() => {
+                let body: unknown
+                try {
+                  body = JSON.parse(fileText)
+                } catch {
+                  return {
+                    ok: false as const,
+                    error:
+                      'This file is not a supported spliit.app JSON export.',
+                    code: 'SPLIIT_UNSUPPORTED_SHAPE',
+                    params: {},
+                  }
+                }
+                try {
+                  return {
+                    ok: true as const,
+                    source: Effect.runSync(picked.parser(body as never)),
+                  }
+                } catch (error) {
+                  return importErrorToParseResult(error)
+                }
+              })()
+            : (() => {
+                try {
+                  return {
+                    ok: true as const,
+                    source: Effect.runSync(picked.parser(fileText as never)),
+                  }
+                } catch (error) {
+                  return importErrorToParseResult(error)
+                }
+              })()
         if (!parsed.ok) {
           if (picked.format === 'json') {
             try {
@@ -325,11 +388,13 @@ export function SourceStep({
     }
   }, [])
 
-  const showFileImport = cfg.fileImport !== null
+  const showFileImport = cfg.fileImport !== null && provider !== 'tricount'
   const showDomainSwap = cfg.hasDomainSwap
   const showUrlPaste = cfg.hasUrlPaste
+  const isSpliit = provider === 'spliit'
   const isSplitwise = provider === 'splitwise'
   const isCospend = provider === 'cospend'
+  const isSettleUp = provider === 'settleup'
   const isCloud = provider === 'spliit-cloud'
 
   return (
@@ -474,7 +539,7 @@ export function SourceStep({
             />
           </PageInset>
         </TabsContent>
-        <TabsContent value="spliit-cloud">
+        <TabsContent value="spliit-cloud" className="flex flex-col gap-4">
           <PageInset>
             <ProviderDescription
               description={t(
@@ -511,16 +576,26 @@ export function SourceStep({
           </PageInset>
         </TabsContent>
         <TabsContent value="tricount">
-          <ComingSoonCard
-            title={t('Groups.Import.Source.tricountComingTitle')}
-            description={t('Groups.Import.Source.tricountComingDescription')}
-          />
+          <PageInset>
+            <TricountSourceTab
+              onLoaded={onLoaded}
+              onMultiLoaded={(sources) => onTricountMultiLoaded?.(sources)}
+              onError={onError}
+            />
+          </PageInset>
         </TabsContent>
         <TabsContent value="settleup">
-          <ComingSoonCard
-            title={t('Groups.Import.Source.settleUpComingTitle')}
-            description={t('Groups.Import.Source.settleUpComingDescription')}
-          />
+          <PageInset>
+            <ProviderDescription
+              description={t('Groups.Import.Source.settleUpDescription')}
+              receiptTitle={t(
+                'Groups.Import.Source.receiptWarningTitleSettleUp',
+              )}
+              receiptDescription={t(
+                'Groups.Import.Source.receiptWarningDescriptionSettleUp',
+              )}
+            />
+          </PageInset>
         </TabsContent>
       </Tabs>
 
@@ -543,6 +618,28 @@ export function SourceStep({
           urlError={displayedUrlError}
           onUrlChange={handleUrlChange}
           onSubmit={handleUrlSubmit}
+          help={
+            isSpliit ? (
+              <ExportGuideTrigger
+                trigger={t(
+                  'Groups.Import.Source.exportGuide.spliitLinkTrigger',
+                )}
+                title={t(
+                  'Groups.Import.Source.exportGuide.spliitLinkDialogTitle',
+                )}
+                steps={[
+                  {
+                    index: 1,
+                    text: t('Groups.Import.Source.exportGuide.spliitLinkStep1'),
+                  },
+                  {
+                    index: 2,
+                    text: t('Groups.Import.Source.exportGuide.spliitLinkStep2'),
+                  },
+                ]}
+              />
+            ) : undefined
+          }
           labels={{
             pasteUrl: t('Groups.Import.Source.pasteUrl'),
             urlDescription: t('Groups.Import.Source.urlDescription'),
@@ -566,6 +663,7 @@ export function SourceStep({
           onDrop={handleDrop}
           onFilesSelected={handleFilesSelected}
           accept={cfg.accept}
+          help={<ExportGuideTrigger {...fileGuideProps(provider, t)} />}
           labels={{
             dropFile: t(
               isCloud
@@ -574,7 +672,9 @@ export function SourceStep({
                   ? 'Groups.Import.Source.dropFileSplitwise'
                   : isCospend
                     ? 'Groups.Import.Source.dropFileCospend'
-                    : 'Groups.Import.Source.dropFile',
+                    : isSettleUp
+                      ? 'Groups.Import.Source.dropFileSettleUp'
+                      : 'Groups.Import.Source.dropFile',
             ),
             dropFileDescription: t(
               isCloud
@@ -583,7 +683,9 @@ export function SourceStep({
                   ? 'Groups.Import.Source.dropFileDescriptionSplitwise'
                   : isCospend
                     ? 'Groups.Import.Source.dropFileDescriptionCospend'
-                    : 'Groups.Import.Source.dropFileDescription',
+                    : isSettleUp
+                      ? 'Groups.Import.Source.dropFileDescriptionSettleUp'
+                      : 'Groups.Import.Source.dropFileDescription',
             ),
           }}
         />
@@ -598,6 +700,134 @@ export function SourceStep({
       )}
     </div>
   )
+}
+
+type FileGuideProps = React.ComponentProps<typeof ExportGuideTrigger>
+
+function fileGuideProps(
+  provider: SourceMode,
+  t: (key: string) => string,
+): FileGuideProps {
+  switch (provider) {
+    case 'spliit':
+      return {
+        trigger: t('Groups.Import.Source.exportGuide.spliitFileTrigger'),
+        title: t('Groups.Import.Source.exportGuide.spliitFileDialogTitle'),
+        steps: [
+          {
+            index: 1,
+            text: t('Groups.Import.Source.exportGuide.spliitFileStep1'),
+          },
+          {
+            index: 2,
+            text: t('Groups.Import.Source.exportGuide.spliitFileStep2'),
+          },
+        ],
+        artifact: '.json / .csv',
+      }
+    case 'spliit-cloud':
+      return {
+        trigger: t('Groups.Import.Source.exportGuide.spliitCloudTrigger'),
+        title: t('Groups.Import.Source.exportGuide.spliitCloudTitle'),
+        steps: [
+          {
+            index: 1,
+            text: t('Groups.Import.Source.exportGuide.spliitCloudStep1'),
+          },
+          {
+            index: 2,
+            text: t('Groups.Import.Source.exportGuide.spliitCloudStep2'),
+          },
+          {
+            index: 3,
+            text: t('Groups.Import.Source.exportGuide.spliitCloudStep3'),
+          },
+        ],
+        artifact: '.spliit.zip',
+        artifactLabel: t('Groups.Import.Source.exportGuide.artifactLabel'),
+        artifactDetail: t(
+          'Groups.Import.Source.exportGuide.spliitCloudArtifactDetail',
+        ),
+        tip: t('Groups.Import.Source.exportGuide.spliitCloudTip'),
+      }
+    case 'splitwise':
+      return {
+        trigger: t('Groups.Import.Source.exportGuide.splitwiseTrigger'),
+        title: t('Groups.Import.Source.exportGuide.splitwiseTitle'),
+        steps: [
+          {
+            index: 1,
+            text: t('Groups.Import.Source.exportGuide.splitwiseStep1'),
+          },
+          {
+            index: 2,
+            text: t('Groups.Import.Source.exportGuide.splitwiseStep2'),
+          },
+          {
+            index: 3,
+            text: t('Groups.Import.Source.exportGuide.splitwiseStep3'),
+          },
+        ],
+        artifact: '*.csv',
+        artifactLabel: t('Groups.Import.Source.exportGuide.artifactLabel'),
+        artifactDetail: t(
+          'Groups.Import.Source.exportGuide.splitwiseArtifactDetail',
+        ),
+        tip: t('Groups.Import.Source.exportGuide.splitwiseTip'),
+      }
+    case 'cospend':
+      return {
+        trigger: t('Groups.Import.Source.exportGuide.cospendTrigger'),
+        title: t('Groups.Import.Source.exportGuide.cospendTitle'),
+        steps: [
+          {
+            index: 1,
+            text: t('Groups.Import.Source.exportGuide.cospendStep1'),
+          },
+          {
+            index: 2,
+            text: t('Groups.Import.Source.exportGuide.cospendStep2'),
+          },
+          {
+            index: 3,
+            text: t('Groups.Import.Source.exportGuide.cospendStep3'),
+          },
+        ],
+        artifact: '*.csv',
+        artifactLabel: t('Groups.Import.Source.exportGuide.artifactLabel'),
+        artifactDetail: t(
+          'Groups.Import.Source.exportGuide.cospendArtifactDetail',
+        ),
+        tip: t('Groups.Import.Source.exportGuide.cospendTip'),
+      }
+    case 'settleup':
+      return {
+        trigger: t('Groups.Import.Source.exportGuide.settleUpTrigger'),
+        title: t('Groups.Import.Source.exportGuide.settleUpTitle'),
+        steps: [
+          {
+            index: 1,
+            text: t('Groups.Import.Source.exportGuide.settleUpStep1'),
+          },
+          {
+            index: 2,
+            text: t('Groups.Import.Source.exportGuide.settleUpStep2'),
+          },
+          {
+            index: 3,
+            text: t('Groups.Import.Source.exportGuide.settleUpStep3'),
+          },
+        ],
+        artifact: '*.csv',
+        artifactLabel: t('Groups.Import.Source.exportGuide.artifactLabel'),
+        artifactDetail: t(
+          'Groups.Import.Source.exportGuide.settleUpArtifactDetail',
+        ),
+        tip: t('Groups.Import.Source.exportGuide.settleUpTip'),
+      }
+    case 'tricount':
+      return { trigger: '', title: '', steps: [] }
+  }
 }
 
 function ProviderDescription({
@@ -621,26 +851,6 @@ function ProviderDescription({
         </div>
       )}
     </div>
-  )
-}
-
-function ComingSoonCard({
-  title,
-  description,
-}: {
-  title: string
-  description: string
-}) {
-  return (
-    <Card data-import-source-card="coming-soon">
-      <CardContent spacing="standalone" className="flex items-start gap-3">
-        <Clock className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
-        <div className="flex flex-col gap-1">
-          <p className="font-medium">{title}</p>
-          <p className="text-sm text-muted-foreground">{description}</p>
-        </div>
-      </CardContent>
-    </Card>
   )
 }
 

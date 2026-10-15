@@ -45,3 +45,34 @@ export function useImportSource(): ImportSourceState {
     reset,
   }
 }
+
+/**
+ * Tricount share-link fetch hook for the Tricount source tab. Same contract as
+ * {@link useImportSource} but hits `tricountPreview` (server-side fetch against
+ * api.tricount.bunq.com, so the browser never contacts Tricount).
+ */
+export function useTricountSource(): ImportSourceState {
+  const [submittedUrl, setSubmittedUrl] = useState<string | null>(null)
+
+  const query = trpc.groups.tricountPreview.useQuery(
+    { sourceUrl: submittedUrl ?? '' },
+    { enabled: !!submittedUrl, retry: false },
+  )
+
+  const submit = useCallback((url: string) => {
+    setSubmittedUrl((prev) => (prev === url ? prev : url))
+  }, [])
+
+  const reset = useCallback(() => {
+    setSubmittedUrl(null)
+  }, [])
+
+  return {
+    data: query.data,
+    isLoading: query.isFetching,
+    isError: query.isError,
+    error: query.error,
+    submit,
+    reset,
+  }
+}

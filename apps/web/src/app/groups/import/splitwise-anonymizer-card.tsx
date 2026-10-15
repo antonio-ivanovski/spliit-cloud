@@ -1,3 +1,4 @@
+import { Effect } from 'effect'
 import { HatGlasses } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -40,7 +41,9 @@ export function SplitwiseAnonymizerCard() {
       setStatus({ kind: 'working' })
       try {
         const text = await file.text()
-        const { outputCsv, outputName } = anonymizeSplitwiseCsv(text)
+        const { outputCsv, outputName } = Effect.runSync(
+          anonymizeSplitwiseCsv(text),
+        )
         const blob = new Blob([outputCsv], { type: 'text/csv;charset=utf-8' })
         const blobUrl = URL.createObjectURL(blob)
         triggerBrowserDownload(blobUrl, outputName)

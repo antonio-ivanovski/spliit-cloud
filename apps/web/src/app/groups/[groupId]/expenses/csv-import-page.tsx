@@ -8,6 +8,7 @@ import { AlertCircle, Check, ChevronDown, Loader2, X } from 'lucide-react'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { ExportGuideTrigger } from '@/app/groups/import/export-guide'
 import { FileUploadCard } from '@/app/groups/import/file-upload-card'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -206,7 +207,7 @@ function hasAmbiguousDate(
 
 function isConfirmedDateMapping(mapping: DelimitedFieldMapping): boolean {
   if (mapping.mode === 'CEL') return true
-  return mapping.transforms.some(
+  return (mapping.transforms ?? []).some(
     (transform) =>
       transform.kind === 'PARSE_DATE' &&
       transform.format !== 'AUTO_MDY' &&
@@ -925,7 +926,7 @@ export function ExpenseFileImportPage({
       (row) => row.categoryProvenance === 'source',
     )?.category
     const categoryId =
-      mapping.categoryBindings[previewSourceKey] ??
+      (mapping.categoryBindings ?? {})[previewSourceKey] ??
       detectedCategory ??
       mapping.defaults.categoryId
     return { key: previewSourceKey, source, titleMode, categoryId, rows }
@@ -947,7 +948,7 @@ export function ExpenseFileImportPage({
         !categoryContext.explicitRows?.[row.mapped.rowNumber] &&
         !(
           row.mapped.categorySource &&
-          mapping?.categoryBindings[
+          (mapping?.categoryBindings ?? {})[
             importCategorySourceKey(row.mapped.categorySource)
           ]
         ),
@@ -1588,6 +1589,31 @@ export function ExpenseFileImportPage({
                   if (file) void chooseFile(file)
                 }}
                 accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain"
+                help={
+                  <ExportGuideTrigger
+                    trigger={t('ExpenseImport.wizard.exportGuide.trigger')}
+                    title={t('ExpenseImport.wizard.exportGuide.title')}
+                    steps={[
+                      {
+                        index: 1,
+                        text: t('ExpenseImport.wizard.exportGuide.step1'),
+                      },
+                      {
+                        index: 2,
+                        text: t('ExpenseImport.wizard.exportGuide.step2'),
+                      },
+                      {
+                        index: 3,
+                        text: t('ExpenseImport.wizard.exportGuide.step3'),
+                      },
+                    ]}
+                    artifact="*.csv"
+                    artifactLabel={t(
+                      'Groups.Import.Source.exportGuide.artifactLabel',
+                    )}
+                    tip={t('ExpenseImport.wizard.exportGuide.tip')}
+                  />
+                }
                 labels={{
                   dropFile: t('ExpenseImport.wizard.dropFile'),
                   dropFileDescription: t(

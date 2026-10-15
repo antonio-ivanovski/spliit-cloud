@@ -1,3 +1,4 @@
+import { Effect } from 'effect'
 import Papa from 'papaparse'
 
 import { DEFAULT_CATEGORIES, SETTLEMENT_CATEGORY_ID } from '../categories'
@@ -10,7 +11,8 @@ import {
   shouldRecoverSpliitOriginal,
 } from './spliit-original-amount'
 import { guessSplitMode } from './split-guess'
-import type { ImportParseResult, NormalizedSource } from './types'
+import { ImportError } from './types'
+import type { NormalizedSource } from './types'
 
 const FALLBACK_CURRENCY: Currency = {
   code: '',
@@ -43,7 +45,9 @@ function toNumberOrNull(value: string | undefined): number | null {
   return Number.isNaN(n) ? null : n
 }
 
-export function tryParseSpliitCsv(input: string): ImportParseResult {
+export const parseSpliitCsv = Effect.fnUntraced(function* (
+  input: string,
+): Effect.fn.Return<NormalizedSource, ImportError> {
   const cleaned = input.charCodeAt(0) === 0xfeff ? input.slice(1) : input
   const parsed = Papa.parse<string[]>(cleaned, {
     skipEmptyLines: 'greedy',
@@ -52,31 +56,28 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
 
   const rows = parsed.data
   if (rows.length < 2) {
-    return {
-      ok: false,
-      error: 'CSV has no data rows',
+    return yield* new ImportError({
+      message: 'CSV has no data rows',
       code: 'CSV_NO_DATA_ROWS',
       params: {},
-    }
+    })
   }
   if (parsed.errors.length > 0) {
     const detail = parsed.errors[0]?.message ?? 'unknown error'
-    return {
-      ok: false,
-      error: `CSV could not be parsed: ${detail}`,
+    return yield* new ImportError({
+      message: `CSV could not be parsed: ${detail}`,
       code: 'CSV_PARSE_FAILED',
       params: { detail },
-    }
+    })
   }
   const header = rows[0]
   const layout = detectCsvLayout(header)
   if (!layout) {
-    return {
-      ok: false,
-      error: 'CSV header is not a Spliit export',
+    return yield* new ImportError({
+      message: 'CSV header is not a Spliit export',
       code: 'CSV_NOT_SPLIIT_EXPORT',
       params: {},
-    }
+    })
   }
 
   const participantHeaders = header
@@ -85,12 +86,11 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
     .filter((h: string) => h.length > 0)
 
   if (participantHeaders.length === 0) {
-    return {
-      ok: false,
-      error: 'CSV is missing participant columns',
+    return yield* new ImportError({
+      message: 'CSV is missing participant columns',
       code: 'CSV_MISSING_PARTICIPANT_COLUMNS',
       params: {},
-    }
+    })
   }
 
   const participantIndex = new Map<string, number>()
@@ -279,12 +279,11 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
   }
 
   if (expenses.length === 0) {
-    return {
-      ok: false,
-      error: 'CSV had no parseable expenses',
+    return yield* new ImportError({
+      message: 'CSV had no parseable expenses',
       code: 'CSV_NO_PARSEABLE_EXPENSES',
       params: {},
-    }
+    })
   }
 
   let mostCommonCurrency: string | null = null
@@ -301,22 +300,19 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
     : ''
 
   return {
-    ok: true,
-    source: {
-      provider: 'SPLIIT',
-      exportVersion: null,
-      sourceGroupId: 'csv-import',
-      sourceUrl: null,
-      name: 'Imported from CSV',
-      information: null,
-      currency,
-      currencyCode: mostCommonCurrency,
-      participants,
-      expenses,
-      documentSource: 'NONE',
-    },
+    provider: 'SPLIIT',
+    exportVersion: null,
+    sourceGroupId: 'csv-import',
+    sourceUrl: null,
+    name: 'Imported from CSV',
+    information: null,
+    currency,
+    currencyCode: mostCommonCurrency,
+    participants,
+    expenses,
+    documentSource: 'NONE',
   }
-}
+})
 
 /**
  * Accept the legacy spliit.app CSV layout (with the historical optional

@@ -1,4 +1,5 @@
 import type * as TanStackReactRouter from '@tanstack/react-router'
+import { Effect } from 'effect'
 import { useState, useSyncExternalStore, useCallback } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -207,7 +208,7 @@ beforeEach(() => {
     }))
   vi.mocked(previewExpenseFile).mockImplementation(
     async (table, mapping, options) =>
-      previewDelimitedRows(table, mapping, options),
+      Effect.runSync(previewDelimitedRows(table, mapping, options)),
   )
   vi.mocked(mapExpenseFile).mockClear()
   vi.spyOn(window.history, 'back').mockImplementation(() =>
@@ -233,6 +234,21 @@ function page() {
 }
 
 describe('expense import workflow', () => {
+  it('shows a bank export guide trigger inside the file card', async () => {
+    const { container, user } = page()
+    const trigger = screen.getByRole('button', {
+      name: /What should my bank CSV look like\?/i,
+    })
+    expect(
+      container.querySelector('[data-import-source-card="file-upload"]'),
+    ).toContainElement(trigger)
+    // Steps live in the dialog, not inline.
+    expect(screen.queryByText(/one expense per row/i)).not.toBeInTheDocument()
+
+    await user.click(trigger)
+    expect(await screen.findByText(/one expense per row/i)).toBeInTheDocument()
+  })
+
   it('accepts a file dropped on the step-1 dropzone', async () => {
     page()
     const content = 'Date,Description,Amount\n2022-03-14,Dropped merchant,10'
@@ -280,7 +296,7 @@ describe('expense import workflow', () => {
       (table, mapping, options) =>
         new Promise((resolve) => {
           pending.push({
-            rows: previewDelimitedRows(table, mapping, options),
+            rows: Effect.runSync(previewDelimitedRows(table, mapping, options)),
             resolve,
           })
         }),
@@ -981,7 +997,7 @@ describe('expense import workflow', () => {
     // Restore the real preview and retry.
     vi.mocked(previewExpenseFile).mockImplementation(
       async (table, mapping, options) =>
-        previewDelimitedRows(table, mapping, options),
+        Effect.runSync(previewDelimitedRows(table, mapping, options)),
     )
     await user.click(screen.getByRole('button', { name: 'Retry preview' }))
     await screen.findByText('Required field mappings')
