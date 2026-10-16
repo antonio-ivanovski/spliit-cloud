@@ -4980,7 +4980,6 @@
     "warnings": {
       "minor-units": "Yeni para birimi farklı alt birimler kullanıyor (ör. sent ve yen) — küçük yuvarlama farkları normaldir.",
       "budgets-stale": "Bütçeler eski para birimi tutarlarıyla kalır, değişimden sonra gözden geçirilmelidir.",
-      "recurring-stale": "Etkin yinelenen gider şablonları eski tutarları korur — değişimden sonra bunları gözden geçir.",
       "exact-to-custom": "Bazı giderlerde kesin tutar kullanıldı, bu yüzden bunlar özel kurlarla dönüştürülür.",
       "fixed-fallback": "Bazı giderler tedavülden kaldırılan para birimi için sabit dönüşümü kullanıyor."
     },

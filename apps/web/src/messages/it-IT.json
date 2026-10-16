@@ -5002,7 +5002,6 @@
     "warnings": {
       "minor-units": "La nuova valuta usa unità minori diverse (es. centesimi vs yen) — sono previste piccole differenze di arrotondamento.",
       "budgets-stale": "I budget restano con gli importi nella vecchia valuta e vanno rivisti dopo lo scambio.",
-      "recurring-stale": "I modelli ricorrenti attivi mantengono i vecchi importi — controllali dopo lo scambio.",
       "exact-to-custom": "Alcune spese usavano importi esatti, quindi vengono convertite a tassi personalizzati.",
       "fixed-fallback": "Alcune spese utilizzano la conversione fissa per una valuta ritirata."
     },

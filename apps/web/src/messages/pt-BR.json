@@ -2664,7 +2664,6 @@
     },
     "warnings": {
       "minor-units": "A nova moeda usa unidades menores diferentes (ex. centavos vs. ienes): pequenas diferenças de arredondamento são esperadas.",
-      "recurring-stale": "Os modelos recorrentes ativos mantêm os valores antigos: revise-os após a troca.",
       "exact-to-custom": "Algumas despesas usaram valores exatos, por isso são convertidas a taxas personalizadas.",
       "fixed-fallback": "Algumas despesas usam a conversão fixa para uma moeda retirada."
     },

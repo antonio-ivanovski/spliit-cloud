@@ -514,7 +514,11 @@ describe('deleteExpense', () => {
     })
     expect(prismaMock.recurringExpenseSeries.update).toHaveBeenCalledWith({
       where: { id: 'series-1' },
-      data: { version: { increment: 1 }, catchUpBatch: null },
+      data: {
+        version: { increment: 1 },
+        templateVersion: { increment: 1 },
+        catchUpBatch: null,
+      },
     })
   })
 
@@ -645,6 +649,7 @@ describe('deleteExpense', () => {
       data: {
         status: 'CANCELLED',
         version: { increment: 1 },
+        templateVersion: { increment: 1 },
         catchUpBatch: null,
       },
     })

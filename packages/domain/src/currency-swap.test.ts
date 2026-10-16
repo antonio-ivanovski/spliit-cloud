@@ -3,8 +3,10 @@ import { describe, expect, it } from 'vitest'
 import {
   computeSwapPairs,
   computeSwapRateKeys,
+  computeSwapTemplateRateKeys,
   legacyModeToPairModes,
   planSwapRows,
+  planSwapTemplate,
   swapPairBaseForExpense,
 } from './currency-swap'
 
@@ -322,6 +324,89 @@ describe('planSwapRows', () => {
     })
     const [row] = planSwapRows(expenses, 'EUR', 'GBP', modes, {})
     expect(row.newAmount).toBe(8500)
+  })
+
+  it('plans templates at the execution date (override wins)', () => {
+    const template = { id: 'series-1', amount: 10000 }
+    const planned = planSwapTemplate(
+      template,
+      'EUR',
+      'GBP',
+      { 'EUR|GBP': { mode: 'fixed', date: '2024-06-01', override: 0.85 } },
+      {},
+      '2025-01-15',
+    )
+    expect(planned?.newAmount).toBe(8500)
+    // Override wins over the execution date: the stamped rate date is the
+    // pair's fixed date, not the execution date.
+    expect(planned?.rateDate).toBe('2024-06-01')
+  })
+
+  it('forwards fixed-fallback provenance to templates', () => {
+    const planned = planSwapTemplate(
+      { id: 'series-1', amount: 10000 },
+      'EUR',
+      'GBP',
+      {},
+      { '2025-01-15|EUR|GBP': 0.9 },
+      '2025-01-15',
+      new Set(['2025-01-15|EUR|GBP']),
+    )
+    expect(planned?.newAmount).toBe(9000)
+    expect(planned?.warning).toBe('fixed-fallback')
+  })
+
+  it('plans templates at the execution-date rate for perDate pairs', () => {
+    const planned = planSwapTemplate(
+      { id: 'series-1', amount: 10000 },
+      'EUR',
+      'GBP',
+      {},
+      { '2025-01-15|EUR|GBP': 0.9 },
+      '2025-01-15',
+    )
+    expect(planned?.newAmount).toBe(9000)
+    expect(planned?.rateDate).toBe('2025-01-15')
+  })
+
+  it('returns null for templates with no usable rate', () => {
+    expect(
+      planSwapTemplate(
+        { id: 'series-1', amount: 10000 },
+        'EUR',
+        'GBP',
+        {},
+        {},
+        '2025-01-15',
+      ),
+    ).toBeNull()
+  })
+
+  it('keys template rates at the execution date (override pairs need none)', () => {
+    expect(
+      computeSwapTemplateRateKeys(
+        [{ id: 'series-1', amount: 10000 }],
+        'EUR',
+        'GBP',
+        {},
+        '2025-01-15',
+      ),
+    ).toEqual([
+      {
+        date: '2025-01-15',
+        base: 'EUR',
+        target: 'GBP',
+      },
+    ])
+    expect(
+      computeSwapTemplateRateKeys(
+        [{ id: 'series-1', amount: 10000 }],
+        'EUR',
+        'GBP',
+        { 'EUR|GBP': { mode: 'fixed', date: '2024-06-01', override: 0.85 } },
+        '2025-01-15',
+      ),
+    ).toEqual([])
   })
 })
 

@@ -100,12 +100,16 @@ export const swapPreviewProcedure = apiProcedure('spliit:groups:read')
       ? sliced.filter((e) => scopedIds.has(e.id))
       : sliced
     const page = scopeRows.slice(input.cursor, input.cursor + input.limit)
-    const [budgetCount, activeRecurringCount] = await Promise.all([
-      prisma.groupBudget.count({ where: { groupId: group.id } }),
-      prisma.recurringExpenseSeries.count({
-        where: { ledgerId: ledger.id, status: 'ACTIVE' },
-      }),
-    ])
+    const [budgetCount, activeRecurringCount, seriesTemplateCount] =
+      await Promise.all([
+        prisma.groupBudget.count({ where: { groupId: group.id } }),
+        prisma.recurringExpenseSeries.count({
+          where: { ledgerId: ledger.id, status: 'ACTIVE' },
+        }),
+        prisma.recurringExpenseSeries.count({
+          where: { ledgerId: ledger.id },
+        }),
+      ])
     const warnings: string[] = []
     const oldDigits = getCurrency(oldCode)?.decimal_digits ?? 2
     const newDigits = getCurrency(newCode)?.decimal_digits ?? 2
@@ -113,7 +117,7 @@ export const swapPreviewProcedure = apiProcedure('spliit:groups:read')
       warnings.push('minor-units')
     }
     if (budgetCount > 0) warnings.push('budgets-stale')
-    if (activeRecurringCount > 0) warnings.push('recurring-stale')
+    if (seriesTemplateCount > 0) warnings.push('series-templates-convert')
     if (preview.rows.some((r) => r.warning === 'exact-to-custom')) {
       warnings.push('exact-to-custom')
     }
@@ -149,6 +153,7 @@ export const swapPreviewProcedure = apiProcedure('spliit:groups:read')
       sumNew: preview.sumNew,
       budgetCount,
       activeRecurringCount,
+      seriesTemplateCount,
       warnings,
     }
   })

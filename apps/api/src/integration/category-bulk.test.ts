@@ -327,4 +327,286 @@ describe('bulkUpdateExpenseCategories — real DB', () => {
     })
     expect(result.applied).toBe(1)
   })
+
+  async function makeRecurringSeries(title: string): Promise<{
+    seriesId: string
+    expenseIds: string[]
+  }> {
+    const caller = makeCaller()
+    const pastDate = new Date()
+    pastDate.setUTCDate(pastDate.getUTCDate() - 14)
+    const result = await caller.expenses.create({
+      requestId: crypto.randomUUID(),
+      groupId,
+      expense: {
+        title,
+        amount: 6000,
+        expenseDate: pastDate.toISOString(),
+        expenseTimeZone: 'UTC',
+        category: 'general',
+        splitMode: 'EVENLY',
+        paidBySplitMode: 'BY_AMOUNT',
+        paidByList: [{ participant: participantId, shares: 6000 }],
+        paidFor: [{ participant: participantId, shares: 1 }],
+        documents: [],
+        recurrenceRule: 'WEEKLY',
+      },
+    })
+    createdExpenseIds.push(result.expenseId)
+    const seriesId = result.recurringSeriesId!
+    const { materializeRecurringExpense } =
+      await import('../lib/api/recurrence-series')
+    let series = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    while (series.nextOccurrenceDate <= new Date()) {
+      await materializeRecurringExpense({
+        seriesId: series.id,
+        sequence: series.occurrencesCreated + 1,
+        occurrenceDate: series.nextOccurrenceDate.toISOString().slice(0, 10),
+      })
+      series = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+        where: { id: series.id },
+      })
+    }
+    const rows = await prisma.expense.findMany({
+      where: { recurringSeriesId: seriesId },
+      orderBy: { recurrenceSequence: 'asc' },
+      select: { id: true },
+    })
+    for (const row of rows) createdExpenseIds.push(row.id)
+    return { seriesId, expenseIds: rows.map((row) => row.id) }
+  }
+
+  it('SELECTED scope leaves the series template untouched (diverged)', async () => {
+    const { seriesId, expenseIds } = await makeRecurringSeries(
+      `Bulk series selected ${runId}`,
+    )
+    expect(expenseIds.length).toBeGreaterThanOrEqual(2)
+    const seriesBefore = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    const result = await bulkUpdateExpenseCategories({
+      groupId,
+      accountId: adminId,
+      input: {
+        groupId,
+        changes: [{ expenseId: expenseIds[0]!, categoryId: 'groceries' }],
+      },
+    })
+    expect(result.applied).toBe(1)
+    expect(result.seriesUpdated).toEqual([])
+    const series = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    expect(
+      (series.template as unknown as { categoryId: string }).categoryId,
+    ).toBe('general')
+    expect(series.templateVersion).toBe(seriesBefore.templateVersion)
+    const untouched = await prisma.expense.findUniqueOrThrow({
+      where: { id: expenseIds[1]! },
+    })
+    expect(untouched.categoryId).toBe('general')
+  })
+
+  it('THIS_AND_FUTURE rewrites the template plus later occurrences', async () => {
+    const { seriesId, expenseIds } = await makeRecurringSeries(
+      `Bulk series future ${runId}`,
+    )
+    expect(expenseIds.length).toBeGreaterThanOrEqual(3)
+    const seriesBefore = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    const result = await bulkUpdateExpenseCategories({
+      groupId,
+      accountId: adminId,
+      input: {
+        groupId,
+        seriesScopes: { [seriesId]: 'THIS_AND_FUTURE' },
+        changes: [{ expenseId: expenseIds[1]!, categoryId: 'groceries' }],
+      },
+    })
+    expect(result.applied).toBe(1)
+    expect(result.seriesUpdated).toEqual([
+      expect.objectContaining({
+        seriesId,
+        propagation: 'THIS_AND_FUTURE',
+        templateChanged: true,
+        toCategoryId: 'groceries',
+      }),
+    ])
+    const series = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    expect(
+      (series.template as unknown as { categoryId: string }).categoryId,
+    ).toBe('groceries')
+    expect(series.templateVersion).toBe(seriesBefore.templateVersion + 1)
+    const rows = await prisma.expense.findMany({
+      where: { recurringSeriesId: seriesId },
+      orderBy: { recurrenceSequence: 'asc' },
+      select: { categoryId: true },
+    })
+    // Anchor (sequence 1) keeps history; selected + later rows propagate.
+    expect(rows[0]!.categoryId).toBe('general')
+    for (const row of rows.slice(1)) {
+      expect(row.categoryId).toBe('groceries')
+    }
+  })
+
+  it('WHOLE_SERIES rewrites the template plus every occurrence', async () => {
+    const { seriesId, expenseIds } = await makeRecurringSeries(
+      `Bulk series whole ${runId}`,
+    )
+    expect(expenseIds.length).toBeGreaterThanOrEqual(2)
+    const result = await bulkUpdateExpenseCategories({
+      groupId,
+      accountId: adminId,
+      input: {
+        groupId,
+        seriesScopes: { [seriesId]: 'WHOLE_SERIES' },
+        changes: [{ expenseId: expenseIds.at(-1)!, categoryId: 'taxi' }],
+      },
+    })
+    expect(result.applied).toBe(1)
+    expect(result.seriesUpdated).toEqual([
+      expect.objectContaining({
+        seriesId,
+        propagation: 'WHOLE_SERIES',
+        toCategoryId: 'taxi',
+      }),
+    ])
+    const rows = await prisma.expense.findMany({
+      where: { recurringSeriesId: seriesId },
+      select: { categoryId: true },
+    })
+    for (const row of rows) expect(row.categoryId).toBe('taxi')
+    const series = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    expect(
+      (series.template as unknown as { categoryId: string }).categoryId,
+    ).toBe('taxi')
+  })
+
+  it('WHOLE_SERIES converges rows that already diverged before the batch', async () => {
+    const { seriesId, expenseIds } = await makeRecurringSeries(
+      `Bulk series heal ${runId}`,
+    )
+    expect(expenseIds.length).toBeGreaterThanOrEqual(2)
+    // Diverge one row outside the batch (single-occurrence semantics).
+    await bulkUpdateExpenseCategories({
+      groupId,
+      accountId: adminId,
+      input: {
+        groupId,
+        changes: [{ expenseId: expenseIds[0]!, categoryId: 'groceries' }],
+      },
+    })
+    const result = await bulkUpdateExpenseCategories({
+      groupId,
+      accountId: adminId,
+      input: {
+        groupId,
+        seriesScopes: { [seriesId]: 'WHOLE_SERIES' },
+        changes: [{ expenseId: expenseIds.at(-1)!, categoryId: 'taxi' }],
+      },
+    })
+    expect(result.seriesUpdated).toEqual([
+      expect.objectContaining({ seriesId, propagation: 'WHOLE_SERIES' }),
+    ])
+    const rows = await prisma.expense.findMany({
+      where: { recurringSeriesId: seriesId },
+      select: { categoryId: true },
+    })
+    expect(rows.length).toBeGreaterThanOrEqual(2)
+    for (const row of rows) expect(row.categoryId).toBe('taxi')
+    const series = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    expect(
+      (series.template as unknown as { categoryId: string }).categoryId,
+    ).toBe('taxi')
+  })
+
+  it('rejects conflicting destinations across an ineligible row', async () => {
+    const { seriesId, expenseIds } = await makeRecurringSeries(
+      `Bulk series cross-row conflict ${runId}`,
+    )
+    expect(expenseIds.length).toBeGreaterThanOrEqual(3)
+    // First row already on the destination: it drops out of eligible
+    // candidates, but the batch still requests two destinations for one
+    // series, mixing an untouched no-op row with a live claim.
+    await bulkUpdateExpenseCategories({
+      groupId,
+      accountId: adminId,
+      input: {
+        groupId,
+        changes: [{ expenseId: expenseIds[0]!, categoryId: 'groceries' }],
+      },
+    })
+    await expect(
+      bulkUpdateExpenseCategories({
+        groupId,
+        accountId: adminId,
+        input: {
+          groupId,
+          seriesScopes: { [seriesId]: 'WHOLE_SERIES' },
+          changes: [
+            { expenseId: expenseIds[0]!, categoryId: 'groceries' },
+            { expenseId: expenseIds[1]!, categoryId: 'taxi' },
+          ],
+        },
+      }),
+    ).rejects.toThrow(/conflicting bulk categories/i)
+  })
+
+  it('rejects conflicting destinations for one series', async () => {
+    const { expenseIds } = await makeRecurringSeries(
+      `Bulk series conflict ${runId}`,
+    )
+    expect(expenseIds.length).toBeGreaterThanOrEqual(2)
+    await expect(
+      bulkUpdateExpenseCategories({
+        groupId,
+        accountId: adminId,
+        input: {
+          groupId,
+          changes: [
+            { expenseId: expenseIds[0]!, categoryId: 'groceries' },
+            { expenseId: expenseIds[1]!, categoryId: 'taxi' },
+          ],
+        },
+      }),
+    ).rejects.toThrow(/conflicting bulk categories/i)
+  })
+
+  it('fails whole batch on a concurrent template change', async () => {
+    const { seriesId, expenseIds } = await makeRecurringSeries(
+      `Bulk series race ${runId}`,
+    )
+    const series = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    await expect(
+      bulkUpdateExpenseCategories({
+        groupId,
+        accountId: adminId,
+        expectedVersions: new Map([[`series:${seriesId}`, 999]]),
+        input: {
+          groupId,
+          seriesScopes: { [seriesId]: 'WHOLE_SERIES' },
+          changes: [{ expenseId: expenseIds[0]!, categoryId: 'groceries' }],
+        },
+      }),
+    ).rejects.toThrow(/series changed/i)
+    const reloaded = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    expect(reloaded.templateVersion).toBe(series.templateVersion)
+    const untouched = await prisma.expense.findUniqueOrThrow({
+      where: { id: expenseIds[0]! },
+    })
+    expect(untouched.categoryId).toBe('general')
+  })
 })

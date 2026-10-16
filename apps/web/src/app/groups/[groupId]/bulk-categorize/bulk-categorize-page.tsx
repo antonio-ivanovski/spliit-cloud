@@ -36,6 +36,11 @@ import { DEFAULT_CATEGORY_ID, type CategoryId } from '@spliit/domain'
 import { BulkCategorizePagedReview } from './bulk-categorize-paged-review'
 import { getBulkCategorizationProgress } from './bulk-categorize-progress'
 import { BulkCategorizeProgressScene } from './bulk-categorize-progress-scene'
+import {
+  BulkCategorizeSeriesScopePicker,
+  type SeriesGroup,
+  type SeriesScope,
+} from './bulk-categorize-table'
 import { BulkCategorizeTable } from './bulk-categorize-table'
 
 export type BulkCategorizePageProps = {
@@ -67,6 +72,10 @@ export function BulkCategorizePage({
     Array<{ expenseId: string; title: string }> | undefined
   >()
   const [filter, setFilter] = useState<'all' | 'general'>('all')
+  const [seriesScopes, setSeriesScopes] = useState<Record<string, SeriesScope>>(
+    {},
+  )
+  const [seriesGroups, setSeriesGroups] = useState<SeriesGroup[]>([])
   const [pendingStage, setPendingStage] = useState<
     'calibration' | 'next' | 'rerun' | 'retry' | null
   >(null)
@@ -116,6 +125,12 @@ export function BulkCategorizePage({
   const rerun = trpc.ai.bulkCategorize.rerun.useMutation()
   const utils = trpc.useUtils()
   const run = status.data
+  const runId = run?.id ?? null
+  useEffect(() => {
+    // oxlint-disable-next-line react/set-state-in-effect -- reset per-run picker state when a new run starts.
+    setSeriesScopes({})
+    setSeriesGroups([])
+  }, [runId])
   const completionForCurrentRun =
     run && completion?.runId === run.id
       ? completion
@@ -208,6 +223,7 @@ export function BulkCategorizePage({
         runId,
         revision: run!.revision,
         skipExpenseIds,
+        seriesScopes,
       })
       setCompletion({
         runId,
@@ -232,7 +248,6 @@ export function BulkCategorizePage({
       }
     }
   }
-
   const selected = run?.selected ?? 0
   const isRunning =
     run &&
@@ -652,7 +667,25 @@ export function BulkCategorizePage({
               aiMinConfidence={features?.aiMinConfidence ?? 0.5}
               onChange={editCategory}
               onViewExpense={onViewExpense}
+              onSeriesGroups={setSeriesGroups}
             />
+            <div className="px-4 pt-3 sm:px-6">
+              <BulkCategorizeSeriesScopePicker
+                groups={seriesGroups}
+                scopes={seriesScopes}
+                disabled={pending}
+                onChange={(seriesId, scope) =>
+                  setSeriesScopes((current) => {
+                    if (scope === 'SELECTED') {
+                      const next = { ...current }
+                      delete next[seriesId]
+                      return next
+                    }
+                    return { ...current, [seriesId]: scope }
+                  })
+                }
+              />
+            </div>
           </CardContent>
           <CardFooter className="sticky bottom-0 z-30 flex flex-wrap items-center justify-between gap-2 border-t bg-background/95 pt-3 pb-[calc(0.75rem+var(--safe-area-bottom))] shadow-[0_-8px_24px_rgb(0_0_0/0.06)] backdrop-blur sm:py-4">
             <div className="flex min-w-0 flex-wrap items-center gap-2">

@@ -12,6 +12,12 @@ const previewState = vi.hoisted(() => ({
   pages: null as null | Array<Record<string, unknown>>,
 }))
 
+const executeResult = vi.hoisted(() => ({
+  updated: 2,
+  newCode: 'EUR',
+  seriesTemplatesConverted: 0,
+}))
+
 vi.mock('@tanstack/react-router', async (importOriginal) => {
   const original = await importOriginal<typeof TanStackReactRouter>()
   return {
@@ -75,7 +81,7 @@ vi.mock('@/trpc/client', () => ({
       },
       swapExecute: {
         useMutation: () => ({
-          mutateAsync: vi.fn(),
+          mutateAsync: vi.fn(async () => ({ ...executeResult })),
           isPending: false,
           error: null,
         }),
@@ -252,6 +258,7 @@ describe('CurrencySwapPage review', () => {
     sumNew: 2000,
     budgetCount: 0,
     activeRecurringCount: 0,
+    seriesTemplateCount: 0,
     warnings: [],
   }
 
@@ -340,5 +347,38 @@ describe('CurrencySwapPage review', () => {
 
     searchState.target = undefined
     previewState.pages = null
+  })
+
+  it('promises template conversion and reports converted templates', async () => {
+    searchState.target = 'EUR'
+    setupGroup()
+    previewState.pages = [
+      {
+        ...previewPage,
+        seriesTemplateCount: 2,
+        warnings: ['series-templates-convert'],
+      },
+    ]
+    executeResult.seriesTemplatesConverted = 2
+    const { user } = render(<CurrencySwapPage />)
+
+    await user.click(screen.getByRole('button', { name: 'Continue' }))
+    await user.click(screen.getByRole('button', { name: 'Preview conversion' }))
+
+    expect(
+      await screen.findByText(/2 recurring templates will convert/i),
+    ).toBeInTheDocument()
+
+    await user.click(
+      screen.getByRole('button', { name: 'Continue to confirm' }),
+    )
+    await user.click(screen.getByRole('button', { name: /swap 2 expenses/i }))
+    expect(
+      await screen.findByText(/2 recurring templates also converted/i),
+    ).toBeInTheDocument()
+
+    searchState.target = undefined
+    previewState.pages = null
+    executeResult.seriesTemplatesConverted = 0
   })
 })

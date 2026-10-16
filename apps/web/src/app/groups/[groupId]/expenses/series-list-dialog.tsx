@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   ResponsiveDialog,
@@ -93,6 +94,14 @@ export function SeriesListDialog({
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle className="flex items-center gap-2">
             <RecurringBadge status={series?.status} />
+            {series?.diverged ? (
+              <Badge
+                variant="outline"
+                className="border-amber-500/50 text-amber-700 dark:text-amber-400"
+              >
+                {t('badgeDiverged')}
+              </Badge>
+            ) : null}
             {t('title')}
           </ResponsiveDialogTitle>
           <ResponsiveDialogDescription>

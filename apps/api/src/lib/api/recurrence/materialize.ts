@@ -257,7 +257,11 @@ export async function materializeRecurringExpense(
     ) {
       await tx.recurringExpenseSeries.update({
         where: { id: series.id },
-        data: { status: RecurringExpenseSeriesStatus.COMPLETED },
+        data: {
+          status: RecurringExpenseSeriesStatus.COMPLETED,
+          version: { increment: 1 },
+          templateVersion: { increment: 1 },
+        },
       })
       return { created: false }
     }
@@ -268,7 +272,11 @@ export async function materializeRecurringExpense(
     ) {
       await tx.recurringExpenseSeries.update({
         where: { id: series.id },
-        data: { status: RecurringExpenseSeriesStatus.COMPLETED },
+        data: {
+          status: RecurringExpenseSeriesStatus.COMPLETED,
+          version: { increment: 1 },
+          templateVersion: { increment: 1 },
+        },
       })
       return { created: false }
     }
@@ -291,6 +299,7 @@ export async function materializeRecurringExpense(
           status: RecurringExpenseSeriesStatus.PAUSED,
           catchUpBatch: null,
           version: { increment: 1 },
+          templateVersion: { increment: 1 },
         },
       })
       return { created: false }
@@ -438,6 +447,7 @@ export async function materializeRecurringExpense(
         nextOccurrenceDate: nextDate,
         nextOccurrenceOrdinal: nextOrdinal,
         version: { increment: 1 },
+        templateVersion: { increment: 1 },
         status: completed
           ? RecurringExpenseSeriesStatus.COMPLETED
           : RecurringExpenseSeriesStatus.ACTIVE,

@@ -325,7 +325,8 @@
     "badgeRunning": "Recurring · Running",
     "badgeStopped": "Recurring · Stopped",
     "badgeCompleted": "Recurring · Completed",
-    "timeZone": "Runs at 3:00 PM in {timeZone}"
+    "timeZone": "Runs at 3:00 PM in {timeZone}",
+    "badgeDiverged": "Template diverged — future occurrences use the template"
   },
   "Groups": {
     "myGroups": "My groups",
@@ -701,7 +702,8 @@
           }
         },
         "documentCount": "Documents: {imported} recovered, {skipped} skipped",
-        "categorizeWithSystemOne": "Suggest categories for uncategorized expenses with System One"
+        "categorizeWithSystemOne": "Suggest categories for uncategorized expenses with System One",
+        "recurringScheduleCategoryDiffers": "Collapsed rows differ only by category — the latest row's category wins."
       },
       "Done": {
         "importComplete": "Import complete",
@@ -3394,7 +3396,18 @@
       "storageBoxes": "Storage Boxes",
       "popcornCombo": "Popcorn Combo",
       "streamingRental": "Streaming Rental"
-    }
+    },
+    "seriesScopeCount": "{selected} of {total} selected",
+    "seriesScopeDescription": "By default only the selected occurrences change and the series template stays as-is. Propagate to update the template and more occurrences.",
+    "seriesScopeLegend": "Propagation scope for {title}",
+    "seriesScopeSection": "Recurring series propagation",
+    "seriesScopeSelected": "Selected only",
+    "seriesScopeTemplateNotice": "The series template and expanded occurrences will also change to this category.",
+    "seriesScopeThisAndFuture": "This and future",
+    "seriesScopeTitle": "Recurring series in this review",
+    "seriesScopeWholeSeries": "Whole series",
+    "seriesScopeCadence": "{frequency} · every {interval}",
+    "seriesScopeDiverged": "Template diverged"
   },
   "ExpensePreview": {
     "title": "Expense preview",
@@ -5054,7 +5067,8 @@
       "message": "Swapped {count} expenses to {code}. Balances, totals and exports now use the new currency.",
       "backToGroup": "Back to the group",
       "backToTools": "Back to Tools",
-      "title": "Swap complete"
+      "title": "Swap complete",
+      "templatesConverted": "{count} recurring templates also converted."
     },
     "kind": {
       "cleared": "Already {to}",
@@ -5075,9 +5089,9 @@
     "warnings": {
       "minor-units": "The new currency uses different minor units (e.g. cents vs yen) — small rounding differences are expected.",
       "budgets-stale": "Budgets stay in the old currency amounts and should be reviewed after the swap.",
-      "recurring-stale": "Active recurring templates keep old amounts — review them after the swap.",
       "exact-to-custom": "Some expenses used exact amounts, so they convert at custom rates.",
-      "fixed-fallback": "Some expenses use the fixed conversion for a withdrawn currency."
+      "fixed-fallback": "Some expenses use the fixed conversion for a withdrawn currency.",
+      "series-templates-convert": "{templateCount} recurring templates will convert at today's rate alongside expenses."
     },
     "back": "Back",
     "pairs": {

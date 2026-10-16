@@ -477,3 +477,81 @@ export function legacyModeToPairModes(
   }
   return modes
 }
+
+export type SwapTemplateInput = {
+  id: string
+  amount: number
+  originalAmount?: number | null
+  originalCurrency?: string | null
+  conversionRate?: number | null
+  conversionSource?: ConversionSource | null
+}
+
+/**
+ * Plan a recurring-template conversion for a swap O -> N. Templates have no
+ * occurrence date of their own, so they resolve at the execution date with one
+ * exception: a fixed-mode pair carrying a user-typed override applies the
+ * override (same rate the user approved for that pair's expenses). Returns null
+ * when the template's lane has no usable rate — the caller must then block
+ * execute exactly like a missing-rate expense row.
+ */
+export function planSwapTemplate(
+  template: SwapTemplateInput,
+  oldCode: string,
+  newCode: string,
+  modes: SwapRateModes | undefined,
+  ratesByKey: Record<string, number>,
+  executionDate: string,
+  fallbackKeys?: ReadonlySet<string>,
+): PlannedSwapRow | null {
+  const [row] = planSwapRows(
+    [
+      {
+        id: template.id,
+        expenseDate: executionDate,
+        amount: template.amount,
+        originalAmount: template.originalAmount,
+        originalCurrency: template.originalCurrency,
+        conversionRate: template.conversionRate,
+        conversionSource: template.conversionSource,
+      },
+    ],
+    oldCode,
+    newCode,
+    modes,
+    ratesByKey,
+    fallbackKeys,
+  )
+  if (!row || row.warning === 'missing-rate') return null
+  return row
+}
+
+/**
+ * Provider rate keys the swap also needs for its series templates. Expense rows
+ * plan per occurrence date; templates resolve at the execution date, so a
+ * perDate pair whose every expense predates the only fetched dates would
+ * otherwise block execute with a template missing-rate that preview never
+ * promised.
+ */
+export function computeSwapTemplateRateKeys(
+  templates: SwapTemplateInput[],
+  oldCode: string,
+  newCode: string,
+  modes: SwapRateModes | undefined,
+  executionDate: string,
+): SwapRateKeyItem[] {
+  return computeSwapRateKeys(
+    templates.map((template) => ({
+      id: template.id,
+      expenseDate: executionDate,
+      amount: template.amount,
+      originalAmount: template.originalAmount,
+      originalCurrency: template.originalCurrency,
+      conversionRate: template.conversionRate,
+      conversionSource: template.conversionSource,
+    })),
+    oldCode,
+    newCode,
+    modes,
+  )
+}

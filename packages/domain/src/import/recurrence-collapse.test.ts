@@ -114,6 +114,8 @@ describe('planLegacyRecurringImport', () => {
           interval: 1,
           end: { type: 'INDEFINITE' },
         },
+        memberCategories: ['general'],
+        categoryDiffers: false,
       },
     ])
   })
@@ -162,6 +164,8 @@ describe('planLegacyRecurringImport', () => {
           interval: 1,
           end: { type: 'INDEFINITE' },
         },
+        memberCategories: ['general'],
+        categoryDiffers: false,
       },
       {
         title: 'Rent',
@@ -171,6 +175,8 @@ describe('planLegacyRecurringImport', () => {
           interval: 1,
           end: { type: 'INDEFINITE' },
         },
+        memberCategories: ['general'],
+        categoryDiffers: false,
       },
     ])
   })
@@ -188,6 +194,41 @@ describe('planLegacyRecurringImport', () => {
     expect(plan.series).toHaveLength(1)
     expect(plan.series[0]!.title).toBe('Gym')
     expect(plan.membership).toHaveLength(1)
+  })
+
+  it('flags collapsed rows that differ only by category (anchor wins)', () => {
+    const expenses = [
+      expense({ expenseDate: '2026-05-19', category: 'groceries' }),
+      expense({ expenseDate: '2026-06-19', category: 'taxi' }),
+      expense({ expenseDate: '2026-07-19', category: 'general' }),
+    ]
+    const plan = planLegacyRecurringImport(expenses, today)
+    expect(plan.series).toHaveLength(1)
+    expect(plan.series[0]!.anchorIndex).toBe(2)
+    expect(plan.series[0]!.memberCategories).toEqual([
+      'groceries',
+      'taxi',
+      'general',
+    ])
+    expect(plan.series[0]!.categoryDiffers).toBe(true)
+    expect(summarizeLegacyRecurringImport(expenses)).toEqual([
+      expect.objectContaining({
+        title: 'Spotify Monthly',
+        memberCategories: ['groceries', 'taxi', 'general'],
+        categoryDiffers: true,
+      }),
+    ])
+  })
+
+  it('reports no category difference for uniform member categories', () => {
+    const expenses = [
+      expense({ expenseDate: '2026-05-19', category: 'groceries' }),
+      expense({ expenseDate: '2026-07-19', category: 'groceries' }),
+    ]
+    const plan = planLegacyRecurringImport(expenses, today)
+    expect(plan.series).toHaveLength(1)
+    expect(plan.series[0]!.memberCategories).toEqual(['groceries'])
+    expect(plan.series[0]!.categoryDiffers).toBe(false)
   })
 })
 

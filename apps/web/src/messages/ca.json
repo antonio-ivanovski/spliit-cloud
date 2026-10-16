@@ -5002,7 +5002,6 @@
     "warnings": {
       "minor-units": "La moneda nova utilitza unitats menors diferents (p. ex., cèntims vs. iens) — són esperables petites diferències d'arrodoniment.",
       "budgets-stale": "Els pressupostos conserven els imports en la moneda antiga i s'haurien de revisar després de l'intercanvi.",
-      "recurring-stale": "Les plantilles recurrents actives conserven els imports antics — revisa-les després de l'intercanvi.",
       "exact-to-custom": "Algunes despeses fan servir imports exactes, així que es converteixen amb tipus personalitzats.",
       "fixed-fallback": "Algunes despeses utilitzen la conversió fixa per a una moneda retirada."
     },

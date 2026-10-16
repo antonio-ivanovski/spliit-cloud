@@ -250,6 +250,13 @@ export function ConfirmStep({
                         title: schedule.title,
                         rule: recurrenceConfigLabel(schedule.config),
                       })}
+                      {schedule.categoryDiffers ? (
+                        <span className="block text-xs">
+                          {t(
+                            'Groups.Import.Confirm.recurringScheduleCategoryDiffers',
+                          )}
+                        </span>
+                      ) : null}
                     </li>
                   ))}
                 </ul>

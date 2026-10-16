@@ -335,6 +335,7 @@ export async function pauseRecurringExpenseSeries(groupId: string) {
     data: {
       status: RecurringExpenseSeriesStatus.PAUSED,
       version: { increment: 1 },
+      templateVersion: { increment: 1 },
     },
   })
 }
@@ -415,6 +416,7 @@ export async function resumeRecurringExpenseSeries(
           data: {
             status: RecurringExpenseSeriesStatus.COMPLETED,
             version: { increment: 1 },
+            templateVersion: { increment: 1 },
           },
         })
         continue
@@ -429,6 +431,7 @@ export async function resumeRecurringExpenseSeries(
           data: {
             status: RecurringExpenseSeriesStatus.COMPLETED,
             version: { increment: 1 },
+            templateVersion: { increment: 1 },
           },
         })
         continue
@@ -448,6 +451,7 @@ export async function resumeRecurringExpenseSeries(
             nextOccurrenceDate: next,
             nextOccurrenceOrdinal: ordinal,
             version: { increment: 1 },
+            templateVersion: { increment: 1 },
           },
         })
         await enqueueMaterialization(

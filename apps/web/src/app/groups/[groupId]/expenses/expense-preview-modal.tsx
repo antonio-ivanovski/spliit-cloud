@@ -268,6 +268,11 @@ export function ExpensePreviewModal({
       nextExpenseId: raw.nextExpenseId,
     }
   }, [expense])
+  const seriesDivergedQuery = trpc.groups.expenses.series.useQuery(
+    { groupId, seriesId: series?.id ?? '', limit: 1 },
+    { enabled: series != null },
+  )
+  const seriesDiverged = seriesDivergedQuery.data?.series[0]?.diverged ?? false
   const currency = group ? getCurrencyFromGroup(group) : undefined
   // Effective actions = server permission ∩ connection. Browse,
   // expand, close, and back stay usable offline; edit/delete/copy/settle and
@@ -622,7 +627,7 @@ export function ExpensePreviewModal({
                   <>
                     <SeriesControls
                       groupId={groupId}
-                      series={series}
+                      series={{ ...series, diverged: seriesDiverged }}
                       onViewSeries={() => setSeriesListOpen(true)}
                     />
                     {useOfflineSource &&

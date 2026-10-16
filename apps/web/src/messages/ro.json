@@ -5007,7 +5007,6 @@
     "warnings": {
       "minor-units": "Moneda nouă folosește unități minore diferite (de ex. cenți vs yeni) — sunt așteptate mici diferențe de rotunjire.",
       "budgets-stale": "Bugetele păstrează sumele în moneda veche și trebuie revizuite după schimbare.",
-      "recurring-stale": "Șabloanele recurente active păstrează sumele vechi — revizuiește-le după schimbare.",
       "exact-to-custom": "Unele cheltuieli au folosit sume exacte, așa că se convertesc la cursuri personalizate.",
       "fixed-fallback": "Unele cheltuieli utilizează conversia fixă pentru o monedă retrasă."
     },

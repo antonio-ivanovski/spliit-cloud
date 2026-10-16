@@ -5026,7 +5026,6 @@
     "warnings": {
       "minor-units": "Nová měna používá jiné dílčí jednotky (např. centy vs. jeny) — očekávejte drobné rozdíly ze zaokrouhlení.",
       "budgets-stale": "Rozpočty zůstanou v částkách staré měny a po výměně by se měly zkontrolovat.",
-      "recurring-stale": "Aktivní opakující se šablony si ponechají staré částky — po výměně je zkontrolujte.",
       "exact-to-custom": "Některé výdaje používaly přesné částky, takže se převedou vlastními kurzy.",
       "fixed-fallback": "Některé výdaje používají pevnou konverzi pro měnu staženou z oběhu."
     },

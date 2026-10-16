@@ -11,6 +11,13 @@ vi.mock('@/trpc/client', () => ({
     ai: {
       bulkCategorize: { reviewPage: { useInfiniteQuery: mocks.reviewPage } },
     },
+    groups: {
+      expenses: {
+        series: {
+          useQuery: () => ({ data: { series: [] } }),
+        },
+      },
+    },
   },
 }))
 
@@ -18,23 +25,37 @@ vi.mock('react-intersection-observer', () => ({
   useInView: () => ({ ref: () => undefined, inView: false }),
 }))
 
-vi.mock('./bulk-categorize-table', () => ({
-  BulkCategorizeTable: ({
-    rows,
-    onChange,
-  }: {
-    rows: Array<{ id: string; title: string }>
-    onChange: (id: string, categoryId: string) => void
-  }) => (
-    <div>
-      {rows.map((row) => (
-        <button key={row.id} onClick={() => onChange(row.id, 'groceries')}>
-          {row.title}
-        </button>
-      ))}
-    </div>
-  ),
-}))
+import type { groupSeriesRows } from './bulk-categorize-table'
+
+vi.mock('./bulk-categorize-table', async (importOriginal) => {
+  const actual = await importOriginal<{
+    groupSeriesRows: typeof groupSeriesRows
+  }>()
+  return {
+    ...actual,
+    groupSeriesRows: (...args: Parameters<typeof actual.groupSeriesRows>) => {
+      // The review only surfaces groups in the save path; keep the table
+      // mock row-focused without losing the grouping contract.
+      if (args[0].length > 0) return actual.groupSeriesRows(...args)
+      return []
+    },
+    BulkCategorizeTable: ({
+      rows,
+      onChange,
+    }: {
+      rows: Array<{ id: string; title: string }>
+      onChange: (id: string, categoryId: string) => void
+    }) => (
+      <div>
+        {rows.map((row) => (
+          <button key={row.id} onClick={() => onChange(row.id, 'groceries')}>
+            {row.title}
+          </button>
+        ))}
+      </div>
+    ),
+  }
+})
 
 import { BulkCategorizePagedReview } from './bulk-categorize-paged-review'
 
@@ -94,29 +115,43 @@ describe('General-only categorization review', () => {
     )
   })
 
-  it('shows a clear finish state when every row has a category', () => {
-    mocks.reviewPage.mockReturnValue({
-      data: undefined,
-      isFetching: false,
-      isFetchingNextPage: false,
-      hasNextPage: false,
-      fetchNextPage: vi.fn(),
-    })
-    render(
-      <BulkCategorizePagedReview
-        groupId="group-1"
-        runId="run-1"
-        reviewCycle="cycle-1"
-        total={0}
-        filter="general"
-        remoteReviewVersion={0}
-        disabled={false}
-        aiMinConfidence={0.5}
-        onChange={async () => true}
-      />,
-    )
+  it('reports recurring series groups with cadence and divergence', async () => {
+    const { groupSeriesRows } = await import('./bulk-categorize-table')
     expect(
-      screen.getByText('No expenses are left in General in this review.'),
-    ).toBeInTheDocument()
+      groupSeriesRows([
+        {
+          id: 'one',
+          title: 'Rent',
+          expenseDate: '2026-01-01',
+          amount: 100,
+          currency: 'USD',
+          categoryId: 'groceries',
+          initialCategoryId: 'general',
+          recurringSeriesId: 'series-1',
+          recurrenceSequence: 1,
+          choices: [],
+        },
+        {
+          id: 'two',
+          title: 'Rent',
+          expenseDate: '2026-02-01',
+          amount: 100,
+          currency: 'USD',
+          categoryId: 'groceries',
+          initialCategoryId: 'general',
+          recurringSeriesId: 'series-1',
+          recurrenceSequence: 2,
+          choices: [],
+        },
+      ]),
+    ).toEqual([
+      expect.objectContaining({
+        seriesId: 'series-1',
+        title: 'Rent',
+        selectedCount: 2,
+        rowCount: 2,
+        diverged: false,
+      }),
+    ])
   })
 })

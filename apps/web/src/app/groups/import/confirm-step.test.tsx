@@ -192,6 +192,42 @@ describe('ConfirmStep', () => {
     ).not.toBeInTheDocument()
   })
 
+  it('notes when collapsed rows differ only by category (anchor wins)', () => {
+    const monthly = {
+      title: 'Spotify Monthly',
+      expenseDate: '2025-05-19',
+      category: 'groceries',
+      amountCurrency: 'EUR',
+      amount: 1000,
+      originalAmount: null,
+      originalCurrency: null,
+      conversionRate: null,
+      paidBySourceId: 'a',
+      paidBy: [{ sourceId: 'a', shares: 1000 }],
+      paidFor: [{ sourceId: 'a', shares: 1 }],
+      splitMode: 'EVENLY' as const,
+      recurrenceRule: 'MONTHLY' as const,
+      recurrence: {
+        frequency: 'MONTHLY' as const,
+        interval: 1,
+        end: { type: 'INDEFINITE' as const },
+      },
+      notes: null,
+    }
+    render(
+      <ConfirmStep
+        {...REQUIRED_PROPS}
+        isSubmitting={false}
+        resolvedExpenses={[
+          monthly,
+          { ...monthly, expenseDate: '2025-06-19', category: 'taxi' },
+          { ...monthly, expenseDate: '2025-07-19', category: 'general' },
+        ]}
+      />,
+    )
+    expect(screen.getByText(/differ only by category/i)).toBeInTheDocument()
+  })
+
   it('uses Cloud manifest counts and hides normalized FX/recurrence summaries', () => {
     render(
       <ConfirmStep

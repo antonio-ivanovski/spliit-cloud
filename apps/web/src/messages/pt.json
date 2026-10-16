@@ -5002,7 +5002,6 @@
     "warnings": {
       "minor-units": "A nova moeda usa unidades menores diferentes (ex. cêntimos vs ienes) — são esperadas pequenas diferenças de arredondamento.",
       "budgets-stale": "Os orçamentos mantêm os montantes na moeda antiga e devem ser revistos após a troca.",
-      "recurring-stale": "Os modelos recorrentes ativos mantêm os montantes antigos — revê-os após a troca.",
       "exact-to-custom": "Algumas despesas usaram montantes exatos, por isso são convertidas a taxas personalizadas.",
       "fixed-fallback": "Algumas despesas utilizam a conversão fixa para uma moeda retirada."
     },

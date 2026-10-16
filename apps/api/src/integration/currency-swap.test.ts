@@ -288,7 +288,11 @@ describe('Currency swap — real DB', () => {
         },
       },
     })
-    expect(result).toEqual({ updated: 2, newCode: 'GBP' })
+    expect(result).toEqual({
+      updated: 2,
+      newCode: 'GBP',
+      seriesTemplatesConverted: 0,
+    })
 
     const ledger = await prisma.ledger.findUniqueOrThrow({
       where: { id: ledgerId },
@@ -326,6 +330,154 @@ describe('Currency swap — real DB', () => {
     expect(
       converted.paidFor.find((p) => p.ledgerParticipantId === aliceLp)?.shares,
     ).toBe(5000)
+  })
+
+  it('converts recurring templates at the pair override (all statuses)', async () => {
+    const { groupId, ledgerId, adminLp } = await createEurGroup()
+    const caller = makeCaller()
+    const pastDate = new Date()
+    pastDate.setUTCDate(pastDate.getUTCDate() - 14)
+    async function makeSeries(title: string) {
+      const created = await caller.expenses.create({
+        requestId: crypto.randomUUID(),
+        groupId,
+        expense: {
+          title,
+          amount: 10000,
+          expenseDate: pastDate.toISOString(),
+          expenseTimeZone: 'UTC',
+          category: 'general',
+          splitMode: 'BY_AMOUNT',
+          paidBySplitMode: 'BY_AMOUNT',
+          paidByList: [{ participant: adminLp, shares: 10000 }],
+          paidFor: [{ participant: adminLp, shares: 10000 }],
+          documents: [],
+          recurrenceRule: 'WEEKLY',
+        },
+      })
+      return created.recurringSeriesId!
+    }
+    const activeId = await makeSeries('Weekly rent active')
+    const pausedId = await makeSeries('Weekly rent paused')
+    const completedId = await makeSeries('Weekly rent completed')
+    const cancelledId = await makeSeries('Weekly rent cancelled')
+    const { stopRecurrence } =
+      await import('../lib/api/expenses/stop-recurrence')
+    await prisma.recurringExpenseSeries.update({
+      where: { id: pausedId },
+      data: { status: 'PAUSED', templateVersion: { increment: 1 } },
+    })
+    await prisma.recurringExpenseSeries.update({
+      where: { id: completedId },
+      data: { status: 'COMPLETED', templateVersion: { increment: 1 } },
+    })
+    const anchor = await prisma.expense.findFirstOrThrow({
+      where: { recurringSeriesId: cancelledId },
+      select: { id: true },
+    })
+    await stopRecurrence(groupId, anchor.id, { accountId: adminId })
+    const seriesId = activeId
+    const before = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    expect(before.status).toBe('ACTIVE')
+    const templateBefore = before.template as unknown as { amount: number }
+    expect(templateBefore.amount).toBe(10000)
+
+    const preview = await caller.swapPreview({
+      groupId,
+      targetCurrencyCode: 'GBP',
+      modes: {
+        'EUR|GBP': { mode: 'fixed', date: '2024-06-02', override: 0.85 },
+      },
+    })
+    expect(preview.seriesTemplateCount).toBe(4)
+    expect(preview.warnings).toContain('series-templates-convert')
+
+    const result = await caller.swapExecute({
+      groupId,
+      targetCurrencyCode: 'GBP',
+      modes: {
+        'EUR|GBP': { mode: 'fixed', date: '2024-06-02', override: 0.85 },
+      },
+    })
+    expect(result.seriesTemplatesConverted).toBe(4)
+
+    const after = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    const templateAfter = after.template as unknown as {
+      amount: number
+      paidFor: Array<{ shares: number }>
+    }
+    // 10000 * 0.85 with EUR->GBP minor-unit scaling.
+    expect(templateAfter.amount).toBe(8500)
+    expect(templateAfter.paidFor[0]!.shares).toBe(8500)
+    expect(after.templateVersion).toBe(before.templateVersion + 1)
+    expect(after.status).toBe('ACTIVE')
+    // Terminal + paused templates convert too, without touching scheduling.
+    for (const id of [pausedId, completedId, cancelledId]) {
+      const converted = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+        where: { id },
+      })
+      const convertedTemplate = converted.template as unknown as {
+        amount: number
+      }
+      expect(convertedTemplate.amount).toBe(8500)
+      expect(converted.templateVersion).toBeGreaterThan(1)
+    }
+    const pausedAfter = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: pausedId },
+    })
+    expect(pausedAfter.status).toBe('PAUSED')
+    const completedAfter =
+      await prisma.recurringExpenseSeries.findUniqueOrThrow({
+        where: { id: completedId },
+      })
+    expect(completedAfter.status).toBe('COMPLETED')
+    const cancelledAfter =
+      await prisma.recurringExpenseSeries.findUniqueOrThrow({
+        where: { id: cancelledId },
+      })
+    expect(cancelledAfter.status).toBe('CANCELLED')
+
+    const activity = await prisma.activity.findFirstOrThrow({
+      where: { ledgerId, type: 'GROUP_UPDATED' },
+      orderBy: { time: 'desc' },
+    })
+    const data = activity.data as unknown as {
+      currencySwap?: {
+        fromCurrencyCode: string
+        toCurrencyCode: string
+        expensesConverted: number
+        seriesTemplatesConverted: number
+      }
+    }
+    expect(data.currencySwap).toEqual({
+      fromCurrencyCode: 'EUR',
+      toCurrencyCode: 'GBP',
+      expensesConverted: result.updated,
+      seriesTemplatesConverted: 4,
+    })
+
+    // Future occurrences materialize in the new currency from the template.
+    const { materializeRecurringExpense } =
+      await import('../lib/api/recurrence-series')
+    const refreshed = await prisma.recurringExpenseSeries.findUniqueOrThrow({
+      where: { id: seriesId },
+    })
+    if (refreshed.nextOccurrenceDate <= new Date()) {
+      const materialized = await materializeRecurringExpense({
+        seriesId,
+        sequence: refreshed.occurrencesCreated + 1,
+        occurrenceDate: refreshed.nextOccurrenceDate.toISOString().slice(0, 10),
+      })
+      expect(materialized.created).toBe(true)
+      const occurrence = await prisma.expense.findUniqueOrThrow({
+        where: { id: materialized.expenseId! },
+      })
+      expect(occurrence.amount).toBe(8500)
+    }
   })
 
   it('rejects non-admin callers', async () => {

@@ -1363,12 +1363,27 @@ export const expenseApiSchema = z
 
 export type Expense = z.infer<typeof expenseApiSchema>
 
+export const bulkCategorySeriesScopeSchema = z.enum([
+  'SELECTED',
+  'THIS_AND_FUTURE',
+  'WHOLE_SERIES',
+])
+export type BulkCategorySeriesScope = z.infer<
+  typeof bulkCategorySeriesScopeSchema
+>
+
 /**
  * Input to the admin bulk-categorize apply step. Each row pairs an expense id
  * with the destination category. The server validates that the expense is
  * eligible for the bulk operation (still on `general`, scoped to the group's
  * ledger, non-settlement, etc.) before applying the change in a single
  * transaction.
+ *
+ * `seriesScopes` controls propagation for recurring series members. The default
+ * `SELECTED` updates only the chosen occurrences and leaves the series template
+ * untouched (flagged as diverged); `THIS_AND_FUTURE` rewrites the template plus
+ * the selected row and every later occurrence; `WHOLE_SERIES` rewrites the
+ * template plus every materialized occurrence.
  */
 export const bulkUpdateExpenseCategoriesInputSchema = z.object({
   groupId: z.string().min(1),
@@ -1382,6 +1397,12 @@ export const bulkUpdateExpenseCategoriesInputSchema = z.object({
     .optional()
     .describe(
       'Whether this bulk update was triggered by an AI confidence workflow.',
+    ),
+  seriesScopes: z
+    .record(z.string(), bulkCategorySeriesScopeSchema)
+    .optional()
+    .describe(
+      'Per-series propagation keyed by recurring series id. Absent series default to SELECTED.',
     ),
   changes: z
     .array(

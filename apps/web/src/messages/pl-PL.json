@@ -5026,7 +5026,6 @@
     "warnings": {
       "minor-units": "Nowa waluta używa innych jednostek podrzędnych (np. centy a jeny) — spodziewane są drobne różnice z zaokrągleń.",
       "budgets-stale": "Budżety zostają w kwotach starej waluty i warto je przejrzeć po zamianie.",
-      "recurring-stale": "Aktywne szablony cykliczne zachowują stare kwoty — przejrzyj je po zamianie.",
       "exact-to-custom": "Część wydatków używała dokładnych kwot, więc przelicza się z kursami własnymi.",
       "fixed-fallback": "Część wydatków używa stałej konwersji dla wycofanej waluty."
     },

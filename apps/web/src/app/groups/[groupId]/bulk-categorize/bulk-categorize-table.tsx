@@ -31,6 +31,8 @@ export type CategorizeRow = {
   currency: string
   categoryId: CategoryId
   initialCategoryId?: CategoryId
+  recurringSeriesId?: string | null
+  recurrenceSequence?: number | null
   choices: Array<{
     categoryId: CategoryId
     confidence: number | null
@@ -43,6 +45,30 @@ export type CategorizeRow = {
       | 'option-probability'
       | 'self-reported-confidence'
   }>
+}
+
+export type SeriesScope = 'SELECTED' | 'THIS_AND_FUTURE' | 'WHOLE_SERIES'
+
+export type SeriesGroup = {
+  seriesId: string
+  title: string
+  frequency: string
+  interval: number
+  selectedCount: number
+  /** Loaded rows of this series in the current review (page-bounded). */
+  rowCount: number
+  /** Whether the live series template diverged from its occurrences. */
+  diverged: boolean
+  /** Loaded rows edited away from their captured category this session. */
+  divergedCount: number
+  rows: CategorizeRow[]
+}
+
+export type SeriesMetadata = {
+  seriesId: string
+  frequency: string
+  interval: number
+  diverged: boolean
 }
 
 const CATEGORIES = DEFAULT_CATEGORIES.filter(
@@ -243,6 +269,130 @@ function QuickChoices({
         )
       })}
     </fieldset>
+  )
+}
+
+export function groupSeriesRows(
+  rows: CategorizeRow[],
+  metadata?: Map<string, SeriesMetadata>,
+): SeriesGroup[] {
+  const bySeries = new Map<string, CategorizeRow[]>()
+  for (const row of rows) {
+    if (!row.recurringSeriesId) continue
+    const list = bySeries.get(row.recurringSeriesId) ?? []
+    list.push(row)
+    bySeries.set(row.recurringSeriesId, list)
+  }
+  return [...bySeries.entries()].map(([seriesId, seriesRows]) => {
+    const meta = metadata?.get(seriesId)
+    const diverged = meta?.diverged ?? false
+    return {
+      seriesId,
+      title: seriesRows[0]?.title ?? seriesId,
+      frequency: meta?.frequency ?? '',
+      interval: meta?.interval ?? 1,
+      selectedCount: seriesRows.filter(
+        (row) => row.categoryId !== DEFAULT_CATEGORY_ID,
+      ).length,
+      rowCount: seriesRows.length,
+      diverged,
+      divergedCount: seriesRows.filter(
+        (row) =>
+          row.categoryId !== DEFAULT_CATEGORY_ID &&
+          row.initialCategoryId !== undefined &&
+          row.initialCategoryId !== row.categoryId,
+      ).length,
+      rows: seriesRows,
+    }
+  })
+}
+
+export function BulkCategorizeSeriesScopePicker({
+  groups,
+  scopes,
+  disabled,
+  onChange,
+}: {
+  groups: SeriesGroup[]
+  scopes: Record<string, SeriesScope>
+  disabled: boolean
+  onChange: (seriesId: string, scope: SeriesScope) => void
+}) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'BulkCategorize' })
+  if (groups.length === 0) return null
+  return (
+    <section
+      aria-label={t('seriesScopeSection')}
+      className="space-y-2 rounded-lg border border-border/60 bg-muted/30 p-3"
+    >
+      <p className="text-sm font-medium">{t('seriesScopeTitle')}</p>
+      <p className="text-xs text-muted-foreground">
+        {t('seriesScopeDescription')}
+      </p>
+      <ul className="space-y-2">
+        {groups.map((group) => {
+          const scope = scopes[group.seriesId] ?? 'SELECTED'
+          return (
+            <li
+              key={group.seriesId}
+              className="flex flex-col gap-1.5 rounded-md border border-border/60 bg-background p-2.5"
+            >
+              <p className="text-sm">
+                <span className="font-medium">{group.title}</span>{' '}
+                <span className="text-muted-foreground">
+                  {t('seriesScopeCount', {
+                    selected: group.selectedCount,
+                    total: group.rowCount,
+                  })}
+                  {group.frequency
+                    ? ` · ${t('seriesScopeCadence', {
+                        frequency: group.frequency.toLowerCase(),
+                        interval: group.interval,
+                      })}`
+                    : ''}
+                </span>
+                {group.diverged ? (
+                  <span className="ms-2 rounded-full border border-amber-500/50 px-2 py-0.5 text-xs text-amber-700 dark:text-amber-400">
+                    {t('seriesScopeDiverged')}
+                  </span>
+                ) : null}
+              </p>
+              <fieldset className="flex flex-wrap gap-1.5 border-0 p-0">
+                <legend className="sr-only">
+                  {t('seriesScopeLegend', { title: group.title })}
+                </legend>
+                {(['SELECTED', 'THIS_AND_FUTURE', 'WHOLE_SERIES'] as const).map(
+                  (value) => (
+                    <Button
+                      key={value}
+                      type="button"
+                      size="sm"
+                      variant={scope === value ? 'default' : 'outline'}
+                      aria-pressed={scope === value}
+                      disabled={disabled}
+                      onClick={() => onChange(group.seriesId, value)}
+                    >
+                      {t(
+                        value === 'SELECTED'
+                          ? 'seriesScopeSelected'
+                          : value === 'THIS_AND_FUTURE'
+                            ? 'seriesScopeThisAndFuture'
+                            : 'seriesScopeWholeSeries',
+                      )}
+                    </Button>
+                  ),
+                )}
+              </fieldset>
+              {scope !== 'SELECTED' && (
+                <p className="text-xs text-amber-700 dark:text-amber-300">
+                  {t('seriesScopeTemplateNotice')}
+                </p>
+              )}
+            </li>
+          )
+        })}
+      </ul>
+    </section>
   )
 }
 

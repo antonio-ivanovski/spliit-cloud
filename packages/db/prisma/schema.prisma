@@ -746,6 +746,11 @@ model BulkCategorizationRow {
   choices           Json                  @default("[]")
   firstPass         Json?
   secondPass        Json?
+  // Series membership snapshot captured when the candidate row is stored,
+  // so the review UI can group recurring occurrences and offer
+  // per-series propagation without an extra join at render time.
+  recurringSeriesId String?
+  recurrenceSequence Int?
 
   @@id([runId, expenseId])
   @@unique([runId, position])
@@ -1227,6 +1232,14 @@ model RecurringExpenseSeries {
   template              Json
   /// [RecurringExpenseCatchUpBatch] Persisted notification coalescing state.
   catchUpBatch          Json?
+  /**
+   * Optimistic-concurrency token for template propagation. Bumped whenever
+   * any template rewrite lands (bulk categorize, currency swap,
+   * single-expense THIS_AND_FUTURE) so concurrent bulk saves fail
+   * whole-batch instead of silently diverging occurrences from the
+   * template.
+   */
+  templateVersion       Int                          @default(1)
   version               Int                          @default(1)
   createdAt             DateTime                     @default(now())
   updatedAt             DateTime                     @updatedAt

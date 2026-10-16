@@ -30,6 +30,8 @@ export type Candidate = {
   expenseDate: string
   amount: number
   currency: string
+  recurringSeriesId?: string | null
+  recurrenceSequence?: number | null
 }
 export type Choice = {
   categoryId: CategoryId
@@ -522,6 +524,12 @@ function rowToSuggestion(row: BulkCategorizationRow): Suggestion {
     ...(row.secondPass
       ? { secondPass: row.secondPass as Suggestion['secondPass'] }
       : {}),
+    ...(row.recurringSeriesId
+      ? { recurringSeriesId: row.recurringSeriesId }
+      : {}),
+    ...(row.recurrenceSequence != null
+      ? { recurrenceSequence: row.recurrenceSequence }
+      : {}),
   }
 }
 const asCandidate = (row: BulkCategorizationRow): Candidate => ({
@@ -531,6 +539,12 @@ const asCandidate = (row: BulkCategorizationRow): Candidate => ({
   expenseDate: row.expenseDate.toISOString(),
   amount: row.amount,
   currency: row.currency,
+  ...(row.recurringSeriesId
+    ? { recurringSeriesId: row.recurringSeriesId }
+    : {}),
+  ...(row.recurrenceSequence != null
+    ? { recurrenceSequence: row.recurrenceSequence }
+    : {}),
 })
 const suggestionData = (row: Suggestion) => ({
   categoryId: row.categoryId,
@@ -723,10 +737,12 @@ export async function captureCategorizationCandidates(groupId: string) {
       version: number
       expenseDate: Date
       amount: number
+      recurringSeriesId: string | null
+      recurrenceSequence: number | null
     }>
   >`
     WITH ranked AS (
-      SELECT "id", "title", "version", "expenseDate", "amount",
+      SELECT "id", "title", "version", "expenseDate", "amount", "recurringSeriesId", "recurrenceSequence",
         row_number() OVER (ORDER BY "expenseDate", "id") - 1 AS ordinal
       FROM "Expense"
       WHERE "ledgerId" = ${group.ledgerId} AND "categoryId" = ${DEFAULT_CATEGORY_ID}
@@ -734,7 +750,7 @@ export async function captureCategorizationCandidates(groupId: string) {
       SELECT *, floor(ordinal * ${Math.min(count, RUN_LIMIT)}::numeric / ${Math.max(count, 1)})::integer AS bucket
       FROM ranked
     )
-    SELECT DISTINCT ON (bucket) "id", "title", "version", "expenseDate", "amount"
+    SELECT DISTINCT ON (bucket) "id", "title", "version", "expenseDate", "amount", "recurringSeriesId", "recurrenceSequence"
     FROM bucketed ORDER BY bucket, ordinal`
   return {
     ledgerId: group.ledgerId,
@@ -746,6 +762,8 @@ export async function captureCategorizationCandidates(groupId: string) {
       expenseDate: row.expenseDate.toISOString(),
       amount: row.amount,
       currency: ledger.currencyCode ?? ledger.currency,
+      recurringSeriesId: row.recurringSeriesId,
+      recurrenceSequence: row.recurrenceSequence,
     })),
   }
 }
@@ -823,6 +841,8 @@ export async function startCategorizationRun(args: {
               expenseDate: new Date(row.expenseDate),
               amount: row.amount,
               currency: row.currency,
+              recurringSeriesId: row.recurringSeriesId ?? null,
+              recurrenceSequence: row.recurrenceSequence ?? null,
             })),
           })
         }
@@ -1075,6 +1095,10 @@ export async function applyCategorizationRun(
   revision: number,
   accountId: string,
   skipExpenseIds: string[] = [],
+  seriesScopes: Record<
+    string,
+    'SELECTED' | 'THIS_AND_FUTURE' | 'WHOLE_SERIES'
+  > = {},
 ) {
   const approvedSkips = new Set(skipExpenseIds)
   const result = await prisma.$transaction(
@@ -1104,6 +1128,25 @@ export async function applyCategorizationRun(
       const expectedVersions = new Map(
         applicable.map((row) => [row.expenseId, row.expenseVersion]),
       )
+      // Snapshot template versions for every touched series so a concurrent
+      // series edit fails the whole batch instead of diverging occurrences
+      // from the template mid-save.
+      const touchedSeriesIds = [
+        ...new Set(
+          applicable
+            .map((row) => row.recurringSeriesId)
+            .filter((id): id is string => id != null),
+        ),
+      ]
+      if (touchedSeriesIds.length > 0) {
+        const seriesRows = await tx.recurringExpenseSeries.findMany({
+          where: { id: { in: touchedSeriesIds } },
+          select: { id: true, templateVersion: true },
+        })
+        for (const series of seriesRows) {
+          expectedVersions.set(`series:${series.id}`, series.templateVersion)
+        }
+      }
       let applied = 0
       for (let offset = 0; offset < applicable.length; offset += 2000) {
         const chunk = applicable.slice(offset, offset + 2000)
@@ -1116,6 +1159,7 @@ export async function applyCategorizationRun(
           input: {
             groupId: run.groupId,
             fromCategoryId: DEFAULT_CATEGORY_ID,
+            seriesScopes,
             changes: chunk.map((row) => ({
               expenseId: row.expenseId,
               categoryId: row.categoryId as CategoryId,
@@ -1169,11 +1213,16 @@ async function findSaveConflicts(
           in: selected.slice(offset, offset + 1000).map((row) => row.expenseId),
         },
       },
-      select: { id: true, version: true, categoryId: true },
+      select: {
+        id: true,
+        version: true,
+        categoryId: true,
+        recurringSeriesId: true,
+      },
     })
     for (const expense of expenses) live.set(expense.id, expense)
   }
-  return selected
+  const rowConflicts = selected
     .filter((row) => {
       const expense = live.get(row.expenseId)
       return (
@@ -1183,6 +1232,58 @@ async function findSaveConflicts(
       )
     })
     .map((row) => ({ expenseId: row.expenseId, title: row.title }))
+  if (rowConflicts.length > 0) return rowConflicts
+  // Series-level conflicts: a template rewritten outside this run since
+  // capture means propagating now would clobber that edit. Fail whole
+  // batch like an expense conflict.
+  //
+  // Capture stores only row-level expense versions (BulkCategorizationRow
+  // has no series-version column), so "since capture" is approximated by
+  // convergence drift: a live template already off `general` while a
+  // selected row still sits on `general` means someone edited the series
+  // outside this run after capture. SELECTED-scope saves inherit the same
+  // check — propagating the drift silently would hide a series edit the
+  // user never reviewed. Bulk-vs-bulk/swap races are additionally guarded
+  // by the `templateVersion` version-claim inside `apply`.
+  const seriesIds = [
+    ...new Set(
+      selected
+        .map((row) => row.recurringSeriesId)
+        .filter((id): id is string => id != null),
+    ),
+  ]
+  if (seriesIds.length === 0) return []
+  const seriesRows = await tx.recurringExpenseSeries.findMany({
+    where: { id: { in: seriesIds } },
+    select: { id: true, templateVersion: true, template: true },
+  })
+  const liveSeries = new Map(seriesRows.map((s) => [s.id, s]))
+  const seriesConflicts: SaveConflict[] = []
+  for (const row of selected) {
+    if (!row.recurringSeriesId) continue
+    const live = liveSeries.get(row.recurringSeriesId)
+    if (!live) {
+      seriesConflicts.push({ expenseId: row.expenseId, title: row.title })
+      break
+    }
+    const template = live.template as unknown as { categoryId?: unknown }
+    // Capture stores only row-level expense versions, not series versions,
+    // so "changed since capture" is approximated by convergence drift: a
+    // live template already off `general` while a selected row still sits
+    // on `general` means someone edited the series outside this run after
+    // capture. SELECTED-scope saves inherit the same check — applying the
+    // drift silently would hide a series edit the user never reviewed.
+    // Bulk-vs-bulk/swap races are additionally guarded by the
+    // `templateVersion` version-claim inside `apply`.
+    if (
+      typeof template.categoryId === 'string' &&
+      template.categoryId !== DEFAULT_CATEGORY_ID
+    ) {
+      seriesConflicts.push({ expenseId: row.expenseId, title: row.title })
+      break
+    }
+  }
+  return seriesConflicts
 }
 
 export async function getCategorizationSaveConflicts(runId: string) {

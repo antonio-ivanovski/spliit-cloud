@@ -2,9 +2,11 @@ import { Effect } from 'effect'
 
 import {
   computeSwapRateKeys,
+  makeSwapRateKey,
   planSwapRows,
   type PlannedSwapRow,
   type SwapExpenseInput,
+  type SwapRateKeyItem,
   type SwapRateModes,
 } from '@spliit/domain'
 
@@ -80,6 +82,38 @@ export const fetchSwapRatesEffect = Effect.fnUntraced(function* (
     ),
   )
   return { rates, fallbackKeys }
+})
+
+/**
+ * Fetch only the template-date keys missing from an already-resolved expense
+ * batch. Templates resolve at the execution date while expenses plan per
+ * occurrence date, so a perDate pair with no occurrence on the execution date
+ * needs one extra fetch — otherwise execute would block on a template
+ * missing-rate that preview never promised. Fixed-override pairs need no fetch
+ * (user-typed rate).
+ */
+export const fetchSwapTemplateRatesEffect = Effect.fnUntraced(function* (
+  keys: SwapRateKeyItem[],
+  resolved: Record<string, number>,
+): Effect.fn.Return<
+  {
+    ratesByKey: Record<string, number>
+    fallbackKeys: ReadonlySet<string>
+  },
+  SwapRateError,
+  FxRateService
+> {
+  const missing = keys.filter(
+    (key) =>
+      resolved[makeSwapRateKey(key.date, key.base, key.target)] === undefined,
+  )
+  if (missing.length === 0)
+    return { ratesByKey: { ...resolved }, fallbackKeys: new Set<string>() }
+  const { rates, fallbackKeys } = yield* fetchSwapRatesEffect(missing)
+  return {
+    ratesByKey: { ...resolved, ...rates },
+    fallbackKeys: new Set(fallbackKeys),
+  }
 })
 
 export type SwapPreview = {

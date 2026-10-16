@@ -74,6 +74,8 @@ vi.mock('@/trpc/client', () => ({
 
 vi.mock('./bulk-categorize-table', () => ({
   BulkCategorizeTable: () => <div data-testid="categorize-table" />,
+  BulkCategorizeSeriesScopePicker: () => null,
+  groupSeriesRows: () => [],
 }))
 vi.mock('./bulk-categorize-paged-review', () => ({
   BulkCategorizePagedReview: () => <div data-testid="paged-review" />,
@@ -115,6 +117,7 @@ describe('BulkCategorizePage completion state', () => {
       runId: 'run-1',
       revision: 1,
       skipExpenseIds: [],
+      seriesScopes: {},
     })
   })
 

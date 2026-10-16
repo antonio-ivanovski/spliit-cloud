@@ -196,8 +196,24 @@ export const bulkUpdateCategoriesOutputSchema = z.object({
       title: z.string(),
       fromCategoryId: categoryIdSchema,
       toCategoryId: categoryIdSchema,
+      recurringSeriesId: z.string().nullable().optional(),
+      propagation: z
+        .enum(['SELECTED', 'THIS_AND_FUTURE', 'WHOLE_SERIES'])
+        .optional(),
     }),
   ),
+  seriesUpdated: z
+    .array(
+      z.object({
+        seriesId: z.string(),
+        propagation: z.enum(['THIS_AND_FUTURE', 'WHOLE_SERIES']),
+        occurrenceCount: z.number().int().nonnegative(),
+        templateChanged: z.boolean(),
+        toCategoryId: categoryIdSchema,
+      }),
+    )
+    .default([]),
+  touchedSeriesIds: z.array(z.string()).default([]),
 })
 
 const recurringOccurrenceResponseSchema = z.object({
@@ -222,6 +238,7 @@ const recurringSeriesListItemResponseSchema = z.object({
   occurrencesCreated: z.number().int(),
   status: recurringSeriesStatusSchema,
   recurrence: recurrenceResponseSchema,
+  diverged: z.boolean().default(false),
   expenses: z.array(recurringOccurrenceResponseSchema),
   hasMoreOccurrences: z.boolean(),
   nextOccurrenceCursor: z.number().int().nullable(),

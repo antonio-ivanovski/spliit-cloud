@@ -5044,7 +5044,6 @@
     "warnings": {
       "minor-units": "Die neue Währung nutzt andere kleinere Einheiten (z. B. Cent vs. Yen) — kleine Rundungsunterschiede sind normal.",
       "budgets-stale": "Haushaltsbudgets bleiben in den alten Währungsbeträgen und sollten nach dem Tausch geprüft werden.",
-      "recurring-stale": "Aktive wiederkehrende Vorlagen behalten alte Beträge — prüfe sie nach dem Tausch.",
       "exact-to-custom": "Manche Ausgaben nutzten exakte Beträge und werden daher zu eigenen Kursen umgerechnet.",
       "fixed-fallback": "Einige Ausgaben verwenden die feste Umrechnung für eine zurückgezogene Währung."
     },

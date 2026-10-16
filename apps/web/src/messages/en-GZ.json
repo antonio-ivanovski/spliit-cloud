@@ -4964,7 +4964,6 @@
     "warnings": {
       "minor-units": "the new currency uses different minor units (e.g. cents vs yen) — small rounding differences expected.",
       "budgets-stale": "budgets stay in the old currency amounts and should be reviewed after the swap.",
-      "recurring-stale": "active recurring templates keep old amounts — review them after the swap.",
       "exact-to-custom": "some expenses used exact amounts, so they convert at custom rates.",
       "fixed-fallback": "some expenses use the locked-in conversion for a retired currency."
     },

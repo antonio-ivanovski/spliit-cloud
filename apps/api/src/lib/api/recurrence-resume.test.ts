@@ -111,6 +111,7 @@ describe('resumeRecurringExpenseSeries', () => {
         nextOccurrenceDate: new Date('2026-08-01T00:00:00.000Z'),
         nextOccurrenceOrdinal: 8,
         version: { increment: 1 },
+        templateVersion: { increment: 1 },
       },
     })
     expect(
@@ -200,6 +201,7 @@ describe('resumeRecurringExpenseSeries', () => {
       data: {
         status: 'COMPLETED',
         version: { increment: 1 },
+        templateVersion: { increment: 1 },
       },
     })
     expect(jobMocks.sendJob).not.toHaveBeenCalled()
@@ -238,6 +240,7 @@ describe('resumeRecurringExpenseSeries', () => {
       data: {
         status: 'COMPLETED',
         version: { increment: 1 },
+        templateVersion: { increment: 1 },
       },
     })
     expect(jobMocks.sendJob).not.toHaveBeenCalled()

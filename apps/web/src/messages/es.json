@@ -5053,7 +5053,6 @@
     "warnings": {
       "minor-units": "La moneda nueva usa «unidades menores» diferentes (p. ej., céntimos frente a yenes) — son esperables pequeñas diferencias de redondeo.",
       "budgets-stale": "Los presupuestos conservan los importes en la moneda antigua y deberían revisarse después del intercambio.",
-      "recurring-stale": "Las plantillas recurrentes activas conservan los importes antiguos — revísalas después del intercambio.",
       "exact-to-custom": "Algunos gastos usaron importes exactos, así que se convierten con tasas personalizadas.",
       "fixed-fallback": "Algunos gastos utilizan la conversión fija para una moneda retirada."
     },

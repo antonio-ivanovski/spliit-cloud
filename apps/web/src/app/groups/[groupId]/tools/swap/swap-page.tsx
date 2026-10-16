@@ -105,9 +105,11 @@ export function CurrencySwapPage() {
   // Absent = allow (the historical always-fallback behavior).
   const [fallbacks, setFallbacks] = useState<Record<string, boolean>>({})
   const [fullListOpen, setFullListOpen] = useState(false)
-  const [done, setDone] = useState<{ updated: number; newCode: string } | null>(
-    null,
-  )
+  const [done, setDone] = useState<{
+    updated: number
+    newCode: string
+    seriesTemplatesConverted: number
+  } | null>(null)
 
   const currencies = useCurrencies('')
   const sourceCurrency = currencies.find((c) => c.code === oldCode)
@@ -848,12 +850,15 @@ export function CurrencySwapPage() {
                           `warnings.${warning}` as
                             | 'warnings.minor-units'
                             | 'warnings.budgets-stale'
-                            | 'warnings.recurring-stale'
+                            | 'warnings.series-templates-convert'
                             | 'warnings.exact-to-custom'
                             | 'warnings.fixed-fallback',
                           {
                             budgetCount: previewMeta!.budgetCount,
                             recurringCount: previewMeta!.activeRecurringCount,
+                            templateCount:
+                              previewMeta!.seriesTemplateCount ??
+                              previewMeta!.activeRecurringCount,
                           },
                         )}
                       </li>
@@ -1124,6 +1129,13 @@ export function CurrencySwapPage() {
                   code: done.newCode,
                 })}
               </p>
+              {done.seriesTemplatesConverted > 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  {t('done.templatesConverted', {
+                    count: done.seriesTemplatesConverted,
+                  })}
+                </p>
+              ) : null}
             </div>
             <div className="flex flex-wrap items-center justify-center gap-2">
               <Button

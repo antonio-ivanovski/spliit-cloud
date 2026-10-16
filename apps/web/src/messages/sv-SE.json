@@ -4968,7 +4968,6 @@
     "warnings": {
       "minor-units": "Den nya valutan använder andra minsta enheter (t.ex. cent vs yen) — små avrundningsskillnader är väntade.",
       "budgets-stale": "Budgetar ligger kvar i den gamla valutans belopp och bör granskas efter bytet.",
-      "recurring-stale": "Aktiva återkommande mallar behåller gamla belopp — granska dem efter bytet.",
       "exact-to-custom": "Vissa utgifter använde exakta belopp och konverteras därför till anpassade kurser.",
       "fixed-fallback": "Vissa utgifter använder den fasta omräkningen för en indragen valuta."
     },

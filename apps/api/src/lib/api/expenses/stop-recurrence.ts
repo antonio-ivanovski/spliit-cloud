@@ -48,6 +48,7 @@ export async function stopRecurrence(
       data: {
         status: 'CANCELLED',
         version: { increment: 1 },
+        templateVersion: { increment: 1 },
         catchUpBatch: null,
       },
     })

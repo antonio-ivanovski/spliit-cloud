@@ -5035,7 +5035,6 @@
     "warnings": {
       "minor-units": "Loại tiền mới dùng đơn vị nhỏ khác (ví dụ cent với yên) — chênh lệch làm tròn nhỏ là bình thường.",
       "budgets-stale": "Ngân sách giữ nguyên số tiền theo loại tiền cũ và nên được xem lại sau khi đổi.",
-      "recurring-stale": "Các mẫu lặp lại đang hoạt động giữ nguyên số tiền cũ — hãy xem lại sau khi đổi.",
       "exact-to-custom": "Một số chi phí đã dùng số tiền chính xác nên được chuyển đổi theo tỷ giá tùy chỉnh.",
       "fixed-fallback": "Một số chi phí dùng quy đổi cố định cho tiền tệ đã bị rút khỏi lưu thông."
     },

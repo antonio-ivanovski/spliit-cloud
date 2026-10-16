@@ -5002,7 +5002,6 @@
     "warnings": {
       "minor-units": "La nouvelle devise utilise des unités mineures différentes (par ex. centimes contre yens) — de petits écarts d’arrondi sont à prévoir.",
       "budgets-stale": "Les budgets conservent les montants dans l’ancienne devise et devront être vérifiés après l’échange.",
-      "recurring-stale": "Les modèles récurrents actifs conservent les anciens montants — vérifiez-les après l’échange.",
       "exact-to-custom": "Certaines dépenses utilisaient des montants exacts, elles sont donc converties à des taux personnalisés.",
       "fixed-fallback": "Certaines dépenses utilisent la conversion fixe pour une monnaie retirée."
     },

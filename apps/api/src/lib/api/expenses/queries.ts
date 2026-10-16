@@ -784,6 +784,48 @@ export async function getRecurringExpenseSeries(
   })
   const hasMore = rows.length > limit
   const page = rows.slice(0, limit)
+  // Divergence badge: a series whose template category drifted from its
+  // materialized occurrences (e.g. a SELECTED-scope bulk edit touched rows
+  // but left the template). Derived read-time — no schema change — so the
+  // series list and bulk review can flag "future occurrences use the
+  // template" without a backfill. Category-only by design: swap rewrites
+  // template and occurrences from one rate plan, so amounts cannot diverge
+  // through bulk tools.
+  const divergedBySeriesId = new Map<string, boolean>()
+  if (page.length > 0) {
+    const categoryRows = await client.expense.groupBy({
+      by: ['recurringSeriesId', 'categoryId'],
+      where: {
+        ledgerId: group.ledgerId,
+        recurringSeriesId: { in: page.map((s) => s.id) },
+      },
+      _count: { _all: true },
+    })
+    const categoriesBySeries = new Map<string, Set<string>>()
+    for (const row of categoryRows) {
+      if (!row.recurringSeriesId) continue
+      const set =
+        categoriesBySeries.get(row.recurringSeriesId) ?? new Set<string>()
+      set.add(row.categoryId)
+      categoriesBySeries.set(row.recurringSeriesId, set)
+    }
+    for (const series of page) {
+      const template = series.template as unknown as {
+        categoryId?: unknown
+      }
+      const templateCategory =
+        typeof template.categoryId === 'string' ? template.categoryId : null
+      const occurrenceCategories = categoriesBySeries.get(series.id)
+      divergedBySeriesId.set(
+        series.id,
+        templateCategory != null &&
+          occurrenceCategories != null &&
+          occurrenceCategories.size > 0 &&
+          (occurrenceCategories.size > 1 ||
+            !occurrenceCategories.has(templateCategory)),
+      )
+    }
+  }
   return {
     series: page.map((series) => {
       const expenses = Array.isArray(series.expenses) ? series.expenses : []
@@ -801,6 +843,7 @@ export async function getRecurringExpenseSeries(
         occurrencesCreated: series.occurrencesCreated,
         status: series.status,
         recurrence: toRecurrenceConfig(series),
+        diverged: divergedBySeriesId.get(series.id) ?? false,
         expenses: expenses.slice(0, occurrenceLimit),
         hasMoreOccurrences: expenses.length > occurrenceLimit,
         nextOccurrenceCursor:

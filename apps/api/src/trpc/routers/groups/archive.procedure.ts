@@ -124,7 +124,11 @@ export const archiveGroupProcedure = apiProcedure('spliit:groups:delete', {
       if (willArchive) {
         await tx.recurringExpenseSeries.updateMany({
           where: { ledgerId: lockedGroup.ledgerId, status: 'ACTIVE' },
-          data: { status: 'PAUSED', version: { increment: 1 } },
+          data: {
+            status: 'PAUSED',
+            version: { increment: 1 },
+            templateVersion: { increment: 1 },
+          },
         })
       }
       const updated = await tx.group.update({

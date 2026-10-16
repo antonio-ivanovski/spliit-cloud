@@ -285,6 +285,7 @@ export async function deleteExpense(
         where: { id: existingExpense.recurringSeriesId },
         data: {
           version: { increment: 1 },
+          templateVersion: { increment: 1 },
           catchUpBatch: null,
           ...(shouldStop ? { status: 'CANCELLED' as const } : {}),
         },

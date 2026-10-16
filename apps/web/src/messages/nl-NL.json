@@ -5044,7 +5044,6 @@
     "warnings": {
       "minor-units": "De nieuwe valuta gebruikt andere kleinste eenheden (bijv. centen vs. yen) — kleine afrondingsverschillen zijn te verwachten.",
       "budgets-stale": "Budgetten blijven in de oude valutabedragen staan en moeten na de wissel worden gecontroleerd.",
-      "recurring-stale": "Actieve terugkerende sjablonen behouden oude bedragen — controleer ze na de wissel.",
       "exact-to-custom": "Sommige uitgaven gebruikten exacte bedragen en worden daarom omgerekend tegen eigen koersen.",
       "fixed-fallback": "Sommige uitgaven gebruiken de vaste omrekening voor een ingetrokken valuta."
     },

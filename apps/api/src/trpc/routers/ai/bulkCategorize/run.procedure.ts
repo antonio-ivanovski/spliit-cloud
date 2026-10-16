@@ -142,6 +142,12 @@ export const bulkCategorizeApplyProcedure = protectedProcedure
   .input(
     revisionInput.extend({
       skipExpenseIds: z.array(z.string().min(1)).max(10_000).optional(),
+      seriesScopes: z
+        .record(
+          z.string().min(1),
+          z.enum(['SELECTED', 'THIS_AND_FUTURE', 'WHOLE_SERIES']),
+        )
+        .optional(),
     }),
   )
   .mutation(async ({ ctx, input }) => {
@@ -152,6 +158,7 @@ export const bulkCategorizeApplyProcedure = protectedProcedure
       input.revision,
       ctx.auth.user.id,
       input.skipExpenseIds,
+      input.seriesScopes ?? {},
     )
   })
 

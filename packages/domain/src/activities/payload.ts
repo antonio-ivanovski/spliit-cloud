@@ -119,6 +119,14 @@ export const groupActivityDataSchema = z.object({
   summary: z.string().optional(),
   changedFields: z.array(groupChangedFieldSchema).optional(),
   changes: z.array(groupActivityChangeSchema).optional(),
+  currencySwap: z
+    .object({
+      fromCurrencyCode: z.string(),
+      toCurrencyCode: z.string(),
+      expensesConverted: z.number().int().nonnegative(),
+      seriesTemplatesConverted: z.number().int().nonnegative(),
+    })
+    .optional(),
 })
 
 export type GroupActivityData = z.infer<typeof groupActivityDataSchema>
@@ -218,9 +226,24 @@ export const expenseCategoriesBulkUpdatedRowSchema = z.object({
   title: z.string().optional(),
   fromCategoryId: categoryIdSchema,
   toCategoryId: categoryIdSchema,
+  recurringSeriesId: z.string().min(1).nullable().optional(),
+  propagation: z
+    .enum(['SELECTED', 'THIS_AND_FUTURE', 'WHOLE_SERIES'])
+    .optional(),
 })
 export type ExpenseCategoriesBulkUpdatedRow = z.infer<
   typeof expenseCategoriesBulkUpdatedRowSchema
+>
+
+export const bulkCategorySeriesUpdateSchema = z.object({
+  seriesId: z.string().min(1),
+  propagation: z.enum(['THIS_AND_FUTURE', 'WHOLE_SERIES']),
+  occurrenceCount: z.number().int().nonnegative(),
+  templateChanged: z.boolean(),
+  toCategoryId: categoryIdSchema,
+})
+export type BulkCategorySeriesUpdate = z.infer<
+  typeof bulkCategorySeriesUpdateSchema
 >
 
 export const expenseCategoriesBulkUpdatedActivityDataSchema = z.object({
@@ -229,6 +252,7 @@ export const expenseCategoriesBulkUpdatedActivityDataSchema = z.object({
   count: z.number().int().nonnegative(),
   distinctCategories: z.number().int().nonnegative().optional(),
   rows: z.array(expenseCategoriesBulkUpdatedRowSchema).max(2000),
+  seriesUpdated: z.array(bulkCategorySeriesUpdateSchema).max(500).optional(),
   fromCategoryId: categoryIdSchema,
   triggeredByAiConfidence: z.boolean().optional(),
 })

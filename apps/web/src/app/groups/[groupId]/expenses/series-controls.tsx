@@ -19,6 +19,7 @@ export type ExpenseSeriesMetadata = {
   status?: 'ACTIVE' | 'PAUSED' | 'COMPLETED' | 'CANCELLED'
   previousExpenseId?: string | null
   nextExpenseId?: string | null
+  diverged?: boolean
 }
 
 export function RecurringBadge({
@@ -76,6 +77,14 @@ export function SeriesControls({
   return (
     <div className="flex flex-wrap items-center gap-2 border-t pt-4">
       <RecurringBadge status={series.status} />
+      {series.diverged ? (
+        <Badge
+          variant="outline"
+          className="border-amber-500/50 text-amber-700 dark:text-amber-400"
+        >
+          {t('badgeDiverged')}
+        </Badge>
+      ) : null}
       <span className="me-auto text-sm text-muted-foreground">
         {t('occurrence', { sequence: series.sequence })}
       </span>

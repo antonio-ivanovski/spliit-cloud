@@ -547,7 +547,7 @@ export async function updateExpense(
       if (options?.scope === 'THIS_AND_FUTURE' && existingSeries !== null) {
         const lockedSeries = await tx.recurringExpenseSeries.findUnique({
           where: { id: existingSeries.id },
-          select: { version: true },
+          select: { version: true, templateVersion: true },
         })
         if (!lockedSeries || lockedSeries.version !== existingSeries.version) {
           throw new Error(
@@ -921,6 +921,7 @@ export async function updateExpense(
                 }),
             status: nextStatus,
             version: { increment: 1 },
+            templateVersion: { increment: 1 },
             template,
             catchUpBatch: catchUpBatch ?? null,
           },

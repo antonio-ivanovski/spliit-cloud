@@ -73,10 +73,12 @@ export const swapPreviewOutputSchema = z.object({
   sumNew: z.number().int(),
   budgetCount: z.number().int().default(0),
   activeRecurringCount: z.number().int().default(0),
+  seriesTemplateCount: z.number().int().default(0),
   warnings: z.array(z.string()).default([]),
 })
 
 export const swapExecuteOutputSchema = z.object({
   updated: z.number().int(),
   newCode: z.string(),
+  seriesTemplatesConverted: z.number().int().default(0),
 })

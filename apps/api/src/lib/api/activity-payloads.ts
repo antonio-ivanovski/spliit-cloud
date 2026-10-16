@@ -88,6 +88,12 @@ type BuildGroupInput = {
   summary?: string
   changedFields?: GroupChangedField[]
   changes?: GroupActivityChange[]
+  currencySwap?: {
+    fromCurrencyCode: string
+    toCurrencyCode: string
+    expensesConverted: number
+    seriesTemplatesConverted: number
+  }
 }
 
 export function buildGroupActivityData(
@@ -100,6 +106,9 @@ export function buildGroupActivityData(
       ? { changedFields: input.changedFields }
       : {}),
     ...(input.changes !== undefined ? { changes: input.changes } : {}),
+    ...(input.currencySwap !== undefined
+      ? { currencySwap: input.currencySwap }
+      : {}),
   }
 }
 

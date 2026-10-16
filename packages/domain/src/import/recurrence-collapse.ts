@@ -63,6 +63,10 @@ export type LegacyRecurringSeriesPlan = {
    * skipping overdue). `null` when the schedule end condition is exhausted.
    */
   nextOccurrenceOrdinal: number | null
+  /** Member categories collapsed into this series (anchor wins on import). */
+  memberCategories: string[]
+  /** True when collapsed rows differ only by category (anchor wins). */
+  categoryDiffers: boolean
 }
 
 export type LegacyRecurringImportPlan = {
@@ -80,6 +84,10 @@ export type LegacyRecurringSummaryItem = {
   recurrenceRule: LegacyRecurrenceRule
   /** Authoritative cadence (frequency + interval + end) for the series. */
   config: RecurrenceConfig
+  /** Member categories collapsed into this series (anchor wins on import). */
+  memberCategories: string[]
+  /** True when collapsed rows differ only by category (anchor wins). */
+  categoryDiffers: boolean
 }
 
 function toUtcDay(value: string | Date): Date {
@@ -253,6 +261,10 @@ export function planLegacyRecurringImport(
     const anchor = expenses[anchorIndex]!
     const config = effectiveRecurringConfig(anchor)
     if (!config) continue
+    const memberCategories = [
+      ...new Set(ordered.map((index) => expenses[index].category)),
+    ]
+    const categoryDiffers = memberCategories.length > 1
 
     ordered.forEach((expenseIndex, offset) => {
       membership.push({
@@ -278,6 +290,8 @@ export function planLegacyRecurringImport(
       occurrenceCount: ordered.length,
       nextOccurrenceDate: next ? next.date : null,
       nextOccurrenceOrdinal: next ? next.ordinal : null,
+      memberCategories,
+      categoryDiffers,
     })
   }
 
@@ -300,6 +314,8 @@ export function summarizeLegacyRecurringImport(
       title: plan.title,
       recurrenceRule: plan.recurrenceRule,
       config: plan.config,
+      memberCategories: plan.memberCategories,
+      categoryDiffers: plan.categoryDiffers,
     }))
 }
 

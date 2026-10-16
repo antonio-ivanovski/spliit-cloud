@@ -5,7 +5,8 @@ import { useInView } from 'react-intersection-observer'
 import { trpc } from '@/trpc/client'
 import type { CategoryId } from '@spliit/domain'
 
-import { BulkCategorizeTable } from './bulk-categorize-table'
+import { BulkCategorizeTable, groupSeriesRows } from './bulk-categorize-table'
+import type { SeriesGroup } from './bulk-categorize-table'
 
 export function BulkCategorizePagedReview({
   groupId,
@@ -18,6 +19,7 @@ export function BulkCategorizePagedReview({
   aiMinConfidence,
   onChange,
   onViewExpense,
+  onSeriesGroups,
 }: {
   groupId: string
   runId: string
@@ -29,6 +31,7 @@ export function BulkCategorizePagedReview({
   aiMinConfidence: number
   onChange: (id: string, categoryId: CategoryId) => Promise<boolean>
   onViewExpense?: (id: string) => void
+  onSeriesGroups?: (groups: SeriesGroup[]) => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'BulkCategorize' })
   const [edits, setEdits] = useState<Map<string, CategoryId>>(new Map())
@@ -61,6 +64,41 @@ export function BulkCategorizePagedReview({
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) void fetchNextPage()
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
+  const hasSeriesRows = useMemo(
+    () => rows.some((row) => row.recurringSeriesId != null),
+    [rows],
+  )
+  const seriesQuery = trpc.groups.expenses.series.useQuery(
+    { groupId, limit: 100 },
+    { enabled: hasSeriesRows },
+  )
+  const metadataBySeriesId = useMemo(() => {
+    const map = new Map<
+      string,
+      {
+        seriesId: string
+        frequency: string
+        interval: number
+        diverged: boolean
+      }
+    >()
+    for (const item of seriesQuery.data?.series ?? []) {
+      map.set(item.id, {
+        seriesId: item.id,
+        frequency: item.frequency,
+        interval: item.interval,
+        diverged: item.diverged,
+      })
+    }
+    return map
+  }, [seriesQuery.data])
+  const enrichedGroups = useMemo(
+    () => groupSeriesRows(rows, metadataBySeriesId),
+    [rows, metadataBySeriesId],
+  )
+  useEffect(() => {
+    onSeriesGroups?.(enrichedGroups)
+  }, [enrichedGroups, onSeriesGroups])
   async function change(id: string, categoryId: CategoryId) {
     if (await onChange(id, categoryId))
       setEdits((current) => new Map(current).set(id, categoryId))

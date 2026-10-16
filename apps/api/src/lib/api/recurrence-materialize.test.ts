@@ -259,7 +259,9 @@ describe('recurring expense materialization', () => {
       }),
     ).resolves.toEqual({ created: false })
     expect(prismaMock.recurringExpenseSeries.update).toHaveBeenCalledWith(
-      expect.objectContaining({ data: { status: 'COMPLETED' } }),
+      expect.objectContaining({
+        data: expect.objectContaining({ status: 'COMPLETED' }),
+      }),
     )
     expect(prismaMock.expense.create).not.toHaveBeenCalled()
     expect(jobMocks.sendJob).not.toHaveBeenCalled()
@@ -275,7 +277,9 @@ describe('recurring expense materialization', () => {
       }),
     ).resolves.toEqual({ created: false })
     expect(prismaMock.recurringExpenseSeries.update).toHaveBeenCalledWith(
-      expect.objectContaining({ data: { status: 'COMPLETED' } }),
+      expect.objectContaining({
+        data: expect.objectContaining({ status: 'COMPLETED' }),
+      }),
     )
     expect(prismaMock.expense.create).not.toHaveBeenCalled()
   })
@@ -312,6 +316,7 @@ describe('recurring expense materialization', () => {
           status: 'PAUSED',
           catchUpBatch: null,
           version: { increment: 1 },
+          templateVersion: { increment: 1 },
         },
       }),
     )

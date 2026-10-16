@@ -4952,7 +4952,6 @@
     "warnings": {
       "minor-units": "Mata uang baru memakai unit minor yang berbeda (mis. sen vs yen) — selisih pembulatan kecil wajar terjadi.",
       "budgets-stale": "Anggaran tetap dalam nominal mata uang lama dan harus ditinjau setelah penukaran.",
-      "recurring-stale": "Templat berulang yang aktif tetap memakai nominal lama — tinjau setelah penukaran.",
       "exact-to-custom": "Beberapa pengeluaran memakai jumlah pasti sehingga dikonversi dengan kurs kustom.",
       "fixed-fallback": "Beberapa pengeluaran memakai konversi tetap untuk mata uang yang ditarik."
     },
