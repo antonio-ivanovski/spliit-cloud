@@ -1,72 +1,47 @@
-import { Effect } from 'effect'
-import Papa from 'papaparse'
+import { Effect, Schema } from 'effect'
 
 import { SETTLEMENT_CATEGORY_ID } from '../categories'
-import type { Currency } from '../currency'
 import { getCurrency } from '../currency'
-import { distributeRemainder } from '../remainder-distribution'
-import {
-  calculateExactShares,
-  serializePaidBy,
-  serializePaidFor,
-} from '../totals'
 import { amountAsMinorUnitsByCode } from '../utils'
-import { guessSplitMode } from './split-guess'
+import { buildNetExpense } from './expense-builder'
+import { createMemberRegistry } from './member-registry'
 import { splitwiseCategoryToId } from './splitwise-categories'
 import {
   isSplitwiseHeader,
   isSplitwiseTotalBalanceLabel,
 } from './splitwise-headers'
+import {
+  dominantCurrency,
+  FALLBACK_CURRENCY,
+  isBlankRow,
+  parseCsvText,
+  parseIsoDatePrefix,
+  toNumberOrNull,
+} from './table'
 import { ImportError } from './types'
 import type { NormalizedSource } from './types'
 
 const PARTICIPANT_START_INDEX = 5
 
-const FALLBACK_CURRENCY: Currency = {
-  code: '',
-  symbol: '',
-  rounding: 0,
-  decimal_digits: 2,
-}
+/** Decoded, trimmed view of one raw CSV row for a known header layout. */
+const SplitwiseRowSchema = Schema.Struct({
+  date: Schema.Trim,
+  title: Schema.Trim,
+  category: Schema.Trim,
+  // Cost stays unknown: blank means "not an expense row" (skip below) and
+  // garbage numerics skip the row too — only structurally undecodable rows
+  // fail the parse. (Effect's NumberFromString accepts NaN as a success, so
+  // the finiteness guard below is the load-bearing check, not the schema.)
+  cost: Schema.Unknown,
+  currency: Schema.Trim,
+})
 
-function toNumberOrNull(value: string | undefined): number | null {
-  if (value === undefined) return null
-  const trimmed = value.trim()
-  if (trimmed === '') return null
-  const n = Number(trimmed)
-  return Number.isNaN(n) ? null : n
-}
-
-export const parseSplitwiseCsv = Effect.fnUntraced(function* (
-  input: string,
+export const parseSplitwiseTable = Effect.fnUntraced(function* (
+  rows: string[][],
 ): Effect.fn.Return<NormalizedSource, ImportError> {
-  const cleaned = input.charCodeAt(0) === 0xfeff ? input.slice(1) : input
-  const parsed = Papa.parse<string[]>(cleaned, {
-    skipEmptyLines: 'greedy',
-    header: false,
-  })
-
-  const rows = parsed.data
-  if (rows.length < 2) {
-    return yield* new ImportError({
-      message: 'CSV has no data rows',
-      code: 'CSV_NO_DATA_ROWS',
-      params: {},
-    })
-  }
-  if (parsed.errors.length > 0) {
-    const detail = parsed.errors[0]?.message ?? 'unknown error'
-    return yield* new ImportError({
-      message: `CSV could not be parsed: ${detail}`,
-      code: 'CSV_PARSE_FAILED',
-      params: { detail },
-    })
-  }
-
   let headerRowIdx = -1
   for (let i = 0; i < rows.length; i++) {
-    const row = rows[i]
-    if (isSplitwiseHeader(row)) {
+    if (isSplitwiseHeader(rows[i])) {
       headerRowIdx = i
       break
     }
@@ -78,22 +53,15 @@ export const parseSplitwiseCsv = Effect.fnUntraced(function* (
       params: {},
     })
   }
-  const header = rows[headerRowIdx]
+  const header = rows[headerRowIdx]!
 
-  const participantIndex = new Map<string, number>()
-  const participants: NormalizedSource['participants'] = []
+  const registry = createMemberRegistry('splitwise-participant')
   for (let i = PARTICIPANT_START_INDEX; i < header.length; i++) {
     const name = (header[i] ?? '').trim()
     if (!name) continue
-    const key = name.toLowerCase()
-    if (participantIndex.has(key)) continue
-    const idx = participants.length
-    participantIndex.set(key, idx)
-    participants.push({
-      sourceId: `splitwise-participant-${idx}`,
-      sourceName: name,
-    })
+    registry.register(name)
   }
+  const participants = registry.all()
   if (participants.length === 0) {
     return yield* new ImportError({
       message: 'CSV is missing participant columns',
@@ -105,14 +73,34 @@ export const parseSplitwiseCsv = Effect.fnUntraced(function* (
   const expenses: NormalizedSource['expenses'] = []
   const currencyCounts = new Map<string, number>()
   for (let r = headerRowIdx + 1; r < rows.length; r++) {
-    const row = rows[r]
-    if (row.every((c: string) => (c ?? '').trim() === '')) continue
-    const date = (row[0] ?? '').trim()
-    const title = (row[1] ?? '').trim()
-    const category = (row[2] ?? '').trim()
-    const cost = toNumberOrNull(row[3])
-    const currencyCode = (row[4] ?? '').trim().toUpperCase()
-    if (!/^\d{4}-\d{2}-\d{2}/.test(date)) continue
+    const row = rows[r]!
+    if (isBlankRow(row)) continue
+    const decoded = yield* Schema.decodeUnknownEffect(SplitwiseRowSchema)({
+      date: row[0] ?? '',
+      title: row[1] ?? '',
+      category: row[2] ?? '',
+      cost: row[3],
+      currency: row[4] ?? '',
+    }).pipe(
+      Effect.mapError(
+        () =>
+          new ImportError({
+            message: `Row ${r + 1} is not a valid Splitwise expense row`,
+            code: 'CSV_INVALID_EXPENSE_ROW',
+            params: { row: r + 1 },
+          }),
+      ),
+    )
+    const date = decoded.date
+    const title = decoded.title
+    const category = decoded.category
+    // Blank cost means "not an expense row"; garbage numerics skip the row
+    // (pinned by "skips rows with unparseable Cost"). Only structurally
+    // undecodable rows fail above.
+    const cost =
+      typeof decoded.cost === 'string' ? toNumberOrNull(decoded.cost) : null
+    const currencyCode = decoded.currency.toUpperCase()
+    if (!parseIsoDatePrefix(date)) continue
     if (!title) continue
     if (cost === null) continue
     if (currencyCode.length !== 3) continue
@@ -135,9 +123,8 @@ export const parseSplitwiseCsv = Effect.fnUntraced(function* (
       if (!name) continue
       const raw = toNumberOrNull(row[i])
       if (raw === null) continue
-      const idx = participantIndex.get(name.toLowerCase())
-      if (idx === undefined) continue
-      const sourceId = participants[idx]!.sourceId
+      const sourceId = registry.idOf(name)
+      if (sourceId === undefined) continue
       if (raw !== 0) {
         entries.push({ sourceId, raw })
       }
@@ -154,89 +141,23 @@ export const parseSplitwiseCsv = Effect.fnUntraced(function* (
       symbol: currencyCode,
     }
     const amountCents = amountAsMinorUnitsByCode(cost, currencyCode)
-    const positiveEntries = entries.filter((e) => e.raw > 0)
-    const negativeEntries = entries.filter((e) => e.raw < 0)
 
-    // Negative cells are consumed shares (major units → minor via serializer).
-    const negativeSerialized = serializePaidFor({
-      splitMode: 'BY_AMOUNT',
-      amount: amountCents,
+    // Signed-net shape: each cell is `Paid - Owe`; negatives are consumed
+    // shares, the payer absorbs the positive residual (their own share plus
+    // any multi-payer residual) and advances the full amount.
+    const netMajors = new Map<string, number>()
+    for (const e of entries) {
+      netMajors.set(e.sourceId, (netMajors.get(e.sourceId) ?? 0) + e.raw)
+    }
+    const built = buildNetExpense({
+      amountCents,
       currency,
-      paidFor: negativeEntries.map((e) => ({
-        participant: { id: e.sourceId },
-        shares: Math.abs(e.raw),
-      })),
-    })
-    const negativeTotal = negativeSerialized.reduce((s, p) => s + p.shares, 0)
-    const remainingShare = amountCents - negativeTotal
-
-    // Positive participants share the remainder evenly via domain core.
-    const positiveExact = calculateExactShares({
-      amount: remainingShare,
-      splitMode: 'EVENLY',
-      participants: positiveEntries.map((e) => ({
-        id: e.sourceId,
-        shares: 1,
-      })),
-    })
-    const positiveAllocated = distributeRemainder(positiveExact, remainingShare)
-
-    const paidFor: Array<{ sourceId: string; shares: number }> = []
-    for (const p of negativeSerialized) {
-      if (p.shares > 0) {
-        paidFor.push({ sourceId: p.participant.id, shares: p.shares })
-      }
-    }
-    for (const e of positiveEntries) {
-      const shares = positiveAllocated[e.sourceId] ?? 0
-      if (shares > 0) paidFor.push({ sourceId: e.sourceId, shares })
-    }
-    if (paidFor.length === 0) continue
-
-    // paidBy = positive raw (paid) + consumed share, in major units then serialize.
-    const paidByMajor = positiveEntries.map((e) => {
-      const consumed = positiveAllocated[e.sourceId] ?? 0
-      const scale = 10 ** currency.decimal_digits
-      return {
-        participant: { id: e.sourceId },
-        shares: Math.abs(e.raw) + consumed / scale,
-      }
-    })
-    const paidBySerialized = serializePaidBy({
-      paidBySplitMode: 'BY_AMOUNT',
-      amount: amountCents,
-      inputCurrency: currency,
-      paidByList: paidByMajor,
-    })
-    // Ensure Σ paidBy === amount (integer residual → first positive / payer).
-    const paidByExact = calculateExactShares({
-      amount: amountCents,
-      splitMode: 'BY_AMOUNT',
-      participants: paidBySerialized.map((p) => ({
-        id: p.participant.id,
-        shares: p.shares,
-      })),
-    })
-    const paidByFixed = distributeRemainder(paidByExact, amountCents, {
+      netMajors,
       payerId: payerSourceId,
     })
-    const paidBy = Object.entries(paidByFixed).map(([sourceId, shares]) => ({
-      sourceId,
-      shares,
-    }))
-
-    // Best-effort split-mode guess (EVENLY / BY_SHARES / BY_AMOUNT).
-    const involvedCount = new Set([
-      ...paidBy.map((p) => p.sourceId),
-      ...paidFor.map((p) => p.sourceId),
-    ]).size
-    const { splitMode, paidFor: resolvedPaidFor } = guessSplitMode(
-      paidFor,
-      amountCents,
-      {
-        involvedParticipantCount: involvedCount,
-      },
-    )
+    if (built.paidFor.length === 0) continue
+    const { paidBy, paidFor, splitMode } = built
+    const resolvedPaidFor = paidFor
 
     expenses.push({
       title,
@@ -266,14 +187,7 @@ export const parseSplitwiseCsv = Effect.fnUntraced(function* (
     })
   }
 
-  let mostCommonCurrency = ''
-  let maxCount = 0
-  for (const [code, count] of currencyCounts) {
-    if (count > maxCount) {
-      maxCount = count
-      mostCommonCurrency = code
-    }
-  }
+  const mostCommonCurrency = dominantCurrency(currencyCounts)
 
   return {
     provider: 'SPLITWISE',
@@ -288,4 +202,11 @@ export const parseSplitwiseCsv = Effect.fnUntraced(function* (
     expenses,
     documentSource: 'NONE',
   }
+})
+
+export const parseSplitwiseCsv = Effect.fn('parseSplitwiseCsv')(function* (
+  input: string,
+): Effect.fn.Return<NormalizedSource, ImportError> {
+  const rows = yield* parseCsvText(input)
+  return yield* parseSplitwiseTable(rows)
 })

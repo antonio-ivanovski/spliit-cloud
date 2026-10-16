@@ -24,7 +24,7 @@ import type {
   NormalizedSourceExpense,
   ParticipantMappingState,
 } from '@spliit/domain/import'
-import { buildImportBatch } from '@spliit/domain/import'
+import { runBuildBatch } from '@spliit/domain/import'
 import { notificationCategoryValues } from '@spliit/domain/notifications'
 
 import { AccountImportProgress } from './account-import-progress'
@@ -65,7 +65,7 @@ import {
 import { LegacyExportWarning } from './legacy-export-warning'
 import { MappingStep } from './mapping-step'
 import { SourceStep } from './source-step'
-import { useImportSource } from './use-import-source'
+import { usePreviewSource } from './use-import-source'
 import { StepHeader } from './wizard-nav'
 
 const importRoute = getRouteApi('/groups/import')
@@ -82,12 +82,12 @@ type AccountImportQueue = {
 }
 
 /**
- * Multi-group Tricount queue. Unlike the Cloud queue, sources are already
- * parsed `NormalizedSource`s (no bundle/inspection wrapper), so the queue holds
- * them directly. Mapping hints carry over by participant name between groups
- * from the same dump.
+ * Multi-group source queue. Unlike the Cloud queue, sources are already parsed
+ * `NormalizedSource`s (no bundle/inspection wrapper), so the queue holds them
+ * directly. Mapping hints carry over by participant name between groups from
+ * the same dump. Only tricount produces multi-group results today.
  */
-type TricountImportQueue = {
+type MultiSourceQueue = {
   sources: NormalizedSource[]
   selectedSourceIds: string[]
   currentIndex: number
@@ -139,8 +139,8 @@ export function ImportGroupWizard() {
   const [accountImportError, setAccountImportError] = useState<string | null>(
     null,
   )
-  const [tricountQueue, setTricountQueue] =
-    useState<TricountImportQueue | null>(null)
+  const [multiSourceQueue, setMultiSourceQueue] =
+    useState<MultiSourceQueue | null>(null)
 
   const [state, dispatch] = useReducer(
     importWizardReducer,
@@ -154,7 +154,7 @@ export function ImportGroupWizard() {
     error: sourcePreviewError,
     submit,
     reset: resetSourcePreview,
-  } = useImportSource()
+  } = usePreviewSource('spliit')
 
   const { data: destinationGroupData } = trpc.groups.get.useQuery(
     { groupId: state.targetGroupId! },
@@ -293,8 +293,8 @@ export function ImportGroupWizard() {
   )
 
   // Prefill error message for the source step's inline error display.
-  // Derived (not stored) because the wizard's `useImportSource`
-  // instance and the source step's `useImportSource` instance don't
+  // Derived (not stored) because the wizard's `usePreviewSource`
+  // instance and the source step's `usePreviewSource` instance don't
   // share their `submittedUrl` state — the wizard knows about the
   // prefill, the source step doesn't, so we hand the message down.
   const prefillErrorMessage = useMemo(() => {
@@ -345,17 +345,18 @@ export function ImportGroupWizard() {
     resetSourcePreview,
   ])
 
-  // Tricount queue: apply remembered name-based mappings when advancing
+  // Multi-source queue: apply remembered name-based mappings when advancing
   // to the next group. Runs once per queued source (guarded by ref key);
   // the user can still adjust in the mapping step.
-  const tricountHintKeyRef = useRef<string | null>(null)
+  const multiSourceHintKeyRef = useRef<string | null>(null)
   useEffect(() => {
-    if (!tricountQueue || !state.source || state.step !== 'destination') return
-    if (tricountQueue.currentIndex === 0) return
+    if (!multiSourceQueue || !state.source || state.step !== 'destination')
+      return
+    if (multiSourceQueue.currentIndex === 0) return
     const key = state.source.sourceGroupId
-    if (tricountHintKeyRef.current === key) return
-    tricountHintKeyRef.current = key
-    const hints = tricountQueue.mappingHints
+    if (multiSourceHintKeyRef.current === key) return
+    multiSourceHintKeyRef.current = key
+    const hints = multiSourceQueue.mappingHints
     if (Object.keys(hints).length === 0) return
     dispatch({
       type: 'MAPPING_HINTS_APPLIED',
@@ -371,7 +372,7 @@ export function ImportGroupWizard() {
         }
       }),
     })
-  }, [tricountQueue, state.source, state.step, state.participants])
+  }, [multiSourceQueue, state.source, state.step, state.participants])
 
   const handleSourceError = useCallback(
     (message: string) => {
@@ -452,7 +453,7 @@ export function ImportGroupWizard() {
 
   // File uploads are parsed client-side and hand the parsed source
   // directly up via this callback. URL pastes / prefill go through the
-  // shared `useImportSource` instance and the wizard's effect above.
+  // shared `usePreviewSource` instance and the wizard's effect above.
   const handleFileLoaded = useCallback(
     (source: NormalizedSource) => {
       setPendingCloudInspection(null)
@@ -466,9 +467,9 @@ export function ImportGroupWizard() {
     [account?.id],
   )
 
-  // Multi-group Tricount dumps: start the queue at the first selected
+  // Multi-group dumps: start the queue at the first selected
   // group. Subsequent groups advance via the done-step continue handler.
-  const handleTricountMultiLoaded = useCallback(
+  const handleMultiLoaded = useCallback(
     (sources: NormalizedSource[]) => {
       if (sources.length === 0) return
       setPendingCloudInspection(null)
@@ -482,7 +483,7 @@ export function ImportGroupWizard() {
         })
         return
       }
-      setTricountQueue({
+      setMultiSourceQueue({
         sources,
         selectedSourceIds: sources.map((s) => s.sourceGroupId),
         currentIndex: 0,
@@ -495,9 +496,9 @@ export function ImportGroupWizard() {
     [account?.id],
   )
 
-  const rememberTricountMappings = useCallback(() => {
-    if (!tricountQueue || !state.source) return
-    setTricountQueue((current) => {
+  const rememberMultiSourceMappings = useCallback(() => {
+    if (!multiSourceQueue || !state.source) return
+    setMultiSourceQueue((current) => {
       if (!current) return current
       const mappingHints = { ...current.mappingHints }
       for (const participant of state.participants) {
@@ -511,16 +512,16 @@ export function ImportGroupWizard() {
       }
       return { ...current, mappingHints }
     })
-  }, [tricountQueue, state.source, state.participants])
+  }, [multiSourceQueue, state.source, state.participants])
 
-  const advanceTricountQueue = useCallback(() => {
-    if (!tricountQueue || !state.source) return
-    rememberTricountMappings()
+  const advanceMultiSourceQueue = useCallback(() => {
+    if (!multiSourceQueue || !state.source) return
+    rememberMultiSourceMappings()
     const sourceId = state.source.sourceGroupId
-    const nextIndex = tricountQueue.currentIndex + 1
+    const nextIndex = multiSourceQueue.currentIndex + 1
     const completed = activeImportGroupId
       ? [
-          ...tricountQueue.completed.filter(
+          ...multiSourceQueue.completed.filter(
             (item) => item.sourceId !== sourceId,
           ),
           {
@@ -529,32 +530,32 @@ export function ImportGroupWizard() {
             name: state.source.name,
           },
         ]
-      : tricountQueue.completed
-    if (nextIndex >= tricountQueue.selectedSourceIds.length) {
-      setTricountQueue({ ...tricountQueue, completed, finished: true })
+      : multiSourceQueue.completed
+    if (nextIndex >= multiSourceQueue.selectedSourceIds.length) {
+      setMultiSourceQueue({ ...multiSourceQueue, completed, finished: true })
       return
     }
-    const next = tricountQueue.sources.find(
-      (s) => s.sourceGroupId === tricountQueue.selectedSourceIds[nextIndex],
+    const next = multiSourceQueue.sources.find(
+      (s) => s.sourceGroupId === multiSourceQueue.selectedSourceIds[nextIndex],
     )
     if (!next) {
-      setTricountQueue({ ...tricountQueue, completed, finished: true })
+      setMultiSourceQueue({ ...multiSourceQueue, completed, finished: true })
       return
     }
     autoMatchKeyRef.current = null
     resetImport()
-    setTricountQueue({
-      ...tricountQueue,
+    setMultiSourceQueue({
+      ...multiSourceQueue,
       completed,
       currentIndex: nextIndex,
     })
     dispatch({ type: 'RESET' })
     dispatch({ type: 'SOURCE_LOADED', source: next, accountId: account?.id })
   }, [
-    tricountQueue,
+    multiSourceQueue,
     state.source,
     activeImportGroupId,
-    rememberTricountMappings,
+    rememberMultiSourceMappings,
     resetImport,
     account?.id,
   ])
@@ -750,11 +751,17 @@ export function ImportGroupWizard() {
         sourceGroupId: state.source.sourceGroupId,
         sourceUrl: state.prefillSourceUrl ?? undefined,
       }
-      const { batch } = buildImportBatch(
+      const built = runBuildBatch(
         state,
         destinationCurrencyCode,
         state.rates ?? undefined,
       )
+      if (!('batch' in built)) {
+        throw new Error(
+          built.ok ? 'Invalid import' : (built.error ?? 'Invalid import'),
+        )
+      }
+      const { batch } = built
       const expenses = buildImportExpenses(batch.expenses)
       const sourceExpenseIndex = new Map(
         state.source.expenses.flatMap((expense, index) =>
@@ -799,7 +806,7 @@ export function ImportGroupWizard() {
       // from the mutation onError handler. Avoid showing a duplicate toast
       // for that expected, actionable flow.
       if (!isDocumentImportFailure(description)) {
-        if (accountQueue || tricountQueue) setAccountImportError(description)
+        if (accountQueue || multiSourceQueue) setAccountImportError(description)
         toast({
           title: t('Groups.Import.Confirm.importErrorTitle'),
           description,
@@ -858,13 +865,13 @@ export function ImportGroupWizard() {
   }, [accountQueue, resetCloudImport, state.cloudInspection])
 
   const handleDoneNavigate = useCallback(() => {
-    if (tricountQueue) {
-      if (tricountQueue.finished) {
-        setTricountQueue(null)
+    if (multiSourceQueue) {
+      if (multiSourceQueue.finished) {
+        setMultiSourceQueue(null)
         void navigate({ to: '/' })
         return
       }
-      advanceTricountQueue()
+      advanceMultiSourceQueue()
       return
     }
     if (accountQueue?.finished) {
@@ -915,8 +922,8 @@ export function ImportGroupWizard() {
       void navigate({ to: '/' })
     }
   }, [
-    tricountQueue,
-    advanceTricountQueue,
+    multiSourceQueue,
+    advanceMultiSourceQueue,
     accountQueue,
     activeImportGroupId,
     navigate,
@@ -956,34 +963,34 @@ export function ImportGroupWizard() {
           index.sourceId === accountQueue.selectedGroupIds[accountGroupIndex],
       )
     : undefined
-  const currentTricountGroup = tricountQueue
-    ? (tricountQueue.sources.find(
+  const currentMultiSourceGroup = multiSourceQueue
+    ? (multiSourceQueue.sources.find(
         (s) =>
           s.sourceGroupId ===
-          tricountQueue.selectedSourceIds[
-            tricountQueue.finished
-              ? tricountQueue.selectedSourceIds.length - 1
-              : tricountQueue.currentIndex
+          multiSourceQueue.selectedSourceIds[
+            multiSourceQueue.finished
+              ? multiSourceQueue.selectedSourceIds.length - 1
+              : multiSourceQueue.currentIndex
           ],
       ) ?? null)
     : null
-  const tricountProgress =
-    tricountQueue && currentTricountGroup ? (
+  const multiSourceProgress =
+    multiSourceQueue && currentMultiSourceGroup ? (
       <AccountImportProgress
         phase="active"
         current={
-          tricountQueue.finished
-            ? tricountQueue.selectedSourceIds.length
-            : tricountQueue.currentIndex + 1
+          multiSourceQueue.finished
+            ? multiSourceQueue.selectedSourceIds.length
+            : multiSourceQueue.currentIndex + 1
         }
-        total={tricountQueue.selectedSourceIds.length}
-        groupName={currentTricountGroup.name}
+        total={multiSourceQueue.selectedSourceIds.length}
+        groupName={currentMultiSourceGroup.name}
       />
     ) : undefined
-  const tricountBatchSummary =
-    tricountQueue && (tricountQueue.finished || state.step === 'done')
+  const multiSourceBatchSummary =
+    multiSourceQueue && (multiSourceQueue.finished || state.step === 'done')
       ? {
-          completed: tricountQueue.completed.map((item) => ({
+          completed: multiSourceQueue.completed.map((item) => ({
             sourceId: item.sourceId,
             name: item.name,
           })),
@@ -1108,7 +1115,7 @@ export function ImportGroupWizard() {
     <div className="flex flex-col gap-6">
       <StepHeader
         step={state.step}
-        accountProgress={accountProgress ?? tricountProgress}
+        accountProgress={accountProgress ?? multiSourceProgress}
       />
 
       {state.step === 'source' && setupBundle ? (
@@ -1158,7 +1165,7 @@ export function ImportGroupWizard() {
           <SourceStep
             onLoaded={handleFileLoaded}
             onCloudLoaded={handleCloudLoaded}
-            onTricountMultiLoaded={handleTricountMultiLoaded}
+            onMultiLoaded={handleMultiLoaded}
             sourcePreview={sourcePreview}
             isSourcePreviewLoading={isSourcePreviewLoading}
             sourcePreviewError={sourcePreviewError}
@@ -1338,7 +1345,7 @@ export function ImportGroupWizard() {
           onBack={handleBack}
           onSubmit={handleSubmit}
           importError={
-            accountQueue || tricountQueue ? accountImportError : null
+            accountQueue || multiSourceQueue ? accountImportError : null
           }
           onSkip={accountQueue ? skipCurrentAccountGroup : undefined}
           cloudSummary={
@@ -1364,8 +1371,8 @@ export function ImportGroupWizard() {
           importedDocumentCount={activeImportedDocumentCount}
           onContinue={handleDoneNavigate}
           continueLabel={
-            tricountQueue
-              ? tricountQueue.finished
+            multiSourceQueue
+              ? multiSourceQueue.finished
                 ? t('Groups.backToHome')
                 : t('Groups.Import.Cloud.continueToNextGroup')
               : accountQueue
@@ -1374,7 +1381,7 @@ export function ImportGroupWizard() {
                   : t('Groups.Import.Cloud.continueToNextGroup')
                 : undefined
           }
-          batchSummary={accountBatchSummary ?? tricountBatchSummary}
+          batchSummary={accountBatchSummary ?? multiSourceBatchSummary}
         />
       )}
     </div>

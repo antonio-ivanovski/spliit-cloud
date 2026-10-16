@@ -12,6 +12,13 @@
  * https://sesterce.io/docs/import/), which the parser also accepts.
  */
 
+import {
+  defineCoreLabels,
+  definePrefixMatcher,
+  isCoreLabel,
+  normalizeHeaderLabel,
+} from './header-map'
+
 const CORE_LABELS = {
   title: ['Title', 'Titre', 'Titel', 'Título', 'Titolo'],
   amount: ['Amount', 'Montant', 'Betrag', 'Importe', 'Importo'],
@@ -31,24 +38,14 @@ const CORE_LABELS = {
 
 type CoreKey = keyof typeof CORE_LABELS
 
-function normalizeHeaderLabel(value: string | undefined): string {
-  return (value ?? '').trim().normalize('NFC')
-}
+const LABEL_SETS = defineCoreLabels(CORE_LABELS)
 
-const LABEL_SETS = Object.fromEntries(
-  Object.entries(CORE_LABELS).map(([key, labels]) => [
-    key,
-    new Set(labels.map((label) => normalizeHeaderLabel(label))),
-  ]),
-) as { [K in CoreKey]: Set<string> }
-
-function isCoreLabel(key: CoreKey, value: string): boolean {
-  const normalized = normalizeHeaderLabel(value)
-  if (LABEL_SETS[key].has(normalized)) return true
+function isTricountCoreLabel(key: CoreKey, value: string): boolean {
+  if (isCoreLabel(LABEL_SETS, key, value)) return true
   // `Amount in default currency (EUR)` — prefix match on the base label.
   if (key === 'amountDefault') {
     return LABEL_SETS.amountDefault.has(
-      normalized.replace(/\s*\([^)]*\)\s*$/, ''),
+      normalizeHeaderLabel(value).replace(/\s*\([^)]*\)\s*$/, ''),
     )
   }
   return false
@@ -56,36 +53,30 @@ function isCoreLabel(key: CoreKey, value: string): boolean {
 
 function isCoreLabelAny(value: string): boolean {
   return (Object.keys(LABEL_SETS) as CoreKey[]).some((key) =>
-    isCoreLabel(key, value),
+    isTricountCoreLabel(key, value),
   )
 }
 
-const PAID_BY_PREFIXES = ['Paid by ', 'Payé par ', 'Gezahlt von ']
-const IMPACTED_PREFIXES = [
+const PAID_BY_MATCHER = definePrefixMatcher([
+  'Paid by ',
+  'Payé par ',
+  'Gezahlt von ',
+])
+const IMPACTED_MATCHER = definePrefixMatcher([
   'Impacted to ',
   'Impacté à ',
   'Paid for ',
   'Payé pour ',
-]
-
-function stripPrefix(value: string, prefixes: string[]): string | null {
-  const normalized = normalizeHeaderLabel(value)
-  for (const prefix of prefixes) {
-    if (normalized.startsWith(prefix) && normalized.length > prefix.length) {
-      return normalized.slice(prefix.length).trim()
-    }
-  }
-  return null
-}
+])
 
 /** Participant name from a `Paid by <Name>` column, or null. */
 export function paidByColumnName(value: string): string | null {
-  return stripPrefix(value, PAID_BY_PREFIXES)
+  return PAID_BY_MATCHER.match(value)
 }
 
 /** Participant name from an `Impacted to <Name>` column, or null. */
 export function impactedColumnName(value: string): string | null {
-  return stripPrefix(value, IMPACTED_PREFIXES)
+  return IMPACTED_MATCHER.match(value)
 }
 
 export type TricountHeaderMap = {
@@ -103,8 +94,11 @@ export type TricountHeaderMap = {
   defaultCurrencyCode: string | null
 }
 
-function findCoreIndex(header: string[], key: CoreKey): number {
-  return header.findIndex((cell) => isCoreLabel(key, cell ?? ''))
+function findTricountCoreIndex(
+  header: readonly (string | undefined)[],
+  key: CoreKey,
+): number {
+  return header.findIndex((cell) => isTricountCoreLabel(key, cell ?? ''))
 }
 
 /**
@@ -117,19 +111,19 @@ export function mapTricountHeader(
   header: readonly (string | undefined)[],
 ): TricountHeaderMap | null {
   const cells = header.map((cell) => cell ?? '')
-  let titleIdx = findCoreIndex(cells, 'title')
-  if (titleIdx === -1) titleIdx = findCoreIndex(cells, 'description')
-  let amountIdx = findCoreIndex(cells, 'amount')
-  if (amountIdx === -1) amountIdx = findCoreIndex(cells, 'cost')
-  let paidByIdx = findCoreIndex(cells, 'paidBy')
-  if (paidByIdx === -1) paidByIdx = findCoreIndex(cells, 'whoPaid')
-  let dateIdx = findCoreIndex(cells, 'dateTime')
-  if (dateIdx === -1) dateIdx = findCoreIndex(cells, 'date')
-  const currencyIdx = findCoreIndex(cells, 'currency')
-  const exchangeRateIdx = findCoreIndex(cells, 'exchangeRate')
-  const amountDefaultIdx = findCoreIndex(cells, 'amountDefault')
-  const transactionTypeIdx = findCoreIndex(cells, 'transactionType')
-  const categoryIdx = findCoreIndex(cells, 'category')
+  let titleIdx = findTricountCoreIndex(cells, 'title')
+  if (titleIdx === -1) titleIdx = findTricountCoreIndex(cells, 'description')
+  let amountIdx = findTricountCoreIndex(cells, 'amount')
+  if (amountIdx === -1) amountIdx = findTricountCoreIndex(cells, 'cost')
+  let paidByIdx = findTricountCoreIndex(cells, 'paidBy')
+  if (paidByIdx === -1) paidByIdx = findTricountCoreIndex(cells, 'whoPaid')
+  let dateIdx = findTricountCoreIndex(cells, 'dateTime')
+  if (dateIdx === -1) dateIdx = findTricountCoreIndex(cells, 'date')
+  const currencyIdx = findTricountCoreIndex(cells, 'currency')
+  const exchangeRateIdx = findTricountCoreIndex(cells, 'exchangeRate')
+  const amountDefaultIdx = findTricountCoreIndex(cells, 'amountDefault')
+  const transactionTypeIdx = findTricountCoreIndex(cells, 'transactionType')
+  const categoryIdx = findTricountCoreIndex(cells, 'category')
 
   // Minimum viable row: a title, a currency, and either a `Paid by`/`Who
   // paid` column or per-member `Paid by <Name>` columns (Sesterce shape

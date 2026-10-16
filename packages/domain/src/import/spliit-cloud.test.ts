@@ -1,5 +1,4 @@
 import { describe, expect, it } from '@effect/vitest'
-import { Effect } from 'effect'
 
 import {
   classifyImportBytes,
@@ -58,23 +57,18 @@ describe('spliit cloud source classification', () => {
   })
 
   it('recognizes a legacy CSV only when the Spliit parser accepts it', () => {
-    const parse = (value: string) =>
-      value === 'spliit'
-        ? Effect.succeed(value)
-        : (Effect.fail(new Error('no')) as Effect.Effect<unknown, unknown>)
-    expect(classifyImportText('export.csv', 'spliit', parse)).toEqual({
+    const valid =
+      '"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"\n' +
+      '"2026-01-12","Dinner","Dining Out","EUR","10.00",,,,"No","Evenly",5.00,-5.00'
+    expect(classifyImportText('export.csv', valid)).toEqual({
       kind: 'SPLIIT_APP_CSV',
     })
-    expect(classifyImportText('export.csv', 'other', parse)).toEqual({
+    expect(classifyImportText('export.csv', 'other')).toEqual({
       kind: 'UNKNOWN',
     })
   })
 
   it('uses payload content when an export has a misleading extension', () => {
-    const parse = (value: string) =>
-      value === 'spliit'
-        ? Effect.succeed(value)
-        : (Effect.fail(new Error('no')) as Effect.Effect<unknown, unknown>)
     expect(
       classifyImportText(
         'download.bin',
@@ -85,14 +79,19 @@ describe('spliit cloud source classification', () => {
           participants: [{ id: 'p1', name: 'A' }],
           expenses: [],
         }),
-        parse,
       ),
     ).toEqual({ kind: 'SPLIIT_APP_JSON' })
-    expect(classifyImportText('download.bin', 'spliit', parse)).toEqual({
+    expect(
+      classifyImportText(
+        'download.bin',
+        '"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John "\n' +
+          '"2026-01-12","Dinner","Dining Out","EUR","10.00",,,,"No","Evenly",10.00',
+      ),
+    ).toEqual({
       kind: 'SPLIIT_APP_CSV',
     })
-    expect(classifyImportText('download.json', 'spliit', parse)).toEqual({
-      kind: 'SPLIIT_APP_CSV',
+    expect(classifyImportText('download.json', 'other')).toEqual({
+      kind: 'UNKNOWN',
     })
   })
 })

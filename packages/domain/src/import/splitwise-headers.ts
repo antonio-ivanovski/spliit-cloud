@@ -1,3 +1,9 @@
+import {
+  defineCoreLabels,
+  isCoreLabel,
+  normalizeHeaderLabel,
+} from './header-map'
+
 const SPLITWISE_HEADER_LABELS = {
   date: ['Date', 'Fecha', 'Datum', 'Tanggal', 'Data', '日付', 'วันที่'],
   description: [
@@ -54,18 +60,7 @@ const SPLITWISE_HEADER_LABELS = {
 
 type SplitwiseHeader = readonly (string | undefined)[]
 
-function normalizeHeaderLabel(value: string | undefined): string {
-  return (value ?? '').trim().normalize('NFC')
-}
-
-const HEADER_LABEL_SETS = Object.fromEntries(
-  Object.entries(SPLITWISE_HEADER_LABELS).map(([key, labels]) => [
-    key,
-    new Set(labels.map((label) => normalizeHeaderLabel(label))),
-  ]),
-) as {
-  [K in keyof typeof SPLITWISE_HEADER_LABELS]: Set<string>
-}
+const HEADER_LABEL_SETS = defineCoreLabels(SPLITWISE_HEADER_LABELS)
 
 const TOTAL_BALANCE_LABELS = new Set(
   [
@@ -86,11 +81,11 @@ const TOTAL_BALANCE_LABELS = new Set(
 /** Returns whether the first five columns use a supported Splitwise locale. */
 export function isSplitwiseHeader(row: SplitwiseHeader): boolean {
   return (
-    HEADER_LABEL_SETS.date.has(normalizeHeaderLabel(row[0])) &&
-    HEADER_LABEL_SETS.description.has(normalizeHeaderLabel(row[1])) &&
-    HEADER_LABEL_SETS.category.has(normalizeHeaderLabel(row[2])) &&
-    HEADER_LABEL_SETS.cost.has(normalizeHeaderLabel(row[3])) &&
-    HEADER_LABEL_SETS.currency.has(normalizeHeaderLabel(row[4]))
+    isCoreLabel(HEADER_LABEL_SETS, 'date', row[0]) &&
+    isCoreLabel(HEADER_LABEL_SETS, 'description', row[1]) &&
+    isCoreLabel(HEADER_LABEL_SETS, 'category', row[2]) &&
+    isCoreLabel(HEADER_LABEL_SETS, 'cost', row[3]) &&
+    isCoreLabel(HEADER_LABEL_SETS, 'currency', row[4])
   )
 }
 

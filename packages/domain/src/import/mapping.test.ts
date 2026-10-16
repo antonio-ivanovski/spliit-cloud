@@ -1,3 +1,4 @@
+import { Effect } from 'effect'
 import { describe, expect, it } from 'vitest'
 
 import { getBalances } from '../balances'
@@ -14,6 +15,7 @@ import {
   type ImportBatchState,
   type ParticipantMappingState,
 } from './mapping'
+import { ImportError } from './types'
 import type {
   NormalizedSource,
   NormalizedSourceExpense,
@@ -359,7 +361,7 @@ describe('buildImportBatch', () => {
       destIds: { 'p-0': 'dest-a', 'p-1': 'dest-b' },
       resolvedExpenses: [baseExpense('p-0', [{ sourceId: 'p-1', shares: 1 }])],
     }
-    const { batch } = buildImportBatch(state, 'EUR')
+    const { batch } = Effect.runSync(buildImportBatch(state, 'EUR'))
     if ('targetGroupId' in batch) throw new Error('expected new-group shape')
     expect(batch.groupFormValues).toEqual({
       name: 'Trip',
@@ -415,7 +417,7 @@ describe('buildImportBatch', () => {
       destIds: { 'p-0': 'dest-a' },
       resolvedExpenses: [],
     }
-    const { batch } = buildImportBatch(state, 'EUR')
+    const { batch } = Effect.runSync(buildImportBatch(state, 'EUR'))
     if ('targetGroupId' in batch) throw new Error('expected new-group shape')
     expect(batch.groupFormValues.emoji).toBe('🍻')
     expect(batch.groupFormValues.color).toBe('teal')
@@ -442,7 +444,7 @@ describe('buildImportBatch', () => {
       destIds: { 'p-0': 'dest-a' },
       resolvedExpenses: [],
     }
-    const { batch } = buildImportBatch(state, 'EUR')
+    const { batch } = Effect.runSync(buildImportBatch(state, 'EUR'))
     if ('targetGroupId' in batch) throw new Error('expected new-group shape')
     expect(batch.groupFormValues.emoji).toBe('')
     expect(batch.groupFormValues.color).toBeNull()
@@ -469,7 +471,7 @@ describe('buildImportBatch', () => {
       destIds: { 'p-0': 'dest-a' },
       resolvedExpenses: [],
     }
-    const { batch } = buildImportBatch(state, 'EUR')
+    const { batch } = Effect.runSync(buildImportBatch(state, 'EUR'))
     if ('targetGroupId' in batch) throw new Error('expected new-group shape')
     // `groupFormSchema` has no null emoji lane; null is undecided anyway.
     expect(batch.groupFormValues.emoji).toBeUndefined()
@@ -497,7 +499,7 @@ describe('buildImportBatch', () => {
       destIds: { 'p-0': 'lp-1' },
       resolvedExpenses: [],
     }
-    const { batch } = buildImportBatch(state, '')
+    const { batch } = Effect.runSync(buildImportBatch(state, ''))
     if (!('targetGroupId' in batch))
       throw new Error('expected existing-group shape')
     expect(batch.targetGroupId).toBe('grp-9')
@@ -529,7 +531,7 @@ describe('buildImportBatch', () => {
       destIds: { 'p-0': 'dest-a' },
       resolvedExpenses: [],
     }
-    const { batch } = buildImportBatch(state, 'EUR')
+    const { batch } = Effect.runSync(buildImportBatch(state, 'EUR'))
     if ('targetGroupId' in batch) throw new Error('expected new-group shape')
     expect(batch.participants).toEqual([
       {
@@ -559,7 +561,7 @@ describe('buildImportBatch', () => {
       destIds: { 'p-0': 'dest-a' },
       resolvedExpenses: [],
     }
-    const { batch } = buildImportBatch(state, 'EUR')
+    const { batch } = Effect.runSync(buildImportBatch(state, 'EUR'))
     if ('targetGroupId' in batch) throw new Error('expected new-group shape')
     expect(batch.participants).toEqual([
       {
@@ -591,7 +593,7 @@ describe('buildImportBatch', () => {
       destIds: { 'p-0': 'dest-a' },
       resolvedExpenses: [baseExpense('p-0', [])],
     }
-    expect(() => buildImportBatch(state, 'EUR')).toThrow(
+    expect(() => Effect.runSync(buildImportBatch(state, 'EUR'))).toThrow(
       'Missing destination id for paidBy participant p-0',
     )
   })
@@ -615,9 +617,12 @@ describe('buildImportBatch', () => {
       destIds: {},
       resolvedExpenses: [],
     }
-    expect(() => buildImportBatch(state, 'EUR')).toThrow(
+    expect(() => Effect.runSync(buildImportBatch(state, 'EUR'))).toThrow(
       'Missing destination id for source participant "John"',
     )
+    const failure = Effect.runSync(Effect.flip(buildImportBatch(state, 'EUR')))
+    expect(failure).toBeInstanceOf(ImportError)
+    expect(failure.code).toBe('BATCH_MISSING_DEST_ID')
   })
 
   describe('cross-currency original fields', () => {
@@ -656,7 +661,7 @@ describe('buildImportBatch', () => {
       const rates = {
         [makeRateKey('2025-11-15', 'JPY', 'EUR')]: 0.0067,
       }
-      const { batch } = buildImportBatch(state, 'EUR', rates)
+      const { batch } = Effect.runSync(buildImportBatch(state, 'EUR', rates))
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       expect(batch.expenses[0].amount).toBe(500)
@@ -691,7 +696,7 @@ describe('buildImportBatch', () => {
       const rates = {
         [makeRateKey('2025-11-15', 'EUR', 'USD')]: 1.1,
       }
-      const { batch } = buildImportBatch(state, 'USD', rates)
+      const { batch } = Effect.runSync(buildImportBatch(state, 'USD', rates))
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       // amount stays in expense currency; server converts on import.
@@ -727,7 +732,7 @@ describe('buildImportBatch', () => {
       const rates = {
         [makeRateKey('2025-11-15', 'EUR', 'USD')]: 1.1,
       }
-      const { batch } = buildImportBatch(state, 'USD', rates)
+      const { batch } = Effect.runSync(buildImportBatch(state, 'USD', rates))
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       expect(batch.expenses[0].conversion?.type).toBe('custom')
@@ -759,7 +764,7 @@ describe('buildImportBatch', () => {
       const rates = {
         [makeRateKey('2025-11-15', 'EUR', 'USD')]: 1.1,
       }
-      const { batch } = buildImportBatch(state, 'USD', rates)
+      const { batch } = Effect.runSync(buildImportBatch(state, 'USD', rates))
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       expect(batch.expenses[0].conversion?.type).toBe('exchange')
@@ -792,7 +797,7 @@ describe('buildImportBatch', () => {
           }),
         ],
       }
-      const { batch } = buildImportBatch(state, 'EUR')
+      const { batch } = Effect.runSync(buildImportBatch(state, 'EUR'))
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       expect(batch.expenses[0].conversion).toBeUndefined()
@@ -834,7 +839,7 @@ describe('buildImportBatch', () => {
       const rates = {
         [makeRateKey('2025-11-15', 'JPY', 'USD')]: 0.0067,
       }
-      const { batch } = buildImportBatch(state, 'USD', rates)
+      const { batch } = Effect.runSync(buildImportBatch(state, 'USD', rates))
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       expect(batch.expenses[0].amount).toBe(1500)
@@ -876,7 +881,7 @@ describe('buildImportBatch', () => {
           }),
         ],
       }
-      const { batch } = buildImportBatch(state, 'USD')
+      const { batch } = Effect.runSync(buildImportBatch(state, 'USD'))
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       expect(batch.expenses[0].amount).toBe(1500)
@@ -907,14 +912,19 @@ describe('buildImportBatch', () => {
       }
       // The wizard passed no `rates` map at all — import must not
       // silently fall back to a placeholder.
-      expect(() => buildImportBatch(state, 'USD')).toThrow(
+      expect(() => Effect.runSync(buildImportBatch(state, 'USD'))).toThrow(
         /cross-currency conversion needs an exchange rate from EUR to USD/,
       )
       // Even with a rates map, a missing key for the specific
       // (date, base, target) tuple is a hard error.
-      expect(() => buildImportBatch(state, 'USD', {})).toThrow(
+      expect(() => Effect.runSync(buildImportBatch(state, 'USD', {}))).toThrow(
         /missing exchange rate for EUR -> USD on 2025-11-15/,
       )
+      const rateFailure = Effect.runSync(
+        Effect.flip(buildImportBatch(state, 'USD', {})),
+      )
+      expect(rateFailure).toBeInstanceOf(ImportError)
+      expect(rateFailure.code).toBe('BATCH_MISSING_RATE')
     })
 
     it('keeps expense amount in original currency minor units', () => {
@@ -941,7 +951,7 @@ describe('buildImportBatch', () => {
       const rates = {
         [makeRateKey('2025-11-15', 'EUR', 'USD')]: 1.1234,
       }
-      const { batch } = buildImportBatch(state, 'USD', rates)
+      const { batch } = Effect.runSync(buildImportBatch(state, 'USD', rates))
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       expect(batch.expenses[0].amount).toBe(333)
@@ -983,7 +993,7 @@ describe('buildImportBatch', () => {
       const rates = {
         [makeRateKey('2025-11-15', 'EUR', 'USD')]: 1.1,
       }
-      const { batch } = buildImportBatch(state, 'USD', rates)
+      const { batch } = Effect.runSync(buildImportBatch(state, 'USD', rates))
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       expect(batch.expenses[0]).toMatchObject({
@@ -1036,7 +1046,7 @@ describe('buildImportBatch', () => {
       const rates = {
         [makeRateKey('2025-11-15', 'EUR', 'USD')]: 0.92,
       }
-      const { batch } = buildImportBatch(state, 'USD', rates)
+      const { batch } = Effect.runSync(buildImportBatch(state, 'USD', rates))
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       const exp = batch.expenses[0]
@@ -1091,7 +1101,7 @@ describe('buildImportBatch', () => {
       const rates = {
         [makeRateKey('2025-11-15', 'EUR', 'USD')]: 0.92,
       }
-      const { batch } = buildImportBatch(state, 'USD', rates)
+      const { batch } = Effect.runSync(buildImportBatch(state, 'USD', rates))
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       const exp = batch.expenses[0]
@@ -1172,7 +1182,7 @@ describe('buildImportBatch', () => {
       const rates = {
         [makeRateKey('2025-11-15', 'EUR', 'USD')]: 0.3333,
       }
-      const { batch } = buildImportBatch(state, 'USD', rates)
+      const { batch } = Effect.runSync(buildImportBatch(state, 'USD', rates))
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       const exp = batch.expenses[0]
@@ -1230,7 +1240,7 @@ describe('buildImportBatch', () => {
           ),
         ],
       }
-      const { batch } = buildImportBatch(state, 'EUR')
+      const { batch } = Effect.runSync(buildImportBatch(state, 'EUR'))
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       const exp = batch.expenses[0]
@@ -1278,7 +1288,7 @@ describe('buildImportBatch', () => {
         destIds: { 'p-0': 'dest-a' },
         resolvedExpenses: [expense],
       }
-      const { batch } = buildImportBatch(state, 'GBP', rates)
+      const { batch } = Effect.runSync(buildImportBatch(state, 'GBP', rates))
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       expect(batch.expenses[0].amount).toBe(1000)
@@ -1328,7 +1338,7 @@ describe('buildImportBatch', () => {
         destIds: { 'p-0': 'dest-a' },
         resolvedExpenses: [expense],
       }
-      const { batch } = buildImportBatch(state, 'EUR', rates)
+      const { batch } = Effect.runSync(buildImportBatch(state, 'EUR', rates))
       if (!('targetGroupId' in batch))
         throw new Error('expected existing-group shape')
       expect(batch.expenses[0].amount).toBe(2500)

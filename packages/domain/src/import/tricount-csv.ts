@@ -27,18 +27,20 @@
  */
 
 import { Effect, Predicate, Schema } from 'effect'
-import Papa from 'papaparse'
 
 import { getCurrency } from '../currency'
-import type { Currency } from '../currency'
-import { distributeRemainder } from '../remainder-distribution'
-import {
-  calculateExactShares,
-  serializePaidBy,
-  serializePaidFor,
-} from '../totals'
 import { amountAsMinorUnitsByCode } from '../utils'
-import { guessSplitMode } from './split-guess'
+import { buildOwedExpense, buildSettlement } from './expense-builder'
+import { createMemberRegistry } from './member-registry'
+import {
+  dominantCurrency,
+  FALLBACK_CURRENCY,
+  isBlankRow,
+  parseCsvText,
+  parseDatePrefix,
+  stripBom,
+  toNumberOrNull,
+} from './table'
 import {
   tricountLooksLikeSettlementTitle,
   tricountCategoryToId,
@@ -50,13 +52,6 @@ import {
 } from './tricount-headers'
 import { ImportError } from './types'
 import type { NormalizedSource } from './types'
-
-const FALLBACK_CURRENCY: Currency = {
-  code: '',
-  symbol: '',
-  rounding: 0,
-  decimal_digits: 2,
-}
 
 /** Decoded, trimmed view of one raw CSV row for a known header layout. */
 const TricountRowSchema = Schema.Struct({
@@ -71,42 +66,6 @@ const TricountRowSchema = Schema.Struct({
   paidBy: Schema.optional(Schema.Trim),
   date: Schema.Trim,
 })
-
-function blankCell(value: string | undefined): boolean {
-  return (value ?? '').trim() === ''
-}
-
-function isBlankRow(row: string[]): boolean {
-  return row.every((cell) => blankCell(cell))
-}
-
-/**
- * Tricount dates are `YYYY-MM-DD HH:mm:SS` (exporter writes
- * `%Y-%m-%d`/`%H:%M:%S`); Sesterce rows are `YYYYMMDD`, `YYYY-MM-DD` or
- * `YYYY/MM/DD`. Returns the `YYYY-MM-DD` prefix or null when unparseable.
- */
-function parseDatePrefix(value: string): string | null {
-  const trimmed = value.trim()
-  const iso = trimmed.match(/^(\d{4}-\d{2}-\d{2})/)
-  if (iso) return iso[1]!
-  const compact = trimmed.match(/^(\d{4})(\d{2})(\d{2})/)
-  if (compact) return `${compact[1]}-${compact[2]}-${compact[3]}`
-  const slashed = trimmed.match(/^(\d{4})\/(\d{2})\/(\d{2})/)
-  if (slashed) return `${slashed[1]}-${slashed[2]}-${slashed[3]}`
-  return null
-}
-
-/**
- * Single expense-column amount for `Paid by`/bare-name layouts (Method 2/3):
- * positive = advanced/owed depending on the column kind.
- */
-function toNumberOrNull(value: string | undefined): number | null {
-  if (value === undefined) return null
-  const trimmed = value.trim()
-  if (trimmed === '') return null
-  const n = Number(trimmed)
-  return Number.isNaN(n) ? null : n
-}
 
 type MemberColumn = { name: string; paidIdx: number; impactedIdx: number }
 
@@ -177,16 +136,8 @@ const parseSection = Effect.fnUntraced(function* (
   const { map } = section
   const limit = section.footerRowIdx !== -1 ? section.footerRowIdx : rows.length
 
-  const participants: NormalizedSource['participants'] = []
-  const nameToSourceId = new Map<string, string>()
-  const registerMember = (name: string): string => {
-    const existing = nameToSourceId.get(name.toLowerCase())
-    if (existing) return existing
-    const sourceId = `tricount-participant-${groupIndex}-${participants.length}`
-    nameToSourceId.set(name.toLowerCase(), sourceId)
-    participants.push({ sourceId, sourceName: name })
-    return sourceId
-  }
+  const registry = createMemberRegistry(`tricount-participant-${groupIndex}`)
+  const registerMember = registry.register
   for (const col of section.memberColumns) registerMember(col.name)
 
   const expenses: NormalizedSource['expenses'] = []
@@ -267,9 +218,9 @@ const parseSection = Effect.fnUntraced(function* (
     if (!Number.isFinite(decoded.amount) || decoded.amount === 0) continue
 
     // Sign convention: expenses negative, incomes positive (exporter
-    // multiplies by -1 on write). Normalize to a positive cost.
+    // multiplies by -1 on write). Normalize to a positive cost. Owed shares
+    // are absolute either way, so INCOME needs no special-casing downstream.
     const typeUpper = decoded.transactionType.trim().toUpperCase()
-    const isIncome = typeUpper === 'INCOME'
     const isBalance =
       typeUpper === 'BALANCE' || tricountLooksLikeSettlementTitle(decoded.title)
     const cost = Math.abs(decoded.amount)
@@ -313,7 +264,7 @@ const parseSection = Effect.fnUntraced(function* (
     const advanced = new Map<string, number>()
     const owed = new Map<string, number>()
     for (const col of section.memberColumns) {
-      const sourceId = nameToSourceId.get(col.name.toLowerCase())!
+      const sourceId = registry.idOf(col.name)!
       if (col.paidIdx !== -1) {
         const value = toNumberOrNull(row[col.paidIdx])
         if (value !== null && value !== 0) {
@@ -348,6 +299,11 @@ const parseSection = Effect.fnUntraced(function* (
         }
       }
       if (!receiverId) continue
+      const settlement = buildSettlement({
+        payerId: payerSourceId,
+        receiverId,
+        amountCents,
+      })
       expenses.push({
         title: decoded.title,
         expenseDate: datePrefix,
@@ -357,10 +313,7 @@ const parseSection = Effect.fnUntraced(function* (
         originalAmount: null,
         originalCurrency: null,
         conversionRate: null,
-        paidBySourceId: payerSourceId,
-        paidBy: [{ sourceId: payerSourceId, shares: amountCents }],
-        paidFor: [{ sourceId: receiverId, shares: amountCents }],
-        splitMode: 'EVENLY',
+        ...settlement,
         recurrenceRule: 'NONE',
         notes: null,
       })
@@ -368,103 +321,17 @@ const parseSection = Effect.fnUntraced(function* (
     }
 
     // Owed side: per-member shares in major units → minor via domain core.
-    const owedEntries = [...owed.entries()]
-      .filter(([, share]) => share > 0)
-      .map(([sourceId, share]) => ({
-        participant: { id: sourceId },
-        shares: isIncome ? -share : share,
-      }))
-    const incomeOwed = isIncome
-      ? owedEntries.map((entry) => ({
-          ...entry,
-          shares: Math.abs(entry.shares),
-        }))
-      : owedEntries
-    const paidForSerialized = serializePaidFor({
-      splitMode: 'BY_AMOUNT',
-      amount: amountCents,
+    // INCOME rows negate then abs (net: abs) — same as the shared builder.
+    const built = buildOwedExpense({
+      amountCents,
       currency,
-      paidFor: incomeOwed,
-    })
-    const paidForCents = new Map<string, number>()
-    for (const entry of paidForSerialized) {
-      if (entry.shares > 0) {
-        paidForCents.set(
-          entry.participant.id,
-          (paidForCents.get(entry.participant.id) ?? 0) + entry.shares,
-        )
-      }
-    }
-    // Remainder from rounding or from members with no owed entry (e.g. a
-    // payer covering extra) goes through the domain remainder distributor.
-    const owedTotal = [...paidForCents.values()].reduce((sum, v) => sum + v, 0)
-    const remainder = amountCents - owedTotal
-    if (remainder !== 0) {
-      const exact = calculateExactShares({
-        amount: Math.abs(remainder),
-        splitMode: 'EVENLY',
-        participants: [{ id: payerSourceId, shares: 1 }],
-      })
-      const fixed = distributeRemainder(exact, Math.abs(remainder))
-      const extra = fixed[payerSourceId] ?? 0
-      if (extra > 0) {
-        paidForCents.set(
-          payerSourceId,
-          (paidForCents.get(payerSourceId) ?? 0) +
-            (remainder > 0 ? extra : -extra),
-        )
-      }
-    }
-    const paidFor = [...paidForCents.entries()]
-      .filter(([, shares]) => shares > 0)
-      .map(([sourceId, shares]) => ({ sourceId, shares }))
-    if (paidFor.length === 0) {
-      paidFor.push({ sourceId: payerSourceId, shares: amountCents })
-    }
-
-    // Payer side: advanced amounts in major units → minor via domain core,
-    // residual pinned to the payer.
-    const advancedEntries = [...advanced.entries()]
-      .filter(([, share]) => share > 0)
-      .map(([sourceId, share]) => ({
-        participant: { id: sourceId },
-        shares: share,
-      }))
-    const paidByMajor =
-      advancedEntries.length > 0
-        ? advancedEntries
-        : [{ participant: { id: payerSourceId }, shares: cost }]
-    const paidBySerialized = serializePaidBy({
-      paidBySplitMode: 'BY_AMOUNT',
-      amount: amountCents,
-      inputCurrency: currency,
-      paidByList: paidByMajor,
-    })
-    const paidByExact = calculateExactShares({
-      amount: amountCents,
-      splitMode: 'BY_AMOUNT',
-      participants: paidBySerialized.map((p) => ({
-        id: p.participant.id,
-        shares: p.shares,
-      })),
-    })
-    const paidByFixed = distributeRemainder(paidByExact, amountCents, {
+      owedMajors: owed,
+      advancedMajors:
+        advanced.size > 0 ? advanced : new Map([[payerSourceId, cost]]),
       payerId: payerSourceId,
     })
-    const paidBy = Object.entries(paidByFixed).map(([sourceId, shares]) => ({
-      sourceId,
-      shares,
-    }))
-
-    const involvedCount = new Set([
-      ...paidBy.map((p) => p.sourceId),
-      ...paidFor.map((p) => p.sourceId),
-    ]).size
-    const { splitMode, paidFor: resolvedPaidFor } = guessSplitMode(
-      paidFor,
-      amountCents,
-      { involvedParticipantCount: involvedCount },
-    )
+    const { splitMode, paidFor: resolvedPaidFor } = built
+    const paidBy = built.paidBy
 
     const exchangeRate =
       decoded.exchangeRate !== undefined &&
@@ -497,6 +364,7 @@ const parseSection = Effect.fnUntraced(function* (
     })
   }
 
+  const participants = registry.all()
   if (participants.length === 0) {
     return yield* new ImportError({
       message: 'CSV is missing participant columns',
@@ -512,14 +380,7 @@ const parseSection = Effect.fnUntraced(function* (
     })
   }
 
-  let mostCommonCurrency = ''
-  let maxCount = 0
-  for (const [code, count] of currencyCounts) {
-    if (count > maxCount) {
-      maxCount = count
-      mostCommonCurrency = code
-    }
-  }
+  const mostCommonCurrency = dominantCurrency(currencyCounts)
 
   const groupName = section.footerName ?? `Imported Tricount ${groupIndex + 1}`
   return {
@@ -541,43 +402,17 @@ const parseSection = Effect.fnUntraced(function* (
 })
 
 /**
- * Parse a Tricount GDPR CSV dump into one normalized source per group.
+ * Parse Tricount GDPR rows (already CSV-decoded) into one normalized source per
+ * group. Thin `parseTricountCsv` wraps this with text decoding.
  *
  * Multi-group: rows between consecutive `tricount <name> - Exported on …`
  * footers (or header rows) form one group each. Returns the list of groups;
  * callers route multi-group results through the account-queue picker and
  * single-group results straight into the wizard.
  */
-export const parseTricountCsv = Effect.fnUntraced(function* (
-  input: string,
+export const parseTricountTable = Effect.fnUntraced(function* (
+  rows: string[][],
 ): Effect.fn.Return<NormalizedSource[], ImportError> {
-  const cleaned = input.charCodeAt(0) === 0xfeff ? input.slice(1) : input
-  // GDPR dumps and the human-readable exporter use `;`; Sesterce uses `,`.
-  // Sniff the first line: the delimiter producing more cells wins.
-  const firstLine = cleaned.split('\n', 1)[0] ?? ''
-  const delimiter =
-    firstLine.split(';').length >= firstLine.split(',').length ? ';' : ','
-  const parsed = Papa.parse<string[]>(cleaned, {
-    skipEmptyLines: false,
-    header: false,
-    delimiter,
-  })
-  if (parsed.errors.length > 0) {
-    const detail = parsed.errors[0]?.message ?? 'unknown error'
-    return yield* new ImportError({
-      message: `CSV could not be parsed: ${detail}`,
-      code: 'CSV_PARSE_FAILED',
-      params: { detail },
-    })
-  }
-  const rows = parsed.data
-  if (rows.length < 2) {
-    return yield* new ImportError({
-      message: 'CSV has no data rows',
-      code: 'CSV_NO_DATA_ROWS',
-      params: {},
-    })
-  }
   const sections = yield* findSections(rows)
   const sources: NormalizedSource[] = []
   for (let i = 0; i < sections.length; i++) {
@@ -587,6 +422,22 @@ export const parseTricountCsv = Effect.fnUntraced(function* (
     sources.push(source)
   }
   return sources
+})
+
+export const parseTricountCsv = Effect.fn('parseTricountCsv')(function* (
+  input: string,
+): Effect.fn.Return<NormalizedSource[], ImportError> {
+  const cleaned = stripBom(input)
+  // GDPR dumps and the human-readable exporter use `;`; Sesterce uses `,`.
+  // Sniff the first line: the delimiter producing more cells wins (ties → ';').
+  const firstLine = cleaned.split('\n', 1)[0] ?? ''
+  const delimiter =
+    firstLine.split(';').length >= firstLine.split(',').length ? ';' : ','
+  const rows = yield* parseCsvText(cleaned, {
+    delimiter,
+    skipEmptyLines: false,
+  })
+  return yield* parseTricountTable(rows)
 })
 
 /**

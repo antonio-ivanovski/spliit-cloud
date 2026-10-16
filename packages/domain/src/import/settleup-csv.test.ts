@@ -450,6 +450,15 @@ describe('decodeSettleUpText', () => {
     expect(decodeSettleUpText(new Uint8Array([0xff, 0xfe, 0x00]))).toBeNull()
     expect(decodeSettleUpText(new Uint8Array([]))).toBeNull()
   })
+
+  it('decodes Latin-1 bytes leniently instead of blocking the import', () => {
+    // An Excel-resaved CSV (`Café` as 0xE9) is not valid UTF-8; like
+    // `file.text()` it decodes with replacement so amounts still import.
+    const bytes = new Uint8Array([
+      0x44, 0x61, 0x74, 0x65, 0x0a, 0x43, 0x61, 0x66, 0xe9,
+    ])
+    expect(decodeSettleUpText(bytes)).toBe('Date\nCaf�')
+  })
 })
 
 describe('mapSettleUpHeader', () => {

@@ -134,6 +134,14 @@ export type GuessBySharesConfig = {
 
 const DEFAULT_MAX_WEIGHT = 25
 
+export { DEFAULT_MAX_WEIGHT as MAX_SHARE_WEIGHT }
+
+/**
+ * Shared cap on the largest normalized share weight, mirroring the `BY_SHARES`
+ * guesser convention: ratios above it are treated as coincidental round numbers
+ * rather than human-intended shares, and fall back to exact cents.
+ */
+
 /**
  * Detect a clean integer-ratio split (BY_SHARES) and return the normalised
  * ratio weights in current internal fixed units (100 = 1 displayed share).

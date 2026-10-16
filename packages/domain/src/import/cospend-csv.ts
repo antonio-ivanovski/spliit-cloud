@@ -1,15 +1,26 @@
-import { Effect } from 'effect'
-import Papa from 'papaparse'
+import { Effect, Schema } from 'effect'
 
 import { SETTLEMENT_CATEGORY_ID } from '../categories'
 import { getCurrency } from '../currency'
-import { distributeRemainder } from '../remainder-distribution'
-import { SHARE_SCALE } from '../shares'
-import { calculateExactShares } from '../totals'
 import { amountAsMinorUnitsByCode } from '../utils'
 import { cospendCategoryToId } from './cospend-categories'
+import {
+  COSPEND_BILL_HEADER,
+  COSPEND_CATEGORY_HEADER,
+  COSPEND_CURRENCY_HEADER,
+  COSPEND_MEMBER_HEADER,
+  COSPEND_PAYMENTMODE_HEADER,
+  isCospendHeader,
+} from './cospend-headers'
+import { buildWeightedExpense } from './expense-builder'
+import { createMemberRegistry } from './member-registry'
 import { recurrenceToLegacyRule } from './recurrence'
-import { gcdOf } from './split-guess'
+import {
+  isBlankRow,
+  parseCsvText,
+  parseIsoDatePrefix,
+  toNumberOrNull,
+} from './table'
 import { ImportError } from './types'
 import type { NormalizedSource, RecurrenceConfig } from './types'
 
@@ -46,56 +57,37 @@ const REPEAT_BASE: Record<
   y: { frequency: 'YEARLY', baseInterval: 1, usesRepeatFreq: true },
 }
 
-/**
- * Cap on the largest normalized share weight, mirroring the `BY_SHARES` guesser
- * convention: ratios above it are treated as coincidental round numbers rather
- * than human-intended shares, and fall back to exact cents (`BY_AMOUNT`).
- */
-const MAX_SHARE_WEIGHT = 25
+const MEMBER_HEADER = COSPEND_MEMBER_HEADER
+const BILL_HEADER = COSPEND_BILL_HEADER
+const CATEGORY_HEADER = COSPEND_CATEGORY_HEADER
+const PAYMENTMODE_HEADER = COSPEND_PAYMENTMODE_HEADER
+const CURRENCY_HEADER = COSPEND_CURRENCY_HEADER
 
-const MEMBER_HEADER = ['name', 'weight', 'active', 'color']
-const BILL_HEADER = [
-  'what',
-  'amount',
-  'date',
-  'timestamp',
-  'payer_name',
-  'payer_weight',
-  'payer_active',
-  'owers',
-  'repeat',
-  'repeatfreq',
-  'repeatallactive',
-  'repeatuntil',
-  'categoryid',
-  'paymentmode',
-  'paymentmodeid',
-  'comment',
-  'deleted',
-]
-const CATEGORY_HEADER = ['categoryname', 'categoryid', 'icon', 'color']
-const PAYMENTMODE_HEADER = ['paymentmodename', 'paymentmodeid', 'icon', 'color']
-const CURRENCY_HEADER = ['currencyname', 'exchange_rate']
-
-function toNumberOrNull(value: string | undefined): number | null {
-  if (value === undefined) return null
-  const trimmed = value.trim()
-  if (trimmed === '') return null
-  const n = Number(trimmed)
-  return Number.isNaN(n) ? null : n
-}
+/** Decoded, trimmed view of one raw bill row for the fixed bill layout. */
+const CospendBillRowSchema = Schema.Struct({
+  what: Schema.Trim,
+  amount: Schema.optional(Schema.NumberFromString),
+  date: Schema.Trim,
+  timestamp: Schema.Trim,
+  payerName: Schema.Trim,
+  owers: Schema.Trim,
+  repeat: Schema.Trim,
+  repeatFreq: Schema.optional(Schema.NumberFromString),
+  repeatUntil: Schema.Trim,
+  categoryId: Schema.Trim,
+  comment: Schema.Trim,
+  deleted: Schema.Trim,
+})
 
 function isHeader(
   row: string[] | undefined,
   header: readonly string[],
 ): boolean {
-  if (!row) return false
-  if (row.length < header.length) return false
-  return header.every((cell, i) => (row[i] ?? '').trim() === cell)
+  return isCospendHeader(row, header)
 }
 
 function isBlank(row: string[]): boolean {
-  return row.every((c) => (c ?? '').trim() === '')
+  return isBlankRow(row)
 }
 
 /** Build a RecurrenceConfig from Cospend repeat metadata, or null if none. */
@@ -129,30 +121,17 @@ function effectiveWeight(weight: number | undefined): number {
 }
 
 /**
- * Parse a Cospend project CSV export into a normalized import source.
+ * Parse Cospend project rows (already CSV-decoded) into a normalized source.
+ * Thin `parseCospendCsv` wraps this with `parseCsvText`.
  *
  * Cospend exports one CSV per project with five sections (members, bills,
  * categories, payment modes, and optionally currencies) separated by blank
  * lines. The project name is not in the file body — only the filename slug — so
  * the group name defaults here and is refined from the filename upstream.
  */
-export const parseCospendCsv = Effect.fnUntraced(function* (
-  input: string,
+export const parseCospendTable = Effect.fnUntraced(function* (
+  rows: string[][],
 ): Effect.fn.Return<NormalizedSource, ImportError> {
-  const cleaned = input.charCodeAt(0) === 0xfeff ? input.slice(1) : input
-  const parsed = Papa.parse<string[]>(cleaned, {
-    skipEmptyLines: 'greedy',
-    header: false,
-  })
-
-  if (parsed.errors.length > 0) {
-    return yield* new ImportError({
-      message: `CSV could not be parsed: ${parsed.errors[0]?.message ?? 'unknown error'}`,
-    })
-  }
-
-  const rows = parsed.data
-
   // ── Locate section headers ────────────────────────────────────────────
   let membersStart = -1
   let billsStart = -1
@@ -176,11 +155,14 @@ export const parseCospendCsv = Effect.fnUntraced(function* (
   }
 
   // ── Members ───────────────────────────────────────────────────────────
-  const participants: NormalizedSource['participants'] = []
-  const nameToSourceId = new Map<string, string>()
+  // Cospend member names are case-sensitive upstream: keep exact-case keys
+  // so `Alex` and `alex` stay separate members.
+  const registry = createMemberRegistry('cospend-member', {
+    caseSensitive: true,
+  })
   const nameToWeight = new Map<string, number>()
   for (let r = membersStart + 1; r < rows.length; r++) {
-    const row = rows[r]
+    const row = rows[r]!
     if (isBlank(row)) continue
     if (
       isHeader(row, BILL_HEADER) ||
@@ -193,10 +175,13 @@ export const parseCospendCsv = Effect.fnUntraced(function* (
     const name = (row[0] ?? '').trim()
     if (!name) continue
     const weight = toNumberOrNull(row[1]) ?? 1
-    const sourceId = `cospend-member-${participants.length}`
-    nameToSourceId.set(name, sourceId)
+    registry.register(name)
     nameToWeight.set(name, weight)
-    participants.push({ sourceId, sourceName: name })
+  }
+  const participants = registry.all()
+  const sourceIdToWeight = new Map<string, number>()
+  for (const p of participants) {
+    sourceIdToWeight.set(p.sourceId, nameToWeight.get(p.sourceName) ?? 1)
   }
   if (participants.length === 0) {
     return yield* new ImportError({
@@ -267,7 +252,7 @@ export const parseCospendCsv = Effect.fnUntraced(function* (
   // reordered or legacy files still parse like upstream's importer does.
   const expenses: NormalizedSource['expenses'] = []
   for (let r = billsStart + 1; r < rows.length; r++) {
-    const row = rows[r]
+    const row = rows[r]!
     if (isBlank(row)) continue
     if (
       isHeader(row, MEMBER_HEADER) ||
@@ -278,33 +263,56 @@ export const parseCospendCsv = Effect.fnUntraced(function* (
     ) {
       break
     }
-    const what = (row[0] ?? '').trim()
-    const amount = toNumberOrNull(row[1])
-    const dateRaw = (row[2] ?? '').trim()
-    const timestampRaw = (row[3] ?? '').trim()
-    const payerName = (row[4] ?? '').trim()
-    const owersRaw = (row[7] ?? '').trim()
-    const repeat = (row[8] ?? '').trim()
-    const repeatFreq = toNumberOrNull(row[9]) ?? 1
-    const repeatUntil = (row[11] ?? '').trim()
+    const decoded = yield* Schema.decodeUnknownEffect(CospendBillRowSchema)({
+      what: row[0] ?? '',
+      // Blank amount means "not a bill row" (skip below); a present but
+      // non-numeric amount is malformed and fails the parse.
+      amount: (row[1] ?? '').trim() === '' ? undefined : row[1],
+      date: row[2] ?? '',
+      timestamp: row[3] ?? '',
+      payerName: row[4] ?? '',
+      owers: row[7] ?? '',
+      repeat: row[8] ?? '',
+      repeatFreq: (row[9] ?? '').trim() === '' ? undefined : row[9],
+      repeatUntil: row[11] ?? '',
+      categoryId: row[12] ?? '',
+      comment: row[15] ?? '',
+      deleted: row[16] ?? '',
+    }).pipe(
+      Effect.mapError(
+        () =>
+          new ImportError({
+            message: `Row ${r + 1} is not a valid Cospend bill row`,
+            code: 'CSV_INVALID_EXPENSE_ROW',
+            params: { row: r + 1 },
+          }),
+      ),
+    )
+    const what = decoded.what
+    const amount = decoded.amount ?? null
+    // Garbage numerics skip the bill (legacy behavior); only structurally
+    // undecodable rows fail above.
+    if (amount !== null && !Number.isFinite(amount)) continue
+    const repeatFreq = decoded.repeatFreq ?? 1
     // `repeatallactive` intentionally does not expand the ower set: the
     // exported owers describe who owed the historical bill, and upstream only
     // consults the flag when materializing *future* repetitions (all active
     // members then). Rewriting history to all-active would charge members who
     // never owed; future Spliit occurrences stay frozen to this ower set.
-    const categoryId = (row[12] ?? '').trim()
-    const comment = (row[15] ?? '').trim()
-    const deleted = (row[16] ?? '').trim()
+    const categoryId = decoded.categoryId
+    const comment = decoded.comment
+    const deleted = decoded.deleted
 
     // Upstream prefers `timestamp` and falls back to `date`; the export
     // always carries both, but timestamp-only files are valid upstream.
     // The timestamp is UTC seconds; the server-local `date` column wins when
     // present so day boundaries match the export.
     let expenseDate: string | null = null
-    if (/^\d{4}-\d{2}-\d{2}/.test(dateRaw)) {
-      expenseDate = dateRaw.slice(0, 10)
-    } else if (/^\d+$/.test(timestampRaw)) {
-      const ts = Number(timestampRaw)
+    const datePrefix = parseIsoDatePrefix(decoded.date)
+    if (datePrefix) {
+      expenseDate = datePrefix
+    } else if (/^\d+$/.test(decoded.timestamp.trim())) {
+      const ts = Number(decoded.timestamp.trim())
       if (Number.isFinite(ts)) {
         expenseDate = new Date(ts * 1000).toISOString().slice(0, 10)
       }
@@ -312,7 +320,7 @@ export const parseCospendCsv = Effect.fnUntraced(function* (
     if (!what || amount === null || !expenseDate) continue
     if (deleted === '1') continue
 
-    const payerSourceId = nameToSourceId.get(payerName)
+    const payerSourceId = registry.idOf(decoded.payerName)
     if (!payerSourceId) continue
 
     // Every ower must resolve to a known member. A partial match (e.g. a
@@ -320,7 +328,7 @@ export const parseCospendCsv = Effect.fnUntraced(function* (
     // `owers` column cannot round-trip) would silently rewrite the split, so
     // skip the bill instead of emitting a truncated one. Duplicate names
     // merge by summing weights.
-    const owerNames = owersRaw
+    const owerNames = decoded.owers
       .split(',')
       .map((n) => n.trim())
       .filter(Boolean)
@@ -328,7 +336,7 @@ export const parseCospendCsv = Effect.fnUntraced(function* (
     const owersBySourceId = new Map<string, number>()
     let unknownOwer = false
     for (const n of owerNames) {
-      const sourceId = nameToSourceId.get(n)
+      const sourceId = registry.idOf(n)
       if (!sourceId) {
         unknownOwer = true
         break
@@ -336,7 +344,7 @@ export const parseCospendCsv = Effect.fnUntraced(function* (
       owersBySourceId.set(
         sourceId,
         (owersBySourceId.get(sourceId) ?? 0) +
-          effectiveWeight(nameToWeight.get(n)),
+          effectiveWeight(sourceIdToWeight.get(sourceId)),
       )
     }
     if (unknownOwer || owersBySourceId.size === 0) continue
@@ -353,59 +361,22 @@ export const parseCospendCsv = Effect.fnUntraced(function* (
     // ratio. Re-guessing the mode from rounded cents (like the Splitwise
     // flow does) would misclassify both: an indivisible even split has GCD 1
     // and a 1:2 split of 42.50 rounds to cents with GCD 1 as well.
-    const weights = owers.map((o) => o.weight)
-    const allEqualWeights = weights.every((w) => w === weights[0])
-    let splitMode: 'EVENLY' | 'BY_SHARES' | 'BY_AMOUNT'
-    let paidFor: Array<{ sourceId: string; shares: number }>
-    if (allEqualWeights) {
-      const exact = calculateExactShares({
-        amount: amountCents,
-        splitMode: 'EVENLY',
-        participants: owers.map((o) => ({ id: o.sourceId, shares: 1 })),
-      })
-      const fixed = distributeRemainder(exact, amountCents)
-      paidFor = owers
-        .map((o) => ({ sourceId: o.sourceId, shares: fixed[o.sourceId] ?? 0 }))
-        .filter((p) => p.shares > 0)
-      splitMode = 'EVENLY'
-    } else {
-      // Scale weights to integers, reduce by GCD, store in fixed units
-      // (100 = 1 displayed share). Ratios with an implausibly large
-      // normalized weight fall back to exact cents.
-      const scaledWeights = weights.map((w) => Math.max(1, Math.round(w * 100)))
-      const divisor = gcdOf(scaledWeights)
-      const normalized = scaledWeights.map((s) => (s / divisor) * SHARE_SCALE)
-      const maxWeight = Math.max(...normalized) / SHARE_SCALE
-      if (maxWeight <= MAX_SHARE_WEIGHT) {
-        paidFor = owers.map((o, i) => ({
-          sourceId: o.sourceId,
-          shares: normalized[i]!,
-        }))
-        splitMode = 'BY_SHARES'
-      } else {
-        const exact = calculateExactShares({
-          amount: amountCents,
-          splitMode: 'BY_SHARES',
-          participants: owers.map((o, i) => ({
-            id: o.sourceId,
-            shares: scaledWeights[i],
-          })),
-        })
-        const fixed = distributeRemainder(exact, amountCents, {
-          payerId: payerSourceId,
-        })
-        paidFor = owers
-          .map((o) => ({
-            sourceId: o.sourceId,
-            shares: fixed[o.sourceId] ?? 0,
-          }))
-          .filter((p) => p.shares > 0)
-        splitMode = 'BY_AMOUNT'
-      }
-    }
+    const weights = new Map<string, number>()
+    for (const o of owers) weights.set(o.sourceId, o.weight)
+    const built = buildWeightedExpense({
+      amountCents,
+      weights,
+      payerId: payerSourceId,
+    })
+    const splitMode = built.splitMode
+    const paidFor = built.paidFor
     if (paidFor.length === 0) continue
 
-    const recurrence = parseCospendRepeat(repeat, repeatFreq, repeatUntil)
+    const recurrence = parseCospendRepeat(
+      decoded.repeat,
+      repeatFreq,
+      decoded.repeatUntil,
+    )
     const recurrenceRule = recurrenceToLegacyRule(recurrence)
 
     let notes: string | null = null
@@ -463,4 +434,11 @@ export const parseCospendCsv = Effect.fnUntraced(function* (
     expenses,
     documentSource: 'NONE',
   }
+})
+
+export const parseCospendCsv = Effect.fn('parseCospendCsv')(function* (
+  input: string,
+): Effect.fn.Return<NormalizedSource, ImportError> {
+  const rows = yield* parseCsvText(input)
+  return yield* parseCospendTable(rows)
 })

@@ -1,5 +1,4 @@
 import { getRouteApi, Link, useNavigate } from '@tanstack/react-router'
-import { Effect } from 'effect'
 import { AlertTriangle, ExternalLink } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -14,12 +13,13 @@ import {
   classifyImportBytes,
   classifyImportText,
   decodeSettleUpText,
+  detectProvidersFromText,
   extractSpliitGroupIdFromUrl,
   guessGroupNameFromFilename,
-  importErrorToParseResult,
-  parseSettleUpCsv,
-  parseSpliitCsv,
+  runParseSingle,
+  runParseSpliitJson,
   type NormalizedSource,
+  type ProviderId,
 } from '@spliit/domain/import'
 
 import {
@@ -30,10 +30,17 @@ import {
 import { DomainSwapCard } from './domain-swap-card'
 import { ExportGuideTrigger } from './export-guide'
 import { FileUploadCard } from './file-upload-card'
+import { GenericSourceTab } from './generic-source-tab'
 import { PasteUrlCard } from './paste-url-card'
-import { PROVIDERS, pickParser, type SourceMode } from './source-providers'
+import {
+  PROVIDERS,
+  getFileGuide,
+  getProviderCopy,
+  getTabLabels,
+  pickParser,
+  type SourceMode,
+} from './source-providers'
 import { SplitwiseAnonymizerCard } from './splitwise-anonymizer-card'
-import { TricountSourceTab } from './tricount-source-tab'
 import type { ImportSourceState } from './use-import-source'
 
 type Props = {
@@ -41,7 +48,7 @@ type Props = {
   onLoaded: (source: NormalizedSource) => void
   onCloudLoaded?: (source: CloudBundleInspection) => void
   /** Multi-group Tricount dumps hand the selected groups up for queueing. */
-  onTricountMultiLoaded?: (sources: NormalizedSource[]) => void
+  onMultiLoaded?: (sources: NormalizedSource[]) => void
   onError: (message: string) => void
   /**
    * Shared import-source state owned by the wizard so manual paste and the
@@ -74,7 +81,7 @@ const importRoute = getRouteApi('/groups/import')
 export function SourceStep({
   onLoaded,
   onCloudLoaded,
-  onTricountMultiLoaded,
+  onMultiLoaded,
   onError,
   sourcePreview,
   isSourcePreviewLoading,
@@ -95,7 +102,12 @@ export function SourceStep({
   const [hasInteracted, setHasInteracted] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [wrongImporter, setWrongImporter] = useState<WrongImporter | null>(null)
-  const [pendingHandoff, setPendingHandoff] = useState<File | null>(null)
+  // A known export dropped on the wrong tab hands off here: navigation flips
+  // the provider, then the effect below re-parses the file on the owning tab.
+  const [pendingHandoff, setPendingHandoff] = useState<{
+    file: File
+    target: SourceMode
+  } | null>(null)
   const maxCloudDocumentBytes =
     useDeploymentConfig().maxExpenseDocumentSize ?? MAX_CLOUD_DOCUMENT_BYTES
 
@@ -121,172 +133,139 @@ export function SourceStep({
     async (file: File) => {
       setHasInteracted(true)
       try {
-        const firstBytes = new Uint8Array(await file.slice(0, 4).arrayBuffer())
+        // Read once: the same bytes drive zip detection, text decode, and
+        // parsing. Raw bytes decode first (Settle Up UTF-16 would mangle
+        // through `file.text()`); undecodable bytes keep the legacy
+        // fileReadError surface.
+        const rawBytes = new Uint8Array(await file.arrayBuffer())
         const isZip =
-          classifyImportBytes(firstBytes).kind === 'SPLIIT_CLOUD_BUNDLE'
+          classifyImportBytes(rawBytes.slice(0, 4)).kind ===
+          'SPLIIT_CLOUD_BUNDLE'
 
-        let text: string | null = null
-        const readText = async () => {
-          text ??= await file.text()
-          return text
-        }
-
-        if (provider === 'settleup') {
-          // Real exports are UTF-16 with a BOM, which file.text() mangles
-          // (UTF-16 NULs become U+0000). Decode from raw bytes first.
-          const bytes = new Uint8Array(await file.arrayBuffer())
-          const decoded = decodeSettleUpText(bytes)
-          if (decoded === null) {
-            onError(t('Groups.Import.Source.fileReadError'))
-            return
-          }
-          try {
-            const source = Effect.runSync(parseSettleUpCsv(decoded))
-            const guessed = guessGroupNameFromFilename(
-              file.name,
-              source.provider,
-            )
-            if (guessed) source.name = guessed
-            onLoaded(source)
-          } catch (error) {
-            const result = importErrorToParseResult(error)
-            onError(
-              result.ok
-                ? t('Groups.Import.Source.fileReadError')
-                : result.error,
-            )
-          }
-          return
-        }
-
-        if (provider === 'spliit' && isZip) {
+        const flagWrongImporter = (
+          target: 'spliit' | 'spliit-cloud',
+          wrongFile: File,
+        ) =>
           setWrongImporter({
-            target: 'spliit-cloud',
-            file,
-            messageKey: 'cloud',
+            target,
+            file: wrongFile,
+            messageKey: target === 'spliit-cloud' ? 'cloud' : 'spliit',
           })
-          return
-        }
+        const isCloudManifest = (kind: string) =>
+          kind === 'SPLIIT_CLOUD_MANIFEST'
 
-        // Inspect the payload before extension-based parsing so a Cloud
-        // manifest renamed to .csv/.txt is still routed to the right tab.
-        if (provider === 'spliit' && !isZip) {
-          const classification = classifyImportText(
-            file.name,
-            await readText(),
-            (value) => parseSpliitCsv(value),
-          )
-          if (classification.kind === 'SPLIIT_CLOUD_MANIFEST') {
-            setWrongImporter({
-              target: 'spliit-cloud',
-              file,
-              messageKey: 'cloud',
-            })
+        // Cloud bundles and cross-importer drops route on bytes + content,
+        // not on the active tab. Zip signatures always belong to the Cloud
+        // flow; Cloud manifests renamed to .csv/.txt are detected by
+        // content so they still land on the right tab.
+        if (isZip) {
+          if (provider !== 'spliit-cloud') {
+            flagWrongImporter('spliit-cloud', file)
             return
-          }
-        }
-
-        if (provider === 'spliit-cloud') {
-          if (!isZip) {
-            const classification = classifyImportText(
-              file.name,
-              await readText(),
-              (value) => parseSpliitCsv(value),
-            )
-            if (
-              classification.kind === 'SPLIIT_APP_JSON' ||
-              classification.kind === 'SPLIIT_APP_CSV'
-            ) {
-              setWrongImporter({
-                target: 'spliit',
-                file,
-                messageKey: 'spliit',
-              })
-              return
-            }
-            throw new Error(t('Groups.Import.Source.cloudZipRequired'))
           }
           onCloudLoaded?.(
             await inspectSpliitCloudBundle(file, maxCloudDocumentBytes),
           )
+          return
+        }
+        const content = decodeSettleUpText(rawBytes)
+        if (content === null || rawBytes.length === 0) {
+          onError(t('Groups.Import.Source.fileReadError'))
+          return
+        }
+        const text = content
+        // Extension-driven JSON first: a `.json` drop on the spliit tab gets
+        // the specific malformed/unsupported-shape error below instead of the
+        // generic routing error (content probes cannot classify bad JSON).
+        const pickedEarly = pickParser(provider, file.name)
+        if (pickedEarly.format === 'json') {
+          let body: unknown
+          try {
+            body = JSON.parse(text)
+          } catch {
+            onError('This file is not a supported spliit.app JSON export.')
+            return
+          }
+          const jsonParsed = runParseSpliitJson(body)
+          if (!jsonParsed.ok) {
+            if (classifyImportPayload(body).kind === 'SPLIIT_CLOUD_MANIFEST') {
+              flagWrongImporter('spliit-cloud', file)
+              return
+            }
+            onError(jsonParsed.error)
+            return
+          }
+          const guessedEarly = guessGroupNameFromFilename(
+            file.name,
+            jsonParsed.source.provider,
+          )
+          if (guessedEarly) jsonParsed.source.name = guessedEarly
+          onLoaded(jsonParsed.source)
+          return
+        }
+        const contentClassification = classifyImportText(file.name, text)
+        if (isCloudManifest(contentClassification.kind)) {
+          if (provider !== 'spliit-cloud') {
+            flagWrongImporter('spliit-cloud', file)
+            return
+          }
+          throw new Error(t('Groups.Import.Source.cloudZipRequired'))
+        }
+
+        if (provider === 'spliit-cloud') {
+          if (
+            contentClassification.kind === 'SPLIIT_APP_JSON' ||
+            contentClassification.kind === 'SPLIIT_APP_CSV'
+          ) {
+            flagWrongImporter('spliit', file)
+            return
+          }
+          throw new Error(t('Groups.Import.Source.cloudZipRequired'))
+        }
+
+        // Data-driven routing: which registered providers accept this
+        // payload? Unknown bytes match nothing; a known export dropped on
+        // the wrong tab hands off to the owning tab (which re-parses on
+        // arrival), so the parse below only runs for the active provider.
+        const accepted = detectProvidersFromText(text)
+        if (accepted.length === 0) {
+          onError(t('Groups.Import.Source.unsupportedFileType'))
+          return
+        }
+        if (!accepted.includes(provider as ProviderId)) {
+          const owner = accepted[0]!
+          if (owner === 'spliit') {
+            flagWrongImporter('spliit', file)
+            return
+          }
+          setPendingHandoff({ file, target: owner })
+          void navigate({
+            to: '/groups/import',
+            search: { source: owner },
+          })
           return
         }
 
         const picked = pickParser(provider, file.name)
         if (!picked.format) {
-          const classification = classifyImportText(
-            file.name,
-            await readText(),
-            (value) => parseSpliitCsv(value),
-          )
-          if (classification.kind === 'SPLIIT_CLOUD_MANIFEST') {
-            setWrongImporter({
-              target: 'spliit-cloud',
-              file,
-              messageKey: 'cloud',
-            })
+          if (isCloudManifest(classifyImportText(file.name, text).kind)) {
+            flagWrongImporter('spliit-cloud', file)
             return
           }
           onError(t('Groups.Import.Source.unsupportedFileType'))
           return
         }
-        if (picked.format === 'cloud') {
-          onCloudLoaded?.(
-            await inspectSpliitCloudBundle(file, maxCloudDocumentBytes),
-          )
+        // JSON resolved above via the extension-driven path, and zip bundles
+        // via the signature gate; only the single-group CSV entry remains.
+        // (A `.zip` name without a zip signature never reaches the bundle
+        // flow — it fails content routing above.)
+        const parsed =
+          picked.format === 'csv' ? runParseSingle(picked.provider, text) : null
+        if (!parsed) {
+          onError(t('Groups.Import.Source.unsupportedFileType'))
           return
         }
-        const fileText = await readText()
-        const parsed =
-          picked.format === 'json'
-            ? (() => {
-                let body: unknown
-                try {
-                  body = JSON.parse(fileText)
-                } catch {
-                  return {
-                    ok: false as const,
-                    error:
-                      'This file is not a supported spliit.app JSON export.',
-                    code: 'SPLIIT_UNSUPPORTED_SHAPE',
-                    params: {},
-                  }
-                }
-                try {
-                  return {
-                    ok: true as const,
-                    source: Effect.runSync(picked.parser(body as never)),
-                  }
-                } catch (error) {
-                  return importErrorToParseResult(error)
-                }
-              })()
-            : (() => {
-                try {
-                  return {
-                    ok: true as const,
-                    source: Effect.runSync(picked.parser(fileText as never)),
-                  }
-                } catch (error) {
-                  return importErrorToParseResult(error)
-                }
-              })()
         if (!parsed.ok) {
-          if (picked.format === 'json') {
-            try {
-              const classification = classifyImportPayload(JSON.parse(fileText))
-              if (classification.kind === 'SPLIIT_CLOUD_MANIFEST') {
-                setWrongImporter({
-                  target: 'spliit-cloud',
-                  file,
-                  messageKey: 'cloud',
-                })
-                return
-              }
-            } catch {
-              // Keep the parser's normal malformed-file message below.
-            }
-          }
           onError(parsed.error)
           return
         }
@@ -304,12 +283,20 @@ export function SourceStep({
         onError(message)
       }
     },
-    [provider, onError, onCloudLoaded, onLoaded, t, maxCloudDocumentBytes],
+    [
+      provider,
+      onError,
+      onCloudLoaded,
+      onLoaded,
+      t,
+      maxCloudDocumentBytes,
+      navigate,
+    ],
   )
 
   useEffect(() => {
-    if (!pendingHandoff || provider !== wrongImporter?.target) return
-    const file = pendingHandoff
+    if (!pendingHandoff || provider !== pendingHandoff.target) return
+    const file = pendingHandoff.file
     let cancelled = false
     queueMicrotask(() => {
       if (cancelled) return
@@ -320,7 +307,7 @@ export function SourceStep({
     return () => {
       cancelled = true
     }
-  }, [handleFile, pendingHandoff, provider, wrongImporter?.target])
+  }, [handleFile, pendingHandoff, provider])
 
   const handleFilesSelected = useCallback(
     (files: File[]) => {
@@ -388,14 +375,13 @@ export function SourceStep({
     }
   }, [])
 
-  const showFileImport = cfg.fileImport !== null && provider !== 'tricount'
+  const showFileImport = cfg.fileImport !== null && !cfg.customTab
   const showDomainSwap = cfg.hasDomainSwap
   const showUrlPaste = cfg.hasUrlPaste
-  const isSpliit = provider === 'spliit'
-  const isSplitwise = provider === 'splitwise'
-  const isCospend = provider === 'cospend'
-  const isSettleUp = provider === 'settleup'
-  const isCloud = provider === 'spliit-cloud'
+  const copy =
+    provider === 'spliit-cloud'
+      ? null
+      : getProviderCopy(provider as ProviderId, t)
 
   return (
     <div className="flex flex-col gap-4">
@@ -440,7 +426,10 @@ export function SourceStep({
                 className="w-fit"
                 type="button"
                 onClick={() => {
-                  setPendingHandoff(wrongImporter.file)
+                  setPendingHandoff({
+                    file: wrongImporter.file,
+                    target: wrongImporter.target,
+                  })
                   void navigate({
                     to: '/groups/import',
                     search: { source: wrongImporter.target },
@@ -469,134 +458,53 @@ export function SourceStep({
             ref={tabsListRef}
             className="w-full justify-start overflow-x-auto sm:w-auto"
           >
-            <TabsTrigger
-              value="spliit"
-              className="min-w-max"
-              nativeButton={false}
-              render={
-                <Link to="/groups/import" search={{ source: 'spliit' }} />
-              }
-            >
-              {t('Groups.Import.Source.fromSpliit')}
-            </TabsTrigger>
-            <TabsTrigger
-              value="spliit-cloud"
-              className="min-w-max"
-              nativeButton={false}
-              render={
-                <Link to="/groups/import" search={{ source: 'spliit-cloud' }} />
-              }
-            >
-              {t('Groups.Import.Source.fromSpliitCloud')}
-            </TabsTrigger>
-            <TabsTrigger
-              value="splitwise"
-              className="min-w-max"
-              nativeButton={false}
-              render={
-                <Link to="/groups/import" search={{ source: 'splitwise' }} />
-              }
-            >
-              {t('Groups.Import.Source.splitwise')}
-            </TabsTrigger>
-            <TabsTrigger
-              value="cospend"
-              className="min-w-max"
-              nativeButton={false}
-              render={
-                <Link to="/groups/import" search={{ source: 'cospend' }} />
-              }
-            >
-              {t('Groups.Import.Source.cospend')}
-            </TabsTrigger>
-            <TabsTrigger
-              value="tricount"
-              className="min-w-max"
-              nativeButton={false}
-              render={
-                <Link to="/groups/import" search={{ source: 'tricount' }} />
-              }
-            >
-              {t('Groups.Import.Source.tricount')}
-            </TabsTrigger>
-            <TabsTrigger
-              value="settleup"
-              className="min-w-max"
-              nativeButton={false}
-              render={
-                <Link to="/groups/import" search={{ source: 'settleup' }} />
-              }
-            >
-              {t('Groups.Import.Source.settleUp')}
-            </TabsTrigger>
+            {getTabLabels(t).map(({ value, label }) => (
+              <TabsTrigger
+                key={value}
+                value={value}
+                className="min-w-max"
+                nativeButton={false}
+                render={<Link to="/groups/import" search={{ source: value }} />}
+              >
+                {label}
+              </TabsTrigger>
+            ))}
           </TabsList>
         </PageInset>
 
-        <TabsContent value="spliit">
-          <PageInset>
-            <ProviderDescription
-              description={t('Groups.Import.Source.spliitDescription')}
-            />
-          </PageInset>
-        </TabsContent>
-        <TabsContent value="spliit-cloud" className="flex flex-col gap-4">
-          <PageInset>
-            <ProviderDescription
-              description={t(
-                'Groups.Import.Source.spliitCloudScopeDescription',
-              )}
-            />
-          </PageInset>
-        </TabsContent>
-        <TabsContent value="splitwise" className="flex flex-col gap-4">
-          <PageInset>
-            <ProviderDescription
-              description={t('Groups.Import.Source.splitwiseDescription')}
-              receiptTitle={t(
-                'Groups.Import.Source.receiptWarningTitleSplitwise',
-              )}
-              receiptDescription={t(
-                'Groups.Import.Source.receiptWarningDescriptionSplitwise',
-              )}
-            />
-          </PageInset>
-          <SplitwiseAnonymizerCard />
-        </TabsContent>
-        <TabsContent value="cospend">
-          <PageInset>
-            <ProviderDescription
-              description={t('Groups.Import.Source.cospendDescription')}
-              receiptTitle={t(
-                'Groups.Import.Source.receiptWarningTitleCospend',
-              )}
-              receiptDescription={t(
-                'Groups.Import.Source.receiptWarningDescriptionCospend',
-              )}
-            />
-          </PageInset>
-        </TabsContent>
-        <TabsContent value="tricount">
-          <PageInset>
-            <TricountSourceTab
-              onLoaded={onLoaded}
-              onMultiLoaded={(sources) => onTricountMultiLoaded?.(sources)}
-              onError={onError}
-            />
-          </PageInset>
-        </TabsContent>
-        <TabsContent value="settleup">
-          <PageInset>
-            <ProviderDescription
-              description={t('Groups.Import.Source.settleUpDescription')}
-              receiptTitle={t(
-                'Groups.Import.Source.receiptWarningTitleSettleUp',
-              )}
-              receiptDescription={t(
-                'Groups.Import.Source.receiptWarningDescriptionSettleUp',
-              )}
-            />
-          </PageInset>
-        </TabsContent>
+        {provider === 'spliit-cloud' ? (
+          <TabsContent value="spliit-cloud" className="flex flex-col gap-4">
+            <PageInset>
+              <ProviderDescription
+                description={t(
+                  'Groups.Import.Source.spliitCloudScopeDescription',
+                )}
+              />
+            </PageInset>
+          </TabsContent>
+        ) : cfg.customTab ? (
+          <TabsContent value={provider}>
+            <PageInset>
+              <GenericSourceTab
+                provider={provider as ProviderId}
+                onLoaded={onLoaded}
+                onMultiLoaded={(sources) => onMultiLoaded?.(sources)}
+                onError={onError}
+              />
+            </PageInset>
+          </TabsContent>
+        ) : (
+          <TabsContent value={provider} className="flex flex-col gap-4">
+            <PageInset>
+              <ProviderDescription
+                description={copy?.description ?? ''}
+                receiptTitle={copy?.receiptTitle ?? undefined}
+                receiptDescription={copy?.receiptDescription ?? undefined}
+              />
+            </PageInset>
+            {provider === 'splitwise' && <SplitwiseAnonymizerCard />}
+          </TabsContent>
+        )}
       </Tabs>
 
       {showDomainSwap && (
@@ -619,7 +527,7 @@ export function SourceStep({
           onUrlChange={handleUrlChange}
           onSubmit={handleUrlSubmit}
           help={
-            isSpliit ? (
+            provider === 'spliit' ? (
               <ExportGuideTrigger
                 trigger={t(
                   'Groups.Import.Source.exportGuide.spliitLinkTrigger',
@@ -663,31 +571,20 @@ export function SourceStep({
           onDrop={handleDrop}
           onFilesSelected={handleFilesSelected}
           accept={cfg.accept}
-          help={<ExportGuideTrigger {...fileGuideProps(provider, t)} />}
-          labels={{
-            dropFile: t(
-              isCloud
-                ? 'Groups.Import.Source.cloudZipRequired'
-                : isSplitwise
-                  ? 'Groups.Import.Source.dropFileSplitwise'
-                  : isCospend
-                    ? 'Groups.Import.Source.dropFileCospend'
-                    : isSettleUp
-                      ? 'Groups.Import.Source.dropFileSettleUp'
-                      : 'Groups.Import.Source.dropFile',
-            ),
-            dropFileDescription: t(
-              isCloud
-                ? 'Groups.Import.Source.spliitCloudScopeDescription'
-                : isSplitwise
-                  ? 'Groups.Import.Source.dropFileDescriptionSplitwise'
-                  : isCospend
-                    ? 'Groups.Import.Source.dropFileDescriptionCospend'
-                    : isSettleUp
-                      ? 'Groups.Import.Source.dropFileDescriptionSettleUp'
-                      : 'Groups.Import.Source.dropFileDescription',
-            ),
-          }}
+          help={<ExportGuideTrigger {...getFileGuide(provider, t)} />}
+          labels={
+            copy
+              ? {
+                  dropFile: copy.dropFile,
+                  dropFileDescription: copy.dropFileDescription,
+                }
+              : {
+                  dropFile: t('Groups.Import.Source.cloudZipRequired'),
+                  dropFileDescription: t(
+                    'Groups.Import.Source.spliitCloudScopeDescription',
+                  ),
+                }
+          }
         />
       )}
 
@@ -700,134 +597,6 @@ export function SourceStep({
       )}
     </div>
   )
-}
-
-type FileGuideProps = React.ComponentProps<typeof ExportGuideTrigger>
-
-function fileGuideProps(
-  provider: SourceMode,
-  t: (key: string) => string,
-): FileGuideProps {
-  switch (provider) {
-    case 'spliit':
-      return {
-        trigger: t('Groups.Import.Source.exportGuide.spliitFileTrigger'),
-        title: t('Groups.Import.Source.exportGuide.spliitFileDialogTitle'),
-        steps: [
-          {
-            index: 1,
-            text: t('Groups.Import.Source.exportGuide.spliitFileStep1'),
-          },
-          {
-            index: 2,
-            text: t('Groups.Import.Source.exportGuide.spliitFileStep2'),
-          },
-        ],
-        artifact: '.json / .csv',
-      }
-    case 'spliit-cloud':
-      return {
-        trigger: t('Groups.Import.Source.exportGuide.spliitCloudTrigger'),
-        title: t('Groups.Import.Source.exportGuide.spliitCloudTitle'),
-        steps: [
-          {
-            index: 1,
-            text: t('Groups.Import.Source.exportGuide.spliitCloudStep1'),
-          },
-          {
-            index: 2,
-            text: t('Groups.Import.Source.exportGuide.spliitCloudStep2'),
-          },
-          {
-            index: 3,
-            text: t('Groups.Import.Source.exportGuide.spliitCloudStep3'),
-          },
-        ],
-        artifact: '.spliit.zip',
-        artifactLabel: t('Groups.Import.Source.exportGuide.artifactLabel'),
-        artifactDetail: t(
-          'Groups.Import.Source.exportGuide.spliitCloudArtifactDetail',
-        ),
-        tip: t('Groups.Import.Source.exportGuide.spliitCloudTip'),
-      }
-    case 'splitwise':
-      return {
-        trigger: t('Groups.Import.Source.exportGuide.splitwiseTrigger'),
-        title: t('Groups.Import.Source.exportGuide.splitwiseTitle'),
-        steps: [
-          {
-            index: 1,
-            text: t('Groups.Import.Source.exportGuide.splitwiseStep1'),
-          },
-          {
-            index: 2,
-            text: t('Groups.Import.Source.exportGuide.splitwiseStep2'),
-          },
-          {
-            index: 3,
-            text: t('Groups.Import.Source.exportGuide.splitwiseStep3'),
-          },
-        ],
-        artifact: '*.csv',
-        artifactLabel: t('Groups.Import.Source.exportGuide.artifactLabel'),
-        artifactDetail: t(
-          'Groups.Import.Source.exportGuide.splitwiseArtifactDetail',
-        ),
-        tip: t('Groups.Import.Source.exportGuide.splitwiseTip'),
-      }
-    case 'cospend':
-      return {
-        trigger: t('Groups.Import.Source.exportGuide.cospendTrigger'),
-        title: t('Groups.Import.Source.exportGuide.cospendTitle'),
-        steps: [
-          {
-            index: 1,
-            text: t('Groups.Import.Source.exportGuide.cospendStep1'),
-          },
-          {
-            index: 2,
-            text: t('Groups.Import.Source.exportGuide.cospendStep2'),
-          },
-          {
-            index: 3,
-            text: t('Groups.Import.Source.exportGuide.cospendStep3'),
-          },
-        ],
-        artifact: '*.csv',
-        artifactLabel: t('Groups.Import.Source.exportGuide.artifactLabel'),
-        artifactDetail: t(
-          'Groups.Import.Source.exportGuide.cospendArtifactDetail',
-        ),
-        tip: t('Groups.Import.Source.exportGuide.cospendTip'),
-      }
-    case 'settleup':
-      return {
-        trigger: t('Groups.Import.Source.exportGuide.settleUpTrigger'),
-        title: t('Groups.Import.Source.exportGuide.settleUpTitle'),
-        steps: [
-          {
-            index: 1,
-            text: t('Groups.Import.Source.exportGuide.settleUpStep1'),
-          },
-          {
-            index: 2,
-            text: t('Groups.Import.Source.exportGuide.settleUpStep2'),
-          },
-          {
-            index: 3,
-            text: t('Groups.Import.Source.exportGuide.settleUpStep3'),
-          },
-        ],
-        artifact: '*.csv',
-        artifactLabel: t('Groups.Import.Source.exportGuide.artifactLabel'),
-        artifactDetail: t(
-          'Groups.Import.Source.exportGuide.settleUpArtifactDetail',
-        ),
-        tip: t('Groups.Import.Source.exportGuide.settleUpTip'),
-      }
-    case 'tricount':
-      return { trigger: '', title: '', steps: [] }
-  }
 }
 
 function ProviderDescription({

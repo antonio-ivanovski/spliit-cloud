@@ -3,11 +3,19 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { render, screen, waitFor } from '@/test/test-utils'
 
-import { TricountSourceTab } from './tricount-source-tab'
+import { GenericSourceTab } from './generic-source-tab'
 
 vi.mock('@/trpc/client', () => ({
   trpc: {
     groups: {
+      importPreview: {
+        useQuery: () => ({
+          data: undefined,
+          isFetching: false,
+          isError: false,
+          error: null,
+        }),
+      },
       tricountPreview: {
         useQuery: () => ({
           data: undefined,
@@ -41,11 +49,12 @@ function upload(csv: string) {
   return { file, input }
 }
 
-describe('TricountSourceTab', () => {
+describe('GenericSourceTab (tricount)', () => {
   it('renders a guide trigger inside each path card, with steps in a dialog', async () => {
     const user = userEvent.setup()
     const view = render(
-      <TricountSourceTab
+      <GenericSourceTab
+        provider="tricount"
         onLoaded={vi.fn()}
         onMultiLoaded={vi.fn()}
         onError={vi.fn()}
@@ -78,7 +87,8 @@ describe('TricountSourceTab', () => {
     const onMultiLoaded = vi.fn()
     const onError = vi.fn()
     render(
-      <TricountSourceTab
+      <GenericSourceTab
+        provider="tricount"
         onLoaded={onLoaded}
         onMultiLoaded={onMultiLoaded}
         onError={onError}
@@ -98,7 +108,8 @@ describe('TricountSourceTab', () => {
     const onMultiLoaded = vi.fn()
     const onError = vi.fn()
     render(
-      <TricountSourceTab
+      <GenericSourceTab
+        provider="tricount"
         onLoaded={onLoaded}
         onMultiLoaded={onMultiLoaded}
         onError={onError}
@@ -123,7 +134,8 @@ describe('TricountSourceTab', () => {
     const user = userEvent.setup()
     const onLoaded = vi.fn()
     render(
-      <TricountSourceTab
+      <GenericSourceTab
+        provider="tricount"
         onLoaded={onLoaded}
         onMultiLoaded={vi.fn()}
         onError={vi.fn()}
@@ -144,7 +156,8 @@ describe('TricountSourceTab', () => {
     const onMultiLoaded = vi.fn()
     const onError = vi.fn()
     render(
-      <TricountSourceTab
+      <GenericSourceTab
+        provider="tricount"
         onLoaded={onLoaded}
         onMultiLoaded={onMultiLoaded}
         onError={onError}

@@ -1258,6 +1258,31 @@ describe('parseSplitwiseCsv', () => {
     }),
   )
 
+  it.effect('skips rows with non-ISO dates (compact/slashed)', () =>
+    Effect.gen(function* () {
+      const csv = splitwiseCsv([
+        ['20260115', 'Compact', 'General', '10.00', 'MKD', '5.00', '-5.00'],
+        ['2026/01/15', 'Slashed', 'General', '10.00', 'MKD', '5.00', '-5.00'],
+        ['2026-01-15', 'Good', 'General', '10.00', 'MKD', '5.00', '-5.00'],
+      ])
+      const source = yield* parseSplitwiseCsv(csv)
+      expect(source.expenses).toHaveLength(1)
+      expect(source.expenses[0]!.title).toBe('Good')
+    }),
+  )
+
+  it.effect('skips a row with a non-numeric cost alongside a valid row', () =>
+    Effect.gen(function* () {
+      const csv = splitwiseCsv([
+        ['2026-01-15', 'Bad cost', 'General', 'not-a-number', 'MKD', '5', '-5'],
+        ['2026-01-15', 'Good', 'General', '10.00', 'MKD', '5.00', '-5.00'],
+      ])
+      const source = yield* parseSplitwiseCsv(csv)
+      expect(source.expenses).toHaveLength(1)
+      expect(source.expenses[0]!.title).toBe('Good')
+    }),
+  )
+
   it.effect('rejects header-only CSV', () =>
     Effect.gen(function* () {
       const error = yield* Effect.flip(parseSplitwiseCsv(HEADER))

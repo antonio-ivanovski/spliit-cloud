@@ -1,3 +1,5 @@
+import { Effect } from 'effect'
+
 import type { ExpenseConversionInput } from '../conversion'
 import type { Currency } from '../currency'
 import { getCurrency } from '../currency'
@@ -9,6 +11,7 @@ import type {
   NormalizedSourceExpense,
   RecurrenceConfig,
 } from './types'
+import { ImportError } from './types'
 
 export type ImportConversionMode = 'perDate' | 'fixed'
 
@@ -269,8 +272,11 @@ function normalizePaidByOriginal(
  * Scale BY_AMOUNT paidFor shares so they sum to `targetAmount`. Converted
  * Spliit sources often store paidFor in ledger units while the import amount is
  * the original-currency expense amount.
+ *
+ * Shared with the Spliit CSV parser, which recovers an original-currency amount
+ * per row (upstream #513) and must rescale ledger-unit paidFor to it.
  */
-function normalizePaidForByAmount(
+export function normalizePaidForByAmount(
   paidFor: Array<{ participant: string; shares: number }>,
   targetAmount: number,
 ): Array<{ participant: string; shares: number }> {
@@ -304,11 +310,7 @@ function normalizePaidForByAmount(
   }))
 }
 
-export function buildImportBatch(
-  state: ImportBatchState,
-  destinationCurrencyCode: string,
-  rates?: ImportRatesByKey,
-): {
+export type ImportBatchResult = {
   batch:
     | {
         targetGroupId: string
@@ -330,65 +332,85 @@ export function buildImportBatch(
         participants: ImportBatchParticipant[]
         expenses: ImportBatchExpense[]
       }
-} {
-  const participants: ImportBatchParticipant[] = state.participants.map((p) => {
+}
+
+export const buildImportBatch = Effect.fnUntraced(function* (
+  state: ImportBatchState,
+  destinationCurrencyCode: string,
+  rates?: ImportRatesByKey,
+): Effect.fn.Return<ImportBatchResult, ImportError> {
+  const participants: ImportBatchParticipant[] = []
+  for (const p of state.participants) {
     const destLedgerParticipantId =
       p.mode === 'LINK_EXISTING_PARTICIPANT'
         ? (p.existingLedgerParticipantId ?? '')
         : (state.destIds[p.source.sourceId] ?? '')
     if (!destLedgerParticipantId) {
-      throw new Error(
-        `Missing destination id for source participant "${p.source.sourceName}"`,
-      )
+      return yield* new ImportError({
+        message: `Missing destination id for source participant "${p.source.sourceName}"`,
+        code: 'BATCH_MISSING_DEST_ID',
+        params: { name: p.source.sourceName },
+      })
     }
     if (p.mode === 'UNLINKED_PARTICIPANT') {
-      return {
+      participants.push({
         mode: 'UNLINKED_PARTICIPANT' as const,
         sourceName: p.source.sourceName,
         destLedgerParticipantId,
-      }
+      })
+      continue
     }
     if (p.mode === 'INVITE_BY_EMAIL' || p.mode === 'INVITE_CONTACT') {
       if (!p.inviteEmail?.trim()) {
-        throw new Error(`Missing email for invitee "${p.source.sourceName}"`)
+        return yield* new ImportError({
+          message: `Missing email for invitee "${p.source.sourceName}"`,
+          code: 'BATCH_MISSING_EMAIL',
+          params: { name: p.source.sourceName },
+        })
       }
-      return {
+      participants.push({
         mode: p.mode as 'INVITE_BY_EMAIL' | 'INVITE_CONTACT',
         sourceName: p.source.sourceName,
         email: p.inviteEmail.trim(),
         destLedgerParticipantId,
-      }
+      })
+      continue
     }
     if (p.mode === 'INVITE_BY_LINK') {
-      return {
+      participants.push({
         mode: 'INVITE_BY_LINK' as const,
         sourceName: p.source.sourceName,
         destLedgerParticipantId,
-      }
+      })
+      continue
     }
     if (p.mode === 'LINK_EXISTING_PARTICIPANT') {
-      return {
+      participants.push({
         mode: 'LINK_EXISTING_PARTICIPANT' as const,
         sourceName: p.source.sourceName,
         destLedgerParticipantId,
-      }
+      })
+      continue
     }
     if (!p.linkedAccountId) {
-      throw new Error(
-        `Missing account for linked participant "${p.source.sourceName}"`,
-      )
+      return yield* new ImportError({
+        message: `Missing account for linked participant "${p.source.sourceName}"`,
+        code: 'BATCH_MISSING_ACCOUNT',
+        params: { name: p.source.sourceName },
+      })
     }
-    return {
+    participants.push({
       mode: 'LINK_ACCOUNT' as const,
       sourceName: p.source.sourceName,
       linkedAccountId: p.linkedAccountId,
       destLedgerParticipantId,
-    }
-  })
+    })
+  }
 
   const sourceCurrencyCode = state.source?.currencyCode ?? ''
 
-  const expenses: ImportBatchExpense[] = state.resolvedExpenses.map((e) => {
+  const expenses: ImportBatchExpense[] = []
+  for (const e of state.resolvedExpenses) {
     const { expenseCurrency, expenseAmount } = resolveImportExpenseMoney(
       e,
       sourceCurrencyCode,
@@ -402,9 +424,11 @@ export function buildImportBatch(
     for (const p of normalizedPaidBy) {
       const destId = state.sourceIdToDestId[p.sourceId]
       if (!destId) {
-        throw new Error(
-          `Missing destination id for paidBy participant ${p.sourceId}`,
-        )
+        return yield* new ImportError({
+          message: `Missing destination id for paidBy participant ${p.sourceId}`,
+          code: 'BATCH_MISSING_DEST_ID',
+          params: { sourceId: p.sourceId },
+        })
       }
       paidByList.push({ participant: destId, shares: p.shares })
     }
@@ -412,9 +436,11 @@ export function buildImportBatch(
     for (const p of e.paidFor) {
       const destId = state.sourceIdToDestId[p.sourceId]
       if (!destId) {
-        throw new Error(
-          `Missing destination id for paidFor participant ${p.sourceId}`,
-        )
+        return yield* new ImportError({
+          message: `Missing destination id for paidFor participant ${p.sourceId}`,
+          code: 'BATCH_MISSING_DEST_ID',
+          params: { sourceId: p.sourceId },
+        })
       }
       paidFor.push({ participant: destId, shares: p.shares })
     }
@@ -443,9 +469,15 @@ export function buildImportBatch(
     if (needsConversion) {
       const dateKey = e.expenseDate.slice(0, 10)
       if (!rates) {
-        throw new Error(
-          `Cannot import "${e.title}": cross-currency conversion needs an exchange rate from ${expenseCurrency} to ${destinationCurrencyCode}.`,
-        )
+        return yield* new ImportError({
+          message: `Cannot import "${e.title}": cross-currency conversion needs an exchange rate from ${expenseCurrency} to ${destinationCurrencyCode}.`,
+          code: 'BATCH_MISSING_RATE',
+          params: {
+            title: e.title,
+            base: expenseCurrency,
+            target: destinationCurrencyCode,
+          },
+        })
       }
       const rateKey = makeRateKey(
         dateKey,
@@ -454,12 +486,19 @@ export function buildImportBatch(
       )
       const rate = rates[rateKey]
       if (typeof rate !== 'number') {
-        throw new Error(
-          `Cannot import "${e.title}": missing exchange rate for ${expenseCurrency} -> ${destinationCurrencyCode} on ${dateKey}.`,
-        )
+        return yield* new ImportError({
+          message: `Cannot import "${e.title}": missing exchange rate for ${expenseCurrency} -> ${destinationCurrencyCode} on ${dateKey}.`,
+          code: 'BATCH_MISSING_RATE',
+          params: {
+            title: e.title,
+            base: expenseCurrency,
+            target: destinationCurrencyCode,
+            date: dateKey,
+          },
+        })
       }
 
-      return {
+      expenses.push({
         expenseDate: new Date(`${e.expenseDate.slice(0, 10)}T12:00:00.000Z`),
         expenseTimeZone: 'UTC',
         title: e.title,
@@ -479,10 +518,11 @@ export function buildImportBatch(
         notes: e.notes ?? undefined,
         recurrence: e.recurrence ?? null,
         recurrenceRule: e.recurrenceRule,
-      }
+      })
+      continue
     }
 
-    return {
+    expenses.push({
       expenseDate: new Date(`${e.expenseDate.slice(0, 10)}T12:00:00.000Z`),
       expenseTimeZone: 'UTC',
       title: e.title,
@@ -496,8 +536,8 @@ export function buildImportBatch(
       notes: e.notes ?? undefined,
       recurrence: e.recurrence ?? null,
       recurrenceRule: e.recurrenceRule,
-    }
-  })
+    })
+  }
 
   const batch =
     state.mode === 'EXISTING_GROUP' && state.targetGroupId
@@ -524,4 +564,4 @@ export function buildImportBatch(
         }
 
   return { batch }
-}
+})

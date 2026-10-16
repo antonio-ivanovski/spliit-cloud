@@ -103,7 +103,7 @@ vi.mock('@/trpc/client', () => {
 })
 
 vi.mock('./use-import-source', () => ({
-  useImportSource: () => ({
+  usePreviewSource: () => ({
     data: undefined,
     isLoading: false,
     error: null,

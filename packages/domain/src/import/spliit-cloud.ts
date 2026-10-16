@@ -7,6 +7,7 @@ import {
   type SpliitGroupExportManifest,
 } from '../export-manifest'
 import { spliitExportSchema } from './spliit'
+import { parseSpliitCsv } from './spliit-csv'
 import { ImportError } from './types'
 
 export type ImportFileKind =
@@ -74,14 +75,14 @@ export function classifyImportPayload(
 }
 
 /**
- * Classify text before selecting a provider-specific parser. The Spliit CSV
- * parser is intentionally not imported here so this helper remains usable by
- * the web source classifier without creating a parser cycle.
+ * Classify text before selecting a provider-specific parser. The legacy spliit
+ * CSV shape is part of the same `spliit` registry entry, so it resolves
+ * directly — no callback needed (`spliit-csv` never imports this module, so
+ * there is no cycle).
  */
 export function classifyImportText(
   fileName: string,
   text: string,
-  parseSpliitCsv: (value: string) => Effect.Effect<unknown, unknown>,
 ): ImportFileClassification {
   const lower = fileName.toLowerCase()
   // Inspect the content as well as the extension. Files downloaded through

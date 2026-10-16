@@ -1,77 +1,51 @@
-import { Effect } from 'effect'
-import Papa from 'papaparse'
+import { Effect, Schema } from 'effect'
 
 import { DEFAULT_CATEGORIES, SETTLEMENT_CATEGORY_ID } from '../categories'
-import type { Currency } from '../currency'
 import { getCurrency } from '../currency'
-import { distributeRemainder } from '../remainder-distribution'
 import { amountAsMinorUnitsByCode } from '../utils'
+import { normalizePaidForByAmount } from './batch'
+import { buildNetExpense, buildSettlement } from './expense-builder'
+import { createMemberRegistry } from './member-registry'
+import { detectSpliitCsvLayout } from './spliit-headers'
 import {
   recoverSpliitOriginalAmount,
   shouldRecoverSpliitOriginal,
 } from './spliit-original-amount'
-import { guessSplitMode } from './split-guess'
+import {
+  dominantCurrency,
+  FALLBACK_CURRENCY,
+  isBlankRow,
+  parseCsvText,
+  parseIsoDatePrefix,
+  toNumberOrNull,
+} from './table'
 import { ImportError } from './types'
 import type { NormalizedSource } from './types'
 
-const FALLBACK_CURRENCY: Currency = {
-  code: '',
-  symbol: '',
-  rounding: 0,
-  decimal_digits: 2,
-}
-
 /**
- * Column indices for the immutable legacy spliit.app CSV export. This is not
- * the Spliit Cloud export format; keep the wire schema stable and map it to
- * current models after parsing.
+ * Column indices for the immutable legacy spliit.app CSV export. See
+ * {@link detectSpliitCsvLayout} for the wire contract.
  */
-type CsvLayout = {
-  /** Column index of `Is Settlement` or the legacy `Is Reimbursement` alias. */
-  isReimbursement: number
-  splitMode: number
-  participantStart: number
-}
 
-function isSettlementCsvHeader(value: string | undefined): boolean {
-  return value === 'Is Settlement' || value === 'Is Reimbursement'
-}
+/** Decoded, trimmed view of one raw CSV row for the fixed legacy layout. */
+const SpliitCsvRowSchema = Schema.Struct({
+  date: Schema.Trim,
+  title: Schema.Trim,
+  category: Schema.Trim,
+  currency: Schema.Trim,
+  // Cost stays lenient: unparseable amounts skip the row (pinned by the
+  // "skips rows with unparseable amounts" fixture), they never fail the file.
+  cost: Schema.Unknown,
+  originalCurrency: Schema.Trim,
+  conversionRate: Schema.Unknown,
+  isReimbursement: Schema.Trim,
+})
 
-function toNumberOrNull(value: string | undefined): number | null {
-  if (value === undefined) return null
-  const trimmed = value.trim()
-  if (trimmed === '') return null
-  const n = Number(trimmed)
-  return Number.isNaN(n) ? null : n
-}
-
-export const parseSpliitCsv = Effect.fnUntraced(function* (
-  input: string,
+export const parseSpliitTable = Effect.fnUntraced(function* (
+  rows: string[][],
 ): Effect.fn.Return<NormalizedSource, ImportError> {
-  const cleaned = input.charCodeAt(0) === 0xfeff ? input.slice(1) : input
-  const parsed = Papa.parse<string[]>(cleaned, {
-    skipEmptyLines: 'greedy',
-    header: false,
-  })
-
-  const rows = parsed.data
-  if (rows.length < 2) {
-    return yield* new ImportError({
-      message: 'CSV has no data rows',
-      code: 'CSV_NO_DATA_ROWS',
-      params: {},
-    })
-  }
-  if (parsed.errors.length > 0) {
-    const detail = parsed.errors[0]?.message ?? 'unknown error'
-    return yield* new ImportError({
-      message: `CSV could not be parsed: ${detail}`,
-      code: 'CSV_PARSE_FAILED',
-      params: { detail },
-    })
-  }
-  const header = rows[0]
-  const layout = detectCsvLayout(header)
+  const header = rows[0]!
+  const layout = detectSpliitCsvLayout(header)
   if (!layout) {
     return yield* new ImportError({
       message: 'CSV header is not a Spliit export',
@@ -93,33 +67,43 @@ export const parseSpliitCsv = Effect.fnUntraced(function* (
     })
   }
 
-  const participantIndex = new Map<string, number>()
-  const participants: NormalizedSource['participants'] = []
-  for (const name of participantHeaders) {
-    const key = name.toLowerCase()
-    if (participantIndex.has(key)) continue
-    const idx = participants.length
-    participantIndex.set(key, idx)
-    participants.push({
-      sourceId: `csv-participant-${idx}`,
-      sourceName: name,
-    })
-  }
+  const registry = createMemberRegistry('csv-participant')
+  for (const name of participantHeaders) registry.register(name)
+  const participants = registry.all()
 
   const expenses: NormalizedSource['expenses'] = []
   const currencyCounts = new Map<string, number>()
   for (let r = 1; r < rows.length; r++) {
-    const row = rows[r]
-    if (row.every((c: string) => (c ?? '').trim() === '')) continue
-    const date = (row[0] ?? '').trim()
-    const title = (row[1] ?? '').trim()
-    const category = (row[2] ?? '').trim()
-    const rowCurrency = (row[3] ?? '').trim().toUpperCase()
-    const costMajor = toNumberOrNull(row[4])
-    const isReimbursement =
-      (row[layout.isReimbursement] ?? '').trim().toLowerCase() === 'yes'
+    const row = rows[r]!
+    if (isBlankRow(row)) continue
+    const decoded = yield* Schema.decodeUnknownEffect(SpliitCsvRowSchema)({
+      date: row[0] ?? '',
+      title: row[1] ?? '',
+      category: row[2] ?? '',
+      currency: row[3] ?? '',
+      cost: row[4],
+      originalCurrency: row[6] ?? '',
+      conversionRate: row[7],
+      isReimbursement: row[layout.isReimbursement] ?? '',
+    }).pipe(
+      Effect.mapError(
+        () =>
+          new ImportError({
+            message: `Row ${r + 1} is not a valid Spliit expense row`,
+            code: 'CSV_INVALID_EXPENSE_ROW',
+            params: { row: r + 1 },
+          }),
+      ),
+    )
+    const date = decoded.date
+    const title = decoded.title
+    const category = decoded.category
+    const rowCurrency = decoded.currency.toUpperCase()
+    const costMajor =
+      typeof decoded.cost === 'string' ? toNumberOrNull(decoded.cost) : null
+    const isReimbursement = decoded.isReimbursement.toLowerCase() === 'yes'
 
-    if (!/^\d{4}-\d{2}-\d{2}/.test(date)) continue
+    if (!parseIsoDatePrefix(date)) continue
     if (title.length === 0) continue
     if (costMajor === null) continue
     const currencyCode = rowCurrency.length === 3 ? rowCurrency : ''
@@ -142,9 +126,8 @@ export const parseSpliitCsv = Effect.fnUntraced(function* (
       if (!name) continue
       const raw = toNumberOrNull(row[i])
       if (raw === null) continue
-      const idx = participantIndex.get(name.toLowerCase())
-      if (idx === undefined) continue
-      const sourceId = participants[idx].sourceId
+      const sourceId = registry.idOf(name)
+      if (sourceId === undefined) continue
       if (raw > 0 && !paidBySourceId) {
         paidBySourceId = sourceId
       } else if (raw === 0 && !firstZeroSourceId) {
@@ -158,6 +141,8 @@ export const parseSpliitCsv = Effect.fnUntraced(function* (
     if (!paidBySourceId) continue
 
     let paidFor: Array<{ sourceId: string; shares: number }>
+    let splitMode: 'EVENLY' | 'BY_SHARES' | 'BY_AMOUNT' | 'BY_PERCENTAGE'
+    let paidBySourceIdResolved = paidBySourceId
 
     if (isReimbursement) {
       // Spliit encodes the receiver as the negative-value participant.
@@ -166,75 +151,58 @@ export const parseSpliitCsv = Effect.fnUntraced(function* (
       const receiver = entries.find((e) => e.raw < 0)
       if (receiver) {
         const payer = entries.find((e) => e.raw > 0)
-        if (payer) paidBySourceId = payer.sourceId
-        paidFor = [{ sourceId: receiver.sourceId, shares: amountCents }]
+        if (payer) paidBySourceIdResolved = payer.sourceId
+        const settlement = buildSettlement({
+          payerId: paidBySourceIdResolved,
+          receiverId: receiver.sourceId,
+          amountCents,
+        })
+        paidBySourceIdResolved = settlement.paidBySourceId
+        paidFor = settlement.paidFor
+        splitMode = settlement.splitMode
       } else {
         const other = entries.find((e) => e.sourceId !== paidBySourceId)
-        if (other) {
-          paidFor = [{ sourceId: other.sourceId, shares: amountCents }]
-        } else {
-          paidFor = [{ sourceId: paidBySourceId, shares: amountCents }]
-        }
+        const receiverId = other ? other.sourceId : paidBySourceId
+        const settlement = buildSettlement({
+          payerId: paidBySourceId,
+          receiverId,
+          amountCents,
+        })
+        paidFor = settlement.paidFor
+        splitMode = settlement.splitMode
       }
     } else {
       // Participant cells are NET balances (paidBy − paidFor) from export-csv.
-      // Reconstruct owed paidFor: debtors owe −net; payer owes cost − Σ(debtor).
-      // Multi-payer uneven exports are underdetermined — remainder goes to paidBy.
-      const scale = 10 ** currency.decimal_digits
-      const nets = entries.map((e) => ({
-        sourceId: e.sourceId,
-        net: Math.round(e.raw * scale),
-      }))
-      const debtorSum = nets
-        .filter((n) => n.net < 0)
-        .reduce((s, n) => s - n.net, 0)
-
-      const exact: Record<string, { numerator: bigint; denominator: bigint }> =
-        {}
-      for (const n of nets) {
-        if (n.net < 0) {
-          exact[n.sourceId] = { numerator: BigInt(-n.net), denominator: 1n }
-        }
+      // Debtors owe −net; the even-split remainder across positive nets covers
+      // the payer's own share (genuine exports are single-payer, so at most one
+      // net is positive and the remainder lands on the payer exactly).
+      // Hand-forged multi-positive rows split the remainder evenly instead —
+      // underdetermined either way, matching the splitwise sibling shape.
+      const netMajors = new Map<string, number>()
+      for (const e of entries) {
+        netMajors.set(e.sourceId, (netMajors.get(e.sourceId) ?? 0) + e.raw)
       }
-      // Payer's share (and any multi-payer residual) so Σ paidFor === Cost.
-      const payerShare = amountCents - debtorSum
-      if (payerShare !== 0 || Object.keys(exact).length === 0) {
-        exact[paidBySourceId] = {
-          numerator:
-            BigInt(Math.max(0, payerShare)) +
-            (exact[paidBySourceId]?.numerator ?? 0n),
-          denominator: 1n,
-        }
-      }
-
-      const reconciled = distributeRemainder(exact, amountCents, {
+      const built = buildNetExpense({
+        amountCents,
+        currency,
+        netMajors,
         payerId: paidBySourceId,
       })
-      paidFor = Object.entries(reconciled)
-        .filter(([, shares]) => shares > 0)
-        .map(([sourceId, shares]) => ({ sourceId, shares }))
+      paidBySourceIdResolved = built.paidBySourceId
+      paidFor = built.paidFor
+      splitMode = built.splitMode
     }
 
     if (paidFor.length === 0) continue
 
-    const involvedCount = new Set([
-      paidBySourceId,
-      ...paidFor.map((p) => p.sourceId),
-    ]).size
-
-    const { splitMode, paidFor: resolvedPaidFor } = guessSplitMode(
-      paidFor,
-      amountCents,
-      {
-        involvedParticipantCount: involvedCount,
-      },
-    )
-
     // Cost is the source-group ledger total (reliable). Original cost is not
     // trusted — recover expense amount from ledger ÷ rate (upstream #513).
     // Once per parse only; no caching.
-    const originalCurrencyRaw = (row[6] ?? '').trim()
-    const conversionRate = toNumberOrNull(row[7])
+    const originalCurrencyRaw = decoded.originalCurrency
+    const conversionRate =
+      typeof decoded.conversionRate === 'string'
+        ? toNumberOrNull(decoded.conversionRate)
+        : null
     const shouldRecover = shouldRecoverSpliitOriginal({
       originalCurrency:
         originalCurrencyRaw.length === 3 ? originalCurrencyRaw : null,
@@ -251,6 +219,23 @@ export const parseSpliitCsv = Effect.fnUntraced(function* (
       : rowCurrency.length === 3
         ? rowCurrency
         : null
+    // The paidFor/splitMode above are computed against the ledger amount.
+    // When the row carries a recoverable original amount (upstream #513),
+    // reuse the generic normalizer directly against the recovered total so
+    // shares sum to what the expense stores. Reimbursements/settlements
+    // keep the full amount on the single receiver.
+    let resolvedPaidFor = paidFor
+    if (shouldRecover && !isReimbursement && expenseAmount !== amountCents) {
+      resolvedPaidFor = normalizePaidForByAmount(
+        paidFor.map((p) => ({ participant: p.sourceId, shares: p.shares })),
+        expenseAmount,
+      ).map((p) => ({ sourceId: p.participant, shares: p.shares }))
+      if (resolvedPaidFor.length === 0) {
+        resolvedPaidFor = [
+          { sourceId: paidBySourceIdResolved, shares: expenseAmount },
+        ]
+      }
+    }
     expenses.push({
       title,
       expenseDate: date.slice(0, 10),
@@ -263,10 +248,10 @@ export const parseSpliitCsv = Effect.fnUntraced(function* (
       originalAmount: shouldRecover ? expenseAmount : null,
       originalCurrency: shouldRecover ? originalCurrencyRaw : null,
       conversionRate: shouldRecover ? conversionRate : null,
-      paidBySourceId,
+      paidBySourceId: paidBySourceIdResolved,
       paidBy: [
         {
-          sourceId: paidBySourceId,
+          sourceId: paidBySourceIdResolved,
           shares: expenseAmount,
         },
       ],
@@ -286,14 +271,7 @@ export const parseSpliitCsv = Effect.fnUntraced(function* (
     })
   }
 
-  let mostCommonCurrency: string | null = null
-  let maxCount = 0
-  for (const [code, count] of currencyCounts) {
-    if (count > maxCount) {
-      maxCount = count
-      mostCommonCurrency = code
-    }
-  }
+  const mostCommonCurrency = dominantCurrency(currencyCounts) || null
 
   const currency = mostCommonCurrency
     ? (getCurrency(mostCommonCurrency)?.symbol ?? mostCommonCurrency)
@@ -314,50 +292,12 @@ export const parseSpliitCsv = Effect.fnUntraced(function* (
   }
 })
 
-/**
- * Accept the legacy spliit.app CSV layout (with the historical optional
- * Conversion source column). Current Cloud recurrence columns are rejected;
- * they are a different transport format and must not become part of this
- * importer’s public schema.
- */
-function detectCsvLayout(header: string[]): CsvLayout | null {
-  const baseOk =
-    header[0] === 'Date' &&
-    header[1] === 'Description' &&
-    header[2] === 'Category' &&
-    header[3] === 'Currency' &&
-    header[4] === 'Cost' &&
-    header[5] === 'Original cost' &&
-    header[6] === 'Original currency' &&
-    header[7] === 'Conversion rate'
-  if (!baseOk) return null
-
-  let isReimbursement: number
-  let splitMode: number
-  if (
-    header[8] === 'Conversion source' &&
-    isSettlementCsvHeader(header[9]) &&
-    header[10] === 'Split mode'
-  ) {
-    isReimbursement = 9
-    splitMode = 10
-  } else if (isSettlementCsvHeader(header[8]) && header[9] === 'Split mode') {
-    isReimbursement = 8
-    splitMode = 9
-  } else {
-    return null
-  }
-
-  if (header.some((column) => /^Recurrence(?: |$)/i.test(column.trim()))) {
-    return null
-  }
-
-  return {
-    isReimbursement,
-    splitMode,
-    participantStart: splitMode + 1,
-  }
-}
+export const parseSpliitCsv = Effect.fn('parseSpliitCsv')(function* (
+  input: string,
+): Effect.fn.Return<NormalizedSource, ImportError> {
+  const rows = yield* parseCsvText(input)
+  return yield* parseSpliitTable(rows)
+})
 
 function categoryToId(name: string): string {
   if (!name) return 'general'

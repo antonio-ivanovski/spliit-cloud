@@ -106,6 +106,33 @@ describe('parseCospendCsv', () => {
     }),
   )
 
+  it.effect('keeps member names case-sensitive (Alex vs alex)', () =>
+    Effect.gen(function* () {
+      const source = yield* parseCospendCsv(
+        cospendCsv({
+          members: [
+            ['Alex', 1],
+            ['alex', 1],
+          ],
+          bills: [
+            {
+              what: 'Case bill',
+              amount: 10,
+              date: '2026-08-02',
+              payer: 'alex',
+              owers: 'Alex,alex',
+            },
+          ],
+        }),
+      )
+      expect(source.participants).toEqual([
+        { sourceId: 'cospend-member-0', sourceName: 'Alex' },
+        { sourceId: 'cospend-member-1', sourceName: 'alex' },
+      ])
+      expect(source.expenses[0]!.paidBySourceId).toBe('cospend-member-1')
+    }),
+  )
+
   it.effect('splits proportionally to member weights', () =>
     Effect.gen(function* () {
       const source = yield* parseCospendCsv(
@@ -753,6 +780,23 @@ describe('parseCospendCsv', () => {
       ].join('\n')
       const error = yield* Effect.flip(parseCospendCsv(csv))
       expect(error.message).toMatch(/no parseable bills/i)
+    }),
+  )
+
+  it.effect('skips a bill row with a non-numeric amount', () =>
+    Effect.gen(function* () {
+      const csv = [
+        'name,weight,active,color',
+        '"Alex",1,1,"#d6b461"',
+        '"Sam",1,1,"#d6b461"',
+        '',
+        'what,amount,date,timestamp,payer_name,payer_weight,payer_active,owers,repeat,repeatfreq,repeatallactive,repeatuntil,categoryid,paymentmode,paymentmodeid,comment,deleted',
+        '"Bad bill",not-a-number,2026-08-02,1785690155,"Alex",1,1,"Alex,Sam",n,1,0,,0,n,0,"",0',
+        '"Good bill",10,2026-08-02,1785690155,"Alex",1,1,"Alex,Sam",n,1,0,,0,n,0,"",0',
+      ].join('\n')
+      const source = yield* parseCospendCsv(csv)
+      expect(source.expenses).toHaveLength(1)
+      expect(source.expenses[0]!.title).toBe('Good bill')
     }),
   )
 })

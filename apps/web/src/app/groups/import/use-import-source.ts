@@ -6,6 +6,8 @@ import type { AppRouter, AppRouterOutput } from '@spliit/api/router'
 
 type PreviewFromUrlResult = AppRouterOutput['groups']['importPreview']
 
+export type PreviewProviderId = 'spliit' | 'tricount'
+
 export type ImportSourceState = {
   data: PreviewFromUrlResult | undefined
   isLoading: boolean
@@ -17,47 +19,27 @@ export type ImportSourceState = {
 }
 
 /**
+ * Single preview hook for URL-based providers. `spliit` hits `importPreview`
+ * (spliit.app JSON fetch); `tricount` hits `tricountPreview` (server-side fetch
+ * against api.tricount.bunq.com, so the browser never contacts Tricount).
+ *
  * Shared fetch hook for both the wizard (?source=<url> handoff) and SourceStep
  * (URL-paste). Wraps `useQuery` so Strict-Mode and deduping are free.
  */
-export function useImportSource(): ImportSourceState {
+export function usePreviewSource(
+  provider: PreviewProviderId,
+): ImportSourceState {
   const [submittedUrl, setSubmittedUrl] = useState<string | null>(null)
 
-  const query = trpc.groups.importPreview.useQuery(
+  const spliitQuery = trpc.groups.importPreview.useQuery(
     { sourceUrl: submittedUrl ?? '' },
-    { enabled: !!submittedUrl, retry: false },
+    { enabled: provider === 'spliit' && !!submittedUrl, retry: false },
   )
-
-  const submit = useCallback((url: string) => {
-    setSubmittedUrl((prev) => (prev === url ? prev : url))
-  }, [])
-
-  const reset = useCallback(() => {
-    setSubmittedUrl(null)
-  }, [])
-
-  return {
-    data: query.data,
-    isLoading: query.isFetching,
-    isError: query.isError,
-    error: query.error,
-    submit,
-    reset,
-  }
-}
-
-/**
- * Tricount share-link fetch hook for the Tricount source tab. Same contract as
- * {@link useImportSource} but hits `tricountPreview` (server-side fetch against
- * api.tricount.bunq.com, so the browser never contacts Tricount).
- */
-export function useTricountSource(): ImportSourceState {
-  const [submittedUrl, setSubmittedUrl] = useState<string | null>(null)
-
-  const query = trpc.groups.tricountPreview.useQuery(
+  const tricountQuery = trpc.groups.tricountPreview.useQuery(
     { sourceUrl: submittedUrl ?? '' },
-    { enabled: !!submittedUrl, retry: false },
+    { enabled: provider === 'tricount' && !!submittedUrl, retry: false },
   )
+  const query = provider === 'spliit' ? spliitQuery : tricountQuery
 
   const submit = useCallback((url: string) => {
     setSubmittedUrl((prev) => (prev === url ? prev : url))

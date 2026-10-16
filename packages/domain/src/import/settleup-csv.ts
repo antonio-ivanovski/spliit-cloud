@@ -33,32 +33,28 @@
  */
 
 import { Effect, Schema } from 'effect'
-import Papa from 'papaparse'
 
 import { getCurrency } from '../currency'
-import type { Currency } from '../currency'
-import { distributeRemainder } from '../remainder-distribution'
-import {
-  calculateExactShares,
-  serializePaidBy,
-  serializePaidFor,
-} from '../totals'
 import { amountAsMinorUnitsByCode } from '../utils'
+import { buildOwedExpense, buildSettlement } from './expense-builder'
+import { createMemberRegistry } from './member-registry'
 import {
   looksLikeSettlementTitle,
   settleUpCategoryToId,
 } from './settleup-categories'
 import { mapSettleUpHeader } from './settleup-headers'
-import { guessSplitMode } from './split-guess'
+import {
+  decodeBytesText,
+  dominantCurrency,
+  FALLBACK_CURRENCY,
+  isBlankRow,
+  parseCsvText,
+  parseDatePrefix,
+  stripBom,
+  toNumberOrNull,
+} from './table'
 import { ImportError } from './types'
 import type { NormalizedSource } from './types'
-
-const FALLBACK_CURRENCY: Currency = {
-  code: '',
-  symbol: '',
-  rounding: 0,
-  decimal_digits: 2,
-}
 
 /** Decoded, trimmed view of one raw CSV row for a known header layout. */
 const SettleUpRowSchema = Schema.Struct({
@@ -74,59 +70,13 @@ const SettleUpRowSchema = Schema.Struct({
   type: Schema.Trim,
 })
 
-function blankCell(value: string | undefined): boolean {
-  return (value ?? '').trim() === ''
-}
-
-function isBlankRow(row: string[]): boolean {
-  return row.every((cell) => blankCell(cell))
-}
-
 /**
- * Decode upload/attachment bytes (or text) to a JS string. Real Settle Up
- * exports are UTF-16LE with a BOM; tolerate BE, BOM-less UTF-16, and plain
- * UTF-8/ASCII (a lone `�` means it was not actually UTF-16). Returns null when
- * the payload cannot be decoded as text.
+ * Decode upload/attachment bytes (or text) to a JS string. Thin alias over the
+ * shared kit helper, kept because the existing test import path and the web
+ * source step reference the Settle Up name.
  */
 export function decodeSettleUpText(input: string | Uint8Array): string | null {
-  if (typeof input === 'string') {
-    return stripUnicodeBom(input)
-  }
-  const bytes = input
-  if (bytes.length === 0) return null
-  const hasLeBom = bytes.length >= 2 && bytes[0] === 0xff && bytes[1] === 0xfe
-  const hasBeBom = bytes.length >= 2 && bytes[0] === 0xfe && bytes[1] === 0xff
-  // NUL every other byte is the UTF-16 signature without a BOM.
-  let nulEven = 0
-  let nulOdd = 0
-  const sample = Math.min(bytes.length, 64)
-  for (let i = 0; i < sample; i++) {
-    if (bytes[i] === 0) {
-      if (i % 2 === 0) nulEven++
-      else nulOdd++
-    }
-  }
-  const looksLe = hasLeBom || (!hasBeBom && nulOdd > nulEven && nulOdd > 0)
-  const looksBe = hasBeBom || (!hasLeBom && nulEven > nulOdd && nulEven > 0)
-  try {
-    if (looksLe) {
-      const text = new TextDecoder('utf-16le').decode(bytes)
-      if (!text.includes('�')) return stripUnicodeBom(text)
-    } else if (looksBe) {
-      const text = new TextDecoder('utf-16be').decode(bytes)
-      if (!text.includes('�')) return stripUnicodeBom(text)
-    }
-    if (hasLeBom || hasBeBom) return null
-    return stripUnicodeBom(
-      new TextDecoder('utf-8', { fatal: true }).decode(bytes),
-    )
-  } catch {
-    return null
-  }
-}
-
-function stripUnicodeBom(text: string): string {
-  return text.charCodeAt(0) === 0xfeff ? text.slice(1) : text
+  return decodeBytesText(input)
 }
 
 function splitList(value: string): string[] {
@@ -136,60 +86,13 @@ function splitList(value: string): string[] {
     .filter((part) => part !== '')
 }
 
-function toNumberOrNull(value: string | undefined): number | null {
-  if (value === undefined) return null
-  const trimmed = value.trim()
-  if (trimmed === '') return null
-  const n = Number(trimmed)
-  return Number.isNaN(n) ? null : n
-}
-
 /**
- * Settle Up timestamps are `YYYY-MM-DD HH:mm:ss` plus a separate `Timezone`
- * column. Returns the `YYYY-MM-DD` prefix or null when unparseable.
+ * Parse Settle Up rows (already CSV-decoded) into a normalized source. Thin
+ * `parseSettleUpCsv` wraps this with bytes/text decoding.
  */
-function parseDatePrefix(value: string): string | null {
-  const match = value.trim().match(/^(\d{4}-\d{2}-\d{2})/)
-  return match?.[1] ?? null
-}
-
-export const parseSettleUpCsv = Effect.fnUntraced(function* (
-  input: string | Uint8Array,
+export const parseSettleUpTable = Effect.fnUntraced(function* (
+  rows: string[][],
 ): Effect.fn.Return<NormalizedSource, ImportError> {
-  const text = decodeSettleUpText(input)
-  if (text === null) {
-    return yield* new ImportError({
-      message: 'File is not decodable text',
-      code: 'CSV_NOT_DECODABLE_TEXT',
-      params: {},
-    })
-  }
-  // Sniff like the Tricount parser so a semicolon-locale file still parses.
-  const firstLine = stripUnicodeBom(text).split('\n', 1)[0] ?? ''
-  const delimiter =
-    firstLine.split(';').length > firstLine.split(',').length ? ';' : ','
-  const parsed = Papa.parse<string[]>(text, {
-    skipEmptyLines: false,
-    header: false,
-    delimiter,
-  })
-  if (parsed.errors.length > 0) {
-    const detail = parsed.errors[0]?.message ?? 'unknown error'
-    return yield* new ImportError({
-      message: `CSV could not be parsed: ${detail}`,
-      code: 'CSV_PARSE_FAILED',
-      params: { detail },
-    })
-  }
-  const rows = parsed.data
-  if (rows.length < 2) {
-    return yield* new ImportError({
-      message: 'CSV has no data rows',
-      code: 'CSV_NO_DATA_ROWS',
-      params: {},
-    })
-  }
-
   let headerRowIdx = -1
   let headerMap: ReturnType<typeof mapSettleUpHeader> = null
   for (let i = 0; i < rows.length; i++) {
@@ -209,16 +112,8 @@ export const parseSettleUpCsv = Effect.fnUntraced(function* (
   }
   const map = headerMap
 
-  const participants: NormalizedSource['participants'] = []
-  const nameToSourceId = new Map<string, string>()
-  const registerMember = (name: string): string => {
-    const existing = nameToSourceId.get(name.toLowerCase())
-    if (existing) return existing
-    const sourceId = `settleup-participant-${participants.length}`
-    nameToSourceId.set(name.toLowerCase(), sourceId)
-    participants.push({ sourceId, sourceName: name })
-    return sourceId
-  }
+  const registry = createMemberRegistry('settleup-participant')
+  const registerMember = registry.register
 
   type PendingRow = {
     rowNumber: number
@@ -315,19 +210,12 @@ export const parseSettleUpCsv = Effect.fnUntraced(function* (
     })
   }
 
-  let dominantCurrency = ''
-  let maxCount = 0
-  for (const [code, count] of currencyCounts) {
-    if (count > maxCount) {
-      maxCount = count
-      dominantCurrency = code
-    }
-  }
+  const dominantCode = dominantCurrency(currencyCounts)
 
   // Single-currency group: skip rows not denominated in the dominant
   // currency (their `Converted amount` is informational only).
   const rowsToImport = pending.filter(
-    (row) => row.currencyCode === dominantCurrency,
+    (row) => row.currencyCode === dominantCode,
   )
   if (rowsToImport.length === 0) {
     return yield* new ImportError({
@@ -337,10 +225,10 @@ export const parseSettleUpCsv = Effect.fnUntraced(function* (
     })
   }
 
-  const currency = getCurrency(dominantCurrency) ?? {
+  const currency = getCurrency(dominantCode) ?? {
     ...FALLBACK_CURRENCY,
-    code: dominantCurrency,
-    symbol: dominantCurrency,
+    code: dominantCode,
+    symbol: dominantCode,
   }
 
   const expenses: NormalizedSource['expenses'] = []
@@ -369,7 +257,7 @@ export const parseSettleUpCsv = Effect.fnUntraced(function* (
     const isSettlement =
       isTransfer || (!isIncome && looksLikeSettlementTitle(title))
     const cost = Math.abs(row.amount)
-    const amountCents = amountAsMinorUnitsByCode(cost, dominantCurrency)
+    const amountCents = amountAsMinorUnitsByCode(cost, dominantCode)
 
     if (isSettlement) {
       // Settlement: payer → single receiver (largest owed entry that is
@@ -394,106 +282,41 @@ export const parseSettleUpCsv = Effect.fnUntraced(function* (
         }
       }
       if (!receiverName) continue
+      const settlement = buildSettlement({
+        payerId: payerSourceId,
+        receiverId: registerMember(receiverName),
+        amountCents,
+      })
       expenses.push({
         title,
         expenseDate: row.datePrefix,
         category: 'settlement',
-        amountCurrency: dominantCurrency,
+        amountCurrency: dominantCode,
         amount: amountCents,
         originalAmount: null,
         originalCurrency: null,
         conversionRate: null,
-        paidBySourceId: payerSourceId,
-        paidBy: [{ sourceId: payerSourceId, shares: amountCents }],
-        paidFor: [
-          { sourceId: registerMember(receiverName), shares: amountCents },
-        ],
-        splitMode: 'EVENLY',
+        ...settlement,
         recurrenceRule: 'NONE',
         notes: null,
       })
       continue
     }
 
-    const paidForSerialized = serializePaidFor({
-      splitMode: 'BY_AMOUNT',
-      amount: amountCents,
-      currency,
-      paidFor: row.receivers
-        .filter((receiver) => receiver.owed > 0)
-        .map((receiver) => ({
-          participant: { id: registerMember(receiver.name) },
-          shares: receiver.owed,
-        })),
-    })
-    const paidForCents = new Map<string, number>()
-    for (const entry of paidForSerialized) {
-      if (entry.shares > 0) {
-        paidForCents.set(
-          entry.participant.id,
-          (paidForCents.get(entry.participant.id) ?? 0) + entry.shares,
-        )
+    const owedMajors = new Map<string, number>()
+    for (const receiver of row.receivers) {
+      if (receiver.owed > 0) {
+        owedMajors.set(registerMember(receiver.name), receiver.owed)
       }
     }
-    // Remainder from rounding (e.g. 8.33 × 12 = 99.96 vs 100) goes
-    // through the domain remainder distributor (pinned to the payer).
-    const owedTotal = [...paidForCents.values()].reduce((sum, v) => sum + v, 0)
-    const remainder = amountCents - owedTotal
-    if (remainder !== 0) {
-      const exact = calculateExactShares({
-        amount: Math.abs(remainder),
-        splitMode: 'EVENLY',
-        participants: [{ id: payerSourceId, shares: 1 }],
-      })
-      const fixed = distributeRemainder(exact, Math.abs(remainder))
-      const extra = fixed[payerSourceId] ?? 0
-      if (extra > 0) {
-        paidForCents.set(
-          payerSourceId,
-          (paidForCents.get(payerSourceId) ?? 0) +
-            (remainder > 0 ? extra : -extra),
-        )
-      }
-    }
-    const paidFor = [...paidForCents.entries()]
-      .filter(([, shares]) => shares > 0)
-      .map(([sourceId, shares]) => ({ sourceId, shares }))
-    if (paidFor.length === 0) {
-      paidFor.push({ sourceId: payerSourceId, shares: amountCents })
-    }
-
     // Payer side: the `Who paid` member advanced the whole total.
-    const paidBySerialized = serializePaidBy({
-      paidBySplitMode: 'BY_AMOUNT',
-      amount: amountCents,
-      inputCurrency: currency,
-      paidByList: [{ participant: { id: payerSourceId }, shares: cost }],
-    })
-    const paidByExact = calculateExactShares({
-      amount: amountCents,
-      splitMode: 'BY_AMOUNT',
-      participants: paidBySerialized.map((p) => ({
-        id: p.participant.id,
-        shares: p.shares,
-      })),
-    })
-    const paidByFixed = distributeRemainder(paidByExact, amountCents, {
+    const built = buildOwedExpense({
+      amountCents,
+      currency,
+      owedMajors,
+      advancedMajors: new Map([[payerSourceId, cost]]),
       payerId: payerSourceId,
     })
-    const paidBy = Object.entries(paidByFixed).map(([sourceId, shares]) => ({
-      sourceId,
-      shares,
-    }))
-
-    const involvedCount = new Set([
-      ...paidBy.map((p) => p.sourceId),
-      ...paidFor.map((p) => p.sourceId),
-    ]).size
-    const { splitMode, paidFor: resolvedPaidFor } = guessSplitMode(
-      paidFor,
-      amountCents,
-      { involvedParticipantCount: involvedCount },
-    )
 
     const exchangeRate =
       row.exchangeRate !== undefined &&
@@ -508,17 +331,14 @@ export const parseSettleUpCsv = Effect.fnUntraced(function* (
       category: isIncome
         ? 'income'
         : settleUpCategoryToId(row.category, row.type),
-      amountCurrency: dominantCurrency,
+      amountCurrency: dominantCode,
       amount: amountCents,
       originalAmount: null,
       originalCurrency: null,
       // Historical row rate preserved for auditing; the wizard converts
       // against Frankfurter at confirm time.
       conversionRate: exchangeRate,
-      paidBySourceId: payerSourceId,
-      paidBy,
-      paidFor: resolvedPaidFor,
-      splitMode,
+      ...built,
       recurrenceRule: 'NONE',
       notes: null,
     })
@@ -539,10 +359,30 @@ export const parseSettleUpCsv = Effect.fnUntraced(function* (
     sourceUrl: null,
     name: 'Imported from Settle Up',
     information: null,
-    currency: dominantCurrency,
-    currencyCode: dominantCurrency,
-    participants,
+    currency: dominantCode,
+    currencyCode: dominantCode,
+    participants: registry.all(),
     expenses,
     documentSource: 'NONE',
   }
+})
+
+export const parseSettleUpCsv = Effect.fn('parseSettleUpCsv')(function* (
+  input: string | Uint8Array,
+): Effect.fn.Return<NormalizedSource, ImportError> {
+  const text = decodeSettleUpText(input)
+  if (text === null) {
+    return yield* new ImportError({
+      message: 'File is not decodable text',
+      code: 'CSV_NOT_DECODABLE_TEXT',
+      params: {},
+    })
+  }
+  // Sniff like the Tricount parser so a semicolon-locale file still parses.
+  // Note: `For whom`/`Split amounts` lists always split on `;`.
+  const firstLine = stripBom(text).split('\n', 1)[0] ?? ''
+  const delimiter =
+    firstLine.split(';').length > firstLine.split(',').length ? ';' : ','
+  const rows = yield* parseCsvText(text, { delimiter, skipEmptyLines: false })
+  return yield* parseSettleUpTable(rows)
 })

@@ -43,11 +43,19 @@ vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => routerMocks.navigate,
 }))
 
-// TricountSourceTab fetches via useTricountSource (tRPC); stub the client
+// TricountSourceTab fetches via usePreviewSource (tRPC); stub the client
 // so tab renders don't need a provider.
 vi.mock('@/trpc/client', () => ({
   trpc: {
     groups: {
+      importPreview: {
+        useQuery: () => ({
+          data: undefined,
+          isFetching: false,
+          isError: false,
+          error: null,
+        }),
+      },
       tricountPreview: {
         useQuery: () => ({
           data: undefined,
@@ -340,6 +348,95 @@ describe('SourceStep — initialError (prefill) handling', () => {
     ])
     expect(source.expenses).toHaveLength(1)
     expect(source.expenses[0]).toMatchObject({ title: 'Dinner', amount: 4000 })
+  })
+
+  it('hands a known export dropped on the wrong tab to the owning tab', async () => {
+    routerMocks.source = 'settleup'
+    const onLoaded = vi.fn()
+    const view = renderSourceStep({ onLoaded })
+    const input = view.container.querySelector('input[type="file"]')
+    if (!(input instanceof HTMLInputElement))
+      throw new Error('file input missing')
+
+    const text = [
+      'Date,Description,Category,Cost,Currency,Alice,Bob',
+      '2024-01-15,Dinner,,40.00,EUR,20.00,-20.00',
+    ].join('\n')
+    fireEvent.change(input, {
+      target: {
+        files: [new File([text], 'export.csv', { type: 'text/csv' })],
+      },
+    })
+
+    await new Promise((resolve) => setTimeout(resolve, 0))
+    // No parse on the wrong tab — navigation hands off instead.
+    expect(onLoaded).not.toHaveBeenCalled()
+    expect(routerMocks.navigate).toHaveBeenCalledWith({
+      to: '/groups/import',
+      search: { source: 'splitwise' },
+    })
+
+    // Arrival on the owning tab re-parses the stashed file.
+    routerMocks.source = 'splitwise'
+    view.rerender(
+      <SourceStep
+        onLoaded={onLoaded}
+        onError={vi.fn()}
+        sourcePreview={undefined}
+        isSourcePreviewLoading={false}
+        sourcePreviewError={null}
+        submitPreview={vi.fn()}
+        resetPreview={vi.fn()}
+      />,
+    )
+    await new Promise((resolve) => setTimeout(resolve, 0))
+    expect(onLoaded).toHaveBeenCalledOnce()
+    const source = onLoaded.mock.calls[0]![0] as { provider: string }
+    expect(source.provider).toBe('SPLITWISE')
+  })
+
+  it('reports an unreadable-file error for an empty file', async () => {
+    // Settleup tab: single file input (the splitwise tab also hosts the
+    // anonymizer card's picker, which would shadow querySelector).
+    routerMocks.source = 'settleup'
+    const onError = vi.fn()
+    const view = renderSourceStep({ onError })
+    const input = view.container.querySelector('input[type="file"]')
+    if (!(input instanceof HTMLInputElement))
+      throw new Error('file input missing')
+
+    fireEvent.change(input, {
+      target: {
+        files: [new File([], 'export.csv', { type: 'text/csv' })],
+      },
+    })
+
+    await new Promise((resolve) => setTimeout(resolve, 100))
+    expect(onError).toHaveBeenCalledWith('Failed to read the file')
+  })
+
+  it('reports a spliit-specific error for malformed JSON on the spliit tab', async () => {
+    routerMocks.source = 'spliit'
+    const onError = vi.fn()
+    const view = renderSourceStep({ onError })
+    const input = view.container.querySelector('input[type="file"]')
+    if (!(input instanceof HTMLInputElement))
+      throw new Error('file input missing')
+
+    fireEvent.change(input, {
+      target: {
+        files: [
+          new File(['{ invalid json'], 'group.json', {
+            type: 'application/json',
+          }),
+        ],
+      },
+    })
+
+    await new Promise((resolve) => setTimeout(resolve, 0))
+    expect(onError).toHaveBeenCalledWith(
+      'This file is not a supported spliit.app JSON export.',
+    )
   })
 
   it('notes that CSV cannot import recurrence', () => {

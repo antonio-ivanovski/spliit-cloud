@@ -26,28 +26,22 @@
  * and unit-testable against recorded fixtures.
  */
 
-import { Effect, Predicate, Schema } from 'effect'
+import { Effect, Schema } from 'effect'
 
 import { getCurrency } from '../currency'
-import type { Currency } from '../currency'
-import { distributeRemainder } from '../remainder-distribution'
-import {
-  calculateExactShares,
-  serializePaidBy,
-  serializePaidFor,
-} from '../totals'
 import { amountAsMinorUnitsByCode } from '../utils'
-import { guessSplitMode } from './split-guess'
+import { buildOwedExpense, buildSettlement } from './expense-builder'
+import { createMemberRegistry } from './member-registry'
+import {
+  dominantCurrency,
+  FALLBACK_CURRENCY,
+  optionalText,
+  parseIsoDatePrefix,
+  toNumberOrNullApi,
+} from './table'
 import { tricountCategoryToId } from './tricount-categories'
 import { ImportError } from './types'
 import type { NormalizedSource } from './types'
-
-const FALLBACK_CURRENCY: Currency = {
-  code: '',
-  symbol: '',
-  rounding: 0,
-  decimal_digits: 2,
-}
 
 const MoneySchema = Schema.Struct({
   currency: Schema.String,
@@ -112,38 +106,12 @@ function displayName(membership: {
   return membership.RegistryMembershipNonUser.alias.display_name
 }
 
-function toNumberOrNull(value: unknown): number | null {
-  if (typeof value === 'number') return Number.isFinite(value) ? value : null
-  if (typeof value !== 'string') return null
-  const trimmed = value.trim()
-  if (trimmed === '') return null
-  const n = Number(trimmed)
-  return Number.isNaN(n) ? null : n
-}
-
-function parseDatePrefix(value: string): string | null {
-  const match = value.trim().match(/^(\d{4}-\d{2}-\d{2})/)
-  return match ? match[1]! : null
-}
-
-function optionalText(value: unknown): string {
-  return typeof value === 'string' ? value : ''
-}
-
 const normalizeRegistry = Effect.fnUntraced(function* (
   registry: Registry,
   sourceUrl: string | null,
 ): Effect.fn.Return<NormalizedSource, ImportError> {
-  const participants: NormalizedSource['participants'] = []
-  const nameToSourceId = new Map<string, string>()
-  const registerMember = (name: string): string => {
-    const existing = nameToSourceId.get(name.toLowerCase())
-    if (existing) return existing
-    const sourceId = `tricount-member-${participants.length}`
-    nameToSourceId.set(name.toLowerCase(), sourceId)
-    participants.push({ sourceId, sourceName: name })
-    return sourceId
-  }
+  const registry_ = createMemberRegistry('tricount-member')
+  const registerMember = registry_.register
   for (const membership of registry.memberships) {
     registerMember(displayName(membership))
   }
@@ -156,13 +124,12 @@ const normalizeRegistry = Effect.fnUntraced(function* (
     const entry: RegistryEntry = wrapper.RegistryEntry
     const title = (entry.description ?? '').trim()
     if (title === '') continue
-    const datePrefix = parseDatePrefix(entry.date)
+    const datePrefix = parseIsoDatePrefix(entry.date)
     if (!datePrefix) continue
-    const cost = Math.abs(toNumberOrNull(entry.amount.value) ?? NaN)
+    const cost = Math.abs(toNumberOrNullApi(entry.amount.value) ?? NaN)
     if (!Number.isFinite(cost) || cost === 0) continue
     const currencyCode = entry.amount.currency.trim().toUpperCase()
     if (currencyCode.length !== 3) continue
-    if (!Predicate.isString(currencyCode)) continue
 
     currencyCounts.set(
       currencyCode,
@@ -185,7 +152,7 @@ const normalizeRegistry = Effect.fnUntraced(function* (
     for (const allocation of entry.allocations) {
       const name = displayName(allocation.membership)
       const sourceId = registerMember(name)
-      const share = Math.abs(toNumberOrNull(allocation.amount.value) ?? 0)
+      const share = Math.abs(toNumberOrNullApi(allocation.amount.value) ?? 0)
       if (share > 0) {
         owed.set(sourceId, (owed.get(sourceId) ?? 0) + share)
       }
@@ -201,6 +168,11 @@ const normalizeRegistry = Effect.fnUntraced(function* (
         }
       }
       if (!receiverId) continue
+      const settlement = buildSettlement({
+        payerId: payerSourceId,
+        receiverId,
+        amountCents,
+      })
       expenses.push({
         sourceId: String(entry.id),
         title,
@@ -211,75 +183,24 @@ const normalizeRegistry = Effect.fnUntraced(function* (
         originalAmount: null,
         originalCurrency: null,
         conversionRate: null,
-        paidBySourceId: payerSourceId,
-        paidBy: [{ sourceId: payerSourceId, shares: amountCents }],
-        paidFor: [{ sourceId: receiverId, shares: amountCents }],
-        splitMode: 'EVENLY',
+        ...settlement,
         recurrenceRule: 'NONE',
         notes: null,
       })
       continue
     }
 
-    const paidForSerialized = serializePaidFor({
-      splitMode: 'BY_AMOUNT',
-      amount: amountCents,
+    const built = buildOwedExpense({
+      amountCents,
       currency,
-      paidFor: [...owed.entries()]
-        .filter(([, share]) => share > 0)
-        .map(([sourceId, share]) => ({
-          participant: { id: sourceId },
-          shares: share,
-        })),
-    })
-    const paidForCents = new Map<string, number>()
-    for (const row of paidForSerialized) {
-      if (row.shares > 0) {
-        paidForCents.set(
-          row.participant.id,
-          (paidForCents.get(row.participant.id) ?? 0) + row.shares,
-        )
-      }
-    }
-    const paidBySerialized = serializePaidBy({
-      paidBySplitMode: 'BY_AMOUNT',
-      amount: amountCents,
-      inputCurrency: currency,
-      paidByList: [{ participant: { id: payerSourceId }, shares: cost }],
-    })
-    const paidByExact = calculateExactShares({
-      amount: amountCents,
-      splitMode: 'BY_AMOUNT',
-      participants: paidBySerialized.map((p) => ({
-        id: p.participant.id,
-        shares: p.shares,
-      })),
-    })
-    const paidByFixed = distributeRemainder(paidByExact, amountCents, {
+      owedMajors: owed,
+      advancedMajors: new Map([[payerSourceId, cost]]),
       payerId: payerSourceId,
     })
-    const paidBy = Object.entries(paidByFixed).map(([sourceId, shares]) => ({
-      sourceId,
-      shares,
-    }))
-    const paidFor = [...paidForCents.entries()]
-      .filter(([, shares]) => shares > 0)
-      .map(([sourceId, shares]) => ({ sourceId, shares }))
-    if (paidFor.length === 0) {
-      paidFor.push({ sourceId: payerSourceId, shares: amountCents })
-    }
+    const { splitMode, paidFor: resolvedPaidFor } = built
+    const paidBy = built.paidBy
 
-    const involvedCount = new Set([
-      ...paidBy.map((p) => p.sourceId),
-      ...paidFor.map((p) => p.sourceId),
-    ]).size
-    const { splitMode, paidFor: resolvedPaidFor } = guessSplitMode(
-      paidFor,
-      amountCents,
-      { involvedParticipantCount: involvedCount },
-    )
-
-    const exchangeRate = toNumberOrNull(entry.exchange_rate)
+    const exchangeRate = toNumberOrNullApi(entry.exchange_rate)
     expenses.push({
       sourceId: String(entry.id),
       title,
@@ -306,6 +227,7 @@ const normalizeRegistry = Effect.fnUntraced(function* (
     })
   }
 
+  const participants = registry_.all()
   if (participants.length === 0) {
     return yield* new ImportError({
       message: 'Tricount has no participants',
@@ -321,14 +243,8 @@ const normalizeRegistry = Effect.fnUntraced(function* (
     })
   }
 
-  let mostCommonCurrency = baseCurrencyCode
-  let maxCount = 0
-  for (const [code, count] of currencyCounts) {
-    if (count > maxCount) {
-      maxCount = count
-      mostCommonCurrency = code
-    }
-  }
+  const votedCurrency = dominantCurrency(currencyCounts)
+  const mostCommonCurrency = votedCurrency || baseCurrencyCode
 
   return {
     provider: 'TRICOUNT',

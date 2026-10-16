@@ -1,35 +1,46 @@
-import { Effect } from 'effect'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { PageInset } from '@/components/layout/page-shell'
 import {
   extractTricountToken,
-  importErrorToParseResult,
-  parseTricountCsv,
+  getProvider,
+  runParseWithRegistry,
   type NormalizedSource,
+  type ProviderId,
 } from '@spliit/domain/import'
 
 import { ExportGuideTrigger } from './export-guide'
 import { FileUploadCard } from './file-upload-card'
 import { PasteUrlCard } from './paste-url-card'
 import { TricountGroupSetup } from './tricount-group-setup'
-import { useTricountSource } from './use-import-source'
+import { usePreviewSource } from './use-import-source'
 
 type Props = {
+  provider: ProviderId
   onLoaded: (source: NormalizedSource) => void
   onMultiLoaded: (sources: NormalizedSource[]) => void
   onError: (message: string) => void
 }
 
+export type { Props as GenericSourceTabProps }
+
 /**
- * Tricount source tab: GDPR CSV upload with multi-group routing.
+ * Registry-driven source tab for tabular providers with multi-group routing.
  *
- * Single-group dumps resolve straight into the wizard via `onLoaded`;
- * multi-group dumps lift into `onMultiLoaded` so the wizard can show the group
- * picker and queue each group through the standard flow.
+ * File uploads parse through the domain provider registry
+ * (`runParseWithRegistry` — never `Effect.runSync` directly); multi-group
+ * results lift into `onMultiLoaded` for the wizard queue, single groups resolve
+ * straight into `onLoaded`. The share-link paste card renders behind the
+ * registry `shareLink` capability (tricount-only today); the preview hook is
+ * keyed by provider so the next URL-based provider needs no tsx branch.
  */
-export function TricountSourceTab({ onLoaded, onMultiLoaded, onError }: Props) {
+export function GenericSourceTab({
+  provider,
+  onLoaded,
+  onMultiLoaded,
+  onError,
+}: Props) {
   const { t } = useTranslation()
   const [isDragging, setIsDragging] = useState(false)
   const [url, setUrl] = useState('')
@@ -44,9 +55,10 @@ export function TricountSourceTab({ onLoaded, onMultiLoaded, onError }: Props) {
     error: previewError,
     submit: submitPreview,
     reset: resetPreview,
-  } = useTricountSource()
+  } = usePreviewSource('tricount')
 
-  // Server fetch completion feeds the same single/multi routing as files.
+  // Server fetch completion feeds the same single/multi routing as files
+  // (tricount-only: the only URL-based tabular provider).
   useEffect(() => {
     if (preview?.kind === 'OK') {
       onLoaded(preview.source)
@@ -85,22 +97,23 @@ export function TricountSourceTab({ onLoaded, onMultiLoaded, onError }: Props) {
   const handleFile = useCallback(
     async (file: File) => {
       const text = await file.text()
-      let sources: NormalizedSource[]
-      try {
-        sources = Effect.runSync(parseTricountCsv(text))
-      } catch (error) {
-        const result = importErrorToParseResult(error)
-        onError(result.ok ? 'Invalid import' : result.error)
+      const result = runParseWithRegistry(provider, text)
+      if (!result.ok) {
+        onError(result.error)
         return
       }
-      if (sources.length === 1) {
-        onLoaded(sources[0]!)
+      if ('sources' in result) {
+        if (result.sources.length === 1) {
+          onLoaded(result.sources[0]!)
+          return
+        }
+        setMultiSources(result.sources)
+        setSelectedIds(result.sources.map((s) => s.sourceGroupId))
         return
       }
-      setMultiSources(sources)
-      setSelectedIds(sources.map((s) => s.sourceGroupId))
+      onLoaded(result.source)
     },
-    [onLoaded, onError],
+    [provider, onLoaded, onError],
   )
 
   const handleToggle = useCallback((sourceId: string, checked: boolean) => {
@@ -140,53 +153,67 @@ export function TricountSourceTab({ onLoaded, onMultiLoaded, onError }: Props) {
     )
   }
 
+  // Share-link sections render behind the registry `shareLink` capability
+  // (tricount-only today). The file path below is provider-generic. When a
+  // second URL-based provider lands, its paste handler keys off the same
+  // capability.
+  const showShareLink = getProvider(provider).shareLink
+
   return (
     <div className="flex flex-col gap-4">
-      <PageInset>
-        <p className="text-sm text-muted-foreground">
-          {t('Groups.Import.Source.exportGuide.tricountDescription')}
-        </p>
-      </PageInset>
-      <PasteUrlCard
-        disabled={false}
-        isPending={isPreviewLoading}
-        url={url}
-        urlError={displayedUrlError}
-        onUrlChange={handleUrlChange}
-        onSubmit={handleUrlSubmit}
-        help={
-          <ExportGuideTrigger
-            trigger={t('Groups.Import.Source.exportGuide.tricountLinkTrigger')}
-            title={t(
-              'Groups.Import.Source.exportGuide.tricountLinkDialogTitle',
-            )}
-            steps={[
-              {
-                index: 1,
-                text: t('Groups.Import.Source.exportGuide.tricountLinkStep1'),
-              },
-              {
-                index: 2,
-                text: t('Groups.Import.Source.exportGuide.tricountLinkStep2'),
-              },
-            ]}
-          />
-        }
-        labels={{
-          pasteUrl: t('Groups.Import.Source.tricountPasteUrl'),
-          urlDescription: t('Groups.Import.Source.tricountUrlDescription'),
-          urlPlaceholder: t('Groups.Import.Source.tricountUrlPlaceholder'),
-          fetchGroupButton: t('Groups.Import.Source.fetchGroupButton'),
-          fetchingButton: t('Groups.Import.Source.fetchingButton'),
-        }}
-      />
-      <PageInset>
-        <div className="flex items-center gap-3 text-xs tracking-wide text-muted-foreground uppercase">
-          <div className="h-px flex-1 bg-border" />
-          <span>{t('Groups.Import.Source.or')}</span>
-          <div className="h-px flex-1 bg-border" />
-        </div>
-      </PageInset>
+      {showShareLink && (
+        <PageInset>
+          <p className="text-sm text-muted-foreground">
+            {t('Groups.Import.Source.exportGuide.tricountDescription')}
+          </p>
+        </PageInset>
+      )}
+      {showShareLink && (
+        <PasteUrlCard
+          disabled={false}
+          isPending={isPreviewLoading}
+          url={url}
+          urlError={displayedUrlError}
+          onUrlChange={handleUrlChange}
+          onSubmit={handleUrlSubmit}
+          help={
+            <ExportGuideTrigger
+              trigger={t(
+                'Groups.Import.Source.exportGuide.tricountLinkTrigger',
+              )}
+              title={t(
+                'Groups.Import.Source.exportGuide.tricountLinkDialogTitle',
+              )}
+              steps={[
+                {
+                  index: 1,
+                  text: t('Groups.Import.Source.exportGuide.tricountLinkStep1'),
+                },
+                {
+                  index: 2,
+                  text: t('Groups.Import.Source.exportGuide.tricountLinkStep2'),
+                },
+              ]}
+            />
+          }
+          labels={{
+            pasteUrl: t('Groups.Import.Source.tricountPasteUrl'),
+            urlDescription: t('Groups.Import.Source.tricountUrlDescription'),
+            urlPlaceholder: t('Groups.Import.Source.tricountUrlPlaceholder'),
+            fetchGroupButton: t('Groups.Import.Source.fetchGroupButton'),
+            fetchingButton: t('Groups.Import.Source.fetchingButton'),
+          }}
+        />
+      )}
+      {showShareLink && (
+        <PageInset>
+          <div className="flex items-center gap-3 text-xs tracking-wide text-muted-foreground uppercase">
+            <div className="h-px flex-1 bg-border" />
+            <span>{t('Groups.Import.Source.or')}</span>
+            <div className="h-px flex-1 bg-border" />
+          </div>
+        </PageInset>
+      )}
       <FileUploadCard
         disabled={false}
         isDragging={isDragging}
