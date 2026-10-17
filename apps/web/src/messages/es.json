@@ -392,7 +392,8 @@
             "yearly": "años"
           }
         },
-        "categorizeWithSystemOne": "Sugerir categorías para gastos sin categorizar con System One"
+        "categorizeWithSystemOne": "Sugerir categorías para gastos sin categorizar con System One",
+        "recurringScheduleCategoryDiffers": "Las filas contraídas solo difieren por categoría: gana la categoría de la fila más reciente."
       },
       "Destination": {
         "heading": "¿Dónde te gustaría importar <strong>{name}</strong>? ({participantCount} participantes · {expenseCount} gastos)",
@@ -3266,7 +3267,18 @@
       "storageBoxes": "Cajas de almacenamiento",
       "popcornCombo": "Combo de palomitas",
       "streamingRental": "Alquiler en streaming"
-    }
+    },
+    "seriesScopeCount": "{selected} de {total} seleccionadas",
+    "seriesScopeDescription": "De forma predeterminada solo cambian las repeticiones seleccionadas y la plantilla de la serie se mantiene igual. Propaga para actualizar la plantilla y más repeticiones.",
+    "seriesScopeLegend": "Alcance de propagación para {title}",
+    "seriesScopeSection": "Propagación de series recurrentes",
+    "seriesScopeSelected": "Solo las seleccionadas",
+    "seriesScopeTemplateNotice": "La plantilla de la serie y las repeticiones ampliadas también cambiarán a esta categoría.",
+    "seriesScopeThisAndFuture": "Esta y las futuras",
+    "seriesScopeTitle": "Series recurrentes en esta revisión",
+    "seriesScopeWholeSeries": "Toda la serie",
+    "seriesScopeCadence": "{frequency} · cada {interval}",
+    "seriesScopeDiverged": "Plantilla divergente"
   },
   "ExpensePreview": {
     "title": "Vista previa del gasto",
@@ -3420,7 +3432,8 @@
     "badgeRunning": "Recurrente · En curso",
     "badgeStopped": "Recurrente · Detenida",
     "badgeCompleted": "Recurrente · Completada",
-    "timeZone": "Se ejecuta a las 15:00 en {timeZone}"
+    "timeZone": "Se ejecuta a las 15:00 en {timeZone}",
+    "badgeDiverged": "Plantilla divergente: las repeticiones futuras usan la plantilla"
   },
   "CurrencyConverter": {
     "trigger": "Conversión de moneda",
@@ -4982,7 +4995,8 @@
       "message": "Se intercambiaron {count} gastos a {code}. Los saldos, totales y exportaciones ya usan la moneda nueva.",
       "backToGroup": "Volver al grupo",
       "backToTools": "Volver a Herramientas",
-      "title": "Intercambio completado"
+      "title": "Intercambio completado",
+      "templatesConverted": "También se convirtieron {count} plantillas recurrentes."
     },
     "filters": {
       "all": "Todos",
@@ -5054,7 +5068,8 @@
       "minor-units": "La moneda nueva usa «unidades menores» diferentes (p. ej., céntimos frente a yenes) — son esperables pequeñas diferencias de redondeo.",
       "budgets-stale": "Los presupuestos conservan los importes en la moneda antigua y deberían revisarse después del intercambio.",
       "exact-to-custom": "Algunos gastos usaron importes exactos, así que se convierten con tasas personalizadas.",
-      "fixed-fallback": "Algunos gastos utilizan la conversión fija para una moneda retirada."
+      "fixed-fallback": "Algunos gastos utilizan la conversión fija para una moneda retirada.",
+      "series-templates-convert": "{templateCount} plantillas recurrentes se convertirán al tipo de cambio de hoy junto con los gastos."
     },
     "back": "Atrás",
     "pairs": {

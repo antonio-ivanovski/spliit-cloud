@@ -928,7 +928,18 @@
       "storageBoxes": "اسٹوریج بکس",
       "popcornCombo": "پاپ کارن کومبو",
       "streamingRental": "اسٹریمنگ کرایہ"
-    }
+    },
+    "seriesScopeCount": "{total} میں سے {selected} منتخب",
+    "seriesScopeDescription": "بطور ڈیفالٹ صرف منتخب واقعات بدلتے ہیں اور سیریز ٹیمپلیٹ جوں کا توں رہتا ہے۔ ٹیمپلیٹ اور مزید واقعات اپ ڈیٹ کرنے کے لیے پھیلائیں۔",
+    "seriesScopeLegend": "{title} کے لیے توسیع کی حد",
+    "seriesScopeSection": "متواتر سیریز کی توسیع",
+    "seriesScopeSelected": "صرف منتخب",
+    "seriesScopeTemplateNotice": "سیریز ٹیمپلیٹ اور پھیلائے گئے واقعات بھی اس زمرے میں بدل جائیں گے۔",
+    "seriesScopeThisAndFuture": "یہ اور آگے",
+    "seriesScopeTitle": "اس جائزے میں متواتر سیریز",
+    "seriesScopeWholeSeries": "پوری سیریز",
+    "seriesScopeCadence": "{frequency} · ہر {interval}",
+    "seriesScopeDiverged": "ٹیمپلیٹ الگ ہو گیا"
   },
   "Categories": {
     "Entertainment": {
@@ -1939,7 +1950,8 @@
       "THIS_AND_FUTURE": "یہ اور اس کے بعد کے واقعات حذف ہو جائیں گے۔ تکرار اگلے طے شدہ واقعہ کے ساتھ جاری رہے گی۔",
       "THIS_AND_FUTURE_STOP": "یہ اور اس کے بعد کے واقعات حذف ہو جائیں گے اور تکرار رک جائے گی۔"
     },
-    "timeZone": "{timeZone} میں سہ پہر 3:00 بجے چلتا ہے"
+    "timeZone": "{timeZone} میں سہ پہر 3:00 بجے چلتا ہے",
+    "badgeDiverged": "ٹیمپلیٹ الگ ہو گیا — آگے کے واقعات ٹیمپلیٹ استعمال کرتے ہیں"
   },
   "Expenses": {
     "title": "اخراجات",
@@ -2270,7 +2282,8 @@
             "yearly": "سال"
           }
         },
-        "categorizeWithSystemOne": "System One سے غیر زمرہ بند اخراجات کے لیے زمرے تجویز کریں"
+        "categorizeWithSystemOne": "System One سے غیر زمرہ بند اخراجات کے لیے زمرے تجویز کریں",
+        "recurringScheduleCategoryDiffers": "ملا دی گئی قطاریں صرف زمرے میں مختلف ہیں — تازہ ترین قطار کا زمرہ جیتتا ہے۔"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -4907,7 +4920,8 @@
       "message": "{count} اخراجات {code} میں تبدیل کر دیے گئے۔ بیلنس، مجموعے اور برآمدات اب نئی کرنسی استعمال کرتے ہیں۔",
       "backToGroup": "گروپ پر واپس جائیں",
       "backToTools": "ٹولز پر واپس جائیں",
-      "title": "تبدیلی مکمل"
+      "title": "تبدیلی مکمل",
+      "templatesConverted": "{count} متواتر ٹیمپلیٹ بھی تبدیل ہو گئے۔"
     },
     "filters": {
       "all": "سبھی",
@@ -4979,7 +4993,8 @@
       "minor-units": "نئی کرنسی مختلف معمولی اکائیاں استعمال کرتی ہے (جیسے سینٹ بمقابلہ ین) — معمولی گول بندی کے فرق متوقع ہیں۔",
       "budgets-stale": "بجٹ پرانی کرنسی کی رقم میں ہی رہتے ہیں، تبدیلی کے بعد ان کا جائزہ لینا چاہیے۔",
       "exact-to-custom": "کچھ اخراجات میں بالکل درست رقمیں استعمال کی گئی تھیں، اس لیے وہ اپنی مرضی کی شرحوں پر تبدیل ہوتے ہیں۔",
-      "fixed-fallback": "کچھ خرچوں میں واپس لی گئی کرنسی کے لیے مقررہ تبدیلی استعمال کی گئی ہے۔"
+      "fixed-fallback": "کچھ خرچوں میں واپس لی گئی کرنسی کے لیے مقررہ تبدیلی استعمال کی گئی ہے۔",
+      "series-templates-convert": "{templateCount} متواتر ٹیمپلیٹ آج کے ریٹ پر اخراجات کے ساتھ تبدیل ہوں گے۔"
     },
     "back": "واپس",
     "pairs": {

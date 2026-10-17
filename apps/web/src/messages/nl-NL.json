@@ -391,7 +391,8 @@
             "yearly": "jaren"
           }
         },
-        "categorizeWithSystemOne": "Categorieën voorstellen voor uitgaven zonder categorie met System One"
+        "categorizeWithSystemOne": "Categorieën voorstellen voor uitgaven zonder categorie met System One",
+        "recurringScheduleCategoryDiffers": "Samengevoegde rijen verschillen alleen in categorie — de categorie van de nieuwste rij wint."
       },
       "Destination": {
         "heading": "Waar wil je <strong>{name}</strong> importeren? ({participantCount} deelnemers · {expenseCount} uitgaven)",
@@ -3262,7 +3263,18 @@
       "storageBoxes": "Opbergdozen",
       "popcornCombo": "Popcorncombo",
       "streamingRental": "Streaminghuur"
-    }
+    },
+    "seriesScopeCount": "{selected} van {total} geselecteerd",
+    "seriesScopeDescription": "Standaard veranderen alleen de geselecteerde voorkomens en blijft de reekssjabloon ongewijzigd. Verspreid om de sjabloon en meer voorkomens bij te werken.",
+    "seriesScopeLegend": "Verspreidingsbereik voor {title}",
+    "seriesScopeSection": "Verspreiding van terugkerende reeksen",
+    "seriesScopeSelected": "Alleen geselecteerde",
+    "seriesScopeTemplateNotice": "De reekssjabloon en uitgebreide voorkomens gaan ook naar deze categorie.",
+    "seriesScopeThisAndFuture": "Deze en toekomstige",
+    "seriesScopeTitle": "Terugkerende reeksen in deze controle",
+    "seriesScopeWholeSeries": "Hele reeks",
+    "seriesScopeCadence": "{frequency} · elke {interval}",
+    "seriesScopeDiverged": "Sjabloon afgeweken"
   },
   "ExpensePreview": {
     "title": "Voorbeeld van uitgave",
@@ -3416,7 +3428,8 @@
     "badgeRunning": "Terugkerend · Lopend",
     "badgeStopped": "Terugkerend · Gestopt",
     "badgeCompleted": "Terugkerend · Voltooid",
-    "timeZone": "Wordt om 15:00 uitgevoerd in {timeZone}"
+    "timeZone": "Wordt om 15:00 uitgevoerd in {timeZone}",
+    "badgeDiverged": "Sjabloon afgeweken — toekomstige voorkomens gebruiken de sjabloon"
   },
   "CurrencyConverter": {
     "trigger": "Valutaconversie",
@@ -4973,7 +4986,8 @@
       "message": "{count} uitgaven gewisseld naar {code}. Saldi, totalen en exports gebruiken nu de nieuwe valuta.",
       "backToGroup": "Terug naar de groep",
       "backToTools": "Terug naar Hulpmiddelen",
-      "title": "Wissel voltooid"
+      "title": "Wissel voltooid",
+      "templatesConverted": "Ook {count} terugkerende sjablonen zijn omgezet."
     },
     "filters": {
       "all": "Alle",
@@ -5045,7 +5059,8 @@
       "minor-units": "De nieuwe valuta gebruikt andere kleinste eenheden (bijv. centen vs. yen) — kleine afrondingsverschillen zijn te verwachten.",
       "budgets-stale": "Budgetten blijven in de oude valutabedragen staan en moeten na de wissel worden gecontroleerd.",
       "exact-to-custom": "Sommige uitgaven gebruikten exacte bedragen en worden daarom omgerekend tegen eigen koersen.",
-      "fixed-fallback": "Sommige uitgaven gebruiken de vaste omrekening voor een ingetrokken valuta."
+      "fixed-fallback": "Sommige uitgaven gebruiken de vaste omrekening voor een ingetrokken valuta.",
+      "series-templates-convert": "{templateCount} terugkerende sjablonen worden samen met de uitgaven omgezet tegen de koers van vandaag."
     },
     "back": "Terug",
     "pairs": {

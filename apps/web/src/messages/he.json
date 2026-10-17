@@ -380,7 +380,8 @@
             "yearly": "שנים"
           }
         },
-        "categorizeWithSystemOne": "הצעת קטגוריות להוצאות ללא קטגוריה באמצעות System One"
+        "categorizeWithSystemOne": "הצעת קטגוריות להוצאות ללא קטגוריה באמצעות System One",
+        "recurringScheduleCategoryDiffers": "שורות מאוחדות נבדלות רק בקטגוריה — הקטגוריה של השורה האחרונה גוברת."
       },
       "Destination": {
         "heading": "לאן תרצה לייבא את <strong>{name}</strong>? ({participantCount} משתתפים · {expenseCount} הוצאות)",
@@ -3220,7 +3221,18 @@
       "storageBoxes": "קופסאות אחסון",
       "popcornCombo": "קומבו פופקורן",
       "streamingRental": "השכרת סטרימינג"
-    }
+    },
+    "seriesScopeCount": "{selected} מתוך {total} נבחרו",
+    "seriesScopeDescription": "כברירת מחדל משתנים רק המופעים הנבחרים ותבנית הסדרה נשארת כפי שהיא. הפיצו כדי לעדכן את התבנית ומופעים נוספים.",
+    "seriesScopeLegend": "היקף ההפצה עבור {title}",
+    "seriesScopeSection": "הפצת סדרות חוזרות",
+    "seriesScopeSelected": "נבחרים בלבד",
+    "seriesScopeTemplateNotice": "תבנית הסדרה והמופעים המורחבים ישתנו גם הם לקטגוריה הזו.",
+    "seriesScopeThisAndFuture": "זה והבאים",
+    "seriesScopeTitle": "סדרות חוזרות בבדיקה הזו",
+    "seriesScopeWholeSeries": "כל הסדרה",
+    "seriesScopeCadence": "{frequency} · כל {interval}",
+    "seriesScopeDiverged": "התבנית סטתה"
   },
   "ExpensePreview": {
     "title": "תצוגה מקדימה של הוצאה",
@@ -3371,7 +3383,8 @@
     "badgeRunning": "חוזרת · פועלת",
     "badgeStopped": "חוזרת · נעצרה",
     "badgeCompleted": "חוזרת · הושלמה",
-    "timeZone": "מופעלת בשעה 15:00 באזור {timeZone}"
+    "timeZone": "מופעלת בשעה 15:00 באזור {timeZone}",
+    "badgeDiverged": "התבנית סטתה — מופעים עתידיים משתמשים בתבנית"
   },
   "CurrencyConverter": {
     "trigger": "המרת מטבע",
@@ -4939,7 +4952,8 @@
       "message": "הוחלפו {count} הוצאות ל־{code}. יתרות, סכומים וייצוא משתמשים כעת במטבע החדש.",
       "backToGroup": "חזרה לקבוצה",
       "backToTools": "חזרה לכלים",
-      "title": "ההחלפה הושלמה"
+      "title": "ההחלפה הושלמה",
+      "templatesConverted": "הומרו גם {count} תבניות חוזרות."
     },
     "filters": {
       "all": "הכול",
@@ -5010,7 +5024,8 @@
       "minor-units": "המטבע החדש משתמש ביחידות משנה שונות (למשל סנט מול ין) — צפו הבדלי עיגול קטנים.",
       "budgets-stale": "תקציבים נשארים בסכומי המטבע הישן ויש לבדוק אותם לאחר ההחלפה.",
       "exact-to-custom": "חלק מההוצאות השתמשו בסכומים מדויקים, ולכן הן מומרות בשערים מותאמים אישית.",
-      "fixed-fallback": "חלק מההוצאות משתמשות בהמרה הקבועה עבור מטבע שהוצא מהמחזור."
+      "fixed-fallback": "חלק מההוצאות משתמשות בהמרה הקבועה עבור מטבע שהוצא מהמחזור.",
+      "series-templates-convert": "{templateCount} תבניות חוזרות יומרו בשער של היום לצד ההוצאות."
     },
     "back": "חזרה",
     "pairs": {

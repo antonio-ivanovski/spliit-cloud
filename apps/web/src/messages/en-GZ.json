@@ -1103,7 +1103,18 @@
       "storageBoxes": "storage boxes haul",
       "popcornCombo": "popcorn combo",
       "streamingRental": "streaming rental night"
-    }
+    },
+    "seriesScopeCount": "{selected}/{total} picked",
+    "seriesScopeDescription": "by default only the selected repeats change and the series template stays as-is. propagate to update the template and more repeats.",
+    "seriesScopeLegend": "propagation scope for {title}",
+    "seriesScopeSection": "recurring series propagation",
+    "seriesScopeSelected": "selected only",
+    "seriesScopeTemplateNotice": "the series template and expanded repeats will also switch to this category.",
+    "seriesScopeThisAndFuture": "this and future",
+    "seriesScopeTitle": "recurring series in this review",
+    "seriesScopeWholeSeries": "whole series",
+    "seriesScopeCadence": "{frequency} · repeats every {interval}",
+    "seriesScopeDiverged": "template diverged"
   },
   "Categories": {
     "Entertainment": {
@@ -2130,7 +2141,8 @@
       "THIS_AND_FUTURE": "this and following repeats get deleted. recurrence continues with the next scheduled one.",
       "THIS_AND_FUTURE_STOP": "this and following repeats get deleted and recurrence stops."
     },
-    "timeZone": "runs at 3:00 PM in {timeZone}"
+    "timeZone": "runs at 3:00 PM in {timeZone}",
+    "badgeDiverged": "template diverged — future repeats use the template"
   },
   "Expenses": {
     "title": "expense central",
@@ -2500,7 +2512,8 @@
             "yearly": "years, fr"
           }
         },
-        "categorizeWithSystemOne": "suggest categories for uncategorized expenses with System One"
+        "categorizeWithSystemOne": "suggest categories for uncategorized expenses with System One",
+        "recurringScheduleCategoryDiffers": "collapsed rows differ only by category — the latest row's category wins."
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}, obviously",
@@ -4893,7 +4906,8 @@
       "message": "swapped {count} expenses to {code}. balances, totals and exports now use the new currency.",
       "backToGroup": "back to the group",
       "backToTools": "back to tools",
-      "title": "swap complete"
+      "title": "swap complete",
+      "templatesConverted": "{count} recurring templates got converted too."
     },
     "filters": {
       "all": "all",
@@ -4965,7 +4979,8 @@
       "minor-units": "the new currency uses different minor units (e.g. cents vs yen) — small rounding differences expected.",
       "budgets-stale": "budgets stay in the old currency amounts and should be reviewed after the swap.",
       "exact-to-custom": "some expenses used exact amounts, so they convert at custom rates.",
-      "fixed-fallback": "some expenses use the locked-in conversion for a retired currency."
+      "fixed-fallback": "some expenses use the locked-in conversion for a retired currency.",
+      "series-templates-convert": "{templateCount} recurring templates will also convert at today's rate alongside expenses."
     },
     "back": "back",
     "pairs": {

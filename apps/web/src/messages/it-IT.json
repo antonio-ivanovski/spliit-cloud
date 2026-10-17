@@ -380,7 +380,8 @@
             "yearly": "anni"
           }
         },
-        "categorizeWithSystemOne": "Suggerisci categorie per le spese non categorizzate con System One"
+        "categorizeWithSystemOne": "Suggerisci categorie per le spese non categorizzate con System One",
+        "recurringScheduleCategoryDiffers": "Le righe raggruppate differiscono solo per categoria — vince la categoria della riga più recente."
       },
       "Destination": {
         "heading": "Dove desideri importare <strong>{name}</strong>? ({participantCount} partecipanti · {expenseCount} spese)",
@@ -3218,7 +3219,18 @@
       "storageBoxes": "Scatole contenitore",
       "popcornCombo": "Combo popcorn",
       "streamingRental": "Noleggio in streaming"
-    }
+    },
+    "seriesScopeCount": "{selected} di {total} selezionate",
+    "seriesScopeDescription": "Per impostazione predefinita cambiano solo le occorrenze selezionate e il modello della serie resta invariato. Propaga per aggiornare il modello e altre occorrenze.",
+    "seriesScopeLegend": "Ambito di propagazione per {title}",
+    "seriesScopeSection": "Propagazione delle serie ricorrenti",
+    "seriesScopeSelected": "Solo selezionate",
+    "seriesScopeTemplateNotice": "Il modello della serie e le occorrenze espanse passeranno anch'essi a questa categoria.",
+    "seriesScopeThisAndFuture": "Questa e future",
+    "seriesScopeTitle": "Serie ricorrenti in questa verifica",
+    "seriesScopeWholeSeries": "Tutta la serie",
+    "seriesScopeCadence": "{frequency} · ogni {interval}",
+    "seriesScopeDiverged": "Modello divergente"
   },
   "ExpensePreview": {
     "title": "Anteprima della spesa",
@@ -3369,7 +3381,8 @@
     "badgeRunning": "Ricorrente · In corso",
     "badgeStopped": "Ricorrente · Interrotta",
     "badgeCompleted": "Ricorrente · Completata",
-    "timeZone": "Viene eseguita alle 15:00 in {timeZone}"
+    "timeZone": "Viene eseguita alle 15:00 in {timeZone}",
+    "badgeDiverged": "Modello divergente — le occorrenze future usano il modello"
   },
   "CurrencyConverter": {
     "trigger": "Conversione valuta",
@@ -4931,7 +4944,8 @@
       "message": "{count} spese scambiate in {code}. Saldi, totali ed esportazioni ora usano la nuova valuta.",
       "backToGroup": "Torna al gruppo",
       "backToTools": "Torna agli Strumenti",
-      "title": "Scambio completato"
+      "title": "Scambio completato",
+      "templatesConverted": "Convertiti anche {count} modelli ricorrenti."
     },
     "filters": {
       "all": "Tutte",
@@ -5003,7 +5017,8 @@
       "minor-units": "La nuova valuta usa unità minori diverse (es. centesimi vs yen) — sono previste piccole differenze di arrotondamento.",
       "budgets-stale": "I budget restano con gli importi nella vecchia valuta e vanno rivisti dopo lo scambio.",
       "exact-to-custom": "Alcune spese usavano importi esatti, quindi vengono convertite a tassi personalizzati.",
-      "fixed-fallback": "Alcune spese utilizzano la conversione fissa per una valuta ritirata."
+      "fixed-fallback": "Alcune spese utilizzano la conversione fissa per una valuta ritirata.",
+      "series-templates-convert": "{templateCount} modelli ricorrenti verranno convertiti al cambio di oggi insieme alle spese."
     },
     "back": "Indietro",
     "pairs": {

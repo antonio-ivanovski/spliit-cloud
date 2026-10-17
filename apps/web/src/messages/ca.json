@@ -380,7 +380,8 @@
             "yearly": "anys"
           }
         },
-        "categorizeWithSystemOne": "Suggerir categories per a les despeses sense categoritzar amb System One"
+        "categorizeWithSystemOne": "Suggerir categories per a les despeses sense categoritzar amb System One",
+        "recurringScheduleCategoryDiffers": "Les files col·lapsades només difereixen per categoria — guanya la categoria de la fila més recent."
       },
       "Destination": {
         "heading": "On voleu importar <strong>{name}</strong>? ({participantCount} participants · {expenseCount} despeses)",
@@ -3218,7 +3219,18 @@
       "storageBoxes": "Caixes d'emmagatzematge",
       "popcornCombo": "Combo de crispetes",
       "streamingRental": "Lloguer en streaming"
-    }
+    },
+    "seriesScopeCount": "{selected} de {total} seleccionades",
+    "seriesScopeDescription": "Per defecte només canvien les repeticions seleccionades i la plantilla de la sèrie es manté igual. Propaga per actualitzar la plantilla i més repeticions.",
+    "seriesScopeLegend": "Abast de propagació per a {title}",
+    "seriesScopeSection": "Propagació de sèries recurrents",
+    "seriesScopeSelected": "Només les seleccionades",
+    "seriesScopeTemplateNotice": "La plantilla de la sèrie i les repeticions ampliades també canviaran a aquesta categoria.",
+    "seriesScopeThisAndFuture": "Aquesta i les futures",
+    "seriesScopeTitle": "Sèries recurrents en aquesta revisió",
+    "seriesScopeWholeSeries": "Tota la sèrie",
+    "seriesScopeCadence": "{frequency} · cada {interval}",
+    "seriesScopeDiverged": "Plantilla divergent"
   },
   "ExpensePreview": {
     "title": "Vista prèvia de la despesa",
@@ -3369,7 +3381,8 @@
     "badgeRunning": "Recurrent · En curs",
     "badgeStopped": "Recurrent · Aturada",
     "badgeCompleted": "Recurrent · Completada",
-    "timeZone": "S'executa a les 15:00 a {timeZone}"
+    "timeZone": "S'executa a les 15:00 a {timeZone}",
+    "badgeDiverged": "Plantilla divergent — les repeticions futures utilitzen la plantilla"
   },
   "CurrencyConverter": {
     "trigger": "Conversió de moneda",
@@ -4931,7 +4944,8 @@
       "message": "S'han intercanviat {count} despeses a {code}. Els saldos, els totals i les exportacions ja utilitzen la moneda nova.",
       "backToGroup": "Torna al grup",
       "backToTools": "Torna a Eines",
-      "title": "Intercanvi complet"
+      "title": "Intercanvi complet",
+      "templatesConverted": "També s'han convertit {count} plantilles recurrents."
     },
     "filters": {
       "all": "Totes",
@@ -5003,7 +5017,8 @@
       "minor-units": "La moneda nova utilitza unitats menors diferents (p. ex., cèntims vs. iens) — són esperables petites diferències d'arrodoniment.",
       "budgets-stale": "Els pressupostos conserven els imports en la moneda antiga i s'haurien de revisar després de l'intercanvi.",
       "exact-to-custom": "Algunes despeses fan servir imports exactes, així que es converteixen amb tipus personalitzats.",
-      "fixed-fallback": "Algunes despeses utilitzen la conversió fixa per a una moneda retirada."
+      "fixed-fallback": "Algunes despeses utilitzen la conversió fixa per a una moneda retirada.",
+      "series-templates-convert": "{templateCount} plantilles recurrents es convertiran al tipus d'avui juntament amb les despeses."
     },
     "back": "Enrere",
     "pairs": {

@@ -385,7 +385,8 @@
             "yearly": "roky"
           }
         },
-        "categorizeWithSystemOne": "Navrhnout kategorie nekategorizovaných výdajů pomocí System One"
+        "categorizeWithSystemOne": "Navrhnout kategorie nekategorizovaných výdajů pomocí System One",
+        "recurringScheduleCategoryDiffers": "Sloučené řádky se liší jen kategorií — vyhrává kategorie nejnovějšího řádku."
       },
       "Destination": {
         "heading": "Kam chcete importovat <strong>{name}</strong>? ({participantCount} účastníků · {expenseCount} výdajů)",
@@ -3238,7 +3239,18 @@
       "storageBoxes": "Úložné krabice",
       "popcornCombo": "Popcornové menu",
       "streamingRental": "Online půjčení filmu"
-    }
+    },
+    "seriesScopeCount": "Vybráno {selected} z {total}",
+    "seriesScopeDescription": "Ve výchozím nastavení se mění jen vybrané výskyty a šablona řady zůstává stejná. Propagace aktualizuje šablonu a další výskyty.",
+    "seriesScopeLegend": "Rozsah propagace pro {title}",
+    "seriesScopeSection": "Propagace opakovaných řad",
+    "seriesScopeSelected": "Jen vybrané",
+    "seriesScopeTemplateNotice": "Šablona řady a rozšířené výskyty se také změní na tuto kategorii.",
+    "seriesScopeThisAndFuture": "Toto a budoucí",
+    "seriesScopeTitle": "Opakované řady v této kontrole",
+    "seriesScopeWholeSeries": "Celá řada",
+    "seriesScopeCadence": "{frequency} · každé {interval}",
+    "seriesScopeDiverged": "Šablona se odchýlila"
   },
   "ExpensePreview": {
     "title": "Náhled výdaje",
@@ -3390,7 +3402,8 @@
     "badgeRunning": "Opakovaný · Probíhá",
     "badgeStopped": "Opakovaný · Zastavený",
     "badgeCompleted": "Opakovaný · Dokončený",
-    "timeZone": "Spouští se v 15:00 v pásmu {timeZone}"
+    "timeZone": "Spouští se v 15:00 v pásmu {timeZone}",
+    "badgeDiverged": "Šablona se odchýlila — budoucí výskyty používají šablonu"
   },
   "CurrencyConverter": {
     "trigger": "Převod měny",
@@ -4956,7 +4969,8 @@
       "message": "Vyměněno {count} výdajů do {code}. Zůstatky, součty a exporty nyní používají novou měnu.",
       "backToGroup": "Zpět do skupiny",
       "backToTools": "Zpět do Nástrojů",
-      "title": "Výměna dokončena"
+      "title": "Výměna dokončena",
+      "templatesConverted": "Převedeno také {count} opakovaných šablon."
     },
     "filters": {
       "all": "Vše",
@@ -5027,7 +5041,8 @@
       "minor-units": "Nová měna používá jiné dílčí jednotky (např. centy vs. jeny) — očekávejte drobné rozdíly ze zaokrouhlení.",
       "budgets-stale": "Rozpočty zůstanou v částkách staré měny a po výměně by se měly zkontrolovat.",
       "exact-to-custom": "Některé výdaje používaly přesné částky, takže se převedou vlastními kurzy.",
-      "fixed-fallback": "Některé výdaje používají pevnou konverzi pro měnu staženou z oběhu."
+      "fixed-fallback": "Některé výdaje používají pevnou konverzi pro měnu staženou z oběhu.",
+      "series-templates-convert": "{templateCount} opakovaných šablon se převede dnešním kurzem spolu s výdaji."
     },
     "back": "Zpět",
     "pairs": {

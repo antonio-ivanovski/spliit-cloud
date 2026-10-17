@@ -385,7 +385,8 @@
             "yearly": "lata"
           }
         },
-        "categorizeWithSystemOne": "Zasugeruj kategorie nieskategoryzowanych wydatków za pomocą System One"
+        "categorizeWithSystemOne": "Zasugeruj kategorie nieskategoryzowanych wydatków za pomocą System One",
+        "recurringScheduleCategoryDiffers": "Scalone wiersze różnią się tylko kategorią — wygrywa kategoria najnowszego wiersza."
       },
       "Destination": {
         "heading": "Gdzie chcesz zaimportować <strong>{name}</strong>? ({participantCount} uczestników · {expenseCount} wydatków)",
@@ -3238,7 +3239,18 @@
       "storageBoxes": "Pudła do przechowywania",
       "popcornCombo": "Zestaw z popcornem",
       "streamingRental": "Wypożyczenie filmu online"
-    }
+    },
+    "seriesScopeCount": "Wybrano {selected} z {total}",
+    "seriesScopeDescription": "Domyślnie zmieniają się tylko wybrane wystąpienia, a szablon serii pozostaje bez zmian. Propaguj, aby zaktualizować szablon i więcej wystąpień.",
+    "seriesScopeLegend": "Zakres propagacji dla {title}",
+    "seriesScopeSection": "Propagacja cyklicznych serii",
+    "seriesScopeSelected": "Tylko wybrane",
+    "seriesScopeTemplateNotice": "Szablon serii i rozwinięte wystąpienia również zmienią się na tę kategorię.",
+    "seriesScopeThisAndFuture": "To i przyszłe",
+    "seriesScopeTitle": "Cykliczne serie w tym przeglądzie",
+    "seriesScopeWholeSeries": "Cała seria",
+    "seriesScopeCadence": "{frequency} · co {interval}",
+    "seriesScopeDiverged": "Szablon rozbieżny"
   },
   "ExpensePreview": {
     "title": "Podgląd wydatku",
@@ -3390,7 +3402,8 @@
     "badgeRunning": "Cykliczny · W toku",
     "badgeStopped": "Cykliczny · Zatrzymany",
     "badgeCompleted": "Cykliczny · Ukończony",
-    "timeZone": "Uruchamiany o 15:00 w strefie {timeZone}"
+    "timeZone": "Uruchamiany o 15:00 w strefie {timeZone}",
+    "badgeDiverged": "Szablon rozbieżny — przyszłe wystąpienia używają szablonu"
   },
   "CurrencyConverter": {
     "trigger": "Przeliczanie waluty",
@@ -4956,7 +4969,8 @@
       "message": "Zamieniono {count} wydatków na {code}. Salda, sumy i eksporty używają teraz nowej waluty.",
       "backToGroup": "Wróć do grupy",
       "backToTools": "Wróć do Narzędzi",
-      "title": "Zamiana ukończona"
+      "title": "Zamiana ukończona",
+      "templatesConverted": "Przekonwertowano także {count} cyklicznych szablonów."
     },
     "filters": {
       "all": "Wszystkie",
@@ -5027,7 +5041,8 @@
       "minor-units": "Nowa waluta używa innych jednostek podrzędnych (np. centy a jeny) — spodziewane są drobne różnice z zaokrągleń.",
       "budgets-stale": "Budżety zostają w kwotach starej waluty i warto je przejrzeć po zamianie.",
       "exact-to-custom": "Część wydatków używała dokładnych kwot, więc przelicza się z kursami własnymi.",
-      "fixed-fallback": "Część wydatków używa stałej konwersji dla wycofanej waluty."
+      "fixed-fallback": "Część wydatków używa stałej konwersji dla wycofanej waluty.",
+      "series-templates-convert": "{templateCount} cyklicznych szablonów zostanie przekonwertowanych po dzisiejszym kursie wraz z wydatkami."
     },
     "back": "Wróć",
     "pairs": {

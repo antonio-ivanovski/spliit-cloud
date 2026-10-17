@@ -379,7 +379,8 @@
             "yearly": "urte"
           }
         },
-        "categorizeWithSystemOne": "Iradoki kategoriak System One erabiliz kategoriatu gabeko gastuetarako"
+        "categorizeWithSystemOne": "Iradoki kategoriak System One erabiliz kategoriatu gabeko gastuetarako",
+        "recurringScheduleCategoryDiffers": "Bildutako errenkadak kategorian soilik desberdintzen dira — azken errenkadaren kategoria da nagusi."
       },
       "Destination": {
         "heading": "Nora inportatu nahi duzu <strong>{name}</strong>? ({participantCount} parte-hartzaile · {expenseCount} gastu)",
@@ -3216,7 +3217,18 @@
       "storageBoxes": "Biltegiratze-kutxak",
       "popcornCombo": "Palomita-konboa",
       "streamingRental": "Streaming-alokairua"
-    }
+    },
+    "seriesScopeCount": "{total}etik {selected} hautatuta",
+    "seriesScopeDescription": "Lehenespenez, hautatutako errepikapenak soilik aldatzen dira eta seriearen txantiloia bere horretan geratzen da. Hedatu txantiloia eta errepikapen gehiago eguneratzeko.",
+    "seriesScopeLegend": "Hedapen-eremua: {title}",
+    "seriesScopeSection": "Serie errepikarien hedapena",
+    "seriesScopeSelected": "Hautatuak soilik",
+    "seriesScopeTemplateNotice": "Seriearen txantiloia eta errepikapen hedatuak ere kategoria honetara aldatuko dira.",
+    "seriesScopeThisAndFuture": "Hau eta etorkizunekoak",
+    "seriesScopeTitle": "Berrikuspen honetako serie errepikariak",
+    "seriesScopeWholeSeries": "Serie osoa",
+    "seriesScopeCadence": "{frequency} · {interval} bakoitzean",
+    "seriesScopeDiverged": "Txantiloia desbideratu da"
   },
   "ExpensePreview": {
     "title": "Gastuaren aurrebista",
@@ -3367,7 +3379,8 @@
     "badgeRunning": "Errepikaria · Martxan",
     "badgeStopped": "Errepikaria · Geldituta",
     "badgeCompleted": "Errepikaria · Osatuta",
-    "timeZone": "15:00etan exekutatzen da {timeZone} ordu-eremuan"
+    "timeZone": "15:00etan exekutatzen da {timeZone} ordu-eremuan",
+    "badgeDiverged": "Txantiloia desbideratu da — etorkizuneko errepikapenek txantiloia erabiltzen dute"
   },
   "CurrencyConverter": {
     "trigger": "Moneda bihurketa",
@@ -4929,7 +4942,8 @@
       "message": "{count} gastu {code}-ra trukatu dira. Saldoek, totalek eta esportazioek moneta berria erabiltzen dute orain.",
       "backToGroup": "Itzuli taldera",
       "backToTools": "Itzuli Tresnetara",
-      "title": "Trukea osatuta"
+      "title": "Trukea osatuta",
+      "templatesConverted": "{count} txantiloi errepikari ere bihurtu dira."
     },
     "filters": {
       "all": "Guztiak",
@@ -5001,7 +5015,8 @@
       "minor-units": "Moneta berriak unitate txiki desberdinak erabiltzen ditu (adib. zentimoak vs yenak) — biribiltze-desberdintasun txikiak espero dira.",
       "budgets-stale": "Aurrekontuek moneta zaharreko zenbatekoak gordetzen dituzte eta trukearen ondoren berrikusi beharko lirateke.",
       "exact-to-custom": "Gastu batzuek zenbateko zehatzak erabili zituzten, beraz tasa pertsonalizatuekin bihurtzen dira.",
-      "fixed-fallback": "Gastu batzuek bihurketa finkoa erabiltzen dute moneta erretiratu baterako."
+      "fixed-fallback": "Gastu batzuek bihurketa finkoa erabiltzen dute moneta erretiratu baterako.",
+      "series-templates-convert": "{templateCount} txantiloi errepikari gaurko kanbio-tasarekin bihurtuko dira, gastuekin batera."
     },
     "back": "Atzera",
     "pairs": {

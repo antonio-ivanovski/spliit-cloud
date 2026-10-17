@@ -390,7 +390,8 @@
             "yearly": "Jahre"
           }
         },
-        "categorizeWithSystemOne": "Kategorien für nicht kategorisierte Ausgaben mit System One vorschlagen"
+        "categorizeWithSystemOne": "Kategorien für nicht kategorisierte Ausgaben mit System One vorschlagen",
+        "recurringScheduleCategoryDiffers": "Zusammengefasste Zeilen unterscheiden sich nur in der Kategorie — die Kategorie der neuesten Zeile gewinnt."
       },
       "Destination": {
         "heading": "Wohin möchtest du <strong>{name}</strong> importieren? ({participantCount} Teilnehmer · {expenseCount} Ausgaben)",
@@ -3262,7 +3263,18 @@
       "storageBoxes": "Aufbewahrungsboxen",
       "popcornCombo": "Popcorn-Menü",
       "streamingRental": "Streaming-Leihe"
-    }
+    },
+    "seriesScopeCount": "{selected} von {total} ausgewählt",
+    "seriesScopeDescription": "Standardmäßig ändern sich nur die ausgewählten Termine, und die Serienvorlage bleibt unverändert. Mit „Übertragen“ aktualisierst du die Vorlage und weitere Termine.",
+    "seriesScopeLegend": "Übertragungsbereich für {title}",
+    "seriesScopeSection": "Übertragung wiederkehrender Serien",
+    "seriesScopeSelected": "Nur ausgewählte",
+    "seriesScopeTemplateNotice": "Die Serienvorlage und erweiterte Termine wechseln ebenfalls zu dieser Kategorie.",
+    "seriesScopeThisAndFuture": "Diese und künftige",
+    "seriesScopeTitle": "Wiederkehrende Serien in dieser Prüfung",
+    "seriesScopeWholeSeries": "Ganze Serie",
+    "seriesScopeCadence": "{frequency} · alle {interval}",
+    "seriesScopeDiverged": "Vorlage abgewichen"
   },
   "ExpensePreview": {
     "title": "Ausgabenvorschau",
@@ -3416,7 +3428,8 @@
     "badgeRunning": "Wiederkehrend · Laufend",
     "badgeStopped": "Wiederkehrend · Gestoppt",
     "badgeCompleted": "Wiederkehrend · Abgeschlossen",
-    "timeZone": "Wird um 15:00 Uhr in {timeZone} ausgeführt"
+    "timeZone": "Wird um 15:00 Uhr in {timeZone} ausgeführt",
+    "badgeDiverged": "Vorlage abgewichen — künftige Termine verwenden die Vorlage"
   },
   "CurrencyConverter": {
     "trigger": "Währungsumrechnung",
@@ -4973,7 +4986,8 @@
       "message": "{count} Ausgaben zu {code} getauscht. Salden, Summen und Exporte nutzen jetzt die neue Währung.",
       "backToGroup": "Zurück zur Gruppe",
       "backToTools": "Zurück zu den Werkzeugen",
-      "title": "Tausch abgeschlossen"
+      "title": "Tausch abgeschlossen",
+      "templatesConverted": "{count} wiederkehrende Vorlagen wurden ebenfalls umgerechnet."
     },
     "filters": {
       "all": "Alle",
@@ -5045,7 +5059,8 @@
       "minor-units": "Die neue Währung nutzt andere kleinere Einheiten (z. B. Cent vs. Yen) — kleine Rundungsunterschiede sind normal.",
       "budgets-stale": "Haushaltsbudgets bleiben in den alten Währungsbeträgen und sollten nach dem Tausch geprüft werden.",
       "exact-to-custom": "Manche Ausgaben nutzten exakte Beträge und werden daher zu eigenen Kursen umgerechnet.",
-      "fixed-fallback": "Einige Ausgaben verwenden die feste Umrechnung für eine zurückgezogene Währung."
+      "fixed-fallback": "Einige Ausgaben verwenden die feste Umrechnung für eine zurückgezogene Währung.",
+      "series-templates-convert": "{templateCount} wiederkehrende Vorlagen werden zum heutigen Kurs zusammen mit den Ausgaben umgerechnet."
     },
     "back": "Zurück",
     "pairs": {

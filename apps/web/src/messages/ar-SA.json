@@ -591,7 +591,18 @@
       "storageBoxes": "صناديق التخزين",
       "popcornCombo": "وجبة الفشار",
       "streamingRental": "استئجار عبر البث"
-    }
+    },
+    "seriesScopeCount": "تم تحديد {selected} من {total}",
+    "seriesScopeDescription": "افتراضيًا، تتغير الأحداث المحددة فقط ويبقى قالب السلسلة كما هو. انشر التغيير لتحديث القالب والمزيد من الأحداث.",
+    "seriesScopeLegend": "نطاق النشر لـ {title}",
+    "seriesScopeSection": "نشر السلاسل المتكررة",
+    "seriesScopeSelected": "المحدد فقط",
+    "seriesScopeTemplateNotice": "سيتغير قالب السلسلة والأحداث الموسّعة أيضًا إلى هذه الفئة.",
+    "seriesScopeThisAndFuture": "هذا وما بعده",
+    "seriesScopeTitle": "السلاسل المتكررة في هذه المراجعة",
+    "seriesScopeWholeSeries": "السلسلة كاملة",
+    "seriesScopeCadence": "{frequency} · كل {interval}",
+    "seriesScopeDiverged": "انحرف القالب"
   },
   "ExpenseDocumentsInput": {
     "ErrorToast": {
@@ -1305,7 +1316,8 @@
             "yearly": "سنوات"
           }
         },
-        "categorizeWithSystemOne": "اقتراح فئات للمصروفات غير المصنّفة باستخدام نظام System One"
+        "categorizeWithSystemOne": "اقتراح فئات للمصروفات غير المصنّفة باستخدام نظام System One",
+        "recurringScheduleCategoryDiffers": "الصفوف المدمجة تختلف في الفئة فقط — تفوز فئة أحدث صف."
       },
       "Documents": {
         "title": "اصطحب إيصالاتك معك",
@@ -3178,7 +3190,8 @@
     "previous": "السابق",
     "badgeStopped": "متكرر · متوقف",
     "stopConfirmTitle": "إيقاف هذا التكرار؟",
-    "timeZone": "يُنفَّذ الساعة 3:00 مساءً في {timeZone}"
+    "timeZone": "يُنفَّذ الساعة 3:00 مساءً في {timeZone}",
+    "badgeDiverged": "انحرف القالب — تستخدم الأحداث المستقبلية القالب"
   },
   "Auth": {
     "forgotPasswordLink": "نسيت كلمة المرور؟",
@@ -5005,7 +5018,8 @@
       "message": "تم تبديل {count} من المصروفات إلى {code}. تستخدم الأرصدة والإجماليات والصادرات الآن العملة الجديدة.",
       "backToGroup": "العودة إلى المجموعة",
       "backToTools": "رجوع إلى الأدوات",
-      "title": "اكتمل التبديل"
+      "title": "اكتمل التبديل",
+      "templatesConverted": "حُوِّل {count} من القوالب المتكررة أيضًا."
     },
     "filters": {
       "all": "الكل",
@@ -5076,7 +5090,8 @@
       "minor-units": "تستخدم العملة الجديدة وحدات فرعية مختلفة (مثل السنت مقابل الين) — فروق تقريب بسيطة متوقعة.",
       "budgets-stale": "تبقى الميزانيات بمبالغ العملة القديمة ويجب مراجعتها بعد التبديل.",
       "exact-to-custom": "استخدمت بعض المصروفات مبالغ دقيقة، لذا تُحوَّل بأسعار مخصصة.",
-      "fixed-fallback": "بعض المصروفات تستخدم التحويل الثابت لعملة مسحوبة من التداول."
+      "fixed-fallback": "بعض المصروفات تستخدم التحويل الثابت لعملة مسحوبة من التداول.",
+      "series-templates-convert": "سيُحوَّل {templateCount} من القوالب المتكررة بسعر اليوم إلى جانب المصروفات."
     },
     "back": "رجوع",
     "pairs": {

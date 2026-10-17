@@ -380,7 +380,8 @@
             "yearly": "ani"
           }
         },
-        "categorizeWithSystemOne": "Sugerează categorii pentru cheltuielile necategorizate folosind System One"
+        "categorizeWithSystemOne": "Sugerează categorii pentru cheltuielile necategorizate folosind System One",
+        "recurringScheduleCategoryDiffers": "Rândurile restrânse diferă doar prin categorie — câștigă categoria rândului cel mai recent."
       },
       "Destination": {
         "heading": "Unde doriți să importați <strong>{name}</strong>? ({participantCount} participanți · {expenseCount} cheltuieli)",
@@ -3218,7 +3219,18 @@
       "storageBoxes": "Cutii de depozitare",
       "popcornCombo": "Meniu cu popcorn",
       "streamingRental": "Închiriere streaming"
-    }
+    },
+    "seriesScopeCount": "{selected} din {total} selectate",
+    "seriesScopeDescription": "În mod implicit, doar aparițiile selectate se schimbă, iar șablonul seriei rămâne neschimbat. Propagă pentru a actualiza șablonul și mai multe apariții.",
+    "seriesScopeLegend": "Domeniu de propagare pentru {title}",
+    "seriesScopeSection": "Propagarea seriilor recurente",
+    "seriesScopeSelected": "Doar cele selectate",
+    "seriesScopeTemplateNotice": "Șablonul seriei și aparițiile extinse se vor schimba și ele în această categorie.",
+    "seriesScopeThisAndFuture": "Aceasta și cele viitoare",
+    "seriesScopeTitle": "Serii recurente în această verificare",
+    "seriesScopeWholeSeries": "Toată seria",
+    "seriesScopeCadence": "{frequency} · la fiecare {interval}",
+    "seriesScopeDiverged": "Șablon divergent"
   },
   "ExpensePreview": {
     "title": "Previzualizarea cheltuielii",
@@ -3369,7 +3381,8 @@
     "badgeRunning": "Recurentă · În desfășurare",
     "badgeStopped": "Recurentă · Oprită",
     "badgeCompleted": "Recurentă · Finalizată",
-    "timeZone": "Rulează la ora 15:00 în {timeZone}"
+    "timeZone": "Rulează la ora 15:00 în {timeZone}",
+    "badgeDiverged": "Șablon divergent — aparițiile viitoare folosesc șablonul"
   },
   "CurrencyConverter": {
     "trigger": "Conversie monetară",
@@ -4936,7 +4949,8 @@
       "message": "Am schimbat {count} cheltuieli în {code}. Soldurile, totalurile și exporturile folosesc acum moneda nouă.",
       "backToGroup": "Înapoi la grup",
       "backToTools": "Înapoi la Instrumente",
-      "title": "Schimbare finalizată"
+      "title": "Schimbare finalizată",
+      "templatesConverted": "Au fost convertite și {count} șabloane recurente."
     },
     "filters": {
       "all": "Toate",
@@ -5008,7 +5022,8 @@
       "minor-units": "Moneda nouă folosește unități minore diferite (de ex. cenți vs yeni) — sunt așteptate mici diferențe de rotunjire.",
       "budgets-stale": "Bugetele păstrează sumele în moneda veche și trebuie revizuite după schimbare.",
       "exact-to-custom": "Unele cheltuieli au folosit sume exacte, așa că se convertesc la cursuri personalizate.",
-      "fixed-fallback": "Unele cheltuieli utilizează conversia fixă pentru o monedă retrasă."
+      "fixed-fallback": "Unele cheltuieli utilizează conversia fixă pentru o monedă retrasă.",
+      "series-templates-convert": "{templateCount} șabloane recurente vor fi convertite la cursul de astăzi împreună cu cheltuielile."
     },
     "back": "Înapoi",
     "pairs": {

@@ -380,7 +380,8 @@
             "yearly": "ans"
           }
         },
-        "categorizeWithSystemOne": "Suggérer des catégories pour les dépenses non catégorisées avec System One"
+        "categorizeWithSystemOne": "Suggérer des catégories pour les dépenses non catégorisées avec System One",
+        "recurringScheduleCategoryDiffers": "Les lignes fusionnées ne diffèrent que par la catégorie — la catégorie de la ligne la plus récente l'emporte."
       },
       "Destination": {
         "heading": "Où souhaitez-vous importer <strong>{name}</strong>? ({participantCount} participants · {expenseCount} dépenses)",
@@ -3218,7 +3219,18 @@
       "storageBoxes": "Boîtes de rangement",
       "popcornCombo": "Menu pop-corn",
       "streamingRental": "Location en streaming"
-    }
+    },
+    "seriesScopeCount": "{selected} sur {total} sélectionnées",
+    "seriesScopeDescription": "Par défaut, seules les occurrences sélectionnées changent et le modèle de la série reste inchangé. Propagez pour mettre à jour le modèle et d'autres occurrences.",
+    "seriesScopeLegend": "Portée de propagation pour {title}",
+    "seriesScopeSection": "Propagation des séries récurrentes",
+    "seriesScopeSelected": "Sélectionnées uniquement",
+    "seriesScopeTemplateNotice": "Le modèle de la série et les occurrences étendues passeront aussi à cette catégorie.",
+    "seriesScopeThisAndFuture": "Celle-ci et les suivantes",
+    "seriesScopeTitle": "Séries récurrentes dans cette vérification",
+    "seriesScopeWholeSeries": "Toute la série",
+    "seriesScopeCadence": "{frequency} · tous les {interval}",
+    "seriesScopeDiverged": "Modèle divergent"
   },
   "ExpensePreview": {
     "title": "Aperçu de la dépense",
@@ -3369,7 +3381,8 @@
     "badgeRunning": "Récurrente · En cours",
     "badgeStopped": "Récurrente · Arrêtée",
     "badgeCompleted": "Récurrente · Terminée",
-    "timeZone": "S'exécute à 15 h dans le fuseau {timeZone}"
+    "timeZone": "S'exécute à 15 h dans le fuseau {timeZone}",
+    "badgeDiverged": "Modèle divergent — les occurrences futures utilisent le modèle"
   },
   "CurrencyConverter": {
     "trigger": "Conversion de devise",
@@ -4931,7 +4944,8 @@
       "message": "{count} dépenses échangées vers {code}. Les soldes, les totaux et les exports utilisent désormais la nouvelle devise.",
       "backToGroup": "Retour au groupe",
       "backToTools": "Retour aux Outils",
-      "title": "Échange terminé"
+      "title": "Échange terminé",
+      "templatesConverted": "{count} modèles récurrents ont aussi été convertis."
     },
     "filters": {
       "all": "Toutes",
@@ -5003,7 +5017,8 @@
       "minor-units": "La nouvelle devise utilise des unités mineures différentes (par ex. centimes contre yens) — de petits écarts d’arrondi sont à prévoir.",
       "budgets-stale": "Les budgets conservent les montants dans l’ancienne devise et devront être vérifiés après l’échange.",
       "exact-to-custom": "Certaines dépenses utilisaient des montants exacts, elles sont donc converties à des taux personnalisés.",
-      "fixed-fallback": "Certaines dépenses utilisent la conversion fixe pour une monnaie retirée."
+      "fixed-fallback": "Certaines dépenses utilisent la conversion fixe pour une monnaie retirée.",
+      "series-templates-convert": "{templateCount} modèles récurrents seront convertis au taux du jour en même temps que les dépenses."
     },
     "back": "Retour",
     "pairs": {

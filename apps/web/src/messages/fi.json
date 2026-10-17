@@ -375,7 +375,8 @@
             "yearly": "vuosi"
           }
         },
-        "categorizeWithSystemOne": "Ehdota luokittelemattomille kuluille luokkia System Onen avulla"
+        "categorizeWithSystemOne": "Ehdota luokittelemattomille kuluille luokkia System Onen avulla",
+        "recurringScheduleCategoryDiffers": "Yhdistetyt rivit eroavat vain luokan osalta — uusimman rivin luokka voittaa."
       },
       "Destination": {
         "heading": "Mihin haluat tuoda <strong>{name}</strong>? ({participantCount} osallistujaa · {expenseCount} kulua)",
@@ -3194,7 +3195,18 @@
       "storageBoxes": "Säilytyslaatikot",
       "popcornCombo": "Popcornsetti",
       "streamingRental": "Suoratoistovuokra"
-    }
+    },
+    "seriesScopeCount": "{selected}/{total} valittu",
+    "seriesScopeDescription": "Oletuksena vain valitut toistot muuttuvat ja sarjan malli pysyy ennallaan. Levitä päivittääksesi mallin ja useampia toistoja.",
+    "seriesScopeLegend": "Levityksen laajuus: {title}",
+    "seriesScopeSection": "Toistuvien sarjojen levitys",
+    "seriesScopeSelected": "Vain valitut",
+    "seriesScopeTemplateNotice": "Sarjan malli ja laajennetut toistot vaihtuvat myös tähän luokkaan.",
+    "seriesScopeThisAndFuture": "Tämä ja tulevat",
+    "seriesScopeTitle": "Toistuvat sarjat tässä tarkistuksessa",
+    "seriesScopeWholeSeries": "Koko sarja",
+    "seriesScopeCadence": "{frequency} · {interval} välein",
+    "seriesScopeDiverged": "Malli poikennut"
   },
   "ExpensePreview": {
     "title": "Kulun esikatselu",
@@ -3344,7 +3356,8 @@
     "badgeRunning": "Toistuva · Käynnissä",
     "badgeStopped": "Toistuva · Pysäytetty",
     "badgeCompleted": "Toistuva · Valmis",
-    "timeZone": "Suoritetaan klo 15.00 aikavyöhykkeellä {timeZone}"
+    "timeZone": "Suoritetaan klo 15.00 aikavyöhykkeellä {timeZone}",
+    "badgeDiverged": "Malli poikennut — tulevat toistot käyttävät mallia"
   },
   "CurrencyConverter": {
     "trigger": "Valuuttamuunnos",
@@ -4901,7 +4914,8 @@
       "message": "Vaihdettu {count} kulua valuuttaan {code}. Saldot, summat ja viennit käyttävät nyt uutta valuuttaa.",
       "backToGroup": "Takaisin ryhmään",
       "backToTools": "Takaisin Työkaluihin",
-      "title": "Vaihto valmis"
+      "title": "Vaihto valmis",
+      "templatesConverted": "Myös {count} toistuvaa mallia muunnettiin."
     },
     "filters": {
       "all": "Kaikki",
@@ -4973,7 +4987,8 @@
       "minor-units": "Uusi valuutta käyttää eri pieniä yksiköitä (esim. sentit vs. jenit) — pieniä pyöristyseroja on odotettavissa.",
       "budgets-stale": "Budjetit pysyvät vanhan valuutan summissa, tarkista ne vaihdon jälkeen.",
       "exact-to-custom": "Jotkin kulut käyttivät tarkkoja summia, joten ne muunnetaan mukautetuilla kursseilla.",
-      "fixed-fallback": "Osa kuluista käyttää kiinteää muuntoa käytöstä poistetulle valuutalle."
+      "fixed-fallback": "Osa kuluista käyttää kiinteää muuntoa käytöstä poistetulle valuutalle.",
+      "series-templates-convert": "{templateCount} toistuvaa mallia muunnetaan tämän päivän kurssilla kulujen ohella."
     },
     "back": "Takaisin",
     "pairs": {

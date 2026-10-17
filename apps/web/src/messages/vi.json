@@ -320,7 +320,8 @@
     "badgeRunning": "Đang chạy",
     "badgeStopped": "Đã dừng",
     "badgeCompleted": "Đã hoàn thành",
-    "timeZone": "Chạy lúc 15:00 theo {timeZone}"
+    "timeZone": "Chạy lúc 15:00 theo {timeZone}",
+    "badgeDiverged": "Mẫu đã lệch — các lần sau dùng mẫu"
   },
   "Groups": {
     "myGroups": "Nhóm của tôi",
@@ -696,7 +697,8 @@
             "yearly": "năm"
           }
         },
-        "categorizeWithSystemOne": "Đề xuất danh mục cho các khoản chi chưa được phân loại bằng System One"
+        "categorizeWithSystemOne": "Đề xuất danh mục cho các khoản chi chưa được phân loại bằng System One",
+        "recurringScheduleCategoryDiffers": "Các hàng gộp chỉ khác nhau ở danh mục — danh mục của hàng mới nhất thắng."
       },
       "Done": {
         "importComplete": "Nhập hoàn tất!",
@@ -3356,7 +3358,18 @@
       "storageBoxes": "Hộp đựng đồ",
       "popcornCombo": "Combo bắp rang",
       "streamingRental": "Thuê phim trực tuyến"
-    }
+    },
+    "seriesScopeCount": "Đã chọn {selected} trên {total}",
+    "seriesScopeDescription": "Theo mặc định, chỉ những lần đã chọn thay đổi và mẫu chuỗi giữ nguyên. Lan truyền để cập nhật mẫu và nhiều lần hơn.",
+    "seriesScopeLegend": "Phạm vi lan truyền cho {title}",
+    "seriesScopeSection": "Lan truyền chuỗi định kỳ",
+    "seriesScopeSelected": "Chỉ những lần đã chọn",
+    "seriesScopeTemplateNotice": "Mẫu chuỗi và các lần mở rộng cũng sẽ chuyển sang danh mục này.",
+    "seriesScopeThisAndFuture": "Lần này và sau",
+    "seriesScopeTitle": "Chuỗi định kỳ trong lần xem xét này",
+    "seriesScopeWholeSeries": "Toàn bộ chuỗi",
+    "seriesScopeCadence": "{frequency} · mỗi {interval}",
+    "seriesScopeDiverged": "Mẫu đã lệch"
   },
   "ExpensePreview": {
     "title": "Chi phí",
@@ -4965,7 +4978,8 @@
       "message": "Đã đổi {count} chi phí sang {code}. Số dư, tổng cộng và bản xuất giờ dùng loại tiền mới.",
       "backToGroup": "Quay lại nhóm",
       "backToTools": "Quay lại Công cụ",
-      "title": "Hoàn tất đổi tiền tệ"
+      "title": "Hoàn tất đổi tiền tệ",
+      "templatesConverted": "{count} mẫu định kỳ cũng đã được chuyển đổi."
     },
     "filters": {
       "all": "Tất cả",
@@ -5036,7 +5050,8 @@
       "minor-units": "Loại tiền mới dùng đơn vị nhỏ khác (ví dụ cent với yên) — chênh lệch làm tròn nhỏ là bình thường.",
       "budgets-stale": "Ngân sách giữ nguyên số tiền theo loại tiền cũ và nên được xem lại sau khi đổi.",
       "exact-to-custom": "Một số chi phí đã dùng số tiền chính xác nên được chuyển đổi theo tỷ giá tùy chỉnh.",
-      "fixed-fallback": "Một số chi phí dùng quy đổi cố định cho tiền tệ đã bị rút khỏi lưu thông."
+      "fixed-fallback": "Một số chi phí dùng quy đổi cố định cho tiền tệ đã bị rút khỏi lưu thông.",
+      "series-templates-convert": "{templateCount} mẫu định kỳ sẽ được chuyển đổi theo tỷ giá hôm nay cùng với các chi phí."
     },
     "back": "Quay lại",
     "pairs": {

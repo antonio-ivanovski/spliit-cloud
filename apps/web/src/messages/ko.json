@@ -271,7 +271,8 @@
             "yearly": "년"
           }
         },
-        "categorizeWithSystemOne": "System One으로 분류되지 않은 지출의 카테고리를 제안"
+        "categorizeWithSystemOne": "System One으로 분류되지 않은 지출의 카테고리를 제안",
+        "recurringScheduleCategoryDiffers": "병합된 행은 카테고리만 다릅니다 — 최신 행의 카테고리가 적용돼요."
       },
       "Destination": {
         "heading": "<strong>{name}</strong>을(를) 어디로 가져오시겠습니까? ({participantCount}명의 참가자 · {expenseCount}개의 지출)",
@@ -3260,7 +3261,18 @@
       "storageBoxes": "수납 박스",
       "popcornCombo": "팝콘 콤보",
       "streamingRental": "스트리밍 대여"
-    }
+    },
+    "seriesScopeCount": "{total}개 중 {selected}개 선택됨",
+    "seriesScopeDescription": "기본적으로 선택한 반복만 변경되고 시리즈 템플릿은 그대로 유지돼요. 템플릿과 더 많은 반복을 업데이트하려면 전파하세요.",
+    "seriesScopeLegend": "{title} 전파 범위",
+    "seriesScopeSection": "반복 시리즈 전파",
+    "seriesScopeSelected": "선택한 항목만",
+    "seriesScopeTemplateNotice": "시리즈 템플릿과 확장된 반복도 이 카테고리로 변경돼요.",
+    "seriesScopeThisAndFuture": "이번 및 이후",
+    "seriesScopeTitle": "이 검토의 반복 시리즈",
+    "seriesScopeWholeSeries": "전체 시리즈",
+    "seriesScopeCadence": "{frequency} · {interval}회마다",
+    "seriesScopeDiverged": "템플릿이 달라짐"
   },
   "ExpensePreview": {
     "title": "지출 미리보기",
@@ -3414,7 +3426,8 @@
     "badgeRunning": "반복 · 실행 중",
     "badgeStopped": "반복 · 중지됨",
     "badgeCompleted": "반복 · 완료됨",
-    "timeZone": "{timeZone} 기준 오후 3시에 실행"
+    "timeZone": "{timeZone} 기준 오후 3시에 실행",
+    "badgeDiverged": "템플릿이 달라짐 — 이후 반복은 템플릿을 사용해요"
   },
   "CurrencyConverter": {
     "trigger": "통화 변환",
@@ -4967,7 +4980,8 @@
       "message": "지출 {count}건을 {code}(으)로 스왑했어요. 잔액, 합계, 내보내기는 이제 새 통화로 계산돼요.",
       "backToGroup": "그룹으로 돌아가기",
       "backToTools": "도구로 돌아가기",
-      "title": "스왑 완료"
+      "title": "스왑 완료",
+      "templatesConverted": "반복 템플릿 {count}개도 변환되었어요."
     },
     "filters": {
       "all": "전체",
@@ -5038,7 +5052,8 @@
       "minor-units": "새 통화는 소수점 단위(예: 센트와 엔)가 달라서 소액 반올림 차이가 생길 수 있어요.",
       "budgets-stale": "예산은 이전 통화 금액 그대로 남으니 스왑 후에 다시 확인하세요.",
       "exact-to-custom": "일부 지출은 총 청구 금액을 사용해서 커스텀 환율로 변환돼요.",
-      "fixed-fallback": "일부 지출은 폐지된 통화에 고정 환산을 사용해요."
+      "fixed-fallback": "일부 지출은 폐지된 통화에 고정 환산을 사용해요.",
+      "series-templates-convert": "반복 템플릿 {templateCount}개가 지출과 함께 오늘 환율로 변환돼요."
     },
     "back": "뒤로",
     "pairs": {

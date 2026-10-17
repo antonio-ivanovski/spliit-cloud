@@ -380,7 +380,8 @@
             "yearly": "anos"
           }
         },
-        "categorizeWithSystemOne": "Sugerir categorias para despesas sem categoria com o System One"
+        "categorizeWithSystemOne": "Sugerir categorias para despesas sem categoria com o System One",
+        "recurringScheduleCategoryDiffers": "As linhas agrupadas só diferem na categoria — vence a categoria da linha mais recente."
       },
       "Destination": {
         "heading": "Onde gostaria de importar o <strong>{name}</strong>? ({participantCount} participantes · {expenseCount} despesas)",
@@ -3218,7 +3219,18 @@
       "storageBoxes": "Caixas de arrumação",
       "popcornCombo": "Menu de pipocas",
       "streamingRental": "Aluguer em streaming"
-    }
+    },
+    "seriesScopeCount": "{selected} de {total} selecionadas",
+    "seriesScopeDescription": "Por predefinição, só as ocorrências selecionadas mudam e o modelo da série fica igual. Propaga para atualizar o modelo e mais ocorrências.",
+    "seriesScopeLegend": "Âmbito de propagação para {title}",
+    "seriesScopeSection": "Propagação de séries recorrentes",
+    "seriesScopeSelected": "Apenas as selecionadas",
+    "seriesScopeTemplateNotice": "O modelo da série e as ocorrências expandidas também passam para esta categoria.",
+    "seriesScopeThisAndFuture": "Esta e as seguintes",
+    "seriesScopeTitle": "Séries recorrentes nesta revisão",
+    "seriesScopeWholeSeries": "Série completa",
+    "seriesScopeCadence": "{frequency} · a cada {interval}",
+    "seriesScopeDiverged": "Modelo divergente"
   },
   "ExpensePreview": {
     "title": "Pré-visualização da despesa",
@@ -3369,7 +3381,8 @@
     "badgeRunning": "Recorrente · Em curso",
     "badgeStopped": "Recorrente · Parada",
     "badgeCompleted": "Recorrente · Concluída",
-    "timeZone": "É executada às 15:00 em {timeZone}"
+    "timeZone": "É executada às 15:00 em {timeZone}",
+    "badgeDiverged": "Modelo divergente — as ocorrências futuras usam o modelo"
   },
   "CurrencyConverter": {
     "trigger": "Conversão de moeda",
@@ -4931,7 +4944,8 @@
       "message": "{count} despesas trocadas para {code}. Saldos, totais e exportações usam agora a nova moeda.",
       "backToGroup": "Voltar ao grupo",
       "backToTools": "Voltar a Ferramentas",
-      "title": "Troca concluída"
+      "title": "Troca concluída",
+      "templatesConverted": "Também foram convertidos {count} modelos recorrentes."
     },
     "filters": {
       "all": "Todas",
@@ -5003,7 +5017,8 @@
       "minor-units": "A nova moeda usa unidades menores diferentes (ex. cêntimos vs ienes) — são esperadas pequenas diferenças de arredondamento.",
       "budgets-stale": "Os orçamentos mantêm os montantes na moeda antiga e devem ser revistos após a troca.",
       "exact-to-custom": "Algumas despesas usaram montantes exatos, por isso são convertidas a taxas personalizadas.",
-      "fixed-fallback": "Algumas despesas utilizam a conversão fixa para uma moeda retirada."
+      "fixed-fallback": "Algumas despesas utilizam a conversão fixa para uma moeda retirada.",
+      "series-templates-convert": "{templateCount} modelos recorrentes serão convertidos à taxa de hoje juntamente com as despesas."
     },
     "back": "Voltar",
     "pairs": {

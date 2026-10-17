@@ -924,7 +924,18 @@
       "storageBoxes": "Förvaringslådor",
       "popcornCombo": "Popcornmeny",
       "streamingRental": "Streaminghyra"
-    }
+    },
+    "seriesScopeCount": "{selected} av {total} valda",
+    "seriesScopeDescription": "Som standard ändras bara de valda förekomsterna och seriens mall förblir oförändrad. Sprid för att uppdatera mallen och fler förekomster.",
+    "seriesScopeLegend": "Spridningsomfång för {title}",
+    "seriesScopeSection": "Spridning av återkommande serier",
+    "seriesScopeSelected": "Endast valda",
+    "seriesScopeTemplateNotice": "Seriens mall och utökade förekomster ändras också till den här kategorin.",
+    "seriesScopeThisAndFuture": "Denna och framtida",
+    "seriesScopeTitle": "Återkommande serier i denna granskning",
+    "seriesScopeWholeSeries": "Hela serien",
+    "seriesScopeCadence": "{frequency} · var {interval}:e",
+    "seriesScopeDiverged": "Mallen har avvikit"
   },
   "Categories": {
     "Entertainment": {
@@ -1935,7 +1946,8 @@
       "THIS_AND_FUTURE": "Denna och följande förekomster tas bort. Upprepningen fortsätter med nästa schemalagda förekomst.",
       "THIS_AND_FUTURE_STOP": "Denna och följande förekomster tas bort och upprepningen stoppas."
     },
-    "timeZone": "Körs kl. 15.00 i {timeZone}"
+    "timeZone": "Körs kl. 15.00 i {timeZone}",
+    "badgeDiverged": "Mallen har avvikit — framtida förekomster använder mallen"
   },
   "Expenses": {
     "title": "Utgifter",
@@ -2266,7 +2278,8 @@
             "yearly": "år"
           }
         },
-        "categorizeWithSystemOne": "Föreslå kategorier för okategoriserade utgifter med System One"
+        "categorizeWithSystemOne": "Föreslå kategorier för okategoriserade utgifter med System One",
+        "recurringScheduleCategoryDiffers": "Sammanslagna rader skiljer sig bara åt i kategori — den senaste radens kategori vinner."
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -4897,7 +4910,8 @@
       "message": "Bytte {count} utgifter till {code}. Balanser, summor och exporter använder nu den nya valutan.",
       "backToGroup": "Tillbaka till gruppen",
       "backToTools": "Tillbaka till Verktyg",
-      "title": "Byte klart"
+      "title": "Byte klart",
+      "templatesConverted": "Även {count} återkommande mallar konverterades."
     },
     "filters": {
       "all": "Alla",
@@ -4969,7 +4983,8 @@
       "minor-units": "Den nya valutan använder andra minsta enheter (t.ex. cent vs yen) — små avrundningsskillnader är väntade.",
       "budgets-stale": "Budgetar ligger kvar i den gamla valutans belopp och bör granskas efter bytet.",
       "exact-to-custom": "Vissa utgifter använde exakta belopp och konverteras därför till anpassade kurser.",
-      "fixed-fallback": "Vissa utgifter använder den fasta omräkningen för en indragen valuta."
+      "fixed-fallback": "Vissa utgifter använder den fasta omräkningen för en indragen valuta.",
+      "series-templates-convert": "{templateCount} återkommande mallar konverteras till dagens kurs tillsammans med utgifterna."
     },
     "back": "Tillbaka",
     "pairs": {

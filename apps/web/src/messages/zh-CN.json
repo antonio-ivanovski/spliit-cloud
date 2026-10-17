@@ -370,7 +370,8 @@
             "yearly": "年"
           }
         },
-        "categorizeWithSystemOne": "使用 System One 为未分类支出建议类别"
+        "categorizeWithSystemOne": "使用 System One 为未分类支出建议类别",
+        "recurringScheduleCategoryDiffers": "合并的行仅分类不同 — 以最新行的分类为准。"
       },
       "Destination": {
         "heading": "您想将 <strong>{name}</strong> 导入到哪里？（{participantCount} 名参与者 · {expenseCount} 笔支出）",
@@ -3182,7 +3183,18 @@
       "storageBoxes": "收纳箱",
       "popcornCombo": "爆米花套餐",
       "streamingRental": "流媒体租片"
-    }
+    },
+    "seriesScopeCount": "已选 {selected}/{total}",
+    "seriesScopeDescription": "默认情况下，仅所选次数会更改，系列模板保持不变。传播后可更新模板及更多次数。",
+    "seriesScopeLegend": "{title} 的传播范围",
+    "seriesScopeSection": "定期系列传播",
+    "seriesScopeSelected": "仅所选次数",
+    "seriesScopeTemplateNotice": "系列模板及展开的次数也将改为该分类。",
+    "seriesScopeThisAndFuture": "本次及以后",
+    "seriesScopeTitle": "本次审核中的定期系列",
+    "seriesScopeWholeSeries": "整个系列",
+    "seriesScopeCadence": "{frequency} · 每 {interval}",
+    "seriesScopeDiverged": "模板已偏离"
   },
   "ExpensePreview": {
     "title": "消费预览",
@@ -3331,7 +3343,8 @@
     "badgeRunning": "定期 · 运行中",
     "badgeStopped": "定期 · 已停止",
     "badgeCompleted": "定期 · 已完成",
-    "timeZone": "在 {timeZone} 下午 3:00 执行"
+    "timeZone": "在 {timeZone} 下午 3:00 执行",
+    "badgeDiverged": "模板已偏离 — 以后的次数使用模板"
   },
   "CurrencyConverter": {
     "trigger": "货币转换",
@@ -4883,7 +4896,8 @@
       "message": "已将 {count} 笔支出更换为 {code}。余额、总额和导出均使用新货币。",
       "backToGroup": "返回群组",
       "backToTools": "返回工具",
-      "title": "更换完成"
+      "title": "更换完成",
+      "templatesConverted": "另有 {count} 个定期模板已换算。"
     },
     "filters": {
       "all": "全部",
@@ -4954,7 +4968,8 @@
       "minor-units": "新货币的辅币单位不同（例如分与日元）——可能会有小额舍入差异。",
       "budgets-stale": "预算仍为旧货币金额，更换后请检查。",
       "exact-to-custom": "部分支出使用了精确金额，因此按自定义汇率换算。",
-      "fixed-fallback": "部分支出对已退出流通的货币使用了固定换算。"
+      "fixed-fallback": "部分支出对已退出流通的货币使用了固定换算。",
+      "series-templates-convert": "{templateCount} 个定期模板将与支出一起按今日汇率换算。"
     },
     "back": "返回",
     "pairs": {

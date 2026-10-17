@@ -370,7 +370,8 @@
             "yearly": "年"
           }
         },
-        "categorizeWithSystemOne": "System One でカテゴリ未設定の支出にカテゴリを提案"
+        "categorizeWithSystemOne": "System One でカテゴリ未設定の支出にカテゴリを提案",
+        "recurringScheduleCategoryDiffers": "まとめられた行はカテゴリだけが異なります — 最新の行のカテゴリが優先されます。"
       },
       "Destination": {
         "heading": "<strong>{name}</strong> をどこにインポートしますか？（{participantCount} 名の参加者 · {expenseCount} 件の支出）",
@@ -3182,7 +3183,18 @@
       "storageBoxes": "収納ボックス",
       "popcornCombo": "ポップコーンセット",
       "streamingRental": "配信レンタル"
-    }
+    },
+    "seriesScopeCount": "{total}件中{selected}件を選択中",
+    "seriesScopeDescription": "既定では選択した回だけが変更され、シリーズのテンプレートはそのままです。反映するとテンプレートと他の回も更新されます。",
+    "seriesScopeLegend": "{title}の反映範囲",
+    "seriesScopeSection": "定期シリーズの反映",
+    "seriesScopeSelected": "選択分のみ",
+    "seriesScopeTemplateNotice": "シリーズのテンプレートと展開された回もこのカテゴリに変更されます。",
+    "seriesScopeThisAndFuture": "今回以降",
+    "seriesScopeTitle": "この確認の定期シリーズ",
+    "seriesScopeWholeSeries": "シリーズ全体",
+    "seriesScopeCadence": "{frequency} · {interval}回ごと",
+    "seriesScopeDiverged": "テンプレートが分岐"
   },
   "ExpensePreview": {
     "title": "支出のプレビュー",
@@ -3331,7 +3343,8 @@
     "badgeRunning": "定期 · 実行中",
     "badgeStopped": "定期 · 停止中",
     "badgeCompleted": "定期 · 完了",
-    "timeZone": "{timeZone}の午後3時に実行"
+    "timeZone": "{timeZone}の午後3時に実行",
+    "badgeDiverged": "テンプレートが分岐 — 今後の回はテンプレートを使用します"
   },
   "CurrencyConverter": {
     "trigger": "通貨換算",
@@ -4883,7 +4896,8 @@
       "message": "{count}件の支出を{code}にスワップしました。残高、合計、エクスポートは新しい通貨で計算されます。",
       "backToGroup": "グループに戻る",
       "backToTools": "ツールに戻る",
-      "title": "スワップ完了"
+      "title": "スワップ完了",
+      "templatesConverted": "定期テンプレート{count}件も換算されました。"
     },
     "filters": {
       "all": "すべて",
@@ -4954,7 +4968,8 @@
       "minor-units": "新しい通貨では小数単位（セントと円など）の扱いが異なるため、少額の丸め差が生じることがあります。",
       "budgets-stale": "予算は古い通貨の金額のまま残るため、スワップ後に見直してください。",
       "exact-to-custom": "一部の支出では請求総額が指定されているため、カスタムレートで換算されます。",
-      "fixed-fallback": "一部の支出は、廃止通貨のため固定換算を使用しています。"
+      "fixed-fallback": "一部の支出は、廃止通貨のため固定換算を使用しています。",
+      "series-templates-convert": "定期テンプレート{templateCount}件は支出とともに本日のレートで換算されます。"
     },
     "back": "戻る",
     "pairs": {

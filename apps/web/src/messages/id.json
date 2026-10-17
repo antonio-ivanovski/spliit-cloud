@@ -370,7 +370,8 @@
             "yearly": "tahun"
           }
         },
-        "categorizeWithSystemOne": "Sarankan kategori untuk pengeluaran yang belum dikategorikan dengan System One"
+        "categorizeWithSystemOne": "Sarankan kategori untuk pengeluaran yang belum dikategorikan dengan System One",
+        "recurringScheduleCategoryDiffers": "Baris yang digabung hanya berbeda pada kategori — kategori baris terbaru yang menang."
       },
       "Destination": {
         "heading": "Di mana Anda ingin mengimpor <strong>{name}</strong>? ({participantCount} peserta · {expenseCount} pengeluaran)",
@@ -3180,7 +3181,18 @@
       "storageBoxes": "Kotak Penyimpanan",
       "popcornCombo": "Paket Popcorn",
       "streamingRental": "Sewa Streaming"
-    }
+    },
+    "seriesScopeCount": "{selected} dari {total} dipilih",
+    "seriesScopeDescription": "Secara default hanya kejadian yang dipilih yang berubah dan templat rangkaian tetap seperti semula. Sebarkan untuk memperbarui templat dan lebih banyak kejadian.",
+    "seriesScopeLegend": "Cakupan penyebaran untuk {title}",
+    "seriesScopeSection": "Penyebaran rangkaian berulang",
+    "seriesScopeSelected": "Hanya yang dipilih",
+    "seriesScopeTemplateNotice": "Templat rangkaian dan kejadian yang diperluas juga akan berubah ke kategori ini.",
+    "seriesScopeThisAndFuture": "Ini dan berikutnya",
+    "seriesScopeTitle": "Rangkaian berulang dalam tinjauan ini",
+    "seriesScopeWholeSeries": "Seluruh rangkaian",
+    "seriesScopeCadence": "{frequency} · setiap {interval}",
+    "seriesScopeDiverged": "Templat menyimpang"
   },
   "ExpensePreview": {
     "title": "Pratinjau pengeluaran",
@@ -3329,7 +3341,8 @@
     "badgeRunning": "Berulang · Berjalan",
     "badgeStopped": "Berulang · Berhenti",
     "badgeCompleted": "Berulang · Selesai",
-    "timeZone": "Dijalankan pukul 15.00 di {timeZone}"
+    "timeZone": "Dijalankan pukul 15.00 di {timeZone}",
+    "badgeDiverged": "Templat menyimpang — kejadian mendatang memakai templat"
   },
   "CurrencyConverter": {
     "trigger": "Konversi Mata Uang",
@@ -4882,7 +4895,8 @@
       "message": "{count} pengeluaran telah ditukar ke {code}. Saldo, total, dan ekspor kini menggunakan mata uang baru.",
       "backToGroup": "Kembali ke grup",
       "backToTools": "Kembali ke Alat",
-      "title": "Penukaran selesai"
+      "title": "Penukaran selesai",
+      "templatesConverted": "{count} templat berulang juga dikonversi."
     },
     "filters": {
       "all": "Semua",
@@ -4953,7 +4967,8 @@
       "minor-units": "Mata uang baru memakai unit minor yang berbeda (mis. sen vs yen) — selisih pembulatan kecil wajar terjadi.",
       "budgets-stale": "Anggaran tetap dalam nominal mata uang lama dan harus ditinjau setelah penukaran.",
       "exact-to-custom": "Beberapa pengeluaran memakai jumlah pasti sehingga dikonversi dengan kurs kustom.",
-      "fixed-fallback": "Beberapa pengeluaran memakai konversi tetap untuk mata uang yang ditarik."
+      "fixed-fallback": "Beberapa pengeluaran memakai konversi tetap untuk mata uang yang ditarik.",
+      "series-templates-convert": "{templateCount} templat berulang akan dikonversi dengan kurs hari ini bersama pengeluaran."
     },
     "back": "Kembali",
     "pairs": {

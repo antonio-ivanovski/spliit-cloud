@@ -181,7 +181,8 @@
         "currencyRateAsOfFormat": "Solicitado {requested} · provedor usou {asOf}",
         "currencyConversionDescription": "As despesas serão convertidas da moeda de origem para a moeda do livro de destino usando as taxas abaixo.",
         "currencyRateForDateFormat": "Aplicado para despesas com data {date}",
-        "categorizeWithSystemOne": "Sugerir categorias para despesas não categorizadas usando o System One"
+        "categorizeWithSystemOne": "Sugerir categorias para despesas não categorizadas usando o System One",
+        "recurringScheduleCategoryDiffers": "As linhas agrupadas diferem apenas na categoria — a categoria da linha mais recente vence."
       },
       "Destination": {
         "heading": "Onde você gostaria de importar <strong>{name}</strong>? ({participantCount} participantes · {expenseCount} despesas)",
@@ -1707,7 +1708,9 @@
       "storageBoxes": "Caixas de armazenamento",
       "popcornCombo": "Combo de pipoca",
       "streamingRental": "Aluguel em streaming"
-    }
+    },
+    "seriesScopeDescription": "Por padrão, só as ocorrências selecionadas mudam e o modelo da série fica igual. Propague para atualizar o modelo e mais ocorrências.",
+    "seriesScopeLegend": "Escopo de propagação para {title}"
   },
   "ExpensePreview": {
     "title": "Prévia da despesa",
@@ -2637,7 +2640,8 @@
     },
     "done": {
       "message": "{count} despesas trocadas para {code}. Saldos, totais e exportações agora usam a nova moeda.",
-      "backToTools": "Voltar às Ferramentas"
+      "backToTools": "Voltar às Ferramentas",
+      "templatesConverted": "{count} modelos recorrentes também foram convertidos."
     },
     "offlineNotice": "Reconecte-se para trocar a moeda do grupo.",
     "preview": {
@@ -2665,7 +2669,8 @@
     "warnings": {
       "minor-units": "A nova moeda usa unidades menores diferentes (ex. centavos vs. ienes): pequenas diferenças de arredondamento são esperadas.",
       "exact-to-custom": "Algumas despesas usaram valores exatos, por isso são convertidas a taxas personalizadas.",
-      "fixed-fallback": "Algumas despesas usam a conversão fixa para uma moeda retirada."
+      "fixed-fallback": "Algumas despesas usam a conversão fixa para uma moeda retirada.",
+      "series-templates-convert": "{templateCount} modelos recorrentes serão convertidos na cotação de hoje junto com as despesas."
     },
     "pairs": {
       "description": "Escolha como cada moeda é convertida para {code}. As taxas na data da despesa usam a data de cada despesa; uma taxa fixa aplica a taxa de uma única data a cada despesa do par.",

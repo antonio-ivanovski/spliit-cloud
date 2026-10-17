@@ -375,7 +375,8 @@
             "yearly": "yıl"
           }
         },
-        "categorizeWithSystemOne": "Kategorilendirilmemiş masraflar için System One ile kategori öner"
+        "categorizeWithSystemOne": "Kategorilendirilmemiş masraflar için System One ile kategori öner",
+        "recurringScheduleCategoryDiffers": "Birleştirilmiş satırlar yalnızca kategori bakımından farklıdır — en yeni satırın kategorisi kazanır."
       },
       "Destination": {
         "heading": "<strong>{name}</strong> grubunu nereye içe aktarmak istersiniz? ({participantCount} katılımcı · {expenseCount} harcama)",
@@ -3202,7 +3203,18 @@
       "storageBoxes": "Saklama Kutuları",
       "popcornCombo": "Patlamış Mısır Menüsü",
       "streamingRental": "Dijital Film Kiralama"
-    }
+    },
+    "seriesScopeCount": "{total} içinden {selected} seçili",
+    "seriesScopeDescription": "Varsayılan olarak yalnızca seçili yinelemeler değişir ve seri şablonu olduğu gibi kalır. Yayılım, şablonu ve daha fazla yinelemeyi günceller.",
+    "seriesScopeLegend": "{title} için yayılım kapsamı",
+    "seriesScopeSection": "Yinelenen seri yayılımı",
+    "seriesScopeSelected": "Yalnızca seçili",
+    "seriesScopeTemplateNotice": "Seri şablonu ve genişletilmiş yinelemeler de bu kategoriye geçecek.",
+    "seriesScopeThisAndFuture": "Bu ve sonrakiler",
+    "seriesScopeTitle": "Bu incelemedeki yinelenen seriler",
+    "seriesScopeWholeSeries": "Tüm seri",
+    "seriesScopeCadence": "{frequency} · her {interval}",
+    "seriesScopeDiverged": "Şablon ayrıştı"
   },
   "ExpensePreview": {
     "title": "Masraf önizlemesi",
@@ -3352,7 +3364,8 @@
     "badgeRunning": "Yinelenen · Devam Ediyor",
     "badgeStopped": "Yinelenen · Durduruldu",
     "badgeCompleted": "Yinelenen · Tamamlandı",
-    "timeZone": "{timeZone} saat diliminde 15:00'te çalışır"
+    "timeZone": "{timeZone} saat diliminde 15:00'te çalışır",
+    "badgeDiverged": "Şablon ayrıştı — gelecekteki yinelemeler şablonu kullanır"
   },
   "CurrencyConverter": {
     "trigger": "Para Birimi Dönüşümü",
@@ -4909,7 +4922,8 @@
       "message": "{count} gider {code} para birimine dönüştürüldü. Bakiyeler, toplamlar ve dışa aktarımlar artık yeni para birimini kullanıyor.",
       "backToGroup": "Gruba dön",
       "backToTools": "Araçlar'a dön",
-      "title": "Değişim tamamlandı"
+      "title": "Değişim tamamlandı",
+      "templatesConverted": "{count} yinelenen şablon da dönüştürüldü."
     },
     "filters": {
       "all": "Tümü",
@@ -4981,7 +4995,8 @@
       "minor-units": "Yeni para birimi farklı alt birimler kullanıyor (ör. sent ve yen) — küçük yuvarlama farkları normaldir.",
       "budgets-stale": "Bütçeler eski para birimi tutarlarıyla kalır, değişimden sonra gözden geçirilmelidir.",
       "exact-to-custom": "Bazı giderlerde kesin tutar kullanıldı, bu yüzden bunlar özel kurlarla dönüştürülür.",
-      "fixed-fallback": "Bazı giderler tedavülden kaldırılan para birimi için sabit dönüşümü kullanıyor."
+      "fixed-fallback": "Bazı giderler tedavülden kaldırılan para birimi için sabit dönüşümü kullanıyor.",
+      "series-templates-convert": "{templateCount} yinelenen şablon, giderlerle birlikte bugünkü kurla dönüştürülecek."
     },
     "back": "Geri",
     "pairs": {

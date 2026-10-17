@@ -928,7 +928,18 @@
       "storageBoxes": "स्टोरेज बॉक्स",
       "popcornCombo": "पॉपकॉर्न कॉम्बो",
       "streamingRental": "स्ट्रीमिंग किराया"
-    }
+    },
+    "seriesScopeCount": "{total} में से {selected} चयनित",
+    "seriesScopeDescription": "डिफ़ॉल्ट रूप से केवल चयनित घटनाएँ बदलती हैं और श्रृंखला टेम्पलेट जैसा है वैसा ही रहता है। टेम्पलेट और अधिक घटनाएँ अपडेट करने के लिए प्रसारित करें।",
+    "seriesScopeLegend": "{title} के लिए प्रसार सीमा",
+    "seriesScopeSection": "आवर्ती श्रृंखला प्रसार",
+    "seriesScopeSelected": "केवल चयनित",
+    "seriesScopeTemplateNotice": "श्रृंखला टेम्पलेट और विस्तारित घटनाएँ भी इस श्रेणी में बदल जाएँगी।",
+    "seriesScopeThisAndFuture": "यह और आगे की",
+    "seriesScopeTitle": "इस समीक्षा में आवर्ती श्रृंखलाएँ",
+    "seriesScopeWholeSeries": "पूरी श्रृंखला",
+    "seriesScopeCadence": "{frequency} · हर {interval}",
+    "seriesScopeDiverged": "टेम्पलेट अलग हो गया"
   },
   "Categories": {
     "Entertainment": {
@@ -1939,7 +1950,8 @@
       "THIS_AND_FUTURE": "यह और बाद की घटनाएं हटा दी जाएंगी। आवृत्ति अगली निर्धारित घटना के साथ जारी रहेगी।",
       "THIS_AND_FUTURE_STOP": "यह और बाद की घटनाएं हटा दी जाएंगी और आवृत्ति बंद हो जाएगी।"
     },
-    "timeZone": "{timeZone} में दोपहर 3:00 बजे चलता है"
+    "timeZone": "{timeZone} में दोपहर 3:00 बजे चलता है",
+    "badgeDiverged": "टेम्पलेट अलग हो गया — आगे की घटनाएँ टेम्पलेट का उपयोग करती हैं"
   },
   "Expenses": {
     "title": "खर्च",
@@ -2270,7 +2282,8 @@
             "yearly": "वर्ष"
           }
         },
-        "categorizeWithSystemOne": "System One से श्रेणीहीन खर्चों के लिए श्रेणियां सुझाएं"
+        "categorizeWithSystemOne": "System One से श्रेणीहीन खर्चों के लिए श्रेणियां सुझाएं",
+        "recurringScheduleCategoryDiffers": "संक्षिप्त पंक्तियाँ केवल श्रेणी में भिन्न हैं — नवीनतम पंक्ति की श्रेणी जीतती है।"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -4906,7 +4919,8 @@
       "message": "{count} खर्च {code} में स्वैप किए गए। शेष राशि, कुल योग और एक्सपोर्ट अब नई मुद्रा का उपयोग करते हैं।",
       "backToGroup": "समूह पर वापस जाएँ",
       "backToTools": "टूल पर वापस जाएँ",
-      "title": "स्वैप पूर्ण"
+      "title": "स्वैप पूर्ण",
+      "templatesConverted": "{count} आवर्ती टेम्पलेट भी परिवर्तित हुए।"
     },
     "filters": {
       "all": "सभी",
@@ -4978,7 +4992,8 @@
       "minor-units": "नई मुद्रा भिन्न लघु इकाइयों का उपयोग करती है (जैसे सेंट बनाम येन) — मामूली पूर्णांकन अंतर अपेक्षित हैं।",
       "budgets-stale": "बजट पुरानी मुद्रा की राशियों में ही रहते हैं, स्वैप के बाद उनकी समीक्षा की जानी चाहिए।",
       "exact-to-custom": "कुछ खर्चों में सटीक राशियाँ इस्तेमाल की गई थीं, इसलिए वे कस्टम दरों पर परिवर्तित होते हैं।",
-      "fixed-fallback": "कुछ खर्चों में वापस ली गई मुद्रा के लिए निश्चित रूपांतरण का उपयोग किया गया है।"
+      "fixed-fallback": "कुछ खर्चों में वापस ली गई मुद्रा के लिए निश्चित रूपांतरण का उपयोग किया गया है।",
+      "series-templates-convert": "{templateCount} आवर्ती टेम्पलेट खर्चों के साथ आज की दर पर परिवर्तित होंगे।"
     },
     "back": "वापस",
     "pairs": {
