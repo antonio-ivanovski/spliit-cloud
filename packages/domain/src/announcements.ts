@@ -126,6 +126,18 @@ export function latestModalAnnouncement(): Announcement | undefined {
     .find((announcement) => hasAnnouncementChannel(announcement, 'modal'))
 }
 
+/**
+ * UTC start of the announcement's publication day. Frontmatter dates are
+ * date-only, so this instant decides which accounts are "new" relative to the
+ * announcement: accounts created at or after it must not receive it (neither
+ * the in-app modal nor the email campaign).
+ */
+export function announcementPublicationStart(
+  announcement: Pick<AnnouncementDefinition, 'date'>,
+): Date {
+  return new Date(`${announcement.date}T00:00:00.000Z`)
+}
+
 export function getAnnouncementTextBody(id: string): {
   title: string
   text: string

@@ -43,10 +43,13 @@ vi.mock('@spliit/domain/announcements', async (importOriginal) => {
 // Import after the mock so the router binds the mocked registry.
 const { announcementsRouter } = await import('./announcements')
 
-function caller(accountId = 'account-1') {
+function caller(
+  accountId = 'account-1',
+  createdAt: Date = new Date('2026-09-15T00:00:00.000Z'),
+) {
   return announcementsRouter.createCaller({
     auth: {
-      user: { id: accountId },
+      user: { id: accountId, createdAt },
       session: { id: 'sess-1' },
     },
   } as never)
@@ -91,6 +94,34 @@ describe('announcementsRouter channels', () => {
     } as never)
     const result = await caller().latestStatus()
     expect(result).toEqual({ announcementId: 'loud-entry', viewed: true })
+  })
+
+  it('latestStatus hides the modal from accounts registered on the publication day', async () => {
+    const result = await caller(
+      'account-1',
+      new Date('2026-10-01T00:00:00.000Z'),
+    ).latestStatus()
+    expect(result).toEqual({ announcementId: null, viewed: true })
+    expect(prismaMock.announcementView.findUnique).not.toHaveBeenCalled()
+  })
+
+  it('latestStatus serves the modal to accounts registered before the publication day', async () => {
+    prismaMock.announcementView.findUnique.mockResolvedValue(null as never)
+    const result = await caller(
+      'account-1',
+      new Date('2026-09-30T23:59:59.999Z'),
+    ).latestStatus()
+    expect(result).toEqual({ announcementId: 'loud-entry', viewed: false })
+  })
+
+  it('latestStatus judges account age against the modal entry, not a newer quiet one', async () => {
+    // The quiet entry is dated 2026-10-02 while the modal entry is 2026-10-01:
+    // an account registered after the modal's publication day gets nothing.
+    const result = await caller(
+      'account-1',
+      new Date('2026-10-02T00:00:00.000Z'),
+    ).latestStatus()
+    expect(result).toEqual({ announcementId: null, viewed: true })
   })
 
   it('markViewed accepts quiet entries', async () => {

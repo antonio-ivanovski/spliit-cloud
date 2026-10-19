@@ -26,7 +26,10 @@ import {
   processAnnouncementCampaigns,
 } from './process'
 
-function setupDelivery(channels: string[] | null) {
+function setupDelivery(
+  channels: string[] | null,
+  createdAt = new Date('2026-09-01T00:00:00.000Z'),
+) {
   prismaMock.announcementCampaign.findMany.mockResolvedValue([
     {
       id: 'spliit-cloud-2-5-0',
@@ -47,6 +50,7 @@ function setupDelivery(channels: string[] | null) {
     attempts: 0,
   } as never)
   prismaMock.user.findUnique.mockResolvedValue({
+    createdAt,
     email: 'alice@example.com',
     emailVerified: true,
     preference: { locale: 'fr-FR' },
@@ -115,6 +119,16 @@ describe('Cloud announcement delivery', () => {
 
   it('skips a recipient who opted out after audience selection', async () => {
     setupDelivery([])
+    await processAnnouncementCampaigns()
+    expect(sendEmailMock).not.toHaveBeenCalled()
+    expect(prismaMock.announcementEmailDelivery.update).toHaveBeenCalledWith({
+      where: { id: 'delivery-1' },
+      data: { status: 'SKIPPED' },
+    })
+  })
+
+  it('skips a pre-created delivery for an account registered on the publication day', async () => {
+    setupDelivery(null, new Date('2026-10-05T00:00:00.000Z'))
     await processAnnouncementCampaigns()
     expect(sendEmailMock).not.toHaveBeenCalled()
     expect(prismaMock.announcementEmailDelivery.update).toHaveBeenCalledWith({

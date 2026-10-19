@@ -28,5 +28,6 @@ who is affected, and the exact migration steps.
 ### 🐛 Bug fixes
 
 - Short entry per fix (`TBD` by @TBD)
+- The What's new dialog and announcement emails now only reach accounts created before the announcement's publication date, so people who sign up later are not shown news that predates them (`TBD` by @TBD)
 
 **Full Changelog**: TBD

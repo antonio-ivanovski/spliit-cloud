@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { prisma } from '@spliit/db'
 import {
   announcements,
+  announcementPublicationStart,
   getAnnouncement,
   hasAnnouncementChannel,
   latestModalAnnouncement,
@@ -23,6 +24,15 @@ export const announcementsRouter = createTRPCRouter({
     // keeps popping until viewed.
     const latest = latestModalAnnouncement()
     if (!latest) return { announcementId: null, viewed: true }
+    // Only accounts that existed before the announcement was published see it.
+    // Frontmatter dates are date-only, so eligibility starts at 00:00 UTC on
+    // that day: an account registered on the publication date counts as new.
+    if (
+      ctx.auth.user.createdAt.getTime() >=
+      announcementPublicationStart(latest).getTime()
+    ) {
+      return { announcementId: null, viewed: true }
+    }
     const view = await prisma.announcementView.findUnique({
       where: {
         accountId_announcementId: {

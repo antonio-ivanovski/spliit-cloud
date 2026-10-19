@@ -1,5 +1,6 @@
 import { prisma } from '@spliit/db'
 import {
+  announcementPublicationStart,
   getAnnouncement,
   hasAnnouncementChannel,
 } from '@spliit/domain/announcements'
@@ -64,6 +65,7 @@ async function sendOne(deliveryId: string) {
   const account = await prisma.user.findUnique({
     where: { id: delivery.accountId },
     select: {
+      createdAt: true,
       email: true,
       emailVerified: true,
       notificationPreferences: {
@@ -83,6 +85,10 @@ async function sendOne(deliveryId: string) {
     optedOut ||
     !announcement ||
     !hasAnnouncementChannel(announcement, 'email') ||
+    // Accounts registered on or after the publication day never receive the
+    // announcement, even when a delivery row predates this rule.
+    account.createdAt.getTime() >=
+      announcementPublicationStart(announcement).getTime() ||
     !env.CLOUD_NEWS_ENABLED
   ) {
     await prisma.announcementEmailDelivery.update({
