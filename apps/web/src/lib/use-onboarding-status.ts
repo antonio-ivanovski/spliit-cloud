@@ -51,11 +51,25 @@ export function useOnboardingStatus() {
     needsProfile,
     needsSafeguard,
     needsOnboarding: needsProfile || needsSafeguard,
+    // Commands require an affirmative server verdict for anonymous accounts.
+    onboardingComplete:
+      !!account &&
+      !needsProfile &&
+      (account.isAnonymous !== true || completed === true),
+    statusError: statusQuery.error,
     // `isPending` alone is also true for a disabled query with no data (a
     // named non-anonymous account would spin forever), so require an actual
     // fetch in flight. Background refetches never set `isPending`.
     statusPending: statusQuery.isPending && statusQuery.isFetching,
     refetchStatus: statusQuery.refetch,
+    // Settle signal for auth-return navigation. The session hook resolved and
+    // the authoritative safeguard verdict is in (or failed open on error).
+    // Navigating on bounce params before this flaps between `/` and
+    // `/auth/complete-profile` while a fresh anonymous session settles — the
+    // "slowing down Firefox" race. A disabled query (non-anonymous account)
+    // is settled by construction: the session predicate is the final verdict.
+    authReturnSettled:
+      !isPending && !(statusQuery.isPending && statusQuery.isFetching),
   }
 }
 

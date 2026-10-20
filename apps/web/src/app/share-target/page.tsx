@@ -52,6 +52,7 @@ import {
   getPendingShare,
   putPendingShare,
 } from '@/lib/share-target-store'
+import { buildAuthBounceSearch } from '@/lib/signup-invite'
 import { resizeImage, useExpenseDocumentUpload } from '@/lib/upload'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { useOnlineStatus } from '@/lib/use-online-status'
@@ -722,9 +723,6 @@ export default function ShareTargetPage() {
   }
 
   if (!account) {
-    const redirect = search.share
-      ? `/share-target/?share=${encodeURIComponent(search.share)}`
-      : '/share-target/'
     return (
       <PageShell className="flex-col gap-4 py-6">
         <Card>
@@ -735,7 +733,17 @@ export default function ShareTargetPage() {
           <CardContent>
             <Button
               nativeButton={false}
-              render={<Link to="/" search={{ redirect }} />}
+              render={
+                <Link
+                  to="/"
+                  search={buildAuthBounceSearch({
+                    writer: 'share-target',
+                    from: search.share
+                      ? `/share-target/?share=${encodeURIComponent(search.share)}`
+                      : '/share-target/',
+                  })}
+                />
+              }
             >
               {t('signInAction')}
               <ArrowRight className="ms-2 h-4 w-4 rtl:rotate-180" />

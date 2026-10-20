@@ -9,8 +9,12 @@ import {
 } from '@/components/mascot/mascot-registry'
 import { MascotSpeechBubble } from '@/components/mascot/mascot-speech-bubble'
 import { useLandingMascot } from '@/components/mascot/use-landing-mascot'
-import { safeLocalReturnPath } from '@/lib/signup-invite'
+import {
+  resolveAuthReturnContext,
+  splitAuthDestination,
+} from '@/lib/signup-invite'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useOnboardingStatus } from '@/lib/use-onboarding-status'
 
 import { RecentGroupList } from './groups/recent-group-list'
 import { SignedOutSavedGroupsEntry } from './groups/signed-out-saved-view-list'
@@ -20,7 +24,19 @@ const homeRouteApi = getRouteApi('/')
 
 export default function HomePage() {
   const { data: account, isPending } = useCurrentAccount()
-  const { redirect } = homeRouteApi.useSearch()
+  // Settle-aware: the onboarding verdict for a fresh anonymous session lags
+  // the session read. Navigating on bounce params before it lands flaps `/`
+  // against `/auth/complete-profile` on every session emission (the
+  // "slowing down Firefox" race) — and a completed-profile bounce through
+  // here would shed the invite token mid-flap. Hold the shell instead.
+  const { authReturnSettled } = useOnboardingStatus()
+  const search = homeRouteApi.useSearch()
+  // Structured return: credentials arrive as first-class params, so the
+  // panel and the signed-in redirect resolve the same bearer context.
+  const returnContext = resolveAuthReturnContext(search)
+  const hasBounceSearch = Boolean(
+    search.redirect || search.invite || search.viewKey || search.invitation,
+  )
 
   if (isPending && !account) {
     return (
@@ -36,15 +52,47 @@ export default function HomePage() {
             <LandingIntro />
           </PageInset>
           <div className="motion-enter">
-            <AuthPanel />
+            {/* Pass the resolved destination explicitly: the panel must not
+                depend on ambient route search, or a lost hop (e.g. an
+                invite-bearing return path) silently drops the invite token
+                from every auth callback after sign-in. */}
+            <AuthPanel redirectTo={returnContext.redirectTo} />
           </div>
         </div>
       </PageShell>
     )
   }
 
-  if (redirect) {
-    return <Navigate to={safeLocalReturnPath(redirect)} replace />
+  // Bounce params with an unsettled verdict: hold the pending shell, exactly
+  // like the cold-start branch above. The URL keeps the credentials (escrow
+  // via URL), so no token sheds while the session settles.
+  if (hasBounceSearch && !authReturnSettled) {
+    return (
+      <PageShell width="lg" className="flex-col gap-6 py-6" aria-busy="true" />
+    )
+  }
+
+  if (hasBounceSearch) {
+    // A bare `/` destination means "no return" — navigating to it would
+    // self-loop on these same params, so render the dashboard instead.
+    if (returnContext.redirectTo === '/') {
+      return (
+        <PageShell className="flex-col gap-6 py-6">
+          <RecentGroupList />
+        </PageShell>
+      )
+    }
+    // Split the destination (see complete-profile): query-in-`to` serializes
+    // verbatim and grows `?invite=T` on every lap.
+    const destination = splitAuthDestination(returnContext.redirectTo)
+    return (
+      <Navigate
+        to={destination.to}
+        search={destination.search}
+        hash={destination.hash}
+        replace
+      />
+    )
   }
 
   return (

@@ -739,7 +739,10 @@
       "notNow": "Ei nyt"
     },
     "groupTabsHint": "Haluatko järjestää ryhmän välilehdet uudelleen tai piilottaa ne, joita et käytä?",
-    "groupTabsHintLink": "Mukauta välilehtiä tilisi asetuksissa"
+    "groupTabsHintLink": "Mukauta välilehtiä tilisi asetuksissa",
+    "linkInvitationFullTitle": "Tämä kutsulinkki on täynnä",
+    "linkInvitationFullDescription": "Tämän linkin kaikki paikat on käytetty. Pyydä ryhmän jäsentä jakamaan uusi linkki.",
+    "linkInvitationSharedUse": "Tätä linkkiä voivat käyttää useat henkilöt liittymisrajan ja voimassaolon puitteissa."
   },
   "GroupForm": {
     "title": "Ryhmän tiedot",
@@ -2056,7 +2059,41 @@
         "shareTitle": "Liity ryhmään {groupName} Spliit Cloudissa",
         "shareText": "Loin juuri ryhmän {groupName} yhteisiä kuluja varten Spliit Cloudissa. Tässä on kertakäyttöinen kutsulinkki — avaa se liittyäksesi:\n{inviteUrl}",
         "generateNew": "Luo uusi linkki",
-        "copyLink": "Kopioi linkki"
+        "copyLink": "Kopioi linkki",
+        "mode": "Ketkä voivat käyttää tätä linkkiä?",
+        "modeOneTime": "Yksi henkilö",
+        "modeOneTimeHint": "Linkki lakkaa toimimasta ensimmäisen hyväksynnän jälkeen.",
+        "modeShared": "Useita henkilöitä",
+        "modeSharedHint": "Jaettu linkki, jota useat henkilöt voivat käyttää alla olevien rajojen puitteissa.",
+        "labelLabel": "Linkin nimi (valinnainen)",
+        "labelPlaceholder": "esim. Perhe, Discord",
+        "joinLimitLabel": "Liittymisraja",
+        "unlimitedJoins": "Rajattomasti liittymisiä",
+        "joinsSuffix": "liittymistä",
+        "expiryLabel": "Vanhenee",
+        "neverExpires": "Ei vanhene koskaan",
+        "expiryUnitHour": "tuntia",
+        "expiryUnitDay": "päivää",
+        "expiryUnitWeek": "viikkoa",
+        "quick24h": "24 tuntia",
+        "quick7d": "7 päivää",
+        "quick30d": "30 päivää",
+        "memberOnlyNote": "Henkilöt liittyvät jäseninä. Kutsu ylläpitäjä sähköpostilla tai kertakäyttölinkillä.",
+        "summaryUnlimited": "Tämä linkki pysyy auki, kunnes perut sen.",
+        "summaryCapped": "Enintään {maxUses} henkilöä voi liittyä · vanhenee {expiry} ({expiryDate}).",
+        "sharedCreated": "Jaettu linkki on valmis. Kopioi se ja julkaise siellä, missä ihmiset ovat.",
+        "sharedIntro": "Tässä on jaettu linkkisi ryhmään {groupName}. Enintään {maxUses} jäsentä voi liittyä sillä alla olevien rajojen puitteissa.",
+        "sharedCopyAgain": "Jäsenet voivat kopioida tämän linkin uudelleen odottavista kutsuista.",
+        "sharedShareText": "Liity ryhmään {groupName} Spliit Cloudissa — avaa tämä linkki liittyäksesi:\n{inviteUrl}",
+        "invalidJoinLimit": "Anna rajaksi 2–1000 liittymistä, tai valitse rajaton.",
+        "invalidExpiry": "Anna voimassaoloksi tunnista vuoteen, tai valitse ei koskaan.",
+        "summaryExpiryOnly": "Rajattomasti liittymisiä · vanhenee {expiry} ({expiryDate}).",
+        "otherOption": "Muu…",
+        "sharedIntroUnlimited": "Tässä on jaettu linkkisi ryhmään {groupName}. Uudet jäsenet voivat liittyä sillä alla olevien rajojen puitteissa.",
+        "expiryUnitLabel": "Vanhenemisyksikkö",
+        "summaryCappedNoDate": "Enintään {maxUses} henkilöä voi liittyä · vanhenee {expiry}.",
+        "summaryExpiryOnlyNoDate": "Rajattomasti liittymisiä · vanhenee {expiry}.",
+        "summaryCappedNever": "Enintään {maxUses} henkilöä voi liittyä · ei vanhene koskaan."
       },
       "temporaryNamePlaceholder": "esim. Alexin kämppäkaveri",
       "friendsDescription": "Kutsu joku jakamiltasi ryhmistä.",
@@ -2112,9 +2149,25 @@
         "type": "QR-sessio",
         "fallbackLabel": "Lähi-QR-koodi",
         "viewQr": "Näytä QR-koodi",
-        "expireNow": "Vanhenna nyt"
+        "expireNow": "Vanhenna nyt",
+        "expireDescription": "Koodi lakkaa toimimasta välittömästi. Jo liittyneet pysyvät jäseninä.",
+        "expireTitle": "Vanhennetaanko tämä QR-koodi?"
       },
-      "createdWithoutEmail": "Kutsu vastaanottajalle {email} luotiin, mutta sähköpostia ei lähetetty. Jaa sen sijaan kutsulinkki."
+      "createdWithoutEmail": "Kutsu vastaanottajalle {email} luotiin, mutta sähköpostia ei lähetetty. Jaa sen sijaan kutsulinkki.",
+      "shared": {
+        "type": "Jaettu linkki",
+        "joinedOf": "Liittynyt {count}/{max}",
+        "joinedUnlimited": "Liittynyt {count}",
+        "full": "Täynnä",
+        "copyLink": "Kopioi linkki",
+        "copied": "Jaettu linkki kopioitu.",
+        "joiners": "Ketkä liittyivät",
+        "joinersEmpty": "Kukaan ei ole vielä liittynyt tällä linkillä.",
+        "editLimits": "Muokkaa linkkiä",
+        "expiresWithJoins": "Vanhenee {date} · {joins}",
+        "revokeDescription": "”{name}” lakkaa toimimasta välittömästi. Jo liittyneet pysyvät jäseninä.",
+        "revokeTitle": "Peruutetaanko jaettu linkki?"
+      }
     },
     "changeRoleAria": "Vaihda roolia",
     "removed": "Jäsen poistettu.",
@@ -2263,10 +2316,21 @@
       "emailInvalid": "Syötä kelvollinen sähköpostiosoite.",
       "linkNotShown": "Kutsulinkkiä ei näytetä täällä. Käytä „Luo uusi linkki“ -painiketta listassa, jos haluat jakaa sen uudelleen.",
       "switchToLinkNote": "Tallenna muuttaaksesi tämän kutsun linkiksi. Sähköpostikutsu lakkaa toimimasta.",
-      "savedWithoutEmail": "Muutokset tallennettu, mutta sähköpostia ei lähetetty. Jaa sen sijaan kutsulinkki."
+      "savedWithoutEmail": "Muutokset tallennettu, mutta sähköpostia ei lähetetty. Jaa sen sijaan kutsulinkki.",
+      "sharedLabelLabel": "Linkin nimi",
+      "sharedMaxUsesLabel": "Liittymisraja",
+      "sharedExpiryLabel": "Vanhenee",
+      "sharedNeverExpires": "Ei vanhene koskaan",
+      "sharedExpiresOn": "Uusi voimassaolo: {date}.",
+      "sharedEndsNow": "Rajan laskeminen arvoon {count} tai alle päättää tämän linkin heti.",
+      "regenerateSharedDescription": "Luodaan uusi linkin URL. Liittymät, nimi, rajat ja voimassaolo säilyvät — vain itse linkki muuttuu.",
+      "linkReadySharedDescription": "Jaa se siellä, missä ihmiset ovat. Jäsenet voivat myös kopioida sen uudelleen odottavista kutsuista.",
+      "linkReadyCopyAgain": "Voit kopioida tämän linkin myöhemmin uudelleen odottavista kutsuista.",
+      "sharedKeepExpiry": "Säilytä nykyinen voimassaolo"
     },
     "regenerate": {
-      "title": "Luo uusi linkki"
+      "title": "Luo uusi linkki",
+      "sharedTitle": "Luo uusi jaettu linkki"
     },
     "actionsFor": "Toiminnot: {name}",
     "readOnlyDescription": "Tähän ryhmään kuuluvat henkilöt ja osallistujat. Sähköpostiosoitteet ja kutsutiedot on piilotettu.",
@@ -2901,7 +2965,10 @@
         "destination": "Vastaanottaja",
         "displayName": "Nimi",
         "role": "Rooli",
-        "credential": "Kutsulinkki"
+        "credential": "Kutsulinkki",
+        "label": "Linkin nimi",
+        "maxUses": "Liittymisraja",
+        "expiry": "Voimassaolo"
       }
     },
     "fallback": "Toiminto on kirjattu",

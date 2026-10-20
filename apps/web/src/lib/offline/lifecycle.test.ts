@@ -1,3 +1,4 @@
+import { QueryClient } from '@tanstack/react-query'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { AuthAccount } from '@/lib/auth'
@@ -769,5 +770,40 @@ describe('auth error verification and bounded server-failure (P1)', () => {
     lifecycle.handleConfirmedSignedOut()
     expect(clear).toHaveBeenCalledTimes(1)
     lifecycle.dispose()
+  })
+})
+
+describe('identity transition query ownership', () => {
+  it('discards a fresh public invitation preview when signing in, then preserves same-account results', async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { staleTime: 30_000 } },
+    })
+    const key = ['groups.get', { groupId: 'group', linkInviteToken: 'token' }]
+    queryClient.setQueryData(key, { currentMember: null })
+    const lifecycle = createOfflineLifecycle({
+      readLastAccount: () => null,
+      writeLastAccount: () => {},
+      clearLastAccount: () => {},
+      resolveNamespace: namespaceFor,
+      verifySession: async () => ({
+        kind: 'verified',
+        account: makeAccount('invitee'),
+      }),
+      queryClient,
+      storage: memoryStorage(),
+    })
+    try {
+      await lifecycle.bootstrap()
+      expect(lifecycle.getSnapshot().session).toBe('verified')
+      expect(queryClient.getQueryData(key)).toBeUndefined()
+      queryClient.setQueryData(key, { currentMember: { id: 'member' } })
+      await lifecycle.verifySession({ fresh: true })
+      expect(queryClient.getQueryData(key)).toEqual({
+        currentMember: { id: 'member' },
+      })
+    } finally {
+      lifecycle.dispose()
+      queryClient.clear()
+    }
   })
 })

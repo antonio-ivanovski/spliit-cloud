@@ -23,6 +23,7 @@ export const CREATE_OPERATIONS = {
   expenseComment: 'groups.expenses.comments.create',
   emailInvitation: 'invitations.create',
   linkInvitation: 'invitations.createLink',
+  sharedLinkInvitation: 'invitations.createSharedLink',
   qrInvitation: 'invitations.createQrLink',
   friendLedger: 'friends.create',
   webhook: 'webhooks.create',
@@ -123,6 +124,12 @@ export const CREATE_MUTATION_CATALOG = [
     operation: CREATE_OPERATIONS.linkInvitation,
     source: 'invitations/index.ts',
     symbol: 'createLink',
+  },
+  {
+    mechanism: 'shared',
+    operation: CREATE_OPERATIONS.sharedLinkInvitation,
+    source: 'invitations/index.ts',
+    symbol: 'createSharedLink',
   },
   {
     mechanism: 'shared',

@@ -745,7 +745,10 @@
       "notNow": "לא עכשיו"
     },
     "groupTabsHint": "רוצה לסדר מחדש את לשוניות הקבוצה או להסתיר את אלו שאינך משתמש בהן?",
-    "groupTabsHintLink": "התאם אישית את הלשוניות בהגדרות החשבון"
+    "groupTabsHintLink": "התאם אישית את הלשוניות בהגדרות החשבון",
+    "linkInvitationFullTitle": "קישור ההזמנה הזה מלא",
+    "linkInvitationFullDescription": "כל המקומות בקישור הזה נוצלו. בקשו מחבר קבוצה לשתף קישור חדש.",
+    "linkInvitationSharedUse": "ניתן להשתמש בקישור הזה על ידי מספר אנשים, במסגרת מגבלת ההצטרפות ותוקפו."
   },
   "GroupForm": {
     "title": "מידע על הקבוצה",
@@ -2065,7 +2068,41 @@
         "shareTitle": "הצטרפות ל-{groupName} ב-Spliit Cloud",
         "shareText": "יצרתי את {groupName} עבור ההוצאות המשותפות שלנו ב-Spliit Cloud. הנה קישור הזמנה חד-פעמי — פתחו אותו כדי להצטרף:\n{inviteUrl}",
         "generateNew": "יצירת קישור חדש",
-        "copyLink": "העתקת קישור"
+        "copyLink": "העתקת קישור",
+        "mode": "מי יכול להשתמש בקישור הזה?",
+        "modeOneTime": "אדם אחד",
+        "modeOneTimeHint": "הקישור יפסיק לעבוד לאחר האישור הראשון.",
+        "modeShared": "מספר אנשים",
+        "modeSharedHint": "קישור משותף שמספר אנשים יכולים להשתמש בו, במסגרת המגבלות למטה.",
+        "labelLabel": "שם הקישור (אופציונלי)",
+        "labelPlaceholder": "למשל: משפחה, Discord",
+        "joinLimitLabel": "מגבלת הצטרפות",
+        "unlimitedJoins": "הצטרפויות ללא מגבלה",
+        "joinsSuffix": "הצטרפויות",
+        "expiryLabel": "תוקף",
+        "neverExpires": "ללא תוקף",
+        "expiryUnitHour": "שעות",
+        "expiryUnitDay": "ימים",
+        "expiryUnitWeek": "שבועות",
+        "quick24h": "24 שעות",
+        "quick7d": "7 ימים",
+        "quick30d": "30 ימים",
+        "memberOnlyNote": "אנשים מצטרפים כחברים. כדי להזמין מנהל יש להשתמש בדוא״ל או בקישור חד-פעמי.",
+        "summaryUnlimited": "הקישור הזה נשאר פתוח עד שתבטלו אותו.",
+        "summaryCapped": "עד {maxUses} אנשים יכולים להצטרף · התוקף {expiry} ({expiryDate}).",
+        "sharedCreated": "הקישור המשותף מוכן. יש להעתיק אותו ולפרסם אותו במקום שבו נמצאים האנשים.",
+        "sharedIntro": "זה הקישור המשותף שלך לקבוצה {groupName}. עד {maxUses} חברים יכולים להצטרף איתו, במסגרת המגבלות למטה.",
+        "sharedCopyAgain": "חברים יכולים להעתיק שוב את הקישור הזה מההזמנות הממתינות.",
+        "sharedShareText": "הצטרפו ל-{groupName} ב-Spliit Cloud — פתחו את הקישור הזה כדי להצטרף:\n{inviteUrl}",
+        "invalidJoinLimit": "יש להזין מגבלה בין 2 ל-1000 הצטרפויות, או לבחור ללא מגבלה.",
+        "invalidExpiry": "יש להזין תוקף בין שעה לשנה, או לבחור ללא תוקף.",
+        "summaryExpiryOnly": "הצטרפויות ללא מגבלה · התוקף {expiry} ({expiryDate}).",
+        "otherOption": "אחר…",
+        "sharedIntroUnlimited": "זה הקישור המשותף שלך לקבוצה {groupName}. חברים חדשים יכולים להצטרף איתו, במסגרת המגבלות למטה.",
+        "expiryUnitLabel": "יחידת התוקף",
+        "summaryCappedNoDate": "עד {maxUses} אנשים יכולים להצטרף · התוקף {expiry}.",
+        "summaryExpiryOnlyNoDate": "הצטרפויות ללא מגבלה · התוקף {expiry}.",
+        "summaryCappedNever": "עד {maxUses} אנשים יכולים להצטרף · ללא תוקף."
       },
       "friendsDescription": "הזמינו מישהו מקבוצות ששיתפתם.",
       "selectFriendPlaceholder": "בחרו חבר…",
@@ -2121,9 +2158,25 @@
         "type": "הפעלת QR",
         "fallbackLabel": "קוד QR קרוב",
         "viewQr": "הצגת קוד QR",
-        "expireNow": "בטל תוקף עכשיו"
+        "expireNow": "בטל תוקף עכשיו",
+        "expireDescription": "הקוד יפסיק לעבוד מיד. אנשים שכבר הצטרפו יישארו חברים.",
+        "expireTitle": "לבטל את תוקף קוד ה-QR?"
       },
-      "createdWithoutEmail": "ההזמנה ל-{email} נוצרה, אך לא נשלח דוא\"ל. שלחו קישור הזמנה במקום זאת."
+      "createdWithoutEmail": "ההזמנה ל-{email} נוצרה, אך לא נשלח דוא\"ל. שלחו קישור הזמנה במקום זאת.",
+      "shared": {
+        "type": "קישור משותף",
+        "joinedOf": "הצטרפו {count} מתוך {max}",
+        "joinedUnlimited": "הצטרפו {count}",
+        "full": "מלא",
+        "copyLink": "העתקת הקישור",
+        "copied": "הקישור המשותף הועתק.",
+        "joiners": "מי הצטרף",
+        "joinersEmpty": "אף אחד עדיין לא הצטרף עם הקישור הזה.",
+        "editLimits": "עריכת הקישור",
+        "expiresWithJoins": "יפוג ב-{date} · {joins}",
+        "revokeDescription": "״{name}״ יפסיק לעבוד מיד. אנשים שכבר הצטרפו יישארו חברים.",
+        "revokeTitle": "לבטל את הקישור המשותף?"
+      }
     },
     "changeRoleAria": "שנה תפקיד",
     "remove": "הסר",
@@ -2273,10 +2326,21 @@
       "emailInvalid": "יש להזין כתובת דוא״ל תקינה.",
       "linkNotShown": "קישור ההזמנה אינו מוצג כאן. אם צריך לשתף אותו שוב, יש להשתמש באפשרות \"יצירת קישור חדש\" ברשימה.",
       "switchToLinkNote": "שמור כדי להמיר הזמנה זו לקישור. הזמנת הדוא״ל תפסיק לפעול.",
-      "savedWithoutEmail": "השינויים נשמרו, אך לא נשלח דוא\"ל. שלחו קישור הזמנה במקום זאת."
+      "savedWithoutEmail": "השינויים נשמרו, אך לא נשלח דוא\"ל. שלחו קישור הזמנה במקום זאת.",
+      "sharedLabelLabel": "שם הקישור",
+      "sharedMaxUsesLabel": "מגבלת הצטרפות",
+      "sharedExpiryLabel": "תוקף",
+      "sharedNeverExpires": "ללא תוקף",
+      "sharedExpiresOn": "תוקף חדש: {date}.",
+      "sharedEndsNow": "הורדת המגבלה ל-{count} או פחות מסיימת את הקישור הזה מיד.",
+      "regenerateSharedDescription": "תיווצר כתובת קישור חדשה. ההצטרפויות, השם, המגבלות והתוקף נשארים — רק הקישור עצמו משתנה.",
+      "linkReadySharedDescription": "יש לשתף אותו במקום שבו נמצאים האנשים. חברים יכולים גם להעתיק אותו שוב מההזמנות הממתינות.",
+      "linkReadyCopyAgain": "ניתן להעתיק שוב את הקישור הזה מאוחר יותר מההזמנות הממתינות.",
+      "sharedKeepExpiry": "שמירת התוקף הנוכחי"
     },
     "regenerate": {
-      "title": "יצירת קישור חדש"
+      "title": "יצירת קישור חדש",
+      "sharedTitle": "יצירת קישור משותף חדש"
     },
     "actionsFor": "פעולות עבור {name}",
     "readOnlyDescription": "אנשים ומשתתפים הכלולים בקבוצה הזו. כתובות האימייל ופרטי ההזמנות מוסתרים.",
@@ -2915,7 +2979,10 @@
         "destination": "נמען",
         "displayName": "שם",
         "role": "תפקיד",
-        "credential": "קישור ההזמנה"
+        "credential": "קישור ההזמנה",
+        "label": "שם הקישור",
+        "maxUses": "מגבלת הצטרפות",
+        "expiry": "תוקף"
       }
     },
     "fallback": "נרשמה פעילות",

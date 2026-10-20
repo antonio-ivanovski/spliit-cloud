@@ -3,7 +3,7 @@ import { getTrpcClient } from '@/trpc/client'
 import { authClient } from './auth'
 import { replaceBrowserLocation } from './browser-navigation'
 import { clearLastAccount } from './last-account'
-import { safeLocalReturnPath } from './signup-invite'
+import { buildAuthBounceSearch } from './signup-invite'
 
 export type PasskeyInfo = {
   id: string
@@ -184,13 +184,16 @@ export async function signOutAndReturnToSignIn(): Promise<void> {
   // orphan the endpoint while the per-account onboarding flag stays set.
   clearLastAccount()
   try {
-    const current =
+    const from =
       typeof window === 'undefined'
         ? '/'
         : `${window.location.pathname}${window.location.search}${window.location.hash}`
-    replaceBrowserLocation(
-      `/?redirect=${encodeURIComponent(safeLocalReturnPath(current))}`,
-    )
+    const bounce = buildAuthBounceSearch({
+      writer: 'passkey-reauth',
+      from,
+    })
+    const query = new URLSearchParams(bounce).toString()
+    replaceBrowserLocation(query ? `/?${query}` : '/')
   } catch {
     // The session is already dead at this point: report the navigation, not
     // the sign-out, so the caller does not claim the sign-out failed.

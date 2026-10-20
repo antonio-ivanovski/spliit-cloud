@@ -44,10 +44,20 @@ export type PendingInvitation = {
   ledgerParticipantId: string | null
   isMultiUse: boolean
   useCount: number
+  /** Per-link join cap for shared links (`null` = unlimited). */
+  maxUses: number | null
+  /** Member-facing label for shared links. */
+  label: string | null
+  /** Whether this is a copyable shared link (raw token stored server-side). */
+  isShared: boolean
+  /** Derived liveness: 'expired' | 'full' | null (still joinable). */
+  endedReason: 'expired' | 'full' | null
   /** Accounts that joined via this QR session, oldest first. */
   recentJoiners: QrSessionJoiner[]
   canRevoke: boolean
   canManage: boolean
+  /** Any active member may copy a live shared link's URL. */
+  canCopyLink: boolean
   recipientProfile: RecipientProfile | null
 }
 
@@ -64,13 +74,14 @@ export type InviteTab = 'friends' | 'email' | 'link' | 'qr' | 'unlinked'
 export type QrSession = {
   invitationId: string
   inviteUrl: string
-  expiresAt: Date | string
+  expiresAt: Date | string | null
   createdAt: number
 }
 
 export function isQrSessionExpired(session: {
-  expiresAt: Date | string
+  expiresAt: Date | string | null
 }): boolean {
+  if (!session.expiresAt) return true
   const ms =
     typeof session.expiresAt === 'string'
       ? new Date(session.expiresAt).getTime()
@@ -85,7 +96,7 @@ export function isQrSessionExpired(session: {
 export function createQrSession(input: {
   invitationId: string
   inviteUrl: string
-  expiresAt: Date | string
+  expiresAt: Date | string | null
 }): QrSession {
   return { ...input, createdAt: Date.now() }
 }
@@ -163,6 +174,15 @@ export type UpdatePendingInput = {
   role: InvitableRole
   temporaryName?: string
   delivery: { type: 'EMAIL'; email: string } | { type: 'LINK' }
+  shared?: {
+    label?: string | null
+    maxUses?: number | null
+    /**
+     * Fresh duration from save time; `null` = never expires, `undefined` = no
+     * change (the row's `expiresAt` stays untouched).
+     */
+    expiresIn?: { amount: number; unit: 'hours' | 'days' | 'weeks' } | null
+  }
 }
 
 export function roleLabel(
@@ -224,14 +244,96 @@ export type LinkFormValues = {
   temporaryName?: string | undefined
 }
 
+export type SharedLinkExpiryUnit = 'hours' | 'days' | 'weeks'
+
+/** A shared-link expiry duration; `null` = never expires. */
+export type SharedLinkExpiry = {
+  amount: number
+  unit: SharedLinkExpiryUnit
+} | null
+
+export type SharedLinkFormValues = {
+  mode: 'oneTime' | 'shared'
+  /** Optional label for a shared link (≤40 chars). */
+  label?: string | undefined
+  /** Picker preset for the join cap (`other` reveals the custom input). */
+  joinLimitPreset: string
+  /** Join cap for a shared link; null = unlimited. */
+  maxUses: number | null
+  /** Picker preset for the expiry (`other` reveals the custom input). */
+  expiryPreset: string
+  /** Expiry duration for a shared link; null = never expires. */
+  expiresIn: SharedLinkExpiry
+}
+
+export const SHARED_LINK_DEFAULT_EXPIRY: {
+  amount: number
+  unit: SharedLinkExpiryUnit
+} = { amount: 7, unit: 'days' }
+export {
+  SHARED_LINK_MIN_USES,
+  SHARED_LINK_MAX_USES_LIMIT,
+  SHARED_LINK_LABEL_MAX_LENGTH,
+} from '@spliit/domain/invitations'
+
+/**
+ * Capped join-limit presets for the picker. Unlimited is the default and a
+ * separate option; anything else goes through the "Other" custom input.
+ */
+export const SHARED_LINK_JOIN_PRESETS = [5, 10, 25] as const
+
+/** Expiry presets for the picker (durations from creation/save time). */
+export const SHARED_LINK_EXPIRY_PRESETS: ReadonlyArray<{
+  key: 'quick24h' | 'quick7d' | 'quick30d'
+  amount: number
+  unit: SharedLinkExpiryUnit
+}> = [
+  { key: 'quick24h', amount: 24, unit: 'hours' },
+  { key: 'quick7d', amount: 7, unit: 'days' },
+  { key: 'quick30d', amount: 30, unit: 'days' },
+]
+
+/** The "Other" custom-input fallback when a value matches no preset. */
+export const SHARED_LINK_CUSTOM_PRESET = 'other'
+
+/**
+ * Resolve the picker preset for a join cap: `null` is unlimited, a preset value
+ * maps to its entry, anything else (including out-of-range numbers) falls back
+ * to the custom input.
+ */
+export function joinLimitPresetFor(
+  maxUses: number | null,
+): 'unlimited' | number | typeof SHARED_LINK_CUSTOM_PRESET {
+  if (maxUses == null) return 'unlimited'
+  return (SHARED_LINK_JOIN_PRESETS as readonly number[]).includes(maxUses)
+    ? maxUses
+    : SHARED_LINK_CUSTOM_PRESET
+}
+
+export const sharedLinkFormDefaults: SharedLinkFormValues = {
+  mode: 'oneTime',
+  label: '',
+  // New links default to unlimited joins for a limited time (7 days):
+  // the caps are opt-in through the pickers, not opt-out checkboxes.
+  joinLimitPreset: 'unlimited',
+  maxUses: null,
+  expiryPreset: 'quick7d',
+  expiresIn: SHARED_LINK_DEFAULT_EXPIRY,
+}
+
 export type GeneratedLink = {
   inviteUrl: string
   temporaryName: string | null
   role: InvitableRole
-  expiresAt: Date | string
+  expiresAt: Date | string | null
+  /** Present for shared links (label/limits echoed for the summary). */
+  isShared?: boolean
+  maxUses?: number | null
+  label?: string | null
 }
 
 const dateFormatCache = new Map<string, Intl.DateTimeFormat>()
+const dateTimeFormatCache = new Map<string, Intl.DateTimeFormat>()
 
 function getDateFormat(locale: string, timeZone: string) {
   const key = `${locale}:${timeZone}`
@@ -248,6 +350,23 @@ function getDateFormat(locale: string, timeZone: string) {
   return fmt
 }
 
+function getDateTimeFormat(locale: string, timeZone: string) {
+  const key = `${locale}:${timeZone}`
+  let fmt = dateTimeFormatCache.get(key)
+  if (!fmt) {
+    fmt = new Intl.DateTimeFormat(resolveFormattingLocale(locale), {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZone,
+    })
+    dateTimeFormatCache.set(key, fmt)
+  }
+  return fmt
+}
+
 export function formatDate(
   value: string | Date,
   locale: string,
@@ -255,6 +374,20 @@ export function formatDate(
 ) {
   const date = typeof value === 'string' ? new Date(value) : value
   return getDateFormat(locale, timeZone).format(date)
+}
+
+/**
+ * Exact date + time for invite expiry displays ("Oct 26, 2026, 2:30 PM"):
+ * pending rows, the result panel, and the projected summary all pin the moment
+ * the link dies, not just the day.
+ */
+export function formatDateTime(
+  value: string | Date,
+  locale: string,
+  timeZone = 'UTC',
+) {
+  const date = typeof value === 'string' ? new Date(value) : value
+  return getDateTimeFormat(locale, timeZone).format(date)
 }
 
 export function useMembersDialogs() {
@@ -362,6 +495,24 @@ export function useMembersDialogs() {
       toast({ description: error.message, variant: 'destructive' })
     },
   })
+
+  const createSharedLinkMutation =
+    trpc.invitations.createSharedLink.useMutation({
+      onSuccess: async () => {
+        toast({ description: t('invite.link.sharedCreated') })
+        await Promise.all([
+          utils.invitations.list.invalidate({ groupId }),
+          utils.groups.get.invalidate({ groupId }),
+          utils.groups.getDetails.invalidate({ groupId }),
+          utils.account.members.invalidate({ groupId }),
+          utils.groups.importLinks.listUnlinked.invalidate({ groupId }),
+          utils.account.friends.invalidate(),
+        ])
+      },
+      onError: (error) => {
+        toast({ description: error.message, variant: 'destructive' })
+      },
+    })
 
   const createParticipantMutation = trpc.groups.participants.create.useMutation(
     {
@@ -552,6 +703,7 @@ export function useMembersDialogs() {
     invitations,
     createMutation,
     createLinkMutation,
+    createSharedLinkMutation,
     createParticipantMutation,
     updatePendingMutation,
     regenerateLinkMutation,

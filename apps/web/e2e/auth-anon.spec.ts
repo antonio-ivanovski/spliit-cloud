@@ -14,8 +14,12 @@ test.describe('auth @smoke', () => {
     await page.getByRole('button', { name: 'Create anonymous account' }).click()
 
     // The name policy is enforced before a valid name completes signup.
-    await expect(page.locator('#profile-name')).toBeVisible()
-    await page.locator('#profile-name').fill('x')
+    await expect(
+      page.getByRole('textbox', { name: 'Display name', exact: true }),
+    ).toBeVisible()
+    await page
+      .getByRole('textbox', { name: 'Display name', exact: true })
+      .fill('x')
     await page.getByRole('button', { name: 'Save and continue' }).click()
     await expect(
       page.getByText('Name must be at least 2 characters.'),

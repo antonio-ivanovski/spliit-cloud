@@ -502,9 +502,9 @@ describe('Friend ledger — real DB', () => {
   })
 
   // ───────────────────────────────────────────────────────────────────
-  // 13.7: auto-accept on link-open
+  // 13.7: preview then explicit link acceptance
   // ───────────────────────────────────────────────────────────────────
-  it('auto-accept on link-open: groups.get with a PENDING FRIEND link token accepts the invitation', async () => {
+  it('friend links preview without joining and accept explicitly with the invited role', async () => {
     // Use a fresh recipient so the partial unique index on
     // Group.friendPairKey does not collide with friend groups
     // already created earlier in this test file.
@@ -578,6 +578,17 @@ describe('Friend ledger — real DB', () => {
         email: linkRecipientEmail,
         name: 'Link Recipient',
       }).get({ groupId, linkInviteToken: token })
+
+      expect(
+        await prisma.groupMember.findUnique({
+          where: { groupId_accountId: { groupId, accountId: linkRecipientId } },
+        }),
+      ).toBeNull()
+      await makeInvitationsCaller({
+        accountId: linkRecipientId,
+        email: linkRecipientEmail,
+        name: 'Link Recipient',
+      }).acceptLink({ token, expectedGroupId: groupId })
 
       const after = await prisma.groupMember.findUnique({
         where: { groupId_accountId: { groupId, accountId: linkRecipientId } },

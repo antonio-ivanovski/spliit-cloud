@@ -760,7 +760,10 @@
       "notNow": "Ahora no"
     },
     "groupTabsHint": "¿Quieres reordenar las pestañas del grupo u ocultar las que no usas?",
-    "groupTabsHintLink": "Personalizar las pestañas en la configuración de tu cuenta"
+    "groupTabsHintLink": "Personalizar las pestañas en la configuración de tu cuenta",
+    "linkInvitationFullTitle": "Este enlace de invitación está completo",
+    "linkInvitationFullDescription": "Ya se usaron todos los lugares de este enlace. Pídele a un miembro del grupo que comparta uno nuevo.",
+    "linkInvitationSharedUse": "Varias personas pueden usar este enlace, dentro de su límite de uniones y su vencimiento."
   },
   "GroupForm": {
     "title": "Información del grupo",
@@ -2085,7 +2088,41 @@
         "shareTitle": "Únete a {groupName} en Spliit Cloud",
         "shareText": "Acabo de crear {groupName} para nuestros gastos compartidos en Spliit Cloud. Aquí tienes un enlace de invitación de un solo uso — ábrelo para unirte:\n{inviteUrl}",
         "generateNew": "Generar nuevo enlace",
-        "copyLink": "Copiar enlace"
+        "copyLink": "Copiar enlace",
+        "mode": "¿Quién puede usar este enlace?",
+        "modeOneTime": "Una persona",
+        "modeOneTimeHint": "El enlace dejará de funcionar tras la primera aceptación.",
+        "modeShared": "Varias personas",
+        "modeSharedHint": "Un enlace compartido que varias personas pueden usar, dentro de los límites siguientes.",
+        "labelLabel": "Nombre del enlace (opcional)",
+        "labelPlaceholder": "p. ej. Familia, Discord",
+        "joinLimitLabel": "Límite de uniones",
+        "unlimitedJoins": "Uniones ilimitadas",
+        "joinsSuffix": "uniones",
+        "expiryLabel": "Caduca en",
+        "neverExpires": "No caduca nunca",
+        "expiryUnitHour": "horas",
+        "expiryUnitDay": "días",
+        "expiryUnitWeek": "semanas",
+        "quick24h": "24 horas",
+        "quick7d": "7 días",
+        "quick30d": "30 días",
+        "memberOnlyNote": "Las personas se unen como miembros. Para invitar a un admin, usa el correo o un enlace de un solo uso.",
+        "summaryUnlimited": "Este enlace sigue abierto hasta que lo revoques.",
+        "summaryCapped": "Hasta {maxUses} personas pueden unirse · caduca en {expiry} ({expiryDate}).",
+        "sharedCreated": "Enlace compartido listo. Cópialo y publícalo donde esté tu gente.",
+        "sharedIntro": "Aquí tienes tu enlace compartido para {groupName}. Hasta {maxUses} miembros pueden unirse con él, dentro de los límites siguientes.",
+        "sharedCopyAgain": "Los miembros pueden copiar este enlace de nuevo desde las invitaciones pendientes.",
+        "sharedShareText": "Únete a {groupName} en Spliit Cloud — abre este enlace para unirte:\n{inviteUrl}",
+        "invalidJoinLimit": "Introduce un límite entre 2 y 1000 uniones, o elige «ilimitado».",
+        "invalidExpiry": "Introduce un vencimiento entre 1 hora y 1 año, o elige «nunca».",
+        "summaryExpiryOnly": "Uniones ilimitadas · caduca en {expiry} ({expiryDate}).",
+        "otherOption": "Otro…",
+        "sharedIntroUnlimited": "Aquí tienes tu enlace compartido para {groupName}. Los nuevos miembros pueden unirse con él, dentro de los límites siguientes.",
+        "expiryUnitLabel": "Unidad de caducidad",
+        "summaryCappedNoDate": "Hasta {maxUses} personas pueden unirse · caduca en {expiry}.",
+        "summaryExpiryOnlyNoDate": "Uniones ilimitadas · caduca en {expiry}.",
+        "summaryCappedNever": "Hasta {maxUses} personas pueden unirse · no caduca nunca."
       },
       "temporaryNamePlaceholder": "p. ej. el compañero de piso de Alex",
       "friendsDescription": "Invita a alguien de los grupos que has compartido.",
@@ -2142,9 +2179,25 @@
         "type": "Sesión QR",
         "fallbackLabel": "Código QR cercano",
         "viewQr": "Ver código QR",
-        "expireNow": "Caducar ahora"
+        "expireNow": "Caducar ahora",
+        "expireDescription": "El código dejará de funcionar inmediatamente. Las personas que ya se unieron siguen siendo miembros.",
+        "expireTitle": "¿Caducar este código QR?"
       },
-      "createdWithoutEmail": "Invitación creada para {email}, pero no se envió ningún correo. Comparte un enlace de invitación en su lugar."
+      "createdWithoutEmail": "Invitación creada para {email}, pero no se envió ningún correo. Comparte un enlace de invitación en su lugar.",
+      "shared": {
+        "type": "Enlace compartido",
+        "joinedOf": "{count} de {max} se unieron",
+        "joinedUnlimited": "{count} se unieron",
+        "full": "Completo",
+        "copyLink": "Copiar enlace",
+        "copied": "Enlace compartido copiado.",
+        "joiners": "Quién se unió",
+        "joinersEmpty": "Nadie se unió con este enlace todavía.",
+        "editLimits": "Editar enlace",
+        "expiresWithJoins": "Caduca el {date} · {joins}",
+        "revokeDescription": "\"{name}\" dejará de funcionar inmediatamente. Las personas que ya se unieron siguen siendo miembros.",
+        "revokeTitle": "¿Revocar el enlace compartido?"
+      }
     },
     "changeRoleAria": "Cambiar rol",
     "remove": "Eliminar",
@@ -2297,10 +2350,21 @@
       "emailInvalid": "Introduce una dirección de correo electrónico válida.",
       "linkNotShown": "El enlace de invitación no se muestra aquí. Si necesitas volver a compartirlo, utiliza \"Generar nuevo enlace\" en la lista.",
       "switchToLinkNote": "Guarda para convertir esta invitación en un enlace. La invitación por correo electrónico dejará de funcionar.",
-      "savedWithoutEmail": "Cambios guardados, pero no se envió ningún correo. Comparte un enlace de invitación en su lugar."
+      "savedWithoutEmail": "Cambios guardados, pero no se envió ningún correo. Comparte un enlace de invitación en su lugar.",
+      "sharedLabelLabel": "Nombre del enlace",
+      "sharedMaxUsesLabel": "Límite de uniones",
+      "sharedExpiryLabel": "Caduca en",
+      "sharedNeverExpires": "No caduca nunca",
+      "sharedExpiresOn": "Nuevo vencimiento: {date}.",
+      "sharedEndsNow": "Reducir el límite a {count} o menos termina este enlace de inmediato.",
+      "regenerateSharedDescription": "Se generará una nueva URL. Las uniones, el nombre, los límites y el vencimiento se mantienen — solo cambia el enlace.",
+      "linkReadySharedDescription": "Compártelo donde esté tu gente. Los miembros también pueden copiarlo de nuevo desde las invitaciones pendientes.",
+      "linkReadyCopyAgain": "Puedes copiar este enlace de nuevo más tarde desde las invitaciones pendientes.",
+      "sharedKeepExpiry": "Mantener el vencimiento actual"
     },
     "regenerate": {
-      "title": "Generar nuevo enlace"
+      "title": "Generar nuevo enlace",
+      "sharedTitle": "Generar nuevo enlace compartido"
     },
     "actionsFor": "Acciones para {name}",
     "readOnlyDescription": "Personas y participantes incluidos en este grupo. Las direcciones de correo electrónico y los detalles de las invitaciones están ocultos.",
@@ -2939,7 +3003,10 @@
         "destination": "Destinatario",
         "displayName": "Nombre",
         "role": "Rol",
-        "credential": "Enlace de invitación"
+        "credential": "Enlace de invitación",
+        "label": "Nombre del enlace",
+        "maxUses": "Límite de uniones",
+        "expiry": "Vencimiento"
       }
     },
     "fallback": "Se registró una actividad",

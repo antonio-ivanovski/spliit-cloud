@@ -406,7 +406,10 @@
       "openSettings": "Abrir as configurações do grupo"
     },
     "groupTabsHint": "Quer reordenar as abas do grupo ou ocultar as que você não usa?",
-    "groupTabsHintLink": "Personalizar as abas nas configurações da sua conta"
+    "groupTabsHintLink": "Personalizar as abas nas configurações da sua conta",
+    "linkInvitationFullTitle": "Este link de convite está cheio",
+    "linkInvitationFullDescription": "Todas as vagas deste link foram usadas. Peça a um membro do grupo para compartilhar um novo.",
+    "linkInvitationSharedUse": "Este link pode ser usado por várias pessoas, dentro do limite de entradas e da validade."
   },
   "GroupForm": {
     "NameField": {
@@ -1036,7 +1039,39 @@
         "shareTitle": "Entre em {groupName} no Spliit Cloud",
         "shareText": "Acabei de criar {groupName} para nossas despesas compartilhadas no Spliit Cloud. Aqui está um link de convite de uso único — abra-o para entrar:\n{inviteUrl}",
         "generateNew": "Gerar novo link",
-        "copyLink": "Copiar link"
+        "copyLink": "Copiar link",
+        "mode": "Quem pode usar este link?",
+        "modeOneTime": "Uma pessoa",
+        "modeOneTimeHint": "O link para de funcionar após o primeiro aceite.",
+        "modeShared": "Várias pessoas",
+        "modeSharedHint": "Um link compartilhado que várias pessoas podem usar, dentro dos limites abaixo.",
+        "labelLabel": "Nome do link (opcional)",
+        "labelPlaceholder": "ex.: Família, Discord",
+        "joinLimitLabel": "Limite de entradas",
+        "unlimitedJoins": "Entradas ilimitadas",
+        "joinsSuffix": "entradas",
+        "expiryLabel": "Expira em",
+        "neverExpires": "Nunca expira",
+        "expiryUnitHour": "horas",
+        "expiryUnitDay": "dias",
+        "expiryUnitWeek": "semanas",
+        "quick24h": "24 horas",
+        "quick7d": "7 dias",
+        "quick30d": "30 dias",
+        "memberOnlyNote": "As pessoas entram como membros. Para convidar um admin, use o e-mail ou um link de uso único.",
+        "summaryUnlimited": "Este link fica aberto até você revogá-lo.",
+        "summaryCapped": "Até {maxUses} pessoas podem entrar · expira em {expiry} ({expiryDate}).",
+        "sharedCreated": "Link compartilhado pronto. Copie e publique onde estão suas pessoas.",
+        "sharedIntro": "Aqui está seu link compartilhado para {groupName}. Até {maxUses} membros podem entrar com este link, dentro dos limites abaixo.",
+        "sharedCopyAgain": "Os membros podem copiar este link de novo nos convites pendentes.",
+        "sharedShareText": "Entre para {groupName} no Spliit Cloud — abra este link para entrar:\n{inviteUrl}",
+        "invalidJoinLimit": "Digite um limite entre 2 e 1000 entradas, ou escolha «ilimitado».",
+        "invalidExpiry": "Digite uma validade entre 1 hora e 1 ano, ou escolha «nunca».",
+        "summaryExpiryOnly": "Entradas ilimitadas · expira em {expiry} ({expiryDate}).",
+        "sharedIntroUnlimited": "Aqui está seu link compartilhado para {groupName}. Novos membros podem entrar com este link, dentro dos limites abaixo.",
+        "summaryCappedNoDate": "Até {maxUses} pessoas podem entrar · expira em {expiry}.",
+        "summaryExpiryOnlyNoDate": "Entradas ilimitadas · expira em {expiry}.",
+        "summaryCappedNever": "Até {maxUses} pessoas podem entrar · nunca expira."
       },
       "friendsDescription": "Convide alguém dos grupos que você já compartilhou.",
       "selectFriendPlaceholder": "Selecione um amigo…",
@@ -1066,7 +1101,24 @@
       "email": {
         "type": "Convite por e-mail"
       },
-      "createdWithoutEmail": "Convite criado para {email}, mas nenhum e-mail foi enviado. Compartilhe um link de convite em vez disso."
+      "createdWithoutEmail": "Convite criado para {email}, mas nenhum e-mail foi enviado. Compartilhe um link de convite em vez disso.",
+      "shared": {
+        "type": "Link compartilhado",
+        "joinedOf": "{count} de {max} entraram",
+        "joinedUnlimited": "{count} entraram",
+        "full": "Cheio",
+        "copyLink": "Copiar link",
+        "copied": "Link compartilhado copiado.",
+        "joiners": "Quem entrou",
+        "joinersEmpty": "Ninguém entrou ainda com este link.",
+        "editLimits": "Editar link",
+        "expiresWithJoins": "Expira em {date} · {joins}",
+        "revokeDescription": "\"{name}\" deixará de funcionar imediatamente. As pessoas que já entraram continuam sendo membros.",
+        "revokeTitle": "Revogar o link compartilhado?"
+      },
+      "qr": {
+        "expireDescription": "O código deixará de funcionar imediatamente. As pessoas que já entraram continuam sendo membros."
+      }
     },
     "removeDialog": {
       "description": "As despesas anteriores permanecerão no livro-razão, mas essa pessoa não aparecerá mais na lista de membros nem em novas despesas.",
@@ -1153,10 +1205,20 @@
       "emailInvalid": "Insira um endereço de e-mail válido.",
       "linkNotShown": "O link de convite não é exibido aqui. Se precisar compartilhá-lo novamente, use \"Gerar novo link\" na lista.",
       "switchToLinkNote": "Salve para converter este convite em um link. O convite por e-mail deixará de funcionar.",
-      "savedWithoutEmail": "Alterações salvas, mas nenhum e-mail foi enviado. Compartilhe um link de convite em vez disso."
+      "savedWithoutEmail": "Alterações salvas, mas nenhum e-mail foi enviado. Compartilhe um link de convite em vez disso.",
+      "sharedLabelLabel": "Nome do link",
+      "sharedMaxUsesLabel": "Limite de entradas",
+      "sharedExpiryLabel": "Expira em",
+      "sharedNeverExpires": "Nunca expira",
+      "sharedExpiresOn": "Nova validade: {date}.",
+      "sharedEndsNow": "Reduzir o limite para {count} ou menos encerra este link na hora.",
+      "regenerateSharedDescription": "Um novo URL será gerado. As entradas, o nome, os limites e a validade continuam — só o link muda.",
+      "linkReadySharedDescription": "Compartilhe onde estão suas pessoas. Os membros também podem copiá-lo de novo nos convites pendentes.",
+      "linkReadyCopyAgain": "Você pode copiar este link de novo mais tarde nos convites pendentes."
     },
     "regenerate": {
-      "title": "Gerar novo link"
+      "title": "Gerar novo link",
+      "sharedTitle": "Gerar novo link compartilhado"
     },
     "splitPresets": {
       "loading": "Carregando predefinições de divisão…",
@@ -1525,7 +1587,10 @@
     },
     "invitation": {
       "changedFields": {
-        "credential": "Link de convite"
+        "credential": "Link de convite",
+        "label": "Nome do link",
+        "maxUses": "Limite de entradas",
+        "expiry": "Validade"
       }
     },
     "fallback": "Uma atividade foi registrada",

@@ -376,6 +376,12 @@ export function classifySyncError(
     return { kind: 'cancelled' }
   }
   const code = getErrorCode(error)
+  if (
+    code === 'PRECONDITION_FAILED' &&
+    error instanceof Error &&
+    error.message === 'ANONYMOUS_SETUP_REQUIRED'
+  )
+    return { kind: 'cancelled' }
   const status = getErrorStatus(error)
   if (code === 'UNAUTHORIZED' || status === 401) return { kind: 'auth' }
   if (
@@ -1248,7 +1254,7 @@ export function createOfflineSync(options: OfflineSyncOptions) {
           onConnectivityFailure(catalogOutcome.error)
           return
         }
-        if (classified.kind === 'auth') {
+        if (classified.kind === 'auth' || classified.kind === 'cancelled') {
           setStatus({ phase: 'cancelled', activity: null })
           return
         }
@@ -1540,6 +1546,10 @@ export function createOfflineSync(options: OfflineSyncOptions) {
               snapshot = null
               setStatus({ phase: 'paused-connectivity', activity: null })
               onConnectivityFailure(outcome.error)
+            } else if (classified.kind === 'cancelled') {
+              completedAll = false
+              snapshot = null
+              setStatus({ phase: 'cancelled', activity: null })
             } else if (classified.kind === 'auth') {
               errors[groupId] = 'auth'
               await recordGroupResult(generation, groupId, false, classified)
@@ -1627,10 +1637,7 @@ export function createOfflineSync(options: OfflineSyncOptions) {
               // Transient failures reaching here already consumed their single
               // 5s retry inside the policy, so a failed group never starves
               // the rest: record and continue to other groups.
-              errors[groupId] =
-                classified.kind === 'transient'
-                  ? classified.code
-                  : classified.kind
+              errors[groupId] = classified.code
               await recordGroupResult(generation, groupId, false, classified)
               snapshot = null
             }

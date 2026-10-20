@@ -35,9 +35,14 @@ function makeInvitation(
     ledgerParticipantId: 'lp-1',
     isMultiUse: false,
     useCount: 0,
+    maxUses: null,
+    label: null,
+    isShared: false,
+    endedReason: null,
     recentJoiners: [],
     canRevoke: true,
     canManage: true,
+    canCopyLink: false,
     recipientProfile: null,
     ...overrides,
   }
@@ -128,5 +133,46 @@ describe('RegenerateLinkDialog', () => {
     renderDialog(makeInvitation({ isMultiUse: true }))
     expect(screen.getByText(/fresh 15-minute expiry/i)).toBeInTheDocument()
     expect(screen.queryByText(/fresh 30-day expiry/i)).not.toBeInTheDocument()
+  })
+
+  it('explains credential-only rotation for a shared link row', async () => {
+    mocks.regenerateMutate.mockResolvedValue({
+      invitation: makeInvitation({
+        isMultiUse: true,
+        isShared: true,
+        useCount: 3,
+        maxUses: 10,
+        label: 'Family chat',
+        expiresAt: new Date('2026-03-01T00:00:00Z'),
+      }),
+      inviteUrl: 'http://localhost:3000/groups/grp-1?invite=sharednew',
+    })
+    const { user } = renderDialog(
+      makeInvitation({
+        isMultiUse: true,
+        isShared: true,
+        useCount: 3,
+        maxUses: 10,
+        label: 'Family chat',
+      }),
+    )
+
+    expect(
+      screen.getByRole('heading', { name: 'Generate new shared link' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(/only the link itself changes/i),
+    ).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Generate new link' }))
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('heading', { name: 'New link ready' }),
+      ).toBeInTheDocument()
+    })
+    expect(
+      screen.getByText(/copy it again from Pending invitations/i),
+    ).toBeInTheDocument()
   })
 })

@@ -1,5 +1,3 @@
-import { TRPCError } from '@trpc/server'
-
 import {
   GroupInvitationStatus,
   GroupInvitationType,
@@ -30,10 +28,14 @@ import { renderInvitationEmail } from '../mail/templates/invitation'
 import { allowUserGeneratedEmail } from '../outbound-email-rate-limit'
 import { planSettlementWebhookBatch } from '../webhooks/planner'
 import { getInvitationDisplayName } from './display'
-import {
-  materializePendingInvitationParticipant,
-  reconcileMemberLedgerParticipant,
-} from './ledger-reconciliation'
+import { InvitationError } from './effects/errors'
+import { materializePendingInvitationParticipant } from './ledger-reconciliation'
+
+export { InvitationError } from './effects/errors'
+export {
+  assertCanAcceptEmailInvitation,
+  assertCanDeclineEmailInvitation,
+} from './email-repository'
 
 export type CreateInvitationInput = {
   groupId: string
@@ -48,12 +50,6 @@ export type CreateInvitationInput = {
 }
 
 type InvitationClient = Prisma.TransactionClient | typeof prisma
-
-export class InvitationError extends TRPCError {
-  constructor(message: string) {
-    super({ code: 'BAD_REQUEST', message })
-  }
-}
 
 export async function assertNotInvitingSelf(
   inviterAccountId: string,
@@ -333,6 +329,9 @@ export async function revokeInvitation(opts: {
         data: {
           status: GroupInvitationStatus.REVOKED,
           revokedAt: new Date(),
+          // A revoked shared link must never be retrievable again, even
+          // from a stale client cache: drop the stored plaintext token.
+          linkToken: null,
         },
       }),
       logActivity(
@@ -425,89 +424,6 @@ export async function getRevokeInvitationPreview(opts: {
   }
 }
 
-/** Email match guard for accepting an email-targeted invitation. */
-export function assertCanAcceptEmailInvitation(
-  invitation: { email: string | null; type: GroupInvitationType },
-  accountEmail: string,
-) {
-  if (invitation.type !== GroupInvitationType.EMAIL) {
-    throw new InvitationError('This invitation is not an email invitation.')
-  }
-  if (
-    !invitation.email ||
-    invitation.email.toLowerCase() !== accountEmail.toLowerCase()
-  ) {
-    throw new InvitationError(
-      'Invitation email does not match the authenticated account email',
-    )
-  }
-}
-
-/** Email match guard for declining an email-targeted invitation. */
-export function assertCanDeclineEmailInvitation(
-  invitation: { email: string | null; type: GroupInvitationType },
-  accountEmail: string,
-) {
-  if (invitation.type !== GroupInvitationType.EMAIL) {
-    throw new InvitationError('This invitation is not an email invitation.')
-  }
-  if (
-    !invitation.email ||
-    invitation.email.toLowerCase() !== accountEmail.toLowerCase()
-  ) {
-    throw new InvitationError('This invitation was not sent to your account.')
-  }
-}
-
-/** Mark a pending invitation as declined by the invitee. */
-export async function declineInvitation(opts: {
-  invitationId: string
-  accountEmail: string
-  accountId: string
-}) {
-  const invitation = await prisma.groupInvitation.findUnique({
-    where: { id: opts.invitationId },
-  })
-  if (!invitation) {
-    throw new InvitationError('Invitation not found.')
-  }
-  if (invitation.status !== GroupInvitationStatus.PENDING) {
-    throw new InvitationError('Invitation is no longer pending.')
-  }
-  assertCanDeclineEmailInvitation(invitation, opts.accountEmail)
-  const boss = await getApiBoss()
-  const { updated } = await prisma.$transaction(async (tx) => {
-    const updated = await tx.groupInvitation.update({
-      where: { id: opts.invitationId },
-      data: {
-        status: GroupInvitationStatus.DECLINED,
-      },
-    })
-    if (invitation.ledgerParticipantId) {
-      await adjustSplitPresetsForRemovedParticipant(
-        invitation.ledgerParticipantId,
-        tx,
-      )
-      await removeParticipantFromSubgroup(invitation.ledgerParticipantId, tx)
-    }
-    const activity = await logActivity(
-      invitation.groupId,
-      {
-        type: 'INVITATION_DECLINED',
-        actor: { type: 'ACCOUNT', id: opts.accountId },
-        subject: { type: 'INVITATION', id: opts.invitationId },
-        data: buildInvitationActivityData({
-          displayLabel: getInvitationDisplayName(invitation),
-        }),
-      },
-      tx,
-    )
-    await planNotificationForActivity(tx, activity, {}, { boss })
-    return { updated, activity }
-  })
-  return updated
-}
-
 /**
  * Send the invitation email to the recipient.
  *
@@ -562,87 +478,6 @@ export async function sendInvitationEmail(opts: {
     )
     return false
   }
-}
-
-/** Accept a pending email-targeted invitation for the current account. */
-export async function acceptInvitation(opts: {
-  invitationId: string
-  accountId: string
-  accountEmail: string
-}) {
-  const invitation = await prisma.groupInvitation.findUnique({
-    where: { id: opts.invitationId },
-    include: { group: { include: { ledger: true } } },
-  })
-  if (!invitation) {
-    throw new Error('Invitation not found')
-  }
-  if (invitation.status !== GroupInvitationStatus.PENDING) {
-    throw new Error('Invitation is no longer pending')
-  }
-  assertCanAcceptEmailInvitation(invitation, opts.accountEmail)
-  if (!invitation.group.ledger) {
-    throw new Error('Group has no ledger')
-  }
-
-  const boss = await getApiBoss()
-  const result = await prisma.$transaction(async (tx) => {
-    const member = await tx.groupMember.upsert({
-      where: {
-        groupId_accountId: {
-          groupId: invitation.groupId,
-          accountId: opts.accountId,
-        },
-      },
-      create: {
-        id: randomId(),
-        groupId: invitation.groupId,
-        accountId: opts.accountId,
-        role: invitation.role,
-        status: 'ACTIVE',
-        joinedAt: new Date(),
-      },
-      update: {
-        role: invitation.role,
-        status: 'ACTIVE',
-        joinedAt: new Date(),
-        leftAt: null,
-      },
-    })
-
-    await reconcileMemberLedgerParticipant(tx, {
-      memberId: member.id,
-      ledgerId: invitation.group.ledger!.id,
-      pendingParticipantId: invitation.ledgerParticipantId,
-    })
-
-    await tx.groupInvitation.update({
-      where: { id: invitation.id },
-      data: {
-        status: GroupInvitationStatus.ACCEPTED,
-        acceptedById: opts.accountId,
-        acceptedAt: new Date(),
-      },
-    })
-
-    const activity = await logActivity(
-      invitation.groupId,
-      {
-        type: 'INVITATION_ACCEPTED',
-        actor: { type: 'ACCOUNT', id: opts.accountId },
-        subject: { type: 'INVITATION', id: invitation.id },
-        data: buildInvitationActivityData({
-          displayLabel: getInvitationDisplayName(invitation),
-        }),
-      },
-      tx,
-    )
-
-    await planNotificationForActivity(tx, activity, {}, { boss })
-
-    return { member, activity }
-  })
-  return result.member
 }
 
 /** List pending email invitations targeted at the current account. */

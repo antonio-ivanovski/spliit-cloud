@@ -299,10 +299,7 @@ export function makeOfflineDownloads(
 
   /** Best-effort notification: listener failures never fail a pass. */
   const notify = (fn: () => void): Effect.Effect<void> =>
-    Effect.matchEffect(Effect.sync(fn), {
-      onFailure: () => Effect.void,
-      onSuccess: () => Effect.void,
-    })
+    Effect.ignore(Effect.try(fn))
 
   const attemptStorage = <A>(
     effect: Effect.Effect<A, StorageServiceError>,
@@ -594,6 +591,7 @@ export function makeOfflineDownloads(
           yield* setStatus({ phase: 'paused-connectivity', activity: null })
           return 'paused' as PassOutcome
         }
+        if (classified.kind === 'cancelled') return yield* finish('cancelled')
         if (classified.kind === 'auth') {
           const reverified = yield* attemptVerify
           return yield* finish(reverified ? 'failed' : 'cancelled')
@@ -839,6 +837,7 @@ export function makeOfflineDownloads(
             yield* setStatus({ phase: 'paused-connectivity', activity: null })
             return 'paused' as PassOutcome
           }
+          if (classified.kind === 'cancelled') return yield* finish('cancelled')
           if (classified.kind === 'auth') {
             errors[groupId] = 'auth'
             yield* recordGroupAttempt(
@@ -974,8 +973,7 @@ export function makeOfflineDownloads(
             )
             continue
           }
-          errors[groupId] =
-            classified.kind === 'transient' ? classified.code : classified.kind
+          errors[groupId] = classified.code
           yield* recordGroupAttempt(
             gen,
             groupId,

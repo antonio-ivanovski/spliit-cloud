@@ -302,13 +302,14 @@ describe('QR / nearby session invitations — real DB', () => {
     expect(ttl).toBeGreaterThan(0)
     expect(ttl).toBeLessThanOrEqual(QR_INVITATION_DEFAULT_TTL_MS)
 
-    // Old token is dead, new token works — twice.
+    // Old token is dead (no row matches the old hash), new token
+    // works — twice.
     await expect(
       invitationsCaller({
         accountId: inviteeId,
         email: inviteeEmail,
       }).acceptLink({ token: oldToken }),
-    ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
     const newToken = getInviteToken(rotated.inviteUrl)!
     await invitationsCaller({
       accountId: inviteeId,

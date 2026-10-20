@@ -1,5 +1,6 @@
 import { z } from 'zod'
 
+import { InviteEndedReasons } from '../../lib/invitations/effects'
 import {
   groupInvitationStatusSchema,
   groupInvitationTypeSchema,
@@ -35,11 +36,24 @@ export const invitationSchema = z.object({
   // QR / nearby sessions: multi-use short-lived link invitations.
   isMultiUse: z.boolean().default(false),
   useCount: z.number().default(0),
+  // Shared (general-purpose multi-person) links: per-link join cap
+  // (`null` = unlimited) and an optional member-facing label. Present only
+  // for shared links; one-time links and QR sessions leave the defaults.
+  maxUses: z.number().int().positive().nullable().default(null),
+  label: z.string().nullable().default(null),
+  // Whether the invitation is a copyable shared link (raw token stored).
+  // Never the token itself — use `getLinkUrl` to retrieve the URL.
+  isShared: z.boolean().default(false),
+  // Derived liveness: 'expired' | 'full' | null (still joinable). Only
+  // meaningful for shared links and QR sessions.
+  endedReason: z.enum(['expired', 'full']).nullable().default(null),
   // Accounts that joined via this QR session, oldest first (empty unless
   // multi-use). Resolved from INVITATION_ACCEPTED activities.
   recentJoiners: z.array(qrSessionJoinerSchema).default([]),
   canRevoke: z.boolean().default(false),
   canManage: z.boolean().default(false),
+  // Any active member may copy a live shared link's URL via `getLinkUrl`.
+  canCopyLink: z.boolean().default(false),
   // Profile of the account matching the invitation email, when one exists.
   recipientProfile: recipientProfileSchema.nullable().default(null),
 })
@@ -89,12 +103,12 @@ export const linkInvitationPreviewSchema = z.object({
   temporaryName: z.string().nullable(),
   role: groupRoleSchema,
   usable: z.boolean(),
-  reason: z
-    .enum(['revoked', 'declined', 'accepted', 'expired', 'unknown'])
-    .nullable(),
+  reason: z.enum(InviteEndedReasons).nullable(),
   expiresAt: z.date().nullable(),
   isMultiUse: z.boolean().default(false),
   useCount: z.number().default(0),
+  maxUses: z.number().int().positive().nullable().default(null),
+  isShared: z.boolean().default(false),
   memberCount: z.number().int().nonnegative().default(0),
   memberSample: z.array(shareMemberSampleSchema).default([]),
 })
@@ -121,11 +135,16 @@ export const revokeInvitationPreviewSchema = z.object({
 export const createLinkInvitationOutputSchema = z.object({
   invitationId: z.string(),
   inviteUrl: z.url(),
-  expiresAt: z.date(),
+  // Null when a shared link never expires. One-time links and QR sessions
+  // always carry a date.
+  expiresAt: z.date().nullable(),
   temporaryName: z.string().nullable(),
   role: groupRoleSchema,
   isMultiUse: z.boolean().default(false),
   useCount: z.number().default(0),
+  maxUses: z.number().int().positive().nullable().default(null),
+  label: z.string().nullable().default(null),
+  isShared: z.boolean().default(false),
 })
 
 export const updatePendingInvitationOutputSchema = z.object({

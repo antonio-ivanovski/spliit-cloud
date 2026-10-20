@@ -1448,7 +1448,10 @@
       "notNow": "ليس الآن"
     },
     "groupTabsHint": "تريد إعادة ترتيب تبويبات المجموعة أو إخفاء التي لا تستخدمها؟",
-    "groupTabsHintLink": "خصّص علامات التبويب في إعدادات حسابك"
+    "groupTabsHintLink": "خصّص علامات التبويب في إعدادات حسابك",
+    "linkInvitationFullTitle": "رابط الدعوة هذا ممتلئ",
+    "linkInvitationFullDescription": "تم استخدام جميع أماكن هذا الرابط. اطلب من أحد أعضاء المجموعة مشاركة رابط جديد.",
+    "linkInvitationSharedUse": "يمكن استخدام هذا الرابط من قِبل عدة أشخاص، ضمن حد الانضمامات ومدة الصلاحية."
   },
   "Unsubscribe": {
     "submitting": "جارٍ إلغاء الاشتراك…",
@@ -2887,7 +2890,41 @@
         "copy": "نسخ رابط دعوة",
         "expiresOn": "ينتهي في {date}",
         "intro": "هذا رابط دعوة لمرة واحدة لـ {groupName}. أرسله إلى الشخص الذي تريد دعوته — سيحصل على وصول كامل بمجرد قبوله.",
-        "copyLink": "نسخ الرابط"
+        "copyLink": "نسخ الرابط",
+        "mode": "من يمكنه استخدام هذا الرابط؟",
+        "modeOneTime": "شخص واحد",
+        "modeOneTimeHint": "سيتوقف الرابط عن العمل بعد أول قبول.",
+        "modeShared": "عدة أشخاص",
+        "modeSharedHint": "رابط مشترك يمكن لعدة أشخاص استخدامه، ضمن الحدود أدناه.",
+        "labelLabel": "اسم الرابط (اختياري)",
+        "labelPlaceholder": "مثال: دردشة العائلة، Discord",
+        "joinLimitLabel": "حد الانضمامات",
+        "unlimitedJoins": "انضمامات بلا حد",
+        "joinsSuffix": "انضمامات",
+        "expiryLabel": "ينتهي خلال",
+        "neverExpires": "لا ينتهي أبدًا",
+        "expiryUnitHour": "ساعات",
+        "expiryUnitDay": "أيام",
+        "expiryUnitWeek": "أسابيع",
+        "quick24h": "24 ساعة",
+        "quick7d": "7 أيام",
+        "quick30d": "30 يومًا",
+        "memberOnlyNote": "ينضم الأشخاص كأعضاء. لدعوة مشرف، استخدم البريد الإلكتروني أو رابطًا لمرة واحدة.",
+        "summaryUnlimited": "يبقى هذا الرابط مفتوحًا حتى تلغيه.",
+        "summaryCapped": "يمكن لما يصل إلى {maxUses} من الأشخاص الانضمام · ينتهي خلال {expiry} ({expiryDate}).",
+        "sharedCreated": "الرابط المشترك جاهز. انسخه وانشره حيث يوجد أصدقاؤك.",
+        "sharedIntro": "إليك رابطك المشترك لمجموعة {groupName}. يمكن لما يصل إلى {maxUses} من الأعضاء الانضمام باستخدامه، ضمن الحدود أدناه.",
+        "sharedCopyAgain": "يمكن للأعضاء نسخ هذا الرابط مجددًا من الدعوات المعلقة.",
+        "sharedShareText": "انضم إلى {groupName} على Spliit Cloud — افتح هذا الرابط للانضمام:\n{inviteUrl}",
+        "invalidJoinLimit": "أدخل حدًا بين 2 و1000 انضمام، أو اختر «بلا حد».",
+        "invalidExpiry": "أدخل مدة صلاحية بين ساعة وسنة، أو اختر «بلا انتهاء».",
+        "summaryExpiryOnly": "انضمامات بلا حد · ينتهي خلال {expiry} ({expiryDate}).",
+        "otherOption": "أخرى…",
+        "sharedIntroUnlimited": "إليك رابطك المشترك لمجموعة {groupName}. يمكن للأعضاء الجدد الانضمام باستخدامه، ضمن الحدود أدناه.",
+        "expiryUnitLabel": "وحدة مدة الصلاحية",
+        "summaryCappedNoDate": "يمكن لما يصل إلى {maxUses} من الأشخاص الانضمام · ينتهي خلال {expiry}.",
+        "summaryExpiryOnlyNoDate": "انضمامات بلا حد · ينتهي خلال {expiry}.",
+        "summaryCappedNever": "يمكن لما يصل إلى {maxUses} من الأشخاص الانضمام · لا ينتهي أبدًا."
       },
       "tab": {
         "link": "رابط دعوة",
@@ -2981,9 +3018,25 @@
         "type": "جلسة QR",
         "fallbackLabel": "رمز QR قريب",
         "viewQr": "عرض رمز QR",
-        "expireNow": "إنهاء الصلاحية الآن"
+        "expireNow": "إنهاء الصلاحية الآن",
+        "expireDescription": "سيتوقف الرمز عن العمل فورًا. الأشخاص الذين انضموا بالفعل سيبقون أعضاءً.",
+        "expireTitle": "إنهاء صلاحية رمز QR هذا؟"
       },
-      "createdWithoutEmail": "تم إنشاء الدعوة إلى {email}، ولكن لم يُرسل أي بريد إلكتروني. أرسل رابط دعوة بدلاً من ذلك."
+      "createdWithoutEmail": "تم إنشاء الدعوة إلى {email}، ولكن لم يُرسل أي بريد إلكتروني. أرسل رابط دعوة بدلاً من ذلك.",
+      "shared": {
+        "type": "رابط مشترك",
+        "joinedOf": "انضم {count} من {max}",
+        "joinedUnlimited": "انضم {count}",
+        "full": "ممتلئ",
+        "copyLink": "نسخ الرابط",
+        "copied": "تم نسخ الرابط المشترك.",
+        "joiners": "من انضم",
+        "joinersEmpty": "لم ينضم أحد بهذا الرابط بعد.",
+        "editLimits": "تعديل الرابط",
+        "expiresWithJoins": "ينتهي في {date} · {joins}",
+        "revokeDescription": "«{name}» سيتوقف عن العمل فورًا. الأشخاص الذين انضموا بالفعل سيبقون أعضاءً.",
+        "revokeTitle": "إلغاء الرابط المشترك؟"
+      }
     },
     "subgroups": {
       "title": "المجموعات الفرعية",
@@ -3048,10 +3101,21 @@
       "emailInvalid": "أدخل عنوان بريد إلكتروني صالحاً.",
       "linkNotShown": "لا يظهر رابط الدعوة هنا. استخدم \"إنشاء رابط جديد\" من القائمة إذا احتجت إلى مشاركته مرة أخرى.",
       "switchToLinkNote": "احفظ لتحويل هذه الدعوة إلى رابط. ستتوقف دعوة البريد الإلكتروني عن العمل.",
-      "savedWithoutEmail": "تم حفظ التغييرات، ولكن لم يُرسل أي بريد إلكتروني. أرسل رابط دعوة بدلاً من ذلك."
+      "savedWithoutEmail": "تم حفظ التغييرات، ولكن لم يُرسل أي بريد إلكتروني. أرسل رابط دعوة بدلاً من ذلك.",
+      "sharedLabelLabel": "اسم الرابط",
+      "sharedMaxUsesLabel": "حد الانضمامات",
+      "sharedExpiryLabel": "ينتهي خلال",
+      "sharedNeverExpires": "لا ينتهي أبدًا",
+      "sharedExpiresOn": "الصلاحية الجديدة: {date}.",
+      "sharedEndsNow": "خفض الحد إلى {count} أو أقل ينهي هذا الرابط فورًا.",
+      "regenerateSharedDescription": "سيتم إنشاء عنوان رابط جديد. تبقى الانضمامات والاسم والحدود والصلاحية كما هي — يتغير الرابط نفسه فقط.",
+      "linkReadySharedDescription": "شاركه حيث يوجد أصدقاؤك. يمكن للأعضاء أيضًا نسخه مجددًا من الدعوات المعلقة.",
+      "linkReadyCopyAgain": "يمكنك نسخ هذا الرابط مجددًا لاحقًا من الدعوات المعلقة.",
+      "sharedKeepExpiry": "الاحتفاظ بالصلاحية الحالية"
     },
     "regenerate": {
-      "title": "إنشاء رابط جديد"
+      "title": "إنشاء رابط جديد",
+      "sharedTitle": "إنشاء رابط مشترك جديد"
     },
     "actionsFor": "إجراءات {name}",
     "readOnlyDescription": "الأشخاص والمشاركون المشمولون في هذه المجموعة. عناوين البريد الإلكتروني وتفاصيل الدعوات مخفية.",
@@ -3387,7 +3451,10 @@
         "destination": "المستلم",
         "displayName": "الاسم",
         "role": "الدور",
-        "credential": "رابط الدعوة"
+        "credential": "رابط الدعوة",
+        "label": "اسم الرابط",
+        "maxUses": "حد الانضمامات",
+        "expiry": "الصلاحية"
       }
     },
     "group": {

@@ -165,11 +165,9 @@ describe('RequireAuth', () => {
       refetch: vi.fn(),
     })
 
-    // currentPathWithSearch uses window.location
-    const _originalLocation = window.location
-    // We can't easily stub window.location.pathname without losing the
-    // reference, so we just check that Navigate is rendered with to="/"
-    // and that a redirect parameter is present in search.
+    // currentPathWithSearch uses window.location; the afterEach hook resets
+    // it to `/expenses`, so the bounce preserves that path.
+    window.history.replaceState(null, '', '/expenses?showSettlements=false')
 
     render(
       <RequireAuth>
@@ -179,7 +177,9 @@ describe('RequireAuth', () => {
 
     const navigate = screen.getByTestId('navigate')
     expect(navigate).toHaveAttribute('data-to', '/')
-    expect(navigate.getAttribute('data-search')).toContain('redirect')
+    expect(JSON.parse(navigate.getAttribute('data-search') ?? '{}')).toEqual({
+      redirect: '/expenses?showSettlements=false',
+    })
     expect(screen.queryByTestId('child')).not.toBeInTheDocument()
   })
 
@@ -253,6 +253,59 @@ describe('RequireAuth', () => {
     expect(screen.queryByTestId('child')).not.toBeInTheDocument()
   })
 
+  it('lifts an invite token into a structured param on the sign-in bounce', () => {
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: null,
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+    // A re-gated page can carry the token nested in a legacy redirect: the
+    // bounce must lift it out, never re-nest it.
+    window.history.replaceState(
+      null,
+      '',
+      '/groups/group-1?redirect=%2Fgroups%2Fgroup-1%3Finvite%3Dinvite-token',
+    )
+
+    render(
+      <RequireAuth>
+        <div data-testid="child">group</div>
+      </RequireAuth>,
+    )
+    const navigate = screen.getByTestId('navigate')
+    expect(navigate).toHaveAttribute('data-to', '/')
+    const search = JSON.parse(navigate.getAttribute('data-search') ?? '{}')
+    expect(search).toMatchObject({
+      redirect: '/groups/group-1',
+      invite: 'invite-token',
+    })
+    expect(JSON.stringify(search)).not.toContain('redirect=%2F')
+    expect(screen.queryByTestId('child')).not.toBeInTheDocument()
+  })
+
+  it('never emits a self-bounce when already on the landing page', () => {
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: null,
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+    window.history.replaceState(null, '', '/?redirect=%2F')
+
+    render(
+      <RequireAuth>
+        <div data-testid="child">protected content</div>
+      </RequireAuth>,
+    )
+    const navigate = screen.getByTestId('navigate')
+    expect(navigate).toHaveAttribute('data-to', '/')
+    expect(navigate.getAttribute('data-search')).toBe('{}')
+    expect(screen.queryByTestId('child')).not.toBeInTheDocument()
+  })
+
   it('lets signed-out visitors through when the URL has a viewKey', () => {
     vi.mocked(useCurrentAccount).mockReturnValue({
       data: null,
@@ -309,6 +362,7 @@ describe('RequireAuth', () => {
       error: null,
       refetch: vi.fn(),
     })
+    window.history.replaceState(null, '', '/expenses')
 
     render(
       <RequireAuth>
@@ -318,7 +372,9 @@ describe('RequireAuth', () => {
 
     const navigate = screen.getByTestId('navigate')
     expect(navigate).toHaveAttribute('data-to', '/auth/complete-profile')
-    expect(navigate.getAttribute('data-search')).toContain('redirect')
+    expect(JSON.parse(navigate.getAttribute('data-search') ?? '{}')).toEqual({
+      redirect: '/expenses',
+    })
     expect(screen.queryByTestId('child')).not.toBeInTheDocument()
   })
 

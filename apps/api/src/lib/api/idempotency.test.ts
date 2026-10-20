@@ -295,6 +295,7 @@ describe('create idempotency primitives', () => {
         'linkInvitation',
         'participant',
         'qrInvitation',
+        'sharedLinkInvitation',
         'splitPreset',
         'subgroup',
         'webhook',

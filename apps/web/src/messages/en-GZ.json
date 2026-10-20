@@ -603,7 +603,10 @@
         "destination": "recipient",
         "displayName": "name",
         "role": "role",
-        "credential": "invite link"
+        "credential": "invite link",
+        "label": "link label",
+        "maxUses": "join cap",
+        "expiry": "expiry"
       }
     },
     "member": {
@@ -2961,7 +2964,10 @@
       "notNow": "not now"
     },
     "groupTabsHint": "wanna reorder the group tabs or hide the ones you never use?",
-    "groupTabsHintLink": "customize tabs in your account settings"
+    "groupTabsHintLink": "customize tabs in your account settings",
+    "linkInvitationFullTitle": "this invite link is full",
+    "linkInvitationFullDescription": "this invite link is all used up. ask someone in the group to share a fresh one.",
+    "linkInvitationSharedUse": "a bunch of people can use this link, within its join limit and expiry."
   },
   "Header": {
     "signIn": "sign in",
@@ -3128,9 +3134,25 @@
         "type": "qr session",
         "fallbackLabel": "nearby qr code",
         "viewQr": "view qr code",
-        "expireNow": "expire now"
+        "expireNow": "expire now",
+        "expireDescription": "the code stops working immediately. anyone who already joined stays a member.",
+        "expireTitle": "expire this qr code?"
       },
-      "createdWithoutEmail": "invite for {email} is made, but no email went out. drop a link invite instead."
+      "createdWithoutEmail": "invite for {email} is made, but no email went out. drop a link invite instead.",
+      "shared": {
+        "type": "shared link",
+        "joinedOf": "{count} of {max} in",
+        "joinedUnlimited": "{count} in so far",
+        "full": "full",
+        "copyLink": "copy link",
+        "copied": "shared link copied.",
+        "joiners": "who joined",
+        "joinersEmpty": "nobody joined with this link yet.",
+        "editLimits": "edit link",
+        "expiresWithJoins": "expires {date} · {joins}",
+        "revokeDescription": "“{name}” stops working immediately. anyone who already joined stays a member.",
+        "revokeTitle": "revoke the shared link?"
+      }
     },
     "invite": {
       "title": "add people",
@@ -3161,7 +3183,41 @@
         "shareTitle": "join {groupName} on Spliit Cloud",
         "shareText": "I just made {groupName} for our shared expenses on Spliit Cloud. here is a one-time invite link — open it to join:\n{inviteUrl}",
         "generateNew": "generate a fresh link",
-        "copyLink": "copy the link"
+        "copyLink": "copy the link",
+        "mode": "who can use this link?",
+        "modeOneTime": "one person",
+        "modeOneTimeHint": "the link stops working after the first accept.",
+        "modeShared": "multiple people",
+        "modeSharedHint": "a shared link a bunch of people can use, within the limits below.",
+        "labelLabel": "link label (optional)",
+        "labelPlaceholder": "e.g. family chat, discord",
+        "joinLimitLabel": "join limit",
+        "unlimitedJoins": "unlimited joins",
+        "joinsSuffix": "joins, fr",
+        "expiryLabel": "expires in",
+        "neverExpires": "never expires",
+        "expiryUnitHour": "hrs",
+        "expiryUnitDay": "dayz, fr",
+        "expiryUnitWeek": "wks",
+        "quick24h": "24 hrs",
+        "quick7d": "7 days, lock in",
+        "quick30d": "30 days, lock in",
+        "memberOnlyNote": "people join as members. to invite an admin, use email or a one-time link.",
+        "summaryUnlimited": "this link stays open until you revoke it.",
+        "summaryCapped": "up to {maxUses} people can join · expires {expiry} ({expiryDate}).",
+        "sharedCreated": "shared link ready. copy it and drop it wherever your people are.",
+        "sharedIntro": "here's your shared link for {groupName}. up to {maxUses} members can join with it, within the limits below.",
+        "sharedCopyAgain": "members can copy this link again from pending invitations.",
+        "sharedShareText": "join {groupName} on Spliit Cloud — open this link to join:\n{inviteUrl}",
+        "invalidJoinLimit": "enter a join limit between 2 and 1000, or pick unlimited.",
+        "invalidExpiry": "enter an expiry between 1 hour and 1 year, or pick never.",
+        "summaryExpiryOnly": "unlimited joins · expires {expiry} ({expiryDate}).",
+        "otherOption": "other…",
+        "sharedIntroUnlimited": "here's your shared link for {groupName}. new members can join with it, within the limits below.",
+        "expiryUnitLabel": "expiry unit",
+        "summaryCappedNoDate": "up to {maxUses} people can join · expires {expiry}.",
+        "summaryExpiryOnlyNoDate": "unlimited joins · expires {expiry}.",
+        "summaryCappedNever": "up to {maxUses} people can join · never expires."
       },
       "tab": {
         "email": "email mode",
@@ -3340,10 +3396,21 @@
       "emailInvalid": "gimme a valid email, fr",
       "linkNotShown": "no invite link shown here. tap \"generate a fresh link\" on the list if u need to share again, fr",
       "switchToLinkNote": "save to convert this invite into a link. the email invite stops working, no cap",
-      "savedWithoutEmail": "changes saved, huge W, but no email went out. drop a link invite instead."
+      "savedWithoutEmail": "changes saved, huge W, but no email went out. drop a link invite instead.",
+      "sharedLabelLabel": "link label",
+      "sharedMaxUsesLabel": "join limit",
+      "sharedExpiryLabel": "expires in",
+      "sharedNeverExpires": "never expires",
+      "sharedExpiresOn": "new expiry: {date}.",
+      "sharedEndsNow": "lowering the join limit to {count} or below ends this link immediately.",
+      "regenerateSharedDescription": "a new link url will be generated. joins so far, the label, the limits, and the expiry stay the same — only the link itself changes.",
+      "linkReadySharedDescription": "share it wherever your people are. members can also copy it again from pending invitations.",
+      "linkReadyCopyAgain": "you can copy this link again later from pending invitations.",
+      "sharedKeepExpiry": "keep current expiry"
     },
     "regenerate": {
-      "title": "generate a fresh link"
+      "title": "generate a fresh link",
+      "sharedTitle": "generate new shared link"
     },
     "actionsFor": "actions for {name}",
     "readOnlyDescription": "people and participants in this group. email addresses and invite details stay hidden.",

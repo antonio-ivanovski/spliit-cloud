@@ -751,7 +751,10 @@
       "notNow": "Teď ne"
     },
     "groupTabsHint": "Chcete změnit pořadí karet skupiny nebo skrýt ty, které nepoužíváte?",
-    "groupTabsHintLink": "Přizpůsobit karty v nastavení účtu"
+    "groupTabsHintLink": "Přizpůsobit karty v nastavení účtu",
+    "linkInvitationFullTitle": "Tento odkaz pozvánky je plný",
+    "linkInvitationFullDescription": "Všechna místa tohoto odkazu jsou obsazena. Požádejte člena skupiny o sdílení nového.",
+    "linkInvitationSharedUse": "Tento odkaz může použít několik lidí v rámci limitu připojení a platnosti."
   },
   "GroupForm": {
     "title": "Informace o skupině",
@@ -2072,7 +2075,41 @@
         "shareTitle": "Připojte se ke skupině {groupName} na Spliit Cloud",
         "shareText": "Právě jsem vytvořil(a) skupinu {groupName} pro naše sdílené výdaje na Spliit Cloud. Zde je jednorázový odkaz pozvánky — otevřete ho a připojte se:\n{inviteUrl}",
         "generateNew": "Vygenerovat nový odkaz",
-        "copyLink": "Kopírovat odkaz"
+        "copyLink": "Kopírovat odkaz",
+        "mode": "Kdo může tento odkaz použít?",
+        "modeOneTime": "Jeden člověk",
+        "modeOneTimeHint": "Odkaz přestane fungovat po prvním přijetí.",
+        "modeShared": "Více lidí",
+        "modeSharedHint": "Sdílený odkaz, který může v rámci níže uvedených limitů použít více lidí.",
+        "labelLabel": "Název odkazu (volitelné)",
+        "labelPlaceholder": "např. Rodina, Discord",
+        "joinLimitLabel": "Limit připojení",
+        "unlimitedJoins": "Neomezená připojení",
+        "joinsSuffix": "připojení",
+        "expiryLabel": "Platnost",
+        "neverExpires": "Nikdy nevyprší",
+        "expiryUnitHour": "hodin",
+        "expiryUnitDay": "dnů",
+        "expiryUnitWeek": "týdnů",
+        "quick24h": "24 hodin",
+        "quick7d": "7 dnů",
+        "quick30d": "30 dnů",
+        "memberOnlyNote": "Lidé se připojují jako členové. Pro pozvání admina použijte e-mail nebo jednorázový odkaz.",
+        "summaryUnlimited": "Tento odkaz zůstane otevřený, dokud ho neodvoláte.",
+        "summaryCapped": "Může se připojit až {maxUses} lidí · vyprší {expiry} ({expiryDate}).",
+        "sharedCreated": "Sdílený odkaz je připraven. Zkopírujte ho a sdílejte tam, kde jsou vaši lidé.",
+        "sharedIntro": "Zde je váš sdílený odkaz pro skupinu {groupName}. Až {maxUses} členů se s ním může připojit, v rámci níže uvedených limitů.",
+        "sharedCopyAgain": "Členové si mohou tento odkaz znovu zkopírovat v čekajících pozvánkách.",
+        "sharedShareText": "Připojte se ke skupině {groupName} na Spliit Cloud — otevřením tohoto odkazu se připojíte:\n{inviteUrl}",
+        "invalidJoinLimit": "Zadejte limit od 2 do 1000 připojení, nebo zvolte „neomezeně“.",
+        "invalidExpiry": "Zadejte platnost od 1 hodiny do 1 roku, nebo zvolte „nikdy“.",
+        "summaryExpiryOnly": "Neomezená připojení · vyprší {expiry} ({expiryDate}).",
+        "otherOption": "Jiné…",
+        "sharedIntroUnlimited": "Zde je váš sdílený odkaz pro skupinu {groupName}. Noví členové se s ním mohou připojit, v rámci níže uvedených limitů.",
+        "expiryUnitLabel": "Jednotka platnosti",
+        "summaryCappedNoDate": "Může se připojit až {maxUses} lidí · vyprší {expiry}.",
+        "summaryExpiryOnlyNoDate": "Neomezená připojení · vyprší {expiry}.",
+        "summaryCappedNever": "Může se připojit až {maxUses} lidí · nikdy nevyprší."
       },
       "temporaryNamePlaceholder": "např. Alexův spolubydlící",
       "friendsDescription": "Pozvěte někoho ze skupin, které jste sdíleli.",
@@ -2130,9 +2167,25 @@
         "type": "QR relace",
         "fallbackLabel": "QR kód pro okolí",
         "viewQr": "Zobrazit QR kód",
-        "expireNow": "Ukončit platnost"
+        "expireNow": "Ukončit platnost",
+        "expireDescription": "Kód okamžitě přestane fungovat. Lidé, kteří se již připojili, zůstanou členy.",
+        "expireTitle": "Ukončit platnost tohoto QR kódu?"
       },
-      "createdWithoutEmail": "Pozvánka pro {email} byla vytvořena, ale e-mail nebyl odeslán. Sdílejte místo toho odkaz pozvánky."
+      "createdWithoutEmail": "Pozvánka pro {email} byla vytvořena, ale e-mail nebyl odeslán. Sdílejte místo toho odkaz pozvánky.",
+      "shared": {
+        "type": "Sdílený odkaz",
+        "joinedOf": "Připojeno {count} z {max}",
+        "joinedUnlimited": "Připojeno {count}",
+        "full": "Plný",
+        "copyLink": "Kopírovat odkaz",
+        "copied": "Sdílený odkaz zkopírován.",
+        "joiners": "Kdo se připojil",
+        "joinersEmpty": "Pomocí tohoto odkazu se zatím nikdo nepřipojil.",
+        "editLimits": "Upravit odkaz",
+        "expiresWithJoins": "Vyprší {date} · {joins}",
+        "revokeDescription": "„{name}“ okamžitě přestane fungovat. Lidé, kteří se již připojili, zůstanou členy.",
+        "revokeTitle": "Odvolat sdílený odkaz?"
+      }
     },
     "changeRoleAria": "Změnit roli",
     "remove": "Odebrat",
@@ -2283,10 +2336,21 @@
       "emailInvalid": "Zadejte platnou e-mailovou adresu.",
       "linkNotShown": "Odkaz pozvánky zde není zobrazen. Pokud jej potřebujete znovu sdílet, použijte v seznamu možnost „Vygenerovat nový odkaz“.",
       "switchToLinkNote": "Uložte pro převod této pozvánky na odkaz. E-mailová pozvánka přestane fungovat.",
-      "savedWithoutEmail": "Změny uloženy, ale e-mail nebyl odeslán. Sdílejte místo toho odkaz pozvánky."
+      "savedWithoutEmail": "Změny uloženy, ale e-mail nebyl odeslán. Sdílejte místo toho odkaz pozvánky.",
+      "sharedLabelLabel": "Název odkazu",
+      "sharedMaxUsesLabel": "Limit připojení",
+      "sharedExpiryLabel": "Platnost",
+      "sharedNeverExpires": "Nikdy nevyprší",
+      "sharedExpiresOn": "Nová platnost: {date}.",
+      "sharedEndsNow": "Snížení limitu na {count} nebo níže tento odkaz okamžitě ukončí.",
+      "regenerateSharedDescription": "Vygeneruje se nová URL odkazu. Připojení, název, limity i platnost zůstanou — změní se pouze samotný odkaz.",
+      "linkReadySharedDescription": "Sdílejte ho tam, kde jsou vaši lidé. Členové si ho mohou také znovu zkopírovat v čekajících pozvánkách.",
+      "linkReadyCopyAgain": "Tento odkaz si budete moci později znovu zkopírovat v čekajících pozvánkách.",
+      "sharedKeepExpiry": "Ponechat aktuální platnost"
     },
     "regenerate": {
-      "title": "Vygenerovat nový odkaz"
+      "title": "Vygenerovat nový odkaz",
+      "sharedTitle": "Vygenerovat nový sdílený odkaz"
     },
     "actionsFor": "Akce pro {name}",
     "readOnlyDescription": "Lidé a účastníci zahrnutí do této skupiny. E-mailové adresy a podrobnosti pozvánek jsou skryté.",
@@ -2925,7 +2989,10 @@
         "destination": "Příjemce",
         "displayName": "Jméno",
         "role": "Úloha",
-        "credential": "Odkaz pozvánky"
+        "credential": "Odkaz pozvánky",
+        "label": "Název odkazu",
+        "maxUses": "Limit připojení",
+        "expiry": "Platnost"
       }
     },
     "fallback": "Byla zaznamenána aktivita",

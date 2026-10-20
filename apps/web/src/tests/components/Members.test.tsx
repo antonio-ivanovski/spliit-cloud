@@ -85,6 +85,12 @@ vi.mock('@/trpc/client', () => {
             return { mutateAsync: mockCreateLinkMutation, isPending: false }
           },
         },
+        createSharedLink: {
+          useMutation: () => ({
+            mutateAsync: vi.fn(),
+            isPending: false,
+          }),
+        },
         updatePending: {
           useMutation: () => ({
             mutateAsync: vi.fn(),
@@ -106,6 +112,12 @@ vi.mock('@/trpc/client', () => {
         revoke: {
           useMutation: () => ({
             mutate: vi.fn(),
+            mutateAsync: vi.fn().mockResolvedValue({}),
+            isPending: false,
+          }),
+        },
+        getLinkUrl: {
+          useMutation: () => ({
             mutateAsync: vi.fn().mockResolvedValue({}),
             isPending: false,
           }),

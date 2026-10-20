@@ -611,32 +611,64 @@ describe('quota pressure', () => {
 })
 
 describe('connectivity recovery', () => {
-  it('pauses on connectivity loss and resumes on reconnect', async () => {
-    let catalogAttempts = 0
-    let connectivityReports = 0
-    const ctx = harness({
-      catalog: makeCatalog(['g1']),
-      fetchCatalogImpl: async () => {
-        catalogAttempts += 1
-        if (catalogAttempts === 1) throw new TypeError('fetch failed')
-        return makeCatalog(['g1'])
-      },
-      onConnectivityFailure: () => {
-        connectivityReports += 1
-      },
-    })
-    await Effect.runPromise(ctx.downloads.requestDownload(FULL))
-    const paused = await Effect.runPromise(ctx.downloads.snapshot)
-    expect(paused.phase).toBe('paused-connectivity')
-    expect(connectivityReports).toBe(1)
-    await Effect.runPromise(ctx.downloads.handleReconnect)
-    const recovered = await Effect.runPromise(ctx.downloads.snapshot)
-    expect(recovered.phase).toBe('done')
-    expect(ctx.storage.calls.commits).toEqual(['g1'])
-  })
+  it.each(['none', 'connectivity', 'broadcast'] as const)(
+    'pauses and resumes even when the %s listener throws',
+    async (throwingListener) => {
+      let catalogAttempts = 0
+      let connectivityReports = 0
+      const ctx = harness({
+        catalog: makeCatalog(['g1']),
+        fetchCatalogImpl: async () => {
+          catalogAttempts += 1
+          if (catalogAttempts === 1) throw new TypeError('fetch failed')
+          return makeCatalog(['g1'])
+        },
+        onConnectivityFailure: () => {
+          connectivityReports += 1
+          if (throwingListener === 'connectivity')
+            throw new Error('listener failed')
+        },
+        broadcast: () => {
+          if (throwingListener === 'broadcast')
+            throw new Error('broadcast failed')
+        },
+      })
+      await Effect.runPromise(ctx.downloads.requestDownload(FULL))
+      const paused = await Effect.runPromise(ctx.downloads.snapshot)
+      expect(paused.phase).toBe('paused-connectivity')
+      expect(connectivityReports).toBe(1)
+      await Effect.runPromise(ctx.downloads.handleReconnect)
+      const recovered = await Effect.runPromise(ctx.downloads.snapshot)
+      expect(recovered.phase).toBe('done')
+      expect(ctx.storage.calls.commits).toEqual(['g1'])
+    },
+  )
 })
 
 describe('auth and access outcomes', () => {
+  it('stops quietly when the API requires anonymous onboarding, then downloads after setup', async () => {
+    let complete = false
+    const ctx = harness({
+      catalog: makeCatalog([]),
+      fetchCatalogImpl: async () => {
+        if (!complete)
+          throw Object.assign(new Error('ANONYMOUS_SETUP_REQUIRED'), {
+            data: { code: 'PRECONDITION_FAILED' },
+          })
+        return makeCatalog([])
+      },
+    })
+    await Effect.runPromise(ctx.downloads.requestDownload(FULL))
+    expect((await Effect.runPromise(ctx.downloads.snapshot)).phase).toBe(
+      'cancelled',
+    )
+    expect(ctx.storage.calls.replaceCatalog).toBe(0)
+    complete = true
+    await Effect.runPromise(ctx.downloads.requestDownload(FULL))
+    expect((await Effect.runPromise(ctx.downloads.snapshot)).phase).toBe('done')
+    expect(ctx.storage.calls.replaceCatalog).toBe(1)
+  })
+
   it('re-verifies on 401 and continues when the session is live', async () => {
     const ctx = harness({
       catalog: makeCatalog(['g1', 'g2']),

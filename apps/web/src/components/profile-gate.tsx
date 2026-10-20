@@ -1,6 +1,7 @@
 import { Navigate, useRouterState } from '@tanstack/react-router'
 import { createContext, type PropsWithChildren } from 'react'
 
+import { buildAuthBounceSearch } from '@/lib/signup-invite'
 import { useOnboardingStatus } from '@/lib/use-onboarding-status'
 
 /**
@@ -26,19 +27,6 @@ const ungatedPaths = new Set([
   '/support',
   '/unsubscribe',
 ])
-
-function stripRedirectParam(search: string): string {
-  try {
-    const params = new URLSearchParams(
-      search.startsWith('?') ? search.slice(1) : search,
-    )
-    params.delete('redirect')
-    const rest = params.toString()
-    return rest ? `?${rest}` : ''
-  } catch {
-    return search
-  }
-}
 
 /**
  * Global guard that ensures authenticated users finish first-run setup (display
@@ -96,22 +84,28 @@ export function ProfileGate({ children }: PropsWithChildren) {
   // Signed in but missing display name or anonymous recovery setup
   if (needsOnboarding) {
     const location = routerState.location as {
+      search?: Record<string, unknown>
       searchStr?: string
       hash?: string
     }
+    // Structured bounce: credentials ride as first-class params, `redirect`
+    // carries the destination pathname only — a re-gated complete-profile
+    // bounce cannot nest (`?redirect=/auth/complete-profile?redirect=…`).
     const searchStr =
       location.searchStr ??
       (typeof window !== 'undefined' ? window.location.search : '')
-    const hash =
+    const rawHash =
       location.hash ??
       (typeof window !== 'undefined' ? window.location.hash : '')
-    // Strip any existing `redirect` param so a re-gated complete-profile
-    // bounce cannot nest (`?redirect=/auth/complete-profile?redirect=…`).
-    const target = `${currentPath}${stripRedirectParam(searchStr)}${hash}`
+    // TanStack locations expose a decoded fragment without the leading #.
+    const hash = rawHash ? `#${rawHash.replace(/^#/, '')}` : ''
     return (
       <Navigate
         to="/auth/complete-profile"
-        search={{ redirect: target }}
+        search={buildAuthBounceSearch({
+          writer: 'ProfileGate',
+          from: `${currentPath}${searchStr}${hash}`,
+        })}
         replace
       />
     )

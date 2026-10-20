@@ -41,6 +41,16 @@ export function AnonymousRecoveryOnboarding({
   const [error, setError] = useState<string | null>(null)
   const [networkFailed, setNetworkFailed] = useState(false)
   const acknowledgingRef = useRef(false)
+  // `onComplete` intentionally lives outside the setup effect's deps: both
+  // hosts pass an unstable identity (inline arrow in the signup dialog, and a
+  // useCallback keyed on `refetch` in complete-profile), so depending on it
+  // re-runs setup after every render — an unbounded setup POST + render loop
+  // that starves the page. The ref always calls the latest callback; the
+  // effect below re-runs only on `isOnline` transitions.
+  const onCompleteRef = useRef(onComplete)
+  useEffect(() => {
+    onCompleteRef.current = onComplete
+  }, [onComplete])
 
   useEffect(() => {
     if (!isOnline) return
@@ -55,14 +65,14 @@ export function AnonymousRecoveryOnboarding({
           const status = await getAnonymousRecoveryStatus()
           if (!active) return
           if (status.acknowledged && status.onboardingCompleted) {
-            await onComplete()
+            await onCompleteRef.current()
             return
           }
           // A registered passkey is an alternative safeguard: skip link
           // setup entirely. The choice between the two happens at signup;
           // afterwards both coexist and neither removes the other.
           if (status.hasPasskey) {
-            await onComplete()
+            await onCompleteRef.current()
             return
           }
           if (!status.acknowledged) {
@@ -78,7 +88,7 @@ export function AnonymousRecoveryOnboarding({
           }
           const code = cause instanceof Error ? cause.message : String(cause)
           if (code === 'RECOVERY_KEY_ALREADY_ACKNOWLEDGED') {
-            await onComplete()
+            await onCompleteRef.current()
             return
           }
           setError(code)
@@ -90,7 +100,7 @@ export function AnonymousRecoveryOnboarding({
     return () => {
       active = false
     }
-  }, [isOnline, onComplete])
+  }, [isOnline])
 
   async function acknowledge() {
     if (!confirmed || !recovery || acknowledgingRef.current) return

@@ -24,6 +24,7 @@ import {
 
 import { randomId } from '../../../lib/api'
 import { accountSummarySelect } from '../../../lib/api/selects/account-summary'
+import { auth } from '../../../lib/auth'
 import { invalidateAccountCache } from '../../../lib/auth/account-cache'
 import {
   listAuthorizedClients,
@@ -615,18 +616,38 @@ export const accountRouter = createTRPCRouter({
     )
     .output(z.object({ account: accountProfileSchema }))
     .mutation(async ({ input, ctx }) => {
-      const account = await prisma.user.update({
-        where: { id: ctx.auth.user.id },
-        data: { name: input.name },
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          emailVerified: true,
-          isAnonymous: true,
-          image: true,
-        },
-      })
+      // Better Auth is the authoritative HTTP write: it updates the user and
+      // refreshes the cached session snapshot in the same endpoint operation.
+      const select = {
+        id: true,
+        name: true,
+        email: true,
+        emailVerified: true,
+        isAnonymous: true,
+        image: true,
+      } as const
+      let account
+      if (ctx.req && ctx.resHeaders) {
+        const refreshed = await auth.api.updateUser({
+          headers: ctx.req.headers,
+          body: { name: input.name },
+          returnHeaders: true,
+        })
+        for (const cookie of refreshed.headers.getSetCookie()) {
+          ctx.resHeaders.append('set-cookie', cookie)
+        }
+        account = await prisma.user.findUniqueOrThrow({
+          where: { id: ctx.auth.user.id },
+          select,
+        })
+      } else {
+        // Internal callers have no HTTP session cookie to refresh.
+        account = await prisma.user.update({
+          where: { id: ctx.auth.user.id },
+          data: { name: input.name },
+          select,
+        })
+      }
       invalidateAccountCache(ctx.auth.user.id)
       return { account }
     }),

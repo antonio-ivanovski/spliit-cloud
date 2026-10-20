@@ -21,7 +21,11 @@ import { isPlaceholderEmail } from '@/lib/account'
 import { useDeploymentConfig } from '@/lib/deployment-config'
 import { markInstallEligible } from '@/lib/install-eligibility'
 import { isPasskeySupported } from '@/lib/passkey'
-import { resolveAuthReturnContext } from '@/lib/signup-invite'
+import {
+  buildAuthBounceSearch,
+  resolveAuthReturnContext,
+  splitAuthDestination,
+} from '@/lib/signup-invite'
 import { useOnboardingStatus } from '@/lib/use-onboarding-status'
 import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
@@ -46,11 +50,24 @@ export function CompleteProfilePage() {
   const { t: tSignup } = useTranslation(undefined, {
     keyPrefix: 'AnonymousAccount.signup',
   })
-  const { redirect } = completeProfileRouteApi.useSearch()
-  // Collapse a nested bounce to its destination in one hop (bounded, deduped
-  // chain) so a re-gated `redirect=/auth/complete-profile?redirect=…` cannot
-  // bounce through this route twice.
-  const { destination: redirectTo } = resolveAuthReturnContext({ redirect })
+  const { redirect, invite, viewKey, invitation, invitationAction } =
+    completeProfileRouteApi.useSearch()
+  // Structured return: the bearer context arrives as first-class params, so
+  // no nested-bounce chain can drop the credentials on the way out.
+  const returnContext = resolveAuthReturnContext({
+    redirect,
+    invite,
+    viewKey,
+    invitation,
+    invitationAction,
+  })
+  const redirectTo = returnContext.redirectTo
+  // Any bounce param on this route must survive the settle wait: the
+  // `!account` bounce below re-emits them. The loader above only waits when
+  // bounce params are present — the plain name form still renders immediately.
+  const bounceSearchPresent = Boolean(
+    redirect || invite || viewKey || invitation,
+  )
   const {
     account,
     isPending,
@@ -59,6 +76,7 @@ export function CompleteProfilePage() {
     needsSafeguard,
     needsOnboarding,
     statusPending,
+    authReturnSettled,
     refetchStatus,
   } = useOnboardingStatus()
   const deployment = useDeploymentConfig()
@@ -97,10 +115,20 @@ export function CompleteProfilePage() {
     await refetchStatus()
   }, [refetch, refetchStatus])
 
-  // The name form renders immediately, but the redirect-out below must wait
+  // The name form renders immediately, but every Navigate below must wait
   // for the authoritative safeguard flag: a named session alone cannot tell
-  // a finished account from one still awaiting its safeguard.
-  if (isPending || (statusPending && !!account && !needsProfile)) {
+  // a finished account from one still awaiting its safeguard. While a fresh
+  // anonymous session settles, interim verdicts flap between renders —
+  // navigating on them ping-pongs `/` against `/auth/complete-profile` on
+  // every session emission (the "slowing down Firefox" race). With bounce
+  // params present, hold the loader until the verdict is stable instead; the
+  // URL escrows the token, so holding sheds nothing. Without bounce params
+  // the form still renders immediately as before.
+  if (
+    isPending ||
+    (statusPending && !!account && !needsProfile) ||
+    (!authReturnSettled && bounceSearchPresent)
+  ) {
     return (
       <PageShell width="full" className="items-center justify-center py-10">
         <PageInset>
@@ -111,12 +139,41 @@ export function CompleteProfilePage() {
   }
 
   if (!account) {
-    const back = `/auth/complete-profile?redirect=${encodeURIComponent(redirectTo)}`
-    return <Navigate to="/" search={{ redirect: back }} replace />
+    // Bounce back here after sign-in through `/`, keeping the bearer context
+    // structured — never nested inside another `redirect=`.
+    const backSearch = new URLSearchParams()
+    if (redirect) backSearch.set('redirect', redirect)
+    if (invite) backSearch.set('invite', invite)
+    if (viewKey) backSearch.set('viewKey', viewKey)
+    if (invitation) backSearch.set('invitation', invitation)
+    if (invitationAction) backSearch.set('invitationAction', invitationAction)
+    const backQuery = backSearch.toString()
+    return (
+      <Navigate
+        to="/"
+        search={buildAuthBounceSearch({
+          writer: 'complete-profile',
+          from: `/auth/complete-profile${backQuery ? `?${backQuery}` : ''}`,
+        })}
+        replace
+      />
+    )
   }
 
   if (!needsOnboarding) {
-    return <Navigate to={redirectTo} replace />
+    // Split the destination: `redirectTo` embeds its query
+    // (`/groups/X?invite=T`) and query-in-`to` serializes verbatim — each
+    // lap would append another `?invite=T` to the value (the mangled-URL
+    // bug). `search` as an object encodes exactly once.
+    const destination = splitAuthDestination(redirectTo)
+    return (
+      <Navigate
+        to={destination.to}
+        search={destination.search}
+        hash={destination.hash}
+        replace
+      />
+    )
   }
 
   async function handleSubmit(event: React.FormEvent) {
@@ -257,5 +314,13 @@ export function CompleteProfilePage() {
   // !needsRecovery`, and every other state returns its step. Kept as a
   // redirect (not a form) so a future predicate change fails closed to the
   // redirect target instead of stranding the account.
-  return <Navigate to={redirectTo} replace />
+  const fallback = splitAuthDestination(redirectTo)
+  return (
+    <Navigate
+      to={fallback.to}
+      search={fallback.search}
+      hash={fallback.hash}
+      replace
+    />
+  )
 }

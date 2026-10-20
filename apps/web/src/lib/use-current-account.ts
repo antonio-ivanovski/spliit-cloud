@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 
 import { authClient } from '@/lib/auth'
 import type { AuthAccount } from '@/lib/auth'
@@ -39,6 +39,7 @@ export function useCurrentAccount() {
   useEffect(() => {
     const id = live?.id ?? null
     const changed = id !== lastLiveId.current
+    if (session.isPending || session.error) return
     lastLiveId.current = id
     if (lifecycle && id && changed && !session.isPending && !session.error) {
       void lifecycle.verifySession({ fresh: true })
@@ -70,6 +71,25 @@ export function useCurrentAccount() {
     }
   }, [lifecycle, session.error])
 
+  // Stable refetch identity for the lifecycle branch: consumers memoize
+  // callbacks on `refetch` (e.g. the complete-profile recovery completion),
+  // and a fresh closure per render would churn them into re-running effects.
+  // Unconditional hook (rules of hooks); only consumed in the branch below.
+  const sessionRefetchRef = useRef(session.refetch)
+  useEffect(() => {
+    sessionRefetchRef.current = session.refetch
+  }, [session.refetch])
+  const lifecycleRefetch = useCallback(
+    async (options?: Parameters<typeof session.refetch>[0]) => {
+      const fresh = options?.query?.disableCookieCache === true
+      // Refresh Better Auth first, then publish the authoritative lifecycle row.
+      const result = await sessionRefetchRef.current(options)
+      await lifecycle?.verifySession({ fresh })
+      return result
+    },
+    [lifecycle],
+  )
+
   if (lifecycle) {
     // Bounded bootstrap: `checking` resolves via the lifecycle's 8s-bound
     // verification — RequireAuth never blocks on an unbounded hook wait.
@@ -81,7 +101,7 @@ export function useCurrentAccount() {
       isPending,
       isRefetching: isPending ? false : session.isRefetching,
       error: session.error,
-      refetch: () => lifecycle.verifySession().then(() => session.refetch()),
+      refetch: lifecycleRefetch,
     }
   }
 

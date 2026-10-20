@@ -1,15 +1,7 @@
-import {
-  Fingerprint,
-  HatGlasses,
-  KeyRound,
-  Loader2,
-  ShieldCheck,
-} from 'lucide-react'
+import { Fingerprint, HatGlasses, KeyRound, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { AnonymousSafeguardChoice } from '@/components/auth/anonymous-safeguard-choice'
-import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -22,18 +14,16 @@ import {
   ResponsiveDialogHeader as DialogHeader,
   ResponsiveDialogTitle as DialogTitle,
 } from '@/components/ui/responsive-dialog'
-import { needsDisplayName } from '@/lib/account'
 import {
   parseAnonymousRecoveryLink,
   recoverAnonymousAccount,
 } from '@/lib/anonymous-recovery'
 import { authClient } from '@/lib/auth'
-import { replaceBrowserLocation } from '@/lib/browser-navigation'
+import { completeAuthSignIn } from '@/lib/auth-completion'
 import { markInstallEligible } from '@/lib/install-eligibility'
 import { isPasskeySupported } from '@/lib/passkey'
 import { signupInviteFetchOptions } from '@/lib/signup-invite'
 import { useOnlineStatus } from '@/lib/use-online-status'
-import { trpc } from '@/trpc/client'
 
 export function AnonymousSignupDialog({
   open,
@@ -41,7 +31,6 @@ export function AnonymousSignupDialog({
   creationEnabled,
   passkeyEnabled,
   linkInviteToken,
-  redirectTo,
   completeProfilePath,
 }: {
   open: boolean
@@ -49,7 +38,6 @@ export function AnonymousSignupDialog({
   creationEnabled: boolean
   passkeyEnabled: boolean
   linkInviteToken?: string
-  redirectTo: string
   completeProfilePath: string
 }) {
   const { t } = useTranslation(undefined, {
@@ -61,37 +49,12 @@ export function AnonymousSignupDialog({
   const [recoveryLink, setRecoveryLink] = useState('')
   const [passkeySignInPending, setPasskeySignInPending] = useState(false)
   const [passkeySignInError, setPasskeySignInError] = useState(false)
-  // Fresh anonymous session established: collect the display name first,
-  // then offer an explicit choice between the recovery link (primary) and a
-  // passkey (secondary) before leaving the dialog. Name-first matters: the
-  // choice step passes the saved name as the passkey ceremony identity
-  // (`user.name`), so the authenticator entry carries the real name instead
-  // of the placeholder email. The choice UI lives in
-  // AnonymousSafeguardChoice so the complete-profile gate offers the same
-  // options. Afterwards both credentials coexist and are managed in Account
-  // settings, and neither one ever removes the other implicitly.
-  const [created, setCreated] = useState(false)
-  const [nameSaved, setNameSaved] = useState(false)
-  const [displayName, setDisplayName] = useState('')
-  const [namePending, setNamePending] = useState(false)
-  const [nameError, setNameError] = useState<string | null>(null)
-  const updateProfile = trpc.account.updateProfile.useMutation()
-
-  const passkeyChoiceAvailable = passkeyEnabled && isPasskeySupported()
-  const showNameStep = created && !nameSaved && passkeyChoiceAvailable
-  const showChoice = created && nameSaved && passkeyChoiceAvailable
-
   function setOpen(nextOpen: boolean) {
-    if (!nextOpen && (pending || namePending || passkeySignInPending)) return
+    if (!nextOpen && (pending || passkeySignInPending)) return
     onOpenChange(nextOpen)
     if (!nextOpen) {
       setRecoveryLink('')
       setError(null)
-      setCreated(false)
-      setNameSaved(false)
-      setDisplayName('')
-      setNamePending(false)
-      setNameError(null)
       setPasskeySignInError(false)
     }
   }
@@ -106,42 +69,11 @@ export function AnonymousSignupDialog({
       })
       if (result.error) throw new Error(result.error.message)
       markInstallEligible()
-      if (passkeyEnabled && isPasskeySupported()) {
-        setCreated(true)
-        setPending(false)
-        return
-      }
-      replaceBrowserLocation(completeProfilePath)
+      completeAuthSignIn({ completeProfilePath })
     } catch {
       setError('create')
       // react-doctor-disable-next-line react-doctor/no-unowned-async-error-clear -- Pending disables every dialog action, so a newer request cannot exist.
       setPending(false)
-    }
-  }
-
-  async function saveDisplayName() {
-    if (!isOnline || namePending) return
-    const trimmed = displayName.trim()
-    if (!trimmed) {
-      setNameError(t('nameRequired'))
-      return
-    }
-    if (trimmed.length < 2) {
-      setNameError(t('nameTooShort'))
-      return
-    }
-    setNamePending(true)
-    setNameError(null)
-    try {
-      await updateProfile.mutateAsync({ name: trimmed })
-      // Bust the cookie-cached session so the safeguard step below reads the
-      // fresh name and can pass it as the passkey ceremony identity.
-      await authClient.getSession({ query: { disableCookieCache: true } })
-      setNameSaved(true)
-    } catch {
-      setNameError(t('nameError'))
-    } finally {
-      setNamePending(false)
     }
   }
 
@@ -156,7 +88,7 @@ export function AnonymousSignupDialog({
     setError(null)
     try {
       await recoverAnonymousAccount({ code })
-      replaceBrowserLocation(redirectTo)
+      completeAuthSignIn({ completeProfilePath })
     } catch {
       setError('recover')
       // react-doctor-disable-next-line react-doctor/no-unowned-async-error-clear -- Pending disables every dialog action, so a newer request cannot exist.
@@ -184,13 +116,7 @@ export function AnonymousSignupDialog({
         throw new Error('passkey sign-in failed')
       }
       markInstallEligible()
-      const session = await authClient.getSession({
-        query: { disableCookieCache: true },
-      })
-      const account = session.data?.user
-      replaceBrowserLocation(
-        account && needsDisplayName(account) ? completeProfilePath : redirectTo,
-      )
+      completeAuthSignIn({ completeProfilePath })
     } catch {
       setPasskeySignInError(true)
       setPasskeySignInPending(false)
@@ -202,231 +128,136 @@ export function AnonymousSignupDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            {showChoice ? (
-              <ShieldCheck className="h-5 w-5 text-primary" />
-            ) : (
-              <HatGlasses className="h-5 w-5 text-primary" />
-            )}
-            {showChoice
-              ? t('choiceTitle')
-              : showNameStep
-                ? t('nameTitle')
-                : t('title')}
+            <HatGlasses className="h-5 w-5 text-primary" />
+            {t('title')}
           </DialogTitle>
           <DialogDescription>
-            {showChoice
-              ? t('choiceDescription')
-              : showNameStep
-                ? t('nameDescription')
-                : creationEnabled
-                  ? t('description')
-                  : t('recoverDescription')}
+            {creationEnabled ? t('description') : t('recoverDescription')}
           </DialogDescription>
         </DialogHeader>
-        {showNameStep ? (
-          <>
-            <DialogBody className="grid gap-3 py-2">
-              {!isOnline ? (
-                <OfflineEmptyState variant="plain" />
-              ) : (
-                <>
-                  <div className="grid gap-1.5">
-                    <Label htmlFor="anonymous-display-name">
-                      {t('nameLabel')}
-                    </Label>
-                    <Input
-                      id="anonymous-display-name"
-                      type="text"
-                      autoComplete="name"
-                      placeholder={t('namePlaceholder')}
-                      value={displayName}
-                      onChange={(event) => {
-                        setDisplayName(event.target.value)
-                        setNameError(null)
-                      }}
-                      disabled={namePending || !isOnline}
-                      required
-                    />
-                  </div>
-                  {nameError ? (
-                    <p className="text-sm text-destructive" role="alert">
-                      {nameError}
-                    </p>
-                  ) : null}
-                  <Button
-                    type="button"
-                    className="w-full"
-                    onClick={() => void saveDisplayName()}
-                    disabled={namePending || !isOnline || !displayName.trim()}
-                  >
-                    {namePending ? (
-                      <Loader2 className="me-2 h-4 w-4 animate-spin" />
-                    ) : null}
-                    {namePending ? t('nameSaving') : t('nameSave')}
-                  </Button>
-                </>
-              )}
-            </DialogBody>
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setOpen(false)}
-                disabled={namePending}
-              >
-                {t('cancel')}
-              </Button>
-            </DialogFooter>
-          </>
-        ) : showChoice ? (
-          <>
-            <DialogBody className="grid gap-3 py-2">
-              <AnonymousSafeguardChoice
-                displayName={displayName.trim()}
-                onComplete={() => replaceBrowserLocation(completeProfilePath)}
-              />
-            </DialogBody>
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setOpen(false)}
-                disabled={pending}
-              >
-                {t('cancel')}
-              </Button>
-            </DialogFooter>
-          </>
-        ) : (
-          <>
-            <DialogBody className="grid gap-5 py-2">
-              {creationEnabled ? (
-                <div className="grid gap-3 rounded-lg border bg-muted/20 p-4">
-                  <div className="grid gap-1">
-                    <p className="font-medium">{t('createTitle')}</p>
-                    <p className="text-sm leading-5 text-muted-foreground">
-                      {t('warning')}
-                    </p>
-                    {passkeyEnabled && isPasskeySupported() ? (
-                      <p className="text-sm leading-5 text-muted-foreground">
-                        {t('passkeyHint')}
-                      </p>
-                    ) : null}
-                  </div>
-                  <Button
-                    type="button"
-                    className="w-full"
-                    onClick={() => void createAccount()}
-                    disabled={pending || !isOnline}
-                  >
-                    {pending ? (
-                      <Loader2 className="me-2 h-4 w-4 animate-spin" />
-                    ) : null}
-                    {t('create')}
-                  </Button>
-                  {error === 'create' ? (
-                    <p className="text-sm text-destructive" role="alert">
-                      {t('createError')}
-                    </p>
-                  ) : null}
-                </div>
-              ) : null}
-              <div className="grid gap-3">
-                <p className="text-sm font-medium">{t('recoverTitle')}</p>
-                <div className="grid gap-3 rounded-lg border bg-muted/20 p-4">
-                  <p className="text-sm leading-5 text-muted-foreground">
-                    {creationEnabled
-                      ? t('recoverDescription')
-                      : t('recoveryOnlyHelp')}
-                  </p>
-                  <div className="grid gap-2">
-                    <Label
-                      htmlFor="anonymous-access-recovery-link"
-                      className="flex items-center gap-2"
-                    >
-                      <KeyRound className="h-4 w-4 text-muted-foreground" />
-                      {t('recoveryLinkRequiredLabel')}
-                    </Label>
-                    <Input
-                      id="anonymous-access-recovery-link"
-                      value={recoveryLink}
-                      onChange={(event) => {
-                        setRecoveryLink(event.target.value)
-                        setError(null)
-                      }}
-                      className="font-mono text-xs"
-                      autoComplete="off"
-                      autoCapitalize="none"
-                      inputMode="url"
-                      spellCheck={false}
-                      placeholder="https://…/auth/recover#code=…"
-                      disabled={pending || !isOnline}
-                    />
-                  </div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => void recoverAccount()}
-                    disabled={pending || !isOnline || !recoveryLink.trim()}
-                  >
-                    {pending ? (
-                      <Loader2 className="me-2 h-4 w-4 animate-spin" />
-                    ) : null}
-                    {t('recover')}
-                  </Button>
-                  {error === 'recover' ? (
-                    <p className="text-sm text-destructive" role="alert">
-                      {t('recoverError')}
-                    </p>
-                  ) : null}
-                </div>
+        <DialogBody className="grid gap-5 py-2">
+          {creationEnabled ? (
+            <div className="grid gap-3 rounded-lg border bg-muted/20 p-4">
+              <div className="grid gap-1">
+                <p className="font-medium">{t('createTitle')}</p>
+                <p className="text-sm leading-5 text-muted-foreground">
+                  {t('warning')}
+                </p>
                 {passkeyEnabled && isPasskeySupported() ? (
-                  <div className="grid gap-3 rounded-lg border bg-muted/20 p-4">
-                    <div className="grid gap-1">
-                      <p className="font-medium">{t('existingPasskeyTitle')}</p>
-                      <p className="text-sm leading-5 text-muted-foreground">
-                        {t('existingPasskeyDescription')}
-                      </p>
-                    </div>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-full"
-                      onClick={() => void signInWithPasskey()}
-                      disabled={pending || passkeySignInPending || !isOnline}
-                    >
-                      {passkeySignInPending ? (
-                        <Loader2 className="me-2 h-4 w-4 animate-spin" />
-                      ) : (
-                        <Fingerprint
-                          className="me-2 h-4 w-4"
-                          aria-hidden="true"
-                        />
-                      )}
-                      {t('passkeySignIn')}
-                    </Button>
-                    {passkeySignInError ? (
-                      <p className="text-sm text-destructive" role="alert">
-                        {t('passkeySignInError')}
-                      </p>
-                    ) : null}
-                  </div>
+                  <p className="text-sm leading-5 text-muted-foreground">
+                    {t('passkeyHint')}
+                  </p>
                 ) : null}
               </div>
-            </DialogBody>
-            <DialogFooter>
+              <Button
+                type="button"
+                className="w-full"
+                onClick={() => void createAccount()}
+                disabled={pending || !isOnline}
+              >
+                {pending ? (
+                  <Loader2 className="me-2 h-4 w-4 animate-spin" />
+                ) : null}
+                {t('create')}
+              </Button>
+              {error === 'create' ? (
+                <p className="text-sm text-destructive" role="alert">
+                  {t('createError')}
+                </p>
+              ) : null}
+            </div>
+          ) : null}
+          <div className="grid gap-3">
+            <p className="text-sm font-medium">{t('recoverTitle')}</p>
+            <div className="grid gap-3 rounded-lg border bg-muted/20 p-4">
+              <p className="text-sm leading-5 text-muted-foreground">
+                {creationEnabled
+                  ? t('recoverDescription')
+                  : t('recoveryOnlyHelp')}
+              </p>
+              <div className="grid gap-2">
+                <Label
+                  htmlFor="anonymous-access-recovery-link"
+                  className="flex items-center gap-2"
+                >
+                  <KeyRound className="h-4 w-4 text-muted-foreground" />
+                  {t('recoveryLinkRequiredLabel')}
+                </Label>
+                <Input
+                  id="anonymous-access-recovery-link"
+                  value={recoveryLink}
+                  onChange={(event) => {
+                    setRecoveryLink(event.target.value)
+                    setError(null)
+                  }}
+                  className="font-mono text-xs"
+                  autoComplete="off"
+                  autoCapitalize="none"
+                  inputMode="url"
+                  spellCheck={false}
+                  placeholder="https://…/auth/recover#code=…"
+                  disabled={pending || !isOnline}
+                />
+              </div>
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setOpen(false)}
-                disabled={pending}
+                className="w-full"
+                onClick={() => void recoverAccount()}
+                disabled={pending || !isOnline || !recoveryLink.trim()}
               >
-                {t('cancel')}
+                {pending ? (
+                  <Loader2 className="me-2 h-4 w-4 animate-spin" />
+                ) : null}
+                {t('recover')}
               </Button>
-            </DialogFooter>
-          </>
-        )}
+              {error === 'recover' ? (
+                <p className="text-sm text-destructive" role="alert">
+                  {t('recoverError')}
+                </p>
+              ) : null}
+            </div>
+            {passkeyEnabled && isPasskeySupported() ? (
+              <div className="grid gap-3 rounded-lg border bg-muted/20 p-4">
+                <div className="grid gap-1">
+                  <p className="font-medium">{t('existingPasskeyTitle')}</p>
+                  <p className="text-sm leading-5 text-muted-foreground">
+                    {t('existingPasskeyDescription')}
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => void signInWithPasskey()}
+                  disabled={pending || passkeySignInPending || !isOnline}
+                >
+                  {passkeySignInPending ? (
+                    <Loader2 className="me-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Fingerprint className="me-2 h-4 w-4" aria-hidden="true" />
+                  )}
+                  {t('passkeySignIn')}
+                </Button>
+                {passkeySignInError ? (
+                  <p className="text-sm text-destructive" role="alert">
+                    {t('passkeySignInError')}
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+        </DialogBody>
+        <DialogFooter>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setOpen(false)}
+            disabled={pending}
+          >
+            {t('cancel')}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

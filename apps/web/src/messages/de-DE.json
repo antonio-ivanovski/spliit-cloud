@@ -759,7 +759,10 @@
       "notNow": "Nicht jetzt"
     },
     "groupTabsHint": "Möchtest du die Gruppenreiter neu anordnen oder nicht genutzte Gruppenreiter ausblenden?",
-    "groupTabsHintLink": "Reiter in den Kontoeinstellungen anpassen"
+    "groupTabsHintLink": "Reiter in den Kontoeinstellungen anpassen",
+    "linkInvitationFullTitle": "Dieser Einladungslink ist voll",
+    "linkInvitationFullDescription": "Alle Beitrittsplätze dieses Links sind vergeben. Bitte ein Gruppenmitglied, einen neuen Link zu teilen.",
+    "linkInvitationSharedUse": "Dieser Link kann von mehreren Personen verwendet werden, im Rahmen seines Beitrittslimits und seiner Gültigkeit."
   },
   "GroupForm": {
     "title": "Gruppeninformationen",
@@ -2084,7 +2087,41 @@
         "shareTitle": "Tritt {groupName} auf Spliit Cloud bei",
         "shareText": "Ich habe gerade {groupName} für unsere gemeinsamen Ausgaben auf Spliit Cloud erstellt. Hier ist ein Einmal-Einladungslink — öffne ihn, um beizutreten:\n{inviteUrl}",
         "generateNew": "Neuen Link erstellen",
-        "copyLink": "Link kopieren"
+        "copyLink": "Link kopieren",
+        "mode": "Wer kann diesen Link nutzen?",
+        "modeOneTime": "Eine Person",
+        "modeOneTimeHint": "Der Link funktioniert nach der ersten Annahme nicht mehr.",
+        "modeShared": "Mehrere Personen",
+        "modeSharedHint": "Ein geteilter Link, den mehrere Personen im Rahmen der Limits unten nutzen können.",
+        "labelLabel": "Link-Name (optional)",
+        "labelPlaceholder": "z. B. Familienchat, Discord",
+        "joinLimitLabel": "Beitrittslimit",
+        "unlimitedJoins": "Unbegrenzte Beitritte",
+        "joinsSuffix": "Beitritte",
+        "expiryLabel": "Läuft ab in",
+        "neverExpires": "Läuft nie ab",
+        "expiryUnitHour": "Stunden",
+        "expiryUnitDay": "Tagen",
+        "expiryUnitWeek": "Wochen",
+        "quick24h": "24 Stunden",
+        "quick7d": "7 Tage",
+        "quick30d": "30 Tage",
+        "memberOnlyNote": "Personen treten als Mitglieder bei. Um einen Admin einzuladen, nutze E-Mail oder einen Einmal-Link.",
+        "summaryUnlimited": "Dieser Link bleibt offen, bis du ihn widerrufst.",
+        "summaryCapped": "Bis zu {maxUses} Personen können beitreten · läuft in {expiry} ab ({expiryDate}).",
+        "sharedCreated": "Geteilter Link bereit. Kopiere ihn und poste ihn dort, wo deine Leute sind.",
+        "sharedIntro": "Hier ist dein geteilter Link für {groupName}. Bis zu {maxUses} Mitglieder können damit beitreten, im Rahmen der Limits unten.",
+        "sharedCopyAgain": "Mitglieder können diesen Link unter „Ausstehende Einladungen“ erneut kopieren.",
+        "sharedShareText": "Tritt {groupName} auf Spliit Cloud bei — öffne diesen Link zum Beitreten:\n{inviteUrl}",
+        "invalidJoinLimit": "Gib ein Beitrittslimit zwischen 2 und 1000 ein oder wähle „unbegrenzt“.",
+        "invalidExpiry": "Gib eine Gültigkeit zwischen 1 Stunde und 1 Jahr ein oder wähle „nie“.",
+        "summaryExpiryOnly": "Unbegrenzte Beitritte · läuft in {expiry} ab ({expiryDate}).",
+        "otherOption": "Andere…",
+        "sharedIntroUnlimited": "Hier ist dein geteilter Link für {groupName}. Neue Mitglieder können damit beitreten, im Rahmen der Limits unten.",
+        "expiryUnitLabel": "Zeiteinheit",
+        "summaryCappedNoDate": "Bis zu {maxUses} Personen können beitreten · läuft in {expiry} ab.",
+        "summaryExpiryOnlyNoDate": "Unbegrenzte Beitritte · läuft in {expiry} ab.",
+        "summaryCappedNever": "Bis zu {maxUses} Personen können beitreten · läuft nie ab."
       },
       "temporaryNamePlaceholder": "z. B. Alex' Mitbewohner",
       "friendsDescription": "Lade jemanden aus Gruppen ein, die du geteilt hast.",
@@ -2140,9 +2177,25 @@
         "type": "QR-Sitzung",
         "fallbackLabel": "QR-Code in der Nähe",
         "viewQr": "QR-Code ansehen",
-        "expireNow": "Sofort ablaufen lassen"
+        "expireNow": "Sofort ablaufen lassen",
+        "expireDescription": "Der Code funktioniert sofort nicht mehr. Personen, die bereits beigetreten sind, bleiben Mitglieder.",
+        "expireTitle": "Diesen QR-Code ablaufen lassen?"
       },
-      "createdWithoutEmail": "Einladung für {email} erstellt, aber es wurde keine E-Mail gesendet. Teile stattdessen einen Einladungslink."
+      "createdWithoutEmail": "Einladung für {email} erstellt, aber es wurde keine E-Mail gesendet. Teile stattdessen einen Einladungslink.",
+      "shared": {
+        "type": "Geteilter Link",
+        "joinedOf": "{count} von {max} beigetreten",
+        "joinedUnlimited": "{count} beigetreten",
+        "full": "Voll",
+        "copyLink": "Link kopieren",
+        "copied": "Geteilter Link kopiert.",
+        "joiners": "Wer beigetreten ist",
+        "joinersEmpty": "Mit diesem Link ist noch niemand beigetreten.",
+        "editLimits": "Link bearbeiten",
+        "expiresWithJoins": "Läuft am {date} ab · {joins}",
+        "revokeDescription": "„{name}“ funktioniert sofort nicht mehr. Personen, die bereits beigetreten sind, bleiben Mitglieder.",
+        "revokeTitle": "Geteilten Link widerrufen?"
+      }
     },
     "removeDialog": {
       "unsettled": {
@@ -2295,10 +2348,21 @@
       "emailInvalid": "Gib eine gültige E-Mail-Adresse ein.",
       "linkNotShown": "Der Einladungslink wird hier nicht angezeigt. Verwende „Neuen Link erstellen“ in der Liste, wenn du ihn erneut teilen möchtest.",
       "switchToLinkNote": "Speichern, um diese Einladung in einen Link umzuwandeln. Die E-Mail-Einladung funktioniert dann nicht mehr.",
-      "savedWithoutEmail": "Änderungen gespeichert, aber es wurde keine E-Mail gesendet. Teile stattdessen einen Einladungslink."
+      "savedWithoutEmail": "Änderungen gespeichert, aber es wurde keine E-Mail gesendet. Teile stattdessen einen Einladungslink.",
+      "sharedLabelLabel": "Link-Name",
+      "sharedMaxUsesLabel": "Beitrittslimit",
+      "sharedExpiryLabel": "Läuft ab in",
+      "sharedNeverExpires": "Läuft nie ab",
+      "sharedExpiresOn": "Neue Gültigkeit: {date}.",
+      "sharedEndsNow": "Wird das Beitrittslimit auf {count} oder darunter gesenkt, endet dieser Link sofort.",
+      "regenerateSharedDescription": "Es wird eine neue Link-URL erzeugt. Bisherige Beitritte, Name, Limits und Gültigkeit bleiben gleich — nur der Link selbst ändert sich.",
+      "linkReadySharedDescription": "Teile ihn dort, wo deine Leute sind. Mitglieder können ihn auch unter „Ausstehende Einladungen“ erneut kopieren.",
+      "linkReadyCopyAgain": "Du kannst diesen Link später unter „Ausstehende Einladungen“ erneut kopieren.",
+      "sharedKeepExpiry": "Aktuelle Gültigkeit behalten"
     },
     "regenerate": {
-      "title": "Neuen Link erstellen"
+      "title": "Neuen Link erstellen",
+      "sharedTitle": "Neuen geteilten Link erzeugen"
     },
     "actionsFor": "Aktionen für {name}",
     "readOnlyDescription": "Personen und Teilnehmende dieser Gruppe. E-Mail-Adressen und Einladungsdetails werden ausgeblendet.",
@@ -2933,7 +2997,10 @@
         "destination": "Empfänger",
         "displayName": "Anzeigename",
         "role": "Rolle",
-        "credential": "Einladungslink"
+        "credential": "Einladungslink",
+        "label": "Link-Name",
+        "maxUses": "Beitrittslimit",
+        "expiry": "Gültigkeit"
       }
     },
     "fallback": "Eine Aktivität wurde aufgezeichnet",

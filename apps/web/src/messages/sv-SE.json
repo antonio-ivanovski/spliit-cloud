@@ -546,7 +546,10 @@
         "destination": "Mottagare",
         "displayName": "Namn",
         "role": "Roll",
-        "credential": "Inbjudningslänk"
+        "credential": "Inbjudningslänk",
+        "label": "Länkens namn",
+        "maxUses": "Gräns för antal",
+        "expiry": "Giltighetstid"
       }
     },
     "member": {
@@ -2727,7 +2730,10 @@
       "notNow": "Inte nu"
     },
     "groupTabsHint": "Vill du ändra ordningen på gruppflikarna eller dölja dem du inte använder?",
-    "groupTabsHintLink": "Anpassa flikar i dina kontoinställningar"
+    "groupTabsHintLink": "Anpassa flikar i dina kontoinställningar",
+    "linkInvitationFullTitle": "Den här inbjudningslänken är full",
+    "linkInvitationFullDescription": "Alla platser på den här länken är använda. Be en gruppmedlem dela en ny länk.",
+    "linkInvitationSharedUse": "Den här länken kan användas av flera personer, inom dess gräns och giltighetstid."
   },
   "Header": {
     "signIn": "Logga in",
@@ -2883,9 +2889,25 @@
         "type": "QR-session",
         "fallbackLabel": "QR-kod i närheten",
         "viewQr": "Visa QR-kod",
-        "expireNow": "Låt gå ut nu"
+        "expireNow": "Låt gå ut nu",
+        "expireDescription": "Koden slutar fungera omedelbart. De som redan har gått med förblir medlemmar.",
+        "expireTitle": "Låt QR-koden gå ut?"
       },
-      "createdWithoutEmail": "Inbjudan för {email} skapad, men inget e-postmeddelande skickades. Dela en inbjudningslänk i stället."
+      "createdWithoutEmail": "Inbjudan för {email} skapad, men inget e-postmeddelande skickades. Dela en inbjudningslänk i stället.",
+      "shared": {
+        "type": "Delad länk",
+        "joinedOf": "{count} av {max} har gått med",
+        "joinedUnlimited": "{count} har gått med",
+        "full": "Fullt",
+        "copyLink": "Kopiera länk",
+        "copied": "Delad länk kopierad.",
+        "joiners": "Vilka som gått med",
+        "joinersEmpty": "Ingen har gått med via den här länken ännu.",
+        "editLimits": "Redigera länk",
+        "expiresWithJoins": "Förfaller {date} · {joins}",
+        "revokeDescription": "”{name}” slutar fungera omedelbart. De som redan har gått med förblir medlemmar.",
+        "revokeTitle": "Återkalla delad länk?"
+      }
     },
     "invite": {
       "title": "Lägg till personer",
@@ -2916,7 +2938,41 @@
         "shareTitle": "Gå med i {groupName} på Spliit Cloud",
         "shareText": "Jag skapade just {groupName} för våra delade utgifter på Spliit Cloud. Här är en engångs-inbjudningslänk — öppna den för att gå med:\n{inviteUrl}",
         "generateNew": "Generera ny länk",
-        "copyLink": "Kopiera länk"
+        "copyLink": "Kopiera länk",
+        "mode": "Vilka kan använda den här länken?",
+        "modeOneTime": "En person",
+        "modeOneTimeHint": "Länken slutar fungera efter första acceptansen.",
+        "modeShared": "Flera personer",
+        "modeSharedHint": "En delad länk som flera personer kan använda, inom gränserna nedan.",
+        "labelLabel": "Länkens namn (valfritt)",
+        "labelPlaceholder": "t.ex. Familj, Discord",
+        "joinLimitLabel": "Gräns för antal",
+        "unlimitedJoins": "Obegränsat antal",
+        "joinsSuffix": "personer",
+        "expiryLabel": "Giltig i",
+        "neverExpires": "Går aldrig ut",
+        "expiryUnitHour": "timmar",
+        "expiryUnitDay": "dagar",
+        "expiryUnitWeek": "veckor",
+        "quick24h": "24 timmar",
+        "quick7d": "7 dagar",
+        "quick30d": "30 dagar",
+        "memberOnlyNote": "Personer går med som medlemmar. Bjud in en admin via e-post eller en engångslänk.",
+        "summaryUnlimited": "Den här länken är öppen tills du återkallar den.",
+        "summaryCapped": "Upp till {maxUses} personer kan gå med · går ut om {expiry} ({expiryDate}).",
+        "sharedCreated": "Delad länk redo. Kopiera den och lägg upp den där dina personer finns.",
+        "sharedIntro": "Här är din delade länk för {groupName}. Upp till {maxUses} medlemmar kan gå med via den, inom gränserna nedan.",
+        "sharedCopyAgain": "Medlemmar kan kopiera den här länken igen från väntande inbjudningar.",
+        "sharedShareText": "Gå med i {groupName} på Spliit Cloud — öppna den här länken för att gå med:\n{inviteUrl}",
+        "invalidJoinLimit": "Ange en gräns mellan 2 och 1000, eller välj obegränsat.",
+        "invalidExpiry": "Ange en giltighetstid mellan 1 timme och 1 år, eller välj aldrig.",
+        "summaryExpiryOnly": "Obegränsat antal · går ut om {expiry} ({expiryDate}).",
+        "otherOption": "Annat…",
+        "sharedIntroUnlimited": "Här är din delade länk för {groupName}. Nya medlemmar kan gå med via den, inom gränserna nedan.",
+        "expiryUnitLabel": "Tidsenhet",
+        "summaryCappedNoDate": "Upp till {maxUses} personer kan gå med · går ut om {expiry}.",
+        "summaryExpiryOnlyNoDate": "Obegränsat antal · går ut om {expiry}.",
+        "summaryCappedNever": "Upp till {maxUses} personer kan gå med · går aldrig ut."
       },
       "tab": {
         "email": "E-post",
@@ -3095,10 +3151,21 @@
       "emailInvalid": "Ange en giltig e-postadress.",
       "linkNotShown": "Inbjudningslänken visas inte här. Använd „Generera ny länk“ i listan om du behöver dela den igen.",
       "switchToLinkNote": "Spara för att omvandla den här inbjudan till en länk. E-postinbjudan slutar att fungera.",
-      "savedWithoutEmail": "Ändringar sparade, men inget e-postmeddelande skickades. Dela en inbjudningslänk i stället."
+      "savedWithoutEmail": "Ändringar sparade, men inget e-postmeddelande skickades. Dela en inbjudningslänk i stället.",
+      "sharedLabelLabel": "Länkens namn",
+      "sharedMaxUsesLabel": "Gräns för antal",
+      "sharedExpiryLabel": "Giltig i",
+      "sharedNeverExpires": "Går aldrig ut",
+      "sharedExpiresOn": "Ny giltighetstid: {date}.",
+      "sharedEndsNow": "Att sänka gränsen till {count} eller lägre avslutar den här länken direkt.",
+      "regenerateSharedDescription": "En ny länkadress skapas. Antal anslutna, namn, gränser och giltighetstid är oförändrade — bara själva länken ändras.",
+      "linkReadySharedDescription": "Dela den där dina personer finns. Medlemmar kan också kopiera den igen från väntande inbjudningar.",
+      "linkReadyCopyAgain": "Du kan kopiera den här länken igen senare från väntande inbjudningar.",
+      "sharedKeepExpiry": "Behåll aktuell giltighetstid"
     },
     "regenerate": {
-      "title": "Generera ny länk"
+      "title": "Generera ny länk",
+      "sharedTitle": "Skapa ny delad länk"
     },
     "actionsFor": "Åtgärder för {name}",
     "readOnlyDescription": "Personer och deltagare som ingår i gruppen. E-postadresser och inbjudningsuppgifter är dolda.",

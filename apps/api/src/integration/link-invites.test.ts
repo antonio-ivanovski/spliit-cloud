@@ -2,6 +2,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { prisma } from '@spliit/db'
 
+import { getApiBaseUrl } from '../lib/auth/urls'
 import { hashLinkToken } from '../lib/invitations'
 import { groupsRouter } from '../trpc/routers/groups'
 import { invitationsRouter } from '../trpc/routers/invitations'
@@ -41,6 +42,20 @@ describe('Link invitation flow — real DB', () => {
           email: adminEmail,
           emailVerified: true,
           name: 'Test Admin',
+        },
+      },
+    } as never)
+  }
+
+  function groupViewerCaller(overrides: { accountId: string; email: string }) {
+    return groupsRouter.createCaller({
+      auth: {
+        session: { id: 'sess-test' },
+        user: {
+          id: overrides.accountId,
+          email: overrides.email,
+          emailVerified: true,
+          name: 'Test Viewer',
         },
       },
     } as never)
@@ -200,6 +215,74 @@ describe('Link invitation flow — real DB', () => {
   // ------------------------------------------------------------------
   // 2. Accept link invite as a signed-in user (second account)
   // ------------------------------------------------------------------
+  it('opening an invitation while signed in previews without consuming it', async () => {
+    const { groupId } = await createTestGroup(`Link preview ${runId}`)
+    const link = await invitationsCaller().createLink({
+      requestId: crypto.randomUUID(),
+      groupId,
+      role: 'MEMBER',
+    })
+    const viewed = await groupViewerCaller({
+      accountId: inviteeId,
+      email: inviteeEmail,
+    }).get({ groupId, linkInviteToken: getInviteToken(link.inviteUrl)! })
+    expect(viewed.currentMember).toBeNull()
+    expect(viewed.currentInvitation?.id).toBe(link.invitationId)
+    expect(
+      await prisma.groupMember.count({
+        where: { groupId, accountId: inviteeId },
+      }),
+    ).toBe(0)
+    expect(
+      await prisma.groupInvitation.findUniqueOrThrow({
+        where: { id: link.invitationId },
+      }),
+    ).toMatchObject({ status: 'PENDING', useCount: 0 })
+  })
+
+  it('OAuth reviewers cannot accept an invitation through a read', async () => {
+    const { groupId } = await createTestGroup(`Link OAuth Read ${runId}`)
+
+    const createResult = await invitationsCaller().createLink({
+      requestId: crypto.randomUUID(),
+      groupId,
+      role: 'MEMBER',
+    })
+    const token = getInviteToken(createResult.inviteUrl)
+    expect(token).not.toBeNull()
+
+    const oauthView = await groupsRouter
+      .createCaller({
+        auth: {
+          credentialKind: 'oauth',
+          accessToken: 'oauth-link-read-test',
+          scopes: ['spliit:groups:read'],
+          audiences: [getApiBaseUrl()],
+          session: { id: 'oauth-link-read-session' },
+          user: {
+            id: secondInviteeId,
+            email: secondInviteeEmail,
+            emailVerified: true,
+            name: 'Second Invitee',
+          },
+        },
+      } as never)
+      .get({ groupId, linkInviteToken: token! })
+    expect(oauthView.currentMember).toBeNull()
+
+    const member = await prisma.groupMember.findUnique({
+      where: { groupId_accountId: { groupId, accountId: secondInviteeId } },
+    })
+    expect(member).toBeNull()
+
+    // A session viewer still sees a confirmation; neither read consumes the token.
+    const viewed = await groupViewerCaller({
+      accountId: secondInviteeId,
+      email: secondInviteeEmail,
+    }).get({ groupId, linkInviteToken: token! })
+    expect(viewed.currentMember).toBeNull()
+  })
+
   it('allows a second signed-in user to accept a link invitation', async () => {
     const { groupId } = await createTestGroup(`Link SignedIn ${runId}`)
 
@@ -376,7 +459,7 @@ describe('Link invitation flow — real DB', () => {
         accountId: inviteeId,
         email: inviteeEmail,
       }).acceptLink({ token: oldToken! }),
-    ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
 
     // The new token works.
     const newToken = getInviteToken(rotated.inviteUrl)
@@ -528,14 +611,15 @@ describe('Link invitation flow — real DB', () => {
     expect(token).not.toBeNull()
 
     // The invitee cannot redeem the link while the EMAIL invite is
-    // pending — accepting would join via the wrong invitation.
+    // pending — accepting would join via the wrong invitation. Surfaced as
+    // a conflict (the recipient-specific invite wins), not a dead link.
     await expect(
       invitationsCaller({
         accountId: inviteeId,
         email: inviteeEmail,
       }).acceptLink({ token }),
     ).rejects.toMatchObject({
-      code: 'BAD_REQUEST',
+      code: 'CONFLICT',
       message: expect.stringMatching(/personal email invitation/i),
     })
 
@@ -570,14 +654,15 @@ describe('Link invitation flow — real DB', () => {
     })
     const token = getInviteToken(createResult.inviteUrl)!
 
-    // Blocked while pending.
+    // Blocked while pending (conflict: the recipient-specific invite
+    // wins over the link).
     await expect(
       invitationsCaller({
         accountId: inviteeId,
         email: inviteeEmail,
       }).acceptLink({ token }),
     ).rejects.toMatchObject({
-      code: 'BAD_REQUEST',
+      code: 'CONFLICT',
       message: expect.stringMatching(/personal email invitation/i),
     })
 
@@ -640,7 +725,7 @@ describe('Link invitation flow — real DB', () => {
         accountId: inviteeId,
         email: inviteeEmail,
       }).acceptLink({ token }),
-    ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
     const newToken = getInviteToken(regenerated.inviteUrl)
     expect(newToken).not.toBeNull()
     const acceptResult = await invitationsCaller({

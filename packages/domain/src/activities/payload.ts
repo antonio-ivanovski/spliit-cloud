@@ -154,6 +154,9 @@ export const invitationChangedFields = [
   'displayName',
   'role',
   'credential',
+  'label',
+  'maxUses',
+  'expiry',
 ] as const
 export const invitationChangedFieldSchema = z.enum(invitationChangedFields)
 export type InvitationChangedField = z.infer<

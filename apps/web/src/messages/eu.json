@@ -744,7 +744,10 @@
       "notNow": "Orain ez"
     },
     "groupTabsHint": "Taldeko fitxak berrantolatu edo erabiltzen ez dituzunak ezkutatu nahi dituzu?",
-    "groupTabsHintLink": "Pertsonalizatu fitxak kontuaren ezarpenetan"
+    "groupTabsHintLink": "Pertsonalizatu fitxak kontuaren ezarpenetan",
+    "linkInvitationFullTitle": "Gonbidapen-esteka hau beteta dago",
+    "linkInvitationFullDescription": "Esteka honetako leku guztiak erabili dira. Eskatu taldeko kide bati berri bat partekatzeko.",
+    "linkInvitationSharedUse": "Esteka hau hainbat lagunek erabili dezakete, bat-egiteen mugapean eta iraungitze-epean."
   },
   "GroupForm": {
     "title": "Taldeko informazioa",
@@ -2063,7 +2066,41 @@
         "shareTitle": "Batu {groupName} taldera Spliit Cloud-en",
         "shareText": "Berriki sortu dut {groupName} gure gastu partekatuetarako Spliit Cloud-en. Hona hemen behin erabil daitekeen gonbidapen-esteka — ireki batzeko:\n{inviteUrl}",
         "generateNew": "Sortu esteka berria",
-        "copyLink": "Kopiatu esteka"
+        "copyLink": "Kopiatu esteka",
+        "mode": "Nork erabili dezake esteka hau?",
+        "modeOneTime": "Pertsona bat",
+        "modeOneTimeHint": "Estekak lehen onarpenaren ondoren uzten du funtzionatzeari.",
+        "modeShared": "Hainbat lagun",
+        "modeSharedHint": "Hainbat lagunek erabil dezaketen esteka partekatua, beheko mugen barruan.",
+        "labelLabel": "Estekaren izena (aukerakoa)",
+        "labelPlaceholder": "adib. Familia, Discord",
+        "joinLimitLabel": "Bat-egiteen muga",
+        "unlimitedJoins": "Mugarik gabeko bat-egiteak",
+        "joinsSuffix": "bat-egite",
+        "expiryLabel": "Iraungitzea",
+        "neverExpires": "Ez da inoiz iraungitzen",
+        "expiryUnitHour": "ordu",
+        "expiryUnitDay": "egun",
+        "expiryUnitWeek": "aste",
+        "quick24h": "24 ordu",
+        "quick7d": "7 egun",
+        "quick30d": "30 egun",
+        "memberOnlyNote": "Lagunak kide gisa batzen dira. Admin bat gonbidatzeko, erabili e-posta edo behin erabil daitekeen esteka.",
+        "summaryUnlimited": "Esteka hau irekita egongo da ezeztatzen duzun arte.",
+        "summaryCapped": "Gehienez {maxUses} lagun batu daitezke · {expiry} barru iraungitzen da ({expiryDate}).",
+        "sharedCreated": "Esteka partekatua prest dago. Kopiatu eta argitaratu zure lagunak dauden lekuan.",
+        "sharedIntro": "Hona hemen {groupName} talderako zure esteka partekatua. Gehienez {maxUses} kide batu daitezke honekin, beheko mugen barruan.",
+        "sharedCopyAgain": "Kideek esteka hau berriro kopiatu dezakete zain dauden gonbidapenetatik.",
+        "sharedShareText": "Batu {groupName} taldera Spliit Cloud-en — ireki esteka hau batzeko:\n{inviteUrl}",
+        "invalidJoinLimit": "Sartu 2 eta 1000 arteko muga, edo aukeratu «mugarik gabe».",
+        "invalidExpiry": "Sartu ordubete eta urtebete arteko iraungitzea, edo aukeratu «inoiz ez».",
+        "summaryExpiryOnly": "Mugarik gabeko bat-egiteak · {expiry} barru iraungitzen da ({expiryDate}).",
+        "otherOption": "Beste bat…",
+        "sharedIntroUnlimited": "Hona hemen {groupName} talderako zure esteka partekatua. Kide berriak honekin batu daitezke, beheko mugen barruan.",
+        "expiryUnitLabel": "Iraungitze-unitatea",
+        "summaryCappedNoDate": "Gehienez {maxUses} lagun batu daitezke · {expiry} barru iraungitzen da.",
+        "summaryExpiryOnlyNoDate": "Mugarik gabeko bat-egiteak · {expiry} barru iraungitzen da.",
+        "summaryCappedNever": "Gehienez {maxUses} lagun batu daitezke · ez da inoiz iraungitzen."
       },
       "temporaryNamePlaceholder": "adib. Alex-en gelakidea",
       "friendsDescription": "Gonbidatu norbait partekatutako taldeetatik.",
@@ -2119,9 +2156,25 @@
         "type": "QR saioa",
         "fallbackLabel": "Inguruko QR kodea",
         "viewQr": "Ikusi QR kodea",
-        "expireNow": "Iraungi orain"
+        "expireNow": "Iraungi orain",
+        "expireDescription": "Kodeak berehala funtzionatzeari utziko dio. Dagoeneko batu direnak kide izaten jarraituko dute.",
+        "expireTitle": "Iraungi QR kode hau?"
       },
-      "createdWithoutEmail": "{email} helbiderako gonbidapena sortu da, baina ez da mezurik bidali. Horren ordez, partekatu gonbidapen-esteka bat."
+      "createdWithoutEmail": "{email} helbiderako gonbidapena sortu da, baina ez da mezurik bidali. Horren ordez, partekatu gonbidapen-esteka bat.",
+      "shared": {
+        "type": "Esteka partekatua",
+        "joinedOf": "{count}/{max} batu dira",
+        "joinedUnlimited": "{count} batu dira",
+        "full": "Beteta",
+        "copyLink": "Kopiatu esteka",
+        "copied": "Esteka partekatua kopiatu da.",
+        "joiners": "Nor batu den",
+        "joinersEmpty": "Ez da inor batu esteka honekin oraindik.",
+        "editLimits": "Editatu esteka",
+        "expiresWithJoins": "{date}ean iraungitzen da · {joins}",
+        "revokeDescription": "\"{name}\" estekak berehala funtzionatzeari utziko dio. Dagoeneko batu direnak kide izaten jarraituko dute.",
+        "revokeTitle": "Ezeztatu esteka partekatua?"
+      }
     },
     "changeRoleAria": "Aldatu rola",
     "remove": "Kendu",
@@ -2271,10 +2324,21 @@
       "emailInvalid": "Sartu baliozko helbide elektroniko bat.",
       "linkNotShown": "Gonbidapen-esteka ez da hemen erakusten. Berriro partekatu behar baduzu, erabili \"Sortu esteka berria\" zerrendan.",
       "switchToLinkNote": "Gorde gonbidapen hau esteka bihurtzeko. Posta elektronikoko gonbidapenak ez du funtzionatuko.",
-      "savedWithoutEmail": "Aldaketak gorde dira, baina ez da mezurik bidali. Horren ordez, partekatu gonbidapen-esteka bat."
+      "savedWithoutEmail": "Aldaketak gorde dira, baina ez da mezurik bidali. Horren ordez, partekatu gonbidapen-esteka bat.",
+      "sharedLabelLabel": "Estekaren izena",
+      "sharedMaxUsesLabel": "Bat-egiteen muga",
+      "sharedExpiryLabel": "Iraungitzea",
+      "sharedNeverExpires": "Ez da inoiz iraungitzen",
+      "sharedExpiresOn": "Iraungitze berria: {date}.",
+      "sharedEndsNow": "Muga {count}ra edo gutxiagora jaisteak esteka hau berehala amaitzen du.",
+      "regenerateSharedDescription": "Estekaren URL berri bat sortuko da. Bat-egiteak, izena, mugak eta iraungitzea berdin mantentzen dira — esteka bera bakarrik aldatzen da.",
+      "linkReadySharedDescription": "Partekatu zure lagunak dauden lekuan. Kideek ere berriro kopiatu dezakete zain dauden gonbidapenetatik.",
+      "linkReadyCopyAgain": "Esteka hau berriro kopiatu ahal izango duzu geroago zain dauden gonbidapenetatik.",
+      "sharedKeepExpiry": "Mantendu uneko iraungitzea"
     },
     "regenerate": {
-      "title": "Sortu esteka berria"
+      "title": "Sortu esteka berria",
+      "sharedTitle": "Sortu esteka partekatu berria"
     },
     "actionsFor": "Ekintzak: {name}",
     "readOnlyDescription": "Talde honetan dauden pertsonak eta parte-hartzaileak. Helbide elektronikoak eta gonbidapenen xehetasunak ezkutatuta daude.",
@@ -2913,7 +2977,10 @@
         "destination": "Hartzailea",
         "displayName": "Izena",
         "role": "Rola",
-        "credential": "Gonbidapen-esteka"
+        "credential": "Gonbidapen-esteka",
+        "label": "Estekaren izena",
+        "maxUses": "Bat-egiteen muga",
+        "expiry": "Iraungitzea"
       }
     },
     "fallback": "Jarduera bat erregistratu da",

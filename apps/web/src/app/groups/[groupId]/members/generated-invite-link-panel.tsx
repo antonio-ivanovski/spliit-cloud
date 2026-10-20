@@ -8,22 +8,27 @@ import { Input } from '@/components/ui/input'
 import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
 
-import { formatDate } from './members-hooks'
+import { formatDateTime } from './members-hooks'
 
 /**
  * One-time shareable-link result view. The URL exists only in the caller's
  * component state — this panel never fetches it from the server, so it must
  * only be rendered with a fresh, never-persisted value.
+ *
+ * `expiresAt` may be null for never-expiring shared links; pass `expiryLabel`
+ * to override the expiry line in that case.
  */
 export function GeneratedInviteLinkPanel({
   inviteUrl,
   expiresAt,
+  expiryLabel,
   onShare,
   canShare,
   className,
 }: {
   inviteUrl: string
-  expiresAt: Date | string
+  expiresAt: Date | string | null
+  expiryLabel?: string
   onShare: () => void
   canShare: boolean
   className?: string
@@ -61,9 +66,12 @@ export function GeneratedInviteLinkPanel({
         )}
       </div>
       <p className="mt-2 text-xs text-muted-foreground">
-        {t('invite.link.expiresOn', {
-          date: formatDate(expiresAt, locale, accountTimeZone),
-        })}
+        {expiryLabel ??
+          (expiresAt
+            ? t('invite.link.expiresOn', {
+                date: formatDateTime(expiresAt, locale, accountTimeZone),
+              })
+            : t('invite.link.neverExpires'))}
       </p>
     </div>
   )

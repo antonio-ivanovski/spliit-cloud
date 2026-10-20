@@ -13,10 +13,22 @@ import { act, render, screen } from '@/test/test-utils'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
-const { mockHomeSearch, mockAnnouncementsListQuery } = vi.hoisted(() => ({
-  mockHomeSearch: { redirect: undefined as string | undefined },
-  mockAnnouncementsListQuery: vi.fn(),
-}))
+const { mockHomeSearch, mockAnnouncementsListQuery, mockOnboardingQuery } =
+  vi.hoisted(() => ({
+    mockHomeSearch: {
+      redirect: undefined as string | undefined,
+      invite: undefined as string | undefined,
+      viewKey: undefined as string | undefined,
+      invitation: undefined as string | undefined,
+    },
+    mockAnnouncementsListQuery: vi.fn(),
+    mockOnboardingQuery: {
+      data: undefined as { anonymousOnboardingCompleted: boolean } | undefined,
+      isPending: false,
+      isFetching: false,
+      refetch: vi.fn(),
+    },
+  }))
 
 vi.mock('@/lib/use-current-account', () => ({
   useCurrentAccount: vi.fn(),
@@ -27,6 +39,11 @@ vi.mock('@/trpc/client', () => ({
     announcements: {
       list: {
         useQuery: mockAnnouncementsListQuery,
+      },
+    },
+    account: {
+      onboardingStatus: {
+        useQuery: () => mockOnboardingQuery,
       },
     },
   },
@@ -48,8 +65,21 @@ vi.mock('@tanstack/react-router', () => ({
     </a>
   ),
   useNavigate: () => vi.fn(),
-  Navigate: ({ to }: { to: string }) => (
-    <div data-testid="home-redirect" data-to={to} />
+  Navigate: ({
+    to,
+    search,
+    hash,
+  }: {
+    to: string
+    search?: Record<string, string>
+    hash?: string
+  }) => (
+    <div
+      data-testid="home-redirect"
+      data-to={to}
+      data-search={search ? JSON.stringify(search) : undefined}
+      data-hash={hash}
+    />
   ),
   getRouteApi: () => ({
     useSearch: () => mockHomeSearch,
@@ -67,7 +97,11 @@ vi.mock('@/lib/auth', () => ({
 
 // Mock AuthPanel to avoid its complex dependencies
 vi.mock('@/components/auth/auth-panel', () => ({
-  AuthPanel: () => <div data-testid="auth-panel">Sign in content</div>,
+  AuthPanel: ({ redirectTo }: { redirectTo?: string }) => (
+    <div data-testid="auth-panel" data-redirect-to={redirectTo ?? ''}>
+      Sign in content
+    </div>
+  ),
 }))
 
 // Mock RecentGroupList to avoid tRPC
@@ -92,6 +126,13 @@ describe('HomePage (signed-out)', () => {
   afterEach(() => {
     vi.clearAllMocks()
     vi.useRealTimers()
+    mockHomeSearch.redirect = undefined
+    mockHomeSearch.invite = undefined
+    mockHomeSearch.viewKey = undefined
+    mockHomeSearch.invitation = undefined
+    mockOnboardingQuery.data = undefined
+    mockOnboardingQuery.isPending = false
+    mockOnboardingQuery.isFetching = false
     window.localStorage.removeItem(DEVICE_SAVED_VIEWS_KEY)
     Object.defineProperty(navigator, 'onLine', {
       configurable: true,
@@ -410,6 +451,10 @@ describe('HomePage (signed-out)', () => {
 describe('HomePage (signed-in)', () => {
   afterEach(() => {
     vi.clearAllMocks()
+    mockHomeSearch.redirect = undefined
+    mockHomeSearch.invite = undefined
+    mockHomeSearch.viewKey = undefined
+    mockHomeSearch.invitation = undefined
     Object.defineProperty(navigator, 'onLine', {
       configurable: true,
       value: true,
@@ -487,6 +532,27 @@ describe('HomePage (signed-in)', () => {
     expect(screen.queryByTestId('landing-updates')).not.toBeInTheDocument()
   })
 
+  it('hands the invite-bearing redirect to the AuthPanel explicitly', () => {
+    mockHomeSearch.redirect = '/groups/grp-1?invite=invite-token'
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: null,
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(<HomePage />)
+
+    // The panel must not depend on ambient route search: the redirect (with
+    // the invite token) is passed as a prop so every auth callback after
+    // sign-in returns to the group invite, never to a bare `/`.
+    expect(screen.getByTestId('auth-panel')).toHaveAttribute(
+      'data-redirect-to',
+      '/groups/grp-1?invite=invite-token',
+    )
+  })
+
   it('continues an authenticated visitor to the preserved destination', () => {
     mockHomeSearch.redirect = '/groups/grp-1?invite=invite-token'
     vi.mocked(useCurrentAccount).mockReturnValue({
@@ -507,9 +573,98 @@ describe('HomePage (signed-in)', () => {
 
     render(<HomePage />)
 
+    // The destination splits into pathname + search object so the query
+    // encodes exactly once (query-in-`to` would serialize verbatim and grow
+    // `?invite=T` on every lap — the mangled-URL bug).
     expect(screen.getByTestId('home-redirect')).toHaveAttribute(
       'data-to',
-      '/groups/grp-1?invite=invite-token',
+      '/groups/grp-1',
     )
+    expect(screen.getByTestId('home-redirect')).toHaveAttribute(
+      'data-search',
+      JSON.stringify({ invite: 'invite-token' }),
+    )
+    expect(
+      screen.getByTestId('home-redirect').getAttribute('data-hash'),
+    ).toBeNull()
+  })
+
+  it('resolves structured bounce params into the panel destination', () => {
+    mockHomeSearch.redirect = '/groups/grp-1'
+    mockHomeSearch.invite = 'structured-token'
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: null,
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(<HomePage />)
+
+    // The token rides as a first-class param, not nested in `redirect`.
+    expect(screen.getByTestId('auth-panel')).toHaveAttribute(
+      'data-redirect-to',
+      '/groups/grp-1?invite=structured-token',
+    )
+  })
+
+  it('renders the dashboard instead of self-bouncing on a bare home return', () => {
+    mockHomeSearch.invite = 'orphan-token'
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: {
+        id: 'user-1',
+        name: 'Alice',
+        email: 'alice@example.com',
+        image: null,
+        emailVerified: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(<HomePage />)
+
+    // No `redirect` and a `/` destination: navigating would self-loop, so the
+    // dashboard renders instead of a `/?redirect=%2F` bounce.
+    expect(screen.getByTestId('recent-group-list')).toBeInTheDocument()
+    expect(screen.queryByTestId('home-redirect')).not.toBeInTheDocument()
+  })
+
+  it('holds the pending shell while bounce params settle', () => {
+    mockHomeSearch.redirect = '/groups/grp-1'
+    mockHomeSearch.invite = 'settling-token'
+    mockOnboardingQuery.isPending = true
+    mockOnboardingQuery.isFetching = true
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: {
+        id: 'guest-1',
+        name: 'New Guest',
+        email: 'guest-1@anonymous.placeholder.local',
+        isAnonymous: true,
+        image: null,
+        emailVerified: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    const { container } = render(<HomePage />)
+
+    // Navigating before the authoritative safeguard verdict lands flaps `/`
+    // against `/auth/complete-profile` on every session emission (the
+    // "slowing down Firefox" race). The URL keeps escrowing the token, so
+    // holding the shell sheds nothing.
+    expect(screen.queryByTestId('home-redirect')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('recent-group-list')).not.toBeInTheDocument()
+    expect(container.querySelector('[aria-busy="true"]')).toBeInTheDocument()
   })
 })

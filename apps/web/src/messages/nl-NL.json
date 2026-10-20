@@ -759,7 +759,10 @@
       "notNow": "Niet nu"
     },
     "groupTabsHint": "Wil je de groepstabbladen anders ordenen of de groepstabbladen verbergen die je niet gebruikt?",
-    "groupTabsHintLink": "Tabbladen aanpassen in je accountinstellingen"
+    "groupTabsHintLink": "Tabbladen aanpassen in je accountinstellingen",
+    "linkInvitationFullTitle": "Deze uitnodigingslink is vol",
+    "linkInvitationFullDescription": "Alle plekken van deze link zijn gebruikt. Vraag een groepslid om een nieuwe te delen.",
+    "linkInvitationSharedUse": "Deze link kan door meerdere mensen gebruikt worden, binnen de limiet en geldigheid."
   },
   "GroupForm": {
     "title": "Groepsinformatie",
@@ -2084,7 +2087,41 @@
         "shareTitle": "Word lid van {groupName} op Spliit Cloud",
         "shareText": "Ik heb {groupName} aangemaakt voor onze gedeelde uitgaven op Spliit Cloud. Hier is een eenmalige uitnodigingslink — open hem om lid te worden:\n{inviteUrl}",
         "generateNew": "Nieuwe link genereren",
-        "copyLink": "Link kopiëren"
+        "copyLink": "Link kopiëren",
+        "mode": "Wie kan deze link gebruiken?",
+        "modeOneTime": "Eén persoon",
+        "modeOneTimeHint": "De link werkt niet meer na de eerste acceptatie.",
+        "modeShared": "Meerdere mensen",
+        "modeSharedHint": "Een gedeelde link die meerdere mensen kunnen gebruiken, binnen de limieten hieronder.",
+        "labelLabel": "Linknaam (optioneel)",
+        "labelPlaceholder": "bijv. Familie, Discord",
+        "joinLimitLabel": "Limiet",
+        "unlimitedJoins": "Onbeperkt deelnemen",
+        "joinsSuffix": "deelnames",
+        "expiryLabel": "Verloopt over",
+        "neverExpires": "Verloopt nooit",
+        "expiryUnitHour": "uur",
+        "expiryUnitDay": "dagen",
+        "expiryUnitWeek": "weken",
+        "quick24h": "24 uur",
+        "quick7d": "7 dagen",
+        "quick30d": "30 dagen",
+        "memberOnlyNote": "Mensen worden lid als lid. Nodig een beheerder uit via e-mail of een eenmalige link.",
+        "summaryUnlimited": "Deze link blijft open tot je hem intrekt.",
+        "summaryCapped": "Maximaal {maxUses} personen kunnen deelnemen · verloopt over {expiry} ({expiryDate}).",
+        "sharedCreated": "Gedeelde link klaar. Kopieer hem en deel hem waar je mensen zijn.",
+        "sharedIntro": "Hier is je gedeelde link voor {groupName}. Maximaal {maxUses} leden kunnen ermee deelnemen, binnen de limieten hieronder.",
+        "sharedCopyAgain": "Leden kunnen deze link opnieuw kopiëren bij de openstaande uitnodigingen.",
+        "sharedShareText": "Word lid van {groupName} op Spliit Cloud — open deze link om lid te worden:\n{inviteUrl}",
+        "invalidJoinLimit": "Voer een limiet tussen 2 en 1000 in, of kies «onbeperkt».",
+        "invalidExpiry": "Voer een geldigheid tussen 1 uur en 1 jaar in, of kies «nooit».",
+        "summaryExpiryOnly": "Onbeperkt deelnemen · verloopt over {expiry} ({expiryDate}).",
+        "otherOption": "Anders…",
+        "sharedIntroUnlimited": "Hier is je gedeelde link voor {groupName}. Nieuwe leden kunnen ermee deelnemen, binnen de limieten hieronder.",
+        "expiryUnitLabel": "Tijdseenheid",
+        "summaryCappedNoDate": "Maximaal {maxUses} personen kunnen deelnemen · verloopt over {expiry}.",
+        "summaryExpiryOnlyNoDate": "Onbeperkt deelnemen · verloopt over {expiry}.",
+        "summaryCappedNever": "Maximaal {maxUses} personen kunnen deelnemen · verloopt nooit."
       },
       "temporaryNamePlaceholder": "bijv. Alex' huisgenoot",
       "friendsDescription": "Nodig iemand uit uit groepen die je hebt gedeeld.",
@@ -2140,9 +2177,25 @@
         "type": "QR-sessie",
         "fallbackLabel": "QR-code in de buurt",
         "viewQr": "QR-code bekijken",
-        "expireNow": "Nu laten verlopen"
+        "expireNow": "Nu laten verlopen",
+        "expireDescription": "De code werkt onmiddellijk niet meer. Mensen die al lid zijn geworden, blijven lid.",
+        "expireTitle": "Deze QR-code laten verlopen?"
       },
-      "createdWithoutEmail": "Uitnodiging voor {email} aangemaakt, maar er is geen e-mail verzonden. Deel in plaats daarvan een uitnodigingslink."
+      "createdWithoutEmail": "Uitnodiging voor {email} aangemaakt, maar er is geen e-mail verzonden. Deel in plaats daarvan een uitnodigingslink.",
+      "shared": {
+        "type": "Gedeelde link",
+        "joinedOf": "{count} van {max} lid geworden",
+        "joinedUnlimited": "{count} lid geworden",
+        "full": "Vol",
+        "copyLink": "Link kopiëren",
+        "copied": "Gedeelde link gekopieerd.",
+        "joiners": "Wie er lid zijn geworden",
+        "joinersEmpty": "Niemand is nog lid geworden via deze link.",
+        "editLimits": "Link bewerken",
+        "expiresWithJoins": "Verloopt op {date} · {joins}",
+        "revokeDescription": "“{name}” werkt onmiddellijk niet meer. Mensen die al lid zijn geworden, blijven lid.",
+        "revokeTitle": "Gedeelde link intrekken?"
+      }
     },
     "changeRoleAria": "Rol wijzigen",
     "remove": "Verwijderen",
@@ -2295,10 +2348,21 @@
       "emailInvalid": "Voer een geldig e-mailadres in.",
       "linkNotShown": "De uitnodigingslink wordt hier niet weergegeven. Gebruik „Nieuwe link genereren“ in de lijst als je hem opnieuw wilt delen.",
       "switchToLinkNote": "Sla op om deze uitnodiging om te zetten in een link. De e-mailuitnodiging werkt dan niet meer.",
-      "savedWithoutEmail": "Wijzigingen opgeslagen, maar er is geen e-mail verzonden. Deel in plaats daarvan een uitnodigingslink."
+      "savedWithoutEmail": "Wijzigingen opgeslagen, maar er is geen e-mail verzonden. Deel in plaats daarvan een uitnodigingslink.",
+      "sharedLabelLabel": "Linknaam",
+      "sharedMaxUsesLabel": "Limiet",
+      "sharedExpiryLabel": "Verloopt over",
+      "sharedNeverExpires": "Verloopt nooit",
+      "sharedExpiresOn": "Nieuwe geldigheid: {date}.",
+      "sharedEndsNow": "De limiet verlagen naar {count} of lager beëindigt deze link meteen.",
+      "regenerateSharedDescription": "Er wordt een nieuwe link-URL gemaakt. Deelnames, naam, limieten en geldigheid blijven gelijk — alleen de link zelf verandert.",
+      "linkReadySharedDescription": "Deel hem waar je mensen zijn. Leden kunnen hem ook opnieuw kopiëren bij de openstaande uitnodigingen.",
+      "linkReadyCopyAgain": "Je kunt deze link later opnieuw kopiëren bij de openstaande uitnodigingen.",
+      "sharedKeepExpiry": "Huidige geldigheid behouden"
     },
     "regenerate": {
-      "title": "Nieuwe link genereren"
+      "title": "Nieuwe link genereren",
+      "sharedTitle": "Nieuwe gedeelde link maken"
     },
     "actionsFor": "Acties voor {name}",
     "readOnlyDescription": "Personen en deelnemers in deze groep. E-mailadressen en uitnodigingsgegevens zijn verborgen.",
@@ -2933,7 +2997,10 @@
         "destination": "Ontvanger",
         "displayName": "Naam",
         "role": "Rol",
-        "credential": "Uitnodigingslink"
+        "credential": "Uitnodigingslink",
+        "label": "Linknaam",
+        "maxUses": "Limiet",
+        "expiry": "Geldigheid"
       }
     },
     "fallback": "Er is een activiteit geregistreerd",

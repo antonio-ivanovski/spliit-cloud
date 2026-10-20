@@ -11,6 +11,7 @@
     "./activities": "./src/activities/index.ts",
     "./balances": "./src/balances.ts",
     "./currency": "./src/currency.ts",
+    "./invitations": "./src/invitations.ts",
     "./i18n": "./src/i18n.ts",
     "./notifications": "./src/notifications.ts",
     "./password": "./src/password.ts",

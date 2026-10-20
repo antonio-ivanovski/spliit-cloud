@@ -639,7 +639,10 @@
       "notNow": "나중에"
     },
     "groupTabsHint": "그룹 탭을 다시 정렬하거나 사용하지 않는 탭을 숨기고 싶으신가요?",
-    "groupTabsHintLink": "계정 설정에서 탭 맞춤 설정"
+    "groupTabsHintLink": "계정 설정에서 탭 맞춤 설정",
+    "linkInvitationFullTitle": "이 초대 링크가 가득 찼습니다",
+    "linkInvitationFullDescription": "이 링크의 자리가 모두 찼습니다. 그룹 멤버에게 새 링크를 공유해 달라고 요청하세요.",
+    "linkInvitationSharedUse": "이 링크는 참가 제한과 만료 기간 내에서 여러 사람이 사용할 수 있습니다."
   },
   "GroupForm": {
     "title": "그룹 정보",
@@ -2073,7 +2076,41 @@
         "shareTitle": "Spliit Cloud에서 {groupName}에 참여하기",
         "shareText": "Spliit Cloud에서 공동 비용 관리를 위해 {groupName} 그룹을 만들었어요. 1회용 초대 링크를 보내드릴게요. 열어서 참여해 주세요:\n{inviteUrl}",
         "generateNew": "새 링크 생성",
-        "copyLink": "링크 복사"
+        "copyLink": "링크 복사",
+        "mode": "이 링크를 누가 사용할 수 있나요?",
+        "modeOneTime": "한 사람",
+        "modeOneTimeHint": "첫 수락 후 링크가 작동을 멈춥니다.",
+        "modeShared": "여러 사람",
+        "modeSharedHint": "아래 제한 내에서 여러 사람이 사용할 수 있는 공유 링크입니다.",
+        "labelLabel": "링크 이름(선택 사항)",
+        "labelPlaceholder": "예: 가족, Discord",
+        "joinLimitLabel": "참가 제한",
+        "unlimitedJoins": "무제한 참가",
+        "joinsSuffix": "참가",
+        "expiryLabel": "만료 기간",
+        "neverExpires": "만료 없음",
+        "expiryUnitHour": "시간",
+        "expiryUnitDay": "일",
+        "expiryUnitWeek": "주",
+        "quick24h": "24시간",
+        "quick7d": "7일",
+        "quick30d": "30일",
+        "memberOnlyNote": "참가자는 멤버로 가입합니다. 관리자를 초대하려면 이메일이나 1회용 링크를 사용하세요.",
+        "summaryUnlimited": "이 링크는 취소할 때까지 열려 있습니다.",
+        "summaryCapped": "최대 {maxUses}명까지 참가할 수 있습니다 · 만료 {expiry} ({expiryDate}).",
+        "sharedCreated": "공유 링크가 준비됐습니다. 복사해서 사람들이 있는 곳에 게시하세요.",
+        "sharedIntro": "{groupName} 그룹의 공유 링크입니다. 이 링크로 최대 {maxUses}명이 아래 제한 내에서 멤버로 참가할 수 있습니다.",
+        "sharedCopyAgain": "멤버는 대기 중인 초대 목록에서 이 링크를 다시 복사할 수 있습니다.",
+        "sharedShareText": "Spliit Cloud의 {groupName} 그룹에 참가하세요 — 참가하려면 이 링크를 여세요:\n{inviteUrl}",
+        "invalidJoinLimit": "2에서 1000 사이의 제한을 입력하거나 무제한을 선택하세요.",
+        "invalidExpiry": "1시간에서 1년 사이의 만료 기간을 입력하거나 만료 없음을 선택하세요.",
+        "summaryExpiryOnly": "누구나 참가할 수 있습니다 · 만료 {expiry} ({expiryDate}).",
+        "otherOption": "기타…",
+        "sharedIntroUnlimited": "{groupName} 그룹의 공유 링크입니다. 이 링크로 새 멤버가 아래 제한 내에서 참가할 수 있습니다.",
+        "expiryUnitLabel": "만료 기간 단위",
+        "summaryCappedNoDate": "최대 {maxUses}명까지 참가할 수 있습니다 · 만료 {expiry}.",
+        "summaryExpiryOnlyNoDate": "누구나 참가할 수 있습니다 · 만료 {expiry}.",
+        "summaryCappedNever": "최대 {maxUses}명까지 참가할 수 있습니다 · 만료 없음."
       },
       "tab": {
         "email": "이메일",
@@ -2139,9 +2176,25 @@
         "type": "QR 세션",
         "fallbackLabel": "주변 QR 코드",
         "viewQr": "QR 코드 보기",
-        "expireNow": "지금 만료"
+        "expireNow": "지금 만료",
+        "expireDescription": "코드는 즉시 만료되어 사용할 수 없게 됩니다. 이미 참여한 사람은 멤버로 남습니다.",
+        "expireTitle": "이 QR 코드를 만료할까요?"
       },
-      "createdWithoutEmail": "{email}에 대한 초대를 만들었지만 이메일은 전송되지 않았습니다. 대신 초대 링크를 공유하세요."
+      "createdWithoutEmail": "{email}에 대한 초대를 만들었지만 이메일은 전송되지 않았습니다. 대신 초대 링크를 공유하세요.",
+      "shared": {
+        "type": "공유 링크",
+        "joinedOf": "{count}/{max}명 참가",
+        "joinedUnlimited": "{count}명 참가",
+        "full": "가득 참",
+        "copyLink": "링크 복사",
+        "copied": "공유 링크가 복사됐습니다.",
+        "joiners": "참가한 사람",
+        "joinersEmpty": "아직 이 링크로 참가한 사람이 없습니다.",
+        "editLimits": "링크 수정",
+        "expiresWithJoins": "만료 {date} · {joins}",
+        "revokeDescription": "“{name}”이(가) 즉시 사용할 수 없게 됩니다. 이미 참여한 사람은 멤버로 남습니다.",
+        "revokeTitle": "공유 링크를 취소할까요?"
+      }
     },
     "changeRoleAria": "역할 변경",
     "remove": "삭제",
@@ -2294,10 +2347,21 @@
       "emailInvalid": "유효한 이메일 주소를 입력하세요.",
       "linkNotShown": "초대 링크는 여기에 표시되지 않습니다. 다시 공유해야 한다면 목록에서 ‘새 링크 생성’을 사용하세요.",
       "switchToLinkNote": "저장하면 이 초대가 링크로 전환됩니다. 이메일 초대는 더 이상 작동하지 않습니다.",
-      "savedWithoutEmail": "변경 사항을 저장했지만 이메일은 전송되지 않았습니다. 대신 초대 링크를 공유하세요."
+      "savedWithoutEmail": "변경 사항을 저장했지만 이메일은 전송되지 않았습니다. 대신 초대 링크를 공유하세요.",
+      "sharedLabelLabel": "링크 이름",
+      "sharedMaxUsesLabel": "참가 제한",
+      "sharedExpiryLabel": "만료 기간",
+      "sharedNeverExpires": "만료 없음",
+      "sharedExpiresOn": "새 만료 기간: {date}.",
+      "sharedEndsNow": "제한을 {count} 이하로 낮추면 이 링크가 즉시 종료됩니다.",
+      "regenerateSharedDescription": "새 링크 주소가 생성됩니다. 참가 수, 이름, 제한, 만료 기간은 그대로 유지되고 링크 자체만 바뀝니다.",
+      "linkReadySharedDescription": "사람들이 있는 곳에 공유하세요. 멤버도 대기 중인 초대 목록에서 다시 복사할 수 있습니다.",
+      "linkReadyCopyAgain": "나중에 대기 중인 초대 목록에서 이 링크를 다시 복사할 수 있습니다.",
+      "sharedKeepExpiry": "현재 만료 기간 유지"
     },
     "regenerate": {
-      "title": "새 링크 생성"
+      "title": "새 링크 생성",
+      "sharedTitle": "새 공유 링크 만들기"
     },
     "actionsFor": "{name}에 대한 작업",
     "readOnlyDescription": "이 그룹에 포함된 사람과 참여자입니다. 이메일 주소와 초대 정보는 숨겨집니다.",
@@ -2936,7 +3000,10 @@
         "destination": "수신자",
         "displayName": "이름",
         "role": "역할",
-        "credential": "초대 링크"
+        "credential": "초대 링크",
+        "label": "링크 이름",
+        "maxUses": "참가 제한",
+        "expiry": "만료 기간"
       }
     },
     "fallback": "활동이 기록되었습니다",

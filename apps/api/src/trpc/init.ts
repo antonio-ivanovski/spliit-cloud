@@ -806,9 +806,21 @@ export async function loadGroupViewer({
         tokenHash: await hashLinkToken(trimmedInvite),
         OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
       },
-      select: { id: true, role: true, type: true },
+      select: {
+        id: true,
+        role: true,
+        type: true,
+        useCount: true,
+        maxUses: true,
+      },
     })
-    if (invitation) {
+    // Prisma cannot compare two columns (`useCount >= maxUses`) in a where
+    // clause, so the full-cap check happens here. A full link grants no
+    // read access — the visitor gets the same FORBIDDEN below. A missing
+    // (`null`) cap is unlimited and can never be full.
+    const isFull =
+      invitation?.maxUses != null && invitation.useCount >= invitation.maxUses
+    if (invitation && !isFull) {
       return {
         group,
         member: null,

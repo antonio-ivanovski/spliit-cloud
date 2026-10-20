@@ -739,7 +739,10 @@
       "notNow": "Şimdi değil"
     },
     "groupTabsHint": "Grup sekmelerini yeniden sıralamak veya kullanmadıklarınızı gizlemek ister misiniz?",
-    "groupTabsHintLink": "Hesap ayarlarınızda sekmeleri özelleştirin"
+    "groupTabsHintLink": "Hesap ayarlarınızda sekmeleri özelleştirin",
+    "linkInvitationFullTitle": "Bu davet bağlantısı dolu",
+    "linkInvitationFullDescription": "Bu bağlantıdaki tüm yerler doldu. Grup üyesinden yeni bir bağlantı paylaşmasını isteyin.",
+    "linkInvitationSharedUse": "Bu bağlantı, katılım sınırı ve süresi içinde birden fazla kişi tarafından kullanılabilir."
   },
   "GroupForm": {
     "title": "Grup bilgileri",
@@ -2057,7 +2060,41 @@
         "shareTitle": "Spliit Cloud'da {groupName} grubuna katıl",
         "shareText": "Spliit Cloud'da ortak harcamalarımız için az önce {groupName} grubunu oluşturdum. İşte tek kullanımlık bir davet bağlantısı — katılmak için açın:\n{inviteUrl}",
         "generateNew": "Yeni bağlantı oluştur",
-        "copyLink": "Bağlantıyı kopyala"
+        "copyLink": "Bağlantıyı kopyala",
+        "mode": "Bu bağlantıyı kimler kullanabilir?",
+        "modeOneTime": "Tek kişi",
+        "modeOneTimeHint": "Bağlantı ilk kabulden sonra çalışmayı durdurur.",
+        "modeShared": "Birden fazla kişi",
+        "modeSharedHint": "Aşağıdaki sınırlar içinde birden fazla kişinin kullanabileceği paylaşılan bağlantı.",
+        "labelLabel": "Bağlantı adı (isteğe bağlı)",
+        "labelPlaceholder": "örn. Aile, Discord",
+        "joinLimitLabel": "Katılım sınırı",
+        "unlimitedJoins": "Sınırsız katılım",
+        "joinsSuffix": "katılım",
+        "expiryLabel": "Süre",
+        "neverExpires": "Asla sona ermez",
+        "expiryUnitHour": "saat",
+        "expiryUnitDay": "gün",
+        "expiryUnitWeek": "hafta",
+        "quick24h": "24 saat",
+        "quick7d": "7 gün",
+        "quick30d": "30 gün",
+        "memberOnlyNote": "Kişiler üye olarak katılır. Yönetici davet etmek için e-posta ya da tek kullanımlık bağlantı kullanın.",
+        "summaryUnlimited": "Bu bağlantı, iptal edene kadar açık kalır.",
+        "summaryCapped": "En fazla {maxUses} kişi katılabilir · bitiş {expiry} ({expiryDate}).",
+        "sharedCreated": "Paylaşılan bağlantı hazır. Kopyalayın ve kişilerinize ulaştırın.",
+        "sharedIntro": "{groupName} için paylaşılan bağlantınız. Bu bağlantıyla en fazla {maxUses} kişi, aşağıdaki sınırlar içinde üye olarak katılabilir.",
+        "sharedCopyAgain": "Üyeler bu bağlantıyı bekleyen davetlerden yeniden kopyalayabilir.",
+        "sharedShareText": "Spliit Cloud'da {groupName} grubuna katılın — katılmak için bu bağlantıyı açın:\n{inviteUrl}",
+        "invalidJoinLimit": "2 ile 1000 arasında bir sınır girin ya da sınırsızı seçin.",
+        "invalidExpiry": "1 saat ile 1 yıl arasında bir süre girin ya da asla'yı seçin.",
+        "summaryExpiryOnly": "Sınırsız katılım · bitiş {expiry} ({expiryDate}).",
+        "otherOption": "Diğer…",
+        "sharedIntroUnlimited": "{groupName} için paylaşılan bağlantınız. Yeni üyeler bu bağlantıyla aşağıdaki sınırlar içinde katılabilir.",
+        "expiryUnitLabel": "Süre birimi",
+        "summaryCappedNoDate": "En fazla {maxUses} kişi katılabilir · bitiş {expiry}.",
+        "summaryExpiryOnlyNoDate": "Sınırsız katılım · bitiş {expiry}.",
+        "summaryCappedNever": "En fazla {maxUses} kişi katılabilir · asla sona ermez."
       },
       "friendsDescription": "Paylaştığınız gruplardan birini davet edin.",
       "selectFriendPlaceholder": "Bir arkadaş seçin…",
@@ -2112,9 +2149,25 @@
         "type": "QR oturumu",
         "fallbackLabel": "Yakındaki QR kod",
         "viewQr": "QR kodunu görüntüle",
-        "expireNow": "Şimdi sona erdir"
+        "expireNow": "Şimdi sona erdir",
+        "expireDescription": "Bu kod hemen çalışmayı durduracak. Zaten katılmış kişiler üye olarak kalır.",
+        "expireTitle": "Bu QR kodu sona erdirilsin mi?"
       },
-      "createdWithoutEmail": "{email} için davet oluşturuldu, ancak e-posta gönderilemedi. Bunun yerine bir davet bağlantısı paylaşın."
+      "createdWithoutEmail": "{email} için davet oluşturuldu, ancak e-posta gönderilemedi. Bunun yerine bir davet bağlantısı paylaşın.",
+      "shared": {
+        "type": "Paylaşılan bağlantı",
+        "joinedOf": "{count}/{max} kişi katıldı",
+        "joinedUnlimited": "{count} kişi katıldı",
+        "full": "Dolu",
+        "copyLink": "Bağlantıyı kopyala",
+        "copied": "Paylaşılan bağlantı kopyalandı.",
+        "joiners": "Kimler katıldı",
+        "joinersEmpty": "Bu bağlantıyla henüz kimse katılmadı.",
+        "editLimits": "Bağlantıyı düzenle",
+        "expiresWithJoins": "Bitiş {date} · {joins}",
+        "revokeDescription": "“{name}” hemen çalışmayı durduracak. Zaten katılmış kişiler üye olarak kalır.",
+        "revokeTitle": "Paylaşılan bağlantı iptal edilsin mi?"
+      }
     },
     "changeRoleAria": "Rolü değiştir",
     "remove": "Çıkar",
@@ -2263,10 +2316,21 @@
       "emailInvalid": "Geçerli bir e-posta adresi girin.",
       "linkNotShown": "Davet bağlantısı burada gösterilmiyor. Yeniden paylaşmanız gerekirse listedeki \"Yeni bağlantı oluştur\" seçeneğini kullanın.",
       "switchToLinkNote": "Bu daveti bağlantıya dönüştürmek için kaydet. E-posta daveti çalışmayı durduracak.",
-      "savedWithoutEmail": "Değişiklikler kaydedildi, ancak e-posta gönderilemedi. Bunun yerine bir davet bağlantısı paylaşın."
+      "savedWithoutEmail": "Değişiklikler kaydedildi, ancak e-posta gönderilemedi. Bunun yerine bir davet bağlantısı paylaşın.",
+      "sharedLabelLabel": "Bağlantı adı",
+      "sharedMaxUsesLabel": "Katılım sınırı",
+      "sharedExpiryLabel": "Süre",
+      "sharedNeverExpires": "Asla sona ermez",
+      "sharedExpiresOn": "Yeni bitiş: {date}.",
+      "sharedEndsNow": "Sınırı {count} veya altına düşürmek bu bağlantıyı hemen kapatır.",
+      "regenerateSharedDescription": "Yeni bir bağlantı adresi oluşturulur. Katılımlar, ad, sınırlar ve süre aynı kalır — yalnızca bağlantının kendisi değişir.",
+      "linkReadySharedDescription": "Kişilerinize ulaştırın. Üyeler de bekleyen davetlerden yeniden kopyalayabilir.",
+      "linkReadyCopyAgain": "Bu bağlantıyı daha sonra bekleyen davetlerden yeniden kopyalayabilirsiniz.",
+      "sharedKeepExpiry": "Mevcut süreyi koru"
     },
     "regenerate": {
-      "title": "Yeni bağlantı oluştur"
+      "title": "Yeni bağlantı oluştur",
+      "sharedTitle": "Yeni paylaşılan bağlantı oluştur"
     },
     "actionsFor": "{name} için işlemler",
     "readOnlyDescription": "Bu gruptaki kişiler ve katılımcılar. E-posta adresleri ve davet ayrıntıları gizlenir.",
@@ -2905,7 +2969,10 @@
         "destination": "Alıcı",
         "displayName": "Ad",
         "role": "Rol",
-        "credential": "Davet bağlantısı"
+        "credential": "Davet bağlantısı",
+        "label": "Bağlantı adı",
+        "maxUses": "Katılım sınırı",
+        "expiry": "Süre"
       }
     },
     "fallback": "Bir aktivite kaydedildi",

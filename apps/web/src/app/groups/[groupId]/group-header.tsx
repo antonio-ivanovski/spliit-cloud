@@ -1,9 +1,4 @@
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useSearch,
-} from '@tanstack/react-router'
+import { Link, useLocation, useSearch } from '@tanstack/react-router'
 import { ArrowLeft, Check, Info, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -15,13 +10,14 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
-import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { isFocusedMobilePath, isMobileGroupTabPath } from '@/lib/mobile-nav'
 import {
   isOfflineWriteError,
   notifyOfflineWriteBlocked,
 } from '@/lib/offline/write-guard'
+import { buildAuthBounceSearch } from '@/lib/signup-invite'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useGroupInvitationAcceptance } from '@/lib/use-invitation-acceptance'
 import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
@@ -63,7 +59,6 @@ export const GroupHeader = ({
         variant: 'destructive',
       }),
   })
-  const navigate = useNavigate({ from: '/groups/$groupId' })
   const utils = trpc.useUtils()
   // Invite accept/decline are writes — gate entry offline with the
   // single deduped explanation. The transport guard also rejects.
@@ -79,59 +74,9 @@ export const GroupHeader = ({
     from: '/groups/$groupId',
   })
 
-  const acceptLinkMutation = trpc.invitations.acceptLink.useMutation({
-    onSuccess: () => {
-      toast({
-        description: tGroups('invitationAccepted'),
-        variant: 'success',
-      })
-      void navigate({
-        search: (prev) => ({ ...prev, invite: undefined }),
-        replace: true,
-      })
-      void utils.groups.get.invalidate({ groupId })
-      void invalidateAccountGroupLists(utils)
-      void utils.invitations.listForAccount.invalidate()
-      void utils.invitations.list.invalidate({ groupId })
-    },
-    onError: (err) => {
-      if (isOfflineWriteError(err)) {
-        notifyOfflineWriteBlocked((message) =>
-          toast({ description: message, variant: 'destructive' }),
-        )
-        return
-      }
-      toast({
-        description: err.message,
-        variant: 'destructive',
-      })
-    },
-  })
-  const acceptMutation = trpc.invitations.accept.useMutation({
-    onSuccess: () => {
-      toast({
-        description: tGroups('invitationAccepted'),
-        variant: 'success',
-      })
-      void utils.groups.get.invalidate({ groupId })
-      void invalidateAccountGroupLists(utils)
-      void utils.invitations.listForAccount.invalidate()
-      // Full page reload to ensure everything is fresh after joining.
-      window.location.reload()
-    },
-    onError: (err) => {
-      if (isOfflineWriteError(err)) {
-        notifyOfflineWriteBlocked((message) =>
-          toast({ description: message, variant: 'destructive' }),
-        )
-        return
-      }
-      toast({
-        description: err.message,
-        variant: 'destructive',
-      })
-    },
-  })
+  const acceptance = useGroupInvitationAcceptance()
+  const acceptLinkMutation = acceptance
+  const acceptMutation = acceptance
 
   const declineMutation = trpc.invitations.decline.useMutation({
     onSuccess: () => {
@@ -162,18 +107,21 @@ export const GroupHeader = ({
     { token: inviteToken ?? '' },
     { enabled: !!inviteToken, retry: false },
   )
+  const previewReason = previewQuery.data?.preview?.reason ?? null
 
   // Banner state comes from the server-side `linkInviteState` (set
-  // by `groups.get` when a token is in the URL). `null` means the
-  // URL has no token — we fall back to the regular email-invite
-  // banner.
+  // by `groups.get` when a token is in the URL). A dead token for a
+  // non-member never reaches this banner — the viewer gate rejects it
+  // first and the layout renders the specific invalid-link page instead.
+  // `null` means the URL has no token — we fall back to the regular
+  // email-invite banner.
   const showLinkAlreadyMember =
     !!inviteToken &&
     !!currentMember &&
     !isLoading &&
     linkInviteState !== 'ACCEPTED'
 
-  const showLinkExpiredOrInvalid =
+  const serverEndedBanner =
     !!inviteToken &&
     !currentMember &&
     !currentInvitation &&
@@ -181,7 +129,16 @@ export const GroupHeader = ({
     (linkInviteState === 'EXPIRED' ||
       linkInviteState === 'REVOKED' ||
       linkInviteState === 'DECLINED' ||
-      linkInviteState === 'ACCEPTED')
+      linkInviteState === 'ACCEPTED' ||
+      linkInviteState === 'FULL')
+
+  // (A dead token for a non-member never reaches this banner — the viewer
+  // gate rejects it first and the layout renders the specific invalid-link
+  // page instead. The public preview still feeds `isLinkFull` below for the
+  // in-group cases where a banner does render.)
+  const showLinkExpiredOrInvalid = serverEndedBanner
+
+  const isLinkFull = linkInviteState === 'FULL' || previewReason === 'full'
 
   // Strip the `?invite=<token>` from the URL. Used by the "already a
   // member" banner, where the viewer can stay on the group page.
@@ -255,9 +212,11 @@ export const GroupHeader = ({
                 <p className="flex items-start gap-1.5 text-xs text-muted-foreground">
                   <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                   <span>
-                    {previewQuery.data?.preview?.isMultiUse
-                      ? tGroups('linkInvitationMultiUse')
-                      : tGroups('linkInvitationSingleUse')}
+                    {previewQuery.data?.preview?.isShared
+                      ? tGroups('linkInvitationSharedUse')
+                      : previewQuery.data?.preview?.isMultiUse
+                        ? tGroups('linkInvitationMultiUse')
+                        : tGroups('linkInvitationSingleUse')}
                   </span>
                 </p>
               )}
@@ -271,6 +230,11 @@ export const GroupHeader = ({
             </div>
             {account ? (
               <div className="flex flex-col gap-2">
+                {acceptance.error ? (
+                  <p role="alert" className="text-sm text-destructive">
+                    {acceptance.error.message}
+                  </p>
+                ) : null}
                 {!isOnline && (
                   <output className="block text-sm text-muted-foreground">
                     Reconnect to make changes
@@ -302,6 +266,7 @@ export const GroupHeader = ({
                       })
                     }}
                     disabled={
+                      !acceptance.ready ||
                       acceptMutation.isPending ||
                       declineMutation.isPending ||
                       acceptLinkMutation.isPending ||
@@ -346,6 +311,7 @@ export const GroupHeader = ({
                         })
                       }}
                       disabled={
+                        !acceptance.ready ||
                         acceptMutation.isPending ||
                         declineMutation.isPending ||
                         !isOnline
@@ -364,11 +330,18 @@ export const GroupHeader = ({
                 render={
                   <Link
                     to="/"
-                    search={{
-                      redirect: inviteToken
-                        ? `/groups/${groupId}?invite=${encodeURIComponent(inviteToken)}`
-                        : `/groups/${groupId}`,
-                    }}
+                    search={buildAuthBounceSearch({
+                      writer: 'group-header',
+                      invitationAction: 'accept',
+                      invitation:
+                        currentInvitation?.type === 'EMAIL'
+                          ? currentInvitation.id
+                          : undefined,
+                      // Live location, verbatim: the builder lifts credentials
+                      // itself (encoding included), so hand-building `?invite=`
+                      // here would double-encode or drop sibling params.
+                      from: `${window.location.pathname}${window.location.search}${window.location.hash}`,
+                    })}
                   />
                 }
               >
@@ -420,9 +393,17 @@ export const GroupHeader = ({
 
       {showLinkExpiredOrInvalid && (
         <Alert data-testid="invitation-expired-banner">
-          <AlertTitle>{tGroups('linkInvitationExpiredTitle')}</AlertTitle>
+          <AlertTitle>
+            {isLinkFull
+              ? tGroups('linkInvitationFullTitle')
+              : tGroups('linkInvitationExpiredTitle')}
+          </AlertTitle>
           <AlertDescription className="flex flex-col items-start gap-3">
-            <span>{tGroups('linkInvitationExpiredDescription')}</span>
+            <span>
+              {isLinkFull
+                ? tGroups('linkInvitationFullDescription')
+                : tGroups('linkInvitationExpiredDescription')}
+            </span>
             <Button
               size="sm"
               variant="outline"

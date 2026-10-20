@@ -5,6 +5,8 @@ import { render, screen } from '@/test/test-utils'
 // ── Module mocks ────────────────────────────────────────────────────────
 
 let mockCurrentPath = '/'
+let mockCurrentSearchStr: string | undefined
+let mockCurrentHash: string | undefined
 
 vi.mock('@tanstack/react-router', () => ({
   Navigate: ({
@@ -21,7 +23,11 @@ vi.mock('@tanstack/react-router', () => ({
     />
   ),
   useRouterState: () => ({
-    location: { pathname: mockCurrentPath },
+    location: {
+      pathname: mockCurrentPath,
+      searchStr: mockCurrentSearchStr,
+      hash: mockCurrentHash,
+    },
   }),
 }))
 
@@ -71,6 +77,8 @@ describe('ProfileGate', () => {
   afterEach(() => {
     vi.clearAllMocks()
     mockCurrentPath = '/'
+    mockCurrentSearchStr = undefined
+    mockCurrentHash = undefined
     mockOnboardingStatus.data = undefined
     mockOnboardingStatus.isPending = false
     mockOnboardingStatus.isFetching = false
@@ -185,6 +193,7 @@ describe('ProfileGate', () => {
   })
 
   it('redirects to complete-profile when account has no name', () => {
+    mockCurrentPath = '/expenses'
     ;(useCurrentAccount as Mock).mockReturnValue({
       data: {
         id: 'user-1',
@@ -206,8 +215,49 @@ describe('ProfileGate', () => {
 
     const navigate = screen.getByTestId('navigate')
     expect(navigate).toHaveAttribute('data-to', '/auth/complete-profile')
-    expect(navigate.getAttribute('data-search')).toContain('redirect')
+    expect(JSON.parse(navigate.getAttribute('data-search') ?? '{}')).toEqual({
+      redirect: '/expenses',
+    })
   })
+
+  it.each([
+    '?invite=gate-token&viewKey=view-proof&invitationAction=accept',
+    '?viewKey=view-proof&invitationAction=accept&invite=gate-token',
+  ])(
+    'preserves proof, action, and router fragments through the setup gate (%s)',
+    (query) => {
+      mockCurrentPath = '/groups/grp-1'
+      mockCurrentSearchStr = query
+      mockCurrentHash = 'members'
+      ;(useCurrentAccount as Mock).mockReturnValue({
+        data: {
+          id: 'user-1',
+          name: '',
+          email: 'alice@example.com',
+          image: null,
+          emailVerified: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        isPending: false,
+      })
+
+      render(
+        <ProfileGate>
+          <div data-testid="child">content</div>
+        </ProfileGate>,
+      )
+
+      const navigate = screen.getByTestId('navigate')
+      expect(navigate).toHaveAttribute('data-to', '/auth/complete-profile')
+      expect(JSON.parse(navigate.getAttribute('data-search') ?? '{}')).toEqual({
+        redirect: '/groups/grp-1#members',
+        invite: 'gate-token',
+        viewKey: 'view-proof',
+        invitationAction: 'accept',
+      })
+    },
+  )
 
   it('redirects a named guest the server still awaits its safeguard from', () => {
     // Name-first regression: the session predicate alone calls this account
@@ -374,8 +424,9 @@ describe('ProfileGate', () => {
 
     const navigate = screen.getByTestId('navigate')
     expect(navigate).toHaveAttribute('data-to', '/auth/complete-profile')
-    // The redirect search param should capture the home path
-    expect(navigate.getAttribute('data-search')).toContain('/')
+    // A self-bounce would emit `?redirect=%2F`: the gate emits a bare search
+    // instead, and complete-profile resolves the destination to `/`.
+    expect(navigate.getAttribute('data-search')).toBe('{}')
   })
 
   it('redirects from /groups/abc when account has no name', () => {

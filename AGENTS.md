@@ -35,3 +35,9 @@ Spliit is a Bun monorepo (web, api, domain, db). Explore `package.json`, workspa
 ## Environment-specific instructions
 
 - Cursor Cloud agents: [`.agents/cursor-cloud.md`](.agents/cursor-cloud.md) (VM-only startup/run gotchas; not relevant to local development).
+
+## Effect
+
+This repository uses Effect TypeScript. Before writing Effect code, read
+`node_modules/effect/AGENTS.md` completely and follow its relevant documentation
+links. For APIs not covered there, consult `node_modules/effect/src`.

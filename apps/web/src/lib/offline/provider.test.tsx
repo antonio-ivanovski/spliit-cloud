@@ -7,11 +7,13 @@ import {
   screen,
   waitFor,
 } from '@testing-library/react'
+import { getQueryKey } from '@trpc/react-query'
 import { StrictMode } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { AuthAccount } from '@/lib/auth'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { trpc } from '@/trpc/client'
 
 import { createConnectivityStore } from './connectivity'
 import { createOfflineLifecycle } from './lifecycle'
@@ -562,76 +564,160 @@ describe('OfflineProvider', () => {
     expect(result.current.isRevalidating).toBe(false)
   })
 
-  it('flushes the outbox before the launch download pass', async () => {
-    // Regression: the flush was wired only into manual retry, so queued
-    // expenses sat pending on the launch and auto-reconnect paths.
+  it('publishes a fresh profile through the lifecycle before account refetch completes', async () => {
+    const original = makeAccount('profile')
+    const renamed = { ...original, name: 'Fresh display name' }
+    let serverAccount = original
+    const refetch = vi.fn(
+      async (options?: { query?: { disableCookieCache?: boolean } }) => {
+        if (options?.query?.disableCookieCache) serverAccount = renamed
+      },
+    )
     mocks.useSession.mockReturnValue({
-      data: { user: makeAccount('a'), session: {} },
+      data: { user: original },
       error: null,
       isPending: false,
       isRefetching: false,
-      refetch: vi.fn(),
+      refetch,
     })
-    const namespace = JSON.stringify(['http://localhost:3001', 'a'])
-    const snapshot = {
-      account: makeAccount('a'),
-      session: 'verified' as const,
-      namespace,
-      generation: 1,
-      cleanupError: null,
-      invalidated: false,
-      lastVerifiedAt: Date.now(),
-      verifyAttempt: 1,
-    }
-    const lifecycle = {
-      getSnapshot: () => snapshot,
-      subscribe: () => () => {},
-      verifySession: vi.fn(async () => undefined),
-      recheckOnFocus: vi.fn(),
-      bootstrap: vi.fn(async () => undefined),
-      dispose: vi.fn(),
-    } as unknown as OfflineLifecycle
-    const sync = {
-      handleLaunch: vi.fn(async () => undefined),
-      handleReconnect: vi.fn(async () => undefined),
-    } as unknown as OfflineSync
+    const lifecycle = createOfflineLifecycle({
+      readLastAccount: () => original,
+      writeLastAccount: () => {},
+      clearLastAccount: () => {},
+      verifySession: async () => ({ kind: 'verified', account: serverAccount }),
+      storage: memoryStorage(),
+    })
     const connectivity = createConnectivityStore({
       isNavigatorOnline: () => true,
       isVisible: () => true,
     })
     const storage = createOfflineStore({
-      openRepository: async () => ({ close: vi.fn() }) as unknown as never,
+      openRepository: async () => ({ close: vi.fn() }) as never,
     })
     const queryClient = makeQueryClient()
-    render(
-      <QueryClientProvider client={queryClient}>
-        <OfflineProvider
-          lifecycle={lifecycle}
-          connectivity={connectivity}
-          storage={storage}
-          sync={sync}
-        >
-          <OfflineSyncHost />
-          <div data-testid="launch-page">content</div>
-        </OfflineProvider>
-      </QueryClientProvider>,
-    )
-
-    await waitFor(() => {
-      expect(sync.handleLaunch).toHaveBeenCalledTimes(1)
+    const { result, unmount } = renderHook(() => useCurrentAccount(), {
+      wrapper: ({ children }) => (
+        <QueryClientProvider client={queryClient}>
+          <OfflineProvider
+            lifecycle={lifecycle}
+            connectivity={connectivity}
+            storage={storage}
+          >
+            {children}
+          </OfflineProvider>
+        </QueryClientProvider>
+      ),
     })
-    // Outbox flushed first with the launch namespace, then the download pass.
-    expect(mocks.buildFlush).toHaveBeenCalledTimes(1)
-    expect(mocks.buildFlush).toHaveBeenCalledWith({
-      namespace,
-      onResolved: expect.any(Function),
-    })
-    const flushOrder = mocks.buildFlush.mock.invocationCallOrder[0]
-    const launchOrder = (sync.handleLaunch as ReturnType<typeof vi.fn>).mock
-      .invocationCallOrder[0]
-    expect(flushOrder).toBeLessThan(launchOrder)
-
-    connectivity.dispose()
-    storage.close()
+    try {
+      await waitFor(() => expect(result.current.isPending).toBe(false))
+      await act(async () => {
+        await result.current.refetch({ query: { disableCookieCache: true } })
+      })
+      expect(result.current.data?.name).toBe('Fresh display name')
+      expect(lifecycle.getSnapshot().account?.name).toBe('Fresh display name')
+    } finally {
+      unmount()
+      lifecycle.dispose()
+      connectivity.dispose()
+      storage.close()
+      queryClient.clear()
+    }
   })
+
+  it.each([false, true])(
+    'flushes before launch and waits for anonymous onboarding when required (%s)',
+    async (anonymous) => {
+      // Regression: the flush was wired only into manual retry, so queued
+      // expenses sat pending on the launch and auto-reconnect paths.
+      mocks.useSession.mockReturnValue({
+        data: { user: makeAccount('a'), session: {} },
+        error: null,
+        isPending: false,
+        isRefetching: false,
+        refetch: vi.fn(),
+      })
+      const namespace = JSON.stringify(['http://localhost:3001', 'a'])
+      const snapshot = {
+        account: { ...makeAccount('a'), isAnonymous: anonymous },
+        session: 'verified' as const,
+        namespace,
+        generation: 1,
+        cleanupError: null,
+        invalidated: false,
+        lastVerifiedAt: Date.now(),
+        verifyAttempt: 1,
+      }
+      const lifecycle = {
+        getSnapshot: () => snapshot,
+        subscribe: () => () => {},
+        verifySession: vi.fn(async () => undefined),
+        recheckOnFocus: vi.fn(),
+        bootstrap: vi.fn(async () => undefined),
+        dispose: vi.fn(),
+      } as unknown as OfflineLifecycle
+      const sync = {
+        handleLaunch: vi.fn(async () => undefined),
+        handleReconnect: vi.fn(async () => undefined),
+      } as unknown as OfflineSync
+      const connectivity = createConnectivityStore({
+        isNavigatorOnline: () => true,
+        isVisible: () => true,
+      })
+      const storage = createOfflineStore({
+        openRepository: async () => ({ close: vi.fn() }) as unknown as never,
+      })
+      const queryClient = makeQueryClient()
+      const statusKey = getQueryKey(
+        trpc.account.onboardingStatus,
+        undefined,
+        'query',
+      )
+      queryClient.setQueryDefaults(statusKey, { staleTime: Infinity })
+      queryClient.setQueryData(statusKey, {
+        anonymousOnboardingCompleted: false,
+      })
+      render(
+        <QueryClientProvider client={queryClient}>
+          <OfflineProvider
+            lifecycle={lifecycle}
+            connectivity={connectivity}
+            storage={storage}
+            sync={sync}
+          >
+            <OfflineSyncHost />
+            <div data-testid="launch-page">content</div>
+          </OfflineProvider>
+        </QueryClientProvider>,
+      )
+
+      if (anonymous) {
+        await act(async () => {
+          await Promise.resolve()
+        })
+        expect(sync.handleLaunch).not.toHaveBeenCalled()
+        expect(mocks.buildFlush).not.toHaveBeenCalled()
+        await act(async () => {
+          queryClient.setQueryData(statusKey, {
+            anonymousOnboardingCompleted: true,
+          })
+        })
+      }
+      await waitFor(() => {
+        expect(sync.handleLaunch).toHaveBeenCalledTimes(1)
+      })
+      // Outbox flushed first with the launch namespace, then the download pass.
+      expect(mocks.buildFlush).toHaveBeenCalledTimes(1)
+      expect(mocks.buildFlush).toHaveBeenCalledWith({
+        namespace,
+        onResolved: expect.any(Function),
+      })
+      const flushOrder = mocks.buildFlush.mock.invocationCallOrder[0]
+      const launchOrder = (sync.handleLaunch as ReturnType<typeof vi.fn>).mock
+        .invocationCallOrder[0]
+      expect(flushOrder).toBeLessThan(launchOrder)
+
+      connectivity.dispose()
+      storage.close()
+    },
+  )
 })

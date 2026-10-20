@@ -119,7 +119,9 @@ export function RegenerateLinkDialog({
                   {t('manage.linkReadyTitle')}
                 </ResponsiveDialogTitle>
                 <ResponsiveDialogDescription>
-                  {t('manage.linkReadyDescription')}
+                  {invitation.isShared
+                    ? t('manage.linkReadySharedDescription')
+                    : t('manage.linkReadyDescription')}
                 </ResponsiveDialogDescription>
               </ResponsiveDialogHeader>
               <ResponsiveDialogBody className="flex flex-col gap-3">
@@ -130,7 +132,9 @@ export function RegenerateLinkDialog({
                   canShare={canShare}
                 />
                 <p className="border-s-2 border-amber-500/50 ps-3 text-sm text-amber-900 dark:text-amber-200">
-                  {t('manage.linkReadyWarning')}
+                  {invitation.isShared
+                    ? t('manage.linkReadyCopyAgain')
+                    : t('manage.linkReadyWarning')}
                 </p>
               </ResponsiveDialogBody>
               <ResponsiveDialogFooter>
@@ -141,12 +145,16 @@ export function RegenerateLinkDialog({
             <>
               <ResponsiveDialogHeader>
                 <ResponsiveDialogTitle>
-                  {t('regenerate.title')}
+                  {invitation.isShared
+                    ? t('regenerate.sharedTitle')
+                    : t('regenerate.title')}
                 </ResponsiveDialogTitle>
                 <ResponsiveDialogDescription>
-                  {invitation.isMultiUse
-                    ? t('manage.regenerateQrDescription')
-                    : t('manage.regenerateDescription')}
+                  {invitation.isShared
+                    ? t('manage.regenerateSharedDescription')
+                    : invitation.isMultiUse
+                      ? t('manage.regenerateQrDescription')
+                      : t('manage.regenerateDescription')}
                 </ResponsiveDialogDescription>
               </ResponsiveDialogHeader>
               <ResponsiveDialogBody className="flex flex-col gap-3">

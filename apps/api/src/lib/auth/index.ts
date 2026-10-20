@@ -650,6 +650,7 @@ export const auth = betterAuth({
     freshAge: SESSION_FRESH_AGE_SECONDS,
     cookieCache: {
       enabled: true,
+      // Profile writes explicitly refresh the session cookie snapshot.
       maxAge: 60 * 5,
     },
   },

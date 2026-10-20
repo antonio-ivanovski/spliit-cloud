@@ -1524,6 +1524,10 @@ describe('invitationsRouter.previewLink', () => {
       role: 'MEMBER',
       temporaryName: null,
       expiresAt: null,
+      isMultiUse: false,
+      linkToken: null,
+      useCount: 0,
+      maxUses: null,
       group: { id: 'grp-1', name: 'Trip' },
       invitedBy: { name: 'Alice' },
     } as never)
@@ -1546,6 +1550,10 @@ describe('invitationsRouter.previewLink', () => {
       role: 'MEMBER',
       temporaryName: null,
       expiresAt: new Date(Date.now() - 1000),
+      isMultiUse: false,
+      linkToken: null,
+      useCount: 0,
+      maxUses: null,
       group: { id: 'grp-1', name: 'Trip' },
       invitedBy: { name: 'Alice' },
     } as never)
@@ -1691,7 +1699,11 @@ describe('invitationsRouter.acceptLink', () => {
       role: 'MEMBER',
       temporaryName: null,
       expiresAt: new Date(Date.now() - 1000),
-      group: { id: 'grp-1', name: 'Trip' },
+      isMultiUse: false,
+      linkToken: null,
+      useCount: 0,
+      maxUses: null,
+      group: { id: 'grp-1', name: 'Trip', groupType: 'GROUP' },
       invitedBy: { name: 'Alice' },
     } as never)
 
@@ -1719,7 +1731,11 @@ describe('invitationsRouter.acceptLink', () => {
       role: 'MEMBER',
       temporaryName: null,
       expiresAt: null,
-      group: { id: 'grp-1', name: 'Trip' },
+      isMultiUse: false,
+      linkToken: null,
+      useCount: 0,
+      maxUses: null,
+      group: { id: 'grp-1', name: 'Trip', groupType: 'GROUP' },
       invitedBy: { name: 'Alice' },
     } as never)
 
@@ -1746,7 +1762,11 @@ describe('invitationsRouter.acceptLink', () => {
       role: 'MEMBER',
       temporaryName: null,
       expiresAt: null,
-      group: { id: 'grp-1', name: 'Trip' },
+      isMultiUse: false,
+      linkToken: null,
+      useCount: 0,
+      maxUses: null,
+      group: { id: 'grp-1', name: 'Trip', groupType: 'GROUP' },
       invitedBy: { name: 'Alice' },
     } as never)
 
@@ -2555,5 +2575,32 @@ describe('invitationsRouter.regenerateLink', () => {
     await expect(
       makeCaller('acct-member').regenerateLink({ invitationId: 'inv-1' }),
     ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+  })
+})
+
+describe('invitationsRouter.getLinkUrl failures', () => {
+  it('preserves database failures as internal errors instead of invalid invitations', async () => {
+    prismaMock.group.findUnique.mockRejectedValueOnce(
+      new Error('Database unavailable'),
+    )
+    await expect(
+      makeCaller('acct-reader').getLinkUrl({
+        groupId: 'grp-copy',
+        invitationId: 'inv-copy',
+      }),
+    ).rejects.toMatchObject({
+      code: 'INTERNAL_SERVER_ERROR',
+      cause: { message: 'Database unavailable' },
+    })
+  })
+
+  it('maps an absent group to the domain not-found response', async () => {
+    prismaMock.group.findUnique.mockResolvedValueOnce(null)
+    await expect(
+      makeCaller('acct-reader').getLinkUrl({
+        groupId: 'grp-copy',
+        invitationId: 'inv-copy',
+      }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
   })
 })

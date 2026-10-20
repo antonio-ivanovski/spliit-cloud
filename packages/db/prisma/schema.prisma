@@ -895,6 +895,17 @@ model GroupInvitation {
   isMultiUse Boolean @default(false)
   useCount   Int     @default(0)
 
+  // Shared (general-purpose multi-person) link invitations. `maxUses` is the
+  // per-link join cap (`null` = unlimited); the atomic accept gate closes the
+  // link once `useCount >= maxUses`. `label` is an optional member-facing
+  // name so several live links can be told apart and revoked individually.
+  // `linkToken` holds the raw token in plaintext for member copy-anytime
+  // retrieval — populated only for shared links, cleared on revoke. The
+  // `tokenHash` remains the accept/dedupe authority.
+  maxUses   Int?
+  label     String?
+  linkToken String?
+
   // Optional virtual LedgerParticipant materialized for this pending invitation
   // so expenses can be recorded against the invitee before they accept. The
   // link is created at invitation write time (email/link send) and populated

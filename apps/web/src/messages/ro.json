@@ -745,7 +745,10 @@
       "notNow": "Nu acum"
     },
     "groupTabsHint": "Vrei să rearanjezi filele grupului sau să le ascunzi pe cele pe care nu le folosești?",
-    "groupTabsHintLink": "Personalizează filele în setările contului tău"
+    "groupTabsHintLink": "Personalizează filele în setările contului tău",
+    "linkInvitationFullTitle": "Acest link de invitație este plin",
+    "linkInvitationFullDescription": "Toate locurile acestui link au fost folosite. Roagă un membru al grupului să distribuie unul nou.",
+    "linkInvitationSharedUse": "Acest link poate fi folosit de mai multe persoane, în limita de alăturări și a valabilității."
   },
   "GroupForm": {
     "title": "Informații despre grup",
@@ -2054,7 +2057,41 @@
         "shareTitle": "Alătură-te grupului {groupName} pe Spliit Cloud",
         "shareText": "Tocmai am creat {groupName} pentru cheltuielile noastre comune pe Spliit Cloud. Acesta este un link de invitație de unică folosință — deschide-l pentru a te alătura:\n{inviteUrl}",
         "generateNew": "Generează un link nou",
-        "copyLink": "Copiază linkul"
+        "copyLink": "Copiază linkul",
+        "mode": "Cine poate folosi acest link?",
+        "modeOneTime": "O persoană",
+        "modeOneTimeHint": "Link-ul nu va mai funcționa după prima acceptare.",
+        "modeShared": "Mai multe persoane",
+        "modeSharedHint": "Un link distribuit pe care mai multe persoane îl pot folosi, în limitele de mai jos.",
+        "labelLabel": "Numele link-ului (opțional)",
+        "labelPlaceholder": "ex. Familia, Discord",
+        "joinLimitLabel": "Limită de alăturări",
+        "unlimitedJoins": "Alăturări nelimitate",
+        "joinsSuffix": "alăturări",
+        "expiryLabel": "Expiră în",
+        "neverExpires": "Nu expiră niciodată",
+        "expiryUnitHour": "ore",
+        "expiryUnitDay": "zile",
+        "expiryUnitWeek": "săptămâni",
+        "quick24h": "24 de ore",
+        "quick7d": "7 zile",
+        "quick30d": "30 de zile",
+        "memberOnlyNote": "Oamenii se alătură ca membri. Pentru a invita un admin, folosește e-mailul sau un link de unică folosință.",
+        "summaryUnlimited": "Acest link rămâne deschis până îl revoci.",
+        "summaryCapped": "Până la {maxUses} persoane se pot alătura · expiră în {expiry} ({expiryDate}).",
+        "sharedCreated": "Link distribuit gata. Copiază-l și publică-l unde sunt oamenii tăi.",
+        "sharedIntro": "Iată link-ul tău distribuit pentru {groupName}. Până la {maxUses} membri se pot alătura cu acest link, în limitele de mai jos.",
+        "sharedCopyAgain": "Membrii pot copia din nou acest link din invitațiile în așteptare.",
+        "sharedShareText": "Alătură-te grupului {groupName} pe Spliit Cloud — deschide acest link pentru a te alătura:\n{inviteUrl}",
+        "invalidJoinLimit": "Introdu o limită între 2 și 1000 de alăturări sau alege «nelimitat».",
+        "invalidExpiry": "Introdu o valabilitate între 1 oră și 1 an sau alege «niciodată».",
+        "summaryExpiryOnly": "Alăturări nelimitate · expiră în {expiry} ({expiryDate}).",
+        "otherOption": "Altceva…",
+        "sharedIntroUnlimited": "Iată link-ul tău distribuit pentru {groupName}. Membrii noi se pot alătura cu acest link, în limitele de mai jos.",
+        "expiryUnitLabel": "Unitate de expirare",
+        "summaryCappedNoDate": "Până la {maxUses} persoane se pot alătura · expiră în {expiry}.",
+        "summaryExpiryOnlyNoDate": "Alăturări nelimitate · expiră în {expiry}.",
+        "summaryCappedNever": "Până la {maxUses} persoane se pot alătura · nu expiră niciodată."
       },
       "tab": {
         "email": "E-mail",
@@ -2121,9 +2158,25 @@
         "type": "Sesiune QR",
         "fallbackLabel": "Cod QR din apropiere",
         "viewQr": "Vezi codul QR",
-        "expireNow": "Expiră acum"
+        "expireNow": "Expiră acum",
+        "expireDescription": "Codul va înceta să funcționeze imediat. Persoanele care s-au alăturat deja rămân membri.",
+        "expireTitle": "Expiri acest cod QR?"
       },
-      "createdWithoutEmail": "Invitație creată pentru {email}, dar nu a fost trimis niciun e-mail. Distribuie în schimb un link de invitație."
+      "createdWithoutEmail": "Invitație creată pentru {email}, dar nu a fost trimis niciun e-mail. Distribuie în schimb un link de invitație.",
+      "shared": {
+        "type": "Link distribuit",
+        "joinedOf": "{count} din {max} s-au alăturat",
+        "joinedUnlimited": "{count} s-au alăturat",
+        "full": "Plin",
+        "copyLink": "Copiază link-ul",
+        "copied": "Link distribuit copiat.",
+        "joiners": "Cine s-a alăturat",
+        "joinersEmpty": "Nimeni nu s-a alăturat încă prin acest link.",
+        "editLimits": "Editează link-ul",
+        "expiresWithJoins": "Expiră pe {date} · {joins}",
+        "revokeDescription": "„{name}” va înceta să funcționeze imediat. Persoanele care s-au alăturat deja rămân membri.",
+        "revokeTitle": "Revoci linkul distribuit?"
+      }
     },
     "changeRoleAria": "Schimbă rolul",
     "remove": "Elimină",
@@ -2273,10 +2326,21 @@
       "emailInvalid": "Introduceți o adresă de e-mail validă.",
       "linkNotShown": "Linkul de invitație nu este afișat aici. Dacă trebuie să-l partajați din nou, utilizați „Generează link nou” din listă.",
       "switchToLinkNote": "Salvează pentru a transforma această invitație într-un link. Invitația prin e-mail nu va mai funcționa.",
-      "savedWithoutEmail": "Modificări salvate, dar nu a fost trimis niciun e-mail. Distribuie în schimb un link de invitație."
+      "savedWithoutEmail": "Modificări salvate, dar nu a fost trimis niciun e-mail. Distribuie în schimb un link de invitație.",
+      "sharedLabelLabel": "Numele link-ului",
+      "sharedMaxUsesLabel": "Limită de alăturări",
+      "sharedExpiryLabel": "Expiră în",
+      "sharedNeverExpires": "Nu expiră niciodată",
+      "sharedExpiresOn": "Valabilitate nouă: {date}.",
+      "sharedEndsNow": "Reducerea limitei la {count} sau mai jos încheie imediat acest link.",
+      "regenerateSharedDescription": "Se va genera un URL nou. Alăturările, numele, limitele și valabilitatea rămân — se schimbă doar link-ul.",
+      "linkReadySharedDescription": "Distribuie-l unde sunt oamenii tăi. Membrii îl pot copia din nou din invitațiile în așteptare.",
+      "linkReadyCopyAgain": "Poți copia din nou acest link mai târziu din invitațiile în așteptare.",
+      "sharedKeepExpiry": "Păstrează valabilitatea actuală"
     },
     "regenerate": {
-      "title": "Generează link nou"
+      "title": "Generează link nou",
+      "sharedTitle": "Generează un link distribuit nou"
     },
     "actionsFor": "Acțiuni pentru {name}",
     "readOnlyDescription": "Persoanele și participanții incluși în acest grup. Adresele de e-mail și detaliile invitațiilor sunt ascunse.",
@@ -2915,7 +2979,10 @@
         "destination": "Destinatar",
         "displayName": "Nume",
         "role": "Rol",
-        "credential": "Link de invitație"
+        "credential": "Link de invitație",
+        "label": "Numele link-ului",
+        "maxUses": "Limită de alăturări",
+        "expiry": "Valabilitate"
       }
     },
     "fallback": "O activitate a fost înregistrată",

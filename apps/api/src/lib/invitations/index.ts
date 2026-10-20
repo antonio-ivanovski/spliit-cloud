@@ -13,7 +13,6 @@ export {
 export {
   InvitationError,
   RevokeInvitationPreconditionError,
-  acceptInvitation,
   assertCanAcceptEmailInvitation,
   assertCanDeclineEmailInvitation,
   assertNoConflictingEmailInvitation,
@@ -21,7 +20,6 @@ export {
   assertNotInvitingSelf,
   createEmailInvitation,
   createInvitation,
-  declineInvitation,
   findPendingEmailInvitation,
   getRevokeInvitationPreview,
   listGroupInvitations,
@@ -47,11 +45,20 @@ export {
 export { reconcileMemberLedgerParticipant } from './ledger-reconciliation'
 
 export {
+  getSharedLinkUrlEffect,
   regenerateLinkInvitation,
   updatePendingInvitation,
+  type GetSharedLinkUrlResult,
   type PendingInvitationDelivery,
   type RegenerateLinkInvitationInput,
   type RegenerateLinkInvitationResult,
   type UpdatePendingInvitationInput,
   type UpdatePendingInvitationResult,
 } from './manage-invitations'
+
+export {
+  acceptInvitation,
+  acceptInvitationEffect,
+  declineInvitation,
+  declineInvitationEffect,
+} from './email-completion'

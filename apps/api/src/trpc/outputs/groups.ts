@@ -123,7 +123,7 @@ export const getGroupOutputSchema = z.object({
     })
     .nullable(),
   linkInviteState: z
-    .enum(['PENDING', 'ACCEPTED', 'REVOKED', 'DECLINED', 'EXPIRED'])
+    .enum(['PENDING', 'ACCEPTED', 'REVOKED', 'DECLINED', 'EXPIRED', 'FULL'])
     .nullable(),
   viewer: z.object({
     source: z.enum(['MEMBER', 'PENDING_INVITATION', 'PUBLIC_LINK']),

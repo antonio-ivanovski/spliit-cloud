@@ -58,7 +58,6 @@ export function AuthPanel({
     emailAuthEnabled,
     passkeyEnabled,
     linkInviteToken,
-    redirectTo: resolvedRedirectTo,
     completeProfilePath,
     setEmail,
     setPassword,
@@ -282,7 +281,6 @@ export function AuthPanel({
         creationEnabled={anonymousEnabled}
         passkeyEnabled={passkeyEnabled}
         linkInviteToken={linkInviteToken}
-        redirectTo={resolvedRedirectTo}
         completeProfilePath={completeProfilePath}
       />
     </>

@@ -159,6 +159,7 @@ function GroupMembersBody() {
     invitationsQuery,
     createMutation,
     createLinkMutation,
+    createSharedLinkMutation,
     createParticipantMutation,
     updatePendingMutation,
     regenerateLinkMutation,
@@ -284,6 +285,7 @@ function GroupMembersBody() {
             canInviteAdmin={isAdmin}
             createMutation={createMutation}
             createLinkMutation={createLinkMutation}
+            createSharedLinkMutation={createSharedLinkMutation}
             createParticipantMutation={createParticipantMutation}
             onInvite={async (values) => {
               const result = await emailInviteAttempt.run((requestId) =>
@@ -303,6 +305,18 @@ function GroupMembersBody() {
                   groupId,
                   role: values.role,
                   temporaryName: values.temporaryName,
+                  requestId,
+                }),
+              )
+              return result ?? undefined
+            }}
+            onGenerateSharedLink={async (values) => {
+              const result = await linkInviteAttempt.run((requestId) =>
+                createSharedLinkMutation.mutateAsync({
+                  groupId,
+                  label: values.label,
+                  maxUses: values.maxUses,
+                  expiresIn: values.expiresIn,
                   requestId,
                 }),
               )

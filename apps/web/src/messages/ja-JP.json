@@ -733,7 +733,10 @@
       "notNow": "今はしない"
     },
     "groupTabsHint": "グループタブを並び替えたり、使わないタブを非表示にしたいですか？",
-    "groupTabsHintLink": "アカウント設定でタブをカスタマイズ"
+    "groupTabsHintLink": "アカウント設定でタブをカスタマイズ",
+    "linkInvitationFullTitle": "この招待リンクは満員です",
+    "linkInvitationFullDescription": "このリンクの参加枠はすべて使用されました。グループのメンバーに新しいリンクの共有を依頼してください。",
+    "linkInvitationSharedUse": "このリンクは参加上限と有効期限の範囲内で複数人が使用できます。"
   },
   "GroupForm": {
     "title": "グループ情報",
@@ -2050,7 +2053,41 @@
         "shareTitle": "Spliit Cloudの{groupName}に参加",
         "shareText": "Spliit Cloudで共同の出費のために{groupName}を作成しました。一回限りの招待リンクはこちらです — 開いて参加してください：\n{inviteUrl}",
         "generateNew": "新しいリンクを生成",
-        "copyLink": "リンクをコピー"
+        "copyLink": "リンクをコピー",
+        "mode": "このリンクを使用できる人",
+        "modeOneTime": "1人",
+        "modeOneTimeHint": "最初の承認後、リンクは無効になります。",
+        "modeShared": "複数人",
+        "modeSharedHint": "下記の制限内で複数人が使用できる共有リンクです。",
+        "labelLabel": "リンク名(任意)",
+        "labelPlaceholder": "例: 家族、Discord",
+        "joinLimitLabel": "参加上限",
+        "unlimitedJoins": "無制限",
+        "joinsSuffix": "参加",
+        "expiryLabel": "有効期限",
+        "neverExpires": "期限なし",
+        "expiryUnitHour": "時間",
+        "expiryUnitDay": "日間",
+        "expiryUnitWeek": "週間",
+        "quick24h": "24時間",
+        "quick7d": "7日間",
+        "quick30d": "30日間",
+        "memberOnlyNote": "参加者はメンバーとして参加します。管理者を招待する場合はメールまたは一回限りリンクを使用してください。",
+        "summaryUnlimited": "このリンクは取り消すまで有効です。",
+        "summaryCapped": "最大 {maxUses} 人まで参加できます · 期限 {expiry}（{expiryDate}）。",
+        "sharedCreated": "共有リンクの準備ができました。コピーして皆さんのいる場所に投稿してください。",
+        "sharedIntro": "{groupName} の共有リンクです。このリンクから最大 {maxUses} 人まで、下記の制限内でメンバーとして参加できます。",
+        "sharedCopyAgain": "メンバーは保留中の招待からこのリンクを再度コピーできます。",
+        "sharedShareText": "Spliit Cloudの {groupName} に参加しましょう — 参加するにはこのリンクを開いてください:\n{inviteUrl}",
+        "invalidJoinLimit": "2から1000の上限を入力するか、「無制限」を選択してください。",
+        "invalidExpiry": "1時間から1年の有効期限を入力するか、「なし」を選択してください。",
+        "summaryExpiryOnly": "誰でも参加できます · 期限 {expiry}（{expiryDate}）。",
+        "otherOption": "その他…",
+        "sharedIntroUnlimited": "{groupName} の共有リンクです。このリンクから下記の制限内で新しいメンバーが参加できます。",
+        "expiryUnitLabel": "期限の単位",
+        "summaryCappedNoDate": "最大 {maxUses} 人まで参加できます · 期限 {expiry}。",
+        "summaryExpiryOnlyNoDate": "誰でも参加できます · 期限 {expiry}。",
+        "summaryCappedNever": "最大 {maxUses} 人まで参加できます · 期限なし。"
       },
       "friendsDescription": "以前に共有したグループから友達を招待します。",
       "selectFriendPlaceholder": "友達を選択…",
@@ -2105,9 +2142,25 @@
         "type": "QRセッション",
         "fallbackLabel": "近くのQRコード",
         "viewQr": "QRコードを表示",
-        "expireNow": "今すぐ期限切れにする"
+        "expireNow": "今すぐ期限切れにする",
+        "expireDescription": "コードはすぐに無効になります。既に参加した人はメンバーのままです。",
+        "expireTitle": "このQRコードを期限切れにしますか？"
       },
-      "createdWithoutEmail": "{email}の招待を作成しましたが、メールは送信されませんでした。代わりに招待リンクを共有してください。"
+      "createdWithoutEmail": "{email}の招待を作成しましたが、メールは送信されませんでした。代わりに招待リンクを共有してください。",
+      "shared": {
+        "type": "共有リンク",
+        "joinedOf": "{count} / {max} 人が参加",
+        "joinedUnlimited": "{count} 人が参加",
+        "full": "満員",
+        "copyLink": "リンクをコピー",
+        "copied": "共有リンクをコピーしました。",
+        "joiners": "参加者",
+        "joinersEmpty": "このリンクから参加した人はまだいません。",
+        "editLimits": "リンクを編集",
+        "expiresWithJoins": "有効期限：{date} · {joins}",
+        "revokeDescription": "「{name}」はすぐに無効になります。既に参加した人はメンバーのままです。",
+        "revokeTitle": "共有リンクを取り消しますか？"
+      }
     },
     "changeRoleAria": "役割を変更",
     "remove": "削除",
@@ -2256,10 +2309,21 @@
       "emailInvalid": "有効なメールアドレスを入力してください。",
       "linkNotShown": "招待リンクはここには表示されません。再度共有する必要がある場合は、一覧で「新しいリンクを生成」を使用してください。",
       "switchToLinkNote": "保存すると、この招待がリンクに変換されます。メール招待は使用できなくなります。",
-      "savedWithoutEmail": "変更を保存しましたが、メールは送信されませんでした。代わりに招待リンクを共有してください。"
+      "savedWithoutEmail": "変更を保存しましたが、メールは送信されませんでした。代わりに招待リンクを共有してください。",
+      "sharedLabelLabel": "リンク名",
+      "sharedMaxUsesLabel": "参加上限",
+      "sharedExpiryLabel": "有効期限",
+      "sharedNeverExpires": "期限なし",
+      "sharedExpiresOn": "新しい有効期限: {date}。",
+      "sharedEndsNow": "上限を {count} 以下に下げるとこのリンクは直ちに終了します。",
+      "regenerateSharedDescription": "新しいリンクURLが生成されます。参加数、名前、制限、有効期限はそのまま — リンク自体のみ変更されます。",
+      "linkReadySharedDescription": "皆さんのいる場所で共有してください。メンバーも保留中の招待から再度コピーできます。",
+      "linkReadyCopyAgain": "このリンクは後で保留中の招待から再度コピーできます。",
+      "sharedKeepExpiry": "現在の有効期限を維持"
     },
     "regenerate": {
-      "title": "新しいリンクを生成"
+      "title": "新しいリンクを生成",
+      "sharedTitle": "新しい共有リンクを作成"
     },
     "actionsFor": "{name}の操作",
     "readOnlyDescription": "このグループに含まれるメンバーと参加者。メールアドレスと招待の詳細は表示されません。",
@@ -2898,7 +2962,10 @@
         "destination": "招待先",
         "displayName": "名前",
         "role": "役割",
-        "credential": "招待リンク"
+        "credential": "招待リンク",
+        "label": "リンク名",
+        "maxUses": "参加上限",
+        "expiry": "有効期限"
       }
     },
     "fallback": "アクティビティが記録されました",

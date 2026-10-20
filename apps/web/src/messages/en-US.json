@@ -845,7 +845,10 @@
       "notNow": "Not now"
     },
     "groupTabsHint": "Looking to reorder the group tabs or hide the ones you don't use?",
-    "groupTabsHintLink": "Customize tabs in your account settings"
+    "groupTabsHintLink": "Customize tabs in your account settings",
+    "linkInvitationFullTitle": "This invite link is full",
+    "linkInvitationFullDescription": "All join spots on this link have been used. Ask a group member to share a new one.",
+    "linkInvitationSharedUse": "This link can be used by several people, within its join limit and expiry."
   },
   "Auth": {
     "title": "Sign in to Spliit Cloud",
@@ -2708,7 +2711,41 @@
         "shareTitle": "Join {groupName} on Spliit Cloud",
         "shareText": "I just created {groupName} for our shared expenses on Spliit Cloud. Here's a one-time invite link — open it to join:\n{inviteUrl}",
         "generateNew": "Generate new link",
-        "copyLink": "Copy link"
+        "copyLink": "Copy link",
+        "mode": "Who can use this link?",
+        "modeOneTime": "One person",
+        "modeOneTimeHint": "The link stops working after the first accept.",
+        "modeShared": "Multiple people",
+        "modeSharedHint": "A shared link several people can use, within the limits below.",
+        "labelLabel": "Link label (optional)",
+        "labelPlaceholder": "e.g. Family chat, Discord",
+        "joinLimitLabel": "Join limit",
+        "unlimitedJoins": "Unlimited joins",
+        "joinsSuffix": "joins",
+        "expiryLabel": "Expires in",
+        "neverExpires": "Never expires",
+        "expiryUnitHour": "hours",
+        "expiryUnitDay": "days",
+        "expiryUnitWeek": "weeks",
+        "quick24h": "24 hours",
+        "quick7d": "7 days",
+        "quick30d": "30 days",
+        "memberOnlyNote": "People join as members. To invite an admin, use email or a one-time link.",
+        "summaryUnlimited": "This link stays open until you revoke it.",
+        "summaryCapped": "Up to {maxUses} people can join · expires in {expiry} ({expiryDate}).",
+        "sharedCreated": "Shared link ready. Copy it and post it wherever your people are.",
+        "sharedIntro": "Here is your shared link for {groupName}. Up to {maxUses} members can join with it, within the limits below.",
+        "sharedCopyAgain": "Members can copy this link again from Pending invitations.",
+        "sharedShareText": "Join {groupName} on Spliit Cloud — open this link to join:\n{inviteUrl}",
+        "invalidJoinLimit": "Enter a join limit between 2 and 1000, or choose unlimited.",
+        "invalidExpiry": "Enter an expiry between 1 hour and 1 year, or choose never.",
+        "summaryExpiryOnly": "Unlimited joins · expires in {expiry} ({expiryDate}).",
+        "otherOption": "Other…",
+        "sharedIntroUnlimited": "Here is your shared link for {groupName}. New members can join with it, within the limits below.",
+        "expiryUnitLabel": "Expiry unit",
+        "summaryCappedNoDate": "Up to {maxUses} people can join · expires in {expiry}.",
+        "summaryExpiryOnlyNoDate": "Unlimited joins · expires in {expiry}.",
+        "summaryCappedNever": "Up to {maxUses} people can join · never expires."
       },
       "qr": {
         "title": "Nearby QR code",
@@ -2766,13 +2803,29 @@
         "type": "QR session",
         "fallbackLabel": "Nearby QR code",
         "viewQr": "View QR code",
-        "expireNow": "Expire now"
+        "expireNow": "Expire now",
+        "expireDescription": "The code stops working immediately. People who already joined stay members.",
+        "expireTitle": "Expire this QR code?"
       },
       "email": {
         "type": "Email invite"
       },
       "updatedOn": "Updated {date}",
-      "createdWithoutEmail": "Invitation created for {email}, but no email was sent. Share a link invite instead."
+      "createdWithoutEmail": "Invitation created for {email}, but no email was sent. Share a link invite instead.",
+      "shared": {
+        "type": "Shared link",
+        "joinedOf": "{count} of {max} joined",
+        "joinedUnlimited": "{count} joined",
+        "full": "Full",
+        "copyLink": "Copy link",
+        "copied": "Shared link copied.",
+        "joiners": "Who joined",
+        "joinersEmpty": "Nobody joined with this link yet.",
+        "editLimits": "Edit link",
+        "expiresWithJoins": "Expires {date} · {joins}",
+        "revokeDescription": "“{name}” will stop working immediately. People who already joined stay members.",
+        "revokeTitle": "Revoke shared link?"
+      }
     },
     "leave": {
       "button": "Leave group",
@@ -2895,10 +2948,21 @@
       "emailInvalid": "Enter a valid email address.",
       "linkNotShown": "The invite link is not shown here. Use \"Generate new link\" on the list if you need to share it again.",
       "switchToLinkNote": "Save to convert this invitation into a link. The email invitation will stop working.",
-      "savedWithoutEmail": "Changes saved, but no email was sent. Share a link invite instead."
+      "savedWithoutEmail": "Changes saved, but no email was sent. Share a link invite instead.",
+      "sharedLabelLabel": "Link label",
+      "sharedMaxUsesLabel": "Join limit",
+      "sharedExpiryLabel": "Expires in",
+      "sharedNeverExpires": "Never expires",
+      "sharedExpiresOn": "New expiry: {date}.",
+      "sharedEndsNow": "Lowering the join limit to {count} or below ends this link immediately.",
+      "regenerateSharedDescription": "A new link URL will be generated. Joins so far, the label, the limits, and the expiry stay the same — only the link itself changes.",
+      "linkReadySharedDescription": "Share it wherever your people are. Members can also copy it again from Pending invitations.",
+      "linkReadyCopyAgain": "You can copy this link again later from Pending invitations.",
+      "sharedKeepExpiry": "Keep current expiry"
     },
     "regenerate": {
-      "title": "Generate new link"
+      "title": "Generate new link",
+      "sharedTitle": "Generate new shared link"
     },
     "actionsFor": "Actions for {name}",
     "readOnlyDescription": "People and participants included in this group. Email addresses and invitation details are hidden.",
@@ -3049,7 +3113,10 @@
         "destination": "Recipient",
         "displayName": "Name",
         "role": "Role",
-        "credential": "Invite link"
+        "credential": "Invite link",
+        "label": "\"Link label\"",
+        "maxUses": "\"Join limit\"",
+        "expiry": "\"Expiry\""
       }
     },
     "participant": {

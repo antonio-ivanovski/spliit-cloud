@@ -1,15 +1,15 @@
 import { useMutation } from '@tanstack/react-query'
-import { useNavigate, useSearch } from '@tanstack/react-router'
+import { useSearch } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useMascotController } from '@/components/mascot/mascot-context'
-import { needsDisplayName } from '@/lib/account'
 import { authClient } from '@/lib/auth'
+import { completeAuthSignIn } from '@/lib/auth-completion'
 import { useDeploymentConfig } from '@/lib/deployment-config'
 import { markInstallEligible } from '@/lib/install-eligibility'
-import { useOptionalOfflineLifecycle } from '@/lib/offline/provider'
 import {
+  buildCompleteProfilePath,
   hasSignupInviteProof,
   resolveAuthReturnContext,
   signupInviteFetchOptions,
@@ -45,29 +45,49 @@ export function useAuthPanel(options?: {
    */
   initialEmailVariant?: EmailVariant
 }) {
-  const lifecycle = useOptionalOfflineLifecycle()
   const mascot = useMascotController()
   const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
   const isOnline = useOnlineStatus()
-  const navigate = useNavigate()
   const {
     redirect,
+    invite: searchInvite,
+    viewKey: searchViewKey,
     mode: initialSearchMode,
     email: initialEmail,
     invitation,
+    invitationAction,
   } = useSearch({ strict: false }) as HomeSearch
+  // Structured return wins over the ambient search: an explicit `redirectTo`
+  // prop (the OAuth review screen, the landing page) carries the destination
+  // the panel must use. `redirectTo` is a full destination path — it may
+  // itself embed the bearer context (e.g. `/groups/X?invite=T` resolved from
+  // a bounce) — so its credentials merge with, never lose to, the ambient
+  // search. Each side fills the other's gaps; structured params win ties.
+  const redirectToContext = options?.redirectTo
+    ? resolveAuthReturnContext({ redirect: options.redirectTo })
+    : null
+  // An explicit prop that resolves nowhere takes no part: the ambient search
+  // keeps full authority instead of being shadowed by a bare `/`.
+  const mergedRedirect =
+    redirectToContext && redirectToContext.redirectTo !== '/'
+      ? redirectToContext.redirectTo
+      : redirect
   const returnContext = resolveAuthReturnContext({
-    redirect,
-    redirectTo: options?.redirectTo,
-    invitation,
+    invitationAction: invitationAction ?? redirectToContext?.invitationAction,
+    redirect: mergedRedirect,
+    invite: searchInvite ?? redirectToContext?.linkInviteToken,
+    viewKey: searchViewKey ?? redirectToContext?.viewKey,
+    invitation: invitation ?? redirectToContext?.emailInvitationId,
   })
   const redirectTo = returnContext.redirectTo
   const deployment = useDeploymentConfig()
   const linkInviteToken = returnContext.linkInviteToken
   const hasInviteProof = hasSignupInviteProof({
-    redirect,
-    redirectTo: options?.redirectTo,
-    invitation,
+    invitationAction: invitationAction ?? redirectToContext?.invitationAction,
+    redirect: mergedRedirect,
+    invite: searchInvite ?? redirectToContext?.linkInviteToken,
+    viewKey: searchViewKey ?? redirectToContext?.viewKey,
+    invitation: invitation ?? redirectToContext?.emailInvitationId,
   })
   const hasEmailInvitation = Boolean(returnContext.emailInvitationId)
   const canSignUp =
@@ -83,9 +103,13 @@ export function useAuthPanel(options?: {
     typeof window !== 'undefined'
       ? window.location.origin
       : 'http://localhost:3000'
-  const callbackURL = `${webOrigin}${redirectTo}`
-  const completeProfilePath = `/auth/complete-profile?redirect=${encodeURIComponent(redirectTo)}`
+
+  // Structured complete-profile hop: destination plus the bearer context
+  // as first-class params — never an opaque nested `redirect=`.
+  const completeProfilePath = buildCompleteProfilePath(redirectTo)
   const completeProfileCallbackURL = `${webOrigin}${completeProfilePath}`
+
+  const callbackURL = completeProfileCallbackURL
 
   const [requestedMode, setRequestedMode] = useState<Mode>(initialMode)
   // Last sign-in method recorded by the better-auth `lastLoginMethod`
@@ -161,17 +185,8 @@ export function useAuthPanel(options?: {
         mascot.react('success')
         setSuccessState('verification')
       } else {
-        await lifecycle?.verifySession({ fresh: true })
-        const session = await authClient.getSession({
-          query: { disableCookieCache: true },
-        })
-        const account = session.data?.user
-        await navigate({
-          href:
-            account && needsDisplayName(account)
-              ? completeProfilePath
-              : redirectTo,
-          replace: true,
+        completeAuthSignIn({
+          completeProfilePath,
         })
       }
     },
@@ -304,17 +319,8 @@ export function useAuthPanel(options?: {
     async onSuccess() {
       mascot.react('success')
       markInstallEligible()
-      await lifecycle?.verifySession({ fresh: true })
-      const session = await authClient.getSession({
-        query: { disableCookieCache: true },
-      })
-      const account = session.data?.user
-      await navigate({
-        href:
-          account && needsDisplayName(account)
-            ? completeProfilePath
-            : redirectTo,
-        replace: true,
+      completeAuthSignIn({
+        completeProfilePath,
       })
     },
   })
@@ -386,7 +392,6 @@ export function useAuthPanel(options?: {
     confirmPassword,
     successState,
     lastLoginMethod,
-    redirectTo,
     completeProfilePath,
     canSubmitPassword,
     canSignUp,

@@ -550,7 +550,10 @@
         "destination": "प्राप्तकर्ता",
         "displayName": "नाम",
         "role": "भूमिका",
-        "credential": "आमंत्रण लिंक"
+        "credential": "आमंत्रण लिंक",
+        "label": "लिंक का नाम",
+        "maxUses": "जुड़ने की सीमा",
+        "expiry": "समाप्ति"
       }
     },
     "member": {
@@ -2731,7 +2734,10 @@
       "notNow": "अभी नहीं"
     },
     "groupTabsHint": "समूह टैब का क्रम बदलना चाहते हैं या जिनका उपयोग नहीं करते उन्हें छिपाना चाहते हैं?",
-    "groupTabsHintLink": "अपनी खाता सेटिंग में टैब कस्टमाइज़ करें"
+    "groupTabsHintLink": "अपनी खाता सेटिंग में टैब कस्टमाइज़ करें",
+    "linkInvitationFullTitle": "यह आमंत्रण लिंक भर गया है",
+    "linkInvitationFullDescription": "इस लिंक के सभी स्थान भर गए हैं। समूह के किसी सदस्य से नया लिंक साझा करने के लिए कहें।",
+    "linkInvitationSharedUse": "इस लिंक का उपयोग कई लोग कर सकते हैं — जुड़ने की सीमा और समाप्ति के भीतर।"
   },
   "Header": {
     "signIn": "साइन इन करें",
@@ -2887,9 +2893,25 @@
         "type": "QR सत्र",
         "fallbackLabel": "नज़दीकी QR कोड",
         "viewQr": "QR कोड देखें",
-        "expireNow": "अभी समाप्त करें"
+        "expireNow": "अभी समाप्त करें",
+        "expireDescription": "यह कोड तुरंत काम करना बंद कर देगा। जो लोग पहले से जुड़ चुके हैं वे सदस्य बने रहेंगे।",
+        "expireTitle": "इस QR कोड को समाप्त करें?"
       },
-      "createdWithoutEmail": "{email} के लिए निमंत्रण बनाया गया, लेकिन कोई ईमेल नहीं भेजा गया। इसके बजाय आमंत्रण लिंक साझा करें।"
+      "createdWithoutEmail": "{email} के लिए निमंत्रण बनाया गया, लेकिन कोई ईमेल नहीं भेजा गया। इसके बजाय आमंत्रण लिंक साझा करें।",
+      "shared": {
+        "type": "साझा लिंक",
+        "joinedOf": "{count} / {max} जुड़े",
+        "joinedUnlimited": "{count} जुड़े",
+        "full": "भरा हुआ",
+        "copyLink": "लिंक कॉपी करें",
+        "copied": "साझा लिंक कॉपी हो गया।",
+        "joiners": "कौन जुड़ा",
+        "joinersEmpty": "इस लिंक से अभी कोई नहीं जुड़ा है।",
+        "editLimits": "लिंक संपादित करें",
+        "expiresWithJoins": "{date} को समाप्त होता है · {joins}",
+        "revokeDescription": "“{name}” तुरंत काम करना बंद कर देगा। जो लोग पहले से जुड़ चुके हैं वे सदस्य बने रहेंगे।",
+        "revokeTitle": "साझा लिंक रद्द करें?"
+      }
     },
     "invite": {
       "title": "लोग जोड़ें",
@@ -2920,7 +2942,41 @@
         "shareTitle": "Spliit Cloud पर {groupName} में शामिल हों",
         "shareText": "मैंने अभी Spliit Cloud पर हमारे साझा खर्चों के लिए {groupName} बनाया है। यहां एक एकल-उपयोग आमंत्रण लिंक है — शामिल होने के लिए इसे खोलें:\n{inviteUrl}",
         "generateNew": "नया लिंक बनाएं",
-        "copyLink": "लिंक कॉपी करें"
+        "copyLink": "लिंक कॉपी करें",
+        "mode": "इस लिंक का उपयोग कौन कर सकता है?",
+        "modeOneTime": "एक व्यक्ति",
+        "modeOneTimeHint": "पहली स्वीकृति के बाद लिंक काम करना बंद कर देगा।",
+        "modeShared": "कई लोग",
+        "modeSharedHint": "एक साझा लिंक जिसका उपयोग नीचे दी गई सीमाओं के भीतर कई लोग कर सकते हैं।",
+        "labelLabel": "लिंक का नाम (वैकल्पिक)",
+        "labelPlaceholder": "जैसे: परिवार, Discord",
+        "joinLimitLabel": "जुड़ने की सीमा",
+        "unlimitedJoins": "असीमित जुड़ाव",
+        "joinsSuffix": "जुड़ाव",
+        "expiryLabel": "समाप्ति",
+        "neverExpires": "कभी समाप्त नहीं होता",
+        "expiryUnitHour": "घंटे",
+        "expiryUnitDay": "दिन",
+        "expiryUnitWeek": "सप्ताह",
+        "quick24h": "24 घंटे",
+        "quick7d": "7 दिन",
+        "quick30d": "30 दिन",
+        "memberOnlyNote": "लोग सदस्य के रूप में जुड़ते हैं। व्यवस्थापक को आमंत्रित करने के लिए ईमेल या एकल-उपयोग लिंक का उपयोग करें।",
+        "summaryUnlimited": "आपके रद्द करने तक यह लिंक खुला रहेगा।",
+        "summaryCapped": "अधिकतम {maxUses} लोग जुड़ सकते हैं · समाप्ति {expiry} ({expiryDate})।",
+        "sharedCreated": "साझा लिंक तैयार है। इसे कॉपी करें और जहां आपके लोग हैं वहां पोस्ट करें।",
+        "sharedIntro": "{groupName} के लिए आपका साझा लिंक। इससे अधिकतम {maxUses} सदस्य जुड़ सकते हैं, नीचे दी गई सीमाओं के भीतर।",
+        "sharedCopyAgain": "सदस्य लंबित आमंत्रणों से इस लिंक को फिर से कॉपी कर सकते हैं।",
+        "sharedShareText": "Spliit Cloud पर {groupName} से जुड़ें — जुड़ने के लिए यह लिंक खोलें:\n{inviteUrl}",
+        "invalidJoinLimit": "2 से 1000 के बीच सीमा दर्ज करें, या «असीमित» चुनें।",
+        "invalidExpiry": "1 घंटे से 1 वर्ष के बीच समाप्ति दर्ज करें, या «कभी नहीं» चुनें।",
+        "summaryExpiryOnly": "कोई भी जुड़ सकता है · समाप्ति {expiry} ({expiryDate})।",
+        "otherOption": "अन्य…",
+        "sharedIntroUnlimited": "{groupName} के लिए आपका साझा लिंक। इससे नए सदस्य नीचे दी गई सीमाओं के भीतर जुड़ सकते हैं।",
+        "expiryUnitLabel": "समाप्ति इकाई",
+        "summaryCappedNoDate": "अधिकतम {maxUses} लोग जुड़ सकते हैं · समाप्ति {expiry}।",
+        "summaryExpiryOnlyNoDate": "कोई भी जुड़ सकता है · समाप्ति {expiry}।",
+        "summaryCappedNever": "अधिकतम {maxUses} लोग जुड़ सकते हैं · कभी समाप्त नहीं होता।"
       },
       "tab": {
         "email": "ईमेल",
@@ -3099,10 +3155,21 @@
       "emailInvalid": "एक मान्य ईमेल पता दर्ज करें।",
       "linkNotShown": "आमंत्रण लिंक यहाँ नहीं दिखाया गया है। यदि आपको इसे फिर से साझा करना है तो सूची में \"नया लिंक बनाएं\" का उपयोग करें।",
       "switchToLinkNote": "इस निमंत्रण को लिंक में बदलने के लिए सहेजें। ईमेल निमंत्रण काम करना बंद कर देगा।",
-      "savedWithoutEmail": "परिवर्तन सहेजे गए, लेकिन कोई ईमेल नहीं भेजा गया। इसके बजाय आमंत्रण लिंक साझा करें।"
+      "savedWithoutEmail": "परिवर्तन सहेजे गए, लेकिन कोई ईमेल नहीं भेजा गया। इसके बजाय आमंत्रण लिंक साझा करें।",
+      "sharedLabelLabel": "लिंक का नाम",
+      "sharedMaxUsesLabel": "जुड़ने की सीमा",
+      "sharedExpiryLabel": "समाप्ति",
+      "sharedNeverExpires": "कभी समाप्त नहीं होता",
+      "sharedExpiresOn": "नई समाप्ति: {date}।",
+      "sharedEndsNow": "सीमा {count} या उससे कम करने पर यह लिंक तुरंत बंद हो जाएगा।",
+      "regenerateSharedDescription": "नया लिंक URL बनाया जाएगा। जुड़ाव, नाम, सीमाएं और समाप्ति वैसे ही रहेंगे — केवल लिंक बदलेगा।",
+      "linkReadySharedDescription": "इसे जहां आपके लोग हैं वहां साझा करें। सदस्य भी लंबित आमंत्रणों से इसे फिर से कॉपी कर सकते हैं।",
+      "linkReadyCopyAgain": "आप बाद में लंबित आमंत्रणों से इस लिंक को फिर से कॉपी कर सकते हैं।",
+      "sharedKeepExpiry": "वर्तमान समाप्ति रखें"
     },
     "regenerate": {
-      "title": "नया लिंक बनाएं"
+      "title": "नया लिंक बनाएं",
+      "sharedTitle": "नया साझा लिंक बनाएं"
     },
     "actionsFor": "{name} के लिए कार्रवाइयाँ",
     "readOnlyDescription": "इस समूह में शामिल लोग और प्रतिभागी। ईमेल पते और आमंत्रण का विवरण छिपा हुआ है।",

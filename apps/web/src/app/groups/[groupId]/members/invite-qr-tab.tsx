@@ -11,6 +11,7 @@ import {
 import { useTranslation } from 'react-i18next'
 
 import { AccountAvatar } from '@/components/account-avatar'
+import { DeletePopup } from '@/components/delete-popup'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
@@ -77,10 +78,19 @@ class QrRendererBoundary extends Component<
   }
 }
 
-function isInvitationExpired(invitation: PendingInvitation): boolean {
+/**
+ * Whether the row is still joinable. The server is the authority
+ * (`endedReason`); the clock is only a client-side fallback for the gap before
+ * the first list response lands. A `full` row is dead — showing its code again
+ * would hand out joins that the accept gate rejects.
+ */
+function isInvitationLive(invitation: PendingInvitation): boolean {
+  // `endedReason` is optional in test fixtures; only an explicit terminal
+  // reason marks the row dead.
+  if (invitation.endedReason != null) return false
   return (
-    !!invitation.expiresAt &&
-    new Date(invitation.expiresAt).getTime() < Date.now()
+    !invitation.expiresAt ||
+    new Date(invitation.expiresAt).getTime() >= Date.now()
   )
 }
 
@@ -137,6 +147,10 @@ export function InviteQrTab({
   const { toast } = useToast()
   const [now, setNow] = useState(() => Date.now())
   const [rendererKey, setRendererKey] = useState(0)
+  // "Stop sharing" revokes the live session through the standard
+  // destructive-confirm dialog (`DeletePopup`): the tab buttons stage the
+  // invitation id and the dialog's confirm fires the mutation.
+  const [confirmStopId, setConfirmStopId] = useState<string | null>(null)
   const createAttempt = useIdempotentCreate()
   const utils = trpc.useUtils()
   const isOnline = useOnlineStatus()
@@ -201,7 +215,10 @@ export function InviteQrTab({
       (invitation) =>
         invitation.type === 'LINK' &&
         invitation.isMultiUse &&
-        !isInvitationExpired(invitation),
+        // Shared links are copy-anytime URLs, not QR sessions: they surface
+        // in the pending list, never as a scannable code.
+        !invitation.isShared &&
+        isInvitationLive(invitation),
     ) ?? null
 
   const showingOwnCode =
@@ -225,7 +242,8 @@ export function InviteQrTab({
         invitation.id === session.invitationId &&
         invitation.type === 'LINK' &&
         invitation.isMultiUse &&
-        !isInvitationExpired(invitation),
+        !invitation.isShared &&
+        isInvitationLive(invitation),
     )
     if (live) {
       seenLiveById.current.set(session.invitationId, true)
@@ -296,6 +314,14 @@ export function InviteQrTab({
     await handleShowQr()
   }
 
+  // `DeletePopup` closes itself on a resolved `onDelete`; the mutation
+  // toast reports the outcome, so a failure keeps the row (and its error
+  // toast) as the retry path.
+  async function handleConfirmStop() {
+    if (!confirmStopId) return
+    await revokeMutation.mutateAsync({ invitationId: confirmStopId })
+  }
+
   return (
     <>
       <p className="border-s-2 border-primary/40 ps-3 text-sm text-muted-foreground">
@@ -341,11 +367,7 @@ export function InviteQrTab({
             type="button"
             variant="outline"
             disabled={revokeMutation.isPending}
-            onClick={() =>
-              void revokeMutation.mutateAsync({
-                invitationId: session.invitationId,
-              })
-            }
+            onClick={() => setConfirmStopId(session.invitationId)}
           >
             {t('invite.qr.stop')}
           </Button>
@@ -386,11 +408,7 @@ export function InviteQrTab({
                 type="button"
                 variant="outline"
                 disabled={revokeMutation.isPending}
-                onClick={() =>
-                  void revokeMutation.mutateAsync({
-                    invitationId: summarySession.id,
-                  })
-                }
+                onClick={() => setConfirmStopId(summarySession.id)}
               >
                 {t('invite.qr.stop')}
               </Button>
@@ -417,6 +435,18 @@ export function InviteQrTab({
           </div>
         </div>
       )}
+      <DeletePopup
+        open={confirmStopId !== null}
+        onOpenChange={(open) => {
+          if (!open) setConfirmStopId(null)
+        }}
+        labels={{
+          title: t('invitations.qr.expireTitle'),
+          description: t('invitations.qr.expireDescription'),
+          yes: t('invite.qr.stop'),
+        }}
+        onDelete={handleConfirmStop}
+      />
     </>
   )
 }

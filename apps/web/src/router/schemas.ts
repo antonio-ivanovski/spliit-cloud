@@ -94,6 +94,8 @@ export const importGroupSearchSchema = z.object({
  * parent keeps them across in-group navigations.
  */
 export const groupAccessSearchSchema = z.object({
+  invitationAction: z.literal('accept').optional().catch(undefined),
+  invitation: optionalString,
   invite: z.string().optional(),
   viewKey: z.string().optional(),
 })
@@ -164,6 +166,9 @@ export const editExpenseSearchSchema = groupAccessSearchSchema.extend({
 
 export const homeSearchSchema = z.object({
   redirect: optionalString,
+  invitationAction: z.literal('accept').optional().catch(undefined),
+  invite: optionalString,
+  viewKey: optionalString,
   mode: z.enum(['sign-in', 'sign-up']).optional().catch(undefined),
   email: optionalString,
   invitation: optionalString,
@@ -234,6 +239,10 @@ export const resetPasswordSearchSchema = z.object({
 
 export const completeProfileSearchSchema = z.object({
   redirect: optionalString,
+  invitationAction: z.literal('accept').optional().catch(undefined),
+  invite: optionalString,
+  viewKey: optionalString,
+  invitation: optionalString,
 })
 
 export const oauthFlowSearchSchema = z.object({

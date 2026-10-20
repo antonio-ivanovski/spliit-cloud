@@ -112,6 +112,10 @@ function toInvitePreviewJson(
       expiresAt: preview.expiresAt,
       isMultiUse: preview.isMultiUse,
       useCount: preview.useCount,
+      maxUses: preview.maxUses,
+      // Present so unfurl clients can pick the shared join-limit copy,
+      // matching the banner and the accept error.
+      isShared: preview.isShared,
       memberCount: 0,
       memberSample: [],
     }

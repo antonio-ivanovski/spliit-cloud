@@ -4,6 +4,7 @@ import { useContext, type PropsWithChildren } from 'react'
 
 import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
+import { buildAuthBounceSearch } from '@/lib/signup-invite'
 import { useOnboardingStatus } from '@/lib/use-onboarding-status'
 import {
   useOfflineWithoutData,
@@ -12,22 +13,15 @@ import {
 
 import { ProfileGateContext } from './profile-gate'
 
-function currentPathWithoutNestedRedirect(): string {
-  if (typeof window === 'undefined') return '/'
-  let search = window.location.search
-  try {
-    const params = new URLSearchParams(
-      search.startsWith('?') ? search.slice(1) : search,
-    )
-    // A re-gated bounce already carries `redirect`: strip it so the new
-    // target cannot nest (`?redirect=/auth/complete-profile?redirect=…`).
-    params.delete('redirect')
-    const rest = params.toString()
-    search = rest ? `?${rest}` : ''
-  } catch {
-    // Keep the raw search on parse failure.
-  }
-  return `${window.location.pathname}${search}${window.location.hash}`
+function currentBounceSearch(): Record<string, string> {
+  if (typeof window === 'undefined') return {}
+  // Pass the full current location: the builder lifts credentials (top-level
+  // or nested in a legacy `redirect=`) and drops the nesting, so a re-gated
+  // bounce can never re-nest (`?redirect=/auth/complete-profile?redirect=…`).
+  return buildAuthBounceSearch({
+    writer: 'RequireAuth',
+    from: `${window.location.pathname}${window.location.search}${window.location.hash}`,
+  })
 }
 
 function hasGroupViewerCredential(): boolean {
@@ -91,13 +85,7 @@ export function RequireAuth({ children }: PropsWithChildren) {
         <ApiErrorEmptyState variant="page" onRetry={() => void refetch()} />
       )
     }
-    return (
-      <Navigate
-        to="/"
-        search={{ redirect: currentPathWithoutNestedRedirect() }}
-        replace
-      />
-    )
+    return <Navigate to="/" search={currentBounceSearch()} replace />
   }
 
   // Fail closed while the authoritative safeguard flag resolves: a named
@@ -117,11 +105,10 @@ export function RequireAuth({ children }: PropsWithChildren) {
   // gate owns this redirect, so defer to it and avoid a double bounce.
   if (needsOnboarding) {
     if (insideProfileGate) return <>{children}</>
-    const target = currentPathWithoutNestedRedirect()
     return (
       <Navigate
         to="/auth/complete-profile"
-        search={{ redirect: target }}
+        search={currentBounceSearch()}
         replace
       />
     )

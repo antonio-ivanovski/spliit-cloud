@@ -733,7 +733,10 @@
       "notNow": "Nanti saja"
     },
     "groupTabsHint": "Ingin menyusun ulang tab grup atau menyembunyikan tab yang tidak digunakan?",
-    "groupTabsHintLink": "Sesuaikan tab di pengaturan akun"
+    "groupTabsHintLink": "Sesuaikan tab di pengaturan akun",
+    "linkInvitationFullTitle": "Tautan undangan ini sudah penuh",
+    "linkInvitationFullDescription": "Semua slot di tautan ini sudah terpakai. Minta anggota grup untuk membagikan tautan baru.",
+    "linkInvitationSharedUse": "Tautan ini dapat digunakan oleh beberapa orang, dalam batas bergabung dan kedaluwarsa."
   },
   "GroupForm": {
     "title": "Informasi grup",
@@ -2050,7 +2053,41 @@
         "shareTitle": "Bergabung ke {groupName} di Spliit Cloud",
         "shareText": "Saya baru saja membuat {groupName} untuk pengeluaran bersama kita di Spliit Cloud. Berikut adalah tautan undangan sekali pakai — buka untuk bergabung:\n{inviteUrl}",
         "generateNew": "Buat tautan baru",
-        "copyLink": "Salin tautan"
+        "copyLink": "Salin tautan",
+        "mode": "Siapa yang dapat memakai tautan ini?",
+        "modeOneTime": "Satu orang",
+        "modeOneTimeHint": "Tautan berhenti berfungsi setelah penerimaan pertama.",
+        "modeShared": "Beberapa orang",
+        "modeSharedHint": "Tautan bersama yang dapat dipakai beberapa orang, dalam batas di bawah.",
+        "labelLabel": "Label tautan (opsional)",
+        "labelPlaceholder": "mis. Keluarga, Discord",
+        "joinLimitLabel": "Batas bergabung",
+        "unlimitedJoins": "Tanpa batas",
+        "joinsSuffix": "bergabung",
+        "expiryLabel": "Kedaluwarsa dalam",
+        "neverExpires": "Tidak pernah kedaluwarsa",
+        "expiryUnitHour": "jam",
+        "expiryUnitDay": "hari",
+        "expiryUnitWeek": "minggu",
+        "quick24h": "24 jam",
+        "quick7d": "7 hari",
+        "quick30d": "30 hari",
+        "memberOnlyNote": "Orang bergabung sebagai anggota. Untuk mengundang admin, gunakan email atau tautan sekali pakai.",
+        "summaryUnlimited": "Tautan ini tetap terbuka sampai Anda mencabutnya.",
+        "summaryCapped": "Hingga {maxUses} orang dapat bergabung · kedaluwarsa {expiry} ({expiryDate}).",
+        "sharedCreated": "Tautan bersama siap. Salin dan posting di tempat orang-orang Anda berada.",
+        "sharedIntro": "Ini tautan bersama Anda untuk {groupName}. Hingga {maxUses} anggota dapat bergabung dengan tautan ini, dalam batas di bawah.",
+        "sharedCopyAgain": "Anggota dapat menyalin tautan ini lagi dari undangan tertunda.",
+        "sharedShareText": "Gabung {groupName} di Spliit Cloud — buka tautan ini untuk bergabung:\n{inviteUrl}",
+        "invalidJoinLimit": "Masukkan batas antara 2 dan 1000, atau pilih tanpa batas.",
+        "invalidExpiry": "Masukkan kedaluwarsa antara 1 jam dan 1 tahun, atau pilih tidak pernah.",
+        "summaryExpiryOnly": "Siapa pun dapat bergabung · kedaluwarsa {expiry} ({expiryDate}).",
+        "otherOption": "Lainnya…",
+        "sharedIntroUnlimited": "Ini tautan bersama Anda untuk {groupName}. Anggota baru dapat bergabung dengan tautan ini, dalam batas di bawah.",
+        "expiryUnitLabel": "Satuan kedaluwarsa",
+        "summaryCappedNoDate": "Hingga {maxUses} orang dapat bergabung · kedaluwarsa {expiry}.",
+        "summaryExpiryOnlyNoDate": "Siapa pun dapat bergabung · kedaluwarsa {expiry}.",
+        "summaryCappedNever": "Hingga {maxUses} orang dapat bergabung · tidak pernah kedaluwarsa."
       },
       "friendsDescription": "Undang seseorang dari grup yang pernah Anda gunakan bersama.",
       "selectFriendPlaceholder": "Pilih teman…",
@@ -2103,9 +2140,25 @@
         "type": "Sesi QR",
         "fallbackLabel": "Kode QR terdekat",
         "viewQr": "Lihat kode QR",
-        "expireNow": "Kedaluwarsakan sekarang"
+        "expireNow": "Kedaluwarsakan sekarang",
+        "expireDescription": "Kode langsung berhenti berfungsi. Orang yang sudah bergabung tetap menjadi anggota.",
+        "expireTitle": "Kedaluwarsakan kode QR ini?"
       },
-      "createdWithoutEmail": "Undangan untuk {email} dibuat, tetapi tidak ada email yang dikirim. Bagikan tautan undangan sebagai gantinya."
+      "createdWithoutEmail": "Undangan untuk {email} dibuat, tetapi tidak ada email yang dikirim. Bagikan tautan undangan sebagai gantinya.",
+      "shared": {
+        "type": "Tautan bersama",
+        "joinedOf": "{count} dari {max} bergabung",
+        "joinedUnlimited": "{count} bergabung",
+        "full": "Penuh",
+        "copyLink": "Salin tautan",
+        "copied": "Tautan bersama tersalin.",
+        "joiners": "Siapa yang bergabung",
+        "joinersEmpty": "Belum ada yang bergabung lewat tautan ini.",
+        "editLimits": "Edit tautan",
+        "expiresWithJoins": "Kedaluwarsa {date} · {joins}",
+        "revokeDescription": "“{name}” akan langsung berhenti berfungsi. Orang yang sudah bergabung tetap menjadi anggota.",
+        "revokeTitle": "Cabut tautan bersama?"
+      }
     },
     "changeRoleAria": "Ubah peran",
     "remove": "Hapus",
@@ -2254,10 +2307,21 @@
       "emailInvalid": "Masukkan alamat email yang valid.",
       "linkNotShown": "Tautan undangan tidak ditampilkan di sini. Gunakan \"Buat tautan baru\" di daftar jika Anda perlu membagikannya lagi.",
       "switchToLinkNote": "Simpan untuk mengubah undangan ini menjadi tautan. Undangan email akan berhenti berfungsi.",
-      "savedWithoutEmail": "Perubahan disimpan, tetapi tidak ada email yang dikirim. Bagikan tautan undangan sebagai gantinya."
+      "savedWithoutEmail": "Perubahan disimpan, tetapi tidak ada email yang dikirim. Bagikan tautan undangan sebagai gantinya.",
+      "sharedLabelLabel": "Label tautan",
+      "sharedMaxUsesLabel": "Batas bergabung",
+      "sharedExpiryLabel": "Kedaluwarsa dalam",
+      "sharedNeverExpires": "Tidak pernah kedaluwarsa",
+      "sharedExpiresOn": "Kedaluwarsa baru: {date}.",
+      "sharedEndsNow": "Menurunkan batas ke {count} atau kurang akan langsung menutup tautan ini.",
+      "regenerateSharedDescription": "URL tautan baru akan dibuat. Jumlah bergabung, label, batas, dan kedaluwarsa tetap sama — hanya tautannya yang berubah.",
+      "linkReadySharedDescription": "Bagikan di tempat orang-orang Anda berada. Anggota juga dapat menyalinnya lagi dari undangan tertunda.",
+      "linkReadyCopyAgain": "Anda dapat menyalin tautan ini lagi nanti dari undangan tertunda.",
+      "sharedKeepExpiry": "Pertahankan kedaluwarsa saat ini"
     },
     "regenerate": {
-      "title": "Buat tautan baru"
+      "title": "Buat tautan baru",
+      "sharedTitle": "Buat tautan bersama baru"
     },
     "actionsFor": "Tindakan untuk {name}",
     "readOnlyDescription": "Orang dan peserta yang termasuk dalam grup ini. Alamat email dan detail undangan disembunyikan.",
@@ -2896,7 +2960,10 @@
         "destination": "Penerima",
         "displayName": "Nama",
         "role": "Peran",
-        "credential": "Tautan undangan"
+        "credential": "Tautan undangan",
+        "label": "Label tautan",
+        "maxUses": "Batas bergabung",
+        "expiry": "Kedaluwarsa"
       }
     },
     "fallback": "Sebuah aktivitas telah dicatat",

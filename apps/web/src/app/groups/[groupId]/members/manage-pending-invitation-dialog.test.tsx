@@ -41,6 +41,12 @@ vi.mock('@/trpc/client', () => ({
           isPending: false,
         }),
       },
+      getLinkUrl: {
+        useMutation: () => ({
+          mutateAsync: vi.fn(async () => ({})),
+          isPending: false,
+        }),
+      },
     },
     useUtils: () => ({
       invitations: {
@@ -80,9 +86,14 @@ function makeInvitation(
     ledgerParticipantId: 'lp-1',
     isMultiUse: false,
     useCount: 0,
+    maxUses: null,
+    label: null,
+    isShared: false,
+    endedReason: null,
     recentJoiners: [],
     canRevoke: true,
     canManage: true,
+    canCopyLink: false,
     recipientProfile: null,
     ...overrides,
   }
@@ -433,6 +444,179 @@ describe('ManagePendingInvitationDialog', () => {
 
     expect(mocks.updateMutate).not.toHaveBeenCalled()
     expect(screen.getByText('Enter a valid email address.')).toBeInTheDocument()
+  })
+})
+
+describe('ManagePendingInvitationDialog shared links', () => {
+  function makeSharedInvitation(
+    overrides: Partial<PendingInvitation> = {},
+  ): PendingInvitation {
+    return makeInvitation({
+      type: 'LINK',
+      email: 'xyz@qr-session.placeholder.local',
+      temporaryName: null,
+      isMultiUse: true,
+      isShared: true,
+      useCount: 2,
+      maxUses: 10,
+      label: 'Family chat',
+      endedReason: null,
+      canCopyLink: true,
+      ledgerParticipantId: null,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      ...overrides,
+    })
+  }
+
+  it('edits label and cap without delivery tabs, name, or role fields', async () => {
+    mocks.updateMutate.mockResolvedValue({
+      invitation: makeSharedInvitation({ label: 'Renamed' }),
+      inviteUrl: null,
+      emailDelivered: true,
+    })
+    const { user, onOpenChange } = renderDialog(makeSharedInvitation())
+
+    // Shared rows swap the whole body: no delivery tabs, no name/role.
+    expect(
+      screen.queryByRole('tab', { name: 'Invite link' }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('textbox', { name: 'Display name' }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('combobox', { name: 'Role' }),
+    ).not.toBeInTheDocument()
+    expect(screen.getByText(/2 of 10 joined/)).toBeInTheDocument()
+
+    const labelInput = screen.getByRole('textbox', { name: 'Link label' })
+    await user.clear(labelInput)
+    await user.type(labelInput, 'Renamed')
+    await user.click(screen.getByRole('button', { name: 'Save changes' }))
+
+    await waitFor(() => {
+      expect(mocks.updateMutate).toHaveBeenCalledWith({
+        invitationId: 'inv-1',
+        role: 'MEMBER',
+        temporaryName: undefined,
+        delivery: { type: 'LINK' },
+        shared: {
+          label: 'Renamed',
+          maxUses: 10,
+          // Untouched expiry sends `undefined` (no change), never `null`
+          // (which would set never-expires).
+          expiresIn: undefined,
+        },
+      })
+    })
+    await waitFor(() => {
+      expect(onOpenChange).toHaveBeenCalledWith(false)
+    })
+  })
+
+  it('defaults the expiry picker to keeping the current expiry', async () => {
+    mocks.updateMutate.mockResolvedValue({
+      invitation: makeSharedInvitation(),
+      inviteUrl: null,
+      emailDelivered: true,
+    })
+    const { user } = renderDialog(makeSharedInvitation())
+
+    // The row's cap pre-selects its preset; expiry stays untouched.
+    expect(
+      screen.getByRole('combobox', { name: 'Join limit' }),
+    ).toHaveTextContent('10 joins')
+    expect(
+      screen.getByRole('combobox', { name: 'Expires in' }),
+    ).toHaveTextContent('Keep current expiry')
+
+    // Dirty the form through the label so Save enables; expiry untouched.
+    const labelInput = screen.getByRole('textbox', { name: 'Link label' })
+    await user.clear(labelInput)
+    await user.type(labelInput, 'Renamed')
+    await user.click(screen.getByRole('button', { name: 'Save changes' }))
+
+    await waitFor(() => {
+      expect(mocks.updateMutate).toHaveBeenCalledWith({
+        invitationId: 'inv-1',
+        role: 'MEMBER',
+        temporaryName: undefined,
+        delivery: { type: 'LINK' },
+        shared: {
+          label: 'Renamed',
+          maxUses: 10,
+          expiresIn: undefined,
+        },
+      })
+    })
+  })
+
+  it('submits a fresh duration when the expiry preset changes', async () => {
+    mocks.updateMutate.mockResolvedValue({
+      invitation: makeSharedInvitation(),
+      inviteUrl: null,
+      emailDelivered: true,
+    })
+    const { user } = renderDialog(makeSharedInvitation())
+
+    await user.click(screen.getByRole('combobox', { name: 'Expires in' }))
+    await user.click(screen.getByRole('option', { name: '30 days' }))
+
+    // The reviewer sees the resulting absolute date, not just "30 days".
+    expect(screen.getByText(/New expiry:/i)).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Save changes' }))
+
+    await waitFor(() => {
+      expect(mocks.updateMutate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          shared: expect.objectContaining({
+            expiresIn: { amount: 30, unit: 'days' },
+          }),
+        }),
+      )
+    })
+  })
+
+  it('warns when the edited cap ends the link immediately', async () => {
+    const { user } = renderDialog(makeSharedInvitation())
+    await user.click(screen.getByRole('combobox', { name: 'Join limit' }))
+    await user.click(screen.getByRole('option', { name: 'Other…' }))
+    const capInput = screen.getByRole('spinbutton', { name: 'Join limit' })
+    await user.clear(capInput)
+    await user.type(capInput, '2')
+
+    expect(screen.getByText(/ends this link immediately/i)).toBeInTheDocument()
+  })
+
+  it('shows exact datetimes in the header note and the new-expiry preview', async () => {
+    mocks.updateMutate.mockResolvedValue({
+      invitation: makeSharedInvitation({
+        expiresAt: new Date('2026-10-26T14:30:00Z'),
+      }),
+      inviteUrl: null,
+      emailDelivered: true,
+    })
+    const { user } = renderDialog(
+      makeSharedInvitation({ expiresAt: new Date('2026-10-26T14:30:00Z') }),
+    )
+
+    // Current expiry pins date + time, not just the day. (The dialog uses
+    // the device timezone, so the clock time isn't pinned — the card test
+    // pins the exact UTC rendering.)
+    expect(
+      screen.getAllByText(
+        /Expires Oct 26, 2026, \d+:\d\d [AP]M · 2 of 10 joined/,
+      ),
+    ).not.toHaveLength(0)
+
+    await user.click(screen.getByRole('combobox', { name: 'Expires in' }))
+    await user.click(screen.getByRole('option', { name: 'Other…' }))
+    const amountInput = screen.getByRole('spinbutton', { name: 'Expires in' })
+    await user.clear(amountInput)
+    await user.type(amountInput, '3')
+
+    // The preview likewise carries the time, not just "3 days".
+    expect(screen.getByText(/New expiry: .+, .+/i)).toBeInTheDocument()
   })
 })
 

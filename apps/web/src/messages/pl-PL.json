@@ -751,7 +751,10 @@
       "notNow": "Nie teraz"
     },
     "groupTabsHint": "Chcesz zmienić kolejność zakładek grupy lub ukryć te, których nie używasz?",
-    "groupTabsHintLink": "Dostosuj zakładki w ustawieniach konta"
+    "groupTabsHintLink": "Dostosuj zakładki w ustawieniach konta",
+    "linkInvitationFullTitle": "Ten link zaproszenia jest pełny",
+    "linkInvitationFullDescription": "Wszystkie miejsca w tym linku zostały wykorzystane. Poproś członka grupy o udostępnienie nowego.",
+    "linkInvitationSharedUse": "Z tego linku może skorzystać kilka osób, w ramach limitu dołączeń i ważności."
   },
   "GroupForm": {
     "title": "Informacje o grupie",
@@ -2069,7 +2072,41 @@
         "shareTitle": "Dołącz do {groupName} w Spliit Cloud",
         "shareText": "Właśnie utworzyłem grupę {groupName} dla naszych wspólnych wydatków w Spliit Cloud. Oto jednorazowy link zaproszenia — otwórz go, aby dołączyć:\n{inviteUrl}",
         "generateNew": "Wygeneruj nowy link",
-        "copyLink": "Kopiuj link"
+        "copyLink": "Kopiuj link",
+        "mode": "Kto może użyć tego linku?",
+        "modeOneTime": "Jedna osoba",
+        "modeOneTimeHint": "Link przestanie działać po pierwszej akceptacji.",
+        "modeShared": "Wiele osób",
+        "modeSharedHint": "Udostępniony link, z którego może skorzystać wiele osób, w ramach limitów poniżej.",
+        "labelLabel": "Nazwa linku (opcjonalnie)",
+        "labelPlaceholder": "np. Czat rodzinny, Discord",
+        "joinLimitLabel": "Limit dołączeń",
+        "unlimitedJoins": "Bez limitu",
+        "joinsSuffix": "dołączenia",
+        "expiryLabel": "Wygasa za",
+        "neverExpires": "Nigdy nie wygasa",
+        "expiryUnitHour": "godziny",
+        "expiryUnitDay": "dni",
+        "expiryUnitWeek": "tygodnie",
+        "quick24h": "24 godziny",
+        "quick7d": "7 dni",
+        "quick30d": "30 dni",
+        "memberOnlyNote": "Osoby dołączają jako członkowie. Aby zaprosić admina, użyj e-maila albo linku jednorazowego.",
+        "summaryUnlimited": "Ten link pozostaje otwarty, dopóki go nie cofniesz.",
+        "summaryCapped": "Może dołączyć do {maxUses} osób · wygasa {expiry} ({expiryDate}).",
+        "sharedCreated": "Udostępniony link gotowy. Skopiuj go i opublikuj tam, gdzie są Twoi ludzie.",
+        "sharedIntro": "Oto Twój udostępniony link do grupy {groupName}. Z jego pomocą może dołączyć do {maxUses} członków, w ramach limitów poniżej.",
+        "sharedCopyAgain": "Członkowie mogą ponownie skopiować ten link w oczekujących zaproszeniach.",
+        "sharedShareText": "Dołącz do grupy {groupName} w Spliit Cloud — otwórz ten link, aby dołączyć:\n{inviteUrl}",
+        "invalidJoinLimit": "Podaj limit od 2 do 1000 dołączeń albo wybierz „bez limitu“.",
+        "invalidExpiry": "Podaj ważność od 1 godziny do 1 roku albo wybierz „nigdy“.",
+        "summaryExpiryOnly": "Bez limitu · wygasa {expiry} ({expiryDate}).",
+        "otherOption": "Inne…",
+        "sharedIntroUnlimited": "Oto Twój udostępniony link do grupy {groupName}. Nowi członkowie mogą z jego pomocą dołączyć, w ramach limitów poniżej.",
+        "expiryUnitLabel": "Jednostka ważności",
+        "summaryCappedNoDate": "Może dołączyć do {maxUses} osób · wygasa {expiry}.",
+        "summaryExpiryOnlyNoDate": "Bez limitu · wygasa {expiry}.",
+        "summaryCappedNever": "Może dołączyć do {maxUses} osób · nigdy nie wygasa."
       },
       "emailDescription": "Wyślij zaproszenie e-mailem. Zaproszona osoba dołączy po zaakceptowaniu z pasującego konta.",
       "linkDescription": "Wygeneruj jednorazowy link, za pomocą którego można dołączyć do grupy. Link przestanie działać po pierwszym zaakceptowaniu.",
@@ -2130,9 +2167,25 @@
         "type": "Sesja QR",
         "fallbackLabel": "Kod QR w pobliżu",
         "viewQr": "Zobacz kod QR",
-        "expireNow": "Unieważnij teraz"
+        "expireNow": "Unieważnij teraz",
+        "expireDescription": "Kod natychmiast przestanie działać. Osoby, które już dołączyły, pozostaną członkami.",
+        "expireTitle": "Unieważnić ten kod QR?"
       },
-      "createdWithoutEmail": "Zaproszenie dla {email} zostało utworzone, ale nie wysłano żadnego e-maila. Zamiast tego udostępnij link zaproszenia."
+      "createdWithoutEmail": "Zaproszenie dla {email} zostało utworzone, ale nie wysłano żadnego e-maila. Zamiast tego udostępnij link zaproszenia.",
+      "shared": {
+        "type": "Udostępniony link",
+        "joinedOf": "{count} z {max} dołączyło",
+        "joinedUnlimited": "Dołączyło: {count}",
+        "full": "Pełny",
+        "copyLink": "Kopiuj link",
+        "copied": "Udostępniony link skopiowany.",
+        "joiners": "Kto dołączył",
+        "joinersEmpty": "Nikt jeszcze nie dołączył przez ten link.",
+        "editLimits": "Edytuj link",
+        "expiresWithJoins": "Wygasa {date} · {joins}",
+        "revokeDescription": "„{name}” natychmiast przestanie działać. Osoby, które już dołączyły, pozostaną członkami.",
+        "revokeTitle": "Cofnąć udostępniony link?"
+      }
     },
     "changeRoleAria": "Zmień rolę",
     "remove": "Usuń",
@@ -2283,10 +2336,21 @@
       "emailInvalid": "Wprowadź prawidłowy adres e-mail.",
       "linkNotShown": "Link zaproszenia nie jest tutaj wyświetlany. Jeśli chcesz udostępnić go ponownie, użyj na liście opcji „Wygeneruj nowy link”.",
       "switchToLinkNote": "Zapisz, aby zamienić to zaproszenie na link. Zaproszenie e-mail przestanie działać.",
-      "savedWithoutEmail": "Zmiany zapisane, ale nie wysłano żadnego e-maila. Zamiast tego udostępnij link zaproszenia."
+      "savedWithoutEmail": "Zmiany zapisane, ale nie wysłano żadnego e-maila. Zamiast tego udostępnij link zaproszenia.",
+      "sharedLabelLabel": "Nazwa linku",
+      "sharedMaxUsesLabel": "Limit dołączeń",
+      "sharedExpiryLabel": "Wygasa za",
+      "sharedNeverExpires": "Nigdy nie wygasa",
+      "sharedExpiresOn": "Nowa ważność: {date}.",
+      "sharedEndsNow": "Obniżenie limitu do {count} lub niżej natychmiast kończy ten link.",
+      "regenerateSharedDescription": "Zostanie wygenerowany nowy adres URL. Dołączenia, nazwa, limity i ważność zostają — zmienia się tylko sam link.",
+      "linkReadySharedDescription": "Udostępnij go tam, gdzie są Twoi ludzie. Członkowie też mogą go ponownie skopiować w oczekujących zaproszeniach.",
+      "linkReadyCopyAgain": "Ten link będzie można ponownie skopiować później w oczekujących zaproszeniach.",
+      "sharedKeepExpiry": "Zachowaj obecną ważność"
     },
     "regenerate": {
-      "title": "Wygeneruj nowy link"
+      "title": "Wygeneruj nowy link",
+      "sharedTitle": "Generuj nowy udostępniony link"
     },
     "actionsFor": "Akcje dla {name}",
     "readOnlyDescription": "Osoby i uczestnicy należący do tej grupy. Adresy e-mail i szczegóły zaproszeń są ukryte.",
@@ -2925,7 +2989,10 @@
         "destination": "Odbiorca",
         "displayName": "Imię",
         "role": "Rola",
-        "credential": "Link zaproszenia"
+        "credential": "Link zaproszenia",
+        "label": "Nazwa linku",
+        "maxUses": "Limit dołączeń",
+        "expiry": "Ważność"
       }
     },
     "fallback": "Aktywność została zarejestrowana",

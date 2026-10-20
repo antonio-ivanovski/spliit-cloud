@@ -18,16 +18,20 @@ import { trpc } from '@/trpc/client'
 import { AddUnlinkedParticipantTab } from './add-unlinked-participant-tab'
 import { InviteEmailTab } from './invite-email-tab'
 import { InviteFriendsTab } from './invite-friends-tab'
-import { InviteLinkTab } from './invite-link-tab'
+import { InviteLinkTab, SharedLinkResultPanel } from './invite-link-tab'
 import { InviteQrTab } from './invite-qr-tab'
 import {
   emailFormSchema,
+  SHARED_LINK_MAX_USES_LIMIT,
+  SHARED_LINK_MIN_USES,
+  sharedLinkFormDefaults,
   type EmailFormValues,
   type GeneratedLink,
   type InvitableRole,
   type InviteTab,
   type LinkFormValues,
   type QrSession,
+  type SharedLinkFormValues,
   type UnlinkedParticipantFormValues,
 } from './members-hooks'
 
@@ -37,9 +41,11 @@ export function InviteCard({
   canInviteAdmin,
   createMutation,
   createLinkMutation,
+  createSharedLinkMutation,
   createParticipantMutation,
   onInvite,
   onGenerateLink,
+  onGenerateSharedLink,
   onAddParticipant,
   qrSession,
   onQrSessionChange,
@@ -50,6 +56,7 @@ export function InviteCard({
   canInviteAdmin: boolean
   createMutation: { isPending: boolean }
   createLinkMutation: { isPending: boolean }
+  createSharedLinkMutation: { isPending: boolean }
   createParticipantMutation: { isPending: boolean }
   onInvite: (values: {
     email: string
@@ -63,7 +70,19 @@ export function InviteCard({
     inviteUrl: string
     temporaryName: string | null
     role: InvitableRole
-    expiresAt: Date | string
+    expiresAt: Date | string | null
+  } | void>
+  onGenerateSharedLink: (values: {
+    label?: string
+    maxUses: number | null
+    expiresIn: { amount: number; unit: 'hours' | 'days' | 'weeks' } | null
+  }) => Promise<{
+    inviteUrl: string
+    role: InvitableRole
+    expiresAt: Date | string | null
+    maxUses: number | null
+    label: string | null
+    isShared: boolean
   } | void>
   onAddParticipant: (values: UnlinkedParticipantFormValues) => Promise<boolean>
   /**
@@ -87,6 +106,25 @@ export function InviteCard({
     useState<InvitableRole>('MEMBER')
   const [generatedLink, setGeneratedLink] = useState<GeneratedLink | null>(null)
   const [inviteTab, setInviteTab] = useState<InviteTab>('email')
+
+  // Leaving the link tab (or switching one-time ↔ shared) drops a stale
+  // generated URL: a generated one-time URL must not linger under the shared
+  // form (and vice versa) — the one-time URL is show-once and the other mode
+  // would mislabel it.
+  function handleInviteTabChange(tab: InviteTab) {
+    defaultTabApplied.current = true
+    setInviteTab(tab)
+    if (tab !== 'link') setGeneratedLink(null)
+  }
+
+  function handleLinkModeChange(mode: 'oneTime' | 'shared') {
+    setGeneratedLink((current) => {
+      if (!current) return current
+      if (mode === 'shared' && !current.isShared) return null
+      if (mode === 'oneTime' && current.isShared) return null
+      return current
+    })
+  }
   // External "View QR" requests land on the QR tab.
   const lastShowQrRequest = useRef(showQrTabRequest)
   useEffect(() => {
@@ -116,11 +154,9 @@ export function InviteCard({
   // Default to friends tab when at least one non-member friend exists.
   const defaultTabApplied = useRef(false)
   useEffect(() => {
-    if (defaultTabApplied.current) return
-    if (!friendsQuery.isLoading && (friends ?? []).some((f) => !f.isMember)) {
-      setInviteTab('friends')
-      defaultTabApplied.current = true
-    }
+    if (defaultTabApplied.current || friendsQuery.isLoading) return
+    defaultTabApplied.current = true
+    if ((friends ?? []).some((f) => !f.isMember)) setInviteTab('friends')
   }, [friendsQuery.isLoading, friends])
 
   const form = useForm<EmailFormValues>({
@@ -132,15 +168,23 @@ export function InviteCard({
     defaultValues: { temporaryName: '' },
   })
 
+  const sharedForm = useForm<SharedLinkFormValues>({
+    defaultValues: sharedLinkFormDefaults,
+  })
+
   // oxlint-disable-next-line react/incompatible-library -- react-hook-form watch reads during render by design.
   const email = form.watch('email')
   const temporaryName = form.watch('temporaryName')
   const linkTemporaryName = linkForm.watch('temporaryName')
+  const sharedLabel = sharedForm.watch('label')
   // Typed but unsubmitted invites would be lost. The global mutation guard
   // covers submitted invites.
   usePwaUpdateBlocker(
     Boolean(
-      email?.trim() || temporaryName?.trim() || linkTemporaryName?.trim(),
+      email?.trim() ||
+      temporaryName?.trim() ||
+      linkTemporaryName?.trim() ||
+      sharedLabel?.trim(),
     ) || selectedFriendAccountId !== '',
     'invite-card-edits',
   )
@@ -170,6 +214,11 @@ export function InviteCard({
   })
 
   const handleLinkSubmit = linkForm.handleSubmit(async (values) => {
+    const mode = sharedForm.getValues('mode')
+    if (mode === 'shared') {
+      await handleSharedLinkSubmit()
+      return
+    }
     const temporaryName = values.temporaryName?.trim()
     try {
       const data = await onGenerateLink({
@@ -182,8 +231,71 @@ export function InviteCard({
           temporaryName: data.temporaryName,
           role: data.role,
           expiresAt: data.expiresAt,
+          isShared: false,
         })
         linkForm.reset({ temporaryName: '' })
+      }
+    } catch {
+      // Mutation callbacks already surface the failure; keep the form draft.
+    }
+  })
+
+  const handleSharedLinkSubmit = sharedForm.handleSubmit(async (values) => {
+    // Client-side bounds mirror the server so mistakes surface instantly.
+    // The server re-validates (never trust the client). An "Other" preset
+    // left empty submits null, which is only valid for Unlimited/Never —
+    // anything else is a missing custom value, not a valid choice.
+    if (values.joinLimitPreset === 'other' && values.maxUses == null) {
+      sharedForm.setError('maxUses', {
+        message: t('invite.link.invalidJoinLimit'),
+      })
+      return
+    }
+    if (values.maxUses != null) {
+      const maxUses = values.maxUses
+      if (
+        !Number.isInteger(maxUses) ||
+        maxUses < SHARED_LINK_MIN_USES ||
+        maxUses > SHARED_LINK_MAX_USES_LIMIT
+      ) {
+        sharedForm.setError('maxUses', {
+          message: t('invite.link.invalidJoinLimit'),
+        })
+        return
+      }
+    }
+    if (values.expiryPreset === 'other' && values.expiresIn == null) {
+      sharedForm.setError('expiresIn', {
+        message: t('invite.link.invalidExpiry'),
+      })
+      return
+    }
+    if (values.expiresIn != null) {
+      const amount = values.expiresIn.amount
+      if (amount == null || !Number.isInteger(amount) || amount < 1) {
+        sharedForm.setError('expiresIn', {
+          message: t('invite.link.invalidExpiry'),
+        })
+        return
+      }
+    }
+    try {
+      const data = await onGenerateSharedLink({
+        label: values.label?.trim() || undefined,
+        maxUses: values.maxUses,
+        expiresIn: values.expiresIn,
+      })
+      if (data) {
+        setGeneratedLink({
+          inviteUrl: data.inviteUrl,
+          temporaryName: null,
+          role: data.role,
+          expiresAt: data.expiresAt,
+          isShared: true,
+          maxUses: data.maxUses,
+          label: data.label,
+        })
+        sharedForm.reset({ ...sharedLinkFormDefaults, mode: 'shared' })
       }
     } catch {
       // Mutation callbacks already surface the failure; keep the form draft.
@@ -209,10 +321,15 @@ export function InviteCard({
     try {
       await navigator.share({
         title: t('invite.link.shareTitle', { groupName }),
-        text: t('invite.link.shareText', {
-          groupName,
-          inviteUrl: generatedLink.inviteUrl,
-        }),
+        text: generatedLink.isShared
+          ? t('invite.link.sharedShareText', {
+              groupName,
+              inviteUrl: generatedLink.inviteUrl,
+            })
+          : t('invite.link.shareText', {
+              groupName,
+              inviteUrl: generatedLink.inviteUrl,
+            }),
       })
     } catch (err) {
       if (err instanceof Error && err.name !== 'AbortError') {
@@ -229,7 +346,7 @@ export function InviteCard({
       <CardContent>
         <Tabs
           value={inviteTab}
-          onValueChange={(value) => setInviteTab(value as InviteTab)}
+          onValueChange={(value) => handleInviteTabChange(value as InviteTab)}
           className="flex flex-col gap-4"
         >
           <Select
@@ -237,7 +354,7 @@ export function InviteCard({
             items={inviteTabItems}
             onValueChange={(value) => {
               if (value) {
-                setInviteTab(value as InviteTab)
+                handleInviteTabChange(value as InviteTab)
               }
             }}
           >
@@ -292,16 +409,29 @@ export function InviteCard({
           <TabsContent value="link" className="mt-0 flex flex-col gap-4">
             <InviteLinkTab
               linkForm={linkForm}
+              sharedForm={sharedForm}
               onSubmit={handleLinkSubmit}
               linkRoleValue={effectiveLinkRoleValue}
               canInviteAdmin={canInviteAdmin}
               onRoleChange={setLinkRoleValue}
-              isPending={createLinkMutation.isPending}
+              isPending={
+                createLinkMutation.isPending ||
+                createSharedLinkMutation.isPending
+              }
               generatedLink={generatedLink}
               canShare={canShare}
               groupName={groupName}
               onShare={handleShareLink}
+              onModeChange={handleLinkModeChange}
             />
+            {generatedLink?.isShared && (
+              <SharedLinkResultPanel
+                generatedLink={generatedLink}
+                canShare={canShare}
+                groupName={groupName}
+                onShare={handleShareLink}
+              />
+            )}
           </TabsContent>
 
           <TabsContent value="qr" className="mt-0 flex flex-col gap-4">

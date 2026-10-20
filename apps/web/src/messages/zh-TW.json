@@ -733,7 +733,10 @@
       "notNow": "暫不"
     },
     "groupTabsHint": "想要重新排列群組標籤頁，或隱藏不用的標籤頁嗎？",
-    "groupTabsHintLink": "在帳戶設定中自訂標籤頁"
+    "groupTabsHintLink": "在帳戶設定中自訂標籤頁",
+    "linkInvitationFullTitle": "此邀請連結已滿",
+    "linkInvitationFullDescription": "此連結的加入名額已用完。請請群組成員分享新連結。",
+    "linkInvitationSharedUse": "此連結可在加入人數上限和有效期內供多人使用。"
   },
   "GroupForm": {
     "title": "群組資訊",
@@ -2050,7 +2053,41 @@
         "shareTitle": "在 Spliit Cloud 上加入 {groupName}",
         "shareText": "我剛在 Spliit Cloud 上為我們的共同支出建立了 {groupName}。這是一個一次性邀請連結——開啟即可加入：\n{inviteUrl}",
         "generateNew": "產生新連結",
-        "copyLink": "複製連結"
+        "copyLink": "複製連結",
+        "mode": "誰可以使用此連結？",
+        "modeOneTime": "一個人",
+        "modeOneTimeHint": "首次接受後，連結將失效。",
+        "modeShared": "多人",
+        "modeSharedHint": "多人可在以下限制內使用的共享連結。",
+        "labelLabel": "連結名稱（選填）",
+        "labelPlaceholder": "例如：家人、Discord",
+        "joinLimitLabel": "加入人數上限",
+        "unlimitedJoins": "無限制",
+        "joinsSuffix": "人次",
+        "expiryLabel": "有效期",
+        "neverExpires": "永不過期",
+        "expiryUnitHour": "小時",
+        "expiryUnitDay": "天",
+        "expiryUnitWeek": "週",
+        "quick24h": "24 小時",
+        "quick7d": "7 天",
+        "quick30d": "30 天",
+        "memberOnlyNote": "加入者將成為成員。如需邀請管理員，請使用電子郵件或一次性連結。",
+        "summaryUnlimited": "此連結將保持開放，直到您撤銷它。",
+        "summaryCapped": "最多可加入 {maxUses} 人 · 有效期至 {expiry}（{expiryDate}）。",
+        "sharedCreated": "共享連結已就緒。複製並發佈到大家所在的地方。",
+        "sharedIntro": "這是您為 {groupName} 建立的共享連結。最多 {maxUses} 人可透過此連結在以下限制內以成員身分加入。",
+        "sharedCopyAgain": "成員可在待處理的邀請中再次複製此連結。",
+        "sharedShareText": "加入 Spliit Cloud 上的 {groupName} — 開啟此連結即可加入：\n{inviteUrl}",
+        "invalidJoinLimit": "請輸入 2 至 1000 的加入人數上限，或選擇「無限制」。",
+        "invalidExpiry": "請輸入 1 小時至 1 年的有效期，或選擇「永不過期」。",
+        "summaryExpiryOnly": "任何人均可加入 · 有效期至 {expiry}（{expiryDate}）。",
+        "otherOption": "其他…",
+        "sharedIntroUnlimited": "這是您為 {groupName} 建立的共享連結。新成員可透過此連結在以下限制內加入。",
+        "expiryUnitLabel": "有效期單位",
+        "summaryCappedNoDate": "最多可加入 {maxUses} 人 · 有效期至 {expiry}。",
+        "summaryExpiryOnlyNoDate": "任何人均可加入 · 有效期至 {expiry}。",
+        "summaryCappedNever": "最多可加入 {maxUses} 人 · 永不過期。"
       },
       "friendsDescription": "從您以前共用過的群組中邀請朋友。",
       "selectFriendPlaceholder": "選擇一位朋友…",
@@ -2105,9 +2142,25 @@
         "type": "二維碼工作階段",
         "fallbackLabel": "附近的二維碼",
         "viewQr": "檢視二維碼",
-        "expireNow": "立即過期"
+        "expireNow": "立即過期",
+        "expireDescription": "該二維碼將立即失效。已加入的人員仍是成員。",
+        "expireTitle": "使此二維碼過期？"
       },
-      "createdWithoutEmail": "已為 {email} 建立邀請，但未傳送電子郵件。請改為分享邀請連結。"
+      "createdWithoutEmail": "已為 {email} 建立邀請，但未傳送電子郵件。請改為分享邀請連結。",
+      "shared": {
+        "type": "共享連結",
+        "joinedOf": "已加入 {count} / {max}",
+        "joinedUnlimited": "已加入 {count}",
+        "full": "已滿",
+        "copyLink": "複製連結",
+        "copied": "已複製共享連結。",
+        "joiners": "加入者",
+        "joinersEmpty": "還沒有人透過此連結加入。",
+        "editLimits": "編輯連結",
+        "expiresWithJoins": "有效期至 {date} · {joins}",
+        "revokeDescription": "「{name}」將立即失效。已加入的人員仍是成員。",
+        "revokeTitle": "撤銷共享連結？"
+      }
     },
     "remove": "移除",
     "removeDialog": {
@@ -2256,10 +2309,21 @@
       "emailInvalid": "請輸入有效的電子郵件地址。",
       "linkNotShown": "邀請連結不會顯示在這裡。如需再次分享，請在清單中使用「產生新連結」。",
       "switchToLinkNote": "儲存後，此邀請將轉換為連結。電子郵件邀請將停止使用。",
-      "savedWithoutEmail": "變更已儲存，但未傳送電子郵件。請改為分享邀請連結。"
+      "savedWithoutEmail": "變更已儲存，但未傳送電子郵件。請改為分享邀請連結。",
+      "sharedLabelLabel": "連結名稱",
+      "sharedMaxUsesLabel": "加入人數上限",
+      "sharedExpiryLabel": "有效期",
+      "sharedNeverExpires": "永不過期",
+      "sharedExpiresOn": "新的有效期：{date}。",
+      "sharedEndsNow": "將上限降至 {count} 或更低將立即關閉此連結。",
+      "regenerateSharedDescription": "將產生新的連結網址。已加入人數、名稱、限制和有效期保持不變 — 僅連結本身發生變化。",
+      "linkReadySharedDescription": "分享到大家所在的地方。成員也可從待處理的邀請中再次複製。",
+      "linkReadyCopyAgain": "您稍後可在待處理的邀請中再次複製此連結。",
+      "sharedKeepExpiry": "保留目前有效期"
     },
     "regenerate": {
-      "title": "產生新連結"
+      "title": "產生新連結",
+      "sharedTitle": "建立新的共享連結"
     },
     "actionsFor": "{name}的操作",
     "readOnlyDescription": "此群組中的人員與參與者。電子郵件地址和邀請詳細資料已隱藏。",
@@ -2898,7 +2962,10 @@
         "destination": "收件人",
         "displayName": "姓名",
         "role": "角色",
-        "credential": "邀請連結"
+        "credential": "邀請連結",
+        "label": "連結名稱",
+        "maxUses": "加入人數上限",
+        "expiry": "有效期"
       }
     },
     "fallback": "已記錄一項活動",

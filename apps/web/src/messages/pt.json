@@ -745,7 +745,10 @@
       "notNow": "Agora não"
     },
     "groupTabsHint": "Queres reordenar os separadores do grupo ou ocultar os que não usas?",
-    "groupTabsHintLink": "Personalizar os separadores nas definições da tua conta"
+    "groupTabsHintLink": "Personalizar os separadores nas definições da tua conta",
+    "linkInvitationFullTitle": "Este link de convite está cheio",
+    "linkInvitationFullDescription": "Todos os lugares deste link foram usados. Pede a um membro do grupo para partilhar um novo.",
+    "linkInvitationSharedUse": "Este link pode ser usado por várias pessoas, dentro do limite de adesões e da validade."
   },
   "GroupForm": {
     "title": "Informações do grupo",
@@ -2057,7 +2060,41 @@
         "shareTitle": "Junta-te a {groupName} no Spliit Cloud",
         "shareText": "Acabei de criar {groupName} para as nossas despesas partilhadas no Spliit Cloud. Aqui está uma ligação de convite única — abre-a para te juntares:\n{inviteUrl}",
         "generateNew": "Gerar nova ligação",
-        "copyLink": "Copiar ligação"
+        "copyLink": "Copiar ligação",
+        "mode": "Quem pode usar este link?",
+        "modeOneTime": "Uma pessoa",
+        "modeOneTimeHint": "O link deixa de funcionar após a primeira aceitação.",
+        "modeShared": "Várias pessoas",
+        "modeSharedHint": "Um link partilhado que várias pessoas podem usar, dentro dos limites abaixo.",
+        "labelLabel": "Nome do link (opcional)",
+        "labelPlaceholder": "p. ex. Família, Discord",
+        "joinLimitLabel": "Limite de adesões",
+        "unlimitedJoins": "Adesões ilimitadas",
+        "joinsSuffix": "adesões",
+        "expiryLabel": "Expira em",
+        "neverExpires": "Nunca expira",
+        "expiryUnitHour": "horas",
+        "expiryUnitDay": "dias",
+        "expiryUnitWeek": "semanas",
+        "quick24h": "24 horas",
+        "quick7d": "7 dias",
+        "quick30d": "30 dias",
+        "memberOnlyNote": "As pessoas aderem como membros. Para convidar um admin, usa o e-mail ou um link de uso único.",
+        "summaryUnlimited": "Este link fica aberto até o revogares.",
+        "summaryCapped": "Até {maxUses} pessoas podem aderir · expira em {expiry} ({expiryDate}).",
+        "sharedCreated": "Link partilhado pronto. Copia-o e publica-o onde estão as tuas pessoas.",
+        "sharedIntro": "Aqui está o teu link partilhado para {groupName}. Até {maxUses} membros podem aderir com este link, dentro dos limites abaixo.",
+        "sharedCopyAgain": "Os membros podem copiar este link de novo nos convites pendentes.",
+        "sharedShareText": "Adere a {groupName} no Spliit Cloud — abre este link para aderires:\n{inviteUrl}",
+        "invalidJoinLimit": "Introduz um limite entre 2 e 1000 adesões, ou escolhe «ilimitado».",
+        "invalidExpiry": "Introduz uma validade entre 1 hora e 1 ano, ou escolhe «nunca».",
+        "summaryExpiryOnly": "Adesões ilimitadas · expira em {expiry} ({expiryDate}).",
+        "otherOption": "Outro…",
+        "sharedIntroUnlimited": "Aqui está o teu link partilhado para {groupName}. Novos membros podem aderir com este link, dentro dos limites abaixo.",
+        "expiryUnitLabel": "Unidade de expiração",
+        "summaryCappedNoDate": "Até {maxUses} pessoas podem aderir · expira em {expiry}.",
+        "summaryExpiryOnlyNoDate": "Adesões ilimitadas · expira em {expiry}.",
+        "summaryCappedNever": "Até {maxUses} pessoas podem aderir · nunca expira."
       },
       "tab": {
         "email": "E-mail",
@@ -2121,9 +2158,25 @@
         "type": "Sessão QR",
         "fallbackLabel": "Código QR próximo",
         "viewQr": "Ver código QR",
-        "expireNow": "Expirar agora"
+        "expireNow": "Expirar agora",
+        "expireDescription": "O código deixará de funcionar imediatamente. As pessoas que já aderiram continuam a ser membros.",
+        "expireTitle": "Expirar este código QR?"
       },
-      "createdWithoutEmail": "Convite criado para {email}, mas não foi enviado nenhum e-mail. Partilha antes uma ligação de convite."
+      "createdWithoutEmail": "Convite criado para {email}, mas não foi enviado nenhum e-mail. Partilha antes uma ligação de convite.",
+      "shared": {
+        "type": "Link partilhado",
+        "joinedOf": "{count} de {max} aderiram",
+        "joinedUnlimited": "{count} aderiram",
+        "full": "Cheio",
+        "copyLink": "Copiar link",
+        "copied": "Link partilhado copiado.",
+        "joiners": "Quem aderiu",
+        "joinersEmpty": "Ninguém aderiu ainda com este link.",
+        "editLimits": "Editar link",
+        "expiresWithJoins": "Expira a {date} · {joins}",
+        "revokeDescription": "\"{name}\" deixará de funcionar imediatamente. As pessoas que já aderiram continuam a ser membros.",
+        "revokeTitle": "Revogar o link partilhado?"
+      }
     },
     "changeRoleAria": "Alterar função",
     "remove": "Remover",
@@ -2273,10 +2326,21 @@
       "emailInvalid": "Insere um endereço de e-mail válido.",
       "linkNotShown": "A ligação de convite não é apresentada aqui. Se precisar de partilhá-la novamente, utilize \"Gerar nova ligação\" na lista.",
       "switchToLinkNote": "Guarda para converter este convite numa ligação. O convite por email deixará de funcionar.",
-      "savedWithoutEmail": "Alterações guardadas, mas não foi enviado nenhum e-mail. Partilha antes uma ligação de convite."
+      "savedWithoutEmail": "Alterações guardadas, mas não foi enviado nenhum e-mail. Partilha antes uma ligação de convite.",
+      "sharedLabelLabel": "Nome do link",
+      "sharedMaxUsesLabel": "Limite de adesões",
+      "sharedExpiryLabel": "Expira em",
+      "sharedNeverExpires": "Nunca expira",
+      "sharedExpiresOn": "Nova validade: {date}.",
+      "sharedEndsNow": "Baixar o limite para {count} ou menos termina este link de imediato.",
+      "regenerateSharedDescription": "Será gerado um novo URL. As adesões, o nome, os limites e a validade mantêm-se — só o link muda.",
+      "linkReadySharedDescription": "Partilha-o onde estão as tuas pessoas. Os membros também o podem copiar de novo nos convites pendentes.",
+      "linkReadyCopyAgain": "Podes copiar este link de novo mais tarde nos convites pendentes.",
+      "sharedKeepExpiry": "Manter a validade atual"
     },
     "regenerate": {
-      "title": "Gerar nova ligação"
+      "title": "Gerar nova ligação",
+      "sharedTitle": "Gerar novo link partilhado"
     },
     "actionsFor": "Ações para {name}",
     "readOnlyDescription": "Pessoas e participantes incluídos neste grupo. Os endereços de e-mail e os detalhes dos convites estão ocultos.",
@@ -2915,7 +2979,10 @@
         "destination": "Destinatário",
         "displayName": "Nome",
         "role": "Função",
-        "credential": "Ligação de convite"
+        "credential": "Ligação de convite",
+        "label": "Nome do link",
+        "maxUses": "Limite de adesões",
+        "expiry": "Validade"
       }
     },
     "fallback": "Uma atividade foi registada",

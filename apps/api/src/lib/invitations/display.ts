@@ -59,14 +59,18 @@ export function buildQrSessionPlaceholderEmail(uniqueId: string): string {
 }
 
 /**
- * Display name for an invitation row. Priority: `temporaryName` → short
- * placeholder username or full real email →
+ * Display name for an invitation row. Priority: shared-link `label` →
+ * `temporaryName` → short placeholder username or full real email →
  * {@link PENDING_INVITEE_FALLBACK_LABEL}.
  */
 export function getInvitationDisplayName(invitation: {
   email: string | null
   temporaryName: string | null
+  label?: string | null
 }): string {
+  if (invitation.label != null && invitation.label.trim().length > 0) {
+    return invitation.label.trim()
+  }
   if (invitation.temporaryName != null) return invitation.temporaryName
   return (
     getPlaceholderEmailDisplayName(invitation.email) ??

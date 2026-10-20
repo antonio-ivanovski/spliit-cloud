@@ -12,10 +12,8 @@ import { getGroup } from '../../../lib/api/groups'
 import { redactViewerDisplayName } from '../../../lib/group-view'
 import { redactGroupForViewer } from '../../../lib/group-view-redaction'
 import { getInvitationDisplayName } from '../../../lib/invitations/display'
-import {
-  acceptLinkInvitation,
-  hashLinkToken,
-} from '../../../lib/invitations/link-invitations'
+import { endedReasonOf } from '../../../lib/invitations/effects'
+import { hashLinkToken } from '../../../lib/invitations/link-invitations'
 import {
   groupAccessFields,
   scopedGroupReadProcedure,
@@ -31,6 +29,7 @@ export type LinkInviteState =
   | 'REVOKED'
   | 'DECLINED'
   | 'EXPIRED'
+  | 'FULL'
 
 export const getGroupProcedure = scopedGroupReadProcedure('spliit:groups:read')
   .input(
@@ -46,25 +45,7 @@ export const getGroupProcedure = scopedGroupReadProcedure('spliit:groups:read')
       ctx.auth != null &&
       'credentialKind' in ctx.auth &&
       ctx.auth.credentialKind === 'oauth'
-    let access = await loadGroupViewer(groupViewerArgs(input, ctx))
-
-    if (
-      account &&
-      !isOAuth &&
-      input.linkInviteToken &&
-      access.group.groupType === GroupType.FRIEND &&
-      access.viewer.kind === 'PENDING_INVITEE'
-    ) {
-      try {
-        await acceptLinkInvitation({
-          token: input.linkInviteToken,
-          accountId: account.id,
-        })
-        access = await loadGroupViewer(groupViewerArgs(input, ctx))
-      } catch {
-        // A concurrent request may have consumed or revoked the invitation.
-      }
-    }
+    const access = await loadGroupViewer(groupViewerArgs(input, ctx))
 
     const group = await getGroup(access.group.id)
     if (!group) {
@@ -162,11 +143,33 @@ async function resolveLinkInviteState(
   const tokenHash = await hashLinkToken(linkInviteToken)
   const row = await prisma.groupInvitation.findFirst({
     where: { groupId, type: GroupInvitationType.LINK, tokenHash },
-    select: { status: true, expiresAt: true },
+    select: {
+      status: true,
+      expiresAt: true,
+      isMultiUse: true,
+      linkToken: true,
+      useCount: true,
+      maxUses: true,
+    },
   })
   if (!row) return null
   if (row.status === GroupInvitationStatus.PENDING) {
-    if (row.expiresAt && row.expiresAt < new Date()) return 'EXPIRED'
+    // Liveness through the single shared helper: the row's `maxUses` is
+    // the cap and a missing (`null`) cap is unlimited, so an unlimited
+    // shared link can never report FULL. The shared flag marks the row for
+    // the banner copy, not for a different cap.
+    const ended = endedReasonOf(
+      {
+        status: row.status,
+        isMultiUse: row.isMultiUse,
+        expiresAt: row.expiresAt,
+        useCount: row.useCount,
+        maxUses: row.maxUses,
+      },
+      new Date(),
+    )
+    if (ended === 'expired') return 'EXPIRED'
+    if (ended === 'full') return 'FULL'
     return 'PENDING'
   }
   if (row.status === GroupInvitationStatus.ACCEPTED) return 'ACCEPTED'

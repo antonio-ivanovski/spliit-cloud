@@ -745,7 +745,10 @@
       "notNow": "Ara no"
     },
     "groupTabsHint": "Vols reordenar les pestanyes del grup o amagar les que no fas servir?",
-    "groupTabsHintLink": "Personalitza les pestanyes a la configuració del compte"
+    "groupTabsHintLink": "Personalitza les pestanyes a la configuració del compte",
+    "linkInvitationFullTitle": "Aquest enllaç d'invitació és ple",
+    "linkInvitationFullDescription": "Totes les places d'aquest enllaç ja s'han fet servir. Demana a un membre del grup que en comparteixi un de nou.",
+    "linkInvitationSharedUse": "Aquest enllaç el poden fer servir diverses persones, dins del límit d'unions i la caducitat."
   },
   "GroupForm": {
     "title": "Informació del grup",
@@ -2064,7 +2067,41 @@
         "shareTitle": "Uneix-te a {groupName} a Spliit Cloud",
         "shareText": "Acabo de crear {groupName} per a les nostres despeses compartides a Spliit Cloud. Aquí tens un enllaç d'invitació d'un sol ús — obre'l per unir-te:\n{inviteUrl}",
         "generateNew": "Genera un enllaç nou",
-        "copyLink": "Copia l'enllaç"
+        "copyLink": "Copia l'enllaç",
+        "mode": "Qui pot fer servir aquest enllaç?",
+        "modeOneTime": "Una persona",
+        "modeOneTimeHint": "L'enllaç deixarà de funcionar després de la primera acceptació.",
+        "modeShared": "Diverses persones",
+        "modeSharedHint": "Un enllaç compartit que diverses persones poden fer servir, dins dels límits següents.",
+        "labelLabel": "Nom de l'enllaç (opcional)",
+        "labelPlaceholder": "p. ex. Família, Discord",
+        "joinLimitLabel": "Límit d'unions",
+        "unlimitedJoins": "Unions il·limitades",
+        "joinsSuffix": "unions",
+        "expiryLabel": "Caducitat",
+        "neverExpires": "No caduca mai",
+        "expiryUnitHour": "hores",
+        "expiryUnitDay": "dies",
+        "expiryUnitWeek": "setmanes",
+        "quick24h": "24 hores",
+        "quick7d": "7 dies",
+        "quick30d": "30 dies",
+        "memberOnlyNote": "Les persones s'hi uneixen com a membres. Per convidar un admin, fes servir el correu o un enllaç d'un sol ús.",
+        "summaryUnlimited": "Aquest enllaç queda obert fins que el revoquis.",
+        "summaryCapped": "Fins a {maxUses} persones s’hi poden unir · caduca en {expiry} ({expiryDate}).",
+        "sharedCreated": "Enllaç compartit a punt. Copia'l i publica'l on hi hagi la teva gent.",
+        "sharedIntro": "Aquí tens el teu enllaç compartit per a {groupName}. Fins a {maxUses} membres s'hi poden unir amb aquest enllaç, dins dels límits següents.",
+        "sharedCopyAgain": "Els membres poden tornar a copiar aquest enllaç des de les invitacions pendents.",
+        "sharedShareText": "Uneix-te a {groupName} a Spliit Cloud — obre aquest enllaç per unir-t'hi:\n{inviteUrl}",
+        "invalidJoinLimit": "Introdueix un límit entre 2 i 1000 unions, o tria «il·limitat».",
+        "invalidExpiry": "Introdueix una caducitat entre 1 hora i 1 any, o tria «mai».",
+        "summaryExpiryOnly": "Unions il·limitades · caduca en {expiry} ({expiryDate}).",
+        "otherOption": "Altre…",
+        "sharedIntroUnlimited": "Aquí tens el teu enllaç compartit per a {groupName}. Els nous membres s'hi poden unir amb aquest enllaç, dins dels límits següents.",
+        "expiryUnitLabel": "Unitat de caducitat",
+        "summaryCappedNoDate": "Fins a {maxUses} persones s’hi poden unir · caduca en {expiry}.",
+        "summaryExpiryOnlyNoDate": "Unions il·limitades · caduca en {expiry}.",
+        "summaryCappedNever": "Fins a {maxUses} persones s’hi poden unir · no caduca mai."
       },
       "temporaryNamePlaceholder": "p. ex. el company de pis de l'Alex",
       "friendsDescription": "Convida algú dels grups que has compartit.",
@@ -2121,9 +2158,25 @@
         "type": "Sessió QR",
         "fallbackLabel": "Codi QR proper",
         "viewQr": "Mostra el codi QR",
-        "expireNow": "Fes caducar ara"
+        "expireNow": "Fes caducar ara",
+        "expireDescription": "El codi deixarà de funcionar immediatament. Les persones que ja s'hi han unit continuen sent membres.",
+        "expireTitle": "Fer caducar aquest codi QR?"
       },
-      "createdWithoutEmail": "Invitació creada per a {email}, però no s'ha enviat cap correu electrònic. Comparteix un enllaç d'invitació en el seu lloc."
+      "createdWithoutEmail": "Invitació creada per a {email}, però no s'ha enviat cap correu electrònic. Comparteix un enllaç d'invitació en el seu lloc.",
+      "shared": {
+        "type": "Enllaç compartit",
+        "joinedOf": "{count} de {max} s'hi han unit",
+        "joinedUnlimited": "{count} s'hi han unit",
+        "full": "Ple",
+        "copyLink": "Copia l'enllaç",
+        "copied": "Enllaç compartit copiat.",
+        "joiners": "Qui s'hi ha unit",
+        "joinersEmpty": "Encara no s'hi ha unit ningú amb aquest enllaç.",
+        "editLimits": "Edita l'enllaç",
+        "expiresWithJoins": "Caduca el {date} · {joins}",
+        "revokeDescription": "\"{name}\" deixarà de funcionar immediatament. Les persones que ja s'hi han unit continuen sent membres.",
+        "revokeTitle": "Revocar l'enllaç compartit?"
+      }
     },
     "changeRoleAria": "Canvia el rol",
     "remove": "Elimina",
@@ -2273,10 +2326,21 @@
       "emailInvalid": "Introdueix una adreça de correu vàlida.",
       "linkNotShown": "L'enllaç d'invitació no es mostra aquí. Si necessites compartir-lo de nou, utilitza \"Genera un enllaç nou\" a la llista.",
       "switchToLinkNote": "Desa per convertir aquesta invitació en un enllaç. La invitació per correu electrònic deixarà de funcionar.",
-      "savedWithoutEmail": "S'han desat els canvis, però no s'ha enviat cap correu electrònic. Comparteix un enllaç d'invitació en el seu lloc."
+      "savedWithoutEmail": "S'han desat els canvis, però no s'ha enviat cap correu electrònic. Comparteix un enllaç d'invitació en el seu lloc.",
+      "sharedLabelLabel": "Nom de l'enllaç",
+      "sharedMaxUsesLabel": "Límit d'unions",
+      "sharedExpiryLabel": "Caducitat",
+      "sharedNeverExpires": "No caduca mai",
+      "sharedExpiresOn": "Nova caducitat: {date}.",
+      "sharedEndsNow": "Reduir el límit a {count} o menys tanca aquest enllaç immediatament.",
+      "regenerateSharedDescription": "Es generarà un URL nou. Les unions, el nom, els límits i la caducitat es mantenen — només canvia l'enllaç.",
+      "linkReadySharedDescription": "Comparteix-lo on hi hagi la teva gent. Els membres també el poden tornar a copiar des de les invitacions pendents.",
+      "linkReadyCopyAgain": "Podràs tornar a copiar aquest enllaç més tard des de les invitacions pendents.",
+      "sharedKeepExpiry": "Conserva la caducitat actual"
     },
     "regenerate": {
-      "title": "Genera un enllaç nou"
+      "title": "Genera un enllaç nou",
+      "sharedTitle": "Genera un enllaç compartit nou"
     },
     "actionsFor": "Accions per a {name}",
     "readOnlyDescription": "Persones i participants inclosos en aquest grup. Les adreces electròniques i els detalls de les invitacions estan ocults.",
@@ -2915,7 +2979,10 @@
         "destination": "Destinatari",
         "displayName": "Nom",
         "role": "Rol",
-        "credential": "Enllaç d'invitació"
+        "credential": "Enllaç d'invitació",
+        "label": "Nom de l’enllaç",
+        "maxUses": "Límit d’unions",
+        "expiry": "Caducitat"
       }
     },
     "fallback": "S'ha registrat una activitat",

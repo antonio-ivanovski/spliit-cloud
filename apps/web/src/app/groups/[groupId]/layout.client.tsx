@@ -32,7 +32,12 @@ import { useToast } from '@/components/ui/use-toast'
 import { useEffectiveRuntimeFeatureFlags } from '@/lib/effective-runtime-feature-flags'
 import { isFocusedMobilePath, isMobileGroupNavPath } from '@/lib/mobile-nav'
 import { useOfflineGroup } from '@/lib/offline/read-hooks'
+import { buildAuthBounceSearch } from '@/lib/signup-invite'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import {
+  InvitationAcceptanceContext,
+  useInvitationAcceptance,
+} from '@/lib/use-invitation-acceptance'
 import {
   useOfflineWithoutData,
   useOnlineStatus,
@@ -52,6 +57,8 @@ export function GroupLayoutClient({
   children,
 }: PropsWithChildren<{ groupId: string }>) {
   const {
+    invitation,
+    invitationAction,
     invite: linkInviteToken,
     viewKey,
     friendLinkInvite: friendLinkInviteUrl,
@@ -93,6 +100,17 @@ export function GroupLayoutClient({
     { groupId, linkInviteToken, viewKey },
     { retry: false },
   )
+  const acceptance = useInvitationAcceptance({
+    groupId,
+    token: linkInviteToken,
+    invitationId: invitation,
+    invitationAction,
+  })
+  async function retryGroup() {
+    await acceptance.refetchOnboarding()
+    await refetch()
+    if (acceptance.error) acceptance.retryAcceptance()
+  }
   const isOnline = useOnlineStatus()
   // Offline adapter: a complete local snapshot renders immediately when the
   // network has no matching complete result (cold direct routes included).
@@ -121,9 +139,6 @@ export function GroupLayoutClient({
   const showServerEmpty = useServerUnreachableWithoutData(!!data?.group)
   const { t: tNotFound } = useTranslation(undefined, {
     keyPrefix: 'Groups.NotFound',
-  })
-  const { t: tInvalidInvite } = useTranslation(undefined, {
-    keyPrefix: 'Groups.linkInvitationInvalid',
   })
   const { t: tInvalidView } = useTranslation(undefined, {
     keyPrefix: 'Groups.viewLinkInvalid',
@@ -172,7 +187,7 @@ export function GroupLayoutClient({
   if (showServerEmpty) {
     return (
       <main className="flex flex-1 flex-col">
-        <ApiErrorEmptyState variant="page" onRetry={() => void refetch()} />
+        <ApiErrorEmptyState variant="page" onRetry={() => void retryGroup()} />
       </main>
     )
   }
@@ -189,7 +204,7 @@ export function GroupLayoutClient({
         <main className="flex flex-1 flex-col gap-4 px-4 pt-4">
           <OfflineMissingData
             description={tOffline('OfflineReadOnly.groupMissing')}
-            onRetry={canRetry ? () => void refetch() : undefined}
+            onRetry={canRetry ? () => void retryGroup() : undefined}
             backLabel={tForbidden('backToGroups')}
             backHref="/"
           />
@@ -200,7 +215,7 @@ export function GroupLayoutClient({
       <main className="flex flex-1 flex-col">
         <OfflineEmptyState
           variant="page"
-          onRetry={canRetry ? () => void refetch() : undefined}
+          onRetry={canRetry ? () => void retryGroup() : undefined}
         />
         <div className="flex justify-center pb-6">
           <Button
@@ -216,10 +231,15 @@ export function GroupLayoutClient({
   }
 
   if (!accountPending && isOnline && error?.data?.code === 'UNAUTHORIZED') {
+    // Structured bounce via the single helper: a self-bounce emits bare `/`
+    // and credentials ride as first-class params, never nested.
     return (
       <Navigate
         to="/"
-        search={{ redirect: `${pathname}${window.location.search}` }}
+        search={buildAuthBounceSearch({
+          writer: 'group-layout',
+          from: `${pathname}${window.location.search}${window.location.hash}`,
+        })}
         replace
       />
     )
@@ -227,29 +247,11 @@ export function GroupLayoutClient({
 
   // Visitors carrying a bearer token that the server doesn't recognize
   // get a token-specific "invalid link" page. Without a token we still
-  // surface the original "not a member" message.
+  // surface the original "not a member" message. The page previews the
+  // token itself so a dead-but-recognized link (expired, full, revoked)
+  // shows the same specific copy the in-group banner would have shown.
   if (!isLoading && error?.data?.code === 'FORBIDDEN' && linkInviteToken) {
-    return (
-      <main className="flex flex-1 items-center justify-center py-10">
-        <PageInset>
-          <div className="flex max-w-md flex-col items-center gap-3 text-center">
-            <h1 className="text-2xl font-semibold">
-              {tInvalidInvite('title')}
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              {tInvalidInvite('description')}
-            </p>
-            <Button
-              variant="outline"
-              nativeButton={false}
-              render={<Link to="/" />}
-            >
-              {tForbidden('backToHome')}
-            </Button>
-          </div>
-        </PageInset>
-      </main>
-    )
+    return <InvalidInvitePage linkInviteToken={linkInviteToken} />
   }
 
   if (!isLoading && error?.data?.code === 'FORBIDDEN' && viewKey) {
@@ -298,6 +300,33 @@ export function GroupLayoutClient({
     )
   }
 
+  if (
+    !isLoading &&
+    linkInviteToken &&
+    error &&
+    ['BAD_REQUEST', 'CONFLICT', 'TOO_MANY_REQUESTS'].includes(
+      error.data?.code ?? '',
+    )
+  ) {
+    return (
+      <main className="flex flex-1 items-center justify-center py-10">
+        <PageInset>
+          <div className="flex max-w-md flex-col items-center gap-3 text-center">
+            <p role="alert" className="text-sm text-muted-foreground">
+              {error.message}
+            </p>
+            <Button
+              variant="outline"
+              nativeButton={false}
+              render={<Link to="/" />}
+            >
+              {tForbidden('backToHome')}
+            </Button>
+          </div>
+        </PageInset>
+      </main>
+    )
+  }
   // Not-found hand-off: when the local group does not exist, the
   // server returns NOT_FOUND. The web asks the lookup procedure to
   // check the in-memory source cache and, on a miss, attempt a
@@ -306,6 +335,29 @@ export function GroupLayoutClient({
   // pre-filled.
   if (!isLoading && error?.data?.code === 'NOT_FOUND') {
     return <NotFoundGroup groupId={groupId} />
+  }
+
+  if (!isLoading && error) {
+    return (
+      <ApiErrorEmptyState variant="page" onRetry={() => void retryGroup()} />
+    )
+  }
+
+  if (acceptance.automatic && acceptance.onboardingError) {
+    return (
+      <ApiErrorEmptyState variant="page" onRetry={() => void retryGroup()} />
+    )
+  }
+
+  if (acceptance.automatic && acceptance.ready && !acceptance.error) {
+    return (
+      <main
+        className="flex flex-1 items-center justify-center py-10"
+        aria-busy="true"
+      >
+        <Loader2 className="size-6 animate-spin" />
+      </main>
+    )
   }
 
   const props =
@@ -353,89 +405,142 @@ export function GroupLayoutClient({
         }
 
   return (
-    <CurrentGroupProvider {...props}>
-      <GroupAmbientAccent
-        color={props.group?.color}
-        groupType={props.group?.groupType}
-      />
-      <GroupMobileAppBar />
-      {/* Keep this wrapper transform-free: expense forms contain a
+    <InvitationAcceptanceContext.Provider value={acceptance}>
+      <CurrentGroupProvider {...props}>
+        <GroupAmbientAccent
+          color={props.group?.color}
+          groupType={props.group?.groupType}
+        />
+        <GroupMobileAppBar />
+        {/* Keep this wrapper transform-free: expense forms contain a
           viewport-fixed action bar. */}
-      <div
-        className={`flex min-w-0 flex-col gap-0 sm:gap-3 ${showMobileNav ? 'pb-(--mobile-nav-height) sm:pb-0' : ''}`}
-      >
-        {!isPrintReportRoute && (
-          <PageInset>
-            <GroupHeader
-              enableReceiptExtract={effectiveRuntimeFlags.enableReceiptExtract}
-              enableVoiceExpense={effectiveRuntimeFlags.enableVoiceExpense}
-            />
-          </PageInset>
-        )}
-        {children ?? <Outlet />}
-      </div>
-      {!isPrintReportRoute && showMobileNav && (
-        <MobileGroupNav groupId={props.groupId} />
-      )}
-      {!isPrintReportRoute && <SaveGroupLocally />}
-      {!isPrintReportRoute && <GroupEmojiIntroDialog />}
-      <ResponsiveDialog
-        open={!!friendLinkDialogUrl}
-        onOpenChange={(open) => {
-          if (!open) setFriendLinkDialogUrl(null)
-        }}
-      >
-        <ResponsiveDialogContent>
-          <ResponsiveDialogHeader>
-            <ResponsiveDialogTitle>
-              {tFriends('inviteLinkTitle')}
-            </ResponsiveDialogTitle>
-            <ResponsiveDialogDescription>
-              {tFriends('inviteLinkDescription')}
-            </ResponsiveDialogDescription>
-          </ResponsiveDialogHeader>
-          <ResponsiveDialogBody>
-            <div className="flex items-center gap-2">
-              <Input
-                readOnly
-                value={friendLinkDialogUrl ?? ''}
-                className="font-mono text-xs"
-                onFocus={(event) => event.currentTarget.select()}
+        <div
+          className={`flex min-w-0 flex-col gap-0 sm:gap-3 ${showMobileNav ? 'pb-(--mobile-nav-height) sm:pb-0' : ''}`}
+        >
+          {!isPrintReportRoute && (
+            <PageInset>
+              <GroupHeader
+                enableReceiptExtract={
+                  effectiveRuntimeFlags.enableReceiptExtract
+                }
+                enableVoiceExpense={effectiveRuntimeFlags.enableVoiceExpense}
               />
-              {friendLinkDialogUrl && (
-                <CopyButton
-                  text={friendLinkDialogUrl}
-                  ariaLabel={tFriends('copyInviteLink')}
-                  copiedLabel={tFriends('copiedInviteLink')}
+            </PageInset>
+          )}
+          {children ?? <Outlet />}
+        </div>
+        {!isPrintReportRoute && showMobileNav && (
+          <MobileGroupNav groupId={props.groupId} />
+        )}
+        {!isPrintReportRoute && <SaveGroupLocally />}
+        {!isPrintReportRoute && <GroupEmojiIntroDialog />}
+        <ResponsiveDialog
+          open={!!friendLinkDialogUrl}
+          onOpenChange={(open) => {
+            if (!open) setFriendLinkDialogUrl(null)
+          }}
+        >
+          <ResponsiveDialogContent>
+            <ResponsiveDialogHeader>
+              <ResponsiveDialogTitle>
+                {tFriends('inviteLinkTitle')}
+              </ResponsiveDialogTitle>
+              <ResponsiveDialogDescription>
+                {tFriends('inviteLinkDescription')}
+              </ResponsiveDialogDescription>
+            </ResponsiveDialogHeader>
+            <ResponsiveDialogBody>
+              <div className="flex items-center gap-2">
+                <Input
+                  readOnly
+                  value={friendLinkDialogUrl ?? ''}
+                  className="font-mono text-xs"
+                  onFocus={(event) => event.currentTarget.select()}
                 />
-              )}
-              {canShare && friendLinkDialogUrl && (
-                <Button
-                  size="icon"
-                  variant="secondary"
-                  type="button"
-                  onClick={async () => {
-                    try {
-                      await navigator.share({
-                        title: tFriends('inviteLinkTitle'),
-                        text: `${tFriends('inviteLinkDescription')} ${friendLinkDialogUrl}`,
-                      })
-                    } catch (err) {
-                      if (err instanceof Error && err.name !== 'AbortError') {
-                        console.warn('[group-layout] share failed:', err)
+                {friendLinkDialogUrl && (
+                  <CopyButton
+                    text={friendLinkDialogUrl}
+                    ariaLabel={tFriends('copyInviteLink')}
+                    copiedLabel={tFriends('copiedInviteLink')}
+                  />
+                )}
+                {canShare && friendLinkDialogUrl && (
+                  <Button
+                    size="icon"
+                    variant="secondary"
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        await navigator.share({
+                          title: tFriends('inviteLinkTitle'),
+                          text: `${tFriends('inviteLinkDescription')} ${friendLinkDialogUrl}`,
+                        })
+                      } catch (err) {
+                        if (err instanceof Error && err.name !== 'AbortError') {
+                          console.warn('[group-layout] share failed:', err)
+                        }
                       }
-                    }
-                  }}
-                  aria-label={tFriends('share')}
-                >
-                  <Share2 className="h-4 w-4" />
-                </Button>
-              )}
-            </div>
-          </ResponsiveDialogBody>
-        </ResponsiveDialogContent>
-      </ResponsiveDialog>
-    </CurrentGroupProvider>
+                    }}
+                    aria-label={tFriends('share')}
+                  >
+                    <Share2 className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            </ResponsiveDialogBody>
+          </ResponsiveDialogContent>
+        </ResponsiveDialog>
+      </CurrentGroupProvider>
+    </InvitationAcceptanceContext.Provider>
+  )
+}
+
+function InvalidInvitePage({ linkInviteToken }: { linkInviteToken: string }) {
+  const { t: tInvalidInvite } = useTranslation(undefined, {
+    keyPrefix: 'Groups.linkInvitationInvalid',
+  })
+  const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
+  const { t: tForbidden } = useTranslation(undefined, {
+    keyPrefix: 'Groups',
+  })
+  // The viewer gate rejected the token before any group data loaded, so
+  // preview the token itself: a dead-but-recognized link (expired, full,
+  // revoked) shows the same specific copy the in-group banner shows, and an
+  // unknown token falls back to the generic invalid-link copy.
+  const previewQuery = trpc.invitations.previewLink.useQuery(
+    { token: linkInviteToken },
+    { retry: false },
+  )
+  const preview = previewQuery.data?.preview
+  const isFull = preview != null && !preview.usable && preview.reason === 'full'
+  const title =
+    preview != null && !preview.usable
+      ? isFull
+        ? tGroups('linkInvitationFullTitle')
+        : tInvalidInvite('title')
+      : tInvalidInvite('title')
+  const description =
+    preview != null && !preview.usable
+      ? isFull
+        ? tGroups('linkInvitationFullDescription')
+        : tInvalidInvite('description')
+      : tInvalidInvite('description')
+  return (
+    <main className="flex flex-1 items-center justify-center py-10">
+      <PageInset>
+        <div className="flex max-w-md flex-col items-center gap-3 text-center">
+          <h1 className="text-2xl font-semibold">{title}</h1>
+          <p className="text-sm text-muted-foreground">{description}</p>
+          <Button
+            variant="outline"
+            nativeButton={false}
+            render={<Link to="/" />}
+          >
+            {tForbidden('backToHome')}
+          </Button>
+        </div>
+      </PageInset>
+    </main>
   )
 }
 

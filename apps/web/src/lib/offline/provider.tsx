@@ -1,4 +1,5 @@
-import { onlineManager, useQueryClient } from '@tanstack/react-query'
+import { onlineManager, useQueryClient, useQuery } from '@tanstack/react-query'
+import { getQueryKey } from '@trpc/react-query'
 import { Effect } from 'effect'
 import {
   createContext,
@@ -11,6 +12,7 @@ import {
   useSyncExternalStore,
 } from 'react'
 
+import { needsDisplayName } from '@/lib/account'
 import { getApiBaseUrl } from '@/lib/api-url'
 import type { AuthAccount } from '@/lib/auth'
 import {
@@ -26,6 +28,7 @@ import {
 import { ProbeOrchestrator } from '@/lib/services/probe-orchestrator'
 import { getPageRuntime } from '@/lib/services/runtime'
 import { SessionService } from '@/lib/services/session'
+import { trpc, getTrpcClient } from '@/trpc/client'
 
 import {
   getDefaultConnectivityStore,
@@ -506,7 +509,16 @@ export function OfflineProvider(props: OfflineProviderProps) {
     const verify: SyncVerifyFn = async (signal) => {
       if (signal.aborted) return false
       const mapped = await verifySessionViaService(signal)
-      return mapped.kind === 'verified'
+      if (mapped.kind !== 'verified' || needsDisplayName(mapped.account))
+        return false
+      if (mapped.account.isAnonymous === true) {
+        const status = await getTrpcClient().account.onboardingStatus.query(
+          undefined,
+          { signal },
+        )
+        if (!status.anonymousOnboardingCompleted) return false
+      }
+      return true
     }
     const created = createOfflineSync({
       namespace,
@@ -844,6 +856,20 @@ export function OfflineSyncHost() {
     getLifecycleSnapshot,
     getLifecycleSnapshot,
   )
+  const onboarding = useQuery({
+    queryKey: getQueryKey(trpc.account.onboardingStatus, undefined, 'query'),
+    queryFn: ({ signal }) =>
+      getTrpcClient().account.onboardingStatus.query(undefined, { signal }),
+    enabled:
+      lifecycleSnapshot.session === 'verified' &&
+      lifecycleSnapshot.account?.isAnonymous === true,
+  })
+  const readyForDownloads =
+    lifecycleSnapshot.session === 'verified' &&
+    !!lifecycleSnapshot.account &&
+    !needsDisplayName(lifecycleSnapshot.account) &&
+    (lifecycleSnapshot.account.isAnonymous !== true ||
+      onboarding.data?.anonymousOnboardingCompleted === true)
   const getTransport = useCallback(
     () => connectivity.getSnapshot().transport,
     [connectivity],
@@ -859,7 +885,7 @@ export function OfflineSyncHost() {
     if (!sync || !lifecycle) return
     const namespace = lifecycleSnapshot.namespace
     if (!namespace) return
-    if (lifecycleSnapshot.session !== 'verified') return
+    if (!readyForDownloads) return
     if (
       launchedRef.current?.namespace === namespace &&
       launchedRef.current.sync === sync
@@ -870,7 +896,13 @@ export function OfflineSyncHost() {
       await flushPendingExpensesBestEffort(namespace)
       await sync.handleLaunch().catch(() => undefined)
     })()
-  }, [sync, lifecycle, lifecycleSnapshot.namespace, lifecycleSnapshot.session])
+  }, [
+    sync,
+    lifecycle,
+    lifecycleSnapshot.namespace,
+    lifecycleSnapshot.session,
+    readyForDownloads,
+  ])
 
   // Successful reconnect auto path: after the recovery probe reports
   // reachable and session verification succeeds, download all groups.
@@ -888,7 +920,7 @@ export function OfflineSyncHost() {
       void lifecycle.verifySession({ fresh: true })
       return
     }
-    if (!sync || lifecycleSnapshot.session !== 'verified') return
+    if (!sync || !readyForDownloads) return
     if (!reconnectPendingRef.current || !lifecycleSnapshot.namespace) return
     reconnectPendingRef.current = false
     const namespace = lifecycleSnapshot.namespace
@@ -902,6 +934,7 @@ export function OfflineSyncHost() {
     transport,
     lifecycleSnapshot.session,
     lifecycleSnapshot.namespace,
+    readyForDownloads,
   ])
 
   // Successful online mutation: schedule an offline refresh asynchronously
@@ -910,7 +943,7 @@ export function OfflineSyncHost() {
   // Group removals evict immediately via explicit callers; this forwarding
   // only schedules targeted refreshes and never delays mutation success.
   useEffect(() => {
-    if (!sync || !queryClientForMutations) return
+    if (!sync || !queryClientForMutations || !readyForDownloads) return
     let unsubscribe: (() => void) | null = null
     try {
       unsubscribe =
@@ -972,7 +1005,7 @@ export function OfflineSyncHost() {
         // Ignore teardown failures.
       }
     }
-  }, [sync, queryClientForMutations])
+  }, [sync, queryClientForMutations, readyForDownloads])
 
   return null
 }
@@ -1049,7 +1082,14 @@ export function useOfflineRetry(): {
     if (reachable && lifecycle) {
       await lifecycle.verifySession().catch(() => undefined)
       const verified = lifecycle.getSnapshot().session === 'verified'
-      if (verified && sync) {
+      const account = lifecycle.getSnapshot().account
+      const onboardingReady =
+        account &&
+        !needsDisplayName(account) &&
+        (account.isAnonymous !== true ||
+          (await getTrpcClient().account.onboardingStatus.query())
+            .anonymousOnboardingCompleted)
+      if (verified && onboardingReady && sync) {
         // Phase 1: flush offline-created expenses BEFORE the download pass,
         // so it already carries the real rows (delete-temp + insert-real
         // reconcile). Best-effort: flush failures never block the download

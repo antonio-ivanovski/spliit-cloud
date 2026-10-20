@@ -1,8 +1,19 @@
-import { Ban, Link2, Mail, Pencil, QrCode, RefreshCw } from 'lucide-react'
+import {
+  Ban,
+  Copy,
+  Link2,
+  Mail,
+  Pencil,
+  QrCode,
+  RefreshCw,
+  Share2,
+  Users,
+} from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AccountAvatar } from '@/components/account-avatar'
+import { DeletePopup } from '@/components/delete-popup'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -13,6 +24,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
 import { trpc } from '@/trpc/client'
@@ -20,6 +39,7 @@ import { trpc } from '@/trpc/client'
 import {
   badgeVariantForRole,
   formatDate,
+  formatDateTime,
   roleLabel,
   type PendingInvitation,
 } from './members-hooks'
@@ -83,12 +103,16 @@ export function PendingInvitationsCard({
   // expiry comparison reads the clock, so tick on the same cadence as the QR
   // tab's countdown: without this, an expired session stays actionable here
   // while the QR tab is unmounted (the shared list query does not poll).
+  // Shared rows are exempt: the server derives their liveness into
+  // `endedReason`, and the filter below must never second-guess it —
+  // client-side clock reads belong only to QR rows the server excludes.
   const [nowMs, setNowMs] = useState(() => Date.now())
   useEffect(() => {
     const timer = window.setInterval(() => setNowMs(Date.now()), 5000)
     return () => window.clearInterval(timer)
   }, [])
   const visibleInvitations = invitations.filter((invitation) => {
+    if (invitation.isShared) return true
     const isQrSession = invitation.type === 'LINK' && invitation.isMultiUse
     if (!isQrSession) return true
     return (
@@ -99,7 +123,8 @@ export function PendingInvitationsCard({
   // QR sessions carry no ledger participant, so the participant-based revoke
   // flow cannot handle them — revoke directly by invitation id. Expiring the
   // session this browser displays must also clear the tab's code (no zombie).
-  const expireQrMutation = trpc.invitations.revoke.useMutation({
+  // Shared links likewise carry no pending participant: revoke directly.
+  const revokeLinkMutation = trpc.invitations.revoke.useMutation({
     onSuccess: async (_data, vars) => {
       toast({ description: t('invitations.revoked') })
       if (vars.invitationId === activeQrSessionId) {
@@ -128,6 +153,61 @@ export function PendingInvitationsCard({
       }
     },
   })
+  const expireQrMutation = revokeLinkMutation
+
+  // Copy-anytime for live shared links: any active member may fetch the
+  // URL through the dedicated mutation (`getLinkUrl` is a mutation, not a
+  // query — it reads a stored secret and must never be cached). Each click
+  // is exactly one call with the clicked row's ids.
+  const getLinkUrlMutation = trpc.invitations.getLinkUrl.useMutation()
+  const [copyingId, setCopyingId] = useState<string | null>(null)
+  const [joinersInvitation, setJoinersInvitation] =
+    useState<PendingInvitation | null>(null)
+  // The standard destructive-confirm dialog (`DeletePopup`, controlled via
+  // `open`/`onOpenChange`) fires the staged target: shared-link revoke or QR
+  // expire by invitation id. The staged target resolves from the current list
+  // so the dialog text stays accurate even if the row re-renders underneath.
+  const [confirmTargetId, setConfirmTargetId] = useState<string | null>(null)
+  const confirmTarget = confirmTargetId
+    ? (visibleInvitations.find((i) => i.id === confirmTargetId) ?? null)
+    : null
+
+  async function handleConfirmRevoke() {
+    if (!confirmTarget) return
+    await revokeLinkMutation.mutateAsync({ invitationId: confirmTarget.id })
+  }
+
+  async function handleCopySharedLink(invitation: PendingInvitation) {
+    setCopyingId(invitation.id)
+    try {
+      const result = await getLinkUrlMutation.mutateAsync({
+        groupId: invitation.groupId,
+        invitationId: invitation.id,
+      })
+      await navigator.clipboard.writeText(result.inviteUrl)
+      toast({ description: t('invitations.shared.copied') })
+    } catch (err) {
+      if (err instanceof Error) {
+        toast({ description: err.message, variant: 'destructive' })
+      }
+    } finally {
+      setCopyingId(null)
+    }
+  }
+
+  function confirmTargetName(invitation: PendingInvitation): string {
+    return (
+      invitation.recipientProfile?.name ??
+      invitation.temporaryName ??
+      (invitation.isShared
+        ? invitation.label?.trim() || t('invitations.shared.type')
+        : invitation.isMultiUse
+          ? t('invitations.qr.fallbackLabel')
+          : invitation.type === 'LINK'
+            ? t('invitations.link.fallbackLabel')
+            : invitation.email)
+    )
+  }
 
   const roleLabels = {
     ADMIN: t('role.admin'),
@@ -166,55 +246,104 @@ export function PendingInvitationsCard({
           <ul className="flex flex-col divide-y">
             {visibleInvitations.map((invitation) => {
               const isLink = invitation.type === 'LINK'
-              const isQrSession = isLink && invitation.isMultiUse
-              // The expiry comparison must happen at render time; the
-              // server emits expiresAt and the badge follows the clock.
+              const isQrSession =
+                isLink && invitation.isMultiUse && !invitation.isShared
+              const isSharedLink = isLink && invitation.isShared
+              // Liveness is server-derived (`endedReason`); the clock is only
+              // a fallback for QR rows whose list response predates the
+              // field. A `full` row is dead even with a future expiry.
+              const endedReason = invitation.endedReason ?? null
               const isExpired =
-                isLink &&
-                !!invitation.expiresAt &&
-                // oxlint-disable-next-line react/purity -- per-row clock read
-                new Date(invitation.expiresAt).getTime() < Date.now()
+                endedReason === 'expired' ||
+                (endedReason === null &&
+                  isLink &&
+                  !!invitation.expiresAt &&
+                  // oxlint-disable-next-line react/purity -- per-row clock read
+                  new Date(invitation.expiresAt).getTime() < Date.now())
+              const isFull = endedReason === 'full'
               const profile = invitation.recipientProfile
               const effectiveName =
                 profile?.name ??
                 invitation.temporaryName ??
-                (isQrSession
-                  ? t('invitations.qr.fallbackLabel')
-                  : isLink
-                    ? t('invitations.link.fallbackLabel')
-                    : invitation.email)
+                (isSharedLink
+                  ? invitation.label?.trim() || t('invitations.shared.type')
+                  : isQrSession
+                    ? t('invitations.qr.fallbackLabel')
+                    : isLink
+                      ? t('invitations.link.fallbackLabel')
+                      : invitation.email)
+              const joinerNames = qrJoinerNames(invitation)
+              const sharedJoins =
+                invitation.maxUses != null
+                  ? t('invitations.shared.joinedOf', {
+                      count: invitation.useCount,
+                      max: invitation.maxUses,
+                    })
+                  : t('invitations.shared.joinedUnlimited', {
+                      count: invitation.useCount,
+                    })
+              const sharedSubtitle = isSharedLink
+                ? [sharedJoins, joinerNames].filter(Boolean).join(' · ')
+                : null
               const subtitle = isQrSession
                 ? [
                     t('invite.qr.joined', { count: invitation.useCount }),
-                    qrJoinerNames(invitation),
+                    joinerNames,
                   ]
                     .filter(Boolean)
                     .join(' · ')
-                : isLink
-                  ? t('invitations.link.anyoneWithLink')
-                  : invitation.email
+                : isSharedLink
+                  ? sharedSubtitle
+                  : isLink
+                    ? t('invitations.link.anyoneWithLink')
+                    : invitation.email
               // Without a temporary name the label IS the email; showing it
               // twice on the same row is noise.
               const nameIsEmail = effectiveName === invitation.email
-              const DeliveryIcon = isQrSession ? QrCode : isLink ? Link2 : Mail
-              const detail = isLink
+              const DeliveryIcon = isQrSession
+                ? QrCode
+                : isSharedLink
+                  ? Share2
+                  : isLink
+                    ? Link2
+                    : Mail
+              // Shared rows lead with the combined expiry + join count
+              // ("Expires Oct 26 · 3 of 10 joined"); the bare subtitle is
+              // only the fallback for never-expiring links.
+              const detail = isSharedLink
                 ? [
-                    subtitle,
                     invitation.expiresAt
-                      ? t('invitations.link.expiresOn', {
-                          date: formatDate(
+                      ? t('invitations.shared.expiresWithJoins', {
+                          date: formatDateTime(
                             invitation.expiresAt,
                             locale,
                             timeZone,
                           ),
+                          joins: sharedJoins,
                         })
-                      : null,
+                      : `${sharedSubtitle} · ${t('invite.link.neverExpires')}`,
+                    joinerNames,
                   ]
                     .filter(Boolean)
                     .join(' · ')
-                : !nameIsEmail
-                  ? subtitle
-                  : null
+                : isLink
+                  ? [
+                      subtitle,
+                      invitation.expiresAt
+                        ? t('invitations.link.expiresOn', {
+                            date: formatDate(
+                              invitation.expiresAt,
+                              locale,
+                              timeZone,
+                            ),
+                          })
+                        : null,
+                    ]
+                      .filter(Boolean)
+                      .join(' · ')
+                  : !nameIsEmail
+                    ? subtitle
+                    : null
               return (
                 <li
                   key={invitation.id}
@@ -256,9 +385,11 @@ export function PendingInvitationsCard({
                             />
                             {isQrSession
                               ? t('invitations.qr.type')
-                              : isLink
-                                ? t('invitations.link.type')
-                                : t('invitations.email.type')}
+                              : isSharedLink
+                                ? t('invitations.shared.type')
+                                : isLink
+                                  ? t('invitations.link.type')
+                                  : t('invitations.email.type')}
                           </Badge>
                           {isExpired && (
                             <Badge
@@ -266,6 +397,14 @@ export function PendingInvitationsCard({
                               className="shrink-0 border-destructive/40 text-destructive"
                             >
                               {t('invitations.link.expired')}
+                            </Badge>
+                          )}
+                          {isFull && (
+                            <Badge
+                              variant="outline"
+                              className="shrink-0 border-amber-500/50 text-amber-900 dark:text-amber-200"
+                            >
+                              {t('invitations.shared.full')}
                             </Badge>
                           )}
                           <Badge
@@ -309,11 +448,7 @@ export function PendingInvitationsCard({
                               aria-label={t('invitations.qr.expireNow')}
                               title={t('invitations.qr.expireNow')}
                               disabled={expireQrMutation.isPending}
-                              onClick={() =>
-                                void expireQrMutation.mutateAsync({
-                                  invitationId: invitation.id,
-                                })
-                              }
+                              onClick={() => setConfirmTargetId(invitation.id)}
                             >
                               <Ban size={16} aria-hidden="true" />
                             </Button>
@@ -336,9 +471,147 @@ export function PendingInvitationsCard({
                                 destructive: true,
                                 disabled: expireQrMutation.isPending,
                                 onSelect: () =>
-                                  expireQrMutation.mutate({
-                                    invitationId: invitation.id,
-                                  }),
+                                  setConfirmTargetId(invitation.id),
+                              },
+                            ]
+                          : []),
+                      ]}
+                    />
+                  ) : isSharedLink ? (
+                    <ResponsiveParticipantActions
+                      label={t('actionsFor', { name: effectiveName })}
+                      mobileTriggerRef={(element) => {
+                        if (invitation.canManage) {
+                          onManageButtonRef(invitation.id, element)
+                        }
+                        if (invitation.canManage) {
+                          onGenerateButtonRef(invitation.id, element)
+                        }
+                      }}
+                      desktopActions={
+                        <SegmentedActions>
+                          {invitation.canCopyLink && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="rounded-none"
+                              aria-label={t('invitations.shared.copyLink')}
+                              title={t('invitations.shared.copyLink')}
+                              disabled={copyingId === invitation.id}
+                              onClick={() =>
+                                void handleCopySharedLink(invitation)
+                              }
+                            >
+                              <Copy size={16} aria-hidden="true" />
+                            </Button>
+                          )}
+                          {invitation.recentJoiners.length > 0 && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="rounded-none"
+                              aria-label={t('invitations.shared.joiners')}
+                              title={t('invitations.shared.joiners')}
+                              onClick={() => setJoinersInvitation(invitation)}
+                            >
+                              <Users size={16} aria-hidden="true" />
+                            </Button>
+                          )}
+                          {invitation.canManage && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="rounded-none"
+                              aria-label={t('invitations.shared.editLimits')}
+                              title={t('invitations.shared.editLimits')}
+                              ref={(element) =>
+                                onManageButtonRef(invitation.id, element)
+                              }
+                              onClick={() => onManage(invitation)}
+                            >
+                              <Pencil size={16} aria-hidden="true" />
+                            </Button>
+                          )}
+                          {invitation.canManage && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="rounded-none"
+                              aria-label={t('invite.link.generateNew')}
+                              title={t('invite.link.generateNew')}
+                              ref={(element) =>
+                                onGenerateButtonRef(invitation.id, element)
+                              }
+                              onClick={() => onGenerateLink(invitation)}
+                            >
+                              <RefreshCw size={16} aria-hidden="true" />
+                            </Button>
+                          )}
+                          {invitation.canRevoke && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="rounded-none text-destructive hover:bg-destructive/10 hover:text-destructive"
+                              aria-label={t('invitations.revokeButton')}
+                              title={t('invitations.revokeButton')}
+                              disabled={revokeLinkMutation.isPending}
+                              onClick={() => setConfirmTargetId(invitation.id)}
+                            >
+                              <Ban size={16} aria-hidden="true" />
+                            </Button>
+                          )}
+                        </SegmentedActions>
+                      }
+                      mobileActions={[
+                        ...(invitation.canCopyLink
+                          ? [
+                              {
+                                key: 'copy-link',
+                                label: t('invitations.shared.copyLink'),
+                                icon: Copy,
+                                disabled: copyingId === invitation.id,
+                                onSelect: () =>
+                                  void handleCopySharedLink(invitation),
+                              },
+                            ]
+                          : []),
+                        ...(invitation.recentJoiners.length > 0
+                          ? [
+                              {
+                                key: 'joiners',
+                                label: t('invitations.shared.joiners'),
+                                icon: Users,
+                                onSelect: () =>
+                                  setJoinersInvitation(invitation),
+                              },
+                            ]
+                          : []),
+                        ...(invitation.canManage
+                          ? [
+                              {
+                                key: 'manage',
+                                label: t('invitations.shared.editLimits'),
+                                icon: Pencil,
+                                onSelect: () => onManage(invitation),
+                              },
+                              {
+                                key: 'regenerate',
+                                label: t('invite.link.generateNew'),
+                                icon: RefreshCw,
+                                onSelect: () => onGenerateLink(invitation),
+                              },
+                            ]
+                          : []),
+                        ...(invitation.canRevoke
+                          ? [
+                              {
+                                key: 'revoke',
+                                label: t('invitations.revokeButton'),
+                                icon: Ban,
+                                destructive: true,
+                                disabled: revokeLinkMutation.isPending,
+                                onSelect: () =>
+                                  setConfirmTargetId(invitation.id),
                               },
                             ]
                           : []),
@@ -456,6 +729,96 @@ export function PendingInvitationsCard({
           </ul>
         )}
       </CardContent>
+      <SharedLinkJoinersDialog
+        invitation={joinersInvitation}
+        onOpenChange={(open) => {
+          if (!open) setJoinersInvitation(null)
+        }}
+      />
+      <DeletePopup
+        open={confirmTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setConfirmTargetId(null)
+        }}
+        labels={{
+          title:
+            confirmTarget && !confirmTarget.isShared
+              ? t('invitations.qr.expireTitle')
+              : t('invitations.shared.revokeTitle'),
+          description:
+            confirmTarget && !confirmTarget.isShared
+              ? t('invitations.qr.expireDescription')
+              : t('invitations.shared.revokeDescription', {
+                  name: confirmTarget ? confirmTargetName(confirmTarget) : '',
+                }),
+          yes:
+            confirmTarget && !confirmTarget.isShared
+              ? t('invitations.qr.expireNow')
+              : t('invitations.revoke'),
+        }}
+        onDelete={handleConfirmRevoke}
+      />
     </Card>
+  )
+}
+
+/**
+ * Short readable name for the staged revoke/expire target (link label, QR
+ * fallback, or email).
+ */
+
+function SharedLinkJoinersDialog({
+  invitation,
+  onOpenChange,
+}: {
+  invitation: PendingInvitation | null
+  onOpenChange: (open: boolean) => void
+}) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
+  const open = invitation !== null
+  return (
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
+      {open && invitation && (
+        <ResponsiveDialogContent className="max-w-md">
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle>
+              {invitation.label?.trim() || t('invitations.shared.type')}
+            </ResponsiveDialogTitle>
+            <ResponsiveDialogDescription>
+              {t('invitations.shared.joiners')}
+            </ResponsiveDialogDescription>
+          </ResponsiveDialogHeader>
+          <ResponsiveDialogBody>
+            {invitation.recentJoiners.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                {t('invitations.shared.joinersEmpty')}
+              </p>
+            ) : (
+              <ul className="flex max-h-80 flex-col divide-y overflow-y-auto">
+                {invitation.recentJoiners.map((joiner) => (
+                  <li
+                    key={joiner.accountId}
+                    className="flex items-center gap-3 py-2 first:pt-0 last:pb-0"
+                  >
+                    <AccountAvatar
+                      account={{
+                        id: joiner.accountId,
+                        name: joiner.name,
+                        image: joiner.image,
+                      }}
+                      size="lg"
+                      className="shrink-0"
+                    />
+                    <span className="min-w-0 flex-1 truncate font-medium">
+                      {joiner.name ?? t('invitations.shared.joiners')}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </ResponsiveDialogBody>
+        </ResponsiveDialogContent>
+      )}
+    </ResponsiveDialog>
   )
 }

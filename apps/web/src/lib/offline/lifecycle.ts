@@ -727,6 +727,8 @@ export function createOfflineLifecycle(options: OfflineLifecycleOptions) {
 
     // Fresh success clears cross-tab invalidation and (re)writes last-account
     // from this verified response only (stale hook data cannot repopulate).
+    // Public query results must not outlive a signed-out -> signed-in transition.
+    if (!current) clearQueryMemory()
     const wasInvalidated = snapshot.invalidated
     setSnapshot({
       ...snapshot,

@@ -840,7 +840,10 @@
       "notNow": "Để sau"
     },
     "groupTabsHint": "Muốn sắp xếp lại các tab nhóm hoặc ẩn những tab bạn không dùng?",
-    "groupTabsHintLink": "Tùy chỉnh các tab trong cài đặt tài khoản"
+    "groupTabsHintLink": "Tùy chỉnh các tab trong cài đặt tài khoản",
+    "linkInvitationFullTitle": "Liên kết mời này đã đầy",
+    "linkInvitationFullDescription": "Liên kết này đã hết lượt tham gia. Hãy nhờ một thành viên trong nhóm chia sẻ liên kết mới.",
+    "linkInvitationSharedUse": "Liên kết này dùng được cho nhiều người, trong giới hạn lượt tham gia và thời hạn."
   },
   "Auth": {
     "title": "Đăng nhập",
@@ -2680,7 +2683,41 @@
         "shareTitle": "Chia sẻ liên kết {groupName}",
         "shareText": "Tôi vừa tạo {groupName} cho các khoản chi chung của chúng ta trên Spliit Cloud. Đây là liên kết mời dùng một lần — hãy mở để tham gia:\n{inviteUrl}",
         "generateNew": "Tạo mới",
-        "copyLink": "Sao chép liên kết"
+        "copyLink": "Sao chép liên kết",
+        "mode": "Ai dùng được liên kết này?",
+        "modeOneTime": "Một người",
+        "modeOneTimeHint": "Liên kết ngừng hoạt động sau lượt chấp nhận đầu tiên.",
+        "modeShared": "Nhiều người",
+        "modeSharedHint": "Liên kết dùng chung cho nhiều người, trong các giới hạn bên dưới.",
+        "labelLabel": "Tên liên kết (không bắt buộc)",
+        "labelPlaceholder": "ví dụ: Gia đình, Discord",
+        "joinLimitLabel": "Giới hạn lượt tham gia",
+        "unlimitedJoins": "Không giới hạn",
+        "joinsSuffix": "lượt",
+        "expiryLabel": "Hết hạn sau",
+        "neverExpires": "Không bao giờ hết hạn",
+        "expiryUnitHour": "giờ",
+        "expiryUnitDay": "ngày",
+        "expiryUnitWeek": "tuần",
+        "quick24h": "24 giờ",
+        "quick7d": "7 ngày",
+        "quick30d": "30 ngày",
+        "memberOnlyNote": "Mọi người tham gia với vai trò thành viên. Để mời quản trị viên, dùng email hoặc liên kết một lần.",
+        "summaryUnlimited": "Liên kết này mở cho đến khi bạn thu hồi.",
+        "summaryCapped": "Tối đa {maxUses} người tham gia được · hết hạn {expiry} ({expiryDate}).",
+        "sharedCreated": "Liên kết dùng chung đã sẵn sàng. Sao chép và đăng ở nơi mọi người có mặt.",
+        "sharedIntro": "Đây là liên kết dùng chung của bạn cho {groupName}. Tối đa {maxUses} thành viên có thể tham gia bằng liên kết này, trong các giới hạn bên dưới.",
+        "sharedCopyAgain": "Thành viên có thể sao chép lại liên kết này từ lời mời đang chờ.",
+        "sharedShareText": "Tham gia {groupName} trên Spliit Cloud — mở liên kết này để tham gia:\n{inviteUrl}",
+        "invalidJoinLimit": "Nhập giới hạn từ 2 đến 1000 lượt, hoặc chọn không giới hạn.",
+        "invalidExpiry": "Nhập thời hạn từ 1 giờ đến 1 năm, hoặc chọn không bao giờ.",
+        "summaryExpiryOnly": "Ai cũng tham gia được · hết hạn {expiry} ({expiryDate}).",
+        "otherOption": "Khác…",
+        "sharedIntroUnlimited": "Đây là liên kết dùng chung của bạn cho {groupName}. Thành viên mới có thể tham gia bằng liên kết này, trong các giới hạn bên dưới.",
+        "expiryUnitLabel": "Đơn vị hết hạn",
+        "summaryCappedNoDate": "Tối đa {maxUses} người tham gia được · hết hạn {expiry}.",
+        "summaryExpiryOnlyNoDate": "Ai cũng tham gia được · hết hạn {expiry}.",
+        "summaryCappedNever": "Tối đa {maxUses} người tham gia được · không bao giờ hết hạn."
       },
       "emailDescription": "Gửi lời mời qua email.",
       "linkDescription": "Mời qua liên kết.",
@@ -2737,9 +2774,25 @@
         "type": "Phiên QR",
         "fallbackLabel": "Mã QR ở gần",
         "viewQr": "Xem mã QR",
-        "expireNow": "Cho hết hạn ngay"
+        "expireNow": "Cho hết hạn ngay",
+        "expireDescription": "Mã sẽ ngừng hoạt động ngay lập tức. Những người đã tham gia vẫn là thành viên.",
+        "expireTitle": "Cho mã QR này hết hạn?"
       },
-      "createdWithoutEmail": "Đã tạo lời mời cho {email}, nhưng không có email nào được gửi. Hãy chia sẻ liên kết mời thay thế."
+      "createdWithoutEmail": "Đã tạo lời mời cho {email}, nhưng không có email nào được gửi. Hãy chia sẻ liên kết mời thay thế.",
+      "shared": {
+        "type": "Liên kết dùng chung",
+        "joinedOf": "{count}/{max} đã tham gia",
+        "joinedUnlimited": "{count} đã tham gia",
+        "full": "Đã đầy",
+        "copyLink": "Sao chép liên kết",
+        "copied": "Đã sao chép liên kết dùng chung.",
+        "joiners": "Ai đã tham gia",
+        "joinersEmpty": "Chưa có ai tham gia bằng liên kết này.",
+        "editLimits": "Sửa liên kết",
+        "expiresWithJoins": "Hết hạn {date} · {joins}",
+        "revokeDescription": "“{name}” sẽ ngừng hoạt động ngay lập tức. Những người đã tham gia vẫn là thành viên.",
+        "revokeTitle": "Thu hồi liên kết dùng chung?"
+      }
     },
     "leave": {
       "button": "Rời nhóm",
@@ -2862,10 +2915,21 @@
       "emailInvalid": "Nhập địa chỉ email hợp lệ.",
       "linkNotShown": "Liên kết mời không được hiển thị ở đây. Hãy dùng \"Tạo liên kết mới\" trong danh sách nếu bạn cần chia sẻ lại.",
       "switchToLinkNote": "Lưu để chuyển lời mời này thành liên kết. Lời mời qua email sẽ ngừng hoạt động.",
-      "savedWithoutEmail": "Đã lưu thay đổi, nhưng không có email nào được gửi. Hãy chia sẻ liên kết mời thay thế."
+      "savedWithoutEmail": "Đã lưu thay đổi, nhưng không có email nào được gửi. Hãy chia sẻ liên kết mời thay thế.",
+      "sharedLabelLabel": "Tên liên kết",
+      "sharedMaxUsesLabel": "Giới hạn lượt tham gia",
+      "sharedExpiryLabel": "Hết hạn sau",
+      "sharedNeverExpires": "Không bao giờ hết hạn",
+      "sharedExpiresOn": "Thời hạn mới: {date}.",
+      "sharedEndsNow": "Giảm giới hạn xuống {count} trở xuống sẽ kết thúc liên kết này ngay.",
+      "regenerateSharedDescription": "Một địa chỉ liên kết mới sẽ được tạo. Lượt tham gia, tên, giới hạn và thời hạn giữ nguyên — chỉ bản thân liên kết thay đổi.",
+      "linkReadySharedDescription": "Chia sẻ ở nơi mọi người có mặt. Thành viên cũng sao chép lại được từ lời mời đang chờ.",
+      "linkReadyCopyAgain": "Bạn có thể sao chép lại liên kết này sau từ lời mời đang chờ.",
+      "sharedKeepExpiry": "Giữ nguyên thời hạn hiện tại"
     },
     "regenerate": {
-      "title": "Tạo liên kết mới"
+      "title": "Tạo liên kết mới",
+      "sharedTitle": "Tạo liên kết dùng chung mới"
     },
     "actionsFor": "Thao tác cho {name}",
     "readOnlyDescription": "Những người và người tham gia trong nhóm này. Địa chỉ email và chi tiết lời mời được ẩn.",
@@ -3016,7 +3080,10 @@
         "destination": "Người nhận",
         "displayName": "Tên",
         "role": "Vai trò",
-        "credential": "Liên kết mời"
+        "credential": "Liên kết mời",
+        "label": "Tên liên kết",
+        "maxUses": "Giới hạn lượt tham gia",
+        "expiry": "Thời hạn"
       }
     },
     "participant": {
