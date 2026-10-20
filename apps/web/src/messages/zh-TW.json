@@ -4010,7 +4010,17 @@
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud 無法套用更新。",
     "retry": "重試",
-    "dismiss": "關閉"
+    "dismiss": "關閉",
+    "available": "有可用的應用程式更新",
+    "availableVersion": "版本 {version} 已可用",
+    "blocked": "強烈建議更新。完成目前的操作後，應用程式將自動更新。",
+    "countdown": "將在 {seconds} 秒後更新至 {version}。你的支出草稿將會還原。",
+    "updateNow": "立即更新",
+    "updatedVersion": "已更新至 {version}。",
+    "draftRestored": "你的支出草稿已還原。",
+    "restoring": "正在還原你的支出草稿……",
+    "recoveryFailed": "無法保留你的支出草稿。為保護你的操作內容，更新已暫停。",
+    "applying": "正在套用應用程式更新……"
   },
   "Tools": {
     "title": "工具",

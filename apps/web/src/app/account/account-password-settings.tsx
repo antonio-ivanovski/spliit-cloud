@@ -26,6 +26,7 @@ import {
   removePassword,
   setPassword,
 } from '@/lib/password'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { useOnlineStatus } from '@/lib/use-online-status'
 import { isStrongPassword } from '@spliit/domain/password'
 
@@ -95,6 +96,14 @@ export function AccountPasswordSettings({
 
   const [removeOpen, setRemoveOpen] = useState(false)
   const [removeCurrentPassword, setRemoveCurrentPassword] = useState('')
+  usePwaUpdateBlocker(
+    (open &&
+      (currentPassword.length > 0 ||
+        newPassword.length > 0 ||
+        confirmPassword.length > 0)) ||
+      (removeOpen && removeCurrentPassword.length > 0),
+    'account-password-form',
+  )
   const [removeErrorCode, setRemoveErrorCode] = useState<string | null>(null)
   const [removeClientError, setRemoveClientError] = useState<string | null>(
     null,

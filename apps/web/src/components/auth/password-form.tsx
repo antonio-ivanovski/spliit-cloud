@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 
 import { EmailField } from './email-field'
 import { PasswordChecklist } from './password-checklist'
@@ -26,6 +27,13 @@ export function PasswordForm(props: {
   onSubmit: (event: React.FormEvent) => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
+  usePwaUpdateBlocker(
+    props.email.length > 0 ||
+      props.password.length > 0 ||
+      props.confirmPassword.length > 0 ||
+      props.isPending,
+    'authentication-form',
+  )
   const actionsDisabled = Boolean(props.disabled)
   return (
     <form className="flex flex-col gap-3 pt-4" onSubmit={props.onSubmit}>

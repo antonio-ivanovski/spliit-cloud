@@ -4096,7 +4096,17 @@
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud konnte das Update nicht anwenden.",
     "retry": "Wiederholen",
-    "dismiss": "Schließen"
+    "dismiss": "Schließen",
+    "available": "Ein App-Update ist verfügbar",
+    "availableVersion": "Version {version} ist verfügbar",
+    "blocked": "Das Update wird dringend empfohlen. Schließe deine aktuelle Arbeit ab, damit die App automatisch aktualisiert werden kann.",
+    "countdown": "Update auf {version} in {seconds} s. Dein Ausgabenentwurf wird wiederhergestellt.",
+    "updateNow": "Jetzt aktualisieren",
+    "updatedVersion": "Auf {version} aktualisiert.",
+    "draftRestored": "Dein Ausgabenentwurf wurde wiederhergestellt.",
+    "restoring": "Dein Ausgabenentwurf wird wiederhergestellt…",
+    "recoveryFailed": "Dein Ausgabenentwurf konnte nicht gesichert werden. Das Update wurde pausiert, um deine Arbeit zu schützen.",
+    "applying": "App-Update wird angewendet…"
   },
   "Tools": {
     "title": "Werkzeuge",

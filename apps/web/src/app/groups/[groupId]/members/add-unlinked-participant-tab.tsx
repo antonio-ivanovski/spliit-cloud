@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 
 import {
   unlinkedParticipantFormSchema,
@@ -33,6 +34,10 @@ export function AddUnlinkedParticipantTab({
     defaultValues: { displayName: '' },
   })
 
+  usePwaUpdateBlocker(
+    form.formState.isDirty || isPending,
+    'participant-form-edits',
+  )
   const handleSubmit = form.handleSubmit(async (values) => {
     try {
       if (await onSubmit(values)) form.reset({ displayName: '' })

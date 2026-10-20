@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/responsive-dialog'
 import { Switch } from '@/components/ui/switch'
 import { useToast } from '@/components/ui/use-toast'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
 
@@ -100,6 +101,7 @@ export function WebhookFormDialog({
   })
   const { isDirty } = form.formState
 
+  usePwaUpdateBlocker(open && !readOnly && isDirty, 'webhook-edits')
   useEffect(() => {
     if (!open) {
       lastKeyRef.current = null

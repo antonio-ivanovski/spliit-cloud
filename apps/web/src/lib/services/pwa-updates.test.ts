@@ -1,6 +1,6 @@
 import { Deferred, Effect, Fiber } from 'effect'
 import { TestClock } from 'effect/testing'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import type { PwaUpdateManager } from '@/lib/pwa-update-manager'
 
@@ -28,6 +28,8 @@ function stubManager(): PwaUpdateManager & {
   let disposed = false
   const listeners = new Set<() => void>()
   const manager = {
+    checkForUpdate: async () => {},
+    updateNow: () => {},
     getSnapshot: () => ({ status: 'hidden' as const }),
     subscribe: (listener: () => void) => {
       listeners.add(listener)
@@ -62,7 +64,6 @@ function harness(overrides?: Partial<PwaUpdateServiceDeps>) {
       return Promise.resolve(null)
     },
     checkIntervalMs: 60 * 60 * 1000,
-    now: () => 1_000,
     isVisible: () => visible,
     ...overrides,
   })
@@ -100,7 +101,7 @@ describe('coalesced update checks', () => {
     expect(calls).toBe(1)
     expect(snapshot.check.checks).toBe(1)
     expect(snapshot.check.inFlight).toBe(false)
-    expect(snapshot.check.lastCheckAt).toBe(1_000)
+    expect(snapshot.check.lastCheckAt).not.toBeNull()
     await Effect.runPromise(service.dispose)
   })
 
@@ -118,8 +119,8 @@ describe('coalesced update checks', () => {
   })
 })
 
-describe('hourly visible checks', () => {
-  it('checks once per visible hour and skips hidden ticks', async () => {
+describe('periodic visible checks', () => {
+  it('checks on startup and each visible interval, skipping hidden ticks', async () => {
     const { service, checks, setVisible } = harness()
     const program = Effect.gen(function* () {
       yield* service.start
@@ -137,7 +138,7 @@ describe('hourly visible checks', () => {
     )
     // Two visible hours checked; the hidden hour skipped without queueing
     // (no catch-up burst when visible again: exactly one more check).
-    expect(total).toBe(3)
+    expect(total).toBe(4)
     await Effect.runPromise(service.dispose)
   })
 
@@ -153,7 +154,7 @@ describe('hourly visible checks', () => {
     const total = await Effect.runPromise(
       program.pipe(Effect.provide(TestClock.layer())),
     )
-    expect(total).toBe(1)
+    expect(total).toBe(2)
     await Effect.runPromise(service.dispose)
   })
 })
@@ -172,4 +173,64 @@ describe('manager commands', () => {
     await Effect.runPromise(service.dispose)
     expect(manager.disposed()).toBe(true)
   })
+})
+
+it('checks on startup and browser resume, then removes browser listeners on disposal', async () => {
+  const doc = new EventTarget()
+  Object.assign(doc, { visibilityState: 'visible' })
+  const win = new EventTarget()
+  vi.stubGlobal('document', doc)
+  vi.stubGlobal('window', win)
+  const probe = vi.fn(async () => undefined)
+  const service = makePwaUpdateService({
+    createManager: stubManager,
+    checkForUpdate: probe,
+    now: () => Date.now(),
+  })
+  try {
+    await Effect.runPromise(service.start)
+    await vi.waitFor(() => expect(probe).toHaveBeenCalledOnce())
+    vi.spyOn(Date, 'now').mockReturnValue(Date.now() + 31_000)
+    doc.dispatchEvent(new Event('visibilitychange'))
+    win.dispatchEvent(new Event('focus'))
+    win.dispatchEvent(new Event('pageshow'))
+    await vi.waitFor(() => expect(probe).toHaveBeenCalledTimes(2))
+    await Effect.runPromise(service.dispose)
+    win.dispatchEvent(new Event('online'))
+    await Promise.resolve()
+    expect(probe).toHaveBeenCalledTimes(2)
+  } finally {
+    await Effect.runPromise(service.dispose)
+    vi.unstubAllGlobals()
+    vi.restoreAllMocks()
+  }
+})
+
+it('uses build hints to bypass cooldown and falls back to native checks when hints fail', async () => {
+  let time = 0
+  const probe = vi.fn(async () => undefined)
+  const hint = vi.fn(
+    async () => null as { buildId: string; version: string } | null,
+  )
+  const { service } = harness({
+    now: () => time,
+    checkForUpdate: probe,
+    fetchBuildInfo: hint,
+  })
+  try {
+    await Effect.runPromise(service.checkNow('startup'))
+    await Effect.runPromise(service.checkNow('foreground'))
+    expect(probe).toHaveBeenCalledOnce()
+    hint.mockResolvedValue({ buildId: 'new-deployment', version: 'v2.11.0' })
+    await Effect.runPromise(service.checkNow('foreground'))
+    expect(probe).toHaveBeenCalledTimes(2)
+    hint.mockRejectedValue(new Error('version endpoint unavailable'))
+    time = 31_000
+    await Effect.runPromise(service.checkNow('foreground'))
+    expect(probe).toHaveBeenCalledTimes(3)
+    await Effect.runPromise(service.checkNow('manual'))
+    expect(probe).toHaveBeenCalledTimes(4)
+  } finally {
+    await Effect.runPromise(service.dispose)
+  }
 })

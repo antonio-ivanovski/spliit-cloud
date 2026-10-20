@@ -38,6 +38,7 @@ import type { Locale } from '@/i18n/request'
 import { localizeCurrencyInput } from '@/lib/currency-input'
 import type { ExpenseCancelLink } from '@/lib/expense-navigation'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { formatCurrency, formatNumber } from '@/lib/utils'
 import type { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
@@ -207,6 +208,10 @@ export function BasicDetailsCard(props: {
   const [pendingCalculatorItems, setPendingCalculatorItems] = useState<
     CalculatorItem[] | null
   >(null)
+  usePwaUpdateBlocker(
+    calculatorOpen || pendingCalculatorItems !== null,
+    'expense-calculator',
+  )
   const watchedItems = useWatch({ control: form.control, name: 'items' }) ?? []
   const watchedCategory = useWatch({ control: form.control, name: 'category' })
   const categoryHint = isSettlementCategory(watchedCategory)

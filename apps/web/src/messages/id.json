@@ -4009,7 +4009,17 @@
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud tidak dapat menerapkan pembaruan.",
     "retry": "Coba lagi",
-    "dismiss": "Tutup"
+    "dismiss": "Tutup",
+    "available": "Pembaruan aplikasi tersedia",
+    "availableVersion": "Versi {version} tersedia",
+    "blocked": "Pembaruan sangat disarankan. Selesaikan pekerjaan saat ini agar aplikasi diperbarui secara otomatis.",
+    "countdown": "Memperbarui ke {version} dalam {seconds} dtk. Draf pengeluaran Anda akan dipulihkan.",
+    "updateNow": "Perbarui sekarang",
+    "updatedVersion": "Diperbarui ke {version}.",
+    "draftRestored": "Draf pengeluaran Anda telah dipulihkan.",
+    "restoring": "Memulihkan draf pengeluaran Anda…",
+    "recoveryFailed": "Draf pengeluaran Anda tidak dapat disimpan. Pembaruan dijeda untuk melindungi pekerjaan Anda.",
+    "applying": "Menerapkan pembaruan aplikasi…"
   },
   "Tools": {
     "title": "Alat",

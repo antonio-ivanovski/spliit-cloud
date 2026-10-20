@@ -53,6 +53,7 @@ import {
 import { useLocale } from '@/i18n/react'
 import { formatExpenseClosed, getDeviceTimeZone } from '@/lib/expense-display'
 import { useMediaQuery } from '@/lib/hooks'
+import { useRecoverableExpenseInput } from '@/lib/use-expense-update-recovery'
 import { cn } from '@/lib/utils'
 import {
   formatTimeMinutes,
@@ -244,8 +245,8 @@ export function ExpenseDateTimeField({ form, readOnly, sExpense }: Props) {
   // Typed-input drafts. `null` means "not editing": the input shows the
   // committed form value. A non-null draft is shown verbatim (even while
   // incomplete or invalid) and only reaches the form on commit.
-  const [dateDraft, setDateDraft] = useState<string | null>(null)
-  const [timeDraft, setTimeDraft] = useState<string | null>(null)
+  const [dateDraft, setDateDraft] = useRecoverableExpenseInput('dateDraft')
+  const [timeDraft, setTimeDraft] = useRecoverableExpenseInput('timeDraft')
   const [dateError, setDateError] = useState(false)
   const [timeError, setTimeError] = useState(false)
   // Escape reverts the draft and blurs synchronously: the blur handler must

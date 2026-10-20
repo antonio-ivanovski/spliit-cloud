@@ -44,6 +44,7 @@ import type { AccountPreferences } from '@/lib/account-preferences'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { useDeploymentConfig } from '@/lib/deployment-config'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { trpc } from '@/trpc/client'
 import { friendFormSchema, type FriendFormValues } from '@spliit/domain/schemas'
@@ -139,6 +140,7 @@ export function CreateFriend() {
     },
   })
 
+  usePwaUpdateBlocker(form.formState.isDirty, 'friend-form-edits')
   useEffect(() => {
     if (!accountPreferences) return
     const currencyCodeState = form.getFieldState('currencyCode')

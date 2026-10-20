@@ -27,6 +27,7 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
 import { useLocale } from '@/i18n/react'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { cn, formatCurrency } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type {
@@ -253,6 +254,10 @@ export function ExpenseItemsCard({
   const [editingTarget, setEditingTarget] = useState<EditingTarget | null>(null)
   const [pendingItemizedEdit, setPendingItemizedEdit] =
     useState<EditingTarget | null>(null)
+  usePwaUpdateBlocker(
+    editingTarget !== null || pendingItemizedEdit !== null,
+    'expense-item-dialog',
+  )
   const [itemsOpen, setItemsOpen] = useState(
     () => splitMode === 'ITEMIZED' || items.length > 0,
   )

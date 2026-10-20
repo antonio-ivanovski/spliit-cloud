@@ -19,6 +19,7 @@ import {
 } from '@/lib/expense-navigation'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { OfflineWriteError } from '@/lib/offline/write-guard'
+import { useExpenseUpdateRecoveryIdentity } from '@/lib/use-expense-update-recovery'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
@@ -54,7 +55,6 @@ export function CreateExpenseForm({
   const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
   const { mutateAsync: createExpenseMutateAsync } = useCreateExpenseMutation()
   const navigate = useNavigate()
-  const createAttempt = useIdempotentCreate()
   // Share-target handoff (`?fromShare=1`): the mutation result carries the
   // new expense id so `onSaved` can land directly on its preview.
   const createdExpenseIdRef = useRef<string | null>(null)
@@ -64,6 +64,10 @@ export function CreateExpenseForm({
   // `?fromExpenseId=<id>` arrives from the "Make a copy" button on
   // the edit page; we prefill the form and force today's date.
   const sourceExpenseId = searchParams.fromExpenseId ?? ''
+  const updateRecovery = useExpenseUpdateRecoveryIdentity(
+    `create:${groupId}:${sourceExpenseId}`,
+  )
+  const createAttempt = useIdempotentCreate(updateRecovery.restored?.requestId)
   const { data: sourceExpenseData, isFetching: isFetchingSource } =
     trpc.groups.expenses.get.useQuery(
       {
@@ -188,6 +192,10 @@ export function CreateExpenseForm({
       )}
       <fieldset disabled={offlineWithData} className="min-w-0">
         <ExpenseForm
+          updateRecovery={{
+            ...updateRecovery,
+            metadata: { requestId: createAttempt.getRequestId() },
+          }}
           group={group}
           {...(sourceExpense ? { expense: sourceExpense, isCopy: true } : {})}
           searchParams={searchParams}

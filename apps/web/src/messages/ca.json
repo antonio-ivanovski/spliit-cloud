@@ -4049,7 +4049,17 @@
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud no ha pogut aplicar l'actualització.",
     "retry": "Torna-ho a provar",
-    "dismiss": "Descarta"
+    "dismiss": "Descarta",
+    "available": "Hi ha una actualització de l'aplicació disponible",
+    "availableVersion": "La versió {version} està disponible",
+    "blocked": "És molt recomanable actualitzar. Acaba el que estàs fent perquè l'aplicació s'actualitzi automàticament.",
+    "countdown": "S'actualitzarà a {version} d'aquí a {seconds} s. Es restaurarà l'esborrany de la despesa.",
+    "updateNow": "Actualitza ara",
+    "updatedVersion": "S'ha actualitzat a {version}.",
+    "draftRestored": "S'ha restaurat l'esborrany de la despesa.",
+    "restoring": "Restaurant l'esborrany de la despesa…",
+    "recoveryFailed": "No s'ha pogut conservar l'esborrany de la despesa. L'actualització s'ha pausat per protegir la teva feina.",
+    "applying": "Aplicant l'actualització de l'aplicació…"
   },
   "Tools": {
     "title": "Eines",

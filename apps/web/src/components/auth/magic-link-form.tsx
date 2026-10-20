@@ -2,6 +2,7 @@ import { Loader2, Mail } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 
 import { EmailField } from './email-field'
 
@@ -14,6 +15,10 @@ export function MagicLinkForm(props: {
   onSubmit: (event: React.FormEvent) => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
+  usePwaUpdateBlocker(
+    props.email.length > 0 || props.isPending,
+    'magic-link-form',
+  )
   const actionsDisabled = Boolean(props.disabled)
   return (
     <form className="flex flex-col gap-3 pt-4" onSubmit={props.onSubmit}>

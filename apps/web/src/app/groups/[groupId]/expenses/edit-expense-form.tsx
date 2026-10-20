@@ -1,5 +1,5 @@
 import { Link, useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
@@ -16,6 +16,8 @@ import {
 } from '@/lib/expense-navigation'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { OfflineWriteError } from '@/lib/offline/write-guard'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
+import { useExpenseUpdateRecoveryIdentity } from '@/lib/use-expense-update-recovery'
 import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
@@ -49,6 +51,9 @@ export function EditExpenseForm({
   const { t: tExpenseForm } = useTranslation(undefined, {
     keyPrefix: 'ExpenseForm',
   })
+  const updateRecovery = useExpenseUpdateRecoveryIdentity(
+    `edit:${groupId}:${expenseId}`,
+  )
   const access = useGroupAccessSearch()
   const { data: groupData } = trpc.groups.get.useQuery({ groupId, ...access })
   const group = groupData?.group
@@ -62,6 +67,20 @@ export function EditExpenseForm({
   })
   const expenseData = expenseQuery.data
   const expense = expenseData?.expense
+  const [baseVersion, setBaseVersion] = useState<{
+    expenseId: string
+    version: number
+  } | null>(null)
+  useEffect(() => {
+    if (!expense) return
+    // oxlint-disable-next-line react/set-state-in-effect -- pin the first loaded version until an explicit conflict reload, even when the query refreshes.
+    setBaseVersion((current) =>
+      current?.expenseId === expenseId
+        ? current
+        : { expenseId, version: expense.version },
+    )
+  }, [expenseId, expense])
+  const [ignoreRecovery, setIgnoreRecovery] = useState(false)
   const [conflictOpen, setConflictOpen] = useState(false)
   const [formRevision, setFormRevision] = useState(0)
   const seriesId = (
@@ -108,7 +127,11 @@ export function EditExpenseForm({
     onDeleted: () =>
       navigate({ ...expenseEditListLink(groupId, returnTo), replace: true }),
   })
-  const selectedScope = initialScope ?? null
+  usePwaUpdateBlocker(scopeDialog !== null, 'expense-recurring-scope')
+  const selectedScope =
+    (ignoreRecovery ? undefined : updateRecovery.restored?.scope) ??
+    initialScope ??
+    null
 
   const navigateAfterUpdate = async () => {
     await navigate({ ...previewLink, replace: true })
@@ -142,7 +165,11 @@ export function EditExpenseForm({
   }
 
   if (!group || !expense) return null
-  const expectedVersion = expense.version
+  const expectedVersion =
+    (ignoreRecovery ? undefined : updateRecovery.restored?.expectedVersion) ??
+    (baseVersion?.expenseId === expenseId
+      ? baseVersion.version
+      : expense.version)
   const offlineWithData = !isOnline
 
   // The expense form is read-only when the group is archived or when the
@@ -200,6 +227,11 @@ export function EditExpenseForm({
           links stay usable; the guard rejects any missed submit. */}
       <fieldset disabled={offlineWithData} className="min-w-0">
         <ExpenseForm
+          updateRecovery={{
+            ...updateRecovery,
+            restored: ignoreRecovery ? null : updateRecovery.restored,
+            metadata: { expectedVersion, scope: selectedScope },
+          }}
           key={formRevision}
           group={group}
           expense={expense}
@@ -313,6 +345,8 @@ export function EditExpenseForm({
           const result = await expenseQuery.refetch()
           if (result.isError) return
           setConflictOpen(false)
+          setBaseVersion(null)
+          setIgnoreRecovery(true)
           setFormRevision((revision) => revision + 1)
         }}
       />

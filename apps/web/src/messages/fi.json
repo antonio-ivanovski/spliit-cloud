@@ -4024,7 +4024,17 @@
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud ei voinut ottaa päivitystä käyttöön.",
     "retry": "Yritä uudelleen",
-    "dismiss": "Sulje"
+    "dismiss": "Sulje",
+    "available": "Sovelluspäivitys on saatavilla",
+    "availableVersion": "Versio {version} on saatavilla",
+    "blocked": "Päivittämistä suositellaan vahvasti. Viimeistele keskeneräinen työsi, niin sovellus päivittyy automaattisesti.",
+    "countdown": "Päivitetään versioon {version} {seconds} s kuluttua. Kululuonnoksesi palautetaan.",
+    "updateNow": "Päivitä nyt",
+    "updatedVersion": "Päivitetty versioon {version}.",
+    "draftRestored": "Kululuonnoksesi palautettiin.",
+    "restoring": "Palautetaan kululuonnostasi…",
+    "recoveryFailed": "Kululuonnostasi ei voitu tallentaa. Päivitys on keskeytetty työsi suojaamiseksi.",
+    "applying": "Otetaan sovelluspäivitystä käyttöön…"
   },
   "Tools": {
     "title": "Työkalut",

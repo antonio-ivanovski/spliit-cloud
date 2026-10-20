@@ -29,6 +29,7 @@ import {
   EmailChangeError,
   requestEmailChange,
 } from '@/lib/email-change'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { cn } from '@/lib/utils'
 
 import { SettingsRow, settingsControlId } from './settings-ui'
@@ -70,6 +71,10 @@ export function AccountEmailSettings({
   const [otp, setOtp] = useState('')
   const [pending, setPending] = useState<Pending>(null)
   const [errorCode, setErrorCode] = useState<string | null>(null)
+  usePwaUpdateBlocker(
+    open && (nextEmail.length > 0 || otp.length > 0 || pending !== null),
+    'account-email-form',
+  )
   const [resendSecondsLeft, setResendSecondsLeft] = useState(0)
   const pendingRef = useRef<Pending>(null)
 

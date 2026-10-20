@@ -18,6 +18,7 @@
     "test:e2e": "playwright test",
     "test:e2e:smoke": "playwright test --grep @smoke",
     "test:integration": "vitest run --config vitest.integration.config.ts --reporter=verbose",
+    "test:pwa": "bun pwa-e2e/build.ts && playwright test --config playwright.pwa.config.ts",
     "test:watch": "vitest"
   },
   "dependencies": {

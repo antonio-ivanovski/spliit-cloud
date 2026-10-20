@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { authClient } from '@/lib/auth'
 import { useDeploymentConfig } from '@/lib/deployment-config'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 
 const forgotPasswordRouteApi = getRouteApi('/auth/forgot-password')
 
@@ -41,6 +42,7 @@ export function ForgotPasswordPage() {
 
   const [email, setEmail] = useState(initialEmail ?? '')
   const [emailSent, setEmailSent] = useState(false)
+  usePwaUpdateBlocker(!emailSent && email.length > 0, 'password-recovery-form')
 
   // react-doctor-disable-next-line react-doctor/query-mutation-missing-invalidation -- better-auth fire-and-forget, no tRPC query cache
   const requestReset = useMutation({

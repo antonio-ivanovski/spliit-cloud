@@ -11,6 +11,20 @@ const mocks = vi.hoisted(() => ({
   expenseVersion: 3,
   onConflict: null as null | (() => void),
   refetch: vi.fn(),
+  update: vi.fn(),
+  restoredVersion: null as number | null,
+  submit: null as ((value: never) => Promise<unknown>) | null,
+}))
+
+vi.mock('@/lib/use-expense-update-recovery', () => ({
+  useExpenseUpdateRecoveryIdentity: () => ({
+    key: 'edit:group-1:expense-1',
+    namespace: 'account:a',
+    restored:
+      mocks.restoredVersion === null
+        ? null
+        : { expectedVersion: mocks.restoredVersion },
+  }),
 }))
 
 vi.mock('@tanstack/react-router', () => ({
@@ -31,7 +45,7 @@ vi.mock('../../current-group-context', () => ({
 vi.mock('../expense-mutation-hooks', () => ({
   useUpdateExpenseMutation: (options: { onConflict: () => void }) => {
     mocks.onConflict = options.onConflict
-    return { mutateAsync: vi.fn() }
+    return { mutateAsync: mocks.update }
   },
   useDeleteExpenseMutation: () => ({ mutateAsync: vi.fn() }),
 }))
@@ -39,7 +53,14 @@ vi.mock('../expense-mutation-hooks', () => ({
 vi.mock('../expense-form/index', async () => {
   const { useState } = await import('react')
   return {
-    ExpenseForm: ({ expense }: { expense: { version: number } }) => {
+    ExpenseForm: ({
+      expense,
+      onSubmit,
+    }: {
+      expense: { version: number }
+      onSubmit: (value: never) => Promise<unknown>
+    }) => {
+      mocks.submit = onSubmit
       useState(() => {
         mocks.formMounts += 1
         mocks.formVersions.push(expense.version)
@@ -92,12 +113,55 @@ function renderForm() {
 }
 
 describe('EditExpenseForm conflict reload', () => {
+  it('keeps the original concurrency version when the server query refreshes during editing', async () => {
+    const view = renderForm()
+    mocks.expenseVersion = 4
+    view.rerender(
+      <EditExpenseForm
+        groupId="group-1"
+        expenseId="expense-1"
+        runtimeFeatureFlags={{} as never}
+      />,
+    )
+    await act(async () => {
+      await mocks.submit?.({} as never)
+    })
+    expect(mocks.update).toHaveBeenCalledWith(
+      expect.objectContaining({ expectedVersion: 3 }),
+    )
+  })
+
+  it('uses the recovered concurrency version until the user explicitly reloads latest', async () => {
+    mocks.restoredVersion = 2
+    mocks.refetch.mockImplementation(async () => {
+      mocks.expenseVersion = 4
+      return { isError: false }
+    })
+    const { user } = renderForm()
+    await act(async () => {
+      await mocks.submit?.({} as never)
+    })
+    expect(mocks.update).toHaveBeenLastCalledWith(
+      expect.objectContaining({ expectedVersion: 2 }),
+    )
+    act(() => mocks.onConflict?.())
+    await user.click(screen.getByRole('button', { name: 'Reload latest' }))
+    await act(async () => {
+      await mocks.submit?.({} as never)
+    })
+    expect(mocks.update).toHaveBeenLastCalledWith(
+      expect.objectContaining({ expectedVersion: 4 }),
+    )
+  })
+
   beforeEach(() => {
     vi.clearAllMocks()
     mocks.formMounts = 0
     mocks.formVersions = []
     mocks.expenseVersion = 3
     mocks.onConflict = null
+    mocks.restoredVersion = null
+    mocks.submit = null
   })
 
   it('keeps the dialog and draft mounted when refetch fails', async () => {

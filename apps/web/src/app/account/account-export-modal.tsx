@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/responsive-dialog'
 import { Switch } from '@/components/ui/switch'
 import { getApiBaseUrl } from '@/lib/api-url'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
@@ -71,6 +72,7 @@ export function AccountExportModal() {
   })
   const { t: tRoot } = useTranslation()
   const [open, setOpen] = useState(false)
+  usePwaUpdateBlocker(open, 'account-export-dialog')
   const [selection, setSelection] = useState(initialSelection)
   const isOnline = useOnlineStatus()
   // Group list is connection-required: never launch the query offline and

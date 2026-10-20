@@ -4020,7 +4020,17 @@
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud kunde inte tillämpa uppdateringen.",
     "retry": "Försök igen",
-    "dismiss": "Stäng"
+    "dismiss": "Stäng",
+    "available": "En appuppdatering finns tillgänglig",
+    "availableVersion": "Version {version} finns tillgänglig",
+    "blocked": "Uppdateringen rekommenderas starkt. Slutför det du arbetar med så uppdateras appen automatiskt.",
+    "countdown": "Uppdaterar till {version} om {seconds} s. Ditt utgiftsutkast återställs.",
+    "updateNow": "Uppdatera nu",
+    "updatedVersion": "Uppdaterad till {version}.",
+    "draftRestored": "Ditt utgiftsutkast har återställts.",
+    "restoring": "Återställer ditt utgiftsutkast…",
+    "recoveryFailed": "Ditt utgiftsutkast kunde inte sparas. Uppdateringen pausas för att skydda ditt arbete.",
+    "applying": "Installerar appuppdatering…"
   },
   "Tools": {
     "title": "Verktyg",

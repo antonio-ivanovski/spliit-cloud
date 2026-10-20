@@ -4049,7 +4049,17 @@
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud nu a putut aplica actualizarea.",
     "retry": "Reîncearcă",
-    "dismiss": "Închide"
+    "dismiss": "Închide",
+    "available": "Este disponibilă o actualizare a aplicației",
+    "availableVersion": "Versiunea {version} este disponibilă",
+    "blocked": "Actualizarea este recomandată cu insistență. Termină ce ai început pentru ca aplicația să se actualizeze automat.",
+    "countdown": "Aplicația se va actualiza la {version} în {seconds} s. Ciorna cheltuielii va fi restaurată.",
+    "updateNow": "Actualizează acum",
+    "updatedVersion": "Aplicația a fost actualizată la {version}.",
+    "draftRestored": "Ciorna cheltuielii a fost restaurată.",
+    "restoring": "Se restaurează ciorna cheltuielii…",
+    "recoveryFailed": "Ciorna cheltuielii nu a putut fi păstrată. Actualizarea este suspendată pentru a-ți proteja munca.",
+    "applying": "Se aplică actualizarea aplicației…"
   },
   "Tools": {
     "title": "Instrumente",

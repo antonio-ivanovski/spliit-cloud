@@ -4016,7 +4016,17 @@
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud couldn't get the update through.",
     "retry": "retry",
-    "dismiss": "dismiss it"
+    "dismiss": "dismiss it",
+    "available": "an app update is ready",
+    "availableVersion": "version {version} is ready",
+    "blocked": "this update is strongly recommended. finish what you're working on and the app will update automatically.",
+    "countdown": "updating to {version} in {seconds}s. your expense draft will be restored.",
+    "updateNow": "update now",
+    "updatedVersion": "you're on {version} now.",
+    "draftRestored": "your expense draft is restored.",
+    "restoring": "restoring your expense draft…",
+    "recoveryFailed": "your expense draft couldn't be preserved. the update is paused to protect your work.",
+    "applying": "updating the app…"
   },
   "Tools": {
     "title": "tools",

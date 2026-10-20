@@ -4051,7 +4051,17 @@
   "PwaUpdate": {
     "waitingFailed": "לא ניתן להחיל את העדכון ב-Spliit Cloud.",
     "retry": "נסה שוב",
-    "dismiss": "סגירה"
+    "dismiss": "סגירה",
+    "available": "זמין עדכון לאפליקציה",
+    "availableVersion": "גרסה {version} זמינה",
+    "blocked": "מומלץ מאוד לעדכן. העדכון יבוצע אוטומטית לאחר סיום העבודה הנוכחית.",
+    "countdown": "העדכון לגרסה {version} יבוצע בעוד {seconds} שנ׳. טיוטת ההוצאה תשוחזר.",
+    "updateNow": "עדכון עכשיו",
+    "updatedVersion": "בוצע עדכון לגרסה {version}.",
+    "draftRestored": "טיוטת ההוצאה שוחזרה.",
+    "restoring": "טיוטת ההוצאה משוחזרת…",
+    "recoveryFailed": "לא ניתן היה לשמור את טיוטת ההוצאה. העדכון מושהה כדי להגן על העבודה שלך.",
+    "applying": "עדכון האפליקציה מוחל…"
   },
   "Tools": {
     "title": "כלים",

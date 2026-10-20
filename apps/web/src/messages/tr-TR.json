@@ -4032,7 +4032,17 @@
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud güncellemeyi uygulayamadı.",
     "retry": "Tekrar dene",
-    "dismiss": "Kapat"
+    "dismiss": "Kapat",
+    "available": "Bir uygulama güncellemesi var",
+    "availableVersion": "{version} sürümü kullanıma hazır",
+    "blocked": "Güncelleme önemle tavsiye edilir. Mevcut işinizi tamamladığınızda uygulama otomatik olarak güncellenir.",
+    "countdown": "{seconds} saniye içinde {version} sürümüne güncellenecek. Gider taslağınız geri yüklenecek.",
+    "updateNow": "Şimdi güncelle",
+    "updatedVersion": "{version} sürümüne güncellendi.",
+    "draftRestored": "Gider taslağınız geri yüklendi.",
+    "restoring": "Gider taslağınız geri yükleniyor…",
+    "recoveryFailed": "Gider taslağınız korunamadı. Çalışmanızı korumak için güncelleme duraklatıldı.",
+    "applying": "Uygulama güncellemesi uygulanıyor…"
   },
   "Tools": {
     "title": "Araçlar",

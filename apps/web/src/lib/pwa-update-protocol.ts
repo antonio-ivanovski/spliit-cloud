@@ -18,7 +18,8 @@ export const PWA_UPDATE_PROTOCOL_VERSION = 1
 export const PWA_UPDATE_ROUND_TIMEOUT_MS = 2000
 
 /** Client-side budget for a full coordinated attempt (both rounds + margin). */
-export const PWA_UPDATE_REQUEST_TIMEOUT_MS = 8000
+export const PWA_UPDATE_REQUEST_TIMEOUT_MS = 15_000
+export const PWA_UPDATE_COUNTDOWN_MS = 5000
 
 /** How long a recorded final confirmation authorizes its reload. */
 export const PWA_UPDATE_AUTH_EXPIRY_MS = 30_000

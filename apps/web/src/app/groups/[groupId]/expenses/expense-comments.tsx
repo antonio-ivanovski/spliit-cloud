@@ -10,6 +10,7 @@ import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import { useOfflineExpenseComments } from '@/lib/offline/read-hooks'
 import { isOfflineWriteError } from '@/lib/offline/write-guard'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { useOnlineStatus } from '@/lib/use-online-status'
 import { formatZonedDate } from '@/lib/utils'
@@ -68,6 +69,7 @@ export function ExpenseComments({
   // online the live query stays authoritative.
   const useOfflineSource = !isOnline && downloadedComments !== null
   const [draft, setDraft] = useState('')
+  usePwaUpdateBlocker(draft.length > 0, 'expense-comment-draft')
   const [validationError, setValidationError] = useState<string | null>(null)
   const [deletingCommentId, setDeletingCommentId] = useState<string | null>(
     null,

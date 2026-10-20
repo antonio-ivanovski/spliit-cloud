@@ -4100,7 +4100,17 @@
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud no ha podido aplicar la actualización.",
     "retry": "Reintentar",
-    "dismiss": "Descartar"
+    "dismiss": "Descartar",
+    "available": "Hay una actualización de la aplicación disponible",
+    "availableVersion": "La versión {version} está disponible",
+    "blocked": "Se recomienda encarecidamente actualizar. Termina lo que estás haciendo para que la aplicación se actualice automáticamente.",
+    "countdown": "Se actualizará a {version} en {seconds} s. Se restaurará el borrador del gasto.",
+    "updateNow": "Actualizar ahora",
+    "updatedVersion": "Se ha actualizado a {version}.",
+    "draftRestored": "Se ha restaurado el borrador del gasto.",
+    "restoring": "Restaurando el borrador del gasto…",
+    "recoveryFailed": "No se ha podido conservar el borrador del gasto. La actualización está en pausa para proteger tu trabajo.",
+    "applying": "Aplicando la actualización de la aplicación…"
   },
   "Tools": {
     "title": "Herramientas",

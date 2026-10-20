@@ -4,6 +4,18 @@ import { describe, expect, it, vi } from 'vitest'
 import { useIdempotentCreate } from './use-idempotent-create'
 
 describe('useIdempotentCreate', () => {
+  it('retains the restored request identity across failed submissions', async () => {
+    const recovered = '00000000-0000-4000-8000-000000000099'
+    const { result } = renderHook(() => useIdempotentCreate(recovered))
+    await expect(
+      result.current.run(async () => {
+        throw new Error('lost response')
+      }),
+    ).rejects.toThrow('lost response')
+    expect(result.current.getRequestId()).toBe(recovered)
+    await expect(result.current.run(async (id) => id)).resolves.toBe(recovered)
+    expect(result.current.getRequestId()).not.toBe(recovered)
+  })
   it('blocks synchronous double submissions and retains the id after failure', async () => {
     const ids = [
       '00000000-0000-4000-8000-000000000001',

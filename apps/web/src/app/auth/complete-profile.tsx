@@ -21,6 +21,7 @@ import { isPlaceholderEmail } from '@/lib/account'
 import { useDeploymentConfig } from '@/lib/deployment-config'
 import { markInstallEligible } from '@/lib/install-eligibility'
 import { isPasskeySupported } from '@/lib/passkey'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import {
   buildAuthBounceSearch,
   resolveAuthReturnContext,
@@ -92,6 +93,7 @@ export function CompleteProfilePage() {
     if (onboardingActive) markInstallEligible()
   }, [onboardingActive])
   const [name, setName] = useState('')
+  usePwaUpdateBlocker(name.length > 0, 'profile-onboarding-form')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 

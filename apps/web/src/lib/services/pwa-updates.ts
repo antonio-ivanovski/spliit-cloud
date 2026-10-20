@@ -1,4 +1,5 @@
 import {
+  Clock,
   Context,
   Deferred,
   Effect,
@@ -9,6 +10,7 @@ import {
   Ref,
 } from 'effect'
 
+import { PWA_BUILD, pwaBuildSchema, type PwaBuild } from '@/lib/pwa-build'
 import {
   createPwaUpdateManager,
   type PwaUpdateManager,
@@ -18,37 +20,11 @@ import {
 import { createSnapshotBridge, type SnapshotBridge } from './snapshot'
 
 /**
- * PWA update lifecycle service (Task 6).
- *
- * The page-side update state machine (registration, idle-gated coordinated
- * activation, blockers, asset recovery, route/scroll restoration) stays inside
- * `createPwaUpdateManager` — this service owns its lifetime and adds the Effect
- * command surface around it (Task 8 unified):
- *
- * - One manager per service instance, created on start and disposed on stop/scope
- *   exit. No module-singleton sharing: tests and the page each own theirs. The
- *   manager runs with its internal check subscription DISABLED
- *   (enableUpdateChecks:false): check cadence (hourly while visible,
- *   foreground, reconnect, manual Retry) flows only through the checkNow
- *   single-flight gate here. The manager keeps updatefound observation +
- *   coordinated activation. The former module singleton is deleted (Task 8):
- *   the pill binds this service, and page wiring never started the singleton.
- * - Update checks (foreground return, reconnect, hourly-while-visible, manual
- *   Retry) coalesce through ONE single-flight gate: concurrent triggers share
- *   the in-flight registration.update instead of stampeding the network.
- * - The hourly loop only checks while visible; hidden ticks are skipped, never
- *   queued. Interruption (page disposal, account teardown) publishes nothing.
- * - Retry/dismissFailure delegate to the manager synchronously — no async
- *   scheduling around them.
- *
- * Untouched by design: the versioned coordination protocol
- * (pwa-update-protocol), the worker-side coordinator, Workbox shell routing in
- * sw.ts, and the 30s-idle / prepare-confirm / no-max-wait-force / max-2-reload
- * policies inside the manager. Those are covered by their own suites; this
- * service owns the driver around them.
+ * Owns page-lifetime update discovery; the manager owns activation and
+ * recovery.
  */
-
-export const PWA_UPDATE_CHECK_INTERVAL_MS = 60 * 60 * 1000
+export const PWA_UPDATE_CHECK_INTERVAL_MS = 5 * 60 * 1000
+export const PWA_UPDATE_CHECK_COOLDOWN_MS = 30_000
 
 export interface PwaUpdateCheckSnapshot {
   readonly inFlight: boolean
@@ -67,7 +43,12 @@ export const INITIAL_PWA_UPDATE_CHECK: PwaUpdateCheckSnapshot = {
   checks: 0,
 }
 
-export type PwaUpdateTrigger = 'foreground' | 'reconnect' | 'hourly' | 'manual'
+export type PwaUpdateTrigger =
+  | 'startup'
+  | 'foreground'
+  | 'reconnect'
+  | 'periodic'
+  | 'manual'
 
 export interface PwaUpdateServiceDeps {
   /**
@@ -83,9 +64,11 @@ export interface PwaUpdateServiceDeps {
    * manager.
    */
   readonly checkForUpdate?: (signal: AbortSignal) => Promise<unknown>
+  readonly fetchBuildInfo?: (signal: AbortSignal) => Promise<PwaBuild | null>
   readonly checkIntervalMs?: number
+  readonly isOnline?: () => boolean
   readonly now?: () => number
-  /** Visible-document gate for the hourly loop. No DOM default on purpose. */
+  /** Visible-document gate for the periodic loop. No DOM default on purpose. */
   readonly isVisible?: () => boolean
 }
 
@@ -94,60 +77,45 @@ export interface PwaUpdateService {
   readonly snapshot: Effect.Effect<PwaUpdateServiceSnapshot>
   /** Coalesced check trigger. Concurrent callers share one underlying check. */
   readonly checkNow: (trigger: PwaUpdateTrigger) => Effect.Effect<void>
-  /** Start manager + hourly loop. Idempotent. */
+  /** Start manager + periodic loop. Idempotent. */
   readonly start: Effect.Effect<void>
-  /** Stop hourly loop. Idempotent; the manager stays until dispose. */
+  /** Stop periodic loop. Idempotent; the manager stays until dispose. */
   readonly stop: Effect.Effect<void>
   /** Release manager listeners/timers. The layer scope calls this on exit. */
   readonly dispose: Effect.Effect<void>
   readonly retry: Effect.Effect<void>
   readonly dismissFailure: Effect.Effect<void>
+  readonly updateNow: Effect.Effect<void>
 }
 
 export const PwaUpdateService =
   Context.Service<PwaUpdateService>('PwaUpdateService')
 
-function defaultCheckForUpdate(signal: AbortSignal): Promise<unknown> {
-  return new Promise((resolve) => {
-    if (signal.aborted) {
-      resolve(null)
-      return
-    }
-    const done = () => resolve(null)
-    signal.addEventListener('abort', done, { once: true })
-    try {
-      if (typeof navigator === 'undefined' || !('serviceWorker' in navigator)) {
-        done()
-        return
-      }
-      void navigator.serviceWorker
-        .getRegistration()
-        .then((registration) => {
-          if (signal.aborted || !registration) {
-            done()
-            return
-          }
-          registration.update().then(done).catch(done)
-        })
-        .catch(done)
-    } catch {
-      done()
-    }
-  })
+async function fetchBuildInfo(signal: AbortSignal): Promise<PwaBuild | null> {
+  if (!import.meta.env.PROD) return null
+  const response = await fetch('/version.json', { cache: 'no-store', signal })
+  if (!response.ok) return null
+  const parsed = pwaBuildSchema.safeParse(await response.json())
+  return parsed.success ? parsed.data : null
 }
 
 export function makePwaUpdateService(
   deps?: PwaUpdateServiceDeps,
 ): PwaUpdateService {
-  // Single-owner checks: the service gate drives registration.update(); the
-  // manager must not run its own hourly/visibility subscription beside it.
-  const createManager =
-    deps?.createManager ??
-    (() => createPwaUpdateManager({ enableUpdateChecks: false }))
-  const checkForUpdate = deps?.checkForUpdate ?? defaultCheckForUpdate
+  const createManager = deps?.createManager ?? createPwaUpdateManager
   const checkIntervalMs = deps?.checkIntervalMs ?? PWA_UPDATE_CHECK_INTERVAL_MS
-  const now = deps?.now ?? (() => Date.now())
-  const isVisible = deps?.isVisible ?? (() => true)
+  const isVisible =
+    deps?.isVisible ??
+    (() =>
+      typeof document === 'undefined' || document.visibilityState === 'visible')
+  const isOnline =
+    deps?.isOnline ??
+    (() => typeof navigator === 'undefined' || navigator.onLine !== false)
+  const readBuild = deps?.fetchBuildInfo ?? fetchBuildInfo
+  let lastAttemptAt = -Infinity
+  let stopped = false
+  let disposed = false
+  const browserCleanup = new Set<() => void>()
 
   let manager: PwaUpdateManager | null = null
   let unsubscribe: (() => void) | null = null
@@ -165,14 +133,8 @@ export function makePwaUpdateService(
   const syncManagerSnapshot = (): void => {
     const current = bridge.getSnapshot()
     const next = manager?.getSnapshot() ?? { status: 'hidden' as const }
-    if (
-      next.status !== current.update.status ||
-      (next.status === 'failed' &&
-        current.update.status === 'failed' &&
-        next.dismissed !== current.update.dismissed)
-    ) {
+    if (next !== current.update)
       bridge.publish({ update: next, check: current.check })
-    }
   }
 
   const patchCheck = (patch: Partial<PwaUpdateCheckSnapshot>): void => {
@@ -192,10 +154,12 @@ export function makePwaUpdateService(
     return manager
   }
 
-  const checkNow: PwaUpdateService['checkNow'] = () =>
+  const checkNow: PwaUpdateService['checkNow'] = (trigger) =>
     Effect.uninterruptibleMask((restore) =>
       Effect.gen(function* () {
-        ensureManager()
+        if (disposed) return
+        const handle = ensureManager()
+        if (!isOnline() || (trigger !== 'manual' && !isVisible())) return
         const existing = yield* Ref.get(inflight)
         if (Option.isSome(existing)) {
           return yield* restore(Deferred.await(existing.value))
@@ -203,21 +167,49 @@ export function makePwaUpdateService(
         const gate = yield* Deferred.make<void>()
         yield* Ref.set(inflight, Option.some(gate))
         patchCheck({ inFlight: true })
+        const checkTime = deps?.now
+          ? deps.now()
+          : yield* Clock.currentTimeMillis
         // tryPromise (not promise): a probe rejection is an expected outcome
         // that settles the gate — never a defect, never a snapshot failure.
         const outcome = yield* restore(
           Effect.exit(
             Effect.tryPromise({
-              try: (signal) => checkForUpdate(signal),
+              try: async (signal) => {
+                const build = await readBuild(
+                  AbortSignal.any([signal, AbortSignal.timeout(3000)]),
+                ).catch(() => null)
+                if (signal.aborted || stopped) return
+                const hinted = build && build.buildId !== PWA_BUILD.buildId
+                if (
+                  !hinted &&
+                  trigger !== 'startup' &&
+                  trigger !== 'manual' &&
+                  checkTime - lastAttemptAt < PWA_UPDATE_CHECK_COOLDOWN_MS
+                )
+                  return
+                lastAttemptAt = checkTime
+                await (deps?.checkForUpdate?.(signal) ??
+                  handle.checkForUpdate())
+                return true
+              },
               catch: (error: unknown) => error,
-            }),
+            }).pipe(Effect.timeoutOption(15_000)),
           ),
         )
         yield* Ref.set(inflight, Option.none())
-        if (Exit.isSuccess(outcome)) {
+        if (stopped || disposed) {
+          yield* Deferred.succeed(gate, undefined)
+          return
+        }
+        if (
+          Exit.isSuccess(outcome) &&
+          Option.isSome(outcome.value) &&
+          outcome.value.value
+        ) {
           patchCheck({
             inFlight: false,
-            lastCheckAt: now(),
+            lastCheckAt: checkTime,
             checks: bridge.getSnapshot().check.checks + 1,
           })
         } else {
@@ -229,29 +221,54 @@ export function makePwaUpdateService(
       }),
     )
 
-  const hourlyLoop: Effect.Effect<void> = Effect.gen(function* () {
+  const periodicLoop: Effect.Effect<void> = Effect.gen(function* () {
     while (true) {
       yield* Effect.sleep(checkIntervalMs)
-      // Hourly ticks only fire while visible; hidden ticks are skipped,
+      // Periodic ticks only fire while visible; hidden ticks are skipped,
       // never queued — the next interval re-evaluates.
       if (isVisible()) {
-        yield* checkNow('hourly')
+        yield* checkNow('periodic')
       }
     }
   })
 
   const start: PwaUpdateService['start'] = Effect.gen(function* () {
     const started = yield* Ref.get(startedRef)
-    if (started) return
+    if (started || disposed) return
+    stopped = false
     ensureManager()
-    // Detached (not auto-supervised): the hourly loop must survive start's
+    const listen = (
+      target: EventTarget,
+      type: string,
+      trigger: PwaUpdateTrigger,
+    ) => {
+      const listener = () => {
+        void Effect.runPromise(checkNow(trigger)).catch(() => {})
+      }
+      target.addEventListener(type, listener)
+      browserCleanup.add(() => target.removeEventListener(type, listener))
+    }
+    if (typeof document !== 'undefined')
+      listen(document, 'visibilitychange', 'foreground')
+    if (typeof window !== 'undefined') {
+      listen(window, 'focus', 'foreground')
+      listen(window, 'pageshow', 'foreground')
+      listen(window, 'online', 'reconnect')
+    }
+    yield* Ref.set(startedRef, true)
+    yield* checkNow('startup')
+    if (!(yield* Ref.get(startedRef))) return
+    // Detached (not auto-supervised): the periodic loop must survive start's
     // completion and die only via stop/dispose interrupting the tracked fiber.
-    const fiber = yield* Effect.forkDetach(hourlyLoop)
+    const fiber = yield* Effect.forkDetach(periodicLoop)
     yield* Ref.set(fiberRef, Option.some(fiber))
     yield* Ref.set(startedRef, true)
   })
 
   const stopLoop: Effect.Effect<void> = Effect.gen(function* () {
+    stopped = true
+    browserCleanup.forEach((release) => release())
+    browserCleanup.clear()
     const fiber = yield* Ref.get(fiberRef)
     yield* Ref.set(fiberRef, Option.none())
     if (Option.isSome(fiber)) {
@@ -265,6 +282,7 @@ export function makePwaUpdateService(
   })
 
   const dispose: PwaUpdateService['dispose'] = Effect.gen(function* () {
+    disposed = true
     yield* stopLoop
     yield* Ref.set(startedRef, false)
     const handle = manager
@@ -286,10 +304,12 @@ export function makePwaUpdateService(
     start,
     stop,
     dispose,
-    retry: Effect.sync(() => {
+    retry: Effect.gen(function* () {
+      yield* checkNow('manual')
       ensureManager().retry()
       syncManagerSnapshot()
     }),
+    updateNow: Effect.sync(() => ensureManager().updateNow()),
     dismissFailure: Effect.sync(() => {
       ensureManager().dismissFailure()
       syncManagerSnapshot()
@@ -298,7 +318,7 @@ export function makePwaUpdateService(
 }
 
 /**
- * Page-scoped update layer: the hourly loop is interrupted and the manager
+ * Page-scoped update layer: the periodic loop is interrupted and the manager
  * disposed when the scope exits. Checks never outlive the page scope.
  */
 export function makePwaUpdateServiceLive(

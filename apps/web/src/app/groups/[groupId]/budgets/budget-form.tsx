@@ -28,6 +28,7 @@ import {
 import { useLocale } from '@/i18n/react'
 import { getCurrencyFromGroup } from '@/lib/currency'
 import { localizeCurrencyInput } from '@/lib/currency-input'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { formatDateOnly } from '@/lib/utils'
 import {
   amountAsDecimal,
@@ -141,6 +142,27 @@ export function BudgetForm({
     budget?.notifyTrending ?? true,
   )
   const [notifyOver, setNotifyOver] = useState(budget?.notifyOver ?? true)
+  usePwaUpdateBlocker(
+    name !== (budget?.name ?? '') ||
+      amount !==
+        (budget
+          ? amountAsDecimal(budget.amount, currency).toFixed(
+              currency.decimal_digits,
+            )
+          : '') ||
+      periodType !== (budget?.periodType ?? 'MONTHLY') ||
+      customStart !== toDateInput(budget?.customStart) ||
+      customEnd !== toDateInput(budget?.customEnd) ||
+      categoryScope !== (budget?.categoryScope ?? 'ALL') ||
+      participantScope !== (budget?.participantScope ?? 'ALL') ||
+      JSON.stringify(categoryNodeIds) !==
+        JSON.stringify(budget?.categoryNodeIds ?? []) ||
+      JSON.stringify(participantIds) !==
+        JSON.stringify(budget?.participantIds ?? []) ||
+      notifyTrending !== (budget?.notifyTrending ?? true) ||
+      notifyOver !== (budget?.notifyOver ?? true),
+    'budget-form-edits',
+  )
   const [error, setError] = useState<string | null>(null)
   const periodSelectItems = useMemo(
     () =>

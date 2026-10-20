@@ -2197,7 +2197,13 @@
     "scopeExpensesWrite": "Adicionar despesas com prévia"
   },
   "PwaUpdate": {
-    "waitingFailed": "O Spliit Cloud não conseguiu aplicar a atualização."
+    "waitingFailed": "O Spliit Cloud não conseguiu aplicar a atualização.",
+    "available": "Uma atualização do aplicativo está disponível",
+    "blocked": "A atualização é altamente recomendada. Conclua o que está fazendo para atualizar o aplicativo automaticamente.",
+    "countdown": "O aplicativo será atualizado para {version} em {seconds} s. O rascunho da despesa será restaurado.",
+    "restoring": "Restaurando o rascunho da despesa…",
+    "recoveryFailed": "Não foi possível preservar o rascunho da despesa. A atualização foi pausada para proteger seu trabalho.",
+    "applying": "Aplicando a atualização do aplicativo…"
   },
   "Tools": {
     "import": {

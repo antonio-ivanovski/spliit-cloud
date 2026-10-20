@@ -1,23 +1,42 @@
 import { useEffect } from 'react'
 
+import type { PwaBuild } from './pwa-build'
+
 type Listener = () => void
 
 let nextId = 1
-const blockers = new Map<number, string>()
+export type PwaCheckpoint = { attemptId: string; build: PwaBuild }
+const blockers = new Map<
+  number,
+  {
+    reason: string
+    active?: () => boolean
+    checkpoint?: (context: PwaCheckpoint) => void
+  }
+>()
 const listeners = new Set<Listener>()
 let protectionInitialized = false
 
-function emit() {
+/** Publish changes to work tracked by a live active predicate. */
+export function notifyPwaUpdateBlockersChanged() {
   listeners.forEach((listener) => listener())
 }
 
 /** Register work that an automatic reload must not interrupt. */
-export function registerPwaUpdateBlocker(reason: string): () => void {
+export function registerPwaUpdateBlocker(
+  reason: string,
+  checkpoint?: (context: PwaCheckpoint) => void,
+  active?: () => boolean,
+): () => void {
   const id = nextId++
-  blockers.set(id, reason)
-  emit()
+  blockers.set(id, {
+    reason,
+    ...(checkpoint ? { checkpoint } : {}),
+    ...(active ? { active } : {}),
+  })
+  notifyPwaUpdateBlockersChanged()
   return () => {
-    if (blockers.delete(id)) emit()
+    if (blockers.delete(id)) notifyPwaUpdateBlockersChanged()
   }
 }
 
@@ -52,15 +71,40 @@ export function usePwaUpdateCompositionGuard(reason = 'text-composition') {
 }
 
 export function hasPwaUpdateBlockers(): boolean {
-  return blockers.size > 0
+  return [...blockers.values()].some(
+    (blocker) => !blocker.active || blocker.active(),
+  )
+}
+
+export function hasHardPwaUpdateBlockers(): boolean {
+  return [...blockers.values()].some(
+    (blocker) => (!blocker.active || blocker.active()) && !blocker.checkpoint,
+  )
+}
+
+/** Only the update coordinator may treat successfully checkpointed work as safe. */
+export function checkpointPwaUpdateWork(context: PwaCheckpoint): number {
+  let count = 0
+  for (const blocker of blockers.values()) {
+    if (blocker.active && !blocker.active()) continue
+    if (!blocker.checkpoint)
+      throw new Error('Unfinished work cannot be restored')
+    blocker.checkpoint(context)
+    count++
+  }
+  return count
 }
 
 export function getPwaUpdateBlockerCount(): number {
-  return blockers.size
+  return [...blockers.values()].filter(
+    (blocker) => !blocker.active || blocker.active(),
+  ).length
 }
 
 export function getPwaUpdateBlockerReasons(): readonly string[] {
   return [...blockers.values()]
+    .filter((blocker) => !blocker.active || blocker.active())
+    .map((blocker) => blocker.reason)
 }
 
 export function subscribePwaUpdateBlockers(listener: Listener): () => void {
@@ -72,7 +116,7 @@ export function subscribePwaUpdateBlockers(listener: Listener): () => void {
 export function markPwaUpdateProtectionInitialized() {
   if (protectionInitialized) return
   protectionInitialized = true
-  emit()
+  notifyPwaUpdateBlockersChanged()
 }
 
 export function isPwaUpdateProtectionInitialized(): boolean {

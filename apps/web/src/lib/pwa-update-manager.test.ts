@@ -48,6 +48,14 @@ function createHarness(
     removeEventListener: vi.fn(),
     postMessage: vi.fn(
       (message: Record<string, unknown>, transfer?: Transferable[]) => {
+        if (message.type === 'GET_PWA_BUILD') {
+          ;(transfer?.[0] as MessagePort)?.postMessage({
+            buildId: 'next-build',
+            version: 'v2.11.0',
+            recoveryVersion: 1,
+          })
+          return
+        }
         if (message.type !== 'REQUEST_COORDINATED_ACTIVATION') {
           workerReplies.push(message)
           return
@@ -93,6 +101,16 @@ function createHarness(
     removeEventListener:
       registrationEvents.removeEventListener.bind(registrationEvents),
   } as unknown as ServiceWorkerRegistration
+  const activationRequests = vi.fn()
+  const originalPost = waitingWorker.postMessage.bind(waitingWorker)
+  waitingWorker.postMessage = ((
+    message: Record<string, unknown>,
+    transfer?: Transferable[],
+  ) => {
+    if (message.type === 'REQUEST_COORDINATED_ACTIVATION')
+      activationRequests(message, transfer)
+    originalPost(message, transfer ?? [])
+  }) as ServiceWorker['postMessage']
   const registerServiceWorker = vi.fn().mockResolvedValue(registration)
   const reload = vi.fn()
   const storage = {
@@ -100,7 +118,6 @@ function createHarness(
     setItem: vi.fn(),
     removeItem: vi.fn(),
   }
-  const subscribeUpdateChecks = vi.fn(() => vi.fn())
   const container = {
     get controller() {
       return controller
@@ -119,7 +136,6 @@ function createHarness(
     registerServiceWorker,
     reload,
     storage,
-    subscribeUpdateChecks,
     hasBlockers: () => blocked,
     isProtectionReady: () => ready,
     subscribeBlockers: subscribe(blockerListeners),
@@ -127,7 +143,6 @@ function createHarness(
     subscribeVisibility: subscribe(visibilityListeners),
     subscribeOnline: subscribe(onlineListeners),
     subscribeAssetErrors: subscribe(assetListeners),
-    subscribeActivity: subscribe(activityListeners),
     now: () => nowValue,
     readScroll: () => ({ x: 0, y: 120 }),
     currentUrl: () => '/groups/g1?tab=expenses',
@@ -152,8 +167,8 @@ function createHarness(
     registerServiceWorker,
     reload,
     storage,
-    subscribeUpdateChecks,
     waitingWorker,
+    activationRequests,
     workerReplies,
     settleRegistration: async () => {
       await vi.waitFor(() =>
@@ -232,20 +247,19 @@ describe('createPwaUpdateManager', () => {
     expect(manager.getSnapshot()).toEqual({ status: 'hidden' })
   })
 
-  it('registers natively, checks immediately, and subscribes for later checks', async () => {
+  it('shares completed registration with discovery checks', async () => {
     const harness = createHarness({ waiting: false })
-    await harness.settleRegistration()
+    await harness.manager.checkForUpdate()
+    expect(harness.registerServiceWorker).toHaveBeenCalledOnce()
     expect(harness.registration.update).toHaveBeenCalledOnce()
-    expect(harness.subscribeUpdateChecks).toHaveBeenCalledWith(
-      harness.registration,
-    )
+    harness.manager.dispose()
   })
 
   it('coordinates an existing update and reloads after controller takeover', async () => {
     const harness = createHarness()
     await harness.settleRegistration()
     await vi.waitFor(() =>
-      expect(harness.waitingWorker.postMessage).toHaveBeenCalledWith(
+      expect(harness.activationRequests).toHaveBeenCalledWith(
         { type: 'REQUEST_COORDINATED_ACTIVATION', protocol: 1 },
         expect.any(Array),
       ),
@@ -262,12 +276,12 @@ describe('createPwaUpdateManager', () => {
     vi.useFakeTimers()
     const harness = createHarness({ blocked: true })
     await harness.settleRegistration()
-    expect(harness.waitingWorker.postMessage).not.toHaveBeenCalled()
-    expect(harness.manager.getSnapshot()).toEqual({ status: 'hidden' })
+    expect(harness.activationRequests).not.toHaveBeenCalled()
+    expect(harness.manager.getSnapshot().status).not.toBe('failed')
 
     harness.setBlocked(false)
     await vi.advanceTimersByTimeAsync(0)
-    expect(harness.waitingWorker.postMessage).toHaveBeenCalledOnce()
+    expect(harness.activationRequests).toHaveBeenCalledOnce()
     harness.changeController()
     expect(harness.reload).toHaveBeenCalledOnce()
   })
@@ -288,14 +302,14 @@ describe('createPwaUpdateManager', () => {
     const harness = createHarness({ activation: 'blocked' })
     await harness.settleRegistration()
     await vi.waitFor(() =>
-      expect(harness.waitingWorker.postMessage).toHaveBeenCalledOnce(),
+      expect(harness.activationRequests).toHaveBeenCalledOnce(),
     )
-    expect(harness.manager.getSnapshot()).toEqual({ status: 'hidden' })
+    expect(harness.manager.getSnapshot().status).not.toBe('failed')
 
     harness.setActivation('accepted')
     harness.focus()
     await vi.waitFor(() =>
-      expect(harness.waitingWorker.postMessage).toHaveBeenCalledTimes(2),
+      expect(harness.activationRequests).toHaveBeenCalledTimes(2),
     )
   })
 
@@ -317,16 +331,19 @@ describe('createPwaUpdateManager', () => {
     harness.setActivation('accepted')
     harness.manager.retry()
     await vi.waitFor(() =>
-      expect(harness.waitingWorker.postMessage).toHaveBeenCalledTimes(2),
+      expect(harness.activationRequests).toHaveBeenCalledTimes(2),
     )
-    expect(harness.manager.getSnapshot()).toEqual({ status: 'hidden' })
+    expect(harness.manager.getSnapshot().status).not.toBe('failed')
   })
 
   it('fails when activation never changes the controller', async () => {
     vi.useFakeTimers()
     const harness = createHarness()
     await harness.settleRegistration()
-    await vi.advanceTimersByTimeAsync(250)
+    await vi.waitFor(() =>
+      expect(harness.manager.getSnapshot().status).toBe('applying'),
+    )
+    await vi.advanceTimersByTimeAsync(201)
     expect(harness.manager.getSnapshot()).toEqual({
       status: 'failed',
       dismissed: false,
@@ -413,7 +430,7 @@ describe('createPwaUpdateManager', () => {
     const harness = createHarness({ activation: 'timeout' })
     await harness.settleRegistration()
     await vi.advanceTimersByTimeAsync(60)
-    expect(harness.manager.getSnapshot()).toEqual({ status: 'hidden' })
+    expect(harness.manager.getSnapshot().status).not.toBe('failed')
     expect(harness.reload).not.toHaveBeenCalled()
   })
 
@@ -424,17 +441,16 @@ describe('createPwaUpdateManager', () => {
     expect(harness.reload).not.toHaveBeenCalled()
   })
 
-  it('defers coordination while the tab is active, proceeds when quiet', async () => {
+  it('does not delay a clean tab for reading or scrolling', async () => {
     const harness = createHarness()
-    harness.setNow(Date.now())
     harness.activity()
     await harness.settleRegistration()
-    await new Promise((resolve) => setTimeout(resolve, 250))
-    expect(harness.waitingWorker.postMessage).not.toHaveBeenCalled()
-    harness.setNow(Date.now() + 31_000)
-    await vi.waitFor(() => {
-      expect(harness.waitingWorker.postMessage).toHaveBeenCalled()
-    })
+    await vi.waitFor(() =>
+      expect(harness.activationRequests).toHaveBeenCalled(),
+    )
+    harness.changeController()
+    expect(harness.reload).toHaveBeenCalledOnce()
+    harness.manager.dispose()
   })
 
   it('never force-reloads a blocked tab (no max-wait)', async () => {
@@ -442,7 +458,7 @@ describe('createPwaUpdateManager', () => {
     await harness.settleRegistration()
     await new Promise((resolve) => setTimeout(resolve, 350))
     expect(harness.reload).not.toHaveBeenCalled()
-    expect(harness.manager.getSnapshot()).toEqual({ status: 'hidden' })
+    expect(harness.manager.getSnapshot().status).not.toBe('failed')
   })
 
   it('bounds asset-error reloads per session and saves restart state', async () => {
@@ -485,6 +501,6 @@ describe('createPwaUpdateManager', () => {
     harness.manager.dispose()
     harness.setBlocked(false)
     harness.focus()
-    expect(harness.waitingWorker.postMessage).not.toHaveBeenCalled()
+    expect(harness.activationRequests).not.toHaveBeenCalled()
   })
 })

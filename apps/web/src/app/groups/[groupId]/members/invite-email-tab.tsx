@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useDeploymentConfig } from '@/lib/deployment-config'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 
 import {
   useRoleSelectItems,
@@ -46,6 +47,10 @@ export function InviteEmailTab({
   email: string
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
+  usePwaUpdateBlocker(
+    form.formState.isDirty || isPending,
+    'invitation-email-edits',
+  )
   const roleSelectItems = useRoleSelectItems()
   const emailDeliveryEnabled = useDeploymentConfig().emailDeliveryEnabled
 

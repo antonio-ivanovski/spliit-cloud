@@ -4049,7 +4049,17 @@
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud non è riuscito ad applicare l'aggiornamento.",
     "retry": "Riprova",
-    "dismiss": "Chiudi"
+    "dismiss": "Chiudi",
+    "available": "È disponibile un aggiornamento dell’app",
+    "availableVersion": "È disponibile la versione {version}",
+    "blocked": "L’aggiornamento è fortemente consigliato. Termina il lavoro in corso per aggiornare automaticamente l’app.",
+    "countdown": "Aggiornamento alla versione {version} tra {seconds} s. La bozza della spesa verrà ripristinata.",
+    "updateNow": "Aggiorna ora",
+    "updatedVersion": "Aggiornamento alla versione {version} completato.",
+    "draftRestored": "La bozza della spesa è stata ripristinata.",
+    "restoring": "Ripristino della bozza della spesa…",
+    "recoveryFailed": "Non è stato possibile conservare la bozza della spesa. L’aggiornamento è sospeso per proteggere il tuo lavoro.",
+    "applying": "Applicazione dell’aggiornamento…"
   },
   "Tools": {
     "title": "Strumenti",

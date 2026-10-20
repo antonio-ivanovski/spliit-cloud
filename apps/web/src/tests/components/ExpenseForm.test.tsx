@@ -1,5 +1,7 @@
+import superjson from 'superjson'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { buildExpenseFormDefaults } from '@/app/groups/[groupId]/expenses/expense-form/default-values'
 import type {
   GroupShape,
   LoadedExpense,
@@ -9,6 +11,14 @@ import { ParticipantDistributionFooter } from '@/components/participant-distribu
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { useCurrencyRate, useMediaQuery } from '@/lib/hooks'
+import {
+  PWA_EXPENSE_RECOVERY_KEY,
+  type ExpenseRecoveryPayload,
+} from '@/lib/pwa-expense-recovery'
+import {
+  checkpointPwaUpdateWork,
+  hasHardPwaUpdateBlockers,
+} from '@/lib/pwa-update-blockers'
 import type { Expense } from '@/lib/schemas'
 import {
   act,
@@ -479,6 +489,79 @@ beforeEach(() => {
 // ── Tests ───────────────────────────────────────────────────────────────
 
 describe('ExpenseForm', () => {
+  it('restores an incomplete expense draft and checkpoints subsequent RHF edits without submitting', async () => {
+    const defaults = buildExpenseFormDefaults({
+      isCreate: false,
+      expense: mockExpense as unknown as LoadedExpense,
+      group: mockGroup as unknown as GroupShape,
+      groupCurrency: getCurrency('USD')!,
+      searchParams: {},
+      currentLedgerParticipantId: 'lp-1',
+      settlementTitle: 'Settlement',
+    })
+    const restored: ExpenseRecoveryPayload = {
+      values: {
+        ...defaults,
+        title: 'D',
+        amount: '' as unknown as number,
+        splitMode: 'BY_PERCENTAGE',
+        paidFor: [
+          { participant: 'lp-1', shares: 25 },
+          { participant: 'lp-2', shares: 75 },
+        ],
+      },
+      defaults,
+      expectedVersion: 3,
+      ui: { dateDraft: '12/', timeDraft: '2:' },
+    }
+    const submit = vi.fn()
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={mockExpense as unknown as LoadedExpense}
+        onSubmit={submit}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        updateRecovery={{
+          key: 'edit:g:e',
+          namespace: 'account:a',
+          restored,
+          metadata: { expectedVersion: 3 },
+        }}
+      />,
+    )
+    const title = screen.getByRole('textbox', { name: /expense title/i })
+    await waitFor(() => expect(title).toHaveValue('D'))
+    expect(screen.getByRole('textbox', { name: /^amount$/i })).toHaveValue('')
+    expect(screen.getByRole('textbox', { name: 'Date' })).toHaveValue('12/')
+    expect(screen.getByRole('textbox', { name: 'Time' })).toHaveValue('2:')
+    await user.type(title, 'inner draft')
+    fireEvent.change(screen.getByRole('textbox', { name: 'Date' }), {
+      target: { value: '12/3/' },
+    })
+    await waitFor(() => expect(hasHardPwaUpdateBlockers()).toBe(false))
+    act(() => {
+      checkpointPwaUpdateWork({
+        attemptId: 'update',
+        build: { buildId: 'next', version: 'v2' },
+      })
+    })
+    const checkpoint = superjson.parse<{ payload: ExpenseRecoveryPayload }>(
+      sessionStorage.getItem(PWA_EXPENSE_RECOVERY_KEY)!,
+    )
+    expect(checkpoint.payload.values.title).toBe('Dinner draft')
+    expect(checkpoint.payload.values.amount).toBe('')
+    expect(checkpoint.payload.values.paidFor.map((row) => row.shares)).toEqual([
+      25, 75,
+    ])
+    expect(checkpoint.payload.expectedVersion).toBe(3)
+    expect(checkpoint.payload.ui).toEqual({
+      dateDraft: '12/3/',
+      timeDraft: '2:',
+    })
+    expect(submit).not.toHaveBeenCalled()
+    sessionStorage.removeItem(PWA_EXPENSE_RECOVERY_KEY)
+  })
+
   it('shows title, amount, date, and category fields in create mode', () => {
     const onSubmit = vi.fn()
     render(

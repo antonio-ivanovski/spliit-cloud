@@ -19,12 +19,14 @@
  * because a worker is a singleton; `sw.ts` owns the message wiring.
  */
 
+import type { PwaBuild } from './pwa-build'
 import {
   COORDINATION_ABORTED,
   COORDINATION_CONFIRM,
   COORDINATION_PREPARE,
   PWA_UPDATE_PROTOCOL_VERSION,
   PWA_UPDATE_ROUND_TIMEOUT_MS,
+  PWA_UPDATE_COUNTDOWN_MS,
   asRoundResponse,
   type CoordinationResult,
   type CoordinationResultReason,
@@ -146,6 +148,7 @@ export async function runCoordinatedActivation(
     workerToken: string
     requesterId?: string
     timeoutMs?: number
+    build?: PwaBuild
   },
 ): Promise<CoordinationResult> {
   const { attemptId, workerToken } = options
@@ -197,6 +200,8 @@ export async function runCoordinatedActivation(
       protocol: PWA_UPDATE_PROTOCOL_VERSION,
       attemptId,
       workerToken,
+      build: options.build,
+      recoveryVersion: 1,
     },
     attemptId,
     timeoutMs,
@@ -204,6 +209,7 @@ export async function runCoordinatedActivation(
   const prepareStatus = (client: CoordinatorClient) =>
     asRoundResponse(prepareInbox.get(client.id), attemptId, [
       'clean',
+      'recoverable',
       'blocked',
       'not-ready',
     ])
@@ -212,7 +218,7 @@ export async function runCoordinatedActivation(
   )
   const prepareUnclean = clients.filter((client) => {
     const status = prepareStatus(client)
-    return status !== null && status !== 'clean'
+    return status !== null && status !== 'clean' && status !== 'recoverable'
   })
   if (prepareMissing.length > 0 || prepareUnclean.length > 0) {
     return abort(
@@ -232,9 +238,14 @@ export async function runCoordinatedActivation(
       protocol: PWA_UPDATE_PROTOCOL_VERSION,
       attemptId,
       workerToken,
+      build: options.build,
+      recoveryVersion: 1,
     },
     attemptId,
-    timeoutMs,
+    timeoutMs +
+      (clients.some((client) => prepareStatus(client) === 'recoverable')
+        ? PWA_UPDATE_COUNTDOWN_MS
+        : 0),
   )
   const confirmStatus = (client: CoordinatorClient) =>
     asRoundResponse(confirmInbox.get(client.id), attemptId, [

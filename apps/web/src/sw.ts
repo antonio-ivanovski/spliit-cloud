@@ -9,6 +9,7 @@ import {
 } from 'workbox-precaching'
 import { NavigationRoute, registerRoute } from 'workbox-routing'
 
+import { GET_PWA_BUILD, PWA_BUILD } from '@/lib/pwa-build'
 import {
   LOCALE_CHUNK_CACHE_NAME,
   MAX_LOCALE_CHUNK_ENTRIES,
@@ -156,6 +157,10 @@ registerRoute(
 )
 
 self.addEventListener('message', (event) => {
+  if (event.data?.type === GET_PWA_BUILD) {
+    event.ports[0]?.postMessage({ ...PWA_BUILD, recoveryVersion: 1 })
+    return
+  }
   if (event.data && event.data.type === 'SKIP_WAITING') {
     // Legacy pages can only activate when they are the sole window. A stale
     // page must never replace the controller underneath other open windows.
@@ -250,6 +255,7 @@ self.addEventListener('message', (event) => {
             {
               attemptId,
               workerToken: WORKER_INSTANCE_TOKEN,
+              build: PWA_BUILD,
               requesterId:
                 typeof sourceClientId === 'string' ? sourceClientId : undefined,
             },

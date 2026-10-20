@@ -10,6 +10,7 @@
  * stay on it or OAuth redirects would get the SPA shell.
  */
 export const APP_SHELL_NAVIGATION_DENYLIST: readonly RegExp[] = [
+  /^\/version\.json(?:$|\?)/,
   /^\/sw\.js(?:$|\?)/,
   /^\/manifest\.webmanifest(?:$|\?)/,
   /^\/android\/releases(?:\/|$)/,

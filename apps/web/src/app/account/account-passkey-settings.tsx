@@ -31,6 +31,7 @@ import {
   signOutAndReturnToSignIn,
   type PasskeyInfo,
 } from '@/lib/passkey'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { useOnlineStatus } from '@/lib/use-online-status'
 
 import { SettingsBadge, SettingsRow } from './settings-ui'
@@ -88,6 +89,10 @@ export function AccountPasskeySettings({
   const [removeError, setRemoveError] = useState<string | null>(null)
   const [checkingFreshness, setCheckingFreshness] = useState(false)
   const [reauthOpen, setReauthOpen] = useState(false)
+  usePwaUpdateBlocker(
+    addOpen || reauthOpen || checkingFreshness,
+    'account-passkey-operation',
+  )
   const [reauthPending, setReauthPending] = useState(false)
 
   function errorMessage(code: string) {

@@ -4068,7 +4068,17 @@
   "PwaUpdate": {
     "waitingFailed": "Nie udało się zastosować aktualizacji Spliit Cloud.",
     "retry": "Ponów",
-    "dismiss": "Zamknij"
+    "dismiss": "Zamknij",
+    "available": "Dostępna jest aktualizacja aplikacji",
+    "availableVersion": "Dostępna jest wersja {version}",
+    "blocked": "Zdecydowanie zalecamy aktualizację. Dokończ bieżącą pracę, aby aplikacja zaktualizowała się automatycznie.",
+    "countdown": "Aktualizacja do {version} za {seconds} s. Szkic wydatku zostanie przywrócony.",
+    "updateNow": "Aktualizuj teraz",
+    "updatedVersion": "Zaktualizowano do {version}.",
+    "draftRestored": "Szkic wydatku został przywrócony.",
+    "restoring": "Przywracanie szkicu wydatku…",
+    "recoveryFailed": "Nie udało się zachować szkicu wydatku. Aktualizacja została wstrzymana, aby chronić twoją pracę.",
+    "applying": "Trwa aktualizowanie aplikacji…"
   },
   "Tools": {
     "title": "Narzędzia",

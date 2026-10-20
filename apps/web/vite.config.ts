@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
 
@@ -7,7 +8,13 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
+import { APP_VERSION } from './src/generated/app-version.js'
 import { buildLocaleChunkIgnores } from './src/lib/pwa-locale-chunks.js'
+
+const appBuild = {
+  buildId: process.env.SPLIIT_BUILD_ID || randomUUID(),
+  version: APP_VERSION,
+}
 
 const publicWebHosts = (process.env.WEB_ORIGINS ?? '')
   .split(',')
@@ -34,10 +41,21 @@ function readMessageLocales(): string[] {
 }
 
 export default defineConfig({
+  define: { __APP_BUILD__: JSON.stringify(appBuild) },
   // All workspace apps share the repository-level .env file. Vite otherwise
   // resolves env files relative to apps/web when this task runs via Turbo.
   envDir: path.resolve(import.meta.dirname, '../..'),
   plugins: [
+    {
+      name: 'spliit-build-info',
+      generateBundle() {
+        this.emitFile({
+          type: 'asset',
+          fileName: 'version.json',
+          source: JSON.stringify(appBuild),
+        })
+      },
+    },
     tanstackRouter({
       target: 'react',
       autoCodeSplitting: true,
@@ -212,6 +230,7 @@ export default defineConfig({
           '**/*.{html,js,css,svg,png,ico,webp,woff2,json,webmanifest}',
         ],
         globIgnores: [
+          'version.json',
           '_worker.js',
           '404.html',
           // Store/install artwork only; not needed to launch the app offline.

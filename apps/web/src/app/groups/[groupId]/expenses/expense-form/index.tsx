@@ -21,12 +21,16 @@ import {
   type ExpenseCancelLink,
 } from '@/lib/expense-navigation'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
-import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import {
   createExpenseFormInputSchema,
   type Expense,
   type ExpenseFormInputValues,
 } from '@/lib/schemas'
+import {
+  ExpenseRecoveryUiContext,
+  useExpenseUpdateCheckpoint,
+  type ExpenseUpdateRecovery,
+} from '@/lib/use-expense-update-recovery'
 import { dateOnlyInAccountTimeZone, getCurrencyFromGroup } from '@/lib/utils'
 import type { CreateExpenseSearch } from '@/router/schemas'
 import { trpc } from '@/trpc/client'
@@ -143,6 +147,7 @@ function shareErrorTarget(
 export type ExpenseSubmitOutcome = 'saved' | 'deferred'
 
 export function ExpenseForm(props: {
+  updateRecovery?: ExpenseUpdateRecovery
   group: NonNullable<AppRouterOutput['groups']['get']['group']>
   expense?: AppRouterOutput['groups']['expenses']['get']['expense']
   /** Complete expense data held only by the file-import review flow. */
@@ -260,9 +265,11 @@ export function ExpenseForm(props: {
   })
   // The global mutation guard covers saves; keep protecting dirty values until
   // the expense has been persisted.
-  usePwaUpdateBlocker(
-    isExpenseFormDirty && !props.readOnly && !persisted,
-    'expense-form-edits',
+  const recoveryUi = useExpenseUpdateCheckpoint(
+    form,
+    props.updateRecovery,
+    isExpenseFormDirty && !props.readOnly,
+    persisted,
   )
 
   // Defaults are resolved independently for payer and participants. They are
@@ -275,7 +282,13 @@ export function ExpenseForm(props: {
   }>({ paidBy: null, paidFor: null })
   // oxlint-disable react/set-state-in-effect -- record which async defaults were applied; this state must remain stable after the user edits the draft.
   useEffect(() => {
-    if (!isCreate || props.expense || props.isCopy || !splitPresetsQuery.data) {
+    if (
+      props.updateRecovery?.restored ||
+      !isCreate ||
+      props.expense ||
+      props.isCopy ||
+      !splitPresetsQuery.data
+    ) {
       return
     }
     const allPresets = splitPresets
@@ -370,6 +383,7 @@ export function ExpenseForm(props: {
     props.expense,
     props.isCopy,
     props.searchParams,
+    props.updateRecovery?.restored,
     splitPresets,
     splitPresetsQuery.data,
   ])
@@ -652,205 +666,211 @@ export function ExpenseForm(props: {
   }
 
   return (
-    <Form {...form}>
-      <form
-        ref={formElementRef}
-        data-expense-form
-        // oxlint-disable-next-line react/refs -- handleInvalidSubmit reads shareInputRefs at submit time (event handler, never during render); the section-qualified registry replaces array-index focus for position-shifting rows.
-        onSubmit={form.handleSubmit(submit, handleInvalidSubmit)}
-        onFocusCapture={tabNavigation.onFocusCapture}
-        onKeyDownCapture={tabNavigation.onKeyDownCapture}
-        noValidate
-        className="min-w-0 overflow-x-hidden pb-24 sm:pb-20"
-      >
-        {props.readOnly && <ReadOnlyNotice />}
-        <BasicDetailsCard
-          form={form}
-          group={props.group}
-          accountTimeZone={accountTimeZone}
-          readOnly={!!props.readOnly}
-          sExpense={sExpense}
-          isCreate={isCreate}
-          isCopy={props.isCopy}
-          recurrenceSequence={
-            !props.isCopy
-              ? (initialExpense?.recurrenceSequence ?? undefined)
-              : undefined
-          }
-          editScope={props.editScope}
-          cancelLink={props.cancelLink}
-          initialRecurrence={
-            !isCreate ? (initialExpense?.recurrence ?? null) : undefined
-          }
-          suggestCategoryMutation={suggestCategoryMutation}
-          runtimeFeatureFlags={props.runtimeFeatureFlags}
-          receiptDocuments={form.getValues('documents').flatMap((document) => {
-            // Images with dimensions (including legacy attachments without
-            // content-type metadata) plus scannable documents (PDF, text,
-            // office files) can be AI-scanned from the fill dialog.
-            const imageWithDims =
-              (isExpenseDocumentImage(document.contentType) ||
-                !document.contentType) &&
-              document.width != null &&
-              document.height != null
-            if (
-              !imageWithDims &&
-              !isScannableReceiptDocument({
-                fileName: document.fileName ?? '',
-                contentType: document.contentType,
-              })
-            ) {
-              return []
-            }
-            return [
-              {
-                id: document.id,
-                url: document.url,
-                width: document.width ?? null,
-                height: document.height ?? null,
-                fileName: document.fileName,
-                contentType: document.contentType,
-              },
-            ]
-          })}
-          receiptScanContext={receiptScanContext}
-          onReceiptAccepted={applyReceiptResult}
-          heading={props.heading}
-          {...conversion}
-          groupCurrency={groupCurrency}
-        />
-        <ExpenseItemsCard
-          form={form}
-          group={props.group}
-          groupCurrency={payerCurrency}
-          readOnly={!!props.readOnly}
-          presets={splitPresets}
-          presetsLoading={splitPresetsQuery.isLoading}
-          canManage={
-            canManageSharedSplitPresets || canManagePersonalSplitPresets
-          }
-          canManageShared={canManageSharedSplitPresets}
-          canManagePersonal={canManagePersonalSplitPresets}
-          renderItemParticipantsModal={({
-            itemIndex,
-            item,
-            open,
-            onClose,
-            onSaveItem,
-            onSaveRemainder,
-            remainderAllocationMode,
-            proportionalPreview,
-            proportionalErrorKey,
-            titleOverride,
-            hideAmountDescription,
-            hideAmountMode,
-            presetsLoading,
-            canManageShared,
-            canManagePersonal,
-          }) => (
-            <ItemParticipantsModal
-              open={open}
-              onOpenChange={(v) => !v && onClose()}
-              form={form}
-              itemIndex={itemIndex}
-              group={props.group}
-              groupCurrency={payerCurrency}
-              item={item}
-              onSaveItem={onSaveItem}
-              onSaveRemainder={onSaveRemainder}
-              remainderAllocationMode={remainderAllocationMode}
-              proportionalPreview={proportionalPreview}
-              proportionalErrorKey={proportionalErrorKey}
-              readOnly={!!props.readOnly}
-              titleOverride={titleOverride}
-              hideAmountDescription={hideAmountDescription}
-              hideAmountMode={hideAmountMode}
-              presets={splitPresets}
-              presetsLoading={presetsLoading}
-              canManage={
-                canManageSharedSplitPresets || canManagePersonalSplitPresets
-              }
-              canManageShared={canManageShared ?? canManageSharedSplitPresets}
-              canManagePersonal={
-                canManagePersonal ?? canManagePersonalSplitPresets
-              }
-            />
-          )}
-        />
-        <PaidForCard
-          form={form}
-          group={props.group}
-          groupCurrency={groupCurrency}
-          payerCurrency={payerCurrency}
-          readOnly={!!props.readOnly}
-          sExpense={sExpense}
-          setManuallyEditedParticipants={setManuallyEditedParticipants}
-          presets={splitPresets}
-          presetsLoading={splitPresetsQuery.isLoading}
-          canManageShared={canManageSharedSplitPresets}
-          canManagePersonal={canManagePersonalSplitPresets}
-          initialLoadedPreset={automaticDefaultPaidForPreset}
-          initialLoadedSource={automaticDefaultPaidForSource}
-          isCreate={isCreate}
-          inputRefs={shareInputRefs}
-        />
-        <PaidByCard
-          form={form}
-          group={props.group}
-          groupCurrency={groupCurrency}
-          payerCurrency={payerCurrency}
-          readOnly={!!props.readOnly}
-          sExpense={sExpense}
-          setManuallyEditedPayers={setManuallyEditedPayers}
-          presets={splitPresets}
-          presetsLoading={splitPresetsQuery.isLoading}
-          canManageShared={canManageSharedSplitPresets}
-          canManagePersonal={canManagePersonalSplitPresets}
-          initialLoadedPreset={automaticDefaultPaidByPreset}
-          initialLoadedSource={automaticDefaultPaidBySource}
-          inputRefs={shareInputRefs}
-        />
-        {props.runtimeFeatureFlags.enableExpenseDocuments && (
-          <DocumentsCard
+    <ExpenseRecoveryUiContext.Provider value={recoveryUi}>
+      <Form {...form}>
+        <form
+          ref={formElementRef}
+          data-expense-form
+          // oxlint-disable-next-line react/refs -- handleInvalidSubmit reads shareInputRefs at submit time (event handler, never during render); the section-qualified registry replaces array-index focus for position-shifting rows.
+          onSubmit={form.handleSubmit(submit, handleInvalidSubmit)}
+          onFocusCapture={tabNavigation.onFocusCapture}
+          onKeyDownCapture={tabNavigation.onKeyDownCapture}
+          noValidate
+          className="min-w-0 overflow-x-hidden pb-24 sm:pb-20"
+        >
+          {props.readOnly && <ReadOnlyNotice />}
+          <BasicDetailsCard
             form={form}
             group={props.group}
+            accountTimeZone={accountTimeZone}
             readOnly={!!props.readOnly}
             sExpense={sExpense}
-            enableReceiptExtract={
-              props.runtimeFeatureFlags.enableReceiptExtract
+            isCreate={isCreate}
+            isCopy={props.isCopy}
+            recurrenceSequence={
+              !props.isCopy
+                ? (initialExpense?.recurrenceSequence ?? undefined)
+                : undefined
             }
-            receiptContext={receiptScanContext}
+            editScope={props.editScope}
+            cancelLink={props.cancelLink}
+            initialRecurrence={
+              !isCreate ? (initialExpense?.recurrence ?? null) : undefined
+            }
+            suggestCategoryMutation={suggestCategoryMutation}
+            runtimeFeatureFlags={props.runtimeFeatureFlags}
+            receiptDocuments={form
+              .getValues('documents')
+              .flatMap((document) => {
+                // Images with dimensions (including legacy attachments without
+                // content-type metadata) plus scannable documents (PDF, text,
+                // office files) can be AI-scanned from the fill dialog.
+                const imageWithDims =
+                  (isExpenseDocumentImage(document.contentType) ||
+                    !document.contentType) &&
+                  document.width != null &&
+                  document.height != null
+                if (
+                  !imageWithDims &&
+                  !isScannableReceiptDocument({
+                    fileName: document.fileName ?? '',
+                    contentType: document.contentType,
+                  })
+                ) {
+                  return []
+                }
+                return [
+                  {
+                    id: document.id,
+                    url: document.url,
+                    width: document.width ?? null,
+                    height: document.height ?? null,
+                    fileName: document.fileName,
+                    contentType: document.contentType,
+                  },
+                ]
+              })}
+            receiptScanContext={receiptScanContext}
             onReceiptAccepted={applyReceiptResult}
+            heading={props.heading}
+            {...conversion}
+            groupCurrency={groupCurrency}
           />
-        )}
-        <ValidationSummary form={form} />
-        {postSaveFailure && props.onSaved && (
-          <div
-            role="alert"
-            className="mb-3 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive"
-          >
-            <p>{t('savedButNotNavigated')}</p>
-            <Button
-              variant="outline"
-              size="sm"
-              className="mt-2"
-              disabled={retryingNav}
-              onClick={() => void tryLeavingAgain()}
+          <ExpenseItemsCard
+            form={form}
+            group={props.group}
+            groupCurrency={payerCurrency}
+            readOnly={!!props.readOnly}
+            presets={splitPresets}
+            presetsLoading={splitPresetsQuery.isLoading}
+            canManage={
+              canManageSharedSplitPresets || canManagePersonalSplitPresets
+            }
+            canManageShared={canManageSharedSplitPresets}
+            canManagePersonal={canManagePersonalSplitPresets}
+            renderItemParticipantsModal={({
+              itemIndex,
+              item,
+              open,
+              onClose,
+              onSaveItem,
+              onSaveRemainder,
+              remainderAllocationMode,
+              proportionalPreview,
+              proportionalErrorKey,
+              titleOverride,
+              hideAmountDescription,
+              hideAmountMode,
+              presetsLoading,
+              canManageShared,
+              canManagePersonal,
+            }) => (
+              <ItemParticipantsModal
+                open={open}
+                onOpenChange={(v) => !v && onClose()}
+                form={form}
+                itemIndex={itemIndex}
+                group={props.group}
+                groupCurrency={payerCurrency}
+                item={item}
+                onSaveItem={onSaveItem}
+                onSaveRemainder={onSaveRemainder}
+                remainderAllocationMode={remainderAllocationMode}
+                proportionalPreview={proportionalPreview}
+                proportionalErrorKey={proportionalErrorKey}
+                readOnly={!!props.readOnly}
+                titleOverride={titleOverride}
+                hideAmountDescription={hideAmountDescription}
+                hideAmountMode={hideAmountMode}
+                presets={splitPresets}
+                presetsLoading={presetsLoading}
+                canManage={
+                  canManageSharedSplitPresets || canManagePersonalSplitPresets
+                }
+                canManageShared={canManageShared ?? canManageSharedSplitPresets}
+                canManagePersonal={
+                  canManagePersonal ?? canManagePersonalSplitPresets
+                }
+              />
+            )}
+          />
+          <PaidForCard
+            form={form}
+            group={props.group}
+            groupCurrency={groupCurrency}
+            payerCurrency={payerCurrency}
+            readOnly={!!props.readOnly}
+            sExpense={sExpense}
+            setManuallyEditedParticipants={setManuallyEditedParticipants}
+            presets={splitPresets}
+            presetsLoading={splitPresetsQuery.isLoading}
+            canManageShared={canManageSharedSplitPresets}
+            canManagePersonal={canManagePersonalSplitPresets}
+            initialLoadedPreset={automaticDefaultPaidForPreset}
+            initialLoadedSource={automaticDefaultPaidForSource}
+            isCreate={isCreate}
+            inputRefs={shareInputRefs}
+          />
+          <PaidByCard
+            form={form}
+            group={props.group}
+            groupCurrency={groupCurrency}
+            payerCurrency={payerCurrency}
+            readOnly={!!props.readOnly}
+            sExpense={sExpense}
+            setManuallyEditedPayers={setManuallyEditedPayers}
+            presets={splitPresets}
+            presetsLoading={splitPresetsQuery.isLoading}
+            canManageShared={canManageSharedSplitPresets}
+            canManagePersonal={canManagePersonalSplitPresets}
+            initialLoadedPreset={automaticDefaultPaidByPreset}
+            initialLoadedSource={automaticDefaultPaidBySource}
+            inputRefs={shareInputRefs}
+          />
+          {props.runtimeFeatureFlags.enableExpenseDocuments && (
+            <DocumentsCard
+              form={form}
+              group={props.group}
+              readOnly={!!props.readOnly}
+              sExpense={sExpense}
+              enableReceiptExtract={
+                props.runtimeFeatureFlags.enableReceiptExtract
+              }
+              receiptContext={receiptScanContext}
+              onReceiptAccepted={applyReceiptResult}
+            />
+          )}
+          <ValidationSummary form={form} />
+          {postSaveFailure && props.onSaved && (
+            <div
+              role="alert"
+              className="mb-3 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive"
             >
-              {t('tryLeavingAgain')}
-            </Button>
-          </div>
-        )}
-        <FormActions
-          isCreate={isCreate}
-          readOnly={!!props.readOnly}
-          onDelete={props.onDelete}
-          expenseTitle={props.expense?.title ?? props.draftExpense?.title}
-          cancelLink={props.cancelLink ?? expenseFormCancelLink(props.group.id)}
-          submitDisabled={persisted}
-        />
-      </form>
-    </Form>
+              <p>{t('savedButNotNavigated')}</p>
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-2"
+                disabled={retryingNav}
+                onClick={() => void tryLeavingAgain()}
+              >
+                {t('tryLeavingAgain')}
+              </Button>
+            </div>
+          )}
+          <FormActions
+            isCreate={isCreate}
+            readOnly={!!props.readOnly}
+            onDelete={props.onDelete}
+            expenseTitle={props.expense?.title ?? props.draftExpense?.title}
+            cancelLink={
+              props.cancelLink ?? expenseFormCancelLink(props.group.id)
+            }
+            submitDisabled={persisted}
+          />
+        </form>
+      </Form>
+    </ExpenseRecoveryUiContext.Provider>
   )
 }
 

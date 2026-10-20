@@ -4010,7 +4010,17 @@
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloudは更新を適用できませんでした。",
     "retry": "再試行",
-    "dismiss": "閉じる"
+    "dismiss": "閉じる",
+    "available": "アプリの更新があります",
+    "availableVersion": "バージョン {version} が利用できます",
+    "blocked": "更新を強くおすすめします。現在の作業を完了すると、自動的に更新されます。",
+    "countdown": "{seconds} 秒後に {version} に更新します。支出の下書きは復元されます。",
+    "updateNow": "今すぐ更新",
+    "updatedVersion": "{version} に更新しました。",
+    "draftRestored": "支出の下書きを復元しました。",
+    "restoring": "支出の下書きを復元しています…",
+    "recoveryFailed": "支出の下書きを保持できませんでした。作業内容を保護するため、更新を一時停止しています。",
+    "applying": "アプリの更新を適用しています…"
   },
   "Tools": {
     "title": "ツール",

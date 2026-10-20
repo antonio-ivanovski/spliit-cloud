@@ -4092,7 +4092,17 @@
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud không thể áp dụng bản cập nhật.",
     "retry": "Thử lại",
-    "dismiss": "Bỏ qua"
+    "dismiss": "Bỏ qua",
+    "available": "Có bản cập nhật ứng dụng",
+    "availableVersion": "Đã có phiên bản {version}",
+    "blocked": "Rất nên cập nhật ứng dụng. Hãy hoàn tất công việc hiện tại để ứng dụng tự động cập nhật.",
+    "countdown": "Sẽ cập nhật lên {version} sau {seconds} giây. Bản nháp chi phí sẽ được khôi phục.",
+    "updateNow": "Cập nhật ngay",
+    "updatedVersion": "Đã cập nhật lên {version}.",
+    "draftRestored": "Bản nháp chi phí đã được khôi phục.",
+    "restoring": "Đang khôi phục bản nháp chi phí…",
+    "recoveryFailed": "Không thể lưu giữ bản nháp chi phí. Quá trình cập nhật đã tạm dừng để bảo vệ nội dung đang làm.",
+    "applying": "Đang áp dụng bản cập nhật ứng dụng…"
   },
   "Tools": {
     "title": "Công cụ",

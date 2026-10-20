@@ -29,6 +29,7 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { useOnlineStatus } from '@/lib/use-online-status'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
@@ -69,6 +70,7 @@ export function WebhookSettings() {
   })
   const [form, setForm] = useState<FormState | null>(null)
   const [secret, setSecret] = useState<string | null>(null)
+  usePwaUpdateBlocker(secret !== null, 'webhook-secret')
   const [historyEndpoint, setHistoryEndpoint] = useState<Endpoint | null>(null)
 
   const refresh = () => utils.webhooks.list.invalidate()

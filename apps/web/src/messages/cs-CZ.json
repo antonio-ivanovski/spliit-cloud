@@ -4068,7 +4068,17 @@
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud nemohl použít aktualizaci.",
     "retry": "Zkusit znovu",
-    "dismiss": "Zavřít"
+    "dismiss": "Zavřít",
+    "available": "Je dostupná aktualizace aplikace",
+    "availableVersion": "Je dostupná verze {version}",
+    "blocked": "Aktualizaci důrazně doporučujeme. Dokončete rozpracovanou práci a aplikace se automaticky aktualizuje.",
+    "countdown": "Aktualizace na verzi {version} za {seconds} s. Rozpracovaný výdaj se obnoví.",
+    "updateNow": "Aktualizovat nyní",
+    "updatedVersion": "Aktualizováno na verzi {version}.",
+    "draftRestored": "Rozpracovaný výdaj byl obnoven.",
+    "restoring": "Obnovování rozpracovaného výdaje…",
+    "recoveryFailed": "Rozpracovaný výdaj se nepodařilo zachovat. Aktualizace je pozastavena, aby se vaše práce neztratila.",
+    "applying": "Probíhá aktualizace aplikace…"
   },
   "Tools": {
     "title": "Nástroje",

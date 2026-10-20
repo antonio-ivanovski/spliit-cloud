@@ -4096,7 +4096,17 @@
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud kon de update niet toepassen.",
     "retry": "Opnieuw proberen",
-    "dismiss": "Sluiten"
+    "dismiss": "Sluiten",
+    "available": "Er is een app-update beschikbaar",
+    "availableVersion": "Versie {version} is beschikbaar",
+    "blocked": "Bijwerken wordt sterk aanbevolen. Rond je huidige werk af om de app automatisch bij te werken.",
+    "countdown": "Over {seconds} s wordt versie {version} geïnstalleerd. Je conceptuitgave wordt hersteld.",
+    "updateNow": "Nu bijwerken",
+    "updatedVersion": "Bijgewerkt naar {version}.",
+    "draftRestored": "Je conceptuitgave is hersteld.",
+    "restoring": "Je conceptuitgave wordt hersteld…",
+    "recoveryFailed": "Je conceptuitgave kon niet worden bewaard. De update is gepauzeerd om je werk te beschermen.",
+    "applying": "App-update wordt toegepast…"
   },
   "Tools": {
     "title": "Hulpmiddelen",

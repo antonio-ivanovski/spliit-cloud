@@ -20,7 +20,7 @@ import { makePwaUpdateService, type PwaUpdateService } from './pwa-updates'
  * Constructs the page-scoped update/notification/install services with
  * production browser defaults and starts them through the page ManagedRuntime
  * (Promise conversion at the bootstrap boundary only). The returned stop
- * releases capture listeners, message ports, manager timers, and the hourly
+ * releases capture listeners, message ports, manager timers, and the periodic
  * check fiber — wired into page disposal in main.tsx alongside the runtime.
  *
  * Single ownership (no dual engines):
@@ -28,11 +28,8 @@ import { makePwaUpdateService, type PwaUpdateService } from './pwa-updates'
  * - Install capture lives ONLY in PwaInstallService (started here, before React
  *   renders). The install hook (use-install-prompt.ts) is a thin presentation
  *   binding over this bundle's install service — it owns no listeners.
- * - Update checks flow ONLY through the update service's checkNow gate (hourly
- *   while visible, foreground, reconnect, manual). The manager runs with its
- *   internal check subscription disabled (enableUpdateChecks:false) and keeps
- *   updatefound observation + coordinated activation, which is its job.
- *   registration.update is byte-compared and cheap either way.
+ * - Update checks flow only through the service gate; registration, waiting
+ *   workers, and coordinated activation belong to its page-scoped manager.
  *
  * Storage persistence stays on-demand (ensureOnce after verified use), not
  * started: post-auth flows call requestPwaPersistence() once the session
@@ -97,9 +94,6 @@ export function createPwaPageServices(deps: PwaPageDeps): PwaPageServices {
       run(updates.start)
       run(notifications.start)
       run(install.start)
-      // An explicit foreground check on boot; the manager reconciles waiting
-      // workers through its own subscription once created.
-      run(updates.checkNow('foreground'))
     },
     stop: () => {
       run(install.stop)

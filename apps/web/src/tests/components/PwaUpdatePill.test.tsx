@@ -32,6 +32,8 @@ function stubManager() {
         }
       },
       retry: vi.fn(),
+      checkForUpdate: vi.fn(async () => {}),
+      updateNow: vi.fn(),
       dismissFailure: vi.fn(),
       dispose: vi.fn(),
     } as unknown as PwaUpdateManager,
@@ -78,9 +80,9 @@ describe('PwaUpdatePill', () => {
     const { stub, user } = await renderPill()
     act(() => stub.setSnapshot({ status: 'failed', dismissed: false }))
 
-    expect(screen.getByRole('status')).toHaveTextContent(
-      "Spliit Cloud couldn't apply the update.",
-    )
+    expect(
+      screen.getByText("Spliit Cloud couldn't apply the update."),
+    ).toBeVisible()
     await user.click(screen.getByRole('button', { name: 'Retry' }))
     await user.click(screen.getByRole('button', { name: 'Dismiss' }))
     expect(stub.manager.retry).toHaveBeenCalledOnce()
@@ -93,5 +95,27 @@ describe('PwaUpdatePill', () => {
       dismissed: true,
     })
     expect(container).toBeEmptyDOMElement()
+  })
+  it('announces a blocked update version without offering an unsafe restart', async () => {
+    await renderPill({ status: 'blocked', version: 'v2.11.0' })
+    expect(screen.getByText('Version v2.11.0 is available')).toBeVisible()
+    expect(screen.getByText(/strongly recommended/)).toBeVisible()
+    expect(
+      screen.queryByRole('button', { name: 'Update now' }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('offers Update now during the countdown with no deferral action', async () => {
+    const { stub, user } = await renderPill({
+      status: 'countdown',
+      version: 'v2.11.0',
+      seconds: 5,
+    })
+    expect(screen.getByText(/in 5s/)).toBeVisible()
+    expect(
+      screen.queryByRole('button', { name: /later|dismiss/i }),
+    ).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Update now' }))
+    expect(stub.manager.updateNow).toHaveBeenCalledOnce()
   })
 })

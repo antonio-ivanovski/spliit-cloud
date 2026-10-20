@@ -4049,7 +4049,17 @@
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud n’a pas pu appliquer la mise à jour.",
     "retry": "Réessayer",
-    "dismiss": "Ignorer"
+    "dismiss": "Ignorer",
+    "available": "Une mise à jour de l’application est disponible",
+    "availableVersion": "La version {version} est disponible",
+    "blocked": "La mise à jour est vivement recommandée. Terminez votre travail en cours pour mettre l’application à jour automatiquement.",
+    "countdown": "Mise à jour vers {version} dans {seconds} s. Votre brouillon de dépense sera restauré.",
+    "updateNow": "Mettre à jour maintenant",
+    "updatedVersion": "Mise à jour vers {version} effectuée.",
+    "draftRestored": "Votre brouillon de dépense a été restauré.",
+    "restoring": "Restauration de votre brouillon de dépense…",
+    "recoveryFailed": "Votre brouillon de dépense n’a pas pu être conservé. La mise à jour est suspendue pour protéger votre travail.",
+    "applying": "Application de la mise à jour…"
   },
   "Tools": {
     "title": "Outils",

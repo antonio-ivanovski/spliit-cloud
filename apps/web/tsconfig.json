@@ -13,6 +13,8 @@
     "src/routeTree.gen.ts",
     "vite.config.ts",
     "playwright.config.ts",
+    "playwright.pwa.config.ts",
+    "pwa-e2e/**/*.ts",
     "e2e/**/*.ts"
   ]
 }

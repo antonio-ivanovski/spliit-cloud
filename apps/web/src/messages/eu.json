@@ -4047,7 +4047,17 @@
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud-ek ezin izan du eguneratzea aplikatu.",
     "retry": "Saiatu berriro",
-    "dismiss": "Baztertu"
+    "dismiss": "Baztertu",
+    "available": "Aplikazioaren eguneratze bat dago erabilgarri",
+    "availableVersion": "{version} bertsioa dago erabilgarri",
+    "blocked": "Biziki gomendatzen da eguneratzea. Amaitu egiten ari zarena automatikoki eguneratzeko.",
+    "countdown": "{version} bertsiora eguneratuko da {seconds} s barru. Gastuaren zirriborroa leheneratuko da.",
+    "updateNow": "Eguneratu orain",
+    "updatedVersion": "{version} bertsiora eguneratu da.",
+    "draftRestored": "Gastuaren zirriborroa leheneratu da.",
+    "restoring": "Gastuaren zirriborroa leheneratzen…",
+    "recoveryFailed": "Ezin izan da gastuaren zirriborroa gorde. Eguneratzea pausatu da zure lana babesteko.",
+    "applying": "Aplikazioaren eguneratzea aplikatzen…"
   },
   "Tools": {
     "title": "Tresnak",

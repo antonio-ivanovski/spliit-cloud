@@ -266,7 +266,7 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Install Playwright browser
-        run: bunx playwright install --with-deps chromium
+        run: bunx playwright install --with-deps chromium firefox
 
       - name: Generate Prisma client
         run: bun run --filter @spliit/db prisma-generate
@@ -305,6 +305,9 @@ jobs:
 
           # Playwright starts the web server itself (build + preview in CI).
           bun --filter @spliit/web test:e2e
+
+      - name: Run PWA update browser tests
+        run: bun --filter @spliit/web test:pwa
 
       - name: Upload Playwright report
         if: failure()

@@ -4094,7 +4094,17 @@
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud에서 업데이트를 적용할 수 없습니다.",
     "retry": "다시 시도",
-    "dismiss": "닫기"
+    "dismiss": "닫기",
+    "available": "앱 업데이트가 있어요",
+    "availableVersion": "{version} 버전을 사용할 수 있어요",
+    "blocked": "업데이트를 적극 권장해요. 현재 작업을 마치면 자동으로 업데이트돼요.",
+    "countdown": "{seconds}초 후 {version} 버전으로 업데이트돼요. 작성 중인 지출 내용은 복원돼요.",
+    "updateNow": "지금 업데이트",
+    "updatedVersion": "{version} 버전으로 업데이트했어요.",
+    "draftRestored": "작성 중이던 지출 내용을 복원했어요.",
+    "restoring": "작성 중이던 지출 내용을 복원하고 있어요…",
+    "recoveryFailed": "작성 중인 지출 내용을 보존하지 못했어요. 작업 내용을 보호하기 위해 업데이트를 일시 중지했어요.",
+    "applying": "앱 업데이트를 적용하고 있어요…"
   },
   "Tools": {
     "title": "도구",

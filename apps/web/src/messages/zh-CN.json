@@ -4010,7 +4010,17 @@
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud 无法应用更新。",
     "retry": "重试",
-    "dismiss": "关闭"
+    "dismiss": "关闭",
+    "available": "有可用的应用更新",
+    "availableVersion": "版本 {version} 已可用",
+    "blocked": "强烈建议更新。完成当前操作后，应用将自动更新。",
+    "countdown": "将在 {seconds} 秒后更新至 {version}。你的支出草稿将会恢复。",
+    "updateNow": "立即更新",
+    "updatedVersion": "已更新至 {version}。",
+    "draftRestored": "你的支出草稿已恢复。",
+    "restoring": "正在恢复你的支出草稿…",
+    "recoveryFailed": "无法保留你的支出草稿。为保护你的操作内容，更新已暂停。",
+    "applying": "正在应用更新…"
   },
   "Tools": {
     "title": "工具",

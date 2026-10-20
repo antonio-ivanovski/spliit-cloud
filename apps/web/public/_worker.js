@@ -502,6 +502,7 @@ function isSpaNavigation(request) {
   if (
     pathname.startsWith('/assets/') ||
     pathname.startsWith('/api/') ||
+    pathname === '/version.json' ||
     pathname === '/sw.js' ||
     pathname === '/registerSW.js' ||
     pathname === '/manifest.webmanifest'
