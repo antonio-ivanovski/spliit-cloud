@@ -1,12 +1,20 @@
 import { createHash, randomBytes } from 'node:crypto'
 
 import { makeSignature } from 'better-auth/crypto'
-import { createLocalJWKSet, jwtVerify } from 'jose'
+import {
+  createLocalJWKSet,
+  exportJWK,
+  generateKeyPair,
+  jwtVerify,
+  SignJWT,
+} from 'jose'
+import type { JWTPayload } from 'jose'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { prisma } from '@spliit/db'
 
 import { app } from '../app'
+import { auth } from '../lib/auth'
 import {
   listAuthorizedClients,
   revokeAuthorizedClient,
@@ -213,9 +221,9 @@ async function refreshAccessToken(opts: {
 }
 
 /**
- * Exercise the real Hono + tRPC bearer boundary without starting a server.
- * Token verification fetches the configured JWKS URL, so route that one
- * process-local request back through the same Hono app.
+ * Exercise the real Hono + tRPC bearer boundary without starting a server. The
+ * public JWKS URL is challenged by Cloudflare in production. Keep that failure
+ * in the fixture so authentication must load its own keys locally.
  */
 async function trpcOverHttp(
   pathWithQuery: string,
@@ -232,7 +240,13 @@ async function trpcOverHttp(
             ? input.href
             : input.url
       if (url === `${ISSUER}/jwks`) {
-        return app.request('/auth/jwks', requestInit)
+        return new Response('<html>Cloudflare challenge</html>', {
+          status: 403,
+          headers: {
+            'content-type': 'text/html; charset=UTF-8',
+            'cf-mitigated': 'challenge',
+          },
+        })
       }
       return originalFetch(input, requestInit)
     })
@@ -394,7 +408,7 @@ describe('OAuth authorization code + PKCE + refresh', () => {
     expect(apiResponse.status).toBe(200)
   })
 
-  it('defaults an omitted resource to the API through exchange and refresh', async () => {
+  it('defaults to the API through exchange and refresh when public JWKS is challenged', async () => {
     const clientId = await registerClient(`OAuth API default ${runId}`)
     const { verifier, challenge } = makePkce()
 
@@ -455,12 +469,145 @@ describe('OAuth authorization code + PKCE + refresh', () => {
       jwks,
       { issuer: ISSUER, audience: API_AUDIENCE },
     )
+    expect((await listGroupsOverHttp(refreshed.access_token)).status).toBe(200)
     expect(refreshedPayload.sub).toBe(fixtureAccountId)
     expect(
       Array.isArray(refreshedPayload.aud)
         ? refreshedPayload.aud
         : [refreshedPayload.aud],
     ).toContain(API_AUDIENCE)
+  })
+
+  it('caches local signing keys and reloads them for a newly rotated key', async () => {
+    const clientId = await registerClient(`OAuth key rotation ${runId}`)
+    const firstKey = await generateKeyPair('EdDSA')
+    const nextKey = await generateKeyPair('EdDSA')
+    const firstKid = `first-${runId}`
+    const nextKid = `next-${runId}`
+    const sign = (kid: string, key: CryptoKey) =>
+      new SignJWT({ azp: clientId, scope: 'spliit:groups:read' })
+        .setProtectedHeader({ alg: 'EdDSA', kid })
+        .setSubject(fixtureAccountId)
+        .setIssuer(ISSUER)
+        .setAudience(API_AUDIENCE)
+        .setIssuedAt()
+        .setExpirationTime('1h')
+        .sign(key)
+    const firstToken = await sign(firstKid, firstKey.privateKey)
+    const nextToken = await sign(nextKid, nextKey.privateKey)
+    const getJwks = vi.spyOn(auth.api, 'getJwks')
+    const warning = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    try {
+      getJwks.mockResolvedValue({
+        keys: [
+          {
+            ...(await exportJWK(firstKey.publicKey)),
+            alg: 'EdDSA',
+            kid: firstKid,
+          },
+        ],
+      })
+      expect((await listGroupsOverHttp(firstToken)).status).toBe(200)
+
+      // The cached key keeps working during a provider outage. An unknown kid
+      // must try to reload, fail closed, and emit only a safe diagnostic.
+      getJwks.mockRejectedValue(new Error('sensitive provider details'))
+      expect((await listGroupsOverHttp(firstToken)).status).toBe(200)
+      expect((await listGroupsOverHttp(nextToken)).status).toBe(401)
+      expect(warning.mock.calls).toEqual([['[oauth] local_jwks_load_failed']])
+
+      getJwks.mockResolvedValue({
+        keys: [
+          {
+            ...(await exportJWK(nextKey.publicKey)),
+            alg: 'EdDSA',
+            kid: nextKid,
+          },
+        ],
+      })
+      expect((await listGroupsOverHttp(nextToken)).status).toBe(200)
+
+      // Once the five-minute cache expires, even a known key must be loaded
+      // again. A provider outage must not extend trust in an expired cache.
+      getJwks.mockRejectedValue(new Error('sensitive provider details'))
+      const clock = vi.spyOn(Date, 'now').mockReturnValue(Date.now() + 300_001)
+      try {
+        expect((await listGroupsOverHttp(nextToken)).status).toBe(401)
+        expect(warning.mock.calls).toEqual([
+          ['[oauth] local_jwks_load_failed'],
+          ['[oauth] local_jwks_load_failed'],
+        ])
+      } finally {
+        clock.mockRestore()
+      }
+    } finally {
+      getJwks.mockRestore()
+      warning.mockRestore()
+    }
+  })
+
+  it('keeps JWT and bearer validation when loading signing keys locally', async () => {
+    const clientId = await registerClient(`OAuth JWT validation ${runId}`)
+    const key = await generateKeyPair('EdDSA')
+    const untrustedKey = await generateKeyPair('EdDSA')
+    const kid = `validation-${runId}`
+    const now = Math.floor(Date.now() / 1000)
+    const validClaims: JWTPayload = {
+      sub: fixtureAccountId,
+      azp: clientId,
+      iss: ISSUER,
+      aud: API_AUDIENCE,
+      iat: now,
+      exp: now + 3600,
+      scope: 'spliit:groups:read',
+    }
+    const sign = (claims: JWTPayload, signingKey = key.privateKey) =>
+      new SignJWT(claims)
+        .setProtectedHeader({ alg: 'EdDSA', kid })
+        .sign(signingKey)
+    const getJwks = vi.spyOn(auth.api, 'getJwks').mockResolvedValue({
+      keys: [
+        {
+          ...(await exportJWK(key.publicKey)),
+          alg: 'EdDSA',
+          kid,
+        },
+      ],
+    })
+    try {
+      expect((await listGroupsOverHttp(await sign(validClaims))).status).toBe(
+        200,
+      )
+      const rejected: Array<[string, JWTPayload, CryptoKey?]> = [
+        ['invalid signature', validClaims, untrustedKey.privateKey],
+        [
+          'wrong issuer',
+          { ...validClaims, iss: 'https://untrusted.example/auth' },
+        ],
+        [
+          'wrong audience',
+          { ...validClaims, aud: 'https://untrusted.example' },
+        ],
+        ['expired', { ...validClaims, exp: now - 60 }],
+        ['DPoP bound', { ...validClaims, cnf: { jkt: 'bound-key' } }],
+        [
+          'malformed scope',
+          { ...validClaims, scope: 'spliit:groups:read  openid' },
+        ],
+        ['non-string scope', { ...validClaims, scope: ['spliit:groups:read'] }],
+      ]
+      for (const [reason, claims, signingKey] of rejected) {
+        const response = await listGroupsOverHttp(
+          await sign(claims, signingKey),
+        )
+        expect(response.status, reason).toBe(401)
+        expect(response.headers.get('www-authenticate'), reason).toContain(
+          'invalid_token',
+        )
+      }
+    } finally {
+      getJwks.mockRestore()
+    }
   })
 
   it('completes the full flow and mints a verifiable MCP-audience token', async () => {

@@ -28,6 +28,8 @@ who is affected, and the exact migration steps.
 
 ### 🐛 Bug fixes
 
+- OAuth API access now works when Cloudflare challenges the server’s public signing-key endpoint, including after token refresh. Reported by @wi1k1n in [#161](https://github.com/antonio-ivanovski/spliit-cloud/issues/161) (`TBD` by @TBD)
+
 - Group viewing and invitation links keep their access tokens through sign-in, signup, profile setup, and recovery, including emailed callbacks opened on another device. Choosing “Sign in to accept” joins the group after setup; opening an invitation otherwise still asks for confirmation (`TBD` by @TBD)
 - Anonymous setup uses one stable profile and safeguard flow, avoiding lost display names and misleading “Downloads need updating” warnings. A late friends response no longer switches away from the invitation method you selected (`TBD` by @TBD)
 - Offline downloads resume reliably after connectivity interruptions even when a status or cross-tab notification fails (`TBD` by @TBD)

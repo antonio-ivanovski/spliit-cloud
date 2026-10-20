@@ -1,4 +1,4 @@
-import { oauthProviderResourceClient } from '@better-auth/oauth-provider/resource-client'
+import { getDpopJktFromPayload, verifyJwsAccessToken } from 'better-auth/oauth2'
 
 import { prisma } from '@spliit/db'
 
@@ -73,7 +73,19 @@ export async function getApplicationAuthFromRequest(
   return { auth }
 }
 
-const oauthResource = oauthProviderResourceClient().getActions()
+// Better Auth caches callback sources for five minutes and reloads on a kid
+// miss. Keep the key stable so requests share that cache across verifications.
+const jwksCacheKey = {}
+
+async function loadLocalJwks() {
+  try {
+    return await auth.api.getJwks()
+  } catch {
+    // Provider errors may contain sensitive details; log only a fixed category.
+    console.warn('[oauth] local_jwks_load_failed')
+    throw new Error('local_jwks_load_failed')
+  }
+}
 
 /**
  * Whether the verified JWT belongs to the pair's current authorization
@@ -143,7 +155,7 @@ export async function getOAuthAuthFromRequest(
   if (!accessToken) return null
 
   const issuer = `${getApiBaseUrl()}/auth`
-  const claims = await oauthResource.verifyBearerToken(accessToken, {
+  const claims = await verifyJwsAccessToken(accessToken, {
     verifyOptions: {
       // Verification accepts any audience this deployment issues tokens for,
       // because the assistant surface must keep authenticating MCP-audience
@@ -152,8 +164,20 @@ export async function getOAuthAuthFromRequest(
       audience: oauthAudiences(),
       issuer,
     },
-    jwksUrl: `${issuer}/jwks`,
+    jwksFetch: loadLocalJwks,
+    jwksCacheKey,
   })
+  // The JWS verifier checks signatures and registered JWT claims. Preserve the
+  // bearer verifier's additional guards when using its callback-based API.
+  if (getDpopJktFromPayload(claims)) return null
+  if (
+    claims.scope !== undefined &&
+    (typeof claims.scope !== 'string' ||
+      !/^[\x21\x23-\x5b\x5d-\x7e]+(?: [\x21\x23-\x5b\x5d-\x7e]+)*$/.test(
+        claims.scope,
+      ))
+  )
+    return null
   if (typeof claims.sub !== 'string') return null
   if (
     typeof claims.exp !== 'number' ||
