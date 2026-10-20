@@ -22,6 +22,8 @@ test.describe('magic link auth', () => {
     // New accounts land on complete-profile for the display name.
     await submitProfileName(page, name)
     await dismissUpdatesModal(page)
-    await expect(page.getByRole('button', { name: 'Anonymous' })).toBeHidden()
+    await expect(
+      page.getByRole('button', { name: 'Continue anonymously' }),
+    ).toBeHidden()
   })
 })

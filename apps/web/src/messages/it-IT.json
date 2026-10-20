@@ -1971,10 +1971,13 @@
     },
     "signInWithX": "Continua con X",
     "signInWithOidc": "Continua con {name}",
-    "signInAnonymously": "Anonimo",
+    "signInAnonymously": "Continua in modo anonimo",
     "lastUsed": "Ultimo utilizzo",
     "emailAuthDisabled": "L'accesso con email è disattivato. Usa il single sign-on (SSO).",
-    "signInWithPasskey": "Accedi con chiave di accesso"
+    "signInWithPasskey": "Accedi con chiave di accesso",
+    "getStartedTitle": "Inizia con Spliit Cloud",
+    "getStartedSubtitle": "Inizia senza registrarti oppure usa un account per accedere ai tuoi gruppi su tutti i dispositivi.",
+    "orUseAccount": "Oppure usa un account"
   },
   "CompleteProfile": {
     "title": "Completa il tuo profilo",

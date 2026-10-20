@@ -478,9 +478,9 @@ describe('AuthPanel', () => {
 
     render(<AuthPanel />)
 
-    expect(screen.getByRole('button', { name: /Anonymous/ })).toHaveTextContent(
-      'Last used',
-    )
+    expect(
+      screen.getByRole('button', { name: /Continue anonymously/ }),
+    ).toHaveTextContent('Last used')
   })
 
   it('shows no Last used badges without a stored method', () => {
@@ -551,7 +551,9 @@ describe('AuthPanel', () => {
     mockSignInAnonymous.mockResolvedValue({ data: {}, error: null })
     const { user } = render(<AuthPanel redirectTo="/groups" />)
 
-    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
+    await user.click(
+      screen.getByRole('button', { name: 'Continue anonymously' }),
+    )
 
     expect(screen.getByText('Create a new account')).toBeInTheDocument()
     expect(
@@ -582,7 +584,9 @@ describe('AuthPanel', () => {
     mockSignInAnonymous.mockResolvedValue({ data: {}, error: null })
     const { user } = render(<AuthPanel />)
 
-    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
+    await user.click(
+      screen.getByRole('button', { name: 'Continue anonymously' }),
+    )
     await user.click(
       screen.getByRole('button', { name: 'Create anonymous account' }),
     )
@@ -603,7 +607,9 @@ describe('AuthPanel', () => {
     mockDeploymentConfig.allowUninvitedSignup = true
     const { user } = render(<AuthPanel />)
 
-    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
+    await user.click(
+      screen.getByRole('button', { name: 'Continue anonymously' }),
+    )
 
     expect(
       screen.queryByRole('button', { name: 'Create anonymous account' }),
@@ -615,7 +621,9 @@ describe('AuthPanel', () => {
 
     const { user } = render(<AuthPanel />)
 
-    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
+    await user.click(
+      screen.getByRole('button', { name: 'Continue anonymously' }),
+    )
 
     expect(
       screen.getByText(/New anonymous accounts are not available here/i),
@@ -628,7 +636,7 @@ describe('AuthPanel', () => {
     ).not.toBeInTheDocument()
   })
 
-  it('renders Anonymous as the final sign-in button', () => {
+  it('offers anonymous access first and separates account sign-in methods', () => {
     mockDeploymentConfig.enableAnonymousAuth = true
     mockDeploymentConfig.enableTwitterOAuth = true
     mockDeploymentConfig.oidcProviders = [{ id: 'oidc', name: 'Company SSO' }]
@@ -638,16 +646,35 @@ describe('AuthPanel', () => {
     const methods = screen
       .getAllByRole('button')
       .filter((button) =>
-        ['Continue with X', 'Continue with Company SSO', 'Anonymous'].includes(
-          button.textContent ?? '',
-        ),
+        [
+          'Continue anonymously',
+          'Continue with X',
+          'Continue with Company SSO',
+        ].includes(button.textContent ?? ''),
       )
     expect(methods.map((button) => button.textContent)).toEqual([
+      'Continue anonymously',
       'Continue with X',
       'Continue with Company SSO',
-      'Anonymous',
     ])
-    expect(methods.at(-1)).toHaveClass('w-full', 'border-border/80')
+    expect(screen.getAllByRole('button')[0]).toBe(methods[0])
+    expect(screen.getByText('Or use an account')).toBeInTheDocument()
+    expect(
+      screen.getByText('Get started with Spliit Cloud'),
+    ).toBeInTheDocument()
+  })
+
+  it('uses one divider when email is the only account sign-in method', () => {
+    mockDeploymentConfig.enableAnonymousAuth = true
+    mockDeploymentConfig.enablePasskeyAuth = false
+
+    render(<AuthPanel />)
+
+    expect(screen.getByText('Or use an account')).toBeInTheDocument()
+    expect(
+      screen.queryByText(/or continue with email/i),
+    ).not.toBeInTheDocument()
+    expect(screen.getByRole('textbox', { name: 'Email' })).toBeInTheDocument()
   })
 
   it('offers creation first and a separate sign-in-link form below it', async () => {
@@ -656,7 +683,9 @@ describe('AuthPanel', () => {
     const savedKey = `spliit_anonymous_v1_${'a'.repeat(43)}`
     const { user } = render(<AuthPanel />)
 
-    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
+    await user.click(
+      screen.getByRole('button', { name: 'Continue anonymously' }),
+    )
     expect(
       screen.getByRole('button', { name: 'Create anonymous account' }),
     ).toBeInTheDocument()
@@ -683,7 +712,9 @@ describe('AuthPanel', () => {
     const savedKey = `spliit_anonymous_v1_${'a'.repeat(43)}`
     const { user } = render(<AuthPanel />)
 
-    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
+    await user.click(
+      screen.getByRole('button', { name: 'Continue anonymously' }),
+    )
     await user.type(
       screen.getByLabelText('Sign in link'),
       `https://app.example/auth/recover#code=${savedKey}`,
@@ -701,7 +732,9 @@ describe('AuthPanel', () => {
     mockDeploymentConfig.enableAnonymousAuth = true
     const { user } = render(<AuthPanel />)
 
-    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
+    await user.click(
+      screen.getByRole('button', { name: 'Continue anonymously' }),
+    )
     await user.type(screen.getByLabelText('Sign in link'), 'not a sign in link')
     await user.click(
       screen.getByRole('button', { name: 'Sign in to anonymous account' }),
@@ -733,7 +766,9 @@ describe('AuthPanel', () => {
     expect(
       screen.getByRole('button', { name: 'Continue with X' }),
     ).toBeDisabled()
-    expect(screen.getByRole('button', { name: 'Anonymous' })).toBeDisabled()
+    expect(
+      screen.getByRole('button', { name: 'Continue anonymously' }),
+    ).toBeDisabled()
     expect(
       screen.getByRole('button', { name: 'Send sign-in link' }),
     ).toBeDisabled()
@@ -860,7 +895,9 @@ describe('AuthPanel', () => {
     mockPasskeySupported.value = true
     mockSignInAnonymous.mockResolvedValue({ data: {}, error: null })
     const { user } = render(<AuthPanel redirectTo="/groups" />)
-    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
+    await user.click(
+      screen.getByRole('button', { name: 'Continue anonymously' }),
+    )
     await user.click(
       screen.getByRole('button', { name: 'Create anonymous account' }),
     )
@@ -878,7 +915,9 @@ describe('AuthPanel', () => {
     mockPasskeySupported.value = true
     const { user } = render(<AuthPanel redirectTo="/groups" />)
 
-    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
+    await user.click(
+      screen.getByRole('button', { name: 'Continue anonymously' }),
+    )
 
     expect(
       screen.getByText('Already have an anonymous account?'),
@@ -899,7 +938,9 @@ describe('AuthPanel', () => {
     mockSignInPasskey.mockResolvedValue({ data: {}, error: null })
     const { user } = render(<AuthPanel redirectTo="/groups" />)
 
-    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
+    await user.click(
+      screen.getByRole('button', { name: 'Continue anonymously' }),
+    )
     await user.click(
       screen.getByRole('button', { name: 'Sign in with passkey' }),
     )
@@ -920,7 +961,9 @@ describe('AuthPanel', () => {
     })
     const { user } = render(<AuthPanel redirectTo="/groups" />)
 
-    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
+    await user.click(
+      screen.getByRole('button', { name: 'Continue anonymously' }),
+    )
     await user.click(
       screen.getByRole('button', { name: 'Sign in with passkey' }),
     )
@@ -939,7 +982,9 @@ describe('AuthPanel', () => {
     })
     const { user } = render(<AuthPanel redirectTo="/groups" />)
 
-    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
+    await user.click(
+      screen.getByRole('button', { name: 'Continue anonymously' }),
+    )
     await user.click(
       screen.getByRole('button', { name: 'Sign in with passkey' }),
     )
@@ -956,7 +1001,9 @@ describe('AuthPanel', () => {
     mockPasskeySupported.value = false
     const { user } = render(<AuthPanel redirectTo="/groups" />)
 
-    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
+    await user.click(
+      screen.getByRole('button', { name: 'Continue anonymously' }),
+    )
 
     expect(
       screen.getByText('Already have an anonymous account?'),
@@ -981,7 +1028,7 @@ describe('AuthPanel', () => {
     render(<AuthPanel hideAnonymous />)
 
     expect(
-      screen.queryByRole('button', { name: /Anonymous/ }),
+      screen.queryByRole('button', { name: /Continue anonymously/ }),
     ).not.toBeInTheDocument()
   })
 })

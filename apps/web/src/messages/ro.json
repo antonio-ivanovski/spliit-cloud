@@ -1971,10 +1971,13 @@
     },
     "signInWithX": "Continuă cu X",
     "signInWithOidc": "Continuă cu {name}",
-    "signInAnonymously": "Anonim",
+    "signInAnonymously": "Continuă anonim",
     "lastUsed": "Ultima utilizare",
     "emailAuthDisabled": "Autentificarea prin e-mail este dezactivată. Folosește autentificarea unică (SSO).",
-    "signInWithPasskey": "Autentifică-te cu cheia de acces"
+    "signInWithPasskey": "Autentifică-te cu cheia de acces",
+    "getStartedTitle": "Începe cu Spliit Cloud",
+    "getStartedSubtitle": "Începe fără să te înregistrezi sau folosește un cont pentru a accesa grupurile tale de pe orice dispozitiv.",
+    "orUseAccount": "Sau folosește un cont"
   },
   "CompleteProfile": {
     "title": "Completează-ți profilul",

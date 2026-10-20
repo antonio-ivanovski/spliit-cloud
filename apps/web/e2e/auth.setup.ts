@@ -17,14 +17,16 @@ import { uniqueId } from './helpers/data'
  */
 setup('create anonymous guest state', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: 'Anonymous' }).click()
+  await page.getByRole('button', { name: 'Continue anonymously' }).click()
   await page.getByRole('button', { name: 'Create anonymous account' }).click()
 
   await submitProfileName(page, uniqueId('Guest'))
   await acknowledgeRecoveryLink(page)
 
   await expect(page).toHaveURL(/\/(\?.*)?$/)
-  await expect(page.getByRole('button', { name: 'Anonymous' })).toBeHidden()
+  await expect(
+    page.getByRole('button', { name: 'Continue anonymously' }),
+  ).toBeHidden()
   // Persist "viewed" for this account so journey specs never see the modal.
   await dismissUpdatesModal(page)
   // Prove persistence before snapshotting the shared state: reload, then read

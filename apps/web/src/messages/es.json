@@ -1992,10 +1992,13 @@
     },
     "signInWithX": "Continuar con X",
     "signInWithOidc": "Continuar con {name}",
-    "signInAnonymously": "Anónimo",
+    "signInAnonymously": "Continúa de forma anónima",
     "lastUsed": "Último uso",
     "emailAuthDisabled": "El inicio de sesión con correo electrónico está desactivado. Usa el inicio de sesión único (SSO).",
-    "signInWithPasskey": "Iniciar sesión con clave de acceso"
+    "signInWithPasskey": "Iniciar sesión con clave de acceso",
+    "getStartedTitle": "Empieza con Spliit Cloud",
+    "getStartedSubtitle": "Empieza sin registrarte o usa una cuenta para acceder a tus grupos desde cualquier dispositivo.",
+    "orUseAccount": "O usa una cuenta"
   },
   "CompleteProfile": {
     "title": "Completa tu perfil",

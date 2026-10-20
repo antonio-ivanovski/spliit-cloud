@@ -658,10 +658,13 @@
     },
     "signInWithX": "X کے ساتھ جاری رکھیں",
     "signInWithOidc": "{name} کے ساتھ جاری رکھیں",
-    "signInAnonymously": "گمنام",
+    "signInAnonymously": "گمنام طور پر جاری رکھیں",
     "lastUsed": "آخری استعمال",
     "emailAuthDisabled": "ای میل سے سائن اِن غیر فعال ہے۔ براہ کرم سنگل سائن آن (SSO) استعمال کریں۔",
-    "signInWithPasskey": "پاسکی سے سائن ان کریں"
+    "signInWithPasskey": "پاسکی سے سائن ان کریں",
+    "getStartedTitle": "Spliit Cloud استعمال کرنا شروع کریں",
+    "getStartedSubtitle": "رجسٹریشن کے بغیر شروع کریں، یا مختلف ڈیوائسز پر اپنے گروپس تک رسائی کے لیے اکاؤنٹ استعمال کریں۔",
+    "orUseAccount": "یا اکاؤنٹ استعمال کریں"
   },
   "Balances": {
     "title": "بیلنس",

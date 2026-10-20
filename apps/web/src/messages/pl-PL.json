@@ -1670,10 +1670,13 @@
     },
     "signInWithX": "Kontynuuj przez X",
     "signInWithOidc": "Kontynuuj przez {name}",
-    "signInAnonymously": "Anonimowy",
+    "signInAnonymously": "Kontynuuj anonimowo",
     "lastUsed": "Ostatnio używane",
     "emailAuthDisabled": "Logowanie przez e-mail jest wyłączone. Użyj logowania jednokrotnego (SSO).",
-    "signInWithPasskey": "Zaloguj się kluczem dostępu"
+    "signInWithPasskey": "Zaloguj się kluczem dostępu",
+    "getStartedTitle": "Zacznij korzystać ze Spliit Cloud",
+    "getStartedSubtitle": "Zacznij bez rejestracji lub użyj konta, aby uzyskać dostęp do swoich grup na różnych urządzeniach.",
+    "orUseAccount": "Lub użyj konta"
   },
   "CompleteProfile": {
     "title": "Uzupełnij swój profil",

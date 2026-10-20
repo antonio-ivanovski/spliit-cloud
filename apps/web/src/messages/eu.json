@@ -1970,10 +1970,13 @@
     },
     "signInWithX": "Jarraitu X-ekin",
     "signInWithOidc": "Jarraitu {name}-rekin",
-    "signInAnonymously": "Anonimoa",
+    "signInAnonymously": "Jarraitu anonimoki",
     "lastUsed": "Azken erabilera",
     "emailAuthDisabled": "Posta elektronikoaren bidezko saioa hasteko aukera desgaituta dago. Erabili saio-hasiera bakarra (SSO).",
-    "signInWithPasskey": "Hasi saioa passkeyarekin"
+    "signInWithPasskey": "Hasi saioa passkeyarekin",
+    "getStartedTitle": "Hasi Spliit Cloud erabiltzen",
+    "getStartedSubtitle": "Hasi izena eman gabe, edo erabili kontu bat zure taldeetara edozein gailutatik sartzeko.",
+    "orUseAccount": "Edo erabili kontu bat"
   },
   "CompleteProfile": {
     "title": "Osatu zure profila",

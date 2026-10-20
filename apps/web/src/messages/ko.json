@@ -1990,10 +1990,13 @@
     },
     "signInWithX": "X로 계속하기",
     "signInWithOidc": "{name}(으)로 계속하기",
-    "signInAnonymously": "익명",
+    "signInAnonymously": "익명으로 계속하기",
     "lastUsed": "최근 사용",
     "emailAuthDisabled": "이메일 로그인이 비활성화되어 있습니다. 싱글 사인온(SSO)을 사용하세요.",
-    "signInWithPasskey": "패스키로 로그인"
+    "signInWithPasskey": "패스키로 로그인",
+    "getStartedTitle": "Spliit Cloud 시작하기",
+    "getStartedSubtitle": "가입 없이 시작하거나 계정을 사용해 여러 기기에서 내 그룹에 접근하세요.",
+    "orUseAccount": "또는 계정 사용"
   },
   "CompleteProfile": {
     "title": "프로필 완성하기",

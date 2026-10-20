@@ -1963,10 +1963,13 @@
     },
     "signInWithX": "Jatka X:llä",
     "signInWithOidc": "Jatka: {name}",
-    "signInAnonymously": "Nimetön",
+    "signInAnonymously": "Jatka nimettömänä",
     "lastUsed": "Viimeksi käytetty",
     "emailAuthDisabled": "Sähköpostilla kirjautuminen on poistettu käytöstä. Käytä kertakirjautumista (SSO).",
-    "signInWithPasskey": "Kirjaudu pääsyavaimella"
+    "signInWithPasskey": "Kirjaudu pääsyavaimella",
+    "getStartedTitle": "Aloita Spliit Cloudin käyttö",
+    "getStartedSubtitle": "Aloita rekisteröitymättä tai käytä tiliä päästäksesi ryhmiisi eri laitteilla.",
+    "orUseAccount": "Tai käytä tiliä"
   },
   "CompleteProfile": {
     "title": "Täydennä profiilisi",

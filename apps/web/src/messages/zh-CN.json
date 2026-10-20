@@ -1956,10 +1956,13 @@
     },
     "signInWithX": "使用 X 继续",
     "signInWithOidc": "使用 {name} 继续",
-    "signInAnonymously": "匿名",
+    "signInAnonymously": "匿名继续",
     "lastUsed": "上次使用",
     "emailAuthDisabled": "已停用邮箱登录。请使用单点登录（SSO）。",
-    "signInWithPasskey": "使用通行密钥登录"
+    "signInWithPasskey": "使用通行密钥登录",
+    "getStartedTitle": "开始使用 Spliit Cloud",
+    "getStartedSubtitle": "无需注册即可开始使用，也可以使用账户在不同设备上访问你的群组。",
+    "orUseAccount": "或使用账户"
   },
   "CompleteProfile": {
     "title": "完善您的个人资料",

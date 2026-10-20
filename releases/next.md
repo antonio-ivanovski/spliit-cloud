@@ -28,6 +28,8 @@ who is affected, and the exact migration steps.
 
 ### 🐛 Bug fixes
 
+- Anonymous access is now the first option, with clearer getting-started wording and branded social sign-in buttons. Reported by @sepulzera in [#162](https://github.com/antonio-ivanovski/spliit-cloud/issues/162) (`TBD` by @antonio-ivanovski)
+
 - OAuth API access now works when Cloudflare challenges the server’s public signing-key endpoint, including after token refresh. Reported by @wi1k1n in [#161](https://github.com/antonio-ivanovski/spliit-cloud/issues/161) (`TBD` by @TBD)
 
 - Group viewing and invitation links keep their access tokens through sign-in, signup, profile setup, and recovery, including emailed callbacks opened on another device. Choosing “Sign in to accept” joins the group after setup; opening an invitation otherwise still asks for confirmation (`TBD` by @TBD)

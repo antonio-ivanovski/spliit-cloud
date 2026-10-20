@@ -29,18 +29,24 @@ test.describe('password auth', () => {
     // for the display name (email accounts skip the recovery safeguard).
     await submitProfileName(page, name)
     await dismissUpdatesModal(page)
-    await expect(page.getByRole('button', { name: 'Anonymous' })).toBeHidden()
+    await expect(
+      page.getByRole('button', { name: 'Continue anonymously' }),
+    ).toBeHidden()
 
     // Sign out, then back in with the password.
     await page.getByRole('button', { name: 'Account' }).click()
     await page.getByRole('menuitem', { name: 'Sign out' }).click()
-    await expect(page.getByRole('button', { name: 'Anonymous' })).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: 'Continue anonymously' }),
+    ).toBeVisible()
 
     await page.getByRole('tab', { name: 'Password' }).click()
     await page.getByLabel('Email').fill(email)
     await page.getByLabel('Password', { exact: true }).fill(TEST_PASSWORD)
     await page.getByRole('button', { name: 'Sign in with password' }).click()
     await expect(page).toHaveURL(/\/(\?.*)?$/)
-    await expect(page.getByRole('button', { name: 'Anonymous' })).toBeHidden()
+    await expect(
+      page.getByRole('button', { name: 'Continue anonymously' }),
+    ).toBeHidden()
   })
 })

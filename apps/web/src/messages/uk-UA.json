@@ -1670,10 +1670,13 @@
     },
     "signInWithX": "Продовжити через X",
     "signInWithOidc": "Продовжити через {name}",
-    "signInAnonymously": "Анонім",
+    "signInAnonymously": "Продовжити анонімно",
     "lastUsed": "Востаннє використано",
     "emailAuthDisabled": "Вхід з email вимкнено. Скористайтеся єдиним входом (SSO).",
-    "signInWithPasskey": "Увійти з ключем доступу"
+    "signInWithPasskey": "Увійти з ключем доступу",
+    "getStartedTitle": "Почати роботу зі Spliit Cloud",
+    "getStartedSubtitle": "Почніть без реєстрації або використовуйте обліковий запис для доступу до своїх груп на різних пристроях.",
+    "orUseAccount": "Або використовуйте обліковий запис"
   },
   "CompleteProfile": {
     "title": "Заповніть свій профіль",

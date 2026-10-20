@@ -654,10 +654,13 @@
     },
     "signInWithX": "Fortsätt med X",
     "signInWithOidc": "Fortsätt med {name}",
-    "signInAnonymously": "Anonym",
+    "signInAnonymously": "Fortsätt anonymt",
     "lastUsed": "Senast använt",
     "emailAuthDisabled": "Inloggning med e-post är inaktiverad. Använd enkel inloggning (SSO).",
-    "signInWithPasskey": "Logga in med passnyckel"
+    "signInWithPasskey": "Logga in med passnyckel",
+    "getStartedTitle": "Kom igång med Spliit Cloud",
+    "getStartedSubtitle": "Börja utan att registrera dig eller använd ett konto för att komma åt dina grupper på flera enheter.",
+    "orUseAccount": "Eller använd ett konto"
   },
   "Balances": {
     "title": "Balanser",

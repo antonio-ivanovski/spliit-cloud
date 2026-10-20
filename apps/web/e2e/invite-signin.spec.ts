@@ -99,7 +99,7 @@ test('passkey sign-in carries explicit acceptance after a preview', async ({
       },
     })
     await page.goto('/')
-    await page.getByRole('button', { name: 'Anonymous' }).click()
+    await page.getByRole('button', { name: 'Continue anonymously' }).click()
     await page.getByRole('button', { name: 'Create anonymous account' }).click()
     await submitProfileName(page, uniqueId('Passkey guest'))
     await page.getByRole('radio', { name: /passkey/i }).click()

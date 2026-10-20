@@ -12,9 +12,11 @@ type Mode = 'sign-in' | 'sign-up'
 
 export function AuthCard({
   mode,
+  anonymousEnabled = false,
   children,
 }: {
   mode: Mode
+  anonymousEnabled?: boolean
   children: React.ReactNode
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
@@ -22,10 +24,14 @@ export function AuthCard({
     <Card className="w-full border-border/80 shadow-xs" data-auth-panel="">
       <CardHeader className="space-y-2 text-center">
         <CardTitle className="text-2xl">
-          {mode === 'sign-in' ? t('title') : t('signUpTitle')}
+          {mode === 'sign-in'
+            ? t(anonymousEnabled ? 'getStartedTitle' : 'title')
+            : t('signUpTitle')}
         </CardTitle>
         <CardDescription>
-          {mode === 'sign-in' ? t('subtitle') : t('signUpSubtitle')}
+          {mode === 'sign-in'
+            ? t(anonymousEnabled ? 'getStartedSubtitle' : 'subtitle')
+            : t('signUpSubtitle')}
         </CardDescription>
       </CardHeader>
       <CardContent className="pb-4 sm:pb-6">{children}</CardContent>

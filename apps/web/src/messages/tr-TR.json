@@ -1654,10 +1654,13 @@
     },
     "signInWithX": "X ile devam et",
     "signInWithOidc": "{name} ile devam et",
-    "signInAnonymously": "Anonim",
+    "signInAnonymously": "Anonim olarak devam et",
     "lastUsed": "Son kullanılan",
     "emailAuthDisabled": "E-posta ile oturum açma devre dışı. Lütfen tek oturum açma (SSO) kullanın.",
-    "signInWithPasskey": "Geçiş anahtarıyla oturum aç"
+    "signInWithPasskey": "Geçiş anahtarıyla oturum aç",
+    "getStartedTitle": "Spliit Cloud kullanmaya başlayın",
+    "getStartedSubtitle": "Kaydolmadan başlayın veya gruplarınıza farklı cihazlardan erişmek için bir hesap kullanın.",
+    "orUseAccount": "Veya bir hesap kullanın"
   },
   "CompleteProfile": {
     "title": "Profilinizi tamamlayın",

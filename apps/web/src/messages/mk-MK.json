@@ -805,10 +805,13 @@
     },
     "signInWithX": "Продолжи со X",
     "signInWithOidc": "Продолжи со {name}",
-    "signInAnonymously": "Анонимни",
+    "signInAnonymously": "Продолжете анонимно",
     "lastUsed": "Последно користено",
     "emailAuthDisabled": "Пријавувањето со е-пошта е оневозможено. Користете единечно најавување (SSO).",
-    "signInWithPasskey": "Најавете се со клуч за пристап"
+    "signInWithPasskey": "Најавете се со клуч за пристап",
+    "getStartedTitle": "Започнете со Spliit Cloud",
+    "getStartedSubtitle": "Започнете без регистрација или користете профил за пристап до вашите групи на сите уреди.",
+    "orUseAccount": "Или користете профил"
   },
   "AccountSettings": {
     "title": "Поставки на профил",

@@ -75,7 +75,7 @@ test('anonymous signup preserves invite proof until joining, then removes it wit
     await page.goto(inviteUrl)
     await page.getByRole('button', { name: 'Sign in to accept' }).click()
     expect(new URL(page.url()).searchParams.getAll('invite')).toEqual([token])
-    await page.getByRole('button', { name: 'Anonymous' }).click()
+    await page.getByRole('button', { name: 'Continue anonymously' }).click()
     await page.getByRole('button', { name: 'Create anonymous account' }).click()
     await submitProfileName(page, uniqueId('Guest'))
     const recoveryLink = await page.locator('input[readonly]').inputValue()
@@ -111,7 +111,7 @@ test('anonymous signup preserves invite proof until joining, then removes it wit
     await signOutAccount(page, true)
     await page.goto(recoveryInvite.inviteUrl)
     await page.getByRole('button', { name: 'Sign in to accept' }).click()
-    await page.getByRole('button', { name: 'Anonymous' }).click()
+    await page.getByRole('button', { name: 'Continue anonymously' }).click()
     await page.getByLabel('Sign in link', { exact: true }).fill(recoveryLink)
     await page
       .getByRole('button', { name: 'Sign in to anonymous account' })

@@ -1971,10 +1971,13 @@
     },
     "signInWithX": "המשך עם X",
     "signInWithOidc": "המשך עם {name}",
-    "signInAnonymously": "אנונימי",
+    "signInAnonymously": "המשך באופן אנונימי",
     "lastUsed": "שימוש אחרון",
     "emailAuthDisabled": "התחברות עם דוא\"ל מושבתת. יש להשתמש בהתחברות מאוחדת (SSO).",
-    "signInWithPasskey": "התחבר עם מפתח גישה"
+    "signInWithPasskey": "התחבר עם מפתח גישה",
+    "getStartedTitle": "מתחילים עם Spliit Cloud",
+    "getStartedSubtitle": "אפשר להתחיל ללא הרשמה, או להשתמש בחשבון כדי לגשת לקבוצות שלך ממכשירים שונים.",
+    "orUseAccount": "או להשתמש בחשבון"
   },
   "CompleteProfile": {
     "title": "השלם את הפרופיל שלך",

@@ -1670,10 +1670,13 @@
     },
     "signInWithX": "Продолжить через X",
     "signInWithOidc": "Продолжить через {name}",
-    "signInAnonymously": "Аноним",
+    "signInAnonymously": "Продолжить анонимно",
     "lastUsed": "Последний раз",
     "emailAuthDisabled": "Вход с помощью email отключён. Используйте единый вход (SSO).",
-    "signInWithPasskey": "Войти с ключом доступа"
+    "signInWithPasskey": "Войти с ключом доступа",
+    "getStartedTitle": "Начать работу со Spliit Cloud",
+    "getStartedSubtitle": "Начните без регистрации или используйте аккаунт для доступа к своим группам на разных устройствах.",
+    "orUseAccount": "Или используйте аккаунт"
   },
   "CompleteProfile": {
     "title": "Заполните профиль",

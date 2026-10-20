@@ -658,10 +658,13 @@
     },
     "signInWithX": "X से जारी रखें",
     "signInWithOidc": "{name} से जारी रखें",
-    "signInAnonymously": "अनाम",
+    "signInAnonymously": "गुमनाम रूप से जारी रखें",
     "lastUsed": "पिछला इस्तेमाल",
     "emailAuthDisabled": "ईमेल से साइन-इन बंद है। कृपया सिंगल साइन-ऑन (SSO) का उपयोग करें।",
-    "signInWithPasskey": "पैसकी से साइन इन करें"
+    "signInWithPasskey": "पैसकी से साइन इन करें",
+    "getStartedTitle": "Spliit Cloud का उपयोग शुरू करें",
+    "getStartedSubtitle": "बिना पंजीकरण के शुरू करें या अलग-अलग डिवाइस पर अपने समूहों तक पहुँचने के लिए खाते का उपयोग करें।",
+    "orUseAccount": "या खाते का उपयोग करें"
   },
   "Balances": {
     "title": "शेष राशि",

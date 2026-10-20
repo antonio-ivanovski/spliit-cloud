@@ -3318,10 +3318,13 @@
     },
     "signInWithX": "تسجيل الدخول عبر X",
     "signInWithOidc": "تسجيل الدخول عبر {name}",
-    "signInAnonymously": "مجهول",
+    "signInAnonymously": "المتابعة بشكل مجهول",
     "lastUsed": "آخر استخدام",
     "emailAuthDisabled": "تسجيل الدخول بالبريد الإلكتروني معطّل. يُرجى استخدام تسجيل الدخول الموحّد (SSO).",
-    "signInWithPasskey": "تسجيل الدخول بمفتاح المرور"
+    "signInWithPasskey": "تسجيل الدخول بمفتاح المرور",
+    "getStartedTitle": "ابدأ مع Spliit Cloud",
+    "getStartedSubtitle": "ابدأ دون تسجيل، أو استخدم حسابًا للوصول إلى مجموعاتك عبر أجهزتك.",
+    "orUseAccount": "أو استخدم حسابًا"
   },
   "Footer": {
     "privacy": "الخصوصية",

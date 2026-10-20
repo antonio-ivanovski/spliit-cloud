@@ -1991,10 +1991,13 @@
     },
     "signInWithX": "Doorgaan met X",
     "signInWithOidc": "Doorgaan met {name}",
-    "signInAnonymously": "Anoniem",
+    "signInAnonymously": "Anoniem doorgaan",
     "lastUsed": "Laatst gebruikt",
     "emailAuthDisabled": "Inloggen met e-mail is uitgeschakeld. Gebruik single sign-on (SSO).",
-    "signInWithPasskey": "Inloggen met passkey"
+    "signInWithPasskey": "Inloggen met passkey",
+    "getStartedTitle": "Aan de slag met Spliit Cloud",
+    "getStartedSubtitle": "Begin zonder je te registreren of gebruik een account om je groepen op al je apparaten te openen.",
+    "orUseAccount": "Of gebruik een account"
   },
   "CompleteProfile": {
     "title": "Voltooi je profiel",

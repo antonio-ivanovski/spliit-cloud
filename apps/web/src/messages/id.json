@@ -1956,10 +1956,13 @@
     },
     "signInWithX": "Lanjutkan dengan X",
     "signInWithOidc": "Lanjutkan dengan {name}",
-    "signInAnonymously": "Anonim",
+    "signInAnonymously": "Lanjutkan secara anonim",
     "lastUsed": "Terakhir digunakan",
     "emailAuthDisabled": "Masuk dengan email dinonaktifkan di instans ini. Gunakan single sign-on (SSO).",
-    "signInWithPasskey": "Masuk dengan passkey"
+    "signInWithPasskey": "Masuk dengan passkey",
+    "getStartedTitle": "Mulai menggunakan Spliit Cloud",
+    "getStartedSubtitle": "Mulai tanpa mendaftar, atau gunakan akun untuk mengakses grup Anda di berbagai perangkat.",
+    "orUseAccount": "Atau gunakan akun"
   },
   "CompleteProfile": {
     "title": "Lengkapi profil Anda",

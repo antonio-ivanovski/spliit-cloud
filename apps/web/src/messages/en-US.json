@@ -911,10 +911,13 @@
     },
     "signInWithX": "Continue with X",
     "signInWithOidc": "Continue with {name}",
-    "signInAnonymously": "Anonymous",
+    "signInAnonymously": "Continue anonymously",
     "lastUsed": "Last used",
     "emailAuthDisabled": "Sign-in with email is disabled. Please use single sign-on.",
-    "signInWithPasskey": "Sign in with passkey"
+    "signInWithPasskey": "Sign in with passkey",
+    "getStartedTitle": "Get started with Spliit Cloud",
+    "getStartedSubtitle": "Start without signing up, or use an account to access your groups across devices.",
+    "orUseAccount": "Or use an account"
   },
   "AccountSettings": {
     "title": "Account settings",

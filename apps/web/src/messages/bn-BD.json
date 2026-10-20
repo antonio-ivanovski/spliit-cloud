@@ -662,10 +662,13 @@
     },
     "signInWithX": "X দিয়ে চালিয়ে যান",
     "signInWithOidc": "{name} দিয়ে চালিয়ে যান",
-    "signInAnonymously": "বেনামী",
+    "signInAnonymously": "বেনামে চালিয়ে যান",
     "lastUsed": "সর্বশেষ ব্যবহৃত",
     "emailAuthDisabled": "ইমেল দিয়ে সাইন-ইন নিষ্ক্রিয় আছে। অনুগ্রহ করে সিঙ্গল সাইন-অন (SSO) ব্যবহার করুন।",
-    "signInWithPasskey": "পাসকি দিয়ে সাইন ইন করুন"
+    "signInWithPasskey": "পাসকি দিয়ে সাইন ইন করুন",
+    "getStartedTitle": "Spliit Cloud ব্যবহার শুরু করুন",
+    "getStartedSubtitle": "নিবন্ধন ছাড়াই শুরু করুন, অথবা বিভিন্ন ডিভাইসে আপনার গ্রুপে প্রবেশ করতে একটি অ্যাকাউন্ট ব্যবহার করুন।",
+    "orUseAccount": "অথবা একটি অ্যাকাউন্ট ব্যবহার করুন"
   },
   "Balances": {
     "title": "ব্যালেন্স",

@@ -1991,10 +1991,13 @@
     },
     "signInWithX": "Weiter mit X",
     "signInWithOidc": "Weiter mit {name}",
-    "signInAnonymously": "Anonym",
+    "signInAnonymously": "Anonym fortfahren",
     "lastUsed": "Zuletzt verwendet",
     "emailAuthDisabled": "Die Anmeldung per E-Mail ist deaktiviert. Bitte nutze Single Sign-on (SSO).",
-    "signInWithPasskey": "Mit Passkey anmelden"
+    "signInWithPasskey": "Mit Passkey anmelden",
+    "getStartedTitle": "Starte mit Spliit Cloud",
+    "getStartedSubtitle": "Starte ohne Registrierung oder verwende ein Konto, um geräteübergreifend auf deine Gruppen zuzugreifen.",
+    "orUseAccount": "Oder verwende ein Konto"
   },
   "CompleteProfile": {
     "title": "Profil vervollständigen",

@@ -1956,10 +1956,13 @@
     },
     "signInWithX": "Xで続ける",
     "signInWithOidc": "{name}で続ける",
-    "signInAnonymously": "匿名",
+    "signInAnonymously": "匿名で続ける",
     "lastUsed": "前回使用",
     "emailAuthDisabled": "メールでのサインインは無効です。シングルサインオンをご利用ください。",
-    "signInWithPasskey": "パスキーでサインイン"
+    "signInWithPasskey": "パスキーでサインイン",
+    "getStartedTitle": "Spliit Cloudを始める",
+    "getStartedSubtitle": "登録せずに始めることも、アカウントを使って複数のデバイスからグループにアクセスすることもできます。",
+    "orUseAccount": "またはアカウントを使用"
   },
   "CompleteProfile": {
     "title": "プロフィールを完成",

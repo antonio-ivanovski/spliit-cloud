@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { HatGlasses } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
@@ -54,6 +55,7 @@ export function AuthPanel({
     githubEnabled,
     twitterEnabled,
     oidcProviders,
+    socialEnabled,
     anonymousEnabled,
     emailAuthEnabled,
     passkeyEnabled,
@@ -117,12 +119,43 @@ export function AuthPanel({
     return embedded ? (
       <div data-auth-panel="">{success}</div>
     ) : (
-      <AuthCard mode={mode}>{success}</AuthCard>
+      <AuthCard
+        mode={mode}
+        anonymousEnabled={anonymousEnabled && !hideAnonymous}
+      >
+        {success}
+      </AuthCard>
     )
   }
 
   const content = (
     <div className="flex flex-col gap-5">
+      {!hideAnonymous && (
+        <>
+          <Button
+            type="button"
+            variant={anonymousEnabled ? 'default' : 'outline'}
+            className="w-full justify-center"
+            onClick={() => setAnonymousDialogOpen(true)}
+            disabled={!isOnline || emailAuth.isPending || magicLink.isPending}
+          >
+            <HatGlasses className="me-2 h-4 w-4" />
+            {t('signInAnonymously')}
+            {lastLoginMethod === 'anonymous' && (
+              <Badge variant="secondary" className="ms-2">
+                {t('lastUsed')}
+              </Badge>
+            )}
+          </Button>
+          {(passkeyEnabled || socialEnabled || emailAuthEnabled) && (
+            <div className="flex items-center gap-3 text-xs text-muted-foreground uppercase">
+              <div className="h-px flex-1 bg-border" />
+              <span>{t('orUseAccount')}</span>
+              <div className="h-px flex-1 bg-border" />
+            </div>
+          )}
+        </>
+      )}
       <SocialButtons
         googleEnabled={googleEnabled}
         githubEnabled={githubEnabled}
@@ -131,14 +164,12 @@ export function AuthPanel({
         passkeyEnabled={passkeyEnabled}
         passkeyPending={passkeyAuth.isPending}
         disabled={!isOnline || emailAuth.isPending || magicLink.isPending}
-        hideAnonymous={hideAnonymous}
         lastUsedMethod={lastLoginMethod}
         onGoogle={handleGoogle}
         onGithub={handleGithub}
         onTwitter={handleTwitter}
         onOidc={handleOidc}
         onPasskey={handlePasskeySignIn}
-        onAnonymous={() => setAnonymousDialogOpen(true)}
       />
       {passkeyAuth.isError ? (
         <p className="text-center text-sm text-destructive" role="alert">
@@ -159,11 +190,13 @@ export function AuthPanel({
         </>
       ) : (
         <>
-          <div className="flex items-center gap-3 text-xs text-muted-foreground uppercase">
-            <div className="h-px flex-1 bg-border" />
-            <span>{t('orContinueWithEmail')}</span>
-            <div className="h-px flex-1 bg-border" />
-          </div>
+          {(passkeyEnabled || socialEnabled) && (
+            <div className="flex items-center gap-3 text-xs text-muted-foreground uppercase">
+              <div className="h-px flex-1 bg-border" />
+              <span>{t('orContinueWithEmail')}</span>
+              <div className="h-px flex-1 bg-border" />
+            </div>
+          )}
 
           <section className="rounded-lg bg-muted/20 p-3">
             <Tabs
@@ -269,7 +302,9 @@ export function AuthPanel({
   const panel = embedded ? (
     <div data-auth-panel="">{content}</div>
   ) : (
-    <AuthCard mode={mode}>{content}</AuthCard>
+    <AuthCard mode={mode} anonymousEnabled={anonymousEnabled && !hideAnonymous}>
+      {content}
+    </AuthCard>
   )
 
   return (

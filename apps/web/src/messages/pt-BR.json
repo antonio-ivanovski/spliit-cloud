@@ -964,10 +964,13 @@
       "message": "Os cadastros são apenas por convite. Use um link de convite ou peça a alguém que te convide para um grupo.",
       "useInvitedEmail": "Use o endereço de e-mail com o qual você recebeu o convite."
     },
-    "signInAnonymously": "Anônimo",
+    "signInAnonymously": "Continuar de forma anônima",
     "lastUsed": "Último uso",
     "emailAuthDisabled": "O login com email está desativado. Use o login único (SSO).",
-    "signInWithPasskey": "Entrar com chave de acesso"
+    "signInWithPasskey": "Entrar com chave de acesso",
+    "getStartedTitle": "Comece a usar o Spliit Cloud",
+    "getStartedSubtitle": "Comece sem se cadastrar ou use uma conta para acessar seus grupos em todos os dispositivos.",
+    "orUseAccount": "Ou use uma conta"
   },
   "CompleteProfile": {
     "title": "Complete seu perfil",

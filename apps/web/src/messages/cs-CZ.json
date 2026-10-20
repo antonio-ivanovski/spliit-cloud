@@ -1670,10 +1670,13 @@
     },
     "signInWithX": "Pokračovat přes X",
     "signInWithOidc": "Pokračovat přes {name}",
-    "signInAnonymously": "Anonymní",
+    "signInAnonymously": "Pokračovat anonymně",
     "lastUsed": "Naposledy použito",
     "emailAuthDisabled": "Přihlášení e-mailem je zakázáno. Použijte jednotné přihlášení (SSO).",
-    "signInWithPasskey": "Přihlásit se pomocí přístupového klíče"
+    "signInWithPasskey": "Přihlásit se pomocí přístupového klíče",
+    "getStartedTitle": "Začněte se Spliit Cloud",
+    "getStartedSubtitle": "Začněte bez registrace nebo použijte účet pro přístup ke svým skupinám na různých zařízeních.",
+    "orUseAccount": "Nebo použijte účet"
   },
   "CompleteProfile": {
     "title": "Dokončete svůj profil",

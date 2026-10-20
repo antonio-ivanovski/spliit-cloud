@@ -1971,10 +1971,13 @@
     },
     "signInWithX": "Continua amb X",
     "signInWithOidc": "Continua amb {name}",
-    "signInAnonymously": "Anònim",
+    "signInAnonymously": "Continua anònimament",
     "lastUsed": "Darrer ús",
     "emailAuthDisabled": "L'inici de sessió amb correu electrònic està desactivat. Utilitza l'inici de sessió únic (SSO).",
-    "signInWithPasskey": "Inicia sessió amb clau d'accés"
+    "signInWithPasskey": "Inicia sessió amb clau d'accés",
+    "getStartedTitle": "Comença amb Spliit Cloud",
+    "getStartedSubtitle": "Comença sense registrar-te o utilitza un compte per accedir als teus grups des de qualsevol dispositiu.",
+    "orUseAccount": "O utilitza un compte"
   },
   "CompleteProfile": {
     "title": "Completa el teu perfil",

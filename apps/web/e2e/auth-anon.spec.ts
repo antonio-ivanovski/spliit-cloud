@@ -10,7 +10,7 @@ import { uniqueId } from './helpers/data'
 test.describe('auth @smoke', () => {
   test('guest can sign up and land logged in', async ({ page }) => {
     await page.goto('/')
-    await page.getByRole('button', { name: 'Anonymous' }).click()
+    await page.getByRole('button', { name: 'Continue anonymously' }).click()
     await page.getByRole('button', { name: 'Create anonymous account' }).click()
 
     // The name policy is enforced before a valid name completes signup.
@@ -30,7 +30,9 @@ test.describe('auth @smoke', () => {
 
     // Logged-in home shows the groups view, not the signed-out panel.
     await expect(page).toHaveURL(/\/(\?.*)?$/)
-    await expect(page.getByRole('button', { name: 'Anonymous' })).toBeHidden()
+    await expect(
+      page.getByRole('button', { name: 'Continue anonymously' }),
+    ).toBeHidden()
     // Fresh accounts get the release-notes dialog; clear it so the run ends
     // in a settled state.
     await dismissUpdatesModal(page)

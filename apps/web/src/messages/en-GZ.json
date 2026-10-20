@@ -711,10 +711,13 @@
     },
     "signInWithX": "continue with X",
     "signInWithOidc": "continue with {name}",
-    "signInAnonymously": "Anon",
+    "signInAnonymously": "continue anonymously",
     "lastUsed": "last used",
     "emailAuthDisabled": "email sign-in is off. use single sign-on instead.",
-    "signInWithPasskey": "sign in with passkey"
+    "signInWithPasskey": "sign in with passkey",
+    "getStartedTitle": "get started with Spliit Cloud",
+    "getStartedSubtitle": "start without signing up, or use an account to access your groups across devices.",
+    "orUseAccount": "or use an account"
   },
   "Balances": {
     "title": "balance check",

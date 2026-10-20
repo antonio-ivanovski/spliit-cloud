@@ -906,10 +906,13 @@
     },
     "signInWithX": "Đăng nhập bằng X",
     "signInWithOidc": "Đăng nhập bằng {name}",
-    "signInAnonymously": "Ẩn danh",
+    "signInAnonymously": "Tiếp tục ẩn danh",
     "lastUsed": "Dùng gần đây",
     "emailAuthDisabled": "Đăng nhập bằng email đã bị tắt trên phiên bản này. Vui lòng dùng đăng nhập một lần (SSO).",
-    "signInWithPasskey": "Đăng nhập bằng passkey"
+    "signInWithPasskey": "Đăng nhập bằng passkey",
+    "getStartedTitle": "Bắt đầu với Spliit Cloud",
+    "getStartedSubtitle": "Bắt đầu mà không cần đăng ký, hoặc dùng tài khoản để truy cập các nhóm trên nhiều thiết bị.",
+    "orUseAccount": "Hoặc dùng tài khoản"
   },
   "AccountSettings": {
     "title": "Cài đặt tài khoản",
