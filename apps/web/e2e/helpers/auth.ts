@@ -71,6 +71,6 @@ export async function signOutAccount(
   }
   await returned
   await expect(
-    page.getByRole('button', { name: /^Anonymous(?: Last used)?$/ }),
+    page.getByRole('button', { name: /^Continue anonymously(?: Last used)?$/ }),
   ).toBeVisible()
 }

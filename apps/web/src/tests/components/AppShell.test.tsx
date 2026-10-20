@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { AppShell } from '@/AppShell'
+import type * as OfflineProviderModule from '@/lib/offline/provider'
 import { render, screen } from '@/test/test-utils'
 
 const route = vi.hoisted(() => ({ pathname: '/' }))
@@ -107,6 +108,13 @@ vi.mock('@/i18n/react', () => ({
 }))
 vi.mock('@/app/groups/merge-device-saved-views', () => ({
   MergeDeviceSavedViews: () => null,
+}))
+// Header placement does not exercise session verification or downloads; their
+// lifecycle and onboarding queries are covered by the offline provider suite.
+vi.mock('@/lib/offline/provider', async (importOriginal) => ({
+  ...(await importOriginal<typeof OfflineProviderModule>()),
+  OfflineProvider: ({ children }: React.PropsWithChildren) => children,
+  OfflineSyncHost: () => null,
 }))
 vi.mock('@/trpc/client', () => ({
   TRPCProvider: ({ children }: React.PropsWithChildren) => children,
