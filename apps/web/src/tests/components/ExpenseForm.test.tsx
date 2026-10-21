@@ -593,7 +593,7 @@ describe('ExpenseForm', () => {
     expect(screen.getByText('Create expense')).toBeInTheDocument()
   })
 
-  it('keeps the primary create and edit actions fixed to the viewport', () => {
+  it('keeps the primary create and edit actions fixed above the viewport safe area', () => {
     const assertFixedSubmitBar = () => {
       const submitButton = screen
         .getAllByRole('button')
@@ -601,7 +601,7 @@ describe('ExpenseForm', () => {
       expect(submitButton).toBeDefined()
       expect(submitButton?.closest('.fixed')).toHaveClass(
         'inset-x-0',
-        'bottom-0',
+        'fixed-bottom-inset',
         'z-40',
       )
     }

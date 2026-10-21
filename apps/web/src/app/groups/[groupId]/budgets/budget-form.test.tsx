@@ -138,13 +138,13 @@ describe('BudgetForm', () => {
     )
   })
 
-  it('keeps the form actions fixed to the bottom of the viewport', () => {
+  it('keeps the form actions fixed above the viewport safe area', () => {
     const { container } = render(
       <BudgetForm groupId="group-1" group={fakeGroup} onSubmit={vi.fn()} />,
     )
 
     const actionBar = container.querySelector('form > div.fixed')
-    expect(actionBar).toHaveClass('inset-x-0', 'bottom-0')
+    expect(actionBar).toHaveClass('inset-x-0', 'fixed-bottom-inset')
     expect(actionBar).toHaveTextContent('Cancel')
     expect(actionBar).toHaveTextContent('Save budget')
   })
