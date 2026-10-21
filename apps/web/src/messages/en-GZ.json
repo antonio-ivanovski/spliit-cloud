@@ -3165,7 +3165,6 @@
       "send": "send the invite",
       "invalidEmail": "enter a valid email address.",
       "emailDescription": "send an invite by email. the invitee joins after accepting from a matching account.",
-      "linkDescription": "generate a one-use link anyone can use to join. it dies after the first accept.",
       "temporaryName": "temporary name, optional",
       "temporaryNamePlaceholder": "e.g. Alex's roomie",
       "friendsDescription": "invite someone from groups you shared before.",

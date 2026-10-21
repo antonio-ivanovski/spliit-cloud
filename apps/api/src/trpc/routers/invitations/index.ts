@@ -284,7 +284,7 @@ export const invitationsRouter = createTRPCRouter({
     }),
 
   /** Create a shareable link invitation. Returns the full invite URL and expiry. */
-  // Create a single-use link invitation (ADMIN only). The raw token is
+  // Create a one-time link invitation (ADMIN only). The raw token is
   // returned exactly once; subsequent reads only see the hash. The
   // web client surfaces the URL in a copyable card right after
   // generation.

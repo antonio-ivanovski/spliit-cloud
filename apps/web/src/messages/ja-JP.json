@@ -2040,7 +2040,6 @@
         "unlinked": "アカウントなし"
       },
       "emailDescription": "メールで招待を送信します。招待を受けた人が対応するアカウントから承認すると参加できます。",
-      "linkDescription": "誰でも参加できる一回限りのリンクを生成します。最初の承認後、リンクは無効になります。",
       "temporaryName": "仮の名前（任意）",
       "temporaryNamePlaceholder": "例：Alexのルームメイト",
       "link": {

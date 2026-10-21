@@ -2055,7 +2055,6 @@
         "unlinked": "Senza account"
       },
       "emailDescription": "Invia un invito tramite email. L'invitato si unisce dopo averlo accettato da un account corrispondente.",
-      "linkDescription": "Genera un link monouso che chiunque può usare per unirsi. Il link smette di funzionare dopo la prima accettazione.",
       "temporaryName": "Nome temporaneo (facoltativo)",
       "temporaryNamePlaceholder": "es. il coinquilino di Alex",
       "link": {

@@ -294,7 +294,7 @@ describe('PendingInvitationsCard row actions', () => {
     expect(screen.getByText('Nearby QR code')).toBeInTheDocument()
     expect(screen.getByText(/2 people joined/)).toBeInTheDocument()
     expect(screen.getByText(/Alice, Bob/)).toBeInTheDocument()
-    // QR rows never offer the single-use link actions.
+    // QR rows never offer the one-time link actions.
     expect(
       screen.queryByRole('button', { name: 'Generate new link' }),
     ).not.toBeInTheDocument()

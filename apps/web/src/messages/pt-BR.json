@@ -1029,7 +1029,6 @@
         "link": "Link de convite"
       },
       "emailDescription": "Envie um convite por e-mail. O convidado entra assim que aceitar a partir de uma conta compatível.",
-      "linkDescription": "Gere um link de uso único para que qualquer pessoa possa entrar. O link deixa de funcionar após o primeiro aceite.",
       "link": {
         "generate": "Gerar link de convite",
         "generating": "Gerando…",

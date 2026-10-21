@@ -2040,7 +2040,6 @@
         "unlinked": "無帳戶"
       },
       "emailDescription": "透過電子郵件發送邀請。受邀者在相符的帳號上接受後即可加入。",
-      "linkDescription": "產生一個一次性連結，任何人都可使用該連結加入。在首次接受後，連結將失效。",
       "temporaryName": "臨時名稱（選填）",
       "temporaryNamePlaceholder": "例如：Alex 的室友",
       "link": {

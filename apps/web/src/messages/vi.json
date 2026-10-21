@@ -2723,7 +2723,6 @@
         "summaryCappedNever": "Tối đa {maxUses} người tham gia được · không bao giờ hết hạn."
       },
       "emailDescription": "Gửi lời mời qua email.",
-      "linkDescription": "Mời qua liên kết.",
       "temporaryName": "Tên tạm thời",
       "temporaryNamePlaceholder": "Tên của họ…",
       "friendsDescription": "Mời từ danh sách bạn bè.",

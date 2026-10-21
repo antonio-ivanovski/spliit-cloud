@@ -2054,7 +2054,6 @@
         "unlinked": "Konturik ez"
       },
       "emailDescription": "Bidali gonbidapen bat e-mail bidez. Gonbidatua batuko da bat datorren kontu batetik onartzen duenean.",
-      "linkDescription": "Sortu behin erabil daitekeen esteka edonork batzeko erabil dezakeena. Lehen onarpenaren ondoren estekak ez du funtzionatuko.",
       "temporaryName": "Behin-behineko izena (aukerakoa)",
       "link": {
         "generate": "Sortu gonbidapen-esteka",

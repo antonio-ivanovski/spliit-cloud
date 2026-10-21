@@ -2075,7 +2075,6 @@
         "unlinked": "Kein Konto"
       },
       "emailDescription": "Sende eine Einladung per E-Mail. Die eingeladene Person tritt bei, sobald sie von einem passenden Konto aus annimmt.",
-      "linkDescription": "Erstelle einen Einmal-Link, mit dem jeder beitreten kann. Nach der ersten Annahme funktioniert der Link nicht mehr.",
       "temporaryName": "Vorläufiger Name (optional)",
       "link": {
         "generate": "Einladungslink erstellen",

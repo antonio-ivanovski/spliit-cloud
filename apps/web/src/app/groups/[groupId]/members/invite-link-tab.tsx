@@ -72,10 +72,6 @@ export function InviteLinkTab({
   const isShared = mode === 'shared'
   return (
     <>
-      <p className="border-s-2 border-primary/40 ps-3 text-sm text-muted-foreground">
-        {t('invite.linkDescription')}
-      </p>
-
       <SharedLinkModeTabs form={sharedForm} onModeChange={onModeChange} />
 
       {isShared ? (
@@ -88,6 +84,9 @@ export function InviteLinkTab({
       ) : (
         <Form {...linkForm}>
           <form onSubmit={onSubmit} className="flex flex-col gap-3">
+            <p className="text-sm text-muted-foreground">
+              {t('invite.link.modeOneTimeHint')}
+            </p>
             <FormField
               control={linkForm.control}
               name="temporaryName"

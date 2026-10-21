@@ -2772,7 +2772,6 @@
         "retry": "Try again"
       },
       "emailDescription": "Send an invitation by email. The invitee joins once they accept from a matching account.",
-      "linkDescription": "Generate a single-use link anyone can use to join. The link stops working after the first accept.",
       "temporaryName": "Temporary name (optional)",
       "temporaryNamePlaceholder": "e.g. Alex's roommate",
       "friendsDescription": "Invite someone from groups you have shared.",

@@ -2123,7 +2123,6 @@
         "unlinked": "계정 없음"
       },
       "emailDescription": "이메일로 초대를 보냅니다. 초대받은 사람이 일치하는 계정에서 수락하면 참여됩니다.",
-      "linkDescription": "누구나 참여할 수 있는 1회용 링크를 생성합니다. 첫 번째 사람이 수락하면 링크는 더 이상 작동하지 않습니다.",
       "temporaryName": "임시 이름 (선택 사항)",
       "temporaryNamePlaceholder": "예: Alex의 룸메이트",
       "friendsDescription": "이전에 공유한 그룹에서 친구를 초대하세요.",

@@ -2055,7 +2055,6 @@
         "unlinked": "Sans compte"
       },
       "emailDescription": "Envoyez une invitation par e-mail. L'invité rejoint le groupe dès qu'il l'accepte depuis un compte correspondant.",
-      "linkDescription": "Générez un lien à usage unique que n'importe qui peut utiliser pour rejoindre le groupe. Le lien cesse de fonctionner après la première acceptation.",
       "temporaryName": "Nom temporaire (facultatif)",
       "temporaryNamePlaceholder": "p. ex. le colocataire d'Alex",
       "link": {

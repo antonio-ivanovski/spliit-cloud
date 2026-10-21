@@ -2047,7 +2047,6 @@
         "unlinked": "Ei tiliä"
       },
       "emailDescription": "Lähetä kutsu sähköpostilla. Kutsuttu liittyy, kun hän hyväksyy sen vastaavalta tililtä.",
-      "linkDescription": "Luo kertakäyttöinen linkki, jota kuka tahansa voi käyttää liittyäkseen. Linkki lakkaa toimimasta ensimmäisen hyväksymisen jälkeen.",
       "temporaryName": "Väliaikainen nimi (valinnainen)",
       "link": {
         "generate": "Luo kutsulinkki",

@@ -2076,7 +2076,6 @@
         "unlinked": "Sin cuenta"
       },
       "emailDescription": "Envía una invitación por correo electrónico. La persona invitada se unirá cuando la acepte desde una cuenta que coincida.",
-      "linkDescription": "Genera un enlace de un solo uso que cualquiera puede usar para unirse. El enlace deja de funcionar tras la primera aceptación.",
       "temporaryName": "Nombre temporal (opcional)",
       "link": {
         "generate": "Generar enlace de invitación",

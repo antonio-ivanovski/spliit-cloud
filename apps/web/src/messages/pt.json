@@ -2048,7 +2048,6 @@
       "send": "Enviar convite",
       "invalidEmail": "Introduz um endereço de email válido.",
       "emailDescription": "Envia um convite por e-mail. O convidado junta-se assim que aceitar a partir de uma conta compatível.",
-      "linkDescription": "Gera uma ligação de utilização única para que qualquer pessoa se possa juntar. A ligação deixa de funcionar após a primeira aceitação.",
       "temporaryName": "Nome temporário (opcional)",
       "link": {
         "generate": "Gerar ligação de convite",

@@ -2063,7 +2063,6 @@
         "unlinked": "Bez účtu"
       },
       "emailDescription": "Pošlete pozvánku e-mailem. Pozvaný se připojí, jakmile ji přijme z odpovídajícího účtu.",
-      "linkDescription": "Vygenerujte jednorázový odkaz, pomocí kterého se může kdokoli připojit. Po prvním přijetí přestane fungovat.",
       "temporaryName": "Dočasné jméno (volitelné)",
       "link": {
         "generate": "Vygenerovat odkaz pozvánky",

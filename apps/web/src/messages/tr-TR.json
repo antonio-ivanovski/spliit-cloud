@@ -2047,7 +2047,6 @@
         "unlinked": "Hesap yok"
       },
       "emailDescription": "E-postayla davet gönderin. Davetli, eşleşen bir hesaptan kabul ettiğinde katılır.",
-      "linkDescription": "Katılmak için herkesin kullanabileceği tek kullanımlık bir bağlantı oluşturun. İlk kabulden sonra bağlantı çalışmayı durdurur.",
       "temporaryName": "Geçici ad (isteğe bağlı)",
       "temporaryNamePlaceholder": "örn. Alex'in oda arkadaşı",
       "link": {

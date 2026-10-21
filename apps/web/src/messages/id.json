@@ -2040,7 +2040,6 @@
         "unlinked": "Tanpa akun"
       },
       "emailDescription": "Kirim undangan melalui email. Yang diundang akan bergabung setelah menerimanya dari akun yang cocok.",
-      "linkDescription": "Buat tautan sekali pakai yang dapat digunakan siapa saja untuk bergabung. Tautan akan berhenti berfungsi setelah penerimaan pertama.",
       "temporaryName": "Nama sementara (opsional)",
       "temporaryNamePlaceholder": "mis. teman sekamar Alex",
       "link": {

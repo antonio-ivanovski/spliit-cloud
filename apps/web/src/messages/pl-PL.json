@@ -2112,7 +2112,6 @@
         "summaryCappedNever": "Może dołączyć do {maxUses} osób · nigdy nie wygasa."
       },
       "emailDescription": "Wyślij zaproszenie e-mailem. Zaproszona osoba dołączy po zaakceptowaniu z pasującego konta.",
-      "linkDescription": "Wygeneruj jednorazowy link, za pomocą którego można dołączyć do grupy. Link przestanie działać po pierwszym zaakceptowaniu.",
       "temporaryName": "Tymczasowa nazwa (opcjonalnie)",
       "temporaryNamePlaceholder": "np. współlokator Alexa",
       "friendsDescription": "Zaproś kogoś z grup, które współdzielisz.",

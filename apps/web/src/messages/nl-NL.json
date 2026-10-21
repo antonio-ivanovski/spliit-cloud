@@ -2075,7 +2075,6 @@
         "unlinked": "Geen account"
       },
       "emailDescription": "Stuur een uitnodiging via e-mail. De genodigde wordt lid zodra hij vanuit een overeenkomend account accepteert.",
-      "linkDescription": "Genereer een link die één keer gebruikt kan worden om lid te worden. De link werkt niet meer zodra iemand hem accepteert.",
       "temporaryName": "Tijdelijke naam (optioneel)",
       "link": {
         "generate": "Uitnodigingslink genereren",

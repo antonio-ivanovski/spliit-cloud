@@ -2920,7 +2920,6 @@
       "send": "Skicka inbjudan",
       "invalidEmail": "Ange en giltig e-postadress.",
       "emailDescription": "Skicka en inbjudan via e-post. Den inbjudne går med när hen accepterar från ett matchande konto.",
-      "linkDescription": "Generera en engångslänk som alla kan använda för att gå med. Länken slutar fungera efter den första acceptansen.",
       "temporaryName": "Tillfälligt namn (valfritt)",
       "temporaryNamePlaceholder": "t.ex. Alex rumskompis",
       "friendsDescription": "Bjud in någon från grupper du har delat.",

@@ -2055,7 +2055,6 @@
         "unlinked": "Sense compte"
       },
       "emailDescription": "Envia una invitació per correu electrònic. La persona convidada s'hi unirà quan l'accepti des d'un compte que coincideixi.",
-      "linkDescription": "Genera un enllaç d'un sol ús que qualsevol pot fer servir per unir-se. L'enllaç deixa de funcionar després de la primera acceptació.",
       "temporaryName": "Nom temporal (opcional)",
       "link": {
         "generate": "Genera l'enllaç d'invitació",
