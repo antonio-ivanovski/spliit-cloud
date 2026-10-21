@@ -1,5 +1,7 @@
 <resources>
     <color name="brand">#047857</color>
     <color name="background">#FFFFFF</color>
-    <color name="dark_background">#111827</color>
+    <color name="dark_background">#0C0A09</color>
+    <!-- Launcher artwork stays on white in both device themes. -->
+    <color name="launcher_background">#FFFFFF</color>
 </resources>

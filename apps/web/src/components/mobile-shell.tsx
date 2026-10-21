@@ -198,7 +198,7 @@ export function MobileGroupNav({ groupId }: GroupNavProps) {
       {createPortal(
         <nav
           aria-label={t('Groups.groupActions')}
-          className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 mobile-bottom-inset shadow-[0_-4px_20px_rgb(0_0_0/0.06)] backdrop-blur supports-backdrop-filter:bg-background/80 sm:hidden"
+          className="fixed inset-x-0 fixed-bottom-inset z-40 border-t bg-background/95 mobile-bottom-inset shadow-[0_-4px_20px_rgb(0_0_0/0.06)] backdrop-blur supports-backdrop-filter:bg-background/80 sm:hidden"
         >
           <div className="mx-auto grid h-(--mobile-nav-bar-height) max-w-lg grid-cols-5 items-stretch px-1">
             {tabs.map(({ to, label, icon: Icon }) => {

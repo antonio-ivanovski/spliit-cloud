@@ -7,14 +7,35 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content"
     />
-    <meta name="theme-color" content="#047857" />
+    <meta name="theme-color" content="#ffffff" />
+    <script>
+      // Resolve the same preference as ThemeProvider before any app content
+      // paints, including a saved override of the device's color scheme.
+      {
+        let savedTheme
+        try {
+          savedTheme = localStorage.getItem('theme')
+        } catch {
+          // Fall back to the device preference when storage is unavailable.
+        }
+        const dark =
+          savedTheme === 'dark' ||
+          (savedTheme !== 'light' &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches)
+        document.documentElement.classList.toggle('dark', dark)
+        document.documentElement.style.colorScheme = dark ? 'dark' : 'light'
+        document
+          .querySelector('meta[name="theme-color"]')
+          .setAttribute('content', dark ? '#0c0a09' : '#ffffff')
+      }
+    </script>
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Spliit Cloud" />
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
-    <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" href="/app-icon-180.png" />
     <title>Spliit Cloud — Share expenses with friends &amp; family</title>
     <meta
       name="description"
@@ -96,6 +117,12 @@
       }
     </script>
     <style>
+      html {
+        background: #ffffff;
+      }
+      html.dark {
+        background: #0c0a09;
+      }
       #pwa-bootstrap {
         position: fixed;
         inset: 0;
@@ -107,19 +134,17 @@
       }
       #pwa-bootstrap-content {
         display: grid;
-        width: min(13rem, 58vw);
+        width: min(8rem, 40vw);
         justify-items: center;
         gap: 1.5rem;
       }
       #pwa-bootstrap img {
-        width: min(13rem, 58vw);
+        width: min(8rem, 40vw);
         height: auto;
       }
-      @media (prefers-color-scheme: dark) {
-        #pwa-bootstrap {
-          background: #030712;
-          color: #d1d5db;
-        }
+      .dark #pwa-bootstrap {
+        background: #0c0a09;
+        color: #d1d5db;
       }
     </style>
     <script>
@@ -186,7 +211,7 @@
   <body>
     <div id="pwa-bootstrap" role="status" aria-live="polite">
       <div id="pwa-bootstrap-content">
-        <img src="/logo-with-text.svg" alt="Spliit Cloud" />
+        <img src="/logo.svg" width="128" height="128" alt="Spliit Cloud" />
         <p
           id="pwa-bootstrap-offline"
           hidden

@@ -220,24 +220,28 @@ html[data-app-mode='pwa'] body {
 :root {
   --safe-area-top: env(safe-area-inset-top, 0px);
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  /* Reserve a stable inset for fixed bars. Only their position changes when
+     Chrome's gesture-area inset changes, avoiding padding relayout on scroll. */
+  --safe-area-bottom-max: env(
+    safe-area-max-inset-bottom,
+    env(safe-area-inset-bottom, 0px)
+  );
   --app-header-bar-height: 3.5rem;
   --app-header-height: calc(
     var(--app-header-bar-height) + var(--safe-area-top)
   );
   --mobile-nav-bar-height: 4rem;
   --mobile-nav-height: calc(
-    var(--mobile-nav-bar-height) + var(--safe-area-bottom)
+    var(--mobile-nav-bar-height) + var(--safe-area-bottom-max)
   );
-  --fixed-action-bar-height: calc(4.5rem + var(--safe-area-bottom));
+  --fixed-action-bar-height: calc(4.5rem + var(--safe-area-bottom-max));
   scroll-padding-top: var(--app-header-height);
 }
 
 @media (width >= 640px) {
   :root {
     --app-header-bar-height: 4rem;
-    --app-header-height: var(--app-header-bar-height);
     --mobile-nav-height: 0px;
-    --fixed-action-bar-height: 4.5rem;
   }
 }
 
@@ -253,7 +257,11 @@ html[data-app-mode='pwa'] body {
 }
 
 @utility mobile-bottom-inset {
-  padding-bottom: var(--safe-area-bottom);
+  padding-bottom: var(--safe-area-bottom-max);
+}
+
+@utility fixed-bottom-inset {
+  bottom: calc(env(safe-area-inset-bottom, 0px) - var(--safe-area-bottom-max));
 }
 
 @layer base {

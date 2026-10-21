@@ -18,7 +18,12 @@ const ThemeContext = createContext<ThemeContextValue | null>(null)
 
 export function ThemeProvider({ children }: PropsWithChildren<object>) {
   const [theme, setThemeState] = useState<Theme>(() => {
-    return (localStorage.getItem('theme') as Theme | null) ?? 'system'
+    try {
+      const saved = localStorage.getItem('theme')
+      return saved === 'light' || saved === 'dark' ? saved : 'system'
+    } catch {
+      return 'system'
+    }
   })
 
   useEffect(() => {
@@ -30,6 +35,15 @@ export function ThemeProvider({ children }: PropsWithChildren<object>) {
         'dark',
         resolvedTheme === 'dark',
       )
+      document.documentElement.style.colorScheme = resolvedTheme
+      // Match the app surface, including explicit overrides of the OS theme.
+      // Keep these colors aligned with index.html and styles/theme.css.
+      document
+        .querySelector('meta[name="theme-color"]')
+        ?.setAttribute(
+          'content',
+          resolvedTheme === 'dark' ? '#0c0a09' : '#ffffff',
+        )
     }
     apply()
     media.addEventListener('change', apply)
@@ -44,7 +58,11 @@ export function ThemeProvider({ children }: PropsWithChildren<object>) {
         options?: { notify?: boolean; persist?: boolean },
       ) => {
         if (options?.persist !== false) {
-          localStorage.setItem('theme', nextTheme)
+          try {
+            localStorage.setItem('theme', nextTheme)
+          } catch {
+            // An unavailable storage area must not prevent a theme change.
+          }
         }
         setThemeState(nextTheme)
         if (options?.notify !== false) {

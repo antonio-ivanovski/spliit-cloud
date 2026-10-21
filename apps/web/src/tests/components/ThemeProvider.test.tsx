@@ -1,4 +1,4 @@
-import { cleanup, render, screen, waitFor } from '@testing-library/react'
+import { act, cleanup, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -35,11 +35,55 @@ beforeEach(() => {
 
 afterEach(() => {
   cleanup()
+  document.querySelector('meta[name="theme-color"]')?.remove()
+  document.documentElement.style.removeProperty('color-scheme')
 })
 
 // ── Tests ───────────────────────────────────────────────────────────────
 
 describe('ThemeProvider', () => {
+  it('keeps browser chrome in sync with app overrides and system theme changes', async () => {
+    const meta = document.createElement('meta')
+    meta.name = 'theme-color'
+    meta.content = '#047857'
+    document.head.append(meta)
+    let systemDark = true
+    const events = new EventTarget()
+    vi.spyOn(window, 'matchMedia').mockReturnValue({
+      get matches() {
+        return systemDark
+      },
+      media: '(prefers-color-scheme: dark)',
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: events.addEventListener.bind(events),
+      removeEventListener: events.removeEventListener.bind(events),
+      dispatchEvent: events.dispatchEvent.bind(events),
+    })
+    const user = userEvent.setup()
+    renderWithProvider(<TestConsumer />)
+    expect(meta.content).toBe('#0c0a09')
+    expect(document.documentElement.style.colorScheme).toBe('dark')
+
+    await user.click(screen.getByTestId('set-light'))
+    expect(meta.content).toBe('#ffffff')
+    expect(document.documentElement.style.colorScheme).toBe('light')
+
+    await user.click(screen.getByTestId('set-system'))
+    expect(meta.content).toBe('#0c0a09')
+    act(() => {
+      systemDark = false
+      events.dispatchEvent(new Event('change'))
+    })
+    expect(meta.content).toBe('#ffffff')
+    expect(document.documentElement.style.colorScheme).toBe('light')
+
+    await user.click(screen.getByTestId('set-dark'))
+    expect(meta.content).toBe('#0c0a09')
+    expect(document.documentElement.style.colorScheme).toBe('dark')
+  })
+
   it('defaults to system theme when localStorage is empty', () => {
     renderWithProvider(<TestConsumer />)
     expect(screen.getByTestId('theme-value')).toHaveTextContent('system')

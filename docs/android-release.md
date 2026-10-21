@@ -214,6 +214,57 @@ environment, as the CI workflow does. Never upload an unsigned local AAB.
 
 ## 8. Qualify on actual devices
 
+### Installed-app artwork and system surfaces
+
+Launcher artwork uses the existing `apps/web/public/logo.svg` mark. The dedicated
+`app-icon.svg` is the white-backed maskable composition; `app-icon-512-maskable.png`
+exports that composition, while `app-icon-{180,192,512}.png` use a slightly larger
+mark for unmasked and Apple touch icons. Android uses the same mark in
+`drawable-nodpi/spliit_logo.png`, a 26% foreground inset on its 108dp adaptive
+layer, and a permanent white launcher background. Keep the complete mark within
+Android's central 66dp safe circle and the PWA's central 80%-diameter safe circle.
+Check circular, squircle, and rounded-square launcher masks after artwork changes.
+
+`apps/web/public/notification-badge.svg` is the canonical banknote-and-scissors
+notification glyph. Its 96×96 transparent PNG is the service worker's `badge`;
+the larger notification `icon` remains in color. Android's `ic_notification.xml`
+provides the same glyph as a 24dp white-on-transparent vector through the
+delegation service's `SMALL_ICON` metadata. Preserve the transparent loops and
+internal gaps: Android masks small icons to monochrome, so a colored logo or
+opaque tile becomes a solid silhouette. `icon_monochrome.xml` is a separately
+scaled adaptive launcher layer, not a notification-sized drawable.
+
+Use a Galaxy S24+, Android 16 / One UI 8.5, Chrome 155.0.8059.84 as the primary
+appearance baseline. Record fresh results with the actual browser version; repeat
+with the current supported Chrome release when it changes. Compare a Chrome tab,
+the Chrome-installed PWA, and the release-signed TWA separately:
+
+- Check launcher icons and themed-icon mode, then deliver a new notification to
+  each installed form. Inspect the status bar and collapsed/expanded shade at
+  actual size in both phone themes. Browser delegation can select the native
+  small icon instead of the web badge. Dismiss older notifications before retrying.
+- Record cold and warm launcher opens, a slow/offline launch, and a deep link.
+  Check branding during package-update discovery, the ABH splash handoff, and the
+  web bootstrap. Look for `SplashScreenStrategy` / `SplashImageTransferTask`
+  failures in `adb logcat`, including “Failed to retrieve splash image” and
+  “Failed to transfer splash image”. Do not claim the thin browser loading line
+  is removed without checking the device recording.
+- Test light, dark, and system app preferences, including light app/dark phone
+  and dark app/light phone. Web theme metadata follows the app preference;
+  native startup uses the phone preference until Chrome loads the web page.
+- Check gesture and three-button navigation, portrait/landscape, drawers, fixed
+  action bars, and keyboard opening/closing. Confirm no control sits under a
+  system bar and bottom-bar backgrounds continue beneath gestures when supported.
+
+Chrome owns the running TWA window and installed-PWA system bars. It can retain
+provider-specific scrims, gesture contrast, or loading indicators. Native wrapper
+window flags cannot override Chrome's window. Keep a readable surface-color
+fallback and record any remaining provider behavior rather than hiding system UI.
+PWA icon updates are browser-managed and may be delayed; compare a fresh install
+when qualifying changed assets. Native resources require a new Android build.
+
+### Functional qualification
+
 Install the release-signed APK on a test device; later test Play's delivered
 build too. Use synthetic groups/receipts and a dedicated test account. Do not
 publish screenshots containing real participants, receipts, or invitations.

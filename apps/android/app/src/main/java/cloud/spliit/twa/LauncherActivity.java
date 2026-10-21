@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.LinearLayout;
+import android.widget.ImageView;
+import android.widget.FrameLayout;
 import androidx.browser.customtabs.CustomTabsCallback;
 import com.google.androidbrowserhelper.trusted.QualityEnforcer;
 import com.google.androidbrowserhelper.trusted.TwaProviderPicker;
@@ -36,11 +38,32 @@ public final class LauncherActivity extends com.google.androidbrowserhelper.trus
         // Deep links and shared receipts must not be interrupted by package-update prompts.
         boolean launcher = Intent.ACTION_MAIN.equals(getIntent().getAction()) && getIntent().getData() == null;
         if (!launcher) { launch(); return; }
+        showLaunchBranding();
         UpdateChecker.check(this, false, (release, failed) -> {
             if (release != null && release.canUpdate(BuildConfig.VERSION_CODE, android.os.Build.VERSION.SDK_INT)) {
                 UpdateChecker.prompt(this, release, this::launch);
             } else launch();
         });
+    }
+
+    private void showLaunchBranding() {
+        // ABH shows its transferable splash only once launchTwa() begins.
+        // Cover the asynchronous update check with the same artwork first.
+        FrameLayout content = new FrameLayout(this);
+        content.setBackgroundColor(getColor(R.color.background));
+        content.setOnApplyWindowInsetsListener((view, insets) -> {
+            android.graphics.Insets bars = insets.getSystemWindowInsets();
+            view.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+            return insets;
+        });
+        ImageView logo = new ImageView(this);
+        logo.setImageResource(R.drawable.splash);
+        logo.setScaleType(ImageView.ScaleType.CENTER);
+        logo.setImportantForAccessibility(ImageView.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        content.addView(logo, new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+        setContentView(content);
+        content.requestApplyInsets();
     }
 
     private boolean hasNetwork() {

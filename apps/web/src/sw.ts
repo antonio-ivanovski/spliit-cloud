@@ -358,7 +358,7 @@ self.addEventListener('push', (event) => {
     self.registration.showNotification(payload.title, {
       body: payload.body,
       icon: '/logo-192x192.png',
-      badge: '/logo-192x192.png',
+      badge: '/notification-badge.png',
       tag: payload.tag ?? `spliit-${payload.kind}`,
       data: { url },
     }),

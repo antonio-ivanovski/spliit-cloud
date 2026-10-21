@@ -74,7 +74,7 @@ export default defineConfig({
         'logo.svg',
         'logo-with-text.svg',
         'favicon/favicon.ico',
-        'favicon/apple-touch-icon.png',
+        'app-icon-180.png',
       ],
       manifest: {
         id: '/',
@@ -121,7 +121,7 @@ export default defineConfig({
           },
         },
         background_color: '#ffffff',
-        theme_color: '#047857',
+        theme_color: '#ffffff',
         lang: 'en',
         dir: 'ltr',
         orientation: 'any',
@@ -147,7 +147,7 @@ export default defineConfig({
             url: '/groups/create',
             icons: [
               {
-                src: '/logo-192x192.png',
+                src: '/app-icon-192.png',
                 sizes: '192x192',
                 type: 'image/png',
               },
@@ -160,7 +160,7 @@ export default defineConfig({
             url: '/expenses',
             icons: [
               {
-                src: '/logo-192x192.png',
+                src: '/app-icon-192.png',
                 sizes: '192x192',
                 type: 'image/png',
               },
@@ -173,7 +173,7 @@ export default defineConfig({
             url: '/account/settings',
             icons: [
               {
-                src: '/logo-192x192.png',
+                src: '/app-icon-192.png',
                 sizes: '192x192',
                 type: 'image/png',
               },
@@ -205,17 +205,17 @@ export default defineConfig({
         ],
         icons: [
           {
-            src: '/logo-192x192.png',
+            src: '/app-icon-192.png',
             sizes: '192x192',
             type: 'image/png',
           },
           {
-            src: '/logo-512x512.png',
+            src: '/app-icon-512.png',
             sizes: '512x512',
             type: 'image/png',
           },
           {
-            src: '/logo-512x512-maskable.png',
+            src: '/app-icon-512-maskable.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable',

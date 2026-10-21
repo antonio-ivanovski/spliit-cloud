@@ -4,5 +4,9 @@
         <item name="android:colorAccent">@color/brand</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:navigationBarColor">@color/background</item>
+        <item name="android:navigationBarDividerColor">@color/background</item>
     </style>
 </resources>
