@@ -23,10 +23,6 @@ who is affected, and the exact migration steps.
 
 ### 🐛 Bug fixes
 
-- Installed apps have better-proportioned home-screen icons, clearer monochrome notification icons, and launch and system-bar colors that follow the app surface. Android startup also shows branding while checking for package updates. (`TBD` by @TBD)
-
-- PWA updates are discovered promptly and apply automatically when safe. Expense drafts survive the update reload with a five-second notice, while other unfinished work keeps the update paused. (`TBD` by @TBD)
-
 - Short entry per fix (`TBD` by @TBD)
 
 **Full Changelog**: TBD
