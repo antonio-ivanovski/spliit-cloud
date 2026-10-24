@@ -2123,6 +2123,13 @@
       "owes": "<strong>{from}</strong> owes <strong>{to}</strong>",
       "markAsPaid": "Mark as paid",
       "markAsPaidAria": "Mark {amount} from {from} to {to} as paid"
+    },
+    "settlementView": {
+      "label": "Show debts as",
+      "simplified": "Simplified",
+      "direct": "Direct",
+      "directDescription": "What each person owes the people they actually shared expenses with, without combining debts across the group.",
+      "offlineHint": "Direct debts need a connection. Showing simplified payments while offline."
     }
   },
   "Stats": {

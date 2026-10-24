@@ -23,6 +23,7 @@ import { useGroupAccessSearch } from '../use-group-access-search'
 import { BalanceViewSelector, type BalanceView } from './balance-view-selector'
 import { withDisplayCurrencies } from './currency-balances'
 import { CurrencyDisplaySelector } from './currency-display-selector'
+import type { SettlementView } from './settlement-controls'
 import { SimpleBalancesCard } from './simple-balances-card'
 
 const balancesRoute = getRouteApi('/groups/$groupId/balances')
@@ -107,10 +108,11 @@ export default function BalancesAndSettlements() {
     currencyDisplay = 'group',
     view: viewParam,
     settlementMode: settlementModeParam,
+    settlementView: settlementViewParam,
   } = balancesRoute.useSearch()
   const navigate = useNavigate()
   const [storedView, setStoredView] = useState<BalanceView>('simple')
-  const settlementMode = settlementModeParam ?? 'individual'
+  const requestedSettlementView = settlementViewParam ?? 'simplified'
   const {
     data: balancesData,
     isLoading: balancesAreLoading,
@@ -133,6 +135,21 @@ export default function BalancesAndSettlements() {
       ? (offline.data?.balances as typeof balancesData)
       : balancesData
   ) as typeof balancesData
+  // Direct (pairwise) debts are online-only; the offline snapshot keeps the
+  // simplified projection, so fall back to it with a hint.
+  const directSettlements =
+    !useOfflineSource && balancesData ? balancesData.direct : undefined
+  const settlementView: SettlementView =
+    requestedSettlementView === 'direct' && directSettlements
+      ? 'direct'
+      : 'simplified'
+  const showDirectOfflineHint =
+    requestedSettlementView === 'direct' && useOfflineSource
+  // Direct debts are always between individuals.
+  const settlementMode =
+    settlementView === 'direct'
+      ? 'individual'
+      : (settlementModeParam ?? 'individual')
   const offlineDirtySince = useOfflineSource
     ? ((offline.data?.dirtySince as Date | null) ?? null)
     : null
@@ -182,7 +199,18 @@ export default function BalancesAndSettlements() {
   const groupCurrency = group ? getCurrencyFromGroup(group) : undefined
   const currencyBalances =
     !isLoading && groupCurrency && effectiveBalances
-      ? withDisplayCurrencies(effectiveBalances.currencyBalances, groupCurrency)
+      ? withDisplayCurrencies(
+          settlementView === 'direct' && directSettlements
+            ? effectiveBalances.currencyBalances.map((summary) => ({
+                ...summary,
+                suggestedSettlements:
+                  directSettlements.currencies.find(
+                    (entry) => entry.currencyCode === summary.currencyCode,
+                  )?.directSettlements ?? [],
+              }))
+            : effectiveBalances.currencyBalances,
+          groupCurrency,
+        )
       : []
   const view = viewParam ?? storedView
   const settlementSubgroups = useMemo<SubgroupDefinition[]>(
@@ -215,6 +243,13 @@ export default function BalancesAndSettlements() {
     suggestedSettlements: effectiveBalances?.suggestedSettlements ?? [],
     policy: 'standard' as const,
   }
+  const displayedSettlementPlan =
+    settlementView === 'direct' && directSettlements
+      ? {
+          suggestedSettlements: directSettlements.suggestedSettlements,
+          policy: undefined,
+        }
+      : individualSettlementPlan
 
   const changeView = (next: BalanceView) => {
     setStoredView(next)
@@ -231,6 +266,7 @@ export default function BalancesAndSettlements() {
         currencyDisplay,
         view: next,
         settlementMode,
+        settlementView: requestedSettlementView,
       },
     })
   }
@@ -244,6 +280,7 @@ export default function BalancesAndSettlements() {
         currencyDisplay: next,
         view,
         settlementMode,
+        settlementView: requestedSettlementView,
       },
     })
   }
@@ -257,6 +294,23 @@ export default function BalancesAndSettlements() {
         currencyDisplay,
         view,
         settlementMode: next,
+        // Subgroup settlement is a simplified projection.
+        settlementView:
+          next === 'subgroups' ? 'simplified' : requestedSettlementView,
+      },
+    })
+  }
+
+  const changeSettlementView = (next: SettlementView) => {
+    void navigate({
+      to: '/groups/$groupId/balances',
+      params: { groupId },
+      replace: true,
+      search: {
+        currencyDisplay,
+        view,
+        settlementMode: next === 'direct' ? 'individual' : settlementMode,
+        settlementView: next,
       },
     })
   }
@@ -297,7 +351,7 @@ export default function BalancesAndSettlements() {
         balances={settlementBalances}
         suggestedSettlements={
           currencyDisplay === 'group'
-            ? individualSettlementPlan.suggestedSettlements
+            ? displayedSettlementPlan.suggestedSettlements
             : undefined
         }
         currencyBalances={currencyBalances}
@@ -310,8 +364,13 @@ export default function BalancesAndSettlements() {
         }
         subgroups={settlementSubgroups}
         subgroupSettlementPlan={subgroupSettlementPlan}
-        individualSettlementPolicy={individualSettlementPlan.policy}
+        individualSettlementPolicy={displayedSettlementPlan.policy}
         view={view}
+        settlementView={showDirectOfflineHint ? 'direct' : settlementView}
+        onSettlementViewChange={changeSettlementView}
+        settlementViewNote={
+          showDirectOfflineHint ? t('settlementView.offlineHint') : undefined
+        }
       />
     </>
   )

@@ -177,14 +177,24 @@ export function SettlementSection({
       removed: false,
     }
 
+  // Direct (pairwise) legs can make someone with a zero or opposite net
+  // balance still pay or receive, so leg membership counts too.
+  const receivers = new Set(suggestedSettlements.map((leg) => leg.to))
+  const payers = new Set(suggestedSettlements.map((leg) => leg.from))
   const receiving = participants.filter(
-    (participant) => (balances[participant.id]?.total ?? 0) > 0,
+    (participant) =>
+      (balances[participant.id]?.total ?? 0) > 0 ||
+      receivers.has(participant.id),
   )
   const paying = participants.filter(
-    (participant) => (balances[participant.id]?.total ?? 0) < 0,
+    (participant) =>
+      (balances[participant.id]?.total ?? 0) < 0 || payers.has(participant.id),
   )
   const settled = participants.filter(
-    (participant) => (balances[participant.id]?.total ?? 0) === 0,
+    (participant) =>
+      (balances[participant.id]?.total ?? 0) === 0 &&
+      !receivers.has(participant.id) &&
+      !payers.has(participant.id),
   )
 
   return (

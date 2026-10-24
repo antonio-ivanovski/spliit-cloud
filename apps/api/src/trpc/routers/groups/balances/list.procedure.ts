@@ -4,6 +4,8 @@ import { prisma } from '@spliit/db'
 import {
   getBalances,
   getCurrencyBalanceSummaries,
+  getDirectSettlements,
+  getDirectSettlementsByCurrency,
   getPublicBalances,
   getSuggestedSettlements,
 } from '@spliit/domain'
@@ -105,6 +107,12 @@ export const listGroupBalancesProcedure = scopedGroupReadProcedure(
       expenses,
       ledger.currencyCode,
     )
+    // Un-simplified pairwise debts (upstream issue #167). Online-only: the
+    // offline snapshot keeps the simplified projection.
+    const direct = {
+      suggestedSettlements: getDirectSettlements(expenses, balances),
+      currencies: getDirectSettlementsByCurrency(expenses, ledger.currencyCode),
+    }
 
     // Soft-removed participants stay in expense history (and thus in balance
     // math) but are excluded from groups.get.participants. Surface them here
@@ -130,5 +138,6 @@ export const listGroupBalancesProcedure = scopedGroupReadProcedure(
         subgroup: subgroupSettlement,
         individual: individualSettlement,
       },
+      direct,
     }
   })
