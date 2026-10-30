@@ -108,7 +108,8 @@
     "toggle": "Đổi giao diện",
     "light": "Sáng",
     "dark": "Tối",
-    "system": "Hệ thống"
+    "system": "Hệ thống",
+    "halloweenEffects": "Hiệu ứng Halloween"
   },
   "Footer": {
     "madeIn": "Được tạo bởi <github>cộng đồng mã nguồn mở</github> với tình yêu ❤️",

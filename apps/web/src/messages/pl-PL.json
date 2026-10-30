@@ -3384,7 +3384,8 @@
     "toggle": "Zmień motyw",
     "light": "Jasny",
     "dark": "Ciemny",
-    "system": "Ustawienie systemowe"
+    "system": "Ustawienie systemowe",
+    "halloweenEffects": "Efekty Halloween"
   },
   "PushOnboarding": {
     "title": "Wybierz sposób otrzymywania aktualizacji",

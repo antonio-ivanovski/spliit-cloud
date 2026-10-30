@@ -3405,7 +3405,8 @@
     "toggle": "Byt tema",
     "light": "Ljust",
     "dark": "Mörkt",
-    "system": "Systemstandard"
+    "system": "Systemstandard",
+    "halloweenEffects": "Halloweeneffekter"
   },
   "Unsubscribe": {
     "title": "Stäng av dessa e-postmeddelanden?",

@@ -3325,7 +3325,8 @@
     "toggle": "テーマを変更",
     "light": "ライト",
     "dark": "ダーク",
-    "system": "システム設定"
+    "system": "システム設定",
+    "halloweenEffects": "ハロウィンの演出"
   },
   "PushOnboarding": {
     "title": "最新情報を受け取る方法を選択",

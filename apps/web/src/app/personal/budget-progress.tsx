@@ -9,7 +9,13 @@ import type { PersonalBudget, PersonalBudgetState } from './types'
 
 const stateStyles: Record<PersonalBudgetState, { bar: string; text: string }> =
   {
-    OK: { bar: 'bg-primary', text: 'text-primary' },
+    /*
+     * `financial-positive`, not `primary`: "on track" is a money status, not
+     * a brand accent. It stays the app's emerald even when a seasonal theme
+     * repaints the primary, so it can never be confused with the amber
+     * "trending" state next to it.
+     */
+    OK: { bar: 'bg-financial-positive', text: 'text-financial-positive' },
     TRENDING: {
       bar: 'bg-amber-500',
       text: 'text-amber-600 dark:text-amber-400',
@@ -25,8 +31,9 @@ type Props = {
 /**
  * Personal budget progress: spent/limit totals, a status-colored bar with a
  * projection marker, and remaining/over/projected captions. Status colors
- * mirror the group budget visuals (on-track green-primary, trending amber, over
- * red).
+ * mirror the group budget visuals (on-track green, trending amber, over red) —
+ * the on-track green is the app's `financial-positive` token, so a seasonal
+ * accent can never repaint it into the trending amber.
  */
 export function PersonalBudgetProgress({ budget, compact = false }: Props) {
   const { t } = usePersonalTranslation()

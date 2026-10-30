@@ -3361,7 +3361,8 @@
     "toggle": "Aldatu gaia",
     "light": "Argia",
     "dark": "Iluna",
-    "system": "Sistemaren lehenetsia"
+    "system": "Sistemaren lehenetsia",
+    "halloweenEffects": "Halloweeneko efektuak"
   },
   "PushOnboarding": {
     "title": "Aukeratu nola egon eguneratuta",

@@ -1,0 +1,837 @@
+/*
+ * Halloween season theme — "Haunted House" direction.
+ *
+ * The season lives entirely behind one attribute: `data-season="halloween"`
+ * on `<html>`. With the attribute absent nothing in this file applies, so
+ * switching the season off restores the app byte for byte (no leftover
+ * markup, no leftover tokens, no leftover scenery).
+ *
+ * ── Layering contract ────────────────────────────────────────────────
+ *   The app shell is an isolated stacking context (`isolate`) holding:
+ *
+ *     -1   .halloween-scenery / .halloween-ground   ← this file
+ *      0   .ambient-backdrop                        ← existing wash
+ *     20   content column
+ *     50   app header
+ *
+ *   The two scenery plates therefore sit *behind* the content and the
+ *   header, and can never overlap a control. They are also
+ *   `pointer-events: none` and `aria-hidden`, so they are inert to
+ *   pointer, keyboard and assistive technology alike.
+ *
+ *   The ambient plate is `position: fixed` (it must not scroll away on a
+ *   long page); the ground plate is `position: absolute` and anchored to
+ *   the bottom of the document, so the silhouettes stand behind the footer
+ *   band rather than floating over the content.
+ *
+ * ── Motion ───────────────────────────────────────────────────────────
+ *   Every animation is a CSS keyframe (no timers, no JS animation). Under
+ *   `prefers-reduced-motion: reduce` they are replaced by a deliberate
+ *   static composition — the scenery stays, the movement stops.
+ *
+ * ── Print ────────────────────────────────────────────────────────────
+ *   Printing is paper: the scenery is dropped and the normal tokens are
+ *   restored, so a report never prints with a plum background.
+ */
+
+/* ══ 1. Tokens ═══════════════════════════════════════════════════════ */
+
+html[data-season='halloween'] {
+  /* Palette, shared by both modes. */
+  --halloween-parchment: #fff0ce;
+  --halloween-moonlight: #24152f;
+  --halloween-ink: #2b1b33;
+  --halloween-plum: #3a2340;
+  --halloween-pumpkin: #e2703a;
+  --halloween-candle: #ffc15e;
+  --halloween-specter: #f6e7c8;
+
+  /*
+   * Storybook display face. System-resident old-style serif only — the
+   * theme must never trigger a network fetch. Body copy keeps the app's
+   * own rounded face; only headings change.
+   */
+  --halloween-display:
+    'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia,
+    'Times New Roman', serif;
+
+  /* Light mode — aged paper. */
+  --background: 41.6 100% 90.4%;
+  --foreground: 280 30.8% 15.3%;
+  --card: 43.1 100% 93.7%;
+  --card-foreground: 280 30.8% 15.3%;
+  --popover: 43.1 100% 93.7%;
+  --popover-foreground: 280 30.8% 15.3%;
+  --primary: 19.3 74.4% 38%;
+  --primary-foreground: 42 100% 95.3%;
+  --secondary: 39.5 46.1% 82.5%;
+  --secondary-foreground: 280 32% 18%;
+  --muted: 39.5 40% 84%;
+  --muted-foreground: 278 16% 36%;
+  --accent: 36.9 100% 68.4%;
+  --accent-foreground: 280 40% 16%;
+  --border: 39.7 44.9% 72.9%;
+  --input: 39.7 44.9% 72.9%;
+  --ring: 19.3 74.4% 45%;
+  /*
+   * --destructive is deliberately left alone: money status stays red.
+   * --financial-positive is deliberately left alone too: a budget that is
+   * on track, a "money paid" bar and an "amount owed" chip keep the app's
+   * emerald so a seasonal accent can never repaint money semantics. The
+   * pumpkin primary is decoration; this green is meaning.
+   */
+
+  /* Art tokens — light. */
+  --halloween-silhouette: #3a2340;
+  --halloween-hill: #4a2e52;
+  --halloween-rim: rgb(255 240 206 / 0.24);
+  --halloween-window: #ffc15e;
+  --halloween-window-glow: rgb(255 193 94 / 0.55);
+  --halloween-moon-core: #fff8e4;
+  --halloween-moon-mid: #f0dcae;
+  --halloween-moon-edge: #d3b985;
+  --halloween-moon-crater: rgb(122 88 38 / 0.14);
+  --halloween-moon-glow: rgb(255 214 140 / 0.34);
+  --halloween-sky-glow: rgb(255 224 158 / 0.3);
+  --halloween-fog: rgb(255 247 228 / 0.55);
+  --halloween-web: rgb(74 46 82 / 0.5);
+  --halloween-grain: rgb(120 80 30 / 0.055);
+  --halloween-sheet: #fdf3dd;
+  --halloween-sheet-edge: rgb(74 46 82 / 0.22);
+  --halloween-ghost-ink: #2b1b33;
+  --halloween-mote: rgb(226 112 58 / 0.55);
+
+  /* Header + hero. */
+  --halloween-header-surface: #f4dfb2;
+  --halloween-header-edge: rgb(58 35 64 / 0.16);
+  --halloween-moonbeam: rgb(255 226 160 / 0.4);
+  --halloween-moon-x: 82%;
+  --halloween-hero-gradient: linear-gradient(
+    100deg,
+    #3a2340 0%,
+    #7d3a2a 42%,
+    #a94719 100%
+  );
+
+  /* The generic emerald/coral wash would fight the plum palette. */
+  --ambient-opacity: 0.42;
+
+  /* Mascot paper, warmed to match the parchment. */
+  --mascot-paper: 42 34% 97%;
+  --mascot-paper-mid: 38 26% 93%;
+  --mascot-paper-edge: 40 22% 89%;
+  --mascot-ink: 280 32% 16%;
+  --mascot-rule: 28 16% 44%;
+  --mascot-stroke: 274 40% 30%;
+  --mascot-accent: 22 62% 42%;
+}
+
+html[data-season='halloween'].dark {
+  /* Dark mode — moonlit. */
+  --background: 274.6 38.2% 13.3%;
+  --foreground: 40.4 71.9% 87.5%;
+  --card: 273.8 36.4% 17.3%;
+  --card-foreground: 40.4 71.9% 87.5%;
+  --popover: 274 38% 15.5%;
+  --popover-foreground: 40.4 71.9% 87.5%;
+  --primary: 19.3 92% 62%;
+  --primary-foreground: 274 45% 12%;
+  --secondary: 274 25% 24%;
+  --secondary-foreground: 40.4 71.9% 87.5%;
+  --muted: 274 22% 22%;
+  --muted-foreground: 40 18% 70%;
+  --accent: 273 32% 32%;
+  --accent-foreground: 40.4 71.9% 87.5%;
+  --border: 274 20% 32%;
+  --input: 274 20% 32%;
+  --ring: 19.3 92% 62%;
+  /* --destructive and --financial-positive stay as the app defines them. */
+
+  /* Art tokens — dark. */
+  --halloween-silhouette: #0f0817;
+  --halloween-hill: #190e28;
+  --halloween-rim: rgb(246 231 200 / 0.18);
+  --halloween-window: #ffd489;
+  --halloween-window-glow: rgb(255 193 94 / 0.75);
+  --halloween-moon-core: #fff6dc;
+  --halloween-moon-mid: #e6d9b4;
+  --halloween-moon-edge: #b3a684;
+  --halloween-moon-crater: rgb(92 70 40 / 0.18);
+  --halloween-moon-glow: rgb(255 224 170 / 0.3);
+  --halloween-sky-glow: rgb(126 88 178 / 0.26);
+  --halloween-fog: rgb(198 176 224 / 0.5);
+  --halloween-web: rgb(226 214 240 / 0.32);
+  --halloween-grain: rgb(255 245 220 / 0.035);
+  --halloween-sheet: #f3e6cd;
+  --halloween-sheet-edge: rgb(255 255 255 / 0.4);
+  --halloween-ghost-ink: #2b1b33;
+  --halloween-mote: rgb(255 193 94 / 0.5);
+
+  /* Header + hero. */
+  --halloween-header-surface: #2c1a3c;
+  --halloween-header-edge: rgb(255 209 138 / 0.18);
+  --halloween-moonbeam: rgb(186 158 236 / 0.32);
+  --halloween-hero-gradient: linear-gradient(
+    100deg,
+    #f6e7c8 0%,
+    #ffc15e 58%,
+    #f77e45 100%
+  );
+
+  --ambient-opacity: 0.3;
+
+  --mascot-paper: 40 24% 88%;
+  --mascot-paper-mid: 38 20% 83%;
+  --mascot-paper-edge: 36 16% 78%;
+  --mascot-ink: 274 40% 18%;
+  --mascot-rule: 34 12% 40%;
+  --mascot-stroke: 274 30% 42%;
+  --mascot-accent: 32 70% 58%;
+}
+
+/* ══ 2. Season surfaces ══════════════════════════════════════════════ */
+
+/*
+ * The season surfaces are screen-only: paper prints as paper, so the
+ * storybook voice, the hero gradient and the moonlit header never reach
+ * the printer.
+ */
+@media screen {
+  /*
+   * Storybook headings. Only headings change face; body copy, labels and
+   * every number keep the app's own type so the data stays readable.
+   */
+  html[data-season='halloween'] :is(h1, h2, h3, h4, h5, h6) {
+    font-family: var(--halloween-display);
+  }
+
+  html[data-season='halloween'] .landing-header {
+    background-image: var(--halloween-hero-gradient);
+  }
+
+  /* Moonlit header: a plum-tinted bar with a soft beam under the moon. */
+  html[data-season='halloween'] [data-app-header] {
+    background-color: color-mix(
+      in oklab,
+      var(--halloween-header-surface) 82%,
+      transparent
+    );
+    border-bottom-color: var(--halloween-header-edge);
+  }
+
+  html[data-season='halloween'] [data-app-header]::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    /* Below the header content, above its own background. */
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(
+      70% 260% at var(--halloween-moon-x) -70%,
+      var(--halloween-moonbeam) 0%,
+      transparent 68%
+    );
+  }
+}
+
+/*
+ * Re-hue the existing ambient wash to the season palette. Group-tinted
+ * backdrops keep their own colour, so they are excluded on purpose.
+ */
+html[data-season='halloween']
+  .ambient-backdrop:not([data-group-tinted='true'])
+  .ambient-backdrop__orb--emerald {
+  background: radial-gradient(
+    circle,
+    hsl(268 62% 58% / 0.16) 0%,
+    hsl(268 58% 50% / 0.06) 46%,
+    transparent 72%
+  );
+}
+
+html[data-season='halloween']
+  .ambient-backdrop:not([data-group-tinted='true'])
+  .ambient-backdrop__orb--coral {
+  background: radial-gradient(
+    circle,
+    hsl(36 92% 62% / 0.14) 0%,
+    hsl(26 88% 54% / 0.05) 48%,
+    transparent 72%
+  );
+}
+
+html[data-season='halloween'].dark
+  .ambient-backdrop:not([data-group-tinted='true'])
+  .ambient-backdrop__orb--emerald {
+  background: radial-gradient(
+    circle,
+    hsl(268 66% 52% / 0.18) 0%,
+    hsl(268 60% 44% / 0.05) 46%,
+    transparent 72%
+  );
+}
+
+html[data-season='halloween'].dark
+  .ambient-backdrop:not([data-group-tinted='true'])
+  .ambient-backdrop__orb--coral {
+  background: radial-gradient(
+    circle,
+    hsl(34 90% 58% / 0.12) 0%,
+    hsl(26 84% 50% / 0.04) 48%,
+    transparent 72%
+  );
+}
+
+/* ══ 3. The scenery plates ═══════════════════════════════════════════ */
+
+/*
+ * Both plates are inert until the season is switched on — with the
+ * attribute removed the markup disappears with the theme.
+ */
+.halloween-scenery,
+.halloween-ground {
+  display: none;
+}
+
+/* ── 3a. Ambient plate (fixed, viewport) ───────────────────────────── */
+
+html[data-season='halloween'] .halloween-scenery {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+
+/* Aged-paper tooth (light) / dust in the moonlight (dark). */
+.halloween-scenery__grain {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    var(--halloween-grain) 0.5px,
+    transparent 0.8px
+  );
+  background-size: 5px 5px;
+}
+
+/* A pool of light behind the moon. */
+.halloween-scenery__sky {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    58% 42% at var(--halloween-moon-x) 4%,
+    var(--halloween-sky-glow) 0%,
+    transparent 70%
+  );
+}
+
+/* Stars: night only. */
+.halloween-scenery__stars {
+  position: absolute;
+  inset: 0 0 30% 0;
+  opacity: 0;
+  background-image:
+    radial-gradient(
+      1.3px 1.3px at 12% 22%,
+      rgb(255 246 220 / 0.75),
+      transparent
+    ),
+    radial-gradient(1px 1px at 28% 9%, rgb(255 246 220 / 0.6), transparent),
+    radial-gradient(
+      1.5px 1.5px at 46% 27%,
+      rgb(255 246 220 / 0.7),
+      transparent
+    ),
+    radial-gradient(1px 1px at 58% 12%, rgb(255 246 220 / 0.5), transparent),
+    radial-gradient(
+      1.2px 1.2px at 71% 32%,
+      rgb(255 246 220 / 0.65),
+      transparent
+    ),
+    radial-gradient(1px 1px at 86% 18%, rgb(255 246 220 / 0.55), transparent),
+    radial-gradient(
+      1.4px 1.4px at 94% 40%,
+      rgb(255 246 220 / 0.7),
+      transparent
+    ),
+    radial-gradient(1px 1px at 8% 44%, rgb(255 246 220 / 0.45), transparent),
+    radial-gradient(
+      1.1px 1.1px at 38% 48%,
+      rgb(255 246 220 / 0.5),
+      transparent
+    ),
+    radial-gradient(1px 1px at 64% 46%, rgb(255 246 220 / 0.45), transparent),
+    radial-gradient(1.2px 1.2px at 78% 6%, rgb(255 246 220 / 0.55), transparent);
+}
+
+html[data-season='halloween'].dark .halloween-scenery__stars {
+  opacity: 1;
+}
+
+/* The moon, rising behind the header. */
+.halloween-scenery__moon {
+  position: absolute;
+  top: clamp(-2.5rem, -1vh, -0.5rem);
+  right: clamp(1rem, 9vw, 8rem);
+  width: clamp(112px, 17vw, 224px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 36% 30%,
+    var(--halloween-moon-core) 0%,
+    var(--halloween-moon-mid) 54%,
+    var(--halloween-moon-edge) 100%
+  );
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.07),
+    0 0 70px 14px var(--halloween-moon-glow);
+  animation: halloween-moon-breathe 46s ease-in-out infinite;
+}
+
+/* Two craters, so the disc is not a flat circle. */
+.halloween-scenery__moon::before,
+.halloween-scenery__moon::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: var(--halloween-moon-crater);
+}
+
+.halloween-scenery__moon::before {
+  top: 26%;
+  left: 22%;
+  width: 22%;
+  height: 22%;
+}
+
+.halloween-scenery__moon::after {
+  top: 52%;
+  left: 52%;
+  width: 13%;
+  height: 13%;
+}
+
+/* Dust and embers. */
+.halloween-scenery__motes {
+  position: absolute;
+  inset: 0;
+}
+
+.halloween-scenery__mote {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--halloween-mote);
+  box-shadow: 0 0 8px 2px var(--halloween-mote);
+  animation: halloween-mote-rise 11s linear infinite;
+}
+
+.halloween-scenery__mote--1 {
+  left: 14%;
+  bottom: 22%;
+  animation-delay: 0s;
+  animation-duration: 13s;
+}
+
+.halloween-scenery__mote--2 {
+  left: 32%;
+  bottom: 30%;
+  animation-delay: 3.4s;
+  animation-duration: 15s;
+}
+
+.halloween-scenery__mote--3 {
+  left: 68%;
+  bottom: 18%;
+  animation-delay: 6.8s;
+  animation-duration: 12s;
+}
+
+.halloween-scenery__mote--4 {
+  left: 84%;
+  bottom: 34%;
+  animation-delay: 9.2s;
+  animation-duration: 16s;
+}
+
+/* Fog: two slow bands hugging the bottom of the viewport. */
+.halloween-scenery__fog {
+  position: absolute;
+  left: -25%;
+  width: 150%;
+  bottom: clamp(-3rem, -4vh, -1rem);
+  height: clamp(160px, 30vh, 340px);
+  background: radial-gradient(
+    58% 100% at 50% 100%,
+    var(--halloween-fog) 0%,
+    transparent 74%
+  );
+  filter: blur(14px);
+  opacity: 0.45;
+  animation: halloween-fog-drift 96s linear infinite alternate;
+}
+
+.halloween-scenery__fog--near {
+  bottom: clamp(-5rem, -6vh, -2rem);
+  height: clamp(140px, 26vh, 300px);
+  opacity: 0.3;
+  filter: blur(22px);
+  animation-duration: 138s;
+  animation-direction: alternate-reverse;
+}
+
+/* Cobwebs in two corners of the viewport. */
+.halloween-scenery__web {
+  position: absolute;
+  width: clamp(84px, 13vw, 190px);
+  aspect-ratio: 1;
+  color: var(--halloween-web);
+  opacity: 0.85;
+}
+
+.halloween-scenery__web--top-left {
+  top: 0;
+  left: 0;
+}
+
+.halloween-scenery__web--bottom-right {
+  right: 0;
+  bottom: 0;
+  transform: rotate(180deg);
+}
+
+/* The signature: Bill in a sheet ghost costume. */
+.halloween-scenery__ghost {
+  position: absolute;
+  left: clamp(0.5rem, 5vw, 4.5rem);
+  bottom: clamp(7rem, 24vh, 14rem);
+  width: clamp(58px, 7vw, 96px);
+  height: auto;
+  filter: drop-shadow(0 12px 18px rgb(20 8 30 / 0.28));
+  animation: halloween-ghost-float 13s ease-in-out infinite alternate;
+}
+
+.halloween-ghost__sheet {
+  fill: var(--halloween-sheet);
+  stroke: var(--halloween-sheet-edge);
+  stroke-width: 1.4;
+}
+
+.halloween-ghost__ink {
+  fill: var(--halloween-ghost-ink);
+}
+
+.halloween-ghost__stroke {
+  fill: none;
+  stroke: var(--halloween-ghost-ink);
+}
+
+.halloween-ghost__seam {
+  stroke: var(--halloween-ghost-ink);
+  stroke-width: 1.6;
+  opacity: 0.3;
+}
+
+.halloween-ghost__rule {
+  stroke: var(--halloween-ghost-ink);
+  stroke-width: 1.8;
+  opacity: 0.22;
+}
+
+.halloween-ghost__arm {
+  stroke: var(--halloween-ghost-ink);
+  opacity: 0.5;
+}
+
+/* ── 3b. Ground plate (document bottom) ────────────────────────────── */
+
+html[data-season='halloween'] .halloween-ground {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 210px;
+  /* Where the silhouettes stand, measured up from the document bottom.
+     The footer band covers the first ~50px (desktop) / ~110px (mobile),
+     so the props read as rising from behind the footer, and the hill fills
+     whatever the footer leaves uncovered. */
+  padding-bottom: 60px;
+  padding-inline: clamp(0.5rem, 4vw, 4rem);
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  color: var(--halloween-silhouette);
+}
+
+/* The rolling hill the silhouettes stand on. */
+.halloween-ground__hill {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 100px;
+  width: 100%;
+  color: var(--halloween-hill);
+}
+
+/* A thin edge of moonlight along the ridge. */
+.halloween-ground__ridge {
+  stroke: var(--halloween-rim);
+  stroke-width: 1.6;
+  vector-effect: non-scaling-stroke;
+}
+
+.halloween-ground__house,
+.halloween-ground__tree,
+.halloween-ground__pumpkin {
+  display: block;
+  flex: 0 0 auto;
+  width: auto;
+  position: relative;
+}
+
+.halloween-ground__house--main {
+  height: 124px;
+}
+
+.halloween-ground__house--far {
+  height: 84px;
+  opacity: 0.72;
+}
+
+.halloween-ground__tree {
+  height: 118px;
+}
+
+.halloween-ground__pumpkin {
+  height: 34px;
+}
+
+.halloween-house__mass {
+  fill: currentColor;
+}
+
+.halloween-house__vane {
+  fill: none;
+  stroke: currentColor;
+}
+
+.halloween-tree__branches {
+  stroke: currentColor;
+}
+
+.halloween-house__window {
+  fill: var(--halloween-window);
+  filter: drop-shadow(0 0 6px var(--halloween-window-glow));
+}
+
+.halloween-house__mullion {
+  fill: none;
+  stroke: var(--halloween-silhouette);
+  stroke-width: 1.6;
+}
+
+.halloween-house__windows {
+  animation: halloween-candle-flicker 7.5s ease-in-out infinite;
+}
+
+.halloween-pumpkin__body {
+  fill: var(--halloween-pumpkin);
+}
+
+.halloween-pumpkin__ridge {
+  stroke: rgb(0 0 0 / 0.16);
+  stroke-width: 1.6;
+}
+
+.halloween-pumpkin__stem {
+  stroke: #4a6b2f;
+}
+
+.halloween-pumpkin__face {
+  fill: var(--halloween-window);
+  filter: drop-shadow(0 0 5px var(--halloween-window-glow));
+}
+
+/* ══ 4. Keyframes ════════════════════════════════════════════════════ */
+
+@keyframes halloween-moon-breathe {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translate3d(0, -12px, 0) scale(1.02);
+    opacity: 1;
+  }
+}
+
+@keyframes halloween-fog-drift {
+  from {
+    transform: translate3d(-7%, 0, 0);
+  }
+  to {
+    transform: translate3d(7%, 0, 0);
+  }
+}
+
+@keyframes halloween-ghost-float {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(-3deg);
+  }
+  100% {
+    transform: translate3d(0, -20px, 0) rotate(3deg);
+  }
+}
+
+@keyframes halloween-mote-rise {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.75;
+  }
+  70% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate3d(14px, -120px, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes halloween-candle-flicker {
+  0%,
+  100% {
+    opacity: 0.95;
+  }
+  34% {
+    opacity: 0.78;
+  }
+  52% {
+    opacity: 0.98;
+  }
+  74% {
+    opacity: 0.86;
+  }
+}
+
+/* ══ 5. Responsive ═══════════════════════════════════════════════════ */
+
+@media (width <= 639px) {
+  html[data-season='halloween'] .halloween-ground {
+    height: 200px;
+    padding-bottom: 54px;
+    padding-inline: 0.75rem;
+  }
+
+  .halloween-ground__house--main {
+    height: 130px;
+  }
+
+  .halloween-ground__tree {
+    height: 120px;
+  }
+
+  .halloween-ground__pumpkin {
+    height: 28px;
+  }
+
+  /* Keep the small screen readable: one house, one tree, one pumpkin. */
+  .halloween-ground__house--far,
+  .halloween-ground__pumpkin--b {
+    display: none;
+  }
+
+  .halloween-scenery__web {
+    width: clamp(72px, 22vw, 120px);
+  }
+
+  .halloween-scenery__ghost {
+    /* Float between the house and the right edge: the tree owns the left. */
+    right: 14%;
+    left: auto;
+    bottom: 16%;
+    width: 52px;
+    opacity: 0.8;
+  }
+}
+
+/* ══ 6. Reduced motion ═══════════════════════════════════════════════ */
+
+/*
+ * The scenery stays, the movement stops. The static composition is
+ * deliberate: the moon rests at mid-breath, the fog sits low and still,
+ * the ghost hangs in place and the candles burn steady.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .halloween-scenery *,
+  .halloween-ground * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .halloween-scenery__moon {
+    transform: none;
+    opacity: 0.96;
+  }
+
+  .halloween-scenery__fog {
+    transform: translate3d(0, 0, 0);
+  }
+
+  .halloween-scenery__ghost {
+    transform: translate3d(0, 0, 0) rotate(-2deg);
+  }
+
+  .halloween-scenery__mote {
+    opacity: 0.4;
+  }
+
+  .halloween-house__windows {
+    opacity: 0.92;
+  }
+}
+
+/* ══ 7. Print ════════════════════════════════════════════════════════ */
+
+@media print {
+  .halloween-scenery,
+  .halloween-ground {
+    display: none !important;
+  }
+
+  /* Paper prints as paper: the normal light tokens come back. */
+  html[data-season='halloween'],
+  html[data-season='halloween'].dark {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 163 94% 24%;
+    --primary-foreground: 0 100% 100%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 142.1 76.2% 36.3%;
+    --ambient-opacity: 0;
+    --mascot-paper: 40 28% 98%;
+    --mascot-paper-mid: 36 20% 94%;
+    --mascot-paper-edge: 42 16% 91%;
+    --mascot-ink: 240 10% 16%;
+    --mascot-rule: 28 10% 46%;
+    --mascot-stroke: 163 42% 28%;
+    --mascot-accent: 163 38% 36%;
+  }
+}

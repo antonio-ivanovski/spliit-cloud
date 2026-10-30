@@ -3410,7 +3410,8 @@
     "toggle": "Design ändern",
     "light": "Hell",
     "dark": "Dunkel",
-    "system": "Systemeinstellung"
+    "system": "Systemeinstellung",
+    "halloweenEffects": "Halloween-Effekte"
   },
   "PushOnboarding": {
     "title": "Wähle, wie du auf dem Laufenden bleiben möchtest",

@@ -3408,7 +3408,8 @@
     "toggle": "테마 변경",
     "light": "라이트",
     "dark": "다크",
-    "system": "시스템 설정"
+    "system": "시스템 설정",
+    "halloweenEffects": "핼러윈 효과"
   },
   "PushOnboarding": {
     "title": "최신 정보를 받는 방법 선택",

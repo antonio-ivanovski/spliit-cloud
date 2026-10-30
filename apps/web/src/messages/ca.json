@@ -3363,7 +3363,8 @@
     "toggle": "Canvia el tema",
     "light": "Clar",
     "dark": "Fosc",
-    "system": "Predeterminat del sistema"
+    "system": "Predeterminat del sistema",
+    "halloweenEffects": "Efectes de Halloween"
   },
   "PushOnboarding": {
     "title": "Tria com estar al dia",

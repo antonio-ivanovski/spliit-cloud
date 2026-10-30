@@ -3363,7 +3363,8 @@
     "toggle": "Cambia tema",
     "light": "Chiaro",
     "dark": "Scuro",
-    "system": "Predefinito di sistema"
+    "system": "Predefinito di sistema",
+    "halloweenEffects": "Effetti di Halloween"
   },
   "PushOnboarding": {
     "title": "Scegli come restare aggiornato",

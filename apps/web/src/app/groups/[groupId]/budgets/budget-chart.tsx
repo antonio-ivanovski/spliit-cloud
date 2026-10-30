@@ -154,7 +154,7 @@ export function BudgetChart({ budget, currency }: Props) {
           </span>
           {period.committed > 0 && (
             <span className="flex items-center gap-1">
-              <span className="inline-block h-0.5 w-3 border-t border-dashed border-primary" />
+              <span className="inline-block h-0.5 w-3 border-t border-dashed border-financial-positive" />
               <span>{t('legendCommitted')}</span>
             </span>
           )}
@@ -228,7 +228,7 @@ export function BudgetChart({ budget, currency }: Props) {
               <Line
                 type="linear"
                 dataKey="committed"
-                stroke="hsl(var(--primary))"
+                stroke="hsl(var(--financial-positive))"
                 strokeWidth={1.5}
                 strokeDasharray="2 2"
                 dot={false}
@@ -271,7 +271,7 @@ function ChartTooltip({
         {formatCurrency(currency, point.cumulative ?? 0, locale)}
       </div>
       {point.committed != null && (
-        <div className="text-primary tabular-nums">
+        <div className="text-financial-positive tabular-nums">
           + {formatCurrency(currency, point.committed, locale)}
         </div>
       )}

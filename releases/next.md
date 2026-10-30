@@ -19,6 +19,9 @@ who is affected, and the exact migration steps.
 
 ### 🚀 Features
 
+- Halloween appearance: Spliit dresses up with haunted scenery and seasonal
+  colors from October 30 through November 1, with an appearance switch that
+  remembers your opt-out in this browser (`TBD` by @TBD)
 - Personal expenses: an account-owned spending ledger with monthly budgets,
   linked group/friend expenses at your share, CSV bank import, smart
   categorization, and a reviewed batch-categorization run (`TBD` by @TBD)

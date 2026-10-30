@@ -3363,7 +3363,8 @@
     "toggle": "Changer de thème",
     "light": "Clair",
     "dark": "Sombre",
-    "system": "Réglage du système"
+    "system": "Réglage du système",
+    "halloweenEffects": "Effets d’Halloween"
   },
   "PushOnboarding": {
     "title": "Choisissez comment rester informé",

@@ -108,7 +108,8 @@
     "toggle": "Change theme",
     "light": "Light",
     "dark": "Dark",
-    "system": "System default"
+    "system": "System default",
+    "halloweenEffects": "Halloween effects"
   },
   "Footer": {
     "madeIn": "Made by the <github>open-source community</github> with love ❤️",

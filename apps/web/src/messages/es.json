@@ -3414,7 +3414,8 @@
     "toggle": "Cambiar tema",
     "light": "Claro",
     "dark": "Oscuro",
-    "system": "Predeterminado del sistema"
+    "system": "Predeterminado del sistema",
+    "halloweenEffects": "Efectos de Halloween"
   },
   "PushOnboarding": {
     "title": "Elige cómo mantenerte al día",

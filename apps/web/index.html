@@ -11,12 +11,28 @@
     <script>
       // Resolve the same preference as ThemeProvider before any app content
       // paints, including a saved override of the device's color scheme.
+      // Keep the Halloween date window, storage key, and colors in sync with
+      // apps/web/src/lib/seasonal-theme.ts.
       {
         let savedTheme
+        let halloweenDisabled = false
         try {
           savedTheme = localStorage.getItem('theme')
+          halloweenDisabled =
+            localStorage.getItem('spliit:halloween-effects-disabled') === 'true'
         } catch {
           // Fall back to the device preference when storage is unavailable.
+        }
+        const now = new Date()
+        const month = now.getMonth()
+        const day = now.getDate()
+        const halloween =
+          !halloweenDisabled &&
+          ((month === 9 && day >= 30) || (month === 10 && day === 1))
+        if (halloween) {
+          document.documentElement.dataset.season = 'halloween'
+        } else {
+          document.documentElement.removeAttribute('data-season')
         }
         const dark =
           savedTheme === 'dark' ||
@@ -26,7 +42,16 @@
         document.documentElement.style.colorScheme = dark ? 'dark' : 'light'
         document
           .querySelector('meta[name="theme-color"]')
-          .setAttribute('content', dark ? '#0c0a09' : '#ffffff')
+          .setAttribute(
+            'content',
+            halloween
+              ? dark
+                ? '#24152F'
+                : '#FFF0CE'
+              : dark
+                ? '#0c0a09'
+                : '#ffffff',
+          )
       }
     </script>
     <link rel="manifest" href="/manifest.webmanifest" />
@@ -123,6 +148,12 @@
       html.dark {
         background: #0c0a09;
       }
+      html[data-season='halloween'] {
+        background: #fff0ce;
+      }
+      html[data-season='halloween'].dark {
+        background: #24152f;
+      }
       #pwa-bootstrap {
         position: fixed;
         inset: 0;
@@ -145,6 +176,26 @@
       .dark #pwa-bootstrap {
         background: #0c0a09;
         color: #d1d5db;
+      }
+      html[data-season='halloween'] #pwa-bootstrap {
+        background: #fff0ce;
+      }
+      html[data-season='halloween'].dark #pwa-bootstrap {
+        background: #24152f;
+        color: #d1d5db;
+      }
+      @media print {
+        html[data-season='halloween'],
+        html[data-season='halloween'] body {
+          background: #ffffff !important;
+        }
+        html[data-season='halloween'] .halloween-scenery,
+        html[data-season='halloween'] .halloween-ground,
+        html[data-season='halloween'] [data-halloween-scenery],
+        html[data-season='halloween'] #halloween-scenery,
+        html[data-season='halloween'] .ambient-backdrop {
+          display: none !important;
+        }
       }
     </style>
     <script>

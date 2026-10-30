@@ -3346,7 +3346,8 @@
     "toggle": "Temayı değiştir",
     "light": "Açık",
     "dark": "Koyu",
-    "system": "Sistem varsayılanı"
+    "system": "Sistem varsayılanı",
+    "halloweenEffects": "Cadılar Bayramı efektleri"
   },
   "PushOnboarding": {
     "title": "Güncel kalma yöntemini seçin",
