@@ -27,6 +27,8 @@
     "@better-auth/passkey": "~1.7.5",
     "@fontsource-variable/nunito": "^5.3.0",
     "@hookform/resolvers": "^5.9.1",
+    "@rive-app/react-webgl2": "^4.37.1",
+    "@rive-app/webgl2": "2.45.1",
     "@spliit/domain": "workspace:*",
     "@tanstack/react-query": "^5.103.1",
     "@tanstack/react-router": "^1.170.36",

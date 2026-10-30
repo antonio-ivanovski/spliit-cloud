@@ -1,0 +1,5097 @@
+{
+  "groups": [
+    {
+      "name": "body",
+      "parent": "artboard",
+      "x": 70,
+      "y": 79,
+      "order": 14
+    },
+    {
+      "name": "lean",
+      "parent": "body",
+      "x": 0,
+      "y": 0,
+      "order": 15
+    },
+    {
+      "name": "acting",
+      "parent": "lean",
+      "x": 0,
+      "y": 0,
+      "order": 16
+    },
+    {
+      "name": "leftShoulder",
+      "parent": "acting",
+      "x": -31,
+      "y": 1,
+      "order": 17
+    },
+    {
+      "name": "leftElbow",
+      "parent": "leftShoulder",
+      "x": -14,
+      "y": 13,
+      "order": 36
+    },
+    {
+      "name": "leftHand",
+      "parent": "leftElbow",
+      "x": -5,
+      "y": 15,
+      "order": 53
+    },
+    {
+      "name": "rightShoulder",
+      "parent": "acting",
+      "x": 31,
+      "y": 1,
+      "order": 73
+    },
+    {
+      "name": "rightElbow",
+      "parent": "rightShoulder",
+      "x": 14,
+      "y": 13,
+      "order": 92
+    },
+    {
+      "name": "rightHand",
+      "parent": "rightElbow",
+      "x": 5,
+      "y": 15,
+      "order": 109
+    },
+    {
+      "name": "leftHalf",
+      "parent": "acting",
+      "x": 0,
+      "y": 0,
+      "order": 129
+    },
+    {
+      "name": "rightHalf",
+      "parent": "acting",
+      "x": 0,
+      "y": 0,
+      "order": 130
+    },
+    {
+      "name": "face",
+      "parent": "acting",
+      "x": 0,
+      "y": -5,
+      "order": 261
+    },
+    {
+      "name": "gaze",
+      "parent": "face",
+      "x": 0,
+      "y": 0,
+      "order": 262
+    },
+    {
+      "name": "leftEye",
+      "parent": "gaze",
+      "x": -12,
+      "y": -4,
+      "order": 263
+    },
+    {
+      "name": "leftBrow",
+      "parent": "face",
+      "x": -12,
+      "y": -15,
+      "order": 272
+    },
+    {
+      "name": "rightEye",
+      "parent": "gaze",
+      "x": 12,
+      "y": -4,
+      "order": 283
+    },
+    {
+      "name": "rightBrow",
+      "parent": "face",
+      "x": 12,
+      "y": -15,
+      "order": 292
+    },
+    {
+      "name": "mouth",
+      "parent": "face",
+      "x": 0,
+      "y": 8,
+      "order": 303
+    },
+    {
+      "name": "leftTwin",
+      "parent": "leftHalf",
+      "x": -17,
+      "y": -6,
+      "order": 310
+    },
+    {
+      "name": "rightTwin",
+      "parent": "rightHalf",
+      "x": 17,
+      "y": -6,
+      "order": 325
+    },
+    {
+      "name": "effects",
+      "parent": "acting",
+      "x": 0,
+      "y": 0,
+      "order": 340
+    },
+    {
+      "name": "coin0",
+      "parent": "effects",
+      "x": 0,
+      "y": 0,
+      "order": 341
+    },
+    {
+      "name": "coin1",
+      "parent": "effects",
+      "x": 0,
+      "y": 0,
+      "order": 352
+    },
+    {
+      "name": "coin2",
+      "parent": "effects",
+      "x": 0,
+      "y": 0,
+      "order": 363
+    },
+    {
+      "name": "coin3",
+      "parent": "effects",
+      "x": 0,
+      "y": 0,
+      "order": 374
+    },
+    {
+      "name": "coin4",
+      "parent": "effects",
+      "x": 0,
+      "y": 0,
+      "order": 385
+    },
+    {
+      "name": "coin5",
+      "parent": "effects",
+      "x": 0,
+      "y": 0,
+      "order": 396
+    },
+    {
+      "name": "scrap",
+      "parent": "effects",
+      "x": 0,
+      "y": 0,
+      "order": 407
+    }
+  ],
+  "shapes": [
+    {
+      "name": "leftUpper",
+      "parent": "leftShoulder",
+      "path": "M 0 -5 L -17 7 L -14 17 L 2 5 Z",
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#ffe7d5ac"
+        },
+        {
+          "paintType": "stroke",
+          "color": "#ff7c8c71",
+          "width": 1.1
+        }
+      ],
+      "order": 18
+    },
+    {
+      "name": "leftUpperLight",
+      "parent": "leftShoulder",
+      "path": "M 0 -5 L -17 7 L -14 10 L 2 2 Z",
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#fffff5dc"
+        }
+      ],
+      "order": 28
+    },
+    {
+      "name": "leftForearm",
+      "parent": "leftElbow",
+      "path": "M 4 -3 L -3 -5 L -8 13 L -1 16 Z",
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#fffff5dc"
+        },
+        {
+          "paintType": "stroke",
+          "color": "#ff7c8c71",
+          "width": 1
+        }
+      ],
+      "order": 37
+    },
+    {
+      "name": "leftCrease",
+      "parent": "leftElbow",
+      "path": "M 3 -2 L -3 1",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ff7c8c71",
+          "width": 0.8
+        }
+      ],
+      "order": 47
+    },
+    {
+      "name": "leftPalm",
+      "parent": "leftHand",
+      "path": "M 4 -3 L -3 -4 L -7 1 L -4 7 L 3 6 L 6 2 Z",
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#fffff5dc"
+        },
+        {
+          "paintType": "stroke",
+          "color": "#ff7c8c71",
+          "width": 1
+        }
+      ],
+      "order": 54
+    },
+    {
+      "name": "leftThumb",
+      "parent": "leftHand",
+      "path": "M 4 0 L 0 2 L -2 0",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ff7c8c71",
+          "width": 0.8
+        }
+      ],
+      "order": 66
+    },
+    {
+      "name": "rightUpper",
+      "parent": "rightShoulder",
+      "path": "M 0 -5 L 17 7 L 14 17 L -2 5 Z",
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#ffe7d5ac"
+        },
+        {
+          "paintType": "stroke",
+          "color": "#ff7c8c71",
+          "width": 1.1
+        }
+      ],
+      "order": 74
+    },
+    {
+      "name": "rightUpperLight",
+      "parent": "rightShoulder",
+      "path": "M 0 -5 L 17 7 L 14 10 L -2 2 Z",
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#fffff5dc"
+        }
+      ],
+      "order": 84
+    },
+    {
+      "name": "rightForearm",
+      "parent": "rightElbow",
+      "path": "M -4 -3 L 3 -5 L 8 13 L 1 16 Z",
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#fffff5dc"
+        },
+        {
+          "paintType": "stroke",
+          "color": "#ff7c8c71",
+          "width": 1
+        }
+      ],
+      "order": 93
+    },
+    {
+      "name": "rightCrease",
+      "parent": "rightElbow",
+      "path": "M -3 -2 L 3 1",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ff7c8c71",
+          "width": 0.8
+        }
+      ],
+      "order": 103
+    },
+    {
+      "name": "rightPalm",
+      "parent": "rightHand",
+      "path": "M -4 -3 L 3 -4 L 7 1 L 4 7 L -3 6 L -6 2 Z",
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#fffff5dc"
+        },
+        {
+          "paintType": "stroke",
+          "color": "#ff7c8c71",
+          "width": 1
+        }
+      ],
+      "order": 110
+    },
+    {
+      "name": "rightThumb",
+      "parent": "rightHand",
+      "path": "M -4 0 L 0 2 L 2 0",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ff7c8c71",
+          "width": 0.8
+        }
+      ],
+      "order": 122
+    },
+    {
+      "name": "leftPaper",
+      "parent": "leftHalf",
+      "path": "M 0 -53 L -26 -53 C -31 -53 -34 -50 -34 -44 L -34 48 L -28 43 L -22 49 L -16 43 L -10 49 L -4 43 L 0 47 Z",
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#fffff5dc"
+        }
+      ],
+      "order": 131
+    },
+    {
+      "name": "rightPaper",
+      "parent": "rightHalf",
+      "path": "M 0 -53 L 24 -53 C 31 -53 34 -49 34 -42 L 34 48 L 28 43 L 22 49 L 16 43 L 10 49 L 4 43 L 0 47 Z",
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#fffff5dc"
+        }
+      ],
+      "order": 145
+    },
+    {
+      "name": "leftOutline",
+      "parent": "leftHalf",
+      "path": "M 0 -53 L -26 -53 C -31 -53 -34 -50 -34 -44 L -34 48 L -28 43 L -22 49 L -16 43 L -10 49 L -4 43 L 0 47",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ff7c8c71",
+          "width": 1.5
+        }
+      ],
+      "order": 159
+    },
+    {
+      "name": "rightOutline",
+      "parent": "rightHalf",
+      "path": "M 0 -53 L 24 -53 C 31 -53 34 -49 34 -42 L 34 48 L 28 43 L 22 49 L 16 43 L 10 49 L 4 43 L 0 47",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ff7c8c71",
+          "width": 1.5
+        }
+      ],
+      "order": 173
+    },
+    {
+      "name": "edgeShadow",
+      "parent": "rightHalf",
+      "path": "M 27 -48 C 31 -44 29 -28 29 -12 L 29 41 L 34 48 L 34 -42 C 34 -47 31 -51 27 -48 Z",
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#ffe7d5ac"
+        }
+      ],
+      "order": 187
+    },
+    {
+      "name": "topFold",
+      "parent": "leftHalf",
+      "path": "M -34 -42 C -28 -47 -14 -45 0 -45 L 0 -53 L -26 -53 C -31 -53 -34 -50 -34 -42 Z",
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#fff0e3c4"
+        }
+      ],
+      "order": 196
+    },
+    {
+      "name": "topFoldRight",
+      "parent": "rightHalf",
+      "path": "M 0 -45 L 24 -45 C 30 -45 31 -43 34 -42 C 34 -49 31 -53 24 -53 L 0 -53 Z",
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#fff0e3c4"
+        }
+      ],
+      "order": 204
+    },
+    {
+      "name": "header",
+      "parent": "leftHalf",
+      "path": "M -23 -34 L -3 -34",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ffa7af8e",
+          "width": 2.3
+        }
+      ],
+      "order": 213
+    },
+    {
+      "name": "headerRight",
+      "parent": "rightHalf",
+      "path": "M 3 -34 L 13 -34",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ffa7af8e",
+          "width": 2.3
+        }
+      ],
+      "order": 219
+    },
+    {
+      "name": "leftPrint0",
+      "parent": "leftHalf",
+      "path": "M -7 23 L -24 23",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ffa7af8e",
+          "width": 1.5
+        }
+      ],
+      "order": 225
+    },
+    {
+      "name": "leftPrint1",
+      "parent": "leftHalf",
+      "path": "M -7 29 L -24 29",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ffa7af8e",
+          "width": 1.5
+        }
+      ],
+      "order": 231
+    },
+    {
+      "name": "leftPrint2",
+      "parent": "leftHalf",
+      "path": "M -7 35 L -17 35",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ffa7af8e",
+          "width": 1.5
+        }
+      ],
+      "order": 237
+    },
+    {
+      "name": "rightPrint0",
+      "parent": "rightHalf",
+      "path": "M 7 23 L 24 23",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ffa7af8e",
+          "width": 1.5
+        }
+      ],
+      "order": 243
+    },
+    {
+      "name": "rightPrint1",
+      "parent": "rightHalf",
+      "path": "M 7 29 L 24 29",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ffa7af8e",
+          "width": 1.5
+        }
+      ],
+      "order": 249
+    },
+    {
+      "name": "rightPrint2",
+      "parent": "rightHalf",
+      "path": "M 7 35 L 17 35",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ffa7af8e",
+          "width": 1.5
+        }
+      ],
+      "order": 255
+    },
+    {
+      "name": "leftEyeInk",
+      "parent": "leftEye",
+      "primitive": "ellipse",
+      "x": 0,
+      "y": 0,
+      "width": 8,
+      "height": 12,
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#ff33483f"
+        }
+      ],
+      "order": 264
+    },
+    {
+      "name": "leftEyeShine",
+      "parent": "leftEye",
+      "primitive": "ellipse",
+      "x": -1.2,
+      "y": -2,
+      "width": 2.1,
+      "height": 2.8,
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#fffffcf2"
+        }
+      ],
+      "order": 268
+    },
+    {
+      "name": "leftBrowStroke",
+      "parent": "leftBrow",
+      "path": "M -5 0 C -2 -2 2 -2 5 0",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ff33483f",
+          "width": 1.4
+        }
+      ],
+      "order": 273
+    },
+    {
+      "name": "leftCheek",
+      "parent": "face",
+      "primitive": "ellipse",
+      "x": -21,
+      "y": 5,
+      "width": 9,
+      "height": 4,
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#ffe6c7a5"
+        }
+      ],
+      "order": 279
+    },
+    {
+      "name": "rightEyeInk",
+      "parent": "rightEye",
+      "primitive": "ellipse",
+      "x": 0,
+      "y": 0,
+      "width": 8,
+      "height": 12,
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#ff33483f"
+        }
+      ],
+      "order": 284
+    },
+    {
+      "name": "rightEyeShine",
+      "parent": "rightEye",
+      "primitive": "ellipse",
+      "x": -1.2,
+      "y": -2,
+      "width": 2.1,
+      "height": 2.8,
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#fffffcf2"
+        }
+      ],
+      "order": 288
+    },
+    {
+      "name": "rightBrowStroke",
+      "parent": "rightBrow",
+      "path": "M -5 0 C -2 -2 2 -2 5 0",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ff33483f",
+          "width": 1.4
+        }
+      ],
+      "order": 293
+    },
+    {
+      "name": "rightCheek",
+      "parent": "face",
+      "primitive": "ellipse",
+      "x": 21,
+      "y": 5,
+      "width": 9,
+      "height": 4,
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#ffe6c7a5"
+        }
+      ],
+      "order": 299
+    },
+    {
+      "name": "smile",
+      "parent": "mouth",
+      "path": "M -8 -2 C -5 6 5 6 8 -2",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ff33483f",
+          "width": 2
+        }
+      ],
+      "order": 304
+    },
+    {
+      "name": "leftTwinEye0",
+      "parent": "leftTwin",
+      "primitive": "ellipse",
+      "x": -5,
+      "y": -2,
+      "width": 4,
+      "height": 7,
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#ff33483f"
+        }
+      ],
+      "order": 311
+    },
+    {
+      "name": "leftTwinEye1",
+      "parent": "leftTwin",
+      "primitive": "ellipse",
+      "x": 5,
+      "y": -2,
+      "width": 4,
+      "height": 7,
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#ff33483f"
+        }
+      ],
+      "order": 315
+    },
+    {
+      "name": "leftTwinSmile",
+      "parent": "leftTwin",
+      "path": "M -5 7 C -2 11 2 11 5 7",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ff33483f",
+          "width": 1.3
+        }
+      ],
+      "order": 319
+    },
+    {
+      "name": "rightTwinEye0",
+      "parent": "rightTwin",
+      "primitive": "ellipse",
+      "x": -5,
+      "y": -2,
+      "width": 4,
+      "height": 7,
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#ff33483f"
+        }
+      ],
+      "order": 326
+    },
+    {
+      "name": "rightTwinEye1",
+      "parent": "rightTwin",
+      "primitive": "ellipse",
+      "x": 5,
+      "y": -2,
+      "width": 4,
+      "height": 7,
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#ff33483f"
+        }
+      ],
+      "order": 330
+    },
+    {
+      "name": "rightTwinSmile",
+      "parent": "rightTwin",
+      "path": "M -5 7 C -2 11 2 11 5 7",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ff33483f",
+          "width": 1.3
+        }
+      ],
+      "order": 334
+    },
+    {
+      "name": "coinFace0",
+      "parent": "coin0",
+      "primitive": "ellipse",
+      "x": 0,
+      "y": 0,
+      "width": 7,
+      "height": 8,
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#ffd4b76e"
+        }
+      ],
+      "order": 342
+    },
+    {
+      "name": "coinMark0",
+      "parent": "coin0",
+      "path": "M 0 -2 L 0 2",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ff927444",
+          "width": 1
+        }
+      ],
+      "order": 346
+    },
+    {
+      "name": "coinFace1",
+      "parent": "coin1",
+      "primitive": "ellipse",
+      "x": 0,
+      "y": 0,
+      "width": 7,
+      "height": 8,
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#ffd4b76e"
+        }
+      ],
+      "order": 353
+    },
+    {
+      "name": "coinMark1",
+      "parent": "coin1",
+      "path": "M 0 -2 L 0 2",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ff927444",
+          "width": 1
+        }
+      ],
+      "order": 357
+    },
+    {
+      "name": "coinFace2",
+      "parent": "coin2",
+      "primitive": "ellipse",
+      "x": 0,
+      "y": 0,
+      "width": 7,
+      "height": 8,
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#ffd4b76e"
+        }
+      ],
+      "order": 364
+    },
+    {
+      "name": "coinMark2",
+      "parent": "coin2",
+      "path": "M 0 -2 L 0 2",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ff927444",
+          "width": 1
+        }
+      ],
+      "order": 368
+    },
+    {
+      "name": "coinFace3",
+      "parent": "coin3",
+      "primitive": "ellipse",
+      "x": 0,
+      "y": 0,
+      "width": 7,
+      "height": 8,
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#ffd4b76e"
+        }
+      ],
+      "order": 375
+    },
+    {
+      "name": "coinMark3",
+      "parent": "coin3",
+      "path": "M 0 -2 L 0 2",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ff927444",
+          "width": 1
+        }
+      ],
+      "order": 379
+    },
+    {
+      "name": "coinFace4",
+      "parent": "coin4",
+      "primitive": "ellipse",
+      "x": 0,
+      "y": 0,
+      "width": 7,
+      "height": 8,
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#ffd4b76e"
+        }
+      ],
+      "order": 386
+    },
+    {
+      "name": "coinMark4",
+      "parent": "coin4",
+      "path": "M 0 -2 L 0 2",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ff927444",
+          "width": 1
+        }
+      ],
+      "order": 390
+    },
+    {
+      "name": "coinFace5",
+      "parent": "coin5",
+      "primitive": "ellipse",
+      "x": 0,
+      "y": 0,
+      "width": 7,
+      "height": 8,
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#ffd4b76e"
+        }
+      ],
+      "order": 397
+    },
+    {
+      "name": "coinMark5",
+      "parent": "coin5",
+      "path": "M 0 -2 L 0 2",
+      "paints": [
+        {
+          "paintType": "stroke",
+          "color": "#ff927444",
+          "width": 1
+        }
+      ],
+      "order": 401
+    },
+    {
+      "name": "scrapPaper",
+      "parent": "scrap",
+      "path": "M -4 -5 L 4 -5 L 3 5 L -4 4 Z",
+      "paints": [
+        {
+          "paintType": "fill",
+          "color": "#fffff5dc"
+        },
+        {
+          "paintType": "stroke",
+          "color": "#ff7c8c71",
+          "width": 0.8
+        }
+      ],
+      "order": 408
+    }
+  ],
+  "timelines": {
+    "idle": {
+      "duration": 6,
+      "loop": true,
+      "tracks": [
+        {
+          "object": "acting",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [6, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [1.8, -2],
+            [3.4, 0],
+            [4.8, -1.4],
+            [6, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 15,
+          "keys": [
+            [0, -0.7],
+            [2, 0.8],
+            [4, -0.4],
+            [6, -0.7]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [6, 100]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [1.8, 101.2],
+            [3.4, 100],
+            [6, 100]
+          ]
+        },
+        {
+          "object": "leftShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [6, 0]
+          ]
+        },
+        {
+          "object": "rightShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [6, 0]
+          ]
+        },
+        {
+          "object": "leftElbow",
+          "property": 15,
+          "keys": [
+            [0, -3],
+            [2, 3],
+            [4, -1],
+            [6, -3]
+          ]
+        },
+        {
+          "object": "rightElbow",
+          "property": 15,
+          "keys": [
+            [0, 3],
+            [2, -2],
+            [4, 2],
+            [6, 3]
+          ]
+        },
+        {
+          "object": "leftHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [6, 0]
+          ]
+        },
+        {
+          "object": "rightHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [6, 0]
+          ]
+        },
+        {
+          "object": "leftEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [1.2, 100],
+            [1.28, 8],
+            [1.4, 100],
+            [4.5, 100],
+            [4.58, 8],
+            [4.7, 100],
+            [6, 100]
+          ]
+        },
+        {
+          "object": "rightEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [1.22, 100],
+            [1.3, 8],
+            [1.42, 100],
+            [4.52, 100],
+            [4.6, 8],
+            [4.72, 100],
+            [6, 100]
+          ]
+        },
+        {
+          "object": "leftBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [6, 0]
+          ]
+        },
+        {
+          "object": "rightBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [6, 0]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [6, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [6, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 14,
+          "keys": [
+            [0, 8],
+            [6, 8]
+          ]
+        },
+        {
+          "object": "face",
+          "property": 14,
+          "keys": [
+            [0, -5],
+            [6, -5]
+          ]
+        },
+        {
+          "object": "scrap",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [6, 0]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [6, 0]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [6, 0]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [6, 0]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [6, 0]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [6, 0]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [6, 0]
+          ]
+        }
+      ]
+    },
+    "thinking": {
+      "duration": 4,
+      "loop": true,
+      "tracks": [
+        {
+          "object": "acting",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [4, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [4, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 15,
+          "keys": [
+            [0, -2],
+            [2, 2],
+            [4, -2]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [4, 100]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [4, 100]
+          ]
+        },
+        {
+          "object": "leftShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [4, 0]
+          ]
+        },
+        {
+          "object": "rightShoulder",
+          "property": 15,
+          "keys": [
+            [0, 115],
+            [2, 120],
+            [4, 115]
+          ]
+        },
+        {
+          "object": "leftElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [4, 0]
+          ]
+        },
+        {
+          "object": "rightElbow",
+          "property": 15,
+          "keys": [
+            [0, 65],
+            [2, 72],
+            [4, 65]
+          ]
+        },
+        {
+          "object": "leftHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [4, 0]
+          ]
+        },
+        {
+          "object": "rightHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [4, 0]
+          ]
+        },
+        {
+          "object": "leftEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [4, 100]
+          ]
+        },
+        {
+          "object": "rightEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [4, 100]
+          ]
+        },
+        {
+          "object": "leftBrow",
+          "property": 15,
+          "keys": [
+            [0, -12],
+            [2, 8],
+            [4, -12]
+          ]
+        },
+        {
+          "object": "rightBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [4, 0]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [4, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 16,
+          "keys": [
+            [0, 55],
+            [4, 55]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 14,
+          "keys": [
+            [0, 8],
+            [4, 8]
+          ]
+        },
+        {
+          "object": "face",
+          "property": 14,
+          "keys": [
+            [0, -5],
+            [4, -5]
+          ]
+        },
+        {
+          "object": "scrap",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [4, 0]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [4, 0]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [4, 0]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [4, 0]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [4, 0]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [4, 0]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [4, 0]
+          ]
+        }
+      ]
+    },
+    "success": {
+      "duration": 2.5,
+      "loop": false,
+      "tracks": [
+        {
+          "object": "acting",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [2.5, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [0.12, 3],
+            [0.35, -8],
+            [0.65, 0],
+            [2.5, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.5, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [2.5, 100]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.12, 96],
+            [0.35, 104],
+            [0.65, 99],
+            [1, 100],
+            [2.5, 100]
+          ]
+        },
+        {
+          "object": "leftShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.15, 15],
+            [0.42, -100],
+            [0.8, -80],
+            [1.3, -95],
+            [2.2, 0],
+            [2.5, 0]
+          ]
+        },
+        {
+          "object": "rightShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.15, -15],
+            [0.42, 100],
+            [0.8, 80],
+            [1.3, 95],
+            [2.2, 0],
+            [2.5, 0]
+          ]
+        },
+        {
+          "object": "leftElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.5, 0]
+          ]
+        },
+        {
+          "object": "rightElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.5, 0]
+          ]
+        },
+        {
+          "object": "leftHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.5, 0]
+          ]
+        },
+        {
+          "object": "rightHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.5, 0]
+          ]
+        },
+        {
+          "object": "leftEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.3, 45],
+            [2.2, 45],
+            [2.5, 100]
+          ]
+        },
+        {
+          "object": "rightEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.3, 45],
+            [2.2, 45],
+            [2.5, 100]
+          ]
+        },
+        {
+          "object": "leftBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.5, 0]
+          ]
+        },
+        {
+          "object": "rightBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.5, 0]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [2.5, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [0.4, 120],
+            [2.2, 120],
+            [2.5, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 14,
+          "keys": [
+            [0, 8],
+            [2.5, 8]
+          ]
+        },
+        {
+          "object": "face",
+          "property": 14,
+          "keys": [
+            [0, -5],
+            [2.5, -5]
+          ]
+        },
+        {
+          "object": "scrap",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.5, 0]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.32, 0],
+            [0.42, 100],
+            [2.1, 100],
+            [2.4, 0],
+            [2.5, 0]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.32, 0],
+            [0.42, 100],
+            [2.1, 100],
+            [2.4, 0],
+            [2.5, 0]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.32, 0],
+            [0.42, 100],
+            [2.1, 100],
+            [2.4, 0],
+            [2.5, 0]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.32, 0],
+            [0.42, 100],
+            [2.1, 100],
+            [2.4, 0],
+            [2.5, 0]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.32, 0],
+            [0.42, 100],
+            [2.1, 100],
+            [2.4, 0],
+            [2.5, 0]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.32, 0],
+            [0.42, 100],
+            [2.1, 100],
+            [2.4, 0],
+            [2.5, 0]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [0.32, 12],
+            [0.8, 22],
+            [2.5, 25]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [0.32, -10],
+            [0.8, -55],
+            [2.5, 60]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.5, 180]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [0.32, -12],
+            [0.8, -27],
+            [2.5, -30]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [0.32, -10],
+            [0.8, -57],
+            [2.5, 60]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.5, 240]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [0.32, 12],
+            [0.8, 32],
+            [2.5, 35]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [0.32, -10],
+            [0.8, -59],
+            [2.5, 60]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.5, 300]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [0.32, -12],
+            [0.8, -37],
+            [2.5, -40]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [0.32, -10],
+            [0.8, -61],
+            [2.5, 60]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.5, 360]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [0.32, 12],
+            [0.8, 42],
+            [2.5, 45]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [0.32, -10],
+            [0.8, -63],
+            [2.5, 60]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.5, 420]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [0.32, -12],
+            [0.8, -47],
+            [2.5, -50]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [0.32, -10],
+            [0.8, -65],
+            [2.5, 60]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.5, 480]
+          ]
+        }
+      ]
+    },
+    "welcome": {
+      "duration": 2.2,
+      "loop": false,
+      "tracks": [
+        {
+          "object": "acting",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [2.2, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [0.12, 3],
+            [0.35, -3],
+            [0.65, 0],
+            [2.2, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.4, -4],
+            [1.5, -3],
+            [2.2, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [2.2, 100]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.12, 96],
+            [0.35, 104],
+            [0.65, 99],
+            [1, 100],
+            [2.2, 100]
+          ]
+        },
+        {
+          "object": "leftShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.2, 0]
+          ]
+        },
+        {
+          "object": "rightShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.25, -20],
+            [0.5, -100],
+            [0.8, -85],
+            [1.05, -110],
+            [1.3, -85],
+            [1.6, -100],
+            [2.05, 0],
+            [2.2, 0]
+          ]
+        },
+        {
+          "object": "leftElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.2, 0]
+          ]
+        },
+        {
+          "object": "rightElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.5, 25],
+            [0.8, -20],
+            [1.05, 20],
+            [1.3, -15],
+            [1.6, 15],
+            [2.05, 0],
+            [2.2, 0]
+          ]
+        },
+        {
+          "object": "leftHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.2, 0]
+          ]
+        },
+        {
+          "object": "rightHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.2, 0]
+          ]
+        },
+        {
+          "object": "leftEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [2.2, 100]
+          ]
+        },
+        {
+          "object": "rightEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [2.2, 100]
+          ]
+        },
+        {
+          "object": "leftBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.2, 0]
+          ]
+        },
+        {
+          "object": "rightBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.2, 0]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [2.2, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [2.2, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 14,
+          "keys": [
+            [0, 8],
+            [2.2, 8]
+          ]
+        },
+        {
+          "object": "face",
+          "property": 14,
+          "keys": [
+            [0, -5],
+            [2.2, -5]
+          ]
+        },
+        {
+          "object": "scrap",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.2, 0]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.2, 0]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.2, 0]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.2, 0]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.2, 0]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.2, 0]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.2, 0]
+          ]
+        }
+      ]
+    },
+    "celebrate": {
+      "duration": 2.8,
+      "loop": false,
+      "tracks": [
+        {
+          "object": "acting",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [2.8, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [0.12, 3],
+            [0.35, -4],
+            [0.65, 0],
+            [2.8, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.8, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [2.8, 100]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.12, 96],
+            [0.35, 104],
+            [0.65, 99],
+            [1, 100],
+            [2.8, 100]
+          ]
+        },
+        {
+          "object": "leftShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.3, -40],
+            [0.65, -118],
+            [0.85, -75],
+            [1.05, -118],
+            [1.25, -75],
+            [1.45, -118],
+            [2.4, 0],
+            [2.8, 0]
+          ]
+        },
+        {
+          "object": "rightShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.3, 40],
+            [0.65, 118],
+            [0.85, 75],
+            [1.05, 118],
+            [1.25, 75],
+            [1.45, 118],
+            [2.4, 0],
+            [2.8, 0]
+          ]
+        },
+        {
+          "object": "leftElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.4, -85],
+            [1.5, -85],
+            [2.4, 0],
+            [2.8, 0]
+          ]
+        },
+        {
+          "object": "rightElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.4, 85],
+            [1.5, 85],
+            [2.4, 0],
+            [2.8, 0]
+          ]
+        },
+        {
+          "object": "leftHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.8, 0]
+          ]
+        },
+        {
+          "object": "rightHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.8, 0]
+          ]
+        },
+        {
+          "object": "leftEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.3, 45],
+            [2.5, 45],
+            [2.8, 100]
+          ]
+        },
+        {
+          "object": "rightEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.3, 45],
+            [2.5, 45],
+            [2.8, 100]
+          ]
+        },
+        {
+          "object": "leftBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.8, 0]
+          ]
+        },
+        {
+          "object": "rightBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.8, 0]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [2.8, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [0.4, 120],
+            [2.5, 120],
+            [2.8, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 14,
+          "keys": [
+            [0, 8],
+            [2.8, 8]
+          ]
+        },
+        {
+          "object": "face",
+          "property": 14,
+          "keys": [
+            [0, -5],
+            [2.8, -5]
+          ]
+        },
+        {
+          "object": "scrap",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.8, 0]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.32, 0],
+            [0.42, 100],
+            [2.4, 100],
+            [2.6999999999999997, 0],
+            [2.8, 0]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.32, 0],
+            [0.42, 100],
+            [2.4, 100],
+            [2.6999999999999997, 0],
+            [2.8, 0]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.32, 0],
+            [0.42, 100],
+            [2.4, 100],
+            [2.6999999999999997, 0],
+            [2.8, 0]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.32, 0],
+            [0.42, 100],
+            [2.4, 100],
+            [2.6999999999999997, 0],
+            [2.8, 0]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.32, 0],
+            [0.42, 100],
+            [2.4, 100],
+            [2.6999999999999997, 0],
+            [2.8, 0]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.32, 0],
+            [0.42, 100],
+            [2.4, 100],
+            [2.6999999999999997, 0],
+            [2.8, 0]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [0.32, 12],
+            [0.8, 22],
+            [2.8, 25]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [0.32, -10],
+            [0.8, -55],
+            [2.8, 60]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.8, 180]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [0.32, -12],
+            [0.8, -27],
+            [2.8, -30]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [0.32, -10],
+            [0.8, -57],
+            [2.8, 60]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.8, 240]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [0.32, 12],
+            [0.8, 32],
+            [2.8, 35]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [0.32, -10],
+            [0.8, -59],
+            [2.8, 60]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.8, 300]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [0.32, -12],
+            [0.8, -37],
+            [2.8, -40]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [0.32, -10],
+            [0.8, -61],
+            [2.8, 60]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.8, 360]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [0.32, 12],
+            [0.8, 42],
+            [2.8, 45]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [0.32, -10],
+            [0.8, -63],
+            [2.8, 60]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.8, 420]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [0.32, -12],
+            [0.8, -47],
+            [2.8, -50]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [0.32, -10],
+            [0.8, -65],
+            [2.8, 60]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.8, 480]
+          ]
+        }
+      ]
+    },
+    "failure": {
+      "duration": 2.6,
+      "loop": false,
+      "tracks": [
+        {
+          "object": "acting",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [0.2, -3],
+            [0.3, 3],
+            [0.4, -2],
+            [0.5, 2],
+            [0.65, 0],
+            [2.6, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [0.12, 3],
+            [0.35, 0],
+            [0.65, 0],
+            [2.6, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.5, -3],
+            [2, -2],
+            [2.6, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [2.6, 100]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.12, 96],
+            [0.35, 104],
+            [0.65, 99],
+            [1, 100],
+            [2.6, 100]
+          ]
+        },
+        {
+          "object": "leftShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.6, 0]
+          ]
+        },
+        {
+          "object": "rightShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.6, 0]
+          ]
+        },
+        {
+          "object": "leftElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.6, 0]
+          ]
+        },
+        {
+          "object": "rightElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.6, 0]
+          ]
+        },
+        {
+          "object": "leftHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.6, 0]
+          ]
+        },
+        {
+          "object": "rightHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.6, 0]
+          ]
+        },
+        {
+          "object": "leftEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [2.6, 100]
+          ]
+        },
+        {
+          "object": "rightEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [2.6, 100]
+          ]
+        },
+        {
+          "object": "leftBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.2, -22],
+            [2, -22],
+            [2.6, 0]
+          ]
+        },
+        {
+          "object": "rightBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.2, 22],
+            [2, 22],
+            [2.6, 0]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.2, -70],
+            [2, -70],
+            [2.6, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [2.6, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 14,
+          "keys": [
+            [0, 8],
+            [2.6, 8]
+          ]
+        },
+        {
+          "object": "face",
+          "property": 14,
+          "keys": [
+            [0, -5],
+            [2.6, -5]
+          ]
+        },
+        {
+          "object": "scrap",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.6, 0]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.6, 0]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.6, 0]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.6, 0]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.6, 0]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.6, 0]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.6, 0]
+          ]
+        }
+      ]
+    },
+    "acknowledge": {
+      "duration": 1.2,
+      "loop": false,
+      "tracks": [
+        {
+          "object": "acting",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [0.12, 3],
+            [0.35, 0],
+            [0.65, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [1.2, 100]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.12, 96],
+            [0.35, 104],
+            [0.65, 99],
+            [1, 100],
+            [1.2, 100]
+          ]
+        },
+        {
+          "object": "leftShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "rightShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.18, 40],
+            [0.4, -80],
+            [0.65, -30],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "leftElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "rightElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.18, 40],
+            [0.4, -30],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "leftHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "rightHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "leftEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [1.2, 100]
+          ]
+        },
+        {
+          "object": "rightEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [1.2, 100]
+          ]
+        },
+        {
+          "object": "leftBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "rightBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [1.2, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [1.2, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 14,
+          "keys": [
+            [0, 8],
+            [1.2, 8]
+          ]
+        },
+        {
+          "object": "face",
+          "property": 14,
+          "keys": [
+            [0, -5],
+            [1.2, -5]
+          ]
+        },
+        {
+          "object": "scrap",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.15, 100],
+            [0.8, 100],
+            [1.1, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "scrap",
+          "property": 13,
+          "keys": [
+            [0, 30],
+            [0.2, 30],
+            [0.65, 53],
+            [1.2, 60]
+          ]
+        },
+        {
+          "object": "scrap",
+          "property": 14,
+          "keys": [
+            [0, 12],
+            [0.2, 12],
+            [0.5, -10],
+            [1.2, 54]
+          ]
+        },
+        {
+          "object": "scrap",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1.2, 220]
+          ]
+        }
+      ]
+    },
+    "pickedUp": {
+      "duration": 1,
+      "loop": true,
+      "tracks": [
+        {
+          "object": "acting",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 14,
+          "keys": [
+            [0, -4],
+            [1, -4]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [1, 100]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 17,
+          "keys": [
+            [0, 104],
+            [1, 104]
+          ]
+        },
+        {
+          "object": "leftShoulder",
+          "property": 15,
+          "keys": [
+            [0, -60],
+            [1, -55]
+          ]
+        },
+        {
+          "object": "rightShoulder",
+          "property": 15,
+          "keys": [
+            [0, 60],
+            [1, 55]
+          ]
+        },
+        {
+          "object": "leftElbow",
+          "property": 15,
+          "keys": [
+            [0, 25],
+            [1, 15]
+          ]
+        },
+        {
+          "object": "rightElbow",
+          "property": 15,
+          "keys": [
+            [0, -25],
+            [1, -15]
+          ]
+        },
+        {
+          "object": "leftHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "rightHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "leftEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [1, 100]
+          ]
+        },
+        {
+          "object": "rightEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [1, 100]
+          ]
+        },
+        {
+          "object": "leftBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "rightBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [1, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [1, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 14,
+          "keys": [
+            [0, 8],
+            [1, 8]
+          ]
+        },
+        {
+          "object": "face",
+          "property": 14,
+          "keys": [
+            [0, -5],
+            [1, -5]
+          ]
+        },
+        {
+          "object": "scrap",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        }
+      ]
+    },
+    "settle": {
+      "duration": 0.7,
+      "loop": false,
+      "tracks": [
+        {
+          "object": "acting",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 14,
+          "keys": [
+            [0, -4],
+            [0.12, 3],
+            [0.3, -1],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [0.7, 100]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 17,
+          "keys": [
+            [0, 104],
+            [0.12, 94],
+            [0.3, 102],
+            [0.5, 99],
+            [0.7, 100]
+          ]
+        },
+        {
+          "object": "leftShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "rightShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "leftElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "rightElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "leftHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "rightHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "leftEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.7, 100]
+          ]
+        },
+        {
+          "object": "rightEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.7, 100]
+          ]
+        },
+        {
+          "object": "leftBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "rightBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.7, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [0.7, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 14,
+          "keys": [
+            [0, 8],
+            [0.7, 8]
+          ]
+        },
+        {
+          "object": "face",
+          "property": 14,
+          "keys": [
+            [0, -5],
+            [0.7, -5]
+          ]
+        },
+        {
+          "object": "scrap",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        }
+      ]
+    },
+    "wiggle": {
+      "duration": 1.2,
+      "loop": false,
+      "tracks": [
+        {
+          "object": "acting",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.2, -7],
+            [0.4, 7],
+            [0.6, -5],
+            [0.8, 4],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [1.2, 100]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [1.2, 100]
+          ]
+        },
+        {
+          "object": "leftShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.3, -55],
+            [0.8, -40],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "rightShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.3, 55],
+            [0.8, 40],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "leftElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "rightElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "leftHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "rightHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "leftEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [1.2, 100]
+          ]
+        },
+        {
+          "object": "rightEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [1.2, 100]
+          ]
+        },
+        {
+          "object": "leftBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "rightBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [1.2, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [1.2, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 14,
+          "keys": [
+            [0, 8],
+            [1.2, 8]
+          ]
+        },
+        {
+          "object": "face",
+          "property": 14,
+          "keys": [
+            [0, -5],
+            [1.2, -5]
+          ]
+        },
+        {
+          "object": "scrap",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1.2, 0]
+          ]
+        }
+      ]
+    },
+    "bashful": {
+      "duration": 1.6,
+      "loop": false,
+      "tracks": [
+        {
+          "object": "acting",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [1.6, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [1.6, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.4, 7],
+            [1.1, 5],
+            [1.6, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [1.6, 100]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [1.6, 100]
+          ]
+        },
+        {
+          "object": "leftShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1.6, 0]
+          ]
+        },
+        {
+          "object": "rightShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.4, 130],
+            [1.1, 130],
+            [1.6, 0]
+          ]
+        },
+        {
+          "object": "leftElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1.6, 0]
+          ]
+        },
+        {
+          "object": "rightElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.4, 65],
+            [1.1, 65],
+            [1.6, 0]
+          ]
+        },
+        {
+          "object": "leftHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1.6, 0]
+          ]
+        },
+        {
+          "object": "rightHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1.6, 0]
+          ]
+        },
+        {
+          "object": "leftEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.4, 55],
+            [1.1, 55],
+            [1.6, 100]
+          ]
+        },
+        {
+          "object": "rightEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [1.6, 100]
+          ]
+        },
+        {
+          "object": "leftBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1.6, 0]
+          ]
+        },
+        {
+          "object": "rightBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1.6, 0]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [1.6, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [1.6, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 14,
+          "keys": [
+            [0, 8],
+            [1.6, 8]
+          ]
+        },
+        {
+          "object": "face",
+          "property": 14,
+          "keys": [
+            [0, -5],
+            [0.4, 0],
+            [1.1, 0],
+            [1.6, -5]
+          ]
+        },
+        {
+          "object": "scrap",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1.6, 0]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1.6, 0]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1.6, 0]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1.6, 0]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1.6, 0]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1.6, 0]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1.6, 0]
+          ]
+        }
+      ]
+    },
+    "stretch": {
+      "duration": 2.4,
+      "loop": false,
+      "tracks": [
+        {
+          "object": "acting",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [2.4, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [2.4, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.4, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [2.4, 100]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.5, 105],
+            [1.2, 105],
+            [2.4, 100]
+          ]
+        },
+        {
+          "object": "leftShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.5, 155],
+            [1.2, 165],
+            [2.4, 0]
+          ]
+        },
+        {
+          "object": "rightShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.5, -155],
+            [1.2, -165],
+            [2.4, 0]
+          ]
+        },
+        {
+          "object": "leftElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.4, 0]
+          ]
+        },
+        {
+          "object": "rightElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.4, 0]
+          ]
+        },
+        {
+          "object": "leftHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.4, 0]
+          ]
+        },
+        {
+          "object": "rightHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.4, 0]
+          ]
+        },
+        {
+          "object": "leftEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.5, 12],
+            [1.2, 12],
+            [2.4, 100]
+          ]
+        },
+        {
+          "object": "rightEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.5, 12],
+            [1.2, 12],
+            [2.4, 100]
+          ]
+        },
+        {
+          "object": "leftBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.4, 0]
+          ]
+        },
+        {
+          "object": "rightBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2.4, 0]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [2.4, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [2.4, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 14,
+          "keys": [
+            [0, 8],
+            [2.4, 8]
+          ]
+        },
+        {
+          "object": "face",
+          "property": 14,
+          "keys": [
+            [0, -5],
+            [2.4, -5]
+          ]
+        },
+        {
+          "object": "scrap",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.4, 0]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.4, 0]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.4, 0]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.4, 0]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.4, 0]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.4, 0]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2.4, 0]
+          ]
+        }
+      ]
+    },
+    "waiting": {
+      "duration": 2,
+      "loop": true,
+      "tracks": [
+        {
+          "object": "acting",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [2, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [2, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 15,
+          "keys": [
+            [0, -2],
+            [2, 2]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [2, 100]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [2, 100]
+          ]
+        },
+        {
+          "object": "leftShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2, 0]
+          ]
+        },
+        {
+          "object": "rightShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2, 0]
+          ]
+        },
+        {
+          "object": "leftElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2, 0]
+          ]
+        },
+        {
+          "object": "rightElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2, 0]
+          ]
+        },
+        {
+          "object": "leftHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2, 0]
+          ]
+        },
+        {
+          "object": "rightHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2, 0]
+          ]
+        },
+        {
+          "object": "leftEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [2, 100]
+          ]
+        },
+        {
+          "object": "rightEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [2, 100]
+          ]
+        },
+        {
+          "object": "leftBrow",
+          "property": 15,
+          "keys": [
+            [0, -5],
+            [2, -5]
+          ]
+        },
+        {
+          "object": "rightBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [2, 0]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [2, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 16,
+          "keys": [
+            [0, 65],
+            [2, 65]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 14,
+          "keys": [
+            [0, 8],
+            [2, 8]
+          ]
+        },
+        {
+          "object": "face",
+          "property": 14,
+          "keys": [
+            [0, -5],
+            [2, -5]
+          ]
+        },
+        {
+          "object": "scrap",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2, 0]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2, 0]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2, 0]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2, 0]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2, 0]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2, 0]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [2, 0]
+          ]
+        }
+      ]
+    },
+    "catching": {
+      "duration": 0.6,
+      "loop": false,
+      "tracks": [
+        {
+          "object": "acting",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [0.6, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [0.6, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 15,
+          "keys": [
+            [0, -2],
+            [0.6, -2]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [0.6, 100]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.6, 100]
+          ]
+        },
+        {
+          "object": "leftShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.6, 0]
+          ]
+        },
+        {
+          "object": "rightShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.6, 0]
+          ]
+        },
+        {
+          "object": "leftElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.6, 0]
+          ]
+        },
+        {
+          "object": "rightElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.6, 0]
+          ]
+        },
+        {
+          "object": "leftHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.6, 0]
+          ]
+        },
+        {
+          "object": "rightHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.6, 0]
+          ]
+        },
+        {
+          "object": "leftEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.6, 100]
+          ]
+        },
+        {
+          "object": "rightEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.6, 100]
+          ]
+        },
+        {
+          "object": "leftBrow",
+          "property": 15,
+          "keys": [
+            [0, -5],
+            [0.6, -5]
+          ]
+        },
+        {
+          "object": "rightBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.6, 0]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.6, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 16,
+          "keys": [
+            [0, 65],
+            [0.6, 65]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 14,
+          "keys": [
+            [0, 8],
+            [0.6, 8]
+          ]
+        },
+        {
+          "object": "face",
+          "property": 14,
+          "keys": [
+            [0, -5],
+            [0.6, -5]
+          ]
+        },
+        {
+          "object": "scrap",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.6, 0]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.6, 0]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.6, 0]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.6, 0]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.6, 0]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.6, 0]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.6, 0]
+          ]
+        }
+      ]
+    },
+    "reading": {
+      "duration": 1,
+      "loop": true,
+      "tracks": [
+        {
+          "object": "acting",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 15,
+          "keys": [
+            [0, -2],
+            [1, -2]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [1, 100]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [1, 100]
+          ]
+        },
+        {
+          "object": "leftShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "rightShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "leftElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "rightElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "leftHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "rightHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "leftEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [1, 100]
+          ]
+        },
+        {
+          "object": "rightEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [1, 100]
+          ]
+        },
+        {
+          "object": "leftBrow",
+          "property": 15,
+          "keys": [
+            [0, -5],
+            [1, -5]
+          ]
+        },
+        {
+          "object": "rightBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [1, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 16,
+          "keys": [
+            [0, 65],
+            [1, 65]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 14,
+          "keys": [
+            [0, 8],
+            [1, 8]
+          ]
+        },
+        {
+          "object": "face",
+          "property": 14,
+          "keys": [
+            [0, -5],
+            [1, -5]
+          ]
+        },
+        {
+          "object": "scrap",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [1, 0]
+          ]
+        }
+      ]
+    },
+    "filing": {
+      "duration": 0.7,
+      "loop": false,
+      "tracks": [
+        {
+          "object": "acting",
+          "property": 13,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 14,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 15,
+          "keys": [
+            [0, -2],
+            [0.7, -2]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 16,
+          "keys": [
+            [0, 100],
+            [0.7, 100]
+          ]
+        },
+        {
+          "object": "acting",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.7, 100]
+          ]
+        },
+        {
+          "object": "leftShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "rightShoulder",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "leftElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "rightElbow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "leftHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "rightHand",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "leftEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.7, 100]
+          ]
+        },
+        {
+          "object": "rightEye",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.7, 100]
+          ]
+        },
+        {
+          "object": "leftBrow",
+          "property": 15,
+          "keys": [
+            [0, -5],
+            [0.7, -5]
+          ]
+        },
+        {
+          "object": "rightBrow",
+          "property": 15,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 17,
+          "keys": [
+            [0, 100],
+            [0.7, 100]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 16,
+          "keys": [
+            [0, 65],
+            [0.7, 65]
+          ]
+        },
+        {
+          "object": "mouth",
+          "property": 14,
+          "keys": [
+            [0, 8],
+            [0.7, 8]
+          ]
+        },
+        {
+          "object": "face",
+          "property": 14,
+          "keys": [
+            [0, -5],
+            [0.7, -5]
+          ]
+        },
+        {
+          "object": "scrap",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "coin0",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "coin1",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "coin2",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "coin3",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "coin4",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        },
+        {
+          "object": "coin5",
+          "property": 18,
+          "keys": [
+            [0, 0],
+            [0.7, 0]
+          ]
+        }
+      ]
+    },
+    "closed": {
+      "duration": 0.35,
+      "loop": false,
+      "tracks": [
+        {
+          "object": "leftHalf",
+          "property": 13,
+          "keys": [[0, 0]]
+        },
+        {
+          "object": "rightHalf",
+          "property": 13,
+          "keys": [[0, 0]]
+        },
+        {
+          "object": "leftHalf",
+          "property": 15,
+          "keys": [[0, 0]]
+        },
+        {
+          "object": "rightHalf",
+          "property": 15,
+          "keys": [[0, 0]]
+        },
+        {
+          "object": "face",
+          "property": 18,
+          "keys": [[0, 100]]
+        },
+        {
+          "object": "leftTwin",
+          "property": 18,
+          "keys": [[0, 0]]
+        },
+        {
+          "object": "rightTwin",
+          "property": 18,
+          "keys": [[0, 0]]
+        }
+      ]
+    },
+    "open": {
+      "duration": 0.35,
+      "loop": false,
+      "tracks": [
+        {
+          "object": "leftHalf",
+          "property": 13,
+          "keys": [[0, -13]]
+        },
+        {
+          "object": "rightHalf",
+          "property": 13,
+          "keys": [[0, 13]]
+        },
+        {
+          "object": "leftHalf",
+          "property": 15,
+          "keys": [[0, -5]]
+        },
+        {
+          "object": "rightHalf",
+          "property": 15,
+          "keys": [[0, 5]]
+        },
+        {
+          "object": "face",
+          "property": 18,
+          "keys": [[0, 0]]
+        },
+        {
+          "object": "leftTwin",
+          "property": 18,
+          "keys": [[0, 100]]
+        },
+        {
+          "object": "rightTwin",
+          "property": 18,
+          "keys": [[0, 100]]
+        }
+      ]
+    }
+  },
+  "poses": {
+    "thinking": 0,
+    "success": 1,
+    "celebrate": 2,
+    "acknowledge": 3,
+    "welcome": 4,
+    "failure": 5,
+    "pickedUp": 6,
+    "settle": 7,
+    "wiggle": 8,
+    "bashful": 9,
+    "stretch": 10,
+    "waiting": 11,
+    "catching": 12,
+    "reading": 13,
+    "filing": 14,
+    "idle": 17
+  }
+}

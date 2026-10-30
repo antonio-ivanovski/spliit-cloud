@@ -121,6 +121,8 @@
         "@better-auth/passkey": "~1.7.5",
         "@fontsource-variable/nunito": "^5.3.0",
         "@hookform/resolvers": "^5.9.1",
+        "@rive-app/react-webgl2": "^4.37.1",
+        "@rive-app/webgl2": "2.45.1",
         "@spliit/domain": "workspace:*",
         "@tanstack/react-query": "^5.103.1",
         "@tanstack/react-router": "^1.170.36",
@@ -1243,6 +1245,10 @@
     "@resvg/resvg-js-win32-ia32-msvc": ["@resvg/resvg-js-win32-ia32-msvc@2.6.2", "", { "os": "win32", "cpu": "ia32" }, "sha512-har4aPAlvjnLcil40AC77YDIk6loMawuJwFINEM7n0pZviwMkMvjb2W5ZirsNOZY4aDbo5tLx0wNMREp5Brk+w=="],
 
     "@resvg/resvg-js-win32-x64-msvc": ["@resvg/resvg-js-win32-x64-msvc@2.6.2", "", { "os": "win32", "cpu": "x64" }, "sha512-ZXtYhtUr5SSaBrUDq7DiyjOFJqBVL/dOBN7N/qmi/pO0IgiWW/f/ue3nbvu9joWE5aAKDoIzy/CxsY0suwGosQ=="],
+
+    "@rive-app/react-webgl2": ["@rive-app/react-webgl2@4.37.1", "", { "dependencies": { "@rive-app/webgl2": "2.45.1" }, "peerDependencies": { "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0" } }, "sha512-+6LAaMaYDrcoRMIRFYsDDUMhJZ6cOTXrApgRD1QniC9aZstliRWVQ40UiuvYi027U0NEnTDa4MyeVfI1xLa7KQ=="],
+
+    "@rive-app/webgl2": ["@rive-app/webgl2@2.45.1", "", {}, "sha512-rR9UctYy7mgTPsINzqAtokBUovmH0lcwReCfxy7fWoyQBtyqzrSuWTZ5B5X5G6tJ06pVK0wkod5d41Rh2519GQ=="],
 
     "@rolldown/binding-android-arm-eabi": ["@rolldown/binding-android-arm-eabi@1.2.9", "", { "os": "android", "cpu": "arm" }, "sha512-tNISae1QEf/vkb3xkRcjV5SEdzPE97We5IVaa2Z8jSszQPZ8U60B/YCYpw4QI7VidYsBtKavczXf+DyDs9WGxw=="],
 

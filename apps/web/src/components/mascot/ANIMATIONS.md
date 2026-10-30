@@ -75,3 +75,79 @@ Halves split on a spring; twin faces appear. Paper, outline, and print stay the 
 4. Host, landing, settings preview, and the expense FAB already go through the registry — no `=== 'bill'` checks.
 
 Swapping the active mascot is changing the preference value. Do not teach mutations a character name.
+
+## Bill v2 Rive draft (not activated)
+
+The existing SVG/Motion Bill remains the production character, per the user's
+decision on 2026-10-22. The current Rive workspace adds a black Rive splash to
+runtime exports and refuses native `.rev` backups. Do not switch the registry or
+existing `BillCharacter` to this draft until splash-free export is available and
+the remaining integration/visual checks below pass. No release-note entry is
+appropriate yet.
+
+Editable cloud document: [Bill draft](https://editor.rive.app/file/untitled/2675355).
+The document currently has a single authored artboard `Bill` and default state
+machine `Bill`. The runtime export also contains Rive's generated splash assets.
+
+Draft artifacts under `scripts/mascot/`:
+
+- `bill-v2.draft.riv`: real Rive export, **includes the required Rive splash**;
+  deliberately outside the web public directory and import graph.
+- `bill-v2.draft.png`: editor capture of the transparent, unanimated artwork.
+- `bill-v2.source.json`: declarative record of groups, shapes, paints, ordered
+  layers, timeline channels, durations, and pose numbers. This is an authoring
+  record, not a native Rive backup or an importable Rive document.
+- `generate-bill-fallback.ts`: run with Bun to regenerate the static counterpart
+  from that record; run the web formatter afterwards.
+
+### Draft runtime contract
+
+`BillRiveCharacter` is an unregistered adapter requiring an explicit `assetUrl`.
+It lazy-loads the matching local WebGL2/WASM runtime and falls back to static SVG
+for reduced motion or load/render errors. No production caller imports it yet.
+The existing character's public interface and controller are unchanged.
+
+The default `Bill` view-model instance has:
+
+| Property         | Type    | Meaning                                       |
+| ---------------- | ------- | --------------------------------------------- |
+| `pose`           | number  | Semantic pose ID from `BILL_POSES`            |
+| `perform`        | trigger | Enter/replay the selected pose                |
+| `open`           | boolean | Blend the independent split-paper layer       |
+| `gazeX`, `gazeY` | number  | Local eye offsets in artwork pixels           |
+| `lean`           | number  | Interaction lean in radians                   |
+| `press`          | number  | Interaction vertical offset in artwork pixels |
+
+Set `pose` before firing `perform`. The controller, rather than animation end
+events, remains the authority for returning app reactions to idle. The default
+timeline is idle; other timelines have explicit neutral keys for shared channels
+to permit interrupted pose blending. The split layer owns only half transforms
+and face visibility. Native authoring uses 60 fps, cubic interpolation, 180 ms
+performance transitions, and 280 ms split transitions.
+
+The adapter accepts an optional mutable interaction ref to avoid per-frame React
+updates. Host wiring, release/cancel behavior, personality tap integration, and
+sorting hand-target geometry are **not implemented yet**. Sorting timelines are
+draft face/body poses, not a completed receipt-handling rig.
+
+### Resume checklist
+
+1. Resolve splash-free export and native backup entitlement in Rive; do not strip,
+   hide, or modify the generated splash to bypass the workspace plan.
+2. Finish visual refinement and verify every pose, including repeated reactions,
+   interruptions, compact sizes, and both themes. Idle and welcome were inspected
+   in the actual WebGL2 runtime; the native state-machine simulation reached
+   welcome from app inputs. This is not complete visual acceptance.
+3. Finish the sorting rig/hand-target bindings and replace the scene's separate
+   SVG arms only after receipt alignment is verified.
+4. Wire host hover/press, drag/release/cancel, and personality inputs. Verify that
+   interactions never interrupt a protected app reaction; add behavioral tests
+   at the actual host/adapter boundary.
+5. Export `.riv` and `.rev` through the official editor. Its MCP `export_file`
+   may be unable to write directly because of the macOS app sandbox; the tool's
+   documented `inline_base64` export response can be decoded directly to disk
+   without printing its payload. Keep the native backup with these sources.
+6. Import the clean asset through Vite, add Rive/WASM assets to the existing PWA
+   cache policy, run real browser lifecycle/offline checks and scoped package
+   gates, then activate `BillRiveCharacter` through `BillCharacter`. Remove
+   superseded artwork and update release notes only when the replacement ships.
