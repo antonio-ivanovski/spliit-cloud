@@ -1398,7 +1398,8 @@
       "simplified": "Semplificati",
       "direct": "Diretti",
       "directDescription": "Quanto ogni persona deve a chi ha effettivamente condiviso spese con lei, senza combinare i debiti di tutto il gruppo.",
-      "offlineHint": "I debiti diretti richiedono una connessione. Offline vengono mostrati i pagamenti semplificati."
+      "offlineHint": "I debiti diretti richiedono una connessione. Offline vengono mostrati i pagamenti semplificati.",
+      "evenOverall": "In pari nel complesso"
     }
   },
   "Stats": {

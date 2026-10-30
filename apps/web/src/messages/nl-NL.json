@@ -1415,7 +1415,8 @@
       "simplified": "Vereenvoudigd",
       "direct": "Rechtstreeks",
       "directDescription": "Wat iedereen verschuldigd is aan de mensen met wie ze echt uitgaven hebben gedeeld, zonder schulden binnen de hele groep samen te voegen.",
-      "offlineHint": "Voor rechtstreekse schulden heb je een verbinding nodig. Offline worden vereenvoudigde betalingen getoond."
+      "offlineHint": "Voor rechtstreekse schulden heb je een verbinding nodig. Offline worden vereenvoudigde betalingen getoond.",
+      "evenOverall": "Per saldo quitte"
     }
   },
   "Stats": {

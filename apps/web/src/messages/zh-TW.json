@@ -1384,7 +1384,8 @@
       "simplified": "簡化",
       "direct": "直接",
       "directDescription": "顯示每個人欠實際共同分攤過支出的人多少錢，不在整個群組內合併債務。",
-      "offlineHint": "直接債務需要連線。離線時顯示簡化後的付款。"
+      "offlineHint": "直接債務需要連線。離線時顯示簡化後的付款。",
+      "evenOverall": "整體持平"
     }
   },
   "Stats": {

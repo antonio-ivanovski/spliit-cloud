@@ -742,7 +742,8 @@
       "simplified": "Förenklade",
       "direct": "Direkta",
       "directDescription": "Vad varje person är skyldig dem de faktiskt har delat utgifter med, utan att slå ihop skulder i hela gruppen.",
-      "offlineHint": "Direkta skulder kräver en anslutning. Offline visas förenklade betalningar."
+      "offlineHint": "Direkta skulder kräver en anslutning. Offline visas förenklade betalningar.",
+      "evenOverall": "Jämnt totalt sett"
     }
   },
   "BulkCategorize": {

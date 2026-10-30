@@ -1405,7 +1405,8 @@
       "simplified": "Uproszczone",
       "direct": "Bezpośrednie",
       "directDescription": "Ile każda osoba jest winna osobom, z którymi faktycznie dzieliła wydatki, bez łączenia długów w całej grupie.",
-      "offlineHint": "Bezpośrednie długi wymagają połączenia. Offline wyświetlane są uproszczone płatności."
+      "offlineHint": "Bezpośrednie długi wymagają połączenia. Offline wyświetlane są uproszczone płatności.",
+      "evenOverall": "Ogółem na zero"
     }
   },
   "Stats": {

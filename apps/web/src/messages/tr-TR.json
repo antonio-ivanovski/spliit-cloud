@@ -1391,7 +1391,8 @@
       "simplified": "Sadeleştirilmiş",
       "direct": "Doğrudan",
       "directDescription": "Herkesin gerçekten harcama paylaştığı kişilere ne kadar borçlu olduğu; grup genelindeki borçlar birleştirilmez.",
-      "offlineHint": "Doğrudan borçlar için bağlantı gerekir. Çevrimdışıyken sadeleştirilmiş ödemeler gösteriliyor."
+      "offlineHint": "Doğrudan borçlar için bağlantı gerekir. Çevrimdışıyken sadeleştirilmiş ödemeler gösteriliyor.",
+      "evenOverall": "Toplamda eşit"
     }
   },
   "Stats": {

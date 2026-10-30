@@ -1515,7 +1515,8 @@
       "simplified": "Simplificadas",
       "direct": "Diretas",
       "directDescription": "O que cada pessoa deve às pessoas com quem realmente partilhou despesas, sem combinar dívidas de todo o grupo.",
-      "offlineHint": "As dívidas diretas precisam de ligação. Sem ligação, são mostrados os pagamentos simplificados."
+      "offlineHint": "As dívidas diretas precisam de ligação. Sem ligação, são mostrados os pagamentos simplificados.",
+      "evenOverall": "Equilibrado no total"
     }
   },
   "Stats": {

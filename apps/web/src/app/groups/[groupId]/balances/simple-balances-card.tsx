@@ -650,23 +650,48 @@ function SettledParticipants({
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
   // A zero net is not "settled up" while someone still pays or receives on a
   // direct (pairwise) leg, e.g. A owes B, B owes C and C owes A the same amount.
+  // List those people as "even overall" so the overview is never blank.
   const onLeg = new Set(
     suggestedSettlements.flatMap((leg) => [leg.from, leg.to]),
   )
-  const settled = participants.filter(
-    (participant) =>
-      (balances[participant.id]?.total ?? 0) === 0 &&
-      !onLeg.has(participant.id),
+  const netZero = participants.filter(
+    (participant) => (balances[participant.id]?.total ?? 0) === 0,
   )
-  if (settled.length === 0) return null
 
   return (
-    <section aria-label={t('direction.settledUp')} className="space-y-3">
+    <>
+      <ParticipantChips
+        title={t('settlementView.evenOverall')}
+        participants={netZero.filter((participant) =>
+          onLeg.has(participant.id),
+        )}
+      />
+      <ParticipantChips
+        title={t('direction.settledUp')}
+        participants={netZero.filter(
+          (participant) => !onLeg.has(participant.id),
+        )}
+      />
+    </>
+  )
+}
+
+function ParticipantChips({
+  title,
+  participants,
+}: {
+  title: string
+  participants: Participant[]
+}) {
+  if (participants.length === 0) return null
+
+  return (
+    <section aria-label={title} className="space-y-3">
       <h3 className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-        {t('direction.settledUp')}
+        {title}
       </h3>
       <div className="flex flex-wrap gap-2">
-        {settled.map((participant) => (
+        {participants.map((participant) => (
           <div
             key={participant.id}
             className="flex items-center gap-2 rounded-full border border-border/70 bg-muted/30 py-1 ps-1 pe-3 text-xs text-muted-foreground"

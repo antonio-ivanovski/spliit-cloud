@@ -2129,7 +2129,8 @@
       "simplified": "Simplified",
       "direct": "Direct",
       "directDescription": "What each person owes the people they actually shared expenses with, without combining debts across the group.",
-      "offlineHint": "Direct debts need a connection. Showing simplified payments while offline."
+      "offlineHint": "Direct debts need a connection. Showing simplified payments while offline.",
+      "evenOverall": "Even overall"
     }
   },
   "Stats": {

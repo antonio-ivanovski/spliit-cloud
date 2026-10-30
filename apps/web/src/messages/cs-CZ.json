@@ -1405,7 +1405,8 @@
       "simplified": "Zjednodušeně",
       "direct": "Přímo",
       "directDescription": "Kolik každý dluží lidem, se kterými skutečně sdílel výdaje, bez slučování dluhů napříč skupinou.",
-      "offlineHint": "Přímé dluhy vyžadují připojení. Offline se zobrazují zjednodušené platby."
+      "offlineHint": "Přímé dluhy vyžadují připojení. Offline se zobrazují zjednodušené platby.",
+      "evenOverall": "Celkově vyrovnaní"
     }
   },
   "Stats": {

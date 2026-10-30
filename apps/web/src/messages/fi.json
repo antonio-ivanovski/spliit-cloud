@@ -1391,7 +1391,8 @@
       "simplified": "Yksinkertaistettuina",
       "direct": "Suoraan",
       "directDescription": "Mitä kukin on velkaa niille, joiden kanssa hän on oikeasti jakanut kuluja, ilman että velkoja yhdistetään koko ryhmän kesken.",
-      "offlineHint": "Suorat velat vaativat yhteyden. Offline-tilassa näytetään yksinkertaistetut maksut."
+      "offlineHint": "Suorat velat vaativat yhteyden. Offline-tilassa näytetään yksinkertaistetut maksut.",
+      "evenOverall": "Kokonaisuutena tasan"
     }
   },
   "Stats": {

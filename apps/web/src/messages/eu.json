@@ -1397,7 +1397,8 @@
       "simplified": "Sinplifikatuta",
       "direct": "Zuzenean",
       "directDescription": "Pertsona bakoitzak benetan gastuak partekatu dituen pertsonei zor diena, taldeko zorrak elkartu gabe.",
-      "offlineHint": "Zor zuzenek konexioa behar dute. Lineaz kanpo, ordainketa sinplifikatuak erakusten dira."
+      "offlineHint": "Zor zuzenek konexioa behar dute. Lineaz kanpo, ordainketa sinplifikatuak erakusten dira.",
+      "evenOverall": "Orotara berdinduta"
     }
   },
   "Stats": {

@@ -1398,7 +1398,8 @@
       "simplified": "Simplificate",
       "direct": "Directe",
       "directDescription": "Cât datorează fiecare persoanelor cu care a împărțit efectiv cheltuieli, fără a combina datoriile din tot grupul.",
-      "offlineHint": "Datoriile directe necesită conexiune. Offline se afișează plățile simplificate."
+      "offlineHint": "Datoriile directe necesită conexiune. Offline se afișează plățile simplificate.",
+      "evenOverall": "Pe zero în total"
     }
   },
   "Stats": {

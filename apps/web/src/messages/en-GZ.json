@@ -799,7 +799,8 @@
       "simplified": "simplified",
       "direct": "direct",
       "directDescription": "what each person owes the people they actually split stuff with, no mixing debts across the whole group.",
-      "offlineHint": "direct debts need a connection. showing simplified payments while you're offline."
+      "offlineHint": "direct debts need a connection. showing simplified payments while you're offline.",
+      "evenOverall": "even overall"
     }
   },
   "Budgets": {

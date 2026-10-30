@@ -2101,7 +2101,8 @@
       "simplified": "Rút gọn",
       "direct": "Trực tiếp",
       "directDescription": "Số tiền mỗi người nợ những người đã thực sự cùng chia chi phí, không gộp các khoản nợ trong cả nhóm.",
-      "offlineHint": "Nợ trực tiếp cần kết nối. Khi ngoại tuyến, đang hiển thị các khoản thanh toán rút gọn."
+      "offlineHint": "Nợ trực tiếp cần kết nối. Khi ngoại tuyến, đang hiển thị các khoản thanh toán rút gọn.",
+      "evenOverall": "Tổng cộng cân bằng"
     }
   },
   "Stats": {

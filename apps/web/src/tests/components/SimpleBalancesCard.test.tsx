@@ -435,6 +435,41 @@ describe('SimpleBalancesCard', () => {
       expect(
         screen.queryByRole('region', { name: 'Settled up' }),
       ).not.toBeInTheDocument()
+      const even = screen.getByRole('region', { name: 'Even overall' })
+      expect(within(even).getByText('Bob')).toBeInTheDocument()
+    })
+
+    it('keeps the overview populated for a closed direct cycle', () => {
+      render(
+        <SimpleBalancesCard
+          isLoading={false}
+          currencyDisplay="group"
+          balances={{
+            alice: { paid: 1000, paidFor: 1000, total: 0 },
+            bob: { paid: 1000, paidFor: 1000, total: 0 },
+            carol: { paid: 1000, paidFor: 1000, total: 0 },
+          }}
+          suggestedSettlements={[
+            { from: 'alice', to: 'bob', amount: 1000 },
+            { from: 'bob', to: 'carol', amount: 1000 },
+            { from: 'carol', to: 'alice', amount: 1000 },
+          ]}
+          currencyBalances={[]}
+          participants={chainParticipants}
+          groupCurrency={EUR}
+          groupId="group-1"
+          settlementView="direct"
+          onSettlementViewChange={vi.fn()}
+        />,
+      )
+
+      const even = screen.getByRole('region', { name: 'Even overall' })
+      for (const name of ['Alice', 'Bob', 'Carol']) {
+        expect(within(even).getByText(name)).toBeInTheDocument()
+      }
+      expect(
+        screen.queryByRole('region', { name: 'Settled up' }),
+      ).not.toBeInTheDocument()
     })
 
     it('still lists net-zero members as settled up in the simplified view', () => {

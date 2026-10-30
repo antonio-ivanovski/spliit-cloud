@@ -1398,7 +1398,8 @@
       "simplified": "Simplificats",
       "direct": "Directes",
       "directDescription": "El que cada persona deu a les persones amb qui realment ha compartit despeses, sense combinar deutes de tot el grup.",
-      "offlineHint": "Els deutes directes necessiten connexió. Sense connexió es mostren els pagaments simplificats."
+      "offlineHint": "Els deutes directes necessiten connexió. Sense connexió es mostren els pagaments simplificats.",
+      "evenOverall": "En equilibri en total"
     }
   },
   "Stats": {
