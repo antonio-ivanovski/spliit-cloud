@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import '../styles/theme.css';
+@import '../styles/halloween.css';
 
 @plugin 'tailwindcss-animate';
 @plugin '@tailwindcss/typography';

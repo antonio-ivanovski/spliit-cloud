@@ -5,6 +5,7 @@ import type * as OfflineProviderModule from '@/lib/offline/provider'
 import { render, screen } from '@/test/test-utils'
 
 const route = vi.hoisted(() => ({ pathname: '/' }))
+const appearance = vi.hoisted(() => ({ halloweenEnabled: false }))
 
 vi.mock('@tanstack/react-router', () => ({
   Outlet: () => <div data-testid="outlet" />,
@@ -48,7 +49,9 @@ vi.mock('@/lib/use-current-account', () => ({
   useCurrentAccount: () => ({ data: null, isPending: false }),
 }))
 vi.mock('@/components/app-image', () => ({
-  default: ({ alt }: { alt: string }) => <img alt={alt} />,
+  default: ({ alt, src }: { alt: string; src: string }) => (
+    <img alt={alt} src={src} />
+  ),
 }))
 vi.mock('@/components/install-promotion-dialog', () => ({
   InstallPromotionDialog: () => null,
@@ -98,6 +101,7 @@ vi.mock('@/components/profile-gate', () => ({
 vi.mock('@/components/progress-bar', () => ({ ProgressBar: () => null }))
 vi.mock('@/components/theme-provider', () => ({
   ThemeProvider: ({ children }: React.PropsWithChildren) => children,
+  useTheme: () => appearance,
 }))
 vi.mock('@/components/theme-toggle', () => ({
   ThemeToggle: () => <button type="button">Theme</button>,
@@ -127,6 +131,21 @@ vi.mock('react-i18next', () => ({
 describe('AppShell locale switcher placement', () => {
   afterEach(() => {
     route.pathname = '/'
+    appearance.halloweenEnabled = false
+  })
+
+  it('switches both header logos with the Halloween appearance', () => {
+    const { rerender } = render(<AppShell />)
+    for (const enabled of [false, true, false]) {
+      appearance.halloweenEnabled = enabled
+      rerender(<AppShell />)
+      for (const logo of screen.getAllByRole('img', { name: 'Spliit Cloud' })) {
+        expect(logo).toHaveAttribute(
+          'src',
+          enabled ? '/logo-with-text-hallowen.svg' : '/logo-with-text.svg',
+        )
+      }
+    }
   })
 
   it('renders the locale switcher in the desktop and normal mobile headers', () => {

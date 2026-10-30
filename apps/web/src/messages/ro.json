@@ -3360,7 +3360,8 @@
     "toggle": "Schimbă tema",
     "light": "Luminoasă",
     "dark": "Întunecată",
-    "system": "Setarea sistemului"
+    "system": "Setarea sistemului",
+    "halloweenEffects": "Efecte de Halloween"
   },
   "PushOnboarding": {
     "title": "Alege cum să fii la curent",

@@ -75,7 +75,7 @@ export function PaidBreakdown({ data, currency }: Props) {
               <div className="flex items-center gap-2">
                 <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
                   <div
-                    className="h-full rounded-full bg-primary"
+                    className="h-full rounded-full bg-financial-positive"
                     style={{
                       width:
                         participant.paid === 0 || maxPaid <= 0

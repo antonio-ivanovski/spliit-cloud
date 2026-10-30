@@ -3407,7 +3407,8 @@
     "toggle": "Thema wijzigen",
     "light": "Licht",
     "dark": "Donker",
-    "system": "Systeeminstelling"
+    "system": "Systeeminstelling",
+    "halloweenEffects": "Halloweeneffecten"
   },
   "PushOnboarding": {
     "title": "Kies hoe je op de hoogte wilt blijven",

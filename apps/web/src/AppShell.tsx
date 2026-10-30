@@ -13,6 +13,7 @@ import { ApiStatusBanner } from '@/components/api-status-banner'
 import Image from '@/components/app-image'
 import { CurrencyConverterButton } from '@/components/currency-converter/currency-converter'
 import { DocumentTitleProvider } from '@/components/document-title'
+import { HalloweenScenery } from '@/components/halloween-scenery'
 import { InstallPromotionDialog } from '@/components/install-promotion-dialog'
 import { LocaleSwitcher } from '@/components/locale-switcher'
 import { MascotProvider } from '@/components/mascot/mascot-context'
@@ -29,7 +30,7 @@ import {
   PwaUpdateNavigationGuard,
 } from '@/components/pwa-update-guards'
 import { PwaUpdatePill } from '@/components/pwa-update-pill'
-import { ThemeProvider } from '@/components/theme-provider'
+import { ThemeProvider, useTheme } from '@/components/theme-provider'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Toaster } from '@/components/ui/toaster'
 import { UpdatesModal } from '@/components/updates-modal'
@@ -45,6 +46,10 @@ import { ArtFooter } from './components/footer/ArtFooter'
 
 function Content() {
   const { t } = useTranslation()
+  const { halloweenEnabled } = useTheme()
+  const logoSrc = halloweenEnabled
+    ? '/logo-with-text-hallowen.svg'
+    : '/logo-with-text.svg'
   const pathname = useLocation({ select: (location) => location.pathname })
   useEffect(() => discardExpenseEditScrollOutside(pathname), [pathname])
   const isAuthRoute = pathname.startsWith('/auth/')
@@ -76,6 +81,7 @@ function Content() {
           <MascotProvider>
             <div className="app-shell relative isolate flex flex-col overflow-x-clip">
               <AmbientBackdrop active={showAmbientBackdrop} />
+              <HalloweenScenery />
               <header
                 data-app-header
                 className="fixed inset-x-0 top-0 z-50 hidden h-16 justify-between border-b bg-background/80 p-2 backdrop-blur-md supports-backdrop-filter:bg-background/80 sm:flex"
@@ -89,7 +95,7 @@ function Content() {
                     aria-label="Spliit Cloud"
                   >
                     <Image
-                      src="/logo-with-text.svg"
+                      src={logoSrc}
                       className="m-1 h-[45px] w-auto"
                       width={(45 * 522) / 180}
                       height={45}
@@ -130,7 +136,7 @@ function Content() {
                     className="flex items-center"
                   >
                     <Image
-                      src="/logo-with-text.svg"
+                      src={logoSrc}
                       className="h-9 w-auto"
                       width={(36 * 522) / 180}
                       height={36}

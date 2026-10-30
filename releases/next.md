@@ -19,7 +19,9 @@ who is affected, and the exact migration steps.
 
 ### 🚀 Features
 
-- Short entry per user-facing change (`TBD` by @TBD)
+- Halloween appearance: Spliit dresses up with haunted scenery and seasonal
+  colors from October 30 through November 1, with an appearance switch that
+  remembers your opt-out in this browser (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
 

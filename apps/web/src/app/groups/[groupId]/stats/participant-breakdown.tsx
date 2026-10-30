@@ -62,7 +62,7 @@ export function ParticipantBreakdown({ data, currency }: Props) {
               <div className="flex items-center gap-2">
                 <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
                   <div
-                    className="h-full rounded-full bg-primary"
+                    className="h-full rounded-full bg-financial-positive"
                     style={{
                       width: `${Math.max(Math.abs(participant.percentage) * 100, 3)}%`,
                       opacity: 1 - index * 0.07,

@@ -3335,7 +3335,8 @@
     "toggle": "Vaihda teemaa",
     "light": "Vaalea",
     "dark": "Tumma",
-    "system": "Järjestelmän oletus"
+    "system": "Järjestelmän oletus",
+    "halloweenEffects": "Halloween-tehosteet"
   },
   "PushOnboarding": {
     "title": "Valitse, miten pysyt ajan tasalla",

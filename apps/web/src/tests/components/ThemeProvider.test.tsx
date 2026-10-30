@@ -31,18 +31,25 @@ function renderWithProvider(ui: React.ReactElement) {
 beforeEach(() => {
   localStorage.clear()
   document.documentElement.classList.remove('dark')
+  document.documentElement.removeAttribute('data-season')
 })
 
 afterEach(() => {
   cleanup()
   document.querySelector('meta[name="theme-color"]')?.remove()
   document.documentElement.style.removeProperty('color-scheme')
+  document.documentElement.removeAttribute('data-season')
 })
 
 // ── Tests ───────────────────────────────────────────────────────────────
 
 describe('ThemeProvider', () => {
   it('keeps browser chrome in sync with app overrides and system theme changes', async () => {
+    // Keep the base theme-color assertions deterministic outside the
+    // Halloween window, which changes the browser chrome colors.
+    vi.spyOn(Date, 'now').mockReturnValue(
+      new Date('2026-06-15T12:00:00').getTime(),
+    )
     const meta = document.createElement('meta')
     meta.name = 'theme-color'
     meta.content = '#047857'

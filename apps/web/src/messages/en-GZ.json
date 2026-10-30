@@ -3728,7 +3728,8 @@
     "toggle": "change the theme",
     "light": "light mode",
     "dark": "dark mode",
-    "system": "system default vibes"
+    "system": "system default vibes",
+    "halloweenEffects": "halloween mode"
   },
   "TimeZoneMismatch": {
     "title": "update your time zone?",

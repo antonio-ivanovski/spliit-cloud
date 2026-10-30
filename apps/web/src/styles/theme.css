@@ -14,6 +14,20 @@
   --color-destructive: hsl(var(--destructive));
   --color-destructive-foreground: hsl(var(--destructive-foreground));
 
+  /*
+   * Money semantics, independent of the brand accent.
+   *
+   * `--primary` is a *brand* colour: it repaints buttons, links and
+   * selection chrome, and seasonal themes are free to change it. Some
+   * places are not brand, though — a budget that is on track, a bar that
+   * shows money paid, a "you are owed" amount. Those must keep reading
+   * green no matter what the accent does, so they use this token instead.
+   *
+   * It is seeded with the normal emerald primary, which keeps every
+   * existing usage pixel-identical outside a season.
+   */
+  --color-financial-positive: hsl(var(--financial-positive));
+
   --color-muted: hsl(var(--muted));
   --color-muted-foreground: hsl(var(--muted-foreground));
 
@@ -56,6 +70,8 @@
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 142.1 76.2% 36.3%;
+    /* Money status green — same emerald as the primary, but independent. */
+    --financial-positive: 163 94% 24%;
     --radius: 0.5rem;
   }
 
@@ -79,5 +95,7 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 142.4 71.8% 29.2%;
+    /* Money status green — same emerald as the primary, but independent. */
+    --financial-positive: 161 90% 45%;
   }
 }

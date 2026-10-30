@@ -3381,7 +3381,8 @@
     "toggle": "Změnit motiv",
     "light": "Světlý",
     "dark": "Tmavý",
-    "system": "Výchozí nastavení systému"
+    "system": "Výchozí nastavení systému",
+    "halloweenEffects": "Halloweenské efekty"
   },
   "PushOnboarding": {
     "title": "Zvolte, jak chcete zůstat v obraze",

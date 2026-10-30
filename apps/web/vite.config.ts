@@ -73,6 +73,7 @@ export default defineConfig({
       includeAssets: [
         'logo.svg',
         'logo-with-text.svg',
+        'logo-with-text-hallowen.svg',
         'favicon/favicon.ico',
         'app-icon-180.png',
       ],

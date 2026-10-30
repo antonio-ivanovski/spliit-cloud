@@ -3322,7 +3322,8 @@
     "toggle": "更改主題",
     "light": "淺色",
     "dark": "深色",
-    "system": "跟隨系統"
+    "system": "跟隨系統",
+    "halloweenEffects": "萬聖節特效"
   },
   "PushOnboarding": {
     "title": "選擇接收最新資訊的方式",
