@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { PageInset } from '@/components/layout/page-shell'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
-import type { Balances, SuggestedSettlement } from '@/lib/balances'
 import { useOfflineBalances } from '@/lib/offline/read-hooks'
 import {
   useOfflineWithoutData,
@@ -24,6 +23,7 @@ import { BalanceViewSelector, type BalanceView } from './balance-view-selector'
 import { withDisplayCurrencies } from './currency-balances'
 import { CurrencyDisplaySelector } from './currency-display-selector'
 import type { SettlementView } from './settlement-controls'
+import { hasUnsettledBalance, withDirectLegs } from './settlement-legs'
 import { SimpleBalancesCard } from './simple-balances-card'
 
 const balancesRoute = getRouteApi('/groups/$groupId/balances')
@@ -33,11 +33,6 @@ type BalanceParticipant = {
   name: string
   account?: { id: string; name?: string | null; image?: string | null } | null
   removed?: boolean
-}
-
-type CurrencyBalanceBucket = {
-  balances: Balances
-  suggestedSettlements: SuggestedSettlement[]
 }
 
 function mergeBalanceParticipants(
@@ -68,35 +63,6 @@ function mergeBalanceParticipants(
     }
   }
   return Array.from(byId.values())
-}
-
-function appearsOnSettlementLeg(
-  participantId: string,
-  suggestedSettlements: SuggestedSettlement[] | undefined,
-): boolean {
-  return (
-    suggestedSettlements?.some(
-      (leg) => leg.from === participantId || leg.to === participantId,
-    ) ?? false
-  )
-}
-
-/** Keep soft-removed people only when they still matter for settlement UI. */
-function hasUnsettledBalance(
-  participantId: string,
-  balances: Balances | undefined,
-  suggestedSettlements: SuggestedSettlement[] | undefined,
-  currencyBalances: CurrencyBalanceBucket[] | undefined,
-): boolean {
-  if ((balances?.[participantId]?.total ?? 0) !== 0) return true
-  if (appearsOnSettlementLeg(participantId, suggestedSettlements)) return true
-  for (const bucket of currencyBalances ?? []) {
-    if ((bucket.balances[participantId]?.total ?? 0) !== 0) return true
-    if (appearsOnSettlementLeg(participantId, bucket.suggestedSettlements)) {
-      return true
-    }
-  }
-  return false
 }
 
 export default function BalancesAndSettlements() {
@@ -175,6 +141,10 @@ export default function BalancesAndSettlements() {
     }
   }, [])
 
+  // Keep removed people who are still on a direct leg when Direct is shown,
+  // even if their net balance is zero.
+  const shownDirect =
+    settlementView === 'direct' ? directSettlements : undefined
   const participants = useMemo(() => {
     const merged = mergeBalanceParticipants(
       group?.participants ?? [],
@@ -187,11 +157,15 @@ export default function BalancesAndSettlements() {
         hasUnsettledBalance(
           participant.id,
           effectiveBalances.balances,
-          effectiveBalances.suggestedSettlements,
-          effectiveBalances.currencyBalances,
+          shownDirect
+            ? shownDirect.suggestedSettlements
+            : effectiveBalances.suggestedSettlements,
+          shownDirect
+            ? withDirectLegs(effectiveBalances.currencyBalances, shownDirect)
+            : effectiveBalances.currencyBalances,
         ),
     )
-  }, [group?.participants, effectiveBalances])
+  }, [group?.participants, effectiveBalances, shownDirect])
 
   const isLoading = useOfflineSource
     ? !effectiveBalances || !group
@@ -200,14 +174,8 @@ export default function BalancesAndSettlements() {
   const currencyBalances =
     !isLoading && groupCurrency && effectiveBalances
       ? withDisplayCurrencies(
-          settlementView === 'direct' && directSettlements
-            ? effectiveBalances.currencyBalances.map((summary) => ({
-                ...summary,
-                suggestedSettlements:
-                  directSettlements.currencies.find(
-                    (entry) => entry.currencyCode === summary.currencyCode,
-                  )?.directSettlements ?? [],
-              }))
+          shownDirect
+            ? withDirectLegs(effectiveBalances.currencyBalances, shownDirect)
             : effectiveBalances.currencyBalances,
           groupCurrency,
         )

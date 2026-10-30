@@ -416,6 +416,47 @@ describe('SimpleBalancesCard', () => {
       ).not.toBeInTheDocument()
     })
 
+    it('does not call net-zero members on a direct leg settled up', () => {
+      render(
+        <SimpleBalancesCard
+          isLoading={false}
+          currencyDisplay="group"
+          balances={chainBalances}
+          suggestedSettlements={directLegs}
+          currencyBalances={[]}
+          participants={chainParticipants}
+          groupCurrency={EUR}
+          groupId="group-1"
+          settlementView="direct"
+          onSettlementViewChange={vi.fn()}
+        />,
+      )
+
+      expect(
+        screen.queryByRole('region', { name: 'Settled up' }),
+      ).not.toBeInTheDocument()
+    })
+
+    it('still lists net-zero members as settled up in the simplified view', () => {
+      render(
+        <SimpleBalancesCard
+          isLoading={false}
+          currencyDisplay="group"
+          balances={chainBalances}
+          suggestedSettlements={[{ from: 'carol', to: 'alice', amount: 1000 }]}
+          currencyBalances={[]}
+          participants={chainParticipants}
+          groupCurrency={EUR}
+          groupId="group-1"
+          settlementView="simplified"
+          onSettlementViewChange={vi.fn()}
+        />,
+      )
+
+      const settled = screen.getByRole('region', { name: 'Settled up' })
+      expect(within(settled).getByText('Bob')).toBeInTheDocument()
+    })
+
     it('shows a note when direct debts are unavailable offline', () => {
       render(
         <SimpleBalancesCard

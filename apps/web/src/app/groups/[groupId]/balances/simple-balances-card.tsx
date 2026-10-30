@@ -262,6 +262,7 @@ function BalanceOverviewCard({
   participantCount,
   currencyDisplay,
   balances,
+  suggestedSettlements,
   currencyBalances,
   participants,
   groupCurrency,
@@ -309,6 +310,7 @@ function BalanceOverviewCard({
         ) : groupCurrency ? (
           <SimpleBalanceOverviewContent
             balances={balances ?? {}}
+            suggestedSettlements={suggestedSettlements}
             participants={participants}
             currency={groupCurrency}
           />
@@ -516,6 +518,7 @@ function OriginalCurrencyOverview({
         <CurrencySection key={summary.currencyCode} currency={summary.currency}>
           <SimpleBalanceOverviewContent
             balances={summary.balances}
+            suggestedSettlements={summary.suggestedSettlements}
             participants={participants}
             currency={summary.currency}
           />
@@ -536,10 +539,12 @@ function hasActivity(
 
 function SimpleBalanceOverviewContent({
   balances,
+  suggestedSettlements,
   participants,
   currency,
 }: {
   balances: Balances
+  suggestedSettlements?: SuggestedSettlement[]
   participants: Participant[]
   currency: Currency
 }) {
@@ -576,7 +581,11 @@ function SimpleBalanceOverviewContent({
           />
         </section>
       )}
-      <SettledParticipants participants={participants} balances={balances} />
+      <SettledParticipants
+        participants={participants}
+        balances={balances}
+        suggestedSettlements={suggestedSettlements}
+      />
     </div>
   )
 }
@@ -632,13 +641,22 @@ function SimpleSuggestedPaymentsContent({
 function SettledParticipants({
   participants,
   balances,
+  suggestedSettlements = [],
 }: {
   participants: Participant[]
   balances: Balances
+  suggestedSettlements?: SuggestedSettlement[]
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
+  // A zero net is not "settled up" while someone still pays or receives on a
+  // direct (pairwise) leg, e.g. A owes B, B owes C and C owes A the same amount.
+  const onLeg = new Set(
+    suggestedSettlements.flatMap((leg) => [leg.from, leg.to]),
+  )
   const settled = participants.filter(
-    (participant) => (balances[participant.id]?.total ?? 0) === 0,
+    (participant) =>
+      (balances[participant.id]?.total ?? 0) === 0 &&
+      !onLeg.has(participant.id),
   )
   if (settled.length === 0) return null
 
