@@ -34,7 +34,52 @@ export function wallTimeToUtc(
   const parsedTimeZone = timeZoneSchema.parse(timeZone)
   const hh = String(Math.floor(timeMinutes / 60)).padStart(2, '0')
   const mm = String(timeMinutes % 60).padStart(2, '0')
-  return dayjs.tz(`${dateOnly}T${hh}:${mm}:00`, parsedTimeZone).utc().toDate()
+  const resolved = dayjs
+    .tz(`${dateOnly}T${hh}:${mm}:00`, parsedTimeZone)
+    .utc()
+    .toDate()
+  return preferEarlierAmbiguousWallTime(
+    dateOnly,
+    timeMinutes,
+    parsedTimeZone,
+    resolved,
+  )
+}
+
+/**
+ * `dayjs.tz` may pick either occurrence of a wall time repeated by a fall-back
+ * transition, and the choice varies with the host's timezone data. Scheduled
+ * entries must not move between environments, so resolve an exact earlier match
+ * explicitly.
+ */
+function preferEarlierAmbiguousWallTime(
+  dateIso: string,
+  timeMinutes: number,
+  timeZone: string,
+  resolved: Date,
+): Date {
+  const [year, month, day] = dateIso.split('-').map(Number)
+  const wallAsUtc = Date.UTC(
+    year,
+    month - 1,
+    day,
+    Math.floor(timeMinutes / 60),
+    timeMinutes % 60,
+  )
+  // A day before the wall time sits outside a fall-back transition, so its
+  // offset identifies the earlier of the two matching instants.
+  const earlierOffset = dayjs(wallAsUtc - 24 * 60 * 60 * 1000)
+    .tz(timeZone)
+    .utcOffset()
+  const earlier = new Date(wallAsUtc - earlierOffset * 60 * 1000)
+  const earlierWall = utcToWallTime(earlier, timeZone)
+  if (
+    earlierWall.dateIso !== dateIso ||
+    earlierWall.timeMinutes !== timeMinutes
+  ) {
+    return resolved
+  }
+  return earlier.getTime() < resolved.getTime() ? earlier : resolved
 }
 
 /** Match PostgreSQL TIMESTAMPTZ(0) before values reach persistence. */
