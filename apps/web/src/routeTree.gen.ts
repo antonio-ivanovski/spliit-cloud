@@ -18,6 +18,7 @@ import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as FeedbackRouteImport } from './routes/feedback'
 import { Route as GroupsRouteRouteImport } from './routes/groups/route'
 import { Route as ImprintRouteImport } from './routes/imprint'
+import { Route as PersonalRouteImport } from './routes/personal'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ShareTargetRouteImport } from './routes/share-target'
 import { Route as SponsorRouteImport } from './routes/sponsor'
@@ -38,6 +39,11 @@ import { Route as GroupsImportRouteImport } from './routes/groups/import'
 import { Route as OauthConsentRouteImport } from './routes/oauth/consent'
 import { Route as OauthLoginRouteImport } from './routes/oauth/login'
 import { Route as OauthManualCallbackRouteImport } from './routes/oauth/manual-callback'
+import { Route as PersonalIndexRouteImport } from './routes/personal/index'
+import { Route as PersonalBudgetsRouteImport } from './routes/personal/budgets'
+import { Route as PersonalRecurringRouteImport } from './routes/personal/recurring'
+import { Route as PersonalSettingsRouteImport } from './routes/personal/settings'
+import { Route as PersonalTransactionsRouteImport } from './routes/personal/transactions'
 import { Route as UpdatesIndexRouteImport } from './routes/updates/index'
 import { Route as UpdatesAnnouncementIdRouteImport } from './routes/updates/$announcementId'
 import { Route as GroupsGroupIdIndexRouteImport } from './routes/groups/$groupId/index'
@@ -51,6 +57,8 @@ import { Route as GroupsGroupIdMembersRouteImport } from './routes/groups/$group
 import { Route as GroupsGroupIdStatsRouteImport } from './routes/groups/$groupId/stats'
 import { Route as GroupsGroupIdToolsRouteImport } from './routes/groups/$groupId/tools'
 import { Route as GroupsBulkCategorizeGroupIdRouteImport } from './routes/groups/bulk-categorize/$groupId'
+import { Route as PersonalTransactionsCategorizeRouteImport } from './routes/personal/transactions_.categorize'
+import { Route as PersonalTransactionsImportRouteImport } from './routes/personal/transactions_.import'
 import { Route as GroupsGroupIdBudgetsIndexRouteImport } from './routes/groups/$groupId/budgets/index'
 import { Route as GroupsGroupIdExpensesIndexRouteImport } from './routes/groups/$groupId/expenses/index'
 import { Route as GroupsGroupIdExpensesCreateRouteImport } from './routes/groups/$groupId/expenses/create'
@@ -109,6 +117,11 @@ const ImprintRoute = ImprintRouteImport.update({
   path: '/imprint',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/imprint.lazy').then((d) => d.Route))
+const PersonalRoute = PersonalRouteImport.update({
+  id: '/personal',
+  path: '/personal',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/personal.lazy').then((d) => d.Route))
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
@@ -225,6 +238,41 @@ const OauthManualCallbackRoute = OauthManualCallbackRouteImport.update({
 } as any).lazy(() =>
   import('./routes/oauth/manual-callback.lazy').then((d) => d.Route),
 )
+const PersonalIndexRoute = PersonalIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PersonalRoute,
+} as any).lazy(() =>
+  import('./routes/personal/index.lazy').then((d) => d.Route),
+)
+const PersonalBudgetsRoute = PersonalBudgetsRouteImport.update({
+  id: '/budgets',
+  path: '/budgets',
+  getParentRoute: () => PersonalRoute,
+} as any).lazy(() =>
+  import('./routes/personal/budgets.lazy').then((d) => d.Route),
+)
+const PersonalRecurringRoute = PersonalRecurringRouteImport.update({
+  id: '/recurring',
+  path: '/recurring',
+  getParentRoute: () => PersonalRoute,
+} as any).lazy(() =>
+  import('./routes/personal/recurring.lazy').then((d) => d.Route),
+)
+const PersonalSettingsRoute = PersonalSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => PersonalRoute,
+} as any).lazy(() =>
+  import('./routes/personal/settings.lazy').then((d) => d.Route),
+)
+const PersonalTransactionsRoute = PersonalTransactionsRouteImport.update({
+  id: '/transactions',
+  path: '/transactions',
+  getParentRoute: () => PersonalRoute,
+} as any).lazy(() =>
+  import('./routes/personal/transactions.lazy').then((d) => d.Route),
+)
 const UpdatesIndexRoute = UpdatesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -317,6 +365,24 @@ const GroupsBulkCategorizeGroupIdRoute =
     import('./routes/groups/bulk-categorize/$groupId.lazy').then(
       (d) => d.Route,
     ),
+  )
+const PersonalTransactionsCategorizeRoute =
+  PersonalTransactionsCategorizeRouteImport.update({
+    id: '/transactions_/categorize',
+    path: '/transactions/categorize',
+    getParentRoute: () => PersonalRoute,
+  } as any).lazy(() =>
+    import('./routes/personal/transactions_.categorize.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const PersonalTransactionsImportRoute =
+  PersonalTransactionsImportRouteImport.update({
+    id: '/transactions_/import',
+    path: '/transactions/import',
+    getParentRoute: () => PersonalRoute,
+  } as any).lazy(() =>
+    import('./routes/personal/transactions_.import.lazy').then((d) => d.Route),
   )
 const GroupsGroupIdBudgetsIndexRoute =
   GroupsGroupIdBudgetsIndexRouteImport.update({
@@ -438,6 +504,7 @@ export interface FileRoutesByFullPath {
   '/features': typeof FeaturesRoute
   '/feedback': typeof FeedbackRoute
   '/imprint': typeof ImprintRoute
+  '/personal': typeof PersonalRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/share-target': typeof ShareTargetRoute
   '/sponsor': typeof SponsorRoute
@@ -457,7 +524,12 @@ export interface FileRoutesByFullPath {
   '/oauth/consent': typeof OauthConsentRoute
   '/oauth/login': typeof OauthLoginRoute
   '/oauth/manual-callback': typeof OauthManualCallbackRoute
+  '/personal/budgets': typeof PersonalBudgetsRoute
+  '/personal/recurring': typeof PersonalRecurringRoute
+  '/personal/settings': typeof PersonalSettingsRoute
+  '/personal/transactions': typeof PersonalTransactionsRoute
   '/updates/$announcementId': typeof UpdatesAnnouncementIdRoute
+  '/personal/': typeof PersonalIndexRoute
   '/updates/': typeof UpdatesIndexRoute
   '/groups/$groupId/activity': typeof GroupsGroupIdActivityRoute
   '/groups/$groupId/balances': typeof GroupsGroupIdBalancesRoute
@@ -469,6 +541,8 @@ export interface FileRoutesByFullPath {
   '/groups/$groupId/stats': typeof GroupsGroupIdStatsRoute
   '/groups/$groupId/tools': typeof GroupsGroupIdToolsRouteWithChildren
   '/groups/bulk-categorize/$groupId': typeof GroupsBulkCategorizeGroupIdRoute
+  '/personal/transactions/categorize': typeof PersonalTransactionsCategorizeRoute
+  '/personal/transactions/import': typeof PersonalTransactionsImportRoute
   '/groups/$groupId/': typeof GroupsGroupIdIndexRoute
   '/groups/$groupId/expenses/create': typeof GroupsGroupIdExpensesCreateRoute
   '/groups/$groupId/expenses/import': typeof GroupsGroupIdExpensesImportRoute
@@ -510,7 +584,12 @@ export interface FileRoutesByTo {
   '/oauth/consent': typeof OauthConsentRoute
   '/oauth/login': typeof OauthLoginRoute
   '/oauth/manual-callback': typeof OauthManualCallbackRoute
+  '/personal/budgets': typeof PersonalBudgetsRoute
+  '/personal/recurring': typeof PersonalRecurringRoute
+  '/personal/settings': typeof PersonalSettingsRoute
+  '/personal/transactions': typeof PersonalTransactionsRoute
   '/updates/$announcementId': typeof UpdatesAnnouncementIdRoute
+  '/personal': typeof PersonalIndexRoute
   '/updates': typeof UpdatesIndexRoute
   '/groups/$groupId/activity': typeof GroupsGroupIdActivityRoute
   '/groups/$groupId/balances': typeof GroupsGroupIdBalancesRoute
@@ -519,6 +598,8 @@ export interface FileRoutesByTo {
   '/groups/$groupId/members': typeof GroupsGroupIdMembersRoute
   '/groups/$groupId/stats': typeof GroupsGroupIdStatsRoute
   '/groups/bulk-categorize/$groupId': typeof GroupsBulkCategorizeGroupIdRoute
+  '/personal/transactions/categorize': typeof PersonalTransactionsCategorizeRoute
+  '/personal/transactions/import': typeof PersonalTransactionsImportRoute
   '/groups/$groupId': typeof GroupsGroupIdIndexRoute
   '/groups/$groupId/expenses/create': typeof GroupsGroupIdExpensesCreateRoute
   '/groups/$groupId/expenses/import': typeof GroupsGroupIdExpensesImportRoute
@@ -544,6 +625,7 @@ export interface FileRoutesById {
   '/features': typeof FeaturesRoute
   '/feedback': typeof FeedbackRoute
   '/imprint': typeof ImprintRoute
+  '/personal': typeof PersonalRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/share-target': typeof ShareTargetRoute
   '/sponsor': typeof SponsorRoute
@@ -563,7 +645,12 @@ export interface FileRoutesById {
   '/oauth/consent': typeof OauthConsentRoute
   '/oauth/login': typeof OauthLoginRoute
   '/oauth/manual-callback': typeof OauthManualCallbackRoute
+  '/personal/budgets': typeof PersonalBudgetsRoute
+  '/personal/recurring': typeof PersonalRecurringRoute
+  '/personal/settings': typeof PersonalSettingsRoute
+  '/personal/transactions': typeof PersonalTransactionsRoute
   '/updates/$announcementId': typeof UpdatesAnnouncementIdRoute
+  '/personal/': typeof PersonalIndexRoute
   '/updates/': typeof UpdatesIndexRoute
   '/groups/$groupId/activity': typeof GroupsGroupIdActivityRoute
   '/groups/$groupId/balances': typeof GroupsGroupIdBalancesRoute
@@ -575,6 +662,8 @@ export interface FileRoutesById {
   '/groups/$groupId/stats': typeof GroupsGroupIdStatsRoute
   '/groups/$groupId/tools': typeof GroupsGroupIdToolsRouteWithChildren
   '/groups/bulk-categorize/$groupId': typeof GroupsBulkCategorizeGroupIdRoute
+  '/personal/transactions_/categorize': typeof PersonalTransactionsCategorizeRoute
+  '/personal/transactions_/import': typeof PersonalTransactionsImportRoute
   '/groups/$groupId/': typeof GroupsGroupIdIndexRoute
   '/groups/$groupId/expenses/create': typeof GroupsGroupIdExpensesCreateRoute
   '/groups/$groupId/expenses/import': typeof GroupsGroupIdExpensesImportRoute
@@ -601,6 +690,7 @@ export interface FileRouteTypes {
     | '/features'
     | '/feedback'
     | '/imprint'
+    | '/personal'
     | '/privacy'
     | '/share-target'
     | '/sponsor'
@@ -620,7 +710,12 @@ export interface FileRouteTypes {
     | '/oauth/consent'
     | '/oauth/login'
     | '/oauth/manual-callback'
+    | '/personal/budgets'
+    | '/personal/recurring'
+    | '/personal/settings'
+    | '/personal/transactions'
     | '/updates/$announcementId'
+    | '/personal/'
     | '/updates/'
     | '/groups/$groupId/activity'
     | '/groups/$groupId/balances'
@@ -632,6 +727,8 @@ export interface FileRouteTypes {
     | '/groups/$groupId/stats'
     | '/groups/$groupId/tools'
     | '/groups/bulk-categorize/$groupId'
+    | '/personal/transactions/categorize'
+    | '/personal/transactions/import'
     | '/groups/$groupId/'
     | '/groups/$groupId/expenses/create'
     | '/groups/$groupId/expenses/import'
@@ -673,7 +770,12 @@ export interface FileRouteTypes {
     | '/oauth/consent'
     | '/oauth/login'
     | '/oauth/manual-callback'
+    | '/personal/budgets'
+    | '/personal/recurring'
+    | '/personal/settings'
+    | '/personal/transactions'
     | '/updates/$announcementId'
+    | '/personal'
     | '/updates'
     | '/groups/$groupId/activity'
     | '/groups/$groupId/balances'
@@ -682,6 +784,8 @@ export interface FileRouteTypes {
     | '/groups/$groupId/members'
     | '/groups/$groupId/stats'
     | '/groups/bulk-categorize/$groupId'
+    | '/personal/transactions/categorize'
+    | '/personal/transactions/import'
     | '/groups/$groupId'
     | '/groups/$groupId/expenses/create'
     | '/groups/$groupId/expenses/import'
@@ -706,6 +810,7 @@ export interface FileRouteTypes {
     | '/features'
     | '/feedback'
     | '/imprint'
+    | '/personal'
     | '/privacy'
     | '/share-target'
     | '/sponsor'
@@ -725,7 +830,12 @@ export interface FileRouteTypes {
     | '/oauth/consent'
     | '/oauth/login'
     | '/oauth/manual-callback'
+    | '/personal/budgets'
+    | '/personal/recurring'
+    | '/personal/settings'
+    | '/personal/transactions'
     | '/updates/$announcementId'
+    | '/personal/'
     | '/updates/'
     | '/groups/$groupId/activity'
     | '/groups/$groupId/balances'
@@ -737,6 +847,8 @@ export interface FileRouteTypes {
     | '/groups/$groupId/stats'
     | '/groups/$groupId/tools'
     | '/groups/bulk-categorize/$groupId'
+    | '/personal/transactions_/categorize'
+    | '/personal/transactions_/import'
     | '/groups/$groupId/'
     | '/groups/$groupId/expenses/create'
     | '/groups/$groupId/expenses/import'
@@ -762,6 +874,7 @@ export interface RootRouteChildren {
   FeaturesRoute: typeof FeaturesRoute
   FeedbackRoute: typeof FeedbackRoute
   ImprintRoute: typeof ImprintRoute
+  PersonalRoute: typeof PersonalRouteWithChildren
   PrivacyRoute: typeof PrivacyRoute
   ShareTargetRoute: typeof ShareTargetRoute
   SponsorRoute: typeof SponsorRoute
@@ -829,6 +942,13 @@ declare module '@tanstack/react-router' {
       path: '/imprint'
       fullPath: '/imprint'
       preLoaderRoute: typeof ImprintRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/personal': {
+      id: '/personal'
+      path: '/personal'
+      fullPath: '/personal'
+      preLoaderRoute: typeof PersonalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -971,6 +1091,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OauthManualCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/personal/': {
+      id: '/personal/'
+      path: '/'
+      fullPath: '/personal/'
+      preLoaderRoute: typeof PersonalIndexRouteImport
+      parentRoute: typeof PersonalRoute
+    }
+    '/personal/budgets': {
+      id: '/personal/budgets'
+      path: '/budgets'
+      fullPath: '/personal/budgets'
+      preLoaderRoute: typeof PersonalBudgetsRouteImport
+      parentRoute: typeof PersonalRoute
+    }
+    '/personal/recurring': {
+      id: '/personal/recurring'
+      path: '/recurring'
+      fullPath: '/personal/recurring'
+      preLoaderRoute: typeof PersonalRecurringRouteImport
+      parentRoute: typeof PersonalRoute
+    }
+    '/personal/settings': {
+      id: '/personal/settings'
+      path: '/settings'
+      fullPath: '/personal/settings'
+      preLoaderRoute: typeof PersonalSettingsRouteImport
+      parentRoute: typeof PersonalRoute
+    }
+    '/personal/transactions': {
+      id: '/personal/transactions'
+      path: '/transactions'
+      fullPath: '/personal/transactions'
+      preLoaderRoute: typeof PersonalTransactionsRouteImport
+      parentRoute: typeof PersonalRoute
+    }
     '/updates/': {
       id: '/updates/'
       path: '/'
@@ -1061,6 +1216,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/groups/bulk-categorize/$groupId'
       preLoaderRoute: typeof GroupsBulkCategorizeGroupIdRouteImport
       parentRoute: typeof GroupsRouteRoute
+    }
+    '/personal/transactions_/categorize': {
+      id: '/personal/transactions_/categorize'
+      path: '/transactions/categorize'
+      fullPath: '/personal/transactions/categorize'
+      preLoaderRoute: typeof PersonalTransactionsCategorizeRouteImport
+      parentRoute: typeof PersonalRoute
+    }
+    '/personal/transactions_/import': {
+      id: '/personal/transactions_/import'
+      path: '/transactions/import'
+      fullPath: '/personal/transactions/import'
+      preLoaderRoute: typeof PersonalTransactionsImportRouteImport
+      parentRoute: typeof PersonalRoute
     }
     '/groups/$groupId/budgets/': {
       id: '/groups/$groupId/budgets/'
@@ -1276,6 +1445,30 @@ const UpdatesRouteRouteWithChildren = UpdatesRouteRoute._addFileChildren(
   UpdatesRouteRouteChildren,
 )
 
+interface PersonalRouteChildren {
+  PersonalBudgetsRoute: typeof PersonalBudgetsRoute
+  PersonalRecurringRoute: typeof PersonalRecurringRoute
+  PersonalSettingsRoute: typeof PersonalSettingsRoute
+  PersonalTransactionsRoute: typeof PersonalTransactionsRoute
+  PersonalIndexRoute: typeof PersonalIndexRoute
+  PersonalTransactionsCategorizeRoute: typeof PersonalTransactionsCategorizeRoute
+  PersonalTransactionsImportRoute: typeof PersonalTransactionsImportRoute
+}
+
+const PersonalRouteChildren: PersonalRouteChildren = {
+  PersonalBudgetsRoute: PersonalBudgetsRoute,
+  PersonalRecurringRoute: PersonalRecurringRoute,
+  PersonalSettingsRoute: PersonalSettingsRoute,
+  PersonalTransactionsRoute: PersonalTransactionsRoute,
+  PersonalIndexRoute: PersonalIndexRoute,
+  PersonalTransactionsCategorizeRoute: PersonalTransactionsCategorizeRoute,
+  PersonalTransactionsImportRoute: PersonalTransactionsImportRoute,
+}
+
+const PersonalRouteWithChildren = PersonalRoute._addFileChildren(
+  PersonalRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GroupsRouteRoute: GroupsRouteRouteWithChildren,
@@ -1285,6 +1478,7 @@ const rootRouteChildren: RootRouteChildren = {
   FeaturesRoute: FeaturesRoute,
   FeedbackRoute: FeedbackRoute,
   ImprintRoute: ImprintRoute,
+  PersonalRoute: PersonalRouteWithChildren,
   PrivacyRoute: PrivacyRoute,
   ShareTargetRoute: ShareTargetRoute,
   SponsorRoute: SponsorRoute,

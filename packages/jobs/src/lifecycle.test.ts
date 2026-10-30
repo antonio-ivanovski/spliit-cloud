@@ -3,7 +3,12 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { JOB_WORK_OPTIONS } from './boss'
 import { env } from './env'
-import { registerHandlers } from './lifecycle'
+import {
+  registerHandlers,
+  schedulePersonalReconcile,
+  schedulePersonalReconciliation,
+  scheduleReconciliation,
+} from './lifecycle'
 import { JOB_NAMES } from './registry'
 import { createBossMock, makeJob } from './test-helpers'
 
@@ -128,5 +133,43 @@ describe('worker handler context', () => {
 
     logSpy.mockRestore()
     errorSpy.mockRestore()
+  })
+
+  it('schedules group and personal reconciliation from env cron', async () => {
+    const boss = createBossMock()
+    const schedule = vi.fn().mockResolvedValue('id')
+    ;(boss as unknown as Record<string, unknown>).schedule = schedule
+    await scheduleReconciliation(boss)
+    await schedulePersonalReconciliation(boss)
+    expect(schedule).toHaveBeenCalledWith(
+      JOB_NAMES.RECONCILE_RECURRING_EXPENSES,
+      env.JOBS_RECONCILIATION_CRON,
+      {},
+      expect.objectContaining({
+        key: 'recurring-expense-reconciliation',
+      }),
+    )
+    expect(schedule).toHaveBeenCalledWith(
+      JOB_NAMES.RECONCILE_PERSONAL_RECURRING,
+      env.JOBS_RECONCILIATION_CRON,
+      {},
+      expect.objectContaining({
+        key: 'personal-recurring-reconciliation',
+      }),
+    )
+  })
+
+  it('schedules the daily personal reconcile from env cron with a fixed key', async () => {
+    const boss = createBossMock()
+    const schedule = vi.fn().mockResolvedValue('id')
+    ;(boss as unknown as Record<string, unknown>).schedule = schedule
+    await schedulePersonalReconcile(boss)
+    expect(schedule).toHaveBeenCalledWith(
+      JOB_NAMES.RECONCILE_PERSONAL,
+      env.JOBS_PERSONAL_RECONCILE_CRON,
+      {},
+      expect.objectContaining({ key: 'personal-reconcile' }),
+    )
+    expect(env.JOBS_PERSONAL_RECONCILE_CRON).toBe('45 3 * * *')
   })
 })

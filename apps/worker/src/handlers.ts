@@ -9,6 +9,15 @@ import { runAnonymousAccountCleanup } from '@spliit/api/lib/auth/anonymous-accou
 import { evaluateBudgets } from '@spliit/api/lib/budgets/evaluate'
 import { runNotificationCleanup } from '@spliit/api/lib/notifications/delivery-cleanup'
 import { reconcileMissingDeliveryJobs } from '@spliit/api/lib/notifications/delivery-reconciliation'
+import {
+  PersonalInclusionService,
+  runPersonalSync,
+} from '@spliit/api/lib/personal/inclusion'
+import { reconcilePersonalAccounts } from '@spliit/api/lib/personal/reconcile-accounts'
+import {
+  materializePersonalRecurringSeries,
+  reconcileDuePersonalRecurringSeries,
+} from '@spliit/api/lib/personal/recurring-materialize'
 import { handleWebhookDelivery } from '@spliit/api/lib/webhooks/delivery'
 import {
   cleanupWebhookDeliveries,
@@ -30,10 +39,36 @@ export const handlers: JobHandlers = {
     )
   },
   [JOB_NAMES.MATERIALIZE_RECURRING_EXPENSE]: async (payload, context) => {
-    await materializeRecurringExpense(payload, context.boss)
+    const result = await materializeRecurringExpense(payload, context.boss)
+    const expenseId = result.created ? result.expenseId : undefined
+    if (expenseId) {
+      await runPersonalSync(
+        PersonalInclusionService.use((service) =>
+          service.syncExpense(expenseId),
+        ),
+      )
+    }
   },
   [JOB_NAMES.RECONCILE_RECURRING_EXPENSES]: async (payload, context) => {
     await reconcileDueRecurringExpenses(context.boss, payload)
+  },
+  [JOB_NAMES.MATERIALIZE_PERSONAL_RECURRING]: async (payload, context) => {
+    await materializePersonalRecurringSeries(payload, context.boss)
+  },
+  [JOB_NAMES.RECONCILE_PERSONAL_RECURRING]: async (payload, context) => {
+    const result = await reconcileDuePersonalRecurringSeries(
+      context.boss,
+      payload,
+    )
+    console.log(
+      JSON.stringify({
+        component: 'personal-recurring-reconciliation',
+        scanned: result.scanned,
+        enqueued: result.enqueued,
+      }),
+    )
+    // Page continuation is enqueued inside the reconciler with a singleton
+    // key, so no follow-up send is needed here.
   },
   [JOB_NAMES.NOTIFICATION_DELIVER]: async (payload, context) => {
     await handleNotificationDelivery(payload.deliveryId, context)
@@ -81,6 +116,18 @@ export const handlers: JobHandlers = {
   },
   [JOB_NAMES.WEBHOOK_CLEANUP]: async () => {
     await cleanupWebhookDeliveries()
+  },
+  [JOB_NAMES.RECONCILE_PERSONAL]: async (payload, context) => {
+    const result = await reconcilePersonalAccounts(context.boss, payload)
+    console.log(
+      JSON.stringify({
+        component: 'personal-reconciliation',
+        scanned: result.scanned,
+        reconciled: result.reconciled,
+      }),
+    )
+    // Continuation is enqueued inside the reconciler with a singleton key,
+    // so no follow-up send is needed here.
   },
   [JOB_NAMES.ANONYMOUS_ACCOUNT_CLEANUP]: async (_payload, _context) => {
     const result = await runAnonymousAccountCleanup()

@@ -28,7 +28,8 @@ describe('paged categorization review', () => {
     } as never)
     prismaMock.bulkCategorizationRow.findMany.mockResolvedValue([
       {
-        expenseId: 'expense-1',
+        itemId: 'expense-1',
+        itemType: 'EXPENSE',
         title: 'Groceries',
         expenseVersion: 1,
         expenseDate: new Date('2025-01-01T00:00:00.000Z'),
@@ -111,7 +112,8 @@ describe('paged categorization review', () => {
     } as never)
     prismaMock.bulkCategorizationRow.findUnique.mockResolvedValue({
       runId: 'run-1',
-      expenseId: 'expense-1',
+      itemId: 'expense-1',
+      itemType: 'EXPENSE',
       stage: 'SUGGESTED',
       title: 'Taxi',
       expenseVersion: 1,
@@ -131,7 +133,7 @@ describe('paged categorization review', () => {
 
     await expect(
       updateRunSuggestions('run-1', 4, [
-        { expenseId: 'expense-1', categoryId: 'taxi' },
+        { itemId: 'expense-1', categoryId: 'taxi' },
       ]),
     ).resolves.toEqual({
       revision: 5,
@@ -141,7 +143,7 @@ describe('paged categorization review', () => {
     })
     expect(prismaMock.bulkCategorizationRow.update).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: { runId_expenseId: { runId: 'run-1', expenseId: 'expense-1' } },
+        where: { runId_itemId: { runId: 'run-1', itemId: 'expense-1' } },
         data: expect.objectContaining({
           categoryId: 'taxi',
           manualCorrection: true,
@@ -156,9 +158,58 @@ describe('paged categorization review', () => {
     } as never)
     await expect(
       updateRunSuggestions('run-1', 3, [
-        { expenseId: 'expense-1', categoryId: 'taxi' },
+        { itemId: 'expense-1', categoryId: 'taxi' },
       ]),
     ).rejects.toThrow('Refresh')
     expect(prismaMock.bulkCategorizationRow.update).not.toHaveBeenCalled()
+  })
+
+  it('reads legacy expenseId-only edit input via the back-compat shim', async () => {
+    prismaMock.bulkCategorizationRun.updateMany.mockResolvedValue({
+      count: 1,
+    } as never)
+    prismaMock.bulkCategorizationRun.findUniqueOrThrow.mockResolvedValue({
+      id: 'run-1',
+      status: 'REVIEW',
+      revision: 5,
+      candidateTotal: 100,
+    } as never)
+    prismaMock.bulkCategorizationRow.findUnique.mockResolvedValue({
+      runId: 'run-1',
+      itemId: 'expense-legacy',
+      itemType: 'EXPENSE',
+      stage: 'SUGGESTED',
+      title: 'Legacy taxi',
+      expenseVersion: 1,
+      expenseDate: new Date(),
+      amount: 100,
+      currency: 'USD',
+      categoryId: 'general',
+      initialCategoryId: 'general',
+      source: 'none',
+      choices: [],
+      rerunFeedback: false,
+    } as never)
+    prismaMock.bulkCategorizationRow.update.mockResolvedValue({} as never)
+    prismaMock.bulkCategorizationRow.count
+      .mockResolvedValueOnce(1 as never)
+      .mockResolvedValueOnce(1 as never)
+
+    await expect(
+      updateRunSuggestions('run-1', 4, [
+        // Legacy clients still send expenseId; the shim maps it to itemId.
+        { expenseId: 'expense-legacy', categoryId: 'taxi' },
+      ]),
+    ).resolves.toEqual({
+      revision: 5,
+      selected: 1,
+      general: 99,
+      newFeedback: 1,
+    })
+    expect(prismaMock.bulkCategorizationRow.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { runId_itemId: { runId: 'run-1', itemId: 'expense-legacy' } },
+      }),
+    )
   })
 })

@@ -16,6 +16,7 @@ import {
 import { useState, Suspense, lazy } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { PersonalHomeCard } from '@/app/personal/personal-home-card'
 import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { PageInset } from '@/components/layout/page-shell'
 import { useMascotController } from '@/components/mascot/mascot-context'
@@ -359,6 +360,7 @@ export function RecentGroupList() {
           stats={effectiveStats}
           groups={effectiveGroups}
         />
+        <PersonalHomeCard />
         {archived.length > 0 && (
           <CollapsibleSection
             storageKey={STORAGE_KEYS.archived}

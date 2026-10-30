@@ -29,6 +29,12 @@ import {
   RECURRING_MATERIALIZATION_QUEUE,
   RECURRING_RECONCILIATION_DLQ,
   RECURRING_RECONCILIATION_QUEUE,
+  PERSONAL_RECURRING_MATERIALIZATION_DLQ,
+  PERSONAL_RECURRING_MATERIALIZATION_QUEUE,
+  PERSONAL_RECURRING_RECONCILIATION_DLQ,
+  PERSONAL_RECURRING_RECONCILIATION_QUEUE,
+  PERSONAL_RECONCILIATION_DLQ,
+  PERSONAL_RECONCILIATION_QUEUE,
   WEBHOOK_CLEANUP_DLQ,
   WEBHOOK_CLEANUP_QUEUE,
   WEBHOOK_DELIVER_DLQ,
@@ -58,6 +64,32 @@ export const JOB_SEND_OPTIONS = {
     expireInSeconds: MATERIALIZATION_EXPIRE_SECONDS,
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
     deadLetter: RECURRING_RECONCILIATION_DLQ,
+  },
+  [PERSONAL_RECURRING_MATERIALIZATION_QUEUE]: {
+    retryLimit: env.JOBS_RETRY_LIMIT,
+    retryDelay: env.JOBS_RETRY_BACKOFF_SECONDS,
+    retryBackoff: true,
+    expireInSeconds: MATERIALIZATION_EXPIRE_SECONDS,
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+    deadLetter: PERSONAL_RECURRING_MATERIALIZATION_DLQ,
+  },
+  [PERSONAL_RECURRING_RECONCILIATION_QUEUE]: {
+    retryLimit: 0,
+    expireInSeconds: MATERIALIZATION_EXPIRE_SECONDS,
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+    deadLetter: PERSONAL_RECURRING_RECONCILIATION_DLQ,
+  },
+  [PERSONAL_RECONCILIATION_QUEUE]: {
+    // A page that hits a retryable PersonalSyncError (DB timeout, deadlock,
+    // serialization failure) fails the job so pg-boss retries the page.
+    // Permanent per-account failures are logged and skipped inside the
+    // handler, so they never reach the DLQ.
+    retryLimit: 3,
+    retryDelay: env.JOBS_RETRY_BACKOFF_SECONDS,
+    retryBackoff: true,
+    expireInSeconds: MATERIALIZATION_EXPIRE_SECONDS,
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+    deadLetter: PERSONAL_RECONCILIATION_DLQ,
   },
   [NOTIFICATION_DELIVER_QUEUE]: {
     retryLimit: env.JOBS_RETRY_LIMIT,
@@ -149,6 +181,20 @@ export const JOB_QUEUE_OPTIONS = {
     policy: 'exclusive',
     notify: true,
   },
+  [PERSONAL_RECURRING_MATERIALIZATION_QUEUE]: {
+    ...JOB_SEND_OPTIONS[PERSONAL_RECURRING_MATERIALIZATION_QUEUE],
+    policy: 'exclusive',
+    notify: true,
+  },
+  [PERSONAL_RECURRING_RECONCILIATION_QUEUE]: {
+    ...JOB_SEND_OPTIONS[PERSONAL_RECURRING_RECONCILIATION_QUEUE],
+    policy: 'exclusive',
+    notify: true,
+  },
+  [PERSONAL_RECONCILIATION_QUEUE]: {
+    ...JOB_SEND_OPTIONS[PERSONAL_RECONCILIATION_QUEUE],
+    notify: true,
+  },
   [NOTIFICATION_DELIVER_QUEUE]: {
     ...JOB_SEND_OPTIONS[NOTIFICATION_DELIVER_QUEUE],
     policy: 'exclusive',
@@ -224,6 +270,18 @@ export const JOB_WORK_OPTIONS = {
     pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
   },
   [RECURRING_RECONCILIATION_QUEUE]: {
+    localConcurrency: 1,
+    pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
+  },
+  [PERSONAL_RECURRING_MATERIALIZATION_QUEUE]: {
+    localConcurrency: env.JOBS_MAX_CONCURRENCY,
+    pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
+  },
+  [PERSONAL_RECURRING_RECONCILIATION_QUEUE]: {
+    localConcurrency: 1,
+    pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
+  },
+  [PERSONAL_RECONCILIATION_QUEUE]: {
     localConcurrency: 1,
     pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
   },
@@ -368,6 +426,15 @@ export async function ensureQueues(boss: SpliitBoss): Promise<void> {
   await createOrConvergeQueue(boss, RECURRING_RECONCILIATION_DLQ, {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
   })
+  await createOrConvergeQueue(boss, PERSONAL_RECURRING_MATERIALIZATION_DLQ, {
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+  })
+  await createOrConvergeQueue(boss, PERSONAL_RECURRING_RECONCILIATION_DLQ, {
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+  })
+  await createOrConvergeQueue(boss, PERSONAL_RECONCILIATION_DLQ, {
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+  })
   await createOrConvergeQueue(boss, NOTIFICATION_DELIVER_DLQ, {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
   })
@@ -420,6 +487,21 @@ export async function ensureQueues(boss: SpliitBoss): Promise<void> {
     boss,
     RECURRING_RECONCILIATION_QUEUE,
     JOB_QUEUE_OPTIONS[RECURRING_RECONCILIATION_QUEUE],
+  )
+  await createOrConvergeQueue(
+    boss,
+    PERSONAL_RECURRING_MATERIALIZATION_QUEUE,
+    JOB_QUEUE_OPTIONS[PERSONAL_RECURRING_MATERIALIZATION_QUEUE],
+  )
+  await createOrConvergeQueue(
+    boss,
+    PERSONAL_RECURRING_RECONCILIATION_QUEUE,
+    JOB_QUEUE_OPTIONS[PERSONAL_RECURRING_RECONCILIATION_QUEUE],
+  )
+  await createOrConvergeQueue(
+    boss,
+    PERSONAL_RECONCILIATION_QUEUE,
+    JOB_QUEUE_OPTIONS[PERSONAL_RECONCILIATION_QUEUE],
   )
   await createOrConvergeQueue(
     boss,
@@ -600,6 +682,34 @@ export async function hasDeadLetteredMaterialization(
   )
 }
 
+export async function hasDeadLetteredPersonalMaterialization(
+  boss: SpliitBoss,
+  payload: {
+    seriesId: string
+    sequence: number
+    occurrenceDate: string
+  },
+): Promise<boolean> {
+  const jobs = await boss.findJobs<
+    JobPayload<'personal-recurring.materialize'>
+  >(PERSONAL_RECURRING_MATERIALIZATION_DLQ, {
+    queued: true,
+    key: materializationSingletonKey(payload),
+    data: {
+      seriesId: payload.seriesId,
+      sequence: payload.sequence,
+      occurrenceDate: payload.occurrenceDate,
+    },
+  })
+  return jobs.some(
+    (job) =>
+      job.sourceName === PERSONAL_RECURRING_MATERIALIZATION_QUEUE &&
+      job.data.seriesId === payload.seriesId &&
+      job.data.sequence === payload.sequence &&
+      job.data.occurrenceDate === payload.occurrenceDate,
+  )
+}
+
 export async function sendJob<Name extends JobName>(
   boss: SpliitBoss,
   name: Name,
@@ -608,7 +718,8 @@ export async function sendJob<Name extends JobName>(
 ) {
   const parsed = jobPayloadSchema(name).parse(payload)
   const requiredOptions: SendOptions =
-    name === RECURRING_MATERIALIZATION_QUEUE
+    name === RECURRING_MATERIALIZATION_QUEUE ||
+    name === PERSONAL_RECURRING_MATERIALIZATION_QUEUE
       ? {
           singletonKey: materializationSingletonKey(
             parsed as JobPayload<'recurring-expense.materialize'>,
@@ -651,7 +762,8 @@ export async function insertJobs<Name extends JobName>(
   const jobs = payloads.map((payload) => {
     const parsed = schema.parse(payload)
     const singletonKey =
-      name === RECURRING_MATERIALIZATION_QUEUE
+      name === RECURRING_MATERIALIZATION_QUEUE ||
+      name === PERSONAL_RECURRING_MATERIALIZATION_QUEUE
         ? materializationSingletonKey(
             parsed as JobPayload<'recurring-expense.materialize'>,
           )

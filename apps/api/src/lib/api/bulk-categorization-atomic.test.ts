@@ -6,6 +6,8 @@ import { prisma$Transaction, prismaMock } from '../../test/state'
 const mocks = vi.hoisted(() => ({
   bulkUpdate: vi.fn(),
   enqueueBudgetEvaluation: vi.fn(),
+  syncGroupMembers: vi.fn(),
+  runPersonalSync: vi.fn(),
 }))
 vi.mock('./category-bulk', () => ({
   bulkUpdateExpenseCategories: mocks.bulkUpdate,
@@ -13,11 +15,19 @@ vi.mock('./category-bulk', () => ({
 vi.mock('../budgets/enqueue', () => ({
   enqueueBudgetEvaluation: mocks.enqueueBudgetEvaluation,
 }))
+vi.mock('../personal/inclusion', () => ({
+  PersonalInclusionService: {
+    use: (fn: (service: unknown) => unknown) =>
+      fn({ syncGroupMembers: mocks.syncGroupMembers }),
+  },
+  runPersonalSync: mocks.runPersonalSync,
+}))
 
 import { applyCategorizationRun } from './bulk-categorization-run'
 
 const row = (index: number) => ({
-  expenseId: `expense-${index}`,
+  itemId: `expense-${index}`,
+  itemType: 'EXPENSE',
   expenseVersion: 1,
   categoryId: 'groceries',
   title: `Expense ${index}`,
@@ -54,6 +64,8 @@ beforeEach(() => {
   })
   mocks.bulkUpdate.mockReset().mockResolvedValue({ applied: 2, skipped: 0 })
   mocks.enqueueBudgetEvaluation.mockReset().mockResolvedValue(undefined)
+  mocks.syncGroupMembers.mockReset()
+  mocks.runPersonalSync.mockReset().mockResolvedValue(undefined)
   prisma$Transaction.mockImplementation(async (callback) => {
     try {
       const result = await (callback as (tx: unknown) => Promise<unknown>)(
@@ -90,6 +102,39 @@ describe('atomic bulk categorization save', () => {
         data: expect.objectContaining({ status: 'DONE', applied: 2 }),
       }),
     )
+    expect(mocks.runPersonalSync).toHaveBeenCalledTimes(1)
+  })
+
+  it('reads legacy expenseId-only rows via the back-compat shim', async () => {
+    prismaMock.bulkCategorizationRow.findMany.mockResolvedValueOnce([
+      {
+        expenseId: 'expense-legacy',
+        expenseVersion: 1,
+        categoryId: 'groceries',
+        title: 'Legacy expense',
+      },
+    ] as never)
+    prismaMock.expense.findMany.mockResolvedValueOnce([
+      { id: 'expense-legacy', version: 1, categoryId: 'general' },
+    ] as never)
+    mocks.bulkUpdate.mockResolvedValueOnce({ applied: 1, skipped: 0 })
+    await expect(
+      applyCategorizationRun('run-1', 1, 'saving-admin'),
+    ).resolves.toEqual({
+      groupId: 'group-1',
+      applied: 1,
+      skipped: 0,
+    })
+    expect(transactionCommitted).toBe(true)
+    expect(mocks.bulkUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        input: expect.objectContaining({
+          changes: expect.arrayContaining([
+            expect.objectContaining({ expenseId: 'expense-legacy' }),
+          ]),
+        }),
+      }),
+    )
   })
 
   it('rolls back when one selected expense conflicts', async () => {
@@ -99,6 +144,7 @@ describe('atomic bulk categorization save', () => {
     ).rejects.toThrow('No categories were applied')
     expect(transactionCommitted).toBe(false)
     expect(prismaMock.bulkCategorizationRun.update).not.toHaveBeenCalled()
+    expect(mocks.runPersonalSync).not.toHaveBeenCalled()
   })
 
   it('rolls back the whole save when a later chunk fails', async () => {
@@ -165,5 +211,18 @@ describe('atomic bulk categorization save', () => {
         }),
       }),
     )
+    expect(mocks.runPersonalSync).toHaveBeenCalledTimes(1)
+  })
+
+  it('still resolves the group apply when personal sync fails (best-effort)', async () => {
+    mocks.runPersonalSync.mockRejectedValueOnce(new Error('sync down'))
+    await expect(
+      applyCategorizationRun('run-1', 1, 'saving-admin'),
+    ).resolves.toEqual({
+      groupId: 'group-1',
+      applied: 2,
+      skipped: 0,
+    })
+    expect(transactionCommitted).toBe(true)
   })
 })

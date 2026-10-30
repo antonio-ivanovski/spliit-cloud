@@ -1,12 +1,19 @@
 import {
+  personalExportManifestSchema,
+  personalExportTransactionSchema,
   spliitAccountExportManifestSchema,
   spliitGroupExportManifestSchema,
+  type PersonalExportManifest,
+  type PersonalExportTransaction,
   type SpliitAccountExportManifest,
   type SpliitGroupExportManifest,
 } from '@spliit/domain/export-manifest'
 
 import { isPlaceholderEmail } from '../invitations/display'
-import type { AccountExportSource } from './account-snapshot'
+import type {
+  AccountExportSource,
+  PersonalExportSource,
+} from './account-snapshot'
 import { createExportArchiveStream, type ExportManifestEntry } from './archive'
 import { safeArchiveSegment } from './archive-path'
 import {
@@ -15,10 +22,65 @@ import {
   type GroupExportSource,
 } from './group-snapshot'
 import type {
+  ExportArchiveEntry,
   ExportArtifact,
   ExportDocumentReader,
   ExportSnapshotDocument,
 } from './types'
+
+function safePersonalFileName(fileName: string | null): string {
+  const cleaned = (fileName ?? 'document')
+    .normalize('NFKC')
+    .replace(/^\.\.[/\\]/, '')
+    .replace(/[\\/:*?"<>|]/g, '_')
+    .split('')
+    .map((character) => (character.charCodeAt(0) <= 0x1f ? '_' : character))
+    .join('')
+    .replace(/\.\.+/g, '.')
+    .replace(/^\.+/, '')
+    .trim()
+  return cleaned || 'document'
+}
+
+export function personalDocumentPath(
+  documentId: string,
+  fileName: string | null,
+): string {
+  return `personal/documents/${safeArchiveSegment(documentId, 'document')}__${safePersonalFileName(fileName)}`
+}
+
+function dateOnly(value: Date): string {
+  return value.toISOString().slice(0, 10)
+}
+
+function toPersonalTransactionRecord(
+  row: PersonalExportSource['transactions'][number],
+): PersonalExportTransaction {
+  return personalExportTransactionSchema.parse({
+    sourceId: row.id,
+    kind: row.kind,
+    amount: row.amount,
+    currencyCode: row.currencyCode,
+    originalAmount: row.originalAmount,
+    originalCurrency: row.originalCurrency,
+    conversionRate: row.conversionRate,
+    conversionSource: row.conversionSource,
+    date: dateOnly(row.date),
+    categoryId: row.categoryId,
+    title: row.title,
+    note: row.note,
+    version: row.version,
+    source: row.source,
+    sourceExpenseId: row.sourceExpenseId,
+    sourceGroupId: row.sourceGroupId,
+    sourceGroupName: row.sourceGroupName,
+    sourceDetachedAt: row.sourceDetachedAt?.toISOString() ?? null,
+    personalRecurringSeriesId: row.personalRecurringSeriesId,
+    recurrenceSequence: row.recurrenceSequence,
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt.toISOString(),
+  })
+}
 
 function emptyAccountPreference() {
   return {
@@ -84,9 +146,28 @@ export function createAccountExportArtifact(
     includeDocuments: boolean
     includeAccountPreferences: boolean
     includeGroupPreferences: boolean
+    includePersonal?: boolean
     signal?: AbortSignal
   },
 ): ExportArtifact {
+  const includePersonal = options.includePersonal ?? source.personal != null
+  const rawPersonal = includePersonal ? (source.personal ?? null) : null
+  // An explicit `includePersonal: true` with no loaded slice still emits an
+  // empty personal manifest so personal-only exports are self-describing.
+  const personalSource =
+    rawPersonal ??
+    (includePersonal && options.includePersonal === true
+      ? {
+          profile: null,
+          transactions: [],
+          budgets: [],
+          rules: [],
+          overrides: [],
+          importSources: [],
+          recurringSeries: [],
+          attachments: [],
+        }
+      : null)
   const exportedAt = options.exportedAt.toISOString()
   const groupEntries: GroupManifestEntry[] = []
   const usedGroupPrefixes = new Set<string>()
@@ -185,6 +266,7 @@ export function createAccountExportArtifact(
       documents: options.includeDocuments,
       accountPreferences: options.includeAccountPreferences,
       groupPreferences: options.includeGroupPreferences,
+      personal: personalSource !== null,
     },
     account: {
       sourceId: source.account.id,
@@ -202,54 +284,269 @@ export function createAccountExportArtifact(
     identities: [],
     groups: groupIndex,
     groupPreferences,
+    personal: null,
   }
   accountManifest.identities = uniqueIdentities(
     source,
     groupEntries.map((entry) => entry.manifest),
   )
 
-  const documents = groupEntries.flatMap((entry) =>
-    entry.documents.map((document) => ({
+  // Personal slice: nested manifest (deferred so attachment statuses are
+  // authoritative) plus a static transactions array via additionalEntries.
+  let personalManifest: PersonalExportManifest | null = null
+  let personalTransactions: PersonalExportTransaction[] = []
+  let personalDocuments: ExportSnapshotDocument[] = []
+  const personalManifestPath = 'personal/manifest.json'
+  const personalTransactionsPath = 'personal/transactions.json' as const
+  if (personalSource) {
+    personalTransactions = personalSource.transactions.map(
+      toPersonalTransactionRecord,
+    )
+    const attachments = personalSource.attachments.map((document) => {
+      const path = personalDocumentPath(document.id, document.fileName)
+      if (!options.includeDocuments) {
+        return {
+          record: {
+            id: document.id,
+            url: document.url,
+            fileName: document.fileName,
+            contentType: document.contentType,
+            width: document.width,
+            height: document.height,
+          },
+          entry: {
+            sourceId: document.id,
+            transactionSourceId: document.personalTransactionId,
+            fileName: document.fileName,
+            contentType: document.contentType,
+            width: document.width,
+            height: document.height,
+            path: null,
+            status: 'OMITTED' as const,
+            sizeBytes: null,
+            sha256: null,
+          },
+        } satisfies ExportSnapshotDocument & {
+          entry: PersonalExportManifest['attachments'][number]
+        }
+      }
+      return {
+        record: {
+          id: document.id,
+          url: document.url,
+          fileName: document.fileName,
+          contentType: document.contentType,
+          width: document.width,
+          height: document.height,
+        },
+        entry: {
+          sourceId: document.id,
+          transactionSourceId: document.personalTransactionId,
+          fileName: document.fileName,
+          contentType: document.contentType,
+          width: document.width,
+          height: document.height,
+          path,
+          status: 'MISSING' as const,
+          sizeBytes: null,
+          sha256: null,
+        },
+      } satisfies ExportSnapshotDocument & {
+        entry: PersonalExportManifest['attachments'][number]
+      }
+    })
+    personalDocuments = attachments
+    const personalManifestRaw = {
+      profile: personalSource.profile
+        ? {
+            currencyCode: personalSource.profile.currencyCode,
+            timeZone: personalSource.profile.timeZone,
+            sharedEnabled: personalSource.profile.sharedEnabled,
+            createdAt: personalSource.profile.createdAt.toISOString(),
+            updatedAt: personalSource.profile.updatedAt.toISOString(),
+          }
+        : null,
+      budgets: personalSource.budgets.map((row) => ({
+        sourceId: row.id,
+        name: row.name,
+        amount: row.amount,
+        currencyCode: row.currencyCode,
+        period: row.period,
+        timeZone: row.timeZone,
+        categoryScope: row.categoryScope,
+        categoryIds: row.categoryIds,
+        startDay: row.startDay,
+        archived: row.archived,
+        archivedAt: row.archivedAt?.toISOString() ?? null,
+        createdAt: row.createdAt.toISOString(),
+        updatedAt: row.updatedAt.toISOString(),
+      })),
+      rules: personalSource.rules.map((row) => ({
+        sourceId: row.id,
+        groupId: row.groupId,
+        included: row.included,
+        includeFrom: row.includeFrom ? dateOnly(row.includeFrom) : null,
+        createdAt: row.createdAt.toISOString(),
+        updatedAt: row.updatedAt.toISOString(),
+      })),
+      overrides: personalSource.overrides.map((row) => ({
+        sourceId: row.id,
+        expenseId: row.expenseId,
+        state: row.state,
+        categoryId: row.categoryId,
+        createdAt: row.createdAt.toISOString(),
+        updatedAt: row.updatedAt.toISOString(),
+      })),
+      importSources: personalSource.importSources.map((row) => ({
+        transactionSourceId: row.personalTransactionId,
+        provider: row.provider,
+        importKey: row.importKey,
+        externalIdentityHash: row.externalIdentityHash,
+        semanticHash: row.semanticHash,
+        rawHash: row.rawHash,
+        importedByAccountId: row.importedByAccountId,
+        createdAt: row.createdAt.toISOString(),
+      })),
+      recurringSeries: personalSource.recurringSeries.map((row) => ({
+        sourceId: row.id,
+        timeZone: row.timeZone,
+        frequency: row.frequency,
+        interval: row.interval,
+        anchorDate: dateOnly(row.anchorDate),
+        anchorSequence: row.anchorSequence,
+        nextOccurrenceDate: dateOnly(row.nextOccurrenceDate),
+        nextOccurrenceOrdinal: row.nextOccurrenceOrdinal,
+        endType: row.endType,
+        occurrenceLimit: row.occurrenceLimit,
+        endDate: row.endDate ? dateOnly(row.endDate) : null,
+        occurrencesCreated: row.occurrencesCreated,
+        status: row.status,
+        kind: row.kind,
+        amount: row.amount,
+        currencyCode: row.currencyCode,
+        categoryId: row.categoryId,
+        title: row.title,
+        note: row.note,
+        version: row.version,
+        createdAt: row.createdAt.toISOString(),
+        updatedAt: row.updatedAt.toISOString(),
+      })),
+      attachments: attachments.map((document) => document.entry),
+      counts: {
+        transactions: personalTransactions.length,
+        budgets: personalSource.budgets.length,
+        rules: personalSource.rules.length,
+        overrides: personalSource.overrides.length,
+        importSources: personalSource.importSources.length,
+        recurringSeries: personalSource.recurringSeries.length,
+        attachments: attachments.length,
+      },
+      warnings: [],
+      transactionsPath: personalTransactionsPath,
+      transactionCount: personalTransactions.length,
+      complete: true,
+      exportedAt,
+    }
+    // Validate early for fail-fast, but keep the raw object so deferred
+    // document reads mutate the same attachment entries the manifest holds.
+    personalExportManifestSchema.parse(personalManifestRaw)
+    personalManifest = personalManifestRaw as PersonalExportManifest
+    accountManifest.personal = {
+      manifestPath: personalManifestPath,
+      transactionCount: personalManifest.transactionCount,
+      budgetCount: personalSource.budgets.length,
+      ruleCount: personalSource.rules.length,
+      overrideCount: personalSource.overrides.length,
+      recurringCount: personalSource.recurringSeries.length,
+      attachmentCount: attachments.length,
+      warningCount: 0,
+      complete: true,
+    }
+  }
+
+  const documents = [
+    ...groupEntries.flatMap((entry) =>
+      entry.documents.map((document) => ({
+        ...document,
+        markMissing(intendedPath: string) {
+          entry.manifest.complete = false
+          accountManifest.complete = false
+          const group = accountManifest.groups.find(
+            (candidate) => candidate.sourceId === entry.group.id,
+          )
+          if (group) group.complete = false
+          entry.manifest.warnings.push({
+            type: 'MISSING_DOCUMENT' as const,
+            documentId: document.entry.sourceId,
+            path: intendedPath,
+          })
+          accountManifest.warnings.push({
+            type: 'MISSING_DOCUMENT' as const,
+            groupSourceId: entry.group.id,
+            documentId: document.entry.sourceId,
+            path: intendedPath,
+          })
+        },
+      })),
+    ),
+    ...personalDocuments.map((document) => ({
       ...document,
       markMissing(intendedPath: string) {
-        entry.manifest.complete = false
+        // Personal warnings stay in the nested personal manifest so old
+        // account readers (which require `groupSourceId` on every root
+        // warning) keep validating. Root completeness still flips.
+        if (personalManifest) {
+          personalManifest.complete = false
+          personalManifest.warnings.push({
+            type: 'MISSING_DOCUMENT' as const,
+            documentId: document.entry.sourceId,
+            path: intendedPath,
+          })
+        }
         accountManifest.complete = false
-        const group = accountManifest.groups.find(
-          (candidate) => candidate.sourceId === entry.group.id,
-        )
-        if (group) group.complete = false
-        entry.manifest.warnings.push({
-          type: 'MISSING_DOCUMENT',
-          documentId: document.entry.sourceId,
-          path: intendedPath,
-        })
-        accountManifest.warnings.push({
-          type: 'MISSING_DOCUMENT',
-          groupSourceId: entry.group.id,
-          documentId: document.entry.sourceId,
-          path: intendedPath,
-        })
+        if (accountManifest.personal) {
+          accountManifest.personal.complete = false
+          accountManifest.personal.warningCount += 1
+        }
       },
     })),
-  )
+  ]
 
-  const manifests: Array<
-    ExportManifestEntry<SpliitGroupExportManifest | SpliitAccountExportManifest>
-  > = [
+  const manifests: Array<ExportManifestEntry<unknown>> = [
     ...groupEntries.map((entry) => ({
       path: entry.manifestPath,
       manifest: entry.manifest,
-      validateManifest: (
-        value: SpliitGroupExportManifest | SpliitAccountExportManifest,
-      ) => spliitGroupExportManifestSchema.parse(value),
+      validateManifest: (value: unknown) =>
+        spliitGroupExportManifestSchema.parse(value),
     })),
+    ...(personalManifest
+      ? [
+          {
+            path: personalManifestPath,
+            manifest: personalManifest,
+            validateManifest: (value: unknown) =>
+              personalExportManifestSchema.parse(value),
+          },
+        ]
+      : []),
     {
       path: 'manifest.json',
       manifest: accountManifest,
-      validateManifest: (value) =>
+      validateManifest: (value: unknown) =>
         spliitAccountExportManifestSchema.parse(value),
     },
   ]
+
+  const additionalEntries: ExportArchiveEntry[] = personalManifest
+    ? [
+        {
+          path: personalTransactionsPath,
+          bytes: new TextEncoder().encode(
+            JSON.stringify(personalTransactions, null, 2),
+          ),
+        },
+      ]
+    : []
 
   const stamp = exportedAt.replace(/\.\d{3}Z$/, 'Z').replace(/[:]/g, '-')
   return {
@@ -261,6 +558,7 @@ export function createAccountExportArtifact(
       manifests,
       documents,
       documentReader: options.documentReader,
+      additionalEntries,
       signal: options.signal,
     }),
   }

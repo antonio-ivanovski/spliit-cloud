@@ -1,5 +1,3 @@
-import { createHash } from 'node:crypto'
-
 import { TRPCError } from '@trpc/server'
 
 import { prisma, type Prisma } from '@spliit/db'
@@ -26,6 +24,14 @@ import {
   resolveConversion,
   type ConversionResolution,
 } from '../../expense-conversion'
+import {
+  externalIdentityHash as sharedExternalIdentityHash,
+  fuzzyImportMatchKey,
+  importDateWindows,
+  normalizedImportTitle,
+  storedImportKey,
+  wallDateIso as sharedWallDateIso,
+} from '../../import/identity'
 import { logServerInfo, logServerWarn } from '../../logging'
 import {
   hasEligibleWebhookEndpoints,
@@ -125,12 +131,7 @@ type MatchIdentity = {
 }
 
 function fuzzyMatchKey(identity: MatchIdentity): string {
-  return [
-    identity.date,
-    identity.amount,
-    identity.currency,
-    normalizedTitle(identity.title),
-  ].join('\0')
+  return fuzzyImportMatchKey(identity)
 }
 
 function candidateMatchKeys(
@@ -165,18 +166,11 @@ function candidateMatchKeys(
 }
 
 function normalizedTitle(value: string): string {
-  return value
-    .normalize('NFKC')
-    .toLocaleLowerCase('en-US')
-    .replace(/[\p{P}\p{S}]+/gu, ' ')
-    .trim()
-    .replace(/\s+/g, ' ')
+  return normalizedImportTitle(value)
 }
 
 function wallDateIso(expenseDate: Date, expenseTimeZone: string): string {
-  return dateOnlyInTimeZone(expenseDate, expenseTimeZone)
-    .toISOString()
-    .slice(0, 10)
+  return sharedWallDateIso(expenseDate, expenseTimeZone)
 }
 
 function sourceAmount(expense: Expense): number {
@@ -207,74 +201,32 @@ function matchIdentity(
 }
 
 function storedOriginKey(ledgerId: string, originFingerprint: string): string {
-  return createHash('sha256')
-    .update(`${EXPENSE_FILE_IMPORT_KEY_DOMAIN}\0`)
-    .update(ledgerId)
-    .update('\0')
-    .update(originFingerprint)
-    .digest('hex')
+  return storedImportKey(
+    EXPENSE_FILE_IMPORT_KEY_DOMAIN,
+    ledgerId,
+    originFingerprint,
+  )
 }
-
-/** Normalize a bank-provided identity component (trim + NFKC, case kept). */
-function normalizedExternalComponent(value: string | null | undefined) {
-  const normalized = (value ?? '').normalize('NFKC').trim()
-  return normalized || null
-}
-
-const EXPENSE_FILE_IDENTITY_DOMAIN = 'spliit:expense-file-identity:v1'
 
 /**
  * Hash-only bank identity: raw bank transaction ids and account namespaces are
- * hashed at the API boundary and never stored. Normalization (NFKC + trim, case
- * kept) runs before hashing, so matching semantics equal a normalized direct
- * comparison. Null when the export provides no id.
+ * hashed at the API boundary and never stored. Delegates to the shared
+ * target-neutral helper (same `spliit:expense-file-identity:v1` domain, so
+ * group and personal imports agree on bank-id identity).
  */
 export function externalIdentityHash(
   externalId: string | null | undefined,
   sourceAccount: string | null | undefined,
 ): string | null {
-  const id = normalizedExternalComponent(externalId)
-  if (!id) return null
-  return createHash('sha256')
-    .update(`${EXPENSE_FILE_IDENTITY_DOMAIN}\0`)
-    .update(normalizedExternalComponent(sourceAccount) ?? '')
-    .update('\0')
-    .update(id)
-    .digest('hex')
+  return sharedExternalIdentityHash(externalId, sourceAccount)
 }
 
 function dateWindows(datesOnly: string[]) {
-  const day = 24 * 60 * 60 * 1000
-  const sorted = [
-    ...new Set(
-      datesOnly
-        .map((date) => new Date(`${date}T00:00:00.000Z`).getTime())
-        .filter(Number.isFinite),
-    ),
-  ].sort((a, b) => a - b)
   // Cluster dates whose padded windows overlap: each window spans
   // [date-1d, date+2d) (a wall date in any UTC-12…UTC+14 zone maps to an
   // instant in that range), so dates more than 3 days apart get separate
   // windows instead of one broad range spanning years of unrelated expenses.
-  const windows: Array<{ gte: Date; lt: Date }> = []
-  let cluster: { min: number; max: number } | null = null
-  const flush = () => {
-    if (cluster) {
-      windows.push({
-        gte: new Date(cluster.min - day),
-        lt: new Date(cluster.max + 2 * day),
-      })
-      cluster = null
-    }
-  }
-  for (const time of sorted) {
-    if (cluster && time - cluster.max > 3 * day) flush()
-    cluster = cluster
-      ? { min: cluster.min, max: Math.max(cluster.max, time) }
-      : { min: time, max: time }
-  }
-  flush()
-  return windows
+  return importDateWindows(datesOnly)
 }
 
 function candidateMatches(

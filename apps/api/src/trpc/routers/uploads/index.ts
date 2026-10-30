@@ -5,6 +5,7 @@ import {
   createUploadPresignForAccount,
   mintCloudImportDocumentPresign,
   mintImportDocumentPresign,
+  mintPersonalPresign,
   mintProfileImagePresign,
 } from '../../../routes/upload'
 import { createTRPCRouter, uploadPresignProcedure } from '../../init'
@@ -17,6 +18,21 @@ import {
 
 const presignInput = z.object({
   ledgerId: z.string().min(1),
+  fileName: z.string().min(1).default('document'),
+  contentType: z
+    .string()
+    .min(1)
+    .describe('MIME type for the presigned PUT (e.g. image/jpeg).')
+    .default('application/octet-stream'),
+  fileSize: z
+    .number()
+    .int()
+    .positive()
+    .describe('Bytes. Validated against the S3/R2 max upload size.')
+    .optional(),
+})
+
+const personalPresignInput = z.object({
   fileName: z.string().min(1).default('document'),
   contentType: z
     .string()
@@ -108,6 +124,30 @@ export const uploadsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const response = await createUploadPresignForAccount({
         ledgerId: input.ledgerId,
+        fileName: input.fileName,
+        contentType: input.contentType,
+        fileSize: input.fileSize,
+        accountId: ctx.auth.user.id,
+      })
+      const body = await readPresignResponse(response, 'Upload presign failed')
+      return body as unknown as {
+        uploadUrl: string
+        fileUrl: string
+        key: string
+      }
+    }),
+
+  /**
+   * Get a presigned PUT URL for a personal entry attachment. The client uploads
+   * directly to S3/R2, then passes the returned `fileUrl` to
+   * `personal.transactions.attachments.add`, which promotes it to a permanent
+   * `documents/personal/<accountId>/` key.
+   */
+  personalPresign: uploadPresignProcedure
+    .input(personalPresignInput)
+    .output(uploadPresignOutputSchema)
+    .mutation(async ({ ctx, input }) => {
+      const response = await mintPersonalPresign({
         fileName: input.fileName,
         contentType: input.contentType,
         fileSize: input.fileSize,

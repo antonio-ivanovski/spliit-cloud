@@ -14,6 +14,10 @@ import {
   NOTIFICATION_DELIVER_QUEUE,
   NOTIFICATION_RECONCILE_DLQ,
   NOTIFICATION_RECONCILE_QUEUE,
+  PERSONAL_RECURRING_MATERIALIZATION_DLQ,
+  PERSONAL_RECURRING_MATERIALIZATION_QUEUE,
+  PERSONAL_RECURRING_RECONCILIATION_DLQ,
+  PERSONAL_RECURRING_RECONCILIATION_QUEUE,
   RECURRING_MATERIALIZATION_DLQ,
   RECURRING_MATERIALIZATION_QUEUE,
   RECURRING_RECONCILIATION_DLQ,
@@ -155,5 +159,76 @@ describe('notification job registry', () => {
         deliveryId: 'delivery-123',
       }),
     ).resolves.toBeDefined()
+  })
+
+  it('declares personal recurring queues with payload and DLQ mappings', () => {
+    expect(JOB_NAMES.MATERIALIZE_PERSONAL_RECURRING).toBe(
+      'personal-recurring.materialize',
+    )
+    expect(JOB_NAMES.RECONCILE_PERSONAL_RECURRING).toBe(
+      'personal-recurring.reconcile',
+    )
+    expect(
+      jobPayloadSchema('personal-recurring.materialize').parse({
+        seriesId: 'series-1',
+        sequence: 1,
+        occurrenceDate: '2026-10-20',
+      }),
+    ).toEqual({
+      seriesId: 'series-1',
+      sequence: 1,
+      occurrenceDate: '2026-10-20',
+    })
+    expect(
+      jobPayloadSchema('personal-recurring.materialize').parse({
+        seriesId: 'series-1',
+        sequence: 1,
+        occurrenceDate: '2026-10-20',
+        attemptId: 'attempt-1',
+      }),
+    ).toMatchObject({ attemptId: 'attempt-1' })
+    expect(PERSONAL_RECURRING_MATERIALIZATION_QUEUE).toBe(
+      'personal-recurring.materialize',
+    )
+    expect(PERSONAL_RECURRING_MATERIALIZATION_DLQ).toBe(
+      'personal-recurring.materialize.dead-letter',
+    )
+    expect(PERSONAL_RECURRING_RECONCILIATION_DLQ).toBe(
+      'personal-recurring.reconcile.dead-letter',
+    )
+    expect(
+      DEAD_LETTER_QUEUE_BY_SOURCE[PERSONAL_RECURRING_MATERIALIZATION_QUEUE],
+    ).toBe(PERSONAL_RECURRING_MATERIALIZATION_DLQ)
+    expect(
+      DEAD_LETTER_QUEUE_BY_SOURCE[PERSONAL_RECURRING_RECONCILIATION_QUEUE],
+    ).toBe(PERSONAL_RECURRING_RECONCILIATION_DLQ)
+    expect(deadLetterQueueFor(PERSONAL_RECURRING_MATERIALIZATION_QUEUE)).toBe(
+      PERSONAL_RECURRING_MATERIALIZATION_DLQ,
+    )
+    expect(
+      sourceQueueForDeadLetter(PERSONAL_RECURRING_RECONCILIATION_DLQ),
+    ).toBe(PERSONAL_RECURRING_RECONCILIATION_QUEUE)
+  })
+
+  it('declares the daily personal reconcile queue with cursor payload and DLQ', async () => {
+    const { JOB_NAMES: names } = await import('./registry')
+    expect(names.RECONCILE_PERSONAL).toBe('personal.reconcile')
+    const {
+      PERSONAL_RECONCILIATION_DLQ: dlq,
+      PERSONAL_RECONCILIATION_QUEUE: queue,
+      DEAD_LETTER_QUEUE_BY_SOURCE: map,
+      deadLetterQueueFor,
+      sourceQueueForDeadLetter,
+      jobPayloadSchema: schema,
+    } = await import('./registry')
+    expect(queue).toBe('personal.reconcile')
+    expect(dlq).toBe('personal.reconcile.dead-letter')
+    expect(map[queue]).toBe(dlq)
+    expect(deadLetterQueueFor(queue)).toBe(dlq)
+    expect(sourceQueueForDeadLetter(dlq)).toBe(queue)
+    expect(schema('personal.reconcile').parse({})).toEqual({})
+    expect(schema('personal.reconcile').parse({ cursor: 'a-1' })).toEqual({
+      cursor: 'a-1',
+    })
   })
 })

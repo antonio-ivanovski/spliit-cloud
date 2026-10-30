@@ -699,6 +699,20 @@ async function runDeletionSteps(
     )
   }
 
+  // Personal receipt attachments are account-scoped rows that cascade on user
+  // delete; remove the S3 objects first (best-effort) so no orphans remain.
+  // Group documents keep their shared-history behavior and are untouched.
+  const personalAttachments = await prisma.personalAttachment.findMany({
+    where: { accountId },
+    select: { url: true },
+  })
+  for (const attachment of personalAttachments) {
+    await notifySafely(
+      () => deleteS3Object(attachment.url),
+      'failed to delete personal attachment',
+    )
+  }
+
   await prisma.user.delete({ where: { id: accountId } })
   invalidateAccountCache(accountId)
 }

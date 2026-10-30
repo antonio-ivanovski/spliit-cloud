@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest'
 import {
   ensureQueues,
   hasDeadLetteredMaterialization,
+  hasDeadLetteredPersonalMaterialization,
   insertJobs,
   JOB_QUEUE_OPTIONS,
   JOB_SEND_OPTIONS,
@@ -23,6 +24,11 @@ import {
   NOTIFICATION_DELIVER_QUEUE,
   NOTIFICATION_RECONCILE_DLQ,
   NOTIFICATION_RECONCILE_QUEUE,
+  PERSONAL_RECONCILIATION_DLQ,
+  PERSONAL_RECONCILIATION_QUEUE,
+  PERSONAL_RECURRING_MATERIALIZATION_DLQ,
+  PERSONAL_RECURRING_MATERIALIZATION_QUEUE,
+  PERSONAL_RECURRING_RECONCILIATION_QUEUE,
   RECURRING_MATERIALIZATION_DLQ,
   RECURRING_MATERIALIZATION_QUEUE,
   RECURRING_RECONCILIATION_DLQ,
@@ -55,6 +61,38 @@ describe('pg-boss queue configuration', () => {
     expect(boss.createQueue).toHaveBeenCalledWith(
       RECURRING_RECONCILIATION_QUEUE,
       expect.objectContaining({ policy: 'exclusive' }),
+    )
+    expect(boss.createQueue).toHaveBeenCalledWith(
+      PERSONAL_RECURRING_MATERIALIZATION_QUEUE,
+      expect.objectContaining({
+        policy: 'exclusive',
+        expireInSeconds: MATERIALIZATION_EXPIRE_SECONDS,
+        deadLetter: PERSONAL_RECURRING_MATERIALIZATION_DLQ,
+      }),
+    )
+    expect(boss.createQueue).toHaveBeenCalledWith(
+      PERSONAL_RECURRING_RECONCILIATION_QUEUE,
+      expect.objectContaining({ policy: 'exclusive' }),
+    )
+    expect(boss.createQueue).toHaveBeenCalledWith(
+      PERSONAL_RECONCILIATION_DLQ,
+      expect.objectContaining({
+        retentionSeconds: env.JOBS_RETENTION_SECONDS,
+      }),
+    )
+    expect(boss.createQueue).toHaveBeenCalledWith(
+      PERSONAL_RECONCILIATION_QUEUE,
+      expect.objectContaining({
+        deadLetter: PERSONAL_RECONCILIATION_DLQ,
+      }),
+    )
+    const order: string[] = []
+    vi.mocked(boss.createQueue).mockImplementation(async (name: string) => {
+      order.push(name)
+    })
+    await ensureQueues(boss)
+    expect(order.indexOf(PERSONAL_RECONCILIATION_DLQ)).toBeLessThan(
+      order.indexOf(PERSONAL_RECONCILIATION_QUEUE),
     )
   })
 
@@ -104,6 +142,25 @@ describe('pg-boss queue configuration', () => {
     )
   })
 
+  it('sends personal materialization with the occurrence singleton key', async () => {
+    const boss = createBossMock()
+
+    await sendJob(boss, JOB_NAMES.MATERIALIZE_PERSONAL_RECURRING, {
+      seriesId: 'series',
+      sequence: 1,
+      occurrenceDate: '2026-10-20',
+    })
+
+    expect(boss.send).toHaveBeenCalledWith(
+      JOB_NAMES.MATERIALIZE_PERSONAL_RECURRING,
+      expect.anything(),
+      expect.objectContaining({
+        deadLetter: PERSONAL_RECURRING_MATERIALIZATION_DLQ,
+        singletonKey: 'series:1:2026-10-20',
+      }),
+    )
+  })
+
   it('finds a matching queued materialization in the dead-letter queue', async () => {
     const boss = createBossMock()
     vi.mocked(boss.findJobs).mockResolvedValue([
@@ -144,6 +201,36 @@ describe('pg-boss queue configuration', () => {
         sequence: 2,
         occurrenceDate: '2026-07-23',
       }),
+    )
+  })
+
+  it('finds a matching personal materialization in its dead-letter queue', async () => {
+    const boss = createBossMock()
+    vi.mocked(boss.findJobs).mockResolvedValue([
+      {
+        sourceName: PERSONAL_RECURRING_MATERIALIZATION_QUEUE,
+        data: { seriesId: 'series', sequence: 1, occurrenceDate: '2026-10-20' },
+      },
+    ] as never)
+
+    await expect(
+      hasDeadLetteredPersonalMaterialization(boss, {
+        seriesId: 'series',
+        sequence: 1,
+        occurrenceDate: '2026-10-20',
+      }),
+    ).resolves.toBe(true)
+    expect(boss.findJobs).toHaveBeenCalledWith(
+      PERSONAL_RECURRING_MATERIALIZATION_DLQ,
+      {
+        queued: true,
+        key: 'series:1:2026-10-20',
+        data: {
+          seriesId: 'series',
+          sequence: 1,
+          occurrenceDate: '2026-10-20',
+        },
+      },
     )
   })
 })

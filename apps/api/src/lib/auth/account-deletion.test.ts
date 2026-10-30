@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import '../../test/mocks'
+import * as upload from '../../routes/upload'
 import { prismaMock, sendEmailMock } from '../../test/state'
 import {
   ACCOUNT_DELETION_GRACE_MS,
@@ -426,6 +427,7 @@ describe('executeAccountDeletion success (account without groups)', () => {
       count: 0,
     } as never)
     prismaMock.oauthConsent.findMany.mockResolvedValue([] as never)
+    prismaMock.personalAttachment.findMany.mockResolvedValue([] as never)
     prismaMock.session.deleteMany.mockResolvedValue({ count: 2 } as never)
     prismaMock.verification.deleteMany.mockResolvedValue({ count: 0 } as never)
     prismaMock.activity.updateMany.mockResolvedValue({ count: 0 } as never)
@@ -450,6 +452,61 @@ describe('executeAccountDeletion success (account without groups)', () => {
       to: account.email,
       subject: 'Your Spliit Cloud account was deleted',
     })
+  })
+
+  it('deletes personal attachment objects, swallowing a single S3 failure', async () => {
+    prismaMock.accountDeletionRequest.updateMany.mockResolvedValue({
+      count: 1,
+    } as never)
+    prismaMock.accountDeletionRequest.findUnique.mockResolvedValue({
+      accountId: account.id,
+      emailSnapshot: account.email,
+      displayNameSnapshot: account.name,
+      keepDisplayName: true,
+      status: 'EXECUTING',
+    } as never)
+    prismaMock.user.findUnique.mockResolvedValue(account as never)
+    prismaMock.groupMember.findMany.mockResolvedValue([] as never)
+    prismaMock.groupInvitation.updateMany.mockResolvedValue({
+      count: 0,
+    } as never)
+    prismaMock.ledgerParticipant.findMany.mockResolvedValue([] as never)
+    prismaMock.expenseComment.findMany.mockResolvedValue([] as never)
+    prismaMock.expenseComment.updateMany.mockResolvedValue({
+      count: 0,
+    } as never)
+    prismaMock.groupBudget.updateMany.mockResolvedValue({ count: 0 } as never)
+    prismaMock.expenseFileImportSource.updateMany.mockResolvedValue({
+      count: 0,
+    } as never)
+    prismaMock.oauthConsent.findMany.mockResolvedValue([] as never)
+    prismaMock.personalAttachment.findMany.mockResolvedValue([
+      { url: 'https://cdn.test/documents/personal/acct-1/a.jpg' },
+      { url: 'https://cdn.test/documents/personal/acct-1/b.jpg' },
+    ] as never)
+    prismaMock.session.deleteMany.mockResolvedValue({ count: 2 } as never)
+    prismaMock.verification.deleteMany.mockResolvedValue({ count: 0 } as never)
+    prismaMock.activity.updateMany.mockResolvedValue({ count: 0 } as never)
+    prismaMock.user.delete.mockResolvedValue(account as never)
+    prismaMock.accountDeletionRequest.update.mockResolvedValue({} as never)
+
+    const deleteS3 = vi.spyOn(upload, 'deleteS3Object')
+    deleteS3.mockResolvedValue(undefined)
+    deleteS3.mockRejectedValueOnce(new Error('s3 down'))
+    try {
+      const result = await executeAccountDeletion(account.id, null, NOW)
+
+      expect(result).toEqual({ executed: true })
+      expect(deleteS3).toHaveBeenCalledTimes(2)
+      expect(deleteS3).toHaveBeenCalledWith(
+        'https://cdn.test/documents/personal/acct-1/a.jpg',
+      )
+      expect(deleteS3).toHaveBeenCalledWith(
+        'https://cdn.test/documents/personal/acct-1/b.jpg',
+      )
+    } finally {
+      deleteS3.mockRestore()
+    }
   })
 })
 

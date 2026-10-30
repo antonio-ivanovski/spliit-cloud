@@ -5,6 +5,10 @@ import { GroupType } from '@spliit/db'
 import { groupUpdateFormSchema } from '@spliit/domain'
 
 import { updateGroup } from '../../../lib/api'
+import {
+  PersonalInclusionService,
+  runPersonalSync,
+} from '../../../lib/personal/inclusion'
 import { loadGroupMutationContext, apiProcedure } from '../../init'
 
 export const updateGroupProcedure = apiProcedure('spliit:groups:manage')
@@ -44,4 +48,11 @@ export const updateGroupProcedure = apiProcedure('spliit:groups:manage')
     await updateGroup(groupId, groupFormValues, {
       accountId: ctx.auth.user.id,
     })
+    if (groupFormValues.name !== group.name) {
+      await runPersonalSync(
+        PersonalInclusionService.use((service) =>
+          service.renameGroup(groupId, groupFormValues.name),
+        ),
+      )
+    }
   })

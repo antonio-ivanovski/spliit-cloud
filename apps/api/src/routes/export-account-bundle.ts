@@ -56,6 +56,7 @@ export async function exportAccountBundle(request: Request) {
       includeDocuments: selection.includeDocuments,
       includeAccountPreferences: selection.includeAccountPreferences,
       includeGroupPreferences: selection.includeGroupPreferences,
+      includePersonal: selection.includePersonal,
       signal: request.signal,
     })
     return new Response(artifact.body, {

@@ -10,6 +10,8 @@ import {
   env,
   JOB_NAMES,
   registerHandlers,
+  schedulePersonalReconcile,
+  schedulePersonalReconciliation,
   scheduleReconciliation,
   startBoss,
   stopBoss,
@@ -47,6 +49,8 @@ async function main() {
   assertHandlersRegistered(handlers)
   await registerHandlers(boss, handlers)
   await scheduleReconciliation(boss)
+  await schedulePersonalReconciliation(boss)
+  await schedulePersonalReconcile(boss)
   await boss.schedule(
     JOB_NAMES.NOTIFICATION_RECONCILE,
     env.JOBS_NOTIFICATION_RECONCILE_CRON,

@@ -1,11 +1,8 @@
 import { prisma, type BulkCategorizationRow, type Prisma } from '@spliit/db'
 import {
   DEFAULT_CATEGORY_ID,
-  SETTLEMENT_CATEGORY_ID,
   categorizeLocally,
-  loadLocaleDictionary,
   categoryConfidenceBand,
-  createCategorySearchDocumentsForLocale,
   normalizeSearchText,
   type CategorizerChoice,
   type CategoryEvidence,
@@ -15,12 +12,14 @@ import { JOB_NAMES, sendJob } from '@spliit/jobs'
 
 import { categorizeExpensesWithSystemOne } from '../ai/batch-categorize'
 import { adaptSystemOneCategory } from '../ai/category-adapters'
-import { getRecentExpenseContext } from '../ai/context'
-import { loadSystemOneDateNeighbors } from '../ai/system-one-neighbors'
-import { enqueueBudgetEvaluation } from '../budgets/enqueue'
 import { env } from '../env'
 import { getApiBossForWrite } from './boss'
-import { bulkUpdateExpenseCategories } from './category-bulk'
+import {
+  groupTarget,
+  personalTarget,
+  targetForScope,
+  type BulkScope,
+} from './bulk-categorization-target'
 import { randomId } from './shared'
 
 export type Candidate = {
@@ -426,7 +425,10 @@ export function mergeRerunSuggestions(
 
 export type RunData = {
   id: string
-  groupId: string
+  groupId: string | null
+  scopeType: string
+  scopeId: string
+  personalAccountId: string | null
   accountId: string
   mode: string
   status: string
@@ -452,7 +454,6 @@ const json = (value: unknown): Prisma.InputJsonValue =>
   value as Prisma.InputJsonValue
 const list = <T>(value: unknown): T[] =>
   Array.isArray(value) ? (value as T[]) : []
-const RUN_LIMIT = 10_000
 const CHUNK_SIZE = 25
 const PAGE_SIZE = 100
 const LEASE_MS = 5 * 60_000
@@ -504,8 +505,12 @@ const logRun = (
   )
 
 function rowToSuggestion(row: BulkCategorizationRow): Suggestion {
+  const itemId =
+    'itemId' in row && typeof (row as { itemId?: unknown }).itemId === 'string'
+      ? (row as unknown as { itemId: string }).itemId
+      : (row as unknown as { expenseId: string }).expenseId
   return {
-    id: row.expenseId,
+    id: itemId,
     title: row.title,
     version: row.expenseVersion,
     expenseDate: row.expenseDate.toISOString(),
@@ -532,20 +537,26 @@ function rowToSuggestion(row: BulkCategorizationRow): Suggestion {
       : {}),
   }
 }
-const asCandidate = (row: BulkCategorizationRow): Candidate => ({
-  id: row.expenseId,
-  title: row.title,
-  version: row.expenseVersion,
-  expenseDate: row.expenseDate.toISOString(),
-  amount: row.amount,
-  currency: row.currency,
-  ...(row.recurringSeriesId
-    ? { recurringSeriesId: row.recurringSeriesId }
-    : {}),
-  ...(row.recurrenceSequence != null
-    ? { recurrenceSequence: row.recurrenceSequence }
-    : {}),
-})
+const asCandidate = (row: BulkCategorizationRow): Candidate => {
+  const itemId =
+    'itemId' in row && typeof (row as { itemId?: unknown }).itemId === 'string'
+      ? (row as unknown as { itemId: string }).itemId
+      : (row as unknown as { expenseId: string }).expenseId
+  return {
+    id: itemId,
+    title: row.title,
+    version: row.expenseVersion,
+    expenseDate: row.expenseDate.toISOString(),
+    amount: row.amount,
+    currency: row.currency,
+    ...(row.recurringSeriesId
+      ? { recurringSeriesId: row.recurringSeriesId }
+      : {}),
+    ...(row.recurrenceSequence != null
+      ? { recurrenceSequence: row.recurrenceSequence }
+      : {}),
+  }
+}
 const suggestionData = (row: Suggestion) => ({
   categoryId: row.categoryId,
   initialCategoryId: row.initialCategoryId ?? row.categoryId,
@@ -653,6 +664,12 @@ export async function presentRun(run: RunData | null) {
     reviewCycle: run.attemptId,
     candidateTotal: run.candidateTotal,
     omitted: run.omitted,
+    scopeType: (run as { scopeType?: string }).scopeType ?? 'GROUP',
+    scopeId:
+      (run as { scopeId?: string }).scopeId ??
+      (run.groupId as string | null) ??
+      '',
+    groupId: run.groupId,
     fullPassPhase: (run.examples as FullPassState | null)?.phase ?? 'first',
     calibration: { ...calibration, sample: sample.map(rowToSuggestion) },
     selected,
@@ -717,90 +734,72 @@ export async function getCategorizationReviewPage(
 }
 
 export async function captureCategorizationCandidates(groupId: string) {
+  const target = groupTarget(groupId)
+  const { count, candidates } = await target.captureCandidates()
   const group = await prisma.group.findUniqueOrThrow({
     where: { id: groupId },
     select: { ledgerId: true },
   })
-  const [count, ledger] = await Promise.all([
-    prisma.expense.count({
-      where: { ledgerId: group.ledgerId, categoryId: DEFAULT_CATEGORY_ID },
-    }),
-    prisma.ledger.findUniqueOrThrow({
-      where: { id: group.ledgerId },
-      select: { currencyCode: true, currency: true },
-    }),
-  ])
-  const rows = await prisma.$queryRaw<
-    Array<{
-      id: string
-      title: string
-      version: number
-      expenseDate: Date
-      amount: number
-      recurringSeriesId: string | null
-      recurrenceSequence: number | null
-    }>
-  >`
-    WITH ranked AS (
-      SELECT "id", "title", "version", "expenseDate", "amount", "recurringSeriesId", "recurrenceSequence",
-        row_number() OVER (ORDER BY "expenseDate", "id") - 1 AS ordinal
-      FROM "Expense"
-      WHERE "ledgerId" = ${group.ledgerId} AND "categoryId" = ${DEFAULT_CATEGORY_ID}
-    ), bucketed AS (
-      SELECT *, floor(ordinal * ${Math.min(count, RUN_LIMIT)}::numeric / ${Math.max(count, 1)})::integer AS bucket
-      FROM ranked
-    )
-    SELECT DISTINCT ON (bucket) "id", "title", "version", "expenseDate", "amount", "recurringSeriesId", "recurrenceSequence"
-    FROM bucketed ORDER BY bucket, ordinal`
-  return {
-    ledgerId: group.ledgerId,
-    count,
-    candidates: rows.slice(0, RUN_LIMIT).map((row): Candidate => ({
-      id: row.id,
-      title: row.title,
-      version: row.version,
-      expenseDate: row.expenseDate.toISOString(),
-      amount: row.amount,
-      currency: ledger.currencyCode ?? ledger.currency,
-      recurringSeriesId: row.recurringSeriesId,
-      recurrenceSequence: row.recurrenceSequence,
-    })),
-  }
+  return { ledgerId: group.ledgerId, count, candidates }
 }
 
 export async function countUncategorizedExpenses(groupId: string) {
-  const group = await prisma.group.findUniqueOrThrow({
-    where: { id: groupId },
-    select: { ledgerId: true },
-  })
-  return prisma.expense.count({
-    where: { ledgerId: group.ledgerId, categoryId: DEFAULT_CATEGORY_ID },
-  })
+  return groupTarget(groupId).countUncategorized()
 }
 
-export async function startCategorizationRun(args: {
-  groupId: string
+export async function countPersonalUncategorizedExpenses(accountId: string) {
+  return personalTarget(accountId).countUncategorized()
+}
+
+export async function capturePersonalCategorizationCandidates(
+  accountId: string,
+) {
+  return personalTarget(accountId).captureCandidates()
+}
+
+async function startScopedCategorizationRun(args: {
+  scope: BulkScope
+  groupId: string | null
+  personalAccountId: string | null
   accountId: string
   mode: BulkCategorizationMode
   locale: string
 }) {
   if (args.mode === 'system-one' && !env.AI_SYSTEM_ONE_API_KEY)
     throw new Error('System One is unavailable')
-  const existing = await prisma.bulkCategorizationRun.findUnique({
-    where: { groupId: args.groupId },
-  })
-  if (existing && existing.status !== 'DONE') return presentRun(existing)
-  const { ledgerId, count, candidates } = await captureCategorizationCandidates(
-    args.groupId,
-  )
-  const existingCategorized = await prisma.expense.count({
-    where: {
-      ledgerId,
-      categoryId: { notIn: [DEFAULT_CATEGORY_ID, SETTLEMENT_CATEGORY_ID] },
-    },
-  })
+  const target =
+    args.scope.scopeType === 'PERSONAL'
+      ? personalTarget(args.scope.scopeId)
+      : groupTarget(args.scope.scopeId)
+  const scopeWhere =
+    args.scope.scopeType === 'PERSONAL'
+      ? {
+          scopeType_scopeId: {
+            scopeType: args.scope.scopeType,
+            scopeId: args.scope.scopeId,
+          } as const,
+        }
+      : {
+          scopeType_scopeId: {
+            scopeType: 'GROUP',
+            scopeId: args.scope.scopeId,
+          } as const,
+        }
+  // Legacy lookup fallback: existing GROUP runs backfilled to scope GROUP/scopeId.
+  const existing =
+    (await prisma.bulkCategorizationRun.findUnique({ where: scopeWhere })) ??
+    (args.groupId
+      ? await prisma.bulkCategorizationRun.findUnique({
+          where: { groupId: args.groupId },
+        })
+      : null)
+  if (existing && existing.status !== 'DONE')
+    return presentRun(existing as RunData)
+  const { count, candidates, existingCategorized } =
+    await target.captureCandidates()
   const id = randomId()
   const attemptId = candidates.length ? randomId() : null
+  const supportsSeries = target.supportsSeries
   try {
     await prisma.$transaction(
       async (tx) => {
@@ -811,7 +810,12 @@ export async function startCategorizationRun(args: {
         await tx.bulkCategorizationRun.create({
           data: {
             id,
-            groupId: args.groupId,
+            scopeType: args.scope.scopeType,
+            scopeId: args.scope.scopeId,
+            ...(args.groupId ? { groupId: args.groupId } : { groupId: null }),
+            ...(args.personalAccountId
+              ? { personalAccountId: args.personalAccountId }
+              : {}),
             accountId: args.accountId,
             mode: args.mode,
             locale: args.locale,
@@ -834,15 +838,21 @@ export async function startCategorizationRun(args: {
           await tx.bulkCategorizationRow.createMany({
             data: candidates.slice(offset, offset + 500).map((row, index) => ({
               runId: id,
-              expenseId: row.id,
+              itemType:
+                args.scope.scopeType === 'PERSONAL' ? 'PERSONAL' : 'EXPENSE',
+              itemId: row.id,
               position: offset + index,
               title: row.title,
               expenseVersion: row.version,
               expenseDate: new Date(row.expenseDate),
               amount: row.amount,
               currency: row.currency,
-              recurringSeriesId: row.recurringSeriesId ?? null,
-              recurrenceSequence: row.recurrenceSequence ?? null,
+              recurringSeriesId: supportsSeries
+                ? (row.recurringSeriesId ?? null)
+                : null,
+              recurrenceSequence: supportsSeries
+                ? (row.recurrenceSequence ?? null)
+                : null,
             })),
           })
         }
@@ -850,10 +860,11 @@ export async function startCategorizationRun(args: {
       { maxWait: 10000, timeout: 120000 },
     )
   } catch (cause) {
-    const active = await prisma.bulkCategorizationRun.findUnique({
-      where: { groupId: args.groupId },
-    })
-    if (active && active.id !== existing?.id) return presentRun(active)
+    const active = await prisma.bulkCategorizationRun
+      .findUnique({ where: scopeWhere })
+      .catch(() => null)
+    if (active && active.id !== existing?.id)
+      return presentRun(active as RunData)
     throw cause
   }
   logRun(id, 'started', {
@@ -863,8 +874,41 @@ export async function startCategorizationRun(args: {
   })
   if (attemptId) await enqueueCategorization(id, 'calibration', attemptId)
   return presentRun(
-    await prisma.bulkCategorizationRun.findUnique({ where: { id } }),
+    (await prisma.bulkCategorizationRun.findUnique({
+      where: { id },
+    })) as RunData | null,
   )
+}
+
+export async function startCategorizationRun(args: {
+  groupId: string
+  accountId: string
+  mode: BulkCategorizationMode
+  locale: string
+}) {
+  return startScopedCategorizationRun({
+    scope: { scopeType: 'GROUP', scopeId: args.groupId },
+    groupId: args.groupId,
+    personalAccountId: null,
+    accountId: args.accountId,
+    mode: args.mode,
+    locale: args.locale,
+  })
+}
+
+export async function startPersonalCategorizationRun(args: {
+  accountId: string
+  mode: BulkCategorizationMode
+  locale: string
+}) {
+  return startScopedCategorizationRun({
+    scope: { scopeType: 'PERSONAL', scopeId: args.accountId },
+    groupId: null,
+    personalAccountId: args.accountId,
+    accountId: args.accountId,
+    mode: args.mode,
+    locale: args.locale,
+  })
 }
 
 async function enqueueCategorization(
@@ -896,7 +940,11 @@ async function enqueueCategorization(
 export async function updateRunSuggestions(
   runId: string,
   revision: number,
-  changes: Array<{ expenseId: string; categoryId: CategoryId }>,
+  changes: Array<{
+    expenseId?: string
+    itemId?: string
+    categoryId: CategoryId
+  }>,
 ) {
   return prisma.$transaction(async (tx) => {
     const claimed = await tx.bulkCategorizationRun.updateMany({
@@ -917,8 +965,10 @@ export async function updateRunSuggestions(
         ? 'SAMPLE'
         : { in: ['CONFIRMED', 'SUGGESTED'] }
     for (const change of changes) {
+      const itemId = change.itemId ?? change.expenseId
+      if (!itemId) throw new Error('Expense is not in this review')
       const row = await tx.bulkCategorizationRow.findUnique({
-        where: { runId_expenseId: { runId, expenseId: change.expenseId } },
+        where: { runId_itemId: { runId, itemId } },
       })
       if (
         !row ||
@@ -933,7 +983,7 @@ export async function updateRunSuggestions(
         change.categoryId,
       )
       await tx.bulkCategorizationRow.update({
-        where: { runId_expenseId: { runId, expenseId: change.expenseId } },
+        where: { runId_itemId: { runId, itemId } },
         data: {
           categoryId: change.categoryId,
           rerunFeedback: false,
@@ -1033,13 +1083,13 @@ async function setReviewOrder(tx: Prisma.TransactionClient, runId: string) {
   await tx.$executeRaw`
     UPDATE "BulkCategorizationRow" AS target SET "reviewOrder" = ranked.ordinal
     FROM (
-      SELECT "expenseId", row_number() OVER (
+      SELECT "itemId", row_number() OVER (
         ORDER BY CASE WHEN "categoryId" = ${DEFAULT_CATEGORY_ID} THEN 0 ELSE 1 END,
-          "expenseDate" DESC, "expenseId"
+          "expenseDate" DESC, "itemId"
       ) - 1 AS ordinal
       FROM "BulkCategorizationRow" WHERE "runId" = ${runId}
     ) AS ranked
-    WHERE target."runId" = ${runId} AND target."expenseId" = ranked."expenseId"`
+    WHERE target."runId" = ${runId} AND target."itemId" = ranked."itemId"`
 }
 
 export async function rerunCategorizationRun(runId: string, revision: number) {
@@ -1109,25 +1159,78 @@ export async function applyCategorizationRun(
       })
       if (claimed.count !== 1)
         throw new Error('This review changed. Refresh and try again.')
-      const run = await tx.bulkCategorizationRun.findUniqueOrThrow({
+      const run = (await tx.bulkCategorizationRun.findUniqueOrThrow({
         where: { id: runId },
-      })
+      })) as unknown as RunData
+      const scope: BulkScope =
+        run.scopeType === 'PERSONAL'
+          ? { scopeType: 'PERSONAL', scopeId: run.scopeId }
+          : { scopeType: 'GROUP', scopeId: run.scopeId || (run.groupId ?? '') }
+      const target = targetForScope(scope.scopeType, scope.scopeId)
       const selected = await tx.bulkCategorizationRow.findMany({
         where: { runId, categoryId: { not: DEFAULT_CATEGORY_ID } },
         orderBy: { position: 'asc' },
       })
-      const conflicts = await findSaveConflicts(tx, run.groupId, selected)
+      const getRowItemId = (
+        row: { itemId?: string } & { expenseId?: string },
+      ) => row.itemId ?? row.expenseId ?? ''
+      const toConflictInput = selected.map((row) => ({
+        itemId: getRowItemId(
+          row as unknown as { itemId?: string; expenseId?: string },
+        ),
+        title: row.title,
+        expenseVersion: row.expenseVersion,
+        recurringSeriesId: row.recurringSeriesId,
+      }))
+      const conflicts = await target.findConflicts(tx, toConflictInput)
       if (conflicts.some((row) => !approvedSkips.has(row.expenseId)))
         throw new Error(
           'Some selected expenses changed since this run started. No categories were applied.',
         )
       const skippedIds = new Set(conflicts.map((row) => row.expenseId))
+      const getItemId = (row: (typeof selected)[number]) =>
+        getRowItemId(row as unknown as { itemId?: string; expenseId?: string })
       const applicable = selected.filter(
-        (row) => !skippedIds.has(row.expenseId),
+        (row) => !skippedIds.has(getItemId(row)),
       )
       const expectedVersions = new Map(
-        applicable.map((row) => [row.expenseId, row.expenseVersion]),
+        applicable.map((row) => [getItemId(row), row.expenseVersion]),
       )
+      if (scope.scopeType === 'PERSONAL') {
+        let applied = 0
+        for (let offset = 0; offset < applicable.length; offset += 2000) {
+          const chunk = applicable.slice(offset, offset + 2000)
+          const chunkApplied = await target.applyChunk(tx, {
+            accountId,
+            changes: chunk.map((row) => ({
+              itemId: getItemId(row),
+              categoryId: row.categoryId as CategoryId,
+            })),
+            expectedVersions,
+          })
+          if (chunkApplied !== chunk.length)
+            throw new Error(
+              'An expense changed while saving. No categories were applied; review the changed expenses and try again.',
+            )
+          applied += chunkApplied
+        }
+        await tx.bulkCategorizationRun.update({
+          where: { id: runId },
+          data: {
+            status: 'DONE',
+            processed: selected.length,
+            total: selected.length,
+            applied,
+            skipped: skippedIds.size,
+            error: null,
+          },
+        })
+        return {
+          groupId: run.groupId ?? null,
+          applied,
+          skipped: skippedIds.size,
+        }
+      }
       // Snapshot template versions for every touched series so a concurrent
       // series edit fails the whole batch instead of diverging occurrences
       // from the template mid-save.
@@ -1147,21 +1250,25 @@ export async function applyCategorizationRun(
           expectedVersions.set(`series:${series.id}`, series.templateVersion)
         }
       }
+      const { bulkUpdateExpenseCategories: bulkUpdate } =
+        await import('./category-bulk')
+      const groupId = run.groupId
+      if (!groupId) throw new Error('Group run is missing its group')
       let applied = 0
       for (let offset = 0; offset < applicable.length; offset += 2000) {
         const chunk = applicable.slice(offset, offset + 2000)
-        const update = await bulkUpdateExpenseCategories({
-          groupId: run.groupId,
+        const update = await bulkUpdate({
+          groupId,
           accountId,
           transaction: tx,
           expectedVersions,
           setBased: true,
           input: {
-            groupId: run.groupId,
+            groupId,
             fromCategoryId: DEFAULT_CATEGORY_ID,
             seriesScopes,
             changes: chunk.map((row) => ({
-              expenseId: row.expenseId,
+              expenseId: getItemId(row),
               categoryId: row.categoryId as CategoryId,
             })),
           },
@@ -1183,120 +1290,97 @@ export async function applyCategorizationRun(
           error: null,
         },
       })
-      return { groupId: run.groupId, applied, skipped: skippedIds.size }
+      return {
+        groupId,
+        applied,
+        skipped: skippedIds.size,
+      }
     },
     { maxWait: 10000, timeout: 180000 },
   )
-  if (result.applied > 0) await enqueueBudgetEvaluation(result.groupId)
+  // Scope-aware post-apply: group budgets via the shared enqueue, personal is
+  // a no-op (budgets are read-computed).
+  if (result.groupId == null) {
+    // Personal run: nothing to enqueue.
+  } else {
+    const { enqueueBudgetEvaluation: enqueueBudgetsAfter } =
+      await import('../budgets/enqueue')
+    if (result.applied > 0 && result.groupId)
+      await enqueueBudgetsAfter(result.groupId as string)
+    // Mirror the manual bulk-update path: propagate the new source categories
+    // to linked personal rows. Best-effort and strictly after the write
+    // transaction commits — a personal sync failure must not fail the group
+    // apply (the daily reconcile pass repairs missed work).
+    if (result.applied > 0 && result.groupId) {
+      try {
+        const { PersonalInclusionService, runPersonalSync } =
+          await import('../personal/inclusion')
+        const groupId = result.groupId as string
+        await runPersonalSync(
+          PersonalInclusionService.use((service) =>
+            service.syncGroupMembers(groupId),
+          ),
+        )
+      } catch (error) {
+        console.warn('[bulk-categorization] personal sync skipped', {
+          runId,
+          error: error instanceof Error ? error.message : String(error),
+        })
+      }
+    }
+  }
   logRun(runId, 'saved', { applied: result.applied })
   return result
 }
 
-type SaveConflict = { expenseId: string; title: string }
+export type SaveConflict = { expenseId: string; title: string }
 
 async function findSaveConflicts(
   tx: Prisma.TransactionClient,
-  groupId: string,
+  scopeOrGroupId: string | BulkScope,
   selected: BulkCategorizationRow[],
 ): Promise<SaveConflict[]> {
   if (!selected.length) return []
-  const group = await tx.group.findUniqueOrThrow({
-    where: { id: groupId },
-    select: { ledgerId: true },
-  })
-  const live = new Map<string, { version: number; categoryId: string }>()
-  for (let offset = 0; offset < selected.length; offset += 1000) {
-    const expenses = await tx.expense.findMany({
-      where: {
-        ledgerId: group.ledgerId,
-        id: {
-          in: selected.slice(offset, offset + 1000).map((row) => row.expenseId),
-        },
-      },
-      select: {
-        id: true,
-        version: true,
-        categoryId: true,
-        recurringSeriesId: true,
-      },
-    })
-    for (const expense of expenses) live.set(expense.id, expense)
-  }
-  const rowConflicts = selected
-    .filter((row) => {
-      const expense = live.get(row.expenseId)
-      return (
-        !expense ||
-        expense.categoryId !== DEFAULT_CATEGORY_ID ||
-        expense.version !== row.expenseVersion
-      )
-    })
-    .map((row) => ({ expenseId: row.expenseId, title: row.title }))
-  if (rowConflicts.length > 0) return rowConflicts
-  // Series-level conflicts: a template rewritten outside this run since
-  // capture means propagating now would clobber that edit. Fail whole
-  // batch like an expense conflict.
-  //
-  // Capture stores only row-level expense versions (BulkCategorizationRow
-  // has no series-version column), so "since capture" is approximated by
-  // convergence drift: a live template already off `general` while a
-  // selected row still sits on `general` means someone edited the series
-  // outside this run after capture. SELECTED-scope saves inherit the same
-  // check — propagating the drift silently would hide a series edit the
-  // user never reviewed. Bulk-vs-bulk/swap races are additionally guarded
-  // by the `templateVersion` version-claim inside `apply`.
-  const seriesIds = [
-    ...new Set(
-      selected
-        .map((row) => row.recurringSeriesId)
-        .filter((id): id is string => id != null),
-    ),
-  ]
-  if (seriesIds.length === 0) return []
-  const seriesRows = await tx.recurringExpenseSeries.findMany({
-    where: { id: { in: seriesIds } },
-    select: { id: true, templateVersion: true, template: true },
-  })
-  const liveSeries = new Map(seriesRows.map((s) => [s.id, s]))
-  const seriesConflicts: SaveConflict[] = []
-  for (const row of selected) {
-    if (!row.recurringSeriesId) continue
-    const live = liveSeries.get(row.recurringSeriesId)
-    if (!live) {
-      seriesConflicts.push({ expenseId: row.expenseId, title: row.title })
-      break
-    }
-    const template = live.template as unknown as { categoryId?: unknown }
-    // Capture stores only row-level expense versions, not series versions,
-    // so "changed since capture" is approximated by convergence drift: a
-    // live template already off `general` while a selected row still sits
-    // on `general` means someone edited the series outside this run after
-    // capture. SELECTED-scope saves inherit the same check — applying the
-    // drift silently would hide a series edit the user never reviewed.
-    // Bulk-vs-bulk/swap races are additionally guarded by the
-    // `templateVersion` version-claim inside `apply`.
-    if (
-      typeof template.categoryId === 'string' &&
-      template.categoryId !== DEFAULT_CATEGORY_ID
-    ) {
-      seriesConflicts.push({ expenseId: row.expenseId, title: row.title })
-      break
-    }
-  }
-  return seriesConflicts
+  const scope: BulkScope =
+    typeof scopeOrGroupId === 'string'
+      ? { scopeType: 'GROUP', scopeId: scopeOrGroupId }
+      : scopeOrGroupId
+  // Back-compat: callers may pass a groupId string; resolve legacy runs via
+  // scope when the string looks like a scopeId already handled above.
+  const target = targetForScope(scope.scopeType, scope.scopeId)
+  return target.findConflicts(
+    tx,
+    selected.map((row) => ({
+      itemId:
+        (row as unknown as { itemId?: string }).itemId ??
+        (row as unknown as { expenseId: string }).expenseId,
+      title: row.title,
+      expenseVersion: row.expenseVersion,
+      recurringSeriesId: row.recurringSeriesId,
+    })),
+  )
 }
 
 export async function getCategorizationSaveConflicts(runId: string) {
-  const run = await prisma.bulkCategorizationRun.findUniqueOrThrow({
+  const run = (await prisma.bulkCategorizationRun.findUniqueOrThrow({
     where: { id: runId },
-    select: { groupId: true, status: true },
-  })
+    select: { groupId: true, scopeType: true, scopeId: true, status: true },
+  })) as unknown as {
+    groupId: string | null
+    scopeType: string
+    scopeId: string
+    status: string
+  }
   if (run.status !== 'REVIEW') return []
   const selected = await prisma.bulkCategorizationRow.findMany({
     where: { runId, categoryId: { not: DEFAULT_CATEGORY_ID } },
     orderBy: { position: 'asc' },
   })
-  return findSaveConflicts(prisma, run.groupId, selected)
+  const scope: BulkScope =
+    run.scopeType === 'PERSONAL'
+      ? { scopeType: 'PERSONAL', scopeId: run.scopeId }
+      : { scopeType: 'GROUP', scopeId: run.scopeId || (run.groupId ?? '') }
+  return findSaveConflicts(prisma, scope, selected)
 }
 
 export async function retryCategorizationRun(runId: string, revision: number) {
@@ -1493,6 +1577,17 @@ export async function suggestRows(
 ): Promise<Suggestion[]> {
   const feedback = buildCategorizationFeedback(confirmed, run.locale)
   const localMode = normalizeBulkCategorizationMode(run.mode) === 'local'
+  const scope: BulkScope =
+    (run as { scopeType?: string }).scopeType === 'PERSONAL'
+      ? {
+          scopeType: 'PERSONAL',
+          scopeId: (run as { scopeId?: string }).scopeId ?? '',
+        }
+      : {
+          scopeType: 'GROUP',
+          scopeId: (run as { scopeId?: string }).scopeId ?? run.groupId ?? '',
+        }
+  const isPersonal = scope.scopeType === 'PERSONAL'
   const local = localMode
     ? (options.localContext ?? (await prepareLocalContext(run)))
     : null
@@ -1502,6 +1597,16 @@ export async function suggestRows(
     minScore: env.CATEGORY_LOCAL_MIN_SCORE,
     settlementMinScore: env.CATEGORY_LOCAL_SETTLEMENT_MIN_SCORE,
   }
+  // Personal ledgers have no date-neighbor index and no group hint; the shared
+  // history still feeds System One as confirmed examples.
+  const personalExamples =
+    !localMode && isPersonal && !local
+      ? (await prepareLocalContext(run)).context.expenses
+      : undefined
+  const systemOneExamples = [
+    ...feedback.positive,
+    ...((personalExamples ?? []) as typeof feedback.positive),
+  ]
   const systemOne =
     normalizeBulkCategorizationMode(run.mode) === 'system-one' && chunk.length
       ? await categorizeExpensesWithSystemOne(
@@ -1511,13 +1616,17 @@ export async function suggestRows(
             expenseDate: row.expenseDate,
           })),
           {
-            groupId: run.groupId,
+            ...(isPersonal ? {} : { groupId: scope.scopeId }),
             locale: run.locale,
-            examples: feedback.positive,
+            examples: systemOneExamples,
             rejectedExamples: feedback.rejected,
-            neighborsById: options.dateNeighbors
-              ? await loadSystemOneDateNeighbors(run.groupId, chunk, confirmed)
-              : undefined,
+            neighborsById:
+              options.dateNeighbors && !isPersonal
+                ? await targetForScope(
+                    scope.scopeType,
+                    scope.scopeId,
+                  ).loadDateNeighbors?.(chunk, confirmed)
+                : undefined,
           },
         )
       : new Map()
@@ -1577,14 +1686,19 @@ export async function suggestRows(
 }
 
 async function prepareLocalContext(run: RunData) {
-  await loadLocaleDictionary(run.locale)
-  return {
-    context: await getRecentExpenseContext(
-      run.groupId,
-      env.CATEGORY_MEMORY_LIMIT,
-    ),
-    documents: createCategorySearchDocumentsForLocale(run.locale),
-  }
+  const scope: BulkScope =
+    (run as { scopeType?: string }).scopeType === 'PERSONAL'
+      ? {
+          scopeType: 'PERSONAL',
+          scopeId: (run as { scopeId?: string }).scopeId ?? '',
+        }
+      : {
+          scopeType: 'GROUP',
+          scopeId: (run as { scopeId?: string }).scopeId ?? run.groupId ?? '',
+        }
+  return targetForScope(scope.scopeType, scope.scopeId).loadLocalContext(
+    run.locale,
+  )
 }
 
 async function processCalibration(
@@ -1629,7 +1743,7 @@ async function processCalibration(
     async (tx) => {
       for (const row of suggested)
         await tx.bulkCategorizationRow.update({
-          where: { runId_expenseId: { runId, expenseId: row.id } },
+          where: { runId_itemId: { runId, itemId: row.id } },
           data: {
             ...suggestionData(row),
             stage: 'SAMPLE',
@@ -1685,7 +1799,7 @@ async function processFull(
         async (tx) => {
           for (const row of additions)
             await tx.bulkCategorizationRow.update({
-              where: { runId_expenseId: { runId, expenseId: row.id } },
+              where: { runId_itemId: { runId, itemId: row.id } },
               data: { ...suggestionData(row), stage: 'SUGGESTED' },
             })
         },
@@ -1723,7 +1837,7 @@ async function processFull(
           workerToken,
           async (tx) => {
             await tx.bulkCategorizationRow.updateMany({
-              where: { runId, expenseId: { in: ids } },
+              where: { runId, itemId: { in: ids } },
               data: { secondPassTarget: true },
             })
           },
@@ -1777,7 +1891,7 @@ async function processFull(
         async (tx) => {
           for (const row of merged)
             await tx.bulkCategorizationRow.update({
-              where: { runId_expenseId: { runId, expenseId: row.id } },
+              where: { runId_itemId: { runId, itemId: row.id } },
               data: { ...suggestionData(row), secondPassTarget: false },
             })
         },
@@ -1839,16 +1953,24 @@ async function processRerun(
       async (tx) => {
         for (const row of additions)
           await tx.bulkCategorizationRow.update({
-            where: { runId_expenseId: { runId, expenseId: row.id } },
+            where: { runId_itemId: { runId, itemId: row.id } },
             data: {
               ...suggestionData(row),
               rerunTarget: false,
               firstPass:
-                pending.find((item) => item.expenseId === row.id)?.firstPass ??
-                undefined,
+                pending.find(
+                  (item) =>
+                    ((item as unknown as { itemId?: string }).itemId ??
+                      (item as unknown as { expenseId?: string }).expenseId) ===
+                    row.id,
+                )?.firstPass ?? undefined,
               secondPass:
-                pending.find((item) => item.expenseId === row.id)?.secondPass ??
-                undefined,
+                pending.find(
+                  (item) =>
+                    ((item as unknown as { itemId?: string }).itemId ??
+                      (item as unknown as { expenseId?: string }).expenseId) ===
+                    row.id,
+                )?.secondPass ?? undefined,
             },
           })
       },

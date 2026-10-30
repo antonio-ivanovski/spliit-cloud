@@ -8,6 +8,10 @@ import {
   expenseOwnerAccountId,
 } from '../../../../lib/api/resource-permissions'
 import { enqueueBudgetEvaluation } from '../../../../lib/budgets/enqueue'
+import {
+  PersonalInclusionService,
+  runPersonalSync,
+} from '../../../../lib/personal/inclusion'
 import { loadGroupMutationContext, apiProcedure } from '../../../init'
 import { deleteExpenseOutputSchema } from '../../../outputs/expenses'
 
@@ -69,6 +73,11 @@ export const deleteGroupExpenseProcedure = apiProcedure(
         { scope, stopRecurrence },
       )
       await enqueueBudgetEvaluation(groupId)
+      await runPersonalSync(
+        PersonalInclusionService.use((service) =>
+          service.deleteExpense(expenseId),
+        ),
+      )
       return {}
     },
   )

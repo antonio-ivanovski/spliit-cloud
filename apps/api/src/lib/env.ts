@@ -145,6 +145,12 @@ const envSchema = z
       interpretEnvVarAsBool,
       z.boolean().default(false),
     ),
+    // Personal expenses (account-owned spending, budgets, and linked group
+    // expenses). Enabled by default; self-hosters can hide the whole section.
+    PUBLIC_ENABLE_PERSONAL_FINANCE: z.preprocess(
+      interpretEnvVarAsBool,
+      z.boolean().default(true),
+    ),
     PUBLIC_DEFAULT_CURRENCY_CODE: supportedCurrencyCodeSchema.default('USD'),
     S3_UPLOAD_KEY: optionalString,
     S3_UPLOAD_SECRET: optionalString,

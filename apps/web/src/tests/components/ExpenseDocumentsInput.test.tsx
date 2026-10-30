@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ExpenseDocumentsInput } from '@/components/expense-documents-input'
 import { useMediaQuery } from '@/lib/hooks'
 import type { ExpenseFormInputValues } from '@/lib/schemas'
+import { resizeImage } from '@/lib/upload'
 import { fireEvent, render, screen, waitFor } from '@/test/test-utils'
 
 const uploadToS3 = vi.fn().mockResolvedValue({
@@ -30,10 +31,20 @@ function renderInput({
   readOnly = false,
   updateDocuments = vi.fn(),
   documents = [],
+  uploadFile,
+  maxDocuments,
+  maxDocumentsReachedLabel,
 }: {
   readOnly?: boolean
   updateDocuments?: (documents: ExpenseFormInputValues['documents']) => void
   documents?: ExpenseFormInputValues['documents']
+  uploadFile?: (input: {
+    file: File
+    width: number | null
+    height: number | null
+  }) => Promise<ExpenseFormInputValues['documents'][number]>
+  maxDocuments?: number
+  maxDocumentsReachedLabel?: string
 } = {}) {
   return {
     updateDocuments,
@@ -44,6 +55,9 @@ function renderInput({
           updateDocuments={updateDocuments}
           ledgerId="ledger-1"
           readOnly={readOnly}
+          uploadFile={uploadFile}
+          maxDocuments={maxDocuments}
+          maxDocumentsReachedLabel={maxDocumentsReachedLabel}
         />
       </form>,
     ),
@@ -55,6 +69,12 @@ beforeEach(() => {
   uploadToS3.mockReset()
   uploadToS3.mockResolvedValue({ url: 'https://example.com/receipt.pdf' })
   toast.mockReset()
+  vi.mocked(resizeImage).mockReset()
+  vi.mocked(resizeImage).mockImplementation(async (file: File) => ({
+    file,
+    width: 100,
+    height: 100,
+  }))
 })
 
 describe('ExpenseDocumentsInput form drag and drop', () => {
@@ -231,5 +251,193 @@ describe('ExpenseDocumentsInput form drag and drop', () => {
     expect(camera).toHaveAttribute('capture', 'environment')
     expect(files).toHaveAttribute('multiple')
     expect(files.accept).toContain('application/pdf')
+  })
+})
+
+describe('ExpenseDocumentsInput injected uploadFile', () => {
+  it('uses the injected transport instead of the ledger hook', async () => {
+    const injected = vi.fn(
+      async ({
+        file,
+      }: {
+        file: File
+        width: number | null
+        height: number | null
+      }) => ({
+        id: 'personal-1',
+        url: 'https://example.com/personal/receipt.jpg',
+        fileName: file.name,
+        contentType: 'image/jpeg',
+        width: 100,
+        height: 100,
+      }),
+    )
+    const { updateDocuments } = renderInput({ uploadFile: injected })
+    const form = document.querySelector('input[type="file"]')!.closest('form')!
+    const file = new File(['receipt'], 'receipt.jpg', {
+      type: 'image/jpeg',
+    })
+
+    fireEvent.drop(form, {
+      dataTransfer: { types: ['Files'], files: [file] },
+    })
+
+    await waitFor(() => expect(updateDocuments).toHaveBeenCalledTimes(1))
+    expect(injected).toHaveBeenCalledWith({
+      file,
+      width: 100,
+      height: 100,
+    })
+    expect(uploadToS3).not.toHaveBeenCalled()
+    expect(updateDocuments).toHaveBeenCalledWith([
+      expect.objectContaining({
+        id: 'personal-1',
+        url: 'https://example.com/personal/receipt.jpg',
+      }),
+    ])
+  })
+
+  it('does not call the injected transport in read-only mode', async () => {
+    const injected = vi.fn()
+    const { updateDocuments } = renderInput({
+      readOnly: true,
+      uploadFile: injected,
+    })
+    const form = document.querySelector('input[type="file"]')!.closest('form')!
+    const file = new File(['receipt'], 'receipt.jpg', {
+      type: 'image/jpeg',
+    })
+
+    fireEvent.drop(form, {
+      dataTransfer: { types: ['Files'], files: [file] },
+    })
+
+    await new Promise((resolve) => setTimeout(resolve, 0))
+    expect(injected).not.toHaveBeenCalled()
+    expect(updateDocuments).not.toHaveBeenCalled()
+  })
+
+  it('shows a single shared toast for unsupported injected files', async () => {
+    const injected = vi.fn()
+    renderInput({ uploadFile: injected })
+    const form = document.querySelector('input[type="file"]')!.closest('form')!
+    const file = new File(['binary'], 'setup.exe', {
+      type: 'application/octet-stream',
+    })
+
+    fireEvent.drop(form, {
+      dataTransfer: { types: ['Files'], files: [file] },
+    })
+
+    await waitFor(() => expect(toast).toHaveBeenCalledTimes(1))
+    expect(injected).not.toHaveBeenCalled()
+  })
+})
+
+describe('ExpenseDocumentsInput maxDocuments', () => {
+  function pdfDocument(
+    id: string,
+  ): ExpenseFormInputValues['documents'][number] {
+    return {
+      id,
+      url: `https://example.com/${id}.pdf`,
+      fileName: `${id}.pdf`,
+      contentType: 'application/pdf',
+      width: null,
+      height: null,
+    }
+  }
+
+  it('hides the add affordance and shows the limit note at the cap', () => {
+    renderInput({
+      documents: [pdfDocument('a'), pdfDocument('b')],
+      maxDocuments: 2,
+      maxDocumentsReachedLabel: 'Limit reached',
+    })
+
+    expect(
+      screen.queryByRole('button', { name: /add attachments/i }),
+    ).toBeNull()
+    expect(screen.getByText('Limit reached')).toBeInTheDocument()
+  })
+
+  it('falls back to the shared limit string without a label', () => {
+    renderInput({
+      documents: [pdfDocument('a'), pdfDocument('b')],
+      maxDocuments: 2,
+    })
+
+    expect(
+      screen.queryByRole('button', { name: /add attachments/i }),
+    ).toBeNull()
+    expect(screen.getByText(/maximum of 2 attachments/i)).toBeInTheDocument()
+  })
+
+  it('refuses files at the cap without uploading', async () => {
+    const injected = vi.fn()
+    const { updateDocuments } = renderInput({
+      documents: [pdfDocument('a'), pdfDocument('b')],
+      uploadFile: injected,
+      maxDocuments: 2,
+      maxDocumentsReachedLabel: 'Limit reached',
+    })
+    const form = document.querySelector('input[type="file"]')!.closest('form')!
+    const file = new File(['receipt'], 'receipt.pdf', {
+      type: 'application/pdf',
+    })
+
+    fireEvent.drop(form, {
+      dataTransfer: { types: ['Files'], files: [file] },
+    })
+
+    await new Promise((resolve) => setTimeout(resolve, 10))
+    expect(injected).not.toHaveBeenCalled()
+    expect(uploadToS3).not.toHaveBeenCalled()
+    expect(updateDocuments).not.toHaveBeenCalled()
+    expect(toast).not.toHaveBeenCalled()
+  })
+
+  it('stops a multi-file drop at the cap', async () => {
+    const injected = vi.fn(
+      async ({
+        file,
+      }: {
+        file: File
+        width: number | null
+        height: number | null
+      }) => ({
+        id: file.name,
+        url: `https://example.com/${file.name}`,
+        fileName: file.name,
+        contentType: 'application/pdf',
+        width: null,
+        height: null,
+      }),
+    )
+    const updateDocuments = vi.fn()
+    renderInput({
+      documents: [pdfDocument('a')],
+      updateDocuments,
+      uploadFile: injected,
+      maxDocuments: 2,
+    })
+    const form = document.querySelector('input[type="file"]')!.closest('form')!
+
+    fireEvent.drop(form, {
+      dataTransfer: {
+        types: ['Files'],
+        files: [
+          new File(['one'], 'one.pdf', { type: 'application/pdf' }),
+          new File(['two'], 'two.pdf', { type: 'application/pdf' }),
+        ],
+      },
+    })
+
+    await waitFor(() => expect(updateDocuments).toHaveBeenCalledTimes(1))
+    expect(injected).toHaveBeenCalledTimes(1)
+    expect(updateDocuments).toHaveBeenCalledWith([
+      pdfDocument('a'),
+      expect.objectContaining({ id: 'one.pdf' }),
+    ])
   })
 })

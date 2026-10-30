@@ -4,6 +4,10 @@ import { bulkUpdateExpenseCategoriesInputSchema } from '@spliit/domain/schemas'
 
 import { bulkUpdateExpenseCategories } from '../../../../lib/api/category-bulk'
 import { enqueueBudgetEvaluation } from '../../../../lib/budgets/enqueue'
+import {
+  PersonalInclusionService,
+  runPersonalSync,
+} from '../../../../lib/personal/inclusion'
 import { loadGroupMutationContext, protectedProcedure } from '../../../init'
 import { bulkUpdateCategoriesOutputSchema } from '../../../outputs/expenses'
 
@@ -33,7 +37,14 @@ export const bulkUpdateExpenseCategoriesProcedure = protectedProcedure
         accountId: ctx.auth.user.id,
         input,
       })
-      if (result.applied > 0) await enqueueBudgetEvaluation(input.groupId)
+      if (result.applied > 0) {
+        await enqueueBudgetEvaluation(input.groupId)
+        await runPersonalSync(
+          PersonalInclusionService.use((service) =>
+            service.syncGroupMembers(input.groupId),
+          ),
+        )
+      }
       return {
         ...result,
         rows: result.rows.map((row) => ({
