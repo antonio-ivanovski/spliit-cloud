@@ -6,6 +6,8 @@ import {
   JOB_NAMES,
   jobPayloadSchema,
   jobPayloadSchemas,
+  PERSONAL_RECONCILIATION_DLQ,
+  PERSONAL_RECURRING_RECONCILIATION_DLQ,
   RECURRING_RECONCILIATION_DLQ,
   type JobName,
   type JobPayload,
@@ -129,6 +131,55 @@ export async function enqueueReconciliation(
       singletonKey: 'recurring-expense-reconciliation-now',
       retryLimit: 0,
       deadLetter: RECURRING_RECONCILIATION_DLQ,
+    },
+  )
+}
+
+export async function schedulePersonalReconciliation(
+  boss: PgBoss,
+): Promise<void> {
+  await boss.schedule(
+    JOB_NAMES.RECONCILE_PERSONAL_RECURRING,
+    env.JOBS_RECONCILIATION_CRON,
+    {},
+    { retryLimit: 0, key: 'personal-recurring-reconciliation' },
+  )
+}
+
+export async function enqueuePersonalReconciliation(
+  boss: PgBoss,
+): Promise<string | null> {
+  return sendJob(
+    boss,
+    JOB_NAMES.RECONCILE_PERSONAL_RECURRING,
+    {},
+    {
+      singletonKey: 'personal-recurring-reconciliation-now',
+      retryLimit: 0,
+      deadLetter: PERSONAL_RECURRING_RECONCILIATION_DLQ,
+    },
+  )
+}
+
+export async function schedulePersonalReconcile(boss: PgBoss): Promise<void> {
+  await boss.schedule(
+    JOB_NAMES.RECONCILE_PERSONAL,
+    env.JOBS_PERSONAL_RECONCILE_CRON,
+    {},
+    { retryLimit: 0, key: 'personal-reconcile' },
+  )
+}
+
+export async function enqueuePersonalReconcile(
+  boss: PgBoss,
+): Promise<string | null> {
+  return sendJob(
+    boss,
+    JOB_NAMES.RECONCILE_PERSONAL,
+    {},
+    {
+      singletonKey: 'personal-reconcile-now',
+      deadLetter: PERSONAL_RECONCILIATION_DLQ,
     },
   )
 }

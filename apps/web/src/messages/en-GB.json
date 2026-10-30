@@ -177,5 +177,28 @@
         "description": "Categorise imported expenses in bulk with a System One decision model such as TypeSafe Jev, using your group's history and reviewed choices as hints. Every suggestion shows its confidence before you apply it."
       }
     }
+  },
+  "Personal": {
+    "categorization": {
+      "title": "Review & categorise",
+      "description": "Batch-review uncategorised personal entries with the same calibration and review flow as groups.",
+      "reviewAndCategorize": "Review & categorise",
+      "emptyTitle": "Nothing to categorise",
+      "documentTitle": "Personal - Review & categorise"
+    },
+    "import": {
+      "categorizeCta": "Categorise imported rows"
+    },
+    "overview": {
+      "categoriesEmpty": "No categorised spending this month."
+    },
+    "recurring": {
+      "description": "Recurring expenses and income materialise into your transactions automatically."
+    },
+    "transactions": {
+      "autoCategorize": "Smart categorise",
+      "autoCategorizeResult": "{applied} of {scanned} entries categorised",
+      "autoCategorizeFailed": "Couldn’t categorise entries."
+    }
   }
 }

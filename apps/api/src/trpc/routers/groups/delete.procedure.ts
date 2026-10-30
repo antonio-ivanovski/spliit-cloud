@@ -4,6 +4,10 @@ import { z } from 'zod'
 import { GroupType } from '@spliit/db'
 
 import { deleteGroup } from '../../../lib/api'
+import {
+  PersonalInclusionService,
+  runPersonalSync,
+} from '../../../lib/personal/inclusion'
 import { loadGroupMutationContext, apiProcedure } from '../../init'
 import { deleteGroupOutputSchema } from '../../outputs/groups'
 
@@ -53,6 +57,11 @@ export const deleteGroupProcedure = apiProcedure('spliit:groups:delete')
     }
 
     try {
+      // Keep every member's personal history as a frozen snapshot before the
+      // group, ledger, and expenses disappear.
+      await runPersonalSync(
+        PersonalInclusionService.use((service) => service.freezeGroup(groupId)),
+      )
       return await deleteGroup({
         groupId,
         actor: { accountId: ctx.auth.user.id },

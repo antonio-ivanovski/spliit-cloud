@@ -52,12 +52,14 @@ function Content() {
   const groupTabMobileRoute = isMobileGroupTabPath(pathname)
   const hideMobileFooter =
     focusedMobileRoute ||
+    pathname.startsWith('/personal') ||
     pathname.startsWith('/groups/') ||
     pathname.startsWith('/expenses') ||
     pathname.startsWith('/friends/') ||
     pathname.startsWith('/account/')
   const showAmbientBackdrop =
     pathname === '/' ||
+    pathname.startsWith('/personal') ||
     pathname.startsWith('/expenses') ||
     pathname.startsWith('/groups') ||
     pathname.startsWith('/friends') ||

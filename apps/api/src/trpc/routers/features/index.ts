@@ -17,6 +17,7 @@ export const featuresRouter = createTRPCRouter({
     .output(
       z.object({
         enableExpenseDocuments: z.boolean(),
+        enablePersonalFinance: z.boolean(),
         maxExpenseDocumentSize: z.number().int().positive(),
         enableReceiptExtract: z.boolean(),
         enableVoiceExpense: z.boolean(),
@@ -62,6 +63,7 @@ export const featuresRouter = createTRPCRouter({
       const oidc = getConfiguredOidcProvider(env)
       return {
         enableExpenseDocuments: env.PUBLIC_ENABLE_EXPENSE_DOCUMENTS,
+        enablePersonalFinance: env.PUBLIC_ENABLE_PERSONAL_FINANCE,
         maxExpenseDocumentSize: getMaxExpenseDocumentSizeBytes(),
         enableReceiptExtract: env.PUBLIC_ENABLE_RECEIPT_EXTRACT,
         enableVoiceExpense: env.PUBLIC_ENABLE_VOICE_EXPENSE,

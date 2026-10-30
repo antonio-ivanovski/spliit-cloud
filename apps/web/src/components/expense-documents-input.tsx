@@ -76,6 +76,37 @@ type Props = {
     info: ReceiptExtractedInfo
     document: ReceiptDocument
   }) => void
+  /**
+   * Injected file upload (e.g. personal attachments, which persist through
+   * `personal.transactions.attachments.add` instead of the group ledger
+   * presign). When provided it replaces only the ledger-hook persistence step:
+   * validation, image resize, the size limit, and every upload error toast stay
+   * shared. Receives the validated (and for images, resized) file plus its
+   * dimensions; unexpected failures propagate to the shared generic error toast
+   * with a retry action.
+   */
+  uploadFile?: (
+    input: InjectedDocumentUploadInput,
+  ) => Promise<ExpenseFormInputValues['documents'][number]>
+  /**
+   * Additive attachment cap. When set and `documents.length` reaches it, the
+   * add affordance is hidden, drops/picks are refused before any
+   * presign/upload, and a "maximum reached" note shows instead. Absent keeps
+   * the group behavior byte-identical.
+   */
+  maxDocuments?: number
+  /** Label for the cap note; falls back to the shared default string. */
+  maxDocumentsReachedLabel?: string
+}
+
+/**
+ * Validated upload payload for an injected transport: the shared component
+ * already checked the type, resized images, and enforced the size limit.
+ */
+export type InjectedDocumentUploadInput = {
+  file: File
+  width: number | null
+  height: number | null
 }
 
 const FALLBACK_MAX_FILE_SIZE = MAX_EXPENSE_DOCUMENT_SIZE
@@ -97,6 +128,9 @@ export function ExpenseDocumentsInput({
   enableReceiptExtract = false,
   receiptContext,
   onReceiptAccepted,
+  uploadFile: injectedUploadFile,
+  maxDocuments,
+  maxDocumentsReachedLabel,
 }: Props) {
   const locale = useLocale()
   const { t } = useTranslation(undefined, {
@@ -108,6 +142,12 @@ export function ExpenseDocumentsInput({
   useEffect(() => {
     maxFileSizeRef.current = maxFileSize
   }, [maxFileSize])
+  const maxDocumentsRef = useRef(maxDocuments)
+  useEffect(() => {
+    maxDocumentsRef.current = maxDocuments
+  }, [maxDocuments])
+  const atMaxDocuments =
+    maxDocuments != null && documents.length >= maxDocuments
   const dropDescription = t('dropDescription', {
     maxSize: formatFileSize(maxFileSize, locale),
   })
@@ -183,6 +223,16 @@ export function ExpenseDocumentsInput({
         })
         return null
       }
+      // Injected transports (personal attachments) only persist the
+      // validated file; unexpected failures propagate to `handleFiles`, which
+      // shows the single generic error toast with a retry action.
+      if (injectedUploadFile) {
+        return injectedUploadFile({
+          file: prepared.file,
+          width: prepared.width,
+          height: prepared.height,
+        })
+      }
       const { url } = await uploadToS3(prepared.file)
       return {
         id: randomId(),
@@ -196,7 +246,7 @@ export function ExpenseDocumentsInput({
         height: prepared.height,
       }
     },
-    [locale, t, toast, uploadToS3],
+    [injectedUploadFile, locale, t, toast, uploadToS3],
   )
 
   const uploadFileRef = useRef(uploadFile)
@@ -209,13 +259,21 @@ export function ExpenseDocumentsInput({
   // oxlint-disable-next-line react/preserve-manual-memoization
   const handleFiles = useCallback(async (files: File[]) => {
     if (!files.length || pendingRef.current) return
+    const max = maxDocumentsRef.current
+    if (max != null && documentsRef.current.length >= max) {
+      return
+    }
     pendingRef.current = true
     setPending(true)
     const added: NonNullable<Awaited<ReturnType<typeof uploadFile>>>[] = []
     try {
       // Keep dropped files in their original order so the attachment grid is
-      // predictable after a multi-file drop.
+      // predictable after a multi-file drop. With a cap, stop before the
+      // limit so no extra file is ever presigned or uploaded.
       for (const file of files) {
+        if (max != null && documentsRef.current.length + added.length >= max) {
+          break
+        }
         try {
           const document = await uploadFileRef.current?.(file)
           if (document) added.push(document)
@@ -295,13 +353,13 @@ export function ExpenseDocumentsInput({
   }, [readOnly])
 
   const openFilePicker = useCallback(() => {
-    if (pending) return
+    if (pending || atMaxDocuments) return
     if (isDesktop) {
       fileInputRef.current?.click()
       return
     }
     setPickerOpen(true)
-  }, [isDesktop, pending])
+  }, [atMaxDocuments, isDesktop, pending])
 
   const selectFromDevice = useCallback(() => {
     setPickerOpen(false)
@@ -337,7 +395,7 @@ export function ExpenseDocumentsInput({
         className="hidden"
       />
 
-      {dragActive && !readOnly && (
+      {dragActive && !readOnly && !atMaxDocuments && (
         <div className="pointer-events-none fixed inset-4 z-50 flex items-center justify-center rounded-lg border-2 border-dashed border-primary bg-background/95 p-6 text-center shadow-lg">
           <div>
             <Upload className="mx-auto mb-2 h-8 w-8 text-primary" />
@@ -365,7 +423,7 @@ export function ExpenseDocumentsInput({
               />
             ))}
           </div>
-          {!readOnly && (
+          {!readOnly && !atMaxDocuments && (
             <Button
               ref={addButtonRef}
               type="button"
@@ -383,10 +441,21 @@ export function ExpenseDocumentsInput({
               {pending ? t('uploading') : t('addAttachments')}
             </Button>
           )}
+          {atMaxDocuments && !readOnly && maxDocuments != null && (
+            <p className="mt-4 text-sm text-muted-foreground">
+              {maxDocumentsReachedLabel ??
+                t('maxDocumentsReached', { max: maxDocuments })}
+            </p>
+          )}
         </>
       ) : readOnly ? (
         <p className="rounded-md border border-dashed px-4 py-5 text-center text-sm text-muted-foreground">
           {t('noAttachments')}
+        </p>
+      ) : atMaxDocuments && maxDocuments != null ? (
+        <p className="rounded-md border border-dashed px-4 py-5 text-center text-sm text-muted-foreground">
+          {maxDocumentsReachedLabel ??
+            t('maxDocumentsReached', { max: maxDocuments })}
         </p>
       ) : (
         <Button
@@ -412,7 +481,7 @@ export function ExpenseDocumentsInput({
         </Button>
       )}
 
-      {!isDesktop && !readOnly && (
+      {!isDesktop && !readOnly && !atMaxDocuments && (
         <Drawer open={pickerOpen} onOpenChange={setPickerOpen}>
           <DrawerContent>
             <DrawerHeader className="text-start">

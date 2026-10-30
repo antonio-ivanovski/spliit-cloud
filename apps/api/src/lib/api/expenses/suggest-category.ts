@@ -15,14 +15,20 @@ import {
   adaptSystemOneCategory,
   adaptLlmCategory,
 } from '../../ai/category-adapters'
-import { getRecentExpenseContext } from '../../ai/context'
+import {
+  getRecentExpenseContext,
+  type RecentExpenseContext,
+} from '../../ai/context'
 import { suggestCategoryWithSystemOne } from '../../ai/system-one-categorize'
 import { isTimeoutError } from '../../ai/timeout'
 import { env } from '../../env'
 import { suggestCategoryWithAI } from '../../expense-form-actions'
 
 export type SuggestExpenseCategoryArgs = {
-  groupId: string
+  /** Group callers use the ledger history. Personal callers inject a loader. */
+  groupId?: string
+  /** Personal (or other) history source. Wins over `groupId` when present. */
+  loadContext?: (limit: number) => Promise<RecentExpenseContext | undefined>
   title: string
   locale?: string
   /**
@@ -104,7 +110,11 @@ export async function suggestExpenseCategory(
     env.CATEGORY_HISTORY_ENABLED ||
     (args.allowAi && env.PUBLIC_ENABLE_CATEGORY_EXTRACT)
   const context = needsContext
-    ? await getRecentExpenseContext(args.groupId, env.CATEGORY_MEMORY_LIMIT)
+    ? args.loadContext
+      ? await args.loadContext(env.CATEGORY_MEMORY_LIMIT)
+      : args.groupId
+        ? await getRecentExpenseContext(args.groupId, env.CATEGORY_MEMORY_LIMIT)
+        : undefined
     : undefined
 
   const local = categorizeLocally({

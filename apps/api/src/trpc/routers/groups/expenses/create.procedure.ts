@@ -14,6 +14,10 @@ import {
 } from '../../../../lib/api/idempotency'
 import { enqueueBudgetEvaluation } from '../../../../lib/budgets/enqueue'
 import { ConversionError } from '../../../../lib/expense-conversion'
+import {
+  PersonalInclusionService,
+  runPersonalSync,
+} from '../../../../lib/personal/inclusion'
 import { loadGroupMutationContext, apiProcedure } from '../../../init'
 import { createExpenseOutputSchema } from '../../../outputs/expenses'
 
@@ -60,7 +64,14 @@ export const createGroupExpenseProcedure = apiProcedure(
           }
         },
       })
-      if (!replayed) await enqueueBudgetEvaluation(groupId)
+      if (!replayed) {
+        await enqueueBudgetEvaluation(groupId)
+        await runPersonalSync(
+          PersonalInclusionService.use((service) =>
+            service.syncExpense(value.expenseId),
+          ),
+        )
+      }
       return value
     } catch (err) {
       if (err instanceof ConversionError) {

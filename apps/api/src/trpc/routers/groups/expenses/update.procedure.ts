@@ -20,6 +20,10 @@ import {
 import { enqueueBudgetEvaluation } from '../../../../lib/budgets/enqueue'
 import { ConversionError } from '../../../../lib/expense-conversion'
 import {
+  PersonalInclusionService,
+  runPersonalSync,
+} from '../../../../lib/personal/inclusion'
+import {
   apiProcedure,
   assertScopeForDestructiveEdit,
   loadGroupMutationContext,
@@ -110,6 +114,9 @@ export const updateGroupExpenseProcedure = apiProcedure(
           { expectedVersion, scope },
         )
         await enqueueBudgetEvaluation(groupId)
+        await runPersonalSync(
+          PersonalInclusionService.use((service) => service.syncExpense(id)),
+        )
         return { expenseId: id, version }
       } catch (err) {
         if (err instanceof ConversionError) {

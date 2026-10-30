@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest'
 
 import {
   migrateGroupExportManifestToV2,
+  personalExportManifestSchema,
+  personalExportTransactionSchema,
   spliitAccountExportManifestSchema,
   spliitGroupExportManifestSchema,
   spliitGroupExportSnapshotSchema,
@@ -256,5 +258,167 @@ describe('spliitGroupExportManifestSchema', () => {
 
     // v2 manifests pass through unchanged.
     expect(migrateGroupExportManifestToV2(migrated)).toBe(migrated)
+  })
+})
+
+describe('personal export slice', () => {
+  const personalTransaction = {
+    sourceId: 'ptx-1',
+    kind: 'EXPENSE',
+    amount: 4200,
+    currencyCode: 'USD',
+    originalAmount: 2100,
+    originalCurrency: 'EUR',
+    conversionRate: 1.1,
+    conversionSource: 'EXCHANGE',
+    date: '2026-08-10',
+    categoryId: 'groceries',
+    title: 'Market',
+    note: null,
+    version: 1,
+    source: 'GROUP',
+    sourceExpenseId: 'exp-1',
+    sourceGroupId: 'grp-1',
+    sourceGroupName: 'Trip',
+    sourceDetachedAt: null,
+    personalRecurringSeriesId: null,
+    recurrenceSequence: null,
+    createdAt: '2026-08-10T12:00:00.000Z',
+    updatedAt: '2026-08-10T12:00:00.000Z',
+  }
+
+  const personalManifest = {
+    profile: {
+      currencyCode: 'USD',
+      timeZone: 'UTC',
+      sharedEnabled: true,
+      createdAt: '2026-08-01T12:00:00.000Z',
+      updatedAt: '2026-08-01T12:00:00.000Z',
+    },
+    budgets: [],
+    rules: [],
+    overrides: [],
+    importSources: [],
+    recurringSeries: [],
+    attachments: [],
+    counts: {
+      transactions: 1,
+      budgets: 0,
+      rules: 0,
+      overrides: 0,
+      importSources: 0,
+      recurringSeries: 0,
+      attachments: 0,
+    },
+    warnings: [],
+    transactionsPath: 'personal/transactions.json',
+    transactionCount: 1,
+    complete: true,
+    exportedAt: '2026-08-10T12:00:00.000Z',
+  }
+
+  it('validates a personal transaction record with provenance', () => {
+    expect(personalExportTransactionSchema.parse(personalTransaction)).toEqual(
+      personalTransaction,
+    )
+  })
+
+  it('validates a personal manifest with nested provenance', () => {
+    expect(personalExportManifestSchema.parse(personalManifest)).toEqual(
+      personalManifest,
+    )
+  })
+
+  it('keeps version 2 with optional personal summary for backward compatibility', () => {
+    const withoutPersonal = spliitAccountExportManifestSchema.parse({
+      format: 'spliit.cloud/export',
+      version: 2,
+      scope: { type: 'ACCOUNT', sourceId: 'account-1' },
+      exportedAt: '2026-08-10T12:00:00.000Z',
+      complete: true,
+      warnings: [],
+      contents: {
+        documents: true,
+        accountPreferences: true,
+        groupPreferences: true,
+      },
+      account: {
+        sourceId: 'account-1',
+        name: 'Alice',
+        email: 'alice@example.com',
+        preferences: null,
+        notificationPreferences: [],
+      },
+      identities: [],
+      groups: [],
+      groupPreferences: null,
+    })
+    expect(withoutPersonal.personal).toBeUndefined()
+    expect(withoutPersonal.contents.personal).toBeUndefined()
+
+    const withPersonal = spliitAccountExportManifestSchema.parse({
+      format: 'spliit.cloud/export',
+      version: 2,
+      scope: { type: 'ACCOUNT', sourceId: 'account-1' },
+      exportedAt: '2026-08-10T12:00:00.000Z',
+      complete: true,
+      warnings: [],
+      contents: {
+        documents: true,
+        accountPreferences: true,
+        groupPreferences: true,
+        personal: true,
+      },
+      account: {
+        sourceId: 'account-1',
+        name: 'Alice',
+        email: 'alice@example.com',
+        preferences: null,
+        notificationPreferences: [],
+      },
+      identities: [],
+      groups: [],
+      groupPreferences: null,
+      personal: {
+        manifestPath: 'personal/manifest.json',
+        transactionCount: 1,
+        budgetCount: 0,
+        ruleCount: 0,
+        overrideCount: 0,
+        recurringCount: 0,
+        attachmentCount: 0,
+        warningCount: 0,
+        complete: true,
+      },
+    })
+    expect(withPersonal.personal).toMatchObject({ transactionCount: 1 })
+  })
+
+  it('still rejects unsupported versions', () => {
+    expect(() =>
+      spliitAccountExportManifestSchema.parse({
+        format: 'spliit.cloud/export',
+        version: 3,
+        scope: { type: 'ACCOUNT', sourceId: 'account-1' },
+        exportedAt: '2026-08-10T12:00:00.000Z',
+        complete: true,
+        warnings: [],
+        contents: {
+          documents: false,
+          accountPreferences: false,
+          groupPreferences: false,
+        },
+        account: {
+          sourceId: 'account-1',
+          name: 'Alice',
+          email: null,
+          preferences: null,
+          notificationPreferences: null,
+        },
+        identities: [],
+        groups: [],
+        groupPreferences: null,
+      }),
+    ).toThrow()
   })
 })

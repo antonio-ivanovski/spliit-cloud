@@ -50,11 +50,19 @@ model User {
   oauthConsents      OauthConsent[]
 
   groupMemberships              GroupMember[]
+  bulkCategorizationRuns        BulkCategorizationRun[]         @relation("PersonalCategorizationRuns")
   // Invitations this account has been the target of (accepted-by).
   receivedInvitations           GroupInvitation[]               @relation("InvitationInviteeAccount")
   // Invitations this account has issued as an owner/admin.
   sentInvitations               GroupInvitation[]               @relation("InvitationInviter")
   groupPreferences              AccountGroupPreference[]
+  personalProfile               PersonalProfile?
+  personalTransactions          PersonalTransaction[]
+  personalRecurringSeries       PersonalRecurringSeries[]
+  personalAttachments           PersonalAttachment[]
+  personalBudgets               PersonalBudget[]
+  personalGroupRules            PersonalGroupRule[]
+  personalExpenseOverrides      PersonalExpenseOverride[]
   personalSplitPresets          SplitPreset[]                  @relation("PersonalSplitPresetOwner")
   savedViews                    AccountSavedView[]
   preference                    AccountPreference?
@@ -573,6 +581,269 @@ model GroupBudgetAlert {
   @@index([budgetId, periodStart])
 }
 
+// ---------------------------------------------------------------------------
+// Personal expenses and budgeting
+//
+// A personal ledger is account-owned and deliberately separate from the
+// group/ledger accounting model: there are no participants, splits, balances,
+// settlements, activities, or webhooks. Group expenses can be *linked* into a
+// personal ledger at the account holder's share; the link is materialized as a
+// PersonalTransaction with `source = GROUP` so the personal list, budgets, and
+// exports read one table and survive leaving the group (via
+// `sourceDetachedAt`). A linked row never edits the source expense.
+// ---------------------------------------------------------------------------
+
+enum PersonalTransactionKind {
+  EXPENSE
+  INCOME
+}
+
+enum PersonalTransactionSource {
+  // Entered directly by the account holder.
+  PERSONAL
+  // Materialized from a group or friend-ledger expense at the holder's share.
+  GROUP
+}
+
+enum PersonalExpenseState {
+  INCLUDE
+  EXCLUDE
+}
+
+model PersonalProfile {
+  account       User     @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  // One personal workspace per account. Created lazily on first visit.
+  accountId     String   @id
+  // The personal ledger's display and settlement currency. Locked while
+  // personal data exists (enforced by the API, not by the database).
+  currencyCode  String
+  timeZone      String   @default("UTC")
+  // Master gate for linked group/friend expenses. Off by default; per-group
+  // rules and per-expense overrides only take effect while this is true.
+  sharedEnabled Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model PersonalTransaction {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   User   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String
+
+  kind         PersonalTransactionKind
+  // Always positive for PERSONAL rows; GROUP rows carry the holder's signed
+  // share so refunds can reduce spending. Minor units in `currencyCode`.
+  amount       Int
+  currencyCode String
+  // Present when the entry was entered/imported in another currency.
+  originalAmount   Int?
+  originalCurrency String?
+  conversionRate   Float?
+  conversionSource ConversionSource?
+  // Calendar date in the profile time zone; the personal ledger has no time.
+  date         DateTime @db.Date
+  categoryId   String   @default("general")
+  title        String?
+  note         String?
+  // Optimistic concurrency for edits and batch categorization.
+  version      Int      @default(1)
+
+  source           PersonalTransactionSource @default(PERSONAL)
+  // Source expense identity. Deliberately not a foreign key: a snapshot must
+  // survive group/expense deletion. Unique per account so one expense can
+  // never land twice.
+  sourceExpenseId  String?
+  sourceGroupId    String?
+  sourceGroupName  String?
+  // Set when the account leaves the group or the group is deleted. Detached
+  // rows are frozen snapshots and are never updated by sync.
+  sourceDetachedAt DateTime?
+
+  fileImportSource PersonalFileImportSource?
+
+  attachments PersonalAttachment[]
+
+  personalRecurringSeries   PersonalRecurringSeries? @relation(fields: [personalRecurringSeriesId], references: [id], onDelete: SetNull)
+  personalRecurringSeriesId String?
+  recurrenceSequence        Int?
+
+  @@unique([accountId, sourceExpenseId])
+  @@unique([personalRecurringSeriesId, recurrenceSequence])
+  @@index([accountId, date])
+  @@index([accountId, source, date])
+  @@index([accountId, categoryId, date])
+  @@index([sourceExpenseId])
+  @@index([sourceGroupId])
+  @@index([personalRecurringSeriesId, recurrenceSequence])
+}
+
+model PersonalGroupRule {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   User   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String
+  group     Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId   String
+
+  // Opt-in per group. The master `PersonalProfile.sharedEnabled` still gates
+  // all of this.
+  included     Boolean @default(false)
+  // Earliest expense date included. Null means all history.
+  includeFrom  DateTime? @db.Date
+
+  @@unique([accountId, groupId])
+  @@index([accountId, included])
+  @@index([groupId])
+}
+
+model PersonalExpenseOverride {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   User    @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String
+  expense   Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  expenseId String
+
+  // INCLUDE pins a single expense in even when its group rule is off.
+  // EXCLUDE removes an otherwise-included expense. Null means the override
+  // only carries a personal category for an entry that is included by rule.
+  state      PersonalExpenseState?
+  categoryId String?
+
+  @@unique([accountId, expenseId])
+  @@index([expenseId])
+}
+
+model PersonalBudget {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   User   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String
+
+  name         String
+  amount       Int
+  currencyCode String
+  period       BudgetPeriod    @default(MONTHLY)
+  // Captured when the budget is created, like GroupBudget.timeZone.
+  timeZone     String          @default("UTC")
+  categoryScope BudgetScopeMode @default(ALL)
+  categoryIds   String[]        @default([])
+  startDay      Int             @default(1)
+  archived      Boolean         @default(false)
+  archivedAt    DateTime?
+
+  @@index([accountId, archived])
+}
+
+model PersonalAttachment {
+  id        String   @id
+  createdAt DateTime @default(now())
+  transaction   PersonalTransaction @relation(fields: [personalTransactionId], references: [id], onDelete: Cascade)
+  personalTransactionId String
+  account   User   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String
+  url         String
+  fileName    String?
+  contentType String?
+  width       Int?
+  height      Int?
+  @@index([personalTransactionId])
+  @@index([accountId])
+}
+
+model PersonalRecurringSeries {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   User   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String
+
+  // Captured profile timezone; existing series keep it when the profile
+  // timezone later changes.
+  timeZone String
+
+  frequency RecurrenceFrequency
+  interval  Int
+
+  anchorDate     DateTime @db.Date
+  anchorSequence Int      @default(1)
+
+  nextOccurrenceDate    DateTime @db.Date
+  nextOccurrenceOrdinal Int      @default(1)
+
+  endType         RecurrenceEndType @default(INDEFINITE)
+  occurrenceLimit Int?
+  endDate         DateTime?         @db.Date
+
+  occurrencesCreated Int @default(0)
+  status             RecurringExpenseSeriesStatus @default(ACTIVE)
+
+  kind         PersonalTransactionKind
+  amount       Int
+  currencyCode String
+  categoryId   String  @default("general")
+  title        String?
+  note         String?
+
+  version Int @default(1)
+
+  transactions PersonalTransaction[]
+
+  @@index([accountId, status, nextOccurrenceDate])
+  @@index([accountId, anchorDate])
+}
+
+// ---------------------------------------------------------------------------
+// Personal file-import provenance (bank CSV imports).
+//
+// Optional 1-1 side table: a row exists only for personal transactions created
+// via file import. Mirrors `ExpenseFileImportSource` but scoped by account
+// instead of ledger. All keys are immutable: they survive user edits of
+// title/date/amount, which is what makes exact re-import detection work.
+// Fuzzy duplicate detection queries live `PersonalTransaction` columns
+// (including linked GROUP rows) and is advisory only.
+// ---------------------------------------------------------------------------
+
+model PersonalFileImportSource {
+  personalTransaction   PersonalTransaction @relation(fields: [personalTransactionId], references: [id], onDelete: Cascade)
+  personalTransactionId String              @id
+  // Denormalized scope key so all lookups stay account-scoped via index.
+  accountId             String
+
+  // Import provider namespace. Only GENERIC_CSV is produced today.
+  provider String @default("GENERIC_CSV")
+  // Immutable replay key: sha256("spliit:personal-file-import:v1" + accountId + originFingerprint).
+  importKey String
+  // Hash-only bank identity: sha256("spliit:expense-file-identity:v1" +
+  // normalized source account + normalized bank transaction id). Raw bank ids
+  // are never stored. Null when the export provides no transaction id.
+  externalIdentityHash String?
+
+  // One-way debug/forensic hashes (never raw source data).
+  semanticHash String
+  rawHash      String
+
+  // Extensible import context without future migrations,
+  // e.g. { fileName, mappingVersion, rowNumber, kind }.
+  meta Json?
+
+  importedByAccountId String?
+  createdAt           DateTime @default(now())
+
+  @@index([accountId, importKey])
+  @@index([accountId, provider, externalIdentityHash], map: "PersonalFileImportSource_accountId_provider_extIdHash_idx")
+}
+
 enum LedgerParticipantKind {
   // Account-backed group member. `groupMemberId` is non-null and the
   // display name resolves through the `Account.name` relation.
@@ -680,6 +951,7 @@ model Group {
   // affects new expense defaults, never rewrites stored expenses.
   defaultEntryCurrencyCode String?
   budgets            GroupBudget[]
+  personalGroupRules PersonalGroupRule[]
   subgroupsEnabled   Boolean                    @default(false)
   subgroups          Subgroup[]
   // Offline read-revision counter. Bumped in-transaction by PostgreSQL
@@ -698,8 +970,21 @@ model Group {
 
 model BulkCategorizationRun {
   id             String                  @id
-  group          Group                   @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  groupId        String                  @unique
+  // Legacy group scope. Nullable to allow personal (account) runs: PostgreSQL
+  // treats NULLs as distinct so the unique constraint still permits many
+  // personal runs. New code uses scopeType/scopeId; groupId stays for the
+  // group UI and the Group cascade.
+  group          Group?                  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId        String?                 @unique
+  // Generic run scope: GROUP runs use scopeId = groupId, PERSONAL runs use
+  // scopeId = accountId. Exactly one of groupId/personalAccountId is set.
+  scopeType      String                  @default("GROUP")
+  scopeId        String                  @default("")
+  // Account owner for PERSONAL runs. FK cascade (rather than an explicit
+  // cleanup step) so account deletion never leaves orphan personal runs;
+  // group runs keep the Group cascade above.
+  personalAccount   User?                @relation("PersonalCategorizationRuns", fields: [personalAccountId], references: [id], onDelete: Cascade)
+  personalAccountId String?
   accountId      String
   mode           String
   status         String
@@ -721,12 +1006,20 @@ model BulkCategorizationRun {
   createdAt      DateTime                @default(now())
   updatedAt      DateTime                @updatedAt
   rows           BulkCategorizationRow[]
+
+  @@unique([scopeType, scopeId])
+  @@index([personalAccountId])
 }
 
 model BulkCategorizationRow {
   run               BulkCategorizationRun @relation(fields: [runId], references: [id], onDelete: Cascade)
   runId             String
-  expenseId         String
+  // Generic item identity: EXPENSE rows use the Expense id, PERSONAL rows use
+  // the PersonalTransaction id. expenseVersion/expenseDate column names are
+  // intentionally retained (they store the personal row version/date too) to
+  // avoid a broad rename diff.
+  itemType          String                @default("EXPENSE")
+  itemId            String                @default("")
   position          Int
   reviewOrder       Int?
   title             String
@@ -752,7 +1045,7 @@ model BulkCategorizationRow {
   recurringSeriesId String?
   recurrenceSequence Int?
 
-  @@id([runId, expenseId])
+  @@id([runId, itemId])
   @@unique([runId, position])
   @@index([runId, stage, position])
   @@index([runId, reviewOrder])
@@ -1115,6 +1408,7 @@ model Expense {
   itemizedRemainder  ExpenseItemizedRemainder?
   comments           ExpenseComment[]
   fileImportSource   ExpenseFileImportSource?
+  personalOverrides  PersonalExpenseOverride[]
 
   @@unique([recurringSeriesId, recurrenceSequence])
   // ledgerId prefix covers group-scoped scans; expenseDate supports

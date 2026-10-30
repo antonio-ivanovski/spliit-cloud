@@ -676,6 +676,71 @@ export async function createUploadUrl(
 }
 
 /**
+ * Presign a receipt/image/PDF upload for an already-authenticated account's
+ * native Personal ledger. Used by the tRPC `uploads.personalPresign` mutation —
+ * the `protectedProcedure` middleware has already enforced auth. There is no
+ * ledger lookup: personal attachments are account-scoped, and the key embeds
+ * the account id so `attachments.add` can reject foreign keys. The group
+ * `mintUploadPresign` flow is untouched.
+ */
+export async function mintPersonalPresign({
+  fileName,
+  contentType,
+  fileSize,
+  accountId,
+}: {
+  fileName: string
+  contentType: string
+  fileSize?: number
+  accountId: string
+}): Promise<Response> {
+  if (!isSupportedExpenseDocumentUpload({ fileName, contentType })) {
+    return Response.json(
+      { error: 'Unsupported expense document type' },
+      { status: 400 },
+    )
+  }
+  if (
+    fileSize !== undefined &&
+    !isExpenseDocumentSizeWithinLimit(
+      fileSize,
+      getMaxExpenseDocumentSizeBytes(),
+    )
+  ) {
+    return Response.json(
+      { error: 'File exceeds the maximum upload size' },
+      { status: 400 },
+    )
+  }
+
+  if (
+    !env.S3_UPLOAD_BUCKET ||
+    !env.S3_UPLOAD_KEY ||
+    !env.S3_UPLOAD_REGION ||
+    !env.S3_UPLOAD_SECRET
+  ) {
+    return Response.json(
+      { error: 'Uploads are not configured' },
+      { status: 503 },
+    )
+  }
+
+  const [, extension = ''] = fileName.match(/(\.[^.]*)$/) ?? []
+  const key = `tmp/personal/${accountId}/${new Date().toISOString()}-${randomId()}${extension.toLowerCase()}`
+  const command = new PutObjectCommand({
+    Bucket: env.S3_UPLOAD_BUCKET,
+    Key: key,
+    ContentType: contentType,
+  })
+  const uploadUrl = await getSignedUrl(getS3Client(), command, {
+    expiresIn: 60,
+  })
+  const fileUrl = publicUrlForKey(key)
+
+  return Response.json({ uploadUrl, fileUrl, key })
+}
+
+/**
  * Presign a document upload for an already-authenticated account. Used by the
  * tRPC `uploads.presign` mutation — the `protectedProcedure` middleware has
  * already enforced auth, so we skip the authentication round-trip the

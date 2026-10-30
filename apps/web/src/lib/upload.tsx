@@ -4,6 +4,7 @@ import { Effect } from 'effect'
 import { assertTransportOnline } from '@/lib/offline/write-guard'
 import { UploadError } from '@/lib/services/errors'
 import { makeUploadPipeline } from '@/lib/services/uploads'
+import type { UploadPipelineDeps } from '@/lib/services/uploads'
 import { trpc } from '@/trpc/client'
 
 const MAX_DIMENSION = 2560
@@ -159,21 +160,18 @@ export async function uploadToPresignedUrl({
 }
 
 /**
- * Expense-document upload through the UploadPipeline service (Task 8).
- *
- * The component keeps presentation + dispatch; the service owns Effect
- * composition (scoped decode/cleanup, exactly-once presign/transfer, explicit
- * unknown outcomes, no blanket retry of mutating stages). React/TanStack is the
- * Promise boundary: the mutation runs the pipeline Effect and maps its typed
- * outcome back to the long-standing { url } / throw contract.
+ * Generic document upload through the UploadPipeline service. The caller
+ * supplies the presign boundary (group `uploads.presign` or personal
+ * `uploads.personalPresign`); presentation, decode, transfer, and error mapping
+ * stay identical for every consumer.
  *
  * The optional HEIC codec stays lazy (maybeDecodeHeic dynamic-imports heic-to
  * at the call site); documents upload as-is with no conversion here.
  */
-export function useExpenseDocumentUpload(ledgerId?: string | null) {
-  const presignMutation = trpc.uploads.presign.useMutation()
-
-  // react-doctor-disable-next-line react-doctor/query-mutation-missing-invalidation -- S3 upload, caller invalidates with returned URL
+export function useDocumentUpload(
+  presign: UploadPipelineDeps['presign'],
+  ledgerId?: string | null,
+) {
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
       // UI entry check before the presign fetch + S3 PUT: uploads
@@ -187,15 +185,7 @@ export function useExpenseDocumentUpload(ledgerId?: string | null) {
             name: file.name,
             contentType: file.type || 'application/octet-stream',
           }),
-        presign: (input) =>
-          presignMutation
-            .mutateAsync({
-              ledgerId: input.ledgerId,
-              fileName: input.fileName,
-              contentType: input.contentType,
-              fileSize: input.fileSize,
-            })
-            .then(({ uploadUrl, fileUrl }) => ({ uploadUrl, fileUrl })),
+        presign,
         transfer: (input, signal) =>
           uploadToPresignedUrl({
             uploadUrl: input.uploadUrl,
@@ -226,6 +216,53 @@ export function useExpenseDocumentUpload(ledgerId?: string | null) {
     uploadToS3: uploadMutation.mutateAsync,
     isUploading: uploadMutation.isPending,
   }
+}
+
+/**
+ * Expense-document upload through the UploadPipeline service (Task 8).
+ *
+ * The component keeps presentation + dispatch; the service owns Effect
+ * composition (scoped decode/cleanup, exactly-once presign/transfer, explicit
+ * unknown outcomes, no blanket retry of mutating stages). React/TanStack is the
+ * Promise boundary: the mutation runs the pipeline Effect and maps its typed
+ * outcome back to the long-standing { url } / throw contract.
+ */
+export function useExpenseDocumentUpload(ledgerId?: string | null) {
+  const presignMutation = trpc.uploads.presign.useMutation()
+
+  // react-doctor-disable-next-line react-doctor/query-mutation-missing-invalidation -- S3 upload, caller invalidates with returned URL
+  return useDocumentUpload(
+    (input) =>
+      presignMutation
+        .mutateAsync({
+          ledgerId: input.ledgerId,
+          fileName: input.fileName,
+          contentType: input.contentType,
+          fileSize: input.fileSize,
+        })
+        .then(({ uploadUrl, fileUrl }) => ({ uploadUrl, fileUrl })),
+    ledgerId,
+  )
+}
+
+/**
+ * Personal entry attachment upload. Same pipeline and contract as group expense
+ * documents; only the presign boundary differs (account-scoped
+ * `uploads.personalPresign`, no ledger).
+ */
+export function usePersonalDocumentUpload() {
+  const presignMutation = trpc.uploads.personalPresign.useMutation()
+
+  // react-doctor-disable-next-line react-doctor/query-mutation-missing-invalidation -- S3 upload, caller persists with returned URL
+  return useDocumentUpload((input) =>
+    presignMutation
+      .mutateAsync({
+        fileName: input.fileName,
+        contentType: input.contentType,
+        fileSize: input.fileSize,
+      })
+      .then(({ uploadUrl, fileUrl }) => ({ uploadUrl, fileUrl })),
+  )
 }
 
 /**

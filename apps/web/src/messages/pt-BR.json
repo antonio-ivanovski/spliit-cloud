@@ -670,7 +670,8 @@
       "description": "{fileName} não é um tipo de anexo compatível."
     },
     "uploading": "Enviando…",
-    "noAttachments": "Ainda não há anexos."
+    "noAttachments": "Ainda não há anexos.",
+    "maxDocumentsReached": "Você atingiu o máximo de {max} anexos."
   },
   "CreateFromReceipt": {
     "Dialog": {
@@ -1381,7 +1382,8 @@
         "documents": "Arquivos de documentos",
         "documentsDescription": "Copie os arquivos de recibos para o backup.",
         "accountPreferencesDescription": "Inclua a aparência, as configurações padrão, as preferências de IA e as notificações.",
-        "groupPreferencesDescription": "Inclua as configurações dos grupos favoritos e ocultos e da divisão padrão."
+        "groupPreferencesDescription": "Inclua as configurações dos grupos favoritos e ocultos e da divisão padrão.",
+        "personalDescription": "Inclui transações pessoais, orçamentos, regras, anexos e pagamentos planejados."
       },
       "sections": {
         "FRIENDS": "Registros com um amigo"
@@ -2804,5 +2806,165 @@
     "connection_settings": "Configurações de conexão",
     "browser_settings": "Configurações do aplicativo",
     "settings": "Configurações"
+  },
+  "Personal": {
+    "attachments": {
+      "unsupportedTitle": "Arquivo não compatível",
+      "unsupportedDescription": "{fileName} não é um tipo de anexo compatível.",
+      "tooBigTitle": "O arquivo é grande demais",
+      "tooBigDescription": "O tamanho máximo que você pode enviar é {maxSize}. O seu é {size}.",
+      "limitReached": "Você anexou o máximo de {max} recibos."
+    },
+    "budgets": {
+      "amount": "Valor",
+      "archiving": "Arquivando…",
+      "chooseCategories": "Escolha categorias",
+      "confirmDelete": "Toque de novo para excluir",
+      "delete": "Excluir",
+      "deleted": "Orçamento excluído",
+      "emptyDescription": "Defina um limite de gasto mensal e acompanhe aqui. As despesas de grupos compartilhados também contam para os seus orçamentos.",
+      "namePlaceholder": "Mercado",
+      "overlapWarning": "{name} já cobre essa despesa. Os valores contarão para os dois orçamentos.",
+      "save": "Salvar orçamento",
+      "saveFailed": "Não foi possível salvar o orçamento.",
+      "saved": "Orçamento salvo",
+      "saving": "Salvando…",
+      "scopeAll": "Todo o gasto",
+      "validationAmount": "Digite um valor maior que zero.",
+      "validationCategories": "Escolha pelo menos uma categoria.",
+      "validationName": "Dê um nome ao orçamento."
+    },
+    "categorization": {
+      "title": "Revisar e categorizar",
+      "description": "Revise em lote as entradas pessoais sem categoria com o mesmo fluxo de calibração e revisão dos grupos.",
+      "reviewAndCategorize": "Revisar e categorizar",
+      "documentTitle": "Pessoal - Revisar e categorizar"
+    },
+    "disabled": {
+      "description": "O acompanhamento de despesas pessoais não está disponível neste servidor no momento."
+    },
+    "entries": {
+      "confirmDelete": "Toque de novo para excluir",
+      "delete": "Excluir",
+      "deleted": "Entrada excluída",
+      "detailSharedTitle": "Despesa compartilhada",
+      "save": "Salvar alterações",
+      "saveFailed": "Não foi possível salvar a entrada.",
+      "saved": "Entrada salva",
+      "sharedBadge": "Compartilhada",
+      "sharedReadonly": "O valor, a data e o título vêm do grupo e não podem ser editados aqui.",
+      "recurringBadge": "Planejada"
+    },
+    "loading": "Carregando Pessoal…",
+    "import": {
+      "description": "Importe extratos bancários como transações pessoais. Duplicatas com suas entradas pessoais e compartilhadas são sinalizadas antes de salvar.",
+      "chooseFile": "Escolha o arquivo CSV",
+      "fileHint": "CSV, TSV ou TXT de até 16 MB. A análise e o mapeamento reutilizam o importador de grupos.",
+      "mappingDescription": "Confirme as colunas detectadas. Valores negativos viram despesas por padrão.",
+      "negativeIsLabel": "Valores negativos são",
+      "negativeIncome": "Receitas",
+      "reviewTitle": "Revisar",
+      "reviewDescription": "Selecione as linhas para importar. As duplicatas precisam ser aprovadas linha por linha.",
+      "committing": "Importando…",
+      "duplicateExact": "Já importada",
+      "duplicateExisting": "Possível duplicata",
+      "duplicateShared": "Compartilhada",
+      "duplicateCurrentFile": "Duplicada no arquivo",
+      "retryCheck": "Verificar duplicatas de novo"
+    },
+    "nav": {
+      "label": "Seções pessoais",
+      "settings": "Configurações",
+      "recurring": "Planejadas"
+    },
+    "overview": {
+      "budgetsCreateCta": "Crie um",
+      "categoriesEmpty": "Sem gasto categorizado este mês.",
+      "categoriesTitle": "Gasto por categoria",
+      "delta": "{amount} em relação ao mês passado",
+      "emptyDescription": "Adicione sua primeira despesa ou inclua sua parte das despesas de grupo para ver tudo no mesmo lugar.",
+      "error": "Não foi possível carregar seu resumo.",
+      "income": "Receitas",
+      "monthSwitcher": "Escolha o mês",
+      "noOverallBudget": "Sem orçamento geral — crie um para acompanhar seu ritmo.",
+      "sharedEnableCta": "Ative nas configurações.",
+      "sharedManage": "Gerenciar",
+      "sharedSummary": "{count} despesas compartilhadas",
+      "sharedTitle": "Dos seus grupos",
+      "upcomingTitle": "Próximas planejadas",
+      "upcomingEmpty": "Sem entradas planejadas próximas",
+      "upcomingViewAll": "Ver planejadas"
+    },
+    "quickAdd": {
+      "amount": "Valor",
+      "description": "Primeiro o valor — adicione o número e depois os detalhes.",
+      "income": "Receita",
+      "notePlaceholder": "Algo para lembrar",
+      "save": "Salvar",
+      "saveFailed": "Não foi possível salvar a entrada.",
+      "saving": "Salvando…",
+      "validationAmount": "Digite um valor maior que zero.",
+      "validationDate": "Escolha uma data.",
+      "suggested": "Sugerido pelas suas despesas recentes"
+    },
+    "recurring": {
+      "title": "Planejadas",
+      "documentTitle": "Planejadas · Pessoal",
+      "description": "Despesas e receitas recorrentes aparecem automaticamente nas suas transações.",
+      "emptyTitle": "Ainda sem transações planejadas",
+      "emptyDescription": "Crie um aluguel mensal, um salário semanal ou qualquer entrada repetida. As próximas ocorrências aparecem abaixo antes de chegar às suas transações.",
+      "create": "Nova transação planejada",
+      "edit": "Editar transação planejada",
+      "save": "Salvar",
+      "saving": "Salvando…",
+      "created": "Transação planejada criada",
+      "updated": "Transação planejada atualizada",
+      "saveFailed": "Não foi possível salvar a transação planejada",
+      "delete": "Excluir",
+      "confirmDelete": "Toque de novo para confirmar a exclusão",
+      "deleted": "Transação planejada excluída",
+      "confirmCancel": "Toque de novo para confirmar o cancelamento",
+      "paused": "Plano pausado",
+      "skipNext": "Pular próxima",
+      "actionFailed": "Essa ação falhou. Tente de novo.",
+      "amount": "Valor",
+      "kindIncome": "Receita",
+      "titlePlaceholder": "ex.: Aluguel",
+      "frequency": "Se repete",
+      "statusPaused": "Pausado",
+      "upcomingEmpty": "Nada planejado neste período.",
+      "validationAmount": "Digite um valor maior que zero",
+      "activeSection": "Ativos e pausados",
+      "completedSection": "Concluídos"
+    },
+    "settings": {
+      "accountSettings": "Configurações da conta",
+      "currencyHint": "Novas entradas usam esta moeda.",
+      "currencyLocked": "A moeda está bloqueada porque você já tem entradas.",
+      "documentTitle": "Configurações pessoais",
+      "error": "Não foi possível carregar as configurações.",
+      "excludedPlaceholder": "As despesas que você excluir de Pessoal aparecerão aqui quando a API expô-las.",
+      "includeFrom": "Incluir {name} a partir do mês",
+      "noGroups": "Ainda sem grupos nem registros com amigos. Crie um para incluir despesas compartilhadas.",
+      "reconcileHint": "Verifique cada grupo de novo e corrija as entradas que a sincronização perdeu.",
+      "saveFailed": "Não foi possível salvar as configurações.",
+      "saveRule": "Salvar",
+      "saved": "Configurações salvas",
+      "sharedDescription": "Inclua sua parte das despesas de grupo e de amigos em Pessoal. Acertos nunca contam.",
+      "sharedOffHint": "Ative as despesas compartilhadas para escolher quais grupos incluir.",
+      "sharedTitle": "Despesas compartilhadas",
+      "sharedToggle": "Incluir minha parte das despesas de grupo",
+      "timeZoneHint": "Meses e datas seguem este fuso horário."
+    },
+    "transactions": {
+      "amountLabel": "Faixa de valor",
+      "emptyDescription": "Adicione sua primeira despesa para começar o acompanhamento.",
+      "emptyFiltered": "Nenhuma entrada corresponde a esses filtros.",
+      "emptyTitle": "Nenhuma entrada encontrada",
+      "resultSummary": "{count} entradas · gasto {spent} · receitas {income}",
+      "sharedOnly": "Só entradas compartilhadas",
+      "sourceGroup": "Compartilhada",
+      "exportTruncated": "Exportação limitada a 10.000 entradas. Ajuste os filtros para um arquivo completo."
+    }
   }
 }

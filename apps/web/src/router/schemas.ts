@@ -316,4 +316,14 @@ export type CreateExpenseSearch = z.infer<typeof createExpenseSearchSchema>
 export type CompleteProfileSearch = z.infer<typeof completeProfileSearchSchema>
 export type ResetPasswordSearch = z.infer<typeof resetPasswordSearchSchema>
 export type ForgotPasswordSearch = z.infer<typeof forgotPasswordSearchSchema>
+export const personalSearchSchema = z.object({
+  month: z
+    .string()
+    .regex(/^\d{4}-\d{2}$/, 'expected YYYY-MM')
+    .optional()
+    .catch(undefined),
+})
+
+export type PersonalSearch = z.infer<typeof personalSearchSchema>
+
 export type HomeSearch = z.infer<typeof homeSearchSchema>

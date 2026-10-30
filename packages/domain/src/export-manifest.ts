@@ -368,6 +368,7 @@ export const accountExportSelectionSchema = z.object({
   includeDocuments: z.boolean(),
   includeAccountPreferences: z.boolean(),
   includeGroupPreferences: z.boolean(),
+  includePersonal: z.boolean().default(true),
 })
 
 export const defaultAccountExportSelection = {
@@ -382,6 +383,7 @@ export const defaultAccountExportSelection = {
   includeDocuments: true,
   includeAccountPreferences: true,
   includeGroupPreferences: true,
+  includePersonal: true,
 } as const satisfies z.input<typeof accountExportSelectionSchema>
 
 export const accountExportIdentitySchema = z.object({
@@ -434,6 +436,172 @@ export const accountExportWarningSchema = exportWarningSchema.extend({
   groupSourceId: sourceId,
 })
 
+// ---------------------------------------------------------------------------
+// Personal slice (account-owned backup, never a group import).
+//
+// Optional-only additions: v1/v2 account bundles without `contents.personal`
+// or `personal` still validate; old readers strip the unknown keys.
+// ---------------------------------------------------------------------------
+
+export const personalExportTransactionSchema = z.object({
+  sourceId,
+  kind: z.enum(['EXPENSE', 'INCOME']),
+  amount: z.number().int(),
+  currencyCode: z.string(),
+  originalAmount: z.number().int().nullable(),
+  originalCurrency: z.string().nullable(),
+  conversionRate: z.number().nullable(),
+  conversionSource: z.enum(['EXCHANGE', 'CUSTOM', 'EXACT']).nullable(),
+  date: dateOnly,
+  categoryId: z.string(),
+  title: z.string().nullable(),
+  note: z.string().nullable(),
+  version: z.number().int().positive(),
+  source: z.enum(['PERSONAL', 'GROUP']),
+  sourceExpenseId: sourceId.nullable(),
+  sourceGroupId: sourceId.nullable(),
+  sourceGroupName: z.string().nullable(),
+  sourceDetachedAt: isoDateTime.nullable(),
+  personalRecurringSeriesId: sourceId.nullable(),
+  recurrenceSequence: z.number().int().positive().nullable(),
+  createdAt: isoDateTime,
+  updatedAt: isoDateTime,
+})
+
+export const personalExportBudgetSchema = z.object({
+  sourceId,
+  name: z.string(),
+  amount: z.number().int().nonnegative(),
+  currencyCode: z.string(),
+  period: z.enum(['WEEKLY', 'MONTHLY', 'YEARLY', 'CUSTOM']),
+  timeZone: z.string(),
+  categoryScope: z.enum(['ALL', 'SELECTED']),
+  categoryIds: z.array(z.string()),
+  startDay: z.number().int(),
+  archived: z.boolean(),
+  archivedAt: isoDateTime.nullable(),
+  createdAt: isoDateTime,
+  updatedAt: isoDateTime,
+})
+
+export const personalExportRuleSchema = z.object({
+  sourceId,
+  groupId: sourceId,
+  included: z.boolean(),
+  includeFrom: dateOnly.nullable(),
+  createdAt: isoDateTime,
+  updatedAt: isoDateTime,
+})
+
+export const personalExportOverrideSchema = z.object({
+  sourceId,
+  expenseId: sourceId,
+  state: z.enum(['INCLUDE', 'EXCLUDE']).nullable(),
+  categoryId: z.string().nullable(),
+  createdAt: isoDateTime,
+  updatedAt: isoDateTime,
+})
+
+// Explicit allow-list. `PersonalFileImportSource.meta` is intentionally
+// excluded: it is unbounded JSON and must never leak into a portable bundle.
+export const personalExportImportSourceSchema = z.object({
+  transactionSourceId: sourceId,
+  provider: z.string(),
+  importKey: z.string(),
+  externalIdentityHash: z.string().nullable(),
+  semanticHash: z.string(),
+  rawHash: z.string(),
+  importedByAccountId: sourceId.nullable(),
+  createdAt: isoDateTime,
+})
+
+export const personalExportRecurringSeriesSchema = z.object({
+  sourceId,
+  timeZone: z.string(),
+  frequency: z.enum(['DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY']),
+  interval: z.number().int().positive(),
+  anchorDate: dateOnly,
+  anchorSequence: z.number().int().positive(),
+  nextOccurrenceDate: dateOnly,
+  nextOccurrenceOrdinal: z.number().int().positive(),
+  endType: z.enum(['INDEFINITE', 'COUNT', 'DATE']),
+  occurrenceLimit: z.number().int().positive().nullable(),
+  endDate: dateOnly.nullable(),
+  occurrencesCreated: z.number().int().nonnegative(),
+  status: z.enum(['ACTIVE', 'PAUSED', 'COMPLETED', 'CANCELLED']),
+  kind: z.enum(['EXPENSE', 'INCOME']),
+  amount: z.number().int(),
+  currencyCode: z.string(),
+  categoryId: z.string(),
+  title: z.string().nullable(),
+  note: z.string().nullable(),
+  version: z.number().int().positive(),
+  createdAt: isoDateTime,
+  updatedAt: isoDateTime,
+})
+
+export const personalExportAttachmentSchema = z.object({
+  sourceId,
+  transactionSourceId: sourceId,
+  fileName: z.string().nullable(),
+  contentType: z.string().nullable(),
+  width: z.number().int().nullable(),
+  height: z.number().int().nullable(),
+  path: z.string().nullable(),
+  status: z.enum(['INCLUDED', 'MISSING', 'OMITTED']),
+  sizeBytes: z.number().int().nonnegative().nullable(),
+  sha256: z
+    .string()
+    .regex(/^[a-f0-9]{64}$/)
+    .nullable(),
+})
+
+export const personalExportProfileSchema = z.object({
+  currencyCode: z.string(),
+  timeZone: z.string(),
+  sharedEnabled: z.boolean(),
+  createdAt: isoDateTime,
+  updatedAt: isoDateTime,
+})
+
+export const personalExportCountsSchema = z.object({
+  transactions: z.number().int().nonnegative(),
+  budgets: z.number().int().nonnegative(),
+  rules: z.number().int().nonnegative(),
+  overrides: z.number().int().nonnegative(),
+  importSources: z.number().int().nonnegative(),
+  recurringSeries: z.number().int().nonnegative(),
+  attachments: z.number().int().nonnegative(),
+})
+
+export const personalExportManifestSchema = z.object({
+  profile: personalExportProfileSchema.nullable(),
+  budgets: z.array(personalExportBudgetSchema),
+  rules: z.array(personalExportRuleSchema),
+  overrides: z.array(personalExportOverrideSchema),
+  importSources: z.array(personalExportImportSourceSchema),
+  recurringSeries: z.array(personalExportRecurringSeriesSchema),
+  attachments: z.array(personalExportAttachmentSchema),
+  counts: personalExportCountsSchema,
+  warnings: z.array(exportWarningSchema),
+  transactionsPath: z.literal('personal/transactions.json'),
+  transactionCount: z.number().int().nonnegative(),
+  complete: z.boolean(),
+  exportedAt: isoDateTime,
+})
+
+export const personalExportSummarySchema = z.object({
+  manifestPath: z.literal('personal/manifest.json'),
+  transactionCount: z.number().int().nonnegative(),
+  budgetCount: z.number().int().nonnegative(),
+  ruleCount: z.number().int().nonnegative(),
+  overrideCount: z.number().int().nonnegative(),
+  recurringCount: z.number().int().nonnegative(),
+  attachmentCount: z.number().int().nonnegative(),
+  warningCount: z.number().int().nonnegative(),
+  complete: z.boolean(),
+})
+
 export const spliitAccountExportManifestSchema = z.object({
   format: z.literal('spliit.cloud/export'),
   version: z.union([z.literal(1), z.literal(2)]),
@@ -445,6 +613,7 @@ export const spliitAccountExportManifestSchema = z.object({
     documents: z.boolean(),
     accountPreferences: z.boolean(),
     groupPreferences: z.boolean(),
+    personal: z.boolean().optional(),
   }),
   account: z.object({
     sourceId,
@@ -458,6 +627,7 @@ export const spliitAccountExportManifestSchema = z.object({
   identities: z.array(accountExportIdentitySchema),
   groups: z.array(accountExportGroupIndexSchema),
   groupPreferences: z.array(accountExportGroupPreferenceSchema).nullable(),
+  personal: personalExportSummarySchema.nullable().optional(),
 })
 
 export type SpliitExportDocument = z.infer<typeof exportDocumentSchema>
@@ -480,3 +650,11 @@ export type AccountExportGroupSection = z.infer<
 export type SpliitAccountExportManifest = z.infer<
   typeof spliitAccountExportManifestSchema
 >
+
+export type PersonalExportTransaction = z.infer<
+  typeof personalExportTransactionSchema
+>
+export type PersonalExportManifest = z.infer<
+  typeof personalExportManifestSchema
+>
+export type PersonalExportSummary = z.infer<typeof personalExportSummarySchema>

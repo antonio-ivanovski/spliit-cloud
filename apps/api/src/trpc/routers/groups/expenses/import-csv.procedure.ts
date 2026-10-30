@@ -21,6 +21,10 @@ import {
 } from '../../../../lib/api/idempotency'
 import { enqueueBudgetEvaluation } from '../../../../lib/budgets/enqueue'
 import { ConversionError } from '../../../../lib/expense-conversion'
+import {
+  PersonalInclusionService,
+  runPersonalSync,
+} from '../../../../lib/personal/inclusion'
 import { loadGroupMutationContext, protectedProcedure } from '../../../init'
 import {
   expenseFileImportDuplicatesOutputSchema,
@@ -312,6 +316,11 @@ export const importExpenseFileProcedure = protectedProcedure
       // stored idempotent result is replayed. Skipping it on replay would
       // leave budgets stale after a client retry.
       await enqueueBudgetEvaluation(input.groupId)
+      await runPersonalSync(
+        PersonalInclusionService.use((service) =>
+          service.syncGroupMembers(input.groupId),
+        ),
+      )
       return value
     } catch (error) {
       if (error instanceof ExpenseFileImportDuplicateError) {

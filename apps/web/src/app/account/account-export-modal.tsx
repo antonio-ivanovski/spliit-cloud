@@ -9,6 +9,7 @@ import {
   FolderOpen,
   Loader2,
   Users,
+  Wallet,
 } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -63,6 +64,7 @@ function initialSelection(): AccountExportSelection {
       defaultAccountExportSelection.includeAccountPreferences,
     includeGroupPreferences:
       defaultAccountExportSelection.includeGroupPreferences,
+    includePersonal: defaultAccountExportSelection.includePersonal,
   }
 }
 
@@ -119,7 +121,9 @@ export function AccountExportModal() {
     ),
   )
   const canExport =
-    selectedGroups.length > 0 || selection.includeAccountPreferences
+    selectedGroups.length > 0 ||
+    selection.includeAccountPreferences ||
+    selection.includePersonal
 
   function updateSection(section: AccountExportGroupSection, checked: boolean) {
     const ids = new Set((grouped.get(section) ?? []).map((group) => group.id))
@@ -158,7 +162,8 @@ export function AccountExportModal() {
     key:
       | 'includeDocuments'
       | 'includeAccountPreferences'
-      | 'includeGroupPreferences',
+      | 'includeGroupPreferences'
+      | 'includePersonal',
     checked: boolean,
   ) {
     setSelection((current) => ({ ...current, [key]: checked }))
@@ -239,6 +244,15 @@ export function AccountExportModal() {
                         checked={selection.includeGroupPreferences}
                         onCheckedChange={(checked) =>
                           updateContent('includeGroupPreferences', checked)
+                        }
+                      />
+                      <ExportToggle
+                        icon={Wallet}
+                        label={t('content.personal')}
+                        description={t('content.personalDescription')}
+                        checked={selection.includePersonal}
+                        onCheckedChange={(checked) =>
+                          updateContent('includePersonal', checked)
                         }
                       />
                     </div>

@@ -150,6 +150,33 @@ const LOCALE_COGNATES = new Set([
   // "Was" is the correct Dutch past tense of zijn (to be), spelled identically
   // to the English swap-preview label — a genuine shared cognate.
   'nl-NL:Was',
+  // "Max"/"Min" are the same abbreviations in Czech and Polish — matches the
+  // established Expenses.filters.maxAmount/minAmount wording in each locale.
+  'cs-CZ:Max',
+  'cs-CZ:Min',
+  'pl-PL:Min',
+  // French "Budgets/Transactions/Net/Date/Occurrences/Type/Source", Catalan
+  // "Categories/Personal/Manual", Spanish/Portuguese "Manual", Romanian
+  // "Personal", Turkish "Net/Min" abbreviations are native spellings identical
+  // to English.
+  'fr-FR:Net',
+  'fr-FR:Budgets',
+  'fr-FR:Transactions',
+  'fr-FR:Date',
+  'fr-FR:Occurrences',
+  'fr-FR:Type',
+  'fr-FR:Source',
+  'ca:Categories',
+  'ca:Net',
+  'ca:Personal',
+  'ca:Manual',
+  'es:Personal',
+  'es:Manual',
+  'ro:Net',
+  'ro:Personal',
+  'tr-TR:Net',
+  'tr-TR:Min',
+  'pt:Manual',
 ])
 
 export function isAllowedLocaleCognate(

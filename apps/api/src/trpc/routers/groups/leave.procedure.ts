@@ -9,6 +9,10 @@ import {
   getLeavePreview,
   leaveGroup,
 } from '../../../lib/api'
+import {
+  PersonalInclusionService,
+  runPersonalSync,
+} from '../../../lib/personal/inclusion'
 import { loadGroupMutationContext, protectedProcedure } from '../../init'
 import {
   archiveForSelfOutputSchema,
@@ -108,6 +112,13 @@ export const leaveGroupProcedure = protectedProcedure
         force,
         promoteMemberId,
       })
+      // The leaver keeps a frozen personal snapshot; remaining members keep
+      // live sync.
+      await runPersonalSync(
+        PersonalInclusionService.use((service) =>
+          service.freeze(ctx.auth.user.id, groupId),
+        ),
+      )
       return result
     } catch (err) {
       throw mapLeaveError(err)

@@ -13,6 +13,7 @@ import { groupsRouter } from './groups'
 import { invitationsRouter } from './invitations'
 import { notificationsRouter } from './notifications'
 import { overviewRouter } from './overview'
+import { personalRouter } from './personal'
 import { uploadsRouter } from './uploads'
 import { webhooksRouter } from './webhooks'
 
@@ -29,6 +30,7 @@ export const appRouter = createTRPCRouter({
   invitations: invitationsRouter,
   notifications: notificationsRouter,
   overview: overviewRouter,
+  personal: personalRouter,
   uploads: uploadsRouter,
   webhooks: webhooksRouter,
 })

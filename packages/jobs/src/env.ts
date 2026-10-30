@@ -21,6 +21,7 @@ const envSchema = z.object({
     .default('pgboss'),
   JOBS_RECONCILIATION_CRON: z.string().min(1).default('*/30 * * * *'),
   JOBS_NOTIFICATION_RECONCILE_CRON: z.string().min(1).default('*/15 * * * *'),
+  JOBS_PERSONAL_RECONCILE_CRON: z.string().min(1).default('45 3 * * *'),
   JOBS_MAX_CONCURRENCY: z.coerce.number().int().positive().default(1),
   JOBS_POLLING_INTERVAL_SECONDS: z.coerce.number().int().positive().default(60),
   JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS: z.coerce
