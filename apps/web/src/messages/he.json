@@ -1392,6 +1392,14 @@
       "owes": "<strong>{from}</strong> חייב ל<strong>{to}</strong>",
       "markAsPaid": "סמן כשולם",
       "markAsPaidAria": "סמן {amount} מ־{from} ל־{to} כשולם"
+    },
+    "settlementView": {
+      "label": "הצגת חובות",
+      "simplified": "מפושט",
+      "direct": "ישיר",
+      "directDescription": "כמה כל אחד חייב לאנשים שאיתם חלק בפועל הוצאות, בלי לאחד חובות בכל הקבוצה.",
+      "offlineHint": "חובות ישירים דורשים חיבור. ללא חיבור מוצגים תשלומים מפושטים.",
+      "evenOverall": "מאוזנים בסך הכול"
     }
   },
   "Stats": {

@@ -1399,6 +1399,14 @@
       "owes": "<strong>{from}</strong> jest winny dla <strong>{to}</strong>",
       "markAsPaid": "Zaznacz jako opłacone",
       "markAsPaidAria": "Oznacz {amount} od {from} dla {to} jako zapłacone"
+    },
+    "settlementView": {
+      "label": "Pokaż długi jako",
+      "simplified": "Uproszczone",
+      "direct": "Bezpośrednie",
+      "directDescription": "Ile każda osoba jest winna osobom, z którymi faktycznie dzieliła wydatki, bez łączenia długów w całej grupie.",
+      "offlineHint": "Bezpośrednie długi wymagają połączenia. Offline wyświetlane są uproszczone płatności.",
+      "evenOverall": "Ogółem na zero"
     }
   },
   "Stats": {

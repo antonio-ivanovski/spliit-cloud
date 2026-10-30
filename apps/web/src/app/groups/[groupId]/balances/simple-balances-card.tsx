@@ -22,7 +22,7 @@ import { BalancesLoading, SettlementsLoading } from './balances-loading'
 import type { CurrencyBalance } from './currency-balances'
 import { CurrencySection } from './currency-section'
 import { SettlementCardHeader } from './settlement-card-header'
-import type { SettlementMode } from './settlement-controls'
+import type { SettlementMode, SettlementView } from './settlement-controls'
 import {
   SettlementGroupActions,
   SettlementGroupButton,
@@ -68,6 +68,9 @@ export function SimpleBalancesCard({
   subgroupSettlementPlan,
   individualSettlementPolicy,
   view = 'simple',
+  settlementView,
+  onSettlementViewChange,
+  settlementViewNote,
 }: {
   isLoading: boolean
   participantCount?: number
@@ -84,6 +87,11 @@ export function SimpleBalancesCard({
   subgroups?: SubgroupDefinition[]
   subgroupSettlementPlan?: SubgroupSettlementPlan
   view?: BalanceView
+  /** Simplified vs direct (pairwise) payments; picker hidden when unset. */
+  settlementView?: SettlementView
+  onSettlementViewChange?: (view: SettlementView) => void
+  /** Shown above the payments, e.g. when direct debts are unavailable. */
+  settlementViewNote?: ReactNode
 }) {
   const hasDisplayedActivity = isLoading
     ? true
@@ -113,6 +121,9 @@ export function SimpleBalancesCard({
         onSwitchToIndividual={() => onSettlementModeChange?.('individual')}
         onSettlementModeChange={onSettlementModeChange}
         view={view}
+        settlementView={settlementView}
+        onSettlementViewChange={onSettlementViewChange}
+        settlementViewNote={settlementViewNote}
       />
       {hasDisplayedActivity ? (
         <BalanceOverviewCard
@@ -170,8 +181,14 @@ function SuggestedPaymentsCard({
   onSwitchToIndividual,
   onSettlementModeChange,
   view,
+  settlementView,
+  onSettlementViewChange,
+  settlementViewNote,
 }: BalanceCardProps & {
   view: BalanceView
+  settlementView?: SettlementView
+  onSettlementViewChange?: (view: SettlementView) => void
+  settlementViewNote?: ReactNode
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
   const [groupBy, setGroupBy] = useState<SettlementDirection>('pay')
@@ -180,15 +197,28 @@ function SuggestedPaymentsCard({
     <Card>
       <SettlementCardHeader
         title={t('simple.suggestedPayments')}
-        description={t('Settlements.description')}
+        description={
+          // A note means direct debts are unavailable and simplified
+          // payments are shown instead.
+          settlementView === 'direct' && !settlementViewNote
+            ? t('settlementView.directDescription')
+            : t('Settlements.description')
+        }
         settlementMode={
           currencyDisplay === 'group' && onSettlementModeChange
             ? settlementMode
             : undefined
         }
         onSettlementModeChange={onSettlementModeChange}
+        settlementView={settlementView}
+        onSettlementViewChange={onSettlementViewChange}
       />
       <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+        {settlementViewNote ? (
+          <div className="mb-4">
+            <SettlementPolicyNote>{settlementViewNote}</SettlementPolicyNote>
+          </div>
+        ) : null}
         {isLoading ? (
           <SettlementsLoading participantCount={participantCount} />
         ) : currencyDisplay === 'original' ? (
@@ -232,6 +262,7 @@ function BalanceOverviewCard({
   participantCount,
   currencyDisplay,
   balances,
+  suggestedSettlements,
   currencyBalances,
   participants,
   groupCurrency,
@@ -279,6 +310,7 @@ function BalanceOverviewCard({
         ) : groupCurrency ? (
           <SimpleBalanceOverviewContent
             balances={balances ?? {}}
+            suggestedSettlements={suggestedSettlements}
             participants={participants}
             currency={groupCurrency}
           />
@@ -486,6 +518,7 @@ function OriginalCurrencyOverview({
         <CurrencySection key={summary.currencyCode} currency={summary.currency}>
           <SimpleBalanceOverviewContent
             balances={summary.balances}
+            suggestedSettlements={summary.suggestedSettlements}
             participants={participants}
             currency={summary.currency}
           />
@@ -506,10 +539,12 @@ function hasActivity(
 
 function SimpleBalanceOverviewContent({
   balances,
+  suggestedSettlements,
   participants,
   currency,
 }: {
   balances: Balances
+  suggestedSettlements?: SuggestedSettlement[]
   participants: Participant[]
   currency: Currency
 }) {
@@ -546,7 +581,11 @@ function SimpleBalanceOverviewContent({
           />
         </section>
       )}
-      <SettledParticipants participants={participants} balances={balances} />
+      <SettledParticipants
+        participants={participants}
+        balances={balances}
+        suggestedSettlements={suggestedSettlements}
+      />
     </div>
   )
 }
@@ -602,23 +641,57 @@ function SimpleSuggestedPaymentsContent({
 function SettledParticipants({
   participants,
   balances,
+  suggestedSettlements = [],
 }: {
   participants: Participant[]
   balances: Balances
+  suggestedSettlements?: SuggestedSettlement[]
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
-  const settled = participants.filter(
+  // A zero net is not "settled up" while someone still pays or receives on a
+  // direct (pairwise) leg, e.g. A owes B, B owes C and C owes A the same amount.
+  // List those people as "even overall" so the overview is never blank.
+  const onLeg = new Set(
+    suggestedSettlements.flatMap((leg) => [leg.from, leg.to]),
+  )
+  const netZero = participants.filter(
     (participant) => (balances[participant.id]?.total ?? 0) === 0,
   )
-  if (settled.length === 0) return null
 
   return (
-    <section aria-label={t('direction.settledUp')} className="space-y-3">
+    <>
+      <ParticipantChips
+        title={t('settlementView.evenOverall')}
+        participants={netZero.filter((participant) =>
+          onLeg.has(participant.id),
+        )}
+      />
+      <ParticipantChips
+        title={t('direction.settledUp')}
+        participants={netZero.filter(
+          (participant) => !onLeg.has(participant.id),
+        )}
+      />
+    </>
+  )
+}
+
+function ParticipantChips({
+  title,
+  participants,
+}: {
+  title: string
+  participants: Participant[]
+}) {
+  if (participants.length === 0) return null
+
+  return (
+    <section aria-label={title} className="space-y-3">
       <h3 className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-        {t('direction.settledUp')}
+        {title}
       </h3>
       <div className="flex flex-wrap gap-2">
-        {settled.map((participant) => (
+        {participants.map((participant) => (
           <div
             key={participant.id}
             className="flex items-center gap-2 rounded-full border border-border/70 bg-muted/30 py-1 ps-1 pe-3 text-xs text-muted-foreground"
@@ -669,18 +742,23 @@ function SimpleSettlementDirections({
 }) {
   const locale = useLocale()
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
-  const participantIdsWithBalance = (predicate: (total: number) => boolean) =>
-    participants.reduce<string[]>((ids, participant) => {
-      if (predicate(balances[participant.id]?.total ?? 0)) {
-        ids.push(participant.id)
-      }
-      return ids
-    }, [])
+  // Direct (pairwise) legs can make someone with a zero or opposite net
+  // balance still pay or receive, so leg membership counts too.
+  const onLegSide = new Set(
+    suggestedSettlements.map((leg) => (groupBy === 'pay' ? leg.from : leg.to)),
+  )
   const title =
     groupBy === 'pay' ? t('direction.toPay') : t('direction.toReceive')
-  const participantIds = participantIdsWithBalance(
-    groupBy === 'pay' ? (total) => total < 0 : (total) => total > 0,
-  )
+  const participantIds = participants.reduce<string[]>((ids, participant) => {
+    const total = balances[participant.id]?.total ?? 0
+    if (
+      (groupBy === 'pay' ? total < 0 : total > 0) ||
+      onLegSide.has(participant.id)
+    ) {
+      ids.push(participant.id)
+    }
+    return ids
+  }, [])
   const groups = buildSettlementGroups(
     suggestedSettlements,
     participantIds,

@@ -1378,6 +1378,14 @@
       "owes": "<strong>{from}</strong>は<strong>{to}</strong>に借りがあります",
       "markAsPaid": "支払い済みとしてマーク",
       "markAsPaidAria": "{from}から{to}への{amount}を支払い済みとしてマーク"
+    },
+    "settlementView": {
+      "label": "貸し借りの表示",
+      "simplified": "簡略化",
+      "direct": "直接",
+      "directDescription": "実際に費用を分け合った相手ごとに、各メンバーがいくら支払うべきかを表示します。グループ全体の貸し借りはまとめません。",
+      "offlineHint": "直接の貸し借りを表示するには接続が必要です。オフライン中は簡略化した支払いを表示しています。",
+      "evenOverall": "全体では差し引きゼロ"
     }
   },
   "Stats": {

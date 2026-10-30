@@ -1509,6 +1509,14 @@
       "owes": "<strong>{from}</strong> deve a <strong>{to}</strong>",
       "markAsPaid": "Marcar como pago",
       "markAsPaidAria": "Marcar {amount} de {from} para {to} como pago"
+    },
+    "settlementView": {
+      "label": "Mostrar dívidas como",
+      "simplified": "Simplificadas",
+      "direct": "Diretas",
+      "directDescription": "O que cada pessoa deve às pessoas com quem realmente partilhou despesas, sem combinar dívidas de todo o grupo.",
+      "offlineHint": "As dívidas diretas precisam de ligação. Sem ligação, são mostrados os pagamentos simplificados.",
+      "evenOverall": "Equilibrado no total"
     }
   },
   "Stats": {

@@ -736,6 +736,14 @@
       "owes": "<strong>{from}</strong> är skyldig <strong>{to}</strong>",
       "markAsPaid": "Markera som betald",
       "markAsPaidAria": "Markera {amount} från {from} till {to} som betald"
+    },
+    "settlementView": {
+      "label": "Visa skulder som",
+      "simplified": "Förenklade",
+      "direct": "Direkta",
+      "directDescription": "Vad varje person är skyldig dem de faktiskt har delat utgifter med, utan att slå ihop skulder i hela gruppen.",
+      "offlineHint": "Direkta skulder kräver en anslutning. Offline visas förenklade betalningar.",
+      "evenOverall": "Jämnt totalt sett"
     }
   },
   "BulkCategorize": {

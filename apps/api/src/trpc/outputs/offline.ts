@@ -210,6 +210,12 @@ export const offlineCatalogOutputSchema = z.object({
 
 export type OfflineCatalogOutput = z.infer<typeof offlineCatalogOutputSchema>
 
+/**
+ * The offline snapshot keeps the simplified balance projection only; the
+ * pairwise ("direct") view is online-only.
+ */
+const offlineBalancesSchema = listBalancesOutputSchema.omit({ direct: true })
+
 export const offlineSnapshotOutputSchema = z.object({
   schemaVersion: z.literal(OFFLINE_CONTRACT_VERSION),
   accountId: z.string().min(1),
@@ -218,7 +224,7 @@ export const offlineSnapshotOutputSchema = z.object({
   group: getGroupOutputSchema,
   overview: overviewGroupSchema,
   global: globalExpenseGroupSchema,
-  balances: listBalancesOutputSchema,
+  balances: offlineBalancesSchema,
   revision: offlineRevisionSchema,
   expenses: z.array(offlineExpenseRecordSchema),
   totalCount: z.number().int().nonnegative(),
@@ -253,7 +259,7 @@ export const offlineGroupDataSchema = z.object({
   group: getGroupOutputSchema,
   overview: overviewGroupSchema,
   global: globalExpenseGroupSchema,
-  balances: listBalancesOutputSchema,
+  balances: offlineBalancesSchema,
   subgroups: listSubgroupsOutputSchema,
   splitPresets: splitPresetListOutputSchema,
   budgets: z.array(budgetSchema),

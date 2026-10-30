@@ -1392,6 +1392,14 @@
       "owes": "<strong>{from}</strong> doit à <strong>{to}</strong>",
       "markAsPaid": "Marquer comme payé",
       "markAsPaidAria": "Marquer comme payé : {amount} de {from} à {to}"
+    },
+    "settlementView": {
+      "label": "Afficher les dettes",
+      "simplified": "Simplifiées",
+      "direct": "Directes",
+      "directDescription": "Ce que chaque personne doit aux personnes avec qui elle a réellement partagé des dépenses, sans regrouper les dettes à l’échelle du groupe.",
+      "offlineHint": "Les dettes directes nécessitent une connexion. Hors ligne, les paiements simplifiés sont affichés.",
+      "evenOverall": "À l’équilibre au total"
     }
   },
   "Stats": {

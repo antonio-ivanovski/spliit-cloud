@@ -5,7 +5,9 @@ import { CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 import {
   SettlementModePicker,
+  SettlementViewPicker,
   type SettlementMode,
+  type SettlementView,
 } from './settlement-controls'
 
 export function SettlementCardHeader({
@@ -13,11 +15,15 @@ export function SettlementCardHeader({
   description,
   settlementMode,
   onSettlementModeChange,
+  settlementView,
+  onSettlementViewChange,
 }: {
   title: ReactNode
   description: ReactNode
   settlementMode?: SettlementMode
   onSettlementModeChange?: (mode: SettlementMode) => void
+  settlementView?: SettlementView
+  onSettlementViewChange?: (view: SettlementView) => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
 
@@ -27,15 +33,31 @@ export function SettlementCardHeader({
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </div>
-      {settlementMode && onSettlementModeChange ? (
-        <div className="w-full min-w-0 space-y-1 sm:w-auto sm:min-w-52 sm:justify-self-end">
-          <span className="block text-[11px] font-medium tracking-wide text-muted-foreground uppercase sm:text-end">
-            {t('settlementMode.label')}
-          </span>
-          <SettlementModePicker
-            value={settlementMode}
-            onChange={onSettlementModeChange}
-          />
+      {(settlementMode && onSettlementModeChange) ||
+      (settlementView && onSettlementViewChange) ? (
+        <div className="flex w-full min-w-0 flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:justify-end sm:justify-self-end">
+          {settlementView && onSettlementViewChange ? (
+            <div className="w-full min-w-0 space-y-1 sm:w-auto sm:min-w-52">
+              <span className="block text-[11px] font-medium tracking-wide text-muted-foreground uppercase sm:text-end">
+                {t('settlementView.label')}
+              </span>
+              <SettlementViewPicker
+                value={settlementView}
+                onChange={onSettlementViewChange}
+              />
+            </div>
+          ) : null}
+          {settlementMode && onSettlementModeChange ? (
+            <div className="w-full min-w-0 space-y-1 sm:w-auto sm:min-w-52">
+              <span className="block text-[11px] font-medium tracking-wide text-muted-foreground uppercase sm:text-end">
+                {t('settlementMode.label')}
+              </span>
+              <SettlementModePicker
+                value={settlementMode}
+                onChange={onSettlementModeChange}
+              />
+            </div>
+          ) : null}
         </div>
       ) : null}
     </CardHeader>

@@ -1409,6 +1409,14 @@
       "owes": "<strong>{from}</strong> schuldet <strong>{to}</strong>",
       "markAsPaid": "Als gezahlt markieren",
       "markAsPaidAria": "Markiere {amount} von {from} an {to} als bezahlt"
+    },
+    "settlementView": {
+      "label": "Schulden anzeigen",
+      "simplified": "Vereinfacht",
+      "direct": "Direkt",
+      "directDescription": "Was jede Person den Leuten schuldet, mit denen sie tatsächlich Ausgaben geteilt hat – ohne Schulden über die ganze Gruppe zusammenzufassen.",
+      "offlineHint": "Direkte Schulden brauchen eine Verbindung. Offline werden vereinfachte Zahlungen angezeigt.",
+      "evenOverall": "Insgesamt ausgeglichen"
     }
   },
   "Stats": {

@@ -70,4 +70,14 @@ export const listBalancesOutputSchema = z.object({
     subgroup: subgroupSettlementPlanSchema,
     individual: individualSettlementPlanSchema,
   }),
+  /** Pairwise ("direct") debts, without cross-participant simplification. */
+  direct: z.object({
+    suggestedSettlements: z.array(suggestedSettlementSchema),
+    currencies: z.array(
+      z.object({
+        currencyCode: z.string(),
+        directSettlements: z.array(suggestedSettlementSchema),
+      }),
+    ),
+  }),
 })

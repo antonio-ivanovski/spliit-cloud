@@ -1385,6 +1385,14 @@
       "owes": "<strong>{from}</strong>, <strong>{to}</strong>'ya borçlu",
       "markAsPaid": "Ödendi olarak işaretle",
       "markAsPaidAria": "{from} tarafından {to} için {amount} ödemesini yapıldı olarak işaretle"
+    },
+    "settlementView": {
+      "label": "Borçları gösterme şekli",
+      "simplified": "Sadeleştirilmiş",
+      "direct": "Doğrudan",
+      "directDescription": "Herkesin gerçekten harcama paylaştığı kişilere ne kadar borçlu olduğu; grup genelindeki borçlar birleştirilmez.",
+      "offlineHint": "Doğrudan borçlar için bağlantı gerekir. Çevrimdışıyken sadeleştirilmiş ödemeler gösteriliyor.",
+      "evenOverall": "Toplamda eşit"
     }
   },
   "Stats": {
