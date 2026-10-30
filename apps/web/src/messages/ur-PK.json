@@ -740,6 +740,13 @@
       "owes": "<strong>{from}</strong> <strong>{to}</strong> کو مقروض ہے",
       "markAsPaid": "ادا شدہ نشان زد کریں",
       "markAsPaidAria": "{from} سے {to} کو {amount} ادا شدہ نشان زد کریں"
+    },
+    "settlementView": {
+      "label": "قرض دکھانے کا طریقہ",
+      "simplified": "آسان کردہ",
+      "direct": "براہِ راست",
+      "directDescription": "ہر شخص ان لوگوں کا کتنا مقروض ہے جن کے ساتھ اس نے واقعی اخراجات بانٹے، پورے گروپ کے قرضوں کو ملائے بغیر۔",
+      "offlineHint": "براہِ راست قرضوں کے لیے کنکشن چاہیے۔ آف لائن ہونے پر آسان کردہ ادائیگیاں دکھائی جا رہی ہیں۔"
     }
   },
   "BulkCategorize": {

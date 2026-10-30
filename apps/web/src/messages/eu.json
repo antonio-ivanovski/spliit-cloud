@@ -1391,6 +1391,13 @@
       "owes": "<strong>{from}</strong>(e)k <strong>{to}</strong>(r)i zor dio",
       "markAsPaid": "Markatu ordainduta gisa",
       "markAsPaidAria": "Markatu {amount}-ko ordainketa ({from} → {to}) ordainduta gisa"
+    },
+    "settlementView": {
+      "label": "Erakutsi zorrak honela",
+      "simplified": "Sinplifikatuta",
+      "direct": "Zuzenean",
+      "directDescription": "Pertsona bakoitzak benetan gastuak partekatu dituen pertsonei zor diena, taldeko zorrak elkartu gabe.",
+      "offlineHint": "Zor zuzenek konexioa behar dute. Lineaz kanpo, ordainketa sinplifikatuak erakusten dira."
     }
   },
   "Stats": {

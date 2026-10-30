@@ -1687,6 +1687,13 @@
       "owes": "<strong>{from}</strong> berutang <strong>{to}</strong>",
       "markAsPaid": "Tandai sebagai telah dibayar",
       "markAsPaidAria": "Tandai {amount} dari {from} ke {to} sebagai sudah dibayar"
+    },
+    "settlementView": {
+      "label": "Tampilkan utang sebagai",
+      "simplified": "Disederhanakan",
+      "direct": "Langsung",
+      "directDescription": "Berapa utang setiap orang kepada orang yang benar-benar berbagi pengeluaran dengannya, tanpa menggabungkan utang di seluruh grup.",
+      "offlineHint": "Utang langsung memerlukan koneksi. Saat offline, pembayaran yang disederhanakan ditampilkan."
     }
   },
   "Stats": {

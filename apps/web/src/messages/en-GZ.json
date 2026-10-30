@@ -793,6 +793,13 @@
       "owes": "<strong>{from}</strong> owes <strong>{to}</strong>, no cap",
       "markAsPaid": "mark as paid",
       "markAsPaidAria": "mark {amount} from {from} to {to} as paid"
+    },
+    "settlementView": {
+      "label": "show debts as",
+      "simplified": "simplified",
+      "direct": "direct",
+      "directDescription": "what each person owes the people they actually split stuff with, no mixing debts across the whole group.",
+      "offlineHint": "direct debts need a connection. showing simplified payments while you're offline."
     }
   },
   "Budgets": {

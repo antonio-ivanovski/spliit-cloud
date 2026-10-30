@@ -107,7 +107,7 @@ export const listGroupBalancesProcedure = scopedGroupReadProcedure(
       expenses,
       ledger.currencyCode,
     )
-    // Un-simplified pairwise debts (upstream issue #167). Online-only: the
+    // Un-simplified pairwise debts (#167). Online-only: the
     // offline snapshot keeps the simplified projection.
     const direct = {
       suggestedSettlements: getDirectSettlements(expenses, balances),

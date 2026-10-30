@@ -1392,6 +1392,13 @@
       "owes": "<strong>{from}</strong> datorează <strong>{to}</strong>",
       "markAsPaid": "Bifează ca plătit",
       "markAsPaidAria": "Marchează {amount} de la {from} către {to} ca plătit"
+    },
+    "settlementView": {
+      "label": "Afișează datoriile ca",
+      "simplified": "Simplificate",
+      "direct": "Directe",
+      "directDescription": "Cât datorează fiecare persoanelor cu care a împărțit efectiv cheltuieli, fără a combina datoriile din tot grupul.",
+      "offlineHint": "Datoriile directe necesită conexiune. Offline se afișează plățile simplificate."
     }
   },
   "Stats": {

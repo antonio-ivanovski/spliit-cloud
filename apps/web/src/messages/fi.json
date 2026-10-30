@@ -1385,6 +1385,13 @@
       "owes": "<strong>{from}</strong> maksaa henkilölle <strong>{to}</strong>",
       "markAsPaid": "Merkitse maksetuksi",
       "markAsPaidAria": "Merkitse {from}–{to}, {amount}, maksetuksi"
+    },
+    "settlementView": {
+      "label": "Näytä velat",
+      "simplified": "Yksinkertaistettuina",
+      "direct": "Suoraan",
+      "directDescription": "Mitä kukin on velkaa niille, joiden kanssa hän on oikeasti jakanut kuluja, ilman että velkoja yhdistetään koko ryhmän kesken.",
+      "offlineHint": "Suorat velat vaativat yhteyden. Offline-tilassa näytetään yksinkertaistetut maksut."
     }
   },
   "Stats": {

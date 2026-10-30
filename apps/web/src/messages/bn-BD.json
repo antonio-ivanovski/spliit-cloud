@@ -744,6 +744,13 @@
       "owes": "<strong>{from}</strong> <strong>{to}</strong>-কে ঋণী",
       "markAsPaid": "পরিশোধিত হিসাবে চিহ্নিত করুন",
       "markAsPaidAria": "{amount} {from} থেকে {to}-কে পরিশোধিত হিসাবে চিহ্নিত করুন"
+    },
+    "settlementView": {
+      "label": "ঋণ দেখানোর ধরন",
+      "simplified": "সরলীকৃত",
+      "direct": "সরাসরি",
+      "directDescription": "প্রত্যেকে যাদের সঙ্গে আসলে খরচ ভাগ করেছেন, তাদের কাছে কত ঋণী — পুরো গ্রুপের ঋণ একত্র না করে।",
+      "offlineHint": "সরাসরি ঋণ দেখতে সংযোগ প্রয়োজন। অফলাইনে সরলীকৃত পেমেন্ট দেখানো হচ্ছে।"
     }
   },
   "BulkCategorize": {

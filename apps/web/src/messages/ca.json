@@ -1392,6 +1392,13 @@
       "owes": "<strong>{from}</strong> deu a <strong>{to}</strong>",
       "markAsPaid": "Marcar com a pagat",
       "markAsPaidAria": "Marca {amount} de {from} a {to} com a pagat"
+    },
+    "settlementView": {
+      "label": "Mostra els deutes com a",
+      "simplified": "Simplificats",
+      "direct": "Directes",
+      "directDescription": "El que cada persona deu a les persones amb qui realment ha compartit despeses, sense combinar deutes de tot el grup.",
+      "offlineHint": "Els deutes directes necessiten connexió. Sense connexió es mostren els pagaments simplificats."
     }
   },
   "Stats": {

@@ -1378,6 +1378,13 @@
       "owes": "<strong>{from}</strong> 欠 <strong>{to}</strong>",
       "markAsPaid": "標記為已支付",
       "markAsPaidAria": "將 {from} 向 {to} 的 {amount} 標記為已付款"
+    },
+    "settlementView": {
+      "label": "債務顯示方式",
+      "simplified": "簡化",
+      "direct": "直接",
+      "directDescription": "顯示每個人欠實際共同分攤過支出的人多少錢，不在整個群組內合併債務。",
+      "offlineHint": "直接債務需要連線。離線時顯示簡化後的付款。"
     }
   },
   "Stats": {
