@@ -3,6 +3,25 @@ import { describe, expect, it, vi } from 'vitest'
 import { allowUserGeneratedEmail } from './outbound-email-rate-limit'
 
 describe('user-generated email limits', () => {
+  it('suppresses placeholder recipients without consuming quota', () => {
+    const senderAccountId = 'sender-placeholder-test'
+
+    expect(
+      allowUserGeneratedEmail({
+        senderAccountId,
+        recipientEmail: 'guest-1@anonymous.placeholder.local',
+        policy: 'test-email',
+      }),
+    ).toBe(false)
+    expect(
+      allowUserGeneratedEmail({
+        senderAccountId,
+        recipientEmail: 'recipient@example.test',
+        policy: 'test-email',
+      }),
+    ).toBe(true)
+  })
+
   it('suppresses repeated delivery to one recipient after the daily quota', () => {
     vi.spyOn(console, 'warn').mockImplementation(() => undefined)
     const options = {

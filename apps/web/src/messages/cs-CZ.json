@@ -2924,7 +2924,9 @@
       "signInMethodsRemoved": "Tyto způsoby přihlášení přestanou fungovat: {methods}.",
       "consequencesTiming": "Tento přehled odpovídá současnému stavu vašeho účtu. Skupiny, členové a výdaje se mohou před začátkem smazání změnit. Vaše volby se použijí na skupiny, kterých budete v té době členem, a na jejich tehdejší zůstatky. Nic z uvedeného se nestane okamžitě.",
       "executingTitle": "Smazání účtu začalo",
-      "executingDescription": "Probíhá smazání vašeho účtu. Některé změny už mohou být dokončené a smazání nelze zrušit ani vrátit zpět. Pokud se zpracování přeruší, naváže na dokončené kroky."
+      "executingDescription": "Probíhá smazání vašeho účtu. Některé změny už mohou být dokončené a smazání nelze zrušit ani vrátit zpět. Pokud se zpracování přeruší, naváže na dokončené kroky.",
+      "scheduledDescriptionNoEmail": "Smazání je naplánováno na {date} nebo později. Účet zůstane aktivní, dokud smazání nezačne. Skupiny, členové a výdaje se mohou během čekání změnit; vaše volby se použijí na jejich stav v době smazání. Smazání můžete zrušit, dokud nezačne.",
+      "scheduledNoEmail": "Smazání naplánováno."
     },
     "androidUpdates": "Aktualizace aplikace pro Android"
   },

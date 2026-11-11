@@ -1565,7 +1565,9 @@
       "accessExplanation": "Estes métodos de login deixarão de funcionar quando sua conta for excluída.",
       "consequencesTiming": "Este resumo reflete o estado atual da sua conta. Os grupos, membros e despesas podem mudar antes de a exclusão começar. Suas opções serão aplicadas aos grupos de que você fizer parte e aos saldos deles naquele momento. Nada do que está indicado aqui acontece imediatamente.",
       "executingTitle": "A exclusão da conta começou",
-      "executingDescription": "A exclusão da sua conta está em processamento. Algumas alterações podem já estar concluídas, e a exclusão não pode ser cancelada nem desfeita. Se o processamento for interrompido, ele retoma a partir das etapas concluídas."
+      "executingDescription": "A exclusão da sua conta está em processamento. Algumas alterações podem já estar concluídas, e a exclusão não pode ser cancelada nem desfeita. Se o processamento for interrompido, ele retoma a partir das etapas concluídas.",
+      "scheduledDescriptionNoEmail": "A exclusão está agendada para começar em {date} ou depois. A conta continua ativa até começar. Os grupos, membros e despesas podem mudar durante a espera; suas opções serão aplicadas ao estado deles quando a exclusão for executada. Você pode cancelá-la até começar.",
+      "scheduledNoEmail": "Exclusão agendada."
     },
     "androidUpdates": "Atualizações do aplicativo Android"
   },

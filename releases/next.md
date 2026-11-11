@@ -23,6 +23,6 @@ who is affected, and the exact migration steps.
 
 ### 🐛 Bug fixes
 
-- Short entry per fix (`TBD` by @TBD)
+- Guest account deletion no longer sends email to synthetic addresses or claims a confirmation email was sent. (`TBD` by @TBD)
 
 **Full Changelog**: TBD

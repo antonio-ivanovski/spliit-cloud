@@ -801,6 +801,7 @@ export const auth = betterAuth({
     // outlived the user noticing the breach, the reset kicks it out.
     revokeSessionsOnPasswordReset: true,
     async sendResetPassword({ user, url }) {
+      if (isPlaceholderEmail(user.email)) return
       enforceAuthEmailRecipientLimit(user.email, '/request-password-reset')
       // Best-effort: a failed send must not break the forgot-password flow.
       // better-auth already created the verification token in the DB, so the
@@ -831,6 +832,7 @@ export const auth = betterAuth({
     // redirecting back to the web app.
     autoSignInAfterVerification: true,
     async sendVerificationEmail({ user, url }) {
+      if (isPlaceholderEmail(user.email)) return
       enforceAuthEmailRecipientLimit(user.email, '/send-verification-email')
       // Best-effort: a failed send must not break the sign-up flow.
       // better-auth already created the verification token in the DB, so the
@@ -1000,6 +1002,7 @@ export const auth = betterAuth({
           magicLink({
             disableSignUp: false,
             sendMagicLink: async ({ email, url }) => {
+              if (isPlaceholderEmail(email)) return
               enforceAuthEmailRecipientLimit(email, '/sign-in/magic-link')
               // Best-effort: a failed send must not break the magic-link sign-in
               // flow. better-auth already created the verification token in the DB,

@@ -2914,7 +2914,9 @@
       "signInMethodsRemoved": "Aquests mètodes d'inici de sessió deixaran de funcionar: {methods}.",
       "consequencesTiming": "Aquest resum reflecteix el teu compte ara. Els grups, els membres i les despeses poden canviar abans que comenci l’eliminació. Les teves opcions s’aplicaran als grups dels quals formis part i als seus saldos en aquell moment. Res del que s’indica aquí passa immediatament.",
       "executingTitle": "L’eliminació del compte ha començat",
-      "executingDescription": "L’eliminació del teu compte s’està processant. Alguns canvis ja poden haver-se completat, i l’eliminació no es pot cancel·lar ni desfer. Si el procés s’interromp, es reprendrà a partir dels passos completats."
+      "executingDescription": "L’eliminació del teu compte s’està processant. Alguns canvis ja poden haver-se completat, i l’eliminació no es pot cancel·lar ni desfer. Si el procés s’interromp, es reprendrà a partir dels passos completats.",
+      "scheduledDescriptionNoEmail": "L’eliminació està programada per començar el {date} o més tard. El compte continua actiu fins que comenci. Els grups, els membres i les despeses poden canviar durant l’espera; les teves opcions s’aplicaran al seu estat quan s’executi l’eliminació. Pots cancel·lar-la fins que comenci.",
+      "scheduledNoEmail": "Supressió programada."
     },
     "androidUpdates": "Actualitzacions de l'aplicació Android"
   },

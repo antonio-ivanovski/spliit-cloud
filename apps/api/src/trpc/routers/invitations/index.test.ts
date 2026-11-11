@@ -838,6 +838,41 @@ describe('invitationsRouter.create — guards and email', () => {
     expect(call.text).toContain('/?invitation=inv-new')
   })
 
+  it('creates a placeholder invitation without attempting delivery', async () => {
+    await authAs('acct-admin')
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: 'grp-1',
+      name: 'Roadtrip 2026',
+      ledgerId: 'ledger-1',
+      ledger: { id: 'ledger-1' },
+    } as never)
+    prismaMock.groupMember.findUnique.mockResolvedValue({
+      groupId: 'grp-1',
+      accountId: 'acct-admin',
+      role: 'ADMIN',
+      status: 'ACTIVE',
+    } as never)
+    prismaMock.groupInvitation.create.mockResolvedValue({
+      id: 'inv-placeholder',
+      email: 'guest-1@anonymous.placeholder.local',
+      groupId: 'grp-1',
+    } as never)
+
+    const caller = makeCaller('acct-admin')
+    const result = await caller.create({
+      requestId: crypto.randomUUID(),
+      groupId: 'grp-1',
+      email: 'guest-1@anonymous.placeholder.local',
+      role: 'MEMBER',
+    })
+
+    expect(result).toMatchObject({
+      invitationId: 'inv-placeholder',
+      emailDelivered: false,
+    })
+    expect(sendEmailMock).not.toHaveBeenCalled()
+  })
+
   it('still creates the invitation when delivery fails without SMTP (SSO-only)', async () => {
     await authAs('acct-admin')
     prismaMock.group.findUnique.mockResolvedValue({

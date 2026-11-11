@@ -1404,7 +1404,9 @@
       "signInMethodsRemoved": "These sign-in methods will stop working: {methods}.",
       "consequencesTiming": "This review reflects your account now. Groups, members, and expenses can change before deletion starts. Your choices will apply to the groups you belong to and their balances at that time. Nothing listed here happens immediately.",
       "executingTitle": "Account deletion has started",
-      "executingDescription": "Your account deletion is processing. Some changes may already be complete, and deletion cannot be cancelled or undone. If processing is interrupted, it resumes from the completed steps."
+      "executingDescription": "Your account deletion is processing. Some changes may already be complete, and deletion cannot be cancelled or undone. If processing is interrupted, it resumes from the completed steps.",
+      "scheduledDescriptionNoEmail": "Deletion is scheduled to start on or after {date}. Your account stays active until it starts. Groups, members, and expenses can change during the wait; your choices apply to their state when deletion runs. You can cancel until deletion starts.",
+      "scheduledNoEmail": "Deletion scheduled."
     },
     "androidUpdates": "Android app updates"
   },

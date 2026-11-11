@@ -47,6 +47,10 @@ const realAuthModule = (await vi.importActual('./index')) as {
           disableDeleteAnonymousUser?: boolean
           generateName?: (ctx: { headers?: Headers }) => string
           generateRandomEmail?: () => string
+          sendMagicLink?: (params: {
+            email: string
+            url: string
+          }) => Promise<void>
           storeInDatabase?: boolean
           customResolveMethod?: (ctx: { path?: string }) => string | null
           rpID?: string
@@ -331,6 +335,36 @@ describe('better-auth emailVerification config', () => {
       expect.stringContaining('auth-email-recipient'),
     )
   })
+
+  it('skips verification email for a placeholder recipient', async () => {
+    await realAuthModule.auth.options.emailVerification?.sendVerificationEmail?.(
+      {
+        user: {
+          id: 'guest-account',
+          email: 'guest-1@anonymous.placeholder.local',
+        },
+        url: 'https://example.test/verify',
+      },
+    )
+
+    expect(sendEmailMock).not.toHaveBeenCalled()
+  })
+})
+
+describe('better-auth magic link config', () => {
+  it('skips magic link email for a placeholder recipient', async () => {
+    const plugin = realAuthModule.auth.options.plugins?.find(
+      (candidate) => candidate.id === 'magic-link',
+    )
+    expect(plugin?.options?.sendMagicLink).toBeDefined()
+
+    await plugin?.options?.sendMagicLink?.({
+      email: 'guest-1@anonymous.placeholder.local',
+      url: 'https://spliit.test/magic-link',
+    })
+
+    expect(sendEmailMock).not.toHaveBeenCalled()
+  })
 })
 
 describe('better-auth last login method tracking', () => {
@@ -493,6 +527,18 @@ describe('better-auth emailAndPassword config', () => {
         ),
       }),
     )
+  })
+
+  it('skips password reset email for a placeholder recipient', async () => {
+    await realAuthModule.auth.options.emailAndPassword?.sendResetPassword?.({
+      user: {
+        id: 'guest-account',
+        email: 'guest-1@anonymous.placeholder.local',
+      },
+      url: 'https://spliit.test/reset-token',
+    })
+
+    expect(sendEmailMock).not.toHaveBeenCalled()
   })
 })
 

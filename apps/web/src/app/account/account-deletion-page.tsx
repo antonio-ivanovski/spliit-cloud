@@ -39,6 +39,7 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
+import { hasRealEmail } from '@/lib/account'
 import { getCurrencyFromGroup } from '@/lib/currency'
 import { useDeploymentConfig } from '@/lib/deployment-config'
 import { groupAccentStyle, GROUP_CARD_NEUTRAL } from '@/lib/group-appearance'
@@ -206,12 +207,16 @@ function AccountDeletionReview() {
     setGeneration((value) => value + 1)
   }
   const request = trpc.account.requestDeletion.useMutation({
-    onSuccess: async () => {
+    onSuccess: async (_data, variables) => {
       await utils.account.deletionStatus.invalidate()
       await utils.account.deletionPreview.invalidate()
       submitting.current = false
       resetReview()
-      toast({ description: t('scheduled') })
+      toast({
+        description: t(
+          hasRealEmail(variables.email) ? 'scheduled' : 'scheduledNoEmail',
+        ),
+      })
     },
     onError: (cause: unknown) => {
       submitting.current = false

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
+import { hasRealEmail } from '@/lib/account'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
@@ -83,6 +84,7 @@ export function ScheduledDeletion({
     },
   })
   const executing = request.status === 'EXECUTING'
+  const emailScheduled = hasRealEmail(account?.email)
   const date = new Intl.DateTimeFormat(i18n.language, {
     dateStyle: 'long',
     timeStyle: 'short',
@@ -96,7 +98,12 @@ export function ScheduledDeletion({
         <p className="mt-3 leading-6">
           {executing
             ? t('executingDescription')
-            : t('scheduledDescription', { date, email: account?.email ?? '' })}
+            : t(
+                emailScheduled
+                  ? 'scheduledDescription'
+                  : 'scheduledDescriptionNoEmail',
+                { date, email: account?.email ?? '' },
+              )}
         </p>
         {!executing && (
           <Button

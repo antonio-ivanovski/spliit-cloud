@@ -457,13 +457,15 @@ export async function requestAccountDeletion({
     timeStyle: 'long',
     timeZone: 'UTC',
   })
-  await notifySafely(async () => {
-    const rendered = await renderAccountDeletionRequestedEmail({
-      executeAtLabel,
-      keepDisplayName,
-    })
-    await sendEmail({ to: account.email, ...rendered })
-  }, 'failed to send deletion-requested notice')
+  if (!isPlaceholderEmail(account.email)) {
+    await notifySafely(async () => {
+      const rendered = await renderAccountDeletionRequestedEmail({
+        executeAtLabel,
+        keepDisplayName,
+      })
+      await sendEmail({ to: account.email, ...rendered })
+    }, 'failed to send deletion-requested notice')
+  }
 
   return { executeAt }
 }
@@ -521,10 +523,12 @@ export async function cancelAccountDeletion(
   }
 
   const recipient = request.emailSnapshot
-  await notifySafely(async () => {
-    const rendered = await renderAccountDeletionCancelledEmail()
-    await sendEmail({ to: recipient, ...rendered })
-  }, 'failed to send deletion-cancelled notice')
+  if (!isPlaceholderEmail(recipient)) {
+    await notifySafely(async () => {
+      const rendered = await renderAccountDeletionCancelledEmail()
+      await sendEmail({ to: recipient, ...rendered })
+    }, 'failed to send deletion-cancelled notice')
+  }
 
   return { cancelled: true }
 }
@@ -648,10 +652,12 @@ async function executeLockedAccountDeletion(
   })
 
   const recipient = request.emailSnapshot
-  await notifySafely(async () => {
-    const rendered = await renderAccountDeletionExecutedEmail()
-    await sendEmail({ to: recipient, ...rendered })
-  }, 'failed to send deletion-executed notice')
+  if (!isPlaceholderEmail(recipient)) {
+    await notifySafely(async () => {
+      const rendered = await renderAccountDeletionExecutedEmail()
+      await sendEmail({ to: recipient, ...rendered })
+    }, 'failed to send deletion-executed notice')
+  }
 
   return { executed: true }
 }

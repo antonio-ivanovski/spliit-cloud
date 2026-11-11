@@ -2895,7 +2895,9 @@
       "signInMethodsRemoved": "Metode masuk berikut tidak akan bisa digunakan lagi: {methods}.",
       "consequencesTiming": "Tinjauan ini mencerminkan kondisi akun Anda sekarang. Grup, anggota, dan pengeluaran dapat berubah sebelum penghapusan dimulai. Pilihan Anda berlaku untuk grup yang Anda ikuti dan saldonya pada saat itu. Tidak ada hal yang tercantum di sini yang langsung terjadi.",
       "executingTitle": "Penghapusan akun telah dimulai",
-      "executingDescription": "Penghapusan akun Anda sedang diproses. Sebagian perubahan mungkin sudah selesai, dan penghapusan tidak dapat dibatalkan atau diurungkan. Jika proses terhenti, proses akan dilanjutkan dari langkah yang sudah selesai."
+      "executingDescription": "Penghapusan akun Anda sedang diproses. Sebagian perubahan mungkin sudah selesai, dan penghapusan tidak dapat dibatalkan atau diurungkan. Jika proses terhenti, proses akan dilanjutkan dari langkah yang sudah selesai.",
+      "scheduledDescriptionNoEmail": "Penghapusan dijadwalkan mulai pada atau setelah {date}. Akun Anda tetap aktif sampai penghapusan dimulai. Grup, anggota, dan pengeluaran dapat berubah selama masa tunggu; pilihan Anda berlaku untuk kondisi saat penghapusan dijalankan. Anda dapat membatalkan sampai penghapusan dimulai.",
+      "scheduledNoEmail": "Penghapusan dijadwalkan."
     },
     "androidUpdates": "Pembaruan aplikasi Android"
   },

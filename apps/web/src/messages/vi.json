@@ -1399,7 +1399,9 @@
       "signInMethodsRemoved": "Các phương thức đăng nhập sau sẽ không còn dùng được: {methods}.",
       "consequencesTiming": "Nội dung xem xét này phản ánh trạng thái tài khoản hiện tại. Nhóm, thành viên và chi phí có thể thay đổi trước khi bắt đầu xóa. Lựa chọn của bạn sẽ áp dụng cho các nhóm bạn tham gia và số dư của chúng tại thời điểm đó. Không có thay đổi nào được liệt kê ở đây diễn ra ngay lập tức.",
       "executingTitle": "Đã bắt đầu xóa tài khoản",
-      "executingDescription": "Việc xóa tài khoản đang được xử lý. Một số thay đổi có thể đã hoàn tất, và không thể hủy hay hoàn tác việc xóa. Nếu quá trình bị gián đoạn, hệ thống sẽ tiếp tục từ các bước đã hoàn tất."
+      "executingDescription": "Việc xóa tài khoản đang được xử lý. Một số thay đổi có thể đã hoàn tất, và không thể hủy hay hoàn tác việc xóa. Nếu quá trình bị gián đoạn, hệ thống sẽ tiếp tục từ các bước đã hoàn tất.",
+      "scheduledDescriptionNoEmail": "Việc xóa được lên lịch bắt đầu vào hoặc sau {date}. Tài khoản vẫn hoạt động cho đến khi bắt đầu xóa. Nhóm, thành viên và chi phí có thể thay đổi trong thời gian chờ; lựa chọn của bạn áp dụng cho trạng thái khi thực hiện xóa. Bạn có thể hủy cho đến khi bắt đầu xóa.",
+      "scheduledNoEmail": "Đã lên lịch xóa."
     },
     "androidUpdates": "Cập nhật ứng dụng Android"
   },

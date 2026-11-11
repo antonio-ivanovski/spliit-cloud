@@ -2912,7 +2912,9 @@
       "signInMethodsRemoved": "Saioa hasteko metodo hauek ez dute funtzionatuko: {methods}.",
       "consequencesTiming": "Laburpen honek zure kontuaren oraingo egoera erakusten du. Taldeak, kideak eta gastuak alda daitezke ezabaketa hasi aurretik. Zure aukerak une horretan kide zaren taldeei eta haien saldoei aplikatuko zaizkie. Hemen adierazitako ezer ez da berehala gertatuko.",
       "executingTitle": "Kontuaren ezabaketa hasi da",
-      "executingDescription": "Zure kontuaren ezabaketa prozesatzen ari da. Baliteke aldaketa batzuk jada osatuta egotea, eta ezabaketa ezin da bertan behera utzi edo desegin. Prozesua eteten bada, osatutako urratsetatik jarraituko du."
+      "executingDescription": "Zure kontuaren ezabaketa prozesatzen ari da. Baliteke aldaketa batzuk jada osatuta egotea, eta ezabaketa ezin da bertan behera utzi edo desegin. Prozesua eteten bada, osatutako urratsetatik jarraituko du.",
+      "scheduledDescriptionNoEmail": "Ezabaketa {date} egunean edo geroago hasteko programatu da. Kontuak aktibo jarraituko du hasi arte. Taldeak, kideak eta gastuak alda daitezke itxaronaldian; zure aukerak ezabaketa gauzatzean duten egoerari aplikatuko zaizkio. Hasi arte bertan behera utz dezakezu.",
+      "scheduledNoEmail": "Ezabatzea programatu da."
     },
     "androidUpdates": "Android aplikazioaren eguneraketak"
   },

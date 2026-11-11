@@ -2914,7 +2914,9 @@
       "signInMethodsRemoved": "Aceste metode de autentificare nu vor mai funcționa: {methods}.",
       "consequencesTiming": "Acest rezumat reflectă starea actuală a contului tău. Grupurile, membrii și cheltuielile se pot schimba înainte să înceapă ștergerea. Opțiunile tale se vor aplica grupurilor din care vei face parte și soldurilor lor din acel moment. Nimic din cele indicate aici nu se întâmplă imediat.",
       "executingTitle": "Ștergerea contului a început",
-      "executingDescription": "Ștergerea contului tău este în curs. Unele modificări pot fi deja finalizate, iar ștergerea nu poate fi anulată sau inversată. Dacă procesarea este întreruptă, se reia de la pașii finalizați."
+      "executingDescription": "Ștergerea contului tău este în curs. Unele modificări pot fi deja finalizate, iar ștergerea nu poate fi anulată sau inversată. Dacă procesarea este întreruptă, se reia de la pașii finalizați.",
+      "scheduledDescriptionNoEmail": "Ștergerea este programată să înceapă la {date} sau mai târziu. Contul rămâne activ până atunci. Grupurile, membrii și cheltuielile se pot schimba în timpul așteptării; opțiunile tale se vor aplica stării lor când se execută ștergerea. O poți anula până când începe.",
+      "scheduledNoEmail": "Ștergerea a fost programată."
     },
     "androidUpdates": "Actualizările aplicației Android"
   },

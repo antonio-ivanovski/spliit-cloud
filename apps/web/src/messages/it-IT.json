@@ -2914,7 +2914,9 @@
       "signInMethodsRemoved": "Questi metodi di accesso smetteranno di funzionare: {methods}.",
       "consequencesTiming": "Questo riepilogo riflette lo stato attuale del tuo account. Gruppi, membri e spese possono cambiare prima dell’inizio dell’eliminazione. Le tue scelte si applicheranno ai gruppi di cui farai parte e ai loro saldi in quel momento. Nulla di quanto indicato qui avviene immediatamente.",
       "executingTitle": "L’eliminazione dell’account è iniziata",
-      "executingDescription": "L’eliminazione del tuo account è in corso. Alcune modifiche potrebbero già essere completate e l’eliminazione non può essere annullata né le modifiche ripristinate. Se l’elaborazione viene interrotta, riprende dai passaggi completati."
+      "executingDescription": "L’eliminazione del tuo account è in corso. Alcune modifiche potrebbero già essere completate e l’eliminazione non può essere annullata né le modifiche ripristinate. Se l’elaborazione viene interrotta, riprende dai passaggi completati.",
+      "scheduledDescriptionNoEmail": "L’eliminazione è programmata per iniziare il {date} o successivamente. L’account resta attivo fino al suo inizio. Gruppi, membri e spese possono cambiare durante l’attesa; le tue scelte si applicheranno al loro stato quando verrà eseguita l’eliminazione. Puoi annullarla fino al suo inizio.",
+      "scheduledNoEmail": "Eliminazione programmata."
     },
     "androidUpdates": "Aggiornamenti dell'app Android"
   },

@@ -1,3 +1,4 @@
+import { isPlaceholderEmail } from './invitations/display'
 import {
   FixedWindowLimiter,
   hashRateLimitIdentity,
@@ -23,6 +24,10 @@ export function allowUserGeneratedEmail(options: {
   recipientEmail: string
   policy: string
 }): boolean {
+  // Synthetic addresses can never receive mail. Skip without charging either
+  // quota so a placeholder invitation does not consume the sender's allowance.
+  if (isPlaceholderEmail(options.recipientEmail.trim())) return false
+
   const senderDecision = senderLimiter.hit(options.senderAccountId)
   if (!senderDecision.allowed) {
     logRateLimitExceeded({

@@ -2897,7 +2897,9 @@
       "signInMethodsRemoved": "以下登入方式將無法再使用：{methods}。",
       "consequencesTiming": "此檢視反映帳戶目前的狀態。刪除開始前，群組、成員和支出可能會發生變化。您的選擇將適用於刪除時您所屬的群組及其當時的餘額。此處列出的變化不會立即發生。",
       "executingTitle": "帳戶刪除已開始",
-      "executingDescription": "正在處理帳戶刪除。部分變更可能已經完成，刪除無法取消或復原。如果處理中斷，將從已完成的步驟之後繼續。"
+      "executingDescription": "正在處理帳戶刪除。部分變更可能已經完成，刪除無法取消或復原。如果處理中斷，將從已完成的步驟之後繼續。",
+      "scheduledDescriptionNoEmail": "刪除預定在 {date} 當日或之後開始。開始前，您的帳戶仍可正常使用。等待期間，群組、成員和支出可能發生變化；您的選擇適用於執行刪除時的狀態。刪除開始前，您可以取消。",
+      "scheduledNoEmail": "已安排刪除。"
     },
     "androidUpdates": "Android 應用程式更新"
   },

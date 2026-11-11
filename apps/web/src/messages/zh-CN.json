@@ -2897,7 +2897,9 @@
       "signInMethodsRemoved": "以下登录方式将无法再使用：{methods}。",
       "consequencesTiming": "此审核反映账户当前的状态。删除开始前，群组、成员和支出可能会发生变化。您的选择将适用于删除时您所属的群组及其当时的余额。此处列出的变化不会立即发生。",
       "executingTitle": "账户删除已开始",
-      "executingDescription": "正在处理账户删除。部分变化可能已经完成，删除无法取消或撤销。如果处理中断，将从已完成的步骤之后继续。"
+      "executingDescription": "正在处理账户删除。部分变化可能已经完成，删除无法取消或撤销。如果处理中断，将从已完成的步骤之后继续。",
+      "scheduledDescriptionNoEmail": "删除计划在 {date} 当日或之后开始。开始前，您的账户仍可正常使用。等待期间，群组、成员和支出可能发生变化；您的选择适用于执行删除时的状态。删除开始前，您可以取消。",
+      "scheduledNoEmail": "已安排删除。"
     },
     "androidUpdates": "Android 应用更新"
   },

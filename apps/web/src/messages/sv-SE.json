@@ -479,7 +479,9 @@
       "signInMethodsRemoved": "De här inloggningsmetoderna slutar fungera: {methods}.",
       "consequencesTiming": "Den här översikten visar ditt konto som det ser ut nu. Grupper, medlemmar och utgifter kan ändras innan borttagningen börjar. Dina val gäller de grupper du då tillhör och deras balanser vid den tidpunkten. Inget som visas här händer omedelbart.",
       "executingTitle": "Borttagningen av kontot har börjat",
-      "executingDescription": "Ditt konto håller på att tas bort. Vissa ändringar kan redan vara klara, och borttagningen kan inte avbrytas eller ångras. Om behandlingen avbryts fortsätter den efter de slutförda stegen."
+      "executingDescription": "Ditt konto håller på att tas bort. Vissa ändringar kan redan vara klara, och borttagningen kan inte avbrytas eller ångras. Om behandlingen avbryts fortsätter den efter de slutförda stegen.",
+      "scheduledDescriptionNoEmail": "Borttagningen börjar tidigast {date}. Ditt konto är aktivt tills den börjar. Grupper, medlemmar och utgifter kan ändras under väntetiden; dina val gäller deras tillstånd när borttagningen sker. Du kan avbryta tills borttagningen börjar.",
+      "scheduledNoEmail": "Borttagning schemalagd."
     },
     "androidUpdates": "Uppdateringar av Android-appen"
   },

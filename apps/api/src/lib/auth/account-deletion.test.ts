@@ -136,6 +136,32 @@ describe('requestAccountDeletion', () => {
     })
   })
 
+  it('schedules deletion without emailing a placeholder recipient', async () => {
+    const guestEmail = 'guest-1@anonymous.placeholder.local'
+    prismaMock.user.findUnique.mockResolvedValue({
+      ...account,
+      email: guestEmail,
+    } as never)
+    prismaMock.accountDeletionRequest.findUnique.mockResolvedValue(
+      null as never,
+    )
+    prismaMock.accountDeletionRequest.create.mockResolvedValue({} as never)
+
+    const result = await requestAccountDeletion({
+      accountId: account.id,
+      email: guestEmail,
+      keepDisplayName: false,
+      sessionCreatedAt: FRESH_SESSION,
+      now: NOW,
+    })
+
+    expect(result.executeAt).toEqual(
+      new Date(NOW.getTime() + ACCOUNT_DELETION_GRACE_MS),
+    )
+    expect(sendJobMock).toHaveBeenCalled()
+    expect(sendEmailMock).not.toHaveBeenCalled()
+  })
+
   it('stores the custom remnant name and settle choice', async () => {
     prismaMock.user.findUnique.mockResolvedValue(account as never)
     prismaMock.accountDeletionRequest.findUnique.mockResolvedValue(
@@ -244,6 +270,20 @@ describe('cancelAccountDeletion', () => {
     prismaMock.accountDeletionRequest.updateMany.mockResolvedValue({ count: 0 })
     await expect(cancelAccountDeletion(account.id, NOW)).rejects.toMatchObject({
       code: 'noPendingRequest',
+    })
+    expect(sendEmailMock).not.toHaveBeenCalled()
+  })
+
+  it('cancels a placeholder-email request without sending a notice', async () => {
+    prismaMock.accountDeletionRequest.findUnique.mockResolvedValue({
+      status: 'PENDING',
+      jobId: null,
+      emailSnapshot: 'guest-1@anonymous.placeholder.local',
+    } as never)
+    prismaMock.accountDeletionRequest.updateMany.mockResolvedValue({ count: 1 })
+
+    await expect(cancelAccountDeletion(account.id, NOW)).resolves.toEqual({
+      cancelled: true,
     })
     expect(sendEmailMock).not.toHaveBeenCalled()
   })
@@ -450,6 +490,51 @@ describe('executeAccountDeletion success (account without groups)', () => {
       to: account.email,
       subject: 'Your Spliit Cloud account was deleted',
     })
+  })
+
+  it('executes a placeholder-email account without sending a notice', async () => {
+    const guestEmail = 'guest-1@anonymous.placeholder.local'
+    prismaMock.accountDeletionRequest.updateMany.mockResolvedValue({
+      count: 1,
+    } as never)
+    prismaMock.accountDeletionRequest.findUnique.mockResolvedValue({
+      accountId: account.id,
+      emailSnapshot: guestEmail,
+      displayNameSnapshot: account.name,
+      keepDisplayName: true,
+      status: 'EXECUTING',
+    } as never)
+    prismaMock.user.findUnique.mockResolvedValue({
+      ...account,
+      email: guestEmail,
+    } as never)
+    prismaMock.groupMember.findMany.mockResolvedValue([] as never)
+    prismaMock.groupInvitation.updateMany.mockResolvedValue({
+      count: 0,
+    } as never)
+    prismaMock.ledgerParticipant.findMany.mockResolvedValue([] as never)
+    prismaMock.expenseComment.findMany.mockResolvedValue([] as never)
+    prismaMock.expenseComment.updateMany.mockResolvedValue({
+      count: 0,
+    } as never)
+    prismaMock.groupBudget.updateMany.mockResolvedValue({ count: 0 } as never)
+    prismaMock.expenseFileImportSource.updateMany.mockResolvedValue({
+      count: 0,
+    } as never)
+    prismaMock.oauthConsent.findMany.mockResolvedValue([] as never)
+    prismaMock.session.deleteMany.mockResolvedValue({ count: 1 } as never)
+    prismaMock.verification.deleteMany.mockResolvedValue({ count: 0 } as never)
+    prismaMock.activity.updateMany.mockResolvedValue({ count: 0 } as never)
+    prismaMock.user.delete.mockResolvedValue(account as never)
+    prismaMock.accountDeletionRequest.update.mockResolvedValue({} as never)
+
+    await expect(
+      executeAccountDeletion(account.id, null, NOW),
+    ).resolves.toEqual({ executed: true })
+    expect(prismaMock.user.delete).toHaveBeenCalledWith({
+      where: { id: account.id },
+    })
+    expect(sendEmailMock).not.toHaveBeenCalled()
   })
 })
 

@@ -57,7 +57,7 @@ const mocks = vi.hoisted(() => ({
   sessionFresh: vi.fn(),
   reauthenticate: vi.fn(),
   requestOptions: null as {
-    onSuccess: () => Promise<void>
+    onSuccess: (data: unknown, variables: { email: string }) => Promise<void>
     onError: (cause: unknown) => void
   } | null,
   cancelOptions: null as {
@@ -98,7 +98,10 @@ vi.mock('@/trpc/client', () => ({
       deletionPreview: { useQuery: () => mocks.deletionPreview() },
       requestDeletion: {
         useMutation: (options: {
-          onSuccess: () => Promise<void>
+          onSuccess: (
+            data: unknown,
+            variables: { email: string },
+          ) => Promise<void>
           onError: (cause: unknown) => void
         }) => {
           mocks.requestOptions = options
@@ -277,6 +280,43 @@ describe('Account deletion page and settings entry', () => {
     })
     await user.click(cancelButton)
     expect(mocks.cancelMutate).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not expose a placeholder email or promise email delivery to guests', async () => {
+    const guestEmail = 'guest-1@anonymous.placeholder.local'
+    mocks.useCurrentAccount.mockReturnValue({
+      data: {
+        ...accountFixture,
+        email: guestEmail,
+        isAnonymous: true,
+      },
+      isPending: false,
+    })
+    mocks.deletionStatus.mockReturnValue({
+      data: {
+        request: {
+          executeAt: new Date('2026-09-24T12:00:00Z'),
+          keepDisplayName: false,
+        },
+      },
+      isPending: false,
+      isError: false,
+    })
+    render(<AccountDeletionPage />)
+
+    expect(screen.getByText('Account deletion scheduled')).toBeInTheDocument()
+    expect(
+      screen.getByText(/Deletion is scheduled to start on or after/),
+    ).toBeInTheDocument()
+    expect(screen.queryByText(guestEmail)).not.toBeInTheDocument()
+    expect(screen.queryByText(/confirmation email/i)).not.toBeInTheDocument()
+
+    await act(async () => {
+      await mocks.requestOptions!.onSuccess(undefined, { email: guestEmail })
+    })
+    expect(mocks.toast).toHaveBeenCalledWith({
+      description: 'Deletion scheduled.',
+    })
   })
 
   it.each([AccountDeletionPage, AccountDeletionSettings])(
@@ -721,9 +761,14 @@ describe('Account deletion page and settings entry', () => {
       isSuccess: true,
     })
     await act(async () => {
-      await mocks.requestOptions!.onSuccess()
+      await mocks.requestOptions!.onSuccess(undefined, {
+        email: previewFixture.email,
+      })
     })
     expect(screen.getByText('Account deletion scheduled')).toBeInTheDocument()
+    expect(mocks.toast).toHaveBeenCalledWith({
+      description: 'Deletion scheduled. Check your email to review or cancel.',
+    })
     expect(screen.queryByRole('radio')).not.toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /cancel deletion/i }))
     expect(mocks.cancelMutate).toHaveBeenCalledOnce()

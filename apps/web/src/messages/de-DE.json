@@ -2932,7 +2932,9 @@
       "signInMethodsRemoved": "Diese Anmeldemethoden funktionieren danach nicht mehr: {methods}.",
       "consequencesTiming": "Diese Übersicht zeigt den aktuellen Stand deines Kontos. Gruppen, Mitglieder und Ausgaben können sich bis zum Beginn der Löschung ändern. Deine Auswahl gilt für die Gruppen, denen du dann angehörst, und deren Salden zu diesem Zeitpunkt. Nichts davon passiert sofort.",
       "executingTitle": "Die Kontolöschung hat begonnen",
-      "executingDescription": "Dein Konto wird gerade gelöscht. Einige Änderungen können bereits abgeschlossen sein. Die Löschung kann weder abgebrochen noch rückgängig gemacht werden. Wird die Verarbeitung unterbrochen, wird sie nach den bereits abgeschlossenen Schritten fortgesetzt."
+      "executingDescription": "Dein Konto wird gerade gelöscht. Einige Änderungen können bereits abgeschlossen sein. Die Löschung kann weder abgebrochen noch rückgängig gemacht werden. Wird die Verarbeitung unterbrochen, wird sie nach den bereits abgeschlossenen Schritten fortgesetzt.",
+      "scheduledDescriptionNoEmail": "Die Löschung beginnt frühestens am {date}. Dein Konto bleibt aktiv, bis sie beginnt. Gruppen, Mitglieder und Ausgaben können sich während der Wartezeit ändern; deine Auswahl gilt für ihren Stand zum Zeitpunkt der Löschung. Du kannst bis zum Beginn der Löschung abbrechen.",
+      "scheduledNoEmail": "Löschung geplant."
     },
     "androidUpdates": "Updates der Android-App"
   },

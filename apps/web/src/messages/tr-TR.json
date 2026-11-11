@@ -2904,7 +2904,9 @@
       "signInMethodsRemoved": "Şu giriş yöntemleri artık kullanılamayacak: {methods}.",
       "consequencesTiming": "Bu inceleme hesabınızın şu anki durumunu yansıtır. Silme başlamadan önce gruplar, üyeler ve harcamalar değişebilir. Seçimleriniz o sırada üyesi olduğunuz gruplara ve bu grupların bakiyelerine uygulanır. Burada listelenenlerin hiçbiri hemen gerçekleşmez.",
       "executingTitle": "Hesap silme başladı",
-      "executingDescription": "Hesabınızın silinmesi devam ediyor. Bazı değişiklikler tamamlanmış olabilir; silme iptal edilemez veya geri alınamaz. İşlem kesintiye uğrarsa tamamlanan adımlardan sonra devam eder."
+      "executingDescription": "Hesabınızın silinmesi devam ediyor. Bazı değişiklikler tamamlanmış olabilir; silme iptal edilemez veya geri alınamaz. İşlem kesintiye uğrarsa tamamlanan adımlardan sonra devam eder.",
+      "scheduledDescriptionNoEmail": "Silme işlemi {date} tarihinde veya sonrasında başlayacak şekilde planlandı. Başlayana kadar hesabınız etkin kalır. Beklerken gruplar, üyeler ve harcamalar değişebilir; seçimleriniz silme sırasındaki durumlarına uygulanır. Silme başlayana kadar iptal edebilirsiniz.",
+      "scheduledNoEmail": "Silme zamanlandı."
     },
     "androidUpdates": "Android uygulaması güncellemeleri"
   },

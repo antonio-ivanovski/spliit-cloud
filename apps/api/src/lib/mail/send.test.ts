@@ -11,7 +11,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 // transporter cache lives per-sender instance.
 vi.mock('nodemailer', async () => await import('nodemailer-mock'))
 
-import { createCloudflareEmailSender, createEmailSender } from './send'
+import {
+  PlaceholderRecipientError,
+  createCloudflareEmailSender,
+  createEmailSender,
+} from './send'
 
 beforeEach(() => {
   // Clear mock state (sent mail cache, shouldFail flag, transporters) so
@@ -36,6 +40,27 @@ describe('sendEmail', () => {
       }),
     ).rejects.toThrow(/No email transport is configured/)
   })
+
+  it.each([
+    'guest-1@anonymous.placeholder.local',
+    'token@link.placeholder.local',
+    '123@github.placeholder.local',
+  ])(
+    'refuses placeholder recipient %s before contacting the transport',
+    async (to) => {
+      const send = createEmailSender({ host: 'smtp.test' })
+
+      await expect(
+        send({
+          to,
+          subject: 'Test subject',
+          text: 'plain text body',
+          html: '<p>html body</p>',
+        }),
+      ).rejects.toBeInstanceOf(PlaceholderRecipientError)
+      expect(mocked.mock.getSentMail()).toHaveLength(0)
+    },
+  )
 
   it('sends through SMTP with full from/to/subject/text/html fields', async () => {
     const send = createEmailSender({
@@ -247,6 +272,23 @@ describe('createCloudflareEmailSender', () => {
     await expect(send({ ...message, text, html })).rejects.toThrow(
       /Email text and html must be non-empty/,
     )
+  })
+
+  it('refuses placeholder recipients before calling the API', async () => {
+    let called = false
+    const fetchImpl = (async () => {
+      called = true
+      return new Response(JSON.stringify({ success: true }), { status: 200 })
+    }) as typeof fetch
+    const send = createCloudflareEmailSender({
+      ...baseConfig,
+      fetchImpl,
+    })
+
+    await expect(
+      send({ ...message, to: 'guest-1@anonymous.placeholder.local' }),
+    ).rejects.toBeInstanceOf(PlaceholderRecipientError)
+    expect(called).toBe(false)
   })
 
   it('posts from/to/subject/text/html/headers to the account send endpoint', async () => {

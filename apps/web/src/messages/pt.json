@@ -2914,7 +2914,9 @@
       "signInMethodsRemoved": "Estes métodos de acesso deixarão de funcionar: {methods}.",
       "consequencesTiming": "Este resumo reflete o estado atual da tua conta. Os grupos, membros e despesas podem mudar antes de a eliminação começar. As tuas opções aplicar-se-ão aos grupos a que pertenceres e aos seus saldos nesse momento. Nada do que está aqui indicado acontece imediatamente.",
       "executingTitle": "A eliminação da conta começou",
-      "executingDescription": "A eliminação da tua conta está em processamento. Algumas alterações podem já estar concluídas, e a eliminação não pode ser cancelada nem desfeita. Se o processamento for interrompido, retoma a partir dos passos concluídos."
+      "executingDescription": "A eliminação da tua conta está em processamento. Algumas alterações podem já estar concluídas, e a eliminação não pode ser cancelada nem desfeita. Se o processamento for interrompido, retoma a partir dos passos concluídos.",
+      "scheduledDescriptionNoEmail": "A eliminação está agendada para começar em {date} ou depois. A conta mantém-se ativa até começar. Os grupos, membros e despesas podem mudar durante a espera; as tuas opções aplicar-se-ão ao seu estado quando a eliminação for executada. Podes cancelá-la até começar.",
+      "scheduledNoEmail": "Eliminação agendada."
     },
     "androidUpdates": "Atualizações da aplicação Android"
   },

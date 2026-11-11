@@ -2924,7 +2924,9 @@
       "signInMethodsRemoved": "Te metody logowania przestaną działać: {methods}.",
       "consequencesTiming": "Ten przegląd przedstawia obecny stan konta. Grupy, członkowie i wydatki mogą się zmienić przed rozpoczęciem usuwania. Twoje wybory zostaną zastosowane do grup, do których będziesz wtedy należeć, oraz ich sald w tym momencie. Nic z wymienionych działań nie następuje od razu.",
       "executingTitle": "Usuwanie konta rozpoczęte",
-      "executingDescription": "Trwa usuwanie konta. Niektóre zmiany mogą być już zakończone i nie można anulować ani cofnąć usunięcia. Jeśli przetwarzanie zostanie przerwane, zostanie wznowione od zakończonych kroków."
+      "executingDescription": "Trwa usuwanie konta. Niektóre zmiany mogą być już zakończone i nie można anulować ani cofnąć usunięcia. Jeśli przetwarzanie zostanie przerwane, zostanie wznowione od zakończonych kroków.",
+      "scheduledDescriptionNoEmail": "Usuwanie ma się rozpocząć {date} lub później. Konto pozostanie aktywne do jego rozpoczęcia. Grupy, członkowie i wydatki mogą się zmienić w okresie oczekiwania; twoje wybory zostaną zastosowane do ich stanu w momencie usuwania. Możesz anulować usunięcie do jego rozpoczęcia.",
+      "scheduledNoEmail": "Usunięcie zaplanowane."
     },
     "androidUpdates": "Aktualizacje aplikacji na Androida"
   },

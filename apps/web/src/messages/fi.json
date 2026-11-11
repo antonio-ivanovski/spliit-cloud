@@ -2900,7 +2900,9 @@
       "signInMethodsRemoved": "Nämä kirjautumistavat lakkaavat toimimasta: {methods}.",
       "consequencesTiming": "Tämä yhteenveto kuvaa tilisi nykyistä tilaa. Ryhmät, jäsenet ja kulut voivat muuttua ennen poistamisen alkamista. Valintasi koskevat ryhmiä, joihin silloin kuulut, ja niiden senhetkisiä saldoja. Mitään tässä lueteltua ei tapahdu heti.",
       "executingTitle": "Tilin poistaminen on alkanut",
-      "executingDescription": "Tilisi poistamista käsitellään. Osa muutoksista voi olla jo valmis, eikä poistamista voi peruuttaa tai kumota. Jos käsittely keskeytyy, sitä jatketaan valmiiden vaiheiden jälkeen."
+      "executingDescription": "Tilisi poistamista käsitellään. Osa muutoksista voi olla jo valmis, eikä poistamista voi peruuttaa tai kumota. Jos käsittely keskeytyy, sitä jatketaan valmiiden vaiheiden jälkeen.",
+      "scheduledDescriptionNoEmail": "Poistaminen on ajastettu alkamaan aikaisintaan {date}. Tilisi pysyy aktiivisena siihen asti. Ryhmät, jäsenet ja kulut voivat muuttua odotusaikana; valintasi koskevat niiden tilaa poistamishetkellä. Voit peruuttaa poistamisen sen alkamiseen asti.",
+      "scheduledNoEmail": "Poisto ajastettu."
     },
     "androidUpdates": "Android-sovelluksen päivitykset"
   },

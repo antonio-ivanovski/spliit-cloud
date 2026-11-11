@@ -1,6 +1,7 @@
 import nodemailer, { type Transporter } from 'nodemailer'
 
 import { env } from '../env'
+import { isPlaceholderEmail } from '../invitations/display'
 import { PROVIDER_TIMEOUT_MS } from '../notifications/delivery-senders'
 
 export type EmailMessage = {
@@ -14,6 +15,22 @@ export type EmailMessage = {
    * rejects anything else — see `assertCloudflareHeaders`.
    */
   headers?: Record<string, string>
+}
+
+/** Synthetic addresses can never receive mail; fail before any provider call. */
+export class PlaceholderRecipientError extends Error {
+  readonly code = 'PLACEHOLDER_RECIPIENT'
+
+  constructor(to: string) {
+    super(`[mail] Refusing to send to synthetic placeholder address ${to}`)
+    this.name = 'PlaceholderRecipientError'
+  }
+}
+
+function assertDeliverableRecipient(message: EmailMessage): void {
+  if (isPlaceholderEmail(message.to.trim())) {
+    throw new PlaceholderRecipientError(message.to)
+  }
 }
 
 function assertNonEmptyBodies(message: EmailMessage): void {
@@ -82,6 +99,7 @@ export function createEmailSender(config: SmtpSenderConfig): EmailSender {
   }
 
   return async function sendEmail(message: EmailMessage): Promise<void> {
+    assertDeliverableRecipient(message)
     if (!config.host) {
       throw new Error(
         '[mail] No email transport is configured. Set SMTP_HOST/SMTP_PORT ' +
@@ -186,6 +204,7 @@ export function createCloudflareEmailSender(
   let loggedConfig = false
 
   return async function sendEmail(message: EmailMessage): Promise<void> {
+    assertDeliverableRecipient(message)
     if (!config.accountId || !config.apiToken) {
       throw new Error(
         '[mail] No email transport is configured. Set Cloudflare email ' +
