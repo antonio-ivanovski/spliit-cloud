@@ -128,6 +128,8 @@ export function BasicDetailsCard(props: {
   sExpense: 'Expense' | 'Income'
   isCreate: boolean
   isCopy?: boolean
+  /** Blank-create entry: plain Enter in Title moves focus to Amount. */
+  enterFromTitleToAmount?: boolean
   recurrenceSequence?: number
   editScope?: 'OCCURRENCE' | 'THIS_AND_FUTURE' | null
   initialRecurrence?: ExpenseFormInputValues['recurrence']
@@ -360,6 +362,7 @@ export function BasicDetailsCard(props: {
                   <FormControl>
                     <Input
                       data-expense-tab-priority={expenseTabPriority.title}
+                      data-expense-title-input
                       placeholder={t(`${sExpense}.TitleField.placeholder`)}
                       className="h-10 w-full rounded-none border-0 text-base shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
                       disabled={readOnly}
@@ -367,6 +370,27 @@ export function BasicDetailsCard(props: {
                       onBlur={() => {
                         field.onBlur()
                         onTitleBlur()
+                      }}
+                      onKeyDown={(event) => {
+                        if (
+                          !props.enterFromTitleToAmount ||
+                          event.key !== 'Enter' ||
+                          event.shiftKey ||
+                          event.altKey ||
+                          event.ctrlKey ||
+                          event.metaKey ||
+                          event.nativeEvent.isComposing
+                        ) {
+                          return
+                        }
+                        // Blank create: Enter advances to the amount instead
+                        // of submitting. Enter in Amount keeps submitting.
+                        event.preventDefault()
+                        event.currentTarget.form
+                          ?.querySelector<HTMLInputElement>(
+                            '[data-expense-amount-input]',
+                          )
+                          ?.focus()
                       }}
                     />
                   </FormControl>
@@ -457,6 +481,7 @@ export function BasicDetailsCard(props: {
                     <AmountInput
                       {...field}
                       data-expense-tab-priority={expenseTabPriority.amount}
+                      data-expense-amount-input
                       containerClassName="min-w-0 flex-1"
                       className="h-10 w-full rounded-none border-0 text-lg font-semibold shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
                       type="text"

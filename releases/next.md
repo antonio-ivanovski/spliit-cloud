@@ -19,7 +19,7 @@ who is affected, and the exact migration steps.
 
 ### 🚀 Features
 
-- Short entry per user-facing change (`TBD` by @TBD)
+- New expenses now open with the title field focused, and Enter in the title moves to the amount for faster manual entry, while copies, settlements, imports, and other prefilled flows keep their existing focus behavior ([#171](https://github.com/antonio-ivanovski/spliit-cloud/issues/171), thanks @eikaramba). (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
 

@@ -50,6 +50,7 @@ import type {
   ReceiptScanContext,
 } from '../create-from-receipt-button'
 import { BasicDetailsCard } from './basic-details-card'
+import { isBlankCreateEntry } from './blank-create'
 import { isValidExpenseDate } from './currency-utils'
 import {
   buildExpenseFormDefaults,
@@ -404,6 +405,38 @@ export function ExpenseForm(props: {
   const shareInputRefs = useRef(new Map<ShareInputKey, HTMLInputElement>())
   const formElementRef = useRef<HTMLFormElement>(null)
   const tabNavigation = useExpenseFormTabNavigation(formElementRef)
+  // Guided entry for a genuinely blank create only: focus Title on mount and
+  // let Enter move Title → Amount. Copy, import, settlement, AI/receipt,
+  // share-target, URL-prefilled, and restored-draft flows keep their own
+  // focus behavior.
+  const blankCreateEntry = isBlankCreateEntry({
+    isCreate,
+    hasSourceExpense: props.expense !== undefined,
+    hasDraftExpense: props.draftExpense !== undefined,
+    isCopy: props.isCopy === true,
+    hasRestoredDraft: props.updateRecovery?.restored != null,
+    searchParams: props.searchParams,
+  })
+
+  useEffect(() => {
+    if (!blankCreateEntry) return
+    const active = document.activeElement
+    if (
+      active instanceof HTMLElement &&
+      active !== document.body &&
+      (active.closest('[role="dialog"], [aria-modal="true"]') !== null ||
+        active.matches('input, textarea, select, [contenteditable="true"]'))
+    ) {
+      // An open dialog or another text entry already owns focus; do not steal
+      // it from a flow the user has started.
+      return
+    }
+    // `form.setFocus` defers to a macrotask; focus directly so the caret is
+    // ready as soon as the create page mounts.
+    formElementRef.current
+      ?.querySelector<HTMLInputElement>('[data-expense-title-input]')
+      ?.focus({ preventScroll: true })
+  }, [blankCreateEntry, form])
 
   const conversion = useExpenseCurrencyConversion({
     form,
@@ -687,6 +720,7 @@ export function ExpenseForm(props: {
             sExpense={sExpense}
             isCreate={isCreate}
             isCopy={props.isCopy}
+            enterFromTitleToAmount={blankCreateEntry}
             recurrenceSequence={
               !props.isCopy
                 ? (initialExpense?.recurrenceSequence ?? undefined)

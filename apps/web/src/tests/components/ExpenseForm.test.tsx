@@ -650,7 +650,6 @@ describe('ExpenseForm', () => {
     if (!payer) throw new Error('Payer selector not found')
     const submit = screen.getByRole('button', { name: /^create$/i })
 
-    await user.tab()
     expect(title).toHaveFocus()
     await user.tab()
     expect(amount).toHaveFocus()
@@ -681,6 +680,61 @@ describe('ExpenseForm', () => {
     await user.tab()
     expect(submit).not.toHaveFocus()
     expect(screen.getByRole('combobox', { name: 'General' })).toHaveFocus()
+  })
+
+  it('focuses the title field for a blank create', () => {
+    render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    expect(
+      screen.getByRole('textbox', { name: /expense title/i }),
+    ).toHaveFocus()
+  })
+
+  it('does not move focus into a prefilled create form', () => {
+    render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        searchParams={{ title: 'Prefilled dinner' }}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    expect(
+      screen.getByRole('textbox', { name: /expense title/i }),
+    ).not.toHaveFocus()
+    expect(screen.getByRole('textbox', { name: /^amount$/i })).not.toHaveFocus()
+  })
+
+  it('moves from title to amount on Enter in a blank create, then submits from amount', async () => {
+    const onSubmit = vi.fn()
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        currentLedgerParticipantId="lp-1"
+        onSubmit={onSubmit}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const title = screen.getByRole('textbox', { name: /expense title/i })
+    const amount = screen.getByRole('textbox', { name: /^amount$/i })
+
+    await user.type(amount, '25')
+    await user.type(title, 'Dinner')
+
+    await user.keyboard('{Enter}')
+    expect(amount).toHaveFocus()
+    expect(onSubmit).not.toHaveBeenCalled()
+
+    await user.keyboard('{Enter}')
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
   })
 
   it('uses the same primary path on mobile and reverses it with Shift+Tab', async () => {
