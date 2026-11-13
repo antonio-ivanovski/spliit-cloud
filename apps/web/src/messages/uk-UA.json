@@ -1399,6 +1399,14 @@
       "owes": "<strong>{from}</strong> винен <strong>{to}</strong>",
       "markAsPaid": "Позначити як сплачене",
       "markAsPaidAria": "Позначити {amount} від {from} для {to} як сплачені"
+    },
+    "settlementView": {
+      "label": "Показувати борги",
+      "simplified": "Спрощено",
+      "direct": "Напряму",
+      "directDescription": "Скільки кожен винен тим, з ким справді ділив витрати, без об’єднання боргів у всій групі.",
+      "offlineHint": "Для прямих боргів потрібне з’єднання. Офлайн показано спрощені платежі.",
+      "evenOverall": "Загалом по нулях"
     }
   },
   "Stats": {

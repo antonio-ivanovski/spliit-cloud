@@ -1409,6 +1409,14 @@
       "owes": "<strong>{from}</strong> betaalt aan <strong>{to}</strong>",
       "markAsPaid": "Markeer als betaald",
       "markAsPaidAria": "Markeer {amount} van {from} aan {to} als betaald"
+    },
+    "settlementView": {
+      "label": "Schulden tonen als",
+      "simplified": "Vereenvoudigd",
+      "direct": "Rechtstreeks",
+      "directDescription": "Wat iedereen verschuldigd is aan de mensen met wie ze echt uitgaven hebben gedeeld, zonder schulden binnen de hele groep samen te voegen.",
+      "offlineHint": "Voor rechtstreekse schulden heb je een verbinding nodig. Offline worden vereenvoudigde betalingen getoond.",
+      "evenOverall": "Per saldo quitte"
     }
   },
   "Stats": {

@@ -1,9 +1,45 @@
-import { Layers3, UserRound } from 'lucide-react'
+import { ArrowLeftRight, Layers3, UserRound, Waypoints } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 
 export type SettlementMode = 'individual' | 'subgroups'
+
+export type SettlementView = 'simplified' | 'direct'
+
+export function SettlementViewPicker({
+  value,
+  onChange,
+}: {
+  value: SettlementView
+  onChange: (view: SettlementView) => void
+}) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
+
+  return (
+    <RadioGroup
+      value={value}
+      onValueChange={(next) => {
+        if (next === 'simplified' || next === 'direct') onChange(next)
+      }}
+      aria-label={t('settlementView.label')}
+      className="inline-flex w-full min-w-0 gap-0.5 rounded-lg border border-border bg-muted/40 p-0.5 sm:w-auto sm:shrink-0"
+    >
+      <SettlementModeOption
+        value="simplified"
+        selected={value === 'simplified'}
+        icon={Waypoints}
+        title={t('settlementView.simplified')}
+      />
+      <SettlementModeOption
+        value="direct"
+        selected={value === 'direct'}
+        icon={ArrowLeftRight}
+        title={t('settlementView.direct')}
+      />
+    </RadioGroup>
+  )
+}
 
 export function SettlementModePicker({
   value,
@@ -45,7 +81,7 @@ function SettlementModeOption({
   icon: Icon,
   title,
 }: {
-  value: SettlementMode
+  value: SettlementMode | SettlementView
   selected: boolean
   icon: typeof UserRound
   title: string

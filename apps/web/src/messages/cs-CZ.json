@@ -1399,6 +1399,14 @@
       "owes": "<strong>{from}</strong> dluží <strong>{to}</strong>",
       "markAsPaid": "Označit jako zaplaceno",
       "markAsPaidAria": "Označit {amount} od {from} pro {to} jako zaplacené"
+    },
+    "settlementView": {
+      "label": "Zobrazit dluhy",
+      "simplified": "Zjednodušeně",
+      "direct": "Přímo",
+      "directDescription": "Kolik každý dluží lidem, se kterými skutečně sdílel výdaje, bez slučování dluhů napříč skupinou.",
+      "offlineHint": "Přímé dluhy vyžadují připojení. Offline se zobrazují zjednodušené platby.",
+      "evenOverall": "Celkově vyrovnaní"
     }
   },
   "Stats": {

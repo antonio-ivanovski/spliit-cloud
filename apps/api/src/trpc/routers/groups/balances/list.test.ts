@@ -207,3 +207,106 @@ describe('groups.balances.list participant labels', () => {
     expect(result.settlement.subgroup.legs).toEqual([])
   })
 })
+
+describe('groups.balances.list direct settlements', () => {
+  const row = (
+    id: string,
+    amount: number,
+    payers: Array<[string, number]>,
+    beneficiaries: string[],
+  ) => ({
+    id,
+    amount,
+    splitMode: 'EVENLY',
+    paidBySplitMode: payers.length > 1 ? 'BY_AMOUNT' : 'EVENLY',
+    originalAmount: null,
+    originalCurrency: null,
+    conversionRate: null,
+    conversionSource: null,
+    paidByList: payers.map(([ledgerParticipantId, shares]) => ({
+      ledgerParticipantId,
+      shares,
+    })),
+    paidFor: beneficiaries.map((ledgerParticipantId) => ({
+      ledgerParticipantId,
+      shares: 1,
+    })),
+    items: [],
+    itemizedRemainder: null,
+  })
+
+  beforeEach(() => {
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: 'grp-1',
+      ledgerId: 'ledger-1',
+      archived: false,
+      ledger: { id: 'ledger-1', currency: '$', currencyCode: 'USD' },
+    } as never)
+    prismaMock.groupMember.findUnique.mockResolvedValue({
+      id: 'member-1',
+      groupId: 'grp-1',
+      accountId: 'acct-self',
+      status: 'ACTIVE',
+      ledgerParticipant: null,
+    } as never)
+    prismaMock.ledgerParticipant.findMany.mockResolvedValue(
+      ['lp-a', 'lp-b', 'lp-c'].map((id) => ({
+        id,
+        displayName: id,
+        removedAt: null,
+        groupMember: null,
+        invitations: [],
+      })) as never,
+    )
+  })
+
+  it('returns pairwise debts next to the simplified payments', async () => {
+    getGroupBalanceExpensesMock.mockResolvedValue([
+      row('e1', 1000, [['lp-a', 1]], ['lp-b']),
+      row('e2', 1000, [['lp-b', 1]], ['lp-c']),
+    ])
+
+    const result = await makeCaller().balances.list({ groupId: 'grp-1' })
+
+    expect(result.suggestedSettlements).toEqual([
+      { from: 'lp-c', to: 'lp-a', amount: 1000 },
+    ])
+    expect(result.direct).toEqual({
+      suggestedSettlements: [
+        { from: 'lp-b', to: 'lp-a', amount: 1000 },
+        { from: 'lp-c', to: 'lp-b', amount: 1000 },
+      ],
+      currencies: [
+        {
+          currencyCode: 'USD',
+          directSettlements: [
+            { from: 'lp-b', to: 'lp-a', amount: 1000 },
+            { from: 'lp-c', to: 'lp-b', amount: 1000 },
+          ],
+        },
+      ],
+    })
+  })
+
+  it('allocates multi-payer expenses proportionally', async () => {
+    getGroupBalanceExpensesMock.mockResolvedValue([
+      row(
+        'e1',
+        300,
+        [
+          ['lp-a', 180],
+          ['lp-b', 120],
+        ],
+        ['lp-a', 'lp-b', 'lp-c'],
+      ),
+    ])
+
+    const result = await makeCaller().balances.list({ groupId: 'grp-1' })
+
+    expect(result.direct.suggestedSettlements).toEqual([
+      { from: 'lp-b', to: 'lp-a', amount: 20 },
+      { from: 'lp-c', to: 'lp-a', amount: 60 },
+      { from: 'lp-c', to: 'lp-b', amount: 40 },
+    ])
+  })
+})

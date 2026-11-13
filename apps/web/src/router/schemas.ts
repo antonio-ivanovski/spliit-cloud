@@ -298,6 +298,8 @@ export const balancesSearchSchema = groupAccessSearchSchema.extend({
     .enum(['individual', 'subgroups'])
     .optional()
     .catch(undefined),
+  /** Simplified (fewest payments) or direct (pairwise) debts. */
+  settlementView: z.enum(['simplified', 'direct']).optional().catch(undefined),
 })
 
 /**

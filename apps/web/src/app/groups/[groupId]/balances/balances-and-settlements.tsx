@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { ApiErrorEmptyState } from '@/components/api-error-empty-state'
 import { PageInset } from '@/components/layout/page-shell'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
-import type { Balances, SuggestedSettlement } from '@/lib/balances'
 import { useOfflineBalances } from '@/lib/offline/read-hooks'
 import {
   useOfflineWithoutData,
@@ -23,6 +22,8 @@ import { useGroupAccessSearch } from '../use-group-access-search'
 import { BalanceViewSelector, type BalanceView } from './balance-view-selector'
 import { withDisplayCurrencies } from './currency-balances'
 import { CurrencyDisplaySelector } from './currency-display-selector'
+import type { SettlementView } from './settlement-controls'
+import { hasUnsettledBalance, withDirectLegs } from './settlement-legs'
 import { SimpleBalancesCard } from './simple-balances-card'
 
 const balancesRoute = getRouteApi('/groups/$groupId/balances')
@@ -32,11 +33,6 @@ type BalanceParticipant = {
   name: string
   account?: { id: string; name?: string | null; image?: string | null } | null
   removed?: boolean
-}
-
-type CurrencyBalanceBucket = {
-  balances: Balances
-  suggestedSettlements: SuggestedSettlement[]
 }
 
 function mergeBalanceParticipants(
@@ -69,35 +65,6 @@ function mergeBalanceParticipants(
   return Array.from(byId.values())
 }
 
-function appearsOnSettlementLeg(
-  participantId: string,
-  suggestedSettlements: SuggestedSettlement[] | undefined,
-): boolean {
-  return (
-    suggestedSettlements?.some(
-      (leg) => leg.from === participantId || leg.to === participantId,
-    ) ?? false
-  )
-}
-
-/** Keep soft-removed people only when they still matter for settlement UI. */
-function hasUnsettledBalance(
-  participantId: string,
-  balances: Balances | undefined,
-  suggestedSettlements: SuggestedSettlement[] | undefined,
-  currencyBalances: CurrencyBalanceBucket[] | undefined,
-): boolean {
-  if ((balances?.[participantId]?.total ?? 0) !== 0) return true
-  if (appearsOnSettlementLeg(participantId, suggestedSettlements)) return true
-  for (const bucket of currencyBalances ?? []) {
-    if ((bucket.balances[participantId]?.total ?? 0) !== 0) return true
-    if (appearsOnSettlementLeg(participantId, bucket.suggestedSettlements)) {
-      return true
-    }
-  }
-  return false
-}
-
 export default function BalancesAndSettlements() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
   const { t: tOffline } = useTranslation()
@@ -107,10 +74,11 @@ export default function BalancesAndSettlements() {
     currencyDisplay = 'group',
     view: viewParam,
     settlementMode: settlementModeParam,
+    settlementView: settlementViewParam,
   } = balancesRoute.useSearch()
   const navigate = useNavigate()
   const [storedView, setStoredView] = useState<BalanceView>('simple')
-  const settlementMode = settlementModeParam ?? 'individual'
+  const requestedSettlementView = settlementViewParam ?? 'simplified'
   const {
     data: balancesData,
     isLoading: balancesAreLoading,
@@ -133,6 +101,21 @@ export default function BalancesAndSettlements() {
       ? (offline.data?.balances as typeof balancesData)
       : balancesData
   ) as typeof balancesData
+  // Direct (pairwise) debts are online-only; the offline snapshot keeps the
+  // simplified projection, so fall back to it with a hint.
+  const directSettlements =
+    !useOfflineSource && balancesData ? balancesData.direct : undefined
+  const settlementView: SettlementView =
+    requestedSettlementView === 'direct' && directSettlements
+      ? 'direct'
+      : 'simplified'
+  const showDirectOfflineHint =
+    requestedSettlementView === 'direct' && useOfflineSource
+  // Direct debts are always between individuals.
+  const settlementMode =
+    settlementView === 'direct'
+      ? 'individual'
+      : (settlementModeParam ?? 'individual')
   const offlineDirtySince = useOfflineSource
     ? ((offline.data?.dirtySince as Date | null) ?? null)
     : null
@@ -158,6 +141,10 @@ export default function BalancesAndSettlements() {
     }
   }, [])
 
+  // Keep removed people who are still on a direct leg when Direct is shown,
+  // even if their net balance is zero.
+  const shownDirect =
+    settlementView === 'direct' ? directSettlements : undefined
   const participants = useMemo(() => {
     const merged = mergeBalanceParticipants(
       group?.participants ?? [],
@@ -170,11 +157,15 @@ export default function BalancesAndSettlements() {
         hasUnsettledBalance(
           participant.id,
           effectiveBalances.balances,
-          effectiveBalances.suggestedSettlements,
-          effectiveBalances.currencyBalances,
+          shownDirect
+            ? shownDirect.suggestedSettlements
+            : effectiveBalances.suggestedSettlements,
+          shownDirect
+            ? withDirectLegs(effectiveBalances.currencyBalances, shownDirect)
+            : effectiveBalances.currencyBalances,
         ),
     )
-  }, [group?.participants, effectiveBalances])
+  }, [group?.participants, effectiveBalances, shownDirect])
 
   const isLoading = useOfflineSource
     ? !effectiveBalances || !group
@@ -182,7 +173,12 @@ export default function BalancesAndSettlements() {
   const groupCurrency = group ? getCurrencyFromGroup(group) : undefined
   const currencyBalances =
     !isLoading && groupCurrency && effectiveBalances
-      ? withDisplayCurrencies(effectiveBalances.currencyBalances, groupCurrency)
+      ? withDisplayCurrencies(
+          shownDirect
+            ? withDirectLegs(effectiveBalances.currencyBalances, shownDirect)
+            : effectiveBalances.currencyBalances,
+          groupCurrency,
+        )
       : []
   const view = viewParam ?? storedView
   const settlementSubgroups = useMemo<SubgroupDefinition[]>(
@@ -215,6 +211,13 @@ export default function BalancesAndSettlements() {
     suggestedSettlements: effectiveBalances?.suggestedSettlements ?? [],
     policy: 'standard' as const,
   }
+  const displayedSettlementPlan =
+    settlementView === 'direct' && directSettlements
+      ? {
+          suggestedSettlements: directSettlements.suggestedSettlements,
+          policy: undefined,
+        }
+      : individualSettlementPlan
 
   const changeView = (next: BalanceView) => {
     setStoredView(next)
@@ -231,6 +234,7 @@ export default function BalancesAndSettlements() {
         currencyDisplay,
         view: next,
         settlementMode,
+        settlementView: requestedSettlementView,
       },
     })
   }
@@ -244,6 +248,7 @@ export default function BalancesAndSettlements() {
         currencyDisplay: next,
         view,
         settlementMode,
+        settlementView: requestedSettlementView,
       },
     })
   }
@@ -257,6 +262,23 @@ export default function BalancesAndSettlements() {
         currencyDisplay,
         view,
         settlementMode: next,
+        // Subgroup settlement is a simplified projection.
+        settlementView:
+          next === 'subgroups' ? 'simplified' : requestedSettlementView,
+      },
+    })
+  }
+
+  const changeSettlementView = (next: SettlementView) => {
+    void navigate({
+      to: '/groups/$groupId/balances',
+      params: { groupId },
+      replace: true,
+      search: {
+        currencyDisplay,
+        view,
+        settlementMode: next === 'direct' ? 'individual' : settlementMode,
+        settlementView: next,
       },
     })
   }
@@ -297,7 +319,7 @@ export default function BalancesAndSettlements() {
         balances={settlementBalances}
         suggestedSettlements={
           currencyDisplay === 'group'
-            ? individualSettlementPlan.suggestedSettlements
+            ? displayedSettlementPlan.suggestedSettlements
             : undefined
         }
         currencyBalances={currencyBalances}
@@ -310,8 +332,13 @@ export default function BalancesAndSettlements() {
         }
         subgroups={settlementSubgroups}
         subgroupSettlementPlan={subgroupSettlementPlan}
-        individualSettlementPolicy={individualSettlementPlan.policy}
+        individualSettlementPolicy={displayedSettlementPlan.policy}
         view={view}
+        settlementView={showDirectOfflineHint ? 'direct' : settlementView}
+        onSettlementViewChange={changeSettlementView}
+        settlementViewNote={
+          showDirectOfflineHint ? t('settlementView.offlineHint') : undefined
+        }
       />
     </>
   )

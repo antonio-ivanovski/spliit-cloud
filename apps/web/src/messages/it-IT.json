@@ -1392,6 +1392,14 @@
       "owes": "<strong>{from}</strong> deve dei soldi a <strong>{to}</strong>",
       "markAsPaid": "Segna come pagato",
       "markAsPaidAria": "Segna come pagato {amount} da {from} a {to}"
+    },
+    "settlementView": {
+      "label": "Mostra i debiti come",
+      "simplified": "Semplificati",
+      "direct": "Diretti",
+      "directDescription": "Quanto ogni persona deve a chi ha effettivamente condiviso spese con lei, senza combinare i debiti di tutto il gruppo.",
+      "offlineHint": "I debiti diretti richiedono una connessione. Offline vengono mostrati i pagamenti semplificati.",
+      "evenOverall": "In pari nel complesso"
     }
   },
   "Stats": {
