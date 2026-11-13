@@ -28,6 +28,26 @@ function alternation(source: string, pattern: RegExp): string[] {
   return (match?.[1] ?? '').split('|').sort()
 }
 
+function exactLocation(path: string): string {
+  const marker = `location = ${path} {`
+  const start = nginxSource.indexOf(marker)
+  expect(start, marker).toBeGreaterThanOrEqual(0)
+  let depth = 0
+  for (
+    let index = start + marker.length - 1;
+    index < nginxSource.length;
+    index++
+  ) {
+    if (nginxSource[index] === '{') {
+      depth += 1
+    } else if (nginxSource[index] === '}') {
+      depth -= 1
+      if (depth === 0) return nginxSource.slice(start, index + 1)
+    }
+  }
+  throw new Error(`Unterminated nginx location block for ${path}`)
+}
+
 describe('nginx markdown negotiation parity', () => {
   it('negotiates every worker markdown page (root served separately)', () => {
     const nginxPages = alternation(
@@ -69,6 +89,25 @@ describe('nginx markdown negotiation parity', () => {
       'add_header Link $spliit_markdown_alternate always;',
     )
   })
+})
+
+describe('auth SPA page routing', () => {
+  const authPages = [
+    '/auth/forgot-password',
+    '/auth/reset-password',
+    '/auth/complete-profile',
+  ]
+
+  for (const page of authPages) {
+    it(`serves ${page} as the SPA for GET/HEAD and proxies other methods`, () => {
+      const block = exactLocation(page)
+      expect(block).toMatch(
+        /if \(\$request_method ~ \^\(GET\|HEAD\)\$\) \{\s*\n\s*rewrite \^ \/index\.html last;\s*\n\s*\}/,
+      )
+      expect(block).toMatch(/\}\s*\n\s*proxy_pass http:\/\/api:3001;/)
+      expect(block).not.toContain('try_files')
+    })
+  }
 })
 
 describe('static crawler fallback', () => {

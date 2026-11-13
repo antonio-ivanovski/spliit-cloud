@@ -24,5 +24,6 @@ who is affected, and the exact migration steps.
 ### 🐛 Bug fixes
 
 - Guest account deletion no longer sends email to synthetic addresses or claims a confirmation email was sent. (`TBD` by @TBD)
+- Password reset from the sign-in flow now completes on Docker Compose deployments: the web container forwards the reset form submission to the API instead of rejecting it with 405 ([#175](https://github.com/antonio-ivanovski/spliit-cloud/issues/175), thanks @yhterrance). (`TBD` by @TBD)
 
 **Full Changelog**: TBD
