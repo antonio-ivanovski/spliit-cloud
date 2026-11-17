@@ -3494,7 +3494,21 @@
       "privacyPolicy": "Integritetspolicy",
       "redirectsTo": "Omdirigerar till",
       "unverifiedClient": "Overifierad app: den här identiteten kommer från appen själv.",
-      "loopbackWarning": "Den här auktoriseringen skickas till en app som körs på den här enheten ({destination}). Godkänn bara om du själv nyss startade den här anslutningen."
+      "loopbackWarning": "Den här auktoriseringen skickas till en app som körs på den här enheten ({destination}). Godkänn bara om du själv nyss startade den här anslutningen.",
+      "budgetsReadTitle": "Läsa budgetar",
+      "budgetsReadDescription": "Dina gruppers budgetar, deras gränser och hur mycket som har spenderats av dem.",
+      "budgetsManageTitle": "Skapa och redigera budgetar",
+      "budgetsManageDescription": "Skapa budgetar, ändra deras gränser, perioder och kategorier samt arkivera dem.",
+      "budgetsDeleteTitle": "Ta bort budgetar",
+      "budgetsDeleteDescription": "Ta bort budgetar permanent. Det går inte att ångra.",
+      "invitationsManageTitle": "Bjuda in personer till dina grupper",
+      "invitationsManageDescription": "Skapa, kopiera och återkalla inbjudningslänkar och QR-koder för dina grupper samt se väntande inbjudningar. Den som får en av de här länkarna kan gå med i gruppen.",
+      "invitationsAcceptTitle": "Gå med i grupper",
+      "invitationsAcceptDescription": "Gå med i grupper via inbjudningslänkar, acceptera eller avböja inbjudningar till dig och se dina väntande inbjudningar.",
+      "uploadsWriteTitle": "Ladda upp dokument",
+      "uploadsWriteDescription": "Bifoga kvittofoton och andra dokument till utgifter i dina grupper.",
+      "aiScanTitle": "Skanna kvitton och röstmeddelanden",
+      "aiScanDescription": "Läsa ut utgiftsuppgifter från kvittofoton och röstinspelningar. Varje skanning räknas mot ditt kontos AI-användningsgräns, precis som när du själv skannar i Spliit Cloud."
     },
     "login": {
       "missingTitle": "Auktoriseringsbegäran saknas",
@@ -4017,7 +4031,14 @@
     "scopeExpensesRead": "Läsa utgifter",
     "scopeExpensesManage": "Hantera utgifter",
     "scopeExpensesDelete": "Ta bort utgifter",
-    "scopeExpensesWrite": "Lägga till utgifter med förhandsvisning"
+    "scopeExpensesWrite": "Lägga till utgifter med förhandsvisning",
+    "scopeBudgetsRead": "Läsa budgetar",
+    "scopeBudgetsManage": "Hantera budgetar",
+    "scopeBudgetsDelete": "Ta bort budgetar",
+    "scopeInvitationsManage": "Bjuda in personer",
+    "scopeInvitationsAccept": "Gå med i grupper",
+    "scopeUploadsWrite": "Ladda upp dokument",
+    "scopeAiScan": "Skanna kvitton"
   },
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud kunde inte tillämpa uppdateringen.",

@@ -3498,7 +3498,21 @@
       "privacyPolicy": "Tietosuojakäytäntö",
       "redirectsTo": "Uudelleenohjaus osoitteeseen",
       "unverifiedClient": "Vahvistamaton sovellus: nämä tiedot ovat sovelluksen itsensä ilmoittamia.",
-      "loopbackWarning": "Tämä valtuutus lähetetään tällä laitteella toimivalle sovellukselle ({destination}). Hyväksy vain, jos aloitit tämän yhteyden itse juuri äsken."
+      "loopbackWarning": "Tämä valtuutus lähetetään tällä laitteella toimivalle sovellukselle ({destination}). Hyväksy vain, jos aloitit tämän yhteyden itse juuri äsken.",
+      "budgetsReadTitle": "Lukea budjetteja",
+      "budgetsReadDescription": "Ryhmiesi budjetit, niiden rajat ja paljonko niistä on jo käytetty.",
+      "budgetsManageTitle": "Luoda ja muokata budjetteja",
+      "budgetsManageDescription": "Luoda budjetteja, muuttaa niiden rajoja, jaksoja ja luokkia sekä arkistoida niitä.",
+      "budgetsDeleteTitle": "Poistaa budjetteja",
+      "budgetsDeleteDescription": "Poistaa budjetteja pysyvästi. Tätä ei voi perua.",
+      "invitationsManageTitle": "Kutsua ihmisiä ryhmiisi",
+      "invitationsManageDescription": "Luoda, kopioida ja perua ryhmiesi kutsulinkkejä ja QR-koodeja sekä nähdä odottavat kutsut. Kuka tahansa, joka saa jonkin näistä linkeistä, voi liittyä ryhmään.",
+      "invitationsAcceptTitle": "Liittyä ryhmiin",
+      "invitationsAcceptDescription": "Liittyä ryhmiin kutsulinkkien kautta, hyväksyä tai hylätä sinulle lähetetyt kutsut ja nähdä odottavat kutsusi.",
+      "uploadsWriteTitle": "Ladata asiakirjoja",
+      "uploadsWriteDescription": "Liittää kuittikuvia ja muita asiakirjoja ryhmiesi kuluihin.",
+      "aiScanTitle": "Skannata kuitteja ja ääniviestejä",
+      "aiScanDescription": "Lukea kulujen tiedot kuittikuvista ja äänitallenteista. Jokainen skannaus lasketaan tilisi tekoälyn käyttörajaan, aivan kuten kun skannaat itse Spliit Cloudissa."
     },
     "login": {
       "missingTitle": "Valtuutuspyyntö puuttuu",
@@ -4021,7 +4035,14 @@
     "scopeExpensesRead": "Lukea kuluja",
     "scopeExpensesManage": "Hallita kuluja",
     "scopeExpensesDelete": "Poistaa kuluja",
-    "scopeExpensesWrite": "Lisätä kuluja esikatselun kautta"
+    "scopeExpensesWrite": "Lisätä kuluja esikatselun kautta",
+    "scopeBudgetsRead": "Lukea budjetteja",
+    "scopeBudgetsManage": "Hallita budjetteja",
+    "scopeBudgetsDelete": "Poistaa budjetteja",
+    "scopeInvitationsManage": "Kutsua ihmisiä",
+    "scopeInvitationsAccept": "Liittyä ryhmiin",
+    "scopeUploadsWrite": "Ladata asiakirjoja",
+    "scopeAiScan": "Skannata kuitteja"
   },
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud ei voinut ottaa päivitystä käyttöön.",

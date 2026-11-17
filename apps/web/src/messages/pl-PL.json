@@ -3544,7 +3544,21 @@
       "privacyPolicy": "Polityka prywatności",
       "redirectsTo": "Przekierowanie do",
       "unverifiedClient": "Niezweryfikowana aplikacja: tę tożsamość podaje sama aplikacja.",
-      "loopbackWarning": "Ta autoryzacja zostanie wysłana do aplikacji działającej na tym urządzeniu ({destination}). Zatwierdź ją tylko wtedy, gdy to połączenie zostało przed chwilą rozpoczęte przez Ciebie."
+      "loopbackWarning": "Ta autoryzacja zostanie wysłana do aplikacji działającej na tym urządzeniu ({destination}). Zatwierdź ją tylko wtedy, gdy to połączenie zostało przed chwilą rozpoczęte przez Ciebie.",
+      "budgetsReadTitle": "Odczyt budżetów",
+      "budgetsReadDescription": "Budżety Twoich grup, ich limity i to, ile już z nich wydano.",
+      "budgetsManageTitle": "Tworzenie i edycja budżetów",
+      "budgetsManageDescription": "Tworzenie budżetów, zmiana ich limitów, okresów i kategorii oraz archiwizowanie.",
+      "budgetsDeleteTitle": "Usuwanie budżetów",
+      "budgetsDeleteDescription": "Trwałe usuwanie budżetów. Nie można tego cofnąć.",
+      "invitationsManageTitle": "Zapraszanie osób do Twoich grup",
+      "invitationsManageDescription": "Tworzenie, kopiowanie i unieważnianie linków zaproszeń oraz kodów QR do Twoich grup, a także podgląd oczekujących zaproszeń. Każdy, kto otrzyma jeden z tych linków, może dołączyć do grupy.",
+      "invitationsAcceptTitle": "Dołączanie do grup",
+      "invitationsAcceptDescription": "Dołączanie do grup przez linki zaproszeń, akceptowanie lub odrzucanie wysłanych do Ciebie zaproszeń oraz podgląd Twoich oczekujących zaproszeń.",
+      "uploadsWriteTitle": "Przesyłanie dokumentów",
+      "uploadsWriteDescription": "Dołączanie zdjęć paragonów i innych dokumentów do wydatków w Twoich grupach.",
+      "aiScanTitle": "Skanowanie paragonów i notatek głosowych",
+      "aiScanDescription": "Odczytywanie szczegółów wydatków ze zdjęć paragonów i nagrań głosowych. Każde skanowanie wlicza się do limitu użycia AI Twojego konta, tak samo jak skanowanie bezpośrednio w Spliit Cloud."
     },
     "login": {
       "missingTitle": "Brak żądania autoryzacji",
@@ -4065,7 +4079,14 @@
     "scopeExpensesRead": "Odczyt wydatków",
     "scopeExpensesManage": "Zarządzanie wydatkami",
     "scopeExpensesDelete": "Usuwanie wydatków",
-    "scopeExpensesWrite": "Dodawanie wydatków z podglądem"
+    "scopeExpensesWrite": "Dodawanie wydatków z podglądem",
+    "scopeBudgetsRead": "Odczyt budżetów",
+    "scopeBudgetsManage": "Zarządzanie budżetami",
+    "scopeBudgetsDelete": "Usuwanie budżetów",
+    "scopeInvitationsManage": "Zapraszanie osób",
+    "scopeInvitationsAccept": "Dołączanie do grup",
+    "scopeUploadsWrite": "Przesyłanie dokumentów",
+    "scopeAiScan": "Skanowanie paragonów"
   },
   "PwaUpdate": {
     "waitingFailed": "Nie udało się zastosować aktualizacji Spliit Cloud.",

@@ -13,14 +13,21 @@ each operation accepts.
 
 Access is granted per resource and per verb.
 
-| Scope                    | Covers                                         |
-| ------------------------ | ---------------------------------------------- |
-| `spliit:groups:read`     | groups, balances, statistics, activity         |
-| `spliit:groups:manage`   | create and edit groups, add participants       |
-| `spliit:groups:delete`   | delete or archive a group, remove participants |
-| `spliit:expenses:read`   | expenses and recurring series                  |
-| `spliit:expenses:manage` | create and edit expenses, stop a recurrence    |
-| `spliit:expenses:delete` | delete an expense, and edits that drop data    |
+| Scope                       | Covers                                                     |
+| --------------------------- | ---------------------------------------------------------- |
+| `spliit:groups:read`        | groups, balances, statistics, activity                     |
+| `spliit:groups:manage`      | create and edit groups, add participants                   |
+| `spliit:groups:delete`      | delete or archive a group, remove participants             |
+| `spliit:expenses:read`      | expenses and recurring series                              |
+| `spliit:expenses:manage`    | create and edit expenses, stop a recurrence                |
+| `spliit:expenses:delete`    | delete an expense, and edits that drop data                |
+| `spliit:budgets:read`       | budgets and their progress                                 |
+| `spliit:budgets:manage`     | create, edit and archive budgets                           |
+| `spliit:budgets:delete`     | delete a budget                                            |
+| `spliit:invitations:manage` | create, list, copy, regenerate and revoke invite links     |
+| `spliit:invitations:accept` | join through an invite link, accept or decline invitations |
+| `spliit:uploads:write`      | upload expense documents                                   |
+| `spliit:ai:scan`            | extract an expense from a receipt or a voice note          |
 
 A client that registers without naming scopes receives the two read scopes
 only. **Write and delete scopes are never granted by default** and must be
@@ -31,8 +38,8 @@ request (see [Calling the API](#calling-the-api)).
 
 Managing or deleting implies reading the same resource, so a token holding
 `spliit:expenses:manage` can read expenses without also holding
-`spliit:expenses:read`. Nothing implies a write, and nothing crosses between
-groups and expenses.
+`spliit:expenses:read`, and the same holds for budgets. Nothing implies a
+write, and nothing crosses between resources.
 
 `spliit:expenses:delete` covers more than the delete procedure. Shortening a
 recurring series with a `THIS_AND_FUTURE` edit drops the occurrences that no
@@ -54,19 +61,38 @@ Scopes bound what a token may attempt, not who the caller is. Group role rules
 still apply on top: a token acting for a non-admin member can only delete
 expenses that member created.
 
+## Invitations, uploads and AI
+
+`spliit:invitations:manage` covers invite links and QR sessions only. An invite
+link lets whoever holds it join the group, so this scope can grant group
+access to other people, and the consent screen says so. Email invitations
+(`invitations.create`, `invitations.updatePending`) stay session-only: a token
+must not send email on the account's behalf. Revoking an invitation with
+`settleBalances=true` creates settlement expenses, so that call also needs
+`spliit:expenses:manage`.
+
+`spliit:invitations:accept` covers joining through an invite link, accepting
+or declining an invitation, and listing the account's pending invitations. It
+is kept apart from `manage` because joining a group and inviting other people
+are different levels of trust.
+
+`spliit:uploads:write` covers the expense-document presign
+(`uploads.presign`). Profile images and import documents stay session-only.
+
+`spliit:ai:scan` covers receipt and voice extraction. Each call spends the
+account's own AI quota, which tokens and browser sessions share, and the
+instance flags (`PUBLIC_ENABLE_RECEIPT_EXTRACT`,
+`PUBLIC_ENABLE_VOICE_EXPENSE`) still apply.
+
 ## What a token cannot reach
 
-Scopes cover groups and expenses: listing and reading groups, balances,
-statistics and activity, plus reading, creating, editing and deleting expenses
-and recurring series.
+Everything else stays session-only for now and answers `401` to a token,
+whatever scopes it holds:
 
-Everything else stays session-only for now and answers `401 Session required`
-to a token, whatever scopes it holds:
-
-- budgets, subgroups, saved views
+- subgroups, saved views
 - expense comments, category memory, common currencies
 - imports and exports
-- invitations, member roles, leaving a group
+- email invitations, member roles, leaving a group
 - account preferences and profile
 
 This is a deliberate starting surface rather than an oversight. Say so if your

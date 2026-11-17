@@ -3493,7 +3493,21 @@
       "privacyPolicy": "隐私政策",
       "redirectsTo": "重定向至",
       "unverifiedClient": "未经验证的应用：此身份信息由应用自行提供。",
-      "loopbackWarning": "此授权将发送给在此设备上运行的应用（{destination}）。仅当你刚刚亲自发起此连接时才批准。"
+      "loopbackWarning": "此授权将发送给在此设备上运行的应用（{destination}）。仅当你刚刚亲自发起此连接时才批准。",
+      "budgetsReadTitle": "查看预算",
+      "budgetsReadDescription": "群组的预算、额度以及已花费的金额。",
+      "budgetsManageTitle": "创建和编辑预算",
+      "budgetsManageDescription": "创建预算，修改其额度、周期和分类，以及归档预算。",
+      "budgetsDeleteTitle": "删除预算",
+      "budgetsDeleteDescription": "永久删除预算。此操作无法撤销。",
+      "invitationsManageTitle": "邀请他人加入群组",
+      "invitationsManageDescription": "为群组创建、复制和撤销邀请链接及二维码，并查看待处理的邀请。任何收到这些链接的人都可以加入群组。",
+      "invitationsAcceptTitle": "加入群组",
+      "invitationsAcceptDescription": "通过邀请链接加入群组，接受或拒绝发给你的邀请，并查看你待处理的邀请。",
+      "uploadsWriteTitle": "上传文件",
+      "uploadsWriteDescription": "为群组中的支出附加收据照片和其他文件。",
+      "aiScanTitle": "扫描收据和语音备忘",
+      "aiScanDescription": "从收据照片和语音录音中读取支出详情。每次扫描都会计入你账户的 AI 使用额度，与你在 Spliit Cloud 中自行扫描相同。"
     },
     "login": {
       "missingTitle": "授权请求缺失",
@@ -4007,7 +4021,14 @@
     "scopeExpensesRead": "读取支出",
     "scopeExpensesManage": "管理支出",
     "scopeExpensesDelete": "删除支出",
-    "scopeExpensesWrite": "通过预览添加支出"
+    "scopeExpensesWrite": "通过预览添加支出",
+    "scopeBudgetsRead": "查看预算",
+    "scopeBudgetsManage": "管理预算",
+    "scopeBudgetsDelete": "删除预算",
+    "scopeInvitationsManage": "邀请他人",
+    "scopeInvitationsAccept": "加入群组",
+    "scopeUploadsWrite": "上传文件",
+    "scopeAiScan": "扫描收据"
   },
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud 无法应用更新。",

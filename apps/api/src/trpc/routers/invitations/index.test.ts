@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import '../../../test/mocks'
+import { getApiBaseUrl } from '../../../lib/auth/urls'
 import {
   authState,
   prisma$Transaction,
@@ -1369,6 +1370,73 @@ describe('invitationsRouter.revoke — unsettled balances', () => {
         data: expect.objectContaining({ removedAt: expect.any(Date) }),
       }),
     )
+  })
+})
+
+describe('invitationsRouter — OAuth tokens', () => {
+  function makeTokenCaller(accountId: string, scopes: string[]) {
+    return invitationsRouter.createCaller({
+      auth: {
+        credentialKind: 'oauth',
+        accessToken: 'redacted',
+        scopes,
+        audiences: [getApiBaseUrl()],
+        user: {
+          id: accountId,
+          email: 'alice@example.com',
+          emailVerified: true,
+          name: 'Alice',
+        },
+        session: { id: 'oauth-session' },
+      },
+    } as never)
+  }
+
+  it('lets the manage scope revoke an invitation without settling', async () => {
+    await authAs('acct-admin')
+    seedRevokeContext({ participantId: null })
+
+    const caller = makeTokenCaller('acct-admin', ['spliit:invitations:manage'])
+    await expect(caller.revoke({ invitationId: 'inv-1' })).resolves.toEqual({})
+  })
+
+  it('needs the expense manage scope to settle balances while revoking', async () => {
+    // Settling writes settlement expenses, which the invitations scope alone
+    // must not be able to do.
+    await authAs('acct-admin')
+    seedRevokeContext({ participantId: 'lp-invitee' })
+
+    const caller = makeTokenCaller('acct-admin', ['spliit:invitations:manage'])
+    await expect(
+      caller.revoke({ invitationId: 'inv-1', settleBalances: true }),
+    ).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+      message: 'Missing required scope: spliit:expenses:manage',
+    })
+    expect(prismaMock.expense.create).not.toHaveBeenCalled()
+    expect(prismaMock.groupInvitation.update).not.toHaveBeenCalled()
+  })
+
+  it('keeps email invitations out of reach of any token', async () => {
+    const caller = makeTokenCaller('acct-admin', [
+      'spliit:invitations:manage',
+      'spliit:invitations:accept',
+    ])
+    await expect(
+      caller.create({
+        groupId: 'grp-1',
+        email: 'bob@example.com',
+        requestId: '00000000-0000-4000-8000-000000000001',
+      } as never),
+    ).rejects.toMatchObject({ code: 'UNAUTHORIZED' })
+    expect(sendEmailMock).not.toHaveBeenCalled()
+  })
+
+  it('does not let the accept scope list group invitations', async () => {
+    const caller = makeTokenCaller('acct-admin', ['spliit:invitations:accept'])
+    await expect(caller.list({ groupId: 'grp-1' })).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+    })
   })
 })
 

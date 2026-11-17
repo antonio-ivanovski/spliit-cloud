@@ -3542,7 +3542,21 @@
       "privacyPolicy": "privacy policy",
       "redirectsTo": "redirects to",
       "unverifiedClient": "unverified app: this name and identity come from the app itself.",
-      "loopbackWarning": "this authorization goes to an app running on this device ({destination}). only approve if you literally just started this connection yourself."
+      "loopbackWarning": "this authorization goes to an app running on this device ({destination}). only approve if you literally just started this connection yourself.",
+      "budgetsReadTitle": "read budgets",
+      "budgetsReadDescription": "your groups' budgets, their limits, and how much has been spent against them.",
+      "budgetsManageTitle": "create and edit budgets",
+      "budgetsManageDescription": "set up new budgets, tweak their limits, periods and categories, and archive them.",
+      "budgetsDeleteTitle": "delete budgets",
+      "budgetsDeleteDescription": "delete budgets for good. no take-backs.",
+      "invitationsManageTitle": "invite people to your groups",
+      "invitationsManageDescription": "create, copy and revoke invite links and QR codes for your groups, and see pending invites. anyone who gets one of these links can join the group.",
+      "invitationsAcceptTitle": "join groups",
+      "invitationsAcceptDescription": "join groups through invite links, accept or decline invites sent your way, and see your pending invites.",
+      "uploadsWriteTitle": "upload docs",
+      "uploadsWriteDescription": "attach receipt pics and other docs to expenses in your groups.",
+      "aiScanTitle": "scan receipts and voice notes",
+      "aiScanDescription": "pull expense details from receipt pics and voice recordings. every scan counts toward your account's AI usage limit, same as scanning in Spliit Cloud yourself."
     },
     "login": {
       "missingTitle": "authorization request missing",
@@ -4013,7 +4027,14 @@
     "scopeExpensesRead": "read expenses",
     "scopeExpensesManage": "manage expenses",
     "scopeExpensesDelete": "delete expenses",
-    "scopeExpensesWrite": "add expenses with a preview"
+    "scopeExpensesWrite": "add expenses with a preview",
+    "scopeBudgetsRead": "read budgets",
+    "scopeBudgetsManage": "manage budgets",
+    "scopeBudgetsDelete": "delete budgets",
+    "scopeInvitationsManage": "invite people",
+    "scopeInvitationsAccept": "join groups",
+    "scopeUploadsWrite": "upload docs",
+    "scopeAiScan": "scan receipts"
   },
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud couldn't get the update through.",

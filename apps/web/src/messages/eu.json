@@ -3529,7 +3529,21 @@
       "privacyPolicy": "Pribatutasun-politika",
       "redirectsTo": "Hona birbideratzen da",
       "unverifiedClient": "Egiaztatu gabeko aplikazioa: identitate hau aplikazioak berak emandakoa da.",
-      "loopbackWarning": "Baimen hau gailu honetan exekutatzen ari den aplikazio bati bidaliko zaio ({destination}). Onartu soilik konexio hau oraintxe zuk zeuk hasi baduzu."
+      "loopbackWarning": "Baimen hau gailu honetan exekutatzen ari den aplikazio bati bidaliko zaio ({destination}). Onartu soilik konexio hau oraintxe zuk zeuk hasi baduzu.",
+      "budgetsReadTitle": "Irakurri aurrekontuak",
+      "budgetsReadDescription": "Zure taldeen aurrekontuak, haien mugak eta horietatik zenbat gastatu den.",
+      "budgetsManageTitle": "Sortu eta aldatu aurrekontuak",
+      "budgetsManageDescription": "Sortu aurrekontuak, aldatu haien mugak, aldiak eta kategoriak, eta artxibatu.",
+      "budgetsDeleteTitle": "Ezabatu aurrekontuak",
+      "budgetsDeleteDescription": "Ezabatu aurrekontuak behin betiko. Ezin da desegin.",
+      "invitationsManageTitle": "Gonbidatu jendea zure taldeetara",
+      "invitationsManageDescription": "Sortu, kopiatu eta baliogabetu zure taldeetarako gonbidapen-estekak eta QR kodeak, eta ikusi zain dauden gonbidapenak. Esteka horietako bat jasotzen duen edonor sar daiteke taldean.",
+      "invitationsAcceptTitle": "Sartu taldeetan",
+      "invitationsAcceptDescription": "Sartu taldeetan gonbidapen-esteken bidez, onartu edo baztertu jasotako gonbidapenak eta ikusi zain dauzkazun gonbidapenak.",
+      "uploadsWriteTitle": "Igo dokumentuak",
+      "uploadsWriteDescription": "Erantsi ordainagirien argazkiak eta beste dokumentu batzuk zure taldeetako gastuei.",
+      "aiScanTitle": "Eskaneatu ordainagiriak eta ahots-oharrak",
+      "aiScanDescription": "Irakurri gastuen xehetasunak ordainagirien argazkietatik eta ahots-grabazioetatik. Eskaneatze bakoitza zure kontuaren IA erabilera-mugan zenbatzen da, Spliit Cloud-en zuzenean eskaneatzean bezala."
     },
     "login": {
       "missingTitle": "Baimen-eskaera falta da",
@@ -4044,7 +4058,14 @@
     "scopeExpensesRead": "Irakurri gastuak",
     "scopeExpensesManage": "Kudeatu gastuak",
     "scopeExpensesDelete": "Ezabatu gastuak",
-    "scopeExpensesWrite": "Gehitu gastuak aurrebistarekin"
+    "scopeExpensesWrite": "Gehitu gastuak aurrebistarekin",
+    "scopeBudgetsRead": "Irakurri aurrekontuak",
+    "scopeBudgetsManage": "Kudeatu aurrekontuak",
+    "scopeBudgetsDelete": "Ezabatu aurrekontuak",
+    "scopeInvitationsManage": "Gonbidatu jendea",
+    "scopeInvitationsAccept": "Sartu taldeetan",
+    "scopeUploadsWrite": "Igo dokumentuak",
+    "scopeAiScan": "Eskaneatu ordainagiriak"
   },
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud-ek ezin izan du eguneratzea aplikatu.",

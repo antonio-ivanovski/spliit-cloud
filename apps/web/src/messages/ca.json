@@ -3531,7 +3531,21 @@
       "privacyPolicy": "Política de privacitat",
       "redirectsTo": "Redirigeix a",
       "unverifiedClient": "Aplicació no verificada: aquesta identitat la proporciona la mateixa aplicació.",
-      "loopbackWarning": "Aquesta autorització s'enviarà a una aplicació que s'executa en aquest dispositiu ({destination}). Aprova-la només si ets tu qui acaba d'iniciar aquesta connexió."
+      "loopbackWarning": "Aquesta autorització s'enviarà a una aplicació que s'executa en aquest dispositiu ({destination}). Aprova-la només si ets tu qui acaba d'iniciar aquesta connexió.",
+      "budgetsReadTitle": "Llegir els pressupostos",
+      "budgetsReadDescription": "Els pressupostos dels teus grups, els seus límits i quant s'hi ha gastat.",
+      "budgetsManageTitle": "Crear i editar pressupostos",
+      "budgetsManageDescription": "Crear pressupostos, canviar-ne els límits, els períodes i les categories, i arxivar-los.",
+      "budgetsDeleteTitle": "Eliminar pressupostos",
+      "budgetsDeleteDescription": "Eliminar pressupostos de manera permanent. No es pot desfer.",
+      "invitationsManageTitle": "Convidar persones als teus grups",
+      "invitationsManageDescription": "Crear, copiar i revocar enllaços d'invitació i codis QR per als teus grups, i veure les invitacions pendents. Qualsevol persona que rebi un d'aquests enllaços es pot unir al grup.",
+      "invitationsAcceptTitle": "Unir-se a grups",
+      "invitationsAcceptDescription": "Unir-se a grups amb enllaços d'invitació, acceptar o rebutjar les invitacions que rebis i veure les teves invitacions pendents.",
+      "uploadsWriteTitle": "Pujar documents",
+      "uploadsWriteDescription": "Adjuntar fotos de tiquets i altres documents a les despeses dels teus grups.",
+      "aiScanTitle": "Escanejar tiquets i notes de veu",
+      "aiScanDescription": "Llegir les dades de les despeses a partir de fotos de tiquets i enregistraments de veu. Cada escaneig compta per al límit d'ús d'IA del teu compte, igual que quan escanejes directament a Spliit Cloud."
     },
     "login": {
       "missingTitle": "Falta la sol·licitud d'autorització",
@@ -4046,7 +4060,14 @@
     "scopeExpensesRead": "Llegir les despeses",
     "scopeExpensesManage": "Gestionar les despeses",
     "scopeExpensesDelete": "Eliminar despeses",
-    "scopeExpensesWrite": "Afegir despeses amb previsualització"
+    "scopeExpensesWrite": "Afegir despeses amb previsualització",
+    "scopeBudgetsRead": "Llegir els pressupostos",
+    "scopeBudgetsManage": "Gestionar els pressupostos",
+    "scopeBudgetsDelete": "Eliminar pressupostos",
+    "scopeInvitationsManage": "Convidar persones",
+    "scopeInvitationsAccept": "Unir-se a grups",
+    "scopeUploadsWrite": "Pujar documents",
+    "scopeAiScan": "Escanejar tiquets"
   },
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud no ha pogut aplicar l'actualització.",

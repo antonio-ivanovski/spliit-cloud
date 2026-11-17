@@ -83,6 +83,75 @@ describe('procedure authorization contracts', () => {
     }
   })
 
+  it('opens budgets, link invitations, uploads and AI to their own scopes', async () => {
+    const contracts = await buildProcedureContracts()
+    const expected: Record<string, string> = {
+      'groups.budgets.list': SPLIIT_SCOPES.budgetsRead,
+      'groups.budgets.get': SPLIIT_SCOPES.budgetsRead,
+      'groups.budgets.create': SPLIIT_SCOPES.budgetsManage,
+      'groups.budgets.update': SPLIIT_SCOPES.budgetsManage,
+      'groups.budgets.archive': SPLIIT_SCOPES.budgetsManage,
+      'groups.budgets.delete': SPLIIT_SCOPES.budgetsDelete,
+      'invitations.list': SPLIIT_SCOPES.invitationsManage,
+      'invitations.createLink': SPLIIT_SCOPES.invitationsManage,
+      'invitations.createSharedLink': SPLIIT_SCOPES.invitationsManage,
+      'invitations.getLinkUrl': SPLIIT_SCOPES.invitationsManage,
+      'invitations.createQrLink': SPLIIT_SCOPES.invitationsManage,
+      'invitations.regenerateLink': SPLIIT_SCOPES.invitationsManage,
+      'invitations.revokePreview': SPLIIT_SCOPES.invitationsManage,
+      'invitations.revoke': SPLIIT_SCOPES.invitationsManage,
+      'invitations.acceptLink': SPLIIT_SCOPES.invitationsAccept,
+      'invitations.accept': SPLIIT_SCOPES.invitationsAccept,
+      'invitations.decline': SPLIIT_SCOPES.invitationsAccept,
+      'invitations.listForAccount': SPLIIT_SCOPES.invitationsAccept,
+      'uploads.presign': SPLIIT_SCOPES.uploadsWrite,
+      'ai.extractExpenseInformationFromImage': SPLIIT_SCOPES.aiScan,
+      'ai.extractExpenseInformationFromAudio': SPLIIT_SCOPES.aiScan,
+    }
+    for (const [path, scope] of Object.entries(expected)) {
+      expect(contracts.get(path), path).toMatchObject({
+        scope,
+        oauthOnly: false,
+      })
+    }
+    expect(contracts.get('invitations.revoke')?.conditionalScopes).toEqual([
+      {
+        scope: SPLIIT_SCOPES.expensesManage,
+        when: expect.stringContaining('settleBalances'),
+      },
+    ])
+  })
+
+  it('keeps email delivery and the other presigns session-only', async () => {
+    // A token must not send email on the account's behalf, and profile or
+    // import uploads are outside the uploads scope.
+    const contracts = await buildProcedureContracts()
+    for (const path of [
+      'invitations.create',
+      'invitations.updatePending',
+      'uploads.profileImagePresign',
+      'uploads.importDocumentPresign',
+      'uploads.cloudImportDocumentPresign',
+    ]) {
+      // The operation exists, so an absent contract means session-only rather
+      // than a renamed procedure.
+      expect(doc.paths?.[`/${path}`], path).toBeDefined()
+      expect(contracts.get(path)?.scope, path).toBeUndefined()
+    }
+  })
+
+  it('accepts budget manage and delete wherever budget read is required', async () => {
+    const op = operation(doc, '/groups.budgets.list', 'get')
+    for (const scope of [
+      SPLIIT_SCOPES.budgetsRead,
+      SPLIIT_SCOPES.budgetsManage,
+      SPLIIT_SCOPES.budgetsDelete,
+    ]) {
+      expect(op.security).toContainEqual({ oauth2: [scope] })
+    }
+    expect(op.security).toContainEqual({ session: [] })
+  })
+
   it('never advertises session authentication for bearer-only procedures', async () => {
     for (const path of Object.keys(doc.paths ?? {})) {
       if (!path.startsWith('/assistant.')) continue

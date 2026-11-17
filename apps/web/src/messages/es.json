@@ -3574,7 +3574,21 @@
       "privacyPolicy": "Política de privacidad",
       "redirectsTo": "Redirige a",
       "unverifiedClient": "Aplicación sin verificar: esta identidad la proporciona la propia aplicación.",
-      "loopbackWarning": "Esta autorización se enviará a una aplicación que se está ejecutando en este dispositivo ({destination}). Apruébala solo si eres tú quien acaba de iniciar esta conexión."
+      "loopbackWarning": "Esta autorización se enviará a una aplicación que se está ejecutando en este dispositivo ({destination}). Apruébala solo si eres tú quien acaba de iniciar esta conexión.",
+      "budgetsReadTitle": "Leer presupuestos",
+      "budgetsReadDescription": "Los presupuestos de tus grupos, sus límites y cuánto se ha gastado de ellos.",
+      "budgetsManageTitle": "Crear y editar presupuestos",
+      "budgetsManageDescription": "Crear presupuestos, cambiar sus límites, periodos y categorías, y archivarlos.",
+      "budgetsDeleteTitle": "Eliminar presupuestos",
+      "budgetsDeleteDescription": "Eliminar presupuestos de forma permanente. Esto no se puede deshacer.",
+      "invitationsManageTitle": "Invitar a personas a tus grupos",
+      "invitationsManageDescription": "Crear, copiar y revocar enlaces de invitación y códigos QR para tus grupos, y ver las invitaciones pendientes. Cualquier persona que reciba uno de estos enlaces puede unirse al grupo.",
+      "invitationsAcceptTitle": "Unirse a grupos",
+      "invitationsAcceptDescription": "Unirse a grupos mediante enlaces de invitación, aceptar o rechazar las invitaciones que recibas y ver tus invitaciones pendientes.",
+      "uploadsWriteTitle": "Subir documentos",
+      "uploadsWriteDescription": "Adjuntar fotos de recibos y otros documentos a los gastos de tus grupos.",
+      "aiScanTitle": "Escanear recibos y notas de voz",
+      "aiScanDescription": "Leer los datos de los gastos a partir de fotos de recibos y grabaciones de voz. Cada escaneo cuenta para el límite de uso de IA de tu cuenta, igual que cuando escaneas directamente en Spliit Cloud."
     },
     "login": {
       "missingTitle": "Falta la solicitud de autorización",
@@ -4097,7 +4111,14 @@
     "scopeExpensesRead": "Leer gastos",
     "scopeExpensesManage": "Gestionar gastos",
     "scopeExpensesDelete": "Eliminar gastos",
-    "scopeExpensesWrite": "Añadir gastos con vista previa"
+    "scopeExpensesWrite": "Añadir gastos con vista previa",
+    "scopeBudgetsRead": "Leer presupuestos",
+    "scopeBudgetsManage": "Gestionar presupuestos",
+    "scopeBudgetsDelete": "Eliminar presupuestos",
+    "scopeInvitationsManage": "Invitar a personas",
+    "scopeInvitationsAccept": "Unirse a grupos",
+    "scopeUploadsWrite": "Subir documentos",
+    "scopeAiScan": "Escanear recibos"
   },
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud no ha podido aplicar la actualización.",

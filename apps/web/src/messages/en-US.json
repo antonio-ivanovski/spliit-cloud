@@ -1431,7 +1431,14 @@
     "scopeExpensesRead": "Read expenses",
     "scopeExpensesManage": "Manage expenses",
     "scopeExpensesDelete": "Delete expenses",
-    "scopeExpensesWrite": "Add expenses with preview"
+    "scopeExpensesWrite": "Add expenses with preview",
+    "scopeBudgetsRead": "Read budgets",
+    "scopeBudgetsManage": "Manage budgets",
+    "scopeBudgetsDelete": "Delete budgets",
+    "scopeInvitationsManage": "Invite people",
+    "scopeInvitationsAccept": "Join groups",
+    "scopeUploadsWrite": "Upload documents",
+    "scopeAiScan": "Scan receipts"
   },
   "CompleteProfile": {
     "title": "Complete your profile",
@@ -3612,7 +3619,21 @@
       "privacyPolicy": "Privacy policy",
       "redirectsTo": "Redirects to",
       "unverifiedClient": "Unverified application: this identity is provided by the application itself.",
-      "loopbackWarning": "This authorization will be sent to an application running on this device ({destination}). Approve only if you started this connection yourself just now."
+      "loopbackWarning": "This authorization will be sent to an application running on this device ({destination}). Approve only if you started this connection yourself just now.",
+      "budgetsReadTitle": "Read budgets",
+      "budgetsReadDescription": "Your groups' budgets, their limits and how much has been spent against them.",
+      "budgetsManageTitle": "Create and edit budgets",
+      "budgetsManageDescription": "Set up new budgets, change their limits, periods and categories, and archive them.",
+      "budgetsDeleteTitle": "Delete budgets",
+      "budgetsDeleteDescription": "Permanently delete budgets. This cannot be undone.",
+      "invitationsManageTitle": "Invite people to your groups",
+      "invitationsManageDescription": "Create, copy and revoke invite links and QR codes for your groups, and see pending invitations. Anyone who receives one of these links can join the group.",
+      "invitationsAcceptTitle": "Join groups",
+      "invitationsAcceptDescription": "Join groups through invite links, accept or decline invitations sent to you, and see your pending invitations.",
+      "uploadsWriteTitle": "Upload documents",
+      "uploadsWriteDescription": "Attach receipt photos and other documents to expenses in your groups.",
+      "aiScanTitle": "Scan receipts and voice notes",
+      "aiScanDescription": "Read expense details from receipt photos and voice recordings. Each scan counts against your account's AI usage limit, just like scanning in Spliit Cloud yourself."
     },
     "login": {
       "missingTitle": "Authorization request missing",

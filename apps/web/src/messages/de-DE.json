@@ -3570,7 +3570,21 @@
       "privacyPolicy": "Datenschutzerklärung",
       "redirectsTo": "Weiterleitung zu",
       "unverifiedClient": "Nicht überprüfte Anwendung: Diese Identität stammt von der Anwendung selbst.",
-      "loopbackWarning": "Diese Autorisierung wird an eine Anwendung gesendet, die auf diesem Gerät läuft ({destination}). Bestätige nur, wenn du diese Verbindung gerade eben selbst gestartet hast."
+      "loopbackWarning": "Diese Autorisierung wird an eine Anwendung gesendet, die auf diesem Gerät läuft ({destination}). Bestätige nur, wenn du diese Verbindung gerade eben selbst gestartet hast.",
+      "budgetsReadTitle": "Budgets lesen",
+      "budgetsReadDescription": "Die Budgets deiner Gruppen, ihre Limits und wie viel davon schon ausgegeben wurde.",
+      "budgetsManageTitle": "Budgets anlegen und bearbeiten",
+      "budgetsManageDescription": "Neue Budgets anlegen, Limits, Zeiträume und Kategorien ändern und Budgets archivieren.",
+      "budgetsDeleteTitle": "Budgets löschen",
+      "budgetsDeleteDescription": "Budgets endgültig löschen. Das lässt sich nicht rückgängig machen.",
+      "invitationsManageTitle": "Personen in deine Gruppen einladen",
+      "invitationsManageDescription": "Einladungslinks und QR-Codes für deine Gruppen erstellen, kopieren und widerrufen sowie offene Einladungen sehen. Wer einen dieser Links erhält, kann der Gruppe beitreten.",
+      "invitationsAcceptTitle": "Gruppen beitreten",
+      "invitationsAcceptDescription": "Über Einladungslinks Gruppen beitreten, an dich gesendete Einladungen annehmen oder ablehnen und deine offenen Einladungen sehen.",
+      "uploadsWriteTitle": "Dokumente hochladen",
+      "uploadsWriteDescription": "Belegfotos und andere Dokumente an Ausgaben in deinen Gruppen anhängen.",
+      "aiScanTitle": "Belege und Sprachnotizen scannen",
+      "aiScanDescription": "Ausgabendetails aus Belegfotos und Sprachaufnahmen auslesen. Jeder Scan zählt zum KI-Nutzungslimit deines Kontos, genau wie wenn du selbst in Spliit Cloud scannst."
     },
     "login": {
       "missingTitle": "Autorisierungsanfrage fehlt",
@@ -4093,7 +4107,14 @@
     "scopeExpensesRead": "Ausgaben lesen",
     "scopeExpensesManage": "Ausgaben verwalten",
     "scopeExpensesDelete": "Ausgaben löschen",
-    "scopeExpensesWrite": "Ausgaben mit Vorschau hinzufügen"
+    "scopeExpensesWrite": "Ausgaben mit Vorschau hinzufügen",
+    "scopeBudgetsRead": "Budgets lesen",
+    "scopeBudgetsManage": "Budgets verwalten",
+    "scopeBudgetsDelete": "Budgets löschen",
+    "scopeInvitationsManage": "Personen einladen",
+    "scopeInvitationsAccept": "Gruppen beitreten",
+    "scopeUploadsWrite": "Dokumente hochladen",
+    "scopeAiScan": "Belege scannen"
   },
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud konnte das Update nicht anwenden.",

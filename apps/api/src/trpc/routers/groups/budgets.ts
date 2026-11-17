@@ -44,15 +44,16 @@ import {
   canManageOwnedResource,
 } from '../../../lib/api/resource-permissions'
 import { groupExpenseListCardSelect } from '../../../lib/api/selects/expense-list'
+import { SPLIIT_SCOPES } from '../../../lib/auth/scopes'
 import { budgetCategoryMatches } from '../../../lib/budgets/category-match'
 import { redactExpenseListShares } from '../../../lib/group-view-redaction'
 import {
+  apiProcedure,
   groupAccessFields,
-  groupReadProcedure,
   groupViewerArgs,
   loadGroupMutationContext,
   loadGroupViewer,
-  protectedProcedure,
+  scopedGroupReadProcedure,
 } from '../../init'
 import { createTRPCRouter } from '../../init'
 import {
@@ -475,7 +476,7 @@ async function establishAlertBaseline(
   else await prisma.$transaction(run)
 }
 
-const list = groupReadProcedure
+const list = scopedGroupReadProcedure(SPLIIT_SCOPES.budgetsRead)
   .input(
     z.object({
       groupId: z.string().min(1),
@@ -516,7 +517,7 @@ const list = groupReadProcedure
     }
   })
 
-const get = groupReadProcedure
+const get = scopedGroupReadProcedure(SPLIIT_SCOPES.budgetsRead)
   .input(
     z.object({
       groupId: z.string().min(1),
@@ -544,7 +545,7 @@ const get = groupReadProcedure
     }
   })
 
-const create = protectedProcedure
+const create = apiProcedure(SPLIIT_SCOPES.budgetsManage)
   .input(budgetInput.extend({ requestId: createRequestIdSchema }))
   .output(createBudgetOutputSchema)
   .mutation(async ({ input, ctx }) => {
@@ -630,7 +631,7 @@ const create = protectedProcedure
     return value
   })
 
-const update = protectedProcedure
+const update = apiProcedure(SPLIIT_SCOPES.budgetsManage)
   .input(budgetInput.extend({ budgetId: z.string().min(1) }))
   .output(updateBudgetOutputSchema)
   .mutation(async ({ input, ctx }) => {
@@ -705,7 +706,7 @@ const update = protectedProcedure
     }
   })
 
-const archive = protectedProcedure
+const archive = apiProcedure(SPLIIT_SCOPES.budgetsManage)
   .input(
     z.object({
       groupId: z.string().min(1),
@@ -747,7 +748,7 @@ const archive = protectedProcedure
     return { archived: input.archived }
   })
 
-const remove = protectedProcedure
+const remove = apiProcedure(SPLIIT_SCOPES.budgetsDelete)
   .input(z.object({ groupId: z.string().min(1), budgetId: z.string().min(1) }))
   .output(deleteBudgetOutputSchema)
   .mutation(async ({ input, ctx }) => {

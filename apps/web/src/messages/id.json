@@ -3491,7 +3491,21 @@
       "privacyPolicy": "Kebijakan privasi",
       "redirectsTo": "Dialihkan ke",
       "unverifiedClient": "Aplikasi belum terverifikasi: identitas ini berasal dari aplikasi itu sendiri.",
-      "loopbackWarning": "Otorisasi ini akan dikirim ke aplikasi yang berjalan di perangkat ini ({destination}). Setujui hanya jika Anda sendiri yang baru saja memulai koneksi ini."
+      "loopbackWarning": "Otorisasi ini akan dikirim ke aplikasi yang berjalan di perangkat ini ({destination}). Setujui hanya jika Anda sendiri yang baru saja memulai koneksi ini.",
+      "budgetsReadTitle": "Melihat anggaran",
+      "budgetsReadDescription": "Anggaran grup Anda, batasnya, dan berapa yang sudah terpakai.",
+      "budgetsManageTitle": "Membuat dan mengedit anggaran",
+      "budgetsManageDescription": "Membuat anggaran, mengubah batas, periode, dan kategorinya, serta mengarsipkannya.",
+      "budgetsDeleteTitle": "Menghapus anggaran",
+      "budgetsDeleteDescription": "Menghapus anggaran secara permanen. Tidak dapat dibatalkan.",
+      "invitationsManageTitle": "Mengundang orang ke grup Anda",
+      "invitationsManageDescription": "Membuat, menyalin, dan mencabut tautan undangan serta kode QR untuk grup Anda, dan melihat undangan yang tertunda. Siapa pun yang menerima salah satu tautan ini dapat bergabung ke grup.",
+      "invitationsAcceptTitle": "Bergabung ke grup",
+      "invitationsAcceptDescription": "Bergabung ke grup melalui tautan undangan, menerima atau menolak undangan yang dikirim kepada Anda, dan melihat undangan Anda yang tertunda.",
+      "uploadsWriteTitle": "Mengunggah dokumen",
+      "uploadsWriteDescription": "Melampirkan foto struk dan dokumen lain ke pengeluaran di grup Anda.",
+      "aiScanTitle": "Memindai struk dan catatan suara",
+      "aiScanDescription": "Membaca detail pengeluaran dari foto struk dan rekaman suara. Setiap pemindaian dihitung dalam batas penggunaan AI akun Anda, sama seperti saat Anda memindai sendiri di Spliit Cloud."
     },
     "login": {
       "missingTitle": "Permintaan otorisasi tidak ditemukan",
@@ -4006,7 +4020,14 @@
     "scopeExpensesRead": "Membaca pengeluaran",
     "scopeExpensesManage": "Mengelola pengeluaran",
     "scopeExpensesDelete": "Menghapus pengeluaran",
-    "scopeExpensesWrite": "Menambah pengeluaran dengan pratinjau"
+    "scopeExpensesWrite": "Menambah pengeluaran dengan pratinjau",
+    "scopeBudgetsRead": "Melihat anggaran",
+    "scopeBudgetsManage": "Mengelola anggaran",
+    "scopeBudgetsDelete": "Menghapus anggaran",
+    "scopeInvitationsManage": "Mengundang orang",
+    "scopeInvitationsAccept": "Bergabung ke grup",
+    "scopeUploadsWrite": "Mengunggah dokumen",
+    "scopeAiScan": "Memindai struk"
   },
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud tidak dapat menerapkan pembaruan.",

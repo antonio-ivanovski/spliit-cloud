@@ -7,7 +7,11 @@ import {
   mintImportDocumentPresign,
   mintProfileImagePresign,
 } from '../../../routes/upload'
-import { createTRPCRouter, uploadPresignProcedure } from '../../init'
+import {
+  createTRPCRouter,
+  uploadPresignApiProcedure,
+  uploadPresignProcedure,
+} from '../../init'
 import {
   profileImagePresignOutputSchema,
   importDocumentPresignOutputSchema,
@@ -101,8 +105,11 @@ export const uploadsRouter = createTRPCRouter({
    * Get a presigned PUT URL for an expense document upload. The client uploads
    * directly to S3/R2, then passes the returned `fileUrl` in the expense's
    * `documents` array.
+   *
+   * Also open to OAuth tokens carrying `spliit:uploads:write`. The other
+   * presigns (imports, profile image) stay session-only.
    */
-  presign: uploadPresignProcedure
+  presign: uploadPresignApiProcedure
     .input(presignInput)
     .output(uploadPresignOutputSchema)
     .mutation(async ({ ctx, input }) => {

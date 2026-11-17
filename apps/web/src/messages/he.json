@@ -3533,7 +3533,21 @@
       "privacyPolicy": "מדיניות פרטיות",
       "redirectsTo": "מפנה אל",
       "unverifiedClient": "אפליקציה לא מאומתת: הזהות הזו מסופקת על ידי האפליקציה עצמה.",
-      "loopbackWarning": "ההרשאה הזו תישלח לאפליקציה שפועלת במכשיר הזה ({destination}). יש לאשר רק אם יזמת את החיבור הזה בעצמך ממש עכשיו."
+      "loopbackWarning": "ההרשאה הזו תישלח לאפליקציה שפועלת במכשיר הזה ({destination}). יש לאשר רק אם יזמת את החיבור הזה בעצמך ממש עכשיו.",
+      "budgetsReadTitle": "צפייה בתקציבים",
+      "budgetsReadDescription": "התקציבים של הקבוצות שלך, המגבלות שלהם וכמה כבר הוצא מהם.",
+      "budgetsManageTitle": "יצירה ועריכה של תקציבים",
+      "budgetsManageDescription": "ליצור תקציבים, לשנות את המגבלות, התקופות והקטגוריות שלהם ולהעביר אותם לארכיון.",
+      "budgetsDeleteTitle": "מחיקת תקציבים",
+      "budgetsDeleteDescription": "למחוק תקציבים לצמיתות. לא ניתן לבטל.",
+      "invitationsManageTitle": "הזמנת אנשים לקבוצות שלך",
+      "invitationsManageDescription": "ליצור, להעתיק ולבטל קישורי הזמנה וקודי QR לקבוצות שלך, ולראות הזמנות ממתינות. כל מי שמקבל אחד מהקישורים האלה יכול להצטרף לקבוצה.",
+      "invitationsAcceptTitle": "הצטרפות לקבוצות",
+      "invitationsAcceptDescription": "להצטרף לקבוצות דרך קישורי הזמנה, לאשר או לדחות הזמנות שנשלחו אליך ולראות את ההזמנות הממתינות שלך.",
+      "uploadsWriteTitle": "העלאת מסמכים",
+      "uploadsWriteDescription": "לצרף תמונות של קבלות ומסמכים אחרים להוצאות בקבוצות שלך.",
+      "aiScanTitle": "סריקת קבלות והודעות קוליות",
+      "aiScanDescription": "לקרוא פרטי הוצאות מתמונות של קבלות ומהקלטות קוליות. כל סריקה נספרת במגבלת השימוש בבינה מלאכותית של החשבון שלך, בדיוק כמו סריקה ישירה ב-Spliit Cloud."
     },
     "login": {
       "missingTitle": "בקשת הרשאה חסרה",
@@ -4048,7 +4062,14 @@
     "scopeExpensesRead": "קריאת הוצאות",
     "scopeExpensesManage": "ניהול הוצאות",
     "scopeExpensesDelete": "מחיקת הוצאות",
-    "scopeExpensesWrite": "הוספת הוצאות עם תצוגה מקדימה"
+    "scopeExpensesWrite": "הוספת הוצאות עם תצוגה מקדימה",
+    "scopeBudgetsRead": "צפייה בתקציבים",
+    "scopeBudgetsManage": "ניהול תקציבים",
+    "scopeBudgetsDelete": "מחיקת תקציבים",
+    "scopeInvitationsManage": "הזמנת אנשים",
+    "scopeInvitationsAccept": "הצטרפות לקבוצות",
+    "scopeUploadsWrite": "העלאת מסמכים",
+    "scopeAiScan": "סריקת קבלות"
   },
   "PwaUpdate": {
     "waitingFailed": "לא ניתן להחיל את העדכון ב-Spliit Cloud.",

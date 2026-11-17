@@ -3507,7 +3507,21 @@
       "privacyPolicy": "رازداری کی پالیسی",
       "redirectsTo": "ری ڈائریکٹ ہوگا",
       "unverifiedClient": "غیر تصدیق شدہ ایپ: یہ شناخت خود ایپ کی فراہم کردہ ہے۔",
-      "loopbackWarning": "یہ اجازت اس ڈیوائس پر چلنے والی ایک ایپ ({destination}) کو بھیجی جائے گی۔ صرف اسی صورت میں منظور کریں جب آپ نے ابھی خود یہ کنکشن شروع کیا ہو۔"
+      "loopbackWarning": "یہ اجازت اس ڈیوائس پر چلنے والی ایک ایپ ({destination}) کو بھیجی جائے گی۔ صرف اسی صورت میں منظور کریں جب آپ نے ابھی خود یہ کنکشن شروع کیا ہو۔",
+      "budgetsReadTitle": "بجٹ دیکھنا",
+      "budgetsReadDescription": "آپ کے گروپوں کے بجٹ، ان کی حدیں اور اب تک ان میں سے کتنا خرچ ہو چکا ہے۔",
+      "budgetsManageTitle": "بجٹ بنانا اور ترمیم کرنا",
+      "budgetsManageDescription": "نئے بجٹ بنانا، ان کی حدیں، مدتیں اور زمرے تبدیل کرنا، اور انہیں آرکائیو کرنا۔",
+      "budgetsDeleteTitle": "بجٹ حذف کرنا",
+      "budgetsDeleteDescription": "بجٹ مستقل طور پر حذف کرنا۔ اسے واپس نہیں کیا جا سکتا۔",
+      "invitationsManageTitle": "لوگوں کو اپنے گروپوں میں مدعو کرنا",
+      "invitationsManageDescription": "اپنے گروپوں کے لیے دعوتی لنکس اور QR کوڈز بنانا، کاپی کرنا اور منسوخ کرنا، اور زیرِ التوا دعوتیں دیکھنا۔ جسے بھی ان میں سے کوئی لنک ملے، وہ گروپ میں شامل ہو سکتا ہے۔",
+      "invitationsAcceptTitle": "گروپوں میں شامل ہونا",
+      "invitationsAcceptDescription": "دعوتی لنکس کے ذریعے گروپوں میں شامل ہونا، آپ کو بھیجی گئی دعوتیں قبول یا مسترد کرنا، اور اپنی زیرِ التوا دعوتیں دیکھنا۔",
+      "uploadsWriteTitle": "دستاویزات اپ لوڈ کرنا",
+      "uploadsWriteDescription": "اپنے گروپوں کے اخراجات کے ساتھ رسیدوں کی تصاویر اور دیگر دستاویزات منسلک کرنا۔",
+      "aiScanTitle": "رسیدیں اور صوتی نوٹس اسکین کرنا",
+      "aiScanDescription": "رسیدوں کی تصاویر اور صوتی ریکارڈنگز سے اخراجات کی تفصیلات پڑھنا۔ ہر اسکین آپ کے اکاؤنٹ کی AI استعمال کی حد میں شمار ہوتا ہے، بالکل ویسے ہی جیسے Spliit Cloud میں خود اسکین کرنے پر۔"
     },
     "login": {
       "missingTitle": "اجازت کی درخواست موجود نہیں",
@@ -4022,7 +4036,14 @@
     "scopeExpensesRead": "اخراجات پڑھنا",
     "scopeExpensesManage": "اخراجات کا انتظام",
     "scopeExpensesDelete": "اخراجات حذف کرنا",
-    "scopeExpensesWrite": "پیش منظر کے ساتھ اخراجات شامل کرنا"
+    "scopeExpensesWrite": "پیش منظر کے ساتھ اخراجات شامل کرنا",
+    "scopeBudgetsRead": "بجٹ دیکھنا",
+    "scopeBudgetsManage": "بجٹ کا انتظام",
+    "scopeBudgetsDelete": "بجٹ حذف کرنا",
+    "scopeInvitationsManage": "لوگوں کو مدعو کرنا",
+    "scopeInvitationsAccept": "گروپوں میں شامل ہونا",
+    "scopeUploadsWrite": "دستاویزات اپ لوڈ کرنا",
+    "scopeAiScan": "رسیدیں اسکین کرنا"
   },
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud اپ ڈیٹ لاگو نہیں کر سکا۔",

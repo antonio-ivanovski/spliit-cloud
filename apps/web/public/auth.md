@@ -109,14 +109,21 @@ authorization flow for step-up.
 
 ## Scopes and credential use
 
-| Scope                    | Covers                                      |
-| ------------------------ | ------------------------------------------- |
-| `spliit:groups:read`     | groups, balances, statistics, activity      |
-| `spliit:groups:manage`   | create and edit groups, add participants    |
-| `spliit:groups:delete`   | delete or archive a group, remove members   |
-| `spliit:expenses:read`   | expenses and recurring series               |
-| `spliit:expenses:manage` | create and edit expenses, stop a recurrence |
-| `spliit:expenses:delete` | delete an expense, and edits that drop data |
+| Scope                       | Covers                                          |
+| --------------------------- | ----------------------------------------------- |
+| `spliit:groups:read`        | groups, balances, statistics, activity          |
+| `spliit:groups:manage`      | create and edit groups, add participants        |
+| `spliit:groups:delete`      | delete or archive a group, remove members       |
+| `spliit:expenses:read`      | expenses and recurring series                   |
+| `spliit:expenses:manage`    | create and edit expenses, stop a recurrence     |
+| `spliit:expenses:delete`    | delete an expense, and edits that drop data     |
+| `spliit:budgets:read`       | budgets and their progress                      |
+| `spliit:budgets:manage`     | create, edit and archive budgets                |
+| `spliit:budgets:delete`     | delete a budget                                 |
+| `spliit:invitations:manage` | create, copy and revoke invite links            |
+| `spliit:invitations:accept` | join through invite links, answer invitations   |
+| `spliit:uploads:write`      | upload expense documents                        |
+| `spliit:ai:scan`            | extract an expense from a receipt or voice note |
 
 A client that registers without naming scopes gets the two read scopes plus
 `openid profile email offline_access` only. Write and delete scopes are never

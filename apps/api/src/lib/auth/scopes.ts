@@ -50,6 +50,32 @@ export const SPLIIT_SCOPES = {
    * shortening a recurring series with `THIS_AND_FUTURE`.
    */
   expensesDelete: 'spliit:expenses:delete',
+  /** Read a group's budgets and their progress. */
+  budgetsRead: 'spliit:budgets:read',
+  /** Create, edit and archive budgets. */
+  budgetsManage: 'spliit:budgets:manage',
+  /** Delete a budget. */
+  budgetsDelete: 'spliit:budgets:delete',
+  /**
+   * Create, list, copy, regenerate and revoke invite links and QR sessions. An
+   * invite link lets whoever holds it join the group, so this scope can grant
+   * group access to other people. Email invitations stay session-only: a token
+   * must not send email on the account's behalf.
+   */
+  invitationsManage: 'spliit:invitations:manage',
+  /**
+   * Join a group through an invite link, accept or decline an invitation, and
+   * list the account's pending invitations. Joining adds the account to a
+   * group, so it is kept apart from creating invitations for others.
+   */
+  invitationsAccept: 'spliit:invitations:accept',
+  /** Upload expense documents (receipt photos, PDFs). */
+  uploadsWrite: 'spliit:uploads:write',
+  /**
+   * Extract expense details from a receipt or a voice note. Each call spends
+   * the account's own AI quota.
+   */
+  aiScan: 'spliit:ai:scan',
 } as const
 
 export type SpliitScope = (typeof SPLIIT_SCOPES)[keyof typeof SPLIIT_SCOPES]
@@ -58,6 +84,7 @@ export type SpliitScope = (typeof SPLIIT_SCOPES)[keyof typeof SPLIIT_SCOPES]
 export const DESTRUCTIVE_SCOPES: readonly SpliitScope[] = [
   SPLIIT_SCOPES.groupsDelete,
   SPLIIT_SCOPES.expensesDelete,
+  SPLIIT_SCOPES.budgetsDelete,
 ]
 
 /** Every scope the provider recognises, including OIDC and the legacy one. */
@@ -110,6 +137,22 @@ const IMPLIED_SCOPES: Readonly<Record<string, readonly SpliitScope[]>> = {
   [SPLIIT_SCOPES.expensesDelete]: [SPLIIT_SCOPES.expensesRead],
   [SPLIIT_SCOPES.groupsManage]: [SPLIIT_SCOPES.groupsRead],
   [SPLIIT_SCOPES.groupsDelete]: [SPLIIT_SCOPES.groupsRead],
+  [SPLIIT_SCOPES.budgetsManage]: [SPLIIT_SCOPES.budgetsRead],
+  [SPLIIT_SCOPES.budgetsDelete]: [SPLIIT_SCOPES.budgetsRead],
+}
+
+/**
+ * Every scope that satisfies `required`: the scope itself, then the scopes that
+ * imply it, in catalogue order. The OpenAPI generator lists these as the
+ * accepted alternatives for an operation.
+ */
+export function scopesSatisfying(required: SpliitScope): SpliitScope[] {
+  return [
+    required,
+    ...Object.values(SPLIIT_SCOPES).filter((scope) =>
+      (IMPLIED_SCOPES[scope] ?? []).includes(required),
+    ),
+  ]
 }
 
 /** Expand a granted scope list with the scopes those grants imply. */

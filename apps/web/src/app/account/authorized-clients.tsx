@@ -40,6 +40,15 @@ const SCOPE_LABELS = {
   'spliit:expenses:read': 'AccountAuthorizedClients.scopeExpensesRead',
   'spliit:expenses:manage': 'AccountAuthorizedClients.scopeExpensesManage',
   'spliit:expenses:delete': 'AccountAuthorizedClients.scopeExpensesDelete',
+  'spliit:budgets:read': 'AccountAuthorizedClients.scopeBudgetsRead',
+  'spliit:budgets:manage': 'AccountAuthorizedClients.scopeBudgetsManage',
+  'spliit:budgets:delete': 'AccountAuthorizedClients.scopeBudgetsDelete',
+  'spliit:invitations:manage':
+    'AccountAuthorizedClients.scopeInvitationsManage',
+  'spliit:invitations:accept':
+    'AccountAuthorizedClients.scopeInvitationsAccept',
+  'spliit:uploads:write': 'AccountAuthorizedClients.scopeUploadsWrite',
+  'spliit:ai:scan': 'AccountAuthorizedClients.scopeAiScan',
   'spliit:expenses:write': 'AccountAuthorizedClients.scopeExpensesWrite',
 } as const
 

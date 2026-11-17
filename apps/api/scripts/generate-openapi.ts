@@ -38,7 +38,12 @@ import { fileURLToPath } from 'node:url'
 import { generateOpenAPIDocument } from '@trpc/openapi'
 import type { OpenAPIV3_1 } from 'openapi-types'
 
-import { ASSISTANT_WRITE_SCOPE, SPLIIT_SCOPES } from '../src/lib/auth/scopes'
+import {
+  ASSISTANT_WRITE_SCOPE,
+  SPLIIT_SCOPES,
+  scopesSatisfying,
+  type SpliitScope,
+} from '../src/lib/auth/scopes'
 import {
   applyOAuthOperationContract,
   buildOAuthProtocolFallbackPaths,
@@ -106,6 +111,18 @@ const SCOPE_DESCRIPTIONS: Record<string, string> = {
     'Read, create and edit expenses directly, and stop a recurrence.',
   [SPLIIT_SCOPES.expensesDelete]:
     'Read and delete expenses, and make edits that drop data such as shortening a recurring series. Never granted by default.',
+  [SPLIIT_SCOPES.budgetsRead]: "Read a group's budgets and their progress.",
+  [SPLIIT_SCOPES.budgetsManage]: 'Read, create, edit and archive budgets.',
+  [SPLIIT_SCOPES.budgetsDelete]:
+    'Read and delete budgets. Never granted by default.',
+  [SPLIIT_SCOPES.invitationsManage]:
+    'Create, list, copy, regenerate and revoke invite links and QR sessions. Invite links let other people join the group. Email invitations stay session-only.',
+  [SPLIIT_SCOPES.invitationsAccept]:
+    "Join groups through invite links, accept or decline invitations, and list the account's pending invitations.",
+  [SPLIIT_SCOPES.uploadsWrite]:
+    'Upload expense documents such as receipt photos and PDFs.',
+  [SPLIIT_SCOPES.aiScan]:
+    "Extract expense details from receipts and voice notes. Each call spends the account's AI quota.",
   [ASSISTANT_WRITE_SCOPE]:
     'Create an expense through the assistant preview and confirmation flow. Does not grant direct writes.',
 }
@@ -389,21 +406,12 @@ function isRestPath(path: string): boolean {
 }
 
 export function acceptedOAuthScopes(requiredScope: string): string[] {
-  if (requiredScope === SPLIIT_SCOPES.groupsRead) {
-    return [
-      SPLIIT_SCOPES.groupsRead,
-      SPLIIT_SCOPES.groupsManage,
-      SPLIIT_SCOPES.groupsDelete,
-    ]
-  }
-  if (requiredScope === SPLIIT_SCOPES.expensesRead) {
-    return [
-      SPLIIT_SCOPES.expensesRead,
-      SPLIIT_SCOPES.expensesManage,
-      SPLIIT_SCOPES.expensesDelete,
-    ]
-  }
-  return [requiredScope]
+  // Implied scopes come from the scope catalogue, so a new manage/delete scope
+  // is accepted wherever its read scope is without restating the hierarchy.
+  const known: readonly string[] = Object.values(SPLIIT_SCOPES)
+  return known.includes(requiredScope)
+    ? scopesSatisfying(requiredScope as SpliitScope)
+    : [requiredScope]
 }
 
 /**

@@ -3544,7 +3544,21 @@
       "privacyPolicy": "Zásady ochrany osobních údajů",
       "redirectsTo": "Přesměrování na",
       "unverifiedClient": "Neověřená aplikace: tuto identitu uvádí sama aplikace.",
-      "loopbackWarning": "Tato autorizace bude odeslána aplikaci běžící na tomto zařízení ({destination}). Schvalte ji pouze v případě, že toto připojení právě teď pochází přímo od vás."
+      "loopbackWarning": "Tato autorizace bude odeslána aplikaci běžící na tomto zařízení ({destination}). Schvalte ji pouze v případě, že toto připojení právě teď pochází přímo od vás.",
+      "budgetsReadTitle": "Číst rozpočty",
+      "budgetsReadDescription": "Rozpočty ve skupinách, jejich limity a kolik se z nich už utratilo.",
+      "budgetsManageTitle": "Vytvářet a upravovat rozpočty",
+      "budgetsManageDescription": "Vytvářet rozpočty, měnit jejich limity, období a kategorie a archivovat je.",
+      "budgetsDeleteTitle": "Mazat rozpočty",
+      "budgetsDeleteDescription": "Trvale mazat rozpočty. Nelze vzít zpět.",
+      "invitationsManageTitle": "Zvát lidi do skupin",
+      "invitationsManageDescription": "Vytvářet, kopírovat a rušit odkazy pozvánek a QR kódy pro skupiny a zobrazovat čekající pozvánky. Kdokoli, kdo jeden z těchto odkazů dostane, se může ke skupině připojit.",
+      "invitationsAcceptTitle": "Připojovat se ke skupinám",
+      "invitationsAcceptDescription": "Připojovat se ke skupinám přes odkazy pozvánek, přijímat nebo odmítat přijaté pozvánky a zobrazovat čekající pozvánky.",
+      "uploadsWriteTitle": "Nahrávat dokumenty",
+      "uploadsWriteDescription": "Přikládat fotky účtenek a další dokumenty k výdajům ve skupinách.",
+      "aiScanTitle": "Skenovat účtenky a hlasové poznámky",
+      "aiScanDescription": "Číst údaje o výdajích z fotek účtenek a hlasových nahrávek. Každé skenování se započítává do limitu využití AI účtu, stejně jako skenování přímo ve Spliit Cloud."
     },
     "login": {
       "missingTitle": "Autorizační požadavek chybí",
@@ -4065,7 +4079,14 @@
     "scopeExpensesRead": "Číst výdaje",
     "scopeExpensesManage": "Spravovat výdaje",
     "scopeExpensesDelete": "Mazat výdaje",
-    "scopeExpensesWrite": "Přidávat výdaje s náhledem"
+    "scopeExpensesWrite": "Přidávat výdaje s náhledem",
+    "scopeBudgetsRead": "Číst rozpočty",
+    "scopeBudgetsManage": "Spravovat rozpočty",
+    "scopeBudgetsDelete": "Mazat rozpočty",
+    "scopeInvitationsManage": "Zvát lidi",
+    "scopeInvitationsAccept": "Připojovat se ke skupinám",
+    "scopeUploadsWrite": "Nahrávat dokumenty",
+    "scopeAiScan": "Skenovat účtenky"
   },
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud nemohl použít aktualizaci.",

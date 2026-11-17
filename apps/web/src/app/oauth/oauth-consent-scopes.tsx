@@ -1,4 +1,15 @@
-import { Database, PencilLine, PlusCircle, Receipt, Trash } from 'lucide-react'
+import {
+  Database,
+  LogIn,
+  PencilLine,
+  PiggyBank,
+  PlusCircle,
+  Receipt,
+  ScanText,
+  Trash,
+  Upload,
+  UserPlus,
+} from 'lucide-react'
 
 /**
  * How each scope is presented on the consent screen.
@@ -45,6 +56,51 @@ const SCOPE_GRANTS = [
     descriptionKey: 'expensesDeleteDescription',
   },
   {
+    scope: 'spliit:budgets:read',
+    icon: PiggyBank,
+    titleKey: 'budgetsReadTitle',
+    descriptionKey: 'budgetsReadDescription',
+  },
+  {
+    scope: 'spliit:budgets:manage',
+    icon: PencilLine,
+    titleKey: 'budgetsManageTitle',
+    descriptionKey: 'budgetsManageDescription',
+  },
+  {
+    scope: 'spliit:budgets:delete',
+    icon: Trash,
+    titleKey: 'budgetsDeleteTitle',
+    descriptionKey: 'budgetsDeleteDescription',
+  },
+  {
+    // Invite links let anyone holding them join: the copy must say that this
+    // grants group access to other people, not only to the app.
+    scope: 'spliit:invitations:manage',
+    icon: UserPlus,
+    titleKey: 'invitationsManageTitle',
+    descriptionKey: 'invitationsManageDescription',
+  },
+  {
+    scope: 'spliit:invitations:accept',
+    icon: LogIn,
+    titleKey: 'invitationsAcceptTitle',
+    descriptionKey: 'invitationsAcceptDescription',
+  },
+  {
+    scope: 'spliit:uploads:write',
+    icon: Upload,
+    titleKey: 'uploadsWriteTitle',
+    descriptionKey: 'uploadsWriteDescription',
+  },
+  {
+    // The app spends the account's own AI quota; the copy says so.
+    scope: 'spliit:ai:scan',
+    icon: ScanText,
+    titleKey: 'aiScanTitle',
+    descriptionKey: 'aiScanDescription',
+  },
+  {
     // Predates the direct-access scopes: creation goes through a preview and a
     // confirmation token, which is what the description promises.
     scope: 'spliit:expenses:write',
@@ -85,6 +141,12 @@ export function describeScopes(
     asked.has('spliit:expenses:delete')
   ) {
     asked.add('spliit:expenses:read')
+  }
+  if (
+    asked.has('spliit:budgets:manage') ||
+    asked.has('spliit:budgets:delete')
+  ) {
+    asked.add('spliit:budgets:read')
   }
   return SCOPE_GRANTS.filter((grant) => asked.has(grant.scope))
 }
