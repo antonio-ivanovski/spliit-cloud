@@ -266,6 +266,11 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Install Playwright browser
+        # Run from the workspace that depends on @playwright/test so bunx
+        # resolves the pinned Playwright version. From the repo root bunx
+        # would fetch the latest release and install browsers for a revision
+        # the test runner never looks for.
+        working-directory: apps/web
         run: bunx playwright install --with-deps chromium firefox
 
       - name: Generate Prisma client
