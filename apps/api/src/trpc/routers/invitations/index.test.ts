@@ -2280,7 +2280,7 @@ describe('invitationsRouter.updatePending', () => {
 
   it('converts LINK -> EMAIL and clears the credential', async () => {
     await authAs('acct-admin')
-    seedUpdateContext({
+    const { invitation } = seedUpdateContext({
       invitation: {
         type: 'LINK',
         email: 'aGVsbG8@link.placeholder.local',
@@ -2288,6 +2288,17 @@ describe('invitationsRouter.updatePending', () => {
         expiresAt: NOW,
       },
     })
+    // The transaction re-read reflects the converted row: the new recipient
+    // address is what the invitation email must target. The synthetic link
+    // placeholder is never deliverable.
+    prismaMock.groupInvitation.findUniqueOrThrow.mockResolvedValue({
+      ...invitation,
+      type: 'EMAIL',
+      email: 'carol@example.com',
+      tokenHash: null,
+      expiresAt: null,
+      updatedAt: new Date(NOW.getTime() + 1000),
+    } as never)
     prismaMock.user.findFirst.mockResolvedValue(null as never)
     prismaMock.groupInvitation.findFirst.mockResolvedValue(null as never)
     prismaMock.groupMember.findFirst.mockResolvedValue(null as never)
