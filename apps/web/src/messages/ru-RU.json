@@ -1247,7 +1247,31 @@
       "impliedRate": "Подразумеваемый курс: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "Предложения категорий",
-    "paidForItemizedEmptyHint": "Назначьте участников позициям, чтобы увидеть долю каждого."
+    "paidForItemizedEmptyHint": "Назначьте участников позициям, чтобы увидеть долю каждого.",
+    "simplified": {
+      "hideSection": "Скрыть {name}",
+      "hideSplit": "Скрыть детали разделения",
+      "showSplit": "Показать детали разделения",
+      "pin": "Всегда показывать детали на этом устройстве",
+      "presets": "Шаблоны",
+      "you": "Вы",
+      "everyone": "всех",
+      "selectedPeople": "{selected} из {total} человек",
+      "evenly": "поровну",
+      "byShares": "по долям",
+      "byPercentage": "по %",
+      "byAmount": "по суммам",
+      "byItems": "по позициям",
+      "paidBy": "Оплачено: <payer>{name}</payer>",
+      "receivedBy": "Получено: <payer>{name}</payer>",
+      "split": "разделено <mode>{mode}</mode> на <people>{people}</people>",
+      "allocation": "начислено <mode>{mode}</mode> на <people>{people}</people>",
+      "settlement": "Расчёт: <from>{from}</from> → <to>{to}</to>",
+      "note": "Заметка",
+      "receipt": "Чек",
+      "repeat": "Повторять",
+      "items": "Позиции"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Удалить документ",
@@ -2628,6 +2652,12 @@
       "deleteConfirmationOptions": {
         "standard": "Диалог подтверждения",
         "strict": "Диалог с вводом"
+      },
+      "expenseFormDensity": {
+        "label": "Форма расхода",
+        "description": "В расширенном режиме всегда видны детали разделения, заметки и чеки. Сохраняется на этом устройстве.",
+        "compact": "Компактный (рекомендуется)",
+        "expanded": "Расширенный"
       }
     },
     "aiPreferences": {

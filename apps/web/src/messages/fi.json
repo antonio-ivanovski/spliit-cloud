@@ -1233,7 +1233,31 @@
       "impliedRate": "Laskennallinen kurssi: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "Kategoriaehdotukset",
-    "paidForItemizedEmptyHint": "Liitä osallistujat kohteisiin nähdäksesi kunkin osuuden."
+    "paidForItemizedEmptyHint": "Liitä osallistujat kohteisiin nähdäksesi kunkin osuuden.",
+    "simplified": {
+      "hideSection": "Piilota {name}",
+      "hideSplit": "Piilota jaon tiedot",
+      "showSplit": "Näytä jaon tiedot",
+      "pin": "Näytä tiedot aina tällä laitteella",
+      "presets": "Esiasetukset",
+      "you": "Sinä",
+      "everyone": "kaikkien",
+      "selectedPeople": "{selected}/{total} osallistujan",
+      "evenly": "tasan",
+      "byShares": "osuuksien mukaan",
+      "byPercentage": "prosenttien mukaan",
+      "byAmount": "summan mukaan",
+      "byItems": "nimikkeittäin",
+      "paidBy": "Maksaja <payer>{name}</payer>",
+      "receivedBy": "Vastaanottaja <payer>{name}</payer>",
+      "split": "jaettu <mode>{mode}</mode> <people>{people}</people> kesken",
+      "allocation": "kohdistettu <mode>{mode}</mode> <people>{people}</people> kesken",
+      "settlement": "<from>{from}</from> maksoi <to>{to}</to>",
+      "note": "Muistiinpano",
+      "receipt": "Kuitti",
+      "repeat": "Toista",
+      "items": "Kohteet"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Poista asiakirja",
@@ -2608,6 +2632,12 @@
       "deleteConfirmationOptions": {
         "standard": "Vahvistusikkuna",
         "strict": "Vahvistus kirjoittamalla"
+      },
+      "expenseFormDensity": {
+        "label": "Kululomake",
+        "description": "Laajennettu näyttää aina jaon tiedot, muistiinpanot ja kuitit. Tallennetaan tälle laitteelle.",
+        "compact": "Tiivis (suositus)",
+        "expanded": "Laajennettu"
       }
     },
     "aiPreferences": {

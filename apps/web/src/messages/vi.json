@@ -1103,6 +1103,12 @@
       "deleteConfirmationOptions": {
         "standard": "Hộp thoại xác nhận",
         "strict": "Hộp thoại xác nhận bằng nhập"
+      },
+      "expenseFormDensity": {
+        "label": "Biểu mẫu chi phí",
+        "description": "Mở rộng luôn hiển thị chi tiết chia, ghi chú và biên lai. Được lưu trên thiết bị này.",
+        "compact": "Thu gọn (đề xuất)",
+        "expanded": "Mở rộng"
       }
     },
     "aiPreferences": {
@@ -1946,7 +1952,31 @@
       "impliedRate": "Tỷ giá suy ra: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "Gợi ý danh mục",
-    "paidForItemizedEmptyHint": "Gán người vào các mục để xem phần của mỗi người."
+    "paidForItemizedEmptyHint": "Gán người vào các mục để xem phần của mỗi người.",
+    "simplified": {
+      "hideSection": "Ẩn {name}",
+      "hideSplit": "Ẩn chi tiết chia",
+      "showSplit": "Hiện chi tiết chia",
+      "pin": "Luôn hiển thị chi tiết trên thiết bị này",
+      "presets": "Mẫu chia",
+      "you": "Bạn",
+      "everyone": "mọi người",
+      "selectedPeople": "{selected} trên {total} người",
+      "evenly": "đều",
+      "byShares": "theo phần",
+      "byPercentage": "theo %",
+      "byAmount": "theo số tiền",
+      "byItems": "theo mục",
+      "paidBy": "Được trả bởi <payer>{name}</payer>",
+      "receivedBy": "Được nhận bởi <payer>{name}</payer>",
+      "split": "chia <mode>{mode}</mode> cho <people>{people}</people>",
+      "allocation": "phân bổ <mode>{mode}</mode> cho <people>{people}</people>",
+      "settlement": "<from>{from}</from> đã trả cho <to>{to}</to>",
+      "note": "Ghi chú",
+      "receipt": "Biên lai",
+      "repeat": "Lặp lại",
+      "items": "Mục"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Xóa tài liệu",

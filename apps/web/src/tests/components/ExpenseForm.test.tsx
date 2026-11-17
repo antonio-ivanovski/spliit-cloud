@@ -9,6 +9,7 @@ import type {
 import { ExpenseForm } from '@/app/groups/[groupId]/expenses/expense-form/index'
 import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
 import { getCurrency, useCurrencies } from '@/lib/currency'
+import { writeExpenseFormDensity } from '@/lib/expense-form-density'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { useCurrencyRate, useMediaQuery } from '@/lib/hooks'
 import {
@@ -407,6 +408,7 @@ type MockQueryResult = {
 }
 
 beforeEach(() => {
+  writeExpenseFormDensity('compact')
   accountPreferenceMocks.preferences = {
     defaultCurrencyCode: 'USD',
     timeZone: 'UTC',
@@ -654,13 +656,9 @@ describe('ExpenseForm', () => {
     await user.tab()
     expect(amount).toHaveFocus()
     await user.tab()
-    expect(date).toHaveFocus()
+    expect(paidByMode).toHaveFocus()
     await user.tab()
-    expect(time).toHaveFocus()
-    await user.tab()
-    expect(datePicker).toHaveFocus()
-    await user.tab()
-    expect(timezone).toHaveFocus()
+    expect(payer).toHaveFocus()
     await user.tab()
     expect(paidForMode).toHaveFocus()
     const participantButtons = Array.from(
@@ -671,9 +669,18 @@ describe('ExpenseForm', () => {
     await user.tab()
     expect(participantButtons[1]).toHaveFocus()
     await user.tab()
-    expect(paidByMode).toHaveFocus()
+    expect(date).toHaveFocus()
     await user.tab()
-    expect(payer).toHaveFocus()
+    expect(time).toHaveFocus()
+    await user.tab()
+    expect(datePicker).toHaveFocus()
+    await user.tab()
+    expect(timezone).toHaveFocus()
+    // Closed add-ons are keyboard-accessible on the primary path.
+    for (const name of ['Note', 'Repeat', 'Items']) {
+      await user.tab()
+      expect(screen.getByRole('button', { name })).toHaveFocus()
+    }
     await user.tab()
     expect(submit).toHaveFocus()
 
@@ -737,7 +744,7 @@ describe('ExpenseForm', () => {
     await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
   })
 
-  it('uses the same primary path on mobile and reverses it with Shift+Tab', async () => {
+  it('uses summary tokens on mobile and reverses the visible path with Shift+Tab', async () => {
     vi.mocked(useMediaQuery).mockReturnValue(false)
     const { user } = render(
       <ExpenseForm
@@ -750,12 +757,12 @@ describe('ExpenseForm', () => {
 
     const title = screen.getByRole('textbox', { name: /expense title/i })
     const amount = screen.getByRole('textbox', { name: /^amount$/i })
-    const date = screen.getByRole('textbox', { name: 'Date' })
+    const date = screen.getByRole('button', { name: /expense date/i })
     const submit = screen
       .getAllByRole('button', { name: /^save$/i })
       .find((button) => (button as HTMLButtonElement).type === 'submit')
     if (!submit) throw new Error('Submit button not found')
-    const payer = screen.getAllByRole('combobox').at(-1)
+    const payer = screen.getByRole('combobox', { name: 'Alice' })
     if (!payer) throw new Error('Payer selector not found')
 
     await user.tab()
@@ -763,12 +770,17 @@ describe('ExpenseForm', () => {
     await user.tab()
     expect(amount).toHaveFocus()
     await user.tab()
-    expect(date).toHaveFocus()
+    expect(payer).toHaveFocus()
 
     fireEvent.pointerDown(submit)
     act(() => submit.focus())
     await user.tab({ shift: true })
-    expect(payer).toHaveFocus()
+    expect(screen.getByRole('button', { name: 'Items' })).toHaveFocus()
+    act(() => date.focus())
+    await user.tab({ shift: true })
+    expect(
+      screen.getByRole('button', { name: /show split details/i }),
+    ).toHaveFocus()
   })
 
   it('inserts visible item and share inputs into the primary path', async () => {
@@ -780,14 +792,13 @@ describe('ExpenseForm', () => {
       />,
     )
 
-    await user.click(screen.getByRole('button', { name: /show items/i }))
+    await user.click(screen.getByRole('button', { name: 'Items' }))
     await user.click(screen.getByRole('button', { name: /add item/i }))
-    const dateTimezone = screen.getByRole('button', { name: /GMT/ })
     const itemTitle = screen.getByRole('textbox', { name: 'Item' })
     const itemCost = screen.getByRole('textbox', { name: 'Cost' })
     const itemQuantity = screen.getByRole('textbox', { name: 'Qty' })
 
-    act(() => dateTimezone.focus())
+    act(() => screen.getByRole('button', { name: 'Repeat' }).focus())
     await user.tab()
     expect(itemTitle).toHaveFocus()
     await user.tab()
@@ -816,13 +827,17 @@ describe('ExpenseForm', () => {
     act(() => paidByAmount.focus())
     await user.tab()
     expect(
-      Array.from(
-        document.querySelectorAll<HTMLButtonElement>('button[aria-pressed]'),
-      ).at(-2),
+      within(screen.getByRole('region', { name: 'Paid by' })).getAllByRole(
+        'button',
+        { pressed: true },
+      )[0],
     ).toHaveFocus()
     await user.tab()
     expect(
-      screen.getAllByRole('textbox', { name: 'Amount for Alice' }).at(-1),
+      within(screen.getByRole('region', { name: 'Paid by' })).getByRole(
+        'textbox',
+        { name: 'Amount for Alice' },
+      ),
     ).toHaveFocus()
   })
 
@@ -835,16 +850,14 @@ describe('ExpenseForm', () => {
       />,
     )
 
-    expect(
-      screen.getByRole('button', { name: /show items/i }),
-    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Items' })).toBeInTheDocument()
     expect(
       screen.queryByRole('button', { name: /add item/i }),
     ).not.toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: /show items/i }))
+    await user.click(screen.getByRole('button', { name: 'Items' }))
     expect(
-      screen.getByRole('button', { name: /hide items/i }),
+      screen.getByRole('button', { name: 'Hide Items' }),
     ).toBeInTheDocument()
     expect(
       screen.getByRole('button', { name: /add item/i }),
@@ -2241,9 +2254,9 @@ describe('ExpenseForm', () => {
     expect(submittedValues).toHaveProperty('amount')
   })
 
-  it('recurrence checkbox renders', () => {
+  it('starts recurrence from the Repeat add-on', async () => {
     const onSubmit = vi.fn()
-    render(
+    const { user } = render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
         onSubmit={onSubmit}
@@ -2252,8 +2265,10 @@ describe('ExpenseForm', () => {
     )
 
     expect(
-      screen.getByRole('checkbox', { name: 'Recurring' }),
-    ).toBeInTheDocument()
+      screen.queryByRole('checkbox', { name: 'Recurring' }),
+    ).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Repeat' }))
+    expect(screen.getByRole('checkbox', { name: 'Recurring' })).toBeChecked()
   })
 
   it('expands recurrence settings and opens the schedule drawer', async () => {
@@ -2265,7 +2280,7 @@ describe('ExpenseForm', () => {
       />,
     )
 
-    await user.click(screen.getByRole('checkbox', { name: 'Recurring' }))
+    await user.click(screen.getByRole('button', { name: 'Repeat' }))
     expect(screen.getByText('Repeat every')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'View all' }))
     expect(screen.getByText('Recurrence schedule')).toBeInTheDocument()
@@ -2296,7 +2311,7 @@ describe('ExpenseForm', () => {
       />,
     )
 
-    await user.click(screen.getByRole('checkbox', { name: 'Recurring' }))
+    await user.click(screen.getByRole('button', { name: 'Repeat' }))
 
     const interval = screen.getByRole('spinbutton', {
       name: 'Repeat interval',
@@ -3617,7 +3632,10 @@ describe('ExpenseForm split presets', () => {
     )
 
     await user.click(
-      screen.getAllByRole('button', { name: 'Load split preset' })[0]!,
+      within(screen.getByRole('region', { name: 'Split between' })).getByRole(
+        'button',
+        { name: 'Load split preset' },
+      ),
     )
     const chooser = screen.getByRole('dialog')
     const chooserScrollBody =
@@ -3638,7 +3656,9 @@ describe('ExpenseForm split presets', () => {
       screen.getByRole('button', { name: new RegExp(preset.name) }),
     )
 
-    expect(screen.getAllByText('Loaded preset')).toHaveLength(1)
+    expect(
+      screen.getByRole('group', { name: 'Loaded preset' }),
+    ).toBeInTheDocument()
     expect(screen.getAllByText(preset.name)).toHaveLength(1)
     expect(screen.queryByText('Shared with group')).not.toBeInTheDocument()
     expect(screen.queryByText('My default')).not.toBeInTheDocument()
@@ -3682,7 +3702,10 @@ describe('ExpenseForm split presets', () => {
     )
 
     await user.click(
-      screen.getAllByRole('button', { name: 'Load split preset' })[0]!,
+      within(screen.getByRole('region', { name: 'Split between' })).getByRole(
+        'button',
+        { name: 'Load split preset' },
+      ),
     )
     await user.click(
       screen.getByRole('button', { name: new RegExp(preset.name) }),
@@ -3750,7 +3773,9 @@ describe('ExpenseForm split presets', () => {
     )
 
     await waitFor(() => {
-      expect(screen.getAllByText('Loaded preset')).toHaveLength(1)
+      expect(
+        screen.getByRole('group', { name: 'Loaded preset' }),
+      ).toBeInTheDocument()
     })
     expect(screen.getByText(preset.name)).toBeInTheDocument()
     expect(screen.getByText('Group default')).toBeInTheDocument()
@@ -3788,7 +3813,9 @@ describe('ExpenseForm split presets', () => {
     )
 
     await waitFor(() => {
-      expect(screen.getAllByText('Loaded preset')).toHaveLength(1)
+      expect(
+        screen.getByRole('group', { name: 'Loaded preset' }),
+      ).toBeInTheDocument()
     })
     expect(screen.getByText('My default')).toBeInTheDocument()
   })
@@ -3815,6 +3842,159 @@ describe('ExpenseForm split presets', () => {
     ).not.toBeInTheDocument()
     expect(
       screen.queryByRole('button', { name: 'Save as preset' }),
+    ).not.toBeInTheDocument()
+  })
+})
+
+describe('ExpenseForm progressive disclosure', () => {
+  beforeEach(() => vi.mocked(useMediaQuery).mockReturnValue(false))
+
+  it('saves the default split without opening details and keeps payer shares in sync while hidden', async () => {
+    const onSubmit = vi.fn().mockResolvedValue('saved')
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        currentLedgerParticipantId="lp-1"
+        onSubmit={onSubmit}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+    expect(screen.getByRole('combobox', { name: 'You' })).toBeVisible()
+    expect(screen.getByRole('button', { name: 'equally' })).toBeVisible()
+    expect(
+      screen.queryByRole('radio', { name: /split: evenly/i }),
+    ).not.toBeInTheDocument()
+    await user.type(
+      screen.getByRole('textbox', { name: /expense title/i }),
+      'Dinner',
+    )
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '24')
+    await user.click(screen.getByRole('button', { name: 'Create' }))
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
+    expect(onSubmit.mock.calls[0][0]).toMatchObject({
+      amount: 2400,
+      splitMode: 'EVENLY',
+      paidByList: [{ participant: 'lp-1', shares: 2400 }],
+      paidFor: [
+        { participant: 'lp-1', shares: 1 },
+        { participant: 'lp-2', shares: 1 },
+      ],
+    })
+  })
+
+  it('reveals the chosen editor, keeps it open when returning to an even split, and preserves drafts across resizing', async () => {
+    const props = {
+      group: mockGroup as unknown as GroupShape,
+      currentLedgerParticipantId: 'lp-1',
+      onSubmit: vi.fn(),
+      runtimeFeatureFlags,
+    }
+    const { user, rerender } = render(<ExpenseForm {...props} />)
+    await user.click(screen.getByRole('button', { name: 'equally' }))
+    await waitFor(() =>
+      expect(
+        screen.getByRole('radio', { name: /split: evenly/i }),
+      ).toHaveFocus(),
+    )
+    await user.click(screen.getByRole('radio', { name: /split: by shares/i }))
+    await user.click(screen.getByRole('radio', { name: /split: evenly/i }))
+    expect(screen.getByRole('radio', { name: /split: evenly/i })).toBeVisible()
+    await user.click(screen.getByRole('button', { name: 'Note' }))
+    const note = screen.getByRole('textbox', { name: 'Notes' })
+    await user.type(note, 'Keep this draft')
+    vi.mocked(useMediaQuery).mockReturnValue(true)
+    rerender(<ExpenseForm {...props} />)
+    expect(screen.getByRole('textbox', { name: 'Notes' })).toHaveValue(
+      'Keep this draft',
+    )
+    vi.mocked(useMediaQuery).mockReturnValue(false)
+    rerender(<ExpenseForm {...props} />)
+    expect(screen.getByRole('textbox', { name: 'Notes' })).toBe(note)
+    await user.clear(note)
+    expect(note).toBeVisible()
+    await user.click(screen.getByRole('button', { name: 'Hide Notes' }))
+    expect(
+      screen.queryByRole('textbox', { name: 'Notes' }),
+    ).not.toBeInTheDocument()
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Note' })).toHaveFocus(),
+    )
+  })
+
+  it('reopens collapsed split errors before focusing them', async () => {
+    const onSubmit = vi.fn()
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={
+          {
+            ...mockExpense,
+            splitMode: 'BY_PERCENTAGE',
+            paidFor: [
+              { ledgerParticipantId: 'lp-1', shares: 4000 },
+              { ledgerParticipantId: 'lp-2', shares: 5000 },
+            ],
+          } as unknown as LoadedExpense
+        }
+        onSubmit={onSubmit}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+    expect(
+      screen.getByRole('textbox', { name: 'Percentage for Alice' }),
+    ).toBeVisible()
+    await user.click(screen.getByRole('button', { name: 'Hide split details' }))
+    expect(
+      screen.queryByRole('textbox', { name: 'Percentage for Alice' }),
+    ).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+    expect(
+      await screen.findByText('Sum of percentages must equal 100.'),
+    ).toBeVisible()
+    expect(
+      screen.getByRole('textbox', { name: 'Percentage for Alice' }),
+    ).toHaveFocus()
+    expect(onSubmit).not.toHaveBeenCalled()
+  })
+
+  it('changing density reveals details even after a manual collapse', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={mockExpense as unknown as LoadedExpense}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+    await user.click(screen.getByRole('button', { name: 'Hide Notes' }))
+    expect(
+      screen.queryByRole('textbox', { name: 'Notes' }),
+    ).not.toBeInTheDocument()
+    act(() => writeExpenseFormDensity('expanded'))
+    expect(screen.getByRole('textbox', { name: 'Notes' })).toBeVisible()
+    expect(screen.getByRole('textbox', { name: 'Date' })).toBeVisible()
+    expect(screen.getByRole('radio', { name: /split: evenly/i })).toBeVisible()
+  })
+
+  it('opens existing notes in read-only mode without add-on or collapse actions', () => {
+    render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={mockExpense as unknown as LoadedExpense}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        readOnly
+      />,
+    )
+    expect(screen.getByRole('textbox', { name: 'Notes' })).toHaveValue(
+      'Great dinner',
+    )
+    expect(screen.getByRole('textbox', { name: 'Notes' })).toBeDisabled()
+    expect(
+      screen.queryByRole('button', { name: 'Hide Notes' }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Repeat' }),
     ).not.toBeInTheDocument()
   })
 })
@@ -4289,7 +4469,7 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
 
     const paidByCard = screen
       .getByTestId('paid-by-distribution-footer')
-      .closest('div.motion-surface')
+      .closest('section')
     if (!paidByCard) throw new Error('paid-by card not found')
     await user.click(
       within(paidByCard as HTMLElement).getByRole('button', {
@@ -4516,7 +4696,7 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
 
     const paidByCard = screen
       .getByTestId('paid-by-distribution-footer')
-      .closest('div.motion-surface')
+      .closest('section')
     if (!paidByCard) throw new Error('paid-by card not found')
     await user.click(
       within(paidByCard as HTMLElement).getByRole('button', {
@@ -4561,7 +4741,7 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
 
     const paidForCard = screen
       .getByTestId('paid-for-distribution-footer')
-      .closest('div.motion-surface')
+      .closest('section')
     if (!paidForCard) throw new Error('paid-for card not found')
     expect(aliceInput).toHaveValue('10')
     expect(
@@ -4598,7 +4778,7 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
 
     const paidByCard = screen
       .getByTestId('paid-by-distribution-footer')
-      .closest('div.motion-surface')
+      .closest('section')
     if (!paidByCard) throw new Error('paid-by card not found')
     await user.click(
       within(paidByCard as HTMLElement).getByRole('button', {
@@ -4784,7 +4964,7 @@ describe('ExpenseForm validation & error reporting', () => {
 
     // Enter ITEMIZED mode: add an item, then confirm the switch dialog
     // (the item participants modal opens after the switch; close it).
-    await user.click(screen.getByRole('button', { name: /show items/i }))
+    await user.click(screen.getByRole('button', { name: 'Items' }))
     await user.click(screen.getByRole('button', { name: /add item/i }))
     await user.click(
       screen.getAllByRole('button', { name: 'Item participants' })[0]!,
@@ -4807,7 +4987,7 @@ describe('ExpenseForm validation & error reporting', () => {
 
     // Enter ITEMIZED mode: add an item, then confirm the switch dialog
     // (the item participants modal opens after the switch; close it).
-    await user.click(screen.getByRole('button', { name: /show items/i }))
+    await user.click(screen.getByRole('button', { name: 'Items' }))
     await user.click(screen.getByRole('button', { name: /add item/i }))
     await user.click(
       screen.getAllByRole('button', { name: 'Item participants' })[0]!,
@@ -4844,7 +5024,7 @@ describe('ExpenseForm validation & error reporting', () => {
       'Lunch',
     )
     await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
-    await user.click(screen.getByRole('button', { name: /show items/i }))
+    await user.click(screen.getByRole('button', { name: 'Items' }))
     await user.click(screen.getByRole('button', { name: /add item/i }))
     await user.click(
       screen.getAllByRole('button', { name: 'Item participants' })[0]!,

@@ -1240,7 +1240,31 @@
       "impliedRate": "Taux implicite : 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "Suggestions de catégorie",
-    "paidForItemizedEmptyHint": "Assignez des personnes aux articles pour voir la part de chacun."
+    "paidForItemizedEmptyHint": "Assignez des personnes aux articles pour voir la part de chacun.",
+    "simplified": {
+      "hideSection": "Masquer {name}",
+      "hideSplit": "Masquer le détail de la répartition",
+      "showSplit": "Afficher le détail de la répartition",
+      "pin": "Toujours afficher les détails sur cet appareil",
+      "presets": "Préréglages",
+      "you": "Vous",
+      "everyone": "tout le monde",
+      "selectedPeople": "{selected} sur {total} personnes",
+      "evenly": "également",
+      "byShares": "par parts",
+      "byPercentage": "par %",
+      "byAmount": "par montant",
+      "byItems": "par articles",
+      "paidBy": "Payé par <payer>{name}</payer>",
+      "receivedBy": "Reçu par <payer>{name}</payer>",
+      "split": "réparti <mode>{mode}</mode> entre <people>{people}</people>",
+      "allocation": "attribué <mode>{mode}</mode> à <people>{people}</people>",
+      "settlement": "<from>{from}</from> a payé <to>{to}</to>",
+      "note": "Notes",
+      "receipt": "Reçu",
+      "repeat": "Répétition",
+      "items": "Articles"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Supprimer le document",
@@ -2618,6 +2642,12 @@
       "deleteConfirmationOptions": {
         "standard": "Dialogue de confirmation",
         "strict": "Dialogue avec saisie"
+      },
+      "expenseFormDensity": {
+        "label": "Formulaire de dépense",
+        "description": "Le mode étendu affiche toujours le détail de la répartition, les notes et les reçus. Enregistré sur cet appareil.",
+        "compact": "Compact (recommandé)",
+        "expanded": "Étendu"
       }
     },
     "aiPreferences": {

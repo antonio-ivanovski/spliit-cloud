@@ -1863,7 +1863,31 @@
       "impliedRate": "سعر الصرف الضمني: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "اقتراحات الفئات",
-    "paidForItemizedEmptyHint": "عيّن الأشخاص إلى البنود لرؤية حصة كل شخص."
+    "paidForItemizedEmptyHint": "عيّن الأشخاص إلى البنود لرؤية حصة كل شخص.",
+    "simplified": {
+      "hideSection": "إخفاء {name}",
+      "hideSplit": "إخفاء تفاصيل التقسيم",
+      "showSplit": "إظهار تفاصيل التقسيم",
+      "pin": "إظهار التفاصيل دائمًا على هذا الجهاز",
+      "presets": "إعدادات مسبقة",
+      "you": "أنت",
+      "everyone": "الجميع",
+      "selectedPeople": "{selected} من {total} أشخاص",
+      "evenly": "بالتساوي",
+      "byShares": "حسب الحصص",
+      "byPercentage": "حسب %",
+      "byAmount": "حسب المبلغ",
+      "byItems": "حسب البنود",
+      "paidBy": "دفع بواسطة <payer>{name}</payer>",
+      "receivedBy": "استُلم بواسطة <payer>{name}</payer>",
+      "split": "قُسّم <mode>{mode}</mode> بين <people>{people}</people>",
+      "allocation": "وُزّع <mode>{mode}</mode> على <people>{people}</people>",
+      "settlement": "<from>{from}</from> سوّى مع <to>{to}</to>",
+      "note": "ملاحظة",
+      "receipt": "إيصال",
+      "repeat": "تكرار",
+      "items": "البنود"
+    }
   },
   "Categories": {
     "noCategory": "لا توجد فئة مطابقة.",
@@ -2138,6 +2162,12 @@
       "deleteConfirmationOptions": {
         "standard": "مربع حوار التأكيد",
         "strict": "مربع حوار التأكيد بالكتابة"
+      },
+      "expenseFormDensity": {
+        "label": "نموذج المصروف",
+        "description": "يعرض الوضع الموسّع دائمًا تفاصيل التقسيم والملاحظات والإيصالات. يُحفظ على هذا الجهاز.",
+        "compact": "مضغوط (موصى به)",
+        "expanded": "موسّع"
       }
     },
     "aiPreferences": {

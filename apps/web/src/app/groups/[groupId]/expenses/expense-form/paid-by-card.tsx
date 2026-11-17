@@ -4,13 +4,7 @@ import type { UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { CardTitle } from '@/components/ui/card'
 import { FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { amountAsDecimal, amountAsMinorUnits } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
@@ -389,14 +383,18 @@ export function PaidByCard(props: {
   }
 
   return (
-    <Card className="mt-4">
-      <CardHeader>
+    <section
+      className="min-w-0 space-y-3"
+      aria-label={t(`${sExpense}.paidByField.label`)}
+    >
+      <div className="space-y-2">
         <CardTitle className="flex justify-between">
           <span>{t(`${sExpense}.paidByField.label`)}</span>
         </CardTitle>
         {!readOnly && (
           <div className="mt-2 w-full">
             <SplitPresetPicker
+              compact
               presets={presets}
               group={group}
               target="paidBy"
@@ -447,13 +445,11 @@ export function PaidByCard(props: {
             )}
           </div>
         )}
-        <CardDescription>
-          {t(`${sExpense}.paidByField.description`)}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+      </div>
+      <div>
         <div className="mb-4">
           <PaidBySplitOptionCards
+            compact
             focusPriority={expenseTabPriority.paidBy}
             value={{
               isMultiPayer: isMultiPayer ?? false,
@@ -525,7 +521,7 @@ export function PaidByCard(props: {
             readOnly={readOnly}
           />
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </section>
   )
 }

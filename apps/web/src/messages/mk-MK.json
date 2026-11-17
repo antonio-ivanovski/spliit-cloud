@@ -1001,6 +1001,12 @@
       "deleteConfirmationOptions": {
         "standard": "Дијалог за потврда",
         "strict": "Дијалог со внесување"
+      },
+      "expenseFormDensity": {
+        "label": "Формулар за трошок",
+        "description": "Проширеното секогаш ги прикажува деталите за поделбата, белешките и сметките. Се зачувува на овој уред.",
+        "compact": "Компактно (препорачано)",
+        "expanded": "Проширено"
       }
     },
     "aiPreferences": {
@@ -1840,7 +1846,31 @@
       "impliedRate": "Пресметан курс: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "Предлози за категории",
-    "paidForItemizedEmptyHint": "Доделете луѓе на ставките за да го видите уделот на секого."
+    "paidForItemizedEmptyHint": "Доделете луѓе на ставките за да го видите уделот на секого.",
+    "simplified": {
+      "hideSection": "Скриј {name}",
+      "hideSplit": "Скриј детали за поделбата",
+      "showSplit": "Прикажи детали за поделбата",
+      "pin": "Секогаш прикажувај детали на овој уред",
+      "presets": "Пресети",
+      "you": "Вие",
+      "everyone": "сите",
+      "selectedPeople": "{selected} од {total} лица",
+      "evenly": "рамномерно",
+      "byShares": "по удели",
+      "byPercentage": "по %",
+      "byAmount": "по износ",
+      "byItems": "по ставки",
+      "paidBy": "Платено: <payer>{name}</payer>",
+      "receivedBy": "Примено: <payer>{name}</payer>",
+      "split": "поделено <mode>{mode}</mode> меѓу <people>{people}</people>",
+      "allocation": "доделено <mode>{mode}</mode> на <people>{people}</people>",
+      "settlement": "Порамнување: <from>{from}</from> → <to>{to}</to>",
+      "note": "Белешка",
+      "receipt": "Сметка",
+      "repeat": "Повтори",
+      "items": "Ставки"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Избриши документ",

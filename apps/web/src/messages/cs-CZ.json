@@ -1247,7 +1247,31 @@
       "impliedRate": "Odvozený kurz: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "Návrhy kategorií",
-    "paidForItemizedEmptyHint": "Přiřaďte osoby k položkám, aby bylo vidět podíl každého."
+    "paidForItemizedEmptyHint": "Přiřaďte osoby k položkám, aby bylo vidět podíl každého.",
+    "simplified": {
+      "hideSection": "Skrýt {name}",
+      "hideSplit": "Skrýt podrobnosti rozdělení",
+      "showSplit": "Zobrazit podrobnosti rozdělení",
+      "pin": "Vždy zobrazovat podrobnosti v tomto zařízení",
+      "presets": "Předvolby",
+      "you": "Vy",
+      "everyone": "všechny",
+      "selectedPeople": "{selected} ze {total} lidí",
+      "evenly": "rovnoměrně",
+      "byShares": "podle podílů",
+      "byPercentage": "podle %",
+      "byAmount": "podle částky",
+      "byItems": "podle položek",
+      "paidBy": "Zaplaceno: <payer>{name}</payer>",
+      "receivedBy": "Přijato: <payer>{name}</payer>",
+      "split": "rozděleno <mode>{mode}</mode> mezi <people>{people}</people>",
+      "allocation": "přiděleno <mode>{mode}</mode> mezi <people>{people}</people>",
+      "settlement": "Vyrovnání: <from>{from}</from> → <to>{to}</to>",
+      "note": "Poznámka",
+      "receipt": "Účtenka",
+      "repeat": "Opakovat",
+      "items": "Položky"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Smazat dokument",
@@ -2628,6 +2652,12 @@
       "deleteConfirmationOptions": {
         "standard": "Potvrzovací dialog",
         "strict": "Dialog se zadáním"
+      },
+      "expenseFormDensity": {
+        "label": "Formulář výdaje",
+        "description": "Rozšířený formulář vždy zobrazuje podrobnosti rozdělení, poznámky a účtenky. Uloženo v tomto zařízení.",
+        "compact": "Kompaktní (doporučeno)",
+        "expanded": "Rozšířený"
       }
     },
     "aiPreferences": {

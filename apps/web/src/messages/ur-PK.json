@@ -187,6 +187,12 @@
       "deleteConfirmationOptions": {
         "standard": "تصدیقی ڈائیلاگ",
         "strict": "لکھ کر تصدیقی ڈائیلاگ"
+      },
+      "expenseFormDensity": {
+        "label": "خرچ فارم",
+        "description": "توسیع شدہ ہمیشہ تقسیم کی تفصیلات، نوٹس اور رسیدیں دکھاتا ہے۔ یہ اس ڈیوائس پر محفوظ ہوتا ہے۔",
+        "compact": "مختصر (تجویز کردہ)",
+        "expanded": "توسیع شدہ"
       }
     },
     "aiPreferences": {
@@ -1877,7 +1883,31 @@
       "impliedRate": "حساب شدہ شرح: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "زمرے کی تجاویز",
-    "paidForItemizedEmptyHint": "ہر ایک کا حصہ دیکھنے کے لیے آئٹمز میں لوگوں کو تفویض کریں۔"
+    "paidForItemizedEmptyHint": "ہر ایک کا حصہ دیکھنے کے لیے آئٹمز میں لوگوں کو تفویض کریں۔",
+    "simplified": {
+      "hideSection": "{name} چھپائیں",
+      "hideSplit": "تقسیم کی تفصیلات چھپائیں",
+      "showSplit": "تقسیم کی تفصیلات دکھائیں",
+      "pin": "اس ڈیوائس پر ہمیشہ تفصیلات دکھائیں",
+      "presets": "پری سیٹس",
+      "you": "آپ",
+      "everyone": "سب",
+      "selectedPeople": "{total} میں سے {selected} افراد",
+      "evenly": "برابر",
+      "byShares": "حصص کے لحاظ سے",
+      "byPercentage": "فیصد کے لحاظ سے",
+      "byAmount": "رقم کے لحاظ سے",
+      "byItems": "آئٹمز کے لحاظ سے",
+      "paidBy": "<payer>{name}</payer> نے ادا کیا",
+      "receivedBy": "<payer>{name}</payer> نے وصول کیا",
+      "split": "<people>{people}</people> کے درمیان <mode>{mode}</mode> تقسیم",
+      "allocation": "<people>{people}</people> کو <mode>{mode}</mode> مختص",
+      "settlement": "<from>{from}</from> نے <to>{to}</to> کو تصفیہ کیا",
+      "note": "نوٹ",
+      "receipt": "رسید",
+      "repeat": "تکرار",
+      "items": "آئٹمز"
+    }
   },
   "ExpensePreview": {
     "title": "خرچے کا پیش نظارہ",

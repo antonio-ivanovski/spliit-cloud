@@ -9,10 +9,11 @@ import {
 export const expenseTabPriority = {
   title: 10,
   amount: 20,
-  date: 30,
-  item: 40,
-  paidFor: 50,
-  paidBy: 60,
+  paidBy: 30,
+  paidFor: 40,
+  date: 50,
+  addons: 55,
+  item: 60,
   submit: 70,
 } as const
 

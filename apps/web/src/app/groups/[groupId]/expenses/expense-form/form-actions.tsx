@@ -16,6 +16,7 @@ import { expenseTabPriority } from './focus-navigation'
  * `SubmitButton` subscribes to the submitting state (via useFormState).
  */
 export const FormActions = memo(function FormActions(props: {
+  wide?: boolean
   isCreate: boolean
   readOnly: boolean
   onDelete?: () => Promise<void>
@@ -31,7 +32,7 @@ export const FormActions = memo(function FormActions(props: {
 
   if (props.readOnly) {
     return (
-      <FixedActionBar>
+      <FixedActionBar wide={props.wide}>
         <Button
           variant="ghost"
           nativeButton={false}
@@ -44,7 +45,7 @@ export const FormActions = memo(function FormActions(props: {
   }
 
   return (
-    <FixedActionBar>
+    <FixedActionBar wide={props.wide}>
       {!props.isCreate && props.onDelete && (
         <DeletePopup
           onDelete={() => props.onDelete!()}

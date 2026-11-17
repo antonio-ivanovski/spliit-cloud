@@ -48,6 +48,9 @@ type Props = {
   disabled?: boolean
   className?: string
   triggerClassName?: string
+  /** Compact expense summaries can show “You” without renaming list entries. */
+  selectedLabel?: string
+  focusPriority?: number
   /** Title and action label shown by the mobile multi-select drawer. */
   mobileTitle?: string
   mobileDoneLabel?: string
@@ -65,6 +68,8 @@ export function ParticipantSelector({
   disabled = false,
   className,
   triggerClassName,
+  selectedLabel,
+  focusPriority,
   mobileTitle,
   mobileDoneLabel,
 }: Props) {
@@ -83,9 +88,10 @@ export function ParticipantSelector({
       ? selectedCount > 0
         ? t('Expenses.filters.nSelected', { count: selectedCount })
         : (multiPlaceholder ?? '')
-      : (selected?.name ?? singlePlaceholder ?? '')
+      : (selectedLabel ?? selected?.name ?? singlePlaceholder ?? '')
 
-  const triggerAriaLabel = mode === 'single' ? selected?.name : undefined
+  const triggerAriaLabel =
+    mode === 'single' ? (selectedLabel ?? selected?.name) : undefined
 
   const trigger = (
     <Button
@@ -95,6 +101,7 @@ export function ParticipantSelector({
       aria-expanded={open}
       aria-label={triggerAriaLabel}
       disabled={disabled}
+      data-expense-tab-priority={focusPriority}
       className={cn(
         'h-9 justify-between px-3 text-sm font-normal',
         className,

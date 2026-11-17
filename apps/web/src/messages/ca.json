@@ -1240,7 +1240,31 @@
       "impliedRate": "Tipus implícit: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "Suggeriments de categoria",
-    "paidForItemizedEmptyHint": "Assigna persones als articles per veure la part de cadascú."
+    "paidForItemizedEmptyHint": "Assigna persones als articles per veure la part de cadascú.",
+    "simplified": {
+      "hideSection": "Amaga {name}",
+      "hideSplit": "Amaga els detalls de la divisió",
+      "showSplit": "Mostra els detalls de la divisió",
+      "pin": "Mostra sempre els detalls en aquest dispositiu",
+      "presets": "Predefinicions",
+      "you": "Tu",
+      "everyone": "tothom",
+      "selectedPeople": "{selected} de {total} persones",
+      "evenly": "a parts iguals",
+      "byShares": "per parts",
+      "byPercentage": "per %",
+      "byAmount": "per quantitat",
+      "byItems": "per articles",
+      "paidBy": "Pagat per <payer>{name}</payer>",
+      "receivedBy": "Rebut per <payer>{name}</payer>",
+      "split": "repartit <mode>{mode}</mode> entre <people>{people}</people>",
+      "allocation": "assignat <mode>{mode}</mode> a <people>{people}</people>",
+      "settlement": "<from>{from}</from> ha pagat a <to>{to}</to>",
+      "note": "Nota",
+      "receipt": "Tiquet",
+      "repeat": "Repetició",
+      "items": "Articles"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Suprimeix el document",
@@ -2618,6 +2642,12 @@
       "deleteConfirmationOptions": {
         "standard": "Diàleg de confirmació",
         "strict": "Diàleg amb escriptura"
+      },
+      "expenseFormDensity": {
+        "label": "Formulari de despesa",
+        "description": "El mode desplegat mostra sempre els detalls de la divisió, les notes i els tiquets. Es desa en aquest dispositiu.",
+        "compact": "Compacte (recomanat)",
+        "expanded": "Desplegat"
       }
     },
     "aiPreferences": {

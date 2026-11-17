@@ -1240,7 +1240,31 @@
       "impliedRate": "Curs implicit: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "Sugestii de categorii",
-    "paidForItemizedEmptyHint": "Atribuie persoane articolelor pentru a vedea partea fiecăruia."
+    "paidForItemizedEmptyHint": "Atribuie persoane articolelor pentru a vedea partea fiecăruia.",
+    "simplified": {
+      "hideSection": "Ascunde {name}",
+      "hideSplit": "Ascunde detaliile împărțirii",
+      "showSplit": "Arată detaliile împărțirii",
+      "pin": "Arată întotdeauna detaliile pe acest dispozitiv",
+      "presets": "Presetări",
+      "you": "Tu",
+      "everyone": "toată lumea",
+      "selectedPeople": "{selected} din {total} persoane",
+      "evenly": "egal",
+      "byShares": "pe părți",
+      "byPercentage": "procentual",
+      "byAmount": "pe sume",
+      "byItems": "pe articole",
+      "paidBy": "Plătit de <payer>{name}</payer>",
+      "receivedBy": "Primit de <payer>{name}</payer>",
+      "split": "împărțit <mode>{mode}</mode> între <people>{people}</people>",
+      "allocation": "alocat <mode>{mode}</mode> către <people>{people}</people>",
+      "settlement": "<from>{from}</from> a plătit <to>{to}</to>",
+      "note": "Notiță",
+      "receipt": "Chitanță",
+      "repeat": "Repetare",
+      "items": "Articole"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Șterge documentul",
@@ -2618,6 +2642,12 @@
       "deleteConfirmationOptions": {
         "standard": "Dialog de confirmare",
         "strict": "Dialog cu introducere"
+      },
+      "expenseFormDensity": {
+        "label": "Formular de cheltuială",
+        "description": "Modul extins afișează întotdeauna detaliile împărțirii, notițele și chitanțele. Se salvează pe acest dispozitiv.",
+        "compact": "Compact (recomandat)",
+        "expanded": "Extins"
       }
     },
     "aiPreferences": {

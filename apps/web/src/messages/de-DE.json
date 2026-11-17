@@ -1257,7 +1257,31 @@
       "impliedRate": "Impliziter Wechselkurs: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "Kategorievorschläge",
-    "paidForItemizedEmptyHint": "Weise Personen den Artikeln zu, um den Anteil jeder Person zu sehen."
+    "paidForItemizedEmptyHint": "Weise Personen den Artikeln zu, um den Anteil jeder Person zu sehen.",
+    "simplified": {
+      "hideSection": "{name} ausblenden",
+      "hideSplit": "Aufteilungsdetails ausblenden",
+      "showSplit": "Aufteilungsdetails anzeigen",
+      "pin": "Details auf diesem Gerät immer anzeigen",
+      "presets": "Vorlagen",
+      "you": "Du",
+      "everyone": "alle",
+      "selectedPeople": "{selected} von {total} Personen",
+      "evenly": "gleichmäßig",
+      "byShares": "nach Anteilen",
+      "byPercentage": "prozentual",
+      "byAmount": "nach Betrag",
+      "byItems": "nach Artikeln",
+      "paidBy": "Bezahlt von <payer>{name}</payer>",
+      "receivedBy": "Erhalten von <payer>{name}</payer>",
+      "split": "aufgeteilt <mode>{mode}</mode> auf <people>{people}</people>",
+      "allocation": "verteilt <mode>{mode}</mode> auf <people>{people}</people>",
+      "settlement": "<from>{from}</from> hat <to>{to}</to> bezahlt",
+      "note": "Notiz",
+      "receipt": "Beleg",
+      "repeat": "Wiederholen",
+      "items": "Artikel"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Dokument löschen",
@@ -2640,6 +2664,12 @@
       "deleteConfirmationOptions": {
         "standard": "Bestätigungsdialog",
         "strict": "Dialog mit Eingabe"
+      },
+      "expenseFormDensity": {
+        "label": "Ausgabenformular",
+        "description": "Ausgeklappt zeigt immer Aufteilungsdetails, Notizen und Belege. Wird auf diesem Gerät gespeichert.",
+        "compact": "Kompakt (empfohlen)",
+        "expanded": "Ausgeklappt"
       }
     },
     "aiPreferences": {

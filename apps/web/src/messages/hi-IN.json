@@ -187,6 +187,12 @@
       "deleteConfirmationOptions": {
         "standard": "पुष्टि संवाद",
         "strict": "लिखकर पुष्टि संवाद"
+      },
+      "expenseFormDensity": {
+        "label": "खर्च फ़ॉर्म",
+        "description": "विस्तारित में विभाजन विवरण, नोट्स और रसीदें हमेशा दिखते हैं। यह इस डिवाइस पर सहेजा जाता है।",
+        "compact": "संक्षिप्त (अनुशंसित)",
+        "expanded": "विस्तारित"
       }
     },
     "aiPreferences": {
@@ -1877,7 +1883,31 @@
       "impliedRate": "अनुमानित दर: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "श्रेणी सुझाव",
-    "paidForItemizedEmptyHint": "प्रत्येक का हिस्सा देखने के लिए आइटमों में लोगों को नियुक्त करें।"
+    "paidForItemizedEmptyHint": "प्रत्येक का हिस्सा देखने के लिए आइटमों में लोगों को नियुक्त करें।",
+    "simplified": {
+      "hideSection": "{name} छिपाएँ",
+      "hideSplit": "विभाजन विवरण छिपाएँ",
+      "showSplit": "विभाजन विवरण दिखाएँ",
+      "pin": "इस डिवाइस पर हमेशा विवरण दिखाएँ",
+      "presets": "प्रीसेट",
+      "you": "आप",
+      "everyone": "सभी",
+      "selectedPeople": "{total} में से {selected} लोग",
+      "evenly": "समान रूप से",
+      "byShares": "शेयरों के अनुसार",
+      "byPercentage": "प्रतिशत के अनुसार",
+      "byAmount": "राशि के अनुसार",
+      "byItems": "आइटम के अनुसार",
+      "paidBy": "<payer>{name}</payer> द्वारा भुगतान",
+      "receivedBy": "<payer>{name}</payer> द्वारा प्राप्त",
+      "split": "<people>{people}</people> के बीच <mode>{mode}</mode> विभाजित",
+      "allocation": "<people>{people}</people> को <mode>{mode}</mode> आवंटित",
+      "settlement": "<from>{from}</from> ने <to>{to}</to> को भुगतान किया",
+      "note": "नोट",
+      "receipt": "रसीद",
+      "repeat": "पुनरावृत्ति",
+      "items": "आइटम"
+    }
   },
   "ExpensePreview": {
     "title": "खर्च पूर्वावलोकन",

@@ -1240,7 +1240,31 @@
       "impliedRate": "שער מחושב: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "הצעות לקטגוריות",
-    "paidForItemizedEmptyHint": "שייכו אנשים לפריטים כדי לראות את החלק של כל אחד."
+    "paidForItemizedEmptyHint": "שייכו אנשים לפריטים כדי לראות את החלק של כל אחד.",
+    "simplified": {
+      "hideSection": "הסתר {name}",
+      "hideSplit": "הסתר פרטי חלוקה",
+      "showSplit": "הצג פרטי חלוקה",
+      "pin": "הצגת פרטים תמיד במכשיר הזה",
+      "presets": "הגדרות מראש",
+      "you": "אתה",
+      "everyone": "כולם",
+      "selectedPeople": "{selected} מתוך {total} אנשים",
+      "evenly": "באופן שווה",
+      "byShares": "לפי חלקי השתתפות",
+      "byPercentage": "לפי אחוזים",
+      "byAmount": "לפי סכום",
+      "byItems": "לפי פריטים",
+      "paidBy": "שולם על ידי <payer>{name}</payer>",
+      "receivedBy": "התקבל על ידי <payer>{name}</payer>",
+      "split": "חולק <mode>{mode}</mode> בין <people>{people}</people>",
+      "allocation": "הוקצה <mode>{mode}</mode> עבור <people>{people}</people>",
+      "settlement": "<from>{from}</from> הסדיר עם <to>{to}</to>",
+      "note": "הערה",
+      "receipt": "קבלה",
+      "repeat": "חזרה",
+      "items": "פריטים"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "מחיקת מסמך",
@@ -2618,6 +2642,12 @@
       "deleteConfirmationOptions": {
         "standard": "דו־שיח לאישור",
         "strict": "דו־שיח אישור בהקלדה"
+      },
+      "expenseFormDensity": {
+        "label": "טופס הוצאה",
+        "description": "מורחב מציג תמיד את פרטי החלוקה, ההערות והקבלות. נשמר במכשיר הזה.",
+        "compact": "מצומצם (מומלץ)",
+        "expanded": "מורחב"
       }
     },
     "aiPreferences": {

@@ -1108,6 +1108,12 @@
       "deleteConfirmationOptions": {
         "standard": "Confirmation dialog",
         "strict": "Typing confirmation dialog"
+      },
+      "expenseFormDensity": {
+        "label": "Expense form",
+        "description": "Expanded always shows split details, notes and receipts. Saved on this device.",
+        "compact": "Compact (recommended)",
+        "expanded": "Expanded"
       }
     },
     "aiPreferences": {
@@ -1974,7 +1980,31 @@
       "impliedRate": "Implied rate: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "Category suggestions",
-    "paidForItemizedEmptyHint": "Assign people to items to see each share."
+    "paidForItemizedEmptyHint": "Assign people to items to see each share.",
+    "simplified": {
+      "hideSection": "Hide {name}",
+      "hideSplit": "Hide split details",
+      "showSplit": "Show split details",
+      "pin": "Always show details on this device",
+      "presets": "Presets",
+      "you": "You",
+      "everyone": "everyone",
+      "selectedPeople": "{selected} of {total} people",
+      "evenly": "equally",
+      "byShares": "by shares",
+      "byPercentage": "by %",
+      "byAmount": "by amount",
+      "byItems": "by items",
+      "paidBy": "Paid by <payer>{name}</payer>",
+      "receivedBy": "Received by <payer>{name}</payer>",
+      "split": "split <mode>{mode}</mode> among <people>{people}</people>",
+      "allocation": "allocated <mode>{mode}</mode> to <people>{people}</people>",
+      "settlement": "<from>{from}</from> paid <to>{to}</to>",
+      "note": "Note",
+      "receipt": "Receipt",
+      "repeat": "Repeat",
+      "items": "Items"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Delete document",

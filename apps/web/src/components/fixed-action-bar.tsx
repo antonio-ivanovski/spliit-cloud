@@ -1,12 +1,25 @@
 import type { ReactNode } from 'react'
 
-export function FixedActionBar({ children }: { children: ReactNode }) {
+import { cn } from '@/lib/utils'
+
+export function FixedActionBar({
+  children,
+  wide = false,
+}: {
+  children: ReactNode
+  wide?: boolean
+}) {
   return (
     <div
       data-fixed-action-bar
       className="fixed inset-x-0 fixed-bottom-inset z-40 border-t bg-background/95 pt-3 pb-[calc(0.75rem+var(--safe-area-bottom-max))] shadow-[0_-8px_24px_rgb(0_0_0/0.06)] backdrop-blur supports-[backdrop-filter]:bg-background/80"
     >
-      <div className="mx-auto flex w-full max-w-(--breakpoint-md) flex-row items-center justify-end gap-2 px-4 pb-0 sm:pb-0">
+      <div
+        className={cn(
+          'mx-auto flex w-full max-w-(--breakpoint-md) flex-row items-center justify-end gap-2 px-4 pb-0 sm:pb-0',
+          wide && 'lg:max-w-6xl',
+        )}
+      >
         {children}
       </div>
     </div>

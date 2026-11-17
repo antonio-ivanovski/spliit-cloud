@@ -290,6 +290,7 @@ export function PresetDistributionPreview({
 }
 
 export function SplitPresetPicker(props: {
+  compact?: boolean
   presets: SplitPreset[]
   group: GroupShape
   target?: 'paidBy' | 'paidFor'
@@ -363,158 +364,248 @@ export function SplitPresetPicker(props: {
 
   return (
     <>
-      <SplitPresetPanel
-        label={
-          loadedPreset ? t('SplitPreset.loadedLabel') : t('SplitPreset.heading')
-        }
-      >
-        <div className="min-w-0">
-          <div className="flex min-w-0 items-center gap-2">
-            <ChartPie
-              className="size-4 shrink-0 text-muted-foreground"
-              aria-hidden="true"
-            />
-            <span className="shrink-0 text-xs font-medium tracking-[0.08em] text-muted-foreground uppercase">
-              {loadedPreset
-                ? t('SplitPreset.loadedLabel')
-                : t('SplitPreset.heading')}
+      {props.compact ? (
+        <fieldset
+          aria-label={
+            loadedPreset
+              ? t('SplitPreset.loadedLabel')
+              : t('SplitPreset.heading')
+          }
+          className="flex min-w-0 flex-wrap items-center gap-2 text-xs"
+        >
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-auto min-h-8 max-w-full gap-1.5 px-2 text-xs"
+            disabled={disabled || loading}
+            onClick={() => setOpen(true)}
+            aria-label={
+              loading ? t('SplitPreset.loading') : t('SplitPreset.load')
+            }
+          >
+            <ChartPie className="size-3.5 shrink-0" aria-hidden="true" />
+            <span className="truncate">
+              {loadedPreset?.name ?? t('simplified.presets')}
             </span>
-            {loadedPreset && (
-              <div className="ms-auto flex min-w-0 flex-wrap items-center justify-end gap-1.5">
-                {loadedSource === 'MY_DEFAULT' && (
-                  <Badge variant="secondary" className="shrink-0 gap-1">
-                    <UserRound className="size-3" aria-hidden="true" />
-                    {tMembers('splitPresets.myDefault')}
-                  </Badge>
-                )}
-                {loadedSource === 'GROUP_DEFAULT' && (
-                  <Badge variant="secondary" className="shrink-0 gap-1">
-                    <UsersRound className="size-3" aria-hidden="true" />
-                    {tMembers('splitPresets.groupDefault')}
-                  </Badge>
-                )}
-                {modified && (
-                  <Badge variant="secondary" className="shrink-0">
-                    {t('SplitPreset.modified')}
-                  </Badge>
-                )}
-                {modified && onSaveAsNew && (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger
-                      render={
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="size-8 shrink-0"
-                          aria-label={t('SplitPreset.actions')}
-                        />
-                      }
-                    >
-                      <MoreHorizontal className="size-4" aria-hidden="true" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        disabled={disabled}
-                        onClick={onSaveAsNew}
-                      >
-                        <FilePlus2 className="me-2 size-4" aria-hidden="true" />
-                        {t('SplitPreset.saveAsNew')}
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                )}
-              </div>
-            )}
-          </div>
-          <div className="mt-3 min-w-0">
-            {loadedPreset ? (
-              <div className="min-w-0">
-                <span className="block min-w-0 text-sm leading-snug font-semibold break-words whitespace-normal">
-                  {loadedPreset.name}
-                </span>
-              </div>
+          </Button>
+          {loadedSource === 'MY_DEFAULT' && (
+            <span className="text-muted-foreground">
+              {tMembers('splitPresets.myDefault')}
+            </span>
+          )}
+          {loadedSource === 'GROUP_DEFAULT' && (
+            <span className="text-muted-foreground">
+              {tMembers('splitPresets.groupDefault')}
+            </span>
+          )}
+          {modified && (
+            <Badge variant="secondary">{t('SplitPreset.modified')}</Badge>
+          )}
+          {modified && canSaveChanges && onSaveChanges && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              disabled={disabled}
+              onClick={onSaveChanges}
+            >
+              {t('SplitPreset.saveChanges')}
+            </Button>
+          )}
+          {onSaveAsNew &&
+            (loadedPreset ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  render={
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      aria-label={t('SplitPreset.actions')}
+                    />
+                  }
+                >
+                  <MoreHorizontal className="size-4" aria-hidden="true" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem disabled={disabled} onClick={onSaveAsNew}>
+                    {t('SplitPreset.saveAsNew')}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
-              <span className="block min-w-0 text-muted-foreground">
-                {loading
-                  ? t('SplitPreset.loading')
-                  : t('SplitPreset.untracked')}
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-auto min-h-8 px-2 text-xs"
+                disabled={disabled}
+                onClick={onSaveAsNew}
+              >
+                {t('SplitPreset.saveAsPreset')}
+              </Button>
+            ))}
+        </fieldset>
+      ) : (
+        <SplitPresetPanel
+          label={
+            loadedPreset
+              ? t('SplitPreset.loadedLabel')
+              : t('SplitPreset.heading')
+          }
+        >
+          <div className="min-w-0">
+            <div className="flex min-w-0 items-center gap-2">
+              <ChartPie
+                className="size-4 shrink-0 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <span className="shrink-0 text-xs font-medium tracking-[0.08em] text-muted-foreground uppercase">
+                {loadedPreset
+                  ? t('SplitPreset.loadedLabel')
+                  : t('SplitPreset.heading')}
               </span>
+              {loadedPreset && (
+                <div className="ms-auto flex min-w-0 flex-wrap items-center justify-end gap-1.5">
+                  {loadedSource === 'MY_DEFAULT' && (
+                    <Badge variant="secondary" className="shrink-0 gap-1">
+                      <UserRound className="size-3" aria-hidden="true" />
+                      {tMembers('splitPresets.myDefault')}
+                    </Badge>
+                  )}
+                  {loadedSource === 'GROUP_DEFAULT' && (
+                    <Badge variant="secondary" className="shrink-0 gap-1">
+                      <UsersRound className="size-3" aria-hidden="true" />
+                      {tMembers('splitPresets.groupDefault')}
+                    </Badge>
+                  )}
+                  {modified && (
+                    <Badge variant="secondary" className="shrink-0">
+                      {t('SplitPreset.modified')}
+                    </Badge>
+                  )}
+                  {modified && onSaveAsNew && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger
+                        render={
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="size-8 shrink-0"
+                            aria-label={t('SplitPreset.actions')}
+                          />
+                        }
+                      >
+                        <MoreHorizontal className="size-4" aria-hidden="true" />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          disabled={disabled}
+                          onClick={onSaveAsNew}
+                        >
+                          <FilePlus2
+                            className="me-2 size-4"
+                            aria-hidden="true"
+                          />
+                          {t('SplitPreset.saveAsNew')}
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
+                </div>
+              )}
+            </div>
+            <div className="mt-3 min-w-0">
+              {loadedPreset ? (
+                <div className="min-w-0">
+                  <span className="block min-w-0 text-sm leading-snug font-semibold break-words whitespace-normal">
+                    {loadedPreset.name}
+                  </span>
+                </div>
+              ) : (
+                <span className="block min-w-0 text-muted-foreground">
+                  {loading
+                    ? t('SplitPreset.loading')
+                    : t('SplitPreset.untracked')}
+                </span>
+              )}
+            </div>
+            {!loadedPreset && (
+              <div className="mt-3 flex min-w-0 flex-wrap items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="h-8 gap-1 px-2.5 text-xs"
+                  aria-label={
+                    loading ? t('SplitPreset.loading') : t('SplitPreset.load')
+                  }
+                  disabled={disabled || loading}
+                  onClick={() => setOpen(true)}
+                >
+                  {loading && (
+                    <LoaderCircle
+                      className="size-3.5 animate-spin"
+                      aria-hidden="true"
+                    />
+                  )}
+                  {loading ? t('SplitPreset.loading') : t('SplitPreset.load')}
+                </Button>
+                {onSaveAsNew && (
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    className="h-8 gap-1 px-2.5 text-xs"
+                    disabled={disabled}
+                    onClick={onSaveAsNew}
+                  >
+                    <FilePlus2 className="size-3.5" aria-hidden="true" />
+                    {t('SplitPreset.saveAsPreset')}
+                  </Button>
+                )}
+              </div>
+            )}
+            {loadedPreset && (
+              <div className="mt-3 flex min-w-0 flex-wrap items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="h-8 gap-1 px-2.5 text-xs"
+                  disabled={disabled || loading}
+                  onClick={() => setOpen(true)}
+                >
+                  {loading ? (
+                    <LoaderCircle
+                      className="size-3.5 animate-spin"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    <FolderOpen className="size-3.5" aria-hidden="true" />
+                  )}
+                  {loading ? t('SplitPreset.loading') : t('SplitPreset.load')}
+                </Button>
+                {modified && canSaveChanges && onSaveChanges && (
+                  <Button
+                    type="button"
+                    variant="default"
+                    size="sm"
+                    className="h-8 gap-1 px-2.5 text-xs"
+                    disabled={disabled}
+                    onClick={onSaveChanges}
+                  >
+                    <Save className="size-3.5" aria-hidden="true" />
+                    {t('SplitPreset.saveChanges')}
+                  </Button>
+                )}
+              </div>
             )}
           </div>
-          {!loadedPreset && (
-            <div className="mt-3 flex min-w-0 flex-wrap items-center gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="h-8 gap-1 px-2.5 text-xs"
-                aria-label={
-                  loading ? t('SplitPreset.loading') : t('SplitPreset.load')
-                }
-                disabled={disabled || loading}
-                onClick={() => setOpen(true)}
-              >
-                {loading && (
-                  <LoaderCircle
-                    className="size-3.5 animate-spin"
-                    aria-hidden="true"
-                  />
-                )}
-                {loading ? t('SplitPreset.loading') : t('SplitPreset.load')}
-              </Button>
-              {onSaveAsNew && (
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  className="h-8 gap-1 px-2.5 text-xs"
-                  disabled={disabled}
-                  onClick={onSaveAsNew}
-                >
-                  <FilePlus2 className="size-3.5" aria-hidden="true" />
-                  {t('SplitPreset.saveAsPreset')}
-                </Button>
-              )}
-            </div>
-          )}
-          {loadedPreset && (
-            <div className="mt-3 flex min-w-0 flex-wrap items-center gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="h-8 gap-1 px-2.5 text-xs"
-                disabled={disabled || loading}
-                onClick={() => setOpen(true)}
-              >
-                {loading ? (
-                  <LoaderCircle
-                    className="size-3.5 animate-spin"
-                    aria-hidden="true"
-                  />
-                ) : (
-                  <FolderOpen className="size-3.5" aria-hidden="true" />
-                )}
-                {loading ? t('SplitPreset.loading') : t('SplitPreset.load')}
-              </Button>
-              {modified && canSaveChanges && onSaveChanges && (
-                <Button
-                  type="button"
-                  variant="default"
-                  size="sm"
-                  className="h-8 gap-1 px-2.5 text-xs"
-                  disabled={disabled}
-                  onClick={onSaveChanges}
-                >
-                  <Save className="size-3.5" aria-hidden="true" />
-                  {t('SplitPreset.saveChanges')}
-                </Button>
-              )}
-            </div>
-          )}
-        </div>
-      </SplitPresetPanel>
+        </SplitPresetPanel>
+      )}
       <ResponsiveDialog
         open={open}
         onOpenChange={(next) => {

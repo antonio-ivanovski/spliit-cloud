@@ -1258,7 +1258,31 @@
       "impliedRate": "Tipo de cambio implícito: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "Sugerencias de categoría",
-    "paidForItemizedEmptyHint": "Asigna personas a los artículos para ver la parte de cada uno."
+    "paidForItemizedEmptyHint": "Asigna personas a los artículos para ver la parte de cada uno.",
+    "simplified": {
+      "hideSection": "Ocultar {name}",
+      "hideSplit": "Ocultar los detalles de la división",
+      "showSplit": "Mostrar los detalles de la división",
+      "pin": "Mostrar siempre los detalles en este dispositivo",
+      "presets": "Preajustes",
+      "you": "Tú",
+      "everyone": "todos",
+      "selectedPeople": "{selected} de {total} personas",
+      "evenly": "a partes iguales",
+      "byShares": "por partes",
+      "byPercentage": "por %",
+      "byAmount": "por cantidad",
+      "byItems": "por artículos",
+      "paidBy": "Pagado por <payer>{name}</payer>",
+      "receivedBy": "Recibido por <payer>{name}</payer>",
+      "split": "dividido <mode>{mode}</mode> entre <people>{people}</people>",
+      "allocation": "asignado <mode>{mode}</mode> a <people>{people}</people>",
+      "settlement": "<from>{from}</from> ha pagado a <to>{to}</to>",
+      "note": "Nota",
+      "receipt": "Recibo",
+      "repeat": "Repetición",
+      "items": "Artículos"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Eliminar documento",
@@ -2642,6 +2666,12 @@
       "deleteConfirmationOptions": {
         "standard": "Diálogo de confirmación",
         "strict": "Diálogo con escritura"
+      },
+      "expenseFormDensity": {
+        "label": "Formulario de gasto",
+        "description": "El modo expandido muestra siempre los detalles de la división, las notas y los recibos. Se guarda en este dispositivo.",
+        "compact": "Compacto (recomendado)",
+        "expanded": "Expandido"
       }
     },
     "aiPreferences": {

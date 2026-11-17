@@ -149,6 +149,7 @@ function SectionLabel({ children }: { children: ReactNode }) {
 }
 
 export function PaidBySplitOptionCards(props: {
+  compact?: boolean
   value: { isMultiPayer: boolean; splitMode: SplitMode }
   onChange: (next: { isMultiPayer: boolean; splitMode: SplitMode }) => void
   readOnly?: boolean
@@ -189,6 +190,46 @@ export function PaidBySplitOptionCards(props: {
   const multiSectionLabel = t('paidBySectionMultiple')
 
   const selectedOption = PAID_BY_OPTIONS.find(isSelected)
+
+  if (props.compact) {
+    return (
+      <div className="min-w-0 space-y-3">
+        <RadioGroup
+          value={selectedOption?.id}
+          onValueChange={(id) => {
+            const option = PAID_BY_OPTIONS.find((o) => o.id === id)
+            if (option)
+              onChange({
+                isMultiPayer: option.isMultiPayer,
+                splitMode: option.splitMode,
+              })
+          }}
+          aria-label={multiSectionLabel}
+          className="flex flex-wrap gap-1 rounded-lg bg-muted/60 p-1"
+        >
+          {PAID_BY_OPTIONS.map((option) => (
+            <RadioGroupItem
+              key={option.id}
+              value={option.id}
+              disabled={readOnly}
+              aria-label={
+                option.id === 'single'
+                  ? t(option.labelKey)
+                  : `${multiSectionLabel} — ${t(option.labelKey)}`
+              }
+              title={t(option.helperKey)}
+              data-expense-tab-priority={props.focusPriority}
+              className="aspect-auto h-auto min-h-9 w-auto flex-1 basis-auto gap-1.5 rounded-md border-0 px-2 py-2 text-xs text-muted-foreground data-checked:bg-background data-checked:text-foreground data-checked:shadow-sm"
+            >
+              <option.icon className="size-3.5 shrink-0" aria-hidden="true" />
+              {t(option.labelKey)}
+            </RadioGroupItem>
+          ))}
+        </RadioGroup>
+        {selectedOption && renderContent?.(selectedOption)}
+      </div>
+    )
+  }
 
   return (
     <RadioGroup
@@ -263,6 +304,7 @@ export function PaidBySplitOptionCards(props: {
 }
 
 export function PaidForSplitOptionCards(props: {
+  compact?: boolean
   value: SplitMode
   onChange: (next: SplitMode) => void
   readOnly?: boolean
@@ -325,6 +367,37 @@ export function PaidForSplitOptionCards(props: {
       ? [ITEMIZED_OPTION, ...standardOptions]
       : standardOptions
   const showProportional = !!showProportionalOption && !hidden.has('EVENLY')
+
+  if (props.compact) {
+    return (
+      <div className="min-w-0 space-y-3">
+        <RadioGroup
+          value={value}
+          onValueChange={(next) => {
+            if (next !== 'ITEMIZED') onChange(next as SplitMode)
+          }}
+          aria-label={t('paidForSection')}
+          className="flex flex-wrap gap-1 rounded-lg bg-muted/60 p-1"
+        >
+          {visibleOptions.map((option) => (
+            <RadioGroupItem
+              key={option.id}
+              value={option.id}
+              disabled={readOnly}
+              aria-label={t('splitOptionAria', { title: t(option.labelKey) })}
+              title={t(option.helperKey)}
+              data-expense-tab-priority={props.focusPriority}
+              className="aspect-auto h-auto min-h-9 w-auto flex-1 basis-auto gap-1.5 rounded-md border-0 px-2 py-2 text-xs text-muted-foreground data-checked:bg-background data-checked:text-foreground data-checked:shadow-sm"
+            >
+              <option.icon className="size-3.5 shrink-0" aria-hidden="true" />
+              {t(option.labelKey)}
+            </RadioGroupItem>
+          ))}
+        </RadioGroup>
+        {value === 'ITEMIZED' ? renderItemizedContent : renderContent?.(value)}
+      </div>
+    )
+  }
 
   return (
     <RadioGroup

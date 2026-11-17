@@ -1226,7 +1226,31 @@
       "impliedRate": "推算匯率：1 {source} = {rate} {target}"
     },
     "otherSuggestions": "類別建議",
-    "paidForItemizedEmptyHint": "為項目指派人員即可查看每個人的分攤額。"
+    "paidForItemizedEmptyHint": "為項目指派人員即可查看每個人的分攤額。",
+    "simplified": {
+      "hideSection": "隱藏 {name}",
+      "hideSplit": "隱藏分攤詳情",
+      "showSplit": "顯示分攤詳情",
+      "pin": "在此裝置上一律顯示詳情",
+      "presets": "預設",
+      "you": "您",
+      "everyone": "所有人",
+      "selectedPeople": "{total} 人中的 {selected} 人",
+      "evenly": "平均",
+      "byShares": "按份額",
+      "byPercentage": "按百分比",
+      "byAmount": "按金額",
+      "byItems": "按項目",
+      "paidBy": "付款人：<payer>{name}</payer>",
+      "receivedBy": "收款人：<payer>{name}</payer>",
+      "split": "<mode>{mode}</mode>分攤給<people>{people}</people>",
+      "allocation": "<mode>{mode}</mode>分配給<people>{people}</people>",
+      "settlement": "<from>{from}</from> 已支付給 <to>{to}</to>",
+      "note": "備註",
+      "receipt": "收據",
+      "repeat": "重複",
+      "items": "項目"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "刪除文檔",
@@ -2601,6 +2625,12 @@
       "deleteConfirmationOptions": {
         "standard": "確認對話方塊",
         "strict": "輸入確認對話方塊"
+      },
+      "expenseFormDensity": {
+        "label": "支出表單",
+        "description": "展開後會一律顯示分攤詳情、備註和收據。儲存在此裝置上。",
+        "compact": "精簡（建議）",
+        "expanded": "展開"
       }
     },
     "aiPreferences": {

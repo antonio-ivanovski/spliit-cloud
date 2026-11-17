@@ -1,7 +1,11 @@
+import type { Ref } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { ExpenseDocumentsInput } from '@/components/expense-documents-input'
+import {
+  ExpenseDocumentsInput,
+  type ExpenseDocumentsPicker,
+} from '@/components/expense-documents-input'
 import {
   Card,
   CardContent,
@@ -22,6 +26,8 @@ import type {
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 
 export function DocumentsCard(props: {
+  embedded?: boolean
+  pickerRef?: Ref<ExpenseDocumentsPicker>
   form: UseFormReturn<ExpenseFormInputValues>
   group: Group
   readOnly: boolean
@@ -44,29 +50,33 @@ export function DocumentsCard(props: {
   } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
 
+  const input = (
+    <FormField
+      control={form.control}
+      name="documents"
+      render={({ field }) => (
+        <ExpenseDocumentsInput
+          pickerRef={props.pickerRef}
+          documents={field.value}
+          updateDocuments={field.onChange}
+          ledgerId={group.ledgerId}
+          readOnly={readOnly}
+          enableReceiptExtract={enableReceiptExtract}
+          receiptContext={receiptContext}
+          onReceiptAccepted={onReceiptAccepted}
+        />
+      )}
+    />
+  )
+  if (props.embedded) return input
+
   return (
     <Card className="mt-4">
       <CardHeader>
         <CardTitle>{t('attachDocuments')}</CardTitle>
         <CardDescription>{t(`${sExpense}.attachDescription`)}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <FormField
-          control={form.control}
-          name="documents"
-          render={({ field }) => (
-            <ExpenseDocumentsInput
-              documents={field.value}
-              updateDocuments={field.onChange}
-              ledgerId={group.ledgerId}
-              readOnly={readOnly}
-              enableReceiptExtract={enableReceiptExtract}
-              receiptContext={receiptContext}
-              onReceiptAccepted={onReceiptAccepted}
-            />
-          )}
-        />
-      </CardContent>
+      <CardContent>{input}</CardContent>
     </Card>
   )
 }

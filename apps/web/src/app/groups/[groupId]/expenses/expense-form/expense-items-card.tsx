@@ -106,6 +106,7 @@ function resolveSeedSplit(group: Group): {
 
 // react-doctor-disable-next-line react-doctor/no-giant-component -- cohesive itemized expense card, shared form state
 export function ExpenseItemsCard({
+  embedded = false,
   form,
   group,
   groupCurrency,
@@ -117,6 +118,7 @@ export function ExpenseItemsCard({
   canManagePersonal,
   renderItemParticipantsModal,
 }: {
+  embedded?: boolean
   form: UseFormReturn<ExpenseFormInputValues>
   group: Group
   /**
@@ -444,9 +446,17 @@ export function ExpenseItemsCard({
 
   return (
     <>
-      <Card className={cn('mt-4', exceedsAmount && 'border-destructive')}>
-        <Collapsible open={itemsOpen} onOpenChange={setItemsOpen}>
-          <CardHeader className="flex flex-row items-start justify-between gap-4">
+      <Card
+        className={cn(
+          embedded ? 'border-0 bg-transparent shadow-none' : 'mt-4',
+          exceedsAmount && 'border-destructive',
+        )}
+      >
+        <Collapsible open={embedded || itemsOpen} onOpenChange={setItemsOpen}>
+          <CardHeader
+            hidden={embedded}
+            className="flex flex-row items-start justify-between gap-4"
+          >
             <div className="min-w-0">
               <CardTitle>{t('items.title')}</CardTitle>
               <CardDescription>{t('items.description')}</CardDescription>
@@ -470,7 +480,7 @@ export function ExpenseItemsCard({
             </CollapsibleTrigger>
           </CardHeader>
           <CollapsibleContent>
-            <CardContent>
+            <CardContent className={embedded ? 'p-0 sm:p-0' : undefined}>
               <FormField
                 control={form.control}
                 name="items"

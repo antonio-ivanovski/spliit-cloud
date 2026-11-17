@@ -187,6 +187,12 @@
       "deleteConfirmationOptions": {
         "standard": "নিশ্চিতকরণ ডায়ালগ",
         "strict": "লিখে নিশ্চিতকরণ ডায়ালগ"
+      },
+      "expenseFormDensity": {
+        "label": "খরচের ফর্ম",
+        "description": "প্রসারিত ভিউতে সবসময় ভাগের বিবরণ, নোট ও রসিদ দেখা যায়। এটি এই ডিভাইসে সংরক্ষিত হয়।",
+        "compact": "সংক্ষিপ্ত (প্রস্তাবিত)",
+        "expanded": "প্রসারিত"
       }
     },
     "aiPreferences": {
@@ -1921,7 +1927,31 @@
       "impliedRate": "অনুমিত বিনিময় হার: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "বিভাগের পরামর্শ",
-    "paidForItemizedEmptyHint": "কার কত অংশ তা দেখতে আইটেমগুলোতে লোক নির্ধারণ করুন।"
+    "paidForItemizedEmptyHint": "কার কত অংশ তা দেখতে আইটেমগুলোতে লোক নির্ধারণ করুন।",
+    "simplified": {
+      "hideSection": "{name} লুকান",
+      "hideSplit": "ভাগের বিবরণ লুকান",
+      "showSplit": "ভাগের বিবরণ দেখান",
+      "pin": "এই ডিভাইসে সবসময় বিবরণ দেখান",
+      "presets": "প্রিসেট",
+      "you": "আপনি",
+      "everyone": "সবাই",
+      "selectedPeople": "{total} জনের মধ্যে {selected} জন",
+      "evenly": "সমানভাবে",
+      "byShares": "ভাগ অনুযায়ী",
+      "byPercentage": "শতাংশ অনুযায়ী",
+      "byAmount": "পরিমাণ অনুযায়ী",
+      "byItems": "আইটেম অনুযায়ী",
+      "paidBy": "<payer>{name}</payer> প্রদান করেছেন",
+      "receivedBy": "<payer>{name}</payer> গ্রহণ করেছেন",
+      "split": "<people>{people}</people>-এর মধ্যে <mode>{mode}</mode> ভাগ",
+      "allocation": "<people>{people}</people>-এর জন্য <mode>{mode}</mode> বরাদ্দ",
+      "settlement": "<from>{from}</from> <to>{to}</to>-কে নিষ্পত্তি করেছেন",
+      "note": "নোট",
+      "receipt": "রসিদ",
+      "repeat": "পুনরাবৃত্তি",
+      "items": "আইটেম"
+    }
   },
   "ExpensePreview": {
     "title": "খরচ প্রিভিউ",

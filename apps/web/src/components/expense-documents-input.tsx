@@ -8,7 +8,14 @@ import {
   Upload,
   X,
 } from 'lucide-react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+  type Ref,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -65,7 +72,10 @@ import {
   mimeTypeForExpenseDocumentFileName,
 } from '@spliit/domain'
 
+export type ExpenseDocumentsPicker = { openPicker: () => void }
+
 type Props = {
+  pickerRef?: Ref<ExpenseDocumentsPicker>
   documents: ExpenseFormInputValues['documents']
   updateDocuments: (documents: ExpenseFormInputValues['documents']) => void
   ledgerId?: string | null
@@ -90,6 +100,7 @@ function isImageAttachment(
 }
 
 export function ExpenseDocumentsInput({
+  pickerRef,
   documents,
   updateDocuments,
   ledgerId,
@@ -295,13 +306,17 @@ export function ExpenseDocumentsInput({
   }, [readOnly])
 
   const openFilePicker = useCallback(() => {
-    if (pending) return
+    if (pending || readOnly) return
     if (isDesktop) {
       fileInputRef.current?.click()
       return
     }
     setPickerOpen(true)
-  }, [isDesktop, pending])
+  }, [isDesktop, pending, readOnly])
+
+  useImperativeHandle(pickerRef, () => ({ openPicker: openFilePicker }), [
+    openFilePicker,
+  ])
 
   const selectFromDevice = useCallback(() => {
     setPickerOpen(false)

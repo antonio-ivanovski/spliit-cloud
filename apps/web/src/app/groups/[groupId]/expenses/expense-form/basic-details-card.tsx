@@ -32,7 +32,6 @@ import {
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
-import { Textarea } from '@/components/ui/textarea'
 import { useLocale } from '@/i18n/react'
 import type { Locale } from '@/i18n/request'
 import { localizeCurrencyInput } from '@/lib/currency-input'
@@ -59,11 +58,6 @@ import {
 } from '@spliit/domain/calculator'
 import { getCurrencyRateWarning } from '@spliit/domain/currency'
 
-import type {
-  ReceiptDocument,
-  ReceiptExtractedInfo,
-  ReceiptScanContext,
-} from '../create-from-receipt-button'
 import { AmountCalculatorDialog } from './amount-calculator-dialog'
 import { AmountInput } from './amount-input'
 import {
@@ -73,9 +67,7 @@ import {
 } from './currency-utils'
 import { applySplitToAll } from './default-item-split'
 import { getNeutralDefaultSplit } from './default-values'
-import { ExpenseDateTimeField } from './expense-date-time-field'
 import { expenseTabPriority } from './focus-navigation'
-import { RecurrenceSection } from './recurrence-section'
 import { useSuggestCategoryFromTitle } from './use-suggest-category-from-title'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
@@ -122,7 +114,6 @@ function RateWarningBanner({
 export function BasicDetailsCard(props: {
   form: UseFormReturn<ExpenseFormInputValues>
   group: Group
-  accountTimeZone: string
   groupCurrency: Currency
   readOnly: boolean
   sExpense: 'Expense' | 'Income'
@@ -130,9 +121,6 @@ export function BasicDetailsCard(props: {
   isCopy?: boolean
   /** Blank-create entry: plain Enter in Title moves focus to Amount. */
   enterFromTitleToAmount?: boolean
-  recurrenceSequence?: number
-  editScope?: 'OCCURRENCE' | 'THIS_AND_FUTURE' | null
-  initialRecurrence?: ExpenseFormInputValues['recurrence']
   heading?: string
   cancelLink?: ExpenseCancelLink
   suggestCategoryMutation: ReturnType<
@@ -171,12 +159,6 @@ export function BasicDetailsCard(props: {
   }[]
   pinnedCurrencyCode?: string
   recommendedCurrencyCodes?: string[]
-  receiptDocuments: ReceiptDocument[]
-  receiptScanContext: ReceiptScanContext
-  onReceiptAccepted: (result: {
-    info: ReceiptExtractedInfo
-    document: ReceiptDocument
-  }) => void
 }) {
   const { form, group, groupCurrency, readOnly, sExpense, isCreate, heading } =
     props
@@ -328,7 +310,7 @@ export function BasicDetailsCard(props: {
           {heading ?? t(`${sExpense}.${isCreate ? 'create' : 'edit'}`)}
         </CardTitle>
       </CardHeader>
-      <CardContent className="grid min-w-0 grid-cols-1 gap-6 sm:grid-cols-2">
+      <CardContent className="grid min-w-0 grid-cols-1 gap-6 pt-4 sm:pt-0">
         <FormField
           control={form.control}
           name="title"
@@ -805,45 +787,6 @@ export function BasicDetailsCard(props: {
             </FormItem>
           )}
         />
-
-        <section className="order-3 col-span-full grid min-w-0 gap-6">
-          <div className="min-w-0">
-            <ExpenseDateTimeField
-              form={form}
-              readOnly={readOnly}
-              sExpense={sExpense}
-            />
-          </div>
-          <div className="min-w-0">
-            <RecurrenceSection
-              form={form}
-              readOnly={readOnly}
-              isCopy={props.isCopy}
-              currentSequence={props.recurrenceSequence}
-              editScope={props.editScope}
-              initialRecurrence={props.initialRecurrence}
-            />
-          </div>
-        </section>
-
-        <section className="order-5 col-span-full grid min-w-0 gap-4">
-          <FormField
-            control={form.control}
-            name="notes"
-            render={({ field }) => (
-              <FormItem className="min-w-0">
-                <FormLabel>{t('notesField.label')}</FormLabel>
-                <FormControl>
-                  <Textarea
-                    className="min-h-24 resize-y text-base"
-                    disabled={readOnly}
-                    {...field}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-        </section>
       </CardContent>
       <ResponsiveDialog
         open={!!pendingCalculatorItems}

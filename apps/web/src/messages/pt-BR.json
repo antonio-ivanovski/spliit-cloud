@@ -647,7 +647,11 @@
       "description": "Insira o valor final, incluindo eventuais taxas.",
       "impliedRate": "Taxa implícita: 1 {source} = {rate} {target}"
     },
-    "paidForItemizedEmptyHint": "Atribua pessoas aos itens para ver a parte de cada um."
+    "paidForItemizedEmptyHint": "Atribua pessoas aos itens para ver a parte de cada um.",
+    "simplified": {
+      "you": "Você",
+      "byAmount": "por valor"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Excluir documento",
@@ -1352,6 +1356,9 @@
       "deleteConfirmationHelp": "As exclusões rápidas pedem confirmação uma vez. As exclusões com digitação pedem para você digitar primeiro o título da despesa. Excluir um grupo ou remover um membro sempre exige digitar.",
       "deleteConfirmationOptions": {
         "strict": "Diálogo com digitação"
+      },
+      "expenseFormDensity": {
+        "description": "O modo expandido mostra sempre os detalhes da divisão, as notas e os recibos. Salvo neste dispositivo."
       }
     },
     "aiPreferences": {

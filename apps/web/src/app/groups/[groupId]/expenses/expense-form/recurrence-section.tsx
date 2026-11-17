@@ -66,7 +66,7 @@ const frequencies: RecurrenceFrequency[] = [
   'YEARLY',
 ]
 
-const defaultRecurrence: RecurrenceConfig = {
+export const defaultRecurrence: RecurrenceConfig = {
   frequency: 'WEEKLY',
   interval: 1,
   end: { type: 'INDEFINITE' },

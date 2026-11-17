@@ -172,7 +172,12 @@ function sentenceCase(value: string, locale: string): string {
   return first ? `${first.toLocaleUpperCase(locale)}${rest.join('')}` : value
 }
 
-export function ExpenseDateTimeField({ form, readOnly, sExpense }: Props) {
+export function ExpenseDateTimeField({
+  form,
+  readOnly,
+  sExpense,
+  compact: compactRequested = false,
+}: Props & { compact?: boolean }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const locale = useLocale()
   const expenseDay = useWatch({
@@ -247,6 +252,9 @@ export function ExpenseDateTimeField({ form, readOnly, sExpense }: Props) {
   // incomplete or invalid) and only reaches the form on commit.
   const [dateDraft, setDateDraft] = useRecoverableExpenseInput('dateDraft')
   const [timeDraft, setTimeDraft] = useRecoverableExpenseInput('timeDraft')
+  // A recovered partial typed date/time must remain editable, not disappear
+  // behind a chip showing the last valid instant.
+  const compact = compactRequested && dateDraft === null && timeDraft === null
   const [dateError, setDateError] = useState(false)
   const [timeError, setTimeError] = useState(false)
   // Escape reverts the draft and blurs synchronously: the blur handler must
@@ -793,16 +801,28 @@ export function ExpenseDateTimeField({ form, readOnly, sExpense }: Props) {
     <Button
       type="button"
       variant="outline"
-      size="icon"
+      size={compact ? 'sm' : 'icon'}
       aria-label={t(`${sExpense}.DateField.label`)}
       aria-haspopup="dialog"
       aria-expanded={open}
       title={display.tooltip}
       data-expense-tab-priority={expenseTabPriority.date}
+      data-expense-date-input={compact ? '' : undefined}
+      data-expense-time-input={compact ? '' : undefined}
       disabled={readOnly}
-      className="h-10 w-10 shrink-0 self-end"
+      className={
+        compact
+          ? 'h-auto min-h-10 max-w-full gap-2 text-start whitespace-normal'
+          : 'h-10 w-10 shrink-0 self-end'
+      }
     >
       <CalendarIcon className="size-4" aria-hidden="true" />
+      {compact && (
+        <span>
+          {display.shortDate} · {display.time}
+          {display.tzHint && ` · ${display.tzHint}`}
+        </span>
+      )}
     </Button>
   )
 
@@ -923,20 +943,25 @@ export function ExpenseDateTimeField({ form, readOnly, sExpense }: Props) {
       name={'expenseDay' as never}
       render={() => (
         <FormItem className="col-span-full w-full min-w-0 md:col-span-2">
-          <FormLabel id={groupLabelId}>
+          <FormLabel
+            id={groupLabelId}
+            className={compact ? 'sr-only' : undefined}
+          >
             {t(`${sExpense}.DateField.label`)}
           </FormLabel>
           <div className="w-full min-w-0">
             <div className="flex min-w-0 items-start gap-2">
-              <FormControl>
-                <div
-                  className="flex min-w-0 flex-1"
-                  role="group"
-                  aria-labelledby={groupLabelId}
-                >
-                  {typedInputs}
-                </div>
-              </FormControl>
+              {!compact && (
+                <FormControl>
+                  <div
+                    className="flex min-w-0 flex-1"
+                    role="group"
+                    aria-labelledby={groupLabelId}
+                  >
+                    {typedInputs}
+                  </div>
+                </FormControl>
+              )}
               {isDesktop ? (
                 <Popover open={open} onOpenChange={handleOpenChange}>
                   <PopoverTrigger disabled={readOnly} render={pickerButton} />
@@ -1012,9 +1037,9 @@ export function ExpenseDateTimeField({ form, readOnly, sExpense }: Props) {
                 </Drawer>
               )}
             </div>
-            {timezoneShortcut}
+            {!compact && timezoneShortcut}
           </div>
-          <FormDescription className="hidden sm:block">
+          <FormDescription className={compact ? 'sr-only' : 'hidden sm:block'}>
             {t(`${sExpense}.DateField.description`)}
           </FormDescription>
           {dateError && (

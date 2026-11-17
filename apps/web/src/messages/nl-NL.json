@@ -1257,7 +1257,31 @@
       "impliedRate": "Afgeleide koers: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "Categoriesuggesties",
-    "paidForItemizedEmptyHint": "Wijs personen toe aan artikelen om ieders aandeel te zien."
+    "paidForItemizedEmptyHint": "Wijs personen toe aan artikelen om ieders aandeel te zien.",
+    "simplified": {
+      "hideSection": "{name} verbergen",
+      "hideSplit": "Verdelingsdetails verbergen",
+      "showSplit": "Verdelingsdetails tonen",
+      "pin": "Details altijd tonen op dit apparaat",
+      "presets": "Voorinstellingen",
+      "you": "Jij",
+      "everyone": "iedereen",
+      "selectedPeople": "{selected} van {total} personen",
+      "evenly": "gelijk",
+      "byShares": "op basis van delen",
+      "byPercentage": "op basis van percentage",
+      "byAmount": "op basis van bedrag",
+      "byItems": "op basis van artikelen",
+      "paidBy": "Betaald door <payer>{name}</payer>",
+      "receivedBy": "Ontvangen door <payer>{name}</payer>",
+      "split": "<mode>{mode}</mode> verdeeld over <people>{people}</people>",
+      "allocation": "<mode>{mode}</mode> toegewezen aan <people>{people}</people>",
+      "settlement": "<from>{from}</from> betaalde <to>{to}</to>",
+      "note": "Notitie",
+      "receipt": "Bon",
+      "repeat": "Herhalen",
+      "items": "Artikelen"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Document verwijderen",
@@ -2640,6 +2664,12 @@
       "deleteConfirmationOptions": {
         "standard": "Bevestigingsdialoog",
         "strict": "Dialoog met typen"
+      },
+      "expenseFormDensity": {
+        "label": "Uitgavenformulier",
+        "description": "Uitgeklapt toont altijd verdelingsdetails, notities en bonnen. Opgeslagen op dit apparaat.",
+        "compact": "Compact (aanbevolen)",
+        "expanded": "Uitgeklapt"
       }
     },
     "aiPreferences": {

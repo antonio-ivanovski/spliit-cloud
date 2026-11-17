@@ -9,7 +9,14 @@
  * between the fixed app header and the fixed action bar.
  */
 
-export type ErrorAnchorKey = 'paidFor' | 'paidByList' | 'items' | 'summary'
+export type ErrorAnchorKey =
+  | 'paidFor'
+  | 'paidByList'
+  | 'items'
+  | 'summary'
+  | 'notes'
+  | 'documents'
+  | 'recurrence'
 
 export function getErrorScrollBehavior(): ScrollBehavior {
   if (
@@ -100,6 +107,9 @@ export function resolveErrorAnchorKey(path: string): ErrorAnchorKey | null {
     return 'paidByList'
   }
   if (/^(items|itemizedRemainder)([.[]|$)/.test(path)) return 'items'
+  if (/^notes([.[]|$)/.test(path)) return 'notes'
+  if (/^documents([.[]|$)/.test(path)) return 'documents'
+  if (/^recurrence([.[]|$)/.test(path)) return 'recurrence'
   return null
 }
 

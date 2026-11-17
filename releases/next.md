@@ -19,6 +19,7 @@ who is affected, and the exact migration steps.
 
 ### 🚀 Features
 
+- The expense form now starts compact, with inline split details on mobile and a live split panel on desktop. Notes, receipts, recurring schedules and items stay available on demand; choose Expanded in app preferences to keep more details visible. (`TBD` by @TBD)
 - New expenses now open with the title field focused, and Enter in the title moves to the amount for faster manual entry, while copies, settlements, imports, and other prefilled flows keep their existing focus behavior ([#171](https://github.com/antonio-ivanovski/spliit-cloud/issues/171), thanks @eikaramba). (`TBD` by @TBD)
 
 ### 🐛 Bug fixes

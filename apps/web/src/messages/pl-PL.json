@@ -1247,7 +1247,31 @@
       "impliedRate": "Wyliczony kurs: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "Propozycje kategorii",
-    "paidForItemizedEmptyHint": "Przypisz osoby do pozycji, aby zobaczyć udział każdego."
+    "paidForItemizedEmptyHint": "Przypisz osoby do pozycji, aby zobaczyć udział każdego.",
+    "simplified": {
+      "hideSection": "Ukryj {name}",
+      "hideSplit": "Ukryj szczegóły podziału",
+      "showSplit": "Pokaż szczegóły podziału",
+      "pin": "Zawsze pokazuj szczegóły na tym urządzeniu",
+      "presets": "Presety",
+      "you": "Ty",
+      "everyone": "wszystkich",
+      "selectedPeople": "{selected} z {total} osób",
+      "evenly": "równo",
+      "byShares": "według udziałów",
+      "byPercentage": "procentowo",
+      "byAmount": "według kwot",
+      "byItems": "według pozycji",
+      "paidBy": "Zapłacono: <payer>{name}</payer>",
+      "receivedBy": "Otrzymano: <payer>{name}</payer>",
+      "split": "podzielono <mode>{mode}</mode> między <people>{people}</people>",
+      "allocation": "przydzielono <mode>{mode}</mode> dla <people>{people}</people>",
+      "settlement": "Rozliczenie: <from>{from}</from> → <to>{to}</to>",
+      "note": "Notatka",
+      "receipt": "Paragon",
+      "repeat": "Powtarzaj",
+      "items": "Pozycje"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Usuń dokument",
@@ -2628,6 +2652,12 @@
       "deleteConfirmationOptions": {
         "standard": "Dialog potwierdzenia",
         "strict": "Dialog z wpisywaniem"
+      },
+      "expenseFormDensity": {
+        "label": "Formularz wydatku",
+        "description": "Rozszerzony zawsze pokazuje szczegóły podziału, notatki i paragony. Zapisano na tym urządzeniu.",
+        "compact": "Kompaktny (zalecane)",
+        "expanded": "Rozszerzony"
       }
     },
     "aiPreferences": {

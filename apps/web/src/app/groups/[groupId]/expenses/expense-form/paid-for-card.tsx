@@ -5,13 +5,7 @@ import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { ParticipantRowAmountPreview } from '@/components/participant-row-amount-preview'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { CardTitle } from '@/components/ui/card'
 import { FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { getCurrency } from '@/lib/currency'
 import { amountAsDecimal, amountAsMinorUnits } from '@/lib/utils'
@@ -739,8 +733,11 @@ export function PaidForCard(props: {
   }
 
   return (
-    <Card className="mt-4">
-      <CardHeader>
+    <section
+      className="min-w-0 space-y-3"
+      aria-label={t(`${sExpense}.paidFor.title`)}
+    >
+      <div className="space-y-2">
         <CardTitle className="flex justify-between gap-2">
           <span>{t(`${sExpense}.paidFor.title`)}</span>
         </CardTitle>
@@ -749,6 +746,7 @@ export function PaidForCard(props: {
           {!readOnly && (
             <>
               <SplitPresetPicker
+                compact
                 presets={presets}
                 loading={presetsLoading}
                 group={group}
@@ -808,12 +806,10 @@ export function PaidForCard(props: {
             </>
           )}
         </div>
-        <CardDescription>
-          {t(`${sExpense}.paidFor.description`)}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+      </div>
+      <div>
         <PaidForSplitOptionCards
+          compact
           focusPriority={expenseTabPriority.paidFor}
           value={splitMode}
           onChange={handlePaidForSplitModeChange}
@@ -821,7 +817,7 @@ export function PaidForCard(props: {
           renderItemizedContent={renderItemizedContent}
           readOnly={readOnly}
         />
-      </CardContent>
+      </div>
 
       <LeaveItemizedDialog
         open={!!pendingModeChange}
@@ -850,6 +846,6 @@ export function PaidForCard(props: {
         onCancel={() => setPendingPreset(null)}
         onConfirm={confirmPreset}
       />
-    </Card>
+    </section>
   )
 }

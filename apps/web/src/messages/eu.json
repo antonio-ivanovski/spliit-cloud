@@ -1239,7 +1239,31 @@
       "impliedRate": "Inplizituko tasa: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "Kategoria-iradokizunak",
-    "paidForItemizedEmptyHint": "Esleitu pertsonak artikuluei, bakoitzaren zatia ikusteko."
+    "paidForItemizedEmptyHint": "Esleitu pertsonak artikuluei, bakoitzaren zatia ikusteko.",
+    "simplified": {
+      "hideSection": "Ezkutatu {name}",
+      "hideSplit": "Ezkutatu banaketaren xehetasunak",
+      "showSplit": "Erakutsi banaketaren xehetasunak",
+      "pin": "Erakutsi beti xehetasunak gailu honetan",
+      "presets": "Aurrezarpenak",
+      "you": "Zu",
+      "everyone": "denak",
+      "selectedPeople": "{total} pertsonetatik {selected}",
+      "evenly": "zati berdinetan",
+      "byShares": "partekatzetan",
+      "byPercentage": "ehunekoen bidez",
+      "byAmount": "zenbatekoen bidez",
+      "byItems": "artikuluka",
+      "paidBy": "<payer>{name}</payer>(e)k ordaindua",
+      "receivedBy": "<payer>{name}</payer>-k jasota",
+      "split": "<mode>{mode}</mode> banatuta: <people>{people}</people>",
+      "allocation": "<mode>{mode}</mode> esleituta: <people>{people}</people>",
+      "settlement": "<from>{from}</from>(e)k <to>{to}</to>(r)i ordaindu dio",
+      "note": "Oharra",
+      "receipt": "Ordainagiria",
+      "repeat": "Errepikapena",
+      "items": "Artikuluak"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Ezabatu dokumentua",
@@ -2616,6 +2640,12 @@
       "deleteConfirmationOptions": {
         "standard": "Berrespen-leihoa",
         "strict": "Idazteko berrespen-leihoa"
+      },
+      "expenseFormDensity": {
+        "label": "Gastu-formularioa",
+        "description": "Modu zabalduak beti erakusten ditu banaketaren xehetasunak, oharrak eta ordainagiriak. Gailu honetan gordetzen da.",
+        "compact": "Trinkoa (gomendatua)",
+        "expanded": "Zabaldua"
       }
     },
     "aiPreferences": {

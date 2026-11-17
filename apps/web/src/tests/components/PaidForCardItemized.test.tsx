@@ -144,7 +144,7 @@ describe('PaidForCard — itemized split option', () => {
     expect(radios[0]).toHaveAttribute('aria-checked', 'true')
 
     // Compact derived totals: nonzero shares only, no disabled picker.
-    const itemizedCard = radios[0].closest('div')
+    const itemizedCard = screen.getByRole('region', { name: 'Split between' })
     expect(itemizedCard).not.toBeNull()
     const itemizedContent = within(itemizedCard as HTMLElement)
     expect(itemizedContent.getByText('Alice')).toBeInTheDocument()

@@ -1247,7 +1247,31 @@
       "impliedRate": "Розрахунковий курс: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "Пропозиції категорій",
-    "paidForItemizedEmptyHint": "Призначте учасників позиціям, щоб побачити частку кожного."
+    "paidForItemizedEmptyHint": "Призначте учасників позиціям, щоб побачити частку кожного.",
+    "simplified": {
+      "hideSection": "Приховати {name}",
+      "hideSplit": "Приховати подробиці розподілу",
+      "showSplit": "Показати подробиці розподілу",
+      "pin": "Завжди показувати подробиці на цьому пристрої",
+      "presets": "Шаблони",
+      "you": "Ви",
+      "everyone": "усіх",
+      "selectedPeople": "{selected} з {total} осіб",
+      "evenly": "порівну",
+      "byShares": "за частками",
+      "byPercentage": "за %",
+      "byAmount": "за сумами",
+      "byItems": "за позиціями",
+      "paidBy": "Сплачено: <payer>{name}</payer>",
+      "receivedBy": "Отримано: <payer>{name}</payer>",
+      "split": "розподілено <mode>{mode}</mode> на <people>{people}</people>",
+      "allocation": "зараховано <mode>{mode}</mode> на <people>{people}</people>",
+      "settlement": "Розрахунок: <from>{from}</from> → <to>{to}</to>",
+      "note": "Примітка",
+      "receipt": "Чек",
+      "repeat": "Повторювати",
+      "items": "Позиції"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Видалити документ",
@@ -2628,6 +2652,12 @@
       "deleteConfirmationOptions": {
         "standard": "Діалог підтвердження",
         "strict": "Діалог із введенням"
+      },
+      "expenseFormDensity": {
+        "label": "Форма витрати",
+        "description": "Розгорнутий режим завжди показує подробиці розподілу, примітки та чеки. Зберігається на цьому пристрої.",
+        "compact": "Компактний (рекомендовано)",
+        "expanded": "Розгорнутий"
       }
     },
     "aiPreferences": {

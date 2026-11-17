@@ -187,6 +187,12 @@
       "deleteConfirmationOptions": {
         "standard": "Bekräftelsedialog",
         "strict": "Dialog med skrift"
+      },
+      "expenseFormDensity": {
+        "label": "Utgiftsformulär",
+        "description": "Utfälld visar alltid fördelningsdetaljer, anteckningar och kvitton. Sparas på den här enheten.",
+        "compact": "Kompakt (rekommenderas)",
+        "expanded": "Utfälld"
       }
     },
     "aiPreferences": {
@@ -1873,7 +1879,31 @@
       "impliedRate": "Härledd kurs: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "Kategoriförslag",
-    "paidForItemizedEmptyHint": "Koppla personer till rader för att se vars och ens andel."
+    "paidForItemizedEmptyHint": "Koppla personer till rader för att se vars och ens andel.",
+    "simplified": {
+      "hideSection": "Dölj {name}",
+      "hideSplit": "Dölj fördelningsdetaljer",
+      "showSplit": "Visa fördelningsdetaljer",
+      "pin": "Visa alltid detaljer på den här enheten",
+      "presets": "Mallar",
+      "you": "Du",
+      "everyone": "alla",
+      "selectedPeople": "{selected} av {total} personer",
+      "evenly": "jämnt",
+      "byShares": "efter andelar",
+      "byPercentage": "efter procent",
+      "byAmount": "efter belopp",
+      "byItems": "efter artiklar",
+      "paidBy": "Betald av <payer>{name}</payer>",
+      "receivedBy": "Mottagen av <payer>{name}</payer>",
+      "split": "fördelat <mode>{mode}</mode> mellan <people>{people}</people>",
+      "allocation": "tilldelat <mode>{mode}</mode> till <people>{people}</people>",
+      "settlement": "<from>{from}</from> betalade <to>{to}</to>",
+      "note": "Anteckning",
+      "receipt": "Kvitto",
+      "repeat": "Upprepa",
+      "items": "Rader"
+    }
   },
   "ExpensePreview": {
     "title": "Utgiftsförhandsvisning",

@@ -1233,7 +1233,31 @@
       "impliedRate": "Hesaplanan kur: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "Kategori önerileri",
-    "paidForItemizedEmptyHint": "Her kişinin payını görmek için kalemlere kişi atayın."
+    "paidForItemizedEmptyHint": "Her kişinin payını görmek için kalemlere kişi atayın.",
+    "simplified": {
+      "hideSection": "{name} bölümünü gizle",
+      "hideSplit": "Bölüşüm ayrıntılarını gizle",
+      "showSplit": "Bölüşüm ayrıntılarını göster",
+      "pin": "Ayrıntıları bu cihazda her zaman göster",
+      "presets": "Ön ayarlar",
+      "you": "Sen",
+      "everyone": "herkes",
+      "selectedPeople": "{total} kişiden {selected}",
+      "evenly": "eşit olarak",
+      "byShares": "pay adedine göre",
+      "byPercentage": "yüzdeye göre",
+      "byAmount": "tutar bazında",
+      "byItems": "kalem bazında",
+      "paidBy": "<payer>{name}</payer> ödedi",
+      "receivedBy": "<payer>{name}</payer> aldı",
+      "split": "<people>{people}</people> için <mode>{mode}</mode> paylaştırıldı",
+      "allocation": "<people>{people}</people> için <mode>{mode}</mode> dağıtıldı",
+      "settlement": "<from>{from}</from>, <to>{to}</to> kişisine borcunu kapattı",
+      "note": "Not",
+      "receipt": "Fiş",
+      "repeat": "Tekrar",
+      "items": "Kalemler"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Belgeyi sil",
@@ -2608,6 +2632,12 @@
       "deleteConfirmationOptions": {
         "standard": "Onay penceresi",
         "strict": "Yazarak onay penceresi"
+      },
+      "expenseFormDensity": {
+        "label": "Masraf formu",
+        "description": "Genişletilmiş görünüm bölüşüm ayrıntılarını, notları ve fişleri her zaman gösterir. Bu cihazda kaydedilir.",
+        "compact": "Kompakt (önerilir)",
+        "expanded": "Genişletilmiş"
       }
     },
     "aiPreferences": {

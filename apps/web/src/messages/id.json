@@ -1226,7 +1226,31 @@
       "impliedRate": "Kurs tersirat: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "Saran kategori",
-    "paidForItemizedEmptyHint": "Tetapkan orang ke item untuk melihat bagian masing-masing."
+    "paidForItemizedEmptyHint": "Tetapkan orang ke item untuk melihat bagian masing-masing.",
+    "simplified": {
+      "hideSection": "Sembunyikan {name}",
+      "hideSplit": "Sembunyikan detail pembagian",
+      "showSplit": "Tampilkan detail pembagian",
+      "pin": "Selalu tampilkan detail di perangkat ini",
+      "presets": "Preset",
+      "you": "Anda",
+      "everyone": "semua orang",
+      "selectedPeople": "{selected} dari {total} peserta",
+      "evenly": "sama rata",
+      "byShares": "berdasarkan porsi",
+      "byPercentage": "berdasarkan persenan",
+      "byAmount": "berdasarkan jumlah",
+      "byItems": "per item",
+      "paidBy": "Dibayar oleh <payer>{name}</payer>",
+      "receivedBy": "Diterima oleh <payer>{name}</payer>",
+      "split": "dibagi <mode>{mode}</mode> di antara <people>{people}</people>",
+      "allocation": "dialokasikan <mode>{mode}</mode> kepada <people>{people}</people>",
+      "settlement": "<from>{from}</from> membayar <to>{to}</to>",
+      "note": "Catatan",
+      "receipt": "Struk",
+      "repeat": "Ulangi",
+      "items": "Item"
+    }
   },
   "Currencies": {
     "search": "Cari mata uang...",
@@ -2599,6 +2623,12 @@
       "deleteConfirmationOptions": {
         "standard": "Dialog konfirmasi",
         "strict": "Dialog dengan pengetikan"
+      },
+      "expenseFormDensity": {
+        "label": "Formulir pengeluaran",
+        "description": "Tampilan lengkap selalu menampilkan detail pembagian, catatan, dan struk. Disimpan di perangkat ini.",
+        "compact": "Ringkas (disarankan)",
+        "expanded": "Lengkap"
       }
     },
     "aiPreferences": {

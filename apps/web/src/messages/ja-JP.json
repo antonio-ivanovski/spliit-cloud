@@ -1226,7 +1226,31 @@
       "impliedRate": "算出レート: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "カテゴリー候補",
-    "paidForItemizedEmptyHint": "品目に参加者を割り当てると、各人の分担額を確認できます。"
+    "paidForItemizedEmptyHint": "品目に参加者を割り当てると、各人の分担額を確認できます。",
+    "simplified": {
+      "hideSection": "{name}を非表示",
+      "hideSplit": "分割の詳細を非表示",
+      "showSplit": "分割の詳細を表示",
+      "pin": "このデバイスで常に詳細を表示",
+      "presets": "プリセット",
+      "you": "あなた",
+      "everyone": "全員",
+      "selectedPeople": "{total}人中{selected}人",
+      "evenly": "均等に",
+      "byShares": "シェアで",
+      "byPercentage": "％で",
+      "byAmount": "金額で",
+      "byItems": "品目で",
+      "paidBy": "<payer>{name}</payer>が支払い",
+      "receivedBy": "<payer>{name}</payer>が受取",
+      "split": "<people>{people}</people>に<mode>{mode}</mode>分割",
+      "allocation": "<people>{people}</people>に<mode>{mode}</mode>配分",
+      "settlement": "<from>{from}</from>が<to>{to}</to>に支払い",
+      "note": "メモ",
+      "receipt": "レシート",
+      "repeat": "繰り返し",
+      "items": "品目"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "書類を削除",
@@ -2601,6 +2625,12 @@
       "deleteConfirmationOptions": {
         "standard": "確認ダイアログ",
         "strict": "入力確認ダイアログ"
+      },
+      "expenseFormDensity": {
+        "label": "支出フォーム",
+        "description": "展開表示では、分割の詳細、メモ、レシートが常に表示されます。このデバイスに保存されます。",
+        "compact": "コンパクト（推奨）",
+        "expanded": "展開表示"
       }
     },
     "aiPreferences": {

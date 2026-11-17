@@ -56,6 +56,10 @@ import {
 } from '@/lib/account-preferences'
 import { useCurrencies } from '@/lib/currency'
 import { useDeploymentConfig } from '@/lib/deployment-config'
+import {
+  useExpenseFormDensity,
+  writeExpenseFormDensity,
+} from '@/lib/expense-form-density'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import {
   useOfflineQueryEnabled,
@@ -106,6 +110,7 @@ function hiddenTabSetsEqual(
 }
 
 export function AccountPreferences() {
+  const expenseFormDensity = useExpenseFormDensity()
   const { t } = useTranslation(undefined, {
     keyPrefix: 'AccountSettings.preferences',
   })
@@ -457,6 +462,43 @@ export function AccountPreferences() {
                     {level.label}
                   </SelectItem>
                 ))}
+              </SelectContent>
+            </Select>
+          }
+        />
+        <SettingsFieldRow
+          id="account-preference-expense-form-density"
+          label={t('expenseFormDensity.label')}
+          description={t('expenseFormDensity.description')}
+          control={
+            <Select
+              value={expenseFormDensity}
+              items={['compact', 'expanded'].map((value) => ({
+                value,
+                label: t(
+                  `expenseFormDensity.${value as 'compact' | 'expanded'}`,
+                ),
+              }))}
+              onValueChange={(value) => {
+                if (value === 'compact' || value === 'expanded')
+                  writeExpenseFormDensity(value)
+              }}
+            >
+              <SelectTrigger
+                id={settingsControlId(
+                  'account-preference-expense-form-density',
+                )}
+                className="w-full sm:max-w-xs"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="compact">
+                  {t('expenseFormDensity.compact')}
+                </SelectItem>
+                <SelectItem value="expanded">
+                  {t('expenseFormDensity.expanded')}
+                </SelectItem>
               </SelectContent>
             </Select>
           }

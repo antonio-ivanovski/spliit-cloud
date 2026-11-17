@@ -1240,7 +1240,31 @@
       "impliedRate": "Tasso implicito: 1 {source} = {rate} {target}"
     },
     "otherSuggestions": "Suggerimenti di categoria",
-    "paidForItemizedEmptyHint": "Assegna le persone alle voci per vedere ogni quota."
+    "paidForItemizedEmptyHint": "Assegna le persone alle voci per vedere ogni quota.",
+    "simplified": {
+      "hideSection": "Nascondi {name}",
+      "hideSplit": "Nascondi i dettagli della divisione",
+      "showSplit": "Mostra i dettagli della divisione",
+      "pin": "Mostra sempre i dettagli su questo dispositivo",
+      "presets": "Preimpostazioni",
+      "you": "Tu",
+      "everyone": "tutti",
+      "selectedPeople": "{selected} di {total} persone",
+      "evenly": "in parti uguali",
+      "byShares": "per quote",
+      "byPercentage": "in %",
+      "byAmount": "per importo",
+      "byItems": "per voci",
+      "paidBy": "Pagato da <payer>{name}</payer>",
+      "receivedBy": "Ricevuto da <payer>{name}</payer>",
+      "split": "diviso <mode>{mode}</mode> tra <people>{people}</people>",
+      "allocation": "assegnato <mode>{mode}</mode> a <people>{people}</people>",
+      "settlement": "<from>{from}</from> ha pagato <to>{to}</to>",
+      "note": "Nota",
+      "receipt": "Ricevuta",
+      "repeat": "Ripetizione",
+      "items": "Voci"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Elimina documento",
@@ -2618,6 +2642,12 @@
       "deleteConfirmationOptions": {
         "standard": "Dialogo di conferma",
         "strict": "Dialogo con digitazione"
+      },
+      "expenseFormDensity": {
+        "label": "Modulo spesa",
+        "description": "La modalità estesa mostra sempre i dettagli della divisione, le note e le ricevute. Salvata su questo dispositivo.",
+        "compact": "Compatto (consigliato)",
+        "expanded": "Esteso"
       }
     },
     "aiPreferences": {
