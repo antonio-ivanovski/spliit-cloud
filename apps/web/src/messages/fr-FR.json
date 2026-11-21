@@ -3523,7 +3523,21 @@
       "privacyPolicy": "Politique de confidentialité",
       "redirectsTo": "Redirection vers",
       "unverifiedClient": "Application non vérifiée : cette identité est fournie par l’application elle-même.",
-      "loopbackWarning": "Cette autorisation sera transmise à une application en cours d’exécution sur cet appareil ({destination}). N’approuvez que si vous venez de lancer cette connexion vous-même."
+      "loopbackWarning": "Cette autorisation sera transmise à une application en cours d’exécution sur cet appareil ({destination}). N’approuvez que si vous venez de lancer cette connexion vous-même.",
+      "budgetsReadTitle": "Lire les budgets",
+      "budgetsReadDescription": "Les budgets de vos groupes, leurs plafonds et les montants déjà dépensés.",
+      "budgetsManageTitle": "Créer et modifier des budgets",
+      "budgetsManageDescription": "Créer des budgets, modifier leurs plafonds, périodes et catégories, et les archiver.",
+      "budgetsDeleteTitle": "Supprimer des budgets",
+      "budgetsDeleteDescription": "Supprimer définitivement des budgets. C'est irréversible.",
+      "invitationsManageTitle": "Inviter des personnes dans vos groupes",
+      "invitationsManageDescription": "Créer, copier et révoquer des liens d'invitation et des QR codes pour vos groupes, et voir les invitations en attente. Toute personne qui reçoit l'un de ces liens peut rejoindre le groupe.",
+      "invitationsAcceptTitle": "Rejoindre des groupes",
+      "invitationsAcceptDescription": "Rejoindre des groupes via des liens d'invitation, accepter ou refuser les invitations qui vous sont envoyées, et voir vos invitations en attente.",
+      "uploadsWriteTitle": "Envoyer des documents",
+      "uploadsWriteDescription": "Joindre des photos de reçus et d'autres documents aux dépenses de vos groupes.",
+      "aiScanTitle": "Scanner des reçus et des notes vocales",
+      "aiScanDescription": "Lire les détails des dépenses à partir de photos de reçus et d'enregistrements vocaux. Chaque scan est décompté de la limite d'utilisation de l'IA de votre compte, comme lorsque vous scannez vous-même dans Spliit Cloud."
     },
     "login": {
       "missingTitle": "Demande d’autorisation manquante",
@@ -4046,7 +4060,14 @@
     "scopeExpensesRead": "Lire les dépenses",
     "scopeExpensesManage": "Gérer les dépenses",
     "scopeExpensesDelete": "Supprimer des dépenses",
-    "scopeExpensesWrite": "Ajouter des dépenses avec aperçu"
+    "scopeExpensesWrite": "Ajouter des dépenses avec aperçu",
+    "scopeBudgetsRead": "Lire les budgets",
+    "scopeBudgetsManage": "Gérer les budgets",
+    "scopeBudgetsDelete": "Supprimer des budgets",
+    "scopeInvitationsManage": "Inviter des personnes",
+    "scopeInvitationsAccept": "Rejoindre des groupes",
+    "scopeUploadsWrite": "Envoyer des documents",
+    "scopeAiScan": "Scanner des reçus"
   },
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud n’a pas pu appliquer la mise à jour.",

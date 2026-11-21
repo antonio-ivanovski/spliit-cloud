@@ -1922,7 +1922,19 @@
       "privacyPolicy": "Política de privacidade",
       "redirectsTo": "Redireciona para",
       "unverifiedClient": "App não verificado: essa identidade é fornecida pelo próprio app.",
-      "loopbackWarning": "Esta autorização será enviada para um app em execução neste dispositivo ({destination}). Aprove apenas se foi você que acabou de iniciar esta conexão."
+      "loopbackWarning": "Esta autorização será enviada para um app em execução neste dispositivo ({destination}). Aprove apenas se foi você que acabou de iniciar esta conexão.",
+      "budgetsReadDescription": "Os orçamentos dos seus grupos, os limites de cada um e quanto já foi gasto.",
+      "budgetsManageDescription": "Criar orçamentos, alterar limites, períodos e categorias, e arquivá-los.",
+      "budgetsDeleteTitle": "Excluir orçamentos",
+      "budgetsDeleteDescription": "Excluir orçamentos em definitivo. Não dá para desfazer.",
+      "invitationsManageTitle": "Convidar pessoas para seus grupos",
+      "invitationsManageDescription": "Criar, copiar e revogar links de convite e QR codes dos seus grupos, e ver convites pendentes. Qualquer pessoa que receber um desses links pode entrar no grupo.",
+      "invitationsAcceptTitle": "Entrar em grupos",
+      "invitationsAcceptDescription": "Entrar em grupos por links de convite, aceitar ou recusar convites enviados para você e ver seus convites pendentes.",
+      "uploadsWriteTitle": "Enviar documentos",
+      "uploadsWriteDescription": "Anexar fotos de recibos e outros documentos às despesas dos seus grupos.",
+      "aiScanTitle": "Escanear recibos e mensagens de voz",
+      "aiScanDescription": "Ler os dados das despesas a partir de fotos de recibos e gravações de voz. Cada leitura conta no limite de uso de IA da sua conta, como quando você escaneia direto no Spliit Cloud."
     },
     "login": {
       "missingTitle": "Solicitação de autorização ausente",
@@ -2195,7 +2207,12 @@
     "scopeExpensesRead": "Ler despesas",
     "scopeExpensesManage": "Gerenciar despesas",
     "scopeExpensesDelete": "Excluir despesas",
-    "scopeExpensesWrite": "Adicionar despesas com prévia"
+    "scopeExpensesWrite": "Adicionar despesas com prévia",
+    "scopeBudgetsManage": "Gerenciar orçamentos",
+    "scopeBudgetsDelete": "Excluir orçamentos",
+    "scopeInvitationsAccept": "Entrar em grupos",
+    "scopeUploadsWrite": "Enviar documentos",
+    "scopeAiScan": "Escanear recibos"
   },
   "PwaUpdate": {
     "waitingFailed": "O Spliit Cloud não conseguiu aplicar a atualização.",

@@ -3570,7 +3570,21 @@
       "privacyPolicy": "Privacybeleid",
       "redirectsTo": "Stuurt door naar",
       "unverifiedClient": "Niet-geverifieerde app: deze identiteit is afkomstig van de app zelf.",
-      "loopbackWarning": "Deze autorisatie wordt verstuurd naar een app die op dit apparaat draait ({destination}). Keur dit alleen goed als je deze verbinding zojuist zelf hebt gestart."
+      "loopbackWarning": "Deze autorisatie wordt verstuurd naar een app die op dit apparaat draait ({destination}). Keur dit alleen goed als je deze verbinding zojuist zelf hebt gestart.",
+      "budgetsReadTitle": "Budgetten bekijken",
+      "budgetsReadDescription": "De budgetten van je groepen, hun limieten en hoeveel er al van is uitgegeven.",
+      "budgetsManageTitle": "Budgetten maken en bewerken",
+      "budgetsManageDescription": "Nieuwe budgetten maken, hun limieten, periodes en categorieën wijzigen en ze archiveren.",
+      "budgetsDeleteTitle": "Budgetten verwijderen",
+      "budgetsDeleteDescription": "Budgetten definitief verwijderen. Dit kan niet ongedaan worden gemaakt.",
+      "invitationsManageTitle": "Mensen uitnodigen voor je groepen",
+      "invitationsManageDescription": "Uitnodigingslinks en QR-codes voor je groepen maken, kopiëren en intrekken, en openstaande uitnodigingen bekijken. Iedereen die een van deze links krijgt, kan lid worden van de groep.",
+      "invitationsAcceptTitle": "Lid worden van groepen",
+      "invitationsAcceptDescription": "Via uitnodigingslinks lid worden van groepen, uitnodigingen aan jou accepteren of weigeren en je openstaande uitnodigingen bekijken.",
+      "uploadsWriteTitle": "Documenten uploaden",
+      "uploadsWriteDescription": "Foto's van bonnen en andere documenten toevoegen aan uitgaven in je groepen.",
+      "aiScanTitle": "Bonnen en spraakberichten scannen",
+      "aiScanDescription": "Uitgavegegevens uitlezen uit foto's van bonnen en spraakopnames. Elke scan telt mee voor de AI-gebruikslimiet van je account, net als wanneer je zelf in Spliit Cloud scant."
     },
     "login": {
       "missingTitle": "Autorisatieverzoek ontbreekt",
@@ -4093,7 +4107,14 @@
     "scopeExpensesRead": "Uitgaven lezen",
     "scopeExpensesManage": "Uitgaven beheren",
     "scopeExpensesDelete": "Uitgaven verwijderen",
-    "scopeExpensesWrite": "Uitgaven toevoegen met voorbeeld"
+    "scopeExpensesWrite": "Uitgaven toevoegen met voorbeeld",
+    "scopeBudgetsRead": "Budgetten bekijken",
+    "scopeBudgetsManage": "Budgetten beheren",
+    "scopeBudgetsDelete": "Budgetten verwijderen",
+    "scopeInvitationsManage": "Mensen uitnodigen",
+    "scopeInvitationsAccept": "Lid worden van groepen",
+    "scopeUploadsWrite": "Documenten uploaden",
+    "scopeAiScan": "Bonnen scannen"
   },
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud kon de update niet toepassen.",

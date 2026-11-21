@@ -3589,7 +3589,21 @@
       "privacyPolicy": "سياسة الخصوصية",
       "redirectsTo": "إعادة التوجيه إلى",
       "unverifiedClient": "تطبيق غير مُتحقَّق منه: هذه الهوية يقدّمها التطبيق نفسه.",
-      "loopbackWarning": "سيُرسَل هذا التفويض إلى تطبيق يعمل على هذا الجهاز ({destination}). يُرجى الموافقة فقط إذا كنت قد بدأت هذا الاتصال بنفسك للتو."
+      "loopbackWarning": "سيُرسَل هذا التفويض إلى تطبيق يعمل على هذا الجهاز ({destination}). يُرجى الموافقة فقط إذا كنت قد بدأت هذا الاتصال بنفسك للتو.",
+      "budgetsReadTitle": "عرض الميزانيات",
+      "budgetsReadDescription": "ميزانيات مجموعاتك وحدودها ومقدار ما أُنفق منها.",
+      "budgetsManageTitle": "إنشاء الميزانيات وتعديلها",
+      "budgetsManageDescription": "إنشاء ميزانيات وتغيير حدودها وفتراتها وفئاتها وأرشفتها.",
+      "budgetsDeleteTitle": "حذف الميزانيات",
+      "budgetsDeleteDescription": "حذف الميزانيات نهائيًا. لا يمكن التراجع عن ذلك.",
+      "invitationsManageTitle": "دعوة أشخاص إلى مجموعاتك",
+      "invitationsManageDescription": "إنشاء روابط الدعوة ورموز QR لمجموعاتك ونسخها وإلغاؤها، وعرض الدعوات المعلّقة. يمكن لأي شخص يتلقى أحد هذه الروابط الانضمام إلى المجموعة.",
+      "invitationsAcceptTitle": "الانضمام إلى المجموعات",
+      "invitationsAcceptDescription": "الانضمام إلى المجموعات عبر روابط الدعوة، وقبول الدعوات المرسلة إليك أو رفضها، وعرض دعواتك المعلّقة.",
+      "uploadsWriteTitle": "رفع المستندات",
+      "uploadsWriteDescription": "إرفاق صور الإيصالات ومستندات أخرى بالمصروفات في مجموعاتك.",
+      "aiScanTitle": "مسح الإيصالات والملاحظات الصوتية",
+      "aiScanDescription": "قراءة تفاصيل المصروفات من صور الإيصالات والتسجيلات الصوتية. تُحتسب كل عملية مسح ضمن حد استخدام الذكاء الاصطناعي في حسابك، تمامًا كما لو أجريت المسح بنفسك في Spliit Cloud."
     },
     "login": {
       "missingTitle": "طلب التفويض مفقود",
@@ -4104,7 +4118,14 @@
     "scopeExpensesRead": "قراءة المصروفات",
     "scopeExpensesManage": "إدارة المصروفات",
     "scopeExpensesDelete": "حذف المصروفات",
-    "scopeExpensesWrite": "إضافة مصروفات مع معاينة"
+    "scopeExpensesWrite": "إضافة مصروفات مع معاينة",
+    "scopeBudgetsRead": "عرض الميزانيات",
+    "scopeBudgetsManage": "إدارة الميزانيات",
+    "scopeBudgetsDelete": "حذف الميزانيات",
+    "scopeInvitationsManage": "دعوة أشخاص",
+    "scopeInvitationsAccept": "الانضمام إلى المجموعات",
+    "scopeUploadsWrite": "رفع المستندات",
+    "scopeAiScan": "مسح الإيصالات"
   },
   "PwaUpdate": {
     "waitingFailed": "تعذّر على Spliit Cloud تطبيق التحديث.",

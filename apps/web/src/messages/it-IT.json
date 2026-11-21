@@ -3531,7 +3531,21 @@
       "privacyPolicy": "Informativa sulla privacy",
       "redirectsTo": "Reindirizza a",
       "unverifiedClient": "App non verificata: questa identità è fornita dall'app stessa.",
-      "loopbackWarning": "Questa autorizzazione verrà inviata a un'app in esecuzione su questo dispositivo ({destination}). Approvala solo se sei tu ad aver appena avviato questa connessione."
+      "loopbackWarning": "Questa autorizzazione verrà inviata a un'app in esecuzione su questo dispositivo ({destination}). Approvala solo se sei tu ad aver appena avviato questa connessione.",
+      "budgetsReadTitle": "Leggere i budget",
+      "budgetsReadDescription": "I budget dei tuoi gruppi, i loro limiti e quanto è già stato speso.",
+      "budgetsManageTitle": "Creare e modificare budget",
+      "budgetsManageDescription": "Creare budget, modificarne limiti, periodi e categorie, e archiviarli.",
+      "budgetsDeleteTitle": "Eliminare budget",
+      "budgetsDeleteDescription": "Eliminare definitivamente i budget. L'operazione è irreversibile.",
+      "invitationsManageTitle": "Invitare persone nei tuoi gruppi",
+      "invitationsManageDescription": "Creare, copiare e revocare link di invito e codici QR per i tuoi gruppi, e vedere gli inviti in sospeso. Chiunque riceva uno di questi link può entrare nel gruppo.",
+      "invitationsAcceptTitle": "Entrare nei gruppi",
+      "invitationsAcceptDescription": "Entrare nei gruppi tramite link di invito, accettare o rifiutare gli inviti ricevuti e vedere i tuoi inviti in sospeso.",
+      "uploadsWriteTitle": "Caricare documenti",
+      "uploadsWriteDescription": "Allegare foto di ricevute e altri documenti alle spese dei tuoi gruppi.",
+      "aiScanTitle": "Scansionare ricevute e note vocali",
+      "aiScanDescription": "Leggere i dettagli delle spese da foto di ricevute e registrazioni vocali. Ogni scansione conta nel limite di utilizzo dell'IA del tuo account, come quando scansioni direttamente in Spliit Cloud."
     },
     "login": {
       "missingTitle": "Richiesta di autorizzazione mancante",
@@ -4046,7 +4060,14 @@
     "scopeExpensesRead": "Leggere le spese",
     "scopeExpensesManage": "Gestire le spese",
     "scopeExpensesDelete": "Eliminare spese",
-    "scopeExpensesWrite": "Aggiungere spese con anteprima"
+    "scopeExpensesWrite": "Aggiungere spese con anteprima",
+    "scopeBudgetsRead": "Leggere i budget",
+    "scopeBudgetsManage": "Gestire i budget",
+    "scopeBudgetsDelete": "Eliminare budget",
+    "scopeInvitationsManage": "Invitare persone",
+    "scopeInvitationsAccept": "Entrare nei gruppi",
+    "scopeUploadsWrite": "Caricare documenti",
+    "scopeAiScan": "Scansionare ricevute"
   },
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud non è riuscito ad applicare l'aggiornamento.",

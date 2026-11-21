@@ -13,19 +13,22 @@ import {
 import { getRecentExpenseContext } from '../../../lib/ai/context'
 import { isTimeoutError } from '../../../lib/ai/timeout'
 import { suggestExpenseCategory } from '../../../lib/api/expenses/suggest-category'
+import { SPLIIT_SCOPES } from '../../../lib/auth/scopes'
 import type { DocumentSource } from '../../../lib/documents/types'
 import { env } from '../../../lib/env'
 import { getOcrProvider, isOcrError } from '../../../lib/ocr'
 import { scanReceiptDocument } from '../../../lib/scan/pipeline'
 import type { ReceiptExtractedResult } from '../../../lib/scan/types'
 import {
+  apiProcedure,
   enforceAiRequestLimit,
   loadGroupMutationContext,
-  protectedProcedure,
 } from '../../init'
 import { extractExpenseInformationOutputSchema } from '../../outputs/ai'
 
-export const extractExpenseInformationFromImageProcedure = protectedProcedure
+export const extractExpenseInformationFromImageProcedure = apiProcedure(
+  SPLIIT_SCOPES.aiScan,
+)
   .input(
     z.object({
       documentUrl: z.url(),

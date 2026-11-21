@@ -20,6 +20,7 @@ who is affected, and the exact migration steps.
 ### 🚀 Features
 
 - New expenses now open with the title field focused, and Enter in the title moves to the amount for faster manual entry, while copies, settlements, imports, and other prefilled flows keep their existing focus behavior ([#171](https://github.com/antonio-ivanovski/spliit-cloud/issues/171), thanks @eikaramba). (`TBD` by @TBD)
+- Apps connected through OAuth can now work with budgets, invite links, expense document uploads and receipt or voice scanning. Each has its own scope on the consent screen, and email invitations stay browser-only ([#174](https://github.com/antonio-ivanovski/spliit-cloud/issues/174), thanks @sundowndev). (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
 

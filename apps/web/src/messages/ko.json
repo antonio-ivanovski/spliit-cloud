@@ -3576,7 +3576,21 @@
       "privacyPolicy": "개인정보 처리방침",
       "redirectsTo": "리디렉션 대상",
       "unverifiedClient": "확인되지 않은 애플리케이션: 이 정보는 애플리케이션이 스스로 제공한 것입니다.",
-      "loopbackWarning": "이 권한 부여는 이 기기에서 실행 중인 애플리케이션({destination})으로 전송됩니다. 방금 직접 이 연결을 시작한 경우에만 허용하세요."
+      "loopbackWarning": "이 권한 부여는 이 기기에서 실행 중인 애플리케이션({destination})으로 전송됩니다. 방금 직접 이 연결을 시작한 경우에만 허용하세요.",
+      "budgetsReadTitle": "예산 보기",
+      "budgetsReadDescription": "그룹의 예산, 한도, 그리고 지금까지 지출한 금액.",
+      "budgetsManageTitle": "예산 생성 및 수정",
+      "budgetsManageDescription": "예산을 만들고 한도, 기간, 카테고리를 변경하거나 보관합니다.",
+      "budgetsDeleteTitle": "예산 삭제",
+      "budgetsDeleteDescription": "예산을 영구적으로 삭제합니다. 되돌릴 수 없습니다.",
+      "invitationsManageTitle": "그룹에 사람 초대",
+      "invitationsManageDescription": "그룹의 초대 링크와 QR 코드를 만들고, 복사하고, 취소하며 대기 중인 초대를 확인합니다. 이 링크를 받은 사람은 누구나 그룹에 참여할 수 있습니다.",
+      "invitationsAcceptTitle": "그룹 참여",
+      "invitationsAcceptDescription": "초대 링크로 그룹에 참여하고, 받은 초대를 수락하거나 거절하며, 대기 중인 초대를 확인합니다.",
+      "uploadsWriteTitle": "문서 업로드",
+      "uploadsWriteDescription": "그룹 지출에 영수증 사진과 기타 문서를 첨부합니다.",
+      "aiScanTitle": "영수증 및 음성 메모 스캔",
+      "aiScanDescription": "영수증 사진과 음성 녹음에서 지출 정보를 읽어 옵니다. Spliit Cloud에서 직접 스캔할 때와 마찬가지로 스캔할 때마다 계정의 AI 사용 한도에 포함됩니다."
     },
     "login": {
       "missingTitle": "인증 요청 없음",
@@ -4091,7 +4105,14 @@
     "scopeExpensesRead": "지출 읽기",
     "scopeExpensesManage": "지출 관리",
     "scopeExpensesDelete": "지출 삭제",
-    "scopeExpensesWrite": "미리 보기로 지출 추가"
+    "scopeExpensesWrite": "미리 보기로 지출 추가",
+    "scopeBudgetsRead": "예산 보기",
+    "scopeBudgetsManage": "예산 관리",
+    "scopeBudgetsDelete": "예산 삭제",
+    "scopeInvitationsManage": "사람 초대",
+    "scopeInvitationsAccept": "그룹 참여",
+    "scopeUploadsWrite": "문서 업로드",
+    "scopeAiScan": "영수증 스캔"
   },
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud에서 업데이트를 적용할 수 없습니다.",

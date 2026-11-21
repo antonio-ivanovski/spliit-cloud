@@ -3531,7 +3531,21 @@
       "privacyPolicy": "Politica de confidențialitate",
       "redirectsTo": "Redirecționează către",
       "unverifiedClient": "Aplicație neverificată: această identitate este furnizată chiar de aplicație.",
-      "loopbackWarning": "Această autorizare va fi trimisă unei aplicații care rulează pe acest dispozitiv ({destination}). Aprobă doar dacă tocmai ai inițiat chiar tu această conectare."
+      "loopbackWarning": "Această autorizare va fi trimisă unei aplicații care rulează pe acest dispozitiv ({destination}). Aprobă doar dacă tocmai ai inițiat chiar tu această conectare.",
+      "budgetsReadTitle": "Citește bugetele",
+      "budgetsReadDescription": "Bugetele grupurilor tale, limitele lor și cât s-a cheltuit din ele.",
+      "budgetsManageTitle": "Creează și modifică bugete",
+      "budgetsManageDescription": "Creează bugete, schimbă-le limitele, perioadele și categoriile și arhivează-le.",
+      "budgetsDeleteTitle": "Șterge bugete",
+      "budgetsDeleteDescription": "Șterge definitiv bugete. Nu se poate anula.",
+      "invitationsManageTitle": "Invită persoane în grupurile tale",
+      "invitationsManageDescription": "Creează, copiază și revocă linkuri de invitație și coduri QR pentru grupurile tale și vezi invitațiile în așteptare. Oricine primește unul dintre aceste linkuri se poate alătura grupului.",
+      "invitationsAcceptTitle": "Alătură-te grupurilor",
+      "invitationsAcceptDescription": "Alătură-te grupurilor prin linkuri de invitație, acceptă sau refuză invitațiile primite și vezi invitațiile tale în așteptare.",
+      "uploadsWriteTitle": "Încarcă documente",
+      "uploadsWriteDescription": "Atașează fotografii ale bonurilor și alte documente la cheltuielile grupurilor tale.",
+      "aiScanTitle": "Scanează bonuri și note vocale",
+      "aiScanDescription": "Citește detaliile cheltuielilor din fotografii ale bonurilor și înregistrări vocale. Fiecare scanare se scade din limita de utilizare AI a contului tău, la fel ca atunci când scanezi direct în Spliit Cloud."
     },
     "login": {
       "missingTitle": "Cerere de autorizare lipsă",
@@ -4046,7 +4060,14 @@
     "scopeExpensesRead": "Citește cheltuielile",
     "scopeExpensesManage": "Gestionează cheltuielile",
     "scopeExpensesDelete": "Șterge cheltuieli",
-    "scopeExpensesWrite": "Adaugă cheltuieli cu previzualizare"
+    "scopeExpensesWrite": "Adaugă cheltuieli cu previzualizare",
+    "scopeBudgetsRead": "Citește bugetele",
+    "scopeBudgetsManage": "Gestionează bugetele",
+    "scopeBudgetsDelete": "Șterge bugete",
+    "scopeInvitationsManage": "Invită persoane",
+    "scopeInvitationsAccept": "Alătură-te grupurilor",
+    "scopeUploadsWrite": "Încarcă documente",
+    "scopeAiScan": "Scanează bonuri"
   },
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud nu a putut aplica actualizarea.",

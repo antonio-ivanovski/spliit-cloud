@@ -297,6 +297,16 @@ function accountRateLimitedProcedure(options: {
       enforce(ctx.auth.user.id, path, ctx.resHeaders)
       return next()
     }),
+    /**
+     * Same per-account budget, also reachable by an OAuth token carrying
+     * `requiredScope`. Sessions and tokens of one account share the bucket, so
+     * a client cannot spend more than its account could from the browser.
+     */
+    apiProcedure: (requiredScope: SpliitScope) =>
+      apiProcedure(requiredScope).use(({ ctx, next, path }) => {
+        enforce(ctx.auth.user.id, path, ctx.resHeaders)
+        return next()
+      }),
     enforce,
   }
 }
@@ -328,6 +338,10 @@ const importRequests = accountRateLimitedProcedure({
 })
 
 export const uploadPresignProcedure = uploadPresignRequests.procedure
+/** Expense document presign, also open to tokens with `spliit:uploads:write`. */
+export const uploadPresignApiProcedure = uploadPresignRequests.apiProcedure(
+  SPLIIT_SCOPES.uploadsWrite,
+)
 export const importProcedure = importRequests.procedure
 
 /** Charge AI quotas only immediately before provider work. */

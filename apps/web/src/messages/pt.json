@@ -3531,7 +3531,21 @@
       "privacyPolicy": "Política de privacidade",
       "redirectsTo": "Redireciona para",
       "unverifiedClient": "Aplicação não verificada: esta identidade é fornecida pela própria aplicação.",
-      "loopbackWarning": "Esta autorização será enviada para uma aplicação em execução neste dispositivo ({destination}). Aprove apenas se esta ligação tiver sido iniciada por si agora mesmo."
+      "loopbackWarning": "Esta autorização será enviada para uma aplicação em execução neste dispositivo ({destination}). Aprove apenas se esta ligação tiver sido iniciada por si agora mesmo.",
+      "budgetsReadTitle": "Ler orçamentos",
+      "budgetsReadDescription": "Os orçamentos dos grupos, os respetivos limites e quanto já foi gasto.",
+      "budgetsManageTitle": "Criar e editar orçamentos",
+      "budgetsManageDescription": "Criar orçamentos, alterar os limites, períodos e categorias, e arquivá-los.",
+      "budgetsDeleteTitle": "Eliminar orçamentos",
+      "budgetsDeleteDescription": "Eliminar orçamentos definitivamente. Não é possível anular.",
+      "invitationsManageTitle": "Convidar pessoas para os grupos",
+      "invitationsManageDescription": "Criar, copiar e revogar ligações de convite e códigos QR para os grupos, e ver os convites pendentes. Qualquer pessoa que receba uma destas ligações pode juntar-se ao grupo.",
+      "invitationsAcceptTitle": "Juntar-se a grupos",
+      "invitationsAcceptDescription": "Juntar-se a grupos através de ligações de convite, aceitar ou recusar convites recebidos e ver os convites pendentes.",
+      "uploadsWriteTitle": "Carregar documentos",
+      "uploadsWriteDescription": "Anexar fotografias de recibos e outros documentos às despesas dos grupos.",
+      "aiScanTitle": "Digitalizar recibos e notas de voz",
+      "aiScanDescription": "Ler os dados das despesas a partir de fotografias de recibos e gravações de voz. Cada digitalização conta para o limite de utilização de IA da conta, tal como ao digitalizar diretamente no Spliit Cloud."
     },
     "login": {
       "missingTitle": "Pedido de autorização em falta",
@@ -4046,7 +4060,14 @@
     "scopeExpensesRead": "Ler despesas",
     "scopeExpensesManage": "Gerir despesas",
     "scopeExpensesDelete": "Eliminar despesas",
-    "scopeExpensesWrite": "Adicionar despesas com pré-visualização"
+    "scopeExpensesWrite": "Adicionar despesas com pré-visualização",
+    "scopeBudgetsRead": "Ler orçamentos",
+    "scopeBudgetsManage": "Gerir orçamentos",
+    "scopeBudgetsDelete": "Eliminar orçamentos",
+    "scopeInvitationsManage": "Convidar pessoas",
+    "scopeInvitationsAccept": "Juntar-se a grupos",
+    "scopeUploadsWrite": "Carregar documentos",
+    "scopeAiScan": "Digitalizar recibos"
   },
   "PwaUpdate": {
     "waitingFailed": "Não foi possível aplicar a atualização no Spliit Cloud.",

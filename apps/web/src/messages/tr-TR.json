@@ -3514,7 +3514,21 @@
       "privacyPolicy": "Gizlilik politikası",
       "redirectsTo": "Şuraya yönlendirilir:",
       "unverifiedClient": "Doğrulanmamış uygulama: Bu kimlik bilgilerini uygulamanın kendisi sağlıyor.",
-      "loopbackWarning": "Bu yetkilendirme, bu cihazda çalışan bir uygulamaya ({destination}) gönderilecek. Yalnızca bu bağlantıyı az önce kendiniz başlattıysanız onaylayın."
+      "loopbackWarning": "Bu yetkilendirme, bu cihazda çalışan bir uygulamaya ({destination}) gönderilecek. Yalnızca bu bağlantıyı az önce kendiniz başlattıysanız onaylayın.",
+      "budgetsReadTitle": "Bütçeleri görüntüleme",
+      "budgetsReadDescription": "Gruplarınızın bütçeleri, limitleri ve bunlardan ne kadar harcandığı.",
+      "budgetsManageTitle": "Bütçe oluşturma ve düzenleme",
+      "budgetsManageDescription": "Bütçe oluşturmak, limitlerini, dönemlerini ve kategorilerini değiştirmek ve arşivlemek.",
+      "budgetsDeleteTitle": "Bütçeleri silme",
+      "budgetsDeleteDescription": "Bütçeleri kalıcı olarak silmek. Geri alınamaz.",
+      "invitationsManageTitle": "Gruplarınıza kişi davet etme",
+      "invitationsManageDescription": "Gruplarınız için davet bağlantıları ve QR kodları oluşturmak, kopyalamak ve iptal etmek, ayrıca bekleyen davetleri görmek. Bu bağlantılardan birini alan herkes gruba katılabilir.",
+      "invitationsAcceptTitle": "Gruplara katılma",
+      "invitationsAcceptDescription": "Davet bağlantılarıyla gruplara katılmak, size gönderilen davetleri kabul etmek veya reddetmek ve bekleyen davetlerinizi görmek.",
+      "uploadsWriteTitle": "Belge yükleme",
+      "uploadsWriteDescription": "Gruplarınızdaki harcamalara makbuz fotoğrafları ve diğer belgeleri eklemek.",
+      "aiScanTitle": "Makbuz ve sesli not tarama",
+      "aiScanDescription": "Makbuz fotoğraflarından ve ses kayıtlarından harcama ayrıntılarını okumak. Her tarama, Spliit Cloud'da kendiniz taradığınızda olduğu gibi hesabınızın yapay zeka kullanım sınırına sayılır."
     },
     "login": {
       "missingTitle": "Yetkilendirme isteği eksik",
@@ -4029,7 +4043,14 @@
     "scopeExpensesRead": "Harcamaları okuma",
     "scopeExpensesManage": "Harcamaları yönetme",
     "scopeExpensesDelete": "Harcamaları silme",
-    "scopeExpensesWrite": "Önizlemeyle harcama ekleme"
+    "scopeExpensesWrite": "Önizlemeyle harcama ekleme",
+    "scopeBudgetsRead": "Bütçeleri görüntüleme",
+    "scopeBudgetsManage": "Bütçeleri yönetme",
+    "scopeBudgetsDelete": "Bütçeleri silme",
+    "scopeInvitationsManage": "Kişi davet etme",
+    "scopeInvitationsAccept": "Gruplara katılma",
+    "scopeUploadsWrite": "Belge yükleme",
+    "scopeAiScan": "Makbuz tarama"
   },
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud güncellemeyi uygulayamadı.",

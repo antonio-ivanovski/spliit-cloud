@@ -10,6 +10,7 @@ import {
   SPLIIT_SCOPES,
   expandScopes,
   hasScope,
+  scopesSatisfying,
 } from './scopes'
 
 describe('scope catalogue', () => {
@@ -45,6 +46,25 @@ describe('scope catalogue', () => {
     for (const scope of DESTRUCTIVE_SCOPES) {
       expect(ALL_SCOPES).toContain(scope)
     }
+  })
+
+  it('keeps every new resource scope out of the default grant', () => {
+    for (const scope of [
+      SPLIIT_SCOPES.budgetsRead,
+      SPLIIT_SCOPES.budgetsManage,
+      SPLIIT_SCOPES.invitationsManage,
+      SPLIIT_SCOPES.invitationsAccept,
+      SPLIIT_SCOPES.uploadsWrite,
+      SPLIIT_SCOPES.aiScan,
+    ]) {
+      expect(DEFAULT_CLIENT_SCOPES).not.toContain(scope)
+      expect(API_RESOURCE_DISCOVERY_SCOPES).not.toContain(scope)
+      expect(ALL_SCOPES).toContain(scope)
+    }
+  })
+
+  it('treats deleting a budget as destructive', () => {
+    expect(DESTRUCTIVE_SCOPES).toContain(SPLIIT_SCOPES.budgetsDelete)
   })
 
   it('keeps the read scope the MCP assistant already requests', () => {
@@ -106,6 +126,65 @@ describe('expandScopes', () => {
 
     expect(expanded.has(SPLIIT_SCOPES.expensesDelete)).toBe(false)
     expect(expanded.has(SPLIIT_SCOPES.groupsDelete)).toBe(false)
+  })
+
+  it('treats budget manage and delete as implying budget read only', () => {
+    for (const scope of [
+      SPLIIT_SCOPES.budgetsManage,
+      SPLIIT_SCOPES.budgetsDelete,
+    ]) {
+      const expanded = expandScopes([scope])
+      expect(expanded.has(SPLIIT_SCOPES.budgetsRead)).toBe(true)
+      expect(expanded.has(SPLIIT_SCOPES.groupsRead)).toBe(false)
+      expect(expanded.has(SPLIIT_SCOPES.expensesRead)).toBe(false)
+    }
+    expect(
+      expandScopes([SPLIIT_SCOPES.budgetsManage]).has(
+        SPLIIT_SCOPES.budgetsDelete,
+      ),
+    ).toBe(false)
+  })
+
+  it('keeps inviting and joining apart', () => {
+    // Creating links for other people and joining a group are different
+    // levels of trust: neither grant may stand in for the other.
+    expect(
+      expandScopes([SPLIIT_SCOPES.invitationsManage]).has(
+        SPLIIT_SCOPES.invitationsAccept,
+      ),
+    ).toBe(false)
+    expect(
+      expandScopes([SPLIIT_SCOPES.invitationsAccept]).has(
+        SPLIIT_SCOPES.invitationsManage,
+      ),
+    ).toBe(false)
+  })
+
+  it('gives uploads and AI scans nothing beyond themselves', () => {
+    for (const scope of [SPLIIT_SCOPES.uploadsWrite, SPLIIT_SCOPES.aiScan]) {
+      expect([...expandScopes([scope])]).toEqual([scope])
+    }
+  })
+})
+
+describe('scopesSatisfying', () => {
+  it('lists the scope first, then the scopes implying it', () => {
+    expect(scopesSatisfying(SPLIIT_SCOPES.budgetsRead)).toEqual([
+      SPLIIT_SCOPES.budgetsRead,
+      SPLIIT_SCOPES.budgetsManage,
+      SPLIIT_SCOPES.budgetsDelete,
+    ])
+    expect(scopesSatisfying(SPLIIT_SCOPES.groupsRead)).toEqual([
+      SPLIIT_SCOPES.groupsRead,
+      SPLIIT_SCOPES.groupsManage,
+      SPLIIT_SCOPES.groupsDelete,
+    ])
+  })
+
+  it('accepts nothing else for a scope no grant implies', () => {
+    expect(scopesSatisfying(SPLIIT_SCOPES.aiScan)).toEqual([
+      SPLIIT_SCOPES.aiScan,
+    ])
   })
 })
 

@@ -3574,7 +3574,21 @@
       "privacyPolicy": "Chính sách quyền riêng tư",
       "redirectsTo": "Chuyển hướng đến",
       "unverifiedClient": "Ứng dụng chưa được xác minh: danh tính này do chính ứng dụng tự cung cấp.",
-      "loopbackWarning": "Ủy quyền này sẽ được gửi đến một ứng dụng đang chạy trên thiết bị này ({destination}). Chỉ phê duyệt nếu chính bạn vừa mới bắt đầu kết nối này."
+      "loopbackWarning": "Ủy quyền này sẽ được gửi đến một ứng dụng đang chạy trên thiết bị này ({destination}). Chỉ phê duyệt nếu chính bạn vừa mới bắt đầu kết nối này.",
+      "budgetsReadTitle": "Xem ngân sách",
+      "budgetsReadDescription": "Ngân sách của các nhóm, hạn mức và số tiền đã chi.",
+      "budgetsManageTitle": "Tạo và sửa ngân sách",
+      "budgetsManageDescription": "Tạo ngân sách, thay đổi hạn mức, kỳ hạn và danh mục, và lưu trữ ngân sách.",
+      "budgetsDeleteTitle": "Xoá ngân sách",
+      "budgetsDeleteDescription": "Xoá vĩnh viễn ngân sách. Không thể hoàn tác.",
+      "invitationsManageTitle": "Mời người khác vào nhóm",
+      "invitationsManageDescription": "Tạo, sao chép và thu hồi liên kết mời và mã QR cho các nhóm, đồng thời xem các lời mời đang chờ. Bất kỳ ai nhận được một trong các liên kết này đều có thể tham gia nhóm.",
+      "invitationsAcceptTitle": "Tham gia nhóm",
+      "invitationsAcceptDescription": "Tham gia nhóm qua liên kết mời, chấp nhận hoặc từ chối lời mời gửi cho bạn và xem các lời mời đang chờ của bạn.",
+      "uploadsWriteTitle": "Tải lên tài liệu",
+      "uploadsWriteDescription": "Đính kèm ảnh biên lai và tài liệu khác vào chi tiêu trong các nhóm.",
+      "aiScanTitle": "Quét biên lai và ghi chú thoại",
+      "aiScanDescription": "Đọc thông tin chi tiêu từ ảnh biên lai và bản ghi âm giọng nói. Mỗi lần quét đều được tính vào hạn mức sử dụng AI của tài khoản, giống như khi bạn tự quét trong Spliit Cloud."
     },
     "login": {
       "missingTitle": "Thiếu yêu cầu cấp quyền",
@@ -4089,7 +4103,14 @@
     "scopeExpensesRead": "Đọc chi tiêu",
     "scopeExpensesManage": "Quản lý chi tiêu",
     "scopeExpensesDelete": "Xoá chi tiêu",
-    "scopeExpensesWrite": "Thêm chi tiêu kèm xem trước"
+    "scopeExpensesWrite": "Thêm chi tiêu kèm xem trước",
+    "scopeBudgetsRead": "Xem ngân sách",
+    "scopeBudgetsManage": "Quản lý ngân sách",
+    "scopeBudgetsDelete": "Xoá ngân sách",
+    "scopeInvitationsManage": "Mời người khác",
+    "scopeInvitationsAccept": "Tham gia nhóm",
+    "scopeUploadsWrite": "Tải lên tài liệu",
+    "scopeAiScan": "Quét biên lai"
   },
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloud không thể áp dụng bản cập nhật.",

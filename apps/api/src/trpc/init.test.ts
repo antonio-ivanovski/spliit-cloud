@@ -15,6 +15,7 @@ import {
   loadGroupViewer,
   protectedProcedure,
   scopedGroupReadProcedure,
+  uploadPresignApiProcedure,
 } from './init'
 
 function makeRequest(): Request {
@@ -511,6 +512,74 @@ describe('token rate limits', () => {
     }
 
     await expect(callMutation(accountId)).rejects.toMatchObject({
+      code: 'TOO_MANY_REQUESTS',
+    })
+  })
+})
+
+describe('uploadPresignApiProcedure', () => {
+  // A query probe keeps the shared authenticated-mutation budget out of the
+  // way, so these cases exercise the upload-presign bucket on its own.
+  const probe = uploadPresignApiProcedure.query(({ ctx }) => ({
+    accountId: ctx.auth.user.id,
+  }))
+
+  function callProbe(auth: Record<string, unknown> | null) {
+    return probe({
+      ctx: { auth },
+      type: 'query',
+      path: 'uploads.presign',
+      getRawInput: async () => undefined,
+      meta: undefined,
+      signal: undefined,
+    } as never)
+  }
+
+  function oauthAuth(accountId: string, scopes: string[]) {
+    return {
+      credentialKind: 'oauth',
+      accessToken: 'redacted',
+      scopes,
+      audiences: [getApiBaseUrl()],
+      user: { id: accountId },
+      session: { id: 'oauth-session' },
+    }
+  }
+
+  it('records the uploads scope for the OpenAPI contract', () => {
+    expect(probe._def.meta).toMatchObject({ scope: 'spliit:uploads:write' })
+  })
+
+  it('accepts a token carrying the uploads scope', async () => {
+    const accountId = `acct-upload-${Math.random()}`
+    await expect(
+      callProbe(oauthAuth(accountId, ['spliit:uploads:write'])),
+    ).resolves.toEqual({ accountId })
+  })
+
+  it('rejects a token that can only manage expenses', async () => {
+    await expect(
+      callProbe(
+        oauthAuth(`acct-upload-${Math.random()}`, ['spliit:expenses:manage']),
+      ),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+  })
+
+  it('makes sessions and tokens of one account share the hourly budget', async () => {
+    // 120/hour per account. A client must not get a second bucket next to the
+    // browser's, or it could upload more than the account itself could.
+    const accountId = `acct-upload-${Math.random()}`
+    const session = { user: { id: accountId }, session: { id: 'sess-up' } }
+    const token = oauthAuth(accountId, ['spliit:uploads:write'])
+    for (let i = 0; i < 60; i++) {
+      await expect(callProbe(session)).resolves.toEqual({ accountId })
+      await expect(callProbe(token)).resolves.toEqual({ accountId })
+    }
+
+    await expect(callProbe(token)).rejects.toMatchObject({
+      code: 'TOO_MANY_REQUESTS',
+    })
+    await expect(callProbe(session)).rejects.toMatchObject({
       code: 'TOO_MANY_REQUESTS',
     })
   })

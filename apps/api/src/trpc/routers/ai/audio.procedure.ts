@@ -5,12 +5,13 @@ import { prisma } from '@spliit/db'
 
 import { isTimeoutError } from '../../../lib/ai/timeout'
 import { extractExpenseInformationFromAudio } from '../../../lib/audio-expense'
+import { SPLIIT_SCOPES } from '../../../lib/auth/scopes'
 import { env } from '../../../lib/env'
 import { resolveParticipantDisplayName } from '../../../lib/invitations/display'
 import {
+  apiProcedure,
   enforceAiRequestLimit,
   loadGroupMutationContext,
-  protectedProcedure,
 } from '../../init'
 import { extractExpenseInformationFromAudioOutputSchema } from '../../outputs/ai'
 
@@ -24,7 +25,9 @@ const audioInputSchema = z.object({
   timezoneOffsetMinutes: z.number().int().min(-840).max(840).optional(),
 })
 
-export const extractExpenseInformationFromAudioProcedure = protectedProcedure
+export const extractExpenseInformationFromAudioProcedure = apiProcedure(
+  SPLIIT_SCOPES.aiScan,
+)
   .input(audioInputSchema)
   .output(extractExpenseInformationFromAudioOutputSchema)
   .mutation(async ({ input, ctx }) => {

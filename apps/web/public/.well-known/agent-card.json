@@ -30,6 +30,24 @@
       "tags": ["expenses", "write"]
     },
     {
+      "description": "Read a group's budgets and their progress. Needs scope spliit:budgets:read; creating, editing and archiving needs spliit:budgets:manage, deleting needs spliit:budgets:delete.",
+      "id": "budgets",
+      "name": "Track budgets",
+      "tags": ["budgets", "read", "write"]
+    },
+    {
+      "description": "Create and revoke invite links for a group with spliit:invitations:manage, and join groups through invite links with spliit:invitations:accept. Email invitations are not available to tokens.",
+      "id": "invitations",
+      "name": "Invite and join",
+      "tags": ["groups", "invitations"]
+    },
+    {
+      "description": "Upload a receipt with spliit:uploads:write, then extract its title, amount, date, category and line items with spliit:ai:scan. Each extraction spends the account's AI quota.",
+      "id": "receipt-scan",
+      "name": "Scan receipts",
+      "tags": ["expenses", "receipts", "ai"]
+    },
+    {
       "description": "Conversational expense creation with a safe confirmation preview over the Model Context Protocol. Needs scope spliit:expenses:write on the MCP resource.",
       "id": "mcp-assistant",
       "name": "Assisted expense entry via MCP",

@@ -20,6 +20,7 @@ import {
   canCreateInvitationWithRole,
   canRevokeInvitation,
 } from '../../../lib/api/resource-permissions'
+import { SPLIIT_SCOPES, type SpliitScope } from '../../../lib/auth/scopes'
 import {
   getPlaceholderEmailDisplayName,
   isPlaceholderEmail,
@@ -65,10 +66,13 @@ import {
   validateSharedLinkLimits,
 } from '../../../lib/invitations/manage-invitations'
 import {
+  apiProcedure,
+  assertOAuthScope,
   createTRPCRouter,
   loadGroupMutationContext,
   protectedProcedure,
   publicProcedure,
+  type ConditionalScope,
 } from '../../init'
 import { mapInviteErrorToTRPC } from '../../invite-errors'
 import { emptyOutputSchema } from '../../outputs/common'
@@ -89,6 +93,31 @@ const invitationProcedure = protectedProcedure.use(async ({ ctx, next }) => {
   }
   return result
 })
+
+/**
+ * `invitationProcedure` that an OAuth token carrying `requiredScope` can also
+ * reach. Email delivery (`create`, `updatePending`) stays on the session-only
+ * procedure above: a token must not send email on the account's behalf.
+ */
+function invitationApiProcedure(
+  requiredScope: SpliitScope,
+  opts?: { conditionalScopes?: ConditionalScope[] },
+) {
+  return apiProcedure(requiredScope, opts).use(async ({ ctx, next }) => {
+    const result = await next()
+    if (!result.ok && isInviteError(result.error.cause)) {
+      mapInviteErrorToTRPC(result.error.cause, ctx.resHeaders)
+    }
+    return result
+  })
+}
+
+const manageInvitationsProcedure = invitationApiProcedure(
+  SPLIIT_SCOPES.invitationsManage,
+)
+const acceptInvitationsProcedure = invitationApiProcedure(
+  SPLIIT_SCOPES.invitationsAccept,
+)
 
 // Only ADMIN and MEMBER roles are exposed in the invitation form. The
 // group creator becomes an ADMIN at create time, so admins invite new
@@ -172,7 +201,7 @@ export const invitationsRouter = createTRPCRouter({
   // derives it. Every other surface — accept gate, copy endpoint, preview —
   // uses the same two helpers from `../../../lib/invitations/effects`, so
   // the list can never disagree with them.)
-  list: invitationProcedure
+  list: manageInvitationsProcedure
     .input(z.object({ groupId: z.string().min(1) }))
     .output(invitationsListOutputSchema)
     .query(async ({ input: { groupId }, ctx }) => {
@@ -294,7 +323,7 @@ export const invitationsRouter = createTRPCRouter({
   // persisted in the idempotency payload. An idempotent replay therefore
   // returns the *stored* URL verbatim — never a URL rebuilt from the
   // current token, which would point at a hash that is not in the database.
-  createLink: invitationProcedure
+  createLink: manageInvitationsProcedure
     .input(
       z.object({
         groupId: z.string().min(1),
@@ -425,7 +454,7 @@ export const invitationsRouter = createTRPCRouter({
    * timestamps — and by persisting the minted URL in the idempotency payload,
    * which the replay path returns verbatim.
    */
-  createSharedLink: invitationProcedure
+  createSharedLink: manageInvitationsProcedure
     .input(
       z.object({
         groupId: z.string().min(1),
@@ -583,7 +612,7 @@ export const invitationsRouter = createTRPCRouter({
   // (The `Exit.match` inline responder maps the Effect failure; anything
   // else is a defect and rethrows as-is so the procedure never swallows a
   // database outage into a domain code.)
-  getLinkUrl: invitationProcedure
+  getLinkUrl: manageInvitationsProcedure
     .input(
       z.object({
         groupId: z.string().min(1),
@@ -609,7 +638,7 @@ export const invitationsRouter = createTRPCRouter({
    * room of people can join from one displayed QR code. Sessions are always
    * MEMBER-level: a forwarded screenshot must never mint outside admins.
    */
-  createQrLink: invitationProcedure
+  createQrLink: manageInvitationsProcedure
     .input(
       z.object({
         groupId: z.string().min(1),
@@ -764,7 +793,7 @@ export const invitationsRouter = createTRPCRouter({
   // (The helper refuses expired / revoked / already-used tokens and the
   // double-active-member case through the tagged invite failures, mapped to
   // stable tRPC codes by the invite boundary.)
-  acceptLink: invitationProcedure
+  acceptLink: acceptInvitationsProcedure
     .input(
       z.object({
         token: invitationTokenSchema,
@@ -907,7 +936,7 @@ export const invitationsRouter = createTRPCRouter({
   // returns whether the invitation's ledger participant has unsettled
   // balances so the dialog can pick between the simple confirm and the
   // three-option variant (settle+revoke, revoke only, cancel).
-  revokePreview: invitationProcedure
+  revokePreview: manageInvitationsProcedure
     .input(
       z.object({
         invitationId: z.string().min(1),
@@ -975,7 +1004,14 @@ export const invitationsRouter = createTRPCRouter({
   // checkbox. This is stricter than the member-remove flow because
   // revoking a non-member leaves the invitee's participant orphaned in
   // the ledger, which breaks the balances view.
-  revoke: invitationProcedure
+  revoke: invitationApiProcedure(SPLIIT_SCOPES.invitationsManage, {
+    conditionalScopes: [
+      {
+        scope: SPLIIT_SCOPES.expensesManage,
+        when: 'settling balances creates settlement expenses (settleBalances)',
+      },
+    ],
+  })
     .input(
       z.object({
         invitationId: z.string().min(1),
@@ -989,6 +1025,11 @@ export const invitationsRouter = createTRPCRouter({
     )
     .output(emptyOutputSchema)
     .mutation(async ({ input: { invitationId, settleBalances }, ctx }) => {
+      // Settling creates settlement expenses, which a token may only do with
+      // the expense manage scope. Sessions are unaffected.
+      if (settleBalances) {
+        assertOAuthScope(ctx.auth, SPLIIT_SCOPES.expensesManage)
+      }
       const existing = await prisma.groupInvitation.findUnique({
         where: { id: invitationId },
         select: {
@@ -1044,7 +1085,7 @@ export const invitationsRouter = createTRPCRouter({
 
   // Accept an email invitation. Link-invite handoff will branch on
   // invitation type to swap the auth helper.
-  accept: invitationProcedure
+  accept: acceptInvitationsProcedure
     .input(
       z.object({
         invitationId: z.string().min(1),
@@ -1065,7 +1106,7 @@ export const invitationsRouter = createTRPCRouter({
 
   // Decline a pending invitation. Only the invitee (the account whose email
   // matches the invitation) can mark their own invitation as declined.
-  decline: invitationProcedure
+  decline: acceptInvitationsProcedure
     .input(z.object({ invitationId: z.string().min(1) }))
     .output(emptyOutputSchema)
     .mutation(async ({ input: { invitationId }, ctx }) => {
@@ -1078,7 +1119,7 @@ export const invitationsRouter = createTRPCRouter({
     }),
 
   // Pending email invitations for the current account.
-  listForAccount: invitationProcedure
+  listForAccount: acceptInvitationsProcedure
     .output(accountInvitationsListOutputSchema)
     .query(async ({ ctx }) => {
       const invitations = await listPendingEmailInvitationsForAccount(
@@ -1195,7 +1236,7 @@ export const invitationsRouter = createTRPCRouter({
    * Rotate a pending link invitation's credential. The old URL stops working
    * immediately; the new shareable URL is returned exactly once.
    */
-  regenerateLink: invitationProcedure
+  regenerateLink: manageInvitationsProcedure
     .input(z.object({ invitationId: z.string().min(1) }))
     .output(regenerateLinkInvitationOutputSchema)
     .mutation(async ({ input, ctx }) => {

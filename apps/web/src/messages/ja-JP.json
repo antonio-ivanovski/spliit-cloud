@@ -3485,7 +3485,21 @@
       "privacyPolicy": "プライバシーポリシー",
       "redirectsTo": "リダイレクト先",
       "unverifiedClient": "未検証のアプリケーション：この身元情報はアプリケーション自身が提供したものです。",
-      "loopbackWarning": "この認可は、このデバイス上で動作しているアプリケーション（{destination}）に送信されます。この接続をたった今自分で開始した場合にのみ許可してください。"
+      "loopbackWarning": "この認可は、このデバイス上で動作しているアプリケーション（{destination}）に送信されます。この接続をたった今自分で開始した場合にのみ許可してください。",
+      "budgetsReadTitle": "予算の閲覧",
+      "budgetsReadDescription": "グループの予算、その上限額、これまでの支出額。",
+      "budgetsManageTitle": "予算の作成と編集",
+      "budgetsManageDescription": "予算を作成し、上限額・期間・カテゴリを変更したり、アーカイブしたりします。",
+      "budgetsDeleteTitle": "予算の削除",
+      "budgetsDeleteDescription": "予算を完全に削除します。元に戻せません。",
+      "invitationsManageTitle": "グループへの招待",
+      "invitationsManageDescription": "グループの招待リンクや QR コードを作成・コピー・取り消しし、保留中の招待を確認します。これらのリンクを受け取った人は誰でもグループに参加できます。",
+      "invitationsAcceptTitle": "グループへの参加",
+      "invitationsAcceptDescription": "招待リンクからグループに参加し、届いた招待を承諾または辞退し、保留中の招待を確認します。",
+      "uploadsWriteTitle": "書類のアップロード",
+      "uploadsWriteDescription": "グループの支出に領収書の写真やその他の書類を添付します。",
+      "aiScanTitle": "領収書と音声メモのスキャン",
+      "aiScanDescription": "領収書の写真や音声録音から支出の詳細を読み取ります。Spliit Cloud で自分でスキャンする場合と同じく、スキャンするたびにアカウントの AI 利用上限にカウントされます。"
     },
     "login": {
       "missingTitle": "認証リクエストがありません",
@@ -4007,7 +4021,14 @@
     "scopeExpensesRead": "支出の閲覧",
     "scopeExpensesManage": "支出の管理",
     "scopeExpensesDelete": "支出の削除",
-    "scopeExpensesWrite": "プレビュー付きで支出を追加"
+    "scopeExpensesWrite": "プレビュー付きで支出を追加",
+    "scopeBudgetsRead": "予算の閲覧",
+    "scopeBudgetsManage": "予算の管理",
+    "scopeBudgetsDelete": "予算の削除",
+    "scopeInvitationsManage": "メンバーの招待",
+    "scopeInvitationsAccept": "グループへの参加",
+    "scopeUploadsWrite": "書類のアップロード",
+    "scopeAiScan": "領収書のスキャン"
   },
   "PwaUpdate": {
     "waitingFailed": "Spliit Cloudは更新を適用できませんでした。",
